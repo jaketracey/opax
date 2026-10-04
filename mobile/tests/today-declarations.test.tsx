@@ -7,7 +7,6 @@ import {
   decodeRecentInterests,
   recentDeclarationsFor,
   recentBillsFor,
-  registerSourceLabelFor,
   suggestionProvenanceFor,
 } from '../src/api/catalogs';
 import {
@@ -52,8 +51,24 @@ test('Today names the actual category, change, party, chamber and date in its wh
   expect(label).toContain('Senate');
   expect(label).toContain('Sponsored travel or hospitality');
   expect(renderer.root.findByType(SourceLink).props.citation).toBe(
-    registerSourceLabelFor(item),
+    'Register of Senators’ Interests',
   );
+  act(() => renderer.unmount());
+});
+test('all 176 pinned House declarations name the Members register', () => {
+  const house = items.filter((item) => item.chamber === 'house');
+  expect(house).toHaveLength(176);
+  expect(
+    house.every(
+      (item) => item.sourceLabel === 'Register of Members’ Interests',
+    ),
+  ).toBe(true);
+  const renderer = render(house[0]!);
+  expect(
+    renderer.root
+      .findAllByType(SourceLink)
+      .some((link) => link.props.citation === 'Register of Members’ Interests'),
+  ).toBe(true);
   act(() => renderer.unmount());
 });
 test('the default six declarations with unreviewed APH rights show blank circles and request no image', () => {

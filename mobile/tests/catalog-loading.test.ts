@@ -3,12 +3,15 @@ import {
   personId,
   type BillIndex,
   type RecentInterests,
+  rosterIdentityFor,
+  suggestionsFor,
 } from '../src/api/catalogs';
 import type { ApiClient, RecordResult } from '../src/api/client';
 import { dataAsOf } from '../src/api/client';
 import { ApiError } from '../src/api/errors';
 import { assertAllowedPath } from '../src/api/policy';
 import { catalogs as data, pinned, slugs } from './pinned';
+import { personRowContext } from '../src/features/search/model';
 const id = personId('person_2b850aa643795ce8902f754b');
 function loader(fail: string[] = [], stale: string[] = []) {
   const calls: string[] = [];
@@ -123,6 +126,42 @@ test('typing suggestions reuses one source snapshot until explicit refresh', asy
   expect(calls).toHaveLength(count);
   await catalogs.suggestionSources(true);
   expect(calls.length).toBeGreaterThan(count);
+});
+test.each([
+  ['/api/person-slugs'],
+  [data.manifest.people_url],
+  ['/api/person-slugs', data.manifest.people_url],
+])(
+  'optional identity failure preserves every suggestion group: %j',
+  async (...paths) => {
+    const { catalogs } = loader(paths);
+    const sources = await catalogs.suggestionSources();
+    for (const query of ['Albanese', 'Grayndler', 'support']) {
+      expect(await catalogs.suggestions(query)).toEqual(
+        suggestionsFor(query, data.roster, sources.electorates, data.bills!),
+      );
+    }
+    const row = (await catalogs.suggestions('Albanese')).people[0]!;
+    expect(row.name).toBe('Anthony Albanese');
+    expect(personRowContext(rosterIdentityFor(row, sources))).toMatchObject({
+      party: undefined,
+      place: undefined,
+    });
+    expect(sources.provenance.people.sources).toHaveLength(1);
+  },
+);
+test('explicit suggestion refresh retries optional identity context', async () => {
+  const failures = ['/api/person-slugs'];
+  const { catalogs } = loader(failures);
+  const first = await catalogs.suggestionSources();
+  expect(first.slugs).toBeUndefined();
+  failures.pop();
+  const next = await catalogs.suggestionSources(true);
+  const row = (await catalogs.suggestions('Albanese')).people[0]!;
+  expect(personRowContext(rosterIdentityFor(row, next))).toMatchObject({
+    party: 'Labor',
+    place: 'Grayndler · House of Representatives · New South Wales',
+  });
 });
 test('bill, electorate and About blocks retain actual cache state', async () => {
   const seatPath =

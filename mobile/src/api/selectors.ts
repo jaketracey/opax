@@ -112,13 +112,15 @@ export function suggestionProvenanceFor(
 }
 export type SearchIdentityCatalogs = Pick<
   ProfileCatalogs,
-  'slugs' | 'roster' | 'people' | 'manifest'
->;
+  'roster' | 'manifest'
+> &
+  Partial<Pick<ProfileCatalogs, 'slugs' | 'people'>>;
 /** Search and the profile header resolve the exact same dated identity. */
 export function searchPersonFor(
   slug: string,
   catalogs: SearchIdentityCatalogs,
 ) {
+  if (!catalogs.slugs || !catalogs.people) return null;
   try {
     const identity = joinPerson(
       slug,
@@ -147,7 +149,8 @@ export function searchPersonFor(
           }))
         : (row?.representation ?? [])
             .filter((r) => r.chamber !== 'senate_committee')
-            .map((r) => ({ ...r, current: identity.partyCurrent })),
+            // Roster representation does not establish whether a seat ended.
+            .map((r) => ({ ...r, current: undefined })),
       chambers: rosterChambersFor(
         row ? { ...row, name: identity.name } : undefined,
       ),
@@ -162,6 +165,7 @@ export function rosterIdentityFor(
   row: Roster['people'][number],
   catalogs: SearchIdentityCatalogs,
 ) {
+  if (!catalogs.slugs || !catalogs.people) return null;
   const candidates = Object.entries(catalogs.slugs.slugs).filter(
     ([, name]) => nameKey(name) === nameKey(row.name),
   );
@@ -592,7 +596,7 @@ export function registerSourceLabelFor(item: RecentInterests['items'][number]) {
     return 'Queensland Register of Members’ Interests';
   if (item.jurisdiction === 'federal' && item.chamber === 'senate')
     return 'Register of Senators’ Interests';
-  if (item.jurisdiction === 'federal' && item.chamber === 'representatives')
+  if (item.jurisdiction === 'federal' && item.chamber === 'house')
     return 'Register of Members’ Interests';
   return 'Register of interests';
 }

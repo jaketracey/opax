@@ -202,12 +202,39 @@ test('dated current seats replace former seats and senator places do not repeat 
   );
   expect(crewther.place).toContain('Mornington');
   expect(crewther.place).not.toContain('Dunkley');
-  const former = roster.people.find(
-    (p) =>
-      p.representation?.length &&
-      rosterIdentityFor(p, catalogs)?.partyCurrent === false,
-  )!;
-  expect(personRowContext(rosterIdentityFor(former, catalogs)).place).toContain(
-    'Former representation:',
+});
+test.each([
+  ['Alex Greenwich', 'Sydney'],
+  ['Jo Haylen', 'Summer Hill'],
+  ['Mark Speakman', 'Cronulla'],
+  ["Marjorie O'Neill", 'Coogee'],
+  ['Yasmin Catley', 'Swansea'],
+])('undated roster representation is neutral for %s', (name, seat) => {
+  const slug = Object.entries(slugs.slugs).find(
+    ([, value]) => nameKey(value) === nameKey(name),
+  )![0];
+  const identity = searchPersonFor(slug, catalogs)!;
+  expect(identity.representation.length).toBeGreaterThan(0);
+  expect(identity.representation.every((r) => r.current === undefined)).toBe(
+    true,
   );
+  expect(personRowContext(identity).place).toBe(
+    `Recorded representation: ${seat} · New South Wales Legislative Assembly`,
+  );
+});
+test('no pinned roster fallback asserts that a seat ended', () => {
+  let recorded = 0;
+  for (const slug of Object.keys(slugs.slugs)) {
+    const identity = searchPersonFor(slug, catalogs);
+    if (
+      identity?.representation.length &&
+      identity.representation.every((r) => r.current === undefined)
+    ) {
+      recorded++;
+      const place = personRowContext(identity).place;
+      expect(place).toContain('Recorded representation:');
+      expect(place).not.toContain('Former representation:');
+    }
+  }
+  expect(recorded).toBeGreaterThan(600);
 });
