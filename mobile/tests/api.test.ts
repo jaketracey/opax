@@ -395,19 +395,20 @@ test('search eviction cannot evict catalogs; oldest validation is evicted within
   await cache.put(entry('catalog-c', 2));
   for (let n = 1; n <= 12; n++)
     await cache.put(entry(`${origin}/api/search-all?kind=person&q=${n}`, n));
-  expect(store.entries.map((e) => e.url).sort()).toEqual(
-    [
-      'catalog-a',
-      'catalog-c',
-      `${origin}/api/search-all?kind=person&q=11`,
-      `${origin}/api/search-all?kind=person&q=12`,
-    ].sort(),
-  );
+  expect(store.entries.map((e) => e.url).sort()).toEqual([
+    'catalog-a',
+    'catalog-c',
+  ]);
+  expect(store.index.every((e) => e.bucket === 'catalog')).toBe(true);
   expect(
-    store.index
-      .filter((e) => e.bucket === 'search')
-      .reduce((total, e) => total + e.bytes, 0),
-  ).toBeLessThanOrEqual(1000);
+    await cache.get(`${origin}/api/search-all?kind=person&q=10`),
+  ).toBeUndefined();
+  expect(
+    await cache.get(`${origin}/api/search-all?kind=person&q=11`),
+  ).toBeDefined();
+  expect(
+    await cache.get(`${origin}/api/search-all?kind=person&q=12`),
+  ).toBeDefined();
 });
 test('429 honours Retry-After seconds and dates, without exceeding the total budget', async () => {
   for (const header of ['2', new Date(3000).toUTCString()]) {
@@ -605,4 +606,58 @@ test('concurrent first reads and a write share one pending index load without lo
   expect(await cache.get('new')).toEqual(entry);
   expect(store.index.map((item) => item.url)).toEqual(['new']);
   expect(indexReads).toHaveBeenCalledTimes(1);
+});
+
+test('search query URLs and result bodies never reach the persistent store or survive a new cache', async () => {
+  const store = new MemoryStore();
+  const methods = [
+    'readIndex',
+    'writeIndex',
+    'read',
+    'write',
+    'remove',
+  ] as const;
+  const calls = methods.map((method) => jest.spyOn(store, method));
+  const cache = new CatalogCache(store);
+  const entry: CacheEntry = {
+    url: `${origin}/api/search-all?kind=interest&q=private-query&page=2`,
+    body: { query: 'private-query', results: ['private-result'] },
+    savedAt: 1,
+    validatedAt: 1,
+    expiresAt: 2,
+    asOf: null,
+  };
+  await cache.put(entry);
+  expect(await cache.get(entry.url)).toEqual(entry);
+  for (const call of calls) expect(call).not.toHaveBeenCalled();
+  expect(JSON.stringify(store)).not.toMatch(
+    /private-query|private-result|search-all/,
+  );
+  expect(await new CatalogCache(store).get(entry.url)).toBeUndefined();
+});
+test('legacy persistent search pages and query metadata are removed while catalogs remain', async () => {
+  const store = new MemoryStore();
+  const entry = (url: string): CacheEntry => ({
+    url,
+    body: 'saved',
+    savedAt: 1,
+    validatedAt: 1,
+    expiresAt: 2,
+    asOf: null,
+  });
+  const catalog = entry('catalog');
+  const search = entry(`${origin}/api/search-all?q=legacy-query&kind=person`);
+  store.entries = [catalog, search];
+  store.index = [
+    { url: catalog.url, bytes: 100, validatedAt: 1, bucket: 'catalog' },
+    { url: search.url, bytes: 100, validatedAt: 1, bucket: 'search' },
+  ];
+  const cache = new CatalogCache(store);
+  expect(await cache.get(search.url)).toBeUndefined();
+  expect(await cache.get(catalog.url)).toEqual(catalog);
+  expect(store.entries).toEqual([catalog]);
+  expect(store.index).toEqual([
+    { url: catalog.url, bytes: 100, validatedAt: 1, bucket: 'catalog' },
+  ]);
+  expect(JSON.stringify(store)).not.toContain('legacy-query');
 });
