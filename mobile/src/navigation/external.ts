@@ -264,9 +264,14 @@ export function sourceUrl(raw: string): string {
 /**
  * Opens an external source record or register in SFSafariViewController,
  * visibly presented (guideline 5.1.1(vii)). E2E builds never open a browser:
- * they show the destination locally instead.
+ * they show the checked destination locally instead, through `showInE2E`
+ * (SourceLink draws the whole URL) or else a native alert.
  */
-export async function openSource(url: string, label: string): Promise<void> {
+export async function openSource(
+  url: string,
+  label: string,
+  showInE2E?: (checked: string) => void,
+): Promise<void> {
   let checked: string;
   try {
     checked = sourceUrl(url);
@@ -276,7 +281,8 @@ export async function openSource(url: string, label: string): Promise<void> {
   }
   if (isE2E) {
     // Title and URL apart, so journeys can assert the exact destination.
-    Alert.alert(`Source record: ${label}`, checked);
+    if (showInE2E) showInE2E(checked);
+    else Alert.alert(`Source record: ${label}`, checked);
     return;
   }
   try {

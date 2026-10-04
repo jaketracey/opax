@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { openOnWeb, openSource } from '../navigation/external';
+import { SourceDestination } from './destination';
 import {
   asAtText,
   formatCount,
@@ -81,22 +83,33 @@ export function SourceLink({
   testID,
 }: SourceLinkProps) {
   const label = record ? `${citation} · ${record}` : citation;
+  // E2E only: the checked URL, drawn in full instead of opening a browser.
+  const [destination, setDestination] = useState<string | null>(null);
   return (
-    <Pressable
-      accessibilityRole="link"
-      accessibilityLabel={`${citation}${record ? `, ${record}` : ''}`}
-      accessibilityHint={
-        kind === 'register' ? 'Opens the register' : 'Opens the source'
-      }
-      testID={testID}
-      onPress={() => openSource(url, label)}
-      style={({ pressed }) => [styles.link, pressed ? styles.pressed : null]}
-    >
-      <Text wordSafe variant="body" tone="bronzeInk" style={styles.linkText}>
-        {label}
-      </Text>
-      <Icon name="arrow.up.right.square" size={16} tone="bronzeInk" />
-    </Pressable>
+    <>
+      <Pressable
+        accessibilityRole="link"
+        accessibilityLabel={`${citation}${record ? `, ${record}` : ''}`}
+        accessibilityHint={
+          kind === 'register' ? 'Opens the register' : 'Opens the source'
+        }
+        testID={testID}
+        onPress={() => openSource(url, label, setDestination)}
+        style={({ pressed }) => [styles.link, pressed ? styles.pressed : null]}
+      >
+        <Text wordSafe variant="body" tone="bronzeInk" style={styles.linkText}>
+          {label}
+        </Text>
+        <Icon name="arrow.up.right.square" size={16} tone="bronzeInk" />
+      </Pressable>
+      {destination !== null ? (
+        <SourceDestination
+          label={label}
+          url={destination}
+          onDismiss={() => setDestination(null)}
+        />
+      ) : null}
+    </>
   );
 }
 
