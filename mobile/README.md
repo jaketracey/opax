@@ -237,8 +237,13 @@ advisories are individually classified in the same baseline. Never run
 `npm audit fix --force`; its suggested dependency downgrades break the fixed SDK.
 
 Search has grouped on-device suggestions, explicit catalog submissions for People,
-Declared interests, Pay and Expenses, and saved/offline states. Today has dated
-bill and declaration feeds; `todayEdition` is disabled until W13 exists. About and
+Declared interests, Pay and Expenses, and saved/offline states. People rows include
+roster party history and seat or chamber context, including the full accessible
+label. Empty results offer one-tap searches in the other allowed kinds; electorate
+suggestions open the native electorate route. Matching-record disclosures expose
+their expanded state. Today has dated bill and declaration feeds with category and
+party; permitted portraits retain their credit and licence links, with blank circles
+for missing, unreviewed or failed images; `todayEdition` is disabled until W13 exists. About and
 sources pushes inside the Account sheet, with snapshot coverage, source terms,
 privacy and the build's complete font notices. Bills has a native list and detail
 stack; Today bill rows, Search bill suggestions and matched profile and Your MP
