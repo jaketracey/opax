@@ -30,10 +30,13 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
     id: search-screen
 - tapOn:
     id: tab-today
+# Today is taller with the edition card; a slow simulator needs more than the
+# default 20 seconds to swipe back up from the footer.
 - scrollUntilVisible:
     element:
       id: today-screen-message
     direction: UP
+    timeout: 90000
 - assertVisible:
     id: today-screen-message
 # Talk and Account and about are navigation-bar buttons on every root screen.
