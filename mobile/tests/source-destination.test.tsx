@@ -1,3 +1,4 @@
+import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock';
 import { act } from 'react';
 import { Modal, ScrollView, StyleSheet } from 'react-native';
 import TestRenderer from 'react-test-renderer';
@@ -13,6 +14,7 @@ jest.mock('react-native/Libraries/Modal/Modal', () => ({
   __esModule: true,
   default: 'Modal',
 }));
+jest.mock('react-native-safe-area-context', () => mockSafeAreaContext);
 
 test('the local destination keeps the complete URL in bounded scrolling content and dismisses independently', () => {
   const url =

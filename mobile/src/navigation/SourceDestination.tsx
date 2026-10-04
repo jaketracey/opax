@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react';
 import { Modal, ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '../design/controls';
 import { Heading, Text } from '../design/text';
 import { colors, layout, spacing } from '../design/tokens';
@@ -26,25 +26,27 @@ export function SourceDestination() {
       presentationStyle="fullScreen"
       onRequestClose={dismiss}
     >
-      <SafeAreaView style={styles.screen} accessibilityViewIsModal>
-        <ScrollView
-          style={styles.scroll}
-          contentContainerStyle={styles.content}
-          testID="source-destination-scroll"
-        >
-          <Heading level={1}>Source record</Heading>
-          <Text
-            accessibilityLabel={url}
-            testID="source-destination-url"
-            style={styles.url}
+      <SafeAreaProvider>
+        <SafeAreaView style={styles.screen} accessibilityViewIsModal>
+          <ScrollView
+            style={styles.scroll}
+            contentContainerStyle={styles.content}
+            testID="source-destination-scroll"
           >
-            {url}
-          </Text>
-        </ScrollView>
-        <View style={styles.dismiss}>
-          <Button label="OK" onPress={dismiss} />
-        </View>
-      </SafeAreaView>
+            <Heading level={1}>Source record</Heading>
+            <Text
+              accessibilityLabel={url}
+              testID="source-destination-url"
+              style={styles.url}
+            >
+              {url}
+            </Text>
+          </ScrollView>
+          <View style={styles.dismiss}>
+            <Button label="OK" onPress={dismiss} />
+          </View>
+        </SafeAreaView>
+      </SafeAreaProvider>
     </Modal>
   );
 }
