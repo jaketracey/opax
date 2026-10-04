@@ -34,12 +34,19 @@ for (const path of Object.keys(snapshot.files)) {
   else assertAllowedPath(path);
   files.set(path, pinnedBytes(path));
 }
-// W13 edition reader: the pinned production response, served verbatim. With
-// OPAX_FIXTURE_EDITION=absent the route answers as the Worker does when no
-// edition is posted (404 edition_not_published), for the hidden-card journey.
+// W13 edition reader: the pinned production response, served verbatim with
+// the Worker's validators (appRead). OPAX_FIXTURE_EDITION picks the journal:
+// - pinned: the edition is posted;
+// - absent: no edition is posted (404 edition_not_published), journey 13b;
+// - withdrawn: the edition is served until the app revalidates it (a
+//   conditional GET, as a pull to refresh sends), then 404 from then on, as
+//   when the posted edition goes, journey 13c. Unconditional launches,
+//   including e2e.sh's warm-up, cannot withdraw it early.
+const editionModes = ['pinned', 'absent', 'withdrawn'];
 const editionMode = process.env.OPAX_FIXTURE_EDITION ?? 'pinned';
-if (editionMode !== 'pinned' && editionMode !== 'absent')
-  throw new Error('OPAX_FIXTURE_EDITION must be pinned or absent');
+if (!editionModes.includes(editionMode))
+  throw new Error('OPAX_FIXTURE_EDITION must be pinned, absent or withdrawn');
+let editionWithdrawn = editionMode === 'absent';
 const edition = responseBytes(snapshot, editionPath);
 const editionDate = decodeEdition(JSON.parse(edition.toString())).date;
 const manifest = JSON.parse(
@@ -120,7 +127,13 @@ export const server = createServer((request, response) => {
     let body = files.get(url.pathname);
     let cacheControl = 'public, max-age=300';
     const isEdition = url.pathname === editionPath;
-    if (isEdition && editionMode === 'absent') {
+    if (
+      isEdition &&
+      editionMode === 'withdrawn' &&
+      request.headers['if-none-match'] !== undefined
+    )
+      editionWithdrawn = true;
+    if (isEdition && editionWithdrawn) {
       status = 404;
       response.writeHead(status, {
         'Content-Type': 'application/json; charset=utf-8',

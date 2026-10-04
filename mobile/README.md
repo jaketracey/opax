@@ -264,8 +264,12 @@ photo catalog supplies an as-at date.
 **Daily edition (W13).** `todayEdition()` reads `GET /api/app/v1/edition/latest`
 (`editionPath` in `policy.ts`; `today` and exact dates are not allowed) through the
 same client and cache as the catalogs: fresh for its max-age, then a saved copy
-stays readable offline and is marked stale. A 404 (no posted edition) returns a
-`missing` block and the card is absent; it is never an error and never falls back.
+stays readable offline and is marked stale. A 404 (no posted edition) is
+authoritative absence: the read opts into `absence` on `ApiClient.get`, so the
+Worker's 404 body is decoded (`decodeEditionRead`) and saved in the edition's
+place with its own time and max-age. The block is `missing` and the card absent,
+then and after a relaunch or offline, until a later 200 replaces it. Any other
+404 body is unreadable data; other routes still treat a 404 as not found.
 `decodeEdition` is strict: the envelope and edition refuse any key the contract
 does not name, the link must be an `https://opax.com.au` member, bill, grants or
 report page, and slides keep their stored type-specific fields while the reader's
@@ -308,11 +312,16 @@ numeric ID for federal pay; ID-less federal pay records still join by name.
 One API response is pinned beside the catalogs: `responses` in
 `fixture-snapshot.json` records the W13 edition fetched once from production
 (`scripts/fixtures/edition-latest.json`, its SHA-256, size, fetch time and the
-reader code it was checked against). The fixture serves those exact bytes; prettier ignores the folder so the
-bytes never change. `OPAX_FIXTURE_EDITION=absent` makes the fixture answer the
-edition as the Worker does when none is posted (404 `edition_not_published`) for
-the no-edition journey, run on its own by path:
-`OPAX_FIXTURE_EDITION=absent scripts/e2e.sh <udid> .maestro/13b-today-no-edition.yaml`.
+reader code it was checked against). The fixture serves those exact bytes with the
+Worker's validators (weak `W/"<sha256>"`; weak, strong, listed or `*` matches give
+304); prettier ignores the folder so the bytes never change. `OPAX_FIXTURE_EDITION`
+picks the journal: `absent` answers as the Worker does when none is posted (404
+`edition_not_published`), and `withdrawn` serves the edition until the app
+revalidates it (a pull to refresh), then 404s from then on. Run each edition
+variant on its own, by path:
+`OPAX_FIXTURE_EDITION=absent scripts/e2e.sh <udid> .maestro/13b-today-no-edition.yaml`
+and
+`OPAX_FIXTURE_EDITION=withdrawn scripts/e2e.sh <udid> .maestro/13c-today-edition-withdrawn.yaml`.
 The `13` shorthand runs only `13-today.yaml`. To repin, fetch the route once and
 update the file, hash, size and fetch time together.
 

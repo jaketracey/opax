@@ -259,13 +259,12 @@ test('a production Host header is rejected even on the loopback socket', async (
   expect(output).toContain('Host is outside the loopback fixture boundary');
 });
 
-describe('the no-edition fixture', () => {
-  // A second server, as e2e.sh starts it for the hidden-card journey.
-  const absentPort = 8996;
-  let absent: ChildProcess;
-  let log = '';
-  const start = (mode: string, port: number) =>
-    spawn(process.execPath, ['--import', 'tsx', 'scripts/fixture-server.ts'], {
+// Second servers, as e2e.sh starts them for the edition journeys 13b and 13c.
+function startFixture(mode: string, port: number) {
+  const child = spawn(
+    process.execPath,
+    ['--import', 'tsx', 'scripts/fixture-server.ts'],
+    {
       cwd: resolve(__dirname, '..'),
       env: {
         ...process.env,
@@ -273,78 +272,119 @@ describe('the no-edition fixture', () => {
         OPAX_FIXTURE_EDITION: mode,
       },
       stdio: ['ignore', 'pipe', 'pipe'],
-    });
-  beforeAll(async () => {
-    absent = start('absent', absentPort);
-    await new Promise<void>((resolve, reject) => {
-      const timer = setTimeout(
-        () => reject(new Error('Fixture startup timeout')),
-        15000,
-      );
-      const receive = (chunk: Buffer) => {
-        log += chunk.toString();
-        if (log.includes('OPAX_FIXTURE_READY')) {
-          clearTimeout(timer);
-          resolve();
-        }
-      };
-      absent.stdout!.on('data', receive);
-      absent.stderr!.on('data', receive);
-      absent.once('exit', (code) => {
+    },
+  );
+  let log = '';
+  const ready = new Promise<void>((resolve, reject) => {
+    const timer = setTimeout(
+      () => reject(new Error('Fixture startup timeout')),
+      15000,
+    );
+    const receive = (chunk: Buffer) => {
+      log += chunk.toString();
+      if (log.includes('OPAX_FIXTURE_READY')) {
         clearTimeout(timer);
-        reject(new Error(`Fixture exited ${code}: ${log}`));
-      });
+        resolve();
+      }
+    };
+    child.stdout!.on('data', receive);
+    child.stderr!.on('data', receive);
+    child.once('exit', (code) => {
+      clearTimeout(timer);
+      reject(new Error(`Fixture exited ${code}: ${log}`));
     });
-  }, 20000);
-  afterAll(async () => {
-    if (absent && absent.exitCode === null)
-      await new Promise<void>((resolve) => {
-        absent.once('exit', () => resolve());
-        absent.kill('SIGTERM');
-      });
   });
+  // Exits are expected after the test; only startup failures reject.
+  ready.catch(() => undefined);
+  return {
+    child,
+    ready,
+    log: () => log,
+    stop: () =>
+      child.exitCode === null
+        ? new Promise<void>((resolve) => {
+            child.once('exit', () => resolve());
+            child.kill('SIGTERM');
+          })
+        : Promise.resolve(),
+  };
+}
+function getAt(
+  port: number,
+  path: string,
+  headers: Record<string, string> = {},
+): Promise<{ status: number; body: string; headers: Record<string, unknown> }> {
+  return new Promise((resolve, reject) => {
+    get({ hostname: '127.0.0.1', port, path, headers }, (response) => {
+      let body = '';
+      response.on('data', (chunk) => (body += String(chunk)));
+      response.on('end', () =>
+        resolve({
+          status: response.statusCode!,
+          body,
+          headers: response.headers,
+        }),
+      );
+    }).on('error', reject);
+  });
+}
+const notPublished = { error: 'edition_not_published', date: '2026-10-04' };
+
+describe('the no-edition fixture', () => {
+  const port = 8996;
+  let fixture: ReturnType<typeof startFixture>;
+  beforeAll(() => {
+    fixture = startFixture('absent', port);
+    return fixture.ready;
+  }, 20000);
+  afterAll(() => fixture?.stop());
   test('answers the edition as the Worker does when none is posted, without a boundary alarm', async () => {
-    expect(log).toContain('edition=absent');
-    const result = await new Promise<{
-      status: number;
-      body: string;
-      cache: unknown;
-    }>((resolve, reject) => {
-      get(
-        { hostname: '127.0.0.1', port: absentPort, path: editionPath },
-        (response) => {
-          let body = '';
-          response.on('data', (chunk) => (body += String(chunk)));
-          response.on('end', () =>
-            resolve({
-              status: response.statusCode!,
-              body,
-              cache: response.headers['cache-control'],
-            }),
-          );
-        },
-      ).on('error', reject);
-    });
+    expect(fixture.log()).toContain('edition=absent');
+    const result = await getAt(port, editionPath);
     expect(result.status).toBe(404);
-    expect(JSON.parse(result.body)).toEqual({
-      error: 'edition_not_published',
-      date: '2026-10-04',
-    });
-    expect(result.cache).toBe('public, max-age=60, must-revalidate');
+    expect(JSON.parse(result.body)).toEqual(notPublished);
+    expect(result.headers['cache-control']).toBe(
+      'public, max-age=60, must-revalidate',
+    );
+    expect(result.headers.etag).toBeUndefined();
     await new Promise((resolve) => setTimeout(resolve, 50));
-    expect(log).not.toContain('OUTSIDE_ALLOW_LIST');
-    expect(log).toContain(
+    expect(fixture.log()).not.toContain('OUTSIDE_ALLOW_LIST');
+    expect(fixture.log()).toContain(
       `"path":"${editionPath}","status":404,"allowed":true`,
     );
   });
-  test('refuses an unknown edition mode at startup', async () => {
-    const child = start('preview', 8995);
-    let output = '';
-    child.stderr!.on('data', (chunk) => (output += String(chunk)));
-    const code = await new Promise<number | null>((resolve) =>
-      child.once('exit', resolve),
-    );
-    expect(code).not.toBe(0);
-    expect(output).toContain('OPAX_FIXTURE_EDITION must be pinned or absent');
+});
+
+describe('the withdrawn-edition fixture', () => {
+  const port = 8994;
+  let fixture: ReturnType<typeof startFixture>;
+  beforeAll(() => {
+    fixture = startFixture('withdrawn', port);
+    return fixture.ready;
+  }, 20000);
+  afterAll(() => fixture?.stop());
+  test('serves the edition until the app revalidates it, then 404s for good', async () => {
+    expect(fixture.log()).toContain('edition=withdrawn');
+    // e2e.sh's warm-up launch and the journey's own launch both get it.
+    const first = await getAt(port, editionPath);
+    expect(first.status).toBe(200);
+    expect((await getAt(port, editionPath)).status).toBe(200);
+    // A pull to refresh revalidates with the saved validator.
+    const refreshed = await getAt(port, editionPath, {
+      'If-None-Match': String(first.headers.etag),
+    });
+    expect(refreshed.status).toBe(404);
+    expect(JSON.parse(refreshed.body)).toEqual(notPublished);
+    // A relaunch after the absence's minute asks again: still gone.
+    expect((await getAt(port, editionPath)).status).toBe(404);
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(fixture.log()).not.toContain('OUTSIDE_ALLOW_LIST');
   });
+});
+
+test('the fixture refuses an unknown edition mode at startup', async () => {
+  const fixture = startFixture('preview', 8995);
+  await expect(fixture.ready).rejects.toThrow(
+    'OPAX_FIXTURE_EDITION must be pinned, absent or withdrawn',
+  );
 });
