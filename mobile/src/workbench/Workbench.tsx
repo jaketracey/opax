@@ -58,6 +58,8 @@ export const WORKBENCH_MARKER = 'OPAX_DESIGN_WORKBENCH';
 // Every value here is real public OPAX data: the pinned roster, the exports
 // at 8f1305e3 quoted in docs/IOS-UX.md, /discovery.json (generated
 // 21 September 2026) and the W12 example in docs/IOS-API-CONTRACT.md.
+// The example records drop the export's internal row number ("local record
+// 643745"), which means nothing to a reader, and name AusTender as it does.
 const westpac: Lead = {
   id: 'donor_contract_overlap:e730d27e99cf3064',
   title: 'Westpac Banking Corporation appears in party receipts and contracts',
@@ -72,14 +74,14 @@ const westpac: Lead = {
   evidence: [
     {
       label:
-        'Westpac Banking Corporation → Australian Labor Party (ALP): $1,803.00 · FY 2024-25 · AEC annual receipt · local record 643745',
+        'Westpac Banking Corporation → Australian Labor Party (ALP): $1,803.00 · FY 2024-25 · AEC annual receipt',
       url: 'https://transparency.aec.gov.au/',
       link_scope: 'source_register',
       record_id: '643745',
     },
     {
       label:
-        'Australian Office of Financial Management → Westpac Banking Corporation: $4,537,500.00 · starts 2017-02-06 · austender · record CN3407266',
+        'Australian Office of Financial Management → Westpac Banking Corporation: $4,537,500.00 · starts 2017-02-06 · AusTender · record CN3407266',
       url: 'https://www.tenders.gov.au/',
       link_scope: 'source_register',
       record_id: 'CN3407266',
