@@ -174,7 +174,7 @@ image sources, which the transport gate checks.
   You"). `kind="record"` for a stable page for this record;
   `kind="register"` for a register's home or search page, with the ID in
   `record` ("AusTender register · record CN3407266"). E2E builds show the
-  destination in an alert instead of opening a browser.
+  destination in a scrollable local view instead of opening a browser.
 - `OpaxWebLink`: a web-only OPAX page (community, the money map, Methods),
   opened in Safari with the "Opens on opax.com.au" cue. `canonicalUrl` checks
   the path raw, parses it and requires the configured origin and the same
