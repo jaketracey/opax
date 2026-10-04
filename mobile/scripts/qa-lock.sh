@@ -22,7 +22,6 @@
 # `sleep 20`, so host tooling can tell the two waits apart.
 
 QA_LOAD_LIMIT=${OPAX_LOAD_LIMIT:-140}
-QA_LOAD_RESUME=${OPAX_LOAD_RESUME:-100}
 QA_PASTE_WAIT_SECONDS=${OPAX_PASTE_WAIT_SECONDS:-7200}
 PASTE_LOCK_HELD=0
 PASTE_LOCK_TOKEN=
@@ -48,15 +47,16 @@ qa_load5() {
   fi
 }
 
-# Returns once the load is under the limit; at or above it, waits for the
-# resume level. Fails at the epoch-seconds deadline in $1 (default one hour).
+# Returns once the five-minute load is under the limit (140). There is no lower
+# resume level: waiting for 100 starved runs for an hour on the shared host.
+# Fails at the epoch-seconds deadline in $1 (default one hour).
 qa_wait_for_capacity() {
   local deadline=${1:-$(($(date +%s) + 3600))} load
   qa_capacity_configured || return 0
   load=$(qa_load5)
   [ "$load" -ge "$QA_LOAD_LIMIT" ] || return 0
-  qa_log "Shared load is $load; waiting for it to fall below $QA_LOAD_RESUME (no lock held)."
-  until [ "$load" -lt "$QA_LOAD_RESUME" ]; do
+  qa_log "Shared load is $load; waiting for it to fall below $QA_LOAD_LIMIT (no lock held)."
+  until [ "$load" -lt "$QA_LOAD_LIMIT" ]; do
     [ "$(date +%s)" -lt "$deadline" ] || { qa_log "Capacity wait expired; retry later."; return 1; }
     sleep "${OPAX_CAPACITY_POLL_SECONDS:-20}"
     load=$(qa_load5)

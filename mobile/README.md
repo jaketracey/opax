@@ -69,8 +69,8 @@ invalid or older candidates. The selected version is saved in `java.log`.
 | `OPAX_ALLOWED_UDIDS`      | Space-separated simulator allow-list                                                  | Accept the requested simulator, with a warning |
 | `OPAX_PASTE_WAIT_SECONDS` | Deadline for the capacity and pasteboard lock waits together                          | 7200                                           |
 
-Configured capacity checks run before builds and devices; a load above 140 waits
-for below 100. The e2e runner starts only its own fixture, installs the Release app
+Configured capacity checks run before builds and devices; a five-minute load of
+140 or more waits until it is under 140. The e2e runner starts only its own fixture, installs the Release app
 without Metro, saves Maestro/screenshots/request logs in ignored `private/qa/<run>/`,
 restores text size/appearance and shuts down on success or failure. Never commit QA evidence.
 `OPAX_QA_RUN` names evidence, `OPAX_QA_APP` selects a prepared app. No audio flows.

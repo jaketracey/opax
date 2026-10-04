@@ -12,7 +12,7 @@ cleanup() {
   /bin/rm -rf "$SCRATCH"
 }
 trap cleanup EXIT
-unset OPAX_CAPACITY_CMD OPAX_PASTE_WAIT_SECONDS OPAX_LOAD_LIMIT OPAX_LOAD_RESUME QA_LOCK_LOG QA_LOCK_SCRIPT
+unset OPAX_CAPACITY_CMD OPAX_PASTE_WAIT_SECONDS OPAX_LOAD_LIMIT QA_LOCK_LOG QA_LOCK_SCRIPT
 export OPAX_PASTE_LOCK="$LOCK" OPAX_LOAD_PROBE="bash '$SCRATCH/probe.sh'"
 export OPAX_CAPACITY_POLL_SECONDS=0.2 OPAX_PASTE_POLL_SECONDS=0.2 OPAX_PASTE_LOG_SECONDS=1
 case "$OPAX_PASTE_LOCK" in "$SCRATCH"/*) ;; *) echo "Refusing a lock outside the scratch directory" >&2; exit 1 ;; esac
@@ -59,14 +59,16 @@ wait_for() {
 release_holder() { touch "$SCRATCH/$1.release"; wait_for "$SCRATCH/$1.released" || fail "$1 did not release"; }
 dead_pid() { bash -c 'echo $$' ; }
 
-# 1. Capacity first: no lock is taken while the load is at or above the limit.
-loads 150 150 120 99 99
+# 1. Capacity first: no lock is taken while the load is at or above the limit,
+#    and the wait ends as soon as the load is under it (no lower resume level).
+loads 150 140 139 130
 start_holder capacity
 wait_for "$SCRATCH/capacity.acquired" || fail "holder never acquired after the load fell"
-grep -q 'waiting for it to fall below 100 (no lock held)' "$SCRATCH/capacity.log" || fail "no capacity wait logged"
+grep -q 'waiting for it to fall below 140 (no lock held)' "$SCRATCH/capacity.log" || fail "no capacity wait logged"
 ! awk '$1 >= 140 && $2 == "held"' "$SCRATCH/trace" | grep -q . || fail "load was above the limit while the lock was held"
-grep -q ' free$' "$SCRATCH/trace" && tail -n 1 "$SCRATCH/trace" | grep -q '^99 held$' || fail "load not rechecked after taking the lock"
-pass "waits for capacity before taking the lock, then rechecks under it"
+expected=$'150 free\n140 free\n139 free\n130 held'
+[ "$(cat "$SCRATCH/trace")" = "$expected" ] || fail "capacity wait or recheck out of order"
+pass "waits for load under 140 before taking the lock, then rechecks under it"
 
 # 2. Owner metadata names the holder without private paths or secrets.
 holder=$(cat "$SCRATCH/capacity.acquired")

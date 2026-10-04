@@ -7,5 +7,5 @@ if [ -z "${OPAX_CAPACITY_CMD:-}" ]; then
   exit 0
 fi
 bash -c "$OPAX_CAPACITY_CMD"
-# At or above the limit, wait for the resume level (one hour at most).
+# At or above the limit, wait until the load is under it (one hour at most).
 qa_wait_for_capacity "$(($(date +%s) + 3600))"
