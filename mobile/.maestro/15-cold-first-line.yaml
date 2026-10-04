@@ -1,0 +1,28 @@
+appId: au.com.opax.app
+name: 15 Cold launch draws Today's first line under the title
+---
+# Run on its own, by path, at AX5 (and at the standard size as a control):
+#   OPAX_CONTENT_SIZE=accessibility-extra-extra-extra-large \
+#     scripts/e2e.sh <udid> .maestro/15-cold-first-line.yaml
+# Build 2 started Today's native refresh control on mount, which left a cold
+# launch's content 60pt high under the large title, so "OPAX is" sat behind
+# it. A cold launch, with no scroll before the checks, must start the
+# independence line with those words, below the title.
+- launchApp:
+    clearState: true
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: today-screen-message
+    timeout: 30000
+- waitForAnimationToEnd
+- assertVisible:
+    id: today-screen-message
+    text: OPAX is independent and non-partisan\..*
+# Maestro's "below" compares top edges: the line starts lower than the title.
+- assertVisible:
+    id: today-screen-message
+    below:
+      text: Today
+      index: 0
+- takeScreenshot: ${EVIDENCE}/15-cold-today-first-line
