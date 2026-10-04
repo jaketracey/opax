@@ -31,7 +31,7 @@ name: 12 Local suggestions and the four catalog search kinds
     element:
       id: search-result-anthony-albanese
     timeout: 90000
-    visibilityPercentage: 1
+    visibilityPercentage: 80
     centerElement: true
 - takeScreenshot: ${EVIDENCE}/12-people
 - scrollUntilVisible:
@@ -54,7 +54,7 @@ name: 12 Local suggestions and the four catalog search kinds
     element:
       id: search-result-anthony-albanese
     timeout: 90000
-    visibilityPercentage: 1
+    visibilityPercentage: 80
     centerElement: true
 - takeScreenshot: ${EVIDENCE}/12-interests
 - scrollUntilVisible:
@@ -76,7 +76,7 @@ name: 12 Local suggestions and the four catalog search kinds
     element:
       id: search-result-anthony-albanese
     timeout: 90000
-    visibilityPercentage: 1
+    visibilityPercentage: 80
     centerElement: true
 - takeScreenshot: ${EVIDENCE}/12-pay
 - scrollUntilVisible:
@@ -113,8 +113,9 @@ name: 12 Local suggestions and the four catalog search kinds
     element:
       id: search-result-anthony-albanese
     timeout: 90000
-    visibilityPercentage: 1
+    visibilityPercentage: 80
     centerElement: true
+# Keep most of this tall row in view: its default tap is at its center.
 - takeScreenshot: ${EVIDENCE}/12-expenses
 - tapOn:
     id: search-result-anthony-albanese
