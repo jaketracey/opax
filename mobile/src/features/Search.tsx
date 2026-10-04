@@ -183,7 +183,7 @@ export default function Search() {
       {error ? (
         <Group>
           {isOffline(error) && !result ? (
-            <OfflineBanner cached={false} />
+            <OfflineBanner cached={false} testID="search-offline-uncached" />
           ) : null}
           <ErrorState
             message={errorMessage(error, 'search')}

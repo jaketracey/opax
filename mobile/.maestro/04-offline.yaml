@@ -47,3 +47,29 @@ name: 04 Read saved public catalogs with the fixture stopped
       id: person-electorate
 - assertVisible: Grayndler
 - takeScreenshot: ${EVIDENCE}/04-offline-profile
+# A submitted search has no disk fallback, even though catalogs remain saved.
+- tapOn: Search
+- scrollUntilVisible:
+    element:
+      id: search-input
+    direction: UP
+- tapOn:
+    id: search-input
+- eraseText
+- inputText: offline submitted search
+- scrollUntilVisible:
+    element:
+      id: search-submit
+    timeout: 90000
+- tapOn:
+    id: search-submit
+- scrollUntilVisible:
+    element:
+      id: search-offline-uncached
+    timeout: 90000
+- assertVisible: This record is not saved on this iPhone yet\. It will load when you are back online\.
+- assertVisible:
+    id: search-error
+- assertNotVisible:
+    id: search-result-.*
+- takeScreenshot: ${EVIDENCE}/04-offline-submitted-search
