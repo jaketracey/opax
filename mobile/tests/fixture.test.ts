@@ -154,6 +154,55 @@ test('serves the pinned production edition byte for byte, with its cache policy'
   });
   expect(conditional.status).toBe(304);
 });
+// The Worker's appRead: ETag W/"<sha256>"; If-None-Match matches the weak or
+// strong form, within a list, or "*", and answers 304 with the same headers.
+const editionTag = `W/"${snapshot.responses[editionPath].sha256}"`;
+test("the edition carries the Worker's weak validator and content type", async () => {
+  const result = await request(editionPath);
+  expect(result.headers.etag).toBe(editionTag);
+  expect(result.headers['content-type']).toBe(
+    'application/json; charset=utf-8',
+  );
+});
+test.each([
+  ['the weak tag', editionTag],
+  ['the strong form', editionTag.slice(2)],
+  ['a list', `"other", ${editionTag}`],
+  ['a list with the strong form', `W/"other",${editionTag.slice(2)}`],
+  ['any tag', '*'],
+])(
+  'If-None-Match with %s answers 304, as the Worker does',
+  async (_name, tag) => {
+    const result = await request(editionPath, { 'If-None-Match': tag });
+    expect(result.status).toBe(304);
+    expect(result.body).toBe('');
+    expect(result.headers.etag).toBe(editionTag);
+    expect(result.headers['cache-control']).toBe(
+      snapshot.responses[editionPath].cacheControl,
+    );
+  },
+);
+test.each(['"other"', 'W/"other"', 'W/"other", "else"'])(
+  'If-None-Match %s that names another version gets the full edition',
+  async (tag) => {
+    const result = await request(editionPath, { 'If-None-Match': tag });
+    expect(result.status).toBe(200);
+    expect(createHash('sha256').update(result.body).digest('hex')).toBe(
+      snapshot.responses[editionPath].sha256,
+    );
+  },
+);
+test('catalog files keep their strong validators', async () => {
+  const roster = await request('/parliamentarians.json');
+  expect(String(roster.headers.etag)).toMatch(/^"[a-f0-9]{64}"$/);
+  expect(
+    (
+      await request('/parliamentarians.json', {
+        'If-None-Match': `W/${String(roster.headers.etag)}`,
+      })
+    ).status,
+  ).toBe(200);
+});
 test('slug API projection validates its full envelope', async () => {
   expect(
     decodeSlugs(JSON.parse((await request('/api/person-slugs')).body)).slugs[

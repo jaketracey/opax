@@ -119,10 +119,11 @@ export const server = createServer((request, response) => {
     const url = new URL(path, `http://127.0.0.1:${port}`);
     let body = files.get(url.pathname);
     let cacheControl = 'public, max-age=300';
-    if (url.pathname === editionPath && editionMode === 'absent') {
+    const isEdition = url.pathname === editionPath;
+    if (isEdition && editionMode === 'absent') {
       status = 404;
       response.writeHead(status, {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json; charset=utf-8',
         'Cache-Control': 'public, max-age=60, must-revalidate',
       });
       response.end(
@@ -130,7 +131,7 @@ export const server = createServer((request, response) => {
       );
       return;
     }
-    if (url.pathname === editionPath) {
+    if (isEdition) {
       body = edition;
       cacheControl = snapshot.responses[editionPath].cacheControl;
     } else if (url.pathname === '/api/person-slugs') {
@@ -197,14 +198,27 @@ export const server = createServer((request, response) => {
       cacheControl = 'no-store';
     }
     if (!body) throw new Error('Path not in the pinned journey snapshot');
-    const etag = `"${createHash('sha256').update(body).digest('hex')}"`;
+    const opaque = `"${createHash('sha256').update(body).digest('hex')}"`;
+    // The edition answers as appRead does: a weak validator, matched in its
+    // weak or strong form, within a list, or by "*".
+    const etag = isEdition ? `W/${opaque}` : opaque;
+    const validators = String(request.headers['if-none-match'] ?? '')
+      .split(',')
+      .map((tag) => tag.trim().replace(/^W\//, ''));
+    const unchanged = isEdition
+      ? validators.includes('*') || validators.includes(opaque)
+      : request.headers['if-none-match'] === etag;
     response.setHeader(
       'Content-Type',
-      url.pathname.endsWith('.webp') ? 'image/webp' : 'application/json',
+      url.pathname.endsWith('.webp')
+        ? 'image/webp'
+        : isEdition
+          ? 'application/json; charset=utf-8'
+          : 'application/json',
     );
     response.setHeader('Cache-Control', cacheControl);
     response.setHeader('ETag', etag);
-    if (request.headers['if-none-match'] === etag) {
+    if (unchanged) {
       status = 304;
       response.writeHead(status);
       response.end();
