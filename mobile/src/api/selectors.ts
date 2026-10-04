@@ -1,7 +1,9 @@
 import type {
+  AppEdition,
   BillDetail,
   BillIndex,
   Corpus,
+  EditionKind,
   ElectorateDetail,
   ElectorateIndex,
   ExpenseCategories,
@@ -501,6 +503,98 @@ export function todayFor(
     bills: recentBillsFor(bills, limit),
     declarations: recentDeclarationsFor(interests, limit),
   };
+}
+// The composer's own words for each kind (portal/src/daily-post.ts covers).
+const editionKindLabels: Record<EditionKind, string> = {
+  politician: 'Parliamentarian',
+  bill: 'Bill',
+  grant: 'Grant award',
+  topic: 'Topic',
+  program: 'Grant program',
+  largest: 'Largest grants',
+};
+// Where the edition labels its own text as a model's.
+const machineNote = /machine-written|written by a model/i;
+// The web's bill-summary attribution when a record carries none
+// (portal/public/app.js): a bill edition's text is its stored model summary.
+export const billSummaryAttribution =
+  'Written by a model from the explanatory memorandum; not the record.';
+/**
+ * A model's text and its attribution, in the edition's own words. A bill's
+ * summary slide carries the record's stored attribution (the web's bill-page
+ * wording); then the caption's own "Machine-written …" line; a bill with
+ * neither takes the web's default. Other kinds are labelled only when the
+ * edition says so.
+ */
+function editionAttribution(edition: AppEdition['edition']): string | null {
+  const summary = edition.slides
+    ?.flatMap((slide) =>
+      slide.type === 'list' && slide.note?.trim() ? [slide.note.trim()] : [],
+    )
+    .find((note) => edition.kind === 'bill' || machineNote.test(note));
+  const caption = (edition.caption ?? '')
+    .split(/\n{2,}/)
+    .map((paragraph) => paragraph.trim())
+    .find((paragraph) => /^machine-written\b/i.test(paragraph));
+  return (
+    summary ??
+    caption ??
+    (edition.kind === 'bill' ? billSummaryAttribution : null)
+  );
+}
+export interface EditionView {
+  /** The journal date: the newest posted edition on or before today. */
+  date: string;
+  kind: EditionKind;
+  kindLabel: string;
+  title: string;
+  /** The post's own paragraphs, verbatim, without its link line. */
+  paragraphs: string[];
+  /** The page on the public site (path and query; any fragment dropped). */
+  path: string;
+  /** Set when the edition's text is a model's, with its own attribution. */
+  machineWritten: { attribution: string } | null;
+  /** The closing slide's source rows and qualifications, verbatim. */
+  sourceRows: string[];
+}
+/**
+ * The card's view of a frozen edition. Nothing is composed or reworded: the
+ * paragraphs are the post's own text, less two repeats of what the card shows
+ * in full (the trailing link, and the title clipped with "…" to fit a post).
+ */
+export function editionFor({ edition }: AppEdition) {
+  const link = new URL(edition.url);
+  const paragraphs = edition.text
+    .split(/\n{2,}/)
+    .map((paragraph) => paragraph.trim())
+    .filter(
+      (paragraph) =>
+        paragraph &&
+        paragraph !== edition.url &&
+        !(
+          paragraph.endsWith('…') &&
+          paragraph.length > 1 &&
+          edition.title.startsWith(paragraph.slice(0, -1).trimEnd())
+        ),
+    );
+  const attribution = editionAttribution(edition);
+  const closing = edition.slides?.at(-1);
+  const view: EditionView = {
+    date: edition.date,
+    kind: edition.kind,
+    kindLabel: editionKindLabels[edition.kind],
+    title: edition.title,
+    paragraphs,
+    path: `${link.pathname}${link.search}`,
+    machineWritten: attribution ? { attribution } : null,
+    sourceRows:
+      closing?.type === 'source'
+        ? closing.rows.map((row) => row.trim()).filter(Boolean)
+        : [],
+  };
+  return block(view, edition.date, [
+    { label: 'OPAX daily edition', url: view.path },
+  ]);
 }
 type BillIndexRow = BillIndex['bills'][number];
 // Folded search text and display rows are computed once per decoded index

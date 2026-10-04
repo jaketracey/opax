@@ -31,6 +31,11 @@ const bucket = (url: string) => (isSearch(url) ? 'search' : 'catalog');
 export class CatalogCache {
   private queue: Promise<unknown> = Promise.resolve();
   private searches = new Map<string, CacheEntry>();
+  // Parsed catalog snapshots share the disk cache's entry/byte bound. Expiry
+  // remains ApiClient's decision; retaining a body never makes it fresh.
+  private catalogs = new Map<string, CacheEntry>();
+  private catalogBytes = new Map<string, number>();
+  private reads = new Map<string, Promise<CacheEntry | undefined>>();
   private index?: CacheIndexEntry[];
   private indexLoad?: Promise<CacheIndexEntry[]>;
   constructor(
@@ -65,11 +70,61 @@ export class CatalogCache {
       });
     return this.indexLoad;
   }
+  private readCatalog(url: string): Promise<CacheEntry | undefined> {
+    const existing = this.catalogs.get(url);
+    if (existing) {
+      this.catalogs.delete(url);
+      this.catalogs.set(url, existing);
+      return Promise.resolve(existing);
+    }
+    let pending = this.reads.get(url);
+    if (!pending) {
+      pending = this.store
+        .read(url)
+        .catch(() => undefined)
+        .then((entry) => {
+          // A write/eviction can supersede an in-flight disk read.
+          if (this.reads.get(url) === pending) {
+            this.reads.delete(url);
+            if (entry) this.remember(entry);
+          }
+          return entry;
+        });
+      this.reads.set(url, pending);
+    }
+    return pending;
+  }
+  private remember(entry: CacheEntry) {
+    const bytes = this.index?.find((item) => item.url === entry.url)?.bytes;
+    this.forget(entry.url);
+    if (bytes === undefined || bytes > this.maxBytes || this.maxEntries < 1)
+      return;
+    let total = [...this.catalogBytes.values()].reduce(
+      (sum, size) => sum + size,
+      0,
+    );
+    while (
+      this.catalogs.size >= this.maxEntries ||
+      total + bytes > this.maxBytes
+    ) {
+      const oldest = this.catalogs.keys().next().value;
+      if (oldest === undefined) break;
+      total -= this.catalogBytes.get(oldest) ?? 0;
+      this.forget(oldest);
+    }
+    this.catalogs.set(entry.url, entry);
+    this.catalogBytes.set(entry.url, bytes);
+  }
+  private forget(url: string) {
+    this.catalogs.delete(url);
+    this.catalogBytes.delete(url);
+    this.reads.delete(url);
+  }
   async get(url: string): Promise<CacheEntry | undefined> {
     await this.queue;
     if (isSearch(url)) return this.searches.get(url);
     if (!(await this.loadIndex()).some((entry) => entry.url === url)) return;
-    return this.store.read(url).catch(() => undefined);
+    return this.readCatalog(url);
   }
   // Serialized compare-and-write; search queries and bodies stay in memory. A caller
   // receives the retained entry when its response loses a validation/date race.
@@ -87,7 +142,7 @@ export class CatalogCache {
         : await this.loadIndex();
       const current = memoryOnly
         ? this.searches.get(entry.url)
-        : await this.store.read(entry.url).catch(() => undefined);
+        : await this.readCatalog(entry.url);
       if (current) {
         const currentDate = Date.parse(current.asOf ?? '');
         const incomingDate = Date.parse(entry.asOf ?? '');
@@ -139,12 +194,17 @@ export class CatalogCache {
           if (!kept.includes(item)) this.searches.delete(item.url);
         return entry;
       }
+      this.forget(entry.url);
       await this.store.write(entry);
       const next = [...kept, ...index.filter((item) => item.bucket !== group)];
       for (const item of candidates)
-        if (!kept.includes(item)) await this.store.remove(item.url);
+        if (!kept.includes(item)) {
+          this.forget(item.url);
+          await this.store.remove(item.url);
+        }
       await this.store.writeIndex(next);
       this.index = next;
+      if (kept.some((item) => item.url === entry.url)) this.remember(entry);
       return entry;
     });
     this.queue = task.catch(() => undefined);

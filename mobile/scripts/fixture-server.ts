@@ -1,12 +1,18 @@
 // Offline, data-only server. No Worker import, proxy, fetch, email or model path.
+import { createVoiceFixture } from './voice-fixture';
 import { createServer } from 'node:http';
 import { createHash } from 'node:crypto';
 import snapshot from './fixture-snapshot.json';
-import { assertAllowedPath, type CatalogKind } from '../src/api/policy';
+import {
+  assertAllowedPath,
+  editionPath,
+  type CatalogKind,
+} from '../src/api/policy';
 import { assertPortraitPath } from '../src/api/portrait-policy';
-import { fixtureBytes } from '../tests/fixture-bytes';
+import { fixtureBytes, responseBytes } from '../tests/fixture-bytes';
 import { catalogSearchRows } from '../src/api/catalog-search';
 import {
+  decodeEdition,
   decodePay,
   decodeExpenses,
   decodeInterest,
@@ -18,9 +24,11 @@ import type {
   Manifest,
   CatalogRecord,
 } from '../src/api/catalogs';
-const port = Number(process.env.OPAX_FIXTURE_PORT ?? 8910);
-if (!Number.isInteger(port) || port < 8900 || port > 8999)
-  throw new Error('Fixture port must be 8900–8999');
+let port = Number(process.env.OPAX_FIXTURE_PORT ?? 8910);
+if (!Number.isInteger(port) || (port !== 0 && (port < 8900 || port > 8999)))
+  throw new Error(
+    'Fixture port must be 8900–8999 or 0 (OS-assigned loopback port)',
+  );
 const files = new Map<string, Buffer>();
 const pinnedBytes = fixtureBytes(snapshot);
 for (const path of Object.keys(snapshot.files)) {
@@ -29,6 +37,21 @@ for (const path of Object.keys(snapshot.files)) {
   else assertAllowedPath(path);
   files.set(path, pinnedBytes(path));
 }
+// W13 edition reader: the pinned production response, served verbatim with
+// the Worker's validators (appRead). OPAX_FIXTURE_EDITION picks the journal:
+// - pinned: the edition is posted;
+// - absent: no edition is posted (404 edition_not_published), journey 13b;
+// - withdrawn: the edition is served until the app revalidates it (a
+//   conditional GET, as a pull to refresh sends), then 404 from then on, as
+//   when the posted edition goes, journey 13c. Unconditional launches,
+//   including e2e.sh's warm-up, cannot withdraw it early.
+const editionModes = ['pinned', 'absent', 'withdrawn'];
+const editionMode = process.env.OPAX_FIXTURE_EDITION ?? 'pinned';
+if (!editionModes.includes(editionMode))
+  throw new Error('OPAX_FIXTURE_EDITION must be pinned, absent or withdrawn');
+let editionWithdrawn = editionMode === 'absent';
+const edition = responseBytes(snapshot, editionPath);
+const editionDate = decodeEdition(JSON.parse(edition.toString())).date;
 const manifest = JSON.parse(
   files.get('/electorates/manifest.json')!.toString(),
 ) as Manifest;
@@ -80,7 +103,9 @@ const normalize = (value: string) =>
     .normalize('NFKD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase();
-export const server = createServer((request, response) => {
+const bill = JSON.parse(files.get('/bills/au-federal-r7534.json')!.toString());
+let voice: Awaited<ReturnType<typeof createVoiceFixture>> | undefined;
+export const server = createServer(async (request, response) => {
   let status = 200;
   let loud = false;
   const path = request.url ?? '/';
@@ -100,13 +125,40 @@ export const server = createServer((request, response) => {
   try {
     if (request.headers.host !== `127.0.0.1:${port}`)
       throw new Error('Host is outside the loopback fixture boundary');
+    if (request.socket.remoteAddress !== '127.0.0.1')
+      throw new Error('Peer is outside the loopback boundary');
+    if (await voice?.route(request, response)) {
+      status = response.statusCode;
+      return;
+    }
     if (request.method !== 'GET') throw new Error('Only GET is allowed');
     if (path.endsWith('.webp')) assertPortraitPath(path);
     else assertAllowedPath(path);
     const url = new URL(path, `http://127.0.0.1:${port}`);
     let body = files.get(url.pathname);
     let cacheControl = 'public, max-age=300';
-    if (url.pathname === '/api/person-slugs') {
+    const isEdition = url.pathname === editionPath;
+    if (
+      isEdition &&
+      editionMode === 'withdrawn' &&
+      request.headers['if-none-match'] !== undefined
+    )
+      editionWithdrawn = true;
+    if (isEdition && editionWithdrawn) {
+      status = 404;
+      response.writeHead(status, {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Cache-Control': 'public, max-age=60, must-revalidate',
+      });
+      response.end(
+        JSON.stringify({ error: 'edition_not_published', date: editionDate }),
+      );
+      return;
+    }
+    if (isEdition) {
+      body = edition;
+      cacheControl = snapshot.responses[editionPath].cacheControl;
+    } else if (url.pathname === '/api/person-slugs') {
       body = Buffer.from(
         JSON.stringify({ generated: roster.meta.generated, slugs }),
       );
@@ -170,14 +222,27 @@ export const server = createServer((request, response) => {
       cacheControl = 'no-store';
     }
     if (!body) throw new Error('Path not in the pinned journey snapshot');
-    const etag = `"${createHash('sha256').update(body).digest('hex')}"`;
+    const opaque = `"${createHash('sha256').update(body).digest('hex')}"`;
+    // The edition answers as appRead does: a weak validator, matched in its
+    // weak or strong form, within a list, or by "*".
+    const etag = isEdition ? `W/${opaque}` : opaque;
+    const validators = String(request.headers['if-none-match'] ?? '')
+      .split(',')
+      .map((tag) => tag.trim().replace(/^W\//, ''));
+    const unchanged = isEdition
+      ? validators.includes('*') || validators.includes(opaque)
+      : request.headers['if-none-match'] === etag;
     response.setHeader(
       'Content-Type',
-      url.pathname.endsWith('.webp') ? 'image/webp' : 'application/json',
+      url.pathname.endsWith('.webp')
+        ? 'image/webp'
+        : isEdition
+          ? 'application/json; charset=utf-8'
+          : 'application/json',
     );
     response.setHeader('Cache-Control', cacheControl);
     response.setHeader('ETag', etag);
-    if (request.headers['if-none-match'] === etag) {
+    if (unchanged) {
       status = 304;
       response.writeHead(status);
       response.end();
@@ -200,15 +265,30 @@ export const server = createServer((request, response) => {
     );
   }
 });
-// Future fake voice relay hook: replace this rejection with a local, explicit upgrade handler.
-server.on('upgrade', (request, socket) => {
+// Authenticated, numeric-loopback fake relay. Never proxies a provider.
+server.on('upgrade', (request, socket, head) => {
+  if (voice?.upgrade(request, socket, head)) return;
   console.error(`OUTSIDE_ALLOW_LIST UPGRADE ${request.url}`);
   socket.end('HTTP/1.1 404 Not Found\r\n\r\n');
 });
-server.listen(port, '127.0.0.1', () =>
+server.listen(port, '127.0.0.1', async () => {
+  port = (server.address() as { port: number }).port;
+  try {
+    voice = await createVoiceFixture(port, {
+      title: bill.title,
+      path: '/bill/au-federal-r7534',
+    });
+  } catch (error) {
+    console.error(
+      `VOICE_FIXTURE_DISABLED: ${error instanceof Error ? error.message : 'contract validation failed'}`,
+    );
+  }
   console.log(
-    `OPAX_FIXTURE_READY port=${port} files=${files.size} offline=true`,
-  ),
-);
+    `OPAX_FIXTURE_READY port=${port} files=${files.size} edition=${editionMode} offline=true`,
+  );
+});
 for (const signal of ['SIGTERM', 'SIGINT'] as const)
-  process.on(signal, () => server.close(() => process.exit(0)));
+  process.on(signal, () => {
+    voice?.close();
+    server.close(() => process.exit(0));
+  });

@@ -10,7 +10,8 @@ if [ "${1:-}" != "--inside-gate" ]; then
   exit
 fi
 mkdir -p private/qa build/production-bundle
-./node_modules/.bin/expo prebuild --platform ios --no-install > private/qa/release-prebuild.log 2>&1
+./node_modules/.bin/expo prebuild --platform ios --clean > private/qa/release-prebuild.log 2>&1
 ./node_modules/.bin/tsx scripts/native-config.ts
+./node_modules/.bin/tsx scripts/voice-pod-policy.ts
 ./node_modules/.bin/expo export --platform ios --output-dir build/production-bundle --clear > private/qa/release-export.log 2>&1
 ./node_modules/.bin/tsx scripts/qa-static.ts --production-bundle build/production-bundle

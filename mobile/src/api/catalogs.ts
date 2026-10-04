@@ -5,7 +5,7 @@ import {
   personSlugForResult,
   type PersonProfile,
 } from './person-identity';
-import type { CatalogKind } from './policy';
+import { editionPath, type CatalogKind } from './policy';
 import * as decode from './catalog-decoders';
 import type { Manifest } from './catalog-decoders';
 import { billKey, interestKey, personId, nameKey, type PersonId } from './ids';
@@ -19,7 +19,9 @@ import {
   billFor,
   billsFor,
   coverageFor,
+  editionFor,
   type Block,
+  type EditionView,
   type ProfileCatalogs,
 } from './selectors';
 export * from './catalog-decoders';
@@ -189,6 +191,44 @@ export class Catalogs {
       ),
     ]);
     return { bills, declarations };
+  }
+  /**
+   * W13: the newest posted daily edition, through the catalog cache like every
+   * other read, so a saved copy stays readable offline and is marked stale.
+   * A 404 is authoritative absence: it is saved in the edition's place (with
+   * its own time and max-age), so the block is `missing` and the card absent,
+   * now, after a relaunch and offline. Nothing is composed when a read fails.
+   */
+  async todayEdition(refresh = false): Promise<Block<EditionView>> {
+    const empty = { sources: [], asAt: null, stale: false, savedAt: null };
+    try {
+      const record = await this.client.get(
+        editionPath,
+        decode.decodeEditionRead,
+        refresh,
+        { absence: true },
+      );
+      if ('absent' in record.data)
+        return { ...empty, data: null, status: 'missing' };
+      return {
+        ...editionFor(record.data),
+        stale: record.stale,
+        savedAt: record.savedAt,
+      };
+    } catch (e) {
+      return {
+        ...empty,
+        data: null,
+        status: 'error',
+        error:
+          e instanceof ApiError
+            ? e
+            : new ApiError(
+                'invalid-data',
+                'The daily edition could not be read.',
+              ),
+      };
+    }
   }
   async directory() {
     const [manifest, roster, slugs] = await Promise.all([

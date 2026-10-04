@@ -4,6 +4,7 @@ import {
   count,
   date,
   dict,
+  exact,
   invalid,
   matching,
   nonempty,
@@ -782,3 +783,141 @@ export const decodeSearch = shape({
 });
 export type SearchPage = Decoded<typeof decodeSearch>;
 export type CatalogRecord = SearchPage['results'][number];
+
+// W13, GET /api/app/v1/edition/latest (docs/IOS-API-CONTRACT.md, "App
+// readers"; portal/src/app-edition.ts). The Worker writes the envelope and the
+// edition field by field, so any other key there is a contract change and is
+// refused. Slides are stored verbatim with their type-specific fields, which
+// the contract allows: beyond the reader's own checks (type, kicker, title,
+// alt; cover first, source last; 3 to 10), only the fields the card reads are
+// decoded. Text is plain server copy, never markup.
+export const editionKinds = [
+  'politician',
+  'bill',
+  'grant',
+  'topic',
+  'program',
+  'largest',
+] as const;
+export type EditionKind = (typeof editionKinds)[number];
+const slideTypes = [
+  'cover',
+  'number',
+  'picture',
+  'bars',
+  'ledger',
+  'timeline',
+  'division',
+  'list',
+  'source',
+] as const;
+const oneOf =
+  <T extends string>(values: readonly T[]) =>
+  (v: unknown): T =>
+    values.includes(v as T) ? (v as T) : invalid();
+const calendarDay = (v: unknown) => date(matching(/^\d{4}-\d{2}-\d{2}$/)(v));
+// The reader's link rule (storedEdition): an https page on the public site
+// under a member, bill, grants or report path. The card opens only its path
+// and query, on the build's own web origin, through the web link guard.
+const editionPage =
+  /^\/(?:subject\/person\/|bill\/|money\/grants(?:\/|$)|reports\/)/;
+const editionLink = (v: unknown): string => {
+  const raw = nonempty(v);
+  let link: URL;
+  try {
+    link = new URL(raw);
+  } catch {
+    invalid();
+  }
+  if (
+    link.protocol !== 'https:' ||
+    link.hostname !== 'opax.com.au' ||
+    link.port ||
+    link.username ||
+    link.password ||
+    !editionPage.test(link.pathname)
+  )
+    invalid();
+  return raw;
+};
+const slideBase = { kicker: text, title: text, alt: text };
+const sourceSlide = shape({ ...slideBase, rows: array(text) });
+const listSlide = shape({ ...slideBase, note: optional(nullable(text)) });
+const otherSlide = shape(slideBase);
+export type EditionSlide =
+  | ({ type: 'source' } & Decoded<typeof sourceSlide>)
+  | ({ type: 'list' } & Decoded<typeof listSlide>)
+  | ({
+      type: Exclude<(typeof slideTypes)[number], 'source' | 'list'>;
+    } & Decoded<typeof otherSlide>);
+const slide = (v: unknown): EditionSlide => {
+  const row = object(v);
+  const type = oneOf(slideTypes)(row.type);
+  if (type === 'source') return { type, ...sourceSlide(row) };
+  if (type === 'list') return { type, ...listSlide(row) };
+  return { type, ...otherSlide(row) };
+};
+const slides = (v: unknown): EditionSlide[] => {
+  const rows = array(slide)(v);
+  if (
+    rows.length < 3 ||
+    rows.length > 10 ||
+    rows[0]!.type !== 'cover' ||
+    rows.at(-1)!.type !== 'source'
+  )
+    invalid();
+  return rows;
+};
+const edition = exact({
+  date: calendarDay,
+  kind: oneOf(editionKinds),
+  subject: nonempty,
+  title: nonempty,
+  text: nonempty,
+  url: editionLink,
+  caption: optional(text),
+  slides: optional(slides),
+});
+const envelope = exact({
+  schema_version: (v: unknown): 1 => (v === 1 ? 1 : invalid()),
+  date: calendarDay,
+  // A freeze time, not a source date, and never shown: the reader's own rule.
+  created_at: (v: unknown) =>
+    Number.isFinite(Date.parse(nonempty(v))) ? text(v) : invalid(),
+  edition,
+});
+export function decodeEdition(v: unknown) {
+  const data = envelope(v);
+  if (data.edition.date !== data.date) invalid('edition: Not the journal date');
+  return data;
+}
+export type AppEdition = ReturnType<typeof decodeEdition>;
+// The latest route's 404s, answered with a body: no posted edition on or
+// before the Melbourne date, or (from a Worker without the reader) no route.
+const editionAbsent = exact({
+  error: (v: unknown): 'edition_not_published' =>
+    v === 'edition_not_published' ? v : invalid(),
+  date: calendarDay,
+});
+const routeAbsent = exact({
+  error: (v: unknown): 'not_found' => (v === 'not_found' ? v : invalid()),
+});
+/**
+ * A read of the latest route: the edition, or its authoritative absence. The
+ * absence is saved like an edition, so it replaces a saved edition rather
+ * than letting a relaunch or an offline read bring yesterday's back.
+ */
+export function decodeEditionRead(
+  v: unknown,
+): AppEdition | { absent: true; date: string | null } {
+  if (v && typeof v === 'object' && 'error' in v) {
+    const row = object(v);
+    if (row.error === 'not_found') {
+      routeAbsent(row);
+      return { absent: true, date: null };
+    }
+    return { absent: true, date: editionAbsent(row).date };
+  }
+  return decodeEdition(v);
+}
+export type Edition = AppEdition['edition'];

@@ -17,11 +17,11 @@ test.each([
     '/bin/bash',
     [
       '-c',
-      'source scripts/qa-env.sh; OPAX_PASTE_WAIT_SECONDS=$1; paste_lock_wait_seconds',
+      'OPAX_PASTE_WAIT_SECONDS=$1; source scripts/qa-lock.sh; qa_paste_lock_wait_seconds; printf "%s\\n" "$QA_PASTE_WAIT_SECONDS"',
       'wait-test',
       input,
     ],
     { encoding: 'utf8' },
   );
-  expect(value.trim()).toBe(expected);
+  expect(value.trim().split('\n')).toEqual([expected, expected]);
 });

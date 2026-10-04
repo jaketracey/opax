@@ -67,7 +67,7 @@ actor AppleVoiceEngine: VoiceAudioEngine {
     private var playbackWaiters: [(UUID, Int, CheckedContinuation<Void, any Error>)] = []
     func start(input: AudioFormat, output: AudioFormat) throws {
         acceptedPlaybackEpoch = 0
-        #if DEBUG
+        #if DEBUG || OPAX_VOICE_E2E
         try VoiceTestSafety.willOpenAudio()
         #endif
         #if os(iOS) && !targetEnvironment(simulator)
@@ -168,7 +168,7 @@ actor AppleVoiceEngine: VoiceAudioEngine {
 public struct AppleMicrophonePermission: MicrophonePermission {
     public init() {}
     public func request() async -> Bool {
-        #if DEBUG
+        #if DEBUG || OPAX_VOICE_E2E
         if VoiceTestSafety.blocksHardware() { return false }
         #endif
         #if os(iOS) && !targetEnvironment(simulator)
@@ -181,7 +181,7 @@ public struct AppleMicrophonePermission: MicrophonePermission {
 public actor AppleVoiceAudioSession: VoiceAudioSession {
     public init() {}
     public func activate() throws {
-        #if DEBUG
+        #if DEBUG || OPAX_VOICE_E2E
         if VoiceTestSafety.blocksHardware() { throw VoiceFailure.audio }
         #endif
         #if os(iOS) && !targetEnvironment(simulator)

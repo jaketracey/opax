@@ -54,7 +54,7 @@ function Disclosure({
 }: {
   label: string;
   id: string;
-  children: React.ReactNode;
+  children: () => React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
   return (
@@ -64,7 +64,7 @@ function Disclosure({
         testID={id}
         onPress={() => setOpen((v) => !v)}
       />
-      {open ? children : null}
+      {open ? children() : null}
     </Group>
   );
 }
@@ -301,43 +301,47 @@ function ProfileScreen({ slug }: { slug: string }) {
                   ) : null}
                   <Text wordSafe>{v.method}</Text>
                   <Disclosure label="Bill votes" id="person-bill-votes">
-                    <Group>
-                      {(['for', 'against'] as const).map((side) => (
-                        <SubSection
-                          key={side}
-                          title={side === 'for' ? 'Voted for' : 'Voted against'}
-                        >
-                          {v[side].length ? (
-                            v[side].map((row, i) => (
-                              <Group key={i} gap={4}>
-                                <Text wordSafe variant="strong">
-                                  {row.name}
-                                </Text>
-                                <Text wordSafe variant="metadata">
-                                  {row.stage} · {formatDate(row.date)}
-                                </Text>
-                                {row.billKey ? (
-                                  <InlineLink
-                                    label="Bill record"
-                                    accessibilityLabel={`Bill record: ${row.name}`}
-                                    onPress={() =>
-                                      router.push(billRoute(row.billKey!))
-                                    }
-                                    testID={`person-bill-${side}-${i}`}
-                                  />
-                                ) : (
-                                  <Text wordSafe variant="fine">
-                                    Not matched to a bill record
+                    {() => (
+                      <Group>
+                        {(['for', 'against'] as const).map((side) => (
+                          <SubSection
+                            key={side}
+                            title={
+                              side === 'for' ? 'Voted for' : 'Voted against'
+                            }
+                          >
+                            {v[side].length ? (
+                              v[side].map((row, i) => (
+                                <Group key={i} gap={4}>
+                                  <Text wordSafe variant="strong">
+                                    {row.name}
                                   </Text>
-                                )}
-                              </Group>
-                            ))
-                          ) : (
-                            <EmptyState message="None of their recorded divisions was a vote on a bill itself." />
-                          )}
-                        </SubSection>
-                      ))}
-                    </Group>
+                                  <Text wordSafe variant="metadata">
+                                    {row.stage} · {formatDate(row.date)}
+                                  </Text>
+                                  {row.billKey ? (
+                                    <InlineLink
+                                      label="Bill record"
+                                      accessibilityLabel={`Bill record: ${row.name}`}
+                                      onPress={() =>
+                                        router.push(billRoute(row.billKey!))
+                                      }
+                                      testID={`person-bill-${side}-${i}`}
+                                    />
+                                  ) : (
+                                    <Text wordSafe variant="fine">
+                                      Not matched to a bill record
+                                    </Text>
+                                  )}
+                                </Group>
+                              ))
+                            ) : (
+                              <EmptyState message="None of their recorded divisions was a vote on a bill itself." />
+                            )}
+                          </SubSection>
+                        ))}
+                      </Group>
+                    )}
                   </Disclosure>
                   {(v.jurisdictions.length ? v.jurisdictions : [undefined]).map(
                     (jur, i) => (
@@ -400,30 +404,33 @@ function ProfileScreen({ slug }: { slug: string }) {
                       label={`${registerCategoryLabel(name)} (${formatCount(bucket.count)})`}
                       id={`interest-bucket-${name}`}
                     >
-                      <Group>
-                        {bucket.items.map((row, i) => (
-                          <Group key={i} gap={4}>
-                            <Text wordSafe variant="strong">
-                              {row.holder}
-                            </Text>
-                            <Text wordSafe>
-                              {row.description || 'Description not recorded'}
-                            </Text>
-                            <Text wordSafe variant="metadata">
-                              {row.kind}
-                              {row.date ? ` · ${formatDate(row.date)}` : ''}
-                              {row.page
-                                ? ` · page ${formatCount(row.page)}`
-                                : ''}
-                            </Text>
-                            {row.ocr ? (
-                              <Text wordSafe variant="fine">
-                                OCR transcription; check the original register.
+                      {() => (
+                        <Group>
+                          {bucket.items.map((row, i) => (
+                            <Group key={i} gap={4}>
+                              <Text wordSafe variant="strong">
+                                {row.holder}
                               </Text>
-                            ) : null}
-                          </Group>
-                        ))}
-                      </Group>
+                              <Text wordSafe>
+                                {row.description || 'Description not recorded'}
+                              </Text>
+                              <Text wordSafe variant="metadata">
+                                {row.kind}
+                                {row.date ? ` · ${formatDate(row.date)}` : ''}
+                                {row.page
+                                  ? ` · page ${formatCount(row.page)}`
+                                  : ''}
+                              </Text>
+                              {row.ocr ? (
+                                <Text wordSafe variant="fine">
+                                  OCR transcription; check the original
+                                  register.
+                                </Text>
+                              ) : null}
+                            </Group>
+                          ))}
+                        </Group>
+                      )}
                     </Disclosure>
                   ))}
                 </Group>
@@ -450,21 +457,23 @@ function ProfileScreen({ slug }: { slug: string }) {
                     label="Declared organisations"
                     id="person-ties-detail"
                   >
-                    <Group>
-                      {ties.map((tie, i) => (
-                        <Group key={i} gap={4}>
-                          <Text wordSafe variant="strong">
-                            {tie.organisation}
-                          </Text>
-                          <Text wordSafe>{tie.kinds.join('; ')}</Text>
-                          {tie.declarations.map((d, j) => (
-                            <Text wordSafe key={j}>
-                              {d.category}: {d.description}
+                    {() => (
+                      <Group>
+                        {ties.map((tie, i) => (
+                          <Group key={i} gap={4}>
+                            <Text wordSafe variant="strong">
+                              {tie.organisation}
                             </Text>
-                          ))}
-                        </Group>
-                      ))}
-                    </Group>
+                            <Text wordSafe>{tie.kinds.join('; ')}</Text>
+                            {tie.declarations.map((d, j) => (
+                              <Text wordSafe key={j}>
+                                {d.category}: {d.description}
+                              </Text>
+                            ))}
+                          </Group>
+                        ))}
+                      </Group>
+                    )}
                   </Disclosure>
                 </Group>
               )}
@@ -515,46 +524,52 @@ function ProfileScreen({ slug }: { slug: string }) {
                     label="Salary by financial year"
                     id="person-pay-years"
                   >
-                    <KeyValueList
-                      items={p.person.by_year.map(([year, amount]) => ({
-                        label: formatFinancialYear(year),
-                        value: formatMoney(amount),
-                      }))}
-                    />
+                    {() => (
+                      <KeyValueList
+                        items={p.person.by_year.map(([year, amount]) => ({
+                          label: formatFinancialYear(year),
+                          value: formatMoney(amount),
+                        }))}
+                      />
+                    )}
                   </Disclosure>
                   <Disclosure label="Posts held" id="person-pay-posts">
-                    <Group>
-                      {[...p.person.spells]
-                        .reverse()
-                        .map(([from, to, post, pct, salary], i) => (
-                          <Group key={i} gap={4}>
-                            <Text wordSafe variant="strong">
-                              {post}
-                            </Text>
-                            <Text wordSafe variant="metadata">
-                              {formatDate(from)} to{' '}
-                              {to ? formatDate(to) : 'present'}
-                            </Text>
-                            <Text wordSafe>
-                              {formatMoney(salary)} a year ·{' '}
-                              {formatPercent(
-                                pct,
-                                Number.isInteger(pct) ? 0 : 1,
-                              )}{' '}
-                              loading at the end of this spell
-                            </Text>
-                          </Group>
-                        ))}
-                    </Group>
+                    {() => (
+                      <Group>
+                        {[...p.person.spells]
+                          .reverse()
+                          .map(([from, to, post, pct, salary], i) => (
+                            <Group key={i} gap={4}>
+                              <Text wordSafe variant="strong">
+                                {post}
+                              </Text>
+                              <Text wordSafe variant="metadata">
+                                {formatDate(from)} to{' '}
+                                {to ? formatDate(to) : 'present'}
+                              </Text>
+                              <Text wordSafe>
+                                {formatMoney(salary)} a year ·{' '}
+                                {formatPercent(
+                                  pct,
+                                  Number.isInteger(pct) ? 0 : 1,
+                                )}{' '}
+                                loading at the end of this spell
+                              </Text>
+                            </Group>
+                          ))}
+                      </Group>
+                    )}
                   </Disclosure>
                   <Disclosure label="Pay coverage" id="person-pay-coverage">
-                    <Group>
-                      {p.notCovered.map((note) => (
-                        <Text wordSafe key={note.id}>
-                          {note.text}
-                        </Text>
-                      ))}
-                    </Group>
+                    {() => (
+                      <Group>
+                        {p.notCovered.map((note) => (
+                          <Text wordSafe key={note.id}>
+                            {note.text}
+                          </Text>
+                        ))}
+                      </Group>
+                    )}
                   </Disclosure>
                 </Group>
               )}
@@ -603,48 +618,52 @@ function ProfileScreen({ slug }: { slug: string }) {
                     label="Expenses by year"
                     id="person-expense-years"
                   >
-                    <KeyValueList
-                      items={e.person.by_year.map(([y, a]) => ({
-                        label: String(y),
-                        value: formatMoney(a),
-                      }))}
-                    />
+                    {() => (
+                      <KeyValueList
+                        items={e.person.by_year.map(([y, a]) => ({
+                          label: String(y),
+                          value: formatMoney(a),
+                        }))}
+                      />
+                    )}
                   </Disclosure>
                   <Disclosure
                     label="Expense categories"
                     id="person-expense-categories"
                   >
-                    <Group>
-                      {e.person.by_category.map(([name, amount]) => {
-                        const category = e.categories?.categories.find(
-                          (c) => c.name === name,
-                        );
-                        return (
-                          <Group key={name} gap={4}>
-                            <Text wordSafe variant="strong">
-                              {name}
-                            </Text>
-                            <Text wordSafe variant="figureInline">
-                              {formatMoney(amount)}
-                            </Text>
-                            {category ? (
-                              <>
-                                <Text wordSafe>{category.text}</Text>
-                                {category.note ? (
-                                  <Text wordSafe variant="fine">
-                                    {category.note}
-                                  </Text>
-                                ) : null}
-                              </>
-                            ) : (
-                              <Text wordSafe>
-                                Category definition not held.
+                    {() => (
+                      <Group>
+                        {e.person.by_category.map(([name, amount]) => {
+                          const category = e.categories?.categories.find(
+                            (c) => c.name === name,
+                          );
+                          return (
+                            <Group key={name} gap={4}>
+                              <Text wordSafe variant="strong">
+                                {name}
                               </Text>
-                            )}
-                          </Group>
-                        );
-                      })}
-                    </Group>
+                              <Text wordSafe variant="figureInline">
+                                {formatMoney(amount)}
+                              </Text>
+                              {category ? (
+                                <>
+                                  <Text wordSafe>{category.text}</Text>
+                                  {category.note ? (
+                                    <Text wordSafe variant="fine">
+                                      {category.note}
+                                    </Text>
+                                  ) : null}
+                                </>
+                              ) : (
+                                <Text wordSafe>
+                                  Category definition not held.
+                                </Text>
+                              )}
+                            </Group>
+                          );
+                        })}
+                      </Group>
+                    )}
                   </Disclosure>
                   {e.categories ? (
                     <>

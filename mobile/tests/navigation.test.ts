@@ -424,6 +424,62 @@ describe('workbench exclusion', () => {
         blocked(blockList(variant), '/repo/mobile/src/app/workbench.tsx'),
       ).toBe(false);
   });
+  test('production blocks direct imports of the native text probe implementation', () => {
+    expect(
+      blocked(
+        blockList('production'),
+        '/repo/mobile/src/design/text-probe.e2e.ts',
+      ),
+    ).toBe(true);
+    expect(
+      blocked(blockList('e2e'), '/repo/mobile/src/design/text-probe.e2e.ts'),
+    ).toBe(false);
+  });
+  test.each(['production', 'e2e', 'development'])(
+    '%s resolves text probes at build time and delegates ordinary imports',
+    (variant) => {
+      const output = execFileSync(
+        process.execPath,
+        [
+          '-e',
+          `
+        const path = require('node:path');
+        const config = require('./metro.config.js');
+        const context = {
+          originModulePath: path.resolve('src/design/text.tsx'),
+          resolveRequest: (_context, name) => ({
+            type: 'sourceFile', filePath: path.resolve('src/design', name + '.ts'),
+          }),
+        };
+        const resolve = name => config.resolver.resolveRequest(context, name, 'ios');
+        process.stdout.write(JSON.stringify([resolve('./text-probe'), resolve('./tokens')]));
+      `,
+        ],
+        {
+          cwd: resolve(__dirname, '..'),
+          env: { ...process.env, OPAX_VARIANT: variant },
+          encoding: 'utf8',
+        },
+      );
+      const resolutions = JSON.parse(output) as {
+        type: string;
+        filePath: string;
+      }[];
+      expect(resolutions[0]).toEqual({
+        type: 'sourceFile',
+        filePath: resolve(
+          __dirname,
+          '../src/design',
+          variant === 'production'
+            ? 'text-probe.production.ts'
+            : 'text-probe.ts',
+        ),
+      });
+      expect(resolutions[1]!.filePath).toBe(
+        resolve(__dirname, '../src/design/tokens.ts'),
+      );
+    },
+  );
 });
 
 test('the temporary privacy link preserves its reviewed query in the e2e destination', async () => {
