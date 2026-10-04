@@ -106,10 +106,13 @@ export function SourceLink({
  */
 export function OpaxWebLink({
   label,
+  accessibilityLabel,
   path,
   testID,
 }: {
   label: string;
+  /** What VoiceOver says when the visible label needs its context. */
+  accessibilityLabel?: string;
   /** A path on the public site, such as "/subject/person/anthony-albanese". */
   path: string;
   testID?: string;
@@ -117,7 +120,7 @@ export function OpaxWebLink({
   return (
     <Pressable
       accessibilityRole="link"
-      accessibilityLabel={label}
+      accessibilityLabel={accessibilityLabel ?? label}
       accessibilityHint="Opens on opax.com.au"
       testID={testID}
       onPress={() => openOnWeb(path, label)}
