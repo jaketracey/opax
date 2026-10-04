@@ -3,15 +3,14 @@
 Export IPEA parliamentary expenses per person from parli.db (`ext_expenses`,
 loaded by parli.ingest.money_ipea) for the portal's person pages. Runs on the
 data box and writes one static file the portal serves as-is: the site never
-touches the DB.
+touches the DB. The monthly refresh group runs it (scripts/weekly_refresh.sh):
 
-  scp scripts/export_expenses.py desktop:/tmp/
-  ssh desktop 'python3 /tmp/export_expenses.py' > portal/public/expenses.json
+  python3 scripts/export_expenses.py > portal/public/expenses.json   # $OPAX_DB, else ~/.cache/autoresearch/parli.db
 
 Output:
 
-  {"meta":  {"source": ..., "licence": "CC BY 4.0", "quarters": 37,
-             "from": "2017Q02", "to": "2026Q02", "source_url": <latest dataset page>,
+  {"meta":  {"source": ..., "licence": "CC BY 3.0 AU", "licence_url": ..., "attribution": ...,
+             "quarters": 37, "from": "2017Q02", "to": "2026Q02", "source_url": <latest dataset page>,
              "people": 440, "rows": 1229512, "generated": "2026-09-02T..."},
    "names": {"anthony albanese": "10007", ...},
    "people": {"10007": {"name": "Anthony Albanese", "total": 24402773, "lines": 3201,
@@ -41,6 +40,11 @@ and repayments; they stay in the totals as published, but the category bar
 list only shows categories with a positive net and the top-five list only
 positive lines. by_year is keyed on the reporting quarter's calendar year
 (from_date is empty on 93% of rows), so 2017 and 2026 are partial years.
+
+Licence: meta.licence is parli.ingest.money_ipea.LICENCE. That loader refuses
+any quarter whose data.gov.au record states another licence, so the published
+statement cannot drift from the datasets' own (the CC BY 4.0 notice on
+ipea.gov.au covers the website, not the data).
 """
 
 import os
@@ -50,12 +54,22 @@ import sqlite3
 import sys
 from collections import defaultdict
 from datetime import datetime, timezone
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from parli.ingest.money_ipea import LICENCE, LICENCE_URL  # noqa: E402
 
 DB = "file:" + (os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")) + "?mode=ro"
 TOP_ITEMS = 5
 MAX_CATEGORIES = 12
 DESC_CHARS = 90
-SOURCE = "Independent Parliamentary Expenses Authority quarterly expenditure reports (data.gov.au, CC BY 4.0)"
+SOURCE = f"Independent Parliamentary Expenses Authority quarterly expenditure reports (data.gov.au, {LICENCE})"
+# The credit the licence asks for: author (in the form IPEA requests), work, licence, and that OPAX's
+# figures are derived from it.
+ATTRIBUTION = (
+    "Source: Independent Parliamentary Expenses Authority © Commonwealth of Australia, Current and Former Parliamentarians’ "
+    f"Expenditure (quarterly datasets on data.gov.au), licensed under {LICENCE} ({LICENCE_URL}). "
+    "OPAX's totals, yearly sums and medians are calculated from the published lines.")
 
 HONORIFIC_RE = re.compile(
     r"^(?:(?:the|senator|hon|mr|mrs|ms|miss|dr|lady|sir|dame|prof|professor)\.?\s+)+", re.I)
@@ -196,7 +210,9 @@ def main():
     out = {
         "meta": {
             "source": SOURCE,
-            "licence": "CC BY 4.0",
+            "licence": LICENCE,
+            "licence_url": LICENCE_URL,
+            "attribution": ATTRIBUTION,
             "source_url": latest_url,
             "quarters": len(periods),
             "from": min(periods),

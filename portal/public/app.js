@@ -4111,9 +4111,10 @@ function loadExpenses() {
   return expensesPromise;
 }
 
+// The licence line comes from the export's meta: the data.gov.au datasets' own licence, not the
+// CC BY 4.0 notice on ipea.gov.au, which covers the website.
 const IPEA_NOTE =
-  "Independent Parliamentary Expenses Authority quarterly reports, CC BY 4.0. Figures are as " +
-  "published; IPEA corrects prior quarters, so treat totals as indicative.";
+  "Figures are as published; IPEA corrects prior quarters, so treat totals as indicative.";
 
 let expenseBenchmarks = null;
 function median(values) {
@@ -4197,6 +4198,10 @@ async function renderPersonExpenses(name, personId, sections) {
   const span = e.from === e.to ? `in ${e.from}` : `${e.from} to ${e.to}`;
   const lines = Number(e.lines || 0);
   const src = safeUrl(expensesData.meta?.source_url);
+  const licenceUrl = safeUrl(expensesData.meta?.licence_url);
+  const licence = !expensesData.meta?.licence ? "" : licenceUrl
+    ? `, <a href="${esc(licenceUrl)}" rel="license noopener" target="_blank">${esc(expensesData.meta.licence)} ↗︎</a>`
+    : `, ${esc(expensesData.meta.licence)}`;
   const benchmark = getExpenseBenchmarks();
   const years = Math.max(Number(e.to) - Number(e.from) + 1, 1);
   const annual = (Number(e.total) || 0) / years;
@@ -4212,7 +4217,7 @@ async function renderPersonExpenses(name, personId, sections) {
       fmt: fmtMoney, heading: "Claimed per year",
       note: "Summed by reporting quarter. IPEA data starts in April 2017 and runs to the latest published quarter, so the first and last years can be partial.",
     }) : ""}
-    ${benchmark ? `<p class="fineprint">Bronze is this member's average year; the ink tick is the median year of ${benchmark.count.toLocaleString()} parliamentarians claiming in ${benchmark.latestYear} who have claimed since ${benchmark.fromCutoff} or earlier. Office costs follow electorate size and travel follows portfolio, so a bar past its tick is a fact, not a finding. Per-year figures divide each total by the ${years} calendar ${years === 1 ? "year" : "years"} claimed; the first and last are partial. Source: ${src ? `<a href="${esc(src)}" rel="noopener" target="_blank">IPEA quarterly expenditure reports, CC BY 4.0, to ${esc(benchmark.latestQuarter)} ↗︎</a>` : "IPEA quarterly expenditure reports, CC BY 4.0"}. IPEA corrects prior quarters, so treat totals as indicative. <a href="/expenses">What the categories mean</a>.</p>` : `<p class="fineprint">${esc(IPEA_NOTE)} <a href="/expenses">What the categories mean</a>${src ? ` · <a href="${esc(src)}" rel="noopener" target="_blank">Latest quarter on data.gov.au ↗︎</a>` : ""}</p>`}`);
+    ${benchmark ? `<p class="fineprint">Bronze is this member's average year; the ink tick is the median year of ${benchmark.count.toLocaleString()} parliamentarians claiming in ${benchmark.latestYear} who have claimed since ${benchmark.fromCutoff} or earlier. Office costs follow electorate size and travel follows portfolio, so a bar past its tick is a fact, not a finding. Per-year figures divide each total by the ${years} calendar ${years === 1 ? "year" : "years"} claimed; the first and last are partial. Source: ${src ? `<a href="${esc(src)}" rel="noopener" target="_blank">IPEA quarterly expenditure reports to ${esc(benchmark.latestQuarter)} ↗︎</a>` : "IPEA quarterly expenditure reports"}${licence}. IPEA corrects prior quarters, so treat totals as indicative. <a href="/expenses">What the categories mean</a>.</p>` : `<p class="fineprint">Independent Parliamentary Expenses Authority quarterly reports${licence}. ${esc(IPEA_NOTE)} <a href="/expenses">What the categories mean</a>${src ? ` · <a href="${esc(src)}" rel="noopener" target="_blank">Latest quarter on data.gov.au ↗︎</a>` : ""}</p>`}`);
   $("subject-infobox")?.querySelector("dl")?.insertAdjacentHTML("beforeend",
     `<dt>Claimed expenses</dt><dd><b>${esc(fmtMoney(e.total))}</b></dd>`);
 }

@@ -2,7 +2,7 @@
 parli.ingest.money_ipea -- IPEA parliamentarian expenditure into `ext_expenses`.
 
 The Independent Parliamentary Expenses Authority publishes one CSV bundle per
-quarter on data.gov.au (organisation `ipea`, licence CC BY): the main
+quarter on data.gov.au (organisation `ipea`, licence CC BY 3.0 AU): the main
 `YYYYqNN_dataextract.csv` transaction file (one row per expense line, with the
 travelling person, category tree, dates, locations and amount) plus
 repayments / certifications / office-costs-by-state / adjustments files. Only
@@ -36,6 +36,14 @@ from parli.ingest.ext_common import (
 from parli.ingest.ipea_expenses import map_category
 
 CKAN_API = "https://data.gov.au/data/api/3/action/package_search"
+
+# The quarterly datasets' licence, as each data.gov.au record states it (license_id `cc-by`). The
+# CC BY 4.0 notice on ipea.gov.au covers the website, not these datasets. scripts/export_expenses.py
+# publishes this licence, so a quarter whose CKAN license_title differs is not loaded (see main).
+LICENCE_TITLE = "Creative Commons Attribution 3.0 Australia"
+LICENCE = "CC BY 3.0 AU"
+LICENCE_URL = "https://creativecommons.org/licenses/by/3.0/au/"
+
 CACHE = CACHE_ROOT / "ipea"
 LEGACY_CACHE = Path("~/.cache/autoresearch/ipea").expanduser()  # the 2026-03 loader's downloads
 
@@ -138,13 +146,19 @@ def discover(session) -> list[dict]:
                 # the 2024 datasets tag their resources '.CSV' (leading dot)
                 if m and (rs.get("format") or "").strip(". ").upper() == "CSV":
                     out.append({"quarter": f"{m.group(1)}q{m.group(2)}", "url": url, "title": ds["title"],
-                                "licence": ds.get("license_id"), "modified": rs.get("last_modified") or ds.get("metadata_modified"),
+                                "licence": ds.get("license_id"), "licence_title": ds.get("license_title"),
+                                "modified": rs.get("last_modified") or ds.get("metadata_modified"),
                                 "dataset_url": f"https://data.gov.au/data/dataset/{ds['name']}"})
         start += 50
         if start >= res["count"]:
             break
     out.sort(key=lambda d: d["quarter"])
     return out
+
+
+def licence_mismatches(datasets: list[dict]) -> list[dict]:
+    """The datasets whose CKAN license_title is not LICENCE_TITLE, the licence the export publishes."""
+    return [d for d in datasets if (d.get("licence_title") or "").strip() != LICENCE_TITLE]
 
 
 def download(session, ds: dict) -> Path:
@@ -212,13 +226,21 @@ def main() -> None:
 
     datasets = discover(session)
     log(f"IPEA: {len(datasets)} quarterly transaction files on data.gov.au "
-        f"({datasets[0]['quarter']} .. {datasets[-1]['quarter']}); licences: {sorted({d['licence'] for d in datasets})}")
+        f"({datasets[0]['quarter']} .. {datasets[-1]['quarter']}); "
+        f"licences: {sorted({str(d.get('licence_title')) for d in datasets})}")
     if args.list:
         for d in datasets:
             print(f"  {d['quarter']}  {d['modified'][:10] if d['modified'] else '?':10}  {d['url']}")
         return
     todo = [d for d in datasets if (not args.since or d["quarter"] >= args.since.lower())
             and (not args.until or d["quarter"] <= args.until.lower())]
+    # Every stored quarter is published under LICENCE, so a record that now says anything else
+    # (a relicensed quarter, a relabelled old one) fails the run until the constant is reviewed.
+    refused = licence_mismatches(datasets)
+    for d in refused:
+        log(f"  {d['quarter']}: data.gov.au licence is {d.get('licence_title')!r}, not {LICENCE_TITLE!r}; "
+            f"not loaded. Check the dataset and update LICENCE in this module before loading it.")
+    todo = [d for d in todo if d not in refused]
     log(f"writer={writer.describe()} ; loading {len(todo)} quarter(s)")
     # The person_id link needs `members`. Loading into the live DB (local via --db/OPAX_DB, or
     # remote) has it; a scratch staging file does not, and would fail the whole transaction.
@@ -244,6 +266,9 @@ def main() -> None:
                              notes=f"{ds['title']} | {ds['url']}")
         summary[ds["quarter"]] = res.get("inserted")
     log("\nSummary: " + json.dumps(summary))
+    if refused:
+        raise SystemExit(f"IPEA: {len(refused)} quarter(s) no longer carry {LICENCE_TITLE} on data.gov.au: "
+                         + ", ".join(d["quarter"] for d in refused))
 
 
 if __name__ == "__main__":

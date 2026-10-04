@@ -11,7 +11,7 @@ const [expenses, photos, app] = await Promise.all([
 const source = app.match(/async function renderPersonExpenses\(name, personId, sections\) \{[\s\S]*?\n\}/)?.[0];
 assert.ok(source, 'the test exercises the person-page renderer');
 
-async function render(name, personId, data = expenses, photoMap = photos) {
+async function render(name, personId, data = expenses, photoMap = photos, overrides = {}) {
   const result = {section: '', infobox: ''};
   const context = {
     currentSubjectKey: 'person:' + name, expensesData: data, photoMap,
@@ -19,6 +19,7 @@ async function render(name, personId, data = expenses, photoMap = photos) {
     getExpenseBenchmarks: () => null, safeUrl: url => url, esc: value => String(value),
     fmtMoney: value => '$' + value, columnChart: rows => JSON.stringify(rows), IPEA_NOTE: '',
     $: () => ({querySelector: () => ({insertAdjacentHTML: (_, html) => { result.infobox += html; }})}),
+    ...overrides,
   };
   runInNewContext(source, context);
   await context.renderPersonExpenses(name, personId, {insertAdjacentHTML: (_, html) => { result.section += html; }});
@@ -55,4 +56,17 @@ test('a valid explicit ID retains priority, while stale IDs and missing portrait
   assert.match((await render('  Test Member  ', 'stale', data, {'test member': 'wd-Q1'})).infobox, /\$200/);
   assert.match((await render('Test Member', null, data, {})).infobox, /\$200/);
   assert.deepEqual(await render('Unlisted Member', null, data, {}), {section: '', infobox: ''});
+});
+
+test('the source line states the licence expenses.json publishes, linked to its deed', async () => {
+  // CC BY 3.0 AU is the data.gov.au datasets' licence; the CC BY 4.0 notice on ipea.gov.au covers the website.
+  const [name] = Object.keys(expenses.names);
+  const benchmark = {count: 300, latestYear: 2026, fromCutoff: 2024, latestQuarter: '2026Q02', totalMedian: 1};
+  for (const overrides of [{}, {getExpenseBenchmarks: () => benchmark, expenseComparisonHTML: () => ''}]) {
+    const {section} = await render(name, null, expenses, photos, overrides);
+    assert.ok(section.includes('<a href="https://creativecommons.org/licenses/by/3.0/au/" rel="license noopener" target="_blank">CC BY 3.0 AU ↗︎</a>'), section);
+    assert.doesNotMatch(section, /CC BY 4\.0/);
+  }
+  const data = {meta: {}, people: {'1': {total: 100, lines: 1, from: 2025, to: 2025}}, names: {'test member': '1'}};
+  assert.doesNotMatch((await render('Test Member', null, data, {})).section, /CC BY|undefined/);
 });

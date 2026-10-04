@@ -211,16 +211,17 @@ def write_csv(path, rows):
 
 class IpeaTests(unittest.TestCase):
     DS = {"quarter": "2026q02", "url": "https://example.test/2026q02_dataextract.csv", "title": "IPEA Q2",
-          "licence": "cc-by", "modified": "2026-08-05", "dataset_url": "https://data.gov.au/data/dataset/x"}
+          "licence": "cc-by", "licence_title": "Creative Commons Attribution 3.0 Australia",
+          "modified": "2026-08-05", "dataset_url": "https://data.gov.au/data/dataset/x"}
 
-    def run_ipea(self, db_arg, csv_rows, env_db=None):
+    def run_ipea(self, db_arg, csv_rows, env_db=None, ds=None):
         with tempfile.TemporaryDirectory() as d:
             csv_path = Path(d) / "q.csv"
             write_csv(csv_path, csv_rows)
             argv = ["money_ipea.py", "--since", "2026q01"] + (["--db", str(db_arg)] if db_arg else [])
             env = {"OPAX_DB": str(env_db)} if env_db else {}
             with mock.patch.object(sys, "argv", argv), mock.patch.dict("os.environ", env, clear=False), \
-                    mock.patch.object(money_ipea, "discover", lambda s: [dict(self.DS)]), \
+                    mock.patch.object(money_ipea, "discover", lambda s: [dict(ds or self.DS)]), \
                     mock.patch.object(money_ipea, "download", lambda s, ds: csv_path), \
                     mock.patch.object(money_ipea, "make_session", lambda: None), quiet():
                 money_ipea.main()
@@ -267,6 +268,19 @@ class IpeaTests(unittest.TestCase):
             self.run_ipea(db, [])                  # header only
             con = sqlite3.connect(db)
             self.assertEqual(con.execute("SELECT COUNT(*) FROM ext_expenses").fetchone()[0], 1)
+            con.close()
+
+    def test_a_quarter_under_another_licence_is_refused_and_fails_the_run(self):
+        # the export publishes money_ipea.LICENCE for every stored quarter, so a record that
+        # says anything else stops the load instead of being published under the wrong licence
+        with tempfile.TemporaryDirectory() as d:
+            db = self.live_db(d)
+            relicensed = dict(self.DS, licence_title="Creative Commons Attribution 4.0 International")
+            with self.assertRaises(SystemExit) as cm:
+                self.run_ipea(db, [self.ROW], ds=relicensed)
+            self.assertIn("2026q02", str(cm.exception.code))
+            con = sqlite3.connect(db)
+            self.assertFalse(con.execute("SELECT 1 FROM sqlite_master WHERE name = 'ext_expenses'").fetchone())
             con.close()
 
     def test_db_has_table(self):
