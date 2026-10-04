@@ -80,8 +80,9 @@ Design workbench) to see every component and state at the current text size.
   The nudge protects measurement; the floor protects drawing. Don't set your
   own `lineHeight` on `Text`; pick a role. The floor is never a height or line
   cap, and resets on text size, content and actual container-width changes.
-  A width change removes the old floor before measuring the natural height;
-  ordinary single-line text adds no settling render. E2E representative names
+  A width change removes the old floor and reads the committed native frame,
+  even when its dimensions stay unchanged and no new layout event fires.
+  Ordinary single-line text adds no settling render. E2E representative names
   expose `drawn-complete-<lineCount>` only when all native line text and bounds
   fit the final frame; production names retain their original IDs.
 - `Heading`: a VoiceOver header. `level` 1 (page), 2 (section), 3 (subsection).

@@ -1,5 +1,11 @@
 import Constants from 'expo-constants';
-import { isValidElement, useRef, useState, type ReactNode } from 'react';
+import {
+  isValidElement,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 import {
   Text as NativeText,
   useWindowDimensions,
@@ -168,6 +174,44 @@ export function Text({
     width: 0,
     minimum: 0,
   });
+  const nativeText = useRef<NativeText>(null);
+  useLayoutEffect(() => {
+    if (
+      heightGuard.key !== heightKey ||
+      heightGuard.minimum !== 0 ||
+      heightGuard.width <= 0
+    )
+      return;
+    // Removing a floor need not change the final dimensions, so onLayout may
+    // not fire again. Measure the committed, unguarded native frame explicitly.
+    // This runs only after a container-width reset, never on ordinary mounts.
+    let active = true;
+    nativeText.current?.measure((_x, _y, width, height) => {
+      if (
+        !active ||
+        Math.abs(width - heightGuard.width) > 0.01 ||
+        width <= 0 ||
+        height <= 0
+      )
+        return;
+      if (measured.current.key === heightKey)
+        measured.current.frame = { width, height };
+      setHeightGuard((previous) =>
+        previous.key === heightKey &&
+        previous.width === heightGuard.width &&
+        previous.minimum === 0
+          ? {
+              key: heightKey,
+              width: heightGuard.width,
+              minimum: Math.ceil(height) + 1,
+            }
+          : previous,
+      );
+    });
+    return () => {
+      active = false;
+    };
+  }, [heightGuard, heightKey]);
   const guardDrawing = () => {
     const { frame, lines } = measured.current;
     if (!frame || frame.height <= 0 || frame.width <= 0) return;
@@ -220,6 +264,7 @@ export function Text({
       // Names and party abbreviations are read with Australian English rules.
       accessibilityLanguage="en-AU"
       {...props}
+      ref={nativeText}
       testID={
         diagnose && drawing.key === heightKey
           ? `${props.testID}-drawn-${drawing.clipped ? 'clipped' : 'complete'}-${drawing.lines}`
@@ -228,22 +273,24 @@ export function Text({
       onTextLayout={onLayoutLines}
       onLayout={(event) => {
         onLayout?.(event);
+        const frame = event.nativeEvent.layout;
+        if (frame.width <= 0 || frame.height <= 0) return;
         // This event may still include the old floor. Forget that frame and
         // its lines before removing the floor, then wait for a fresh layout.
         if (
           heightGuard.key === heightKey &&
-          heightGuard.width !== event.nativeEvent.layout.width
+          Math.abs(heightGuard.width - frame.width) > 0.01
         ) {
           measured.current = { key: heightKey };
           setHeightGuard({
             key: heightKey,
-            width: event.nativeEvent.layout.width,
+            width: frame.width,
             minimum: 0,
           });
           if (diagnose) setDrawing({ key: '', lines: 0, clipped: true });
           return;
         }
-        currentMeasurement().frame = event.nativeEvent.layout;
+        currentMeasurement().frame = frame;
         guardDrawing();
       }}
       allowFontScaling

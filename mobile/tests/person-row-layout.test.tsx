@@ -155,6 +155,48 @@ test('298 → 320 → 298 → 600 measures afresh without carrying the old floor
   act(() => renderer.unmount());
 });
 
+test('a width reset remeasures even when removing the floor emits no onLayout', () => {
+  let renderer!: TestRenderer.ReactTestRenderer;
+  const callbacks: ((
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+  ) => void)[] = [];
+  const measure = jest.fn((callback) => callbacks.push(callback));
+  act(() => {
+    renderer = TestRenderer.create(<Text wordSafe>Anthony Albanese</Text>);
+  });
+  const name = () => renderer.root.findByType(NativeText);
+  name().instance.measure = measure;
+  const floor = () => StyleSheet.flatten(name().props.style).minHeight;
+  const layout = (width: number, height: number) =>
+    act(() =>
+      name().props.onLayout({ nativeEvent: { layout: { width, height } } }),
+    );
+  layout(298, 141);
+  expect(measure).not.toHaveBeenCalled();
+  layout(320, 142);
+  expect(floor()).toBeUndefined();
+  act(() => callbacks.shift()!(0, 0, 320.000001, 71));
+  expect(floor()).toBe(72);
+  // Narrowing already exceeds the old 72pt floor. Removing it leaves 141pt
+  // unchanged, so there is no second layout event to drive the guard.
+  layout(298, 141);
+  expect(floor()).toBeUndefined();
+  act(() => callbacks.shift()!(0, 0, 298, 141));
+  expect(floor()).toBe(142);
+  layout(600, 142);
+  const stale = callbacks.shift()!;
+  // A normal layout can settle before the asynchronous native measure returns.
+  layout(600, 71);
+  expect(floor()).toBe(72);
+  act(() => stale(0, 0, 600, 72));
+  expect(floor()).toBe(72);
+  expect(measure).toHaveBeenCalledTimes(3);
+  act(() => renderer.unmount());
+});
+
 const nativeLines = [
   { text: 'Anthony ', x: 0, y: 0, width: 200, height: 70.591 },
   { text: 'Albanese', x: 0, y: 70.591, width: 200, height: 70.591 },
