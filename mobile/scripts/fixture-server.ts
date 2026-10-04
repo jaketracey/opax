@@ -2,11 +2,16 @@
 import { createServer } from 'node:http';
 import { createHash } from 'node:crypto';
 import snapshot from './fixture-snapshot.json';
-import { assertAllowedPath, type CatalogKind } from '../src/api/policy';
+import {
+  assertAllowedPath,
+  editionPath,
+  type CatalogKind,
+} from '../src/api/policy';
 import { assertPortraitPath } from '../src/api/portrait-policy';
-import { fixtureBytes } from '../tests/fixture-bytes';
+import { fixtureBytes, responseBytes } from '../tests/fixture-bytes';
 import { catalogSearchRows } from '../src/api/catalog-search';
 import {
+  decodeEdition,
   decodePay,
   decodeExpenses,
   decodeInterest,
@@ -29,6 +34,14 @@ for (const path of Object.keys(snapshot.files)) {
   else assertAllowedPath(path);
   files.set(path, pinnedBytes(path));
 }
+// W13 edition reader: the pinned production response, served verbatim. With
+// OPAX_FIXTURE_EDITION=absent the route answers as the Worker does when no
+// edition is posted (404 edition_not_published), for the hidden-card journey.
+const editionMode = process.env.OPAX_FIXTURE_EDITION ?? 'pinned';
+if (editionMode !== 'pinned' && editionMode !== 'absent')
+  throw new Error('OPAX_FIXTURE_EDITION must be pinned or absent');
+const edition = responseBytes(snapshot, editionPath);
+const editionDate = decodeEdition(JSON.parse(edition.toString())).date;
 const manifest = JSON.parse(
   files.get('/electorates/manifest.json')!.toString(),
 ) as Manifest;
@@ -106,7 +119,21 @@ export const server = createServer((request, response) => {
     const url = new URL(path, `http://127.0.0.1:${port}`);
     let body = files.get(url.pathname);
     let cacheControl = 'public, max-age=300';
-    if (url.pathname === '/api/person-slugs') {
+    if (url.pathname === editionPath && editionMode === 'absent') {
+      status = 404;
+      response.writeHead(status, {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=60, must-revalidate',
+      });
+      response.end(
+        JSON.stringify({ error: 'edition_not_published', date: editionDate }),
+      );
+      return;
+    }
+    if (url.pathname === editionPath) {
+      body = edition;
+      cacheControl = snapshot.responses[editionPath].cacheControl;
+    } else if (url.pathname === '/api/person-slugs') {
       body = Buffer.from(
         JSON.stringify({ generated: roster.meta.generated, slugs }),
       );
@@ -207,7 +234,7 @@ server.on('upgrade', (request, socket) => {
 });
 server.listen(port, '127.0.0.1', () =>
   console.log(
-    `OPAX_FIXTURE_READY port=${port} files=${files.size} offline=true`,
+    `OPAX_FIXTURE_READY port=${port} files=${files.size} edition=${editionMode} offline=true`,
   ),
 );
 for (const signal of ['SIGTERM', 'SIGINT'] as const)

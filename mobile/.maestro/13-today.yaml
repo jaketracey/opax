@@ -4,6 +4,48 @@ name: 13 Today feeds and their dated original sources
 - launchApp
 - assertVisible:
     id: today-screen-message
+# The daily edition: the fixture's pinned production response, as posted.
+# At AX5 the title alone can outgrow the screen, so match a tenth of it.
+- scrollUntilVisible:
+    element:
+      id: today-edition-head
+      text: 'Daily edition, Bill, 4 October 2026: Wage Justice for Early Childhood.*'
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/13-edition
+# A bill edition's text is a model's summary: its label comes first.
+- scrollUntilVisible:
+    element:
+      id: today-edition-machine
+      text: 'Machine-written\. Machine-written summary; check the bill text for the full detail\.'
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/13-edition-machine
+- scrollUntilVisible:
+    element:
+      id: today-edition-link
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+- tapOn:
+    id: today-edition-link
+# E2E shows the guarded web address on the build's reserved origin instead.
+- scrollUntilVisible:
+    element:
+      text: https://opax\.invalid/bill/au-federal-r7529
+    timeout: 20000
+- takeScreenshot: ${EVIDENCE}/13-edition-link-alert
+- tapOn: OK
+- scrollUntilVisible:
+    element:
+      id: today-edition-as-at
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+- assertVisible: 'As at 4 October 2026 · Source: OPAX daily edition'
+- takeScreenshot: ${EVIDENCE}/13-edition-as-at
 - scrollUntilVisible:
     element:
       id: today-bill-0

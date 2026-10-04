@@ -1,0 +1,33 @@
+appId: au.com.opax.app
+name: 13b Today with no daily edition published
+---
+# Run on its own, by path, against the no-edition fixture:
+#   OPAX_FIXTURE_EDITION=absent scripts/e2e.sh <udid> .maestro/13b-today-no-edition.yaml
+# The fixture then answers the edition as the Worker does when none is posted
+# (404 edition_not_published). clearState, so no saved edition stands in.
+- launchApp:
+    clearState: true
+- assertVisible:
+    id: today-screen-message
+# The feeds still load: wait for them, so the edition read has answered too.
+- scrollUntilVisible:
+    element:
+      id: today-bill-0
+    timeout: 90000
+    visibilityPercentage: 1
+    centerElement: true
+- scrollUntilVisible:
+    element:
+      id: today-screen-message
+    timeout: 90000
+    direction: UP
+# No section, no placeholder and no error: the card simply is not there.
+- assertNotVisible:
+    id: today-edition
+- assertNotVisible:
+    id: today-edition-loading
+- assertNotVisible:
+    id: today-edition-error
+- assertNotVisible: Daily edition
+- assertVisible: Recently introduced bills
+- takeScreenshot: ${EVIDENCE}/13b-no-edition
