@@ -57,7 +57,7 @@ until grep -q OPAX_FIXTURE_READY "$OUT/fixture.log"; do
 done
 # Maestro inputText may use iOS pasteboard internally. Serialize all input flows.
 if [ -n "${OPAX_PASTE_LOCK:-}" ]; then
-  deadline=$((SECONDS + ${OPAX_PASTE_WAIT_SECONDS:-600}))
+  deadline=$((SECONDS + $(paste_lock_wait_seconds)))
   until mkdir "$OPAX_PASTE_LOCK" 2>/dev/null; do
     [ "$SECONDS" -lt "$deadline" ] || { echo "Pasteboard lock wait expired" >&2; exit 1; }
     sleep 5
