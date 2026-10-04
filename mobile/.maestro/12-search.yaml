@@ -164,17 +164,16 @@ name: 12 Local suggestions and the four catalog search kinds
     timeout: 30000
 - scrollUntilVisible:
     element:
-      id: search-result-anthony-albanese
+      id: search-result-anthony-albanese-name
     direction: DOWN
     timeout: 90000
-    visibilityPercentage: 80
     centerElement: true
     speed: 20
-# Keep most of this tall row in view: its default tap is at its center.
+# Target the name so the tap stays visible at both default size and AX5.
 - takeScreenshot: ${EVIDENCE}/12-expenses
 - waitForAnimationToEnd
 - tapOn:
-    id: search-result-anthony-albanese
+    id: search-result-anthony-albanese-name
 - extendedWaitUntil:
     visible:
       id: person-screen-title
