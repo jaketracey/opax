@@ -75,14 +75,17 @@ Design workbench) to see every component and state at the current text size.
   full size when the text size, width or text (nested text included) changes.
   Every role's line height carries a 1/997pt nudge (`LINE_HEIGHT_NUDGE`):
   it keeps RN's ceiled text measurement off exact pixel boundaries. Yoga can
-  still round the final frame below that measurement, so word-safe and plain
-  multiline text also reserve a stable `ceil(naturalHeight) + 1pt` floor.
+  still round the final frame below that measurement, so every content Text
+  reserves a stable `ceil(naturalHeight) + 1pt` floor, including plain text.
   The nudge protects measurement; the floor protects drawing. Don't set your
   own `lineHeight` on `Text`; pick a role. The floor is never a height or line
   cap, and resets on text size, content and actual container-width changes.
   A width change removes the old floor and reads the committed native frame,
   even when its dimensions stay unchanged and no new layout event fires.
-  Ordinary single-line text adds no settling render. E2E representative names
+  At standard size this adds 1–1.67pt and one settling render. Repeated layouts
+  dispatch no state updates, and plain text needs no native line measurement:
+  an initial empty line event is suppressed by RN, so relying on it would miss
+  completely vanished text. E2E representative names
   expose `drawn-complete-<lineCount>` only when all native line text and bounds
   fit the final frame; production names retain their original IDs.
 - `Heading`: a VoiceOver header. `level` 1 (page), 2 (section), 3 (subsection).

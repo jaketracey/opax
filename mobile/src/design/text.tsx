@@ -217,15 +217,10 @@ export function Text({
     if (!frame || frame.height <= 0 || frame.width <= 0) return;
     // One whole point survives Yoga rounding; a physical pixel may round away.
     // Only the first natural frame sets the minimum, never the guarded frame.
-    // Ordinary single-line text needs no extra render. A clipped wrapped
-    // paragraph may be reported as one overflowing native line. Avoid even
-    // dispatching a no-op update once settled (React may render before bailout).
-    if (
-      !(heightGuard.key === heightKey && heightGuard.minimum > 0) &&
-      (wordSafe ||
-        (lines &&
-          (lines.length > 1 || drawnTextClipped(lines, frame, content))))
-    ) {
+    // Guard every content Text, including a completely missing first line:
+    // RN suppresses the initial empty onTextLayout event. A frame callback is
+    // independent of its glyphs. Avoid dispatching no-op updates once settled.
+    if (!(heightGuard.key === heightKey && heightGuard.minimum > 0)) {
       setHeightGuard({
         key: heightKey,
         width: frame.width,
@@ -270,7 +265,9 @@ export function Text({
           ? `${props.testID}-drawn-${drawing.clipped ? 'clipped' : 'complete'}-${drawing.lines}`
           : props.testID
       }
-      onTextLayout={onLayoutLines}
+      onTextLayout={
+        wordSafe || diagnose || onTextLayout ? onLayoutLines : undefined
+      }
       onLayout={(event) => {
         onLayout?.(event);
         const frame = event.nativeEvent.layout;

@@ -219,10 +219,9 @@ test.each(['body', 'metadata', 'fine'] as const)(
         }),
       );
     layout(141);
-    expect(StyleSheet.flatten(text().props.style).minHeight).toBeUndefined();
-    act(() =>
-      text().props.onTextLayout({ nativeEvent: { lines: nativeLines } }),
-    );
+    // The guard works without any line event, including RN's suppressed first
+    // empty glyph result. Plain text does not request extra line measurement.
+    expect(text().props.onTextLayout).toBeUndefined();
     expect(StyleSheet.flatten(text().props.style).minHeight).toBe(142);
     for (let i = 0; i < 20; i++) layout(142);
     expect(StyleSheet.flatten(text().props.style).minHeight).toBe(142);
@@ -304,74 +303,59 @@ test.each(['production', 'development', 'e2e'])(
   },
 );
 
-test('standard-size cost: single lines do not settle, multiline guards settle once', () => {
-  jest
-    .mocked(useWindowDimensions)
-    .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 1 });
-  let renderer!: TestRenderer.ReactTestRenderer;
-  let commits = 0;
-  let duration = 0;
-  act(() => {
-    renderer = TestRenderer.create(
-      <Profiler
-        id="standard-text"
-        onRender={(_id, _phase, actualDuration) => {
-          commits++;
-          duration += actualDuration;
-        }}
-      >
-        {Array.from({ length: 100 }, (_, i) => (
-          <Text key={i}>A source line</Text>
-        ))}
-      </Profiler>,
+test.each([
+  ['single-line', 25.333, 27],
+  ['multiline', 50.333, 52],
+] as const)(
+  'standard-size %s cost settles once without recurring layouts',
+  (kind, naturalHeight, minimum) => {
+    jest
+      .mocked(useWindowDimensions)
+      .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 1 });
+    let renderer!: TestRenderer.ReactTestRenderer;
+    let commits = 0;
+    let duration = 0;
+    act(() => {
+      renderer = TestRenderer.create(
+        <Profiler
+          id="standard-text"
+          onRender={(_id, _phase, actualDuration) => {
+            commits++;
+            duration += actualDuration;
+          }}
+        >
+          {Array.from({ length: 100 }, (_, i) => (
+            <Text key={i}>
+              {kind === 'single-line'
+                ? 'A source line'
+                : 'A source line\nA second line'}
+            </Text>
+          ))}
+        </Profiler>,
+      );
+    });
+    const nodes = () => renderer.root.findAllByType(NativeText);
+    const layout = (height: number) =>
+      act(() =>
+        nodes().forEach((text) =>
+          text.props.onLayout({
+            nativeEvent: { layout: { width: 298, height } },
+          }),
+        ),
+      );
+    expect(commits).toBe(1);
+    layout(naturalHeight);
+    expect(commits).toBe(2);
+    expect(StyleSheet.flatten(nodes()[0]!.props.style).minHeight).toBe(minimum);
+    expect(minimum - naturalHeight).toBeCloseTo(1.667, 3);
+    expect(nodes().every((text) => text.props.onTextLayout === undefined)).toBe(
+      true,
     );
-  });
-  const nodes = () => renderer.root.findAllByType(NativeText);
-  const layout = (height: number) =>
-    act(() =>
-      nodes().forEach((text) =>
-        text.props.onLayout({
-          nativeEvent: { layout: { width: 298, height } },
-        }),
-      ),
+    for (let i = 0; i < 20; i++) layout(minimum);
+    expect(commits).toBe(2);
+    console.log(
+      `standard-size ${kind} guard cost: 100 texts, ${commits} commits including mount, 20 repeated layouts add 0 commits, Profiler ${duration.toFixed(2)}ms`,
     );
-  const lines = (multiline: boolean) =>
-    act(() =>
-      nodes().forEach((text) =>
-        text.props.onTextLayout({
-          nativeEvent: {
-            lines: multiline
-              ? [
-                  { text: 'A source ', x: 0, y: 0, width: 200, height: 22.001 },
-                  { text: 'line', x: 0, y: 22.001, width: 60, height: 22.001 },
-                ]
-              : [
-                  {
-                    text: 'A source line',
-                    x: 0,
-                    y: 0,
-                    width: 260,
-                    height: 22.001,
-                  },
-                ],
-          },
-        }),
-      ),
-    );
-  layout(22.333);
-  lines(false);
-  expect(commits).toBe(1);
-  layout(44.333);
-  lines(true);
-  expect(commits).toBe(2);
-  expect(StyleSheet.flatten(nodes()[0]!.props.style).minHeight).toBe(46);
-  for (let i = 0; i < 20; i++) {
-    layout(46);
-    lines(true);
-  }
-  expect(commits).toBe(2);
-  console.log(
-    `standard-size guard cost: 100 texts, ${commits} commits including mount, 20 repeated layouts add 0 commits, Profiler ${duration.toFixed(2)}ms`,
-  );
-  act(() => renderer.unmount());
-});
+    act(() => renderer.unmount());
+  },
+);
