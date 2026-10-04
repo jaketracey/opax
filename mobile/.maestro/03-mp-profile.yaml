@@ -33,6 +33,10 @@ name: 03 Read a sourced profile
     id: person-source
 - assertVisible: https://raw.githubusercontent.com/openaustralia/openaustralia-parser/master/data/representatives.csv
 - takeScreenshot: ${EVIDENCE}/03-source-destination
+# At AX5 the URL runs past the screen: the page scrolls and draws the tail in
+# full ("representatives.csv", never "representative...").
+- scroll
+- takeScreenshot: ${EVIDENCE}/03-source-destination-end
 - tapOn: OK
 # Share uses the canonical web path; e2e carries a non-resolving origin.
 - tapOn: Share Anthony Albanese
