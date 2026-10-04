@@ -469,15 +469,22 @@ export class Catalogs {
         ...result.data,
         results: result.data.results
           .filter((row) => !row.href.startsWith('/ask'))
-          .map((row) => ({
-            ...row,
-            personSlug: personSlugForResult(
+          .map((row) => {
+            const personSlug = personSlugForResult(
               row,
               slugs.data,
               bridge?.[0].data,
               people?.data,
-            ),
-          })),
+            );
+            return {
+              ...row,
+              personSlug,
+              // The verified slug bridge also resolves formal register names.
+              profileName: personSlug
+                ? slugs.data.slugs[personSlug]
+                : undefined,
+            };
+          }),
       },
     };
   }

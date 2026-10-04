@@ -394,7 +394,10 @@ export default function Search() {
                         <PersonRow
                           {...personRowContext(
                             sources
-                              ? searchPersonFor(row.title, sources.roster)
+                              ? searchPersonFor(
+                                  row.profileName ?? row.title,
+                                  sources.roster,
+                                )
                               : null,
                           )}
                           name={row.title}

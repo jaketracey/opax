@@ -229,6 +229,7 @@ test('interest search adapter loads the ID bridge and retains its cache state', 
   };
   const result = await new Catalogs(client).search('Pasin', 'interest');
   expect(result.data.results[0]?.personSlug).toBe('tony-pasin');
+  expect(result.data.results[0]?.profileName).toBe('Tony Pasin');
   expect(result.stale).toBe(true);
 });
 

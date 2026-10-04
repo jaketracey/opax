@@ -255,3 +255,70 @@ test('submitted people rows retain the selector party, place and complete access
   expect(label).toContain('New South Wales');
   await act(async () => renderer.unmount());
 });
+
+test.each([
+  {
+    title: 'Antony Pasin',
+    profileName: 'Tony Pasin',
+    slug: 'tony-pasin',
+    party: 'Liberal',
+    seat: 'Barker',
+  },
+  {
+    title: 'Robert Katter',
+    profileName: 'Bob Katter',
+    slug: 'bob-katter',
+    party: "Katter's Australian Party",
+    seat: 'Kennedy',
+  },
+])(
+  'a mapped register name $title keeps its source spelling and roster details',
+  async ({ title, profileName, slug, party, seat }) => {
+    jest.mocked(catalogs.search).mockResolvedValue({
+      data: {
+        query: title,
+        results: [
+          {
+            slug: 'catalog-1',
+            title,
+            profileName,
+            personSlug: slug,
+            snippet: '',
+            href: `/declared?person=${encodeURIComponent(title)}`,
+          },
+        ],
+        warnings: [],
+        total: 1,
+        page: 1,
+        pages: 1,
+      },
+      stale: false,
+      savedAt: 100,
+      asOf: null,
+    } as unknown as Awaited<ReturnType<typeof catalogs.search>>);
+    let renderer!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      renderer = TestRenderer.create(<Search />);
+    });
+    await act(async () =>
+      renderer.root.findByType(Field).props.onChangeText(title),
+    );
+    await act(async () =>
+      renderer.root
+        .findAllByType(Button)
+        .find((b) => b.props.testID === 'search-submit')!
+        .props.onPress(),
+    );
+    const row = renderer.root.findByType(PersonRow);
+    expect(row.props).toMatchObject({ name: title, party, partyCurrent: true });
+    expect(row.props.place).toContain(seat);
+    const label = row.find(
+      (n) =>
+        typeof n.type !== 'string' && n.props.accessibilityRole === 'button',
+    ).props.accessibilityLabel;
+    expect(label).toContain(title);
+    expect(label).toContain(party);
+    expect(label).toContain(seat);
+    await act(async () => renderer.unmount());
+  },
+);
