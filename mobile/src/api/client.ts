@@ -38,10 +38,40 @@ export function dataAsOf(value: unknown): string | null {
     data.generated;
   return typeof date === 'string' ? date : null;
 }
+// Cached JSON must remain the version that passed validation. Freezing once
+// prevents a screen from changing a reused result without another decode.
+function freezeSnapshot(...values: unknown[]) {
+  const pending = [...values];
+  const seen = new WeakSet<object>();
+  while (pending.length) {
+    const item = pending.pop();
+    if (item === null || typeof item !== 'object' || seen.has(item))
+      continue;
+    seen.add(item);
+    // A decoder or store may have frozen only the parent. Still traverse its
+    // children; shared raw/decoded descendants are visited once per snapshot.
+    if (!Object.isFrozen(item)) Object.freeze(item);
+    for (const child of Object.values(item)) pending.push(child);
+  }
+}
 export class ApiClient {
   private transport: typeof fetch;
   private now: () => number;
   private sleep: (ms: number) => Promise<void>;
+  // Body identity is a catalog version, independent of dates or ETags. Each
+  // decoder validates that version once; new bytes must validate again. Weak
+  // keys release decoded snapshots when the bounded raw cache evicts them.
+  private decoded = new WeakMap<object, Map<Decoder<unknown>, unknown>>();
+  private decodeBody<T>(body: unknown, decode: Decoder<T>): T {
+    if (body === null || typeof body !== 'object') return decode(body);
+    let versions = this.decoded.get(body);
+    if (versions?.has(decode)) return versions.get(decode) as T;
+    const value = decode(body); // Never retain a failed validation.
+    freezeSnapshot(body, value);
+    if (!versions) this.decoded.set(body, (versions = new Map()));
+    versions.set(decode, value);
+    return value;
+  }
   constructor(private options: ClientOptions) {
     this.transport = options.transport ?? expoFetch;
     this.now = options.now ?? Date.now;
@@ -67,13 +97,13 @@ export class ApiClient {
     let cached = await this.options.cache.get(url);
     if (cached) {
       try {
-        decode(cached.body);
+        this.decodeBody(cached.body, decode);
       } catch {
         cached = undefined;
       }
     }
     const result = (entry: CacheEntry, stale: boolean): RecordResult<T> => ({
-      data: decode(entry.body),
+      data: this.decodeBody(entry.body, decode),
       stale,
       savedAt: entry.savedAt,
       asOf: entry.asOf,
@@ -159,7 +189,7 @@ export class ApiClient {
           );
         }
         try {
-          decode(body);
+          this.decodeBody(body, decode);
         } catch {
           throw new ApiError(
             'invalid-data',
