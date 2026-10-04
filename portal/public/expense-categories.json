@@ -2,10 +2,28 @@
  "meta": {
   "source": "Independent Parliamentary Expenses Authority, explanatory notes for parliamentarian expenditure",
   "source_url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure",
-  "licence": "CC BY 3.0 AU",
-  "licence_note": "The category names are the Independent Parliamentary Expenses Authority's own and are reproduced unchanged. The definitions here are written by OPAX from IPEA's explanatory notes and guidance, the Parliamentary Business Resources Act 2017, and the Department of Finance's Ministerial and Parliamentary Services pages, each cited above. IPEA material is licensed CC BY 3.0 AU with the attribution Independent Parliamentary Expenses Authority © Commonwealth of Australia. The expenditure figures on OPAX come from IPEA's quarterly reports published on data.gov.au, also CC BY. The quarterly expenditure datasets on data.gov.au carry Creative Commons Attribution 3.0 Australia; the 4.0 licence on ipea.gov.au covers the website's own material, not the datasets.",
-  "updated": "2026-09-02",
-  "licence_url": "http://creativecommons.org/licenses/by/3.0/au/"
+  "licence": "CC BY 4.0",
+  "licence_note": "The category names are the Independent Parliamentary Expenses Authority's own and are reproduced unchanged. OPAX writes the definitions from the sources cited with each: IPEA's explanatory notes and guidance, the Parliamentary Business Resources Act 2017, and the Department of Finance's Ministerial and Parliamentary Services pages. Two IPEA licences apply. The definitions draw on IPEA's explanatory notes and guidance on ipea.gov.au: Independent Parliamentary Expenses Authority © Commonwealth of Australia, licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). The category names and the expenditure figures OPAX derives come from IPEA's quarterly datasets on data.gov.au, Current and Former Parliamentarians’ Expenditure: Independent Parliamentary Expenses Authority © Commonwealth of Australia, licensed CC BY 3.0 AU (https://creativecommons.org/licenses/by/3.0/au/).",
+  "updated": "2026-10-04",
+  "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+  "licences": [
+   {
+    "covers": "The definitions draw on",
+    "work": "IPEA's explanatory notes and guidance on ipea.gov.au",
+    "url": "https://www.ipea.gov.au/reporting/explanatory-notes-parliamentarian-expenditure",
+    "attribution": "Independent Parliamentary Expenses Authority © Commonwealth of Australia",
+    "licence": "CC BY 4.0",
+    "licence_url": "https://creativecommons.org/licenses/by/4.0/"
+   },
+   {
+    "covers": "The category names and the expenditure figures OPAX derives come from",
+    "work": "IPEA's quarterly datasets on data.gov.au, Current and Former Parliamentarians’ Expenditure",
+    "url": "https://data.gov.au/data/organization/ipea",
+    "attribution": "Independent Parliamentary Expenses Authority © Commonwealth of Australia",
+    "licence": "CC BY 3.0 AU",
+    "licence_url": "https://creativecommons.org/licenses/by/3.0/au/"
+   }
+  ]
  },
  "groups": [
   {

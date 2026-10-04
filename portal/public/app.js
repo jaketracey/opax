@@ -4508,9 +4508,22 @@ async function renderExpenseGlossary() {
       }).join("")}</dl>`;
   }).join("") +
     (meta.licence_note
-      ? `<h3>Sources and licence</h3><p class="fineprint">${esc(meta.licence_note)}${
-        safeUrl(meta.source_url) ? ` <a href="${esc(meta.source_url)}" rel="noopener" target="_blank">IPEA expenditure reports ↗︎</a>` : ""}</p>`
+      ? `<h3>Sources and licences</h3><p class="fineprint">${licenceNoteHTML(meta)}</p>`
       : "");
+}
+
+/** The note as written, with each of meta.licences' works and licences linked
+ *  where the note names them: "<work>" and "<licence> (<licence_url>)". */
+function licenceNoteHTML(meta) {
+  let html = esc(meta.licence_note);
+  for (const l of Array.isArray(meta.licences) ? meta.licences : []) {
+    const work = safeUrl(l.url), deed = safeUrl(l.licence_url);
+    if (work && l.work) html = html.replace(esc(l.work),
+      () => `<a href="${esc(work)}" rel="noopener" target="_blank">${esc(l.work)} ↗︎</a>`);
+    if (deed && l.licence) html = html.replace(`${esc(l.licence)} (${esc(deed)})`,
+      () => `<a href="${esc(deed)}" rel="license noopener" target="_blank">${esc(l.licence)} ↗︎</a>`);
+  }
+  return html;
 }
 
 // --- access: the money <-> access join ---------------------------------------
