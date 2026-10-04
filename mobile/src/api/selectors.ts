@@ -22,6 +22,7 @@ import {
   billDedupeDivisions,
   billDisplay,
   billFoldText,
+  billNoteLinks,
   billNoteText,
   billQuestionParts,
   billSentenceCase,
@@ -702,6 +703,8 @@ export function billFor(bill: BillDetail, index: BillIndex) {
             // is named by its stage and date. The note is the record's prose.
             head,
             note: note ? billNoteText(note) : '',
+            // The note's own citations, which the web keeps as links.
+            noteLinks: note ? billNoteLinks(note) : [],
             stageLabel: billStage(d.stage),
             splits: billSplits(d),
           };

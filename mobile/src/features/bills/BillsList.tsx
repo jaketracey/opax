@@ -1,9 +1,14 @@
-import { useEffect, useMemo, useState } from 'react';
-import { FlatList, Keyboard, StyleSheet, View } from 'react-native';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  FlatList,
+  Keyboard,
+  RefreshControl,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { router } from 'expo-router';
 import { ApiError } from '../../api/errors';
-import { billFacetsFor, billsFor, type BillIndex } from '../../api/catalogs';
-import type { RecordResult } from '../../api/client';
+import { billFacetsFor, billsFor } from '../../api/catalogs';
 import { catalogs } from '../../api/runtime';
 import {
   AsAtLine,
@@ -20,7 +25,7 @@ import {
   Text,
   errorMessage,
 } from '../../design/primitives';
-import { colors, layout, spacing } from '../../design/tokens';
+import { chrome, colors, layout, spacing } from '../../design/tokens';
 import { billRoute } from '../../navigation/routes';
 import {
   appliedFilters,
@@ -30,6 +35,7 @@ import {
   withoutFilter,
 } from './filters';
 import { BillRow } from './parts';
+import { useCatalogRecord } from './useCatalogRecord';
 
 // The web's bill-list fine print, in its words (portal/public/app.js
 // BILLS_FINEPRINT), without the sentences about division counts the app's
@@ -39,33 +45,12 @@ const FINEPRINT =
 
 /** The Bills tab: every federal bill in the index, filtered and searched on the device. */
 export default function BillsList() {
-  const [record, setRecord] = useState<RecordResult<BillIndex> | null>(null);
-  const [error, setError] = useState<unknown>(null);
-  const [retry, setRetry] = useState(0);
-  const again = () => {
-    setError(null);
-    setRetry((value) => value + 1);
-  };
+  const load = useCallback(() => catalogs.bills(), []);
+  const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
   const [text, setText] = useState('');
   const [query, setQuery] = useState('');
   const { filters } = useBillFilterState();
 
-  useEffect(() => {
-    let active = true;
-    catalogs
-      .bills()
-      .then((result) => {
-        if (!active) return;
-        setRecord(result);
-        setError(null);
-      })
-      .catch((e: unknown) => {
-        if (active) setError(e);
-      });
-    return () => {
-      active = false;
-    };
-  }, [retry]);
   // Filter as the reader types, a beat behind the keyboard.
   useEffect(() => {
     const timer = setTimeout(() => setQuery(text.trim()), 150);
@@ -129,7 +114,17 @@ export default function BillsList() {
       {record?.stale ? (
         <>
           <OfflineBanner testID="bills-offline" />
-          <StaleNotice savedAt={record.savedAt} testID="bills-stale" />
+          <StaleNotice
+            savedAt={record.savedAt}
+            refreshing={refreshing}
+            testID="bills-stale"
+          />
+          <Button
+            label="Try again"
+            onPress={refresh}
+            loading={refreshing}
+            testID="bills-refresh"
+          />
         </>
       ) : null}
       {list && index ? (
@@ -142,14 +137,14 @@ export default function BillsList() {
           <OfflineBanner cached={false} testID="bills-offline-uncached" />
           <Button
             label="Try again"
-            onPress={() => again()}
+            onPress={retry}
             testID="bills-error-retry"
           />
         </>
       ) : error && !record ? (
         <ErrorState
           message={errorMessage(error)}
-          onRetry={() => again()}
+          onRetry={retry}
           testID="bills-error"
         />
       ) : !record ? (
@@ -178,6 +173,13 @@ export default function BillsList() {
   return (
     <FlatList
       testID="bills-screen"
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={refresh}
+          tintColor={chrome.tint}
+        />
+      }
       style={styles.screen}
       contentContainerStyle={styles.content}
       contentInsetAdjustmentBehavior="automatic"

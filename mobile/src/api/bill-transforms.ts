@@ -256,6 +256,27 @@ export const billParty = (p: string | null | undefined) =>
   BILL_PARTY_LABELS[String(p || '').trim()] || billPartyName(p ?? null);
 /** A division note as plain words: link text kept, URLs and emphasis dropped. */
 export const billNoteText = (note: string) => billFlat(billNoteRepair(note));
+// Relative links in They Vote For You's notes are its own pages.
+const BILL_NOTE_BASE = 'https://theyvoteforyou.org.au';
+export interface BillNoteLink {
+  /** The link text as the note reads it ("bills digest"). */
+  label: string;
+  /** The destination, relative links resolved against They Vote For You. */
+  url: string;
+}
+/**
+ * The record's own citations in a division note, in order, exactly where the
+ * web's billNoteHTML makes a link: http(s) destinations only, everything else
+ * stays words. Callers still pass each through the app's source-link policy.
+ */
+export function billNoteLinks(note: string): BillNoteLink[] {
+  const links: BillNoteLink[] = [];
+  for (const m of billNoteRepair(note).matchAll(BILL_MD_LINK)) {
+    const url = m[2]!.startsWith('/') ? BILL_NOTE_BASE + m[2] : m[2]!;
+    if (/^https?:\/\//i.test(url)) links.push({ label: billPlain(m[1]!), url });
+  }
+  return links;
+}
 
 export interface BillStageRun<D> {
   /** The stage as the register wrote it, in English ("Second reading"). */

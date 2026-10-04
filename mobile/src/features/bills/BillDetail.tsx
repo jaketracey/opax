@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import { RefreshControl, StyleSheet, View } from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import {
   billName,
@@ -32,18 +32,21 @@ import {
   Text,
   errorMessage,
 } from '../../design/primitives';
-import { spacing } from '../../design/tokens';
+import { chrome, spacing } from '../../design/tokens';
 import { billRoute, personRoute } from '../../navigation/routes';
 import { shareHeaderItem } from '../../navigation/share';
 import { chamberLabel } from './filters';
 import {
   Bullet,
+  DivisionNote,
   InlineLink,
+  MachineBrief,
   PartySplits,
   RecordedParty,
   dateSpan,
 } from './parts';
 import { sponsorSlug } from './sponsors';
+import { useCatalogRecord } from './useCatalogRecord';
 
 type BillRecord = Awaited<ReturnType<typeof catalogs.billFor>>;
 type BillView = BillRecord['data'];
@@ -86,30 +89,9 @@ const stageText = (s: BillTimelineStage) =>
 /** One bill: what it would change, how it moved, and how each house divided. */
 export default function BillDetail() {
   const { key } = useLocalSearchParams<{ key: string }>();
-  const [record, setRecord] = useState<BillRecord | null>(null);
-  const [error, setError] = useState<unknown>(null);
-  const [retry, setRetry] = useState(0);
-  const again = () => {
-    setError(null);
-    setRetry((value) => value + 1);
-  };
+  const load = useCallback(() => catalogs.billFor(String(key)), [key]);
+  const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
   const [sponsors, setSponsors] = useState<Record<string, PersonSlug>>({});
-  useEffect(() => {
-    let active = true;
-    catalogs
-      .billFor(String(key))
-      .then((result) => {
-        if (!active) return;
-        setRecord(result);
-        setError(null);
-      })
-      .catch((e: unknown) => {
-        if (active) setError(e);
-      });
-    return () => {
-      active = false;
-    };
-  }, [key, retry]);
   const view = record?.data;
   const identity = view?.identity.data ?? null;
   // Sponsors link to their profile only where the roster and the directory
@@ -163,7 +145,16 @@ export default function BillDetail() {
             : undefined,
         }}
       />
-      <Screen testID={view ? 'bill-screen' : 'bill-pending-screen'}>
+      <Screen
+        testID={view ? 'bill-screen' : 'bill-pending-screen'}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={refresh}
+            tintColor={chrome.tint}
+          />
+        }
+      >
         {notFound ? (
           <Group>
             <Heading level={1} testID="bill-not-found">
@@ -179,14 +170,14 @@ export default function BillDetail() {
             <OfflineBanner cached={false} testID="bill-offline-uncached" />
             <Button
               label="Try again"
-              onPress={() => again()}
+              onPress={retry}
               testID="bill-error-retry"
             />
           </Group>
         ) : error && !record ? (
           <ErrorState
             message={errorMessage(error)}
-            onRetry={() => again()}
+            onRetry={retry}
             testID="bill-error"
           />
         ) : !view ? (
@@ -204,6 +195,8 @@ export default function BillDetail() {
               sponsors={sponsors}
               stale={record.stale}
               savedAt={record.savedAt}
+              refreshing={refreshing}
+              onRefresh={refresh}
             />
             <Summary view={view} />
             <KeyDates view={view} />
@@ -255,11 +248,15 @@ function BillHead({
   sponsors,
   stale,
   savedAt,
+  refreshing,
+  onRefresh,
 }: {
   view: BillView;
   sponsors: Record<string, PersonSlug>;
   stale: boolean;
   savedAt: number;
+  refreshing: boolean;
+  onRefresh: () => void;
 }) {
   const identity = view.identity.data!;
   const draft = identity.status === 'exposure_draft';
@@ -269,7 +266,17 @@ function BillHead({
       {stale ? (
         <>
           <OfflineBanner testID="bill-offline" />
-          <StaleNotice savedAt={savedAt} testID="bill-stale" />
+          <StaleNotice
+            savedAt={savedAt}
+            refreshing={refreshing}
+            testID="bill-stale"
+          />
+          <Button
+            label="Try again"
+            onPress={onRefresh}
+            loading={refreshing}
+            testID="bill-refresh"
+          />
         </>
       ) : null}
       <Text variant="kicker">{draft ? 'Exposure draft' : 'Bill'}</Text>
@@ -583,7 +590,6 @@ function DivisionItem({
       >
         <Text variant="strong">{outcome}</Text> · {counts}
       </Text>
-      {division.note ? <Text variant="fine">{division.note}</Text> : null}
       <PartySplits
         splits={division.splits}
         basisNote={basisNote}
@@ -595,6 +601,13 @@ function DivisionItem({
         url={division.url}
         kind="record"
         testID={`bill-division-${index}-source`}
+      />
+      {/* The record's prose comes after the counts and source; a long note
+          folds so the next division is never buried under it. */}
+      <DivisionNote
+        note={division.note}
+        links={division.noteLinks}
+        testID={`bill-division-${index}-note`}
       />
     </View>
   );
@@ -633,16 +646,12 @@ function Speeches({ view }: { view: BillView }) {
                   {speech.party ? <RecordedParty party={speech.party} /> : null}
                   {meta ? <Text variant="metadata">{meta}</Text> : null}
                 </View>
-                {speech.brief ? (
-                  <Group gap={spacing.s1}>
-                    <Text
-                      variant="kicker"
-                      testID={`bill-speech-${index}-brief-label`}
-                    >
-                      {speech.briefLabel}
-                    </Text>
-                    <Text variant="body">{speech.brief}</Text>
-                  </Group>
+                {speech.brief && speech.briefLabel ? (
+                  <MachineBrief
+                    label={speech.briefLabel}
+                    brief={speech.brief}
+                    testID={`bill-speech-${index}-brief`}
+                  />
                 ) : null}
                 <OpaxWebLink
                   label="Read the speech"

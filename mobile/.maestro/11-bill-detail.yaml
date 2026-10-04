@@ -97,6 +97,21 @@ name: 11 Read a bill, its machine summary, divisions and speeches
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/11-division-source
 - tapOn: OK
+# The record's long note folds below the counts and source; it opens whole.
+- scrollUntilVisible:
+    element:
+      id: bill-division-0-note
+    timeout: 60000
+- assertVisible: Division note, 45 words
+- waitForAnimationToEnd
+- tapOn:
+    id: bill-division-0-note
+- scrollUntilVisible:
+    element:
+      id: bill-division-0-note-text
+    visibilityPercentage: 10
+    timeout: 60000
+- takeScreenshot: ${EVIDENCE}/11-division-note
 # Near the end of the page an element cannot be centred: scroll to it only.
 - scrollUntilVisible:
     element:

@@ -1,10 +1,16 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import type { BillSplit, billSplits } from '../../api/bill-transforms';
+import type {
+  BillNoteLink,
+  BillSplit,
+  billSplits,
+} from '../../api/bill-transforms';
+import { sourceUrl } from '../../navigation/external';
 import { formatCount, formatDate } from '../../design/format';
 import { partyIdentity } from '../../design/party';
 import {
   Icon,
+  SourceLink,
   Text,
   useAccessibilitySize,
   type SFSymbol,
@@ -238,7 +244,6 @@ export function PartySplits({
   basisNote: string;
   testID: string;
 }) {
-  const [open, setOpen] = useState(false);
   if (!splits.recorded)
     return (
       <Text variant="fine" testID={`${testID}-none`}>
@@ -247,10 +252,64 @@ export function PartySplits({
     );
   const parties = splits.drawn.length + splits.folded.length;
   return (
+    <Disclosure
+      label="Party splits"
+      accessibilityLabel={`Party splits, ${parties} ${parties === 1 ? 'party' : 'parties'}`}
+      testID={testID}
+      bodyTestID={`${testID}-list`}
+    >
+      {splits.drawn.map((split) => (
+        <SplitRow
+          key={split.party}
+          split={split}
+          max={splits.max}
+          testID={`${testID}-${split.label.replace(/[^A-Za-z]+/g, '-').toLowerCase()}`}
+        />
+      ))}
+      {splits.folded.length ? (
+        <Text
+          variant="fine"
+          accessibilityLabel={`Also ${splits.folded.map(splitLabel).join('; ')}.`}
+        >
+          Also{' '}
+          {splits.folded
+            .map((s) => `${s.label} ${s.ayes}–${s.noes}`)
+            .join(', ')}
+          .
+        </Text>
+      ) : null}
+      {splits.notes.length ? (
+        <Text variant="fine">{splits.notes.join(' · ')}</Text>
+      ) : null}
+      <Text variant="fine">{basisNote}</Text>
+    </Disclosure>
+  );
+}
+
+/**
+ * A control that shows and hides a block: its label, a chevron, and the
+ * expanded state for VoiceOver. Collapsed by default.
+ */
+export function Disclosure({
+  label,
+  accessibilityLabel,
+  testID,
+  bodyTestID,
+  children,
+}: {
+  label: string;
+  /** What VoiceOver reads when it should say more than the label. */
+  accessibilityLabel?: string;
+  testID: string;
+  bodyTestID?: string;
+  children: ReactNode;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
     <View style={styles.splits}>
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={`Party splits, ${parties} ${parties === 1 ? 'party' : 'parties'}`}
+        accessibilityLabel={accessibilityLabel ?? label}
         accessibilityState={{ expanded: open }}
         testID={testID}
         onPress={() => setOpen((value) => !value)}
@@ -259,39 +318,139 @@ export function PartySplits({
           pressed ? { backgroundColor: colors.sunken } : null,
         ]}
       >
-        <Text variant="control" tone="navy" style={styles.grow}>
-          Party splits
+        <Text variant="control" tone="navy" wordSafe style={styles.grow}>
+          {label}
         </Text>
         <Icon name={open ? 'chevron.up' : 'chevron.down'} size={14} />
       </Pressable>
       {open ? (
-        <View style={styles.splitList} testID={`${testID}-list`}>
-          {splits.drawn.map((split) => (
-            <SplitRow
-              key={split.party}
-              split={split}
-              max={splits.max}
-              testID={`${testID}-${split.label.replace(/[^A-Za-z]+/g, '-').toLowerCase()}`}
-            />
-          ))}
-          {splits.folded.length ? (
-            <Text
-              variant="fine"
-              accessibilityLabel={`Also ${splits.folded.map(splitLabel).join('; ')}.`}
-            >
-              Also{' '}
-              {splits.folded
-                .map((s) => `${s.label} ${s.ayes}–${s.noes}`)
-                .join(', ')}
-              .
-            </Text>
-          ) : null}
-          {splits.notes.length ? (
-            <Text variant="fine">{splits.notes.join(' · ')}</Text>
-          ) : null}
-          <Text variant="fine">{basisNote}</Text>
+        <View style={styles.splitList} testID={bodyTestID ?? `${testID}-body`}>
+          {children}
         </View>
       ) : null}
+    </View>
+  );
+}
+
+const words = (text: string) => text.split(/\s+/).filter(Boolean).length;
+/** A division note up to this many characters reads inline; longer ones fold. */
+export const NOTE_INLINE_LIMIT = 200;
+/** A machine brief up to this many characters reads inline; longer ones fold. */
+export const BRIEF_INLINE_LIMIT = 500;
+
+/**
+ * A note's citations the app can open: each destination once, and only those
+ * the source-link policy accepts (HTTPS, no user information, no OPAX route
+ * the app never opens). The rest stay words in the note.
+ */
+export function noteCitations(links: readonly BillNoteLink[]) {
+  const seen = new Set<string>();
+  const out: { label: string; url: string; host: string }[] = [];
+  for (const link of links) {
+    let url: string;
+    try {
+      url = sourceUrl(link.url);
+    } catch {
+      continue;
+    }
+    if (seen.has(url)) continue;
+    seen.add(url);
+    out.push({
+      label: link.label,
+      url,
+      host: new URL(url).hostname.replace(/^www\./, ''),
+    });
+  }
+  return out;
+}
+
+/**
+ * The record's prose about a division. Short notes read inline; a long note
+ * folds behind "Division note" so the motion, counts, splits and source come
+ * first. Its own citations follow it as source links.
+ */
+export function DivisionNote({
+  note,
+  links,
+  testID,
+}: {
+  note: string;
+  links: readonly BillNoteLink[];
+  testID: string;
+}) {
+  const citations = noteCitations(links);
+  if (!note && !citations.length) return null;
+  const body = (
+    <>
+      {note ? (
+        <Text variant="metadata" testID={`${testID}-text`}>
+          {note}
+        </Text>
+      ) : null}
+      {citations.length ? (
+        <View style={styles.citations}>
+          <Text variant="kicker">Linked in the note</Text>
+          {citations.map((c, i) => (
+            <SourceLink
+              key={c.url}
+              citation={c.host}
+              record={c.label}
+              url={c.url}
+              kind="record"
+              testID={`${testID}-link-${i}`}
+            />
+          ))}
+        </View>
+      ) : null}
+    </>
+  );
+  if (note.length <= NOTE_INLINE_LIMIT)
+    return (
+      <View style={styles.citations} testID={testID}>
+        {body}
+      </View>
+    );
+  return (
+    <Disclosure
+      label="Division note"
+      accessibilityLabel={`Division note, ${words(note)} words`}
+      testID={testID}
+    >
+      {body}
+    </Disclosure>
+  );
+}
+
+/** A stored machine brief: its label always shows; a long brief folds. */
+export function MachineBrief({
+  label,
+  brief,
+  testID,
+}: {
+  label: string;
+  brief: string;
+  testID: string;
+}) {
+  return (
+    <View style={styles.citations}>
+      <Text variant="kicker" testID={`${testID}-label`}>
+        {label}
+      </Text>
+      {brief.length <= BRIEF_INLINE_LIMIT ? (
+        <Text variant="body" testID={`${testID}-text`}>
+          {brief}
+        </Text>
+      ) : (
+        <Disclosure
+          label="Read the brief"
+          accessibilityLabel={`Read the ${label.toLowerCase()}, ${words(brief)} words`}
+          testID={`${testID}-more`}
+        >
+          <Text variant="body" testID={`${testID}-text`}>
+            {brief}
+          </Text>
+        </Disclosure>
+      )}
     </View>
   );
 }
@@ -376,6 +535,7 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.s2,
   },
   splits: { gap: spacing.s3 },
+  citations: { gap: spacing.s1 },
   disclosure: {
     flexDirection: 'row',
     alignItems: 'center',

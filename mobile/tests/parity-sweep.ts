@@ -8,6 +8,8 @@ import ts from 'typescript';
 import { decodeBill, decodeVotes } from '../src/api/catalogs';
 import {
   billDedupeDivisions,
+  billNoteLinks,
+  billQuestionParts,
   billSponsorFromPortfolio,
   billPortfolio,
   billSponsorName,
@@ -15,7 +17,8 @@ import {
   billDisplay,
 } from '../src/api/bill-transforms';
 import { voteTotals } from '../src/api/transforms';
-import { bills, catalogs, pinned, files } from './pinned';
+import { sponsorSlug } from '../src/features/bills/sponsors';
+import { bills, catalogs, pinned, files, roster, slugs } from './pinned';
 const web = readFileSync(
   resolve(__dirname, '../../portal/public/app.js'),
   'utf8',
@@ -54,6 +57,8 @@ const report = {
   pinnedBills: 0,
   localBills: 0,
   indexRows: bills.bills.length,
+  noteLinks: 0,
+  linkedSponsors: 0,
   differences: 0,
 };
 const voteSource = fn('renderPersonVotes');
@@ -156,6 +161,69 @@ for (const bill of detailInputs)
     originalDedupe(bill.divisions, bill),
     `divisions: ${bill.key}`,
   );
+// A division note's citations: the web's billNoteHTML links, in order, with
+// the same labels and destinations (relative links on They Vote For You).
+// The dedupe source above defines the helpers billNoteHTML calls.
+const noteHTML = runInNewContext(
+  [
+    dedupeSource,
+    fn('esc'),
+    fn('safeUrl'),
+    constant('BILL_NOTE_BASE'),
+    fn('billNoteHTML'),
+    'billNoteHTML',
+  ].join('\n'),
+) as (text: string) => string;
+const unescape = (s: string) =>
+  s
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&');
+for (const bill of detailInputs)
+  for (const division of bill.divisions) {
+    const { note } = billQuestionParts(division, bill);
+    if (!note) continue;
+    const expected = [
+      ...noteHTML(note).matchAll(/<a href="([^"]*)"[^>]*>([^<]*)&nbsp;/g),
+    ].map((m) => ({ label: unescape(m[2]!), url: unescape(m[1]!) }));
+    const actual = billNoteLinks(note);
+    same(actual, expected, `note links: ${bill.key} ${division.key}`);
+    report.noteLinks += actual.length;
+  }
+// A sponsor link never names anyone but the person on screen: whenever a
+// sponsor resolves, the directory's name for that slug is the displayed name
+// or the roster's recorded full name for the same person.
+const fold = (n: string) =>
+  n
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLocaleLowerCase('en-AU')
+    .replace(/[’‘ʼ`']/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+for (const bill of detailInputs) {
+  const members = billDisplay(bill).sponsorMembers;
+  for (const member of members) {
+    const slug = sponsorSlug(
+      member.name,
+      roster,
+      slugs,
+      members.length === 1 ? bill.sponsor_person_id : null,
+    );
+    if (!slug) continue;
+    const linked = slugs.slugs[slug]!;
+    const rows = roster.people.filter((r) => fold(r.name) === fold(linked));
+    const names = [linked, ...rows.flatMap((r) => (r.full ? [r.full] : []))];
+    equal(
+      names.some((n) => fold(n) === fold(member.name)),
+      true,
+      `sponsor link: ${bill.key} ${member.name} -> ${slug}`,
+    );
+    report.linkedSponsors += 1;
+  }
+}
 for (const b of [...bills.bills, ...detailInputs]) {
   same(
     billSponsorFromPortfolio(b.portfolio),

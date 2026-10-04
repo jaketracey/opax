@@ -103,6 +103,8 @@ const decodeSweep = shape({
   pinnedBills: count,
   localBills: count,
   indexRows: count,
+  noteLinks: count,
+  linkedSponsors: count,
   differences: count,
 });
 let sweep: ReturnType<typeof decodeSweep> | undefined;
@@ -147,6 +149,13 @@ test('division deduplication matches the web on every local bill file', () => {
   const report = completeSweep();
   expect(report.localBills).toBeGreaterThan(0);
   expect(report.differences).toBe(0);
+}, 50000);
+test('division note citations match the web links on every local bill file', () => {
+  // The sweep compares each note's links with the web's billNoteHTML.
+  expect(completeSweep().noteLinks).toBeGreaterThan(1000);
+}, 50000);
+test('no sponsor link names anyone but the person on screen, across every local bill', () => {
+  expect(completeSweep().linkedSponsors).toBeGreaterThan(100);
 }, 50000);
 test('samePartyLabel matches the actual web rule for all roster party pairs', () => {
   const original = runInNewContext(
