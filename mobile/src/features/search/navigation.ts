@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { catalogs } from '../../api/runtime';
-import { ApiError } from '../../api/errors';
+import { nameKey } from '../../api/ids';
 import { personRoute } from '../../navigation/routes';
 import { openOnWeb } from '../../navigation/external';
 
@@ -13,11 +13,9 @@ export async function openSearchPerson(slug: string) {
 }
 export async function openSuggestedPerson(name: string) {
   const slugs = (await catalogs.slugs()).data.slugs;
-  const candidates = Object.entries(slugs).filter(([, n]) => n === name);
-  if (candidates.length !== 1)
-    throw new ApiError(
-      'not-found',
-      'This person is not in the public directory.',
-    );
-  await openSearchPerson(candidates[0]![0]);
+  const candidates = Object.entries(slugs).filter(
+    ([, n]) => nameKey(n) === nameKey(name),
+  );
+  if (candidates.length === 1) await openSearchPerson(candidates[0]![0]);
+  else await openOnWeb(`/subject/person/${encodeURIComponent(name)}`, name);
 }

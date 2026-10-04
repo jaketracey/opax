@@ -1,4 +1,5 @@
-import { bills, index, roster } from './pinned';
+import { bills, index, roster, slugs } from './pinned';
+import { nameKey } from '../src/api/ids';
 import { suggestionsFor } from '../src/api/catalogs';
 import { groupSuggestions, searchKinds } from '../src/features/search/model';
 
@@ -44,3 +45,39 @@ test('the kind control exposes exactly the permitted catalog submissions', () =>
     'expense',
   ]);
 });
+
+// All 13 twins in the pinned roster: case variants as well as apostrophes.
+const twinNames = [
+  'Hugh McDermott',
+  "Brendan O'Connor",
+  "Kelly O'Dwyer",
+  "Ken O'Dowd",
+  'Bert Van Manen',
+  "Gavan O'Connor",
+  'Scot MacDonald',
+  'Jodi McKay',
+  'M O’Brien',
+  'D O’Brien',
+  'D’Ambrosio',
+  'Yvette D’Ath',
+  "Deborah O'Neill",
+];
+test.each(twinNames)(
+  'the two spellings of %s suggest one slug-holder row',
+  (name) => {
+    const key = nameKey(name);
+    const twins = roster.people.filter((p) => nameKey(p.name) === key);
+    expect(twins).toHaveLength(2);
+    const holder = Object.values(slugs.slugs).find((n) => nameKey(n) === key);
+    for (const twin of twins) {
+      const rows = suggestionsFor(
+        twin.name,
+        roster,
+        index,
+        bills,
+      ).people.filter((p) => nameKey(p.name) === key);
+      expect(rows).toHaveLength(1);
+      expect(rows[0]?.name).toBe(holder);
+    }
+  },
+);
