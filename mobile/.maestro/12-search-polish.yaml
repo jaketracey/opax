@@ -62,3 +62,8 @@ name: 12 Search alternate kinds and native electorate suggestions
     timeout: 20000
 - assertVisible: Grayndler
 - takeScreenshot: ${EVIDENCE}/12-native-electorate
+- runFlow:
+    file: review-pages.yaml
+    env:
+      END: electorate-elections
+      PREFIX: 12-native-representation
