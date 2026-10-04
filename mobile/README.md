@@ -147,17 +147,19 @@ attack regression tests.
   `personSlugForResult` resolves the encoded name/canonical slug from `href`
   through the slug API before navigation. Current seats come from dated electorate
   observations, not last speech year or the roster's historical representation array.
-- Cache entries use one disk file per complete origin and URL, with a small
-  in-memory metadata index persisted separately. Catalogs have a 40-entry/12 MiB
-  budget; no-store search pages have their own 8-entry/1 MiB budget and cannot
-  evict catalogs. Oldest validation is evicted within each bucket. Writes serialize
-  and use temporary files. Every write re-reads the entry: older source dates or
+- Public catalog cache entries use one disk file per complete origin and URL,
+  with a small metadata index persisted separately and a 40-entry/12 MiB budget.
+  Search queries and result pages stay in memory only, with an 8-entry/1 MiB
+  budget, and cannot evict catalogs. Legacy disk search entries are removed when
+  the catalog index loads. Oldest validation is evicted within each bucket.
+  Writes serialize; catalog disk writes use temporary files. Every write checks
+  the retained entry: older source dates or
   responses started before the stored validation are rejected; 304 refreshes need
   the same stored ETag. A rejected response returns the retained observation.
   The v2 layout discards the earlier snapshot cache; system cache storage can also
   be reclaimed by iOS. Offline data is opportunistic, not permanent storage. HTTP freshness
   expires at max-age (capped to one day); no-store search is revalidated on every
-  read but retained locally for offline use. `savedAt`, `validatedAt`, `asOf` and
+  read and retained only for the current app session. `savedAt`, `validatedAt`, `asOf` and
   `stale` are distinct. Transient failures can return stale data; 4xx identity,
   invalid data and forbidden routes do not. Display saved and source dates.
 - `scripts/fixture-snapshot.json` pins SHA-256 and byte sizes of the reviewed public P0 files. Startup verifies hashes and freezes bytes in memory.
