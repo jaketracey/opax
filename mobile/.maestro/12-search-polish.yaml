@@ -25,6 +25,7 @@ name: 12 Search alternate kinds and native electorate suggestions
     element:
       id: search-empty-pay
     timeout: 90000
+    centerElement: true
 - takeScreenshot: ${EVIDENCE}/12-other-kinds
 - tapOn:
     id: search-empty-pay
@@ -46,6 +47,7 @@ name: 12 Search alternate kinds and native electorate suggestions
     element:
       id: search-suggestion-electorate-.*
     timeout: 90000
+    centerElement: true
     visibilityPercentage: 1
 - takeScreenshot: ${EVIDENCE}/12-electorate-suggestion
 - tapOn:

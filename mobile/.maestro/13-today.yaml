@@ -36,6 +36,7 @@ name: 13 Today feeds and their dated original sources
     element:
       id: bill-source-0
     timeout: 90000
+    centerElement: true
 - tapOn:
     id: bill-source-0
 - assertVisible: https://parlinfo.aph.gov.au/.*
@@ -53,6 +54,7 @@ name: 13 Today feeds and their dated original sources
     element:
       id: today-declaration-0
     timeout: 90000
+    centerElement: true
 - takeScreenshot: ${EVIDENCE}/13-declaration
 - tapOn:
     id: today-declaration-0
