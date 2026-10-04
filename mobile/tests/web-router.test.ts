@@ -87,6 +87,7 @@ function guardFrom(source: string): Guard {
     'expo-web-browser': {},
     '../design/environment': { webOrigin: origin, isE2E: true },
     '../design/tokens': { light: {} },
+    './source-destination': {},
   };
   vm.runInNewContext(outputText, {
     module,

@@ -61,10 +61,13 @@ name: 13 Today feeds and their dated original sources
 - assertVisible: https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Senators_Interests/Senators_Interests_Register/123072
 - takeScreenshot: ${EVIDENCE}/13-declaration-source-alert
 # The local destination view scrolls a long URL at AX5. Capture its end too.
-- swipe:
-    start: 50%, 65%
-    end: 50%, 35%
-    duration: 1000
+- repeat:
+    times: 8
+    commands:
+      - swipe:
+          start: 50%, 65%
+          end: 50%, 35%
+          duration: 1000
 - takeScreenshot: ${EVIDENCE}/13-declaration-source-alert-end
 - tapOn: OK
 # AX5 swipes can overshoot this tall text. Find it, then use a short drag
