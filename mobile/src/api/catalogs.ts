@@ -5,7 +5,7 @@ import {
   personSlugForResult,
   type PersonProfile,
 } from './person-identity';
-import type { CatalogKind } from './policy';
+import { editionPath, type CatalogKind } from './policy';
 import * as decode from './catalog-decoders';
 import type { Manifest } from './catalog-decoders';
 import { billKey, interestKey, personId, nameKey, type PersonId } from './ids';
@@ -19,7 +19,9 @@ import {
   billFor,
   billsFor,
   coverageFor,
+  editionFor,
   type Block,
+  type EditionView,
   type ProfileCatalogs,
 } from './selectors';
 export * from './catalog-decoders';
@@ -189,6 +191,47 @@ export class Catalogs {
       ),
     ]);
     return { bills, declarations };
+  }
+  /**
+   * W13: the newest posted daily edition, through the catalog cache like every
+   * other read, so a saved copy stays readable offline and is marked stale.
+   * A 404 means no edition is published: the block is `missing` and the card
+   * is absent, never an error. Nothing is composed when the read fails.
+   */
+  async todayEdition(refresh = false): Promise<Block<EditionView>> {
+    try {
+      const record = await this.client.get(
+        editionPath,
+        decode.decodeEdition,
+        refresh,
+      );
+      return {
+        ...editionFor(record.data),
+        stale: record.stale,
+        savedAt: record.savedAt,
+      };
+    } catch (e) {
+      const missing = e instanceof ApiError && e.code === 'not-found';
+      return {
+        data: null,
+        status: missing ? 'missing' : 'error',
+        ...(missing
+          ? {}
+          : {
+              error:
+                e instanceof ApiError
+                  ? e
+                  : new ApiError(
+                      'invalid-data',
+                      'The daily edition could not be read.',
+                    ),
+            }),
+        sources: [],
+        asAt: null,
+        stale: false,
+        savedAt: null,
+      };
+    }
   }
   async directory() {
     const [manifest, roster, slugs] = await Promise.all([
