@@ -2,6 +2,14 @@
 # Retry the shared host's worker SIGSEGV once; preserve all other test failures.
 set -euo pipefail
 cd "$(dirname "$0")/.."
+# Watch mode needs the caller's TTY for keyboard prompts. There is no retry
+# wrapper in an interactive session; preserve Jest's descriptors and exit code.
+for argument in "$@"; do
+  case "$argument" in
+    --watch|--watchAll|--watch=true|--watchAll=true)
+      exec ./node_modules/.bin/jest "$@" ;;
+  esac
+done
 LOG=$(mktemp "${TMPDIR:-/tmp}/opax-jest.XXXXXX")
 trap '/bin/rm -f "$LOG"' EXIT
 for attempt in 1 2; do

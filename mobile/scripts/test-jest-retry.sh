@@ -12,6 +12,7 @@ count=$(cat "$MOCK_ROOT/count")
 count=$((count + 1))
 printf '%s\n' "$count" > "$MOCK_ROOT/count"
 printf '%s\n' "$*" >> "$MOCK_ROOT/args"
+printf '%s\n' "$$" > "$MOCK_ROOT/pid"
 case "$MOCK_MODE" in
   pass) exit 0 ;;
   fail) echo 'FAIL assertion failed'; exit 3 ;;
@@ -38,4 +39,17 @@ check fail 3 1
 check crash-then-pass 0 2
 grep -q 'retrying once' "$SCRATCH/log"
 check crash-twice 1 2
+for option in --watch --watchAll --watch=true --watchAll=true; do
+  printf '0\n' > "$SCRATCH/count"
+  : > "$SCRATCH/args"
+  # exec must preserve the wrapper PID (and therefore the caller's TTY).
+  MOCK_ROOT="$SCRATCH" MOCK_MODE=crash-twice bash "$SCRATCH/scripts/jest-retry.sh" "$option" > "$SCRATCH/log" 2>&1 &
+  watch_pid=$!
+  rc=0
+  wait "$watch_pid" || rc=$?
+  [ "$rc" = 1 ] && [ "$(cat "$SCRATCH/count")" = 1 ] && [ "$(cat "$SCRATCH/pid")" = "$watch_pid" ] || exit 1
+  [ "$(cat "$SCRATCH/args")" = "$option" ] || exit 1
+  PASSED=$((PASSED + 1))
+  echo "ok $PASSED - $option exec preserves interactivity and exit without retry"
+done
 echo "jest-retry: $PASSED passed"

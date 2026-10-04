@@ -223,7 +223,7 @@ attack regression tests.
   Worker imports or outbound network. The person search projection matches names
   from these catalogs; it does not reproduce production index ranking. A Host header other than the exact loopback host is rejected. Unknown
   routes/methods/kinds return 404 with `OUTSIDE_ALLOW_LIST`. The documented
-  `upgrade` hook is reserved for a later fake voice relay.
+  `upgrade` hook now hosts the loopback fake voice relay; see `src/voice/README.md`.
 - Add independent `.maestro/<nn>-<journey>.yaml` flows using stable `testID`s.
   Use `${EVIDENCE}` for relative screenshot paths within Maestro's artifact bundle;
   the runner gathers named PNGs into the run's `screenshots/` folder.
