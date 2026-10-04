@@ -17,13 +17,11 @@ STATUS_FILE="$OUT/exit-status"
 /bin/rm -f "$STATUS_FILE"
 echo "$$" > "$OUT/pid"
 echo "E2E pid=$$ status=$STATUS_FILE"
-export QA_LOCK_LOG="$OUT/lock.log"
+export QA_LOCK_LOG="$OUT/lock.log" QA_LOCK_SCRIPT=e2e.sh
 FIXTURE_PID=; AUDIT_PID=; OWN_DEVICE=0
 cleanup() {
   rc=$?
   trap - EXIT INT TERM
-  # Nothing after Maestro needs the pasteboard: free it before slower teardown.
-  qa_paste_lock_release
   if [ -n "$AUDIT_PID" ]; then kill "$AUDIT_PID" 2>/dev/null || true; wait "$AUDIT_PID" 2>/dev/null || true; fi
   if [ -n "$FIXTURE_PID" ]; then kill "$FIXTURE_PID" 2>/dev/null || true; wait "$FIXTURE_PID" 2>/dev/null || true; fi
   if [ "$OWN_DEVICE" = 1 ]; then
@@ -78,27 +76,25 @@ for flow in "$@"; do
     *) test -f "$flow" || { echo "Unknown flow: $flow" >&2; exit 1; }; FLOWS+=("$flow") ;;
   esac
 done
-# Maestro inputText may use the iOS pasteboard. Serialize all input flows under
-# the shared lock, and never wait on the host while holding it: pass the build
-# gate first, then wait for capacity and the lock (scripts/qa-lock.sh). Maestro
-# then runs niced directly, so a held lock never queues behind other builds.
-build_command true
-qa_paste_lock_acquire || { echo "Pasteboard lock wait expired; see $QA_LOCK_LOG" >&2; exit 1; }
 ./node_modules/.bin/tsx scripts/connection-audit.ts "$UDID" "$OUT" > "$OUT/connection-audit.log" 2>&1 &
 AUDIT_PID=$!
 # Bound native launch calls; warm the installed app before Maestro's clear-state.
 perl -e 'alarm 60; exec @ARGV' xcrun simctl launch "$UDID" au.com.opax.app > "$OUT/launch.log" 2>&1 || true
 perl -e 'alarm 60; exec @ARGV' xcrun simctl terminate "$UDID" au.com.opax.app >> "$OUT/launch.log" 2>&1 || true
+# Maestro inputText may use the iOS pasteboard, so every Maestro run holds the
+# shared lock, taken inside the build gate after a capacity wait and freed as
+# soon as the run ends (qa_paste_lock_run in scripts/qa-lock.sh). A TERM to this
+# script takes effect when the current run returns; TERM the lock's owner pid
+# (qa-locked.sh) to stop it at once.
 if [ "${#FLOWS[@]}" -gt 0 ]; then
-nice -n 10 maestro --device "$UDID" test --test-output-dir "$OUT/maestro" --debug-output "$OUT/maestro" --format junit --output "$OUT/report.xml" -e EVIDENCE=screenshots -e REMOTE_SHARE_UI="${OPAX_REMOTE_SHARE_UI:-false}" "${FLOWS[@]}" > "$OUT/maestro.log" 2>&1 || { cat "$OUT/maestro.log" >&2; exit 1; }
+qa_paste_lock_run maestro --device "$UDID" test --test-output-dir "$OUT/maestro" --debug-output "$OUT/maestro" --format junit --output "$OUT/report.xml" -e EVIDENCE=screenshots -e REMOTE_SHARE_UI="${OPAX_REMOTE_SHARE_UI:-false}" "${FLOWS[@]}" > "$OUT/maestro.log" 2>&1 || { cat "$OUT/maestro.log" >&2; exit 1; }
 ./node_modules/.bin/tsx scripts/collect-screenshots.ts "$OUT/screenshots" "$OUT/maestro"
 fi
 if [ "$OFFLINE" = 1 ]; then
   kill "$FIXTURE_PID"; wait "$FIXTURE_PID" || true; FIXTURE_PID=
-  nice -n 10 maestro --device "$UDID" test --test-output-dir "$OUT/offline-maestro" --debug-output "$OUT/offline-maestro" --format junit --output "$OUT/offline-report.xml" -e EVIDENCE=screenshots -e REMOTE_SHARE_UI="${OPAX_REMOTE_SHARE_UI:-false}" .maestro/04-offline.yaml > "$OUT/offline-maestro.log" 2>&1 || { cat "$OUT/offline-maestro.log" >&2; exit 1; }
+  qa_paste_lock_run maestro --device "$UDID" test --test-output-dir "$OUT/offline-maestro" --debug-output "$OUT/offline-maestro" --format junit --output "$OUT/offline-report.xml" -e EVIDENCE=screenshots -e REMOTE_SHARE_UI="${OPAX_REMOTE_SHARE_UI:-false}" .maestro/04-offline.yaml > "$OUT/offline-maestro.log" 2>&1 || { cat "$OUT/offline-maestro.log" >&2; exit 1; }
   ./node_modules/.bin/tsx scripts/collect-screenshots.ts "$OUT/screenshots" "$OUT/offline-maestro"
 fi
-qa_paste_lock_release
 if grep -Eq 'OUTSIDE_ALLOW_LIST|"allowed":false|opax\.com\.au' "$OUT/fixture.log"; then echo "Fixture request boundary failed" >&2; exit 1; fi
 kill "$AUDIT_PID"
 wait "$AUDIT_PID" || { cat "$OUT/connection-audit.log" >&2; AUDIT_PID=; exit 1; }

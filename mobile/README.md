@@ -78,17 +78,37 @@ Journey 04 stops the fixture and checks saved data without clearing the app. Def
 runs include 01–04; `OPAX_VERIFY_OFFLINE=1` also adds 04 to a selected warm run.
 
 The pasteboard lock (`scripts/qa-lock.sh`) is shared with other projects, so a run
-never waits on the host while holding it. Before the Maestro flows the runner passes
-the build gate, waits for capacity, and only then takes the lock with `mkdir`. If the
-load has reached 140 by then, it releases the lock and waits again. Maestro then runs
-niced. `OPAX_PASTE_WAIT_SECONDS` covers both waits; every minute `lock.log` names the
-lock, the elapsed time and the holder. The holder writes `owner` inside the lock
-directory (pid, script, worktree name, UTC start, random token) and deletes it before
-`rmdir`, so other projects' plain `mkdir`/`rmdir` keep working. A waiter removes a lock
-only when its owner file names a dead pid, and logs it; a lock with a live pid or no
-owner file is never removed. The lock is released as soon as the flows finish, and on
-any failure. `scripts/test-qa-lock.sh`, part of `npm run qa`, tests this in a scratch
-directory. Never write your own lock wrapper.
+never waits on anything while holding it. Every Maestro run goes through
+`qa_paste_lock_run`: holding nothing, it waits for the lock to look free and for
+capacity, then enters the build gate with `scripts/qa-locked.sh`. Inside the gate the
+wrapper makes one non-blocking lock attempt and rechecks the load. If the lock is
+taken or the load has reached 140, it leaves the gate at once and the runner starts
+again; otherwise Maestro runs and the lock is released when it ends. The wrapper leads
+its own process group: Maestro and its children run in it, and release first stops any
+leftovers. `OPAX_PASTE_WAIT_SECONDS` covers all the waiting; every minute `lock.log`
+names the lock, the elapsed time and the holder. Never write your own lock wrapper.
+
+The lock directory appears in one atomic step with its `owner` file (pid and pgid of
+the wrapper, script, worktree name, UTC start, random token) and is released by renaming
+it aside, so a crash never leaves an OPAX lock without an owner. Other projects' plain
+`mkdir`/`rmdir` keep working: publication never replaces an existing directory, and
+OPAX never writes into a lock it did not create. A waiter retires a lock only when its
+owner's pid is dead and no process in its group is alive, and logs it. A lock with a
+live holder, a live group member or no owner file is never removed, whatever its age.
+`<lock>.opax/` holds the reap guard plus staging and retired copies from crashed runs,
+which are cleaned once their pid is dead. `scripts/test-qa-lock.sh`, part of
+`npm run qa`, tests all of this with a mocked gate in a scratch directory.
+
+If a lock stays held, read `lock.log` and `<lock>/owner`, then:
+
+- **OPAX owner, dead pid, live group** (`pgrep -g <pgid>` lists processes): the locked
+  Maestro's leftovers still run. Stop them with `kill -TERM -- -<pgid>`; the next waiter
+  then retires the lock.
+- **OPAX owner, live pid:** the run is still going. To stop it now, `kill -TERM <pid>`;
+  the wrapper stops its group and releases. A TERM to `e2e.sh` itself takes effect when
+  the current Maestro run returns.
+- **No owner file:** the lock belongs to another project or an older OPAX script. Leave
+  it. Remove it with `rmdir` only after its owner confirms nothing uses the pasteboard.
 
 Agent command runners stop long foreground commands, which can strand a simulator
 or the lock. **Start e2e and release runs detached and poll them**:
