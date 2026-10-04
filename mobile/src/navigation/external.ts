@@ -266,7 +266,7 @@ export function sourceUrl(raw: string): string {
  * visibly presented (guideline 5.1.1(vii)). E2E builds never open a browser:
  * they show the destination locally instead.
  */
-export async function openSource(url: string, label: string): Promise<void> {
+export async function openSource(url: string): Promise<void> {
   let checked: string;
   try {
     checked = sourceUrl(url);
@@ -275,8 +275,9 @@ export async function openSource(url: string, label: string): Promise<void> {
     return;
   }
   if (isE2E) {
-    // Title and URL apart, so journeys can assert the exact destination.
-    Alert.alert(`Source record: ${label}`, checked);
+    // The citation remains on the source link. Repeating it in this native
+    // alert's title can push the exact destination out of view at AX5.
+    Alert.alert('Source record', checked);
     return;
   }
   try {

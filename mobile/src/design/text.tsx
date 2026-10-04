@@ -164,9 +164,7 @@ export function Text({
         },
         tabular ? { fontVariant: ['tabular-nums'] } : null,
         style,
-        reserveLines
-          ? { flexShrink: 0, minHeight: measuredHeight || undefined }
-          : null,
+        reserveLines ? { minHeight: measuredHeight || undefined } : null,
       ]}
     />
   );

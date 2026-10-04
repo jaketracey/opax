@@ -428,11 +428,11 @@ describe('word-safe text', () => {
         const style = StyleSheet.flatten(name().props.style);
         if (reserved) {
           expect(style.minHeight).toBeGreaterThan(128.668);
-          expect(style.flexShrink).toBe(0);
         } else {
           expect(style.minHeight).toBeUndefined();
-          expect(style.flexShrink).toBe(1);
         }
+        // The line box must not disable horizontal shrink beside an icon.
+        expect(style.flexShrink).toBe(1);
         expect(name().props.children).toBe('Anthony Albanese');
         expect(name().props.maxFontSizeMultiplier).toBe(0);
         expect(name().props.numberOfLines).toBeUndefined();
