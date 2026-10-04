@@ -41,9 +41,10 @@ PY="$REPO/.venv/bin/python"
 STEP_TIMEOUT="${OPAX_STEP_TIMEOUT:-3h}"
 ONLY="${OPAX_ONLY:-}"
 ALLOW_FAIL=",${OPAX_ALLOW_FAIL:-},"
-# exit 3 from these means the source refused to change the register (empty or shrunken upstream): the last good
-# rows are kept, so it is reported as stale, not failed (periodic-refresh.md, exit codes)
-STALE_OK=",donations_qld,donations_vic,donations_tas,donations_apply,lobbyists_fetch,lobbyists_apply,fits_fetch,fits_apply,rosters_fetch,qld_contracts,"
+# exit 3 from these means the source refused to change the register (empty or shrunken upstream; for ipea, a
+# quarter whose data.gov.au licence changed): the last good rows are kept, so it is reported as stale, not failed
+# (periodic-refresh.md, exit codes)
+STALE_OK=",donations_qld,donations_vic,donations_tas,donations_apply,lobbyists_fetch,lobbyists_apply,fits_fetch,fits_apply,rosters_fetch,qld_contracts,ipea,"
 
 # log, count, run_step, FAILED_STEPS, STEP_DELTA (shared with daily_refresh.sh)
 . "$REPO/scripts/lib/refresh_lib.sh"

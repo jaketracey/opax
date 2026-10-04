@@ -41,10 +41,10 @@ list only shows categories with a positive net and the top-five list only
 positive lines. by_year is keyed on the reporting quarter's calendar year
 (from_date is empty on 93% of rows), so 2017 and 2026 are partial years.
 
-Licence: meta.licence is parli.ingest.money_ipea.LICENCE. That loader refuses
-any quarter whose data.gov.au record states another licence, so the published
-statement cannot drift from the datasets' own (the CC BY 4.0 notice on
-ipea.gov.au covers the website, not the data).
+Licence: meta.licence is parli.ingest.money_ipea.LICENCE. That loader will not
+load a quarter whose data.gov.au record names another licence (by license_id
+or licence URL), so the published statement cannot drift from the datasets'
+own (the CC BY 4.0 notice on ipea.gov.au covers the website, not the data).
 """
 
 import os

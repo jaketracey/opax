@@ -37,6 +37,7 @@ unset behaviour is exactly as before (the desktop `ssh` backend for the ext load
 | `refresh_releases.py` | every step ran and succeeded | a fetch or publish step failed, or the KB "no generation" check failed (others still ran; nothing created after a failed check) | | |
 | `money_state_donations`, `money_small_jurisdictions`, `money_lobbyists` (direct) | ok | an exception (a lobbyist jurisdiction that fails is logged `FAILED` and skipped, exit stays 0) | | a source's replace was refused by the empty-upstream guard; the other sources still loaded |
 | `state_rosters fetch`, `qld_contracts` | ok | exception | | refused: the stored rows were kept (`--allow-shrink` overrides) |
+| `money_ipea` | ok (a quarter outside `--since`/`--until` whose licence changed is only a `WARNING` line) | exception | | a quarter in range whose data.gov.au licence (`license_id`, licence URL) is no longer `money_ipea.LICENCE` was not loaded and keeps its stored rows; the other quarters loaded. A re-spelled licence title is only noted |
 | `keep_if_unchanged.py` | `unchanged` or `changed` printed | | new file missing / empty / unparseable (committed file untouched) | repo unreadable or path outside it |
 | `validate_data.py GROUP...` | all groups ok | number of failing groups (one `FAIL <group>: ...` line each) | | |
 

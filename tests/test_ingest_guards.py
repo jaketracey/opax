@@ -9,6 +9,7 @@ empty CSV; money_diaries re-parsed every PDF on every run.
 import contextlib
 import csv
 import io
+import re
 import sqlite3
 import sys
 import tempfile
@@ -212,16 +213,17 @@ def write_csv(path, rows):
 class IpeaTests(unittest.TestCase):
     DS = {"quarter": "2026q02", "url": "https://example.test/2026q02_dataextract.csv", "title": "IPEA Q2",
           "licence": "cc-by", "licence_title": "Creative Commons Attribution 3.0 Australia",
+          "licence_url": "http://creativecommons.org/licenses/by/3.0/au/",
           "modified": "2026-08-05", "dataset_url": "https://data.gov.au/data/dataset/x"}
 
-    def run_ipea(self, db_arg, csv_rows, env_db=None, ds=None):
+    def run_ipea(self, db_arg, csv_rows, env_db=None):
         with tempfile.TemporaryDirectory() as d:
             csv_path = Path(d) / "q.csv"
             write_csv(csv_path, csv_rows)
             argv = ["money_ipea.py", "--since", "2026q01"] + (["--db", str(db_arg)] if db_arg else [])
             env = {"OPAX_DB": str(env_db)} if env_db else {}
             with mock.patch.object(sys, "argv", argv), mock.patch.dict("os.environ", env, clear=False), \
-                    mock.patch.object(money_ipea, "discover", lambda s: [dict(ds or self.DS)]), \
+                    mock.patch.object(money_ipea, "discover", lambda s: [dict(self.DS)]), \
                     mock.patch.object(money_ipea, "download", lambda s, ds: csv_path), \
                     mock.patch.object(money_ipea, "make_session", lambda: None), quiet():
                 money_ipea.main()
@@ -270,18 +272,83 @@ class IpeaTests(unittest.TestCase):
             self.assertEqual(con.execute("SELECT COUNT(*) FROM ext_expenses").fetchone()[0], 1)
             con.close()
 
-    def test_a_quarter_under_another_licence_is_refused_and_fails_the_run(self):
-        # the export publishes money_ipea.LICENCE for every stored quarter, so a record that
-        # says anything else stops the load instead of being published under the wrong licence
+    def run_quarters(self, db, quarters, since="2026q01"):
+        """Load [(dataset overrides, csv rows), ...], one CSV per quarter; returns (exit code, log)."""
+        with tempfile.TemporaryDirectory() as d:
+            datasets, paths = [], {}
+            for over, csv_rows in quarters:
+                ds = dict(self.DS, **over)
+                paths[ds["quarter"]] = Path(d) / f"{ds['quarter']}.csv"
+                write_csv(paths[ds["quarter"]], csv_rows)
+                datasets.append(ds)
+            out, code = io.StringIO(), 0
+            with mock.patch.object(sys, "argv", ["money_ipea.py", "--since", since, "--db", str(db)]), \
+                    mock.patch.object(money_ipea, "discover", lambda s: [dict(x) for x in datasets]), \
+                    mock.patch.object(money_ipea, "download", lambda s, ds: paths[ds["quarter"]]), \
+                    mock.patch.object(money_ipea, "make_session", lambda: None), contextlib.redirect_stdout(out):
+                try:
+                    money_ipea.main()
+                except SystemExit as e:
+                    code = e.code
+            return code, out.getvalue()
+
+    def quarter(self, period, uid):
+        q = period.lower()
+        return {"quarter": q, "url": f"https://example.test/{q}_dataextract.csv"}, \
+            [dict(self.ROW, UniqueId=uid, ReportingPeriodId=period)]
+
+    def stored(self, db):
+        con = sqlite3.connect(db)
+        try:
+            return sorted(con.execute("SELECT reporting_period_id, unique_id FROM ext_expenses").fetchall())
+        finally:
+            con.close()
+
+    def test_a_respelled_licence_title_fails_nothing(self):
+        # the review's case: a spacing/case-only change to a 2017 quarter's title, outside the run's range
         with tempfile.TemporaryDirectory() as d:
             db = self.live_db(d)
-            relicensed = dict(self.DS, licence_title="Creative Commons Attribution 4.0 International")
-            with self.assertRaises(SystemExit) as cm:
-                self.run_ipea(db, [self.ROW], ds=relicensed)
-            self.assertIn("2026q02", str(cm.exception.code))
-            con = sqlite3.connect(db)
-            self.assertFalse(con.execute("SELECT 1 FROM sqlite_master WHERE name = 'ext_expenses'").fetchone())
-            con.close()
+            self.assertEqual(self.run_quarters(db, [self.quarter("2017Q02", "old")], since="2017q01")[0], 0)
+            respelled = {"licence_title": "creative  commons attribution 3.0   AUSTRALIA "}
+            q17, rows17 = self.quarter("2017Q02", "new17")
+            q26, rows26 = self.quarter("2026Q02", "new26")
+            code, out = self.run_quarters(db, [(dict(q17, **respelled), rows17), (dict(q26, **respelled), rows26)])
+            self.assertEqual(code, 0)
+            self.assertNotIn("REFUSED", out)
+            self.assertNotIn("WARNING", out)
+            self.assertEqual(self.stored(db), [("2017Q02", "old"), ("2026Q02", "new26")])
+
+    def test_a_relicensed_quarter_in_range_is_stale_and_keeps_its_rows(self):
+        with tempfile.TemporaryDirectory() as d:
+            db = self.live_db(d)
+            self.run_quarters(db, [self.quarter("2026Q02", "kept")])
+            for change in ({"licence": "cc-by-4.0"},
+                           {"licence_url": "https://creativecommons.org/licenses/by/4.0/"}):
+                q01, rows01 = self.quarter("2026Q01", "q1")
+                q02, rows02 = self.quarter("2026Q02", "replacement")
+                code, out = self.run_quarters(db, [(q01, rows01), (dict(q02, **change), rows02)])
+                self.assertEqual(code, 3, change)          # stale: weekly_refresh.sh logs STALE, not FAIL
+                self.assertIn("REFUSED 2026q02", out)
+                self.assertIn("last good rows kept: 2026q02", out)
+                # the refused quarter keeps its stored rows; the other quarter in range still loads
+                self.assertEqual(self.stored(db), [("2026Q01", "q1"), ("2026Q02", "kept")])
+
+    def test_a_relicensed_quarter_outside_the_range_is_only_a_warning(self):
+        with tempfile.TemporaryDirectory() as d:
+            db = self.live_db(d)
+            self.run_quarters(db, [self.quarter("2017Q02", "old")], since="2017q01")
+            q17, rows17 = self.quarter("2017Q02", "new17")
+            code, out = self.run_quarters(db, [(dict(q17, licence="cc-by-4.0"), rows17), self.quarter("2026Q02", "new26")])
+            self.assertEqual(code, 0)
+            self.assertIn("WARNING 2017q02 (outside this run)", out)
+            self.assertEqual(self.stored(db), [("2017Q02", "old"), ("2026Q02", "new26")])
+
+    def test_weekly_refresh_reports_an_ipea_exit_3_as_stale(self):
+        # run_step ipea ... treats rc=3 as STALE only for steps listed in STALE_OK (scripts/lib/refresh_lib.sh)
+        sh = (ROOT / "scripts/weekly_refresh.sh").read_text()
+        stale_ok = re.search(r'^STALE_OK="([^"]*)"', sh, re.M).group(1)
+        self.assertIn(",ipea,", stale_ok)
+        self.assertRegex(sh, r"run_step ipea [^\n]*\\\n\s*\"\$PY\" -m parli\.ingest\.money_ipea ")
 
     def test_db_has_table(self):
         with tempfile.TemporaryDirectory() as d:

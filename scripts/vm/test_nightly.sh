@@ -157,7 +157,7 @@ if [ "${FAKE_WEEKLY_MODE:-ok}" = locked ]; then echo "$(date '+%F %T') another w
   echo "$(date '+%F %T') [x_speakers] OK in 2s; (no row count); log /x"
   [ "${FAKE_WEEKLY_MODE:-ok}" = failsteps ] && echo "$(date '+%F %T') [x_fits] FAIL(rc=1) in 1s; (no row count); log /x"
   echo "$(date '+%F %T') ===== weekly refresh end ====="
-  [ "${FAKE_WEEKLY_MODE:-ok}" = stale ] && echo "$(date '+%F %T') Stale weekly refresh: source refused to change the register: fits_fetch"
+  [ "${FAKE_WEEKLY_MODE:-ok}" = stale ] && echo "$(date '+%F %T') Stale weekly refresh: source refused to change the register: ${FAKE_STALE_STEPS:-fits_fetch}"
   [ "${FAKE_WEEKLY_MODE:-ok}" = failsteps ] && echo "$(date '+%F %T') Incomplete weekly refresh: failed steps x_fits"
 } >> "$PIPE/weekly.log"
 [ "${FAKE_WEEKLY_MODE:-ok}" = failsteps ] && exit 1
@@ -631,6 +631,11 @@ FAIL_RC=3 FAIL_STEPS="fits_register" weekly weekly
 check "exit 0" test "$WRC" -eq 0
 check "logged STALE and listed on the Stale line" bash -c "grep -q '\[fits_fetch\] STALE(rc=3' '$HOME/.cache/autoresearch/pipeline/weekly.log' && grep -q 'Stale weekly refresh: .*fits_fetch' '$HOME/.cache/autoresearch/pipeline/weekly.log'"
 check "and not as an incomplete run" bash -c "! grep -q 'Incomplete weekly refresh' '$HOME/.cache/autoresearch/pipeline/weekly.log'"
+new_weekly_sandbox w22i
+FAIL_RC=3 FAIL_STEPS="money_ipea" weekly monthly
+check "monthly: an IPEA quarter refused for its licence (exit 3) is stale: exit 0" test "$WRC" -eq 0
+check "logged STALE and listed on the Stale line, not as an incomplete run" bash -c "grep -q '\[ipea\] STALE(rc=3' $WLOG && grep -q 'Stale weekly refresh: .*ipea' $WLOG && ! grep -q 'Incomplete weekly refresh' $WLOG"
+check "and the expenses export still runs after it" order parli.ingest.money_ipea scripts/export_expenses.py
 new_weekly_sandbox w22g
 FAIL_RC=3 FAIL_STEPS="export_speakers.py" weekly weekly
 check "exit 3 from a step that is not a register loader is still a failure" test "$WRC" -eq 1
@@ -641,6 +646,9 @@ new_sandbox s22n
 FAKE_MODE=ok OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=stale nightly
 check "a stale source: the night is ok (exit 0)" test "$NRC" -eq 0
 check "but the status carries a warning naming it" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and any(\"fits_fetch\" in w for w in s[\"warnings\"]), s'"
+new_sandbox s22p
+FAKE_MODE=ok OPAX_FORCE_GROUPS=monthly FAKE_WEEKLY_MODE=stale FAKE_STALE_STEPS=ipea nightly
+check "a monthly run with a stale IPEA quarter: exit 0, status ok with a warning naming ipea" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and any(\"ipea\" in w for w in s[\"warnings\"]), s'"
 
 echo "== 25. nightly: a periodic group that fails validation, fails its tests, or never completes is put back; the rest goes out"
 new_sandbox s25
