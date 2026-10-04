@@ -45,6 +45,7 @@ export default function Today() {
       <Text
         variant="fine"
         testID="today-screen-message"
+        wordSafe
         style={{ flexShrink: 0 }}
       >
         OPAX is independent and non-partisan. It is not a government app.
