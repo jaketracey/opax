@@ -272,9 +272,11 @@ report page, and slides keep their stored type-specific fields while the reader'
 own rules (type, kicker, title, alt; cover first, source last; 3 to 10) are checked.
 `editionFor` keeps the post's text verbatim as plain text, dropping only its link
 line and a title clipped with "…" (both shown in full on the card). A bill edition
-is labelled machine-written with its own attribution (the caption's
-"Machine-written summary…" line, else the summary slide's note, else the web's
-"Written by a model from the explanatory memorandum; not the record."). The card
+is labelled machine-written with its own attribution: the summary slide's stored
+note (the web's bill-page wording), else the caption's "Machine-written…" line,
+else the web's "Written by a model from the explanatory memorandum; not the
+record." Other kinds are labelled only when the edition says so. `created_at`
+and a link fragment follow the Worker's own looser rules (the card shows neither). The card
 (`src/features/EditionCard.tsx`) shows the kind and date, title, attribution, text,
 the closing slide's source rows, a "Read the …" link that opens the page on the web
 through `webPageUrl`/`openOnWeb` on the build's own origin, and an as-at line.

@@ -59,7 +59,7 @@ describe('the edition decoder', () => {
     ['a journal date that differs', at(['date'], '2026-10-03')],
     ['an impossible date', at(['date'], '2026-02-30')],
     ['a timestamp as the journal date', at(['date'], '2026-10-04T00:00:00Z')],
-    ['a freeze time without a zone', at(['created_at'], '2026-10-03 22:00:07')],
+    ['an unreadable freeze time', at(['created_at'], 'yesterday')],
     ['an empty freeze time', at(['created_at'], '')],
     ['an unknown kind', at(['edition', 'kind'], 'quote')],
     ['an empty title', at(['edition', 'title'], ' ')],
@@ -78,7 +78,6 @@ describe('the edition decoder', () => {
     ],
     ['a port', at(['edition', 'url'], 'https://opax.com.au:8443/bill/x')],
     ['credentials', at(['edition', 'url'], 'https://a:b@opax.com.au/bill/x')],
-    ['a fragment', at(['edition', 'url'], 'https://opax.com.au/bill/x#/ask')],
     ['an Ask link', at(['edition', 'url'], 'https://opax.com.au/ask?q=x')],
     ['an API link', at(['edition', 'url'], 'https://opax.com.au/api/brief')],
     ['the today redirect', at(['edition', 'url'], 'https://opax.com.au/today')],
@@ -128,6 +127,12 @@ describe('the edition decoder', () => {
     expect(plain.edition.slides).toBeUndefined();
     expect(() => decodeEdition(at(['edition', 'caption'], ''))).not.toThrow();
   });
+  test('a fragment on the link is accepted, as the Worker does, and dropped', () => {
+    const anchored = decodeEdition(
+      at(['edition', 'url'], 'https://opax.com.au/bill/au-federal-r7529#votes'),
+    );
+    expect(editionFor(anchored).data!.path).toBe('/bill/au-federal-r7529');
+  });
   test.each([
     'https://opax.com.au/subject/person/Tony%20Abbott',
     'https://opax.com.au/money/grants/federal/recipient/abn:83140439239?award=GA12345',
@@ -161,7 +166,7 @@ describe('the edition selector', () => {
       path: '/bill/au-federal-r7529',
       machineWritten: {
         attribution:
-          'Machine-written summary; check the bill text for the full detail.',
+          'Written by a model from the explanatory memorandum; not the record.',
       },
       sourceRows: [
         'Explanatory memorandum on ParlInfo, CC BY-NC-ND 4.0',
@@ -173,11 +178,21 @@ describe('the edition selector', () => {
     for (const row of view.data!.sourceRows)
       expect(JSON.stringify(decoded.edition.slides)).toContain(row);
   });
-  test("labels a bill edition machine-written from the list slide, or the web's attribution", () => {
-    const noCaption = decodeEdition(without('caption'));
-    expect(editionFor(noCaption).data!.machineWritten).toEqual({
+  test("a bill's attribution: its summary slide, else the caption's line, else the web's", () => {
+    const own = decodeEdition(
+      at(
+        ['edition', 'slides', 1, 'note'],
+        'Summary drafted by a model from the explanatory memorandum.',
+      ),
+    );
+    expect(editionFor(own).data!.machineWritten).toEqual({
       attribution:
-        'Written by a model from the explanatory memorandum; not the record.',
+        'Summary drafted by a model from the explanatory memorandum.',
+    });
+    const captionOnly = decodeEdition(without('slides'));
+    expect(editionFor(captionOnly).data!.machineWritten).toEqual({
+      attribution:
+        'Machine-written summary; check the bill text for the full detail.',
     });
     const bare = decodeEdition(
       replaceAt(without('caption'), ['edition', 'slides'], undefined),
@@ -186,6 +201,24 @@ describe('the edition selector', () => {
       attribution: billSummaryAttribution,
     });
     expect(editionFor(bare).data!.sourceRows).toEqual([]);
+  });
+  test('a caption that only mentions machine-written text is not an attribution', () => {
+    const topic = decodeEdition(
+      replaceAt(
+        replaceAt(
+          replaceAt(
+            replaceAt(raw(), ['edition', 'kind'], 'topic'),
+            ['edition', 'url'],
+            'https://opax.com.au/reports/early-childhood',
+          ),
+          ['edition', 'slides', 1, 'note'],
+          null,
+        ),
+        ['edition', 'caption'],
+        'Every speech is cited; machine-written briefs are labelled on the web.',
+      ),
+    );
+    expect(editionFor(topic).data!.machineWritten).toBeNull();
   });
   test('a figures edition with no model attribution is not labelled machine-written', () => {
     const topic = decodeEdition(

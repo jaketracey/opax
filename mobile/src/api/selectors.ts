@@ -519,6 +519,29 @@ const machineNote = /machine-written|written by a model/i;
 // (portal/public/app.js): a bill edition's text is its stored model summary.
 export const billSummaryAttribution =
   'Written by a model from the explanatory memorandum; not the record.';
+/**
+ * A model's text and its attribution, in the edition's own words. A bill's
+ * summary slide carries the record's stored attribution (the web's bill-page
+ * wording); then the caption's own "Machine-written …" line; a bill with
+ * neither takes the web's default. Other kinds are labelled only when the
+ * edition says so.
+ */
+function editionAttribution(edition: AppEdition['edition']): string | null {
+  const summary = edition.slides
+    ?.flatMap((slide) =>
+      slide.type === 'list' && slide.note?.trim() ? [slide.note.trim()] : [],
+    )
+    .find((note) => edition.kind === 'bill' || machineNote.test(note));
+  const caption = (edition.caption ?? '')
+    .split(/\n{2,}/)
+    .map((paragraph) => paragraph.trim())
+    .find((paragraph) => /^machine-written\b/i.test(paragraph));
+  return (
+    summary ??
+    caption ??
+    (edition.kind === 'bill' ? billSummaryAttribution : null)
+  );
+}
 export interface EditionView {
   /** The journal date: the newest posted edition on or before today. */
   date: string;
@@ -527,7 +550,7 @@ export interface EditionView {
   title: string;
   /** The post's own paragraphs, verbatim, without its link line. */
   paragraphs: string[];
-  /** The page on the public site, opened through the web link guard. */
+  /** The page on the public site (path and query; any fragment dropped). */
   path: string;
   /** Set when the edition's text is a model's, with its own attribution. */
   machineWritten: { attribution: string } | null;
@@ -554,17 +577,7 @@ export function editionFor({ edition }: AppEdition) {
           edition.title.startsWith(paragraph.slice(0, -1).trimEnd())
         ),
     );
-  const attribution =
-    (edition.caption ?? '')
-      .split(/\n{2,}/)
-      .map((paragraph) => paragraph.trim())
-      .find((paragraph) => machineNote.test(paragraph)) ??
-    (edition.slides ?? [])
-      .flatMap((slide) =>
-        slide.type === 'list' && slide.note ? [slide.note.trim()] : [],
-      )
-      .find((note) => machineNote.test(note)) ??
-    (edition.kind === 'bill' ? billSummaryAttribution : null);
+  const attribution = editionAttribution(edition);
   const closing = edition.slides?.at(-1);
   const view: EditionView = {
     date: edition.date,

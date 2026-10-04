@@ -18,7 +18,7 @@ name: 13 Today feeds and their dated original sources
 - scrollUntilVisible:
     element:
       id: today-edition-machine
-      text: 'Machine-written\. Machine-written summary; check the bill text for the full detail\.'
+      text: 'Machine-written\. Written by a model from the explanatory memorandum; not the record\.'
     timeout: 90000
     visibilityPercentage: 10
     centerElement: true
@@ -110,5 +110,7 @@ name: 13 Today feeds and their dated original sources
     element:
       id: today-declarations-as-at
     timeout: 90000
-- assertVisible: As at .* Source.*
+- assertVisible:
+    id: today-declarations-as-at
+    text: As at .* Source.*
 - takeScreenshot: ${EVIDENCE}/13-declarations-as-at

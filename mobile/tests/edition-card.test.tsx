@@ -74,7 +74,7 @@ describe('the edition card', () => {
     expect(textOf(root, 'today-edition-kicker')).toBe('Bill · 4 October 2026');
     expect(textOf(root, 'today-edition-title')).toBe(pinned.edition.title);
     expect(textOf(root, 'today-edition-machine')).toBe(
-      'Machine-writtenMachine-written summary; check the bill text for the full detail.',
+      'Machine-writtenWritten by a model from the explanatory memorandum; not the record.',
     );
     expect(textOf(root, 'today-edition-text')).toBe(
       'This bill would keep funding grants that support pay for early childhood education and care workers.Passed 18 Sep 2026.',
@@ -117,7 +117,7 @@ describe('the edition card', () => {
       `Daily edition, Bill, 4 October 2026: ${pinned.edition.title}`,
     );
     expect(labelOf(root, 'today-edition-machine')).toBe(
-      'Machine-written. Machine-written summary; check the bill text for the full detail.',
+      'Machine-written. Written by a model from the explanatory memorandum; not the record.',
     );
     expect(labelOf(root, 'today-edition-text')).toBe(
       edition.paragraphs.join('\n'),

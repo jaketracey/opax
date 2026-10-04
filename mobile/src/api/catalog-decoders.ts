@@ -817,8 +817,8 @@ const oneOf =
     values.includes(v as T) ? (v as T) : invalid();
 const calendarDay = (v: unknown) => date(matching(/^\d{4}-\d{2}-\d{2}$/)(v));
 // The reader's link rule (storedEdition): an https page on the public site
-// under a member, bill, grants or report path. The card opens only its path,
-// on the build's own web origin, through the web link guard.
+// under a member, bill, grants or report path. The card opens only its path
+// and query, on the build's own web origin, through the web link guard.
 const editionPage =
   /^\/(?:subject\/person\/|bill\/|money\/grants(?:\/|$)|reports\/)/;
 const editionLink = (v: unknown): string => {
@@ -835,7 +835,6 @@ const editionLink = (v: unknown): string => {
     link.port ||
     link.username ||
     link.password ||
-    link.hash ||
     !editionPage.test(link.pathname)
   )
     invalid();
@@ -882,9 +881,9 @@ const edition = exact({
 const envelope = exact({
   schema_version: (v: unknown): 1 => (v === 1 ? 1 : invalid()),
   date: calendarDay,
-  // The publisher writes toISOString(); a freeze time, not a source date.
+  // A freeze time, not a source date, and never shown: the reader's own rule.
   created_at: (v: unknown) =>
-    date(matching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?Z$/)(v)),
+    Number.isFinite(Date.parse(nonempty(v))) ? text(v) : invalid(),
   edition,
 });
 export function decodeEdition(v: unknown) {
