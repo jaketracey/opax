@@ -1,6 +1,9 @@
 appId: au.com.opax.app
 name: 12 Local suggestions and the four catalog search kinds
 ---
+# scrollUntilVisible always swipes from the centre of the screen. Tap
+# targets are centred with speed-20 swipes (about half a screen each), so
+# the tap lands clear of the navigation bar and the floating tab bar.
 - launchApp:
     clearState: true
 - tapOn:
@@ -15,24 +18,39 @@ name: 12 Local suggestions and the four catalog search kinds
 - scrollUntilVisible:
     element:
       id: search-suggestion-person-.*
+    direction: DOWN
     timeout: 90000
     centerElement: true
 - takeScreenshot: ${EVIDENCE}/12-suggestions
 - assertVisible:
     id: search-suggestion-person-.*
+# Leave the field before submitting. On iOS 27 the first tap after typing
+# only ended editing: the suggestions stayed and no search ran.
+- hideKeyboard
 - scrollUntilVisible:
     element:
       id: search-submit
     timeout: 90000
     direction: UP
+- waitForAnimationToEnd
 - tapOn:
     id: search-submit
+# The results state replaces the suggestions; at AX5 it starts below the fold.
+- scrollUntilVisible:
+    element:
+      id: search-cache-state
+    direction: DOWN
+    visibilityPercentage: 1
+    speed: 20
+    timeout: 30000
 - scrollUntilVisible:
     element:
       id: search-result-anthony-albanese
+    direction: DOWN
     timeout: 90000
     visibilityPercentage: 80
     centerElement: true
+    speed: 20
 - takeScreenshot: ${EVIDENCE}/12-people
 - scrollUntilVisible:
     element:
@@ -47,15 +65,26 @@ name: 12 Local suggestions and the four catalog search kinds
 - scrollUntilVisible:
     element:
       id: search-submit
+    direction: DOWN
     timeout: 90000
+- waitForAnimationToEnd
 - tapOn:
     id: search-submit
 - scrollUntilVisible:
     element:
+      id: search-cache-state
+    direction: DOWN
+    visibilityPercentage: 1
+    speed: 20
+    timeout: 30000
+- scrollUntilVisible:
+    element:
       id: search-result-anthony-albanese
+    direction: DOWN
     timeout: 90000
     visibilityPercentage: 80
     centerElement: true
+    speed: 20
 - takeScreenshot: ${EVIDENCE}/12-interests
 - scrollUntilVisible:
     element:
@@ -69,20 +98,35 @@ name: 12 Local suggestions and the four catalog search kinds
 - scrollUntilVisible:
     element:
       id: search-submit
+    direction: DOWN
     timeout: 90000
+- waitForAnimationToEnd
 - tapOn:
     id: search-submit
 - scrollUntilVisible:
     element:
+      id: search-cache-state
+    direction: DOWN
+    visibilityPercentage: 1
+    speed: 20
+    timeout: 30000
+- scrollUntilVisible:
+    element:
       id: search-result-anthony-albanese
+    direction: DOWN
     timeout: 90000
     visibilityPercentage: 80
     centerElement: true
+    speed: 20
 - takeScreenshot: ${EVIDENCE}/12-pay
 - scrollUntilVisible:
     element:
       text: Read matching record
+    direction: DOWN
     timeout: 90000
+    centerElement: true
+    speed: 20
+- waitForAnimationToEnd
 - tapOn: Read matching record
 - takeScreenshot: ${EVIDENCE}/12-pay-expanded
 # Expanding removes the preview above the toggle, moving it up at AX5.
@@ -106,17 +150,29 @@ name: 12 Local suggestions and the four catalog search kinds
 - scrollUntilVisible:
     element:
       id: search-submit
+    direction: DOWN
     timeout: 90000
+- waitForAnimationToEnd
 - tapOn:
     id: search-submit
 - scrollUntilVisible:
     element:
+      id: search-cache-state
+    direction: DOWN
+    visibilityPercentage: 1
+    speed: 20
+    timeout: 30000
+- scrollUntilVisible:
+    element:
       id: search-result-anthony-albanese
+    direction: DOWN
     timeout: 90000
     visibilityPercentage: 80
     centerElement: true
+    speed: 20
 # Keep most of this tall row in view: its default tap is at its center.
 - takeScreenshot: ${EVIDENCE}/12-expenses
+- waitForAnimationToEnd
 - tapOn:
     id: search-result-anthony-albanese
 - extendedWaitUntil:

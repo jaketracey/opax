@@ -23,8 +23,14 @@ export function RecordRow({
       style={({ pressed }) => [styles.row, pressed ? styles.pressed : null]}
     >
       <View style={styles.text}>
-        <Text variant="strong">{title}</Text>
-        {detail ? <Text variant="metadata">{detail}</Text> : null}
+        <Text wordSafe variant="strong">
+          {title}
+        </Text>
+        {detail ? (
+          <Text wordSafe variant="metadata">
+            {detail}
+          </Text>
+        ) : null}
       </View>
       <Icon name="chevron.right" size={14} tone="inkSoft" />
     </Pressable>

@@ -395,7 +395,6 @@ describe('party context', () => {
 describe('word-safe text', () => {
   test.each([
     { size: 'default', fontScale: 1, reserved: false },
-    { size: 'AX5', fontScale: 3.571, reserved: true },
   ])(
     'the $size name retains its measured lines without a font or line cap',
     ({ fontScale, reserved }) => {

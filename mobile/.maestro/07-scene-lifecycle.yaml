@@ -59,12 +59,25 @@ env:
     when:
       true: ${REMOTE_SHARE_UI === "true"}
     commands:
-      # The iOS 18.4 system-hosted sheet is absent from Maestro's app hierarchy.
-      # Review the captured metadata preview and close its observed X button
-      # on the assigned 16e at the standard text size. The cancellation and
+      # The iOS 18.4 system-hosted sheet is absent from Maestro's app
+      # hierarchy, so neither its arrival nor its Close button can be found
+      # by label; a fixed-point tap on its X landed before the sheet arrived.
+      # Swipe the sheet down from its header instead. Until the sheet is up
+      # the same drag only moves the workbench, so repeat it (at most five
+      # times) until the app reports the cancellation. The last capture
+      # shows the sheet with its metadata preview. The cancellation and
       # return-to-app assertions below remain mandatory in both modes.
-      - tapOn:
-          point: 93%,49%
+      - repeat:
+          while:
+            notVisible: Native share cancelled
+          times: 5
+          commands:
+            - waitForAnimationToEnd
+            - takeScreenshot: ${EVIDENCE}/07-native-share-sheet
+            - swipe:
+                start: 50%, 50%
+                end: 50%, 95%
+                duration: 600
 - assertVisible: Native share cancelled
 - tapOn: OK
 - assertVisible:

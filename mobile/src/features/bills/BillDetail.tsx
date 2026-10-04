@@ -318,7 +318,7 @@ function BillHead({
                   testID={`bill-sponsor-${slug}`}
                 />
               ) : (
-                <Text key={member.name} variant="strong">
+                <Text wordSafe key={member.name} variant="strong">
                   {label}
                 </Text>
               );
@@ -638,7 +638,7 @@ function Speeches({ view }: { view: BillView }) {
                 style={styles.speech}
                 testID={`bill-speech-${index}`}
               >
-                <Text variant="strong">
+                <Text wordSafe variant="strong">
                   {speech.speaker ||
                     `Speech on ${formatDate(speech.date, 'short')}`}
                 </Text>

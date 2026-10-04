@@ -407,7 +407,9 @@ export default function Search() {
                           }
                         />
                       ) : (
-                        <Text variant="strong">{row.title}</Text>
+                        <Text wordSafe variant="strong">
+                          {row.title}
+                        </Text>
                       )}
                       <Excerpt snippet={row.snippet} />
                       {row.url ? (

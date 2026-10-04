@@ -1,6 +1,8 @@
 appId: au.com.opax.app
 name: 01 Launch, reach every tab and the navigation-bar sheets
 ---
+# scrollUntilVisible always swipes from the centre of the screen, clear of the
+# leading edge, so no scroll can start a back-swipe.
 - launchApp:
     clearState: true
 - assertVisible:
@@ -8,10 +10,22 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
 - assertVisible:
     id: today-screen-message
 - takeScreenshot: ${EVIDENCE}/01-today
+# Wait for the Today catalog itself: before it loads the page is short, and
+# the footer is on screen with nothing above it.
+- scrollUntilVisible:
+    element:
+      id: today-bill-0
+    direction: DOWN
+    visibilityPercentage: 1
+    timeout: 60000
+# Today is a long feed (about 25 screens at AX5). The footer is the last
+# element, so fast swipes cannot carry past it; the bound is time, not swipes.
 - scrollUntilVisible:
     element:
       id: today-screen-footer
-    timeout: 90000
+    direction: DOWN
+    speed: 70
+    timeout: 300000
     centerElement: true
 - takeScreenshot: ${EVIDENCE}/01-today-footer
 - tapOn:
@@ -30,11 +44,14 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
     id: search-screen
 - tapOn:
     id: tab-today
+# Today keeps its scroll position across tabs: back up the same long feed.
+# The message is the first element, so fast swipes cannot carry past it.
 - scrollUntilVisible:
     element:
       id: today-screen-message
     direction: UP
-    timeout: 90000
+    speed: 70
+    timeout: 300000
     centerElement: true
 - assertVisible:
     id: today-screen-message
