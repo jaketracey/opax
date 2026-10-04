@@ -25,7 +25,7 @@ name: 04 Read saved public catalogs with the fixture stopped
 - inputText: Anthony Albanese
 - scrollUntilVisible:
     element:
-      text: Saved .* It may be out of date\.
+      text: As at .* Source.*OPAX parliamentary roster
     timeout: 60000
 - scrollUntilVisible:
     element:
