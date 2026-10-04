@@ -1,0 +1,185 @@
+appId: au.com.opax.app
+name: 11 Read a bill, its machine summary, divisions and speeches
+---
+# No clearState: a relaunch resets the list, and offline journey 04 reads
+# the records earlier journeys saved.
+- launchApp
+- tapOn:
+    id: tab-bills
+- extendedWaitUntil:
+    visible:
+      id: bills-count
+    timeout: 20000
+- tapOn:
+    id: bills-search
+- inputText: interactive gambling levy
+- pressKey: Enter
+# At the largest text sizes a bill row is taller than the screen: it counts
+# as found once part of it shows, then is centred so the tap lands on it.
+- scrollUntilVisible:
+    element:
+      id: bill-row-au-federal-r7534
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 70
+    timeout: 180000
+- waitForAnimationToEnd
+- tapOn:
+    id: bill-row-au-federal-r7534
+- extendedWaitUntil:
+    visible:
+      id: bill-screen
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: bill-status
+    speed: 70
+    timeout: 180000
+- assertVisible: Passed, as at 26 August 2026
+- takeScreenshot: ${EVIDENCE}/11-bill
+# The machine summary sits under its stored attribution, never as the record.
+- scrollUntilVisible:
+    element:
+      id: bill-summary-attribution
+    timeout: 60000
+- assertVisible: Machine summary
+- assertVisible: Written by a model from the explanatory memorandum; not the record\.
+- takeScreenshot: ${EVIDENCE}/11-summary
+# Long jumps aim fast at a large container (any part showing counts), then
+# step gently to the small element: fast swipes can carry past a short one.
+# (At AX5 the whole Divisions section is too tall to appear in the iOS
+# hierarchy; the first division's container does.)
+- scrollUntilVisible:
+    element:
+      id: bill-division-0
+    visibilityPercentage: 1
+    speed: 70
+    timeout: 180000
+- scrollUntilVisible:
+    element:
+      id: bill-division-0-outcome
+    timeout: 60000
+- assertVisible: Negatived, 11 ayes, 24 noes
+- scrollUntilVisible:
+    element:
+      id: bill-division-0-splits
+    timeout: 60000
+- waitForAnimationToEnd
+- tapOn:
+    id: bill-division-0-splits
+# Party splits by label and count in words, never colour alone.
+# In list order: the largest party (Labor) first, then Greens.
+- scrollUntilVisible:
+    element:
+      id: bill-division-0-splits-labor
+    timeout: 60000
+- assertVisible: Labor, no ayes, 21 noes
+- scrollUntilVisible:
+    element:
+      id: bill-division-0-splits-greens
+    timeout: 60000
+- assertVisible: Greens, 9 ayes, no noes
+- takeScreenshot: ${EVIDENCE}/11-party-splits
+# The link is just below the splits: a gentle scroll, so the page is not
+# still coasting (and the link off screen) when the tap lands.
+- scrollUntilVisible:
+    element:
+      id: bill-division-0-source
+    timeout: 60000
+# A tap during scroll momentum only stops the scroll on iOS: settle first.
+- waitForAnimationToEnd
+# Sources open in the in-app browser; e2e shows the destination locally.
+- tapOn:
+    id: bill-division-0-source
+- scrollUntilVisible:
+    element:
+      text: https://theyvoteforyou.org.au/divisions/senate/2026-08-19/.*
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/11-division-source
+- tapOn: OK
+# The record's long note folds below the counts and source; it opens whole.
+- scrollUntilVisible:
+    element:
+      id: bill-division-0-note
+    timeout: 60000
+- assertVisible: Division note, 45 words
+- waitForAnimationToEnd
+- tapOn:
+    id: bill-division-0-note
+- scrollUntilVisible:
+    element:
+      id: bill-division-0-note-text
+    visibilityPercentage: 10
+    timeout: 60000
+- takeScreenshot: ${EVIDENCE}/11-division-note
+# Near the end of the page an element cannot be centred: scroll to it only.
+- scrollUntilVisible:
+    element:
+      id: bill-speeches
+    visibilityPercentage: 1
+    speed: 70
+    timeout: 180000
+- scrollUntilVisible:
+    element:
+      id: bill-speech-0-brief-label
+    timeout: 60000
+- assertVisible: Machine brief
+- scrollUntilVisible:
+    element:
+      text: Tony Burke
+    direction: UP
+    speed: 70
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/11-speech
+# An exposure draft: released, not introduced, with its consultation.
+- launchApp
+- tapOn:
+    id: tab-bills
+- extendedWaitUntil:
+    visible:
+      id: bills-count
+    timeout: 20000
+- tapOn:
+    id: bills-search
+- inputText: digital duty of care
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: bill-row-au-federal-ed-online-safety-digital-duty-of-care-2026
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 70
+    timeout: 180000
+- waitForAnimationToEnd
+- tapOn:
+    id: bill-row-au-federal-ed-online-safety-digital-duty-of-care-2026
+- extendedWaitUntil:
+    visible:
+      id: bill-screen
+    timeout: 15000
+- assertVisible: Exposure draft
+- takeScreenshot: ${EVIDENCE}/11-exposure-draft
+- scrollUntilVisible:
+    element:
+      id: bill-introduced
+    speed: 70
+    timeout: 180000
+- assertVisible: Released 8 September 2026
+- scrollUntilVisible:
+    element:
+      text: Government exposure draft, not yet introduced
+    speed: 70
+    timeout: 180000
+- scrollUntilVisible:
+    element:
+      text: Open for consultation from 8 September 2026
+    speed: 70
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/11-consultation
+- scrollUntilVisible:
+    element:
+      id: bill-summary-attribution
+    speed: 70
+    timeout: 180000
+- assertVisible: Written by a model from the exposure draft text; not the record\.
+- takeScreenshot: ${EVIDENCE}/11-exposure-summary
