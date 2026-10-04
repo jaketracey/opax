@@ -180,9 +180,19 @@ export class ApiClient {
               : {}),
           })
           .catch(() => entry);
+        // A concurrent read can retain its freshly validated copy of this
+        // exact ETag. A zero TTL requires the next read to revalidate; it
+        // does not make this successful live validation an offline fallback.
+        const validatedSameRecord =
+          !!entry.etag &&
+          retained.etag === entry.etag &&
+          retained.validatedAt >= requestStartedAt &&
+          retained.validatedAt <= time;
         return result(
           retained,
-          retained !== entry && !isFresh(retained, this.now()),
+          retained !== entry &&
+            !isFresh(retained, this.now()) &&
+            !validatedSameRecord,
         );
       } catch (error) {
         lastError =
