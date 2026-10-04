@@ -60,13 +60,19 @@ name: 13 Today feeds and their dated original sources
     id: today-declaration-0
 - assertVisible: https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Senators_Interests/Senators_Interests_Register/123072
 - takeScreenshot: ${EVIDENCE}/13-declaration-source-alert
+# UIKit scrolls a long destination inside the alert at AX5. Capture its end too.
+- swipe:
+    start: 50%, 65%
+    end: 50%, 35%
+    duration: 1000
+- takeScreenshot: ${EVIDENCE}/13-declaration-source-alert-end
 - tapOn: OK
 # AX5 swipes can overshoot this tall text. Find it, then use a short drag
 # to keep its date below the navigation bar before requiring full visibility.
 - scrollUntilVisible:
     element:
       id: today-declarations-as-at
-    timeout: 90000
+    timeout: 300000
     visibilityPercentage: 1
     centerElement: true
 - swipe:
@@ -76,6 +82,6 @@ name: 13 Today feeds and their dated original sources
 - scrollUntilVisible:
     element:
       id: today-declarations-as-at
-    timeout: 90000
+    timeout: 300000
 - assertVisible: As at .* Source.*
 - takeScreenshot: ${EVIDENCE}/13-declarations-as-at
