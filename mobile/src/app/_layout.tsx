@@ -2,9 +2,10 @@ import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { isProduction } from '../design/environment';
+import { isE2E, isProduction } from '../design/environment';
 import { fonts, light } from '../design/tokens';
 import { closeSheetItem, useStackChrome } from '../navigation/chrome';
+import { SourceDestination } from '../navigation/SourceDestination';
 export default function Layout() {
   const [loaded, error] = useFonts({
     [fonts.serif]: require('../../assets/fonts/Merriweather.ttf'),
@@ -54,6 +55,7 @@ export default function Layout() {
           />
         )}
       </Stack>
+      {isE2E ? <SourceDestination /> : null}
     </SafeAreaProvider>
   );
 }

@@ -9,6 +9,10 @@ import {
   sourceUrl,
 } from '../src/navigation/external';
 import { shareRecord } from '../src/navigation/share';
+import {
+  presentSourceDestination,
+  sourceDestination,
+} from '../src/navigation/source-destination';
 import { isE2E, webOrigin } from '../src/design/environment';
 import { partyIdentity } from '../src/design/party';
 import {
@@ -347,12 +351,14 @@ describe('e2e configuration and sharing', () => {
     );
     alert.mockRestore();
   });
-  test('e2e source destinations keep the full URL in a separate message', async () => {
+  test('e2e source destinations retain the complete validated URL without a native alert', async () => {
     const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
     const url =
       'https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Senators_Interests/Senators_Interests_Register/123072';
     await openSource(url);
-    expect(alert).toHaveBeenCalledWith('Source record', url);
+    expect(sourceDestination()).toBe(url);
+    expect(alert).not.toHaveBeenCalled();
+    presentSourceDestination(null);
     alert.mockRestore();
   });
 });

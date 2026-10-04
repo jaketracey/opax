@@ -60,7 +60,7 @@ name: 13 Today feeds and their dated original sources
     id: today-declaration-0
 - assertVisible: https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Senators_Interests/Senators_Interests_Register/123072
 - takeScreenshot: ${EVIDENCE}/13-declaration-source-alert
-# UIKit scrolls a long destination inside the alert at AX5. Capture its end too.
+# The local destination view scrolls a long URL at AX5. Capture its end too.
 - swipe:
     start: 50%, 65%
     end: 50%, 35%

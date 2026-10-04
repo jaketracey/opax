@@ -2,6 +2,7 @@ import { Alert, Linking } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import { isE2E, webOrigin } from '../design/environment';
 import { light } from '../design/tokens';
+import { presentSourceDestination } from './source-destination';
 
 // Where the Worker or the web app turns an OPAX address into a page the app
 // never sends a reader to (portal/src/page-entry.ts, portal/src/index.ts,
@@ -275,9 +276,7 @@ export async function openSource(url: string): Promise<void> {
     return;
   }
   if (isE2E) {
-    // The citation remains on the source link. Repeating it in this native
-    // alert's title can push the exact destination out of view at AX5.
-    Alert.alert('Source record', checked);
+    presentSourceDestination(checked);
     return;
   }
   try {
