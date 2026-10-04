@@ -1,6 +1,11 @@
 appId: au.com.opax.app
 name: 13 Today feeds and their dated original sources
 ---
+# scrollUntilVisible always swipes from the centre of the screen. Tap
+# targets are centred with speed-20 swipes (about half a screen each). From
+# iOS 26 the tab bar floats over the bottom of the page, and a link drawn
+# under it still counts as visible: on iOS 27 a source tap hit the Your MP
+# tab. Each group of steps first checks the page is still shown.
 - launchApp
 - assertVisible:
     id: today-screen-message
@@ -68,7 +73,9 @@ name: 13 Today feeds and their dated original sources
     timeout: 90000
     visibilityPercentage: 1
     centerElement: true
+    speed: 20
     direction: UP
+- waitForAnimationToEnd
 - tapOn:
     id: today-bill-0
 - scrollUntilVisible:
