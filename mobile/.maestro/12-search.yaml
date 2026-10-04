@@ -83,11 +83,13 @@ name: 12 Local suggestions and the four catalog search kinds
     timeout: 90000
 - tapOn: Read matching record
 - takeScreenshot: ${EVIDENCE}/12-pay-expanded
+# Expanding removes the preview above the toggle, moving it up at AX5.
 - scrollUntilVisible:
     element:
       text: Hide matching record
     timeout: 90000
     centerElement: true
+    direction: UP
 - takeScreenshot: ${EVIDENCE}/12-pay-expanded-toggle
 - tapOn: Hide matching record
 - scrollUntilVisible:
