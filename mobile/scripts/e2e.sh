@@ -2,7 +2,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer EXPO_NO_TELEMETRY=1 MAESTRO_CLI_NO_ANALYTICS=true MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED=true
-UDID=${1:?Usage: scripts/e2e.sh udid [01 02 03 04 05 06 10 11 12 13 14]}; shift
+UDID=${1:?Usage: scripts/e2e.sh udid [01 02 03 04 05 06 07 08 09 10 11 12 13 14]}; shift
 source scripts/qa-env.sh
 source scripts/qa-java.sh
 configure_java
@@ -40,6 +40,20 @@ cleanup() {
 trap cleanup EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
+# Maestro inputText may use iOS pasteboard internally. Serialize all input flows.
+if [ -n "${OPAX_PASTE_LOCK:-}" ]; then
+  deadline=$((SECONDS + $(paste_lock_wait_seconds)))
+  while true; do
+    # Capacity waits belong outside the shared input lock, including after contention.
+    scripts/capacity.sh >> "$OUT/capacity.log"
+    if mkdir "$OPAX_PASTE_LOCK" 2>/dev/null; then break; fi
+    [ "$SECONDS" -lt "$deadline" ] || { echo "Pasteboard lock wait expired" >&2; exit 1; }
+    sleep 5
+  done
+  PASTE_LOCK=1
+else
+  echo "No pasteboard lock configured; skipping lock." >&2
+fi
 OWN_DEVICE=1; ORIGINAL_SIZE=large; ORIGINAL_APPEARANCE=light
 boot_simulator "$UDID" > "$OUT/simulator.log" 2>&1
 ORIGINAL_SIZE=$(xcrun simctl ui "$UDID" content_size)
@@ -55,17 +69,6 @@ until grep -q OPAX_FIXTURE_READY "$OUT/fixture.log"; do
   [ "$SECONDS" -lt "$deadline" ] || { echo "Fixture did not become ready" >&2; exit 1; }
   sleep 1
 done
-# Maestro inputText may use iOS pasteboard internally. Serialize all input flows.
-if [ -n "${OPAX_PASTE_LOCK:-}" ]; then
-  deadline=$((SECONDS + $(paste_lock_wait_seconds)))
-  until mkdir "$OPAX_PASTE_LOCK" 2>/dev/null; do
-    [ "$SECONDS" -lt "$deadline" ] || { echo "Pasteboard lock wait expired" >&2; exit 1; }
-    sleep 5
-  done
-  PASTE_LOCK=1
-else
-  echo "No pasteboard lock configured; skipping lock." >&2
-fi
 FLOWS=()
 OFFLINE=${OPAX_VERIFY_OFFLINE:-0}
 if [ "$#" = 0 ]; then set -- 01 02 03 04; fi
@@ -73,7 +76,7 @@ for flow in "$@"; do
   case "$flow" in
     04|.maestro/04-offline.yaml) OFFLINE=1 ;;
     [0-9][0-9]) matches=(.maestro/"$flow"-*.yaml); test -f "${matches[0]}" || { echo "Unknown flow: $flow" >&2; exit 1; }; for match in "${matches[@]}"; do
-      case "$match" in *-open-profile.yaml) continue ;; esac
+      case "$match" in *-open-profile.yaml|*-scene-lifecycle.yaml) continue ;; esac
       FLOWS+=("$match")
     done ;;
     *) test -f "$flow" || { echo "Unknown flow: $flow" >&2; exit 1; }; FLOWS+=("$flow") ;;

@@ -1,0 +1,27 @@
+appId: au.com.opax.app
+name: Open a roster profile from the public search
+---
+- launchApp
+- tapOn:
+    id: tab-search
+- scrollUntilVisible:
+    element:
+      id: search-input
+    centerElement: true
+    timeout: 300000
+- tapOn:
+    id: search-input
+- inputText: ${NAME}
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: search-result-${SLUG}
+    centerElement: true
+    timeout: 300000
+- tapOn:
+    id: search-result-${SLUG}
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/08-${SLUG}-identity

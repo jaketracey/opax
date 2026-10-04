@@ -1,0 +1,133 @@
+appId: au.com.opax.app
+name: 07 Choose a state district explicitly where a verified roster exists
+---
+- launchApp:
+    clearState: true
+- tapOn:
+    id: tab-your-mp
+- tapOn:
+    id: seat-search
+- inputText: Ballarat
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: seat-choice-federal-representatives-vic-ballarat
+    centerElement: true
+    timeout: 300000
+- tapOn:
+    id: seat-choice-federal-representatives-vic-ballarat
+- scrollUntilVisible:
+    element:
+      id: your-register-toggle
+    centerElement: true
+    timeout: 300000
+- tapOn:
+    id: your-register-toggle
+- extendedWaitUntil:
+    visible:
+      id: your-register-heading
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/07-state-register-open
+- scrollUntilVisible:
+    element:
+      id: choose-state-seat
+    timeout: 300000
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/07-state-choice-needed
+- tapOn:
+    id: choose-state-seat
+- scrollUntilVisible:
+    element:
+      id: seat-search
+    direction: UP
+    centerElement: true
+    timeout: 300000
+- tapOn:
+    id: seat-search
+- inputText: Wendouree
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: seat-choice-vic-vic-la-vic-wendouree
+    centerElement: true
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/07-state-chooser
+- tapOn:
+    id: seat-choice-vic-vic-la-vic-wendouree
+- scrollUntilVisible:
+    element:
+      id: your-state-member-juliana-addison
+    timeout: 300000
+    centerElement: true
+    visibilityPercentage: 50
+- takeScreenshot: ${EVIDENCE}/07-state-member
+- runFlow:
+    file: review-pages.yaml
+    env:
+      END: your-mp-end
+      PREFIX: 07-state-details
+- launchApp
+- tapOn:
+    id: tab-your-mp
+- scrollUntilVisible:
+    element:
+      id: your-state-member-juliana-addison
+    timeout: 300000
+    centerElement: true
+    visibilityPercentage: 50
+- takeScreenshot: ${EVIDENCE}/07-state-restored
+- runFlow:
+    file: review-pages.yaml
+    env:
+      END: your-mp-end
+      PREFIX: 07-state-restored-details
+- scrollUntilVisible:
+    element:
+      id: choose-state-seat
+    direction: UP
+    centerElement: true
+    timeout: 300000
+- tapOn:
+    id: choose-state-seat
+- scrollUntilVisible:
+    element:
+      id: seat-search
+    direction: UP
+    centerElement: true
+    timeout: 300000
+- tapOn:
+    id: seat-search
+- inputText: Eureka
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: seat-choice-vic-vic-la-vic-eureka
+    centerElement: true
+    timeout: 300000
+- tapOn:
+    id: seat-choice-vic-vic-la-vic-eureka
+- scrollUntilVisible:
+    element:
+      id: remove-state-seat-el_6197f5d66f485727812f7ba1
+    centerElement: true
+    timeout: 300000
+- assertNotVisible:
+    id: remove-state-seat-el_7415d33a6ae75d549c3fdfc2
+- takeScreenshot: ${EVIDENCE}/07-state-replaced
+- tapOn:
+    id: remove-state-seat-el_6197f5d66f485727812f7ba1
+- scrollUntilVisible:
+    element:
+      id: choose-state-seat
+    centerElement: true
+    timeout: 300000
+- assertNotVisible:
+    id: remove-state-seat-el_6197f5d66f485727812f7ba1
+- takeScreenshot: ${EVIDENCE}/07-state-removed
+- scrollUntilVisible:
+    element:
+      id: your-seat-name
+    direction: UP
+    centerElement: true
+    timeout: 300000
+- assertVisible: Ballarat

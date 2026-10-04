@@ -69,7 +69,7 @@ export function PartyLabel({
           style={[styles.dot, { backgroundColor: identity.color }]}
         />
       ) : null}
-      <Text variant={dense ? 'metadata' : 'body'} tone={tone}>
+      <Text wordSafe variant={dense ? 'metadata' : 'body'} tone={tone}>
         {text.visible}
         {text.previous ? (
           <Text variant={dense ? 'metadata' : 'body'} tone="inkSoft">
@@ -130,10 +130,20 @@ export function PersonRow({
       <View style={[styles.personMain, stacked ? styles.personStacked : null]}>
         <Portrait />
         <View style={styles.personText}>
-          <Text variant="strong">{name}</Text>
+          <Text wordSafe variant="strong">
+            {name}
+          </Text>
           {partyContext ? <PartyLabel {...partyContext} dense /> : null}
-          {place ? <Text variant="metadata">{place}</Text> : null}
-          {detail ? <Text variant="metadata">{detail}</Text> : null}
+          {place ? (
+            <Text wordSafe variant="metadata">
+              {place}
+            </Text>
+          ) : null}
+          {detail ? (
+            <Text wordSafe variant="metadata">
+              {detail}
+            </Text>
+          ) : null}
         </View>
       </View>
       {onPress ? <Icon name="chevron.right" size={14} tone="inkSoft" /> : null}

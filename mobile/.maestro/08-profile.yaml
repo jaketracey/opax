@@ -1,0 +1,81 @@
+appId: au.com.opax.app
+name: 08 Independent profile blocks, current senator, former member and local share
+---
+- runFlow:
+    file: 08-open-profile.yaml
+    env:
+      NAME: Anthony Albanese
+      SLUG: anthony-albanese
+- runFlow:
+    file: review-pages.yaml
+    env:
+      END: person-end
+      PREFIX: 08-albanese
+- scrollUntilVisible:
+    element:
+      id: person-expenses-heading
+    direction: UP
+    timeout: 300000
+- assertVisible:
+    id: person-expenses-heading
+- scrollUntilVisible:
+    element:
+      id: person-pay-heading
+    direction: UP
+    timeout: 300000
+- assertVisible:
+    id: person-pay-heading
+- scrollUntilVisible:
+    element:
+      id: person-interests-heading
+    direction: UP
+    timeout: 300000
+- assertVisible:
+    id: person-interests-heading
+- scrollUntilVisible:
+    element:
+      id: person-votes-heading
+    direction: UP
+    timeout: 300000
+- assertVisible:
+    id: person-votes-heading
+- tapOn: Share Anthony Albanese
+- assertVisible: https://opax.invalid/subject/person/anthony-albanese
+- takeScreenshot: ${EVIDENCE}/08-share
+- tapOn: OK
+- runFlow:
+    file: 08-open-profile.yaml
+    env:
+      NAME: Penny Wong
+      SLUG: penny-wong
+- runFlow:
+    file: review-pages.yaml
+    env:
+      END: person-end
+      PREFIX: 08-wong
+- runFlow:
+    file: 08-open-profile.yaml
+    env:
+      NAME: Sheena Watt
+      SLUG: sheena-watt
+- scrollUntilVisible:
+    element:
+      id: person-portrait
+    direction: UP
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/08-permitted-portrait
+- runFlow:
+    file: review-pages.yaml
+    env:
+      END: person-end
+      PREFIX: 08-watt
+- runFlow:
+    file: 06-open-profile.yaml
+    env:
+      NAME: Julia Gillard
+      SLUG: julia-gillard
+- runFlow:
+    file: review-pages.yaml
+    env:
+      END: person-end
+      PREFIX: 08-former

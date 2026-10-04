@@ -17,7 +17,7 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
 - tapOn:
     id: tab-your-mp
 - assertVisible:
-    id: your-mp-screen-message
+    id: seat-empty
 - tapOn:
     id: tab-bills
 - extendedWaitUntil:

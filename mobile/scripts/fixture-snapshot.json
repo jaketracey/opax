@@ -45,7 +45,9 @@
     "/interests/10809.json": "1721bf569c9e107029a97fba6b1d847b22847cd217862c4635695ce81edc695b",
     "/interests/11029.json": "becbfe09a821f66552192cfef3884ebc4af03e67626f596080f012da8dd2b8fd",
     "/interests/11034.json": "46690ff3b10a3fb538df71e377e45710a00adb7373f39a704ecf04738ca4c5fa",
-    "/bills/au-federal-r6850.json": "4dea516900856f35aaf82ab26fe3e16e297a4e618da833c778f88aaca0eb4df4"
+    "/bills/au-federal-r6850.json": "4dea516900856f35aaf82ab26fe3e16e297a4e618da833c778f88aaca0eb4df4",
+    "/interests/10368.json": "ff5efe599a6eed1e8f86294a12d7162c1163b3b1eba26b6ff81438c6f5df41bd",
+    "/electorates/releases/b56417062ccc33cf/el_8675b02bc36a5ecc9916fb12.json": "9f9fc62df45601cdaed7da268a439760fd4fe3796d143385ddffcb20e55213a5"
   },
   "sizes": {
     "/parliamentarians.json": 405665,
@@ -91,7 +93,9 @@
     "/interests/10809.json": 5713,
     "/interests/11029.json": 9710,
     "/interests/11034.json": 7188,
-    "/bills/au-federal-r6850.json": 3139
+    "/bills/au-federal-r6850.json": 3139,
+    "/interests/10368.json": 5581,
+    "/electorates/releases/b56417062ccc33cf/el_8675b02bc36a5ecc9916fb12.json": 17378
   },
   "testOnlyFiles": ["/graph/money.json", "/interests/ties-by-donor.json"]
 }

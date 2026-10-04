@@ -49,6 +49,7 @@ export default function TabStack({ segment }: { segment: string }) {
           }}
         />
       ) : null}
+      <Stack.Screen name="electorate/[id]" options={{ title: '' }} />
     </Stack>
   );
 }

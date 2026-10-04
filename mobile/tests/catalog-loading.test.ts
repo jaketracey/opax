@@ -53,6 +53,19 @@ test('full profile API loads only reviewed paths and retains independent cache/s
     ),
   ).toBe(true);
 });
+test('Your MP defers the member register file until its disclosure is opened', async () => {
+  const { catalogs, calls } = loader();
+  const preview = await catalogs.profileFor(id, { includeInterests: false });
+  expect(preview.blocks.votes.status).toBe('ready');
+  expect(preview.interestKey).toBe('10007');
+  expect(calls).not.toContain('/interests/10007.json');
+  expect(
+    calls.filter((path) => /^\/interests\/[^/]+\.json$/.test(path)),
+  ).toEqual(['/interests/index.json']);
+  const opened = await catalogs.profileFor(id, { includeInterests: true });
+  expect(opened.blocks.interests.data?.name).toBe('Anthony Albanese');
+  expect(calls).toContain('/interests/10007.json');
+});
 test.each([
   '/votes.json',
   '/pay.json',

@@ -17,3 +17,8 @@ export function fromWebPath(
 }
 // Reserved Talk sheet presentation seam; no permission or transport is installed.
 export const voiceSlot = { enabled: false, module: 'src/voice' } as const;
+
+export const electorateRoute = (id: string) => ({
+  pathname: '/electorate/[id]' as const,
+  params: { id },
+});

@@ -45,7 +45,8 @@ scripts/e2e.sh <simulator-udid> 01 02 03 04 05 06
 OPAX_CONTENT_SIZE=accessibility-extra-extra-extra-large scripts/e2e.sh <simulator-udid> 03 05 06
 ```
 
-The optional `.maestro/07-scene-lifecycle.yaml` smoke checks cold/warm links and
+The optional `.maestro/07-scene-lifecycle.yaml` smoke is run by its explicit path;
+numeric journey 07 excludes it and runs only the Your MP journeys. It checks cold/warm links and
 the real native share module. On the 16e with iOS 18.4 at standard text size, use
 `OPAX_REMOTE_SHARE_UI=true`: its system-hosted share sheet is absent from Maestro's
 app hierarchy. Review `07-native-share.png` for the title, icon and URL; the flow
@@ -70,8 +71,11 @@ invalid or older candidates. The selected version is saved in `java.log`.
 | `OPAX_PASTE_WAIT_SECONDS` | Digit-only pasteboard lock wait (seconds)                                             | 7,200 seconds; invalid values also use this default |
 
 Configured capacity checks run before builds and devices; load5 at or above 140
-waits until it is below 140, before taking the shared lock. The e2e runner starts
-only its own fixture, installs the Release app
+waits until it is below 140. Capacity is checked before every pasteboard-lock
+attempt, so no capacity wait runs while that lock is held. The lock wait is
+`OPAX_PASTE_WAIT_SECONDS`, validated by `paste_lock_wait_seconds` in `qa-env.sh`
+(default 7200). Start long builds and device runs detached with `nohup` and poll
+their logs. The e2e runner starts only its own fixture, installs the Release app
 without Metro, saves Maestro/screenshots/request logs in ignored `private/qa/<run>/`,
 restores text size/appearance, shuts down, then releases the lock on success or
 failure. Never commit QA evidence. `OPAX_QA_RUN` names evidence, `OPAX_QA_APP`
@@ -82,7 +86,9 @@ saved data without clearing the app. Default runs include 01–04;
 The runner samples the selected simulator's app processes with `lsof -a -p <pid> -i`
 every nominal 250ms, writing raw `connection-samples.jsonl` and a measured
 `connection-audit.json`. Missing process coverage, collection errors or observed
-external connections fail. Short connections between samples may be missed; the
+external connections fail. Polling gaps above 3,000ms also fail: the audit records
+`longestSampleGapMs` and `sampleGapLimitMs`, covering each active app process,
+startup, scheduling delays, in-flight samples and the final tail. Short connections between samples may be missed; the
 source, variant and bundle boundaries are checked separately. Fixture request
 counts are in `request-audit.json` and do not claim to measure external traffic.
 
@@ -235,12 +241,25 @@ Declared interests, Pay and Expenses, and saved/offline states. Today has dated
 bill and declaration feeds; `todayEdition` is disabled until W13 exists. About and
 sources pushes inside the Account sheet, with snapshot coverage, source terms,
 privacy and the build's complete font notices. Bills has a native list and detail
-stack; Today bill rows and Search bill suggestions open that detail route. Your MP
-remains a placeholder. Profile links resolve canonical person IDs before passing
-them through the existing identifier route; the slug form is also retained for the
-foundation journeys. Journeys 12–14 exercise these screens.
-Licensed postcode lookup, full profiles, portrait rights, sign-in, voice and
-universal links belong to their owning lanes.
+stack; Today bill rows, Search bill suggestions and matched profile and Your MP
+vote rows open that detail route. Profile links resolve canonical person IDs before
+passing them through the existing identifier route; the slug form is also retained
+for the foundation journeys.
+Your MP supports an explicit seat choice saved on the device, verified member
+and senator observations, and explicit state-seat choices where a verified
+roster exists. Historical seats are excluded from the picker; a saved historical
+choice and its electorate record explain that the seat was abolished. A state
+choice replaces the prior district/region in its chamber and can be removed.
+The choice file may be included in device backups. The member's register file
+is fetched only when Register changes is opened. Person profiles render the catalog
+blocks independently, including portrait permission, W12 voting dates, register OCR
+warnings, pay, expenses and party receipts. Roster-only former profiles explicitly
+say their records are not linked in this release and link to the web; they do not
+claim those records are absent. Electorates show dated representation, elections,
+Census vintage and sources. Journeys 07–09 cover Your MP, profiles and electorates;
+12–14 cover Search, Today and About. The runner accepts 01–14 and rejects unknown
+numeric flows. Licensed postcode/location lookup, sign-in, voice, universal links
+and wider data coverage belong to their owning lanes.
 
 ## P0 catalog adapters (data only)
 
