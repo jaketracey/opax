@@ -1,0 +1,28 @@
+appId: au.com.opax.app
+---
+- scrollUntilVisible:
+    element:
+      id: your-register-toggle
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/${REGISTER_PREFIX}-register-target-settled
+- tapOn:
+    id: your-register-toggle
+# A floating iOS header can intercept the first tap. Retry only while the
+# control still says Show, so a register that is opening is never closed.
+- runFlow:
+    when:
+      visible:
+        id: your-register-toggle
+        text: Show register changes
+    commands:
+      - swipe:
+          start: 90%,35%
+          end: 90%,55%
+          duration: 600
+      - waitForAnimationToEnd
+      - takeScreenshot: ${EVIDENCE}/${REGISTER_PREFIX}-register-target-repositioned
+      - tapOn:
+          id: your-register-toggle
