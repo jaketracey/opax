@@ -52,9 +52,14 @@ export class CatalogCache {
           (item) => item.bucket !== 'search' && !isSearch(item.url),
         );
         if (catalogs.length !== index.length) {
-          for (const item of index)
-            if (!catalogs.includes(item)) await this.store.remove(item.url);
-          await this.store.writeIndex(catalogs);
+          try {
+            for (const item of index)
+              if (!catalogs.includes(item)) await this.store.remove(item.url);
+            await this.store.writeIndex(catalogs);
+          } catch {
+            // Cleanup is best effort: catalog reads and writes must still work.
+            // The old disk index (or DiskStore's orphan sweep) retries on launch.
+          }
         }
         return (this.index = catalogs);
       });

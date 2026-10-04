@@ -661,3 +661,127 @@ test('legacy persistent search pages and query metadata are removed while catalo
   ]);
   expect(JSON.stringify(store)).not.toContain('legacy-query');
 });
+
+describe.each(['remove', 'writeIndex'] as const)(
+  'legacy search cleanup with a failing %s',
+  (method) => {
+    function legacyStore() {
+      const store = new MemoryStore();
+      const catalog: CacheEntry = {
+        url: `${origin}/parliamentarians.json`,
+        body: { generated: '2026-09-04' },
+        savedAt: 1,
+        validatedAt: 1,
+        expiresAt: 2,
+        asOf: '2026-09-04',
+      };
+      const search = {
+        ...catalog,
+        url: `${origin}/api/search-all?q=legacy-query&kind=person`,
+        body: { query: 'legacy-query', results: ['legacy-result'] },
+      };
+      store.entries = [catalog, search];
+      store.index = [
+        { url: catalog.url, bytes: 100, validatedAt: 1, bucket: 'catalog' },
+        { url: search.url, bytes: 100, validatedAt: 1, bucket: 'search' },
+      ];
+      jest.spyOn(store, method).mockRejectedValueOnce(new Error('disk full'));
+      return { store, catalog, search };
+    }
+    test('catalog reads, network fetches and writes survive the cleanup failure', async () => {
+      const { store, catalog, search } = legacyStore();
+      const cache = new CatalogCache(store);
+      expect(await cache.get(catalog.url)).toEqual(catalog);
+      expect(await cache.get(search.url)).toBeUndefined();
+      const transport = jest.fn().mockResolvedValue(response());
+      const client = new ApiClient({
+        origin,
+        version: '0.1.0',
+        build: '1',
+        cache,
+        transport,
+        now: () => 1000,
+        retries: 0,
+      });
+      await expect(
+        client.get('/parliamentarians.json', decode),
+      ).resolves.toMatchObject({
+        data: { generated: '2026-09-04' },
+        stale: false,
+      });
+      expect(transport).toHaveBeenCalledTimes(1);
+      expect(await cache.get(catalog.url)).toMatchObject({ validatedAt: 1000 });
+      const next = { ...catalog, url: 'next-catalog', validatedAt: 1001 };
+      await expect(cache.put(next)).resolves.toEqual(next);
+      expect(await cache.get(next.url)).toEqual(next);
+      expect(store.index.map((entry) => entry.url)).toEqual([
+        next.url,
+        catalog.url,
+      ]);
+      expect(JSON.stringify(store.index)).not.toContain('legacy-query');
+    });
+    test('keeps the filtered index in memory and retries failed cleanup next launch', async () => {
+      const { store, catalog, search } = legacyStore();
+      const indexReads = jest.spyOn(store, 'readIndex');
+      const cache = new CatalogCache(store);
+      expect(await cache.get(catalog.url)).toEqual(catalog);
+      expect(await cache.get(catalog.url)).toEqual(catalog);
+      expect(await cache.get(search.url)).toBeUndefined();
+      expect(indexReads).toHaveBeenCalledTimes(1);
+      expect(store.index.some((entry) => entry.url === search.url)).toBe(true);
+      expect(await new CatalogCache(store).get(catalog.url)).toEqual(catalog);
+      expect(indexReads).toHaveBeenCalledTimes(2);
+      expect(store.entries).toEqual([catalog]);
+      expect(JSON.stringify(store)).not.toContain('legacy-query');
+    });
+  },
+);
+
+test('a catalog write during legacy cleanup cannot be overwritten by the cleanup index', async () => {
+  const store = new MemoryStore();
+  const catalog: CacheEntry = {
+    url: 'catalog',
+    body: 'saved',
+    savedAt: 1,
+    validatedAt: 1,
+    expiresAt: 2,
+    asOf: null,
+  };
+  const search = {
+    ...catalog,
+    url: `${origin}/api/search-all?q=legacy-query&kind=person`,
+  };
+  store.entries = [catalog, search];
+  store.index = [
+    { url: catalog.url, bytes: 100, validatedAt: 1, bucket: 'catalog' },
+    { url: search.url, bytes: 100, validatedAt: 1, bucket: 'search' },
+  ];
+  let started!: () => void;
+  const cleanupStarted = new Promise<void>((resolve) => {
+    started = resolve;
+  });
+  let finish!: () => void;
+  const remove = store.remove.bind(store);
+  jest.spyOn(store, 'remove').mockImplementationOnce(async (url) => {
+    started();
+    await new Promise<void>((resolve) => {
+      finish = resolve;
+    });
+    await remove(url);
+  });
+  const cache = new CatalogCache(store);
+  const read = cache.get(catalog.url);
+  await cleanupStarted;
+  const next = { ...catalog, url: 'next-catalog', validatedAt: 2 };
+  const writes = jest.spyOn(store, 'write');
+  const write = cache.put(next);
+  await new Promise<void>((resolve) => setImmediate(resolve));
+  expect(writes).not.toHaveBeenCalled();
+  finish();
+  await Promise.all([read, write]);
+  expect(await cache.get(next.url)).toEqual(next);
+  expect(store.index.map((entry) => entry.url)).toEqual([
+    next.url,
+    catalog.url,
+  ]);
+});
