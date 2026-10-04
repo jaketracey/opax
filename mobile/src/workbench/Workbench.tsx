@@ -48,6 +48,9 @@ import {
   type TextVariant,
 } from '../design/tokens';
 import { shareRecord } from '../navigation/share';
+import { canonicalUrl } from '../navigation/external';
+import { isE2E } from '../design/environment';
+import { OpaxShare } from '../../modules/opax-share';
 
 // Searched for by the release bundle scan: it must never appear in production.
 export const WORKBENCH_MARKER = 'OPAX_DESIGN_WORKBENCH';
@@ -142,6 +145,31 @@ export default function Workbench() {
           {WORKBENCH_MARKER}
         </Text>
       </Group>
+
+      {isE2E ? (
+        <Button
+          label="Native share sheet (QA)"
+          testID="wb-native-share"
+          onPress={() => {
+            if (!OpaxShare) {
+              Alert.alert('Native share unavailable');
+              return;
+            }
+            void OpaxShare.share({
+              url: canonicalUrl('/subject/person/anthony-albanese'),
+              title: 'Anthony Albanese',
+            }).then(
+              (completed) =>
+                Alert.alert(
+                  completed
+                    ? 'Native share completed'
+                    : 'Native share cancelled',
+                ),
+              () => Alert.alert('Native share failed'),
+            );
+          }}
+        />
+      ) : null}
 
       <Block id="mark" title="Mark and app icon">
         <View style={styles.markRow}>
