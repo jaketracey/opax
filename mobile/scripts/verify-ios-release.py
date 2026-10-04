@@ -35,7 +35,18 @@ ANALYTICS_HOSTS = {"segment.io", "segment.com", "segmentapis.com", "posthog.com"
                    "amplitude.com", "sentry.io", "appsflyer.com", "adjust.com", "google-analytics.com",
                    "app-measurement.com", "crashlytics.com", "heap.io", "heapanalytics.com",
                    "appcenter.ms", "bugsnag.com", "datadoghq.com", "graph.facebook.com"}
-ROUTE_KEYS = re.compile(rb"\./[A-Za-z0-9_(),@%.\[\]/+~-]+\.(?:tsx?|jsx?)")
+ROUTE_KEY = re.compile(r"\./[A-Za-z0-9_(),@%.\[\]/+~-]+\.(?:tsx?|jsx?)")
+PATH_TOKENS = re.compile(rb"[A-Za-z0-9_(),@%.\[\]/+~-]+")
+HERMES_MAGIC = 0x1F1903C103BC1FC6
+HERMES_HEADER_SIZE = 128
+HERMES_FIELDS = ("fileLength", "globalCodeIndex", "functionCount", "stringKindCount", "identifierCount",
+                 "stringCount", "overflowStringCount", "stringStorageSize", "bigIntCount", "bigIntStorageSize",
+                 "regExpCount", "regExpStorageSize", "literalValueBufferSize", "objKeyBufferSize",
+                 "objShapeTableCount", "numStringSwitchImms", "segmentID", "cjsModuleCount",
+                 "functionSourceCount", "debugInfoOffset")
+# Bytecode versions whose layout this reader knows (function header bytes).
+# Any other version fails closed: check a shipped bundle before adding one.
+HERMES_LAYOUTS = {98: {"function_header_size": 12}}
 DEVELOPMENT_ROUTE = re.compile(r"workbench|fixture|__tests__|\(dev\)|__dev|home-prototype", re.I)
 DEVELOPMENT_PATHS = re.compile(rb"(?:src/app|app)/[^\x00\s\"']*(?:workbench|__tests__|fixtures?|\(dev\)|__dev)|"
                                rb"ui-workbench|home-prototype|/__dev(?:/|\x00)", re.I)
@@ -129,20 +140,61 @@ def shipping_source_keys(routes):
     return keys
 
 
+def hermes_strings(body):
+    """Every entry of a Hermes bytecode string table, or None if the body is not
+    Hermes bytecode. Malformed tables and unknown versions fail closed."""
+    if len(body) < HERMES_HEADER_SIZE or struct.unpack_from("<Q", body)[0] != HERMES_MAGIC:
+        return None
+    version = struct.unpack_from("<I", body, 8)[0]
+    layout = HERMES_LAYOUTS.get(version)
+    require(layout is not None, f"shipped JS is Hermes bytecode version {version}; the verifier reads "
+            f"only versions {sorted(HERMES_LAYOUTS)}")
+    header = dict(zip(HERMES_FIELDS, struct.unpack_from("<20I", body, 32)))
+    require(header["fileLength"] == len(body), "Hermes bytecode length matches its header")
+
+    def align(offset):
+        return (offset + 3) & ~3
+
+    offset = align(HERMES_HEADER_SIZE + header["functionCount"] * layout["function_header_size"])
+    kinds = offset
+    offset = align(offset + 4 * header["stringKindCount"])
+    offset = align(offset + 4 * header["identifierCount"])
+    small = offset
+    offset = align(offset + 4 * header["stringCount"])
+    overflow = offset
+    storage = align(offset + 8 * header["overflowStringCount"])
+    end = storage + header["stringStorageSize"]
+    require(end <= (header["debugInfoOffset"] or len(body)) <= len(body),
+            "Hermes string storage lies within the bytecode")
+    runs = struct.unpack_from(f"<{header['stringKindCount']}I", body, kinds)
+    require(sum(run & 0x7FFFFFFF for run in runs) == header["stringCount"],
+            "Hermes string kinds cover the whole string table")
+    strings = set()
+    for index in range(header["stringCount"]):
+        entry = struct.unpack_from("<I", body, small + 4 * index)[0]
+        utf16, start, length = entry & 1, (entry >> 1) & 0x7FFFFF, entry >> 24
+        if length == 0xFF:
+            require(start < header["overflowStringCount"], "Hermes overflow string index is valid")
+            start, length = struct.unpack_from("<II", body, overflow + 8 * start)
+        size = length * (2 if utf16 else 1)
+        require(start + size <= header["stringStorageSize"], "Hermes string entries lie within string storage")
+        raw = body[storage + start:storage + start + size]
+        strings.add(raw.decode("utf-16-le", errors="replace") if utf16 else raw.decode("latin-1"))
+    return strings
+
+
 def bundle_route_keys(body, routes):
-    """Hermes packs strings without separators, so a route key can run into its
-    neighbour ("./talk.tsxfoo.js"). Presence is an exact byte search for each
-    expected key; regex scans only look for keys that must be absent."""
+    """Route keys are compared as whole strings: Hermes string-table entries, or
+    whole tokens for plain JS. Hermes packs and overlaps its string storage, so
+    raw bytes cannot tell "./talk.tsx" from "./talk.tsx.workbench.tsx"."""
     expected = shipping_source_keys(routes)
-    missing = sorted(key for key in expected if key.encode() not in body)
+    strings = hermes_strings(body)
+    if strings is None:
+        strings = {token.decode("latin-1") for token in PATH_TOKENS.findall(body)}
+    missing = sorted(expected - strings)
     require(bool(expected) and not missing, "every shipping Expo route key is present in shipped JS" +
             (f" (missing {', '.join(missing)})" if missing else ""))
-    # Blank out the expected keys (longest first), then any route-shaped string left
-    # over is a route the production tree does not ship.
-    remainder = body
-    for key in sorted(expected, key=len, reverse=True):
-        remainder = remainder.replace(key.encode(), b"\0")
-    unexpected = sorted({key.decode() for key in ROUTE_KEYS.findall(remainder)})
+    unexpected = sorted(string for string in strings if ROUTE_KEY.fullmatch(string) and string not in expected)
     development = sorted(key for key in expected if DEVELOPMENT_ROUTE.search(key))
     require(not unexpected and not development and not DEVELOPMENT_PATHS.search(body),
             "no unshipped, development or workbench route keys in shipped JS" +
