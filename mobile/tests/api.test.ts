@@ -481,7 +481,7 @@ test('byte eviction keeps the most recently validated entries', async () => {
     store.index.reduce((total, e) => total + e.bytes, 0),
   ).toBeLessThanOrEqual(500);
 });
-test('repeated cache reads use one metadata load and only the requested body', async () => {
+test('repeated cache reads reuse the retained parsed snapshot without rereading disk', async () => {
   const store = new MemoryStore();
   const indexReads = jest.spyOn(store, 'readIndex');
   const bodyReads = jest.spyOn(store, 'read');
@@ -498,7 +498,7 @@ test('repeated cache reads use one metadata load and only the requested body', a
   await cache.get('a');
   await cache.get('a');
   expect(indexReads).toHaveBeenCalledTimes(1);
-  expect(bodyReads.mock.calls).toEqual([['a'], ['a']]);
+  expect(bodyReads).not.toHaveBeenCalled();
 });
 
 test('clock moving forward then back refetches and retains a newer as-at', async () => {
@@ -784,4 +784,149 @@ test('a catalog write during legacy cleanup cannot be overwritten by the cleanup
     next.url,
     catalog.url,
   ]);
+});
+
+test('one decoded snapshot per decoder and body, including 304; a new body validates despite identical ETag/date', async () => {
+  let time = 1000;
+  const transport = jest
+    .fn()
+    .mockResolvedValueOnce(
+      response(200, { etag: 'same', 'cache-control': 'max-age=1' }),
+    )
+    .mockResolvedValueOnce(
+      new Response(null, {
+        status: 304,
+        headers: { 'cache-control': 'max-age=60' },
+      }),
+    )
+    .mockResolvedValueOnce(
+      response(200, { etag: 'same', 'cache-control': 'max-age=60' }),
+    );
+  const { client } = setup(transport, () => time);
+  const validate = jest.fn((value: unknown) => ({ ...decode(value) }));
+  const first = await client.get('/parliamentarians.json', validate);
+  expect((await client.get('/parliamentarians.json', validate)).data).toBe(
+    first.data,
+  );
+  expect(validate).toHaveBeenCalledTimes(1);
+  time = 2000;
+  const revalidated = await client.get('/parliamentarians.json', validate);
+  expect(revalidated.data).toBe(first.data);
+  expect(revalidated.savedAt).toBe(first.savedAt);
+  expect(validate).toHaveBeenCalledTimes(1);
+  const otherDecoder = jest.fn(decode);
+  await client.get('/parliamentarians.json', otherDecoder);
+  expect(otherDecoder).toHaveBeenCalledTimes(1);
+  const refreshed = await client.get('/parliamentarians.json', validate, true);
+  expect(refreshed.data).toEqual(first.data);
+  expect(refreshed.data).not.toBe(first.data);
+  expect(validate).toHaveBeenCalledTimes(2);
+  expect(transport).toHaveBeenCalledTimes(3);
+});
+
+test('memoized decoding still checks expiry and returns source/save dates on offline fallback', async () => {
+  let time = 1000;
+  const transport = jest
+    .fn()
+    .mockResolvedValueOnce(response(200, { 'cache-control': 'max-age=1' }))
+    .mockRejectedValue(new TypeError('offline'));
+  const { client } = setup(transport, () => time);
+  const validate = jest.fn(decode);
+  const first = await client.get('/parliamentarians.json', validate);
+  time = 2000;
+  expect(await client.get('/parliamentarians.json', validate)).toEqual({
+    ...first,
+    stale: true,
+  });
+  expect(transport).toHaveBeenCalledTimes(2);
+  expect(validate).toHaveBeenCalledTimes(1);
+});
+
+test('failed validation is never memoized; invalid forced refresh cannot use the validated old snapshot', async () => {
+  const transport = jest
+    .fn()
+    .mockResolvedValueOnce(response(200, { 'cache-control': 'max-age=60' }))
+    .mockResolvedValueOnce(new Response(JSON.stringify({ generated: 1 })));
+  const { client } = setup(transport);
+  const validate = jest.fn((value: unknown) => {
+    if (typeof decode(value).generated !== 'string') throw new Error('invalid');
+    return decode(value);
+  });
+  await client.get('/parliamentarians.json', validate);
+  await expect(
+    client.get('/parliamentarians.json', validate, true),
+  ).rejects.toMatchObject({ code: 'invalid-data' });
+  expect(validate).toHaveBeenCalledTimes(2);
+});
+
+test('concurrent disk reads share a snapshot; eviction and replacements drop its in-memory version', async () => {
+  const store = new MemoryStore();
+  const entry = (url: string, time: number): CacheEntry => ({
+    url,
+    body: { time },
+    asOf: null,
+    savedAt: time,
+    validatedAt: time,
+    expiresAt: 10000,
+  });
+  await new CatalogCache(store, 2000, 1).put(entry('a', 1));
+  const read = jest.spyOn(store, 'read').mockImplementation(async (url) => {
+    const value = store.entries.find((e) => e.url === url);
+    return value
+      ? (JSON.parse(JSON.stringify(value)) as CacheEntry)
+      : undefined;
+  });
+  const cache = new CatalogCache(store, 2000, 1);
+  const [first, second] = await Promise.all([cache.get('a'), cache.get('a')]);
+  expect(second).toBe(first);
+  expect(read).toHaveBeenCalledTimes(1);
+  await cache.put(entry('b', 2));
+  expect(await cache.get('a')).toBeUndefined();
+  await cache.put(entry('a', 3));
+  expect((await cache.get('a'))?.body).toEqual({ time: 3 });
+  expect(await cache.get('a')).not.toBe(first);
+  expect(await cache.get('b')).toBeUndefined();
+});
+
+test('a restored disk index cannot exceed a smaller in-memory entry bound', async () => {
+  const store = new MemoryStore();
+  const original = new CatalogCache(store, 2000, 2);
+  const entry = (url: string): CacheEntry => ({
+    url,
+    body: { url },
+    savedAt: 1,
+    validatedAt: 1,
+    expiresAt: 100,
+    asOf: null,
+  });
+  await original.put(entry('a'));
+  await original.put(entry('b'));
+  const read = jest.spyOn(store, 'read');
+  const cache = new CatalogCache(store, 2000, 1);
+  await cache.get('a');
+  await cache.get('b');
+  await cache.get('b');
+  await cache.get('a');
+  expect(read.mock.calls).toEqual([['a'], ['b'], ['a']]);
+});
+
+test('validated raw and decoded snapshots cannot be mutated to bypass their decoder', async () => {
+  const transport = jest
+    .fn()
+    .mockResolvedValue(response(200, { 'cache-control': 'max-age=60' }));
+  const { client, cache } = setup(transport);
+  const validate = jest.fn((body: unknown) => ({
+    ...decode(body),
+    nested: { values: [1, 2] },
+  }));
+  const first = await client.get('/parliamentarians.json', validate);
+  expect(Reflect.set(first.data, 'generated', 'invalid')).toBe(false);
+  expect(Reflect.set(first.data.nested.values, 0, 'invalid')).toBe(false);
+  const raw = (await cache.get(`${origin}/parliamentarians.json`))!
+    .body as object;
+  expect(Reflect.set(raw, 'generated', 1)).toBe(false);
+  expect((await client.get('/parliamentarians.json', validate)).data).toEqual(
+    first.data,
+  );
+  expect(validate).toHaveBeenCalledTimes(1);
 });
