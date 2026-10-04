@@ -331,25 +331,32 @@ function setup(...responses: (Response | Error)[]) {
     if (next instanceof Error) throw next;
     return next;
   });
-  const catalogs = new Catalogs(
-    new ApiClient({
-      origin,
-      version: '0.1.0',
-      build: '3',
-      cache: new CatalogCache(new MemoryStore()),
-      transport: transport as unknown as typeof fetch,
-      now: () => time,
-      retries: 0,
-    }),
-  );
+  // The disk store outlives the app; a relaunch builds a new cache and client.
+  const store = new MemoryStore();
+  const launch = () =>
+    new Catalogs(
+      new ApiClient({
+        origin,
+        version: '0.1.0',
+        build: '3',
+        cache: new CatalogCache(store),
+        transport: transport as unknown as typeof fetch,
+        now: () => time,
+        retries: 0,
+      }),
+    );
   return {
-    catalogs,
+    catalogs: launch(),
+    relaunch: launch,
+    store,
     transport,
     later: (ms: number) => {
       time += ms;
     },
   };
 }
+const notPublished = () =>
+  served(404, '{"error":"edition_not_published","date":"2026-10-04"}');
 
 describe('todayEdition()', () => {
   test('reads the edition once, then serves the saved copy while it is fresh', async () => {
@@ -424,11 +431,100 @@ describe('todayEdition()', () => {
       stale: false,
       savedAt: null,
     });
-    const { catalogs, later } = setup(served(), served(404, '{}'));
+    const { catalogs, later } = setup(served(), notPublished());
     await catalogs.todayEdition();
     later(301_000);
     expect((await catalogs.todayEdition()).status).toBe('missing');
   });
+  test('a forced 404 replaces a fresh saved edition: a relaunch stays absent without asking', async () => {
+    const { catalogs, relaunch, transport, store } = setup(
+      served(),
+      notPublished(),
+    );
+    expect((await catalogs.todayEdition()).status).toBe('ready');
+    expect((await catalogs.todayEdition(true)).status).toBe('missing');
+    // The 200 would still be fresh for four more minutes; the absence is
+    // saved in its place with the 404's own minute.
+    expect(store.entries).toHaveLength(1);
+    expect(store.entries[0]!.body).toEqual({
+      error: 'edition_not_published',
+      date: '2026-10-04',
+    });
+    expect(await relaunch().todayEdition()).toMatchObject({
+      status: 'missing',
+      data: null,
+    });
+    expect(transport).toHaveBeenCalledTimes(2);
+  });
+  test('after expiry, a 404 then an offline relaunch never brings the edition back', async () => {
+    const { catalogs, relaunch, later } = setup(
+      served(),
+      notPublished(),
+      new TypeError('offline'),
+      new TypeError('offline'),
+    );
+    await catalogs.todayEdition();
+    later(301_000);
+    expect((await catalogs.todayEdition()).status).toBe('missing');
+    // Offline within the absence's minute, then long after it.
+    expect((await relaunch().todayEdition()).status).toBe('missing');
+    later(61_000);
+    expect(await relaunch().todayEdition()).toMatchObject({
+      status: 'missing',
+      data: null,
+    });
+    later(86_400_000);
+    expect((await relaunch().todayEdition()).status).toBe('missing');
+  });
+  test('a saved absence gives way to the next posted edition', async () => {
+    const { catalogs, relaunch, later } = setup(notPublished(), served());
+    expect((await catalogs.todayEdition()).status).toBe('missing');
+    later(61_000);
+    const next = await relaunch().todayEdition();
+    expect(next).toMatchObject({ status: 'ready', stale: false });
+    expect(next.data!.title).toBe(decoded.edition.title);
+  });
+  test('a Worker without the reader (404 not_found) is absence too', async () => {
+    expect(
+      (
+        await setup(
+          served(404, '{"error":"not_found"}'),
+        ).catalogs.todayEdition()
+      ).status,
+    ).toBe('missing');
+  });
+  test.each([
+    ['an empty object', '{}'],
+    [
+      'an extra key',
+      '{"error":"edition_not_published","date":"2026-10-04","x":1}',
+    ],
+    [
+      'an impossible date',
+      '{"error":"edition_not_published","date":"2026-02-30"}',
+    ],
+    ['another error', '{"error":"invalid_date"}'],
+    ['an HTML page', '<html>Not found</html>'],
+  ])(
+    'a 404 with %s is unreadable, not absence, and keeps the saved edition',
+    async (_name, body) => {
+      const { catalogs, later } = setup(
+        served(),
+        served(404, body),
+        new TypeError('offline'),
+      );
+      await catalogs.todayEdition();
+      later(301_000);
+      expect(await catalogs.todayEdition()).toMatchObject({
+        status: 'error',
+        error: { code: 'invalid-data' },
+      });
+      expect(await catalogs.todayEdition()).toMatchObject({
+        status: 'ready',
+        stale: true,
+      });
+    },
+  );
   test.each<[string, Response]>([
     ['broken JSON', served(200, '{"schema_version":1,')],
     ['a contract change', served(200, JSON.stringify({ ...raw(), extra: 1 }))],

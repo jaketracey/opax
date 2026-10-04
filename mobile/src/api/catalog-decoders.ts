@@ -892,4 +892,32 @@ export function decodeEdition(v: unknown) {
   return data;
 }
 export type AppEdition = ReturnType<typeof decodeEdition>;
+// The latest route's 404s, answered with a body: no posted edition on or
+// before the Melbourne date, or (from a Worker without the reader) no route.
+const editionAbsent = exact({
+  error: (v: unknown): 'edition_not_published' =>
+    v === 'edition_not_published' ? v : invalid(),
+  date: calendarDay,
+});
+const routeAbsent = exact({
+  error: (v: unknown): 'not_found' => (v === 'not_found' ? v : invalid()),
+});
+/**
+ * A read of the latest route: the edition, or its authoritative absence. The
+ * absence is saved like an edition, so it replaces a saved edition rather
+ * than letting a relaunch or an offline read bring yesterday's back.
+ */
+export function decodeEditionRead(
+  v: unknown,
+): AppEdition | { absent: true; date: string | null } {
+  if (v && typeof v === 'object' && 'error' in v) {
+    const row = object(v);
+    if (row.error === 'not_found') {
+      routeAbsent(row);
+      return { absent: true, date: null };
+    }
+    return { absent: true, date: editionAbsent(row).date };
+  }
+  return decodeEdition(v);
+}
 export type Edition = AppEdition['edition'];

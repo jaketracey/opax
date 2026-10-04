@@ -49,10 +49,17 @@ export class ApiClient {
       options.sleep ??
       ((ms) => new Promise((resolve) => setTimeout(resolve, ms)));
   }
+  /**
+   * `absence: true` is for a route whose 404 is an authoritative answer with
+   * a body (the W13 edition): the 404 body is decoded and saved like a 200,
+   * so it replaces the saved record and is fresh, stale or offline as any
+   * other read. Everywhere else a 404 is a not-found error.
+   */
   async get<T>(
     path: string,
     decode: Decoder<T>,
     force = false,
+    { absence = false }: { absence?: boolean } = {},
   ): Promise<RecordResult<T>> {
     const url = allowedURL(this.options.origin, path); // before cache or networking
     const requestStartedAt = this.now();
@@ -121,7 +128,11 @@ export class ApiClient {
             if (!Number.isFinite(retryDelay)) retryDelay = 300 * 2 ** attempt;
           }
         }
-        if (response.status !== 304 && !response.ok)
+        if (
+          response.status !== 304 &&
+          !response.ok &&
+          !(absence && response.status === 404)
+        )
           throw httpError(response.status);
         let body: unknown;
         try {

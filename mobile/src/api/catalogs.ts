@@ -195,41 +195,38 @@ export class Catalogs {
   /**
    * W13: the newest posted daily edition, through the catalog cache like every
    * other read, so a saved copy stays readable offline and is marked stale.
-   * A 404 means no edition is published: the block is `missing` and the card
-   * is absent, never an error. Nothing is composed when the read fails.
+   * A 404 is authoritative absence: it is saved in the edition's place (with
+   * its own time and max-age), so the block is `missing` and the card absent,
+   * now, after a relaunch and offline. Nothing is composed when a read fails.
    */
   async todayEdition(refresh = false): Promise<Block<EditionView>> {
+    const empty = { sources: [], asAt: null, stale: false, savedAt: null };
     try {
       const record = await this.client.get(
         editionPath,
-        decode.decodeEdition,
+        decode.decodeEditionRead,
         refresh,
+        { absence: true },
       );
+      if ('absent' in record.data)
+        return { ...empty, data: null, status: 'missing' };
       return {
         ...editionFor(record.data),
         stale: record.stale,
         savedAt: record.savedAt,
       };
     } catch (e) {
-      const missing = e instanceof ApiError && e.code === 'not-found';
       return {
+        ...empty,
         data: null,
-        status: missing ? 'missing' : 'error',
-        ...(missing
-          ? {}
-          : {
-              error:
-                e instanceof ApiError
-                  ? e
-                  : new ApiError(
-                      'invalid-data',
-                      'The daily edition could not be read.',
-                    ),
-            }),
-        sources: [],
-        asAt: null,
-        stale: false,
-        savedAt: null,
+        status: 'error',
+        error:
+          e instanceof ApiError
+            ? e
+            : new ApiError(
+                'invalid-data',
+                'The daily edition could not be read.',
+              ),
       };
     }
   }
