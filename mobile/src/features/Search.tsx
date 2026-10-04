@@ -48,7 +48,7 @@ export default function Search() {
   const [kind, setKind] = useState<CatalogKind>('person');
   const [sources, setSources] = useState<Sources | null>(null);
   const [sourceError, setSourceError] = useState<unknown>(null);
-  const [refreshing, setRefreshing] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [result, setResult] = useState<Results | null>(null);
   const [error, setError] = useState<unknown>(null);
   const [openError, setOpenError] = useState<{
