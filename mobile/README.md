@@ -75,20 +75,26 @@ Configured capacity checks run before builds and devices; a five-minute load of
 a decimal of at most nine digits in `qa-lock.sh`; invalid values default to 7200.
 The e2e runner starts only its own fixture, installs the Release app
 without Metro, saves Maestro/screenshots/request logs in ignored `private/qa/<run>/`,
-restores text size/appearance and shuts down on success or failure. Never commit QA evidence.
+restores text size/appearance and shuts down on success, failure or TERM. Never commit QA evidence.
 `OPAX_QA_RUN` names evidence, `OPAX_QA_APP` selects a prepared app. No audio flows.
 Journey 04 stops the fixture and checks saved data without clearing the app. Default
 runs include 01–04; `OPAX_VERIFY_OFFLINE=1` also adds 04 to a selected warm run.
 
-The pasteboard lock (`scripts/qa-lock.sh`) is shared with other projects, so a run
-never waits on anything while holding it. Every Maestro run goes through
+The pasteboard lock (`scripts/qa-lock.sh`) is shared with other projects. Fixture
+preparation and server startup finish before the runner waits for it; waiting lanes
+keep their simulators shut down. The whole device lifetime goes through
 `qa_paste_lock_run`: holding nothing, it waits for the lock to look free and for
 capacity, then enters the build gate with `scripts/qa-locked.sh`. Inside the gate the
 wrapper makes one non-blocking lock attempt and rechecks the load. If the lock is
 taken or the load has reached 140, it leaves the gate at once and the runner starts
-again; otherwise Maestro runs and the lock is released when it ends. The wrapper leads
-its own process group: Maestro and its children run in it, and release first stops any
-leftovers. `OPAX_PASTE_WAIT_SECONDS` covers all the waiting; every minute `lock.log`
+again; otherwise `scripts/e2e-device.sh` boots, installs, runs every Maestro phase
+(including offline 04), restores settings and shuts down before the lock is released.
+`device-timing.txt` records boot, install, total device setup and cleanup seconds
+added to lock holding time.
+Screenshot collection and fixture teardown follow release (offline 04 stops its
+fixture while locked). The wrapper leads its own process group: the device command,
+Maestro and their children run in it, and release first stops any leftovers.
+`OPAX_PASTE_WAIT_SECONDS` covers all the waiting; every minute `lock.log`
 names the lock, the elapsed time and the holder. Never write your own lock wrapper.
 
 The lock directory appears in one atomic step with its `owner` file (pid and pgid of
