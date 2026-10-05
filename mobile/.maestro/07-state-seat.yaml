@@ -16,13 +16,10 @@ name: 07 Choose a state district explicitly where a verified roster exists
     timeout: 300000
 - tapOn:
     id: seat-choice-federal-representatives-vic-ballarat
-- scrollUntilVisible:
-    element:
-      id: your-register-toggle
-    centerElement: true
-    timeout: 300000
-- tapOn:
-    id: your-register-toggle
+- runFlow:
+    file: support/open-your-register.yaml
+    env:
+      REGISTER_PREFIX: 07-state
 - extendedWaitUntil:
     visible:
       id: your-register-heading

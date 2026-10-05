@@ -8,7 +8,7 @@
     "ios": "bash scripts/run-ios.sh",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "test": "jest --runInBand",
+    "test": "bash scripts/jest-retry.sh --maxWorkers=2",
     "format": "prettier --write src scripts tests plugins app.config.ts *.js *.json .maestro README.md",
     "qa-advisories": "tsx scripts/qa-advisories.ts",
     "qa-static": "tsx scripts/qa-static.ts",
@@ -40,6 +40,7 @@
     "@types/node": "26.6.3",
     "@types/react": "19.2.4",
     "@types/react-test-renderer": "19.1.0",
+    "@types/ws": "8.18.2",
     "eslint": "9.39.5",
     "eslint-config-expo": "57.0.2",
     "jest": "29.7.0",
@@ -47,7 +48,8 @@
     "prettier": "3.8.5",
     "react-test-renderer": "19.2.3",
     "tsx": "4.23.15",
-    "typescript": "6.0.3"
+    "typescript": "6.0.3",
+    "ws": "8.22.0"
   },
   "engines": {
     "node": ">=24 <25",

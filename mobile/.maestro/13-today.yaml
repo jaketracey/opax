@@ -9,6 +9,49 @@ name: 13 Today feeds and their dated original sources
 - launchApp
 - assertVisible:
     id: today-screen-message
+# The daily edition: the fixture's pinned production response, as posted.
+# At AX5 the title alone can outgrow the screen, so match a tenth of it.
+- scrollUntilVisible:
+    element:
+      id: today-edition-head
+      text: 'Daily edition, Bill, 4 October 2026: Wage Justice for Early Childhood.*'
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/13-edition
+# A bill edition's text is a model's summary: its label comes first.
+- scrollUntilVisible:
+    element:
+      id: today-edition-machine
+      text: 'Machine-written\. Written by a model from the explanatory memorandum; not the record\.'
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/13-edition-machine
+- scrollUntilVisible:
+    element:
+      id: today-edition-link
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+- waitForAnimationToEnd
+- tapOn:
+    id: today-edition-link
+# E2E shows the guarded web address on the build's reserved origin instead.
+- scrollUntilVisible:
+    element:
+      text: https://opax\.invalid/bill/au-federal-r7529
+    timeout: 20000
+- takeScreenshot: ${EVIDENCE}/13-edition-link-alert
+- tapOn: OK
+- scrollUntilVisible:
+    element:
+      id: today-edition-as-at
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+- assertVisible: 'As at 4 October 2026 · Source: OPAX daily edition'
+- takeScreenshot: ${EVIDENCE}/13-edition-as-at
 - scrollUntilVisible:
     element:
       id: today-bill-0
@@ -42,6 +85,7 @@ name: 13 Today feeds and their dated original sources
     timeout: 90000
     visibilityPercentage: 1
 - takeScreenshot: ${EVIDENCE}/13-open-bill
+# On iOS 27 an uncentred source link can sit under the tab bar.
 - assertVisible:
     id: bill-screen
 - scrollUntilVisible:
@@ -64,6 +108,13 @@ name: 13 Today feeds and their dated original sources
     id: today-screen
 - scrollUntilVisible:
     element:
+      id: today-declaration-person-0
+    timeout: 90000
+    visibilityPercentage: 1
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/13-declaration-person
+- scrollUntilVisible:
+    element:
       id: today-declaration-0
     direction: DOWN
     timeout: 90000
@@ -77,26 +128,45 @@ name: 13 Today feeds and their dated original sources
     id: today-declaration-0
 - assertVisible: https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Senators_Interests/Senators_Interests_Register/123072
 - takeScreenshot: ${EVIDENCE}/13-declaration-source-alert
+# The local destination view scrolls a long URL at AX5. Capture its end too.
+- repeat:
+    times: 8
+    commands:
+      - swipe:
+          start: 50%, 65%
+          end: 50%, 35%
+          duration: 1000
+- takeScreenshot: ${EVIDENCE}/13-declaration-source-alert-end
 - tapOn: OK
-# AX5 swipes can overshoot this tall text. Find it, then use a short drag
-# to keep its date below the navigation bar before requiring full visibility.
 - assertVisible:
     id: today-screen
+# At AX5 this as-at line is about 520pt tall. Centring lands it differently
+# on each screen (the 17 Pro shows all of it; a centre stopped by the page end
+# clips its date), so a fixed drag after centring can push it off either edge.
+# Start from the page end, where every device places it the same way, then
+# drag its date back below the navigation bar before requiring full visibility.
 - scrollUntilVisible:
     element:
-      id: today-declarations-as-at
+      id: today-screen-footer
     direction: DOWN
-    timeout: 90000
+    timeout: 300000
     visibilityPercentage: 1
-    centerElement: true
+- swipe:
+    start: 90%, 70%
+    end: 90%, 20%
+    duration: 300
+- waitForAnimationToEnd
 - swipe:
     start: 90%, 30%
     end: 90%, 60%
     duration: 1000
+- waitForAnimationToEnd
 - scrollUntilVisible:
     element:
       id: today-declarations-as-at
     direction: DOWN
-    timeout: 90000
-- assertVisible: As at .* Source.*
+    timeout: 300000
+- assertVisible:
+    id: today-declarations-as-at
+    text: As at .* Source.*
 - takeScreenshot: ${EVIDENCE}/13-declarations-as-at

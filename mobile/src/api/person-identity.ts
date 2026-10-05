@@ -32,6 +32,8 @@ export interface PersonProfile {
   rosterParty: string | null;
   formerly: string | null;
   seats: SeatObservation[];
+  /** Resolved alongside the dated identity; callers must not repeat an ID join. */
+  rosterRow?: Roster['people'][number];
   sources: Source[];
   asOf: string;
 }
@@ -274,7 +276,20 @@ export function joinPerson(
       ),
     ),
     seats,
+    rosterRow: row,
     sources,
     asOf: seats[0]?.as_of ?? roster.meta.generated,
   };
+}
+
+/** The same chamber-only identity guard used by Your MP and Search. */
+export function rosterChambersFor(row: Roster['people'][number] | undefined) {
+  if (
+    !row?.name.trim().includes(' ') ||
+    (!row.pid && row.chambers?.includes('senate_committee'))
+  )
+    return [];
+  return (row.chambers ?? []).filter(
+    (chamber) => chamber !== 'senate_committee',
+  );
 }

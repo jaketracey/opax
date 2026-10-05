@@ -57,7 +57,7 @@ function ElectorateScreen({ id }: { id: string }) {
     [directory, setDirectory] = useState<Directory | null>(null),
     [error, setError] = useState<string | null>(null),
     [retry, setRetry] = useState(0),
-    [busy, setBusy] = useState(true),
+    [refreshing, setRefreshing] = useState(false),
     [expanded, setExpanded] = useState<string[]>([]);
   useEffect(() => {
     let active = true;
@@ -89,14 +89,14 @@ function ElectorateScreen({ id }: { id: string }) {
         if (active) setError(errorMessage(e));
       })
       .finally(() => {
-        if (active) setBusy(false);
+        if (active) setRefreshing(false);
       });
     return () => {
       active = false;
     };
   }, [id, retry]);
   const refresh = () => {
-      setBusy(true);
+      setRefreshing(true);
       setError(null);
       setRetry((v) => v + 1);
     },
@@ -121,7 +121,7 @@ function ElectorateScreen({ id }: { id: string }) {
       <Screen
         testID="electorate-screen"
         refreshControl={
-          <RefreshControl refreshing={busy} onRefresh={refresh} />
+          <RefreshControl refreshing={refreshing} onRefresh={refresh} />
         }
       >
         {error ? (

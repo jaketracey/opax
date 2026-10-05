@@ -38,10 +38,40 @@ export function dataAsOf(value: unknown): string | null {
     data.generated;
   return typeof date === 'string' ? date : null;
 }
+// Cached JSON must remain the version that passed validation. Freezing once
+// prevents a screen from changing a reused result without another decode.
+function freezeSnapshot(...values: unknown[]) {
+  const pending = [...values];
+  const seen = new WeakSet<object>();
+  while (pending.length) {
+    const item = pending.pop();
+    if (item === null || typeof item !== 'object' || seen.has(item))
+      continue;
+    seen.add(item);
+    // A decoder or store may have frozen only the parent. Still traverse its
+    // children; shared raw/decoded descendants are visited once per snapshot.
+    if (!Object.isFrozen(item)) Object.freeze(item);
+    for (const child of Object.values(item)) pending.push(child);
+  }
+}
 export class ApiClient {
   private transport: typeof fetch;
   private now: () => number;
   private sleep: (ms: number) => Promise<void>;
+  // Body identity is a catalog version, independent of dates or ETags. Each
+  // decoder validates that version once; new bytes must validate again. Weak
+  // keys release decoded snapshots when the bounded raw cache evicts them.
+  private decoded = new WeakMap<object, Map<Decoder<unknown>, unknown>>();
+  private decodeBody<T>(body: unknown, decode: Decoder<T>): T {
+    if (body === null || typeof body !== 'object') return decode(body);
+    let versions = this.decoded.get(body);
+    if (versions?.has(decode)) return versions.get(decode) as T;
+    const value = decode(body); // Never retain a failed validation.
+    freezeSnapshot(body, value);
+    if (!versions) this.decoded.set(body, (versions = new Map()));
+    versions.set(decode, value);
+    return value;
+  }
   constructor(private options: ClientOptions) {
     this.transport = options.transport ?? expoFetch;
     this.now = options.now ?? Date.now;
@@ -49,10 +79,17 @@ export class ApiClient {
       options.sleep ??
       ((ms) => new Promise((resolve) => setTimeout(resolve, ms)));
   }
+  /**
+   * `absence: true` is for a route whose 404 is an authoritative answer with
+   * a body (the W13 edition): the 404 body is decoded and saved like a 200,
+   * so it replaces the saved record and is fresh, stale or offline as any
+   * other read. Everywhere else a 404 is a not-found error.
+   */
   async get<T>(
     path: string,
     decode: Decoder<T>,
     force = false,
+    { absence = false }: { absence?: boolean } = {},
   ): Promise<RecordResult<T>> {
     const url = allowedURL(this.options.origin, path); // before cache or networking
     const requestStartedAt = this.now();
@@ -60,13 +97,13 @@ export class ApiClient {
     let cached = await this.options.cache.get(url);
     if (cached) {
       try {
-        decode(cached.body);
+        this.decodeBody(cached.body, decode);
       } catch {
         cached = undefined;
       }
     }
     const result = (entry: CacheEntry, stale: boolean): RecordResult<T> => ({
-      data: decode(entry.body),
+      data: this.decodeBody(entry.body, decode),
       stale,
       savedAt: entry.savedAt,
       asOf: entry.asOf,
@@ -121,7 +158,11 @@ export class ApiClient {
             if (!Number.isFinite(retryDelay)) retryDelay = 300 * 2 ** attempt;
           }
         }
-        if (response.status !== 304 && !response.ok)
+        if (
+          response.status !== 304 &&
+          !response.ok &&
+          !(absence && response.status === 404)
+        )
           throw httpError(response.status);
         let body: unknown;
         try {
@@ -148,7 +189,7 @@ export class ApiClient {
           );
         }
         try {
-          decode(body);
+          this.decodeBody(body, decode);
         } catch {
           throw new ApiError(
             'invalid-data',
@@ -180,9 +221,18 @@ export class ApiClient {
               : {}),
           })
           .catch(() => entry);
+        // A concurrent read can retain its freshly validated copy of this
+        // exact ETag. A zero TTL requires the next read to revalidate; it
+        // does not make this successful live validation an offline fallback.
+        const validatedSameRecord =
+          !!entry.etag &&
+          retained.etag === entry.etag &&
+          retained.validatedAt >= requestStartedAt;
         return result(
           retained,
-          retained !== entry && !isFresh(retained, this.now()),
+          retained !== entry &&
+            !isFresh(retained, this.now()) &&
+            !validatedSameRecord,
         );
       } catch (error) {
         lastError =

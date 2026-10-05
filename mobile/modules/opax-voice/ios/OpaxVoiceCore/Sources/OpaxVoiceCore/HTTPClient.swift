@@ -15,7 +15,7 @@ public struct RoutePolicy: Sendable {
     public let origin: URL
     private let loopback: Bool
     public init() { origin = URL(string: "https://opax.com.au")!; loopback = false }
-    #if DEBUG
+    #if DEBUG || OPAX_VOICE_E2E
     /// Test fixtures only. Restricts *all* transports to this one numeric loopback origin.
     public static func loopback(port: UInt16) -> RoutePolicy {
         RoutePolicy(origin: URL(string: "http://127.0.0.1:\(port)")!, loopback: true)
@@ -129,7 +129,7 @@ public actor VoiceHTTPClient {
         return CredentialRequest(request: policy.decorate(request, credential: sent), credential: sent)
     }
     private func execute(_ prepared: CredentialRequest, route: AuthRoute) async throws -> HTTPResponse {
-        #if DEBUG
+        #if DEBUG || OPAX_VOICE_E2E
         try VoiceTestSafety.validate(prepared.request)
         #endif
         let response = try await transport.send(prepared.request)
@@ -251,7 +251,7 @@ public actor VoiceHTTPClient {
         try policy.validateRelay(reservation)
         guard let sent = try await credential() else { throw VoiceFailure.signedOut }
         let request = policy.decorate(URLRequest(url: reservation.signedURL), credential: sent, webSocket: true)
-        #if DEBUG
+        #if DEBUG || OPAX_VOICE_E2E
         try VoiceTestSafety.validate(request)
         #endif
         return CredentialRequest(request: request, credential: sent)
@@ -334,7 +334,7 @@ public final class AuthenticatedURLSession: HTTPTransport, Sendable {
         return config
     }
     public func send(_ request: URLRequest) async throws -> HTTPResponse {
-        #if DEBUG
+        #if DEBUG || OPAX_VOICE_E2E
         try VoiceTestSafety.validate(request)
         #endif
         guard let url = request.url, policy.permits(url, method: request.httpMethod ?? "GET") else { throw VoiceFailure.forbidden }

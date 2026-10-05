@@ -8,7 +8,7 @@ import {
   billTimeline,
   type BillTimelineStage,
 } from '../../api/bill-transforms';
-import { billKey, type PersonSlug } from '../../api/catalogs';
+import { billKey, catalogSources, type PersonSlug } from '../../api/catalogs';
 import { ApiError } from '../../api/errors';
 import { catalogs } from '../../api/runtime';
 import { formatCount, formatDate } from '../../design/format';
@@ -491,7 +491,7 @@ function KeyDates({ view }: { view: BillView }) {
           (view.keyDates.data ?? []).some((d) =>
             d.url?.startsWith('https://parlinfo.aph.gov.au/'),
           )
-            ? 'ParlInfo bill records'
+            ? catalogSources.bills.label
             : [...new Set(view.identity.sources.map((s) => s.label))]
         }
       />

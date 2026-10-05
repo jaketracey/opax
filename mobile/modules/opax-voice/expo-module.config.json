@@ -1,0 +1,7 @@
+{
+  "platforms": ["apple"],
+  "apple": {
+    "modules": ["OpaxVoiceModule"],
+    "podspecPath": ["ios/OpaxVoiceCore.podspec", "ios/OpaxVoice.podspec"]
+  }
+}

@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import {
   ActivityIndicator,
+  type AccessibilityState,
   Pressable,
   StyleSheet,
   TextInput,
@@ -71,6 +72,8 @@ export interface ButtonProps {
   loading?: boolean;
   fullWidth?: boolean;
   accessibilityHint?: string;
+  /** Disclosure state; disabled and busy remain controlled by the button. */
+  expanded?: AccessibilityState['expanded'];
   testID?: string;
 }
 
@@ -85,6 +88,7 @@ export function Button({
   loading = false,
   fullWidth = false,
   accessibilityHint,
+  expanded,
   testID,
 }: ButtonProps) {
   const states = buttonStates[variant];
@@ -97,7 +101,11 @@ export function Button({
       accessibilityRole="button"
       accessibilityLabel={label}
       accessibilityHint={accessibilityHint}
-      accessibilityState={{ disabled: inert, busy: loading }}
+      accessibilityState={{
+        disabled: inert,
+        busy: loading,
+        ...(expanded === undefined ? {} : { expanded }),
+      }}
       testID={testID}
       disabled={inert}
       onPress={onPress}

@@ -95,6 +95,19 @@ export function shape<S extends Record<string, Decoder<unknown>>>(
     ) as Shape<S>;
   };
 }
+/** A `shape` that also refuses any key its schema does not name. */
+export function exact<S extends Record<string, Decoder<unknown>>>(
+  schema: S,
+): Decoder<Shape<S>> {
+  const decode = shape(schema);
+  return (v) => {
+    const extra = Object.keys(object(v)).find(
+      (key) => !Object.hasOwn(schema, key),
+    );
+    if (extra !== undefined) invalid(`${extra}: Not in the contract`);
+    return decode(v);
+  };
+}
 export const matching =
   (pattern: RegExp): Decoder<string> =>
   (v) =>

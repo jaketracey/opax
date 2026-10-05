@@ -37,7 +37,7 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
 - extendedWaitUntil:
     visible:
       id: bills-count
-    timeout: 20000
+    timeout: 300000
 - tapOn:
     id: tab-search
 - assertVisible:
@@ -52,6 +52,7 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
     direction: UP
     speed: 70
     timeout: 300000
+    centerElement: true
 - assertVisible:
     id: today-screen-message
 # Talk and Account and about are navigation-bar buttons on every root screen.

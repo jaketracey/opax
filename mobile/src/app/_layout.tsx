@@ -1,10 +1,16 @@
-import { Stack } from 'expo-router';
+import { useEffect } from 'react';
+import { Stack, router, type Href } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { isProduction } from '../design/environment';
+import { hasSourcePreview, isProduction } from '../design/environment';
 import { fonts, light } from '../design/tokens';
 import { closeSheetItem, useStackChrome } from '../navigation/chrome';
+import {
+  presentSourceDestination,
+  sourceDestination,
+  subscribeSourceDestination,
+} from '../navigation/source-destination';
 export default function Layout() {
   const [loaded, error] = useFonts({
     [fonts.serif]: require('../../assets/fonts/Merriweather.ttf'),
@@ -14,6 +20,19 @@ export default function Layout() {
     [fonts.sansBold]: require('../../assets/fonts/PublicSans-Bold.ttf'),
   });
   const chrome = useStackChrome();
+  useEffect(() => {
+    if (!hasSourcePreview) return;
+    return subscribeSourceDestination(() => {
+      const destination = sourceDestination();
+      if (destination === null) return;
+      presentSourceDestination(null);
+      // A native-stack route can present above Account's existing sheet.
+      router.push({
+        pathname: '/source-destination',
+        params: { ...destination },
+      } as Href);
+    });
+  }, []);
   if (!loaded && !error) return null;
   // Talk and Account and about are full-height sheets from the navigation bar
   // (IOS-UX section 3). Their lanes replace the placeholder content.
@@ -41,6 +60,16 @@ export default function Layout() {
           name="account"
           options={{ ...sheet, headerShown: false }}
         />
+        {hasSourcePreview ? (
+          <Stack.Screen
+            name="source-destination"
+            options={{
+              headerShown: false,
+              presentation: 'fullScreenModal',
+              animation: 'none',
+            }}
+          />
+        ) : null}
         {isProduction ? null : (
           // Development and e2e only: the route file is excluded from release
           // bundles by metro.config.js.

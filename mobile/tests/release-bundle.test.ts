@@ -1,4 +1,7 @@
-import { assertNoFixtureOrigin } from '../scripts/release-bundle-policy';
+import {
+  assertNoFixtureOrigin,
+  assertNoVoiceFixtures,
+} from '../scripts/release-bundle-policy';
 
 test('production bundle rejects the configured non-default fixture port', () => {
   expect(() =>
@@ -22,3 +25,14 @@ test.each(['http://127.0.0.1:8999', 'https://localhost:443'])(
     );
   },
 );
+
+test.each([
+  'voice-bridge-test',
+  'Voice bridge fixture workbench',
+  '/__fixture/voice/log',
+  'NSMicrophoneUsageDescription',
+])('production rejects voice test marker %s', (marker) => {
+  expect(() => assertNoVoiceFixtures(Buffer.from(marker))).toThrow(
+    /voice test material/,
+  );
+});

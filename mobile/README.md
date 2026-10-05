@@ -1,6 +1,6 @@
 # OPAX iOS foundation
 
-Expo SDK 57 / React Native 0.86, strict TypeScript, expo-router. iOS 18.4 is
+Expo SDK 57 / React Native 0.86, strict TypeScript, expo-router. iOS 18.4 (`ios.deploymentTarget`) is
 the minimum. Light mode only; Android is possible later and is not built here.
 App identity: OPAX, `au.com.opax.app`, version `0.1.0`, build `1`.
 No push, analytics, crash reporter or microphone permission. Production release
@@ -68,24 +68,71 @@ invalid or older candidates. The selected version is saved in `java.log`.
 | `OPAX_PASTE_LOCK`         | Shared directory lock for Maestro input                                               | Skip locking, with a notice                         |
 | `OPAX_CAPACITY_CMD`       | Trusted local shell command checking host capacity                                    | Skip capacity checks, with a notice                 |
 | `OPAX_ALLOWED_UDIDS`      | Space-separated simulator allow-list                                                  | Accept the requested simulator, with a warning      |
-| `OPAX_PASTE_WAIT_SECONDS` | Digit-only pasteboard lock wait (seconds)                                             | 7,200 seconds; invalid values also use this default |
+| `OPAX_PASTE_WAIT_SECONDS` | Digit-only deadline for capacity and pasteboard lock waits                            | 7,200 seconds; invalid values also use this default |
 
-Configured capacity checks run before builds and devices; load5 at or above 140
-waits until it is below 140. Capacity is checked before every pasteboard-lock
-attempt, so no capacity wait runs while that lock is held. The lock wait is
-`OPAX_PASTE_WAIT_SECONDS`, validated by `paste_lock_wait_seconds` in `qa-env.sh`
-(default 7200). Start long builds and device runs detached with `nohup` and poll
-their logs. The e2e runner starts only its own fixture, installs the Release app
+Configured capacity checks run before builds and devices; a five-minute load of
+140 or more waits until it is under 140. `OPAX_PASTE_WAIT_SECONDS` is validated as
+a decimal of at most nine digits in `qa-lock.sh`; invalid values default to 7200.
+The e2e runner starts only its own fixture, installs the Release app
 without Metro, saves Maestro/screenshots/request logs in ignored `private/qa/<run>/`,
-restores text size/appearance, shuts down, then releases the lock on success or
-failure. Never commit QA evidence. `OPAX_QA_RUN` names evidence, `OPAX_QA_APP`
-selects a prepared app. No audio flows. Journey 04 stops the fixture and checks
-saved data without clearing the app. Default runs include 01–04;
-`OPAX_VERIFY_OFFLINE=1` also adds 04 to a selected warm run.
+restores text size/appearance and shuts down on success or failure. Never commit QA evidence.
+`OPAX_QA_RUN` names evidence, `OPAX_QA_APP` selects a prepared app. No audio flows.
+Journey 04 stops the fixture and checks saved data without clearing the app. Default
+runs include 01–04; `OPAX_VERIFY_OFFLINE=1` also adds 04 to a selected warm run.
+
+The pasteboard lock (`scripts/qa-lock.sh`) is shared with other projects, so a run
+never waits on anything while holding it. Every Maestro run goes through
+`qa_paste_lock_run`: holding nothing, it waits for the lock to look free and for
+capacity, then enters the build gate with `scripts/qa-locked.sh`. Inside the gate the
+wrapper makes one non-blocking lock attempt and rechecks the load. If the lock is
+taken or the load has reached 140, it leaves the gate at once and the runner starts
+again; otherwise Maestro runs and the lock is released when it ends. The wrapper leads
+its own process group: Maestro and its children run in it, and release first stops any
+leftovers. `OPAX_PASTE_WAIT_SECONDS` covers all the waiting; every minute `lock.log`
+names the lock, the elapsed time and the holder. Never write your own lock wrapper.
+
+The lock directory appears in one atomic step with its `owner` file (pid and pgid of
+the wrapper, script, worktree name, UTC start, random token) and is released by renaming
+it aside, so a crash never leaves an OPAX lock without an owner. Other projects' plain
+`mkdir`/`rmdir` keep working: publication never replaces an existing directory, and
+OPAX never writes into a lock it did not create. A waiter retires a lock only when its
+owner's pid is dead and no process in its group is alive, and logs it. A lock with a
+live holder, a live group member or no owner file is never removed, whatever its age.
+`<lock>.opax/` holds the reap guard plus staging and retired copies from crashed runs,
+which are cleaned once their pid is dead. `scripts/test-qa-lock.sh`, part of
+`npm run qa`, tests all of this with a mocked gate in a scratch directory.
+
+If a lock stays held, read `lock.log` and `<lock>/owner`, then:
+
+- **OPAX owner, dead pid, live group** (`pgrep -g <pgid>` lists processes): the locked
+  Maestro's leftovers still run. Stop them with `kill -TERM -- -<pgid>`; the next waiter
+  then retires the lock.
+- **OPAX owner, live pid:** the run is still going. To stop it now, `kill -TERM <pid>`;
+  the wrapper stops its group and releases. A TERM to `e2e.sh` itself takes effect when
+  the current Maestro run returns.
+- **No owner file:** the lock belongs to another project or an older OPAX script. Leave
+  it. Remove it with `rmdir` only after its owner confirms nothing uses the pasteboard.
+
+Agent command runners stop long foreground commands, which can strand a simulator
+or the lock. **Start e2e and release runs detached and poll them**:
+
+```sh
+mkdir -p private/qa
+OPAX_QA_RUN=<run> nohup scripts/e2e.sh <udid> 01 02 > private/qa/<run>.out 2>&1 &
+```
+
+Its first line is `E2E pid=<pid> status=private/qa/<run>/exit-status` (the path is
+absolute). The status file holds the exit code and appears only after cleanup: lock
+released, fixture stopped, simulator shut down. If the pid is gone with no status file,
+the run was killed: read `lock.log`, then shut the simulator down yourself. Start a
+release the same way, logging under ignored `private/` so the worktree stays clean
+(`nohup scripts/release-ios.sh --build-number N > private/release-N.out 2>&1 &`).
+Poll its pid; success ends with `Verified release evidence:` and writes `release.json`.
 
 The runner samples the selected simulator's app processes with `lsof -a -p <pid> -i`
 every nominal 250ms, writing raw `connection-samples.jsonl` and a measured
-`connection-audit.json`. Missing process coverage, collection errors or observed
+`connection-audit.json`. The sampler uses numeric socket addresses without DNS or
+outbound probes. Missing process coverage, collection errors or observed
 external connections fail. Polling gaps above 3,000ms also fail: the audit records
 `longestSampleGapMs` and `sampleGapLimitMs`, covering each active app process,
 startup, scheduling delays, in-flight samples and the final tail. Short connections between samples may be missed; the
@@ -176,7 +223,7 @@ attack regression tests.
   Worker imports or outbound network. The person search projection matches names
   from these catalogs; it does not reproduce production index ranking. A Host header other than the exact loopback host is rejected. Unknown
   routes/methods/kinds return 404 with `OUTSIDE_ALLOW_LIST`. The documented
-  `upgrade` hook is reserved for a later fake voice relay.
+  `upgrade` hook now hosts the loopback fake voice relay; see `src/voice/README.md`.
 - Add independent `.maestro/<nn>-<journey>.yaml` flows using stable `testID`s.
   Use `${EVIDENCE}` for relative screenshot paths within Maestro's artifact bundle;
   the runner gathers named PNGs into the run's `screenshots/` folder.
@@ -237,8 +284,13 @@ advisories are individually classified in the same baseline. Never run
 `npm audit fix --force`; its suggested dependency downgrades break the fixed SDK.
 
 Search has grouped on-device suggestions, explicit catalog submissions for People,
-Declared interests, Pay and Expenses, and saved/offline states. Today has dated
-bill and declaration feeds; `todayEdition` is disabled until W13 exists. About and
+Declared interests, Pay and Expenses, and saved/offline states. People rows include
+roster party history and seat or chamber context, including the full accessible
+label. Empty results offer one-tap searches in the other allowed kinds; electorate
+suggestions open the native electorate route. Matching-record disclosures expose
+their expanded state. Today opens with the daily edition card, then dated bill and
+declaration feeds with category and party; permitted portraits retain their credit
+and licence links, with blank circles for missing, unreviewed or failed images. About and
 sources pushes inside the Account sheet, with snapshot coverage, source terms,
 privacy and the build's complete font notices. Bills has a native list and detail
 stack; Today bill rows, Search bill suggestions and matched profile and Your MP
@@ -280,6 +332,30 @@ require native-use review. Exact full-name photo keys take priority over folded
 apostrophes; surname roster stubs never enter profile catalog lookups. Neither
 photo catalog supplies an as-at date.
 
+**Daily edition (W13).** `todayEdition()` reads `GET /api/app/v1/edition/latest`
+(`editionPath` in `policy.ts`; `today` and exact dates are not allowed) through the
+same client and cache as the catalogs: fresh for its max-age, then a saved copy
+stays readable offline and is marked stale. A 404 (no posted edition) is
+authoritative absence: the read opts into `absence` on `ApiClient.get`, so the
+Worker's 404 body is decoded (`decodeEditionRead`) and saved in the edition's
+place with its own time and max-age. The block is `missing` and the card absent,
+then and after a relaunch or offline, until a later 200 replaces it. Any other
+404 body is unreadable data; other routes still treat a 404 as not found.
+`decodeEdition` is strict: the envelope and edition refuse any key the contract
+does not name, the link must be an `https://opax.com.au` member, bill, grants or
+report page, and slides keep their stored type-specific fields while the reader's
+own rules (type, kicker, title, alt; cover first, source last; 3 to 10) are checked.
+`editionFor` keeps the post's text verbatim as plain text, dropping only its link
+line and a title clipped with "…" (both shown in full on the card). A bill edition
+is labelled machine-written with its own attribution: the summary slide's stored
+note (the web's bill-page wording), else the caption's "Machine-written…" line,
+else the web's "Written by a model from the explanatory memorandum; not the
+record." Other kinds are labelled only when the edition says so. `created_at`
+and a link fragment follow the Worker's own looser rules (the card shows neither). The card
+(`src/features/EditionCard.tsx`) shows the kind and date, title, attribution, text,
+the closing slide's source rows, a "Read the …" link that opens the page on the web
+through `webPageUrl`/`openOnWeb` on the build's own origin, and an as-at line.
+
 Use `billsFor(filters)`, `billFor(key)`, `today()`, `about()`, `suggestions(query)`
 and `search(query, kind)` for the remaining P0 blocks. Load `suggestionSources()`
 once on screen entry; `suggestions()` then matches that snapshot locally while
@@ -303,6 +379,22 @@ functions, and resolve all 354 current canonical people in the pinned release.
 The profile sweep compares portrait, votes, interests, pay and expenses statuses
 against both round-1 commits on those same bytes. State profiles require a matching
 numeric ID for federal pay; ID-less federal pay records still join by name.
+
+One API response is pinned beside the catalogs: `responses` in
+`fixture-snapshot.json` records the W13 edition fetched once from production
+(`scripts/fixtures/edition-latest.json`, its SHA-256, size, fetch time and the
+reader code it was checked against). The fixture serves those exact bytes with the
+Worker's validators (weak `W/"<sha256>"`; weak, strong, listed or `*` matches give
+304); prettier ignores the folder so the bytes never change. `OPAX_FIXTURE_EDITION`
+picks the journal: `absent` answers as the Worker does when none is posted (404
+`edition_not_published`), and `withdrawn` serves the edition until the app
+revalidates it (a pull to refresh), then 404s from then on. Run each edition
+variant on its own, by path:
+`OPAX_FIXTURE_EDITION=absent scripts/e2e.sh <udid> .maestro/13b-today-no-edition.yaml`
+and
+`OPAX_FIXTURE_EDITION=withdrawn scripts/e2e.sh <udid> .maestro/13c-today-edition-withdrawn.yaml`.
+The `13` shorthand runs only `13-today.yaml`. To repin, fetch the route once and
+update the file, hash, size and fetch time together.
 
 Fixture startup and tests read git blobs at `fixture-snapshot.json`'s `sourceCommit`,
 then verify SHA-256 and byte size; worktree/nightly catalog changes cannot alter

@@ -3,12 +3,15 @@ import {
   personId,
   type BillIndex,
   type RecentInterests,
+  rosterIdentityFor,
+  suggestionsFor,
 } from '../src/api/catalogs';
 import type { ApiClient, RecordResult } from '../src/api/client';
 import { dataAsOf } from '../src/api/client';
 import { ApiError } from '../src/api/errors';
 import { assertAllowedPath } from '../src/api/policy';
 import { catalogs as data, pinned, slugs } from './pinned';
+import { personRowContext } from '../src/features/search/model';
 const id = personId('person_2b850aa643795ce8902f754b');
 function loader(fail: string[] = [], stale: string[] = []) {
   const calls: string[] = [];
@@ -124,6 +127,93 @@ test('typing suggestions reuses one source snapshot until explicit refresh', asy
   await catalogs.suggestionSources(true);
   expect(calls.length).toBeGreaterThan(count);
 });
+test.each([
+  ['/api/person-slugs'],
+  [data.manifest.people_url],
+  ['/api/person-slugs', data.manifest.people_url],
+])(
+  'optional identity failure preserves every suggestion group: %j',
+  async (...paths) => {
+    const { catalogs } = loader(paths);
+    const sources = await catalogs.suggestionSources();
+    for (const query of ['Albanese', 'Grayndler', 'support']) {
+      expect(await catalogs.suggestions(query)).toEqual(
+        suggestionsFor(query, data.roster, sources.electorates, data.bills!),
+      );
+    }
+    const row = (await catalogs.suggestions('Albanese')).people[0]!;
+    expect(row.name).toBe('Anthony Albanese');
+    expect(personRowContext(rosterIdentityFor(row, sources))).toMatchObject({
+      party: undefined,
+      place: undefined,
+    });
+    expect(sources.provenance.people.sources).toHaveLength(1);
+  },
+);
+test('explicit suggestion refresh retries optional identity context', async () => {
+  const failures = ['/api/person-slugs'];
+  const { catalogs } = loader(failures);
+  const first = await catalogs.suggestionSources();
+  expect(first.slugs).toBeUndefined();
+  failures.pop();
+  const next = await catalogs.suggestionSources(true);
+  const row = (await catalogs.suggestions('Albanese')).people[0]!;
+  expect(personRowContext(rosterIdentityFor(row, next))).toMatchObject({
+    party: 'Labor',
+    place: 'Grayndler · House of Representatives · New South Wales',
+  });
+});
+test.each([
+  ['/api/person-slugs'],
+  [data.manifest.people_url],
+  ['/api/person-slugs', data.manifest.people_url],
+])(
+  'the next Search focus retries missing identity context: %j',
+  async (...paths) => {
+    const failures = [...paths];
+    const { catalogs, calls } = loader(failures);
+    const first = await catalogs.suggestionSourcesOnFocus();
+    const row = (await catalogs.suggestions('Albanese')).people[0]!;
+    expect(
+      personRowContext(rosterIdentityFor(row, first)).place,
+    ).toBeUndefined();
+    const initialCalls = calls.length;
+    // Typing does not consume the retry before Search regains focus.
+    await catalogs.suggestions('Grayndler');
+    expect(calls).toHaveLength(initialCalls);
+    failures.length = 0;
+    const recovered = await catalogs.suggestionSourcesOnFocus();
+    expect(personRowContext(rosterIdentityFor(row, recovered))).toMatchObject({
+      party: 'Labor',
+      place: 'Grayndler · House of Representatives · New South Wales',
+    });
+    const recoveredCalls = calls.length;
+    await catalogs.suggestionSourcesOnFocus();
+    expect(calls).toHaveLength(recoveredCalls);
+  },
+);
+test('identity recovery is shared by concurrent focuses and never loops after another failure', async () => {
+  const failures = ['/api/person-slugs', data.manifest.people_url];
+  const { catalogs, calls } = loader(failures);
+  await catalogs.suggestionSourcesOnFocus();
+  const retry = catalogs.suggestionSourcesOnFocus();
+  expect(catalogs.suggestionSourcesOnFocus()).toBe(retry);
+  const partial = await retry;
+  expect(partial.slugs).toBeUndefined();
+  expect(partial.people).toBeUndefined();
+  for (const path of failures)
+    expect(calls.filter((called) => called === path)).toHaveLength(2);
+  const attemptedCalls = calls.length;
+  for (let focus = 0; focus < 4; focus++)
+    await catalogs.suggestionSourcesOnFocus();
+  await catalogs.suggestions('Albanese');
+  expect(calls).toHaveLength(attemptedCalls);
+  // Explicit user refresh remains available after the automatic budget is used.
+  failures.length = 0;
+  const refreshed = await catalogs.suggestionSources(true);
+  expect(refreshed.slugs).toBeDefined();
+  expect(refreshed.people).toBeDefined();
+});
 test('bill, electorate and About blocks retain actual cache state', async () => {
   const seatPath =
     '/electorates/releases/b56417062ccc33cf/el_5d600e7f6dca5b72ae04d686.json';
@@ -229,6 +319,7 @@ test('interest search adapter loads the ID bridge and retains its cache state', 
   };
   const result = await new Catalogs(client).search('Pasin', 'interest');
   expect(result.data.results[0]?.personSlug).toBe('tony-pasin');
+  expect(result.data.results[0]?.profileName).toBe('Tony Pasin');
   expect(result.stale).toBe(true);
 });
 
@@ -277,9 +368,46 @@ test('explicit suggestion, Today and coverage refreshes revalidate fresh cache e
     '/electorates/manifest.json',
     '/parliamentarians.json',
     '/bills/index.json',
+    '/api/person-slugs',
     data.manifest.index_url,
+    data.manifest.people_url,
+    '/parliamentarians.json',
+    '/photos/people.json',
+    '/photos/credits.json',
     '/bills/index.json',
     '/interests/recent.json',
     '/corpus.json',
   ]);
+});
+
+test.each([
+  '/parliamentarians.json',
+  '/photos/people.json',
+  '/photos/credits.json',
+])(
+  'Today keeps declarations and bills readable when optional metadata fails: %s',
+  async (path) => {
+    const { catalogs } = loader([path]);
+    const today = await catalogs.today();
+    expect(today.bills.status).toBe('ready');
+    expect(today.declarations.status).toBe('ready');
+    expect(today.declarations.data).toHaveLength(6);
+    if (path === '/parliamentarians.json')
+      expect(today.declarations.data?.every((d) => d.party === undefined)).toBe(
+        true,
+      );
+    else
+      expect(today.declarations.data?.every((d) => d.portrait === null)).toBe(
+        true,
+      );
+  },
+);
+test('Today propagates optional metadata cache state without changing the declaration date', async () => {
+  const { catalogs } = loader([], ['/parliamentarians.json']);
+  const today = await catalogs.today();
+  expect(today.declarations.stale).toBe(true);
+  expect(today.declarations.asAt).toBe(
+    (pinned('/interests/recent.json') as { meta: { generated: string } }).meta
+      .generated,
+  );
 });

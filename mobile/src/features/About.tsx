@@ -39,7 +39,7 @@ export default function About() {
   > | null>(null);
   const [error, setError] = useState<unknown>(null);
   const [retry, setRetry] = useState(0);
-  const [refreshing, setRefreshing] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [coverageDetails, setCoverageDetails] = useState(false);
   const [sourceDetails, setSourceDetails] = useState(false);
   const [font, setFont] = useState<string | null>(null);

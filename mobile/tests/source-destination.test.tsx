@@ -1,133 +1,130 @@
+import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock';
 import { act } from 'react';
-import { Alert, Text as NativeText } from 'react-native';
-import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { SourceLink } from '../src/design/primitives';
+import { Alert, ScrollView, StyleSheet } from 'react-native';
+import TestRenderer from 'react-test-renderer';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Button } from '../src/design/controls';
+import { Text } from '../src/design/text';
+import { SourceDestination } from '../src/navigation/SourceDestination';
 
-const url =
+jest.mock('react-native-safe-area-context', () => mockSafeAreaContext);
+
+test('the local destination keeps the complete URL in bounded scrolling content and dismisses independently', () => {
+  const url =
+    'https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Senators_Interests/Senators_Interests_Register/123072';
+  let renderer!: TestRenderer.ReactTestRenderer;
+  const dismiss = jest.fn();
+  act(() => {
+    renderer = TestRenderer.create(
+      <SourceDestination
+        url={url}
+        citation="Register of Senators’ Interests"
+        dismiss={dismiss}
+      />,
+    );
+  });
+  expect(
+    renderer.root.findByType(SafeAreaView).props.accessibilityViewIsModal,
+  ).toBe(true);
+  expect(
+    StyleSheet.flatten(renderer.root.findByType(ScrollView).props.style).flex,
+  ).toBe(1);
+  expect(
+    renderer.root
+      .findAllByType(Text)
+      .some(
+        (node) =>
+          node.props.children ===
+          'Source record: Register of Senators’ Interests',
+      ),
+  ).toBe(true);
+  const destination = renderer.root
+    .findAllByType(Text)
+    .find((node) => node.props.testID === 'source-destination-url')!;
+  expect(destination.props.children).toBe(url);
+  expect(destination.props.accessibilityLabel).toBe(url);
+  expect(destination.props.numberOfLines).toBeUndefined();
+  expect(destination.props.ellipsizeMode).toBeUndefined();
+  // Selectable, so the exact destination can be copied, not only read.
+  expect(destination.props.selectable).toBe(true);
+  act(() => renderer.root.findByType(Button).props.onPress());
+  expect(dismiss).toHaveBeenCalledTimes(1);
+  act(() => renderer.unmount());
+});
+
+const representatives =
   'https://raw.githubusercontent.com/openaustralia/openaustralia-parser/master/data/representatives.csv';
-const label = 'OpenAustralia parliamentary service records';
+const citation = 'OpenAustralia parliamentary service records';
 
-// As in app/_layout.tsx: the page's own provider starts from these insets.
-const metrics = {
-  frame: { x: 0, y: 0, width: 390, height: 844 },
-  insets: { top: 47, left: 0, right: 0, bottom: 34 },
-};
+/** openSource and the page's store, from a fresh registry with this build. */
+function load(build: { isE2E: boolean; hasSourcePreview: boolean }) {
+  const openBrowserAsync = jest.fn(async () => ({ type: 'opened' }));
+  let external!: typeof import('../src/navigation/external');
+  let store!: typeof import('../src/navigation/source-destination');
+  jest.isolateModules(() => {
+    jest.doMock('../src/design/environment', () => ({
+      ...jest.requireActual('../src/design/environment'),
+      ...build,
+      variant: build.isE2E ? 'e2e' : 'production',
+      isProduction: !build.isE2E,
+    }));
+    jest.doMock('expo-web-browser', () => ({
+      openBrowserAsync,
+      WebBrowserPresentationStyle: { PAGE_SHEET: 'pageSheet' },
+    }));
+    // The real modules, wired to the mocks above.
+    external = jest.requireActual<typeof import('../src/navigation/external')>(
+      '../src/navigation/external',
+    );
+    store = jest.requireActual<
+      typeof import('../src/navigation/source-destination')
+    >('../src/navigation/source-destination');
+  });
+  return { ...external, ...store, openBrowserAsync };
+}
 
-const hosts = (root: ReactTestInstance, testID: string) =>
-  root.findAll(
-    (node) => typeof node.type === 'string' && node.props.testID === testID,
-  );
-const press = (root: ReactTestInstance, testID: string) =>
-  root
-    .findAll(
-      (node) =>
-        node.props.testID === testID &&
-        typeof node.props.onPress === 'function',
-    )[0]!
-    .props.onPress();
-const text = (node: ReactTestInstance) =>
-  node
-    .findAllByType(NativeText)
-    .map((child) => child.props.children)
-    .flat()
-    .filter((child) => typeof child === 'string')
-    .join('');
+describe('opening a source link', () => {
+  let alert: jest.SpyInstance;
+  beforeEach(() => {
+    alert = jest.spyOn(Alert, 'alert').mockImplementation(() => undefined);
+  });
+  afterEach(() => alert.mockRestore());
 
-describe('source links in e2e builds', () => {
-  test('draw the whole checked URL on their own page, closed by OK', async () => {
-    const alert = jest
-      .spyOn(Alert, 'alert')
-      .mockImplementation(() => undefined);
-    let renderer!: TestRenderer.ReactTestRenderer;
-    act(() => {
-      renderer = TestRenderer.create(
-        <SafeAreaProvider initialMetrics={metrics}>
-          <SourceLink
-            citation={label}
-            url={url}
-            kind="record"
-            testID="person-source"
-          />
-        </SafeAreaProvider>,
-      );
+  test('e2e hands the source page the checked URL and its citation', async () => {
+    const { openSource, sourceDestination, openBrowserAsync } = load({
+      isE2E: true,
+      hasSourcePreview: true,
     });
-    expect(hosts(renderer.root, 'source-destination')).toHaveLength(0);
-    await act(async () => {
-      await press(renderer.root, 'person-source');
-    });
+    await openSource(representatives, citation);
     // No native alert: it ends an over-long word with an ellipsis.
     expect(alert).not.toHaveBeenCalled();
-    const [shown] = renderer.root.findAll(
-      (node) =>
-        node.type === NativeText &&
-        node.props.testID === 'source-destination-url',
-    );
-    expect(shown!.props.children).toBe(url);
-    expect(shown!.props.selectable).toBe(true);
-    expect(shown!.props.numberOfLines).toBeUndefined();
-    expect(shown!.props.ellipsizeMode).toBeUndefined();
-    const [page] = hosts(renderer.root, 'source-destination');
-    expect(text(page!)).toContain(`Source record: ${label}`);
-    await act(async () => {
-      press(renderer.root, 'source-destination-ok');
-    });
-    expect(hosts(renderer.root, 'source-destination')).toHaveLength(0);
-    alert.mockRestore();
+    expect(openBrowserAsync).not.toHaveBeenCalled();
+    expect(sourceDestination()).toEqual({ url: representatives, citation });
   });
-  test('an unsafe URL still says it could not be opened', async () => {
-    const alert = jest
-      .spyOn(Alert, 'alert')
-      .mockImplementation(() => undefined);
-    let renderer!: TestRenderer.ReactTestRenderer;
-    act(() => {
-      renderer = TestRenderer.create(
-        <SourceLink
-          citation={label}
-          url="http://example.com/"
-          kind="record"
-          testID="person-source"
-        />,
-      );
+  test('an unsafe URL still says it could not be opened, and presents nothing', async () => {
+    const { openSource, sourceDestination, openBrowserAsync } = load({
+      isE2E: true,
+      hasSourcePreview: true,
     });
-    await act(async () => {
-      await press(renderer.root, 'person-source');
-    });
+    await openSource('http://example.com/', citation);
     expect(alert).toHaveBeenCalledWith(
       'Source record',
       'This source link could not be opened.',
     );
-    expect(hosts(renderer.root, 'source-destination')).toHaveLength(0);
-    alert.mockRestore();
+    expect(sourceDestination()).toBeNull();
+    expect(openBrowserAsync).not.toHaveBeenCalled();
   });
-});
-
-describe('source links in shipping builds', () => {
-  test('open the in-app browser and never draw the e2e page', async () => {
-    const openBrowserAsync = jest.fn(async () => ({ type: 'opened' }));
-    const show = jest.fn();
-    let openSource!: typeof import('../src/navigation/external').openSource;
-    jest.isolateModules(() => {
-      jest.doMock('../src/design/environment', () => ({
-        ...jest.requireActual('../src/design/environment'),
-        variant: 'production',
-        isE2E: false,
-        isProduction: true,
-      }));
-      jest.doMock('expo-web-browser', () => ({
-        openBrowserAsync,
-        WebBrowserPresentationStyle: { PAGE_SHEET: 'pageSheet' },
-      }));
-      // The real module, wired to the mocks above.
-      ({ openSource } = jest.requireActual<
-        typeof import('../src/navigation/external')
-      >('../src/navigation/external'));
+  test('shipping builds open the in-app browser and never present the page', async () => {
+    const { openSource, sourceDestination, openBrowserAsync } = load({
+      isE2E: false,
+      hasSourcePreview: false,
     });
-    await openSource(url, label, show);
-    expect(show).not.toHaveBeenCalled();
+    await openSource(representatives, citation);
     expect(openBrowserAsync).toHaveBeenCalledWith(
-      url,
+      representatives,
       expect.objectContaining({ presentationStyle: 'pageSheet' }),
     );
+    expect(sourceDestination()).toBeNull();
+    expect(alert).not.toHaveBeenCalled();
   });
 });

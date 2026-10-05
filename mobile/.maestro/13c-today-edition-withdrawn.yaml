@@ -1,0 +1,51 @@
+appId: au.com.opax.app
+name: 13c A withdrawn daily edition stays gone after a relaunch
+---
+# Run on its own, by path, against the withdrawn-edition fixture:
+#   OPAX_FIXTURE_EDITION=withdrawn scripts/e2e.sh <udid> .maestro/13c-today-edition-withdrawn.yaml
+# The fixture serves the pinned edition until the app revalidates it, then
+# answers 404 as the Worker does when no posted edition remains. clearState,
+# so the first read is the edition itself.
+- launchApp:
+    clearState: true
+- scrollUntilVisible:
+    element:
+      id: today-edition-head
+    timeout: 90000
+    visibilityPercentage: 10
+- takeScreenshot: ${EVIDENCE}/13c-edition-posted
+# Pull to refresh: the forced read revalidates, gets the 404, and the card goes.
+- scrollUntilVisible:
+    element:
+      id: today-screen-message
+    direction: UP
+    timeout: 90000
+- swipe:
+    start: 50%, 30%
+    end: 50%, 85%
+    duration: 800
+- extendedWaitUntil:
+    notVisible:
+      id: today-edition
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/13c-edition-withdrawn
+# Relaunch while the saved edition would still be fresh: it must not return.
+- launchApp
+- assertVisible:
+    id: today-screen-message
+- scrollUntilVisible:
+    element:
+      id: today-bill-0
+    timeout: 90000
+    visibilityPercentage: 1
+    centerElement: true
+- scrollUntilVisible:
+    element:
+      id: today-screen-message
+    direction: UP
+    timeout: 90000
+- assertNotVisible:
+    id: today-edition
+- assertNotVisible: Daily edition
+- assertVisible: Recently introduced bills
+- takeScreenshot: ${EVIDENCE}/13c-after-relaunch

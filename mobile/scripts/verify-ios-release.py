@@ -47,9 +47,9 @@ HERMES_FIELDS = ("fileLength", "globalCodeIndex", "functionCount", "stringKindCo
 # Bytecode versions whose layout this reader knows (function header bytes).
 # Any other version fails closed: check a shipped bundle before adding one.
 HERMES_LAYOUTS = {98: {"function_header_size": 12}}
-DEVELOPMENT_ROUTE = re.compile(r"workbench|fixture|__tests__|\(dev\)|__dev|home-prototype", re.I)
-DEVELOPMENT_PATHS = re.compile(rb"(?:src/app|app)/[^\x00\s\"']*(?:workbench|__tests__|fixtures?|\(dev\)|__dev)|"
-                               rb"ui-workbench|home-prototype|/__dev(?:/|\x00)", re.I)
+DEVELOPMENT_ROUTE = re.compile(r"workbench|source-destination|fixture|__tests__|\(dev\)|__dev|home-prototype|voice-bridge-test|test-screens", re.I)
+DEVELOPMENT_PATHS = re.compile(rb"(?:src/app|app)/[^\x00\s\"']*(?:workbench|__tests__|fixtures?|\(dev\)|__dev|voice-bridge-test|test-screens)|"
+                               rb"(?:src/)?test-screens/|ui-workbench|home-prototype|/__dev(?:/|\x00)", re.I)
 SCENE_DELEGATE = "EXExpoAppSceneDelegate"
 # Files under mobile/scripts/ that shape the shipped app (Metro reads the block
 # list) are application inputs, not tooling, for artifact provenance.
@@ -143,8 +143,9 @@ def shipping_source_keys(routes):
 def hermes_strings(body):
     """Every entry of a Hermes bytecode string table, or None if the body is not
     Hermes bytecode. Malformed tables and unknown versions fail closed."""
-    if len(body) < HERMES_HEADER_SIZE or struct.unpack_from("<Q", body)[0] != HERMES_MAGIC:
+    if len(body) < 8 or struct.unpack_from("<Q", body)[0] != HERMES_MAGIC:
         return None
+    require(len(body) >= HERMES_HEADER_SIZE, "Hermes bytecode header is truncated")
     version = struct.unpack_from("<I", body, 8)[0]
     layout = HERMES_LAYOUTS.get(version)
     require(layout is not None, f"shipped JS is Hermes bytecode version {version}; the verifier reads "
@@ -183,6 +184,18 @@ def hermes_strings(body):
     return strings
 
 
+def verify_no_drawn_diagnostics(body):
+    """Inspect actual Hermes entries, not overlapping raw string storage."""
+    markers = ("-drawn-", "testDrawnText", "drawnTextClipped")
+    strings = hermes_strings(body)
+    found = [marker for marker in markers if (
+        any(marker in entry for entry in strings) if strings is not None
+        else marker.encode() in body)]
+    require(not found, "no e2e drawn-line diagnostics in production JS" +
+            (f" (found {', '.join(found)})" if found else ""))
+    return len(strings) if strings is not None else None
+
+
 def bundle_route_keys(body, routes):
     """Route keys are compared as whole strings: Hermes string-table entries, or
     whole tokens for plain JS. Hermes packs and overlaps its string storage, so
@@ -200,6 +213,31 @@ def bundle_route_keys(body, routes):
             "no unshipped, development or workbench route keys in shipped JS" +
             (f" (found {', '.join(unexpected + development)})" if unexpected or development else ""))
     return sorted(expected)
+
+
+def no_voice_native_symbols(symbols):
+    return not re.search(rb"OpaxVoiceCore|OpaxVoice|requestRecordPermission", symbols, re.I)
+
+
+MACHO_HEADERS = {b"\xcf\xfa\xed\xfe": ("<", 32), b"\xce\xfa\xed\xfe": ("<", 28),
+                 b"\xfe\xed\xfa\xcf": (">", 32), b"\xfe\xed\xfa\xce": (">", 28)}
+FAT_HEADERS = {b"\xca\xfe\xba\xbe": (">", 20), b"\xbe\xba\xfe\xca": ("<", 20),
+               b"\xca\xfe\xba\xbf": (">", 32), b"\xbf\xba\xfe\xca": ("<", 32)}
+
+
+def verify_no_voice_native_code(app):
+    """Stripping removes symbols, not Swift metadata/provider registration bytes."""
+    scanned = []
+    for path in sorted(p for p in app.rglob("*") if p.is_file()):
+        with path.open("rb") as stream:
+            magic = stream.read(4)
+        if magic not in MACHO_HEADERS and magic not in FAT_HEADERS:
+            continue
+        require(no_voice_native_symbols(without_signature(path.read_bytes())),
+                f"No voice or microphone permission code in Mach-O: {path.relative_to(app)}")
+        scanned.append(str(path.relative_to(app)))
+    require(bool(scanned), "Production app contains Mach-O code to scan")
+    return scanned
 
 
 def scene_manifest_valid(info):
@@ -269,21 +307,43 @@ def command(*args):
 
 def without_signature(body):
     """Exclude only LC_CODE_SIGNATURE bytes; scan every other Mach-O byte."""
-    if body[:4] != b"\xcf\xfa\xed\xfe":
+    magic = body[:4]
+    if magic in FAT_HEADERS:
+        endian, entry_size = FAT_HEADERS[magic]
+        require(len(body) >= 8, "Valid fat Mach-O header")
+        count = struct.unpack_from(endian + "I", body, 4)[0]
+        table_end = 8 + count * entry_size
+        require(count > 0 and table_end <= len(body), "Valid fat Mach-O architecture table")
+        clean = bytearray(body)
+        ranges = []
+        for index in range(count):
+            start, length = struct.unpack_from(endian + ("II" if entry_size == 20 else "QQ"),
+                                              body, 8 + index * entry_size + 8)
+            require(start >= table_end and length >= 28 and start + length <= len(body),
+                    "Valid fat Mach-O slice boundary")
+            require(body[start:start + 4] in MACHO_HEADERS, "Valid thin Mach-O slice")
+            ranges.append((start, start + length))
+            clean[start:start + length] = without_signature(body[start:start + length])
+        ordered = sorted(ranges)
+        require(all(left[1] <= right[0] for left, right in zip(ordered, ordered[1:])),
+                "Non-overlapping fat Mach-O slices")
+        return bytes(clean)
+    if magic not in MACHO_HEADERS:
         return body
-    require(len(body) >= 32, "Valid Mach-O header")
-    count = struct.unpack_from("<I", body, 16)[0]
-    commands_end = 32 + struct.unpack_from("<I", body, 20)[0]
+    endian, header_size = MACHO_HEADERS[magic]
+    require(len(body) >= header_size, "Valid Mach-O header")
+    count = struct.unpack_from(endian + "I", body, 16)[0]
+    commands_end = header_size + struct.unpack_from(endian + "I", body, 20)[0]
     require(commands_end <= len(body), "Valid Mach-O load-command boundary")
-    offset = 32
+    offset = header_size
     clean = bytearray(body)
     for _ in range(count):
         require(offset + 8 <= commands_end, "Valid Mach-O load command")
-        kind, size = struct.unpack_from("<II", body, offset)
+        kind, size = struct.unpack_from(endian + "II", body, offset)
         require(size >= 8 and offset + size <= commands_end, "Valid Mach-O load command")
         if kind == 0x1d:
             require(size == 16, "Valid Mach-O signature command")
-            start, length = struct.unpack_from("<II", body, offset + 8)
+            start, length = struct.unpack_from(endian + "II", body, offset + 8)
             require(start >= commands_end and length > 0 and start + length <= len(body),
                     "Valid Mach-O signature boundary")
             clean[start:start + length] = b"\0" * length
@@ -400,9 +460,13 @@ def verify_app(app, args):
     bundle = (app / "main.jsbundle").read_bytes()
     check(all(marker.encode() in bundle for marker in GUARDS), "shipped catalog/origin/redirect guards")
     check(not has_loopback(bundle), "no normalized loopback or fixture origin in shipped JS")
+    verify_no_drawn_diagnostics(bundle)
+    check(True, "no e2e drawn-line diagnostics in production Hermes string entries")
     route_keys = bundle_route_keys(bundle, Path("src/app"))
     check(True, "every shipping Expo route key is present in shipped JS")
     check(True, "no unshipped, development or workbench route keys in shipped JS")
+    verify_no_voice_native_code(app)
+    check(True, "no OpaxVoiceCore, OpaxVoice or microphone permission code in any production Mach-O")
     configs = list(app.rglob("app.config"))
     check(bool(configs), "embedded Expo config exists")
     for path in configs:

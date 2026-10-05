@@ -1,7 +1,8 @@
 import { Alert, Linking } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
-import { isE2E, webOrigin } from '../design/environment';
+import { hasSourcePreview, isE2E, webOrigin } from '../design/environment';
 import { light } from '../design/tokens';
+import { presentSourceDestination } from './source-destination';
 
 // Where the Worker or the web app turns an OPAX address into a page the app
 // never sends a reader to (portal/src/page-entry.ts, portal/src/index.ts,
@@ -264,13 +265,11 @@ export function sourceUrl(raw: string): string {
 /**
  * Opens an external source record or register in SFSafariViewController,
  * visibly presented (guideline 5.1.1(vii)). E2E builds never open a browser:
- * they show the checked destination locally instead, through `showInE2E`
- * (SourceLink draws the whole URL) or else a native alert.
+ * they show the destination locally instead.
  */
 export async function openSource(
   url: string,
-  label: string,
-  showInE2E?: (checked: string) => void,
+  citation = 'Source record',
 ): Promise<void> {
   let checked: string;
   try {
@@ -280,9 +279,8 @@ export async function openSource(
     return;
   }
   if (isE2E) {
-    // Title and URL apart, so journeys can assert the exact destination.
-    if (showInE2E) showInE2E(checked);
-    else Alert.alert(`Source record: ${label}`, checked);
+    if (hasSourcePreview) presentSourceDestination({ url: checked, citation });
+    else Alert.alert(`Source record: ${citation}`, checked);
     return;
   }
   try {
@@ -298,18 +296,27 @@ export async function openSource(
 }
 
 /**
+ * The address openOnWeb opens for a path on the public site, or null when the
+ * guard refuses it. The raw path is validated, then the record's query is kept
+ * for navigation; sourceUrl applies the route, query and fragment guard to it.
+ * Canonical share links still omit query state.
+ */
+export function webPageUrl(path: string): string | null {
+  try {
+    canonicalUrl(path);
+    return sourceUrl(new URL(path, webOrigin).toString());
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Opens a web-only OPAX page (community, the money map, Methods) in Safari,
  * outside the app. The control shows the "Opens on opax.com.au" cue.
  */
 export async function openOnWeb(path: string, label: string): Promise<void> {
-  let url: string;
-  try {
-    // Validate the raw path, then keep the record's query for navigation.
-    // sourceUrl applies the route/query/fragment guard to privacy links too.
-    // Canonical share links still omit query state.
-    canonicalUrl(path);
-    url = sourceUrl(new URL(path, webOrigin).toString());
-  } catch {
+  const url = webPageUrl(path);
+  if (url === null) {
     Alert.alert('opax.com.au', 'This page could not be opened.');
     return;
   }

@@ -1,7 +1,9 @@
 import type {
+  AppEdition,
   BillDetail,
   BillIndex,
   Corpus,
+  EditionKind,
   ElectorateDetail,
   ElectorateIndex,
   ExpenseCategories,
@@ -39,6 +41,7 @@ import { ApiError } from './errors';
 import {
   personId,
   personSlug,
+  rosterId,
   nameKey,
   nameValues,
   interestKey,
@@ -46,6 +49,8 @@ import {
 } from './ids';
 import {
   namedRosterRow,
+  joinPerson,
+  rosterChambersFor,
   rosterRowFor,
   numericPersonId,
   type PersonProfile,
@@ -85,6 +90,91 @@ const block = <T>(
   stale: false,
   savedAt: null,
 });
+/** Shared catalog citations for selectors and loader provenance. */
+export const catalogSources = {
+  people: { label: 'OPAX parliamentary roster', url: '/subject/person' },
+  electorates: { label: 'OPAX electorate release', url: '/subject/electorate' },
+  bills: {
+    label: 'ParlInfo bill records',
+    url: 'https://parlinfo.aph.gov.au/',
+  },
+} satisfies Record<string, Provenance>;
+export function suggestionProvenanceFor(
+  dates: Record<keyof typeof catalogSources, string | null>,
+) {
+  const ready = (asAt: string | null, source: Provenance): Block<null> => ({
+    ...block(null, asAt, [source]),
+    status: 'ready',
+  });
+  return {
+    people: ready(dates.people, catalogSources.people),
+    electorates: ready(dates.electorates, catalogSources.electorates),
+    bills: ready(dates.bills, catalogSources.bills),
+  };
+}
+export type SearchIdentityCatalogs = Pick<
+  ProfileCatalogs,
+  'roster' | 'manifest'
+> &
+  Partial<Pick<ProfileCatalogs, 'slugs' | 'people'>>;
+/** Search and the profile header resolve the exact same dated identity. */
+export function searchPersonFor(
+  slug: string,
+  catalogs: SearchIdentityCatalogs,
+) {
+  if (!catalogs.slugs || !catalogs.people) return null;
+  try {
+    const identity = joinPerson(
+      slug,
+      catalogs.slugs,
+      catalogs.roster,
+      catalogs.people,
+      catalogs.manifest,
+    );
+    const row = identity.rosterRow;
+    return {
+      name: identity.name,
+      party: identity.party ?? undefined,
+      partyCurrent: identity.partyCurrent,
+      formerly: identity.formerly,
+      representation: identity.seats.length
+        ? identity.seats.map((seat) => ({
+            electorate: seat.name,
+            chamber: seat.chamber,
+            jurisdiction: seat.jurisdiction,
+            state: row?.representation?.find(
+              (r) =>
+                nameKey(r.electorate) === nameKey(seat.name) &&
+                r.chamber === seat.chamber,
+            )?.state,
+            current: seat.current,
+          }))
+        : (row?.representation ?? [])
+            .filter((r) => r.chamber !== 'senate_committee')
+            // Roster representation does not establish whether a seat ended.
+            .map((r) => ({ ...r, current: undefined })),
+      chambers: rosterChambersFor(
+        row ? { ...row, name: identity.name } : undefined,
+      ),
+      states: row?.states ?? [],
+    };
+  } catch {
+    // Conflicting or missing identities show a name without affiliation/place.
+    return null;
+  }
+}
+export function rosterIdentityFor(
+  row: Roster['people'][number],
+  catalogs: SearchIdentityCatalogs,
+) {
+  if (!catalogs.slugs || !catalogs.people) return null;
+  const candidates = Object.entries(catalogs.slugs.slugs).filter(
+    ([, name]) => nameKey(name) === nameKey(row.name),
+  );
+  return candidates.length === 1
+    ? searchPersonFor(candidates[0]![0], catalogs)
+    : null;
+}
 export interface ProfileCatalogs {
   manifest: Manifest;
   roster: Roster;
@@ -476,15 +566,89 @@ export function recentBillsFor(bills: BillIndex, limit = 6) {
       .slice(0, Math.max(0, Math.floor(limit)))
       .map(billDisplay),
     bills.generated_at,
-    [{ label: 'ParlInfo bill records', url: 'https://parlinfo.aph.gov.au/' }],
+    [catalogSources.bills],
   );
 }
-export function recentDeclarationsFor(interests: RecentInterests, limit = 6) {
+// The web register's DECLARED_BUCKET_LABELS (portal/public/app.js).
+export function declarationCategoryFor(bucket: string) {
+  return (
+    (
+      {
+        shareholdings: 'Shareholding',
+        real_estate: 'Real estate',
+        trusts: 'Trust',
+        directorships: 'Directorship',
+        gifts: 'Gift',
+        travel: 'Sponsored travel or hospitality',
+        memberships: 'Membership or office',
+        liabilities: 'Liability',
+        other: 'Other interest',
+      } as Record<string, string>
+    )[bucket] ?? 'Register category not recorded'
+  );
+}
+export interface DeclarationCatalogs {
+  roster?: Roster;
+  photoPeople?: PhotoPeople;
+  photoCredits?: PhotoCredits;
+}
+/** The register named by this row, rather than the multi-register dataset. */
+export function registerSourceLabelFor(item: RecentInterests['items'][number]) {
+  if (item.jurisdiction === 'qld')
+    return 'Queensland Register of Members’ Interests';
+  if (item.jurisdiction === 'federal' && item.chamber === 'senate')
+    return 'Register of Senators’ Interests';
+  if (item.jurisdiction === 'federal' && item.chamber === 'house')
+    return 'Register of Members’ Interests';
+  return 'Register of interests';
+}
+export function recentDeclarationsFor(
+  interests: RecentInterests,
+  limit = 6,
+  catalogs: DeclarationCatalogs = {},
+) {
   const items = [...interests.items]
     .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, Math.max(0, Math.floor(limit)));
   return block(
-    items,
+    items.map((item) => {
+      let row: Roster['people'][number] | undefined;
+      try {
+        row = catalogs.roster
+          ? rosterRowFor(
+              [item.name],
+              catalogs.roster,
+              /^\d+$/.test(item.person_id)
+                ? rosterId(item.person_id)
+                : undefined,
+            )
+          : undefined;
+      } catch {
+        /* Conflicting roster observations must not invent an affiliation. */
+      }
+      let portrait: ReturnType<typeof portraitFor> = null;
+      if (catalogs.photoPeople && catalogs.photoCredits) {
+        try {
+          portrait = portraitFor(
+            [item.name, ...(row ? [row.name] : [])],
+            catalogs.photoPeople,
+            catalogs.photoCredits,
+          );
+        } catch {
+          /* Ambiguous photo identities keep the blank circle. */
+        }
+      }
+      return {
+        ...item,
+        ...personPartyFor([], row, row),
+        party: row
+          ? (personPartyFor([], row, row).party ?? undefined)
+          : undefined,
+        portrait,
+        sourceLabel: registerSourceLabelFor(item),
+        category: declarationCategoryFor(item.bucket),
+      };
+    }),
     interests.meta.generated,
     [...new Set(items.map((item) => item.url))].map((url) => ({
       label: interests.meta.source,
@@ -501,6 +665,98 @@ export function todayFor(
     bills: recentBillsFor(bills, limit),
     declarations: recentDeclarationsFor(interests, limit),
   };
+}
+// The composer's own words for each kind (portal/src/daily-post.ts covers).
+const editionKindLabels: Record<EditionKind, string> = {
+  politician: 'Parliamentarian',
+  bill: 'Bill',
+  grant: 'Grant award',
+  topic: 'Topic',
+  program: 'Grant program',
+  largest: 'Largest grants',
+};
+// Where the edition labels its own text as a model's.
+const machineNote = /machine-written|written by a model/i;
+// The web's bill-summary attribution when a record carries none
+// (portal/public/app.js): a bill edition's text is its stored model summary.
+export const billSummaryAttribution =
+  'Written by a model from the explanatory memorandum; not the record.';
+/**
+ * A model's text and its attribution, in the edition's own words. A bill's
+ * summary slide carries the record's stored attribution (the web's bill-page
+ * wording); then the caption's own "Machine-written …" line; a bill with
+ * neither takes the web's default. Other kinds are labelled only when the
+ * edition says so.
+ */
+function editionAttribution(edition: AppEdition['edition']): string | null {
+  const summary = edition.slides
+    ?.flatMap((slide) =>
+      slide.type === 'list' && slide.note?.trim() ? [slide.note.trim()] : [],
+    )
+    .find((note) => edition.kind === 'bill' || machineNote.test(note));
+  const caption = (edition.caption ?? '')
+    .split(/\n{2,}/)
+    .map((paragraph) => paragraph.trim())
+    .find((paragraph) => /^machine-written\b/i.test(paragraph));
+  return (
+    summary ??
+    caption ??
+    (edition.kind === 'bill' ? billSummaryAttribution : null)
+  );
+}
+export interface EditionView {
+  /** The journal date: the newest posted edition on or before today. */
+  date: string;
+  kind: EditionKind;
+  kindLabel: string;
+  title: string;
+  /** The post's own paragraphs, verbatim, without its link line. */
+  paragraphs: string[];
+  /** The page on the public site (path and query; any fragment dropped). */
+  path: string;
+  /** Set when the edition's text is a model's, with its own attribution. */
+  machineWritten: { attribution: string } | null;
+  /** The closing slide's source rows and qualifications, verbatim. */
+  sourceRows: string[];
+}
+/**
+ * The card's view of a frozen edition. Nothing is composed or reworded: the
+ * paragraphs are the post's own text, less two repeats of what the card shows
+ * in full (the trailing link, and the title clipped with "…" to fit a post).
+ */
+export function editionFor({ edition }: AppEdition) {
+  const link = new URL(edition.url);
+  const paragraphs = edition.text
+    .split(/\n{2,}/)
+    .map((paragraph) => paragraph.trim())
+    .filter(
+      (paragraph) =>
+        paragraph &&
+        paragraph !== edition.url &&
+        !(
+          paragraph.endsWith('…') &&
+          paragraph.length > 1 &&
+          edition.title.startsWith(paragraph.slice(0, -1).trimEnd())
+        ),
+    );
+  const attribution = editionAttribution(edition);
+  const closing = edition.slides?.at(-1);
+  const view: EditionView = {
+    date: edition.date,
+    kind: edition.kind,
+    kindLabel: editionKindLabels[edition.kind],
+    title: edition.title,
+    paragraphs,
+    path: `${link.pathname}${link.search}`,
+    machineWritten: attribution ? { attribution } : null,
+    sourceRows:
+      closing?.type === 'source'
+        ? closing.rows.map((row) => row.trim()).filter(Boolean)
+        : [],
+  };
+  return block(view, edition.date, [
+    { label: 'OPAX daily edition', url: view.path },
+  ]);
 }
 type BillIndexRow = BillIndex['bills'][number];
 // Folded search text and display rows are computed once per decoded index
@@ -585,7 +841,7 @@ export function billsFor(
         (b.introduced ?? '').localeCompare(a.introduced ?? ''),
     );
   return block(rows.map(billDisplayRow), index.generated_at, [
-    { label: 'ParlInfo bill records', url: 'https://parlinfo.aph.gov.au/' },
+    catalogSources.bills,
   ]);
 }
 // Statuses in the order a reader follows a bill; anything new follows.
@@ -636,7 +892,7 @@ export function billFacetsFor(index: BillIndex) {
   return block(
     { total: index.bills.length, statuses, chambers, years },
     index.generated_at,
-    [{ label: 'ParlInfo bill records', url: 'https://parlinfo.aph.gov.au/' }],
+    [catalogSources.bills],
   );
 }
 export function billFor(bill: BillDetail, index: BillIndex) {

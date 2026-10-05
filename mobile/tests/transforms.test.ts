@@ -1,4 +1,4 @@
-import { decodeBill, decodeMoney } from '../src/api/catalogs';
+import { decodeBill, decodeMoney, decodeExpenses } from '../src/api/catalogs';
 import { assertReceiptsLookup } from './receipts';
 import {
   billDedupeDivisions,
@@ -379,4 +379,18 @@ describe('bill list and detail transforms match the web', () => {
     expect(original.billParty('PRES')).toBe(billParty('PRES'));
     expect(billParty('')).toBe('Not recorded');
   });
+});
+
+test('catalog-version indexes and benchmarks reuse only identical decoded catalogs', () => {
+  const firstTitles = billTitleIndex(bills);
+  expect(billTitleIndex(bills)).toBe(firstTitles);
+  const replacement = { ...bills, bills: [...bills.bills] };
+  expect(billTitleIndex(replacement)).not.toBe(firstTitles);
+  expect(billTitleIndex(replacement)).toEqual(firstTitles);
+  const expenses = decodeExpenses(pinned('/expenses.json'));
+  const firstBenchmark = expenseBenchmarks(expenses);
+  expect(expenseBenchmarks(expenses)).toBe(firstBenchmark);
+  const next = { ...expenses, people: { ...expenses.people } };
+  expect(expenseBenchmarks(next)).not.toBe(firstBenchmark);
+  expect(expenseBenchmarks(next)).toEqual(firstBenchmark);
 });
