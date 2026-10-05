@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 # scripts/vm/test_nightly.sh -- end-to-end test of scripts/vm/nightly.sh in a sandbox.
 #
-#   scripts/vm/test_nightly.sh                    # on a Linux box (needs git, python3 + requests, flock)
+#   scripts/vm/test_nightly.sh                    # on a Linux box (needs git, python3 + requests, flock, sqlite3)
 #   docker run --rm -v "$PWD":/src:ro ubuntu:24.04 bash -c \
-#     'apt-get update -qq && apt-get install -y -qq git python3 python3-requests util-linux >/dev/null && bash /src/scripts/vm/test_nightly.sh'
+#     'apt-get update -qq && apt-get install -y -qq git python3 python3-requests util-linux sqlite3 >/dev/null && bash /src/scripts/vm/test_nightly.sh'
+# (scripts/vm/export_people.sh reads the members table with the sqlite3 CLI; without it the weekly
+# scenarios fail.)
 #
 # Nothing here touches the network, the real knowledge box, GitHub or the real repo:
 # a throwaway HOME, a bare git repo as "origin", a fake daily_refresh.sh and a knowledge-box
@@ -158,6 +160,7 @@ if [ "${FAKE_WEEKLY_MODE:-ok}" = locked ]; then echo "$(date '+%F %T') another w
   [ "${FAKE_WEEKLY_MODE:-ok}" = failsteps ] && echo "$(date '+%F %T') [x_fits] FAIL(rc=1) in 1s; (no row count); log /x"
   echo "$(date '+%F %T') ===== weekly refresh end ====="
   [ "${FAKE_WEEKLY_MODE:-ok}" = stale ] && echo "$(date '+%F %T') Stale weekly refresh: source refused to change the register: ${FAKE_STALE_STEPS:-fits_fetch}"
+  [ -n "${FAKE_ROSTER_HELD:-}" ] && echo "$(date '+%F %T') Roster held: $FAKE_ROSTER_HELD"
   [ "${FAKE_WEEKLY_MODE:-ok}" = failsteps ] && echo "$(date '+%F %T') Incomplete weekly refresh: failed steps x_fits"
 } >> "$PIPE/weekly.log"
 [ "${FAKE_WEEKLY_MODE:-ok}" = failsteps ] && exit 1
@@ -374,7 +377,7 @@ if [ "${1:-}" = "-m" ]; then
   [ "$2" = parli.ingest.committee_hearings ] && [ -n "${COMMITTEES_CHANGED:-}" ] && echo "COMMITTEES_CHANGED rows_updated=$COMMITTEES_CHANGED rows_removed=0"
   for f in ${FAIL_STEPS:-}; do [ "$2" = "parli.ingest.$f" ] && exit ${FAIL_RC:-1}; done
 else
-  for f in ${FAIL_STEPS:-}; do [ "${1:-}" = "scripts/$f" ] && exit ${FAIL_RC:-1}; done
+  for f in ${FAIL_STEPS:-}; do [ "${1:-}" = "scripts/$f" ] && { [ -z "${FAIL_MSG:-}" ] || echo "$FAIL_MSG" >&2; exit ${FAIL_RC:-1}; }; done
 fi
 exit 0
 PYSTUB
@@ -636,6 +639,11 @@ FAIL_RC=3 FAIL_STEPS="money_ipea" weekly monthly
 check "monthly: an IPEA quarter refused for its licence (exit 3) is stale: exit 0" test "$WRC" -eq 0
 check "logged STALE and listed on the Stale line, not as an incomplete run" bash -c "grep -q '\[ipea\] STALE(rc=3' $WLOG && grep -q 'Stale weekly refresh: .*ipea' $WLOG && ! grep -q 'Incomplete weekly refresh' $WLOG"
 check "and the expenses export still runs after it" order parli.ingest.money_ipea scripts/export_expenses.py
+new_weekly_sandbox w22h
+FAIL_RC=3 FAIL_STEPS="export_parliamentarians.py" FAIL_MSG="ROSTER HELD: 1 sitting member row(s) lose their id or seat: Pat Conaghan (10922 -> no id)" weekly weekly
+check "a held roster export (exit 3) is stale, not failed: exit 0" test "$WRC" -eq 0
+check "logged STALE, listed on the Stale line, and the reason on a Roster held line" bash -c "grep -q '\[x_people\] STALE(rc=3' $WLOG && grep -q 'Stale weekly refresh: .*x_people' $WLOG && grep -q 'Roster held: 1 sitting member row(s) lose their id or seat: Pat Conaghan (10922 -> no id)' $WLOG && ! grep -q 'Incomplete weekly refresh' $WLOG"
+check "and the exports after it still run" order scripts/export_parliamentarians.py scripts/export_money_graph.py
 new_weekly_sandbox w22g
 FAIL_RC=3 FAIL_STEPS="export_speakers.py" weekly weekly
 check "exit 3 from a step that is not a register loader is still a failure" test "$WRC" -eq 1
@@ -646,6 +654,9 @@ new_sandbox s22n
 FAKE_MODE=ok OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=stale nightly
 check "a stale source: the night is ok (exit 0)" test "$NRC" -eq 0
 check "but the status carries a warning naming it" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and any(\"fits_fetch\" in w for w in s[\"warnings\"]), s'"
+new_sandbox s22r
+FAKE_MODE=ok OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=stale FAKE_STALE_STEPS=x_people FAKE_ROSTER_HELD="1 sitting member row(s) lose their id or seat: Pat Conaghan (10922 -> no id)" nightly
+check "a held roster: the night is ok, and the status says the roster was held and why" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and any(\"roster export was held\" in w and \"Pat Conaghan (10922 -> no id)\" in w for w in s[\"warnings\"]), s'"
 new_sandbox s22p
 FAKE_MODE=ok OPAX_FORCE_GROUPS=monthly FAKE_WEEKLY_MODE=stale FAKE_STALE_STEPS=ipea nightly
 check "a monthly run with a stale IPEA quarter: exit 0, status ok with a warning naming ipea" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and any(\"ipea\" in w for w in s[\"warnings\"]), s'"

@@ -44,7 +44,7 @@ ALLOW_FAIL=",${OPAX_ALLOW_FAIL:-},"
 # exit 3 from these means the source refused to change the register (empty or shrunken upstream; for ipea, a
 # quarter whose data.gov.au licence changed): the last good rows are kept, so it is reported as stale, not failed
 # (periodic-refresh.md, exit codes)
-STALE_OK=",donations_qld,donations_vic,donations_tas,donations_apply,lobbyists_fetch,lobbyists_apply,fits_fetch,fits_apply,rosters_fetch,qld_contracts,ipea,"
+STALE_OK=",donations_qld,donations_vic,donations_tas,donations_apply,lobbyists_fetch,lobbyists_apply,fits_fetch,fits_apply,rosters_fetch,qld_contracts,ipea,x_people,"
 
 # log, count, run_step, FAILED_STEPS, STEP_DELTA (shared with daily_refresh.sh)
 . "$REPO/scripts/lib/refresh_lib.sh"
@@ -130,6 +130,10 @@ if [ "$want_weekly" = 1 ]; then
   run_step x_speakers "" "$EXPORT" json portal/public/speakers.json "$PY" scripts/export_speakers.py
   # the directory plus the recorded representation the portal needs (scripts/vm/export_people.sh says why)
   run_step x_people "" "$EXPORT" json portal/public/parliamentarians.json bash scripts/vm/export_people.sh
+  # exit 3: the export would take a sitting member's id or seat, change >25 rows' identity or drop rows, so the
+  # shipped roster is kept (STALE_OK); say why, for the nightly status (docs/PHOTOS.md, "Nightly safety net")
+  held=$(grep -m1 '^ROSTER HELD:' "$PIPE/x_people.log" 2>/dev/null || true)
+  [ -z "$held" ] || log "Roster held: ${held#ROSTER HELD: }"
   run_step x_money "" "$EXPORT" json portal/public/graph/money.json "$PY" scripts/export_money_graph.py
   for j in qld vic tas; do
     run_step "x_money_$j" "" "$EXPORT" json "portal/public/graph/money.$j.json" "$PY" scripts/export_state_money.py "$j"

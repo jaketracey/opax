@@ -1614,7 +1614,7 @@ export function mountTimeMachine(container, opts = {}) {
 
   let photoMapPromise = null
   function fillPortraits(scope) {
-    photoMapPromise ??= fetch('/photos/people.json').then((r) => r.json()).catch(() => null)
+    photoMapPromise ??= fetch('/photos/people.json', { cache: 'no-cache' }).then((r) => r.json()).catch(() => null)  // whose face: revalidated
     photoMapPromise.then((map) => {
       for (const slot of scope.querySelectorAll('.tm-portrait[data-speaker]')) {
         const id = map && map[String(slot.dataset.speaker).trim().toLowerCase()]

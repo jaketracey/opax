@@ -783,8 +783,8 @@ export function rankFor(score, total) {
  *  Data loading
  * ---------------------------------------------------------------- */
 
-async function fetchJson(url, signal) {
-  const res = await fetch(url, { signal });
+async function fetchJson(url, signal, init) {
+  const res = await fetch(url, { signal, ...init });
   if (!res.ok) throw new Error(url + " → HTTP " + res.status);
   return res.json();
 }
@@ -794,7 +794,7 @@ async function loadData(signal) {
     fetchJson("/graph/money.json", signal),
     fetchJson("/reports/index.json", signal),
     fetchJson("/corpus.json", signal).catch(() => null),
-    fetchJson("/photos/people.json", signal).catch(() => null),
+    fetchJson("/photos/people.json", signal, { cache: "no-cache" }).catch(() => null),  // whose face: revalidated
     fetchJson("/years/index.json", signal).catch(() => null),
   ]);
   const reports = {};

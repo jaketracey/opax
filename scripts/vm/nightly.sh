@@ -288,6 +288,8 @@ if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "${OPAX_NIGHTLY_SKIP_PERIODIC
     fi
     stale=$(last_run_line "$WEEKLY_LOG" 'Stale weekly refresh:' | sed 's/.*register: //')
     [ -z "$stale" ] || warn "a source refused to change its register tonight (kept the last good rows): $stale"
+    held=$(last_run_line "$WEEKLY_LOG" 'Roster held:' | sed 's/.*Roster held: //')
+    [ -z "$held" ] || warn "the roster export was held and the shipped parliamentarians.json kept (review, then OPAX_ROSTER_ACCEPT=1): $held"
   fi
 fi
 

@@ -76,6 +76,17 @@ from scripts.roster_identity import member, same_person, verify  # noqa: E402
 DB = "file:" + (os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")) + "?mode=ro"
 FLOOR = 5
 
+# The safety net (docs/PHOTOS.md, "Nightly safety net"). A new export may not replace the roster the site
+# ships now if it would take a sitting member's id or seat, change the identity of more than
+# MAX_IDENTITY_CHANGES rows, or drop rows: the export exits HELD with the reasons on stderr, so
+# scripts/vm/export_step.sh keeps the shipped file and weekly_refresh.sh logs the step STALE (STALE_OK) with a
+# "Roster held:" line the nightly status repeats. OPAX_ROSTER_ACCEPT=1 ships a reviewed change anyway.
+PREVIOUS = os.environ.get("OPAX_ROSTER_PREVIOUS") or os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "portal", "public", "parliamentarians.json")
+IDENTITY_FIELDS = ("pid", "current", "party_now", "full")
+MAX_IDENTITY_CHANGES = 25
+HELD = 3
+
 # Letters (any script), spaces, hyphens, apostrophes, dots; 2-5 tokens; not a
 # sentence. "Shoebridge" (one token) passes: surname-only Hansard prints are
 # real collaborator values with entry pages of their own.
@@ -109,6 +120,45 @@ def member_party(pid, name, state, chamber, raw, canonical):
         verified = canon_party(None, canonical)
         return verified if verified and verified != correction[0] else correction[1]
     return label
+
+
+def refusals(previous, new, max_changes=MAX_IDENTITY_CHANGES):
+    """Why the `new` roster rows must not replace the `previous` (shipped) ones; empty when they may.
+    Rows are matched by name, the roster's key."""
+    reasons = []
+    if len(new) < len(previous):
+        reasons.append(f"the row count drops from {len(previous):,} to {len(new):,}")
+    now = {p["name"]: p for p in new}
+    lost = []
+    for p in previous:
+        if not p.get("current"):
+            continue
+        q = now.get(p["name"])
+        if q is None:
+            lost.append(f"{p['name']} (row gone)")
+        elif q.get("pid") != p.get("pid"):
+            lost.append(f"{p['name']} ({p.get('pid') or 'no id'} -> {q.get('pid') or 'no id'})")
+        elif not q.get("current"):
+            lost.append(f"{p['name']} (no longer sitting)")
+    if lost:
+        more = f" and {len(lost) - 8} more" if len(lost) > 8 else ""
+        reasons.append(f"{len(lost)} sitting member row(s) lose their id or seat: {', '.join(lost[:8])}{more}")
+    changed = [p["name"] for p in previous if p["name"] in now
+               and any(p.get(f) != now[p["name"]].get(f) for f in IDENTITY_FIELDS)]
+    if len(changed) > max_changes:
+        reasons.append(f"{len(changed)} rows change {'/'.join(IDENTITY_FIELDS)} (more than {max_changes}): "
+                       f"{', '.join(changed[:8])} and {len(changed) - 8} more")
+    return reasons
+
+
+def shipped_roster(path=None):
+    """The people rows of the roster the site ships now, or None when there is none to compare with."""
+    path = path or PREVIOUS
+    try:
+        with open(path, encoding="utf-8") as fh:
+            return json.load(fh)["people"]
+    except (OSError, ValueError, KeyError):
+        return None
 
 
 def main() -> None:
@@ -242,6 +292,13 @@ def main() -> None:
         },
         "people": out,
     }
+    previous = shipped_roster()
+    held = refusals(previous, out) if previous is not None and os.environ.get("OPAX_ROSTER_ACCEPT") != "1" else []
+    if held:
+        print("ROSTER HELD: " + "; ".join(held), file=sys.stderr)
+        print(f"[export] not shipped: {PREVIOUS} is kept. If the change is right, rerun with "
+              "OPAX_ROSTER_ACCEPT=1 (docs/PHOTOS.md, \"Nightly safety net\")", file=sys.stderr)
+        sys.exit(HELD)
     json.dump(doc, sys.stdout, ensure_ascii=False, separators=(",", ":"))
     print(f"[export] {len(out):,} people, {witnesses:,} witness-only excluded, "
           f"{below:,} below floor, {malformed:,} malformed ({time.time() - t0:.0f}s)", file=sys.stderr)

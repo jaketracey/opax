@@ -166,18 +166,54 @@ its row is one person, and discards a download whose bytes match another portrai
 faces from `people.json`; a person with no face gets the blank circle in the directory too.
 
 **Caches.** `OG_VERSION` is 6, which changes every share-card URL and the Worker's card cache key,
-so no cached card keeps a removed face. `/photos/people.json` is served `max-age=0,
-must-revalidate` (an ETag round trip), so a returning reader gets a correction on the next page
-view instead of after a day of stale grace. Answers cached under `CACHE_EPOCH` (a pay ranking
-naming "Ian McLachlan") clear with the nightly epoch bump.
+so no cached card keeps a removed face. The files that say who is who are `photos/people.json`,
+`parliamentarians.json`, `pay.json`, `votes.json`, `expenses.json` and `interests/index.json`
+(whose face, which pid and seat, and each record set's name index). Every page module fetches them
+with `cache: "no-cache"`, and `_headers` serves them `max-age=0, must-revalidate`. A browser that
+kept last release's copy under the old one-hour-plus-a-day headers ignores new headers until it
+asks again, so the fetch option is what retires it: the browser revalidates (an ETag round trip, a
+304 with no body when nothing changed) and takes the corrected file on the next page load. The
+bills already work this way. `portal/test/identity-cache.test.mjs` runs the loaders against a
+recording `fetch`, scans every module's fetches of these paths and checks the header rules; a
+headless Chrome profile primed with the old roster got the corrected one on its next load (round 2
+of the review). Answers cached under `CACHE_EPOCH` (a pay ranking naming "Ian McLachlan") stay
+until the epoch next moves, which the nightly does only when the knowledge box changes; bump it
+with `scripts/bump_cache_epoch.py` at deploy if that matters.
+
+**Nightly safety net.** The roster export runs against the real database only in the weekly group
+(Sundays, step `x_people`), and the corrected roster above came from the pinned exports, so
+`export_parliamentarians.py` refuses to ship a roster that moves too far from the one the site
+ships now. `refusals(previous, new)` holds the export if any sitting member's row loses its pid,
+changes it, loses its sitting status or disappears; if more than 25 rows change `pid`, `current`,
+`party_now` or `full`; or if the row count drops. A held export prints `ROSTER HELD: <reasons>` to
+stderr and exits 3 with nothing on stdout, so `scripts/vm/export_step.sh` keeps the shipped
+`parliamentarians.json`; `weekly_refresh.sh` lists `x_people` in `STALE_OK` (logged STALE, not a
+failure) and logs a `Roster held:` line, which `nightly.sh` turns into a status warning: "the
+roster export was held and the shipped parliamentarians.json kept (review, then
+OPAX_ROSTER_ACCEPT=1): <reasons>". An election, a retirement or the first real-database run after
+this change can trip it legitimately: review the difference, then rerun on the VM with
+`OPAX_ROSTER_ACCEPT=1 OPAX_ONLY=x_people scripts/weekly_refresh.sh weekly`. Tests:
+`scripts/test_export_parliamentarians.py` (each rule, and a real-database export whose members
+table knows nobody, which is held and shipped only with the override) and
+`scripts/vm/test_nightly.sh` (a held export is STALE with a `Roster held:` line; the night stays ok
+with the reason in its warnings).
 
 **Left open.** The five `wrong_face` files (and their JPEG twins and entries) should be deleted so
 a refresh can fetch the real portraits; 10725 will come back as Sandy Macdonald's from
 OpenAustralia, so John Alexander needs Commons. Rex Patrick's 10903 and Steve Martin's 10905 are
-their own faces but no roster name uses them. A mixed surname print gets its face and records back
-only when the export can split its rows by person (dated seat or witness evidence on the rows
-themselves). The "Cox" row still carries David Cox's Kingston representation from
-`enrich_profile_jurisdictions.py`, which matches by name, not pid.
+their own faces but no roster name uses them.
+
+**Follow-up: state faces through dated, chamber-scoped person rows.** The twelve state members who
+lost their only face (Stephen Andrew, Neil Angus, Mark Bailey, Ros Bates, Sandy Bolton, Nigel
+Dalton, Cameron Dick, Martin Foley, Jon Krause, David Morris, Tim Nicholls, Margie Nightingale)
+have no row of their own: Hansard prints them by surname, and their surname row also holds
+federal-committee witnesses (Dalton spans QLD and NSW, Morris ACT, VIC and federal). The fix is in
+the data model, not the map: the export should split a surname row by dated jurisdiction, chamber
+and seat evidence into an owner row (Mark Bailey: the QLD Legislative Assembly rows for his seat
+and years) that can carry the face and the records, leaving the aggregate print blank. The same
+split should take David Cox's Kingston representation off the "Cox" row, where
+`enrich_profile_jurisdictions.py` puts it by name; a surname page should not imply that one seat
+identifies the whole row.
 
 ## Why not the APH image API directly
 

@@ -3415,10 +3415,15 @@ function explainBtn(detail, label, { primary = false } = {}) {
 // industry-coloured monogram tiles — most are private companies with no clean,
 // legally safe logo source.
 
+// The files that say who is who (whose face, which pid, whose votes, pay, expenses, interests) are
+// fetched with { cache: "no-cache" }: the browser revalidates its copy (an ETag round trip, a 304 with
+// no body when nothing changed), so a corrected identity reaches a returning reader on the next load
+// instead of after a stale day. Headers alone cannot retire a copy cached under the old ones
+// (docs/PHOTOS.md, "Caches"; the bills use the same rule).
 let photoMap = null;
 let photoMapPromise = null;
 function loadPhotoMap() {
-  photoMapPromise ??= fetch("/photos/people.json")
+  photoMapPromise ??= fetch("/photos/people.json", { cache: "no-cache" })
     .then((r) => r.json()).then((d) => (photoMap = d)).catch(() => null);
   return photoMapPromise;
 }
@@ -3457,7 +3462,7 @@ async function renderPortraitCredit(name, key) {
 let votesData = null;
 let votesPromise = null;
 function loadVotes() {
-  votesPromise ??= fetch("/votes.json")
+  votesPromise ??= fetch("/votes.json", { cache: "no-cache" })
     .then((r) => (r.ok ? r.json() : null)).then((d) => (votesData = d)).catch(() => null);
   return votesPromise;
 }
@@ -3688,8 +3693,8 @@ async function renderPersonInterests(name, personId, sections) {
   const slot = document.createElement("div");
   slot.id = "subject-interests";
   sections.appendChild(slot);
-  const getJSON = (url) => fetch(url).then((r) => (r.ok ? r.json() : null)).catch(() => null);
-  renderPersonInterests.index ??= getJSON("/interests/index.json");
+  const getJSON = (url, init) => fetch(url, init).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  renderPersonInterests.index ??= getJSON("/interests/index.json", { cache: "no-cache" });
   const index = await renderPersonInterests.index;
   if (currentSubjectKey !== key) return;
   const lname = String(name || "").trim().toLowerCase();
@@ -4108,7 +4113,7 @@ async function renderDonorTaxCharity(name, sections) {
 let expensesData = null;
 let expensesPromise = null;
 function loadExpenses() {
-  expensesPromise ??= fetch("/expenses.json")
+  expensesPromise ??= fetch("/expenses.json", { cache: "no-cache" })
     .then((r) => (r.ok ? r.json() : null)).then((d) => (expensesData = d)).catch(() => null);
   return expensesPromise;
 }
@@ -4232,7 +4237,7 @@ async function renderPersonExpenses(name, personId, sections) {
 // opens; silent for anyone the file does not know (state members, pre-1999).
 let payPromise = null;
 function loadPay() {
-  payPromise ??= fetch("/pay.json").then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  payPromise ??= fetch("/pay.json", { cache: "no-cache" }).then((r) => (r.ok ? r.json() : null)).catch(() => null);
   return payPromise;
 }
 /** Folded exactly as build_pay.py folds the keys of pay.json's `names`. */
@@ -6182,7 +6187,7 @@ function anyPartyDotHTML(label, colours) {
 
 let parliamentariansPromise = null;
 function loadParliamentarians() {
-  parliamentariansPromise ??= fetch("/parliamentarians.json")
+  parliamentariansPromise ??= fetch("/parliamentarians.json", { cache: "no-cache" })
     .then((r) => (r.ok ? r.json() : null)).then(async (data) => {
       try {
         const module = await loadElectorateModule();

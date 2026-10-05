@@ -6,7 +6,9 @@ const cash = value => Number(value).toLocaleString('en-AU', {style:'currency', c
 const date = value => shortDate(String(value).slice(0,10));
 const jur = value => ({federal:'Federal',nsw:'New South Wales',vic:'Victoria',qld:'Queensland',sa:'South Australia',act:'ACT'}[value] || value);
 const href = (kind, name) => `/subject/${kind}/${encodeURIComponent(name)}`;
-const read = async url => { const response = await fetch(url); if (!response.ok) throw Error('Data unavailable'); return response.json(); };
+const read = async (url, init) => { const response = await fetch(url, init); if (!response.ok) throw Error('Data unavailable'); return response.json(); };
+// who-is-who files revalidate on every load (app.js loadPhotoMap says why)
+const IDENTITY = { cache: 'no-cache' };
 export function newest(items, key, limit) {
   return items.filter(item => item[key]).slice().sort((a,b) => String(b[key]).localeCompare(String(a[key]))).slice(0,limit);
 }
@@ -86,7 +88,7 @@ export async function hydrateRecordCards(onChange) {
   const track = document.querySelector('#hp-ency-track');
   const groups = await Promise.allSettled([
     (async () => {
-      const [photos, ballots] = await Promise.all([read('/photos/people.json'),read('/votes.json')]);
+      const [photos, ballots] = await Promise.all([read('/photos/people.json', IDENTITY),read('/votes.json', IDENTITY)]);
       // Official portrait-backed voting records; Wikimedia credits remain on profile pages.
       const pool = Object.values(ballots).filter(p => p?.name && /^\d+$/.test(photos[p.name.toLowerCase()] || '') && (p.for?.length || p.against?.length));
       return dailySelection(pool,p=>p.name,8).map(p => card('parliamentarian', `<div class="hp-ency-head"><img src="/photos/${encodeURIComponent(photos[p.name.toLowerCase()])}.webp" alt="" width="64" height="64" loading="lazy"><div><span class="hp-meta">Parliamentarian</span><h3><a href="${href('person',p.name)}">${esc(p.name)}</a></h3>${party(p.party)}</div></div><div class="hp-ency-votes">${votes('Voted for',p.for)}${votes('Voted against',p.against)}</div><p class="hp-meta">${count(p.divisions_total)} recorded votes${p.years ? `, ${esc(p.years[0])} to ${esc(p.years[1])}` : ''}</p>`,href('person',p.name)));
