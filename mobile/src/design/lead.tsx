@@ -97,7 +97,11 @@ export function LeadEvidenceLink({
   const body = (
     <>
       <View style={styles.evidenceText}>
-        {item.amount ? <Text variant="figureInline">{item.amount}</Text> : null}
+        {item.amount ? (
+          <Text wordSafe variant="figureInline">
+            {item.amount}
+          </Text>
+        ) : null}
         {item.from && item.to ? (
           <Text wordSafe variant="body">
             {item.from} → {item.to}
@@ -202,6 +206,7 @@ export function LeadCard({
                 style={[styles.metric, stacked ? styles.metricStacked : null]}
               >
                 <Text
+                  wordSafe
                   variant="figureInline"
                   style={stacked ? null : styles.metricValue}
                 >

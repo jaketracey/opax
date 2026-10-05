@@ -48,6 +48,7 @@ export function ConcentrationChart({
           {comparison.chartTitle}
         </Heading>
         <Text
+          wordSafe
           variant="figureInline"
           accessibilityLabel={`${moneyAccessibilityLabel(comparison.total, true)} total`}
           testID={`${testID}-total`}
@@ -99,7 +100,9 @@ export function ConcentrationChart({
                 <Text wordSafe variant="strong">
                   {row.name}
                 </Text>
-                <Text variant="figureInline">{formatMoney(row.value)}</Text>
+                <Text wordSafe variant="figureInline">
+                  {formatMoney(row.value)}
+                </Text>
                 <Text wordSafe variant="metadata">
                   {[`${formatPercent(row.share)} of the total`, records]
                     .filter(Boolean)
@@ -131,7 +134,7 @@ function ChartBar({ row, testID }: { row: ChartRow; testID: string }) {
           </Text>
           {path ? <Icon name="safari" size={16} tone="bronzeInk" /> : null}
         </View>
-        <Text variant="figureInline">
+        <Text wordSafe variant="figureInline">
           {formatMoneyCompact(row.value)} · {formatPercent(row.share)}
         </Text>
         <View
