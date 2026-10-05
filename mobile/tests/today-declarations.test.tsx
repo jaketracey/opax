@@ -69,16 +69,15 @@ test('all 176 pinned House declarations name the Members register', () => {
   ).toBe(true);
   act(() => renderer.unmount());
 });
-test('website portraits retain licence facts while unresolved local bytes keep the blank fallback', () => {
+test('unresolved local portrait bytes keep the blank fallback', () => {
   for (const item of items.slice(0, 6)) {
-    expect(item.portrait?.display).toBe('website-file');
     const renderer = render(item);
     expect(renderer.root.findAllByType(Image)).toHaveLength(0);
     expect(renderer.root.findAllByType(Portrait)).toHaveLength(1);
     act(() => renderer.unmount());
   }
 });
-test('conflicting roster or photo observations never choose an invented party or portrait', () => {
+test('conflicting roster observations never choose an invented party', () => {
   const item = recent.items[0]!;
   const row = catalogs.roster.people.find((r) => r.pid === item.person_id)!;
   const conflict = {

@@ -259,7 +259,7 @@ test('unverified private identity is refused before any name or profile blocks r
   await act(async () => r.unmount());
 });
 
-test('cached portrait renders with its source-provided credit and licence', async () => {
+test('profile credit follows native image decode and disappears with the failed image', async () => {
   mockParams.slug = 'sheena-watt';
   const identity = c.joinPerson('sheena-watt', slugs, roster, people, manifest);
   mock.person.mockResolvedValue(result(identity));
@@ -278,8 +278,14 @@ test('cached portrait renders with its source-provided credit and licence', asyn
   expect(r.root.findByType(Image).props.source.uri).toContain(
     'wd-Q100327610.webp',
   );
+  expect(text(r)).not.toContain('Gabagool2005');
+  await act(async () => r.root.findByType(Image).props.onLoad());
   expect(text(r)).toContain('Gabagool2005');
   expect(text(r)).toContain('CC0');
+  await act(async () => r.root.findByType(Image).props.onError());
+  expect(r.root.findAllByType(Image)).toHaveLength(0);
+  expect(text(r)).not.toContain('Gabagool2005');
+  expect(text(r)).not.toContain('CC0');
   await act(async () => r.unmount());
 });
 
@@ -738,4 +744,22 @@ test('closed salary disclosure does no row formatting; opening renders every ret
     if (r) await act(async () => r!.unmount());
     years.mockRestore();
   }
+});
+
+test('a surname profile retains its short route for portrait refusal after canonical profile resolution', async () => {
+  mockParams.slug = 'walsh';
+  const identity = c.joinPerson('walsh', slugs, roster, people, manifest);
+  mock.person.mockResolvedValue(result(identity));
+  mock.profileFor.mockResolvedValue(
+    c.profileFor(identity.canonicalPersonId!, catalogs),
+  );
+  jest.mocked(portraitService.get).mockResolvedValue(null);
+  const r = await render(<Person />);
+  expect(portraitService.get).toHaveBeenCalledWith({
+    name: 'Jess Walsh',
+    slug: 'walsh',
+    refresh: false,
+  });
+  expect(r.root.findAllByType(Image)).toHaveLength(0);
+  await act(async () => r.unmount());
 });
