@@ -237,34 +237,35 @@ describe('party status rule', () => {
   const row = (extra: object) =>
     ({ name: 'A Member', party: 'Labor', ...extra }) as RosterPerson;
   test.each([
-    ['a current dated seat', [sitting], undefined, 'current'],
+    ['a current dated seat', 'current', [sitting], undefined],
     [
       'a current roster row with its party',
+      'current',
       [],
       row({ current: true, party_now: 'Labor' }),
-      'current',
     ],
     [
       'a current roster row without party_now',
+      'unknown',
       [],
       row({ current: true }),
-      'unknown',
     ],
     [
       'a roster row that says it is not current',
+      'former',
       [],
       row({ current: false }),
-      'former',
     ],
-    ['an ended dated seat with no roster row', [ended], undefined, 'former'],
+    ['an ended dated seat with no roster row', 'former', [ended], undefined],
     [
       'an ended dated seat the roster agrees covers it',
+      'former',
       [ended],
       row({ states: ['federal'] }),
-      'former',
     ],
     [
       'an ended federal seat beside a recorded state seat',
+      'unknown',
       [ended],
       row({
         states: ['federal'],
@@ -272,18 +273,95 @@ describe('party status rule', () => {
           { jurisdiction: 'nsw', chamber: 'nsw_la', electorate: 'Lismore' },
         ],
       }),
-      'unknown',
     ],
     [
       'no dated seat and no roster status',
+      'unknown',
       [],
       row({ states: ['qld'] }),
-      'unknown',
     ],
-    ['nothing at all', [], undefined, 'unknown'],
-  ] as const)('%s is %s', (_, seats, rosterRow, status) => {
+    ['nothing at all', 'unknown', [], undefined],
+  ] as const)('%s is %s', (_, status, seats, rosterRow) => {
     expect(partyStatusFor([...seats], rosterRow)).toBe(status);
     expect(personPartyFor([...seats], rosterRow).partyStatus).toBe(status);
+  });
+  test('an ended seat never overrules a current roster row without party_now', () => {
+    expect(
+      partyStatusFor([ended], row({ current: true, states: ['federal'] })),
+    ).toBe('unknown');
+  });
+  test('no current roster row can ever produce former', () => {
+    const otherState = { ...ended, jurisdiction: 'nsw', chamber: 'nsw_la' };
+    const seatSets = [[], [ended], [otherState], [ended, otherState]];
+    const extras = [
+      {},
+      { party_now: 'Labor' },
+      { states: ['federal'] },
+      { states: ['federal', 'nsw'] },
+      {
+        representation: [
+          { jurisdiction: 'federal', chamber: 'senate', electorate: 'NSW' },
+        ],
+      },
+    ];
+    for (const seats of seatSets)
+      for (const extra of extras)
+        expect(
+          partyStatusFor(seats, row({ ...extra, current: true })),
+        ).not.toBe('former');
+    // Every pinned current row, stripped of party_now, against every pinned
+    // person's observations with each seat marked ended.
+    const currentRows = roster.people
+      .filter((r) => r.current === true)
+      .map(({ party_now: _, ...r }) => r as RosterPerson);
+    expect(currentRows.length).toBeGreaterThan(300);
+    const outcomes = new Set<string>();
+    for (const person of people.people) {
+      const endedSeats = person.electorates.map((s) => ({
+        ...s,
+        current: false,
+      }));
+      for (const r of currentRows) outcomes.add(partyStatusFor(endedSeats, r));
+    }
+    expect([...outcomes]).toEqual(['unknown']);
+  });
+  test("Deborah O'Neill's ended Robertson record stays current-or-plain beside her current roster row", () => {
+    // The release has a historical canonical record holding only Robertson
+    // (ended) beside her current Senate record.
+    const historical = people.people.find(
+      (p) =>
+        p.name === "Deborah O'Neill" && p.electorates.every((s) => !s.current),
+    )!;
+    expect(historical.electorates.map((s) => s.name)).toEqual(['Robertson']);
+    const identity = (r: typeof roster) =>
+      profileFor(historical.person_id, { ...catalogs, roster: r }).blocks
+        .identity.data!;
+    const asPinned = identity(roster);
+    expect(asPinned.partyStatus).toBe('current');
+    expect(
+      partyText({
+        party: asPinned.party,
+        status: asPinned.partyStatus,
+        formerly: asPinned.formerly,
+      }),
+    ).toEqual({ visible: 'Labor', previous: null, spoken: 'Labor' });
+    // The same row without its optional party_now: still never "Formerly".
+    const withoutPartyNow = identity({
+      ...roster,
+      people: roster.people.map((r) => {
+        if (r.current !== true) return r;
+        const { party_now: _, ...rest } = r;
+        return rest as RosterPerson;
+      }),
+    });
+    expect(withoutPartyNow.partyStatus).toBe('unknown');
+    expect(
+      partyText({
+        party: withoutPartyNow.party,
+        status: withoutPartyNow.partyStatus,
+        formerly: withoutPartyNow.formerly,
+      }),
+    ).toEqual({ visible: 'Labor', previous: null, spoken: 'Labor' });
   });
   test('a sitting member keeps a dated seat party over the roster', () => {
     expect(

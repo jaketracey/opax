@@ -43,6 +43,9 @@ export function partyStatusFor(
     (row?.current === true && !!row.party_now)
   )
     return 'current';
+  // A roster that says the person sits is never overruled by an ended seat,
+  // even without party_now to name the current party.
+  if (row?.current === true) return 'unknown';
   if (row?.current === false) return 'former';
   // An ended seat proves a former member only where the dated release speaks
   // for every jurisdiction the roster records: an ended federal seat says
