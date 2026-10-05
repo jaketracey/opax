@@ -25,7 +25,7 @@ export function TodayDeclaration({
       <PersonRow
         name={item.name}
         party={item.party}
-        partyCurrent={item.partyCurrent}
+        partyStatus={item.partyStatus}
         formerly={item.formerly}
         place={chamberName(item.chamber, item.jurisdiction) ?? undefined}
         detail={`${item.category}, ${registerChangeLabel(item.kind)} ${formatDate(item.date, 'short')}`}

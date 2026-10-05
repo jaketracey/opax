@@ -41,7 +41,10 @@ export function RepresentativeRows({
             testID={`${id}-${profile?.slug ?? r.person_id}`}
             name={r.person.name}
             party={profile?.party ?? r.party}
-            partyCurrent={profile?.partyCurrent ?? observations.length > 0}
+            partyStatus={
+              profile?.partyStatus ??
+              (observations.length > 0 ? 'current' : 'unknown')
+            }
             formerly={profile?.formerly}
             place={
               seat

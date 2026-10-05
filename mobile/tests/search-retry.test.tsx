@@ -139,7 +139,7 @@ test('people suggestions include party and place in the whole accessible row', a
     renderer.root.findByType(Field).props.onChangeText('Anthony Albanese'),
   );
   const row = renderer.root.findByType(PersonRow);
-  expect(row.props).toMatchObject({ party: 'Labor', partyCurrent: true });
+  expect(row.props).toMatchObject({ party: 'Labor', partyStatus: 'current' });
   const label = row.find(
     (n) => typeof n.type !== 'string' && n.props.accessibilityRole === 'button',
   ).props.accessibilityLabel;
@@ -256,7 +256,7 @@ test('submitted people rows retain the selector party, place and complete access
   const row = renderer.root.findByType(PersonRow);
   expect(row.props).toMatchObject({
     party: 'Labor',
-    partyCurrent: true,
+    partyStatus: 'current',
     testID: 'search-result-anthony-albanese',
   });
   const label = row.find(
@@ -323,7 +323,11 @@ test.each([
         .props.onPress(),
     );
     const row = renderer.root.findByType(PersonRow);
-    expect(row.props).toMatchObject({ name: title, party, partyCurrent: true });
+    expect(row.props).toMatchObject({
+      name: title,
+      party,
+      partyStatus: 'current',
+    });
     expect(row.props.place).toContain(seat);
     const label = row.find(
       (n) =>

@@ -1,5 +1,5 @@
 appId: au.com.opax.app
-name: Open a profile from Search and check its party reads "Formerly Labor"
+name: Open a profile from Search and check its party label (PARTY, never NOT_PARTY)
 ---
 # A fresh launch (state kept) starts with an empty field at the top of
 # Search; editing a previous query is unreliable at AX5, where a tap can put
@@ -27,5 +27,5 @@ name: Open a profile from Search and check its party reads "Formerly Labor"
     element:
       id: person-party
     centerElement: true
-- assertVisible: Formerly Labor
-- assertNotVisible: ^Labor$
+- assertVisible: ${PARTY}
+- assertNotVisible: ${NOT_PARTY}
