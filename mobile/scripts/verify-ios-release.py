@@ -202,6 +202,18 @@ def verify_no_drawn_diagnostics(body):
     return count
 
 
+# Launch arguments only e2e builds read (src/onboarding/launch-flag.e2e.ts).
+E2E_LAUNCH_FLAGS = ("OPAXWelcomeTour",)
+
+
+def verify_no_e2e_launch_flags(body):
+    """Inspect actual Hermes entries, not overlapping raw string storage."""
+    found, count = markers_in_entries(body, E2E_LAUNCH_FLAGS)
+    require(not found, "no e2e launch arguments in production JS" +
+            (f" (found {', '.join(found)})" if found else ""))
+    return count
+
+
 # Test IDs of the e2e source page (a blocked development route) and of the
 # SourceLink preview that build 3 withdrew. The route name itself ships in the
 # root layout, switched off at runtime, so only these IDs are refused.
@@ -483,6 +495,8 @@ def verify_app(app, args):
     check(True, "no e2e drawn-line diagnostics in production Hermes string entries")
     verify_no_source_preview_ids(bundle)
     check(True, "no e2e source preview test IDs in production Hermes string entries")
+    verify_no_e2e_launch_flags(bundle)
+    check(True, "no e2e launch arguments in production Hermes string entries")
     route_keys = bundle_route_keys(bundle, Path("src/app"))
     check(True, "every shipping Expo route key is present in shipped JS")
     check(True, "no unshipped, development or workbench route keys in shipped JS")

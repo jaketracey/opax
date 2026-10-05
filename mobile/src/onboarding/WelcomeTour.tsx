@@ -17,7 +17,7 @@ import {
   Divider,
   Heading,
   Text,
-  useReduceMotion,
+  useReduceMotionSetting,
 } from '../design/primitives';
 import {
   colors,
@@ -68,7 +68,10 @@ export function WelcomeTour({
 }) {
   const { width, height, fontScale } = useWindowDimensions();
   const insets = useSafeAreaInsets();
-  const reduced = useReduceMotion();
+  // Null until iOS answers: scenes wait, and nothing parallaxes or animates
+  // a page turn until the setting is known to be off.
+  const motion = useReduceMotionSetting();
+  const reduced = motion !== false;
   const accessibilitySize = isAccessibilityCategory(fontScale);
   const count = welcomePages.length;
   const [page, setPage] = useState(0);
@@ -236,6 +239,7 @@ export function WelcomeTour({
             current={index === page}
             revealed={seen.has(index) || index === near}
             reduced={reduced}
+            motion={motion}
             fontScale={fontScale}
             wordsFirst={accessibilitySize}
             insets={{ left: insets.left, right: insets.right }}
@@ -285,6 +289,7 @@ function Page({
   current,
   revealed,
   reduced,
+  motion,
   fontScale,
   wordsFirst,
   insets,
@@ -299,6 +304,8 @@ function Page({
   current: boolean;
   revealed: boolean;
   reduced: boolean;
+  /** The Reduce Motion setting, or null until it is known. */
+  motion: boolean | null;
   fontScale: number;
   wordsFirst: boolean;
   insets: { left: number; right: number };
@@ -357,7 +364,7 @@ function Page({
           height={stageHeight}
           fontScale={fontScale}
           active={revealed}
-          reduced={reduced}
+          reduced={motion}
         />
       </Animated.View>
     </View>

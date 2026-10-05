@@ -30,29 +30,44 @@ import type { WelcomePage } from './pages';
  */
 export const SCENE_WIDTH = 300;
 
-const SceneContext = createContext({ active: false, reduced: false });
+/** `reduced` is null until iOS has said whether Reduce Motion is on. */
+const SceneContext = createContext<{
+  active: boolean;
+  reduced: boolean | null;
+}>({ active: false, reduced: null });
 
-/** A part of a scene: rises and fades in once its page is first shown. */
+/**
+ * A part of a scene: rises and fades in once its page is first shown. It
+ * waits for the Reduce Motion setting before anything moves; with Reduce
+ * Motion on (or turned on mid-reveal) it shows its finished state at once.
+ */
 function Reveal({ order, children }: { order: number; children: ReactNode }) {
   const { active, reduced } = useContext(SceneContext);
   const shown = useState(() => new Animated.Value(reduced ? 1 : 0))[0];
   const done = useRef(false);
+  const running = useRef<Animated.CompositeAnimation | null>(null);
   useEffect(() => {
-    if (done.current) return;
+    if (reduced === null) return;
     if (reduced) {
+      running.current?.stop();
+      running.current = null;
       done.current = true;
       shown.setValue(1);
       return;
     }
-    if (!active) return;
+    if (done.current || !active) return;
     done.current = true;
-    Animated.timing(shown, {
+    const reveal = Animated.timing(shown, {
       toValue: 1,
       duration: 420,
       delay: 120 + order * 90,
       easing: Easing.bezier(0.2, 0, 0, 1),
       useNativeDriver: true,
-    }).start();
+    });
+    running.current = reveal;
+    reveal.start(() => {
+      if (running.current === reveal) running.current = null;
+    });
   }, [active, reduced, order, shown]);
   return (
     <Animated.View
@@ -245,7 +260,8 @@ export function Scene({
   height: number;
   fontScale: number;
   active: boolean;
-  reduced: boolean;
+  /** Null until the Reduce Motion setting is known. */
+  reduced: boolean | null;
 }) {
   const layoutWidth = SCENE_WIDTH * Math.min(Math.max(fontScale, 1), 2.4);
   const [natural, setNatural] = useState(0);

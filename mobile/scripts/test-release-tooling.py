@@ -642,6 +642,18 @@ class BundleAttackTests(unittest.TestCase):
         with self.assertRaises(ReleaseError):
             verify.verify_no_drawn_diagnostics(bundle[:-1])
 
+    def test_e2e_launch_flags_are_refused_in_production_string_entries(self):
+        for entry in (b"OPAXWelcomeTour", b"-OPAXWelcomeTour on"):
+            with self.subTest(entry=entry):
+                bundle = hermes_bundle(entry, [packed(entry, entry)])
+                with self.assertRaisesRegex(ReleaseError, "no e2e launch arguments"):
+                    verify.verify_no_e2e_launch_flags(bundle)
+        with self.assertRaises(ReleaseError):
+            verify.verify_no_e2e_launch_flags(b"plain JS OPAXWelcomeTour")
+        storage = b"shippingOPAXWelcomeTour"
+        bundle = hermes_bundle(storage, [packed(storage, b"shipping")])
+        self.assertEqual(verify.verify_no_e2e_launch_flags(bundle), 1)
+
     def test_source_preview_ids_are_refused_in_production_string_entries(self):
         self.assertIn(b"source-destination-ok", [i.encode() for i in verify.E2E_SOURCE_PREVIEW_IDS])
         for marker in (b"source-destination-url", b"source-destination-scroll", b"source-destination-ok"):

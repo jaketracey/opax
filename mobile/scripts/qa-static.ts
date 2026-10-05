@@ -8,6 +8,7 @@ import { boundaryFiles } from './boundary-files';
 import { scanSwift } from './swift-boundary';
 import { scanNative } from './native-boundary';
 import {
+  assertNoE2ELaunchFlags,
   assertNoFixtureOrigin,
   assertNoVoiceFixtures,
 } from './release-bundle-policy';
@@ -211,6 +212,7 @@ if (productionIndex !== -1) {
       'Production bundle contains the design workbench',
     );
     assertNoVoiceFixtures(body);
+    assertNoE2ELaunchFlags(body);
     for (const testID of [
       'source-destination-url',
       'source-destination-scroll',

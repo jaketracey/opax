@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from 'react';
-import { Settings } from 'react-native';
 import { File, Paths } from 'expo-file-system';
 import { isE2E } from '../design/environment';
+import { e2eTourRequested } from './launch-flag';
 
 /**
  * The welcome tour shows once on this device, after the first launch, and
@@ -9,12 +9,11 @@ import { isE2E } from '../design/environment';
  * file in the app's documents, like the seat choice; skipping counts as seen.
  *
  * E2E journeys start with cleared state, so e2e builds treat the tour as seen
- * unless the launch argument `-OPAXWelcomeTour on` asks for the production
- * behaviour (Maestro: `launchApp: arguments: { OPAXWelcomeTour: on }`).
- * Production and development builds never read the argument.
+ * unless their launch argument asks for the production behaviour
+ * (launch-flag.e2e.ts). Release builds never contain the reader: Metro swaps
+ * in launch-flag.production.ts, and development builds ignore it.
  */
 export const TOUR_VERSION = 1;
-export const TOUR_LAUNCH_ARGUMENT = 'OPAXWelcomeTour';
 const file = () => new File(Paths.document, 'opax-welcome-v1.json');
 
 export async function tourSeen(): Promise<boolean> {
@@ -38,15 +37,6 @@ export async function markTourSeen(): Promise<void> {
   const temporary = new File(Paths.document, 'opax-welcome-v1.tmp');
   temporary.write(JSON.stringify({ version: TOUR_VERSION }));
   temporary.move(file(), { overwrite: true });
-}
-
-/** The e2e opt-in, read from the launch arguments (NSUserDefaults). */
-export function e2eTourRequested(): boolean {
-  try {
-    return String(Settings.get(TOUR_LAUNCH_ARGUMENT) ?? '') === 'on';
-  } catch {
-    return false;
-  }
 }
 
 /** Whether the first launch shows the tour. */

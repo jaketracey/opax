@@ -3,14 +3,14 @@
  * native splash. Content is mounted and touchable underneath the whole time;
  * the handoff is a veil that never takes input or VoiceOver focus.
  *
- * - The masthead rule draws out from the centre under the wordmark.
- * - The veil fades as soon as the first screen is ready, but not before
- *   `hold` (so the rule is seen) and never later than `latestFade`.
+ * - The masthead rule draws out from the centre under the wordmark while
+ *   the veil fades.
+ * - The veil fades as soon as the first screen is ready, with no minimum
+ *   hold, and never later than `latestFade`.
  * - Reduce Motion: no rule, a short static fade from the moment it is ready.
  */
 export const handoff = {
   rule: 520,
-  hold: 260,
   fade: 440,
   latestFade: 760,
   reducedFade: 240,
@@ -20,8 +20,7 @@ export const handoff = {
 
 /** When the fade starts, from when the first screen was ready. */
 export function fadeStart(readyAt: number, reduced: boolean): number {
-  if (reduced) return Math.max(0, readyAt);
-  return Math.min(handoff.latestFade, Math.max(handoff.hold, readyAt));
+  return Math.max(0, reduced ? readyAt : Math.min(handoff.latestFade, readyAt));
 }
 
 /** The longest the handoff can last. */

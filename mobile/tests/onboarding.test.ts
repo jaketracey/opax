@@ -2,6 +2,7 @@ import { act, createElement } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { Settings } from 'react-native';
 import * as tour from '../src/onboarding/state';
+import { e2eTourRequested } from '../src/onboarding/launch-flag';
 import * as chooser from '../src/features/your-mp/chooser-request';
 import {
   fadeStart,
@@ -89,7 +90,7 @@ describe('first launch decision', () => {
     );
   });
   test('the e2e opt-in is exactly -OPAXWelcomeTour on', () => {
-    const { e2eTourRequested, settings } = loadState(true);
+    const { settings } = loadState(true);
     const get = settings.get as jest.Mock;
     get.mockReturnValue('on');
     expect(e2eTourRequested()).toBe(true);
@@ -192,8 +193,8 @@ describe('launch handoff timing', () => {
     expect(longestHandoff(true)).toBeLessThanOrEqual(1200);
     expect(handoff.rule).toBeLessThanOrEqual(handoff.latestFade);
   });
-  test('fades as soon as the first screen is ready, after a short hold', () => {
-    expect(fadeStart(0, false)).toBe(handoff.hold);
+  test('fades the moment the first screen is ready, with no minimum hold', () => {
+    expect(fadeStart(0, false)).toBe(0);
     expect(fadeStart(400, false)).toBe(400);
     expect(fadeStart(5000, false)).toBe(handoff.latestFade);
   });

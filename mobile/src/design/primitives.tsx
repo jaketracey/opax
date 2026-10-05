@@ -55,4 +55,5 @@ export {
   useAccessibilitySize,
   useBoldText,
   useReduceMotion,
+  useReduceMotionSetting,
 } from './accessibility';

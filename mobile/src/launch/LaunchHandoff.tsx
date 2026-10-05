@@ -13,10 +13,10 @@ import { fadeStart, handoff, lockup } from './timing';
 
 /**
  * The launch splash, handed over. It draws the native splash's image in the
- * same place, so hiding the native one shows no seam. A bronze hairline then
- * draws out under the wordmark, a broadsheet masthead rule, and the veil
- * fades to the first screen (src/launch/timing.ts has the beats; at most
- * 1.2 s). Content is mounted and touchable underneath from the first frame:
+ * same place, so hiding the native one shows no seam. A bronze hairline
+ * draws out under the wordmark, a broadsheet masthead rule, as the veil
+ * fades to the first screen the moment it is ready (src/launch/timing.ts
+ * has the beats; at most 1.2 s). Content is mounted and touchable underneath from the first frame:
  * the veil takes no touches and is hidden from VoiceOver. Reduce Motion: no
  * rule, only a short fade.
  */

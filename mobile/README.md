@@ -247,13 +247,13 @@ the plugin would switch the whole app to Automatic to show it, and
 
 **Handoff.** `src/launch/splash.ts` holds the native splash until
 `LaunchHandoff` has drawn the same image in the same place, then hides it (no
-seam). A 1pt bronze rule draws out under the wordmark and the veil fades as
-soon as the first screen (Today, or the tour) has rendered: no earlier than
-260ms, no later than 760ms, with a 440ms fade, so at most 1.2s. Content is
-mounted and touchable under it from the first frame; the veil takes no
-touches and is hidden from VoiceOver. Reduce Motion: no rule, a 240ms fade.
-A failsafe hides the native splash after 4s if the handoff never draws.
-Beats are in `src/launch/timing.ts`.
+seam). A 1pt bronze rule draws out under the wordmark as the veil fades,
+starting the moment the first screen (Today, or the tour) has rendered, with
+no minimum hold and never later than 760ms; the fade takes 440ms, so at most
+1.2s. Content is mounted and touchable under it from the first frame; the
+veil takes no touches and is hidden from VoiceOver. Reduce Motion: no rule, a
+240ms fade. A failsafe hides the native splash after 4s if the handoff never
+draws. Beats are in `src/launch/timing.ts`.
 
 **Welcome tour.** Five pages over the app (`src/onboarding/`): what OPAX is,
 Your MP, profiles, Bills and Today, Search. Each page is a scene built from
@@ -272,9 +272,13 @@ saves `opax-welcome-v1.json` in the app's documents. Account and about, About
 OPAX, Replay welcome tour closes the sheet and shows it again.
 
 **E2E flag.** Journeys start with cleared state, so e2e builds treat the tour
-as seen. The launch argument `-OPAXWelcomeTour on` (read from
-`NSUserDefaults` in e2e builds only; production and development never read
-it) restores the production behaviour. In Maestro:
+as seen. The launch argument `-OPAXWelcomeTour on` restores the production
+behaviour. Its reader (`src/onboarding/launch-flag.e2e.ts`, NSUserDefaults)
+never ships: production Metro resolves `launch-flag` to
+`launch-flag.production.ts`, the production block list refuses the e2e file,
+and `qa-static --production-bundle` and the release verifier fail if
+`OPAXWelcomeTour` appears in release JS. Development builds ignore it. Scene
+reveals wait until iOS has answered whether Reduce Motion is on. In Maestro:
 
 ```yaml
 - launchApp:

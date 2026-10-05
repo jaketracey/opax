@@ -467,6 +467,48 @@ describe('workbench exclusion', () => {
       blocked(blockList('e2e'), '/repo/mobile/src/design/text-probe.e2e.ts'),
     ).toBe(false);
   });
+  test('production blocks direct imports of the welcome tour launch argument', () => {
+    const file = '/repo/mobile/src/onboarding/launch-flag.e2e.ts';
+    expect(blocked(blockList('production'), file)).toBe(true);
+    expect(blocked(blockList('e2e'), file)).toBe(false);
+  });
+  test.each(['production', 'e2e', 'development'])(
+    '%s resolves the welcome tour launch argument at build time',
+    (variant) => {
+      const output = execFileSync(
+        process.execPath,
+        [
+          '-e',
+          `
+        const path = require('node:path');
+        const config = require('./metro.config.js');
+        const context = {
+          originModulePath: path.resolve('src/onboarding/state.ts'),
+          resolveRequest: (_context, name) => ({
+            type: 'sourceFile', filePath: path.resolve('src/onboarding', name + '.ts'),
+          }),
+        };
+        process.stdout.write(JSON.stringify(config.resolver.resolveRequest(context, './launch-flag', 'ios')));
+      `,
+        ],
+        {
+          cwd: resolve(__dirname, '..'),
+          env: { ...process.env, OPAX_VARIANT: variant },
+          encoding: 'utf8',
+        },
+      );
+      expect(JSON.parse(output)).toEqual({
+        type: 'sourceFile',
+        filePath: resolve(
+          __dirname,
+          '../src/onboarding',
+          variant === 'production'
+            ? 'launch-flag.production.ts'
+            : 'launch-flag.ts',
+        ),
+      });
+    },
+  );
   test.each(['production', 'e2e', 'development'])(
     '%s resolves text probes at build time and delegates ordinary imports',
     (variant) => {
