@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AppState, View, type LayoutChangeEvent } from 'react-native';
-import { useFocusEffect } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { File, Paths } from 'expo-file-system';
 import { GLView, type ExpoWebGLRenderingContext } from 'expo-gl';
 import {
   Gesture,
@@ -33,6 +34,10 @@ function percentile(values: number[], quantile: number) {
 }
 /** Phase-one lab only. Metro excludes both this screen and its route from production. */
 export default function MoneyMapSpike() {
+  const params = useLocalSearchParams<{
+    benchmark?: string;
+    seconds?: string;
+  }>();
   const started = useRef(0);
   const [record, setRecord] = useState<RecordResult<MoneyGraph> | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -62,6 +67,17 @@ export default function MoneyMapSpike() {
   const frames = useRef(0);
   const lastLabels = useRef(0);
   const mounted = useRef(true);
+  const inkPixels = useRef(0);
+  const orbitDuration = useRef(10000);
+  const writeMeasurement = useCallback((data: Record<string, unknown>) => {
+    try {
+      new File(Paths.cache, 'money-spike-result.json').write(
+        JSON.stringify(data),
+      );
+    } catch {
+      /* Evidence IO must not alter the renderer. */
+    }
+  }, []);
   const stop = useCallback(() => {
     if (raf.current !== null) cancelAnimationFrame(raf.current);
     raf.current = null;
@@ -70,10 +86,16 @@ export default function MoneyMapSpike() {
     (cause: unknown) => {
       stop();
       setError(cause instanceof Error ? cause.message : String(cause));
+      setReady(false);
+      writeMeasurement({
+        status: 'failed',
+        error: cause instanceof Error ? cause.message : String(cause),
+        drawnFrames: frames.current,
+      });
       engine.current?.dispose();
       engine.current = null;
     },
-    [stop],
+    [stop, writeMeasurement],
   );
   const loop = useCallback(
     function frame() {
@@ -98,22 +120,48 @@ export default function MoneyMapSpike() {
         engine.current.render(now);
         if (first.current === null) {
           const ink = engine.current.verifyPixels();
+          inkPixels.current = ink;
+          setReady(true);
           first.current = performance.now() - started.current;
           setProbe(
             `Native pixels verified: ${ink}; first frame ${first.current.toFixed(1)} ms`,
           );
         }
-        engine.current.endFrame();
+        if (frames.current === 0)
+          writeMeasurement({
+            status: 'first-frame',
+            firstFrameMs: first.current,
+            inkPixels: inkPixels.current,
+            drawnFrames: 1,
+          });
         frames.current++;
         if (run) {
           run.submit.push(performance.now() - submit);
-          if (now - run.started >= 10000) {
+          if (now - run.started >= orbitDuration.current) {
             setSummary(
               `Orbit complete: ${run.intervals.length} frames; interval median ${percentile(run.intervals, 0.5).toFixed(1)} ms, p95 ${percentile(run.intervals, 0.95).toFixed(1)} ms; JS submit median ${percentile(run.submit, 0.5).toFixed(1)} ms; first ${first.current.toFixed(1)} ms`,
             );
+            const readbackStarted = performance.now();
+            const finalInkPixels = engine.current.verifyPixels();
+            const gpuReadbackMs = performance.now() - readbackStarted;
+            writeMeasurement({
+              finalInkPixels,
+              gpuReadbackMs,
+              orbitSeconds: orbitDuration.current / 1000,
+              status: 'orbit-complete',
+              firstFrameMs: first.current,
+              inkPixels: inkPixels.current,
+              drawnFrames: frames.current,
+              orbitFrames: run.intervals.length,
+              intervalMedianMs: percentile(run.intervals, 0.5),
+              intervalP95Ms: percentile(run.intervals, 0.95),
+              jsSubmitMedianMs: percentile(run.submit, 0.5),
+              jsSubmitP95Ms: percentile(run.submit, 0.95),
+            });
             benchmark.current = null;
           }
         }
+        engine.current.endFrame();
         if (now - lastLabels.current > 200) {
           setLabels(engine.current.labels());
           lastLabels.current = now;
@@ -123,8 +171,18 @@ export default function MoneyMapSpike() {
         fail(cause);
       }
     },
-    [fail],
+    [fail, writeMeasurement],
   );
+  useEffect(() => {
+    orbitDuration.current = params.seconds === '60' ? 60000 : 10000;
+    if (ready && params.benchmark === '1')
+      benchmark.current = {
+        started: performance.now(),
+        intervals: [],
+        submit: [],
+        previous: 0,
+      };
+  }, [ready, params.benchmark, params.seconds]);
   const start = useCallback(() => {
     if (
       raf.current === null &&
@@ -238,7 +296,7 @@ export default function MoneyMapSpike() {
   };
   return (
     <Screen testID="money-spike-screen">
-      <Heading level={1}>Native money map spike</Heading>
+      <Heading level={2}>Native money map spike</Heading>
       <Text>Political donations &amp; public money map</Text>
       <Text variant="fine">
         Phase 1 · {record?.data.nodes.length ?? '…'} nodes and{' '}

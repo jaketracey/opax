@@ -8,6 +8,7 @@ import {
   EDGE_FRAGMENT_SHADER,
 } from './ported/edge-shaders';
 import type { MoneyGraph, MoneyNode } from './data';
+import { nativeWebGL2Context } from './native-context';
 
 export interface ProjectedLabel {
   id: string;
@@ -46,6 +47,14 @@ export class NativeMoneyScene {
   private height: number;
   private byId: Map<string, MoneyNode>;
   private connected = new Set<string>();
+  private colours: THREE.Color[];
+  private edgeColours: THREE.Color[];
+  private nodeColour = new THREE.Color();
+  private paperColour = new THREE.Color(SURFACE);
+  private direction = new THREE.Vector3();
+  private ribbonA = new THREE.Vector3();
+  private ribbonB = new THREE.Vector3();
+  private ribbonSide = new THREE.Vector3();
   private positions: Float32Array;
   private flowColors: Float32Array;
 
@@ -70,7 +79,7 @@ export class NativeMoneyScene {
     } as unknown as HTMLCanvasElement;
     this.renderer = new THREE.WebGLRenderer({
       canvas,
-      context: gl,
+      context: nativeWebGL2Context(gl),
       antialias: false,
       alpha: false,
     });
@@ -86,6 +95,15 @@ export class NativeMoneyScene {
     fill.position.set(-0.6, -0.35, -0.7);
     this.scene.add(hemi, key, fill);
     this.byId = new Map(graph.nodes.map((n) => [n.id, n]));
+    this.colours = graph.nodes.map(
+      (n) => new THREE.Color(n.colour ?? clusterColour(n.group).colour),
+    );
+    this.edgeColours = graph.edges.map((e) => {
+      const source = this.byId.get(e.source)!;
+      return new THREE.Color(
+        source.colour ?? clusterColour(source.group).colour,
+      );
+    });
     const groups = new Map<string, number>();
     graph.nodes.forEach((n) =>
       groups.set(n.group, (groups.get(n.group) ?? 0) + 1),
@@ -288,23 +306,21 @@ export class NativeMoneyScene {
       this.dummy.updateMatrix();
       this.matrix.copy(this.dummy.matrix);
       this.nodes.setMatrixAt(i, this.matrix);
-      const colour = new THREE.Color(
-        node.colour ?? clusterColour(node.group).colour,
-      );
+      const colour = this.nodeColour.copy(this.colours[i]!);
       if (this.selected && !this.connected.has(node.id))
-        colour.lerp(new THREE.Color(SURFACE), 0.85);
+        colour.lerp(this.paperColour, 0.85);
       this.nodes.setColorAt(i, colour);
     });
     this.nodes.instanceMatrix.needsUpdate = true;
     if (this.nodes.instanceColor) this.nodes.instanceColor.needsUpdate = true;
-    const view = this.camera.getWorldDirection(new THREE.Vector3());
+    const view = this.camera.getWorldDirection(this.direction);
     this.graph.edges.forEach((e, i) => {
       const from = this.sim.byId(e.source)!;
       const to = this.sim.byId(e.target)!;
-      const a = new THREE.Vector3(from.x, from.y, from.z);
-      const b = new THREE.Vector3(to.x, to.y, to.z);
-      const side = b
-        .clone()
+      const a = this.ribbonA.set(from.x, from.y, from.z);
+      const b = this.ribbonB.set(to.x, to.y, to.z);
+      const side = this.ribbonSide
+        .copy(b)
         .sub(a)
         .cross(view)
         .normalize()
@@ -314,28 +330,26 @@ export class NativeMoneyScene {
             Math.min(1.9, 0.2 + 0.42 * Math.log10(1 + e.total / 10000)),
           ),
         );
-      const verts = [
-        a.clone().add(side),
-        a.clone().sub(side),
-        b.clone().add(side),
-        a.clone().sub(side),
-        b.clone().sub(side),
-        b.clone().add(side),
-      ];
-      const source = this.byId.get(e.source)!;
-      const c = new THREE.Color(
-        source.colour ?? clusterColour(source.group).colour,
-      );
+      const c = this.edgeColours[i]!;
       const alpha =
         this.selected &&
         e.source !== this.selected &&
         e.target !== this.selected
           ? 0.025
           : 0.22;
-      verts.forEach((v, k) => {
-        this.positions.set([v.x, v.y, v.z], (i * 6 + k) * 3);
-        this.flowColors.set([c.r, c.g, c.b, alpha], (i * 6 + k) * 4);
-      });
+      for (let k = 0; k < 6; k++) {
+        const endpoint = k === 2 || k === 4 || k === 5 ? b : a;
+        const sign = k === 0 || k === 2 || k === 5 ? 1 : -1;
+        const offset = (i * 6 + k) * 3;
+        this.positions[offset] = endpoint.x + sign * side.x;
+        this.positions[offset + 1] = endpoint.y + sign * side.y;
+        this.positions[offset + 2] = endpoint.z + sign * side.z;
+        const colorOffset = (i * 6 + k) * 4;
+        this.flowColors[colorOffset] = c.r;
+        this.flowColors[colorOffset + 1] = c.g;
+        this.flowColors[colorOffset + 2] = c.b;
+        this.flowColors[colorOffset + 3] = alpha;
+      }
     });
     this.edges.geometry.attributes.position!.needsUpdate = true;
     this.edges.geometry.attributes.flowColor!.needsUpdate = true;
