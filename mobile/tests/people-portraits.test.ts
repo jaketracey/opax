@@ -1,8 +1,17 @@
 import { PeoplePortraits } from '../src/api/people-portraits';
-import { buildPortraitIndex } from '../src/api/portrait-index';
+import { joinPerson } from '../src/api/person-identity';
 import type { Catalogs } from '../src/api/catalogs';
 import type { PortraitCache } from '../src/api/portrait-cache';
 import { catalogs } from './pinned';
+function canonicalID(slug: string) {
+  return joinPerson(
+    slug,
+    catalogs.slugs,
+    catalogs.roster,
+    catalogs.people,
+    catalogs.manifest,
+  ).canonicalPersonId!;
+}
 function service() {
   const record = (data: unknown) => ({ data });
   const source = {
@@ -29,14 +38,13 @@ function service() {
 }
 test('portrait service resolves the same canonical route IDs and directory slugs as profiles', async () => {
   const { reader, source, cache } = service();
-  const index = buildPortraitIndex(catalogs as never);
   for (const [slug, key] of [
     ['julia-gillard', '10257'],
     ['anthony-albanese', '10007'],
     ['penny-wong', '10678'],
     ['sheena-watt', 'wd-Q100327610'],
   ]) {
-    const id = index.identities.get(slug!)!.canonicalPersonId!;
+    const id = canonicalID(slug!);
     const [bySlug, byID] = await Promise.all([
       reader.get({ slug }),
       reader.get({ slug: id }),
@@ -52,7 +60,6 @@ test('portrait service resolves the same canonical route IDs and directory slugs
 });
 test('unknown canonical IDs and withheld shared faces never reach the image cache', async () => {
   const { reader, cache } = service();
-  const index = buildPortraitIndex(catalogs as never);
   expect(
     await reader.get({ slug: 'person_unknown', name: 'Julia Gillard' }),
   ).toBeNull();
@@ -60,7 +67,7 @@ test('unknown canonical IDs and withheld shared faces never reach the image cach
     expect(await reader.get({ slug })).toBeNull();
     expect(
       await reader.get({
-        slug: index.identities.get(slug)!.canonicalPersonId!,
+        slug: canonicalID(slug),
       }),
     ).toBeNull();
   }
