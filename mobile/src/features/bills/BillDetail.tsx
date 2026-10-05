@@ -1,6 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
-import { Stack, router, useLocalSearchParams } from 'expo-router';
+import {
+  Stack,
+  router,
+  useLocalSearchParams,
+  useNavigation,
+  type NativeStackNavigationProp,
+} from 'expo-router';
 import {
   billName,
   billSentenceCase,
@@ -93,10 +99,45 @@ export default function BillDetail() {
     section?: string;
   }>();
   const scrollRef = useRef<ScrollView>(null);
+  const navigation =
+    useNavigation<
+      NativeStackNavigationProp<Record<string, object | undefined>>
+    >();
   const divisionJump = useRef(false);
+  const [entered, setEntered] = useState(false);
+  const [divisionY, setDivisionY] = useState<number | null>(null);
+  const [contentHeight, setContentHeight] = useState(0);
   useEffect(() => {
     divisionJump.current = false;
   }, [key, section]);
+  useEffect(
+    () =>
+      navigation.addListener('transitionEnd', (event) => {
+        if (!event.data.closing) setEntered(true);
+      }),
+    [navigation],
+  );
+  useEffect(() => {
+    if (
+      section !== 'divisions' ||
+      !entered ||
+      divisionY === null ||
+      contentHeight <= divisionY ||
+      divisionJump.current
+    )
+      return;
+    // iOS may reset an early scroll during the native push, or clamp it
+    // before the scroll view knows its content size. Wait for both signals.
+    const frame = requestAnimationFrame(() => {
+      if (!scrollRef.current) return;
+      scrollRef.current.scrollTo({
+        y: Math.max(0, divisionY - 16),
+        animated: false,
+      });
+      divisionJump.current = true;
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [section, entered, divisionY, contentHeight]);
   const load = useCallback(() => catalogs.billFor(String(key)), [key]);
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
   const [sponsors, setSponsors] = useState<Record<string, PersonSlug>>({});
@@ -155,6 +196,7 @@ export default function BillDetail() {
       />
       <Screen
         scrollRef={scrollRef}
+        onContentSizeChange={(_, height) => setContentHeight(height)}
         testID={view ? 'bill-screen' : 'bill-pending-screen'}
         refreshControl={
           <RefreshControl
@@ -210,18 +252,9 @@ export default function BillDetail() {
             <Summary view={view} />
             <KeyDates view={view} />
             <View
+              testID="bill-divisions-anchor"
               onLayout={(event) => {
-                if (section !== 'divisions' || divisionJump.current) return;
-                const y = event.nativeEvent.layout.y;
-                divisionJump.current = true;
-                requestAnimationFrame(() =>
-                  requestAnimationFrame(() =>
-                    scrollRef.current?.scrollTo({
-                      y: Math.max(0, y - 16),
-                      animated: false,
-                    }),
-                  ),
-                );
+                setDivisionY(event.nativeEvent.layout.y);
               }}
             >
               <Divisions view={view} />
