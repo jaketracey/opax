@@ -1,9 +1,11 @@
+import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useAccessibilitySize } from './accessibility';
 import { Icon } from './icon';
 import type { PartyStatus } from '../api/party-transforms';
 import { partyIdentity, partyText, type PartyContext } from './party';
 import { Text } from './text';
+import { nameProbeProps } from './text-probe';
 import { colors, hairline, layout, minimumTarget, spacing } from './tokens';
 
 const portraitSizes = { row: 44, profile: 88 } as const;
@@ -88,12 +90,14 @@ export function PartyLabel({
 type PersonRowParty =
   | { party?: undefined; partyStatus?: undefined; formerly?: undefined }
   | {
-      party: string | null;
+      party: string | null | undefined;
       partyStatus: PartyStatus;
       formerly?: string | null;
     };
 export type PersonRowProps = PersonRowParty & {
   name: string;
+  /** Reviewed portrait content; callers retain its credit and licence links. */
+  portrait?: ReactNode;
   /** "Member for Grayndler · NSW" or "Senator for Queensland". */
   place?: string;
   /** A date or extra line: "Sponsored travel, added 2 Sep 2026". */
@@ -101,6 +105,8 @@ export type PersonRowProps = PersonRowParty & {
   /** Present only for roster parliamentarians with a native page. */
   onPress?: () => void;
   testID?: string;
+  /** Opt in only for journeys that inspect native drawn-line bounds. */
+  testDrawnName?: boolean;
 };
 /**
  * A row for a roster parliamentarian: portrait (blank circle without one),
@@ -110,6 +116,7 @@ export type PersonRowProps = PersonRowParty & {
  */
 export function PersonRow({
   name,
+  portrait,
   party,
   partyStatus,
   formerly,
@@ -117,6 +124,7 @@ export function PersonRow({
   detail,
   onPress,
   testID,
+  testDrawnName = false,
 }: PersonRowProps) {
   const stacked = useAccessibilitySize();
   const partyContext =
@@ -134,13 +142,14 @@ export function PersonRow({
   const body = (
     <>
       <View style={[styles.personMain, stacked ? styles.personStacked : null]}>
-        <Portrait />
+        {portrait ?? <Portrait />}
         <View
           style={[styles.personText, stacked ? null : styles.personTextInline]}
         >
           <Text
             wordSafe
             variant="strong"
+            {...(testDrawnName ? nameProbeProps : {})}
             testID={testID ? `${testID}-name` : undefined}
             style={styles.personName}
           >

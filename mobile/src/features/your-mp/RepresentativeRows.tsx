@@ -37,6 +37,7 @@ export function RepresentativeRows({
         return (
           <PersonRow
             key={r.person_id}
+            testDrawnName
             testID={`${id}-${profile?.slug ?? r.person_id}`}
             name={r.person.name}
             party={profile?.party ?? r.party}

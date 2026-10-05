@@ -59,9 +59,11 @@ const config: ExpoConfig = {
       tinted: './assets/icon/icon-tinted.png',
     },
     buildNumber,
+    deploymentTarget: '18.4',
     supportsTablet: false,
     infoPlist: {
       ITSAppUsesNonExemptEncryption: false,
+      ...(variant === 'e2e' ? { OPAXVoiceFixturePort: port } : {}),
       ...(variant === 'e2e' || localDevelopment
         ? {
             NSAppTransportSecurity: {
@@ -80,8 +82,9 @@ const config: ExpoConfig = {
   },
   plugins: [
     ['expo-router', { sitemap: variant !== 'production' }],
-    ['./plugins/withSceneLifecycle.js', { ios: { deploymentTarget: '18.4' } }],
+    './plugins/withSceneLifecycle.js',
     './plugins/withNetworkPolicy.js',
+    ['./plugins/withVoiceAutolinking.js', { variant }],
   ],
   extra: {
     variant,

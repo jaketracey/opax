@@ -74,13 +74,22 @@ Design workbench) to see every component and state at the current text size.
   the word fits, never below the reader's default size, and starts again from
   full size when the text size, width or text (nested text included) changes.
   Every role's line height carries a 1/997pt nudge (`LINE_HEIGHT_NUDGE`):
-  when a text's lines add up exactly to the pixel grid, TextKit can drop the
-  last line and draw the one before it clipped. Don't set your own
-  `lineHeight` on `Text`; pick a role.
-  Word-safe text also reserves one whole point beyond its first measured height:
-  Yoga can round the frame below TextKit's fractional line height and drop the
-  final wrapped line on the iPhone 16e. This is a measured minimum, never a
-  height or line cap, and resets when the text size or content changes.
+  it keeps RN's ceiled text measurement off exact pixel boundaries. Yoga can
+  still round the final frame below that measurement, so every content Text
+  reserves a stable `ceil(naturalHeight) + 1pt` floor, including plain text.
+  The nudge protects measurement; the floor protects drawing. Don't set your
+  own `lineHeight` on `Text`; pick a role. The floor is never a height or line
+  cap, and resets on text size, content and actual container-width changes.
+  A width change removes the old floor and reads the committed native frame,
+  even when its dimensions stay unchanged and no new layout event fires.
+  At standard size this adds 1–1.67pt and one settling render. Repeated layouts
+  dispatch no state updates, and plain text needs no native line measurement:
+  an initial empty line event is suppressed by RN, so relying on it would miss
+  completely vanished text. E2E representative names
+  expose `drawn-complete-<lineCount>` only when all native line text and bounds
+  fit the final frame. Metro substitutes a no-op hook and empty prop factory
+  in production and blocks the e2e implementation, so its diagnostic code
+  and strings do not ship; production names retain their original IDs.
 - `Heading`: a VoiceOver header. `level` 1 (page), 2 (section), 3 (subsection).
   Always word-safe, so "representation" never breaks at AX5. Root screens take
   their title from the native large title instead.
@@ -188,7 +197,7 @@ image sources, which the transport gate checks.
   You"). `kind="record"` for a stable page for this record;
   `kind="register"` for a register's home or search page, with the ID in
   `record` ("AusTender register · record CN3407266"). E2E builds show the
-  destination in an alert instead of opening a browser.
+  destination in a scrollable local view instead of opening a browser.
 - `OpaxWebLink`: a web-only OPAX page (community, the money map, Methods),
   opened in Safari with the "Opens on opax.com.au" cue. `canonicalUrl` checks
   the path raw, parses it and requires the configured origin and the same
@@ -250,6 +259,11 @@ Copy is in `stateCopy` (IOS-UX section 4, "States, everywhere").
   caveat are shown verbatim and in full; never shorten, reorder or reword
   them. Reading order: title, each metric as "label, value", the caveats, then
   the evidence links.
+
+Person rows keep their `-name` testID after layout. RepresentativeRows opts
+into `testDrawnName` for journeys 07 and 09, which require the e2e-only
+`-drawn-complete-N` diagnostic ID. Other callers, including Search, retain the
+stable name ID; production excludes the probe implementation in both cases.
 
 ## Navigation chrome (`src/navigation/`)
 

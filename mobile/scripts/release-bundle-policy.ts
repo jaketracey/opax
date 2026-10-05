@@ -16,3 +16,18 @@ export function assertNoFixtureOrigin(body: Buffer, fixturePort: string) {
     'Production bundle contains the configured fixture port',
   );
 }
+
+export function assertNoVoiceFixtures(body: Buffer) {
+  for (const marker of [
+    'voice-bridge-test',
+    'Voice bridge fixture workbench',
+    'happy@example.invalid',
+    '/__fixture/voice',
+    'Fixture code:',
+    'NSMicrophoneUsageDescription',
+  ])
+    assert(
+      !body.includes(Buffer.from(marker)),
+      `Production bundle contains voice test material: ${marker}`,
+    );
+}

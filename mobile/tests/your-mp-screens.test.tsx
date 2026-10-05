@@ -1,3 +1,4 @@
+import * as format from '../src/design/format';
 import { act, type ReactElement } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { Image, RefreshControl } from 'react-native';
@@ -686,4 +687,43 @@ test('missing register ties do not refer to an existing file; expense copy uses 
   expect(text(a)).not.toContain('A bar past its tick');
   expect(text(a)).toContain('divided by its covered calendar years');
   await act(async () => a.unmount());
+});
+
+test('closed salary disclosure does no row formatting; opening renders every retained year', async () => {
+  const person = c.joinPerson(
+    'anthony-albanese',
+    slugs,
+    roster,
+    people,
+    manifest,
+  );
+  const profile = c.profileFor(person.canonicalPersonId!, catalogs);
+  mock.person.mockResolvedValue(result(person));
+  mock.profileFor.mockResolvedValue(profile);
+  const years = jest.spyOn(format, 'formatFinancialYear');
+  let r: TestRenderer.ReactTestRenderer | undefined;
+  try {
+    r = await render(<Person />);
+    expect(years).not.toHaveBeenCalled();
+    const toggle = () =>
+      r!.root
+        .findAllByType(Button)
+        .find((n) => n.props.testID === 'person-pay-years')!
+        .props.onPress();
+    await act(async () => toggle());
+    expect(years).toHaveBeenCalledTimes(
+      profile.blocks.pay.data!.person.by_year.length,
+    );
+    expect(text(r)).toContain(
+      format.formatFinancialYear(
+        profile.blocks.pay.data!.person.by_year[0]![0],
+      ),
+    );
+    years.mockClear();
+    await act(async () => toggle());
+    expect(years).not.toHaveBeenCalled();
+  } finally {
+    if (r) await act(async () => r!.unmount());
+    years.mockRestore();
+  }
 });

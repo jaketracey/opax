@@ -1,6 +1,22 @@
 # OPAX voice core
 
-Swift core only, in its own `OpaxVoiceCore` module. The W5 deletion extension is implemented against the Worker contract read from fetched `origin/main` at `46133089`. No production or staging endpoint is contacted by this lane.
+Swift core in its own `OpaxVoiceCore` module, with a local Expo wrapper. The W5 deletion extension is implemented against the Worker contract read from fetched `origin/main` at `46133089`. No production or staging endpoint is contacted by this lane.
+
+## Expo wrapper
+
+`expo-module.config.json` autolinks two separate static pods: `ios/OpaxVoiceCore.podspec`
+compiles only the core sources with Swift 6, and `ios/OpaxVoice.podspec` compiles
+`ios/Bridge/` with dependencies on ExpoModulesCore and OpaxVoiceCore. Tests and
+Package.swift are excluded from pod compilation. One `VoiceController` actor owns
+one HTTP client and one `VoiceCallController`; one cancellable Expo task consumes
+its sanitised event stream. `VoiceBridgeValue` explicitly projects each approved
+field; it never encodes arbitrary objects or response bodies.
+
+The e2e Release pods compile `OPAX_VOICE_E2E`, retaining the synthetic engine and
+numeric-loopback execution guard without compiling the app as DEBUG. Production
+pods omit that condition and keep consent denied until the UI lane implements it.
+The JS contract and UI handoff are in [src/voice/README.md](../../src/voice/README.md).
+No microphone purpose string or real permission request is enabled by this lane.
 
 ## Layout and architecture
 
@@ -161,7 +177,7 @@ The Expo wrapper podspec lives in `ios/`, so its own files use a glob relative t
 
 Construct one controller, one event consumer and one native engine/socket. Use the same RoutePolicy for KeychainCredentialStore, authenticated session and relay factory. Expose status using `bridgeValue`, plus sanitized community/challenge/sign-in results; never forward SessionCredential, Reservation, raw requests/errors, transports or audio. Forward only VoiceEvent state, mode, playback, transcript, validated sources, time, sanitized status and enum errors. Display a clear notice on `.playback(.truncated)`. Expose controller requestDeletionCode/deleteAccount with only their challenge/boolean results, collect the fresh deletion code, and clear app-owned account caches on success or confirmed sign-out. Call shutdown on module destruction. Consent UI/storage belongs to the wrapper; withdrawing consent also ends the call.
 
-Add NSMicrophoneUsageDescription through app configuration, no UIBackgroundModes; use development builds rather than Expo Go. DEBUG fixture construction selects synthetic audio, fake permission/session, in-memory credentials and guarded loopback transports. Production has no fixture entry points or origins. The native policy is pinned to the production origin; Jake's manual staging build needs a separately reviewed origin policy and separate Keychain namespace, never a JS-supplied origin.
+Add NSMicrophoneUsageDescription through app configuration only after the voice UI ships its consent flow; this lane omits it and denies production consent/permission. Do not add UIBackgroundModes; use native builds rather than Expo Go. The compiled e2e simulator fixture selects synthetic audio, fake permission/session, native in-memory credentials and guarded loopback transports. Production has no fixture entry points or origins. The native policy is pinned to the production origin; Jake's manual staging build needs a separately reviewed origin policy and separate Keychain namespace, never a JS-supplied origin.
 
 ## Remaining integration checks
 

@@ -18,11 +18,22 @@ test('the matching record can be read in full and collapsed without changing it'
       expect(button.props.label).toBe(label);
       button.props.onPress();
     });
+  const state = () =>
+    renderer.root.find(
+      (n) =>
+        typeof n.type !== 'string' && n.props.accessibilityRole === 'button',
+    ).props;
+  expect(state()).toMatchObject({
+    accessibilityRole: 'button',
+    accessibilityState: { expanded: false },
+  });
   expect(text()).toContain('First source sentence.');
   expect(text()).not.toContain(snippet);
   press('Read matching record');
+  expect(state().accessibilityState.expanded).toBe(true);
   expect(text()).toContain(snippet);
   press('Hide matching record');
+  expect(state().accessibilityState.expanded).toBe(false);
   expect(text()).toContain('First source sentence.');
   expect(text()).not.toContain(snippet);
 });

@@ -67,13 +67,15 @@ env:
       # times) until the app reports the cancellation. The last capture
       # shows the sheet with its metadata preview. The cancellation and
       # return-to-app assertions below remain mandatory in both modes.
+      - evalScript: ${output.shareAttempt = 0}
       - repeat:
           while:
             notVisible: Native share cancelled
           times: 5
           commands:
             - waitForAnimationToEnd
-            - takeScreenshot: ${EVIDENCE}/07-native-share-sheet
+            - evalScript: ${output.shareAttempt = output.shareAttempt + 1}
+            - takeScreenshot: ${EVIDENCE}/07-native-share-sheet-${output.shareAttempt}
             - swipe:
                 start: 50%, 50%
                 end: 50%, 95%

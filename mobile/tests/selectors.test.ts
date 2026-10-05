@@ -530,3 +530,18 @@ test('bill search covers short titles, sponsor, portfolio, status and year; draf
       .data!.find((b) => b.key === draft.key)?.introducedLabel,
   ).toBe('Released');
 });
+
+test('folded name indexes preserve source order, aliases and ambiguity across snapshot changes', () => {
+  const index = { 'O’Neill': 'a', Other: 'x', "O'Neill": 'b', Albanese: 'c' };
+  expect(d.nameValues(index, ['Albanese', "O'Neill", "O'Neill"])).toEqual([
+    'a',
+    'b',
+    'c',
+  ]);
+  expect(d.nameValues(index, ['O’Neill'])).toEqual(['a', 'b']);
+  expect(d.nameValues({ ...index, 'O.Neill': 'd' }, ["O'Neill"])).toEqual([
+    'a',
+    'b',
+    'd',
+  ]);
+});

@@ -1,0 +1,38 @@
+appId: au.com.opax.app
+---
+- scrollUntilVisible:
+    element:
+      id: voice-email
+    direction: UP
+    centerElement: true
+- tapOn:
+    id: voice-email
+- eraseText: 100
+- inputText: ${VOICE_EMAIL}
+- runFlow: voice-dismiss-keyboard.yaml
+- scrollUntilVisible:
+    element:
+      id: voice-request-code
+    centerElement: true
+- tapOn:
+    id: voice-request-code
+- scrollUntilVisible:
+    element:
+      id: voice-code
+    centerElement: true
+- tapOn:
+    id: voice-code
+- eraseText: 100
+- inputText: '01234567'
+- runFlow: voice-dismiss-keyboard.yaml
+- scrollUntilVisible:
+    element:
+      id: voice-consume-code
+    centerElement: true
+- tapOn:
+    id: voice-consume-code
+- scrollUntilVisible:
+    element:
+      id: voice-auth
+    direction: UP
+- assertVisible: Signed in

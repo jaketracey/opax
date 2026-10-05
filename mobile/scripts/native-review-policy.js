@@ -3,7 +3,6 @@
 const reviewedNativeModules = Object.freeze({
   'modules/opax-share/index.ts': Object.freeze(['OpaxShare']),
   'modules/opax-voice/index.ts': Object.freeze(['OpaxVoice']),
-  'modules/opax-voice/src/OpaxVoiceModule.ts': Object.freeze(['OpaxVoice']),
 });
 
 // The voice core's URLSession transports are reviewed exceptions. Its two test
@@ -11,6 +10,9 @@ const reviewedNativeModules = Object.freeze({
 // Share metadata has NO Swift networking exception (including link previews).
 const voiceRoot = 'modules/opax-voice/ios/OpaxVoiceCore/';
 const reviewedSwiftNetworking = Object.freeze({
+  'modules/opax-voice/ios/Bridge/VoiceController.swift': [
+    'URLSessionRelayFactory',
+  ],
   [`${voiceRoot}Sources/OpaxVoiceCore/CallController.swift`]: ['URLSession'],
   [`${voiceRoot}Sources/OpaxVoiceCore/HTTPClient.swift`]: ['URLSession'],
   [`${voiceRoot}Sources/OpaxVoiceCore/Relay.swift`]: ['URLSession'],

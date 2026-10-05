@@ -12,6 +12,8 @@ export const variant: Variant = known.includes(String(extra?.variant))
   ? (extra!.variant as Variant)
   : 'e2e';
 export const isE2E = variant === 'e2e';
+// Only an explicitly configured e2e bundle contains the local preview route.
+export const hasSourcePreview = extra?.variant === 'e2e';
 export const isProduction = variant === 'production';
 
 /**

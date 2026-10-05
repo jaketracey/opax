@@ -11,6 +11,10 @@ name: 12 Local suggestions and the four catalog search kinds
 - tapOn:
     id: search-input
 - inputText: Anthony Albanese
+# Swipe on the content: iOS visibility checks can see rows behind the keyboard.
+- swipe:
+    start: 90%, 40%
+    end: 90%, 20%
 - scrollUntilVisible:
     element:
       id: search-suggestion-person-.*
@@ -44,7 +48,7 @@ name: 12 Local suggestions and the four catalog search kinds
       id: search-result-anthony-albanese
     direction: DOWN
     timeout: 90000
-    visibilityPercentage: 1
+    visibilityPercentage: 80
     centerElement: true
     speed: 20
 - takeScreenshot: ${EVIDENCE}/12-people
@@ -53,6 +57,7 @@ name: 12 Local suggestions and the four catalog search kinds
       id: search-kind-menu
     timeout: 90000
     direction: UP
+    centerElement: true
 - tapOn:
     id: search-kind-menu
 - takeScreenshot: ${EVIDENCE}/12-kind-menu
@@ -77,7 +82,7 @@ name: 12 Local suggestions and the four catalog search kinds
       id: search-result-anthony-albanese
     direction: DOWN
     timeout: 90000
-    visibilityPercentage: 1
+    visibilityPercentage: 80
     centerElement: true
     speed: 20
 - takeScreenshot: ${EVIDENCE}/12-interests
@@ -86,6 +91,7 @@ name: 12 Local suggestions and the four catalog search kinds
       id: search-kind-menu
     timeout: 90000
     direction: UP
+    centerElement: true
 - tapOn:
     id: search-kind-menu
 - tapOn: Pay
@@ -109,7 +115,7 @@ name: 12 Local suggestions and the four catalog search kinds
       id: search-result-anthony-albanese
     direction: DOWN
     timeout: 90000
-    visibilityPercentage: 1
+    visibilityPercentage: 80
     centerElement: true
     speed: 20
 - takeScreenshot: ${EVIDENCE}/12-pay
@@ -123,12 +129,21 @@ name: 12 Local suggestions and the four catalog search kinds
 - waitForAnimationToEnd
 - tapOn: Read matching record
 - takeScreenshot: ${EVIDENCE}/12-pay-expanded
+# Expanding removes the preview above the toggle, moving it up at AX5.
+- scrollUntilVisible:
+    element:
+      text: Hide matching record
+    timeout: 90000
+    centerElement: true
+    direction: UP
+- takeScreenshot: ${EVIDENCE}/12-pay-expanded-toggle
 - tapOn: Hide matching record
 - scrollUntilVisible:
     element:
       id: search-kind-menu
     timeout: 90000
     direction: UP
+    centerElement: true
 - tapOn:
     id: search-kind-menu
 - tapOn: Expenses
@@ -149,16 +164,16 @@ name: 12 Local suggestions and the four catalog search kinds
     timeout: 30000
 - scrollUntilVisible:
     element:
-      id: search-result-anthony-albanese
+      id: search-result-anthony-albanese-name
     direction: DOWN
     timeout: 90000
-    visibilityPercentage: 1
     centerElement: true
     speed: 20
+# Target the name so the tap stays visible at both default size and AX5.
 - takeScreenshot: ${EVIDENCE}/12-expenses
 - waitForAnimationToEnd
 - tapOn:
-    id: search-result-anthony-albanese
+    id: search-result-anthony-albanese-name
 - extendedWaitUntil:
     visible:
       id: person-screen-title
