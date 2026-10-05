@@ -4,7 +4,8 @@ name: 28 Welcome tour on first launch, Skip, finish into the seat chooser, no re
 # E2E builds treat the tour as seen, so other journeys are never blocked.
 # The launch argument -OPAXWelcomeTour on asks for the production behaviour.
 # Quote "on": unquoted it is a YAML boolean. Pages are matched by their
-# position label ("Page 2 of 5"), which stays on screen at every text size.
+# position label ("Page 2 of 5"), which stays on screen at every text size;
+# at AX5 a page's words can outgrow the screen, so match a tenth of them.
 - launchApp:
     clearState: true
     arguments:
@@ -12,20 +13,33 @@ name: 28 Welcome tour on first launch, Skip, finish into the seat chooser, no re
 - extendedWaitUntil:
     visible: Page 1 of 5
     timeout: 60000
-- assertVisible:
-    id: tour-page-about
+- scrollUntilVisible:
+    element:
+      id: tour-page-about
+    visibilityPercentage: 10
+    timeout: 30000
 - assertVisible:
     id: tour-skip
+# The masthead is one element, "OPAX".
+- assertVisible:
+    id: tour-masthead
+    text: OPAX
 - takeScreenshot: ${EVIDENCE}/28-page-1
 - tapOn:
     id: tour-next
 - extendedWaitUntil:
     visible: Page 2 of 5
     timeout: 10000
-- assertVisible:
-    id: tour-page-your-mp
+- scrollUntilVisible:
+    element:
+      id: tour-page-your-mp
+    visibilityPercentage: 10
+    timeout: 30000
 - assertVisible:
     id: tour-skip
+# Scenes are pictures: their sample words never reach VoiceOver.
+- assertNotVisible: Example electorate
+- assertNotVisible: Your member
 - takeScreenshot: ${EVIDENCE}/28-page-2
 # The pager follows a swipe as well as Next.
 - swipe:
@@ -33,8 +47,11 @@ name: 28 Welcome tour on first launch, Skip, finish into the seat chooser, no re
 - extendedWaitUntil:
     visible: Page 3 of 5
     timeout: 10000
-- assertVisible:
-    id: tour-page-profiles
+- scrollUntilVisible:
+    element:
+      id: tour-page-profiles
+    visibilityPercentage: 10
+    timeout: 30000
 - assertVisible:
     id: tour-skip
 - takeScreenshot: ${EVIDENCE}/28-page-3
@@ -43,16 +60,22 @@ name: 28 Welcome tour on first launch, Skip, finish into the seat chooser, no re
 - extendedWaitUntil:
     visible: Page 4 of 5
     timeout: 10000
-- assertVisible:
-    id: tour-page-bills-today
+- scrollUntilVisible:
+    element:
+      id: tour-page-bills-today
+    visibilityPercentage: 10
+    timeout: 30000
 - takeScreenshot: ${EVIDENCE}/28-page-4
 - tapOn:
     id: tour-next
 - extendedWaitUntil:
     visible: Page 5 of 5
     timeout: 10000
-- assertVisible:
-    id: tour-page-search
+- scrollUntilVisible:
+    element:
+      id: tour-page-search
+    visibilityPercentage: 10
+    timeout: 30000
 - assertVisible:
     id: tour-skip
 - assertNotVisible:
@@ -96,8 +119,11 @@ name: 28 Welcome tour on first launch, Skip, finish into the seat chooser, no re
 - extendedWaitUntil:
     visible: Page 1 of 5
     timeout: 30000
-- assertVisible:
-    id: tour-page-about
+- scrollUntilVisible:
+    element:
+      id: tour-page-about
+    visibilityPercentage: 10
+    timeout: 30000
 - takeScreenshot: ${EVIDENCE}/28-replay
 - tapOn:
     id: tour-skip
