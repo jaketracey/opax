@@ -3,6 +3,13 @@ name: Cached electorate outline without a fixture or tiles
 ---
 - launchApp
 - openLink: opax://electorate/el_5d600e7f6dca5b72ae04d686
+- runFlow:
+    when:
+      visible:
+        text: Open
+    commands:
+      - tapOn:
+          text: Open
 - scrollUntilVisible:
     element:
       id: electorate-outline-drawn-pixels-[1-9][0-9]*
