@@ -5,6 +5,10 @@ name: 12 Search keyboard keeps the submit target and delivers a single tap
 # Transients are checked separately from the fixture probe (250 ms samples).
 - launchApp:
     clearState: true
+- extendedWaitUntil:
+    visible:
+      id: today-screen-message
+    timeout: 20000
 - waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/12-keyboard-cold-today
 - copyTextFrom:
