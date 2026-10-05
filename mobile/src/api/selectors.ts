@@ -190,12 +190,23 @@ export interface ProfileCatalogs {
   photoPeople?: PhotoPeople;
   photoCredits?: PhotoCredits;
 }
+export function fullPortraitName(name: string): boolean {
+  const words = name.trim().split(/\s+/);
+  return (
+    words.length >= 2 &&
+    /^[\p{L}][\p{L}'’ʼ-]+$/u.test(words[0]!) &&
+    words[0]!.replace(/[^\p{L}]/gu, '').length >= 2
+  );
+}
 const photoPolicy = 'https://www.aph.gov.au/Help/Disclaimer_Privacy_Copyright';
 export function portraitFor(
   names: string[],
   people: PhotoPeople,
   credits: PhotoCredits,
+  id?: string,
 ) {
+  names = names.filter(fullPortraitName);
+  if (!names.length) return null;
   const exact = names.flatMap((name) => {
     const key = name.trim().toLowerCase();
     return Object.hasOwn(people, key) ? [people[key]!] : [];
@@ -203,29 +214,32 @@ export function portraitFor(
   // Distinct exact spellings can refer to distinct photos. A folded spelling
   // is only evidence when none of the supplied full names has an exact key.
   const keys = [...new Set(exact.length ? exact : nameValues(people, names))];
-  if (keys.length > 1)
+  const official =
+    id &&
+    /^\d+$/.test(id) &&
+    Object.values(people).includes(id as import('./ids').PortraitKey);
+  if (keys.length > 1 && !official)
     throw new ApiError('invalid-data', 'The portrait identity needs review.');
-  const key = keys[0];
+  const key = official ? (id as import('./ids').PortraitKey) : keys[0];
+  if (id && key && /^\d+$/.test(key) && key !== id) return null;
   if (!key) return null;
   if (/^\d+$/.test(key))
     return {
       key,
       path: `/photos/${key}.webp`,
-      credit: 'Parliament of Australia, via OpenAustralia',
+      credit: 'Official portrait',
       licence: 'CC BY-NC-ND 4.0',
       licenceURL: 'https://creativecommons.org/licenses/by-nc-nd/4.0/',
       sourceURL: photoPolicy,
       attribution: '',
-      display: 'review-required' as const,
+      display: 'website-file' as const,
       notice:
         'Official portrait: native display, offline copies and further crops need review against the non-commercial, no-derivatives terms.',
     };
   const c = credits[key];
   if (!c) return null;
-  // Unreviewed/bare attribution/GFDL/free-use licences never silently become
-  // permission. Commons CC BY/SA, CC0 and public-domain notices are exposed.
-  const allowed =
-    /^(?:CC BY(?:-SA)? [234]\.\d(?: au)?|CC0|Public domain)$/i.test(c.licence);
+  // Preserve the web's per-file terms; app-distribution rights remain decision 13.
+
   return {
     key,
     path: `/photos/${key}.webp`,
@@ -234,7 +248,7 @@ export function portraitFor(
     licenceURL: c.licence_url || c.page,
     sourceURL: c.page,
     attribution: c.attribution,
-    display: allowed ? ('permitted' as const) : ('review-required' as const),
+    display: 'website-file' as const,
     notice: /BY-SA/.test(c.licence)
       ? 'The existing crop is offered under the same share-alike licence. Preserve attribution and licence links.'
       : 'Preserve attribution and licence links; use the existing portrait without a new crop.',
@@ -323,6 +337,7 @@ export function profileFor(id: PersonId, catalogs: ProfileCatalogs) {
     canonicalPersonId: p.person_id,
     rosterPersonId: p.legacy_person_id ?? row?.pid,
     legacyPersonId: numericPersonId(p.legacy_person_id, row),
+    rosterRow: row,
     ...personPartyFor(seats, row, namedRow),
     seats,
     sources: manifest.sources.filter((s) => p.sources.includes(s.source_id)),
@@ -447,7 +462,12 @@ export function profileFor(id: PersonId, catalogs: ProfileCatalogs) {
   try {
     portrait =
       catalogs.photoPeople && catalogs.photoCredits
-        ? portraitFor(names, catalogs.photoPeople, catalogs.photoCredits)
+        ? portraitFor(
+            names,
+            catalogs.photoPeople,
+            catalogs.photoCredits,
+            identity.legacyPersonId,
+          )
         : null;
   } catch {
     fail('portrait', 'The portrait identity needs review.');
@@ -633,6 +653,7 @@ export function recentDeclarationsFor(
             [item.name, ...(row ? [row.name] : [])],
             catalogs.photoPeople,
             catalogs.photoCredits,
+            row?.pid,
           );
         } catch {
           /* Ambiguous photo identities keep the blank circle. */

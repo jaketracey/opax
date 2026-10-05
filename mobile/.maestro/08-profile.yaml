@@ -6,6 +6,18 @@ name: 08 Independent profile blocks, current senator, former member and local sh
     env:
       NAME: Anthony Albanese
       SLUG: anthony-albanese
+- extendedWaitUntil:
+    visible:
+      id: person-portrait
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/08-official-portrait
+- scrollUntilVisible:
+    element:
+      id: person-portrait-attribution
+    centerElement: true
+    timeout: 300000
+- assertVisible: Official portrait.*CC BY-NC-ND 4.0.*
+- takeScreenshot: ${EVIDENCE}/08-official-credit
 - runFlow:
     file: review-pages.yaml
     env:
@@ -63,7 +75,14 @@ name: 08 Independent profile blocks, current senator, former member and local sh
       id: person-portrait
     direction: UP
     timeout: 300000
-- takeScreenshot: ${EVIDENCE}/08-permitted-portrait
+- takeScreenshot: ${EVIDENCE}/08-commons-portrait
+- scrollUntilVisible:
+    element:
+      id: person-portrait-attribution
+    centerElement: true
+    timeout: 300000
+- assertVisible: Gabagool2005.*CC0.*Wikimedia Commons.*
+- takeScreenshot: ${EVIDENCE}/08-commons-credit
 - runFlow:
     file: review-pages.yaml
     env:
@@ -79,3 +98,16 @@ name: 08 Independent profile blocks, current senator, former member and local sh
     env:
       END: person-end
       PREFIX: 08-former
+
+- runFlow:
+    file: 08-open-profile.yaml
+    env:
+      NAME: Madonna Jarrett
+      SLUG: madonna-jarrett
+- extendedWaitUntil:
+    visible:
+      id: person-portrait-blank
+    timeout: 30000
+- assertNotVisible:
+    id: person-portrait
+- takeScreenshot: ${EVIDENCE}/08-no-portrait

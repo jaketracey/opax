@@ -9,17 +9,15 @@ import {
   recentBillsFor,
   suggestionProvenanceFor,
 } from '../src/api/catalogs';
-import {
-  PersonRow,
-  Portrait,
-  SourceLink,
-  Text,
-} from '../src/design/primitives';
+import { PersonRow, Portrait, SourceLink } from '../src/design/primitives';
 import { TodayDeclaration } from '../src/features/today/TodayDeclaration';
 import { formatDate } from '../src/design/format';
+jest.mock('../src/api/runtime', () => ({
+  portraits: { get: jest.fn(async () => null) },
+}));
 
 jest.mock('../src/api/image-policy', () => ({
-  remoteImageURI: (path: string) => `http://127.0.0.1:8918${path}`,
+  localImageURI: (uri: string) => uri,
 }));
 const recent = decodeRecentInterests(pinned('/interests/recent.json'));
 const items = recentDeclarationsFor(recent, 300, catalogs).data!;
@@ -71,62 +69,14 @@ test('all 176 pinned House declarations name the Members register', () => {
   ).toBe(true);
   act(() => renderer.unmount());
 });
-test('the default six declarations with unreviewed APH rights show blank circles and request no image', () => {
+test('website portraits retain licence facts while unresolved local bytes keep the blank fallback', () => {
   for (const item of items.slice(0, 6)) {
-    expect(item.portrait?.display).toBe('review-required');
+    expect(item.portrait?.display).toBe('website-file');
     const renderer = render(item);
     expect(renderer.root.findAllByType(Image)).toHaveLength(0);
     expect(renderer.root.findAllByType(Portrait)).toHaveLength(1);
     act(() => renderer.unmount());
   }
-});
-test('a permitted existing portrait keeps its credit and licence, with a blank fallback on image failure', () => {
-  const item = items.find((i) => i.portrait?.display === 'permitted')!;
-  expect(item).toBeDefined();
-  const renderer = render(item);
-  const image = renderer.root.findByType(Image);
-  expect(image.props.source.uri).toBe(
-    `http://127.0.0.1:8918${item.portrait!.path}`,
-  );
-  expect(image.props.resizeMode).toBe('contain');
-  expect(image.props.accessibilityElementsHidden).toBe(true);
-  const links = renderer.root.findAllByType(SourceLink);
-  expect(
-    links.some(
-      (l) =>
-        l.props.citation === 'Portrait credit' &&
-        l.props.url === item.portrait!.sourceURL,
-    ),
-  ).toBe(true);
-  expect(
-    links.some(
-      (l) =>
-        l.props.citation === 'Portrait licence' &&
-        l.props.url ===
-          (item.portrait!.licenceURL.startsWith('https:')
-            ? item.portrait!.licenceURL
-            : item.portrait!.sourceURL),
-    ),
-  ).toBe(true);
-  expect(
-    renderer.root
-      .findAllByType(Text)
-      .some((t) => t.props.children === item.portrait!.notice),
-  ).toBe(true);
-  act(() => image.props.onError());
-  expect(renderer.root.findAllByType(Image)).toHaveLength(0);
-  expect(renderer.root.findAllByType(Portrait)).toHaveLength(1);
-  expect(
-    renderer.root
-      .findAllByType(SourceLink)
-      .some((l) => l.props.citation.startsWith('Portrait')),
-  ).toBe(false);
-  expect(
-    renderer.root
-      .findAllByType(Text)
-      .some((t) => String(t.props.children).includes('could not be loaded')),
-  ).toBe(true);
-  act(() => renderer.unmount());
 });
 test('conflicting roster or photo observations never choose an invented party or portrait', () => {
   const item = recent.items[0]!;

@@ -238,18 +238,18 @@ explicit supported catalog kind **other than bill**. Bills use static JSON.
 Never call Ask, `/api/search` (even keyword), summaries, follow-ups, journey
 stories, briefs, positions, `/og/*`, `/mcp`, resources, topics or any model-backed
 route. Search kinds are only `person`, `interest`, `pay` and `expense`.
-Remote Image URIs must directly call the imported `remoteImageURI` helper in
-`src/api/image-policy.ts`: only `/photos/<catalog-id>.webp` on the configured
-origin is allowed. Local `require()` images are allowed. Photo-map decoding and
-fixture portrait pins belong to the catalog/portrait lanes; do not widen the image
-policy for arbitrary URLs. On every JSX tag, `source` is reserved for images; use
-`citation` for text labels. Font maps may use computed family names, but every
-value must be a bundled literal `require()` asset. JS and TS source extensions are
-all scanned. Raw fetch, XHR, WebSocket, EventSource, computed global access,
-file-system downloads and WebView transports fail lint and static checks. Unknown
-routes throw **before** cache lookup or networking. Redirects and cross-origin
-requests fail closed. Transport belongs exclusively to the API
-client; ESLint and the static AST scan enforce this.
+Native Image URIs must directly call imported `localImageURI` from
+`src/api/image-policy.ts`; only files inside the configured API origin's
+portrait cache pass. `ApiClient.getPortrait` permits GET of
+`/photos/<numeric-person-id|wd-QID>.webp` only (strict positive, bounded keys),
+checks MIME, redirects, actual/declared 64 KiB limit and the 200×200 WebP frame.
+The exact map and credits routes have 64 KiB and 256 KiB body limits.
+The cache deduplicates keys, limits concurrency to three and disk usage to
+12 MiB/1,024 files, and retains valid files offline. Tests use only immutable,
+hash-pinned map, credits and selected website images; a reviewed image absent
+from the small fixture subset returns an expected 404 and a blank fallback.
+Run `node --import tsx scripts/portrait-probe.ts` for roster coverage and
+ambiguous-name/shared-face refusals. App rights remain IOS-APP.md decision 13.
 
 Both source gates scan JS/TS in `src/` and `modules/`. `modules/*/scripts/` is Node
 tooling, exempt from app transport and origin rules but still scanned for secrets.
@@ -289,7 +289,7 @@ roster party history and seat or chamber context, including the full accessible
 label. Empty results offer one-tap searches in the other allowed kinds; electorate
 suggestions open the native electorate route. Matching-record disclosures expose
 their expanded state. Today opens with the daily edition card, then dated bill and
-declaration feeds with category and party; permitted portraits retain their credit
+declaration feeds with category and party; website portraits retain their credit
 and licence links, with blank circles for missing, unreviewed or failed images. About and
 sources pushes inside the Account sheet, with snapshot coverage, source terms,
 privacy and the build's complete font notices. Bills has a native list and detail

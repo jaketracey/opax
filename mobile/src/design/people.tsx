@@ -1,5 +1,7 @@
+import { useState } from 'react';
+import { localImageURI } from '../api/image-policy';
 import type { ReactNode } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { useAccessibilitySize } from './accessibility';
 import { Icon } from './icon';
 import { partyIdentity, partyText, type PartyContext } from './party';
@@ -9,31 +11,67 @@ import { colors, hairline, layout, minimumTarget, spacing } from './tokens';
 
 const portraitSizes = { row: 44, profile: 88 } as const;
 
-/**
- * A parliamentarian's portrait. Until a reviewed portrait path exists in the
- * API client (see src/design/README.md), every portrait is the blank circle:
- * never initials, never a remote image loaded outside the client.
- */
+/** An unchanged local portrait, or the existing blank circle. Never initials. */
 export function Portrait({
   size = 'row',
   testID,
+  localURI,
+  name,
+  official = false,
+  nameBeside = true,
 }: {
   size?: keyof typeof portraitSizes;
   testID?: string;
+  localURI?: string;
+  name?: string;
+  official?: boolean;
+  nameBeside?: boolean;
 }) {
+  const [failedURI, setFailedURI] = useState<string | null>(null);
   const dimension = portraitSizes[size];
+  let uri: string | undefined;
+  try {
+    if (localURI && localURI !== failedURI) uri = localImageURI(localURI);
+  } catch {
+    /* Blank fallback for anything outside the cache. */
+  }
+  const decorative = nameBeside || !name || !uri;
   return (
     <View
       testID={testID}
-      // A blank circle says nothing, so VoiceOver skips it; the name is beside it.
-      accessibilityElementsHidden
-      importantForAccessibility="no-hide-descendants"
+      accessibilityElementsHidden={decorative}
+      importantForAccessibility={decorative ? 'no-hide-descendants' : 'auto'}
       accessibilityIgnoresInvertColors
       style={[
         styles.portrait,
-        { width: dimension, height: dimension, borderRadius: dimension / 2 },
+        {
+          width: dimension,
+          height: dimension,
+          borderRadius: dimension / 2,
+          overflow: 'hidden',
+        },
       ]}
-    />
+    >
+      {uri ? (
+        <Image
+          source={{ uri: localImageURI(uri) }}
+          style={{ width: dimension, height: dimension }}
+          resizeMode="contain"
+          accessible={!decorative}
+          accessibilityLabel={
+            decorative
+              ? undefined
+              : `${official ? 'Official portrait' : 'Photo'} of ${name}`
+          }
+          accessibilityElementsHidden={decorative}
+          importantForAccessibility={
+            decorative ? 'no-hide-descendants' : 'auto'
+          }
+          accessibilityIgnoresInvertColors
+          onError={() => setFailedURI(uri!)}
+        />
+      ) : null}
+    </View>
   );
 }
 

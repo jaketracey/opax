@@ -1,3 +1,4 @@
+import { isPortraitPath } from './portrait-policy';
 // Public, catalog-only GETs. Adding a path requires a source/cost review and test.
 export const catalogKinds = ['person', 'interest', 'pay', 'expense'] as const;
 export type CatalogKind = (typeof catalogKinds)[number];
@@ -83,7 +84,8 @@ export function assertAllowedPath(path: string): void {
     staticPaths.has(pathname!) ||
     releasePath.test(pathname!) ||
     billPath.test(pathname!) ||
-    interestPath.test(pathname!)
+    interestPath.test(pathname!) ||
+    isPortraitPath(pathname!)
   )
     return;
   throw new Error('Route is outside the public catalog allow-list');

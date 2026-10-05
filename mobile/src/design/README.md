@@ -158,16 +158,19 @@ Design workbench) to see every component and state at the current text size.
   `party` must come with `partyCurrent` (the type enforces it). One VoiceOver
   element: "Anthony Albanese, Labor, Member for Grayndler · NSW". Pass
   `onPress` only for roster parliamentarians with a native page.
-- `Portrait`: **always the blank circle for now**, never initials. The
-  harness allow-list has no portrait path, and `<Image>` with a remote URI
-  would be transport outside the API client. **Profiles lane:** add the
-  portrait map (`/photos/people.json`) and a reviewed image route to
-  `src/api/policy.ts` with tests, fetch bytes through the client into the
-  cache, and pass a local file URI to a new `Portrait` prop; show the credit
-  ("Official portrait", CC BY-NC-ND for APH) on the profile, hide the image
-  from VoiceOver when the name is beside it (otherwise "Official portrait of
-  [name]"), and keep `accessibilityIgnoresInvertColors`. The rights review
-  (IOS-APP.md decision 13) decides whether APH portraits can be cached.
+- `Portrait`: the unchanged website 200×200 WebP, scaled into the circle,
+  or the blank fallback; never initials. `localURI` is a file in the current
+  API origin's portrait cache. Native images call `localImageURI`; remote
+  images are refused by the transport gate. `CachedPortrait` resolves through
+  `person-identity.ts`, the slug map and roster, uses full names or a resolved
+  person_id, refuses surname/initials-only matches and conflicting face owners,
+  and loads through the byte API client (three concurrent reads, one per key).
+  A portrait beside its name is hidden from VoiceOver; otherwise pass
+  `nameBeside={false}` and `name`, with `official` for APH. Both the circle and
+  image preserve `accessibilityIgnoresInvertColors`.
+  Profiles show "Official portrait", CC BY-NC-ND 4.0 and licence/source links,
+  or the web's "Photo" artist, per-file licence and Commons source link.
+  Decision 13 in IOS-APP.md remains open for app distribution and caching.
 
 ## The record
 
