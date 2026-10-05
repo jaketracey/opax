@@ -4,8 +4,10 @@
 // serves them max-age=0, must-revalidate (docs/PHOTOS.md, "Caches").
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
 import {readFile, readdir} from 'node:fs/promises';
 import {runInNewContext} from 'node:vm';
+import {MODULE_STAMPS} from '../../scripts/stamp_assets.mjs';
 
 const pub = new URL('../public/', import.meta.url);
 const IDENTITY = ['/photos/people.json', '/parliamentarians.json', '/pay.json', '/votes.json', '/expenses.json', '/interests/index.json'];
@@ -52,3 +54,32 @@ test('_headers serves each identity file for revalidation, replacing the hourly 
     assert.match(block, /! Cache-Control\n\s+Cache-Control: public, max-age=0, must-revalidate/, path);
   }
 });
+
+// A module that fetches these files itself is only as fresh as the copy of the module the browser runs: a
+// cached old quiz.js once kept showing Rex Patrick's face on Patrick Conaghan. Such modules are imported by
+// a URL carrying their content hash (scripts/stamp_assets.mjs MODULE_STAMPS), so a changed module is a URL
+// no cache holds.
+test('every module that loads identity files itself is content-stamped where it is imported', async () => {
+  const files = (await readdir(pub)).filter((f) => f.endsWith('.js'));
+  const stamped = new Set(MODULE_STAMPS.map(([, mod]) => mod));
+  const fetching = [];
+  for (const file of files) {
+    const src = await readFile(new URL(file, pub), 'utf8');
+    if (IDENTITY.some((path) => new RegExp(`\\b(?:fetch|read|getJSON|fetchJson)\\(\\s*["'\`]${path.replace(/[./]/g, '\\$&')}`).test(src))) fetching.push(file);
+  }
+  assert.deepEqual(fetching.filter((f) => f !== 'app.js' && !stamped.has(f)), [], 'stamp them in MODULE_STAMPS');
+  for (const [importer, mod] of MODULE_STAMPS) {
+    const hash = createHash('sha256').update(await readFile(new URL(mod, pub))).digest('hex').slice(0, 10);
+    let refs = 0;
+    for (const file of files.filter((f) => f !== mod)) {  // its own usage example is not an import
+      const src = await readFile(new URL(file, pub), 'utf8');
+      // an import: import("/m.js"), from '/m.js', or the explore registry's module: "/m.js" (not a doc comment)
+      for (const [, url] of src.matchAll(new RegExp(`(?:import\\(\\s*|from\\s+|module:\\s*)["'\`](/${mod.replace('.', '\\.')}[^"'\`]*)["'\`]`, 'g'))) {
+        refs++;
+        assert.equal(url, `/${mod}?v=${hash}`, `${file} imports ${mod} without its current stamp: run node scripts/stamp_assets.mjs`);
+      }
+    }
+    assert.ok(refs >= 1, `${importer} imports /${mod}`);
+  }
+});
+

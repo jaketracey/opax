@@ -173,34 +173,47 @@ with `cache: "no-cache"`, and `_headers` serves them `max-age=0, must-revalidate
 kept last release's copy under the old one-hour-plus-a-day headers ignores new headers until it
 asks again, so the fetch option is what retires it: the browser revalidates (an ETag round trip, a
 304 with no body when nothing changed) and takes the corrected file on the next page load. The
-bills already work this way. `portal/test/identity-cache.test.mjs` runs the loaders against a
-recording `fetch`, scans every module's fetches of these paths and checks the header rules; checked
-with `wrangler dev` and a headless Chrome profile primed by the release before this branch (Rex
-Patrick's face and 1,598 divisions on Patrick Conaghan, then served from disk): the next load took
-every identity file from the network and showed Pat Conaghan's face and 1,199 divisions, no face or
-votes on Graeme Campbell and Cox; the same profile with round 1's loaders kept serving the old
-files from disk (`scripts/_photos_work/qa-portrait-pairs-r2/`). Answers cached under `CACHE_EPOCH`
-(a pay ranking naming "Ian McLachlan") stay until the epoch next moves, which the nightly does only
-when the knowledge box changes; bump it with `scripts/bump_cache_epoch.py` at deploy if that
-matters.
+bills already work this way. A loader is only as fresh as the copy of its module the browser runs,
+so the three modules that fetch these files themselves (`quiz.js` and `timemachine.js`, imported by
+`app.js`, and `home-data.js`, imported by `home.js`) are imported by a URL carrying their content
+hash: `scripts/stamp_assets.mjs` writes it (`MODULE_STAMPS`) before it hashes the importer,
+`--check` fails when it is stale, and the test fails on an unversioned or stale import, or on a new
+module that fetches an identity file without being listed. Every other module takes faces and
+records from `app.js`, which is itself stamped. A cached quiz module from before this change kept
+showing Rex Patrick's face on Patrick Conaghan through a fresh page (round 3 of the review).
+`portal/test/identity-cache.test.mjs` runs the loaders against a recording `fetch`, scans every
+module's fetches of these paths and checks the header rules; checked with `wrangler dev` and a
+headless Chrome profile primed by the release before this branch (Rex Patrick's face and 1,598
+divisions on Patrick Conaghan, then served from disk): the next load took every identity file from
+the network and showed Pat Conaghan's face and 1,199 divisions, no face or votes on Graeme Campbell
+and Cox; the same profile with round 1's loaders kept serving the old files from disk
+(`scripts/_photos_work/qa-portrait-pairs-r2/`). Answers cached under `CACHE_EPOCH` (a pay ranking
+naming "Ian McLachlan") stay until the epoch next moves, which the nightly does only when the
+knowledge box changes; bump it with `scripts/bump_cache_epoch.py` at deploy if that matters.
 
 **Nightly safety net.** The roster export runs against the real database only in the weekly group
 (Sundays, step `x_people`), and the corrected roster above came from the pinned exports, so
 `export_parliamentarians.py` refuses to ship a roster that moves too far from the one the site
 ships now. `refusals(previous, new)` holds the export if any sitting member's row loses its pid,
 changes it, loses its sitting status or disappears; if more than 25 rows change `pid`, `current`,
-`party_now` or `full`; or if the row count drops. A held export prints `ROSTER HELD: <reasons>` to
-stderr and exits 3 with nothing on stdout, so `scripts/vm/export_step.sh` keeps the shipped
-`parliamentarians.json`; `weekly_refresh.sh` lists `x_people` in `STALE_OK` (logged STALE, not a
-failure) and logs a `Roster held:` line, which `nightly.sh` turns into a status warning: "the
-roster export was held and the shipped parliamentarians.json kept (review, then
-OPAX_ROSTER_ACCEPT=1): <reasons>". An election, a retirement or the first real-database run after
-this change can trip it legitimately: review the difference, then rerun on the VM with
+`party_now` or `full`; or if the row count drops. It fails closed: a baseline that is missing,
+unreadable, not JSON, or without a non-empty `people` list of named rows is a reason to hold too,
+never permission to ship (a missing or malformed baseline once let a roster with no sitting ids
+through the real wrappers). A held export prints `ROSTER HELD: <reasons>` to stderr and exits 3
+with nothing on stdout, so `scripts/vm/export_step.sh` keeps the shipped `parliamentarians.json`;
+`weekly_refresh.sh` lists `x_people` in `STALE_OK` (logged STALE, not a failure) and logs a `Roster
+held:` line, which `nightly.sh` turns into a status warning: "the roster export was held and the
+shipped parliamentarians.json kept (review, then OPAX_ROSTER_ACCEPT=1): <reasons>". An election, a
+retirement, a deliberate first export with no baseline, or the first real-database run after this
+change can trip it legitimately: review the difference, then rerun on the VM with
 `OPAX_ROSTER_ACCEPT=1 OPAX_ONLY=x_people scripts/weekly_refresh.sh weekly`. Tests:
-`scripts/test_export_parliamentarians.py` (each rule, and a real-database export whose members
-table knows nobody, which is held and shipped only with the override) and
-`scripts/vm/test_nightly.sh` (a held export is STALE with a `Roster held:` line; the night stays ok
-with the reason in its warnings).
+`scripts/test_export_parliamentarians.py` (each rule, every kind of unusable baseline, and an
+export whose members table knows nobody, held and shipped only with the override),
+`scripts/test_roster_export_wrappers.py` (the same through the real `export_step.sh` and
+`export_people.sh` with the production SQL: a good, missing, malformed or null-people baseline
+holds and keeps the file byte for byte; the override installs) and `scripts/vm/test_nightly.sh` (a
+held export is STALE with a `Roster held:` line; the night stays ok with the reason in its
+warnings).
 
 **Left open.** The five `wrong_face` files (and their JPEG twins and entries) should be deleted so
 a refresh can fetch the real portraits; 10725 will come back as Sandy Macdonald's from

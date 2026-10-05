@@ -78,9 +78,11 @@ FLOOR = 5
 
 # The safety net (docs/PHOTOS.md, "Nightly safety net"). A new export may not replace the roster the site
 # ships now if it would take a sitting member's id or seat, change the identity of more than
-# MAX_IDENTITY_CHANGES rows, or drop rows: the export exits HELD with the reasons on stderr, so
+# MAX_IDENTITY_CHANGES rows, or drop rows, and it is held just the same when the shipped roster cannot be read
+# or is not a roster (fail closed): the export exits HELD with the reasons on stderr, so
 # scripts/vm/export_step.sh keeps the shipped file and weekly_refresh.sh logs the step STALE (STALE_OK) with a
-# "Roster held:" line the nightly status repeats. OPAX_ROSTER_ACCEPT=1 ships a reviewed change anyway.
+# "Roster held:" line the nightly status repeats. OPAX_ROSTER_ACCEPT=1 ships a reviewed change, or a first
+# export with no baseline, anyway.
 PREVIOUS = os.environ.get("OPAX_ROSTER_PREVIOUS") or os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "portal", "public", "parliamentarians.json")
 IDENTITY_FIELDS = ("pid", "current", "party_now", "full")
@@ -152,13 +154,23 @@ def refusals(previous, new, max_changes=MAX_IDENTITY_CHANGES):
 
 
 def shipped_roster(path=None):
-    """The people rows of the roster the site ships now, or None when there is none to compare with."""
+    """(people rows, None) for the roster the site ships now, or (None, why) when there is no usable one.
+    A missing, unreadable or malformed baseline is a reason to hold, never permission to ship: only
+    OPAX_ROSTER_ACCEPT=1 lets an export through without one (a deliberate first run)."""
     path = path or PREVIOUS
     try:
         with open(path, encoding="utf-8") as fh:
-            return json.load(fh)["people"]
-    except (OSError, ValueError, KeyError):
-        return None
+            doc = json.load(fh)
+    except FileNotFoundError:
+        return None, f"no shipped roster at {path} to compare with"
+    except (OSError, ValueError) as err:
+        return None, f"the shipped roster at {path} cannot be read ({type(err).__name__}: {err})"
+    people = doc.get("people") if isinstance(doc, dict) else None
+    if not isinstance(people, list) or not people:
+        return None, f"the shipped roster at {path} has no people to compare with"
+    if not all(isinstance(p, dict) and isinstance(p.get("name"), str) and p["name"] for p in people):
+        return None, f"the shipped roster at {path} has rows without a name"
+    return people, None
 
 
 def main() -> None:
@@ -292,8 +304,11 @@ def main() -> None:
         },
         "people": out,
     }
-    previous = shipped_roster()
-    held = refusals(previous, out) if previous is not None and os.environ.get("OPAX_ROSTER_ACCEPT") != "1" else []
+    previous, unusable = shipped_roster()
+    if os.environ.get("OPAX_ROSTER_ACCEPT") == "1":
+        held = []
+    else:
+        held = [unusable] if unusable else refusals(previous, out)
     if held:
         print("ROSTER HELD: " + "; ".join(held), file=sys.stderr)
         print(f"[export] not shipped: {PREVIOUS} is kept. If the change is right, rerun with "

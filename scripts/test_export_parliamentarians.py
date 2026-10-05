@@ -14,10 +14,12 @@ from parli.ingest.link_speakers import build_member_lookup, match_historical_sur
 
 class MemberPartyTests(unittest.TestCase):
     def setUp(self):
-        # These exports are tiny fixtures; the safety net has its own tests below.
-        patcher = patch.object(export, 'PREVIOUS', os.path.join(tempfile.gettempdir(), 'no-shipped-roster.json'))
-        patcher.start()
-        self.addCleanup(patcher.stop)
+        # These exports are tiny fixtures with no baseline, which only the explicit override ships; the
+        # safety net has its own tests below.
+        for patcher in (patch.object(export, 'PREVIOUS', os.path.join(tempfile.gettempdir(), 'no-shipped-roster.json')),
+                        patch.dict(os.environ, {'OPAX_ROSTER_ACCEPT': '1'})):
+            patcher.start()
+            self.addCleanup(patcher.stop)
 
     def test_verified_state_roster_repairs_are_scoped_to_the_contaminated_identity(self):
         self.assertEqual(export.member_party('vic_annabelle_cleeland', 'Annabelle Cleeland', 'vic', 'vic_la', 'ALP', None), 'Nationals')
@@ -189,8 +191,10 @@ class SafetyNetTests(unittest.TestCase):
         self.assertRegex(' '.join(export.refusals(self.SHIPPED, new)), r'^26 rows change pid/current/party_now/full \(more than 25\)')
         self.assertEqual(export.refusals(self.SHIPPED, self.SHIPPED[:-1]), ['the row count drops from 34 to 33'])
 
-    def test_a_real_database_export_that_strips_ids_is_not_shipped(self):
-        # The members table the VM sees knows nobody (a bad sync, a renamed column): every pid would vanish.
+    def stripped_export(self, baseline):
+        """Run the exporter against a database whose members table knows nobody (a bad sync, a renamed
+        column: every pid would vanish), with `baseline` as the shipped roster file's bytes (None: no file).
+        Returns a function env -> (exit code, stdout, stderr)."""
         db = sqlite3.connect(':memory:')
         self.addCleanup(db.close)
         db.executescript('''
@@ -202,14 +206,16 @@ class SafetyNetTests(unittest.TestCase):
         for name, pid in [('Anthony Albanese', '10007'), ('Pat Conaghan', '10922')]:
             db.executemany('INSERT INTO speeches VALUES (?,?,?,?,?,?,?,?,?)',
                            [(name, pid, 'ALP', None, 'federal', 'representatives', '2025-03-03', None, 'x' * 250)] * 6)
-        with tempfile.NamedTemporaryFile('w', suffix='.json', delete=False) as fh:
-            json.dump({'meta': {}, 'people': [roster_row('Anthony Albanese', '10007', True),
-                                              roster_row('Pat Conaghan', '10922', True)]}, fh)
-        self.addCleanup(os.unlink, fh.name)
+        folder = tempfile.mkdtemp()
+        self.addCleanup(lambda: [os.unlink(os.path.join(folder, f)) for f in os.listdir(folder)] and os.rmdir(folder))
+        path = os.path.join(folder, 'parliamentarians.json')
+        if baseline is not None:
+            with open(path, 'wb') as fh:
+                fh.write(baseline)
 
         def run(env):
             stdout, stderr = io.StringIO(), io.StringIO()
-            with patch.object(export.sqlite3, 'connect', return_value=db), patch.object(export, 'PREVIOUS', fh.name), \
+            with patch.object(export.sqlite3, 'connect', return_value=db), patch.object(export, 'PREVIOUS', path), \
                  patch.object(export, 'same_person', return_value={}), patch.dict(os.environ, env), \
                  patch.multiple(export, prepare_dedupe=lambda *_: None, JUNK_PREDICATES='', DEDUPE_PREDICATES=''), \
                  contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
@@ -219,7 +225,13 @@ class SafetyNetTests(unittest.TestCase):
                 except SystemExit as exit_:
                     code = exit_.code
             return code, stdout.getvalue(), stderr.getvalue()
+        return run
 
+    GOOD = json.dumps({'meta': {}, 'people': [roster_row('Anthony Albanese', '10007', True),
+                                              roster_row('Pat Conaghan', '10922', True)]}).encode()
+
+    def test_a_real_database_export_that_strips_ids_is_not_shipped(self):
+        run = self.stripped_export(self.GOOD)
         code, out, err = run({'OPAX_ROSTER_ACCEPT': ''})
         self.assertEqual(code, export.HELD)
         self.assertEqual(out, '', 'nothing reaches export_step.sh, so the shipped file is kept')
@@ -229,6 +241,37 @@ class SafetyNetTests(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertEqual({p['name'] for p in json.loads(out)['people']}, {'Anthony Albanese', 'Pat Conaghan'})
 
+    def test_no_usable_baseline_holds_the_export_unless_it_is_overridden(self):
+        # Fail closed: a baseline that cannot be compared with is a reason to hold, never permission to ship.
+        for case, baseline, why in [
+            ('missing', None, 'no shipped roster at'),
+            ('malformed JSON', b'{', 'cannot be read (JSONDecodeError'),
+            ('people null', b'{"people": null}', 'has no people to compare with'),
+            ('people empty', b'{"people": []}', 'has no people to compare with'),
+            ('not an object', b'[1, 2]', 'has no people to compare with'),
+            ('nameless rows', b'{"people": [{"pid": "10007"}]}', 'has rows without a name'),
+        ]:
+            with self.subTest(case):
+                run = self.stripped_export(baseline)
+                code, out, err = run({'OPAX_ROSTER_ACCEPT': ''})
+                self.assertEqual((code, out), (export.HELD, ''), err)
+                self.assertRegex(err, r'ROSTER HELD: (no shipped roster|the shipped roster) at ')
+                self.assertIn(why, err)
+                code, out, _ = run({'OPAX_ROSTER_ACCEPT': '1'})  # a deliberate first run
+                self.assertEqual(code, 0)
+                self.assertEqual(len(json.loads(out)['people']), 2)
+
+    def test_the_baseline_loader_says_why_it_cannot_be_used(self):
+        folder = tempfile.mkdtemp()
+        self.addCleanup(lambda: [os.unlink(os.path.join(folder, f)) for f in os.listdir(folder)] and os.rmdir(folder))
+        good = os.path.join(folder, 'good.json')
+        with open(good, 'wb') as fh:
+            fh.write(self.GOOD)
+        people, why = export.shipped_roster(good)
+        self.assertEqual((len(people), why), (2, None))
+        people, why = export.shipped_roster(os.path.join(folder, 'missing.json'))
+        self.assertIsNone(people)
+        self.assertIn('no shipped roster at', why)
 
 if __name__ == '__main__':
     unittest.main()
