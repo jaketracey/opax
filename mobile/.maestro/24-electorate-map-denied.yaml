@@ -20,9 +20,14 @@ name: 24 Permission denied keeps the chooser available
     timeout: 15000
 - scrollUntilVisible:
     element: Don’t Allow
-    centerElement: true
+    # iOS 26's AX5 permission button extends below its alert viewport. Its
+    # visible upper part is tappable; centering this system button cannot work.
+    visibilityPercentage: 50
+    centerElement: false
     timeout: 300000
-- tapOn: Don’t Allow
+- tapOn:
+    text: Don’t Allow
+    point: "50%,10%"
 - scrollUntilVisible:
     element:
       id: location-denied

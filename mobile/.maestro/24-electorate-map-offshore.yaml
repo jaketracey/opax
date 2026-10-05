@@ -20,7 +20,7 @@ name: 24 Offshore has no match and the manual chooser works
     timeout: 15000
 - scrollUntilVisible:
     element: Allow Once
-    centerElement: true
+    centerElement: false
     timeout: 300000
 - tapOn: Allow Once
 - scrollUntilVisible:
