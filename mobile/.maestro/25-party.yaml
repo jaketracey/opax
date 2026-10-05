@@ -117,7 +117,18 @@ name: 25 Native party members, pinned receipts, bill divisions and web fallback
     visible:
       id: bill-divisions
     timeout: 30000
+- assertVisible:
+    id: bill-divisions-title
 - takeScreenshot: ${EVIDENCE}/25-native-divisions
+- scrollUntilVisible:
+    element:
+      id: bill-division-0-outcome
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/25-native-division-counts
 - tapOn:
     text: Back
     index: 0

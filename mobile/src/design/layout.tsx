@@ -1,15 +1,9 @@
-import {
-  Children,
-  type ReactElement,
-  type ReactNode,
-  type RefObject,
-} from 'react';
+import { Children, type ReactElement, type ReactNode } from 'react';
 import {
   ScrollView,
   StyleSheet,
   View,
   type RefreshControlProps,
-  type ScrollViewProps,
   type ViewProps,
 } from 'react-native';
 import { useAccessibilitySize } from './accessibility';
@@ -26,19 +20,13 @@ export function Screen({
   testID,
   children,
   refreshControl,
-  scrollRef,
-  onContentSizeChange,
 }: {
   testID?: string;
   children: ReactNode;
   refreshControl?: ReactElement<RefreshControlProps>;
-  scrollRef?: RefObject<ScrollView | null>;
-  onContentSizeChange?: ScrollViewProps['onContentSizeChange'];
 }) {
   return (
     <ScrollView
-      ref={scrollRef}
-      onContentSizeChange={onContentSizeChange}
       testID={testID}
       style={styles.screen}
       contentInsetAdjustmentBehavior="automatic"

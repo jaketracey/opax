@@ -439,7 +439,7 @@ model, search or generation calls. The money-map destination is isolated in
 
 Recent divisions follow the web's 96-candidate / 32-readable-file scan, collapse
 duplicate divisions and retain party-attribution caveats. Bill links push the
-native divisions section. Every block has its own source date, provenance,
+native divisions view, which links to the full bill details. Every block has its own source date, provenance,
 saved-copy state and independent error state. Journey `25-party.yaml` covers
 profile chip, current members, a JSON-pointer receipt check, member profile,
 bill divisions and unresolved web fallback; run it at standard size and AX5.

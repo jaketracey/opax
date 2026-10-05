@@ -1,12 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
-import {
-  Stack,
-  router,
-  useLocalSearchParams,
-  useNavigation,
-  type NativeStackNavigationProp,
-} from 'expo-router';
+import { useCallback, useEffect, useState } from 'react';
+import { RefreshControl, StyleSheet, View } from 'react-native';
+import { Stack, router, useLocalSearchParams } from 'expo-router';
 import {
   billName,
   billSentenceCase,
@@ -98,46 +92,7 @@ export default function BillDetail() {
     key: string;
     section?: string;
   }>();
-  const scrollRef = useRef<ScrollView>(null);
-  const navigation =
-    useNavigation<
-      NativeStackNavigationProp<Record<string, object | undefined>>
-    >();
-  const divisionJump = useRef(false);
-  const [entered, setEntered] = useState(false);
-  const [divisionY, setDivisionY] = useState<number | null>(null);
-  const [contentHeight, setContentHeight] = useState(0);
-  useEffect(() => {
-    divisionJump.current = false;
-  }, [key, section]);
-  useEffect(
-    () =>
-      navigation.addListener('transitionEnd', (event) => {
-        if (!event.data.closing) setEntered(true);
-      }),
-    [navigation],
-  );
-  useEffect(() => {
-    if (
-      section !== 'divisions' ||
-      !entered ||
-      divisionY === null ||
-      contentHeight <= divisionY ||
-      divisionJump.current
-    )
-      return;
-    // iOS may reset an early scroll during the native push, or clamp it
-    // before the scroll view knows its content size. Wait for both signals.
-    const frame = requestAnimationFrame(() => {
-      if (!scrollRef.current) return;
-      scrollRef.current.scrollTo({
-        y: Math.max(0, divisionY - 16),
-        animated: false,
-      });
-      divisionJump.current = true;
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [section, entered, divisionY, contentHeight]);
+  const focusedDivisions = section === 'divisions';
   const load = useCallback(() => catalogs.billFor(String(key)), [key]);
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
   const [sponsors, setSponsors] = useState<Record<string, PersonSlug>>({});
@@ -195,8 +150,6 @@ export default function BillDetail() {
         }}
       />
       <Screen
-        scrollRef={scrollRef}
-        onContentSizeChange={(_, height) => setContentHeight(height)}
         testID={view ? 'bill-screen' : 'bill-pending-screen'}
         refreshControl={
           <RefreshControl
@@ -241,26 +194,38 @@ export default function BillDetail() {
         ) : null}
         {view && identity && record ? (
           <>
-            <BillHead
-              view={view}
-              sponsors={sponsors}
-              stale={record.stale}
-              savedAt={record.savedAt}
-              refreshing={refreshing}
-              onRefresh={refresh}
-            />
-            <Summary view={view} />
-            <KeyDates view={view} />
-            <View
-              testID="bill-divisions-anchor"
-              onLayout={(event) => {
-                setDivisionY(event.nativeEvent.layout.y);
-              }}
-            >
-              <Divisions view={view} />
-            </View>
-            <Speeches view={view} />
-            <Acts view={view} />
+            {focusedDivisions ? (
+              <>
+                {record.stale ? (
+                  <Group>
+                    <OfflineBanner testID="bill-offline" />
+                    <StaleNotice
+                      savedAt={record.savedAt}
+                      refreshing={refreshing}
+                      testID="bill-stale"
+                    />
+                    <Button label="Try again" onPress={retry} />
+                  </Group>
+                ) : null}
+                <Divisions view={view} focused />
+              </>
+            ) : (
+              <>
+                <BillHead
+                  view={view}
+                  sponsors={sponsors}
+                  stale={record.stale}
+                  savedAt={record.savedAt}
+                  refreshing={refreshing}
+                  onRefresh={refresh}
+                />
+                <Summary view={view} />
+                <KeyDates view={view} />
+                <Divisions view={view} />
+                <Speeches view={view} />
+                <Acts view={view} />
+              </>
+            )}
             <Section title="Sources" testID="bill-sources">
               {view.identity.sources.length ? (
                 view.identity.sources.map((source, index) => (
@@ -557,14 +522,38 @@ function KeyDates({ view }: { view: BillView }) {
   );
 }
 
-function Divisions({ view }: { view: BillView }) {
+function Divisions({
+  view,
+  focused = false,
+}: {
+  view: BillView;
+  focused?: boolean;
+}) {
   const [all, setAll] = useState(false);
   const data = view.divisions.data!;
   const rows = data.rows;
   const shown = all ? rows : rows.slice(0, DIVISIONS_SHOWN);
   const rest = rows.length - shown.length;
   return (
-    <Section title="Divisions" testID="bill-divisions">
+    <Section title={focused ? undefined : 'Divisions'} testID="bill-divisions">
+      {focused ? (
+        <Group>
+          <Heading level={1} testID="bill-divisions-title">
+            Bill divisions
+          </Heading>
+          <Text variant="metadata" testID="bill-divisions-bill-name">
+            {billName({
+              title: view.identity.data!.title,
+              short_title: view.identity.data!.shortTitle,
+            })}
+          </Text>
+          <InlineLink
+            label="Full bill details"
+            onPress={() => router.push(billRoute(view.identity.data!.key))}
+            testID="bill-divisions-details"
+          />
+        </Group>
+      ) : null}
       {rows.length ? (
         <RowList>
           {shown.map((division, index) => (
