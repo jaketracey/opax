@@ -1,3 +1,5 @@
+import { router } from 'expo-router';
+import { partyRoute } from '../navigation/routes';
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useAccessibilitySize } from './accessibility';
@@ -52,16 +54,54 @@ export function PartyLabel({
   formerly,
   dense = false,
   testID,
+  linked = true,
 }: PartyContext & {
   dense?: boolean;
   testID?: string;
+  linked?: boolean;
 }) {
   const identity = partyIdentity(party);
   const text = partyText({ party, status, formerly }, dense);
   const tone = dense ? 'inkSoft' : 'ink';
+  const Container = linked && identity.recorded ? Pressable : View;
   return (
-    <View
-      style={styles.party}
+    <Container
+      style={[
+        styles.party,
+        linked && identity.recorded
+          ? {
+              minHeight: minimumTarget,
+              minWidth: minimumTarget,
+              alignSelf: 'flex-start',
+              maxWidth: '100%',
+            }
+          : null,
+      ]}
+      {...(linked && identity.recorded
+        ? {
+            accessibilityRole: 'link' as const,
+            accessibilityHint: 'Opens the party record',
+            onPress: () => router.push(partyRoute(identity.name)),
+            accessibilityActions:
+              text.previous && formerly
+                ? [
+                    {
+                      name: 'openPreviousParty',
+                      label: `Open ${formerly} party page`,
+                    },
+                  ]
+                : undefined,
+            onAccessibilityAction: (event: {
+              nativeEvent: { actionName: string };
+            }) => {
+              if (
+                event.nativeEvent.actionName === 'openPreviousParty' &&
+                formerly
+              )
+                router.push(partyRoute(formerly));
+            },
+          }
+        : {})}
       accessible
       accessibilityLabel={text.spoken}
       testID={testID}
@@ -73,15 +113,31 @@ export function PartyLabel({
           style={[styles.dot, { backgroundColor: identity.color }]}
         />
       ) : null}
-      <Text wordSafe variant={dense ? 'metadata' : 'body'} tone={tone}>
+      <Text
+        wordSafe
+        variant={dense ? 'metadata' : 'body'}
+        tone={tone}
+        style={{ flexShrink: 1 }}
+      >
         {text.visible}
         {text.previous ? (
-          <Text variant={dense ? 'metadata' : 'body'} tone="inkSoft">
+          <Text
+            variant={dense ? 'metadata' : 'body'}
+            tone="inkSoft"
+            onPress={
+              linked && formerly
+                ? (event) => {
+                    event.stopPropagation();
+                    router.push(partyRoute(formerly));
+                  }
+                : undefined
+            }
+          >
             {` · ${text.previous}`}
           </Text>
         ) : null}
       </Text>
-    </View>
+    </Container>
   );
 }
 
@@ -186,6 +242,34 @@ export function PersonRow({
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={label}
+      accessibilityActions={
+        partyContext?.party
+          ? [
+              {
+                name: 'openParty',
+                label: `Open ${partyIdentity(partyContext.party).name} party page`,
+              },
+              ...(partyContext.formerly &&
+              partyContext.formerly !== partyContext.party
+                ? [
+                    {
+                      name: 'openPreviousParty',
+                      label: `Open ${partyContext.formerly} party page`,
+                    },
+                  ]
+                : []),
+            ]
+          : undefined
+      }
+      onAccessibilityAction={(event) => {
+        if (event.nativeEvent.actionName === 'openParty' && partyContext?.party)
+          router.push(partyRoute(partyContext.party));
+        if (
+          event.nativeEvent.actionName === 'openPreviousParty' &&
+          partyContext?.formerly
+        )
+          router.push(partyRoute(partyContext.formerly));
+      }}
       testID={testID}
       onPress={onPress}
       style={({ pressed }) => [

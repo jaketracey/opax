@@ -92,7 +92,6 @@ test('serves pinned public data, catalog search and conditional ETag responses o
   });
 });
 test.each([
-  '/graph/money.json',
   '/interests/ties-by-donor.json',
   '/api/ask',
   '/api/search?q=x',

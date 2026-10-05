@@ -1,3 +1,5 @@
+import { router } from 'expo-router';
+import { partyRoute } from '../../navigation/routes';
 import { useState, type ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import type {
@@ -175,11 +177,19 @@ function SplitRow({
   testID?: string;
 }) {
   const stacked = useAccessibilitySize();
+  const Container = notParty.has(split.party.trim()) ? View : Pressable;
   const dot = notParty.has(split.party.trim())
     ? null
     : partyIdentity(split.label).color;
   return (
-    <View
+    <Container
+      {...(notParty.has(split.party.trim())
+        ? {}
+        : {
+            accessibilityRole: 'link' as const,
+            accessibilityHint: 'Opens the party record',
+            onPress: () => router.push(partyRoute(split.label)),
+          })}
       accessible
       accessibilityLabel={splitLabel(split)}
       testID={testID}
@@ -230,7 +240,7 @@ function SplitRow({
           />
         </View>
       </View>
-    </View>
+    </Container>
   );
 }
 
@@ -282,6 +292,13 @@ export function PartySplits({
           .
         </Text>
       ) : null}
+      {splits.folded.map((split) => (
+        <InlineLink
+          key={split.party}
+          label={splitLabel(split)}
+          onPress={() => router.push(partyRoute(split.label))}
+        />
+      ))}
       {splits.notes.length ? (
         <Text variant="fine">{splits.notes.join(' · ')}</Text>
       ) : null}
@@ -492,7 +509,13 @@ export function Bullet({ children }: { children: string }) {
 export function RecordedParty({ party }: { party: string }) {
   const identity = partyIdentity(party);
   return (
-    <View style={styles.party}>
+    <Pressable
+      style={[styles.party, { minHeight: minimumTarget }]}
+      accessibilityRole="link"
+      accessibilityLabel={identity.name}
+      accessibilityHint="Opens the party record"
+      onPress={() => router.push(partyRoute(identity.name))}
+    >
       {identity.color ? (
         <View
           accessibilityElementsHidden
@@ -500,8 +523,10 @@ export function RecordedParty({ party }: { party: string }) {
           style={[styles.dot, { backgroundColor: identity.color }]}
         />
       ) : null}
-      <Text variant="metadata">{identity.name}</Text>
-    </View>
+      <Text wordSafe variant="metadata" style={styles.grow}>
+        {identity.name}
+      </Text>
+    </Pressable>
   );
 }
 

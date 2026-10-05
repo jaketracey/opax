@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-import { RefreshControl, StyleSheet, View } from 'react-native';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import {
   billName,
@@ -88,7 +88,15 @@ const stageText = (s: BillTimelineStage) =>
 
 /** One bill: what it would change, how it moved, and how each house divided. */
 export default function BillDetail() {
-  const { key } = useLocalSearchParams<{ key: string }>();
+  const { key, section } = useLocalSearchParams<{
+    key: string;
+    section?: string;
+  }>();
+  const scrollRef = useRef<ScrollView>(null);
+  const divisionJump = useRef(false);
+  useEffect(() => {
+    divisionJump.current = false;
+  }, [key, section]);
   const load = useCallback(() => catalogs.billFor(String(key)), [key]);
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
   const [sponsors, setSponsors] = useState<Record<string, PersonSlug>>({});
@@ -146,6 +154,7 @@ export default function BillDetail() {
         }}
       />
       <Screen
+        scrollRef={scrollRef}
         testID={view ? 'bill-screen' : 'bill-pending-screen'}
         refreshControl={
           <RefreshControl
@@ -200,7 +209,23 @@ export default function BillDetail() {
             />
             <Summary view={view} />
             <KeyDates view={view} />
-            <Divisions view={view} />
+            <View
+              onLayout={(event) => {
+                if (section !== 'divisions' || divisionJump.current) return;
+                const y = event.nativeEvent.layout.y;
+                divisionJump.current = true;
+                requestAnimationFrame(() =>
+                  requestAnimationFrame(() =>
+                    scrollRef.current?.scrollTo({
+                      y: Math.max(0, y - 16),
+                      animated: false,
+                    }),
+                  ),
+                );
+              }}
+            >
+              <Divisions view={view} />
+            </View>
             <Speeches view={view} />
             <Acts view={view} />
             <Section title="Sources" testID="bill-sources">

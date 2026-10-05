@@ -1,0 +1,154 @@
+appId: au.com.opax.app
+name: 25 Native party members, pinned receipts, bill divisions and web fallback
+---
+- runFlow:
+    file: 08-open-profile.yaml
+    env:
+      NAME: Anthony Albanese
+      SLUG: anthony-albanese
+- scrollUntilVisible:
+    element:
+      id: person-party
+    direction: UP
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- tapOn:
+    id: person-party
+- extendedWaitUntil:
+    visible:
+      id: party-title
+    timeout: 30000
+- assertVisible: Labor
+- takeScreenshot: ${EVIDENCE}/25-party-title
+- scrollUntilVisible:
+    element:
+      id: party-current-count
+    direction: DOWN
+    speed: 20
+    timeout: 180000
+- assertVisible: .* current members with current evidence
+- scrollUntilVisible:
+    element:
+      id: party-current-toggle
+    direction: DOWN
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- tapOn:
+    id: party-current-toggle
+- scrollUntilVisible:
+    element:
+      id: party-member-anthony-albanese
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/25-current-members
+- assertNotVisible:
+    id: party-member-anthony-albanese-name-drawn-clipped.*
+- assertVisible: .*Current evidence as at 4 September 2026.*
+- tapOn:
+    id: party-member-anthony-albanese
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+    timeout: 15000
+- assertVisible: Anthony Albanese
+- takeScreenshot: ${EVIDENCE}/25-member-profile
+- tapOn:
+    text: Back
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: party-current-toggle
+    direction: UP
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- assertVisible: Hide current members
+- tapOn:
+    id: party-current-toggle
+- runScript: support/party-figures.js
+- scrollUntilVisible:
+    element:
+      id: party-receipts-total
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- assertVisible: ${output.partyReceiptsLabel}
+- takeScreenshot: ${EVIDENCE}/25-pinned-receipts
+- scrollUntilVisible:
+    element:
+      id: party-donor-years-toggle
+    direction: DOWN
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- tapOn:
+    id: party-donor-years-toggle
+- takeScreenshot: ${EVIDENCE}/25-donors-by-year
+- tapOn:
+    id: party-donor-years-toggle
+- scrollUntilVisible:
+    element:
+      id: party-money-caveat
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/25-money-caveat
+- scrollUntilVisible:
+    element:
+      id: party-bill-au-federal-r7501
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/25-party-votes
+- tapOn:
+    id: party-bill-au-federal-r7501
+- extendedWaitUntil:
+    visible:
+      id: bill-divisions
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/25-native-divisions
+- tapOn:
+    text: Back
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: party-end
+    direction: DOWN
+    speed: 20
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/25-party-end
+# Review every viewport at either text size, with the long member list closed.
+- scrollUntilVisible:
+    element:
+      id: party-title
+    direction: UP
+    visibilityPercentage: 10
+    speed: 20
+    timeout: 180000
+- runFlow:
+    file: review-pages.yaml
+    env:
+      END: party-end
+      PREFIX: 25-review
+# This is a synthetic unresolved route, not a claim about a real party.
+- openLink: opax://party/opax-fixture-unresolved
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible: Opens on opax.com.au.*
+    timeout: 30000
+- assertVisible: https://opax.invalid/subject/party/opax-fixture-unresolved
+- takeScreenshot: ${EVIDENCE}/25-web-fallback
+- tapOn: OK

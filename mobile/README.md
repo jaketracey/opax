@@ -419,3 +419,27 @@ Surname person pages use the release's unique current ID holder (or sole histori
 holder); incompatible roster representations are refused, including the shared
 David/Dorinda Cox ID. Roster-only register results such as Mark Furner retain their
 directory link without inventing a canonical release ID.
+
+## Native party page
+
+Party labels push `/party/<slug>` in the current tab's stack. Slugs come
+from recorded labels; `partyIdentity` and `samePartyLabel` provide the existing
+identity rules, with no prefix matching or new aliases. A catalog-confirmed
+absence opens the existing web party page; a failed read offers retry.
+
+The page reads the roster and dated people release for current members, with
+unknown affiliation status in a separate Recorded disclosure and former members
+excluded. Each member opens its native profile. Receipt totals and rank read
+`/graph/money.json` directly; displayed donor flows do not replace the party
+node total. Donors retain year keys and the graph's exclusions. Associated
+entities read `/graph/aec-extras.json`, retain their own annual-return years,
+and are never added to the party total. Both are static catalog GETs, without
+model, search or generation calls. The money-map destination is isolated in
+`MoneyMapLink` for a later native route.
+
+Recent divisions follow the web's 96-candidate / 32-readable-file scan, collapse
+duplicate divisions and retain party-attribution caveats. Bill links push the
+native divisions section. Every block has its own source date, provenance,
+saved-copy state and independent error state. Journey `25-party.yaml` covers
+profile chip, current members, a JSON-pointer receipt check, member profile,
+bill divisions and unresolved web fallback; run it at standard size and AX5.

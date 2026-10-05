@@ -37,7 +37,7 @@ import {
   jurisdictionName,
 } from '../design/parliament';
 import { shareHeaderItem } from '../navigation/share';
-import { billRoute, electorateRoute } from '../navigation/routes';
+import { billRoute, electorateRoute, partyRoute } from '../navigation/routes';
 import { InlineLink } from './bills/parts';
 import { EvidenceFooter, RecordBlock } from './your-mp/Evidence';
 import {
@@ -701,11 +701,19 @@ function ProfileScreen({ slug }: { slug: string }) {
               {(p) => (
                 <Group>
                   <Text wordSafe>{p.caption}</Text>
-                  <OpaxWebLink
-                    label="Party receipts"
-                    path={p.url}
-                    testID="person-party-receipts"
-                  />
+                  {p.party ? (
+                    <Button
+                      label="Party receipts"
+                      onPress={() => router.push(partyRoute(p.party!))}
+                      testID="person-party-receipts"
+                    />
+                  ) : (
+                    <OpaxWebLink
+                      label="Party receipts"
+                      path={p.url}
+                      testID="person-party-receipts"
+                    />
+                  )}
                 </Group>
               )}
             </RecordBlock>

@@ -109,3 +109,11 @@ export function partyText(
       : identity.name,
   };
 }
+
+/** Slugs are derived only from recorded labels; this adds no party aliases. */
+export const partySlug = (name: string) =>
+  name
+    .trim()
+    .toLocaleLowerCase('en-AU')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');

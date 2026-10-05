@@ -32,6 +32,8 @@ name: 12 Local suggestions and the four catalog search kinds
       id: search-submit
     timeout: 90000
     direction: UP
+    centerElement: true
+    speed: 20
 - waitForAnimationToEnd
 - tapOn:
     id: search-submit

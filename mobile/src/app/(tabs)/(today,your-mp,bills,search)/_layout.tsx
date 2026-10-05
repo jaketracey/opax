@@ -35,6 +35,7 @@ export default function TabStack({ segment }: { segment: string }) {
           unstable_headerRightItems: rootHeaderItems,
         }}
       />
+      <Stack.Screen name="party/[slug]" options={{ title: '' }} />
       <Stack.Screen name="person/[slug]" options={{ title: '' }} />
       <Stack.Screen name="bill/[key]" options={{ title: '' }} />
       {segment === '(bills)' ? (
