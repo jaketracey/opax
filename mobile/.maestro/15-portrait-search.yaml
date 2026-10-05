@@ -11,6 +11,28 @@ name: 15 Surname search stays blank while the full-name entry keeps its face
 - hideKeyboard
 - scrollUntilVisible:
     element:
+      id: search-suggestion-person-10956
+      text: ^Walsh.*
+    direction: DOWN
+    centerElement: true
+    timeout: 90000
+- assertVisible:
+    id: search-suggestion-person-10956
+    text: ^Walsh.*
+- takeScreenshot: ${EVIDENCE}/15-walsh-surname-suggestion
+- scrollUntilVisible:
+    element:
+      id: search-suggestion-person-10956
+      text: Jess Walsh.*
+    direction: DOWN
+    centerElement: true
+    timeout: 90000
+- assertVisible:
+    id: search-suggestion-person-10956
+    text: Jess Walsh.*
+- takeScreenshot: ${EVIDENCE}/15-jess-fullname-suggestion
+- scrollUntilVisible:
+    element:
       id: search-submit
     direction: UP
     timeout: 90000
