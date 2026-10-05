@@ -1,9 +1,11 @@
 appId: au.com.opax.app
 name: 24 Electorate outline and on-device location suggestion
 ---
-# Harness sets a Grayndler simulated fix and resets When In Use permission.
+# Harness sets a Grayndler simulated fix; launch resets location permission.
 - launchApp:
     clearState: true
+    permissions:
+      location: unset
 - tapOn:
     id: tab-your-mp
 - scrollUntilVisible:

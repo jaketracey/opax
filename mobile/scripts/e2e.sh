@@ -96,7 +96,6 @@ if [ "${#FLOWS[@]}" -gt 0 ]; then
 for journey in "${FLOWS[@]}"; do
   case "$journey" in
     .maestro/24-electorate-map*.yaml)
-      xcrun simctl privacy "$UDID" reset location au.com.opax.app
       case "$journey" in
         *-offshore.yaml) xcrun simctl location "$UDID" set -35,155 ;;
         *) xcrun simctl location "$UDID" set -33.900123456,151.145123456 ;;

@@ -3,6 +3,8 @@ name: 24 Permission denied keeps the chooser available
 ---
 - launchApp:
     clearState: true
+    permissions:
+      location: unset
 - tapOn:
     id: tab-your-mp
 - scrollUntilVisible:

@@ -3,6 +3,8 @@ name: 24 Offshore has no match and the manual chooser works
 ---
 - launchApp:
     clearState: true
+    permissions:
+      location: unset
 - tapOn:
     id: tab-your-mp
 - scrollUntilVisible:
