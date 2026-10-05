@@ -6,11 +6,8 @@ name: 08 Independent profile blocks, current senator, former member and local sh
     env:
       NAME: Anthony Albanese
       SLUG: anthony-albanese
-- extendedWaitUntil:
-    visible:
-      id: person-portrait
-    timeout: 30000
-- takeScreenshot: ${EVIDENCE}/08-official-portrait
+# The portrait is deliberately hidden from VoiceOver beside the name. Its
+# visible credit appears after the reviewed bytes have reached the local cache.
 - scrollUntilVisible:
     element:
       id: person-portrait-attribution
@@ -18,6 +15,13 @@ name: 08 Independent profile blocks, current senator, former member and local sh
     timeout: 300000
 - assertVisible: Official portrait.*CC BY-NC-ND 4.0.*
 - takeScreenshot: ${EVIDENCE}/08-official-credit
+- scrollUntilVisible:
+    element:
+      id: person-screen-title
+    direction: UP
+    centerElement: true
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/08-official-portrait
 - runFlow:
     file: review-pages.yaml
     env:
@@ -72,17 +76,18 @@ name: 08 Independent profile blocks, current senator, former member and local sh
       SLUG: sheena-watt
 - scrollUntilVisible:
     element:
-      id: person-portrait
-    direction: UP
-    timeout: 300000
-- takeScreenshot: ${EVIDENCE}/08-commons-portrait
-- scrollUntilVisible:
-    element:
       id: person-portrait-attribution
     centerElement: true
     timeout: 300000
 - assertVisible: Gabagool2005.*CC0.*Wikimedia Commons.*
 - takeScreenshot: ${EVIDENCE}/08-commons-credit
+- scrollUntilVisible:
+    element:
+      id: person-screen-title
+    direction: UP
+    centerElement: true
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/08-commons-portrait
 - runFlow:
     file: review-pages.yaml
     env:
@@ -104,10 +109,8 @@ name: 08 Independent profile blocks, current senator, former member and local sh
     env:
       NAME: Madonna Jarrett
       SLUG: madonna-jarrett
-- extendedWaitUntil:
-    visible:
-      id: person-portrait-blank
-    timeout: 30000
-- assertNotVisible:
-    id: person-portrait
+# The pinned map has no portrait for Madonna Jarrett. Inspect this capture's
+# blank circle; a decorative fallback must also stay out of the AX hierarchy.
+- assertVisible:
+    id: person-screen-title
 - takeScreenshot: ${EVIDENCE}/08-no-portrait
