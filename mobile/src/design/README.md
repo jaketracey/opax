@@ -250,6 +250,11 @@ Copy is in `stateCopy` (IOS-UX section 4, "States, everywhere").
   them. Reading order: title, each metric as "label, value", the caveats, then
   the evidence links.
 
+Person rows keep their `-name` testID after layout. RepresentativeRows opts
+into `testDrawnName` for journeys 07 and 09, which require the e2e-only
+`-drawn-complete-N` diagnostic ID. Other callers, including Search, retain the
+stable name ID; production excludes the probe implementation in both cases.
+
 ## Navigation chrome (`src/navigation/`)
 
 - Each tab owns a native stack (`src/app/(tabs)/(…)/`): root screens show a

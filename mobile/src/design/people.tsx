@@ -103,6 +103,8 @@ export type PersonRowProps = PersonRowParty & {
   /** Present only for roster parliamentarians with a native page. */
   onPress?: () => void;
   testID?: string;
+  /** Opt in only for journeys that inspect native drawn-line bounds. */
+  testDrawnName?: boolean;
 };
 /**
  * A row for a roster parliamentarian: portrait (blank circle without one),
@@ -120,6 +122,7 @@ export function PersonRow({
   detail,
   onPress,
   testID,
+  testDrawnName = false,
 }: PersonRowProps) {
   const stacked = useAccessibilitySize();
   const partyContext =
@@ -144,7 +147,7 @@ export function PersonRow({
           <Text
             wordSafe
             variant="strong"
-            {...nameProbeProps}
+            {...(testDrawnName ? nameProbeProps : {})}
             testID={testID ? `${testID}-name` : undefined}
             style={styles.personName}
           >

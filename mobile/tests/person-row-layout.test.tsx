@@ -252,6 +252,52 @@ test('drawing check rejects the clipped one-line surname, missing text and last-
   expect(drawnTextClipped(nativeLines, frame, 'Anthony Albanese')).toBe(false);
 });
 
+test.each([false, true])(
+  'person-row name keeps its stable ID unless drawn checks are requested: %s',
+  (testDrawnName) => {
+    Constants.expoConfig!.extra!.variant = 'e2e';
+    jest.mocked(useWindowDimensions).mockReturnValue({
+      width: 390,
+      height: 844,
+      scale: 3,
+      fontScale: 1,
+    });
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        <PersonRow
+          name="Anthony Albanese"
+          testID="search-result-anthony-albanese"
+          testDrawnName={testDrawnName}
+          onPress={() => undefined}
+        />,
+      );
+    });
+    const name = () =>
+      renderer.root
+        .findAllByType(NativeText)
+        .find((node) =>
+          node.props.testID?.startsWith('search-result-anthony-albanese-name'),
+        )!;
+    expect(name().props.testID).toBe('search-result-anthony-albanese-name');
+    act(() =>
+      name().props.onLayout({
+        nativeEvent: { layout: { width: 298, height: 142 } },
+      }),
+    );
+    act(() =>
+      name().props.onTextLayout({ nativeEvent: { lines: nativeLines } }),
+    );
+    expect(name().props.testID).toBe(
+      testDrawnName
+        ? 'search-result-anthony-albanese-name-drawn-complete-2'
+        : 'search-result-anthony-albanese-name',
+    );
+    act(() => renderer.unmount());
+    Constants.expoConfig!.extra!.variant = 'production';
+  },
+);
+
 test.each(['production', 'development', 'e2e'])(
   'drawn-name hook is gated for %s',
   (variant) => {
