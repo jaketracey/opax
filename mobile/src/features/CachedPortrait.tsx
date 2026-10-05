@@ -24,7 +24,10 @@ export function CachedPortrait({
     onDisplay: (visible: boolean) => void;
   } | null>(null);
   const identity = slug ?? name;
-  const request = useMemo(() => ({}), [name, slug, retryKey]);
+  const request = useMemo(
+    () => ({ name, slug, retryKey }),
+    [name, slug, retryKey],
+  );
   useEffect(() => {
     let active = true;
     onCredit?.(null);
