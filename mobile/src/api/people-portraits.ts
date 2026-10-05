@@ -44,7 +44,19 @@ export class PeoplePortraits {
       );
       if (matches.length === 1) slug = matches[0]![0];
     }
-    const info = slug ? index.portraits.get(slug) : undefined;
+    let info = slug ? index.portraits.get(slug) : undefined;
+    // Catalogs.person accepts canonical IDs as route identifiers. Resolve them
+    // against the same verified directory identities, never against photo names.
+    if (!info && slug?.startsWith('person_')) {
+      const candidates = [...index.identities]
+        .filter(([, p]) => p.canonicalPersonId === slug)
+        .flatMap(([key]) => {
+          const portrait = index.portraits.get(key);
+          return portrait ? [portrait] : [];
+        });
+      if (new Set(candidates.map((p) => p.key)).size === 1)
+        info = candidates[0];
+    }
     return info ? { info, localURI: await this.cache.get(info.key) } : null;
   }
 }

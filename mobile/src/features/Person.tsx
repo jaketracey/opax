@@ -162,7 +162,7 @@ function ProfileScreen({ slug }: { slug: string }) {
             <Group>
               <CachedPortrait
                 name={identity.name}
-                slug={slug}
+                slug={profile.slug}
                 size="profile"
                 testID="person-portrait"
                 onCredit={setPortrait}
