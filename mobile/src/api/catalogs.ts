@@ -272,6 +272,104 @@ export class Catalogs {
       };
     }
   }
+  /**
+   * Local follows (src/features/follows): the shared catalogs their change
+   * markers read. Nothing is read per followed record, so following many
+   * items never crowds the bounded cache. `refresh` revalidates each file,
+   * as a pull to refresh does. Each file fails on its own: a missing one
+   * leaves its markers unchecked instead of failing the others.
+   */
+  async followSources(
+    needs: { people?: boolean; bills?: boolean; electorates?: boolean },
+    refresh = false,
+  ) {
+    const records: RecordResult<unknown>[] = [];
+    const errors: ApiError[] = [];
+    const read = async <T>(
+      wanted: boolean | undefined,
+      path: string,
+      decoder: Decoder<T>,
+    ): Promise<T | null> => {
+      if (!wanted) return null;
+      try {
+        const record = await this.client.get(path, decoder, refresh);
+        records.push(record);
+        return record.data;
+      } catch (e) {
+        errors.push(
+          e instanceof ApiError
+            ? e
+            : new ApiError('invalid-data', 'This catalog could not be read.'),
+        );
+        return null;
+      }
+    };
+    const seats = needs.people || needs.electorates;
+    const [
+      manifest,
+      roster,
+      slugs,
+      bills,
+      votes,
+      interestIndex,
+      pay,
+      expenses,
+    ] = await Promise.all([
+      read(seats, '/electorates/manifest.json', decode.decodeManifest),
+      read(needs.people, '/parliamentarians.json', decode.decodeRoster),
+      read(needs.people, '/api/person-slugs', decode.decodeSlugs),
+      read(needs.bills, '/bills/index.json', decode.decodeBillIndex),
+      read(needs.people, '/votes.json', decode.decodeVotes),
+      read(needs.people, '/interests/index.json', decode.decodeInterestIndex),
+      read(needs.people, '/pay.json', decode.decodePay),
+      read(needs.people, '/expenses.json', decode.decodeExpenses),
+    ]);
+    const [people, electorates] = await Promise.all([
+      read(
+        needs.people && !!manifest,
+        manifest?.people_url ?? '',
+        decode.decodePeople,
+      ),
+      read(
+        seats && !!manifest,
+        manifest?.index_url ?? '',
+        decode.decodeElectorateIndex,
+      ),
+    ]);
+    // Seats and people from two different releases never answer who sits where.
+    const sameRelease = (release: string | undefined) =>
+      release !== undefined && release === manifest?.release_id;
+    if (
+      (people && !sameRelease(people.meta.release_id)) ||
+      (electorates && !sameRelease(electorates.meta.release_id))
+    )
+      errors.push(
+        new ApiError(
+          'invalid-data',
+          'The electorate release is incomplete. Try again.',
+        ),
+      );
+    return {
+      manifest,
+      roster,
+      slugs,
+      people: people && sameRelease(people.meta.release_id) ? people : null,
+      electorates:
+        electorates && sameRelease(electorates.meta.release_id)
+          ? electorates
+          : null,
+      bills,
+      votes,
+      interestIndex,
+      pay,
+      expenses,
+      stale: records.some((r) => r.stale),
+      savedAt: records.length
+        ? Math.min(...records.map((r) => r.savedAt))
+        : null,
+      error: errors[0] ?? null,
+    };
+  }
   async directory() {
     const [manifest, roster, slugs] = await Promise.all([
       this.manifest(),

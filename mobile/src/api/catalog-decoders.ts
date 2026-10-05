@@ -173,6 +173,10 @@ const electorateFields = {
   capacity: count,
   sources: strings,
   url: nonempty,
+  // Local follows compare these to notice a new election result without
+  // reading each seat's detail file.
+  latest_election: optional(nullable(date)),
+  election_count: optional(count),
 };
 const electorate = shape(electorateFields);
 export type Electorate = Decoded<typeof electorate>;
