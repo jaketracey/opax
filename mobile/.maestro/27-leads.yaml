@@ -269,8 +269,13 @@ name: 27 Leads and the declared-interests feed
     id: lead-screen
 - tapOn:
     id: lead-link-money-map
+# E2E shows the guarded web address on the build's reserved origin instead;
+# at AX5 the alert's message can sit below its fold.
 # pointer: /signals/1/category
-- assertVisible: https://opax\.invalid/discover\?category=recipient_concentration&item=recipient_concentration%3Aa186427ec7f0b918
+- scrollUntilVisible:
+    element:
+      text: https://opax\.invalid/discover\?category=recipient_concentration&item=recipient_concentration%3Aa186427ec7f0b918
+    timeout: 20000
 - takeScreenshot: ${EVIDENCE}/27-money-map-link
 - tapOn: OK
 # The declared-interests feed behind Today's recent declarations.
