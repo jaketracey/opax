@@ -3,18 +3,18 @@ const path = require('node:path');
 const config = getDefaultConfig(__dirname);
 const inheritedResolver = config.resolver.resolveRequest;
 const probeModule = path.join(__dirname, 'src/design/text-probe');
+const talkModule = path.join(__dirname, 'src/features/talk/TalkScreen');
 config.resolver.resolveRequest = (context, moduleName, platform) => {
-  if (
-    process.env.OPAX_VARIANT === 'production' &&
-    moduleName.startsWith('.') &&
-    path
-      .resolve(path.dirname(context.originModulePath), moduleName)
-      .replace(/\.[jt]sx?$/, '') === probeModule
-  ) {
-    return {
-      type: 'sourceFile',
-      filePath: `${probeModule}.production.ts`,
-    };
+  const resolved = moduleName.startsWith('.')
+    ? path
+        .resolve(path.dirname(context.originModulePath), moduleName)
+        .replace(/\.[jt]sx?$/, '')
+    : null;
+  if (process.env.OPAX_VARIANT === 'production') {
+    if (resolved === probeModule)
+      return { type: 'sourceFile', filePath: `${probeModule}.production.ts` };
+    if (resolved === talkModule)
+      return { type: 'sourceFile', filePath: `${talkModule}.production.tsx` };
   }
   return typeof inheritedResolver === 'function'
     ? inheritedResolver(context, moduleName, platform)

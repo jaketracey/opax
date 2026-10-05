@@ -1,2 +1,1 @@
-import { TalkComingSoon } from '../features/ComingSoon';
-export default TalkComingSoon;
+export { default } from '../features/talk/TalkScreen';

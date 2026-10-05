@@ -72,7 +72,13 @@ export default function Person() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
   return <ProfileScreen key={slug} slug={slug} />;
 }
-function ProfileScreen({ slug }: { slug: string }) {
+export function ProfileScreen({
+  slug,
+  embedded = false,
+}: {
+  slug: string;
+  embedded?: boolean;
+}) {
   const [profile, setProfile] = useState<ProfileView | null>(null),
     [error, setError] = useState<string | null>(null),
     [retry, setRetry] = useState(0),
@@ -127,15 +133,17 @@ function ProfileScreen({ slug }: { slug: string }) {
   const webPath = `/subject/person/${profile?.slug ?? slug}`;
   return (
     <>
-      <Stack.Screen
-        options={{
-          title: identity?.name ?? '',
-          headerTitle: '',
-          unstable_headerRightItems: identity
-            ? () => [shareHeaderItem({ path: webPath, title: identity.name })]
-            : undefined,
-        }}
-      />
+      {embedded ? null : (
+        <Stack.Screen
+          options={{
+            title: identity?.name ?? '',
+            headerTitle: '',
+            unstable_headerRightItems: identity
+              ? () => [shareHeaderItem({ path: webPath, title: identity.name })]
+              : undefined,
+          }}
+        />
+      )}
       <Screen
         testID={identity ? 'person-screen' : 'person-pending-screen'}
         refreshControl={

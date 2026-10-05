@@ -1,0 +1,216 @@
+appId: au.com.opax.app
+name: 21 Talk consent, captions, sources, controls and refusal states
+---
+- launchApp:
+    clearState: true
+- openLink: opax://talk
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: talk-sign-in
+    timeout: 15000
+- assertVisible: Voice needs a free OPAX account.*
+- takeScreenshot: ${EVIDENCE}/21-signed-out
+- tapOn:
+    id: talk-sign-in
+- assertVisible:
+    id: account-sheet-message
+- runFlow:
+    file: support/talk-fixture-account.yaml
+    env:
+      TALK_EMAIL: happy@example.invalid
+- scrollUntilVisible:
+    element:
+      id: talk-start
+    centerElement: true
+- tapOn:
+    id: talk-start
+- scrollUntilVisible:
+    element:
+      id: talk-agree
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/21-consent
+- tapOn:
+    id: talk-agree
+- scrollUntilVisible:
+    element:
+      id: talk-status
+    direction: UP
+    centerElement: true
+- extendedWaitUntil:
+    visible: Listening to you|OPAX is speaking
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/21-live
+- scrollUntilVisible:
+    element:
+      id: talk-turn-user
+    visibilityPercentage: 10
+- assertVisible: .*Synthetic fixture question.*
+- scrollUntilVisible:
+    element:
+      id: talk-turn-agent
+    visibilityPercentage: 10
+- assertVisible: .*Synthetic corrected greeting.*
+- takeScreenshot: ${EVIDENCE}/21-correction
+- scrollUntilVisible:
+    element:
+      id: talk-source-0
+    centerElement: true
+    visibilityPercentage: 10
+- takeScreenshot: ${EVIDENCE}/21-sources
+- tapOn:
+    id: talk-source-0
+- extendedWaitUntil:
+    visible:
+      id: bill-title
+    timeout: 60000
+- takeScreenshot: ${EVIDENCE}/21-source-record
+- scrollUntilVisible:
+    element:
+      id: talk-record-back
+    direction: UP
+    centerElement: true
+- tapOn:
+    id: talk-record-back
+- scrollUntilVisible:
+    element:
+      id: talk-mute
+    direction: UP
+    centerElement: true
+- tapOn:
+    id: talk-mute
+- scrollUntilVisible:
+    element:
+      id: talk-status
+    direction: UP
+- assertVisible: Your microphone is muted
+- takeScreenshot: ${EVIDENCE}/21-muted
+- scrollUntilVisible:
+    element:
+      id: talk-end
+    centerElement: true
+- tapOn:
+    id: talk-end
+- scrollUntilVisible:
+    element:
+      id: talk-status
+    direction: UP
+- extendedWaitUntil:
+    visible: Conversation ended. Your microphone is off.
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/21-ended
+- scrollUntilVisible:
+    element:
+      id: talk-withdraw
+    centerElement: true
+- tapOn:
+    id: talk-withdraw
+- scrollUntilVisible:
+    element:
+      id: talk-consent-state
+    direction: UP
+    visibilityPercentage: 10
+- assertVisible: Voice processing consent has not been given on this device.
+- takeScreenshot: ${EVIDENCE}/21-withdrawn
+- scrollUntilVisible:
+    element:
+      id: talk-start
+    direction: UP
+    centerElement: true
+- tapOn:
+    id: talk-start
+- scrollUntilVisible:
+    element:
+      id: talk-not-now
+    centerElement: true
+- tapOn:
+    id: talk-not-now
+- takeScreenshot: ${EVIDENCE}/21-consent-declined
+- runFlow:
+    file: support/talk-fixture-account.yaml
+    env:
+      TALK_EMAIL: deadline@example.invalid
+- scrollUntilVisible:
+    element:
+      id: talk-start
+    centerElement: true
+- tapOn:
+    id: talk-start
+- scrollUntilVisible:
+    element:
+      id: talk-agree
+    centerElement: true
+- tapOn:
+    id: talk-agree
+- scrollUntilVisible:
+    element:
+      id: talk-status
+    direction: UP
+    visibilityPercentage: 10
+- extendedWaitUntil:
+    visible: Your free voice allowance is complete. Your microphone is off.
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      id: talk-allowance
+    visibilityPercentage: 10
+- assertVisible: 0:00 remaining.*
+- takeScreenshot: ${EVIDENCE}/21-deadline
+- runFlow:
+    file: support/talk-fixture-account.yaml
+    env:
+      TALK_EMAIL: exhausted@example.invalid
+- scrollUntilVisible:
+    element:
+      id: talk-status
+    visibilityPercentage: 10
+- assertVisible: You have used your free voice allowance.*
+- takeScreenshot: ${EVIDENCE}/21-exhausted
+- assertNotVisible:
+    id: talk-start
+- runFlow:
+    file: support/talk-fixture-account.yaml
+    env:
+      TALK_EMAIL: disabled@example.invalid
+- scrollUntilVisible:
+    element:
+      id: talk-status
+    visibilityPercentage: 10
+- assertVisible: Voice is taking a break.*
+- takeScreenshot: ${EVIDENCE}/21-disabled
+- assertNotVisible:
+    id: talk-start
+- runFlow:
+    file: support/talk-fixture-account.yaml
+    env:
+      TALK_EMAIL: budget@example.invalid
+- scrollUntilVisible:
+    element:
+      id: talk-status
+    visibilityPercentage: 10
+- assertVisible: Voice is closed for the rest of this month.*
+- takeScreenshot: ${EVIDENCE}/21-budget
+- assertNotVisible:
+    id: talk-start
+- runFlow:
+    file: support/talk-fixture-account.yaml
+    env:
+      TALK_EMAIL: drop@example.invalid
+- scrollUntilVisible:
+    element:
+      id: talk-start
+    centerElement: true
+- tapOn:
+    id: talk-start
+- scrollUntilVisible:
+    element:
+      id: talk-status
+    direction: UP
+    visibilityPercentage: 10
+- extendedWaitUntil:
+    visible: The connection ended.*
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/21-drop
+- tapOn: Done

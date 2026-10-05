@@ -52,7 +52,13 @@ export default function Electorate() {
   const { id } = useLocalSearchParams<{ id: string }>();
   return <ElectorateScreen key={id} id={id} />;
 }
-function ElectorateScreen({ id }: { id: string }) {
+export function ElectorateScreen({
+  id,
+  embedded = false,
+}: {
+  id: string;
+  embedded?: boolean;
+}) {
   const [view, setView] = useState<ElectorateView | null>(null),
     [directory, setDirectory] = useState<Directory | null>(null),
     [error, setError] = useState<string | null>(null),
@@ -106,18 +112,20 @@ function ElectorateScreen({ id }: { id: string }) {
     );
   return (
     <>
-      <Stack.Screen
-        options={{
-          title: identity?.name ?? '',
-          headerTitle: '',
-          unstable_headerRightItems:
-            identity && seat
-              ? () => [
-                  shareHeaderItem({ path: seat.url, title: identity.name }),
-                ]
-              : undefined,
-        }}
-      />
+      {embedded ? null : (
+        <Stack.Screen
+          options={{
+            title: identity?.name ?? '',
+            headerTitle: '',
+            unstable_headerRightItems:
+              identity && seat
+                ? () => [
+                    shareHeaderItem({ path: seat.url, title: identity.name }),
+                  ]
+                : undefined,
+          }}
+        />
+      )}
       <Screen
         testID="electorate-screen"
         refreshControl={

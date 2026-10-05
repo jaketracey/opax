@@ -35,11 +35,10 @@ and a harmless unsubscribe function when the module is absent. Development and
 e2e retain the native module. The UI lane must remove the exclusion deliberately
 when consent, purpose string and the related release gates are ready.
 
-Development consent is deliberately denied and its permission dependency cannot
-request the microphone. `NSMicrophoneUsageDescription` is absent in every variant,
-including e2e, which needs no permission. The UI lane must implement and store
-explicit third-party consent with withdrawal, wire the permission dependency,
-and deliberately update `withNetworkPolicy.js` and native policy gates before
+Development and e2e consent starts denied. The Talk UI stores an explicit choice
+on this device and can withdraw it during a call. Its permission dependency is
+wired to Apple permission but refuses access while the purpose string is absent. `NSMicrophoneUsageDescription` is absent in every variant,
+including e2e, which needs no permission. The release lane must deliberately update `withNetworkPolicy.js` and native policy gates before
 adding the purpose string. Never enable consent automatically in production.
 
 The UI needs sign-in/code entry, deletion confirmation and proof entry, every

@@ -1,0 +1,29 @@
+appId: au.com.opax.app
+---
+# The bridge workbench is compiled only for e2e and never sends email.
+- openLink: opax://voice-bridge-test
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: voice-bridge-test-title
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: voice-logout
+    centerElement: true
+- tapOn:
+    id: voice-logout
+- runFlow:
+    file: voice-code.yaml
+    env:
+      VOICE_EMAIL: ${TALK_EMAIL}
+- openLink: opax://talk
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: talk-sheet-message
+    timeout: 15000

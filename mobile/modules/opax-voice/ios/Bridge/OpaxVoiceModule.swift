@@ -31,6 +31,11 @@ public final class OpaxVoiceModule: Module {
         AsyncFunction("status") { await self.controller.status() }
         AsyncFunction("requestCode") { (email: String) in await self.controller.requestCode(email) }
         AsyncFunction("consumeCode") { (challenge: String, code: String) in await self.controller.consumeCode(challenge, code) }
+        AsyncFunction("consent") { await self.controller.consent() }
+        AsyncFunction("setConsent") { (granted: Bool) in await self.controller.setConsent(granted) }
+        AsyncFunction("sendText") { (text: String) in await self.controller.sendText(text) }
+        AsyncFunction("discardEvidence") { await self.controller.discardEvidence() }
+        AsyncFunction("background") { await self.controller.background() }
         AsyncFunction("start") { await self.controller.start() }
         AsyncFunction("mute") { (muted: Bool) in await self.controller.mute(muted) }
         AsyncFunction("end") { await self.controller.end() }

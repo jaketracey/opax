@@ -1,17 +1,19 @@
 import Foundation
 import OpaxVoiceCore
 
+// Consent starts false in every build. Only an explicit UI choice writes it.
 private struct BridgeConsent: VoiceConsent {
-    func isGranted() async -> Bool {
-        #if OPAX_VOICE_E2E && targetEnvironment(simulator)
-        return true // Synthetic fixture consent only. Never ships in production.
-        #else
-        return false // Voice UI must implement explicit consent before enabling calls.
-        #endif
-    }
+    static let key = "opax.voice.consent.v1"
+    func isGranted() async -> Bool { UserDefaults.standard.bool(forKey: Self.key) }
 }
-private struct DeferredMicrophonePermission: MicrophonePermission {
-    func request() async -> Bool { false }
+private struct ReleaseGatedMicrophonePermission: MicrophonePermission {
+    func request() async -> Bool {
+        // The purpose string is a later, deliberate release decision. Never
+        // request hardware permission until that reviewed input exists.
+        guard let purpose = Bundle.main.object(forInfoDictionaryKey: "NSMicrophoneUsageDescription") as? String,
+              !purpose.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return false }
+        return await AppleMicrophonePermission().request()
+    }
 }
 
 /// Exactly one core and authenticated client per Expo module instance.
@@ -36,7 +38,7 @@ actor VoiceController {
         #else
         policy = RoutePolicy()
         engines = AppleVoiceEngineFactory()
-        permission = DeferredMicrophonePermission()
+        permission = ReleaseGatedMicrophonePermission()
         audioSession = AppleVoiceAudioSession()
         store = KeychainCredentialStore(policy: policy)
         #endif
@@ -64,6 +66,17 @@ actor VoiceController {
             return await status()
         } catch { return VoiceBridgeValue.failure(error) }
     }
+    func consent() -> Bool { UserDefaults.standard.bool(forKey: BridgeConsent.key) }
+    func setConsent(_ granted: Bool) async {
+        UserDefaults.standard.set(granted, forKey: BridgeConsent.key)
+        if !granted { await call.withdrawConsent() }
+    }
+    func sendText(_ text: String) async -> [String: Any] {
+        do { try await call.sendText(text); return VoiceBridgeValue.success() }
+        catch { return VoiceBridgeValue.failure(error) }
+    }
+    func discardEvidence() async { await call.discardEvidence() }
+    func background() async { await call.handle(.background) }
     func start() async -> [String: Any] { await call.start(); return VoiceBridgeValue.success() }
     func mute(_ muted: Bool) async -> [String: Any] { await call.setMuted(muted); return VoiceBridgeValue.success() }
     func end() async -> [String: Any] { await call.end(); return VoiceBridgeValue.success() }
