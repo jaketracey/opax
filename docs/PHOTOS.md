@@ -174,11 +174,15 @@ kept last release's copy under the old one-hour-plus-a-day headers ignores new h
 asks again, so the fetch option is what retires it: the browser revalidates (an ETag round trip, a
 304 with no body when nothing changed) and takes the corrected file on the next page load. The
 bills already work this way. `portal/test/identity-cache.test.mjs` runs the loaders against a
-recording `fetch`, scans every module's fetches of these paths and checks the header rules; a
-headless Chrome profile primed with the old roster got the corrected one on its next load (round 2
-of the review). Answers cached under `CACHE_EPOCH` (a pay ranking naming "Ian McLachlan") stay
-until the epoch next moves, which the nightly does only when the knowledge box changes; bump it
-with `scripts/bump_cache_epoch.py` at deploy if that matters.
+recording `fetch`, scans every module's fetches of these paths and checks the header rules; checked
+with `wrangler dev` and a headless Chrome profile primed by the release before this branch (Rex
+Patrick's face and 1,598 divisions on Patrick Conaghan, then served from disk): the next load took
+every identity file from the network and showed Pat Conaghan's face and 1,199 divisions, no face or
+votes on Graeme Campbell and Cox; the same profile with round 1's loaders kept serving the old
+files from disk (`scripts/_photos_work/qa-portrait-pairs-r2/`). Answers cached under `CACHE_EPOCH`
+(a pay ranking naming "Ian McLachlan") stay until the epoch next moves, which the nightly does only
+when the knowledge box changes; bump it with `scripts/bump_cache_epoch.py` at deploy if that
+matters.
 
 **Nightly safety net.** The roster export runs against the real database only in the weekly group
 (Sundays, step `x_people`), and the corrected roster above came from the pinned exports, so
