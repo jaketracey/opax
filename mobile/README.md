@@ -91,6 +91,19 @@ again; otherwise `scripts/e2e-device.sh` boots, installs, runs every Maestro pha
 (including offline 04), restores settings and shuts down before the lock is released.
 `device-timing.txt` records boot, install, total device setup and cleanup seconds
 added to lock holding time.
+Boot (including a simulator-gate wait) is limited to 300 seconds, install to 240,
+each simulator UI call to 10 and shutdown to 20. `OPAX_BOOT_TIMEOUT_SECONDS`,
+`OPAX_INSTALL_TIMEOUT_SECONDS`, `OPAX_SIMCTL_TIMEOUT_SECONDS` and
+`OPAX_SHUTDOWN_TIMEOUT_SECONDS` override these positive limits. A run never waits
+for host capacity, a build slot or the pasteboard lock while holding the lock;
+the simulator-gate wait and device calls inside it have the limits above.
+The device command gets a 120-second stop grace (`OPAX_E2E_STOP_GRACE_SECONDS`),
+enough for four bounded restore/readback calls and shutdown. The parent attempts
+a bounded fallback shutdown after release if the device started but did not
+confirm shutdown. This fallback does not run for a queued lane that never started.
+The isolated harness tests have a 300-second overall limit
+(`OPAX_E2E_TEST_TIMEOUT_SECONDS`) and clean up their own scratch process groups
+when the limit expires.
 Screenshot collection and fixture teardown follow release (offline 04 stops its
 fixture while locked). The wrapper leads its own process group: the device command,
 Maestro and their children run in it, and release first stops any leftovers.
@@ -114,8 +127,10 @@ If a lock stays held, read `lock.log` and `<lock>/owner`, then:
   Maestro's leftovers still run. Stop them with `kill -TERM -- -<pgid>`; the next waiter
   then retires the lock.
 - **OPAX owner, live pid:** the run is still going. To stop it now, `kill -TERM <pid>`;
-  the wrapper stops its group and releases. A TERM to `e2e.sh` itself takes effect when
-  the current Maestro run returns.
+  the wrapper stops its group and releases. A TERM to `e2e.sh` itself takes effect
+  promptly, including while waiting for capacity or queued in the build gate:
+  it records cancellation, stops its wait tree, waits for its active lock owner
+  to finish cleanup and then stops its fixture. A cancelled device command never boots.
 - **No owner file:** the lock belongs to another project or an older OPAX script. Leave
   it. Remove it with `rmdir` only after its owner confirms nothing uses the pasteboard.
 
@@ -129,7 +144,9 @@ OPAX_QA_RUN=<run> nohup scripts/e2e.sh <udid> 01 02 > private/qa/<run>.out 2>&1 
 
 Its first line is `E2E pid=<pid> status=private/qa/<run>/exit-status` (the path is
 absolute). The status file holds the exit code and appears only after cleanup: lock
-released, fixture stopped, simulator shut down. If the pid is gone with no status file,
+released, fixture stopped, simulator shutdown confirmed or its bounded fallback
+attempt finished (read `restore.log` and `fallback-shutdown.log` for errors).
+If the pid is gone with no status file,
 the run was killed: read `lock.log`, then shut the simulator down yourself. Start a
 release the same way, logging under ignored `private/` so the worktree stays clean
 (`nohup scripts/release-ios.sh --build-number N > private/release-N.out 2>&1 &`).
