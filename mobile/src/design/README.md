@@ -72,7 +72,10 @@ Design workbench) to see every component and state at the current text size.
   `wordSafe` stops a word splitting across lines: when a laid-out line ends
   inside a word, the text lowers its own Dynamic Type cap in 10% steps until
   the word fits, never below the reader's default size, and starts again from
-  full size when the text size, width or text (nested text included) changes.
+  full size when the text size, window width, role, Bold Text or text (nested
+  text included) changes, or when its column grows wider than the widest line
+  at the break plus one line height. Only a layout measured at the size now
+  drawn moves the cap, and only downwards, so a late event cannot undo a step.
   The cap scales the role's font size and line height, never
   `maxFontSizeMultiplier`: React Native's text measure cache ignores that prop,
   so a cap passed through it keeps the full-size layout and drawing.

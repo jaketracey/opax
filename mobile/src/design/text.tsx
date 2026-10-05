@@ -113,6 +113,85 @@ export function nextWordSafeCap(
 }
 
 /**
+ * A word-safe text's cap. `key` is the text size, window width, role, weight
+ * and text it belongs to; `full` is the uncapped multiplier, measured at the
+ * first mid-word break. `lineWidth` and `slack` record the column it broke
+ * in: its widest line then, and one line height.
+ */
+export interface WordSafeCap {
+  key: string;
+  cap: number;
+  full: number;
+  lineWidth: number;
+  slack: number;
+}
+export const fullSize = (key: string): WordSafeCap => ({
+  key,
+  cap: 0,
+  full: 0,
+  lineWidth: 0,
+  slack: 0,
+});
+/** Two-place rounding of the line height leaves this much noise. */
+const MEASURED_AT_TOLERANCE = 0.03;
+
+/**
+ * The cap after one layout of a word-safe text. It only steps down, in 10%
+ * steps, after a mid-word break, and only from a layout measured at the size
+ * now drawn: an older layout delivered late (full size after a cap, or a
+ * capped one after a reset) can neither raise nor lower it. Returns
+ * `previous` itself when nothing changes, so React skips the update.
+ */
+export function wordSafeAfterLayout(
+  previous: WordSafeCap,
+  key: string,
+  lines: readonly { text: string; width: number; height: number }[],
+  baseLineHeight: number,
+): WordSafeCap {
+  if (!lines.length) return previous;
+  const state = previous.key === key ? previous : fullSize(key);
+  const measuredAt = lineScale(lines[0]!.height, baseLineHeight);
+  const drawnAt = state.cap || state.full;
+  if (drawnAt && Math.abs(measuredAt - drawnAt) > MEASURED_AT_TOLERANCE)
+    return previous;
+  if (!breaksMidWord(lines)) return previous;
+  const next = nextWordSafeCap(lines[0]!.height, baseLineHeight);
+  if (next === null || (state.cap && next >= state.cap)) return previous;
+  return {
+    key,
+    cap: next,
+    full: state.full || measuredAt,
+    lineWidth:
+      state.lineWidth ||
+      Math.max(
+        0,
+        ...lines.map((line) => (Number.isFinite(line.width) ? line.width : 0)),
+      ),
+    slack: state.slack || lines[0]!.height,
+  };
+}
+
+/**
+ * The cap after the text's frame changes width. A char-wrapped line fills
+ * its column to within one glyph, and a smaller font never draws wider than
+ * that column, so a frame wider than the widest line at the break plus one
+ * line height means the column itself grew: start again from full size,
+ * keeping the measured uncapped multiplier. Narrower frames keep the cap; a
+ * mid-word break in a narrower column steps it down as usual.
+ */
+export function wordSafeAfterResize(
+  previous: WordSafeCap,
+  key: string,
+  frameWidth: number,
+): WordSafeCap {
+  // Without measured line widths there is no column to compare against.
+  if (previous.key !== key || !previous.cap || !previous.lineWidth)
+    return previous;
+  if (frameWidth <= previous.lineWidth + previous.slack) return previous;
+  return { ...fullSize(key), full: previous.full };
+}
+
+/**
  * All content text. Scales with its Dynamic Type ramp to AX5 with no fixed
  * cap and no line limit; never pass `numberOfLines` for names, titles, figures
  * or caveats.
@@ -130,20 +209,20 @@ export function Text({
   const role = textStyles[variant];
   const tabular = 'tabular' in role && role.tabular;
   const { fontScale, width, scale } = useWindowDimensions();
-  // A cap belongs to one text size, width and text (nested text included, such
-  // as a field's "(required)"): any change starts again from full size.
+  // A cap belongs to one text size, window width, role, weight and text
+  // (nested text included, such as a field's "(required)"): any change starts
+  // again from full size, and so does a wider column (onLayout below).
   const content = textContent(props.children);
-  const key = `${fontScale}|${width}|${content}`;
-  // `full` is the uncapped multiplier, measured at the first mid-word break.
-  const [capped, setCapped] = useState({ key, cap: 0, full: 0 });
-  const { cap, full } = capped.key === key ? capped : { cap: 0, full: 0 };
+  const key = `${fontScale}|${width}|${variant}|${bold}|${content}`;
+  const [capped, setCapped] = useState(() => fullSize(key));
+  const { cap, full } = capped.key === key ? capped : fullSize(key);
   // React Native's text measure cache compares fonts by size, multiplier and
   // ramp but not maxFontSizeMultiplier, so a cap passed that way keeps the
   // cached full-size layout and drawing ("Parliamentar / y" in About at AX5).
   // The cap scales the role's own size and line height instead, which the
   // cache does compare; Dynamic Type multiplies the result by the same ramp.
   const capScale = wordSafe && cap && full ? cap / full : 1;
-  const heightKey = `${key}|${variant}|${bold}|${cap}|${scale}`;
+  const heightKey = `${key}|${cap}|${scale}`;
   const probe = useTextProbe(props, heightKey, content);
   const measured = useRef<{
     key: string;
@@ -221,15 +300,14 @@ export function Text({
     guardDrawing();
     if (!wordSafe) return;
     const lines = event.nativeEvent.lines;
-    if (!lines.length || !breaksMidWord(lines)) return;
-    const base = role.lineHeight + LINE_HEIGHT_NUDGE;
-    const next = nextWordSafeCap(lines[0]!.height, base);
-    if (next !== null)
-      setCapped({
+    setCapped((previous) =>
+      wordSafeAfterLayout(
+        previous,
         key,
-        cap: next,
-        full: full || lineScale(lines[0]!.height, base),
-      });
+        lines,
+        role.lineHeight + LINE_HEIGHT_NUDGE,
+      ),
+    );
   };
   return (
     <NativeText
@@ -244,6 +322,10 @@ export function Text({
         onLayout?.(event);
         const frame = event.nativeEvent.layout;
         if (frame.width <= 0 || frame.height <= 0) return;
+        if (wordSafe)
+          setCapped((previous) =>
+            wordSafeAfterResize(previous, key, frame.width),
+          );
         // This event may still include the old floor. Forget that frame and
         // its lines before removing the floor, then wait for a fresh layout.
         if (
