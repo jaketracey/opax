@@ -47,7 +47,12 @@
     "/interests/11034.json": "46690ff3b10a3fb538df71e377e45710a00adb7373f39a704ecf04738ca4c5fa",
     "/bills/au-federal-r6850.json": "4dea516900856f35aaf82ab26fe3e16e297a4e618da833c778f88aaca0eb4df4",
     "/interests/10368.json": "ff5efe599a6eed1e8f86294a12d7162c1163b3b1eba26b6ff81438c6f5df41bd",
-    "/electorates/releases/b56417062ccc33cf/el_8675b02bc36a5ecc9916fb12.json": "9f9fc62df45601cdaed7da268a439760fd4fe3796d143385ddffcb20e55213a5"
+    "/electorates/releases/b56417062ccc33cf/el_8675b02bc36a5ecc9916fb12.json": "9f9fc62df45601cdaed7da268a439760fd4fe3796d143385ddffcb20e55213a5",
+    "/discovery.json": "ec40618f59d52e1632e1d04e0fda353cb93f9a57a757c70cc42f64010d892366",
+    "/photos/wd-Q134384419.webp": "34c8fdf27e0d1284ecbc6245ab2f2282b21a53b9558efc80b197945ed26ad42c",
+    "/photos/wd-Q134590436.webp": "6396fc61ef52e4a37e1b3e5b1e21230134861071db8ae6d66a46685fdd1faf5b",
+    "/photos/wd-Q134312684.webp": "e0035d5c4a6ebc582b8273d933f912822731163c22fdd5222e563f275cfe7e4b",
+    "/photos/wd-Q133500279.webp": "39a16739d4e181f06f57bbef358798f90b5becde508635254361af15178ce0e8"
   },
   "sizes": {
     "/parliamentarians.json": 405665,
@@ -95,7 +100,12 @@
     "/interests/11034.json": 7188,
     "/bills/au-federal-r6850.json": 3139,
     "/interests/10368.json": 5581,
-    "/electorates/releases/b56417062ccc33cf/el_8675b02bc36a5ecc9916fb12.json": 17378
+    "/electorates/releases/b56417062ccc33cf/el_8675b02bc36a5ecc9916fb12.json": 17378,
+    "/discovery.json": 158573,
+    "/photos/wd-Q134384419.webp": 2826,
+    "/photos/wd-Q134590436.webp": 4910,
+    "/photos/wd-Q134312684.webp": 5322,
+    "/photos/wd-Q133500279.webp": 4202
   },
   "testOnlyFiles": ["/graph/money.json", "/interests/ties-by-donor.json"],
   "responses": {

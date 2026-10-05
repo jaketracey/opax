@@ -14,6 +14,8 @@ const staticPaths = new Set([
   '/photos/people.json',
   '/photos/credits.json',
   '/corpus.json',
+  // Leads (P1): the static discovery export, 60 signals with their caveats.
+  '/discovery.json',
 ]);
 // W13 frozen daily edition: one D1 read of the posted journal, no model,
 // preview or OG path (docs/IOS-API-CONTRACT.md, "App readers"). Only `latest`:

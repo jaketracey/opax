@@ -759,6 +759,82 @@ export const decodeCorpus = shape({
   }),
 });
 export type Corpus = Decoded<typeof decodeCorpus>;
+// /discovery.json (scripts/export_discovery.py; docs/DISCOVERY.md). A signal is
+// a lead, never a finding: its title, summary, metric labels, evidence labels
+// and caveats are the export's own sentences and stay verbatim. The export's
+// timestamps carry microseconds, which not every engine parses, so the
+// calendar date is checked on its own.
+const exportTimestamp = (v: unknown) => {
+  const s = matching(/^\d{4}-\d{2}-\d{2}T/)(v);
+  date(s.slice(0, 10));
+  return s;
+};
+const leadMetric = shape({
+  label: nonempty,
+  value: number,
+  format: matching(/^(?:currency|number|percent)$/) as (
+    v: unknown,
+  ) => 'currency' | 'number' | 'percent',
+});
+const leadEvidence = shape({
+  label: nonempty,
+  table: nonempty,
+  record_id: nonempty,
+  url: nullable(url),
+  link_scope: optional(text),
+});
+const leadParticipant = shape({
+  name: nonempty,
+  value: number,
+  share: number,
+  record_count: count,
+});
+const leadChart = shape({
+  type: nonempty,
+  group_label: nonempty,
+  group_total: number,
+  leading_name: nonempty,
+  participant_label: nonempty,
+  participant_count: count,
+  record_count: count,
+  participants: nonemptyArray(leadParticipant),
+  other_total: number,
+  other_share: number,
+  other_count: count,
+  period: optional(
+    shape({
+      kind: nonempty,
+      from: nullable(text),
+      to: nullable(text),
+      undated_records: optional(count),
+      invalid_date_records: optional(count),
+    }),
+  ),
+});
+export const decodeDiscovery = shape({
+  signals: array(
+    shape({
+      id: nonempty,
+      category: nonempty,
+      entity: nonempty,
+      title: nonempty,
+      summary: nonempty,
+      metrics: array(leadMetric),
+      evidence: array(leadEvidence),
+      caveats: nonemptyArray(nonempty),
+      chart: optional(leadChart),
+    }),
+  ),
+  coverage: shape({
+    donations: count,
+    contracts: count,
+    snapshot_at: optional(exportTimestamp),
+  }),
+  methodology: nonemptyArray(nonempty),
+  generated_at: exportTimestamp,
+});
+export type Discovery = Decoded<typeof decodeDiscovery>;
+export type DiscoverySignal = Discovery['signals'][number];
 export const decodeSearch = shape({
   query: text,
   kind: matching(/^(?:person|interest|pay|expense)$/),
