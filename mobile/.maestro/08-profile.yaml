@@ -97,10 +97,17 @@ name: 08 Independent profile blocks, current senator, former member and local sh
     timeout: 300000
 - takeScreenshot: ${EVIDENCE}/08-commons-portrait
 - runFlow:
-    file: 06-open-profile.yaml
+    file: 08-open-profile.yaml
     env:
       NAME: Julia Gillard
       SLUG: julia-gillard
+- scrollUntilVisible:
+    element:
+      id: person-party
+    centerElement: true
+    timeout: 300000
+- assertVisible: Formerly Labor
+- assertNotVisible: ^Labor$
 - runFlow:
     file: review-pages.yaml
     env:
