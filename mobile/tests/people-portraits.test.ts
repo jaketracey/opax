@@ -53,9 +53,9 @@ test('portrait service resolves the same canonical route IDs and directory slugs
     expect(byID).toEqual(bySlug);
     expect(byID?.localURI).toBe(`file:///cache/${key}.webp`);
   }
-  expect(source.directory).toHaveBeenCalledTimes(1);
-  expect(source.photoPeople).toHaveBeenCalledTimes(1);
-  expect(source.photoCredits).toHaveBeenCalledTimes(1);
+  expect(source.directory).toHaveBeenCalledTimes(4);
+  expect(source.photoPeople).toHaveBeenCalledTimes(4);
+  expect(source.photoCredits).toHaveBeenCalledTimes(4);
   expect(cache.get).toHaveBeenCalledTimes(8);
 });
 test('unknown canonical IDs and withheld shared faces never reach the image cache', async () => {
@@ -72,4 +72,50 @@ test('unknown canonical IDs and withheld shared faces never reach the image cach
     ).toBeNull();
   }
   expect(cache.get).not.toHaveBeenCalled();
+});
+
+test('a refreshed portrait map and credits replace the saved index, including a removed photo', async () => {
+  const { reader, source, cache } = service();
+  const original = await reader.get({ slug: 'sheena-watt' });
+  expect(original?.info.key).toBe('wd-Q100327610');
+  source.photoCredits.mockResolvedValue({
+    data: {
+      ...catalogs.photoCredits!,
+      'wd-Q100327610': {
+        ...catalogs.photoCredits!['wd-Q100327610']!,
+        artist: 'Updated attribution',
+      },
+    },
+  });
+  expect(
+    (await reader.get({ slug: 'sheena-watt', refresh: true }))?.info.credit,
+  ).toContain('Updated attribution');
+  const { ['sheena watt']: _removed, ...remaining } = catalogs.photoPeople!;
+  source.photoPeople.mockResolvedValue({ data: remaining });
+  expect(await reader.get({ slug: 'sheena-watt' })).toBeNull();
+  expect(cache.get).toHaveBeenCalledTimes(2);
+  expect(source.directory).toHaveBeenLastCalledWith(false);
+  expect(source.photoCredits).toHaveBeenCalledWith(true);
+});
+test('a refreshed directory spelling is checked again before the ID fallback', async () => {
+  const { reader, source } = service();
+  expect((await reader.get({ slug: 'jess-walsh' }))?.info.key).toBe('10956');
+  const directory = await source.directory();
+  source.directory.mockResolvedValue({
+    ...directory,
+    slugs: {
+      data: {
+        ...catalogs.slugs,
+        slugs: { ...catalogs.slugs.slugs, 'jess-walsh': 'Walsh' },
+      },
+    },
+  });
+  expect(await reader.get({ slug: 'jess-walsh' })).toBeNull();
+});
+test('surname routes and name-only lookups never fall through to the canonical full-name image', async () => {
+  const { reader, cache } = service();
+  expect(await reader.get({ slug: 'walsh', name: 'Jess Walsh' })).toBeNull();
+  expect(await reader.get({ name: 'Walsh' })).toBeNull();
+  expect(cache.get).not.toHaveBeenCalled();
+  expect((await reader.get({ slug: 'jess-walsh' }))?.info.key).toBe('10956');
 });

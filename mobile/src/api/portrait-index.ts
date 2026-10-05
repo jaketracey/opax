@@ -23,8 +23,7 @@ function identityNames(p: PersonProfile, c: PortraitCatalogs): string[] {
   const release = c.people.people.find(
     (r) => r.person_id === p.canonicalPersonId,
   );
-  // Only a resolved release can turn a surname/initials entry into a full identity.
-  if (!fullPortraitName(p.name) && !release) return [];
+  if (!fullPortraitName(p.name)) return [];
   return [
     p.name,
     release?.name ?? '',
@@ -75,6 +74,9 @@ function* portraitIndexSteps(c: PortraitCatalogs) {
         c.manifest,
       );
       identities.set(slug, identity);
+      // A short directory row may combine several people. Its linked ID cannot
+      // establish whose speeches the row contains, even if that ID has a face.
+      if (!fullPortraitName(identity.name)) continue;
       const portrait = portraitFor(
         identityNames(identity, c),
         c.photoPeople,
@@ -112,12 +114,6 @@ function* portraitIndexSteps(c: PortraitCatalogs) {
       ([key, group]) =>
         !conflicts.has(key) &&
         group.some((a) => group.some((b) => !samePortraitPerson(a, b))),
-    ).length,
-    refusedSurnameKeys: Object.keys(c.photoPeople).filter(
-      (n) => n.trim().split(/\s+/).length === 1,
-    ).length,
-    refusedInitialKeys: Object.keys(c.photoPeople).filter(
-      (n) => n.trim().split(/\s+/).length > 1 && !fullPortraitName(n),
     ).length,
   };
 }

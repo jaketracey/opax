@@ -20,6 +20,7 @@ export function Portrait({
   name,
   official = false,
   nameBeside = true,
+  onDisplay,
 }: {
   size?: keyof typeof portraitSizes;
   testID?: string;
@@ -27,6 +28,7 @@ export function Portrait({
   name?: string;
   official?: boolean;
   nameBeside?: boolean;
+  onDisplay?: (visible: boolean) => void;
 }) {
   const [failedURI, setFailedURI] = useState<string | null>(null);
   const dimension = portraitSizes[size];
@@ -69,7 +71,11 @@ export function Portrait({
             decorative ? 'no-hide-descendants' : 'auto'
           }
           accessibilityIgnoresInvertColors
-          onError={() => setFailedURI(uri!)}
+          onLoad={() => onDisplay?.(true)}
+          onError={() => {
+            setFailedURI(uri!);
+            onDisplay?.(false);
+          }}
         />
       ) : null}
     </View>

@@ -4,7 +4,7 @@ import {
   buildPortraitIndexAsync,
   samePortraitPerson,
 } from '../src/api/portrait-index';
-import { portraitFor } from '../src/api/selectors';
+import { fullPortraitName, portraitFor } from '../src/api/selectors';
 import { assertPortraitBytes } from '../src/api/portrait-policy';
 import { PortraitCache, type SavedPortrait } from '../src/api/portrait-cache';
 import { catalogs, pinnedBytes, roster } from './pinned';
@@ -14,8 +14,11 @@ import { pinnedPortraitBlobs } from '../scripts/portrait-byte-probe';
 test('the pinned directory refuses surname/initials keys and every unrelated shared face', () => {
   const index = buildPortraitIndex(catalogs as PortraitCatalogs);
   expect(roster.people).toHaveLength(1557);
-  expect(index.refusedSurnameKeys).toBe(206);
-  expect(index.refusedInitialKeys).toBe(51);
+  const shortRows = [...index.identities].filter(
+    ([, p]) => !fullPortraitName(p.name),
+  );
+  expect(shortRows.length).toBeGreaterThan(0);
+  for (const [slug] of shortRows) expect(index.portraits.has(slug)).toBe(false);
   expect(index.portraits.get('anthony-albanese')?.key).toBe('10007');
   expect(index.portraits.get('sheena-watt')?.key).toBe('wd-Q100327610');
   expect(index.portraits.has('madonna-jarrett')).toBe(false);
@@ -155,4 +158,46 @@ test('yielding native directory lookup retains every synchronous identity refusa
   expect(UIHandled).toBe(true);
   expect([...asyncIndex.portraits]).toEqual([...sync.portraits]);
   expect(asyncIndex.conflictingKeysRefused).toBe(sync.conflictingKeysRefused);
+});
+
+const reviewedShortRows = [
+  ['Morton', 'ben-morton', '10886'],
+  ['Edwards', 'graham-edwards', '10190'],
+  ['Jackson', 'sharryn-jackson', '10328'],
+  ['Walsh', 'jess-walsh', '10956'],
+  ['Howard', 'john-howard', '10313'],
+  ['Murphy', 'john-murphy', '10473'],
+  ['Walker', 'charlotte-walker', 'wd-Q134590436'],
+  ['Wilson', 'rick-wilson', '10816'],
+] as const;
+test.each(reviewedShortRows)(
+  '%s stays blank despite a resolved ID, while %s keeps its portrait',
+  (name, fullSlug, key) => {
+    const index = buildPortraitIndex(catalogs as PortraitCatalogs);
+    const short = [...index.identities].find(([, p]) => p.name === name)!;
+    expect(short[1].canonicalPersonId).toBeTruthy();
+    expect(short[1].legacyPersonId).toBeTruthy();
+    expect(index.portraits.has(short[0])).toBe(false);
+    expect(index.identities.get(fullSlug)?.canonicalPersonId).toBe(
+      short[1].canonicalPersonId,
+    );
+    expect(index.portraits.get(fullSlug)?.key).toBe(key);
+  },
+);
+test('initials cannot acquire a face through the same resolved roster ID as a full-name entry', () => {
+  const row = roster.people.find((p) => p.name === 'Ben Morton')!;
+  const index = buildPortraitIndex({
+    ...catalogs,
+    slugs: {
+      ...catalogs.slugs,
+      slugs: { ...catalogs.slugs.slugs, 'b-morton': 'B. Morton' },
+    },
+    roster: {
+      ...roster,
+      people: [...roster.people, { ...row, name: 'B. Morton' }],
+    },
+  } as PortraitCatalogs);
+  expect(index.identities.get('b-morton')?.legacyPersonId).toBe(row.pid);
+  expect(index.portraits.has('b-morton')).toBe(false);
+  expect(index.portraits.get('ben-morton')?.key).toBe('10886');
 });

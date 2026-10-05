@@ -609,8 +609,6 @@ export function declarationCategoryFor(bucket: string) {
 }
 export interface DeclarationCatalogs {
   roster?: Roster;
-  photoPeople?: PhotoPeople;
-  photoCredits?: PhotoCredits;
 }
 /** The register named by this row, rather than the multi-register dataset. */
 export function registerSourceLabelFor(item: RecentInterests['items'][number]) {
@@ -646,26 +644,12 @@ export function recentDeclarationsFor(
       } catch {
         /* Conflicting roster observations must not invent an affiliation. */
       }
-      let portrait: ReturnType<typeof portraitFor> = null;
-      if (catalogs.photoPeople && catalogs.photoCredits) {
-        try {
-          portrait = portraitFor(
-            [item.name, ...(row ? [row.name] : [])],
-            catalogs.photoPeople,
-            catalogs.photoCredits,
-            row?.pid,
-          );
-        } catch {
-          /* Ambiguous photo identities keep the blank circle. */
-        }
-      }
       return {
         ...item,
         ...personPartyFor([], row, row),
         party: row
           ? (personPartyFor([], row, row).party ?? undefined)
           : undefined,
-        portrait,
         sourceLabel: registerSourceLabelFor(item),
         category: declarationCategoryFor(item.bucket),
       };

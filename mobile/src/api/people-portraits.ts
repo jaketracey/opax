@@ -4,40 +4,65 @@ import { buildPortraitIndexAsync, type PortraitInfo } from './portrait-index';
 import { nameKey } from './ids';
 export class PeoplePortraits {
   private index?: Promise<Awaited<ReturnType<typeof buildPortraitIndexAsync>>>;
+  private snapshot?: readonly unknown[];
+  private reading?: typeof this.index;
   constructor(
     private catalogs: Catalogs,
     private cache: PortraitCache,
   ) {}
-  private directory() {
-    this.index ??= Promise.all([
-      this.catalogs.directory(),
-      this.catalogs.photoPeople(),
-      this.catalogs.photoCredits(),
-    ])
-      .then(([d, map, credits]) =>
-        buildPortraitIndexAsync({
+  private directory(refresh = false) {
+    if (this.reading && !refresh) return this.reading;
+    const pending = Promise.all([
+      this.catalogs.directory(refresh),
+      this.catalogs.photoPeople(refresh),
+      this.catalogs.photoCredits(refresh),
+    ]).then(([d, map, credits]) => {
+      // ApiClient retains immutable decoded snapshots for unchanged cache bytes,
+      // including 304s. Read the current catalogs before reusing the index.
+      const snapshot = [
+        d.roster.data,
+        d.slugs.data,
+        d.people.data,
+        d.manifest.data,
+        map.data,
+        credits.data,
+      ];
+      if (
+        !this.index ||
+        snapshot.some((data, i) => data !== this.snapshot?.[i])
+      ) {
+        this.snapshot = snapshot;
+        const index = buildPortraitIndexAsync({
           roster: d.roster.data,
           slugs: d.slugs.data,
           people: d.people.data,
           manifest: d.manifest.data,
           photoPeople: map.data,
           photoCredits: credits.data,
-        }),
-      )
-      .catch((error) => {
-        this.index = undefined;
-        throw error;
-      });
-    return this.index;
+        });
+        this.index = index;
+        void index.catch(() => {
+          if (this.index === index) this.index = undefined;
+        });
+      }
+      return this.index!;
+    });
+    const reading = pending.finally(() => {
+      if (this.reading === reading) this.reading = undefined;
+    });
+    this.reading = reading;
+    return reading;
   }
   async get({
     slug,
     name,
+    refresh = false,
   }: {
     slug?: string;
     name?: string;
+    refresh?: boolean;
   }): Promise<{ info: PortraitInfo; localURI: string } | null> {
-    const index = await this.directory();
+    const index = await this.directory(refresh);
     if (!slug && name) {
       const matches = [...index.identities].filter(
         ([, p]) => nameKey(p.name) === nameKey(name),

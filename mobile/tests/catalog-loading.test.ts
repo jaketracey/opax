@@ -372,8 +372,6 @@ test('explicit suggestion, Today and coverage refreshes revalidate fresh cache e
     data.manifest.index_url,
     data.manifest.people_url,
     '/parliamentarians.json',
-    '/photos/people.json',
-    '/photos/credits.json',
     '/bills/index.json',
     '/interests/recent.json',
     '/corpus.json',
@@ -387,17 +385,15 @@ test.each([
 ])(
   'Today keeps declarations and bills readable when optional metadata fails: %s',
   async (path) => {
-    const { catalogs } = loader([path]);
+    const { catalogs, calls } = loader([path]);
     const today = await catalogs.today();
+    expect(calls).not.toContain('/photos/people.json');
+    expect(calls).not.toContain('/photos/credits.json');
     expect(today.bills.status).toBe('ready');
     expect(today.declarations.status).toBe('ready');
     expect(today.declarations.data).toHaveLength(6);
     if (path === '/parliamentarians.json')
       expect(today.declarations.data?.every((d) => d.party === undefined)).toBe(
-        true,
-      );
-    else
-      expect(today.declarations.data?.every((d) => d.portrait === null)).toBe(
         true,
       );
   },

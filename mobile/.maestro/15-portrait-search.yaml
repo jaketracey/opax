@@ -1,0 +1,36 @@
+appId: au.com.opax.app
+name: 15 Surname search stays blank while the full-name entry keeps its face
+---
+- launchApp:
+    clearState: true
+- tapOn:
+    id: tab-search
+- tapOn:
+    id: search-input
+- inputText: Walsh
+- hideKeyboard
+- scrollUntilVisible:
+    element:
+      id: search-submit
+    direction: UP
+    timeout: 90000
+- tapOn:
+    id: search-submit
+- scrollUntilVisible:
+    element:
+      id: search-result-walsh
+    direction: DOWN
+    centerElement: true
+    timeout: 90000
+- assertVisible:
+    id: search-result-walsh
+- takeScreenshot: ${EVIDENCE}/15-walsh-blank
+- scrollUntilVisible:
+    element:
+      id: search-result-jess-walsh
+    direction: DOWN
+    centerElement: true
+    timeout: 90000
+- assertVisible:
+    id: search-result-jess-walsh
+- takeScreenshot: ${EVIDENCE}/15-jess-walsh-portrait
