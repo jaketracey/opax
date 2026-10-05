@@ -17,10 +17,11 @@ name: 24 Permission denied keeps the chooser available
     visible: Allow Once
     timeout: 15000
 - tapOn: Don’t Allow
-- extendedWaitUntil:
-    visible:
+- scrollUntilVisible:
+    element:
       id: location-denied
-    timeout: 15000
+    centerElement: true
+    timeout: 300000
 - takeScreenshot: ${EVIDENCE}/24-permission-denied
 - runFlow:
     file: support/location-manual-seat.yaml

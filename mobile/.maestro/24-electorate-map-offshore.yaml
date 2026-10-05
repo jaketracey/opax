@@ -17,9 +17,10 @@ name: 24 Offshore has no match and the manual chooser works
     visible: Allow Once
     timeout: 15000
 - tapOn: Allow Once
-- extendedWaitUntil:
-    visible:
+- scrollUntilVisible:
+    element:
       id: location-no-match
+    centerElement: true
     timeout: 300000
 - takeScreenshot: ${EVIDENCE}/24-offshore-no-match
 - runFlow:
