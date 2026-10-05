@@ -260,7 +260,11 @@ test('a production Host header is rejected even on the loopback socket', async (
 });
 
 // Second servers, as e2e.sh starts them for the edition journeys 13b and 13c.
-function startFixture(mode: string, port: number) {
+function startFixture(
+  mode: string,
+  port: number,
+  env: Record<string, string> = {},
+) {
   const child = spawn(
     process.execPath,
     ['--import', 'tsx', 'scripts/fixture-server.ts'],
@@ -270,6 +274,7 @@ function startFixture(mode: string, port: number) {
         ...process.env,
         OPAX_FIXTURE_PORT: String(port),
         OPAX_FIXTURE_EDITION: mode,
+        ...env,
       },
       stdio: ['ignore', 'pipe', 'pipe'],
     },
@@ -386,5 +391,62 @@ test('the fixture refuses an unknown edition mode at startup', async () => {
   const fixture = startFixture('preview', 8995);
   await expect(fixture.ready).rejects.toThrow(
     'OPAX_FIXTURE_EDITION must be pinned, absent or withdrawn',
+  );
+});
+
+// Journey 26: the follows fixture moves one declaration and one bill stage.
+describe('the changed-data fixture', () => {
+  const port = 8993;
+  let fixture: ReturnType<typeof startFixture>;
+  beforeAll(() => {
+    fixture = startFixture('pinned', port, { OPAX_FIXTURE_DATA: 'changed' });
+    return fixture.ready;
+  }, 20000);
+  afterAll(() => fixture?.stop());
+  test('serves pinned bytes with a long max-age until a revalidation, then the bumped catalogs', async () => {
+    expect(fixture.log()).toContain('data=changed');
+    const bills = await getAt(port, '/bills/index.json');
+    const register = await getAt(port, '/interests/index.json');
+    for (const [path, first] of [
+      ['/bills/index.json', bills],
+      ['/interests/index.json', register],
+    ] as const) {
+      expect(first.status).toBe(200);
+      expect(createHash('sha256').update(first.body).digest('hex')).toBe(
+        files[path],
+      );
+      expect(first.headers['cache-control']).toBe('public, max-age=86400');
+      // Unconditional launches (e2e.sh's warm-up) never move the data.
+      expect((await getAt(port, path)).headers.etag).toBe(first.headers.etag);
+    }
+    // A pull to refresh revalidates with the saved validator.
+    const moved = await getAt(port, '/bills/index.json', {
+      'If-None-Match': String(bills.headers.etag),
+    });
+    expect(moved.status).toBe(200);
+    const row = JSON.parse(moved.body).bills.find(
+      (b: { key: string }) => b.key === 'au-federal-r7549',
+    );
+    expect(row).toMatchObject({ status: 'passed', status_as_of: '2026-10-01' });
+    // Both files have moved from then on, including the one not yet asked.
+    const bumped = JSON.parse(
+      (await getAt(port, '/interests/index.json')).body,
+    );
+    expect(bumped.people['10007']).toEqual({
+      name: 'Anthony Albanese',
+      total: 29,
+    });
+    // Other catalogs are untouched.
+    const roster = await getAt(port, '/parliamentarians.json');
+    expect(roster.headers['cache-control']).toBe('public, max-age=300');
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(fixture.log()).not.toContain('OUTSIDE_ALLOW_LIST');
+  });
+});
+
+test('the fixture refuses an unknown data mode at startup', async () => {
+  const fixture = startFixture('pinned', 8992, { OPAX_FIXTURE_DATA: 'live' });
+  await expect(fixture.ready).rejects.toThrow(
+    'OPAX_FIXTURE_DATA must be pinned or changed',
   );
 });
