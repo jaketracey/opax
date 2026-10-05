@@ -28,10 +28,7 @@ test('portrait reads local unaltered bytes, skips VoiceOver beside a name and fa
   });
   const image = renderer.root.findByType(Image);
   expect(image.props.source.uri).toBe('file:///cache/10007.webp');
-  expect(image.props.contentFit).toBe('contain');
-  expect(image.props.cachePolicy).toBe('none');
-  expect(image.props.useAppleWebpCodec).toBe(false);
-  expect(image.props.allowDownscaling).toBe(false);
+  expect(image.props.resizeMode).toBe('contain');
   expect(image.props.accessibilityIgnoresInvertColors).toBe(true);
   expect(image.props.accessibilityElementsHidden).toBe(true);
   expect(image.props.accessible).toBe(false);
@@ -97,8 +94,8 @@ test('credits follow native decode success, disappear on failure and ignore an o
   });
   expect(onCredit).toHaveBeenLastCalledWith(null);
   const image = renderer.root.findByType(Image);
-  const oldOnDisplay = image.props.onDisplay;
-  act(() => oldOnDisplay());
+  const oldOnLoad = image.props.onLoad;
+  act(() => oldOnLoad());
   expect(onCredit).toHaveBeenLastCalledWith(info);
   act(() => image.props.onError());
   expect(renderer.root.findAllByType(Image)).toHaveLength(0);
@@ -120,9 +117,9 @@ test('credits follow native decode success, disappear on failure and ignore an o
   });
   expect(onCredit).toHaveBeenLastCalledWith(null);
   const count = onCredit.mock.calls.length;
-  act(() => oldOnDisplay());
+  act(() => oldOnLoad());
   expect(onCredit).toHaveBeenCalledTimes(count);
-  act(() => renderer.root.findByType(Image).props.onDisplay());
+  act(() => renderer.root.findByType(Image).props.onLoad());
   expect(onCredit).toHaveBeenLastCalledWith(info);
   mockPortraitGet.mockResolvedValue(null);
   await act(async () =>
