@@ -1,14 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { View } from 'react-native';
-import {
-  Canvas,
-  Path,
-  useCanvasRef,
-  ColorType,
-  AlphaType,
-} from '@shopify/react-native-skia';
+import { Canvas, Path, useCanvasRef } from '@shopify/react-native-skia';
 import { Group, Text, SourceLink, EmptyState } from '../../design/primitives';
-import { isE2E } from '../../design/environment';
+import { useOutlineProbe } from './outline-probe';
 import {
   displayBoundary,
   outlinePath,
@@ -25,48 +19,13 @@ export function OutlineMap({
 }) {
   const boundary = displayBoundary(boundaries),
     ref = useCanvasRef();
-  const [width, setWidth] = useState(0),
-    [pixels, setPixels] = useState(0);
+  const [width, setWidth] = useState(0);
   const height = 250,
     path =
       boundary?.geometry && width > 32
         ? outlinePath(boundary.geometry, width, height)
         : '';
-  useEffect(() => {
-    if (!isE2E || !path) return;
-    let active = true,
-      tries = 0;
-    const timer = setInterval(() => {
-      // Probe the native canvas's actual raster, not JS geometry or an AX label.
-      const image = ref.current?.makeImageSnapshot();
-      const bytes = image?.readPixels(0, 0, {
-        width: image.width(),
-        height: image.height(),
-        colorType: ColorType.RGBA_8888,
-        alphaType: AlphaType.Unpremul,
-      });
-      let drawn = 0;
-      if (bytes)
-        for (let i = 3; i < bytes.length; i += 4)
-          if (
-            bytes[i]! > 0 &&
-            bytes[i - 3]! < 50 &&
-            bytes[i - 2]! < 70 &&
-            bytes[i - 1]! < 100
-          )
-            drawn++;
-      image?.dispose();
-      if (active && drawn > 40) {
-        setPixels(drawn);
-        clearInterval(timer);
-      }
-      if (++tries >= 20) clearInterval(timer);
-    }, 250);
-    return () => {
-      active = false;
-      clearInterval(timer);
-    };
-  }, [path, ref]);
+  const probeID = useOutlineProbe(ref, path);
   if (!boundary?.geometry)
     return (
       <EmptyState
@@ -82,11 +41,7 @@ export function OutlineMap({
         accessible
         accessibilityRole="image"
         accessibilityLabel={`Outline of ${name}, ${state.toUpperCase()}; display outline from the ${origin} ${boundary.vintage} boundaries`}
-        testID={
-          isE2E && pixels > 40
-            ? `electorate-outline-drawn-pixels-${pixels}`
-            : 'electorate-outline'
-        }
+        testID={probeID}
         onLayout={(e) => setWidth(e.nativeEvent.layout.width)}
         style={{ height, backgroundColor: '#F1EFE8' }}
       >

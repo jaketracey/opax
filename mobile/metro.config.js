@@ -2,18 +2,22 @@ const { getDefaultConfig } = require('expo/metro-config');
 const path = require('node:path');
 const config = getDefaultConfig(__dirname);
 const inheritedResolver = config.resolver.resolveRequest;
-const probeModule = path.join(__dirname, 'src/design/text-probe');
+const probeModules = new Set([
+  path.join(__dirname, 'src/design/text-probe'),
+  path.join(__dirname, 'src/features/electorate-map/outline-probe'),
+]);
 config.resolver.resolveRequest = (context, moduleName, platform) => {
+  const source = path
+    .resolve(path.dirname(context.originModulePath), moduleName)
+    .replace(/\.[jt]sx?$/, '');
   if (
     process.env.OPAX_VARIANT === 'production' &&
     moduleName.startsWith('.') &&
-    path
-      .resolve(path.dirname(context.originModulePath), moduleName)
-      .replace(/\.[jt]sx?$/, '') === probeModule
+    probeModules.has(source)
   ) {
     return {
       type: 'sourceFile',
-      filePath: `${probeModule}.production.ts`,
+      filePath: `${source}.production.ts`,
     };
   }
   return typeof inheritedResolver === 'function'
