@@ -1,0 +1,110 @@
+appId: au.com.opax.app
+name: 28 Welcome tour on first launch, Skip, finish into the seat chooser, no repeat, replay from Account
+---
+# E2E builds treat the tour as seen, so other journeys are never blocked.
+# The launch argument -OPAXWelcomeTour on asks for the production behaviour.
+# Quote "on": unquoted it is a YAML boolean. Pages are matched by their
+# position label ("Page 2 of 5"), which stays on screen at every text size.
+- launchApp:
+    clearState: true
+    arguments:
+      OPAXWelcomeTour: 'on'
+- extendedWaitUntil:
+    visible: Page 1 of 5
+    timeout: 60000
+- assertVisible:
+    id: tour-page-about
+- assertVisible:
+    id: tour-skip
+- takeScreenshot: ${EVIDENCE}/28-page-1
+- tapOn:
+    id: tour-next
+- extendedWaitUntil:
+    visible: Page 2 of 5
+    timeout: 10000
+- assertVisible:
+    id: tour-page-your-mp
+- assertVisible:
+    id: tour-skip
+- takeScreenshot: ${EVIDENCE}/28-page-2
+# The pager follows a swipe as well as Next.
+- swipe:
+    direction: LEFT
+- extendedWaitUntil:
+    visible: Page 3 of 5
+    timeout: 10000
+- assertVisible:
+    id: tour-page-profiles
+- assertVisible:
+    id: tour-skip
+- takeScreenshot: ${EVIDENCE}/28-page-3
+- tapOn:
+    id: tour-next
+- extendedWaitUntil:
+    visible: Page 4 of 5
+    timeout: 10000
+- assertVisible:
+    id: tour-page-bills-today
+- takeScreenshot: ${EVIDENCE}/28-page-4
+- tapOn:
+    id: tour-next
+- extendedWaitUntil:
+    visible: Page 5 of 5
+    timeout: 10000
+- assertVisible:
+    id: tour-page-search
+- assertVisible:
+    id: tour-skip
+- assertNotVisible:
+    id: tour-next
+- takeScreenshot: ${EVIDENCE}/28-page-5
+# Finish: Choose your electorate opens Your MP's seat chooser.
+- tapOn:
+    id: tour-finish
+- extendedWaitUntil:
+    notVisible:
+      id: welcome-tour
+    timeout: 10000
+- scrollUntilVisible:
+    element:
+      id: seat-search
+    timeout: 60000
+    visibilityPercentage: 10
+- takeScreenshot: ${EVIDENCE}/28-seat-chooser
+# Seen: a relaunch with the same argument goes straight to the app.
+- stopApp
+- launchApp:
+    arguments:
+      OPAXWelcomeTour: 'on'
+- extendedWaitUntil:
+    visible:
+      id: today-screen
+    timeout: 60000
+- assertNotVisible:
+    id: welcome-tour
+- takeScreenshot: ${EVIDENCE}/28-relaunch
+# Replay from Account › About OPAX; Skip closes it.
+- tapOn: Account and about
+- scrollUntilVisible:
+    element:
+      id: account-replay-tour
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+- tapOn:
+    id: account-replay-tour
+- extendedWaitUntil:
+    visible: Page 1 of 5
+    timeout: 30000
+- assertVisible:
+    id: tour-page-about
+- takeScreenshot: ${EVIDENCE}/28-replay
+- tapOn:
+    id: tour-skip
+- extendedWaitUntil:
+    notVisible:
+      id: welcome-tour
+    timeout: 10000
+- assertVisible:
+    id: today-screen
+- takeScreenshot: ${EVIDENCE}/28-after-skip
