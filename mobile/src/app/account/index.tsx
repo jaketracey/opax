@@ -1,1 +1,2 @@
-export { AccountComingSoon as default } from '../../features/ComingSoon';
+// Production resolves the unchanged placeholder (features/account/entry.production.tsx).
+export { default } from '../../features/account/entry';

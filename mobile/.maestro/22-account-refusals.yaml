@@ -1,0 +1,46 @@
+appId: au.com.opax.app
+name: 22 Account refusals, an invalid address and a disabled account
+---
+- launchApp
+- tapOn: Account and about
+- extendedWaitUntil:
+    visible: 'Not signed in\..*'
+    timeout: 15000
+- tapOn:
+    id: account-sign-in-start
+- scrollUntilVisible:
+    element:
+      id: account-email
+    centerElement: true
+    timeout: 30000
+- tapOn:
+    id: account-email
+- inputText: not-an-address
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      text: 'Enter a valid email address\.'
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/22-invalid-email
+# Relaunch rather than edit: at AX5 eraseText can land mid-text.
+- launchApp
+- tapOn: Account and about
+- runFlow:
+    file: support/account-sign-in.yaml
+    env:
+      ACCOUNT_EMAIL: disabled@example.invalid
+# The code is accepted, but voice treats a disabled member as signed out.
+- extendedWaitUntil:
+    visible: 'This account is unavailable\..*'
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/22-disabled
+- scrollUntilVisible:
+    element:
+      id: account-sign-out
+    centerElement: true
+    timeout: 30000
+- tapOn:
+    id: account-sign-out
+- extendedWaitUntil:
+    visible: 'Not signed in\..*'
+    timeout: 15000

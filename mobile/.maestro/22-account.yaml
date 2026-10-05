@@ -1,0 +1,124 @@
+appId: au.com.opax.app
+name: 22 Account sign-in by emailed code, sign-out and deletion
+---
+# Fixture accounts only (happy@example.invalid, code 01234567); nothing is
+# emailed. Relaunch without clearState keeps journey 04's offline cache.
+- launchApp
+- tapOn: Account and about
+- extendedWaitUntil:
+    visible: 'Not signed in\. An account is only needed to talk to OPAX\.'
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/22-signed-out
+- tapOn:
+    id: account-sign-in-start
+- scrollUntilVisible:
+    element:
+      id: account-email
+    centerElement: true
+    timeout: 30000
+- assertVisible: '.*same account as the OPAX community on opax\.com\.au.*'
+- takeScreenshot: ${EVIDENCE}/22-email
+- tapOn:
+    id: account-email
+- inputText: happy@example.invalid
+- pressKey: Enter
+- extendedWaitUntil:
+    visible:
+      id: account-code
+    timeout: 15000
+- assertVisible: 'We sent a code to happy@example\.invalid\. It expires in 15 minutes\.'
+- takeScreenshot: ${EVIDENCE}/22-code
+# A wrong code gets the one answer every refused code gets.
+- inputText: '76543210'
+- scrollUntilVisible:
+    element:
+      text: 'That code did not work\. Check it, or send a new code\.'
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/22-wrong-code
+- scrollUntilVisible:
+    element:
+      id: account-code
+    direction: UP
+    centerElement: true
+    timeout: 30000
+# The field selects its code on focus, so typing replaces it.
+- tapOn:
+    id: account-code
+- eraseText: 12
+- inputText: '01234567'
+- extendedWaitUntil:
+    visible: 'Signed in as happy@example\.invalid'
+    timeout: 15000
+- assertVisible: 'Voice time: \d+:\d\d remaining'
+- takeScreenshot: ${EVIDENCE}/22-signed-in
+- scrollUntilVisible:
+    element:
+      id: account-sign-out
+    centerElement: true
+    timeout: 30000
+- tapOn:
+    id: account-sign-out
+- extendedWaitUntil:
+    visible: 'Signed out of this iPhone\.'
+    timeout: 15000
+- assertVisible: 'Not signed in\..*'
+- takeScreenshot: ${EVIDENCE}/22-signed-out-again
+- runFlow:
+    file: support/account-sign-in.yaml
+    env:
+      ACCOUNT_EMAIL: happy@example.invalid
+- extendedWaitUntil:
+    visible: 'Signed in as happy@example\.invalid'
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: account-delete
+    centerElement: true
+    timeout: 30000
+- tapOn:
+    id: account-delete
+- extendedWaitUntil:
+    visible: What is deleted
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/22-delete-confirm
+- scrollUntilVisible:
+    element:
+      text: What is not deleted
+    centerElement: true
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/22-delete-kept
+- scrollUntilVisible:
+    element:
+      id: account-delete-confirm
+    centerElement: true
+    timeout: 30000
+- tapOn:
+    id: account-delete-confirm
+- extendedWaitUntil:
+    visible:
+      id: account-deletion-code
+    timeout: 15000
+# A full code only hides the keyboard: deleting needs the tap below.
+- inputText: '01234567'
+- takeScreenshot: ${EVIDENCE}/22-deletion-code
+- scrollUntilVisible:
+    element:
+      id: account-delete-final
+    centerElement: true
+    timeout: 30000
+- tapOn:
+    id: account-delete-final
+- extendedWaitUntil:
+    visible: Account deleted
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/22-deleted
+- scrollUntilVisible:
+    element:
+      id: account-delete-done
+    timeout: 30000
+- tapOn:
+    id: account-delete-done
+- extendedWaitUntil:
+    visible: 'Not signed in\..*'
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/22-signed-out-after-deletion

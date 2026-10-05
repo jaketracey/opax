@@ -2,19 +2,21 @@ const { getDefaultConfig } = require('expo/metro-config');
 const path = require('node:path');
 const config = getDefaultConfig(__dirname);
 const inheritedResolver = config.resolver.resolveRequest;
-const probeModule = path.join(__dirname, 'src/design/text-probe');
+// Modules with a production twin: release bundles resolve `<module>.production`.
+const productionTwins = new Map([
+  [path.join(__dirname, 'src/design/text-probe'), '.production.ts'],
+  [path.join(__dirname, 'src/features/account/entry'), '.production.tsx'],
+]);
 config.resolver.resolveRequest = (context, moduleName, platform) => {
-  if (
-    process.env.OPAX_VARIANT === 'production' &&
-    moduleName.startsWith('.') &&
-    path
+  if (process.env.OPAX_VARIANT === 'production' && moduleName.startsWith('.')) {
+    const target = path
       .resolve(path.dirname(context.originModulePath), moduleName)
-      .replace(/\.[jt]sx?$/, '') === probeModule
-  ) {
-    return {
-      type: 'sourceFile',
-      filePath: `${probeModule}.production.ts`,
-    };
+      .replace(/\.[jt]sx?$/, '');
+    if (productionTwins.has(target))
+      return {
+        type: 'sourceFile',
+        filePath: target + productionTwins.get(target),
+      };
   }
   return typeof inheritedResolver === 'function'
     ? inheritedResolver(context, moduleName, platform)

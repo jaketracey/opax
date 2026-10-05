@@ -1,0 +1,27 @@
+appId: au.com.opax.app
+---
+# From Account and about, signed out: sign in with ${ACCOUNT_EMAIL} and the
+# fixture's synthetic code. The fixture never sends email.
+- scrollUntilVisible:
+    element:
+      id: account-sign-in-start
+    centerElement: true
+    timeout: 30000
+- tapOn:
+    id: account-sign-in-start
+- scrollUntilVisible:
+    element:
+      id: account-email
+    centerElement: true
+    timeout: 30000
+- tapOn:
+    id: account-email
+- inputText: ${ACCOUNT_EMAIL}
+# Return sends: at AX5 a keyboard swipe would land on the keys.
+- pressKey: Enter
+- extendedWaitUntil:
+    visible:
+      id: account-code
+    timeout: 15000
+# The code field takes focus; a full code submits by itself.
+- inputText: '01234567'

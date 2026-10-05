@@ -4,5 +4,7 @@
   "[/\\\\]src[/\\\\]app[/\\\\]voice-bridge-test\\.tsx$",
   "[/\\\\]src[/\\\\]test-screens[/\\\\].*",
   "[/\\\\]src[/\\\\]design[/\\\\]text-probe\\.e2e\\.ts$",
-  "[/\\\\]src[/\\\\]app[/\\\\]source-destination\\.tsx$"
+  "[/\\\\]src[/\\\\]app[/\\\\]source-destination\\.tsx$",
+  "[/\\\\]src[/\\\\]app[/\\\\]account[/\\\\](?:sign-in|delete)\\.tsx$",
+  "[/\\\\]src[/\\\\]features[/\\\\]account[/\\\\](?!entry\\.production\\.tsx$).*"
 ]
