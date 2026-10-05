@@ -365,8 +365,10 @@ export's date, in the export's order ("All leads") or by category, sorted as the
 web sorts. Each card opens its comparison: the web's takeaway, the five-plus-Other
 share chart (each row one VoiceOver element, bars decorative) with a Table view of
 the same rows to the dollar, or the two separate money flows for companies in
-both, then the card again and the web's links on opax.com.au (supplier profile;
-the lead's own `/discover` page, where the web draws its money map). The web's
+both, then the card again, the web's links on opax.com.au (supplier profile; the
+comparison's own `/discover` page, where the web draws its money map; the full
+money map) and "About these numbers". A signal that does not decode, or a
+concentration without its chart, is left out and counted on screen. The web's
 "Find mentions in parliament" opens `/search`, which the Worker sends to Ask's
 model-backed search, so the app leaves it out. Evidence labels are read into
 amount, payer and payee, detail and register (`leadEvidenceFor`): OPAX's local

@@ -256,6 +256,7 @@ name: 27 Leads and the declared-interests feed
 - assertVisible:
     id: lead-card-caveat-2
     text: Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification\. State, election and referendum disclosures are excluded\.
+# The web's links: this comparison on opax.com.au, and its full money map.
 - scrollUntilVisible:
     element:
       id: lead-link-money-map
@@ -264,11 +265,22 @@ name: 27 Leads and the declared-interests feed
     visibilityPercentage: 10
     centerElement: true
     speed: 20
+- assertVisible:
+    id: lead-link-money-map
+    text: Open the full money map
+- scrollUntilVisible:
+    element:
+      id: lead-link-web
+    direction: UP
+    timeout: 180000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
 - waitForAnimationToEnd
 - assertVisible:
     id: lead-screen
 - tapOn:
-    id: lead-link-money-map
+    id: lead-link-web
 # E2E shows the guarded web address on the build's reserved origin instead;
 # at AX5 the alert's message can sit below its fold.
 # pointer: /signals/1/category
@@ -276,7 +288,7 @@ name: 27 Leads and the declared-interests feed
     element:
       text: https://opax\.invalid/discover\?category=recipient_concentration&item=recipient_concentration%3Aa186427ec7f0b918
     timeout: 20000
-- takeScreenshot: ${EVIDENCE}/27-money-map-link
+- takeScreenshot: ${EVIDENCE}/27-web-link
 - tapOn: OK
 # The declared-interests feed behind Today's recent declarations.
 - tapOn:

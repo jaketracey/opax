@@ -25,13 +25,20 @@ export const noFilters: FeedFilters = {
   member: '',
 };
 
+// A fixed order, whatever order the export's rows come in: the House, then
+// the Senate, then state chambers by name; Federal, then states by name.
+const chamberRank: Record<string, number> = { house: 0, senate: 1 };
+const jurisdictionRank: Record<string, number> = { federal: 0 };
+const byRank = (rank: Record<string, number>) => (a: Facet, b: Facet) =>
+  (rank[a.id] ?? 9) - (rank[b.id] ?? 9) || a.label.localeCompare(b.label);
+
 export interface Facet {
   id: string;
   label: string;
   count: number;
 }
 /**
- * The chambers and jurisdictions present in the export, in first-seen order
+ * The chambers and jurisdictions present in the export, in a fixed order,
  * with their counts. IDs never reach the reader: an unknown chamber reads
  * "Chamber not recorded".
  */
@@ -55,8 +62,8 @@ export function feedFacets(rows: readonly FeedRow[]) {
     jurisdictions.set(row.jurisdiction, jurisdiction);
   }
   return {
-    chambers: [...chambers.values()],
-    jurisdictions: [...jurisdictions.values()],
+    chambers: [...chambers.values()].sort(byRank(chamberRank)),
+    jurisdictions: [...jurisdictions.values()].sort(byRank(jurisdictionRank)),
   };
 }
 

@@ -79,6 +79,7 @@ export function TodayDeclaration({
       {item.description ? <Text>{item.description}</Text> : null}
       {showTies && item.ties?.length ? (
         <Text
+          wordSafe
           variant="fine"
           tone="ink"
           testID={`${testIDPrefix}-ties-${index}`}

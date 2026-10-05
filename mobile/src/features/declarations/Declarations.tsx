@@ -71,7 +71,7 @@ export default function Declarations() {
       {record ? (
         <>
           <Group gap={spacing.s3}>
-            <Text variant="control" accessibilityRole="header">
+            <Text wordSafe variant="control" accessibilityRole="header">
               Chamber
             </Text>
             <SegmentedControl
@@ -89,11 +89,12 @@ export default function Declarations() {
               ]}
               value={filters.chamber}
               onChange={(chamber) => setFilters((f) => ({ ...f, chamber }))}
+              stacked
               testID="declarations-chamber"
             />
           </Group>
           <Group gap={spacing.s3}>
-            <Text variant="control" accessibilityRole="header">
+            <Text wordSafe variant="control" accessibilityRole="header">
               Jurisdiction
             </Text>
             <SegmentedControl
@@ -113,6 +114,7 @@ export default function Declarations() {
               onChange={(jurisdiction) =>
                 setFilters((f) => ({ ...f, jurisdiction }))
               }
+              stacked
               testID="declarations-jurisdiction"
             />
           </Group>
@@ -151,9 +153,10 @@ export default function Declarations() {
         This export holds the newest {formatCount(record.meta.rows)} of{' '}
         {formatCount(record.meta.available)} dated register alterations. Entries
         are as declared, not verified by OPAX. Additions and deletions carry the
-        date the register records. Organisation matches to AEC Transparency
-        Register returns, the lobbyist registers and FITS use exact normalised
-        names.
+        date the register records. A gift or trip with no organisation match
+        names one the AEC and lobbyist registers do not list under that
+        spelling. Organisation matches to AEC Transparency Register returns, the
+        lobbyist registers and FITS use exact normalised names.
       </Text>
     </Group>
   ) : null;

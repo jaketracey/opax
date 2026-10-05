@@ -811,20 +811,19 @@ const leadChart = shape({
     }),
   ),
 });
-export const decodeDiscovery = shape({
-  signals: array(
-    shape({
-      id: nonempty,
-      category: nonempty,
-      entity: nonempty,
-      title: nonempty,
-      summary: nonempty,
-      metrics: array(leadMetric),
-      evidence: array(leadEvidence),
-      caveats: nonemptyArray(nonempty),
-      chart: optional(leadChart),
-    }),
-  ),
+const discoverySignal = shape({
+  id: nonempty,
+  category: nonempty,
+  entity: nonempty,
+  title: nonempty,
+  summary: nonempty,
+  metrics: array(leadMetric),
+  evidence: array(leadEvidence),
+  caveats: nonemptyArray(nonempty),
+  chart: optional(leadChart),
+});
+const discoveryEnvelope = shape({
+  signals: array((v: unknown) => v),
   coverage: shape({
     donations: count,
     contracts: count,
@@ -833,7 +832,25 @@ export const decodeDiscovery = shape({
   methodology: nonemptyArray(nonempty),
   generated_at: exportTimestamp,
 });
-export type Discovery = Decoded<typeof decodeDiscovery>;
+/**
+ * The envelope must be whole; a signal that does not read (no caveats, a
+ * metric format the app does not know) is left out and counted, so one odd
+ * signal never hides the others and no lead shows without its caveats.
+ */
+export function decodeDiscovery(value: unknown) {
+  const envelope = discoveryEnvelope(value);
+  const signals: Decoded<typeof discoverySignal>[] = [];
+  let unreadable = 0;
+  for (const raw of envelope.signals) {
+    try {
+      signals.push(discoverySignal(raw));
+    } catch {
+      unreadable += 1;
+    }
+  }
+  return { ...envelope, signals, unreadable };
+}
+export type Discovery = ReturnType<typeof decodeDiscovery>;
 export type DiscoverySignal = Discovery['signals'][number];
 export const decodeSearch = shape({
   query: text,

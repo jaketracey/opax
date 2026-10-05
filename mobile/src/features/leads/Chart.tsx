@@ -152,6 +152,7 @@ function ChartBar({ row, testID }: { row: ChartRow; testID: string }) {
             ]}
           />
         </View>
+        {path ? <Text variant="fine">Opens on opax.com.au</Text> : null}
       </View>
     </>
   );
@@ -236,6 +237,7 @@ const styles = StyleSheet.create({
     marginTop: spacing.s1,
   },
   fill: { height: 8 },
-  pressed: { backgroundColor: colors.raised },
+  // Sunken, as source links press: every drawn pair is in the contrast table.
+  pressed: { backgroundColor: colors.sunken },
   cell: { gap: spacing.s1 },
 });

@@ -16,13 +16,15 @@ import { chrome } from '../../design/tokens';
 import { webPageUrl } from '../../navigation/external';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { RecordStatus } from '../RecordStatus';
+import { AboutLeads } from './About';
 import { ConcentrationChart, OverlapFlows } from './Chart';
 import { discoveryAsOf, leadFor } from './model';
 
 /**
  * One lead's comparison, as the web's /discover detail draws it: the
  * takeaway, the chart (or the two separate money flows), its note, then the
- * whole lead card with every caveat and example record, and the web's links.
+ * whole lead card with every caveat and example record, the web's links, and
+ * "About these numbers" with the export's methodology.
  */
 export default function LeadDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -110,6 +112,12 @@ export default function LeadDetail() {
                 ))}
               </Section>
             ) : null}
+            <AboutLeads
+              discovery={discovery}
+              savedAt={record?.stale ? record.savedAt : null}
+              lede
+              testID="lead-about"
+            />
           </>
         ) : null}
       </Screen>

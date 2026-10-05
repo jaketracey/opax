@@ -6,6 +6,7 @@ import {
   moneyAccessibilityLabel,
 } from '../../design/format';
 import type { LeadEvidence } from '../../design/lead';
+import { sourceUrl } from '../../navigation/external';
 
 // The leads on the web's /discover page (portal/public/app.js, "discovery"):
 // the same signals, categories, comparisons, caveats and links, in the web's
@@ -97,8 +98,15 @@ export function leadEvidenceFor(evidence: Evidence): LeadEvidenceView {
     : undefined;
   const host = hostOf(evidence.url);
   const known = !!register && (host === null || host === register.host);
-  const kind =
-    evidence.link_scope === 'source_register' ? 'register' : 'record';
+  // Only the export's own word for a record page makes a record link.
+  const kind = evidence.link_scope === 'record' ? 'record' : 'register';
+  // A link the source guard refuses (not HTTPS, say) is shown unlinked.
+  let url: string | null = null;
+  try {
+    url = evidence.url ? sourceUrl(evidence.url) : null;
+  } catch {
+    url = null;
+  }
   const base: LeadEvidenceView = {
     amount: null,
     amountSpoken: null,
@@ -111,7 +119,7 @@ export function leadEvidenceFor(evidence: Evidence): LeadEvidenceView {
         ? 'Source register'
         : 'Source record',
     record: null,
-    url: evidence.url,
+    url,
     kind,
   };
   if (!known) return base;
@@ -239,10 +247,19 @@ function periodText(chart: NonNullable<DiscoverySignal['chart']>) {
   return `Contract start years ${period.from.slice(0, 4)}–${period.to.slice(0, 4)}`;
 }
 
-function comparisonFor(signal: DiscoverySignal): LeadComparison {
+/**
+ * The comparison for the signal's own family. A concentration without its
+ * chart has nothing to compare and is null: the web would describe it as a
+ * name found in both sets of records, which it is not.
+ */
+function comparisonFor(
+  signal: DiscoverySignal,
+  category: LeadCategory,
+): LeadComparison | null {
   const chart = signal.chart;
-  const contracts = signal.category === 'procurement_concentration';
-  if (chart) {
+  const contracts = category === 'procurement_concentration';
+  if (category !== 'donor_contract_overlap') {
+    if (!chart) return null;
     const lead = chart.participants[0]!;
     const missing =
       (chart.period?.undated_records ?? 0) +
@@ -295,8 +312,10 @@ function comparisonFor(signal: DiscoverySignal): LeadComparison {
 
 // The web's actions (discoveryDetailHTML). "Find mentions in parliament"
 // opens /search, which the Worker sends to Ask's model-backed search, so the
-// app leaves it out (navigation/external.ts). The money map is drawn on the
-// web's lead page, behind its "Explore connections on the money map" button.
+// app leaves it out (navigation/external.ts). The web draws the money map
+// inside the lead's own page ("Explore connections on the money map"), so the
+// app opens that page, and the full map through the web's own "Open the full
+// money map" link.
 function linksFor(signal: DiscoverySignal, category: LeadCategory): LeadLink[] {
   const links: LeadLink[] = [];
   if (category !== 'recipient_concentration')
@@ -306,21 +325,19 @@ function linksFor(signal: DiscoverySignal, category: LeadCategory): LeadLink[] {
       path: supplierPath(signal.entity),
       testID: 'supplier',
     });
-  links.push(
-    category === 'procurement_concentration'
-      ? {
-          label: 'Open this comparison on opax.com.au',
-          accessibilityLabel: `Open the ${signal.chart?.group_label ?? signal.entity} comparison`,
-          path: discoverPath(signal),
-          testID: 'web',
-        }
-      : {
-          label: 'Explore connections on the money map',
-          accessibilityLabel: `Explore connections on the money map, ${signal.entity}`,
-          path: discoverPath(signal),
-          testID: 'money-map',
-        },
-  );
+  links.push({
+    label: 'Open this comparison on opax.com.au',
+    accessibilityLabel: `Open the ${signal.chart?.group_label ?? signal.entity} comparison`,
+    path: discoverPath(signal),
+    testID: 'web',
+  });
+  if (category !== 'procurement_concentration')
+    links.push({
+      label: 'Open the full money map',
+      accessibilityLabel: 'Open the full money map',
+      path: '/money',
+      testID: 'money-map',
+    });
   return links;
 }
 
@@ -332,9 +349,15 @@ const citations: Record<LeadCategory, string[]> = {
   donor_contract_overlap: ['AEC annual returns', 'AusTender'],
 };
 
+/**
+ * A signal as a lead, or null when the app cannot show it faithfully: a
+ * category it does not know, or a concentration without its chart.
+ */
 export function leadFor(signal: DiscoverySignal): LeadView | null {
   if (!isLeadCategory(signal.category)) return null;
   const category = signal.category;
+  const comparison = comparisonFor(signal, category);
+  if (!comparison) return null;
   return {
     id: signal.id,
     category,
@@ -346,7 +369,7 @@ export function leadFor(signal: DiscoverySignal): LeadView | null {
     caveats: signal.caveats,
     evidence: signal.evidence.map(leadEvidenceFor),
     citation: citations[category],
-    comparison: comparisonFor(signal),
+    comparison,
     links: linksFor(signal, category),
   };
 }
@@ -367,26 +390,28 @@ const nameOf = (signal: DiscoverySignal) =>
  * "Cards alternate signal families and rank within each family by recorded
  * value"). A category sorts as the web does: by total (contract value for
  * companies in both) or, for concentrations, by the largest share; ties by
- * name. Signals of a category the app does not know are left out.
+ * name. Signals the app cannot show faithfully (leadFor) are left out.
  */
 export function leadsFor(
   discovery: Discovery,
   filter: LeadFilter = 'all',
   sort: LeadSort = 'value',
 ): LeadView[] {
-  let signals = discovery.signals.filter((signal) =>
-    isLeadCategory(signal.category),
-  );
+  let pairs = discovery.signals.flatMap((signal) => {
+    const lead = leadFor(signal);
+    return lead ? [{ signal, lead }] : [];
+  });
   if (filter !== 'all') {
-    signals = signals.filter((signal) => signal.category === filter);
     const byShare = sort === 'share' && filter !== 'donor_contract_overlap';
-    signals = [...signals].sort(
-      (a, b) =>
-        (byShare ? shareOf(b) - shareOf(a) : totalOf(b) - totalOf(a)) ||
-        nameOf(a).localeCompare(nameOf(b)),
-    );
+    pairs = pairs
+      .filter(({ signal }) => signal.category === filter)
+      .sort(
+        ({ signal: a }, { signal: b }) =>
+          (byShare ? shareOf(b) - shareOf(a) : totalOf(b) - totalOf(a)) ||
+          nameOf(a).localeCompare(nameOf(b)),
+      );
   }
-  return signals.map((signal) => leadFor(signal)!);
+  return pairs.map(({ lead }) => lead);
 }
 
 /** "60 leads", "28 agencies", "1 party". */

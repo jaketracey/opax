@@ -145,14 +145,25 @@ describe('the discovery export', () => {
       'A concentration is a reason to look closer, not proof of wrongdoing. This page covers 19,301 contracts and 92,642 party receipts.',
     );
   });
-  test('refuses a malformed export', () => {
+  test('leaves out and counts a signal that does not read; refuses a malformed envelope', () => {
     const raw = pinned('/discovery.json') as { signals: unknown[] };
-    expect(() =>
-      decodeDiscovery({
-        ...raw,
-        signals: [{ ...(raw.signals[0] as object), caveats: [] }],
-      }),
-    ).toThrow(ApiError);
+    // No lead ever shows without its caveats, and one odd signal (a metric
+    // format the app does not know) never hides the others.
+    const odd = decodeDiscovery({
+      ...raw,
+      signals: [
+        { ...(raw.signals[0] as object), caveats: [] },
+        {
+          ...(raw.signals[1] as object),
+          metrics: [{ label: 'Ratio', value: 2, format: 'ratio' }],
+        },
+        raw.signals[2],
+      ],
+    });
+    expect(odd.unreadable).toBe(2);
+    expect(odd.signals.map((s) => s.id)).toEqual([signals[2]!.id]);
+    expect(discovery.unreadable).toBe(0);
+    expect(() => decodeDiscovery({ ...raw, signals: {} })).toThrow(ApiError);
     expect(() =>
       decodeDiscovery({ ...raw, generated_at: '2026-02-30T00:00:00+00:00' }),
     ).toThrow(ApiError);
@@ -249,6 +260,20 @@ describe('evidence labels', () => {
       leadEvidenceFor({ ...receipt, table: 'constructor', url: null }),
     ).toMatchObject({ register: 'Source register', amount: null });
   });
+  test('a link the source guard refuses is shown unlinked; no scope means a register', () => {
+    const plain = leadEvidenceFor({
+      ...receipt,
+      url: 'http://transparency.aec.gov.au/',
+    });
+    expect(plain.url).toBeNull();
+    expect(plain.amount).not.toBeNull();
+    const unscoped = { ...receipt };
+    delete unscoped.link_scope;
+    expect(leadEvidenceFor(unscoped).kind).toBe('register');
+    expect(leadEvidenceFor({ ...receipt, link_scope: 'record' }).kind).toBe(
+      'record',
+    );
+  });
   test('a local contract row number is not shown as a register ID', () => {
     const contract = evidence.find((e) => e.table === 'contracts')!;
     const local = {
@@ -291,6 +316,24 @@ describe('leads', () => {
         contractValue(both[i]!),
       );
     expect(leadsFor(discovery, 'recipient_concentration')).toHaveLength(3);
+  });
+  test('a concentration without its chart is left out, and the screen says how many', async () => {
+    const chartless = { ...signals[1]!, chart: undefined };
+    expect(leadFor(chartless)).toBeNull();
+    const short = { ...discovery, signals: [signals[0]!, chartless] };
+    expect(leadsFor(short).map((l) => l.id)).toEqual([signals[0]!.id]);
+    mock.discovery.mockResolvedValueOnce({
+      data: { ...short, unreadable: 1 },
+      asOf: null,
+      stale: false,
+      savedAt: 200,
+    });
+    const renderer = await render(<Leads />);
+    expect(texts(renderer.root)).toContain('1 lead');
+    expect(texts(renderer.root)).toContain(
+      '2 leads in this export could not be read and are not shown.',
+    );
+    act(() => renderer.unmount());
   });
   test('a signal of a category the app does not know is left out', () => {
     const unknown = { ...signals[0]!, category: 'new_family' };
@@ -352,9 +395,14 @@ describe('leads', () => {
   test('links follow the web’s actions, never /search, and pass the link guard', () => {
     const kinds = (s: DiscoverySignal) =>
       leadFor(s)!.links.map((l) => l.testID);
-    expect(kinds(signals[0]!)).toEqual(['supplier', 'money-map']);
-    expect(kinds(signals[1]!)).toEqual(['money-map']);
+    expect(kinds(signals[0]!)).toEqual(['supplier', 'web', 'money-map']);
+    expect(kinds(signals[1]!)).toEqual(['web', 'money-map']);
     expect(kinds(signals[2]!)).toEqual(['supplier', 'web']);
+    // The money map is the web's own "Open the full money map".
+    expect(leadFor(signals[1]!)!.links[1]).toMatchObject({
+      label: 'Open the full money map',
+      path: '/money',
+    });
     for (const s of signals)
       for (const link of leadFor(s)!.links) {
         expect(link.path).not.toMatch(/^\/search/);
@@ -487,6 +535,10 @@ describe('a lead’s comparison', () => {
     );
     for (const caveat of signals[1]!.caveats)
       expect(texts(root)).toContain(caveat);
+    // "About these numbers": the web's lede and the methodology in full.
+    expect(texts(root)).toContain(aboutLede(discovery));
+    for (const method of discovery.methodology)
+      expect(texts(root)).toContain(method);
     expect(
       root.findAll((n) => n.props.testID === 'lead-link-money-map').length,
     ).toBeGreaterThan(0);
@@ -563,10 +615,18 @@ describe('the declared-interests feed', () => {
   test('filters by chamber, jurisdiction and member; chambers are named, never IDs', async () => {
     const rows = (await fixture().declarations()).data!;
     const facets = feedFacets(rows);
+    // A fixed order, although the newest row is a Senate row.
+    expect(rows[0]!.chamber).toBe('senate');
     expect(facets.chambers).toEqual([
-      { id: 'senate', label: 'Senate', count: 124 },
       { id: 'house', label: 'House of Representatives', count: 176 },
+      { id: 'senate', label: 'Senate', count: 124 },
     ]);
+    expect(
+      feedFacets([
+        { ...rows[0]!, chamber: 'qld_la', jurisdiction: 'qld' },
+        ...rows,
+      ]).jurisdictions.map((f) => f.label),
+    ).toEqual(['Federal', 'Queensland']);
     expect(facets.jurisdictions).toEqual([
       { id: 'federal', label: 'Federal', count: 300 },
     ]);
@@ -615,7 +675,7 @@ describe('the declared-interests feed', () => {
       ),
     ).toBe(true);
     expect(texts(root)).toContain(
-      'This export holds the newest 300 of 1,660 dated register alterations. Entries are as declared, not verified by OPAX. Additions and deletions carry the date the register records. Organisation matches to AEC Transparency Register returns, the lobbyist registers and FITS use exact normalised names.',
+      'This export holds the newest 300 of 1,660 dated register alterations. Entries are as declared, not verified by OPAX. Additions and deletions carry the date the register records. A gift or trip with no organisation match names one the AEC and lobbyist registers do not list under that spelling. Organisation matches to AEC Transparency Register returns, the lobbyist registers and FITS use exact normalised names.',
     );
     act(() => renderer.unmount());
   });

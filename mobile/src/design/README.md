@@ -114,7 +114,9 @@ Design workbench) to see every component and state at the current text size.
   "Remove the kind filter, Declared interests". 4pt radius, not a capsule.
 - `SegmentedControl`: one choice among peers. 48pt outside height; every
   segment is a real 44 by 44pt target (the selected highlight is inset 3pt
-  inside it), labels wrap, and segments stack at accessibility sizes. Each
+  inside it), labels wrap, and segments stack at accessibility sizes.
+  `stacked` stacks them at every size, for labels whose longest word would
+  not fit an equal share of the row (the Leads and declarations filters). Each
   segment reports selected and "2 of 3". It is a group of buttons, not tabs.
 - `Field`: label (always visible, word-safe), optional `hint`, `error` and
   `required`. The input carries the label, required state, error and hint for

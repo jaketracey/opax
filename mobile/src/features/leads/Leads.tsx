@@ -3,16 +3,13 @@ import { RefreshControl, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 import { catalogs } from '../../api/runtime';
 import {
-  AsAtLine,
   Button,
   Divider,
   EmptyState,
   Group,
   LeadCard,
   Screen,
-  Section,
   SegmentedControl,
-  SourceLink,
   Text,
   type Segment,
 } from '../../design/primitives';
@@ -21,6 +18,7 @@ import { leadRoute } from '../../navigation/routes';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { RecordRow } from '../RecordRow';
 import { RecordStatus } from '../RecordStatus';
+import { AboutLeads } from './About';
 import {
   aboutLede,
   categoryOption,
@@ -65,15 +63,12 @@ export default function Leads() {
   );
   const asOf = discovery ? discoveryAsOf(discovery) : null;
   const savedAt = record?.stale ? record.savedAt : null;
-  // The registers the example records open, named as the cards name them.
-  const registers = useMemo(() => {
-    const found = new Map<string, string>();
-    for (const lead of discovery ? leadsFor(discovery) : [])
-      for (const item of lead.evidence)
-        if (item.url?.startsWith('https://') && !found.has(item.register))
-          found.set(item.register, item.url);
-    return [...found];
-  }, [discovery]);
+  // Signals the app cannot show faithfully are left out, and said to be.
+  const hidden = discovery
+    ? discovery.unreadable +
+      discovery.signals.length -
+      leadsFor(discovery).length
+    : 0;
   const choose = (next: LeadFilter) => {
     setFilter(next);
     setVisible(PAGE);
@@ -108,6 +103,7 @@ export default function Leads() {
               segments={filters}
               value={filter}
               onChange={choose}
+              stacked
               testID="leads-filter"
             />
             {filter !== 'all' && filter !== 'donor_contract_overlap' ? (
@@ -124,6 +120,12 @@ export default function Leads() {
             <Text variant="metadata" testID="leads-count">
               {leadCount(leads.length, filter)}
             </Text>
+            {hidden ? (
+              <Text wordSafe variant="fine" tone="ink" testID="leads-hidden">
+                {leadCount(hidden, 'all')} in this export could not be read and{' '}
+                {hidden === 1 ? 'is' : 'are'} not shown.
+              </Text>
+            ) : null}
           </Group>
           {leads.length ? (
             <View>
@@ -158,36 +160,11 @@ export default function Leads() {
               testID="leads-more"
             />
           ) : null}
-          <Section title="About these numbers" testID="leads-about">
-            <Group gap={spacing.s3}>
-              {discovery.methodology.map((method, index) => (
-                <Text
-                  key={index}
-                  wordSafe
-                  variant="fine"
-                  tone="ink"
-                  testID={`leads-method-${index}`}
-                >
-                  {method}
-                </Text>
-              ))}
-            </Group>
-            <AsAtLine
-              asOf={asOf}
-              citation={['AEC annual returns', 'AusTender']}
-              savedAt={savedAt}
-              testID="leads-as-at"
-            />
-            {registers.map(([name, url], index) => (
-              <SourceLink
-                key={name}
-                citation={name}
-                url={url}
-                kind="register"
-                testID={`leads-register-${index}`}
-              />
-            ))}
-          </Section>
+          <AboutLeads
+            discovery={discovery}
+            savedAt={savedAt}
+            testID="leads-about"
+          />
         </>
       ) : null}
     </Screen>
