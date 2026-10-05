@@ -36,6 +36,16 @@ ANALYTICS_HOSTS = {"segment.io", "segment.com", "segmentapis.com", "posthog.com"
                    "app-measurement.com", "crashlytics.com", "heap.io", "heapanalytics.com",
                    "appcenter.ms", "bugsnag.com", "datadoghq.com", "graph.facebook.com"}
 ROUTE_KEY = re.compile(r"\./[A-Za-z0-9_(),@%.\[\]/+~-]+\.(?:tsx?|jsx?)")
+# Skia 2.6.2 reads Reanimated's package.json version, so Metro includes its
+# pinned 4.5.1 sideEffects metadata. These eight exact dependency references
+# are not Expo route keys. Never exempt an actual source route or a new path.
+REANIMATED_METADATA_PATHS = {
+    "./src/layoutReanimation/animationsManager.ts",
+    "./lib/module/layoutReanimation/animationsManager.js",
+    "./src/core.ts", "./lib/module/core.js",
+    "./src/initializers.ts", "./lib/module/initializers.js",
+    "./src/index.ts", "./lib/module/index.js",
+}
 PATH_TOKENS = re.compile(rb"[A-Za-z0-9_(),@%.\[\]/+~-]+")
 HERMES_MAGIC = 0x1F1903C103BC1FC6
 HERMES_HEADER_SIZE = 128
@@ -207,7 +217,9 @@ def bundle_route_keys(body, routes):
     missing = sorted(expected - strings)
     require(bool(expected) and not missing, "every shipping Expo route key is present in shipped JS" +
             (f" (missing {', '.join(missing)})" if missing else ""))
-    unexpected = sorted(string for string in strings if ROUTE_KEY.fullmatch(string) and string not in expected)
+    metadata = REANIMATED_METADATA_PATHS if {"react-native-reanimated", "4.5.1"} <= strings else set()
+    unexpected = sorted(string for string in strings if ROUTE_KEY.fullmatch(string) and string not in expected
+                        and not (string in metadata and not (routes / string).is_file()))
     development = sorted(key for key in expected if DEVELOPMENT_ROUTE.search(key))
     require(not unexpected and not development and not DEVELOPMENT_PATHS.search(body),
             "no unshipped, development or workbench route keys in shipped JS" +
