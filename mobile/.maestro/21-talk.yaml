@@ -60,6 +60,14 @@ name: 21 Talk consent, captions, sources, controls and refusal states
 - takeScreenshot: ${EVIDENCE}/21-correction
 - scrollUntilVisible:
     element:
+      id: talk-report-1
+    centerElement: true
+- assertVisible: Report this answer
+- takeScreenshot: ${EVIDENCE}/21-report-control
+- tapOn:
+    id: talk-report-1
+- scrollUntilVisible:
+    element:
       id: talk-source-0
     centerElement: true
     visibilityPercentage: 10

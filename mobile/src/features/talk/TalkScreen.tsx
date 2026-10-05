@@ -31,8 +31,12 @@ import type { VoiceSource } from '../../voice';
 import { clock, endCopy, failureCopy, refusal, timeLabel } from './model';
 import { recordDestination } from './sources';
 import { useTalk } from './useTalk';
+import { AnswerCaption } from './AnswerCaption';
+import { reportAnswer, type ReportAnswer } from './reportAnswer';
 
-export default function TalkScreen() {
+export default function TalkScreen({
+  onReportAnswer = reportAnswer,
+}: { onReportAnswer?: ReportAnswer } = {}) {
   const call = useTalk();
   const { snapshot: s } = call;
   const [askingConsent, setAskingConsent] = useState(false);
@@ -308,10 +312,9 @@ export default function TalkScreen() {
                   you.
                 </Text>
                 <Text>
-                  OPAX keeps voice usage and session times. The release policy
-                  is no recordings and deletion of provider transcripts within
-                  one day. These provider settings must be confirmed before
-                  voice is released.
+                  OPAX keeps voice usage and session times. The voice policy is
+                  no recordings and deletion of provider transcripts within one
+                  day.
                 </Text>
                 <Text>
                   This choice is stored on this device. You can withdraw it here
@@ -322,6 +325,7 @@ export default function TalkScreen() {
                   path="/privacy"
                   testID="talk-consent-privacy"
                 />
+                <VoiceDisclosure />
                 <Button
                   label="Agree and start"
                   testID="talk-agree"
@@ -342,15 +346,20 @@ export default function TalkScreen() {
             ) : (
               <Group>
                 {s.status && !blocked ? (
-                  <Button
-                    label="Start talking"
-                    testID="talk-start"
-                    variant="primary"
-                    disabled={call.busy || !call.consentLoaded}
-                    onPress={() =>
-                      call.consent ? void call.start() : setAskingConsent(true)
-                    }
-                  />
+                  <>
+                    <VoiceDisclosure />
+                    <Button
+                      label="Start talking"
+                      testID="talk-start"
+                      variant="primary"
+                      disabled={call.busy || !call.consentLoaded}
+                      onPress={() =>
+                        call.consent
+                          ? void call.start()
+                          : setAskingConsent(true)
+                      }
+                    />
+                  </>
                 ) : null}
                 <Button
                   label="Check availability"
@@ -389,17 +398,11 @@ export default function TalkScreen() {
           {s.transcript.length ? (
             <Section title="Captions">
               {s.transcript.map((turn) => (
-                <Group
+                <AnswerCaption
                   key={`${turn.role}-${turn.id}`}
-                  accessible
-                  accessibilityLabel={`${turn.role === 'user' ? 'You' : 'OPAX'} said ${turn.text}`}
-                  testID={`talk-turn-${turn.role}`}
-                >
-                  <Text variant="metadata">
-                    {turn.role === 'user' ? 'You' : 'OPAX'}
-                  </Text>
-                  <Text>{turn.text}</Text>
-                </Group>
+                  turn={turn}
+                  onReportAnswer={onReportAnswer}
+                />
               ))}
             </Section>
           ) : null}
@@ -429,10 +432,7 @@ export default function TalkScreen() {
             </Section>
           ) : null}
           <Section>
-            <Text>
-              AI voice powered by ElevenLabs. Answers may be mistaken; check the
-              linked records.
-            </Text>
+            {active ? <VoiceDisclosure /> : null}
             <Text>
               Your microphone starts only after you choose Start talking, agree
               to voice processing and allow microphone access.
@@ -469,6 +469,14 @@ export default function TalkScreen() {
         </Screen>
       )}
     </View>
+  );
+}
+function VoiceDisclosure() {
+  return (
+    <Text testID="talk-disclosure">
+      AI voice powered by ElevenLabs. Answers may be mistaken; check the linked
+      records.
+    </Text>
   );
 }
 function TypedMessage({
