@@ -25,11 +25,19 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
 const productionBlockList = require('./scripts/production-block-list.json').map(
   (source) => new RegExp(source),
 );
+// Account sign-in and deletion stay out of production until voice ships there:
+// only entry.production.tsx (the placeholder) is visible to release bundles.
+const accountSignIn = [
+  /[/\\]src[/\\]app[/\\]account[/\\](?:sign-in|delete)\.tsx$/,
+  /[/\\]src[/\\]features[/\\]account[/\\](?!entry\.production\.tsx$).*/,
+];
 config.cacheVersion = `opax-${process.env.OPAX_VARIANT ?? 'development'}`;
 const existing = config.resolver.blockList;
 config.resolver.blockList = [
   ...(Array.isArray(existing) ? existing : existing ? [existing] : []),
-  ...(process.env.OPAX_VARIANT === 'production' ? productionBlockList : []),
+  ...(process.env.OPAX_VARIANT === 'production'
+    ? [...productionBlockList, ...accountSignIn]
+    : []),
   ...(!['production', 'e2e'].includes(process.env.OPAX_VARIANT)
     ? productionBlockList.filter((rule) =>
         /voice-bridge-test|test-screens/.test(rule.source),

@@ -48,15 +48,17 @@ export const accountCopy = {
   deleteIntro:
     'Your OPAX community account is also used on opax.com.au. Deleting it here deletes it there too.',
   deletedHeading: 'What is deleted',
+  // Decision 5 (IOS-APP section 11) and IOS-UX 4.12.
   deleted: [
     'Your account and its personal data, including your email address.',
+    'Your own discussions and replies on opax.com.au, with your reading lists, saved chats and messages.',
     'Your sign-in sessions on every device.',
-    'What you wrote on opax.com.au: discussions, replies, reading lists, saved chats and messages.',
   ],
   keptHeading: 'What is not deleted',
   kept: [
-    'Records of voice call time, because the shared monthly voice limit depends on them. They are unlinked from your account straight away. Each keeps the voice provider’s reference to its conversation until OPAX’s housekeeping removes it, a day after the call is recorded as closed. A call cut off by a failure is recorded as closed shortly after its time limit.',
-    'Other members’ replies and messages. A discussion you started that has replies stays as a stub with no personal details.',
+    'Other members’ replies under a discussion you started. The discussion stays as a stub with no personal data. Other members also keep their own messages.',
+    'Your voice usage, kept without a link to you, because the shared monthly voice limit depends on it. Each record keeps the voice provider’s reference to its conversation until OPAX’s housekeeping removes it, a day after the call is recorded as closed. A call cut off by a failure is recorded as closed shortly after its time limit.',
+    'Voice time is not refunded. Deleting the account does not give back time already used.',
     'The public parliamentary record.',
   ],
   deleteConfirmNote:
@@ -70,7 +72,7 @@ export const accountCopy = {
   sendNewDeletionCode: 'Send a new deletion code',
   accountDeleted: 'Account deleted',
   accountDeletedDetail:
-    'Your OPAX account, its personal data and what you wrote on opax.com.au have been deleted. This iPhone is signed out. Everything public in the app keeps working.',
+    'Your OPAX account, its personal data and your own discussions and replies have been deleted. This iPhone is signed out. Everything public in the app keeps working.',
   done: 'Done',
 } as const;
 

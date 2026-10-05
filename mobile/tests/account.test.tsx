@@ -487,6 +487,26 @@ describe('Delete account', () => {
     expect(onCancel).toHaveBeenCalled();
     expect(mocked.requestDeletionCode).not.toHaveBeenCalled();
   });
+  test('the confirmation states decision 5', async () => {
+    const { renderer } = await toCode();
+    const page = texts(renderer).join('\n');
+    // Personal data and the member's own discussions and replies go.
+    expect(page).toMatch(/personal data, including your email address/);
+    expect(page).toMatch(/Your own discussions and replies on opax\.com\.au/);
+    // Other members' replies stay under a stub with no personal data.
+    expect(page).toMatch(
+      /Other members’ replies under a discussion you started\. The discussion stays as a stub with no personal data\./,
+    );
+    // Voice usage is kept without a link, and nothing is refunded.
+    expect(page).toMatch(/Your voice usage, kept without a link to you/);
+    expect(page).toMatch(/Voice time is not refunded\./);
+    expect(page.indexOf('What is deleted')).toBeLessThan(
+      page.indexOf('Your own discussions'),
+    );
+    expect(page.indexOf('What is not deleted')).toBeLessThan(
+      page.indexOf('Voice time is not refunded'),
+    );
+  });
   test('a fresh code, a deliberate tap, then the result', async () => {
     mocked.status.mockResolvedValue({ ok: true, value: signedOut });
     const { renderer, onDone } = await toCode();

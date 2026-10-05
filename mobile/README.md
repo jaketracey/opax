@@ -193,9 +193,9 @@ attack regression tests.
 - Account (`src/features/account/`, routes `src/app/account/`): sign-in by
   emailed code, sign-out and deletion through the voice bridge, with copy from
   IOS-UX 4.11 and 4.12. Development and e2e builds only for now: production
-  resolves `entry.production.tsx`, the unchanged placeholder, and the block
-  list keeps the sign-in and deletion routes and every other account file out
-  of release bundles (`tests/account-production.test.tsx`). The address, the
+  resolves `entry.production.tsx`, the unchanged placeholder, and
+  `metro.config.js` keeps the sign-in and deletion routes and every other
+  account file out of release bundles (`tests/account-production.test.tsx`). The address, the
   challenge and the code live in memory only; the token stays native. The Talk
   sheet can host `SignInFlow` itself. Journey 22 uses the fixture accounts.
 - Sharing goes through `src/navigation/share.ts` and the local Swift module
