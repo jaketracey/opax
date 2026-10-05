@@ -22,3 +22,5 @@ export const electorateRoute = (id: string) => ({
   pathname: '/electorate/[id]' as const,
   params: { id },
 });
+// Local follows: the list and its management, pushed within the current tab.
+export const followsRoute = '/follows';

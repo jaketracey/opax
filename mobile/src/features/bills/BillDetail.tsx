@@ -46,6 +46,7 @@ import {
   dateSpan,
 } from './parts';
 import { sponsorSlug } from './sponsors';
+import { FollowToggle } from '../follows/FollowToggle';
 import { useCatalogRecord } from './useCatalogRecord';
 
 type BillRecord = Awaited<ReturnType<typeof catalogs.billFor>>;
@@ -292,6 +293,15 @@ function BillHead({
           ? `, as at ${formatDate(identity.statusAsOf)}`
           : ''}
       </Text>
+      <FollowToggle
+        kind="bill"
+        id={identity.key}
+        title={billName({
+          title: identity.title,
+          short_title: identity.shortTitle,
+        })}
+        testID="bill-follow"
+      />
       {identity.introduced ? (
         <Text variant="metadata" wordSafe testID="bill-introduced">
           {identity.introducedLabel} {formatDate(identity.introduced)}
