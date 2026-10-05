@@ -152,9 +152,18 @@ export function WelcomeTour({
     }),
   );
 
+  // At standard sizes the picture and the words fit without scrolling on
+  // every supported iPhone; at accessibility sizes the page scrolls.
   const stageHeight = accessibilitySize
     ? 260
-    : Math.round(Math.max(240, Math.min(360, height * 0.4)));
+    : Math.round(Math.max(230, Math.min(330, height * 0.34)));
+
+  // A rotation changes the page width: stay on the same page.
+  useEffect(() => {
+    pager.current?.scrollTo({ x: page * width, animated: false });
+    // Only when the width changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [width]);
 
   return (
     <Animated.View
