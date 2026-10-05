@@ -18,7 +18,7 @@ test.each(catalogKinds)('one explicit P0 search kind is allowed: %s', (kind) =>
   ).not.toThrow(),
 );
 test.each([
-  '/graph/money.json',
+  '/graph/money.json?unreviewed=1',
   '/interests/ties-by-donor.json',
   '/api/ask',
   '/api/search?q=x&mode=keyword',

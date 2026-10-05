@@ -1,0 +1,45 @@
+appId: au.com.opax.app
+name: 23 Native money map phase-one rendering and orbit spike
+---
+- launchApp:
+    clearState: true
+- openLink: opax://money-map-spike
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible: 'Native pixels verified:.*'
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/23-orbit-0
+- swipe:
+    start: 30%, 42%
+    end: 70%, 42%
+    duration: 1000
+- takeScreenshot: ${EVIDENCE}/23-orbit-1
+- swipe:
+    start: 70%, 44%
+    end: 30%, 39%
+    duration: 1000
+- takeScreenshot: ${EVIDENCE}/23-orbit-2
+- scrollUntilVisible:
+    element:
+      id: money-spike-measure
+    centerElement: true
+- tapOn:
+    id: money-spike-measure
+- extendedWaitUntil:
+    visible: 'Orbit complete:.*'
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/23-metrics
+- scrollUntilVisible:
+    element:
+      id: money-spike-focus
+    centerElement: true
+- tapOn:
+    id: money-spike-focus
+- scrollUntilVisible:
+    element:
+      id: money-spike-card
+    centerElement: true
+- assertVisible: '\$1,120,198,704 disclosed receipts'
+- takeScreenshot: ${EVIDENCE}/23-focus

@@ -82,6 +82,12 @@ export default function Layout() {
             }}
           />
         )}
+        {isProduction ? null : (
+          <Stack.Screen
+            name="money-map-spike"
+            options={{ ...chrome, headerShown: true, title: 'Money map spike' }}
+          />
+        )}
       </Stack>
     </SafeAreaProvider>
   );

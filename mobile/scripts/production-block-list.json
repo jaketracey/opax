@@ -4,5 +4,6 @@
   "[/\\\\]src[/\\\\]app[/\\\\]voice-bridge-test\\.tsx$",
   "[/\\\\]src[/\\\\]test-screens[/\\\\].*",
   "[/\\\\]src[/\\\\]design[/\\\\]text-probe\\.e2e\\.ts$",
-  "[/\\\\]src[/\\\\]app[/\\\\]source-destination\\.tsx$"
+  "[/\\\\]src[/\\\\]app[/\\\\]source-destination\\.tsx$",
+  "[/\\\\]src[/\\\\]app[/\\\\]money-map-spike\\.tsx$"
 ]
