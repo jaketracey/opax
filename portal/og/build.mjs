@@ -10,8 +10,7 @@
 // The Worker draws the same cards live (src/og-render.ts) from the same trees
 // (src/og.ts). This script exists because satori cannot read WebP, so the
 // portraits need a JPEG twin, and because the home page is an asset hit that
-// never reaches the Worker, so its card is a file. Needs Node >= 23.6 (imports
-// src/og.ts directly via type stripping).
+// never reaches the Worker, so its card is a file.
 
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, statSync, existsSync } from 'node:fs'
 import { join, dirname } from 'node:path'
@@ -19,9 +18,14 @@ import { fileURLToPath } from 'node:url'
 import satori, { init as initSatori } from 'satori/wasm'
 import initYoga from 'yoga-wasm-web'
 import { initWasm, Resvg } from '@resvg/resvg-wasm'
-import { OG_FONT_FILES, homeCard, ogLayout } from '../src/og.ts'
+import { build } from 'esbuild'
 
 const PORTAL = join(dirname(fileURLToPath(import.meta.url)), '..')
+// src/ is written for the Worker's bundler, which resolves './story' to story.ts
+// and plain Node does not, so src/og.ts is bundled here by esbuild, the bundler
+// wrangler uses, as the tests load it: these are the trees the Worker draws.
+const bundled = await build({ entryPoints: [join(PORTAL, 'src/og.ts')], bundle: true, write: false, platform: 'node', format: 'esm', logLevel: 'warning' })
+const { OG_FONT_FILES, homeCard, ogLayout } = await import(`data:text/javascript;base64,${Buffer.from(bundled.outputFiles[0].text).toString('base64')}`)
 const PUBLIC = join(PORTAL, 'public')
 const PHOTOS = join(PUBLIC, 'photos')
 const JPG = join(PHOTOS, 'jpg')

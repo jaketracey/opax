@@ -1,4 +1,6 @@
 interface Env {
+  /** Minimum native app version; absent/invalid defaults to 0.0.0 (never blocks). Raising it is Jake's deliberate update lever. */
+  APP_MINIMUM_VERSION?: string
   /** HMAC-SHA-256 key for sign-in and member-bound deletion codes. Separate Worker secret in each environment. */
   COMMUNITY_CODE_MAC_SECRET?: string
   /** Present only on staging: the existing public API, with secrets kept in its Worker. */
@@ -54,6 +56,7 @@ interface Env {
 
 declare namespace Cloudflare {
   interface Env {
+    APP_MINIMUM_VERSION?: string
     /** HMAC-SHA-256 key for sign-in and member-bound deletion codes. Separate Worker secret in each environment. */
     COMMUNITY_CODE_MAC_SECRET?: string
   /** Present only on staging: the existing public API, with secrets kept in its Worker. */

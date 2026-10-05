@@ -1,0 +1,24 @@
+{
+  "about": "Hand-checked identity facts. same_person: a printed name that is the person who owns that key (an OpenAustralia/TheyVoteForYou person id), where the names alone do not show it or the speech linker gave the print someone else's id. Read by scripts/roster_identity.py (the roster's pid), scripts/photo_identity.mjs (the portrait map check) and scripts/backfill_photos_oa.py. wrong_face: a portrait file that shows somebody other than the person who owns its key; no name may map to it until the file is replaced and looked at. docs/PHOTOS.md, 'Identity check'.",
+  "same_person": {
+    "alexander somlyay": {"key": "10600", "why": "Alex Somlyay (Fairfax 1990-2013); OpenAustralia lists him as Alexander Michael Somlyay; the linker gave 10725, John Alexander"},
+    "antony windsor": {"key": "10676", "why": "Tony Windsor (New England); Antony is his given name"},
+    "david tollner": {"key": "10636", "why": "Dave Tollner (Solomon 2001-2007); the only Tollner in the House"},
+    "elizabeth coker": {"key": "10921", "why": "Libby Coker (Corangamite from 2019); the only Coker in the House"},
+    "elizabeth webster": {"key": "10935", "why": "Anne Webster (Mallee from 2019), printed with her middle name; the only Webster in the House that year"},
+    "katrina allen": {"key": "10928", "why": "Katie Allen (Higgins 2019-2022); Katrina is her given name"},
+    "katter bob jnr": {"key": "10352", "why": "Bob Katter (Kennedy from 1993), printed 'Katter Bob Jnr' in 1998-99"},
+    "kevin drum": {"key": "10875", "why": "Damian Drum (Murray, Nicholls 2016-2022), printed with his middle name"},
+    "patrick conaghan": {"key": "10922", "why": "Pat Conaghan (Cowper from 2019); OpenAustralia lists him as Patrick John Conaghan; the linker gave 10903, Rex Patrick"},
+    "patrick farmer": {"key": "10212", "why": "Pat Farmer (Macarthur 2001-2010); OpenAustralia lists him as Patrick Francis Farmer; the linker gave 10903, Rex Patrick"},
+    "peter sidebottom": {"key": "10583", "why": "Sid Sidebottom (Braddon), printed with his first name Peter in 1998-99"},
+    "robert baldwin": {"key": "10026", "why": "Bob Baldwin (Paterson); OpenAustralia lists him as Robert Charles Baldwin; the linker gave 10545, Stuart Robert"}
+  },
+  "wrong_face": {
+    "10080": "Tony Burke's portrait (byte-identical to 10081), not Anna Burke",
+    "10509": "a woman with long curly hair, probably Alicia Payne (compare 10919), not Marise Payne",
+    "10519": "a woman, probably Melissa Price (compare 10818), not Roger Price",
+    "10565": "Scott Buchholz's portrait (byte-identical to 10752), not Bruce Scott",
+    "10725": "Sandy Macdonald's Senate portrait (byte-identical to 10402; his given names are John Alexander), not John Alexander"
+  }
+}

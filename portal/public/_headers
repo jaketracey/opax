@@ -35,6 +35,29 @@
 # .webp so /photos/people.json is left to the /*.json rule and not double-set.)
 /*.json
   Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+# The files that say who is who: whose face (the portrait map), which person id and
+# seat (the roster), and the name indexes of the pay, votes, expenses and interests
+# records. A correction must reach a returning reader on the next page view, not after
+# a day of stale grace: ETag revalidation. The site's own loaders also fetch them with
+# cache: "no-cache", because a copy cached under the old headers ignores these.
+/photos/people.json
+  ! Cache-Control
+  Cache-Control: public, max-age=0, must-revalidate
+/parliamentarians.json
+  ! Cache-Control
+  Cache-Control: public, max-age=0, must-revalidate
+/pay.json
+  ! Cache-Control
+  Cache-Control: public, max-age=0, must-revalidate
+/votes.json
+  ! Cache-Control
+  Cache-Control: public, max-age=0, must-revalidate
+/expenses.json
+  ! Cache-Control
+  Cache-Control: public, max-age=0, must-revalidate
+/interests/index.json
+  ! Cache-Control
+  Cache-Control: public, max-age=0, must-revalidate
 # Bill dates and progress should reflect each publication for returning readers.
 /bills/*.json
   ! Cache-Control

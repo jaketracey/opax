@@ -31,7 +31,7 @@ const data = {
   money: json("graph/money.json"),
   reports,
   corpus: json("corpus.json"),
-  parliamentarians: json("parliamentarians.json"),
+  photos: json("photos/people.json"),
   years,
 };
 const ctx = makeQuizContext(data);
@@ -54,6 +54,8 @@ for (const [id, question] of built) {
   if (question.kind === "portrait") {
     for (const option of question.options) {
       assert.ok(existsSync(join(publicDir, option.photo)), id + " portrait exists: " + option.photo);
+      assert.equal(option.photo, "/photos/" + encodeURIComponent(data.photos[option.label.toLowerCase()]) + ".webp",
+        id + " shows the face the portrait map gives " + option.label);
     }
   }
   const figureOptions = (question.options || []).filter((option) => Number.isFinite(option.value));

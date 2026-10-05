@@ -16,15 +16,18 @@
  * WHY IT MUST RUN: `wrangler deploy` on its own ships an unstamped index.html
  * against immutable Cache-Control. Deploy with `npm run deploy`, never by hand.
  *
- * The modules app.js import()s at runtime (money-map.js, statemap.js, quiz.js,
- * voice.js, ...) are fetched by bare path from inside app.js, so they cannot be
- * stamped from here; _headers gives them max-age=300 + a day of
- * stale-while-revalidate instead. Stamping them too would mean rewriting app.js
- * at deploy time.
+ * Most modules app.js import()s at runtime (money-map.js, statemap.js, voice.js,
+ * ...) are fetched by a path written into app.js, with a hand-bumped ?v= where it
+ * matters; _headers gives them max-age=300 + a day of stale-while-revalidate.
+ * The modules in MODULE_STAMPS are the exception: they load the who-is-who files
+ * themselves (portraits, the roster), so a browser must never run a cached copy of
+ * an old one. Each gets its content hash written into its importer here, before
+ * the importer itself is hashed, so a changed module is a new URL all the way up
+ * (docs/PHOTOS.md, "Caches"). `--check` fails when one of those stamps is stale.
  */
 import { createHash } from 'node:crypto'
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, unlinkSync } from 'node:fs'
-import { dirname, join } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
@@ -116,6 +119,33 @@ async function refreshFonts() {
 
 // --- stamping ---------------------------------------------------------------
 
+/** [importer, module]: modules that fetch photos/people.json or the roster themselves. */
+export const MODULE_STAMPS = [['app.js', 'quiz.js'], ['app.js', 'timemachine.js'], ['home.js', 'home-data.js']]
+
+/** Write each MODULE_STAMPS module's content hash into its importer; returns the importers that were stale. */
+function stampModules({ check }) {
+  const stale = []
+  for (const importer of [...new Set(MODULE_STAMPS.map(([i]) => i))]) {
+    const path = join(PUBLIC, importer)
+    const before = readFileSync(path, 'utf8')
+    let after = before
+    for (const [, mod] of MODULE_STAMPS.filter(([i]) => i === importer)) {
+      const pattern = new RegExp(`(["'])/${mod.replace('.', '\\.')}(?:\\?v=[A-Za-z0-9._-]*)?\\1`, 'g')
+      let hits = 0
+      after = after.replace(pattern, (_, q) => { hits += 1; return `${q}/${mod}?v=${hashOf(mod)}${q}` })
+      if (!hits) {
+        console.error(`stamp_assets: ${importer} no longer imports /${mod}; update MODULE_STAMPS.`)
+        process.exit(1)
+      }
+    }
+    if (after !== before) {
+      stale.push(importer)
+      if (!check) writeFileSync(path, after)
+    }
+  }
+  return stale
+}
+
 // Keep the homepage's first-render chrome identical to the application shell.
 // Both documents then use navigation.js for the same menus and interactions.
 function syncHomeChrome(html, shell) {
@@ -132,6 +162,8 @@ function syncHomeChrome(html, shell) {
 }
 
 function stamp({ check }) {
+  // Modules first: their stamps change app.js and home.js, which are hashed below.
+  const staleModules = stampModules({ check })
   const before = readFileSync(INDEX, 'utf8')
   const hashes = Object.fromEntries(STAMPED.map((f) => [f, hashOf(f)]))
   let hits = 0
@@ -165,7 +197,7 @@ function stamp({ check }) {
   const homeAfter = syncHomeChrome(homeBefore, after).replace(/\/(style\.css|ui-controls\.css|home\.css|home\.js|navigation\.js|quick-search\.js|analytics\.js|events\.js|gtm\.js)\?v=[A-Za-z0-9._-]*/g, (_, file) => `/${file}?v=${hashOf(file)}`)
   if (!check && homeAfter !== homeBefore) writeFileSync(homePath, homeAfter)
   if (check) {
-    if (homeAfter !== homeBefore || after !== before || communityAfter !== communityBefore || workbenchAfter !== workbenchBefore || prototypeAfter !== prototypeBefore) {
+    if (staleModules.length || homeAfter !== homeBefore || after !== before || communityAfter !== communityBefore || workbenchAfter !== workbenchBefore || prototypeAfter !== prototypeBefore) {
       console.error('stamp_assets: entry-page stamps or shared chrome are stale — run `node scripts/stamp_assets.mjs`.')
       process.exit(1)
     }
@@ -177,6 +209,8 @@ function stamp({ check }) {
   console.log(after === before ? 'stamp_assets: already current.' : 'stamp_assets: index.html updated.')
 }
 
-const args = process.argv.slice(2)
-if (args.includes('--fonts')) await refreshFonts()
-stamp({ check: args.includes('--check') })
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  const args = process.argv.slice(2)
+  if (args.includes('--fonts')) await refreshFonts()
+  stamp({ check: args.includes('--check') })
+}

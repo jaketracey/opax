@@ -3427,10 +3427,15 @@ function explainBtn(detail, label, { primary = false } = {}) {
 // industry-coloured monogram tiles — most are private companies with no clean,
 // legally safe logo source.
 
+// The files that say who is who (whose face, which pid, whose votes, pay, expenses, interests) are
+// fetched with { cache: "no-cache" }: the browser revalidates its copy (an ETag round trip, a 304 with
+// no body when nothing changed), so a corrected identity reaches a returning reader on the next load
+// instead of after a stale day. Headers alone cannot retire a copy cached under the old ones
+// (docs/PHOTOS.md, "Caches"; the bills use the same rule).
 let photoMap = null;
 let photoMapPromise = null;
 function loadPhotoMap() {
-  photoMapPromise ??= fetch("/photos/people.json")
+  photoMapPromise ??= fetch("/photos/people.json", { cache: "no-cache" })
     .then((r) => r.json()).then((d) => (photoMap = d)).catch(() => null);
   return photoMapPromise;
 }
@@ -3469,14 +3474,17 @@ async function renderPortraitCredit(name, key) {
 let votesData = null;
 let votesPromise = null;
 function loadVotes() {
-  votesPromise ??= fetch("/votes.json")
+  votesPromise ??= fetch("/votes.json", { cache: "no-cache" })
     .then((r) => (r.ok ? r.json() : null)).then((d) => (votesData = d)).catch(() => null);
   return votesPromise;
 }
 
-function votesFor(name) {
-  const pid = photoMap?.[String(name || "").trim().toLowerCase()];
-  return (pid && votesData?.[pid]) || null;
+// Records join on who a person is, never on which portrait they have: the roster's pid is verified
+// (scripts/roster_identity.py), and each export's own name index names its people. A portrait key can
+// be a Commons id, or once was somebody else's (docs/PHOTOS.md, "Identity check").
+function votesFor(name, pid) {
+  const keys = [pid, ...(votesData?._names?.[String(name || "").trim().toLowerCase()] || [])].filter(Boolean);
+  return keys.map((k) => votesData?.[k]).find((r) => r && typeof r === "object") || null;
 }
 
 function subjectHash(kind, label) {
@@ -3697,13 +3705,12 @@ async function renderPersonInterests(name, personId, sections) {
   const slot = document.createElement("div");
   slot.id = "subject-interests";
   sections.appendChild(slot);
-  const getJSON = (url) => fetch(url).then((r) => (r.ok ? r.json() : null)).catch(() => null);
-  renderPersonInterests.index ??= getJSON("/interests/index.json");
-  const [index] = await Promise.all([renderPersonInterests.index, loadPhotoMap()]);
+  const getJSON = (url, init) => fetch(url, init).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  renderPersonInterests.index ??= getJSON("/interests/index.json", { cache: "no-cache" });
+  const index = await renderPersonInterests.index;
   if (currentSubjectKey !== key) return;
   const lname = String(name || "").trim().toLowerCase();
-  const pid = personId || photoMap?.[lname] || null;
-  const id = pid && index?.people?.[pid] ? pid : index?._by_name?.[lname];
+  const id = personId && index?.people?.[personId] ? personId : index?._by_name?.[lname];
   if (!id || !/^[\w-]+$/.test(id)) { slot.remove(); return; }
   const data = await getJSON(`/interests/${encodeURIComponent(id)}.json`);
   if (currentSubjectKey !== key) return;
@@ -4118,14 +4125,15 @@ async function renderDonorTaxCharity(name, sections) {
 let expensesData = null;
 let expensesPromise = null;
 function loadExpenses() {
-  expensesPromise ??= fetch("/expenses.json")
+  expensesPromise ??= fetch("/expenses.json", { cache: "no-cache" })
     .then((r) => (r.ok ? r.json() : null)).then((d) => (expensesData = d)).catch(() => null);
   return expensesPromise;
 }
 
+// The licence line comes from the export's meta: the data.gov.au datasets' own licence, not the
+// CC BY 4.0 notice on ipea.gov.au, which covers the website.
 const IPEA_NOTE =
-  "Independent Parliamentary Expenses Authority quarterly reports, CC BY 4.0. Figures are as " +
-  "published; IPEA corrects prior quarters, so treat totals as indicative.";
+  "Figures are as published; IPEA corrects prior quarters, so treat totals as indicative.";
 
 let expenseBenchmarks = null;
 function median(values) {
@@ -4198,17 +4206,21 @@ function expenseComparisonHTML(person, benchmark, source) {
  *  Silent when the person has no IPEA entry (state MPs, pre-2017 members). */
 async function renderPersonExpenses(name, personId, sections) {
   const key = currentSubjectKey;
-  await Promise.all([loadExpenses(), loadPhotoMap(), loadExpenseDefs()]);
+  await Promise.all([loadExpenses(), loadExpenseDefs()]);
   if (currentSubjectKey !== key || !expensesData?.people) return;
   const nameKey = String(name || "").trim().toLowerCase();
-  // Portrait keys may be Wikimedia IDs, while IPEA uses legacy person IDs.
-  // Only a candidate with an expense record may take priority over the name index.
-  const e = [personId, photoMap?.[nameKey], expensesData.names?.[nameKey]]
+  // The roster's verified pid, then IPEA's own name index; only a candidate with an expense
+  // record may take priority over the name index.
+  const e = [personId, expensesData.names?.[nameKey]]
     .map((pid) => pid && expensesData.people[pid]).find(Boolean);
   if (!e) return;
   const span = e.from === e.to ? `in ${e.from}` : `${e.from} to ${e.to}`;
   const lines = Number(e.lines || 0);
   const src = safeUrl(expensesData.meta?.source_url);
+  const licenceUrl = safeUrl(expensesData.meta?.licence_url);
+  const licence = !expensesData.meta?.licence ? "" : licenceUrl
+    ? `, <a href="${esc(licenceUrl)}" rel="license noopener" target="_blank">${esc(expensesData.meta.licence)} ↗︎</a>`
+    : `, ${esc(expensesData.meta.licence)}`;
   const benchmark = getExpenseBenchmarks();
   const years = Math.max(Number(e.to) - Number(e.from) + 1, 1);
   const annual = (Number(e.total) || 0) / years;
@@ -4224,7 +4236,7 @@ async function renderPersonExpenses(name, personId, sections) {
       fmt: fmtMoney, heading: "Claimed per year",
       note: "Summed by reporting quarter. IPEA data starts in April 2017 and runs to the latest published quarter, so the first and last years can be partial.",
     }) : ""}
-    ${benchmark ? `<p class="fineprint">Bronze is this member's average year; the ink tick is the median year of ${benchmark.count.toLocaleString()} parliamentarians claiming in ${benchmark.latestYear} who have claimed since ${benchmark.fromCutoff} or earlier. Office costs follow electorate size and travel follows portfolio, so a bar past its tick is a fact, not a finding. Per-year figures divide each total by the ${years} calendar ${years === 1 ? "year" : "years"} claimed; the first and last are partial. Source: ${src ? `<a href="${esc(src)}" rel="noopener" target="_blank">IPEA quarterly expenditure reports, CC BY 4.0, to ${esc(benchmark.latestQuarter)} ↗︎</a>` : "IPEA quarterly expenditure reports, CC BY 4.0"}. IPEA corrects prior quarters, so treat totals as indicative. <a href="/expenses">What the categories mean</a>.</p>` : `<p class="fineprint">${esc(IPEA_NOTE)} <a href="/expenses">What the categories mean</a>${src ? ` · <a href="${esc(src)}" rel="noopener" target="_blank">Latest quarter on data.gov.au ↗︎</a>` : ""}</p>`}`);
+    ${benchmark ? `<p class="fineprint">Bronze is this member's average year; the ink tick is the median year of ${benchmark.count.toLocaleString()} parliamentarians claiming in ${benchmark.latestYear} who have claimed since ${benchmark.fromCutoff} or earlier. Office costs follow electorate size and travel follows portfolio, so a bar past its tick is a fact, not a finding. Per-year figures divide each total by the ${years} calendar ${years === 1 ? "year" : "years"} claimed; the first and last are partial. Source: ${src ? `<a href="${esc(src)}" rel="noopener" target="_blank">IPEA quarterly expenditure reports to ${esc(benchmark.latestQuarter)} ↗︎</a>` : "IPEA quarterly expenditure reports"}${licence}. IPEA corrects prior quarters, so treat totals as indicative. <a href="/expenses">What the categories mean</a>.</p>` : `<p class="fineprint">Independent Parliamentary Expenses Authority quarterly reports${licence}. ${esc(IPEA_NOTE)} <a href="/expenses">What the categories mean</a>${src ? ` · <a href="${esc(src)}" rel="noopener" target="_blank">Latest quarter on data.gov.au ↗︎</a>` : ""}</p>`}`);
   $("subject-infobox")?.querySelector("dl")?.insertAdjacentHTML("beforeend",
     `<dt>Claimed expenses</dt><dd><b>${esc(fmtMoney(e.total))}</b></dd>`);
 }
@@ -4237,7 +4249,7 @@ async function renderPersonExpenses(name, personId, sections) {
 // opens; silent for anyone the file does not know (state members, pre-1999).
 let payPromise = null;
 function loadPay() {
-  payPromise ??= fetch("/pay.json").then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  payPromise ??= fetch("/pay.json", { cache: "no-cache" }).then((r) => (r.ok ? r.json() : null)).catch(() => null);
   return payPromise;
 }
 /** Folded exactly as build_pay.py folds the keys of pay.json's `names`. */
@@ -4515,9 +4527,22 @@ async function renderExpenseGlossary() {
       }).join("")}</dl>`;
   }).join("") +
     (meta.licence_note
-      ? `<h3>Sources and licence</h3><p class="fineprint">${esc(meta.licence_note)}${
-        safeUrl(meta.source_url) ? ` <a href="${esc(meta.source_url)}" rel="noopener" target="_blank">IPEA expenditure reports ↗︎</a>` : ""}</p>`
+      ? `<h3>Sources and licences</h3><p class="fineprint">${licenceNoteHTML(meta)}</p>`
       : "");
+}
+
+/** The note as written, with each of meta.licences' works and licences linked
+ *  where the note names them: "<work>" and "<licence> (<licence_url>)". */
+function licenceNoteHTML(meta) {
+  let html = esc(meta.licence_note);
+  for (const l of Array.isArray(meta.licences) ? meta.licences : []) {
+    const work = safeUrl(l.url), deed = safeUrl(l.licence_url);
+    if (work && l.work) html = html.replace(esc(l.work),
+      () => `<a href="${esc(work)}" rel="noopener" target="_blank">${esc(l.work)} ↗︎</a>`);
+    if (deed && l.licence) html = html.replace(`${esc(l.licence)} (${esc(deed)})`,
+      () => `<a href="${esc(deed)}" rel="license noopener" target="_blank">${esc(l.licence)} ↗︎</a>`);
+  }
+  return html;
 }
 
 // --- access: the money <-> access join ---------------------------------------
@@ -4851,12 +4876,12 @@ async function renderPartyMentions(label, sections, key) {
 async function renderPersonVotes(name, personId, sections) {
   const key = currentSubjectKey;
   sections.insertAdjacentHTML("beforeend", `<div id="subject-votes"></div>`);
-  await Promise.all([loadPhotoMap(), loadVotes()]);
+  await loadVotes();
   if (currentSubjectKey !== key) return;
   const slot = $("subject-votes");
   if (!slot) return;
   const lname = String(name || "").trim().toLowerCase();
-  const keys = [...new Set([personId, photoMap?.[lname], ...(votesData?._names?.[lname] || [])].filter(Boolean))];
+  const keys = [...new Set([personId, ...(votesData?._names?.[lname] || [])].filter(Boolean))];
   const recs = keys.map((k) => votesData?.[k]).filter((r) => r && typeof r === "object");
   if (!recs.length) { slot.remove(); return; }
   const sum = (field) => recs.reduce((a, r) => a + (Number(r[field]) || 0), 0);
@@ -5324,8 +5349,9 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   });
   // The structured record first; the speeches follow it.
   renderPersonTopics(name, sections).then(() => refreshPersonJumps(sections));
-  renderPersonVotes(name, photoMap?.[name.trim().toLowerCase()] ?? null, sections).then(() => refreshPersonJumps(sections));
-  renderPersonInterests(name, null, sections).then(() => refreshPersonJumps(sections));
+  // Records by the roster's verified pid (none for a print that holds more than one person).
+  renderPersonVotes(name, roster?.pid ?? null, sections).then(() => refreshPersonJumps(sections));
+  renderPersonInterests(name, roster?.pid ?? null, sections).then(() => refreshPersonJumps(sections));
   renderPersonSpeeches(name, speeches, chambers, sections).then(() => refreshPersonJumps(sections));
   renderPersonDiary(name, sections, chambers).then(() => polishPersonSections(sections));
   const news = document.createElement("section");
@@ -5340,7 +5366,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   await renderPersonPay(name, sections);
   if (currentSubjectKey !== key) return;
   refreshPersonJumps(sections);
-  await renderPersonExpenses(name, photoMap?.[name.trim().toLowerCase()], sections);
+  await renderPersonExpenses(name, roster?.pid ?? null, sections);
   if (currentSubjectKey !== key) return;
   const mentions = document.createElement("section");
   mentions.id = "person-mentions";
@@ -6173,7 +6199,7 @@ function anyPartyDotHTML(label, colours) {
 
 let parliamentariansPromise = null;
 function loadParliamentarians() {
-  parliamentariansPromise ??= fetch("/parliamentarians.json")
+  parliamentariansPromise ??= fetch("/parliamentarians.json", { cache: "no-cache" })
     .then((r) => (r.ok ? r.json() : null)).then(async (data) => {
       try {
         const module = await loadElectorateModule();
@@ -6459,7 +6485,7 @@ async function buildPeopleDirectory() {
   for (const p of items) {
     const lname = p.name.toLowerCase();
     p._photo = photoUrlFor(p.name);
-    const keys = [...new Set([p.pid, photoMap?.[lname], ...(votesData?._names?.[lname] || [])].filter(Boolean))];
+    const keys = [...new Set([p.pid, ...(votesData?._names?.[lname] || [])].filter(Boolean))];
     p._divisions = keys.reduce((a, k) => a + (Number(votesData?.[k]?.divisions_total) || 0), 0);
     p._sortName = `${lname.split(" ").pop()} ${lname}`;
   }
@@ -6482,7 +6508,7 @@ async function buildPeopleDirectory() {
   const row = (p) => {
     const portrait = p._photo
       ? `<span class="dir-portrait"><img src="${esc(p._photo)}" alt="" width="64" height="64" loading="lazy"></span>`
-      : `<span class="dir-mono" aria-hidden="true">${esc(p.name.slice(0, 1))}</span>`;
+      : `<span class="dir-mono" aria-hidden="true"></span>`;
     const where = (p.states || []).map((s) => STATE_NAMES[s] || s).join(", ");
     const metaLine = [
       p.party ? partyChipHTML(p.party) : `<span class="dir-muted">No party recorded</span>`,
@@ -7419,12 +7445,18 @@ function billRulerHTML(dates) {
   const x = (t) => 8 + ((t - first) / span) * 664;
   const ticks = points.map((t) =>
     `<line class="bill-ruler-tick" x1="${x(t).toFixed(2)}" x2="${x(t).toFixed(2)}" y1="10" y2="30"/>`).join("");
+  const day = (t) => esc(fmtDate(new Date(t).toISOString().slice(0, 10)));
   const label = (t, anchor) =>
-    `<text class="bill-ruler-label" x="${x(t).toFixed(2)}" y="45" text-anchor="${anchor}">${esc(fmtDate(new Date(t).toISOString().slice(0, 10)))}</text>`;
+    `<text class="bill-ruler-label" x="${x(t).toFixed(2)}" y="45" text-anchor="${anchor}">${day(t)}</text>`;
+  // A bill whose every stage fell on one day has no span: both ends land on the
+  // left edge, and the end label, anchored to finish there, ran off the ruler and
+  // left its last digit printed over the first label (":617 Sep 2026"). One day
+  // is one notch with one date.
+  const oneDay = last === first;
   return `<svg class="bill-ruler" viewBox="0 0 680 52" role="img"
-    aria-label="The recorded stages of this bill, from ${esc(fmtDate(new Date(first).toISOString().slice(0, 10)))} to ${esc(fmtDate(new Date(last).toISOString().slice(0, 10)))}">
+    aria-label="The recorded stages of this bill, ${oneDay ? `all on ${day(first)}` : `from ${day(first)} to ${day(last)}`}">
     <line class="bill-ruler-axis" x1="8" x2="672" y1="30" y2="30"/>
-    ${ticks}${label(first, "start")}${label(last, "end")}
+    ${ticks}${label(first, "start")}${oneDay ? "" : label(last, "end")}
   </svg>`;
 }
 
@@ -8255,9 +8287,9 @@ document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
   ballot: { name: "Build your ballot", dialog: "dialog-ballot", body: "explore-ballot", module: "/ballot.js?v=20260909-1", mount: "mountBallot" },
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=ba3595d5ef", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
-  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js", mount: "mountQuiz" },
+  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=0409f75df4", mount: "mountQuiz" },
   ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=shareable-receipts-20260913", mount: "mountLedger" },
   grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=vacant-seats-20260930", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js", mount: "mountMatrix" },
@@ -8638,7 +8670,7 @@ async function renderFrontEncy(dayIdx, todayReport, don) {
   }
   // Cards with a voting record first: they carry the bill lists that give the
   // rail its shape, and a card with only a sentence would stand mostly empty.
-  const fullCard = (p) => { const v = votesFor(p.name); return Boolean(v?.for?.length || v?.against?.length); };
+  const fullCard = (p) => { const v = votesFor(p.name, rosterByName.get(p.name.toLowerCase())?.pid); return Boolean(v?.for?.length || v?.against?.length); };
   const dailyPool = dailyEncyShuffle(pool, p => p.name);
   const picks = [...dailyPool.filter(fullCard), ...dailyPool.filter((p) => !fullCard(p))].slice(0, 8);
 
@@ -8650,9 +8682,9 @@ async function renderFrontEncy(dayIdx, todayReport, don) {
       </ul>
     </div>` : "";
   const cards = picks.map((p) => {
-    const v = votesFor(p.name);
-    const hasVotes = Boolean(v?.for?.length || v?.against?.length);
     const r = rosterByName.get(p.name.toLowerCase()); // the roster fills a card that has no votes to show
+    const v = votesFor(p.name, r?.pid);
+    const hasVotes = Boolean(v?.for?.length || v?.against?.length);
     return `<article class="report-card ency-card">
       <div class="ency-head">
         <img class="ency-portrait" src="${esc(photoUrlFor(p.name))}" alt="" width="64" height="64">

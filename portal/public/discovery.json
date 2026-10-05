@@ -160,7 +160,7 @@
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 38.68,
+          "value": 38.67,
           "format": "percent"
         },
         {
@@ -170,17 +170,17 @@
         },
         {
           "label": "Total recorded value",
-          "value": 6057606016.84,
+          "value": 6058664016.84,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 534.0,
+          "value": 535.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 931.0,
+          "value": 932.0,
           "format": "number"
         }
       ],
@@ -200,22 +200,22 @@
       "chart": {
         "type": "concentration",
         "group_label": "Department of Home Affairs",
-        "group_total": 6057606016.84,
+        "group_total": 6058664016.84,
         "leading_name": "SECURE JOURNEYS PTY LTD",
         "participant_label": "supplier",
-        "participant_count": 534,
-        "record_count": 931,
+        "participant_count": 535,
+        "record_count": 932,
         "participants": [
           {
             "name": "SECURE JOURNEYS PTY LTD",
             "value": 2343038544.0,
-            "share": 38.68,
+            "share": 38.67,
             "record_count": 1
           },
           {
             "name": "CUSHMAN & WAKEFIELD PTY LTD",
             "value": 1019223563.3,
-            "share": 16.83,
+            "share": 16.82,
             "record_count": 3
           },
           {
@@ -237,9 +237,9 @@
             "record_count": 1
           }
         ],
-        "other_total": 2095572685.4,
-        "other_share": 34.59,
-        "other_count": 529,
+        "other_total": 2096630685.4,
+        "other_share": 34.61,
+        "other_count": 530,
         "period": {
           "kind": "contract_start_date",
           "from": "2009-12-23",
@@ -406,11 +406,11 @@
       "category": "procurement_concentration",
       "entity": "API Services Australia Pty Ltd",
       "title": "Department of Health, Disability and Ageing: 29% awarded to one supplier",
-      "summary": "API Services Australia Pty Ltd accounts for 29.3% of the positive recorded contract value for Department of Health, Disability and Ageing.",
+      "summary": "API Services Australia Pty Ltd accounts for 29.0% of the positive recorded contract value for Department of Health, Disability and Ageing.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 29.35,
+          "value": 29.03,
           "format": "percent"
         },
         {
@@ -420,17 +420,17 @@
         },
         {
           "label": "Total recorded value",
-          "value": 4062159176.65,
+          "value": 4106571953.79,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 201.0,
+          "value": 205.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 307.0,
+          "value": 317.0,
           "format": "number"
         }
       ],
@@ -450,46 +450,46 @@
       "chart": {
         "type": "concentration",
         "group_label": "Department of Health, Disability and Ageing",
-        "group_total": 4062159176.65,
+        "group_total": 4106571953.79,
         "leading_name": "API Services Australia Pty Ltd",
         "participant_label": "supplier",
-        "participant_count": 201,
-        "record_count": 307,
+        "participant_count": 205,
+        "record_count": 317,
         "participants": [
           {
             "name": "API Services Australia Pty Ltd",
             "value": 1192129400.0,
-            "share": 29.35,
+            "share": 29.03,
             "record_count": 2
           },
           {
             "name": "GlaxoSmithKline Australia Pty Ltd",
             "value": 718600000.0,
-            "share": 17.69,
+            "share": 17.5,
             "record_count": 2
           },
           {
             "name": "SYMBION PTY LTD",
             "value": 596460700.0,
-            "share": 14.68,
+            "share": 14.52,
             "record_count": 1
           },
           {
             "name": "Accenture Australia Pty Ltd",
             "value": 291811469.99,
-            "share": 7.18,
+            "share": 7.11,
             "record_count": 4
           },
           {
             "name": "SANOFI-AVENTIS AUSTRALIA PTY LTD",
             "value": 137100000.0,
-            "share": 3.38,
+            "share": 3.34,
             "record_count": 2
           }
         ],
-        "other_total": 1126057606.66,
-        "other_share": 27.72,
-        "other_count": 196,
+        "other_total": 1170470383.8,
+        "other_share": 28.5,
+        "other_count": 200,
         "period": {
           "kind": "contract_start_date",
           "from": "2020-02-19",
@@ -806,11 +806,11 @@
       "category": "procurement_concentration",
       "entity": "Wise Employment Ltd",
       "title": "Department of Social Services: 28% awarded to one supplier",
-      "summary": "Wise Employment Ltd accounts for 27.7% of the positive recorded contract value for Department of Social Services.",
+      "summary": "Wise Employment Ltd accounts for 27.6% of the positive recorded contract value for Department of Social Services.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 27.68,
+          "value": 27.63,
           "format": "percent"
         },
         {
@@ -820,17 +820,17 @@
         },
         {
           "label": "Total recorded value",
-          "value": 1357925787.56,
+          "value": 1360504682.56,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 222.0,
+          "value": 223.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 371.0,
+          "value": 373.0,
           "format": "number"
         }
       ],
@@ -850,50 +850,50 @@
       "chart": {
         "type": "concentration",
         "group_label": "Department of Social Services",
-        "group_total": 1357925787.56,
+        "group_total": 1360504682.56,
         "leading_name": "Wise Employment Ltd",
         "participant_label": "supplier",
-        "participant_count": 222,
-        "record_count": 371,
+        "participant_count": 223,
+        "record_count": 373,
         "participants": [
           {
             "name": "Wise Employment Ltd",
             "value": 375903562.05,
-            "share": 27.68,
+            "share": 27.63,
             "record_count": 1
           },
           {
             "name": "The Trustee for the Salvation Army (Victoria) Property Trust",
             "value": 134300238.54,
-            "share": 9.89,
+            "share": 9.87,
             "record_count": 1
           },
           {
             "name": "AMES Australia",
             "value": 105045402.61,
-            "share": 7.74,
+            "share": 7.72,
             "record_count": 1
           },
           {
             "name": "The Personnel Group Ltd",
             "value": 93210154.95,
-            "share": 6.86,
+            "share": 6.85,
             "record_count": 1
           },
           {
             "name": "VERTO LTD",
             "value": 92736083.55,
-            "share": 6.83,
+            "share": 6.82,
             "record_count": 1
           }
         ],
-        "other_total": 556730345.86,
-        "other_share": 41.0,
-        "other_count": 217,
+        "other_total": 559309240.86,
+        "other_share": 41.11,
+        "other_count": 218,
         "period": {
           "kind": "contract_start_date",
           "from": "2010-08-31",
-          "to": "2026-04-26",
+          "to": "2026-10-01",
           "undated_records": 0,
           "invalid_date_records": 0
         }
@@ -955,12 +955,12 @@
       "id": "procurement_concentration:0e79dfcd4ffb3b41",
       "category": "procurement_concentration",
       "entity": "Roche Products Pty Ltd",
-      "title": "National Blood Authority: 57% awarded to one supplier",
-      "summary": "Roche Products Pty Ltd accounts for 56.9% of the positive recorded contract value for National Blood Authority.",
+      "title": "National Blood Authority: 56% awarded to one supplier",
+      "summary": "Roche Products Pty Ltd accounts for 56.1% of the positive recorded contract value for National Blood Authority.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 56.87,
+          "value": 56.08,
           "format": "percent"
         },
         {
@@ -970,17 +970,17 @@
         },
         {
           "label": "Total recorded value",
-          "value": 558715063.76,
+          "value": 566572655.26,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 28.0,
+          "value": 29.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 30.0,
+          "value": 31.0,
           "format": "number"
         }
       ],
@@ -1000,50 +1000,50 @@
       "chart": {
         "type": "concentration",
         "group_label": "National Blood Authority",
-        "group_total": 558715063.76,
+        "group_total": 566572655.26,
         "leading_name": "Roche Products Pty Ltd",
         "participant_label": "supplier",
-        "participant_count": 28,
-        "record_count": 30,
+        "participant_count": 29,
+        "record_count": 31,
         "participants": [
           {
             "name": "Roche Products Pty Ltd",
             "value": 317718916.9,
-            "share": 56.87,
+            "share": 56.08,
             "record_count": 1
           },
           {
             "name": "Sanofi-Aventis Australia Pty Ltd",
             "value": 81881219.2,
-            "share": 14.66,
+            "share": 14.45,
             "record_count": 1
           },
           {
             "name": "CSL Behring (Australia) Pty Ltd",
             "value": 73601832.7,
-            "share": 13.17,
+            "share": 12.99,
             "record_count": 1
           },
           {
             "name": "Takeda Pharmaceuticals Australia Pty Ltd",
             "value": 22323957.7,
-            "share": 4.0,
+            "share": 3.94,
             "record_count": 1
           },
           {
             "name": "Shire Australia Pty Ltd",
             "value": 18207413.07,
-            "share": 3.26,
+            "share": 3.21,
             "record_count": 1
           }
         ],
-        "other_total": 44981724.19,
-        "other_share": 8.05,
-        "other_count": 23,
+        "other_total": 52839315.69,
+        "other_share": 9.33,
+        "other_count": 24,
         "period": {
           "kind": "contract_start_date",
           "from": "2013-10-31",
-          "to": "2025-06-30",
+          "to": "2026-09-13",
           "undated_records": 0,
           "invalid_date_records": 0
         }
@@ -1255,12 +1255,12 @@
       "id": "procurement_concentration:55a3487fd5c825dd",
       "category": "procurement_concentration",
       "entity": "Besix Watpac",
-      "title": "CSIRO: 33% awarded to one supplier",
-      "summary": "Besix Watpac accounts for 32.9% of the positive recorded contract value for CSIRO.",
+      "title": "CSIRO: 32% awarded to one supplier",
+      "summary": "Besix Watpac accounts for 32.1% of the positive recorded contract value for CSIRO.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 32.86,
+          "value": 32.06,
           "format": "percent"
         },
         {
@@ -1270,17 +1270,17 @@
         },
         {
           "label": "Total recorded value",
-          "value": 864487234.62,
+          "value": 886240656.43,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 174.0,
+          "value": 176.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 216.0,
+          "value": 221.0,
           "format": "number"
         }
       ],
@@ -1300,50 +1300,50 @@
       "chart": {
         "type": "concentration",
         "group_label": "CSIRO",
-        "group_total": 864487234.62,
+        "group_total": 886240656.43,
         "leading_name": "Besix Watpac",
         "participant_label": "supplier",
-        "participant_count": 174,
-        "record_count": 216,
+        "participant_count": 176,
+        "record_count": 221,
         "participants": [
           {
             "name": "Besix Watpac",
             "value": 284106451.2,
-            "share": 32.86,
+            "share": 32.06,
             "record_count": 2
           },
           {
             "name": "SIMEC ZEN Energy Retail Pty Ltd",
             "value": 127211000.0,
-            "share": 14.72,
+            "share": 14.35,
             "record_count": 1
           },
           {
             "name": "Data#3 Limited",
             "value": 37263043.4,
-            "share": 4.31,
+            "share": 4.2,
             "record_count": 1
           },
           {
             "name": "Duratec Limited",
             "value": 27206083.9,
-            "share": 3.15,
+            "share": 3.07,
             "record_count": 2
           },
           {
             "name": "Aurecon Australasia Pty Ltd",
             "value": 26965105.95,
-            "share": 3.12,
+            "share": 3.04,
             "record_count": 1
           }
         ],
-        "other_total": 361735550.17,
-        "other_share": 41.84,
-        "other_count": 169,
+        "other_total": 383488971.98,
+        "other_share": 43.27,
+        "other_count": 171,
         "period": {
           "kind": "contract_start_date",
           "from": "2012-12-31",
-          "to": "2026-07-29",
+          "to": "2026-08-31",
           "undated_records": 0,
           "invalid_date_records": 0
         }
@@ -1364,7 +1364,7 @@
         },
         {
           "label": "Recorded contract value",
-          "value": 99531368.36,
+          "value": 100851368.36,
           "format": "currency"
         },
         {
@@ -1374,7 +1374,7 @@
         },
         {
           "label": "Contract records",
-          "value": 95.0,
+          "value": 96.0,
           "format": "number"
         }
       ],
@@ -1556,11 +1556,11 @@
       "category": "procurement_concentration",
       "entity": "JONES LANG LASALLE (ACT) PTY LIMITED",
       "title": "Department of the Prime Minister and Cabinet: 46% awarded to one supplier",
-      "summary": "JONES LANG LASALLE (ACT) PTY LIMITED accounts for 46.2% of the positive recorded contract value for Department of the Prime Minister and Cabinet.",
+      "summary": "JONES LANG LASALLE (ACT) PTY LIMITED accounts for 45.9% of the positive recorded contract value for Department of the Prime Minister and Cabinet.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 46.24,
+          "value": 45.94,
           "format": "percent"
         },
         {
@@ -1570,7 +1570,7 @@
         },
         {
           "label": "Total recorded value",
-          "value": 303186943.05,
+          "value": 305204156.63,
           "format": "currency"
         },
         {
@@ -1580,7 +1580,7 @@
         },
         {
           "label": "Records in comparison",
-          "value": 235.0,
+          "value": 236.0,
           "format": "number"
         }
       ],
@@ -1600,50 +1600,50 @@
       "chart": {
         "type": "concentration",
         "group_label": "Department of the Prime Minister and Cabinet",
-        "group_total": 303186943.05,
+        "group_total": 305204156.63,
         "leading_name": "JONES LANG LASALLE (ACT) PTY LIMITED",
         "participant_label": "supplier",
         "participant_count": 174,
-        "record_count": 235,
+        "record_count": 236,
         "participants": [
           {
             "name": "JONES LANG LASALLE (ACT) PTY LIMITED",
             "value": 140207244.49,
-            "share": 46.24,
+            "share": 45.94,
             "record_count": 1
           },
           {
             "name": "DATA#3 LIMITED",
-            "value": 16923742.69,
-            "share": 5.58,
-            "record_count": 2
+            "value": 18940956.27,
+            "share": 6.21,
+            "record_count": 3
           },
           {
             "name": "Australian National University",
             "value": 14795000.0,
-            "share": 4.88,
+            "share": 4.85,
             "record_count": 2
           },
           {
             "name": "WILSON PARKING AUSTRALIA",
             "value": 13750000.0,
-            "share": 4.54,
+            "share": 4.51,
             "record_count": 1
           },
           {
             "name": "WILSON SECURITY",
             "value": 13750000.0,
-            "share": 4.54,
+            "share": 4.51,
             "record_count": 1
           }
         ],
         "other_total": 103760955.87,
-        "other_share": 34.22,
+        "other_share": 34.0,
         "other_count": 169,
         "period": {
           "kind": "contract_start_date",
           "from": "2013-03-24",
-          "to": "2026-06-30",
+          "to": "2026-09-02",
           "undated_records": 0,
           "invalid_date_records": 0
         }
@@ -1855,12 +1855,12 @@
       "id": "procurement_concentration:63138efa297ac458",
       "category": "procurement_concentration",
       "entity": "Microsoft Services",
-      "title": "Digital Transformation Agency: 61% awarded to one supplier",
-      "summary": "Microsoft Services accounts for 60.8% of the positive recorded contract value for Digital Transformation Agency.",
+      "title": "Digital Transformation Agency: 60% awarded to one supplier",
+      "summary": "Microsoft Services accounts for 60.4% of the positive recorded contract value for Digital Transformation Agency.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 60.81,
+          "value": 60.39,
           "format": "percent"
         },
         {
@@ -1870,17 +1870,17 @@
         },
         {
           "label": "Total recorded value",
-          "value": 167299827.63,
+          "value": 168477040.59,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 86.0,
+          "value": 87.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 118.0,
+          "value": 119.0,
           "format": "number"
         }
       ],
@@ -1900,50 +1900,50 @@
       "chart": {
         "type": "concentration",
         "group_label": "Digital Transformation Agency",
-        "group_total": 167299827.63,
+        "group_total": 168477040.59,
         "leading_name": "Microsoft Services",
         "participant_label": "supplier",
-        "participant_count": 86,
-        "record_count": 118,
+        "participant_count": 87,
+        "record_count": 119,
         "participants": [
           {
             "name": "Microsoft Services",
             "value": 101739820.85,
-            "share": 60.81,
+            "share": 60.39,
             "record_count": 1
           },
           {
             "name": "Telstra Australia",
             "value": 9445748.5,
-            "share": 5.65,
+            "share": 5.61,
             "record_count": 2
           },
           {
             "name": "Oracle Corporation Australia Pty Ltd",
             "value": 7956850.0,
-            "share": 4.76,
+            "share": 4.72,
             "record_count": 1
           },
           {
             "name": "KPMG",
             "value": 5059164.3,
-            "share": 3.02,
+            "share": 3.0,
             "record_count": 5
           },
           {
             "name": "The Trust Company (Australia) Limited",
             "value": 4767690.16,
-            "share": 2.85,
+            "share": 2.83,
             "record_count": 1
           }
         ],
-        "other_total": 38330553.82,
-        "other_share": 22.91,
-        "other_count": 81,
+        "other_total": 39507766.78,
+        "other_share": 23.45,
+        "other_count": 82,
         "period": {
           "kind": "contract_start_date",
           "from": "2015-11-16",
-          "to": "2026-05-31",
+          "to": "2026-09-02",
           "undated_records": 0,
           "invalid_date_records": 0
         }
@@ -2302,156 +2302,6 @@
       "entity_url": null
     },
     {
-      "id": "procurement_concentration:372999cdb22330f1",
-      "category": "procurement_concentration",
-      "entity": "Data#3 Limited",
-      "title": "Department of Parliamentary Services: 25% awarded to one supplier",
-      "summary": "Data#3 Limited accounts for 25.1% of the positive recorded contract value for Department of Parliamentary Services.",
-      "metrics": [
-        {
-          "label": "Largest supplier share",
-          "value": 25.1,
-          "format": "percent"
-        },
-        {
-          "label": "Largest supplier value",
-          "value": 62781613.37,
-          "format": "currency"
-        },
-        {
-          "label": "Total recorded value",
-          "value": 250087271.54,
-          "format": "currency"
-        },
-        {
-          "label": "Distinct suppliers",
-          "value": 124.0,
-          "format": "number"
-        },
-        {
-          "label": "Records in comparison",
-          "value": 185.0,
-          "format": "number"
-        }
-      ],
-      "evidence": [
-        {
-          "label": "Department of Parliamentary Services → Data#3 Limited: $1,352,735.01 · starts 2016-06-30 · austender · record CN3358964",
-          "table": "contracts",
-          "record_id": "CN3358964",
-          "url": "https://www.tenders.gov.au/",
-          "link_scope": "source_register"
-        }
-      ],
-      "caveats": [
-        "This share describes available records only; missing disclosures can materially change it.",
-        "At least two positive records and a 25% share are required. A single reporting period is not imposed."
-      ],
-      "chart": {
-        "type": "concentration",
-        "group_label": "Department of Parliamentary Services",
-        "group_total": 250087271.54,
-        "leading_name": "Data#3 Limited",
-        "participant_label": "supplier",
-        "participant_count": 124,
-        "record_count": 185,
-        "participants": [
-          {
-            "name": "Data#3 Limited",
-            "value": 62781613.37,
-            "share": 25.1,
-            "record_count": 6
-          },
-          {
-            "name": "BAE Systems Australia Ltd",
-            "value": 22215762.77,
-            "share": 8.88,
-            "record_count": 2
-          },
-          {
-            "name": "ERM Power Retail Pty Ltd",
-            "value": 20608487.23,
-            "share": 8.24,
-            "record_count": 1
-          },
-          {
-            "name": "The Trustee for OPP West Block Trus",
-            "value": 19328570.0,
-            "share": 7.73,
-            "record_count": 1
-          },
-          {
-            "name": "Manteena Security Aust Pty Ltd",
-            "value": 16142894.4,
-            "share": 6.45,
-            "record_count": 3
-          }
-        ],
-        "other_total": 109009943.77,
-        "other_share": 43.59,
-        "other_count": 119,
-        "period": {
-          "kind": "contract_start_date",
-          "from": "2013-10-01",
-          "to": "2026-08-09",
-          "undated_records": 0,
-          "invalid_date_records": 0
-        }
-      },
-      "entity_url": null
-    },
-    {
-      "id": "donor_contract_overlap:e9eb869bde87d5c4",
-      "category": "donor_contract_overlap",
-      "entity": "Raytheon Australia",
-      "title": "Raytheon Australia appears in party receipts and contracts",
-      "summary": "An exact supplier-name match connects a canonical donor in annual AEC party-receipt disclosures with government contract awards.",
-      "metrics": [
-        {
-          "label": "Recorded party receipts",
-          "value": 1124750.0,
-          "format": "currency"
-        },
-        {
-          "label": "Recorded contract value",
-          "value": 33986133.74,
-          "format": "currency"
-        },
-        {
-          "label": "Party receipt records",
-          "value": 67.0,
-          "format": "number"
-        },
-        {
-          "label": "Contract records",
-          "value": 2.0,
-          "format": "number"
-        }
-      ],
-      "evidence": [
-        {
-          "label": "Raytheon Australia Pty Ltd → Australian Labor Party (ALP): $33,000.00 · FY 2024-25 · AEC annual receipt · local record 643490",
-          "table": "donations",
-          "record_id": "643490",
-          "url": "https://transparency.aec.gov.au/",
-          "link_scope": "source_register"
-        },
-        {
-          "label": "Department of Defence → RAYTHEON AUSTRALIA: $217,521.09 · starts 2021-07-08 · austender · record CN3794688",
-          "table": "contracts",
-          "record_id": "CN3794688",
-          "url": "https://www.tenders.gov.au/",
-          "link_scope": "source_register"
-        }
-      ],
-      "caveats": [
-        "Matching names are not verified legal identities; unrelated entities can share a name.",
-        "The records can cover different years and jurisdictions. No sequence or causal link is inferred.",
-        "Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification. State, election and referendum disclosures are excluded."
-      ],
-      "entity_url": null
-    },
-    {
       "id": "procurement_concentration:bf535c5af7dbb5ad",
       "category": "procurement_concentration",
       "entity": "Department of Climate Change, Energy, the Environment and Water",
@@ -2551,45 +2401,45 @@
       "entity_url": null
     },
     {
-      "id": "donor_contract_overlap:c615230073f839cb",
+      "id": "donor_contract_overlap:e9eb869bde87d5c4",
       "category": "donor_contract_overlap",
-      "entity": "Sanofi-Aventis Australia Pty Ltd",
-      "title": "Sanofi-Aventis Australia Pty Ltd appears in party receipts and contracts",
+      "entity": "Raytheon Australia",
+      "title": "Raytheon Australia appears in party receipts and contracts",
       "summary": "An exact supplier-name match connects a canonical donor in annual AEC party-receipt disclosures with government contract awards.",
       "metrics": [
         {
           "label": "Recorded party receipts",
-          "value": 955007.0,
+          "value": 1124750.0,
           "format": "currency"
         },
         {
           "label": "Recorded contract value",
-          "value": 219787118.14,
+          "value": 33986133.74,
           "format": "currency"
         },
         {
           "label": "Party receipt records",
-          "value": 105.0,
+          "value": 67.0,
           "format": "number"
         },
         {
           "label": "Contract records",
-          "value": 4.0,
+          "value": 2.0,
           "format": "number"
         }
       ],
       "evidence": [
         {
-          "label": "Sanofi-Aventis Australia Pty Ltd → Australian Labor Party (ALP): $44,000.00 · FY 2024-25 · AEC annual receipt · local record 643555",
+          "label": "Raytheon Australia Pty Ltd → Australian Labor Party (ALP): $33,000.00 · FY 2024-25 · AEC annual receipt · local record 643490",
           "table": "donations",
-          "record_id": "643555",
+          "record_id": "643490",
           "url": "https://transparency.aec.gov.au/",
           "link_scope": "source_register"
         },
         {
-          "label": "Department of Health and Aged Care → SANOFI-AVENTIS AUSTRALIA PTY LTD: $805,898.94 · starts 2015-03-02 · austender · record CN2918262",
+          "label": "Department of Defence → RAYTHEON AUSTRALIA: $217,521.09 · starts 2021-07-08 · austender · record CN3794688",
           "table": "contracts",
-          "record_id": "CN2918262",
+          "record_id": "CN3794688",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -2701,45 +2551,45 @@
       "entity_url": null
     },
     {
-      "id": "donor_contract_overlap:d45695559a792cc7",
+      "id": "donor_contract_overlap:1b3a47fb03bb9929",
       "category": "donor_contract_overlap",
-      "entity": "Australia Post",
-      "title": "Australia Post appears in party receipts and contracts",
+      "entity": "Origin Energy",
+      "title": "Origin Energy appears in party receipts and contracts",
       "summary": "An exact supplier-name match connects a canonical donor in annual AEC party-receipt disclosures with government contract awards.",
       "metrics": [
         {
           "label": "Recorded party receipts",
-          "value": 941692.0,
+          "value": 1049131.0,
           "format": "currency"
         },
         {
           "label": "Recorded contract value",
-          "value": 7729759.26,
+          "value": 14783874.6,
           "format": "currency"
         },
         {
           "label": "Party receipt records",
-          "value": 31.0,
+          "value": 301.0,
           "format": "number"
         },
         {
           "label": "Contract records",
-          "value": 10.0,
+          "value": 3.0,
           "format": "number"
         }
       ],
       "evidence": [
         {
-          "label": "Australia Post → Liberal National Party of Queensland: $25,895.00 · FY 2024-25 · AEC annual receipt · local record 645660",
+          "label": "Origin Energy → Australian Labor Party (ALP): $1,500.00 · FY 2024-25 · AEC annual receipt · local record 643397",
           "table": "donations",
-          "record_id": "645660",
+          "record_id": "643397",
           "url": "https://transparency.aec.gov.au/",
           "link_scope": "source_register"
         },
         {
-          "label": "Department of Defence → AUSTRALIA POST: $172,500.00 · starts 2014-06-09 · austender · record CN2346802",
+          "label": "CSIRO → Origin Energy: $5,490,562.00 · starts 2026-08-31 · austender · record CN4279386",
           "table": "contracts",
-          "record_id": "CN2346802",
+          "record_id": "CN4279386",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -2851,45 +2701,45 @@
       "entity_url": null
     },
     {
-      "id": "donor_contract_overlap:3dbf66a86549f4bf",
+      "id": "donor_contract_overlap:c615230073f839cb",
       "category": "donor_contract_overlap",
-      "entity": "Memocorp Australia Pty Ltd",
-      "title": "Memocorp Australia Pty Ltd appears in party receipts and contracts",
+      "entity": "Sanofi-Aventis Australia Pty Ltd",
+      "title": "Sanofi-Aventis Australia Pty Ltd appears in party receipts and contracts",
       "summary": "An exact supplier-name match connects a canonical donor in annual AEC party-receipt disclosures with government contract awards.",
       "metrics": [
         {
           "label": "Recorded party receipts",
-          "value": 766120.0,
+          "value": 955007.0,
           "format": "currency"
         },
         {
           "label": "Recorded contract value",
-          "value": 5096881.0,
+          "value": 219787118.14,
           "format": "currency"
         },
         {
           "label": "Party receipt records",
-          "value": 102.0,
+          "value": 105.0,
           "format": "number"
         },
         {
           "label": "Contract records",
-          "value": 1.0,
+          "value": 4.0,
           "format": "number"
         }
       ],
       "evidence": [
         {
-          "label": "Memocorp Australia Pty Ltd → Liberal Party of Australia: $20,000.00 · FY 2009-10 · AEC annual receipt · local record 721288",
+          "label": "Sanofi-Aventis Australia Pty Ltd → Australian Labor Party (ALP): $44,000.00 · FY 2024-25 · AEC annual receipt · local record 643555",
           "table": "donations",
-          "record_id": "721288",
+          "record_id": "643555",
           "url": "https://transparency.aec.gov.au/",
           "link_scope": "source_register"
         },
         {
-          "label": "Australian Institute of Health and Welfare → Memocorp Australia Pty Ltd: $5,096,881.00 · starts 2026-05-31 · austender · record CN4241377",
+          "label": "Department of Health and Aged Care → SANOFI-AVENTIS AUSTRALIA PTY LTD: $805,898.94 · starts 2015-03-02 · austender · record CN2918262",
           "table": "contracts",
-          "record_id": "CN4241377",
+          "record_id": "CN2918262",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -3001,195 +2851,45 @@
       "entity_url": null
     },
     {
-      "id": "donor_contract_overlap:3db69032f5d36155",
+      "id": "donor_contract_overlap:d45695559a792cc7",
       "category": "donor_contract_overlap",
-      "entity": "J.J. Richards & Sons Pty Ltd",
-      "title": "J.J. Richards & Sons Pty Ltd appears in party receipts and contracts",
+      "entity": "Australia Post",
+      "title": "Australia Post appears in party receipts and contracts",
       "summary": "An exact supplier-name match connects a canonical donor in annual AEC party-receipt disclosures with government contract awards.",
       "metrics": [
         {
           "label": "Recorded party receipts",
-          "value": 759750.0,
+          "value": 941692.0,
           "format": "currency"
         },
         {
           "label": "Recorded contract value",
-          "value": 106506.4,
+          "value": 7729759.26,
           "format": "currency"
         },
         {
           "label": "Party receipt records",
-          "value": 40.0,
+          "value": 31.0,
           "format": "number"
         },
         {
           "label": "Contract records",
-          "value": 1.0,
-          "format": "number"
-        }
-      ],
-      "evidence": [
-        {
-          "label": "J.J. Richards & Sons PTY LTD → Australian Labor Party (State of Queensland): $11,000.00 · FY 2023-24 · AEC annual receipt · local record 653042",
-          "table": "donations",
-          "record_id": "653042",
-          "url": "https://transparency.aec.gov.au/",
-          "link_scope": "source_register"
-        },
-        {
-          "label": "Department of Agriculture, Fisheries and Forestry → J.J. Richards & Sons Pty Ltd: $106,506.40 · starts 2015-05-05 · austender · record CN3042362",
-          "table": "contracts",
-          "record_id": "CN3042362",
-          "url": "https://www.tenders.gov.au/",
-          "link_scope": "source_register"
-        }
-      ],
-      "caveats": [
-        "Matching names are not verified legal identities; unrelated entities can share a name.",
-        "The records can cover different years and jurisdictions. No sequence or causal link is inferred.",
-        "Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification. State, election and referendum disclosures are excluded."
-      ],
-      "entity_url": null
-    },
-    {
-      "id": "procurement_concentration:1ed0baf5852aa7a9",
-      "category": "procurement_concentration",
-      "entity": "WSP Australia pty Limited",
-      "title": "High Speed Rail Authority: 54% awarded to one supplier",
-      "summary": "WSP Australia pty Limited accounts for 54.4% of the positive recorded contract value for High Speed Rail Authority.",
-      "metrics": [
-        {
-          "label": "Largest supplier share",
-          "value": 54.42,
-          "format": "percent"
-        },
-        {
-          "label": "Largest supplier value",
-          "value": 47585221.53,
-          "format": "currency"
-        },
-        {
-          "label": "Total recorded value",
-          "value": 87434836.6,
-          "format": "currency"
-        },
-        {
-          "label": "Distinct suppliers",
           "value": 10.0,
           "format": "number"
-        },
-        {
-          "label": "Records in comparison",
-          "value": 11.0,
-          "format": "number"
         }
       ],
       "evidence": [
         {
-          "label": "High Speed Rail Authority → WSP Australia pty Limited: $47,585,221.53 · starts 2026-06-17 · austender · record CN4259915",
-          "table": "contracts",
-          "record_id": "CN4259915",
-          "url": "https://www.tenders.gov.au/",
-          "link_scope": "source_register"
-        }
-      ],
-      "caveats": [
-        "This share describes available records only; missing disclosures can materially change it.",
-        "At least two positive records and a 25% share are required. A single reporting period is not imposed."
-      ],
-      "chart": {
-        "type": "concentration",
-        "group_label": "High Speed Rail Authority",
-        "group_total": 87434836.6,
-        "leading_name": "WSP Australia pty Limited",
-        "participant_label": "supplier",
-        "participant_count": 10,
-        "record_count": 11,
-        "participants": [
-          {
-            "name": "WSP Australia pty Limited",
-            "value": 47585221.53,
-            "share": 54.42,
-            "record_count": 1
-          },
-          {
-            "name": "Bellgrove Advisory Pty Ltd",
-            "value": 18010682.0,
-            "share": 20.6,
-            "record_count": 1
-          },
-          {
-            "name": "J A T SERVICES PTY LTD JAT SERVICES",
-            "value": 9436973.0,
-            "share": 10.79,
-            "record_count": 2
-          },
-          {
-            "name": "ARUP AUSTRALIA PROJECTS PTY LIMITED",
-            "value": 4946042.2,
-            "share": 5.66,
-            "record_count": 1
-          },
-          {
-            "name": "VEITCH LISTER CONSULTING PTY LTD",
-            "value": 2973305.44,
-            "share": 3.4,
-            "record_count": 1
-          }
-        ],
-        "other_total": 4482612.43,
-        "other_share": 5.13,
-        "other_count": 5,
-        "period": {
-          "kind": "contract_start_date",
-          "from": "2024-05-26",
-          "to": "2026-06-30",
-          "undated_records": 0,
-          "invalid_date_records": 0
-        }
-      },
-      "entity_url": null
-    },
-    {
-      "id": "donor_contract_overlap:10dbffc74e3bdddf",
-      "category": "donor_contract_overlap",
-      "entity": "Roche Products Pty Ltd",
-      "title": "Roche Products Pty Ltd appears in party receipts and contracts",
-      "summary": "An exact supplier-name match connects a canonical donor in annual AEC party-receipt disclosures with government contract awards.",
-      "metrics": [
-        {
-          "label": "Recorded party receipts",
-          "value": 717324.0,
-          "format": "currency"
-        },
-        {
-          "label": "Recorded contract value",
-          "value": 317718916.9,
-          "format": "currency"
-        },
-        {
-          "label": "Party receipt records",
-          "value": 47.0,
-          "format": "number"
-        },
-        {
-          "label": "Contract records",
-          "value": 1.0,
-          "format": "number"
-        }
-      ],
-      "evidence": [
-        {
-          "label": "Roche Products Pty Ltd → Australian Labor Party (ALP): $22,000.00 · FY 2024-25 · AEC annual receipt · local record 643518",
+          "label": "Australia Post → Liberal National Party of Queensland: $25,895.00 · FY 2024-25 · AEC annual receipt · local record 645660",
           "table": "donations",
-          "record_id": "643518",
+          "record_id": "645660",
           "url": "https://transparency.aec.gov.au/",
           "link_scope": "source_register"
         },
         {
-          "label": "National Blood Authority → Roche Products Pty Ltd: $317,718,916.90 · starts 2025-06-30 · austender · record CN4171505",
+          "label": "Department of Defence → AUSTRALIA POST: $172,500.00 · starts 2014-06-09 · austender · record CN2346802",
           "table": "contracts",
-          "record_id": "CN4171505",
+          "record_id": "CN2346802",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -3301,45 +3001,45 @@
       "entity_url": null
     },
     {
-      "id": "donor_contract_overlap:16063c416f2fb353",
+      "id": "donor_contract_overlap:3dbf66a86549f4bf",
       "category": "donor_contract_overlap",
-      "entity": "Deloitte",
-      "title": "Deloitte appears in party receipts and contracts",
+      "entity": "Memocorp Australia Pty Ltd",
+      "title": "Memocorp Australia Pty Ltd appears in party receipts and contracts",
       "summary": "An exact supplier-name match connects a canonical donor in annual AEC party-receipt disclosures with government contract awards.",
       "metrics": [
         {
           "label": "Recorded party receipts",
-          "value": 584656.0,
+          "value": 766120.0,
           "format": "currency"
         },
         {
           "label": "Recorded contract value",
-          "value": 8217502.1,
+          "value": 5096881.0,
           "format": "currency"
         },
         {
           "label": "Party receipt records",
-          "value": 30.0,
+          "value": 102.0,
           "format": "number"
         },
         {
           "label": "Contract records",
-          "value": 8.0,
+          "value": 1.0,
           "format": "number"
         }
       ],
       "evidence": [
         {
-          "label": "Deloitte → Liberal Party of Australia: $30,000.00 · FY 2024-25 · AEC annual receipt · local record 645880",
+          "label": "Memocorp Australia Pty Ltd → Liberal Party of Australia: $20,000.00 · FY 2009-10 · AEC annual receipt · local record 721288",
           "table": "donations",
-          "record_id": "645880",
+          "record_id": "721288",
           "url": "https://transparency.aec.gov.au/",
           "link_scope": "source_register"
         },
         {
-          "label": "Department of Defence → DELOITTE: $1,942,299.50 · starts 2015-10-26 · austender · record CN3303687",
+          "label": "Australian Institute of Health and Welfare → Memocorp Australia Pty Ltd: $5,096,881.00 · starts 2026-05-31 · austender · record CN4241377",
           "table": "contracts",
-          "record_id": "CN3303687",
+          "record_id": "CN4241377",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -3355,12 +3055,12 @@
       "id": "procurement_concentration:01eff87fac5d53f0",
       "category": "procurement_concentration",
       "entity": "Vopak Terminal Darwin Pty Ltd",
-      "title": "National Indigenous Australians Agency: 43% awarded to one supplier",
-      "summary": "Vopak Terminal Darwin Pty Ltd accounts for 42.9% of the positive recorded contract value for National Indigenous Australians Agency.",
+      "title": "National Indigenous Australians Agency: 42% awarded to one supplier",
+      "summary": "Vopak Terminal Darwin Pty Ltd accounts for 41.7% of the positive recorded contract value for National Indigenous Australians Agency.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 42.89,
+          "value": 41.67,
           "format": "percent"
         },
         {
@@ -3370,17 +3070,17 @@
         },
         {
           "label": "Total recorded value",
-          "value": 106394895.27,
+          "value": 109524098.27,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 63.0,
+          "value": 65.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 80.0,
+          "value": 82.0,
           "format": "number"
         }
       ],
@@ -3400,50 +3100,50 @@
       "chart": {
         "type": "concentration",
         "group_label": "National Indigenous Australians Agency",
-        "group_total": 106394895.27,
+        "group_total": 109524098.27,
         "leading_name": "Vopak Terminal Darwin Pty Ltd",
         "participant_label": "supplier",
-        "participant_count": 63,
-        "record_count": 80,
+        "participant_count": 65,
+        "record_count": 82,
         "participants": [
           {
             "name": "Vopak Terminal Darwin Pty Ltd",
             "value": 45635451.28,
-            "share": 42.89,
+            "share": 41.67,
             "record_count": 1
           },
           {
             "name": "INDIGENOUS DEFENCE AND INFRASTRUCTURE CONSORTIUM PTY LTD",
             "value": 11594250.0,
-            "share": 10.9,
+            "share": 10.59,
             "record_count": 2
           },
           {
             "name": "Power Back Pty Ltd",
             "value": 10927498.36,
-            "share": 10.27,
+            "share": 9.98,
             "record_count": 1
           },
           {
             "name": "Ninti One Limited",
             "value": 5803382.33,
-            "share": 5.45,
+            "share": 5.3,
             "record_count": 3
           },
           {
             "name": "Australian Institute of Health and Welfare",
             "value": 5127908.0,
-            "share": 4.82,
+            "share": 4.68,
             "record_count": 1
           }
         ],
-        "other_total": 27306405.3,
-        "other_share": 25.67,
-        "other_count": 58,
+        "other_total": 30435608.3,
+        "other_share": 27.79,
+        "other_count": 60,
         "period": {
           "kind": "contract_start_date",
           "from": "2008-12-03",
-          "to": "2026-06-15",
+          "to": "2026-09-06",
           "undated_records": 0,
           "invalid_date_records": 0
         }
@@ -3451,25 +3151,25 @@
       "entity_url": null
     },
     {
-      "id": "donor_contract_overlap:11b93c3591812703",
+      "id": "donor_contract_overlap:3db69032f5d36155",
       "category": "donor_contract_overlap",
-      "entity": "Medtronic Australasia Pty Ltd",
-      "title": "Medtronic Australasia Pty Ltd appears in party receipts and contracts",
+      "entity": "J.J. Richards & Sons Pty Ltd",
+      "title": "J.J. Richards & Sons Pty Ltd appears in party receipts and contracts",
       "summary": "An exact supplier-name match connects a canonical donor in annual AEC party-receipt disclosures with government contract awards.",
       "metrics": [
         {
           "label": "Recorded party receipts",
-          "value": 495745.0,
+          "value": 759750.0,
           "format": "currency"
         },
         {
           "label": "Recorded contract value",
-          "value": 3107779.2,
+          "value": 106506.4,
           "format": "currency"
         },
         {
           "label": "Party receipt records",
-          "value": 65.0,
+          "value": 40.0,
           "format": "number"
         },
         {
@@ -3480,16 +3180,16 @@
       ],
       "evidence": [
         {
-          "label": "Medtronic Australasia Pty Ltd → Australian Labor Party (ALP): $27,500.00 · FY 2024-25 · AEC annual receipt · local record 643294",
+          "label": "J.J. Richards & Sons PTY LTD → Australian Labor Party (State of Queensland): $11,000.00 · FY 2023-24 · AEC annual receipt · local record 653042",
           "table": "donations",
-          "record_id": "643294",
+          "record_id": "653042",
           "url": "https://transparency.aec.gov.au/",
           "link_scope": "source_register"
         },
         {
-          "label": "Department of Health, Disability and Ageing → Medtronic Australasia Pty Ltd: $3,107,779.20 · starts 2026-06-30 · austender · record CN4260932",
+          "label": "Department of Agriculture, Fisheries and Forestry → J.J. Richards & Sons Pty Ltd: $106,506.40 · starts 2015-05-05 · austender · record CN3042362",
           "table": "contracts",
-          "record_id": "CN4260932",
+          "record_id": "CN3042362",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -3601,45 +3301,45 @@
       "entity_url": null
     },
     {
-      "id": "donor_contract_overlap:4eb3ce122126d885",
+      "id": "donor_contract_overlap:10dbffc74e3bdddf",
       "category": "donor_contract_overlap",
-      "entity": "Price Waterhouse Coopers",
-      "title": "Price Waterhouse Coopers appears in party receipts and contracts",
+      "entity": "Roche Products Pty Ltd",
+      "title": "Roche Products Pty Ltd appears in party receipts and contracts",
       "summary": "An exact supplier-name match connects a canonical donor in annual AEC party-receipt disclosures with government contract awards.",
       "metrics": [
         {
           "label": "Recorded party receipts",
-          "value": 493167.0,
+          "value": 717324.0,
           "format": "currency"
         },
         {
           "label": "Recorded contract value",
-          "value": 355000.0,
+          "value": 317718916.9,
           "format": "currency"
         },
         {
           "label": "Party receipt records",
-          "value": 18.0,
+          "value": 47.0,
           "format": "number"
         },
         {
           "label": "Contract records",
-          "value": 2.0,
+          "value": 1.0,
           "format": "number"
         }
       ],
       "evidence": [
         {
-          "label": "Price Waterhouse Coopers → Liberal Party of Australia: $55,000.00 · FY 2022-23 · AEC annual receipt · local record 660319",
+          "label": "Roche Products Pty Ltd → Australian Labor Party (ALP): $22,000.00 · FY 2024-25 · AEC annual receipt · local record 643518",
           "table": "donations",
-          "record_id": "660319",
+          "record_id": "643518",
           "url": "https://transparency.aec.gov.au/",
           "link_scope": "source_register"
         },
         {
-          "label": "Department of Infrastructure, Transport, Regional Development, Communications and the Arts → Price Waterhouse Coopers: $145,000.00 · starts 2016-01-10 · austender · record CN3322336",
+          "label": "National Blood Authority → Roche Products Pty Ltd: $317,718,916.90 · starts 2025-06-30 · austender · record CN4171505",
           "table": "contracts",
-          "record_id": "CN3322336",
+          "record_id": "CN4171505",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -3751,45 +3451,45 @@
       "entity_url": null
     },
     {
-      "id": "donor_contract_overlap:3e2e3968718f6445",
+      "id": "donor_contract_overlap:16063c416f2fb353",
       "category": "donor_contract_overlap",
-      "entity": "Gilbert + Tobin",
-      "title": "Gilbert + Tobin appears in party receipts and contracts",
+      "entity": "Deloitte",
+      "title": "Deloitte appears in party receipts and contracts",
       "summary": "An exact supplier-name match connects a canonical donor in annual AEC party-receipt disclosures with government contract awards.",
       "metrics": [
         {
           "label": "Recorded party receipts",
-          "value": 474724.0,
+          "value": 584656.0,
           "format": "currency"
         },
         {
           "label": "Recorded contract value",
-          "value": 604937.3,
+          "value": 8217502.1,
           "format": "currency"
         },
         {
           "label": "Party receipt records",
-          "value": 60.0,
+          "value": 30.0,
           "format": "number"
         },
         {
           "label": "Contract records",
-          "value": 1.0,
+          "value": 8.0,
           "format": "number"
         }
       ],
       "evidence": [
         {
-          "label": "Gilbert + Tobin → Australian Labor Party (ALP): $3,312.00 · FY 2024-25 · AEC annual receipt · local record 643098",
+          "label": "Deloitte → Liberal Party of Australia: $30,000.00 · FY 2024-25 · AEC annual receipt · local record 645880",
           "table": "donations",
-          "record_id": "643098",
+          "record_id": "645880",
           "url": "https://transparency.aec.gov.au/",
           "link_scope": "source_register"
         },
         {
-          "label": "Export Finance Australia → Gilbert + Tobin: $604,937.30 · starts 2025-11-20 · austender · record CN4211286",
+          "label": "Department of Defence → DELOITTE: $1,942,299.50 · starts 2015-10-26 · austender · record CN3303687",
           "table": "contracts",
-          "record_id": "CN4211286",
+          "record_id": "CN3303687",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -3901,45 +3601,45 @@
       "entity_url": null
     },
     {
-      "id": "donor_contract_overlap:74a7afe9cef6572e",
+      "id": "donor_contract_overlap:11b93c3591812703",
       "category": "donor_contract_overlap",
-      "entity": "Clayton Utz",
-      "title": "Clayton Utz appears in party receipts and contracts",
+      "entity": "Medtronic Australasia Pty Ltd",
+      "title": "Medtronic Australasia Pty Ltd appears in party receipts and contracts",
       "summary": "An exact supplier-name match connects a canonical donor in annual AEC party-receipt disclosures with government contract awards.",
       "metrics": [
         {
           "label": "Recorded party receipts",
-          "value": 463261.0,
+          "value": 495745.0,
           "format": "currency"
         },
         {
           "label": "Recorded contract value",
-          "value": 28493690.65,
+          "value": 3107779.2,
           "format": "currency"
         },
         {
           "label": "Party receipt records",
-          "value": 146.0,
+          "value": 65.0,
           "format": "number"
         },
         {
           "label": "Contract records",
-          "value": 57.0,
+          "value": 1.0,
           "format": "number"
         }
       ],
       "evidence": [
         {
-          "label": "Clayton Utz → Australian Labor Party (State of Queensland): $1,870.00 · FY 2019-20 · AEC annual receipt · local record 675045",
+          "label": "Medtronic Australasia Pty Ltd → Australian Labor Party (ALP): $27,500.00 · FY 2024-25 · AEC annual receipt · local record 643294",
           "table": "donations",
-          "record_id": "675045",
+          "record_id": "643294",
           "url": "https://transparency.aec.gov.au/",
           "link_scope": "source_register"
         },
         {
-          "label": "Department of Defence → CLAYTON UTZ: $105,171.00 · starts 2013-01-24 · austender · record CN1175672",
+          "label": "Department of Health, Disability and Ageing → Medtronic Australasia Pty Ltd: $3,107,779.20 · starts 2026-06-30 · austender · record CN4260932",
           "table": "contracts",
-          "record_id": "CN1175672",
+          "record_id": "CN4260932",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -4051,45 +3751,45 @@
       "entity_url": null
     },
     {
-      "id": "donor_contract_overlap:d2b5bd20b78dabcf",
+      "id": "donor_contract_overlap:4eb3ce122126d885",
       "category": "donor_contract_overlap",
-      "entity": "EY",
-      "title": "EY appears in party receipts and contracts",
+      "entity": "Price Waterhouse Coopers",
+      "title": "Price Waterhouse Coopers appears in party receipts and contracts",
       "summary": "An exact supplier-name match connects a canonical donor in annual AEC party-receipt disclosures with government contract awards.",
       "metrics": [
         {
           "label": "Recorded party receipts",
-          "value": 405210.0,
+          "value": 493167.0,
           "format": "currency"
         },
         {
           "label": "Recorded contract value",
-          "value": 1132620.0,
+          "value": 355000.0,
           "format": "currency"
         },
         {
           "label": "Party receipt records",
-          "value": 14.0,
+          "value": 18.0,
           "format": "number"
         },
         {
           "label": "Contract records",
-          "value": 1.0,
+          "value": 2.0,
           "format": "number"
         }
       ],
       "evidence": [
         {
-          "label": "EY → Australian Labor Party (ALP): $1,444.00 · FY 2024-25 · AEC annual receipt · local record 643055",
+          "label": "Price Waterhouse Coopers → Liberal Party of Australia: $55,000.00 · FY 2022-23 · AEC annual receipt · local record 660319",
           "table": "donations",
-          "record_id": "643055",
+          "record_id": "660319",
           "url": "https://transparency.aec.gov.au/",
           "link_scope": "source_register"
         },
         {
-          "label": "Australian National Audit Office → EY: $1,132,620.00 · starts 2022-08-22 · austender · record CN3907746",
+          "label": "Department of Infrastructure, Transport, Regional Development, Communications and the Arts → Price Waterhouse Coopers: $145,000.00 · starts 2016-01-10 · austender · record CN3322336",
           "table": "contracts",
-          "record_id": "CN3907746",
+          "record_id": "CN3322336",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -4201,45 +3901,45 @@
       "entity_url": null
     },
     {
-      "id": "donor_contract_overlap:b0575faf11a26d51",
+      "id": "donor_contract_overlap:3e2e3968718f6445",
       "category": "donor_contract_overlap",
-      "entity": "Kellogg Brown & Root Pty Ltd",
-      "title": "Kellogg Brown & Root Pty Ltd appears in party receipts and contracts",
+      "entity": "Gilbert + Tobin",
+      "title": "Gilbert + Tobin appears in party receipts and contracts",
       "summary": "An exact supplier-name match connects a canonical donor in annual AEC party-receipt disclosures with government contract awards.",
       "metrics": [
         {
           "label": "Recorded party receipts",
-          "value": 362000.0,
+          "value": 474724.0,
           "format": "currency"
         },
         {
           "label": "Recorded contract value",
-          "value": 404218892.18,
+          "value": 604937.3,
           "format": "currency"
         },
         {
           "label": "Party receipt records",
-          "value": 55.0,
+          "value": 60.0,
           "format": "number"
         },
         {
           "label": "Contract records",
-          "value": 17.0,
+          "value": 1.0,
           "format": "number"
         }
       ],
       "evidence": [
         {
-          "label": "Kellogg Brown & Root Pty Ltd → Australian Labor Party (ALP): $15,000.00 · FY 2007-08 · AEC annual receipt · local record 726549",
+          "label": "Gilbert + Tobin → Australian Labor Party (ALP): $3,312.00 · FY 2024-25 · AEC annual receipt · local record 643098",
           "table": "donations",
-          "record_id": "726549",
+          "record_id": "643098",
           "url": "https://transparency.aec.gov.au/",
           "link_scope": "source_register"
         },
         {
-          "label": "Department of Defence → KELLOGG BROWN & ROOT PTY LTD: $292,891.98 · starts 2013-05-12 · austender · record CN1420041",
+          "label": "Export Finance Australia → Gilbert + Tobin: $604,937.30 · starts 2025-11-20 · austender · record CN4211286",
           "table": "contracts",
-          "record_id": "CN1420041",
+          "record_id": "CN4211286",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -4351,45 +4051,45 @@
       "entity_url": null
     },
     {
-      "id": "donor_contract_overlap:73cbbe8709091608",
+      "id": "donor_contract_overlap:74a7afe9cef6572e",
       "category": "donor_contract_overlap",
-      "entity": "Saab Australia Pty Ltd",
-      "title": "Saab Australia Pty Ltd appears in party receipts and contracts",
+      "entity": "Clayton Utz",
+      "title": "Clayton Utz appears in party receipts and contracts",
       "summary": "An exact supplier-name match connects a canonical donor in annual AEC party-receipt disclosures with government contract awards.",
       "metrics": [
         {
           "label": "Recorded party receipts",
-          "value": 328250.0,
+          "value": 463261.0,
           "format": "currency"
         },
         {
           "label": "Recorded contract value",
-          "value": 123319983.37,
+          "value": 28493690.65,
           "format": "currency"
         },
         {
           "label": "Party receipt records",
-          "value": 24.0,
+          "value": 146.0,
           "format": "number"
         },
         {
           "label": "Contract records",
-          "value": 10.0,
+          "value": 57.0,
           "format": "number"
         }
       ],
       "evidence": [
         {
-          "label": "Saab Australia Pty Ltd → Australian Labor Party (ALP): $22,000.00 · FY 2024-25 · AEC annual receipt · local record 643550",
+          "label": "Clayton Utz → Australian Labor Party (State of Queensland): $1,870.00 · FY 2019-20 · AEC annual receipt · local record 675045",
           "table": "donations",
-          "record_id": "643550",
+          "record_id": "675045",
           "url": "https://transparency.aec.gov.au/",
           "link_scope": "source_register"
         },
         {
-          "label": "Department of Defence → SAAB AUSTRALIA PTY LTD: $402,147.91 · starts 2014-01-01 · austender · record CN1976271",
+          "label": "Department of Defence → CLAYTON UTZ: $105,171.00 · starts 2013-01-24 · austender · record CN1175672",
           "table": "contracts",
-          "record_id": "CN1976271",
+          "record_id": "CN1175672",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -4501,25 +4201,25 @@
       "entity_url": null
     },
     {
-      "id": "donor_contract_overlap:43050733d96300e6",
+      "id": "donor_contract_overlap:d2b5bd20b78dabcf",
       "category": "donor_contract_overlap",
-      "entity": "Advanced Personnel Management",
-      "title": "Advanced Personnel Management appears in party receipts and contracts",
+      "entity": "EY",
+      "title": "EY appears in party receipts and contracts",
       "summary": "An exact supplier-name match connects a canonical donor in annual AEC party-receipt disclosures with government contract awards.",
       "metrics": [
         {
           "label": "Recorded party receipts",
-          "value": 322713.0,
+          "value": 405210.0,
           "format": "currency"
         },
         {
           "label": "Recorded contract value",
-          "value": 10554087.8,
+          "value": 1132620.0,
           "format": "currency"
         },
         {
           "label": "Party receipt records",
-          "value": 21.0,
+          "value": 14.0,
           "format": "number"
         },
         {
@@ -4530,16 +4230,316 @@
       ],
       "evidence": [
         {
-          "label": "Advanced Personnel Management → Australian Labor Party (ALP): $10,000.00 · FY 2024-25 · AEC annual receipt · local record 642748",
+          "label": "EY → Australian Labor Party (ALP): $1,444.00 · FY 2024-25 · AEC annual receipt · local record 643055",
           "table": "donations",
-          "record_id": "642748",
+          "record_id": "643055",
           "url": "https://transparency.aec.gov.au/",
           "link_scope": "source_register"
         },
         {
-          "label": "Department of Veterans' Affairs → ADVANCED PERSONNEL MANAGEMENT: $10,554,087.80 · starts 2023-12-11 · austender · record CN4048116",
+          "label": "Australian National Audit Office → EY: $1,132,620.00 · starts 2022-08-22 · austender · record CN3907746",
           "table": "contracts",
-          "record_id": "CN4048116",
+          "record_id": "CN3907746",
+          "url": "https://www.tenders.gov.au/",
+          "link_scope": "source_register"
+        }
+      ],
+      "caveats": [
+        "Matching names are not verified legal identities; unrelated entities can share a name.",
+        "The records can cover different years and jurisdictions. No sequence or causal link is inferred.",
+        "Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification. State, election and referendum disclosures are excluded."
+      ],
+      "entity_url": null
+    },
+    {
+      "id": "procurement_concentration:1293f491afbee7b9",
+      "category": "procurement_concentration",
+      "entity": "Jones Lang LaSalle (ACT) Pty Ltd",
+      "title": "Comcare: 51% awarded to one supplier",
+      "summary": "Jones Lang LaSalle (ACT) Pty Ltd accounts for 50.6% of the positive recorded contract value for Comcare.",
+      "metrics": [
+        {
+          "label": "Largest supplier share",
+          "value": 50.61,
+          "format": "percent"
+        },
+        {
+          "label": "Largest supplier value",
+          "value": 23395180.86,
+          "format": "currency"
+        },
+        {
+          "label": "Total recorded value",
+          "value": 46230738.4,
+          "format": "currency"
+        },
+        {
+          "label": "Distinct suppliers",
+          "value": 20.0,
+          "format": "number"
+        },
+        {
+          "label": "Records in comparison",
+          "value": 21.0,
+          "format": "number"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "Comcare → Jones Lang LaSalle (ACT) Pty Ltd: $23,395,180.86 · starts 2023-04-30 · austender · record CN4033842",
+          "table": "contracts",
+          "record_id": "CN4033842",
+          "url": "https://www.tenders.gov.au/",
+          "link_scope": "source_register"
+        }
+      ],
+      "caveats": [
+        "This share describes available records only; missing disclosures can materially change it.",
+        "At least two positive records and a 25% share are required. A single reporting period is not imposed."
+      ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Comcare",
+        "group_total": 46230738.4,
+        "leading_name": "Jones Lang LaSalle (ACT) Pty Ltd",
+        "participant_label": "supplier",
+        "participant_count": 20,
+        "record_count": 21,
+        "participants": [
+          {
+            "name": "Jones Lang LaSalle (ACT) Pty Ltd",
+            "value": 23395180.86,
+            "share": 50.61,
+            "record_count": 1
+          },
+          {
+            "name": "Data#3 Limited",
+            "value": 5482335.33,
+            "share": 11.86,
+            "record_count": 1
+          },
+          {
+            "name": "Enwerd Pty Ltd, the trustee for N & N Werdiger family Trust No.2",
+            "value": 2629916.81,
+            "share": 5.69,
+            "record_count": 1
+          },
+          {
+            "name": "Capgemini Australia Pty Ltd",
+            "value": 1688943.3,
+            "share": 3.65,
+            "record_count": 1
+          },
+          {
+            "name": "Corporate Travel Management Group Pty Ltd",
+            "value": 1405114.0,
+            "share": 3.04,
+            "record_count": 1
+          }
+        ],
+        "other_total": 11629248.1,
+        "other_share": 25.15,
+        "other_count": 15,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2016-06-30",
+          "to": "2026-06-30",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
+      "entity_url": null
+    },
+    {
+      "id": "donor_contract_overlap:b0575faf11a26d51",
+      "category": "donor_contract_overlap",
+      "entity": "Kellogg Brown & Root Pty Ltd",
+      "title": "Kellogg Brown & Root Pty Ltd appears in party receipts and contracts",
+      "summary": "An exact supplier-name match connects a canonical donor in annual AEC party-receipt disclosures with government contract awards.",
+      "metrics": [
+        {
+          "label": "Recorded party receipts",
+          "value": 362000.0,
+          "format": "currency"
+        },
+        {
+          "label": "Recorded contract value",
+          "value": 404218892.18,
+          "format": "currency"
+        },
+        {
+          "label": "Party receipt records",
+          "value": 55.0,
+          "format": "number"
+        },
+        {
+          "label": "Contract records",
+          "value": 17.0,
+          "format": "number"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "Kellogg Brown & Root Pty Ltd → Australian Labor Party (ALP): $15,000.00 · FY 2007-08 · AEC annual receipt · local record 726549",
+          "table": "donations",
+          "record_id": "726549",
+          "url": "https://transparency.aec.gov.au/",
+          "link_scope": "source_register"
+        },
+        {
+          "label": "Department of Defence → KELLOGG BROWN & ROOT PTY LTD: $292,891.98 · starts 2013-05-12 · austender · record CN1420041",
+          "table": "contracts",
+          "record_id": "CN1420041",
+          "url": "https://www.tenders.gov.au/",
+          "link_scope": "source_register"
+        }
+      ],
+      "caveats": [
+        "Matching names are not verified legal identities; unrelated entities can share a name.",
+        "The records can cover different years and jurisdictions. No sequence or causal link is inferred.",
+        "Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification. State, election and referendum disclosures are excluded."
+      ],
+      "entity_url": null
+    },
+    {
+      "id": "procurement_concentration:9aee38e5e3496e4e",
+      "category": "procurement_concentration",
+      "entity": "SECO TOOLS AUST P/L",
+      "title": "Royal Australian Mint: 56% awarded to one supplier",
+      "summary": "SECO TOOLS AUST P/L accounts for 56.2% of the positive recorded contract value for Royal Australian Mint.",
+      "metrics": [
+        {
+          "label": "Largest supplier share",
+          "value": 56.23,
+          "format": "percent"
+        },
+        {
+          "label": "Largest supplier value",
+          "value": 23150000.0,
+          "format": "currency"
+        },
+        {
+          "label": "Total recorded value",
+          "value": 41170103.8,
+          "format": "currency"
+        },
+        {
+          "label": "Distinct suppliers",
+          "value": 22.0,
+          "format": "number"
+        },
+        {
+          "label": "Records in comparison",
+          "value": 22.0,
+          "format": "number"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "Royal Australian Mint → SECO TOOLS AUST P/L: $23,150,000.00 · starts 2016-11-07 · austender · record CN3387315",
+          "table": "contracts",
+          "record_id": "CN3387315",
+          "url": "https://www.tenders.gov.au/",
+          "link_scope": "source_register"
+        }
+      ],
+      "caveats": [
+        "This share describes available records only; missing disclosures can materially change it.",
+        "At least two positive records and a 25% share are required. A single reporting period is not imposed."
+      ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Royal Australian Mint",
+        "group_total": 41170103.8,
+        "leading_name": "SECO TOOLS AUST P/L",
+        "participant_label": "supplier",
+        "participant_count": 22,
+        "record_count": 22,
+        "participants": [
+          {
+            "name": "SECO TOOLS AUST P/L",
+            "value": 23150000.0,
+            "share": 56.23,
+            "record_count": 1
+          },
+          {
+            "name": "Monarch Building Solutions",
+            "value": 5293362.8,
+            "share": 12.86,
+            "record_count": 1
+          },
+          {
+            "name": "Hay Specialist Recruitment (Australia) Pty Ltd",
+            "value": 4500000.0,
+            "share": 10.93,
+            "record_count": 1
+          },
+          {
+            "name": "IAS Logistics Pty Limited",
+            "value": 3356448.0,
+            "share": 8.15,
+            "record_count": 1
+          },
+          {
+            "name": "AUSTRALIA POST MELB",
+            "value": 1078000.0,
+            "share": 2.62,
+            "record_count": 1
+          }
+        ],
+        "other_total": 3792293.0,
+        "other_share": 9.21,
+        "other_count": 17,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2014-01-08",
+          "to": "2026-09-27",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
+      "entity_url": null
+    },
+    {
+      "id": "donor_contract_overlap:73cbbe8709091608",
+      "category": "donor_contract_overlap",
+      "entity": "Saab Australia Pty Ltd",
+      "title": "Saab Australia Pty Ltd appears in party receipts and contracts",
+      "summary": "An exact supplier-name match connects a canonical donor in annual AEC party-receipt disclosures with government contract awards.",
+      "metrics": [
+        {
+          "label": "Recorded party receipts",
+          "value": 328250.0,
+          "format": "currency"
+        },
+        {
+          "label": "Recorded contract value",
+          "value": 123319983.37,
+          "format": "currency"
+        },
+        {
+          "label": "Party receipt records",
+          "value": 24.0,
+          "format": "number"
+        },
+        {
+          "label": "Contract records",
+          "value": 10.0,
+          "format": "number"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "Saab Australia Pty Ltd → Australian Labor Party (ALP): $22,000.00 · FY 2024-25 · AEC annual receipt · local record 643550",
+          "table": "donations",
+          "record_id": "643550",
+          "url": "https://transparency.aec.gov.au/",
+          "link_scope": "source_register"
+        },
+        {
+          "label": "Department of Defence → SAAB AUSTRALIA PTY LTD: $402,147.91 · starts 2014-01-01 · austender · record CN1976271",
+          "table": "contracts",
+          "record_id": "CN1976271",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -4554,7 +4554,7 @@
   ],
   "coverage": {
     "donations": 92642,
-    "contracts": 19301,
+    "contracts": 19451,
     "available_categories": [
       "donor_contract_overlap",
       "recipient_concentration",
@@ -4562,7 +4562,7 @@
     ],
     "unavailable_categories": [],
     "source_donation_rows": 199233,
-    "source_contract_rows": 19301,
+    "source_contract_rows": 19451,
     "eligible_annual_party_receipt_rows": 100482,
     "excluded_before_name_checks": 98751,
     "excluded_receipt_rows": {
@@ -4574,7 +4574,7 @@
     "financial_year_from": "1998-99",
     "financial_year_to": "2024-25",
     "receipt_scope": "AEC annual returns to canonical parties, direct classification only",
-    "snapshot_at": "2026-09-21T12:22:45.355457+00:00"
+    "snapshot_at": "2026-10-03T19:41:18.234736+00:00"
   },
   "methodology": [
     "This snapshot uses annual AEC party-receipt records with a canonical party recipient and ingestion classification direct. These are disclosed receipts, not a verified gifts-only dataset.",
@@ -4588,6 +4588,6 @@
     "Source links open the official source register, not an individual receipt or notice. Evidence labels carry original reported names, row amounts and local source IDs; each is one example behind the aggregate.",
     "Reporting thresholds, incomplete coverage and duplicated/amended disclosures can affect totals. Absence of a signal is not evidence of absence."
   ],
-  "generated_at": "2026-09-21T12:22:45.355457+00:00",
-  "export_seconds": 1.665
+  "generated_at": "2026-10-03T19:41:18.234736+00:00",
+  "export_seconds": 3.732
 }

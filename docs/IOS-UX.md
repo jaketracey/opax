@@ -1013,7 +1013,7 @@ The examples in this list illustrate formats only.
 - Money: to the dollar for records and rates of pay ("$4,537,500"; "$622,102 a year"). In running text, "$4.7 million". Compact forms only in charts and tight figures, in one style. The web has three today: "$24.4M" and "$507K" (`fmtMoney` on entity pages), "$2.3bn" and "$211.6m" (the contracts view) and "$10m" (the daily edition). This document proposes lowercase "m" and "bn" for the app.
 - Percentages: one decimal for shares of a whole ("78.4%"); whole numbers that add to 100 where a set of shares is shown together (largest remainder), as the grants exports do.
 - Dates: "17 September 2026"; "17 Sep 2026" in dense rows. The web mixes "4 Sept 2026" (electorate pages) with "26 Aug 2026" (bills); the app uses three-letter months throughout. Financial years with an en dash: "2024–25". Ranges in prose: "1998 to 2026".
-- As-at dates: the web says both "As of 4 Sept 2026" (electorates) and "as at 26 Aug 2026" (bills, pay). The app uses "As at", the Australian form, followed by the source and, where it applies, the licence: "As at [date] · Source: IPEA quarterly expenditure reports, CC BY 4.0, to [quarter]".
+- As-at dates: the web says both "As of 4 Sept 2026" (electorates) and "as at 26 Aug 2026" (bills, pay). The app uses "As at", the Australian form, followed by the source and, where it applies, the licence: "As at [date] · Source: IPEA quarterly expenditure reports to [quarter], CC BY 3.0 AU".
 - Voice time: minutes and seconds with tabular figures ("7:42"), and "10 minutes" in words in sentences.
 
 ### App Store drafts for Jake

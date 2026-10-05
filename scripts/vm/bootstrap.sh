@@ -159,7 +159,7 @@ say "apt packages"
 APT="env DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a apt-get"
 $SUDO $APT update -qq
 PKGS=(ca-certificates curl gnupg git python3 python3-venv python3-dev build-essential zstd rsync sqlite3 jq
-      util-linux tzdata less iproute2 xz-utils)
+      util-linux tzdata less iproute2 xz-utils tesseract-ocr)
 [ "$SKIP_F2B" -eq 1 ] || PKGS+=(fail2ban)
 [ "$SKIP_UPGRADES" -eq 1 ] || PKGS+=(unattended-upgrades)
 $SUDO $APT install -y -qq "${PKGS[@]}"

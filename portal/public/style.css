@@ -5314,8 +5314,10 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .el-service li > span { margin-left:.6rem; font-size:.85rem; }
 .el-demographics { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1.5rem; }
 .el-demographics dt { font-size:.8rem; }
-.el-demographics dd { margin:.3rem 0 0; font-size:1.7rem; font-variant-numeric:tabular-nums; }
-.el-demographics small { display:block; font-size:.7rem; }
+/* The figures take the record's serif, like every other headline figure (.tile b,
+   .stat-figure): Public Sans's tabular digits, set this large, read as a code font. */
+.el-demographics dd { margin:.3rem 0 0; font:700 1.7rem/1.15 var(--serif); font-variant-numeric:tabular-nums; }
+.el-demographics small { display:block; margin-top:.25rem; font:400 .7rem/1.4 var(--sans); }
 .el-section > ul { padding-left:1.2rem; }
 .el-section > ul li { margin:.65rem 0; }
 .el-id { overflow-wrap:anywhere; font-size:.75rem; }
@@ -5508,6 +5510,16 @@ h3, #panel-methods h3, #panel-expenses h3 {
 .chat-launcher:focus-visible { outline: 3px solid var(--bronze-ink); outline-offset: 3px; }
 /* The launcher floats over the last lines of the page; the page leaves it room. */
 body.assistant-ready { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
+/* Every other page's columns stop short of the corner; the grants register and
+   the receipts ledger run the full width, so their right-hand column and fine
+   print passed under the launcher wherever the reader stopped scrolling. Where
+   it floats on desktop they keep out of its column: its footprint (20px inset,
+   the 134px pill, a 12px gap) less the margin the centred page already leaves. */
+@media (min-width: 801px) {
+  body.assistant-ready #money-records-body {
+    padding-right: max(0px, calc(166px - (100vw - min(100vw, 1440px)) / 2 - clamp(1.25rem, 4vw, 4.5rem)));
+  }
+}
 /* While a guided journey plays the map the launcher steps aside; an open
    conversation stays where the reader put it. */
 body.journey-playing .chat-launcher { display: none; }

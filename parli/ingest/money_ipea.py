@@ -2,7 +2,7 @@
 parli.ingest.money_ipea -- IPEA parliamentarian expenditure into `ext_expenses`.
 
 The Independent Parliamentary Expenses Authority publishes one CSV bundle per
-quarter on data.gov.au (organisation `ipea`, licence CC BY): the main
+quarter on data.gov.au (organisation `ipea`, licence CC BY 3.0 AU): the main
 `YYYYqNN_dataextract.csv` transaction file (one row per expense line, with the
 travelling person, category tree, dates, locations and amount) plus
 repayments / certifications / office-costs-by-state / adjustments files. Only
@@ -36,6 +36,16 @@ from parli.ingest.ext_common import (
 from parli.ingest.ipea_expenses import map_category
 
 CKAN_API = "https://data.gov.au/data/api/3/action/package_search"
+
+# The quarterly datasets' licence, as each data.gov.au record states it. The CC BY 4.0 notice on
+# ipea.gov.au covers the website, not these datasets. scripts/export_expenses.py publishes LICENCE,
+# so a quarter whose record names another licence is not loaded (see main). The licence's identity is
+# CKAN's license_id and licence URL; the title is display text and only noted when it reads differently.
+LICENCE_ID = "cc-by"
+LICENCE_TITLE = "Creative Commons Attribution 3.0 Australia"
+LICENCE = "CC BY 3.0 AU"
+LICENCE_URL = "https://creativecommons.org/licenses/by/3.0/au/"
+
 CACHE = CACHE_ROOT / "ipea"
 LEGACY_CACHE = Path("~/.cache/autoresearch/ipea").expanduser()  # the 2026-03 loader's downloads
 
@@ -138,13 +148,38 @@ def discover(session) -> list[dict]:
                 # the 2024 datasets tag their resources '.CSV' (leading dot)
                 if m and (rs.get("format") or "").strip(". ").upper() == "CSV":
                     out.append({"quarter": f"{m.group(1)}q{m.group(2)}", "url": url, "title": ds["title"],
-                                "licence": ds.get("license_id"), "modified": rs.get("last_modified") or ds.get("metadata_modified"),
+                                "licence": ds.get("license_id"), "licence_title": ds.get("license_title"),
+                                "licence_url": ds.get("license_url"),
+                                "modified": rs.get("last_modified") or ds.get("metadata_modified"),
                                 "dataset_url": f"https://data.gov.au/data/dataset/{ds['name']}"})
         start += 50
         if start >= res["count"]:
             break
     out.sort(key=lambda d: d["quarter"])
     return out
+
+
+def _licence_uri(url: str) -> str:
+    """'http://creativecommons.org/licenses/by/3.0/au/' -> 'creativecommons.org/licenses/by/3.0/au'."""
+    return re.sub(r"^(?:https?://)?(?:www\.)?", "", (url or "").strip().lower()).rstrip("/")
+
+
+def licence_problem(ds: dict) -> str | None:
+    """Why a dataset's CKAN licence is not LICENCE, or None when it is: the license_id must be
+    LICENCE_ID and the licence URL, where CKAN gives one, LICENCE_URL (scheme, www and a trailing
+    slash aside). The title is not compared here; see title_differs."""
+    if (ds.get("licence") or "").strip().lower() != LICENCE_ID:
+        return f"license_id {ds.get('licence')!r}, not {LICENCE_ID!r}"
+    url = ds.get("licence_url")
+    if url and _licence_uri(url) != _licence_uri(LICENCE_URL):
+        return f"licence URL {url!r}, not {LICENCE_URL!r}"
+    return None
+
+
+def title_differs(ds: dict) -> bool:
+    """True when the licence title reads other than LICENCE_TITLE beyond whitespace and case."""
+    norm = lambda s: " ".join((s or "").split()).casefold()
+    return norm(ds.get("licence_title")) != norm(LICENCE_TITLE)
 
 
 def download(session, ds: dict) -> Path:
@@ -212,13 +247,31 @@ def main() -> None:
 
     datasets = discover(session)
     log(f"IPEA: {len(datasets)} quarterly transaction files on data.gov.au "
-        f"({datasets[0]['quarter']} .. {datasets[-1]['quarter']}); licences: {sorted({d['licence'] for d in datasets})}")
+        f"({datasets[0]['quarter']} .. {datasets[-1]['quarter']}); "
+        f"licences: {sorted({str(d.get('licence')) for d in datasets})}")
     if args.list:
         for d in datasets:
             print(f"  {d['quarter']}  {d['modified'][:10] if d['modified'] else '?':10}  {d['url']}")
         return
     todo = [d for d in datasets if (not args.since or d["quarter"] >= args.since.lower())
             and (not args.until or d["quarter"] <= args.until.lower())]
+    # Every stored quarter is published under LICENCE. A quarter in this run's range whose record now
+    # names another licence is not loaded: its stored rows stay and the run exits 3 (stale, not failed;
+    # docs/operations/periodic-refresh.md). Outside the range nothing is loaded, so it is a warning.
+    refused = []
+    for d in datasets:
+        problem = licence_problem(d)
+        if problem and d in todo:
+            refused.append(d)
+            log(f"  REFUSED {d['quarter']}: the data.gov.au licence is {problem}; not loaded, the stored rows "
+                f"are kept. Check the dataset, then update the LICENCE constants in this module.")
+        elif problem:
+            log(f"  WARNING {d['quarter']} (outside this run): the data.gov.au licence is {problem}; "
+                f"OPAX publishes its stored rows as {LICENCE}. Check the dataset.")
+        elif title_differs(d):
+            log(f"  note {d['quarter']}: the licence title reads {d.get('licence_title')!r}; "
+                f"its license_id and URL still name {LICENCE}")
+    todo = [d for d in todo if d not in refused]
     log(f"writer={writer.describe()} ; loading {len(todo)} quarter(s)")
     # The person_id link needs `members`. Loading into the live DB (local via --db/OPAX_DB, or
     # remote) has it; a scratch staging file does not, and would fail the whole transaction.
@@ -243,7 +296,13 @@ def main() -> None:
                              delete_params=["ipea", period_id], post_sql=post,
                              notes=f"{ds['title']} | {ds['url']}")
         summary[ds["quarter"]] = res.get("inserted")
+    for d in refused:
+        summary[d["quarter"]] = "REFUSED: licence"
     log("\nSummary: " + json.dumps(summary))
+    if refused:
+        log(f"IPEA: {len(refused)} quarter(s) refused for their licence, last good rows kept: "
+            + ", ".join(d["quarter"] for d in refused))
+        raise SystemExit(3)
 
 
 if __name__ == "__main__":

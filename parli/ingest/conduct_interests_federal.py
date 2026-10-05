@@ -14,8 +14,8 @@ Access constraints (measured 2026-09-02, see docs/DATA-INTERESTS.md)
   * static.aph.gov.au (the PDFs) serves our honest User-Agent "OPAX research (opax.com.au)".
   * www.aph.gov.au (index + Senate pages) sits behind a WAF that 403s every non-browser
     User-Agent, including python-requests and curl. This module therefore never spoofs a
-    browser by default: pass the saved HTML with --index-html / --senate-html-dir, or opt in
-    explicitly with --browser-ua. robots.txt allows the paths.
+    browser: Firecrawl (FIRECRAWL_API_KEY) is the approved route, or pass saved HTML with
+    --index-html / --senate-html-dir. robots.txt allows the paths.
   * Licence: CC BY-NC-ND 4.0 (site-wide). Facts are extracted, every row links to the
     source document; the KB rendering is a decision for the user (see the doc).
 
@@ -47,8 +47,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 USER_AGENT = "OPAX research (opax.com.au)"
-BROWSER_UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
-              "(KHTML, like Gecko) Chrome/128.0 Safari/537.36 OPAX-research/1.0 (+https://opax.com.au)")
 
 CACHE_DIR = Path(os.environ.get("OPAX_INTERESTS_CACHE", "~/.cache/autoresearch/conduct_interests/federal")).expanduser()
 DEFAULT_DB = Path(os.environ.get("OPAX_DB") or "~/.cache/autoresearch/parli.db").expanduser()
@@ -196,10 +194,10 @@ def _normalize_name(raw: str) -> str | None:
     return normalize_speaker(cleaned)
 
 
-def _session(browser_ua: bool = False):
+def _session():
     import requests
     s = requests.Session()
-    s.headers["User-Agent"] = BROWSER_UA if browser_ua else USER_AGENT
+    s.headers["User-Agent"] = USER_AGENT
     return s
 
 
@@ -217,15 +215,18 @@ def parse_house_index(html: str) -> list[dict]:
     from bs4 import BeautifulSoup
     soup = BeautifulSoup(html, "html.parser")
     out = []
-    for table in soup.select("table.documents"):
+    for table in soup.select("table.documents, table.members-interests__table"):
         for tr in table.select("tbody tr"):
             tds = tr.find_all("td")
             if len(tds) < 3:
                 continue
             a = tds[2].find("a", href=True)
-            if not a or ".pdf" not in a["href"].lower():
+            if not a:
                 continue
             url = a["href"]
+            api = re.search(r"/api/members/([A-Za-z0-9]+)/statement/(\d+)$", url)
+            if ".pdf" not in url.lower() and not api:
+                continue
             if url.startswith("/"):
                 url = "https://www.aph.gov.au" + url
             name_raw = _norm_ws(tds[1].get_text(" "))
@@ -239,29 +240,24 @@ def parse_house_index(html: str) -> list[dict]:
                 "electorate": _norm_ws(m.group("elec")) if m else None,
                 "state": (m.group("state") or "").upper() or None if m else None,
                 "url": url,
-                "rev": rev.group(1) if rev else None,
-                "file": url.split("?")[0].rsplit("/", 1)[-1],
+                "rev": rev.group(1) if rev else (_iso(_norm_ws(tds[0].get_text())) if api else None),
+                "file": f"{api.group(1)}_48P.pdf" if api else url.split("?")[0].rsplit("/", 1)[-1],
             })
     return out
 
 
-def fetch_house_index(index_html: Path | None, browser_ua: bool) -> list[dict]:
+def fetch_house_index(index_html: Path | None) -> list[dict]:
     if index_html:
         return parse_house_index(Path(index_html).read_text(encoding="utf-8", errors="replace"))
-    s = _session(browser_ua)
-    r = s.get(HOUSE_INDEX_URL, timeout=60)
-    if r.status_code == 403:
-        sys.exit("www.aph.gov.au returned 403 (WAF blocks non-browser User-Agents). Save the register page "
-                 "from a browser and pass --index-html, or opt in with --browser-ua.")
-    r.raise_for_status()
-    return parse_house_index(r.text)
+    from .interests_fetch import Firecrawl
+    return parse_house_index(Firecrawl().scrape(HOUSE_INDEX_URL))
 
 
 def download_house_pdfs(entries: list[dict], dest: Path, limit: int | None = None,
                         delay: float = 0.5, refresh: bool = False) -> list[tuple[dict, Path]]:
     """Fetch PDFs from static.aph.gov.au with the research UA. Cached by filename+rev."""
     dest.mkdir(parents=True, exist_ok=True)
-    s = _session(False)
+    s = _session()
     out = []
     for e in entries[:limit] if limit else entries:
         path = dest / e["file"]
@@ -699,7 +695,7 @@ def parse_house_pdf(path: Path, entry: dict) -> InterestDocument:
     import pdfplumber
     doc_key = re.sub(r"[^A-Za-z0-9]+", "-", entry["file"].rsplit(".", 1)[0]).strip("-").lower()
     doc = InterestDocument(
-        doc_id=f"house-{PARLIAMENT}-{doc_key}", chamber="house", parliament=PARLIAMENT,
+        doc_id=entry.get("doc_id") or f"house-{PARLIAMENT}-{doc_key}", chamber="house", parliament=PARLIAMENT,
         member_name_raw=entry.get("name_raw") or entry["file"],
         member_name=_normalize_name(f"{entry['surname']}, {entry['given']}") if entry.get("surname") else None,
         electorate=entry.get("electorate"), state=entry.get("state"), party=None,
@@ -1122,8 +1118,10 @@ def _write_eval_dump(doc: InterestDocument, pdf_path: Path, out_dir: Path) -> No
 
 
 def cmd_house(args):
-    entries = fetch_house_index(args.index_html, args.browser_ua)
+    entries = fetch_house_index(args.index_html)
     entries = [e for e in entries if e.get("surname")]
+    from .interests_fetch import retain_house_ids
+    retain_house_ids(entries, args.db)
     print(f"[house] {len(entries)} member PDFs on the index")
     if args.only:
         entries = [e for e in entries if args.only.lower() in e["file"].lower()]
@@ -1164,15 +1162,18 @@ def cmd_senate(args):
             docs.append(doc)
             print(f"  {f.name:24s} {doc.member_name_raw:30s} rows={len(doc.rows):3d} last_modified={doc.last_updated}")
     else:
-        s = _session(args.browser_ua)
-        r = s.get(SENATE_INDEX_URL, timeout=60)
-        if r.status_code == 403:
-            sys.exit("www.aph.gov.au 403 for this User-Agent; save the pages and use --senate-html-dir, or --browser-ua.")
-        index = parse_senate_index(r.text)
+        from .interests_fetch import Firecrawl, FetchError, senate_page
+        client = Firecrawl()
+        index = parse_senate_index(client.scrape(SENATE_INDEX_URL))
         print(f"[senate] {len(index)} senators on the index")
         for e in index[:args.limit] if args.limit else index:
-            rr = s.get(e["url"], timeout=60); rr.raise_for_status()
-            doc = parse_senate_page(rr.text, e["url"], e["id"])
+            try:
+                html, fetched_at = senate_page(e, CACHE_DIR / f"senate/{PARLIAMENT}p/pages", client)
+            except FetchError as ex:
+                print(f"[preserved] {e['id']}: {ex}")
+                continue
+            doc = parse_senate_page(html, e["url"], e["id"])
+            doc.fetched_at = fetched_at
             docs.append(doc)
             print(f"  {e['id']:8s} {doc.member_name_raw:30s} rows={len(doc.rows):3d}")
             time.sleep(0.5)
@@ -1211,31 +1212,42 @@ def _load_docs(docs, db_path: Path):
     ensure_tables(conn)
     conn.executescript(INGEST_LOG_DDL)
     matched = 0
+    stored = 0
     by_source: dict[str, list[InterestDocument]] = {}
     for d in docs:
         by_source.setdefault(f"{d.chamber}-{d.parliament}", []).append(d)
     for source, group in by_source.items():
-        ids = [d.doc_id for d in group]
         deleted = 0
-        for i in range(0, len(ids), 500):
-            chunk = ids[i:i + 500]
-            deleted += conn.execute(f"SELECT COUNT(*) FROM ext_interests WHERE doc_id IN ({','.join('?' * len(chunk))})",
-                                    chunk).fetchone()[0]
+        loaded = 0
         for d in group:
             try:
                 d.person_id = match_person_id(conn, d)
             except sqlite3.OperationalError:
                 d.person_id = None
             matched += bool(d.person_id)
+            previous = conn.execute("SELECT file_sha256, parser_version, person_id, member_name_raw, "
+                                    "source_url, source_rev, last_updated, statement_date, ocr_pages, warnings, kb_text "
+                                    "FROM ext_interests_documents WHERE doc_id=?", (d.doc_id,)).fetchone()
+            signature = (d.file_sha256, PARSER_VERSION, d.person_id, d.member_name_raw,
+                         d.source_url, d.source_rev, d.last_updated, d.statement_date, d.ocr_pages,
+                         json.dumps(d.warnings) if d.warnings else None, render_kb_text(d))
+            if d.file_sha256 and previous == signature:
+                # Stable row IDs matter to recent.json and ties. A quiet daily
+                # refresh must not turn unchanged disclosures into new IDs.
+                continue
+            deleted += conn.execute("SELECT COUNT(*) FROM ext_interests WHERE doc_id=?", (d.doc_id,)).fetchone()[0]
             store_document(conn, d)
-        conn.execute("INSERT INTO ext_ingest_log (table_name, source, rows_loaded, rows_deleted, loaded_at, notes) VALUES (?,?,?,?,?,?)",
-                     ("ext_interests", source, sum(len(d.rows) for d in group), deleted,
-                      datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-                      f"{len(group)} documents, parser {PARSER_VERSION}"))
+            stored += 1
+            loaded += len(d.rows)
+        if loaded:
+            conn.execute("INSERT INTO ext_ingest_log (table_name, source, rows_loaded, rows_deleted, loaded_at, notes) VALUES (?,?,?,?,?,?)",
+                         ("ext_interests", source, loaded, deleted,
+                          datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                          f"{len(group)} documents checked, parser {PARSER_VERSION}"))
     conn.commit()
     n_docs = conn.execute("SELECT COUNT(*) FROM ext_interests_documents").fetchone()[0]
     n_rows = conn.execute("SELECT COUNT(*) FROM ext_interests").fetchone()[0]
-    print(f"[db] stored {len(docs)} documents ({matched} matched to members) -> "
+    print(f"[db] checked {len(docs)} documents, stored {stored} ({matched} matched to members) -> "
           f"ext_interests_documents={n_docs} ext_interests={n_rows}")
     conn.close()
 
@@ -1272,8 +1284,6 @@ def main(argv=None):
         sp.add_argument("--db", default=None, help="parli.db path; omit to skip loading")
         sp.add_argument("--dry-run", action="store_true")
         sp.add_argument("--export-jsonl")
-        sp.add_argument("--browser-ua", action="store_true",
-                        help="opt in to a browser-style UA for www.aph.gov.au (WAF blocks bots); off by default")
 
     h = sub.add_parser("house"); common(h)
     h.add_argument("--index-html", help="saved copy of the register index page (avoids the WAF)")
@@ -1287,6 +1297,15 @@ def main(argv=None):
     s.add_argument("--senate-html-dir", help="directory of saved senator pages (<id>.html)")
     s.set_defaults(func=cmd_senate)
 
+    r = sub.add_parser("refresh", help="bounded, cached House + Senate refresh for the daily pipeline")
+    common(r)
+    r.add_argument("--cache-dir", default=str(CACHE_DIR))
+    r.add_argument("--status", help="receipt path; defaults to production only for both chambers loaded into a DB")
+    r.add_argument("--credit-cap", type=int, default=int(os.environ.get("OPAX_INTERESTS_CREDIT_CAP", "100")))
+    r.add_argument("--chamber", choices=("house", "senate"))
+    from .interests_fetch import refresh, STATUS_PATH
+    r.set_defaults(func=refresh)
+
     l = sub.add_parser("load")
     l.add_argument("--jsonl", required=True); l.add_argument("--db", default=str(DEFAULT_DB))
     l.set_defaults(func=cmd_load)
@@ -1296,8 +1315,10 @@ def main(argv=None):
     k.set_defaults(func=cmd_kb_export)
 
     args = p.parse_args(argv)
-    args.func(args)
+    if args.cmd == "refresh" and args.status is None and args.db and not args.chamber and not args.dry_run:
+        args.status = str(STATUS_PATH)
+    return args.func(args)
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

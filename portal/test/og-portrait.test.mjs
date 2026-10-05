@@ -85,7 +85,7 @@ test('the layout table and the format parser leave the landscape card untouched'
   assert.equal(ogFormat('portrait'), 'portrait');
   const home = cardTree(homeCard());
   assert.equal(home.props.style.width, 1200); assert.equal(home.props.style.height, 630);
-  assert.equal(OG_VERSION, '5', 'the masthead now spells the name Exchange, so crawlers fetch the new card');
+  assert.equal(OG_VERSION, '6', 'portraits taken off people they did not show, so crawlers and the edge fetch the new card');
 });
 
 test('the Worker draws ?format=portrait at 1080x1350, keys the cache on it and says so in a header', async () => {
