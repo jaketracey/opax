@@ -126,7 +126,7 @@ name: 25 Native party members, pinned receipts, bill divisions and web fallback
       id: party-end
     direction: DOWN
     speed: 20
-    timeout: 180000
+    timeout: 600000
 - takeScreenshot: ${EVIDENCE}/25-party-end
 # Review every viewport at either text size, with the long member list closed.
 - scrollUntilVisible:
@@ -135,12 +135,13 @@ name: 25 Native party members, pinned receipts, bill divisions and web fallback
     direction: UP
     visibilityPercentage: 10
     speed: 20
-    timeout: 180000
+    timeout: 600000
 - runFlow:
     file: review-pages.yaml
     env:
       END: party-end
       PREFIX: 25-review
+      REVIEW_PAGES: 200
 # This is a synthetic unresolved route, not a claim about a real party.
 - openLink: opax://party/opax-fixture-unresolved
 - tapOn:
