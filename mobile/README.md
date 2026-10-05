@@ -56,7 +56,7 @@ and return to Workbench. Other devices retain automated preview assertions.
 Copy `.qa.local.env.example` to the ignored `.qa.local.env` for optional host
 configuration. Scripts source it before running. Never commit actual paths or IDs.
 
-Before any simulator boot, app install, fixture startup or pasteboard lock, the
+Before any simulator boot, app install or fixture startup, the
 runner selects a working Java 17+ installation. It tries inherited `JAVA_HOME`,
 sdkman installations, macOS `java_home -v 17+`, then Java on `PATH`, skipping
 invalid or older candidates. The selected version is saved in `java.log`.
@@ -81,13 +81,15 @@ Journey 04 stops the fixture and checks saved data without clearing the app. Def
 runs include 01–04; `OPAX_VERIFY_OFFLINE=1` also adds 04 to a selected warm run.
 
 The pasteboard lock (`scripts/qa-lock.sh`) is shared with other projects, so a run
-never waits on anything while holding it. Every Maestro run goes through
-`qa_paste_lock_run`: holding nothing, it waits for the lock to look free and for
+waits for capacity and lock admission before booting. The whole device phase goes
+through `qa_paste_lock_run`: holding nothing, it waits for the lock to look free and for
 capacity, then enters the build gate with `scripts/qa-locked.sh`. Inside the gate the
 wrapper makes one non-blocking lock attempt and rechecks the load. If the lock is
 taken or the load has reached 140, it leaves the gate at once and the runner starts
-again; otherwise Maestro runs and the lock is released when it ends. The wrapper leads
-its own process group: Maestro and its children run in it, and release first stops any
+again; otherwise the runner boots, installs, runs Maestro and shuts the simulator down
+before releasing the lock. It uses the existing wrapper, with no additional lock
+wrapper. The wrapper leads its own process group: the device phase and its children
+run in it, and release first stops any
 leftovers. `OPAX_PASTE_WAIT_SECONDS` covers all the waiting; every minute `lock.log`
 names the lock, the elapsed time and the holder. Never write your own lock wrapper.
 
