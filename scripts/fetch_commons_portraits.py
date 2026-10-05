@@ -74,4 +74,4 @@ for part in range(0,len(sheet),100):
 print("[sheet] written", (len(sheet)+99)//100, "sheets")
 
 # The whole map must still pass the identity check (scripts/photo_identity.mjs; docs/PHOTOS.md).
-import subprocess; sys.exit(subprocess.run(["node", str(W/"scripts"/"photo_identity.mjs")]).returncode)
+import subprocess; sys.exit(subprocess.run(["node", str(W/"scripts"/"photo_identity.mjs"), "--strict"]).returncode)

@@ -6,42 +6,16 @@ Identity (2026-10-06). The roster's pid is the dominant person_id on a name's sp
 can carry somebody else's: "Patrick Conaghan" -> 10903 (Rex Patrick), "Graeme Campbell" -> 10098 (George
 Campbell). This script once mapped every roster name to its roster pid, which put 13 people on another
 person's face (docs/PHOTOS.md). Now a name is mapped only when it agrees with the name the pid belongs to
-(TheyVoteForYou's, in votes.json, else pay.json) or scripts/photo_identity.json lists it as the same person;
-a surname-only or initials print only alongside a fetch of its pid and only when every chamber it spoke in
-is federal; never onto a pid listed there as wrong_face; and a download whose bytes match another portrait
+(TheyVoteForYou's, in votes.json, else pay.json) or scripts/person_identity.json lists it as the same person;
+a surname-only or initials print only alongside a fetch of its pid and only when its roster row is one
+person (federal only, no committee-witness rows; the roster gives a mixed print no pid); never onto a pid listed there as wrong_face; and a download whose bytes match another portrait
 is discarded. A full name whose pid already has a file (the roster renamed someone) is mapped to it without
 a fetch. The run ends with scripts/photo_identity.mjs over the whole map and exits with its status."""
-import hashlib, io, json, re, subprocess, sys, time, unicodedata
+import hashlib, io, json, subprocess, sys, time
 from pathlib import Path
 W = Path(__file__).resolve().parents[1]; PH = W/"portal/public/photos"
-TITLES = {"hon", "the", "dr", "mr", "mrs", "ms", "sir", "jr", "am", "ao", "mp", "mlc", "mla", "kc", "qc"}
-
-def parts(name):
-    s = "".join(c for c in unicodedata.normalize("NFKD", str(name or "")) if not unicodedata.combining(c))
-    s = s.lower().replace("’", "'").replace("‘", "'").replace("`", "'").replace(".", " ")
-    return [t for t in re.split(r"[\s,]+", s) if t and t not in TITLES]
-
-def weak(name):
-    """A print with no real first name: "Burke", "T Smith", "K.J. Maher"."""
-    return all(len(t) == 1 for t in parts(name)[:-1])
-
-def agrees(name, owner):
-    """The name agrees with the pid owner's name: same surname (however many words), and a first name that
-    is a prefix of one of the owner's either way (Phil/Phillip), or initials that agree. The JavaScript twin
-    is nameAgrees() in scripts/photo_identity.mjs, which has the final say."""
-    n, o = parts(name), parts(owner)
-    if not n or not o or n[-1] != o[-1]: return False
-    tail = 1
-    while tail < len(n) and tail < len(o) and n[-1 - tail] == o[-1 - tail]: tail += 1
-    given, owner_given = n[:-tail], o[:-tail]
-    if not given: return True
-    if not owner_given: return False
-    if all(len(t) == 1 for t in given):
-        a, b = "".join(given), "".join(t[0] for t in owner_given)
-        return a.startswith(b) or b.startswith(a)
-    first = given[0]
-    return any(t == first or (min(len(t), len(first)) >= 3 and (t.startswith(first) or first.startswith(t))) for t in owner_given)
-
+sys.path.insert(0, str(W))
+from scripts.roster_identity import agrees, weak  # noqa: E402
 def owners(votes, pay):
     """pid -> the name TheyVoteForYou (else the pay registry) gives it."""
     out = {k: v["name"] for k, v in votes.items() if k.isdigit() and isinstance(v, dict) and v.get("name")}
@@ -65,8 +39,8 @@ def plan(people, pm, have, owner, identity):
             if not agrees(name, owner[pid]): skipped[name] = f"{pid} is {owner[pid]}"; continue
         if weak(name):
             if pid in have: continue  # left as it is: a print can hold several people
-            if set(p.get("states") or []) != {"federal"}:
-                skipped[name] = "surname-only print outside federal parliament"; continue
+            if set(p.get("states") or []) != {"federal"} or p.get("witness_rows"):
+                skipped[name] = "surname-only print that is not one person"; continue
         if pid in have: to_map[name] = pid
         else: to_fetch.append((name, pid))
     return to_map, to_fetch, skipped
@@ -77,7 +51,7 @@ def main():
     S = requests.Session(); S.headers["User-Agent"] = "OPAX research (opax.com.au; jake.tracey@noice.work)"
     people = json.load(open(W/"portal/public/parliamentarians.json"))["people"]
     pm = json.load(open(PH/"people.json"))
-    identity = json.load(open(W/"scripts/photo_identity.json"))
+    identity = json.load(open(W/"scripts/person_identity.json"))
     owner = owners(json.load(open(W/"portal/public/votes.json")), json.load(open(W/"portal/public/pay.json")))
     have = {f.stem for f in PH.glob("*.webp")}
     seen = {hashlib.sha256(f.read_bytes()).hexdigest(): f.stem for f in PH.glob("*.webp")}
@@ -117,7 +91,7 @@ def main():
     json.dump(pm, open(PH/"people.json","w"), ensure_ascii=False, indent=0, sort_keys=True)
     (W/"scripts"/"_photos_work").mkdir(exist_ok=True); json.dump(log, open(W/"scripts"/"_photos_work"/"backfill_photos_oa.log.json","w"), indent=0)
     print(f"[oa] done ok={ok} none={miss} dup={dup} -> {PH} people.json={len(pm)}")
-    sys.exit(subprocess.run(["node", str(W/"scripts/photo_identity.mjs")]).returncode)
+    sys.exit(subprocess.run(["node", str(W/"scripts/photo_identity.mjs"), "--strict"]).returncode)
 
 if __name__ == "__main__":
     main()

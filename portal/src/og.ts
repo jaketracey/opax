@@ -14,9 +14,11 @@
 export const OG_WIDTH = 1200
 export const OG_HEIGHT = 630
 
-/** Bump when the drawing changes: it is folded into every og:image URL so the
- *  social crawlers (which cache by URL, some for weeks) fetch the new card. */
-export const OG_VERSION = '5'
+/** Bump when the drawing changes, or when a card's portrait or name was wrong: it is
+ *  folded into every og:image URL and the Worker's card cache key, so the social
+ *  crawlers (which cache by URL, some for weeks) and the edge fetch the new card.
+ *  6: portraits taken off people they did not show (docs/PHOTOS.md, "Identity check"). */
+export const OG_VERSION = '6'
 
 import { STORY_SAFE, STORY_SIZES, type StoryFormat, type StorySlide } from './story'
 

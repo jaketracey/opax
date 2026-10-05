@@ -150,5 +150,16 @@ class PayRules(unittest.TestCase):
         self.assertEqual(self.out["names"]["pat premier"], "PM1")
 
 
+class RosterNames(unittest.TestCase):
+    def test_the_record_takes_the_handbook_name_and_every_spelling_finds_it(self):
+        # Hansard prints Pat Premier as "Patrick Premier" more often; the roster gives both rows his pid.
+        roster = [{"name": "Patrick Premier", "pid": "10901", "states": ["federal"], "speeches": 90},
+                  {"name": "Pat Premier", "pid": "10901", "states": ["federal"], "speeches": 40}]
+        out = bp.build(Namespace(refresh=False, as_of=AS_OF), raw=RAW, oa={"PM1": ("10901", [])}, roster=roster)
+        self.assertEqual((out["people"]["PM1"]["name"], out["people"]["PM1"]["pid"]), ("Pat Premier", "10901"))
+        self.assertEqual(out["names"]["patrick premier"], "PM1")
+        self.assertEqual(out["names"]["pat premier"], "PM1")
+
+
 if __name__ == "__main__":
     unittest.main()

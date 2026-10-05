@@ -4,7 +4,8 @@ import unittest
 from scripts import backfill_photos_oa as oa
 
 OWNER = {"10098": "George Campbell", "10903": "Rex Patrick", "10922": "Pat Conaghan", "10875": "Damian Drum",
-         "10080": "Anna Burke", "10081": "Tony Burke", "11036": "Kara Cook", "11055": "Jessica Collins"}
+         "10080": "Anna Burke", "10081": "Tony Burke", "11036": "Kara Cook", "11055": "Jessica Collins",
+         "11040": "Matt Gregg"}
 IDENTITY = {"same_person": {"kevin drum": {"key": "10875"}}, "wrong_face": {"10080": "Tony Burke's portrait"}}
 
 
@@ -38,11 +39,13 @@ class PlanTests(unittest.TestCase):
 
     def test_surname_prints_only_come_with_a_federal_fetch(self):
         to_map, to_fetch, skipped = self.plan(
-            [person("Burke", "10081"), person("Cook", "11036"), person("Collins", "11055", ("federal", "qld"))],
+            [person("Burke", "10081"), person("Cook", "11036"), person("Collins", "11055", ("federal", "qld")),
+             dict(person("Gregg", "11040"), witness_rows=25)],
             have={"10081"})
         self.assertEqual(to_map, {})
         self.assertEqual(to_fetch, [("cook", "11036")])
-        self.assertEqual(skipped, {"collins": "surname-only print outside federal parliament"})
+        self.assertEqual(skipped, {"collins": "surname-only print that is not one person",
+                                   "gregg": "surname-only print that is not one person"})
 
     def test_mapped_names_and_unknown_owners_are_left_alone(self):
         to_map, to_fetch, skipped = self.plan([person("Tony Burke", "10081"), person("Jo Bloggs", "99999")],

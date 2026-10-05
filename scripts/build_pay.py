@@ -477,13 +477,18 @@ def build(args, raw=None, oa=None, roster=None):
 
     # Roster matching: OA's APH id first, then an exact folded name among
     # federal people.
-    # The roster keeps a row per spelling ("Albanese", "Anthony Albanese") under
-    # one pid: the row with the most speeches is the person's page.
-    by_pid = {}
+    # The roster keeps a row per spelling under one pid ("Anthony Albanese", and
+    # Hansard prints such as "Patrick Conaghan" for Pat Conaghan, verified by
+    # scripts/roster_identity.py): the person's page is the row named as the
+    # Handbook names them, best name first, else the row with the most speeches.
+    by_pid = defaultdict(list)
     for p in roster:
         if p.get("pid") and "federal" in p.get("states", []) and " " in p["name"]:
-            if p.get("speeches", 0) > by_pid.get(str(p["pid"]), {}).get("speeches", -1):
-                by_pid[str(p["pid"])] = p
+            by_pid[str(p["pid"])].append(p)
+
+    def page_row(rows, public):
+        best = {fold(n): i for i, n in reversed(list(enumerate(public)))}
+        return min(rows, key=lambda p: (best.get(fold(p["name"]), len(public)), -p.get("speeches", 0))) if rows else None
     by_name = defaultdict(list)
     for p in roster:
         if "federal" in p.get("states", []):
@@ -542,8 +547,9 @@ def build(args, raw=None, oa=None, roster=None):
                 spells.append({"from": a, "to": b, "post": post, "pct": pct, "salary": salary, "assumed": assumed})
 
         sitting = spans[-1][1] > as_of
-        opax = by_pid.get(oa.get(phid, ("", []))[0])
-        candidates = display_names(person) + oa.get(phid, ("", []))[1]
+        spellings = by_pid.get(oa.get(phid, ("", []))[0], [])
+        opax = page_row(spellings, display_names(person))
+        candidates = display_names(person) + oa.get(phid, ("", []))[1] + [p["name"] for p in spellings]
         if not opax:
             found = {id(p): p for name in candidates for p in by_name.get(fold(name), [])}
             opax = next(iter(found.values())) if len(found) == 1 else None

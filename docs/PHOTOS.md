@@ -1,9 +1,10 @@
 # Portraits: sources, licences, matching, refresh
 
-Status 2026-10-06: 849 files; `people.json` maps 1,038 names to 842 of them, which gives 1,039
-of the 1,700 people in `parliamentarians.json` a face (275 of the 385 entries the roster marks
-sitting). The identity fix of that day (below) took 27 names off faces that were not theirs; every
-map writer now ends with the identity check, and so does the deploy's test run.
+Status 2026-10-06: 849 portrait files (850 with the placeholder); `people.json` maps 964 names to
+830 of them, which gives 965 of the 1,700 people in `parliamentarians.json` a face (245 of the 328
+entries the roster marks sitting; every sitting member who had a face still has one). The identity
+work of that day (below) took names off faces that were not theirs, gave the roster verified person
+ids, and stopped records joining on portrait keys; both deploy scripts run the identity check.
 
 Status 2026-09-12: **850 portraits** serve 1,066 of the 1,557 people in `parliamentarians.json`
 (68 %; 280 of the 313 sitting-member name entries). The 2026-09-04 pass had 829 files for
@@ -69,77 +70,114 @@ surname-only matches are held to a stricter test (below).
 
 ## Identity check (2026-10-06)
 
-A review of the map for the iOS app found pairs of different people on one key. The person page
-reads more than the face through that key: `renderPersonVotes`, `renderPersonExpenses` and
-`renderPersonInterests` in `app.js` take the photo key as the person's id, so "Patrick Conaghan"
-showed Rex Patrick's face, voting record and expenses. 27 names were taken off the map:
+A review of the map for the iOS app found pairs of different people on one key, and the Codex
+review of the first fix found the same wrong ids under the records: the person page and the
+directory took votes, expenses and interests by the photo key or the roster pid, and the pay build
+named its records through the roster. "Patrick Conaghan" showed Rex Patrick's face, 1,598 divisions
+and expenses; Graeme Campbell had George Campbell's 381 divisions and pay; David Cox, Ian McLachlan
+and Bill Taylor were marked sitting through Dorinda Cox's, Andrew McLachlan's and Angus Taylor's
+ids.
 
-* **A full name on somebody else's pid (13).** The key's owner is the TheyVoteForYou name for the
-  pid in `votes.json`: Graeme Campbell on 10098 (George Campbell); Kathy and Kathryn Sullivan on
-  10615 (Jon Sullivan); Ricky Johnston on 10344 (David Johnston); Patrick Conaghan and Patrick
-  Farmer on 10903 (Rex Patrick); Alexander Somlyay on 10725 (John Alexander); Robert Baldwin on
-  10545 (Stuart Robert); Bill Taylor on 10817 (Angus Taylor); Michael Cobb on 10127 (John Cobb);
-  Ian McLachlan on 10959 (Andrew McLachlan); David Cox on 10964 (Dorinda Cox); Stephen Martin on
-  10905 (Steve Martin, the Tasmanian senator, not the Speaker). The owner keeps the key.
-* **A file showing somebody else (5).** Three pairs of keys held byte-identical files, and a look
-  at the first 200 files (the old stack's, fetched by surname) found two more. Owners were settled
-  by the backdrop (340 of 342 House-only portraits are green, all 176 Senate-only ones red) and,
-  for identification only, reference photos on Wikipedia and Commons: 10080 = 10081 is Tony
-  Burke (white hair, dark glasses, as in 2024), so Anna Burke lost the face; 10565 = 10752 is
-  Scott Buchholz, so Bruce Scott did; 10725 = 10402 is a red Senate portrait, Sandy Macdonald's
-  (his given names are John Alexander, which is how OpenAustralia came to serve it for John
-  Alexander's id too), so John Alexander did; 10509 shows a woman with long curly hair, not
-  Marise Payne (probably Alicia Payne, 10919); 10519 shows a woman, not Roger Price (probably
-  Melissa Price, 10818). The five files stay on disk, unmapped and listed as `wrong_face`.
-* **Surname prints the roster gives to someone else or to no one (9).** "Burke" (roster 10080,
-  map 10081), "Price" (10818 / 10519), "Collins" (11055 / 10136), and "Garrett", "Hanson",
-  "Howard", "Marshall", "Williams", "Morton", which the roster gives no pid because they span a
-  state parliament (Jane Garrett, Jeremy Hanson, Steven Marshall ...).
-
-No sitting member lost a face: the five sitting entries that did ("Collins", "Price", David Cox,
-Ian McLachlan, Bill Taylor) are mixed prints or 1990s members the roster wrongly marks sitting
-through the wrong pid.
-
-**Cause.** The roster's `pid` is the dominant `person_id` on a name's speeches
+**Cause.** The roster's `pid` was the dominant `person_id` on a name's speeches
 (`export_parliamentarians.py`), and the speech linker gives some prints the id of a namesake (for
 members who left by 2004, a later one with the same surname) or of a member whose surname is their
-first name (Patrick → Rex Patrick, Alexander → John Alexander, Robert → Stuart Robert).
-`backfill_photos_oa.py` mapped every roster name to its roster pid without asking whose pid it was,
-and when two names shared a pid without a file, both landed in the same run. The five wrong files
-came from the old stack's surname fetch and, once, from OpenAustralia itself.
+first name (Patrick → Rex Patrick, Alexander → John Alexander, Robert → Stuart Robert). Everything
+keyed on it inherited the error: `backfill_photos_oa.py` mapped every roster name to its roster pid
+(two names on one pid both landed in the same run), `build_pay.py` named a Handbook record after
+the roster row with the most speeches for its pid ("David Cox" on Dorinda Cox's pay), and `app.js`
+read records by photo key. Four wrong files came from the old stack's surname fetch and one from
+OpenAustralia itself.
 
-**The check.** `scripts/photo_identity.mjs` audits the whole map and exits 1 on a problem;
-`portal/test/photo-identity.test.mjs` runs it in every deploy, and `backfill_photos_oa.py`,
-`fetch_commons_portraits.py` and `recrop_commons_portraits.py` end with it. Rules: a name agrees
-with its key's owner (TheyVoteForYou name for a numeric key, else `pay.json`; the Wikidata label
-in `credits.json` for a `wd-` key): same surname, a first name that is a prefix of one of the
-owner's either way, initials that agree. A surname or initials print on a numeric key needs the
-roster to give it that pid. A roster name with a numeric pid sits on that pid, or on a `wd-` key
-whose label is the pid's owner. No key holds names the roster gives different pids; no two keys
-hold identical bytes; every key has a file. `scripts/photo_identity.json` holds the verified
-exceptions: `same_person` (eight prints such as "Kevin Drum" for Damian Kevin Drum and "Katrina
-Allen" for Katie Allen) and `wrong_face` (the five files). `backfill_photos_oa.py` now maps a name
-only when it agrees with the pid's owner (or is a `same_person` entry), never onto a `wrong_face`
-file, maps a surname print only alongside a fetch and only when every chamber it spoke in is
-federal, and discards a download whose bytes match another portrait. The quiz took its faces from
-the roster pid (`person.pid`), bypassing the map; it reads `photos/people.json` now. A person with
-no face gets the blank circle in the Parliamentarians directory too, which showed an initial.
+**The roster's pid is verified.** `scripts/roster_identity.py` decides it for
+`export_parliamentarians.py` from the members table: a print keeps an id only when
+`scripts/person_identity.json` lists it (`same_person`, checked by hand), or one of its own speech
+ids belongs to a member whose name agrees, or (a full name) exactly one federal member agrees by
+name and sat in its years. `current`, `party_now` and `full` follow the verified id. A surname or
+initials print takes an id only when it is one person: federal only, no committee-witness rows, no
+other member's id on its speeches, every year inside the member's term, no chamber the member never
+sat in. Otherwise it gets none: "Cox" holds David Cox's Kingston years and Dorinda Cox's,
+"McKenzie" holds witnesses named McKenzie. The database was out of reach (desktop down, the refresh
+VM off outside its window), so `python3 scripts/roster_identity.py --pinned` applied the same rule
+to the shipped `parliamentarians.json` from the repository's exports (TheyVoteForYou names, pay
+records whose name agrees, electorate seat periods); 118 rows changed, only in `pid`, `current`,
+`party_now` and `full`, and a second run changes nothing. The weekly `x_people` export now produces
+the same from the database.
 
-**If a nightly deploy fails on this test,** the roster has changed whom a mapped print belongs to:
-the message names the line. Remove it from `people.json` (or, once verified, add a `same_person`
-entry); `skip_tests` is for emergencies only.
+| Print | Was | Now | Evidence |
+|---|---|---|---|
+| Graeme Campbell | 10098 (George Campbell) | none | Kalgoorlie, left 1998; OpenAustralia 10099, not in the members table |
+| Kathy Sullivan, Kathryn Sullivan | 10615 (Jon Sullivan) | none | Moncrieff, left 2001 (OA 10616) |
+| Ricky Johnston | 10344 (David Johnston) | none | Canning, left 1998 (OA 10346) |
+| Bill Taylor | 10817 (Angus Taylor), sitting | none | Groom, left 1998 (OA 10623, William Leonard Taylor) |
+| Michael Cobb | 10127 (John Cobb) | none | Parkes, left 1998 (OA 10128) |
+| Ian McLachlan | 10959 (Andrew McLachlan), sitting | none | Barker, left 1998 (OA 10441) |
+| David Cox | 10964 (Dorinda Cox), sitting | none | Kingston, left 2004 (OA 10155) |
+| Stephen Martin | 10905 (Steve Martin) | none | Cunningham, the former Speaker, left 2002 (OA 10420) |
+| Patrick Conaghan | 10903 (Rex Patrick) | 10922 | Pat Conaghan; OA lists Patrick John Conaghan |
+| Patrick Farmer | 10903 (Rex Patrick) | 10212 | Pat Farmer; OA lists Patrick Francis Farmer |
+| Alexander Somlyay | 10725 (John Alexander) | 10600 | Alex Somlyay; OA lists Alexander Michael Somlyay |
+| Robert Baldwin | 10545 (Stuart Robert) | 10026 | Bob Baldwin; OA lists Robert Charles Baldwin |
 
-**Left open.** The roster pid is still wrong for the 13 full names, so the people directory sorts
-them by the other person's divisions and marks David Cox, Ian McLachlan and Bill Taylor as sitting;
-the fix belongs in `export_parliamentarians.py` (keep a pid only when the members-table name
-agrees). Once it is fixed, "Patrick Conaghan" can take 10922, "Alexander Somlyay" 10600 and "Robert
-Baldwin" 10026. The five `wrong_face` files should be deleted with their JPEG twins and their
-`wrong_face` entries, so a refresh can fetch the real portraits (10725 will come back as Sandy
-Macdonald's from OpenAustralia; John Alexander needs Commons). Rex Patrick's 10903 and Steve
-Martin's 10905 are their own faces but no roster name uses them. Surname prints the roster ties to
-the face's owner but which also hold other people's speeches ("Murphy" in the NSW Council,
-"Anderson" years after John Anderson left, "Cox" for David Cox's years) keep their face: that is a
-roster identity question, listed in the iOS portraits review.
+Eleven full names gained their own id (David Shoebridge, Janelle Saffin, Chris Crewther, Mehreen
+Faruqi, Gregory Hunt and the curly-apostrophe twins such as "Brendan O’Connor"), and 94 surname
+prints lost theirs as mixed. The OA ids of the 1990s members are not given: the members table holds
+TheyVoteForYou's members (2006 on), so the export cannot verify them, and nothing is keyed on them.
+
+**Records join on identity, never on a portrait.** The person page passes the roster pid to
+`renderPersonVotes`, `renderPersonInterests` and `renderPersonExpenses`; the directory and
+`votesFor` take the roster pid and each export's own name index (`votes.json` `_names`, IPEA
+`names`, the interests `_by_name`). `photoMap` is read only by `photoIdFor`
+(`portal/test/person-identity.test.mjs` checks the six names and that). `build_pay.py` names a
+record after the roster row matching the Handbook's best public name (else most speeches) and
+indexes every roster spelling of the pid. The shipped `pay.json` was patched by running the build
+from the cached Handbook with the old and the corrected roster and carrying only the identity
+differences across (18 records' name/pid/party, the current list's names, the name index): George
+Campbell's record is his again, Rex Patrick's is no longer "Patrick Conaghan", David Cox and the
+former Speaker Stephen Martin get their own records back without another member's id.
+
+**Faces.** Removed in the first fix (27): the 13 full names above from the wrong keys; five names
+whose own file shows someone else (`wrong_face`: Anna Burke 10080 = Tony Burke's 10081, Bruce Scott
+10565 = Scott Buchholz's 10752, John Alexander 10725 = Sandy Macdonald's Senate portrait 10402, his
+given names being John Alexander; Marise Payne 10509, a woman with long curly hair, probably Alicia
+Payne; Roger Price 10519, a woman, probably Melissa Price), settled by the backdrop (340 of 342
+House-only portraits are green, all 176 Senate-only ones red) and reference photos viewed for
+identification only; and nine surname prints the roster gave to someone else or no one. Removed in
+the second (77): every surname print that spans more than one parliament (27) or includes
+committee-witness rows (50), from "Abbott" to "Wong". Twelve state members had only such a print
+and lost their only face: Andrew, Angus, Bailey, Bates, Bolton, Dalton, Dick, Foley, Krause,
+Morris, Nicholls, Nightingale (their Queensland, Victorian or NSW rows share the print with
+federal-committee witnesses). Restored on the verified ids: Patrick Conaghan (10922), Alexander
+Somlyay (10600), Robert Baldwin (10026). Every sitting member who had a face still has one.
+
+**The check.** `scripts/photo_identity.mjs` audits the map. Corrupt, which fails: a name that does
+not agree with its key's owner (TheyVoteForYou name, else `pay.json`; the Wikidata label for a
+`wd-` key) unless `same_person` lists it, a name on a `wrong_face` file, a key with no file, two
+keys with identical bytes. Roster, which warns: a surname print that spans parliaments, includes
+witnesses or lacks that pid in the roster; a full name the roster gives another pid; a key holding
+names with different roster pids; an unknown owner. Both `npm run deploy` and `npm run
+deploy:staging` run `photo_identity.mjs --deploy` before Wrangler: it stops on a corrupt mapping
+and otherwise ships the map without the roster warnings' names (the working copy of `people.json`
+is left changed, as the other builds leave theirs). `portal/test/photo-identity.test.mjs` (in the
+Actions deploy before `npm run deploy`) fails on corrupt and prints the warnings, so a weekly
+roster change cannot block a nightly data deploy. The photo scripts end with `--strict`, which
+fails on either. `backfill_photos_oa.py` maps a name only when it agrees with the pid's owner (or
+is listed), never onto a `wrong_face` file, a surname print only alongside a fetch and only when
+its row is one person, and discards a download whose bytes match another portrait. The quiz takes
+faces from `people.json`; a person with no face gets the blank circle in the directory too.
+
+**Caches.** `OG_VERSION` is 6, which changes every share-card URL and the Worker's card cache key,
+so no cached card keeps a removed face. `/photos/people.json` is served `max-age=0,
+must-revalidate` (an ETag round trip), so a returning reader gets a correction on the next page
+view instead of after a day of stale grace. Answers cached under `CACHE_EPOCH` (a pay ranking
+naming "Ian McLachlan") clear with the nightly epoch bump.
+
+**Left open.** The five `wrong_face` files (and their JPEG twins and entries) should be deleted so
+a refresh can fetch the real portraits; 10725 will come back as Sandy Macdonald's from
+OpenAustralia, so John Alexander needs Commons. Rex Patrick's 10903 and Steve Martin's 10905 are
+their own faces but no roster name uses them. A mixed surname print gets its face and records back
+only when the export can split its rows by person (dated seat or witness evidence on the rows
+themselves). The "Cox" row still carries David Cox's Kingston representation from
+`enrich_profile_jurisdictions.py`, which matches by name, not pid.
 
 ## Why not the APH image API directly
 
@@ -155,7 +193,8 @@ robots.txt. Every one of the 401 requested ids was there.
 1. `backfill_photos_oa.py` — every roster entry with a numeric `pid` and no file: fetch from
    OpenAustralia (large, then small), centre-square crop nudged up 10 %, write webp, map the name;
    a renamed full name whose pid has a file is mapped without a fetch. Only names that agree with
-   the pid's owner are mapped (Identity check, above).
+   the pid's owner are mapped (Identity check, above). The roster's pid itself is verified by
+   `roster_identity.py` (the same section).
    Blocked by a Cloudflare challenge since at least 2026-09-12; retry before assuming it still is.
 2. `wikidata_match.py` — roster entries without a portrait (no numeric pid, or a pid whose
    OpenAustralia fetch failed): SPARQL for holders of the matching

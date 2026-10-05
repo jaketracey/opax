@@ -5,8 +5,10 @@ Export the parliamentarians directory the portal's Parliamentarians index
 /tmp/arag_mig supplies the sync's corpus rules and the speaker normaliser);
 the portal serves the output as a static file and never touches the DB.
 
-  scp scripts/export_parliamentarians.py desktop:/tmp/arag_mig/
-  ssh desktop 'python3 /tmp/arag_mig/export_parliamentarians.py' > portal/public/parliamentarians.json
+  bash scripts/vm/export_people.sh > portal/public/parliamentarians.json   # on the refresh VM, from a checkout
+
+It imports scripts/roster_identity.py and reads scripts/person_identity.json, so
+run it from a checkout (the weekly x_people step does), not as a lone copy.
 
 Read-only: parli.db is opened with mode=ro and never written.
 
@@ -39,13 +41,18 @@ Output (compact JSON, people sorted by speeches desc):
                "parties": ["Labor", "Independent"],   # only when more than one
                "states": ["federal"], "chambers": ["representatives"],
                "first": 1996, "last": 2026,
-               "pid": "10007",                        # federal TVFY id when known
+               "pid": "10007",                        # federal TVFY id, verified
                "full": "David Shoebridge"},           # surname-only prints: the
               ...]}                                   # members-table full name
 
-Portrait ids (photos/people.json) and voting records (votes.json) are joined
-CLIENT-SIDE by lowercased name, so this export stays a pure function of the
-corpus and the two other files can be regenerated independently.
+`pid` (and with it `current`, `party_now` and `full`) is the person id the row
+is verified to be, not merely the dominant person_id on its speeches: the speech
+linker gives some prints a namesake's id ("Graeme Campbell" -> George Campbell's
+10098, "Patrick Conaghan" -> Rex Patrick's 10903). scripts/roster_identity.py
+says what counts as evidence; a surname-only print that holds more than one
+person ("Cox": David Cox's Kingston years and Dorinda Cox's) gets no pid at all.
+The portal joins votes, expenses, interests and pay by this pid, and photos by
+lowercased name (docs/PHOTOS.md, "Identity check").
 """
 
 import os
@@ -64,6 +71,7 @@ from parli.ingest.arag_sync import (  # noqa: E402
     clean_party, prepare_dedupe,
 )
 from parli.ingest.speaker_names import normalize_speaker  # noqa: E402
+from scripts.roster_identity import member, same_person, verify  # noqa: E402
 
 DB = "file:" + (os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")) + "?mode=ro"
 FLOOR = 5
@@ -123,6 +131,15 @@ def main() -> None:
         GROUP BY 1, 2, 3, 4, 5, 6, 7, 8""").fetchall()
     members = {r[0]: (r[1], member_party(*r)) for r in db.execute(
         "SELECT person_id, full_name, state, chamber, party, party_canonical FROM members")}
+    # Federal members with their terms: what a row's pid is verified against.
+    federal = {str(r[0]): member(r[0], [r[1], f"{r[2] or ''} {r[3] or ''}".strip()], r[4],
+                                 int(r[5][:4]) if r[5] and r[5][:4].isdigit() else None,
+                                 int(r[6][:4]) if r[6] and r[6][:4].isdigit() else None)
+               for r in db.execute(
+                   "SELECT person_id, full_name, first_name, last_name, chamber, entered_house, left_house "
+                   "FROM members WHERE chamber IN ('representatives', 'senate') AND person_id GLOB '[0-9]*'")}
+    same = same_person()
+    now_year = date.today().year
     # Sitting federal parliamentarians and the party they sit for today (members.left_house is
     # NULL only for the current 150 + 76 after the APH sweep of 2026-09-04). The speech-dominant
     # "party" stays as the history; "party_now" is what the page should lead with.
@@ -174,33 +191,40 @@ def main() -> None:
         ranked = [lab for lab, c in p["parties"].most_common() if c >= max(5, 0.02 * p["n"])]
         if not ranked and p["parties"]:
             ranked = [p["parties"].most_common(1)[0][0]]
-        top_pid = p["pids"].most_common(1)[0][0] if p["pids"] else None
-        if not ranked and top_pid and members.get(top_pid, ("", None))[1]:
-            # State Hansard rows seldom carry a party; the members table does.
-            ranked = [members[top_pid][1]]
         rec = {"name": name, "speeches": p["n"]}
-        if ranked:
-            rec["party"] = ranked[0]
-            if len(ranked) > 1:
-                rec["parties"] = ranked
         rec["states"] = [s for s, _ in p["states"].most_common()]
         rec["chambers"] = [c for c, _ in p["chambers"].most_common()]
         if p["years"]:
             rec["first"], rec["last"] = min(p["years"]), max(p["years"])
-        if top_pid and top_pid.isdigit():
-            rec["pid"] = top_pid
-        if top_pid in current:
-            rec["current"] = True
-            if current[top_pid][0]:
-                rec["party_now"] = current[top_pid][0]
-        # Surname-only prints ("Shoebridge"): the members table knows the person.
-        if " " not in name and top_pid:
-            full = members.get(top_pid, ("", None))[0] or ""
-            if " " in full and full.split()[-1].lower() == name.lower().split()[-1]:
-                rec["full"] = full
         if p["witness"]:
             rec["witness_rows"] = p["witness"]
-        out.append(rec)
+        # The federal id only on evidence; a state member's id (non-numeric, name-built) still
+        # supplies a missing party.
+        pid, _why = verify(rec, p["pids"], federal, same, now_year)
+        top_pid = p["pids"].most_common(1)[0][0] if p["pids"] else None
+        party_pid = pid or (top_pid if top_pid and not top_pid.isdigit() else None)
+        if not ranked and party_pid and members.get(party_pid, ("", None))[1]:
+            # State Hansard rows seldom carry a party; the members table does.
+            ranked = [members[party_pid][1]]
+        if ranked:
+            rec["party"] = ranked[0]
+            if len(ranked) > 1:
+                rec["parties"] = ranked
+        if pid:
+            rec["pid"] = pid
+        if pid in current:
+            rec["current"] = True
+            if current[pid][0]:
+                rec["party_now"] = current[pid][0]
+        # Surname-only prints ("Shoebridge"): the members table knows the person.
+        if " " not in name and party_pid:
+            full = members.get(party_pid, ("", None))[0] or ""
+            if " " in full and full.split()[-1].lower() == name.lower().split()[-1]:
+                rec["full"] = full
+        # Key order as before: name, speeches, party, parties, states, chambers, first, last, pid, ...
+        order = ["name", "speeches", "party", "parties", "states", "chambers", "first", "last", "pid",
+                 "current", "party_now", "full", "witness_rows"]
+        out.append({k: rec[k] for k in order if k in rec})
 
     out.sort(key=lambda r: (-r["speeches"], r["name"]))
     doc = {

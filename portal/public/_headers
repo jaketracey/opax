@@ -35,6 +35,11 @@
 # .webp so /photos/people.json is left to the /*.json rule and not double-set.)
 /*.json
   Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+# The portrait map says whose face is whose: a correction must reach a returning
+# reader on the next page view, not after a day of stale grace (ETag revalidation).
+/photos/people.json
+  ! Cache-Control
+  Cache-Control: public, max-age=0, must-revalidate
 # Bill dates and progress should reflect each publication for returning readers.
 /bills/*.json
   ! Cache-Control
