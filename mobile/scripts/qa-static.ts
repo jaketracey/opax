@@ -38,6 +38,14 @@ for (const variant of ['production', 'e2e']) {
   );
   const native = introspected._internal.modResults.ios.infoPlist;
   assert(!native.NSMicrophoneUsageDescription);
+  // The app is light-only. expo-splash-screen switches the whole app to
+  // Automatic when a dark splash is configured, so guard the result.
+  assert.equal(
+    native.UIUserInterfaceStyle,
+    'Light',
+    'The app stays light-only',
+  );
+  assert.equal(native.UILaunchStoryboardName, 'SplashScreen');
   assert.deepEqual(native.UIApplicationSceneManifest, {
     UIApplicationSupportsMultipleScenes: false,
     UISceneConfigurations: {

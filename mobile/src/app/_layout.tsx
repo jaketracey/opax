@@ -1,11 +1,23 @@
-import { useEffect } from 'react';
+// First: holds the native splash until the launch handoff replaces it.
+import '../launch/splash';
+import { useCallback, useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { Stack, router, type Href } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { hasSourcePreview, isProduction } from '../design/environment';
 import { fonts, light } from '../design/tokens';
+import { requestSeatChooser } from '../features/your-mp/chooser-request';
+import { LaunchHandoff } from '../launch/LaunchHandoff';
 import { closeSheetItem, useStackChrome } from '../navigation/chrome';
+import {
+  checkFirstLaunch,
+  hideTour,
+  leaveTour,
+  useTourState,
+} from '../onboarding/state';
+import { WelcomeTour } from '../onboarding/WelcomeTour';
 import {
   presentSourceDestination,
   sourceDestination,
@@ -20,6 +32,13 @@ export default function Layout() {
     [fonts.sansBold]: require('../../assets/fonts/PublicSans-Bold.ttf'),
   });
   const chrome = useStackChrome();
+  const tour = useTourState();
+  const [laidOut, setLaidOut] = useState(false);
+  const [handedOver, setHandedOver] = useState(false);
+  const endHandoff = useCallback(() => setHandedOver(true), []);
+  useEffect(() => {
+    void checkFirstLaunch();
+  }, []);
   useEffect(() => {
     if (!hasSourcePreview) return;
     return subscribeSourceDestination(() => {
@@ -45,44 +64,68 @@ export default function Layout() {
   return (
     <SafeAreaProvider>
       <StatusBar style="dark" />
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: light.paper },
-        }}
-      >
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen
-          name="talk"
-          options={{ ...sheet, title: 'Talk to OPAX' }}
-        />
-        <Stack.Screen
-          name="account"
-          options={{ ...sheet, headerShown: false }}
-        />
-        {hasSourcePreview ? (
+      <View style={styles.app} onLayout={() => setLaidOut(true)}>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: light.paper },
+          }}
+        >
+          <Stack.Screen name="(tabs)" />
           <Stack.Screen
-            name="source-destination"
-            options={{
-              headerShown: false,
-              presentation: 'fullScreenModal',
-              animation: 'none',
+            name="talk"
+            options={{ ...sheet, title: 'Talk to OPAX' }}
+          />
+          <Stack.Screen
+            name="account"
+            options={{ ...sheet, headerShown: false }}
+          />
+          {hasSourcePreview ? (
+            <Stack.Screen
+              name="source-destination"
+              options={{
+                headerShown: false,
+                presentation: 'fullScreenModal',
+                animation: 'none',
+              }}
+            />
+          ) : null}
+          {isProduction ? null : (
+            // Development and e2e only: the route file is excluded from release
+            // bundles by metro.config.js.
+            <Stack.Screen
+              name="workbench"
+              options={{
+                ...sheet,
+                presentation: 'fullScreenModal',
+                title: 'Workbench',
+              }}
+            />
+          )}
+        </Stack>
+        {/* Above the tabs; a replay closes the Account sheet first. */}
+        {tour === 'visible' ? (
+          <WelcomeTour
+            entrance={handedOver}
+            onLeave={(reason) => {
+              void leaveTour();
+              if (reason === 'finish') {
+                requestSeatChooser();
+                router.navigate('/your-mp' as Href);
+              }
             }}
+            onClosed={hideTour}
           />
         ) : null}
-        {isProduction ? null : (
-          // Development and e2e only: the route file is excluded from release
-          // bundles by metro.config.js.
-          <Stack.Screen
-            name="workbench"
-            options={{
-              ...sheet,
-              presentation: 'fullScreenModal',
-              title: 'Workbench',
-            }}
+        {handedOver ? null : (
+          <LaunchHandoff
+            ready={laidOut && tour !== 'checking'}
+            onDone={endHandoff}
           />
         )}
-      </Stack>
+      </View>
     </SafeAreaProvider>
   );
 }
+
+const styles = StyleSheet.create({ app: { flex: 1 } });

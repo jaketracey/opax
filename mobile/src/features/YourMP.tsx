@@ -1,5 +1,5 @@
 import { formatDate } from '../design/format';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { router } from 'expo-router';
 import { Keyboard, RefreshControl } from 'react-native';
 import { catalogs } from '../api/runtime';
@@ -29,6 +29,7 @@ import { InlineLink } from './bills/parts';
 import { EvidenceFooter, RecordBlock } from './your-mp/Evidence';
 import { RepresentativeRows } from './your-mp/RepresentativeRows';
 import { loadChoice, saveChoice } from './your-mp/choice-store';
+import { useSeatChooserRequest } from './your-mp/chooser-request';
 import {
   matchingSeats,
   replaceStateSeat,
@@ -136,6 +137,13 @@ export default function YourMP() {
     setBusy(true);
     setRefresh((v) => v + 1);
   };
+  // The welcome tour's last step opens the chooser (src/onboarding/).
+  const openChooser = useCallback(() => {
+    setChoosing(true);
+    setStateChoosing(false);
+    setQuery('');
+  }, []);
+  useSeatChooserRequest(openChooser);
   async function choose(seat: Electorate) {
     const next: SeatChoice =
       stateChoosing && choice
