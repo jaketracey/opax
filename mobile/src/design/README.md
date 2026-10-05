@@ -73,9 +73,15 @@ Design workbench) to see every component and state at the current text size.
   inside a word, the text lowers its own Dynamic Type cap in 10% steps until
   the word fits, never below the reader's default size, and starts again from
   full size when the text size, window width, role, Bold Text or text (nested
-  text included) changes, or when its column grows wider than the widest line
-  at the break plus one line height. Only a layout measured at the size now
-  drawn moves the cap, and only downwards, so a late event cannot undo a step.
+  text included) changes, or when its column widens. Each cap is drawn by its
+  own native Text (a React key per generation), so every layout event names
+  the instance that measured it and late events from earlier instances are
+  ignored. A capped instance draws one font and one text, so its frame
+  widening means the column widened: it starts again from full size and steps
+  down afresh. Across a step, it restarts only when its widest line scaled to
+  full size fits a frame wider than the one full size broke in. The cap only
+  steps down within a generation, and never at or below the reader's default
+  size. Frames and lines that change nothing drawn never render.
   The cap scales the role's font size and line height, never
   `maxFontSizeMultiplier`: React Native's text measure cache ignores that prop,
   so a cap passed through it keeps the full-size layout and drawing.

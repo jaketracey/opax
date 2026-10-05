@@ -113,82 +113,138 @@ export function nextWordSafeCap(
 }
 
 /**
- * A word-safe text's cap. `key` is the text size, window width, role, weight
- * and text it belongs to; `full` is the uncapped multiplier, measured at the
- * first mid-word break. `lineWidth` and `slack` record the column it broke
- * in: its widest line then, and one line height.
+ * A word-safe text's state for one identity: text size, window width, role,
+ * weight and text. Every change of cap starts a new generation, drawn by a
+ * new native Text (its React key), so each layout event names the instance
+ * that measured it: Fabric delivers a late event to the props of the
+ * instance that emitted it, never to its replacement's.
  */
-export interface WordSafeCap {
+export interface WordSafeState {
   key: string;
+  gen: number;
+  /** The cap on the Dynamic Type multiplier; 0 is full size. */
   cap: number;
+  /** The uncapped multiplier, from this identity's first full-size break. */
   full: number;
-  lineWidth: number;
-  slack: number;
+  /** The full-size generation, and the frame width it was laid out in. */
+  fullGen: number;
+  fullFrame: number;
+  /** The capped instance's frame width, and its longest unbreakable run of
+   * text scaled to full size (an upper bound: its widest line). */
+  frame: number;
+  word: number;
 }
-export const fullSize = (key: string): WordSafeCap => ({
+/** The native instance an event came from. */
+export interface WordSafeInstance {
+  key: string;
+  gen: number;
+}
+export const wordSafeStart = (key: string, gen = 0): WordSafeState => ({
   key,
+  gen,
   cap: 0,
   full: 0,
-  lineWidth: 0,
-  slack: 0,
+  fullGen: gen,
+  fullFrame: 0,
+  frame: 0,
+  word: 0,
 });
 /** Two-place rounding of the line height leaves this much noise. */
 const MEASURED_AT_TOLERANCE = 0.03;
-
+/** Frame widths are compared to the half point; fits keep a point spare. */
+const WIDTH_EPSILON = 0.5;
+const FIT_MARGIN = 1;
+const compact = (text: string) => text.replace(/\s/g, '');
+/** Full size again, as a new generation; the uncapped multiplier still holds. */
+const restart = (state: WordSafeState): WordSafeState => ({
+  ...wordSafeStart(state.key, state.gen + 1),
+  full: state.full,
+});
 /**
- * The cap after one layout of a word-safe text. It only steps down, in 10%
- * steps, after a mid-word break, and only from a layout measured at the size
- * now drawn: an older layout delivered late (full size after a cap, or a
- * capped one after a reset) can neither raise nor lower it. Returns
- * `previous` itself when nothing changes, so React skips the update.
+ * The column grew enough: the capped instance's frame is wider than the one
+ * full size broke in, and every unbreakable run of its text, scaled back to
+ * full size, fits in it. Glyph advances scale linearly with point size.
  */
-export function wordSafeAfterLayout(
-  previous: WordSafeCap,
-  key: string,
-  lines: readonly { text: string; width: number; height: number }[],
-  baseLineHeight: number,
-): WordSafeCap {
-  if (!lines.length) return previous;
-  const state = previous.key === key ? previous : fullSize(key);
-  const measuredAt = lineScale(lines[0]!.height, baseLineHeight);
-  const drawnAt = state.cap || state.full;
-  if (drawnAt && Math.abs(measuredAt - drawnAt) > MEASURED_AT_TOLERANCE)
-    return previous;
-  if (!breaksMidWord(lines)) return previous;
-  const next = nextWordSafeCap(lines[0]!.height, baseLineHeight);
-  if (next === null || (state.cap && next >= state.cap)) return previous;
-  return {
-    key,
-    cap: next,
-    full: state.full || measuredAt,
-    lineWidth:
-      state.lineWidth ||
-      Math.max(
-        0,
-        ...lines.map((line) => (Number.isFinite(line.width) ? line.width : 0)),
-      ),
-    slack: state.slack || lines[0]!.height,
-  };
+function provenToFit(state: WordSafeState): WordSafeState {
+  return state.cap &&
+    state.word &&
+    state.frame &&
+    state.fullFrame &&
+    state.frame > state.fullFrame + WIDTH_EPSILON &&
+    state.word + FIT_MARGIN <= state.frame
+    ? restart(state)
+    : state;
 }
 
 /**
- * The cap after the text's frame changes width. A char-wrapped line fills
- * its column to within one glyph, and a smaller font never draws wider than
- * that column, so a frame wider than the widest line at the break plus one
- * line height means the column itself grew: start again from full size,
- * keeping the measured uncapped multiplier. Narrower frames keep the cap; a
- * mid-word break in a narrower column steps it down as usual.
+ * The state after one line measurement. Only the instance now drawn counts,
+ * and only for this text. The cap only steps down, in 10% steps, after a
+ * mid-word break measured at the size now drawn, and never at or below the
+ * reader's default size, where there is nothing to step down to (a layout
+ * from a larger size delivered late included). `full` comes only from a
+ * fresh full-size break. Returns `state` itself when nothing changes.
  */
-export function wordSafeAfterResize(
-  previous: WordSafeCap,
-  key: string,
-  frameWidth: number,
-): WordSafeCap {
-  // Without measured line widths there is no column to compare against.
-  if (previous.key !== key || !previous.cap || !previous.lineWidth)
-    return previous;
-  if (frameWidth <= previous.lineWidth + previous.slack) return previous;
-  return { ...fullSize(key), full: previous.full };
+export function wordSafeOnLines(
+  state: WordSafeState,
+  at: WordSafeInstance,
+  lines: readonly { text: string; width: number; height: number }[],
+  content: string,
+  baseLineHeight: number,
+  fontScale: number,
+): WordSafeState {
+  if (at.key !== state.key || at.gen !== state.gen || !lines.length)
+    return state;
+  if (fontScale <= 1) return state;
+  if (compact(lines.map((line) => line.text).join('')) !== compact(content))
+    return state;
+  const measuredAt = lineScale(lines[0]!.height, baseLineHeight);
+  const drawnAt = state.cap || state.full;
+  if (drawnAt && Math.abs(measuredAt - drawnAt) > MEASURED_AT_TOLERANCE)
+    return state;
+  if (breaksMidWord(lines)) {
+    const next = nextWordSafeCap(lines[0]!.height, baseLineHeight);
+    if (next === null || (state.cap && next >= state.cap)) return state;
+    return {
+      ...state,
+      gen: state.gen + 1,
+      cap: next,
+      full: state.full || measuredAt,
+      frame: 0,
+      word: 0,
+    };
+  }
+  if (!state.cap) return state;
+  // No run breaks at this cap, so each lies within one line.
+  const widest = Math.max(
+    ...lines.map((line) =>
+      Number.isFinite(line.width) ? line.width : Infinity,
+    ),
+  );
+  const word = (widest * state.full) / measuredAt;
+  return provenToFit(state.word === word ? state : { ...state, word });
+}
+
+/**
+ * The state after a frame. A capped instance draws one font and one text, so
+ * any widening of its frame is its column widening: start again from full
+ * size and step down afresh, which also restores a larger cap after a
+ * narrower column widens again. A frame from the full-size generation, even
+ * one delivered after the cap moved on, records where full size broke.
+ */
+export function wordSafeOnFrame(
+  state: WordSafeState,
+  at: WordSafeInstance,
+  width: number,
+): WordSafeState {
+  if (at.key !== state.key || !(width > 0)) return state;
+  if (at.gen === state.fullGen && (at.gen !== state.gen || !state.cap))
+    return state.fullFrame === width
+      ? state
+      : provenToFit({ ...state, fullFrame: width });
+  if (at.gen !== state.gen || !state.cap) return state;
+  if (state.frame && width > state.frame + WIDTH_EPSILON) return restart(state);
+  if (state.frame === width) return state;
+  return provenToFit({ ...state, frame: width });
 }
 
 /**
@@ -211,11 +267,35 @@ export function Text({
   const { fontScale, width, scale } = useWindowDimensions();
   // A cap belongs to one text size, window width, role, weight and text
   // (nested text included, such as a field's "(required)"): any change starts
-  // again from full size, and so does a wider column (onLayout below).
+  // again from full size, and so does a wider column (wordSafeOnFrame).
   const content = textContent(props.children);
   const key = `${fontScale}|${width}|${variant}|${bold}|${content}`;
-  const [capped, setCapped] = useState(() => fullSize(key));
-  const { cap, full } = capped.key === key ? capped : fullSize(key);
+  // The state machine runs at event time in a ref, so frames and lines that
+  // change nothing drawn never render; `shown` re-renders on a new generation.
+  const [shown, setShown] = useState(() => wordSafeStart(key));
+  const machine = useRef(shown);
+  const committedKey = useRef(key);
+  useLayoutEffect(() => {
+    committedKey.current = key;
+  });
+  const drawn = shown.key === key ? shown : wordSafeStart(key);
+  const { cap, full } = drawn;
+  const instance: WordSafeInstance = { key: drawn.key, gen: drawn.gen };
+  const advance = (step: (state: WordSafeState) => WordSafeState) => {
+    // An event from an instance of an earlier identity, delivered late.
+    if (instance.key !== committedKey.current) return;
+    if (machine.current.key !== instance.key) {
+      const earlier = machine.current;
+      machine.current = wordSafeStart(instance.key);
+      // Returning to that identity later must not draw its old cap.
+      if (earlier.gen) setShown(machine.current);
+    }
+    const previous = machine.current;
+    const next = step(previous);
+    if (next === previous) return;
+    machine.current = next;
+    if (next.gen !== previous.gen) setShown(next);
+  };
   // React Native's text measure cache compares fonts by size, multiplier and
   // ramp but not maxFontSizeMultiplier, so a cap passed that way keeps the
   // cached full-size layout and drawing ("Parliamentar / y" in About at AX5).
@@ -300,17 +380,21 @@ export function Text({
     guardDrawing();
     if (!wordSafe) return;
     const lines = event.nativeEvent.lines;
-    setCapped((previous) =>
-      wordSafeAfterLayout(
-        previous,
-        key,
+    advance((state) =>
+      wordSafeOnLines(
+        state,
+        instance,
         lines,
+        content,
         role.lineHeight + LINE_HEIGHT_NUDGE,
+        fontScale,
       ),
     );
   };
   return (
     <NativeText
+      // One native instance per generation (see WordSafeState).
+      key={wordSafe ? `${drawn.key}|${drawn.gen}` : undefined}
       // Names and party abbreviations are read with Australian English rules.
       accessibilityLanguage="en-AU"
       {...probe.props}
@@ -323,9 +407,7 @@ export function Text({
         const frame = event.nativeEvent.layout;
         if (frame.width <= 0 || frame.height <= 0) return;
         if (wordSafe)
-          setCapped((previous) =>
-            wordSafeAfterResize(previous, key, frame.width),
-          );
+          advance((state) => wordSafeOnFrame(state, instance, frame.width));
         // This event may still include the old floor. Forget that frame and
         // its lines before removing the floor, then wait for a fresh layout.
         if (
