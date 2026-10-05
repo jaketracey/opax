@@ -251,6 +251,11 @@ routes throw **before** cache lookup or networking. Redirects and cross-origin
 requests fail closed. Transport belongs exclusively to the API
 client; ESLint and the static AST scan enforce this.
 
+Apple Maps tiles are an allowed iOS system service, outside app catalog
+transport. The current Skia electorate outline has no basemap and makes no tile
+requests, so this feature adds no app network host. The one-shot location fix
+stays on the device and never enters the API client.
+
 Both source gates scan JS/TS in `src/` and `modules/`. `modules/*/scripts/` is Node
 tooling, exempt from app transport and origin rules but still scanned for secrets.
 App and module source cannot import that tooling, including via re-exports or
