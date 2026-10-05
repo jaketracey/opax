@@ -22,3 +22,11 @@ export const electorateRoute = (id: string) => ({
   pathname: '/electorate/[id]' as const,
   params: { id },
 });
+
+// Leads and the declared-interests feed (P1), opened from Today.
+export const leadsRoute = { pathname: '/leads' as const };
+export const leadRoute = (id: string) => ({
+  pathname: '/lead/[id]' as const,
+  params: { id },
+});
+export const declarationsRoute = { pathname: '/declarations' as const };

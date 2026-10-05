@@ -50,6 +50,12 @@ export default function TabStack({ segment }: { segment: string }) {
         />
       ) : null}
       <Stack.Screen name="electorate/[id]" options={{ title: '' }} />
+      <Stack.Screen name="leads" options={{ title: 'Leads' }} />
+      <Stack.Screen name="lead/[id]" options={{ title: '' }} />
+      <Stack.Screen
+        name="declarations"
+        options={{ title: 'Declared interests' }}
+      />
     </Stack>
   );
 }

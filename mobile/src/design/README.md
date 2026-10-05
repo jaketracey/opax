@@ -255,10 +255,15 @@ Copy is in `stateCopy` (IOS-UX section 4, "States, everywhere").
 ## Leads
 
 - `LeadCard`: one `/discovery.json` signal (P1). The kicker reads "Lead ·
-  [category]". Title, summary, metric labels, evidence labels and every
-  caveat are shown verbatim and in full; never shorten, reorder or reword
-  them. Reading order: title, each metric as "label, value", the caveats, then
-  the evidence links.
+  [category]". Title, summary, metric labels and every caveat are shown
+  verbatim and in full; never shorten, reorder or reword them. Reading order:
+  title, each metric as "label, value", the caveats, then the example records.
+  Each record (`LeadEvidenceLink`) is one link: amount, payer → payee, detail,
+  then the register and its own ID ("AusTender register · record CN3407266"),
+  read from the export's label by `leadEvidenceFor`
+  (`src/features/leads/model.ts`), which never shows OPAX's local row number.
+  With a `testID`, parts carry `-title`, `-metric-N`, `-caveat-N`,
+  `-evidence-N` and `-as-at`.
 
 Person rows keep their `-name` testID after layout. RepresentativeRows opts
 into `testDrawnName` for journeys 07 and 09, which require the e2e-only

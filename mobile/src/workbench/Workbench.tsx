@@ -48,6 +48,7 @@ import {
   type TextVariant,
 } from '../design/tokens';
 import { shareRecord } from '../navigation/share';
+import { leadEvidenceFor } from '../features/leads/model';
 import { canonicalUrl } from '../navigation/external';
 import { isE2E } from '../design/environment';
 import { OpaxShare } from '../../modules/opax-share';
@@ -69,10 +70,13 @@ const westpac: Lead = {
     { label: 'Party receipt records', value: 1041, format: 'number' },
     { label: 'Contract records', value: 4, format: 'number' },
   ],
+  // Read into reader-facing parts as the Leads screen does: OPAX's local
+  // row number never shows.
   evidence: [
     {
       label:
         'Westpac Banking Corporation → Australian Labor Party (ALP): $1,803.00 · FY 2024-25 · AEC annual receipt · local record 643745',
+      table: 'donations',
       url: 'https://transparency.aec.gov.au/',
       link_scope: 'source_register',
       record_id: '643745',
@@ -80,11 +84,12 @@ const westpac: Lead = {
     {
       label:
         'Australian Office of Financial Management → Westpac Banking Corporation: $4,537,500.00 · starts 2017-02-06 · austender · record CN3407266',
+      table: 'contracts',
       url: 'https://www.tenders.gov.au/',
       link_scope: 'source_register',
       record_id: 'CN3407266',
     },
-  ],
+  ].map(leadEvidenceFor),
   caveats: [
     'Matching names are not verified legal identities; unrelated entities can share a name.',
     'The records can cover different years and jurisdictions. No sequence or causal link is inferred.',
