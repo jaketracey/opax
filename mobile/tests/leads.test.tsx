@@ -244,6 +244,10 @@ describe('evidence labels', () => {
       register: 'Source register',
       amount: null,
     });
+    // Inherited names are not registers.
+    expect(
+      leadEvidenceFor({ ...receipt, table: 'constructor', url: null }),
+    ).toMatchObject({ register: 'Source register', amount: null });
   });
   test('a local contract row number is not shown as a register ID', () => {
     const contract = evidence.find((e) => e.table === 'contracts')!;

@@ -92,7 +92,9 @@ const sourceTokens: Record<string, string[]> = {
  * label, so no unread ID reaches the reader.
  */
 export function leadEvidenceFor(evidence: Evidence): LeadEvidenceView {
-  const register = registers[evidence.table];
+  const register = Object.hasOwn(registers, evidence.table)
+    ? registers[evidence.table]
+    : undefined;
   const host = hostOf(evidence.url);
   const known = !!register && (host === null || host === register.host);
   const kind =
