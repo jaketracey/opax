@@ -1,0 +1,20 @@
+{
+  "about": "Identity exceptions for portal/public/photos/people.json, read by scripts/photo_identity.mjs (the map check) and scripts/backfill_photos_oa.py. same_person: a roster spelling whose first name does not agree with the portrait owner's name but is verified to be the same person, so the check lets that one name use that one key. wrong_face: a portrait file that shows somebody other than the person who owns its key; no name may map to it, and backfill_photos_oa.py will not map it, until the file is replaced and looked at. docs/PHOTOS.md, 'Identity check'.",
+  "same_person": {
+    "antony windsor": {"key": "10676", "why": "Tony Windsor (New England); Antony is his given name"},
+    "david tollner": {"key": "10636", "why": "Dave Tollner (Solomon 2001-2007); the only Tollner in the House"},
+    "elizabeth coker": {"key": "10921", "why": "Libby Coker (Corangamite from 2019); the only Coker in the House"},
+    "elizabeth webster": {"key": "10935", "why": "Anne Webster (Mallee from 2019), printed with her middle name; the only Webster in the House that year"},
+    "katrina allen": {"key": "10928", "why": "Katie Allen (Higgins 2019-2022); Katrina is her given name"},
+    "katter bob jnr": {"key": "10352", "why": "Bob Katter (Kennedy from 1993), printed 'Katter Bob Jnr' in 1998-99"},
+    "kevin drum": {"key": "10875", "why": "Damian Drum (Murray, Nicholls 2016-2022), printed with his middle name"},
+    "peter sidebottom": {"key": "10583", "why": "Sid Sidebottom (Braddon), printed with his first name Peter in 1998-99"}
+  },
+  "wrong_face": {
+    "10080": "Tony Burke's portrait (byte-identical to 10081), not Anna Burke",
+    "10509": "a woman with long curly hair, probably Alicia Payne (compare 10919), not Marise Payne",
+    "10519": "a woman, probably Melissa Price (compare 10818), not Roger Price",
+    "10565": "Scott Buchholz's portrait (byte-identical to 10752), not Bruce Scott",
+    "10725": "Sandy Macdonald's Senate portrait (byte-identical to 10402; his given names are John Alexander), not John Alexander"
+  }
+}

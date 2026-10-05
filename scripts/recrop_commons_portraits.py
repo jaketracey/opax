@@ -79,3 +79,6 @@ for part in range(0,len(sheet),100):
         img.paste(Image.open(PH/f"{key}.webp").resize((tile,tile)),(x,y)); d.text((x+2,y+tile+2), n[:20], fill="black"); d.text((x+2,y+tile+16), f"{l[:14]} {log[key]}", fill="gray")
     img.save(WK/f"recrop_sheet_{'new_' if ONLY is not None else ''}{part//100+1}.png")
 print("sheets:", (len(sheet)+99)//100)
+
+# The whole map must still pass the identity check (scripts/photo_identity.mjs; docs/PHOTOS.md).
+import subprocess; sys.exit(subprocess.run(["node", str(W/"scripts"/"photo_identity.mjs")]).returncode)

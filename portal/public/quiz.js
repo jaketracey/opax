@@ -114,12 +114,13 @@ export function makeQuizContext(data) {
     .map(([slug, r]) => ({ slug, title: r.title || slug, stats: r.stats || {} }))
     .filter((r) => r.stats.speech_count > 0);
 
-  const people = (data.parliamentarians && data.parliamentarians.people) || [];
-  const peopleByName = new Map(people.map((p) => [p.name, p]));
+  // Faces come from the portrait map (photos/people.json), never from a roster pid:
+  // a pid can belong to somebody else, and a file can be withheld from the map.
+  const photos = data.photos || {};
   const years = Object.values(data.years || {}).filter((y) => y && y.year && y.voices);
 
   return {
-    money, donors, donorsById, parties, industries, reports, peopleByName, years,
+    money, donors, donorsById, parties, industries, reports, photos, years,
     corpus: data.corpus || null,
   };
 }
@@ -154,8 +155,7 @@ function searchLink(query, filters, label) {
   return { href: "/search?" + params.toString(), label };
 }
 function portraitFor(ctx, name) {
-  const person = ctx.peopleByName.get(name);
-  const id = person && (person.photo || person.pid);
+  const id = ctx.photos[String(name || "").trim().toLowerCase()];
   return id ? "/photos/" + encodeURIComponent(id) + ".webp" : null;
 }
 function factLine(label, value) { return label + ": " + value; }
@@ -723,7 +723,7 @@ export function validateQuestion(q) {
 
 /**
  * Build one round of questions from the loaded data.
- * data = { money, reports: {slug: reportJson}, corpus, parliamentarians, years }
+ * data = { money, reports: {slug: reportJson}, corpus, photos, years }
  */
 export function buildRound(data, rng = Math.random, count = 8, deck = "mixed") {
   const ctx = makeQuizContext(data);
@@ -790,11 +790,11 @@ async function fetchJson(url, signal) {
 }
 
 async function loadData(signal) {
-  const [money, index, corpus, parliamentarians, yearIndex] = await Promise.all([
+  const [money, index, corpus, photos, yearIndex] = await Promise.all([
     fetchJson("/graph/money.json", signal),
     fetchJson("/reports/index.json", signal),
     fetchJson("/corpus.json", signal).catch(() => null),
-    fetchJson("/parliamentarians.json", signal).catch(() => null),
+    fetchJson("/photos/people.json", signal).catch(() => null),
     fetchJson("/years/index.json", signal).catch(() => null),
   ]);
   const reports = {};
@@ -809,7 +809,7 @@ async function loadData(signal) {
       catch (e) { if (e && e.name === "AbortError") throw e; /* year questions degrade */ }
     }),
   ]);
-  return { money, reports, corpus, parliamentarians, years };
+  return { money, reports, corpus, photos, years };
 }
 
 /* ---------------------------------------------------------------- *

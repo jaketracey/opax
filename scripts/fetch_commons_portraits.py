@@ -72,3 +72,6 @@ for part in range(0,len(sheet),100):
         d.text((x+2,y+tile+2), name[:20], fill="black"); d.text((x+2,y+tile+16), label[:20], fill="gray")
     img.save(SCR/f"contact_sheet_{'new_' if '--new' in sys.argv else ''}{part//100+1}.png")
 print("[sheet] written", (len(sheet)+99)//100, "sheets")
+
+# The whole map must still pass the identity check (scripts/photo_identity.mjs; docs/PHOTOS.md).
+import subprocess; sys.exit(subprocess.run(["node", str(W/"scripts"/"photo_identity.mjs")]).returncode)
