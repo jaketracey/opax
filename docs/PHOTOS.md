@@ -179,8 +179,12 @@ so the three modules that fetch these files themselves (`quiz.js` and `timemachi
 hash: `scripts/stamp_assets.mjs` writes it (`MODULE_STAMPS`) before it hashes the importer,
 `--check` fails when it is stale, and the test fails on an unversioned or stale import, or on a new
 module that fetches an identity file without being listed. Every other module takes faces and
-records from `app.js`, which is itself stamped. A cached quiz module from before this change kept
-showing Rex Patrick's face on Patrick Conaghan through a fresh page (round 3 of the review).
+records from `app.js`, which is itself stamped. Checked with `wrangler dev` and a headless Chrome
+profile primed on `/explore?game=quiz` by the release before this branch (the old `/quiz.js`, faces
+by roster pid: Rex Patrick's 10903 on Patrick Conaghan, Dorinda Cox's on Cox): this branch's shell
+fetched `/quiz.js?v=<hash>` from the network and its portrait map gave Pat Conaghan's 10922 and no
+face for Cox, while round 2's shell, importing the bare `/quiz.js`, ran the cached old module from
+disk and kept Rex Patrick's face (`scripts/_photos_work/qa-portrait-pairs-r3/`).
 `portal/test/identity-cache.test.mjs` runs the loaders against a recording `fetch`, scans every
 module's fetches of these paths and checks the header rules; checked with `wrangler dev` and a
 headless Chrome profile primed by the release before this branch (Rex Patrick's face and 1,598
