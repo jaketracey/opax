@@ -16,7 +16,7 @@ appId: au.com.opax.app
 - tapOn:
     id: voice-logout
 - runFlow:
-    file: voice-code.yaml
+    file: talk-fixture-code.yaml
     env:
       VOICE_EMAIL: deadline@example.invalid
 # Recreate only the synthetic deadline account so 20 and 21 may share a
@@ -49,7 +49,7 @@ appId: au.com.opax.app
     direction: UP
 - assertVisible: Account deleted
 - runFlow:
-    file: voice-code.yaml
+    file: talk-fixture-code.yaml
     env:
       VOICE_EMAIL: deadline@example.invalid
 - openLink: opax://talk

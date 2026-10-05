@@ -16,7 +16,7 @@ appId: au.com.opax.app
 - tapOn:
     id: voice-logout
 - runFlow:
-    file: voice-code.yaml
+    file: talk-fixture-code.yaml
     env:
       VOICE_EMAIL: ${TALK_EMAIL}
 - openLink: opax://talk
