@@ -27,37 +27,56 @@ export function Screen({
   testID,
   children,
   refreshControl,
-  stableKeyboard = false,
+}: {
+  testID?: string;
+  children: ReactNode;
+  refreshControl?: ReactElement<RefreshControlProps>;
+}) {
+  return (
+    <ScrollView
+      testID={testID}
+      style={styles.screen}
+      contentInsetAdjustmentBehavior="automatic"
+      keyboardShouldPersistTaps="handled"
+      automaticallyAdjustKeyboardInsets
+      keyboardDismissMode="on-drag"
+      refreshControl={refreshControl}
+      contentContainerStyle={styles.content}
+    >
+      {children}
+    </ScrollView>
+  );
+}
+
+/** Search's form owns keyboard space; UIKit retains navigation/tab insets. */
+export function KeyboardStableScreen({
+  testID,
+  children,
+  refreshControl,
   keyboardTarget,
 }: {
   testID?: string;
   children: ReactNode;
   refreshControl?: ReactElement<RefreshControlProps>;
-  /** Keep an editable form fixed through keyboard dismissal and body changes. */
-  stableKeyboard?: boolean;
-  keyboardTarget?: RefObject<View | null>;
+  keyboardTarget: RefObject<View | null>;
 }) {
   const scroll = useRef<ScrollView>(null);
-  const keyboard = useStableKeyboard(stableKeyboard, scroll, keyboardTarget);
+  const keyboard = useStableKeyboard(scroll, keyboardTarget);
   return (
     <ScrollView
       ref={scroll}
       testID={testID}
       style={styles.screen}
       contentInsetAdjustmentBehavior="automatic"
-      keyboardShouldPersistTaps={stableKeyboard ? 'always' : 'handled'}
-      automaticallyAdjustKeyboardInsets={!stableKeyboard}
-      // Our measured reveal can use a negative offset within UIKit bar insets.
-      scrollToOverflowEnabled={stableKeyboard}
+      keyboardShouldPersistTaps="handled"
+      automaticallyAdjustKeyboardInsets={false}
+      scrollToOverflowEnabled
       keyboardDismissMode="on-drag"
       refreshControl={refreshControl}
-      contentContainerStyle={[
-        styles.content,
-        stableKeyboard ? keyboard.contentStyle : null,
-      ]}
-      onLayout={stableKeyboard ? keyboard.onLayout : undefined}
-      onScroll={stableKeyboard ? keyboard.onScroll : undefined}
-      scrollEventThrottle={stableKeyboard ? 16 : undefined}
+      contentContainerStyle={[styles.content, keyboard.contentStyle]}
+      onLayout={keyboard.onLayout}
+      onScroll={keyboard.onScroll}
+      scrollEventThrottle={16}
     >
       {children}
     </ScrollView>

@@ -20,7 +20,7 @@ import {
   OpaxWebLink,
   PersonRow,
   RowList,
-  Screen,
+  KeyboardStableScreen,
   Section,
   SourceLink,
   StaleNotice,
@@ -169,9 +169,8 @@ export default function Search() {
       </Group>
     ) : null;
   return (
-    <Screen
+    <KeyboardStableScreen
       testID="search-screen"
-      stableKeyboard
       keyboardTarget={submit}
       refreshControl={
         <RefreshControl
@@ -474,6 +473,6 @@ export default function Search() {
           ) : null}
         </Section>
       ) : null}
-    </Screen>
+    </KeyboardStableScreen>
   );
 }

@@ -1,34 +1,13 @@
 appId: au.com.opax.app
 ---
 # Accessibility visibility can include controls obscured by the keyboard.
-# Check their native window frame, then use a content gesture above the keyboard.
+# Check the native window frame before any journey gesture can mask a failed app reveal.
 - copyTextFrom:
     id: search-geometry
 - evalScript: ${output.geometry = JSON.parse(maestro.copiedText)}
-- repeat:
-    times: 6
-    commands:
-      - runFlow:
-          when:
-            true: ${output.geometry.button.y + output.geometry.button.height > output.geometry.windowHeight - output.geometry.keyboardHeight - 8}
-          commands:
-            - swipe:
-                start: 90%, 45%
-                end: 90%, 25%
-                speed: 20
-            - waitForAnimationToEnd
-            # Content dragging may dismiss editing. Refocus at the resulting
-            # offset; the form and submit target must now fit above the keyboard.
-            - tapOn:
-                id: search-input
-                point: 50%,90%
-            - extendedWaitUntil:
-                visible: '.*"keyboardHeight":[1-9][0-9]{2}.*'
-                timeout: 10000
-            - waitForAnimationToEnd
-            - copyTextFrom:
-                id: search-geometry
-            - evalScript: ${output.geometry = JSON.parse(maestro.copiedText)}
+- assertTrue:
+    condition: ${output.geometry.button.y + output.geometry.button.height <= output.geometry.windowHeight - output.geometry.keyboardHeight - 8}
+    label: The app already revealed the submit button above the keyboard
 - assertTrue:
     condition: ${output.geometry.button.y >= output.geometry.nav.y + output.geometry.nav.height && output.geometry.button.y + output.geometry.button.height <= output.geometry.windowHeight - output.geometry.keyboardHeight - 8}
     label: The entire submit button is between the navigation bar and software keyboard

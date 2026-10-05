@@ -5,6 +5,7 @@ private enum OpaxSearchGeometryProbe {
   static var keyboardHeight: CGFloat = 0
   static var last = ""
   static let label = UILabel()
+  static let maximumLogBytes: UInt64 = 512 * 1024
   static func start() {
     NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillChangeFrameNotification, object: nil, queue: .main) { note in
       if let frame = note.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
@@ -14,7 +15,7 @@ private enum OpaxSearchGeometryProbe {
     label.isAccessibilityElement = true
     label.accessibilityIdentifier = "search-geometry"
     label.isUserInteractionEnabled = false
-    timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in sample() }
+    timer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { _ in sample() }
   }
   static func views(_ root: UIView) -> [UIView] {
     [root] + root.subviews.flatMap { views($0) }
@@ -52,15 +53,20 @@ private enum OpaxSearchGeometryProbe {
       "results": views(screen).contains { $0.accessibilityIdentifier == "search-cache-state" },
     ]
     guard let raw = try? JSONSerialization.data(withJSONObject: data, options: [.sortedKeys]), let text = String(data: raw, encoding: .utf8) else { return }
-    label.accessibilityLabel = text
     if text == last { return }; last = text
+    label.accessibilityLabel = text
     var record = data; record["time"] = Date().timeIntervalSince1970
     guard let bytes = try? JSONSerialization.data(withJSONObject: record, options: [.sortedKeys]),
           let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
     let url = directory.appendingPathComponent("search-geometry.jsonl")
     if !FileManager.default.fileExists(atPath: url.path) { FileManager.default.createFile(atPath: url.path, contents: nil) }
     if let file = try? FileHandle(forWritingTo: url) {
-      file.seekToEndOfFile(); file.write(bytes); file.write(Data([10])); try? file.close()
+      let size = file.seekToEndOfFile()
+      if size + UInt64(bytes.count + 1) > maximumLogBytes {
+        file.truncateFile(atOffset: 0)
+        file.seek(toFileOffset: 0)
+      }
+      file.write(bytes); file.write(Data([10])); try? file.close()
     }
   }
 }

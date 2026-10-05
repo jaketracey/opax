@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type RefObject } from 'react';
+import { useContext, useEffect, useRef, useState, type RefObject } from 'react';
 import {
   Keyboard,
   useWindowDimensions,
@@ -8,6 +8,7 @@ import {
   type NativeScrollEvent,
   type NativeSyntheticEvent,
 } from 'react-native';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { spacing } from './tokens';
 
 /**
@@ -18,18 +19,17 @@ import { spacing } from './tokens';
  * suggestions or the keyboard closes, so short content cannot clamp it.
  */
 export function useStableKeyboard(
-  enabled: boolean,
   scroll: RefObject<ScrollView | null>,
   target?: RefObject<View | null>,
 ) {
   const { height: windowHeight } = useWindowDimensions();
+  const bottomInset = useContext(SafeAreaInsetsContext)?.bottom ?? 0;
   const [viewportHeight, setViewportHeight] = useState(0);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
-  const [offsetFloor, setOffsetFloor] = useState(0);
+  const [offsetFloor, setOffsetFloor] = useState<number | null>(null);
   const offset = useRef(0);
   const keyboard = useRef(0);
   useEffect(() => {
-    if (!enabled) return;
     let frame: number | undefined;
     // Reveal the action only on opening/resizing the keyboard. Never rewind
     // the offset on dismissal. Measure after the content spacer is committed.
@@ -56,7 +56,7 @@ export function useStableKeyboard(
       (e) => {
         const height = Math.max(0, windowHeight - e.endCoordinates.screenY);
         if (height > 0 && keyboard.current === 0)
-          setOffsetFloor(Math.max(0, offset.current));
+          setOffsetFloor(offset.current);
         keyboard.current = height;
         setKeyboardHeight(height);
         if (height > 0) reveal();
@@ -68,7 +68,7 @@ export function useStableKeyboard(
       shown.remove();
       if (frame !== undefined) cancelAnimationFrame(frame);
     };
-  }, [enabled, windowHeight, scroll, target]);
+  }, [windowHeight, scroll, target]);
   return {
     onLayout(e: LayoutChangeEvent) {
       setViewportHeight(e.nativeEvent.layout.height);
@@ -77,11 +77,19 @@ export function useStableKeyboard(
       const y = e.nativeEvent.contentOffset.y;
       offset.current = y;
       if (keyboard.current > 0)
-        setOffsetFloor((floor) => Math.max(floor, y, 0));
-      else if (y <= 0) setOffsetFloor(0);
+        setOffsetFloor((floor) => Math.max(floor ?? y, y));
+      // Release retained space as the reader scrolls back toward the top.
+      // Negative offsets are valid within UIKit's adjusted navigation inset.
+      else
+        setOffsetFloor((floor) => (floor === null ? null : Math.min(floor, y)));
     },
     contentStyle: {
-      minHeight: viewportHeight + offsetFloor,
+      // No artificial height at rest. Retain only the height needed for the
+      // current offset, excluding the native tab-bar safe area at the bottom.
+      minHeight:
+        offsetFloor === null
+          ? 0
+          : Math.max(0, viewportHeight - bottomInset + offsetFloor),
       paddingBottom: spacing.s7 + keyboardHeight,
     },
   };
