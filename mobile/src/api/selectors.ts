@@ -1049,6 +1049,12 @@ export function electorateFor(seat: ElectorateDetail) {
           .map((s) => ({ label: s.label, url: s.url, licence: s.licence })),
       ),
     ),
+    boundaries: seat.boundaries.map((b) => ({
+      ...b,
+      source_geometry_url:
+        b.source_geometry_url ??
+        b.sources.map((id) => seat.sources[id]?.url).find(Boolean),
+    })),
     related: seat.relations,
     rosters: seat.rosters,
     terms: seat.terms,

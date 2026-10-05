@@ -1,0 +1,11 @@
+appId: au.com.opax.app
+name: Cached electorate outline without a fixture or tiles
+---
+- launchApp
+- openLink: opax://electorate/el_5d600e7f6dca5b72ae04d686
+- scrollUntilVisible:
+    element:
+      id: electorate-outline-drawn-pixels-[1-9][0-9]*
+    centerElement: true
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/24-offline-native-outline

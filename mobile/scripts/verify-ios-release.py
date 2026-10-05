@@ -30,7 +30,7 @@ SDK_PATTERN = re.compile(rb"posthog|mixpanel|amplitude|segment\.com|sentry|appsf
                          rb"firebaseanalytics|appcenter|bugsnag|datadog|fbSDK|crashlytics|heapanalytics", re.I)
 SHIPPED_FRAMEWORKS = {"ExpoModulesJSI.framework", "hermesvm.framework", "ExpoFont.framework",
                       "ExpoModulesCore.framework", "React.framework", "ReactNativeDependencies.framework",
-                      "ExpoModulesWorklets.framework", "ExpoFileSystem.framework"}
+                      "ExpoModulesWorklets.framework", "ExpoFileSystem.framework", "ExpoLocation.framework"}
 ANALYTICS_HOSTS = {"segment.io", "segment.com", "segmentapis.com", "posthog.com", "mixpanel.com",
                    "amplitude.com", "sentry.io", "appsflyer.com", "adjust.com", "google-analytics.com",
                    "app-measurement.com", "crashlytics.com", "heap.io", "heapanalytics.com",
@@ -267,7 +267,7 @@ def framework_allowlist(app):
     frameworks = list(app.rglob("*.framework"))
     require({p.name for p in frameworks} == SHIPPED_FRAMEWORKS and
             all(p.parent == app / "Frameworks" for p in frameworks) and not list(app.rglob("*.dylib")),
-            "native framework allowlist matches the eight shipped frameworks")
+            "native framework allowlist matches the nine shipped frameworks")
 
 
 def no_app_extensions(app, info):
@@ -418,14 +418,20 @@ def verify_app(app, args):
           "Expo scene delegate class linked in the app executable")
     check(info.get("ITSAppUsesNonExemptEncryption") is False, "standard HTTPS encryption compliance")
     check("NSAppTransportSecurity" not in info, "no ATS exception")
-    # Current catalog app has no permission-gated features. This allow-list must
-    # be deliberately reviewed when a permission-requiring feature ships.
-    check(not any(re.fullmatch(r"NS.*UsageDescription", k) for k in info),
-          "no purpose strings for unshipped permission features")
+    purpose = "OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere."
+    check({k: v for k, v in info.items() if re.fullmatch(r"NS.*UsageDescription", k)} ==
+          {"NSLocationWhenInUseUsageDescription": purpose},
+          "exact foreground-only location purpose string; no other permissions")
+    check("location" not in info.get("UIBackgroundModes", []), "no background location mode")
+    privacy = plistlib.loads((app / "PrivacyInfo.xcprivacy").read_bytes())
+    check(privacy.get("NSPrivacyTracking") is False and
+          privacy.get("NSPrivacyCollectedDataTypes") == [] and
+          not privacy.get("NSPrivacyTrackingDomains"),
+          "app privacy manifest: no collected location or tracking")
     check(info.get("DTXcodeBuild") == args.xcode_build, "archive uses the selected release Xcode")
     check(no_app_extensions(app, info), "no app extensions")
     framework_allowlist(app)
-    check(True, "native framework allowlist matches the eight shipped frameworks")
+    check(True, "native framework allowlist matches the nine shipped frameworks")
     command("/usr/bin/codesign", "--verify", "--deep", "--strict", str(app))
     check(True, "code signatures valid")
     entitlements = plistlib.loads(command("/usr/bin/codesign", "-d", "--entitlements", ":-", str(app)))

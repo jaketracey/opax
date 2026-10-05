@@ -310,7 +310,7 @@ say their records are not linked in this release and link to the web; they do no
 claim those records are absent. Electorates show dated representation, elections,
 Census vintage and sources. Journeys 07–09 cover Your MP, profiles and electorates;
 12–14 cover Search, Today and About. The runner accepts 01–14 and rejects unknown
-numeric flows. Licensed postcode/location lookup, sign-in, voice, universal links
+numeric flows. Precise allocation with licensed postcode/location data, sign-in, voice, universal links
 and wider data coverage belong to their owning lanes.
 
 ## P0 catalog adapters (data only)
@@ -419,3 +419,7 @@ Surname person pages use the release's unique current ID holder (or sole histori
 holder); incompatible roster representations are refused, including the shared
 David/Dorinda Cox ID. Roster-only register results such as Mark Furner retain their
 directory link without inventing a canonical release ID.
+
+### Electorate outline and optional location
+
+The cached seat file now draws a tile-free Skia outline. Your MP can suggest a federal seat from one foreground location fix, entirely on the iPhone, with explicit confirmation. See [IOS-ELECTORATE-MAP.md](../docs/IOS-ELECTORATE-MAP.md) for display limitations, privacy, cache budget, download measurement and the compact-file proposal. Journey 24 sets a simulated fix per case through the harness; `OPAX_VERIFY_MAP_OFFLINE=1` adds a stopped-fixture map check.

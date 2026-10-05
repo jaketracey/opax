@@ -1,3 +1,4 @@
+import { LocationSuggestion } from './electorate-map/LocationSuggestion';
 import { formatDate } from '../design/format';
 import { useEffect, useState } from 'react';
 import { router } from 'expo-router';
@@ -196,6 +197,13 @@ export default function YourMP() {
           <Heading level={2}>
             {stateChoosing ? 'Choose your state electorate' : 'Find your MP'}
           </Heading>
+          {!stateChoosing && directory ? (
+            <LocationSuggestion
+              seats={directory.electorates.data.electorates}
+              onConfirm={(seat) => void choose(seat)}
+              disabled={saving}
+            />
+          ) : null}
           <Field
             label="Electorate or member’s name"
             testID="seat-search"

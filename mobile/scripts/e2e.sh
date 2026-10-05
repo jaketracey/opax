@@ -29,6 +29,7 @@ cleanup() {
     xcrun simctl ui "$UDID" appearance "$ORIGINAL_APPEARANCE" >> "$OUT/restore.log" 2>&1 || true
     xcrun simctl ui "$UDID" content_size >> "$OUT/restore.log" 2>&1 || true
     xcrun simctl ui "$UDID" appearance >> "$OUT/restore.log" 2>&1 || true
+    xcrun simctl location "$UDID" clear >> "$OUT/restore.log" 2>&1 || true
     xcrun simctl shutdown "$UDID" >> "$OUT/restore.log" 2>&1 || true
   fi
   # Record every executed retry, including a run that subsequently fails.
@@ -92,13 +93,29 @@ perl -e 'alarm 60; exec @ARGV' xcrun simctl terminate "$UDID" au.com.opax.app >>
 # script takes effect when the current run returns; TERM the lock's owner pid
 # (qa-locked.sh) to stop it at once.
 if [ "${#FLOWS[@]}" -gt 0 ]; then
-qa_paste_lock_run maestro --device "$UDID" test --test-output-dir "$OUT/maestro" --debug-output "$OUT/maestro" --format junit --output "$OUT/report.xml" -e EVIDENCE=screenshots -e REMOTE_SHARE_UI="${OPAX_REMOTE_SHARE_UI:-false}" "${FLOWS[@]}" > "$OUT/maestro.log" 2>&1 || { cat "$OUT/maestro.log" >&2; exit 1; }
+for journey in "${FLOWS[@]}"; do
+  case "$journey" in
+    .maestro/24-electorate-map*.yaml)
+      xcrun simctl privacy "$UDID" reset location au.com.opax.app
+      case "$journey" in
+        *-offshore.yaml) xcrun simctl location "$UDID" set -- -35,155 ;;
+        *) xcrun simctl location "$UDID" set -- -33.900123456,151.145123456 ;;
+      esac ;;
+  esac
+  journey_name=$(basename "$journey" .yaml)
+  qa_paste_lock_run maestro --device "$UDID" test --test-output-dir "$OUT/maestro" --debug-output "$OUT/maestro" --format junit --output "$OUT/$journey_name-report.xml" -e EVIDENCE=screenshots -e REMOTE_SHARE_UI="${OPAX_REMOTE_SHARE_UI:-false}" "$journey" >> "$OUT/maestro.log" 2>&1 || { cat "$OUT/maestro.log" >&2; exit 1; }
+done
 ./node_modules/.bin/tsx scripts/collect-screenshots.ts "$OUT/screenshots" "$OUT/maestro"
 fi
 if [ "$OFFLINE" = 1 ]; then
   kill "$FIXTURE_PID"; wait "$FIXTURE_PID" || true; FIXTURE_PID=
   qa_paste_lock_run maestro --device "$UDID" test --test-output-dir "$OUT/offline-maestro" --debug-output "$OUT/offline-maestro" --format junit --output "$OUT/offline-report.xml" -e EVIDENCE=screenshots -e REMOTE_SHARE_UI="${OPAX_REMOTE_SHARE_UI:-false}" .maestro/04-offline.yaml > "$OUT/offline-maestro.log" 2>&1 || { cat "$OUT/offline-maestro.log" >&2; exit 1; }
   ./node_modules/.bin/tsx scripts/collect-screenshots.ts "$OUT/screenshots" "$OUT/offline-maestro"
+fi
+if [ "${OPAX_VERIFY_MAP_OFFLINE:-0}" = 1 ]; then
+  kill "$FIXTURE_PID"; wait "$FIXTURE_PID" || true; FIXTURE_PID=
+  qa_paste_lock_run maestro --device "$UDID" test --test-output-dir "$OUT/map-offline-maestro" --debug-output "$OUT/map-offline-maestro" --format junit --output "$OUT/map-offline-report.xml" -e EVIDENCE=screenshots .maestro/support/electorate-map-offline.yaml > "$OUT/map-offline-maestro.log" 2>&1 || { cat "$OUT/map-offline-maestro.log" >&2; exit 1; }
+  ./node_modules/.bin/tsx scripts/collect-screenshots.ts "$OUT/screenshots" "$OUT/map-offline-maestro"
 fi
 if grep -Eq 'OUTSIDE_ALLOW_LIST|"allowed":false|opax\.com\.au' "$OUT/fixture.log"; then echo "Fixture request boundary failed" >&2; exit 1; fi
 kill "$AUDIT_PID"

@@ -1,0 +1,27 @@
+appId: au.com.opax.app
+name: 24 Permission denied keeps the chooser available
+---
+- launchApp:
+    clearState: true
+- tapOn:
+    id: tab-your-mp
+- scrollUntilVisible:
+    element:
+      id: use-my-location
+    direction: UP
+    centerElement: true
+    timeout: 300000
+- tapOn:
+    id: use-my-location
+- extendedWaitUntil:
+    visible: Allow Once
+    timeout: 15000
+- tapOn: Don’t Allow
+- extendedWaitUntil:
+    visible:
+      id: location-denied
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/24-permission-denied
+- runFlow:
+    file: support/location-manual-seat.yaml
+- takeScreenshot: ${EVIDENCE}/24-denied-manual

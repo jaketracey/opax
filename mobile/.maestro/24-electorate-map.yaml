@@ -1,0 +1,79 @@
+appId: au.com.opax.app
+name: 24 Electorate outline and on-device location suggestion
+---
+# Harness sets a Grayndler simulated fix and resets When In Use permission.
+- launchApp:
+    clearState: true
+- tapOn:
+    id: tab-your-mp
+- scrollUntilVisible:
+    element:
+      id: use-my-location
+    direction: UP
+    centerElement: true
+    timeout: 300000
+- tapOn:
+    id: use-my-location
+- extendedWaitUntil:
+    visible: Allow Once
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/24-location-purpose
+- tapOn: Allow Once
+- extendedWaitUntil:
+    visible:
+      id: location-confirm
+    timeout: 300000
+- scrollUntilVisible:
+    element:
+      id: location-suggestion
+    centerElement: true
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/24-suggestion
+- scrollUntilVisible:
+    element:
+      id: location-confirm
+    centerElement: true
+    timeout: 300000
+- tapOn:
+    id: location-confirm
+- extendedWaitUntil:
+    visible:
+      id: your-seat-name
+    timeout: 30000
+- assertVisible: Grayndler
+- scrollUntilVisible:
+    element:
+      id: your-electorate
+    centerElement: true
+    timeout: 300000
+- tapOn:
+    id: your-electorate
+- scrollUntilVisible:
+    element:
+      id: electorate-outline-drawn-pixels-[1-9][0-9]*
+    centerElement: true
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/24-native-outline
+- scrollUntilVisible:
+    element:
+      id: outline-label
+    centerElement: true
+    timeout: 300000
+- assertVisible: Display outline · AEC · 2025 election
+- takeScreenshot: ${EVIDENCE}/24-vintage
+- scrollUntilVisible:
+    element:
+      id: outline-limit
+    centerElement: true
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/24-allocation-warning
+- scrollUntilVisible:
+    element:
+      id: outline-source
+    centerElement: true
+    timeout: 300000
+- tapOn:
+    id: outline-source
+- assertVisible: https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip
+- takeScreenshot: ${EVIDENCE}/24-source
+- tapOn: OK
