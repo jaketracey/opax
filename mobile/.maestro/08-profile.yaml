@@ -6,22 +6,6 @@ name: 08 Independent profile blocks, current senator, former member and local sh
     env:
       NAME: Anthony Albanese
       SLUG: anthony-albanese
-# The portrait is deliberately hidden from VoiceOver beside the name. Its
-# visible credit appears after the reviewed bytes have reached the local cache.
-- scrollUntilVisible:
-    element:
-      id: person-portrait-attribution
-    centerElement: true
-    timeout: 300000
-- assertVisible: Official portrait.*CC BY-NC-ND 4.0.*
-- takeScreenshot: ${EVIDENCE}/08-official-credit
-- scrollUntilVisible:
-    element:
-      id: person-screen-title
-    direction: UP
-    centerElement: true
-    timeout: 300000
-- takeScreenshot: ${EVIDENCE}/08-official-portrait
 - runFlow:
     file: review-pages.yaml
     env:
@@ -59,6 +43,24 @@ name: 08 Independent profile blocks, current senator, former member and local sh
 - assertVisible: https://opax.invalid/subject/person/anthony-albanese
 - takeScreenshot: ${EVIDENCE}/08-share
 - tapOn: OK
+# The portrait is deliberately hidden from VoiceOver beside the name. Sweep
+# the existing record first, then return to its credit after the cold lookup.
+# Scrolling down immediately can pass the credit before it finishes loading.
+- scrollUntilVisible:
+    element:
+      id: person-portrait-attribution
+    direction: UP
+    centerElement: true
+    timeout: 300000
+- assertVisible: Official portrait.*CC BY-NC-ND 4.0.*
+- takeScreenshot: ${EVIDENCE}/08-official-credit
+- scrollUntilVisible:
+    element:
+      id: person-screen-title
+    direction: UP
+    centerElement: true
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/08-official-portrait
 - runFlow:
     file: 08-open-profile.yaml
     env:
@@ -74,9 +76,15 @@ name: 08 Independent profile blocks, current senator, former member and local sh
     env:
       NAME: Sheena Watt
       SLUG: sheena-watt
+- runFlow:
+    file: review-pages.yaml
+    env:
+      END: person-end
+      PREFIX: 08-watt
 - scrollUntilVisible:
     element:
       id: person-portrait-attribution
+    direction: UP
     centerElement: true
     timeout: 300000
 - assertVisible: Gabagool2005.*CC0.*Wikimedia Commons.*
@@ -88,11 +96,6 @@ name: 08 Independent profile blocks, current senator, former member and local sh
     centerElement: true
     timeout: 300000
 - takeScreenshot: ${EVIDENCE}/08-commons-portrait
-- runFlow:
-    file: review-pages.yaml
-    env:
-      END: person-end
-      PREFIX: 08-watt
 - runFlow:
     file: 06-open-profile.yaml
     env:
