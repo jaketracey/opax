@@ -823,6 +823,16 @@ class BundleAttackTests(unittest.TestCase):
                     verify.framework_allowlist(app)
                 plant.rmdir()
 
+    def test_analytics_check_reads_hermes_entries_and_still_refuses_sdk_and_host_plants(self):
+        storage = b"ignoreAllLogsENTRY_EXIT"
+        safe = hermes_bundle(storage, [packed(storage, entry) for entry in (b"ignoreAllLogs", b"ENTRY_EXIT")])
+        self.assertFalse(verify.has_analytics(safe))
+        for entry in (b"sentry", b"https://us.i.posthog.com/capture", b"HTTPS://API.HEAP.IO/track"):
+            with self.subTest(entry=entry):
+                self.assertTrue(verify.has_analytics(hermes_bundle(entry, [packed(entry, entry)])))
+        with self.assertRaises(ReleaseError):
+            verify.has_analytics(safe[:-1])
+
     def test_every_embedded_bundle_entitlement_payload_checked(self):
         with tempfile.TemporaryDirectory() as d:
             import plistlib

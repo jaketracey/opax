@@ -98,9 +98,14 @@ def has_loopback(body):
 
 
 def has_analytics(body):
-    return bool(SDK_PATTERN.search(body)) or any(
+    # Hermes packs adjacent/overlapping strings: ignoreAllLogs + ENTRY_EXIT
+    # contains raw "sENTRY" without any Sentry string or SDK. Inspect the same
+    # actual entries used by route/probe checks; malformed bytecode fails closed.
+    strings = hermes_strings(body)
+    entries = [body] if strings is None else [entry.encode("utf-8") for entry in strings]
+    return any(bool(SDK_PATTERN.search(entry)) or any(
         host == denied or host.endswith("." + denied)
-        for host in url_hosts(body) for denied in ANALYTICS_HOSTS)
+        for host in url_hosts(entry) for denied in ANALYTICS_HOSTS) for entry in entries)
 
 
 @lru_cache(maxsize=1)
