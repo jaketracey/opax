@@ -8,6 +8,7 @@ import { boundaryFiles } from './boundary-files';
 import { scanSwift } from './swift-boundary';
 import { scanNative } from './native-boundary';
 import {
+  assertNoE2ELaunchFlags,
   assertNoFixtureOrigin,
   assertNoVoiceFixtures,
 } from './release-bundle-policy';
@@ -38,6 +39,14 @@ for (const variant of ['production', 'e2e']) {
   );
   const native = introspected._internal.modResults.ios.infoPlist;
   assert(!native.NSMicrophoneUsageDescription);
+  // The app is light-only. expo-splash-screen switches the whole app to
+  // Automatic when a dark splash is configured, so guard the result.
+  assert.equal(
+    native.UIUserInterfaceStyle,
+    'Light',
+    'The app stays light-only',
+  );
+  assert.equal(native.UILaunchStoryboardName, 'SplashScreen');
   assert.deepEqual(native.UIApplicationSceneManifest, {
     UIApplicationSupportsMultipleScenes: false,
     UISceneConfigurations: {
@@ -203,6 +212,7 @@ if (productionIndex !== -1) {
       'Production bundle contains the design workbench',
     );
     assertNoVoiceFixtures(body);
+    assertNoE2ELaunchFlags(body);
     for (const testID of [
       'source-destination-url',
       'source-destination-scroll',

@@ -10,6 +10,9 @@ source scripts/qa-flows.sh
 qa_check_flow_selectors "$@" || exit 2
 PORT=${OPAX_FIXTURE_PORT:-8910}
 SIZE=${OPAX_CONTENT_SIZE:-large}
+# The app is light-only; dark is for checking the launch screen (journey 28b).
+APPEARANCE=${OPAX_APPEARANCE:-light}
+case "$APPEARANCE" in light|dark) ;; *) echo "OPAX_APPEARANCE must be light or dark" >&2; exit 1 ;; esac
 RUN=${OPAX_QA_RUN:-$(date -u +%Y%m%dT%H%M%SZ)-${UDID:0:8}-$SIZE}
 OUT="$PWD/private/qa/$RUN"
 mkdir -p "$OUT/screenshots" "$OUT/maestro"
@@ -60,7 +63,7 @@ boot_simulator "$UDID" > "$OUT/simulator.log" 2>&1
 ORIGINAL_SIZE=$(xcrun simctl ui "$UDID" content_size)
 ORIGINAL_APPEARANCE=$(xcrun simctl ui "$UDID" appearance)
 xcrun simctl ui "$UDID" content_size "$SIZE"
-xcrun simctl ui "$UDID" appearance light
+xcrun simctl ui "$UDID" appearance "$APPEARANCE"
 xcrun simctl install "$UDID" "$APP"
 OPAX_FIXTURE_PORT="$PORT" ./node_modules/.bin/tsx scripts/fixture-server.ts > "$OUT/fixture.log" 2>&1 &
 FIXTURE_PID=$!

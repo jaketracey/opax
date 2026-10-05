@@ -84,6 +84,25 @@ const config: ExpoConfig = {
     ['expo-router', { sitemap: variant !== 'production' }],
     './plugins/withSceneLifecycle.js',
     './plugins/withNetworkPolicy.js',
+    [
+      'expo-splash-screen',
+      {
+        // The star mark and the "OPAX" wordmark, centred on paper, with no
+        // other text. Rendered from assets/splash/*.svg by
+        // scripts/render-splash.swift. The lockup is 200pt wide;
+        // src/launch/LaunchHandoff.tsx draws the same image.
+        //
+        // No `dark` block: the app is light-only (UIUserInterfaceStyle Light)
+        // and iOS draws the launch screen in the app's style, so a dark splash
+        // could never show. The plugin would also switch the whole app to
+        // Automatic to make it show. The navy artwork (splash-dark) is
+        // rendered and ready for when a dark palette is approved.
+        backgroundColor: '#FAF9F6',
+        image: './assets/splash/splash@3x.png',
+        imageWidth: 200,
+        resizeMode: 'contain',
+      },
+    ],
     ['./plugins/withVoiceAutolinking.js', { variant }],
   ],
   extra: {

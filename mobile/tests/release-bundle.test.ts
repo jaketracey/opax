@@ -1,5 +1,6 @@
 import {
   assertNoFixtureOrigin,
+  assertNoE2ELaunchFlags,
   assertNoVoiceFixtures,
 } from '../scripts/release-bundle-policy';
 
@@ -36,3 +37,12 @@ test.each([
     /voice test material/,
   );
 });
+
+test.each(['OPAXWelcomeTour', '-OPAXWelcomeTour on'])(
+  'production rejects the e2e launch argument %s',
+  (marker) => {
+    expect(() => assertNoE2ELaunchFlags(Buffer.from(marker))).toThrow(
+      /e2e launch argument/,
+    );
+  },
+);

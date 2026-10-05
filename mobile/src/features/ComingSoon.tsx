@@ -1,5 +1,6 @@
 import { router } from 'expo-router';
 import { isProduction } from '../design/environment';
+import { showTour } from '../onboarding/state';
 import { Button, Group, Screen, Section, Text } from '../design/primitives';
 
 const independence =
@@ -48,6 +49,15 @@ export function AccountComingSoon() {
           label="About and sources"
           testID="account-about"
           onPress={() => router.push('/account/about')}
+        />
+        <Button
+          label="Replay welcome tour"
+          testID="account-replay-tour"
+          onPress={() => {
+            // The tour draws above the tabs, so the sheet closes first.
+            router.back();
+            showTour();
+          }}
         />
       </Section>
       {isProduction ? null : (
