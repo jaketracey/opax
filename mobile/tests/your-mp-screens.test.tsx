@@ -125,7 +125,8 @@ test('former roster identity never masquerades as a current affiliation', async 
     c.profileFor(former.canonicalPersonId!, catalogs),
   );
   const r = await render(<Person />);
-  expect(r.root.findByType(PartyLabel).props.current).toBe(false);
+  expect(r.root.findByType(PartyLabel).props.status).toBe('former');
+  expect(text(r)).toContain('Formerly Labor');
   expect(text(r)).toContain('Historical entitlements are listed below');
   await act(async () => r.unmount());
 });
@@ -228,7 +229,9 @@ test('roster-only member shows limited coverage without fabricating figures', as
   const r = await render(<Person />);
   expect(text(r)).toContain('Only the public directory identity');
   expect(mock.profileFor).not.toHaveBeenCalled();
-  expect(r.root.findByType(PartyLabel).props.current).toBe(false);
+  // No dated seat joins and the roster has no status: the party reads plainly.
+  expect(r.root.findByType(PartyLabel).props.status).toBe('unknown');
+  expect(text(r)).not.toContain('Formerly');
   await act(async () => r.unmount());
 });
 test('unverified private identity is refused before any name or profile blocks render', async () => {
@@ -354,7 +357,7 @@ test.each([
   },
 );
 
-test('Windsor is a former parliamentarian even without a representation row', async () => {
+test('Windsor has a profile even without a representation row', async () => {
   mockParams.slug = 'antony-windsor';
   const identity = c.joinPerson(
     mockParams.slug,
@@ -366,7 +369,8 @@ test('Windsor is a former parliamentarian even without a representation row', as
   mock.person.mockResolvedValue(result(identity));
   const r = await render(<Person />);
   expect(text(r)).toContain('Antony Windsor');
-  expect(r.root.findByType(PartyLabel).props.current).toBe(false);
+  expect(r.root.findByType(PartyLabel).props.status).toBe('unknown');
+  expect(text(r)).not.toContain('Formerly');
   expect(text(r)).toContain('does not link');
   expect(
     r.root.findAllByType(Button).some((n) => n.props.label === 'Try again'),

@@ -36,7 +36,7 @@ test.each([1, 1.786, 2.143, 2.643, 3.143, 3.571])(
         <PersonRow
           name="Anthony Albanese"
           party="Labor"
-          partyCurrent
+          partyStatus="current"
           place="Member for Grayndler · House of Representatives · New South Wales"
           detail="As at 4 September 2026"
           testID="electorate-member-anthony-albanese"

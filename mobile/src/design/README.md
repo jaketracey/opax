@@ -146,16 +146,26 @@ Design workbench) to see every component and state at the current text size.
 ## People
 
 - `PartyLabel`: 10pt dot plus the party exactly as the data names it, never
-  without its status. `current` is required: `current={false}` reads
-  "Formerly Labor" (a member no longer sitting, or a party the data does not
-  mark as current); `formerly="Nationals"` on a current party reads "One
-  Nation · formerly Nationals" (the web's wording). VoiceOver hears the same.
-  `dense` shows the web's short label (ALP, LIB, GRN) and still reads the full
-  name. A missing party reads "Party not recorded", with no dot. The profile
-  adapter supplies `partyCurrent` and `rosterParty`; compare names with
-  `samePartyLabel` (the web's).
+  without its status. `status` (`PartyStatus` from
+  `src/api/party-transforms.ts`) is required and has three values:
+  - `"current"` (a current dated seat, or a current APH roster row with
+    `party_now`) reads "Labor";
+  - `"former"` (the dated release says the last seat ended, or the roster
+    says the person is not current) reads "Formerly Labor";
+  - `"unknown"` (no dated seat and no roster status: most state members)
+    reads "Labor", plainly, as the web does. It never says "Formerly", and
+    never "sitting"; where a status word is needed, the neutral one is
+    "Parliamentarian".
+
+  `formerly="Nationals"` on a current or undated party reads "One Nation ·
+  formerly Nationals" (the web's wording). VoiceOver hears the same words in
+  every state. `dense` shows the web's short label (ALP, LIB, GRN) and still
+  reads the full name. A missing party reads "Party not recorded", with no
+  dot. The profile adapter (`personPartyFor`) supplies `partyStatus` and
+  `rosterParty`; compare names with `samePartyLabel` (the web's).
+
 - `PersonRow`: portrait, name, party, place, optional detail and chevron. A
-  `party` must come with `partyCurrent` (the type enforces it). One VoiceOver
+  `party` must come with `partyStatus` (the type enforces it). One VoiceOver
   element: "Anthony Albanese, Labor, Member for Grayndler · NSW". Pass
   `onPress` only for roster parliamentarians with a native page.
 - `Portrait`: **always the blank circle for now**, never initials. The

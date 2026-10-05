@@ -180,7 +180,7 @@ function ProfileScreen({ slug }: { slug: string }) {
               </Heading>
               <PartyLabel
                 party={identity.party}
-                current={identity.partyCurrent}
+                status={identity.partyStatus}
                 formerly={identity.formerly}
                 testID="person-party"
               />

@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useAccessibilitySize } from './accessibility';
 import { Icon } from './icon';
+import type { PartyStatus } from '../api/party-transforms';
 import { partyIdentity, partyText, type PartyContext } from './party';
 import { Text } from './text';
 import { nameProbeProps } from './text-probe';
@@ -39,14 +40,15 @@ export function Portrait({
 
 /**
  * Party identity: a 10pt dot plus the readable label, never colour alone, and
- * never without its context: a historical affiliation reads "Formerly Labor",
- * a sitting member who changed party reads "One Nation · formerly Nationals".
+ * never without its context: a known former member reads "Formerly Labor", a
+ * member who changed party reads "One Nation · formerly Nationals". A party
+ * the data does not date reads plainly ("Labor"), as on the web.
  * Dense rows can show the web's short label (ALP, LIB); VoiceOver still reads
  * the full name. An unrecorded party is said in words, with no dot.
  */
 export function PartyLabel({
   party,
-  current,
+  status,
   formerly,
   dense = false,
   testID,
@@ -55,7 +57,7 @@ export function PartyLabel({
   testID?: string;
 }) {
   const identity = partyIdentity(party);
-  const text = partyText({ party, current, formerly }, dense);
+  const text = partyText({ party, status, formerly }, dense);
   const tone = dense ? 'inkSoft' : 'ink';
   return (
     <View
@@ -84,12 +86,12 @@ export function PartyLabel({
 }
 
 // A party always travels with its status, so no row shows a historical
-// affiliation as if it were current.
+// affiliation as if it were current, or an undated one as if it were former.
 type PersonRowParty =
-  | { party?: undefined; partyCurrent?: undefined; formerly?: undefined }
+  | { party?: undefined; partyStatus?: undefined; formerly?: undefined }
   | {
       party: string | null | undefined;
-      partyCurrent: boolean;
+      partyStatus: PartyStatus;
       formerly?: string | null;
     };
 export type PersonRowProps = PersonRowParty & {
@@ -116,7 +118,7 @@ export function PersonRow({
   name,
   portrait,
   party,
-  partyCurrent,
+  partyStatus,
   formerly,
   place,
   detail,
@@ -128,7 +130,7 @@ export function PersonRow({
   const partyContext =
     party === undefined
       ? null
-      : { party, current: partyCurrent ?? false, formerly };
+      : { party, status: partyStatus ?? 'unknown', formerly };
   const label = [
     name,
     partyContext ? partyText(partyContext).spoken : null,

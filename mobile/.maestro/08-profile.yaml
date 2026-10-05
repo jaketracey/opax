@@ -74,6 +74,8 @@ name: 08 Independent profile blocks, current senator, former member and local sh
     env:
       NAME: Julia Gillard
       SLUG: julia-gillard
+      PARTY: Formerly Labor
+      NOT_PARTY: ^Labor$
 - runFlow:
     file: review-pages.yaml
     env:

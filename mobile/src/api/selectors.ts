@@ -135,7 +135,7 @@ export function searchPersonFor(
     return {
       name: identity.name,
       party: identity.party ?? undefined,
-      partyCurrent: identity.partyCurrent,
+      partyStatus: identity.partyStatus,
       formerly: identity.formerly,
       representation: identity.seats.length
         ? identity.seats.map((seat) => ({
@@ -323,7 +323,7 @@ export function profileFor(id: PersonId, catalogs: ProfileCatalogs) {
     canonicalPersonId: p.person_id,
     rosterPersonId: p.legacy_person_id ?? row?.pid,
     legacyPersonId: numericPersonId(p.legacy_person_id, row),
-    ...personPartyFor(seats, row, namedRow),
+    ...personPartyFor(p.electorates, row, namedRow),
     seats,
     sources: manifest.sources.filter((s) => p.sources.includes(s.source_id)),
     asOf: seats[0]?.as_of ?? roster.meta.generated,
