@@ -45,7 +45,10 @@ export function RepresentativeRows({
               <CachedPortrait name={r.person.name} slug={profile?.slug} />
             }
             party={profile?.party ?? r.party}
-            partyCurrent={profile?.partyCurrent ?? observations.length > 0}
+            partyStatus={
+              profile?.partyStatus ??
+              (observations.length > 0 ? 'current' : 'unknown')
+            }
             formerly={profile?.formerly}
             place={
               seat

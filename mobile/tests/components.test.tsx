@@ -220,7 +220,7 @@ describe('people', () => {
       <PersonRow
         name="Anthony Albanese"
         party="Labor"
-        partyCurrent
+        partyStatus="current"
         place="Member for Grayndler · NSW"
         onPress={() => undefined}
       />,

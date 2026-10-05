@@ -3,6 +3,7 @@
 Release tooling produces a production-only, signed App Store Connect IPA for
 `au.com.opax.app`, version `0.1.0`. Upload and TestFlight distribution are separate
 steps. Only the orchestrator uploads a commit that has passed the QA gate.
+App Store listing, review notes, questionnaires and gaps: [IOS-STORE.md](IOS-STORE.md).
 
 Use Node 24, npm 11, Python 3 with PyJWT, CocoaPods and the released Xcode at
 `/Applications/Xcode.app`. The tool checks the Xcode build against a reviewed
