@@ -292,13 +292,15 @@ export function PartySplits({
           .
         </Text>
       ) : null}
-      {splits.folded.map((split) => (
-        <InlineLink
-          key={split.party}
-          label={splitLabel(split)}
-          onPress={() => router.push(partyRoute(split.label))}
-        />
-      ))}
+      {splits.folded
+        .filter((split) => !notParty.has(split.party.trim()))
+        .map((split) => (
+          <InlineLink
+            key={split.party}
+            label={splitLabel(split)}
+            onPress={() => router.push(partyRoute(split.label))}
+          />
+        ))}
       {splits.notes.length ? (
         <Text variant="fine">{splits.notes.join(' · ')}</Text>
       ) : null}
@@ -508,15 +510,21 @@ export function Bullet({ children }: { children: string }) {
 /** A party dot and its label as the record names it (no current/former claim). */
 export function RecordedParty({ party }: { party: string }) {
   const identity = partyIdentity(party);
+  const recorded = identity.recorded && !notParty.has(party.trim());
+  const Container = recorded ? Pressable : View;
   return (
-    <Pressable
+    <Container
       style={[styles.party, { minHeight: minimumTarget }]}
-      accessibilityRole="link"
+      {...(recorded
+        ? {
+            accessibilityRole: 'link' as const,
+            accessibilityHint: 'Opens the party record',
+            onPress: () => router.push(partyRoute(identity.name)),
+          }
+        : {})}
       accessibilityLabel={identity.name}
-      accessibilityHint="Opens the party record"
-      onPress={() => router.push(partyRoute(identity.name))}
     >
-      {identity.color ? (
+      {recorded && identity.color ? (
         <View
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
@@ -526,7 +534,7 @@ export function RecordedParty({ party }: { party: string }) {
       <Text wordSafe variant="metadata" style={styles.grow}>
         {identity.name}
       </Text>
-    </Pressable>
+    </Container>
   );
 }
 

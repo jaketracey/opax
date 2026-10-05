@@ -4,6 +4,7 @@ import TestRenderer from 'react-test-renderer';
 import { router } from 'expo-router';
 import { catalogs as runtime } from '../src/api/runtime';
 import { Catalogs } from '../src/api/catalogs';
+import { PartySplits, RecordedParty } from '../src/features/bills/parts';
 import { PartyPage } from '../src/features/Party';
 import { PartyLabel, PersonRow } from '../src/design/people';
 import { openOnWeb } from '../src/navigation/external';
@@ -90,6 +91,47 @@ test('profile chips and grouped person-row VoiceOver actions open the same nativ
     }),
   );
   expect(router.push).toHaveBeenLastCalledWith(partyRoute('Labor'));
+  act(() => r.unmount());
+});
+test('bill links exclude presiding roles and unrecorded affiliations, including folded splits', () => {
+  // UI-only synthetic parties and anonymous roles; no public person's votes
+  // or bill record is changed. These rare role codes are register fields.
+  const row = (party: string, label: string, ayes = 1) => ({
+    party, label, ayes, noes: 0,
+  });
+  const splits = {
+    drawn: Array.from({ length: 5 }, (_, i) =>
+      row(`Fixture party ${i + 1}`, `Fixture party ${i + 1}`, 5),
+    ),
+    folded: [
+      row('Fixture small party', 'Fixture small party'),
+      row('PRES', 'Presiding officer'),
+      row('SPK', 'Speaker'),
+      row('', 'Not recorded'),
+    ],
+    max: 5, notes: [], recorded: true,
+  };
+  let r!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    r = TestRenderer.create(
+      <PartySplits splits={splits} basisNote="" testID="splits" />,
+    );
+  });
+  press(r, 'splits');
+  const links = r.root.findAll(
+    (n) => typeof n.type === 'string' && n.props.accessibilityRole === 'link',
+  );
+  expect(links).toHaveLength(6);
+  for (const link of links)
+    expect(link.props.accessibilityLabel).not.toMatch(
+      /^(Presiding officer|Speaker|Not recorded)/,
+    );
+  for (const party of [' ', 'PRES', 'SPK']) {
+    act(() => r.update(<RecordedParty party={party} />));
+    expect(
+      r.root.findAll((n) => n.props.accessibilityRole === 'link'),
+    ).toHaveLength(0);
+  }
   act(() => r.unmount());
 });
 test('member disclosure opens native profiles; the total and every block have provenance', async () => {
