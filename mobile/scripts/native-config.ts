@@ -3,6 +3,8 @@ import { execFileSync } from 'node:child_process';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import config from '../app.config';
+import { policy } from '../plugins/voiceProduction';
+const productionVoice = config.extra?.productionVoiceEnabled === true;
 const plist = JSON.parse(
   execFileSync(
     '/usr/bin/plutil',
@@ -10,9 +12,9 @@ const plist = JSON.parse(
     { encoding: 'utf8' },
   ),
 );
-assert(
-  !plist.NSMicrophoneUsageDescription,
-  'Microphone permission is deferred',
+assert.equal(
+  plist.NSMicrophoneUsageDescription,
+  productionVoice ? policy.microphonePurpose : undefined,
 );
 if (config.extra?.variant === 'production') {
   assert(
@@ -22,9 +24,35 @@ if (config.extra?.variant === 'production') {
   assert(
     readFileSync('ios/Podfile', 'utf8').includes(
       "use_expo_modules! :exclude => ['opax-voice']",
-    ),
-    'Production excludes both voice pods',
+    ) === !productionVoice,
+    'Production voice pods follow the build-time switch',
   );
+  const lock = readFileSync('ios/Podfile.lock', 'utf8');
+  for (const name of ['OpaxVoice', 'OpaxVoiceCore'])
+    assert.equal(
+      new RegExp(`^  - ${name} \\(`, 'm').test(lock),
+      productionVoice,
+      `${name} linking`,
+    );
+  if (productionVoice) {
+    assert.equal(plist.OPAXProductionVoiceEnabled, true);
+    assert.equal(plist.OPAXVoiceConsentDefault, false);
+    assert.deepEqual(plist.OPAXVoiceAllowedRoutes, policy.routes);
+    for (const name of ['OpaxVoice', 'OpaxVoiceCore']) {
+      const settings = readFileSync(
+        `ios/Pods/Target Support Files/${name}/${name}.release.xcconfig`,
+        'utf8',
+      );
+      assert(
+        settings.includes('OPAX_VOICE_PRODUCTION'),
+        `${name} production compile gate`,
+      );
+      assert(
+        !/OPAX_VOICE_E2E|\bDEBUG\b/.test(settings),
+        `${name} has no synthetic compile gate`,
+      );
+    }
+  }
 } else if (config.extra?.variant === 'e2e')
   assert.equal(
     plist.OPAXVoiceFixturePort,

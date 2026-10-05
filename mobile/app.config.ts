@@ -1,9 +1,15 @@
 import type { ExpoConfig } from 'expo/config';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import {
+  policy,
+  productionVoiceEnabled,
+  voicePrivacyManifest,
+} from './plugins/voiceProduction';
 
 type Variant = 'development' | 'e2e' | 'production';
 const variant = (process.env.OPAX_VARIANT ?? 'development') as Variant;
+const productionVoice = productionVoiceEnabled(variant);
 const buildNumber = process.env.OPAX_BUILD_NUMBER ?? '1';
 if (!/^[1-9][0-9]*$/.test(buildNumber)) {
   throw new Error('OPAX_BUILD_NUMBER must be a positive integer');
@@ -103,10 +109,13 @@ const config: ExpoConfig = {
         resizeMode: 'contain',
       },
     ],
-    ['./plugins/withVoiceAutolinking.js', { variant }],
+    ['./plugins/withVoiceAutolinking.js', { variant, productionVoice }],
   ],
   extra: {
     variant,
+    ...(productionVoice
+      ? { productionVoiceEnabled: true, voiceConsentDefault: false }
+      : {}),
     apiOrigin: origin,
     webOrigin,
     appVersion: '0.1.0',
@@ -121,4 +130,17 @@ const config: ExpoConfig = {
   },
   updates: { enabled: false },
 };
+// Merge after the base config so independent on-device location declarations
+// and existing required-reason entries survive their lane's integration.
+if (productionVoice && config.ios) {
+  config.ios.privacyManifests = voicePrivacyManifest(
+    config.ios.privacyManifests,
+  );
+  Object.assign((config.ios.infoPlist ??= {}), {
+    NSMicrophoneUsageDescription: policy.microphonePurpose,
+    OPAXProductionVoiceEnabled: true,
+    OPAXVoiceConsentDefault: policy.consentDefault,
+    OPAXVoiceAllowedRoutes: policy.routes,
+  });
+}
 export default config;

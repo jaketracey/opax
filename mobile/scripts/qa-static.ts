@@ -7,11 +7,13 @@ import { scanSecrets } from './secret-boundary';
 import { boundaryFiles } from './boundary-files';
 import { scanSwift } from './swift-boundary';
 import { scanNative } from './native-boundary';
+import { policy, productionVoiceEnabled } from '../plugins/voiceProduction';
 import {
   assertNoE2ELaunchFlags,
   assertNoFixtureOrigin,
   assertNoVoiceFixtures,
 } from './release-bundle-policy';
+const productionVoice = productionVoiceEnabled('production');
 function config(variant: string) {
   return JSON.parse(
     execFileSync(
@@ -38,7 +40,16 @@ for (const variant of ['production', 'e2e']) {
     ),
   );
   const native = introspected._internal.modResults.ios.infoPlist;
-  assert(!native.NSMicrophoneUsageDescription);
+  assert.equal(
+    native.NSMicrophoneUsageDescription,
+    variant === 'production' && productionVoice
+      ? policy.microphonePurpose
+      : undefined,
+  );
+  if (variant === 'production' && productionVoice) {
+    assert.equal(native.OPAXVoiceConsentDefault, false);
+    assert.deepEqual(native.OPAXVoiceAllowedRoutes, policy.routes);
+  }
   // The app is light-only. expo-splash-screen switches the whole app to
   // Automatic when a dark splash is configured, so guard the result.
   assert.equal(
@@ -99,7 +110,12 @@ for (const app of [release, e2e]) {
   assert.equal(app.version, '0.1.0');
   assert.equal(app.ios.bundleIdentifier, 'au.com.opax.app');
   assert.equal(app.ios.buildNumber, process.env.OPAX_BUILD_NUMBER ?? '1');
-  assert(!app.ios.infoPlist.NSMicrophoneUsageDescription);
+  assert.equal(
+    app.ios.infoPlist.NSMicrophoneUsageDescription,
+    app.extra.variant === 'production' && productionVoice
+      ? policy.microphonePurpose
+      : undefined,
+  );
   assert.equal(app.updates.enabled, false);
   // SDK 57's built-in deployment target; the scene plugin passes no deprecated
   // expo-build-properties target.
@@ -211,8 +227,13 @@ if (productionIndex !== -1) {
       !body.includes(Buffer.from('OPAX_DESIGN_WORKBENCH')),
       'Production bundle contains the design workbench',
     );
-    assertNoVoiceFixtures(body);
+    assertNoVoiceFixtures(body, productionVoice);
     assertNoE2ELaunchFlags(body);
+    execFileSync(
+      'python3',
+      ['scripts/verify-ios-release.py', '--bundle-only', path],
+      { stdio: 'pipe' },
+    );
     for (const testID of [
       'source-destination-url',
       'source-destination-scroll',

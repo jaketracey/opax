@@ -2,22 +2,35 @@ import Foundation
 import OpaxVoiceCore
 
 private struct BridgeConsent: VoiceConsent {
+    let store = StoredVoiceConsent()
     func isGranted() async -> Bool {
         #if OPAX_VOICE_E2E && targetEnvironment(simulator)
         return true // Synthetic fixture consent only. Never ships in production.
+        #elseif OPAX_VOICE_PRODUCTION
+        return await store.isGranted()
         #else
         return false // Voice UI must implement explicit consent before enabling calls.
         #endif
     }
 }
 private struct DeferredMicrophonePermission: MicrophonePermission {
-    func request() async -> Bool { false }
+    func request() async -> Bool {
+        #if OPAX_VOICE_PRODUCTION
+        guard Bundle.main.object(forInfoDictionaryKey: "OPAXProductionVoiceEnabled") as? Bool == true,
+              let purpose = Bundle.main.object(forInfoDictionaryKey: "NSMicrophoneUsageDescription") as? String,
+              !purpose.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return false }
+        return await AppleMicrophonePermission().request()
+        #else
+        return false
+        #endif
+    }
 }
 
 /// Exactly one core and authenticated client per Expo module instance.
 actor VoiceController {
     let call: VoiceCallController
     private let http: VoiceHTTPClient
+    private let consentSource = BridgeConsent()
     init() {
         let policy: RoutePolicy
         let engines: any VoiceEngineFactory
@@ -34,6 +47,11 @@ actor VoiceController {
         audioSession = DebugSilentAudioSession()
         store = InMemoryCredentialStore()
         #else
+        #if OPAX_VOICE_PRODUCTION
+        // CNG metadata and compiled native routes must agree before any I/O.
+        precondition(RoutePolicy.productionConfigurationMatches(Bundle.main.infoDictionary ?? [:]),
+                     "Invalid production voice configuration")
+        #endif
         policy = RoutePolicy()
         engines = AppleVoiceEngineFactory()
         permission = DeferredMicrophonePermission()
@@ -44,8 +62,13 @@ actor VoiceController {
         let http = VoiceHTTPClient(policy: policy, store: store, transport: transport)
         self.http = http
         call = VoiceCallController(http: http, relays: URLSessionRelayFactory(session: transport, policy: policy),
-            engines: engines, permission: permission, consent: BridgeConsent(),
+            engines: engines, permission: permission, consent: consentSource,
             audioSession: audioSession, lifecycle: AppleVoiceLifecycle())
+    }
+    func consent() async -> Bool { await consentSource.store.isGranted() }
+    func setConsent(_ granted: Bool) async {
+        await consentSource.store.setGranted(granted)
+        if !granted { await call.withdrawConsent() }
     }
     func snapshot() async -> [String: Any] { VoiceBridgeValue.success(VoiceBridgeValue.snapshot(await call.snapshot())) }
     func status() async -> [String: Any] {

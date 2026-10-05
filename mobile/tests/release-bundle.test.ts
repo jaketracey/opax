@@ -10,7 +10,7 @@ test('production bundle rejects the configured non-default fixture port', () => 
   ).toThrow(/configured fixture port/);
   expect(() =>
     assertNoFixtureOrigin(Buffer.from('release :8910'), '8953'),
-  ).not.toThrow();
+  ).toThrow(/fixture port/);
   expect(() =>
     assertNoFixtureOrigin(Buffer.from('fixture :8910'), '8910'),
   ).toThrow(/configured fixture port/);

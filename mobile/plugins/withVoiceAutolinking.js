@@ -3,7 +3,7 @@ const { withPodfile } = require('expo/config-plugins');
 // Supported use_expo_modules! exclusion is propagated to Expo's resolver and
 // generated module provider. Both podspecs belong to the local opax-voice module.
 const declaration = "use_expo_modules! :exclude => ['opax-voice']";
-function configurePodfile(contents, variant) {
+function configurePodfile(contents, variant, productionVoice = false) {
   const pattern =
     /^([ \t]*)use_expo_modules!(?: :exclude => \['opax-voice'\])?[ \t]*$/gm;
   const matches = [...contents.matchAll(pattern)];
@@ -14,14 +14,21 @@ function configurePodfile(contents, variant) {
   return contents.replace(
     pattern,
     (_match, indent) =>
-      indent + (variant === 'production' ? declaration : 'use_expo_modules!'),
+      indent +
+      (variant === 'production' && !productionVoice
+        ? declaration
+        : 'use_expo_modules!'),
   );
 }
-module.exports = function withVoiceAutolinking(config, { variant }) {
+module.exports = function withVoiceAutolinking(
+  config,
+  { variant, productionVoice = false },
+) {
   return withPodfile(config, (mod) => {
     mod.modResults.contents = configurePodfile(
       mod.modResults.contents,
       variant,
+      productionVoice,
     );
     return mod;
   });
