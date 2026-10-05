@@ -33,6 +33,8 @@ name: 24 Electorate outline and on-device location suggestion
 - scrollUntilVisible:
     element:
       id: location-suggestion
+    # At AX5, centering Confirm has scrolled the preceding message above it.
+    direction: UP
     centerElement: true
     timeout: 300000
 - takeScreenshot: ${EVIDENCE}/24-suggestion
