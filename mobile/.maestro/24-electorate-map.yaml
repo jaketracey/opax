@@ -19,6 +19,10 @@ name: 24 Electorate outline and on-device location suggestion
 - extendedWaitUntil:
     visible: Allow Once
     timeout: 15000
+- scrollUntilVisible:
+    element: Allow Once
+    centerElement: true
+    timeout: 300000
 - takeScreenshot: ${EVIDENCE}/24-location-purpose
 - tapOn: Allow Once
 - scrollUntilVisible:

@@ -18,6 +18,10 @@ name: 24 Offshore has no match and the manual chooser works
 - extendedWaitUntil:
     visible: Allow Once
     timeout: 15000
+- scrollUntilVisible:
+    element: Allow Once
+    centerElement: true
+    timeout: 300000
 - tapOn: Allow Once
 - scrollUntilVisible:
     element:

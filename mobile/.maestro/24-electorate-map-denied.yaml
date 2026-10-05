@@ -18,6 +18,10 @@ name: 24 Permission denied keeps the chooser available
 - extendedWaitUntil:
     visible: Allow Once
     timeout: 15000
+- scrollUntilVisible:
+    element: Don’t Allow
+    centerElement: true
+    timeout: 300000
 - tapOn: Don’t Allow
 - scrollUntilVisible:
     element:
