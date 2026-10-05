@@ -8,6 +8,10 @@ import { firstLineVerdict, type Ocr } from './first-line-policy';
 
 const SOURCE = 'scripts/ocr-lines.swift';
 const BINARY = 'build/qa-tools/ocr-lines';
+// Bounded, so a stuck compiler or recogniser fails the run instead of
+// holding it: a first compile takes about 3s and a recognition under 1s.
+const COMPILE_TIMEOUT_MS = 180_000;
+const OCR_TIMEOUT_MS = 60_000;
 
 /** Compiles the recogniser once per source revision. */
 function recogniser(): string {
@@ -23,6 +27,7 @@ function recogniser(): string {
     mkdirSync('build/qa-tools', { recursive: true });
     execFileSync('xcrun', ['swiftc', '-O', SOURCE, '-o', BINARY], {
       stdio: ['ignore', 'ignore', 'inherit'],
+      timeout: COMPILE_TIMEOUT_MS,
     });
     writeFileSync(stamp, digest);
   }
@@ -36,7 +41,10 @@ const binary = recogniser();
 let failed = 0;
 for (const screenshot of screenshots) {
   const ocr = JSON.parse(
-    execFileSync(binary, [screenshot], { encoding: 'utf8' }),
+    execFileSync(binary, [screenshot], {
+      encoding: 'utf8',
+      timeout: OCR_TIMEOUT_MS,
+    }),
   ) as Ocr;
   const verdict = firstLineVerdict(ocr);
   if (!verdict.pass) failed++;
