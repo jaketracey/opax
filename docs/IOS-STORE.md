@@ -8,10 +8,13 @@ Written 5 October 2026. This document prepares the first App Store submission of
 - Apple's [App Review Guidelines](https://developer.apple.com/app-store/review/guidelines/), "Last Updated: June 8, 2026", and the App Store Connect help pages linked in each section, read on 5 October 2026.
 - The App Store Connect record, read with GET requests only on 5 October 2026. The record exists as "OPAX" with primary language English (Australia). Version 1.0 is in Prepare for Submission. Subtitle, description, keywords, promotional text, support URL, marketing URL, privacy policy URL, copyright, categories, content rights, the age rating questionnaire and the App Review information are all empty. Builds 1 and 2 are valid and report `usesNonExemptEncryption: false`. The App Privacy answers are not readable through the API and were not checked.
 - The live website, read on 5 October 2026: `/about` and `/methods` load; `/privacy`, `/support` and `/contact` return 404.
+- Round 2, the same day: the account lane (`ios/account-ui` at `cf720317`), the portraits lane (`ios/portraits` at `9bfa6825`), the voice lane's uncommitted worktree (`ios/talk-sheet`), [PHOTOS.md](PHOTOS.md) and the portrait scripts.
 
 Related documents: [IOS-APP.md](IOS-APP.md) (decisions, sections 6 and 11), [IOS-UX.md](IOS-UX.md) (sections 6 and 8), [IOS-RELEASE.md](IOS-RELEASE.md) (build and TestFlight tooling).
 
-**Status in one line.** The listing copy, review notes and questionnaire answers below are ready to enter. Submission is blocked by seven gaps in section 6: a published contact and support page, a deployed privacy policy, placeholder sheets in the production build, the privacy label inputs, the rights review, unentered metadata, and the version number.
+**Status in one line.** The listing copy, review notes and questionnaire answers below describe the read-only v1 and are ready to enter. Submission is blocked by seven gaps in section 6: a published contact and support page, a deployed privacy policy, placeholder sheets in the production build, the privacy label inputs, confirmation of the content rights answer, unentered metadata, and the version number. Official parliamentary portraits are a separate risk (R8).
+
+**Scope.** v1 is Today, Your MP, member profiles, electorates, Bills, Search, and About and sources. Talk to OPAX (voice) and Account (sign-in by code, sign-out, deletion) are being built on `ios/talk-sheet` and `ios/account-ui` for development and e2e builds only; production builds keep them out until Jake approves the consent step, the microphone purpose string and decision 5. Nothing in sections 1 to 8 presents them as v1 features. Section 9 is a separate, conditional variant for the release that adds voice.
 
 ## 1. Listing copy
 
@@ -76,7 +79,7 @@ The app needs no account and has no advertising, in-app purchases or analytics.
 
 | Claim | Evidence |
 | --- | --- |
-| Read without an account; no sign-in in this build | `mobile/src/features/ComingSoon.tsx:33` (signing in is not in this version); no credential on public requests (`mobile/src/api/client.ts:126`, `credentials: 'omit'`) |
+| Read without an account; no sign-in in this build | No sign-in screen in production: `mobile/src/features/ComingSoon.tsx:33` at `a8bec98f`, and on `ios/account-ui` the production twin `mobile/src/features/account/entry.production.tsx` with the sign-in files on `mobile/scripts/production-block-list.json`; no credential on public requests (`mobile/src/api/client.ts:126`, `credentials: 'omit'`) |
 | Search by electorate or member name; federal member and senators | `mobile/src/features/YourMP.tsx:200` (field "Electorate or member’s name"), `:457` ("Your senators") |
 | State members only where a verified roster exists | `mobile/src/features/YourMP.tsx:479-528`; `mobile/src/api/selectors.ts:1085-1087` |
 | Choice saved on the iPhone | `mobile/src/features/your-mp/choice-store.ts:3` (document file `opax-seat-v1.json`); on-screen text `YourMP.tsx:210` |
@@ -110,7 +113,7 @@ App Store Connect says the support URL "must lead to actual contact information 
 - A monitored contact email address for support, corrections and privacy requests (one address can serve all three), plus whatever postal address or phone number legal advice says is needed.
 - How to report a data error: what to include (the page or record link, what is wrong, the source that shows it) and what happens next. The same route serves corrections and, once voice ships, "Report this answer" (IOS-APP.md decision 11).
 - The independence statement, word for word as in the app.
-- Short answers: no account needed to read; where the data comes from, with links to Methods and source terms; how current it is (each block's as-at line); why a portrait can be a blank circle (only openly licensed portraits are shown); why state members appear for some states only (verified rosters).
+- Short answers: no account needed to read; where the data comes from, with links to Methods and source terms; how current it is (each block's as-at line); why a portrait can be a blank circle (no portrait the app can show for that member); why state members appear for some states only (verified rosters).
 - Supported devices: iPhone, iOS 18.4 or later (`mobile/app.config.ts:62-63`).
 - Links to the privacy policy (`/privacy`), Methods (`/methods`) and the source code repository.
 
@@ -122,14 +125,16 @@ The site is a single-page app, so `/support` needs a panel, a route, a sitemap e
 
 ### 2.1 Notes to paste
 
-These notes assume gap B3 is fixed, so the production build has no Talk sheet and no sign-in text. If a build still shows them, replace the second paragraph with: "The Talk button and the Account sheet show that voice and sign-in are not in this version. They have no other function." The text is 2,845 bytes of the 4,000 the Notes field allows.
+These notes describe the read-only v1 build with the portraits lane in it, and assume gap B3 is fixed, so the production build shows no Talk button and no sign-in text. If a build still shows the placeholder sheets, add to the second paragraph: "The Talk button and the Account sheet only say that these features are not in this version." The text is 3,000 bytes of the 4,000 the Notes field allows.
 
 ```text
 OPAX is a free, read-only reader for the public record of Australian politics. No account, sign-in or demo account is needed. The app has no in-app purchases, advertising, analytics or tracking.
 
-This version contains Today, Your MP, member profiles, electorates, Bills and Search, plus About and sources. Voice and sign-in are not in this version and are not in the build.
+This version contains Today, Your MP, member profiles, electorates, Bills and Search, plus About and sources. It has no sign-in and no account features.
 
 Content. The app shows public records published by Australian parliaments and public agencies: recorded divisions, registers of members' interests, pay entitlements set by the Remuneration Tribunal, expenses reported by the Independent Parliamentary Expenses Authority, federal bills, and electorate and election results. Blocks name their source and how current they are. Native profiles exist only for members of parliament on OPAX's verified roster, as public office holders, and cover their official records. Other people named in public records do not get a profile in the app.
+
+Portraits. Member photos from Wikimedia Commons are shown with the author, the licence and a link to the file. A member without one shows a blank circle.
 
 Machine-written text. Bill summaries and speech briefs were written in advance by a language model and stored. The app labels them "Machine summary" or "Machine brief" with an attribution line, and it makes no AI or model requests.
 
@@ -139,7 +144,7 @@ OPAX is independent and non-partisan. It is not a government app and is not affi
 
 Walkthrough (about three minutes, no account):
 1. The app opens on Today: the independence line, the latest daily edition, recently introduced bills and recent declarations.
-2. Your MP tab: type an electorate such as Grayndler and tap it. The screen shows the seat, its member and senators. Tap the member's name for the profile: voting record, declared interests, pay, expenses and party receipts. The Share button is at the top right.
+2. Your MP tab: type an electorate such as Grayndler and tap it. The screen shows the seat, its member and senators. Tap the member's name for the profile: portrait and its credit, voting record, declared interests, pay, expenses and party receipts. The Share button is at the top right.
 3. On Your MP, tap "Electorate record": representatives, elections (tap "Candidates and recorded votes"), Census context and sources.
 4. Bills tab: search by title or tap Filters (status, chamber, year). Open a bill: a labelled machine summary, key dates, divisions with party splits, speeches and the Act it became.
 5. Search tab: type a surname. Suggestions appear for people, electorates and bills. Submit to search; the "Kind" menu switches between People, Declared interests, Pay and Expenses.
@@ -152,6 +157,8 @@ Contact for this review: [review contact name, email and phone]. Support and cor
 ```
 
 The bracketed contact is the App Review contact, which App Store Connect also asks for separately (name, email, phone in international format).
+
+**Conditional on Jake's portrait choice (section 3.4).** Only if official portraits are switched on (option a or b), add after the Portraits paragraph: "Official portraits from the Parliament of Australia are shown with an 'Official portrait' credit and a link to their CC BY-NC-ND 4.0 licence." Voice additions are in section 9 and apply only if voice ships.
 
 ### 2.2 Sources and licences, as the app states them
 
@@ -166,7 +173,8 @@ From the About and sources screen (`mobile/src/features/About.tsx:203-285`). The
 | Independent Parliamentary Expenses Authority | Claimed expenses | CC BY 3.0 AU (data.gov.au) |
 | Remuneration Tribunal | Pay entitlements | Entitlements set by instrument, not payslips; refer to each record's terms |
 | Electorates release (boundaries, elections, Census) | Electorate records | Per source, shown with each record (`mobile/src/api/selectors.ts:1088-1095`) |
-| Wikimedia Commons portraits | Member portraits | Shown only under CC BY, CC BY-SA, CC0 or public domain, with credit and licence link (`selectors.ts:223-238`, `Person.tsx:231-263`). Official APH portraits are never displayed (`selectors.ts:210-220`) |
+| Wikimedia Commons portraits | Member portraits (profile credit block, not About) | Each file's own licence, shown with the author and links to the licence and file page. At `a8bec98f` only CC BY, CC BY-SA, CC0 and public domain files are shown (`selectors.ts:223-238`, `Person.tsx:231-263`); the portraits lane shows every Commons file with its licence (`ios/portraits`, `selectors.ts:239-255`). Rights by source: section 3.4 |
+| Parliament of Australia official portraits (via OpenAustralia) | Member portraits | CC BY-NC-ND 4.0. Not displayed at `a8bec98f` (`selectors.ts:210-220`). Planned for the submission build: off, a blank circle, until Jake chooses an option in section 3.4 |
 | Merriweather, Public Sans | Fonts | SIL Open Font License 1.1; notices in the app (`About.tsx:318-348`) |
 | OPAX code | The app | AGPL-3.0, with a link to the repository (`About.tsx:279-285`) |
 
@@ -234,7 +242,28 @@ Content counts below use the repository copy of `portal/public/bills/index.json`
 App Store Connect asks whether the app "contain[s], show[s], or access[es] third-party content" and, if so, whether it has "all the necessary rights to that content" ([app information](https://developer.apple.com/help/app-store-connect/reference/app-information/app-information)). The field is empty today.
 
 - **First answer: yes**, the app contains third-party content: the sources in section 2.2.
-- **Second answer: PENDING** the rights review (IOS-APP.md decision 13). Do not assert the rights until it is done. The questions it has to settle are in gap B5.
+- **Second answer: PENDING confirmation.** Jake decided IOS-APP.md decision 13 on 5 October 2026 ("portraits OK"; section 3.4). Decision 13 also listed the data licences for app distribution and the AGPL question for code reused from the web. The decision as relayed does not mention those, so confirm that it covers them before asserting the rights (gap B5). Answering yes does not settle the official portrait crops, which stay a risk (R8).
+
+### 3.4 Rights under guideline 5.2, by source
+
+Guideline 5.2: "Make sure your app only includes content that you created or that you have a license to use"; 5.2.1: apps "should be submitted by the person or legal entity that owns or has licensed the intellectual property". 2.3.9 applies the same to screenshots.
+
+**Decision 13, portraits (Jake, 5 October 2026: "portraits OK").** The app shows official parliamentary portraits unaltered, with an "Official portrait" credit and a licence link (CC BY-NC-ND 4.0 for the Parliament of Australia), cached unaltered and only scaled for display. A portraits lane is building this for build 3 or 4.
+
+**What "unaltered" means here.** The app shows the website's own files, byte for byte, only scaled: the portraits lane accepts nothing but the website's 200x200 WebP (`mobile/src/api/portrait-policy.ts:1,16-40` on `ios/portraits`). The website's files are themselves crops of the originals, so the question is what the website did to each source. Creative Commons 4.0, section 2(a)(4), lets a licensee use the work in any medium or format and make "technical modifications necessary to do so", and says "simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material": resizing is one. A crop changes the work, which makes it an adaptation. CC BY and CC BY-SA allow adaptations with attribution (and share-alike for BY-SA). CC BY-NC-ND allows sharing only unadapted copies.
+
+| Source | Files on the website | Licence | What the website did to the file | What that means | App plan for the submission build | Status |
+| --- | --- | --- | --- | --- | --- | --- |
+| Parliament of Australia official portraits, fetched from OpenAustralia by person_id | 551 numeric keys in `portal/public/photos/` | CC BY-NC-ND 4.0, site-wide on aph.gov.au (PHOTOS.md:13,106-107) | Centre-square crop nudged up 10 %, then resized to 200x200 (`scripts/backfill_photos_oa.py:29`; PHOTOS.md:76-77). The script's docstring says the earlier set from the APH image API has the same 200x200 centre-square form (`backfill_photos_oa.py:2`) | The crop is an adaptation of no-derivatives material. Resizing alone would not be | Off: a blank circle, until Jake chooses (a) show the website's crops, (b) regenerate resized-only files from uncropped originals, or (c) keep them off | **RISK (R8)**, on the website today as well, until (b) is done. Not resolved by decision 13 |
+| Wikimedia Commons, the file named by Wikidata for the member | 298 `wd-` keys | Per file, from `credits.json`: CC BY-SA (2.0 to 4.0, including 2.5 and 3.0 AU) 167, CC BY (1.0 to 4.0, including 3.0 AU) 98, CC0 19, public domain 10, GFDL 1.2 2, "copyrighted free use" 2. None is no-derivatives | Face-aware square crop (2.6 times the largest face), resized to 200x200 (`scripts/recrop_commons_portraits.py:54-59`; PHOTOS.md:95-100) | An adaptation, which these licences allow with attribution; BY-SA crops are offered under the same licence, with the `credits.json` entry as the notice (PHOTOS.md:108-113) | On, with the author, licence and links to the licence and file page on the profile (`ios/portraits`, `selectors.ts:239-255`; `mobile/src/design/README.md:171-172` there) | OK. Small follow-ups in N6 |
+
+Points to carry with the APH options:
+
+- **Option (b) needs app changes too.** The portraits lane accepts only 200x200 files (`portrait-policy.ts:39-40` on `ios/portraits`), and it draws every portrait inside a circle that clips the square's corners (`mobile/src/design/people.tsx:45-59` there: `borderRadius` with `overflow: 'hidden'`). A resized-only official portrait is not square, so the size check and the circle both have to change for it to be shown whole. Whether a circular mask on a no-derivatives image counts as an alteration is a question for whoever advises on the rights; showing official portraits uncropped avoids it.
+- **The lane does not yet switch by source.** At `9bfa6825` the portraits lane marks both sources `website-file` and shows official portraits with the "Official portrait" credit (`selectors.ts:226-235` there). The by-source plan above (official portraits off) must be in the gated build before submission.
+- **The originals.** Regenerating under (b) needs the uncropped originals, which are probably on the desktop PC (not reachable on 5 October); OpenAustralia has been behind a Cloudflare challenge since at least 12 September 2026 (PHOTOS.md:23-24).
+
+**Data and code.** The data licences are in section 2.2. Hansard and the House and Senate registers carry non-commercial, no-derivatives terms; Queensland's register has no verified licence; machine summaries of explanatory memoranda and briefs of speeches may count as adaptations; the code is AGPL-3.0. The app is free, with no advertising or purchases. These stay with gap B5 until Jake confirms decision 13 covers them. The app bundles no parliament logo, crest or party logo (`mobile/assets` holds only the icon and fonts), and the icon is a gold map of Australia on navy (`mobile/assets/icon/icon.png`).
 
 ## 4. Privacy nutrition label draft
 
@@ -254,7 +283,7 @@ Apple defines collection as "transmitting data off the device in a way that allo
 | `/api/person-slugs`, `/api/app/v1/edition/latest` | GET with no user input | Logged URL holds nothing about the reader | None | `policy.ts:22,80-88` |
 | IP address on each request | Read by Cloudflare's per-address rate limiters over 60-second windows; may appear in Workers Logs (P5) and security analytics (P6) | Rate limiter counts cover 60-second windows; logs and analytics unconfirmed | **PENDING P5, P6.** Apple has no IP data type and says to "declare the relevant data types based on how you use IP address". OPAX derives no location or identifier from it, so no type applies unless Jake treats retained logs as Other Data | Privacy page draft, "Reading the record"; IOS-APP.md section 6 |
 | Seat choice | Nothing; a file in the app's documents | On device only | None | `mobile/src/features/your-mp/choice-store.ts:3-17` |
-| Offline cache | Nothing; responses saved in the app's cache directory, at most 12 MB | On device only | None | `mobile/src/api/disk-store.ts:15`; `mobile/src/api/cache.ts:43` |
+| Offline cache | Nothing; responses saved in the app's cache directory, at most 12 MB. The portraits lane also keeps the website's portrait files, unaltered, in a cache of its own | On device only | None | `mobile/src/api/disk-store.ts:15`; `mobile/src/api/cache.ts:43`; `mobile/src/api/portrait-disk-store.ts` on `ios/portraits` |
 | Search results | Nothing further; kept in memory for the session | Not saved | None | `cache.ts:134` (`memoryOnly`); About `:305-308` |
 | Share | The system share sheet gets a canonical URL and a title built on the phone; no page or image fetch | No | None | `mobile/src/navigation/share.ts:17-38` |
 | opax.com.au pages | Opened in Safari, outside the app | The website's own analytics apply to Safari, as for any visit | None for the app. Apple's web-view rule covers web traffic inside the app | `external.ts:317-329` (`Linking.openURL`) |
@@ -299,7 +328,7 @@ Sign-in and voice add Email Address, User ID, Audio Data, Other User Content and
 
 ## 5. Screenshot plan
 
-No captures in this pass. Captures happen after the build 3 QA gate, on simulators the OPAX orchestrator assigns.
+No captures in this pass. Captures happen on simulators the OPAX orchestrator assigns, after the QA gate passes a build that contains the portraits lane (build 3 or 4). Frames show portraits, and screenshots must match the app (guideline 2.3), so capturing from a build without portraits, or before the official-portrait switch lands, would have to be redone.
 
 ### 5.1 Required sizes
 
@@ -315,23 +344,24 @@ From [Screenshot specifications](https://developer.apple.com/help/app-store-conn
 - **Build.** A production-variant build, so no Development section or fixture origin can appear. An e2e build with a pinned snapshot is acceptable for frames that never open the Account sheet, which shows a "Development" section outside production (`ComingSoon.tsx:53-63`).
 - **Device state.** Light appearance (the app is light only, `app.config.ts:52`), default text size, language and region English (Australia), status bar overridden to 9:41 with full signal and battery.
 - **Neutrality.** Frames 2 to 4 use two sitting members from different parties, neither a party leader nor a minister, and no frame shows a block that reads as a verdict on a person. Choose frames whose senator lists and party splits include Labor, the Coalition and the crossbench, following the balance rule in IOS-UX.md section 6.
-- **Rights and audience.** No official APH portraits (the app never displays them, `selectors.ts:210-220`). A Commons portrait appears only with its credit in the same frame; otherwise choose a member whose profile shows the blank circle. No member who has died. No coat of arms, crest or party logo (the app bundles none: `mobile/assets` holds only the icon and fonts). Guideline 2.3.8 asks for 4+ suitable screenshots, so no bill about crime, firearms or gambling appears in a frame.
+- **Portraits.** Plan every frame so it does not depend on official portraits, which are off in the submission build (section 3.4). Use members whose portrait is a Wikimedia Commons file under CC BY, CC BY-SA, CC0 or public domain (not GFDL or "copyrighted free use"), or frames with no portrait in view. Most sitting federal members have official portraits and will show a blank circle; federal members with a `wd-` key in `photos/people.json`, mostly members first elected in 2025, have Commons portraits (PHOTOS.md:14). Under each Commons portrait in a frame, add a credit line outside the device image: "Photo: [author], [licence], via Wikimedia Commons" (2.3.9). If Jake later switches official portraits on, recapture any frame where a blank circle would become a portrait.
+- **Rights and audience.** No member who has died. No coat of arms, crest or party logo (the app bundles none: `mobile/assets` holds only the icon and fonts). Guideline 2.3.8 asks for 4+ suitable screenshots, so no bill about crime, firearms or gambling appears in a frame.
 - **Captions** sit above the device image in Public Sans, plain sentence case, no claims beyond what the frame shows (guideline 2.3.3 allows text overlays).
 
 ### 5.3 Frames
 
 | # | Screen | Data state | Caption (words) | Journey or fixture |
 | --- | --- | --- | --- | --- |
-| 1 | Your MP, seat chosen | A federal House seat with its member and that state's senators, from several parties; the Change seat button visible | Find your MP and senators (5) | `.maestro/07-your-mp.yaml`, with the seat chosen under the neutrality rule |
-| 2 | Member profile, top | Member A: name, party label, seat, as-at line, voting record with recorded divisions, ayes and noes | A member’s recorded votes (4) | `.maestro/08-profile.yaml` |
+| 1 | Your MP, seat chosen | A federal House seat whose member has a Commons portrait; that state's senators from several parties, with portraits or blank circles exactly as the build shows them; the Change seat button visible | Find your MP and senators (5) | `.maestro/07-your-mp.yaml`, with the seat chosen under the neutrality and portrait rules |
+| 2 | Member profile, top | Member A, with a Commons portrait and its credit line under the frame: name, party label, seat, as-at line, voting record with recorded divisions, ayes and noes | A member’s recorded votes (4) | `.maestro/08-profile.yaml` |
 | 3 | Member profile, declared interests | Member A: declared interests counts and Declared ties with source footer | Declared interests from the registers (5) | `.maestro/08-profile.yaml`, scrolled to `person-interests` |
-| 4 | Member profile, pay and expenses | Member B (another party): Pay for the posts held and Claimed expenses by year, as-at lines visible | Pay and expenses, as reported (5) | `.maestro/08-profile.yaml` with member B |
+| 4 | Member profile, pay and expenses | Member B (another party), scrolled so no portrait is in view: Pay for the posts held and Claimed expenses by year, as-at lines visible | Pay and expenses, as reported (5) | `.maestro/08-profile.yaml` with member B |
 | 5 | Bills list | Latest activity first, one filter chip applied, count line visible | Follow federal bills (3) | `.maestro/10-bills.yaml` |
 | 6 | Bill detail, divisions | A passed bill on an uncontroversial subject, with a division and party splits expanded; machine summary label visible above or in a second take | Divisions and party splits (4) | `.maestro/11-bill-detail.yaml`, with a bill chosen under the rights and audience rule (its current fixture is a gambling bill) |
 | 7 | Electorate | Representatives, an election with candidates expanded, Census context heading | Electorates, elections and Census (4) | `.maestro/09-electorate.yaml` |
-| 8 | Search results (optional) | People kind, a common surname with results from several parties | Search people, interests, pay (4) | `.maestro/12-search.yaml` |
+| 8 | Search results (optional) | People kind, a common surname with results from several parties; portraits or blank circles as the build shows them, with credit lines for any Commons portrait in view | Search people, interests, pay (4) | `.maestro/12-search.yaml` |
 
-Today is left out because its daily edition changes every day and some editions compare parties.
+Today is left out because its daily edition changes every day and some editions compare parties. Frames 5 to 7 have no portrait in view unless the build draws one in a row; if it does, the portrait rules apply.
 
 ## 6. Gap list
 
@@ -343,9 +373,9 @@ Ranked: **blocker** (submission should not go ahead), **risk** (could draw a rej
 | --- | --- | --- | --- | --- |
 | B1 | 1.5, 2.1(a); decision 12 | No contact or support page. The app's About screen says "A corrections and contact address will be added here when it is confirmed." The live About page says "OPAX has no dedicated inbox" and points to GitHub issues. `/support` and `/contact` return 404 | `About.tsx:295-300`; live `/about` | Publish a monitored contact address and `/support` (section 1.2); put the address in About's "Corrections and contact"; use the page as the support URL |
 | B2 | 5.1.1(i) | No privacy policy at the URL the listing needs. `/privacy` returns 404; the draft cannot deploy until its 16 placeholders are filled. The app links to `/community?view=privacy`, the older account privacy view | `About.tsx:312-316`; section 4.5 | Fill P1 to P16, deploy the page, enter `https://opax.com.au/privacy` in App Store Connect, change the app link to `/privacy` |
-| B3 | 2.1(a) ("placeholder text ... should be scrubbed"), 2.3.1(a), 2.3 | Production builds show a Talk button on every tab's root screen that opens "Talk to OPAX is not in this version of the app yet", and an Account sheet that says "Signing in is not in this version of the app yet". About's privacy text describes voice data the build does not collect and says IP retention "is not yet confirmed" | `mobile/src/navigation/chrome.ts:47-65` (not gated by build variant), applied to the four root screens in `mobile/src/app/(tabs)/(today,your-mp,bills,search)/_layout.tsx:18-35`; `ComingSoon.tsx:14,33`; `About.tsx:295-310` | In production builds, hide Talk until voice ships and present the Account button as About; remove the pending sentences. The voice module itself is already excluded from production (`withVoiceAutolinking.js:17`) |
+| B3 | 2.1(a) ("placeholder text ... should be scrubbed"), 2.3.1(a), 2.3 | Production builds show a Talk button on every tab's root screen that opens "Talk to OPAX is not in this version of the app yet", and an Account sheet that says "Signing in is not in this version of the app yet". About's privacy text describes voice data the build does not collect and says IP retention "is not yet confirmed" | `mobile/src/navigation/chrome.ts:47-65` (not gated by build variant), applied to the four root screens in `mobile/src/app/(tabs)/(today,your-mp,bills,search)/_layout.tsx:18-35`; `ComingSoon.tsx:14,33`; `About.tsx:295-310` | In production builds, hide Talk until voice ships and present the Account button as About; remove the pending sentences. The voice module itself is already excluded from production (`withVoiceAutolinking.js:17`). The voice and account lanes keep these same placeholders as their production twins (`mobile/src/features/account/entry.production.tsx` on `ios/account-ui`; `TalkScreen.production.tsx` in the uncommitted `ios/talk-sheet` worktree), so the fix has to land separately |
 | B4 | 5.1.1, 2.3 (privacy information is metadata); decision 14 | The App Privacy answers cannot be final. Catalog search words reach Workers Logs in the URL, and IP retention in logs and analytics is unconfirmed | Section 4; `portal/wrangler.jsonc:32-35` | Answer P5 and P6, then choose "Data Not Collected" or declare Search History (section 4.3). Alternatively stop logging the query string on `/api/search-all`, which would keep "Data Not Collected" |
-| B5 | 5.2, 5.2.1, 5.2.2; content rights; decision 13 | No rights review yet. Hansard and the House and Senate registers carry non-commercial, no-derivatives terms; Queensland's register has no verified licence; the code is AGPL-3.0. The app is free, with no ads or purchases. It shows registers as extracted facts with links, and machine-written summaries of explanatory memoranda and briefs of speeches. It never displays official APH portraits, only Commons portraits under open licences with credit, and bundles no parliament logo or crest | `About.tsx:203-285`; `selectors.ts:210-238`; `mobile/assets` (icon and fonts only); the icon is a gold map of Australia on navy (`mobile/assets/icon/icon.png`) | Before submission, settle: App Store distribution under the non-commercial terms; whether machine summaries and briefs are adaptations under no-derivatives terms; the unlicensed Queensland register; the AGPL question for code reused from the web. Then answer content rights (section 3.3) |
+| B5 | 5.2, 5.2.1, 5.2.2; content rights; decision 13 | Content rights cannot be asserted yet. Decision 13 was decided for portraits on 5 October 2026 (section 3.4). It also covered the data licences for app distribution and the AGPL question, which the decision as relayed does not mention: Hansard and the House and Senate registers carry non-commercial, no-derivatives terms; Queensland's register has no verified licence; machine summaries of explanatory memoranda and briefs of speeches may count as adaptations; the code is AGPL-3.0. The app is free, with no ads or purchases, and bundles no parliament logo or crest | Section 3.4; `About.tsx:203-285`; `mobile/assets` (icon and fonts only) | Jake confirms that decision 13 covers the data licences and the AGPL question, or settles them; then answer content rights (section 3.3). The official portrait crops stay a separate risk (R8) |
 | B6 | 2.1(a) ("all necessary metadata"), 2.3 | App Store Connect metadata is empty: subtitle, description, keywords, support URL, privacy policy URL, copyright, categories, age rating, content rights, App Review contact and notes, screenshots | App Store Connect read, 5 October 2026 | Enter sections 1 to 3 once B1, B2 and B5 settle; capture section 5 after the build 3 gate |
 | B7 | Build selection | The App Store version in App Store Connect is 1.0; the app's version is 0.1.0. App Store Connect files builds under their version number and asks you to choose from the builds uploaded for the version, so a 0.1.0 build is not expected to be offered for version 1.0 (section 8) | `mobile/app.config.ts:49`; IOS-RELEASE.md; App Store Connect read | Choose the release version. Recommended: build the submission as 1.0.0 (app config and release tooling), since guideline 2.2 keeps betas off the App Store and a 0.1 version reads as one; or rename the App Store version to 0.1.0 |
 
@@ -360,6 +390,7 @@ Ranked: **blocker** (submission should not go ahead), **risk** (could draw a rej
 | R5 | 2.4.1 | The app is iPhone only. App Review can run iPhone apps on iPad in compatibility mode, and App Store Connect has availability settings for offering iPhone apps on Apple silicon Macs and Apple Vision Pro | `app.config.ts:63` | Run the release build once on an iPad simulator before submission; turn off Mac and Vision Pro availability unless tested |
 | R6 | 5.1.1, App Privacy (web traffic) | The source-link checker accepts opax.com.au addresses, so a catalog source link on the site itself would open in the in-app Safari view and load the website's analytics inside the app. Whether any catalog row carries such a link is unverified | `external.ts:238-264` | Route opax.com.au hosts through the Safari hand-off (`openOnWeb`) in `openSource` |
 | R7 | Availability; App Store Connect Digital Services Act field | Distribution in the European Union needs a Digital Services Act trader declaration, and a trader's contact details are shown on EU product pages. The content is Australian | App Store Connect help, [app information](https://developer.apple.com/help/app-store-connect/reference/app-information/app-information) | Recommended: make v1 available in Australia only. Otherwise answer the trader question |
+| R8 | 5.2, 5.2.1; 2.3.9 | Official parliamentary portraits are CC BY-NC-ND 4.0, and all 551 website files are centre-square crops resized to 200x200: a crop is an adaptation, which no-derivatives terms do not allow. This is a risk on the website today as well. The submission build is planned to show them off (blank circle), but at `9bfa6825` the portraits lane still shows them; the app also clips each portrait to a circle | Section 3.4; `scripts/backfill_photos_oa.py:29`; PHOTOS.md:13,76-77; on `ios/portraits`: `selectors.ts:226-235`, `portrait-policy.ts:39-40`, `people.tsx:45-59` | Ship the build with official portraits off. Jake chooses (a) the website's crops, which keeps this risk, (b) resized-only files regenerated from uncropped originals, shown whole rather than clipped to a circle, or (c) keep them off. Stays a risk until (b) is done. Under (c) the app shows none, but the website's crops remain a risk |
 
 ### Not applicable to this build, and when they start to apply
 
@@ -379,6 +410,7 @@ Ranked: **blocker** (submission should not go ahead), **risk** (could draw a rej
 | N3 | Accessibility Nutrition Labels | Optional in App Store Connect | Fill after the AX5 release gate passes, from its evidence |
 | N4 | Marketing page | None | `/app` page as in section 1.2 |
 | N5 | Promotional text | Not set | Can change without a new build; use it for coverage news, such as a new state roster |
+| N6 | Commons portrait follow-ups | The portraits lane shows every Commons file. Two are GFDL 1.2, whose modified versions must carry the GFDL text, and two are "copyrighted free use", whose terms vary by file. CC BY 4.0 asks a reuser to indicate changes; the credit does not say the photo is cropped. List rows show portraits without a credit line, as the website does, with the credit one tap away on the profile | Keep the four GFDL and free-use files off in the app (or ship the GFDL text), and add "cropped" to the Commons credit line |
 
 ### Decisions 11 to 15 at a glance
 
@@ -386,7 +418,7 @@ Ranked: **blocker** (submission should not go ahead), **risk** (could draw a rej
 | --- | --- |
 | 11, guideline 4.7 | Not applicable until voice ships (table above) |
 | 12, support URL and contact | Blocker B1 |
-| 13, rights review | Blocker B5; content rights (section 3.3) |
+| 13, rights review | Decided for portraits on 5 October 2026 (section 3.4). Blocker B5 until Jake confirms it covers the data licences and the AGPL question; official portrait crops are risk R8 |
 | 14, privacy label inputs | Blocker B4; section 4 |
 | 15, notice about people who have died | Nice-to-have N1; description (section 1.1) |
 
@@ -398,12 +430,14 @@ Only Jake can give these. Specifics are kept outside the repository.
 2. The responsible entity: the seller and copyright name, the privacy policy's owner, and the App Review contact person (sections 1, 2.1, 4.4).
 3. The facts behind the privacy page placeholders, first the log and analytics retention ones (P5, P6) that decide the label, then the rest so the page can deploy (B2, B4).
 4. Approval to deploy the privacy page and a support page on opax.com.au, and the production-build change that hides the voice and sign-in placeholders (B1 to B3).
-5. The rights review and who does it (B5).
-6. The release version number for the App Store (B7).
-7. The age rating judgement calls: confirm 9+ (section 3.1).
-8. Availability: Australia only, or wider with the trader declaration (R7).
-9. Whether to add the notice about people who have died, and its wording (N1).
-10. Final choices: subtitle, secondary category.
+5. Confirmation that decision 13 also covers the data licences and the AGPL question, or a decision on them (B5).
+6. Official parliamentary portraits: option (a) the website's crops, (b) resized-only files from uncropped originals, which also needs the originals, or (c) keep them off; and whether to keep the four GFDL and free-use Commons files off (R8, N6).
+7. The release version number for the App Store (B7).
+8. The age rating judgement calls: confirm 9+ (section 3.1).
+9. Availability: Australia only, or wider with the trader declaration (R7).
+10. Whether to add the notice about people who have died, and its wording (N1).
+11. Final choices: subtitle, secondary category.
+12. Only if voice ships (section 9): approval of the consent step, the microphone purpose string and decision 5; how App Review gets a sign-in code for a demo account; decision 11.
 
 ## 8. Claims not verified in this pass
 
@@ -415,4 +449,81 @@ Only Jake can give these. Specifics are kept outside the repository.
 - **Age rating.** The 9+ result is read from Apple's published table; App Store Connect computes the real one. Title counts come from the repository copy of the bills index, not the live file.
 - **Support page contact requirements.** Which of address, email and phone Australian law requires is a legal question.
 - **Screens on a device.** No simulator or device run was made in this pass; walkthrough steps come from the code and the Maestro journeys.
+- **Official portraits off by source.** The plan to ship official portraits off comes from the OPAX orchestrator; no commit I could read implements it (`9bfa6825` shows them).
+- **The first 201 official portraits.** That they were cropped like the rest rests on the backfill script's docstring and the orchestrator's check of the 551 files; the script that made them was not read.
+- **Circular display.** Whether clipping a no-derivatives image to a circle counts as an alteration is a legal question.
+- **Voice and account labels (section 9).** Account labels are from `ios/account-ui` at `cf720317`; Talk labels are from uncommitted work on `ios/talk-sheet` and from IOS-UX.md 4.10 to 4.12, and may change.
 - **App Privacy answers already in App Store Connect.** Not readable through the API.
+
+## 9. If voice ships: conditional variant (not v1)
+
+**Everything in this section is conditional.** It applies only to a later release that adds Talk to OPAX and Account, and only after Jake approves the consent step, the microphone purpose string and decision 5 (account deletion policy), with decision 8 (provider settings), decision 11 (guideline 4.7) and the privacy placeholders P10 to P14 settled. Until then none of it goes into App Store Connect, and sections 1 to 8 stand as written.
+
+The lanes are `ios/talk-sheet` (voice sheet; uncommitted on 5 October 2026) and `ios/account-ui` (`cf720317`: sign-in by emailed code, sign-out, deletion). Both build for development and e2e only, and production resolves the existing placeholders instead (`mobile/src/features/account/entry.production.tsx` and `mobile/scripts/production-block-list.json` on `ios/account-ui`).
+
+### 9.1 Listing deltas
+
+| Field | Change | Count |
+| --- | --- | --- |
+| Subtitle, keywords | No change | 29 of 30; 95 of 100 bytes |
+| Promotional text | Replace with: "Find your MP and senators and see their votes, declared interests, pay and expenses. Follow federal bills, or ask OPAX about the public record by voice." | 152 of 170 |
+| Description | Add the paragraph below after "Search", and replace the last line with "Reading needs no account. The app has no advertising, in-app purchases or analytics." | 2,879 of 4,000; 3,003 with the decision 15 notice |
+
+```text
+Talk to OPAX
+Ask about the public record by voice and hear answers with links to the records they draw on. Voice needs a free OPAX account, which you can delete in the app. A free account includes 10 minutes of voice time in total. Before your first call, OPAX asks your permission to send your voice and the words of the conversation to ElevenLabs, its third-party voice provider. Answers may be mistaken: check the linked records.
+```
+
+Evidence: the assistant answers from the public record and cites sources (IOS-APP.md section 1); 600 seconds per ordinary account (IOS-APP.md section 5); consent before the first call, ElevenLabs as the receiver, and the disclosure line "Answers may be mistaken; check the linked records" (IOS-UX.md 4.10); deletion in the app (`mobile/src/features/account/copy.ts` on `ios/account-ui`, "Delete account").
+
+### 9.2 Review note additions
+
+Add after the walkthrough, replacing "It has no sign-in and no account features." in the second paragraph with "Only Talk to OPAX needs an account; everything else works signed out.", and drop walkthrough step 7 (offline) to stay within the limit: the notes then come to 3,866 bytes of the 4,000 allowed, before the bracketed items are filled. Bracketed items need Jake; keep the demo account text short.
+
+```text
+Talk to OPAX (voice): tap Talk (waveform icon) at the top right of a tab's first screen.
+1. Tap "Sign in to talk for free", enter the demo email, tap "Send code", enter the 8-digit code [how the reviewer receives it] and tap "Sign in".
+2. The one-time consent step says voice and the words of the conversation go to ElevenLabs, a third-party AI provider. Tap "Agree and start" ("Not now" uses no time).
+3. Allow the microphone when iOS asks.
+4. Tap "Start talking" and ask, for example, "Who represents Grayndler?" Captions and Sources appear; "Type instead" sends text. Tap "End call".
+5. Deletion: person icon, "Delete account". The screen lists what is deleted and kept; enter the deletion code emailed to the account. The app signs out.
+Demo account: [email], [n] minutes of voice time; deleting it ends the demo: [reset arrangement].
+The assistant runs on OPAX's server and answers from OPAX's public record. [Guideline 4.7 statement, per decision 11.]
+```
+
+Labels come from `copy.ts` on `ios/account-ui` ("Sign in for voice", "Send code", "Sign in", "Delete account", "8-digit deletion code") and from IOS-UX.md 4.10 to 4.12 and the uncommitted `ios/talk-sheet` work ("Sign in to talk for free", "Agree and start", "Not now", "Start talking", "End call", "Type instead"). Recheck them against the build being submitted.
+
+**Microphone purpose string** (`NSMicrophoneUsageDescription`, draft in the privacy page notes at `89781797`; adopt only once P10 is confirmed): "OPAX uses the microphone only during a voice call you start. Your speech is sent to ElevenLabs, OPAX's voice provider, to understand and answer you. OPAX keeps no recordings."
+
+**Account deletion, guideline 5.1.1(v).** "If your app supports account creation, you must also offer account deletion within the app." The account lane's flow: "Delete account", a screen listing what is deleted and what is kept, an emailed eight-digit deletion code, then "Account deleted" and signed out (`copy.ts` on `ios/account-ui`). What is kept (voice time records without a member link, other members' replies) follows decision 5, which is still Jake's.
+
+### 9.3 Privacy label changes
+
+From [IOS-VOICE.md, section 6](IOS-VOICE.md#6-store-and-privacy-notes) and the privacy page draft. "Data Not Collected" no longer applies.
+
+| Apple data type | Collected | Linked | Tracking | Purpose | Why |
+| --- | --- | --- | --- | --- | --- |
+| Contact Info: Email Address | Yes | Yes | No | App Functionality | Sign-in by emailed code; stored with the account |
+| Identifiers: User ID | Yes | Yes | No | App Functionality | Member ID on sessions and voice rows |
+| User Content: Audio Data | Yes, provisionally | Yes | No | App Functionality | The voice leaves the phone during a call, through OPAX's relay to ElevenLabs. Recording is documented as off (P10, unverified live); declaring it is the safe reading for a third-party AI |
+| User Content: Other User Content | Yes | Yes | No | App Functionality | The words of the conversation, spoken or typed with "Type instead", go to ElevenLabs, which is documented as keeping transcripts for one day (P10). The app shows captions and does not store them |
+| Usage Data: Product Interaction | Yes | Yes | No | App Functionality | Voice seconds and times, kept for the lifetime allowance |
+
+The privacy manifest gains the matching `NSPrivacyCollectedDataType` entries, and the voice tool's searches reach Progress through OPAX's server, as the privacy page draft says. The session token stays in the Keychain on the device (IOS-APP.md section 5). The search-words question in section 4 (P5) still applies.
+
+### 9.4 Age rating and export compliance
+
+- **Age rating: no change expected.** The questionnaire has no AI or chatbot question (IOS-VOICE.md section 6). The reader talks to an assistant, not to another user, so messaging and chat and user-generated content stay No; the assistant answers from the same record. If App Review applies guideline 4.7 (decision 11), 4.7.5 requires an age restriction mechanism: revisit age assurance and the minimum age (P14) then.
+- **Export compliance: no change.** The voice module uses the operating system's TLS (`URLSessionWebSocketTask`, `mobile/modules/opax-voice/ios/OpaxVoiceCore/Sources/OpaxVoiceCore/Relay.swift:54`) and the Keychain (`Credentials.swift:35-52` there), with no cryptography library. `ITSAppUsesNonExemptEncryption` stays false.
+
+### 9.5 Voice gaps to close before that release
+
+| ID | Gap | Fix |
+| --- | --- | --- |
+| V1 | Demo account (2.1(a)): sign-in codes go by email, which a reviewer cannot read | Jake picks a route: a mailbox the reviewer can open, a review account with a fixed code (a Worker change needing review and his OK), or a demo mode, which needs Apple's prior approval under 2.1(a) |
+| V2 | Guideline 4.7 (decision 11) | Ask App Review first; if it applies, filtering, reporting, blocking, consent in each instance, a universal-link index (W17) and an age restriction follow |
+| V3 | The purpose string is stripped and refused today | `mobile/plugins/withNetworkPolicy.js:6` deletes it and `mobile/scripts/verify-ios-release.py:423` refuses any purpose string; both change with the voice release, after Jake approves the text |
+| V4 | Consent and privacy copy rest on P10 to P13 and the privacy page | Confirm the provider settings (decision 8), fill the placeholders, deploy the page |
+| V5 | Deletion policy (decision 5) and the Worker's deletion and sign-in routes | Jake's decision; confirm the routes are live in production before review |
+| V6 | Review traffic spends real voice time: 600 seconds per account, within a shared 40,000-second monthly budget and two concurrent calls (IOS-APP.md section 5) | Give the demo account enough time, or an operator-approved unlimited allowance |
+| V7 | Screenshots and B3 | Undo the B3 placeholder fix (Talk and Account return as real features) and recapture any frame whose navigation bar changes; consider a Talk frame |
