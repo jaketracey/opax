@@ -1,9 +1,9 @@
 {
-  "version": "2026-10-05",
-  "expected_resources": 728772,
+  "version": "2026-10-06",
+  "expected_resources": 728783,
   "expected_resources_breakdown": {
-    "live_index_before_refresh": 728771,
-    "new_press_release_resources": 1
+    "live_index_before_refresh": 728772,
+    "new_press_release_resources": 11
   },
   "collected_speeches": 691104,
   "sources": [
@@ -64,7 +64,7 @@
     },
     {
       "name": "Prime Minister transcripts and releases (PM&C)",
-      "docs": 658,
+      "docs": 661,
       "coverage": "2025–2026"
     },
     {
@@ -104,12 +104,12 @@
     },
     {
       "name": "Queensland Government ministerial statements",
-      "docs": 122,
+      "docs": 125,
       "coverage": "7–21 Sep 2026 refresh"
     },
     {
       "name": "Victorian Premier releases",
-      "docs": 127,
+      "docs": 132,
       "coverage": "7–21 Sep 2026 refresh"
     },
     {
@@ -146,7 +146,7 @@
     "SA Hansard stops at November 2024: hansardsearch.parliament.sa.gov.au now sits behind a WAF that challenges every non-browser request, so the source cannot be fetched."
   ],
   "refresh": {
-    "checked_at": "2026-10-04T17:28:32+00:00",
+    "checked_at": "2026-10-05T17:26:16+00:00",
     "news_resources": 0,
     "bills_registry": 2988,
     "current_parliament_bills": 295,
@@ -190,7 +190,7 @@
       "grant_award": 8159,
       "grant_invitation": 227,
       "parliamentary_profile": 983,
-      "press_release": 6350,
+      "press_release": 6361,
       "research_report": 35,
       "speech": 691104
     },
@@ -201,7 +201,7 @@
       "qld_speeches": 0,
       "act_speeches": 0,
       "nsw_releases": 0,
-      "austender_contracts": 7,
+      "austender_contracts": 2,
       "new_federal_divisions": 0
     },
     "structured_sources": {
