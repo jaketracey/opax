@@ -65,9 +65,11 @@ export function useTalk() {
     useCallback(() => {
       mounted.current = true;
       dispatching.current = false;
+      setBusy(false);
+      setConsentLoaded(false);
       const generation = ++focusGeneration.current;
       const unsubscribe = voice.subscribe((event) => {
-        if (!mounted.current) return;
+        if (!mounted.current || generation !== focusGeneration.current) return;
         sequence.current += 1;
         for (const key of eventKeys[event.type])
           revisions.current[key] = sequence.current;

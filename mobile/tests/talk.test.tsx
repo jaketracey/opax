@@ -36,11 +36,17 @@ jest.mock('../src/features/talk/bridge', () => ({
   background: jest.fn(),
   sendText: jest.fn(),
 }));
+const mockFocus: {
+  effect?: () => void | (() => void);
+  cleanup?: void | (() => void);
+} = {};
 jest.mock('expo-router', () => ({
   useFocusEffect: (effect: () => void | (() => void)) => {
-    jest
-      .requireActual<typeof import('react')>('react')
-      .useEffect(effect, [effect]);
+    jest.requireActual<typeof import('react')>('react').useEffect(() => {
+      mockFocus.effect = effect;
+      mockFocus.cleanup = effect();
+      return () => mockFocus.cleanup?.();
+    }, [effect]);
   },
 }));
 const mockVoice = jest.mocked(voice);
@@ -187,6 +193,38 @@ test('End cancels a pending Start, with no blind retry', async () => {
     await starting;
   });
   expect(mockVoice.start).toHaveBeenCalledTimes(1);
+});
+test('refocusing a retained sheet clears pending controls and rejects its old subscription', async () => {
+  mockBridge.readConsent.mockResolvedValue(true);
+  await mount();
+  const pending = deferred<voice.VoiceResult<void>>();
+  mockVoice.start.mockReturnValueOnce(pending.promise);
+  let starting!: Promise<void>;
+  act(() => {
+    starting = call.start();
+  });
+  expect(call.busy).toBe(true);
+  const oldListener = listener;
+  act(() => mockFocus.cleanup?.());
+  await act(async () => {
+    mockFocus.cleanup = mockFocus.effect?.();
+  });
+  expect(call.busy).toBe(false);
+  expect(call.consentLoaded).toBe(true);
+  act(() =>
+    oldListener({
+      type: 'transcript',
+      turns: [{ role: 'user', id: 99, text: 'Old sheet words' }],
+    }),
+  );
+  expect(call.snapshot.transcript).toEqual([]);
+  await act(async () => {
+    pending.resolve(ok);
+    await starting;
+  });
+  expect(call.busy).toBe(false);
+  expect(mockVoice.start).toHaveBeenCalledTimes(1);
+  expect(mockVoice.end).toHaveBeenCalledTimes(1);
 });
 test('inactive does not end; background delegates a specific reason; foreground refreshes and recovers', async () => {
   let lifecycle!: (state: AppStateStatus) => void;
