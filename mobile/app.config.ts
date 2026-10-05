@@ -83,6 +83,7 @@ const config: ExpoConfig = {
   plugins: [
     ['expo-router', { sitemap: variant !== 'production' }],
     './plugins/withSceneLifecycle.js',
+    ['./plugins/withSearchGeometryProbe.js', { variant }],
     './plugins/withNetworkPolicy.js',
     ['./plugins/withVoiceAutolinking.js', { variant }],
   ],

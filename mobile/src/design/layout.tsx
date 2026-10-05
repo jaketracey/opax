@@ -1,4 +1,10 @@
-import { Children, type ReactElement, type ReactNode } from 'react';
+import {
+  Children,
+  useRef,
+  type ReactElement,
+  type ReactNode,
+  type RefObject,
+} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -10,6 +16,7 @@ import { useAccessibilitySize } from './accessibility';
 import { Divider } from './controls';
 import { Heading, Text } from './text';
 import { colors, hairline, layout, spacing } from './tokens';
+import { useStableKeyboard } from './useStableKeyboard';
 
 /**
  * A scrolling screen on paper, under the native navigation bar. It is the
@@ -20,21 +27,37 @@ export function Screen({
   testID,
   children,
   refreshControl,
+  stableKeyboard = false,
+  keyboardTarget,
 }: {
   testID?: string;
   children: ReactNode;
   refreshControl?: ReactElement<RefreshControlProps>;
+  /** Keep an editable form fixed through keyboard dismissal and body changes. */
+  stableKeyboard?: boolean;
+  keyboardTarget?: RefObject<View | null>;
 }) {
+  const scroll = useRef<ScrollView>(null);
+  const keyboard = useStableKeyboard(stableKeyboard, scroll, keyboardTarget);
   return (
     <ScrollView
+      ref={scroll}
       testID={testID}
       style={styles.screen}
       contentInsetAdjustmentBehavior="automatic"
-      keyboardShouldPersistTaps="handled"
-      automaticallyAdjustKeyboardInsets
+      keyboardShouldPersistTaps={stableKeyboard ? 'always' : 'handled'}
+      automaticallyAdjustKeyboardInsets={!stableKeyboard}
+      // Our measured reveal can use a negative offset within UIKit bar insets.
+      scrollToOverflowEnabled={stableKeyboard}
       keyboardDismissMode="on-drag"
       refreshControl={refreshControl}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[
+        styles.content,
+        stableKeyboard ? keyboard.contentStyle : null,
+      ]}
+      onLayout={stableKeyboard ? keyboard.onLayout : undefined}
+      onScroll={stableKeyboard ? keyboard.onScroll : undefined}
+      scrollEventThrottle={stableKeyboard ? 16 : undefined}
     >
       {children}
     </ScrollView>
