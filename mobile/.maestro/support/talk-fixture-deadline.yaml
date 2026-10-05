@@ -1,0 +1,62 @@
+appId: au.com.opax.app
+---
+# The bridge workbench is compiled only for e2e and never sends email.
+- openLink: opax://voice-bridge-test
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: voice-bridge-test-title
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: voice-logout
+    centerElement: true
+- tapOn:
+    id: voice-logout
+- runFlow:
+    file: voice-code.yaml
+    env:
+      VOICE_EMAIL: deadline@example.invalid
+# Recreate only the synthetic deadline account so 20 and 21 may share a
+# fixture. Deletion preserves previous call charges and open slots.
+- scrollUntilVisible:
+    element:
+      id: voice-deletion-code
+    centerElement: true
+- tapOn:
+    id: voice-deletion-code
+- scrollUntilVisible:
+    element:
+      id: voice-code
+    direction: UP
+    centerElement: true
+- tapOn:
+    id: voice-code
+- eraseText: 100
+- inputText: '01234567'
+- runFlow: voice-dismiss-keyboard.yaml
+- scrollUntilVisible:
+    element:
+      id: voice-delete
+    centerElement: true
+- tapOn:
+    id: voice-delete
+- scrollUntilVisible:
+    element:
+      id: voice-message
+    direction: UP
+- assertVisible: Account deleted
+- runFlow:
+    file: voice-code.yaml
+    env:
+      VOICE_EMAIL: deadline@example.invalid
+- openLink: opax://talk
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: talk-sheet-message
+    timeout: 15000

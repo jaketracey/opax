@@ -1,4 +1,4 @@
-import { Children, type ReactElement, type ReactNode } from 'react';
+import { Children, type ReactElement, type ReactNode, type Ref } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -20,13 +20,16 @@ export function Screen({
   testID,
   children,
   refreshControl,
+  scrollRef,
 }: {
   testID?: string;
+  scrollRef?: Ref<ScrollView>;
   children: ReactNode;
   refreshControl?: ReactElement<RefreshControlProps>;
 }) {
   return (
     <ScrollView
+      ref={scrollRef}
       testID={testID}
       style={styles.screen}
       contentInsetAdjustmentBehavior="automatic"

@@ -5,6 +5,7 @@ import {
   Alert,
   Linking,
   Pressable,
+  ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
@@ -40,6 +41,7 @@ export default function TalkScreen() {
   const [screenReader, setScreenReader] = useState(false);
   const priorAnnouncement = useRef('');
   const statusNode = useRef<View>(null);
+  const page = useRef<ScrollView>(null);
   const focusedEntry = useRef(false);
   const terminal = call.terminal;
   const live = s.state === 'live';
@@ -97,6 +99,11 @@ export default function TalkScreen() {
       if (node) AccessibilityInfo.setAccessibilityFocus(node);
     }
   }, [terminal, screenReader]);
+  useEffect(() => {
+    // Explicit Start and call completion reveal the status and first captions.
+    // Countdown/correction events leave the reader's scroll position alone.
+    page.current?.scrollTo({ y: 0, animated: false });
+  }, [active]);
   const close = () => {
     if (active)
       Alert.alert('End the conversation?', undefined, [
@@ -157,9 +164,17 @@ export default function TalkScreen() {
       {destination ? (
         <>
           <Group style={styles.recordControls}>
-            <Text testID="talk-record-status" accessibilityLabel={stateText}>
-              {stateText}
-            </Text>
+            <View
+              ref={statusNode}
+              accessible
+              accessibilityLanguage="en-AU"
+              testID="talk-record-status"
+              accessibilityLabel={stateText}
+            >
+              <Text variant="fine" wordSafe>
+                {stateText}
+              </Text>
+            </View>
             <Button
               label="Back to conversation"
               testID="talk-record-back"
@@ -182,25 +197,28 @@ export default function TalkScreen() {
           )}
         </>
       ) : (
-        <Screen testID="talk-sheet">
-          <Group>
-            <Text variant="lede" testID="talk-sheet-message" wordSafe>
-              Explore the record with your voice
-            </Text>
-            <Text>
-              Ask about Australian politics, spending and the public record. You
-              can interrupt or ask a follow-up.
-            </Text>
-            {isE2E ? (
-              <Text variant="fine">
-                This fixture uses synthetic input and silent playback.
+        <Screen testID="talk-sheet" scrollRef={page}>
+          {active ? null : (
+            <Group>
+              <Text variant="lede" testID="talk-sheet-message" wordSafe>
+                Explore the record with your voice
               </Text>
-            ) : null}
-          </Group>
+              <Text>
+                Ask about Australian politics, spending and the public record.
+                You can interrupt or ask a follow-up.
+              </Text>
+              {isE2E ? (
+                <Text variant="fine">
+                  This fixture uses synthetic input and silent playback.
+                </Text>
+              ) : null}
+            </Group>
+          )}
           <Section>
             <View
               ref={statusNode}
               accessible
+              accessibilityLanguage="en-AU"
               accessibilityLabel={stateText}
               testID="talk-status"
               onLayout={() => {
@@ -368,33 +386,6 @@ export default function TalkScreen() {
               </Group>
             )}
           </Section>
-          <Section>
-            <Text>
-              AI voice powered by ElevenLabs. Answers may be mistaken; check the
-              linked records.
-            </Text>
-            <Text>
-              Your microphone starts only after you choose Start talking, agree
-              to voice processing and allow microphone access.
-            </Text>
-            <OpaxWebLink label="Voice privacy" path="/privacy" />
-            <Text testID="talk-consent-state">
-              {call.consent
-                ? 'Voice processing consent is given on this device.'
-                : 'Voice processing consent has not been given on this device.'}
-            </Text>
-            {call.consent ? (
-              <Button
-                label="Withdraw voice consent"
-                testID="talk-withdraw"
-                onPress={() =>
-                  void call
-                    .changeConsent(false)
-                    .then(() => setAskingConsent(false))
-                }
-              />
-            ) : null}
-          </Section>
           {s.transcript.length ? (
             <Section title="Captions">
               {s.transcript.map((turn) => (
@@ -437,6 +428,33 @@ export default function TalkScreen() {
                 ))}
             </Section>
           ) : null}
+          <Section>
+            <Text>
+              AI voice powered by ElevenLabs. Answers may be mistaken; check the
+              linked records.
+            </Text>
+            <Text>
+              Your microphone starts only after you choose Start talking, agree
+              to voice processing and allow microphone access.
+            </Text>
+            <OpaxWebLink label="Voice privacy" path="/privacy" />
+            <Text testID="talk-consent-state">
+              {call.consent
+                ? 'Voice processing consent is given on this device.'
+                : 'Voice processing consent has not been given on this device.'}
+            </Text>
+            {call.consent ? (
+              <Button
+                label="Withdraw voice consent"
+                testID="talk-withdraw"
+                onPress={() =>
+                  void call
+                    .changeConsent(false)
+                    .then(() => setAskingConsent(false))
+                }
+              />
+            ) : null}
+          </Section>
           {live ? <TypedMessage send={call.send} busy={call.busy} /> : null}
           {!active && queuedSource ? (
             <Button

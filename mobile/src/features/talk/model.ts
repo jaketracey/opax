@@ -82,8 +82,11 @@ export const isCallActive = (state: VoiceSnapshot['state']) =>
   ['checking', 'reserving', 'connecting', 'live', 'ending'].includes(state);
 export const clock = (seconds: number) =>
   `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
-export const timeLabel = (seconds: number) =>
-  `${Math.floor(seconds / 60)} minutes ${seconds % 60} seconds remaining`;
+export const timeLabel = (seconds: number) => {
+  const minutes = Math.floor(seconds / 60),
+    rest = seconds % 60;
+  return `${minutes} ${minutes === 1 ? 'minute' : 'minutes'} ${rest} ${rest === 1 ? 'second' : 'seconds'} remaining`;
+};
 export const emptySnapshot: VoiceSnapshot = {
   state: 'idle',
   reason: null,

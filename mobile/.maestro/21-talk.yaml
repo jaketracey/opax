@@ -7,6 +7,10 @@ name: 21 Talk consent, captions, sources, controls and refusal states
 - tapOn:
     text: Open
     optional: true
+- scrollUntilVisible:
+    element:
+      id: talk-sign-in
+    centerElement: true
 - extendedWaitUntil:
     visible:
       id: talk-sign-in
@@ -77,7 +81,7 @@ name: 21 Talk consent, captions, sources, controls and refusal states
 - scrollUntilVisible:
     element:
       id: talk-mute
-    direction: UP
+    direction: DOWN
     centerElement: true
 - tapOn:
     id: talk-mute
@@ -128,10 +132,7 @@ name: 21 Talk consent, captions, sources, controls and refusal states
 - tapOn:
     id: talk-not-now
 - takeScreenshot: ${EVIDENCE}/21-consent-declined
-- runFlow:
-    file: support/talk-fixture-account.yaml
-    env:
-      TALK_EMAIL: deadline@example.invalid
+- runFlow: support/talk-fixture-deadline.yaml
 - scrollUntilVisible:
     element:
       id: talk-start
@@ -156,7 +157,9 @@ name: 21 Talk consent, captions, sources, controls and refusal states
     element:
       id: talk-allowance
     visibilityPercentage: 10
-- assertVisible: 0:00 remaining.*
+- assertVisible:
+    id: talk-allowance
+    text: 0 minutes 0 seconds remaining
 - takeScreenshot: ${EVIDENCE}/21-deadline
 - runFlow:
     file: support/talk-fixture-account.yaml
