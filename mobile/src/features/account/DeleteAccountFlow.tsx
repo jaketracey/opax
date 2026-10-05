@@ -36,10 +36,8 @@ export function DeleteAccountFlow({
   const inFlight = useRef(false);
   const challenge = useCodeChallenge();
 
-  function refuse(message: string) {
-    setError(message);
-    AccessibilityInfo.announceForAccessibility(message);
-  }
+  // ErrorState draws the sentence as an alert and moves VoiceOver to it.
+  const refuse = (message: string) => setError(message);
   function refused(failure: VoiceFailure) {
     // The native core has already removed a token the Worker refused.
     if (failure === 'signedOut' || failure === 'forbidden') sessionEnded();
@@ -123,7 +121,6 @@ export function DeleteAccountFlow({
             // keyboard so the button is in view.
             if (digits.length === CODE_LENGTH) Keyboard.dismiss();
           }}
-          error={error}
           testID="account-deletion-code"
           textContentType="oneTimeCode"
           autoComplete="one-time-code"
@@ -131,6 +128,9 @@ export function DeleteAccountFlow({
           autoFocus
           selectTextOnFocus
         />
+        {error ? (
+          <ErrorState message={error} testID="account-deletion-code-error" />
+        ) : null}
         <Button
           variant="danger"
           label={accountCopy.deleteAccount}

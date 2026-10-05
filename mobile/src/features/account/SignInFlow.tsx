@@ -4,6 +4,7 @@ import * as voice from '../../voice';
 import type { VoiceStatus } from '../../voice';
 import {
   Button,
+  ErrorState,
   Field,
   Group,
   Heading,
@@ -42,10 +43,8 @@ export function SignInFlow({
   const inFlight = useRef(false);
   const challenge = useCodeChallenge();
 
-  function refuse(message: string) {
-    setError(message);
-    AccessibilityInfo.announceForAccessibility(message);
-  }
+  // ErrorState draws the sentence as an alert and moves VoiceOver to it.
+  const refuse = (message: string) => setError(message);
   function accepted(address: string, status: VoiceStatus) {
     challenge.clear();
     setCode('');
@@ -121,7 +120,6 @@ export function SignInFlow({
             setEmail(text);
             setError(null);
           }}
-          error={error}
           testID="account-email"
           textContentType="emailAddress"
           autoComplete="email"
@@ -132,6 +130,9 @@ export function SignInFlow({
           returnKeyType="send"
           onSubmitEditing={() => void send(false)}
         />
+        {error ? (
+          <ErrorState message={error} testID="account-email-error" />
+        ) : null}
         <Button
           variant="primary"
           label={accountCopy.sendCode}
@@ -155,7 +156,6 @@ export function SignInFlow({
         label={accountCopy.code}
         value={code}
         onChangeText={changeCode}
-        error={error}
         testID="account-code"
         textContentType="oneTimeCode"
         autoComplete="one-time-code"
@@ -163,6 +163,9 @@ export function SignInFlow({
         autoFocus
         selectTextOnFocus
       />
+      {error ? (
+        <ErrorState message={error} testID="account-code-error" />
+      ) : null}
       <Button
         variant="primary"
         label={accountCopy.signIn}

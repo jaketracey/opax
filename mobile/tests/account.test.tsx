@@ -79,6 +79,8 @@ const field = (renderer: Renderer, testID: string) =>
   renderer.root
     .findAllByType(Field)
     .find((node) => node.props.testID === testID)!;
+const refusal = (renderer: Renderer) =>
+  renderer.root.findAllByType(ErrorState)[0]?.props.message;
 async function press(renderer: Renderer, testID: string) {
   await act(async () => {
     button(renderer, testID).props.onPress();
@@ -324,9 +326,7 @@ describe('Sign in by code', () => {
     await type(renderer, 'account-email', 'not an address');
     await press(renderer, 'account-send-code');
     expect(mocked.requestCode).not.toHaveBeenCalled();
-    expect(field(renderer, 'account-email').props.error).toBe(
-      refusalCopy.invalidEmail,
-    );
+    expect(refusal(renderer)).toBe(refusalCopy.invalidEmail);
   });
   test.each([
     ['rateLimited', 'Too many codes requested. Try again later.'],
@@ -337,7 +337,7 @@ describe('Sign in by code', () => {
     async (error, message) => {
       mocked.requestCode.mockResolvedValueOnce({ ok: false, error });
       const renderer = await toCode();
-      expect(field(renderer, 'account-email').props.error).toBe(message);
+      expect(refusal(renderer)).toBe(message);
     },
   );
   test('the code field is one-time-code and paste friendly, and a full code signs in', async () => {
@@ -365,7 +365,7 @@ describe('Sign in by code', () => {
     const onSignedIn = jest.fn();
     const renderer = await toCode(onSignedIn);
     await type(renderer, 'account-code', '76543210');
-    expect(field(renderer, 'account-code').props.error).toBe(
+    expect(refusal(renderer)).toBe(
       'That code did not work. Check it, or send a new code.',
     );
     expect(field(renderer, 'account-code').props.value).toBe('76543210');
@@ -398,13 +398,9 @@ describe('Sign in by code', () => {
       .mockResolvedValueOnce({ ok: false, error: 'rateLimited' });
     const renderer = await toCode();
     await type(renderer, 'account-code', '01234567');
-    expect(field(renderer, 'account-code').props.error).toBe(
-      refusalCopy.network,
-    );
+    expect(refusal(renderer)).toBe(refusalCopy.network);
     await press(renderer, 'account-sign-in-code');
-    expect(field(renderer, 'account-code').props.error).toBe(
-      refusalCopy.tooManyAttempts,
-    );
+    expect(refusal(renderer)).toBe(refusalCopy.tooManyAttempts);
   });
   test('after five codes the challenge is not tried again', async () => {
     mocked.consumeCode.mockResolvedValue({
@@ -415,18 +411,14 @@ describe('Sign in by code', () => {
     await type(renderer, 'account-code', '76543210');
     for (let i = 0; i < 5; i++) await press(renderer, 'account-sign-in-code');
     expect(mocked.consumeCode).toHaveBeenCalledTimes(5);
-    expect(field(renderer, 'account-code').props.error).toBe(
-      refusalCopy.codeSpent,
-    );
+    expect(refusal(renderer)).toBe(refusalCopy.codeSpent);
   });
   test('an incomplete code is not sent', async () => {
     const renderer = await toCode();
     await type(renderer, 'account-code', '0123');
     await press(renderer, 'account-sign-in-code');
     expect(mocked.consumeCode).not.toHaveBeenCalled();
-    expect(field(renderer, 'account-code').props.error).toBe(
-      refusalCopy.codeIncomplete,
-    );
+    expect(refusal(renderer)).toBe(refusalCopy.codeIncomplete);
   });
   test('resend after its cooldown, and expiry after 15 minutes', async () => {
     jest.useFakeTimers({ now: 1_000_000 });
@@ -454,9 +446,7 @@ describe('Sign in by code', () => {
     });
     await type(renderer, 'account-code', '01234567');
     expect(mocked.consumeCode).not.toHaveBeenCalled();
-    expect(field(renderer, 'account-code').props.error).toBe(
-      refusalCopy.codeExpired,
-    );
+    expect(refusal(renderer)).toBe(refusalCopy.codeExpired);
   });
   test('Use a different email returns to the address and drops the challenge', async () => {
     const renderer = await toCode();
@@ -524,13 +514,11 @@ describe('Delete account', () => {
     await press(renderer, 'account-delete-confirm');
     await type(renderer, 'account-deletion-code', '76543210');
     await press(renderer, 'account-delete-final');
-    expect(field(renderer, 'account-deletion-code').props.error).toBe(
+    expect(refusal(renderer)).toBe(
       'That code did not work. Check it, or send a new deletion code.',
     );
     await press(renderer, 'account-delete-final');
-    expect(field(renderer, 'account-deletion-code').props.error).toBe(
-      refusalCopy.signedOut,
-    );
+    expect(refusal(renderer)).toBe(refusalCopy.signedOut);
     expect(mocked.status).toHaveBeenCalled();
   });
   test('a refused deletion-code request stays on the confirmation', async () => {
