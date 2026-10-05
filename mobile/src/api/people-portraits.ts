@@ -1,9 +1,9 @@
 import type { Catalogs } from './catalogs';
 import type { PortraitCache } from './portrait-cache';
-import { buildPortraitIndex, type PortraitInfo } from './portrait-index';
+import { buildPortraitIndexAsync, type PortraitInfo } from './portrait-index';
 import { nameKey } from './ids';
 export class PeoplePortraits {
-  private index?: Promise<ReturnType<typeof buildPortraitIndex>>;
+  private index?: Promise<Awaited<ReturnType<typeof buildPortraitIndexAsync>>>;
   constructor(
     private catalogs: Catalogs,
     private cache: PortraitCache,
@@ -15,7 +15,7 @@ export class PeoplePortraits {
       this.catalogs.photoCredits(),
     ])
       .then(([d, map, credits]) =>
-        buildPortraitIndex({
+        buildPortraitIndexAsync({
           roster: d.roster.data,
           slugs: d.slugs.data,
           people: d.people.data,

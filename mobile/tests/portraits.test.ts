@@ -1,6 +1,7 @@
 import { portraitKey } from '../src/api/ids';
 import {
   buildPortraitIndex,
+  buildPortraitIndexAsync,
   samePortraitPerson,
 } from '../src/api/portrait-index';
 import { portraitFor } from '../src/api/selectors';
@@ -123,4 +124,17 @@ test('a map assigning one Commons face to two unrelated resolved people is refus
   expect(index.portraits.has('sheena-watt')).toBe(false);
   expect(index.portraits.has('enver-erdogan')).toBe(false);
   expect(index.conflictingKeysRefused).toBeGreaterThan(0);
+});
+
+test('yielding native directory lookup retains every synchronous identity refusal and face key', async () => {
+  const sync = buildPortraitIndex(catalogs as PortraitCatalogs);
+  let UIHandled = false;
+  const pending = buildPortraitIndexAsync(catalogs as PortraitCatalogs);
+  setTimeout(() => {
+    UIHandled = true;
+  }, 0);
+  const asyncIndex = await pending;
+  expect(UIHandled).toBe(true);
+  expect([...asyncIndex.portraits]).toEqual([...sync.portraits]);
+  expect(asyncIndex.conflictingKeysRefused).toBe(sync.conflictingKeysRefused);
 });

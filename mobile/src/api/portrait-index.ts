@@ -57,12 +57,14 @@ export function samePortraitPerson(
   );
 }
 /** One index for the entire directory, so two unrelated identities cannot share a face. */
-export function buildPortraitIndex(c: PortraitCatalogs) {
+function* portraitIndexSteps(c: PortraitCatalogs) {
   const identities = new Map<string, PersonProfile>();
   const candidates = new Map<string, PortraitInfo>();
   const owners = new Map<string, PersonProfile[]>();
   let identityRefusals = 0;
+  let processed = 0;
   for (const slug of Object.keys(c.slugs.slugs)) {
+    if (processed++ % 12 === 0) yield;
     try {
       const identity = joinPerson(
         slug,
@@ -112,4 +114,21 @@ export function buildPortraitIndex(c: PortraitCatalogs) {
       (n) => n.trim().split(/\s+/).length > 1 && !fullPortraitName(n),
     ).length,
   };
+}
+
+export function buildPortraitIndex(c: PortraitCatalogs) {
+  const steps = portraitIndexSteps(c);
+  let step = steps.next();
+  while (!step.done) step = steps.next();
+  return step.value;
+}
+/** Cold directory lookup must leave native input and navigation responsive. */
+export async function buildPortraitIndexAsync(c: PortraitCatalogs) {
+  const steps = portraitIndexSteps(c);
+  let step = steps.next();
+  while (!step.done) {
+    await new Promise<void>((resolve) => setTimeout(resolve, 0));
+    step = steps.next();
+  }
+  return step.value;
 }
