@@ -9,6 +9,8 @@ import { assertPortraitBytes } from '../src/api/portrait-policy';
 import { PortraitCache, type SavedPortrait } from '../src/api/portrait-cache';
 import { catalogs, pinnedBytes, roster } from './pinned';
 import type { PortraitCatalogs } from '../src/api/portrait-index';
+import { portraitFaceKey } from '../src/api/portrait-byte-groups';
+import { pinnedPortraitBlobs } from '../scripts/portrait-byte-probe';
 test('the pinned directory refuses surname/initials keys and every unrelated shared face', () => {
   const index = buildPortraitIndex(catalogs as PortraitCatalogs);
   expect(roster.people).toHaveLength(1557);
@@ -18,8 +20,10 @@ test('the pinned directory refuses surname/initials keys and every unrelated sha
   expect(index.portraits.get('sheena-watt')?.key).toBe('wd-Q100327610');
   expect(index.portraits.has('madonna-jarrett')).toBe(false);
   const owners = new Map<string, string[]>();
-  for (const [slug, p] of index.portraits)
-    owners.set(p.key, [...(owners.get(p.key) ?? []), slug]);
+  for (const [slug, p] of index.portraits) {
+    const face = portraitFaceKey(p.key);
+    owners.set(face, [...(owners.get(face) ?? []), slug]);
+  }
   for (const group of owners.values())
     for (const a of group)
       for (const b of group)
@@ -29,6 +33,20 @@ test('the pinned directory refuses surname/initials keys and every unrelated sha
             index.identities.get(b)!,
           ),
         ).toBe(true);
+});
+test('all pinned byte-identical files are reviewed and unrelated owners get blank portraits', () => {
+  expect(pinnedPortraitBlobs().size).toBe(850);
+  const index = buildPortraitIndex(catalogs as PortraitCatalogs);
+  for (const slug of [
+    'anna-burke',
+    'tony-burke',
+    'sandy-macdonald',
+    'alexander-somlyay',
+    'john-alexander',
+    'bruce-scott',
+    'scott-buchholz',
+  ])
+    expect(index.portraits.has(slug)).toBe(false);
 });
 test.each(['Abbott', 'Albanese', 'T Smith', 'K.J. Maher'])(
   'a bare or initials map match is refused: %s',

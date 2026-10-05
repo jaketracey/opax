@@ -9,6 +9,7 @@ import type {
   PhotoCredits,
 } from './catalog-decoders';
 import { portraitFor, fullPortraitName } from './selectors';
+import { portraitFaceKey } from './portrait-byte-groups';
 export type PortraitInfo = NonNullable<ReturnType<typeof portraitFor>>;
 export interface PortraitCatalogs {
   roster: Roster;
@@ -82,7 +83,8 @@ function* portraitIndexSteps(c: PortraitCatalogs) {
       );
       if (!portrait) continue;
       candidates.set(slug, portrait);
-      owners.set(portrait.key, [...(owners.get(portrait.key) ?? []), identity]);
+      const face = portraitFaceKey(portrait.key);
+      owners.set(face, [...(owners.get(face) ?? []), identity]);
     } catch {
       identityRefusals++;
     }
@@ -95,13 +97,17 @@ function* portraitIndexSteps(c: PortraitCatalogs) {
       .map(([key]) => key),
   );
   const portraits = new Map(
-    [...candidates].filter(([, p]) => !conflicts.has(p.key)),
+    [...candidates].filter(([, p]) => !conflicts.has(portraitFaceKey(p.key))),
   );
   return {
     portraits,
     identities,
     identityRefusals,
-    conflictingKeysRefused: conflicts.size,
+    conflictingKeysRefused: new Set(
+      [...candidates.values()]
+        .filter((p) => conflicts.has(portraitFaceKey(p.key)))
+        .map((p) => p.key),
+    ).size,
     unrelatedSharedFaces: [...owners].filter(
       ([key, group]) =>
         !conflicts.has(key) &&

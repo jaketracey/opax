@@ -1,6 +1,8 @@
 import { strictEqual } from 'node:assert';
 import { catalogs, roster } from '../tests/pinned';
 import { nameKey } from '../src/api/ids';
+import { pinnedPortraitBlobs } from './portrait-byte-probe';
+import { portraitByteGroups } from '../src/api/portrait-byte-groups';
 import {
   buildPortraitIndex,
   samePortraitPerson,
@@ -9,8 +11,15 @@ const index = buildPortraitIndex(
   catalogs as import('../src/api/portrait-index').PortraitCatalogs,
 );
 const byFace = new Map<string, string[]>();
-for (const [slug, portrait] of index.portraits)
-  byFace.set(portrait.key, [...(byFace.get(portrait.key) ?? []), slug]);
+const blobs = pinnedPortraitBlobs();
+for (const [slug, portrait] of index.portraits) {
+  const face = blobs.get(portrait.key);
+  if (!face)
+    throw new Error(
+      `Portrait file missing from pinned corpus: ${portrait.key}`,
+    );
+  byFace.set(face, [...(byFace.get(face) ?? []), slug]);
+}
 let unrelatedSharedFaces = 0;
 for (const slugs of byFace.values())
   for (const a of slugs)
@@ -32,6 +41,8 @@ console.log(
       rosterPeopleWithPortrait: rosterPortraits,
       directoryPortraits: index.portraits.size,
       distinctPortraitFiles: byFace.size,
+      pinnedPortraitFiles: blobs.size,
+      reviewedByteIdenticalGroups: portraitByteGroups.length,
       surnameOnlyKeysRefused: index.refusedSurnameKeys,
       initialsKeysRefused: index.refusedInitialKeys,
       identityRefusals: index.identityRefusals,

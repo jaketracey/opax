@@ -163,7 +163,8 @@ Design workbench) to see every component and state at the current text size.
   API origin's portrait cache. Native images call `localImageURI`; remote
   images are refused by the transport gate. `CachedPortrait` resolves through
   `person-identity.ts`, the slug map and roster, uses full names or a resolved
-  person_id, refuses surname/initials-only matches and conflicting face owners,
+  person_id, refuses surname/initials-only matches and conflicting face owners
+  (including reviewed byte-identical files under different keys),
   and loads through the byte API client (three concurrent reads, one per key).
   A portrait beside its name is hidden from VoiceOver; otherwise pass
   `nameBeside={false}` and `name`, with `official` for APH. Both the circle and

@@ -249,7 +249,11 @@ The cache deduplicates keys, limits concurrency to three and disk usage to
 hash-pinned map, credits and selected website images; a reviewed image absent
 from the small fixture subset returns an expected 404 and a blank fallback.
 Run `node --import tsx scripts/portrait-probe.ts` for roster coverage and
-ambiguous-name/shared-face refusals. App rights remain IOS-APP.md decision 13.
+ambiguous-name/shared-face refusals. The probe compares every image blob at the
+pinned fixture commit, including byte-identical files under different keys;
+the app groups the three reviewed duplicate pairs before checking identity
+ownership, so their unrelated candidates remain blank. Repinning fails until
+those byte groups are reviewed again. App rights remain IOS-APP.md decision 13.
 
 Both source gates scan JS/TS in `src/` and `modules/`. `modules/*/scripts/` is Node
 tooling, exempt from app transport and origin rules but still scanned for secrets.
