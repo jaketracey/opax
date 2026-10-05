@@ -129,8 +129,9 @@ If a lock stays held, read `lock.log` and `<lock>/owner`, then:
 - **OPAX owner, live pid:** the run is still going. To stop it now, `kill -TERM <pid>`;
   the wrapper stops its group and releases. A TERM to `e2e.sh` itself takes effect
   promptly, including while waiting for capacity or queued in the build gate:
-  it records cancellation, stops its wait tree, waits for its active lock owner
-  to finish cleanup and then stops its fixture. A cancelled device command never boots.
+  it records cancellation, drains its active lock owner while retaining the build
+  gate, cancels the remaining wait tree and then stops its fixture. A cancelled
+  device command never boots.
 - **No owner file:** the lock belongs to another project or an older OPAX script. Leave
   it. Remove it with `rmdir` only after its owner confirms nothing uses the pasteboard.
 

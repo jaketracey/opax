@@ -93,7 +93,11 @@ if [ -e "$SCRATCH/gate-hold" ]; then
   while [ -e "$SCRATCH/gate-hold" ]; do sleep 0.1; done
 fi
 export MOCK_IN_GATE=1
-"$@"
+touch "$SCRATCH/$MOCK_LANE.gate-active"
+trap '/bin/rm -f "$SCRATCH/$MOCK_LANE.gate-active"' EXIT
+trap 'exit 143' TERM
+"$@" &
+wait $!
 EOF
 cat > "$SCRATCH/sim-gate.sh" <<'EOF'
 #!/usr/bin/env bash
@@ -122,8 +126,8 @@ shift # simctl
 action=$1; udid=$2; shift 2
 lock=free; [ ! -f "$OPAX_PASTE_LOCK/owner" ] || lock=held
 echo "$MOCK_LANE $action $* lock=$lock gate=${MOCK_IN_GATE:-0}" >> "$SCRATCH/trace"
-if [ "$lock" != held ] || [ "${MOCK_IN_GATE:-0}" != 1 ]; then
-  { [ "${MOCK_NO_LOCK:-0}" = 1 ] && [ "${MOCK_IN_GATE:-0}" = 1 ]; } || { [ "$action" = shutdown ] && [ "${MOCK_ALLOW_FALLBACK:-0}" = 1 ] && [ -e "$MOBILE/private/qa/$MOCK_LANE/device-started" ]; } || { echo unlocked >> "$SCRATCH/violations"; exit 90; }
+if [ "$lock" != held ] || [ "${MOCK_IN_GATE:-0}" != 1 ] || [ ! -e "$SCRATCH/$MOCK_LANE.gate-active" ]; then
+  { [ "${MOCK_NO_LOCK:-0}" = 1 ] && [ "${MOCK_IN_GATE:-0}" = 1 ] && [ -e "$SCRATCH/$MOCK_LANE.gate-active" ]; } || { [ "$action" = shutdown ] && [ "${MOCK_ALLOW_FALLBACK:-0}" = 1 ] && [ -e "$MOBILE/private/qa/$MOCK_LANE/device-started" ]; } || { echo unlocked >> "$SCRATCH/violations"; exit 90; }
 fi
 case "$action" in
   boot)
@@ -154,7 +158,7 @@ cat > "$SCRATCH/bin/maestro" <<'EOF'
 #!/usr/bin/env bash
 set -eu
 phase=online; [[ "$*" != *04-offline.yaml* ]] || phase=offline
-{ [ -f "$OPAX_PASTE_LOCK/owner" ] || [ "${MOCK_NO_LOCK:-0}" = 1 ]; } && [ -d "$SCRATCH/booted" ] && [ "${MOCK_IN_GATE:-0}" = 1 ] || { echo maestro-unlocked >> "$SCRATCH/violations"; exit 92; }
+{ [ -f "$OPAX_PASTE_LOCK/owner" ] || [ "${MOCK_NO_LOCK:-0}" = 1 ]; } && [ -d "$SCRATCH/booted" ] && [ "${MOCK_IN_GATE:-0}" = 1 ] && [ -e "$SCRATCH/$MOCK_LANE.gate-active" ] || { echo maestro-unlocked >> "$SCRATCH/violations"; exit 92; }
 if [ "${MOCK_NO_LOCK:-0}" = 1 ]; then echo none; else sed -n 's/^token=//p' "$OPAX_PASTE_LOCK/owner"; fi > "$SCRATCH/$MOCK_LANE.$phase.token"
 lock=held; [ "${MOCK_NO_LOCK:-0}" != 1 ] || lock=unconfigured
 echo "$MOCK_LANE maestro $phase lock=$lock gate=1" >> "$SCRATCH/trace"
@@ -350,7 +354,7 @@ wait_for "$SCRATCH/term-parent.maestro"
 kill -TERM "$LANE_PID"
 check_rc term-parent 143
 [ ! -e "$MOBILE/private/qa/term-parent/fallback-shutdown.log" ] || fail 'parent TERM skipped locked cleanup'
-pass 'TERM to the active runner stops its owner and waits for locked shutdown'
+pass 'TERM to the active runner retains the build gate through locked shutdown'
 export OPAX_PASTE_LOCK= MOCK_NO_LOCK=1
 run_lane term-unconfigured 01
 wait_for "$SCRATCH/term-unconfigured.maestro"

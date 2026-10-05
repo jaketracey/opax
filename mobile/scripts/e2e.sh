@@ -35,21 +35,8 @@ fallback_shutdown() {
     return 1
   fi
 }
-cancel_wait() {
-  [ -n "$WAITER_PID" ] || return 0
-  touch "$OUT/cancelled"
-  # The waiter/gate queue has its own group; qa-locked leads a separate group.
-  kill -TERM "$WAITER_PID" 2>/dev/null || true
-  kill -TERM -- "-$WAITER_PID" 2>/dev/null || true
-  kill -CONT "$WAITER_PID" 2>/dev/null || true
-  kill -CONT -- "-$WAITER_PID" 2>/dev/null || true
-  local deadline=$(($(date +%s) + 2)) owner started
-  while kill -0 "$WAITER_PID" 2>/dev/null && [ "$(date +%s)" -lt "$deadline" ]; do sleep 0.1; done
-  if /bin/ps -axo pgid=,command= | awk -v group="$WAITER_PID" -v out="$OUT" '$1 == group && index($0, out) {found=1} END {exit !found}'; then
-    kill -KILL -- "-$WAITER_PID" 2>/dev/null || true
-  fi
-  wait "$WAITER_PID" 2>/dev/null || true
-  WAITER_PID=
+stop_device() {
+  local deadline owner started
   # PID + start time also covers the explicitly unconfigured-lock mode and
   # prevents a reused PID from being signalled. The token pins shared release.
   if [ -f "$OUT/device-wrapper" ]; then
@@ -65,6 +52,30 @@ cancel_wait() {
       sleep 0.1
     done
   fi
+}
+cancel_wait() {
+  [ -n "$WAITER_PID" ] || return 0
+  touch "$OUT/cancelled"
+  local rc=0 deadline
+  # Drain the active device owner before stopping its gate parent, so the build
+  # gate remains held through shutdown. A queued lane has no device to drain.
+  stop_device || rc=1
+  # The waiter/gate queue has its own group; qa-locked leads a separate group.
+  kill -TERM "$WAITER_PID" 2>/dev/null || true
+  kill -TERM -- "-$WAITER_PID" 2>/dev/null || true
+  kill -CONT "$WAITER_PID" 2>/dev/null || true
+  kill -CONT -- "-$WAITER_PID" 2>/dev/null || true
+  deadline=$(($(date +%s) + 2))
+  while kill -0 "$WAITER_PID" 2>/dev/null && [ "$(date +%s)" -lt "$deadline" ]; do sleep 0.1; done
+  if /bin/ps -axo pgid=,command= | awk -v group="$WAITER_PID" -v out="$OUT" '$1 == group && index($0, out) {found=1} END {exit !found}'; then
+    kill -KILL -- "-$WAITER_PID" 2>/dev/null || true
+  fi
+  wait "$WAITER_PID" 2>/dev/null || true
+  WAITER_PID=
+  # Catch a wrapper admitted during cancellation; its pre-boot cancelled check
+  # keeps it from booting, but its separate process group still needs draining.
+  stop_device || rc=1
+  return "$rc"
 }
 cleanup() {
   rc=$?
