@@ -642,6 +642,25 @@ class BundleAttackTests(unittest.TestCase):
         with self.assertRaises(ReleaseError):
             verify.verify_no_drawn_diagnostics(bundle[:-1])
 
+    def test_source_preview_ids_are_refused_in_production_string_entries(self):
+        self.assertIn(b"source-destination-ok", [i.encode() for i in verify.E2E_SOURCE_PREVIEW_IDS])
+        for marker in (b"source-destination-url", b"source-destination-scroll", b"source-destination-ok"):
+            for entry in (marker, b"prefix" + marker + b"suffix"):
+                with self.subTest(marker=marker, entry=entry):
+                    bundle = hermes_bundle(entry, [packed(entry, entry)])
+                    with self.assertRaisesRegex(ReleaseError, "no e2e source preview test IDs"):
+                        verify.verify_no_source_preview_ids(bundle)
+            with self.subTest(plain=marker), self.assertRaises(ReleaseError):
+                verify.verify_no_source_preview_ids(b"plain JS " + marker)
+
+    def test_source_preview_check_allows_the_route_name_and_fails_closed(self):
+        # The root layout ships the route name, switched off at runtime.
+        storage = b"source-destination./_layout.tsx"
+        bundle = hermes_bundle(storage, [packed(storage, b"source-destination"), packed(storage, b"./_layout.tsx")])
+        self.assertEqual(verify.verify_no_source_preview_ids(bundle), 2)
+        with self.assertRaises(ReleaseError):
+            verify.verify_no_source_preview_ids(bundle[:-1])
+
     def test_route_keys_are_whole_hermes_string_entries(self):
         keys = ["./(tabs)/(bills)/bills.tsx", "./_layout.tsx", "./account.tsx", "./talk.tsx"]
         # Hermes packs strings without separators and lets entries overlap.

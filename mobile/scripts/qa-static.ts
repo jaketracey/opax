@@ -211,10 +211,15 @@ if (productionIndex !== -1) {
       'Production bundle contains the design workbench',
     );
     assertNoVoiceFixtures(body);
-    assert(
-      !body.includes(Buffer.from('source-destination-url')),
-      'Production bundle contains the e2e source destination preview',
-    );
+    for (const testID of [
+      'source-destination-url',
+      'source-destination-scroll',
+      'source-destination-ok',
+    ])
+      assert(
+        !body.includes(Buffer.from(testID)),
+        `Production bundle contains the e2e source destination preview (${testID})`,
+      );
   }
   const bodies = bundles.map((path) => readFileSync(path));
   for (const marker of [

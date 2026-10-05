@@ -6,6 +6,8 @@ UDID=${1:?Usage: scripts/e2e.sh udid [01 02 03 04 05 06 07 08 09 10 11 12 13 14 
 source scripts/qa-env.sh
 source scripts/qa-lock.sh
 source scripts/qa-java.sh
+source scripts/qa-flows.sh
+qa_check_flow_selectors "$@" || exit 2
 PORT=${OPAX_FIXTURE_PORT:-8910}
 SIZE=${OPAX_CONTENT_SIZE:-large}
 # The app is light-only; dark is for checking the launch screen (journey 28b).
@@ -97,6 +99,14 @@ perl -e 'alarm 60; exec @ARGV' xcrun simctl terminate "$UDID" au.com.opax.app >>
 if [ "${#FLOWS[@]}" -gt 0 ]; then
 qa_paste_lock_run maestro --device "$UDID" test --test-output-dir "$OUT/maestro" --debug-output "$OUT/maestro" --format junit --output "$OUT/report.xml" -e EVIDENCE=screenshots -e REMOTE_SHARE_UI="${OPAX_REMOTE_SHARE_UI:-false}" "${FLOWS[@]}" > "$OUT/maestro.log" 2>&1 || { cat "$OUT/maestro.log" >&2; exit 1; }
 ./node_modules/.bin/tsx scripts/collect-screenshots.ts "$OUT/screenshots" "$OUT/maestro"
+# Journey 15 must draw "OPAX is" below the large title. The accessibility tree
+# kept the sentence while build 2 drew it behind the title, so read the pixels.
+for flow in "${FLOWS[@]}"; do
+  case "$flow" in
+    *15-cold-first-line.yaml)
+      ./node_modules/.bin/tsx scripts/first-line-check.ts "$OUT/screenshots/15-cold-today-first-line.png" > "$OUT/first-line-check.log" 2>&1 || { cat "$OUT/first-line-check.log" >&2; exit 1; } ;;
+  esac
+done
 fi
 if [ "$OFFLINE" = 1 ]; then
   kill "$FIXTURE_PID"; wait "$FIXTURE_PID" || true; FIXTURE_PID=
