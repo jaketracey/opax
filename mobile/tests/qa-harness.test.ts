@@ -1,4 +1,4 @@
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 
 // Exercise the wait parser alone. No locks, build gates or devices are used.
 test.each([
@@ -24,4 +24,34 @@ test.each([
     { encoding: 'utf8' },
   );
   expect(value.trim().split('\n')).toEqual([expected, expected]);
+});
+
+// The selection rule alone: no simulator, fixture or Maestro is started.
+describe('journey selectors', () => {
+  const check = (...selectors: string[]) =>
+    spawnSync(
+      '/bin/bash',
+      [
+        '-c',
+        'source scripts/qa-flows.sh; qa_check_flow_selectors "$@"',
+        'flows-test',
+        ...selectors,
+      ],
+      { encoding: 'utf8' },
+    );
+  test('a bare 15 is refused with the explicit AX5 path', () => {
+    const result = check('01', '15');
+    expect(result.status).toBe(2);
+    expect(result.stderr).toContain(
+      'OPAX_CONTENT_SIZE=accessibility-extra-extra-extra-large scripts/e2e.sh <udid> .maestro/15-cold-first-line.yaml',
+    );
+  });
+  test.each([
+    [['.maestro/15-cold-first-line.yaml']],
+    [['01', '05', '13', '14']],
+    [['.maestro/13b-today-no-edition.yaml']],
+    [[]],
+  ])('selectors %j are accepted', (selectors) => {
+    expect(check(...selectors).status).toBe(0);
+  });
 });

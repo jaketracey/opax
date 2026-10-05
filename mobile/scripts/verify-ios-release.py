@@ -184,16 +184,35 @@ def hermes_strings(body):
     return strings
 
 
-def verify_no_drawn_diagnostics(body):
-    """Inspect actual Hermes entries, not overlapping raw string storage."""
-    markers = ("-drawn-", "testDrawnText", "drawnTextClipped")
+def markers_in_entries(body, markers):
+    """Markers found inside actual Hermes entries, not overlapping raw string
+    storage; plain JS is searched whole. Returns (found, entry count)."""
     strings = hermes_strings(body)
     found = [marker for marker in markers if (
         any(marker in entry for entry in strings) if strings is not None
         else marker.encode() in body)]
+    return found, len(strings) if strings is not None else None
+
+
+def verify_no_drawn_diagnostics(body):
+    """Inspect actual Hermes entries, not overlapping raw string storage."""
+    found, count = markers_in_entries(body, ("-drawn-", "testDrawnText", "drawnTextClipped"))
     require(not found, "no e2e drawn-line diagnostics in production JS" +
             (f" (found {', '.join(found)})" if found else ""))
-    return len(strings) if strings is not None else None
+    return count
+
+
+# Test IDs of the e2e source page (a blocked development route) and of the
+# SourceLink preview that build 3 withdrew. The route name itself ships in the
+# root layout, switched off at runtime, so only these IDs are refused.
+E2E_SOURCE_PREVIEW_IDS = ("source-destination-url", "source-destination-scroll", "source-destination-ok")
+
+
+def verify_no_source_preview_ids(body):
+    found, count = markers_in_entries(body, E2E_SOURCE_PREVIEW_IDS)
+    require(not found, "no e2e source preview test IDs in production JS" +
+            (f" (found {', '.join(found)})" if found else ""))
+    return count
 
 
 def bundle_route_keys(body, routes):
@@ -462,6 +481,8 @@ def verify_app(app, args):
     check(not has_loopback(bundle), "no normalized loopback or fixture origin in shipped JS")
     verify_no_drawn_diagnostics(bundle)
     check(True, "no e2e drawn-line diagnostics in production Hermes string entries")
+    verify_no_source_preview_ids(bundle)
+    check(True, "no e2e source preview test IDs in production Hermes string entries")
     route_keys = bundle_route_keys(bundle, Path("src/app"))
     check(True, "every shipping Expo route key is present in shipped JS")
     check(True, "no unshipped, development or workbench route keys in shipped JS")

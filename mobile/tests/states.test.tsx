@@ -30,11 +30,18 @@ import {
 } from '../src/design/contrast';
 import { light, partyColors } from '../src/design/palette';
 import {
+  LINE_HEIGHT_NUDGE,
   breaksMidWord,
+  lineScale,
   nextWordSafeCap,
   textContent,
 } from '../src/design/text';
-import { controlHeight, minimumTarget } from '../src/design/tokens';
+import {
+  controlHeight,
+  minimumTarget,
+  textStyles,
+  type TextVariant,
+} from '../src/design/tokens';
 
 function render(element: ReactElement) {
   let renderer!: TestRenderer.ReactTestRenderer;
@@ -425,9 +432,19 @@ describe('party context', () => {
 });
 
 describe('word-safe text', () => {
-  test.each([
-    { size: 'default', fontScale: 1, reserved: false },
-  ])(
+  // The cap scales the role's own size and line height: React Native's text
+  // measure cache ignores maxFontSizeMultiplier, so that prop stays 0.
+  const capScale = (node: ReactTestInstance, variant: TextVariant) => {
+    const role = textStyles[variant];
+    const style = StyleSheet.flatten(node.props.style);
+    expect(node.props.maxFontSizeMultiplier).toBe(0);
+    expect(style.lineHeight).toBeCloseTo(
+      ((role.lineHeight + LINE_HEIGHT_NUDGE) * style.fontSize) / role.fontSize,
+      6,
+    );
+    return Number(style.fontSize) / role.fontSize;
+  };
+  test.each([{ size: 'default', fontScale: 1, reserved: false }])(
     'the $size name retains its measured lines without a font or line cap',
     ({ fontScale, reserved }) => {
       const originalWindow = Dimensions.get('window');
@@ -498,37 +515,40 @@ describe('word-safe text', () => {
         renderer.root
           .findAllByType(NativeText)
           .find((node) => typeof node.props.onTextLayout === 'function')!;
+      // Lines carry the whole drawn text, the nested marker included.
+      const marker = (on: boolean) => (on ? ' (required)' : '');
       act(() => {
         label().props.onTextLayout({
           nativeEvent: {
             lines: [
               { text: 'Representatio', height: 22 * 3 },
-              { text: 'n', height: 22 * 3 },
+              { text: `n${marker(required)}`, height: 22 * 3 },
             ],
           },
         });
       });
-      expect(label().props.maxFontSizeMultiplier).toBe(2.7);
+      // 2.7 of the uncapped 3.
+      expect(capScale(label(), 'control')).toBeCloseTo(0.9, 6);
       act(() => {
         renderer.update(<Field label="Name" required={required} />);
       });
-      expect(label().props.maxFontSizeMultiplier).toBe(0);
+      expect(capScale(label(), 'control')).toBe(1);
       // Changing only the required marker is a change of text too.
       act(() => {
         label().props.onTextLayout({
           nativeEvent: {
             lines: [
               { text: 'Na', height: 22 * 3 },
-              { text: 'me', height: 22 * 3 },
+              { text: `me${marker(required)}`, height: 22 * 3 },
             ],
           },
         });
       });
-      expect(label().props.maxFontSizeMultiplier).toBe(2.7);
+      expect(capScale(label(), 'control')).toBeCloseTo(0.9, 6);
       act(() => {
         renderer.update(<Field label="Name" required={!required} />);
       });
-      expect(label().props.maxFontSizeMultiplier).toBe(0);
+      expect(capScale(label(), 'control')).toBe(1);
     }
   });
   test('reads the text of nested children', () => {
@@ -559,6 +579,7 @@ describe('word-safe text', () => {
     );
   });
   test('steps the scale down, never below the reader default', () => {
+    expect(lineScale(30 * 2.3, 30)).toBe(2.3);
     expect(nextWordSafeCap(30 * 2.3, 30)).toBe(2.07);
     expect(nextWordSafeCap(30 * 1.05, 30)).toBe(1);
     expect(nextWordSafeCap(30, 30)).toBeNull();
@@ -580,7 +601,7 @@ describe('word-safe text', () => {
         .findAllByType(NativeText)
         .find((node) => typeof node.props.onTextLayout === 'function')!;
     expect(label().props.children).toBe('Parliamentary Library · Bills Digest');
-    expect(label().props.maxFontSizeMultiplier).toBe(0);
+    expect(capScale(label(), 'body')).toBe(1);
     act(() => {
       label().props.onTextLayout({
         nativeEvent: {
@@ -591,9 +612,10 @@ describe('word-safe text', () => {
         },
       });
     });
-    expect(label().props.maxFontSizeMultiplier).toBe(2.7);
+    // 2.7 of the uncapped 3, through the role's own size and line height.
+    expect(capScale(label(), 'body')).toBeCloseTo(0.9, 6);
   });
-  test('a heading lowers its own cap after a mid-word break, and only then', () => {
+  test('a heading lowers its own size after a mid-word break, and only then', () => {
     let renderer!: TestRenderer.ReactTestRenderer;
     act(() => {
       renderer = TestRenderer.create(
@@ -601,21 +623,250 @@ describe('word-safe text', () => {
       );
     });
     const text = () => renderer.root.findByType(NativeText);
-    expect(text().props.maxFontSizeMultiplier).toBe(0);
-    const layout = (lines: { text: string; height: number }[]) =>
+    expect(capScale(text(), 'heading')).toBe(1);
+    const layout = (at: number, broken = true) =>
       act(() => {
-        text().props.onTextLayout({ nativeEvent: { lines } });
+        text().props.onTextLayout({
+          nativeEvent: {
+            lines: broken
+              ? [
+                  {
+                    text: 'Recorded representatio',
+                    width: 330,
+                    height: 30 * at,
+                  },
+                  { text: 'n', width: 20, height: 30 * at },
+                ]
+              : [
+                  { text: 'Recorded ', width: 200, height: 30 * at },
+                  { text: 'representation', width: 320, height: 30 * at },
+                ],
+          },
+        });
       });
-    layout([
-      { text: 'Recorded ', height: 30 * 2.2 },
-      { text: 'representation', height: 30 * 2.2 },
-    ]);
-    expect(text().props.maxFontSizeMultiplier).toBe(0);
-    layout([
-      { text: 'Recorded representatio', height: 30 * 2.3 },
-      { text: 'n', height: 30 * 2.3 },
-    ]);
-    expect(text().props.maxFontSizeMultiplier).toBe(2.07);
+    layout(2.3, false);
+    expect(capScale(text(), 'heading')).toBe(1);
+    layout(2.3);
+    // Uncapped 2.3, capped 2.07: 90% of the role's size, which Dynamic Type
+    // then multiplies by the same 2.3.
+    expect(capScale(text(), 'heading')).toBeCloseTo(2.07 / 2.3, 6);
+    // Each layout at the size now drawn that still breaks steps 10% lower,
+    // always as a share of the same uncapped 2.3, and stops at the reader's
+    // default size.
+    for (const [at, next] of [
+      [2.07, 1.86],
+      [1.86, 1.67],
+      [1.67, 1.5],
+      [1.5, 1.35],
+      [1.35, 1.22],
+      [1.22, 1.1],
+      [1.1, 1],
+      [1, 1],
+    ] as const) {
+      layout(at);
+      expect(capScale(text(), 'heading')).toBeCloseTo(next / 2.3, 6);
+    }
     expect(text().props.accessibilityRole).toBe('header');
+  });
+  describe('word-safe resets and late layouts', () => {
+    const base = textStyles.heading.lineHeight + LINE_HEIGHT_NUDGE;
+    // "Representation" at heading scale: 212pt wide at the uncapped 2.3,
+    // 191pt at 2.07 and 172pt at 1.86.
+    const broken = (at: number, widths: [number, number]) => ({
+      nativeEvent: {
+        lines: [
+          { text: 'Representatio', width: widths[0], height: base * at },
+          { text: 'n', width: widths[1], height: base * at },
+        ],
+      },
+    });
+    const fits = (at: number, width = (212 * at) / 2.3) => ({
+      nativeEvent: {
+        lines: [{ text: 'Representation', width, height: base * at }],
+      },
+    });
+    const frame = (width: number) => ({
+      nativeEvent: { layout: { x: 0, y: 0, width, height: 200 } },
+    });
+    const setSize = (fontScale: number) =>
+      Dimensions.set({
+        window: { width: 390, height: 844, scale: 3, fontScale },
+        screen: { width: 390, height: 844, scale: 3, fontScale },
+      });
+    let originalWindow: ReturnType<typeof Dimensions.get>;
+    let originalScreen: ReturnType<typeof Dimensions.get>;
+    let renderer: TestRenderer.ReactTestRenderer;
+    beforeEach(() => {
+      originalWindow = Dimensions.get('window');
+      originalScreen = Dimensions.get('screen');
+    });
+    afterEach(() =>
+      act(() => {
+        renderer?.unmount();
+        Dimensions.set({ window: originalWindow, screen: originalScreen });
+      }),
+    );
+    function heading(
+      fontScale = 2.3,
+      variant: TextVariant = 'heading',
+      children = 'Representation',
+    ) {
+      act(() => {
+        setSize(fontScale);
+        renderer = TestRenderer.create(
+          <Text wordSafe variant={variant}>
+            {children}
+          </Text>,
+        );
+      });
+      const text = () => renderer.root.findByType(NativeText);
+      return {
+        text,
+        ratio: () => capScale(text(), variant),
+        layout: (event: object) => act(() => text().props.onTextLayout(event)),
+        resize: (width: number) =>
+          act(() => text().props.onLayout(frame(width))),
+      };
+    }
+
+    // Review round 2, probe 1.
+    test('a modest wider column restores full size once the full word fits', () => {
+      const { ratio, layout, resize } = heading();
+      resize(200);
+      layout(broken(2.3, [198, 14]));
+      expect(ratio()).toBeCloseTo(0.9, 6);
+      layout(fits(2.07, 191));
+      // 200 to 220pt: 191pt at 2.07 is 212pt at 2.3, which now fits.
+      resize(220);
+      expect(ratio()).toBe(1);
+      // The capped layout, delivered late to the full-size text, is ignored.
+      layout(fits(2.07, 191));
+      expect(ratio()).toBe(1);
+    });
+    test('a narrower column that widens again restores the larger cap', () => {
+      const { ratio, layout, resize } = heading();
+      resize(200);
+      layout(broken(2.3, [198, 14]));
+      resize(200);
+      layout(fits(2.07));
+      expect(ratio()).toBeCloseTo(2.07 / 2.3, 6);
+      // The column narrows to 180pt and 191pt no longer fits.
+      resize(180);
+      layout(broken(2.07, [178, 13]));
+      resize(180);
+      layout(fits(1.86));
+      expect(ratio()).toBeCloseTo(1.86 / 2.3, 6);
+      // Back to 200pt: the same capped text's frame widens, so the column
+      // did. Full size breaks there again and steps to the 200pt cap.
+      resize(200);
+      expect(ratio()).toBe(1);
+      layout(broken(2.3, [198, 14]));
+      expect(ratio()).toBeCloseTo(2.07 / 2.3, 6);
+      // Repeated frames and lines at that width settle without restarting.
+      for (let i = 0; i < 5; i++) {
+        resize(200);
+        layout(fits(2.07));
+      }
+      expect(ratio()).toBeCloseTo(2.07 / 2.3, 6);
+    });
+    test("the capped text's own narrowing never counts as a wider column", () => {
+      const { ratio, layout, resize } = heading();
+      resize(200);
+      layout(broken(2.3, [198, 14]));
+      // The capped text hugs its 191pt word: narrower than the column, and
+      // never wider than the 200pt it broke in, so the cap stays.
+      resize(191);
+      layout(fits(2.07, 191));
+      resize(191);
+      expect(ratio()).toBeCloseTo(2.07 / 2.3, 6);
+    });
+    test("a change of role starts again with that role's own uncapped size", () => {
+      const { text, layout } = heading(
+        2.3,
+        'heading',
+        'Recorded representation',
+      );
+      layout({
+        nativeEvent: {
+          lines: [
+            { text: 'Recorded representatio', width: 300, height: base * 2.3 },
+            { text: 'n', width: 12, height: base * 2.3 },
+          ],
+        },
+      });
+      expect(capScale(text(), 'heading')).toBeCloseTo(2.07 / 2.3, 6);
+      act(() =>
+        renderer.update(
+          <Text wordSafe variant="fine">
+            Recorded representation
+          </Text>,
+        ),
+      );
+      expect(capScale(text(), 'fine')).toBe(1);
+      // The fine role's ramp is 3.4 at this size: 3.06 of 3.4, not of 2.3.
+      const fine = textStyles.fine.lineHeight + LINE_HEIGHT_NUDGE;
+      act(() =>
+        text().props.onTextLayout({
+          nativeEvent: {
+            lines: [
+              {
+                text: 'Recorded representatio',
+                width: 300,
+                height: fine * 3.4,
+              },
+              { text: 'n', width: 12, height: fine * 3.4 },
+            ],
+          },
+        }),
+      );
+      expect(capScale(text(), 'fine')).toBeCloseTo(3.06 / 3.4, 6);
+    });
+    test('a late layout from an earlier size can neither raise nor lower the cap', () => {
+      const { text, ratio, layout } = heading();
+      const fullSizeText = text().props.onTextLayout;
+      layout(broken(2.3, [300, 12]));
+      const firstCap = text().props.onTextLayout;
+      layout(broken(2.07, [300, 12]));
+      expect(ratio()).toBeCloseTo(1.86 / 2.3, 6);
+      // Events from the earlier native instances, as Fabric delivers them.
+      act(() => fullSizeText(broken(2.3, [300, 12])));
+      act(() => firstCap(broken(2.07, [300, 12])));
+      expect(ratio()).toBeCloseTo(1.86 / 2.3, 6);
+      // A layout at another size arriving at the current instance is ignored.
+      layout(broken(2.3, [300, 12]));
+      layout(broken(1.3, [300, 12]));
+      expect(ratio()).toBeCloseTo(1.86 / 2.3, 6);
+      // A fresh layout at 1.86 still steps down as usual.
+      layout(broken(1.86, [300, 12]));
+      expect(ratio()).toBeCloseTo(1.67 / 2.3, 6);
+    });
+    // Review round 2, probe 2.
+    test('after a switch to standard size a late AX5 layout cannot shrink below the role size', () => {
+      const { text, ratio, layout } = heading();
+      layout(broken(2.3, [198, 14]));
+      expect(ratio()).toBeCloseTo(0.9, 6);
+      const ax5Text = text().props.onTextLayout;
+      act(() => setSize(1));
+      expect(ratio()).toBe(1);
+      // The AX5 layout, from the old instance and through the current one.
+      act(() => ax5Text(broken(2.07, [198, 14])));
+      layout(broken(2.07, [198, 14]));
+      expect(ratio()).toBe(1);
+      layout(fits(1, 92));
+      expect(ratio()).toBe(1);
+    });
+    test('after a switch between large sizes the uncapped size comes only from a fresh layout', () => {
+      const { text, ratio, layout } = heading();
+      layout(broken(2.3, [198, 14]));
+      const ax5Text = text().props.onTextLayout;
+      // To a smaller accessibility size, where the heading's ramp is 2.0.
+      act(() => setSize(2.643));
+      expect(ratio()).toBe(1);
+      // The old instance's AX5 layout cannot set this size's uncapped value.
+      act(() => ax5Text(broken(2.07, [198, 14])));
+      expect(ratio()).toBe(1);
+      layout(broken(2.0, [198, 14]));
+      expect(ratio()).toBeCloseTo(1.8 / 2.0, 6);
+    });
   });
 });
