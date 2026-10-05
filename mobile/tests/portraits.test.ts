@@ -184,20 +184,23 @@ test.each(reviewedShortRows)(
     expect(index.portraits.get(fullSlug)?.key).toBe(key);
   },
 );
-test('initials cannot acquire a face through the same resolved roster ID as a full-name entry', () => {
-  const row = roster.people.find((p) => p.name === 'Ben Morton')!;
-  const index = buildPortraitIndex({
-    ...catalogs,
-    slugs: {
-      ...catalogs.slugs,
-      slugs: { ...catalogs.slugs.slugs, 'b-morton': 'B. Morton' },
-    },
-    roster: {
-      ...roster,
-      people: [...roster.people, { ...row, name: 'B. Morton' }],
-    },
-  } as PortraitCatalogs);
-  expect(index.identities.get('b-morton')?.legacyPersonId).toBe(row.pid);
-  expect(index.portraits.has('b-morton')).toBe(false);
-  expect(index.portraits.get('ben-morton')?.key).toBe('10886');
-});
+test.each(['B. Morton', 'BM Morton'])(
+  '%s cannot acquire a face through the same resolved roster ID as a full-name entry',
+  (name) => {
+    const row = roster.people.find((p) => p.name === 'Ben Morton')!;
+    const index = buildPortraitIndex({
+      ...catalogs,
+      slugs: {
+        ...catalogs.slugs,
+        slugs: { ...catalogs.slugs.slugs, 'b-morton': name },
+      },
+      roster: {
+        ...roster,
+        people: [...roster.people, { ...row, name }],
+      },
+    } as PortraitCatalogs);
+    expect(index.identities.get('b-morton')?.legacyPersonId).toBe(row.pid);
+    expect(index.portraits.has('b-morton')).toBe(false);
+    expect(index.portraits.get('ben-morton')?.key).toBe('10886');
+  },
+);

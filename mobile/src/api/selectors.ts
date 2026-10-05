@@ -192,8 +192,10 @@ export interface ProfileCatalogs {
 }
 export function fullPortraitName(name: string): boolean {
   const words = name.trim().split(/\s+/);
+  // Roster entries such as "SM Fentiman" use unpunctuated initials.
   return (
     words.length >= 2 &&
+    !/^[\p{Lu}]{2,3}$/u.test(words[0]!) &&
     /^[\p{L}][\p{L}'’ʼ-]+$/u.test(words[0]!) &&
     words[0]!.replace(/[^\p{L}]/gu, '').length >= 2
   );
