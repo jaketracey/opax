@@ -140,14 +140,14 @@ test('electorate retains votes, Census vintage, related constituencies and evide
   expect(view.representatives.asAt).toBe('2026-09-04');
   expect(view.representatives.sources.length).toBeGreaterThan(0);
 });
-test('Commons portraits expose licence/credit; unsupported terms and APH need review', () => {
+test('website portraits expose original credits and terms without deciding app rights', () => {
   const p = d.portraitFor(
     ['Sheena Watt'],
     catalogs.photoPeople!,
     catalogs.photoCredits!,
   )!;
   expect(p.licence).toBe('CC0');
-  expect(p.display).toBe('permitted');
+  expect(p.display).toBe('website-file');
   expect(p.credit).toBe('Gabagool2005');
   expect(
     d.portraitFor(
@@ -155,7 +155,7 @@ test('Commons portraits expose licence/credit; unsupported terms and APH need re
       catalogs.photoPeople!,
       catalogs.photoCredits!,
     )?.display,
-  ).toBe('review-required');
+  ).toBe('website-file');
   expect(
     d.portraitFor(
       ['Madonna Jarrett'],
@@ -168,11 +168,11 @@ test('Commons portraits expose licence/credit; unsupported terms and APH need re
       ...catalogs.photoCredits!,
       [p.key]: { ...catalogs.photoCredits![p.key]!, licence: 'GFDL' },
     })?.display,
-  ).toBe('review-required');
+  ).toBe('website-file');
 });
 test.each([
   ["Deborah O'Neill", '10747'],
-  ['Mehreen Faruqi', 'wd-Q16728926'],
+  ['Mehreen Faruqi', '10912'],
 ])('%s keeps its exact full-name portrait key', (name, key) => {
   const person = people.people.find(
     (p) => p.name === name && p.electorates.some((s) => s.current),

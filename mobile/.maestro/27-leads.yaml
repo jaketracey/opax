@@ -1,0 +1,411 @@
+appId: au.com.opax.app
+name: 27 Leads and the declared-interests feed
+---
+# No clearState: offline journey 04 reads the records earlier journeys saved.
+#
+# JSON-pointer checks: each "# pointer:" line names a value in the pinned
+# /discovery.json (or another pinned file, "file#pointer"), and
+# tests/leads-journey.test.ts requires the next assertion's text to contain
+# it as the app shows it ("as dollars", "as percent", "as millions", "as
+# count"; a metric object reads "label, value"; a timestamp reads as its
+# date). "# pointer-absent:" requires the assertion that follows to refuse it.
+#
+# scrollUntilVisible always swipes from the centre of the screen. Tall AX5
+# elements count as found once a tenth shows and are then centred with
+# speed-20 swipes (about half a screen each), so a tap lands on them and not
+# under the floating tab bar.
+- launchApp
+- assertVisible:
+    id: today-screen-message
+- scrollUntilVisible:
+    element:
+      id: today-leads-open
+    direction: DOWN
+    timeout: 180000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/27-today-entry
+- tapOn:
+    id: today-leads-open
+# At AX5 the lede alone fills the screen: wait for the screen, then scroll.
+- extendedWaitUntil:
+    visible:
+      id: leads-lede
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: leads-count
+    direction: DOWN
+    timeout: 180000
+    centerElement: true
+    speed: 20
+- assertVisible:
+    id: leads-count
+    text: 60 leads
+- takeScreenshot: ${EVIDENCE}/27-leads
+# The first lead is the export's first signal, with its own figures.
+# pointer: /signals/0/title
+- scrollUntilVisible:
+    element:
+      id: lead-0-title
+      text: 'Lead, Companies in both\. Westpac Banking Corporation appears in party receipts and contracts'
+    direction: DOWN
+    timeout: 180000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/27-lead-title
+- scrollUntilVisible:
+    element:
+      id: lead-0-metric-0
+    direction: DOWN
+    timeout: 180000
+    centerElement: true
+    speed: 20
+# pointer: /signals/0/metrics/0
+- assertVisible:
+    id: lead-0-metric-0
+    text: Recorded party receipts, 76,984,493 dollars
+- scrollUntilVisible:
+    element:
+      id: lead-0-metric-1
+    direction: DOWN
+    timeout: 180000
+    centerElement: true
+    speed: 20
+# pointer: /signals/0/metrics/1
+- assertVisible:
+    id: lead-0-metric-1
+    text: Recorded contract value, 9,102,500 dollars
+- scrollUntilVisible:
+    element:
+      id: lead-0-metric-2
+    direction: DOWN
+    timeout: 180000
+    centerElement: true
+    speed: 20
+# pointer: /signals/0/metrics/2
+- assertVisible:
+    id: lead-0-metric-2
+    text: Party receipt records, 1,041
+- scrollUntilVisible:
+    element:
+      id: lead-0-metric-3
+    direction: DOWN
+    timeout: 180000
+    centerElement: true
+    speed: 20
+# pointer: /signals/0/metrics/3
+- assertVisible:
+    id: lead-0-metric-3
+    text: Contract records, 4
+- takeScreenshot: ${EVIDENCE}/27-lead-figures
+# Every caveat is on the card, in the export's words.
+# pointer: /signals/0/caveats/0
+- scrollUntilVisible:
+    element:
+      id: lead-0-caveat-0
+      text: Matching names are not verified legal identities; unrelated entities can share a name\.
+    direction: DOWN
+    timeout: 180000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/27-lead-caveat
+# pointer: /signals/0/caveats/2
+- scrollUntilVisible:
+    element:
+      id: lead-0-caveat-2
+      text: Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification\. State, election and referendum disclosures are excluded\.
+    direction: DOWN
+    timeout: 180000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+# The receipt names its register, not OPAX's local row number.
+- scrollUntilVisible:
+    element:
+      id: lead-0-evidence-0
+      text: '1,803 dollars, Westpac Banking Corporation to Australian Labor Party \(ALP\), AEC annual receipt · FY 2024–25, AEC Transparency Register'
+    direction: DOWN
+    timeout: 180000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+# pointer-absent: /signals/0/evidence/0/record_id
+- assertNotVisible:
+    text: '.*643745.*'
+# pointer: /signals/0/evidence/1/record_id
+- scrollUntilVisible:
+    element:
+      id: lead-0-evidence-1
+      text: '4,537,500 dollars, Australian Office of Financial Management to Westpac Banking Corporation, Contract value · starts 6 Feb 2017, AusTender register, record CN3407266'
+    direction: DOWN
+    timeout: 180000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/27-lead-records
+- scrollUntilVisible:
+    element:
+      id: lead-0-as-at
+    direction: DOWN
+    timeout: 180000
+    centerElement: true
+    speed: 20
+# pointer: /generated_at
+- assertVisible:
+    id: lead-0-as-at
+    text: 'As at 21 September 2026 · Source: AEC annual returns; AusTender'
+- takeScreenshot: ${EVIDENCE}/27-lead-as-at
+# A source opens: e2e builds show the checked address locally.
+- scrollUntilVisible:
+    element:
+      id: lead-0-evidence-0
+    direction: UP
+    timeout: 180000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- waitForAnimationToEnd
+- assertVisible:
+    id: leads-screen
+- tapOn:
+    id: lead-0-evidence-0
+# pointer: /signals/0/evidence/0/url
+- assertVisible:
+    id: source-destination-url
+    text: https://transparency\.aec\.gov\.au/
+- takeScreenshot: ${EVIDENCE}/27-lead-source
+- tapOn: OK
+- assertVisible:
+    id: leads-screen
+# The second lead's comparison: its chart, then the same rows as a table.
+- scrollUntilVisible:
+    element:
+      id: lead-1-open
+    direction: DOWN
+    timeout: 300000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- waitForAnimationToEnd
+- tapOn:
+    id: lead-1-open
+- extendedWaitUntil:
+    visible:
+      id: lead-heading
+    timeout: 30000
+# pointer: /signals/1/chart/participants/0/name
+- scrollUntilVisible:
+    element:
+      id: lead-takeaway
+      text: 78\.4% of recorded receipts came from Mineralogy Pty Ltd\.
+    direction: DOWN
+    timeout: 180000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/27-comparison
+# pointer: /signals/1/chart/participants/0/name
+# pointer: /signals/1/chart/participants/0/value as millions
+# pointer: /signals/1/chart/participants/0/share as percent
+- scrollUntilVisible:
+    element:
+      id: lead-chart-row-0
+      text: Mineralogy Pty Ltd, 124\.7 million dollars, 78\.4 percent
+    direction: DOWN
+    timeout: 180000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/27-chart
+- scrollUntilVisible:
+    element:
+      id: lead-chart-show-table
+    direction: UP
+    timeout: 180000
+    centerElement: true
+    speed: 20
+- waitForAnimationToEnd
+- tapOn:
+    id: lead-chart-show-table
+# pointer: /signals/1/chart/participants/0/value as dollars
+# pointer: /signals/1/chart/participants/0/record_count as count
+- scrollUntilVisible:
+    element:
+      id: lead-chart-cell-0
+      text: Mineralogy Pty Ltd, value 124,655,455 dollars, share 78\.4 percent, 230 records
+    direction: DOWN
+    timeout: 180000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/27-table
+# pointer: /signals/1/caveats/2
+- scrollUntilVisible:
+    element:
+      id: lead-card-caveat-2
+      text: Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification\. State, election and referendum disclosures are excluded\.
+    direction: DOWN
+    timeout: 180000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+# The web's links: this comparison on opax.com.au, and its full money map.
+- scrollUntilVisible:
+    element:
+      id: lead-link-money-map
+    direction: DOWN
+    timeout: 180000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- assertVisible:
+    id: lead-link-money-map
+    text: Open the full money map
+- scrollUntilVisible:
+    element:
+      id: lead-link-web
+    direction: UP
+    timeout: 180000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- waitForAnimationToEnd
+- assertVisible:
+    id: lead-screen
+- tapOn:
+    id: lead-link-web
+# E2E shows the guarded web address on the build's reserved origin instead;
+# at AX5 the alert's message can sit below its fold.
+# pointer: /signals/1/category
+- scrollUntilVisible:
+    element:
+      text: https://opax\.invalid/discover\?category=recipient_concentration&item=recipient_concentration%3Aa186427ec7f0b918
+    timeout: 20000
+- takeScreenshot: ${EVIDENCE}/27-web-link
+- tapOn: OK
+# The declared-interests feed behind Today's recent declarations.
+- tapOn:
+    id: tab-today
+- extendedWaitUntil:
+    visible:
+      id: today-screen
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      id: today-declarations-all
+    direction: DOWN
+    timeout: 300000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- waitForAnimationToEnd
+- tapOn:
+    id: today-declarations-all
+- extendedWaitUntil:
+    visible:
+      id: declarations-screen
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: declarations-chamber-house
+    direction: DOWN
+    timeout: 180000
+    centerElement: true
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/27-declarations
+- scrollUntilVisible:
+    element:
+      id: declarations-count
+    direction: DOWN
+    timeout: 180000
+    centerElement: true
+    speed: 20
+# pointer: /interests/recent.json#/meta/rows as count
+- assertVisible:
+    id: declarations-count
+    text: 300 declarations · newest first
+- scrollUntilVisible:
+    element:
+      id: declarations-chamber-house
+    direction: UP
+    timeout: 180000
+    centerElement: true
+    speed: 20
+- waitForAnimationToEnd
+- tapOn:
+    id: declarations-chamber-house
+- scrollUntilVisible:
+    element:
+      id: declarations-count
+    direction: DOWN
+    timeout: 180000
+    centerElement: true
+    speed: 20
+- assertVisible:
+    id: declarations-count
+    text: 176 of 300 declarations · newest first
+- takeScreenshot: ${EVIDENCE}/27-declarations-house
+# Every row in the filtered list is a House row. At AX5 a row can be taller
+# than the screen, so its text is matched where a tenth of it shows.
+- scrollUntilVisible:
+    element:
+      id: declaration-person-0
+      text: Andrew Wilkie, .*House of Representatives.*
+    direction: DOWN
+    timeout: 180000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- assertNotVisible:
+    id: declaration-person-0
+    text: .*Senate.*
+- takeScreenshot: ${EVIDENCE}/27-declarations-house-row
+# A member's name narrows the feed; the row opens the native profile.
+- scrollUntilVisible:
+    element:
+      id: declarations-member
+    direction: UP
+    timeout: 180000
+    centerElement: true
+    speed: 20
+- tapOn:
+    id: declarations-member
+- inputText: Briskey
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: declarations-count
+    direction: DOWN
+    timeout: 180000
+    centerElement: true
+    speed: 20
+- assertVisible:
+    id: declarations-count
+    text: 3 of 300 declarations · newest first
+- scrollUntilVisible:
+    element:
+      id: declaration-person-0
+    direction: DOWN
+    timeout: 180000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- waitForAnimationToEnd
+- assertVisible:
+    id: declarations-screen
+- takeScreenshot: ${EVIDENCE}/27-declarations-member
+- tapOn:
+    id: declaration-person-0
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+    timeout: 30000
+- assertVisible:
+    id: person-screen-title
+    text: Jo Briskey
+- takeScreenshot: ${EVIDENCE}/27-profile

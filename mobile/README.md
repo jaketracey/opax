@@ -463,6 +463,35 @@ and a link fragment follow the Worker's own looser rules (the card shows neither
 the closing slide's source rows, a "Read the …" link that opens the page on the web
 through `webPageUrl`/`openOnWeb` on the build's own origin, and an as-at line.
 
+**Leads and the declared-interests feed (P1).** Today links to both and loads
+neither. `discovery()` reads `/discovery.json` whole (`decodeDiscovery`; the
+export's microsecond timestamps are checked by their calendar date). The Leads
+screen (`src/features/leads/`) shows every signal as a `LeadCard` with its
+figures, every caveat verbatim, its example records and an as-at line from the
+export's date, in the export's order ("All leads") or by category, sorted as the
+web sorts. Each card opens its comparison: the web's takeaway, the five-plus-Other
+share chart (each row one VoiceOver element, bars decorative) with a Table view of
+the same rows to the dollar, or the two separate money flows for companies in
+both, then the card again, the web's links on opax.com.au (supplier profile; the
+comparison's own `/discover` page, where the web draws its money map; the full
+money map) and "About these numbers". A signal that does not decode, or a
+concentration without its chart, is left out and counted on screen. The web's
+"Find mentions in parliament" opens `/search`, which the Worker sends to Ask's
+model-backed search, so the app leaves it out. Evidence labels are read into
+amount, payer and payee, detail and register (`leadEvidenceFor`): OPAX's local
+row numbers ("local record 643745") are dropped, AusTender contract notice IDs
+are kept, a label with no ID (donations, since the web export's 66d7bf45) reads
+the same, and a label in any other shape keeps its register link with the label
+hidden. `declarations()` reads every `/interests/recent.json` row with Today's
+party and portrait joins and, through the register's ID bridge
+(`declarationProfilesFor`, the same bridge as Search's interest rows), the
+profile slug of each member; the feed (`src/features/declarations/`) filters on
+the device by chamber, jurisdiction and member and reuses Today's register row,
+adding the profile link and the export's name matches with their caveat.
+Journey 27 checks the first lead's figures by JSON pointer:
+`tests/leads-journey.test.ts` resolves each `# pointer:` annotation in the
+pinned export and requires the assertion after it to show that value.
+
 Use `billsFor(filters)`, `billFor(key)`, `today()`, `about()`, `suggestions(query)`
 and `search(query, kind)` for the remaining P0 blocks. Load `suggestionSources()`
 once on screen entry; `suggestions()` then matches that snapshot locally while
@@ -475,9 +504,9 @@ branded ID parsers are also exported from `src/api/catalogs.ts` for already load
 OPAX record/party links are relative web paths: resolve them using the build-config
 origin when opening. E2E displays links locally and never opens production.
 
-The fixture pins 44 complete files (6,816,022 bytes), including whole-site votes,
-pay, expenses and money. `fixture-snapshot.json` records every size and hash;
-42 files are served. Its `testOnlyFiles` retain the money graph and donor ties
+The fixture pins 51 complete files (7,014,814 bytes), including whole-site votes,
+pay, expenses, money and the discovery export. `fixture-snapshot.json` records
+every size and hash; 49 files are served. Its `testOnlyFiles` retain the money graph and donor ties
 for decoder/parity tests while their retired GET routes remain denied.
 Interest-detail search covers twelve pinned members; the recent feed, pay and
 expenses are complete. Local search does not reproduce production ranking.
@@ -530,3 +559,31 @@ directory link without inventing a canonical release ID.
 ### Electorate outline and optional location
 
 The cached seat file now draws a tile-free Skia outline. Your MP can suggest a federal seat from one foreground location fix, entirely on the iPhone, with explicit confirmation. See [IOS-ELECTORATE-MAP.md](../docs/IOS-ELECTORATE-MAP.md) for display limitations, privacy, cache budget, download measurement and the compact-file proposal. Journey 24 sets a simulated fix per case through the harness; `OPAX_VERIFY_MAP_OFFLINE=1` adds a stopped-fixture map check.
+
+## Native party page
+
+Recorded party labels push `/party/<slug>` in the current tab's stack. Independent,
+unaligned and other non-party affiliations stay plain text and never resolve as
+parties. Slugs come
+from recorded labels; `partyIdentity` and `samePartyLabel` provide the existing
+identity rules, with no prefix matching or new aliases. A catalog-confirmed
+absence opens the existing web party page; a failed read offers retry.
+
+The page reads the roster and dated people release for current members, with
+unknown affiliation status in a separate Recorded disclosure and former members
+excluded. Recorded rows require full names, omit current-person/current-seat
+overlaps, and show no unverified roster place or chamber. Each member opens its
+native profile. Receipt totals and rank read
+`/graph/money.json` directly; displayed donor flows do not replace the party
+node total. Donors retain year keys and the graph's exclusions. Associated
+entities read `/graph/aec-extras.json`, retain their own annual-return years,
+and are never added to the party total. Both are static catalog GETs, without
+model, search or generation calls. The money-map destination is isolated in
+`MoneyMapLink` for a later native route.
+
+Recent divisions follow the web's 96-candidate / 32-readable-file scan, collapse
+duplicate divisions and retain party-attribution caveats. Bill links push the
+native divisions view, which links to the full bill details. Every block has its own source date, provenance,
+saved-copy state and independent error state. Journey `25-party.yaml` covers
+profile chip, current members, a JSON-pointer receipt check, member profile,
+bill divisions and unresolved web fallback; run it at standard size and AX5.

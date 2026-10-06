@@ -40,6 +40,20 @@ export interface PartyIdentity {
 
 export const PARTY_NOT_RECORDED = 'Party not recorded';
 
+/** Recorded affiliations and presiding roles are not necessarily parties. */
+export function isPartyLabel(party: string | null | undefined): boolean {
+  const name = party
+    ?.trim()
+    .toLocaleLowerCase('en-AU')
+    .replace(/[‐‑‒–—]/g, '-');
+  return (
+    !!name &&
+    !/^(?:ind(?:ependent)?s?\b|unaligned\b|non[ -]?aligned\b|unaffiliated\b|non[ -]?party\b|pres$|spk$|(?:party )?not recorded$)/.test(
+      name,
+    )
+  );
+}
+
 export function partyIdentity(party: string | null | undefined): PartyIdentity {
   const name = party?.trim();
   if (!name)
@@ -109,3 +123,11 @@ export function partyText(
       : identity.name,
   };
 }
+
+/** Slugs are derived only from recorded labels; this adds no party aliases. */
+export const partySlug = (name: string) =>
+  name
+    .trim()
+    .toLocaleLowerCase('en-AU')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
