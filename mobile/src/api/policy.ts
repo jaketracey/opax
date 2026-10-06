@@ -1,4 +1,5 @@
 import { isPortraitPath } from './portrait-policy';
+import { isRecordSlug, billTextPathPattern, isSimilarRequest } from './record-policy';
 // Public, catalog-only GETs. Adding a path requires a source/cost review and test.
 export const catalogKinds = ['person', 'interest', 'pay', 'expense'] as const;
 export type CatalogKind = (typeof catalogKinds)[number];
@@ -47,6 +48,8 @@ export function assertAllowedPath(path: string): void {
     throw new Error('Route is outside the public catalog allow-list');
   const params = new URLSearchParams(query);
   if (path.split('?').length > 2) throw new Error('Invalid catalog query');
+  // Explicitly opened readers and the related-speech button (build 7).
+  if (pathname === '/api/search' && isSimilarRequest(params)) return;
   if (pathname === '/api/search-all') {
     const kind = params.get('kind');
     const allowedParams = [
@@ -85,6 +88,9 @@ export function assertAllowedPath(path: string): void {
   if (
     pathname === '/api/person-slugs' ||
     pathname === editionPath ||
+    pathname === '/api/recent' ||
+    (pathname?.startsWith('/api/resource/') && isRecordSlug(pathname.slice(14))) ||
+    billTextPathPattern.test(pathname!) ||
     staticPaths.has(pathname!) ||
     releasePath.test(pathname!) ||
     billPath.test(pathname!) ||

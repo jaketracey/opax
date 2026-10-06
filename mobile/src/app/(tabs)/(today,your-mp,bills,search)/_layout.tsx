@@ -37,6 +37,10 @@ export default function TabStack({ segment }: { segment: string }) {
       />
       <Stack.Screen name="party/[slug]" options={{ title: '' }} />
       <Stack.Screen name="person/[slug]" options={{ title: '' }} />
+      <Stack.Screen name="doc/[slug]" options={{ title: '' }} />
+      <Stack.Screen name="doc-cite/[slug]" options={{ title: 'Cite' }} />
+      <Stack.Screen name="bill-text/[key]" options={{ title: 'Bill text' }} />
+      <Stack.Screen name="recent-records" options={{ title: 'Just added' }} />
       <Stack.Screen name="bill/[key]" options={{ title: '' }} />
       {segment === '(bills)' ? (
         // The bill list's filters: a sheet over the Bills stack, closed by Done.

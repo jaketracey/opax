@@ -8,7 +8,7 @@ import { formatDate } from '../design/format';
 import { CatalogState } from './CatalogState';
 import { EditionSection } from './EditionCard';
 import { RecordRow } from './RecordRow';
-import { billRoute, declarationsRoute, leadsRoute } from '../navigation/routes';
+import { billRoute, declarationsRoute, leadsRoute, recentRecordsRoute } from '../navigation/routes';
 import { TodayDeclaration } from './today/TodayDeclaration';
 import { FollowingSection } from './follows/FollowingSection';
 
@@ -96,6 +96,9 @@ export default function Today() {
             </RowList>
           )}
         </CatalogState>
+      </Section>
+      <Section title="Just added to the record" testID="today-records">
+        <RecordRow title="Just added to the record" detail="Newly indexed source records" onPress={() => router.push(recentRecordsRoute)} testID="today-records-open" />
       </Section>
       {/* Static: the Leads screen loads its export when it opens. */}
       <Section title="Leads" testID="today-leads">

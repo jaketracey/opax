@@ -32,6 +32,7 @@ import {
 import { billStatus } from '../design/parliament';
 import { RecordRow } from './RecordRow';
 import { Excerpt } from './search/Excerpt';
+import { RecordActions } from './records/RecordActions';
 import { KindPicker } from './search/KindPicker';
 import { isOffline } from './CatalogState';
 import {
@@ -448,6 +449,7 @@ export default function Search() {
                         </Text>
                       )}
                       <Excerpt snippet={row.snippet} />
+                      <RecordActions slug={row.slug} />
                       {row.url ? (
                         <SourceLink
                           citation={row.source || 'Original source'}

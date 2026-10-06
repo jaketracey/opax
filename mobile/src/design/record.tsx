@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import { openOnWeb, openSource } from '../navigation/external';
+import { fromWebPath } from '../navigation/routes';
 import {
   asAtText,
   formatCount,
@@ -117,11 +118,13 @@ export function OpaxWebLink({
   path: string;
   testID?: string;
 }) {
+  const route = fromWebPath(path);
+  const nativeReader = route?.pathname === '/doc/[slug]' || route?.pathname === '/bill-text/[key]';
   return (
     <Pressable
       accessibilityRole="link"
       accessibilityLabel={accessibilityLabel ?? label}
-      accessibilityHint="Opens on opax.com.au"
+      accessibilityHint={nativeReader ? 'Opens the reader' : 'Opens on opax.com.au'}
       testID={testID}
       onPress={() => openOnWeb(path, label)}
       style={({ pressed }) => [styles.link, pressed ? styles.pressed : null]}
@@ -130,9 +133,9 @@ export function OpaxWebLink({
         <Text wordSafe variant="body" tone="bronzeInk">
           {label}
         </Text>
-        <Text variant="fine">Opens on opax.com.au</Text>
+        {nativeReader ? null : <Text variant="fine">Opens on opax.com.au</Text>}
       </View>
-      <Icon name="safari" size={18} tone="bronzeInk" />
+      <Icon name={nativeReader ? 'chevron.right' : 'safari'} size={18} tone="bronzeInk" />
     </Pressable>
   );
 }

@@ -34,7 +34,7 @@ import {
   errorMessage,
 } from '../../design/primitives';
 import { chrome, spacing } from '../../design/tokens';
-import { billRoute, personRoute } from '../../navigation/routes';
+import { billRoute, personRoute, billTextRoute } from '../../navigation/routes';
 import { shareHeaderItem } from '../../navigation/share';
 import { chamberLabel } from './filters';
 import {
@@ -236,6 +236,7 @@ export default function BillDetail({
                   refreshing={refreshing}
                   onRefresh={refresh}
                 />
+                <Button label="Read the bill text" onPress={() => router.push(billTextRoute(identity.key))} testID="bill-read-text" />
                 <Summary view={view} />
                 <KeyDates view={view} />
                 <Divisions view={view} />
