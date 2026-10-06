@@ -8,6 +8,7 @@ import {
   type CodeChallenge,
   type AccountDeletion,
   type VoiceResult,
+  type VoiceLevels,
 } from './types';
 const invalid = () => {
   throw new Error('Invalid native voice value');
@@ -145,6 +146,18 @@ export function mapEvent(value: unknown): VoiceEvent | null {
       default:
         return null;
     }
+  } catch {
+    return null;
+  }
+}
+
+/** Two finite levels in [0, 1]; anything else is dropped. */
+export function mapLevels(value: unknown): VoiceLevels | null {
+  try {
+    const v = object(value);
+    const level = (n: unknown) =>
+      typeof n === 'number' && n >= 0 && n <= 1 ? n : invalid();
+    return { input: level(v.input), output: level(v.output) };
   } catch {
     return null;
   }

@@ -24,6 +24,20 @@ import XCTest
         let count = await rig.http.count(.voiceFinish); XCTAssertEqual(count, 1)
         await rig.close()
     }
+    func testLevelsStreamOnlyWhileLiveAndSettleSilentAtEnd() async throws {
+        let rig = try await Rig.make()
+        let seen = LevelRecorder()
+        let reading = Task { for await value in rig.controller.levels { await seen.record(value) } }
+        await rig.engine.setMeter(AudioLevels(input: 0.4, output: 0.7))
+        try await rig.live()
+        try await eventually { await seen.items.contains(AudioLevels(input: 0.4, output: 0.7)) }
+        await rig.controller.end()
+        try await eventually { await seen.items.last == .silent }
+        let count = await seen.items.count
+        try await Task.sleep(for: .milliseconds(250))
+        let after = await seen.items.count; XCTAssertEqual(after, count)
+        reading.cancel(); await rig.close()
+    }
     func testFailedFreshStatusDoesNotExposeCachedAllowance() async throws {
         let rig = try await Rig.make(); _ = try await rig.controller.refreshStatus()
         await rig.http.setResponse(.voiceStatus, HTTPResponse(status: 503, body: json(["error": "Synthetic failure"])))
@@ -286,4 +300,9 @@ import XCTest
         do { try await rig.controller.sendText(String(repeating: "x", count: 2001)); XCTFail() } catch { XCTAssertEqual(error as? VoiceFailure, .policy) }
         let messages = await rig.relay.messages; XCTAssertEqual(messages.count, 4); await rig.close()
     }
+}
+
+actor LevelRecorder {
+    var items: [AudioLevels] = []
+    func record(_ value: AudioLevels) { items.append(value) }
 }
