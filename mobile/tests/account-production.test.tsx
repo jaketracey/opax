@@ -6,7 +6,7 @@ import ProductionAccount from '../src/features/account/entry.production';
 import { AccountComingSoon } from '../src/features/ComingSoon';
 
 // Production builds keep Account and about exactly as it was before voice:
-// Metro resolves entry.production.tsx, and the block list keeps the sign-in
+// Metro resolves entry.production.ts, and metro.config.js keeps the sign-in
 // routes and every other account file out of the bundle.
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 jest.mock('../src/design/environment', () => ({
@@ -77,7 +77,7 @@ test.each(['production', 'e2e', 'development'])(
       resolve(
         root,
         'src/features/account',
-        variant === 'production' ? 'entry.production.tsx' : 'entry.tsx',
+        variant === 'production' ? 'entry.production.ts' : 'entry.tsx',
       ),
     );
     expect(other!.filePath).toBe(resolve(root, 'src/app/account/about.tsx'));
@@ -98,7 +98,7 @@ test('production bundles cannot see the sign-in or deletion screens', () => {
   ])
     expect([path, blocked(list, path)]).toEqual([path, true]);
   for (const path of [
-    'src/features/account/entry.production.tsx',
+    'src/features/account/entry.production.ts',
     'src/app/account/index.tsx',
     'src/app/account/about.tsx',
     'src/app/account/_layout.tsx',

@@ -2,21 +2,30 @@ const { getDefaultConfig } = require('expo/metro-config');
 const path = require('node:path');
 const config = getDefaultConfig(__dirname);
 const inheritedResolver = config.resolver.resolveRequest;
-// Modules with a production twin: release bundles resolve `<module>.production`.
-const productionTwins = new Map([
-  [path.join(__dirname, 'src/design/text-probe'), '.production.ts'],
-  [path.join(__dirname, 'src/features/account/entry'), '.production.tsx'],
-]);
+// Modules with a production stub beside them: the e2e drawn-line probe, the
+// welcome tour's launch argument and the electorate outline probe, and the
+// Account sheet, whose sign-in stays out of production until voice ships.
+const productionStubs = [
+  'src/design/text-probe',
+  'src/onboarding/launch-flag',
+  'src/features/electorate-map/outline-probe',
+  'src/features/account/entry',
+].map((module) => path.join(__dirname, module));
 config.resolver.resolveRequest = (context, moduleName, platform) => {
-  if (process.env.OPAX_VARIANT === 'production' && moduleName.startsWith('.')) {
-    const target = path
-      .resolve(path.dirname(context.originModulePath), moduleName)
-      .replace(/\.[jt]sx?$/, '');
-    if (productionTwins.has(target))
-      return {
-        type: 'sourceFile',
-        filePath: target + productionTwins.get(target),
-      };
+  const target = moduleName.startsWith('.')
+    ? path
+        .resolve(path.dirname(context.originModulePath), moduleName)
+        .replace(/\.[jt]sx?$/, '')
+    : null;
+  if (
+    process.env.OPAX_VARIANT === 'production' &&
+    target !== null &&
+    productionStubs.includes(target)
+  ) {
+    return {
+      type: 'sourceFile',
+      filePath: `${target}.production.ts`,
+    };
   }
   return typeof inheritedResolver === 'function'
     ? inheritedResolver(context, moduleName, platform)
@@ -26,10 +35,10 @@ const productionBlockList = require('./scripts/production-block-list.json').map(
   (source) => new RegExp(source),
 );
 // Account sign-in and deletion stay out of production until voice ships there:
-// only entry.production.tsx (the placeholder) is visible to release bundles.
+// only entry.production.ts (the placeholder) is visible to release bundles.
 const accountSignIn = [
   /[/\\]src[/\\]app[/\\]account[/\\](?:sign-in|delete)\.tsx$/,
-  /[/\\]src[/\\]features[/\\]account[/\\](?!entry\.production\.tsx$).*/,
+  /[/\\]src[/\\]features[/\\]account[/\\](?!entry\.production\.ts$).*/,
 ];
 config.cacheVersion = `opax-${process.env.OPAX_VARIANT ?? 'development'}`;
 const existing = config.resolver.blockList;

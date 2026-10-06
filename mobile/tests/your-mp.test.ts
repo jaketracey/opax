@@ -65,9 +65,11 @@ test('only release/roster identities receive a native profile', () => {
   );
   expect(representativeProfile('private-person', directory)).toBeNull();
 });
-test('roster-only former profiles retain Formerly and explicit unlinked blocks', () => {
+test('roster-only profiles read their party plainly and keep explicit unlinked blocks', () => {
+  // The release names him Anthony John Abbott with no ID, so no dated seat joins.
   const p = joinPerson('tony-abbott', slugs, roster, people, manifest);
-  expect(p.partyCurrent).toBe(false);
+  expect(p.seats).toHaveLength(0);
+  expect(p.partyStatus).toBe('unknown');
   const view = uncoveredProfile(p);
   expect(view.blocks.identity.data).toBe(p);
   expect(view.blocks.pay.status).toBe('unlinked');

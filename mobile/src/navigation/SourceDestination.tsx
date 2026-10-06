@@ -26,7 +26,9 @@ export function SourceDestination({
             {citation ? `Source record: ${citation}` : 'Source record'}
           </Heading>
           {url ? (
+            // Selectable, so a reviewer can copy the exact destination.
             <Text
+              selectable
               accessibilityLabel={url}
               testID="source-destination-url"
               style={styles.url}

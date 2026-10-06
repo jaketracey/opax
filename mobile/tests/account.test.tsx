@@ -296,11 +296,12 @@ describe('Account section', () => {
     await act(async () => listener({ type: 'status', status: status() }));
     expect(shows(renderer, 'Voice time: 8:00 remaining')).toBe(true);
   });
-  test('the development sheet keeps About and the workbench', async () => {
+  test('the development sheet keeps About, the tour replay and the workbench', async () => {
     const renderer = await render(<AccountEntry />);
     expect(renderer.root.findByType(AccountScreen)).toBeTruthy();
     expect(button(renderer, 'account-about')).toBeTruthy();
     expect(button(renderer, 'account-workbench')).toBeTruthy();
+    expect(button(renderer, 'account-replay-tour')).toBeTruthy();
   });
 });
 

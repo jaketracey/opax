@@ -36,7 +36,7 @@ test.each([1, 1.786, 2.143, 2.643, 3.143, 3.571])(
         <PersonRow
           name="Anthony Albanese"
           party="Labor"
-          partyCurrent
+          partyStatus="current"
           place="Member for Grayndler · House of Representatives · New South Wales"
           detail="As at 4 September 2026"
           testID="electorate-member-anthony-albanese"
@@ -402,6 +402,58 @@ test.each([
     expect(commits).toBe(2);
     console.log(
       `standard-size ${kind} guard cost: 100 texts, ${commits} commits including mount, 20 repeated layouts add 0 commits, Profiler ${duration.toFixed(2)}ms`,
+    );
+    act(() => renderer.unmount());
+  },
+);
+
+test.each([
+  ['standard', 1],
+  ['AX5', 3.571],
+] as const)(
+  'word-safe text that fits at %s size settles once without recurring layouts',
+  (size, fontScale) => {
+    jest
+      .mocked(useWindowDimensions)
+      .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale });
+    let renderer!: TestRenderer.ReactTestRenderer;
+    let commits = 0;
+    act(() => {
+      renderer = TestRenderer.create(
+        <Profiler id="word-safe-text" onRender={() => commits++}>
+          {Array.from({ length: 100 }, (_, i) => (
+            <Text key={i} wordSafe variant="heading">
+              Sources
+            </Text>
+          ))}
+        </Profiler>,
+      );
+    });
+    const nodes = () => renderer.root.findAllByType(NativeText);
+    const height = 30 * fontScale;
+    const layout = (frameHeight: number) =>
+      act(() =>
+        nodes().forEach((text) => {
+          text.props.onLayout({
+            nativeEvent: { layout: { width: 298, height: frameHeight } },
+          });
+          text.props.onTextLayout({
+            nativeEvent: {
+              lines: [{ text: 'Sources', x: 0, y: 0, width: 120, height }],
+            },
+          });
+        }),
+      );
+    expect(commits).toBe(1);
+    layout(height);
+    // The rounding guard's one settling commit; the word-safe state records
+    // frames and lines without rendering.
+    expect(commits).toBe(2);
+    const settled = StyleSheet.flatten(nodes()[0]!.props.style).minHeight;
+    for (let i = 0; i < 20; i++) layout(settled);
+    expect(commits).toBe(2);
+    console.log(
+      `${size} word-safe fitting text: 100 texts, ${commits} commits including mount, 20 repeated layouts add 0 commits`,
     );
     act(() => renderer.unmount());
   },

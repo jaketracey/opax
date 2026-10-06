@@ -29,18 +29,37 @@ projects every result/event again, strips extra fields and drops malformed event
 
 ## Before the voice UI ships
 
-Production excludes both voice pods through the Expo autolinking config plugin.
-The optional module loader returns a typed `unavailable` result for every command
-and a harmless unsubscribe function when the module is absent. Development and
-e2e retain the native module. The UI lane must remove the exclusion deliberately
-when consent, purpose string and the related release gates are ready.
+Production defaults to excluding both voice pods through the Expo autolinking
+config plugin. The optional loader returns a typed `unavailable` result for every
+command and a harmless unsubscribe function when absent. Development/e2e retain
+the native module. The build-time switch `OPAX_PRODUCTION_VOICE=1` deliberately
+enables both pods, the microphone purpose string, native route metadata and the
+conservative privacy manifest together. Its default remains `0` during Phase 1.
+See `plugins/voiceProduction.js` and `voice-production-policy.json`. Do not change
+that default until the Talk and Account UI lanes have merged and their production
+screen tests, fixture matrix and both release verifiers pass. No runtime or OTA
+flag can enable this capability.
 
 Development consent is deliberately denied and its permission dependency cannot
-request the microphone. `NSMicrophoneUsageDescription` is absent in every variant,
-including e2e, which needs no permission. The UI lane must implement and store
-explicit third-party consent with withdrawal, wire the permission dependency,
-and deliberately update `withNetworkPolicy.js` and native policy gates before
-adding the purpose string. Never enable consent automatically in production.
+request the microphone. The purpose string is absent with the production switch
+off and in development/e2e, which need no permission. With the switch on, the
+bridge reads `StoredVoiceConsent` (`opax.voice.consent.v1`), denied on a fresh
+install, and only requests permission after an explicit grant. `consent()` and
+`setConsent(boolean)` are native hooks for the UI lane; withdrawal ends a call.
+Never enable consent automatically in production. The UI must show its disclosure
+before every call and end calls on background (the core already handles lifecycle).
+
+The native production gate compares the embedded method/path list with `AuthRoute`
+before any I/O. Credentials remain in the origin-scoped this-device-only Keychain;
+Cookie and Origin are attached only to those ten routes, never to catalog data,
+provider hosts or a browser. Redirects and ambient cookie jars remain disabled.
+
+`report-answer.ts` exposes `reportAnswer(recordPath)` for Talk. It uses the shared
+in-app Safari source browser, sending a canonical record path only. Until the
+privacy lane publishes `/support`, it opens the GitHub new-issue page with that
+record and a reminder to omit personal information. Set embedded
+`extra.supportPageAvailable` only after publication is verified. This helper
+does not submit reports or probe any endpoint.
 
 The UI needs sign-in/code entry, deletion confirmation and proof entry, every
 refusal and terminal reason in `types.ts`, captions/corrections, source navigation,
@@ -60,11 +79,14 @@ compiled numeric-loopback guard. The simulator fixture port is embedded by CNG (
 origin override. In e2e, `opax://voice-bridge-test` opens a test screen outside the
 design and feature lanes. Metro excludes its route and `src/test-screens/` in all
 other variants so an ordinary development build cannot run fixture actions against
-the production policy. The release bundle check rejects the route, fixture/code markers and microphone
-purpose string. The shared production block list is read by Metro and the route
-verifier. The pod policy verifies autolinking excludes both voice pods in production
-and retains both in development/e2e; the archive and IPA verifiers reject voice
-or microphone permission markers in every Mach-O, including stripped binaries. Signed release tooling uses a
+the production policy. Release bundle checks reject the route and fixture/code
+markers in both switch states. The microphone purpose string is forbidden when
+off and required with the policy text when on. The shared production block list
+is read by Metro and the route verifier. Pod policy checks both production states
+and retains both pods in development/e2e. Archive and IPA verifiers reject voice
+and microphone permission code when off; when on they require both linked pods,
+stored consent, the exact purpose text, Talk/Account route keys and the privacy
+manifest, while rejecting native fixture code. Signed release tooling uses a
 clean prebuild, so e2e Pods cannot be reused for an archive. The e2e fixture injects
 native in-memory credentials as specified by the core plan; production uses the
 origin-scoped Keychain store. Simulator builds need no signing identity. Test

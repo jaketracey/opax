@@ -1,5 +1,6 @@
 import { router } from 'expo-router';
 import { Button, Screen, Section, Text } from '../../design/primitives';
+import { showTour } from '../../onboarding/state';
 import { AccountSection } from './AccountSection';
 
 const independence =
@@ -7,7 +8,7 @@ const independence =
 
 /**
  * Account and about (IOS-UX 4.9) in development and e2e builds. Production
- * keeps the placeholder in ComingSoon.tsx until voice ships (entry.production.tsx).
+ * keeps the placeholder in ComingSoon.tsx until voice ships (entry.production.ts).
  */
 export function AccountScreen() {
   return (
@@ -27,6 +28,15 @@ export function AccountScreen() {
           label="About and sources"
           testID="account-about"
           onPress={() => router.push('/account/about')}
+        />
+        <Button
+          label="Replay welcome tour"
+          testID="account-replay-tour"
+          onPress={() => {
+            // The tour draws above the tabs, so the sheet closes first.
+            router.back();
+            showTour();
+          }}
         />
       </Section>
       {/* This screen never ships in production, so neither does the workbench link. */}

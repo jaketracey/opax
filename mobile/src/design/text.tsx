@@ -92,17 +92,159 @@ export function textContent(node: ReactNode): string {
 }
 
 /**
- * The next scale cap after a mid-word break, from the line height in effect
- * (line heights scale with the same Dynamic Type multiplier as the font).
+ * The Dynamic Type multiplier in effect, to two places, from a laid-out line
+ * height (line heights scale with the same multiplier as the font).
+ */
+export function lineScale(lineHeight: number, baseLineHeight: number): number {
+  return Math.round((lineHeight / baseLineHeight) * 100) / 100;
+}
+
+/**
+ * The next scale cap after a mid-word break, from the line height in effect.
  * Null when the text is already at the reader's default size or below.
  */
 export function nextWordSafeCap(
   lineHeight: number,
   baseLineHeight: number,
 ): number | null {
-  const current = Math.round((lineHeight / baseLineHeight) * 100) / 100;
+  const current = lineScale(lineHeight, baseLineHeight);
   if (current <= 1.01) return null;
   return Math.max(1, Math.round(current * 90) / 100);
+}
+
+/**
+ * A word-safe text's state for one identity: text size, window width, role,
+ * weight and text. Every change of cap starts a new generation, drawn by a
+ * new native Text (its React key), so each layout event names the instance
+ * that measured it: Fabric delivers a late event to the props of the
+ * instance that emitted it, never to its replacement's.
+ */
+export interface WordSafeState {
+  key: string;
+  gen: number;
+  /** The cap on the Dynamic Type multiplier; 0 is full size. */
+  cap: number;
+  /** The uncapped multiplier, from this identity's first full-size break. */
+  full: number;
+  /** The full-size generation, and the frame width it was laid out in. */
+  fullGen: number;
+  fullFrame: number;
+  /** The capped instance's frame width, and its longest unbreakable run of
+   * text scaled to full size (an upper bound: its widest line). */
+  frame: number;
+  word: number;
+}
+/** The native instance an event came from. */
+export interface WordSafeInstance {
+  key: string;
+  gen: number;
+}
+export const wordSafeStart = (key: string, gen = 0): WordSafeState => ({
+  key,
+  gen,
+  cap: 0,
+  full: 0,
+  fullGen: gen,
+  fullFrame: 0,
+  frame: 0,
+  word: 0,
+});
+/** Two-place rounding of the line height leaves this much noise. */
+const MEASURED_AT_TOLERANCE = 0.03;
+/** Frame widths are compared to the half point; fits keep a point spare. */
+const WIDTH_EPSILON = 0.5;
+const FIT_MARGIN = 1;
+const compact = (text: string) => text.replace(/\s/g, '');
+/** Full size again, as a new generation; the uncapped multiplier still holds. */
+const restart = (state: WordSafeState): WordSafeState => ({
+  ...wordSafeStart(state.key, state.gen + 1),
+  full: state.full,
+});
+/**
+ * The column grew enough: the capped instance's frame is wider than the one
+ * full size broke in, and every unbreakable run of its text, scaled back to
+ * full size, fits in it. Glyph advances scale linearly with point size.
+ */
+function provenToFit(state: WordSafeState): WordSafeState {
+  return state.cap &&
+    state.word &&
+    state.frame &&
+    state.fullFrame &&
+    state.frame > state.fullFrame + WIDTH_EPSILON &&
+    state.word + FIT_MARGIN <= state.frame
+    ? restart(state)
+    : state;
+}
+
+/**
+ * The state after one line measurement. Only the instance now drawn counts,
+ * and only for this text. The cap only steps down, in 10% steps, after a
+ * mid-word break measured at the size now drawn, and never at or below the
+ * reader's default size, where there is nothing to step down to (a layout
+ * from a larger size delivered late included). `full` comes only from a
+ * fresh full-size break. Returns `state` itself when nothing changes.
+ */
+export function wordSafeOnLines(
+  state: WordSafeState,
+  at: WordSafeInstance,
+  lines: readonly { text: string; width: number; height: number }[],
+  content: string,
+  baseLineHeight: number,
+  fontScale: number,
+): WordSafeState {
+  if (at.key !== state.key || at.gen !== state.gen || !lines.length)
+    return state;
+  if (fontScale <= 1) return state;
+  if (compact(lines.map((line) => line.text).join('')) !== compact(content))
+    return state;
+  const measuredAt = lineScale(lines[0]!.height, baseLineHeight);
+  const drawnAt = state.cap || state.full;
+  if (drawnAt && Math.abs(measuredAt - drawnAt) > MEASURED_AT_TOLERANCE)
+    return state;
+  if (breaksMidWord(lines)) {
+    const next = nextWordSafeCap(lines[0]!.height, baseLineHeight);
+    if (next === null || (state.cap && next >= state.cap)) return state;
+    return {
+      ...state,
+      gen: state.gen + 1,
+      cap: next,
+      full: state.full || measuredAt,
+      frame: 0,
+      word: 0,
+    };
+  }
+  if (!state.cap) return state;
+  // No run breaks at this cap, so each lies within one line.
+  const widest = Math.max(
+    ...lines.map((line) =>
+      Number.isFinite(line.width) ? line.width : Infinity,
+    ),
+  );
+  const word = (widest * state.full) / measuredAt;
+  return provenToFit(state.word === word ? state : { ...state, word });
+}
+
+/**
+ * The state after a frame. A capped instance draws one font and one text, so
+ * any widening of its frame is its column widening: start again from full
+ * size and step down afresh, which also restores a larger cap after a
+ * narrower column widens again. A frame from the full-size generation, even
+ * one delivered after the cap moved on, records where full size broke.
+ */
+export function wordSafeOnFrame(
+  state: WordSafeState,
+  at: WordSafeInstance,
+  width: number,
+): WordSafeState {
+  if (at.key !== state.key || !(width > 0)) return state;
+  if (at.gen === state.fullGen && (at.gen !== state.gen || !state.cap))
+    return state.fullFrame === width
+      ? state
+      : provenToFit({ ...state, fullFrame: width });
+  if (at.gen !== state.gen || !state.cap) return state;
+  if (state.frame && width > state.frame + WIDTH_EPSILON) return restart(state);
+  if (state.frame === width) return state;
+  return provenToFit({ ...state, frame: width });
 }
 
 /**
@@ -123,13 +265,44 @@ export function Text({
   const role = textStyles[variant];
   const tabular = 'tabular' in role && role.tabular;
   const { fontScale, width, scale } = useWindowDimensions();
-  // A cap belongs to one text size, width and text (nested text included, such
-  // as a field's "(required)"): any change starts again from full size.
+  // A cap belongs to one text size, window width, role, weight and text
+  // (nested text included, such as a field's "(required)"): any change starts
+  // again from full size, and so does a wider column (wordSafeOnFrame).
   const content = textContent(props.children);
-  const key = `${fontScale}|${width}|${content}`;
-  const [capped, setCapped] = useState({ key, cap: 0 });
-  const cap = capped.key === key ? capped.cap : 0;
-  const heightKey = `${key}|${variant}|${bold}|${cap}|${scale}`;
+  const key = `${fontScale}|${width}|${variant}|${bold}|${content}`;
+  // The state machine runs at event time in a ref, so frames and lines that
+  // change nothing drawn never render; `shown` re-renders on a new generation.
+  const [shown, setShown] = useState(() => wordSafeStart(key));
+  const machine = useRef(shown);
+  const committedKey = useRef(key);
+  useLayoutEffect(() => {
+    committedKey.current = key;
+  });
+  const drawn = shown.key === key ? shown : wordSafeStart(key);
+  const { cap, full } = drawn;
+  const instance: WordSafeInstance = { key: drawn.key, gen: drawn.gen };
+  const advance = (step: (state: WordSafeState) => WordSafeState) => {
+    // An event from an instance of an earlier identity, delivered late.
+    if (instance.key !== committedKey.current) return;
+    if (machine.current.key !== instance.key) {
+      const earlier = machine.current;
+      machine.current = wordSafeStart(instance.key);
+      // Returning to that identity later must not draw its old cap.
+      if (earlier.gen) setShown(machine.current);
+    }
+    const previous = machine.current;
+    const next = step(previous);
+    if (next === previous) return;
+    machine.current = next;
+    if (next.gen !== previous.gen) setShown(next);
+  };
+  // React Native's text measure cache compares fonts by size, multiplier and
+  // ramp but not maxFontSizeMultiplier, so a cap passed that way keeps the
+  // cached full-size layout and drawing ("Parliamentar / y" in About at AX5).
+  // The cap scales the role's own size and line height instead, which the
+  // cache does compare; Dynamic Type multiplies the result by the same ramp.
+  const capScale = wordSafe && cap && full ? cap / full : 1;
+  const heightKey = `${key}|${cap}|${scale}`;
   const probe = useTextProbe(props, heightKey, content);
   const measured = useRef<{
     key: string;
@@ -207,15 +380,21 @@ export function Text({
     guardDrawing();
     if (!wordSafe) return;
     const lines = event.nativeEvent.lines;
-    if (!lines.length || !breaksMidWord(lines)) return;
-    const next = nextWordSafeCap(
-      lines[0]!.height,
-      role.lineHeight + LINE_HEIGHT_NUDGE,
+    advance((state) =>
+      wordSafeOnLines(
+        state,
+        instance,
+        lines,
+        content,
+        role.lineHeight + LINE_HEIGHT_NUDGE,
+        fontScale,
+      ),
     );
-    if (next !== null) setCapped({ key, cap: next });
   };
   return (
     <NativeText
+      // One native instance per generation (see WordSafeState).
+      key={wordSafe ? `${drawn.key}|${drawn.gen}` : undefined}
       // Names and party abbreviations are read with Australian English rules.
       accessibilityLanguage="en-AU"
       {...probe.props}
@@ -227,6 +406,8 @@ export function Text({
         onLayout?.(event);
         const frame = event.nativeEvent.layout;
         if (frame.width <= 0 || frame.height <= 0) return;
+        if (wordSafe)
+          advance((state) => wordSafeOnFrame(state, instance, frame.width));
         // This event may still include the old floor. Forget that frame and
         // its lines before removing the floor, then wait for a fresh layout.
         if (
@@ -246,14 +427,14 @@ export function Text({
         guardDrawing();
       }}
       allowFontScaling
-      maxFontSizeMultiplier={wordSafe && cap ? cap : 0}
+      maxFontSizeMultiplier={0}
       dynamicTypeRamp={role.dynamicTypeRamp}
       style={[
         {
           color: colors[tone ?? role.color],
           fontFamily: bold ? boldStep[role.fontFamily] : role.fontFamily,
-          fontSize: role.fontSize,
-          lineHeight: role.lineHeight + LINE_HEIGHT_NUDGE,
+          fontSize: role.fontSize * capScale,
+          lineHeight: (role.lineHeight + LINE_HEIGHT_NUDGE) * capScale,
           flexShrink: 1,
         },
         tabular ? { fontVariant: ['tabular-nums'] } : null,

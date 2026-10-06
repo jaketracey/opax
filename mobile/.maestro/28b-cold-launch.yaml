@@ -1,0 +1,31 @@
+appId: au.com.opax.app
+name: 28b Cold launch recorded, splash then handoff then Today
+---
+# Run by path (the 28 shorthand runs only 28-welcome.yaml). Records a cold
+# launch for review: the native splash, the handoff's bronze rule and fade,
+# then Today. E2E builds treat the welcome tour as seen. Frames are cut from
+# the recording afterwards (README, "Launch and welcome tour").
+- launchApp
+- extendedWaitUntil:
+    visible:
+      id: today-screen
+    timeout: 60000
+- stopApp
+- startRecording: ${EVIDENCE}/28b-cold-launch
+# Give the recorder a moment to start before the launch.
+- extendedWaitUntil:
+    visible: Not drawn by OPAX
+    timeout: 1500
+    optional: true
+- launchApp
+- extendedWaitUntil:
+    visible:
+      id: today-screen
+    timeout: 60000
+# Let the handoff (at most 1.2 s) finish on the recording.
+- extendedWaitUntil:
+    visible: Not drawn by OPAX
+    timeout: 2500
+    optional: true
+- takeScreenshot: ${EVIDENCE}/28b-first-screen
+- stopRecording

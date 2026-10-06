@@ -8,7 +8,7 @@ import { get, request as httpRequest } from 'node:http';
 import { resolve } from 'node:path';
 let child: ChildProcess;
 let output = '';
-const port = 8998;
+let port = 0; // Each unit-test fixture reserves its own loopback port atomically.
 function request(
   path: string,
   headers: Record<string, string> = {},
@@ -51,7 +51,9 @@ beforeAll(async () => {
     );
     const receive = (chunk: Buffer) => {
       output += chunk.toString();
-      if (output.includes('OPAX_FIXTURE_READY')) {
+      const ready = /OPAX_FIXTURE_READY port=(\d+)/.exec(output);
+      if (ready) {
+        port = Number(ready[1]);
         clearTimeout(timer);
         resolve();
       }
@@ -260,7 +262,7 @@ test('a production Host header is rejected even on the loopback socket', async (
 });
 
 // Second servers, as e2e.sh starts them for the edition journeys 13b and 13c.
-function startFixture(mode: string, port: number) {
+function startFixture(mode: string, port = 0) {
   const child = spawn(
     process.execPath,
     ['--import', 'tsx', 'scripts/fixture-server.ts'],
@@ -282,7 +284,9 @@ function startFixture(mode: string, port: number) {
     );
     const receive = (chunk: Buffer) => {
       log += chunk.toString();
-      if (log.includes('OPAX_FIXTURE_READY')) {
+      const ready = /OPAX_FIXTURE_READY port=(\d+)/.exec(log);
+      if (ready) {
+        port = Number(ready[1]);
         clearTimeout(timer);
         resolve();
       }
@@ -300,6 +304,7 @@ function startFixture(mode: string, port: number) {
     child,
     ready,
     log: () => log,
+    port: () => port,
     stop: () =>
       child.exitCode === null
         ? new Promise<void>((resolve) => {
@@ -331,16 +336,15 @@ function getAt(
 const notPublished = { error: 'edition_not_published', date: '2026-10-04' };
 
 describe('the no-edition fixture', () => {
-  const port = 8996;
   let fixture: ReturnType<typeof startFixture>;
   beforeAll(() => {
-    fixture = startFixture('absent', port);
+    fixture = startFixture('absent');
     return fixture.ready;
   }, 20000);
   afterAll(() => fixture?.stop());
   test('answers the edition as the Worker does when none is posted, without a boundary alarm', async () => {
     expect(fixture.log()).toContain('edition=absent');
-    const result = await getAt(port, editionPath);
+    const result = await getAt(fixture.port(), editionPath);
     expect(result.status).toBe(404);
     expect(JSON.parse(result.body)).toEqual(notPublished);
     expect(result.headers['cache-control']).toBe(
@@ -356,34 +360,33 @@ describe('the no-edition fixture', () => {
 });
 
 describe('the withdrawn-edition fixture', () => {
-  const port = 8994;
   let fixture: ReturnType<typeof startFixture>;
   beforeAll(() => {
-    fixture = startFixture('withdrawn', port);
+    fixture = startFixture('withdrawn');
     return fixture.ready;
   }, 20000);
   afterAll(() => fixture?.stop());
   test('serves the edition until the app revalidates it, then 404s for good', async () => {
     expect(fixture.log()).toContain('edition=withdrawn');
     // e2e.sh's warm-up launch and the journey's own launch both get it.
-    const first = await getAt(port, editionPath);
+    const first = await getAt(fixture.port(), editionPath);
     expect(first.status).toBe(200);
-    expect((await getAt(port, editionPath)).status).toBe(200);
+    expect((await getAt(fixture.port(), editionPath)).status).toBe(200);
     // A pull to refresh revalidates with the saved validator.
-    const refreshed = await getAt(port, editionPath, {
+    const refreshed = await getAt(fixture.port(), editionPath, {
       'If-None-Match': String(first.headers.etag),
     });
     expect(refreshed.status).toBe(404);
     expect(JSON.parse(refreshed.body)).toEqual(notPublished);
     // A relaunch after the absence's minute asks again: still gone.
-    expect((await getAt(port, editionPath)).status).toBe(404);
+    expect((await getAt(fixture.port(), editionPath)).status).toBe(404);
     await new Promise((resolve) => setTimeout(resolve, 50));
     expect(fixture.log()).not.toContain('OUTSIDE_ALLOW_LIST');
   });
 });
 
 test('the fixture refuses an unknown edition mode at startup', async () => {
-  const fixture = startFixture('preview', 8995);
+  const fixture = startFixture('preview');
   await expect(fixture.ready).rejects.toThrow(
     'OPAX_FIXTURE_EDITION must be pinned, absent or withdrawn',
   );

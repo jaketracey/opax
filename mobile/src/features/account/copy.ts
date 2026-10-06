@@ -2,7 +2,7 @@ import { formatClock } from '../../design/format';
 import type { VoiceFailure } from '../../voice';
 
 // Account copy (docs/IOS-UX.md sections 4.9, 4.11 and 4.12). Development and
-// e2e builds only: production resolves entry.production.tsx, so none of it
+// e2e builds only: production resolves entry.production.ts, so none of it
 // ships until voice does.
 export const accountCopy = {
   checking: 'Checking your account…',

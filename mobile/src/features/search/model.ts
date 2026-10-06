@@ -63,7 +63,7 @@ export function personRowContext(
       : undefined;
   return {
     party: person?.party,
-    partyCurrent: person?.partyCurrent ?? false,
+    partyStatus: person?.partyStatus ?? ('unknown' as const),
     formerly: person?.formerly,
     place: place || undefined,
   };
