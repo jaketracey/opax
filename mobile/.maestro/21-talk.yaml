@@ -38,6 +38,16 @@ name: 21 Talk consent, captions, sources, controls and refusal states
     element:
       id: talk-agree
     centerElement: true
+# At AX5 UIKit can report the button visible while its centre is beneath the
+# sheet header. Reveal it physically before the one consent tap.
+- runFlow:
+    when:
+      true: ${CONTENT_SIZE === 'accessibility-extra-extra-extra-large'}
+    commands:
+      - swipe:
+          start: 90%, 30%
+          end: 90%, 55%
+          duration: 600
 - takeScreenshot: ${EVIDENCE}/21-consent
 - tapOn:
     id: talk-agree
@@ -96,11 +106,12 @@ name: 21 Talk consent, captions, sources, controls and refusal states
 # The e2e browser preview is a separate native-stack route. Leaving Talk ends
 # its call and discards evidence, so explicitly start a fresh fixture call.
 # Stored consent must let this call start without another consent prompt.
+# Ending resets Talk to the top; at AX5 Start is below the long introduction.
 - scrollUntilVisible:
     timeout: 60000
     element:
       id: talk-start
-    direction: UP
+    direction: DOWN
     centerElement: true
 - tapOn:
     id: talk-start
