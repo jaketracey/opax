@@ -29,27 +29,33 @@ name: 27 Leads and the declared-interests feed
 - takeScreenshot: ${EVIDENCE}/27-today-entry
 - tapOn:
     id: today-leads-open
+# At AX5 the lede alone fills the screen: wait for the screen, then scroll.
 - extendedWaitUntil:
     visible:
-      id: leads-count
+      id: leads-lede
     timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: leads-count
+    direction: DOWN
+    timeout: 180000
+    centerElement: true
+    speed: 20
 - assertVisible:
     id: leads-count
     text: 60 leads
 - takeScreenshot: ${EVIDENCE}/27-leads
 # The first lead is the export's first signal, with its own figures.
+# pointer: /signals/0/title
 - scrollUntilVisible:
     element:
       id: lead-0-title
+      text: 'Lead, Companies in both\. Westpac Banking Corporation appears in party receipts and contracts'
     direction: DOWN
     timeout: 180000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
-# pointer: /signals/0/title
-- assertVisible:
-    id: lead-0-title
-    text: 'Lead, Companies in both\. Westpac Banking Corporation appears in party receipts and contracts'
 - takeScreenshot: ${EVIDENCE}/27-lead-title
 - scrollUntilVisible:
     element:
@@ -97,58 +103,50 @@ name: 27 Leads and the declared-interests feed
     text: Contract records, 4
 - takeScreenshot: ${EVIDENCE}/27-lead-figures
 # Every caveat is on the card, in the export's words.
+# pointer: /signals/0/caveats/0
 - scrollUntilVisible:
     element:
       id: lead-0-caveat-0
+      text: Matching names are not verified legal identities; unrelated entities can share a name\.
     direction: DOWN
     timeout: 180000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
-# pointer: /signals/0/caveats/0
-- assertVisible:
-    id: lead-0-caveat-0
-    text: Matching names are not verified legal identities; unrelated entities can share a name\.
 - takeScreenshot: ${EVIDENCE}/27-lead-caveat
+# pointer: /signals/0/caveats/2
 - scrollUntilVisible:
     element:
       id: lead-0-caveat-2
+      text: Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification\. State, election and referendum disclosures are excluded\.
     direction: DOWN
     timeout: 180000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
-# pointer: /signals/0/caveats/2
-- assertVisible:
-    id: lead-0-caveat-2
-    text: Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification\. State, election and referendum disclosures are excluded\.
 # The receipt names its register, not OPAX's local row number.
 - scrollUntilVisible:
     element:
       id: lead-0-evidence-0
+      text: '1,803 dollars, Westpac Banking Corporation to Australian Labor Party \(ALP\), AEC annual receipt · FY 2024–25, AEC Transparency Register'
     direction: DOWN
     timeout: 180000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
-- assertVisible:
-    id: lead-0-evidence-0
-    text: '1,803 dollars, Westpac Banking Corporation to Australian Labor Party \(ALP\), AEC annual receipt · FY 2024–25, AEC Transparency Register'
 # pointer-absent: /signals/0/evidence/0/record_id
 - assertNotVisible:
     text: '.*643745.*'
+# pointer: /signals/0/evidence/1/record_id
 - scrollUntilVisible:
     element:
       id: lead-0-evidence-1
+      text: '4,537,500 dollars, Australian Office of Financial Management to Westpac Banking Corporation, Contract value · starts 6 Feb 2017, AusTender register, record CN3407266'
     direction: DOWN
     timeout: 180000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
-# pointer: /signals/0/evidence/1/record_id
-- assertVisible:
-    id: lead-0-evidence-1
-    text: '4,537,500 dollars, Australian Office of Financial Management to Westpac Banking Corporation, Contract value · starts 6 Feb 2017, AusTender register, record CN3407266'
 - takeScreenshot: ${EVIDENCE}/27-lead-records
 - scrollUntilVisible:
     element:
@@ -198,27 +196,31 @@ name: 27 Leads and the declared-interests feed
     id: lead-1-open
 - extendedWaitUntil:
     visible:
-      id: lead-takeaway
+      id: lead-heading
     timeout: 30000
 # pointer: /signals/1/chart/participants/0/name
-- assertVisible:
-    id: lead-takeaway
-    text: 78\.4% of recorded receipts came from Mineralogy Pty Ltd\.
-- takeScreenshot: ${EVIDENCE}/27-comparison
 - scrollUntilVisible:
     element:
-      id: lead-chart-row-0
+      id: lead-takeaway
+      text: 78\.4% of recorded receipts came from Mineralogy Pty Ltd\.
     direction: DOWN
     timeout: 180000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
+- takeScreenshot: ${EVIDENCE}/27-comparison
 # pointer: /signals/1/chart/participants/0/name
 # pointer: /signals/1/chart/participants/0/value as millions
 # pointer: /signals/1/chart/participants/0/share as percent
-- assertVisible:
-    id: lead-chart-row-0
-    text: Mineralogy Pty Ltd, 124\.7 million dollars, 78\.4 percent
+- scrollUntilVisible:
+    element:
+      id: lead-chart-row-0
+      text: Mineralogy Pty Ltd, 124\.7 million dollars, 78\.4 percent
+    direction: DOWN
+    timeout: 180000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
 - takeScreenshot: ${EVIDENCE}/27-chart
 - scrollUntilVisible:
     element:
@@ -230,32 +232,28 @@ name: 27 Leads and the declared-interests feed
 - waitForAnimationToEnd
 - tapOn:
     id: lead-chart-show-table
+# pointer: /signals/1/chart/participants/0/value as dollars
+# pointer: /signals/1/chart/participants/0/record_count as count
 - scrollUntilVisible:
     element:
       id: lead-chart-cell-0
+      text: Mineralogy Pty Ltd, value 124,655,455 dollars, share 78\.4 percent, 230 records
     direction: DOWN
     timeout: 180000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
-# pointer: /signals/1/chart/participants/0/value as dollars
-# pointer: /signals/1/chart/participants/0/record_count as count
-- assertVisible:
-    id: lead-chart-cell-0
-    text: Mineralogy Pty Ltd, value 124,655,455 dollars, share 78\.4 percent, 230 records
 - takeScreenshot: ${EVIDENCE}/27-table
+# pointer: /signals/1/caveats/2
 - scrollUntilVisible:
     element:
       id: lead-card-caveat-2
+      text: Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification\. State, election and referendum disclosures are excluded\.
     direction: DOWN
     timeout: 180000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
-# pointer: /signals/1/caveats/2
-- assertVisible:
-    id: lead-card-caveat-2
-    text: Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification\. State, election and referendum disclosures are excluded\.
 # The web's links: this comparison on opax.com.au, and its full money map.
 - scrollUntilVisible:
     element:
@@ -310,8 +308,15 @@ name: 27 Leads and the declared-interests feed
     id: today-declarations-all
 - extendedWaitUntil:
     visible:
-      id: declarations-chamber-house
+      id: declarations-screen
     timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: declarations-chamber-house
+    direction: DOWN
+    timeout: 180000
+    centerElement: true
+    speed: 20
 - takeScreenshot: ${EVIDENCE}/27-declarations
 - scrollUntilVisible:
     element:
@@ -345,18 +350,17 @@ name: 27 Leads and the declared-interests feed
     id: declarations-count
     text: 176 of 300 declarations · newest first
 - takeScreenshot: ${EVIDENCE}/27-declarations-house
-# Every row in the filtered list is a House row.
+# Every row in the filtered list is a House row. At AX5 a row can be taller
+# than the screen, so its text is matched where a tenth of it shows.
 - scrollUntilVisible:
     element:
       id: declaration-person-0
+      text: Andrew Wilkie, .*House of Representatives.*
     direction: DOWN
     timeout: 180000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
-- assertVisible:
-    id: declaration-person-0
-    text: Andrew Wilkie, .*House of Representatives.*
 - assertNotVisible:
     id: declaration-person-0
     text: .*Senate.*
