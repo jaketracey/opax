@@ -32,7 +32,11 @@ import { clock, endCopy, failureCopy, refusal, timeLabel } from './model';
 import { recordDestination } from './sources';
 import { useTalk } from './useTalk';
 import { AnswerCaption } from './AnswerCaption';
-import { reportAnswer, type ReportAnswer } from './reportAnswer';
+import {
+  reportAnswer,
+  reportFromSources,
+  type ReportAnswer,
+} from './reportAnswer';
 
 export default function TalkScreen({
   onReportAnswer = reportAnswer,
@@ -312,9 +316,12 @@ export default function TalkScreen({
                   you.
                 </Text>
                 <Text>
-                  OPAX keeps voice usage and session times. The voice policy is
-                  no recordings and deletion of provider transcripts within one
-                  day.
+                  OPAX keeps a record of each call, linked to your account: the
+                  seconds used, when it started and ended, and ElevenLabs&apos;
+                  reference for it. OPAX keeps no recording and no transcript.
+                  When OPAX last checked (9 September 2026), ElevenLabs was set
+                  not to record audio and to delete transcripts after one day.
+                  ElevenLabs&apos; own privacy policy also applies.
                 </Text>
                 <Text>
                   This choice is stored on this device. You can withdraw it here
@@ -401,7 +408,7 @@ export default function TalkScreen({
                 <AnswerCaption
                   key={`${turn.role}-${turn.id}`}
                   turn={turn}
-                  onReportAnswer={onReportAnswer}
+                  onReport={() => reportFromSources(s.sources, onReportAnswer)}
                 />
               ))}
             </Section>

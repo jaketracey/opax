@@ -20,7 +20,7 @@ export const failureCopy: Record<VoiceFailure, string> = {
     'A voice conversation is already open on your account. End it there, then check availability again.',
   forbidden:
     'OPAX could not authorise this voice request. Your microphone is off.',
-  unavailable: 'Voice is unavailable in this build. Your microphone is off.',
+  unavailable: 'Voice is unavailable right now. Your microphone is off.',
   network:
     'The connection ended. Your microphone is off. Check availability before starting again.',
   policy:

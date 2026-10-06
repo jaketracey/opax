@@ -1,13 +1,12 @@
 import { Button, Group, Text } from '../../design/primitives';
 import type { TranscriptTurn } from '../../voice';
-import type { ReportAnswer } from './reportAnswer';
 
 export function AnswerCaption({
   turn,
-  onReportAnswer,
+  onReport,
 }: {
   turn: TranscriptTurn;
-  onReportAnswer: ReportAnswer;
+  onReport: () => void;
 }) {
   return (
     <Group>
@@ -24,7 +23,7 @@ export function AnswerCaption({
           label="Report this answer"
           testID={`talk-report-${turn.id}`}
           variant="quiet"
-          onPress={() => onReportAnswer({ id: turn.id, text: turn.text })}
+          onPress={onReport}
         />
       ) : null}
     </Group>

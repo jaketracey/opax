@@ -73,6 +73,11 @@ name: 21 Talk consent, captions, sources, controls and refusal states
 - takeScreenshot: ${EVIDENCE}/21-report-control
 - tapOn:
     id: talk-report-1
+- extendedWaitUntil:
+    visible: Report a linked record
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/21-report-record-choice
+- tapOn: Public receipt records
 - scrollUntilVisible:
     timeout: 60000
     element:
