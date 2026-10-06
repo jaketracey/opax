@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react';
+import { ownsRowPadding } from './row-padding';
 import {
   Animated,
   Easing,
@@ -135,7 +136,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: rhythm.tight,
     minHeight: minimumTarget,
-    paddingVertical: rhythm.tight,
+    paddingVertical: 6,
   },
   text: {
     flex: 1,
@@ -151,3 +152,5 @@ const styles = StyleSheet.create({
     gap: rhythm.block,
   },
 });
+
+ownsRowPadding(Disclosure);

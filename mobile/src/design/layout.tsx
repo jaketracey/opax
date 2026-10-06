@@ -1,5 +1,6 @@
 import {
   Children,
+  isValidElement,
   useRef,
   type ReactElement,
   type ReactNode,
@@ -17,6 +18,7 @@ import { useAccessibilitySize } from './accessibility';
 import { Divider } from './controls';
 import type { SFSymbol } from './icon';
 import { InfoButton, type InfoNotes } from './info';
+import { ROW_OWNS_PADDING } from './row-padding';
 import { IconTile } from './rows';
 import { Heading, Text, type TextTone } from './text';
 import {
@@ -177,7 +179,11 @@ export function SubSection({
   );
 }
 
-/** Rows separated by subtle hairlines, 8pt either side. */
+/**
+ * Rows separated by subtle hairlines: 10pt either side of content, 2pt
+ * either side of a control row (LinkRow, Disclosure, PersonRow, a web link)
+ * that carries its own 44pt height and padding, so a one-line row is 48pt.
+ */
 export function RowList({ children }: { children: ReactNode }) {
   const rows = Children.toArray(children);
   return (
@@ -185,11 +191,17 @@ export function RowList({ children }: { children: ReactNode }) {
       {rows.map((row, index) => (
         <View key={index}>
           {index > 0 ? <Divider variant="subtle" /> : null}
-          <View style={styles.row}>{row}</View>
+          <View style={ownsPadding(row) ? styles.controlRow : styles.row}>
+            {row}
+          </View>
         </View>
       ))}
     </View>
   );
+}
+function ownsPadding(row: ReactNode) {
+  if (!isValidElement(row) || typeof row.type === 'string') return false;
+  return !!(row.type as unknown as Record<symbol, boolean>)[ROW_OWNS_PADDING];
 }
 
 export interface KeyValue {
@@ -302,6 +314,7 @@ const styles = StyleSheet.create({
     paddingTop: rhythm.heading,
   },
   row: { paddingVertical: layout.rowGap },
+  controlRow: { paddingVertical: 2 },
   kvInline: {
     flexDirection: 'row',
     alignItems: 'baseline',

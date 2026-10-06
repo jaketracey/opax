@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { ownsRowPadding } from './row-padding';
 import {
   ActionSheetIOS,
   Platform,
@@ -232,7 +233,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: rhythm.heading,
     minHeight: minimumTarget,
-    paddingVertical: rhythm.tight + 2,
+    paddingVertical: 6,
   },
   text: { flex: 1, gap: rhythm.tight },
   inline: { flexDirection: 'row', alignItems: 'center' },
@@ -257,3 +258,5 @@ const styles = StyleSheet.create({
   },
   originalText: { flexShrink: 1 },
 });
+
+ownsRowPadding(LinkRow);

@@ -1,4 +1,5 @@
 import { Pressable, StyleSheet, View } from 'react-native';
+import { ownsRowPadding } from './row-padding';
 import { openOnWeb, openSource } from '../navigation/external';
 import {
   asAtText,
@@ -334,10 +335,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: rhythm.tight,
     minHeight: minimumTarget,
-    paddingVertical: rhythm.line,
+    paddingVertical: 6,
   },
   shrink: { flexShrink: 1 },
   pressed: { backgroundColor: colors.sunken },
   figure: { gap: spacing.s1 },
   big: { gap: 2 },
 });
+
+ownsRowPadding(OpaxWebLink);

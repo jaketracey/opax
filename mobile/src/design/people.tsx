@@ -1,4 +1,5 @@
 import { router } from 'expo-router';
+import { ownsRowPadding } from './row-padding';
 import { partyRoute } from '../navigation/routes';
 import { useState } from 'react';
 import { localImageURI } from '../api/image-policy';
@@ -465,7 +466,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: rhythm.heading,
     minHeight: minimumTarget,
-    paddingVertical: rhythm.line,
+    paddingVertical: 6,
   },
   personMain: {
     flex: 1,
@@ -492,3 +493,5 @@ const styles = StyleSheet.create({
   },
   shrink: { flexShrink: 1 },
 });
+
+ownsRowPadding(PersonRow);
