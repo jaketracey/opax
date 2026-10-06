@@ -64,6 +64,69 @@ SCENE_DELEGATE = "EXExpoAppSceneDelegate"
 # Files under mobile/scripts/ that shape the shipped app (Metro reads the block
 # list) are application inputs, not tooling, for artifact provenance.
 APP_INPUTS_UNDER_SCRIPTS = {"mobile/scripts/production-block-list.json"}
+VOICE_POLICY = json.loads((Path(__file__).resolve().parent.parent / "voice-production-policy.json").read_text())
+LOCATION_PURPOSE = "OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere."
+
+
+def production_voice_enabled(value=None):
+    value = os.environ.get("OPAX_PRODUCTION_VOICE", "0") if value is None else value
+    require(value in ("0", "1"), "OPAX_PRODUCTION_VOICE must be 0 or 1")
+    return value == "1"
+
+
+def verify_voice_info(info, enabled):
+    permissions = {k: v for k, v in info.items() if re.fullmatch(r"NS.*UsageDescription", k)}
+    # The independent electorate lane uses location on device only.
+    if "NSLocationWhenInUseUsageDescription" in permissions:
+        require(permissions.pop("NSLocationWhenInUseUsageDescription") == LOCATION_PURPOSE,
+                "approved on-device location purpose string")
+    if enabled:
+        require(permissions == {"NSMicrophoneUsageDescription": VOICE_POLICY["microphonePurpose"]},
+                "approved microphone purpose string, no unshipped permissions")
+        require(info.get("OPAXProductionVoiceEnabled") is True and
+                info.get("OPAXVoiceConsentDefault") is False and
+                info.get("OPAXVoiceAllowedRoutes") == VOICE_POLICY["routes"],
+                "production voice route allow-list and denied consent default")
+    else:
+        require(not permissions and not any(k in info for k in (
+            "OPAXProductionVoiceEnabled", "OPAXVoiceConsentDefault", "OPAXVoiceAllowedRoutes")),
+            "no purpose strings or native gates for unshipped voice")
+    require("OPAXVoiceFixturePort" not in info, "production has no native fixture port")
+
+
+def verify_voice_privacy(manifest):
+    require(manifest.get("NSPrivacyTracking") is False and not manifest.get("NSPrivacyTrackingDomains"),
+            "privacy manifest declares no tracking")
+    entries = manifest.get("NSPrivacyCollectedDataTypes", [])
+    expected = {"NSPrivacyCollectedDataType" + name: linked
+                for linked, names in ((True, VOICE_POLICY["linkedDataTypes"]),
+                                      (False, VOICE_POLICY["unlinkedDataTypes"])) for name in names}
+    require(len(entries) == len(expected) and {e.get("NSPrivacyCollectedDataType") for e in entries} == set(expected),
+            "privacy manifest collected types match the conservative production label; location not collected")
+    for entry in entries:
+        require(entry.get("NSPrivacyCollectedDataTypeLinked") is expected[entry["NSPrivacyCollectedDataType"]] and
+                entry.get("NSPrivacyCollectedDataTypeTracking") is False and
+                entry.get("NSPrivacyCollectedDataTypePurposes") == ["NSPrivacyCollectedDataTypePurposeAppFunctionality"],
+                "privacy type linkage, no tracking and App Functionality purpose")
+    reasons = manifest.get("NSPrivacyAccessedAPITypes", [])
+    require(bool(reasons) and all(e.get("NSPrivacyAccessedAPITypeReasons") for e in reasons) and
+            any(e.get("NSPrivacyAccessedAPIType") == "NSPrivacyAccessedAPICategoryUserDefaults" and
+                "CA92.1" in e.get("NSPrivacyAccessedAPITypeReasons", []) for e in reasons),
+            "existing required-reason entries retained, including UserDefaults CA92.1")
+
+
+def verify_voice_bundle(body, enabled):
+    strings = hermes_strings(body)
+    if strings is None:
+        strings = {token.decode("latin-1") for token in PATH_TOKENS.findall(body)}
+    if enabled:
+        require("./talk.tsx" in strings and bool({"./account.tsx", "./account/index.tsx"} & strings),
+                "production voice requires Talk and Account route keys")
+    markers = ("voice-bridge-test", "Voice bridge fixture workbench", "example.invalid", "/__fixture/voice",
+               "Fixture code:", "OPAX_VOICE_E2E", "DebugSyntheticEngineFactory", "DebugSilentAudioSession")
+    found, _ = markers_in_entries(body, markers + (() if enabled else ("NSMicrophoneUsageDescription",)))
+    require(not found, "no voice fixture or synthetic account material in production JS" +
+            (f" (found {', '.join(found)})" if found else ""))
 
 
 def url_hosts(body):
@@ -281,11 +344,38 @@ def verify_no_voice_native_code(app):
             magic = stream.read(4)
         if magic not in MACHO_HEADERS and magic not in FAT_HEADERS:
             continue
-        require(no_voice_native_symbols(without_signature(path.read_bytes())),
+        body = without_signature(path.read_bytes())
+        verify_no_native_voice_fixtures(body)
+        require(no_voice_native_symbols(body),
                 f"No voice or microphone permission code in Mach-O: {path.relative_to(app)}")
         scanned.append(str(path.relative_to(app)))
     require(bool(scanned), "Production app contains Mach-O code to scan")
     return scanned
+
+
+def verify_no_native_voice_fixtures(body):
+    require(not any(marker in body for marker in (b"DebugSyntheticEngineFactory", b"DebugSilentAudioSession",
+                b"OPAXVoiceFixturePort", b"example.invalid", b"/__fixture/voice", b"OPAXWelcomeTour")) and
+            not re.search(rb":89[0-9]{2}", body),
+            "no e2e voice implementation, accounts, relay or fixture ports in production Mach-O")
+
+
+def verify_voice_native_code(app):
+    """Require both statically linked pods, including stripped Swift metadata.
+    Fixture implementations must not be compiled into any production Mach-O."""
+    bodies = []
+    for path in sorted(p for p in app.rglob("*") if p.is_file()):
+        with path.open("rb") as stream:
+            magic = stream.read(4)
+        if magic not in MACHO_HEADERS and magic not in FAT_HEADERS:
+            continue
+        body = without_signature(path.read_bytes())
+        verify_no_native_voice_fixtures(body)
+        bodies.append(body)
+    require(bool(bodies), "Production app contains Mach-O code to scan")
+    for marker in (b"OpaxVoiceModule", b"OpaxVoiceCore", b"StoredVoiceConsent", VOICE_POLICY["consentKey"].encode(),
+                   b"OPAXProductionVoiceEnabled", b"OPAXVoiceAllowedRoutes", b"requestRecordPermission"):
+        require(any(marker in body for body in bodies), "production voice native code linked: " + marker.decode())
 
 
 def scene_manifest_valid(info):
@@ -466,16 +556,26 @@ def verify_app(app, args):
           "Expo scene delegate class linked in the app executable")
     check(info.get("ITSAppUsesNonExemptEncryption") is False, "standard HTTPS encryption compliance")
     check("NSAppTransportSecurity" not in info, "no ATS exception")
-    purpose = "OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere."
-    check({k: v for k, v in info.items() if re.fullmatch(r"NS.*UsageDescription", k)} ==
-          {"NSLocationWhenInUseUsageDescription": purpose},
-          "exact foreground-only location purpose string; no other permissions")
+    voice_enabled = production_voice_enabled()
+    expected_permissions = {"NSLocationWhenInUseUsageDescription": LOCATION_PURPOSE}
+    if voice_enabled:
+        expected_permissions["NSMicrophoneUsageDescription"] = VOICE_POLICY["microphonePurpose"]
+    check({k: v for k, v in info.items() if re.fullmatch(r"NS.*UsageDescription", k)} == expected_permissions,
+          "exact foreground-only location purpose string; no other permissions" if not voice_enabled else
+          "exact foreground-only location and approved microphone purpose strings; no other permissions")
     check("location" not in info.get("UIBackgroundModes", []), "no background location mode")
+    verify_voice_info(info, voice_enabled)
+    check(True, "approved voice purpose/route/consent policy" if voice_enabled else
+          "no purpose strings for unshipped voice features")
     privacy = plistlib.loads((app / "PrivacyInfo.xcprivacy").read_bytes())
-    check(privacy.get("NSPrivacyTracking") is False and
-          privacy.get("NSPrivacyCollectedDataTypes") == [] and
-          not privacy.get("NSPrivacyTrackingDomains"),
-          "app privacy manifest: no collected location or tracking")
+    if voice_enabled:
+        verify_voice_privacy(privacy)
+        check(True, "production privacy types, no tracking, existing required reasons retained")
+    else:
+        check(privacy.get("NSPrivacyTracking") is False and
+              privacy.get("NSPrivacyCollectedDataTypes") == [] and
+              not privacy.get("NSPrivacyTrackingDomains"),
+              "app privacy manifest: no collected location or tracking")
     check(info.get("DTXcodeBuild") == args.xcode_build, "archive uses the selected release Xcode")
     check(no_app_extensions(app, info), "no app extensions")
     framework_allowlist(app)
@@ -523,12 +623,23 @@ def verify_app(app, args):
     route_keys = bundle_route_keys(bundle, Path("src/app"))
     check(True, "every shipping Expo route key is present in shipped JS")
     check(True, "no unshipped, development or workbench route keys in shipped JS")
-    verify_no_voice_native_code(app)
-    check(True, "no OpaxVoiceCore, OpaxVoice or microphone permission code in any production Mach-O")
+    verify_voice_bundle(bundle, voice_enabled)
+    if voice_enabled:
+        verify_voice_native_code(app)
+        check(True, "both voice pods, permission and denied-by-default consent store linked; no native fixtures")
+        check(True, "Talk and Account routes present")
+    else:
+        verify_no_voice_native_code(app)
+        check(True, "no OpaxVoiceCore, OpaxVoice or microphone permission code in any production Mach-O")
     configs = list(app.rglob("app.config"))
     check(bool(configs), "embedded Expo config exists")
     for path in configs:
         config = json.loads(path.read_bytes())
+        check((config["extra"].get("productionVoiceEnabled") is True) == voice_enabled,
+              "embedded production voice switch matches the release invocation")
+        verify_voice_info(config["ios"]["infoPlist"], voice_enabled)
+        if voice_enabled:
+            check(config["extra"].get("voiceConsentDefault") is False, "embedded consent is denied by default")
         check(config["extra"]["variant"] == "production" and
               config["extra"]["apiOrigin"] == "https://opax.com.au" and
               config["extra"]["appBuild"] == args.build and
@@ -573,12 +684,24 @@ def verify_app(app, args):
                "source": "local" if local else "cloud-managed"}
     print(f"Signing: {signing['source']} {cert_type}; {signing['identity_name']}")
     return {"commit": args.commit, "version": args.version, "build": args.build,
-            "kind": args.kind, "checks": results, "signing": signing,
+            "kind": args.kind, "production_voice_enabled": voice_enabled, "checks": results, "signing": signing,
             "bundle_route_keys": route_keys, "embedded_bundles_checked": embedded_bundles,
             "team_id_in_required_signing_metadata": team_in_metadata}
 
 
 def main():
+    # Shared offline Hermes-aware route/fixture gate used by qa-static. It
+    # intentionally needs no signing credentials and performs no network I/O.
+    if "--bundle-only" in sys.argv:
+        parser = argparse.ArgumentParser()
+        parser.add_argument("--bundle-only", type=Path, required=True)
+        args = parser.parse_args()
+        try:
+            verify_voice_bundle(args.bundle_only.read_bytes(), production_voice_enabled())
+            print("PASS production voice bundle policy")
+        except (ReleaseError, OSError, ValueError) as error:
+            raise SystemExit(str(error))
+        return
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("path", type=Path)
     parser.add_argument("--kind", choices=["archive", "distribution"], required=True)

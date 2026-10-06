@@ -12,6 +12,13 @@ public enum AuthRoute: String, CaseIterable, Sendable {
     }
 }
 public struct RoutePolicy: Sendable {
+    public static func productionConfigurationMatches(_ info: [String: Any]) -> Bool {
+        guard info["OPAXProductionVoiceEnabled"] as? Bool == true,
+              info["OPAXVoiceConsentDefault"] as? Bool == false,
+              let routes = info["OPAXVoiceAllowedRoutes"] as? [String] else { return false }
+        let expected = AuthRoute.allCases.map { $0.method + " " + $0.rawValue }
+        return routes.count == expected.count && Set(routes) == Set(expected)
+    }
     public let origin: URL
     private let loopback: Bool
     public init() { origin = URL(string: "https://opax.com.au")!; loopback = false }

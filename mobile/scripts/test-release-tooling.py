@@ -878,5 +878,92 @@ class BundleAttackTests(unittest.TestCase):
                     verify.nested_entitlements(app)
 
 
+class ProductionVoiceTests(unittest.TestCase):
+    def info(self):
+        return {"NSMicrophoneUsageDescription": verify.VOICE_POLICY["microphonePurpose"],
+                "OPAXProductionVoiceEnabled": True, "OPAXVoiceConsentDefault": False,
+                "OPAXVoiceAllowedRoutes": verify.VOICE_POLICY["routes"]}
+
+    def manifest(self):
+        return {"NSPrivacyTracking": False, "NSPrivacyCollectedDataTypes": [
+            {"NSPrivacyCollectedDataType": "NSPrivacyCollectedDataType" + name,
+             "NSPrivacyCollectedDataTypeLinked": linked, "NSPrivacyCollectedDataTypeTracking": False,
+             "NSPrivacyCollectedDataTypePurposes": ["NSPrivacyCollectedDataTypePurposeAppFunctionality"]}
+            for linked, names in ((True, verify.VOICE_POLICY["linkedDataTypes"]),
+                                  (False, verify.VOICE_POLICY["unlinkedDataTypes"])) for name in names],
+            "NSPrivacyAccessedAPITypes": [{"NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+                                         "NSPrivacyAccessedAPITypeReasons": ["CA92.1"]}]}
+
+    def native_body(self):
+        return struct.pack("<8I", 0xfeedfacf, 0, 0, 0, 0, 0, 0, 0) + b"\0".join((
+            b"OpaxVoiceModule", b"OpaxVoiceCore", b"StoredVoiceConsent", b"opax.voice.consent.v1",
+            b"OPAXProductionVoiceEnabled", b"OPAXVoiceAllowedRoutes", b"requestRecordPermission"))
+
+    def test_switch_defaults_off_and_rejects_invalid_values(self):
+        with patch.dict(os.environ, {}, clear=True):
+            self.assertFalse(verify.production_voice_enabled())
+        self.assertFalse(verify.production_voice_enabled("0"))
+        self.assertTrue(verify.production_voice_enabled("1"))
+        for value in ("", "true", "2"):
+            with self.assertRaises(ReleaseError): verify.production_voice_enabled(value)
+
+    def test_both_purpose_modes_and_on_device_location(self):
+        verify.verify_voice_info({}, False)
+        verify.verify_voice_info(self.info(), True)
+        for enabled, info in ((False, {}), (True, self.info())):
+            info["NSLocationWhenInUseUsageDescription"] = verify.LOCATION_PURPOSE
+            verify.verify_voice_info(info, enabled)
+        for enabled, info in ((True, {}), (False, self.info())):
+            with self.assertRaises(ReleaseError): verify.verify_voice_info(info, enabled)
+
+    def test_wrong_purpose_routes_auto_consent_and_fixture_metadata_fail(self):
+        for key, value in (("NSMicrophoneUsageDescription", "draft"), ("OPAXVoiceConsentDefault", True),
+                           ("OPAXVoiceAllowedRoutes", verify.VOICE_POLICY["routes"] + ["POST /api/ask"]),
+                           ("OPAXProductionVoiceEnabled", False), ("OPAXVoiceFixturePort", 8923),
+                           ("NSCameraUsageDescription", "unshipped")):
+            info = {**self.info(), key: value}
+            with self.subTest(key=key), self.assertRaises(ReleaseError): verify.verify_voice_info(info, True)
+
+    def test_privacy_exact_types_linkage_tracking_purpose_and_reasons(self):
+        self.assertEqual(verify.VOICE_POLICY["unlinkedDataTypes"], ["SearchHistory", "OtherDataTypes"])
+        verify.verify_voice_privacy(self.manifest())
+        for key, value in (("NSPrivacyTracking", True), ("NSPrivacyTrackingDomains", ["foreign.test"]),
+                           ("NSPrivacyAccessedAPITypes", []), ("NSPrivacyCollectedDataTypes", [])):
+            with self.subTest(key=key), self.assertRaises(ReleaseError):
+                verify.verify_voice_privacy({**self.manifest(), key: value})
+        for key, value in (("NSPrivacyCollectedDataTypeLinked", False), ("NSPrivacyCollectedDataTypeTracking", True),
+                           ("NSPrivacyCollectedDataTypePurposes", ["NSPrivacyCollectedDataTypePurposeAnalytics"]),
+                           ("NSPrivacyCollectedDataType", "NSPrivacyCollectedDataTypePreciseLocation")):
+            changed = self.manifest(); changed["NSPrivacyCollectedDataTypes"][0][key] = value
+            with self.subTest(key=key), self.assertRaises(ReleaseError): verify.verify_voice_privacy(changed)
+
+    def test_voice_routes_required_as_whole_hermes_entries_in_on_mode(self):
+        keys = b"./talk.tsx./account/index.tsx"
+        body = hermes_bundle(keys, [packed(keys, b"./talk.tsx"), packed(keys, b"./account/index.tsx")])
+        verify.verify_voice_bundle(body, True)
+        verify.verify_voice_bundle(b"catalog only", False)
+        for bad in (b"./talk.tsx\0", b"./talk.tsx.workbench.tsx\0./account/index.tsx\0"):
+            with self.assertRaises(ReleaseError): verify.verify_voice_bundle(bad, True)
+
+    def test_fixture_material_stays_forbidden_in_both_modes(self):
+        for enabled in (False, True):
+            for marker in (b"happy@example.invalid", b"arbitrary@example.invalid", b"voice-bridge-test", b"/__fixture/voice"):
+                with self.subTest(enabled=enabled, marker=marker), self.assertRaises(ReleaseError):
+                    verify.verify_voice_bundle(b"./talk.tsx\0./account/index.tsx\0" + marker, enabled)
+
+    def test_both_pods_consent_and_permission_required_without_native_fixtures(self):
+        with tempfile.TemporaryDirectory() as d:
+            app = Path(d); binary = app / "OPAX"
+            body = self.native_body(); binary.write_bytes(body)
+            verify.verify_voice_native_code(app)
+            with self.assertRaises(ReleaseError): verify.verify_no_voice_native_code(app)
+            for marker in (b"OpaxVoiceModule", b"OpaxVoiceCore", b"StoredVoiceConsent", b"requestRecordPermission"):
+                binary.write_bytes(body.replace(marker, b"missing"))
+                with self.subTest(marker=marker), self.assertRaises(ReleaseError): verify.verify_voice_native_code(app)
+            for marker in (b"DebugSyntheticEngineFactory", b"OPAXVoiceFixturePort", b"http://127.0.0.1:8923", b"test@example.invalid"):
+                binary.write_bytes(body + marker)
+                with self.subTest(marker=marker), self.assertRaises(ReleaseError): verify.verify_voice_native_code(app)
+
+
 if __name__ == "__main__":
     unittest.main()

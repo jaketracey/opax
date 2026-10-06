@@ -12,19 +12,22 @@ export function assertNoFixtureOrigin(body: Buffer, fixturePort: string) {
       'Production bundle has a loopback origin',
     );
   assert(
-    !body.includes(Buffer.from(`:${fixturePort}`)),
+    !/:89[0-9]{2}/.test(body.toString('latin1')) &&
+      !body.includes(Buffer.from(`:${fixturePort}`)),
     'Production bundle contains the configured fixture port',
   );
 }
 
-export function assertNoVoiceFixtures(body: Buffer) {
+export function assertNoVoiceFixtures(body: Buffer, productionVoice = false) {
   for (const marker of [
     'voice-bridge-test',
     'Voice bridge fixture workbench',
-    'happy@example.invalid',
+    'example.invalid',
     '/__fixture/voice',
     'Fixture code:',
-    'NSMicrophoneUsageDescription',
+    ...(productionVoice ? [] : ['NSMicrophoneUsageDescription']),
+    'OPAX_VOICE_E2E',
+    'DebugSyntheticEngineFactory',
   ])
     assert(
       !body.includes(Buffer.from(marker)),
