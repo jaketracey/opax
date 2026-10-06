@@ -71,7 +71,7 @@ from parli.ingest.arag_sync import (  # noqa: E402
     clean_party, prepare_dedupe,
 )
 from parli.ingest.speaker_names import normalize_speaker  # noqa: E402
-from scripts.roster_identity import member, same_person, state_member_matches, usable_alias, verify, weak  # noqa: E402
+from scripts.roster_identity import COMMITTEES, agrees, member, same_person, state_member_matches, usable_alias, verify, weak  # noqa: E402
 from scripts.enrich_profile_jurisdictions import pinned_reference, repair, REVIEWED  # noqa: E402
 
 DB = "file:" + (os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")) + "?mode=ro"
@@ -297,6 +297,15 @@ def main(argv=()) -> None:
             full = members.get(party_pid, {}).get("name") or ""
             if usable_alias(full) and full.split()[-1].lower() == name.lower().split()[-1]:
                 rec["full"] = full
+        if " " not in name and not rec.get('full') and top_pid in members:
+            raw=members[top_pid]
+            # Carry a malformed own-house alias only into the shared repair,
+            # so the pinned and SQL paths can recognise the same source defect.
+            # It supplies neither an MP id nor a party, and is corrected or
+            # removed before any output. Committee-only reachability is excluded.
+            if (len(raw['name'].split())>1 and not usable_alias(raw['name']) and agrees(name,raw['name'])
+                    and raw['state'] in rec['states'] and raw['chamber'] in set(rec['chambers'])-COMMITTEES):
+                rec['full']=raw['name']
         # Key order as before: name, speeches, party, parties, states, chambers, first, last, pid, ...
         order = ["name", "speeches", "party", "parties", "states", "chambers", "first", "last", "pid",
                  "current", "party_now", "full", "witness_rows", "recorded_parties"]

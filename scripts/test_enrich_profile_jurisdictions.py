@@ -95,7 +95,7 @@ class PinnedServiceTests(unittest.TestCase):
         rows = json.loads((profiles.PUBLIC/'parliamentarians.json').read_text())['people']
         self.assertEqual(self.repair(copy.deepcopy(rows)), [])
         for p in rows:
-            if identity.mixed_print(p):
+            if identity.weak(p['name']) and len(p.get('states',[]))>1:
                 own = profiles.print_identity(p, profiles.dated_records(self.reference, self.reviewed), self.reference)
                 if not own:
                     for field in ('pid', 'full', 'party', 'parties', 'current', 'party_now'):
@@ -121,23 +121,25 @@ class GeneralGuardTests(unittest.TestCase):
         profiles.repair([row],profiles.pinned_reference(),json.loads(profiles.REVIEWED.read_text()))
         return row
 
-    def test_hanson_uses_act_evidence_instead_of_a_federal_committee_namesake(self):
+    def test_hanson_contains_jeremy_and_pauline_and_stays_neutral(self):
         p=self.state_case('Hanson',['act','federal'],['act_la','senate_committee','joint_committee'],256,28,'Pauline Hanson','One Nation',2024)
-        self.assertEqual((p.get('full'),p.get('party')),('Jeremy Hanson','Liberal'))
-        self.assertEqual({r['jurisdiction'] for r in p['identity_evidence']},{'act'})
+        self.assertNotIn('full',p)
+        self.assertNotIn('party',p)
 
-    def test_mcbride_uses_sa_evidence_instead_of_a_federal_committee_namesake(self):
+    def test_mcbride_contains_nick_and_emma_and_stays_neutral(self):
         p=self.state_case('McBride',['sa','federal'],['sa_ha','senate_committee','house_committee'],216,83,'Emma McBride','Labor')
-        self.assertEqual((p.get('full'),p.get('party')),('Nick McBride','Liberal'))
-        self.assertEqual({r['jurisdiction'] for r in p['identity_evidence']},{'sa'})
+        self.assertNotIn('full',p)
+        self.assertNotIn('party',p)
 
-    def test_gee_uses_sa_evidence_instead_of_a_federal_committee_namesake(self):
+    def test_gee_contains_jon_and_andrew_and_stays_neutral(self):
         p=self.state_case('Gee',['sa','federal'],['sa_ha','joint_committee'],76,0,'Andrew Gee','Independent')
-        self.assertEqual((p.get('full'),p.get('party')),('Jon Gee','Labor'))
+        self.assertNotIn('full',p)
+        self.assertNotIn('party',p)
 
-    def test_kennedy_uses_victorian_evidence_instead_of_a_federal_committee_namesake(self):
+    def test_kennedy_contains_john_and_simon_and_stays_neutral(self):
         p=self.state_case('Kennedy',['vic','federal'],['vic_la','house_committee','senate_committee'],331,44,'Simon Kennedy','Liberal',2019)
-        self.assertEqual((p.get('full'),p.get('party')),('John Kennedy','Labor'))
+        self.assertNotIn('full',p)
+        self.assertNotIn('party',p)
 
     def test_ng_without_own_nsw_evidence_stays_neutral(self):
         p=self.state_case('Ng',['nsw','federal'],['nsw_la','nsw_lc','house_committee','joint_committee','senate_committee'],199,66,'Gabriel Ng','Labor',2025)
@@ -165,19 +167,20 @@ class GeneralGuardTests(unittest.TestCase):
         self.assertNotIn('full',row)
         self.assertNotIn('party',row)
 
-    def test_witness_majority_and_ties_stay_neutral_with_a_strict_majority_boundary(self):
-        record=dict(name='Alex Smith',identity='one',jurisdiction='federal',chamber='representatives',electorate='First Seat',start='2020-01-01',end='2022-12-31')
+    def test_only_more_than_half_witnesses_permits_neutralising_a_clean_record(self):
         for witnesses in [49,50,51,99]:
-            row=person('Smith',['federal'],['representatives','house_committee'],2020,2022,full='Alex Smith',party='Labor',pid='123',witness_rows=witnesses)
+            row=person('Unknown',['sa'],['sa_ha'],2020,2022,full='Alex Unknown',party='Labor',witness_rows=witnesses)
             row['speeches']=100
+            before=copy.deepcopy(row)
             with self.subTest(witnesses=witnesses):
-                own=profiles.print_identity(row,[record],{})
-                self.assertEqual(bool(own),witnesses<50)
-                identity.guard_print(row,resolved=bool(own))
-                self.assertEqual(row.get('full'), 'Alex Smith' if witnesses<50 else None)
-                self.assertNotIn('pid',row)  # No witness speech takes an MP record join.
-                self.assertEqual(row['witness_rows'],witnesses)
+                self.assertEqual(profiles.witness_dominated(row),witnesses>50)
+                profiles.repair([row],{}, {})
+                if witnesses<=50:self.assertEqual(row,before)
+                else:
+                    self.assertNotIn('full',row)
+                    self.assertNotIn('party',row)
                 self.assertEqual(row['speeches'],100)
+                self.assertEqual(row['witness_rows'],witnesses)
 
     def test_anderson_and_bishop_and_all_witness_dominated_rows_have_no_mp_identity(self):
         for name,total,witnesses,full in [('Anderson',450,449,'John Anderson'),('Bishop',33,32,'Julie Bishop')]:
@@ -188,7 +191,7 @@ class GeneralGuardTests(unittest.TestCase):
                 self.assertNotIn(field,row,name)
         people=json.loads((profiles.PUBLIC/'parliamentarians.json').read_text())['people']
         for p in people:
-            if not identity.parliamentary_speakers_dominate(p):
+            if profiles.witness_dominated(p):
                 for field in ['pid','full','party','parties','identity_evidence','affiliations']:
                     self.assertNotIn(field,p,p['name'])
 
@@ -216,7 +219,7 @@ class GeneralGuardTests(unittest.TestCase):
         self.assertNotIn('full',row)
         self.assertNotIn('party',row)
 
-    def test_sa_two_house_initials_keep_the_five_verified_names_and_parties(self):
+    def test_sa_two_house_initials_preserve_main_except_the_evidenced_lensink_portfolio(self):
         rows=json.loads((profiles.PUBLIC/'parliamentarians.json').read_text())['people']
         people={p['name']:p for p in rows}
         for name,full,party in [('K.J. Maher','Kyam Maher','Labor'),('R.I. Lucas','Rob Lucas','Liberal'),
@@ -225,7 +228,9 @@ class GeneralGuardTests(unittest.TestCase):
             with self.subTest(name=name):
                 p=people[name]
                 self.assertFalse(identity.mixed_print(p))
-                self.assertEqual((p['full'],p['party']),(full,party))
+                self.assertEqual(p['party'],party)
+                if name=='J.M.A. Lensink':self.assertEqual(p['full'],full)
+                else:self.assertNotIn('full',p)
         self.assertEqual(people['J.M.A. Lensink']['representation'][0]['electorate'],'South Australia')
 
     def test_dated_election_aliases_preserve_verified_federal_nicknames(self):

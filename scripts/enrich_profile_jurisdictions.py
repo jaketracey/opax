@@ -11,11 +11,12 @@ import json
 import re
 import sys
 from collections import defaultdict
+from functools import lru_cache
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from scripts.roster_identity import COMMITTEES, FEDERAL, agrees, alias_name, guard_print, mixed_print, parliamentary_speakers_dominate, parts, state_member_matches, usable_alias, weak
+from scripts.roster_identity import COMMITTEES, FEDERAL, agrees, alias_name, guard_print, mixed_print, parliamentary_speakers_dominate, parts, pinned_members, state_member_matches, usable_alias, weak
 
 PUBLIC = ROOT / 'portal/public'
 REVIEWED = ROOT / 'scripts/roster_service.json'
@@ -50,7 +51,11 @@ def enrich(people,members,seats,reference=None,reviewed=None):
             record={'jurisdiction':jur,'chamber':chamber,'electorate':region or electorate,
                     'state':state,'basis':'Recorded parliamentary roster; exact name and chamber match'}
             if record not in matches:matches.append(record)
-        person['representation']=matches
+        # The first export repair may already have replaced a contaminated
+        # member-stub seat with independently dated service. Do not undo that
+        # evidence when the wrapper runs its members-table enrichment pass.
+        if not person.get('representation') or not (person.get('identity_evidence') or person.get('affiliations')):
+            person['representation']=matches or person.get('representation',[])
     if reference is not None:
         repair(people,reference,reviewed or {})
     else:
@@ -143,25 +148,25 @@ def print_identity(person,records,reference,printed_people=()):
     an independently evidenced name, seat or party. Committees are not houses.
     Multiple compatible people refuse a single-person identity.
     """
-    if not parliamentary_speakers_dominate(person):return []
+    if not parliamentary_speakers_dominate(person) or person.get('first') is None or person.get('last') is None:return []
     houses=set(person.get('chambers',[]))-COMMITTEES
     jurisdictions={'federal' if c in FEDERAL else c.split('_')[0] for c in houses}
     if not jurisdictions:return []
     own=matching_records(person,records,{},allow_weak=True)
     # Committee membership/testimony cannot supply a candidate for a house.
-    # When the print also has an actual federal house, another federal member
-    # reached via a committee can contradict its identity (David/Dorinda Cox).
-    # That negative evidence never identifies a state speaker or supplies own.
+    # A federal parliamentarian can appear before either house's committee.
+    # Their dated service may contradict a state namesake, but never supplies
+    # own (which is restricted to the print's actual non-committee houses).
     compatible=dict(person,chambers=list(houses))
-    if houses & FEDERAL:
-        if set(person.get('chambers',[])) & {'senate_committee','joint_committee'}:compatible['chambers'].append('senate')
-        if set(person.get('chambers',[])) & {'house_committee','joint_committee'}:compatible['chambers'].append('representatives')
+    committees=set(person.get('chambers',[])) & COMMITTEES
+    if committees and 'federal' in person.get('states',[]):
+        compatible['chambers']=list(houses | FEDERAL)
     possible=matching_records(compatible,records,{},unique=False,allow_weak=True)
     if ambiguous_scopes(possible):return []
     by_id={p['person_id']:p for p in reference.get('people',[])}
     seats={e['electorate_id']:e for e in reference.get('electorates',[])}
     candidates={}
-    conflicting_names=[]
+    conflicting_names=committee_names(person,reference) if committees else []
     for roster in reference.get('rosters',[]):
         e=seats[roster['electorate_id']]
         if e['jurisdiction'] not in person.get('states',[]) or e['chamber'] not in compatible['chambers']:continue
@@ -170,9 +175,7 @@ def print_identity(person,records,reference,printed_people=()):
             name=alias_name(p['name'])
             if usable_alias(name) and agrees(person['name'],name):
                 if e['chamber'] not in houses:
-                    # An undated federal stub can expose a namesake behind
-                    # committee rows; it cannot identify that print positively.
-                    conflicting_names.append(name)
+                    # Undated stubs alone do not prove service in these years.
                     continue
                 candidates[(key(name),e['jurisdiction'],e['chamber'])]=dict(name=name,jurisdiction=e['jurisdiction'],
                     chamber=e['chamber'],electorate=e['name'],state=e.get('state_code','').upper(),
@@ -199,6 +202,88 @@ def print_identity(person,records,reference,printed_people=()):
     if not jurisdictions <= {r['jurisdiction'] for r in [*own,*candidates.values()]}:return []
     if own:return own if jurisdictions <= {r['jurisdiction'] for r in own} else []
     return list(candidates.values()) if len({key(r['name']) for r in candidates.values()})==1 else []
+
+
+@lru_cache(maxsize=1)
+def committee_members():
+    # Negative evidence only, from the same verified pinned exports used by
+    # the photo guard. Fixture-only checkouts may omit these exports.
+    return pinned_members() if (PUBLIC/'votes.json').exists() and (PUBLIC/'pay.json').exists() else {}
+
+
+def committee_names(person,reference):
+    if person.get('first') is None or person.get('last') is None:return []
+    if not set(person.get('chambers',[])) & COMMITTEES or 'federal' not in person.get('states',[]):return []
+    ids={str(p.get('legacy_person_id')) for p in reference.get('people',[]) if p.get('jurisdiction')=='federal'}
+    found=[]
+    for pid,m in committee_members().items():
+        if pid not in ids:continue
+        if m.get('start') is not None and m['start']>person['last']:continue
+        if m.get('end') is not None and m['end']<person['first']:continue
+        found.extend(alias_name(n) for n in m['names'] if usable_alias(alias_name(n)) and agrees(person['name'],n))
+    return found
+
+
+def witness_dominated(person):
+    """Round 3's governing threshold: more than half the rows are witnesses."""
+    return person.get('witness_rows',0)*2 > person.get('speeches',0)
+
+
+def change_reason(person,records,reference,reviewed,printed_people=(),catalog=None):
+    """Evidence permitting an edit. Missing positive evidence permits no edit.
+
+    This gate applies equally to pinned repair and the database export. Ordinary
+    records, including state initials and two-house careers, pass through intact.
+    """
+    if witness_dominated(person):return 'witness-dominated','More than 50% witness rows'
+    if weak(person['name']) and len(set(person.get('states',[])))>1:
+        return 'spans parliaments','Weak printed name aggregates multiple parliaments'
+    own=(print_identity(person,records,reference,printed_people) if weak(person['name'])
+         else matching_records(person,records,reviewed))
+    if weak(person['name']) and not str(person.get('pid','')).isdigit() and own and usable_alias(person.get('full')) and any(
+            r.get('start') and not any(agrees(person['full'],n) for n in [r['name'],*r.get('aliases',[])]) for r in own):
+        return 'mix-up corrected','Alias contradicts the dated member in the recorded chamber'
+    if weak(person['name']) and not own:
+        possible=matching_records(person,records,{},unique=False,allow_weak=True)
+        names=[r['name'] for r in possible]+committee_names(person,reference)
+        names += [p['name'] for p in printed_people if usable_alias(p['name'])
+                  and agrees(person['name'],p['name']) and set(p.get('chambers',[])) & set(person.get('chambers',[]))
+                  and p.get('first') is not None and p.get('last') is not None
+                  and person.get('first') is not None and person.get('last') is not None
+                  and p['first']<=person['last'] and p['last']>=person['first']]
+        if ambiguous_scopes(possible) or any(not agrees(a,b) for a in names for b in names):
+            return 'mix-up corrected','Different dated parliamentarians match the same print'
+    if person.get('full') and not usable_alias(person['full']):
+        return 'alias normalisation','Byline, compact initials or non-display casing in full-name alias'
+    if catalog is None:
+        catalog=defaultdict(set)
+        for e in reference.get('electorates',[]):catalog[(e['jurisdiction'],e['chamber'])].add(key(e['name']))
+    for old in person.get('representation',[]):
+        scope=(old['jurisdiction'],old['chamber'])
+        place=re.split(r'\s+[–—]\s+',old['electorate'])[0].strip()
+        evidence=[r for r in own if (r['jurisdiction'],r['chamber'])==scope]
+        if evidence and key(place) not in {key(r['electorate']) for r in evidence} and any(r.get('start') and not r.get('as_of') for r in evidence):
+            return 'mix-up corrected','Seat contradicts dated service in the recorded chamber'
+        if old['electorate']!=place and key(place) in catalog[scope]:
+            return 'mix-up corrected','Portfolio joined into an electorate label'
+        if old['chamber']=='nsw_lc' and key(place)=='legislative council district of new south wales':
+            return 'mix-up corrected','Noncanonical Council constituency from the member-stub join'
+        if old['chamber'] in ('nsw_lc','sa_lc') and key(place) not in catalog[scope]:
+            return 'mix-up corrected','Assembly seat or portfolio attached to a Council record'
+        if old['jurisdiction']=='federal' and key(place) not in catalog[scope] and any(
+                key(place) in names for (jur,house),names in catalog.items() if jur!='federal'):
+            return 'mix-up corrected','State electorate attached to a federal record'
+    service=[r for r in own if r['identity'].startswith('reviewed:')]
+    if service and max(service,key=lambda r:r['start']).get('party') != person.get('party'):
+        return 'mix-up corrected','Party contradicts dated service in this parliament'
+    if person['name'] in reviewed.get('party_corrections',[]) and own and any(r.get('party')!=person.get('party') for r in own):
+        return 'mix-up corrected','Reviewed party mismatch against dated election evidence'
+    if ambiguous_scopes(matching_records(person,records,reviewed,unique=False)):
+        return 'mix-up corrected','Overlapping terms belong to different person identities'
+    # Full-name state speaker with an explicitly reviewed missing party (Melissa).
+    if person['name'] in reviewed.get('party_from_pinned_roster',[]) and not person.get('party'):
+        return 'mix-up corrected','Reviewed member-stub party omission; official roster supplies party'
+    return None
 
 
 def ambiguous_scopes(records):
@@ -240,20 +325,22 @@ def repair(people,reference,reviewed):
     changed=[]
     for p in people:
         before=copy.deepcopy(p)
-        if not parliamentary_speakers_dominate(p):
+        tokens=parts(p['name'])
+        peers=prints.get(tokens[-1] if tokens else None,())
+        reason=change_reason(p,records,reference,reviewed,peers,catalog)
+        if reason is None:continue
+        if witness_dominated(p):
             guard_print(p,force=True)
             if p!=before:changed.append((p['name'],before,copy.deepcopy(p)))
             continue
         contradictory=False
         if weak(p['name']):
-            tokens=parts(p['name'])
-            own=print_identity(p,records,reference,prints.get(tokens[-1] if tokens else None,()))
-            contradictory=not own and bool(matching_records(p,records,{},unique=False,allow_weak=True))
-            # verify() already established ownership of numeric speech ids.
-            # Preserve those single-parliament, non-witness records; this
-            # resolver never infers a new id or house from a committee label.
-            verified=bool(str(p.get('pid','')).isdigit() and not mixed_print(p))
-            guard_print(p,resolved=bool(own),force=not own and not verified)
+            own=print_identity(p,records,reference,peers)
+            contradictory=not own and reason[0]=='mix-up corrected'
+            # Absence of evidence is not evidence of a mix-up. Only actual
+            # contradictions or multiple-parliament aggregates go neutral.
+            if own:guard_print(p,resolved=True)
+            elif contradictory or reason[0]=='spans parliaments':guard_print(p,force=True)
             if own:
                 latest=max(own,key=lambda r:r.get('start',''))
                 if usable_alias(latest['name']):p['full']=latest['name']
@@ -269,6 +356,14 @@ def repair(people,reference,reviewed):
                     p['party']=p['recorded_parties'][0]
                 p.pop('recorded_parties',None)
                 evidence=own
+                if before.get('full') and not usable_alias(before['full']):
+                    # Repair compact/byline aliases with their dated state seat.
+                    # This also preserves correct Gaven/Nudgee/Gladstone KB rows.
+                    for r in own:
+                        row=representation(r)
+                        if not any((x['jurisdiction'],x['chamber'],x['electorate'])==
+                                   (row['jurisdiction'],row['chamber'],row['electorate']) for x in p.get('representation',[])):
+                            p.setdefault('representation',[]).append(row)
             else:
                 if not usable_alias(p.get('full')):p.pop('full',None)
                 evidence=[]
@@ -289,7 +384,7 @@ def repair(people,reference,reviewed):
                 # The former label names the same statewide constituency, not a district.
                 place='New South Wales'
                 old=dict(old,electorate=place)
-            if own and key(place) not in places and any(not r.get('as_of') for r in own):
+            if own and key(place) not in places and any(r.get('start') and not r.get('as_of') for r in own):
                 # A valid-looking seat can belong to another same-surname MP (Kemp/Lee).
                 for r in own:
                     row=representation(r)
@@ -372,7 +467,7 @@ def main():
         if not a.members:p.error('--members is required unless --pinned is set')
         enrich(data['people'],json.loads(a.members.read_text()),json.loads(a.research.read_text())['seats'],reference,reviewed)
     data['meta']['representation']={'updated':'2026-10-06','matched':sum(bool(p['representation']) for p in data['people']),
-        'method':'Unique compatible person evidenced in every non-committee parliament, with a strict parliamentary-speaker majority; independent dated name, seat and chamber evidence repairs contaminated joins. Ambiguous, contradictory and witness-dominated prints remain neutral; transcript aggregates are retained.'}
+        'method':'Evidence-gated corrections only; clean records pass through intact. Committee rows may contradict, never establish, an identity. More than 50% witness rows means neutral; weak multi-parliament or contradictory prints require a unique compatible identity. Transcript aggregates are retained.'}
     a.directory.write_text(json.dumps(data,ensure_ascii=False,separators=(',',':'))+'\n')
     print(data['meta']['representation'])
 

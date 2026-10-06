@@ -16,3 +16,10 @@ identities come from the shipped roster, with the existing limit of 25 changes.
 
 Run `python3 -m unittest scripts.test_roster_export_wrappers`. No desktop
 connection, remote Git ref, network calls or credentials are needed.
+
+`main-66e75d74.json` separately freezes **complete records**, including representation
+basis and provenance, from the current `origin/main` (`66e75d74`); its roster records are identical
+to the earlier `23cad95a` raw export snapshot. The round-3 audit compares every
+field and rejects clean-record changes. The raw SQL replay fixture remains unchanged.
+Witness neutralisation now applies only above 50%; ties retain main unless there
+is separate evidence of a mix-up.

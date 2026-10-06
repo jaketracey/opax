@@ -5,6 +5,7 @@ import { profileAffiliations, profileJurisdictions } from '../public/profile-jur
 import { isWeakName } from '../../scripts/photo_identity.mjs';
 const roster = JSON.parse(await readFile(new URL('../public/parliamentarians.json', import.meta.url)));
 const people = new Map(roster.people.map(p => [p.name, p]));
+const mainRoster = JSON.parse(await readFile(new URL('../../tests/fixtures/roster-export/main-66e75d74.json', import.meta.url), 'utf8'));
 
 test('Bob Horne has Paterson; Melissa alone has Williamstown and the Victorian Labor facet', () => {
   const bob = people.get('Bob Horne'), melissa = people.get('Melissa Horne');
@@ -41,7 +42,7 @@ test('ambiguous prints stay neutral and retained aliases contain real given name
     if (!p.full) continue;
     assert.ok(!isWeakName(p.full), p.name);
     assert.doesNotMatch(p.full, /^(?:By|Sm|Gj|Lm|Ml|Aj|Pt|Mt|Sj|De|Mc|Cd|Maj) /, p.name);
-    if (isWeakName(p.name) && (p.states.length > 1 || p.witness_rows)) {
+    if (isWeakName(p.name) && p.states.length > 1) {
       assert.ok(p.identity_evidence?.length || p.identity_basis, p.name);
       assert.equal(p.pid, undefined, p.name);
       assert.equal(p.current, undefined, p.name);
@@ -50,29 +51,30 @@ test('ambiguous prints stay neutral and retained aliases contain real given name
   }
 });
 
-test('the SA initials keep their names and parties; dated careers are visible profile data', () => {
+test('SA two-house careers keep main’s parties, and dated mixed-era careers remain visible', () => {
   for (const [name, full, party] of [['K.J. Maher', 'Kyam Maher', 'Labor'], ['R.I. Lucas', 'Rob Lucas', 'Liberal'],
     ['S.G. Wade', 'Stephen Wade', 'Liberal'], ['C.M. Scriven', 'Clare Scriven', 'Labor'], ['J.M.A. Lensink', 'Michelle Lensink', 'Liberal']]) {
-    assert.equal(people.get(name).full, full);
+    if (name === 'J.M.A. Lensink') assert.equal(people.get(name).full, full);
+    else assert.equal(people.get(name).full, undefined);
     assert.equal(people.get(name).party, party);
   }
   assert.ok(profileAffiliations(people.get('Mark Latham')).some(r => r.party === 'Labor' && r.electorate === 'Werriwa'));
   assert.ok(profileAffiliations(people.get('Lynda Voltz')).some(r => r.chamber === 'nsw_lc' && r.party === 'Labor'));
-  assert.ok(profileAffiliations(people.get('Ros Spence')).some(r => r.electorate === 'Yuroke' && r.end === '2022-11-26'));
+  assert.ok(profileJurisdictions(people.get('Ros Spence')).representations.some(r => r.electorate === 'Yuroke'));
+  for (const name of ['Ros Spence', 'Malinauskas', 'P.B. Malinauskas', 'V.A. Chapman', 'S.S. Marshall', 'A. Koutsantonis', 'Picton', 'C.J. Picton']) {
+    assert.deepEqual(people.get(name), mainRoster.people.find(p => p.name === name), name);
+  }
 });
 
 test('state records never take a federal committee namesake, and witness-majority aggregates stay neutral', () => {
-  for (const [name, full, party] of [['Hanson', 'Jeremy Hanson', 'Liberal'], ['McBride', 'Nick McBride', 'Liberal'],
-    ['Gee', 'Jon Gee', 'Labor'], ['Kennedy', 'John Kennedy', 'Labor']]) {
-    assert.equal(people.get(name).full, full, name);
-    assert.equal(people.get(name).party, party, name);
-  }
-  for (const name of ['Ng', 'Le', 'Thomas', 'Power', 'Guy', 'Dick']) {
+  for (const name of ['Paterson', 'Roberts', 'Watt', 'Walsh', 'Pratt', 'Hanson', 'McBride', 'Gee', 'Kennedy',
+    'Green', 'Berry', 'Wells', 'Watts', 'Lim', 'T Smith', 'Bates', 'Perrett', 'Ng', 'Le', 'Thomas', 'Power', 'Guy', 'Dick']) {
     assert.equal(people.get(name).full, undefined, name);
     assert.equal(people.get(name).party, undefined, name);
+    assert.deepEqual(people.get(name).representation, [], name);
   }
   for (const p of roster.people) {
-    if ((p.witness_rows || 0) * 2 < p.speeches) continue;
+    if ((p.witness_rows || 0) * 2 <= p.speeches) continue;
     for (const field of ['pid', 'full', 'current', 'party_now', 'party', 'parties', 'identity_evidence', 'affiliations']) {
       assert.equal(p[field], undefined, `${p.name}: ${field}`);
     }
