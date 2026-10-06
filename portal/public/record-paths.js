@@ -1,7 +1,8 @@
 // Which public record a /support?record=<path> report is about. A path counts
 // only when it is exactly the page of a record OPAX publishes: the search
 // catalog's records, indexed by path at build time (scripts/build_search_catalog.mjs
-// writes search-catalog/<version>/paths-<n>.json). Anything else, and any
+// writes search-catalog/<version>/paths-<n>.json), and a person's slug
+// address beside the name address the catalog links. Anything else, and any
 // failure to look it up, leaves the report general, with no path in it.
 // Shared by the build, /support (app.js imports it lazily) and the tests.
 
@@ -48,8 +49,14 @@ function ownsPath(record, path) {
  * kind is the route's (person, party, donor, supplier, agency, campaigner,
  * bill, report). A path with no single owner title is a section or listing,
  * and is left out.
+ *
+ * `aliases` are [alias, target] pairs for a page with a second address: a
+ * person's slug (/subject/person/tony-abbott) beside the name the catalog
+ * links. An alias takes the title its target ends up with. A path that a
+ * record links to itself keeps its own entry, or stays out of the index if
+ * it has none, and an alias claimed by two titles is left out too.
  */
-export function recordPathIndex(records) {
+export function recordPathIndex(records, aliases = []) {
   const byPath = new Map();
   for (const record of records) {
     const href = String(record?.href ?? '');
@@ -62,9 +69,21 @@ export function recordPathIndex(records) {
     if (ownsPath(record, path)) entry.owners.add(title);
     byPath.set(path, entry);
   }
-  const shards = Array.from({ length: RECORD_PATH_SHARDS }, () => ({}));
+  const titleOf = new Map();
   for (const [path, { all, owners }] of byPath) {
     const titles = all.size === 1 ? all : owners;
+    if (titles.size === 1) titleOf.set(path, [...titles][0]);
+  }
+  const byAlias = new Map();
+  for (const [alias, target] of aliases) {
+    const path = canonicalRecordPath(alias);
+    const title = titleOf.get(canonicalRecordPath(target));
+    if (!path || !title || byPath.has(path)) continue;
+    byAlias.set(path, (byAlias.get(path) ?? new Set()).add(title));
+  }
+  const shards = Array.from({ length: RECORD_PATH_SHARDS }, () => ({}));
+  for (const [path, title] of titleOf) shards[recordPathShard(path)][path] = title;
+  for (const [path, titles] of byAlias) {
     if (titles.size === 1) shards[recordPathShard(path)][path] = [...titles][0];
   }
   return shards;

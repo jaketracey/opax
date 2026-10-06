@@ -4,6 +4,7 @@ import { resolve, join } from 'node:path';
 import { createHash } from 'node:crypto';
 import { normalize, tokens, bucket } from '../portal/src/catalog-query.mjs';
 import { recordPathIndex } from '../portal/public/record-paths.js';
+import { slugIndex } from '../portal/src/person-slug.ts';
 import { moneyFlowType } from '../portal/public/money-records.js';
 import { recordsWithLocations } from '../portal/public/grants-research.js';
 import { payPersonRecord, payPersonOrder, payGeneralRecords } from '../portal/src/pay-records.mjs';
@@ -64,6 +65,12 @@ export function interestHref(register, person, speakerNames) {
  return person ? personHref(person.name)
    : speakerNames.has(register.name) ? personHref(register.name) : register.source_url;
 }
+
+// A person's page has a second address: the slug the router settles on, which is
+// what a report from the page carries to /support. slugIndex() is the Worker's own,
+// one slug per person, so a twin spelling's slug names the fuller entry. The Worker
+// also gives slugs to seat holders outside the roster, who never outrank a roster entry.
+export const personSlugPaths = people => [...slugIndex(people).slugOf].map(([name,slug])=>['/subject/person/'+slug,personHref(name)]);
 
 async function main() {
  const roster = await read('parliamentarians.json');
@@ -166,7 +173,8 @@ async function main() {
  for(let i=0;i<docs.length;i+=256)await put('records-'+Math.floor(i/256)+'.json',docs.slice(i,i+256).map(d=>d.record));
  // /support names a reported record only when its path is exactly one of these (portal/public/record-paths.js).
  // A grant recipient's own record owns its page; the award records only link to it.
- for(const [i,shard] of recordPathIndex(docs.map(d=>d.key.includes(':grant-recipient:')?{...d.record,owner:true}:d.record)).entries())await put('paths-'+i+'.json',shard);
+ // A person's slug names the same page as their name.
+ for(const [i,shard] of recordPathIndex(docs.map(d=>d.key.includes(':grant-recipient:')?{...d.record,owner:true}:d.record),personSlugPaths(roster.people)).entries())await put('paths-'+i+'.json',shard);
  const manifest={version,count:docs.length,counts,recordShardSize:256,coverage:'Searches the records and profiles published on OPAX. Map connections, expense totals and recipient profiles are aggregates and may overlap individual records. Published grant and interest detail exports are samples of their source registers; document search returns a ranked retrieval window.'};
  await writeFile(join(output,'manifest.json'),JSON.stringify(manifest));
  console.log(JSON.stringify(manifest,null,2));
