@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { RefreshControl } from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../api/runtime';
+import type { PartyPageRecord } from '../api/catalogs';
 import { partyPageCopy, type PartyMember } from '../api/party-page';
 import { billSentenceCase } from '../api/bill-transforms';
 import {
@@ -97,7 +98,11 @@ export default function Party() {
   return <PartyPage key={slug} input={name ?? slug} />;
 }
 export function PartyPage({ input }: { input: string }) {
-  const load = useCallback(() => catalogs.partyPage(input), [input]);
+  const load = useCallback(
+    (refresh: boolean, publish: (record: PartyPageRecord) => void) =>
+      catalogs.partyPage(input, refresh, publish),
+    [input],
+  );
   const { record, error, refresh, retry, refreshing } = useCatalogRecord(load);
   const [membersOpen, setMembersOpen] = useState(false);
   const [recordedOpen, setRecordedOpen] = useState(false);

@@ -386,3 +386,56 @@ test('member source links come from included people, with no unrelated geometry 
     ),
   ).toBe(true);
 });
+
+test('publishes title and first block while independent optional catalogs are pending', async () => {
+  let releaseMoney!: () => void;
+  let releaseEntities!: () => void;
+  let releaseVotes!: () => void;
+  const money = new Promise<void>((resolve) => {
+    releaseMoney = resolve;
+  });
+  const entities = new Promise<void>((resolve) => {
+    releaseEntities = resolve;
+  });
+  const votes = new Promise<void>((resolve) => {
+    releaseVotes = resolve;
+  });
+  const reads: { path: string; refresh: boolean }[] = [];
+  const api = new Catalogs({
+    get: async (path, decoder, refresh = false) => {
+      reads.push({ path, refresh });
+      if (path === '/graph/money.json') await money;
+      if (path === '/graph/aec-extras.json') await entities;
+      if (path === '/bills/index.json') await votes;
+      return get(path, decoder);
+    },
+  });
+  let first!: () => void;
+  let receipts!: () => void;
+  const firstPublished = new Promise<void>((resolve) => {
+    first = resolve;
+  });
+  const receiptsPublished = new Promise<void>((resolve) => {
+    receipts = resolve;
+  });
+  const updates: import('../src/api/catalogs').PartyPageRecord[] = [];
+  const pending = api.partyPage('Labor', true, (record) => {
+    updates.push(record);
+    first();
+    if (record.data?.receipts.status === 'ready') receipts();
+  });
+  await firstPublished;
+  expect(updates[0]!.data?.label).toBe('Labor');
+  expect(updates[0]!.data?.members.data).toEqual(members);
+  for (const block of ['receipts', 'associated', 'divisions'] as const)
+    expect(updates[0]!.data?.[block].status).toBe('loading');
+  releaseMoney();
+  await receiptsPublished;
+  expect(updates.at(-1)!.data?.associated.status).toBe('loading');
+  expect(updates.at(-1)!.data?.divisions.status).toBe('loading');
+  releaseEntities();
+  releaseVotes();
+  const final = await pending;
+  expect(final.data?.divisions.status).toBe('ready');
+  expect(reads.every((r) => r.refresh)).toBe(true);
+});

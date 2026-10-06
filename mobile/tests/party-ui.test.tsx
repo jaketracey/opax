@@ -422,3 +422,54 @@ test('failed read offers retry and does not mistake a network failure for an unk
   ).toBeGreaterThan(0);
   act(() => r.unmount());
 });
+
+test('title and Members render before receipts, associations and splits settle', async () => {
+  let publish!: (record: typeof view) => void;
+  let finish!: (record: typeof view) => void;
+  jest
+    .mocked(runtime.partyPage)
+    .mockImplementation((_input, _refresh, progress) => {
+      publish = progress!;
+      return new Promise((resolve) => {
+        finish = resolve;
+      });
+    });
+  const r = await render();
+  const loading = {
+    status: 'loading' as const,
+    data: null,
+    asAt: null,
+    sources: [],
+    stale: false,
+    savedAt: null,
+  };
+  await act(async () =>
+    publish({
+      ...view,
+      data: {
+        ...view.data!,
+        receipts: loading,
+        associated: loading,
+        divisions: loading,
+        moneyMeta: null,
+      },
+    }),
+  );
+  for (const id of [
+    'party-title',
+    'party-current-count',
+    'party-receipts-loading',
+    'party-associated-loading',
+    'party-divisions-loading',
+  ])
+    expect(r.root.findAll((n) => n.props.testID === id).length).toBeGreaterThan(
+      0,
+    );
+  await act(async () => finish(view));
+  expect(
+    r.root.findAll((n) => n.props.testID === 'party-receipts-total').length,
+  ).toBeGreaterThan(0);
+  act(() => r.unmount());
+  // Progress from an obsolete request must be ignored along with its completion.
+  act(() => publish(view));
+});
