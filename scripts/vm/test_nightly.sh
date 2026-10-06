@@ -718,7 +718,7 @@ echo 'x' > "$REPO/portal/public/speakers.json.untracked.txt"
 FAKE_MODE=ok nightly
 check "a file the nightly does not own is never swept into its commit" bash -c "! git --git-dir='$ORIGIN' ls-tree -r --name-only main | grep -q untracked"
 
-echo "== 28. owned roster profiles reconcile after the data gate; rehearsal disables writes"
+echo "== 28. owned roster profiles preview by default; only the dedicated switch enables bounded apply"
 roster_stub() {
   cat > "$REPO/scripts/reconcile_roster_profiles.py" <<'PYEOF'
 import json, os, pathlib, sys
@@ -732,12 +732,24 @@ new_sandbox s28
 roster_stub
 mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
 OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok nightly
-check "reconciliation runs after the passing portal gate with apply, plan and backups" python3 -c "import json; r=json.load(open('$HOME/roster.calls')); assert r['tests_ran'] and '--apply' in r['args'] and '--output' in r['args'] and '--backup' in r['args']"
+check "reconciliation runs after the passing portal gate with dry-run, plan and no apply" python3 -c "import json; r=json.load(open('$HOME/roster.calls')); assert r['tests_ran'] and '--dry-run' in r['args'] and '--apply' not in r['args'] and '--output' in r['args']"
 check "successful reconciliation leaves the night green" test "$NRC" -eq 0
 new_sandbox s28b
 roster_stub
 OPAX_PERIODIC_SYNC_KB=0 nightly
-check "rehearsal KB switch suppresses roster publication" test ! -e "$HOME/roster.calls"
+check "rehearsal KB switch leaves roster read-only" python3 -c "import json; r=json.load(open('$HOME/roster.calls')); assert '--dry-run' in r['args'] and '--apply' not in r['args']"
+new_sandbox s28enabled
+roster_stub
+OPAX_ROSTER_SYNC_KB=1 nightly
+check "only explicit OPAX_ROSTER_SYNC_KB=1 selects apply with backups" python3 -c "import json; r=json.load(open('$HOME/roster.calls')); assert '--apply' in r['args'] and '--dry-run' not in r['args'] and '--backup' in r['args']"
+new_sandbox s28periodic
+roster_stub
+OPAX_PERIODIC_SYNC_KB=1 nightly
+check "the broader periodic switch cannot enable roster apply" python3 -c "import json; r=json.load(open('$HOME/roster.calls')); assert '--dry-run' in r['args'] and '--apply' not in r['args']"
+new_sandbox s28disabled
+roster_stub
+OPAX_ROSTER_SYNC_KB=0 nightly
+check "explicit zero leaves roster read-only" python3 -c "import json; r=json.load(open('$HOME/roster.calls')); assert '--dry-run' in r['args'] and '--apply' not in r['args']"
 new_sandbox s28c
 roster_stub
 FAKE_ROSTER_RC=1 nightly

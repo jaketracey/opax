@@ -6,7 +6,7 @@ import sys
 import tempfile
 import unittest
 from scripts.publish_grants_research import resource
-from scripts.reconcile_roster_profiles import apply, inventory, owned, plan
+from scripts.reconcile_roster_profiles import apply, check_change_limit, fingerprint, inventory, owned, plan, projection
 from parli.arag import AragError
 
 
@@ -28,6 +28,80 @@ class FakeKB:
 
 
 class ReconcileTests(unittest.TestCase):
+    def test_native_response_label_bookkeeping_matches_source_pairs_and_readback(self):
+        native=json.loads((Path(__file__).parent/'fixtures/roster-reconcile/native-label-shape.json').read_text())
+        desired=copy.deepcopy(native)
+        desired['texts']={k:v['value'] for k,v in desired.pop('data')['texts'].items()}
+        for c in desired['usermetadata']['classifications']:c.pop('cancelled_by_user')
+        self.assertTrue(owned(native))
+        self.assertEqual(projection(native),projection(desired))
+        self.assertEqual(fingerprint(native),fingerprint(desired))
+        self.assertEqual(plan([desired],[native]),[])
+        cancelled=copy.deepcopy(native)
+        source=next(c for c in cancelled['usermetadata']['classifications'] if c['labelset']=='source')
+        source['cancelled_by_user']=True
+        self.assertFalse(owned(cancelled))
+        self.assertNotEqual(projection(cancelled),projection(desired))
+        desired['texts']['t-body']['body']='Corrected Paterson source body'
+        class NativeShapeKB(FakeKB):
+            def create_resource(self,row):
+                super().create_resource(row)
+                r=self.rows[row['slug']]
+                r['data']={'texts':{k:{'value':v} for k,v in r.pop('texts').items()}}
+                for c in r['usermetadata']['classifications']:c['cancelled_by_user']=False
+        kb=NativeShapeKB([native])
+        with tempfile.TemporaryDirectory() as folder:
+            self.assertEqual(apply(kb,plan([desired],[native]),[desired],folder)[0]['verified'],True)
+        self.assertEqual(plan([desired],list(kb.rows.values())),[])
+
+    def test_combined_apply_cap_aborts_before_reads_or_writes_and_accepts_the_boundary(self):
+        old=[];desired=[]
+        for i in range(31):
+            row=profile('a','old');row['slug']=f'roster-profile-{i:016x}';old.append(row)
+            if i<16:
+                new=copy.deepcopy(row);new['texts']['t-body']['body']='new';desired.append(new)
+        operations=plan(desired,old)
+        class NoReadsKB(FakeKB):
+            def get_resource_by_slug(self,*a,**kw):raise AssertionError('Cap must abort before preflight')
+        kb=NoReadsKB(old)
+        with tempfile.TemporaryDirectory() as folder:
+            with self.assertRaisesRegex(ValueError,'31.*30'):apply(kb,operations,desired,folder)
+            self.assertEqual(list(Path(folder).iterdir()),[])
+        self.assertEqual(kb.writes,[])
+        check_change_limit(operations[:30])
+        # Creates do not consume the destructive-change cap.
+        check_change_limit([{'action':'create'}]*100)
+
+    def test_apply_cli_requires_the_explicit_dedicated_switch(self):
+        import os
+        root=Path(__file__).resolve().parents[1]
+        env=dict(os.environ,OPAX_ROSTER_SYNC_KB='0')
+        with tempfile.TemporaryDirectory() as folder:
+            r=subprocess.run([sys.executable,str(root/'scripts/reconcile_roster_profiles.py'),'--apply',
+                '--backup',folder,'--output',str(Path(folder)/'plan.json')],env=env,capture_output=True,text=True)
+            self.assertNotEqual(r.returncode,0)
+            self.assertIn('explicit OPAX_ROSTER_SYNC_KB=1',r.stderr)
+            self.assertEqual(list(Path(folder).iterdir()),[])
+
+    def test_reviewed_slug_batch_selects_exactly_the_requested_operations(self):
+        root=Path(__file__).resolve().parents[1]
+        from scripts.publish_grants_research import records
+        old=[r for r in records(json.loads((root/'portal/public/research/mlci.json').read_text()),
+                              json.loads((root/'portal/public/parliamentarians.json').read_text()))
+             if r['slug'].startswith('roster-profile-')]
+        for row in old[:2]:row['texts']['t-body']['body']='stale source'
+        with tempfile.TemporaryDirectory() as folder:
+            path=Path(folder);(path/'inventory.json').write_text(json.dumps(old))
+            (path/'slugs.json').write_text(json.dumps([old[1]['slug']]))
+            r=subprocess.run([sys.executable,str(root/'scripts/reconcile_roster_profiles.py'),
+                '--inventory',str(path/'inventory.json'),'--slugs',str(path/'slugs.json'),
+                '--output',str(path/'plan.json')],capture_output=True,text=True)
+            self.assertEqual(r.returncode,0,r.stderr)
+            result=json.loads((path/'plan.json').read_text())
+            self.assertEqual([op['slug'] for op in result['operations']],[old[1]['slug']])
+            self.assertEqual(result['retirements_and_replacements'],1)
+            self.assertEqual(result['apply_cap'],30)
+
     def test_exact_plan_has_replacement_retirement_creation_and_no_unchanged_write(self):
         before=[profile('a','old wrong seat'),profile('b','orphan'),profile('c','unchanged')]
         desired=[profile('a','correct seat'),profile('c','unchanged'),profile('d','new')]

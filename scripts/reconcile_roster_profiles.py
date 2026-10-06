@@ -11,6 +11,7 @@ from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 import sys
@@ -21,12 +22,20 @@ from parli.arag import AragConfig, AragError, KbClient, load_dotenv
 ROOT=Path(__file__).resolve().parents[1]
 
 
+def labels(row):
+    """Ignore native bookkeeping; retain an explicit user cancellation."""
+    return [dict(labelset=c['labelset'],label=c['label'],
+                 **({'cancelled_by_user':True} if c.get('cancelled_by_user') is True else {}))
+            for c in row.get('usermetadata',{}).get('classifications',[])
+            if isinstance(c,dict) and c.get('labelset') and c.get('label')]
+
+
 def owned(row):
-    labels=row.get('usermetadata',{}).get('classifications',[])
+    classifications=labels(row)
     return bool(re.fullmatch(r'roster-profile-[a-f0-9]{16}',row.get('slug',''))) and (
         row.get('origin',{}).get('source_id')=='opax-grants-research' and
-        {'labelset':'source','label':'opax_parliamentary_roster'} in labels and
-        {'labelset':'kind','label':'parliamentary_profile'} in labels)
+        {'labelset':'source','label':'opax_parliamentary_roster'} in classifications and
+        {'labelset':'kind','label':'parliamentary_profile'} in classifications)
 
 
 def projection(row):
@@ -34,7 +43,7 @@ def projection(row):
     return {'title':row.get('title'),'body':texts.get('t-body',{}).get('body'),
             'origin':{'url':row.get('origin',{}).get('url'),
                       'created':(row.get('origin',{}).get('created') or '')[:10]}, 'extra':row.get('extra'),
-            'labels':sorted(row.get('usermetadata',{}).get('classifications',[]),key=lambda c:(c['labelset'],c['label']))}
+            'labels':sorted(labels(row),key=lambda c:(c['labelset'],c['label']))}
 
 
 def fingerprint(row):
@@ -48,8 +57,8 @@ def public_projection(row):
     cannot reveal earlier labels in the same set, so they cannot establish drift.
     """
     result=projection(row)
-    labels={c['labelset']:c['label'] for c in row.get('usermetadata',{}).get('classifications',[])}
-    result['labels']=[{'labelset':k,'label':v} for k,v in sorted(labels.items())]
+    observable={c['labelset']:c['label'] for c in labels(row)}
+    result['labels']=[{'labelset':k,'label':v} for k,v in sorted(observable.items())]
     return result
 
 
@@ -61,10 +70,10 @@ def plan(desired,inventory,public=False):
     for slug in sorted(wanted.keys()|existing.keys()):
         old=existing.get(slug);new=wanted.get(slug)
         if old is not None and not owned(old):
-            labels=old.get('usermetadata',{}).get('classifications',[])
+            classifications=labels(old)
             if not (public and old.get('_public_snapshot') and
-                    {'labelset':'source','label':'opax_parliamentary_roster'} in labels and
-                    {'labelset':'kind','label':'parliamentary_profile'} in labels):
+                    {'labelset':'source','label':'opax_parliamentary_roster'} in classifications and
+                    {'labelset':'kind','label':'parliamentary_profile'} in classifications):
                 raise ValueError('Unowned roster-profile resource: '+slug)
         if old is None:action='create'
         elif new is None:action='retire'
@@ -119,7 +128,15 @@ def get_optional(kb,slug):
         return None
 
 
-def apply(kb,operations,desired,backup):
+def check_change_limit(operations,max_changes=30):
+    changes=sum(op['action'] in {'retire','replace'} for op in operations)
+    if changes > max_changes:
+        raise ValueError(f'Apply cap exceeded: {changes} retirements/replacements > {max_changes}; review smaller explicit --slugs batches')
+
+
+def apply(kb,operations,desired,backup,max_changes=30):
+    # Fail before preflight or any write, including when called outside the CLI.
+    check_change_limit(operations,max_changes)
     backup=Path(backup);backup.mkdir(parents=True,exist_ok=True)
     wanted={r['slug']:r for r in desired}
     # Preflight every planned mutation before making the first remote write.
@@ -162,9 +179,11 @@ def main():
     ap.add_argument('--previous-directory',type=Path,help='previous roster names for public orphan discovery')
     ap.add_argument('--output',type=Path,required=True,help='exact reconciliation plan including before/after bodies')
     ap.add_argument('--backup',type=Path,help='required for apply; originals and verified receipts')
+    ap.add_argument('--slugs',type=Path,help='reviewed JSON list of slugs to reconcile; supervised bounded batches')
     mode=ap.add_mutually_exclusive_group();mode.add_argument('--apply',action='store_true');mode.add_argument('--dry-run',action='store_true')
     args=ap.parse_args()
     if args.apply and (args.inventory or args.public_base or not args.backup):ap.error('--apply requires online KB inventory and --backup')
+    if args.apply and os.environ.get('OPAX_ROSTER_SYNC_KB')!='1':ap.error('--apply requires explicit OPAX_ROSTER_SYNC_KB=1')
     directory=json.loads(args.directory.read_text())
     desired=[r for r in records(json.loads(args.data.read_text()),directory) if r['slug'].startswith('roster-profile-')]
     if args.env:load_dotenv(args.env)
@@ -189,15 +208,25 @@ def main():
                 if existing:old.append(existing)
     is_public=bool(args.public_base or any(r.get('_public_snapshot') for r in old))
     operations=plan(desired,old,public=is_public)
+    if args.slugs:
+        selected=json.loads(args.slugs.read_text())
+        if not isinstance(selected,list) or any(not isinstance(s,str) or not re.fullmatch(r'roster-profile-[a-f0-9]{16}',s) for s in selected):
+            ap.error('--slugs must be a JSON list of roster-profile slugs')
+        unknown=set(selected)-{r['slug'] for r in [*old,*desired]}
+        if unknown:ap.error('--slugs contains unknown resources')
+        operations=[op for op in operations if op['slug'] in selected]
     result={'mode':'apply' if args.apply else 'dry-run','desired':len(desired),'indexed':len(old),
             'counts':dict(Counter(op['action'] for op in operations)),
             'ownership':'Public source labels only; apply verifies KB source_id' if is_public else 'KB source_id verified',
             'comparison':'Public API projection (one value per labelset)' if is_public else 'Full native source projection',
+            'apply_cap':30,'retirements_and_replacements':sum(op['action'] in {'retire','replace'} for op in operations),
             'operations':operations}
     args.output.parent.mkdir(parents=True,exist_ok=True);args.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
     print(json.dumps({k:v for k,v in result.items() if k!='operations'}),flush=True)
     for op in operations:print(f"{op['action']} {op['slug']} {op['title']}",flush=True)
     if args.apply:
+        try:check_change_limit(operations)
+        except ValueError as e:ap.error(str(e))
         from scripts.publish_collected_bill_texts import assert_no_generation
         from parli.arag import _request
         assert_no_generation(_request('GET',kb._rag('/configuration'),kb._headers),

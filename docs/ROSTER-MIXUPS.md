@@ -1,133 +1,149 @@
-# Roster identity and era audit — round 1, 6 October 2026
+# Roster identity and era audit — round 2, 6 October 2026
 
-Baselines: `origin/main` at `23cad95a` and the reviewed first repair `ecc26aa2`.
-The desktop database remains unreachable. Repairs use the manifest-pinned
+Baselines: `origin/main` (`23cad95a`), first repair `ecc26aa2`, and round 1
+`c99d59cb`. The desktop database remains unreachable. Repairs use manifest-pinned
 release `b56417062ccc33cf`, its independent OpenAustralia terms and official
-Victorian roster, plus the dated public evidence frozen in
-`scripts/roster_service.json` and `scripts/roster_state_evidence.json`. The latter
-records source URLs, snapshot dates and document hashes where downloadable.
-Former members in a chamber index are dated before leaving, rather than all
-being assigned its final publication date. A roster snapshot establishes its
-date; it does not erase valid earlier seats.
+Victorian roster, and public dated evidence in `scripts/roster_service.json`
+and `scripts/roster_state_evidence.json`. Five small additions establish Nick
+McBride and Jon Gee in the SA Assembly, John Kennedy in the Victorian Assembly,
+Richard Harvey in Newland, and Danny O'Brien's Nationals affiliation. Each has an
+official source URL and a date within the documented service period; these are
+historical evidence points, not assertions about today's party or membership.
 
-No database changes, KB publication, push or deploy were performed. Public KB
-resources were read with GET requests for the dry run. Only the roster was
-regenerated; portraits, votes, pay, expenses and the immutable electorate
-release are unchanged. Search build output is excluded from the commit.
+No production write, database change, push or deploy was performed. Public KB
+resources were read using GET for the preview. Only `parliamentarians.json` was
+regenerated. Search build output is excluded from the commit.
 
-## Source causes and rules
+## 1. Own parliament and chamber evidence
 
-* **Bob Horne / Melissa Horne:** `export_people.sh` fed member name, jurisdiction,
-  chamber and electorate into `enrich_profile_jurisdictions.enrich()`. The old
-  join trusted the electorate string on an otherwise agreeing Bob/federal/
-  representatives stub, admitting Melissa's Williamstown and portfolios. The
-  dated federal terms and [AEC 1998 elected list](https://aec.gov.au/Elections/federal_elections/1998/hor-elected.htm)
-  link Bob / Robert Hodges Horne to Paterson. The unavailable database's original
-  mutation is unknown; the export step that admitted it is fixed.
-* **Mark Latham:** the SQL export grouped names across jurisdictions and years,
-  then paired a dominant federal Labor label with the union of chambers. The
-  member-stub join also admitted Werriwa as a NSW Council electorate. Shared
-  repair preserves federal Labor/Werriwa and the separately dated NSW One Nation
-  and Independent service. The flat latest NSW affiliation is Independent.
-* **Over-removal:** the first repair treated every multi-parliament, witness or
-  two-house weak print as ambiguous. Resolution now checks the complete compatible
-  candidate set before removing identity. Exactly one agreeing roster person
-  keeps their name and party; conflicting names or overlapping identities are
-  refused. Dated full-name transcript prints also expose newer namesakes absent
-  from an older snapshot, such as Monica and Damien Tudehope. Malformed initials
-  and bylines are excluded from that candidate set. A resolved aggregate containing
-  witnesses or multiple parliaments still gets no numeric pid or sitting flag.
-* **Undated state stubs:** missing `entered_house` is unknown, not contradictory.
-  Known dates must overlap; name, jurisdiction and chamber must agree, and the
-  candidate must be unique. Undated legacy stubs corroborate a name; they cannot
-  repair a seat or party against independent dated evidence. The numeric federal
-  pid verifier retains its existing stricter ownership rule.
-* **Two houses:** a single state's two-house career does not by itself establish
-  two people. This matches the photo guard. Kyam Maher, Rob Lucas, Stephen Wade,
-  Clare Scriven and Michelle Lensink retain their names and parties. Lensink's
-  ministerial office is replaced with statewide South Australia.
-* **Aliases:** `normalize_state_speaker_name()` removes a leading `By` and
-  preserves compact uppercase initials as dotted initials instead of making them
-  given names. Repair rejects unusable aliases and recovers real names from dated
-  sources (Louise Staley, Shannon Fentiman, Glenn Butcher, Leeanne Enoch, Leanne
-  Linard, Mark Furner, Amanda Stoker, Pat Weir and David Basham). AEC's dated 1998
-  seat list also links Jenny/Jennifer Macklin, Joe/Joseph Hockey and Bernie/Bernard
-  Ripoll, preserving their already verified numeric ids.
+Round 1 expanded committee chambers into federal houses, then allowed candidates
+reachable only through those committees to identify state transcript aggregates.
+A missing state roster let the federal namesake win. `print_identity()` now uses
+only the print's actual non-committee houses for positive candidates. Every
+non-committee parliament in the record must have its own agreeing candidate;
+no roster/evidence for that parliament means neutral. Committees never establish
+a positive candidate or a numeric person id. In an actual federal-house aggregate,
+a committee namesake may contradict an identity (David/Dorinda Cox), including
+an undated legacy stub, but cannot supply it.
 
-## Nine original corrections and visible careers
+| Print | Round 1 | Round 2 | Evidence / result |
+|---|---|---|---|
+| Hanson | Pauline Hanson, One Nation | Jeremy Hanson, Liberal | ACT Assembly roster; restores main's name |
+| McBride | Emma McBride, Labor | Nick McBride, Liberal | Dated 2020 SA Assembly / MacKillop Liberal service; restores main's name |
+| Gee | Andrew Gee, Independent | Jon Gee, Labor | Dated 2020 SA Assembly / Taylor Labor service |
+| Kennedy | Simon Kennedy, Liberal | John Kennedy, Labor | Dated 2020 Victorian Assembly / Hawthorn Labor service; restores main's name |
+| Ng | Gabriel Ng, Labor | Neutral | No own NSW roster/evidence |
+| Le | Dai Le, Independent | Neutral | Federal service does not establish identity for the NSW Assembly rows |
+| Thomas, Power | Federal namesakes | Neutral | No own SA roster/evidence |
+| Guy, Dick | Federal namesakes | Neutral | No own NSW roster/evidence |
+| Cox | Neutral | Neutral | Contradictory federal David/Dorinda identities remain refused |
 
-| Person | Corrected data retained in this round |
+All six requested cases have individual Python regressions. The general guard
+covers missing own jurisdiction, pure committees, and committee names used only
+to contradict a federal aggregate. The shared exporter and pinned repair use the
+same rule. Existing numeric speech identities independently verified by
+`roster_identity.verify()` remain intact on single-parliament, non-witness
+speaker records; this resolver supplies no new committee-only identity.
+
+SA two-house careers remain allowed, consistently with the photo guard: Kyam
+Maher, Rob Lucas, Stephen Wade, Clare Scriven and Michelle Lensink retain their
+names and parties. The two houses do not by themselves prove two people.
+
+## 2. Parliamentary-speaker majority and witness attribution
+
+The threshold is **strictly more than 50% parliamentary-speaker rows**:
+`witness_rows * 2 < speeches`. This gives “dominate” its ordinary majority
+meaning and makes ties neutral. It is a minimum condition, not sufficient proof
+of identity; all chamber/jurisdiction and uniqueness checks still apply.
+Boundary tests cover 49%, 50%, 51% and 99% witnesses. All witness counts and
+speech counts remain unchanged. A mixed/witness aggregate never receives a
+numeric MP pid, even where an MP name is supported by majority speaker rows.
+The committee linker retains witness testimony as witness records with no MP
+person id; its tests include an MP and a witness sharing a surname.
+
+Anderson (449 witnesses / 450 rows) and Bishop (32 / 33) lose their MP aliases,
+party, seats and identity provenance. The whole-roster assertion requires the
+same for every witness-dominated print. Witness testimony is never attached to
+an MP through this display/identity repair.
+
+Of 147 witness-dominated or tied prints, **59** carried an MP alias in round 1; **32** gained that alias against main. All 59 are now neutral (**2** ties), with **zero** MP aliases, parties or numeric ids on these 147 prints. Every removed alias is listed in the round-2 change table below.
+
+## 3. Alias source normalization
+
+`normalize_state_speaker_name()` now uses the ingest's display-casing normalizer
+instead of turning every unknown two-capital first name into dotted initials.
+`KY CHAN` becomes `Ky Chan`, `JO CLAY` becomes `Jo Clay`, and `DI FARMER` becomes
+`Di Farmer`. Genuine compact initials such as `SM FENTIMAN` and `GJ BUTCHER`
+stay initials and cannot qualify as full-name aliases. The source resolver also
+normalizes roster names before selection: `LEO McLEAY` becomes `Leo McLeay`,
+and postnominals do not become part of a given name. Tests cover each form.
+`D O’Brien` and `D O'Brien` now agree on Danny O'Brien / Nationals using the dated
+Victorian Electoral Commission result, rather than retaining a Liberal label.
+
+## Original corrections and dated careers retained
+
+| Person | Correct data |
 |---|---|
-| Bob Horne | Paterson, NSW; Melissa's Williamstown and portfolios removed |
+| Bob Horne | Federal Paterson, NSW; Melissa's Williamstown and portfolios removed |
 | Melissa Horne | Williamstown, Victorian Assembly, Labor |
-| Mark Latham | Independent NSW MLC; federal Labor/Werriwa to 21 January 2005, then dated NSW One Nation and Independent service |
-| David Kemp | Goldstein, VIC; namesake Michael Kemp's Oxley removed |
+| Mark Latham | NSW Independent MLC; federal Labor / Werriwa to 21 January 2005, NSW One Nation from 23 March 2019, Independent from 22 August 2023 |
+| David Kemp | Goldstein, VIC; Michael Kemp's Oxley removed |
 | Michael Lee | Dobell, NSW; Geoff Lee's Parramatta removed |
 | Lynda Voltz | Council 24 March 2007–28 February 2019; Auburn / Assembly from 23 March 2019, Labor |
 | Ingrid Stitt | Western Metropolitan; portfolios removed from electorate text |
 | Bronnie Taylor | Canonical statewide New South Wales Council label |
-| Ros Spence | Kalkallo retained; Yuroke restored with 29 November 2014–26 November 2022 service evidence |
+| Ros Spence | Kalkallo and dated Yuroke (29 November 2014–26 November 2022) |
 
-The profile infobox now renders dated parliamentary service with party, seat,
-chamber, dates and source links. Mark's title uses the dated current Council
-service rather than interpreting `current` as federal Werriwa tenure. Mark and
-Voltz carry both `current` and `party_now`; the weak Latham aggregate carries
-neither. Service-seat de-duplication ignores description/basis differences.
+Bob/Melissa's exact-name member-stub join admitted an otherwise agreeing Bob /
+federal / representatives record with Melissa's contaminated seat. Independent
+dated federal terms now reject it. Latham's SQL name aggregate paired a dominant
+federal Labor label with the union of chambers, and a member-stub join admitted
+Werriwa as a NSW Council seat. The shared repair keeps party, seat and chamber
+with their dated careers. The unavailable database's original mutations remain
+unknown; the export steps that admitted them are fixed.
 
 ## Whole-roster comparison
 
-Party facets count roster rows (including historical transcript aggregates).
-Web recorded-speaker counts use the unchanged client identity rule: numeric pid,
-otherwise lowercase `full || name`. These are directory counts, not a claim
-that every speech in a weak aggregate belongs to its resolved parliamentarian.
+Party facets count rows, including historical transcript aggregates. Web recorded
+speakers use the unchanged client key: numeric pid, otherwise lowercase
+`full || name`. These are directory counts, not an attribution of witness
+speeches to the named parliamentarian.
 
-| Count | origin/main | ecc26aa2 | Round 1 |
-|---|---:|---:|---:|
-| Roster rows | 1,700 | 1,700 | 1,700 |
-| Speeches | 605,149 | 605,149 | 605,149 |
-| Rows with party | 1,177 | 967 | 1,131 |
-| Rows with full alias | 420 | 245 | 443 |
-| Rows with representation | 985 | 944 | 963 |
-| Current rows | 328 | 328 | 330 |
-| Rows with party_now | 328 | 330 | 330 |
-| Rows with numeric pid | 740 | 740 | 740 |
-| Queensland Labor facet | 57 | 27 | 44 |
-| Queensland LNP facet | 56 | 29 | 47 |
-| Web recorded speakers: Labor | 451 | 350 | 428 |
-| Web recorded speakers: LNP | 92 | 61 | 82 |
+| Count | origin/main | ecc26aa2 | c99d59cb | Round 2 |
+|---|---:|---:|---:|---:|
+| Roster rows | 1,700 | 1,700 | 1,700 | 1,700 |
+| Speeches | 605,149 | 605,149 | 605,149 | 605,149 |
+| Rows with party | 1,177 | 967 | 1,131 | 1,002 |
+| Rows with full alias | 420 | 245 | 443 | 324 |
+| Rows with representation | 985 | 944 | 963 | 950 |
+| Current rows | 328 | 328 | 330 | 330 |
+| Rows with party_now | 328 | 330 | 330 | 330 |
+| Rows with numeric pid | 740 | 740 | 740 | 740 |
+| Queensland Labor facet | 57 | 27 | 44 | 37 |
+| Queensland LNP facet | 56 | 29 | 47 | 41 |
+| Web recorded speakers: Labor | 451 | 350 | 428 | 368 |
+| Web recorded speakers: LNP | 92 | 61 | 82 | 74 |
+| Witness-dominated aliases | 81 | 0 | 59 | 0 |
 
-Of the reviewed 287 removals, **164** now keep a compatible name or
-party and **123** remain neutral. **89 of the 175 removed aliases** are
-recovered; 86 remain unsupported or contradicted by competing people. All
-11 sampled correct identities marked L by the reviewer are retained. Under the
-reproducible narrower criterion “lost alias, no full-name surname sibling, one
-non-committee house, under 25% witnesses”, all 29 affected prints now recover
-names. Different-name overlaps remain neutral: Berry (Carol / Yvette), Green
-(Nita / Danielle), Horne (Bob / Melissa), Andrews (Kevin / Daniel), Katter
-(Bob / Robbie) and Tudehope (Damien / Monica), for example.
+The original 287-review table now has **81 retained identities** and **206 neutral aggregates**. Against c99d59cb, aliases: **130 removed, 11 added, 5 renamed**.
 
-Against main, 537 rows differ, 297 excluding provenance-only additions.
-Against ecc26aa2, 408 differ, 229 excluding provenance-only additions.
-Every name, speech count, state/chamber list, first/last year, witness count and
-numeric pid is unchanged from main. The table below covers all 287 reviewed
-prints; the following table lists additional rows with changed identity facts.
+Against main: 602 changed rows, 377 with changed identity/affiliation/representation facts. Against ecc26aa2: 401 changed rows, 209 with changed identity/affiliation/representation facts. Against c99d59cb: 177 changed rows, 177 with changed identity/affiliation/representation facts. Every printed name, speech count, state/chamber list, first/last year, witness
+count and numeric pid remains unchanged from main. All round-2 changed facts
+and the original 287 reviewed prints are listed below.
 
-## Export and nightly reproduction
+## Export reproduction and next read-only query
 
-`export_parliamentarians.py` and pinned repair invoke the same `repair()`.
-`export_people.sh` defers the hold check until representation enrichment is
-finished, then checks the final file. Direct exporter use also repairs before
-checking. The existing 25-change limit and sitting-member fail-closed checks
+The box-shaped fixture has all 1,700 original prints and their exact speech /
+witness counts. It runs the real SQL exporter and wrapper with member stubs
+without start dates outside Queensland. Its synthetic speech rows preserve the
+majority/tie side of each print; just recording the presence of one witness
+would defeat the new guard. The replay produces **zero identity changes, limit
+25**, with no hold. The source and pinned repair use the same resolver, and
+pinned repair is byte-idempotent. The sitting-member and missing-baseline holds
 remain in force.
 
-The fixed public `tests/fixtures/roster-export/prints-23cad95a.json` contains all
-1,700 pre-repair prints. The test builds the production SQL schema and undated
-member stubs outside Queensland, runs the real exporter and wrapper, and
-compares final identities with the shipped file. **One identity difference
-(McDermott), limit 25; no hold.** All named regression targets match. This proves
-the box-shaped fixture path, not access to the real desktop database.
-
-At the next refresh, one read-only query should confirm the loaders' date shape:
+At the next refresh, confirm the expected loader shape with this one read-only
+query, then inspect the actual export diff before accepting a held first export:
 
 ```sql
 SELECT state, COUNT(*) AS members, SUM(entered_house IS NULL) AS undated
@@ -136,446 +152,605 @@ WHERE state NOT IN ('federal')
 GROUP BY state;
 ```
 
-## Ask, search, MCP and voice evidence reconciliation
+## 4. KB reconciler safety and supervised first run
 
-`scripts/reconcile_roster_profiles.py` is read-only by default. It inventories
-owned `roster-profile-*` resources, constructs exact desired source bodies and
-metadata, and plans create, replace or retire. Replacements delete/recreate the
-owned derived record so stale generated fields cannot survive an ordinary
-update. Original resources are backed up outside the KB. Apply preflights every
-ownership/fingerprint before the first write, rechecks each mutation, and verifies
-read-back; a retry is idempotent. Model generation is checked off before apply.
+Native classifications are compared as labelset/label pairs. Additional native
+bookkeeping (including `cancelled_by_user: false`) no longer creates spurious
+drift or fails ownership/read-back. An explicit `cancelled_by_user: true` remains
+semantic: it cannot establish the publisher's source ownership. The test fixture
+uses Bob's read-only public body plus the native `data.texts.*.value` and label
+shape already used by repository readers; it tests ownership, fingerprint,
+no-op planning, replacement and native-shape read-back.
 
-The credential-free public GET inventory captured all **983** live profile slugs
-from the union of previous and current roster names. The public route exposes
-source/kind labels but not KB `source_id`, and collapses each labelset to its
-last value. The preview compares that observable projection, avoiding label-only
-false positives for multi-state profiles; native publication compares all labels.
-The dry-run plan states these limitations.
-The approved apply must inventory the native KB again and verify `source_id`;
-public/offline snapshots cannot be applied. No credentials were read or logged
-for this inventory. The named stale records were confirmed live: Bob still has
-Williamstown, Mark a Council Werriwa, Kemp Oxley, and Theophanous federal Northcote.
-
-Dry run: **60 replacements, 26 retirements, 6 creates**, 963 desired profiles.
-The exact JSON plan includes before/after bodies, metadata and hashes. The full
-operation list follows below. Output and the captured public inventory are ignored:
-`scripts/_photos_work/qa-roster-mixups/round1/roster-profile-plan.json`,
-`roster-profile-plan.inventory.json`, and `roster-profile-dry-run.log`.
+**No usable KB credentials exist in the checked OPAX process/environment files
+on this Mac. No native GET was possible.** The fixture is explicitly documented
+as schema-shaped, not a captured native response. Capture a real owned resource
+on the refresh box before first apply. Native dry-run uses **`~/opax/.env`** on
+that box; no Mac env file is available for native inventory. This Mac can run
+credential-free public GET preview or replay the ignored inventory offline.
+The latter needs no env file:
 
 ```sh
 python3 scripts/reconcile_roster_profiles.py --dry-run \
-  --inventory scripts/_photos_work/qa-roster-mixups/round1/roster-profile-plan.inventory.json \
-  --output scripts/_photos_work/qa-roster-mixups/round1/roster-profile-plan.json
+  --inventory scripts/_photos_work/qa-roster-mixups/round2/roster-profile-plan.inventory.json \
+  --output scripts/_photos_work/qa-roster-mixups/round2/roster-profile-plan.json
 ```
 
-The orchestrator runs the real publication after approval, with native KB
-credentials, `--apply`, `--output` and `--backup`. No apply was run here. Nightly
-now performs the same reconciliation after final data validation and the portal
-gate, before measuring the corpus and stamping its cache epoch. A failure is
-recorded and retried next night. Rehearsals disable writes with
-`OPAX_PERIODIC_SYNC_KB=0` (or `OPAX_ROSTER_SYNC_KB=0`).
+Nightly reconciliation defaults to **dry-run**. Only explicit
+`OPAX_ROSTER_SYNC_KB=1` selects `--apply`; `OPAX_PERIODIC_SYNC_KB` cannot enable it.
+CLI apply independently checks the dedicated switch. A hard cap of **30 combined
+retirements + replacements** aborts before remote reads/writes in the apply
+helper; no CLI cap override exists. Dry-run can list larger plans. `--slugs`
+selects explicitly reviewed JSON batches; malformed/unknown slugs abort.
 
-## Validation and screenshots
+Publication replaces owned records (delete/recreate) to clear stale generated
+fields, or retires orphaned derived profiles. It backs up originals outside the
+KB, verifies ownership/fingerprints before the first write and again before each
+mutation, and checks read-back. Offline/public plans cannot be applied. Apply
+re-inventories the native KB and checks that model generation is disabled.
 
-Node `v24.21.0`. `npm run build:search` before `npm test`: **847 passed, zero
-failed**; `npm run check` passes. Python: **52 passed** (40 export/identity/
-representation/wrapper tests, four grants tests and eight reconciliation tests).
-The grants assertions use fixed totals again: 1,431 published records, 963 roster
-profiles, 737 representation-review tasks. Photo identity audit: **ok, zero
-warnings**. Linux nightly rehearsal: **203 checks passed, zero failed**, including
-roster apply ordering, rehearsal suppression and failure reporting. Pinned repair
-is byte-idempotent. Search build output is restored after testing.
+Fresh read-only public inventory: **983 existing profiles**, **950 desired**, **55 replacements, 35 retirements, 2 creates**. The 90 retirements/replacements exceed the apply cap; do not apply as one run. The public route omits native source_id and collapses each labelset to one value. This preview states those limits; native inventory/ownership can change the plan. Exact before/after bodies and hashes are in the ignored `round2/roster-profile-plan.json`, with its `roster-profile-plan.inventory.json` and dry-run log.
 
-Wrangler ran locally at `127.0.0.1:8794`; installed Google Chrome ran headless.
-Local API responses were empty fixtures because the desktop KB was unreachable;
-all page assets and roster data were served locally. External browser requests
-were blocked. For round-1 before comparisons, the browser used ecc26aa2's exact
-app/helper/roster assets; the local Worker remains the current implementation.
-The checks cover roster-driven pages and career rendering, not live speech search.
+The orchestrator supervises these commands **after approval**, on the refresh
+box at the reviewed commit. Keep the dedicated switch off for the first plan:
 
-Ignored `scripts/_photos_work/qa-roster-mixups/round1/{before,after}/` contain
-screenshots, page text and `results.json` for Bob, Melissa, Mark, Lynda, Ros,
-SA/Maher, Staley aliases, Queensland Labor and the Labor party view. The after
-folder also contains `mark-latham-mobile.png` with no horizontal overflow.
-Assertions cover Paterson, Williamstown/Labor, Independent MLC, visible federal
-Labor and Voltz Council careers, restored Yuroke, SA aliases and Louise Staley.
-The original pre-main/first-repair screenshots remain in
-`scripts/_photos_work/qa-roster-mixups/{before,after}/`.
+```sh
+cd ~/opax
+ROSTER_REVIEW_DIR="$HOME/.cache/opax/roster-review-2026-10-06"
+mkdir -p "$ROSTER_REVIEW_DIR"
+.venv/bin/python scripts/reconcile_roster_profiles.py --dry-run --env "$PWD/.env" \
+  --output "$ROSTER_REVIEW_DIR/native-plan.json"
+```
 
-## All 287 reviewed prints
+Copy one real native GET to the ignored review directory (never print the env):
 
-“Retained” means one compatible identity resolved. “Neutral” keeps transcript
-aggregates and recorded party labels, with no asserted single-person affiliation.
-The registry and per-row `identity_evidence` / `identity_basis` record evidence.
+```sh
+.venv/bin/python - "$PWD/.env" "$ROSTER_REVIEW_DIR/native-bob.json" <<'PYGET'
+import hashlib,json,sys
+from pathlib import Path
+from parli.arag import AragConfig,KbClient,load_dotenv
+load_dotenv(sys.argv[1])
+k=KbClient(AragConfig.from_env())
+slug='roster-profile-'+hashlib.sha256(b'Bob Horne').hexdigest()[:16]
+r=k.get_resource_by_slug(slug,show='basic&show=origin&show=extra&show=values')
+Path(sys.argv[2]).write_text(json.dumps(r,ensure_ascii=False,indent=2)+'\n')
+PYGET
+```
 
-| Print | Main alias | Round 1 alias | Round 1 party | Result |
+Inspect the native labels and plan locally, and only copy public source facts to
+any committed fixture. Split the approved plan into explicit reviewed batches
+of at most 30 operations (creates included here, conservatively):
+
+```sh
+.venv/bin/python - "$ROSTER_REVIEW_DIR" <<'PYBATCH'
+import json,sys
+from pathlib import Path
+p=Path(sys.argv[1]);ops=json.loads((p/'native-plan.json').read_text())['operations']
+for i in range(0,len(ops),30):
+    (p/f'batch-{i//30+1:02}.json').write_text(json.dumps([o['slug'] for o in ops[i:i+30]],indent=2)+'\n')
+PYBATCH
+```
+
+Preview each selected batch with native reads and review it. The orchestrator
+then applies that batch with the explicit switch and retained backups:
+
+```sh
+.venv/bin/python scripts/reconcile_roster_profiles.py --dry-run --env "$PWD/.env" \
+  --slugs "$ROSTER_REVIEW_DIR/batch-01.json" \
+  --output "$ROSTER_REVIEW_DIR/batch-01-preview.json"
+OPAX_ROSTER_SYNC_KB=1 .venv/bin/python scripts/reconcile_roster_profiles.py --apply \
+  --env "$PWD/.env" --slugs "$ROSTER_REVIEW_DIR/batch-01.json" \
+  --output "$ROSTER_REVIEW_DIR/batch-01-apply.json" \
+  --backup "$ROSTER_REVIEW_DIR/backups"
+```
+
+Repeat preview/review/apply for subsequent batch files, then rerun the native
+full dry-run and verify zero drift. Only after supervised reconciliation should
+the orchestrator explicitly enable `OPAX_ROSTER_SYNC_KB=1` for unattended future
+runs; the cap still applies. No apply command above was executed in this repair.
+
+## Validation and local browser evidence
+
+Node **24.21.0**. `npm run build:search` then `npm test`: **848 passed**, zero
+failures/skips. `npm run check` passes. Focused Python gates: **68 passed**
+(31 representation/resolver, seven numeric identity, ten exporter, four real
+wrapper/replay, 12 reconciliation and four grants tests). Photo identity audit:
+**ok, zero warnings**. Linux nightly rehearsal: **206 passed, zero failed**.
+Grants totals are fixed at **1,418 records, 950 roster profiles, 750
+representation-review tasks**. Search build output is restored after testing.
+
+Additional committee/witness/ACT tests: **23 passed, 28 skipped** (optional
+PDF parser unavailable); witness attribution tests pass.
+
+Local `wrangler dev --local --port 8794` and headless Chrome checks cover Bob,
+Melissa, Mark, Voltz, Ros, all six requested incorrect-name/neutral profiles,
+Anderson, Bishop, McLeay and Labor/Queensland directory views. Before
+screenshots inject c99d59cb's roster in the browser; the local Worker stays at
+the current implementation. External requests and API searches are stubbed to
+prevent paid/model calls. Thus this verifies roster-driven rendering and visible
+careers, not the native KB or live Ask. Ignored before/after screenshots and
+page text are in `scripts/_photos_work/qa-roster-mixups/round2/{before,after}/`;
+`results.json` records titles, infoboxes and page errors for the focused round-2
+checks. The six named profiles and four alias directory checks pass; the before
+and after alias screenshots show Pauline → Jeremy Hanson, Emma → Nick McBride,
+Andrew → Jon Gee and Simon → John Kennedy. All checks have zero page errors.
+The local profile metadata also carries the corrected Labor/Liberal descriptions.
+
+## Every round-2 changed identity/affiliation fact
+
+| Print | Round 1 alias / party | Round 2 alias / party | Changed fields | Reason |
 |---|---|---|---|---|
-| Abbott | — | — | — | neutral |
-| Adams | — | — | — | neutral |
-| Addison | Juliana Addison | Juliana Addison | Labor | retained |
-| Aitchison | Jenny Aitchison | — | — | neutral |
-| Anderson | — | John Anderson | Nationals | retained |
-| Andrew | Stephen Andrew | Stephen Andrew | Katter's Australian Party | retained |
-| Andrews | Daniel Andrews | — | — | neutral |
-| Angus | Neil Angus | Neil Angus | — | retained |
-| Anthony | — | — | — | neutral |
-| Ayres | — | Tim Ayres | Labor | retained |
-| Bailey | Mc Bailey | Mark Bailey | Labor | retained |
-| Baird | — | Bruce Baird | Liberal | retained |
-| Baldwin | — | — | — | neutral |
-| Barr | Andrew Barr | — | — | neutral |
-| Barrett | Scott Barrett | Scott Barrett | Nationals | retained |
-| Barry | Chiaka Barry | Chiaka Barry | Liberal | retained |
-| Bartlett | — | — | — | neutral |
-| Bates | Ros Bates | Ros Bates | LNP | retained |
-| Batt | — | David Batt | LNP | retained |
-| Bedford | Frances Bedford | Frances Bedford | Independent | retained |
-| Bell | Troy Bell | — | — | neutral |
-| Bennett | Stephen Bennett | Stephen Bennett | LNP | retained |
-| Berry | Yvette Berry | — | — | neutral |
-| Billson | — | Bruce Billson | Liberal | retained |
-| Bilyk | — | — | — | neutral |
-| Birrell | — | Sam Birrell | Nationals | retained |
-| Bishop | — | Julie Bishop | Liberal | retained |
-| Blackwood | Gary Blackwood | Gary Blackwood | — | retained |
-| Blair | Niall Blair | — | — | neutral |
-| Boele | — | Nicolette Boele | Independent | retained |
-| Bolton | Sandy Bolton | Sandy Bolton | Independent | retained |
-| Bourne | Wendy Bourne | Wendy Bourne | Labor | retained |
-| Bowen | — | Chris Bowen | Labor | retained |
-| Boyd | Nikki Boyd | — | — | neutral |
-| Boyer | Blair Boyer | Blair Boyer | Labor | retained |
-| Brereton | — | — | — | neutral |
-| Brooks | Colin Brooks | Colin Brooks | Labor | retained |
-| Brown | Michael Brown | — | — | neutral |
-| Burgess | By Burgess | Neale Burgess | — | retained |
-| Burke | — | — | — | neutral |
-| Bush | Jonty Bush | Jonty Bush | Labor | retained |
-| Butler | Liza Butler | — | — | neutral |
-| C.M. Scriven | — | Clare Scriven | Labor | retained |
-| Cain | Peter Cain | Peter Cain | Liberal | retained |
-| Campbell | — | Julie-Ann Campbell | Labor | retained |
-| Carroll | Ben Carroll | Ben Carroll | Labor | retained |
-| Carter | Susan Carter | Susan Carter | Liberal | retained |
-| Castley | Leanne Castley | Leanne Castley | Independent | retained |
-| Chandler | — | Claire Chandler | Liberal | retained |
-| Chandler-Mather | — | Max Chandler-Mather | Greens | retained |
-| Chapman | Vickie Chapman | — | — | neutral |
-| Charles | — | — | — | neutral |
-| Chisholm | — | Anthony Chisholm | Labor | retained |
-| Clancy | Nadia Clancy | — | — | neutral |
-| Clark | Robert Clark | Robert Clark | — | retained |
-| Clarke | David Clarke | — | — | neutral |
-| Clay | Jo Clay | Jo Clay | Greens | retained |
-| Close | Susan Close | Susan Close | Labor | retained |
-| Coleman | — | David Coleman | Liberal | retained |
-| Collins | — | — | — | neutral |
-| Connolly | Sarah Connolly | Sarah Connolly | Labor | retained |
-| Cook | Nat Cook | — | — | neutral |
-| Cooke | Steph Cooke | — | — | neutral |
-| Costello | — | Peter Costello | Liberal | retained |
-| Cox | — | — | — | neutral |
-| Crawford | Cd Crawford | Craig Crawford | Labor | retained |
-| Cross | Matt Cross | — | — | neutral |
-| Crouch | Adam Crouch | — | — | neutral |
-| Cusack | Catherine Cusack | — | — | neutral |
-| Dalton | Nigel Dalton | — | — | neutral |
-| Davey | — | — | — | neutral |
-| Davies | Tanya Davies | — | — | neutral |
-| Davis | Donna Davis | — | — | neutral |
-| Dick | Cameron Dick | Cameron Dick | Labor | retained |
-| Dillon | Sean Dillon | Sean Dillon | LNP | retained |
-| Donnelly | Greg Donnelly | — | — | neutral |
-| Dowling | — | Richard Dowling | Labor | retained |
-| Doyle | — | — | — | neutral |
-| Duniam | — | Jonathon Duniam | Liberal | retained |
-| Edwards | Maree Edwards | — | — | neutral |
-| Ellis | Fraser Ellis | — | — | neutral |
-| Emerson | Thomas Emerson | — | — | neutral |
-| Evans | — | Trevor Evans | Liberal | retained |
-| Fang | Wes Fang | Wes Fang | Nationals | retained |
-| Farmer | De Farmer | — | — | neutral |
-| Farrell | — | Don Farrell | Labor | retained |
-| Fawcett | — | — | — | neutral |
-| Field | Russell Field | Russell Field | LNP | retained |
-| Foley | Martin Foley | Martin Foley | — | retained |
-| Franklin | Ben Franklin | Ben Franklin | Nationals | retained |
-| Gallagher | — | Katy Gallagher | Labor | retained |
-| Gardner | J.A.W. Gardner | — | — | neutral |
-| Garrett | — | — | — | neutral |
-| Gee | — | Andrew Gee | Independent | retained |
-| George | — | Jennie George | Labor | retained |
-| Gilbert | Julieanne Gilbert | Julieanne Gilbert | Labor | retained |
-| Gosling | — | Luke Gosling | Labor | retained |
-| Grace | Grace Grace | Grace Grace | Labor | retained |
-| Graham | John Graham | John Graham | Labor | retained |
-| Grant | Troy Grant | — | — | neutral |
-| Green | By Green | — | — | neutral |
-| Gregg | — | Matt Gregg | Labor | retained |
-| Griffin | James Griffin | — | — | neutral |
-| Guy | Matthew Guy | Matthew Guy | — | retained |
-| Haines | — | Helen Haines | Independent | retained |
-| Halfpenny | Bronwyn Halfpenny | Bronwyn Halfpenny | Labor | retained |
-| Hall | Katie Hall | — | — | neutral |
-| Hanson | Jeremy Hanson | Pauline Hanson | One Nation | retained |
-| Harper | Aaron Harper | Aaron Harper | Labor | retained |
-| Harris | David Harris | — | — | neutral |
-| Harrison | Jodie Harrison | — | — | neutral |
-| Hart | Michael Hart | Michael Hart | LNP | retained |
-| Harvey | Richard Manuel Harvey | — | — | neutral |
-| Hawke | — | Alex Hawke | Liberal | retained |
-| Head | Bryson Head | Bryson Head | LNP | retained |
-| Henderson | — | Sarah Henderson | Liberal | retained |
-| Hennessy | Jill Hennessy | Jill Hennessy | — | retained |
-| Hoare | — | Kelly Hoare | Labor | retained |
-| Holland | Michael Holland | — | — | neutral |
-| Hood | D.G.E. Hood | — | — | neutral |
-| Horne | Melissa Horne | — | — | neutral |
-| Howard | Jennifer Howard | — | — | neutral |
-| Hughes | Eddie Hughes | — | — | neutral |
-| Hunt | Jason Hunt | — | — | neutral |
-| Hurst | Emma Hurst | Emma Hurst | Animal Justice Party | retained |
-| Hutton | Nigel Hutton | Nigel Hutton | LNP | retained |
-| Irwin | — | Julia Irwin | Labor | retained |
-| J.M.A. Lensink | — | Michelle Lensink | Liberal | retained |
-| Jackson | Rose Jackson | — | — | neutral |
-| James | Bree James | — | — | neutral |
-| Jenkins | — | Harry Jenkins | Labor | retained |
-| Johnson | — | Michael Johnson | Liberal | retained |
-| K.J. Maher | — | Kyam Maher | Labor | retained |
-| Katter | Rob Katter | — | — | neutral |
-| Kelly | Joe Kelly | — | — | neutral |
-| Kemp | Michael Kemp | — | — | neutral |
-| Kennedy | John Kennedy | Simon Kennedy | Liberal | retained |
-| Kerr | — | Duncan Kerr | Labor | retained |
-| King | Shane King | — | — | neutral |
-| Kirkland | Donna Kirkland | Donna Kirkland | LNP | retained |
-| Knight | Sharon Knight | Sharon Knight | — | retained |
-| Krause | Jon Krause | Jon Krause | LNP | retained |
-| Lane | Jordan Lane | — | — | neutral |
-| Latham | — | Mark Latham | Independent | retained |
-| Lawrence | — | — | — | neutral |
-| Le | — | Dai Le | Independent | retained |
-| Leahy | Ann Leahy | Ann Leahy | LNP | retained |
-| Lee | Elizabeth Lee | — | — | neutral |
-| Liddle | — | Kerrynne Liddle | Liberal | retained |
-| Lim | — | — | — | neutral |
-| Lindsay | — | Peter Lindsay | Liberal | retained |
-| Lister | James Lister | James Lister | LNP | retained |
-| Lloyd | — | — | — | neutral |
-| Lui | Cynthia Lui | Cynthia Lui | Labor | retained |
-| Lynch | Paul Lynch | — | — | neutral |
-| MacDonald | Aileen MacDonald | Aileen MacDonald | Liberal | retained |
-| Marshall | Steven Marshall | — | — | neutral |
-| Martin | James Martin | — | — | neutral |
-| McAllister | — | Jenny McAllister | Labor | retained |
-| McBride | Nick McBride | Emma McBride | Labor | retained |
-| McCarthy | — | Malarndirri McCarthy | Labor | retained |
-| McClelland | — | Robert McClelland | Labor | retained |
-| McCormack | — | Michael McCormack | Nationals | retained |
-| McDonald | — | — | — | neutral |
-| McGhie | Steve McGhie | Steve McGhie | Labor | retained |
-| McGrath | — | James McGrath | LNP | retained |
-| McGuire | Frank McGuire | Frank McGuire | — | retained |
-| McKenzie | — | — | — | neutral |
-| McKim | — | Nick McKim | Greens | retained |
-| McLeay | — | LEO McLEAY | Labor | retained |
-| McLeish | Cindy McLeish | Cindy McLeish | Liberal | retained |
-| McMahon | Melissa McMahon | Melissa McMahon | Labor | retained |
-| McMillan | Corrine McMillan | Corrine McMillan | Labor | retained |
-| McMullan | — | — | — | neutral |
-| McNamara | — | Karen McNamara | Liberal | retained |
-| Millar | Lachlan Millar | Lachlan Millar | LNP | retained |
-| Mitchell | — | — | — | neutral |
-| Moriarty | Tara Moriarty | Tara Moriarty | Labor | retained |
-| Morris | Deborah Morris | — | — | neutral |
-| Morton | Kendall Morton | — | — | neutral |
-| Moylan | Brendan Moylan | — | — | neutral |
-| Mulholland | — | Corinne Mulholland | Labor | retained |
-| Mullen | Charis Mullen | Charis Mullen | Labor | retained |
-| Munro | Jacqui Munro | Jacqui Munro | Liberal | retained |
-| Murphy | — | — | — | neutral |
-| Murray | Steve Murray | — | — | neutral |
-| Nelson | — | Brendan Nelson | Liberal | retained |
-| Neville | Lisa Neville | — | — | neutral |
-| Ng | — | Gabriel Ng | Labor | retained |
-| Nicholls | Tim Nicholls | Tim Nicholls | LNP | retained |
-| Nightingale | Margie Nightingale | Margie Nightingale | Labor | retained |
-| Noonan | Wade Noonan | Wade Noonan | — | retained |
-| Northe | By Northe | Russell Northe | — | retained |
-| O'Byrne | — | Michelle Anne O'Byrne | Labor | retained |
-| O'Connor | — | — | — | neutral |
-| O'Keefe | — | Neil Patrick O'Keefe | Labor | retained |
-| O'Neill | — | — | — | neutral |
-| O'Sullivan | — | Matt O'Sullivan | Liberal | retained |
-| Orr | Suzanne Orr | Suzanne Orr | Labor | retained |
-| Pakula | Martin Pakula | Martin Pakula | — | retained |
-| Park | Ryan Park | — | — | neutral |
-| Parker | Jamie Parker | — | — | neutral |
-| Paterson | — | — | — | neutral |
-| Patterson | S.J.R. Patterson | — | — | neutral |
-| Pearce | Rhiannon Pearce | — | — | neutral |
-| Pearson | Danny Pearson | — | — | neutral |
-| Perrett | Tony Perrett | Tony Perrett | LNP | retained |
-| Pettersson | Michael Pettersson | Michael Pettersson | Labor | retained |
-| Phillips | — | Fiona Phillips | Labor | retained |
-| Piper | Greg Piper | — | — | neutral |
-| Poole | Janelle Poole | Janelle Poole | LNP | retained |
-| Porter | — | Christian Porter | Liberal | retained |
-| Powell | Andrew Powell | Andrew Powell | LNP | retained |
-| Power | Linus Power | Linus Power | Labor | retained |
-| Pratt | Penny Pratt | — | — | neutral |
-| Preston | Robyn Preston | — | — | neutral |
-| Price | — | — | — | neutral |
-| Pugh | Jess Pugh | Jess Pugh | Labor | retained |
-| R.I. Lucas | — | Rob Lucas | Liberal | retained |
-| Rae | — | Sam Rae | Labor | retained |
-| Ray | — | — | — | neutral |
-| Read | Tim Read | Tim Read | Greens | retained |
-| Reid | — | Gordon Reid | Labor | retained |
-| Reynolds | — | — | — | neutral |
-| Richards | Pauline Richards | — | — | neutral |
-| Richardson | Tim Richardson | Tim Richardson | Labor | retained |
-| Riordan | Richard Riordan | Richard Riordan | Liberal | retained |
-| Roberts | — | — | — | neutral |
-| Robinson | Mark Robinson | Mark Robinson | LNP | retained |
-| Rudd | — | Kevin Rudd | Labor | retained |
-| Ryall | Dee Ryall | Dee Ryall | — | retained |
-| Ryan | — | — | — | neutral |
-| S.G. Wade | — | Stephen Wade | Liberal | retained |
-| Saunders | Bruce Saunders | — | — | neutral |
-| Scarr | — | Paul Scarr | Liberal | retained |
-| Sciacca | — | Concetto Antonio Sciacca | Labor | retained |
-| Scott | Robin Scott | — | — | neutral |
-| Sharpe | Penny Sharpe | Penny Sharpe | Labor | retained |
-| Sheldon | — | Tony Sheldon | Labor | retained |
-| Shoebridge | — | David Shoebridge | Greens | retained |
-| Sidoti | John Sidoti | — | — | neutral |
-| Simpson | Fiona Simpson | Fiona Simpson | LNP | retained |
-| Singh | Gurmesh Singh | — | — | neutral |
-| Small | — | Ben Small | Liberal | retained |
-| Smith | Tom Smith | — | — | neutral |
-| Spence | Ros Spence | Ros Spence | Labor | retained |
-| Steel | Chris Steel | Chris Steel | Labor | retained |
-| Stevens | Ray Stevens | — | — | neutral |
-| Stewart | — | — | — | neutral |
-| Stuart | Maryanne Stuart | — | — | neutral |
-| Sullivan | — | Jimmy Sullivan | Labor | retained |
-| Swan | — | Wayne Swan | Labor | retained |
-| Tanner | — | Lindsay Tanner | Labor | retained |
-| Taylor | Jackson Taylor | — | — | neutral |
-| Telfer | Sam Telfer | Sam Telfer | Liberal | retained |
-| Theophanous | Kat Theophanous | — | — | neutral |
-| Thomas | Mary-Anne Thomas | Mary-Anne Thomas | Labor | retained |
-| Thompson | Erin Thompson | — | — | neutral |
-| Thomson | Marsha Thomson | Marsha Thomson | — | retained |
-| Thorpe | — | Lidia Thorpe | Independent | retained |
-| Tilley | Bill Tilley | Bill Tilley | — | retained |
-| Treloar | Peter Treloar | Peter Treloar | Liberal | retained |
-| Tudehope | Monica Tudehope | — | — | neutral |
-| Urquhart | — | Anne Urquhart | Labor | retained |
-| Walker | — | — | — | neutral |
-| Wallace | — | — | — | neutral |
-| Walsh | — | — | — | neutral |
-| Ward | Vicki Ward | — | — | neutral |
-| Ware | — | Jenny Ware | Liberal | retained |
-| Warren | Greg Warren | — | — | neutral |
-| Washington | Kate Washington | — | — | neutral |
-| Waters | — | Larissa Waters | Greens | retained |
-| Watson | Anna Watson | — | — | neutral |
-| Watt | — | — | — | neutral |
-| Watts | Trevor Watts | — | — | neutral |
-| Wells | Kim Wells | — | — | neutral |
-| Whiteaker | — | Ellie Whiteaker | Labor | retained |
-| Whiting | Chris Whiting | Chris Whiting | Labor | retained |
-| Wilkinson | Kylie Wilkinson | — | — | neutral |
-| Williams | Gabrielle Williams | — | — | neutral |
-| Williamson | Richie Williamson | — | — | neutral |
-| Wilson | Felicity Wilson | — | — | neutral |
-| Wong | — | Penny Wong | Labor | retained |
-| Wooldridge | Michael Wooldridge | Michael Wooldridge | Liberal | retained |
-| Worth | — | — | — | neutral |
-| Young | Rebecca Young | — | — | neutral |
-| Zahra | — | Christian John Zahra | Labor | retained |
+| A. Koutsantonis | Labor | — | party | No unique identity covering own non-committee parliaments |
+| A. Michaels | Labor | — | party | No unique identity covering own non-committee parliaments |
+| A. Piccolo | Labor | — | party | No unique identity covering own non-committee parliaments |
+| Anderson | John Anderson / Nationals | — | full, party | Witness majority/tie |
+| Ayres | Tim Ayres / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| B.I. Boyer | Labor | — | party | No unique identity covering own non-committee parliaments |
+| Baird | Bruce Baird / Liberal | — | full, party | Witness majority/tie |
+| Barrett | Scott Barrett / Nationals | — | full, party | Witness majority/tie |
+| Batt | David Batt / LNP | — | full, party | No unique identity covering own non-committee parliaments |
+| Batty | Jack Batty / Liberal | — | full, party | No unique identity covering own non-committee parliaments |
+| Bennett | Stephen Bennett / LNP | — | full, party | Witness majority/tie |
+| Berry | — | Yvette Berry / Labor | full, party | Own dated evidence / normalized source alias |
+| Billson | Bruce Billson / Liberal | — | full, party | Witness majority/tie |
+| Birrell | Sam Birrell / Nationals | — | full, party | No unique identity covering own non-committee parliaments |
+| Bishop | Julie Bishop / Liberal | — | full, party | Witness majority/tie |
+| Boele | Nicolette Boele / Independent | — | full, party | No unique identity covering own non-committee parliaments |
+| Bourne | Wendy Bourne / Labor | — | full, party | Witness majority/tie |
+| Bowen | Chris Bowen / Labor | — | full, party | Witness majority/tie |
+| Brayne | Chris Brayne / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| Brooks | Colin Brooks / Labor | — | full, party, representation | Witness majority/tie |
+| Buckingham | Jeremy Buckingham / Legalise Cannabis | — | full, party | Witness majority/tie |
+| C.J. Picton | Labor | — | party | No unique identity covering own non-committee parliaments |
+| C.L. Wingard | Liberal | — | party | No unique identity covering own non-committee parliaments |
+| Campbell | Julie-Ann Campbell / Labor | — | full, party | Witness majority/tie |
+| Carter | Susan Carter / Liberal | — | full, party | Witness majority/tie |
+| Chandler | Claire Chandler / Liberal | — | full, party | No unique identity covering own non-committee parliaments |
+| Chandler-Mather | Max Chandler-Mather / Greens | — | full, party | Witness majority/tie |
+| Chisholm | Anthony Chisholm / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| Clark | Robert Clark | — | full | Witness majority/tie |
+| Coleman | David Coleman / Liberal | — | full, party | Witness majority/tie |
+| Costello | Peter Costello / Liberal | — | full, party | Witness majority/tie |
+| Cowdrey | Matt Cowdrey / Liberal | — | full, party | No unique identity covering own non-committee parliaments |
+| Crakanthorp | Tim Crakanthorp | — | full | No unique identity covering own non-committee parliaments |
+| Crawford | Craig Crawford / Labor | — | full, party, representation | Witness majority/tie |
+| Cregan | Dan Cregan / Liberal | — | full, party | No unique identity covering own non-committee parliaments |
+| Cupper | Ali Cupper | — | full | No unique identity covering own non-committee parliaments |
+| D O’Brien | Danny O’Brien / Liberal | Danny O'Brien / Nationals | full, party | Own dated evidence / normalized source alias |
+| D.G. Pisoni | Liberal | — | party | No unique identity covering own non-committee parliaments |
+| D.J. Speirs | Liberal | — | party | No unique identity covering own non-committee parliaments |
+| D.K.B. Basham | — | — | representation | No unique identity covering own non-committee parliaments |
+| D.R. Cregan | Liberal | — | party | No unique identity covering own non-committee parliaments |
+| Dick | Cameron Dick / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| Dillon | Sean Dillon / LNP | — | full, party | Witness majority/tie |
+| Dowling | Richard Dowling / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| Duluk | Sam Duluk / Liberal | — | full, party | No unique identity covering own non-committee parliaments |
+| Duniam | Jonathon Duniam / Liberal | — | full, party | No unique identity covering own non-committee parliaments |
+| Evans | Trevor Evans / Liberal | — | full, party | Witness majority/tie |
+| Fang | Wes Fang / Nationals | — | full, party | Witness majority/tie |
+| Farrell | Don Farrell / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| Field | Russell Field / LNP | — | full, party | Witness majority/tie |
+| Franklin | Ben Franklin / Nationals | — | full, party | Witness majority/tie |
+| Fulbrook | John Fulbrook | — | full | No unique identity covering own non-committee parliaments |
+| G.G. Brock | Independent | — | party | No unique identity covering own non-committee parliaments |
+| Gallagher | Katy Gallagher / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| Gee | Andrew Gee / Independent | Jon Gee / Labor | full, party | Own dated evidence / normalized source alias |
+| George | Jennie George / Labor | — | full, party | Witness majority/tie |
+| Gosling | Luke Gosling / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| Graham | John Graham / Labor | — | full, party | Witness majority/tie |
+| Green | — | Danielle Green / Labor | full, party | Own dated evidence / normalized source alias |
+| Greenwich | Alex Greenwich | — | full | No unique identity covering own non-committee parliaments |
+| Gregg | Matt Gregg / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| Guy | Matthew Guy | — | full, representation | No unique identity covering own non-committee parliaments |
+| H.M. Girolamo | Liberal | — | party | No unique identity covering own non-committee parliaments |
+| Haines | Helen Haines / Independent | — | full, party | No unique identity covering own non-committee parliaments |
+| Halse | Dustin Halse / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| Hanson | Pauline Hanson / One Nation | Jeremy Hanson / Liberal | full, party | Own dated evidence / normalized source alias |
+| Harper | Aaron Harper / Labor | — | full, party | Witness majority/tie |
+| Hart | Michael Hart / LNP | — | full, party | Witness majority/tie |
+| Harvey | — | Richard Harvey / Liberal | full, party | Own dated evidence / normalized source alias |
+| Henderson | Sarah Henderson / Liberal | — | full, party | No unique identity covering own non-committee parliaments |
+| Hildyard | Katrine Hildyard / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| Hoare | Kelly Hoare / Labor | — | full, party | Witness majority/tie |
+| Hodges | Mark Hodges | — | full | No unique identity covering own non-committee parliaments |
+| Hurn | Ashton Hurn | — | full | No unique identity covering own non-committee parliaments |
+| Hurst | Emma Hurst / Animal Justice Party | — | full, party | Witness majority/tie |
+| Hutchesson | Catherine Hutchesson / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| Hutton | Nigel Hutton / LNP | — | full, party | Witness majority/tie |
+| Irwin | Julia Irwin / Labor | — | full, party | Witness majority/tie |
+| J.A.W. Gardner | — | — | representation | No unique identity covering own non-committee parliaments |
+| J.B. Teague | Liberal | — | party | No unique identity covering own non-committee parliaments |
+| J.K. Szakacs | Labor | — | party | No unique identity covering own non-committee parliaments |
+| Jenkins | Harry Jenkins / Labor | — | full, party | Witness majority/tie |
+| Johnson | Michael Johnson / Liberal | — | full, party | Witness majority/tie |
+| K.A. Hildyard | Labor | — | party | No unique identity covering own non-committee parliaments |
+| Kairouz | Marlene Kairouz | — | full | No unique identity covering own non-committee parliaments |
+| Kennedy | Simon Kennedy / Liberal | John Kennedy / Labor | full, party | Own dated evidence / normalized source alias |
+| Kerr | Duncan Kerr / Labor | — | full, party | Witness majority/tie |
+| Kirkland | Donna Kirkland / LNP | — | full, party | Witness majority/tie |
+| Knight | Sharon Knight | — | full | Witness majority/tie |
+| Knoll | Stephan Knoll / Liberal | — | full, party | No unique identity covering own non-committee parliaments |
+| L.W.K. Bignell | — | — | representation | No unique identity covering own non-committee parliaments |
+| Le | Dai Le / Independent | — | full, party | No unique identity covering own non-committee parliaments |
+| Liddle | Kerrynne Liddle / Liberal | — | full, party | No unique identity covering own non-committee parliaments |
+| Lim | — | Hong Lim / Labor | full, party | Own dated evidence / normalized source alias |
+| Lindsay | Peter Lindsay / Liberal | — | full, party | Witness majority/tie |
+| Luethen | Paula Luethen / Liberal | — | full, party | No unique identity covering own non-committee parliaments |
+| MacDonald | Aileen MacDonald / Liberal | — | full, party | Witness majority/tie |
+| Malinauskas | Peter Malinauskas / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| McAllister | Jenny McAllister / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| McBride | Emma McBride / Labor | Nick McBride / Liberal | full, party | Own dated evidence / normalized source alias |
+| McCarthy | Malarndirri McCarthy / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| McClelland | Robert McClelland / Labor | — | full, party | Witness majority/tie |
+| McCormack | Michael McCormack / Nationals | — | full, party | No unique identity covering own non-committee parliaments |
+| McDermott | Hugh McDermott | — | full | No unique identity covering own non-committee parliaments |
+| McGirr | Joe McGirr | — | full | No unique identity covering own non-committee parliaments |
+| McGrath | James McGrath / LNP | — | full, party | No unique identity covering own non-committee parliaments |
+| McKim | Nick McKim / Greens | — | full, party | No unique identity covering own non-committee parliaments |
+| McLeay | LEO McLEAY / Labor | — | full, party | Witness majority/tie |
+| Michaels | Andrea Michaels / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| Moriarty | Tara Moriarty / Labor | — | full, party | Witness majority/tie |
+| Mulholland | Corinne Mulholland / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| Munro | Jacqui Munro / Liberal | — | full, party | Witness majority/tie |
+| N.F. Cook | Labor | — | party | No unique identity covering own non-committee parliaments |
+| Nelson | Brendan Nelson / Liberal | — | full, party | Witness majority/tie |
+| Ng | Gabriel Ng / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| Noonan | Wade Noonan | — | full | Witness majority/tie |
+| O'Byrne | Michelle Anne O'Byrne / Labor | — | full, party, representation | Witness majority/tie |
+| O'Keefe | Neil Patrick O'Keefe / Labor | — | full, party | Witness majority/tie |
+| O'Sullivan | Matt O'Sullivan / Liberal | — | full, party | No unique identity covering own non-committee parliaments |
+| Odenwalder | Lee Odenwalder / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| P.B. Malinauskas | Labor | — | party | No unique identity covering own non-committee parliaments |
+| Paterson | — | Marisa Paterson / Labor | full, party | Own dated evidence / normalized source alias |
+| Pederick | Adrian Pederick / Liberal | — | full, party | No unique identity covering own non-committee parliaments |
+| Phillips | Fiona Phillips / Labor | — | full, party | Witness majority/tie |
+| Picton | Chris Picton / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| Pisoni | David Pisoni / Liberal | — | full, party | No unique identity covering own non-committee parliaments |
+| Porter | Christian Porter / Liberal | — | full, party | Witness majority/tie |
+| Power | Linus Power / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| Pratt | — | Penny Pratt / Liberal | full, party | Own dated evidence / normalized source alias |
+| Pugh | Jess Pugh / Labor | — | full, party | Witness majority/tie |
+| R. Sanderson | Liberal | — | party | No unique identity covering own non-committee parliaments |
+| R.B. Martin | Labor | — | party | No unique identity covering own non-committee parliaments |
+| Rae | Sam Rae / Labor | — | full, party | Witness majority/tie |
+| Rattenbury | — | — | representation | No unique identity covering own non-committee parliaments |
+| Reid | Gordon Reid / Labor | — | full, party | Witness majority/tie |
+| Roberts | — | Rod Roberts / Independent | full, party | Own dated evidence / normalized source alias |
+| Robinson | Mark Robinson / LNP | — | full, party | Witness majority/tie |
+| Ryall | Dee Ryall | — | full | Witness majority/tie |
+| S.C. Mullighan | Labor | — | party | No unique identity covering own non-committee parliaments |
+| S.J.R. Patterson | — | — | representation | No unique identity covering own non-committee parliaments |
+| S.K. Knoll | Liberal | — | party | No unique identity covering own non-committee parliaments |
+| S.S. Marshall | Liberal | — | party | No unique identity covering own non-committee parliaments |
+| Savvas | Olivia Savvas / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| Scarr | Paul Scarr / Liberal | — | full, party | No unique identity covering own non-committee parliaments |
+| Sciacca | Concetto Antonio Sciacca / Labor | — | full, party, representation | Witness majority/tie |
+| Scruby | Jacqui Scruby | — | full | No unique identity covering own non-committee parliaments |
+| Sheldon | Tony Sheldon / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| Shoebridge | David Shoebridge / Greens | — | full, party | No unique identity covering own non-committee parliaments |
+| Small | Ben Small / Liberal | — | full, party | No unique identity covering own non-committee parliaments |
+| Speirs | David Speirs / Liberal | — | full, party | No unique identity covering own non-committee parliaments |
+| St Clair | Nationals | — | party, representation | Witness majority/tie |
+| Sterle | Glenn Sterle / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| Stinson | Jayne Stinson / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| Sullivan | Jimmy Sullivan / Labor | — | full, party, representation | Witness majority/tie |
+| Swan | Wayne Swan / Labor | — | full, party | Witness majority/tie |
+| Szakacs | Joe Szakacs / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| T.J. Whetstone | Liberal | — | party | No unique identity covering own non-committee parliaments |
+| Tanner | Lindsay Tanner / Labor | — | full, party | Witness majority/tie |
+| Tarzia | Vincent Tarzia / Liberal | — | full, party | No unique identity covering own non-committee parliaments |
+| Teague | Josh Teague / Liberal | — | full, party | No unique identity covering own non-committee parliaments |
+| Thomas | Mary-Anne Thomas / Labor | — | full, party, representation | No unique identity covering own non-committee parliaments |
+| Thomson | Marsha Thomson | — | full | Witness majority/tie |
+| Urquhart | Anne Urquhart / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| V.A. Chapman | Liberal | — | party | No unique identity covering own non-committee parliaments |
+| V.A. Tarzia | Liberal | — | party | No unique identity covering own non-committee parliaments |
+| Walsh | — | Peter Walsh / Nationals | full, party | Own dated evidence / normalized source alias |
+| Ware | Jenny Ware / Liberal | — | full, party | Witness majority/tie |
+| Waters | Larissa Waters / Greens | — | full, party | No unique identity covering own non-committee parliaments |
+| Watt | — | Graham Watt / Labor | full, party | Own dated evidence / normalized source alias |
+| Watts | — | Trevor Watts / LNP | full, party | Own dated evidence / normalized source alias |
+| Wells | — | Kim Wells / Liberal | full, party | Own dated evidence / normalized source alias |
+| Whetstone | Tim Whetstone / Liberal | — | full, party | No unique identity covering own non-committee parliaments |
+| Whiteaker | Ellie Whiteaker / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| Wong | Penny Wong / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| Wooldridge | Michael Wooldridge / Liberal | — | full, party | Witness majority/tie |
+| Wortley | Russell Wortley / Labor | — | full, party | No unique identity covering own non-committee parliaments |
+| Z.L. Bettison | Labor | — | party | No unique identity covering own non-committee parliaments |
 
-## Other corrected rows
+## All 287 original reviewed prints
 
-| Print | Changed fields against main | Resulting alias / party / representation |
-|---|---|---|
-| Basham | full, party | David Basham; Liberal; Finniss |
-| Bob Horne | representation | Labor; Paterson |
-| Bronnie Taylor | representation | New South Wales |
-| Buckingham | full, party | Jeremy Buckingham; Legalise Cannabis |
-| Butcher | full | Glenn Butcher; Labor |
-| Buttigieg | party | Mark Buttigieg; Labor |
-| C. Bonaros | full | Connie Bonaros |
-| Cheeseman | party | Darren Cheeseman; Independent |
-| D O'Brien | full, party | Danny O'Brien; Nationals |
-| D O’Brien | full | Danny O’Brien; Liberal |
-| D.G.E. Hood | full | Dennis Hood |
-| D.W. Ridgway | full | David Ridgway; Liberal |
-| David Kemp | representation | Liberal; Goldstein |
-| Doolan | full | Ariana Doolan; LNP |
-| D’Ambrosio | full | Lily D'Ambrosio; Mill Park |
-| E.S. Bourke | full | Emily Bourke; Labor |
-| Enoch | full | Leeanne Enoch; Labor; Algester |
-| F. Pangallo | full | Frank Pangallo |
-| Fentiman | full | Shannon Fentiman; Labor; Waterford |
-| Fowles | party, representation | Will Fowles; Independent; Ringwood |
-| Fregon | party, representation | Matt Fregon; Labor; Ashwood |
-| Furner | full | Mark Furner; Labor; Ferny Grove |
-| Hamer | party | Paul Hamer; Labor; Box Hill |
-| Hatcher | full | Kendall Hatcher; LNP; Caloundra |
-| Higginson | party | Sue Higginson; Greens |
-| Hockey | full | Joseph Benedict Hockey; Liberal |
-| I. Pnevmatikos | full | Irene Pnevmatikos; Labor |
-| I.K. Hunter | full | Ian Hunter; Labor |
-| Ingrid Stitt | representation | Western Metropolitan |
-| J Bull | full | Josh Bull; Labor |
-| J.A. Darley | full | John Darley; Independent |
-| J.E. Hanson | full | Justin Hanson; Labor |
-| J.S. Lee | full | Jing Lee; Liberal |
-| Kempton | full | David Kempton; LNP; Cook |
-| Kernot | full | Cheryl Kernot; Labor; Dickson |
-| Lambie | party | Jacqui Lambie; Jacqui Lambie Network |
-| Linard | full | Leanne Linard; Labor |
-| Lynda Voltz | party, current, party_now, representation, affiliations | Labor; Auburn; New South Wales |
-| M O'Brien | full | Michael O'Brien |
-| M O’Brien | full | Michael O'Brien; Liberal |
-| M.C. Parnell | full | Mark Parnell; Greens |
-| Maas | party | Gary Maas; Labor; Narre Warren South |
-| Macklin | full | Jennifer Louise Macklin; Labor |
-| Mark Latham | party, parties, current, party_now, representation, affiliations | Independent; New South Wales; Werriwa |
-| Melissa Horne | party | Labor; Williamstown |
-| Michael Lee | representation | Labor; Dobell |
-| N.J. Centofanti | full | Nicola Centofanti; Liberal |
-| Newbury | party | James Newbury; Liberal; Brighton |
-| Payman | party | Fatima Payman; Australia's Voice |
-| Perera | full | Jude Perera; Cranbourne |
-| R Smith | full | Ryan Smith |
-| R.A. Simms | full | Robert Simms; Greens |
-| R.P. Wortley | full | Russell Wortley; Labor |
-| Richmond | full | Luke Richmond; Labor; Stafford |
-| Ripoll | full | Bernard Fernando Ripoll; Labor |
-| Ros Spence | affiliations | Kalkallo; Yuroke |
-| Rowswell | party | Brad Rowswell; Liberal; Sandringham |
-| S.E. Close | full | Susan Close; Labor |
-| Scanlon | full | Meaghan Scanlon; Labor |
-| Settle | party, representation | Michaela Settle; Labor; Eureka |
-| Staley | full | Louise Staley; Ripon |
-| Sterle | full, party | Glenn Sterle; Labor |
-| Stoker | full | Amanda Stoker; LNP |
-| T Bull | full | Tim Bull; Labor |
-| T Smith | full | Tim Smith |
-| T.A. Franks | full | Tammy Franks; Greens |
-| T.J. Stephens | full | Terence Stephens; Liberal |
-| T.T. Ngo | full | Tung Ngo; Labor |
-| Tollner | full, party | David William Tollner; CLP |
-| Vallence | party | Bridget Vallence; Liberal; Evelyn |
-| Weir | full | Pat Weir; LNP; Condamine |
+| Print | Main alias | Round 1 alias | Round 2 alias | Round 2 party | Result |
+|---|---|---|---|---|---|
+| Abbott | — | — | — | — | Neutral |
+| Adams | — | — | — | — | Neutral |
+| Addison | Juliana Addison | Juliana Addison | Juliana Addison | Labor | Retained |
+| Aitchison | Jenny Aitchison | — | — | — | Neutral |
+| Anderson | — | John Anderson | — | — | Neutral |
+| Andrew | Stephen Andrew | Stephen Andrew | Stephen Andrew | Katter's Australian Party | Retained |
+| Andrews | Daniel Andrews | — | — | — | Neutral |
+| Angus | Neil Angus | Neil Angus | Neil Angus | — | Retained |
+| Anthony | — | — | — | — | Neutral |
+| Ayres | — | Tim Ayres | — | — | Neutral |
+| Bailey | Mc Bailey | Mark Bailey | Mark Bailey | Labor | Retained |
+| Baird | — | Bruce Baird | — | — | Neutral |
+| Baldwin | — | — | — | — | Neutral |
+| Barr | Andrew Barr | — | — | — | Neutral |
+| Barrett | Scott Barrett | Scott Barrett | — | — | Neutral |
+| Barry | Chiaka Barry | Chiaka Barry | Chiaka Barry | Liberal | Retained |
+| Bartlett | — | — | — | — | Neutral |
+| Bates | Ros Bates | Ros Bates | Ros Bates | LNP | Retained |
+| Batt | — | David Batt | — | — | Neutral |
+| Bedford | Frances Bedford | Frances Bedford | Frances Bedford | Independent | Retained |
+| Bell | Troy Bell | — | — | — | Neutral |
+| Bennett | Stephen Bennett | Stephen Bennett | — | — | Neutral |
+| Berry | Yvette Berry | — | Yvette Berry | Labor | Retained |
+| Billson | — | Bruce Billson | — | — | Neutral |
+| Bilyk | — | — | — | — | Neutral |
+| Birrell | — | Sam Birrell | — | — | Neutral |
+| Bishop | — | Julie Bishop | — | — | Neutral |
+| Blackwood | Gary Blackwood | Gary Blackwood | Gary Blackwood | — | Retained |
+| Blair | Niall Blair | — | — | — | Neutral |
+| Boele | — | Nicolette Boele | — | — | Neutral |
+| Bolton | Sandy Bolton | Sandy Bolton | Sandy Bolton | Independent | Retained |
+| Bourne | Wendy Bourne | Wendy Bourne | — | — | Neutral |
+| Bowen | — | Chris Bowen | — | — | Neutral |
+| Boyd | Nikki Boyd | — | — | — | Neutral |
+| Boyer | Blair Boyer | Blair Boyer | Blair Boyer | Labor | Retained |
+| Brereton | — | — | — | — | Neutral |
+| Brooks | Colin Brooks | Colin Brooks | — | — | Neutral |
+| Brown | Michael Brown | — | — | — | Neutral |
+| Burgess | By Burgess | Neale Burgess | Neale Burgess | — | Retained |
+| Burke | — | — | — | — | Neutral |
+| Bush | Jonty Bush | Jonty Bush | Jonty Bush | Labor | Retained |
+| Butler | Liza Butler | — | — | — | Neutral |
+| C.M. Scriven | — | Clare Scriven | Clare Scriven | Labor | Retained |
+| Cain | Peter Cain | Peter Cain | Peter Cain | Liberal | Retained |
+| Campbell | — | Julie-Ann Campbell | — | — | Neutral |
+| Carroll | Ben Carroll | Ben Carroll | Ben Carroll | Labor | Retained |
+| Carter | Susan Carter | Susan Carter | — | — | Neutral |
+| Castley | Leanne Castley | Leanne Castley | Leanne Castley | Independent | Retained |
+| Chandler | — | Claire Chandler | — | — | Neutral |
+| Chandler-Mather | — | Max Chandler-Mather | — | — | Neutral |
+| Chapman | Vickie Chapman | — | — | — | Neutral |
+| Charles | — | — | — | — | Neutral |
+| Chisholm | — | Anthony Chisholm | — | — | Neutral |
+| Clancy | Nadia Clancy | — | — | — | Neutral |
+| Clark | Robert Clark | Robert Clark | — | — | Neutral |
+| Clarke | David Clarke | — | — | — | Neutral |
+| Clay | Jo Clay | Jo Clay | Jo Clay | Greens | Retained |
+| Close | Susan Close | Susan Close | Susan Close | Labor | Retained |
+| Coleman | — | David Coleman | — | — | Neutral |
+| Collins | — | — | — | — | Neutral |
+| Connolly | Sarah Connolly | Sarah Connolly | Sarah Connolly | Labor | Retained |
+| Cook | Nat Cook | — | — | — | Neutral |
+| Cooke | Steph Cooke | — | — | — | Neutral |
+| Costello | — | Peter Costello | — | — | Neutral |
+| Cox | — | — | — | — | Neutral |
+| Crawford | Cd Crawford | Craig Crawford | — | — | Neutral |
+| Cross | Matt Cross | — | — | — | Neutral |
+| Crouch | Adam Crouch | — | — | — | Neutral |
+| Cusack | Catherine Cusack | — | — | — | Neutral |
+| Dalton | Nigel Dalton | — | — | — | Neutral |
+| Davey | — | — | — | — | Neutral |
+| Davies | Tanya Davies | — | — | — | Neutral |
+| Davis | Donna Davis | — | — | — | Neutral |
+| Dick | Cameron Dick | Cameron Dick | — | — | Neutral |
+| Dillon | Sean Dillon | Sean Dillon | — | — | Neutral |
+| Donnelly | Greg Donnelly | — | — | — | Neutral |
+| Dowling | — | Richard Dowling | — | — | Neutral |
+| Doyle | — | — | — | — | Neutral |
+| Duniam | — | Jonathon Duniam | — | — | Neutral |
+| Edwards | Maree Edwards | — | — | — | Neutral |
+| Ellis | Fraser Ellis | — | — | — | Neutral |
+| Emerson | Thomas Emerson | — | — | — | Neutral |
+| Evans | — | Trevor Evans | — | — | Neutral |
+| Fang | Wes Fang | Wes Fang | — | — | Neutral |
+| Farmer | De Farmer | — | — | — | Neutral |
+| Farrell | — | Don Farrell | — | — | Neutral |
+| Fawcett | — | — | — | — | Neutral |
+| Field | Russell Field | Russell Field | — | — | Neutral |
+| Foley | Martin Foley | Martin Foley | Martin Foley | — | Retained |
+| Franklin | Ben Franklin | Ben Franklin | — | — | Neutral |
+| Gallagher | — | Katy Gallagher | — | — | Neutral |
+| Gardner | J.A.W. Gardner | — | — | — | Neutral |
+| Garrett | — | — | — | — | Neutral |
+| Gee | — | Andrew Gee | Jon Gee | Labor | Retained |
+| George | — | Jennie George | — | — | Neutral |
+| Gilbert | Julieanne Gilbert | Julieanne Gilbert | Julieanne Gilbert | Labor | Retained |
+| Gosling | — | Luke Gosling | — | — | Neutral |
+| Grace | Grace Grace | Grace Grace | Grace Grace | Labor | Retained |
+| Graham | John Graham | John Graham | — | — | Neutral |
+| Grant | Troy Grant | — | — | — | Neutral |
+| Green | By Green | — | Danielle Green | Labor | Retained |
+| Gregg | — | Matt Gregg | — | — | Neutral |
+| Griffin | James Griffin | — | — | — | Neutral |
+| Guy | Matthew Guy | Matthew Guy | — | — | Neutral |
+| Haines | — | Helen Haines | — | — | Neutral |
+| Halfpenny | Bronwyn Halfpenny | Bronwyn Halfpenny | Bronwyn Halfpenny | Labor | Retained |
+| Hall | Katie Hall | — | — | — | Neutral |
+| Hanson | Jeremy Hanson | Pauline Hanson | Jeremy Hanson | Liberal | Retained |
+| Harper | Aaron Harper | Aaron Harper | — | — | Neutral |
+| Harris | David Harris | — | — | — | Neutral |
+| Harrison | Jodie Harrison | — | — | — | Neutral |
+| Hart | Michael Hart | Michael Hart | — | — | Neutral |
+| Harvey | Richard Manuel Harvey | — | Richard Harvey | Liberal | Retained |
+| Hawke | — | Alex Hawke | Alex Hawke | Liberal | Retained |
+| Head | Bryson Head | Bryson Head | Bryson Head | LNP | Retained |
+| Henderson | — | Sarah Henderson | — | — | Neutral |
+| Hennessy | Jill Hennessy | Jill Hennessy | Jill Hennessy | — | Retained |
+| Hoare | — | Kelly Hoare | — | — | Neutral |
+| Holland | Michael Holland | — | — | — | Neutral |
+| Hood | D.G.E. Hood | — | — | — | Neutral |
+| Horne | Melissa Horne | — | — | — | Neutral |
+| Howard | Jennifer Howard | — | — | — | Neutral |
+| Hughes | Eddie Hughes | — | — | — | Neutral |
+| Hunt | Jason Hunt | — | — | — | Neutral |
+| Hurst | Emma Hurst | Emma Hurst | — | — | Neutral |
+| Hutton | Nigel Hutton | Nigel Hutton | — | — | Neutral |
+| Irwin | — | Julia Irwin | — | — | Neutral |
+| J.M.A. Lensink | — | Michelle Lensink | Michelle Lensink | Liberal | Retained |
+| Jackson | Rose Jackson | — | — | — | Neutral |
+| James | Bree James | — | — | — | Neutral |
+| Jenkins | — | Harry Jenkins | — | — | Neutral |
+| Johnson | — | Michael Johnson | — | — | Neutral |
+| K.J. Maher | — | Kyam Maher | Kyam Maher | Labor | Retained |
+| Katter | Rob Katter | — | — | — | Neutral |
+| Kelly | Joe Kelly | — | — | — | Neutral |
+| Kemp | Michael Kemp | — | — | — | Neutral |
+| Kennedy | John Kennedy | Simon Kennedy | John Kennedy | Labor | Retained |
+| Kerr | — | Duncan Kerr | — | — | Neutral |
+| King | Shane King | — | — | — | Neutral |
+| Kirkland | Donna Kirkland | Donna Kirkland | — | — | Neutral |
+| Knight | Sharon Knight | Sharon Knight | — | — | Neutral |
+| Krause | Jon Krause | Jon Krause | Jon Krause | LNP | Retained |
+| Lane | Jordan Lane | — | — | — | Neutral |
+| Latham | — | Mark Latham | Mark Latham | Independent | Retained |
+| Lawrence | — | — | — | — | Neutral |
+| Le | — | Dai Le | — | — | Neutral |
+| Leahy | Ann Leahy | Ann Leahy | Ann Leahy | LNP | Retained |
+| Lee | Elizabeth Lee | — | — | — | Neutral |
+| Liddle | — | Kerrynne Liddle | — | — | Neutral |
+| Lim | — | — | Hong Lim | Labor | Retained |
+| Lindsay | — | Peter Lindsay | — | — | Neutral |
+| Lister | James Lister | James Lister | James Lister | LNP | Retained |
+| Lloyd | — | — | — | — | Neutral |
+| Lui | Cynthia Lui | Cynthia Lui | Cynthia Lui | Labor | Retained |
+| Lynch | Paul Lynch | — | — | — | Neutral |
+| MacDonald | Aileen MacDonald | Aileen MacDonald | — | — | Neutral |
+| Marshall | Steven Marshall | — | — | — | Neutral |
+| Martin | James Martin | — | — | — | Neutral |
+| McAllister | — | Jenny McAllister | — | — | Neutral |
+| McBride | Nick McBride | Emma McBride | Nick McBride | Liberal | Retained |
+| McCarthy | — | Malarndirri McCarthy | — | — | Neutral |
+| McClelland | — | Robert McClelland | — | — | Neutral |
+| McCormack | — | Michael McCormack | — | — | Neutral |
+| McDonald | — | — | — | — | Neutral |
+| McGhie | Steve McGhie | Steve McGhie | Steve McGhie | Labor | Retained |
+| McGrath | — | James McGrath | — | — | Neutral |
+| McGuire | Frank McGuire | Frank McGuire | Frank McGuire | — | Retained |
+| McKenzie | — | — | — | — | Neutral |
+| McKim | — | Nick McKim | — | — | Neutral |
+| McLeay | — | LEO McLEAY | — | — | Neutral |
+| McLeish | Cindy McLeish | Cindy McLeish | Cindy McLeish | Liberal | Retained |
+| McMahon | Melissa McMahon | Melissa McMahon | Melissa McMahon | Labor | Retained |
+| McMillan | Corrine McMillan | Corrine McMillan | Corrine McMillan | Labor | Retained |
+| McMullan | — | — | — | — | Neutral |
+| McNamara | — | Karen McNamara | Karen McNamara | Liberal | Retained |
+| Millar | Lachlan Millar | Lachlan Millar | Lachlan Millar | LNP | Retained |
+| Mitchell | — | — | — | — | Neutral |
+| Moriarty | Tara Moriarty | Tara Moriarty | — | — | Neutral |
+| Morris | Deborah Morris | — | — | — | Neutral |
+| Morton | Kendall Morton | — | — | — | Neutral |
+| Moylan | Brendan Moylan | — | — | — | Neutral |
+| Mulholland | — | Corinne Mulholland | — | — | Neutral |
+| Mullen | Charis Mullen | Charis Mullen | Charis Mullen | Labor | Retained |
+| Munro | Jacqui Munro | Jacqui Munro | — | — | Neutral |
+| Murphy | — | — | — | — | Neutral |
+| Murray | Steve Murray | — | — | — | Neutral |
+| Nelson | — | Brendan Nelson | — | — | Neutral |
+| Neville | Lisa Neville | — | — | — | Neutral |
+| Ng | — | Gabriel Ng | — | — | Neutral |
+| Nicholls | Tim Nicholls | Tim Nicholls | Tim Nicholls | LNP | Retained |
+| Nightingale | Margie Nightingale | Margie Nightingale | Margie Nightingale | Labor | Retained |
+| Noonan | Wade Noonan | Wade Noonan | — | — | Neutral |
+| Northe | By Northe | Russell Northe | Russell Northe | — | Retained |
+| O'Byrne | — | Michelle Anne O'Byrne | — | — | Neutral |
+| O'Connor | — | — | — | — | Neutral |
+| O'Keefe | — | Neil Patrick O'Keefe | — | — | Neutral |
+| O'Neill | — | — | — | — | Neutral |
+| O'Sullivan | — | Matt O'Sullivan | — | — | Neutral |
+| Orr | Suzanne Orr | Suzanne Orr | Suzanne Orr | Labor | Retained |
+| Pakula | Martin Pakula | Martin Pakula | Martin Pakula | — | Retained |
+| Park | Ryan Park | — | — | — | Neutral |
+| Parker | Jamie Parker | — | — | — | Neutral |
+| Paterson | — | — | Marisa Paterson | Labor | Retained |
+| Patterson | S.J.R. Patterson | — | — | — | Neutral |
+| Pearce | Rhiannon Pearce | — | — | — | Neutral |
+| Pearson | Danny Pearson | — | — | — | Neutral |
+| Perrett | Tony Perrett | Tony Perrett | Tony Perrett | LNP | Retained |
+| Pettersson | Michael Pettersson | Michael Pettersson | Michael Pettersson | Labor | Retained |
+| Phillips | — | Fiona Phillips | — | — | Neutral |
+| Piper | Greg Piper | — | — | — | Neutral |
+| Poole | Janelle Poole | Janelle Poole | Janelle Poole | LNP | Retained |
+| Porter | — | Christian Porter | — | — | Neutral |
+| Powell | Andrew Powell | Andrew Powell | Andrew Powell | LNP | Retained |
+| Power | Linus Power | Linus Power | — | — | Neutral |
+| Pratt | Penny Pratt | — | Penny Pratt | Liberal | Retained |
+| Preston | Robyn Preston | — | — | — | Neutral |
+| Price | — | — | — | — | Neutral |
+| Pugh | Jess Pugh | Jess Pugh | — | — | Neutral |
+| R.I. Lucas | — | Rob Lucas | Rob Lucas | Liberal | Retained |
+| Rae | — | Sam Rae | — | — | Neutral |
+| Ray | — | — | — | — | Neutral |
+| Read | Tim Read | Tim Read | Tim Read | Greens | Retained |
+| Reid | — | Gordon Reid | — | — | Neutral |
+| Reynolds | — | — | — | — | Neutral |
+| Richards | Pauline Richards | — | — | — | Neutral |
+| Richardson | Tim Richardson | Tim Richardson | Tim Richardson | Labor | Retained |
+| Riordan | Richard Riordan | Richard Riordan | Richard Riordan | Liberal | Retained |
+| Roberts | — | — | Rod Roberts | Independent | Retained |
+| Robinson | Mark Robinson | Mark Robinson | — | — | Neutral |
+| Rudd | — | Kevin Rudd | Kevin Rudd | Labor | Retained |
+| Ryall | Dee Ryall | Dee Ryall | — | — | Neutral |
+| Ryan | — | — | — | — | Neutral |
+| S.G. Wade | — | Stephen Wade | Stephen Wade | Liberal | Retained |
+| Saunders | Bruce Saunders | — | — | — | Neutral |
+| Scarr | — | Paul Scarr | — | — | Neutral |
+| Sciacca | — | Concetto Antonio Sciacca | — | — | Neutral |
+| Scott | Robin Scott | — | — | — | Neutral |
+| Sharpe | Penny Sharpe | Penny Sharpe | Penny Sharpe | Labor | Retained |
+| Sheldon | — | Tony Sheldon | — | — | Neutral |
+| Shoebridge | — | David Shoebridge | — | — | Neutral |
+| Sidoti | John Sidoti | — | — | — | Neutral |
+| Simpson | Fiona Simpson | Fiona Simpson | Fiona Simpson | LNP | Retained |
+| Singh | Gurmesh Singh | — | — | — | Neutral |
+| Small | — | Ben Small | — | — | Neutral |
+| Smith | Tom Smith | — | — | — | Neutral |
+| Spence | Ros Spence | Ros Spence | Ros Spence | Labor | Retained |
+| Steel | Chris Steel | Chris Steel | Chris Steel | Labor | Retained |
+| Stevens | Ray Stevens | — | — | — | Neutral |
+| Stewart | — | — | — | — | Neutral |
+| Stuart | Maryanne Stuart | — | — | — | Neutral |
+| Sullivan | — | Jimmy Sullivan | — | — | Neutral |
+| Swan | — | Wayne Swan | — | — | Neutral |
+| Tanner | — | Lindsay Tanner | — | — | Neutral |
+| Taylor | Jackson Taylor | — | — | — | Neutral |
+| Telfer | Sam Telfer | Sam Telfer | Sam Telfer | Liberal | Retained |
+| Theophanous | Kat Theophanous | — | — | — | Neutral |
+| Thomas | Mary-Anne Thomas | Mary-Anne Thomas | — | — | Neutral |
+| Thompson | Erin Thompson | — | — | — | Neutral |
+| Thomson | Marsha Thomson | Marsha Thomson | — | — | Neutral |
+| Thorpe | — | Lidia Thorpe | Lidia Thorpe | Independent | Retained |
+| Tilley | Bill Tilley | Bill Tilley | Bill Tilley | — | Retained |
+| Treloar | Peter Treloar | Peter Treloar | Peter Treloar | Liberal | Retained |
+| Tudehope | Monica Tudehope | — | — | — | Neutral |
+| Urquhart | — | Anne Urquhart | — | — | Neutral |
+| Walker | — | — | — | — | Neutral |
+| Wallace | — | — | — | — | Neutral |
+| Walsh | — | — | Peter Walsh | Nationals | Retained |
+| Ward | Vicki Ward | — | — | — | Neutral |
+| Ware | — | Jenny Ware | — | — | Neutral |
+| Warren | Greg Warren | — | — | — | Neutral |
+| Washington | Kate Washington | — | — | — | Neutral |
+| Waters | — | Larissa Waters | — | — | Neutral |
+| Watson | Anna Watson | — | — | — | Neutral |
+| Watt | — | — | Graham Watt | Labor | Retained |
+| Watts | Trevor Watts | — | Trevor Watts | LNP | Retained |
+| Wells | Kim Wells | — | Kim Wells | Liberal | Retained |
+| Whiteaker | — | Ellie Whiteaker | — | — | Neutral |
+| Whiting | Chris Whiting | Chris Whiting | Chris Whiting | Labor | Retained |
+| Wilkinson | Kylie Wilkinson | — | — | — | Neutral |
+| Williams | Gabrielle Williams | — | — | — | Neutral |
+| Williamson | Richie Williamson | — | — | — | Neutral |
+| Wilson | Felicity Wilson | — | — | — | Neutral |
+| Wong | — | Penny Wong | — | — | Neutral |
+| Wooldridge | Michael Wooldridge | Michael Wooldridge | — | — | Neutral |
+| Worth | — | — | — | — | Neutral |
+| Young | Rebecca Young | — | — | — | Neutral |
+| Zahra | — | Christian John Zahra | Christian John Zahra | Labor | Retained |
 
-## Exact dry-run operations
+## Exact public dry-run operations
 
 | Action | Slug | Profile |
 |---|---|---|
@@ -584,7 +759,6 @@ The registry and per-row `identity_evidence` / `identity_basis` record evidence.
 | replace | `roster-profile-0cc4b1dc91bcb587` | Connolly — recorded representation |
 | replace | `roster-profile-128b2a6b11a74ecc` | Richmond — recorded representation |
 | replace | `roster-profile-14429d05ad173a03` | Hatcher — recorded representation |
-| create | `roster-profile-14f3eccd711e688c` | St Clair — recorded representation |
 | replace | `roster-profile-1745992a04e3a825` | McGhie — recorded representation |
 | replace | `roster-profile-24a352af0cebeb26` | Mark Latham — recorded representation |
 | retire | `roster-profile-25c7e17d3e9906a3` | Hall — recorded representation |
@@ -600,11 +774,10 @@ The registry and per-row `identity_evidence` / `identity_basis` record evidence.
 | replace | `roster-profile-4b54a74d0bc58377` | Staley — recorded representation |
 | replace | `roster-profile-51389ddc33bbe1a8` | Tilley — recorded representation |
 | retire | `roster-profile-53b67882d1ef765c` | Hood — recorded representation |
-| replace | `roster-profile-55fb96bf33f19ca5` | Guy — recorded representation |
+| retire | `roster-profile-55fb96bf33f19ca5` | Guy — recorded representation |
 | replace | `roster-profile-59b31e31f2108026` | Rowswell — recorded representation |
-| replace | `roster-profile-5dfcf9ef1fb1ecbc` | Thomas — recorded representation |
+| retire | `roster-profile-5dfcf9ef1fb1ecbc` | Thomas — recorded representation |
 | replace | `roster-profile-60ebd6bcc7db69e6` | Kilkenny — recorded representation |
-| create | `roster-profile-61f609aa31a0d657` | Rattenbury — recorded representation |
 | create | `roster-profile-654f4c67d878e078` | Zahra — recorded representation |
 | replace | `roster-profile-671937d5fbe84833` | Enoch — recorded representation |
 | replace | `roster-profile-6b2f9cafe62cf707` | Addison — recorded representation |
@@ -616,10 +789,12 @@ The registry and per-row `identity_evidence` / `identity_basis` record evidence.
 | replace | `roster-profile-76df69fa9d736283` | Carroll — recorded representation |
 | retire | `roster-profile-7d12edc0aac210e0` | Linard — recorded representation |
 | retire | `roster-profile-7f2cc2d8db905052` | Morris — recorded representation |
-| replace | `roster-profile-7fe5df9caca67218` | Sullivan — recorded representation |
-| replace | `roster-profile-813f46eed45decb5` | Brooks — recorded representation |
+| retire | `roster-profile-7f7067993647ba86` | L.W.K. Bignell — recorded representation |
+| retire | `roster-profile-7fe5df9caca67218` | Sullivan — recorded representation |
+| retire | `roster-profile-813f46eed45decb5` | Brooks — recorded representation |
 | replace | `roster-profile-8188fe38fdd1502d` | Lynda Voltz — recorded representation |
 | replace | `roster-profile-845666d5a05426ab` | Hibbins — recorded representation |
+| retire | `roster-profile-88c4947f2996593e` | S.J.R. Patterson — recorded representation |
 | retire | `roster-profile-88f7d9080f5b37ab` | Gardner — recorded representation |
 | retire | `roster-profile-915ea74ac01cd10e` | Andrews — recorded representation |
 | retire | `roster-profile-9230ee73603d65a6` | Worth — recorded representation |
@@ -627,7 +802,6 @@ The registry and per-row `identity_evidence` / `identity_basis` record evidence.
 | replace | `roster-profile-95e178b51ca9d858` | Basham — recorded representation |
 | replace | `roster-profile-a0c79a8531e1feaa` | Settle — recorded representation |
 | replace | `roster-profile-a31537a34670a046` | Fentiman — recorded representation |
-| create | `roster-profile-a7087476b5c7c2cd` | Sciacca — recorded representation |
 | replace | `roster-profile-a78fb093d48ed1b1` | Couzens — recorded representation |
 | replace | `roster-profile-a9a96d230d00826a` | Weir — recorded representation |
 | replace | `roster-profile-a9cafd60efe1a190` | Latham — recorded representation |
@@ -651,10 +825,10 @@ The registry and per-row `identity_evidence` / `identity_basis` record evidence.
 | replace | `roster-profile-cdab02bff6d7f4b4` | Staikos — recorded representation |
 | retire | `roster-profile-ceb32b93931ce2ef` | Bailey — recorded representation |
 | replace | `roster-profile-d394e2a4020b802e` | Newbury — recorded representation |
+| retire | `roster-profile-d3a3a167f6411557` | J.A.W. Gardner — recorded representation |
 | replace | `roster-profile-d43974c13c6b3fb5` | David Kemp — recorded representation |
 | retire | `roster-profile-d486dfbd5fb57834` | Green — recorded representation |
 | replace | `roster-profile-d4c73fc7bf88b45f` | Northe — recorded representation |
-| create | `roster-profile-d6098b0174e62780` | O'Byrne — recorded representation |
 | replace | `roster-profile-d73e9a3c865c8158` | Ros Spence — recorded representation |
 | replace | `roster-profile-d80f3e7b13b303ec` | Michael Lee — recorded representation |
 | retire | `roster-profile-d85eb74fd75da1bc` | Butcher — recorded representation |
@@ -668,6 +842,7 @@ The registry and per-row `identity_evidence` / `identity_basis` record evidence.
 | replace | `roster-profile-f10c3dd20768dbfa` | D’Ambrosio — recorded representation |
 | replace | `roster-profile-f17a23da8c159549` | Dimopoulos — recorded representation |
 | replace | `roster-profile-f2dd86e34cc18d36` | Burgess — recorded representation |
-| replace | `roster-profile-f3cdc1043ba7dd24` | Crawford — recorded representation |
+| retire | `roster-profile-f3cdc1043ba7dd24` | Crawford — recorded representation |
+| retire | `roster-profile-f45059f514ba1dc9` | D.K.B. Basham — recorded representation |
 | replace | `roster-profile-f66c37bba249563d` | McLeish — recorded representation |
 | retire | `roster-profile-fdd571b8488fd086` | Theophanous — recorded representation |

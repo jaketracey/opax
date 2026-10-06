@@ -1,0 +1,55 @@
+{
+  "slug": "roster-profile-b1284448f3eb6388",
+  "title": "Bob Horne — recorded representation",
+  "origin": {
+    "url": "https://opax.com.au/subject/person/Bob%20Horne",
+    "created": "2026-09-09T00:00:00Z",
+    "source_id": "opax-grants-research"
+  },
+  "usermetadata": {
+    "classifications": [
+      {
+        "labelset": "kind",
+        "label": "parliamentary_profile",
+        "cancelled_by_user": false
+      },
+      {
+        "labelset": "source",
+        "label": "opax_parliamentary_roster",
+        "cancelled_by_user": false
+      },
+      {
+        "labelset": "state",
+        "label": "federal",
+        "cancelled_by_user": false
+      }
+    ]
+  },
+  "extra": {
+    "metadata": {
+      "date": "2026-09-09",
+      "representation": [
+        {
+          "electorate": "Williamstown – Minister for Ports and Freight, Minister for Roads and Road Safety, Minister for Health Infrastructure",
+          "state": null,
+          "chamber": "representatives",
+          "jurisdiction": "federal",
+          "basis": "Recorded parliamentary roster; exact name and chamber match"
+        }
+      ],
+      "record_type": "Derived roster affiliation",
+      "date_meaning": "Enrichment snapshot, not tenure or speech date",
+      "licence": "Structured facts and an attributed summary; original document linked."
+    }
+  },
+  "data": {
+    "texts": {
+      "t-body": {
+        "value": {
+          "body": "Bob Horne — recorded parliamentary representation in Opax's roster: federal / representatives: Williamstown – Minister for Ports and Freight, Minister for Roads and Road Safety, Minister for Health Infrastructure. Matched by exact full name, compatible jurisdiction and chamber, not person ID alone. These are recorded affiliations and may include past seats; they do not establish current tenure, service dates or the electorate at the time of a particular speech.",
+          "format": "PLAIN"
+        }
+      }
+    }
+  }
+}

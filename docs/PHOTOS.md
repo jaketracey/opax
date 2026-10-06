@@ -209,9 +209,15 @@ unreadable, not JSON, or without a non-empty `people` list of named rows is a re
 never permission to ship (a missing or malformed baseline once let a roster with no sitting ids
 through the real wrappers). The exporter and pinned repair use the same identity resolver;
 missing start dates on non-Queensland state stubs are unknown, not a reason to remove a unique
-compatible name. `export_people.sh` checks the final enriched file, so its dated service repairs
+compatible name. Positive candidates must fit the print's actual non-committee houses,
+and every represented parliament needs its own evidence; committee-only reachability
+cannot identify a state speaker. A strict majority of parliamentary-speaker rows is
+also required (`witness_rows * 2 < speeches`); ties and witness majorities remain
+neutral, and mixed/witness aggregates never acquire an MP pid. A state's two houses
+alone remain a valid career. `export_people.sh` checks the final enriched file, so its dated service repairs
 are included before counting identity changes. The all-1,700-print fixture with those undated
-state stubs passes with one change (limit 25); see [the round-1 audit](ROSTER-MIXUPS.md).
+state stubs and the original witness proportions passes with zero changes (limit 25);
+see [the round-2 audit](ROSTER-MIXUPS.md).
 A held export prints `ROSTER HELD: <reasons>` to stderr and exits 3
 with nothing on stdout, so `scripts/vm/export_step.sh` keeps the shipped `parliamentarians.json`;
 `weekly_refresh.sh` lists `x_people` in `STALE_OK` (logged STALE, not a failure) and logs a `Roster

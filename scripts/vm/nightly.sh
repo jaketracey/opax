@@ -50,6 +50,7 @@
 #   OPAX_NIGHTLY_SKIP_DAILY    1 = skip daily_refresh.sh only (the periodic groups still run; for rehearsing them)
 #   OPAX_NIGHTLY_SKIP_PERIODIC 1 = skip the weekly/monthly groups tonight
 #   OPAX_PERIODIC_SYNC_KB 0 = the periodic groups do not write to the knowledge box (rehearsal; default 1)
+#   OPAX_ROSTER_SYNC_KB  1 = explicitly enable roster KB apply (default dry-run, cap 30 retirements/replacements)
 #   OPAX_PERIODIC_ALLOW_FAIL  periodic steps allowed to fail without failing the night (default none)
 #   OPAX_NODE / OPAX_NPM  node and npm binaries for the pre-commit portal test gate (default: from PATH)
 #   OPAX_GATE_BUILD       0 = the gate does not run `npm run build:search` before the tests
@@ -387,12 +388,14 @@ if [ "${OPAX_TEST_GATE:-1}" != 0 ]; then
   fi
 fi
 
-# Reconcile derived roster evidence only after the final data validation/test
-# gate. Replacements remove stale generated fields; orphaned owned profiles are
-# retired. Rehearsals suppress KB writes with OPAX_PERIODIC_SYNC_KB=0.
-if [ -f scripts/reconcile_roster_profiles.py ] && [ "${OPAX_ROSTER_SYNC_KB:-${OPAX_PERIODIC_SYNC_KB:-1}}" = 1 ]; then
-  log "reconciling owned roster-profile KB records (replace stale, retire orphaned)"
-  run "$PY" scripts/reconcile_roster_profiles.py --env .env --apply \
+# Preview derived roster evidence after the final data gate. Publication needs
+# the dedicated switch explicitly set to 1; the broader periodic switch cannot
+# enable it. The reconciler aborts above 30 combined retirements/replacements.
+if [ -f scripts/reconcile_roster_profiles.py ]; then
+  roster_mode=(--dry-run)
+  if [ "${OPAX_ROSTER_SYNC_KB:-0}" = 1 ]; then roster_mode=(--apply); fi
+  log "reconciling owned roster-profile KB records (${roster_mode[0]}, apply cap 30)"
+  run "$PY" scripts/reconcile_roster_profiles.py --env .env "${roster_mode[@]}" \
     --output "$PIPE/roster-profile-plan.json" --backup "$PIPE/roster-profile-backups" \
     || fail "roster-profile reconciliation failed; retry next night (plan and backups retained)"
 fi

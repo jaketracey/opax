@@ -115,6 +115,93 @@ class PinnedServiceTests(unittest.TestCase):
 
 
 class GeneralGuardTests(unittest.TestCase):
+    def state_case(self,name,states,chambers,speeches,witnesses,wrong_name,wrong_party,first=2020):
+        row=person(name,states,chambers,first,2026,full=wrong_name,party=wrong_party,witness_rows=witnesses)
+        row['speeches']=speeches
+        profiles.repair([row],profiles.pinned_reference(),json.loads(profiles.REVIEWED.read_text()))
+        return row
+
+    def test_hanson_uses_act_evidence_instead_of_a_federal_committee_namesake(self):
+        p=self.state_case('Hanson',['act','federal'],['act_la','senate_committee','joint_committee'],256,28,'Pauline Hanson','One Nation',2024)
+        self.assertEqual((p.get('full'),p.get('party')),('Jeremy Hanson','Liberal'))
+        self.assertEqual({r['jurisdiction'] for r in p['identity_evidence']},{'act'})
+
+    def test_mcbride_uses_sa_evidence_instead_of_a_federal_committee_namesake(self):
+        p=self.state_case('McBride',['sa','federal'],['sa_ha','senate_committee','house_committee'],216,83,'Emma McBride','Labor')
+        self.assertEqual((p.get('full'),p.get('party')),('Nick McBride','Liberal'))
+        self.assertEqual({r['jurisdiction'] for r in p['identity_evidence']},{'sa'})
+
+    def test_gee_uses_sa_evidence_instead_of_a_federal_committee_namesake(self):
+        p=self.state_case('Gee',['sa','federal'],['sa_ha','joint_committee'],76,0,'Andrew Gee','Independent')
+        self.assertEqual((p.get('full'),p.get('party')),('Jon Gee','Labor'))
+
+    def test_kennedy_uses_victorian_evidence_instead_of_a_federal_committee_namesake(self):
+        p=self.state_case('Kennedy',['vic','federal'],['vic_la','house_committee','senate_committee'],331,44,'Simon Kennedy','Liberal',2019)
+        self.assertEqual((p.get('full'),p.get('party')),('John Kennedy','Labor'))
+
+    def test_ng_without_own_nsw_evidence_stays_neutral(self):
+        p=self.state_case('Ng',['nsw','federal'],['nsw_la','nsw_lc','house_committee','joint_committee','senate_committee'],199,66,'Gabriel Ng','Labor',2025)
+        for k in ['full','party','identity_evidence','affiliations']:self.assertNotIn(k,p)
+
+    def test_le_federal_service_cannot_cover_nsw_assembly_speeches(self):
+        p=self.state_case('Le',['nsw','federal'],['nsw_la','representatives','house_committee','joint_committee'],56,2,'Dai Le','Independent',2022)
+        for k in ['full','party','identity_evidence','affiliations']:self.assertNotIn(k,p)
+
+    def test_every_non_committee_parliament_needs_evidence_not_just_one(self):
+        row=person('Smith',['vic','sa','federal'],['vic_la','sa_ha','joint_committee'],2020,2022)
+        record=dict(name='Alex Smith',identity='one',jurisdiction='vic',chamber='vic_la',electorate='First Seat',start='2020-01-01',end='2022-12-31')
+        self.assertEqual(profiles.print_identity(row,[record],{}),[])
+        row=person('Smith',['vic','federal'],['vic_la','joint_committee'],2020,2022)
+        federal=dict(record,jurisdiction='federal',chamber='representatives')
+        self.assertEqual(profiles.print_identity(row,[federal],{}),[])
+        row=person('Smith',['federal'],['house_committee'],2020,2022)
+        self.assertEqual(profiles.print_identity(row,[federal],{}),[])
+
+    def test_federal_committee_namesake_can_refuse_but_never_supply_an_identity(self):
+        row=person('Cox',['federal'],['representatives','senate_committee'],2000,2024,full='David Cox',party='Labor')
+        reference=profiles.pinned_reference()
+        self.assertEqual(profiles.print_identity(row,profiles.dated_records(reference,{}),reference),[])
+        profiles.repair([row],reference,{})
+        self.assertNotIn('full',row)
+        self.assertNotIn('party',row)
+
+    def test_witness_majority_and_ties_stay_neutral_with_a_strict_majority_boundary(self):
+        record=dict(name='Alex Smith',identity='one',jurisdiction='federal',chamber='representatives',electorate='First Seat',start='2020-01-01',end='2022-12-31')
+        for witnesses in [49,50,51,99]:
+            row=person('Smith',['federal'],['representatives','house_committee'],2020,2022,full='Alex Smith',party='Labor',pid='123',witness_rows=witnesses)
+            row['speeches']=100
+            with self.subTest(witnesses=witnesses):
+                own=profiles.print_identity(row,[record],{})
+                self.assertEqual(bool(own),witnesses<50)
+                identity.guard_print(row,resolved=bool(own))
+                self.assertEqual(row.get('full'), 'Alex Smith' if witnesses<50 else None)
+                self.assertNotIn('pid',row)  # No witness speech takes an MP record join.
+                self.assertEqual(row['witness_rows'],witnesses)
+                self.assertEqual(row['speeches'],100)
+
+    def test_anderson_and_bishop_and_all_witness_dominated_rows_have_no_mp_identity(self):
+        for name,total,witnesses,full in [('Anderson',450,449,'John Anderson'),('Bishop',33,32,'Julie Bishop')]:
+            row=person(name,['federal'],['representatives','senate_committee'],2004,2026,full=full,party='Liberal',witness_rows=witnesses)
+            row['speeches']=total
+            profiles.repair([row],profiles.pinned_reference(),json.loads(profiles.REVIEWED.read_text()))
+            for field in ['pid','full','party','parties','identity_evidence','identity_basis','affiliations']:
+                self.assertNotIn(field,row,name)
+        people=json.loads((profiles.PUBLIC/'parliamentarians.json').read_text())['people']
+        for p in people:
+            if not identity.parliamentary_speakers_dominate(p):
+                for field in ['pid','full','party','parties','identity_evidence','affiliations']:
+                    self.assertNotIn(field,p,p['name'])
+
+    def test_verified_committee_speaker_pid_is_preserved_without_inferring_a_candidate(self):
+        row=person('Ruston',['federal'],['senate_committee'],2025,2026,full='Anne Ruston',party='Liberal',pid='10781')
+        self.assertEqual(profiles.print_identity(row,profiles.dated_records(profiles.pinned_reference(),{}),profiles.pinned_reference()),[])
+        profiles.repair([row],profiles.pinned_reference(),{})
+        self.assertEqual((row['pid'],row['full']),('10781','Anne Ruston'))
+
+    def test_apostrophe_variants_share_the_dated_nationals_affiliation(self):
+        people={p['name']:p for p in json.loads((profiles.PUBLIC/'parliamentarians.json').read_text())['people']}
+        for name in ["D O'Brien",'D O’Brien']:self.assertEqual(people[name]['party'],'Nationals')
+
     def test_one_dated_candidate_keeps_identity_but_a_second_candidate_refuses_it(self):
         row=person('Smith',['vic','federal'],['vic_la','senate_committee'],2020,2022,
                    full='Alex Smith',party='Labor',witness_rows=1)
@@ -150,12 +237,15 @@ class GeneralGuardTests(unittest.TestCase):
     def test_bad_stub_aliases_never_become_given_names(self):
         from parli.ingest.link_speakers import normalize_state_speaker_name
         self.assertEqual(normalize_state_speaker_name('By STALEY','vic'),'Staley')
-        self.assertEqual(normalize_state_speaker_name('SM FENTIMAN','qld'),'S.M. Fentiman')
-        self.assertEqual(normalize_state_speaker_name('GJ BUTCHER','qld'),'G.J. Butcher')
+        self.assertEqual(normalize_state_speaker_name('SM FENTIMAN','qld'),'SM Fentiman')
+        self.assertEqual(normalize_state_speaker_name('GJ BUTCHER','qld'),'GJ Butcher')
+        self.assertEqual(normalize_state_speaker_name('KY CHAN','nsw'),'Ky Chan')
         self.assertEqual(normalize_state_speaker_name('JO CLAY','act'),'Jo Clay')
         self.assertEqual(normalize_state_speaker_name('DI FARMER','qld'),'Di Farmer')
-        for alias in ['By Staley','Sm Fentiman','Gj Butcher','Lm Enoch','Ml Furner','D.K.B. Basham']:
+        for alias in ['By Staley','Sm Fentiman','Gj Butcher','Lm Enoch','Ml Furner','D.K.B. Basham','LEO McLEAY']:
             self.assertFalse(identity.usable_alias(alias),alias)
+        self.assertEqual(identity.alias_name('LEO McLEAY'),'Leo McLeay')
+        self.assertTrue(identity.usable_alias('Leo McLeay'))
         people={p['name']:p for p in json.loads((profiles.PUBLIC/'parliamentarians.json').read_text())['people']}
         for name,full in [('Staley','Louise Staley'),('Fentiman','Shannon Fentiman'),('Butcher','Glenn Butcher'),
             ('Enoch','Leeanne Enoch'),('Linard','Leanne Linard'),('Furner','Mark Furner'),

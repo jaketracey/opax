@@ -403,6 +403,11 @@
     ]},
     {"source_url": "https://hansardsearch.parliament.sa.gov.au/daily/lh/2020-04-08/33", "as_of": "2020-04-08", "jurisdiction": "sa", "chamber": "sa_ha", "members": [
       {"name": "Peter Treloar", "aliases": ["Peter Andrew Treloar"], "electorate": "Flinders"}
-    ]}
+    ]},
+    {"source_url": "https://www.parliament.sa.gov.au/Search/Member?id=5383&type=member", "as_of": "2020-02-19", "jurisdiction": "sa", "chamber": "sa_ha", "members": [{"name": "Nick McBride", "aliases": ["Philip Nicholas McBride"], "electorate": "MacKillop", "party": "Liberal"}]},
+    {"source_url": "https://www.parliament.sa.gov.au/Search/Member?id=4845&type=member", "as_of": "2020-02-19", "jurisdiction": "sa", "chamber": "sa_ha", "members": [{"name": "Jon Gee", "aliases": ["Jonathan Peter Gee"], "electorate": "Taylor", "party": "Labor"}]},
+    {"source_url": "https://www.parliament.vic.gov.au/members/john-kennedy/", "as_of": "2020-02-19", "jurisdiction": "vic", "chamber": "vic_la", "members": [{"name": "John Kennedy", "aliases": ["John Ormond Kennedy"], "electorate": "Hawthorn", "party": "Labor"}]},
+    {"source_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/gippsland-south-district-results", "as_of": "2022-11-26", "jurisdiction": "vic", "chamber": "vic_la", "members": [{"name": "Danny O'Brien", "aliases": [], "electorate": "Gippsland South", "party": "Nationals"}]},
+    {"source_url": "https://www.ecsa.sa.gov.au/electoral-districts/electoral-district-profiles/newland", "as_of": "2020-05-01", "jurisdiction": "sa", "chamber": "sa_ha", "members": [{"name": "Richard Harvey", "aliases": [], "electorate": "Newland", "party": "Liberal"}]}
   ]
 }

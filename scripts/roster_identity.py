@@ -37,6 +37,8 @@ from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT))
+from parli.ingest.speaker_names import normalize_speaker
 PUBLIC = ROOT / "portal" / "public"
 IDENTITY = ROOT / "scripts" / "person_identity.json"
 TITLES = {"hon", "the", "dr", "mr", "mrs", "ms", "sir", "jr", "am", "ao", "mp", "mlc", "mla", "kc", "qc"}
@@ -55,12 +57,29 @@ def weak(name):
     return all(len(t) == 1 for t in parts(name)[:-1])
 
 
+def alias_name(name):
+    """Use the ingest display casing, never a source's all-capital byline."""
+    return normalize_speaker(str(name or '')) or ''
+
+
 def usable_alias(name):
     """Member stubs can contain a byline or compact initials, not a given name."""
     tokens = str(name or '').split()
-    if len(tokens) < 2 or weak(name) or tokens[0].casefold() in {'by','in','an'}:
+    if (len(tokens) < 2 or weak(name) or alias_name(name) != name
+            or tokens[0].casefold() in {'by','in','an'}):
         return False
     return tokens[0].casefold() not in {'sm', 'gj', 'lm', 'ml', 'aj', 'pt', 'mt', 'sj', 'de', 'mc', 'cd', 'maj'}
+
+
+def parliamentary_speakers_dominate(row):
+    """A parliamentary identity needs strictly more speaker rows than witnesses.
+
+    Ties are neutral. This is an identity/display guard, never attribution of
+    witness testimony; mixed aggregates still cannot carry a numeric MP pid.
+    """
+    total=row.get('speeches',0)
+    witnesses=row.get('witness_rows',0)
+    return total > 0 and 0 <= witnesses < total / 2
 
 
 def mixed_print(row):
@@ -92,7 +111,8 @@ def guard_print(row, resolved=False, force=False):
                                 *(row.get("recorded_parties") or [])]))
     if any(labels):
         row["recorded_parties"] = [p for p in labels if p]
-    for field in ("pid", "current", "party_now", "full", "party", "parties"):
+    for field in ("pid", "current", "party_now", "full", "party", "parties",
+                  "identity_evidence", "identity_basis", "affiliations"):
         row.pop(field, None)
     if "representation" in row:
         row["representation"] = []

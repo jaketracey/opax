@@ -15,7 +15,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from scripts.roster_identity import COMMITTEES, agrees, guard_print, mixed_print, parts, state_member_matches, usable_alias, weak
+from scripts.roster_identity import COMMITTEES, FEDERAL, agrees, alias_name, guard_print, mixed_print, parliamentary_speakers_dominate, parts, state_member_matches, usable_alias, weak
 
 PUBLIC = ROOT / 'portal/public'
 REVIEWED = ROOT / 'scripts/roster_service.json'
@@ -109,6 +109,7 @@ def dated_records(reference,reviewed,state_evidence=None):
                 state=snapshot['jurisdiction'].upper(),start=date,end=date,
                 as_of=date,source_url=snapshot['source_url']))
     for r in records:
+        r['name']=alias_name(r['name'])
         for alias,fact in reviewed.get('aliases',{}).items():
             if (r['name'],r['jurisdiction'],r['chamber'])==(fact['name'],fact['jurisdiction'],fact['chamber']):
                 r.setdefault('aliases',[]).append(alias)
@@ -142,29 +143,43 @@ def print_identity(person,records,reference,printed_people=()):
     an independently evidenced name, seat or party. Committees are not houses.
     Multiple compatible people refuse a single-person identity.
     """
+    if not parliamentary_speakers_dominate(person):return []
+    houses=set(person.get('chambers',[]))-COMMITTEES
+    jurisdictions={'federal' if c in FEDERAL else c.split('_')[0] for c in houses}
+    if not jurisdictions:return []
     own=matching_records(person,records,{},allow_weak=True)
-    # Committee prints may contain another parliamentarian from the other
-    # federal house. They can contradict a match, but never establish a pid.
-    compatible=dict(person,chambers=list(person.get('chambers',[])))
-    if set(person.get('chambers',[])) & {'senate_committee','joint_committee'}:compatible['chambers'].append('senate')
-    if set(person.get('chambers',[])) & {'house_committee','joint_committee'}:compatible['chambers'].append('representatives')
+    # Committee membership/testimony cannot supply a candidate for a house.
+    # When the print also has an actual federal house, another federal member
+    # reached via a committee can contradict its identity (David/Dorinda Cox).
+    # That negative evidence never identifies a state speaker or supplies own.
+    compatible=dict(person,chambers=list(houses))
+    if houses & FEDERAL:
+        if set(person.get('chambers',[])) & {'senate_committee','joint_committee'}:compatible['chambers'].append('senate')
+        if set(person.get('chambers',[])) & {'house_committee','joint_committee'}:compatible['chambers'].append('representatives')
     possible=matching_records(compatible,records,{},unique=False,allow_weak=True)
     if ambiguous_scopes(possible):return []
     by_id={p['person_id']:p for p in reference.get('people',[])}
     seats={e['electorate_id']:e for e in reference.get('electorates',[])}
     candidates={}
+    conflicting_names=[]
     for roster in reference.get('rosters',[]):
         e=seats[roster['electorate_id']]
         if e['jurisdiction'] not in person.get('states',[]) or e['chamber'] not in compatible['chambers']:continue
         for m in roster.get('members',[]):
             p=by_id[m['person_id']]
-            if usable_alias(p['name']) and agrees(person['name'],p['name']):
-                candidates[key(p['name'])]=dict(name=p['name'],jurisdiction=e['jurisdiction'],
+            name=alias_name(p['name'])
+            if usable_alias(name) and agrees(person['name'],name):
+                if e['chamber'] not in houses:
+                    # An undated federal stub can expose a namesake behind
+                    # committee rows; it cannot identify that print positively.
+                    conflicting_names.append(name)
+                    continue
+                candidates[(key(name),e['jurisdiction'],e['chamber'])]=dict(name=name,jurisdiction=e['jurisdiction'],
                     chamber=e['chamber'],electorate=e['name'],state=e.get('state_code','').upper(),
                     party=m.get('party'),identity='stub:'+p['person_id'])
     # A stub's given name is still evidence of another person, even when it
     # has no entered_house. Do not silently select the better-documented one.
-    names=[r['name'] for r in possible]+list(candidates)
+    names=[r['name'] for r in possible]+[r['name'] for r in candidates.values()]+conflicting_names
     # Full given names actually printed in the same dated transcript scopes
     # can contradict a surname join. They do not supply seats or affiliations.
     # This catches new namesakes absent from an older roster snapshot, such as
@@ -172,15 +187,18 @@ def print_identity(person,records,reference,printed_people=()):
     for other in printed_people:
         if not usable_alias(other['name']) or not agrees(person['name'],other['name']):continue
         if not set(other.get('states',[])) & set(person.get('states',[])):continue
-        if not (set(other.get('chambers',[]))-COMMITTEES) & set(compatible['chambers']):continue
+        if not (set(other.get('chambers',[]))-COMMITTEES) & houses:continue
         if (other.get('first') is None or other.get('last') is None
                 or other['first']>person['last'] or other['last']<person['first']):continue
         names.append(other['name'])
     if names and not all(agrees(a,b) or any(a in r.get('aliases',[]) and b==r['name']
                       or b in r.get('aliases',[]) and a==r['name'] for r in own)
                       for a in names for b in names):return []
-    if own:return own
-    return list(candidates.values()) if len(candidates)==1 else []
+    # Every parliament with an actual house needs its own candidate evidence.
+    # Two houses within one state are allowed, consistently with the photo guard.
+    if not jurisdictions <= {r['jurisdiction'] for r in [*own,*candidates.values()]}:return []
+    if own:return own if jurisdictions <= {r['jurisdiction'] for r in own} else []
+    return list(candidates.values()) if len({key(r['name']) for r in candidates.values()})==1 else []
 
 
 def ambiguous_scopes(records):
@@ -222,12 +240,20 @@ def repair(people,reference,reviewed):
     changed=[]
     for p in people:
         before=copy.deepcopy(p)
+        if not parliamentary_speakers_dominate(p):
+            guard_print(p,force=True)
+            if p!=before:changed.append((p['name'],before,copy.deepcopy(p)))
+            continue
         contradictory=False
         if weak(p['name']):
             tokens=parts(p['name'])
             own=print_identity(p,records,reference,prints.get(tokens[-1] if tokens else None,()))
             contradictory=not own and bool(matching_records(p,records,{},unique=False,allow_weak=True))
-            guard_print(p,resolved=bool(own),force=contradictory)
+            # verify() already established ownership of numeric speech ids.
+            # Preserve those single-parliament, non-witness records; this
+            # resolver never infers a new id or house from a committee label.
+            verified=bool(str(p.get('pid','')).isdigit() and not mixed_print(p))
+            guard_print(p,resolved=bool(own),force=not own and not verified)
             if own:
                 latest=max(own,key=lambda r:r.get('start',''))
                 if usable_alias(latest['name']):p['full']=latest['name']
@@ -346,7 +372,7 @@ def main():
         if not a.members:p.error('--members is required unless --pinned is set')
         enrich(data['people'],json.loads(a.members.read_text()),json.loads(a.research.read_text())['seats'],reference,reviewed)
     data['meta']['representation']={'updated':'2026-10-06','matched':sum(bool(p['representation']) for p in data['people']),
-        'method':'Unique compatible roster person; independent dated name, seat and chamber evidence repairs contaminated joins. Ambiguous or contradictory prints have no single-person affiliation; transcript aggregates are retained.'}
+        'method':'Unique compatible person evidenced in every non-committee parliament, with a strict parliamentary-speaker majority; independent dated name, seat and chamber evidence repairs contaminated joins. Ambiguous, contradictory and witness-dominated prints remain neutral; transcript aggregates are retained.'}
     a.directory.write_text(json.dumps(data,ensure_ascii=False,separators=(',',':'))+'\n')
     print(data['meta']['representation'])
 

@@ -60,3 +60,21 @@ test('the SA initials keep their names and parties; dated careers are visible pr
   assert.ok(profileAffiliations(people.get('Lynda Voltz')).some(r => r.chamber === 'nsw_lc' && r.party === 'Labor'));
   assert.ok(profileAffiliations(people.get('Ros Spence')).some(r => r.electorate === 'Yuroke' && r.end === '2022-11-26'));
 });
+
+test('state records never take a federal committee namesake, and witness-majority aggregates stay neutral', () => {
+  for (const [name, full, party] of [['Hanson', 'Jeremy Hanson', 'Liberal'], ['McBride', 'Nick McBride', 'Liberal'],
+    ['Gee', 'Jon Gee', 'Labor'], ['Kennedy', 'John Kennedy', 'Labor']]) {
+    assert.equal(people.get(name).full, full, name);
+    assert.equal(people.get(name).party, party, name);
+  }
+  for (const name of ['Ng', 'Le', 'Thomas', 'Power', 'Guy', 'Dick']) {
+    assert.equal(people.get(name).full, undefined, name);
+    assert.equal(people.get(name).party, undefined, name);
+  }
+  for (const p of roster.people) {
+    if ((p.witness_rows || 0) * 2 < p.speeches) continue;
+    for (const field of ['pid', 'full', 'current', 'party_now', 'party', 'parties', 'identity_evidence', 'affiliations']) {
+      assert.equal(p[field], undefined, `${p.name}: ${field}`);
+    }
+  }
+});

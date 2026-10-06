@@ -309,6 +309,18 @@ just that group when the check fails; it also puts every periodic file back to H
 its end line (killed, lock held). A loader that exits 3 ("the source refused to change the register") is logged STALE, keeps
 the last good rows, and shows up as a `warnings` entry in `status.json`, not as a failure. Time: see "How long it takes".
 
+**Roster KB reconciliation.** After final data validation and the portal gate,
+`reconcile_roster_profiles.py` previews changes to owned `roster-profile-*`
+resources. It is **dry-run by default**. Only explicit `OPAX_ROSTER_SYNC_KB=1`
+selects apply; the broader `OPAX_PERIODIC_SYNC_KB` switch cannot enable it.
+Apply aborts above **30 combined retirements/replacements**, backs up originals
+under `$PIPE/roster-profile-backups`, and verifies ownership, concurrent changes
+and read-back. A failure is reported and retried next night. The first native
+inventory and publication require supervised reviewed batches; see
+[the roster audit and exact commands](../ROSTER-MIXUPS.md#4-kb-reconciler-safety-and-supervised-first-run).
+Native reads use `~/opax/.env` on this box. The Mac currently has no usable KB
+credentials and can run only the public GET preview or an offline captured plan.
+
 **Portal test gate.** The deploy job runs the whole portal suite before it ships, and the suite reads the generated files
 (grant shards, money graph, suppliers, pay, parliamentarians ...). So after validation the nightly rebuilds the search
 catalog (`npm run build:search`, ~50 s) and runs `node --test test/*.test.mjs` (679 tests, ~55 s on the VM; ~4 min in all)

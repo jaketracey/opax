@@ -27,6 +27,7 @@ import re
 from collections import Counter, defaultdict
 
 from parli.schema import get_db, init_db
+from parli.ingest.speaker_names import normalize_speaker
 
 logging.basicConfig(
     level=logging.INFO,
@@ -624,19 +625,12 @@ def normalize_state_speaker_name(raw: str, state: str) -> str | None:
     # Normalize case: title-case but preserve internal capitals (McLeish, O'Brien)
     parts = name.split()
     normalized_parts = []
-    for i, part in enumerate(parts):
-        if (i == 0 and len(parts) > 1 and re.fullmatch(r'[A-Z]{2}', part)
-                and part not in {'AL', 'BO', 'DI', 'ED', 'JO', 'TY'}):
-            normalized_parts.append('.'.join(part) + '.')
-            continue
+    for part in parts:
         # Skip initials like "R.I." for SA
         if re.match(r'^[A-Z]\.[A-Z]\.?$', part):
             continue
         if re.match(r'^[A-Z]\.?$', part):
             continue
-        # Preserve names that have internal caps (McDonald, McLEISH -> McLeish)
-        if part.isupper() and len(part) > 1:
-            part = part.title()
         normalized_parts.append(part)
 
     if not normalized_parts:
@@ -644,7 +638,9 @@ def normalize_state_speaker_name(raw: str, state: str) -> str | None:
 
     name = " ".join(normalized_parts)
 
-    return name if name else None
+    # Display casing does not invent dotted initials from a capitalised first
+    # name (KY -> Ky). Genuine compact initials remain unusable as full aliases.
+    return normalize_speaker(name) if name else None
 
 
 def extract_electorate_clean(raw_electorate: str) -> str:

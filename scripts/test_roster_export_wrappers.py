@@ -151,12 +151,18 @@ class ShippedIdentityReplayTests(unittest.TestCase):
                            (p.get('party_now'),p.get('party_now'),p['pid']))
         for p in rows:
             chambers=p.get('chambers') or ['representatives']
-            for i in range(max(6,len(chambers))):
+            size=max(6,len(chambers))
+            size+=size%2  # A tied real aggregate must remain tied, never round up to an MP majority.
+            # The identity guard uses the witness proportion, not just presence.
+            # Preserve its strict-majority side while keeping every fixture
+            # print exportable and at least one parliamentary-speaker row.
+            witnesses=min(size-1,max(1,int(p.get('witness_rows',0)*size/p['speeches']))) if p.get('witness_rows') else 0
+            for i in range(size):
                 chamber=chambers[i%len(chambers)]
                 state=chamber.split('_')[0] if '_' in chamber and 'committee' not in chamber else 'federal'
                 if state not in p['states']:state=p['states'][0]
                 year=p['first'] if i==0 else p['last']
-                witness='Witness' if p.get('witness_rows') and i==1 else None
+                witness='Witness' if 1<=i<=witnesses else None
                 pid=p.get('pid') or member_ids.get(p['name'])
                 # No inferred identity on committee witnesses.
                 if witness:pid=None

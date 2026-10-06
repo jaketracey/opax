@@ -2,9 +2,11 @@
 
 `prints-23cad95a.json` freezes the public roster's raw identity, scope, year and
 seat fields at the `source_commit` recorded in the file. It deliberately keeps
-the bad aliases and seats that the repair must correct. Speech totals and
-representation descriptions are omitted; the test builds at least six distinct
-SQL speech rows per printed name with the original scope/year combinations.
+the bad aliases and seats that the repair must correct. Original speech and
+witness totals preserve which side of the strict-majority threshold each print
+falls on. Representation descriptions are omitted; the test builds at least six
+distinct SQL speech rows per printed name with the original scope/year
+combinations and witness proportion (scaled down, with at least one speaker).
 
 The test creates real `members` and `speeches` tables using the production
 schema, leaves member start dates absent outside Queensland (as the box's
