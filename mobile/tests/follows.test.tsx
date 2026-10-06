@@ -26,11 +26,19 @@ import { FollowToggle } from '../src/features/follows/FollowToggle';
 import { catalogs, index } from './pinned';
 
 const mockDisk = new Map<string, string>();
+// The next whole-file replacement fails, as an interrupted save would.
+let mockFailNextReplace = false;
+// Native semantics: File.move with overwrite deletes the destination before
+// moving (FileSystemPath.swift), while the legacy writer replaces a file with
+// Data.write(.atomic), which leaves the old file whole when it fails.
 jest.mock('expo-file-system', () => {
   class File {
     name: string;
     constructor(_directory: unknown, name: string) {
       this.name = name;
+    }
+    get uri() {
+      return `file:///documents/${this.name}`;
     }
     get exists() {
       return mockDisk.has(this.name);
@@ -41,13 +49,27 @@ jest.mock('expo-file-system', () => {
     write(body: string) {
       mockDisk.set(this.name, body);
     }
-    move(to: File) {
+    move(to: File, options?: { overwrite?: boolean }) {
+      if (options?.overwrite) mockDisk.delete(to.name);
+      if (mockFailNextReplace) {
+        mockFailNextReplace = false;
+        throw new Error('move failed');
+      }
       mockDisk.set(to.name, mockDisk.get(this.name)!);
       mockDisk.delete(this.name);
     }
   }
   return { File, Paths: { document: 'documents' } };
 });
+jest.mock('expo-file-system/legacy', () => ({
+  writeAsStringAsync: async (uri: string, body: string) => {
+    if (mockFailNextReplace) {
+      mockFailNextReplace = false;
+      throw new Error('write failed');
+    }
+    mockDisk.set(uri.replace('file:///documents/', ''), body);
+  },
+}));
 jest.mock('../src/api/runtime', () => ({
   catalogs: { followSources: jest.fn() },
 }));
@@ -296,6 +318,7 @@ describe('change markers', () => {
 describe('the follows store', () => {
   beforeEach(() => {
     mockDisk.clear();
+    mockFailNextReplace = false;
     resetFollowsForTests();
   });
   test('saved follows decode strictly: known kinds, valid IDs, no duplicates, at most the cap', () => {
@@ -361,6 +384,27 @@ describe('the follows store', () => {
     await clearFollows();
     resetFollowsForTests();
     expect(await loadFollows()).toEqual([]);
+  });
+  test('a save that fails leaves the saved follows whole, now and after a relaunch', async () => {
+    await follow({ kind: 'bill', id: BILL, title: 'Bill' });
+    await follow({ kind: 'electorate', id: GRAYNDLER, title: 'Grayndler' });
+    mockFailNextReplace = true;
+    await expect(
+      follow({ kind: 'person', id: ALBANESE, title: 'Anthony Albanese' }),
+    ).rejects.toThrow();
+    expect((await loadFollows()).map(followKey)).toEqual([
+      `bill:${BILL}`,
+      `electorate:${GRAYNDLER}`,
+    ]);
+    // A relaunch reads the file: both earlier follows are still there.
+    resetFollowsForTests();
+    expect((await loadFollows()).map(followKey)).toEqual([
+      `bill:${BILL}`,
+      `electorate:${GRAYNDLER}`,
+    ]);
+    expect(Object.keys(Object.fromEntries(mockDisk))).toEqual([
+      'opax-follows-v1.json',
+    ]);
   });
   test('the cap refuses a new follow', async () => {
     for (let i = 1; i <= FOLLOW_LIMIT; i++)

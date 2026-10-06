@@ -1,5 +1,6 @@
 import { useEffect, useSyncExternalStore } from 'react';
 import { File, Paths } from 'expo-file-system';
+import { writeAsStringAsync } from 'expo-file-system/legacy';
 import { billKey, electorateId, personId } from '../../api/ids';
 
 /**
@@ -110,10 +111,14 @@ async function readFollows(): Promise<Follow[]> {
     return [];
   }
 }
+// One atomic replacement (Data.write(.atomic) in the legacy writer): the old
+// list stays whole until the new one is in place. File.move with overwrite
+// deletes the old file first, so a failure there would lose every follow.
 function writeFollows(follows: Follow[]) {
-  const temporary = new File(Paths.document, 'opax-follows-v1.tmp');
-  temporary.write(JSON.stringify({ version: 1, follows }));
-  temporary.move(new File(Paths.document, FILE), { overwrite: true });
+  return writeAsStringAsync(
+    new File(Paths.document, FILE).uri,
+    JSON.stringify({ version: 1, follows }),
+  );
 }
 
 let state: Follow[] | null = null;
@@ -138,7 +143,7 @@ function update<T>(change: (follows: Follow[]) => [Follow[], T]): Promise<T> {
     const current = await loadFollows();
     const [next, result] = change(current);
     if (next !== current) {
-      writeFollows(next);
+      await writeFollows(next);
       state = next;
       emit();
     }
