@@ -1,7 +1,9 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import path from 'node:path';
-import ProductionTalk from '../src/features/talk/TalkScreen.production';
+import ProductionTalk from '../src/features/talk/entry.production';
+import RealTalk from '../src/features/talk/entry';
+import TalkScreen from '../src/features/talk/TalkScreen';
 import { TalkComingSoon } from '../src/features/ComingSoon';
 import { Text } from '../src/design/primitives';
 import * as voice from '../src/voice';
@@ -11,26 +13,54 @@ jest.mock('../modules/opax-voice', () => ({ __esModule: true, default: null }));
 
 jest.mock('expo-constants', () => ({
   __esModule: true,
-  default: { expoConfig: { extra: { variant: 'production' } } },
+  default: {
+    expoConfig: {
+      extra: {
+        variant: 'production',
+        apiOrigin: 'https://opax.com.au',
+        webOrigin: 'https://opax.com.au',
+        appVersion: '0.1.0',
+        appBuild: '5',
+      },
+    },
+  },
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 jest.mock('expo/metro-config', () => ({
   getDefaultConfig: () => ({ resolver: {} }),
 }));
-test('production variant selects the unchanged placeholder without loading the voice screen', () => {
-  const prior = process.env.OPAX_VARIANT;
-  process.env.OPAX_VARIANT = 'production';
-  const config = jest.requireActual('../metro.config');
-  const result = config.resolver.resolveRequest(
-    { originModulePath: path.join(__dirname, '../src/app/talk.tsx') },
-    '../features/talk/TalkScreen',
-    'ios',
-  );
-  expect(result.filePath).toBe(
-    path.join(__dirname, '../src/features/talk/TalkScreen.production.tsx'),
-  );
-  if (prior === undefined) delete process.env.OPAX_VARIANT;
-  else process.env.OPAX_VARIANT = prior;
+test.each(['0', '1'])(
+  'production voice mode %s selects the matching Talk entry',
+  (mode) => {
+    const prior = { ...process.env };
+    process.env.OPAX_VARIANT = 'production';
+    process.env.OPAX_PRODUCTION_VOICE = mode;
+    jest.isolateModules(() => {
+      const config = jest.requireActual('../metro.config');
+      const result = config.resolver.resolveRequest(
+        {
+          originModulePath: path.join(__dirname, '../src/app/talk.tsx'),
+          resolveRequest: () => ({
+            type: 'sourceFile',
+            filePath: path.join(__dirname, '../src/features/talk/entry.tsx'),
+          }),
+        },
+        '../features/talk/entry',
+        'ios',
+      );
+      expect(result.filePath).toBe(
+        path.join(
+          __dirname,
+          `../src/features/talk/entry.${mode === '0' ? 'production.ts' : 'tsx'}`,
+        ),
+      );
+    });
+    process.env = prior;
+    expect(RealTalk).toBe(TalkScreen);
+  },
+);
+
+test('switch-off Talk keeps the placeholder copy', () => {
   expect(ProductionTalk).toBe(TalkComingSoon);
   let renderer!: TestRenderer.ReactTestRenderer;
   act(() => {

@@ -19,7 +19,9 @@
     "UserID",
     "AudioData",
     "OtherUserContent",
-    "ProductInteraction"
+    "ProductInteraction",
+    "SearchHistory",
+    "OtherDataTypes"
   ],
-  "unlinkedDataTypes": ["SearchHistory", "OtherDataTypes"]
+  "unlinkedDataTypes": []
 }

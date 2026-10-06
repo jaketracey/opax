@@ -226,13 +226,13 @@ struct Rig: Sendable {
     let lifecycle: FakeLifecycle, controller: VoiceCallController, recorder: EventRecorder
     let recording: Task<Void, Never>
     static func make(relays: (any RelayFactory)? = nil, port: UInt16 = 8901, timing: CallTiming = CallTiming(),
-                     clock: any VoiceClock = SystemVoiceClock()) async throws -> Rig {
+                     clock: any VoiceClock = SystemVoiceClock(), storedConsent: (any VoiceConsent)? = nil) async throws -> Rig {
         let http = FixtureHTTP(port: port), store = InMemoryCredentialStore(), engine = FakeAudioEngine(), relay = InMemoryRelay()
         let permission = FakePermission(), session = FakeSession(), consent = FakeConsent(), lifecycle = FakeLifecycle()
         try await store.write(SessionCredential(token: fixtureToken, expiresAt: Date().addingTimeInterval(100)))
         let client = VoiceHTTPClient(policy: .loopback(port: port), store: store, transport: http, clock: clock)
         let controller = VoiceCallController(http: client, relays: relays ?? relay, engines: engine,
-            permission: permission, consent: consent, audioSession: session, lifecycle: lifecycle, clock: clock, timing: timing)
+            permission: permission, consent: storedConsent ?? consent, audioSession: session, lifecycle: lifecycle, clock: clock, timing: timing)
         let recorder = EventRecorder()
         let recording = Task { for await event in controller.events { await recorder.record(event) } }
         return Rig(http: http, client: client, engine: engine, relay: relay, store: store, permission: permission,

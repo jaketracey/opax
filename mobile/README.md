@@ -604,3 +604,29 @@ native divisions view, which links to the full bill details. Every block has its
 saved-copy state and independent error state. Journey `25-party.yaml` covers
 profile chip, current members, a JSON-pointer receipt check, member profile,
 bill divisions and unresolved web fallback; run it at standard size and AX5.
+
+Party identity performance uses weak, snapshot-scoped name and ID indexes in
+`src/api/person-identity.ts`. Ordered collision lists preserve the original
+ambiguity and chamber/seat guards. Joined profiles (including identity refusals)
+are reused only while slugs, roster, people and manifest are the same decoded
+objects. New catalog bytes invalidate automatically; HTTP 304 revalidation can
+keep the unchanged snapshot. Do not mutate decoded catalogs in place.
+
+`Catalogs.partyPage(input, refresh, publish)` publishes the resolved title and
+Members before loading receipts, associated entities and division records. Each
+optional block progresses independently through its loading/error/ready state.
+The screen hook ignores progress from obsolete loads and forwards forced refresh
+through every party catalog read.
+
+To reproduce the pinned equality proof and offline computation timings:
+
+```sh
+npm test -- person-identity-index party-page party-ui
+npx tsx scripts/measure-party-identity.ts
+```
+
+The benchmark compares cold catalog snapshots against the frozen pre-index
+implementation in `tests/reference/`. Its other workloads measure shared identity
+joins used by Person, Search, Your MP and the directory portrait/marker consumers;
+they exclude catalog decode, networking and native rendering. Release simulator
+latency is measured separately using journey 25 command traces.

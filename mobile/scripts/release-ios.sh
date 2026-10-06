@@ -7,15 +7,22 @@ cd "$(dirname "$0")/.."
 UPLOAD=0
 BUILD_NUMBER=
 EXPECTED_COMMIT=
+EXPECTED_VOICE_MODE=
+CALLER_VOICE_MODE_SET=${OPAX_PRODUCTION_VOICE+x}
+CALLER_VOICE_MODE=${OPAX_PRODUCTION_VOICE-}
 while [ "$#" -gt 0 ]; do
   case "$1" in
-    --build-number|--expected-commit)
+    --build-number|--expected-commit|--expected-voice-mode)
       [ "$#" -ge 2 ] || { echo "Option requires a value" >&2; exit 2; }
-      if [ "$1" = --build-number ]; then BUILD_NUMBER=$2; else EXPECTED_COMMIT=$2; fi
+      case "$1" in
+        --build-number) BUILD_NUMBER=$2 ;;
+        --expected-commit) EXPECTED_COMMIT=$2 ;;
+        --expected-voice-mode) EXPECTED_VOICE_MODE=$2 ;;
+      esac
       shift 2 ;;
     --upload) UPLOAD=1; shift ;;
     --help)
-      echo 'release-ios.sh [--build-number N] [--upload --expected-commit SHA]'
+      echo 'release-ios.sh [--build-number N] [--upload --expected-commit SHA --expected-voice-mode 0|1]'
       exit 0 ;;
     *) echo "Unknown release option" >&2; exit 2 ;;
   esac
@@ -32,14 +39,26 @@ fi
 if [ "$UPLOAD" = 1 ] && [ -z "$EXPECTED_COMMIT" ]; then
   echo "Upload requires --expected-commit with the full SHA approved by QA." >&2; exit 1
 fi
+if [ "$UPLOAD" = 1 ] && [ -z "$EXPECTED_VOICE_MODE" ]; then
+  echo 'Upload requires an explicit --expected-voice-mode 0 or 1.' >&2; exit 1
+fi
 source scripts/qa-env.sh
 if [ -f private/local.env ]; then set -a; source private/local.env; set +a; fi
+# An explicit caller mode wins over either ignored local configuration file.
+if [ "$CALLER_VOICE_MODE_SET" = x ]; then export OPAX_PRODUCTION_VOICE=$CALLER_VOICE_MODE; fi
 # Values remain local; do not enable tracing or echo any signing arguments.
 python3 scripts/release_support.py --scan-tracked "$ROOT"
 export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
 export OPAX_VARIANT=production EXPO_NO_TELEMETRY=1 EXPO_NO_DOTENV=1 CI=1 PYTHONDONTWRITEBYTECODE=1
-export OPAX_PRODUCTION_VOICE=${OPAX_PRODUCTION_VOICE:-0}
+export OPAX_PRODUCTION_VOICE=${OPAX_PRODUCTION_VOICE-1}
 case "$OPAX_PRODUCTION_VOICE" in 0|1) ;; *) echo 'OPAX_PRODUCTION_VOICE must be 0 or 1.' >&2; exit 2 ;; esac
+if [ -n "$EXPECTED_VOICE_MODE" ]; then
+  case "$EXPECTED_VOICE_MODE" in 0|1) ;; *) echo 'Expected voice mode must be 0 or 1.' >&2; exit 2 ;; esac
+  [ "$EXPECTED_VOICE_MODE" = "$OPAX_PRODUCTION_VOICE" ] || {
+    echo 'Release refused: effective voice mode differs from the explicit expected mode.' >&2; exit 1;
+  }
+fi
+export OPAX_RELEASE_EXPECTED_VOICE_MODE=$EXPECTED_VOICE_MODE
 unset OPAX_DEV_ORIGIN OPAX_FIXTURE_PORT EXPO_PUBLIC_API_ORIGIN
 python3 - <<'PY'
 from pathlib import Path
@@ -163,6 +182,7 @@ python3 - "$OUT" "$ARCHIVE_SECONDS" <<'PY'
 import json,pathlib,sys
 p=pathlib.Path(sys.argv[1]); v=json.loads((p/'verification-distribution.json').read_text())
 v['archive_seconds']=int(sys.argv[2]); v['uploaded']=False
+v['production_voice_mode']='on' if v['production_voice_enabled'] else 'off'
 (p/'release.json').write_text(json.dumps(v,indent=2)+'\n')
 print(f"Archive: {v['archive_seconds']} seconds; IPA: {v['ipa_bytes']} bytes; SHA256: {v['ipa_sha256']}")
 PY

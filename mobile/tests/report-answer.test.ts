@@ -1,5 +1,9 @@
 import { openSource } from '../src/navigation/external';
 import { reportAnswer, reportAnswerUrl } from '../src/voice/report-answer';
+jest.mock('expo-constants', () => ({
+  __esModule: true,
+  default: { expoConfig: { extra: { supportPageAvailable: true } } },
+}));
 jest.mock('../src/navigation/external', () => ({
   canonicalUrl: (path: string) => {
     if (path.includes('..') || path.includes('%') || path.includes('\\'))
@@ -17,7 +21,7 @@ test('live support carries the canonical record path only', () => {
   ]);
 });
 test('until support is published reports open GitHub with the record and a privacy reminder', async () => {
-  const url = reportAnswerUrl('/doc/fixture-record');
+  const url = reportAnswerUrl('/doc/fixture-record', false);
   const parsed = new URL(url);
   expect(parsed.origin + parsed.pathname).toBe(
     'https://github.com/jaketracey/opax/issues/new',
@@ -29,7 +33,24 @@ test('until support is published reports open GitHub with the record and a priva
     'do not include personal information',
   );
   await reportAnswer('/doc/fixture-record');
-  expect(openSource).toHaveBeenCalledWith(url, 'Report this answer');
+  expect(openSource).toHaveBeenCalledWith(
+    reportAnswerUrl('/doc/fixture-record', true),
+    'Report this answer',
+  );
+});
+test('a missing record opens published support without a record and never throws', async () => {
+  expect(reportAnswerUrl(null)).toBe('https://opax.invalid/support');
+  await expect(reportAnswer(null)).resolves.toBeUndefined();
+  expect(openSource).toHaveBeenCalledWith(
+    'https://opax.invalid/support',
+    'Report this answer',
+  );
+});
+test('person slugs carry only their exact catalog path', () => {
+  const url = new URL(reportAnswerUrl('/subject/person/fixture-person'));
+  expect([...url.searchParams.entries()]).toEqual([
+    ['record', '/subject/person/fixture-person'],
+  ]);
 });
 test.each([
   '/api/voice/start',
@@ -39,6 +60,9 @@ test.each([
   '/doc/a#secret',
   '/doc/..',
   '/doc/%2e%2e',
+  '/doc/space here',
+  '/doc/<markup>',
+  '/doc/' + 'a'.repeat(301),
 ])('report rejects unsafe record path %s', (path) => {
   expect(() => reportAnswerUrl(path, true)).toThrow();
 });

@@ -15,7 +15,7 @@ import { AppState } from 'react-native';
  * load and Try again after an error pass `false`.
  */
 export function useCatalogRecord<R extends { stale: boolean }>(
-  load: (refresh: boolean) => Promise<R>,
+  load: (refresh: boolean, publish: (record: R) => void) => Promise<R>,
 ) {
   const [record, setRecord] = useState<R | null>(null);
   const [error, setError] = useState<unknown>(null);
@@ -27,7 +27,12 @@ export function useCatalogRecord<R extends { stale: boolean }>(
   const start = useCallback(
     (refresh = false) => {
       const id = ++latest.current;
-      load(refresh)
+      const publish = (result: R) => {
+        if (id !== latest.current) return;
+        setRecord(result);
+        setError(null);
+      };
+      load(refresh, publish)
         .then((result) => {
           if (id !== latest.current) return;
           setRecord(result);

@@ -9,7 +9,7 @@ const independence =
 
 /**
  * Account and about (IOS-UX 4.9) in development and e2e builds. Production
- * keeps the placeholder in ComingSoon.tsx until voice ships (entry.production.ts).
+ * selects entry.production.ts only when the production voice switch is off.
  */
 export function AccountScreen() {
   return (

@@ -28,6 +28,19 @@ appId: au.com.opax.app
       # the whole address so replacement cannot leave a suffix behind.
       - longPressOn:
           id: voice-email
+      # AX5 paginates the iOS edit menu. The fixture field is positioned above
+      # the keyboard; its unlabelled next-menu arrow is at this screen point.
+      # Require Select All below before any replacement or auth request.
+      - runFlow:
+          when:
+            true: ${CONTENT_SIZE === 'accessibility-extra-extra-extra-large'}
+          commands:
+            - runFlow:
+                when:
+                  notVisible: Select All
+                commands:
+                  - tapOn:
+                      point: "73%,40%"
       - tapOn: Select All
       - eraseText: 1
       - inputText: ${VOICE_EMAIL}

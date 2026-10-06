@@ -1,1 +1,1 @@
-export { default } from '../features/talk/TalkScreen';
+export { default } from '../features/talk/entry';

@@ -31,16 +31,21 @@ projects every result/event again, strips extra fields and drops malformed event
 
 ## Before the voice UI ships
 
-Production defaults to excluding both voice pods through the Expo autolinking
-config plugin. The optional loader returns a typed `unavailable` result for every
-command and a harmless unsubscribe function when absent. Development/e2e retain
-the native module. The build-time switch `OPAX_PRODUCTION_VOICE=1` deliberately
-enables both pods, the microphone purpose string, native route metadata and the
-conservative privacy manifest together. Its default remains `0` during Phase 1.
-See `plugins/voiceProduction.js` and `voice-production-policy.json`. Do not change
-that default until the Talk and Account UI lanes have merged and their production
-screen tests, fixture matrix and both release verifiers pass. No runtime or OTA
-flag can enable this capability.
+Release checklist completed for production build 5:
+
+- [x] `OPAX_PRODUCTION_VOICE` defaults to `1` and selects both real Talk and
+  Account entries, both pods, permission metadata and the native route policy.
+- [x] Explicit `0` preserves the placeholders and excludes both voice pods;
+  both states have production tests and archive/IPA verification.
+- [x] All seven privacy types are linked, none track, and location stays on-device.
+- [x] Consent reads the stored choice in every build; withdrawal blocks the next call.
+- [x] Report this answer opens published support with a record path or no record;
+  captions never leave the app through reporting.
+- [x] Upload requires an explicit expected mode matching `release.json`.
+
+See `plugins/voiceProduction.js` and `voice-production-policy.json`. No runtime
+or OTA flag can enable this capability. Fixture journey and Release launch
+proofs are retained privately; Jake makes the first real TestFlight call.
 
 Consent starts denied in every variant, development and e2e included. The Talk
 UI stores an explicit choice on this device through the native `consent()` and
@@ -58,10 +63,10 @@ Cookie and Origin are attached only to those ten routes, never to catalog data,
 provider hosts or a browser. Redirects and ambient cookie jars remain disabled.
 
 `report-answer.ts` exposes `reportAnswer(recordPath)` for Talk. It uses the shared
-in-app Safari source browser, sending a canonical record path only. Until the
-privacy lane publishes `/support`, it opens the GitHub new-issue page with that
-record and a reminder to omit personal information. Set embedded
-`extra.supportPageAvailable` only after publication is verified. This helper
+in-app Safari source browser, sending a canonical record path only. The published
+`/support` page is enabled by embedded `extra.supportPageAvailable: true`; a
+missing record opens general support without a record parameter. The helper
+retains the GitHub fallback for a build whose support flag is false. This helper
 does not submit reports or probe any endpoint.
 
 The UI needs sign-in/code entry, deletion confirmation and proof entry, every
