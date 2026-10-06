@@ -11,8 +11,14 @@ import {
   recentDeclarationsFor,
   type DiscoverySignal,
 } from '../src/api/catalogs';
-import type { ApiClient, RecordResult } from '../src/api/client';
-import { dataAsOf } from '../src/api/client';
+import { createHash } from 'node:crypto';
+import { ApiClient, dataAsOf, type RecordResult } from '../src/api/client';
+import {
+  CatalogCache,
+  type CacheEntry,
+  type CacheIndexEntry,
+  type CacheStore,
+} from '../src/api/cache';
 import { ApiError } from '../src/api/errors';
 import { LeadCard } from '../src/design/primitives';
 import { chamberName } from '../src/design/parliament';
@@ -40,7 +46,13 @@ import {
   leadFor,
   leadsFor,
 } from '../src/features/leads/model';
-import { bills, catalogs as pinnedCatalogs, pinned, slugs } from './pinned';
+import {
+  bills,
+  catalogs as pinnedCatalogs,
+  pinned,
+  pinnedBytes,
+  slugs,
+} from './pinned';
 
 jest.mock('../src/api/runtime', () => ({
   catalogs: {
@@ -89,8 +101,10 @@ beforeEach(() => {
   Object.values(mock).forEach((fn) => fn.mockReset());
   jest.mocked(router.push).mockReset();
   const catalogs = fixture();
-  mock.discovery.mockImplementation(() => catalogs.discovery());
-  mock.declarations.mockImplementation(() => catalogs.declarations());
+  mock.discovery.mockImplementation((refresh) => catalogs.discovery(refresh));
+  mock.declarations.mockImplementation((refresh) =>
+    catalogs.declarations(refresh),
+  );
 });
 
 async function render(element: React.ReactElement) {
@@ -773,4 +787,118 @@ test('Today opens Leads and the full declarations feed without loading either', 
   expect(mock.discovery).not.toHaveBeenCalled();
   expect(mock.declarations).not.toHaveBeenCalled();
   act(() => renderer.unmount());
+});
+
+describe('pull to refresh', () => {
+  // The screen's own native refresh control (the first one in the tree).
+  const pull = (root: ReactTestInstance) =>
+    act(async () =>
+      root
+        .findAll((node) => !!node.props.refreshControl)[0]!
+        .props.refreshControl.props.onRefresh(),
+    );
+  test.each([
+    ['Leads', () => <Leads />, 'discovery'],
+    ['a lead’s comparison', () => <LeadDetail />, 'discovery'],
+    ['the declarations feed', () => <Declarations />, 'declarations'],
+  ] as const)(
+    '%s forces its loader on a refresh, and not on the first load',
+    async (_name, screen, loader) => {
+      mockParams.id = signals[1]!.id;
+      const renderer = await render(screen());
+      expect(mock[loader]).toHaveBeenCalledTimes(1);
+      expect(mock[loader]).toHaveBeenLastCalledWith(false);
+      await pull(renderer.root);
+      expect(mock[loader]).toHaveBeenCalledTimes(2);
+      expect(mock[loader]).toHaveBeenLastCalledWith(true);
+      act(() => renderer.unmount());
+    },
+  );
+
+  // The real client and cache over the pinned files, served for an hour
+  // (the published JSON cache policy), counting reads that reach the network.
+  class MemoryStore implements CacheStore {
+    entries: CacheEntry[] = [];
+    index: CacheIndexEntry[] = [];
+    async readIndex() {
+      return this.index;
+    }
+    async writeIndex(entries: CacheIndexEntry[]) {
+      this.index = entries;
+    }
+    async read(url: string) {
+      return this.entries.find((entry) => entry.url === url);
+    }
+    async write(entry: CacheEntry) {
+      this.entries = [
+        entry,
+        ...this.entries.filter((item) => item.url !== entry.url),
+      ];
+    }
+    async remove(url: string) {
+      this.entries = this.entries.filter((entry) => entry.url !== url);
+    }
+  }
+  function cachedCatalogs() {
+    const reads: string[] = [];
+    const transport = (async (input: RequestInfo | URL) => {
+      const path = new URL(String(input)).pathname;
+      reads.push(path);
+      const bytes =
+        path === '/api/person-slugs'
+          ? Buffer.from(JSON.stringify(slugs))
+          : pinnedBytes(path);
+      return new Response(new Uint8Array(bytes), {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'public, max-age=3600',
+          ETag: `"${createHash('sha256').update(bytes).digest('hex')}"`,
+        },
+      });
+    }) as typeof fetch;
+    const client = new ApiClient({
+      origin: 'https://example.test',
+      version: '0.1.0',
+      build: '1',
+      cache: new CatalogCache(new MemoryStore()),
+      transport,
+      now: () => 1000,
+      retries: 0,
+    });
+    return { catalogs: new Catalogs(client), reads };
+  }
+  test.each([
+    ['Leads', () => <Leads />, 'discovery', '/discovery.json'],
+    [
+      'a lead’s comparison',
+      () => <LeadDetail />,
+      'discovery',
+      '/discovery.json',
+    ],
+    [
+      'the declarations feed',
+      () => <Declarations />,
+      'declarations',
+      '/interests/recent.json',
+    ],
+  ] as const)(
+    '%s re-reads a still-fresh cached export from the network on a refresh',
+    async (_name, screen, loader, path) => {
+      mockParams.id = signals[1]!.id;
+      const { catalogs, reads } = cachedCatalogs();
+      mock.discovery.mockImplementation((refresh) =>
+        catalogs.discovery(refresh),
+      );
+      mock.declarations.mockImplementation((refresh) =>
+        catalogs.declarations(refresh),
+      );
+      const renderer = await render(screen());
+      expect(mock[loader]).toHaveBeenCalledTimes(1);
+      expect(reads.filter((p) => p === path)).toHaveLength(1);
+      await pull(renderer.root);
+      expect(reads.filter((p) => p === path)).toHaveLength(2);
+      act(() => renderer.unmount());
+    },
+  );
 });

@@ -33,7 +33,10 @@ import {
  * member's profile and any name match the export found.
  */
 export default function Declarations() {
-  const load = useCallback(() => catalogs.declarations(), []);
+  const load = useCallback(
+    (refresh: boolean) => catalogs.declarations(refresh),
+    [],
+  );
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
   const [filters, setFilters] = useState<FeedFilters>(noFilters);
   const [text, setText] = useState('');

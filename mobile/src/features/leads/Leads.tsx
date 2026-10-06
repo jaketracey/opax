@@ -51,7 +51,10 @@ const sorts: readonly Segment<LeadSort>[] = [
  * to the comparison behind it. "All leads" keeps the export's order.
  */
 export default function Leads() {
-  const load = useCallback(() => catalogs.discovery(), []);
+  const load = useCallback(
+    (refresh: boolean) => catalogs.discovery(refresh),
+    [],
+  );
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
   const [filter, setFilter] = useState<LeadFilter>('all');
   const [sort, setSort] = useState<LeadSort>('value');

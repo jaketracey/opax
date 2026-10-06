@@ -28,7 +28,10 @@ import { discoveryAsOf, leadFor } from './model';
  */
 export default function LeadDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const load = useCallback(() => catalogs.discovery(), []);
+  const load = useCallback(
+    (refresh: boolean) => catalogs.discovery(refresh),
+    [],
+  );
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
   const discovery = record?.data;
   const lead = useMemo(() => {
