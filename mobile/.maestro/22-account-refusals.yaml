@@ -1,0 +1,68 @@
+appId: au.com.opax.app
+name: 22 Account refusals, an invalid address and a disabled account
+---
+# Tap targets are reached by scrolling down from above, never centred (see
+# support/account-sign-in.yaml), and each tap waits for the screen to settle.
+- launchApp
+- tapOn: Account and about
+- extendedWaitUntil:
+    visible: 'Not signed in\..*'
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: account-sign-in-start
+    timeout: 30000
+- waitForAnimationToEnd
+- tapOn:
+    id: account-sign-in-start
+- scrollUntilVisible:
+    element:
+      id: account-email
+    timeout: 30000
+- waitForAnimationToEnd
+- tapOn:
+    id: account-email
+- inputText: not-an-address
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      text: 'Enter a valid email address\.'
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/22-invalid-email
+# Relaunch rather than edit: at AX5 eraseText can land mid-text.
+- launchApp
+- tapOn: Account and about
+- runFlow:
+    file: support/account-sign-in.yaml
+    env:
+      ACCOUNT_EMAIL: disabled@example.invalid
+# The code is accepted, but voice refuses a disabled member; the account is
+# still held, so sign-out and deletion stay offered.
+- scrollUntilVisible:
+    element:
+      text: 'Voice is not available for this account\..*'
+    direction: UP
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/22-disabled
+# Reopening reads status afresh: the controls come from the native status.
+- tapOn: Done
+- tapOn: Account and about
+- extendedWaitUntil:
+    visible: 'Voice is not available for this account\..*'
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: account-delete
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: account-sign-out
+    timeout: 30000
+- waitForAnimationToEnd
+- tapOn:
+    id: account-sign-out
+- scrollUntilVisible:
+    element:
+      text: 'Not signed in\..*'
+    direction: UP
+    timeout: 30000

@@ -14,7 +14,7 @@ Partial status is held outside published data in weak metadata, propagated to th
 | Manifest sources, files, coverage and dates | Strict structural release, attribution and coverage. |
 | People directory | Bounded whole-person loss; electorates and periods within a person are strict. All copies of a duplicated person ID are omitted. |
 | Seat index | Bounded whole-seat loss; representatives are strict inside each seat. All copies of a duplicated seat ID are omitted. Your MP marks partial coverage; party membership counts require complete directory sources. |
-| Seat detail | Strict representatives, boundaries, elections/candidates/votes, census vintages, relations, rosters, terms, identities and citations. Missing rows could select the wrong latest fact, change representation or remove attribution. |
+| Seat detail | Strict representatives, elections/candidates/votes, census vintages, relations, rosters, terms, identities and citations. Missing rows could select the wrong latest fact, change representation or remove attribution. Display outlines are optional enhancements to one valid seat record: incoming `ios/app` behavior omits unusable outlines and flags the file partial, while keeping the seat readable. |
 | Bill index | Bounded whole-bill loss, flagged to readers and excluded from Follows. |
 | Bill detail | Strict dates, relationships, sources, divisions, speeches and acts: coherent timeline and evidence. |
 | Votes | Bounded whole vote-record/name-entry loss. Nested vote lists and years are strict; all records for a name must survive together before any total is calculated. Broken references to an absent raw key fail the file. |

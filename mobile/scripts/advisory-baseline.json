@@ -1,5 +1,5 @@
 {
-  "reviewed": "2026-10-03",
+  "reviewed": "2026-10-06",
   "accepted": [
     {
       "package": "braces",
@@ -30,6 +30,12 @@
       "advisory": "GHSA-w5hq-g745-h8pq",
       "exposure": "tooling",
       "reason": "Prebuild xcode tooling; not executed by the app."
+    },
+    {
+      "package": "sprintf-js",
+      "advisory": "GHSA-hp3w-g68c-fv3c",
+      "exposure": "tooling",
+      "reason": "Jest/NYC configuration tooling via babel-plugin-istanbul, load-nyc-config, js-yaml and argparse; not in the production Metro source graph. Untrusted precision strings can cause a RangeError in formatting; no patched upstream version exists. App data never reaches this tooling formatter. Re-review on Jest/NYC upgrades."
     }
   ]
 }

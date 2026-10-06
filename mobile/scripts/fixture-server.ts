@@ -29,6 +29,19 @@ if (!Number.isInteger(port) || (port !== 0 && (port < 8900 || port > 8999)))
   throw new Error(
     'Fixture port must be 8900–8999 or 0 (OS-assigned loopback port)',
   );
+
+// W13 edition reader: the pinned production response, served verbatim with
+// the Worker's validators (appRead). OPAX_FIXTURE_EDITION picks the journal:
+// - pinned: the edition is posted;
+// - absent: no edition is posted (404 edition_not_published), journey 13b;
+// - withdrawn: the edition is served until the app revalidates it (a
+//   conditional GET, as a pull to refresh sends), then 404 from then on, as
+//   when the posted edition goes, journey 13c. Unconditional launches,
+//   including e2e.sh's warm-up, cannot withdraw it early.
+const editionModes = ['pinned', 'absent', 'withdrawn'];
+const editionMode = process.env.OPAX_FIXTURE_EDITION ?? 'pinned';
+if (!editionModes.includes(editionMode))
+  throw new Error('OPAX_FIXTURE_EDITION must be pinned, absent or withdrawn');
 const files = new Map<string, Buffer>();
 const pinnedBytes = fixtureBytes(snapshot);
 for (const path of Object.keys(snapshot.files)) {
@@ -51,18 +64,6 @@ if (rosterMode === 'null-optional') {
   files.set(path, Buffer.from(JSON.stringify(raw)));
   console.log('OPAX_FIXTURE_ROSTER null-optional: pid=10007 speeches=null');
 }
-// W13 edition reader: the pinned production response, served verbatim with
-// the Worker's validators (appRead). OPAX_FIXTURE_EDITION picks the journal:
-// - pinned: the edition is posted;
-// - absent: no edition is posted (404 edition_not_published), journey 13b;
-// - withdrawn: the edition is served until the app revalidates it (a
-//   conditional GET, as a pull to refresh sends), then 404 from then on, as
-//   when the posted edition goes, journey 13c. Unconditional launches,
-//   including e2e.sh's warm-up, cannot withdraw it early.
-const editionModes = ['pinned', 'absent', 'withdrawn'];
-const editionMode = process.env.OPAX_FIXTURE_EDITION ?? 'pinned';
-if (!editionModes.includes(editionMode))
-  throw new Error('OPAX_FIXTURE_EDITION must be pinned, absent or withdrawn');
 let editionWithdrawn = editionMode === 'absent';
 // Local follows (journey 26). OPAX_FIXTURE_DATA picks the catalogs:
 // - pinned: the pinned bytes, as always;

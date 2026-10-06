@@ -75,6 +75,10 @@ public struct VoiceStatus: Sendable, Decodable, Equatable {
     public let remainingSeconds: Int
     public let activeSession: ActiveSession?
     public let budgetOpen: Bool?
+    /// Set by the client, never decoded: this iPhone holds an account session
+    /// the server has not revoked. Voice can refuse a member (a disabled one)
+    /// whose account can still be signed out and deleted.
+    public internal(set) var accountHeld = false
     enum CodingKeys: String, CodingKey {
         case enabled, unlimited; case signedIn = "signed_in", totalSeconds = "total_seconds"
         case remainingSeconds = "remaining_seconds", activeSession = "active_session", budgetOpen = "budget_open"
@@ -95,9 +99,12 @@ public struct VoiceStatusSnapshot: Sendable, Codable, Equatable {
     public let remainingSeconds: Int
     public let activeSession: OpenSession?
     public let budgetOpen: Bool?
+    /// Sign-out and deletion stay available while true, whatever voice allows.
+    public let accountHeld: Bool
     init(_ status: VoiceStatus) {
         enabled = status.enabled; signedIn = status.signedIn; unlimited = status.unlimited
         totalSeconds = status.totalSeconds; remainingSeconds = status.remainingSeconds; budgetOpen = status.budgetOpen
+        accountHeld = status.accountHeld
         activeSession = status.activeSession.map { OpenSession(state: $0.state, expiresAt: $0.expiresAt) }
     }
     public var refusal: VoiceFailure? {

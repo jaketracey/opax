@@ -168,7 +168,8 @@ public actor VoiceHTTPClient {
     func request(_ route: AuthRoute, body: Data? = nil) async throws -> HTTPResponse { try await perform(route, body: body).0 }
     public func status() async throws -> VoiceStatus {
         let (response, sent) = try await perform(.voiceStatus)
-        let status = try JSONDecoder().decode(VoiceStatus.self, from: response.body)
+        var status = try JSONDecoder().decode(VoiceStatus.self, from: response.body)
+        status.accountHeld = sent != nil
         if !status.signedIn, let sent, !revokedCredentials.contains(sent) {
             // Voice deliberately hides disabled members. Confirm actual sign-out
             // with community using this request's snapshot, never a newer sign-in.
@@ -177,7 +178,7 @@ public actor VoiceHTTPClient {
             if let confirmation = try? await execute(prepared, route: .communityStatus),
                let community = try? JSONDecoder().decode(CommunityStatus.self, from: confirmation.body),
                community.member == nil, community.canDeleteAccount != true {
-                try await clearCredential(sent)
+                try await clearCredential(sent); status.accountHeld = false
             }
         }
         return status

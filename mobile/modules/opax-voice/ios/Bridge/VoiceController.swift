@@ -1,20 +1,15 @@
 import Foundation
 import OpaxVoiceCore
 
+// Consent starts false in every build. Only an explicit UI choice writes it.
 private struct BridgeConsent: VoiceConsent {
     let store = StoredVoiceConsent()
-    func isGranted() async -> Bool {
-        #if OPAX_VOICE_E2E && targetEnvironment(simulator)
-        return true // Synthetic fixture consent only. Never ships in production.
-        #elseif OPAX_VOICE_PRODUCTION
-        return await store.isGranted()
-        #else
-        return false // Voice UI must implement explicit consent before enabling calls.
-        #endif
-    }
+    func isGranted() async -> Bool { await store.isGranted() }
 }
-private struct DeferredMicrophonePermission: MicrophonePermission {
+private struct ReleaseGatedMicrophonePermission: MicrophonePermission {
     func request() async -> Bool {
+        // Only the production switch embeds the purpose string. Development
+        // never requests hardware permission; e2e uses the debug permission.
         #if OPAX_VOICE_PRODUCTION
         guard Bundle.main.object(forInfoDictionaryKey: "OPAXProductionVoiceEnabled") as? Bool == true,
               let purpose = Bundle.main.object(forInfoDictionaryKey: "NSMicrophoneUsageDescription") as? String,
@@ -54,7 +49,7 @@ actor VoiceController {
         #endif
         policy = RoutePolicy()
         engines = AppleVoiceEngineFactory()
-        permission = DeferredMicrophonePermission()
+        permission = ReleaseGatedMicrophonePermission()
         audioSession = AppleVoiceAudioSession()
         store = KeychainCredentialStore(policy: policy)
         #endif
@@ -87,6 +82,12 @@ actor VoiceController {
             return await status()
         } catch { return VoiceBridgeValue.failure(error) }
     }
+    func sendText(_ text: String) async -> [String: Any] {
+        do { try await call.sendText(text); return VoiceBridgeValue.success() }
+        catch { return VoiceBridgeValue.failure(error) }
+    }
+    func discardEvidence() async { await call.discardEvidence() }
+    func background() async { await call.handle(.background) }
     func start() async -> [String: Any] { await call.start(); return VoiceBridgeValue.success() }
     func mute(_ muted: Bool) async -> [String: Any] { await call.setMuted(muted); return VoiceBridgeValue.success() }
     func end() async -> [String: Any] { await call.end(); return VoiceBridgeValue.success() }

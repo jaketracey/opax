@@ -81,9 +81,12 @@ let e2eDiagnostics = false;
 export function setCatalogDiagnostics(e2e: boolean) {
   e2eDiagnostics = e2e;
 }
-export function logDroppedRow(label: string, row: string | number) {
+export function catalogWarning(message: string) {
   if ((typeof __DEV__ !== 'undefined' && __DEV__) || e2eDiagnostics)
-    console.warn(`Dropped malformed catalog row: ${label} [${row}]`);
+    console.warn(message);
+}
+export function logDroppedRow(label: string, row: string | number) {
+  catalogWarning(`Dropped malformed catalog row: ${label} [${row}]`);
 }
 // Metadata stays outside the published data and is retained by decode memoization.
 const partialCatalogs = new WeakSet<object>();
@@ -116,7 +119,7 @@ function withLoss<T extends object>(out: T, total: number, dropped: number): T {
     dropped > 0 || Object.values(out).some(isPartialCatalog),
   );
 }
-/** Logical rejection (identity, duplicates, references) uses the same budget
+/** Logical rejection (identity and duplicates) uses the same budget
  * as schema rejection, including rows already lost from this collection. */
 export function filterRows<T>(
   input: T[],

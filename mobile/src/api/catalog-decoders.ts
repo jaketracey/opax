@@ -1,4 +1,5 @@
-import { decodeBoundary } from './electorate-geometry';
+import { ApiError } from './errors';
+import { decodeBoundary, type Boundary } from './electorate-geometry';
 import {
   array,
   boolean,
@@ -19,6 +20,7 @@ import {
   markPartial,
   filterRows,
   uniqueRows,
+  catalogWarning,
   optional,
   shape,
   text,
@@ -237,7 +239,8 @@ const election = shape({
 });
 const electorateShape = shape({
   ...electorateFields,
-  boundaries: array(decodeBoundary),
+  // Each outline is decoded on its own in decodeElectorate.
+  boundaries: array((v): unknown => v),
   elections: array(election),
   sources: dict(source),
   demographics: array(
@@ -290,14 +293,35 @@ const electorateShape = shape({
   people: dict(identity, personId),
 });
 export function decodeElectorate(v: unknown) {
-  const s = electorateShape(v);
+  const { boundaries: outlines, ...s } = electorateShape(v);
   if (
     s.representatives.some((r) => r.person_id !== r.person.person_id) ||
-    Object.entries(s.people).some(([id, p]) => id !== p.person_id) ||
-    s.boundaries.some((b) => b.electorate_id !== s.electorate_id)
+    Object.entries(s.people).some(([id, p]) => id !== p.person_id)
   )
     invalid('The seat identities do not match.');
-  return s;
+  // Display outlines enhance a single valid seat record. Missing outlines do
+  // not change a representation, total or latest fact. Keep ios/app's ability
+  // to read the seat without them, while flagging the incomplete display data.
+  const boundaries: Boundary[] = [];
+  for (const outline of outlines) {
+    let boundary: Boundary | null;
+    try {
+      boundary = decodeBoundary(outline);
+    } catch (error) {
+      if (!(error instanceof ApiError) || error.code !== 'invalid-data')
+        throw error;
+      boundary = null;
+    }
+    if (boundary?.electorate_id === s.electorate_id) boundaries.push(boundary);
+    else
+      catalogWarning(
+        `Skipped a malformed display outline for ${s.electorate_id}`,
+      );
+  }
+  return markPartial(
+    { ...s, boundaries },
+    isPartialCatalog(s) || boundaries.length !== outlines.length,
+  );
 }
 export type ElectorateDetail = Decoded<typeof decodeElectorate>;
 const billFields = {

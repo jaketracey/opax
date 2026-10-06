@@ -9,6 +9,7 @@ import { PartyPage } from '../src/features/Party';
 import { PartyLabel, PersonRow } from '../src/design/people';
 import { openOnWeb } from '../src/navigation/external';
 import { partyRoute } from '../src/navigation/routes';
+import { partyColors } from '../src/design/palette';
 import { pinned, slugs } from './pinned';
 jest.mock('expo-router', () => ({
   router: { push: jest.fn() },
@@ -269,6 +270,92 @@ test('bill links exclude presiding roles and unrecorded affiliations, including 
       r.root.findAll((n) => n.props.accessibilityRole === 'link'),
     ).toHaveLength(0);
   }
+  act(() => r.unmount());
+});
+test('the Independent grey dot is drawn as a label, never a link; other affiliations get none', () => {
+  // The dots are decorative views beside the label text.
+  const dots = (r: TestRenderer.ReactTestRenderer) =>
+    r.root
+      .findAll(
+        (n) =>
+          typeof n.type === 'string' &&
+          n.props.accessibilityElementsHidden === true &&
+          [n.props.style].flat(2).some((s) => s?.borderRadius === 5),
+      )
+      .map(
+        (n) =>
+          Object.assign({}, ...[n.props.style].flat(2)).backgroundColor as
+            | string
+            | undefined,
+      );
+  const links = (r: TestRenderer.ReactTestRenderer) =>
+    r.root.findAll(
+      (n) =>
+        typeof n.type === 'string' &&
+        (n.props.accessibilityRole === 'link' ||
+          typeof n.props.onPress === 'function'),
+    );
+  let r!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    r = TestRenderer.create(
+      <PartyLabel party="Independent" status="current" testID="chip" />,
+    );
+  });
+  expect(dots(r)).toEqual([partyColors.independent]);
+  expect(links(r)).toHaveLength(0);
+  act(() => r.update(<RecordedParty party="Independent" />));
+  expect(dots(r)).toEqual([partyColors.independent]);
+  expect(links(r)).toHaveLength(0);
+  const split = (party: string, label: string) => ({
+    party,
+    label,
+    ayes: 2,
+    noes: 0,
+  });
+  act(() =>
+    r.update(
+      <PartySplits
+        splits={{
+          drawn: [
+            split('Independent', 'Independent'),
+            split('PRES', 'Presiding officer'),
+            split('SPK', 'Speaker'),
+            split('Unaligned', 'Unaligned'),
+          ],
+          folded: [],
+          max: 2,
+          notes: [],
+          recorded: true,
+        }}
+        basisNote=""
+        testID="splits"
+      />,
+    ),
+  );
+  press(r, 'splits');
+  expect(dots(r)).toEqual([partyColors.independent]);
+  expect(
+    r.root.findAll(
+      (n) => typeof n.type === 'string' && n.props.accessibilityRole === 'link',
+    ),
+  ).toHaveLength(0);
+  for (const party of [
+    'IND',
+    'Independent Liberal',
+    'Unaligned',
+    'Non-aligned',
+    'PRES',
+    'SPK',
+  ]) {
+    act(() => r.update(<PartyLabel party={party} status="current" />));
+    expect(dots(r)).toEqual([]);
+    act(() => r.update(<RecordedParty party={party} />));
+    expect(dots(r)).toEqual([]);
+  }
+  // A party keeps its dot and its link.
+  act(() => r.update(<PartyLabel party="Labor" status="current" />));
+  expect(dots(r)).toEqual([partyColors.labor]);
+  expect(links(r)).toHaveLength(1);
   act(() => r.unmount());
 });
 test('member disclosure opens native profiles; the total and every block have provenance', async () => {
