@@ -235,7 +235,9 @@ const styles = StyleSheet.create({
     gap: spacing.s1 + 1,
     paddingHorizontal: spacing.s3,
     paddingVertical: 3,
-    borderRadius: 999,
+    // A pill at standard sizes; a rounded rectangle once the label wraps.
+    borderRadius: 12,
+    borderCurve: 'continuous',
     maxWidth: '100%',
   },
   chipDot: { width: 8, height: 8, borderRadius: 4 },
