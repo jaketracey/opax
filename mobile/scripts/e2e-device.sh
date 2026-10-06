@@ -102,14 +102,14 @@ for journey in "$@"; do
   esac
   journey_name=$(basename "$journey" .yaml)
   assert_device_lock
-  maestro --device "$UDID" test --test-output-dir "$OUT/maestro" --debug-output "$OUT/maestro" --format junit --output "$OUT/$journey_name-report.xml" -e EVIDENCE=screenshots -e REMOTE_SHARE_UI="${OPAX_REMOTE_SHARE_UI:-false}" "$journey" >> "$OUT/maestro.log" 2>&1 &
+  maestro --device "$UDID" test --test-output-dir "$OUT/maestro" --debug-output "$OUT/maestro" --format junit --output "$OUT/$journey_name-report.xml" -e EVIDENCE=screenshots -e FIXTURE_PORT="${OPAX_FIXTURE_PORT:-8910}" -e REMOTE_SHARE_UI="${OPAX_REMOTE_SHARE_UI:-false}" "$journey" >> "$OUT/maestro.log" 2>&1 &
   rc=0; wait $! || rc=$?
   if [ "$rc" != 0 ]; then cat "$OUT/maestro.log" >&2; exit "$rc"; fi
 done
 if [ "$OFFLINE" = 1 ]; then
   stop_fixture
   assert_device_lock
-  maestro --device "$UDID" test --test-output-dir "$OUT/offline-maestro" --debug-output "$OUT/offline-maestro" --format junit --output "$OUT/offline-report.xml" -e EVIDENCE=screenshots -e REMOTE_SHARE_UI="${OPAX_REMOTE_SHARE_UI:-false}" .maestro/04-offline.yaml > "$OUT/offline-maestro.log" 2>&1 &
+  maestro --device "$UDID" test --test-output-dir "$OUT/offline-maestro" --debug-output "$OUT/offline-maestro" --format junit --output "$OUT/offline-report.xml" -e EVIDENCE=screenshots -e FIXTURE_PORT="${OPAX_FIXTURE_PORT:-8910}" -e REMOTE_SHARE_UI="${OPAX_REMOTE_SHARE_UI:-false}" .maestro/04-offline.yaml > "$OUT/offline-maestro.log" 2>&1 &
   rc=0; wait $! || rc=$?
   if [ "$rc" != 0 ]; then cat "$OUT/offline-maestro.log" >&2; exit "$rc"; fi
 fi

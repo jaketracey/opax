@@ -1,4 +1,13 @@
 import type { ApiClient, RecordResult } from './client';
+import {
+  partyLabels,
+  resolveParty,
+  partyMembers,
+  partyMoney,
+  recentPartyBills,
+  partyDivisions,
+} from './party-page';
+import { samePartyLabel } from '../design/party';
 import { ApiError } from './errors';
 import {
   joinPerson,
@@ -59,6 +68,194 @@ export class Catalogs {
   private suggestionData?: Promise<SuggestionSources>;
   private suggestionIdentityRetry: 'unused' | 'available' | 'used' = 'unused';
   constructor(private client: Pick<ApiClient, 'get'>) {}
+  async partyPage(input: string) {
+    const read = async <T>(
+      pending: Promise<RecordResult<T>>,
+      source: string,
+    ): Promise<Block<T>> => {
+      try {
+        const r = await pending;
+        return {
+          data: r.data,
+          status: 'ready',
+          asAt: null,
+          sources: [{ label: source, url: '' }],
+          stale: r.stale,
+          savedAt: r.savedAt,
+        };
+      } catch (e) {
+        return {
+          data: null,
+          status: 'error',
+          asAt: null,
+          sources: [],
+          stale: false,
+          savedAt: null,
+          error:
+            e instanceof ApiError
+              ? e
+              : new ApiError('invalid-data', 'This catalog could not be read.'),
+        };
+      }
+    };
+    // Start independent reads together; each optional block has its own error.
+    const moneyPending = read(
+      this.client.get('/graph/money.json', decode.decodeMoney),
+      'AEC disclosure returns, CC BY 4.0',
+    );
+    const entitiesPending = read(
+      this.client.get('/graph/aec-extras.json', decode.decodeAecExtras),
+      'AEC Transparency Register, CC BY 4.0',
+    );
+    const votesPending = (async () => {
+      const index = await this.bills();
+      const files: RecordResult<decode.BillDetail>[] = [];
+      const candidates = recentPartyBills(index.data);
+      let failed = 0;
+      for (let i = 0; i < candidates.length && files.length < 32; i += 8) {
+        const batch = await Promise.allSettled(
+          candidates.slice(i, i + 8).map((b) => this.bill(b.key)),
+        );
+        for (const r of batch) {
+          if (r.status === 'fulfilled') {
+            if (files.length < 32) files.push(r.value);
+          }
+          else failed++;
+        }
+      }
+      if (candidates.length && !files.length)
+        throw new ApiError(
+          'http',
+          'Bill division records could not be loaded.',
+        );
+      return {
+        data: { index: index.data, files: files.map((f) => f.data), failed },
+        stale: index.stale || files.some((f) => f.stale),
+        savedAt: Math.min(index.savedAt, ...files.map((f) => f.savedAt)),
+        etag: null,
+        asOf: index.data.generated_at,
+      };
+    })();
+    const votesRead = read(
+      votesPending,
+      'They Vote For You, ODbL; ParlInfo bill records',
+    );
+    const corePending = (async () => {
+      const [roster, slugs, manifest] = await Promise.all([
+        this.roster(),
+        this.slugs(),
+        this.manifest(),
+      ]);
+      const people = await this.people(manifest.data);
+      return { roster, slugs, manifest, people };
+    })();
+    const coreRead = read(
+      corePending.then((data) => ({
+        data,
+        stale: [data.roster, data.slugs, data.manifest, data.people].some(
+          (r) => r.stale,
+        ),
+        savedAt: Math.min(
+          data.roster.savedAt,
+          data.slugs.savedAt,
+          data.manifest.savedAt,
+          data.people.savedAt,
+        ),
+        asOf: data.people.data.meta.generated,
+      })),
+      'OPAX parliamentary roster and dated seats',
+    );
+    const [core, money, entities, votes] = await Promise.all([
+      coreRead,
+      moneyPending,
+      entitiesPending,
+      votesRead,
+    ]);
+    const labels = core.data
+      ? partyLabels(
+          core.data.roster.data,
+          core.data.people.data,
+          money.data ?? undefined,
+        )
+      : (money.data?.nodes
+          .filter((n) => n.kind === 'party')
+          .flatMap((n) => [n.label, ...(n.aliases ?? [])]) ?? []);
+    const label = resolveParty(input, labels);
+    if (!label) {
+      if (core.status === 'error' || money.status === 'error')
+        throw core.error ?? money.error;
+      return { data: null, stale: false };
+    }
+    const membership = core.data
+      ? partyMembers(
+          label,
+          core.data.roster.data,
+          core.data.people.data,
+          core.data.slugs.data,
+          core.data.manifest.data,
+        )
+      : null;
+    const members: Block<ReturnType<typeof partyMembers>> = {
+      ...core,
+      data: membership,
+      asAt: core.data?.people.data.meta.generated ?? null,
+      sources: membership
+        ? [
+            { label: 'OPAX parliamentary roster', url: '/subject/person' },
+            ...membership.sources.map((s) => ({
+              label: [s.label, s.licence].filter(Boolean).join(', '),
+              url: s.url,
+              licence: s.licence,
+            })),
+          ]
+        : [],
+    };
+    const receipts = {
+      ...money,
+      data: money.data ? partyMoney(label, money.data) : null,
+      asAt: money.data?.meta.generated ?? null,
+    };
+    const association = entities.data
+      ? Object.entries(entities.data.parties).find(([party]) =>
+          samePartyLabel(party, label),
+        )?.[1]
+      : null;
+    const associated = {
+      ...entities,
+      data: entities.data
+        ? {
+            rows: association?.associated_entities?.slice(0, 6) ?? [],
+            total: association?.associated_entities_total ?? 0,
+            notes: entities.data.meta.notes,
+          }
+        : null,
+      asAt: entities.data?.meta.generated ?? null,
+    };
+    const divisions = {
+      ...votes,
+      data: votes.data
+        ? {
+            rows: partyDivisions(label, votes.data.files),
+            scanned: votes.data.files.length,
+            failed: votes.data.failed,
+            basisNote: votes.data.index.meta.party_basis_note,
+          }
+        : null,
+      asAt: votes.data?.index.generated_at ?? null,
+    };
+    return {
+      data: {
+        label,
+        rosterAsAt: core.data?.roster.data.meta.generated ?? null,
+        members,
+        receipts,
+        associated,
+        divisions,
+        moneyMeta: money.data?.meta ?? null,
+      },
+      stale: [members, money, entities, votes].some((b) => b.stale),
+    };
+  }
   roster() {
     return this.client.get('/parliamentarians.json', decode.decodeRoster);
   }

@@ -522,3 +522,31 @@ directory link without inventing a canonical release ID.
 ### Electorate outline and optional location
 
 The cached seat file now draws a tile-free Skia outline. Your MP can suggest a federal seat from one foreground location fix, entirely on the iPhone, with explicit confirmation. See [IOS-ELECTORATE-MAP.md](../docs/IOS-ELECTORATE-MAP.md) for display limitations, privacy, cache budget, download measurement and the compact-file proposal. Journey 24 sets a simulated fix per case through the harness; `OPAX_VERIFY_MAP_OFFLINE=1` adds a stopped-fixture map check.
+
+## Native party page
+
+Recorded party labels push `/party/<slug>` in the current tab's stack. Independent,
+unaligned and other non-party affiliations stay plain text and never resolve as
+parties. Slugs come
+from recorded labels; `partyIdentity` and `samePartyLabel` provide the existing
+identity rules, with no prefix matching or new aliases. A catalog-confirmed
+absence opens the existing web party page; a failed read offers retry.
+
+The page reads the roster and dated people release for current members, with
+unknown affiliation status in a separate Recorded disclosure and former members
+excluded. Recorded rows require full names, omit current-person/current-seat
+overlaps, and show no unverified roster place or chamber. Each member opens its
+native profile. Receipt totals and rank read
+`/graph/money.json` directly; displayed donor flows do not replace the party
+node total. Donors retain year keys and the graph's exclusions. Associated
+entities read `/graph/aec-extras.json`, retain their own annual-return years,
+and are never added to the party total. Both are static catalog GETs, without
+model, search or generation calls. The money-map destination is isolated in
+`MoneyMapLink` for a later native route.
+
+Recent divisions follow the web's 96-candidate / 32-readable-file scan, collapse
+duplicate divisions and retain party-attribution caveats. Bill links push the
+native divisions view, which links to the full bill details. Every block has its own source date, provenance,
+saved-copy state and independent error state. Journey `25-party.yaml` covers
+profile chip, current members, a JSON-pointer receipt check, member profile,
+bill divisions and unresolved web fallback; run it at standard size and AX5.

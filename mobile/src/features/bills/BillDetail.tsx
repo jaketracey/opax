@@ -88,7 +88,11 @@ const stageText = (s: BillTimelineStage) =>
 
 /** One bill: what it would change, how it moved, and how each house divided. */
 export default function BillDetail() {
-  const { key } = useLocalSearchParams<{ key: string }>();
+  const { key, section } = useLocalSearchParams<{
+    key: string;
+    section?: string;
+  }>();
+  const focusedDivisions = section === 'divisions';
   const load = useCallback(() => catalogs.billFor(String(key)), [key]);
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
   const [sponsors, setSponsors] = useState<Record<string, PersonSlug>>({});
@@ -190,19 +194,38 @@ export default function BillDetail() {
         ) : null}
         {view && identity && record ? (
           <>
-            <BillHead
-              view={view}
-              sponsors={sponsors}
-              stale={record.stale}
-              savedAt={record.savedAt}
-              refreshing={refreshing}
-              onRefresh={refresh}
-            />
-            <Summary view={view} />
-            <KeyDates view={view} />
-            <Divisions view={view} />
-            <Speeches view={view} />
-            <Acts view={view} />
+            {focusedDivisions ? (
+              <>
+                {record.stale ? (
+                  <Group>
+                    <OfflineBanner testID="bill-offline" />
+                    <StaleNotice
+                      savedAt={record.savedAt}
+                      refreshing={refreshing}
+                      testID="bill-stale"
+                    />
+                    <Button label="Try again" onPress={retry} />
+                  </Group>
+                ) : null}
+                <Divisions view={view} focused />
+              </>
+            ) : (
+              <>
+                <BillHead
+                  view={view}
+                  sponsors={sponsors}
+                  stale={record.stale}
+                  savedAt={record.savedAt}
+                  refreshing={refreshing}
+                  onRefresh={refresh}
+                />
+                <Summary view={view} />
+                <KeyDates view={view} />
+                <Divisions view={view} />
+                <Speeches view={view} />
+                <Acts view={view} />
+              </>
+            )}
             <Section title="Sources" testID="bill-sources">
               {view.identity.sources.length ? (
                 view.identity.sources.map((source, index) => (
@@ -499,14 +522,38 @@ function KeyDates({ view }: { view: BillView }) {
   );
 }
 
-function Divisions({ view }: { view: BillView }) {
+function Divisions({
+  view,
+  focused = false,
+}: {
+  view: BillView;
+  focused?: boolean;
+}) {
   const [all, setAll] = useState(false);
   const data = view.divisions.data!;
   const rows = data.rows;
   const shown = all ? rows : rows.slice(0, DIVISIONS_SHOWN);
   const rest = rows.length - shown.length;
   return (
-    <Section title="Divisions" testID="bill-divisions">
+    <Section title={focused ? undefined : 'Divisions'} testID="bill-divisions">
+      {focused ? (
+        <Group>
+          <Heading level={1} testID="bill-divisions-title">
+            Bill divisions
+          </Heading>
+          <Text variant="metadata" testID="bill-divisions-bill-name">
+            {billName({
+              title: view.identity.data!.title,
+              short_title: view.identity.data!.shortTitle,
+            })}
+          </Text>
+          <InlineLink
+            label="Full bill details"
+            onPress={() => router.push(billRoute(view.identity.data!.key))}
+            testID="bill-divisions-details"
+          />
+        </Group>
+      ) : null}
       {rows.length ? (
         <RowList>
           {shown.map((division, index) => (

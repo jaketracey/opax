@@ -734,6 +734,9 @@ export const decodeMoney = shape({
       aliases: optional(strings),
       total: number,
       count,
+      via: optional(text),
+      firstYear: optional(count),
+      lastYear: optional(count),
       byYear: dict(yearAmount),
     }),
   ),
@@ -925,3 +928,32 @@ export function decodeEditionRead(
   return decodeEdition(v);
 }
 export type Edition = AppEdition['edition'];
+
+// Party-page projection of the AEC annual-return export. These receipts are
+// the entity's own return, never added to the party's donor-flow total.
+export const decodeAecExtras = shape({
+  meta: shape({
+    generated: date,
+    source: nonempty,
+    register_url: url,
+    licence: nonempty,
+    notes: strings,
+  }),
+  parties: dict(
+    shape({
+      associated_entities_total: optional(count),
+      associated_entities: optional(
+        array(
+          shape({
+            name: nonempty,
+            year: nonempty,
+            receipts: nullable(number),
+            payments: nullable(number),
+            debts: nullable(number),
+          }),
+        ),
+      ),
+    }),
+  ),
+});
+export type AecExtras = Decoded<typeof decodeAecExtras>;

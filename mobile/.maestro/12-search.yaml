@@ -32,6 +32,8 @@ name: 12 Local suggestions and the four catalog search kinds
       id: search-submit
     timeout: 90000
     direction: UP
+    centerElement: true
+    speed: 20
 - waitForAnimationToEnd
 # Native frames exclude targets obscured by navigation or tab bars.
 - runFlow: search-submit-reveal.yaml

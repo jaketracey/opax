@@ -1,9 +1,16 @@
+import { router } from 'expo-router';
+import { partyRoute } from '../navigation/routes';
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useAccessibilitySize } from './accessibility';
 import { Icon } from './icon';
 import type { PartyStatus } from '../api/party-transforms';
-import { partyIdentity, partyText, type PartyContext } from './party';
+import {
+  isPartyLabel,
+  partyIdentity,
+  partyText,
+  type PartyContext,
+} from './party';
 import { Text } from './text';
 import { nameProbeProps } from './text-probe';
 import { colors, hairline, layout, minimumTarget, spacing } from './tokens';
@@ -52,36 +59,96 @@ export function PartyLabel({
   formerly,
   dense = false,
   testID,
+  linked = true,
 }: PartyContext & {
   dense?: boolean;
   testID?: string;
+  linked?: boolean;
 }) {
   const identity = partyIdentity(party);
   const text = partyText({ party, status, formerly }, dense);
   const tone = dense ? 'inkSoft' : 'ink';
+  const partyLinked = linked && isPartyLabel(party);
+  const previousLinked = linked && !!text.previous && isPartyLabel(formerly);
+  const Container = partyLinked ? Pressable : View;
   return (
-    <View
-      style={styles.party}
+    <Container
+      style={[
+        styles.party,
+        partyLinked
+          ? {
+              minHeight: minimumTarget,
+              minWidth: minimumTarget,
+              alignSelf: 'flex-start',
+              maxWidth: '100%',
+            }
+          : null,
+      ]}
+      {...(partyLinked
+        ? {
+            accessibilityRole: 'link' as const,
+            accessibilityHint: 'Opens the party record',
+            onPress: () => router.push(partyRoute(identity.name)),
+          }
+        : {})}
+      {...(previousLinked
+        ? {
+            accessibilityActions: formerly
+              ? [
+                  {
+                    name: 'openPreviousParty',
+                    label: `Open ${formerly} party page`,
+                  },
+                ]
+              : undefined,
+            onAccessibilityAction: (event: {
+              nativeEvent: { actionName: string };
+            }) => {
+              if (
+                event.nativeEvent.actionName === 'openPreviousParty' &&
+                formerly &&
+                isPartyLabel(formerly)
+              )
+                router.push(partyRoute(formerly));
+            },
+          }
+        : {})}
       accessible
       accessibilityLabel={text.spoken}
       testID={testID}
     >
-      {identity.color ? (
+      {isPartyLabel(party) && identity.color ? (
         <View
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
           style={[styles.dot, { backgroundColor: identity.color }]}
         />
       ) : null}
-      <Text wordSafe variant={dense ? 'metadata' : 'body'} tone={tone}>
+      <Text
+        wordSafe
+        variant={dense ? 'metadata' : 'body'}
+        tone={tone}
+        style={{ flexShrink: 1 }}
+      >
         {text.visible}
         {text.previous ? (
-          <Text variant={dense ? 'metadata' : 'body'} tone="inkSoft">
+          <Text
+            variant={dense ? 'metadata' : 'body'}
+            tone="inkSoft"
+            onPress={
+              previousLinked && formerly
+                ? (event) => {
+                    event.stopPropagation();
+                    router.push(partyRoute(formerly));
+                  }
+                : undefined
+            }
+          >
             {` · ${text.previous}`}
           </Text>
         ) : null}
       </Text>
-    </View>
+    </Container>
   );
 }
 
@@ -186,6 +253,43 @@ export function PersonRow({
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={label}
+      accessibilityActions={
+        partyContext
+          ? [
+              ...(isPartyLabel(partyContext.party)
+                ? [
+                    {
+                      name: 'openParty',
+                      label: `Open ${partyIdentity(partyContext.party).name} party page`,
+                    },
+                  ]
+                : []),
+              ...(isPartyLabel(partyContext.formerly) &&
+              partyContext.formerly !== partyContext.party
+                ? [
+                    {
+                      name: 'openPreviousParty',
+                      label: `Open ${partyContext.formerly} party page`,
+                    },
+                  ]
+                : []),
+            ]
+          : undefined
+      }
+      onAccessibilityAction={(event) => {
+        if (
+          event.nativeEvent.actionName === 'openParty' &&
+          partyContext?.party &&
+          isPartyLabel(partyContext.party)
+        )
+          router.push(partyRoute(partyContext.party));
+        if (
+          event.nativeEvent.actionName === 'openPreviousParty' &&
+          partyContext?.formerly &&
+          isPartyLabel(partyContext.formerly)
+        )
+          router.push(partyRoute(partyContext.formerly));
+      }}
       testID={testID}
       onPress={onPress}
       style={({ pressed }) => [
