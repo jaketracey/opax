@@ -4347,7 +4347,7 @@ function renderSupport(params) {
   showSupportRecord(null);
   const raw = params.get("record");
   if (!raw) return;
-  import("/record-paths.js?v=record-paths-1")
+  import("/record-paths.js?v=record-paths-2")
     .then(({ lookupRecordPath }) => lookupRecordPath(raw, supportJson))
     .then((record) => { if (record && generation === supportGeneration) showSupportRecord(record); })
     .catch(() => { /* the report stays general */ });

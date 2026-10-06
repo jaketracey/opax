@@ -81,8 +81,11 @@ export async function lookupRecordPath(raw, fetchJson) {
   if (!path) return null;
   try {
     const manifest = await fetchJson('/search-catalog/manifest.json');
-    const version = String(manifest?.version ?? '');
-    if (!/^[0-9a-f]{16}$/.test(version)) return null;
+    // A plain object whose version is a string of the build's exact shape: an
+    // array, a number or anything that only stringifies to one is malformed.
+    if (!manifest || typeof manifest !== 'object' || Array.isArray(manifest)) return null;
+    const version = manifest.version;
+    if (typeof version !== 'string' || !/^[0-9a-f]{16}$/.test(version)) return null;
     const shard = await fetchJson(`/search-catalog/${version}/paths-${recordPathShard(path)}.json`);
     const title = shard && Object.prototype.hasOwnProperty.call(shard, path) ? shard[path] : null;
     return typeof title === 'string' && title ? { path, title } : null;

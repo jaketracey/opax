@@ -158,6 +158,16 @@ test('a lookup failure, a bad manifest or an unknown path leaves the report gene
   const failing = async () => { throw new Error('offline'); };
   assert.equal(await lookupRecordPath(real, failing), null, 'offline');
   assert.equal(await lookupRecordPath(real, async (url) => (url.endsWith('manifest.json') ? { version: '../../etc' } : {})), null, 'bad version');
+  // A malformed manifest falls back too, even when its version would stringify
+  // to a real one (["0123456789abcdef"] is "0123456789abcdef" as a string).
+  for (const manifest of [{ version: [index.version] }, { version: [[index.version]] }, { version: { toString: () => index.version } },
+    { version: Number.parseInt(index.version.replace(/[a-f]/g, '1'), 10) }, { version: ` ${index.version}` }, { version: index.version.toUpperCase() },
+    [index.version], [{ version: index.version }], index.version, null, 42, {}]) {
+    const served = async (url) => (url.endsWith('manifest.json') ? manifest : index.shards[recordPathShard(canonicalRecordPath(real))]);
+    assert.equal(await lookupRecordPath(real, served), null, `malformed manifest ${JSON.stringify(manifest)}`);
+  }
+  // The same index behind a well-formed manifest still names the record.
+  assert.notEqual(await lookupRecordPath(real, async (url) => (url.endsWith('manifest.json') ? { version: index.version } : index.shards[recordPathShard(canonicalRecordPath(real))])), null);
   assert.equal(await lookupRecordPath(real, async (url) => { if (url.endsWith('manifest.json')) return { version: index.version }; throw new Error('404'); }), null, 'shard missing');
   assert.equal(await lookupRecordPath(real, async (url) => (url.endsWith('manifest.json') ? { version: index.version } : [real])), null, 'malformed shard');
   assert.equal(await lookupRecordPath(real, async (url) => (url.endsWith('manifest.json') ? { version: index.version } : { [real]: 42 })), null, 'non-string title');
