@@ -6,23 +6,31 @@ appId: au.com.opax.app
       id: voice-email
     direction: UP
     centerElement: true
-- tapOn:
-    id: voice-email
-# The fixture workbench has no keyboard avoidance. Move the focused field
-# above the keyboard before long-pressing; on-drag dismissal is intentional.
-- swipe:
-    start: 50%, 40%
-    end: 50%, 15%
-    duration: 600
-- tapOn:
-    id: voice-email
-# At AX5, tapping a truncated field can put the caret in the middle. Select
-# the whole address so replacement cannot leave a suffix behind.
-- longPressOn:
-    id: voice-email
-- tapOn: Select All
-- eraseText: 1
-- inputText: ${VOICE_EMAIL}
+# Leave an already-correct fixture address alone. iOS may omit Select All
+# when the text is already selected after the deadline account reset.
+- runFlow:
+    when:
+      notVisible:
+        id: voice-email
+        text: ^${VOICE_EMAIL}$
+    commands:
+      - tapOn:
+          id: voice-email
+      # The fixture workbench has no keyboard avoidance. Move the focused field
+      # above the keyboard before long-pressing; on-drag dismissal is intentional.
+      - swipe:
+          start: 50%, 40%
+          end: 50%, 15%
+          duration: 600
+      - tapOn:
+          id: voice-email
+      # At AX5, tapping a truncated field can put the caret in the middle. Select
+      # the whole address so replacement cannot leave a suffix behind.
+      - longPressOn:
+          id: voice-email
+      - tapOn: Select All
+      - eraseText: 1
+      - inputText: ${VOICE_EMAIL}
 - assertVisible:
     id: voice-email
     text: ^${VOICE_EMAIL}$
