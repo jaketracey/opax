@@ -318,7 +318,7 @@ test('programming errors in shaped or keyed vote records escape isolation', () =
     )([{ n: 1 }]),
   ).toThrow(TypeError);
   const raw = pinned('/votes.json') as Record<string, unknown>;
-  Object.defineProperty(raw, '10007', {
+  Object.defineProperty(raw['10007'] as object, 'ayes', {
     enumerable: true,
     get() {
       throw new TypeError('vote decoder bug');
@@ -406,7 +406,7 @@ test.each([
   ],
   ['/bills/au-federal-r7534.json', d.decodeBill, ['divisions', 0, 'ayes']],
 ] as [string, (v: unknown) => unknown, (string | number)[]][])(
-  '%s list %j stays whole when a missing row would change a fact or citation',
+  '%s factual list %# stays whole when a missing row would change a fact or citation',
   (path, decode, field) => {
     expect(() => decode(replaceAt(pinned(path), field, null))).toThrow(
       ApiError,
