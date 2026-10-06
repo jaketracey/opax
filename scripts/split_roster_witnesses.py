@@ -2,7 +2,7 @@
 """Offline, scoped restoration from a pinned aggregate, without a desktop DB.
 
 The aggregate proves how many rows are witnesses, but not the scope of every
-remaining row. Counts are therefore upper bounds until a SQL refresh. Identity
+remaining row. Own counts are pending until a SQL refresh. Identity
 is restricted to the one actual state house, enforced by the portal per row.
 Federal committees cannot establish or contradict a *state-house-only* scope.
 No multi-state or federal-house aggregate can use this offline shortcut.
@@ -29,18 +29,17 @@ def restored_scope(row, reference, reviewed, peers=()):
     own.pop('witness_rows', None)
     if own['speeches'] < 5:
         return None
-    evidence = profiles.print_identity(own, profiles.dated_records(reference, reviewed), reference, peers)
-    if not evidence or any(not r.get('source_url') or not r.get('start') for r in evidence):
+    resolved = profiles.split_identity(own, reference, reviewed, peers)
+    if not resolved:
         return None
-    if len({profiles.key(r['name']) for r in evidence}) != 1:
-        return None
+    service, scope, evidence, _ = resolved
     latest = max(evidence, key=lambda r: r['start'])
     if not latest.get('party'):
         return None
     profiles.guard_print(own, force=True)
-    own.update(full=latest['name'], party=latest['party'],
-               speech_scope={'state': 'qld', 'chamber': 'qld_la'},
-               speech_count_basis='non-witness upper bound; exact house count requires SQL refresh',
+    own.update(full=latest['name'], party=profiles.split_party(service, min(f"{row['last']}-12-31", scope['service'][-1]['end'])),
+               speech_scope=scope, speeches=None,
+               speech_count_basis='pending own-house, in-service SQL export',
                transcript={k: copy.deepcopy(row[k]) for k in
                            ('speeches', 'states', 'chambers', 'first', 'last', 'witness_rows') if k in row},
                separated_witnesses={'name': row['name'], 'speaker_type': 'witness',
@@ -51,6 +50,8 @@ def restored_scope(row, reference, reviewed, peers=()):
                representation=list({(r['jurisdiction'], r['chamber'], r['electorate']): profiles.representation(r)
                                     for r in evidence}.values()))
     own.pop('recorded_parties', None)
+    if service.get('party_periods'):
+        own['parties'] = [own['party'], *dict.fromkeys(p['party'] for p in service['party_periods'] if p['party'] != own['party'])]
     return own
 
 
@@ -66,12 +67,13 @@ def split_pinned(doc, reference, reviewed):
             row.clear()
             row.update(own)
             changed.append(row['name'])
-    doc['meta']['speeches'] = sum(p['speeches'] for p in doc['people'])
+    doc['meta']['speeches'] = sum(p['speeches'] or 0 for p in doc['people'])
     doc['meta']['witness_speeches_separated'] = sum(p.get('separated_witnesses', {}).get('speeches', 0) for p in doc['people'])
-    doc['meta']['speech_counts_include_upper_bounds'] = True
+    doc['meta'].pop('speech_counts_include_upper_bounds', None)
+    doc['meta']['speech_counts_pending'] = sum(p['speeches'] is None for p in doc['people'])
     if 'representation' in doc['meta']:
         doc['meta']['representation']['matched'] = sum(bool(p.get('representation')) for p in doc['people'])
-        doc['meta']['representation']['method'] = 'Evidence-gated corrections only; clean records pass through intact. Scoped witness splits use dated Queensland Assembly identities, exclude testimony and require an own-house retrieval filter. Legacy aggregates are preserved under transcript; non-witness counts are upper bounds until the SQL refresh.'
+        doc['meta']['representation']['method'] = 'Evidence-gated corrections only; clean records pass through intact. Scoped witness splits use dated Queensland Assembly identities, exclude testimony and require an own-house, in-service retrieval filter. Legacy aggregates are preserved under transcript; own counts await the SQL refresh.'
     return changed
 
 

@@ -3,7 +3,7 @@
 
 "use strict";
 let attributionHelpers;
-const attributionReady = import('./speech-attribution.js?v=20261006-1').then(module => { attributionHelpers = module; });
+const attributionReady = import('./speech-attribution.js?v=20261006-2').then(module => { attributionHelpers = module; });
 const isWitness = row => attributionHelpers ? attributionHelpers.isWitness(row) : true;
 const isUnattributed = row => attributionHelpers ? attributionHelpers.isUnattributed(row) : true;
 const belongsToScope = (row, scope) => attributionHelpers ? attributionHelpers.belongsToScope(row, scope) : false;
@@ -4866,7 +4866,7 @@ async function renderPartyMembers(label, head, key) {
   const sitting = new Set(), speakers = new Set();
   for (const person of data.people) {
     if (person.current && samePartyLabel(person.party_now || person.party, label)) sitting.add(identity(person));
-    if (person.speeches > 0 && [person.party, ...(person.parties || [])].some((party) => party && samePartyLabel(party, label))) speakers.add(identity(person));
+    if ((person.speeches > 0 || person.speech_scope) && [person.party, ...(person.parties || [])].some((party) => party && samePartyLabel(party, label))) speakers.add(identity(person));
   }
   const directoryParty = data.people.flatMap((person) => [person.party, ...(person.parties || [])])
     .find((party) => party && samePartyLabel(party, label)) || label;
@@ -6596,7 +6596,7 @@ async function buildPeopleDirectory() {
         <span class="result-meta">${metaLine}</span>
       </div>
       <div class="dir-figs">
-        ${p.roster_only ? '<span class="dir-fig">From the member roster<br>Speech total not yet indexed</span>' : p.speech_count_basis ? `<span class="dir-fig"><b>≤ ${num(p.speeches)}</b>non-witness rows<br>Own chamber only</span>` : `<span class="dir-fig"><b>${num(p.speeches)}</b>speech${p.speeches === 1 ? "" : "es"}</span>`}
+        ${p.roster_only ? '<span class="dir-fig">From the member roster<br>Speech total not yet indexed</span>' : p.speech_count_basis ? '<span class="dir-fig">Count pending exact export<br>Own-house, in-service speeches</span>' : `<span class="dir-fig"><b>${num(p.speeches)}</b>speech${p.speeches === 1 ? "" : "es"}</span>`}
         ${p._divisions ? `<span class="dir-fig"><b>${num(p._divisions)}</b>division${p._divisions === 1 ? "" : "s"}</span>` : ""}
       </div>
     </li>`;
@@ -6630,7 +6630,7 @@ async function buildPeopleDirectory() {
     fineprint: `Names appear as Hansard prints them, so a surname-only print ("Shoebridge") is its own entry, with the
       members register's full name beside it where the record knows it. Speech counts follow the site's corpus rule
       (speeches since the 1993 election, 200+ characters, procedural rows removed) and are counted from the
-      corpus itself, so they can run ahead of what the index has loaded so far. A ≤ count is the non-witness upper bound from an older aggregate; attribution is restricted to the MP's own chamber until an exact export is available. Speakers with fewer than
+      corpus itself, so they can run ahead of what the index has loaded so far. Split records show a pending count until an exact export counts only the MP's own-house, in-service speeches. Speakers with fewer than
       ${num(meta.floor || 5)} indexed speeches${meta.witnesses_excluded ? ` and ${num(meta.witnesses_excluded)} people who appear only as committee witnesses` : ""}
       are not listed from the speech export. Verified representatives are included independently of that threshold; their missing speech totals are labelled explicitly. Party is the label the person's speeches carry, or the members register's where they carry none;
       many state Hansard rows record neither. Portraits are official APH and OpenAustralia photos; divisions come from
@@ -14201,7 +14201,7 @@ function syncPathMeta() {
 }
 
 // Person links are written as slugs once this lands; nothing waits on it.
-attributionReady.then(() => {
+attributionReady.catch(() => {}).finally(() => {
   loadPersonSlugs();
   initAskBuilder();
   route();

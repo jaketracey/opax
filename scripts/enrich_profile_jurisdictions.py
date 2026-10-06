@@ -21,6 +21,7 @@ from scripts.roster_identity import COMMITTEES, FEDERAL, agrees, alias_name, gua
 PUBLIC = ROOT / 'portal/public'
 REVIEWED = ROOT / 'scripts/roster_service.json'
 STATE_EVIDENCE = ROOT / 'scripts/roster_state_evidence.json'
+WITNESS_SERVICE = ROOT / 'scripts/roster_witness_service.json'
 
 REGIONS={'ACT':'Australian Capital Territory','NSW':'New South Wales','VIC':'Victoria','QLD':'Queensland','SA':'South Australia','WA':'Western Australia','TAS':'Tasmania','NT':'Northern Territory'}
 
@@ -226,7 +227,7 @@ def committee_names(person,reference):
 
 def witness_dominated(person):
     """Round 3's governing threshold: more than half the rows are witnesses."""
-    return person.get('witness_rows',0)*2 > person.get('speeches',0)
+    return person.get('witness_rows',0)*2 > (person.get('speeches') or 0)
 
 
 def consistent_career(person,records,reference,reviewed,printed_people=()):
@@ -339,6 +340,41 @@ def representation(r):
         'basis':'Dated parliamentary service or official roster; name, jurisdiction and chamber verified'}
 
 
+def split_identity(person, reference, reviewed, peers=()):
+    """Resolve only the reviewed split, using its own house and bounded service.
+
+    Committee members and witnesses have no vote in the identity, threshold,
+    party or count. A roster snapshot supplies identity evidence, not a term.
+    The separate reviewed coverage supplies the date limits.
+    """
+    services = json.loads(WITNESS_SERVICE.read_text())['services']
+    service = next((s for s in services if s['print'] == person['name']), None)
+    houses = set(person.get('chambers', [])) - COMMITTEES
+    if not service or houses != {service['chamber']}:
+        return None
+    own = dict(person, states=[service['state']], chambers=[service['chamber']])
+    own.pop('witness_rows', None)
+    evidence = print_identity(own, dated_records(reference, reviewed), reference, peers)
+    if not evidence or any(key(r['name']) != key(service['name']) or
+                           not r.get('source_url') or not r.get('start') for r in evidence):
+        return None
+    scope = {k: service[k] for k in ('state', 'chamber')}
+    scope['service'] = service['intervals']
+    groups = person.get('_speech_groups')
+    if groups is not None:
+        groups = [g for g in groups if g['state'] == scope['state'] and g['chamber'] == scope['chamber']
+                  and g.get('speaker_type') not in ('chair', 'unknown')
+                  and any(t['start'] <= g['date'][:10] <= t['end'] for t in scope['service'])]
+        if sum(g['n'] for g in groups) < 5:
+            return None
+    return service, scope, evidence, groups
+
+
+def split_party(service, last_date):
+    return next((p['party'] for p in reversed(service.get('party_periods', []))
+                 if p['start'] <= last_date <= p['end']), service['party'])
+
+
 def repair(people,reference,reviewed):
     """Repair only unsupported joins in place, leaving transcript counts and scopes intact.
 
@@ -360,6 +396,27 @@ def repair(people,reference,reviewed):
         before=copy.deepcopy(p)
         tokens=parts(p['name'])
         peers=prints.get(tokens[-1] if tokens else None,())
+        if p.get('separated_witnesses'):
+            resolved = split_identity(p, reference, reviewed, peers)
+            guard_print(p, force=True)
+            if resolved:
+                service, scope, evidence, groups = resolved
+                # SQL groups are required for an exact count and the floor.
+                if groups is not None:
+                    p.update(full=service['name'], speech_scope=scope,
+                             speeches=sum(g['n'] for g in groups),
+                             states=[scope['state']], chambers=[scope['chamber']],
+                             first=min(int(g['date'][:4]) for g in groups),
+                             last=max(int(g['date'][:4]) for g in groups),
+                             party=split_party(service, max(g['date'][:10] for g in groups)),
+                             representation=list({(r['jurisdiction'],r['chamber'],r['electorate']):representation(r)
+                                                  for r in evidence}.values()),
+                             identity_evidence=[{k:r.get(k) for k in ('name','jurisdiction','chamber','electorate','as_of','start','end','source_url')}
+                                                for r in evidence])
+                    parties = sorted({split_party(service, g['date'][:10]) for g in groups})
+                    if len(parties) > 1:p['parties'] = parties
+            if p != before:changed.append((p['name'],before,copy.deepcopy(p)))
+            continue
         reason=change_reason(p,records,reference,reviewed,peers,catalog)
         if reason is None:continue
         if witness_dominated(p):
@@ -369,13 +426,6 @@ def repair(people,reference,reviewed):
         contradictory=False
         if weak(p['name']):
             own=print_identity(p,records,reference,peers)
-            if p.get('separated_witnesses'):
-                # A one-row residue or an ambiguous namesake is no MP identity.
-                if p['speeches'] < 5: own=[]
-                guard_print(p,force=True)
-                if not own:
-                    if p!=before:changed.append((p['name'],before,copy.deepcopy(p)))
-                    continue
             contradictory=not own and reason[0]=='mix-up corrected'
             # Absence of evidence is not evidence of a mix-up. Only actual
             # contradictions or multiple-parliament aggregates go neutral.
@@ -396,10 +446,6 @@ def repair(people,reference,reviewed):
                     p['party']=p['recorded_parties'][0]
                 p.pop('recorded_parties',None)
                 evidence=own
-                if p.get('separated_witnesses'):
-                    p['representation']=list({(r['jurisdiction'],r['chamber'],r['electorate']):representation(r) for r in own}.values())
-                    if len(p.get('states',[]))==1 and len(p.get('chambers',[]))==1 and p['chambers'][0] not in COMMITTEES:
-                        p['speech_scope']={'state':p['states'][0],'chamber':p['chambers'][0]}
                 if before.get('full') and not usable_alias(before['full']):
                     # Repair compact/byline aliases with their dated state seat.
                     # This also preserves correct Gaven/Nudgee/Gladstone KB rows.

@@ -158,6 +158,9 @@ def attribution_refusals(rows):
     reasons = []
     for row in rows:
         witness = row.get('separated_witnesses')
+        scope = row.get('speech_scope') or {}
+        if witness and any(row.get(k) for k in ('pid', 'full', 'party', 'parties', 'party_now', 'current', 'representation', 'affiliations')) and not (scope.get('state') and scope.get('chamber') and scope.get('service')):
+            reasons.append(f"{row['name']}: named witness-split record has no own-house scope")
         if witness and (witness.get('speaker_type') != 'witness' or any(witness.get(k) for k in
                 ('pid', 'person_id', 'full', 'party', 'parties', 'party_now', 'current', 'representation', 'affiliations'))):
             reasons.append(f"{row['name']}: separated witness testimony carries an MP attribution")
@@ -207,13 +210,14 @@ def main(argv=()) -> None:
              f"{JUNK_PREDICATES} {DEDUPE_PREDICATES}")
     columns = {r[1] for r in db.execute('PRAGMA table_info(speeches)')}
     witness_type = "OR speaker_type = 'witness'" if 'speaker_type' in columns else ''
+    speaker_type = 'speaker_type' if 'speaker_type' in columns else 'NULL'
     rows = db.execute(f"""
         SELECT speaker_name, person_id, party, party_canonical, state, chamber,
-               substr(date, 1, 4) AS yr,
+               substr(date, 1, 10) AS speech_date,
                ((witness_name IS NOT NULL AND witness_name != '') {witness_type}) AS is_witness,
-               COUNT(*) AS n
+               COUNT(*) AS n, {speaker_type} AS speaker_type
         FROM speeches WHERE {where}
-        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8""").fetchall()
+        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 10""").fetchall()
     members = {r[0]: {"name": r[1], "party": member_party(*r[:6]), "state": r[2] or "federal",
                        "chamber": r[3], "start": r[6], "end": r[7]} for r in db.execute(
         "SELECT person_id, full_name, state, chamber, party, party_canonical, entered_house, left_house FROM members")}
@@ -236,7 +240,8 @@ def main(argv=()) -> None:
     print(f"[export] {len(rows):,} speaker groups ({time.time() - t0:.0f}s)", file=sys.stderr)
 
     people = {}
-    for speaker, pid, party, canonical, state, chamber, yr, is_witness, n in rows:
+    for speaker, pid, party, canonical, state, chamber, speech_date, is_witness, n, row_type in rows:
+        yr = (speech_date or '')[:4]
         name = normalize_speaker(speaker)
         if not name:
             continue
@@ -245,7 +250,7 @@ def main(argv=()) -> None:
             p = people[name] = {
                 "n": 0, "witness": 0, "witness_states": Counter(), "witness_chambers": Counter(),
                 "witness_years": [], "parties": Counter(), "states": Counter(),
-                "chambers": Counter(), "years": [], "pids": Counter(),
+                "chambers": Counter(), "years": [], "pids": Counter(), "groups": [],
             }
         if is_witness:
             p["witness"] += n
@@ -254,6 +259,8 @@ def main(argv=()) -> None:
             if yr and yr.isdigit(): p['witness_years'].append(int(yr))
             continue  # No witness party, pid, era or chamber can influence the MP.
         p["n"] += n
+        p['groups'].append(dict(state=state or 'federal', chamber=chamber, date=speech_date or '',
+                                speaker_type=row_type, n=n))
         label = canon_party(party, canonical)
         if label:
             p["parties"][label] += n
@@ -287,11 +294,25 @@ def main(argv=()) -> None:
         rec["chambers"] = [c for c, _ in p["chambers"].most_common()]
         if p["years"]:
             rec["first"], rec["last"] = min(p["years"]), max(p["years"])
-        if p["witness"]:
+        if p["witness"] * 2 > p['n'] + p['witness']:
             rec['separated_witnesses'] = {'name': name, 'speaker_type': 'witness', 'speeches': p['witness'],
                 'states': list(p['witness_states']), 'chambers': list(p['witness_chambers'])}
             if p['witness_years']:
                 rec['separated_witnesses'].update(first=min(p['witness_years']), last=max(p['witness_years']))
+            rec['_speech_groups'] = p['groups']
+            rec['transcript'] = dict(speeches=p['n'] + p['witness'], witness_rows=p['witness'],
+                states=list(p['states'] | p['witness_states']), chambers=list(p['chambers'] | p['witness_chambers']),
+                first=min(p['years'] + p['witness_years']), last=max(p['years'] + p['witness_years']))
+        elif p['witness']:
+            # Preserve the existing non-majority aggregate contract. The scoped
+            # restoration is for records neutralised by the majority-witness
+            # rule; other names still use the established identity resolver.
+            # Per-row witness markers always prevent testimony attribution.
+            rec.update(speeches=p['n'] + p['witness'], witness_rows=p['witness'],
+                       states=[s for s, _ in (p['states'] + p['witness_states']).most_common()],
+                       chambers=[c for c, _ in (p['chambers'] + p['witness_chambers']).most_common()])
+            all_years = p['years'] + p['witness_years']
+            if all_years:rec.update(first=min(all_years), last=max(all_years))
         # The federal id only on evidence; a state member's id (non-numeric, name-built) still
         # supplies a missing party.
         pid, _why = verify(rec, p["pids"], federal, same, now_year)
@@ -330,11 +351,14 @@ def main(argv=()) -> None:
                 rec['full']=raw['name']
         # Key order as before: name, speeches, party, parties, states, chambers, first, last, pid, ...
         order = ["name", "speeches", "party", "parties", "states", "chambers", "first", "last", "pid",
-                 "current", "party_now", "full", "witness_rows", "recorded_parties", "separated_witnesses"]
+                 "current", "party_now", "full", "witness_rows", "recorded_parties", "separated_witnesses", "transcript", "_speech_groups"]
         out.append({k: rec[k] for k in order if k in rec})
 
     out.sort(key=lambda r: (-r["speeches"], r["name"]))
     repair(out,pinned_reference(),json.loads(REVIEWED.read_text()))
+    for row in out:row.pop('_speech_groups', None)
+    speeches_total = sum(p['speeches'] for p in out)
+    out.sort(key=lambda r: (-r['speeches'], r['name']))
     doc = {
         "meta": {
             "generated": date.today().isoformat(),

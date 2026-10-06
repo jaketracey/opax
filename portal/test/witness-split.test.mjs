@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 import ts from 'typescript';
+import { personSpeechCount } from '../../scripts/build_search_catalog.mjs';
 import { isWitness, isUnattributed, belongsToScope, scopeFilter, speakerHref } from '../public/speech-attribution.js';
 
 const source = ts.createSourceFile('index.ts', readFileSync(new URL('../src/index.ts', import.meta.url), 'utf8'), ts.ScriptTarget.Latest, true);
@@ -19,8 +20,11 @@ test('13 QLD review cases restore named parties; witnesses are conserved separat
     const expected = fixture.cases.find(c => c.before.name === name);
     assert.equal(p.full, expected.expected_full);
     assert.equal(p.party, expected.expected_party);
-    assert.deepEqual(p.speech_scope, scope);
-    assert.equal(p.speeches + p.separated_witnesses.speeches, expected.before.speeches);
+    assert.equal(p.speech_scope.state, scope.state);
+    assert.equal(p.speech_scope.chamber, scope.chamber);
+    assert.ok(p.speech_scope.service.length);
+    assert.equal(p.speeches, null);
+    assert.equal(p.transcript.speeches, expected.before.speeches);
     assert.equal(p.witness_rows, undefined);
     for (const key of ['pid', 'party', 'full', 'representation', 'affiliations', 'current']) assert.equal(p.separated_witnesses[key], undefined);
   }
@@ -122,4 +126,57 @@ test('Ask scope and topic catalog use the same partition; prior citations cannot
   assert.equal(fallback.answer_status,'reasoned');
   assert.match(JSON.stringify(calls[4].filter_expression), /qld_la/);
   assert.deepEqual(plain(calls[4].rag_strategies),[]);
+});
+
+
+test('service date limits reject missing dates, departed MPs and pre-election namesakes', () => {
+  for (const name of ['Stewart','Walker','Kirkland','Sullivan']) {
+    const p = roster.people.find(p => p.name === name);
+    const row = {kind:'speech',state:'qld',chamber:'qld_la',speaker_type:'member'};
+    assert.equal(belongsToScope(row,p.speech_scope),false);
+    assert.equal(belongsToScope({...row,date:'2023-06-01'},p.speech_scope),false);
+    assert.ok(belongsToScope({...row,date:p.speech_scope.service[0].start},p.speech_scope));
+    assert.equal(belongsToScope({...row,date:'2027-01-01'},p.speech_scope),false);
+    const filters = JSON.stringify(scopeFilter(p.speech_scope));
+    for (const interval of p.speech_scope.service) {
+      assert.ok(filters.includes(interval.start)); assert.ok(filters.includes(interval.end));
+    }
+  }
+  const former = roster.people.find(p=>p.name==='Stewart');
+  assert.equal(belongsToScope({kind:'speech',state:'qld',chamber:'qld_la',date:'2026-03-01'},former.speech_scope),false);
+});
+
+test('pending counts cannot credit committee parliamentarians in catalog, description or share card', async () => {
+  for (const name of ['Stewart','Walker']) {
+    const p = roster.people.find(p=>p.name===name);
+    assert.match(personSpeechCount(p),/Count pending exact export/);
+    assert.doesNotMatch(personSpeechCount(p),/178|120|Up to|≤/);
+  }
+  const api = runInNewContext(ts.transpile(select(['personMeta']))+';personMeta', {
+    SITE_ORIGIN:'https://local.test', CHAMBER_NAMES:{qld_la:'Legislative Assembly'}, STATE_NAMES:{qld:'Queensland parliament'},
+    personAt:(people,name)=>people.byFold.get(name.toLowerCase()),personPath:(_people,name)=>'/subject/person/'+name,
+    photoIdFor:()=>null,creditLine:async()=>null,
+    loadPeople: async()=>({people:roster.people,byFold:new Map(roster.people.map(p=>[p.name.toLowerCase(),p]))}),
+    loadMoney: async()=>null, loadPhotos: async()=>({}),
+    foldName:s=>s.toLowerCase(), slugIndex:()=>({slugOf:new Map()}),
+    personTitle:(name)=>name, hasInterestsRegister:async()=>false, personRole:()=>null,
+    num:n=>String(n), years:(a,b)=>`${a}–${b}`, andList:a=>a.join(', '),
+    withTail:(a,b)=>a+' '+b, prerenderBlock:()=>'', partyColour:()=>null,
+  });
+  for (const name of ['Stewart','Walker']) {
+    const meta = await api(name,new URL('https://local.test/subject/person/'+name),{});
+    assert.match(meta.description,/Count pending exact export/);
+    assert.equal(meta.card.stat,undefined);
+    assert.doesNotMatch(meta.description,/178|120|Up to|≤/);
+  }
+});
+
+test('a failed attribution import still starts routing and the Ask builder', async () => {
+  const app = readFileSync(new URL('../public/app.js',import.meta.url),'utf8');
+  const boot = app.slice(app.lastIndexOf('attributionReady.'));
+  const called = [];
+  const ready = Promise.reject(new Error('simulated missing asset'));
+  await runInNewContext(boot,{attributionReady:ready,
+    loadPersonSlugs:()=>called.push('slugs'),initAskBuilder:()=>called.push('ask'),route:()=>called.push('route')});
+  assert.deepEqual(called,['slugs','ask','route']);
 });

@@ -595,7 +595,8 @@ async function searchWindow(
     const speaker = resource.origin?.collaborators?.[0] ?? null
     const rowScope = speaker ? speakerDirectory.byFold.get(foldName(speaker))?.speech_scope : null
     const outside = rowScope && !belongsToScope({kind: label(resource, 'kind'), state: label(resource, 'state'),
-      chamber: label(resource, 'chamber'), speaker_type: witness ? 'witness' : label(resource, 'speaker_type')}, rowScope)
+      chamber: label(resource, 'chamber'), date: typeof meta.date === 'string' ? meta.date : null,
+      speaker_type: witness ? 'witness' : label(resource, 'speaker_type')}, rowScope)
     // Compare paragraphs on the CALIBRATED scale — raw BM25 (unbounded) would
     // always beat raw semantic (0-1), hijacking snippet choice and ranking.
     // The snippet, though, should be the passage that actually says what the
@@ -931,7 +932,8 @@ function askPayload(answer: AskAnswer, records: AskRecords = { records: [], cove
       const speaker = r.origin?.collaborators?.[0] ?? null
       const rowScope = speaker && people?.byFold.get(foldName(speaker))?.speech_scope
       const outside = rowScope && !belongsToScope({ kind: label(r, 'kind'), state: label(r, 'state'),
-        chamber: label(r, 'chamber'), speaker_type: witness ? 'witness' : label(r, 'speaker_type') }, rowScope)
+        chamber: label(r, 'chamber'), date: typeof meta.date === 'string' ? meta.date : null,
+        speaker_type: witness ? 'witness' : label(r, 'speaker_type') }, rowScope)
       return {
         resource: rid,
         slug: r.slug ?? '',
@@ -3286,7 +3288,7 @@ interface Person {
   speech_scope?: SpeechScope
   speech_count_basis?: string
   name: string
-  speeches: number
+  speeches: number | null
   party: string | null
   states: string[]
   chambers: string[]
@@ -3435,7 +3437,7 @@ function loadPeople(env: Env): Promise<PeopleData> {
         byName.set(p.name, p)
         const f = foldName(p.name)
         const prev = byFold.get(f)
-        if (!prev || p.speeches > prev.speeches) byFold.set(f, p) // curly/straight twins: keep the fuller entry
+        if (!prev || (p.speeches ?? 0) > (prev.speeches ?? 0)) byFold.set(f, p) // curly/straight twins: keep the fuller entry
       }
       return { generated: raw.meta?.generated ?? '', people: raw.people, byName, byFold, ...slugIndex(raw.people) }
     })
@@ -4085,7 +4087,7 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   const role = p.speech_scope ? null : personRole(p, new Date().getUTCFullYear())
   const interests = await hasInterestsRegister(env, display, p.pid)
   title = personTitle(display, role, federal ? (interests ? 'Speeches, votes & interests' : 'Speeches & votes') : 'Speeches')
-  const count = p.speech_count_basis ? `Up to ${num(p.speeches)} non-witness rows; attribution restricted to the ${where}.` : `${num(p.speeches)} speeches in Hansard.`
+  const count = p.speech_count_basis ? `Count pending exact export; only own-house, in-service speeches in the ${where}.` : `${num(p.speeches ?? 0)} speeches in Hansard.`
   const period = p.speech_count_basis ? `Transcript aggregate: ${years(p.first, p.last)}.` : `${years(p.first, p.last)}.`
   const facts = `${display}${role ? `, ${roleLine(role)}` : who ? ` (${who})` : ''}: ${count} ${period}`
   const holds = andList([federal ? 'votes' : '', interests ? 'register of interests' : '', p.party ? 'who funds their party' : ''].filter(Boolean))
@@ -4111,7 +4113,7 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
       kicker: 'Parliamentarian',
       title: display,
       lines: [[p.party, where].filter(Boolean).join(' · '), `${p.speech_count_basis ? 'Transcript aggregate' : 'Collected records'}: ${years(p.first, p.last)}`],
-      stat: { value: (p.speech_count_basis ? '≤ ' : '') + num(p.speeches), label: p.speech_count_basis ? 'non-witness rows; own house only' : 'speeches in the Opax record' },
+      ...(p.speech_count_basis ? {} : { stat: { value: num(p.speeches ?? 0), label: 'speeches in the Opax record' } }),
       dot: partyColour(moneyData, p.party),
       portraitId,
       credit,
@@ -4297,7 +4299,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
   let card: CardSpec
   if (dir === 'party') {
     const members = people?.people.filter((p) => p.party && foldName(p.party) === foldName(display)) ?? []
-    const speeches = members.reduce((s, p) => s + p.speeches, 0)
+    const speeches = members.reduce((s, p) => s + (p.speeches ?? 0), 0)
     const parts: string[] = []
     if (members.length) parts.push(`${num(members.length)} parliamentarians and ${num(speeches)} speeches in the record`)
     if (node) parts.push(`${money(node.total)} in disclosed receipts, ${years(node.firstYear, node.lastYear)} (${node.sourceShort})`)

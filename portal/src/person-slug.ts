@@ -22,13 +22,13 @@ export interface SlugIndex<T> { bySlug: Map<string, T>; slugOf: Map<string, stri
  * entry takes it, as byFold already decides for twin spellings; the other
  * keeps its name as its address rather than landing on the wrong person.
  */
-export function slugIndex<T extends { name: string; speeches: number }>(people: readonly T[]): SlugIndex<T> {
+export function slugIndex<T extends { name: string; speeches: number | null }>(people: readonly T[]): SlugIndex<T> {
   const bySlug = new Map<string, T>()
   for (const p of people) {
     const slug = personSlug(p.name)
     if (!slug) continue
     const holder = bySlug.get(slug)
-    if (!holder || p.speeches > holder.speeches) bySlug.set(slug, p)
+    if (!holder || (p.speeches ?? 0) > (holder.speeches ?? 0)) bySlug.set(slug, p)
   }
   const slugOf = new Map<string, string>()
   for (const [slug, p] of bySlug) slugOf.set(p.name, slug)

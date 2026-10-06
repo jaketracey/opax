@@ -1,8 +1,9 @@
-export interface SpeechScope { state: string; chamber: string }
+export interface SpeechScope { state: string; chamber: string; service?: { start: string; end: string }[] }
 export interface AttributedRow {
   kind?: string | null; state?: string | null; chamber?: string | null;
   speaker_type?: string | null; witness_name?: string | null; person_id?: string | number | null;
   speaker_attribution?: string | null;
+  date?: string | null;
 }
 export function isWitness(row: AttributedRow): boolean;
 export function isUnattributed(row: AttributedRow): boolean;

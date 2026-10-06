@@ -41,7 +41,7 @@ def audit(before, after, reference, reviewed):
             expected = restored_scope(p, reference, reviewed, prints[profiles.parts(name)[-1]])
             if expected != q:
                 raise ValueError('Unproven or modified witness split: '+name)
-            reason = ('witness split', 'Dated QLD Assembly identity; witness rows separate; own-house filter required; count is an upper bound')
+            reason = ('witness split', 'Dated QLD Assembly identity; witness rows separate; own-house and service-date filters required; exact count pending')
         elif profiles.witness_dominated(p) and any(q.get(k) for k in
                 ('pid', 'full', 'party', 'parties', 'party_now', 'current', 'representation', 'affiliations')):
             raise ValueError('Unproven unscoped identity on witness-dominated print: '+name)
@@ -65,14 +65,14 @@ def markdown(result, before, after, baseline):
               '| Party rows / facet | Main | Split | Change |', '|---|---:|---:|---:|']
     for label, jur, party in [('Total rows with party', None, None), ('SA rows with party', 'sa', None),
             ('SA Labor', 'sa', 'Labor'), ('SA Liberal', 'sa', 'Liberal'), ('QLD rows with party', 'qld', None),
-            ('QLD Labor', 'qld', 'Labor'), ('QLD LNP', 'qld', 'LNP')]:
+            ('QLD Labor', 'qld', 'Labor'), ('QLD LNP', 'qld', 'LNP'), ('QLD Independent', 'qld', 'Independent')]:
         a,b=party_rows(before,jur,party),party_rows(after,jur,party)
         lines.append(f'| {label} | {a} | {b} | {b-a:+} |')
     lines += ['', 'Party facets include both `party` and `parties`, matching the website. These are transcript-directory rows, not unique people or current seats.', '',
               '## Every changed record', '', '| Print | Category | Changed fields | Evidence permitting change |', '|---|---|---|---|']
     for p in result['changes']:
         lines.append(f'| {p["name"]} | {p["category"]} | {", ".join(p["fields"])} | {p["reason"]} |')
-    lines += ['', 'Offline split counts are non-witness upper bounds, not exact per-house counts. The original aggregate remains under `transcript`; separated witnesses have no MP identity, party or seat. The nightly SQL export computes the exact partition before resolving identity.', '']
+    lines += ['', 'Offline own-house, in-service counts are pending, with no number published. The original aggregate remains under `transcript`; separated witnesses have no MP identity, party or seat. The nightly SQL export computes the exact partition before resolving identity.', '']
     return '\n'.join(lines)
 
 

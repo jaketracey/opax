@@ -1,175 +1,144 @@
-# Roster witness split (P2)
+# Roster witness split — review fixes, round 1
 
-The surname directory now identifies a proven Queensland Assembly MP only for
-their own parliamentary rows. Witness testimony stays unattributed. This follows
-the no-harm roster repair in [ROSTER-MIXUPS.md](ROSTER-MIXUPS.md).
+Baseline: refreshed `origin/main` (`8e1977cfe8681e09536ac8573fadf0c825654416`).
+Previous branch commit: `4a60eab4`. The desktop database remains unreachable.
+No deployment, production write or reconciliation apply was performed.
 
-Baseline: `origin/main`, `8e1977cfe8681e09536ac8573fadf0c825654416`, refreshed on
-2026-10-06. Work is local on `web/roster-witness-split`; no deployment, KB apply,
-desktop connection or production write was performed.
+## Nightly identity and count gate
 
-## Attribution contract
+The 16 reviewed identities remain pinned, restricted to Queensland's Assembly.
+`scripts/roster_witness_service.json` records bounded attribution coverage;
+its dates describe the reviewed corpus coverage, not first election dates or
+current tenure. The 57th Parliamentary Record establishes the historical
+identities; the 2026 photosheet establishes the newer identities and service
+year. The [official dissolution and election dates](https://www.parliament.qld.gov.au/Global/FAQs/Frequently-Asked-Questions-during-an-election-period/Dates-of-the-Writ)
+exclude the dissolution gap and pre-election turns of the new intake.
+Historical MPs' coverage ends on 30 September 2024. New members' coverage starts
+on 26 October 2024. Continuing members' coverage is limited to the reviewed
+2024–2026 service years. Future years require reviewed evidence.
 
-- The SQL exporter partitions rows marked by either `witness_name` or
-  `speaker_type=witness` **before** counting MP IDs, parties, jurisdictions,
-  chambers and speech years. The witness partition contains only transcript
-  facts; no MP identity, party or seat.
-- The repair resolves identity from the non-witness partition. An ambiguous
-  surname or fewer than five own rows stays neutral. Explicit witness markers
-  override even a reviewed same-person alias or a stale numeric MP ID.
-- The nightly `scripts/vm/export_people.sh` runs the same exporter and repair.
-  The existing 25-identity change cap remains. Its final check rejects MP fields
-  on testimony even when `OPAX_ROSTER_ACCEPT=1` is set.
-- The public Worker restricts restored speaker search, Ask retrieval and topic
-  catalogs to `kind=speech`, `state=qld`, `chamber=qld_la`, excluding witness,
-  chair and unknown turns. Search also rejects results outside this scope after
-  retrieval. Prior Ask citations cannot bypass the new scope.
-- Search results, answer sources and individual document APIs remove stale MP
-  IDs and party fields from testimony and out-of-scope surname records. Their
-  links open `?attribution=unattributed`; that view has no MP identity, seat,
-  party, portrait or Person structured data. No MP portrait is shown beside
-  such a document or source card.
+The production SQL exporter retains date, jurisdiction, chamber and speaker-type
+counts until identity resolution. A majority-witness print can acquire an MP
+identity only when its own-house, in-service non-witness count reaches **five**.
+Committee turns, witnesses, chairs, unknown speakers and out-of-coverage house
+turns cannot contribute. Committee namesakes cannot establish or contradict the
+restricted Assembly identity. Other actual houses still block this restoration.
+The separate witness aggregate has no MP name, ID, party or representation.
 
-Witness-only names retain the existing exclusion from the parliamentarian
-directory; their evidence remains retrievable. Anderson and Bishop remain
-neutral, as do unproven QLD cases Kelly and Morton and multi-state names such as
-Brown, King and Smith.
+Unresolved majority-witness prints remain neutral, including Brooks, Kerr,
+Clark, Anderson and Bishop. The export refuses a named split without an own-house
+scope and service limits, including with `OPAX_ROSTER_ACCEPT=1`. The unchanged
+25-identity safety cap and sitting-ID protection still apply. Non-majority
+records keep the established aggregate contract and identity resolver; their
+witness markers continue to prevent per-row MP attribution.
 
-## Offline roster and counts
+The same house and date scope is sent to retrieval and checked again on returned
+search results, answers, resources and browser speech rows. Missing dates fail
+closed for a dated scope.
 
-The desktop database is unavailable. The public aggregate identifies witness
-totals but does not give a count for each remaining chamber. Consequently the
-checked-in restoration requires one actual house, Queensland Assembly, a unique
-name supported by the dated parliamentary snapshots, and an enforced own-house
-retrieval scope. Federal committees cannot establish the scoped QLD identity.
-Multi-state and federal-house aggregates cannot use this shortcut.
+## Dated party and displayed counts
 
-`scripts/split_roster_witnesses.py` produces the pinned restoration. Original
-counts, jurisdictions, chambers and years remain under `transcript`;
-`separated_witnesses` preserves the witness count without attribution. The
-remaining count is explicitly a **non-witness upper bound**, marked by
-`speech_count_basis` and disclosed in the directory, search catalog and metadata.
-The retained year range is labelled as transcript years, not an MP's service
-dates or the dates of their own speeches.
-It is not presented as a measured count of this MP's own house speeches.
-The SQL export computes the exact witness/non-witness partition when it becomes
-available. No sitting status or current tenure is inferred from these snapshots.
+Sullivan's party is **Independent**, with Labor preserved as a historical party.
+The [Parliamentary Library's dated record](https://www.aph.gov.au/About_Parliament/Parliamentary_departments/Parliamentary_Library/Research/FlagPost/2025/September/GendercompositionofAustralianparliamentsbyparty)
+places the switch on 12 May 2025. SQL uses the party at the latest eligible own
+speech, rather than the dominant historical party or a 2024 roster snapshot.
+His coverage ends on 9 April 2026, supported by the
+[official vacancy notice](https://www.parliament.qld.gov.au/Work-of-the-Assembly/Tabled-Papers/docs/5826t0542/5826t542.pdf).
 
-| Printed name | Parliamentary identity | Recorded party | Non-witness upper bound | Witness rows separated |
-|---|---|---|---:|---:|
-| Stewart | Scott Stewart | Labor | 178 | 203 |
-| Pugh | Jess Pugh | Labor | 65 | 288 |
-| Walker | Les Walker | Labor | 120 | 152 |
-| Bennett | Stephen Bennett | LNP | 65 | 134 |
-| Stevens | Ray Stevens | LNP | 76 | 88 |
-| Kirkland | Donna Kirkland | LNP | 55 | 82 |
-| Bourne | Wendy Bourne | Labor | 26 | 109 |
-| Sullivan | Jimmy Sullivan | Labor | 60 | 74 |
-| Field | Russell Field | LNP | 39 | 90 |
-| Young | Rebecca Young | LNP | 46 | 61 |
-| Hutton | Nigel Hutton | LNP | 41 | 58 |
-| Dillon | Sean Dillon | LNP | 43 | 51 |
-| Hart | Michael Hart | LNP | 24 | 38 |
-| Robinson | Mark Robinson | LNP | 9 | 87 |
-| Harper | Aaron Harper | Labor | 28 | 67 |
-| Crawford | Craig Crawford | Labor | 6 | 25 |
+All 16 pinned `speeches` values are **null**, with a pending count basis. The
+old totals and scopes remain under `transcript` for provenance. Neither 178
+nor 120 is presented as Scott Stewart's or Les Walker's own speech count.
+The directory, search description and search catalog say **Count pending exact
+export**. Share cards omit the numeric statistic. A SQL refresh publishes only
+an exact own-house, in-service count. Pending counts do not remove the MP from
+party membership lists.
 
-The 13 review cases total **838** non-witness rows in the pinned aggregate. The
-three further historical cases, Robinson, Harper and Crawford, add **43**. These
-881 rows are upper bounds; the own-house API filter determines attribution for
-each retrieved row. All 1,607 separated witness rows stay unattributed.
+The attribution helper import is non-fatal: rejected loading still runs the
+slug loader, Ask builder and router. Existing attribution fallbacks fail closed.
 
-## No-harm diff
+## Replay results
 
-[ROSTER-WITNESS-SPLIT-DIFF.md](ROSTER-WITNESS-SPLIT-DIFF.md) compares every field
-of all 1,700 roster records with refreshed main. The scoped resolver must exactly
-reproduce every restoration; an edited or unproven split fails the audit.
+The reviewer harness was available. Its A/B population logic is now checked in
+as `ShippedIdentityReplayTests.populate_replay`, exercised through the production
+SQL and `scripts/vm/export_step.sh` / `export_people.sh`, without an override.
+It deliberately alternates each aggregate's first/last years.
 
-| Exclusive category | Changed records |
-|---|---:|
-| Witness split | 16 |
-| Mix-up corrected | 0 |
-| Witness-dominated | 0 |
-| Spans parliaments | 0 |
-| Alias normalisation | 0 |
-| Clean record changed | 0 |
+| Fixture | Result | Scoped identities | Identity differences / cap |
+|---|---|---:|---:|
+| Reviewer A: committee witnesses | Ships, no hold | 14 of 16 | 5 / 25 |
+| Reviewer B: witnesses plus committee MP turns | Ships, no hold | 14 of 16 | 5 / 25 |
+| Detailed 16-case own-service shape plus controls | Ships, no hold | All 16 | Within cap |
 
-**1,684 records are exactly unchanged.** QLD party rows increase **81 → 97**:
-Labor **37 → 44**, LNP **38 → 47**. Total party rows increase **1,058 → 1,074**.
-SA party rows stay **74**, including Labor 33 and Liberal 35. These are directory
-rows, not counts of unique MPs or current seats. No wrong attribution is permitted
-by the split guards or observed in the fixture and local checks; an exhaustive
-replay of the unavailable desktop database is not claimed.
+The only omitted split identities in A/B are:
+
+- **Robinson:** three eligible house rows in A and two in B; the other
+  compressed turns are post-service or committee turns, below the five-row floor.
+- **Crawford:** three eligible house rows in both A and B; the other compressed
+  turns are post-service, below the five-row floor.
+
+Both remain neutral; invalid rows do not rescue the threshold. Their detailed
+fixture supplies eight and five eligible own rows, respectively, and restores
+both. That detailed fixture separates committee witnesses from non-witness
+committee MPs, including Jana Stewart and Charlotte Walker, and adds same-house
+rows outside coverage. It yields **627 exact eligible own rows across 16 MPs**;
+Scott Stewart has 30 and Les Walker 28. These are synthetic SQL fixtures shaped
+from the reviewed public aggregates and sampled scopes, not a desktop snapshot.
+All witness counts are preserved separately. Threshold tests independently check
+four own rows plus many committee or post-service rows cannot name an MP.
+
+The other three A/B identity differences are the established synthetic stub
+coalescences: Blandthorn, D'Ambrosio and McDermott. No additional split is named.
+There are **zero named unscoped splits** and **zero wrong attributions observed**
+in the fixtures. An exhaustive replay of the unavailable desktop DB is not claimed.
+
+```sh
+python3 -m unittest scripts.test_roster_export_wrappers.ShippedIdentityReplayTests
+python3 -m unittest scripts.test_roster_witness_split
+```
+
+## Categorised diff against main
+
+[ROSTER-WITNESS-SPLIT-DIFF.md](ROSTER-WITNESS-SPLIT-DIFF.md) compares every field of
+all 1,700 records. There are **16 witness splits**, **1,684 exactly unchanged**,
+and zero mix-up, witness-dominated, multi-parliament, alias or clean-record changes.
+QLD party rows remain **81 → 97**; total party rows **1,058 → 1,074**. Party facets
+are QLD Labor **37 → 44**, LNP **38 → 47**, Independent **1 → 2**. Historical Labor
+on Sullivan still counts in the Labor facet; his leading party is Independent.
+SA's 74 party rows are unchanged. **1,607 witness rows** remain separate and
+unattributed. All 16 own counts await an exact SQL refresh.
 
 ## KB reconciliation dry-run
 
-The existing captured public inventory was replayed offline, with no credentials
-or apply. It contains 983 indexed profiles; it is the same snapshot used for the
-main plan, so the comparison isolates this change.
+The same captured public inventory (983 indexed profiles) was replayed offline.
+Against main, desired profiles remain **961 → 977**, replace **52 → 54**, retire
+**27 → 25**, create **5 → 19**. Against `4a60eab4`, operation counts are unchanged;
+**16 desired operation payloads change** to carry service limits, including
+Sullivan's corrected party. Unrelated operations are unchanged. The apply cap
+remains 30; retirements plus replacements remain 79. **Nothing was applied.**
 
-| Plan measure | Main | P2 | Change |
-|---|---:|---:|---:|
-| Desired profiles | 961 | 977 | +16 |
-| Replace | 52 | 54 | +2 |
-| Retire | 27 | 25 | −2 |
-| Create | 5 | 19 | +14 |
-
-Exactly 16 operations change, all belonging to the restored prints. Crawford and
-Sullivan move from retire to replace; the other 14 gain create operations. The
-previous five creates and all unrelated operations are unchanged. Restored KB
-profiles include the own-house scope and explicitly separate testimony.
-
-Retirements plus replacements remain **79**, above the unchanged apply cap of
-30. **Nothing was applied.** The inventory is a captured public projection, with
-one value per labelset; a fresh native inventory may produce a different plan.
-
-```sh
-python3 scripts/reconcile_roster_profiles.py --dry-run \
-  --inventory /Users/jake/Projects/opax-ios-wt/roster-mixups/scripts/_photos_work/qa-roster-mixups/round2/roster-profile-plan.inventory.json \
-  --output scripts/_photos_work/qa-roster-witness-split/roster-profile-plan.json
-```
-
-The plan, inventory and QA logs remain ignored and are not committed.
+This is a captured public projection with one value per labelset; a fresh native
+inventory can produce a different plan. Plans and QA logs are ignored.
 
 ## Validation
 
-- Python suites: **251 passed** across roster/export/identity (120), reconciliation
-  (12), discovery (19), research (4), and committee/ingestion/evidence tests (96).
-  Split coverage includes 11 tests, including refusal of unscoped or modified
-  identity restorations and rejection of witness attribution with the override.
-- Fixtures freeze the actual public records from `8e1977cf` for the 13 QLD
-  review cases, three historical restorations and witness-heavy/ambiguous controls.
-  Synthetic SQL rows use those observed counts and the production schema to
-  exercise the real nightly wrapper; they are not a desktop row snapshot.
-  The 13 QLD cases yield exactly 838 synthetic own rows, plus neutral one-row
-  Anderson and Bishop residues. Witness type-only markers and contradictory
-  member links cannot contribute MP identity or party.
-- The legacy all-roster synthetic replay now exceeds the identity change cap
-  after partitioning its artificial scopes. It is **held**, and the wrapper
-  preserves the shipped file byte for byte; the cap was not raised.
-- Node **24.21.0**, `npm ci`, `npm run build:search`, then `npm test`:
-  **869 passed**, zero failed or skipped. Search build output is excluded from
-  the commit.
-- `npm run check`: passed. `node scripts/photo_identity.mjs --strict`: passed.
-- Categorised diff: passed, 16 witness splits, zero clean changes.
-- Local `wrangler dev --local` at `127.0.0.1:8791`: browser spot checks passed for
-  Scott Stewart/Townsville/Labor, Les Walker/Mundingburra/Labor,
-  Ray Stevens/Mermaid Beach/LNP, Jess Pugh/Mount Ommaney/Labor and
-  Stephen Bennett/Burnett/LNP. Each displays the QLD Assembly scope and a
-  separate testimony link. Bennett's link was opened and the neutral evidence
-  view verified. Local development had no KB credentials, so speech retrieval
-  is verified by fixtures rather than a live KB query.
+- Python: 122 roster/export/identity, 12 reconciliation, 19 discovery, four
+  research and 96 committee/ingestion/evidence tests: **253 passed**.
+- Node 24.21.0: `npm run build:search`, then `npm test`: **872 passed**.
+- `npm run check` and strict photo identity audit: passed.
+- Reviewer A/B replay and categorised diff: passed.
+- Local `wrangler dev --local`: five restored MP pages checked; pending own
+  counts and scoped identities verified. No KB credentials were supplied.
+- Search build output is excluded from the commit.
 
-```sh
-python3 -m unittest scripts.test_roster_identity \
-  scripts.test_enrich_profile_jurisdictions scripts.test_roster_main_preservation \
-  scripts.test_roster_export_wrappers scripts.test_roster_witness_split scripts.test_export_grants
-python3 -m unittest tests.test_roster_profile_reconciliation
-python3 -m unittest discover -s tests -p 'test_discovery.py'
-python3 -m unittest tests.test_grants_research
-python3 -m pytest tests/test_committee_sync.py tests/test_committee_witnesses.py \
-  tests/test_committee_transcript.py parli/tests/test_evidence_layers.py \
-  parli/tests/test_text_patch.py parli/tests/test_words_sync.py -q
-python3 scripts/audit_roster_changes.py --baseline origin/main \
-  --output docs/ROSTER-WITNESS-SPLIT-DIFF.md
-```
+## Audit follow-up list — deferred P3s
+
+1. Full-name speaker lookup: the KB generally indexes these MPs under full names,
+   so restored surname pages often have no retrieved speeches; link or resolve
+   the matching full-name speaker without broadening attribution.
+2. Transcript years: hide or revise the 2024–2026 aggregate years for departed
+   MPs so they cannot be mistaken for service years.
+3. KB wording: replace "Matched by exact full name" on surname-derived profiles.
+4. Audit wording: the shared resolver proves reproducibility, not independent
+   correctness; revise its current "independent scoped resolver" wording.
+5. Party preference: review the global roster-over-retrieved-party preference
+   separately, including clean person pages.

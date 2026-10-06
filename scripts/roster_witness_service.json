@@ -1,0 +1,245 @@
+{
+  "reviewed": "2026-10-06",
+  "note": "Bounded own-house attribution coverage for the 16 reviewed prints. Coverage starts in 2024, the first year in their exported corpus, not their first election. The 2026 photosheet proves service in that year only; it does not assert current tenure or future years. Exact election, dissolution and vacancy boundaries override year precision.",
+  "boundary_source": "https://www.parliament.qld.gov.au/Global/FAQs/Frequently-Asked-Questions-during-an-election-period/Dates-of-the-Writ",
+  "services": [
+    {
+      "print": "Stewart",
+      "name": "Scott Stewart",
+      "state": "qld",
+      "chamber": "qld_la",
+      "intervals": [
+        {
+          "start": "2024-01-01",
+          "end": "2024-09-30"
+        }
+      ],
+      "party": "Labor"
+    },
+    {
+      "print": "Walker",
+      "name": "Les Walker",
+      "state": "qld",
+      "chamber": "qld_la",
+      "intervals": [
+        {
+          "start": "2024-01-01",
+          "end": "2024-09-30"
+        }
+      ],
+      "party": "Labor"
+    },
+    {
+      "print": "Stevens",
+      "name": "Ray Stevens",
+      "state": "qld",
+      "chamber": "qld_la",
+      "intervals": [
+        {
+          "start": "2024-01-01",
+          "end": "2024-09-30"
+        },
+        {
+          "start": "2024-10-26",
+          "end": "2026-12-31"
+        }
+      ],
+      "party": "LNP"
+    },
+    {
+      "print": "Pugh",
+      "name": "Jess Pugh",
+      "state": "qld",
+      "chamber": "qld_la",
+      "intervals": [
+        {
+          "start": "2024-01-01",
+          "end": "2024-09-30"
+        },
+        {
+          "start": "2024-10-26",
+          "end": "2026-12-31"
+        }
+      ],
+      "party": "Labor"
+    },
+    {
+      "print": "Bennett",
+      "name": "Stephen Bennett",
+      "state": "qld",
+      "chamber": "qld_la",
+      "intervals": [
+        {
+          "start": "2024-01-01",
+          "end": "2024-09-30"
+        },
+        {
+          "start": "2024-10-26",
+          "end": "2026-12-31"
+        }
+      ],
+      "party": "LNP"
+    },
+    {
+      "print": "Kirkland",
+      "name": "Donna Kirkland",
+      "state": "qld",
+      "chamber": "qld_la",
+      "intervals": [
+        {
+          "start": "2024-10-26",
+          "end": "2026-12-31"
+        }
+      ],
+      "party": "LNP"
+    },
+    {
+      "print": "Bourne",
+      "name": "Wendy Bourne",
+      "state": "qld",
+      "chamber": "qld_la",
+      "intervals": [
+        {
+          "start": "2024-10-26",
+          "end": "2026-12-31"
+        }
+      ],
+      "party": "Labor"
+    },
+    {
+      "print": "Sullivan",
+      "name": "Jimmy Sullivan",
+      "state": "qld",
+      "chamber": "qld_la",
+      "intervals": [
+        {
+          "start": "2024-01-01",
+          "end": "2024-09-30"
+        },
+        {
+          "start": "2024-10-26",
+          "end": "2026-04-09"
+        }
+      ],
+      "party": "Labor",
+      "party_periods": [
+        {
+          "start": "2024-01-01",
+          "end": "2025-05-11",
+          "party": "Labor"
+        },
+        {
+          "start": "2025-05-12",
+          "end": "2026-04-09",
+          "party": "Independent"
+        }
+      ],
+      "party_source_url": "https://www.aph.gov.au/About_Parliament/Parliamentary_departments/Parliamentary_Library/Research/FlagPost/2025/September/GendercompositionofAustralianparliamentsbyparty",
+      "end_source_url": "https://www.parliament.qld.gov.au/Work-of-the-Assembly/Tabled-Papers/docs/5826t0542/5826t542.pdf"
+    },
+    {
+      "print": "Field",
+      "name": "Russell Field",
+      "state": "qld",
+      "chamber": "qld_la",
+      "intervals": [
+        {
+          "start": "2024-10-26",
+          "end": "2026-12-31"
+        }
+      ],
+      "party": "LNP"
+    },
+    {
+      "print": "Young",
+      "name": "Rebecca Young",
+      "state": "qld",
+      "chamber": "qld_la",
+      "intervals": [
+        {
+          "start": "2024-10-26",
+          "end": "2026-12-31"
+        }
+      ],
+      "party": "LNP"
+    },
+    {
+      "print": "Hutton",
+      "name": "Nigel Hutton",
+      "state": "qld",
+      "chamber": "qld_la",
+      "intervals": [
+        {
+          "start": "2024-10-26",
+          "end": "2026-12-31"
+        }
+      ],
+      "party": "LNP"
+    },
+    {
+      "print": "Dillon",
+      "name": "Sean Dillon",
+      "state": "qld",
+      "chamber": "qld_la",
+      "intervals": [
+        {
+          "start": "2024-10-26",
+          "end": "2026-12-31"
+        }
+      ],
+      "party": "LNP"
+    },
+    {
+      "print": "Hart",
+      "name": "Michael Hart",
+      "state": "qld",
+      "chamber": "qld_la",
+      "intervals": [
+        {
+          "start": "2024-01-01",
+          "end": "2024-09-30"
+        }
+      ],
+      "party": "LNP"
+    },
+    {
+      "print": "Robinson",
+      "name": "Mark Robinson",
+      "state": "qld",
+      "chamber": "qld_la",
+      "intervals": [
+        {
+          "start": "2024-01-01",
+          "end": "2024-09-30"
+        }
+      ],
+      "party": "LNP"
+    },
+    {
+      "print": "Harper",
+      "name": "Aaron Harper",
+      "state": "qld",
+      "chamber": "qld_la",
+      "intervals": [
+        {
+          "start": "2024-01-01",
+          "end": "2024-09-30"
+        }
+      ],
+      "party": "Labor"
+    },
+    {
+      "print": "Crawford",
+      "name": "Craig Crawford",
+      "state": "qld",
+      "chamber": "qld_la",
+      "intervals": [
+        {
+          "start": "2024-01-01",
+          "end": "2024-09-30"
+        }
+      ],
+      "party": "Labor"
+    }
+  ]
+}
