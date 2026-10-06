@@ -55,6 +55,54 @@ def weak(name):
     return all(len(t) == 1 for t in parts(name)[:-1])
 
 
+def mixed_print(row):
+    """A weak print cannot identify one person across parliaments, houses or witnesses.
+
+    Full names can have genuine careers in multiple houses (Mark Latham); a bare
+    surname needs dated evidence for that, which the aggregated print does not hold.
+    """
+    houses = set(row.get("chambers") or []) - COMMITTEES
+    return weak(row["name"]) and (len(set(row.get("states") or [])) > 1
+                                 or len(houses) > 1 or bool(row.get("witness_rows")))
+
+
+def guard_print(row):
+    """Keep the transcript aggregate, but no single person's identity, seat or party.
+
+    Speech party labels are retained as recorded_parties. A flat party facet would
+    otherwise combine a federal Labor era with an unrelated state chamber.
+    """
+    if not mixed_print(row):
+        return
+    labels = list(dict.fromkeys([row.get("party"), *(row.get("parties") or []),
+                                *(row.get("recorded_parties") or [])]))
+    if any(labels):
+        row["recorded_parties"] = [p for p in labels if p]
+    for field in ("pid", "current", "party_now", "full", "party", "parties"):
+        row.pop(field, None)
+    if "representation" in row:
+        row["representation"] = []
+
+
+def state_member_matches(row, m):
+    """A state fallback must belong to this print's jurisdiction, house and name.
+
+    Surname/initials prints additionally need a term covering all their years.
+    A dominant speech id alone is never evidence of a person's identity.
+    """
+    if mixed_print(row) or not agrees(row["name"], m["name"]):
+        return False
+    if set(row.get("states") or []) != {m.get("state")}:
+        return False
+    if set(row.get("chambers") or []) - COMMITTEES != {m.get("chamber")}:
+        return False
+    if weak(row["name"]):
+        start, end = _year(m.get("start")), _year(m.get("end"))
+        return (start is not None and row.get("first") is not None and start <= row["first"]
+                and row.get("last") is not None and (end is None or row["last"] <= end))
+    return True
+
+
 def agrees(name, owner):
     """The name agrees with the owner's name: same surname (however many words), and a first name that
     is a prefix of one of the owner's either way (Phil/Phillip), or initials that agree. The JavaScript

@@ -1,0 +1,73 @@
+{
+  "reviewed": "2026-10-06",
+  "aliases": {
+    "Bob Horne": {
+      "name": "Robert Hodges Horne",
+      "jurisdiction": "federal",
+      "chamber": "representatives",
+      "source_url": "https://aec.gov.au/Elections/federal_elections/1998/hor-elected.htm",
+      "note": "AEC names Bob Horne for Paterson in 1998; pinned OpenAustralia terms name Robert Hodges Horne for that seat and election."
+    }
+  },
+  "service": [
+    {
+      "name": "Mark Latham",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "electorate": "New South Wales",
+      "state": "NSW",
+      "start": "2019-03-23",
+      "end": "2023-03-02",
+      "party": "One Nation",
+      "source_url": "https://www.parliament.nsw.gov.au/researchpapers/Documents/NSW2019_LegislativeCouncil.pdf"
+    },
+    {
+      "name": "Mark Latham",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "electorate": "New South Wales",
+      "state": "NSW",
+      "start": "2023-03-25",
+      "end": "2023-08-21",
+      "party": "One Nation",
+      "source_url": "https://www.parliament.nsw.gov.au/researchpapers/Documents/2023-NSW-election-Analysis-of-results.pdf"
+    },
+    {
+      "name": "Mark Latham",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "electorate": "New South Wales",
+      "state": "NSW",
+      "start": "2023-08-22",
+      "end": null,
+      "as_of": "2026-10-06",
+      "party": "Independent",
+      "source_url": "https://www.parliament.nsw.gov.au/hp/housepaper/29312/19-Min-20230822-Cor.pdf",
+      "current_source_url": "https://www.parliament.nsw.gov.au/members-and-electorates/members-and-ministers/members-details?memberId=2251"
+    },
+    {
+      "name": "Lynda Voltz",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "electorate": "New South Wales",
+      "state": "NSW",
+      "start": "2007-03-24",
+      "end": "2019-02-28",
+      "party": "Labor",
+      "source_url": "https://www.parliament.nsw.gov.au/members-and-electorates/members-and-ministers/members-details?memberId=42"
+    },
+    {
+      "name": "Lynda Voltz",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Auburn",
+      "state": "NSW",
+      "start": "2019-03-23",
+      "end": null,
+      "as_of": "2026-10-06",
+      "party": "Labor",
+      "source_url": "https://www.parliament.nsw.gov.au/members-and-electorates/members-and-ministers/members-details?memberId=42"
+    }
+  ],
+  "party_from_pinned_roster": ["Melissa Horne"]
+}

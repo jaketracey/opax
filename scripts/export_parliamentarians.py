@@ -71,7 +71,7 @@ from parli.ingest.arag_sync import (  # noqa: E402
     clean_party, prepare_dedupe,
 )
 from parli.ingest.speaker_names import normalize_speaker  # noqa: E402
-from scripts.roster_identity import member, same_person, verify  # noqa: E402
+from scripts.roster_identity import guard_print, member, same_person, state_member_matches, verify, weak  # noqa: E402
 
 DB = "file:" + (os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")) + "?mode=ro"
 FLOOR = 5
@@ -191,8 +191,9 @@ def main() -> None:
                COUNT(*) AS n
         FROM speeches WHERE {where}
         GROUP BY 1, 2, 3, 4, 5, 6, 7, 8""").fetchall()
-    members = {r[0]: (r[1], member_party(*r)) for r in db.execute(
-        "SELECT person_id, full_name, state, chamber, party, party_canonical FROM members")}
+    members = {r[0]: {"name": r[1], "party": member_party(*r[:6]), "state": r[2] or "federal",
+                       "chamber": r[3], "start": r[6], "end": r[7]} for r in db.execute(
+        "SELECT person_id, full_name, state, chamber, party, party_canonical, entered_house, left_house FROM members")}
     # Federal members with their terms: what a row's pid is verified against.
     federal = {str(r[0]): member(r[0], [r[1], f"{r[2] or ''} {r[3] or ''}".strip()], r[4],
                                  int(r[5][:4]) if r[5] and r[5][:4].isdigit() else None,
@@ -264,10 +265,14 @@ def main() -> None:
         # supplies a missing party.
         pid, _why = verify(rec, p["pids"], federal, same, now_year)
         top_pid = p["pids"].most_common(1)[0][0] if p["pids"] else None
-        party_pid = pid or (top_pid if top_pid and not top_pid.isdigit() else None)
-        if not ranked and party_pid and members.get(party_pid, ("", None))[1]:
+        state_pid = (top_pid if top_pid and not top_pid.isdigit() and top_pid in members
+                     and state_member_matches(rec, members[top_pid])
+                     and (not weak(name) or (len(p['pids'])==1 and sum(
+                         state_member_matches(rec,m) for m in members.values())==1)) else None)
+        party_pid = pid or state_pid
+        if not ranked and party_pid and members.get(party_pid, {}).get("party"):
             # State Hansard rows seldom carry a party; the members table does.
-            ranked = [members[party_pid][1]]
+            ranked = [members[party_pid]["party"]]
         if ranked:
             rec["party"] = ranked[0]
             if len(ranked) > 1:
@@ -280,12 +285,13 @@ def main() -> None:
                 rec["party_now"] = current[pid][0]
         # Surname-only prints ("Shoebridge"): the members table knows the person.
         if " " not in name and party_pid:
-            full = members.get(party_pid, ("", None))[0] or ""
+            full = members.get(party_pid, {}).get("name") or ""
             if " " in full and full.split()[-1].lower() == name.lower().split()[-1]:
                 rec["full"] = full
+        guard_print(rec)
         # Key order as before: name, speeches, party, parties, states, chambers, first, last, pid, ...
         order = ["name", "speeches", "party", "parties", "states", "chambers", "first", "last", "pid",
-                 "current", "party_now", "full", "witness_rows"]
+                 "current", "party_now", "full", "witness_rows", "recorded_parties"]
         out.append({k: rec[k] for k in order if k in rec})
 
     out.sort(key=lambda r: (-r["speeches"], r["name"]))

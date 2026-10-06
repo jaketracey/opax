@@ -49,6 +49,7 @@ class MemberPartyTests(unittest.TestCase):
             ('100', 'Peter Cleeland', 'federal', 'representatives', 'ALP', None, '1996-03-02'),
             ('101', 'Party Switch', 'federal', 'senate', 'Greens', 'Greens', None),
         ])
+        db.execute("UPDATE members SET entered_house='2018-03-17' WHERE person_id='sa_harvey'")
         for name, pid, state, chamber, party in [
             ('Annabelle Cleeland', 'vic_annabelle_cleeland', 'vic', 'vic_la', ''),
             ('Harvey', 'sa_harvey', 'sa', 'sa_ha', ''),
@@ -56,7 +57,8 @@ class MemberPartyTests(unittest.TestCase):
             ('Party Switch', '101', 'federal', 'senate', 'ALP'),
         ]:
             db.executemany('INSERT INTO speeches VALUES (?,?,?,?,?,?,?,?,?)',
-                           [(name, pid, party, None, state, chamber, '2025-05-01', None, 'x' * 250)] * 6)
+                           [(name, pid, party, None, state, chamber,
+                             '2020-05-01' if name=='Harvey' else '2025-05-01', None, 'x' * 250)] * 6)
         stdout = io.StringIO()
         with patch.object(export.sqlite3, 'connect', return_value=db), \
              patch.multiple(export, prepare_dedupe=lambda *_: None, JUNK_PREDICATES='', DEDUPE_PREDICATES=''), \

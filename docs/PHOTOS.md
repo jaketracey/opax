@@ -70,6 +70,10 @@ surname-only matches are held to a stricter test (below).
 
 ## Identity check (2026-10-06)
 
+The follow-up [roster identity and era audit](ROSTER-MIXUPS.md) fixes the same boundary for seats,
+full-name aliases and party eras: Bob/Melissa Horne, Mark Latham, Kemp/Lee and all mixed surname
+prints. It runs in the representation export and supports pinned-only repair when the desktop is down.
+
 A review of the map for the iOS app found pairs of different people on one key, and the Codex
 review of the first fix found the same wrong ids under the records: the person page and the
 directory took votes, expenses and interests by the photo key or the roster pid, and the pay build

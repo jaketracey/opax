@@ -530,7 +530,7 @@ new_weekly_sandbox() {
   cp "$SRC/scripts/vm/export_step.sh" "$SRC/scripts/vm/keep_if_unchanged.py" "$SRC/scripts/vm/export_people.sh" "$RS/repo/scripts/vm/"
   chmod +x "$RS/repo/scripts/weekly_refresh.sh" "$RS/repo/scripts/vm/export_step.sh"
   # export_people.sh reads the members table with the sqlite3 CLI
-  python3 -c "import sqlite3,os; d=sqlite3.connect(os.path.expanduser('~/.cache/autoresearch/parli.db')); d.execute('create table if not exists members(full_name,state,chamber,electorate)'); d.commit()"
+  python3 -c "import sqlite3,os; d=sqlite3.connect(os.path.expanduser('~/.cache/autoresearch/parli.db')); d.execute('create table if not exists members(full_name,state,chamber,electorate,entered_house,left_house)'); d.commit()"
 }
 weekly() { (cd "$RS" && "$RS/repo/scripts/weekly_refresh.sh" "$@" >"$RS/out.txt" 2>&1); WRC=$?; }
 WLOG='$HOME/.cache/autoresearch/pipeline/weekly.log'

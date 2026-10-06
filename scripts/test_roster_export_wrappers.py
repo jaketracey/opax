@@ -19,6 +19,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 COPIED = ["scripts/vm/export_step.sh", "scripts/vm/export_people.sh", "scripts/vm/keep_if_unchanged.py",
           "scripts/export_parliamentarians.py", "scripts/roster_identity.py", "scripts/enrich_profile_jurisdictions.py",
+          "scripts/roster_service.json", "portal/public/electorates/manifest.json",
+          "portal/public/electorates/releases/b56417062ccc33cf/reference.json",
           "scripts/person_identity.json", "portal/public/research/mlci.json"]
 ROSTER = "portal/public/parliamentarians.json"
 SITTING = [("Anthony Albanese", "10007"), ("Pat Conaghan", "10922")]
