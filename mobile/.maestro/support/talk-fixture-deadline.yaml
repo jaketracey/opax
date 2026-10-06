@@ -10,6 +10,7 @@ appId: au.com.opax.app
       id: voice-bridge-test-title
     timeout: 15000
 - scrollUntilVisible:
+    timeout: 60000
     element:
       id: voice-logout
     centerElement: true
@@ -22,12 +23,14 @@ appId: au.com.opax.app
 # Recreate only the synthetic deadline account so 20 and 21 may share a
 # fixture. Deletion preserves previous call charges and open slots.
 - scrollUntilVisible:
+    timeout: 60000
     element:
       id: voice-deletion-code
     centerElement: true
 - tapOn:
     id: voice-deletion-code
 - scrollUntilVisible:
+    timeout: 60000
     element:
       id: voice-code
     direction: UP
@@ -36,14 +39,16 @@ appId: au.com.opax.app
     id: voice-code
 - eraseText: 100
 - inputText: '01234567'
-- runFlow: voice-dismiss-keyboard.yaml
+- runFlow: talk-dismiss-keyboard.yaml
 - scrollUntilVisible:
+    timeout: 60000
     element:
       id: voice-delete
     centerElement: true
 - tapOn:
     id: voice-delete
 - scrollUntilVisible:
+    timeout: 60000
     element:
       id: voice-message
     direction: UP

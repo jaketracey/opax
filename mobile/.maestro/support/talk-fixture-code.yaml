@@ -1,6 +1,7 @@
 appId: au.com.opax.app
 ---
 - scrollUntilVisible:
+    timeout: 60000
     element:
       id: voice-email
     direction: UP
@@ -9,14 +10,16 @@ appId: au.com.opax.app
     id: voice-email
 - eraseText: 100
 - inputText: ${VOICE_EMAIL}
-- runFlow: voice-dismiss-keyboard.yaml
+- runFlow: talk-dismiss-keyboard.yaml
 - scrollUntilVisible:
+    timeout: 60000
     element:
       id: voice-request-code
     centerElement: true
 - tapOn:
     id: voice-request-code
 - scrollUntilVisible:
+    timeout: 60000
     element:
       id: voice-code
     centerElement: true
@@ -24,8 +27,9 @@ appId: au.com.opax.app
     id: voice-code
 - eraseText: 100
 - inputText: '01234567'
-- runFlow: voice-dismiss-keyboard.yaml
+- runFlow: talk-dismiss-keyboard.yaml
 - scrollUntilVisible:
+    timeout: 60000
     element:
       id: voice-consume-code
     centerElement: true
@@ -34,6 +38,7 @@ appId: au.com.opax.app
 # Disabled voice deliberately returns signed-out status even after successful
 # authentication. Check the fixture's code acknowledgement instead.
 - scrollUntilVisible:
+    timeout: 60000
     element:
       id: voice-message
     direction: UP

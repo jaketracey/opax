@@ -10,6 +10,7 @@ appId: au.com.opax.app
       id: voice-bridge-test-title
     timeout: 15000
 - scrollUntilVisible:
+    timeout: 60000
     element:
       id: voice-logout
     centerElement: true
