@@ -1,5 +1,6 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
+import { ScrollView } from 'react-native';
 import { router } from 'expo-router';
 import * as voice from '../src/voice';
 import type { VoiceEvent, VoiceStatus } from '../src/voice';
@@ -531,6 +532,19 @@ describe('Delete account', () => {
     expect(mocked.status).toHaveBeenCalled();
     await press(renderer, 'account-delete-done');
     expect(onDone).toHaveBeenCalled();
+  });
+  test('each step opens in a new scroll view, so at the top', async () => {
+    const { renderer } = await toCode();
+    const view = () => renderer.root.findByType(ScrollView).instance;
+    const confirm = view();
+    await press(renderer, 'account-delete-confirm');
+    const code = view();
+    await type(renderer, 'account-deletion-code', '01234567');
+    await press(renderer, 'account-delete-final');
+    expect(shows(renderer, accountCopy.accountDeleted)).toBe(true);
+    expect(confirm).toBeTruthy();
+    expect(code).not.toBe(confirm);
+    expect(view()).not.toBe(code);
   });
   test('a wrong deletion code, then an ended session', async () => {
     mocked.deleteAccount

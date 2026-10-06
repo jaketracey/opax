@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
 import { AccessibilityInfo, Keyboard } from 'react-native';
 import * as voice from '../../voice';
 import type { VoiceFailure } from '../../voice';
@@ -8,6 +8,7 @@ import {
   Field,
   Group,
   Heading,
+  Screen,
   Text,
 } from '../../design/primitives';
 import { CODE_LENGTH, codeDigits } from './code';
@@ -17,7 +18,8 @@ import { useCodeChallenge } from './useCodeChallenge';
 
 /**
  * Account deletion (IOS-UX 4.12, IOS-APP section 6): what is and is not
- * deleted, a fresh emailed code, then the result. Ends signed out.
+ * deleted, a fresh emailed code, then the result. Ends signed out. A whole
+ * screen: it draws its own scroll view, one per step.
  */
 export function DeleteAccountFlow({
   onCancel,
@@ -89,8 +91,15 @@ export function DeleteAccountFlow({
     AccessibilityInfo.announceForAccessibility(accountCopy.accountDeleted);
   }
 
+  // Each step opens at the top of its own scroll view. In one shared view a
+  // step opened mid-page at large text sizes, below its own heading.
+  const page = (content: ReactNode) => (
+    <Screen key={step} testID="account-delete-screen">
+      {content}
+    </Screen>
+  );
   if (step === 'deleted')
-    return (
+    return page(
       <Group testID="account-deleted-step">
         <Heading level={2} testID="account-deleted">
           {accountCopy.accountDeleted}
@@ -102,10 +111,10 @@ export function DeleteAccountFlow({
           onPress={onDone}
           testID="account-delete-done"
         />
-      </Group>
+      </Group>,
     );
   if (step === 'code')
-    return (
+    return page(
       <Group testID="account-deletion-code-step">
         <Heading level={2}>{accountCopy.enterDeletionCode}</Heading>
         <Text testID="account-deletion-code-sent">
@@ -158,9 +167,9 @@ export function DeleteAccountFlow({
           onPress={onCancel}
           testID="account-deletion-cancel"
         />
-      </Group>
+      </Group>,
     );
-  return (
+  return page(
     <Group testID="account-delete-confirm-step">
       <Text variant="lede">{accountCopy.deleteIntro}</Text>
       <Heading level={2}>{accountCopy.deletedHeading}</Heading>
@@ -188,6 +197,6 @@ export function DeleteAccountFlow({
         onPress={onCancel}
         testID="account-delete-cancel"
       />
-    </Group>
+    </Group>,
   );
 }
