@@ -227,7 +227,12 @@
     "/bills/au-federal-s1479.json": "65c3da3e39b082021ad6471efa8870fbd41f5a0d6e445cfaa452c962bf80af9f",
     "/bills/au-federal-s1499.json": "0a35be70f319848b1cac79ff018d808cb374987e0a35915a6ba80970e73b30f0",
     "/bills/au-federal-r7503.json": "c3470a394d4216d48cee34a8c8db92a42facb91db9c37efcf17040dfcb4496de",
-    "/bills/au-federal-r7484.json": "9578d0a0903a2c114c13e29f267d5debdf510cbbbd4aa8934a5c8b367205f699"
+    "/bills/au-federal-r7484.json": "9578d0a0903a2c114c13e29f267d5debdf510cbbbd4aa8934a5c8b367205f699",
+    "/discovery.json": "ec40618f59d52e1632e1d04e0fda353cb93f9a57a757c70cc42f64010d892366",
+    "/photos/wd-Q134384419.webp": "34c8fdf27e0d1284ecbc6245ab2f2282b21a53b9558efc80b197945ed26ad42c",
+    "/photos/wd-Q134590436.webp": "6396fc61ef52e4a37e1b3e5b1e21230134861071db8ae6d66a46685fdd1faf5b",
+    "/photos/wd-Q134312684.webp": "e0035d5c4a6ebc582b8273d933f912822731163c22fdd5222e563f275cfe7e4b",
+    "/photos/wd-Q133500279.webp": "39a16739d4e181f06f57bbef358798f90b5becde508635254361af15178ce0e8"
   },
   "sizes": {
     "/parliamentarians.json": 405665,
@@ -455,9 +460,16 @@
     "/bills/au-federal-s1479.json": 6016,
     "/bills/au-federal-s1499.json": 4611,
     "/bills/au-federal-r7503.json": 13328,
-    "/bills/au-federal-r7484.json": 9565
+    "/bills/au-federal-r7484.json": 9565,
+    "/discovery.json": 158573,
+    "/photos/wd-Q134384419.webp": 2826,
+    "/photos/wd-Q134590436.webp": 4910,
+    "/photos/wd-Q134312684.webp": 5322,
+    "/photos/wd-Q133500279.webp": 4202
   },
-  "testOnlyFiles": ["/interests/ties-by-donor.json"],
+  "testOnlyFiles": [
+    "/interests/ties-by-donor.json"
+  ],
   "responses": {
     "/api/app/v1/edition/latest": {
       "file": "fixtures/edition-latest.json",

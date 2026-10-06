@@ -455,6 +455,35 @@ and a link fragment follow the Worker's own looser rules (the card shows neither
 the closing slide's source rows, a "Read the …" link that opens the page on the web
 through `webPageUrl`/`openOnWeb` on the build's own origin, and an as-at line.
 
+**Leads and the declared-interests feed (P1).** Today links to both and loads
+neither. `discovery()` reads `/discovery.json` whole (`decodeDiscovery`; the
+export's microsecond timestamps are checked by their calendar date). The Leads
+screen (`src/features/leads/`) shows every signal as a `LeadCard` with its
+figures, every caveat verbatim, its example records and an as-at line from the
+export's date, in the export's order ("All leads") or by category, sorted as the
+web sorts. Each card opens its comparison: the web's takeaway, the five-plus-Other
+share chart (each row one VoiceOver element, bars decorative) with a Table view of
+the same rows to the dollar, or the two separate money flows for companies in
+both, then the card again, the web's links on opax.com.au (supplier profile; the
+comparison's own `/discover` page, where the web draws its money map; the full
+money map) and "About these numbers". A signal that does not decode, or a
+concentration without its chart, is left out and counted on screen. The web's
+"Find mentions in parliament" opens `/search`, which the Worker sends to Ask's
+model-backed search, so the app leaves it out. Evidence labels are read into
+amount, payer and payee, detail and register (`leadEvidenceFor`): OPAX's local
+row numbers ("local record 643745") are dropped, AusTender contract notice IDs
+are kept, a label with no ID (donations, since the web export's 66d7bf45) reads
+the same, and a label in any other shape keeps its register link with the label
+hidden. `declarations()` reads every `/interests/recent.json` row with Today's
+party and portrait joins and, through the register's ID bridge
+(`declarationProfilesFor`, the same bridge as Search's interest rows), the
+profile slug of each member; the feed (`src/features/declarations/`) filters on
+the device by chamber, jurisdiction and member and reuses Today's register row,
+adding the profile link and the export's name matches with their caveat.
+Journey 27 checks the first lead's figures by JSON pointer:
+`tests/leads-journey.test.ts` resolves each `# pointer:` annotation in the
+pinned export and requires the assertion after it to show that value.
+
 Use `billsFor(filters)`, `billFor(key)`, `today()`, `about()`, `suggestions(query)`
 and `search(query, kind)` for the remaining P0 blocks. Load `suggestionSources()`
 once on screen entry; `suggestions()` then matches that snapshot locally while
@@ -467,9 +496,9 @@ branded ID parsers are also exported from `src/api/catalogs.ts` for already load
 OPAX record/party links are relative web paths: resolve them using the build-config
 origin when opening. E2E displays links locally and never opens production.
 
-The fixture pins 44 complete files (6,816,022 bytes), including whole-site votes,
-pay, expenses and money. `fixture-snapshot.json` records every size and hash;
-42 files are served. Its `testOnlyFiles` retain the money graph and donor ties
+The fixture pins 51 complete files (7,014,814 bytes), including whole-site votes,
+pay, expenses, money and the discovery export. `fixture-snapshot.json` records
+every size and hash; 49 files are served. Its `testOnlyFiles` retain the money graph and donor ties
 for decoder/parity tests while their retired GET routes remain denied.
 Interest-detail search covers twelve pinned members; the recent feed, pay and
 expenses are complete. Local search does not reproduce production ranking.

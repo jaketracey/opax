@@ -10,12 +10,42 @@ import { registerChangeLabel } from '../your-mp/model';
 type Declaration = NonNullable<
   ReturnType<typeof recentDeclarationsFor>['data']
 >[number];
+type Tie = NonNullable<Declaration['ties']>[number];
+
+// The web's register labels for a name match (app.js declaredTieHTML).
+function tieText(tie: Tie) {
+  const kinds = tie.kinds.length ? tie.kinds : [tie.kind];
+  const labels: string[] = [];
+  if (kinds.includes('donor'))
+    labels.push(
+      `AEC donor${tie.industry ? ` · ${tie.industry.replace(/_/g, ' ')}` : ''}`,
+    );
+  if (kinds.includes('lobbyist')) labels.push('registered lobbying firm');
+  if (kinds.includes('fits')) labels.push('FITS registrant');
+  return labels.length
+    ? `${tie.organisation}, ${labels.join(' · ')}`
+    : tie.organisation;
+}
+
+/**
+ * One register alteration: the member, what changed and when, the entry in
+ * the member's own words, and its source. Today shows the newest six; the
+ * declared-interests feed shows every row with the member's profile link
+ * and any name match the export found.
+ */
 export function TodayDeclaration({
   item,
   index,
+  testIDPrefix = 'today-declaration',
+  onOpenPerson,
+  showTies = false,
 }: {
   item: Declaration;
   index: number;
+  testIDPrefix?: string;
+  /** Present only when the member has a native profile. */
+  onOpenPerson?: () => void;
+  showTies?: boolean;
 }) {
   const [failedPath, setFailedPath] = useState<string | null>(null);
   const portrait =
@@ -29,7 +59,8 @@ export function TodayDeclaration({
         formerly={item.formerly}
         place={chamberName(item.chamber, item.jurisdiction) ?? undefined}
         detail={`${item.category}, ${registerChangeLabel(item.kind)} ${formatDate(item.date, 'short')}`}
-        testID={`today-declaration-person-${index}`}
+        testID={`${testIDPrefix}-person-${index}`}
+        onPress={onOpenPerson}
         portrait={
           portrait && failedPath !== portrait.path ? (
             <Image
@@ -40,12 +71,23 @@ export function TodayDeclaration({
               importantForAccessibility="no-hide-descendants"
               accessibilityIgnoresInvertColors
               onError={() => setFailedPath(portrait.path)}
-              testID={`today-declaration-portrait-${index}`}
+              testID={`${testIDPrefix}-portrait-${index}`}
             />
           ) : undefined
         }
       />
       {item.description ? <Text>{item.description}</Text> : null}
+      {showTies && item.ties?.length ? (
+        <Text
+          wordSafe
+          variant="fine"
+          tone="ink"
+          testID={`${testIDPrefix}-ties-${index}`}
+        >
+          Name match: {item.ties.map(tieText).join('; ')}. Exact names only;
+          this identifies a shared name across public registers, not wrongdoing.
+        </Text>
+      ) : null}
       {portrait && failedPath !== portrait.path ? (
         <Group>
           <Text variant="fine">
@@ -83,7 +125,7 @@ export function TodayDeclaration({
         record={`${item.name}${item.page !== null ? `, page ${item.page}` : ''}`}
         url={item.url}
         kind="record"
-        testID={`today-declaration-${index}`}
+        testID={`${testIDPrefix}-${index}`}
       />
     </Group>
   );

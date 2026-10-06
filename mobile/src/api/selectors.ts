@@ -50,6 +50,7 @@ import {
 import {
   namedRosterRow,
   joinPerson,
+  personSlugForResult,
   rosterChambersFor,
   rosterRowFor,
   numericPersonId,
@@ -655,6 +656,54 @@ export function recentDeclarationsFor(
       url,
     })),
   );
+}
+/**
+ * The directory slug of each declaring member whose native profile the
+ * register's ID bridge resolves, keyed by the name the register prints.
+ * Search's interest rows use the same bridge (personSlugForResult); a name
+ * that resolves to no one, to several people, or to someone without a
+ * canonical person ID gets no profile link.
+ */
+export function declarationProfilesFor(
+  names: readonly string[],
+  catalogs: {
+    slugs: Slugs;
+    interestIndex: InterestIndex;
+    people: PeopleCatalog;
+    roster: Roster;
+    manifest: Manifest;
+  },
+): Record<string, string> {
+  const found: Record<string, string> = {};
+  for (const name of new Set(names)) {
+    const slug = personSlugForResult(
+      {
+        kind: 'interest',
+        title: name,
+        href: `/declared?${new URLSearchParams({ person: name })}`,
+        snippet: '',
+        slug: 'catalog-0',
+        resource: '',
+      },
+      catalogs.slugs,
+      catalogs.interestIndex,
+      catalogs.people,
+    );
+    if (!slug) continue;
+    try {
+      const person = joinPerson(
+        slug,
+        catalogs.slugs,
+        catalogs.roster,
+        catalogs.people,
+        catalogs.manifest,
+      );
+      if (person.canonicalPersonId) found[name] = slug;
+    } catch {
+      /* An identity the directory cannot settle stays plain text. */
+    }
+  }
+  return found;
 }
 export function todayFor(
   bills: BillIndex,

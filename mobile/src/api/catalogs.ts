@@ -20,6 +20,7 @@ import type { Decoder } from './validation';
 import type { Manifest } from './catalog-decoders';
 import { billKey, interestKey, personId, nameKey, type PersonId } from './ids';
 import {
+  declarationProfilesFor,
   profileFor,
   recentBillsFor,
   recentDeclarationsFor,
@@ -318,6 +319,86 @@ export class Catalogs {
   }
   corpus() {
     return this.client.get('/corpus.json', decode.decodeCorpus);
+  }
+  /** Leads (P1): the static discovery export, decoded whole. */
+  discovery(refresh = false) {
+    return this.client.get('/discovery.json', decode.decodeDiscovery, refresh);
+  }
+  /**
+   * The declared-interests feed behind Today's recent declarations: every
+   * row of /interests/recent.json, newest first, with Today's party and
+   * portrait joins and the profile slug of each member the register's ID
+   * bridge resolves. Joins are optional: without them a row keeps its text
+   * and source, and shows no party, portrait or profile link.
+   */
+  async declarations(refresh = false) {
+    const record = await this.client.get(
+      '/interests/recent.json',
+      decode.decodeRecentInterests,
+      refresh,
+    );
+    const optional = <T>(path: string, decoder: Decoder<T>) =>
+      this.client.get(path, decoder, refresh).catch(() => null);
+    const [roster, photoPeople, photoCredits, slugs, interestIndex, manifest] =
+      await Promise.all([
+        optional('/parliamentarians.json', decode.decodeRoster),
+        optional('/photos/people.json', decode.decodePhotoPeople),
+        optional('/photos/credits.json', decode.decodePhotoCredits),
+        optional('/api/person-slugs', decode.decodeSlugs),
+        optional('/interests/index.json', decode.decodeInterestIndex),
+        optional('/electorates/manifest.json', decode.decodeManifest),
+      ]);
+    const people = manifest
+      ? await optional(manifest.data.people_url, decode.decodePeople).then(
+          (r) =>
+            r && r.data.meta.release_id === manifest.data.release_id ? r : null,
+        )
+      : null;
+    const interests = record.data;
+    const view = recentDeclarationsFor(interests, interests.items.length, {
+      roster: roster?.data,
+      photoPeople: photoPeople?.data,
+      photoCredits: photoCredits?.data,
+    });
+    const profiles =
+      roster && slugs && interestIndex && manifest && people
+        ? declarationProfilesFor(
+            interests.items.map((item) => item.name),
+            {
+              roster: roster.data,
+              slugs: slugs.data,
+              interestIndex: interestIndex.data,
+              manifest: manifest.data,
+              people: people.data,
+            },
+          )
+        : {};
+    const records = [
+      record,
+      ...[
+        roster,
+        photoPeople,
+        photoCredits,
+        slugs,
+        interestIndex,
+        manifest,
+        people,
+      ].filter((r) => r !== null),
+    ];
+    return {
+      ...cached(
+        {
+          ...view,
+          data: (view.data ?? []).map((item) => ({
+            ...item,
+            profileSlug: profiles[item.name] ?? null,
+          })),
+        },
+        records,
+      ),
+      // The export's own coverage: the newest `rows` of `available`.
+      meta: interests.meta,
+    };
   }
   async about(refresh = false) {
     const result = await this.client.get(
