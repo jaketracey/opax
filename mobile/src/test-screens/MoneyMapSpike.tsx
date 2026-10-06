@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AppState, View, type LayoutChangeEvent } from 'react-native';
-import { useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { File, Paths } from 'expo-file-system';
 import { GLView, type ExpoWebGLRenderingContext } from 'expo-gl';
 import {
@@ -37,7 +37,10 @@ export default function MoneyMapSpike() {
   const params = useLocalSearchParams<{
     benchmark?: string;
     seconds?: string;
+    leave?: string;
   }>();
+  const router = useRouter();
+  const exitTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const started = useRef(0);
   const [record, setRecord] = useState<RecordResult<MoneyGraph> | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -66,6 +69,8 @@ export default function MoneyMapSpike() {
   const first = useRef<number | null>(null);
   const frames = useRef(0);
   const lastLabels = useRef(0);
+  const lastFrame = useRef(0);
+  const lastTap = useRef(0);
   const mounted = useRef(true);
   const inkPixels = useRef(0);
   const orbitDuration = useRef(10000);
@@ -109,10 +114,23 @@ export default function MoneyMapSpike() {
         return;
       }
       const now = performance.now();
+      // 30 completed frames/s is sufficient for an interactive money map.
+      if (now - lastFrame.current < 32) {
+        raf.current = requestAnimationFrame(frame);
+        return;
+      }
+      lastFrame.current = now;
       try {
         const run = benchmark.current;
         if (run) {
-          engine.current.orbit(0.8, 0);
+          engine.current.orbit(1.6, 0);
+          if (now - lastTap.current > 5000) {
+            const id =
+              Math.floor((now - run.started) / 5000) % 2 ? 'party:Labor' : null;
+            engine.current.focus(id);
+            setSelected(id);
+            lastTap.current = now;
+          }
           if (run.previous) run.intervals.push(now - run.previous);
           run.previous = now;
         }
@@ -134,6 +152,7 @@ export default function MoneyMapSpike() {
             inkPixels: inkPixels.current,
             drawnFrames: 1,
           });
+        engine.current.endFrame();
         frames.current++;
         if (run) {
           run.submit.push(performance.now() - submit);
@@ -145,6 +164,7 @@ export default function MoneyMapSpike() {
             const finalInkPixels = engine.current.verifyPixels();
             const gpuReadbackMs = performance.now() - readbackStarted;
             writeMeasurement({
+              ...engine.current.diagnostics(),
               finalInkPixels,
               gpuReadbackMs,
               orbitSeconds: orbitDuration.current / 1000,
@@ -155,13 +175,16 @@ export default function MoneyMapSpike() {
               orbitFrames: run.intervals.length,
               intervalMedianMs: percentile(run.intervals, 0.5),
               intervalP95Ms: percentile(run.intervals, 0.95),
+              completionMedianMs: percentile(run.submit, 0.5),
+              completionP95Ms: percentile(run.submit, 0.95),
               jsSubmitMedianMs: percentile(run.submit, 0.5),
               jsSubmitP95Ms: percentile(run.submit, 0.95),
             });
             benchmark.current = null;
+            if (params.leave === '1')
+              exitTimer.current = setTimeout(() => router.replace('/'), 5000);
           }
         }
-        engine.current.endFrame();
         if (now - lastLabels.current > 200) {
           setLabels(engine.current.labels());
           lastLabels.current = now;
@@ -171,10 +194,11 @@ export default function MoneyMapSpike() {
         fail(cause);
       }
     },
-    [fail, writeMeasurement],
+    [fail, writeMeasurement, params.leave, router],
   );
   useEffect(() => {
-    orbitDuration.current = params.seconds === '60' ? 60000 : 10000;
+    orbitDuration.current =
+      Math.max(10, Math.min(300, Number(params.seconds) || 10)) * 1000;
     if (ready && params.benchmark === '1')
       benchmark.current = {
         started: performance.now(),
@@ -221,6 +245,7 @@ export default function MoneyMapSpike() {
     }, fail);
     return () => {
       mounted.current = false;
+      if (exitTimer.current) clearTimeout(exitTimer.current);
       stop();
       engine.current?.dispose();
       engine.current = null;
@@ -273,7 +298,6 @@ export default function MoneyMapSpike() {
     engine.current?.focus(id);
   }, []);
   // Gesture builder stores callbacks; they read refs only when native input fires.
-  /* eslint-disable react-hooks/refs */
   const gesture = useMemo(
     () =>
       Gesture.Simultaneous(
@@ -289,7 +313,6 @@ export default function MoneyMapSpike() {
       ),
     [beginPan, updatePan, endTap, beginPinch, updatePinch],
   );
-  /* eslint-enable react-hooks/refs */
   const node = record?.data.nodes.find((n) => n.id === selected);
   const layout = (event: LayoutChangeEvent) => {
     setSize({ width: event.nativeEvent.layout.width, height: 350 });

@@ -31,7 +31,6 @@ export class NativeMoneyScene {
     roughness: 0.8,
     metalness: 0,
   });
-  private matrix = new THREE.Matrix4();
   private dummy = new THREE.Object3D();
   private centres: ReturnType<typeof clusterCentres3D>;
   private theta = 0.2;
@@ -52,10 +51,11 @@ export class NativeMoneyScene {
   private nodeColour = new THREE.Color();
   private paperColour = new THREE.Color(SURFACE);
   private direction = new THREE.Vector3();
-  private ribbonA = new THREE.Vector3();
-  private ribbonB = new THREE.Vector3();
-  private ribbonSide = new THREE.Vector3();
   private positions: Float32Array;
+  private others: Float32Array;
+  private appearanceDirty = true;
+  private layoutDirty = true;
+  private completedFrames = 0;
   private flowColors: Float32Array;
 
   constructor(
@@ -128,6 +128,8 @@ export class NativeMoneyScene {
     this.nodes.frustumCulled = false;
     this.scene.add(this.nodes);
     this.positions = new Float32Array(graph.edges.length * 6 * 3);
+    this.others = new Float32Array(graph.edges.length * 6 * 3);
+    const widthSide = new Float32Array(graph.edges.length * 6 * 2);
     this.flowColors = new Float32Array(graph.edges.length * 6 * 4);
     const flowT = new Float32Array(graph.edges.length * 6);
     const flowSeed = new Float32Array(graph.edges.length * 6);
@@ -136,7 +138,12 @@ export class NativeMoneyScene {
       for (let v = 0; v < 6; v++) {
         flowT[i * 6 + v] = [0, 0, 1, 0, 1, 1][v]!;
         flowSeed[i * 6 + v] = (i * 0.618) % 1;
-        flowKind[i * 6 + v] = 0;
+        flowKind[i * 6 + v] = e.grant ? 1 : 0;
+        widthSide[(i * 6 + v) * 2] = Math.max(
+          0.24,
+          Math.min(1.9, 0.2 + 0.42 * Math.log10(1 + e.total / 10000)),
+        );
+        widthSide[(i * 6 + v) * 2 + 1] = v === 0 || v === 2 || v === 5 ? 1 : -1;
       }
     });
     const edgeGeometry = new THREE.BufferGeometry();
@@ -152,6 +159,16 @@ export class NativeMoneyScene {
         THREE.DynamicDrawUsage,
       ),
     );
+    edgeGeometry.setAttribute(
+      'flowOther',
+      new THREE.BufferAttribute(this.others, 3).setUsage(
+        THREE.DynamicDrawUsage,
+      ),
+    );
+    edgeGeometry.setAttribute(
+      'flowWidthSide',
+      new THREE.BufferAttribute(widthSide, 2),
+    );
     edgeGeometry.setAttribute('flowT', new THREE.BufferAttribute(flowT, 1));
     edgeGeometry.setAttribute(
       'flowSeed',
@@ -164,9 +181,24 @@ export class NativeMoneyScene {
     this.edges = new THREE.Mesh(
       edgeGeometry,
       new THREE.ShaderMaterial({
-        vertexShader: EDGE_VERTEX_SHADER,
+        // The web ribbon is camera-facing. Compute its side on the GPU instead
+        // of copying all ribbon vertices through Expo's native queue each orbit.
+        vertexShader: EDGE_VERTEX_SHADER.replace(
+          'void main() {',
+          `attribute vec3 flowOther;
+attribute vec2 flowWidthSide;
+uniform vec3 uView;
+void main() {`,
+        ).replace(
+          'vec4(position, 1.0)',
+          'vec4(position + normalize(cross(flowOther - position, uView)) * flowWidthSide.x * flowWidthSide.y, 1.0)',
+        ),
         fragmentShader: EDGE_FRAGMENT_SHADER,
-        uniforms: { uPhase: { value: 0 }, uReduced: { value: 0 } },
+        uniforms: {
+          uPhase: { value: 0 },
+          uReduced: { value: 0 },
+          uView: { value: this.direction },
+        },
         transparent: true,
         depthWrite: false,
         side: THREE.DoubleSide,
@@ -208,6 +240,7 @@ export class NativeMoneyScene {
     );
   }
   focus(id: string | null) {
+    this.appearanceDirty = true;
     this.selected = id;
     this.connected.clear();
     if (id) {
@@ -287,7 +320,10 @@ export class NativeMoneyScene {
   render(now: number) {
     if (this.disposed) throw new Error('GL context has been released');
     if (this.gl.isContextLost()) throw new Error('GL context lost');
-    if (this.sim.alpha() > 0.004) this.sim.tick(1);
+    if (this.sim.alpha() > 0.004) {
+      this.sim.tick(1);
+      this.layoutDirty = true;
+    }
     if (!this.owned && !this.reduced)
       this.theta = 0.2 + Math.sin((now / 48000) * Math.PI * 2) * 0.22;
     this.camera.position.set(
@@ -299,60 +335,64 @@ export class NativeMoneyScene {
     this.camera.updateMatrixWorld();
     this.fog.near = this.distance * 0.6;
     this.fog.far = this.distance * 2.2;
-    this.sim.nodes.forEach((n, i) => {
-      const node = this.graph.nodes[i]!;
-      this.dummy.position.set(n.x, n.y, n.z);
-      this.dummy.scale.setScalar(n.radius);
-      this.dummy.updateMatrix();
-      this.matrix.copy(this.dummy.matrix);
-      this.nodes.setMatrixAt(i, this.matrix);
-      const colour = this.nodeColour.copy(this.colours[i]!);
-      if (this.selected && !this.connected.has(node.id))
-        colour.lerp(this.paperColour, 0.85);
-      this.nodes.setColorAt(i, colour);
-    });
-    this.nodes.instanceMatrix.needsUpdate = true;
-    if (this.nodes.instanceColor) this.nodes.instanceColor.needsUpdate = true;
-    const view = this.camera.getWorldDirection(this.direction);
-    this.graph.edges.forEach((e, i) => {
-      const from = this.sim.byId(e.source)!;
-      const to = this.sim.byId(e.target)!;
-      const a = this.ribbonA.set(from.x, from.y, from.z);
-      const b = this.ribbonB.set(to.x, to.y, to.z);
-      const side = this.ribbonSide
-        .copy(b)
-        .sub(a)
-        .cross(view)
-        .normalize()
-        .multiplyScalar(
-          Math.max(
-            0.24,
-            Math.min(1.9, 0.2 + 0.42 * Math.log10(1 + e.total / 10000)),
-          ),
-        );
-      const c = this.edgeColours[i]!;
-      const alpha =
-        this.selected &&
-        e.source !== this.selected &&
-        e.target !== this.selected
-          ? 0.025
-          : 0.22;
-      for (let k = 0; k < 6; k++) {
-        const endpoint = k === 2 || k === 4 || k === 5 ? b : a;
-        const sign = k === 0 || k === 2 || k === 5 ? 1 : -1;
-        const offset = (i * 6 + k) * 3;
-        this.positions[offset] = endpoint.x + sign * side.x;
-        this.positions[offset + 1] = endpoint.y + sign * side.y;
-        this.positions[offset + 2] = endpoint.z + sign * side.z;
-        const colorOffset = (i * 6 + k) * 4;
-        this.flowColors[colorOffset] = c.r;
-        this.flowColors[colorOffset + 1] = c.g;
-        this.flowColors[colorOffset + 2] = c.b;
-        this.flowColors[colorOffset + 3] = alpha;
+    if (this.layoutDirty || this.appearanceDirty) {
+      this.sim.nodes.forEach((n, i) => {
+        if (this.layoutDirty) {
+          this.dummy.position.set(n.x, n.y, n.z);
+          this.dummy.scale.setScalar(n.radius);
+          this.dummy.updateMatrix();
+          this.nodes.setMatrixAt(i, this.dummy.matrix);
+        }
+        if (this.appearanceDirty) {
+          const colour = this.nodeColour.copy(this.colours[i]!);
+          if (this.selected && !this.connected.has(n.id))
+            colour.lerp(this.paperColour, 0.85);
+          this.nodes.setColorAt(i, colour);
+        }
+      });
+      if (this.layoutDirty) this.nodes.instanceMatrix.needsUpdate = true;
+      if (this.appearanceDirty && this.nodes.instanceColor)
+        this.nodes.instanceColor.needsUpdate = true;
+      this.graph.edges.forEach((e, i) => {
+        const from = this.sim.byId(e.source)!;
+        const to = this.sim.byId(e.target)!;
+        const alpha =
+          this.selected &&
+          e.source !== this.selected &&
+          e.target !== this.selected
+            ? 0.025
+            : 0.22;
+        const colour = this.edgeColours[i]!;
+        for (let k = 0; k < 6; k++) {
+          if (this.layoutDirty) {
+            const endpoint = k === 2 || k === 4 || k === 5 ? to : from;
+            const offset = (i * 6 + k) * 3;
+            this.positions[offset] = endpoint.x;
+            this.positions[offset + 1] = endpoint.y;
+            this.positions[offset + 2] = endpoint.z;
+            // Direction must be source -> target for both ribbon endpoints.
+            this.others[offset] = endpoint.x + to.x - from.x;
+            this.others[offset + 1] = endpoint.y + to.y - from.y;
+            this.others[offset + 2] = endpoint.z + to.z - from.z;
+          }
+          if (this.appearanceDirty) {
+            const offset = (i * 6 + k) * 4;
+            this.flowColors[offset] = colour.r;
+            this.flowColors[offset + 1] = colour.g;
+            this.flowColors[offset + 2] = colour.b;
+            this.flowColors[offset + 3] = alpha;
+          }
+        }
+      });
+      if (this.layoutDirty) {
+        this.edges.geometry.attributes.position!.needsUpdate = true;
+        this.edges.geometry.attributes.flowOther!.needsUpdate = true;
       }
-    });
-    this.edges.geometry.attributes.position!.needsUpdate = true;
-    this.edges.geometry.attributes.flowColor!.needsUpdate = true;
+      if (this.appearanceDirty)
+        this.edges.geometry.attributes.flowColor!.needsUpdate = true;
+      this.layoutDirty = this.appearanceDirty = false;
+    }
+    this.camera.getWorldDirection(this.direction);
     this.edges.material.uniforms.uPhase!.value = (now / 7000) % 1;
     this.renderer.render(this.scene, this.camera);
   }
@@ -380,7 +420,21 @@ export class NativeMoneyScene {
     return ink;
   }
   endFrame() {
+    // endFrameEXP schedules work; it does not provide backpressure. Wait for
+    // this frame's GPU work and native batch before allowing another frame.
+    this.gl.finish();
     this.gl.endFrameEXP();
+    this.gl.flushEXP();
+    this.completedFrames++;
+  }
+  diagnostics() {
+    return {
+      completedFrames: this.completedFrames,
+      geometries: this.renderer.info.memory.geometries,
+      textures: this.renderer.info.memory.textures,
+      programs: this.renderer.info.programs?.length ?? 0,
+      layoutSettled: this.sim.alpha() <= 0.004,
+    };
   }
   dispose() {
     if (this.disposed) return;
