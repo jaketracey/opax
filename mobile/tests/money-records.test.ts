@@ -10,10 +10,10 @@ import {
   moneyWindowYears,
   publicMoneyLabel,
 } from '../src/features/money/records';
-import { moneyView } from '../src/features/money/view';
 import { moneyRoute } from '../src/navigation/routes';
 import { pinned } from './pinned';
 import {
+  moneyView,
   defaultMoneyFilters,
   donationRanks,
   rankedDonors,

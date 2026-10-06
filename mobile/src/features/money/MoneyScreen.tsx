@@ -241,7 +241,10 @@ function MoneyCatalogScreen({
                   testID: 'money-mode-list',
                 },
               ]}
-              onChange={onMode}
+              onChange={(next) => {
+                if (next === '3d') setGLFallback(false);
+                onMode(next);
+              }}
               testID="money-view-toggle"
             />
             {glFallback ? (
