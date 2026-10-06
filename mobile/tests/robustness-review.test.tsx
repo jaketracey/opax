@@ -460,6 +460,7 @@ test.each([true, false])(
             savedAt: null,
           }}
           missing="No voting summary is held for this person in the release."
+          partialMissing="No readable record was found for this person. Some rows in the latest public export were unreadable."
           retry={() => {}}
         >
           {() => null}

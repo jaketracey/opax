@@ -92,6 +92,7 @@ export function RecordBlock<T>({
   id,
   block,
   missing,
+  partialMissing,
   unlinked,
   retry,
   children,
@@ -101,6 +102,7 @@ export function RecordBlock<T>({
   id: string;
   block: EvidenceBlock<T>;
   missing: string;
+  partialMissing?: string;
   unlinked?: string;
   retry: () => void;
   children: (data: T) => ReactNode;
@@ -127,11 +129,7 @@ export function RecordBlock<T>({
         />
       ) : block.data === null ? (
         <EmptyState
-          message={
-            block.partial
-              ? 'No readable record was found for this person. Some rows in the latest public export were unreadable.'
-              : missing
-          }
+          message={block.partial ? (partialMissing ?? missing) : missing}
           testID={`${id}-missing`}
         />
       ) : (

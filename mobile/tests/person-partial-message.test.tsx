@@ -101,6 +101,7 @@ test.each([
         id={`person-${kind}`}
         block={after}
         missing={missing}
+        partialMissing="No readable record was found for this person. Some rows in the latest public export were unreadable."
         retry={() => {}}
       >
         {() => null}
