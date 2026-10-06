@@ -1,4 +1,4 @@
-import { decodeBoundary } from './electorate-geometry';
+import { decodeBoundary, type Boundary } from './electorate-geometry';
 import {
   array,
   boolean,
@@ -219,7 +219,8 @@ const election = shape({
 });
 const electorateShape = shape({
   ...electorateFields,
-  boundaries: array(decodeBoundary),
+  // Each outline is decoded on its own in decodeElectorate.
+  boundaries: array((v): unknown => v),
   elections: array(election),
   sources: dict(source),
   demographics: array(
@@ -272,15 +273,26 @@ const electorateShape = shape({
   people: dict(identity, personId),
 });
 export function decodeElectorate(v: unknown) {
-  const s = electorateShape(v);
+  const { boundaries: outlines, ...s } = electorateShape(v);
   if (
     s.representatives.some((r) => r.person_id !== r.person.person_id) ||
     Object.entries(s.people).some(([id, p]) => id !== p.person_id)
   )
     invalid('The seat person IDs do not agree.');
-  if (s.boundaries.some((b) => b.electorate_id !== s.electorate_id))
-    invalid('The outline belongs to another seat.');
-  return s;
+  // A malformed outline, or one for another seat, drops only itself: the
+  // Electorate and Your MP screens still read, with no display outline.
+  const boundaries = outlines.flatMap((outline) => {
+    let boundary: Boundary | null;
+    try {
+      boundary = decodeBoundary(outline);
+    } catch {
+      boundary = null;
+    }
+    if (boundary?.electorate_id === s.electorate_id) return [boundary];
+    console.warn(`Skipped a malformed display outline for ${s.electorate_id}`);
+    return [];
+  });
+  return { ...s, boundaries };
 }
 export type ElectorateDetail = Decoded<typeof decodeElectorate>;
 const billFields = {
