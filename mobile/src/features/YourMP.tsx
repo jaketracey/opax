@@ -1,3 +1,4 @@
+import { PartialNotice, SavedCopyNotice } from './CatalogNotice';
 import { LocationSuggestion } from './electorate-map/LocationSuggestion';
 import { formatDate } from '../design/format';
 import { useCallback, useEffect, useState } from 'react';
@@ -206,6 +207,12 @@ export default function YourMP() {
           <Heading level={2}>
             {stateChoosing ? 'Choose your state electorate' : 'Find your MP'}
           </Heading>
+          {directory?.electorates.partial ? (
+            <PartialNotice testID="seat-directory-partial" />
+          ) : null}
+          {directory?.electorates.staleReason ? (
+            <SavedCopyNotice reason={directory.electorates.staleReason} />
+          ) : null}
           {!stateChoosing && directory ? (
             <LocationSuggestion
               seats={directory.electorates.data.electorates}

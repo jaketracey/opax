@@ -125,12 +125,9 @@ describe('the edition decoder', () => {
     at(['edition', 'slides', 1, 'alt'], undefined),
     at(['edition', 'slides', 1, 'note'], 3),
   ])(
-    'drops a malformed content slide while retaining cover and source',
+    'rejects malformed content slides so context is not silently lost',
     (input) => {
-      const slides = decodeEdition(input).edition.slides!;
-      expect(slides).toHaveLength(4);
-      expect(slides[0]!.type).toBe('cover');
-      expect(slides.at(-1)!.type).toBe('source');
+      expect(() => decodeEdition(input)).toThrow();
     },
   );
   test('null optional edition fields are missing', () => {

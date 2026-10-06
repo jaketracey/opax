@@ -1011,7 +1011,7 @@ test('failed validation is never memoized; invalid forced refresh serves the las
   const first = await client.get('/parliamentarians.json', validate);
   await expect(
     client.get('/parliamentarians.json', validate, true),
-  ).resolves.toEqual({ ...first, stale: true });
+  ).resolves.toEqual({ ...first, stale: true, staleReason: 'unreadable' });
   expect(validate).toHaveBeenCalledTimes(2);
 });
 
@@ -1231,7 +1231,7 @@ describe.each([false, true])('last good copy, force=%s', (force) => {
       time = 3000;
       expect(
         await client.get('/parliamentarians.json', validate, force),
-      ).toEqual({ ...first, stale: true });
+      ).toEqual({ ...first, stale: true, staleReason: 'unreadable' });
       expect(await cache.get(`${origin}/parliamentarians.json`)).toBe(saved);
       expect(writes).not.toHaveBeenCalled();
       const relaunched = new ApiClient({

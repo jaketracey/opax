@@ -1,3 +1,4 @@
+import { SavedCopyNotice } from '../CatalogNotice';
 import { useCallback, useEffect, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
@@ -199,7 +200,12 @@ export default function BillDetail() {
               <>
                 {record.stale ? (
                   <Group>
-                    <OfflineBanner testID="bill-offline" />
+                    <SavedCopyNotice
+                      reason={record.staleReason}
+                      testID={
+                        record.staleReason ? 'bill-saved-copy' : 'bill-offline'
+                      }
+                    />
                     <StaleNotice
                       savedAt={record.savedAt}
                       refreshing={refreshing}
@@ -216,6 +222,7 @@ export default function BillDetail() {
                   view={view}
                   sponsors={sponsors}
                   stale={record.stale}
+                  staleReason={record.staleReason}
                   savedAt={record.savedAt}
                   refreshing={refreshing}
                   onRefresh={refresh}
@@ -271,6 +278,7 @@ function BillHead({
   view,
   sponsors,
   stale,
+  staleReason,
   savedAt,
   refreshing,
   onRefresh,
@@ -278,6 +286,7 @@ function BillHead({
   view: BillView;
   sponsors: Record<string, PersonSlug>;
   stale: boolean;
+  staleReason?: 'unreadable' | 'unavailable';
   savedAt: number;
   refreshing: boolean;
   onRefresh: () => void;
@@ -289,7 +298,10 @@ function BillHead({
     <Group gap={spacing.s3}>
       {stale ? (
         <>
-          <OfflineBanner testID="bill-offline" />
+          <SavedCopyNotice
+            reason={staleReason}
+            testID={staleReason ? 'bill-saved-copy' : 'bill-offline'}
+          />
           <StaleNotice
             savedAt={savedAt}
             refreshing={refreshing}

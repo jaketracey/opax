@@ -156,23 +156,13 @@ describe.each(cases)('$name decoder', ({ path, decode, badPath, bad }) => {
     '/parliamentarians.json': ['people'],
     [manifest.people_url]: ['people'],
     [manifest.index_url]: ['electorates'],
-    '/electorates/releases/b56417062ccc33cf/el_5d600e7f6dca5b72ae04d686.json': [
-      'elections',
-      0,
-      'candidates',
-    ],
     '/bills/index.json': ['bills'],
-    '/votes.json': ['10007'],
+    '/votes.json': ['records', '10007'],
     '/interests/index.json': ['_by_name', 'aaron violi'],
-    '/interests/10007.json': ['buckets', 'memberships', 'items'],
     '/interests/recent.json': ['items'],
     '/interests/ties-by-donor.json': ['donors', 'ASX Limited'],
-    '/pay.json': ['people', 'R36'],
-    '/expenses.json': ['people', '10007'],
-    '/expense-categories.json': ['categories'],
     '/photos/people.json': ['anthony albanese'],
     '/photos/credits.json': ['wd-Q100327610'],
-    '/graph/money.json': ['nodes'],
   };
   test('isolates malformed records and rejects malformed structural fields', () => {
     const rowPath = rowPaths[path];
@@ -181,16 +171,23 @@ describe.each(cases)('$name decoder', ({ path, decode, badPath, bad }) => {
       expect(() => decode(input)).toThrow(ApiError);
       return;
     }
-    const output = decode(input);
-    const read = (root: unknown): unknown =>
-      rowPath.reduce<unknown>(
+    const expected = decode(pinned(path));
+    const parent = rowPath
+      .slice(0, -1)
+      .reduce<unknown>(
         (v, key) => (v as Record<string | number, unknown>)[key],
-        root,
-      );
-    const before = read(decode(pinned(path)));
-    const after = read(output);
-    if (Array.isArray(before)) expect(after).toHaveLength(before.length - 1);
-    else expect(after).toBeUndefined();
+        expected,
+      ) as Record<string | number, unknown>;
+    const key = rowPath.at(-1)!;
+    if (Array.isArray(parent[key]) && path !== '/interests/ties-by-donor.json')
+      parent[key] = (parent[key] as unknown[]).slice(1);
+    else delete parent[key];
+    if (path === '/votes.json') {
+      const names = (expected as d.Votes).names;
+      for (const [name, keys] of Object.entries(names))
+        if (keys.includes('10007')) delete names[name];
+    }
+    expect(decode(input)).toEqual(expected);
   });
   if (!path.startsWith('/photos/'))
     test('rejects a missing envelope', () =>
@@ -207,9 +204,9 @@ test('slug API validates date and names, using its pinned-source projection', ()
   expect(() => d.decodeSlugs({ ...slugs, generated: undefined })).toThrow(
     ApiError,
   );
-  expect(
-    d.decodeSlugs({ ...slugs, slugs: { 'anthony-albanese': 1 } }).slugs,
-  ).toEqual({});
+  expect(() =>
+    d.decodeSlugs({ ...slugs, slugs: { 'anthony-albanese': 1 } }),
+  ).toThrow(ApiError);
 });
 test.each(
   Object.keys(files).filter(
@@ -271,9 +268,9 @@ test('search envelopes validate all shown fields and reject unapproved kinds', (
     warnings: [],
   };
   expect(d.decodeSearch(page).results).toHaveLength(1);
-  expect(
-    d.decodeSearch(replaceAt(page, ['results', 0, 'href'], undefined)).results,
-  ).toEqual([]);
+  expect(() =>
+    d.decodeSearch(replaceAt(page, ['results', 0, 'href'], undefined)),
+  ).toThrow(ApiError);
   for (const p of [
     { ...page, kind: 'bill' },
     { ...page, total: -1 },
@@ -294,11 +291,11 @@ test('crossed IDs, empty pay series and unsafe licence links are malformed', () 
   expect(() =>
     d.decodePay(replaceAt(pinned('/pay.json'), ['base'], [])),
   ).toThrow(ApiError);
-  expect(
+  expect(() =>
     d.decodePay(
       replaceAt(pinned('/pay.json'), ['people', 'R36', 'by_year'], []),
-    ).people.R36,
-  ).toBeUndefined();
+    ),
+  ).toThrow(ApiError);
   expect(
     d.decodePhotoCredits(
       replaceAt(

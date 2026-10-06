@@ -1,3 +1,4 @@
+import { PartialNotice, SavedCopyNotice } from '../CatalogNotice';
 import type { ReactNode } from 'react';
 import type { EvidenceBlock } from './model';
 import {
@@ -44,8 +45,12 @@ export function EvidenceFooter({
           testID={`${id}-as-at`}
         />
       ) : null}
+      {block.partial ? <PartialNotice testID={`${id}-partial`} /> : null}
       {block.stale ? (
         <>
+          {block.staleReason ? (
+            <SavedCopyNotice reason={block.staleReason} />
+          ) : null}
           {block.savedAt !== null ? (
             <StaleNotice savedAt={block.savedAt} />
           ) : (

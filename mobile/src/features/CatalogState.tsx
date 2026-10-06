@@ -1,3 +1,4 @@
+import { PartialNotice, SavedCopyNotice } from './CatalogNotice';
 import type { ReactNode } from 'react';
 import type { Block } from '../api/catalogs';
 import { ApiError } from '../api/errors';
@@ -54,7 +55,7 @@ export function CatalogState<T>({
     <Group>
       {block.stale ? (
         <>
-          <OfflineBanner />
+          <SavedCopyNotice reason={block.staleReason} />
           {block.savedAt !== null ? (
             <StaleNotice
               savedAt={block.savedAt}
@@ -64,6 +65,7 @@ export function CatalogState<T>({
           ) : null}
         </>
       ) : null}
+      {block.partial ? <PartialNotice testID={`${testID}-partial`} /> : null}
       {block.data === null ||
       (Array.isArray(block.data) && block.data.length === 0) ? (
         <EmptyState message={empty} testID={`${testID}-empty`} />

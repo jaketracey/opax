@@ -136,7 +136,7 @@ test('a bad release row or duplicate cannot invalidate its healthy siblings', ()
       ...raw,
       electorates: [...raw.electorates, raw.electorates[0]],
     }),
-  ).toEqual(good);
+  ).toEqual({ ...good, electorates: good.electorates.slice(1) });
 });
 test('lookup catalogs drop only bad entries', () => {
   expect(
@@ -154,16 +154,16 @@ test('diagnostics run only in development or e2e and never log row contents', ()
   try {
     flags.__DEV__ = false;
     setCatalogDiagnostics(false);
-    expect(decode([{ secret: 'private payload' }])).toEqual([]);
+    expect(() => decode([{ secret: 'private payload' }])).toThrow(ApiError);
     expect(console.warn).not.toHaveBeenCalled();
     setCatalogDiagnostics(true);
-    decode([{ secret: 'private payload' }]);
+    expect(() => decode([{ secret: 'private payload' }])).toThrow(ApiError);
     expect(console.warn).toHaveBeenLastCalledWith(
       'Dropped malformed catalog row: test [0]',
     );
     flags.__DEV__ = true;
     setCatalogDiagnostics(false);
-    decode([null]);
+    expect(() => decode([null])).toThrow(ApiError);
     expect(console.warn).toHaveBeenCalledTimes(2);
   } finally {
     flags.__DEV__ = dev;

@@ -1,3 +1,4 @@
+import { PartialNotice, SavedCopyNotice } from './CatalogNotice';
 import { CachedPortrait } from './CachedPortrait';
 import { useCallback, useRef, useState } from 'react';
 import { Keyboard, RefreshControl, type View } from 'react-native';
@@ -143,6 +144,10 @@ export default function Search() {
   const showSuggestions = query.trim().length >= 2 && !submitted;
   const sourcesStale =
     sources && Object.values(sources.provenance).some((block) => block.stale);
+  const sourceReason =
+    sources &&
+    Object.values(sources.provenance).find((block) => block.staleReason)
+      ?.staleReason;
   const noSuggestions =
     showSuggestions &&
     suggestions &&
@@ -151,6 +156,7 @@ export default function Search() {
   const metadata = (group: keyof Sources['provenance']) =>
     sources ? (
       <Group>
+        {sources.provenance[group].partial ? <PartialNotice /> : null}
         {sources.provenance[group].stale &&
         sources.provenance[group].savedAt !== null ? (
           <StaleNotice
@@ -256,7 +262,14 @@ export default function Search() {
                 />
               ) : null}
               {sourcesStale ? (
-                <OfflineBanner testID="search-suggestions-offline" />
+                <SavedCopyNotice
+                  reason={sourceReason ?? undefined}
+                  testID={
+                    sourceReason
+                      ? 'search-suggestions-saved-copy'
+                      : 'search-suggestions-offline'
+                  }
+                />
               ) : null}
               {noSuggestions ? (
                 <EmptyState
@@ -366,7 +379,14 @@ export default function Search() {
             <Group>
               {result.stale ? (
                 <>
-                  <OfflineBanner testID="search-offline" />
+                  <SavedCopyNotice
+                    reason={result.staleReason}
+                    testID={
+                      result.staleReason
+                        ? 'search-saved-copy'
+                        : 'search-offline'
+                    }
+                  />
                   <StaleNotice
                     savedAt={result.savedAt}
                     refreshing={busy}
@@ -378,6 +398,9 @@ export default function Search() {
                   Public catalog results
                 </Text>
               )}
+              {result.partial ? (
+                <PartialNotice testID="search-partial" />
+              ) : null}
               {!resultRows.length ? (
                 <Group>
                   <EmptyState

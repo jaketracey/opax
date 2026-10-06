@@ -165,17 +165,20 @@ describe('the discovery export', () => {
     // format the app does not know) never hides the others.
     const odd = decodeDiscovery({
       ...raw,
-      signals: [
-        { ...(raw.signals[0] as object), caveats: [] },
-        {
-          ...(raw.signals[1] as object),
-          metrics: [{ label: 'Ratio', value: 2, format: 'ratio' }],
-        },
-        raw.signals[2],
-      ],
+      signals: [{ ...signals[0], caveats: [] }, signals[1], signals[2]],
     });
-    expect(odd.unreadable).toBe(2);
-    expect(odd.signals.map((s) => s.id)).toEqual([signals[2]!.id]);
+    expect(odd.unreadable).toBe(1);
+    expect(odd.signals).toEqual(signals.slice(1, 3));
+    expect(() =>
+      decodeDiscovery({
+        ...raw,
+        signals: [
+          { ...signals[0], caveats: [] },
+          { ...signals[1], caveats: [] },
+          signals[2],
+        ],
+      }),
+    ).toThrow(ApiError);
     expect(discovery.unreadable).toBe(0);
     expect(() => decodeDiscovery({ ...raw, signals: {} })).toThrow(ApiError);
     expect(() =>

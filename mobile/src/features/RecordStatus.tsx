@@ -1,3 +1,5 @@
+import { PartialNotice, SavedCopyNotice } from './CatalogNotice';
+import type { RecordResult } from '../api/client';
 import { ApiError } from '../api/errors';
 import {
   Button,
@@ -23,7 +25,12 @@ export function RecordStatus({
   label,
   testID,
 }: {
-  record: { stale: boolean; savedAt: number | null } | null;
+  record: {
+    stale: boolean;
+    savedAt: number | null;
+    partial?: boolean;
+    staleReason?: RecordResult<unknown>['staleReason'];
+  } | null;
   error: unknown;
   refreshing: boolean;
   refresh: () => void;
@@ -35,7 +42,11 @@ export function RecordStatus({
   if (record?.stale)
     return (
       <Group>
-        <OfflineBanner testID={`${testID}-offline`} />
+        <SavedCopyNotice
+          reason={record.staleReason}
+          testID={`${testID}-${record.staleReason ? 'saved-copy' : 'offline'}`}
+        />
+        {record.partial ? <PartialNotice testID={`${testID}-partial`} /> : null}
         {record.savedAt !== null ? (
           <StaleNotice
             savedAt={record.savedAt}
@@ -51,7 +62,10 @@ export function RecordStatus({
         />
       </Group>
     );
-  if (record) return null;
+  if (record)
+    return record.partial ? (
+      <PartialNotice testID={`${testID}-partial`} />
+    ) : null;
   if (error instanceof ApiError && ['offline', 'timeout'].includes(error.code))
     return (
       <Group>

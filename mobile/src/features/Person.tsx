@@ -95,6 +95,8 @@ function ProfileScreen({ slug }: { slug: string }) {
         ? await catalogs.profileFor(person.data.canonicalPersonId)
         : uncoveredProfile(person.data);
       if (!person.data.canonicalPersonId) {
+        p.blocks.identity.partial = person.partial;
+        p.blocks.identity.staleReason = person.staleReason;
         p.blocks.identity.stale = person.stale;
         p.blocks.identity.savedAt = person.savedAt;
       }

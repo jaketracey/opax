@@ -2,6 +2,7 @@ import { fetch as expoFetch } from 'expo/fetch';
 import { CatalogCache, isFresh, type CacheEntry } from './cache';
 import { ApiError, httpError } from './errors';
 import { allowedURL } from './policy';
+import { isPartialCatalog } from './validation';
 import {
   assertPortraitPath,
   assertPortraitBytes,
@@ -13,6 +14,8 @@ import {
 export interface RecordResult<T> {
   data: T;
   stale: boolean;
+  partial?: boolean;
+  staleReason?: 'unreadable' | 'unavailable';
   savedAt: number;
   asOf: string | null;
 }
@@ -112,6 +115,9 @@ export class ApiClient {
     }
     const result = (entry: CacheEntry, stale: boolean): RecordResult<T> => ({
       data: this.decodeBody(entry.body, decode),
+      ...(isPartialCatalog(this.decodeBody(entry.body, decode))
+        ? { partial: true }
+        : {}),
       stale,
       savedAt: entry.savedAt,
       asOf: entry.asOf,
@@ -299,7 +305,15 @@ export class ApiClient {
         // body this reader cannot use.
       }
     }
-    if (cached) return result(cached, true);
+    if (cached)
+      return {
+        ...result(cached, true),
+        ...(lastError.code === 'invalid-data'
+          ? { staleReason: 'unreadable' as const }
+          : ['offline', 'timeout'].includes(lastError.code)
+            ? {}
+            : { staleReason: 'unavailable' as const }),
+      };
     throw lastError;
   }
   private async readBytes(

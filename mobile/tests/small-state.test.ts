@@ -21,6 +21,12 @@ jest.mock('expo-file-system', () => ({
     }
     write(body: string) {
       mockWrites.push(this.name);
+      // The legacy implementation prepares its temp file successfully;
+      // an armed interruption occurs in its destination-deleting move.
+      if (this.name.endsWith('.tmp')) {
+        mockDisk.set(this.name, body);
+        return;
+      }
       if (mockInterrupt === 'before') throw new Error('interrupted');
       if (mockInterrupt === 'missing') {
         mockDisk.delete(this.name);
@@ -36,7 +42,11 @@ jest.mock('expo-file-system', () => ({
     // Model Expo's destructive overwrite move: these stores must not use it.
     move(to: { name: string }) {
       mockDisk.delete(to.name);
-      throw new Error('unsafe overwrite move');
+      if (mockInterrupt) throw new Error('interrupted');
+      const body = mockDisk.get(this.name)!;
+      mockDisk.set(to.name, body);
+      mockDisk.delete(this.name);
+      this.name = to.name;
     }
   },
 }));

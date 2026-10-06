@@ -16,7 +16,7 @@ import {
 } from './person-identity';
 import { editionPath, type CatalogKind } from './policy';
 import * as decode from './catalog-decoders';
-import type { Decoder } from './validation';
+import { isPartialCatalog, type Decoder } from './validation';
 import type { Manifest } from './catalog-decoders';
 import { billKey, interestKey, personId, nameKey, type PersonId } from './ids';
 import {
@@ -53,12 +53,27 @@ interface SuggestionSources {
     bills: Block<null>;
   };
 }
+function recordFlags(
+  records: {
+    partial?: boolean;
+    staleReason?: RecordResult<unknown>['staleReason'];
+  }[],
+) {
+  const reason = records.some((r) => r.staleReason === 'unreadable')
+    ? ('unreadable' as const)
+    : records.find((r) => r.staleReason)?.staleReason;
+  return {
+    ...(records.some((r) => r.partial) ? { partial: true } : {}),
+    ...(reason ? { staleReason: reason } : {}),
+  };
+}
 function cached<T>(
   block: Block<T>,
   records: RecordResult<unknown>[],
 ): Block<T> {
   return {
     ...block,
+    ...recordFlags(records),
     stale: records.some((r) => r.stale),
     savedAt: records.length
       ? Math.min(...records.map((r) => r.savedAt))
@@ -78,6 +93,7 @@ export class Catalogs {
         const r = await pending;
         return {
           data: r.data,
+          ...recordFlags([r]),
           status: 'ready',
           asAt: null,
           sources: [{ label: source, url: '' }],
@@ -120,8 +136,7 @@ export class Catalogs {
         for (const r of batch) {
           if (r.status === 'fulfilled') {
             if (files.length < 32) files.push(r.value);
-          }
-          else failed++;
+          } else failed++;
         }
       }
       if (candidates.length && !files.length)
@@ -130,6 +145,7 @@ export class Catalogs {
           'Bill division records could not be loaded.',
         );
       return {
+        ...recordFlags([index, ...files]),
         data: { index: index.data, files: files.map((f) => f.data), failed },
         stale: index.stale || files.some((f) => f.stale),
         savedAt: Math.min(index.savedAt, ...files.map((f) => f.savedAt)),
@@ -148,11 +164,22 @@ export class Catalogs {
         this.manifest(),
       ]);
       const people = await this.people(manifest.data);
+      // Membership counts and money ranks require a complete cohort.
+      if (
+        [roster, slugs, manifest, people].some(
+          (r) => r.partial || isPartialCatalog(r.data),
+        )
+      )
+        throw new ApiError(
+          'invalid-data',
+          'Some membership rows could not be read.',
+        );
       return { roster, slugs, manifest, people };
     })();
     const coreRead = read(
       corePending.then((data) => ({
         data,
+        ...recordFlags([data.roster, data.slugs, data.manifest, data.people]),
         stale: [data.roster, data.slugs, data.manifest, data.people].some(
           (r) => r.stale,
         ),
@@ -431,10 +458,12 @@ export class Catalogs {
     ]) {
       block.stale = bill.stale;
       block.savedAt = bill.savedAt;
+      Object.assign(block, recordFlags([bill]));
     }
     view.divisions = cached(view.divisions, [bill, index]);
     return {
       ...bill,
+      ...recordFlags([bill, index]),
       stale: bill.stale || index.stale,
       savedAt: Math.min(bill.savedAt, index.savedAt),
       data: view,
@@ -454,6 +483,7 @@ export class Catalogs {
         const selected = select(record.data);
         return {
           ...selected,
+          ...recordFlags([selected, record]),
           stale: record.stale || selected.stale,
           savedAt:
             selected.savedAt === null
@@ -533,6 +563,7 @@ export class Catalogs {
         return { ...empty, data: null, status: 'missing' };
       return {
         ...editionFor(record.data),
+        ...recordFlags([record]),
         stale: record.stale,
         savedAt: record.savedAt,
       };
@@ -573,6 +604,15 @@ export class Catalogs {
       try {
         const record = await this.client.get(path, decoder, refresh);
         records.push(record);
+        if (record.partial || isPartialCatalog(record.data)) {
+          errors.push(
+            new ApiError(
+              'invalid-data',
+              'Some rows in this export could not be read.',
+            ),
+          );
+          return null;
+        }
         return record.data;
       } catch (e) {
         errors.push(
@@ -642,6 +682,7 @@ export class Catalogs {
       interestIndex,
       pay,
       expenses,
+      ...recordFlags(records),
       stale: records.some((r) => r.stale),
       savedAt: records.length
         ? Math.min(...records.map((r) => r.savedAt))
@@ -697,6 +738,7 @@ export class Catalogs {
     ]) {
       block.stale = result.stale;
       block.savedAt = result.savedAt;
+      Object.assign(block, recordFlags([result]));
     }
     return { ...result, data: view };
   }
@@ -888,11 +930,16 @@ export class Catalogs {
       const cached = keys
         .map((k) => records.get(k))
         .filter((r): r is RecordResult<unknown> => r !== undefined);
+      Object.assign(block, recordFlags(cached));
       block.stale = cached.some((r) => r.stale);
       block.savedAt = cached.length
         ? Math.min(...cached.map((r) => r.savedAt))
         : null;
     }
+    Object.assign(
+      profile.blocks.identity,
+      recordFlags(Object.values(directory)),
+    );
     profile.blocks.identity.stale = Object.values(directory).some(
       (r) => r.stale,
     );
@@ -930,6 +977,7 @@ export class Catalogs {
     ];
     return {
       ...result,
+      ...recordFlags(records),
       stale: records.some((r) => r.stale),
       savedAt: Math.min(...records.map((r) => r.savedAt)),
       data: {
@@ -996,6 +1044,7 @@ export class Catalogs {
         people.data,
         manifest.data,
       ),
+      ...recordFlags(Object.values(directory)),
       stale: Object.values(directory).some((r) => r.stale),
       savedAt: Math.min(...Object.values(directory).map((r) => r.savedAt)),
       asOf: people.asOf ?? manifest.asOf,
