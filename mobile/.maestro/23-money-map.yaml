@@ -110,7 +110,7 @@ name: 23 Native money map, held figures, original source and ranked list
       id: money-focus-years
     centerElement: true
     timeout: 90000
-- assertVisible: 'Financial years, 2024–25'
+- assertVisible: 'Return years, 2024'
 - assertVisible: 'Receipts, 3,929'
 - takeScreenshot: ${EVIDENCE}/23-focus-years
 - scrollUntilVisible:
@@ -136,7 +136,7 @@ name: 23 Native money map, held figures, original source and ranked list
       id: money-donor-0
     centerElement: true
     timeout: 120000
-- assertVisible: '1\. Mining and Energy Union, \$4,102,022 disclosed donations.*2024–25'
+- assertVisible: '1\. Mining and Energy Union, \$4,102,022 disclosed donations.*2024'
 - takeScreenshot: ${EVIDENCE}/23-list
 - scrollUntilVisible:
     element:
@@ -152,3 +152,36 @@ name: 23 Native money map, held figures, original source and ranked list
     centerElement: true
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/23-list-source
+
+# Every party and public-money hub is reachable from the accessible list.
+- runFlow:
+    file: support/money-screen-scroll-up.yaml
+    env:
+      TARGET_ID: money-list-records-toggle
+- tapOn:
+    id: money-list-records-toggle
+- runFlow:
+    file: support/money-screen-scroll.yaml
+    env:
+      TARGET_ID: money-list-record-party:Labor
+- tapOn:
+    id: money-list-record-party:Labor
+- extendedWaitUntil:
+    visible:
+      id: money-focus-name
+      text: Labor
+    timeout: 30000
+- tapOn: Done
+- runFlow:
+    file: support/money-screen-scroll.yaml
+    env:
+      TARGET_ID: money-list-record-grantor:contracts
+- tapOn:
+    id: money-list-record-grantor:contracts
+- extendedWaitUntil:
+    visible:
+      id: money-focus-amount
+    timeout: 30000
+- assertVisible: .*held by donors on this map across.*contracts
+- takeScreenshot: ${EVIDENCE}/23-list-public-money
+- tapOn: Done

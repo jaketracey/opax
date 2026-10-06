@@ -41,6 +41,7 @@ export class NativeMoneyScene {
   private selected: string | null = null;
   private owned = false;
   private reduced = false;
+  private cameraDirty = true;
   private disposed = false;
   private width: number;
   private height: number;
@@ -72,6 +73,7 @@ export class NativeMoneyScene {
     width: number,
     height: number,
   ) {
+    this.cameraDirty = true;
     this.width = width;
     this.height = height;
     this.framebufferWidth = gl.drawingBufferWidth;
@@ -271,6 +273,7 @@ void main() {`,
   resize(width: number, height: number, pixelRatio: number) {
     if (width <= 0 || height <= 0) return;
     if (width === this.width && height === this.height) return;
+    this.cameraDirty = true;
     this.width = width;
     this.height = height;
     this.framebufferWidth = Math.round(width * pixelRatio);
@@ -280,10 +283,12 @@ void main() {`,
     this.camera.updateProjectionMatrix();
   }
   setReducedMotion(value: boolean) {
+    if (this.reduced !== value) this.cameraDirty = true;
     this.reduced = value;
     this.edges.material.uniforms.uReduced!.value = value ? 1 : 0;
   }
   orbit(dx: number, dy: number) {
+    this.cameraDirty = true;
     this.owned = true;
     this.theta -= dx * 0.006;
     this.phi = THREE.MathUtils.clamp(
@@ -293,6 +298,7 @@ void main() {`,
     );
   }
   zoom(scale: number) {
+    this.cameraDirty = true;
     this.owned = true;
     this.distance = THREE.MathUtils.clamp(
       this.distance / scale,
@@ -301,6 +307,7 @@ void main() {`,
     );
   }
   focus(id: string | null) {
+    this.cameraDirty = true;
     this.appearanceDirty = true;
     id = id && this.active.has(id) ? id : null;
     this.selected = id;
@@ -389,6 +396,14 @@ void main() {`,
   render(now: number) {
     if (this.disposed) throw new Error('GL context has been released');
     if (this.gl.isContextLost()) throw new Error('GL context lost');
+    if (
+      this.reduced &&
+      this.sim.alpha() <= 0.004 &&
+      !this.layoutDirty &&
+      !this.appearanceDirty &&
+      !this.cameraDirty
+    )
+      return false;
     if (this.sim.alpha() > 0.004) {
       this.sim.tick(1);
       this.layoutDirty = true;
@@ -465,6 +480,8 @@ void main() {`,
     this.camera.getWorldDirection(this.direction);
     this.edges.material.uniforms.uPhase!.value = (now / 7000) % 1;
     this.renderer.render(this.scene, this.camera);
+    this.cameraDirty = false;
+    return true;
   }
   /** Read native pixels at visible nodes without allocating two full framebuffers. */
   verifyPixels(): number {

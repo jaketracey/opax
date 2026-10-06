@@ -20,6 +20,12 @@ jest.mock('expo-router', () => ({
       return mockBlur;
     }, [callback]),
 }));
+let mockE2E = true;
+jest.mock('../src/design/environment', () => ({
+  get isE2E() {
+    return mockE2E;
+  },
+}));
 let mockReduced: boolean | null = null;
 jest.mock('../src/design/accessibility', () => ({
   ...jest.requireActual('../src/design/accessibility'),
@@ -84,10 +90,12 @@ jest
 const gl = { getError: () => 0, NO_ERROR: 0 };
 beforeEach(() => {
   jest.clearAllMocks();
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
   pending.clear();
   sequence = 0;
   now = 0;
   mockReduced = null;
+  mockE2E = true;
   AppState.currentState = 'active';
   global.requestAnimationFrame = jest.fn((callback) => {
     const id = ++sequence;
@@ -187,5 +195,53 @@ test('a lost context removes the GL view, releases the scene and offers one fres
   );
   start(r);
   expect(NativeMoneyScene).toHaveBeenCalledTimes(2);
+  act(() => r.unmount());
+});
+
+test('benign GL diagnostics do not remove a drawable view; real context loss offers the list', () => {
+  let r!: TestRenderer.ReactTestRenderer;
+  const unavailable = jest.fn();
+  act(() => {
+    r = TestRenderer.create(
+      <NativeMoneyMap
+        graph={graph}
+        view={graph}
+        active
+        onSelect={jest.fn()}
+        onUnavailable={unavailable}
+      />,
+    );
+  });
+  const scene = start(r);
+  const getError = jest.spyOn(gl, 'getError');
+  getError.mockReturnValue(0x0500);
+  for (let i = 0; i < 32; i++) frame();
+  expect(scene.dispose).not.toHaveBeenCalled();
+  expect(unavailable).not.toHaveBeenCalled();
+  getError.mockReturnValue(0x9242);
+  for (let i = 0; i < 31 && pending.size; i++) frame();
+  expect(unavailable).toHaveBeenCalledTimes(1);
+  expect(scene.dispose).toHaveBeenCalledTimes(1);
+  getError.mockRestore();
+  act(() => r.unmount());
+});
+
+test('production never gates its first frame on the e2e pixel probe', () => {
+  mockE2E = false;
+  let r!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    r = TestRenderer.create(
+      <NativeMoneyMap graph={graph} view={graph} active onSelect={jest.fn()} />,
+    );
+  });
+  const scene = start(r);
+  scene.verifyPixels.mockImplementation(() => {
+    throw new Error('Benign readback discrepancy');
+  });
+  frame();
+  frame();
+  expect(scene.verifyPixels).not.toHaveBeenCalled();
+  expect(scene.endFrame).toHaveBeenCalledTimes(2);
+  expect(scene.dispose).not.toHaveBeenCalled();
   act(() => r.unmount());
 });

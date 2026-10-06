@@ -1,6 +1,6 @@
 import { isE2E } from '../../design/environment';
 import { Button, Group } from '../../design/primitives';
-import { formatFinancialYear } from '../../design/format';
+import { formatDisclosureYear } from '../../design/format';
 import type { MoneyTestHookProps } from './probe-types';
 
 export function moneyProbeId(completedFrames: number, pixels: number) {
@@ -26,7 +26,7 @@ export function MoneyTestHooks({ graph, onYear, onFocus }: MoneyTestHookProps) {
     <Group>
       {Number.isFinite(year) ? (
         <Button
-          label={`Show ${formatFinancialYear(year)} only`}
+          label={`Show ${formatDisclosureYear(year)} only`}
           testID="money-test-year"
           onPress={() => onYear(year)}
         />

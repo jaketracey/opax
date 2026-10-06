@@ -721,7 +721,14 @@ export function ProfileScreen({
                   <Text wordSafe>{p.caption}</Text>
                   <RecordRow
                     title="Money map"
-                    onPress={() => router.push(moneyRoute(p.party))}
+                    onPress={() =>
+                      router.push(
+                        moneyRoute(
+                          identity.party ?? p.party,
+                          identity.seats[0]?.jurisdiction,
+                        ),
+                      )
+                    }
                     testID="person-money-map"
                   />
                   {p.party ? (

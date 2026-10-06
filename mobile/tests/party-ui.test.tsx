@@ -568,3 +568,13 @@ test.each(['pull', 'foreground'] as const)(
     }
   },
 );
+
+test('the party money-map seam opens the native canonical party focus', async () => {
+  const r = await render();
+  press(r, 'party-money-map');
+  expect(router.push).toHaveBeenLastCalledWith({
+    pathname: '/money',
+    params: { focus: 'party:Labor' },
+  });
+  await act(async () => r.unmount());
+});

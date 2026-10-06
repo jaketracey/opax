@@ -72,10 +72,13 @@ export function moneyFlowType(edge: MoneyEdge, nodes: Map<string, MoneyNode>) {
     return 'donations';
   return null;
 }
-export function moneyView(raw: MoneyGraph, f: MoneyFilters): MoneyGraph {
+export function moneyWindowNodes(
+  raw: MoneyGraph,
+  f: MoneyFilters,
+): MoneyNode[] {
   const extent = yearExtent(raw);
   const recalculate = f.from > extent.from || f.to < extent.to || f.inflation;
-  const nodes = recalculate
+  return recalculate
     ? raw.nodes.map((n) => ({
         ...windowFigures(n, f.from, f.to, f.inflation),
         ...(n.grants
@@ -86,6 +89,11 @@ export function moneyView(raw: MoneyGraph, f: MoneyFilters): MoneyGraph {
           : {}),
       }))
     : raw.nodes;
+}
+export function moneyView(raw: MoneyGraph, f: MoneyFilters): MoneyGraph {
+  const extent = yearExtent(raw);
+  const recalculate = f.from > extent.from || f.to < extent.to || f.inflation;
+  const nodes = moneyWindowNodes(raw, f);
   const byId = new Map(nodes.map((n) => [n.id, n]));
   const edges = (
     recalculate
@@ -116,4 +124,11 @@ export function rankedDonors(view: MoneyGraph) {
     .sort(
       (a, b) => b.total - a.total || a.label.localeCompare(b.label, 'en-AU'),
     );
+}
+
+/** Only the exporter-selected donation cohort can have a donation rank. */
+export function donationRanks(donors: MoneyNode[]) {
+  return new Map(
+    donors.filter((n) => n.via !== 'public_money').map((n, i) => [n.id, i + 1]),
+  );
 }

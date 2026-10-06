@@ -94,49 +94,32 @@ function publicMoney(x: PublicMoneyBlock): boolean {
         )))
   );
 }
-/** Some state exports split one canonical donor ID across differently cased names.
- * Join only complete, disjoint annual disclosures; overlapping records remain an error.
- */
-function joinDatedDonor(a: MoneyNode, b: MoneyNode): MoneyNode {
-  const completeYears = (n: MoneyNode) => {
-    const cells = Object.entries(n.byYear ?? {});
-    return (
-      cells.length > 0 &&
-      n.undated === undefined &&
-      n.grants === undefined &&
-      n.contracts === undefined &&
-      n.flow === undefined &&
-      cells.reduce((sum, [, cell]) => sum + cell[0], 0) === n.total &&
-      cells.reduce((sum, [, cell]) => sum + cell[1], 0) === n.count &&
-      Math.min(...cells.map(([key]) => Number(key))) === n.firstYear &&
-      Math.max(...cells.map(([key]) => Number(key))) === n.lastYear
-    );
-  };
-  if (
-    a.kind !== 'donor' ||
-    b.kind !== 'donor' ||
-    a.label.toLowerCase() !== b.label.toLowerCase() ||
-    a.group !== b.group ||
-    a.industry !== b.industry ||
-    a.profileUrl !== b.profileUrl ||
-    a.colour !== b.colour ||
-    !completeYears(a) ||
-    !completeYears(b) ||
-    Object.keys(b.byYear!).some((key) => key in a.byYear!)
-  )
-    throw new Error('Ambiguous duplicate money donor');
-  const joined = {
-    ...a,
-    total: a.total + b.total,
-    count: a.count + b.count,
-    firstYear: Math.min(a.firstYear!, b.firstYear!),
-    lastYear: Math.max(a.lastYear!, b.lastYear!),
-    byYear: { ...a.byYear, ...b.byYear },
-  };
-  if (!figures(joined)) throw new Error('Invalid combined money donor');
-  return joined;
+export interface MoneyDecodeLoss {
+  nodes: number;
+  edges: number;
+  fields: number;
 }
-/** Reject corrupt cache/network data before allocating GL resources or summing cells. */
+// Keep validation metadata outside the source's published facts, as robustness does.
+const losses = new WeakMap<MoneyGraph, MoneyDecodeLoss>();
+export const moneyDecodeLoss = (graph: MoneyGraph): MoneyDecodeLoss =>
+  losses.get(graph) ?? { nodes: 0, edges: 0, fields: 0 };
+function identity(value: unknown): string {
+  const ordered = (x: unknown): unknown =>
+    Array.isArray(x)
+      ? x.map(ordered)
+      : x && typeof x === 'object'
+        ? Object.fromEntries(
+            Object.entries(x)
+              .sort(([a], [b]) => a.localeCompare(b))
+              .map(([k, v]) => [k, ordered(v)]),
+          )
+        : x;
+  return JSON.stringify(ordered(value));
+}
+/** One bad row cannot blank a jurisdiction. No synthetic sums for duplicate IDs.
+ * Identical records may differ only in total: retain the larger. Otherwise omit
+ * every row for that identity, including all dangling edges, and count the loss.
+ */
 export function decodeMoneyGraph(value: unknown): MoneyGraph {
   const graph = value as MoneyGraph;
   if (
@@ -145,40 +128,88 @@ export function decodeMoneyGraph(value: unknown): MoneyGraph {
     typeof graph.meta.coverage !== 'string' ||
     typeof graph.meta.source !== 'string' ||
     !Array.isArray(graph.nodes) ||
-    !Array.isArray(graph.edges) ||
-    graph.nodes.length > 1000 ||
-    graph.edges.length > 10000
+    !Array.isArray(graph.edges)
   )
     throw new Error('Invalid money graph');
-  const nodes = new Map<string, MoneyNode>();
-  for (const node of graph.nodes) {
+  let fields = 0;
+  const buckets = new Map<string, MoneyNode[]>();
+  const invalidIds = new Set<string>();
+  for (const original of graph.nodes.slice(0, 1000)) {
+    const node = original && { ...original };
     if (
       !node ||
       typeof node.id !== 'string' ||
+      !node.id.trim() ||
       typeof node.label !== 'string' ||
+      !node.label.trim() ||
       typeof node.group !== 'string' ||
-      typeof node.kind !== 'string' ||
       typeof node.industry !== 'string' ||
-      !figures(node) ||
-      (node.colour !== undefined && !/^#[a-f\d]{6}$/i.test(node.colour)) ||
-      (node.grants !== undefined && !publicMoney(node.grants)) ||
-      (node.contracts !== undefined && !publicMoney(node.contracts))
-    )
-      throw new Error('Invalid money node');
-    const previous = nodes.get(node.id);
-    nodes.set(node.id, previous ? joinDatedDonor(previous, node) : node);
+      !['donor', 'party', 'grantor', 'agency', 'supplier'].includes(
+        node.kind,
+      ) ||
+      !figures(node)
+    ) {
+      if (typeof node?.id === 'string') invalidIds.add(node.id);
+      continue;
+    }
+    if (node.colour !== undefined && !/^#[a-f\d]{6}$/i.test(node.colour)) {
+      delete node.colour;
+      fields++;
+    }
+    for (const key of ['grants', 'contracts'] as const) {
+      if (node[key] !== undefined && !publicMoney(node[key]!)) {
+        delete node[key];
+        fields++;
+      }
+    }
+    const rows = buckets.get(node.id) ?? [];
+    rows.push(node);
+    buckets.set(node.id, rows);
   }
-  for (const edge of graph.edges)
+  const nodes: MoneyNode[] = [];
+  for (const [id, rows] of buckets) {
+    if (invalidIds.has(id)) continue;
+    const signatures = new Set(
+      rows.map(({ total: _total, ...rest }) => identity(rest)),
+    );
+    if (signatures.size !== 1) continue;
+    nodes.push(rows.reduce((a, b) => (b.total > a.total ? b : a)));
+  }
+  const ids = new Set(nodes.map((n) => n.id));
+  const edgeBuckets = new Map<string, MoneyEdge[]>();
+  for (const edge of graph.edges.slice(0, 10000)) {
     if (
       !edge ||
-      !nodes.has(edge.source) ||
-      !nodes.has(edge.target) ||
+      !ids.has(edge.source) ||
+      !ids.has(edge.target) ||
       !figures(edge)
     )
-      throw new Error('Invalid money edge');
-  return nodes.size === graph.nodes.length
-    ? graph
-    : { ...graph, nodes: [...nodes.values()] };
+      continue;
+    const key = identity([
+      edge.source,
+      edge.target,
+      edge.flow ?? '',
+      edge.grant ?? false,
+    ]);
+    const rows = edgeBuckets.get(key) ?? [];
+    rows.push(edge);
+    edgeBuckets.set(key, rows);
+  }
+  const edges: MoneyEdge[] = [];
+  for (const rows of edgeBuckets.values()) {
+    const signatures = new Set(
+      rows.map(({ total: _total, ...rest }) => identity(rest)),
+    );
+    if (signatures.size !== 1) continue;
+    edges.push(rows.reduce((a, b) => (b.total > a.total ? b : a)));
+  }
+  const result = { ...graph, nodes, edges };
+  losses.set(result, {
+    nodes: graph.nodes.length - nodes.length,
+    edges: graph.edges.length - edges.length,
+    fields,
+  });
+  return result;
 }
 export const moneyCatalogs = {
   federal: { label: 'Federal', path: '/graph/money.json' },

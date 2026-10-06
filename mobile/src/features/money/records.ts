@@ -1,7 +1,8 @@
 import { fromWebPath } from '../../navigation/routes';
-import { formatFinancialYear } from '../../design/format';
+import { formatDisclosureYear, formatCount } from '../../design/format';
 import {
   moneyCatalogs,
+  type MoneyFigures,
   type MoneyGraph,
   type MoneyNode,
   type MoneyJurisdiction,
@@ -72,8 +73,22 @@ export function moneyFocusRoute(
 export function moneyYears(first: number | null, last: number | null) {
   if (first === null || last === null) return 'Year not recorded';
   return first === last
-    ? formatFinancialYear(first)
-    : `${formatFinancialYear(first)} to ${formatFinancialYear(last)}`;
+    ? formatDisclosureYear(first)
+    : `${formatDisclosureYear(first)} to ${formatDisclosureYear(last)}`;
+}
+export function moneyWindowYears(
+  figures: MoneyFigures,
+  filters: MoneyFilters,
+  awarded = false,
+) {
+  if (figures.count === 0)
+    return `${awarded ? 'nothing awarded' : 'nothing disclosed'} in ${moneyYears(filters.from, filters.to)}`;
+  return moneyYears(figures.firstYear, figures.lastYear);
+}
+export function publicMoneyLabel(node: MoneyNode) {
+  return node.flow === 'contracts'
+    ? `held by donors on this map across ${formatCount(node.count)} contracts`
+    : `awarded to donors on this map across ${formatCount(node.count)} grants`;
 }
 export function moneySource(graph: MoneyGraph) {
   const federal =
@@ -118,13 +133,13 @@ export function moneyCaveats(graph: MoneyGraph): string[] {
       `Source: ${graph.meta.commission ?? graph.meta.sourceShort ?? graph.meta.source}, ${graph.meta.coverage}.`,
       graph.meta.threshold ?? '',
       'Totals are a floor, not a ceiling.',
-      'Gifts to candidates and committees, public funding and internal party transfers are excluded.',
+      'Donor totals exclude gifts to candidates and committees, public funding and internal party transfers. Party receipts exclude public funding and include internal party transfers.',
       graph.meta.not_summed ?? '',
     ].filter(Boolean);
   return [
     'AEC disclosure data: donations under the disclosure threshold are not reported and cannot appear here, so totals are a floor, not a ceiling.',
     `Source: Australian Electoral Commission annual and election returns, ${graph.meta.coverage}.`,
-    'Public electoral funding and internal party transfers are excluded.',
+    'Donor totals exclude public electoral funding and internal party transfers. Party receipts exclude public electoral funding and include internal party transfers.',
     'State and federal returns are not summed: AEC returns already include state branch receipts.',
   ];
 }

@@ -7,8 +7,9 @@ import {
   StaleNotice,
   Text,
 } from '../../design/primitives';
-import type { MoneyGraph } from './data';
+import { moneyDecodeLoss, type MoneyGraph } from './data';
 import { moneyCaveats, moneySource } from './records';
+import { disclosureYearNote } from '../../design/format';
 
 export function MoneyRecordStatus({
   record,
@@ -45,6 +46,15 @@ export function MoneyAttribution({
         kind="register"
         testID="money-source"
       />
+      <Text wordSafe variant="fine">
+        {disclosureYearNote}
+      </Text>
+      {Object.values(moneyDecodeLoss(record.data)).some((n) => n > 0) ? (
+        <Text wordSafe variant="fine">
+          Some records could not be read and are omitted. Displayed
+          relationships may be incomplete.
+        </Text>
+      ) : null}
       {caveats
         ? moneyCaveats(record.data).map((note) => (
             <Text key={note} wordSafe variant="fine">

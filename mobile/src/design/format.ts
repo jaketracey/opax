@@ -164,6 +164,16 @@ export function formatFinancialYear(startYear: number): string {
   return `${startYear}–${String((startYear + 1) % 100).padStart(2, '0')}`;
 }
 
+/** Money exports mix annual FY-start keys and election polling years without
+ * per-cell return types. Preserve the bare source year, as the web does; never
+ * infer a financial year from an election key. Shared by map and party page.
+ */
+export function formatDisclosureYear(year: number): string {
+  return String(year);
+}
+export const disclosureYearNote =
+  'Annual returns use the first year of the financial year; election returns use polling year.';
+
 /** Ranges in prose: "1998 to 2026". */
 export function formatYearRange(from: number, to: number): string {
   return from === to ? String(from) : `${from} to ${to}`;

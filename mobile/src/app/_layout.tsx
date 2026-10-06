@@ -71,7 +71,7 @@ export default function Layout() {
             contentStyle: { backgroundColor: light.paper },
           }}
         >
-          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="(tabs)" options={{ title: 'Back' }} />
           <Stack.Screen
             name="money"
             options={{ ...chrome, headerShown: true, title: 'Money map' }}

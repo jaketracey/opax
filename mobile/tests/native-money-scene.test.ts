@@ -191,3 +191,26 @@ test('native pixel verification reuses a bounded buffer and rejects a blank surf
   expect(() => scene.verifyPixels()).toThrow('GL error 1282');
   scene.dispose();
 });
+
+test('Reduce Motion skips identical settled frames but redraws after orbit, zoom, focus, resize or a filter change', () => {
+  const { scene } = create();
+  scene.setReducedMotion(true);
+  for (let i = 0; i < 400; i++) scene.render(i * 34);
+  const render = jest.mocked(THREE.WebGLRenderer).mock.results.at(-1)!.value
+    .render;
+  const count = render.mock.calls.length;
+  for (let i = 0; i < 100; i++)
+    expect(scene.render(20000 + i * 34)).toBe(false);
+  expect(render).toHaveBeenCalledTimes(count);
+  for (const change of [
+    () => scene.orbit(1, 1),
+    () => scene.zoom(1.1),
+    () => scene.focus('party:Labor'),
+    () => scene.resize(400, 350, 2),
+  ]) {
+    change();
+    expect(scene.render(30000)).toBe(true);
+    expect(scene.render(30034)).toBe(false);
+  }
+  scene.dispose();
+});

@@ -23,6 +23,7 @@ import {
   errorMessage,
 } from '../../design/primitives';
 import { formatCount, formatMoney } from '../../design/format';
+import { samePartyLabel } from '../../design/party';
 import { colors, layout, spacing } from '../../design/tokens';
 import { RecordRow } from '../RecordRow';
 import type { MoneyJurisdiction, MoneyNode } from './data';
@@ -37,10 +38,18 @@ import {
   moneyJurisdiction,
   moneySource,
   moneyYears,
+  moneyWindowYears,
+  publicMoneyLabel,
   param,
   type MoneyParams,
 } from './records';
-import { moneyView, rankedDonors, type MoneyFilters } from './view';
+import {
+  moneyView,
+  moneyWindowNodes,
+  donationRanks,
+  rankedDonors,
+  type MoneyFilters,
+} from './view';
 
 export default function MoneyScreen() {
   const params = useLocalSearchParams<MoneyParams>();
@@ -95,6 +104,7 @@ function MoneyCatalogScreen({
     [changedFilters, record, params],
   );
   const [controlsOpen, setControlsOpen] = useState(false);
+  const [recordsOpen, setRecordsOpen] = useState(false);
   const map = useRef<NativeMoneyMapHandle | null>(null);
   const [plateVisible, setPlateVisible] = useState(true);
   const plate = useRef({ top: 0, bottom: 700 }),
@@ -106,6 +116,17 @@ function MoneyCatalogScreen({
     [record, filters],
   );
   const donors = useMemo(() => (view ? rankedDonors(view) : []), [view]);
+  const ranks = useMemo(() => donationRanks(donors), [donors]);
+  const otherRecords = useMemo(
+    () =>
+      record && filters
+        ? moneyWindowNodes(record.data, filters).filter(
+            (n) => n.kind === 'party' || n.kind === 'grantor',
+          )
+        : [],
+    [record, filters],
+  );
+  const [glFallback, setGLFallback] = useState(false);
   const select = useCallback(
     (id: string) => {
       if (filters) router.push(moneyFocusRoute(id, jurisdiction, filters));
@@ -113,7 +134,13 @@ function MoneyCatalogScreen({
     [router, filters, jurisdiction],
   );
   useEffect(() => {
-    const requested = param(params.focus);
+    const rawFocus = param(params.focus);
+    const requested = rawFocus?.startsWith('party:')
+      ? record?.data.nodes.find(
+          (n) =>
+            n.kind === 'party' && samePartyLabel(n.label, rawFocus.slice(6)),
+        )?.id
+      : rawFocus;
     if (
       requested &&
       !consumedFocusRef.current &&
@@ -122,7 +149,7 @@ function MoneyCatalogScreen({
       consumedFocusRef.current = true;
       select(requested);
     }
-  }, [params.focus, view, select, consumedFocusRef]);
+  }, [params.focus, record, view, select, consumedFocusRef]);
   const source = record ? moneySource(record.data) : null;
   const parties = useMemo(() => {
     const result = new Map<string, string[]>();
@@ -148,11 +175,21 @@ function MoneyCatalogScreen({
   const renderDonor = ({ item, index }: { item: MoneyNode; index: number }) => (
     <Group gap={spacing.s3} style={styles.donor}>
       <RecordRow
-        title={`${formatCount(index + 1)}. ${item.label}`}
+        title={
+          ranks.has(item.id)
+            ? `${formatCount(ranks.get(item.id)!)}. ${item.label}`
+            : item.label
+        }
         testID={`money-donor-${index}`}
-        detail={`${formatMoney(item.total)} disclosed donations · ${moneyYears(item.firstYear, item.lastYear)}`}
+        detail={`${formatMoney(item.total)} disclosed donations · ${moneyWindowYears(item, filters!)}`}
         onPress={() => select(item.id)}
       />
+      {item.via === 'public_money' ? (
+        <Text wordSafe variant="fine">
+          On the map for the public money it holds, not for the size of its
+          donations.
+        </Text>
+      ) : null}
       <Text wordSafe variant="metadata" testID={`money-donor-parties-${index}`}>
         {parties.get(item.id)?.join(', ') ??
           'No disclosed party flow in these years'}
@@ -207,6 +244,12 @@ function MoneyCatalogScreen({
               onChange={onMode}
               testID="money-view-toggle"
             />
+            {glFallback ? (
+              <Text wordSafe testID="money-gl-fallback">
+                The 3D view is unavailable. You can explore the same records in
+                the list.
+              </Text>
+            ) : null}
             {error ? (
               <ErrorState
                 message={errorMessage(error)}
@@ -246,6 +289,10 @@ function MoneyCatalogScreen({
                         view={view}
                         active={plateVisible}
                         onSelect={select}
+                        onUnavailable={() => {
+                          setGLFallback(true);
+                          onMode('list');
+                        }}
                       />
                     ) : (
                       <EmptyState
@@ -282,6 +329,24 @@ function MoneyCatalogScreen({
                 />
                 {mode === 'list' ? (
                   <>
+                    <Heading level={2}>Parties and public money</Heading>
+                    <Button
+                      label={`${recordsOpen ? 'Hide' : 'Show'} parties and public money`}
+                      expanded={recordsOpen}
+                      onPress={() => setRecordsOpen((value) => !value)}
+                      testID="money-list-records-toggle"
+                    />
+                    {recordsOpen
+                      ? otherRecords.map((node) => (
+                          <RecordRow
+                            key={node.id}
+                            title={node.label}
+                            detail={`${formatMoney(node.total)} · ${node.kind === 'grantor' ? publicMoneyLabel(node) : 'Disclosed receipts'} · ${moneyWindowYears(node, filters, node.kind === 'grantor')}`}
+                            testID={`money-list-record-${node.id}`}
+                            onPress={() => select(node.id)}
+                          />
+                        ))
+                      : null}
                     <Heading level={2}>Ranked donors</Heading>
                     <Text wordSafe variant="fine">
                       Disclosed donations, largest first. Public grants and

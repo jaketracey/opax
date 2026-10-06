@@ -8,7 +8,8 @@ import { billSentenceCase } from '../api/bill-transforms';
 import {
   formatCount,
   formatDate,
-  formatFinancialYear,
+  formatDisclosureYear,
+  disclosureYearNote,
   formatMoney,
 } from '../design/format';
 import { chamberName, jurisdictionName } from '../design/parliament';
@@ -282,7 +283,7 @@ export function PartyPage({ input }: { input: string }) {
                             title={
                               row.year === 'undated'
                                 ? 'Undated'
-                                : formatFinancialYear(Number(row.year))
+                                : formatDisclosureYear(Number(row.year))
                             }
                           >
                             <RowList>
@@ -306,9 +307,8 @@ export function PartyPage({ input }: { input: string }) {
                 <Group>
                   <Text wordSafe variant="fine">
                     Top donors are the displayed donor-to-party flows, not all
-                    party receipts. Year keys use the first year of each
-                    financial year; election returns use polling year. No
-                    sequence or causal link is inferred.
+                    party receipts. {disclosureYearNote} No sequence or causal
+                    link is inferred.
                   </Text>
                 </Group>
               ) : null}
@@ -317,7 +317,7 @@ export function PartyPage({ input }: { input: string }) {
                 url="https://transparency.aec.gov.au/"
                 kind="register"
               />
-              <MoneyMapLink />
+              <MoneyMapLink party={view.label} />
             </Section>
             <Section title="Associated entities">
               <CatalogState

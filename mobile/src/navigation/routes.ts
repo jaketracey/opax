@@ -37,7 +37,16 @@ export const leadRoute = (id: string) => ({
 export const declarationsRoute = { pathname: '/declarations' as const };
 // Local follows: the list and its management, pushed within the current tab.
 export const followsRoute = '/follows';
-export const moneyRoute = (party?: string | null) => ({
-  pathname: '/money' as const,
-  ...(party ? { params: { focus: `party:${party}` } } : {}),
-});
+export const moneyRoute = (party?: string | null, jurisdiction = 'federal') => {
+  const state = ['qld', 'vic', 'tas'].find(
+    (key) => jurisdiction === key || jurisdiction === `au-${key}`,
+  );
+  const params = {
+    ...(party ? { focus: `party:${party}` } : {}),
+    ...(state ? { jurisdiction: state } : {}),
+  };
+  return {
+    pathname: '/money' as const,
+    ...(Object.keys(params).length ? { params } : {}),
+  };
+};

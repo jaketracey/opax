@@ -22,6 +22,7 @@ import {
 import { colors, spacing } from '../../design/tokens';
 import type { MoneyGraph } from './data';
 import { NativeMoneyScene, type ProjectedLabel } from './NativeMoneyScene';
+import { isE2E } from '../../design/environment';
 import { moneyProbeId } from './money-probe';
 import { MoneyMapLabels, moneyLabelGroups } from './MoneyMapLabels';
 
@@ -33,12 +34,14 @@ export function NativeMoneyMap({
   view,
   active,
   onSelect,
+  onUnavailable,
   ref,
 }: {
   graph: MoneyGraph;
   view: MoneyGraph;
   active: boolean;
   onSelect: (id: string) => void;
+  onUnavailable?: () => void;
   ref?: Ref<NativeMoneyMapHandle>;
 }) {
   const labelGroups = useMemo(() => moneyLabelGroups(graph), [graph]);
@@ -80,14 +83,19 @@ export function NativeMoneyMap({
     engine.current = null;
     glContext.current = null;
   }, [stop]);
-  const fail = useCallback(() => {
-    release();
-    if (mounted.current) {
-      setError(true);
-      setLabels([]);
-      setProbe('money-map-canvas');
-    }
-  }, [release]);
+  const fail = useCallback(
+    (reason?: unknown) => {
+      if (__DEV__ || isE2E) console.warn('Money map GL unavailable', reason);
+      release();
+      if (mounted.current) {
+        setError(true);
+        setLabels([]);
+        setProbe('money-map-canvas');
+        onUnavailable?.();
+      }
+    },
+    [release, onUnavailable],
+  );
   const loop = useCallback(
     function frame() {
       if (
@@ -108,10 +116,16 @@ export function NativeMoneyMap({
       lastFrame.current = now;
       try {
         const scene = engine.current;
-        scene.render(now);
-        if (!pixels.current) pixels.current = scene.verifyPixels();
-        scene.endFrame();
-        if (!probed.current && scene.diagnostics().completedFrames >= 2) {
+        const drawn = scene.render(now);
+        if (drawn !== false) {
+          if (isE2E && !pixels.current) pixels.current = scene.verifyPixels();
+          scene.endFrame();
+        }
+        if (
+          isE2E &&
+          !probed.current &&
+          scene.diagnostics().completedFrames >= 2
+        ) {
           probed.current = true;
           setProbe(
             moneyProbeId(scene.diagnostics().completedFrames, pixels.current),
@@ -121,17 +135,19 @@ export function NativeMoneyMap({
           const gl = glContext.current;
           // Expo's native isContextLost() is a stub; GL errors or invalid-context
           // exceptions remove this view and offer a fresh owned context.
-          if (gl.getError() !== gl.NO_ERROR)
-            throw new Error('Native GL context unavailable');
+          const error = gl.getError();
+          if (error === 0x9242) throw new Error('Native GL context lost');
+          if (error !== gl.NO_ERROR && (__DEV__ || isE2E))
+            console.warn('Money map GL diagnostic', error);
           lastErrorCheck.current = now;
         }
-        if (now - lastLabels.current >= 200) {
+        if (drawn !== false && now - lastLabels.current >= 200) {
           setLabels(scene.labels());
           lastLabels.current = now;
         }
         raf.current = requestAnimationFrame(frame);
-      } catch {
-        fail();
+      } catch (reason) {
+        fail(reason);
       }
     },
     [fail],
@@ -203,8 +219,8 @@ export function NativeMoneyMap({
         probed.current = false;
         lastFrame.current = 0;
         start();
-      } catch {
-        fail();
+      } catch (reason) {
+        fail(reason);
       }
     },
     [graph, size.width, size.height, release, start, fail],

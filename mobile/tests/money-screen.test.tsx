@@ -13,6 +13,37 @@ import {
   SourceLink,
 } from '../src/design/primitives';
 import { pinned } from './pinned';
+import { RecordRow } from '../src/features/RecordRow';
+
+test('the accessible list opens every party and public-money hub without the canvas', async () => {
+  const r = await render(<MoneyScreen />);
+  await act(async () =>
+    r.root
+      .findAllByType(Button)
+      .find((x) => x.props.testID === 'money-list-records-toggle')!
+      .props.onPress(),
+  );
+  const raw = pinned('/graph/money.json') as {
+    nodes: { id: string; kind: string }[];
+  };
+  const targets = raw.nodes.filter(
+    (n) => n.kind === 'party' || n.kind === 'grantor',
+  );
+  for (const node of targets) {
+    const row = r.root
+      .findAllByType(RecordRow)
+      .find((x) => x.props.testID === `money-list-record-${node.id}`)!;
+    expect(row).toBeDefined();
+    await act(async () => row.props.onPress());
+    expect(mockRouter.push).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        pathname: '/money-node',
+        params: expect.objectContaining({ node: node.id }),
+      }),
+    );
+  }
+  await act(async () => r.unmount());
+});
 
 jest.mock('../src/api/runtime', () => ({ apiClient: { get: jest.fn() } }));
 jest.mock('../src/features/money/NativeMoneyMap', () => ({
@@ -121,11 +152,28 @@ test('the native focus record shows the pinned selected-year figure, years and o
   const r = await render(<MoneyNodeScreen />);
   expect(r.root.findAllByType(MoneyFigure)[0]!.props.amount).toBe(69010542);
   const rows = r.root.findByType(KeyValueList).props.items;
-  expect(rows).toContainEqual(expect.objectContaining({ value: '2024–25' }));
+  expect(rows).toContainEqual(expect.objectContaining({ value: '2024' }));
   expect(
     r.root
       .findAllByType(SourceLink)
       .some((x) => x.props.url === 'https://transparency.aec.gov.au/'),
   ).toBe(true);
+  await act(async () => r.unmount());
+});
+
+test('a public-money focus figure states the mapped-donor scope and contract coverage', async () => {
+  const raw = pinned('/graph/money.json') as {
+    nodes: { id: string; kind: string; flow?: string; count: number }[];
+    meta: { contracts_coverage: string };
+  };
+  const hub = raw.nodes.find(
+    (n) => n.kind === 'grantor' && n.flow === 'contracts',
+  )!;
+  Object.assign(mockParams, { node: hub.id });
+  const r = await render(<MoneyNodeScreen />);
+  expect(r.root.findAllByType(MoneyFigure)[0]!.props.label).toContain(
+    'held by donors on this map across',
+  );
+  expect(JSON.stringify(r.toJSON())).toContain(raw.meta.contracts_coverage);
   await act(async () => r.unmount());
 });

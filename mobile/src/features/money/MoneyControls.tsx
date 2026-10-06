@@ -9,7 +9,7 @@ import {
   Text,
   useAccessibilitySize,
 } from '../../design/primitives';
-import { formatFinancialYear } from '../../design/format';
+import { formatDisclosureYear } from '../../design/format';
 import { colors, minimumTarget, spacing } from '../../design/tokens';
 import { moneyCatalogs, type MoneyGraph, type MoneyJurisdiction } from './data';
 import { yearExtent, type MoneyFilters } from './view';
@@ -65,7 +65,7 @@ export function MoneyYearSlider({
   return (
     <Group gap={spacing.s3}>
       <Text variant="control" wordSafe>
-        {label}: {formatFinancialYear(shown)}
+        {label}: {formatDisclosureYear(shown)}
       </Text>
       <GestureDetector gesture={gesture}>
         <View
@@ -76,11 +76,11 @@ export function MoneyYearSlider({
             min,
             max,
             now: value,
-            text: formatFinancialYear(value),
+            text: formatDisclosureYear(value),
           }}
           accessibilityActions={[
-            { name: 'increment', label: 'Later financial year' },
-            { name: 'decrement', label: 'Earlier financial year' },
+            { name: 'increment', label: 'Later return year' },
+            { name: 'decrement', label: 'Earlier return year' },
           ]}
           onAccessibilityAction={(event) => {
             if (event.nativeEvent.actionName === 'increment')

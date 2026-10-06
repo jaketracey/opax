@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 import {
   decodeMoneyGraph,
   moneyCatalogs,
+  moneyDecodeLoss,
   type MoneyNode,
 } from '../src/features/money/data';
 import {
@@ -21,89 +22,77 @@ import {
   type CacheIndexEntry,
 } from '../src/api/cache';
 
-test('the full pinned graph is accepted and corrupt endpoints or numbers are rejected', () => {
+test('a malformed or duplicated row is counted without blanking the valid jurisdiction', () => {
   const graph = decodeMoneyGraph(pinned('/graph/money.json'));
   expect(graph.nodes).toHaveLength(413);
   expect(graph.edges).toHaveLength(1159);
-  expect(() =>
-    decodeMoneyGraph({ ...graph, nodes: [...graph.nodes, graph.nodes[0]] }),
-  ).toThrow();
-  expect(() =>
-    decodeMoneyGraph({
-      ...graph,
-      edges: [{ ...graph.edges[0], target: 'missing' }],
-    }),
-  ).toThrow();
-  expect(() =>
-    decodeMoneyGraph({
-      ...graph,
-      nodes: [{ ...graph.nodes[0], total: Infinity }],
-    }),
-  ).toThrow();
+  const duplicate = decodeMoneyGraph({
+    ...graph,
+    nodes: [...graph.nodes, graph.nodes[0]],
+  });
+  expect(duplicate.nodes).toHaveLength(413);
+  expect(moneyDecodeLoss(duplicate).nodes).toBe(1);
+  const bad = decodeMoneyGraph({
+    ...graph,
+    nodes: [
+      ...graph.nodes,
+      { ...graph.nodes[0], id: 'fixture:bad', total: Infinity },
+    ],
+    edges: [...graph.edges, { ...graph.edges[0], target: 'missing' }],
+  });
+  expect(bad.nodes).toHaveLength(413);
+  expect(bad.edges).toHaveLength(1159);
+  expect(moneyDecodeLoss(bad)).toEqual({ nodes: 1, edges: 1, fields: 0 });
 });
-test('a canonical donor split across name casing and disjoint years retains every disclosed figure and edge', () => {
-  const graph = decodeMoneyGraph(pinned('/graph/money.tas.json'));
-  const first: MoneyNode = {
+test('ID duplicates retain the larger total only when all other fields are identical; ambiguity removes all rows and dangling edges', () => {
+  const graph = decodeMoneyGraph(pinned('/graph/money.json'));
+  const donor: MoneyNode = {
     id: 'donor:fixture',
     label: 'Fixture donor',
     kind: 'donor',
     industry: 'individual',
     group: 'individuals',
-    total: 3700,
+    total: 5,
     count: 1,
-    firstYear: 2025,
-    lastYear: 2025,
-    byYear: { '2025': [3700, 1] as [number, number] },
+    firstYear: null,
+    lastYear: null,
   };
-  const second = {
-    ...first,
-    label: 'FIxture donor',
-    total: 1401,
-    firstYear: 2026,
-    lastYear: 2026,
-    byYear: { '2026': [1401, 1] as [number, number] },
-  };
-  const edge = (node: MoneyNode) => ({
-    ...node,
-    source: node.id,
+  const edge = {
+    source: donor.id,
     target: graph.nodes[0]!.id,
-  });
+    total: 5,
+    count: 1,
+    firstYear: null,
+    lastYear: null,
+  };
   const input = {
     ...graph,
-    nodes: [graph.nodes[0]!, first, second],
-    edges: [edge(first), edge(second)],
+    nodes: [graph.nodes[0]!, donor, { ...donor, total: 10 }],
+    edges: [edge],
   };
-  const decoded = decodeMoneyGraph(input);
-  expect(decoded.nodes).toHaveLength(2);
-  expect(decoded.nodes[1]).toMatchObject({
-    label: 'Fixture donor',
-    total: 5101,
-    count: 2,
-    firstYear: 2025,
-    lastYear: 2026,
-    byYear: { '2025': [3700, 1], '2026': [1401, 1] },
+  const clean = decodeMoneyGraph(input);
+  expect(clean.nodes[1]!.total).toBe(10);
+  expect(moneyDecodeLoss(clean).nodes).toBe(1);
+  for (const changed of [
+    { ...donor, label: 'FIxture donor' },
+    { ...donor, byYear: { '2026': [5, 1] } },
+    { ...donor, count: 2 },
+  ]) {
+    const omitted = decodeMoneyGraph({
+      ...input,
+      nodes: [graph.nodes[0]!, donor, changed, donor],
+    });
+    expect(omitted.nodes.map((n) => n.id)).toEqual([graph.nodes[0]!.id]);
+    expect(omitted.edges).toEqual([]);
+    expect(moneyDecodeLoss(omitted)).toMatchObject({ nodes: 3, edges: 1 });
+  }
+  const repeatedEdges = decodeMoneyGraph({
+    ...graph,
+    edges: [...graph.edges, graph.edges[0]!],
   });
-  expect(decoded.edges).toBe(input.edges);
+  expect(repeatedEdges.edges).toHaveLength(graph.edges.length);
+  expect(moneyDecodeLoss(repeatedEdges).edges).toBe(1);
   expect(input.nodes).toHaveLength(3);
-  for (const ambiguous of [
-    {
-      ...second,
-      byYear: first.byYear,
-      total: 3700,
-      firstYear: 2025,
-      lastYear: 2025,
-    },
-    { ...second, label: 'Another fixture donor' },
-    { ...second, kind: 'party' },
-    { ...second, byYear: {} },
-    {
-      ...second,
-      grants: { total: 0, count: 0, firstYear: null, lastYear: null },
-    },
-  ])
-    expect(() =>
-      decodeMoneyGraph({ ...input, nodes: [first, ambiguous] }),
-    ).toThrow();
 });
 test('native force layout is reproducible, finite and preserves the web physics', () => {
   const graph = decodeMoneyGraph(pinned('/graph/money.json'));
@@ -198,23 +187,26 @@ test.each(Object.values(moneyCatalogs))(
       { undated: [-1, 1] },
       { firstYear: 2025, lastYear: 1998 },
     ]) {
-      expect(() =>
-        decodeMoneyGraph({
-          ...graph,
-          nodes: [{ ...graph.nodes[0], ...fields }],
-        }),
-      ).toThrow();
-    }
-    expect(() =>
-      decodeMoneyGraph({
+      const dropped = decodeMoneyGraph({
         ...graph,
-        nodes: [
-          {
-            ...graph.nodes[0],
-            grants: { total: NaN, count: 1, firstYear: null, lastYear: null },
-          },
-        ],
-      }),
-    ).toThrow();
+        nodes: [{ ...graph.nodes[0], ...fields }],
+      });
+      expect(dropped.nodes).toEqual([]);
+      expect(moneyDecodeLoss(dropped).nodes).toBe(1);
+    }
+    const droppedField = decodeMoneyGraph({
+      ...graph,
+      nodes: [
+        {
+          ...graph.nodes[0],
+          grants: { total: NaN, count: 1, firstYear: null, lastYear: null },
+          colour: 'invalid',
+        },
+      ],
+    });
+    expect(droppedField.nodes).toHaveLength(1);
+    expect(droppedField.nodes[0]!.grants).toBeUndefined();
+    expect(droppedField.nodes[0]!.colour).toBeUndefined();
+    expect(moneyDecodeLoss(droppedField).fields).toBe(2);
   },
 );

@@ -27,11 +27,13 @@ import {
   moneyJurisdiction,
   moneyProfile,
   moneyYears,
+  moneyWindowYears,
+  publicMoneyLabel,
   param,
   publicMoneySource,
   type MoneyParams,
 } from './records';
-import { moneyView } from './view';
+import { moneyView, moneyWindowNodes } from './view';
 
 export default function MoneyNodeScreen() {
   const params = useLocalSearchParams<MoneyParams>();
@@ -43,7 +45,13 @@ export default function MoneyNodeScreen() {
     [record, params],
   );
   const view = useMemo(
-    () => (record && filters ? moneyView(record.data, filters) : null),
+    () =>
+      record && filters
+        ? {
+            ...moneyView(record.data, filters),
+            nodes: moneyWindowNodes(record.data, filters),
+          }
+        : null,
     [record, filters],
   );
   const node = view?.nodes.find((n) => n.id === param(params.node));
@@ -83,11 +91,13 @@ export default function MoneyNodeScreen() {
       ? 'Disclosed receipts'
       : node.kind === 'donor'
         ? 'Disclosed donations'
-        : node.flow === 'contracts' ||
-            node.kind === 'agency' ||
-            node.kind === 'supplier'
-          ? 'Recorded contract commitments'
-          : 'Recorded grant awards';
+        : node.kind === 'grantor'
+          ? publicMoneyLabel(node)
+          : node.flow === 'contracts' ||
+              node.kind === 'agency' ||
+              node.kind === 'supplier'
+            ? 'Recorded contract commitments'
+            : 'Recorded grant awards';
   return (
     <Screen testID="money-focus-sheet">
       <MoneyRecordStatus record={record} />
@@ -107,8 +117,8 @@ export default function MoneyNodeScreen() {
       <KeyValueList
         items={[
           {
-            label: 'Financial years',
-            value: moneyYears(node.firstYear, node.lastYear),
+            label: 'Return years',
+            value: moneyWindowYears(node, filters, node.kind === 'grantor'),
             testID: 'money-focus-years',
           },
           {
@@ -133,7 +143,7 @@ export default function MoneyNodeScreen() {
       ) : null}
       {node.kind === 'party' && filters.industry ? (
         <Text wordSafe variant="fine">
-          The party total covers all industries in these financial years. The
+          The party total covers all industries in these return years. The
           relationships below follow the industry filter.
         </Text>
       ) : null}
@@ -150,7 +160,9 @@ export default function MoneyNodeScreen() {
             ? 'Top donors shown on the map'
             : node.kind === 'donor'
               ? 'Where it went'
-              : 'Awarded to'
+              : node.flow === 'contracts'
+                ? 'Largest contractors among the donors on this map'
+                : 'Largest recipients among the donors on this map'
         }
       >
         <RowList>
@@ -161,7 +173,7 @@ export default function MoneyNodeScreen() {
             );
             return other ? (
               <RecordRow
-                key={`${edge.source}:${edge.target}`}
+                key={`${edge.source}:${edge.target}:${edge.flow ?? 'donations'}`}
                 title={other.label}
                 detail={`${formatMoney(edge.total)} · ${moneyYears(edge.firstYear, edge.lastYear)}`}
                 onPress={() =>
@@ -185,7 +197,7 @@ export default function MoneyNodeScreen() {
                 label={`Recorded grant awards · ${formatCount(node.grants.count)} grants`}
               />
               <Text wordSafe>
-                {moneyYears(node.grants.firstYear, node.grants.lastYear)}
+                {moneyWindowYears(node.grants, filters, true)}
               </Text>
               {record.data.meta.grants_source ? (
                 <Text wordSafe variant="fine">
@@ -206,7 +218,7 @@ export default function MoneyNodeScreen() {
                 label={`Recorded contract commitments · ${formatCount(node.contracts.count)} contracts`}
               />
               <Text wordSafe>
-                {moneyYears(node.contracts.firstYear, node.contracts.lastYear)}
+                {moneyWindowYears(node.contracts, filters, true)}
               </Text>
               <Text wordSafe variant="fine">
                 Recorded contract commitments, not verified payments.
@@ -229,6 +241,12 @@ export default function MoneyNodeScreen() {
           </Text>
         </Section>
       ) : null}
+      {node.via === 'public_money' ? (
+        <Text wordSafe variant="fine">
+          On the map for the public money it holds, not for the size of its
+          donations.
+        </Text>
+      ) : null}
       {node.kind === 'grantor' ? (
         <Group>
           <Text wordSafe variant="fine">
@@ -236,6 +254,12 @@ export default function MoneyNodeScreen() {
               ? contractsSource.citation
               : grantsSource.citation}
           </Text>
+          {node.flow === 'contracts' &&
+          typeof record.data.meta.contracts_coverage === 'string' ? (
+            <Text wordSafe variant="fine">
+              {record.data.meta.contracts_coverage}.
+            </Text>
+          ) : null}
           <SourceLink
             citation={
               node.flow === 'contracts'
