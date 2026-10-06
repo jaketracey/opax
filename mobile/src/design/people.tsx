@@ -7,6 +7,7 @@ import { Icon } from './icon';
 import type { PartyStatus } from '../api/party-transforms';
 import {
   isPartyLabel,
+  partyDot,
   partyIdentity,
   partyText,
   type PartyContext,
@@ -66,6 +67,7 @@ export function PartyLabel({
   linked?: boolean;
 }) {
   const identity = partyIdentity(party);
+  const dot = partyDot(party);
   const text = partyText({ party, status, formerly }, dense);
   const tone = dense ? 'inkSoft' : 'ink';
   const partyLinked = linked && isPartyLabel(party);
@@ -117,11 +119,11 @@ export function PartyLabel({
       accessibilityLabel={text.spoken}
       testID={testID}
     >
-      {isPartyLabel(party) && identity.color ? (
+      {dot ? (
         <View
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
-          style={[styles.dot, { backgroundColor: identity.color }]}
+          style={[styles.dot, { backgroundColor: dot }]}
         />
       ) : null}
       <Text

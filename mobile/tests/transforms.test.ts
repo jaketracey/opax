@@ -27,6 +27,7 @@ import {
   payPersonRecord,
 } from '../src/api/transforms';
 import { bills, catalogs, pinned, files } from './pinned';
+import { partyLabels, partyMoney, resolveParty } from '../src/api/party-page';
 const web = readFileSync(
   resolve(__dirname, '../../portal/public/app.js'),
   'utf8',
@@ -167,7 +168,7 @@ test('samePartyLabel matches the actual web rule for all roster party pairs', ()
     );
   }
 });
-test('the link-only party projection matches the pinned register and web URL selection', () => {
+test('the link-only party projection matches the pinned register; the button lands where the chip does', () => {
   const raw = pinned('/graph/money.json') as {
     meta: { generated: string };
     nodes: { kind: string; label: string; aliases?: string[] }[];
@@ -178,20 +179,54 @@ test('the link-only party projection matches the pinned register and web URL sel
       .filter((n) => n.kind === 'party')
       .map((n) => ({ label: n.label, aliases: n.aliases ?? [] })),
   });
+  const graph = decodeMoney(raw);
+  const labels = partyLabels(catalogs.roster, catalogs.people, graph);
   const original = runInNewContext(
     `${fn('normName')}\n${fn('findMoneyNode')}\nfindMoneyNode`,
     { moneyData: raw },
   ) as (kind: string, name: string) => { label: string } | null;
+  const differs = new Set<string>();
   for (const row of catalogs.people.people)
     for (const seat of row.electorates.filter((s) => s.current)) {
-      const node = seat.party ? original('party', seat.party) : null;
-      expect(partyReceiptsFor(seat.party).url).toBe(
+      // A party chip opens the party page, which resolves the label among
+      // every recorded party label and reads that party's receipts.
+      const chip = seat.party ? resolveParty(seat.party, labels) : null;
+      const node = chip ? (partyMoney(chip, graph)?.node.label ?? null) : null;
+      const receipts = partyReceiptsFor(seat.party);
+      expect(receipts.party).toBe(node);
+      expect(receipts.url).toBe(
         node && seat.party
           ? `/subject/party/${encodeURIComponent(seat.party)}`
           : '/money',
       );
-      expect(partyReceiptsFor(seat.party).party).toBe(node?.label ?? null);
+      if (seat.party && (original('party', seat.party)?.label ?? null) !== node)
+        differs.add(seat.party);
     }
+  // The web's findMoneyNode prefix-matches and misses party identities; the
+  // only pinned difference is a recorded One Nation name, which the chip
+  // resolves to the One Nation receipts.
+  expect([...differs]).toEqual(["Pauline Hanson's One Nation"]);
+});
+test('party receipts never prefix-match a party name', () => {
+  for (const [label, party] of [
+    ['Labor', 'Labor'],
+    ['Australian Labor Party', 'Labor'],
+    ['Liberal National Party of Queensland', 'LNP'],
+    ["Pauline Hanson's One Nation", 'One Nation'],
+    ['Liberal Democrats', null],
+    ['Liberal Party', null],
+    ['Labor Left', null],
+    ['Greens (WA)', null],
+    ['Independent', null],
+    ['SPK', null],
+    ['', null],
+  ] as const) {
+    const receipts = partyReceiptsFor(label || null);
+    expect(receipts.party).toBe(party);
+    expect(receipts.url).toBe(
+      party ? `/subject/party/${encodeURIComponent(label)}` : '/money',
+    );
+  }
 });
 test('receipts drift from the pinned or current money graph fails with deliberate repin instructions', () => {
   const graph = decodeMoney(pinned('/graph/money.json'));
