@@ -202,6 +202,16 @@ export function fullPortraitName(name: string): boolean {
   );
 }
 const photoPolicy = 'https://www.aph.gov.au/Help/Disclaimer_Privacy_Copyright';
+/**
+ * Store decision (6 Oct): Commons files under CC BY or CC BY-SA (any version,
+ * ported or not), CC0 or public domain only. GFDL and "copyrighted free use"
+ * files are left out by their recorded licence, whatever their name key.
+ */
+export function commonsLicenceShown(licence: string): boolean {
+  return /^(?:CC BY(?:-SA)? [1-4]\.\d(?: [a-z]{2})?|CC0|Public domain)$/i.test(
+    licence.trim(),
+  );
+}
 export function portraitFor(
   names: string[],
   people: PhotoPeople,
@@ -240,9 +250,8 @@ export function portraitFor(
         'Official portrait: native display, offline copies and further crops need review against the non-commercial, no-derivatives terms.',
     };
   const c = credits[key];
-  if (!c) return null;
+  if (!c || !commonsLicenceShown(c.licence)) return null;
   // Preserve the web's per-file terms; app-distribution rights remain decision 13.
-
   return {
     key,
     path: `/photos/${key}.webp`,

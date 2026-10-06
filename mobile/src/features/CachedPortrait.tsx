@@ -2,6 +2,16 @@ import { useEffect, useMemo, useState } from 'react';
 import { portraits } from '../api/runtime';
 import { Portrait } from '../design/people';
 import type { PortraitInfo } from '../api/portrait-index';
+/**
+ * The credit line under a portrait. Commons files are OPAX's face-aware crop
+ * and resize, which CC BY 4.0 section 3(a)(1)(B) asks to indicate.
+ */
+export function portraitCreditLine(info: PortraitInfo): string {
+  const line = `${info.credit} · ${info.licence}`;
+  return /^\d+$/.test(info.key)
+    ? line
+    : `${line}, via Wikimedia Commons, cropped`;
+}
 export function CachedPortrait({
   name,
   slug,

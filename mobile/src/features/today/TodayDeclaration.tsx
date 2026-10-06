@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CachedPortrait } from '../CachedPortrait';
+import { CachedPortrait, portraitCreditLine } from '../CachedPortrait';
 import type { PortraitInfo } from '../../api/portrait-index';
 import type { recentDeclarationsFor } from '../../api/selectors';
 import { Group, PersonRow, SourceLink, Text } from '../../design/primitives';
@@ -81,9 +81,7 @@ export function TodayDeclaration({
       ) : null}
       {portrait ? (
         <Group>
-          <Text variant="fine">
-            {portrait.credit} · {portrait.licence}
-          </Text>
+          <Text variant="fine">{portraitCreditLine(portrait)}</Text>
           {portrait.attribution ? (
             <Text variant="fine">{portrait.attribution}</Text>
           ) : null}

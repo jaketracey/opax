@@ -1,7 +1,10 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { Image } from 'react-native';
-import { CachedPortrait } from '../src/features/CachedPortrait';
+import {
+  CachedPortrait,
+  portraitCreditLine,
+} from '../src/features/CachedPortrait';
 import { portraitFor } from '../src/api/selectors';
 import { Portrait } from '../src/design/people';
 const mockPortraitGet = jest.fn();
@@ -70,6 +73,39 @@ test.each([
     act(() => renderer.unmount());
   },
 );
+
+test('the Commons credit says the file is cropped; the official credit does not', () => {
+  expect(
+    portraitCreditLine(
+      portraitFor(
+        ['Anthony Albanese'],
+        { 'anthony albanese': '10007' } as never,
+        {},
+      )!,
+    ),
+  ).toBe('Official portrait · CC BY-NC-ND 4.0');
+  expect(
+    portraitCreditLine(
+      portraitFor(
+        ['Sheena Watt'],
+        { 'sheena watt': 'wd-Q1' } as never,
+        {
+          'wd-Q1': {
+            artist: 'Gabagool2005',
+            attribution: '',
+            credit: 'Own work',
+            file: 'File:Example.jpg',
+            label: 'Sheena Watt',
+            licence: 'CC0',
+            licence_url: '',
+            page: 'https://commons.wikimedia.org/wiki/File:Example.jpg',
+            wikidata: 'Q1',
+          },
+        } as never,
+      )!,
+    ),
+  ).toBe('Gabagool2005 · CC0, via Wikimedia Commons, cropped');
+});
 
 test('credits follow native decode success, disappear on failure and ignore an obsolete image callback', async () => {
   const info = portraitFor(

@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 import { RefreshControl } from 'react-native';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../api/runtime';
-import { CachedPortrait } from './CachedPortrait';
+import { CachedPortrait, portraitCreditLine } from './CachedPortrait';
 import type { PortraitInfo } from '../api/portrait-index';
 import {
   AsAtLine,
@@ -234,10 +234,7 @@ function ProfileScreen({ slug }: { slug: string }) {
                     variant="fine"
                     testID="person-portrait-attribution"
                   >
-                    {portrait.credit} · {portrait.licence}
-                    {!/^\d+$/.test(portrait.key)
-                      ? ', via Wikimedia Commons'
-                      : ''}
+                    {portraitCreditLine(portrait)}
                   </Text>
                   {portrait.attribution ? (
                     <Text wordSafe variant="fine">
