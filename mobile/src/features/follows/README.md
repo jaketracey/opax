@@ -5,9 +5,13 @@ Following block shows what changed in the published record since the reader
 last looked (`docs/IOS-UX.md`, "Follows and alerts", local follows P1, phase 1).
 Nothing is synced: no server, account or device token, and no notification.
 
-- `store.ts`: the follows file, `opax-follows-v1.json` in the app's documents
-  beside the saved seat (`opax-seat-v1.json`), written through a temporary
-  file. At most 50 (`FOLLOW_LIMIT`). Each follow keeps the canonical ID, the
+- `store.ts`: the follows, in the app's documents beside the saved seat
+  (`opax-seat-v1.json`). Two slots, `opax-follows-v1.json` and
+  `opax-follows-v1.b.json`, are written alternately: each save writes a
+  complete, numbered copy into the older slot, and a read takes the newest copy
+  that decodes. The newest good copy is never deleted or overwritten, so a save
+  cut short keeps the previous list (`File.write` is not atomic, and `File.move`
+  with overwrite deletes its destination first). At most 50 (`FOLLOW_LIMIT`). Each follow keeps the canonical ID, the
   name when followed, when it was followed, and the markers it last showed
   (`seen`, `seenAt`). Device backups may include it.
 - `markers.ts`: pure. Reads each follow's markers from the shared catalogs and

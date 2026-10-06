@@ -1,6 +1,5 @@
 import { useEffect, useSyncExternalStore } from 'react';
 import { File, Paths } from 'expo-file-system';
-import { writeAsStringAsync } from 'expo-file-system/legacy';
 import { billKey, electorateId, personId } from '../../api/ids';
 
 /**
@@ -37,7 +36,12 @@ const ids: Record<FollowKind, (v: unknown) => string> = {
   electorate: electorateId,
 };
 
-const FILE = 'opax-follows-v1.json';
+// Two slots, written alternately. Each save writes a complete, numbered copy
+// into the older slot, so the newest good copy is never deleted or
+// overwritten: File.write is not atomic, and File.move with overwrite deletes
+// its destination before moving. A read takes the newest copy that decodes,
+// so a save cut short (a torn or missing slot) leaves the previous list.
+const SLOTS = ['opax-follows-v1.json', 'opax-follows-v1.b.json'] as const;
 const isRecord = (v: unknown): v is Record<string, unknown> =>
   !!v && typeof v === 'object' && !Array.isArray(v);
 const time = (v: unknown) =>
@@ -102,23 +106,44 @@ export function decodeFollows(v: unknown): Follow[] {
   return out;
 }
 
-async function readFollows(): Promise<Follow[]> {
+interface SavedCopy {
+  generation: number;
+  follows: Follow[];
+}
+async function readSlot(name: string): Promise<SavedCopy | null> {
   try {
-    const saved = new File(Paths.document, FILE);
-    if (!saved.exists) return [];
-    return decodeFollows(JSON.parse(await saved.text()));
+    const saved = new File(Paths.document, name);
+    if (!saved.exists) return null;
+    const raw: unknown = JSON.parse(await saved.text());
+    if (!isRecord(raw) || raw.version !== 1 || !Array.isArray(raw.follows))
+      return null;
+    const generation =
+      typeof raw.generation === 'number' &&
+      Number.isSafeInteger(raw.generation) &&
+      raw.generation >= 0
+        ? raw.generation
+        : 0;
+    return { generation, follows: decodeFollows(raw) };
   } catch {
-    return [];
+    return null;
   }
 }
-// One atomic replacement (Data.write(.atomic) in the legacy writer): the old
-// list stays whole until the new one is in place. File.move with overwrite
-// deletes the old file first, so a failure there would lose every follow.
+// The slot holding the newest saved copy, and its number; slot -1 is none.
+let newest = { slot: -1, generation: 0 };
+async function readFollows(): Promise<Follow[]> {
+  const copies = await Promise.all(SLOTS.map(readSlot));
+  const [a, b] = copies;
+  const slot = b && (!a || b.generation > a.generation) ? 1 : a ? 0 : -1;
+  newest = { slot, generation: copies[slot]?.generation ?? 0 };
+  return copies[slot]?.follows ?? [];
+}
 function writeFollows(follows: Follow[]) {
-  return writeAsStringAsync(
-    new File(Paths.document, FILE).uri,
-    JSON.stringify({ version: 1, follows }),
+  const slot = newest.slot === 0 ? 1 : 0;
+  const generation = newest.generation + 1;
+  new File(Paths.document, SLOTS[slot]).write(
+    JSON.stringify({ version: 1, generation, follows }),
   );
+  newest = { slot, generation };
 }
 
 let state: Follow[] | null = null;
@@ -143,7 +168,7 @@ function update<T>(change: (follows: Follow[]) => [Follow[], T]): Promise<T> {
     const current = await loadFollows();
     const [next, result] = change(current);
     if (next !== current) {
-      await writeFollows(next);
+      writeFollows(next);
       state = next;
       emit();
     }
@@ -232,4 +257,5 @@ export function resetFollowsForTests() {
   state = null;
   loading = null;
   queue = Promise.resolve();
+  newest = { slot: -1, generation: 0 };
 }
