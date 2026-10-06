@@ -4,7 +4,7 @@ Written 5 October 2026 and made final on 6 October 2026 for a v1 **with Talk to 
 
 **Jake, 6 October 2026, 10:40:** "unblock all the work that's waiting for me. Any placeholder stuff can be filled in quickly later. Enable the voice and account deletion - do not block for trivial/license related stuff". Every open store item is therefore settled at its documented default and recorded as "decided 6 Oct (default)" in section 8.
 
-**Citations.** A bare `path:line` is `ios/app` at `946ef7e3`. Talk, Account and some other screens are in lanes that have not merged into `ios/app` yet; those citations name the branch and commit:
+**Citations.** A bare `path:line` is `ios/app` at `946ef7e3`. Talk, Account and some other screens are in lanes that have not merged into `ios/app` yet, and the website's privacy and support pages are on `main`; those citations name the branch and commit:
 
 | Lane | Commit | What it adds | In v1 |
 | --- | --- | --- | --- |
@@ -14,7 +14,7 @@ Written 5 October 2026 and made final on 6 October 2026 for a v1 **with Talk to 
 | `ios/leads-feed` | `028f3e87` | Leads and the declared-interests feed | If merged before the gate |
 | `ios/party-page` | `1babc9f1` | Party pages | If merged before the gate |
 | `ios/portraits` | `61416e0c` | The website's portrait files, with credits | If merged before the gate |
-| `web/privacy-app` | `f7f3e30b` | The `/privacy` and `/support` pages on opax.com.au (local branch; not on the public remote yet) | Deployed before submission |
+| `main` | `f7f3e30b` | The `/privacy` and `/support` pages, merged from `web/privacy-app` | Live on opax.com.au since 6 October 2026 (production Worker `c237a703`) |
 
 The build-5 gate (section 6.2) rechecks every lane label quoted here against the build being submitted.
 
@@ -44,10 +44,10 @@ Counts are in characters as App Store Connect counts them, checked with a script
 | Keywords | australia,parliament,senator,electorate,politician,legislation,interests,expenses,salary,civics | 95 of 100 bytes | No spaces; no word repeats the name or subtitle; no app, company or trademark names |
 | Primary category | Reference | | Apple's Reference definition lists "general research" and "politics" ([categories](https://developer.apple.com/app-store/categories/)) |
 | Secondary category | News | | Decided 6 Oct (default), as drafted. News covers "information about current events or developments in areas of interest such as politics" |
-| Support URL | `https://opax.com.au/support` | | The page is on `web/privacy-app` (section 1.2); deployed before submission (section 6.2) |
+| Support URL | `https://opax.com.au/support` | | Live since 6 October 2026 (section 1.2) |
 | Marketing URL | Empty | | Optional field. A later `/app` page is nice-to-have N4 |
-| Privacy policy URL | `https://opax.com.au/privacy` | | All sixteen placeholders filled on `web/privacy-app` (`docs/PRIVACY.md:9-30` there); deployed before submission |
-| Copyright | 2026 Jake Tracey | | Decided 6 Oct (default): the person the privacy page names as responsible (`docs/PRIVACY.md:16` on `web/privacy-app`) |
+| Privacy policy URL | `https://opax.com.au/privacy` | | Live since 6 October 2026, all sixteen placeholders filled (`docs/PRIVACY.md:9-30` on `main`) |
+| Copyright | 2026 Jake Tracey | | Decided 6 Oct (default): the person the privacy page names as responsible (`docs/PRIVACY.md:16` on `main`) |
 | Primary language | English (Australia) | | Already set |
 | Price | Free | | No in-app purchases (`mobile/package.json` has no purchase package) |
 | Availability | Australia only | | Decided 6 Oct (default). Avoids the EU Digital Services Act trader declaration (old risk R7) |
@@ -128,9 +128,9 @@ The slash marks the line break between the heading and its text, as in the parag
 | Today: new bills, recent declarations, daily edition | `mobile/src/features/Today.tsx:59-111`; edition route `policy.ts:22` |
 | Search kinds and suggestions | `mobile/src/features/search/model.ts:5-28`; `mobile/src/features/Search.tsx:184` |
 | Talk: answers with links to records | Sources travel as validated record paths (`mobile/src/voice/README.md:25-27`); the Sources list on `ios/talk-sheet` (`mobile/src/features/talk/TalkScreen.tsx:410-422` there) |
-| Account for people aged 16 and over | The privacy page and `/support` (`docs/PRIVACY.md:28` on `web/privacy-app`); the app's sign-in screen gains the same line at the build-5 gate (section 6.2) |
+| Account for people aged 16 and over | The privacy page and `/support` (`docs/PRIVACY.md:28` on `main`); the app's sign-in screen gains the same line at the build-5 gate (section 6.2) |
 | Deletion in the app | `deleteAccount` in the bridge (`mobile/src/voice/README.md:12-13`) on the deletion routes (`voice-production-policy.json:14-15`); the flow on `ios/account-ui` (`mobile/src/features/account/copy.ts:24,47-76` there) |
-| 10 minutes in total | 600 seconds per account, not monthly (privacy page, "Your 10 minutes", on `web/privacy-app`); "Voice time: … remaining" on `ios/account-ui` (`copy.ts:13-14` there) |
+| 10 minutes in total | 600 seconds per account, not monthly (privacy page, "Your 10 minutes", on `main`); "Voice time: … remaining" on `ios/account-ui` (`copy.ts:13-14` there) |
 | Consent before the first call; ElevenLabs named | The native consent store, denied by default (`voice-production-policy.json:3-4`; `mobile/src/voice/README.md:43-50`); the consent screen on `ios/talk-sheet` (`TalkScreen.tsx:306-344` there) |
 | "Answers may be mistaken" | The disclosure before every call on `ios/talk-sheet` (`TalkScreen.tsx:474-481` there) |
 | Offline reading, marked with save time | Disk cache `mobile/src/api/disk-store.ts:15`; saved-time notices `mobile/src/features/your-mp/Evidence.tsx:43-50`, `mobile/src/design/states.tsx:19,190-202`; journey `mobile/.maestro/04-offline.yaml`. Search results are not saved (`mobile/src/api/cache.ts:134`) |
@@ -138,15 +138,15 @@ The slash marks the line break between the heading and its text, as in the parag
 | Independence statement; "leads, not findings" | `mobile/src/features/ComingSoon.tsx:6-7`, `About.tsx:93-95`, `Today.tsx:57`; `Today.tsx:112-114` |
 | Sources named | About `:203-253`; electorate sources carry their own licence (`selectors.ts:1094-1101`) |
 | No advertising, in-app purchases or analytics | `mobile/package.json`; `mobile/scripts/verify-ios-release.py:29-36,660-661` |
-| Notice about people who have died | Decision 15 (section 8). The web's About carries it on `web/privacy-app` (`portal/public/index.html:1166` there); the app's About gains it at the build-5 gate |
+| Notice about people who have died | Decision 15 (section 8). The web's About carries it on `main` (`portal/public/index.html:1166` there); the app's About gains it at the build-5 gate |
 
 ### 1.2 Support and privacy pages
 
 App Store Connect says the support URL "must lead to actual contact information (legal address, email address, telephone number), as may be required by local law, so that users can reach you regarding app issues, general feedback, and feature enhancement requests". Guideline 1.5 asks that the app and its support URL "include an easy way to contact you".
 
-**Decided 6 Oct (default), decision 12:** `/support` and `/privacy` ship on opax.com.au from `web/privacy-app`, with honest interim wording until a private inbox exists. That branch is local and not deployed yet; deployment is in the build-5 gate list (section 6.2).
+**Decided 6 Oct (default), decision 12:** `/support` and `/privacy` are live on opax.com.au since 6 October 2026 (production Worker `c237a703`, from `main` at `f7f3e30b`), with honest interim wording until a private inbox exists.
 
-`/support` on that branch (`portal/public/index.html:1869-1924` there) has:
+`/support` (`portal/public/index.html:1869-1924` on `main`) has:
 
 - the independence statement;
 - "Report a wrong record or a wrong answer": what to include, and a button that opens a public GitHub issue, pre-filled with the record when the app or site passes `?record=<path>` for a page OPAX publishes (`docs/PRIVACY.md:36` there);
@@ -206,11 +206,11 @@ Support and corrections: https://opax.com.au/support. OPAX has no private inbox 
 | Person icon, About and sources; Talk (waveform icon) | `mobile/src/navigation/chrome.ts:47-65`; `ComingSoon.tsx:48-52` |
 | "Sign in to talk for free" | `TalkScreen.tsx:294-304` on `ios/talk-sheet` (opens the Account sheet) |
 | "Sign in for voice", "Send code", "8-digit code", "Sign in" | `mobile/src/features/account/copy.ts:10,32,40-41` on `ios/account-ui`; `AccountSection.tsx:83-84` there |
-| Code from login.opax.com.au; 15 minutes; creates the account | The privacy page's email section and `/support` on `web/privacy-app` (`docs/PRIVACY.md:72-73` there); `copy.ts:29-30,35-36` on `ios/account-ui` |
+| Code from login.opax.com.au; 15 minutes; creates the account | The privacy page's email section and `/support` on `main` (`docs/PRIVACY.md:72-73` there); `copy.ts:29-30,35-36` on `ios/account-ui` |
 | Consent screen, "Agree and start", microphone after consent | `TalkScreen.tsx:306-344` on `ios/talk-sheet`; the native order on `ios/app`: consent, then permission (`mobile/src/voice/README.md:45-48`) |
 | Captions, Sources, "Type instead", "Report this answer", "End call" | `TalkScreen.tsx:189,399,410,491-502` and `mobile/src/features/talk/AnswerCaption.tsx:21-27` on `ios/talk-sheet` |
 | Leaving the app ends a call (decision 10) | `mobile/modules/opax-voice/ios/OpaxVoiceCore/Sources/OpaxVoiceCore/AppleAudio.swift:226`; `CallController.swift:400` there |
-| 10 minutes, shared monthly budget, two calls | Privacy page "Your 10 minutes" on `web/privacy-app`; IOS-APP.md section 5; "closed for the rest of this month" on `ios/talk-sheet` (`mobile/src/features/talk/model.ts:64-65` there) |
+| 10 minutes, shared monthly budget, two calls | Privacy page "Your 10 minutes" on `main`; IOS-APP.md section 5; "closed for the rest of this month" on `ios/talk-sheet` (`mobile/src/features/talk/model.ts:64-65` there) |
 | Deletion path | `AccountSection.tsx:57-58` and `copy.ts:47-76` on `ios/account-ui`; routes `voice-production-policy.json:14-15` |
 | No AI requests when reading | The public client's allow-list (`policy.ts:1-2,29-90`); IOS-APP.md section 2 (never-call rule) |
 
@@ -236,7 +236,7 @@ Guideline 4.7 covers software "not embedded in the binary", naming chatbots, and
 | Reporting | "Report this answer" under each completed answer (`AnswerCaption.tsx:21-27` on `ios/talk-sheet`). On `ios/app`, `reportAnswer` opens a report in the in-app Safari view with a record path only, never answer text (`mobile/src/voice/report-answer.ts:11-48`); it opens `/support?record=<path>` once `supportPageAvailable` is set, and a public GitHub issue until then (`report-answer.ts:6-9,31-41`) |
 | Timely responses | Reports land as public GitHub issues until a private inbox exists (Needs Jake 4) |
 | Consent in each instance | Consent once, with the disclosure before every call (decision 10); a per-call consent would be needed if App Review applies 4.7.3 |
-| Age restriction | Accounts and voice are for people 16 and over, stated, not checked (`docs/PRIVACY.md:28` on `web/privacy-app`). A declared-age step would be needed if App Review applies 4.7.5 |
+| Age restriction | Accounts and voice are for people 16 and over, stated, not checked (`docs/PRIVACY.md:28` on `main`). A declared-age step would be needed if App Review applies 4.7.5 |
 | Filtering, blocking | The assistant answers from the public record through OPAX's search; there are no other users to block |
 | Index with universal links (4.7.4) | Not in v1. If 4.7 applies, inbound universal links (W17) move into v1 (decision 11) |
 
@@ -244,7 +244,7 @@ Guideline 4.7 covers software "not embedded in the binary", naming chatbots, and
 
 "If your app supports account creation, you must also offer account deletion within the app." Signing in creates an account, so deletion is in the app: Account sheet, "Delete account", a screen listing what is deleted and what is kept, a fresh emailed eight-digit deletion code, then "Account deleted" and signed out (`copy.ts:47-76` on `ios/account-ui`; journey `22-account.yaml` there). The bridge calls `requestDeletionCode` and `deleteAccount` (`mobile/src/voice/README.md:12-13`) on the two deletion routes (`voice-production-policy.json:14-15`); the voice core ends any live call before it deletes (`mobile/modules/opax-voice/ios/OpaxVoiceCore/Sources/OpaxVoiceCore/CallController.swift:387-395`).
 
-What is kept follows decision 5, decided 6 Oct (default): other members keep their replies under a deleted discussion, which becomes a stub with no personal data, and their own messages; voice records lose their member link and keep their seconds, so deletion refunds no time; no legal retention beyond what is disclosed; a returning email gets a fresh 10 minutes, and no email hash is kept. The privacy page says the same ("Deleting your account", on `web/privacy-app`). Deletion has been live on the Worker since 3 October 2026 (`docs/COMMUNITY.md:55` on `main`).
+What is kept follows decision 5, decided 6 Oct (default): other members keep their replies under a deleted discussion, which becomes a stub with no personal data, and their own messages; voice records lose their member link and keep their seconds, so deletion refunds no time; no legal retention beyond what is disclosed; a returning email gets a fresh 10 minutes, and no email hash is kept. The privacy page says the same ("Deleting your account", on `main`). Deletion has been live on the Worker since 3 October 2026 (`docs/COMMUNITY.md:55` on `main`).
 
 ### 2.5 Sources and licences, as the app states them
 
@@ -291,7 +291,7 @@ Counts come from the repository copies, which production refreshes nightly, run 
 | Question (API field) | Answer | Reason | Evidence |
 | --- | --- | --- | --- |
 | Parental controls (`parentalControls`) | No | None in the app | |
-| Age assurance (`ageAssurance`) | No | No age checks. The minimum age of 16 for accounts and voice is stated, not checked (`docs/PRIVACY.md:28` on `web/privacy-app`) | |
+| Age assurance (`ageAssurance`) | No | No age checks. The minimum age of 16 for accounts and voice is stated, not checked (`docs/PRIVACY.md:28` on `main`) | |
 | Unrestricted web access (`unrestrictedWebAccess`) | No | No browser or address bar. A source link opens one checked HTTPS page in an in-app Safari view; opax.com.au pages open in Safari outside the app. See risk R3 | `external.ts:238-264` (link checks), `:266-293`, `:317-329` |
 | User-generated content (`userGeneratedContent`) | No | No community features in the app. What a reader says or types to Talk goes to the assistant and is shown to no one else | No community routes in `mobile/src/app`; the only account routes are sign-in, sign-out, status and deletion (`voice-production-policy.json:10-15`) |
 | Social media (`socialMedia`, `socialMediaAgeRestricted`) | No | None | As above |
@@ -348,7 +348,7 @@ Guideline 5.2: "Make sure your app only includes content that you created or tha
 
 ## 4. App Privacy label
 
-Final answers, decided 6 Oct (default) under decision 14 ("answer conservatively"). The types are those of the privacy manifest the release builds with the voice switch on, which the release verifier enforces. One linkage differs from that manifest today: Other Data (IP addresses) is declared **linked** here and unlinked in the manifest on `ios/app`. Phase 2 of `ios/voice-prod` changes the manifest to match before build 5 (section 4.1, "The manifest change").
+Final answers, decided 6 Oct (default) under decision 14 ("answer conservatively"). The types are those of the privacy manifest the release builds with the voice switch on, which the release verifier enforces. Two linkages differ from that manifest today: Search History and Other Data (IP addresses) are declared **linked** here and unlinked in the manifest on `ios/app`. Phase 2 of `ios/voice-prod` changes the manifest to match before build 5 (section 4.1, "The manifest change").
 
 ### 4.1 Answers to enter in App Store Connect
 
@@ -361,7 +361,7 @@ Final answers, decided 6 Oct (default) under decision 14 ("answer conservatively
 | User Content: Audio Data | Yes | Yes | No | App Functionality |
 | User Content: Other User Content | Yes | Yes | No | App Functionality |
 | Usage Data: Product Interaction | Yes | Yes | No | App Functionality |
-| Search History | Yes | No | No | App Functionality |
+| Search History | Yes | Yes | No | App Functionality |
 | Other Data: Other Data Types (IP addresses) | Yes | Yes | No | App Functionality |
 
 **Tracking: No.** No App Tracking Transparency prompt; `NSPrivacyTracking` is false and no tracking domains are declared (`verify-ios-release.py:98-99`).
@@ -370,11 +370,11 @@ Final answers, decided 6 Oct (default) under decision 14 ("answer conservatively
 
 **Where it is enforced.** The types and their linkage come from one policy file (`mobile/voice-production-policy.json:17-24`), turned into manifest entries with tracking false and the App Functionality purpose (`mobile/plugins/voiceProduction.js:14-40`), merged into the app's manifest only when the switch is on (`mobile/app.config.ts:155-158`). The release verifier refuses a switch-on archive whose manifest differs in any type, linkage, tracking flag or purpose, and states "location not collected" (`verify-ios-release.py:97-116,570-573`).
 
-**The manifest change (phase 2 of `ios/voice-prod`).** On `ios/app` the policy file lists `OtherDataTypes` as unlinked (`mobile/voice-production-policy.json:24`), so a build-5 archive made today would declare it unlinked and disagree with this label. Before build 5:
+**The manifest change (phase 2 of `ios/voice-prod`).** On `ios/app` the policy file lists `SearchHistory` and `OtherDataTypes` as unlinked (`mobile/voice-production-policy.json:24`), so a build-5 archive made today would declare both unlinked and disagree with this label. Before build 5:
 
-1. `mobile/voice-production-policy.json:17-24`: move `"OtherDataTypes"` from `unlinkedDataTypes` to the end of `linkedDataTypes`, giving linked `["EmailAddress", "UserID", "AudioData", "OtherUserContent", "ProductInteraction", "OtherDataTypes"]` and unlinked `["SearchHistory"]`.
-2. `mobile/scripts/test-release-tooling.py:928`: expect `unlinkedDataTypes` to be `["SearchHistory"]`, and assert that `linkedDataTypes` ends with `"OtherDataTypes"`.
-3. `mobile/tests/voice-production.test.ts:99-116`: keep the seven-type count; add an assertion that the `NSPrivacyCollectedDataTypeOtherDataTypes` entry has `NSPrivacyCollectedDataTypeLinked` true.
+1. `mobile/voice-production-policy.json:17-24`: move `"SearchHistory"` and `"OtherDataTypes"` from `unlinkedDataTypes` to the end of `linkedDataTypes`, giving linked `["EmailAddress", "UserID", "AudioData", "OtherUserContent", "ProductInteraction", "SearchHistory", "OtherDataTypes"]` and unlinked `[]`.
+2. `mobile/scripts/test-release-tooling.py:928`: expect `unlinkedDataTypes` to be `[]`, and assert that `linkedDataTypes` ends with `"SearchHistory", "OtherDataTypes"`.
+3. `mobile/tests/voice-production.test.ts:99-116`: keep the seven-type count; add assertions that the `NSPrivacyCollectedDataTypeSearchHistory` and `NSPrivacyCollectedDataTypeOtherDataTypes` entries have `NSPrivacyCollectedDataTypeLinked` true. With every type linked, the verifier's expected map still works (`verify-ios-release.py:101-103`).
 4. No code change in `mobile/plugins/voiceProduction.js:14-25` or `mobile/scripts/verify-ios-release.py:97-110`: both read the two lists from the policy file, so the manifest and the verifier follow it.
 5. Rebuild with the switch on and confirm that `verify-ios-release.py` passes on the archive and the IPA (build-5 gate item 2).
 
@@ -384,13 +384,13 @@ Apple counts data as collected when it leaves the device and is kept "for a peri
 
 | Type | What leaves the phone, and what is kept | Evidence |
 | --- | --- | --- |
-| Email Address | The address entered at sign-in, kept with the account until deletion | `POST /api/community/auth/request` (`voice-production-policy.json:11`); privacy page, "Community accounts", on `web/privacy-app` |
+| Email Address | The address entered at sign-in, kept with the account until deletion | `POST /api/community/auth/request` (`voice-production-policy.json:11`); privacy page, "Community accounts", on `main` |
 | User ID | The member ID behind the session and on each voice record. The session cookie lives in the Keychain, this device only, and goes only to the ten account and voice routes | `Credentials.swift:48`; `voice-production-policy.json:5-16`; `mobile/src/voice/README.md:52-55` |
-| Audio Data | The voice during a call, through OPAX's relay to ElevenLabs. ElevenLabs was set not to record audio when last checked (9 September 2026); declared because a third-party AI processes it | `Relay.swift:54`; `docs/PRIVACY.md:24` on `web/privacy-app` (P10); the decision 8 check is Needs Jake 3 |
-| Other User Content | The words of the conversation, spoken or typed with "Type instead", sent to ElevenLabs and the language model it runs; transcripts kept one day at ElevenLabs as last checked. The app does not store captions | `docs/PRIVACY.md:24-25,75` on `web/privacy-app`; `mobile/src/voice/README.md:71-72` |
-| Product Interaction | For each call, the seconds reserved and charged and the start and end times, kept to count the 10 minutes and the shared monthly budget | Privacy page, "What is kept" and "Your 10 minutes", on `web/privacy-app`; IOS-APP.md section 6 |
-| Search History (not linked) | Catalog search words travel in the URL of `GET /api/search-all`; Workers Logs keep each URL for 7 days. Not linked because a catalog search carries no session: the catalog client omits credentials and sends only `Accept`, `User-Agent` and `If-None-Match`; the session lives only in the voice core, which keeps no shared cookie jar and attaches the cookie only to the ten account and voice routes, none of them `/api/search-all`. If Workers Logs also keep the IP with each search URL, the IP correlation described in the next row would apply here too (section 9) | `policy.ts:45-77`; `client.ts:126,130-134`; `mobile/modules/opax-voice/ios/OpaxVoiceCore/Sources/OpaxVoiceCore/HTTPClient.swift:41-49,339`; `voice-production-policy.json:5-16`; `portal/wrangler.jsonc:32-35`; `docs/PRIVACY.md:19` on `web/privacy-app` (P5) |
-| Other Data Types (IP addresses, linked) | IP addresses: read by rate limiters, possibly recorded in Workers Logs (kept 7 days) and kept up to 31 days in Cloudflare's traffic and security analytics, whose records hold the IP with the request's path and query. Apple has no IP type and says to "declare the relevant data types based on how you use IP address, such as precise location, coarse location, device ID, or diagnostics"; OPAX uses them for none of those, only rate limits and security, so they are declared as Other Data. **Linked**, because voice and account requests are tied to the member: they carry the session cookie, and the voice connection URL carries a `session_id` that the Worker stores against the member ID. A retained record of such a request can therefore tie its IP address to an account. Apple treats data as not linked only if it is de-identified before collection and never re-linked; OPAX has no such step, so decision 14's conservative answer is linked | `HTTPClient.swift:49,57-58`; `portal/src/voice.ts:42-45,264-266`; `docs/PRIVACY.md:19-20` on `web/privacy-app` (P5, P6); IOS-APP.md section 6 |
+| Audio Data | The voice during a call, through OPAX's relay to ElevenLabs. ElevenLabs was set not to record audio when last checked (9 September 2026); declared because a third-party AI processes it | `Relay.swift:54`; `docs/PRIVACY.md:24` on `main` (P10); the decision 8 check is Needs Jake 3 |
+| Other User Content | The words of the conversation, spoken or typed with "Type instead", sent to ElevenLabs and the language model it runs; transcripts kept one day at ElevenLabs as last checked. The app does not store captions | `docs/PRIVACY.md:24-25,75` on `main`; `mobile/src/voice/README.md:71-72` |
+| Product Interaction | For each call, the seconds reserved and charged and the start and end times, kept to count the 10 minutes and the shared monthly budget | Privacy page, "What is kept" and "Your 10 minutes", on `main`; IOS-APP.md section 6 |
+| Search History (linked) | Catalog search words travel in the URL of `GET /api/search-all`; Workers Logs keep each URL for 7 days, and Cloudflare may keep the IP with it. Linked under decision 14: a catalog search carries no session (`client.ts:126,130-134`), but voice and account requests tie an IP to a member (next row), so a kept search can be tied to an account through its IP | `policy.ts:45-77`; `client.ts:126,130-134`; `portal/wrangler.jsonc:32-35`; `docs/PRIVACY.md:19-20` on `main` (P5, P6) |
+| Other Data Types (IP addresses, linked) | IP addresses: read by rate limiters, possibly recorded in Workers Logs (kept 7 days) and kept up to 31 days in Cloudflare's traffic and security analytics, whose records hold the IP with the request's path and query. Apple has no IP type and says to "declare the relevant data types based on how you use IP address, such as precise location, coarse location, device ID, or diagnostics"; OPAX uses them for none of those, only rate limits and security, so they are declared as Other Data. **Linked**, because voice and account requests are tied to the member: they carry the session cookie, and the voice connection URL carries a `session_id` that the Worker stores against the member ID. A retained record of such a request can therefore tie its IP address to an account. Apple treats data as not linked only if it is de-identified before collection and never re-linked; OPAX has no such step, so decision 14's conservative answer is linked | `HTTPClient.swift:49,57-58`; `portal/src/voice.ts:42-45,264-266`; `docs/PRIVACY.md:19-20` on `main` (P5, P6); IOS-APP.md section 6 |
 | Location (not collected) | One reading after "Use my location", turned into a seat suggestion on the iPhone; never sent, saved or logged. Outlines are fetched before the reading, so no request depends on it | `location.ts:5-6,13-31`; `LocationSuggestion.tsx:69-72`; `mobile/tests/location-privacy.test.ts`; `app.config.ts:76-77,99-107`; IOS-ELECTORATE-MAP.md |
 | Seat, follows, consent, cache (not collected) | Kept on the device only: the seat file, the voice consent flag, the offline cache (at most 12 MB) and, if `ios/follows` is in the build, the follows file | `choice-store.ts:3-17`; `voice-production-policy.json:3-4`; `disk-store.ts:15`, `cache.ts:43`; `mobile/src/features/follows/README.md:8-12` on `ios/follows` |
 | Analytics, crash reports, SDKs (none) | No analytics or crash-reporting SDK; the verifier rejects them | `verify-ios-release.py:29-36,660-661` |
@@ -402,8 +402,8 @@ With the switch off, the manifest declares no collected data, by design, so that
 
 ### 4.4 Privacy policy link
 
-- **App Store Connect:** `https://opax.com.au/privacy`, live once `web/privacy-app` deploys. A guard (`scripts/check_privacy_placeholders.mjs` there) blocks deployment while any placeholder remains; none remains.
-- **In the app:** About links "Privacy policy" to `/community?view=privacy` (`About.tsx:312-316`), which hands over to `/privacy` once the branch deploys; the build-5 gate points it at `/privacy` directly. Talk links "Voice privacy" to `/privacy` (`TalkScreen.tsx:323-327` on `ios/talk-sheet`).
+- **App Store Connect:** `https://opax.com.au/privacy`, live since 6 October 2026. A guard (`scripts/check_privacy_placeholders.mjs` on `main`) blocks any deployment while a placeholder remains; none remains.
+- **In the app:** About links "Privacy policy" to `/community?view=privacy` (`About.tsx:312-316`), which now hands over to `/privacy`; the build-5 gate points it at `/privacy` directly. Talk links "Voice privacy" to `/privacy` (`TalkScreen.tsx:323-327` on `ios/talk-sheet`).
 - **In-app privacy text** (`About.tsx:302-310`) says "IP log retention is not yet confirmed". The build-5 gate replaces it with the facts above: logs 7 days, analytics 31 days.
 
 ### 4.5 Purpose strings
@@ -413,7 +413,7 @@ With the switch off, the manifest declares no collected data, by design, so that
 | `NSMicrophoneUsageDescription` (switch on only) | "OPAX uses your microphone only during a Talk call you start. Your audio is sent to ElevenLabs, OPAX’s voice provider, to understand and answer you." | `mobile/voice-production-policy.json:2`; set by `app.config.ts:159-160`; required word for word by `verify-ios-release.py:84-85,559-565` |
 | `NSLocationWhenInUseUsageDescription` | "OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere." | `app.config.ts:76-77,99-107`; `verify-ios-release.py:68,81-82` |
 
-No other purpose string ships: the verifier refuses any other `NS*UsageDescription` (`verify-ios-release.py:84-85`), and the location plugin turns off Always and motion permissions (`app.config.ts:103-105`). The microphone is asked for only after consent (`mobile/src/voice/README.md:45-48`). [IOS-VOICE.md, section 6](IOS-VOICE.md#6-store-and-privacy-notes) and `docs/PRIVACY.md` on `web/privacy-app` hold older drafts of the microphone string; the policy file's text is the one that ships.
+No other purpose string ships: the verifier refuses any other `NS*UsageDescription` (`verify-ios-release.py:84-85`), and the location plugin turns off Always and motion permissions (`app.config.ts:103-105`). The microphone is asked for only after consent (`mobile/src/voice/README.md:45-48`). [IOS-VOICE.md, section 6](IOS-VOICE.md#6-store-and-privacy-notes) and `docs/PRIVACY.md` on `main` hold older drafts of the microphone string; the policy file's text is the one that ships.
 
 ## 5. Screenshot plan
 
@@ -462,21 +462,21 @@ Ranked as before: **blocker** (submission should not go ahead), **risk** (could 
 
 | ID | Was | Resolution |
 | --- | --- | --- |
-| B1 | No contact or support page (1.5; decision 12) | `/support` on `web/privacy-app`, with interim wording and public GitHub issues until an inbox exists. Decided 6 Oct (default). Deployment and the About link: section 6.2. The inbox: Needs Jake 4 |
-| B2 | No privacy policy at the URL (5.1.1(i)) | `/privacy` on `web/privacy-app`, all sixteen placeholders filled (`docs/PRIVACY.md:9-30` there). Deployment and the app link: section 6.2 |
+| B1 | No contact or support page (1.5; decision 12) | `/support`, live since 6 October 2026, with interim wording and public GitHub issues until an inbox exists. Decided 6 Oct (default). The About link: section 6.2. The inbox: Needs Jake 4 |
+| B2 | No privacy policy at the URL (5.1.1(i)) | `/privacy`, live since 6 October 2026, all sixteen placeholders filled (`docs/PRIVACY.md:9-30` on `main`). The app link: section 6.2 |
 | B3 | Production placeholders for Talk and Account (2.1(a)) | Voice, sign-in and deletion ship (Jake, 6 October). The production build shows the real Talk and Account screens; About's pending sentences are replaced. Both are build-5 gate items |
-| B4 | App Privacy answers pending P5 and P6 | Final label in section 4: the switch-on manifest's types, with Other Data (IP addresses) linked. Decided 6 Oct (default) |
+| B4 | App Privacy answers pending P5 and P6 | Final label in section 4: the switch-on manifest's types, with every type linked. Decided 6 Oct (default) |
 | B5 | Content rights and Commons compliance | Content rights Yes; GFDL and "free use" files left out; "cropped" added to the Commons credit. Decided 6 Oct (default) (section 3.4) |
 | B6 | App Store Connect metadata empty | Every field is final in sections 1 to 4; entering it is part of submission (Needs Jake 2) |
 | B7 | Version 0.1.0 against App Store version 1.0 | 1.0.0. Decided 6 Oct (default). The app change is a build-5 gate item; the App Store version is set at submission |
 | B8 | Official portrait licensing | Licence items never block (Jake, 5 and 6 October). Moved to risk R8; no APH portraits in screenshots |
 | R7 | EU trader declaration | Australia only. Decided 6 Oct (default) |
 | N1 | Notice about people who have died (decision 15) | In the description (section 1.1). Decided 6 Oct (default). In the app's About: section 6.2 |
-| N2 | Privacy manifest matches the label | The verifier enforces the switch-on manifest; it matches the label once phase 2 makes Other Data linked (section 4.1, gate item 2) |
+| N2 | Privacy manifest matches the label | The verifier enforces the switch-on manifest; it matches the label once phase 2 makes Search History and Other Data linked (section 4.1, gate item 2) |
 | V1 | Demo account for voice | No demo account; review signs in with its own email (section 2.2). Decided 6 Oct (default). Residual: risk R10 |
 | V2 | Guideline 4.7 | Decision 11 at its default: "Report this answer" ships, and Jake asks App Review before submission (section 2.3, Needs Jake 1). Residual: risk R9 |
 | V3 | Microphone purpose string stripped and refused | The switch adds the approved string and the verifier requires it (section 4.5) |
-| V4 | Consent and privacy copy rested on P10 to P13 | Filled with dated wording on `web/privacy-app`; the ElevenLabs dashboard check (decision 8) is Needs Jake 3 and changes only the date |
+| V4 | Consent and privacy copy rested on P10 to P13 | Filled with dated wording on the live privacy page; the ElevenLabs dashboard check (decision 8) is Needs Jake 3 and changes only the date |
 | V5 | Deletion policy (decision 5) and Worker routes | Decided 6 Oct (default); sign-in and deletion live on the Worker since 3 October 2026 |
 | V6 | Review traffic spends real voice time | Decision 9 at its default: shared budget. The notes tell App Review the budget applies. Residual: risk R11 |
 | V7 | Screenshots and B3 | Section 5 plans for the switch-on build, with a Talk frame |
@@ -486,27 +486,26 @@ Ranked as before: **blocker** (submission should not go ahead), **risk** (could 
 Engineering items for the OPAX orchestrator, not for Jake. Build 5 is the first build with voice; it must pass the usual QA gate plus these before it is the submission build.
 
 1. **Talk and Account merged.** `ios/talk-sheet` and `ios/account-ui` merge into `ios/app`; voice-prod phase 2 replaces the production twins, which still resolve to the placeholders (`mobile/src/app/talk.tsx:1-2`, `mobile/src/app/account/index.tsx:1`; `ComingSoon.tsx:10-75`), and the production Account screen has no "Development" section.
-2. **Switch on, with the label's linkage.** Phase 2 of `ios/voice-prod` makes Other Data linked in the policy file and its tests (section 4.1, "The manifest change"). The release is built with `OPAX_PRODUCTION_VOICE=1`, both release verifiers pass in that mode, the switch-on app is launched once on a simulator, and upload refuses a build whose recorded switch does not match (section 4.3).
-3. **"Report this answer" wired.** Talk passes a source's record path, not answer text, with a mode for answers that cite no record (`report-answer.ts:12-29` takes a path; `AnswerCaption.tsx:27` on `ios/talk-sheet` passes text). `supportPageAvailable` is set only after `/support` is live (`report-answer.ts:6-7`).
-4. **The privacy and support pages deployed** from `web/privacy-app` (its placeholder guard passes), then checked live: `/privacy`, `/support`, `/support?record=<path>`.
-5. **About updated** (`About.tsx:295-316`): "Corrections and contact" points to `/support`; "Privacy policy" points to `/privacy`; the privacy text states the retention facts and what voice sends; the notice about people who have died is added.
-6. **Minimum age in the app.** The sign-in screen and Talk's sign-in prompt say "Accounts and voice are for people aged 16 and over", as the website does (`copy.ts:27-30` on `ios/account-ui`; `TalkScreen.tsx:296-298` on `ios/talk-sheet`).
-7. **Consent wording dated.** Talk's consent screen gives the ElevenLabs settings as last checked, matching the privacy page, not as a standing policy (`TalkScreen.tsx:315-318` on `ios/talk-sheet`; `docs/PRIVACY.md:94` on `web/privacy-app`).
-8. **Version 1.0.0** in `mobile/app.config.ts:55,141` and the release tooling (`mobile/scripts/release-ios.sh:64,68,77`).
-9. **Portraits, if `ios/portraits` is in the build:** leave out the two GFDL and two "copyrighted free use" files, and add "cropped" to the Commons credit; the website's credits change in the same way.
-10. **Person search filtered to the verified roster** (risk R1), or non-member rows labelled, before submission.
-11. **Labels rechecked.** Every quoted label in sections 2.1, 2.6 and 5.3 is checked against the submitted build, and the notes are recounted (4,000-byte limit).
-12. **Screenshots captured** under section 5, then the iPad compatibility run for risk R5.
+2. **Switch on, with the label's linkage.** Phase 2 of `ios/voice-prod` makes Search History and Other Data linked in the policy file and its tests (section 4.1, "The manifest change"). The release is built with `OPAX_PRODUCTION_VOICE=1`, both release verifiers pass in that mode, the switch-on app is launched once on a simulator, and upload refuses a build whose recorded switch does not match (section 4.3).
+3. **"Report this answer" wired.** Talk passes a source's record path, not answer text, with a mode for answers that cite no record (`report-answer.ts:12-29` takes a path; `AnswerCaption.tsx:27` on `ios/talk-sheet` passes text). `/support` is live, so the build sets `supportPageAvailable` (`report-answer.ts:6-7`).
+4. **About updated** (`About.tsx:295-316`): "Corrections and contact" points to `/support`; "Privacy policy" points to `/privacy`; the privacy text states the retention facts and what voice sends; the notice about people who have died is added.
+5. **Minimum age in the app.** The sign-in screen and Talk's sign-in prompt say "Accounts and voice are for people aged 16 and over", as the website does (`copy.ts:27-30` on `ios/account-ui`; `TalkScreen.tsx:296-298` on `ios/talk-sheet`).
+6. **Consent wording dated.** Talk's consent screen gives the ElevenLabs settings as last checked, matching the privacy page, not as a standing policy (`TalkScreen.tsx:315-318` on `ios/talk-sheet`; `docs/PRIVACY.md:94` on `main`).
+7. **Version 1.0.0** in `mobile/app.config.ts:55,141` and the release tooling (`mobile/scripts/release-ios.sh:64,68,77`).
+8. **Portraits, if `ios/portraits` is in the build:** leave out the two GFDL and two "copyrighted free use" files, and add "cropped" to the Commons credit; the website's credits change in the same way.
+9. **Person search filtered to the verified roster** (risk R1), or non-member rows labelled, before submission.
+10. **Labels rechecked.** Every quoted label in sections 2.1, 2.6 and 5.3 is checked against the submitted build, and the notes are recounted (4,000-byte limit).
+11. **Screenshots captured** under section 5, then the iPad compatibility run for risk R5.
 
 ### 6.3 Risks still open
 
 | ID | Guideline | Risk | Evidence | Mitigation |
 | --- | --- | --- | --- | --- |
-| R1 | 5.1.1(viii) | The largest review risk. Native profiles exist only for roster parliamentarians, but person search returns rows from the compiled catalog, 1,557 in the current manifest; 414 are surname-only and 63 appear only in Senate committee Hansard. The app shows the rows it gets back (non-roster names open on opax.com.au). Electorate pages list candidates with their votes, as published | `mobile/src/features/search/navigation.ts:9-14,32`; `portal/src/catalog-search.ts:45-50`; `scripts/build_search_catalog.mjs:45-46`; `portal/public/search-catalog/manifest.json` | The review notes explain the scope. Gate item 10 |
+| R1 | 5.1.1(viii) | The largest review risk. Native profiles exist only for roster parliamentarians, but person search returns rows from the compiled catalog, 1,557 in the current manifest; 414 are surname-only and 63 appear only in Senate committee Hansard. The app shows the rows it gets back (non-roster names open on opax.com.au). Electorate pages list candidates with their votes, as published | `mobile/src/features/search/navigation.ts:9-14,32`; `portal/src/catalog-search.ts:45-50`; `scripts/build_search_catalog.mjs:45-46`; `portal/public/search-catalog/manifest.json` | The review notes explain the scope. Gate item 9 |
 | R2 | 4.2 | Low to medium. Some blocks hand off to the website, each labelled "Opens on opax.com.au" | `mobile/src/design/record.tsx:120-136`; `external.ts:317-329` | The notes list native features; voice, the outline map and offline reading add native depth |
 | R3 | 2.3.6 | "Unrestricted web access" answered No. A reviewer could read the in-app Safari view as web access, which would make the rating 16+; "Report this answer" also opens GitHub there until `/support` is set | `external.ts:266-293`; `report-answer.ts:30-47` | Keep No. If App Review disagrees, open source links in Safari |
 | R4 | 1.1.1, 1.1.6 | Low. Facts with sources and dates, labelled machine text, "leads, not findings". Some daily editions compare parties, in balanced order | `Today.tsx:112-114`; `mobile/src/features/EditionCard.tsx:30-35` | Keep caveats visible; corrections through `/support` |
-| R5 | 2.4.1 | iPhone only; App Review can run it on iPad in compatibility mode | `app.config.ts:69` | Gate item 12; Mac and Vision Pro availability off |
+| R5 | 2.4.1 | iPhone only; App Review can run it on iPad in compatibility mode | `app.config.ts:69` | Gate item 11; Mac and Vision Pro availability off |
 | R6 | 5.1.1 | The source-link checker accepts opax.com.au, so a catalog source link on the site itself would load the website's analytics in the in-app Safari view; whether any row carries one is unverified | `external.ts:238-264` | Route opax.com.au hosts through `openOnWeb` |
 | R8 | 5.2, 5.2.1 | Official portraits are CC BY-NC-ND 4.0 and the website's files are crops; the app also clips portraits to a circle. Applies to the website too. Accepted by Jake ("I will fix the licensing stuff later") | Section 3.4; `scripts/backfill_photos_oa.py:29` | No APH portraits in screenshots. Later fix: resized-only files from uncropped originals, or the Parliament's permission |
 | R9 | 4.7 | If App Review treats Talk as 4.7 software: filtering, timely responses, per-instance consent, a universal-link index (W17) and a verified or declared age gate | Section 2.3 | Ask before submission (Needs Jake 1); the notes repeat the position; the work is listed in section 2.3 |
@@ -556,10 +555,10 @@ Only these four need Jake. Everything else is decided (section 8) or is engineer
 | Subtitle | "Your MP, votes, bills and pay", as drafted | Decided 6 Oct (default) |
 | Secondary category | News, as drafted | Decided 6 Oct (default) |
 | Copyright | 2026 Jake Tracey | Decided 6 Oct (default) |
-| Support and privacy (decision 12) | `/support` and `/privacy` on opax.com.au from `web/privacy-app`; interim wording and public GitHub issues until an inbox exists; review contact through `/support` | Decided 6 Oct (default) |
+| Support and privacy (decision 12) | `/support` and `/privacy`, live on opax.com.au since 6 October 2026; interim wording and public GitHub issues until an inbox exists; review contact through `/support` | Decided 6 Oct (default) |
 | Content rights (decision 13) | Yes; licence items never block | Decided 6 Oct (default) |
 | Store screenshots (decision 13) | No APH portraits | Decided 6 Oct (default) |
-| Privacy label (decision 14) | Section 4.1: the switch-on manifest's seven types; Other Data (IP addresses) linked, Search History not linked | Decided 6 Oct (default) |
+| Privacy label (decision 14) | Section 4.1: the switch-on manifest's seven types; Search History and Other Data (IP addresses) linked | Decided 6 Oct (default) |
 | Account deletion policy (decision 5) | As in section 2.4 | Decided 6 Oct (default) |
 | Provider settings (decision 8) | Documented settings; Jake checks the dashboard and makes the first call | Decided 6 Oct (default) |
 | Voice budget (decision 9) | Shared with the web | Decided 6 Oct (default) |
@@ -570,9 +569,9 @@ Only these four need Jake. Everything else is decided (section 8) or is engineer
 
 ## 9. Claims not verified in this pass
 
-- **Lane labels.** Talk and Account labels come from `ios/talk-sheet` at `6cb7c7d4` and `ios/account-ui` at `078031c9`, both unmerged and still changing; gate item 11 rechecks them.
+- **Lane labels.** Talk and Account labels come from `ios/talk-sheet` at `6cb7c7d4` and `ios/account-ui` at `078031c9`, both unmerged and still changing; gate item 10 rechecks them.
 - **Live retention.** Log (7 days) and analytics (31 days) retention come from the privacy branch's read-only checks and Cloudflare's documentation (`docs/PRIVACY.md:19-20` there). Whether Workers Logs entries hold IP fields was not readable by API; the label declares IPs either way.
-- **Search History linkage.** The label declares it not linked because a catalog search carries no session (`client.ts:126,130-134`). Whether Workers Logs keep the IP with each search URL was not readable by API; if they do, a search could be tied to an account through the IP, the same way as Other Data, and the conservative answer would be linked.
+- **IP fields in Workers Logs.** Whether log entries hold the IP was not readable by API. The label declares Search History and Other Data linked either way.
 - **ElevenLabs settings.** Recording off and one-day transcripts are as recorded on 9 September 2026 (Needs Jake 3).
 - **Build selection.** That App Store Connect offers a 1.0.0 build for a version renamed 1.0.0 is expected, not tested.
 - **Person search rows (R1)** and **opax.com.au source links (R6)**: as on 5 October; no production search was run.
