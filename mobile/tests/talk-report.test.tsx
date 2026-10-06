@@ -2,7 +2,7 @@ import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { Button } from '../src/design/primitives';
 import { AnswerCaption } from '../src/features/talk/AnswerCaption';
-import { canReport, talkMenu } from '../src/features/talk/menu';
+import { canReport, talkMenu, timeLeft } from '../src/features/talk/menu';
 import type { TranscriptTurn, VoiceSource } from '../src/voice';
 import { reportChoices } from '../src/features/talk/reportAnswer';
 
@@ -101,6 +101,21 @@ test('caption corrections cannot change the data sent by the report control', ()
     ),
   );
   expect(report.mock.calls).toEqual([['/bill/example'], ['/bill/example']]);
+});
+
+test('during a call the menu title changes only at five minutes and each minute after', () => {
+  const titles = new Set(
+    Array.from({ length: 601 }, (_, seconds) => timeLeft(true, seconds, null)),
+  );
+  expect([...titles]).toEqual([
+    'Under a minute left in this call',
+    '1 min left in this call',
+    '2 min left in this call',
+    '3 min left in this call',
+    '4 min left in this call',
+    '5 min left in this call',
+    'Over 5 min left in this call',
+  ]);
 });
 
 test('the menu keeps web pages out of a call and offers withdrawal only after consent', () => {

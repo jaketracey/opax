@@ -8,8 +8,9 @@ export const canReport = (transcript: readonly TranscriptTurn[]) =>
   transcript.some((turn) => turn.role === 'agent' && turn.text.trim() !== '');
 
 /**
- * The menu's title: time left in this call, or the account's allowance. Whole
- * minutes, so the menu changes once a minute rather than every second.
+ * The menu's title: time left in this call, or the account's allowance.
+ * A new title rebuilds the native menu and closes it if open, so during a
+ * call it changes rarely: once at five minutes, then each minute after.
  */
 export function timeLeft(
   live: boolean,
@@ -17,9 +18,11 @@ export function timeLeft(
   status: VoiceStatus | null,
 ): string | undefined {
   if (live)
-    return remaining >= 60
-      ? `${minutesLeft(remaining)} left in this call`
-      : 'Under a minute left in this call';
+    return remaining > 300
+      ? 'Over 5 min left in this call'
+      : remaining >= 60
+        ? `${minutesLeft(remaining)} left in this call`
+        : 'Under a minute left in this call';
   if (!status) return undefined;
   if (status.unlimited) return 'Unlimited minutes';
   return `${minutesLeft(status.remainingSeconds)} left`;
