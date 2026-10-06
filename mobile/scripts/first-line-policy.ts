@@ -26,6 +26,39 @@ export interface FirstLineVerdict {
 export const TITLE = 'Today';
 export const PREFIX = 'OPAX is';
 const bottom = (line: OcrLine) => line.top + line.height;
+// Vision sometimes returns a drawn Latin capital as its Cyrillic or Greek
+// look-alike ("OPАХ is" beside an all-caps date at AX5). The glyphs drawn are
+// the same, so compare those capitals as the Latin letters they show.
+const lookalikes: Record<string, string> = {
+  А: 'A',
+  В: 'B',
+  Е: 'E',
+  К: 'K',
+  М: 'M',
+  Н: 'H',
+  О: 'O',
+  Р: 'P',
+  С: 'C',
+  Т: 'T',
+  Х: 'X',
+  У: 'Y',
+  Α: 'A',
+  Β: 'B',
+  Ε: 'E',
+  Ζ: 'Z',
+  Η: 'H',
+  Ι: 'I',
+  Κ: 'K',
+  Μ: 'M',
+  Ν: 'N',
+  Ο: 'O',
+  Ρ: 'P',
+  Τ: 'T',
+  Υ: 'Y',
+  Χ: 'X',
+};
+const latin = (text: string) =>
+  text.replace(/[\u0391-\u03A9\u0410-\u042F]/g, (c) => lookalikes[c] ?? c);
 const letters = (text: string) => text.replace(/[^\p{L}]/gu, '');
 
 /**
@@ -50,7 +83,7 @@ export function firstLineVerdict(ocr: Ocr): FirstLineVerdict {
     .filter((line) => line !== title && line.top > bottom(title))
     .sort((a, b) => b.top - a.top)[0];
   const prefix = ocr.lines
-    .filter((line) => line.text.trim().startsWith(PREFIX))
+    .filter((line) => latin(line.text.trim()).startsWith(PREFIX))
     .sort((a, b) => a.top - b.top)[0];
   const found = { title, tabLabel, prefix };
   if (!prefix)

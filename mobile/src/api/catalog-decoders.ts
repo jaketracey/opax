@@ -27,6 +27,7 @@ import {
   text,
   url,
   type Decoded,
+  type Decoder,
 } from './validation';
 import {
   billKey,
@@ -1029,17 +1030,78 @@ const slideBase = { kicker: text, title: text, alt: text };
 const sourceSlide = shape({ ...slideBase, rows: array(text) });
 const listSlide = shape({ ...slideBase, note: optional(nullable(text)) });
 const otherSlide = shape(slideBase);
+// Today's front page reads a few more fields where the slides carry them
+// (portal/src/story.ts). Each is optional and lenient: a field that is
+// missing or unreadable is left out, and never refuses the edition.
+const lenient =
+  <T>(decode: Decoder<T>): Decoder<T | undefined> =>
+  (v) => {
+    try {
+      return v === undefined || v === null ? undefined : decode(v);
+    } catch (error) {
+      if (error instanceof ApiError && error.code === 'invalid-data')
+        return undefined;
+      throw error;
+    }
+  };
+const coverSlide = shape({ ...slideBase, line: lenient(nonempty) });
+const numberSlide = shape({
+  ...slideBase,
+  value: lenient(nonempty),
+  label: lenient(nonempty),
+});
+const barsSlide = shape({
+  ...slideBase,
+  items: lenient(
+    array(
+      shape({
+        label: nonempty,
+        pct: (v: unknown) =>
+          number(v) >= 0 && number(v) <= 100 ? number(v) : invalid(),
+      }),
+    ),
+  ),
+  note: lenient(nonempty),
+});
+const timelineSlide = shape({
+  ...slideBase,
+  events: lenient(array(shape({ date: nonempty, text: nonempty }))),
+});
+const divisionSlide = shape({
+  ...slideBase,
+  ayes: lenient(count),
+  noes: lenient(count),
+});
 export type EditionSlide =
   | ({ type: 'source' } & Decoded<typeof sourceSlide>)
   | ({ type: 'list' } & Decoded<typeof listSlide>)
+  | ({ type: 'cover' } & Decoded<typeof coverSlide>)
+  | ({ type: 'number' } & Decoded<typeof numberSlide>)
+  | ({ type: 'bars' } & Decoded<typeof barsSlide>)
+  | ({ type: 'timeline' } & Decoded<typeof timelineSlide>)
+  | ({ type: 'division' } & Decoded<typeof divisionSlide>)
   | ({
-      type: Exclude<(typeof slideTypes)[number], 'source' | 'list'>;
+      type: Exclude<
+        (typeof slideTypes)[number],
+        | 'source'
+        | 'list'
+        | 'cover'
+        | 'number'
+        | 'bars'
+        | 'timeline'
+        | 'division'
+      >;
     } & Decoded<typeof otherSlide>);
 const slide = (v: unknown): EditionSlide => {
   const row = object(v);
   const type = oneOf(slideTypes)(row.type);
   if (type === 'source') return { type, ...sourceSlide(row) };
   if (type === 'list') return { type, ...listSlide(row) };
+  if (type === 'cover') return { type, ...coverSlide(row) };
+  if (type === 'number') return { type, ...numberSlide(row) };
+  if (type === 'bars') return { type, ...barsSlide(row) };
+  if (type === 'timeline') return { type, ...timelineSlide(row) };
+  if (type === 'division') return { type, ...divisionSlide(row) };
   return { type, ...otherSlide(row) };
 };
 const slides = (v: unknown): EditionSlide[] => {
