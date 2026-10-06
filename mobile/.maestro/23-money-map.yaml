@@ -73,6 +73,11 @@ name: 23 Native money map, held figures, original source and ranked list
       TARGET_ID: money-industry-unions
 - tapOn:
     id: money-industry-unions
+# The options collapse after selection; restore the selected control as the scroll anchor.
+- runFlow:
+    file: support/money-screen-scroll-up.yaml
+    env:
+      TARGET_ID: money-industry
 - runFlow:
     file: support/money-screen-scroll.yaml
     env:
