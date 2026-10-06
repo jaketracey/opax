@@ -19,6 +19,11 @@ test.each(catalogKinds)('one explicit P0 search kind is allowed: %s', (kind) =>
 );
 test.each([
   '/graph/money.json?unreviewed=1',
+  '/graph/money.qld.json?nocache=1',
+  '/graph/money.vic.json?',
+  '/graph/money.tas.json?year=2025',
+  '/graph/money.nsw.json',
+  '/graph/money.wa.json',
   '/interests/ties-by-donor.json',
   '/api/ask',
   '/api/search?q=x&mode=keyword',

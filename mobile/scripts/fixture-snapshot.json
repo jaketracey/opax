@@ -195,7 +195,10 @@
     "/electorates/releases/b56417062ccc33cf/el_eb1f9e493e735d638d94fc7c.json": "6e2978fa66fd550e2945ab7bb0184c400f0f9139effff84d5d10269a7599132c",
     "/electorates/releases/b56417062ccc33cf/el_1c5760dd86eb5448b864081d.json": "585ea85ae4d5caaccdb70db634623e601302c0c86cb64c4cb459376c85587f6a",
     "/electorates/releases/b56417062ccc33cf/el_d4e49dcc67895c7b9dec5e26.json": "030232cc7da53ae907b6ce3dd5a712767c494b134b8d505b33fabcc62440141a",
-    "/electorates/releases/b56417062ccc33cf/el_44d2793f0bed5ce6b44b5b19.json": "e3e36df522e15e991a91b9231e16fbab048848a95285035ee76570f138fc1699"
+    "/electorates/releases/b56417062ccc33cf/el_44d2793f0bed5ce6b44b5b19.json": "e3e36df522e15e991a91b9231e16fbab048848a95285035ee76570f138fc1699",
+    "/graph/money.qld.json": "a86e13dc48bac9c7a65f2f14206e6379fa6f0b1071619d068e6cfa2f097c08f0",
+    "/graph/money.vic.json": "e4a6d027af6b02434f329804c392c65c2609f4237574ea7a7c22eff71fe0e71f",
+    "/graph/money.tas.json": "f3c091832c8b3120a56b6340c123969e27cea62189c2aa017833daa559dc1374"
   },
   "sizes": {
     "/parliamentarians.json": 405665,
@@ -391,7 +394,10 @@
     "/electorates/releases/b56417062ccc33cf/el_eb1f9e493e735d638d94fc7c.json": 38650,
     "/electorates/releases/b56417062ccc33cf/el_1c5760dd86eb5448b864081d.json": 60546,
     "/electorates/releases/b56417062ccc33cf/el_d4e49dcc67895c7b9dec5e26.json": 28263,
-    "/electorates/releases/b56417062ccc33cf/el_44d2793f0bed5ce6b44b5b19.json": 47335
+    "/electorates/releases/b56417062ccc33cf/el_44d2793f0bed5ce6b44b5b19.json": 47335,
+    "/graph/money.qld.json": 209891,
+    "/graph/money.vic.json": 110918,
+    "/graph/money.tas.json": 67774
   },
   "testOnlyFiles": ["/interests/ties-by-donor.json"],
   "responses": {

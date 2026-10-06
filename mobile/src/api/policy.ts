@@ -14,8 +14,11 @@ const staticPaths = new Set([
   '/photos/people.json',
   '/photos/credits.json',
   '/corpus.json',
-  // Reviewed immutable static graph export: no Worker/model/auth request.
+  // Reviewed immutable federal/state graph exports: no Worker/model/auth request.
   '/graph/money.json',
+  '/graph/money.qld.json',
+  '/graph/money.vic.json',
+  '/graph/money.tas.json',
 ]);
 // W13 frozen daily edition: one D1 read of the posted journal, no model,
 // preview or OG path (docs/IOS-API-CONTRACT.md, "App readers"). Only `latest`:

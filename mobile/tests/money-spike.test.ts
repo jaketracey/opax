@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { decodeMoneyGraph } from '../src/features/money/data';
+import { decodeMoneyGraph, moneyCatalogs } from '../src/features/money/data';
 import {
   clusterCentres3D,
   ForceSim3D,
@@ -76,42 +76,77 @@ test('flow shaders are the web shaders, without a network loader', () => {
     /(?:Loader|fetch|XMLHttpRequest|WebSocket)\s*\(/,
   );
 });
-test('graph uses the reviewed client and survives an offline read from saved cache', async () => {
-  const graph = pinned('/graph/money.json');
-  let offline = false;
-  const transport = jest.fn(async () => {
-    if (offline) throw new Error('fixture offline');
-    return new Response(JSON.stringify(graph), {
-      status: 200,
-      headers: { 'cache-control': 'max-age=0' },
+test.each(Object.values(moneyCatalogs))(
+  'reviewed $path survives an offline read from saved cache',
+  async ({ path }) => {
+    const graph = pinned(path);
+    let offline = false;
+    const transport = jest.fn(async () => {
+      if (offline) throw new Error('fixture offline');
+      return new Response(JSON.stringify(graph), {
+        status: 200,
+        headers: { 'cache-control': 'max-age=0' },
+      });
     });
-  });
-  const entries = new Map<string, CacheEntry>();
-  let index: CacheIndexEntry[] = [];
-  const client = new ApiClient({
-    origin: 'https://fixture.invalid',
-    version: '0.1.0',
-    build: '4',
-    cache: new CatalogCache({
-      readIndex: async () => index,
-      writeIndex: async (value) => {
-        index = value;
-      },
-      read: async (url) => entries.get(url),
-      write: async (entry) => {
-        entries.set(entry.url, entry);
-      },
-      remove: async (url) => {
-        entries.delete(url);
-      },
-    }),
-    transport,
-    retries: 0,
-  });
-  const online = await client.get('/graph/money.json', decodeMoneyGraph);
-  offline = true;
-  const saved = await client.get('/graph/money.json', decodeMoneyGraph);
-  expect(saved.data).toEqual(online.data);
-  expect(saved.stale).toBe(true);
-  expect(saved.asOf).toBe('2026-09-21');
-});
+    const entries = new Map<string, CacheEntry>();
+    let index: CacheIndexEntry[] = [];
+    const client = new ApiClient({
+      origin: 'https://fixture.invalid',
+      version: '0.1.0',
+      build: '4',
+      cache: new CatalogCache({
+        readIndex: async () => index,
+        writeIndex: async (value) => {
+          index = value;
+        },
+        read: async (url) => entries.get(url),
+        write: async (entry) => {
+          entries.set(entry.url, entry);
+        },
+        remove: async (url) => {
+          entries.delete(url);
+        },
+      }),
+      transport,
+      retries: 0,
+    });
+    const online = await client.get(path, decodeMoneyGraph);
+    offline = true;
+    const saved = await client.get(path, decodeMoneyGraph);
+    expect(saved.data).toEqual(online.data);
+    expect(saved.stale).toBe(true);
+    expect(saved.asOf).toBe('2026-09-21');
+  },
+);
+
+test.each(Object.values(moneyCatalogs))(
+  'year cells and public-money blocks are validated for $path',
+  ({ path }) => {
+    const graph = decodeMoneyGraph(pinned(path));
+    expect(graph.nodes.length).toBeGreaterThan(100);
+    expect(graph.edges.length).toBeGreaterThan(100);
+    for (const fields of [
+      { byYear: { '2025': [Infinity, 1] } },
+      { undated: [-1, 1] },
+      { firstYear: 2025, lastYear: 1998 },
+    ]) {
+      expect(() =>
+        decodeMoneyGraph({
+          ...graph,
+          nodes: [{ ...graph.nodes[0], ...fields }],
+        }),
+      ).toThrow();
+    }
+    expect(() =>
+      decodeMoneyGraph({
+        ...graph,
+        nodes: [
+          {
+            ...graph.nodes[0],
+            grants: { total: NaN, count: 1, firstYear: null, lastYear: null },
+          },
+        ],
+      }),
+    ).toThrow();
+  },
+);
