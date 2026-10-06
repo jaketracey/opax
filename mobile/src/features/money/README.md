@@ -42,6 +42,11 @@ requested. Every graph request goes through `ApiClient`, four exact reviewed
 static routes and the existing bounded disk cache. Fixture snapshots pin all
 four files by hash; tests never use production data requests.
 
+A published state export can split one canonical donor ID across name casing
+and different financial years. The decoder joins only complete, disjoint annual
+disclosures with the same identity and category, preserving every flow and
+amount. Ambiguous or overlapping duplicates remain a data error.
+
 ## Records and accessibility
 
 Native adjustable financial-year rails also have earlier/later buttons and

@@ -1,6 +1,10 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { decodeMoneyGraph, moneyCatalogs } from '../src/features/money/data';
+import {
+  decodeMoneyGraph,
+  moneyCatalogs,
+  type MoneyNode,
+} from '../src/features/money/data';
 import {
   clusterCentres3D,
   ForceSim3D,
@@ -36,6 +40,70 @@ test('the full pinned graph is accepted and corrupt endpoints or numbers are rej
       nodes: [{ ...graph.nodes[0], total: Infinity }],
     }),
   ).toThrow();
+});
+test('a canonical donor split across name casing and disjoint years retains every disclosed figure and edge', () => {
+  const graph = decodeMoneyGraph(pinned('/graph/money.tas.json'));
+  const first: MoneyNode = {
+    id: 'donor:fixture',
+    label: 'Fixture donor',
+    kind: 'donor',
+    industry: 'individual',
+    group: 'individuals',
+    total: 3700,
+    count: 1,
+    firstYear: 2025,
+    lastYear: 2025,
+    byYear: { '2025': [3700, 1] as [number, number] },
+  };
+  const second = {
+    ...first,
+    label: 'FIxture donor',
+    total: 1401,
+    firstYear: 2026,
+    lastYear: 2026,
+    byYear: { '2026': [1401, 1] as [number, number] },
+  };
+  const edge = (node: MoneyNode) => ({
+    ...node,
+    source: node.id,
+    target: graph.nodes[0]!.id,
+  });
+  const input = {
+    ...graph,
+    nodes: [graph.nodes[0]!, first, second],
+    edges: [edge(first), edge(second)],
+  };
+  const decoded = decodeMoneyGraph(input);
+  expect(decoded.nodes).toHaveLength(2);
+  expect(decoded.nodes[1]).toMatchObject({
+    label: 'Fixture donor',
+    total: 5101,
+    count: 2,
+    firstYear: 2025,
+    lastYear: 2026,
+    byYear: { '2025': [3700, 1], '2026': [1401, 1] },
+  });
+  expect(decoded.edges).toBe(input.edges);
+  expect(input.nodes).toHaveLength(3);
+  for (const ambiguous of [
+    {
+      ...second,
+      byYear: first.byYear,
+      total: 3700,
+      firstYear: 2025,
+      lastYear: 2025,
+    },
+    { ...second, label: 'Another fixture donor' },
+    { ...second, kind: 'party' },
+    { ...second, byYear: {} },
+    {
+      ...second,
+      grants: { total: 0, count: 0, firstYear: null, lastYear: null },
+    },
+  ])
+    expect(() =>
+      decodeMoneyGraph({ ...input, nodes: [first, ambiguous] }),
+    ).toThrow();
 });
 test('native force layout is reproducible, finite and preserves the web physics', () => {
   const graph = decodeMoneyGraph(pinned('/graph/money.json'));
