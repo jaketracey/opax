@@ -22,13 +22,16 @@ filter, never a union (docs/DATA-MONEY.md section 3).
 Methodology mirrors export_money_graph.py rule for rule, with the state twists
 recorded in each file's `meta` block:
 
-1. Only rows with a canonical `recipient_party` are used; gifts to candidates,
-   committees, third parties and independents are not party donations.
+1. Only rows with a canonical `recipient_party` are used. The test is party
+   assignment, not recipient type: a gift to a candidate or committee that is
+   assigned to a party is kept.
 2. amount > 0 only.
 3. Public funding / government bodies are excluded (same name regex; donors whose
    dominant industry is 'government' are dropped wholesale).
-4. Internal party transfers are excluded (industry = 'party_internal' or a party
-   word in the donor name): the Greens' national body gifting its QLD branch, etc.
+4. Internal party transfers (industry = 'party_internal' or a party word in the
+   donor name: the Greens' national body gifting its QLD branch, etc.) are
+   excluded from donor totals and flows only. Party node totals keep them, as in
+   money.json (meta.party_totals_note).
 5. Donors with industry other/NULL/unidentified need a per-jurisdiction lifetime
    floor to earn a place (the federal $5m floor would empty a state file). A
    donor's industry is the biggest CLASSIFIED tag across its rows; 'other' and
@@ -814,10 +817,10 @@ def main() -> None:
 
     floor_text = f"${cfg['other_floor'] / 1000:,.0f}k".replace(",", "")
     exclusions = [
-        "gifts to candidates, committees, third parties and independents (no canonical party recipient)",
+        "records not assigned to a party (no canonical recipient_party; gifts to candidates or committees assigned to a party are kept)",
         "public electoral funding and government bodies (electoral commissions / ATO / departments; industry 'government')",
         "donor entities resolved to kind='government' or kind='party_unit'",
-        "internal party transfers (industry='party_internal' or donor named after a party)",
+        "internal party transfers (industry='party_internal' or donor named after a party), from donor totals and flows only; party node totals include them",
         f"donors with industry other/unknown under {floor_text} lifetime in this jurisdiction",
     ]
     for t in cfg["drop_disclosure_types"]:
@@ -880,6 +883,11 @@ def main() -> None:
             "edge_count": len(edges),
             **grants_meta,
             **contracts_meta,
+            "party_totals_note": (
+                "Party node totals cover all rows assigned to a party except public funding identified "
+                "by the reported donor name, unchanged by entity resolution; unlike donor totals and "
+                "flows, they include internal party transfers."
+            ),
         },
         "nodes": nodes,
         "edges": edges,

@@ -696,7 +696,7 @@ def main() -> None:
                 "donation_type='flagged_review' rows (data-quality outliers)",
                 "public electoral funding (AEC / state electoral commissions / ATO / Dept of Finance)",
                 "donor entities resolved to kind='government' or kind='party_unit'",
-                "internal party transfers (industry='party_internal' or donor named after a party)",
+                "internal party transfers (industry='party_internal' or donor named after a party), from donor totals and flows only; party node totals include them",
                 "donors with industry other/unknown under $5m lifetime",
             ],
             "rows_considered": used_rows,

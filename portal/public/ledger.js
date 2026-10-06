@@ -964,7 +964,7 @@ export function mountLedger (container, opts = {}) {
         ? `Caveat: ${meta.threshold} Totals are a floor, not a ceiling.`
         : 'Caveat: donations under the AEC disclosure threshold are not reported: totals are a floor, not a ceiling.',
       meta.jurisdiction
-        ? 'Excluded: gifts to candidates and committees, public funding and internal party transfers.'
+        ? 'Only records assigned to a party are included. Excluded: public funding and internal party transfers.'
         : 'Excluded: public electoral funding and internal party transfers.',
       meta.not_summed || NOT_SUMMED,
       'Year columns use the first year of each financial year; election returns may use the polling year. Year filters sum only dated yearly amounts and exclude undated records.',
@@ -1126,7 +1126,7 @@ export function mountLedger (container, opts = {}) {
     const donors = data.nodes.filter((n) => n.kind === 'donor').length
     fineEl.textContent = m.jurisdiction
       ? `${m.commission} (${m.sourceShort}), ${m.coverage}, top ${NUM.format(donors)} disclosed donors. ` +
-        `${m.threshold} Totals are a floor, not a ceiling. Gifts to candidates and committees, ` +
+        `${m.threshold} Totals are a floor, not a ceiling. Only records assigned to a party are included; ` +
         `public funding and internal party transfers excluded. ${m.not_summed || NOT_SUMMED} ` +
         `Licence: ${m.licence}. `
       : `AEC disclosures ${YEAR_MIN}–${YEAR_MAX}, top ${NUM.format(donors)} disclosed donors. Donations under ` +

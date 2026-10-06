@@ -215,7 +215,9 @@ node graph/smoke-test.mjs                 # data + layout, headless
 
 `public/graph/money.json` is exported from parli.db (see
 `../../scripts/export_money_graph.py` for the methodology and exclusion
-rules — public funding, internal party transfers etc.):
+rules — public funding, internal party transfers etc. — which shape donor
+totals and flows; party totals keep internal party transfers and leave out
+only public funding identified by the reported donor name):
 
 ```sh
 ssh desktop python3 - < ../scripts/export_money_graph.py > public/graph/money.json

@@ -1260,11 +1260,11 @@ function moneyFineprintHTML(jur, meta) {
   if (meta?.jurisdiction) {
     parts.push(`Source: ${meta.commission} (${meta.sourceShort}), ${meta.coverage}; licence: ${meta.licence}.`);
     parts.push(meta.threshold, "Totals are a floor, not a ceiling.");
-    parts.push("Public funding and gifts to candidates and committees are excluded. Donor totals exclude internal party transfers; party totals include them.");
+    parts.push("Only records assigned to a party are included. Party totals leave out public funding identified by the reported donor name. Donor totals and flows also exclude public funding under variant spellings, government entities and internal party transfers; party totals include transfers.");
     parts.push(meta.not_summed || STATE_NOT_SUMMED);
   } else {
     parts.push("Source: Australian Electoral Commission annual and election returns, financial years 1998-99 to 2025-26.");
-    parts.push(AEC_NOTE, "Public electoral funding is excluded. Donor totals exclude internal party transfers; party totals include them.", STATE_NOT_SUMMED);
+    parts.push(AEC_NOTE, "Party totals leave out public funding identified by the reported donor name. Donor totals and flows also exclude public funding under variant spellings, government entities and internal party transfers; party totals include transfers.", STATE_NOT_SUMMED);
   }
   const fullParams = new URLSearchParams();
   if (jur !== "federal") fullParams.set("jur", jur);
