@@ -62,7 +62,12 @@ export function AccountSection() {
     </>
   );
   return (
-    <Section title="Account" testID="account-section">
+    <Section
+      title="Account"
+      icon="person.crop.circle"
+      accent="people"
+      testID="account-section"
+    >
       <Group>
         {account.notice ? (
           <Text testID="account-notice">{account.notice}</Text>
