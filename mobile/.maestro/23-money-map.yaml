@@ -130,11 +130,7 @@ name: 23 Native money map, held figures, original source and ranked list
 - tapOn: OK
 - tapOn: Done
 - runFlow:
-    file: support/money-screen-scroll-up.yaml
-    env:
-      TARGET_ID: money-mode-list
-- tapOn:
-    id: money-mode-list
+    file: support/money-screen-list.yaml
 - scrollUntilVisible:
     element:
       id: money-donor-0

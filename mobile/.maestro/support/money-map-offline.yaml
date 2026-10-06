@@ -19,11 +19,7 @@ name: Cold money map and ranked list from disk cache with the fixture stopped
     timeout: 90000
 - takeScreenshot: ${EVIDENCE}/23-offline-map
 - runFlow:
-    file: money-screen-scroll-up.yaml
-    env:
-      TARGET_ID: money-mode-list
-- tapOn:
-    id: money-mode-list
+    file: money-screen-list.yaml
 - scrollUntilVisible:
     element:
       id: money-donor-0
