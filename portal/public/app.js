@@ -4318,30 +4318,58 @@ async function renderPersonPay(name, sections) {
 
 // --- /support: a report names its record ------------------------------------
 // /support?record=<path> names the record a report is about and pre-fills the
-// GitHub issue, which is public. So only a public record's own path gets
-// through: the query and fragment are dropped (they can carry a reader's
-// search words or a sign-in token), the path must start at a record route,
-// and a segment that could be an email address, a key or a token is refused.
+// GitHub issue, which is public. A path is kept only when it has the shape of
+// a public record route OPAX itself links to: the Worker's matchSeoRoute
+// shapes, made stricter. Anything else, including anything that could be a
+// sign-in token, a key or an email address, gets the general form.
 const SUPPORT_ISSUES = "https://github.com/jaketracey/opax/issues/new";
-const SUPPORT_RECORD_ROOT = /^\/(?:doc|bill|bills|subject|reports|money|connections|declared|discover|explore)(?:\/|$)/;
+const SUPPORT_DIRS = ["person", "party", "donor", "supplier", "agency", "campaigner", "electorate"];
+const SUPPORT_SECTIONS = ["bills", "money", "reports", "subject", "connections", "declared", "discover", "explore"];
+/** The record's path, decoded and checked segment by segment, or "" for the general form. */
 function supportRecord(raw) {
-  const path = String(raw || "").split(/[?#]/)[0].replace(/\/+$/, "");
-  if (path.length > 300 || !SUPPORT_RECORD_ROOT.test(path)) return "";
-  const safe = path.split("/").slice(1).every((seg) =>
-    /^[\p{L}\p{N} .,'’‘&():-]{1,200}$/u.test(seg) // letters, digits and name punctuation: no "@", "=", "%" or "_"
-    && !/[A-Za-z0-9]{24,}/.test(seg) // no long unbroken run
-    && !(/[a-z]/.test(seg) && /[A-Z]/.test(seg) && /\d/.test(seg) && !/\s/.test(seg) && seg.length >= 16)); // no mixed-case key
-  return safe ? path : "";
+  // The query and fragment never count: they can carry search words or a token.
+  const cut = String(raw || "").split(/[?#]/)[0];
+  if (!cut.startsWith("/") || cut.length > 600) return "";
+  // Each segment is decoded exactly once. What is left may not hold an escape
+  // (double encoding), a slash or backslash (an encoded one), a control
+  // character, or be empty, "." or "..": no path can step outside its route.
+  let s;
+  try { s = cut.slice(1).replace(/\/$/, "").split("/").map(decodeURIComponent); } catch { return ""; }
+  if (s.some((seg) => seg === "" || /^\.+$/.test(seg) || /[\/\\%\u0000-\u001f\u007f]/.test(seg))) return "";
+  // A slug in hyphen-word form, as doc, bill and report keys are; no part of
+  // it 32 characters or longer.
+  const slug = (x, max = 120) => x.length <= max && /^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/.test(x) && x.split("-").every((part) => part.length < 32);
+  // A display name: words of letters, digits and name punctuation, none over
+  // 24 characters (the longest in the record is 22), so a 43-character token
+  // never passes as one; at least one letter, and no run of six digits.
+  const name = (x) => x.length <= 200 && /\p{L}/u.test(x) && !/\d{6}/.test(x)
+    && x.split(" ").every((w) => /^[\p{L}\p{N}.,'’‘&()[\]-]{1,24}$/u.test(w));
+  const [a, b, c, d, e] = s, n = s.length;
+  const ok = (n === 1 && SUPPORT_SECTIONS.includes(a))
+    || (a === "doc" && n === 2 && slug(b))
+    || (a === "bill" && n === 2 && slug(b, 64))
+    || (a === "reports" && slug(b) && (n === 2 || (n === 4 && c === "s" && /^\d{1,3}$/.test(d))))
+    || (a === "money" && n === 2 && (b === "receipts" || b === "grants"))
+    || (a === "money" && n === 5 && b === "grants" && (c === "federal" || c === "qld") && d === "recipient"
+      && /^(?:abn:\d{11}|name:[a-z0-9 .&'()-]{2,120}|person:[a-z0-9 .'-]{2,120})$/.test(e) && e.split(" ").every((w) => w.length < 32))
+    || (a === "subject" && n === 2 && (b === "topic" || SUPPORT_DIRS.includes(b)))
+    || (a === "subject" && n === 3 && b === "topic" && /^[a-z][a-z-]{0,59}$/.test(c))
+    || (a === "subject" && n === 3 && SUPPORT_DIRS.includes(b) && (/^[sa]-[0-9a-f]{20}$/.test(c) || slug(c) || name(c)));
+  return ok ? `/${s.join("/")}` : "";
+}
+/** The record as a link: each segment encoded again, so names with spaces stay one URL. */
+function supportRecordHref(path) {
+  return path.split("/").map(encodeURIComponent).join("/");
 }
 function supportIssueUrl(path) {
-  const body = [path ? `Record: ${SITE_ORIGIN}${path}` : "Record or page:", "", "What is wrong:", "", "The source that shows it:", ""].join("\n");
+  const body = [path ? `Record: ${SITE_ORIGIN}${supportRecordHref(path)}` : "Record or page:", "", "What is wrong:", "", "The source that shows it:", ""].join("\n");
   return `${SUPPORT_ISSUES}?${new URLSearchParams({ title: path ? `Correction: ${path}` : "Correction", body })}`;
 }
 function renderSupport(params) {
   const path = supportRecord(params.get("record"));
   $("support-record").hidden = !path;
   if (path) {
-    $("support-record-link").href = path;
+    $("support-record-link").href = supportRecordHref(path);
     $("support-record-link").textContent = `opax.com.au${path}`;
   }
   $("support-issue-link").href = supportIssueUrl(path);
