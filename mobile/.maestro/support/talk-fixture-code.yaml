@@ -8,6 +8,14 @@ appId: au.com.opax.app
     centerElement: true
 - tapOn:
     id: voice-email
+# The fixture workbench has no keyboard avoidance. Move the focused field
+# above the keyboard before long-pressing; on-drag dismissal is intentional.
+- swipe:
+    start: 50%, 40%
+    end: 50%, 15%
+    duration: 600
+- tapOn:
+    id: voice-email
 # At AX5, tapping a truncated field can put the caret in the middle. Select
 # the whole address so replacement cannot leave a suffix behind.
 - longPressOn:
