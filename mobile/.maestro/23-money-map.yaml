@@ -32,61 +32,68 @@ name: 23 Native money map, held figures, original source and ranked list
     duration: 1000
 - takeScreenshot: ${EVIDENCE}/23-orbit-2
 # This accessible action uses the same year setter as the adjustable rails.
-- scrollUntilVisible:
-    element:
-      id: money-test-year
-    centerElement: true
-    timeout: 90000
+- runFlow:
+    file: support/money-screen-scroll.yaml
+    env:
+      TARGET_ID: money-test-year
+      SCROLL_START: "97%, 85%"
+      SCROLL_END: "97%, 30%"
 - tapOn:
     id: money-test-year
-- scrollUntilVisible:
-    element:
-      id: money-filters
-    direction: UP
-    centerElement: true
-    timeout: 90000
+- runFlow:
+    file: support/money-screen-scroll.yaml
+    env:
+      TARGET_ID: money-filters
+      SCROLL_START: "97%, 30%"
+      SCROLL_END: "97%, 85%"
 - tapOn:
     id: money-filters
-- scrollUntilVisible:
-    element:
-      id: money-from-year
-    centerElement: true
-    timeout: 90000
+- runFlow:
+    file: support/money-screen-scroll.yaml
+    env:
+      TARGET_ID: money-from-year
+      SCROLL_START: "97%, 85%"
+      SCROLL_END: "97%, 30%"
 - takeScreenshot: ${EVIDENCE}/23-from-year
-- scrollUntilVisible:
-    element:
-      id: money-to-year
-    centerElement: true
-    timeout: 90000
+- runFlow:
+    file: support/money-screen-scroll.yaml
+    env:
+      TARGET_ID: money-to-year
+      SCROLL_START: "97%, 85%"
+      SCROLL_END: "97%, 30%"
 - takeScreenshot: ${EVIDENCE}/23-to-year
-- scrollUntilVisible:
-    element:
-      id: money-industry
-    centerElement: true
-    timeout: 90000
+- runFlow:
+    file: support/money-screen-scroll.yaml
+    env:
+      TARGET_ID: money-industry
+      SCROLL_START: "97%, 85%"
+      SCROLL_END: "97%, 30%"
 - tapOn:
     id: money-industry
-- scrollUntilVisible:
-    element:
-      id: money-industry-unions
-    centerElement: true
-    timeout: 90000
+- runFlow:
+    file: support/money-screen-scroll.yaml
+    env:
+      TARGET_ID: money-industry-unions
+      SCROLL_START: "97%, 85%"
+      SCROLL_END: "97%, 30%"
 - tapOn:
     id: money-industry-unions
-- scrollUntilVisible:
-    element:
-      id: money-layer-contracts
-    centerElement: true
-    timeout: 90000
+- runFlow:
+    file: support/money-screen-scroll.yaml
+    env:
+      TARGET_ID: money-layer-contracts
+      SCROLL_START: "97%, 85%"
+      SCROLL_END: "97%, 30%"
 - tapOn:
     id: money-layer-contracts
 - takeScreenshot: ${EVIDENCE}/23-layers
 # The focus action invokes the same scene focus and sheet callback as a tap.
-- scrollUntilVisible:
-    element:
-      id: money-test-focus
-    centerElement: true
-    timeout: 90000
+- runFlow:
+    file: support/money-screen-scroll.yaml
+    env:
+      TARGET_ID: money-test-focus
+      SCROLL_START: "97%, 85%"
+      SCROLL_END: "97%, 30%"
 - tapOn:
     id: money-test-focus
 - extendedWaitUntil:
@@ -132,13 +139,12 @@ name: 23 Native money map, held figures, original source and ranked list
 - tapOn:
     id: source-destination-ok
 - tapOn: Done
-- scrollUntilVisible:
-    element:
-      id: money-mode-list
-    direction: UP
-    centerElement: true
-    speed: 70
-    timeout: 120000
+- runFlow:
+    file: support/money-screen-scroll.yaml
+    env:
+      TARGET_ID: money-mode-list
+      SCROLL_START: "97%, 30%"
+      SCROLL_END: "97%, 85%"
 - tapOn:
     id: money-mode-list
 - scrollUntilVisible:

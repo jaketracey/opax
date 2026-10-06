@@ -18,12 +18,12 @@ name: Cold money map and ranked list from disk cache with the fixture stopped
       id: money-map-drawn-frames-[2-9][0-9]*-pixels-[1-9][0-9]*
     timeout: 90000
 - takeScreenshot: ${EVIDENCE}/23-offline-map
-- scrollUntilVisible:
-    element:
-      id: money-mode-list
-    direction: UP
-    centerElement: true
-    timeout: 90000
+- runFlow:
+    file: money-screen-scroll.yaml
+    env:
+      TARGET_ID: money-mode-list
+      SCROLL_START: "97%, 30%"
+      SCROLL_END: "97%, 85%"
 - tapOn:
     id: money-mode-list
 - scrollUntilVisible:

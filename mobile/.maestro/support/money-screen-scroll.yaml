@@ -1,0 +1,15 @@
+appId: au.com.opax.app
+---
+# Keep page scrolling outside the native canvas, whose one-finger pan orbits.
+- repeat:
+    times: 18
+    while:
+      notVisible:
+        id: ${TARGET_ID}
+    commands:
+      - swipe:
+          start: ${SCROLL_START}
+          end: ${SCROLL_END}
+          duration: 600
+- assertVisible:
+    id: ${TARGET_ID}
