@@ -194,7 +194,7 @@ name: 21 Talk consent, captions, sources, controls and refusal states
 - takeScreenshot: ${EVIDENCE}/21-menu
 - tapOn: Withdraw voice consent
 - extendedWaitUntil:
-    visible: Voice consent withdrawn.
+    visible: Consent withdrawn. Microphone off.
     timeout: 15000
 - takeScreenshot: ${EVIDENCE}/21-withdrawn
 - scrollUntilVisible:

@@ -73,13 +73,12 @@ export default function TalkScreen({
   const active = call.active && (s.state !== 'checking' || call.busy);
   const blocked = refusal(s.status);
   const failure = call.error === 'signedOut' ? null : call.error;
+  // Newest first: a failure, then this sheet's own notice (it follows any
+  // ending it replaces), then how the last call ended, then a refusal.
   const message = failure
     ? failureCopy[failure]
-    : terminal
-      ? endCopy[terminal]
-      : blocked
-        ? failureCopy[blocked]
-        : notice;
+    : (notice ??
+      (terminal ? endCopy[terminal] : blocked ? failureCopy[blocked] : null));
   const lastTurn = s.transcript[s.transcript.length - 1];
   const phase: OrbPhase = !active
     ? 'rest'
@@ -192,7 +191,7 @@ export default function TalkScreen({
   const withdraw = () =>
     void call.changeConsent(false).then((stored) => {
       setAskingConsent(false);
-      if (stored) setNotice('Voice consent withdrawn.');
+      if (stored) setNotice(endCopy.consentWithdrawn);
     });
   const start = () => {
     setNotice(null);
@@ -352,36 +351,40 @@ export default function TalkScreen({
             style={[styles.stage, consenting ? styles.emblem : null]}
             onLayout={onStage}
           >
-            <View
-              ref={statusNode}
-              accessible
-              accessibilityLanguage="en-AU"
-              accessibilityLabel={stateText}
-              accessibilityHint={
-                screenReader && active
-                  ? 'Headphones keep VoiceOver speech out of the microphone.'
-                  : undefined
-              }
-              testID="talk-status"
-              onLayout={() => {
-                if (!focusedEntry.current && screenReader) {
-                  focusedEntry.current = true;
-                  const node = statusNode.current
-                    ? findNodeHandle(statusNode.current)
-                    : null;
-                  if (node) AccessibilityInfo.setAccessibilityFocus(node);
+            {/* Absolute, so the orb never props the stage open: the stage
+                is exactly the room the dock and captions leave. */}
+            <View style={styles.orbFrame}>
+              <View
+                ref={statusNode}
+                accessible
+                accessibilityLanguage="en-AU"
+                accessibilityLabel={stateText}
+                accessibilityHint={
+                  screenReader && active
+                    ? 'Headphones keep VoiceOver speech out of the microphone.'
+                    : undefined
                 }
-              }}
-              style={{ width: orbSize, height: orbSize }}
-            >
-              {orbSize ? (
-                <VoiceOrb
-                  phase={phase}
-                  levels={levels}
-                  size={orbSize}
-                  reduceMotion={reduceMotion}
-                />
-              ) : null}
+                testID="talk-status"
+                onLayout={() => {
+                  if (!focusedEntry.current && screenReader) {
+                    focusedEntry.current = true;
+                    const node = statusNode.current
+                      ? findNodeHandle(statusNode.current)
+                      : null;
+                    if (node) AccessibilityInfo.setAccessibilityFocus(node);
+                  }
+                }}
+                style={{ width: orbSize, height: orbSize }}
+              >
+                {orbSize ? (
+                  <VoiceOrb
+                    phase={phase}
+                    levels={levels}
+                    size={orbSize}
+                    reduceMotion={reduceMotion}
+                  />
+                ) : null}
+              </View>
             </View>
           </View>
           {showCaptions ? (
@@ -692,4 +695,13 @@ const styles = StyleSheet.create({
   },
   recordStatus: { width: 44, height: 44 },
   emblem: { minHeight: 0 },
+  orbFrame: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
