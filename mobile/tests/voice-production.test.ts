@@ -33,6 +33,17 @@ test.each(['0', '1'])(
     expect(config.ios.privacyManifests).toEqual(
       enabled ? voicePrivacyManifest() : undefined,
     );
+    expect(
+      config.plugins.find(
+        (plugin: unknown) =>
+          Array.isArray(plugin) &&
+          plugin[0] === './plugins/withVoiceAutolinking.js',
+      )?.[1],
+    ).toEqual(
+      enabled
+        ? { variant: 'production', productionVoice: true }
+        : { variant: 'production' },
+    );
     const podfile = configurePodfile(
       'use_expo_modules!\n',
       'production',
@@ -84,6 +95,11 @@ test('privacy merges existing required reasons without declaring on-device locat
   expect(manifest.NSPrivacyAccessedAPITypes).toEqual(reasons);
   expect(manifest.NSPrivacyTracking).toBe(false);
   expect(manifest.NSPrivacyCollectedDataTypes).toHaveLength(7);
+  expect(
+    manifest.NSPrivacyCollectedDataTypes.map(
+      (entry) => entry.NSPrivacyCollectedDataType,
+    ),
+  ).toContain('NSPrivacyCollectedDataTypeOtherDataTypes');
   for (const entry of manifest.NSPrivacyCollectedDataTypes) {
     expect(entry.NSPrivacyCollectedDataTypeTracking).toBe(false);
     expect(entry.NSPrivacyCollectedDataTypePurposes).toEqual([

@@ -885,6 +885,7 @@ class ProductionVoiceTests(unittest.TestCase):
             with self.subTest(key=key), self.assertRaises(ReleaseError): verify.verify_voice_info(info, True)
 
     def test_privacy_exact_types_linkage_tracking_purpose_and_reasons(self):
+        self.assertEqual(verify.VOICE_POLICY["unlinkedDataTypes"], ["SearchHistory", "OtherDataTypes"])
         verify.verify_voice_privacy(self.manifest())
         for key, value in (("NSPrivacyTracking", True), ("NSPrivacyTrackingDomains", ["foreign.test"]),
                            ("NSPrivacyAccessedAPITypes", []), ("NSPrivacyCollectedDataTypes", [])):
