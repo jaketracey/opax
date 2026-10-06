@@ -107,6 +107,7 @@ const config: ExpoConfig = {
     ],
     ['./plugins/withSearchGeometryProbe.js', { variant }],
     './plugins/withNetworkPolicy.js',
+    './plugins/withGLCompilerCleanup.js',
     [
       'expo-splash-screen',
       {
