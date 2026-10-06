@@ -3,6 +3,12 @@ name: 23 Native money map, held figures, original source and ranked list
 ---
 - launchApp:
     clearState: true
+# The Edition can expand after the initial Today layout. Wait before locating its next row.
+- scrollUntilVisible:
+    element:
+      id: today-edition-as-at
+    centerElement: true
+    timeout: 120000
 - scrollUntilVisible:
     element:
       id: today-money-map
@@ -10,6 +16,7 @@ name: 23 Native money map, held figures, original source and ranked list
     timeout: 120000
 - tapOn:
     id: today-money-map
+    waitToSettleTimeoutMs: 1000
 - scrollUntilVisible:
     element:
       id: money-map-(canvas|drawn-frames-.*-pixels-.*)
