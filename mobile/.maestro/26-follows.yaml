@@ -134,6 +134,13 @@ name: 26 Follow a member, a bill and an electorate; Today shows what changed
     id: tab-today
 - assertVisible:
     id: today-screen
+# Today keeps its scroll position; at AX5 that is below Following, so
+# start from the top and search down.
+- scrollUntilVisible:
+    element:
+      id: today-screen-message
+    direction: UP
+    timeout: 90000
 - scrollUntilVisible:
     element:
       id: today-following-summary
@@ -223,6 +230,11 @@ name: 26 Follow a member, a bill and an electorate; Today shows what changed
 - tapOn: Today
 - assertVisible:
     id: today-screen
+- scrollUntilVisible:
+    element:
+      id: today-screen-message
+    direction: UP
+    timeout: 90000
 - scrollUntilVisible:
     element:
       id: today-following-summary
@@ -356,6 +368,13 @@ name: 26 Follow a member, a bill and an electorate; Today shows what changed
     centerElement: true
     speed: 20
 - tapOn: Today
+- assertVisible:
+    id: today-screen
+- scrollUntilVisible:
+    element:
+      id: today-screen-message
+    direction: UP
+    timeout: 90000
 - scrollUntilVisible:
     element:
       id: today-following-empty
