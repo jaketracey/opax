@@ -238,7 +238,10 @@ attack regression tests.
   The v2 layout discards the earlier snapshot cache; system cache storage can also
   be reclaimed by iOS. Offline data is opportunistic, not permanent storage. HTTP freshness
   expires at max-age (capped to one day); no-store search is revalidated on every
-  read and retained only for the current app session. `savedAt`, `validatedAt`, `asOf` and
+  read and retained only for the current app session. A forced read (pull to refresh)
+  sends `Cache-Control: no-cache`: expo/fetch's URLSession keeps its own HTTP cache,
+  which otherwise answers a fresh entry under about 512 KB itself, even with
+  `If-None-Match`. `savedAt`, `validatedAt`, `asOf` and
   `stale` are distinct. Transient failures can return stale data; 4xx identity,
   invalid data and forbidden routes do not. Display saved and source dates.
 - `scripts/fixture-snapshot.json` pins SHA-256 and byte sizes of the reviewed public P0 files. Startup verifies hashes and freezes bytes in memory.
