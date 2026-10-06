@@ -182,7 +182,10 @@ export default function MoneyMapSpike() {
             });
             benchmark.current = null;
             if (params.leave === '1')
-              exitTimer.current = setTimeout(() => router.replace('/'), 5000);
+              exitTimer.current = setTimeout(() => {
+                if (router.canGoBack()) router.back();
+                else router.replace('/');
+              }, 5000);
           }
         }
         if (now - lastLabels.current > 200) {
