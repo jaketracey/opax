@@ -884,9 +884,9 @@ def main() -> None:
             **grants_meta,
             **contracts_meta,
             "party_totals_note": (
-                "Party node totals cover all rows assigned to a party except public funding identified "
-                "by the reported donor name, unchanged by entity resolution; unlike donor totals and "
-                "flows, they include internal party transfers."
+                "Party node totals cover all cleaned rows assigned to a party except public funding "
+                "identified by the reported donor name, unchanged by entity resolution; unlike donor "
+                "totals and flows, they include internal party transfers."
             ),
         },
         "nodes": nodes,
