@@ -1,13 +1,13 @@
 appId: au.com.opax.app
 ---
-# A tap while a scroll is still settling is absorbed by the scroll view
-# (seen at AX5), so every tap waits for the screen to settle first.
 # From Account and about, signed out: sign in with ${ACCOUNT_EMAIL} and the
 # fixture's synthetic code. The fixture never sends email.
+# Tap targets are reached by scrolling down from above, never centred: at AX5
+# centring overshoots a tall button under the sheet's header, and a tap there
+# hits the header. Each tap also waits for the screen to settle.
 - scrollUntilVisible:
     element:
       id: account-sign-in-start
-    centerElement: true
     timeout: 30000
 - waitForAnimationToEnd
 - tapOn:
@@ -15,7 +15,6 @@ appId: au.com.opax.app
 - scrollUntilVisible:
     element:
       id: account-email
-    centerElement: true
     timeout: 30000
 - waitForAnimationToEnd
 - tapOn:
@@ -23,14 +22,18 @@ appId: au.com.opax.app
 - inputText: ${ACCOUNT_EMAIL}
 # Return sends: at AX5 a keyboard swipe would land on the keys.
 - pressKey: Enter
-# Waits for the code step and brings the field above the keyboard; a full
-# code submits by itself.
+# The code step can open mid-page; start from its heading.
+- scrollUntilVisible:
+    element:
+      text: Enter the code
+    direction: UP
+    timeout: 30000
 - scrollUntilVisible:
     element:
       id: account-code
-    centerElement: true
     timeout: 30000
 - waitForAnimationToEnd
 - tapOn:
     id: account-code
+# A full code submits by itself.
 - inputText: '01234567'

@@ -1,8 +1,8 @@
 appId: au.com.opax.app
 name: 22 Account sign-in by emailed code, sign-out and deletion
 ---
-# A tap while a scroll is still settling is absorbed by the scroll view
-# (seen at AX5), so every tap waits for the screen to settle first.
+# Tap targets are reached by scrolling down from above, never centred (see
+# support/account-sign-in.yaml), and each tap waits for the screen to settle.
 # Fixture accounts only (happy@example.invalid, code 01234567); nothing is
 # emailed. Relaunch without clearState keeps journey 04's offline cache.
 # Every check scrolls to its target, so the flow holds at AX5.
@@ -15,7 +15,6 @@ name: 22 Account sign-in by emailed code, sign-out and deletion
 - scrollUntilVisible:
     element:
       id: account-sign-in-start
-    centerElement: true
     timeout: 30000
 - waitForAnimationToEnd
 - tapOn:
@@ -27,26 +26,28 @@ name: 22 Account sign-in by emailed code, sign-out and deletion
 - scrollUntilVisible:
     element:
       id: account-age-limit
-    centerElement: true
     timeout: 30000
 - assertVisible: 'Accounts and voice are for people aged 16 and over\.'
 - takeScreenshot: ${EVIDENCE}/22-email
 - scrollUntilVisible:
     element:
       id: account-email
-    centerElement: true
     timeout: 30000
 - waitForAnimationToEnd
 - tapOn:
     id: account-email
 - inputText: happy@example.invalid
 - pressKey: Enter
-# A wrong code gets the one answer every refused code gets. Centring the
-# field also waits for the code step; a full code submits by itself.
+# A wrong code gets the one answer every refused code gets. The code step
+# can open mid-page, so start from its heading; a full code submits itself.
+- scrollUntilVisible:
+    element:
+      text: Enter the code
+    direction: UP
+    timeout: 30000
 - scrollUntilVisible:
     element:
       id: account-code
-    centerElement: true
     timeout: 30000
 - waitForAnimationToEnd
 - tapOn:
@@ -66,7 +67,6 @@ name: 22 Account sign-in by emailed code, sign-out and deletion
 - scrollUntilVisible:
     element:
       id: account-code
-    centerElement: true
     timeout: 30000
 # The field selects its code on focus, so typing replaces it.
 - waitForAnimationToEnd
@@ -87,7 +87,6 @@ name: 22 Account sign-in by emailed code, sign-out and deletion
 - scrollUntilVisible:
     element:
       id: account-sign-out
-    centerElement: true
     timeout: 30000
 - waitForAnimationToEnd
 - tapOn:
@@ -114,7 +113,6 @@ name: 22 Account sign-in by emailed code, sign-out and deletion
 - scrollUntilVisible:
     element:
       id: account-delete
-    centerElement: true
     timeout: 30000
 - waitForAnimationToEnd
 - tapOn:
@@ -127,7 +125,6 @@ name: 22 Account sign-in by emailed code, sign-out and deletion
 - scrollUntilVisible:
     element:
       text: What is not deleted
-    centerElement: true
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/22-delete-kept
 - scrollUntilVisible:
@@ -137,15 +134,18 @@ name: 22 Account sign-in by emailed code, sign-out and deletion
 - scrollUntilVisible:
     element:
       id: account-delete-confirm
-    centerElement: true
     timeout: 30000
 - waitForAnimationToEnd
 - tapOn:
     id: account-delete-confirm
 - scrollUntilVisible:
     element:
+      text: Enter the deletion code
+    direction: UP
+    timeout: 30000
+- scrollUntilVisible:
+    element:
       id: account-deletion-code
-    centerElement: true
     timeout: 30000
 - waitForAnimationToEnd
 - tapOn:
@@ -156,7 +156,6 @@ name: 22 Account sign-in by emailed code, sign-out and deletion
 - scrollUntilVisible:
     element:
       id: account-delete-final
-    centerElement: true
     timeout: 30000
 - waitForAnimationToEnd
 - tapOn:
