@@ -20,6 +20,12 @@
       "reason": "Expo CLI signing tooling; no app import or signing in this lane."
     },
     {
+      "package": "sprintf-js",
+      "advisory": "GHSA-hp3w-g68c-fv3c",
+      "exposure": "tooling",
+      "reason": "Jest coverage tooling only: jest-expo -> babel-jest -> babel-plugin-istanbul -> @istanbuljs/load-nyc-config -> js-yaml 3 -> argparse 1 -> sprintf-js 1.0.3. Not in the app bundle; the only fix is a major Jest upgrade outside the Expo SDK 57 pin. Accepted 6 Oct 2026; review on the next jest-expo update."
+    },
+    {
       "package": "uuid",
       "advisory": "GHSA-w5hq-g745-h8pq",
       "exposure": "tooling",
@@ -29,7 +35,7 @@
       "package": "sprintf-js",
       "advisory": "GHSA-hp3w-g68c-fv3c",
       "exposure": "tooling",
-      "reason": "argparse 1 in Istanbul tooling formats CLI help strings. Its sprintf-js imports are confined to argparse CLI help/parser files; no app-source import or Expo/RN runtime path. No patched npm release exists (latest 1.1.3 is affected); framework downgrades are not a compatible remediation. Review on upstream patch updates."
+      "reason": "Jest/NYC configuration tooling via babel-plugin-istanbul, load-nyc-config, js-yaml and argparse; not in the production Metro source graph. Untrusted precision strings can cause a RangeError in formatting; no patched upstream version exists. App data never reaches this tooling formatter. Re-review on Jest/NYC upgrades."
     }
   ]
 }

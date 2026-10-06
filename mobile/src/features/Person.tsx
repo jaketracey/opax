@@ -7,10 +7,11 @@ import {
   formatYearRange,
 } from '../design/format';
 import { useEffect, useState } from 'react';
-import { Image, RefreshControl } from 'react-native';
+import { RefreshControl } from 'react-native';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../api/runtime';
-import { remoteImageURI } from '../api/image-policy';
+import { CachedPortrait, portraitCreditLine } from './CachedPortrait';
+import type { PortraitInfo } from '../api/portrait-index';
 import {
   AsAtLine,
   Button,
@@ -22,7 +23,6 @@ import {
   LoadingState,
   OpaxWebLink,
   PartyLabel,
-  Portrait,
   Screen,
   Section,
   SourceLink,
@@ -37,9 +37,15 @@ import {
   jurisdictionName,
 } from '../design/parliament';
 import { shareHeaderItem } from '../navigation/share';
-import { billRoute, electorateRoute, moneyRoute } from '../navigation/routes';
+import {
+  billRoute,
+  electorateRoute,
+  moneyRoute,
+  partyRoute,
+} from '../navigation/routes';
 import { RecordRow } from './RecordRow';
 import { InlineLink } from './bills/parts';
+import { FollowToggle } from './follows/FollowToggle';
 import { EvidenceFooter, RecordBlock } from './your-mp/Evidence';
 import {
   uncoveredProfile,
@@ -73,12 +79,18 @@ export default function Person() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
   return <ProfileScreen key={slug} slug={slug} />;
 }
-function ProfileScreen({ slug }: { slug: string }) {
+export function ProfileScreen({
+  slug,
+  embedded = false,
+}: {
+  slug: string;
+  embedded?: boolean;
+}) {
   const [profile, setProfile] = useState<ProfileView | null>(null),
     [error, setError] = useState<string | null>(null),
     [retry, setRetry] = useState(0),
     [refreshing, setRefreshing] = useState(false),
-    [portraitFailed, setPortraitFailed] = useState(false),
+    [portrait, setPortrait] = useState<PortraitInfo | null>(null),
     [noNativeProfile, setNoNativeProfile] = useState(false);
   useEffect(() => {
     let active = true;
@@ -119,24 +131,24 @@ function ProfileScreen({ slug }: { slug: string }) {
   const refresh = () => {
       setRefreshing(true);
       setError(null);
-      setPortraitFailed(false);
       setRetry((v) => v + 1);
     },
     identity = profile?.blocks.identity.data,
     b = profile?.blocks;
-  const portrait = b?.portrait.data;
   const webPath = `/subject/person/${profile?.slug ?? slug}`;
   return (
     <>
-      <Stack.Screen
-        options={{
-          title: identity?.name ?? '',
-          headerTitle: '',
-          unstable_headerRightItems: identity
-            ? () => [shareHeaderItem({ path: webPath, title: identity.name })]
-            : undefined,
-        }}
-      />
+      {embedded ? null : (
+        <Stack.Screen
+          options={{
+            title: identity?.name ?? '',
+            headerTitle: '',
+            unstable_headerRightItems: identity
+              ? () => [shareHeaderItem({ path: webPath, title: identity.name })]
+              : undefined,
+          }}
+        />
+      )}
       <Screen
         testID={identity ? 'person-screen' : 'person-pending-screen'}
         refreshControl={
@@ -163,19 +175,14 @@ function ProfileScreen({ slug }: { slug: string }) {
         {identity && b ? (
           <>
             <Group>
-              {portrait?.display === 'permitted' && !portraitFailed ? (
-                <Image
-                  source={{ uri: remoteImageURI(portrait.path) }}
-                  style={{ width: 88, height: 88, borderRadius: 44 }}
-                  resizeMode="contain"
-                  accessibilityElementsHidden
-                  accessibilityIgnoresInvertColors
-                  onError={() => setPortraitFailed(true)}
-                  testID="person-portrait"
-                />
-              ) : (
-                <Portrait size="profile" testID="person-blank-portrait" />
-              )}
+              <CachedPortrait
+                name={identity.name}
+                slug={slug}
+                size="profile"
+                testID="person-portrait"
+                onCredit={setPortrait}
+                retryKey={retry}
+              />
               <Heading level={1} testID="person-screen-title">
                 {identity.name}
               </Heading>
@@ -185,6 +192,14 @@ function ProfileScreen({ slug }: { slug: string }) {
                 formerly={identity.formerly}
                 testID="person-party"
               />
+              {profile.personId ? (
+                <FollowToggle
+                  kind="person"
+                  id={profile.personId}
+                  title={identity.name}
+                  testID="person-follow"
+                />
+              ) : null}
               {identity.seats.length ? (
                 identity.seats.map((seat) => (
                   <Group key={seat.electorate_id} gap={4}>
@@ -229,47 +244,49 @@ function ProfileScreen({ slug }: { slug: string }) {
               </Text>
               <EvidenceFooter block={b.identity} id="person" />
             </Group>
-            <RecordBlock
-              title="Portrait credit"
-              id="person-portrait-credit"
-              block={b.portrait}
-              missing="No portrait with display permission is available."
-              retry={refresh}
-            >
-              {(p) => (
+            {portrait ? (
+              <Section
+                title={
+                  /^\d+$/.test(portrait.key) ? 'Official portrait' : 'Photo'
+                }
+                testID="person-portrait-credit"
+              >
                 <Group gap={8}>
-                  <Text wordSafe variant="fine">
-                    {p.credit} · {p.licence}
+                  <Text
+                    wordSafe
+                    variant="fine"
+                    testID="person-portrait-attribution"
+                  >
+                    {portraitCreditLine(portrait)}
                   </Text>
-                  <Text wordSafe variant="fine">
-                    {p.attribution}
-                  </Text>
-                  <Text wordSafe variant="fine">
-                    {p.notice}
-                  </Text>
-                  {p.display !== 'permitted' ? (
+                  {portrait.attribution ? (
                     <Text wordSafe variant="fine">
-                      Portrait display permission needs review. A blank circle
-                      is shown.
-                    </Text>
-                  ) : portraitFailed ? (
-                    <Text wordSafe variant="fine">
-                      The permitted portrait could not be loaded. A blank circle
-                      is shown.
+                      {portrait.attribution}
                     </Text>
                   ) : null}
                   <SourceLink
                     citation="Portrait licence"
                     url={
-                      p.licenceURL.startsWith('https:')
-                        ? p.licenceURL
-                        : p.sourceURL
+                      portrait.licenceURL.startsWith('https:')
+                        ? portrait.licenceURL
+                        : portrait.sourceURL
                     }
                     kind="record"
+                    testID="person-portrait-licence"
+                  />
+                  <SourceLink
+                    citation={
+                      /^\d+$/.test(portrait.key)
+                        ? 'Parliament of Australia, via OpenAustralia'
+                        : 'Wikimedia Commons'
+                    }
+                    url={portrait.sourceURL}
+                    kind="record"
+                    testID="person-portrait-source"
                   />
                 </Group>
-              )}
-            </RecordBlock>
+              </Section>
+            ) : null}
             <RecordBlock
               title="Voting record"
               id="person-votes"
@@ -707,11 +724,19 @@ function ProfileScreen({ slug }: { slug: string }) {
                     onPress={() => router.push(moneyRoute(p.party))}
                     testID="person-money-map"
                   />
-                  <OpaxWebLink
-                    label="Party receipts"
-                    path={p.url}
-                    testID="person-party-receipts"
-                  />
+                  {p.party ? (
+                    <Button
+                      label="Party receipts"
+                      onPress={() => router.push(partyRoute(p.party!))}
+                      testID="person-party-receipts"
+                    />
+                  ) : (
+                    <OpaxWebLink
+                      label="Party receipts"
+                      path={p.url}
+                      testID="person-party-receipts"
+                    />
+                  )}
                 </Group>
               )}
             </RecordBlock>

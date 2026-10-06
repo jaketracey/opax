@@ -8,6 +8,9 @@ export type NativeVoice = {
   consumeCode(challengeId: string, code: string): Promise<unknown>;
   consent(): Promise<unknown>;
   setConsent(granted: boolean): Promise<unknown>;
+  sendText(text: string): Promise<unknown>;
+  discardEvidence(): Promise<unknown>;
+  background(): Promise<unknown>;
   start(): Promise<unknown>;
   mute(muted: boolean): Promise<unknown>;
   end(): Promise<unknown>;

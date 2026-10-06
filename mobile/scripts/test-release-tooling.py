@@ -399,7 +399,8 @@ class ReleaseStepTests(unittest.TestCase):
         ipa = out / "export/OPAX.ipa"
         ipa.write_bytes(b"verified IPA bytes")
         report = {"commit": "a" * 40, "uploaded": False, "ipa_bytes": ipa.stat().st_size,
-                  "ipa_sha256": hashlib.sha256(ipa.read_bytes()).hexdigest()}
+                  "ipa_sha256": hashlib.sha256(ipa.read_bytes()).hexdigest(),
+                  "production_voice_enabled": True, "production_voice_mode": "on"}
         (out / "release.json").write_text(json.dumps(report))
         return mobile, out, ipa
 
@@ -409,7 +410,7 @@ class ReleaseStepTests(unittest.TestCase):
             with patch.dict(os.environ, self.values), patch.object(step, "load_credentials"), \
                  patch.object(step, "clean_commit") as clean, patch.object(step, "run_logged") as logged, \
                  contextlib.redirect_stdout(io.StringIO()):
-                step.upload_verified(mobile, out, "a" * 40)
+                step.upload_verified(mobile, out, "a" * 40, "1")
                 clean.assert_called_once_with(mobile.parent, "a" * 40)
                 cmd = logged.call_args.args[0]
                 self.assertEqual(cmd[:5], ["xcrun", "altool", "--upload-app", "-f", str(ipa)])
@@ -426,8 +427,31 @@ class ReleaseStepTests(unittest.TestCase):
                      patch.object(step, "clean_commit", side_effect=ReleaseError("changed HEAD") if attack == "head" else None), \
                      patch.object(step, "run_logged") as logged:
                     with self.assertRaises(ReleaseError):
-                        step.upload_verified(mobile, out, "a" * 40)
+                        step.upload_verified(mobile, out, "a" * 40, "1")
                     logged.assert_not_called()
+
+    def test_upload_requires_explicit_matching_recorded_voice_mode(self):
+        for expected, recorded in ((None, True), ("", True), ("yes", True),
+                                   ("0", True), ("1", False), ("1", None), ("1", 1)):
+            with self.subTest(expected=expected, recorded=recorded), tempfile.TemporaryDirectory() as d:
+                mobile, out, _ = self.upload_fixture(d)
+                report = json.loads((out / "release.json").read_text())
+                report["production_voice_enabled"] = recorded
+                (out / "release.json").write_text(json.dumps(report))
+                with patch.object(step, "load_credentials") as credentials, patch.object(step, "run_logged") as logged:
+                    with self.assertRaisesRegex(ReleaseError, "voice mode"):
+                        step.upload_verified(mobile, out, "a" * 40, expected)
+                    credentials.assert_not_called(); logged.assert_not_called()
+        with tempfile.TemporaryDirectory() as d:
+            mobile, out, _ = self.upload_fixture(d)
+            report = json.loads((out / "release.json").read_text())
+            report.update(production_voice_enabled=False, production_voice_mode="off")
+            (out / "release.json").write_text(json.dumps(report))
+            with patch.dict(os.environ, self.values), patch.object(step, "load_credentials"), \
+                 patch.object(step, "clean_commit"), patch.object(step, "run_logged") as logged, \
+                 contextlib.redirect_stdout(io.StringIO()):
+                step.upload_verified(mobile, out, "a" * 40, "0")
+                logged.assert_called_once()
 
     def test_dotenv_inputs_and_node_modules_symlink_refused(self):
         with tempfile.TemporaryDirectory() as d:
@@ -880,7 +904,8 @@ class BundleAttackTests(unittest.TestCase):
 
 class ProductionVoiceTests(unittest.TestCase):
     def info(self):
-        return {"NSMicrophoneUsageDescription": verify.VOICE_POLICY["microphonePurpose"],
+        return {"NSMotionUsageDescription": verify.MOTION_PURPOSE,
+                "NSMicrophoneUsageDescription": verify.VOICE_POLICY["microphonePurpose"],
                 "OPAXProductionVoiceEnabled": True, "OPAXVoiceConsentDefault": False,
                 "OPAXVoiceAllowedRoutes": verify.VOICE_POLICY["routes"]}
 
@@ -899,22 +924,37 @@ class ProductionVoiceTests(unittest.TestCase):
             b"OpaxVoiceModule", b"OpaxVoiceCore", b"StoredVoiceConsent", b"opax.voice.consent.v1",
             b"OPAXProductionVoiceEnabled", b"OPAXVoiceAllowedRoutes", b"requestRecordPermission"))
 
-    def test_switch_defaults_off_and_rejects_invalid_values(self):
+    def test_switch_defaults_on_and_rejects_invalid_values(self):
         with patch.dict(os.environ, {}, clear=True):
-            self.assertFalse(verify.production_voice_enabled())
+            self.assertTrue(verify.production_voice_enabled())
         self.assertFalse(verify.production_voice_enabled("0"))
         self.assertTrue(verify.production_voice_enabled("1"))
         for value in ("", "true", "2"):
             with self.assertRaises(ReleaseError): verify.production_voice_enabled(value)
 
     def test_both_purpose_modes_and_on_device_location(self):
-        verify.verify_voice_info({}, False)
+        verify.verify_voice_info({"NSMotionUsageDescription": verify.MOTION_PURPOSE}, False)
         verify.verify_voice_info(self.info(), True)
-        for enabled, info in ((False, {}), (True, self.info())):
+        for enabled, info in ((False, {"NSMotionUsageDescription": verify.MOTION_PURPOSE}), (True, self.info())):
             info["NSLocationWhenInUseUsageDescription"] = verify.LOCATION_PURPOSE
             verify.verify_voice_info(info, enabled)
         for enabled, info in ((True, {}), (False, self.info())):
             with self.assertRaises(ReleaseError): verify.verify_voice_info(info, enabled)
+
+    def test_motion_purpose_is_required_and_exact_in_both_voice_modes(self):
+        for enabled in (False, True):
+            info = self.info() if enabled else {"NSMotionUsageDescription": verify.MOTION_PURPOSE}
+            verify.verify_voice_info(info, enabled)
+            for key, value in (("NSMotionUsageDescription", "draft"),
+                               ("NSMotionUsageDescription", "Allow motion activity"),
+                               ("NSMotionUsageDescription", verify.MOTION_PURPOSE + " "),
+                               ("NSCameraUsageDescription", "unshipped"),
+                               ("NSLocationAlwaysUsageDescription", verify.LOCATION_PURPOSE)):
+                with self.subTest(enabled=enabled, key=key, value=value), self.assertRaises(ReleaseError):
+                    verify.verify_voice_info({**info, key: value}, enabled)
+            info.pop("NSMotionUsageDescription")
+            with self.subTest(enabled=enabled, missing=True), self.assertRaises(ReleaseError):
+                verify.verify_voice_info(info, enabled)
 
     def test_wrong_purpose_routes_auto_consent_and_fixture_metadata_fail(self):
         for key, value in (("NSMicrophoneUsageDescription", "draft"), ("OPAXVoiceConsentDefault", True),
@@ -925,7 +965,8 @@ class ProductionVoiceTests(unittest.TestCase):
             with self.subTest(key=key), self.assertRaises(ReleaseError): verify.verify_voice_info(info, True)
 
     def test_privacy_exact_types_linkage_tracking_purpose_and_reasons(self):
-        self.assertEqual(verify.VOICE_POLICY["unlinkedDataTypes"], ["SearchHistory", "OtherDataTypes"])
+        self.assertEqual(verify.VOICE_POLICY["unlinkedDataTypes"], [])
+        self.assertEqual(verify.VOICE_POLICY["linkedDataTypes"][-2:], ["SearchHistory", "OtherDataTypes"])
         verify.verify_voice_privacy(self.manifest())
         for key, value in (("NSPrivacyTracking", True), ("NSPrivacyTrackingDomains", ["foreign.test"]),
                            ("NSPrivacyAccessedAPITypes", []), ("NSPrivacyCollectedDataTypes", [])):
@@ -938,8 +979,10 @@ class ProductionVoiceTests(unittest.TestCase):
             with self.subTest(key=key), self.assertRaises(ReleaseError): verify.verify_voice_privacy(changed)
 
     def test_voice_routes_required_as_whole_hermes_entries_in_on_mode(self):
-        keys = b"./talk.tsx./account/index.tsx"
-        body = hermes_bundle(keys, [packed(keys, b"./talk.tsx"), packed(keys, b"./account/index.tsx")])
+        parts = [b"./talk.tsx", b"./account/index.tsx", b"./account/sign-in.tsx", b"./account/delete.tsx",
+                 b"talk-consent", b"account-sign-in-start"]
+        keys = b"".join(parts)
+        body = hermes_bundle(keys, [packed(keys, part) for part in parts])
         verify.verify_voice_bundle(body, True)
         verify.verify_voice_bundle(b"catalog only", False)
         for bad in (b"./talk.tsx\0", b"./talk.tsx.workbench.tsx\0./account/index.tsx\0"):

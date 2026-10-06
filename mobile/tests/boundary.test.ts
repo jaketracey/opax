@@ -1,9 +1,25 @@
+import { portraitDirectory } from '../src/api/portrait-disk-store';
+
 import { unacceptedAdvisories } from '../scripts/advisory-policy';
 import { scanSource, secretPattern } from '../scripts/source-boundary';
-import { remoteImageURI } from '../src/api/image-policy';
+import { localImageURI } from '../src/api/image-policy';
 import { Linter, type Rule } from 'eslint';
 import * as parser from '@typescript-eslint/parser';
 import transportRule from '../scripts/transport-rule';
+
+jest.mock('expo-file-system', () => ({
+  Paths: { cache: { uri: 'file:///cache/' } },
+  Directory: class {
+    uri: string;
+    constructor(...parts: (string | { uri: string })[]) {
+      this.uri = parts
+        .map((p) => (typeof p === 'string' ? p : p.uri))
+        .join('/')
+        .replace(/(?<!:)\/{2,}/g, '/')
+        .replace('file:/', 'file:///');
+    }
+  },
+}));
 
 function lintBoundary(path: string, content: string) {
   const messages = new Linter().verify(
@@ -90,7 +106,7 @@ test.each([
   `import * as Font from 'expo-font'; const load = Font.loadAsync; load({ Leak: url })`,
   `import * as Font from 'expo-font'; Font[method]({ Leak: url })`,
   `import { TurboModuleRegistry as Registry } from 'react-native'; Registry.getEnforcing('Networking')`,
-  `<Photo source={{ ['u' + 'ri']: remoteImageURI('/photos/10007.webp') }} />`,
+  `<Photo source={{ ['u' + 'ri']: localImageURI('/photos/10007.webp') }} />`,
   `<Photo source={{ [key]: url }} />`,
   `<Photo source={{ ...source }} />`,
   `<Photo source={source} />`,
@@ -104,8 +120,8 @@ test.each([
 );
 
 test.each([
-  `import { remoteImageURI as portrait } from './api/image-policy'; <Photo source={{ uri: portrait('/photos/10007.webp') }} />`,
-  `import { remoteImageURI } from './api/image-policy'; <ImageBackground source={({ uri: (remoteImageURI('/photos/10007.webp') as string) })!} />`,
+  `import { localImageURI as portrait } from './api/image-policy'; <Photo source={{ uri: portrait('/photos/10007.webp') }} />`,
+  `import { localImageURI } from './api/image-policy'; <ImageBackground source={({ uri: (localImageURI('/photos/10007.webp') as string) })!} />`,
   `<Photo source={require('./assets/portrait.webp')} />`,
   `import * as Font from 'expo-font'; Font.loadAsync({ Bundled: require('./assets/font.ttf') })`,
   `import { loadAsync as load } from 'expo-font'; load('Bundled', (require('./assets/font.ttf') as number)!)`,
@@ -154,7 +170,7 @@ test.each([
   `import { useAssets } from 'expo-asset'; useAssets([require('./local.png')])`,
   `import * as Assets from 'expo-asset'; Assets.useAssets(require('./local.png'))`,
 ])('both gates allow ordinary image/asset policy forms: %s', (snippet) => {
-  const content = `import { remoteImageURI as portrait } from './api/image-policy'; ${snippet}`;
+  const content = `import { localImageURI as portrait } from './api/image-policy'; ${snippet}`;
   expect(scanSource('src/portrait.tsx', content)).toEqual([]);
   expect(lintBoundary('src/portrait.tsx', content)).toEqual([]);
 });
@@ -177,7 +193,7 @@ test.each([
   `loadingIndicatorSource={require('./local.webp')}`,
 ])('both gates allow an Avatar wrapper using the policy: %s', (prop) => {
   const content = `import { Image, type ImageProps } from 'react-native';
-    import { remoteImageURI as portrait } from './api/image-policy';
+    import { localImageURI as portrait } from './api/image-policy';
     function Avatar(props: ImageProps) { return <Image {...props} />; }
     <Avatar ${prop} />;`;
   expect(scanSource('src/avatar.tsx', content)).toEqual([]);
@@ -425,29 +441,30 @@ test('remote image expressions must call the imported policy helper', () => {
   expect(
     scanSource(
       'src/photo.tsx',
-      `import { remoteImageURI as portrait } from './api/image-policy'; <Image source={{ uri: portrait('/photos/10007.webp') }} />`,
+      `import { localImageURI as portrait } from './api/image-policy'; <Image source={{ uri: portrait('/photos/10007.webp') }} />`,
     ),
   ).toEqual([]);
   expect(
     scanSource(
       'src/photo.tsx',
-      `const remoteImageURI = x => x; <Image source={{ uri: remoteImageURI('/og/x') }} />`,
+      `const localImageURI = x => x; <Image source={{ uri: localImageURI('/og/x') }} />`,
     ),
   ).not.toEqual([]);
 });
-test('only same-origin portrait WebP assets enter the image transport', () => {
-  expect(remoteImageURI('/photos/10007.webp')).toBe(
+test('native images accept only local cache files from the configured origin', () => {
+  const root =
+    portraitDirectory('https://example.test').uri.replace(/\/$/, '') + '/';
+  expect(localImageURI(root + '10007.webp')).toBe(root + '10007.webp');
+  for (const value of [
     'https://example.test/photos/10007.webp',
-  );
-  for (const path of [
-    '/og/person.webp',
-    '/photos/people.json',
-    '/photos/../x.webp',
-    '/photos/%2e.webp',
-    '//example.test/a.webp',
-    '/photos/a.webp?q=x',
+    '/photos/10007.webp',
+    root + '../10007.webp',
+    root + '%31.webp',
+    root + '10007.webp?x=1',
+    root + 'people.json',
+    'file:///other/10007.webp',
   ])
-    expect(() => remoteImageURI(path)).toThrow();
+    expect(() => localImageURI(value)).toThrow();
 });
 test('secret signatures cover text files as well as source', () => {
   expect(secretPattern.test(`access_token="${'x'.repeat(32)}"`)).toBe(true);

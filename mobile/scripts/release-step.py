@@ -14,10 +14,15 @@ from release_inputs import clean_commit, dependency_command, refuse_dotenv
 from release_support import ReleaseError, load_credentials, redact, run_logged
 
 
-def upload_verified(mobile, out, approved_commit):
-    load_credentials()
+def upload_verified(mobile, out, approved_commit, expected_voice_mode):
     refuse_dotenv(mobile)
     report = json.loads((out / "release.json").read_text())
+    if expected_voice_mode not in ("0", "1"):
+        raise ReleaseError("Upload refused: an explicit expected voice mode (0 or 1) is required.")
+    expected_enabled = expected_voice_mode == "1"
+    if (report.get("production_voice_enabled") is not expected_enabled or
+            report.get("production_voice_mode") != ("on" if expected_enabled else "off")):
+        raise ReleaseError("Upload refused: recorded production voice mode differs from the expected mode.")
     ipa = out / "export/OPAX.ipa"
     if not re.fullmatch(r"[0-9a-f]{40}", approved_commit or "") or report["commit"] != approved_commit:
         raise ReleaseError("Upload refused: verified artifact must match the full QA-approved commit.")
@@ -28,6 +33,7 @@ def upload_verified(mobile, out, approved_commit):
         raise ReleaseError("Upload refused: IPA bytes differ from the verified release.json hash or size.")
     # These are the final checks before starting altool. No re-export occurs.
     clean_commit(mobile.parent, approved_commit)
+    load_credentials()
     run_logged(["xcrun", "altool", "--upload-app", "-f", str(ipa),
                 "--api-key", os.environ["ASC_KEY_ID"], "--api-issuer", os.environ["ASC_ISSUER_ID"],
                 "--p8-file-path", os.environ["ASC_KEY_PATH"]], out / "upload-command.log", public_env=True)
@@ -36,10 +42,10 @@ def upload_verified(mobile, out, approved_commit):
     print("PASS uploaded the exact verified IPA bytes")
 
 
-def run(step, mobile, out):
+def run(step, mobile, out, expected_voice_mode=None):
     refuse_dotenv(mobile)
     if step == "upload":
-        upload_verified(mobile, out, os.environ.get("OPAX_RELEASE_COMMIT"))
+        upload_verified(mobile, out, os.environ.get("OPAX_RELEASE_COMMIT"), expected_voice_mode)
         return
     if step == "dependencies":
         cmd = dependency_command(mobile)
@@ -79,6 +85,7 @@ def run(step, mobile, out):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("step", choices=["dependencies", "prebuild", "archive", "export", "upload"])
+    parser.add_argument("--expected-voice-mode", choices=["0", "1"])
     args = parser.parse_args()
     try:
         mobile = Path(__file__).resolve().parent.parent
@@ -86,7 +93,7 @@ def main():
         out = Path(os.environ["OPAX_RELEASE_OUT"])
         if not re.fullmatch(r"[1-9][0-9]*", build) or out != mobile / f"private/release/0.1.0-{build}" or out.resolve() != out:
             raise ReleaseError("Release evidence path must identify this worktree's build.")
-        run(args.step, mobile, out)
+        run(args.step, mobile, out, args.expected_voice_mode)
     except (ReleaseError, OSError, ValueError, KeyError) as error:
         raise SystemExit(redact(str(error)))
 

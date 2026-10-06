@@ -40,6 +40,23 @@ export interface PartyIdentity {
 
 export const PARTY_NOT_RECORDED = 'Party not recorded';
 
+/** Recorded affiliations and presiding roles are not necessarily parties. */
+export function isPartyLabel(party: string | null | undefined): boolean {
+  const name = party
+    ?.trim()
+    .toLocaleLowerCase('en-AU')
+    .replace(/[‐‑‒–—]/g, '-');
+  return (
+    !!name &&
+    !/^(?:ind(?:ependent)?s?\b|unaligned\b|non[ -]?aligned\b|unaffiliated\b|non[ -]?party\b|pres$|spk$|(?:party )?not recorded$)/.test(
+      name,
+    )
+  );
+}
+
+const knownParty = (name: string) =>
+  parties[name.trim().toLocaleLowerCase('en-AU').replace(/’/g, "'")];
+
 export function partyIdentity(party: string | null | undefined): PartyIdentity {
   const name = party?.trim();
   if (!name)
@@ -49,7 +66,7 @@ export function partyIdentity(party: string | null | undefined): PartyIdentity {
       color: null,
       recorded: false,
     };
-  const known = parties[name.toLocaleLowerCase('en-AU').replace(/’/g, "'")];
+  const known = knownParty(name);
   return {
     name,
     short: known?.short ?? name,
@@ -57,6 +74,18 @@ export function partyIdentity(party: string | null | undefined): PartyIdentity {
     color: partyColors[known?.key ?? 'other'],
     recorded: true,
   };
+}
+
+/**
+ * The dot beside a label: a party's colour, or the Independent grey (the
+ * web's party-ind chip). Independent is a label, never a link; other
+ * affiliations and presiding roles get no dot.
+ */
+export function partyDot(party: string | null | undefined): string | null {
+  const identity = partyIdentity(party);
+  return isPartyLabel(party) || knownParty(identity.name)?.key === 'independent'
+    ? identity.color
+    : null;
 }
 
 /** The web's samePartyLabel: two names for one party compare equal ("Labor", "ALP"). */
@@ -108,4 +137,36 @@ export function partyText(
       ? `${identity.name}, formerly ${before.name}`
       : identity.name,
   };
+}
+
+/** Slugs are derived only from recorded labels; this adds no party aliases. */
+export const partySlug = (name: string) =>
+  name
+    .trim()
+    .toLocaleLowerCase('en-AU')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+
+/**
+ * One recorded label for the input, or null: an exact label, a derived slug,
+ * or one party identity among the labels. Never a prefix match, and never a
+ * non-party label (Independent, presiding roles).
+ */
+export function resolveParty(input: string, labels: string[]): string | null {
+  if (!isPartyLabel(input)) return null;
+  labels = labels.filter(isPartyLabel);
+  const exactName = labels.find((label) => label === input);
+  const slugMatches = labels.filter((label) => partySlug(label) === input);
+  const candidates = exactName
+    ? [exactName]
+    : slugMatches.length
+      ? slugMatches
+      : [input];
+  const matches = labels.filter((label) =>
+    candidates.some((candidate) => samePartyLabel(label, candidate)),
+  );
+  const identities = new Set(
+    matches.map((label) => partyIdentity(label).short),
+  );
+  return identities.size === 1 ? matches[0]! : null;
 }

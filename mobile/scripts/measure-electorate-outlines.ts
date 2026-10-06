@@ -35,7 +35,7 @@ async function main() {
     return { data };
   };
   const start = performance.now();
-  const outlines = await loadOutlines(seats, load, () => {});
+  const { outlines } = await loadOutlines(seats, load, () => {});
   const coldMs = performance.now() - start;
   const warmStart = performance.now();
   await loadOutlines(seats, load, () => {});

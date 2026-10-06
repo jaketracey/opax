@@ -64,6 +64,12 @@ export type VoiceStatus = {
     expiresAt: number | null;
   } | null;
   budgetOpen: boolean | null;
+  /**
+   * This iPhone holds an account session the server has not revoked. Voice
+   * can refuse a member (a disabled one) whose account can still be signed
+   * out and deleted. Absent from older native builds.
+   */
+  accountHeld?: boolean;
 };
 export type CodeChallenge = { sent: boolean; challengeId: string };
 export type AccountDeletion = { deleted: boolean; signedOut: boolean };

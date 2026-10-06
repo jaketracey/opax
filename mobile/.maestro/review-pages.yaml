@@ -3,7 +3,7 @@ name: Capture each viewport without speech
 ---
 - evalScript: ${output.page = 0}
 - repeat:
-    times: 100
+    times: "${typeof REVIEW_PAGES === 'undefined' ? 100 : Number(REVIEW_PAGES)}"
     while:
       notVisible:
         id: ${END}

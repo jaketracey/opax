@@ -1,3 +1,6 @@
+import { PortraitCache } from './portrait-cache';
+import { PortraitDiskStore } from './portrait-disk-store';
+import { PeoplePortraits } from './people-portraits';
 import Constants from 'expo-constants';
 import { ApiClient } from './client';
 import { CatalogCache } from './cache';
@@ -34,3 +37,7 @@ export const apiClient = new ApiClient({
   cache: new CatalogCache(new DiskStore(), 24 * 1024 * 1024, 220),
 });
 export const catalogs = new Catalogs(apiClient);
+export const portraits = new PeoplePortraits(
+  catalogs,
+  new PortraitCache(new PortraitDiskStore(extra.apiOrigin), apiClient),
+);

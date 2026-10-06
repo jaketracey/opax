@@ -140,14 +140,14 @@ test('electorate retains votes, Census vintage, related constituencies and evide
   expect(view.representatives.asAt).toBe('2026-09-04');
   expect(view.representatives.sources.length).toBeGreaterThan(0);
 });
-test('Commons portraits expose licence/credit; unsupported terms and APH need review', () => {
+test('website portraits expose original credits and terms without deciding app rights', () => {
   const p = d.portraitFor(
     ['Sheena Watt'],
     catalogs.photoPeople!,
     catalogs.photoCredits!,
   )!;
   expect(p.licence).toBe('CC0');
-  expect(p.display).toBe('permitted');
+  expect(p.display).toBe('website-file');
   expect(p.credit).toBe('Gabagool2005');
   expect(
     d.portraitFor(
@@ -155,7 +155,7 @@ test('Commons portraits expose licence/credit; unsupported terms and APH need re
       catalogs.photoPeople!,
       catalogs.photoCredits!,
     )?.display,
-  ).toBe('review-required');
+  ).toBe('website-file');
   expect(
     d.portraitFor(
       ['Madonna Jarrett'],
@@ -167,12 +167,47 @@ test('Commons portraits expose licence/credit; unsupported terms and APH need re
     d.portraitFor(['Sheena Watt'], catalogs.photoPeople!, {
       ...catalogs.photoCredits!,
       [p.key]: { ...catalogs.photoCredits![p.key]!, licence: 'GFDL' },
-    })?.display,
-  ).toBe('review-required');
+    }),
+  ).toBeNull();
+});
+test('Commons portraits are left out by their licence, not by their name key', () => {
+  const credits = catalogs.photoCredits!;
+  const left: Record<string, [name: string, licence: string]> = {
+    'wd-Q6812492': ['Melinda Pavey', 'GFDL 1.2'],
+    'wd-Q7803243': ['Tim Bull', 'GFDL 1.2'],
+    'wd-Q1383644': ['Ian Hunter', 'Copyrighted free use'],
+    'wd-Q7613391': ['Steve Minnikin', 'Copyrighted free use'],
+  };
+  expect(
+    Object.keys(credits)
+      .filter((key) => !d.commonsLicenceShown(credits[key]!.licence))
+      .sort(),
+  ).toEqual(Object.keys(left).sort());
+  expect(
+    Object.keys(credits).filter((key) =>
+      d.commonsLicenceShown(credits[key]!.licence),
+    ),
+  ).toHaveLength(294);
+  for (const [key, [name, licence]] of Object.entries(left)) {
+    expect(credits[key]!.licence).toBe(licence);
+    // A full-name key reaches the licence check even where the website's own
+    // key is initials ("i.k. hunter") or a surname ("minnikin").
+    const people = { [name.toLowerCase()]: key } as never;
+    expect(d.portraitFor([name], people, credits)).toBeNull();
+  }
+  expect(
+    d.portraitFor(['Melinda Pavey'], catalogs.photoPeople!, credits),
+  ).toBeNull();
+  expect(
+    d.portraitFor(['Tim Bull'], catalogs.photoPeople!, credits),
+  ).toBeNull();
+  const evans = d.portraitFor(['Gareth Evans'], catalogs.photoPeople!, credits);
+  expect(evans?.key).toBe('wd-Q381902');
+  expect(evans?.licence).toBe('CC BY 1.0');
 });
 test.each([
   ["Deborah O'Neill", '10747'],
-  ['Mehreen Faruqi', 'wd-Q16728926'],
+  ['Mehreen Faruqi', '10912'],
 ])('%s keeps its exact full-name portrait key', (name, key) => {
   const person = people.people.find(
     (p) => p.name === name && p.electorates.some((s) => s.current),

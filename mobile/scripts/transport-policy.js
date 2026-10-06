@@ -194,7 +194,7 @@ function scanBoundary(path, content, cwd = process.cwd()) {
         if (
           resolve(dirname(resolve(cwd, path)), `${module}.ts`) ===
             resolve(cwd, 'src/api/image-policy.ts') &&
-          imported === 'remoteImageURI'
+          imported === 'localImageURI'
         )
           helpers.add(local);
       }
@@ -470,7 +470,7 @@ function scanBoundary(path, content, cwd = process.cwd()) {
       )
         report(
           node,
-          'Image URI must be a literal key calling imported remoteImageURI',
+          'Image URI must be a literal key calling imported localImageURI',
         );
     }
     // Any component can wrap a native image: check every image prop without

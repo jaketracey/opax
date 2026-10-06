@@ -1,0 +1,15 @@
+appId: au.com.opax.app
+---
+# The fixture workbench spans eight pages at AX5. Keep keyboard dismissal
+# bounded while allowing the heading to be reached at that size.
+- swipe:
+    start: 90%, 40%
+    end: 90%, 15%
+    duration: 600
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: voice-bridge-test-title
+    direction: UP
+- tapOn:
+    id: voice-bridge-test-title

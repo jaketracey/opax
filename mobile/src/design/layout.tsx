@@ -3,6 +3,7 @@ import {
   useRef,
   type ReactElement,
   type ReactNode,
+  type Ref,
   type RefObject,
 } from 'react';
 import {
@@ -27,13 +28,16 @@ export function Screen({
   testID,
   children,
   refreshControl,
+  scrollRef,
 }: {
   testID?: string;
+  scrollRef?: Ref<ScrollView>;
   children: ReactNode;
   refreshControl?: ReactElement<RefreshControlProps>;
 }) {
   return (
     <ScrollView
+      ref={scrollRef}
       testID={testID}
       style={styles.screen}
       contentInsetAdjustmentBehavior="automatic"

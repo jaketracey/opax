@@ -16,6 +16,7 @@ import {
   ErrorState,
   Group,
   Heading,
+  PartyLabel,
   KeyValueList,
   LoadingState,
   Screen,
@@ -31,6 +32,7 @@ import {
 import { electorateRoute } from '../navigation/routes';
 import { shareHeaderItem } from '../navigation/share';
 import { RecordBlock } from './your-mp/Evidence';
+import { FollowToggle } from './follows/FollowToggle';
 import { RepresentativeRows } from './your-mp/RepresentativeRows';
 import type { Directory, ElectorateView } from './your-mp/model';
 const indicators: Record<string, [string, 'count' | 'money' | 'percent']> = {
@@ -53,7 +55,13 @@ export default function Electorate() {
   const { id } = useLocalSearchParams<{ id: string }>();
   return <ElectorateScreen key={id} id={id} />;
 }
-function ElectorateScreen({ id }: { id: string }) {
+export function ElectorateScreen({
+  id,
+  embedded = false,
+}: {
+  id: string;
+  embedded?: boolean;
+}) {
   const [view, setView] = useState<ElectorateView | null>(null),
     [directory, setDirectory] = useState<Directory | null>(null),
     [error, setError] = useState<string | null>(null),
@@ -107,18 +115,20 @@ function ElectorateScreen({ id }: { id: string }) {
     );
   return (
     <>
-      <Stack.Screen
-        options={{
-          title: identity?.name ?? '',
-          headerTitle: '',
-          unstable_headerRightItems:
-            identity && seat
-              ? () => [
-                  shareHeaderItem({ path: seat.url, title: identity.name }),
-                ]
-              : undefined,
-        }}
-      />
+      {embedded ? null : (
+        <Stack.Screen
+          options={{
+            title: identity?.name ?? '',
+            headerTitle: '',
+            unstable_headerRightItems:
+              identity && seat
+                ? () => [
+                    shareHeaderItem({ path: seat.url, title: identity.name }),
+                  ]
+                : undefined,
+          }}
+        />
+      )}
       <Screen
         testID="electorate-screen"
         refreshControl={
@@ -154,6 +164,12 @@ function ElectorateScreen({ id }: { id: string }) {
                 jurisdictionName(identity.jurisdiction) ??
                 'Jurisdiction not recorded'}
             </Text>
+            <FollowToggle
+              kind="electorate"
+              id={identity.id}
+              title={identity.name}
+              testID="electorate-follow"
+            />
             <Section title="Electorate outline" testID="electorate-map">
               <OutlineMap
                 boundaries={view.boundaries}
@@ -223,10 +239,14 @@ function ElectorateScreen({ id }: { id: string }) {
                                 <Text wordSafe variant="strong">
                                   {c.name}
                                 </Text>
-                                <Text wordSafe variant="metadata">
-                                  {c.party ?? 'Party not recorded'}
-                                  {c.elected ? ' · Elected' : ''}
-                                </Text>
+                                <PartyLabel
+                                  party={c.party}
+                                  status="unknown"
+                                  dense
+                                />
+                                {c.elected ? (
+                                  <Text variant="metadata">Elected</Text>
+                                ) : null}
                                 <KeyValueList
                                   items={c.votes.map((v) => ({
                                     label:

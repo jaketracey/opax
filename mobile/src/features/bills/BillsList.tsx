@@ -45,7 +45,7 @@ const FINEPRINT =
 
 /** The Bills tab: every federal bill in the index, filtered and searched on the device. */
 export default function BillsList() {
-  const load = useCallback(() => catalogs.bills(), []);
+  const load = useCallback((refresh: boolean) => catalogs.bills(refresh), []);
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
   const [text, setText] = useState('');
   const [query, setQuery] = useState('');

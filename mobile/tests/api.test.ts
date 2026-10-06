@@ -1,3 +1,4 @@
+import { pinnedBytes } from './pinned';
 import { ApiClient } from '../src/api/client';
 import {
   CatalogCache,
@@ -147,6 +148,48 @@ test('expiry revalidates with ETag; preserves original saved date on 304', async
     redirect: 'manual',
     headers: { 'User-Agent': 'OPAX-iOS/0.1.0 (1)' },
   });
+});
+test('a forced read reaches the network while a fresh copy is saved, and tells the HTTP cache to revalidate', async () => {
+  // URLSession's own HTTP cache answers a fresh entry itself, even with an
+  // If-None-Match; only a request no-cache makes it ask the origin.
+  let time = 1000;
+  const transport = jest
+    .fn()
+    .mockResolvedValueOnce(
+      response(200, { ETag: '"index-v1"', 'Cache-Control': 'max-age=300' }),
+    )
+    .mockResolvedValueOnce(
+      new Response(null, {
+        status: 304,
+        headers: { 'Cache-Control': 'max-age=300' },
+      }),
+    )
+    .mockResolvedValueOnce(
+      response(200, { ETag: '"index-v2"', 'Cache-Control': 'max-age=300' }),
+    );
+  const { client } = setup(transport, () => time);
+  await client.get('/interests/index.json', decode);
+  expect(transport.mock.calls[0]?.[1].headers).not.toHaveProperty(
+    'Cache-Control',
+  );
+  time = 2000;
+  // Still fresh: an ordinary read stays on the device.
+  await client.get('/interests/index.json', decode);
+  expect(transport).toHaveBeenCalledTimes(1);
+  const refreshed = await client.get('/interests/index.json', decode, true);
+  expect(transport).toHaveBeenCalledTimes(2);
+  expect(transport.mock.calls[1]?.[1].headers).toMatchObject({
+    'If-None-Match': '"index-v1"',
+    'Cache-Control': 'no-cache',
+  });
+  expect(refreshed.stale).toBe(false);
+  // An expiry revalidation is ordinary: no request directive.
+  time = 1000 + 301_000 + 2000;
+  await client.get('/interests/index.json', decode);
+  expect(transport).toHaveBeenCalledTimes(3);
+  expect(transport.mock.calls[2]?.[1].headers).not.toHaveProperty(
+    'Cache-Control',
+  );
 });
 test('offline fallback has its saved/as-of dates, uncached offline maps to error', async () => {
   const transport = jest
@@ -1070,4 +1113,88 @@ test('pre-frozen parents still protect nested raw and decoded snapshot values', 
   );
   expect(validate).toHaveBeenCalledTimes(1);
   expect(transport).not.toHaveBeenCalled();
+});
+
+describe('reviewed portrait byte transport', () => {
+  const portrait = () => new Uint8Array(pinnedBytes('/photos/10007.webp'));
+  test('bytes stay unchanged and only GET with omitted credentials reaches the reviewed origin', async () => {
+    const transport = jest.fn(
+      async () =>
+        new Response(portrait(), { headers: { 'Content-Type': 'image/webp' } }),
+    );
+    const { client } = setup(transport);
+    expect(await client.getPortrait('/photos/10007.webp')).toEqual(portrait());
+    expect(transport).toHaveBeenCalledWith(
+      'https://example.test/photos/10007.webp',
+      expect.objectContaining({
+        method: 'GET',
+        credentials: 'omit',
+        redirect: 'manual',
+        headers: expect.objectContaining({ Accept: 'image/webp' }),
+      }),
+    );
+    await expect(
+      client.get('/photos/10007.webp', decode),
+    ).rejects.toMatchObject({ code: 'forbidden' });
+    expect(transport).toHaveBeenCalledTimes(1);
+  });
+  test.each([
+    '/photos/10007.webp?x=1',
+    '/photos/0.webp',
+    '/photos/wd-Q0.webp',
+    '/photos/jpg/10007.jpg',
+    '/photos/10007.webp#x',
+    '//example.test/photos/10007.webp',
+    '/og/person/10007.webp',
+    '/photos/%31.webp',
+    '/photos/100000000000.webp',
+  ])('unreviewed byte path fails before transport: %s', async (path) => {
+    const transport = jest.fn();
+    await expect(setup(transport).client.getPortrait(path)).rejects.toThrow();
+    expect(transport).not.toHaveBeenCalled();
+  });
+  test.each([
+    () =>
+      new Response(portrait(), {
+        status: 302,
+        headers: { location: '/og/person/x' },
+      }),
+    () =>
+      new Response(portrait(), { headers: { 'Content-Type': 'image/jpeg' } }),
+    () =>
+      new Response(portrait(), {
+        headers: { 'Content-Type': 'image/webp', 'Content-Length': '65537' },
+      }),
+    () =>
+      new Response(new Uint8Array(65537), {
+        headers: { 'Content-Type': 'image/webp' },
+      }),
+    () =>
+      new Response('<html>Error</html>', {
+        headers: { 'Content-Type': 'image/webp' },
+      }),
+  ])(
+    'redirects, wrong type, declared or actual oversize and invalid files are rejected',
+    async (make) => {
+      await expect(
+        setup(jest.fn(async () => make())).client.getPortrait(
+          '/photos/10007.webp',
+        ),
+      ).rejects.toThrow();
+    },
+  );
+  test.each([
+    ['/photos/people.json', 65537],
+    ['/photos/credits.json', 262145],
+  ] as const)('metadata %s has a bounded response body', async (path, size) => {
+    const transport = jest.fn(
+      async () =>
+        new Response(' '.repeat(size), {
+          headers: { 'Content-Type': 'application/json' },
+        }),
+    );
+    await expect(
+      setup(transport).client.get(path, decode),
+    ).rejects.toMatchObject({ code: 'invalid-data' });
+  });
 });

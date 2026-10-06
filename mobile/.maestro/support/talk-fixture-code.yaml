@@ -1,0 +1,84 @@
+appId: au.com.opax.app
+---
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: voice-email
+    direction: UP
+    centerElement: true
+# Leave an already-correct fixture address alone. iOS may omit Select All
+# when the text is already selected after the deadline account reset.
+- runFlow:
+    when:
+      notVisible:
+        id: voice-email
+        text: ^${VOICE_EMAIL}$
+    commands:
+      - tapOn:
+          id: voice-email
+      # The fixture workbench has no keyboard avoidance. Move the focused field
+      # above the keyboard before long-pressing; on-drag dismissal is intentional.
+      - swipe:
+          start: 50%, 40%
+          end: 50%, 15%
+          duration: 600
+      - tapOn:
+          id: voice-email
+      # At AX5, tapping a truncated field can put the caret in the middle. Select
+      # the whole address so replacement cannot leave a suffix behind.
+      - longPressOn:
+          id: voice-email
+      # AX5 paginates the iOS edit menu. The fixture field is positioned above
+      # the keyboard; its unlabelled next-menu arrow is at this screen point.
+      # Require Select All below before any replacement or auth request.
+      - runFlow:
+          when:
+            true: ${CONTENT_SIZE === 'accessibility-extra-extra-extra-large'}
+          commands:
+            - runFlow:
+                when:
+                  notVisible: Select All
+                commands:
+                  - tapOn:
+                      point: "73%,40%"
+      - tapOn: Select All
+      - eraseText: 1
+      - inputText: ${VOICE_EMAIL}
+- assertVisible:
+    id: voice-email
+    text: ^${VOICE_EMAIL}$
+- runFlow: talk-dismiss-keyboard.yaml
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: voice-request-code
+    centerElement: true
+- tapOn:
+    id: voice-request-code
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: voice-code
+    centerElement: true
+- tapOn:
+    id: voice-code
+- eraseText: 100
+- inputText: '01234567'
+- runFlow: talk-dismiss-keyboard.yaml
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: voice-consume-code
+    centerElement: true
+- tapOn:
+    id: voice-consume-code
+# Disabled voice deliberately returns signed-out status even after successful
+# authentication. Check the fixture's code acknowledgement instead.
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: voice-message
+    direction: UP
+- assertVisible:
+    id: voice-message
+    text: Code consumed

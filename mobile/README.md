@@ -75,20 +75,39 @@ Configured capacity checks run before builds and devices; a five-minute load of
 a decimal of at most nine digits in `qa-lock.sh`; invalid values default to 7200.
 The e2e runner starts only its own fixture, installs the Release app
 without Metro, saves Maestro/screenshots/request logs in ignored `private/qa/<run>/`,
-restores text size/appearance and shuts down on success or failure. Never commit QA evidence.
+restores text size/appearance and shuts down on success, failure or TERM. Never commit QA evidence.
 `OPAX_QA_RUN` names evidence, `OPAX_QA_APP` selects a prepared app. No audio flows.
 Journey 04 stops the fixture and checks saved data without clearing the app. Default
 runs include 01–04; `OPAX_VERIFY_OFFLINE=1` also adds 04 to a selected warm run.
 
-The pasteboard lock (`scripts/qa-lock.sh`) is shared with other projects, so a run
-never waits on anything while holding it. Every Maestro run goes through
+The pasteboard lock (`scripts/qa-lock.sh`) is shared with other projects. Fixture
+preparation and server startup finish before the runner waits for it; waiting lanes
+keep their simulators shut down. The whole device lifetime goes through
 `qa_paste_lock_run`: holding nothing, it waits for the lock to look free and for
 capacity, then enters the build gate with `scripts/qa-locked.sh`. Inside the gate the
 wrapper makes one non-blocking lock attempt and rechecks the load. If the lock is
 taken or the load has reached 140, it leaves the gate at once and the runner starts
-again; otherwise Maestro runs and the lock is released when it ends. The wrapper leads
-its own process group: Maestro and its children run in it, and release first stops any
-leftovers. `OPAX_PASTE_WAIT_SECONDS` covers all the waiting; every minute `lock.log`
+again; otherwise `scripts/e2e-device.sh` boots, installs, runs every Maestro phase
+(including offline 04), restores settings and shuts down before the lock is released.
+`device-timing.txt` records boot, install, total device setup and cleanup seconds
+added to lock holding time.
+Boot (including a simulator-gate wait) is limited to 300 seconds, install to 240,
+each simulator UI call to 10 and shutdown to 20. `OPAX_BOOT_TIMEOUT_SECONDS`,
+`OPAX_INSTALL_TIMEOUT_SECONDS`, `OPAX_SIMCTL_TIMEOUT_SECONDS` and
+`OPAX_SHUTDOWN_TIMEOUT_SECONDS` override these positive limits. A run never waits
+for host capacity, a build slot or the pasteboard lock while holding the lock;
+the simulator-gate wait and device calls inside it have the limits above.
+The device command gets a 120-second stop grace (`OPAX_E2E_STOP_GRACE_SECONDS`),
+enough for five bounded restore/readback calls and shutdown. The parent attempts
+a bounded fallback shutdown after release if the device started but did not
+confirm shutdown. This fallback does not run for a queued lane that never started.
+The isolated harness tests have a 300-second overall limit
+(`OPAX_E2E_TEST_TIMEOUT_SECONDS`) and clean up their own scratch process groups
+when the limit expires.
+Screenshot collection and fixture teardown follow release (offline 04 stops its
+fixture while locked). The wrapper leads its own process group: the device command,
+Maestro and their children run in it, and release first stops any leftovers.
+`OPAX_PASTE_WAIT_SECONDS` covers all the waiting; every minute `lock.log`
 names the lock, the elapsed time and the holder. Never write your own lock wrapper.
 
 The lock directory appears in one atomic step with its `owner` file (pid and pgid of
@@ -108,8 +127,11 @@ If a lock stays held, read `lock.log` and `<lock>/owner`, then:
   Maestro's leftovers still run. Stop them with `kill -TERM -- -<pgid>`; the next waiter
   then retires the lock.
 - **OPAX owner, live pid:** the run is still going. To stop it now, `kill -TERM <pid>`;
-  the wrapper stops its group and releases. A TERM to `e2e.sh` itself takes effect when
-  the current Maestro run returns.
+  the wrapper stops its group and releases. A TERM to `e2e.sh` itself takes effect
+  promptly, including while waiting for capacity or queued in the build gate:
+  it records cancellation, drains its active lock owner while retaining the build
+  gate, cancels the remaining wait tree and then stops its fixture. A cancelled
+  device command never boots.
 - **No owner file:** the lock belongs to another project or an older OPAX script. Leave
   it. Remove it with `rmdir` only after its owner confirms nothing uses the pasteboard.
 
@@ -123,7 +145,9 @@ OPAX_QA_RUN=<run> nohup scripts/e2e.sh <udid> 01 02 > private/qa/<run>.out 2>&1 
 
 Its first line is `E2E pid=<pid> status=private/qa/<run>/exit-status` (the path is
 absolute). The status file holds the exit code and appears only after cleanup: lock
-released, fixture stopped, simulator shut down. If the pid is gone with no status file,
+released, fixture stopped, simulator shutdown confirmed or its bounded fallback
+attempt finished (read `restore.log` and `fallback-shutdown.log` for errors).
+If the pid is gone with no status file,
 the run was killed: read `lock.log`, then shut the simulator down yourself. Start a
 release the same way, logging under ignored `private/` so the worktree stays clean
 (`nohup scripts/release-ios.sh --build-number N > private/release-N.out 2>&1 &`).
@@ -190,6 +214,14 @@ attack regression tests.
   component and state. It exists in development and e2e builds only (Account
   and about, then Design workbench); `metro.config.js` blocks it from
   production bundles and `check-release-bundle.sh` verifies its absence.
+- Account (`src/features/account/`, routes `src/app/account/`): sign-in by
+  emailed code, sign-out and deletion through the voice bridge, with copy from
+  IOS-UX 4.11 and 4.12. Development and e2e builds only for now: production
+  resolves `entry.production.ts`, the unchanged placeholder, and
+  `metro.config.js` keeps the sign-in and deletion routes and every other
+  account file out of release bundles (`tests/account-production.test.tsx`). The address, the
+  challenge and the code live in memory only; the token stays native. The Talk
+  sheet can host `SignInFlow` itself. Journey 22 uses the fixture accounts.
 - Sharing goes through `src/navigation/share.ts` and the local Swift module
   `modules/opax-share`, which builds link metadata on the device. Canonical
   links use `extra.webOrigin` from the build configuration.
@@ -214,7 +246,10 @@ attack regression tests.
   The v2 layout discards the earlier snapshot cache; system cache storage can also
   be reclaimed by iOS. Offline data is opportunistic, not permanent storage. HTTP freshness
   expires at max-age (capped to one day); no-store search is revalidated on every
-  read and retained only for the current app session. `savedAt`, `validatedAt`, `asOf` and
+  read and retained only for the current app session. A forced read (pull to refresh)
+  sends `Cache-Control: no-cache`: expo/fetch's URLSession keeps its own HTTP cache,
+  which otherwise answers a fresh entry under about 512 KB itself, even with
+  `If-None-Match`. `savedAt`, `validatedAt`, `asOf` and
   `stale` are distinct. Transient failures can return stale data; 4xx identity,
   invalid data and forbidden routes do not. Display saved and source dates.
 - `scripts/fixture-snapshot.json` pins SHA-256 and byte sizes of the reviewed public P0 files. Startup verifies hashes and freezes bytes in memory.
@@ -431,6 +466,35 @@ and a link fragment follow the Worker's own looser rules (the card shows neither
 the closing slide's source rows, a "Read the …" link that opens the page on the web
 through `webPageUrl`/`openOnWeb` on the build's own origin, and an as-at line.
 
+**Leads and the declared-interests feed (P1).** Today links to both and loads
+neither. `discovery()` reads `/discovery.json` whole (`decodeDiscovery`; the
+export's microsecond timestamps are checked by their calendar date). The Leads
+screen (`src/features/leads/`) shows every signal as a `LeadCard` with its
+figures, every caveat verbatim, its example records and an as-at line from the
+export's date, in the export's order ("All leads") or by category, sorted as the
+web sorts. Each card opens its comparison: the web's takeaway, the five-plus-Other
+share chart (each row one VoiceOver element, bars decorative) with a Table view of
+the same rows to the dollar, or the two separate money flows for companies in
+both, then the card again, the web's links on opax.com.au (supplier profile; the
+comparison's own `/discover` page, where the web draws its money map; the full
+money map) and "About these numbers". A signal that does not decode, or a
+concentration without its chart, is left out and counted on screen. The web's
+"Find mentions in parliament" opens `/search`, which the Worker sends to Ask's
+model-backed search, so the app leaves it out. Evidence labels are read into
+amount, payer and payee, detail and register (`leadEvidenceFor`): OPAX's local
+row numbers ("local record 643745") are dropped, AusTender contract notice IDs
+are kept, a label with no ID (donations, since the web export's 66d7bf45) reads
+the same, and a label in any other shape keeps its register link with the label
+hidden. `declarations()` reads every `/interests/recent.json` row with Today's
+party and portrait joins and, through the register's ID bridge
+(`declarationProfilesFor`, the same bridge as Search's interest rows), the
+profile slug of each member; the feed (`src/features/declarations/`) filters on
+the device by chamber, jurisdiction and member and reuses Today's register row,
+adding the profile link and the export's name matches with their caveat.
+Journey 27 checks the first lead's figures by JSON pointer:
+`tests/leads-journey.test.ts` resolves each `# pointer:` annotation in the
+pinned export and requires the assertion after it to show that value.
+
 Use `billsFor(filters)`, `billFor(key)`, `today()`, `about()`, `suggestions(query)`
 and `search(query, kind)` for the remaining P0 blocks. Load `suggestionSources()`
 once on screen entry; `suggestions()` then matches that snapshot locally while
@@ -443,9 +507,9 @@ branded ID parsers are also exported from `src/api/catalogs.ts` for already load
 OPAX record/party links are relative web paths: resolve them using the build-config
 origin when opening. E2E displays links locally and never opens production.
 
-The fixture pins 44 complete files (6,816,022 bytes), including whole-site votes,
-pay, expenses and money. `fixture-snapshot.json` records every size and hash;
-42 files are served. Its `testOnlyFiles` retain the money graph and donor ties
+The fixture pins 51 complete files (7,014,814 bytes), including whole-site votes,
+pay, expenses, money and the discovery export. `fixture-snapshot.json` records
+every size and hash; 49 files are served. Its `testOnlyFiles` retain the money graph and donor ties
 for decoder/parity tests while their retired GET routes remain denied.
 Interest-detail search covers twelve pinned members; the recent feed, pay and
 expenses are complete. Local search does not reproduce production ranking.
@@ -468,7 +532,18 @@ variant on its own, by path:
 `OPAX_FIXTURE_EDITION=absent scripts/e2e.sh <udid> .maestro/13b-today-no-edition.yaml`
 and
 `OPAX_FIXTURE_EDITION=withdrawn scripts/e2e.sh <udid> .maestro/13c-today-edition-withdrawn.yaml`.
-The `13` shorthand runs only `13-today.yaml`. To repin, fetch the route once and
+The `13` shorthand runs only `13-today.yaml`.
+
+**Local follows (journey 26).** Follows are saved on the device and compared
+on the device with the shared catalogs (`src/features/follows/README.md` has
+the markers, their source fields and dates). `OPAX_FIXTURE_DATA=changed` makes
+the fixture serve `/bills/index.json` and `/interests/index.json` pinned, with a
+day's max-age, until the app revalidates either (Today's pull to refresh); from
+then on both carry one synthetic change: Anthony Albanese's register count
+28 to 29, and the Ending Financial Abuse bill (`au-federal-r7549`) passed as at
+1 October 2026. Run it on its own, by path:
+`OPAX_FIXTURE_DATA=changed scripts/e2e.sh <udid> .maestro/26-follows.yaml`.
+The `26` shorthand without the variable never sees the change and fails. To repin, fetch the route once and
 update the file, hash, size and fetch time together.
 
 Fixture startup and tests read git blobs at `fixture-snapshot.json`'s `sourceCommit`,
@@ -498,3 +573,60 @@ directory link without inventing a canonical release ID.
 ### Electorate outline and optional location
 
 The cached seat file now draws a tile-free Skia outline. Your MP can suggest a federal seat from one foreground location fix, entirely on the iPhone, with explicit confirmation. See [IOS-ELECTORATE-MAP.md](../docs/IOS-ELECTORATE-MAP.md) for display limitations, privacy, cache budget, download measurement and the compact-file proposal. Journey 24 sets a simulated fix per case through the harness; `OPAX_VERIFY_MAP_OFFLINE=1` adds a stopped-fixture map check.
+
+## Native party page
+
+Recorded party labels push `/party/<slug>` in the current tab's stack. Independent,
+unaligned and other non-party affiliations stay plain text and never resolve as
+parties; Independent keeps its grey dot, as a label only. Slugs come
+from recorded labels; `partyIdentity` and `samePartyLabel` provide the existing
+identity rules, with no prefix matching or new aliases. A catalog-confirmed
+absence opens the existing web party page; a failed read offers retry. A
+profile's Party receipts button resolves its party with the same `resolveParty`.
+
+The page reads the roster and dated people release for current members, with
+unknown affiliation status in a separate Recorded disclosure and former members
+excluded. Recorded rows require full names, omit current people, and omit a
+person only when every parliament and chamber they are recorded in has their
+seat held by someone else (a former federal MP now in a state house without
+dated seats stays). They show no unverified roster place or chamber. Each member opens its
+native profile. Receipt totals and rank read
+`/graph/money.json` directly; displayed donor flows do not replace the party
+node total. Donors retain year keys and the graph's exclusions. Associated
+entities read `/graph/aec-extras.json`, retain their own annual-return years,
+and are never added to the party total. Both are static catalog GETs, without
+model, search or generation calls. The money-map destination is isolated in
+`MoneyMapLink` for a later native route.
+
+Recent divisions follow the web's 96-candidate / 32-readable-file scan, collapse
+duplicate divisions and retain party-attribution caveats. Bill links push the
+native divisions view, which links to the full bill details. Every block has its own source date, provenance,
+saved-copy state and independent error state. Journey `25-party.yaml` covers
+profile chip, current members, a JSON-pointer receipt check, member profile,
+bill divisions and unresolved web fallback; run it at standard size and AX5.
+
+Party identity performance uses weak, snapshot-scoped name and ID indexes in
+`src/api/person-identity.ts`. Ordered collision lists preserve the original
+ambiguity and chamber/seat guards. Joined profiles (including identity refusals)
+are reused only while slugs, roster, people and manifest are the same decoded
+objects. New catalog bytes invalidate automatically; HTTP 304 revalidation can
+keep the unchanged snapshot. Do not mutate decoded catalogs in place.
+
+`Catalogs.partyPage(input, refresh, publish)` publishes the resolved title and
+Members before loading receipts, associated entities and division records. Each
+optional block progresses independently through its loading/error/ready state.
+The screen hook ignores progress from obsolete loads and forwards forced refresh
+through every party catalog read.
+
+To reproduce the pinned equality proof and offline computation timings:
+
+```sh
+npm test -- person-identity-index party-page party-ui
+npx tsx scripts/measure-party-identity.ts
+```
+
+The benchmark compares cold catalog snapshots against the frozen pre-index
+implementation in `tests/reference/`. Its other workloads measure shared identity
+joins used by Person, Search, Your MP and the directory portrait/marker consumers;
+they exclude catalog decode, networking and native rendering. Release simulator
+latency is measured separately using journey 25 command traces.

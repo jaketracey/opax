@@ -1,8 +1,7 @@
 import Constants from 'expo-constants';
 import { canonicalUrl, openSource } from '../navigation/external';
 
-// The privacy lane will set this embedded configuration only after /support is
-// published. No health probe, transcript, credential or account ID is sent.
+// /support is published. No health probe, transcript, credential or account ID is sent.
 const supportAvailable =
   Constants.expoConfig?.extra?.supportPageAvailable === true;
 export const correctionsIssuesUrl =
@@ -10,13 +9,15 @@ export const correctionsIssuesUrl =
 
 /** Only a canonical record path travels with the report, never answer text. */
 export function reportAnswerUrl(
-  recordPath: string,
+  recordPath: string | null,
   hasSupport = supportAvailable,
 ): string {
+  if (recordPath === null)
+    return hasSupport ? canonicalUrl('/support') : correctionsIssuesUrl;
   if (
     typeof recordPath !== 'string' ||
-    recordPath.length > 1800 ||
-    /[?#]/.test(recordPath)
+    recordPath.length > 301 ||
+    /[?#<>"\\\s]/.test(recordPath)
   )
     throw new Error(
       'Reports need a public record path without query or fragment',
@@ -43,6 +44,6 @@ export function reportAnswerUrl(
 }
 
 /** Presents the existing in-app Safari source browser (e2e previews locally). */
-export async function reportAnswer(recordPath: string): Promise<void> {
+export async function reportAnswer(recordPath: string | null): Promise<void> {
   await openSource(reportAnswerUrl(recordPath), 'Report this answer');
 }

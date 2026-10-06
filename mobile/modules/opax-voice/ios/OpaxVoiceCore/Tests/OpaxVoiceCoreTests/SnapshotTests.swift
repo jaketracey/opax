@@ -21,6 +21,20 @@ final class SnapshotTests: XCTestCase, @unchecked Sendable {
         XCTAssertNil(value.status)
         await rig.close()
     }
+    func testDismissDiscardsEvidenceWithoutRequestsButCannotClearLiveCaptions() async throws {
+        let rig = try await Rig.make(); try await rig.live()
+        await rig.relay.enqueue(.data(json(["type": "agent_response", "agent_response_event": ["event_id": 1, "agent_response": "Transient caption"]])))
+        try await eventually { await rig.controller.snapshot().transcript.count == 1 }
+        await rig.controller.discardEvidence()
+        let live = await rig.controller.snapshot(); XCTAssertEqual(live.transcript.count, 1)
+        await rig.controller.end()
+        let requests = await rig.http.count(.voiceStatus)
+        await rig.controller.discardEvidence()
+        let closed = await rig.controller.snapshot()
+        XCTAssertEqual(closed.transcript, []); XCTAssertEqual(closed.sources, [])
+        let after = await rig.http.count(.voiceStatus); XCTAssertEqual(after, requests)
+        await rig.close()
+    }
     func testIdleSnapshotDoesNotEmitOrMakeRequests() async throws {
         let rig = try await Rig.make()
         let value = await rig.controller.snapshot()

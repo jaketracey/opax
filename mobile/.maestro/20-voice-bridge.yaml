@@ -18,6 +18,12 @@ name: 20 Silent native voice bridge and account lifecycle
       VOICE_EMAIL: happy@example.invalid
 - scrollUntilVisible:
     element:
+      id: voice-agree
+    centerElement: true
+- tapOn:
+    id: voice-agree
+- scrollUntilVisible:
+    element:
       id: voice-start
     centerElement: true
 - tapOn:

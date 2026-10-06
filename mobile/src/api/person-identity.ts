@@ -46,29 +46,140 @@ const folded = (name: string) =>
     .replace(/[\u0300-\u036f]/g, '')
     .toLocaleLowerCase('en-AU')
     .replace(/[’‘ʼ`']/g, '');
-function firstNamesSharePrefix(a: string, b: string) {
-  const left = folded(a.trim().split(/\s+/)[0] ?? '');
-  const right = folded(b.trim().split(/\s+/)[0] ?? '');
+// Object identity is the immutable decoded catalog version (see ApiClient).
+// New bytes get new indexes; weak keys let evicted snapshots and joins go away.
+function memoFold() {
+  const names = new Map<string, string>();
+  return (name: string) => {
+    let key = names.get(name);
+    if (key === undefined) names.set(name, (key = folded(name)));
+    return key;
+  };
+}
+function append<T>(map: Map<string, T[]>, key: string, value: T) {
+  const rows = map.get(key);
+  if (rows) rows.push(value);
+  else map.set(key, [value]);
+}
+type RosterRow = Roster['people'][number];
+type Person = PeopleCatalog['people'][number];
+function indexRoster(roster: Roster) {
+  const fold = memoFold();
+  const names = new Map<string, RosterRow[]>();
+  const ids = new Map<string, RosterRow[]>();
+  const fullNamesById = new Map<string, Map<string, RosterRow[]>>();
+  for (const row of roster.people) {
+    append(names, fold(row.name), row);
+    if (row.pid) {
+      append(ids, row.pid, row);
+      if (row.name.trim().includes(' ')) {
+        let full = fullNamesById.get(row.pid);
+        if (!full) fullNamesById.set(row.pid, (full = new Map()));
+        append(full, fold(row.name), row);
+      }
+    }
+  }
+  return { fold, names, ids, fullNamesById };
+}
+function indexPeople(people: PeopleCatalog) {
+  const fold = memoFold();
+  const names = new Map<string, Person[]>();
+  const ids = new Map<string, Person[]>();
+  const order = new Map<Person, number>();
+  people.people.forEach((person, i) => {
+    order.set(person, i);
+    // filter/some returned each row once, even with duplicate aliases.
+    for (const name of new Set([person.name, ...person.aliases].map(fold)))
+      append(names, name, person);
+    if (person.legacy_person_id) append(ids, person.legacy_person_id, person);
+  });
+  return { fold, names, ids, order };
+}
+function indexSlugs(slugs: Slugs) {
+  const fold = memoFold();
+  const names = new Map<string, [string, string][]>();
+  for (const entry of Object.entries(slugs.slugs))
+    append(names, fold(entry[1]), entry);
+  return { fold, names };
+}
+function snapshotIndex<K extends object, V>(build: (key: K) => V) {
+  const versions = new WeakMap<K, V>();
+  return (key: K) => {
+    let value = versions.get(key);
+    if (!value) versions.set(key, (value = build(key)));
+    return value;
+  };
+}
+const rosterIndex = snapshotIndex(indexRoster);
+const peopleIndex = snapshotIndex(indexPeople);
+const slugIndex = snapshotIndex(indexSlugs);
+const interestIdentityIndex = snapshotIndex((interests: InterestIndex) => {
+  const peopleNames = new Map<string, string[]>();
+  const namesById = new Map<string, string[]>();
+  for (const [id, person] of Object.entries(interests.people))
+    append(peopleNames, nameKey(person.name), id);
+  for (const [name, id] of Object.entries(interests._by_name))
+    append(namesById, id, name);
+  return { peopleNames, namesById };
+});
+const joinedSnapshots = new WeakMap<
+  Slugs,
+  WeakMap<
+    Roster,
+    WeakMap<
+      PeopleCatalog,
+      WeakMap<Manifest, Map<string, PersonProfile | PersonIdentityError>>
+    >
+  >
+>();
+function joinedProfiles(
+  slugs: Slugs,
+  roster: Roster,
+  people: PeopleCatalog,
+  manifest: Manifest,
+) {
+  let rosters = joinedSnapshots.get(slugs);
+  if (!rosters) joinedSnapshots.set(slugs, (rosters = new WeakMap()));
+  let releases = rosters.get(roster);
+  if (!releases) rosters.set(roster, (releases = new WeakMap()));
+  let manifests = releases.get(people);
+  if (!manifests) releases.set(people, (manifests = new WeakMap()));
+  let profiles = manifests.get(manifest);
+  if (!profiles) manifests.set(manifest, (profiles = new Map()));
+  return profiles;
+}
+function firstNamesSharePrefix(
+  a: string,
+  b: string,
+  fold: (name: string) => string,
+) {
+  const left = fold(a.trim().split(/\s+/)[0] ?? '');
+  const right = fold(b.trim().split(/\s+/)[0] ?? '');
   return (
     !!left && !!right && (left.startsWith(right) || right.startsWith(left))
   );
 }
 export function namedRosterRow(names: string[], roster: Roster) {
+  const index = rosterIndex(roster);
   for (const name of names) {
-    const row = roster.people.find((r) => folded(r.name) === folded(name));
+    const row = index.names.get(index.fold(name))?.[0];
     if (row) return row;
   }
   return undefined;
 }
 export function rosterRowFor(names: string[], roster: Roster, id?: RosterId) {
-  const rows = id ? roster.people.filter((r) => r.pid === id) : [];
+  const index = rosterIndex(roster);
+  const rows = id ? (index.ids.get(id) ?? []) : [];
   // A unique legacy ID is authoritative even when the register uses a formal
   // name. Multi-row IDs commonly include a surname stub: prefer the matching
   // full-name row, then a sole full-name row; never select a stub by file order.
   if (rows.length === 1) return rows[0];
   if (rows.length > 1) {
     const full = rows.filter((r) => r.name.trim().includes(' '));
-    const named = namedRosterRow(names, { ...roster, people: full });
+    const fullNames = index.fullNamesById.get(id!);
+    const named = names
+      .map((name) => fullNames?.get(index.fold(name))?.[0])
+      .find(Boolean);
     if (named) return named;
     if (full.length === 1) return full[0];
     throw new PersonIdentityError('The roster identity needs review.');
@@ -90,36 +201,37 @@ export function personSlugForResult(
   if (!['person', 'pay', 'expense', 'interest'].includes(row.kind))
     return undefined;
   const resolveName = (name: string): PersonSlug | undefined => {
-    const direct = Object.entries(slugs.slugs).filter(
-      ([, n]) => folded(n) === folded(name),
-    );
+    const index = slugIndex(slugs);
+    const direct = index.names.get(index.fold(name)) ?? [];
     const directSlug =
       direct.length === 1 ? personSlug(direct[0]![0]) : undefined;
     if (row.kind !== 'interest' || !interests || !people) return directSlug;
     // Prefer the register's ID bridge even if a historical spelling has its
     // own directory slug (Patrick Conaghan and current Pat Conaghan).
+    const interestIndex = interestIdentityIndex(interests);
     const keys = [
       ...new Set([
         ...nameValues(interests._by_name, [name]),
-        ...Object.entries(interests.people)
-          .filter(([, r]) => nameKey(r.name) === nameKey(name))
-          .map(([id]) => id),
+        ...(interestIndex.peopleNames.get(nameKey(name)) ?? []),
       ]),
     ];
     if (!keys.length) return directSlug;
     const numeric = keys.filter((id) => /^\d+$/.test(id));
     const ids = numeric.length ? numeric : keys;
     if (ids.length !== 1) return undefined;
-    const indexNames = Object.entries(interests._by_name)
-      .filter(([, id]) => id === ids[0])
-      .map(([name]) => name);
-    let persons = people.people.filter((p) =>
-      numeric.length
-        ? p.legacy_person_id === ids[0]
-        : [p.name, ...p.aliases].some((n) =>
-            indexNames.some((a) => folded(a) === folded(n)),
+    const indexNames = interestIndex.namesById.get(ids[0]!) ?? [];
+    const personsIndex = peopleIndex(people);
+    let persons = numeric.length
+      ? (personsIndex.ids.get(ids[0]!) ?? [])
+      : [
+          ...new Set(
+            indexNames.flatMap(
+              (name) => personsIndex.names.get(personsIndex.fold(name)) ?? [],
+            ),
           ),
-    );
+        ].sort(
+          (a, b) => personsIndex.order.get(a)! - personsIndex.order.get(b)!,
+        );
     if (persons.length > 1) {
       const current = persons.filter((p) =>
         p.electorates.some((s) => s.current),
@@ -129,9 +241,7 @@ export function personSlugForResult(
     if (!persons.length) return directSlug;
     if (persons.length !== 1) return undefined;
     for (const name of [persons[0]!.name, ...persons[0]!.aliases]) {
-      const resolved = Object.entries(slugs.slugs).filter(
-        ([, n]) => folded(name) === folded(n),
-      );
+      const resolved = index.names.get(index.fold(name)) ?? [];
       if (resolved.length === 1) return personSlug(resolved[0]![0]);
     }
     return undefined;
@@ -165,6 +275,31 @@ export function joinPerson(
   people: PeopleCatalog,
   manifest: Manifest,
 ): PersonProfile {
+  const profiles = joinedProfiles(slugs, roster, people, manifest);
+  const cached = profiles.get(slug);
+  if (cached instanceof PersonIdentityError) throw cached;
+  if (cached) return cached;
+  try {
+    const profile = computePerson(slug, slugs, roster, people, manifest);
+    Object.freeze(profile.seats);
+    Object.freeze(profile.sources);
+    Object.freeze(profile);
+    profiles.set(slug, profile);
+    return profile;
+  } catch (error) {
+    if (error instanceof PersonIdentityError) profiles.set(slug, error);
+    throw error;
+  }
+}
+function computePerson(
+  slug: string,
+  slugs: Slugs,
+  roster: Roster,
+  people: PeopleCatalog,
+  manifest: Manifest,
+): PersonProfile {
+  const index = peopleIndex(people);
+  const fold = index.fold;
   const name = slugs.slugs[slug];
   if (!Object.hasOwn(slugs.slugs, slug) || typeof name !== 'string')
     throw new ApiError(
@@ -172,9 +307,7 @@ export function joinPerson(
       'This person is not in the public directory.',
     );
   const named = namedRosterRow([name], roster);
-  const byName = people.people.filter((p) =>
-    [p.name, ...p.aliases].some((alias) => folded(alias) === folded(name)),
-  );
+  const byName = index.names.get(fold(name)) ?? [];
   const currentByName = byName.filter((p) =>
     p.electorates.some((s) => s.current),
   );
@@ -185,7 +318,7 @@ export function joinPerson(
         ? byName[0]
         : undefined;
   const id = release?.legacy_person_id ?? named?.pid;
-  const byId = id ? people.people.filter((p) => p.legacy_person_id === id) : [];
+  const byId = id ? (index.ids.get(id) ?? []) : [];
   const currentById = byId.filter((p) => p.electorates.some((s) => s.current));
   // Surname directory entries inherit their identity from the release's ID,
   // including a sole historical holder. Current observations take priority.
@@ -207,7 +340,7 @@ export function joinPerson(
     release &&
     named &&
     (!named.name.trim().includes(' ') ||
-      !firstNamesSharePrefix(named.name, release.name))
+      !firstNamesSharePrefix(named.name, release.name, fold))
   ) {
     const seats = release.electorates;
     const incompatibleSeat = named.representation?.some(
@@ -216,7 +349,7 @@ export function joinPerson(
           (s) =>
             s.jurisdiction === r.jurisdiction &&
             s.chamber === r.chamber &&
-            folded(s.name) === folded(r.electorate),
+            fold(s.name) === fold(r.electorate),
         ),
     );
     // Committee appearances do not establish membership. A recorded federal
@@ -243,13 +376,12 @@ export function joinPerson(
   );
   let matches = release
     ? [release]
-    : people.people.filter(
-        (p) =>
-          (row?.pid && p.legacy_person_id === row.pid) ||
-          [p.name, ...p.aliases].some(
-            (alias) => folded(alias) === folded(name),
-          ),
-      );
+    : [
+        ...new Set([
+          ...(row?.pid ? (index.ids.get(row.pid) ?? []) : []),
+          ...byName,
+        ]),
+      ].sort((a, b) => index.order.get(a)! - index.order.get(b)!);
   if (matches.length > 1) {
     const current = matches.filter((p) => p.electorates.some((s) => s.current));
     if (current.length === 1) matches = current;

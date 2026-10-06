@@ -45,6 +45,9 @@ export function chamberName(
   if (!chamber) return null;
   const id = chamber.toLowerCase();
   if (federalChambers[id]) return federalChambers[id];
+  // The registers of interests name the federal lower house "house".
+  if (id === 'house' && (!jurisdiction || jurisdiction === 'federal'))
+    return federalChambers.representatives!;
   const match = /^([a-z]+)_(la|lc|ha)$/.exec(id);
   const state = match ? jurisdictions[match[1]!] : undefined;
   if (match && state && match[1] !== 'federal')

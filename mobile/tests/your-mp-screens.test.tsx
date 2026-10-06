@@ -1,9 +1,12 @@
+import {
+  portraits as portraitService,
+  catalogs as runtime,
+} from '../src/api/runtime';
 import * as format from '../src/design/format';
 import { act, type ReactElement } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { Image, RefreshControl } from 'react-native';
 import { router } from 'expo-router';
-import { catalogs as runtime } from '../src/api/runtime';
 import * as c from '../src/api/catalogs';
 import { ApiError } from '../src/api/errors';
 import {
@@ -29,6 +32,7 @@ import {
 } from '../src/design/primitives';
 import { loadChoice, saveChoice } from '../src/features/your-mp/choice-store';
 jest.mock('../src/api/runtime', () => ({
+  portraits: { get: jest.fn() },
   catalogs: {
     person: jest.fn(),
     profileFor: jest.fn(),
@@ -42,7 +46,7 @@ jest.mock('../src/features/your-mp/choice-store', () => ({
   saveChoice: jest.fn(),
 }));
 jest.mock('../src/api/image-policy', () => ({
-  remoteImageURI: (path: string) => `http://127.0.0.1:8912${path}`,
+  localImageURI: (uri: string) => uri,
 }));
 const mockParams: { slug?: string; id?: string } = {};
 jest.mock('expo-router', () => ({
@@ -87,7 +91,7 @@ beforeEach(() => {
   )!.electorate_id;
   mock.directory.mockResolvedValue(directory);
 });
-test('profile failure in expenses preserves votes, pay and identity; official portrait stays blank', async () => {
+test('profile failure in expenses preserves votes, pay and identity; absent local image keeps fallback', async () => {
   mockParams.slug = 'penny-wong';
   const person = c.joinPerson('penny-wong', slugs, roster, people, manifest);
   const p = c.profileFor(person.canonicalPersonId!, {
@@ -109,7 +113,7 @@ test('profile failure in expenses preserves votes, pay and identity; official po
     r.root.findAll((n) => n.props.testID === 'person-expenses-error').length,
   ).toBeGreaterThan(0);
   expect(r.root.findAllByType(Image)).toHaveLength(0);
-  expect(text(r)).toContain('Portrait display permission needs review');
+  expect(text(r)).not.toContain('Portrait display permission needs review');
   expect(text(r)).toContain('Record date not published');
   expect(text(r)).toContain('Real estate');
   expect(text(r)).not.toContain('real_estate');
@@ -221,6 +225,59 @@ test('electorate preserves Census vintage and renders candidates as plain public
   await act(async () => r.unmount());
 });
 
+test('a malformed outline drops only itself: the Electorate screen still reads', async () => {
+  const seat = index.electorates.find((s) => s.name === 'Grayndler')!;
+  const raw = pinned(seat.detail_url) as {
+    boundaries: { geometry_kind: string }[];
+  };
+  // An unclosed ring in the named outlines; the rest of the file is pinned.
+  const broken = (kinds: string[]) => ({
+    ...raw,
+    boundaries: raw.boundaries.map((b) =>
+      kinds.includes(b.geometry_kind)
+        ? {
+            ...b,
+            geometry: {
+              type: 'Polygon',
+              coordinates: [
+                [
+                  [151, -33],
+                  [151.1, -33],
+                  [151.1, -33.1],
+                ],
+              ],
+            },
+          }
+        : b,
+    ),
+  });
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  const official = c.decodeElectorate(broken(['official']));
+  expect(official.boundaries.map((b) => b.geometry_kind)).toEqual([
+    'statistical',
+  ]);
+  expect(warn).toHaveBeenCalledWith(
+    `Skipped a malformed display outline for ${seat.electorate_id}`,
+  );
+  mock.electorateFor.mockResolvedValue(result(c.electorateFor(official)));
+  let r = await render(<Electorate />);
+  expect(text(r)).toContain('2021 Census geography');
+  expect(text(r)).toContain('Display outline · ABS statistical geography');
+  await act(async () => r.unmount());
+  mock.electorateFor.mockResolvedValue(
+    result(
+      c.electorateFor(c.decodeElectorate(broken(['official', 'statistical']))),
+    ),
+  );
+  r = await render(<Electorate />);
+  expect(text(r)).toContain('2021 Census geography');
+  expect(
+    r.root.findAll((n) => n.props.testID === 'outline-unavailable').length,
+  ).toBeGreaterThan(0);
+  await act(async () => r.unmount());
+  warn.mockRestore();
+});
+
 test('roster-only member shows limited coverage without fabricating figures', async () => {
   mockParams.slug = 'tony-abbott';
   mock.person.mockResolvedValue(
@@ -255,19 +312,33 @@ test('unverified private identity is refused before any name or profile blocks r
   await act(async () => r.unmount());
 });
 
-test('permitted portrait renders with its source-provided credit and licence', async () => {
+test('profile credit follows native image decode and disappears with the failed image', async () => {
   mockParams.slug = 'sheena-watt';
   const identity = c.joinPerson('sheena-watt', slugs, roster, people, manifest);
   mock.person.mockResolvedValue(result(identity));
   mock.profileFor.mockResolvedValue(
     c.profileFor(identity.canonicalPersonId!, catalogs),
   );
+  jest.mocked(portraitService.get).mockResolvedValueOnce({
+    info: c.portraitFor(
+      ['Sheena Watt'],
+      catalogs.photoPeople!,
+      catalogs.photoCredits!,
+    )!,
+    localURI: 'file:///cache/wd-Q100327610.webp',
+  });
   const r = await render(<Person />);
   expect(r.root.findByType(Image).props.source.uri).toContain(
-    '/photos/wd-Q100327610.webp',
+    'wd-Q100327610.webp',
   );
+  expect(text(r)).not.toContain('Gabagool2005');
+  await act(async () => r.root.findByType(Image).props.onLoad());
   expect(text(r)).toContain('Gabagool2005');
   expect(text(r)).toContain('CC0');
+  await act(async () => r.root.findByType(Image).props.onError());
+  expect(r.root.findAllByType(Image)).toHaveLength(0);
+  expect(text(r)).not.toContain('Gabagool2005');
+  expect(text(r)).not.toContain('CC0');
   await act(async () => r.unmount());
 });
 
@@ -726,4 +797,22 @@ test('closed salary disclosure does no row formatting; opening renders every ret
     if (r) await act(async () => r!.unmount());
     years.mockRestore();
   }
+});
+
+test('a surname profile retains its short route for portrait refusal after canonical profile resolution', async () => {
+  mockParams.slug = 'walsh';
+  const identity = c.joinPerson('walsh', slugs, roster, people, manifest);
+  mock.person.mockResolvedValue(result(identity));
+  mock.profileFor.mockResolvedValue(
+    c.profileFor(identity.canonicalPersonId!, catalogs),
+  );
+  jest.mocked(portraitService.get).mockResolvedValue(null);
+  const r = await render(<Person />);
+  expect(portraitService.get).toHaveBeenCalledWith({
+    name: 'Jess Walsh',
+    slug: 'walsh',
+    refresh: false,
+  });
+  expect(r.root.findAllByType(Image)).toHaveLength(0);
+  await act(async () => r.unmount());
 });

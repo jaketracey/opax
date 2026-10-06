@@ -294,24 +294,28 @@ export default function About() {
       </Section>
       <Section title="Corrections and contact" testID="about-contact">
         <Text>
-          A corrections and contact address will be added here when it is
-          confirmed.
+          Report a correction or contact OPAX through the support page.
         </Text>
+        <OpaxWebLink
+          label="Support and corrections"
+          path="/support"
+          testID="about-support"
+        />
       </Section>
       <Section title="Privacy">
         <Text>
           Public reading needs no account and sends no account or device
           identifier. Requests reach OPAX’s servers with this iPhone’s IP
-          address, which rate limiters read. IP log retention is not yet
-          confirmed. Submitted searches are sent only to OPAX’s servers. Search
-          queries and their results stay in memory during this app session and
-          are not saved on this phone. Other public catalogs are saved on this
-          phone for offline reading. Voice uses an email address, member ID,
-          audio and words.
+          address, which is used for rate limits and security. The privacy
+          policy explains what is kept and for how long. Submitted searches are
+          sent only to OPAX’s servers. Search queries and their results stay in
+          memory during this app session and are not saved on this phone. Other
+          public catalogs are saved on this phone for offline reading. Voice
+          uses an email address, member ID, audio and words.
         </Text>
         <OpaxWebLink
           label="Privacy policy"
-          path="/community?view=privacy"
+          path="/privacy"
           testID="about-privacy"
         />
       </Section>

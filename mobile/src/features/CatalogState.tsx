@@ -30,7 +30,7 @@ export function CatalogState<T>({
   links?: boolean;
   refreshing?: boolean;
 }) {
-  if (!block)
+  if (!block || block.status === 'loading')
     return (
       <LoadingState
         label="Loading the public record"

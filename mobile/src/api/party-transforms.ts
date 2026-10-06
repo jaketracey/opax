@@ -1,5 +1,5 @@
 // samePartyLabel and PARTY_MAP labels ported from portal/public/app.js.
-import { moneyName } from './transforms';
+import { resolveParty } from '../design/party';
 import type { Roster, SeatObservation } from './catalog-decoders';
 const partyLabels: Record<string, string> = {
   labor: 'ALP',
@@ -134,19 +134,23 @@ export const receiptParties = {
     },
   ],
 } as const;
+// The same strict matching as the party chips (resolveParty): an exact label,
+// a slug or one party identity, never a prefix ("Liberal Democrats" is not
+// Liberal; "Liberal National Party of Queensland" is the LNP).
 export function partyReceiptsFor(party: string | null) {
-  const nn = moneyName(party ?? '');
   const nodes = receiptParties.parties;
-  const node =
-    nodes.find((n) => moneyName(n.label) === nn) ||
-    nodes.find((n) => n.aliases.some((a: string) => moneyName(a) === nn)) ||
-    (nn
-      ? nodes.find(
-          (n) =>
-            moneyName(n.label).startsWith(nn) ||
-            nn.startsWith(moneyName(n.label)),
-        )
-      : undefined);
+  const resolved = party
+    ? resolveParty(
+        party,
+        nodes.flatMap((n) => [n.label, ...n.aliases]),
+      )
+    : null;
+  const node = resolved
+    ? nodes.find(
+        (n) =>
+          n.label === resolved || n.aliases.some((a: string) => a === resolved),
+      )
+    : undefined;
   return {
     url:
       node && party ? `/subject/party/${encodeURIComponent(party)}` : '/money',

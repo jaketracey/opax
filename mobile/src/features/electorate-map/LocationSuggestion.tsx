@@ -99,8 +99,8 @@ export function LocationSuggestion({
             choose another.
           </Text>
           <Text wordSafe variant="fine">
-            Suggestion from AEC 2025 election display outlines. Boundaries may
-            have changed; confirm your seat.
+            Suggestion from AEC {result.vintage} display outlines. Boundaries
+            may have changed; confirm your seat.
           </Text>
           <Button
             label={`Confirm ${result.seat.name}`}

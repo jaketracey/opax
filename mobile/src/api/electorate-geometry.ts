@@ -71,12 +71,13 @@ export function displayBoundary(boundaries: Boundary[]) {
     )
   );
 }
-export function federalBoundary(boundaries: Boundary[]) {
-  return boundaries.find(
+// Official simplified federal display outlines of any vintage. The release
+// says which vintage it carries ("2025 election"); see loadOutlines.
+export function federalBoundaries(boundaries: Boundary[]) {
+  return boundaries.filter(
     (b) =>
       b.geometry_kind === 'official' &&
       b.display_simplified === true &&
-      b.vintage === '2025 election' &&
       b.geometry &&
       ['EPSG:4283', 'EPSG:4326'].includes(b.crs ?? ''),
   );

@@ -66,16 +66,19 @@ SCENE_DELEGATE = "EXExpoAppSceneDelegate"
 APP_INPUTS_UNDER_SCRIPTS = {"mobile/scripts/production-block-list.json"}
 VOICE_POLICY = json.loads((Path(__file__).resolve().parent.parent / "voice-production-policy.json").read_text())
 LOCATION_PURPOSE = "OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere."
+MOTION_PURPOSE = 'OPAX doesn\'t use motion or fitness data. iOS requires this note because the location library behind "Use my location" includes motion features that OPAX never turns on.'
 
 
 def production_voice_enabled(value=None):
-    value = os.environ.get("OPAX_PRODUCTION_VOICE", "0") if value is None else value
+    value = os.environ.get("OPAX_PRODUCTION_VOICE", "1") if value is None else value
     require(value in ("0", "1"), "OPAX_PRODUCTION_VOICE must be 0 or 1")
     return value == "1"
 
 
 def verify_voice_info(info, enabled):
     permissions = {k: v for k, v in info.items() if re.fullmatch(r"NS.*UsageDescription", k)}
+    require(permissions.pop("NSMotionUsageDescription", None) == MOTION_PURPOSE,
+            "exact unused-library motion purpose string")
     # The independent electorate lane uses location on device only.
     if "NSLocationWhenInUseUsageDescription" in permissions:
         require(permissions.pop("NSLocationWhenInUseUsageDescription") == LOCATION_PURPOSE,
@@ -120,8 +123,17 @@ def verify_voice_bundle(body, enabled):
     if strings is None:
         strings = {token.decode("latin-1") for token in PATH_TOKENS.findall(body)}
     if enabled:
-        require("./talk.tsx" in strings and bool({"./account.tsx", "./account/index.tsx"} & strings),
-                "production voice requires Talk and Account route keys")
+        require("./talk.tsx" in strings and "./account/index.tsx" in strings and
+                {"./account/sign-in.tsx", "./account/delete.tsx"} <= strings,
+                "production voice requires Talk, Account, sign-in and deletion route keys")
+        found, _ = markers_in_entries(body, ("talk-consent", "account-sign-in-start"))
+        require(set(found) == {"talk-consent", "account-sign-in-start"}, "production voice ships real Talk and Account screens")
+        found, _ = markers_in_entries(body, ("Talk to OPAX is not in this version of the app yet.",
+                                            "Signing in is not in this version of the app yet."))
+        require(not found, "production voice has no Talk or Account placeholder copy")
+    else:
+        require(not {"./account/sign-in.tsx", "./account/delete.tsx"} & strings,
+                "voice-off production excludes sign-in and deletion routes")
     markers = ("voice-bridge-test", "Voice bridge fixture workbench", "example.invalid", "/__fixture/voice",
                "Fixture code:", "OPAX_VOICE_E2E", "DebugSyntheticEngineFactory", "DebugSilentAudioSession")
     found, _ = markers_in_entries(body, markers + (() if enabled else ("NSMicrophoneUsageDescription",)))
@@ -557,12 +569,13 @@ def verify_app(app, args):
     check(info.get("ITSAppUsesNonExemptEncryption") is False, "standard HTTPS encryption compliance")
     check("NSAppTransportSecurity" not in info, "no ATS exception")
     voice_enabled = production_voice_enabled()
-    expected_permissions = {"NSLocationWhenInUseUsageDescription": LOCATION_PURPOSE}
+    expected_permissions = {"NSLocationWhenInUseUsageDescription": LOCATION_PURPOSE,
+                            "NSMotionUsageDescription": MOTION_PURPOSE}
     if voice_enabled:
         expected_permissions["NSMicrophoneUsageDescription"] = VOICE_POLICY["microphonePurpose"]
     check({k: v for k, v in info.items() if re.fullmatch(r"NS.*UsageDescription", k)} == expected_permissions,
-          "exact foreground-only location purpose string; no other permissions" if not voice_enabled else
-          "exact foreground-only location and approved microphone purpose strings; no other permissions")
+          "exact location and unused-library motion purpose strings; no other permissions" if not voice_enabled else
+          "exact location, unused-library motion and approved microphone purpose strings; no other permissions")
     check("location" not in info.get("UIBackgroundModes", []), "no background location mode")
     verify_voice_info(info, voice_enabled)
     check(True, "approved voice purpose/route/consent policy" if voice_enabled else
@@ -640,6 +653,7 @@ def verify_app(app, args):
         verify_voice_info(config["ios"]["infoPlist"], voice_enabled)
         if voice_enabled:
             check(config["extra"].get("voiceConsentDefault") is False, "embedded consent is denied by default")
+            check(config["extra"].get("supportPageAvailable") is True, "published support page enabled for answer reports")
         check(config["extra"]["variant"] == "production" and
               config["extra"]["apiOrigin"] == "https://opax.com.au" and
               config["extra"]["appBuild"] == args.build and

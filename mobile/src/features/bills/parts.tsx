@@ -1,3 +1,5 @@
+import { router } from 'expo-router';
+import { partyRoute } from '../../navigation/routes';
 import { useState, type ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import type {
@@ -7,7 +9,7 @@ import type {
 } from '../../api/bill-transforms';
 import { sourceUrl } from '../../navigation/external';
 import { formatCount, formatDate } from '../../design/format';
-import { partyIdentity } from '../../design/party';
+import { isPartyLabel, partyDot, partyIdentity } from '../../design/party';
 import {
   Icon,
   SourceLink,
@@ -156,8 +158,10 @@ const countText = (s: { ayes: number; noes: number }) =>
 /** What VoiceOver reads for one party's split: "Greens, 9 ayes, no noes". */
 export const splitLabel = (s: BillSplit) =>
   `${s.label}, ${ayeWords(s.ayes)}, ${noWords(s.noes)}`;
-// Register codes for people who are not a party: no party dot for them.
-const notParty = new Set(['', 'PRES', 'SPK']);
+// Register codes for people who are not a party: no party link for them,
+// and no dot except the Independent grey.
+const notParty = (split: BillSplit) =>
+  !isPartyLabel(split.party) || !isPartyLabel(split.label);
 
 /**
  * One party's ayes and noes: the party as a dot and its name, the counts in
@@ -175,11 +179,17 @@ function SplitRow({
   testID?: string;
 }) {
   const stacked = useAccessibilitySize();
-  const dot = notParty.has(split.party.trim())
-    ? null
-    : partyIdentity(split.label).color;
+  const Container = notParty(split) ? View : Pressable;
+  const dot = partyDot(split.party) && partyDot(split.label);
   return (
-    <View
+    <Container
+      {...(notParty(split)
+        ? {}
+        : {
+            accessibilityRole: 'link' as const,
+            accessibilityHint: 'Opens the party record',
+            onPress: () => router.push(partyRoute(split.label)),
+          })}
       accessible
       accessibilityLabel={splitLabel(split)}
       testID={testID}
@@ -230,7 +240,7 @@ function SplitRow({
           />
         </View>
       </View>
-    </View>
+    </Container>
   );
 }
 
@@ -282,6 +292,15 @@ export function PartySplits({
           .
         </Text>
       ) : null}
+      {splits.folded
+        .filter((split) => !notParty(split))
+        .map((split) => (
+          <InlineLink
+            key={split.party}
+            label={splitLabel(split)}
+            onPress={() => router.push(partyRoute(split.label))}
+          />
+        ))}
       {splits.notes.length ? (
         <Text variant="fine">{splits.notes.join(' · ')}</Text>
       ) : null}
@@ -491,17 +510,32 @@ export function Bullet({ children }: { children: string }) {
 /** A party dot and its label as the record names it (no current/former claim). */
 export function RecordedParty({ party }: { party: string }) {
   const identity = partyIdentity(party);
+  const recorded = isPartyLabel(party);
+  const dot = partyDot(party);
+  const Container = recorded ? Pressable : View;
   return (
-    <View style={styles.party}>
-      {identity.color ? (
+    <Container
+      style={[styles.party, { minHeight: minimumTarget }]}
+      {...(recorded
+        ? {
+            accessibilityRole: 'link' as const,
+            accessibilityHint: 'Opens the party record',
+            onPress: () => router.push(partyRoute(identity.name)),
+          }
+        : {})}
+      accessibilityLabel={identity.name}
+    >
+      {dot ? (
         <View
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
-          style={[styles.dot, { backgroundColor: identity.color }]}
+          style={[styles.dot, { backgroundColor: dot }]}
         />
       ) : null}
-      <Text variant="metadata">{identity.name}</Text>
-    </View>
+      <Text wordSafe variant="metadata" style={styles.grow}>
+        {identity.name}
+      </Text>
+    </Container>
   );
 }
 
