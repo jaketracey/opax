@@ -1,19 +1,26 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { ActionSheetIOS } from 'react-native';
 import { Button } from '../src/design/primitives';
 import { AnswerCaption } from '../src/features/talk/AnswerCaption';
 import { canReport, talkMenu } from '../src/features/talk/menu';
 import type { TranscriptTurn, VoiceSource } from '../src/voice';
-import { reportFromSources } from '../src/features/talk/reportAnswer';
+import { reportChoices } from '../src/features/talk/reportAnswer';
 
+const answered: TranscriptTurn[] = [
+  { role: 'agent', id: 1, text: 'Synthetic answer' },
+];
 // Reporting moved from each caption to Talk's More menu.
-function menuFor(transcript: TranscriptTurn[], onReport = jest.fn()) {
+function menuFor(
+  transcript: TranscriptTurn[],
+  onReport: (path: string | null) => void = jest.fn(),
+  sources: VoiceSource[] = [],
+) {
   const item = talkMenu({
     live: true,
     active: true,
     typing: false,
     report: canReport(transcript),
+    records: reportChoices(sources),
     consent: true,
     onType: jest.fn(),
     onReport,
@@ -21,14 +28,20 @@ function menuFor(transcript: TranscriptTurn[], onReport = jest.fn()) {
     onWithdraw: jest.fn(),
   });
   if (item.type !== 'menu') throw new Error('Expected the More menu');
-  return item.menu.items.flatMap((entry) =>
-    entry.type === 'action' ? [entry] : [],
-  );
+  return item.menu.items;
 }
-const reportItem = (transcript: TranscriptTurn[], onReport = jest.fn()) =>
-  menuFor(transcript, onReport).find(
+const reportItem = (
+  transcript: TranscriptTurn[],
+  onReport?: (path: string | null) => void,
+  sources?: VoiceSource[],
+) =>
+  menuFor(transcript, onReport, sources).find(
     (entry) => entry.label === 'Report this answer',
   );
+const press = (item: ReturnType<typeof reportItem>) => {
+  if (item?.type !== 'action') throw new Error('Expected a report action');
+  act(() => item.onPress());
+};
 
 test.each<TranscriptTurn>([
   { role: 'user', id: 1, text: 'Synthetic question' },
@@ -65,24 +78,29 @@ test('an explicit report tap passes no caption words or answer ID', () => {
     report,
   );
   expect(report).not.toHaveBeenCalled();
-  act(() => item!.onPress());
+  press(item);
   expect(report).toHaveBeenCalledTimes(1);
-  expect(report).toHaveBeenCalledWith();
+  expect(report).toHaveBeenCalledWith(null);
 });
 
 test('caption corrections cannot change the data sent by the report control', () => {
   const report = jest.fn();
-  const original = reportItem(
-    [{ role: 'agent', id: 1, text: 'Original synthetic answer' }],
-    report,
+  const sources = [{ path: '/bill/example', title: 'Bill record' }];
+  press(
+    reportItem(
+      [{ role: 'agent', id: 1, text: 'Original synthetic answer' }],
+      report,
+      sources,
+    ),
   );
-  const corrected = reportItem(
-    [{ role: 'agent', id: 1, text: 'Corrected synthetic answer' }],
-    report,
+  press(
+    reportItem(
+      [{ role: 'agent', id: 1, text: 'Corrected synthetic answer' }],
+      report,
+      sources,
+    ),
   );
-  act(() => original!.onPress());
-  act(() => corrected!.onPress());
-  expect(report.mock.calls).toEqual([[], []]);
+  expect(report.mock.calls).toEqual([['/bill/example'], ['/bill/example']]);
 });
 
 test('the menu keeps web pages out of a call and offers withdrawal only after consent', () => {
@@ -91,6 +109,7 @@ test('the menu keeps web pages out of a call and offers withdrawal only after co
     active: true,
     typing: false,
     report: false,
+    records: [],
     consent: true,
     onType: jest.fn(),
     onReport: jest.fn(),
@@ -102,6 +121,7 @@ test('the menu keeps web pages out of a call and offers withdrawal only after co
     active: false,
     typing: false,
     report: false,
+    records: [],
     consent: false,
     onType: jest.fn(),
     onReport: jest.fn(),
@@ -133,21 +153,21 @@ test.each<{ sources: VoiceSource[] }>([
 ])(
   'reports without a record when no call source is reportable: $sources',
   ({ sources }) => {
+    expect(reportChoices(sources)).toEqual([]);
     const report = jest.fn();
-    reportFromSources(sources, report);
+    press(reportItem(answered, report, sources));
     expect(report).toHaveBeenCalledWith(null);
   },
 );
 
 test('reports only the single valid call record path, never its title', () => {
   const report = jest.fn();
-  reportFromSources(
-    [
+  press(
+    reportItem(answered, report, [
       { path: '/bill/example', title: 'Private caption words' },
       { path: '/subject/electorate/example', title: 'Other words' },
       { path: '/bill/example', title: 'Duplicate source' },
-    ],
-    report,
+    ]),
   );
   expect(report).toHaveBeenCalledTimes(1);
   expect(report).toHaveBeenCalledWith('/bill/example');
@@ -155,24 +175,20 @@ test('reports only the single valid call record path, never its title', () => {
 });
 
 test('chooses among call-level records by title and reports only the selected path', () => {
-  const sheet = jest
-    .spyOn(ActionSheetIOS, 'showActionSheetWithOptions')
-    .mockImplementation(() => {});
   const report = jest.fn();
-  reportFromSources(
-    [
-      { path: '/bill/example', title: 'Bill record' },
-      { path: '/money/receipts', title: 'Receipt records' },
-    ],
-    report,
-  );
+  const item = reportItem(answered, report, [
+    { path: '/bill/example', title: 'Bill record' },
+    { path: '/money/receipts', title: 'Receipt records' },
+  ]);
+  if (item?.type !== 'submenu') throw new Error('Expected a record choice');
   expect(report).not.toHaveBeenCalled();
-  const [options, choose] = sheet.mock.calls[0]!;
-  expect(options.options).toEqual(['Bill record', 'Receipt records', 'Cancel']);
-  choose(options.cancelButtonIndex!);
-  expect(report).not.toHaveBeenCalled();
-  choose(1);
+  expect(item.items.map((entry) => entry.label)).toEqual([
+    'Bill record',
+    'Receipt records',
+  ]);
+  const receipts = item.items[1]!;
+  if (receipts.type !== 'action') throw new Error('Expected an action');
+  act(() => receipts.onPress());
   expect(report).toHaveBeenCalledWith('/money/receipts');
-  expect(report.mock.calls[0]).toEqual(['/money/receipts']);
-  sheet.mockRestore();
+  expect(report.mock.calls).toEqual([['/money/receipts']]);
 });

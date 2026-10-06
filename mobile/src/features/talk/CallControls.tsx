@@ -3,7 +3,7 @@ import { Text as NativeText, Pressable, StyleSheet, View } from 'react-native';
 import { SymbolView, type SFSymbol } from 'expo-symbols';
 import { fonts, light, spacing } from '../../design/tokens';
 
-type Look = 'plain' | 'on' | 'danger';
+type Look = 'plain' | 'on' | 'danger' | 'disabled';
 const looks: Record<
   Look,
   { fill: string; pressed: string; border: string; icon: string }
@@ -25,6 +25,13 @@ const looks: Record<
     pressed: '#86191F',
     border: light.danger,
     icon: light.onNavy,
+  },
+  // Opaque role colours, never opacity, as for every disabled control.
+  disabled: {
+    fill: light.sunken,
+    pressed: light.sunken,
+    border: light.lineStrong,
+    icon: light.inkSoft,
   },
 };
 // Large for the call itself, small beside it, bar for the record view's bar.
@@ -57,7 +64,7 @@ export function RoundButton({
   testID?: string;
 }) {
   const d = diameters[size];
-  const style = looks[look];
+  const style = looks[disabled ? 'disabled' : look];
   return (
     <Pressable
       accessibilityRole="button"
@@ -80,7 +87,6 @@ export function RoundButton({
           borderRadius: d / 2,
           backgroundColor: pressed ? style.pressed : style.fill,
           borderColor: style.border,
-          opacity: disabled ? 0.4 : 1,
         },
       ]}
     >

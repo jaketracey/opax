@@ -1,7 +1,7 @@
 import type { NativeStackHeaderItem } from 'expo-router';
 import type { SFSymbol } from '../../design/icon';
 import { chrome } from '../../design/tokens';
-import type { TranscriptTurn, VoiceStatus } from '../../voice';
+import type { TranscriptTurn, VoiceSource, VoiceStatus } from '../../voice';
 
 /** Reporting is offered once OPAX has answered with words. */
 export const canReport = (transcript: readonly TranscriptTurn[]) =>
@@ -33,8 +33,9 @@ export function minutesLeft(seconds: number) {
 const symbol = (name: SFSymbol) => ({ type: 'sfSymbol' as const, name });
 
 /**
- * Talk's "…" menu: everything that is not the call itself. Each action is
- * passed in; the report action receives no caption words (reportAnswer.ts).
+ * Talk's "…" menu: everything that is not the call itself. Reporting names
+ * a record path or none, never caption words: one record (or none) reports
+ * at once, several are a submenu of their titles (reportChoices).
  */
 export function talkMenu({
   title,
@@ -42,6 +43,7 @@ export function talkMenu({
   active,
   typing,
   report,
+  records,
   consent,
   onType,
   onReport,
@@ -53,38 +55,53 @@ export function talkMenu({
   active: boolean;
   typing: boolean;
   report: boolean;
+  records: readonly VoiceSource[];
   consent: boolean;
   onType: () => void;
-  onReport: () => void;
+  onReport: (recordPath: string | null) => void;
   onPrivacy: () => void;
   onWithdraw: () => void;
 }): NativeStackHeaderItem {
-  const items = [];
+  const items: Extract<
+    NativeStackHeaderItem,
+    { type: 'menu' }
+  >['menu']['items'] = [];
   if (live && !typing)
     items.push({
-      type: 'action' as const,
+      type: 'action',
       label: 'Type a message',
       icon: symbol('keyboard'),
       onPress: onType,
     });
-  if (report)
+  if (report && records.length > 1)
     items.push({
-      type: 'action' as const,
+      type: 'submenu',
       label: 'Report this answer',
       icon: symbol('flag'),
-      onPress: () => onReport(),
+      items: records.map((record) => ({
+        type: 'action' as const,
+        label: record.title,
+        onPress: () => onReport(record.path),
+      })),
+    });
+  else if (report)
+    items.push({
+      type: 'action',
+      label: 'Report this answer',
+      icon: symbol('flag'),
+      onPress: () => onReport(records[0]?.path ?? null),
     });
   // A web page during a call would leave it; privacy is linked before one.
   if (!active)
     items.push({
-      type: 'action' as const,
+      type: 'action',
       label: 'Voice privacy',
       icon: symbol('hand.raised'),
       onPress: onPrivacy,
     });
   if (consent)
     items.push({
-      type: 'action' as const,
+      type: 'action',
       label: 'Withdraw voice consent',
       icon: symbol('xmark.circle'),
       destructive: true,

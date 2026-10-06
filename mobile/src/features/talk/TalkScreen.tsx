@@ -22,11 +22,7 @@ import { endCopy, failureCopy, refusal, timeLabel } from './model';
 import { recordDestination } from './sources';
 import { useTalk } from './useTalk';
 import { AnswerCaption } from './AnswerCaption';
-import {
-  reportAnswer,
-  reportFromSources,
-  type ReportAnswer,
-} from './reportAnswer';
+import { reportAnswer, reportChoices, type ReportAnswer } from './reportAnswer';
 import { VoiceOrb, type OrbPhase } from './VoiceOrb';
 import { useVoiceLevels } from './useVoiceLevels';
 import { useCaptionsPreference } from './captions-preference';
@@ -41,7 +37,7 @@ type Action = 'start' | 'signIn' | 'search' | 'settings' | 'retry';
  * UIKit drops a sheet, browser or keyboard presented while a menu is still
  * closing, so a menu action that presents waits for the menu to go.
  */
-const afterMenu = (action: () => void) => setTimeout(action, 450);
+const afterMenu = (action: () => void) => setTimeout(action, 600);
 
 export default function TalkScreen({
   onReportAnswer = reportAnswer,
@@ -201,16 +197,17 @@ export default function TalkScreen({
   };
   // Header items are native: rebuild them only when the menu changes, never
   // on each countdown tick, so an open menu is not replaced under a finger.
-  const handlers = useRef({ close, withdraw, report: () => {} });
+  const handlers = useRef({
+    close,
+    withdraw,
+    report: onReportAnswer,
+  });
   useLayoutEffect(() => {
-    handlers.current = {
-      close,
-      withdraw,
-      report: () => reportFromSources(s.sources, onReportAnswer),
-    };
+    handlers.current = { close, withdraw, report: onReportAnswer };
   });
   const menuTitle = timeLeft(live, s.remaining, s.status);
   const reportable = canReport(s.transcript);
+  const records = useMemo(() => reportChoices(s.sources), [s.sources]);
   const screenOptions = useMemo(
     () => ({
       title: active ? '' : 'Talk to OPAX',
@@ -222,9 +219,11 @@ export default function TalkScreen({
           active,
           typing,
           report: reportable,
+          records,
           consent: call.consent,
           onType: () => afterMenu(() => setTyping(true)),
-          onReport: () => afterMenu(() => handlers.current.report()),
+          onReport: (path) =>
+            afterMenu(() => void handlers.current.report(path)),
           onPrivacy: () =>
             afterMenu(() => void openOnWeb('/privacy', 'Voice privacy')),
           onWithdraw: () => handlers.current.withdraw(),
@@ -238,7 +237,7 @@ export default function TalkScreen({
         },
       ],
     }),
-    [menuTitle, live, active, typing, reportable, call.consent],
+    [menuTitle, live, active, typing, reportable, records, call.consent],
   );
 
   const destination = record ? recordDestination(record.path) : null;
