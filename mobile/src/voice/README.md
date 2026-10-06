@@ -42,14 +42,15 @@ that default until the Talk and Account UI lanes have merged and their productio
 screen tests, fixture matrix and both release verifiers pass. No runtime or OTA
 flag can enable this capability.
 
-Development consent is deliberately denied and its permission dependency cannot
-request the microphone. The purpose string is absent with the production switch
-off and in development/e2e, which need no permission. With the switch on, the
-bridge reads `StoredVoiceConsent` (`opax.voice.consent.v1`), denied on a fresh
-install, and only requests permission after an explicit grant. `consent()` and
-`setConsent(boolean)` are native hooks for the UI lane; withdrawal ends a call.
-Never enable consent automatically in production. The UI must show its disclosure
-before every call and end calls on background (the core already handles lifecycle).
+Consent starts denied in every variant, development and e2e included. The Talk
+UI stores an explicit choice on this device through the native `consent()` and
+`setConsent(boolean)` hooks (`StoredVoiceConsent`, `opax.voice.consent.v1`, denied
+on a fresh install) and can withdraw it during a call; withdrawal ends a call.
+The permission dependency requests the microphone only after an explicit grant,
+and only with the production switch on. The purpose string is absent with the
+switch off and in development/e2e, which need no permission. Never enable consent
+automatically in production. The UI must show its disclosure before every call
+and end calls on background (the core already handles lifecycle).
 
 The native production gate compares the embedded method/path list with `AuthRoute`
 before any I/O. Credentials remain in the origin-scoped this-device-only Keychain;

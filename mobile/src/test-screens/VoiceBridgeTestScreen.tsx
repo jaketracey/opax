@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as voice from '../voice';
+import { setConsent } from '../features/talk/bridge';
 import type {
   VoiceEvent,
   VoiceResult,
@@ -190,6 +191,19 @@ export default function VoiceBridgeTestScreen() {
               setMessage('Code consumed');
             },
           ),
+      )}
+      <Text style={styles.text}>
+        Calls require an explicit consent choice, including synthetic calls.
+      </Text>
+      {button(
+        'voice-agree',
+        'Agree to synthetic voice processing',
+        () => void setConsent(true),
+      )}
+      {button(
+        'voice-withdraw',
+        'Withdraw synthetic voice consent',
+        () => void setConsent(false),
       )}
       {button(
         'voice-start',

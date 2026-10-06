@@ -73,6 +73,13 @@ public actor VoiceCallController {
         VoiceSnapshot(state: state, reason: reason, mode: mode, playback: playbackState,
             remaining: remaining, transcript: evidence.turns, sources: evidence.sources, status: latestStatus)
     }
+    /// The UI discards transient captions only after leaving a finished call.
+    /// End itself retains them for the on-screen end state and snapshot recovery.
+    public func discardEvidence() {
+        guard ![.checking, .reserving, .connecting, .live, .ending].contains(state) else { return }
+        evidence = EvidenceModel()
+        continuation.yield(.transcript([])); continuation.yield(.sources([]))
+    }
     private func observe() {
         guard lifecycleTask == nil else { return }
         let events = lifecycle.events

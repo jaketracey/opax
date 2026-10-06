@@ -88,12 +88,13 @@ const stageText = (s: BillTimelineStage) =>
     .join(' · ');
 
 /** One bill: what it would change, how it moved, and how each house divided. */
-export default function BillDetail() {
-  const { key, section } = useLocalSearchParams<{
-    key: string;
-    section?: string;
-  }>();
-  const focusedDivisions = section === 'divisions';
+export default function BillDetail({
+  recordKey,
+  embedded = false,
+}: { recordKey?: string; embedded?: boolean } = {}) {
+  const params = useLocalSearchParams<{ key: string; section?: string }>();
+  const key = recordKey ?? params.key;
+  const focusedDivisions = params.section === 'divisions';
   const load = useCallback(() => catalogs.billFor(String(key)), [key]);
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
   const [sponsors, setSponsors] = useState<Record<string, PersonSlug>>({});
@@ -137,19 +138,24 @@ export default function BillDetail() {
       (error instanceof ApiError && error.code === 'not-found'));
   return (
     <>
-      <Stack.Screen
-        options={{
-          // The title is the page's level 1 heading; `title` still names the
-          // screen for the back stack.
-          title: name,
-          headerTitle: '',
-          unstable_headerRightItems: identity
-            ? () => [
-                shareHeaderItem({ path: `/bill/${identity.key}`, title: name }),
-              ]
-            : undefined,
-        }}
-      />
+      {embedded ? null : (
+        <Stack.Screen
+          options={{
+            // The title is the page's level 1 heading; `title` still names the
+            // screen for the back stack.
+            title: name,
+            headerTitle: '',
+            unstable_headerRightItems: identity
+              ? () => [
+                  shareHeaderItem({
+                    path: `/bill/${identity.key}`,
+                    title: name,
+                  }),
+                ]
+              : undefined,
+          }}
+        />
+      )}
       <Screen
         testID={view ? 'bill-screen' : 'bill-pending-screen'}
         refreshControl={

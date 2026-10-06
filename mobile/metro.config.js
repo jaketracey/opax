@@ -11,21 +11,19 @@ const productionStubs = [
   'src/features/electorate-map/outline-probe',
   'src/features/account/entry',
 ].map((module) => path.join(__dirname, module));
+// Production keeps the Talk placeholder until the voice switch ships.
+const talkModule = path.join(__dirname, 'src/features/talk/TalkScreen');
 config.resolver.resolveRequest = (context, moduleName, platform) => {
   const target = moduleName.startsWith('.')
     ? path
         .resolve(path.dirname(context.originModulePath), moduleName)
         .replace(/\.[jt]sx?$/, '')
     : null;
-  if (
-    process.env.OPAX_VARIANT === 'production' &&
-    target !== null &&
-    productionStubs.includes(target)
-  ) {
-    return {
-      type: 'sourceFile',
-      filePath: `${target}.production.ts`,
-    };
+  if (process.env.OPAX_VARIANT === 'production' && target !== null) {
+    if (productionStubs.includes(target))
+      return { type: 'sourceFile', filePath: `${target}.production.ts` };
+    if (target === talkModule)
+      return { type: 'sourceFile', filePath: `${talkModule}.production.tsx` };
   }
   return typeof inheritedResolver === 'function'
     ? inheritedResolver(context, moduleName, platform)
