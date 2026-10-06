@@ -1,5 +1,6 @@
 import { isPortraitPath } from './portrait-policy';
-// Public, catalog-only GETs. Adding a path requires a source/cost review and test.
+import { allowsReportsPath } from './reports-policy';
+// Reviewed public GETs. Build 7 adds reader-chosen paid routes in reports-policy.
 export const catalogKinds = ['person', 'interest', 'pay', 'expense'] as const;
 export type CatalogKind = (typeof catalogKinds)[number];
 const staticPaths = new Set([
@@ -47,6 +48,7 @@ export function assertAllowedPath(path: string): void {
     throw new Error('Route is outside the public catalog allow-list');
   const params = new URLSearchParams(query);
   if (path.split('?').length > 2) throw new Error('Invalid catalog query');
+  if (allowsReportsPath(path)) return;
   if (pathname === '/api/search-all') {
     const kind = params.get('kind');
     const allowedParams = [

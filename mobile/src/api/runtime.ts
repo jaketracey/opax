@@ -7,6 +7,7 @@ import { CatalogCache } from './cache';
 import { DiskStore } from './disk-store';
 import { Catalogs } from './catalogs';
 import { setCatalogDiagnostics } from './validation';
+import { ReportsRepository } from '../features/reports/repository';
 const extra = Constants.expoConfig?.extra;
 if (
   !extra ||
@@ -39,6 +40,7 @@ const client = new ApiClient({
   cache: new CatalogCache(new DiskStore(), 24 * 1024 * 1024, 220),
 });
 export const catalogs = new Catalogs(client);
+export const reports = new ReportsRepository(client);
 export const portraits = new PeoplePortraits(
   catalogs,
   new PortraitCache(new PortraitDiskStore(extra.apiOrigin), client),

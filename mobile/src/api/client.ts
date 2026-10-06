@@ -98,7 +98,7 @@ export class ApiClient {
     path: string,
     decode: Decoder<T>,
     force = false,
-    { absence = false }: { absence?: boolean } = {},
+    { absence = false, retries }: { absence?: boolean; retries?: number } = {},
   ): Promise<RecordResult<T>> {
     const url = allowedURL(this.options.origin, path); // before cache or networking
     if (isPortraitPath(path))
@@ -129,7 +129,8 @@ export class ApiClient {
       'offline',
       'This record is not saved on this iPhone yet. It will load when you are back online.',
     );
-    for (let attempt = 0; attempt <= (this.options.retries ?? 2); attempt++) {
+    const attempts = retries ?? this.options.retries ?? 2;
+    for (let attempt = 0; attempt <= attempts; attempt++) {
       const remaining = deadline - this.now();
       if (remaining <= 0) break;
       let retryDelay = 300 * 2 ** attempt;
@@ -291,7 +292,7 @@ export class ApiClient {
       } finally {
         clearTimeout(timer);
       }
-      if (attempt < (this.options.retries ?? 2)) {
+      if (attempt < attempts) {
         if (retryDelay >= deadline - this.now()) break;
         await this.sleep(retryDelay);
       }

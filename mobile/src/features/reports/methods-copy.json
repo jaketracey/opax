@@ -1,0 +1,74 @@
+[
+  {
+    "kind": "p",
+    "text": "Methods"
+  },
+  {
+    "kind": "h2",
+    "text": "How OPAX works, and how to cite it"
+  },
+  {
+    "kind": "h3",
+    "text": "What OPAX is, and is not"
+  },
+  {
+    "kind": "p",
+    "text": "OPAX is a retrieval and analysis layer over public records. It is not the official record. Before publishing a quote, verify the wording at the source link on the document page. Every document links to its official origin where one exists."
+  },
+  {
+    "kind": "h3",
+    "text": "Corpus construction"
+  },
+  {
+    "kind": "p",
+    "text": "Speeches are included from 13 March 1993, the election that seated the longest-serving current federal parliamentarian, so nothing in the corpus predates a currently serving member. Speeches under 200 characters are excluded (procedural fragments), duplicates across overlapping sources are removed, and procedural noise (division roll-calls, chair interjections, day indexes) is stripped. The machine-readable corpus manifest, including per-source counts and the current corpus version, is at corpus.json."
+  },
+  {
+    "kind": "h3",
+    "text": "Retrieval and generation"
+  },
+  {
+    "kind": "p",
+    "text": "Search runs hybrid semantic + keyword retrieval with a reranking pass. Answers are generated only from retrieved passages, with citations. Embeddings: multilingual-2024-05-06. Generation model (pinned): gemini-2.5-flash-lite. Model identity may change between corpus versions and is recorded in the manifest."
+  },
+  {
+    "kind": "h3",
+    "text": "Reproducibility"
+  },
+  {
+    "kind": "p",
+    "text": "Searches are reproducible given a query, filters and corpus version: every export file embeds all three. Generated answers are not reproducible and must not be quoted as data. The supported method for a paper: state the question, cite the returned documents by their permanent OPAX links, and archive the export file."
+  },
+  {
+    "kind": "h3",
+    "text": "Known limitations"
+  },
+  {
+    "kind": "li",
+    "text": "Hansard is a revised record (\"substantially verbatim\"), not a raw transcript."
+  },
+  {
+    "kind": "li",
+    "text": "Party labels use a 15-value canonical vocabulary; some speeches carry no party label."
+  },
+  {
+    "kind": "li",
+    "text": "State coverage windows differ by parliament (QLD only from 2024, NSW/VIC from 2015)."
+  },
+  {
+    "kind": "h3",
+    "text": "Corrections"
+  },
+  {
+    "kind": "li",
+    "text": "30 September 2026, grants by seat. Grant program pages now take each seat's member and party on the grant date from the parliamentary service records, which date every change of party. They previously used the member's current party, so a member who later changed party was counted under the later party. A seat that was vacant on the grant date is now left out of the \"to seats held by the government of the day\" share, as awards without an electorate already were, and shown as a vacant seat. That share changed for 50 federal programs; award totals did not change."
+  },
+  {
+    "kind": "h3",
+    "text": "Licence, code and corrections"
+  },
+  {
+    "kind": "p",
+    "text": "AGPL-3.0. Source and issue tracker: github.com/jaketracey/opax. Data errors are corrections we want, so please report them."
+  }
+]

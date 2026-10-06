@@ -12,6 +12,7 @@ import {
 import { PersonRow, Portrait, SourceLink } from '../src/design/primitives';
 import { TodayDeclaration } from '../src/features/today/TodayDeclaration';
 import { formatDate } from '../src/design/format';
+jest.mock('../src/features/reports/TodayReports', () => ({Spotlight: () => null, ReportsEntry: () => null, FromRecord: () => null, TodayCoverage: () => null}));
 jest.mock('../src/api/runtime', () => ({
   portraits: { get: jest.fn(async () => null) },
 }));

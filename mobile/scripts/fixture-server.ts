@@ -1,5 +1,6 @@
 // Offline, data-only server. No Worker import, proxy, fetch, email or model path.
 import { createVoiceFixture } from './voice-fixture';
+import { reportsFixture } from './reports-fixture';
 import { createServer } from 'node:http';
 import { createHash } from 'node:crypto';
 import snapshot from './fixture-snapshot.json';
@@ -60,6 +61,7 @@ if (!['pinned', 'null-optional'].includes(rosterMode))
   throw new Error('OPAX_FIXTURE_ROSTER must be pinned or null-optional');
 const files = new Map<string, Buffer>();
 const pinnedBytes = fixtureBytes(snapshot);
+const reportBytes = reportsFixture(pinnedBytes);
 for (const path of Object.keys(snapshot.files)) {
   if (snapshot.testOnlyFiles.includes(path)) continue;
   if (path.endsWith('.webp')) assertPortraitPath(path);
@@ -179,7 +181,7 @@ export const server = createServer(async (request, response) => {
     if (path.endsWith('.webp')) assertPortraitPath(path);
     else assertAllowedPath(path);
     const url = new URL(path, `http://127.0.0.1:${port}`);
-    let body = files.get(url.pathname);
+    let body = reportBytes(path) ?? files.get(url.pathname);
     let cacheControl = 'public, max-age=300';
     const isEdition = url.pathname === editionPath;
     if (

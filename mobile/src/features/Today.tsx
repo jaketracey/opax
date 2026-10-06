@@ -11,6 +11,7 @@ import { RecordRow } from './RecordRow';
 import { billRoute, declarationsRoute, leadsRoute } from '../navigation/routes';
 import { TodayDeclaration } from './today/TodayDeclaration';
 import { FollowingSection } from './follows/FollowingSection';
+import { FromRecord, ReportsEntry, Spotlight, TodayCoverage } from './reports/TodayReports';
 
 export default function Today() {
   const [data, setData] = useState<Awaited<
@@ -67,6 +68,10 @@ export default function Today() {
         refreshing={refreshing}
         onRetry={refresh}
       />
+      <ReportsEntry />
+      <Spotlight />
+      <FromRecord />
+      <TodayCoverage />
       <Section title="Recently introduced bills" testID="today-bills">
         <CatalogState
           block={data?.bills ?? null}

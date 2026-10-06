@@ -235,7 +235,14 @@
     "/photos/wd-Q133500279.webp": "39a16739d4e181f06f57bbef358798f90b5becde508635254361af15178ce0e8",
     "/photos/10257.webp": "5d7acf340f0cf73f556cc18b53394127b0bf0de8317f4e59d0e0a993e7310a8b",
     "/photos/10001.webp": "a01454c6a792423388e65311735aee72832c93b837a771d35b42e9717c125156",
-    "/photos/10956.webp": "854d831dde2d67c9a6e186f4e80939ae6b22bbceeb7a73b500cb4da0096cdf9d"
+    "/photos/10956.webp": "854d831dde2d67c9a6e186f4e80939ae6b22bbceeb7a73b500cb4da0096cdf9d",
+    "/reports/index.json": "8bc60bb7722ac113b7a88b3c7c003c92ec447b0063eeb24125a65023b6c1c900",
+    "/reports/climate.json": "d3e4d52cfb1183a662bc964b82a6adb0acf918ba33ae76860d2ba3b7c22d954e",
+    "/reports/gambling.json": "bea54b0a2b7929c533fb53f5cf523f482241779db386b722ca1ba2e3cb5c12b5",
+    "/reports/housing.json": "682fd4ed200a025d3c9668b308b235cc52cfeed99eaad114cbcd99dbb77b09c8",
+    "/reports/immigration.json": "681096253170659cb9c5e76433396a023628ff1aee33f2f0fb7663c4785bc9d6",
+    "/reports/indigenous.json": "68d6146c8213539c9f03fefc29beed33a723726ff9314dcfc58707a7c82352d5",
+    "/reports/media.json": "b637516b0fd6b0c335c3c6579e16f9ee9e17659f87be3328df7f277dad5be549"
   },
   "sizes": {
     "/parliamentarians.json": 405665,
@@ -471,7 +478,14 @@
     "/photos/wd-Q133500279.webp": 4202,
     "/photos/10257.webp": 3408,
     "/photos/10001.webp": 3326,
-    "/photos/10956.webp": 4708
+    "/photos/10956.webp": 4708,
+    "/reports/index.json": 1522,
+    "/reports/climate.json": 231439,
+    "/reports/gambling.json": 210229,
+    "/reports/housing.json": 219922,
+    "/reports/immigration.json": 212831,
+    "/reports/indigenous.json": 218531,
+    "/reports/media.json": 198442
   },
   "testOnlyFiles": [
     "/interests/ties-by-donor.json"

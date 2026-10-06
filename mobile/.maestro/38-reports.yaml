@@ -1,0 +1,101 @@
+appId: au.com.opax.app
+name: 38 Spotlight, report, Money, section deep link and cited record
+---
+- launchApp:
+    clearState: true
+- scrollUntilVisible:
+    element:
+      id: today-reports
+    direction: DOWN
+    timeout: 300000
+    centerElement: true
+- tapOn:
+    id: today-reports
+- assertVisible:
+    id: reports-screen
+- takeScreenshot: ${EVIDENCE}/38-reports-index
+- tapOn:
+    text: Back
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: today-spotlight
+    direction: DOWN
+    timeout: 300000
+    visibilityPercentage: 5
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/38-spotlight
+- scrollUntilVisible:
+    element:
+      id: today-spotlight-open
+    direction: DOWN
+    timeout: 300000
+    centerElement: true
+- tapOn:
+    id: today-spotlight-open
+- assertVisible:
+    id: report-title
+- takeScreenshot: ${EVIDENCE}/38-report
+- scrollUntilVisible:
+    element:
+      id: report-tab-money
+    direction: DOWN
+    timeout: 300000
+    centerElement: true
+- tapOn:
+    id: report-tab-money
+- scrollUntilVisible:
+    element:
+      id: report-money
+    direction: DOWN
+    timeout: 300000
+    visibilityPercentage: 5
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/38-money
+- scrollUntilVisible:
+    element:
+      text: Words per dollar
+    direction: DOWN
+    timeout: 300000
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/38-words-per-dollar
+- scrollUntilVisible:
+    element:
+      id: report-open-section-1
+    direction: DOWN
+    timeout: 300000
+    visibilityPercentage: 10
+    centerElement: true
+- tapOn:
+    id: report-open-section-1
+- scrollUntilVisible:
+    element:
+      id: report-section-1
+    direction: DOWN
+    timeout: 90000
+    visibilityPercentage: 2
+- takeScreenshot: ${EVIDENCE}/38-section
+- scrollUntilVisible:
+    element:
+      id: report-answer-1-citation-1
+    direction: DOWN
+    timeout: 300000
+    centerElement: true
+- tapOn:
+    id: report-answer-1-citation-1
+# The records lane owns the reader. Until integrated the fixture shows its
+# canonical web destination without making any production request.
+- assertVisible: https://opax.invalid/doc/.*
+- takeScreenshot: ${EVIDENCE}/38-cited-record
+- tapOn: OK
+- scrollUntilVisible:
+    element:
+      id: report-section-share-1
+    direction: DOWN
+    timeout: 300000
+    centerElement: true
+- tapOn:
+    id: report-section-share-1
+- assertVisible: https://opax.invalid/reports/gambling/s/1
+- takeScreenshot: ${EVIDENCE}/38-section-share
+- tapOn: OK

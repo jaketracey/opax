@@ -24,6 +24,7 @@ import Today from '../src/features/Today';
 import { responseBytes } from './fixture-bytes';
 import { replaceAt } from './pinned';
 
+jest.mock('../src/features/reports/TodayReports', () => ({Spotlight: () => null, ReportsEntry: () => null, FromRecord: () => null, TodayCoverage: () => null}));
 jest.mock('../src/api/runtime', () => ({
   catalogs: { today: jest.fn(), todayEdition: jest.fn() },
 }));

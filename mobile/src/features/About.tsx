@@ -18,6 +18,8 @@ import {
 } from '../design/primitives';
 import { formatCount, formatDate } from '../design/format';
 import { CatalogState, isOffline } from './CatalogState';
+import { RecordRow } from './RecordRow';
+import { openRecord } from './reports/open';
 
 // Source terms summarised from portal/public/index.html, “Licences and reuse”.
 // Coverage files do not publish licence fields; never infer an open licence.
@@ -95,6 +97,12 @@ export default function About() {
           is not affiliated with any parliament, government or political party.
         </Text>
       </Group>
+      <Section title="Read the record">
+        <RecordRow title="Reports" onPress={() => openRecord('/reports', 'Reports')} testID="about-reports" />
+        <RecordRow title="Topics A–Z" onPress={() => openRecord('/subject/topic', 'Topics A–Z')} testID="about-topics" />
+        <RecordRow title="Sources & coverage" onPress={() => openRecord('/stats', 'Sources & coverage')} testID="about-stats" />
+        <RecordRow title="Methods and source terms" onPress={() => openRecord('/methods', 'Methods')} testID="about-methods" />
+      </Section>
       <Section title="Coverage" testID="about-coverage">
         {error ? (
           <Group>
@@ -271,11 +279,6 @@ export default function About() {
           Sources without public reuse rights are excluded from the public site.
           This app does not grant a new licence over source data.
         </Text>
-        <OpaxWebLink
-          label="Methods and source terms"
-          path="/methods"
-          testID="about-methods"
-        />
         <Text>OPAX code: AGPL-3.0.</Text>
         <SourceLink
           citation="OPAX source code and licence"
