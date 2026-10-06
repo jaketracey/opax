@@ -50,6 +50,8 @@ def run(step, mobile, out, expected_voice_mode=None):
     if step == "dependencies":
         cmd = dependency_command(mobile)
     elif step == "prebuild":
+        run_logged(["python3", "scripts/apply-privacy-patches.py"],
+                   out / "privacy-patches-prebuild.log", public_env=True)
         cmd = ["nice", "-n", "10", "./node_modules/.bin/expo", "prebuild", "--platform", "ios", "--clean"]
     else:
         load_credentials()  # Source the local mode-600 file inside the gated process.
@@ -76,6 +78,8 @@ def run(step, mobile, out, expected_voice_mode=None):
     # variables before Expo or Xcode build phases inherit the environment.
     run_logged(cmd, out / f"{step}-command.log", public_env=True)
     if step == "dependencies":
+        run_logged(["python3", "scripts/apply-privacy-patches.py"],
+                   out / "privacy-patches-command.log", public_env=True)
         # Reviewed pinned Skia installer copies bundled platform libraries; no network.
         run_logged(["node", "node_modules/@shopify/react-native-skia/scripts/install-libs.js"],
                    out / "native-libs-command.log", public_env=True)

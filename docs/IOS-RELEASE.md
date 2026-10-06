@@ -43,6 +43,59 @@ native identity and embedded Expo config. Production origin is always
 `https://opax.com.au`. Every run refuses root `.env*` files, disables Expo dotenv
 loading, and runs `npm ci --include=dev --ignore-scripts` from the committed
 lockfile before QA and clean prebuild. It refuses a symlinked `node_modules`.
+After each install, `scripts/apply-privacy-patches.py` validates package versions
+and pristine/patched SHA-256s, replays the reviewed patches without offsets or
+fuzz, and verifies every output. The same check runs before prebuild and in its
+config plugin. SDK upgrades must deliberately regenerate and review the patches.
+`expo-location` 57.0.20 retains location/heading support but rejects its four
+motion APIs explicitly on iOS. Reanimated 4.5.1 keeps the sensor bridge and
+returns its existing unavailable sentinel (`-1`); its CoreMotion implementation
+is excluded. Animation code is unchanged. `buildFromSource` includes these
+packages and the coupled Worklets package, plus `expo-file-system` to retain
+its privacy resource bundle.
+
+The app manifest declares local file metadata (`C617.1`), event timers
+(`35F9.1`), storage-aware offline cache writes (`E174.1`), and app-only defaults
+(`CA92.1`). The cache skips persistence when there is insufficient free space,
+while a successful online read remains usable. No disk-space value leaves the
+device. Active keyboards are scanned; declare a suitable reason only if a
+future build actually links that API and the feature meets that reason.
+CocoaPods stages React's own metadata/default/timer declarations inside each
+local prebuilt React framework slice before Xcode embeds and signs it. It also
+keeps the upstream resource bundles. The staging step refuses shared artifacts.
+
+`verify-ios-release.py` scans every Mach-O with `nm`, `otool` (loads and ObjC
+metadata), and `strings`. Both archive/IPA verification and `qa-static.ts`'s
+production native-app checks run this gate. Each used required-reason category must have a
+valid declaration in its executable bundle and in the app manifest; sibling
+SDK manifests cannot mask a missing declaration. Reports and full tool output
+are saved as `privacy-scan-archive.json` / `privacy-scan-distribution.json` and
+`privacy-symbols-archive/` / `privacy-symbols-distribution/` in release evidence.
+A signing-free scan is available with:
+
+```sh
+python3 scripts/verify-ios-release.py --privacy-only "$APP" \
+  --privacy-output "$EVIDENCE/privacy-scan.json" \
+  --privacy-evidence "$EVIDENCE/privacy-symbols"
+```
+
+CoreMotion and its purpose string are forbidden. The purpose rules cover camera,
+recording/microphone, location, contacts, photo read/write, Bluetooth, health
+read/write, calendar/reminders, tracking, Bonjour/local discovery and speech
+recognition. Playback-only AVAudioSession and ordinary internet sockets do not
+imply recording or local discovery. This conservative inventory is a static
+release gate; permissions/access modes and declared reason intent still require
+source review. The scanner cannot discover dynamically constructed API names.
+Apple's [required-reason definitions](https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api)
+are the authority for code selection.
+
+The money-map-3d lane's narrow AVCapture absence gate agrees with this gate:
+AVCapture camera imports require `NSCameraUsageDescription`, and OPAX's shipped
+permission allow-list excludes camera. When both merge, keep the single general
+binary inventory and the map lane's source/build exclusions; remove a duplicate
+camera scan if it merely repeats this rule. Never add a purpose string to excuse
+unused camera code.
+
 This replaces ignored dependency edits before bundling. With `--upload`, an
 explicit number must be at least the next number ASC reports, checked before
 archiving; missing app records or API access fail before the build.
@@ -107,7 +160,7 @@ the approved full commit:
 
 ```sh
 scripts/release-ios.sh --build-number "$BUILD" \
-  --upload --expected-commit "$QA_APPROVED_COMMIT"
+  --upload --expected-commit "$QA_APPROVED_COMMIT" --expected-voice-mode 1
 python3 scripts/asc-testflight.py 0.1.0 "$BUILD" \
   --tester "$OPAX_INTERNAL_TESTER_EMAIL" \
   --what-to-test 'Check public catalog browsing, search and saved data.'

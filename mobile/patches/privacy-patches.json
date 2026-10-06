@@ -1,0 +1,63 @@
+[
+  {
+    "package": "expo-location",
+    "version": "57.0.20",
+    "patch": "expo-location+57.0.20.patch",
+    "sha256": "d0692f446b128f26a396358561d9128ec61d9c396554afdc8d47948fef1b16eb",
+    "files": [
+      {
+        "path": "ios/LocationModule.swift",
+        "before": "09ac3bb07f1a3a5d947981e851fec8d4fcbb930ea4a93a33584cd7c4eb68db4c",
+        "after": "0cc9450458dafef6dfb226af97f5bab4a876c0287ae0cbeb1e9ae0bdaaaf7557"
+      },
+      {
+        "path": "ios/LocationExceptions.swift",
+        "before": "fc55b359aaa50001748e328ef17432cdaa8e072adc2ba4dbfc18cb7f3992ab22",
+        "after": "5a582d704392d23829cf33f290628bd867c8cc506b16e60c1e4dd855e14f2a85"
+      },
+      {
+        "path": "ios/Providers/MotionActivityStreamer.swift",
+        "before": "6fe6cfb505299f8d0b452291402087b19776f9035bb4f2c006fcd4c356e481dd",
+        "after": null
+      },
+      {
+        "path": "ios/Requesters/MotionActivityPermissionRequester.swift",
+        "before": "d018db2b0b4be268c3aa37b5f4dc511589e870e0058b7d8ce186d88921247b58",
+        "after": null
+      },
+      {
+        "path": "src/Location.ts",
+        "before": "22799cde9db06c62048d33b7813022da733283c117f2ac0cce3863d25f8aa64e",
+        "after": "273c42a54774fbda04bb27c3fadbba3be3397f2bef7b4839da066d18916ee49c"
+      },
+      {
+        "path": "build/Location.js",
+        "before": "0fe9359ff90bb84ccd64b7ed45cb48ff061534ce0b1e56922ad0b7b2385890ea",
+        "after": "2ba8345fb67b47dfc52fdcdd08cb98dd558a24ff22b44c16e1f608d2af927b13"
+      }
+    ]
+  },
+  {
+    "package": "react-native-reanimated",
+    "version": "4.5.1",
+    "patch": "react-native-reanimated+4.5.1.patch",
+    "sha256": "365b46ecb12570ae2dcda4ed3edde6bfab46e771eed12ca85cd048a88c79ce3e",
+    "files": [
+      {
+        "path": "RNReanimated.podspec",
+        "before": "93d2d5148b78e7bd0f99588cb940081f32bafce53545debac97a1a5f7103f09d",
+        "after": "28a577a77fd0ac37388f87a837e306566ea80852a14c54c83f6534a876b430eb"
+      },
+      {
+        "path": "apple/reanimated/apple/sensor/ReanimatedSensorContainer.m",
+        "before": "a1156e06524f9452be6421f55c52c7964d3022eb11e8735ee2204b007c00ebb2",
+        "after": "e76f10aab98bff1df5897b1dca3f8e21c84588d6aa2e52c14ba490a1a33f548e"
+      },
+      {
+        "path": "apple/reanimated/apple/sensor/ReanimatedSensorContainer.h",
+        "before": "827a469ccd1dbc41b1f9ab8d9bbd879e586988c2e67c98b5eefb8959cbe0d426",
+        "after": "8f68e9f1c9d31e431b89b2ab4d03b1a48bebc5b492da919666d0a77b79a85969"
+      }
+    ]
+  }
+]

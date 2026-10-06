@@ -16,10 +16,7 @@ assert.equal(
   plist.NSLocationWhenInUseUsageDescription,
   'OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere.',
 );
-assert.equal(
-  plist.NSMotionUsageDescription,
-  'OPAX doesn\'t use motion or fitness data. iOS requires this note because the location library behind "Use my location" includes motion features that OPAX never turns on.',
-);
+assert.equal(plist.NSMotionUsageDescription, undefined);
 assert(
   !plist.NSLocationAlwaysUsageDescription &&
     !plist.NSLocationAlwaysAndWhenInUseUsageDescription,
@@ -88,6 +85,27 @@ assert.deepEqual(plist.UIApplicationSceneManifest, {
     ],
   },
 });
+// The actual Sources phase must compile the patched modules rather than a
+// prebuilt framework. Grepping node_modules alone cannot prove this.
+const sources = readFileSync('ios/Pods/Pods.xcodeproj/project.pbxproj', 'utf8');
+for (const file of [
+  'LocationModule.swift',
+  'FileSystemModule.swift',
+  'ReanimatedSensorContainer.m',
+])
+  assert(
+    sources.includes(`${file} in Sources`),
+    `${file} builds from reviewed source`,
+  );
+for (const file of [
+  'MotionActivityStreamer.swift',
+  'MotionActivityPermissionRequester.swift',
+  'ReanimatedSensor.m',
+])
+  assert(
+    !sources.includes(`${file} in Sources`),
+    `${file} is excluded from compilation`,
+  );
 const delegate = readFileSync('ios/OPAX/AppDelegate.swift', 'utf8');
 assert(
   delegate.includes('ExpoAppDelegate, ExpoReactNativeFactoryProvider') &&

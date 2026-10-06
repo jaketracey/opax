@@ -18,6 +18,7 @@ import zipfile
 from urllib.parse import unquote, urlsplit
 
 sys.dont_write_bytecode = True
+from privacy_scan import scan as scan_binary_privacy
 from release_support import PRIVATE_NAMES, ReleaseError, load_credentials, matches, private_values, redact, scan_tracked
 
 GUARDS = (
@@ -30,7 +31,7 @@ SDK_PATTERN = re.compile(rb"posthog|mixpanel|amplitude|segment\.com|sentry|appsf
                          rb"firebaseanalytics|appcenter|bugsnag|datadog|fbSDK|crashlytics|heapanalytics", re.I)
 SHIPPED_FRAMEWORKS = {"ExpoModulesJSI.framework", "hermesvm.framework", "ExpoFont.framework",
                       "ExpoModulesCore.framework", "React.framework", "ReactNativeDependencies.framework",
-                      "ExpoModulesWorklets.framework", "ExpoFileSystem.framework", "ExpoLocation.framework"}
+                      "ExpoModulesWorklets.framework"}
 ANALYTICS_HOSTS = {"segment.io", "segment.com", "segmentapis.com", "posthog.com", "mixpanel.com",
                    "amplitude.com", "sentry.io", "appsflyer.com", "adjust.com", "google-analytics.com",
                    "app-measurement.com", "crashlytics.com", "heap.io", "heapanalytics.com",
@@ -66,7 +67,7 @@ SCENE_DELEGATE = "EXExpoAppSceneDelegate"
 APP_INPUTS_UNDER_SCRIPTS = {"mobile/scripts/production-block-list.json"}
 VOICE_POLICY = json.loads((Path(__file__).resolve().parent.parent / "voice-production-policy.json").read_text())
 LOCATION_PURPOSE = "OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere."
-MOTION_PURPOSE = 'OPAX doesn\'t use motion or fitness data. iOS requires this note because the location library behind "Use my location" includes motion features that OPAX never turns on.'
+
 
 
 def production_voice_enabled(value=None):
@@ -77,8 +78,7 @@ def production_voice_enabled(value=None):
 
 def verify_voice_info(info, enabled):
     permissions = {k: v for k, v in info.items() if re.fullmatch(r"NS.*UsageDescription", k)}
-    require(permissions.pop("NSMotionUsageDescription", None) == MOTION_PURPOSE,
-            "exact unused-library motion purpose string")
+    require("NSMotionUsageDescription" not in permissions, "unused motion purpose string absent")
     # The independent electorate lane uses location on device only.
     if "NSLocationWhenInUseUsageDescription" in permissions:
         require(permissions.pop("NSLocationWhenInUseUsageDescription") == LOCATION_PURPOSE,
@@ -417,7 +417,7 @@ def framework_allowlist(app):
     frameworks = list(app.rglob("*.framework"))
     require({p.name for p in frameworks} == SHIPPED_FRAMEWORKS and
             all(p.parent == app / "Frameworks" for p in frameworks) and not list(app.rglob("*.dylib")),
-            "native framework allowlist matches the nine shipped frameworks")
+            "native framework allowlist matches the shipped frameworks")
 
 
 def no_app_extensions(app, info):
@@ -569,13 +569,12 @@ def verify_app(app, args):
     check(info.get("ITSAppUsesNonExemptEncryption") is False, "standard HTTPS encryption compliance")
     check("NSAppTransportSecurity" not in info, "no ATS exception")
     voice_enabled = production_voice_enabled()
-    expected_permissions = {"NSLocationWhenInUseUsageDescription": LOCATION_PURPOSE,
-                            "NSMotionUsageDescription": MOTION_PURPOSE}
+    expected_permissions = {"NSLocationWhenInUseUsageDescription": LOCATION_PURPOSE}
     if voice_enabled:
         expected_permissions["NSMicrophoneUsageDescription"] = VOICE_POLICY["microphonePurpose"]
     check({k: v for k, v in info.items() if re.fullmatch(r"NS.*UsageDescription", k)} == expected_permissions,
-          "exact location and unused-library motion purpose strings; no other permissions" if not voice_enabled else
-          "exact location, unused-library motion and approved microphone purpose strings; no other permissions")
+          "exact location purpose string; no other permissions" if not voice_enabled else
+          "exact location and approved microphone purpose strings; no other permissions")
     check("location" not in info.get("UIBackgroundModes", []), "no background location mode")
     verify_voice_info(info, voice_enabled)
     check(True, "approved voice purpose/route/consent policy" if voice_enabled else
@@ -589,10 +588,14 @@ def verify_app(app, args):
               privacy.get("NSPrivacyCollectedDataTypes") == [] and
               not privacy.get("NSPrivacyTrackingDomains"),
               "app privacy manifest: no collected location or tracking")
+    binary_privacy = scan_binary_privacy(app,
+        output=Path(args.output).with_name("privacy-scan-" + args.kind + ".json"),
+        evidence_dir=Path(args.output).parent / ("privacy-symbols-" + args.kind))
+    check(True, "all Mach-O privacy APIs have purpose strings and bundle/app required reasons; CoreMotion absent")
     check(info.get("DTXcodeBuild") == args.xcode_build, "archive uses the selected release Xcode")
     check(no_app_extensions(app, info), "no app extensions")
     framework_allowlist(app)
-    check(True, "native framework allowlist matches the nine shipped frameworks")
+    check(True, "native framework allowlist matches the shipped frameworks")
     command("/usr/bin/codesign", "--verify", "--deep", "--strict", str(app))
     check(True, "code signatures valid")
     entitlements = plistlib.loads(command("/usr/bin/codesign", "-d", "--entitlements", ":-", str(app)))
@@ -699,7 +702,7 @@ def verify_app(app, args):
     print(f"Signing: {signing['source']} {cert_type}; {signing['identity_name']}")
     return {"commit": args.commit, "version": args.version, "build": args.build,
             "kind": args.kind, "production_voice_enabled": voice_enabled, "checks": results, "signing": signing,
-            "bundle_route_keys": route_keys, "embedded_bundles_checked": embedded_bundles,
+            "binary_privacy": binary_privacy, "bundle_route_keys": route_keys, "embedded_bundles_checked": embedded_bundles,
             "team_id_in_required_signing_metadata": team_in_metadata}
 
 
@@ -713,6 +716,18 @@ def main():
         try:
             verify_voice_bundle(args.bundle_only.read_bytes(), production_voice_enabled())
             print("PASS production voice bundle policy")
+        except (ReleaseError, OSError, ValueError) as error:
+            raise SystemExit(str(error))
+        return
+    if "--privacy-only" in sys.argv:
+        parser = argparse.ArgumentParser()
+        parser.add_argument("--privacy-only", type=Path, required=True)
+        parser.add_argument("--privacy-output", type=Path)
+        parser.add_argument("--privacy-evidence", type=Path)
+        args = parser.parse_args()
+        try:
+            report = scan_binary_privacy(args.privacy_only, output=args.privacy_output, evidence_dir=args.privacy_evidence)
+            print(f"PASS binary privacy scan: {len(report['binaries'])} binaries, {len(report['manifests'])} manifests; CoreMotion absent")
         except (ReleaseError, OSError, ValueError) as error:
             raise SystemExit(str(error))
         return

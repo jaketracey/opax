@@ -904,8 +904,7 @@ class BundleAttackTests(unittest.TestCase):
 
 class ProductionVoiceTests(unittest.TestCase):
     def info(self):
-        return {"NSMotionUsageDescription": verify.MOTION_PURPOSE,
-                "NSMicrophoneUsageDescription": verify.VOICE_POLICY["microphonePurpose"],
+        return {"NSMicrophoneUsageDescription": verify.VOICE_POLICY["microphonePurpose"],
                 "OPAXProductionVoiceEnabled": True, "OPAXVoiceConsentDefault": False,
                 "OPAXVoiceAllowedRoutes": verify.VOICE_POLICY["routes"]}
 
@@ -933,28 +932,23 @@ class ProductionVoiceTests(unittest.TestCase):
             with self.assertRaises(ReleaseError): verify.production_voice_enabled(value)
 
     def test_both_purpose_modes_and_on_device_location(self):
-        verify.verify_voice_info({"NSMotionUsageDescription": verify.MOTION_PURPOSE}, False)
+        verify.verify_voice_info({}, False)
         verify.verify_voice_info(self.info(), True)
-        for enabled, info in ((False, {"NSMotionUsageDescription": verify.MOTION_PURPOSE}), (True, self.info())):
+        for enabled, info in ((False, {}), (True, self.info())):
             info["NSLocationWhenInUseUsageDescription"] = verify.LOCATION_PURPOSE
             verify.verify_voice_info(info, enabled)
         for enabled, info in ((True, {}), (False, self.info())):
             with self.assertRaises(ReleaseError): verify.verify_voice_info(info, enabled)
 
-    def test_motion_purpose_is_required_and_exact_in_both_voice_modes(self):
+    def test_unused_motion_purpose_is_refused_in_both_voice_modes(self):
         for enabled in (False, True):
-            info = self.info() if enabled else {"NSMotionUsageDescription": verify.MOTION_PURPOSE}
+            info = self.info() if enabled else {}
             verify.verify_voice_info(info, enabled)
-            for key, value in (("NSMotionUsageDescription", "draft"),
-                               ("NSMotionUsageDescription", "Allow motion activity"),
-                               ("NSMotionUsageDescription", verify.MOTION_PURPOSE + " "),
+            for key, value in (("NSMotionUsageDescription", "unused motion"),
                                ("NSCameraUsageDescription", "unshipped"),
                                ("NSLocationAlwaysUsageDescription", verify.LOCATION_PURPOSE)):
-                with self.subTest(enabled=enabled, key=key, value=value), self.assertRaises(ReleaseError):
+                with self.subTest(enabled=enabled, key=key), self.assertRaises(ReleaseError):
                     verify.verify_voice_info({**info, key: value}, enabled)
-            info.pop("NSMotionUsageDescription")
-            with self.subTest(enabled=enabled, missing=True), self.assertRaises(ReleaseError):
-                verify.verify_voice_info(info, enabled)
 
     def test_wrong_purpose_routes_auto_consent_and_fixture_metadata_fail(self):
         for key, value in (("NSMicrophoneUsageDescription", "draft"), ("OPAXVoiceConsentDefault", True),

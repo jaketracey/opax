@@ -31,7 +31,12 @@ test.each(['0', '1'])(
       enabled ? policy.routes : undefined,
     );
     // ios/app declares no tracking and no collected data for on-device location.
-    const base = { NSPrivacyTracking: false, NSPrivacyCollectedDataTypes: [] };
+    const base = {
+      NSPrivacyTracking: false,
+      NSPrivacyCollectedDataTypes: [],
+      NSPrivacyAccessedAPITypes:
+        config.ios.privacyManifests.NSPrivacyAccessedAPITypes,
+    };
     expect(config.ios.privacyManifests).toEqual(
       enabled ? voicePrivacyManifest(base) : base,
     );
