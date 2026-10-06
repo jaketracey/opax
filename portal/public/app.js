@@ -4317,12 +4317,21 @@ async function renderPersonPay(name, sections) {
 }
 
 // --- /support: a report names its record ------------------------------------
-// The app's "Report this answer" opens /support?record=<path>. A same-site path
-// is named on the page and pre-fills the GitHub issue; anything else is ignored.
+// /support?record=<path> names the record a report is about and pre-fills the
+// GitHub issue, which is public. So only a public record's own path gets
+// through: the query and fragment are dropped (they can carry a reader's
+// search words or a sign-in token), the path must start at a record route,
+// and a segment that could be an email address, a key or a token is refused.
 const SUPPORT_ISSUES = "https://github.com/jaketracey/opax/issues/new";
+const SUPPORT_RECORD_ROOT = /^\/(?:doc|bill|bills|subject|reports|money|connections|declared|discover|explore)(?:\/|$)/;
 function supportRecord(raw) {
-  const path = String(raw || "");
-  return /^\/(?!\/)[^\s\\<>"]{0,300}$/.test(path) ? path : "";
+  const path = String(raw || "").split(/[?#]/)[0].replace(/\/+$/, "");
+  if (path.length > 300 || !SUPPORT_RECORD_ROOT.test(path)) return "";
+  const safe = path.split("/").slice(1).every((seg) =>
+    /^[\p{L}\p{N} .,'’‘&():-]{1,200}$/u.test(seg) // letters, digits and name punctuation: no "@", "=", "%" or "_"
+    && !/[A-Za-z0-9]{24,}/.test(seg) // no long unbroken run
+    && !(/[a-z]/.test(seg) && /[A-Z]/.test(seg) && /\d/.test(seg) && !/\s/.test(seg) && seg.length >= 16)); // no mixed-case key
+  return safe ? path : "";
 }
 function supportIssueUrl(path) {
   const body = [path ? `Record: ${SITE_ORIGIN}${path}` : "Record or page:", "", "What is wrong:", "", "The source that shows it:", ""].join("\n");
