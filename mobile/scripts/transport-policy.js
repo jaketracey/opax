@@ -38,6 +38,23 @@ const imageMethods = new Set([
   'getSize',
   'getSizeWithHeaders',
 ]);
+// The WebP decoder is confined to the portrait renderer. Its SDK loaders,
+// aliases, placeholders and other transport entry points remain unavailable.
+const portraitImageProps = new Set([
+  'source',
+  'style',
+  'contentFit',
+  'cachePolicy',
+  'useAppleWebpCodec',
+  'allowDownscaling',
+  'accessible',
+  'accessibilityLabel',
+  'accessibilityElementsHidden',
+  'importantForAccessibility',
+  'accessibilityIgnoresInvertColors',
+  'onDisplay',
+  'onError',
+]);
 
 /** @param {import('typescript').Node | undefined} node */
 function unwrap(node) {
@@ -132,6 +149,27 @@ function scanBoundary(path, content, cwd = process.cwd()) {
   const helpers = new Set(),
     images = new Set(['Image']),
     assets = new Set(['Asset']);
+  const portraitImages = new Set();
+  const reviewedPortraitImport = (node) => {
+    if (
+      !node ||
+      !ts.isImportDeclaration(node) ||
+      sourcePath !== 'src/design/people.tsx' ||
+      !ts.isStringLiteral(node.moduleSpecifier) ||
+      node.moduleSpecifier.text !== 'expo-image' ||
+      !node.importClause ||
+      node.importClause.name
+    )
+      return false;
+    const bindings = node.importClause.namedBindings;
+    return (
+      !!bindings &&
+      ts.isNamedImports(bindings) &&
+      bindings.elements.length === 1 &&
+      (bindings.elements[0].propertyName ?? bindings.elements[0].name).text ===
+        'Image'
+    );
+  };
   const fonts = new Set(['Font']),
     fontFunctions = new Set(),
     assetFunctions = new Set(),
@@ -173,6 +211,10 @@ function scanBoundary(path, content, cwd = process.cwd()) {
           ['Image', 'ImageBackground'].includes(imported)
         )
           images.add(local);
+        if (module === 'expo-image' && imported === 'Image') {
+          images.add(local);
+          portraitImages.add(local);
+        }
         if (module === 'react-native' && imported === 'NativeModules')
           nativeObjects.add(local);
         if (module === 'react-native' && imported === 'TurboModuleRegistry')
@@ -198,7 +240,8 @@ function scanBoundary(path, content, cwd = process.cwd()) {
         )
           helpers.add(local);
       }
-    if (forbiddenModule(module)) report(node, 'Unreviewed transport import');
+    if (forbiddenModule(module) && !reviewedPortraitImport(node))
+      report(node, 'Unreviewed transport import');
     if (importsModuleTooling(path, module, cwd))
       report(
         node,
@@ -301,8 +344,45 @@ function scanBoundary(path, content, cwd = process.cwd()) {
           'Module Node tooling cannot be imported by app or module source',
         );
     }
-    if (ts.isStringLiteral(node) && forbiddenModule(node.text))
+    if (
+      ts.isStringLiteral(node) &&
+      forbiddenModule(node.text) &&
+      !reviewedPortraitImport(node.parent)
+    )
       report(node, 'Unreviewed transport module');
+    if (
+      ts.isIdentifier(node) &&
+      portraitImages.has(node.text) &&
+      !importedName(node) &&
+      !(
+        (ts.isJsxOpeningElement(node.parent) ||
+          ts.isJsxClosingElement(node.parent) ||
+          ts.isJsxSelfClosingElement(node.parent)) &&
+        node.parent.tagName === node
+      )
+    )
+      report(
+        node,
+        'Portrait decoder may only render a policy-checked JSX image',
+      );
+    if (
+      (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) &&
+      portraitImages.has(identifier(node.tagName))
+    ) {
+      if (
+        !node.attributes.properties.some(
+          (prop) =>
+            ts.isJsxAttribute(prop) && prop.name.getText(tree) === 'source',
+        )
+      )
+        report(node, 'Portrait decoder requires a policy-checked local source');
+      for (const prop of node.attributes.properties)
+        if (
+          !ts.isJsxAttribute(prop) ||
+          !portraitImageProps.has(prop.name.getText(tree))
+        )
+          report(prop, 'Unreviewed portrait decoder prop or spread');
+    }
     if (ts.isIdentifier(node) || ts.isStringLiteral(node)) {
       if (banned.has(node.text) || (!client && node.text === 'fetch'))
         report(node, `Transport forbidden: ${node.text}`);

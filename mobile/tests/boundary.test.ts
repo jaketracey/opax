@@ -42,6 +42,44 @@ function lintBoundary(path: string, content: string) {
   return messages.filter((message) => message.ruleId === 'opax/transport');
 }
 
+test('both gates allow only the reviewed WebP renderer with the local URI guard', () => {
+  const content = `import { Image as Photo } from 'expo-image';
+    import { localImageURI } from '../api/image-policy';
+    <Photo source={{ uri: localImageURI(file) }} contentFit="contain" cachePolicy="none" />`;
+  expect(scanSource('src/design/people.tsx', content)).toEqual([]);
+  expect(lintBoundary('src/design/people.tsx', content)).toEqual([]);
+  expect(scanSource('src/design/other.tsx', content)).not.toEqual([]);
+  expect(lintBoundary('src/design/other.tsx', content).length).toBeGreaterThan(
+    0,
+  );
+});
+
+test.each([
+  `import * as SDK from 'expo-image';`,
+  `import Image from 'expo-image';`,
+  `import { Image, ImageRef } from 'expo-image';`,
+  `import { useImage } from 'expo-image';`,
+  `export { Image } from 'expo-image';`,
+  `const SDK = require('expo-image');`,
+  `import('expo-image');`,
+  `import { Image } from 'expo-image'; Image.prefetch(url);`,
+  `import { Image } from 'expo-image'; Image.loadAsync(url);`,
+  `import { Image } from 'expo-image'; const escaped = Image;`,
+  `import { Image } from 'expo-image'; <Image source={{ uri: url }} />;`,
+  `import { Image } from 'expo-image'; <Image source={{ uri: localImageURI(file) }} placeholder={url} />;`,
+  `import { Image } from 'expo-image'; <Image source={{ uri: localImageURI(file) }} {...props} />;`,
+  `import { Image } from 'expo-image'; <Image />;`,
+])(
+  'both gates refuse WebP SDK transport escapes even in the renderer: %s',
+  (snippet) => {
+    const content = `import { localImageURI } from '../api/image-policy'; ${snippet}`;
+    expect(scanSource('src/design/people.tsx', content)).not.toEqual([]);
+    expect(
+      lintBoundary('src/design/people.tsx', content).length,
+    ).toBeGreaterThan(0);
+  },
+);
+
 const reviewerLeaks = [
   [
     '01 cast global fetch',

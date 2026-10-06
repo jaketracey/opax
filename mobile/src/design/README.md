@@ -170,7 +170,10 @@ Design workbench) to see every component and state at the current text size.
   `onPress` only for roster parliamentarians with a native page.
 - `Portrait`: the unchanged website 200×200 WebP, scaled into the circle,
   or the blank fallback; never initials. `localURI` is a file in the current
-  API origin's portrait cache. Native images call `localImageURI`; remote
+  API origin's portrait cache. The reviewed WebP renderer is `expo-image` in
+  `people.tsx` only, with its own cache disabled and no downscaling. Credit is
+  shown after `onDisplay`, and hidden on `onError`. Native images call
+  `localImageURI`; remote
   images are refused by the transport gate. `CachedPortrait` resolves through
   `person-identity.ts`, the slug map and roster, uses full names or a resolved
   person_id, refuses surname/initials-only matches and conflicting face owners
