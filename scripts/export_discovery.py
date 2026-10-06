@@ -124,9 +124,10 @@ def export_discovery(source, limit=60):
         for evidence in signal["evidence"]:
             if evidence["table"] == "donations":
                 r = original_donations[evidence["record_id"]]
+                # The AEC annual receipts file carries no return or transaction ID, and
+                # donation_id is OPAX's own row number, so the label names the register only.
                 evidence["label"] = (f"{r['donor_name']} → {r['recipient']}: ${r['amount']:,.2f}"
-                                     f" · FY {r['financial_year'] or 'unknown'} · AEC annual receipt"
-                                     f" · local record {r['donation_id']}")
+                                     f" · FY {r['financial_year'] or 'unknown'} · AEC annual receipt")
                 evidence["url"] = "https://transparency.aec.gov.au/"
                 evidence["link_scope"] = "source_register"
             else:
@@ -155,7 +156,7 @@ def export_discovery(source, limit=60):
         "Concentration requires at least two positive records and a largest-participant share of at least 25%. Cards alternate signal families and rank within each family by recorded value.",
         "Concentration charts show the five largest named participants by recorded value; Other includes every remaining participant. Recorded date or financial-year spans exclude missing/invalid dates, counted separately, while their values remain in totals.",
         "Contracts reflect recorded award values, not expenditure, and are a partial corpus. Date errors and future start dates are possible; no timing inference is made.",
-        "Source links open the official source register, not an individual receipt or notice. Evidence labels carry original reported names, row amounts and local source IDs; each is one example behind the aggregate.",
+        "Source links open the official source register, not an individual receipt or notice. Evidence labels carry original reported names and row amounts, and contract labels the AusTender CN ID; each is one example behind the aggregate.",
         "Reporting thresholds, incomplete coverage and duplicated/amended disclosures can affect totals. Absence of a signal is not evidence of absence.",
     ]
     result["generated_at"] = result["coverage"]["snapshot_at"]

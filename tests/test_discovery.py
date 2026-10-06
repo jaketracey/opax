@@ -171,9 +171,11 @@ class DiscoveryTests(unittest.TestCase):
         donation, contract = overlap["evidence"]
         self.assertIn("Acme → Party A: $60.00", donation["label"])
         self.assertIn("FY 2024-25", donation["label"])
+        self.assertNotIn("record", donation["label"])  # donation_id is OPAX's own row number.
         self.assertIsNone(donation["url"])
         self.assertIn("Agency A → ACME: $1,000.00", contract["label"])
         self.assertIn("starts 2025-01-02", contract["label"])
+        self.assertTrue(contract["label"].endswith(" · record CN1"))
         self.assertEqual(contract["url"], "https://example.org/record/CN1")
 
     def test_evidence_is_batched_and_only_for_selected_cards(self):
@@ -186,17 +188,21 @@ class DiscoveryTests(unittest.TestCase):
         self.assertTrue(all(" IN (" in q for q in evidence_queries))
 
 
+PRODUCTION_SCHEMA = """
+    CREATE TABLE donations (donation_id INTEGER PRIMARY KEY, donor_name TEXT,
+        recipient TEXT, recipient_canonical TEXT, amount REAL, financial_year TEXT,
+        industry TEXT, source TEXT, donation_type TEXT);
+    CREATE TABLE contracts (contract_id TEXT PRIMARY KEY, supplier_name TEXT,
+        agency TEXT, amount REAL, start_date TEXT, source TEXT);
+    CREATE TABLE ext_donor_aliases (alias_raw TEXT, entity_id TEXT);
+    CREATE TABLE ext_donor_entities (entity_id TEXT, canonical_name TEXT, kind TEXT);
+"""
+
+
 class ProductionExportTests(unittest.TestCase):
     def test_filters_receipts_and_preserves_source_data(self):
         db = sqlite3.connect(":memory:")
-        db.executescript("""
-            CREATE TABLE donations (donation_id INTEGER PRIMARY KEY, donor_name TEXT,
-                recipient TEXT, recipient_canonical TEXT, amount REAL, financial_year TEXT,
-                industry TEXT, source TEXT, donation_type TEXT);
-            CREATE TABLE contracts (contract_id TEXT PRIMARY KEY, supplier_name TEXT,
-                agency TEXT, amount REAL, start_date TEXT, source TEXT);
-            CREATE TABLE ext_donor_aliases (alias_raw TEXT, entity_id TEXT);
-            CREATE TABLE ext_donor_entities (entity_id TEXT, canonical_name TEXT, kind TEXT);
+        db.executescript(PRODUCTION_SCHEMA + """
             INSERT INTO ext_donor_entities VALUES ('acme', 'Acme Limited', 'company');
             INSERT INTO ext_donor_aliases VALUES ('ACME LTD', 'acme');
             INSERT INTO ext_donor_entities VALUES ('dept', 'Public Department', 'government');
@@ -238,6 +244,31 @@ class ProductionExportTests(unittest.TestCase):
         with self.assertRaises(sqlite3.OperationalError):
             db.execute('DELETE FROM donations')
         db.close()
+
+    def test_labels_carry_register_ids_not_local_row_numbers(self):
+        db = sqlite3.connect(":memory:")
+        db.executescript(PRODUCTION_SCHEMA + """
+            INSERT INTO contracts VALUES ('CN3407266', 'Acme Limited', 'Agency', 300, '2024-10-01', 'austender');
+            INSERT INTO contracts VALUES ('CN3407267', 'Other Supplier', 'Agency', 100, '2024-11-01', 'austender');
+        """)
+        db.executemany('INSERT INTO donations VALUES (?,?,?,?,?,?,?,?,?)', [
+            (643745, 'Acme Limited', 'Branch A', 'Party A', 90, '2024-25', 'retail', 'aec_annual', 'direct'),
+            (643746, 'Other', 'Branch A', 'Party A', 10, None, 'other', 'aec_annual', 'direct'),
+        ])
+        db.commit()
+        result = _export_module.export_discovery(db)
+        db.close()
+        self.assertEqual({s['category'] for s in result['signals']},
+                         {'donor_contract_overlap', 'recipient_concentration', 'procurement_concentration'})
+        evidence = [e for s in result['signals'] for e in s['evidence']]
+        self.assertEqual({e['table'] for e in evidence}, {'donations', 'contracts'})
+        for item in evidence:
+            self.assertNotIn('local record', item['label'])
+            self.assertNotIn('64374', item['label'])  # No donation row number, in any form.
+        labels = {e['label'] for e in evidence}
+        self.assertIn('Acme Limited → Branch A: $90.00 · FY 2024-25 · AEC annual receipt', labels)
+        self.assertIn('Agency → Acme Limited: $300.00 · starts 2024-10-01 · austender · record CN3407266', labels)
+        self.assertFalse(any('local' in line for line in result['methodology']))
 
 
 if __name__ == "__main__":
