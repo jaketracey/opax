@@ -272,6 +272,9 @@ export class ApiClient {
                   'offline',
                   'This record is not saved on this iPhone yet. It will load when you are back online.',
                 );
+        // A bad export is not evidence that the last validated record went
+        // away. Stop retrying and serve its original source/save dates.
+        if (lastError.code === 'invalid-data') break;
         if (
           !['offline', 'timeout', 'server', 'rate-limited'].includes(
             lastError.code,
@@ -286,7 +289,16 @@ export class ApiClient {
         await this.sleep(retryDelay);
       }
     }
-    cached = (await this.options.cache.get(url)) ?? cached;
+    const latest = await this.options.cache.get(url);
+    if (latest) {
+      try {
+        this.decodeBody(latest.body, decode);
+        cached = latest;
+      } catch {
+        // Keep this request's known-good copy if another decoder cached a
+        // body this reader cannot use.
+      }
+    }
     if (cached) return result(cached, true);
     throw lastError;
   }

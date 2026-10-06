@@ -48,7 +48,7 @@ export const nullable =
 export const optional =
   <T>(decode: Decoder<T>): Decoder<T | undefined> =>
   (v) =>
-    v === undefined ? undefined : decode(v);
+    v === undefined || v === null ? undefined : decode(v);
 export const array =
   <T>(decode: Decoder<T>): Decoder<T[]> =>
   (v) => {
@@ -71,6 +71,52 @@ export const dict =
     Object.fromEntries(
       Object.entries(object(v)).map(([k, item]) => [key(k), decode(item)]),
     );
+/** Only catalog records may be skipped. Containers and structural fields
+ * still use the strict decoders above; coordinates, tuples and evidence
+ * inside a record must be whole before that record can be shown. */
+let e2eDiagnostics = false;
+export function setCatalogDiagnostics(e2e: boolean) {
+  e2eDiagnostics = e2e;
+}
+export function logDroppedRow(label: string, row: string | number) {
+  if ((typeof __DEV__ !== 'undefined' && __DEV__) || e2eDiagnostics)
+    console.warn(`Dropped malformed catalog row: ${label} [${row}]`);
+}
+export const rows =
+  <T>(decode: Decoder<T>, label = 'rows'): Decoder<T[]> =>
+  (v) => {
+    if (!Array.isArray(v)) invalid();
+    const out: T[] = [];
+    v.forEach((row, index) => {
+      try {
+        out.push(decode(row));
+      } catch (error) {
+        if (!(error instanceof ApiError) || error.code !== 'invalid-data')
+          throw error;
+        logDroppedRow(label, index);
+      }
+    });
+    return out;
+  };
+export const records =
+  <T>(
+    decode: Decoder<T>,
+    key: Decoder<string> = nonempty,
+    label = 'records',
+  ): Decoder<Record<string, T>> =>
+  (v) => {
+    const out: [string, T][] = [];
+    Object.entries(object(v)).forEach(([k, row], index) => {
+      try {
+        out.push([key(k), decode(row)]);
+      } catch (error) {
+        if (!(error instanceof ApiError) || error.code !== 'invalid-data')
+          throw error;
+        logDroppedRow(label, index);
+      }
+    });
+    return Object.fromEntries(out);
+  };
 export type Decoded<D> = D extends Decoder<infer T> ? T : never;
 type Shape<S extends Record<string, Decoder<unknown>>> = {
   [K in keyof S as undefined extends Decoded<S[K]> ? never : K]: Decoded<S[K]>;

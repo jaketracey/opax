@@ -152,10 +152,46 @@ const cases: {
 describe.each(cases)('$name decoder', ({ path, decode, badPath, bad }) => {
   test('accepts the complete hash-pinned real file', () =>
     expect(() => decode(pinned(path))).not.toThrow());
-  test('rejects a malformed nested variant', () =>
-    expect(() => decode(replaceAt(pinned(path), badPath, bad))).toThrow(
-      ApiError,
-    ));
+  const rowPaths: Record<string, (string | number)[]> = {
+    '/parliamentarians.json': ['people'],
+    [manifest.people_url]: ['people'],
+    [manifest.index_url]: ['electorates'],
+    '/electorates/releases/b56417062ccc33cf/el_5d600e7f6dca5b72ae04d686.json': [
+      'elections',
+      0,
+      'candidates',
+    ],
+    '/bills/index.json': ['bills'],
+    '/votes.json': ['10007'],
+    '/interests/index.json': ['_by_name', 'aaron violi'],
+    '/interests/10007.json': ['buckets', 'memberships', 'items'],
+    '/interests/recent.json': ['items'],
+    '/interests/ties-by-donor.json': ['donors', 'ASX Limited'],
+    '/pay.json': ['people', 'R36'],
+    '/expenses.json': ['people', '10007'],
+    '/expense-categories.json': ['categories'],
+    '/photos/people.json': ['anthony albanese'],
+    '/photos/credits.json': ['wd-Q100327610'],
+    '/graph/money.json': ['nodes'],
+  };
+  test('isolates malformed records and rejects malformed structural fields', () => {
+    const rowPath = rowPaths[path];
+    const input = replaceAt(pinned(path), badPath, bad);
+    if (!rowPath) {
+      expect(() => decode(input)).toThrow(ApiError);
+      return;
+    }
+    const output = decode(input);
+    const read = (root: unknown): unknown =>
+      rowPath.reduce<unknown>(
+        (v, key) => (v as Record<string | number, unknown>)[key],
+        root,
+      );
+    const before = read(decode(pinned(path)));
+    const after = read(output);
+    if (Array.isArray(before)) expect(after).toHaveLength(before.length - 1);
+    else expect(after).toBeUndefined();
+  });
   if (!path.startsWith('/photos/'))
     test('rejects a missing envelope', () =>
       expect(() => decode({})).toThrow(ApiError));
@@ -171,9 +207,9 @@ test('slug API validates date and names, using its pinned-source projection', ()
   expect(() => d.decodeSlugs({ ...slugs, generated: undefined })).toThrow(
     ApiError,
   );
-  expect(() =>
-    d.decodeSlugs({ ...slugs, slugs: { 'anthony-albanese': 1 } }),
-  ).toThrow(ApiError);
+  expect(
+    d.decodeSlugs({ ...slugs, slugs: { 'anthony-albanese': 1 } }).slugs,
+  ).toEqual({});
 });
 test.each(
   Object.keys(files).filter(
@@ -203,8 +239,8 @@ test('votes metadata may be absent, but malformed metadata fails closed', () => 
     schema: 1,
   };
   expect(d.decodeVotes({ ...raw, _meta: meta }).meta).toEqual(meta);
+  expect(d.decodeVotes({ ...raw, _meta: null }).meta).toBeNull();
   for (const bad of [
-    null,
     {},
     { ...meta, schema: 2 },
     { ...meta, latest_division_date: 1 },
@@ -235,10 +271,12 @@ test('search envelopes validate all shown fields and reject unapproved kinds', (
     warnings: [],
   };
   expect(d.decodeSearch(page).results).toHaveLength(1);
+  expect(
+    d.decodeSearch(replaceAt(page, ['results', 0, 'href'], undefined)).results,
+  ).toEqual([]);
   for (const p of [
     { ...page, kind: 'bill' },
     { ...page, total: -1 },
-    replaceAt(page, ['results', 0, 'href'], undefined),
   ])
     expect(() => d.decodeSearch(p)).toThrow(ApiError);
 });
@@ -256,18 +294,18 @@ test('crossed IDs, empty pay series and unsafe licence links are malformed', () 
   expect(() =>
     d.decodePay(replaceAt(pinned('/pay.json'), ['base'], [])),
   ).toThrow(ApiError);
-  expect(() =>
+  expect(
     d.decodePay(
       replaceAt(pinned('/pay.json'), ['people', 'R36', 'by_year'], []),
-    ),
-  ).toThrow(ApiError);
-  expect(() =>
+    ).people.R36,
+  ).toBeUndefined();
+  expect(
     d.decodePhotoCredits(
       replaceAt(
         pinned('/photos/credits.json'),
         ['wd-Q100327610', 'licence_url'],
         'javascript:x',
       ),
-    ),
-  ).toThrow(ApiError);
+    )['wd-Q100327610'],
+  ).toBeUndefined();
 });

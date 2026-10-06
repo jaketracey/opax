@@ -1,7 +1,12 @@
 import { createHash } from 'node:crypto';
 import snapshot from '../scripts/fixture-snapshot.json';
 import { files, servedFiles } from './pinned';
-import { decodeEdition, decodeSearch, decodeSlugs } from '../src/api/catalogs';
+import {
+  decodeEdition,
+  decodeSearch,
+  decodeSlugs,
+  decodeRoster,
+} from '../src/api/catalogs';
 import { editionPath } from '../src/api/policy';
 import { spawn, type ChildProcess } from 'node:child_process';
 import { get, request as httpRequest } from 'node:http';
@@ -452,3 +457,30 @@ test('the fixture refuses an unknown data mode at startup', async () => {
     'OPAX_FIXTURE_DATA must be pinned or changed',
   );
 });
+
+test('null-optional roster mode changes one field and preserves the People record', async () => {
+  const fixture = startFixture('pinned', 0, {
+    OPAX_FIXTURE_ROSTER: 'null-optional',
+  });
+  try {
+    await fixture.ready;
+    const response = await getAt(fixture.port(), '/parliamentarians.json');
+    expect(response.status).toBe(200);
+    const raw = JSON.parse(response.body);
+    const normal = JSON.parse((await request('/parliamentarians.json')).body);
+    const index = normal.people.findIndex(
+      (row: { pid?: string }) => row.pid === '10007',
+    );
+    normal.people[index].speeches = null;
+    expect(raw).toEqual(normal);
+    const decoded = decodeRoster(raw);
+    expect(decoded.people).toHaveLength(normal.people.length);
+    expect(decoded.people.find((row) => row.pid === '10007')).toMatchObject({
+      name: 'Anthony Albanese',
+      speeches: undefined,
+    });
+    expect(fixture.log()).toContain('pid=10007 speeches=null');
+  } finally {
+    await fixture.stop();
+  }
+}, 20000);

@@ -1,17 +1,13 @@
-import { File, Paths } from 'expo-file-system';
+import { TwoSlotStore } from '../../storage/two-slot';
 import { decodeChoice, type SeatChoice } from './model';
-const file = () => new File(Paths.document, 'opax-seat-v1.json');
-export async function loadChoice(): Promise<SeatChoice | null> {
-  const saved = file();
-  if (!saved.exists) return null;
-  try {
-    return decodeChoice(JSON.parse(await saved.text()));
-  } catch {
-    return null;
-  }
+const store = new TwoSlotStore(
+  ['opax-seat-v1.json', 'opax-seat-v1.b.json'],
+  decodeChoice,
+  (choice) => choice,
+);
+export function loadChoice(): Promise<SeatChoice | null> {
+  return store.read();
 }
-export async function saveChoice(choice: SeatChoice): Promise<void> {
-  const temporary = new File(Paths.document, 'opax-seat-v1.tmp');
-  temporary.write(JSON.stringify(choice));
-  temporary.move(file(), { overwrite: true });
+export function saveChoice(choice: SeatChoice): Promise<void> {
+  return store.save(choice);
 }

@@ -37,6 +37,20 @@ for (const path of Object.keys(snapshot.files)) {
   else assertAllowedPath(path);
   files.set(path, pinnedBytes(path));
 }
+// Robustness-only opt-in: change one optional field, preserving every
+// source fact and all other pinned bytes in the normal fixture mode.
+const rosterMode = process.env.OPAX_FIXTURE_ROSTER ?? 'pinned';
+if (!['pinned', 'null-optional'].includes(rosterMode))
+  throw new Error('OPAX_FIXTURE_ROSTER must be pinned or null-optional');
+if (rosterMode === 'null-optional') {
+  const path = '/parliamentarians.json';
+  const raw = JSON.parse(files.get(path)!.toString());
+  const row = raw.people.find((p: { pid?: string }) => p.pid === '10007');
+  if (!row) throw new Error('Null-optional fixture person is absent');
+  row.speeches = null;
+  files.set(path, Buffer.from(JSON.stringify(raw)));
+  console.log('OPAX_FIXTURE_ROSTER null-optional: pid=10007 speeches=null');
+}
 // W13 edition reader: the pinned production response, served verbatim with
 // the Worker's validators (appRead). OPAX_FIXTURE_EDITION picks the journal:
 // - pinned: the edition is posted;

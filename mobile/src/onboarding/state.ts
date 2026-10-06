@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from 'react';
 import { File, Paths } from 'expo-file-system';
+import { TwoSlotStore } from '../storage/two-slot';
 import { isE2E } from '../design/environment';
 import { e2eTourRequested } from './launch-flag';
 
@@ -16,27 +17,28 @@ import { e2eTourRequested } from './launch-flag';
 export const TOUR_VERSION = 1;
 const file = () => new File(Paths.document, 'opax-welcome-v1.json');
 
+const store = new TwoSlotStore<{ version: number }>(
+  ['opax-welcome-v1.json', 'opax-welcome-v1.b.json'],
+  (raw) => {
+    if (!raw || typeof raw !== 'object') return null;
+    const version = (raw as { version?: unknown }).version;
+    return typeof version === 'number' && Number.isSafeInteger(version)
+      ? { version }
+      : null;
+  },
+  (value) => value,
+);
 export async function tourSeen(): Promise<boolean> {
-  const saved = file();
-  if (!saved.exists) return false;
-  try {
-    const value: unknown = JSON.parse(await saved.text());
-    return (
-      typeof value === 'object' &&
-      value !== null &&
-      (value as { version?: unknown }).version === TOUR_VERSION
-    );
-  } catch {
-    // An unreadable flag is treated as seen: the tour never traps anyone,
-    // and it can be replayed from Account.
-    return true;
-  }
+  const value = await store.read();
+  if (value) return value.version === TOUR_VERSION;
+  // Preserve the legacy unreadable-flag rule: never trap a reader in the
+  // tour, and replay remains available from Account.
+  return (
+    file().exists || new File(Paths.document, 'opax-welcome-v1.b.json').exists
+  );
 }
-
-export async function markTourSeen(): Promise<void> {
-  const temporary = new File(Paths.document, 'opax-welcome-v1.tmp');
-  temporary.write(JSON.stringify({ version: TOUR_VERSION }));
-  temporary.move(file(), { overwrite: true });
+export function markTourSeen(): Promise<void> {
+  return store.save({ version: TOUR_VERSION });
 }
 
 /** Whether the first launch shows the tour. */

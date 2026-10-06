@@ -1,0 +1,45 @@
+appId: au.com.opax.app
+name: 30 People and Person survive a null optional roster field
+---
+# Run with OPAX_FIXTURE_ROSTER=null-optional. Only Anthony Albanese's
+# optional speeches field differs from the pinned public roster.
+- launchApp:
+    clearState: true
+- tapOn:
+    id: tab-search
+- assertVisible:
+    id: search-screen
+- scrollUntilVisible:
+    element:
+      id: search-input
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: search-input
+- inputText: Anthony Albanese
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: search-result-anthony-albanese
+    centerElement: true
+    timeout: 90000
+- assertVisible:
+    id: search-result-anthony-albanese
+    text: Anthony Albanese.*
+- takeScreenshot: ${EVIDENCE}/30-null-optional-people
+- tapOn:
+    id: search-result-anthony-albanese
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+      text: Anthony Albanese
+    timeout: 60000
+- takeScreenshot: ${EVIDENCE}/30-null-optional-person
+- scrollUntilVisible:
+    element:
+      id: person-party
+    centerElement: true
+    timeout: 90000
+- assertVisible:
+    id: person-party
+- takeScreenshot: ${EVIDENCE}/30-null-optional-person-party

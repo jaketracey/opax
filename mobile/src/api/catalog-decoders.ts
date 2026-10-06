@@ -13,6 +13,9 @@ import {
   nullable,
   number,
   object,
+  rows,
+  records,
+  logDroppedRow,
   optional,
   shape,
   text,
@@ -33,6 +36,13 @@ import {
 } from './ids';
 
 const strings = array(text);
+const nonemptyRows =
+  <T>(decode: (v: unknown) => T) =>
+  (v: unknown): T[] => {
+    const valid = rows(decode)(v);
+    if (!valid.length) invalid();
+    return valid;
+  };
 const maybeText = optional(nullable(text));
 const maybeDate = optional(nullable(date));
 const source = shape({
@@ -93,7 +103,7 @@ const rosterPerson = shape({
   first: optional(count),
   last: optional(count),
   representation: optional(
-    array(
+    rows(
       shape({
         jurisdiction: nonempty,
         chamber: nonempty,
@@ -106,7 +116,7 @@ const rosterPerson = shape({
 });
 export const decodeRoster = shape({
   meta: shape({ generated: date }),
-  people: array(rosterPerson),
+  people: rows(rosterPerson, 'rosterPerson'),
 });
 export type Roster = Decoded<typeof decodeRoster>;
 export type RosterPerson = Decoded<typeof rosterPerson>;
@@ -125,7 +135,7 @@ const manifestShape = shape({
   generated: date,
   index_url: nonempty,
   people_url: nonempty,
-  sources: array(source),
+  sources: rows(source, 'sources'),
   files: dict(matching(/^[a-f0-9]{64}$/)),
   coverage: shape({ jurisdictions: dict(coverageRow), notes: strings }),
 });
@@ -141,18 +151,25 @@ export function decodeManifest(v: unknown) {
 export type Manifest = ReturnType<typeof decodeManifest>;
 const peopleShape = shape({
   meta: releaseMeta,
-  people: array(electoratePerson),
+  people: rows(electoratePerson, 'electoratePerson'),
 });
 export function decodePeople(v: unknown) {
   const p = peopleShape(v);
-  if (new Set(p.people.map((p) => p.person_id)).size !== p.people.length)
-    invalid('Duplicate canonical people.');
+  const seen = new Set<string>();
+  p.people = p.people.filter((person, index) => {
+    if (seen.has(person.person_id)) {
+      logDroppedRow('people.duplicate', index);
+      return false;
+    }
+    seen.add(person.person_id);
+    return true;
+  });
   return p;
 }
 export type PeopleCatalog = Decoded<typeof decodePeople>;
 export const decodeSlugs = shape({
   generated: date,
-  slugs: dict(nonempty, personSlug),
+  slugs: records(nonempty, personSlug),
 });
 export type Slugs = Decoded<typeof decodeSlugs>;
 const electorateFields = {
@@ -164,7 +181,7 @@ const electorateFields = {
   ),
   representation_as_of: nullable(date),
   representation_status: nonempty,
-  representatives: array(
+  representatives: rows(
     shape({ party: nullable(text), person_id: personId, person: identity }),
   ),
   jurisdiction: nonempty,
@@ -181,21 +198,36 @@ const electorateFields = {
 };
 const electorate = shape(electorateFields);
 export type Electorate = Decoded<typeof electorate>;
-const indexShape = shape({ meta: releaseMeta, electorates: array(electorate) });
+const indexShape = shape({
+  meta: releaseMeta,
+  electorates: rows(electorate, 'electorate'),
+});
 export function decodeElectorateIndex(v: unknown) {
   const index = indexShape(v);
+  // If no seat belongs to the declared release, the envelope itself is
+  // crossed. Reject it so a refresh cannot replace a good index with an
+  // empty one. One crossed row beside a healthy seat is still isolated.
   if (
-    new Set(index.electorates.map((s) => s.electorate_id)).size !==
-    index.electorates.length
+    index.electorates.length &&
+    index.electorates.every(
+      (s) => s.detail_url.split('/')[3] !== index.meta.release_id,
+    )
   )
-    invalid('Duplicate electorates.');
-  for (const s of index.electorates)
+    invalid('The seat release metadata does not match its rows.');
+  const seen = new Set<string>();
+  index.electorates = index.electorates.filter((s, row) => {
     if (
+      seen.has(s.electorate_id) ||
       s.detail_url !==
         `/electorates/releases/${index.meta.release_id}/${s.electorate_id}.json` ||
       s.representatives.some((r) => r.person_id !== r.person.person_id)
-    )
-      invalid('The seat IDs do not match their release.');
+    ) {
+      logDroppedRow('electorates.identity', row);
+      return false;
+    }
+    seen.add(s.electorate_id);
+    return true;
+  });
   return index;
 }
 export type ElectorateIndex = Decoded<typeof decodeElectorateIndex>;
@@ -216,17 +248,17 @@ const candidate = shape({
 });
 const election = shape({
   election: shape({ poll_date: date, kind: nonempty, name: nonempty }),
-  candidates: array(candidate),
+  candidates: rows(candidate, 'candidate'),
   sources: strings,
   election_id: nonempty,
   status: nonempty,
 });
 const electorateShape = shape({
   ...electorateFields,
-  boundaries: array(decodeBoundary),
-  elections: array(election),
-  sources: dict(source),
-  demographics: array(
+  boundaries: rows(decodeBoundary, 'decodeBoundary'),
+  elections: rows(election, 'election'),
+  sources: records(source, nonempty, 'sources'),
+  demographics: rows(
     shape({
       year: count,
       vintage: nonempty,
@@ -235,7 +267,7 @@ const electorateShape = shape({
       sources: strings,
     }),
   ),
-  relations: array(
+  relations: rows(
     shape({
       kind: nonempty,
       related_id: electorateId,
@@ -251,7 +283,7 @@ const electorateShape = shape({
       vintage: text,
     }),
   ),
-  rosters: array(
+  rosters: rows(
     shape({
       as_of: date,
       capacity: count,
@@ -260,7 +292,7 @@ const electorateShape = shape({
       sources: strings,
     }),
   ),
-  terms: array(
+  terms: rows(
     shape({
       person_id: personId,
       start: nullable(date),
@@ -273,17 +305,27 @@ const electorateShape = shape({
       party_periods: array(period),
     }),
   ),
-  people: dict(identity, personId),
+  people: records(identity, personId),
 });
 export function decodeElectorate(v: unknown) {
   const s = electorateShape(v);
-  if (
-    s.representatives.some((r) => r.person_id !== r.person.person_id) ||
-    Object.entries(s.people).some(([id, p]) => id !== p.person_id)
-  )
-    invalid('The seat person IDs do not agree.');
-  if (s.boundaries.some((b) => b.electorate_id !== s.electorate_id))
-    invalid('The outline belongs to another seat.');
+  s.representatives = s.representatives.filter((r, row) => {
+    if (r.person_id === r.person.person_id) return true;
+    logDroppedRow('seat.representatives.identity', row);
+    return false;
+  });
+  s.people = Object.fromEntries(
+    Object.entries(s.people).filter(([id, p], row) => {
+      if (id === p.person_id) return true;
+      logDroppedRow('seat.people.identity', row);
+      return false;
+    }),
+  );
+  s.boundaries = s.boundaries.filter((b, row) => {
+    if (b.electorate_id === s.electorate_id) return true;
+    logDroppedRow('seat.boundaries.identity', row);
+    return false;
+  });
   return s;
 }
 export type ElectorateDetail = Decoded<typeof decodeElectorate>;
@@ -320,7 +362,7 @@ export const decodeBillIndex = shape({
     party_basis: nonempty,
     party_coverage: partyCoverage,
   }),
-  bills: array(bill),
+  bills: rows(bill, 'bill'),
 });
 export type BillIndex = Decoded<typeof decodeBillIndex>;
 const billSource = shape({
@@ -370,7 +412,7 @@ export const decodeBill = shape({
     nullable(shape({ url, opens: date, closes: nullable(date), note: text })),
   ),
   related: optional(
-    array(
+    rows(
       shape({
         kind: nonempty,
         key: billKey,
@@ -382,14 +424,14 @@ export const decodeBill = shape({
   ),
   became: optional(nullable(billKey)),
   sponsor_person_id: nullable(rosterId),
-  key_dates: array(
+  key_dates: rows(
     shape({ stage: nonempty, date, house: nullable(text), url: nullable(url) }),
   ),
-  sources: array(billSource),
+  sources: rows(billSource, 'billSource'),
   summary: nullable(summary),
-  divisions: array(division),
-  speeches: array(speech),
-  acts: array(
+  divisions: rows(division, 'division'),
+  speeches: rows(speech, 'speech'),
+  acts: rows(
     shape({ title: nonempty, frl_uri: url, assent_date: nullable(date) }),
   ),
 });
@@ -415,6 +457,7 @@ const vote = shape({
 });
 export type VoteRecord = Decoded<typeof vote>;
 export type VoteBill = Decoded<typeof voteBill>;
+const recordsOfVoteNames = records(array(voteKey));
 const votesMeta = shape({
   content_changed_at: date,
   latest_division_date: nullable(date),
@@ -430,18 +473,26 @@ export interface Votes {
 export function decodeVotes(v: unknown): Votes {
   const raw = object(v);
   const records: Record<string, VoteRecord> = {};
+  const dropped = new Set<string>();
   for (const [k, row] of Object.entries(raw)) {
     if (k === '_names' || k === '_meta') continue;
-    records[voteKey(k)] = vote(row);
+    try {
+      records[voteKey(k)] = vote(row);
+    } catch {
+      dropped.add(k);
+      logDroppedRow('votes', dropped.size - 1);
+    }
   }
-  const names = dict(array(voteKey))(raw._names);
+  const names = recordsOfVoteNames(raw._names);
+  for (const name of Object.keys(names))
+    names[name] = names[name]!.filter((key) => !dropped.has(key));
   if (
     Object.values(names).some((keys) =>
       keys.some((k) => !Object.hasOwn(records, k)),
     )
   )
     invalid('The voting name index points to a missing record.');
-  const meta = raw._meta === undefined ? null : votesMeta(raw._meta);
+  const meta = raw._meta == null ? null : votesMeta(raw._meta);
   if (meta && meta.schema !== 1) invalid('The voting schema is unsupported.');
   return { records, names, meta };
 }
@@ -483,8 +534,8 @@ const detailTie = shape({
 });
 export const decodeInterestIndex = shape({
   _meta: shape({ generated: date, rows: count, people: count }),
-  _by_name: dict(interestKey),
-  people: dict(shape({ name: nonempty, total: count }), interestKey),
+  _by_name: records(interestKey),
+  people: records(shape({ name: nonempty, total: count }), interestKey),
 });
 export type InterestIndex = Decoded<typeof decodeInterestIndex>;
 export const decodeInterest = shape({
@@ -499,8 +550,8 @@ export const decodeInterest = shape({
   ocr_rows: count,
   unread_pages: optional(count),
   alterations: shape({ added: count, deleted: count }),
-  buckets: dict(shape({ count, items: array(registerRow) })),
-  ties: optional(array(detailTie)),
+  buckets: records(shape({ count, items: rows(registerRow, 'registerRow') })),
+  ties: optional(rows(detailTie, 'detailTie')),
 });
 export type InterestDetail = Decoded<typeof decodeInterest>;
 const recentDeclaration = shape({
@@ -527,7 +578,7 @@ export const decodeRecentInterests = shape({
     available: count,
     limit: count,
   }),
-  items: array(recentDeclaration),
+  items: rows(recentDeclaration, 'recentDeclaration'),
 });
 export type RecentInterests = Decoded<typeof decodeRecentInterests>;
 const donorTie = shape({
@@ -551,7 +602,7 @@ export const decodeInterestTies = shape({
     donors: count,
     rows: count,
   }),
-  donors: dict(array(donorTie)),
+  donors: records(rows(donorTie, 'donorTie')),
 });
 export type InterestTies = Decoded<typeof decodeInterestTies>;
 const paySource = shape({
@@ -617,12 +668,12 @@ export const decodePay = shape({
     generated: date,
     as_of: date,
     from: date,
-    sources: array(paySource),
+    sources: rows(paySource, 'pay.sources'),
     method: nonempty,
-    not_covered: array(shape({ id: nonempty, text: nonempty })),
+    not_covered: rows(shape({ id: nonempty, text: nonempty })),
     electorate_allowance: shape({ min: number, max: number, source: nonempty }),
   }),
-  base: nonemptyArray(
+  base: nonemptyRows(
     shape({
       from: date,
       amount: number,
@@ -630,10 +681,10 @@ export const decodePay = shape({
       url,
     }),
   ),
-  offices: dict(
+  offices: records(
     shape({ label: nonempty, kind: nonempty, pct: number, source: nonempty }),
   ),
-  current: array(
+  current: rows(
     shape({
       id: payId,
       name: nonempty,
@@ -644,8 +695,8 @@ export const decodePay = shape({
       salary: number,
     }),
   ),
-  names: dict(payId),
-  people: dict(payPerson, payId),
+  names: records(payId),
+  people: records(payPerson, payId),
 });
 export type Pay = Decoded<typeof decodePay>;
 const expensePerson = shape({
@@ -678,8 +729,8 @@ export const decodeExpenses = shape({
     rows: count,
     unlinked: shape({ names: count, amount: number }),
   }),
-  names: dict(legacyPersonId),
-  people: dict(expensePerson, legacyPersonId),
+  names: records(legacyPersonId),
+  people: records(expensePerson, legacyPersonId),
 });
 export type Expenses = Decoded<typeof decodeExpenses>;
 export const decodeExpenseCategories = shape({
@@ -691,8 +742,8 @@ export const decodeExpenseCategories = shape({
     licence_url: url,
     updated: date,
   }),
-  groups: array(shape({ id: nonempty, title: nonempty, blurb: text })),
-  categories: array(
+  groups: rows(shape({ id: nonempty, title: nonempty, blurb: text })),
+  categories: rows(
     shape({
       name: nonempty,
       group: nonempty,
@@ -704,9 +755,9 @@ export const decodeExpenseCategories = shape({
   ),
 });
 export type ExpenseCategories = Decoded<typeof decodeExpenseCategories>;
-export const decodePhotoPeople = dict(portraitKey);
+export const decodePhotoPeople = records(portraitKey);
 export type PhotoPeople = Decoded<typeof decodePhotoPeople>;
-export const decodePhotoCredits = dict(
+export const decodePhotoCredits = records(
   shape({
     artist: text,
     attribution: text,
@@ -730,7 +781,7 @@ export const decodeMoney = shape({
     exclusions: strings,
     party_totals_note: nonempty,
   }),
-  nodes: array(
+  nodes: rows(
     shape({
       id: nonempty,
       label: nonempty,
@@ -744,7 +795,7 @@ export const decodeMoney = shape({
       byYear: dict(yearAmount),
     }),
   ),
-  edges: array(
+  edges: rows(
     shape({
       source: nonempty,
       target: nonempty,
@@ -759,7 +810,7 @@ export const decodeCorpus = shape({
   version: date,
   expected_resources: count,
   collected_speeches: count,
-  sources: array(shape({ name: nonempty, docs: count, coverage: nonempty })),
+  sources: rows(shape({ name: nonempty, docs: count, coverage: nonempty })),
   inclusion: nonempty,
   known_defects: strings,
   refresh: shape({
@@ -852,11 +903,12 @@ export function decodeDiscovery(value: unknown) {
   const envelope = discoveryEnvelope(value);
   const signals: Decoded<typeof discoverySignal>[] = [];
   let unreadable = 0;
-  for (const raw of envelope.signals) {
+  for (const [index, raw] of envelope.signals.entries()) {
     try {
       signals.push(discoverySignal(raw));
     } catch {
       unreadable += 1;
+      logDroppedRow('discovery.signals', index);
     }
   }
   return { ...envelope, signals, unreadable };
@@ -866,7 +918,7 @@ export type DiscoverySignal = Discovery['signals'][number];
 export const decodeSearch = shape({
   query: text,
   kind: matching(/^(?:person|interest|pay|expense)$/),
-  results: array(
+  results: rows(
     shape({
       kind: matching(/^(?:person|interest|pay|expense)$/),
       title: nonempty,
@@ -962,15 +1014,17 @@ const slide = (v: unknown): EditionSlide => {
   return { type, ...otherSlide(row) };
 };
 const slides = (v: unknown): EditionSlide[] => {
-  const rows = array(slide)(v);
+  const valid = rows(slide, 'edition.slides')(v);
+  // Cover, source and minimum length are structural: a journal cannot
+  // present a partial slideshow without its opening or attribution.
   if (
-    rows.length < 3 ||
-    rows.length > 10 ||
-    rows[0]!.type !== 'cover' ||
-    rows.at(-1)!.type !== 'source'
+    valid.length < 3 ||
+    valid.length > 10 ||
+    valid[0]!.type !== 'cover' ||
+    valid.at(-1)!.type !== 'source'
   )
     invalid();
-  return rows;
+  return valid;
 };
 const edition = exact({
   date: calendarDay,
@@ -1036,11 +1090,11 @@ export const decodeAecExtras = shape({
     licence: nonempty,
     notes: strings,
   }),
-  parties: dict(
+  parties: records(
     shape({
       associated_entities_total: optional(count),
       associated_entities: optional(
-        array(
+        rows(
           shape({
             name: nonempty,
             year: nonempty,
