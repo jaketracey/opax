@@ -129,7 +129,7 @@ export function RecordBlock<T>({
         <EmptyState
           message={
             block.partial
-              ? 'This record could not be read in the latest public export.'
+              ? 'No readable record was found for this person. Some rows in the latest public export were unreadable.'
               : missing
           }
           testID={`${id}-missing`}

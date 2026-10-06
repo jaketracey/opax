@@ -442,7 +442,7 @@ test('a malformed voting name bridge fails the file instead of enabling a legacy
 });
 
 test.each([true, false])(
-  'an absent Person vote block distinguishes unreadable data (partial=%s) from no held record',
+  'an absent Person vote block describes catalog completeness (partial=%s)',
   (partial) => {
     let renderer!: TestRenderer.ReactTestRenderer;
     act(() => {
@@ -472,14 +472,14 @@ test.each([true, false])(
       .join(' ');
     if (partial) {
       expect(words).toContain(
-        'This record could not be read in the latest public export.',
+        'No readable record was found for this person. Some rows in the latest public export were unreadable.',
       );
       expect(words).not.toContain('No voting summary is held');
     } else {
       expect(words).toContain(
         'No voting summary is held for this person in the release.',
       );
-      expect(words).not.toContain('This record could not be read');
+      expect(words).not.toContain('No readable record was found');
     }
     act(() => renderer.unmount());
   },
