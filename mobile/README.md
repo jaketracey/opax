@@ -556,15 +556,18 @@ The cached seat file now draws a tile-free Skia outline. Your MP can suggest a f
 
 Recorded party labels push `/party/<slug>` in the current tab's stack. Independent,
 unaligned and other non-party affiliations stay plain text and never resolve as
-parties. Slugs come
+parties; Independent keeps its grey dot, as a label only. Slugs come
 from recorded labels; `partyIdentity` and `samePartyLabel` provide the existing
 identity rules, with no prefix matching or new aliases. A catalog-confirmed
-absence opens the existing web party page; a failed read offers retry.
+absence opens the existing web party page; a failed read offers retry. A
+profile's Party receipts button resolves its party with the same `resolveParty`.
 
 The page reads the roster and dated people release for current members, with
 unknown affiliation status in a separate Recorded disclosure and former members
-excluded. Recorded rows require full names, omit current-person/current-seat
-overlaps, and show no unverified roster place or chamber. Each member opens its
+excluded. Recorded rows require full names, omit current people, and omit a
+person only when every parliament and chamber they are recorded in has their
+seat held by someone else (a former federal MP now in a state house without
+dated seats stays). They show no unverified roster place or chamber. Each member opens its
 native profile. Receipt totals and rank read
 `/graph/money.json` directly; displayed donor flows do not replace the party
 node total. Donors retain year keys and the graph's exclusions. Associated
