@@ -16,6 +16,10 @@ assert.equal(
   plist.NSLocationWhenInUseUsageDescription,
   'OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere.',
 );
+assert.equal(
+  plist.NSMotionUsageDescription,
+  'OPAX doesn\'t use motion or fitness data. iOS requires this note because the location library behind "Use my location" includes motion features that OPAX never turns on.',
+);
 assert(
   !plist.NSLocationAlwaysUsageDescription &&
     !plist.NSLocationAlwaysAndWhenInUseUsageDescription,

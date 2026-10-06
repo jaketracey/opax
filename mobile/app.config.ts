@@ -10,6 +10,8 @@ import {
 type Variant = 'development' | 'e2e' | 'production';
 const variant = (process.env.OPAX_VARIANT ?? 'development') as Variant;
 const productionVoice = productionVoiceEnabled(variant);
+const motionPurpose =
+  'OPAX doesn\'t use motion or fitness data. iOS requires this note because the location library behind "Use my location" includes motion features that OPAX never turns on.';
 const buildNumber = process.env.OPAX_BUILD_NUMBER ?? '1';
 if (!/^[1-9][0-9]*$/.test(buildNumber)) {
   throw new Error('OPAX_BUILD_NUMBER must be a positive integer');
@@ -75,6 +77,7 @@ const config: ExpoConfig = {
       ITSAppUsesNonExemptEncryption: false,
       NSLocationWhenInUseUsageDescription:
         'OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere.',
+      NSMotionUsageDescription: motionPurpose,
       ...(variant === 'e2e' ? { OPAXVoiceFixturePort: port } : {}),
       ...(variant === 'e2e' || localDevelopment
         ? {
@@ -101,7 +104,7 @@ const config: ExpoConfig = {
         locationWhenInUsePermission:
           'OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere.',
         locationAlwaysPermission: false,
-        motionUsagePermission: false,
+        motionUsagePermission: motionPurpose,
         locationAlwaysAndWhenInUsePermission: false,
       },
     ],

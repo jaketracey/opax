@@ -66,6 +66,7 @@ SCENE_DELEGATE = "EXExpoAppSceneDelegate"
 APP_INPUTS_UNDER_SCRIPTS = {"mobile/scripts/production-block-list.json"}
 VOICE_POLICY = json.loads((Path(__file__).resolve().parent.parent / "voice-production-policy.json").read_text())
 LOCATION_PURPOSE = "OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere."
+MOTION_PURPOSE = 'OPAX doesn\'t use motion or fitness data. iOS requires this note because the location library behind "Use my location" includes motion features that OPAX never turns on.'
 
 
 def production_voice_enabled(value=None):
@@ -76,6 +77,8 @@ def production_voice_enabled(value=None):
 
 def verify_voice_info(info, enabled):
     permissions = {k: v for k, v in info.items() if re.fullmatch(r"NS.*UsageDescription", k)}
+    require(permissions.pop("NSMotionUsageDescription", None) == MOTION_PURPOSE,
+            "exact unused-library motion purpose string")
     # The independent electorate lane uses location on device only.
     if "NSLocationWhenInUseUsageDescription" in permissions:
         require(permissions.pop("NSLocationWhenInUseUsageDescription") == LOCATION_PURPOSE,
@@ -566,12 +569,13 @@ def verify_app(app, args):
     check(info.get("ITSAppUsesNonExemptEncryption") is False, "standard HTTPS encryption compliance")
     check("NSAppTransportSecurity" not in info, "no ATS exception")
     voice_enabled = production_voice_enabled()
-    expected_permissions = {"NSLocationWhenInUseUsageDescription": LOCATION_PURPOSE}
+    expected_permissions = {"NSLocationWhenInUseUsageDescription": LOCATION_PURPOSE,
+                            "NSMotionUsageDescription": MOTION_PURPOSE}
     if voice_enabled:
         expected_permissions["NSMicrophoneUsageDescription"] = VOICE_POLICY["microphonePurpose"]
     check({k: v for k, v in info.items() if re.fullmatch(r"NS.*UsageDescription", k)} == expected_permissions,
-          "exact foreground-only location purpose string; no other permissions" if not voice_enabled else
-          "exact foreground-only location and approved microphone purpose strings; no other permissions")
+          "exact location and unused-library motion purpose strings; no other permissions" if not voice_enabled else
+          "exact location, unused-library motion and approved microphone purpose strings; no other permissions")
     check("location" not in info.get("UIBackgroundModes", []), "no background location mode")
     verify_voice_info(info, voice_enabled)
     check(True, "approved voice purpose/route/consent policy" if voice_enabled else

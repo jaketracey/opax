@@ -14,6 +14,8 @@ import {
   assertNoVoiceFixtures,
 } from './release-bundle-policy';
 const productionVoice = productionVoiceEnabled('production');
+const motionPurpose =
+  'OPAX doesn\'t use motion or fitness data. iOS requires this note because the location library behind "Use my location" includes motion features that OPAX never turns on.';
 function config(variant: string) {
   return JSON.parse(
     execFileSync(
@@ -28,7 +30,7 @@ function config(variant: string) {
 }
 const release = config('production');
 const e2e = config('e2e');
-for (const variant of ['production', 'e2e']) {
+for (const variant of ['production', 'e2e', 'development']) {
   const introspected = JSON.parse(
     execFileSync(
       './node_modules/.bin/expo',
@@ -62,6 +64,7 @@ for (const variant of ['production', 'e2e']) {
     native.NSLocationWhenInUseUsageDescription,
     'OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere.',
   );
+  assert.equal(native.NSMotionUsageDescription, motionPurpose);
   assert(
     !native.NSLocationAlwaysUsageDescription &&
       !native.NSLocationAlwaysAndWhenInUseUsageDescription,
@@ -73,6 +76,7 @@ for (const variant of ['production', 'e2e']) {
       .sort(),
     [
       'NSLocationWhenInUseUsageDescription',
+      'NSMotionUsageDescription',
       ...(variant === 'production' && productionVoice
         ? ['NSMicrophoneUsageDescription']
         : []),
@@ -99,7 +103,7 @@ for (const variant of ['production', 'e2e']) {
       !native.NSAppTransportSecurity,
       'CNG must remove release ATS exceptions',
     );
-  } else {
+  } else if (variant === 'e2e') {
     assert.equal(
       native.OPAXVoiceFixturePort,
       Number(process.env.OPAX_FIXTURE_PORT ?? 8910),
@@ -137,6 +141,7 @@ for (const app of [release, e2e]) {
       ? policy.microphonePurpose
       : undefined,
   );
+  assert.equal(app.ios.infoPlist.NSMotionUsageDescription, motionPurpose);
   assert.equal(app.updates.enabled, false);
   // SDK 57's built-in deployment target; the scene plugin passes no deprecated
   // expo-build-properties target.
@@ -297,6 +302,13 @@ if (appIndex !== -1) {
   assert.equal(
     plist.NSLocationWhenInUseUsageDescription,
     'OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere.',
+  );
+  assert.equal(plist.NSMotionUsageDescription, motionPurpose);
+  assert.deepEqual(
+    Object.keys(plist)
+      .filter((key) => /^NS.*UsageDescription$/.test(key))
+      .sort(),
+    ['NSLocationWhenInUseUsageDescription', 'NSMotionUsageDescription'].sort(),
   );
   assert(
     !plist.NSLocationAlwaysUsageDescription &&
