@@ -5234,7 +5234,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   const roster = (await loadParliamentarians())?.people?.find((p) => p.name.toLowerCase() === String(name).toLowerCase());
   if (currentSubjectKey !== key) return;
   const partyNow = roster?.party_now || null;
-  const { profileJurisdictions } = await import('/profile-jurisdictions.js?v=20260909-1');
+  const { profileJurisdictions, profileAffiliations } = await import('/profile-jurisdictions.js?v=20261006-1');
   if (currentSubjectKey !== key) return;
   const representation = profileJurisdictions(roster);
   const party = partyNow || spokeAs;
@@ -5308,6 +5308,11 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     representation.jurisdictions.length && ["Jurisdiction", representation.jurisdictions.map(j=>`<a href="${esc(searchHash('',{state:j.id,kind:'speech'}))}">${esc(j.label)}</a>`).join(', ')],
     representation.chambers.length && ["Chamber", esc(representation.chambers.join(', '))],
     ...electorateRows,
+    profileAffiliations(roster).length && ["Parliamentary service", profileAffiliations(roster).map(r =>
+      `${esc(r.jurisdictionLabel)} · ${esc(r.chamberLabel)} · ${esc(r.electorate)} · ${esc(r.party || 'Party not recorded')}<br>` +
+      `${esc(r.start)} – ${esc(r.end || 'ongoing at the review date')}` +
+      (r.source_url ? ` <a href="${esc(r.source_url)}" target="_blank" rel="noopener noreferrer">Source ↗︎</a>` : '')
+    ).join('<br><br>')],
     dates.length && ["Indexed speeches span", `${esc(fmtDate(dates[0]))} – ${esc(fmtDate(dates[dates.length - 1]))}`],
     fitsInfoRow(fits, "people", name),
   ], "", [

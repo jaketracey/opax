@@ -31,6 +31,21 @@ test('former members, state members and statewide councils', () => {
   assert.equal(personTitle('Shoebridge', null, 'Speeches'), 'Shoebridge · OPAX');
 });
 
+test('dated current service chooses the chamber and party for a career spanning parliaments', () => {
+  const latham = { name: 'Mark Latham', party: 'Independent', party_now: 'Independent', current: true,
+    states: ['federal', 'nsw'], last: 2026,
+    representation: [seat('Werriwa', 'representatives'), seat('New South Wales', 'nsw_lc', 'nsw')],
+    affiliations: [
+      { ...seat('Werriwa', 'representatives'), start: '1994-01-29', end: '2005-01-21', party: 'Labor' },
+      { ...seat('New South Wales', 'nsw_lc', 'nsw'), start: '2023-08-22', end: null, party: 'Independent' },
+    ] };
+  assert.equal(roleLine(personRole(latham, 2026)), 'Independent MLC (NSW)');
+  assert.doesNotMatch(personTitle(latham.name, personRole(latham, 2026), 'Speeches'), /Werriwa|MP,/);
+  // A mismatched or future service cannot supply a party for another seat.
+  latham.affiliations[1].start = '2027-01-01';
+  assert.equal(personRole(latham, 2026).federal, true);
+});
+
 test('a long title drops the suffix, then the state, then the party', () => {
   const r = { name: 'Concetta Fierravanti-Wells', former: 'former ', party: 'Liberal', role: 'Senator for New South Wales', tag: '', federal: true };
   const t = personTitle(r.name, r, 'Speeches, votes & interests');

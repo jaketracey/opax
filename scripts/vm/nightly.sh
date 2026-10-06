@@ -387,6 +387,16 @@ if [ "${OPAX_TEST_GATE:-1}" != 0 ]; then
   fi
 fi
 
+# Reconcile derived roster evidence only after the final data validation/test
+# gate. Replacements remove stale generated fields; orphaned owned profiles are
+# retired. Rehearsals suppress KB writes with OPAX_PERIODIC_SYNC_KB=0.
+if [ -f scripts/reconcile_roster_profiles.py ] && [ "${OPAX_ROSTER_SYNC_KB:-${OPAX_PERIODIC_SYNC_KB:-1}}" = 1 ]; then
+  log "reconciling owned roster-profile KB records (replace stale, retire orphaned)"
+  run "$PY" scripts/reconcile_roster_profiles.py --env .env --apply \
+    --output "$PIPE/roster-profile-plan.json" --backup "$PIPE/roster-profile-backups" \
+    || fail "roster-profile reconciliation failed; retry next night (plan and backups retained)"
+fi
+
 # ---- 5. corpus manifest + cache epoch ---------------------------------------------------------------------
 RESULT_JSON=$(mktemp)
 # corpus.json is what starts the deploy (deploy.yml runs on pushes that change it). So it must change

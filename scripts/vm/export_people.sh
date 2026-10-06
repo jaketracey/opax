@@ -11,8 +11,9 @@ PY="${PY:-.venv/bin/python}"
 DB="${OPAX_DB:-$HOME/.cache/autoresearch/parli.db}"
 T=$(mktemp -d "${TMPDIR:-/tmp}/people.XXXXXX")
 trap 'rm -rf "$T"' EXIT
-"$PY" scripts/export_parliamentarians.py > "$T/directory.json"
+"$PY" scripts/export_parliamentarians.py --defer-check > "$T/directory.json"
 sqlite3 -readonly -json "$DB" "SELECT full_name, state, chamber, electorate, entered_house, left_house FROM members" > "$T/members.json"
 "$PY" scripts/enrich_profile_jurisdictions.py --members "$T/members.json" --directory "$T/directory.json" \
     --research portal/public/research/mlci.json >&2
+"$PY" scripts/export_parliamentarians.py --check-directory "$T/directory.json" >&2
 cat "$T/directory.json"

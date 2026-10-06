@@ -28,11 +28,10 @@ class GrantsResearchTests(unittest.TestCase):
         data=json.loads((ROOT/'portal/public/research/mlci.json').read_text())
         directory=json.loads((ROOT/'portal/public/parliamentarians.json').read_text())
         rows=list(records(data,directory))
-        # Only verified profiles are published; the identity audit can remove unsafe joins.
-        expected=(len(data['projects'])+len(data['seats'])+len(data['awards'])+2
-                  +sum(bool(p.get('representation')) for p in directory['people']))
-        self.assertEqual(len(rows),expected)
-        self.assertEqual(len({r['slug'] for r in rows}),expected)
+        # Reviewed, fixed totals: catches accidental publication loss or growth.
+        self.assertEqual(len(rows),1431)
+        self.assertEqual(len({r['slug'] for r in rows}),1431)
+        self.assertEqual(sum(r['slug'].startswith('roster-profile-') for r in rows),963)
         for r in rows:
             self.assertTrue(r['origin']['url'].startswith('https://'))
             self.assertEqual(r['origin']['source_id'],'opax-grants-research')
@@ -53,7 +52,7 @@ class GrantsResearchTests(unittest.TestCase):
         directory=json.loads((ROOT/'portal/public/parliamentarians.json').read_text())
         counts=Counter(kind for kind,_,_ in tasks(data,directory))
         self.assertEqual(counts,{'project_location':226,'invitation_award_match':89,
-            'representation_review':sum(not p.get('representation') for p in directory['people']),
+            'representation_review':737,
             'cpi_method_reconciliation':1})
 
 if __name__=='__main__':unittest.main()

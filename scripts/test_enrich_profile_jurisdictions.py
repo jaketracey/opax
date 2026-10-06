@@ -88,7 +88,7 @@ class PinnedServiceTests(unittest.TestCase):
         stitt['representation'] = [dict(jurisdiction='vic', chamber='vic_lc', state='VIC',
                                        electorate='Western Metropolitan – Minister for Mental Health')]
         self.repair([ros, stitt])
-        self.assertEqual([r['electorate'] for r in ros['representation']], ['Kalkallo'])
+        self.assertEqual([r['electorate'] for r in ros['representation']], ['Kalkallo', 'Yuroke'])
         self.assertEqual([r['electorate'] for r in stitt['representation']], ['Western Metropolitan'])
 
     def test_pinned_repair_is_idempotent_and_the_whole_shipped_roster_passes(self):
@@ -96,9 +96,11 @@ class PinnedServiceTests(unittest.TestCase):
         self.assertEqual(self.repair(copy.deepcopy(rows)), [])
         for p in rows:
             if identity.mixed_print(p):
-                for field in ('pid', 'full', 'party', 'parties', 'current', 'party_now'):
-                    self.assertNotIn(field, p, p['name'])
-                self.assertFalse(p.get('representation'), p['name'])
+                own = profiles.print_identity(p, profiles.dated_records(self.reference, self.reviewed), self.reference)
+                if not own:
+                    for field in ('pid', 'full', 'party', 'parties', 'current', 'party_now'):
+                        self.assertNotIn(field, p, p['name'])
+                    self.assertFalse(p.get('representation'), p['name'])
 
     def test_legitimate_spelling_changes_and_seat_moves_keep_their_records(self):
         rows = json.loads((profiles.PUBLIC/'parliamentarians.json').read_text())['people']
@@ -113,9 +115,69 @@ class PinnedServiceTests(unittest.TestCase):
 
 
 class GeneralGuardTests(unittest.TestCase):
+    def test_one_dated_candidate_keeps_identity_but_a_second_candidate_refuses_it(self):
+        row=person('Smith',['vic','federal'],['vic_la','senate_committee'],2020,2022,
+                   full='Alex Smith',party='Labor',witness_rows=1)
+        records=[dict(name='Alex Smith',identity='one',jurisdiction='vic',chamber='vic_la',
+                      electorate='First Seat',start='2020-01-01',end='2022-12-31',party='Labor')]
+        self.assertEqual(profiles.print_identity(row,records,{}),records)
+        identity.guard_print(row,resolved=True)
+        self.assertEqual(row['full'],'Alex Smith')
+        second=dict(records[0],name='Casey Smith',identity='two')
+        self.assertEqual(profiles.print_identity(row,records+[second],{}),[])
+        identity.guard_print(row)
+        self.assertNotIn('full',row)
+        self.assertNotIn('party',row)
+
+    def test_sa_two_house_initials_keep_the_five_verified_names_and_parties(self):
+        rows=json.loads((profiles.PUBLIC/'parliamentarians.json').read_text())['people']
+        people={p['name']:p for p in rows}
+        for name,full,party in [('K.J. Maher','Kyam Maher','Labor'),('R.I. Lucas','Rob Lucas','Liberal'),
+            ('S.G. Wade','Stephen Wade','Liberal'),('C.M. Scriven','Clare Scriven','Labor'),
+            ('J.M.A. Lensink','Michelle Lensink','Liberal')]:
+            with self.subTest(name=name):
+                p=people[name]
+                self.assertFalse(identity.mixed_print(p))
+                self.assertEqual((p['full'],p['party']),(full,party))
+        self.assertEqual(people['J.M.A. Lensink']['representation'][0]['electorate'],'South Australia')
+
+    def test_dated_election_aliases_preserve_verified_federal_nicknames(self):
+        people={p['name']:p for p in json.loads((profiles.PUBLIC/'parliamentarians.json').read_text())['people']}
+        for name,pid in [('Macklin','10409'),('Hockey','10306'),('Ripoll','10542')]:
+            self.assertEqual(people[name]['pid'],pid)
+            self.assertTrue(people[name]['full'])
+
+    def test_bad_stub_aliases_never_become_given_names(self):
+        from parli.ingest.link_speakers import normalize_state_speaker_name
+        self.assertEqual(normalize_state_speaker_name('By STALEY','vic'),'Staley')
+        self.assertEqual(normalize_state_speaker_name('SM FENTIMAN','qld'),'S.M. Fentiman')
+        self.assertEqual(normalize_state_speaker_name('GJ BUTCHER','qld'),'G.J. Butcher')
+        self.assertEqual(normalize_state_speaker_name('JO CLAY','act'),'Jo Clay')
+        self.assertEqual(normalize_state_speaker_name('DI FARMER','qld'),'Di Farmer')
+        for alias in ['By Staley','Sm Fentiman','Gj Butcher','Lm Enoch','Ml Furner','D.K.B. Basham']:
+            self.assertFalse(identity.usable_alias(alias),alias)
+        people={p['name']:p for p in json.loads((profiles.PUBLIC/'parliamentarians.json').read_text())['people']}
+        for name,full in [('Staley','Louise Staley'),('Fentiman','Shannon Fentiman'),('Butcher','Glenn Butcher'),
+            ('Enoch','Leeanne Enoch'),('Linard','Leanne Linard'),('Furner','Mark Furner'),
+            ('Stoker','Amanda Stoker'),('Weir','Pat Weir'),('Basham','David Basham')]:
+            self.assertEqual(people[name].get('full'),full,name)
+
+    def test_new_full_name_print_can_contradict_an_older_roster_snapshot(self):
+        row=person('Tudehope',['nsw'],['nsw_la','nsw_lc'],2025,2026,full='Monica Tudehope',party='Liberal')
+        monica=person('Monica Tudehope',['nsw'],['nsw_la'],2025,2026)
+        profiles.repair([row,monica],profiles.pinned_reference(),json.loads(profiles.REVIEWED.read_text()))
+        self.assertNotIn('full',row)
+        self.assertNotIn('party',row)
+
+    def test_duplicate_member_stubs_do_not_duplicate_dated_service_seats(self):
+        vol=person('Lynda Voltz',['nsw'],['nsw_lc','nsw_la'],2015,2026)
+        member=dict(full_name='Lynda Voltz',state='nsw',chamber='nsw_la',electorate='Auburn')
+        profiles.enrich([vol],[member,dict(member)],[],profiles.pinned_reference(),json.loads(profiles.REVIEWED.read_text()))
+        self.assertEqual([(r['chamber'],r['electorate']) for r in vol['representation']],
+                         [('nsw_la','Auburn'),('nsw_lc','New South Wales')])
+
     def test_mixed_print_keeps_transcript_scopes_counts_and_labels_without_a_person_join(self):
         for states, chambers, witness in [(['vic', 'federal'], ['vic_la', 'representatives'], 0),
-                                          (['nsw'], ['nsw_la', 'nsw_lc'], 0),
                                           (['federal'], ['representatives', 'house_committee'], 2)]:
             with self.subTest(states=states, witness=witness):
                 row = person('Horne', states, chambers, full='Melissa Horne', party='Labor',
@@ -135,7 +197,7 @@ class GeneralGuardTests(unittest.TestCase):
         self.assertFalse(identity.state_member_matches(bob, melissa))
         horn = person('Horne', ['vic'], ['vic_la'], 2020, 2022)
         self.assertTrue(identity.state_member_matches(horn, melissa))
-        self.assertFalse(identity.state_member_matches(horn, dict(melissa, start=None)))
+        self.assertTrue(identity.state_member_matches(horn, dict(melissa, start=None)))
         self.assertFalse(identity.state_member_matches(horn, dict(melissa, start='2023-01-01')))
         self.assertFalse(identity.state_member_matches(horn, dict(melissa, chamber='vic_lc')))
 
@@ -150,7 +212,7 @@ class GeneralGuardTests(unittest.TestCase):
         ref = dict(people=[dict(person_id='one', name='Alex Smith')], electorates=[dict(electorate_id='seat',
                    name='First Seat', jurisdiction='federal', chamber='representatives')],
                    terms=[dict(person_id='one', electorate_id='seat', start=None, end=None)])
-        self.assertEqual(profiles.dated_records(ref, {}), [])
+        self.assertEqual(profiles.dated_records(ref, {}, state_evidence={}), [])
 
     def test_legacy_member_roster_is_not_an_independent_dated_authority(self):
         ref = dict(people=[dict(person_id='one', name='Alex Smith')], electorates=[dict(electorate_id='seat',
@@ -158,7 +220,7 @@ class GeneralGuardTests(unittest.TestCase):
                    sources=[dict(source_id='legacy', label='OPAX existing parliamentary person identifiers')],
                    rosters=[dict(as_of='2026-09-09', priority=100, electorate_id='seat',
                                  members=[dict(person_id='one', party='Labor')], sources=['legacy'])])
-        self.assertEqual(profiles.dated_records(ref, {}), [])
+        self.assertEqual(profiles.dated_records(ref, {}, state_evidence={}), [])
 
     def test_same_full_name_in_overlapping_terms_is_not_one_person(self):
         row = person('Alex Smith', ['federal'], ['representatives'], 2020, 2022)

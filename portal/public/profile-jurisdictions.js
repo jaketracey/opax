@@ -6,3 +6,10 @@ export function profileJurisdictions(person) {
   const representations = (person?.representation || []).filter(r=>person.states.includes(r.jurisdiction)&&person.chambers.includes(r.chamber)&&r.electorate);
   return {jurisdictions,chambers,representations};
 }
+
+export function profileAffiliations(person) {
+  return (person?.affiliations || []).filter(r => r.electorate && r.start &&
+    person.states?.includes(r.jurisdiction) && person.chambers?.includes(r.chamber))
+    .map(r => ({...r, jurisdictionLabel: parliaments[r.jurisdiction] || r.jurisdiction,
+      chamberLabel: houses[r.chamber] || r.chamber}));
+}

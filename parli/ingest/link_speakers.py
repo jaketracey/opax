@@ -116,6 +116,9 @@ def normalize_speaker_name(raw: str) -> str | None:
 
     name = raw.strip()
 
+    # Victorian transcript bylines are not a member's given name.
+    name = re.sub(r'^by\s+', '', name, flags=re.IGNORECASE)
+
     # Strip parenthesised content (electorate info etc.)
     name = PAREN_RE.sub(" ", name)
 
@@ -587,7 +590,7 @@ def normalize_state_speaker_name(raw: str, state: str) -> str | None:
     if not raw or not raw.strip():
         return None
 
-    name = raw.strip()
+    name = re.sub(r'^by\s+', '', raw.strip(), flags=re.IGNORECASE)
 
     # Strip parenthesised content
     name = PAREN_RE.sub(" ", name)
@@ -621,7 +624,11 @@ def normalize_state_speaker_name(raw: str, state: str) -> str | None:
     # Normalize case: title-case but preserve internal capitals (McLeish, O'Brien)
     parts = name.split()
     normalized_parts = []
-    for part in parts:
+    for i, part in enumerate(parts):
+        if (i == 0 and len(parts) > 1 and re.fullmatch(r'[A-Z]{2}', part)
+                and part not in {'AL', 'BO', 'DI', 'ED', 'JO', 'TY'}):
+            normalized_parts.append('.'.join(part) + '.')
+            continue
         # Skip initials like "R.I." for SA
         if re.match(r'^[A-Z]\.[A-Z]\.?$', part):
             continue

@@ -717,6 +717,31 @@ git -C "$REPO" ls-files portal/public | grep -q speakers.json   # the group's fi
 echo 'x' > "$REPO/portal/public/speakers.json.untracked.txt"
 FAKE_MODE=ok nightly
 check "a file the nightly does not own is never swept into its commit" bash -c "! git --git-dir='$ORIGIN' ls-tree -r --name-only main | grep -q untracked"
+
+echo "== 28. owned roster profiles reconcile after the data gate; rehearsal disables writes"
+roster_stub() {
+  cat > "$REPO/scripts/reconcile_roster_profiles.py" <<'PYEOF'
+import json, os, pathlib, sys
+home = pathlib.Path(os.environ['HOME'])
+calls = (home / 'node.calls').read_text() if (home / 'node.calls').exists() else ''
+(home / 'roster.calls').write_text(json.dumps({'args': sys.argv[1:], 'tests_ran': 'node --test' in calls}))
+sys.exit(int(os.environ.get('FAKE_ROSTER_RC', '0')))
+PYEOF
+}
+new_sandbox s28
+roster_stub
+mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
+OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok nightly
+check "reconciliation runs after the passing portal gate with apply, plan and backups" python3 -c "import json; r=json.load(open('$HOME/roster.calls')); assert r['tests_ran'] and '--apply' in r['args'] and '--output' in r['args'] and '--backup' in r['args']"
+check "successful reconciliation leaves the night green" test "$NRC" -eq 0
+new_sandbox s28b
+roster_stub
+OPAX_PERIODIC_SYNC_KB=0 nightly
+check "rehearsal KB switch suppresses roster publication" test ! -e "$HOME/roster.calls"
+new_sandbox s28c
+roster_stub
+FAKE_ROSTER_RC=1 nightly
+check "a reconciliation failure is visible and retried next night" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'roster-profile reconciliation failed; retry next night'"
 echo
 echo "passed $PASS, failed $FAILN"
 [ "$FAILN" -eq 0 ]

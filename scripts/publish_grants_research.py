@@ -58,7 +58,17 @@ def records(data, directory=None):
         text=(f"{p['name']} — recorded parliamentary representation in Opax's roster: {facts}. "
               "Matched by exact full name, compatible jurisdiction and chamber, not person ID alone. "
               "These are recorded affiliations and may include past seats; they do not establish current tenure, service dates or the electorate at the time of a particular speech.")
-        row=resource('roster-profile-'+hashlib.sha256(p['name'].encode()).hexdigest()[:16],p['name']+' — recorded representation',text,'https://opax.com.au/subject/person/'+quote(p['name'],safe=''),data['as_of'],'parliamentary_profile','opax_parliamentary_roster',{'record_type':'Derived roster affiliation','representation':p['representation'],'date_meaning':'Enrichment snapshot, not tenure or speech date'})
+        metadata={'record_type':'Derived roster affiliation','representation':p['representation'],'date_meaning':'Enrichment snapshot, not tenure or speech date'}
+        if p.get('full'):
+            text+=f" The uniquely matched parliamentary name is {p['full']}."
+            metadata['identity_name']=p['full']
+        if p.get('affiliations'):
+            metadata['affiliations']=p['affiliations']
+            text+=' Dated parliamentary service: '+'; '.join(
+                f"{r['jurisdiction']} / {r['chamber']}: {r['electorate']}, {r.get('party') or 'party not recorded'}, "
+                f"{r['start']} to {r.get('end') or 'ongoing at the review date'} (source: {r['source_url']})"
+                for r in p['affiliations'])+'.'
+        row=resource('roster-profile-'+hashlib.sha256(p['name'].encode()).hexdigest()[:16],p['name']+' — recorded representation',text,'https://opax.com.au/subject/person/'+quote(p['name'],safe=''),data['as_of'],'parliamentary_profile','opax_parliamentary_roster',metadata)
         row['usermetadata']['classifications']=[c for c in row['usermetadata']['classifications'] if c['labelset'] not in {'state','topic'}]+[{'labelset':'state','label':j} for j in sorted({r['jurisdiction'] for r in p['representation']})]
         yield row
 

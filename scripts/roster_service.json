@@ -7,6 +7,27 @@
       "chamber": "representatives",
       "source_url": "https://aec.gov.au/Elections/federal_elections/1998/hor-elected.htm",
       "note": "AEC names Bob Horne for Paterson in 1998; pinned OpenAustralia terms name Robert Hodges Horne for that seat and election."
+    },
+    "Jenny Macklin": {
+      "name": "Jennifer Louise Macklin",
+      "jurisdiction": "federal",
+      "chamber": "representatives",
+      "source_url": "https://aec.gov.au/Elections/federal_elections/1998/hor-elected.htm",
+      "note": "AEC lists Jenny Macklin in Jagajaga in 1998; the pinned dated OpenAustralia term names Jennifer Louise Macklin for that seat and election."
+    },
+    "Joe Hockey": {
+      "name": "Joseph Benedict Hockey",
+      "jurisdiction": "federal",
+      "chamber": "representatives",
+      "source_url": "https://aec.gov.au/Elections/federal_elections/1998/hor-elected.htm",
+      "note": "AEC lists Joe Hockey in North Sydney in 1998; the pinned dated OpenAustralia term names Joseph Benedict Hockey for that seat and election."
+    },
+    "Bernie Ripoll": {
+      "name": "Bernard Fernando Ripoll",
+      "jurisdiction": "federal",
+      "chamber": "representatives",
+      "source_url": "https://aec.gov.au/Elections/federal_elections/1998/hor-elected.htm",
+      "note": "AEC lists Bernie Ripoll in Oxley in 1998; the pinned dated OpenAustralia term names Bernard Fernando Ripoll for that seat and election."
     }
   },
   "service": [
@@ -69,5 +90,20 @@
       "source_url": "https://www.parliament.nsw.gov.au/members-and-electorates/members-and-ministers/members-details?memberId=42"
     }
   ],
-  "party_from_pinned_roster": ["Melissa Horne"]
+  "party_from_pinned_roster": [
+    "Melissa Horne"
+  ],
+  "history": [
+    {
+      "name": "Ros Spence",
+      "jurisdiction": "vic",
+      "chamber": "vic_la",
+      "electorate": "Yuroke",
+      "state": "VIC",
+      "party": "Labor",
+      "start": "2014-11-29",
+      "end": "2022-11-26",
+      "source_url": "https://www.parliament.vic.gov.au/members/ros-spence/"
+    }
+  ]
 }

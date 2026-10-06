@@ -33,6 +33,7 @@ export interface RolePerson {
   states: string[]
   last: number | null
   representation?: RoleSeat[]
+  affiliations?: (RoleSeat & { start: string; end?: string | null; party?: string | null })[]
 }
 
 export interface PersonRole {
@@ -52,7 +53,8 @@ export interface PersonRole {
  * The seat a person is best known by and whether they still hold it. Federal
  * sitting status comes from the APH roster (`current`); the state files carry
  * no roster flag, so a state member who spoke this year or last is taken as
- * sitting, and anyone else as former.
+ * sitting, and anyone else as former. A dated current service takes priority
+ * over those heuristics for careers that span parliaments or chambers.
  */
 export function personRole(p: RolePerson, year: number): PersonRole | null {
   const seats = p.representation ?? []
@@ -60,10 +62,14 @@ export function personRole(p: RolePerson, year: number): PersonRole | null {
   const federalSeat = seats.find(s => s.jurisdiction === 'federal')
   const stateSeat = seats.find(s => s.jurisdiction !== 'federal')
   const stateSitting = !!stateSeat && (p.last ?? 0) >= year - 1
-  const seat = p.current && federalSeat ? federalSeat : stateSitting ? stateSeat! : (federalSeat ?? stateSeat!)
+  const service = p.current ? (p.affiliations ?? []).filter(s => s.start && !s.end && Number(s.start.slice(0, 4)) <= year)
+    .sort((a, b) => b.start.localeCompare(a.start))[0] : undefined
+  const datedSeat = service && seats.find(s => s.jurisdiction === service.jurisdiction &&
+    s.chamber === service.chamber && s.electorate === service.electorate)
+  const seat = datedSeat ?? (p.current && federalSeat ? federalSeat : stateSitting ? stateSeat! : (federalSeat ?? stateSeat!))
   const federal = seat.jurisdiction === 'federal'
-  const sitting = federal ? !!p.current : stateSitting
-  const party = (sitting ? p.party_now : null) ?? p.party ?? ''
+  const sitting = datedSeat ? !!p.current : federal ? !!p.current : stateSitting
+  const party = (sitting ? (datedSeat ? service?.party : null) ?? p.party_now : null) ?? p.party ?? ''
   const senate = seat.chamber === 'senate'
   // Some state rosters append the member's portfolios ("Williamstown – Minister for Ports").
   const place = seat.electorate.split(/\s+[–—-]\s+/)[0].trim()

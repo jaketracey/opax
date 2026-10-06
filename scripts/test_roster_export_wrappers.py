@@ -19,7 +19,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 COPIED = ["scripts/vm/export_step.sh", "scripts/vm/export_people.sh", "scripts/vm/keep_if_unchanged.py",
           "scripts/export_parliamentarians.py", "scripts/roster_identity.py", "scripts/enrich_profile_jurisdictions.py",
-          "scripts/roster_service.json", "portal/public/electorates/manifest.json",
+          "scripts/roster_service.json", "scripts/roster_state_evidence.json", "portal/public/electorates/manifest.json",
           "portal/public/electorates/releases/b56417062ccc33cf/reference.json",
           "scripts/person_identity.json", "portal/public/research/mlci.json"]
 ROSTER = "portal/public/parliamentarians.json"
@@ -106,6 +106,76 @@ class RealWrapperTests(unittest.TestCase):
         rows = json.loads(shipped)["people"]
         self.assertEqual({r["name"] for r in rows}, {n for n, _ in SITTING})
         self.assertFalse(any(r.get("pid") for r in rows), "the override ships exactly what the export said")
+
+
+class ShippedIdentityReplayTests(unittest.TestCase):
+    sandbox = RealWrapperTests.sandbox
+    export = RealWrapperTests.export
+    def test_box_shaped_export_reproduces_shipped_identities_without_a_hold(self):
+        """Replay all pinned prints through production SQL and the real wrapper.
+
+        This is an export-shape fixture, not a desktop snapshot: counts are small,
+        but scopes, years, aliases and sitting ids come from the pinned exports.
+        State member stubs deliberately have no entered_house outside Queensland.
+        """
+        from scripts.roster_identity import pinned_members
+        from scripts.export_parliamentarians import IDENTITY_FIELDS, refusals
+        shipped=json.loads((ROOT/ROSTER).read_text())
+        box=self.sandbox((ROOT/ROSTER).read_bytes())
+        # Fixed public export fixture: works without a remote ref or mutable
+        # origin/main, and retains the original bad joins for regression coverage.
+        old=json.loads((ROOT/'tests/fixtures/roster-export/prints-23cad95a.json').read_text())
+        rows=old['people'];db=sqlite3.connect(box/'parli.db')
+        db.execute('PRAGMA foreign_keys=OFF');db.execute('DELETE FROM speeches');db.execute('DELETE FROM members')
+        people=pinned_members();member_ids={}
+        for pid,m in people.items():
+            name=m['names'][0]
+            db.execute('INSERT INTO members (person_id,full_name,first_name,last_name,state,chamber,party,party_canonical,entered_house,left_house) VALUES (?,?,?,?,?,?,?,?,?,?)',
+                       (pid,name,name.split()[0],name.split()[-1],'federal',m['chamber'],'Labor','Labor',
+                        str(m['start'])+'-01-01' if m['start'] else None,str(m['end'])+'-12-31' if m['end'] else None))
+        for p in rows:
+            state=next((s for s in p['states'] if s!='federal'),None)
+            house=next((c for c in p['chambers'] if c.startswith(str(state)+'_')),None)
+            if not state or not house:continue
+            name=p.get('full') or p['name'];pid=state+'-fixture-'+name
+            member_ids[p['name']]=pid
+            if db.execute('SELECT 1 FROM members WHERE person_id=?',(pid,)).fetchone():continue
+            seat=next((r['electorate'] for r in p.get('representation',[]) if r['jurisdiction']==state),'')
+            db.execute('INSERT INTO members (person_id,full_name,first_name,last_name,state,chamber,party,party_canonical,electorate,entered_house,left_house) VALUES (?,?,?,?,?,?,?,?,?,?,?)',
+                       (pid,name,name.split()[0],name.split()[-1],state,house,p.get('party'),p.get('party'),seat,
+                        str(p['first'])+'-01-01' if state=='qld' else None,None))
+        # Current federal party follows the shipped federal id, not an assumed ALP.
+        for p in shipped['people']:
+            if p.get('pid') and p.get('current'):
+                db.execute('UPDATE members SET left_house=NULL,party=?,party_canonical=? WHERE person_id=?',
+                           (p.get('party_now'),p.get('party_now'),p['pid']))
+        for p in rows:
+            chambers=p.get('chambers') or ['representatives']
+            for i in range(max(6,len(chambers))):
+                chamber=chambers[i%len(chambers)]
+                state=chamber.split('_')[0] if '_' in chamber and 'committee' not in chamber else 'federal'
+                if state not in p['states']:state=p['states'][0]
+                year=p['first'] if i==0 else p['last']
+                witness='Witness' if p.get('witness_rows') and i==1 else None
+                pid=p.get('pid') or member_ids.get(p['name'])
+                # No inferred identity on committee witnesses.
+                if witness:pid=None
+                db.execute('INSERT INTO speeches (person_id,speaker_name,party,party_canonical,state,chamber,date,text,source,witness_name) VALUES (?,?,?,?,?,?,?,?,?,?)',
+                    (pid,p['name'],p.get('party'),p.get('party'),state,chamber,f'{year}-03-{i+1:02}',
+                     f"Replay {p['name']} speech {i}. "+'Parliamentary fixture text. '*12,'test_fixture',witness))
+        db.commit();db.close()
+        code,err,output=self.export(box)
+        self.assertEqual(code,0,err)
+        exported=json.loads(output)['people']
+        self.assertEqual(len(exported),1700)
+        self.assertEqual(refusals(shipped['people'],exported),[])
+        by_name={p['name']:p for p in exported}
+        changes=[p['name'] for p in shipped['people'] if any(p.get(k)!=by_name[p['name']].get(k) for k in IDENTITY_FIELDS)]
+        self.assertLessEqual(len(changes),25,changes)
+        for name in ['Bob Horne','Melissa Horne','Mark Latham','Nicholls','Steel','Staley','K.J. Maher','J.M.A. Lensink']:
+            wanted=next(p for p in shipped['people'] if p['name']==name)
+            self.assertEqual({k:by_name[name].get(k) for k in IDENTITY_FIELDS},{k:wanted.get(k) for k in IDENTITY_FIELDS},name)
+        print(f'All-roster fixture replay: {len(changes)} identity changes / limit 25: {changes}',file=sys.stderr)
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { profileJurisdictions } from '../public/profile-jurisdictions.js';
+import { profileAffiliations, profileJurisdictions } from '../public/profile-jurisdictions.js';
 import { isWeakName } from '../../scripts/photo_identity.mjs';
 const roster = JSON.parse(await readFile(new URL('../public/parliamentarians.json', import.meta.url)));
 const people = new Map(roster.people.map(p => [p.name, p]));
@@ -31,11 +31,32 @@ test('Mark retains the federal Labor dates, with One Nation and independent NSW 
   assert.deepEqual(labor, []);
 });
 
-test('every mixed surname or initials print has no single-person record or party facet', () => {
-  for (const p of roster.people) {
-    const houses = new Set(p.chambers.filter(c => !c.includes('committee')));
-    if (!isWeakName(p.name) || !(p.states.length > 1 || houses.size > 1 || p.witness_rows)) continue;
-    for (const field of ['pid', 'full', 'current', 'party_now', 'party', 'parties']) assert.equal(p[field], undefined, `${p.name}: ${field}`);
-    assert.deepEqual(p.representation, [], p.name);
+test('ambiguous prints stay neutral and retained aliases contain real given names', () => {
+  for (const name of ['Horne', 'Andrews', 'Theophanous', 'Cox', 'Katter', 'Smith', 'Tudehope']) {
+    const p = people.get(name);
+    for (const field of ['pid', 'full', 'current', 'party_now', 'party', 'parties']) assert.equal(p[field], undefined, `${name}: ${field}`);
+    assert.deepEqual(p.representation, [], name);
   }
+  for (const p of roster.people) {
+    if (!p.full) continue;
+    assert.ok(!isWeakName(p.full), p.name);
+    assert.doesNotMatch(p.full, /^(?:By|Sm|Gj|Lm|Ml|Aj|Pt|Mt|Sj|De|Mc|Cd|Maj) /, p.name);
+    if (isWeakName(p.name) && (p.states.length > 1 || p.witness_rows)) {
+      assert.ok(p.identity_evidence?.length || p.identity_basis, p.name);
+      assert.equal(p.pid, undefined, p.name);
+      assert.equal(p.current, undefined, p.name);
+      assert.equal(p.party_now, undefined, p.name);
+    }
+  }
+});
+
+test('the SA initials keep their names and parties; dated careers are visible profile data', () => {
+  for (const [name, full, party] of [['K.J. Maher', 'Kyam Maher', 'Labor'], ['R.I. Lucas', 'Rob Lucas', 'Liberal'],
+    ['S.G. Wade', 'Stephen Wade', 'Liberal'], ['C.M. Scriven', 'Clare Scriven', 'Labor'], ['J.M.A. Lensink', 'Michelle Lensink', 'Liberal']]) {
+    assert.equal(people.get(name).full, full);
+    assert.equal(people.get(name).party, party);
+  }
+  assert.ok(profileAffiliations(people.get('Mark Latham')).some(r => r.party === 'Labor' && r.electorate === 'Werriwa'));
+  assert.ok(profileAffiliations(people.get('Lynda Voltz')).some(r => r.chamber === 'nsw_lc' && r.party === 'Labor'));
+  assert.ok(profileAffiliations(people.get('Ros Spence')).some(r => r.electorate === 'Yuroke' && r.end === '2022-11-26'));
 });

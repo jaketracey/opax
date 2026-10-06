@@ -71,7 +71,8 @@ from parli.ingest.arag_sync import (  # noqa: E402
     clean_party, prepare_dedupe,
 )
 from parli.ingest.speaker_names import normalize_speaker  # noqa: E402
-from scripts.roster_identity import guard_print, member, same_person, state_member_matches, verify, weak  # noqa: E402
+from scripts.roster_identity import member, same_person, state_member_matches, usable_alias, verify, weak  # noqa: E402
+from scripts.enrich_profile_jurisdictions import pinned_reference, repair, REVIEWED  # noqa: E402
 
 DB = "file:" + (os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")) + "?mode=ro"
 FLOOR = 5
@@ -173,7 +174,15 @@ def shipped_roster(path=None):
     return people, None
 
 
-def main() -> None:
+def main(argv=()) -> None:
+    import argparse
+    ap=argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('--defer-check',action='store_true',help='export_people.sh checks the enriched output')
+    ap.add_argument('--check-directory',type=str,help='check a final enriched roster against the shipped one')
+    args=ap.parse_args(argv)
+    if args.check_directory:
+        check_roster(json.load(open(args.check_directory))['people'])
+        return
     t0 = time.time()
     db = sqlite3.connect(DB, uri=True)
     # prepare_dedupe prints its progress line; stdout is the JSON document.
@@ -267,8 +276,8 @@ def main() -> None:
         top_pid = p["pids"].most_common(1)[0][0] if p["pids"] else None
         state_pid = (top_pid if top_pid and not top_pid.isdigit() and top_pid in members
                      and state_member_matches(rec, members[top_pid])
-                     and (not weak(name) or (len(p['pids'])==1 and sum(
-                         state_member_matches(rec,m) for m in members.values())==1)) else None)
+                     and (not weak(name) or len({m['name'] for m in members.values()
+                         if state_member_matches(rec,m) and usable_alias(m['name'])})==1) else None)
         party_pid = pid or state_pid
         if not ranked and party_pid and members.get(party_pid, {}).get("party"):
             # State Hansard rows seldom carry a party; the members table does.
@@ -286,15 +295,15 @@ def main() -> None:
         # Surname-only prints ("Shoebridge"): the members table knows the person.
         if " " not in name and party_pid:
             full = members.get(party_pid, {}).get("name") or ""
-            if " " in full and full.split()[-1].lower() == name.lower().split()[-1]:
+            if usable_alias(full) and full.split()[-1].lower() == name.lower().split()[-1]:
                 rec["full"] = full
-        guard_print(rec)
         # Key order as before: name, speeches, party, parties, states, chambers, first, last, pid, ...
         order = ["name", "speeches", "party", "parties", "states", "chambers", "first", "last", "pid",
                  "current", "party_now", "full", "witness_rows", "recorded_parties"]
         out.append({k: rec[k] for k in order if k in rec})
 
     out.sort(key=lambda r: (-r["speeches"], r["name"]))
+    repair(out,pinned_reference(),json.loads(REVIEWED.read_text()))
     doc = {
         "meta": {
             "generated": date.today().isoformat(),
@@ -310,6 +319,13 @@ def main() -> None:
         },
         "people": out,
     }
+    if not args.defer_check:check_roster(out)
+    json.dump(doc, sys.stdout, ensure_ascii=False, separators=(",", ":"))
+    print(f"[export] {len(out):,} people, {witnesses:,} witness-only excluded, "
+          f"{below:,} below floor, {malformed:,} malformed ({time.time() - t0:.0f}s)", file=sys.stderr)
+
+
+def check_roster(out):
     previous, unusable = shipped_roster()
     if os.environ.get("OPAX_ROSTER_ACCEPT") == "1":
         held = []
@@ -320,10 +336,7 @@ def main() -> None:
         print(f"[export] not shipped: {PREVIOUS} is kept. If the change is right, rerun with "
               "OPAX_ROSTER_ACCEPT=1 (docs/PHOTOS.md, \"Nightly safety net\")", file=sys.stderr)
         sys.exit(HELD)
-    json.dump(doc, sys.stdout, ensure_ascii=False, separators=(",", ":"))
-    print(f"[export] {len(out):,} people, {witnesses:,} witness-only excluded, "
-          f"{below:,} below floor, {malformed:,} malformed ({time.time() - t0:.0f}s)", file=sys.stderr)
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:])

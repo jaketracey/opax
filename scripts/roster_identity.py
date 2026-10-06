@@ -55,24 +55,38 @@ def weak(name):
     return all(len(t) == 1 for t in parts(name)[:-1])
 
 
+def usable_alias(name):
+    """Member stubs can contain a byline or compact initials, not a given name."""
+    tokens = str(name or '').split()
+    if len(tokens) < 2 or weak(name) or tokens[0].casefold() in {'by','in','an'}:
+        return False
+    return tokens[0].casefold() not in {'sm', 'gj', 'lm', 'ml', 'aj', 'pt', 'mt', 'sj', 'de', 'mc', 'cd', 'maj'}
+
+
 def mixed_print(row):
-    """A weak print cannot identify one person across parliaments, houses or witnesses.
+    """A print needing independent resolution, aligned with the portrait guard.
 
-    Full names can have genuine careers in multiple houses (Mark Latham); a bare
-    surname needs dated evidence for that, which the aggregated print does not hold.
+    A state's two-house transcript does not by itself establish two people.
+    Multi-parliament and witness prints may still have one uniquely evidenced
+    parliamentary identity; repair() resolves that before calling guard_print.
     """
-    houses = set(row.get("chambers") or []) - COMMITTEES
     return weak(row["name"]) and (len(set(row.get("states") or [])) > 1
-                                 or len(houses) > 1 or bool(row.get("witness_rows")))
+                                 or bool(row.get("witness_rows")))
 
 
-def guard_print(row):
+def guard_print(row, resolved=False, force=False):
     """Keep the transcript aggregate, but no single person's identity, seat or party.
 
     Speech party labels are retained as recorded_parties. A flat party facet would
     otherwise combine a federal Labor era with an unrelated state chamber.
     """
-    if not mixed_print(row):
+    if not mixed_print(row) and not force:
+        return
+    if resolved:
+        # Dated evidence identifies the parliamentarian, not every committee
+        # witness's speech. Never give such an aggregate their numeric pid.
+        for field in ("pid", "current", "party_now"):
+            row.pop(field, None)
         return
     labels = list(dict.fromkeys([row.get("party"), *(row.get("parties") or []),
                                 *(row.get("recorded_parties") or [])]))
@@ -87,19 +101,19 @@ def guard_print(row):
 def state_member_matches(row, m):
     """A state fallback must belong to this print's jurisdiction, house and name.
 
-    Surname/initials prints additionally need a term covering all their years.
+    Known dates must overlap; absent state-stub dates are not a contradiction.
     A dominant speech id alone is never evidence of a person's identity.
     """
     if mixed_print(row) or not agrees(row["name"], m["name"]):
         return False
     if set(row.get("states") or []) != {m.get("state")}:
         return False
-    if set(row.get("chambers") or []) - COMMITTEES != {m.get("chamber")}:
+    if m.get("chamber") not in set(row.get("chambers") or []) - COMMITTEES:
         return False
     if weak(row["name"]):
         start, end = _year(m.get("start")), _year(m.get("end"))
-        return (start is not None and row.get("first") is not None and start <= row["first"]
-                and row.get("last") is not None and (end is None or row["last"] <= end))
+        return ((start is None or row.get("last") is not None and start <= row['last'])
+                and (end is None or row.get("first") is not None and row['first'] <= end))
     return True
 
 
