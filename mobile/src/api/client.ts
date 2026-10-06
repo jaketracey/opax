@@ -45,8 +45,7 @@ function freezeSnapshot(...values: unknown[]) {
   const seen = new WeakSet<object>();
   while (pending.length) {
     const item = pending.pop();
-    if (item === null || typeof item !== 'object' || seen.has(item))
-      continue;
+    if (item === null || typeof item !== 'object' || seen.has(item)) continue;
     seen.add(item);
     // A decoder or store may have frozen only the parent. Still traverse its
     // children; shared raw/decoded descendants are visited once per snapshot.
@@ -130,6 +129,11 @@ export class ApiClient {
             Accept: 'application/json',
             'User-Agent': `OPAX-iOS/${this.options.version} (${this.options.build})`,
             ...(cached?.etag ? { 'If-None-Match': cached.etag } : {}),
+            // A forced read (a pull to refresh) must reach the origin. The
+            // transport's URLSession keeps its own HTTP cache, which answers
+            // a fresh entry under ~512 KB itself, If-None-Match or not; a
+            // request no-cache makes it revalidate.
+            ...(force ? { 'Cache-Control': 'no-cache' } : {}),
           },
         });
         if (
