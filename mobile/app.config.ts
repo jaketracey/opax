@@ -133,6 +133,7 @@ const config: ExpoConfig = {
   ],
   extra: {
     variant,
+    supportPageAvailable: true,
     ...(productionVoice
       ? { productionVoiceEnabled: true, voiceConsentDefault: false }
       : {}),

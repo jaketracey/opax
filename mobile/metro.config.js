@@ -1,18 +1,21 @@
 const { getDefaultConfig } = require('expo/metro-config');
 const path = require('node:path');
+const { productionVoiceEnabled } = require('./plugins/voiceProduction');
+const variant = process.env.OPAX_VARIANT ?? 'development';
+const voiceEnabled = productionVoiceEnabled(variant);
 const config = getDefaultConfig(__dirname);
 const inheritedResolver = config.resolver.resolveRequest;
 // Modules with a production stub beside them: the e2e drawn-line probe, the
 // welcome tour's launch argument and the electorate outline probe, and the
-// Account sheet, whose sign-in stays out of production until voice ships.
+// Account and Talk entries use a single release switch below.
 const productionStubs = [
   'src/design/text-probe',
   'src/onboarding/launch-flag',
   'src/features/electorate-map/outline-probe',
-  'src/features/account/entry',
 ].map((module) => path.join(__dirname, module));
-// Production keeps the Talk placeholder until the voice switch ships.
-const talkModule = path.join(__dirname, 'src/features/talk/TalkScreen');
+const voiceEntries = ['account', 'talk'].map((feature) =>
+  path.join(__dirname, `src/features/${feature}/entry`),
+);
 config.resolver.resolveRequest = (context, moduleName, platform) => {
   const target = moduleName.startsWith('.')
     ? path
@@ -22,8 +25,8 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
   if (process.env.OPAX_VARIANT === 'production' && target !== null) {
     if (productionStubs.includes(target))
       return { type: 'sourceFile', filePath: `${target}.production.ts` };
-    if (target === talkModule)
-      return { type: 'sourceFile', filePath: `${talkModule}.production.tsx` };
+    if (!voiceEnabled && voiceEntries.includes(target))
+      return { type: 'sourceFile', filePath: `${target}.production.ts` };
   }
   return typeof inheritedResolver === 'function'
     ? inheritedResolver(context, moduleName, platform)
@@ -38,12 +41,12 @@ const accountSignIn = [
   /[/\\]src[/\\]app[/\\]account[/\\](?:sign-in|delete)\.tsx$/,
   /[/\\]src[/\\]features[/\\]account[/\\](?!entry\.production\.ts$).*/,
 ];
-config.cacheVersion = `opax-${process.env.OPAX_VARIANT ?? 'development'}`;
+config.cacheVersion = `opax-${variant}-voice-${voiceEnabled ? 'on' : 'off'}`;
 const existing = config.resolver.blockList;
 config.resolver.blockList = [
   ...(Array.isArray(existing) ? existing : existing ? [existing] : []),
   ...(process.env.OPAX_VARIANT === 'production'
-    ? [...productionBlockList, ...accountSignIn]
+    ? [...productionBlockList, ...(!voiceEnabled ? accountSignIn : [])]
     : []),
   ...(!['production', 'e2e'].includes(process.env.OPAX_VARIANT)
     ? productionBlockList.filter((rule) =>

@@ -75,7 +75,7 @@ if [ -f "$SCRIPTS/qa-flows.sh" ]; then /bin/cp "$SCRIPTS/qa-flows.sh" "$MOBILE/s
 touch "$SCRATCH/app/main.jsbundle" "$MOBILE/.maestro/01-start.yaml" "$MOBILE/.maestro/04-offline.yaml"
 export SCRATCH MOBILE OPAX_PASTE_LOCK="$LOCK" OPAX_BUILD_GATE="$SCRATCH/gate.sh" OPAX_SIM_GATE="$SCRATCH/sim-gate.sh"
 export OPAX_ALLOWED_UDIDS='lane-a lane-b' OPAX_QA_APP="$SCRATCH/app" OPAX_CONTENT_SIZE=large
-export OPAX_CAPACITY_CMD= OPAX_LOAD_PROBE='echo 0' OPAX_PASTE_WAIT_SECONDS=10
+export OPAX_CAPACITY_CMD= OPAX_LOAD_PROBE='echo 0' OPAX_PASTE_WAIT_SECONDS=10 OPAX_LOAD_LIMIT=140
 export OPAX_PASTE_POLL_SECONDS=0.1 OPAX_STOP_GRACE_SECONDS=4 JAVA_HOME="$SCRATCH/jdk"
 export OPAX_E2E_STOP_GRACE_SECONDS=4
 export PATH="$SCRATCH/bin:$PATH"
@@ -162,6 +162,7 @@ phase=online; [[ "$*" != *04-offline.yaml* ]] || phase=offline
 if [ "${MOCK_NO_LOCK:-0}" = 1 ]; then echo none; else sed -n 's/^token=//p' "$OPAX_PASTE_LOCK/owner"; fi > "$SCRATCH/$MOCK_LANE.$phase.token"
 lock=held; [ "${MOCK_NO_LOCK:-0}" != 1 ] || lock=unconfigured
 echo "$MOCK_LANE maestro $phase lock=$lock gate=1" >> "$SCRATCH/trace"
+printf '%s\n' "$@" > "$SCRATCH/$MOCK_LANE.$phase.maestro-args"
 touch "$SCRATCH/$MOCK_LANE.maestro"
 if [ "${MOCK_PAUSE:-}" = maestro ]; then
   until [ -e "$SCRATCH/$MOCK_LANE.release" ]; do sleep 0.1; done
@@ -212,6 +213,7 @@ check_rc() {
 }
 run_lane success 01
 check_rc success 0
+grep -qx 'CONTENT_SIZE=large' "$SCRATCH/success.online.maestro-args" || fail 'flow text size differs from the device size'
 grep -q 'success ui content_size extra-large lock=held' "$SCRATCH/trace" && grep -q 'success ui appearance dark lock=held' "$SCRATCH/trace" || fail 'restore original settings'
 grep -q 'success fixture-stop lock=free' "$SCRATCH/trace" || fail 'fixture teardown before release'
 [ -f "$MOBILE/private/qa/success/device-timing.txt" ] || fail 'no boot/install timing'
