@@ -16,6 +16,7 @@ import {
   ErrorState,
   Group,
   Heading,
+  PartyLabel,
   KeyValueList,
   LoadingState,
   Screen,
@@ -230,10 +231,14 @@ function ElectorateScreen({ id }: { id: string }) {
                                 <Text wordSafe variant="strong">
                                   {c.name}
                                 </Text>
-                                <Text wordSafe variant="metadata">
-                                  {c.party ?? 'Party not recorded'}
-                                  {c.elected ? ' · Elected' : ''}
-                                </Text>
+                                <PartyLabel
+                                  party={c.party}
+                                  status="unknown"
+                                  dense
+                                />
+                                {c.elected ? (
+                                  <Text variant="metadata">Elected</Text>
+                                ) : null}
                                 <KeyValueList
                                   items={c.votes.map((v) => ({
                                     label:

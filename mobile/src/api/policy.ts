@@ -1,3 +1,4 @@
+import { isPortraitPath } from './portrait-policy';
 // Public, catalog-only GETs. Adding a path requires a source/cost review and test.
 export const catalogKinds = ['person', 'interest', 'pay', 'expense'] as const;
 export type CatalogKind = (typeof catalogKinds)[number];
@@ -14,6 +15,10 @@ const staticPaths = new Set([
   '/photos/people.json',
   '/photos/credits.json',
   '/corpus.json',
+  '/graph/money.json',
+  '/graph/aec-extras.json',
+  // Leads (P1): the static discovery export, 60 signals with their caveats.
+  '/discovery.json',
 ]);
 // W13 frozen daily edition: one D1 read of the posted journal, no model,
 // preview or OG path (docs/IOS-API-CONTRACT.md, "App readers"). Only `latest`:
@@ -83,7 +88,8 @@ export function assertAllowedPath(path: string): void {
     staticPaths.has(pathname!) ||
     releasePath.test(pathname!) ||
     billPath.test(pathname!) ||
-    interestPath.test(pathname!)
+    interestPath.test(pathname!) ||
+    isPortraitPath(pathname!)
   )
     return;
   throw new Error('Route is outside the public catalog allow-list');

@@ -1,3 +1,6 @@
+import { PortraitCache } from './portrait-cache';
+import { PortraitDiskStore } from './portrait-disk-store';
+import { PeoplePortraits } from './people-portraits';
 import Constants from 'expo-constants';
 import { ApiClient } from './client';
 import { CatalogCache } from './cache';
@@ -27,11 +30,14 @@ if (
 )
   throw new Error('API origin does not match the build variant');
 export const isE2E = extra.variant === 'e2e';
-export const catalogs = new Catalogs(
-  new ApiClient({
-    origin: extra.apiOrigin,
-    version: extra.appVersion,
-    build: extra.appBuild,
-    cache: new CatalogCache(new DiskStore(), 24 * 1024 * 1024, 220),
-  }),
+const client = new ApiClient({
+  origin: extra.apiOrigin,
+  version: extra.appVersion,
+  build: extra.appBuild,
+  cache: new CatalogCache(new DiskStore(), 24 * 1024 * 1024, 220),
+});
+export const catalogs = new Catalogs(client);
+export const portraits = new PeoplePortraits(
+  catalogs,
+  new PortraitCache(new PortraitDiskStore(extra.apiOrigin), client),
 );

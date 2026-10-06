@@ -35,6 +35,7 @@ export default function TabStack({ segment }: { segment: string }) {
           unstable_headerRightItems: rootHeaderItems,
         }}
       />
+      <Stack.Screen name="party/[slug]" options={{ title: '' }} />
       <Stack.Screen name="person/[slug]" options={{ title: '' }} />
       <Stack.Screen name="bill/[key]" options={{ title: '' }} />
       {segment === '(bills)' ? (
@@ -50,6 +51,12 @@ export default function TabStack({ segment }: { segment: string }) {
         />
       ) : null}
       <Stack.Screen name="electorate/[id]" options={{ title: '' }} />
+      <Stack.Screen name="leads" options={{ title: 'Leads' }} />
+      <Stack.Screen name="lead/[id]" options={{ title: '' }} />
+      <Stack.Screen
+        name="declarations"
+        options={{ title: 'Declared interests' }}
+      />
       <Stack.Screen name="follows" options={{ title: 'Following' }} />
     </Stack>
   );

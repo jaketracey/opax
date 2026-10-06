@@ -8,7 +8,7 @@ import { formatDate } from '../design/format';
 import { CatalogState } from './CatalogState';
 import { EditionSection } from './EditionCard';
 import { RecordRow } from './RecordRow';
-import { billRoute } from '../navigation/routes';
+import { billRoute, declarationsRoute, leadsRoute } from '../navigation/routes';
 import { TodayDeclaration } from './today/TodayDeclaration';
 import { FollowingSection } from './follows/FollowingSection';
 
@@ -97,6 +97,20 @@ export default function Today() {
           )}
         </CatalogState>
       </Section>
+      {/* Static: the Leads screen loads its export when it opens. */}
+      <Section title="Leads" testID="today-leads">
+        <Text wordSafe>
+          Where recorded contract value or party receipts concentrate, and
+          companies that appear in both. Each lead keeps its caveats; a lead is
+          not a finding.
+        </Text>
+        <RecordRow
+          title="All leads"
+          detail="Government contracts, party funding, companies in both"
+          onPress={() => router.push(leadsRoute)}
+          testID="today-leads-open"
+        />
+      </Section>
       <Section title="Recent declarations" testID="today-declarations">
         <CatalogState
           block={data?.declarations ?? null}
@@ -111,6 +125,12 @@ export default function Today() {
               {declarations.map((item, i) => (
                 <TodayDeclaration key={item.id} item={item} index={i} />
               ))}
+              <RecordRow
+                title="All recent declarations"
+                detail="By chamber, jurisdiction and member"
+                onPress={() => router.push(declarationsRoute)}
+                testID="today-declarations-all"
+              />
             </RowList>
           )}
         </CatalogState>

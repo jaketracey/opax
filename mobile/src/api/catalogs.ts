@@ -1,4 +1,13 @@
 import type { ApiClient, RecordResult } from './client';
+import {
+  partyLabels,
+  resolveParty,
+  partyMembers,
+  partyMoney,
+  recentPartyBills,
+  partyDivisions,
+} from './party-page';
+import { samePartyLabel } from '../design/party';
 import { ApiError } from './errors';
 import {
   joinPerson,
@@ -11,6 +20,7 @@ import type { Decoder } from './validation';
 import type { Manifest } from './catalog-decoders';
 import { billKey, interestKey, personId, nameKey, type PersonId } from './ids';
 import {
+  declarationProfilesFor,
   profileFor,
   recentBillsFor,
   recentDeclarationsFor,
@@ -59,20 +69,220 @@ export class Catalogs {
   private suggestionData?: Promise<SuggestionSources>;
   private suggestionIdentityRetry: 'unused' | 'available' | 'used' = 'unused';
   constructor(private client: Pick<ApiClient, 'get'>) {}
-  roster() {
-    return this.client.get('/parliamentarians.json', decode.decodeRoster);
+  async partyPage(input: string) {
+    const read = async <T>(
+      pending: Promise<RecordResult<T>>,
+      source: string,
+    ): Promise<Block<T>> => {
+      try {
+        const r = await pending;
+        return {
+          data: r.data,
+          status: 'ready',
+          asAt: null,
+          sources: [{ label: source, url: '' }],
+          stale: r.stale,
+          savedAt: r.savedAt,
+        };
+      } catch (e) {
+        return {
+          data: null,
+          status: 'error',
+          asAt: null,
+          sources: [],
+          stale: false,
+          savedAt: null,
+          error:
+            e instanceof ApiError
+              ? e
+              : new ApiError('invalid-data', 'This catalog could not be read.'),
+        };
+      }
+    };
+    // Start independent reads together; each optional block has its own error.
+    const moneyPending = read(
+      this.client.get('/graph/money.json', decode.decodeMoney),
+      'AEC disclosure returns, CC BY 4.0',
+    );
+    const entitiesPending = read(
+      this.client.get('/graph/aec-extras.json', decode.decodeAecExtras),
+      'AEC Transparency Register, CC BY 4.0',
+    );
+    const votesPending = (async () => {
+      const index = await this.bills();
+      const files: RecordResult<decode.BillDetail>[] = [];
+      const candidates = recentPartyBills(index.data);
+      let failed = 0;
+      for (let i = 0; i < candidates.length && files.length < 32; i += 8) {
+        const batch = await Promise.allSettled(
+          candidates.slice(i, i + 8).map((b) => this.bill(b.key)),
+        );
+        for (const r of batch) {
+          if (r.status === 'fulfilled') {
+            if (files.length < 32) files.push(r.value);
+          }
+          else failed++;
+        }
+      }
+      if (candidates.length && !files.length)
+        throw new ApiError(
+          'http',
+          'Bill division records could not be loaded.',
+        );
+      return {
+        data: { index: index.data, files: files.map((f) => f.data), failed },
+        stale: index.stale || files.some((f) => f.stale),
+        savedAt: Math.min(index.savedAt, ...files.map((f) => f.savedAt)),
+        etag: null,
+        asOf: index.data.generated_at,
+      };
+    })();
+    const votesRead = read(
+      votesPending,
+      'They Vote For You, ODbL; ParlInfo bill records',
+    );
+    const corePending = (async () => {
+      const [roster, slugs, manifest] = await Promise.all([
+        this.roster(),
+        this.slugs(),
+        this.manifest(),
+      ]);
+      const people = await this.people(manifest.data);
+      return { roster, slugs, manifest, people };
+    })();
+    const coreRead = read(
+      corePending.then((data) => ({
+        data,
+        stale: [data.roster, data.slugs, data.manifest, data.people].some(
+          (r) => r.stale,
+        ),
+        savedAt: Math.min(
+          data.roster.savedAt,
+          data.slugs.savedAt,
+          data.manifest.savedAt,
+          data.people.savedAt,
+        ),
+        asOf: data.people.data.meta.generated,
+      })),
+      'OPAX parliamentary roster and dated seats',
+    );
+    const [core, money, entities, votes] = await Promise.all([
+      coreRead,
+      moneyPending,
+      entitiesPending,
+      votesRead,
+    ]);
+    const labels = core.data
+      ? partyLabels(
+          core.data.roster.data,
+          core.data.people.data,
+          money.data ?? undefined,
+        )
+      : (money.data?.nodes
+          .filter((n) => n.kind === 'party')
+          .flatMap((n) => [n.label, ...(n.aliases ?? [])]) ?? []);
+    const label = resolveParty(input, labels);
+    if (!label) {
+      if (core.status === 'error' || money.status === 'error')
+        throw core.error ?? money.error;
+      return { data: null, stale: false };
+    }
+    const membership = core.data
+      ? partyMembers(
+          label,
+          core.data.roster.data,
+          core.data.people.data,
+          core.data.slugs.data,
+          core.data.manifest.data,
+        )
+      : null;
+    const members: Block<ReturnType<typeof partyMembers>> = {
+      ...core,
+      data: membership,
+      asAt: core.data?.people.data.meta.generated ?? null,
+      sources: membership
+        ? [
+            { label: 'OPAX parliamentary roster', url: '/subject/person' },
+            ...membership.sources.map((s) => ({
+              label: [s.label, s.licence].filter(Boolean).join(', '),
+              url: s.url,
+              licence: s.licence,
+            })),
+          ]
+        : [],
+    };
+    const receipts = {
+      ...money,
+      data: money.data ? partyMoney(label, money.data) : null,
+      asAt: money.data?.meta.generated ?? null,
+    };
+    const association = entities.data
+      ? Object.entries(entities.data.parties).find(([party]) =>
+          samePartyLabel(party, label),
+        )?.[1]
+      : null;
+    const associated = {
+      ...entities,
+      data: entities.data
+        ? {
+            rows: association?.associated_entities?.slice(0, 6) ?? [],
+            total: association?.associated_entities_total ?? 0,
+            notes: entities.data.meta.notes,
+          }
+        : null,
+      asAt: entities.data?.meta.generated ?? null,
+    };
+    const divisions = {
+      ...votes,
+      data: votes.data
+        ? {
+            rows: partyDivisions(label, votes.data.files),
+            scanned: votes.data.files.length,
+            failed: votes.data.failed,
+            basisNote: votes.data.index.meta.party_basis_note,
+          }
+        : null,
+      asAt: votes.data?.index.generated_at ?? null,
+    };
+    return {
+      data: {
+        label,
+        rosterAsAt: core.data?.roster.data.meta.generated ?? null,
+        members,
+        receipts,
+        associated,
+        divisions,
+        moneyMeta: money.data?.meta ?? null,
+      },
+      stale: [members, money, entities, votes].some((b) => b.stale),
+    };
   }
-  slugs() {
-    return this.client.get('/api/person-slugs', decode.decodeSlugs);
+  roster(refresh = false) {
+    return this.client.get(
+      '/parliamentarians.json',
+      decode.decodeRoster,
+      refresh,
+    );
   }
-  manifest() {
-    return this.client.get('/electorates/manifest.json', decode.decodeManifest);
+  slugs(refresh = false) {
+    return this.client.get('/api/person-slugs', decode.decodeSlugs, refresh);
   }
-  people(manifest: Manifest) {
-    return this.client.get(manifest.people_url, decode.decodePeople);
+  manifest(refresh = false) {
+    return this.client.get(
+      '/electorates/manifest.json',
+      decode.decodeManifest,
+      refresh,
+    );
   }
-  electorates(manifest: Manifest) {
-    return this.client.get(manifest.index_url, decode.decodeElectorateIndex);
+  people(manifest: Manifest, refresh = false) {
+    return this.client.get(manifest.people_url, decode.decodePeople, refresh);
+  }
+  electorates(manifest: Manifest, refresh = false) {
+    return this.client.get(
+      manifest.index_url,
+      decode.decodeElectorateIndex,
+      refresh,
+    );
   }
   electorate(path: string) {
     return this.client.get(path, decode.decodeElectorate);
@@ -113,14 +323,91 @@ export class Catalogs {
       decode.decodeExpenseCategories,
     );
   }
-  photoPeople() {
-    return this.client.get('/photos/people.json', decode.decodePhotoPeople);
+  photoPeople(refresh = false) {
+    return this.client.get(
+      '/photos/people.json',
+      decode.decodePhotoPeople,
+      refresh,
+    );
   }
-  photoCredits() {
-    return this.client.get('/photos/credits.json', decode.decodePhotoCredits);
+  photoCredits(refresh = false) {
+    return this.client.get(
+      '/photos/credits.json',
+      decode.decodePhotoCredits,
+      refresh,
+    );
   }
   corpus() {
     return this.client.get('/corpus.json', decode.decodeCorpus);
+  }
+  /** Leads (P1): the static discovery export, decoded whole. */
+  discovery(refresh = false) {
+    return this.client.get('/discovery.json', decode.decodeDiscovery, refresh);
+  }
+  /**
+   * The declared-interests feed behind Today's recent declarations: every
+   * row of /interests/recent.json, newest first, with Today's party join
+   * and the profile slug of each member the register's ID bridge resolves.
+   * Portraits load per row (CachedPortrait). Joins are optional: without
+   * them a row keeps its text and source, and shows no party or profile link.
+   */
+  async declarations(refresh = false) {
+    const record = await this.client.get(
+      '/interests/recent.json',
+      decode.decodeRecentInterests,
+      refresh,
+    );
+    const optional = <T>(path: string, decoder: Decoder<T>) =>
+      this.client.get(path, decoder, refresh).catch(() => null);
+    const [roster, slugs, interestIndex, manifest] = await Promise.all([
+      optional('/parliamentarians.json', decode.decodeRoster),
+      optional('/api/person-slugs', decode.decodeSlugs),
+      optional('/interests/index.json', decode.decodeInterestIndex),
+      optional('/electorates/manifest.json', decode.decodeManifest),
+    ]);
+    const people = manifest
+      ? await optional(manifest.data.people_url, decode.decodePeople).then(
+          (r) =>
+            r && r.data.meta.release_id === manifest.data.release_id ? r : null,
+        )
+      : null;
+    const interests = record.data;
+    const view = recentDeclarationsFor(interests, interests.items.length, {
+      roster: roster?.data,
+    });
+    const profiles =
+      roster && slugs && interestIndex && manifest && people
+        ? declarationProfilesFor(
+            interests.items.map((item) => item.name),
+            {
+              roster: roster.data,
+              slugs: slugs.data,
+              interestIndex: interestIndex.data,
+              manifest: manifest.data,
+              people: people.data,
+            },
+          )
+        : {};
+    const records = [
+      record,
+      ...[roster, slugs, interestIndex, manifest, people].filter(
+        (r) => r !== null,
+      ),
+    ];
+    return {
+      ...cached(
+        {
+          ...view,
+          data: (view.data ?? []).map((item) => ({
+            ...item,
+            profileSlug: profiles[item.name] ?? null,
+          })),
+        },
+        records,
+      ),
+      // The export's own coverage: the newest `rows` of `available`.
+      meta: interests.meta,
+    };
   }
   async about(refresh = false) {
     const result = await this.client.get(
@@ -190,11 +477,7 @@ export class Catalogs {
     };
     const optional = async <T>(path: string, decoder: Decoder<T>) =>
       this.client.get(path, decoder, refresh).catch(() => null);
-    const metadata = Promise.all([
-      optional('/parliamentarians.json', decode.decodeRoster),
-      optional('/photos/people.json', decode.decodePhotoPeople),
-      optional('/photos/credits.json', decode.decodePhotoCredits),
-    ]);
+    const metadata = optional('/parliamentarians.json', decode.decodeRoster);
     const [bills, declarations] = await Promise.all([
       load(
         this.client.get('/bills/index.json', decode.decodeBillIndex, refresh),
@@ -209,25 +492,21 @@ export class Catalogs {
         // Attach the load handler immediately, including when optional metadata is slow.
         return load(
           pending.then(async (record) => {
-            const [roster, photoPeople, photoCredits] = await metadata;
+            const roster = await metadata;
             return {
               ...record,
               data: {
                 interests: record.data,
                 roster,
-                photoPeople,
-                photoCredits,
               },
             };
           }),
-          ({ interests, roster, photoPeople, photoCredits }) =>
+          ({ interests, roster }) =>
             cached(
               recentDeclarationsFor(interests, limit, {
                 roster: roster?.data,
-                photoPeople: photoPeople?.data,
-                photoCredits: photoCredits?.data,
               }),
-              [roster, photoPeople, photoCredits].filter((r) => r !== null),
+              roster ? [roster] : [],
             ),
         );
       })(),
@@ -370,15 +649,15 @@ export class Catalogs {
       error: errors[0] ?? null,
     };
   }
-  async directory() {
+  async directory(refresh = false) {
     const [manifest, roster, slugs] = await Promise.all([
-      this.manifest(),
-      this.roster(),
-      this.slugs(),
+      this.manifest(refresh),
+      this.roster(refresh),
+      this.slugs(refresh),
     ]);
     const [people, electorates] = await Promise.all([
-      this.people(manifest.data),
-      this.electorates(manifest.data),
+      this.people(manifest.data, refresh),
+      this.electorates(manifest.data, refresh),
     ]);
     if (
       people.data.meta.release_id !== manifest.data.release_id ||

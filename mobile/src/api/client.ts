@@ -2,6 +2,13 @@ import { fetch as expoFetch } from 'expo/fetch';
 import { CatalogCache, isFresh, type CacheEntry } from './cache';
 import { ApiError, httpError } from './errors';
 import { allowedURL } from './policy';
+import {
+  assertPortraitPath,
+  assertPortraitBytes,
+  isPortraitPath,
+  portraitMaxBytes,
+  portraitMetadataLimits,
+} from './portrait-policy';
 
 export interface RecordResult<T> {
   data: T;
@@ -91,6 +98,8 @@ export class ApiClient {
     { absence = false }: { absence?: boolean } = {},
   ): Promise<RecordResult<T>> {
     const url = allowedURL(this.options.origin, path); // before cache or networking
+    if (isPortraitPath(path))
+      throw new ApiError('forbidden', 'Images require the byte client.');
     const requestStartedAt = this.now();
     const deadline = requestStartedAt + (this.options.timeoutMs ?? 8000);
     let cached = await this.options.cache.get(url);
@@ -170,7 +179,19 @@ export class ApiClient {
           throw httpError(response.status);
         let body: unknown;
         try {
-          body = response.status === 304 ? cached!.body : await response.json();
+          body =
+            response.status === 304
+              ? cached!.body
+              : portraitMetadataLimits[path]
+                ? JSON.parse(
+                    new TextDecoder().decode(
+                      await this.readBytes(
+                        response,
+                        portraitMetadataLimits[path]!,
+                      ),
+                    ),
+                  )
+                : await response.json();
         } catch (error) {
           if (controller.signal.aborted)
             throw new ApiError(
@@ -268,5 +289,82 @@ export class ApiClient {
     cached = (await this.options.cache.get(url)) ?? cached;
     if (cached) return result(cached, true);
     throw lastError;
+  }
+  private async readBytes(
+    response: Response,
+    limit: number,
+  ): Promise<Uint8Array> {
+    const declared = response.headers.get('content-length');
+    if (
+      declared !== null &&
+      (!/^\d+$/.test(declared) || Number(declared) > limit)
+    ) {
+      await response.body?.cancel();
+      throw new ApiError('invalid-data', 'Portrait response is too large.');
+    }
+    if (!response.body)
+      throw new ApiError('invalid-data', 'Portrait response is empty.');
+    const reader = response.body.getReader();
+    const chunks: Uint8Array[] = [];
+    let size = 0;
+    try {
+      for (;;) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        size += value.byteLength;
+        if (size > limit) {
+          await reader.cancel();
+          throw new ApiError('invalid-data', 'Portrait response is too large.');
+        }
+        chunks.push(value);
+      }
+    } finally {
+      reader.releaseLock();
+    }
+    const bytes = new Uint8Array(size);
+    let offset = 0;
+    for (const chunk of chunks) {
+      bytes.set(chunk, offset);
+      offset += chunk.length;
+    }
+    return bytes;
+  }
+  async getPortrait(path: string): Promise<Uint8Array> {
+    assertPortraitPath(path);
+    const url = allowedURL(this.options.origin, path);
+    const controller = new AbortController();
+    const timer = setTimeout(
+      () => controller.abort(),
+      this.options.timeoutMs ?? 8000,
+    );
+    try {
+      const response = await this.transport(url, {
+        method: 'GET',
+        credentials: 'omit',
+        redirect: 'manual',
+        signal: controller.signal,
+        headers: {
+          Accept: 'image/webp',
+          'User-Agent': `OPAX-iOS/${this.options.version} (${this.options.build})`,
+        },
+      });
+      if (
+        response.redirected ||
+        (response.status >= 300 && response.status < 400) ||
+        (response.url && response.url !== url)
+      )
+        throw new ApiError('forbidden', 'Portrait redirects are forbidden.');
+      if (!response.ok) throw httpError(response.status);
+      if (
+        response.headers.get('content-type')?.split(';')[0]?.trim() !==
+        'image/webp'
+      )
+        throw new ApiError('invalid-data', 'Portrait response is not WebP.');
+      const bytes = await this.readBytes(response, portraitMaxBytes);
+      assertPortraitBytes(bytes);
+      return bytes;
+    } finally {
+      clearTimeout(timer);
+    }
   }
 }

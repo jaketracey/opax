@@ -250,6 +250,17 @@ export const server = createServer(async (request, response) => {
       );
       cacheControl = 'no-store';
     }
+    if (!body && url.pathname.endsWith('.webp')) {
+      status = 404;
+      response.writeHead(status, {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store',
+      });
+      response.end(
+        JSON.stringify({ error: 'Portrait not in the pinned image subset' }),
+      );
+      return;
+    }
     if (changedFiles.has(url.pathname)) {
       if (request.headers['if-none-match'] !== undefined) dataChanged = true;
       if (dataChanged) body = changedFiles.get(url.pathname);
