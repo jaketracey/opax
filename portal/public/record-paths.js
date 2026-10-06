@@ -58,10 +58,13 @@ function ownsPath(record, path) {
  */
 export function recordPathIndex(records, aliases = []) {
   const byPath = new Map();
+  // Every path a record links to, titled or not: none of them is an alias's to take.
+  const linked = new Set();
   for (const record of records) {
     const href = String(record?.href ?? '');
     if (!href.startsWith('/') || href.startsWith('//') || /[?#]/.test(href)) continue;
     const path = canonicalRecordPath(href);
+    if (path) linked.add(path);
     const title = String(record?.title ?? '').trim();
     if (!path || !title) continue;
     const entry = byPath.get(path) ?? { all: new Set(), owners: new Set() };
@@ -78,7 +81,7 @@ export function recordPathIndex(records, aliases = []) {
   for (const [alias, target] of aliases) {
     const path = canonicalRecordPath(alias);
     const title = titleOf.get(canonicalRecordPath(target));
-    if (!path || !title || byPath.has(path)) continue;
+    if (!path || !title || linked.has(path)) continue;
     byAlias.set(path, (byAlias.get(path) ?? new Set()).add(title));
   }
   const shards = Array.from({ length: RECORD_PATH_SHARDS }, () => ({}));

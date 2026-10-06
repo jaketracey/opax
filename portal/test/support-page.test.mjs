@@ -164,6 +164,8 @@ test('a slug never displaces a path a record links to, and names nothing without
     { kind: 'person', title: 'A Person', href: '/subject/person/A%20Person' },
     { kind: 'person', title: 'B Person', href: '/subject/person/B%20Person' },
     { title: 'One receipt', href: '/money' }, { title: 'Another receipt', href: '/money' },
+    // Linked with no title: the path stays out, and no alias takes it.
+    { kind: 'person', title: '  ', href: '/subject/person/c-person' }, { kind: 'person', href: '/subject/person/d-person' },
   ];
   const all = Object.assign({}, ...recordPathIndex(records, [
     ['/subject/person/somebody', '/subject/person/A%20Person'], // a record's own path
@@ -173,9 +175,11 @@ test('a slug never displaces a path a record links to, and names nothing without
     ['/subject/person/twice', '/subject/person/A%20Person'], ['/subject/person/twice', '/subject/person/B%20Person'],
     ['/subject/person/../community', '/subject/person/A%20Person'], ['//evil.example', '/subject/person/A%20Person'],
     ['/subject/person/a-person', '/subject/person/A Person'],
+    ['/subject/person/c-person', '/subject/person/A%20Person'], ['/subject/person/d-person', '/subject/person/B%20Person'],
   ]));
   assert.equal(all['/subject/person/somebody'], 'Somebody');
-  for (const path of ['/money', '/subject/person/nobody', '/subject/person/receipts', '/subject/person/twice', '/community']) assert.equal(all[path], undefined, path);
+  for (const path of ['/money', '/subject/person/nobody', '/subject/person/receipts', '/subject/person/twice', '/community',
+    '/subject/person/c-person', '/subject/person/d-person']) assert.equal(all[path], undefined, path);
   assert.equal(all['/subject/person/a-person'], 'A Person');
   assert.equal(Object.keys(all).length, 4);
 });
