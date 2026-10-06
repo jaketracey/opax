@@ -153,9 +153,10 @@ export function createVoiceAssistant({ mount = document.body, trigger = null, fe
   controls.append(start, signin, mute, end);
   const footer = element('div', 'opax-voice-footer');
   footer.append(element('p', '', 'AI voice powered by ElevenLabs. Answers may be mistaken; check the linked records.'));
+  footer.append(element('p', '', 'Voice is for people aged 16 and over.'));
   const privacyLine = element('p', '', 'Your microphone starts when you choose Start talking. ');
   const privacy = element('a', '', 'Voice privacy');
-  privacy.href = '/community?view=privacy#voice';
+  privacy.href = '/privacy#voice';
   privacyLine.append(privacy);
   footer.append(privacyLine);
   panel.append(header, body, controls, footer);
