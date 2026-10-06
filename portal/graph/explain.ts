@@ -1791,7 +1791,7 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
         'AEC disclosure data: donations under the disclosure threshold are not reported and cannot appear here, so totals are a floor, not a ceiling.'
       const excluded = Array.isArray(meta.exclusions)
         ? `The export excludes ${meta.exclusions.slice(0, 3).join('; ')}.`
-        : 'Public electoral funding, internal party transfers and government entities are excluded from the federal map.'
+        : "Public electoral funding, internal party transfers and government entities are excluded from the federal map's donor flows."
       const noCausation = 'A disclosed donation and a parliamentary statement can be placed beside each other, but this does not prove access, influence, agreement or a causal link.'
       const stateRule = flow.jurisdiction === 'federal'
         ? helpers.stateNotSummed || 'State and federal returns are not summed: AEC returns already include state branch receipts.'

@@ -1260,11 +1260,11 @@ function moneyFineprintHTML(jur, meta) {
   if (meta?.jurisdiction) {
     parts.push(`Source: ${meta.commission} (${meta.sourceShort}), ${meta.coverage}; licence: ${meta.licence}.`);
     parts.push(meta.threshold, "Totals are a floor, not a ceiling.");
-    parts.push("Gifts to candidates and committees, public funding and internal party transfers are excluded.");
+    parts.push("Public funding and gifts to candidates and committees are excluded. Donor totals exclude internal party transfers; party totals include them.");
     parts.push(meta.not_summed || STATE_NOT_SUMMED);
   } else {
     parts.push("Source: Australian Electoral Commission annual and election returns, financial years 1998-99 to 2025-26.");
-    parts.push(AEC_NOTE, "Public electoral funding and internal party transfers are excluded.", STATE_NOT_SUMMED);
+    parts.push(AEC_NOTE, "Public electoral funding is excluded. Donor totals exclude internal party transfers; party totals include them.", STATE_NOT_SUMMED);
   }
   const fullParams = new URLSearchParams();
   if (jur !== "federal") fullParams.set("jur", jur);
@@ -5254,7 +5254,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     if (!isParty && node.contracts) sections.insertAdjacentHTML("beforeend",
       `<p class="fineprint"><a href="/subject/supplier?donor=${encodeURIComponent(node.id)}">Explore their supplier records →</a></p>`);
     sections.insertAdjacentHTML("beforeend",
-      `<p class="fineprint">${esc(AEC_NOTE)}</p>`);
+      `<p class="fineprint">${esc(AEC_NOTE)}${isParty ? " The received total includes internal party transfers; the donor amounts above exclude them." : ""}</p>`);
     if (!isParty) {
       const evidenceSlot = document.createElement('section');
       evidenceSlot.hidden = true;
