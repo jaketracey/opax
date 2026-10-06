@@ -35,3 +35,5 @@ export const leadRoute = (id: string) => ({
   params: { id },
 });
 export const declarationsRoute = { pathname: '/declarations' as const };
+// Local follows: the list and its management, pushed within the current tab.
+export const followsRoute = '/follows';

@@ -39,6 +39,7 @@ import {
 import { shareHeaderItem } from '../navigation/share';
 import { billRoute, electorateRoute, partyRoute } from '../navigation/routes';
 import { InlineLink } from './bills/parts';
+import { FollowToggle } from './follows/FollowToggle';
 import { EvidenceFooter, RecordBlock } from './your-mp/Evidence';
 import {
   uncoveredProfile,
@@ -185,6 +186,14 @@ export function ProfileScreen({
                 formerly={identity.formerly}
                 testID="person-party"
               />
+              {profile.personId ? (
+                <FollowToggle
+                  kind="person"
+                  id={profile.personId}
+                  title={identity.name}
+                  testID="person-follow"
+                />
+              ) : null}
               {identity.seats.length ? (
                 identity.seats.map((seat) => (
                   <Group key={seat.electorate_id} gap={4}>
