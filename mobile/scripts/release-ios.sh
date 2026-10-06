@@ -38,6 +38,8 @@ if [ -f private/local.env ]; then set -a; source private/local.env; set +a; fi
 python3 scripts/release_support.py --scan-tracked "$ROOT"
 export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
 export OPAX_VARIANT=production EXPO_NO_TELEMETRY=1 EXPO_NO_DOTENV=1 CI=1 PYTHONDONTWRITEBYTECODE=1
+export OPAX_PRODUCTION_VOICE=${OPAX_PRODUCTION_VOICE:-0}
+case "$OPAX_PRODUCTION_VOICE" in 0|1) ;; *) echo 'OPAX_PRODUCTION_VOICE must be 0 or 1.' >&2; exit 2 ;; esac
 unset OPAX_DEV_ORIGIN OPAX_FIXTURE_PORT EXPO_PUBLIC_API_ORIGIN
 python3 - <<'PY'
 from pathlib import Path
@@ -82,6 +84,7 @@ mkdir -p "$OUT"
 git check-ignore -q "$OUT" || { echo 'Release evidence must be git-ignored.' >&2; exit 1; }
 printf '%s\n' "$COMMIT" > "$OUT/commit.txt"
 printf '%s\n' "$XCODE_BUILD" > "$OUT/xcode-build.txt"
+printf '%s\n' "$OPAX_PRODUCTION_VOICE" > "$OUT/production-voice-switch.txt"
 ARCHIVE="$OUT/OPAX.xcarchive"
 export OPAX_RELEASE_OUT="$OUT" OPAX_RELEASE_COMMIT="$COMMIT"
 cleanup() {

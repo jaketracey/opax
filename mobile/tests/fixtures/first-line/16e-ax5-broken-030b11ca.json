@@ -1,0 +1,105 @@
+{
+ "source": "build 2 at 030b11ca, 16e iOS 18.4 AX5, cold launch with the refresh control on at mount (first line behind the title)",
+ "width": 1170,
+ "height": 2532,
+ "lines": [
+  {
+   "height": 36.8,
+   "left": 106.7,
+   "text": "2:41",
+   "top": 58.9,
+   "width": 95.7
+  },
+  {
+   "height": 181.3,
+   "left": 41.3,
+   "text": "Today",
+   "top": 302.3,
+   "width": 571.2
+  },
+  {
+   "height": 103.2,
+   "left": 51.5,
+   "text": "independent and",
+   "top": 566.8,
+   "width": 883.0
+  },
+  {
+   "height": 99.4,
+   "left": 62.5,
+   "text": "non-partisan. It is",
+   "top": 728.7,
+   "width": 897.7
+  },
+  {
+   "height": 95.7,
+   "left": 62.5,
+   "text": "not a government",
+   "top": 890.6,
+   "width": 916.1
+  },
+  {
+   "height": 84.6,
+   "left": 62.5,
+   "text": "app.",
+   "top": 1056.2,
+   "width": 231.8
+  },
+  {
+   "height": 165.6,
+   "left": 57.8,
+   "text": "Recently",
+   "top": 1387.7,
+   "width": 681.7
+  },
+  {
+   "height": 144.4,
+   "left": 47.5,
+   "text": "introduced",
+   "top": 1609.7,
+   "width": 850.6
+  },
+  {
+   "height": 135.1,
+   "left": 51.1,
+   "text": "bills",
+   "top": 1825.0,
+   "width": 343.2
+  },
+  {
+   "height": 149.0,
+   "left": 60.4,
+   "text": "Child Support",
+   "top": 2145.1,
+   "width": 942.3
+  },
+  {
+   "height": 33.4,
+   "left": 98.6,
+   "text": "Today",
+   "top": 2394.8,
+   "width": 93.7
+  },
+  {
+   "height": 32.9,
+   "left": 371.2,
+   "text": "Your MP",
+   "top": 2394.1,
+   "width": 129.5
+  },
+  {
+   "height": 29.4,
+   "left": 695.4,
+   "text": "Bills",
+   "top": 2395.8,
+   "width": 66.2
+  },
+  {
+   "height": 29.4,
+   "left": 967.6,
+   "text": "Search",
+   "top": 2395.8,
+   "width": 106.7
+  }
+ ]
+}

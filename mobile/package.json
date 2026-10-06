@@ -16,6 +16,7 @@
     "qa": "bash scripts/qa.sh"
   },
   "dependencies": {
+    "@shopify/react-native-skia": "2.6.2",
     "expo": "57.0.26",
     "expo-build-properties": "57.0.22",
     "expo-constants": "57.0.20",
@@ -23,7 +24,9 @@
     "expo-font": "57.0.4",
     "expo-gl": "57.0.2",
     "expo-linking": "57.0.11",
+    "expo-location": "57.0.20",
     "expo-router": "57.0.24",
+    "expo-splash-screen": "57.0.9",
     "expo-status-bar": "57.0.1",
     "expo-symbols": "57.0.3",
     "expo-web-browser": "57.0.3",

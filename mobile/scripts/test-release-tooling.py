@@ -9,6 +9,7 @@ import io
 import json
 import os
 from pathlib import Path
+import re
 import struct
 import subprocess
 import sys
@@ -485,6 +486,35 @@ class ReleaseStepTests(unittest.TestCase):
 
 
 class BundleAttackTests(unittest.TestCase):
+    def test_pinned_reanimated_metadata_is_not_a_route_but_new_paths_are_refused(self):
+        with tempfile.TemporaryDirectory() as d:
+            routes = Path(d)
+            (routes / "_layout.tsx").write_text("shipping route")
+            entries = ["./_layout.tsx", "react-native-reanimated", "4.5.1",
+                       *sorted(verify.REANIMATED_METADATA_PATHS)]
+            storage = "\0".join(entries).encode()
+            bundle = hermes_bundle(storage, [packed(storage, entry.encode()) for entry in entries])
+            self.assertEqual(verify.bundle_route_keys(bundle, routes), ["./_layout.tsx"])
+            for plant in ("./src/unexpected.ts", "./lib/module/workbench.js", "./src/core.ts.workbench.tsx"):
+                with self.subTest(plant=plant), self.assertRaises(ReleaseError):
+                    body = storage + b"\0" + plant.encode()
+                    verify.bundle_route_keys(hermes_bundle(body, [packed(body, entry.encode())
+                                             for entry in [*entries, plant]]), routes)
+            # A source route with an exempt-looking name must still fail when
+            # Metro excludes it; dependency metadata cannot conceal that route.
+            (routes / "src").mkdir()
+            (routes / "src/core.ts").write_text("unshipped route")
+            with patch.object(verify, "production_block_list", return_value=(re.compile(r"/src/core\.ts$"),)):
+                with self.assertRaises(ReleaseError):
+                    verify.bundle_route_keys(bundle, routes)
+
+    def test_dependency_paths_without_pinned_package_identity_are_refused(self):
+        with tempfile.TemporaryDirectory() as d:
+            routes = Path(d)
+            (routes / "_layout.tsx").write_text("shipping route")
+            with self.assertRaises(ReleaseError):
+                verify.bundle_route_keys(b"\0./_layout.tsx\0./src/core.ts\0", routes)
+
     def test_app_extensions_refused(self):
         with tempfile.TemporaryDirectory() as d:
             app = Path(d)
@@ -642,6 +672,37 @@ class BundleAttackTests(unittest.TestCase):
         with self.assertRaises(ReleaseError):
             verify.verify_no_drawn_diagnostics(bundle[:-1])
 
+    def test_e2e_launch_flags_are_refused_in_production_string_entries(self):
+        for entry in (b"OPAXWelcomeTour", b"-OPAXWelcomeTour on"):
+            with self.subTest(entry=entry):
+                bundle = hermes_bundle(entry, [packed(entry, entry)])
+                with self.assertRaisesRegex(ReleaseError, "no e2e launch arguments"):
+                    verify.verify_no_e2e_launch_flags(bundle)
+        with self.assertRaises(ReleaseError):
+            verify.verify_no_e2e_launch_flags(b"plain JS OPAXWelcomeTour")
+        storage = b"shippingOPAXWelcomeTour"
+        bundle = hermes_bundle(storage, [packed(storage, b"shipping")])
+        self.assertEqual(verify.verify_no_e2e_launch_flags(bundle), 1)
+
+    def test_source_preview_ids_are_refused_in_production_string_entries(self):
+        self.assertIn(b"source-destination-ok", [i.encode() for i in verify.E2E_SOURCE_PREVIEW_IDS])
+        for marker in (b"source-destination-url", b"source-destination-scroll", b"source-destination-ok"):
+            for entry in (marker, b"prefix" + marker + b"suffix"):
+                with self.subTest(marker=marker, entry=entry):
+                    bundle = hermes_bundle(entry, [packed(entry, entry)])
+                    with self.assertRaisesRegex(ReleaseError, "no e2e source preview test IDs"):
+                        verify.verify_no_source_preview_ids(bundle)
+            with self.subTest(plain=marker), self.assertRaises(ReleaseError):
+                verify.verify_no_source_preview_ids(b"plain JS " + marker)
+
+    def test_source_preview_check_allows_the_route_name_and_fails_closed(self):
+        # The root layout ships the route name, switched off at runtime.
+        storage = b"source-destination./_layout.tsx"
+        bundle = hermes_bundle(storage, [packed(storage, b"source-destination"), packed(storage, b"./_layout.tsx")])
+        self.assertEqual(verify.verify_no_source_preview_ids(bundle), 2)
+        with self.assertRaises(ReleaseError):
+            verify.verify_no_source_preview_ids(bundle[:-1])
+
     def test_route_keys_are_whole_hermes_string_entries(self):
         keys = ["./(tabs)/(bills)/bills.tsx", "./_layout.tsx", "./account.tsx", "./talk.tsx"]
         # Hermes packs strings without separators and lets entries overlap.
@@ -793,6 +854,16 @@ class BundleAttackTests(unittest.TestCase):
                     verify.framework_allowlist(app)
                 plant.rmdir()
 
+    def test_analytics_check_reads_hermes_entries_and_still_refuses_sdk_and_host_plants(self):
+        storage = b"ignoreAllLogsENTRY_EXIT"
+        safe = hermes_bundle(storage, [packed(storage, entry) for entry in (b"ignoreAllLogs", b"ENTRY_EXIT")])
+        self.assertFalse(verify.has_analytics(safe))
+        for entry in (b"sentry", b"https://us.i.posthog.com/capture", b"HTTPS://API.HEAP.IO/track"):
+            with self.subTest(entry=entry):
+                self.assertTrue(verify.has_analytics(hermes_bundle(entry, [packed(entry, entry)])))
+        with self.assertRaises(ReleaseError):
+            verify.has_analytics(safe[:-1])
+
     def test_every_embedded_bundle_entitlement_payload_checked(self):
         with tempfile.TemporaryDirectory() as d:
             import plistlib
@@ -805,6 +876,93 @@ class BundleAttackTests(unittest.TestCase):
             with patch.object(verify, "command", side_effect=command):
                 with self.assertRaisesRegex(ReleaseError, "embedded code bundle"):
                     verify.nested_entitlements(app)
+
+
+class ProductionVoiceTests(unittest.TestCase):
+    def info(self):
+        return {"NSMicrophoneUsageDescription": verify.VOICE_POLICY["microphonePurpose"],
+                "OPAXProductionVoiceEnabled": True, "OPAXVoiceConsentDefault": False,
+                "OPAXVoiceAllowedRoutes": verify.VOICE_POLICY["routes"]}
+
+    def manifest(self):
+        return {"NSPrivacyTracking": False, "NSPrivacyCollectedDataTypes": [
+            {"NSPrivacyCollectedDataType": "NSPrivacyCollectedDataType" + name,
+             "NSPrivacyCollectedDataTypeLinked": linked, "NSPrivacyCollectedDataTypeTracking": False,
+             "NSPrivacyCollectedDataTypePurposes": ["NSPrivacyCollectedDataTypePurposeAppFunctionality"]}
+            for linked, names in ((True, verify.VOICE_POLICY["linkedDataTypes"]),
+                                  (False, verify.VOICE_POLICY["unlinkedDataTypes"])) for name in names],
+            "NSPrivacyAccessedAPITypes": [{"NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+                                         "NSPrivacyAccessedAPITypeReasons": ["CA92.1"]}]}
+
+    def native_body(self):
+        return struct.pack("<8I", 0xfeedfacf, 0, 0, 0, 0, 0, 0, 0) + b"\0".join((
+            b"OpaxVoiceModule", b"OpaxVoiceCore", b"StoredVoiceConsent", b"opax.voice.consent.v1",
+            b"OPAXProductionVoiceEnabled", b"OPAXVoiceAllowedRoutes", b"requestRecordPermission"))
+
+    def test_switch_defaults_off_and_rejects_invalid_values(self):
+        with patch.dict(os.environ, {}, clear=True):
+            self.assertFalse(verify.production_voice_enabled())
+        self.assertFalse(verify.production_voice_enabled("0"))
+        self.assertTrue(verify.production_voice_enabled("1"))
+        for value in ("", "true", "2"):
+            with self.assertRaises(ReleaseError): verify.production_voice_enabled(value)
+
+    def test_both_purpose_modes_and_on_device_location(self):
+        verify.verify_voice_info({}, False)
+        verify.verify_voice_info(self.info(), True)
+        for enabled, info in ((False, {}), (True, self.info())):
+            info["NSLocationWhenInUseUsageDescription"] = verify.LOCATION_PURPOSE
+            verify.verify_voice_info(info, enabled)
+        for enabled, info in ((True, {}), (False, self.info())):
+            with self.assertRaises(ReleaseError): verify.verify_voice_info(info, enabled)
+
+    def test_wrong_purpose_routes_auto_consent_and_fixture_metadata_fail(self):
+        for key, value in (("NSMicrophoneUsageDescription", "draft"), ("OPAXVoiceConsentDefault", True),
+                           ("OPAXVoiceAllowedRoutes", verify.VOICE_POLICY["routes"] + ["POST /api/ask"]),
+                           ("OPAXProductionVoiceEnabled", False), ("OPAXVoiceFixturePort", 8923),
+                           ("NSCameraUsageDescription", "unshipped")):
+            info = {**self.info(), key: value}
+            with self.subTest(key=key), self.assertRaises(ReleaseError): verify.verify_voice_info(info, True)
+
+    def test_privacy_exact_types_linkage_tracking_purpose_and_reasons(self):
+        self.assertEqual(verify.VOICE_POLICY["unlinkedDataTypes"], ["SearchHistory", "OtherDataTypes"])
+        verify.verify_voice_privacy(self.manifest())
+        for key, value in (("NSPrivacyTracking", True), ("NSPrivacyTrackingDomains", ["foreign.test"]),
+                           ("NSPrivacyAccessedAPITypes", []), ("NSPrivacyCollectedDataTypes", [])):
+            with self.subTest(key=key), self.assertRaises(ReleaseError):
+                verify.verify_voice_privacy({**self.manifest(), key: value})
+        for key, value in (("NSPrivacyCollectedDataTypeLinked", False), ("NSPrivacyCollectedDataTypeTracking", True),
+                           ("NSPrivacyCollectedDataTypePurposes", ["NSPrivacyCollectedDataTypePurposeAnalytics"]),
+                           ("NSPrivacyCollectedDataType", "NSPrivacyCollectedDataTypePreciseLocation")):
+            changed = self.manifest(); changed["NSPrivacyCollectedDataTypes"][0][key] = value
+            with self.subTest(key=key), self.assertRaises(ReleaseError): verify.verify_voice_privacy(changed)
+
+    def test_voice_routes_required_as_whole_hermes_entries_in_on_mode(self):
+        keys = b"./talk.tsx./account/index.tsx"
+        body = hermes_bundle(keys, [packed(keys, b"./talk.tsx"), packed(keys, b"./account/index.tsx")])
+        verify.verify_voice_bundle(body, True)
+        verify.verify_voice_bundle(b"catalog only", False)
+        for bad in (b"./talk.tsx\0", b"./talk.tsx.workbench.tsx\0./account/index.tsx\0"):
+            with self.assertRaises(ReleaseError): verify.verify_voice_bundle(bad, True)
+
+    def test_fixture_material_stays_forbidden_in_both_modes(self):
+        for enabled in (False, True):
+            for marker in (b"happy@example.invalid", b"arbitrary@example.invalid", b"voice-bridge-test", b"/__fixture/voice"):
+                with self.subTest(enabled=enabled, marker=marker), self.assertRaises(ReleaseError):
+                    verify.verify_voice_bundle(b"./talk.tsx\0./account/index.tsx\0" + marker, enabled)
+
+    def test_both_pods_consent_and_permission_required_without_native_fixtures(self):
+        with tempfile.TemporaryDirectory() as d:
+            app = Path(d); binary = app / "OPAX"
+            body = self.native_body(); binary.write_bytes(body)
+            verify.verify_voice_native_code(app)
+            with self.assertRaises(ReleaseError): verify.verify_no_voice_native_code(app)
+            for marker in (b"OpaxVoiceModule", b"OpaxVoiceCore", b"StoredVoiceConsent", b"requestRecordPermission"):
+                binary.write_bytes(body.replace(marker, b"missing"))
+                with self.subTest(marker=marker), self.assertRaises(ReleaseError): verify.verify_voice_native_code(app)
+            for marker in (b"DebugSyntheticEngineFactory", b"OPAXVoiceFixturePort", b"http://127.0.0.1:8923", b"test@example.invalid"):
+                binary.write_bytes(body + marker)
+                with self.subTest(marker=marker), self.assertRaises(ReleaseError): verify.verify_voice_native_code(app)
 
 
 if __name__ == "__main__":

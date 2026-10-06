@@ -466,9 +466,26 @@ describe('workbench exclusion', () => {
     expect(
       blocked(blockList('e2e'), '/repo/mobile/src/design/text-probe.e2e.ts'),
     ).toBe(false);
+    expect(
+      blocked(
+        blockList('production'),
+        '/repo/mobile/src/features/electorate-map/outline-probe.e2e.ts',
+      ),
+    ).toBe(true);
+    expect(
+      blocked(
+        blockList('e2e'),
+        '/repo/mobile/src/features/electorate-map/outline-probe.e2e.ts',
+      ),
+    ).toBe(false);
+  });
+  test('production blocks direct imports of the welcome tour launch argument', () => {
+    const file = '/repo/mobile/src/onboarding/launch-flag.e2e.ts';
+    expect(blocked(blockList('production'), file)).toBe(true);
+    expect(blocked(blockList('e2e'), file)).toBe(false);
   });
   test.each(['production', 'e2e', 'development'])(
-    '%s resolves text probes at build time and delegates ordinary imports',
+    '%s resolves the welcome tour launch argument at build time',
     (variant) => {
       const output = execFileSync(
         process.execPath,
@@ -478,13 +495,62 @@ describe('workbench exclusion', () => {
         const path = require('node:path');
         const config = require('./metro.config.js');
         const context = {
-          originModulePath: path.resolve('src/design/text.tsx'),
+          originModulePath: path.resolve('src/onboarding/state.ts'),
           resolveRequest: (_context, name) => ({
-            type: 'sourceFile', filePath: path.resolve('src/design', name + '.ts'),
+            type: 'sourceFile', filePath: path.resolve('src/onboarding', name + '.ts'),
+          }),
+        };
+        process.stdout.write(JSON.stringify(config.resolver.resolveRequest(context, './launch-flag', 'ios')));
+      `,
+        ],
+        {
+          cwd: resolve(__dirname, '..'),
+          env: { ...process.env, OPAX_VARIANT: variant },
+          encoding: 'utf8',
+        },
+      );
+      expect(JSON.parse(output)).toEqual({
+        type: 'sourceFile',
+        filePath: resolve(
+          __dirname,
+          '../src/onboarding',
+          variant === 'production'
+            ? 'launch-flag.production.ts'
+            : 'launch-flag.ts',
+        ),
+      });
+    },
+  );
+  test.each(
+    ['production', 'e2e', 'development'].flatMap((variant) =>
+      [
+        ['src/design', 'text-probe', 'tokens'],
+        ['src/features/electorate-map', 'outline-probe', 'suggestion'],
+      ].map(([directory, probe, ordinary]) => [
+        variant,
+        directory,
+        probe,
+        ordinary,
+      ]),
+    ),
+  )(
+    '%s resolves %s/%s at build time and delegates ordinary imports',
+    (variant, directory, probe, ordinary) => {
+      const output = execFileSync(
+        process.execPath,
+        [
+          '-e',
+          `
+        const path = require('node:path');
+        const config = require('./metro.config.js');
+        const context = {
+          originModulePath: path.resolve('${directory}/component.tsx'),
+          resolveRequest: (_context, name) => ({
+            type: 'sourceFile', filePath: path.resolve('${directory}', name + '.ts'),
           }),
         };
         const resolve = name => config.resolver.resolveRequest(context, name, 'ios');
-        process.stdout.write(JSON.stringify([resolve('./text-probe'), resolve('./tokens')]));
+        process.stdout.write(JSON.stringify([resolve('./${probe}'), resolve('./${ordinary}')]));
       `,
         ],
         {
@@ -501,14 +567,12 @@ describe('workbench exclusion', () => {
         type: 'sourceFile',
         filePath: resolve(
           __dirname,
-          '../src/design',
-          variant === 'production'
-            ? 'text-probe.production.ts'
-            : 'text-probe.ts',
+          `../${directory}`,
+          variant === 'production' ? `${probe}.production.ts` : `${probe}.ts`,
         ),
       });
       expect(resolutions[1]!.filePath).toBe(
-        resolve(__dirname, '../src/design/tokens.ts'),
+        resolve(__dirname, `../${directory}/${ordinary}.ts`),
       );
     },
   );

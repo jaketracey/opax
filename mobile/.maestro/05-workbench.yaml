@@ -36,6 +36,15 @@ name: 05 Design workbench, every component and state
     id: wb-share
 - assertVisible: https://opax.invalid/subject/person/anthony-albanese
 - tapOn: OK
+# The lead card's example records read as labels, never the export's
+# internal row number ("local record 643745").
+- scrollUntilVisible:
+    element:
+      text: Westpac Banking Corporation → Australian Labor Party .* AEC annual receipt
+    direction: UP
+    centerElement: true
+- assertNotVisible: .*local record.*
+- takeScreenshot: ${EVIDENCE}/05-workbench-lead-records
 - tapOn: Done
 - scrollUntilVisible:
     element:

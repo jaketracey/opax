@@ -31,6 +31,6 @@ export const apiClient = new ApiClient({
   origin: extra.apiOrigin,
   version: extra.appVersion,
   build: extra.appBuild,
-  cache: new CatalogCache(new DiskStore()),
+  cache: new CatalogCache(new DiskStore(), 24 * 1024 * 1024, 220),
 });
 export const catalogs = new Catalogs(apiClient);

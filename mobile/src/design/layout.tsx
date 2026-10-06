@@ -1,4 +1,10 @@
-import { Children, type ReactElement, type ReactNode } from 'react';
+import {
+  Children,
+  useRef,
+  type ReactElement,
+  type ReactNode,
+  type RefObject,
+} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -10,6 +16,7 @@ import { useAccessibilitySize } from './accessibility';
 import { Divider } from './controls';
 import { Heading, Text } from './text';
 import { colors, hairline, layout, spacing } from './tokens';
+import { useStableKeyboard } from './useStableKeyboard';
 
 /**
  * A scrolling screen on paper, under the native navigation bar. It is the
@@ -35,6 +42,41 @@ export function Screen({
       keyboardDismissMode="on-drag"
       refreshControl={refreshControl}
       contentContainerStyle={styles.content}
+    >
+      {children}
+    </ScrollView>
+  );
+}
+
+/** Search's form owns keyboard space; UIKit retains navigation/tab insets. */
+export function KeyboardStableScreen({
+  testID,
+  children,
+  refreshControl,
+  keyboardTarget,
+}: {
+  testID?: string;
+  children: ReactNode;
+  refreshControl?: ReactElement<RefreshControlProps>;
+  keyboardTarget: RefObject<View | null>;
+}) {
+  const scroll = useRef<ScrollView>(null);
+  const keyboard = useStableKeyboard(scroll, keyboardTarget);
+  return (
+    <ScrollView
+      ref={scroll}
+      testID={testID}
+      style={styles.screen}
+      contentInsetAdjustmentBehavior="automatic"
+      keyboardShouldPersistTaps="handled"
+      automaticallyAdjustKeyboardInsets={false}
+      scrollToOverflowEnabled
+      keyboardDismissMode="on-drag"
+      refreshControl={refreshControl}
+      contentContainerStyle={[styles.content, keyboard.contentStyle]}
+      onLayout={keyboard.onLayout}
+      onScroll={keyboard.onScroll}
+      scrollEventThrottle={16}
     >
       {children}
     </ScrollView>
