@@ -200,15 +200,6 @@ name: 26 Follow a member, a bill and an electorate; Today shows what changed
 - takeScreenshot: ${EVIDENCE}/26-today-changed
 - scrollUntilVisible:
     element:
-      id: today-following-person-person_2b850aa643795ce8902f754b
-      text: 'Anthony Albanese, Parliamentarian, 1 change since \d+ \w+ 20\d\d, 1 new declared entry, Register of Members’ Interests, as at 4 September 2026'
-    timeout: 90000
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
-- takeScreenshot: ${EVIDENCE}/26-today-member-changed
-- scrollUntilVisible:
-    element:
       id: today-following-bill-au-federal-r7549
       text: '.*, Bill, 1 change since \d+ \w+ 20\d\d, Now passed; was before parliament, ParlInfo bill records, as at 1 October 2026'
     timeout: 90000
@@ -217,6 +208,15 @@ name: 26 Follow a member, a bill and an electorate; Today shows what changed
     speed: 20
 - waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/26-today-bill-changed
+- scrollUntilVisible:
+    element:
+      id: today-following-person-person_2b850aa643795ce8902f754b
+      text: 'Anthony Albanese, Parliamentarian, 1 change since \d+ \w+ 20\d\d, 1 new declared entry, Register of Members’ Interests, as at 4 September 2026'
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/26-today-member-changed
 
 # Opening the bill marks it seen; the member still shows its change.
 # At AX5 the row (about 1,370pt) outgrows the screen, and Maestro taps its
@@ -335,16 +335,16 @@ name: 26 Follow a member, a bill and an electorate; Today shows what changed
     speed: 20
 - scrollUntilVisible:
     element:
-      id: today-following-person-person_2b850aa643795ce8902f754b
-      text: 'Anthony Albanese, Parliamentarian, 1 change since .*1 new declared entry.*'
+      id: today-following-bill-au-federal-r7549
+      text: '.*, Bill, No changes since \d+ \w+ 20\d\d'
     timeout: 90000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
 - scrollUntilVisible:
     element:
-      id: today-following-bill-au-federal-r7549
-      text: '.*, Bill, No changes since \d+ \w+ 20\d\d'
+      id: today-following-person-person_2b850aa643795ce8902f754b
+      text: 'Anthony Albanese, Parliamentarian, 1 change since .*1 new declared entry.*'
     timeout: 90000
     visibilityPercentage: 10
     centerElement: true
