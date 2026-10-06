@@ -25,7 +25,6 @@ import {
   LinkRow,
   LoadingState,
   OpaxWebLink,
-  PartyChip,
   PersonRow,
   RowList,
   Screen,
@@ -35,7 +34,7 @@ import {
   Text,
   errorMessage,
 } from '../design/primitives';
-import { partyWash } from '../design/party';
+import { partyDot, partyWash } from '../design/party';
 import { colors, radius, rhythm } from '../design/tokens';
 import { openOnWeb } from '../navigation/external';
 import { billRoute, personRoute } from '../navigation/routes';
@@ -161,11 +160,22 @@ export function PartyPage({ input }: { input: string }) {
             <View
               style={[styles.hero, { backgroundColor: partyWash(view.label) }]}
             >
-              <Text variant="kicker">Political party</Text>
+              <View style={styles.kicker}>
+                {partyDot(view.label) ? (
+                  <View
+                    accessibilityElementsHidden
+                    importantForAccessibility="no-hide-descendants"
+                    style={[
+                      styles.dot,
+                      { backgroundColor: partyDot(view.label)! },
+                    ]}
+                  />
+                ) : null}
+                <Text variant="kicker">Political party</Text>
+              </View>
               <Heading level={1} testID="party-title">
                 {view.label}
               </Heading>
-              <PartyChip party={view.label} status="unknown" short={false} />
             </View>
             <Section
               title="Members"
@@ -190,6 +200,11 @@ export function PartyPage({ input }: { input: string }) {
                     <BigFigure
                       value={formatCount(data.currentCount)}
                       label="current members with current evidence"
+                      detail={
+                        view.rosterAsAt
+                          ? `Roster as at ${formatDate(view.rosterAsAt, 'short')}`
+                          : undefined
+                      }
                       accessibilityLabel={`${formatCount(data.currentCount)} current members with current evidence`}
                       accent="people"
                       testID="party-current-count"
@@ -222,10 +237,6 @@ export function PartyPage({ input }: { input: string }) {
                         </Disclosure>
                       ) : null}
                     </RowList>
-                    <AsAtLine
-                      asOf={view.rosterAsAt}
-                      citation="OPAX parliamentary roster"
-                    />
                   </>
                 )}
               </CatalogState>
@@ -514,6 +525,16 @@ const styles = StyleSheet.create({
     padding: rhythm.block + rhythm.line,
     borderWidth: 1,
     borderColor: colors.line,
+  },
+  kicker: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
+  // The raised ring keeps the party colour at 3:1 on its own wash.
+  dot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    borderWidth: 1.5,
+    borderColor: colors.raised,
+    boxSizing: 'content-box',
   },
   donor: {
     flexDirection: 'row',

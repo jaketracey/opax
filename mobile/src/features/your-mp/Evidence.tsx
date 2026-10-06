@@ -7,6 +7,7 @@ import {
   EmptyState,
   ErrorState,
   Group,
+  Heading,
   Section,
   StaleNotice,
   Text,
@@ -15,7 +16,7 @@ import {
   type InfoNotes,
   type SFSymbol,
 } from '../../design/primitives';
-import { rhythm, type Accent } from '../../design/tokens';
+import { colors, hairline, rhythm, type Accent } from '../../design/tokens';
 
 /**
  * The foot of a record block: one quiet "Updated 4 Oct 2026" caption and a
@@ -27,15 +28,20 @@ export function EvidenceFooter({
   block,
   id,
   date = true,
+  caption,
 }: {
   block: EvidenceBlock<unknown>;
   id: string;
   date?: boolean;
+  /** The block's own caption in place of its as-at line (the votes record). */
+  caption?: ReactNode;
 }) {
   return (
     <Group gap={rhythm.line}>
       <View style={styles.foot}>
-        {date ? (
+        {caption ? (
+          <View style={styles.caption}>{caption}</View>
+        ) : date ? (
           <View style={styles.caption}>
             <AsAtLine
               asOf={block.asAt}
@@ -85,7 +91,16 @@ export function RecordBlock<T>({
   icon,
   accent,
   info,
+  sub,
+  caption,
 }: {
+  /** Replaces the footer's as-at line, beside View original. */
+  caption?: ReactNode;
+  /**
+   * A block inside a section (one election, one Census year): a level 3
+   * heading under a subtle rule ('ruled') or none for the first ('first').
+   */
+  sub?: 'ruled' | 'first';
   title: string;
   id: string;
   block: EvidenceBlock<T>;
@@ -101,15 +116,8 @@ export function RecordBlock<T>({
   info?: (data: T | null) => InfoNotes | null;
 }) {
   const notes = info?.(block.data);
-  return (
-    <Section
-      testID={id}
-      title={title}
-      headingTestID={`${id}-heading`}
-      icon={icon}
-      accent={accent}
-      info={notes ? { ...notes, testID: `${id}-info` } : undefined}
-    >
+  const body = (
+    <>
       {block.status === 'unlinked' ? (
         <EmptyState
           message={
@@ -132,7 +140,31 @@ export function RecordBlock<T>({
       ) : (
         children(block.data)
       )}
-      <EvidenceFooter block={block} id={id} date={date} />
+      <EvidenceFooter block={block} id={id} date={date} caption={caption} />
+    </>
+  );
+  if (sub)
+    return (
+      <View
+        testID={id}
+        style={[styles.sub, sub === 'ruled' ? styles.subRuled : null]}
+      >
+        <Heading level={3} testID={`${id}-heading`}>
+          {title}
+        </Heading>
+        {body}
+      </View>
+    );
+  return (
+    <Section
+      testID={id}
+      title={title}
+      headingTestID={`${id}-heading`}
+      icon={icon}
+      accent={accent}
+      info={notes ? { ...notes, testID: `${id}-info` } : undefined}
+    >
+      {body}
     </Section>
   );
 }
@@ -146,4 +178,11 @@ const styles = StyleSheet.create({
     rowGap: rhythm.line,
   },
   caption: { flexGrow: 1, flexShrink: 1 },
+  sub: { gap: rhythm.tight },
+  subRuled: {
+    marginTop: rhythm.tight,
+    paddingTop: rhythm.block,
+    borderTopWidth: hairline,
+    borderTopColor: colors.dividerSubtle,
+  },
 });

@@ -8,6 +8,7 @@ export {
   Tag,
   FilterChip,
   SegmentedControl,
+  ChoiceChips,
   Field,
   Divider,
   type ButtonProps,

@@ -16,7 +16,7 @@ import {
   Field,
   Group,
   InfoButton,
-  SegmentedControl,
+  ChoiceChips,
   Text,
 } from '../../design/primitives';
 import { formatCount } from '../../design/format';
@@ -87,7 +87,7 @@ export default function Declarations() {
             <Text wordSafe variant="control" accessibilityRole="header">
               Chamber
             </Text>
-            <SegmentedControl
+            <ChoiceChips
               segments={[
                 {
                   value: 'all',
@@ -102,7 +102,6 @@ export default function Declarations() {
               ]}
               value={filters.chamber}
               onChange={(chamber) => setFilters((f) => ({ ...f, chamber }))}
-              stacked
               testID="declarations-chamber"
             />
           </Group>
@@ -110,7 +109,7 @@ export default function Declarations() {
             <Text wordSafe variant="control" accessibilityRole="header">
               Jurisdiction
             </Text>
-            <SegmentedControl
+            <ChoiceChips
               segments={[
                 {
                   value: 'all',
@@ -127,7 +126,6 @@ export default function Declarations() {
               onChange={(jurisdiction) =>
                 setFilters((f) => ({ ...f, jurisdiction }))
               }
-              stacked
               testID="declarations-jurisdiction"
             />
           </Group>
@@ -210,7 +208,11 @@ export default function Declarations() {
           }
         />
       )}
-      ItemSeparatorComponent={() => <Divider variant="subtle" />}
+      ItemSeparatorComponent={() => (
+        <View style={styles.separator}>
+          <Divider variant="subtle" />
+        </View>
+      )}
       ListHeaderComponent={header}
       ListEmptyComponent={
         record ? (
@@ -248,5 +250,6 @@ const styles = StyleSheet.create({
   header: { paddingBottom: spacing.s4 },
   footer: { paddingTop: spacing.s4 },
   count: { flexDirection: 'row', alignItems: 'center', gap: spacing.s3 },
+  separator: { paddingVertical: 12 },
   grow: { flex: 1 },
 });

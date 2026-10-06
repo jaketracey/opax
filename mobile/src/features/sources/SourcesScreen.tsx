@@ -246,15 +246,9 @@ function DatasetRow({ dataset }: { dataset: Dataset }) {
   return (
     <Disclosure
       label={dataset.name}
-      value={dataset.licence}
-      accessibilityLabel={[dataset.name, dataset.publisher, dataset.licence]
-        .filter(Boolean)
-        .join(', ')}
+      detail={[dataset.publisher, dataset.licence].filter(Boolean).join(' · ')}
       testID={`sources-dataset-${dataset.id}`}
     >
-      <Text wordSafe variant="metadata">
-        {dataset.publisher}
-      </Text>
       {dataset.terms.map((term, index) => (
         <Text key={index} wordSafe variant="body">
           {term}

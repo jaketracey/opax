@@ -224,6 +224,7 @@ export function ElectorateScreen({
                 view.elections.map((b, i) => (
                   <RecordBlock
                     key={i}
+                    sub={i ? 'ruled' : 'first'}
                     title={b.data?.election.name ?? 'Election'}
                     id={`electorate-election-${i}`}
                     block={b}
@@ -300,6 +301,7 @@ export function ElectorateScreen({
                 view.census.map((b, i) => (
                   <RecordBlock
                     key={i}
+                    sub={i ? 'ruled' : 'first'}
                     title={`Census ${b.data?.year ?? ''}`}
                     id={`electorate-census-${i}`}
                     block={b}

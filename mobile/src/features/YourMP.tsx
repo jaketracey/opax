@@ -366,6 +366,21 @@ export default function YourMP() {
                 missing="No recorded bill votes are held for this member."
                 retry={retry}
                 date={false}
+                caption={
+                  memberProfile.blocks.votes.data ? (
+                    <Group gap={rhythm.line}>
+                      {memberProfile.blocks.votes.data.jurisdictions.map(
+                        (jur) => (
+                          <AsAtLine
+                            key={jur}
+                            votes={votingMetaFor(memberProfile.blocks.votes)}
+                            jurisdiction={jur}
+                          />
+                        ),
+                      )}
+                    </Group>
+                  ) : undefined
+                }
                 info={(v) =>
                   v ? { title: 'About these votes', notes: [v.method] } : null
                 }
@@ -432,13 +447,6 @@ export default function YourMP() {
                     {!v.for.length && !v.against.length ? (
                       <EmptyState message="None of their recorded divisions was a vote on a bill itself." />
                     ) : null}
-                    {v.jurisdictions.map((jur) => (
-                      <AsAtLine
-                        key={jur}
-                        votes={votingMetaFor(memberProfile.blocks.votes)}
-                        jurisdiction={jur}
-                      />
-                    ))}
                   </Group>
                 )}
               </RecordBlock>

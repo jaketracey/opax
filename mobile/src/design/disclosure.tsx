@@ -30,6 +30,7 @@ export function animateLayout(reduceMotion: boolean) {
 export function Disclosure({
   label,
   value,
+  detail,
   icon,
   accent,
   accessibilityLabel,
@@ -41,8 +42,10 @@ export function Disclosure({
   children,
 }: {
   label: string;
-  /** A short trailing value: a count or a total. */
+  /** A short trailing value: a count or a total. Never wraps. */
   value?: string;
+  /** A line under the label: "Parliament of Australia · CC BY-NC-ND". */
+  detail?: string;
   /** A leading SF Symbol, tinted with the accent. */
   icon?: SFSymbol;
   accent?: Accent;
@@ -77,7 +80,8 @@ export function Disclosure({
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={
-          accessibilityLabel ?? (value ? `${label}, ${value}` : label)
+          accessibilityLabel ??
+          [label, value, detail].filter(Boolean).join(', ')
         }
         accessibilityState={{ expanded: open }}
         testID={testID}
@@ -94,11 +98,18 @@ export function Disclosure({
       >
         {icon ? <Icon name={icon} size={17} tone={tint} /> : null}
         <View style={[styles.text, stacked ? styles.stacked : null]}>
-          <Text wordSafe variant="strong" style={styles.label}>
-            {label}
-          </Text>
+          <View style={styles.label}>
+            <Text wordSafe variant="strong">
+              {label}
+            </Text>
+            {detail ? (
+              <Text wordSafe variant="metadata">
+                {detail}
+              </Text>
+            ) : null}
+          </View>
           {value ? (
-            <Text variant="figureInline" tone="inkSoft">
+            <Text variant="figureInline" tone="inkSoft" style={styles.value}>
               {value}
             </Text>
           ) : null}
@@ -145,7 +156,8 @@ const styles = StyleSheet.create({
     gap: rhythm.tight,
   },
   stacked: { flexDirection: 'column', alignItems: 'flex-start', gap: 0 },
-  label: { flexShrink: 1, flexGrow: 1 },
+  label: { flexShrink: 1, flexGrow: 1, gap: 2 },
+  value: { flexShrink: 0 },
   body: {
     paddingTop: rhythm.line,
     paddingBottom: rhythm.tight,

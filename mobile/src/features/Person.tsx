@@ -246,6 +246,30 @@ export function ProfileScreen({
               missing="No voting summary is held for this person in the release."
               retry={refresh}
               date={false}
+              caption={
+                b.votes.data ? (
+                  <Group gap={rhythm.line}>
+                    {(b.votes.data.jurisdictions.length
+                      ? b.votes.data.jurisdictions
+                      : [undefined]
+                    ).map((jur, i) => (
+                      <AsAtLine
+                        key={i}
+                        votes={votingMetaFor(b.votes)}
+                        jurisdiction={jur}
+                        citation={b.votes.sources
+                          .map((s) => s.label)
+                          .join('; ')}
+                        licence={b.votes.sources
+                          .flatMap((s) => (s.licence ? [s.licence] : []))
+                          .join('; ')}
+                        savedAt={b.votes.stale ? b.votes.savedAt : null}
+                        testID="person-votes-as-at"
+                      />
+                    ))}
+                  </Group>
+                ) : undefined
+              }
               info={(v) =>
                 v
                   ? { title: 'About the voting record', notes: [v.method] }
@@ -329,23 +353,6 @@ export function ProfileScreen({
                       )}
                     </Disclosure>
                   </RowList>
-                  {(v.jurisdictions.length ? v.jurisdictions : [undefined]).map(
-                    (jur, i) => (
-                      <AsAtLine
-                        key={i}
-                        votes={votingMetaFor(b.votes)}
-                        jurisdiction={jur}
-                        citation={b.votes.sources
-                          .map((s) => s.label)
-                          .join('; ')}
-                        licence={b.votes.sources
-                          .flatMap((s) => (s.licence ? [s.licence] : []))
-                          .join('; ')}
-                        savedAt={b.votes.stale ? b.votes.savedAt : null}
-                        testID="person-votes-as-at"
-                      />
-                    ),
-                  )}
                 </Group>
               )}
             </RecordBlock>

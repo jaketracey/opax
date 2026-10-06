@@ -152,6 +152,11 @@ export const componentPairs: ColourPair[] = [
   pair('Segment label', 'pressed', 'navy', 'sunken'),
   pair('Segment label', 'selected', 'onNavy', 'navy'),
   pair('Segmented boundary', 'rest', 'lineStrong', 'paper', 'non-text'),
+  // ChoiceChips.
+  pair('Choice chip label', 'rest', 'navy', 'navyWash'),
+  pair('Choice chip label', 'pressed', 'navy', 'sunken'),
+  pair('Choice chip label', 'selected', 'onNavy', 'navy'),
+  pair('Choice chip label', 'pressed', 'onNavy', 'navyRaised'),
 
   // Field.
   pair('Field value', 'rest', 'ink', 'raised'),

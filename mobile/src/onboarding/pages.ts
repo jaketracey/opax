@@ -28,7 +28,7 @@ export const welcomePages: readonly WelcomePage[] = [
   {
     id: 'profiles',
     title: 'Profiles',
-    body: 'A profile brings together votes, pay, claimed expenses and declared interests. Each part names its source and gives an as-at date.',
+    body: 'A profile brings together votes, pay, claimed expenses and declared interests. Each part shows when its record was updated and links to the original.',
     example: true,
   },
   {

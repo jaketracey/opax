@@ -8,6 +8,7 @@ import {
   Group,
   LeadCard,
   Screen,
+  ChoiceChips,
   SegmentedControl,
   Text,
   type Segment,
@@ -101,11 +102,10 @@ export default function Leads() {
             {aboutLede(discovery)}
           </Text>
           <Group>
-            <SegmentedControl
+            <ChoiceChips
               segments={filters}
               value={filter}
               onChange={choose}
-              stacked
               testID="leads-filter"
             />
             {filter !== 'all' && filter !== 'donor_contract_overlap' ? (

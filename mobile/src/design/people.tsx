@@ -256,7 +256,11 @@ export function PartyChip({
       accessible={!nested}
       accessibilityLabel={nested ? undefined : text.spoken}
       testID={testID}
-      style={[styles.chip, { backgroundColor: wash }]}
+      style={[
+        styles.chip,
+        nested ? styles.chipNested : null,
+        { backgroundColor: wash },
+      ]}
     >
       {dot ? (
         <View
@@ -348,7 +352,12 @@ export function PersonRow({
             {name}
           </Text>
           {partyContext || place ? (
-            <View style={styles.personMeta}>
+            <View
+              style={[
+                styles.personMeta,
+                stacked ? styles.personMetaWrap : null,
+              ]}
+            >
               {partyContext ? <PartyChip {...partyContext} /> : null}
               {place ? (
                 <Text wordSafe variant="metadata" style={styles.shrink}>
@@ -461,6 +470,7 @@ const styles = StyleSheet.create({
     boxSizing: 'content-box',
   },
   chipText: { flexShrink: 1 },
+  chipNested: { alignSelf: 'center' },
   person: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -484,13 +494,14 @@ const styles = StyleSheet.create({
   personText: { gap: rhythm.line, alignSelf: 'stretch' },
   personTextInline: { flex: 1 },
   personName: { flexShrink: 0 },
+  // The chip and the role share a line; the role wraps beside the chip.
   personMeta: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     columnGap: rhythm.tight,
     rowGap: rhythm.line,
   },
+  personMetaWrap: { flexWrap: 'wrap' },
   shrink: { flexShrink: 1 },
 });
 
