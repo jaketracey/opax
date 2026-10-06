@@ -1018,6 +1018,8 @@ The examples in this list illustrate formats only.
 
 ### App Store drafts for Jake
 
+> **Superseded on 6 October 2026.** The final listing copy is in [IOS-STORE.md, section 1](IOS-STORE.md#1-listing-copy). This draft is kept for its history.
+>
 > **DRAFT, for Jake's decision. Not final copy.**
 >
 > **Name** (30 characters at most): "OPAX". If unavailable: "OPAX Accountability".
