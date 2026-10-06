@@ -3,7 +3,7 @@
 
 "use strict";
 let attributionHelpers;
-const attributionReady = import('./speech-attribution.js?v=20261006-3').then(module => { attributionHelpers = module; });
+const attributionReady = import('./speech-attribution.js?v=20261006-4').then(module => { attributionHelpers = module; });
 const isWitness = row => attributionHelpers ? attributionHelpers.isWitness(row) : true;
 const isUnattributed = row => attributionHelpers ? attributionHelpers.isUnattributed(row) : true;
 const belongsToScope = (row, scope) => attributionHelpers ? attributionHelpers.belongsToScope(row, scope) : false;
@@ -11,6 +11,7 @@ const speakerHref = (row, href) => attributionHelpers ? attributionHelpers.speak
 const splitPerson = (people, name) => attributionHelpers?.splitPerson(people, name) || null;
 const splitSpeakers = person => attributionHelpers?.splitSpeakers(person) || [];
 const personScope = person => attributionHelpers?.personScope(person) || person?.speech_scope || null;
+const datedAffiliationParty = (row, person) => attributionHelpers?.datedAffiliationParty(row, person) || null;
 
 const $ = (id) => document.getElementById(id);
 
@@ -4051,11 +4052,7 @@ async function subjectMentions(name, container, heading) {
     const [data, roster] = await Promise.all([
       api(`/api/search?${new URLSearchParams({ q: `"${name}"`, top_k: "6" })}`), loadParliamentarians()]);
     if (!data.results?.length) return;
-    // Speeches made from the chair or a ministry carry an office string, not a party, so the
-    // chip goes missing (Michaelia Cash as Deputy Leader, Scott Ryan as President). The roster
-    // knows the party; today's party for sitting members, the speech-dominant one otherwise.
-    const byName = new Map((roster?.people || []).map((p) => [p.name.toLowerCase(), p.party_now || p.party]));
-    for (const r of data.results) if (!r.party && r.speaker) r.party = byName.get(String(r.speaker).toLowerCase()) || null;
+    fillDatedMentionParties(data.results, roster);
     const items = data.results.slice(0, 5).map((r) => `
       <li><a href="/doc/${esc(r.slug)}" class="source-title doc-title">${esc(displayTitle(r))}</a>
         <span class="result-meta">${metaHTML(r, { linkSpeaker: true, linkParty: true })}</span>
@@ -4064,6 +4061,17 @@ async function subjectMentions(name, container, heading) {
       `<p class="kicker">${esc(heading)}</p><ul class="subject-list" role="list">${items}</ul>
        <p class="fineprint"><a href="${esc(searchHash(`"${name}"`, {}))}">All mentions in the record</a></p>`);
   } catch { /* mentions are a bonus, not a dependency */ }
+}
+
+/** Missing speech labels need dated evidence, never the profile's current party. */
+function fillDatedMentionParties(results, roster) {
+  const people = roster?.people || [];
+  const byName = new Map(people.map(person => [person.name.toLowerCase(), person]));
+  for (const row of results) {
+    if (row.party || !row.speaker) continue;
+    const person = byName.get(String(row.speaker).toLowerCase()) || splitPerson(people, row.speaker);
+    row.party = datedAffiliationParty(row, person);
+  }
 }
 
 /**
@@ -4894,8 +4902,7 @@ async function renderPartyMentions(label, sections, key) {
     ]);
     if (currentSubjectKey !== key || !slot.isConnected) return;
     const results = (data.results || []).slice(0, 5);
-    const byName = new Map((roster?.people || []).map((person) => [person.name.toLowerCase(), person.party_now || person.party]));
-    for (const result of results) if (!result.party && result.speaker) result.party = byName.get(String(result.speaker).toLowerCase()) || null;
+    fillDatedMentionParties(results, roster);
     const paint = (briefs) => {
       if (currentSubjectKey !== key || !slot.isConnected) return;
       slot.innerHTML = `<h3 class="subject-section-title">In parliament</h3>
@@ -5309,7 +5316,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   const { profileJurisdictions, profileAffiliations } = await import('/profile-jurisdictions.js?v=20261006-1');
   if (currentSubjectKey !== key) return;
   const representation = profileJurisdictions(roster);
-  const party = partyNow || (roster?.speech_scope ? roster.party || spokeAs : spokeAs);
+  const party = partyNow || roster?.party || spokeAs;
   const formerly = partyNow && spokeAs && !samePartyLabel(partyNow, spokeAs) ? spokeAs : null;
   const dates = speeches.map((r) => r.date).filter(Boolean).sort();
   const chambers = [...new Set(speeches.map((r) => STATE_NAMES[r.state] || r.state).filter(Boolean))];

@@ -250,12 +250,14 @@ test('own-speaker search expands aliases without admitting another speaker; test
   assert.doesNotMatch(JSON.stringify(field), /Scott Stewart/);
 });
 
-test('only split profiles take roster party ahead of speech party, and clean pages keep their former behavior', () => {
+test('every clean profile keeps current main’s curated roster party precedence', () => {
   const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
   const partyLine = app.match(/  const party = partyNow \|\|.*;/)[0];
   const party = (roster, spokeAs) => runInNewContext(partyLine + ';party', {roster, spokeAs, partyNow:roster?.party_now || null});
   for (const p of roster.people.filter(p=>!p.speech_scope)) for (const spokeAs of ['Labor','Independent',null]) {
-    assert.equal(party(p,spokeAs),p.party_now || spokeAs,p.name);
+    assert.equal(party(p,spokeAs),p.party_now || p.party || spokeAs,p.name);
   }
+  assert.equal(party(roster.people.find(p=>p.name==='Latham'),'Labor'),'Independent');
+  assert.equal(party(roster.people.find(p=>p.name==="Ken O'Dowd"),'LNP'),'Nationals');
   assert.equal(party(roster.people.find(p=>p.name==='Sullivan'),'Labor'),'Independent');
 });

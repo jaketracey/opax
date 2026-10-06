@@ -48,6 +48,22 @@ export function personScope(person) {
   return { ...person.speech_scope, ...(speakers.length ? { speakers } : {}) };
 }
 
+/** A speech's party can be inferred only from unambiguous dated service in its house. */
+export function datedAffiliationParty(row, person) {
+  if (isUnattributed(row) || row?.kind !== 'speech' || !row.state || !row.chamber) return null;
+  const date = typeof row.date === 'string' ? row.date.slice(0, 10) : '';
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isFinite(Date.parse(date)) ||
+      new Date(date).toISOString().slice(0, 10) !== date) return null;
+  const scope = personScope(person);
+  if (scope && !belongsToScope(row, scope)) return null;
+  const affiliations = (person?.affiliations || []).filter(term =>
+    term.jurisdiction === row.state && term.chamber === row.chamber && term.start &&
+    term.start <= date && (!term.end || date <= term.end));
+  if (!affiliations.length || affiliations.some(term => !term.party)) return null;
+  const parties = [...new Set(affiliations.map(term => term.party))];
+  return parties.length === 1 ? parties[0] : null;
+}
+
 /** Replace the requested print's exact collaborator clause before adding its scope. */
 export function scopedCollaborators(filter, scope) {
   if (!scope?.speakers || !filter || typeof filter !== 'object') return filter;

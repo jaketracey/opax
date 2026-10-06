@@ -14,4 +14,8 @@ export interface SplitPerson { name: string; full?: string; speech_scope?: Speec
 export function splitSpeakers(person: SplitPerson | null | undefined): string[];
 export function splitPerson<T extends SplitPerson>(people: T[], name: string): T | null;
 export function personScope(person: SplitPerson | null | undefined): SpeechScope | null;
+export interface DatedPartyPerson extends SplitPerson {
+  affiliations?: { jurisdiction: string; chamber: string; party?: string | null; start: string; end?: string | null }[];
+}
+export function datedAffiliationParty(row: AttributedRow, person: DatedPartyPerson | null | undefined): string | null;
 export function scopedCollaborators(filter: unknown, scope: SpeechScope): unknown;
