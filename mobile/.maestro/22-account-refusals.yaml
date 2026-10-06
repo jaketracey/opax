@@ -1,6 +1,8 @@
 appId: au.com.opax.app
 name: 22 Account refusals, an invalid address and a disabled account
 ---
+# A tap while a scroll is still settling is absorbed by the scroll view
+# (seen at AX5), so every tap waits for the screen to settle first.
 - launchApp
 - tapOn: Account and about
 - extendedWaitUntil:
@@ -11,6 +13,7 @@ name: 22 Account refusals, an invalid address and a disabled account
       id: account-sign-in-start
     centerElement: true
     timeout: 30000
+- waitForAnimationToEnd
 - tapOn:
     id: account-sign-in-start
 - scrollUntilVisible:
@@ -18,6 +21,7 @@ name: 22 Account refusals, an invalid address and a disabled account
       id: account-email
     centerElement: true
     timeout: 30000
+- waitForAnimationToEnd
 - tapOn:
     id: account-email
 - inputText: not-an-address
@@ -46,6 +50,7 @@ name: 22 Account refusals, an invalid address and a disabled account
       id: account-sign-out
     centerElement: true
     timeout: 30000
+- waitForAnimationToEnd
 - tapOn:
     id: account-sign-out
 - scrollUntilVisible:

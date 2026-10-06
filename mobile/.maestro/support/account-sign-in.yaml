@@ -1,5 +1,7 @@
 appId: au.com.opax.app
 ---
+# A tap while a scroll is still settling is absorbed by the scroll view
+# (seen at AX5), so every tap waits for the screen to settle first.
 # From Account and about, signed out: sign in with ${ACCOUNT_EMAIL} and the
 # fixture's synthetic code. The fixture never sends email.
 - scrollUntilVisible:
@@ -7,6 +9,7 @@ appId: au.com.opax.app
       id: account-sign-in-start
     centerElement: true
     timeout: 30000
+- waitForAnimationToEnd
 - tapOn:
     id: account-sign-in-start
 - scrollUntilVisible:
@@ -14,6 +17,7 @@ appId: au.com.opax.app
       id: account-email
     centerElement: true
     timeout: 30000
+- waitForAnimationToEnd
 - tapOn:
     id: account-email
 - inputText: ${ACCOUNT_EMAIL}
@@ -26,6 +30,7 @@ appId: au.com.opax.app
       id: account-code
     centerElement: true
     timeout: 30000
+- waitForAnimationToEnd
 - tapOn:
     id: account-code
 - inputText: '01234567'

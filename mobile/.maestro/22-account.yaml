@@ -1,6 +1,8 @@
 appId: au.com.opax.app
 name: 22 Account sign-in by emailed code, sign-out and deletion
 ---
+# A tap while a scroll is still settling is absorbed by the scroll view
+# (seen at AX5), so every tap waits for the screen to settle first.
 # Fixture accounts only (happy@example.invalid, code 01234567); nothing is
 # emailed. Relaunch without clearState keeps journey 04's offline cache.
 # Every check scrolls to its target, so the flow holds at AX5.
@@ -15,6 +17,7 @@ name: 22 Account sign-in by emailed code, sign-out and deletion
       id: account-sign-in-start
     centerElement: true
     timeout: 30000
+- waitForAnimationToEnd
 - tapOn:
     id: account-sign-in-start
 - scrollUntilVisible:
@@ -33,6 +36,7 @@ name: 22 Account sign-in by emailed code, sign-out and deletion
       id: account-email
     centerElement: true
     timeout: 30000
+- waitForAnimationToEnd
 - tapOn:
     id: account-email
 - inputText: happy@example.invalid
@@ -44,6 +48,7 @@ name: 22 Account sign-in by emailed code, sign-out and deletion
       id: account-code
     centerElement: true
     timeout: 30000
+- waitForAnimationToEnd
 - tapOn:
     id: account-code
 - inputText: '76543210'
@@ -64,6 +69,7 @@ name: 22 Account sign-in by emailed code, sign-out and deletion
     centerElement: true
     timeout: 30000
 # The field selects its code on focus, so typing replaces it.
+- waitForAnimationToEnd
 - tapOn:
     id: account-code
 - eraseText: 12
@@ -83,6 +89,7 @@ name: 22 Account sign-in by emailed code, sign-out and deletion
       id: account-sign-out
     centerElement: true
     timeout: 30000
+- waitForAnimationToEnd
 - tapOn:
     id: account-sign-out
 - scrollUntilVisible:
@@ -109,6 +116,7 @@ name: 22 Account sign-in by emailed code, sign-out and deletion
       id: account-delete
     centerElement: true
     timeout: 30000
+- waitForAnimationToEnd
 - tapOn:
     id: account-delete
 - scrollUntilVisible:
@@ -131,6 +139,7 @@ name: 22 Account sign-in by emailed code, sign-out and deletion
       id: account-delete-confirm
     centerElement: true
     timeout: 30000
+- waitForAnimationToEnd
 - tapOn:
     id: account-delete-confirm
 - scrollUntilVisible:
@@ -138,6 +147,7 @@ name: 22 Account sign-in by emailed code, sign-out and deletion
       id: account-deletion-code
     centerElement: true
     timeout: 30000
+- waitForAnimationToEnd
 - tapOn:
     id: account-deletion-code
 # A full code only hides the keyboard: deleting needs the tap below.
@@ -148,6 +158,7 @@ name: 22 Account sign-in by emailed code, sign-out and deletion
       id: account-delete-final
     centerElement: true
     timeout: 30000
+- waitForAnimationToEnd
 - tapOn:
     id: account-delete-final
 - extendedWaitUntil:
@@ -158,6 +169,7 @@ name: 22 Account sign-in by emailed code, sign-out and deletion
     element:
       id: account-delete-done
     timeout: 30000
+- waitForAnimationToEnd
 - tapOn:
     id: account-delete-done
 - scrollUntilVisible:
