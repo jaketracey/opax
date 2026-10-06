@@ -28,6 +28,7 @@ export const accountCopy = {
     'An OPAX account lets you talk to OPAX. The rest of the app works without one.',
   sameAccount:
     'It is the same account as the OPAX community on opax.com.au. Signing in creates an account if you do not have one.',
+  ageLimit: 'Accounts and voice are for people aged 16 and over.',
   email: 'Email',
   sendCode: 'Send code',
   privacy: 'Privacy policy',

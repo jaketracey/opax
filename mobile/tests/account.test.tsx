@@ -316,6 +316,11 @@ describe('Sign in by code', () => {
     const renderer = await render(<SignInFlow onSignedIn={jest.fn()} />);
     expect(shows(renderer, accountCopy.signInIntro)).toBe(true);
     expect(shows(renderer, accountCopy.sameAccount)).toBe(true);
+    expect(
+      shows(renderer, 'Accounts and voice are for people aged 16 and over.'),
+    ).toBe(true);
+    const privacy = renderer.root.findByProps({ testID: 'account-privacy' });
+    expect(privacy.props.path).toBe('/privacy');
     const email = field(renderer, 'account-email').props;
     expect(email).toMatchObject({
       label: 'Email',

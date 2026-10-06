@@ -113,6 +113,7 @@ export function SignInFlow({
       <Group testID="account-email-step">
         <Text variant="lede">{accountCopy.signInIntro}</Text>
         <Text>{accountCopy.sameAccount}</Text>
+        <Text testID="account-age-limit">{accountCopy.ageLimit}</Text>
         <Field
           label={accountCopy.email}
           value={email}
@@ -142,7 +143,7 @@ export function SignInFlow({
         />
         <OpaxWebLink
           label={accountCopy.privacy}
-          path="/community?view=privacy"
+          path="/privacy"
           testID="account-privacy"
         />
       </Group>

@@ -19,9 +19,13 @@ appId: au.com.opax.app
 - inputText: ${ACCOUNT_EMAIL}
 # Return sends: at AX5 a keyboard swipe would land on the keys.
 - pressKey: Enter
-- extendedWaitUntil:
-    visible:
+# Waits for the code step and brings the field above the keyboard; a full
+# code submits by itself.
+- scrollUntilVisible:
+    element:
       id: account-code
-    timeout: 15000
-# The code field takes focus; a full code submits by itself.
+    centerElement: true
+    timeout: 30000
+- tapOn:
+    id: account-code
 - inputText: '01234567'

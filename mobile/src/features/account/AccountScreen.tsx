@@ -1,4 +1,5 @@
 import { router } from 'expo-router';
+import { isProduction } from '../../design/environment';
 import { Button, Screen, Section, Text } from '../../design/primitives';
 import { showTour } from '../../onboarding/state';
 import { AccountSection } from './AccountSection';
@@ -39,14 +40,17 @@ export function AccountScreen() {
           }}
         />
       </Section>
-      {/* This screen never ships in production, so neither does the workbench link. */}
-      <Section title="Development">
-        <Button
-          label="Design workbench"
-          testID="account-workbench"
-          onPress={() => router.push('/workbench')}
-        />
-      </Section>
+      {isProduction ? null : (
+        // Development and e2e only, whatever the voice switch says; the
+        // workbench route is not in release bundles.
+        <Section title="Development">
+          <Button
+            label="Design workbench"
+            testID="account-workbench"
+            onPress={() => router.push('/workbench')}
+          />
+        </Section>
+      )}
     </Screen>
   );
 }

@@ -4,11 +4,16 @@ import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import ProductionAccount from '../src/features/account/entry.production';
 import { AccountComingSoon } from '../src/features/ComingSoon';
+import { AccountScreen } from '../src/features/account/AccountScreen';
 
 // Production builds keep Account and about exactly as it was before voice:
 // Metro resolves entry.production.ts, and metro.config.js keeps the sign-in
 // routes and every other account file out of the bundle.
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('../src/voice', () => ({
+  status: jest.fn(async () => ({ ok: false, error: 'unavailable' })),
+  subscribe: jest.fn(() => () => {}),
+}));
 jest.mock('../src/design/environment', () => ({
   ...jest.requireActual('../src/design/environment'),
   isProduction: true,
@@ -53,6 +58,23 @@ test('the production entry is the unchanged placeholder', async () => {
     'Design workbench',
   ])
     expect(text).not.toContain(absent);
+});
+
+test('production never draws the Development section, placeholder or not', async () => {
+  // The placeholder ships today; the full sheet ships once the voice switch
+  // flips. Neither may show development UI in a production build.
+  for (const Sheet of [ProductionAccount, AccountScreen]) {
+    let renderer!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      renderer = TestRenderer.create(<Sheet />);
+    });
+    const text = JSON.stringify(renderer.toJSON());
+    expect(text).toContain('About OPAX');
+    expect(text).not.toContain('Development');
+    expect(text).not.toContain('Design workbench');
+    expect(text).not.toContain('account-workbench');
+    act(() => renderer.unmount());
+  }
 });
 
 test.each(['production', 'e2e', 'development'])(
