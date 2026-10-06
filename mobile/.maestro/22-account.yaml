@@ -131,9 +131,12 @@ name: 22 Account sign-in by emailed code, sign-out and deletion
     element:
       text: 'Voice time is not refunded\..*'
     timeout: 30000
+# At AX5 this paragraph is taller than the screen (1,060pt), so it can
+# never be fully visible.
 - scrollUntilVisible:
     element:
       text: 'Recovery history\..*up to 30 days, then is gone\.'
+    visibilityPercentage: 20
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/22-delete-recovery
 - scrollUntilVisible:
