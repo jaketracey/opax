@@ -1,6 +1,10 @@
 import { catalogs, people, roster } from './pinned';
 import { nameKey, nameValues } from '../src/api/ids';
-import { portraitFor, fullPortraitName } from '../src/api/selectors';
+import {
+  portraitFor,
+  fullPortraitName,
+  commonsLicenceShown,
+} from '../src/api/selectors';
 import { payNameKey } from '../src/api/transforms';
 
 // Freeze the fold preceding 2f1fbfeb, independently of the production helper.
@@ -86,7 +90,12 @@ test('pinned full-name portraits retain exact-key-first joins; abbreviated names
         key: portraitFor([name], index, credits)?.key ?? null,
       }).toEqual({
         name,
-        key: key && (/^\d+$/.test(key) || credits[key]) ? key : null,
+        key:
+          key &&
+          (/^\d+$/.test(key) ||
+            (credits[key] && commonsLicenceShown(credits[key].licence)))
+            ? key
+            : null,
       });
     }
   }
