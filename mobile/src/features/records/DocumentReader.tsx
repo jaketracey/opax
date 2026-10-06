@@ -353,7 +353,7 @@ function Similar({ doc }: { doc: DocumentRecord }) {
       .finally(() => setLoading(false));
   };
   return (
-    <Section title="Similar speeches">
+    <Section title={open ? "Similar speeches" : undefined}>
       <Button
         label={open ? 'Close similar' : 'Similar speeches'}
         onPress={open ? () => setOpen(false) : loadSimilar}

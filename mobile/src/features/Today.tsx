@@ -97,7 +97,7 @@ export default function Today() {
           )}
         </CatalogState>
       </Section>
-      <Section title="Just added to the record" testID="today-records">
+      <Section testID="today-records">
         <RecordRow title="Just added to the record" detail="Newly indexed source records" onPress={() => router.push(recentRecordsRoute)} testID="today-records-open" />
       </Section>
       {/* Static: the Leads screen loads its export when it opens. */}
