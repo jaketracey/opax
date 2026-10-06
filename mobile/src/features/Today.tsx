@@ -8,7 +8,7 @@ import { formatDate } from '../design/format';
 import { CatalogState } from './CatalogState';
 import { EditionSection } from './EditionCard';
 import { RecordRow } from './RecordRow';
-import { billRoute } from '../navigation/routes';
+import { billRoute, moneyRoute } from '../navigation/routes';
 import { TodayDeclaration } from './today/TodayDeclaration';
 
 export default function Today() {
@@ -60,6 +60,12 @@ export default function Today() {
         block={edition}
         onRetry={refresh}
         refreshing={refreshing}
+      />
+      <RecordRow
+        title="Money map"
+        detail="Political donations & public money map"
+        onPress={() => router.push(moneyRoute())}
+        testID="today-money-map"
       />
       <Section title="Recently introduced bills" testID="today-bills">
         <CatalogState

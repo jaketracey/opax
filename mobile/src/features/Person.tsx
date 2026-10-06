@@ -37,7 +37,8 @@ import {
   jurisdictionName,
 } from '../design/parliament';
 import { shareHeaderItem } from '../navigation/share';
-import { billRoute, electorateRoute } from '../navigation/routes';
+import { billRoute, electorateRoute, moneyRoute } from '../navigation/routes';
+import { RecordRow } from './RecordRow';
 import { InlineLink } from './bills/parts';
 import { EvidenceFooter, RecordBlock } from './your-mp/Evidence';
 import {
@@ -701,6 +702,11 @@ function ProfileScreen({ slug }: { slug: string }) {
               {(p) => (
                 <Group>
                   <Text wordSafe>{p.caption}</Text>
+                  <RecordRow
+                    title="Money map"
+                    onPress={() => router.push(moneyRoute(p.party))}
+                    testID="person-money-map"
+                  />
                   <OpaxWebLink
                     label="Party receipts"
                     path={p.url}

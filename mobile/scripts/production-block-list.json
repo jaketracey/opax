@@ -6,6 +6,7 @@
   "[/\\\\]src[/\\\\]design[/\\\\]text-probe\\.e2e\\.ts$",
   "[/\\\\]src[/\\\\]onboarding[/\\\\]launch-flag\\.e2e\\.ts$",
   "[/\\\\]src[/\\\\]features[/\\\\]electorate-map[/\\\\]outline-probe\\.e2e\\.ts$",
+  "[/\\\\]src[/\\\\]features[/\\\\]money[/\\\\]money-probe\\.e2e\\.tsx$",
   "[/\\\\]src[/\\\\]app[/\\\\]source-destination\\.tsx$",
   "[/\\\\]modules[/\\\\]opax-voice[/\\\\]scripts[/\\\\].*",
   "[/\\\\]src[/\\\\]app[/\\\\]money-map-spike\\.tsx$"

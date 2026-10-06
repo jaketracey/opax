@@ -44,6 +44,8 @@ export class NativeMoneyScene {
   private disposed = false;
   private width: number;
   private height: number;
+  private framebufferWidth: number;
+  private framebufferHeight: number;
   private byId: Map<string, MoneyNode>;
   private connected = new Set<string>();
   private colours: THREE.Color[];
@@ -51,6 +53,11 @@ export class NativeMoneyScene {
   private nodeColour = new THREE.Color();
   private paperColour = new THREE.Color(SURFACE);
   private direction = new THREE.Vector3();
+  private projected = new THREE.Vector3();
+  private active: Set<string>;
+  private activeEdges: Uint8Array;
+  private visibleGroups: Set<string>;
+  private widthSide: Float32Array;
   private positions: Float32Array;
   private others: Float32Array;
   private appearanceDirty = true;
@@ -66,6 +73,8 @@ export class NativeMoneyScene {
   ) {
     this.width = width;
     this.height = height;
+    this.framebufferWidth = gl.drawingBufferWidth;
+    this.framebufferHeight = gl.drawingBufferHeight;
     // Three needs only this canvas surface with an explicitly supplied context.
     // Native GLView owns the actual view and destroys its context on unmount.
     const canvas = {
@@ -95,6 +104,9 @@ export class NativeMoneyScene {
     fill.position.set(-0.6, -0.35, -0.7);
     this.scene.add(hemi, key, fill);
     this.byId = new Map(graph.nodes.map((n) => [n.id, n]));
+    this.active = new Set(this.byId.keys());
+    this.activeEdges = new Uint8Array(graph.edges.length).fill(1);
+    this.visibleGroups = new Set(graph.nodes.map((n) => this.group(n)));
     this.colours = graph.nodes.map(
       (n) => new THREE.Color(n.colour ?? clusterColour(n.group).colour),
     );
@@ -106,13 +118,13 @@ export class NativeMoneyScene {
     });
     const groups = new Map<string, number>();
     graph.nodes.forEach((n) =>
-      groups.set(n.group, (groups.get(n.group) ?? 0) + 1),
+      groups.set(this.group(n), (groups.get(this.group(n)) ?? 0) + 1),
     );
     this.centres = clusterCentres3D(groups, width / height, 'parties');
     this.sim = new ForceSim3D({
       nodes: graph.nodes.map((n) => ({
         id: n.id,
-        group: n.group,
+        group: this.group(n),
         radius: radiusFor('resources', n.total / 10000),
       })),
       links: graph.edges,
@@ -129,7 +141,9 @@ export class NativeMoneyScene {
     this.scene.add(this.nodes);
     this.positions = new Float32Array(graph.edges.length * 6 * 3);
     this.others = new Float32Array(graph.edges.length * 6 * 3);
-    const widthSide = new Float32Array(graph.edges.length * 6 * 2);
+    const widthSide = (this.widthSide = new Float32Array(
+      graph.edges.length * 6 * 2,
+    ));
     this.flowColors = new Float32Array(graph.edges.length * 6 * 4);
     const flowT = new Float32Array(graph.edges.length * 6);
     const flowSeed = new Float32Array(graph.edges.length * 6);
@@ -218,6 +232,52 @@ void main() {`,
       1.08;
     this.sim.tick(12);
   }
+  private group(node: MoneyNode) {
+    return node.kind === 'grantor' ? 'public money' : node.group;
+  }
+  /** Filters reuse this context, simulation, geometry and every upload buffer. */
+  setView(view: MoneyGraph) {
+    this.active = new Set(view.nodes.map((n) => n.id));
+    this.visibleGroups = new Set(view.nodes.map((n) => this.group(n)));
+    view.nodes.forEach((n) => this.byId.set(n.id, n));
+    const byPair = new Map(
+      view.edges.map((e) => [`${e.source}\0${e.target}`, e]),
+    );
+    const degrees = new Map<string, number>();
+    view.edges.forEach((e) => {
+      degrees.set(e.source, (degrees.get(e.source) ?? 0) + 1);
+      degrees.set(e.target, (degrees.get(e.target) ?? 0) + 1);
+    });
+    this.sim.nodes.forEach((n) => {
+      n.radius = radiusFor('links', degrees.get(n.id) ?? 0);
+    });
+    this.graph.edges.forEach((e, i) => {
+      const shown = byPair.get(`${e.source}\0${e.target}`);
+      this.activeEdges[i] = shown ? 1 : 0;
+      const width = shown
+        ? Math.max(
+            0.24,
+            Math.min(1.9, 0.2 + 0.42 * Math.log10(1 + shown.total / 10000)),
+          )
+        : 0;
+      for (let k = 0; k < 6; k++) this.widthSide[(i * 6 + k) * 2] = width;
+    });
+    this.edges.geometry.attributes.flowWidthSide!.needsUpdate = true;
+    this.layoutDirty = this.appearanceDirty = true;
+    if (this.selected && !this.active.has(this.selected)) this.focus(null);
+    else this.updateConnected();
+  }
+  resize(width: number, height: number, pixelRatio: number) {
+    if (width <= 0 || height <= 0) return;
+    if (width === this.width && height === this.height) return;
+    this.width = width;
+    this.height = height;
+    this.framebufferWidth = Math.round(width * pixelRatio);
+    this.framebufferHeight = Math.round(height * pixelRatio);
+    this.renderer.setSize(this.framebufferWidth, this.framebufferHeight, false);
+    this.camera.aspect = width / height;
+    this.camera.updateProjectionMatrix();
+  }
   setReducedMotion(value: boolean) {
     this.reduced = value;
     this.edges.material.uniforms.uReduced!.value = value ? 1 : 0;
@@ -241,16 +301,10 @@ void main() {`,
   }
   focus(id: string | null) {
     this.appearanceDirty = true;
+    id = id && this.active.has(id) ? id : null;
     this.selected = id;
-    this.connected.clear();
+    this.updateConnected();
     if (id) {
-      this.connected.add(id);
-      this.graph.edges.forEach((e) => {
-        if (e.source === id || e.target === id) {
-          this.connected.add(e.source);
-          this.connected.add(e.target);
-        }
-      });
       const node = this.sim.byId(id);
       if (node) {
         this.target.set(node.x, node.y, node.z);
@@ -262,16 +316,30 @@ void main() {`,
       this.distance = this.fit;
     }
   }
+  private updateConnected() {
+    this.connected.clear();
+    const id = this.selected;
+    if (id) {
+      this.connected.add(id);
+      this.graph.edges.forEach((e, i) => {
+        if (this.activeEdges[i] && (e.source === id || e.target === id)) {
+          this.connected.add(e.source);
+          this.connected.add(e.target);
+        }
+      });
+    }
+  }
   pick(x: number, y: number): string | null {
     let nearest = 24;
     let id: string | null = null;
     this.sim.nodes.forEach((n) => {
-      const p = new THREE.Vector3(n.x, n.y, n.z).project(this.camera);
+      if (!this.active.has(n.id)) return;
+      const p = this.projected.set(n.x, n.y, n.z).project(this.camera);
       const d = Math.hypot(
         ((p.x + 1) * this.width) / 2 - x,
         ((1 - p.y) * this.height) / 2 - y,
       );
-      if (p.z < 1 && d < nearest) {
+      if (p.z > -1 && p.z < 1 && d < nearest) {
         nearest = d;
         id = n.id;
       }
@@ -282,8 +350,8 @@ void main() {`,
     const labels: ProjectedLabel[] = [];
     const occupied: { x: number; y: number }[] = [];
     for (const [group, c] of this.centres) {
-      if (group === 'parties') continue;
-      const p = new THREE.Vector3(c.x, c.y + c.r, c.z).project(this.camera);
+      if (group === 'parties' || !this.visibleGroups.has(group)) continue;
+      const p = this.projected.set(c.x, c.y + c.r, c.z).project(this.camera);
       const x = ((p.x + 1) * this.width) / 2;
       const y = ((1 - p.y) * this.height) / 2;
       if (
@@ -306,7 +374,7 @@ void main() {`,
     }
     if (this.selected) {
       const n = this.sim.byId(this.selected)!;
-      const p = new THREE.Vector3(n.x, n.y, n.z).project(this.camera);
+      const p = this.projected.set(n.x, n.y, n.z).project(this.camera);
       labels.push({
         id: n.id,
         label: this.byId.get(n.id)!.label,
@@ -339,7 +407,7 @@ void main() {`,
       this.sim.nodes.forEach((n, i) => {
         if (this.layoutDirty) {
           this.dummy.position.set(n.x, n.y, n.z);
-          this.dummy.scale.setScalar(n.radius);
+          this.dummy.scale.setScalar(this.active.has(n.id) ? n.radius : 0);
           this.dummy.updateMatrix();
           this.nodes.setMatrixAt(i, this.dummy.matrix);
         }
@@ -356,10 +424,11 @@ void main() {`,
       this.graph.edges.forEach((e, i) => {
         const from = this.sim.byId(e.source)!;
         const to = this.sim.byId(e.target)!;
-        const alpha =
-          this.selected &&
-          e.source !== this.selected &&
-          e.target !== this.selected
+        const alpha = !this.activeEdges[i]
+          ? 0
+          : this.selected &&
+              e.source !== this.selected &&
+              e.target !== this.selected
             ? 0.025
             : 0.22;
         const colour = this.edgeColours[i]!;
@@ -399,13 +468,13 @@ void main() {`,
   /** Native GPU readback; rejects a blank clear surface or a GL error. Once per run. */
   verifyPixels(): number {
     const pixels = new Uint8Array(
-      this.gl.drawingBufferWidth * this.gl.drawingBufferHeight * 4,
+      this.framebufferWidth * this.framebufferHeight * 4,
     );
     this.gl.readPixels(
       0,
       0,
-      this.gl.drawingBufferWidth,
-      this.gl.drawingBufferHeight,
+      this.framebufferWidth,
+      this.framebufferHeight,
       this.gl.RGBA,
       this.gl.UNSIGNED_BYTE,
       pixels,
@@ -439,12 +508,26 @@ void main() {`,
   dispose() {
     if (this.disposed) return;
     this.disposed = true;
-    this.geometry.dispose();
-    this.material.dispose();
-    this.edges.geometry.dispose();
-    this.edges.material.dispose();
-    this.nodes.dispose();
+    // A lost native context may already reject GL deletes. Continue releasing
+    // every JS resource; GLView's native owner destroys the context on unmount.
+    for (const release of [
+      () => this.geometry.dispose(),
+      () => this.material.dispose(),
+      () => this.edges.geometry.dispose(),
+      () => this.edges.material.dispose(),
+      () => this.nodes.dispose(),
+      () => this.renderer.dispose(),
+    ]) {
+      try {
+        release();
+      } catch {
+        /* Native context has already gone. */
+      }
+    }
     this.scene.clear();
-    this.renderer.dispose();
+    this.byId.clear();
+    this.connected.clear();
+    this.active.clear();
+    this.visibleGroups.clear();
   }
 }

@@ -1,0 +1,34 @@
+appId: au.com.opax.app
+name: Cold money map and ranked list from disk cache with the fixture stopped
+---
+- stopApp
+- launchApp
+- openLink: opax://money
+- tapOn:
+    text: Open
+    optional: true
+- scrollUntilVisible:
+    element:
+      id: money-map-(canvas|drawn-frames-.*-pixels-.*)
+    centerElement: true
+    visibilityPercentage: 10
+    timeout: 120000
+- extendedWaitUntil:
+    visible:
+      id: money-map-drawn-frames-[2-9][0-9]*-pixels-[1-9][0-9]*
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/23-offline-map
+- scrollUntilVisible:
+    element:
+      id: money-mode-list
+    direction: UP
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: money-mode-list
+- scrollUntilVisible:
+    element:
+      id: money-donor-0
+    centerElement: true
+    timeout: 120000
+- takeScreenshot: ${EVIDENCE}/23-offline-list

@@ -22,3 +22,7 @@ export const electorateRoute = (id: string) => ({
   pathname: '/electorate/[id]' as const,
   params: { id },
 });
+export const moneyRoute = (party?: string | null) => ({
+  pathname: '/money' as const,
+  ...(party ? { params: { focus: `party:${party}` } } : {}),
+});

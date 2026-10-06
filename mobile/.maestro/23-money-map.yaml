@@ -1,14 +1,24 @@
 appId: au.com.opax.app
-name: 23 Native money map phase-one rendering and orbit spike
+name: 23 Native money map, held figures, original source and ranked list
 ---
 - launchApp:
     clearState: true
-- openLink: opax://money-map-spike
+- scrollUntilVisible:
+    element:
+      id: today-money-map
+    centerElement: true
+    timeout: 120000
 - tapOn:
-    text: Open
-    optional: true
+    id: today-money-map
+- scrollUntilVisible:
+    element:
+      id: money-map-(canvas|drawn-frames-.*-pixels-.*)
+    centerElement: true
+    visibilityPercentage: 10
+    timeout: 120000
 - extendedWaitUntil:
-    visible: 'Native pixels verified:.*'
+    visible:
+      id: money-map-drawn-frames-[2-9][0-9]*-pixels-[1-9][0-9]*
     timeout: 90000
 - takeScreenshot: ${EVIDENCE}/23-orbit-0
 - swipe:
@@ -21,25 +31,134 @@ name: 23 Native money map phase-one rendering and orbit spike
     end: 30%, 39%
     duration: 1000
 - takeScreenshot: ${EVIDENCE}/23-orbit-2
+# This accessible action uses the same year setter as the adjustable rails.
 - scrollUntilVisible:
     element:
-      id: money-spike-measure
+      id: money-test-year
     centerElement: true
-- tapOn:
-    id: money-spike-measure
-- extendedWaitUntil:
-    visible: 'Orbit complete:.*'
     timeout: 90000
-- takeScreenshot: ${EVIDENCE}/23-metrics
-- scrollUntilVisible:
-    element:
-      id: money-spike-focus
-    centerElement: true
 - tapOn:
-    id: money-spike-focus
+    id: money-test-year
 - scrollUntilVisible:
     element:
-      id: money-spike-card
+      id: money-filters
+    direction: UP
     centerElement: true
-- assertVisible: '\$1,120,198,704 disclosed receipts'
-- takeScreenshot: ${EVIDENCE}/23-focus
+    timeout: 90000
+- tapOn:
+    id: money-filters
+- scrollUntilVisible:
+    element:
+      id: money-from-year
+    centerElement: true
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/23-from-year
+- scrollUntilVisible:
+    element:
+      id: money-to-year
+    centerElement: true
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/23-to-year
+- scrollUntilVisible:
+    element:
+      id: money-industry
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: money-industry
+- scrollUntilVisible:
+    element:
+      id: money-industry-unions
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: money-industry-unions
+- scrollUntilVisible:
+    element:
+      id: money-layer-contracts
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: money-layer-contracts
+- takeScreenshot: ${EVIDENCE}/23-layers
+# The focus action invokes the same scene focus and sheet callback as a tap.
+- scrollUntilVisible:
+    element:
+      id: money-test-focus
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: money-test-focus
+- extendedWaitUntil:
+    visible:
+      id: money-focus-name
+      text: Labor
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: money-focus-amount
+    centerElement: true
+    visibilityPercentage: 10
+    timeout: 90000
+- assertVisible: '69,010,542 dollars, Disclosed receipts'
+- takeScreenshot: ${EVIDENCE}/23-focus-amount
+- scrollUntilVisible:
+    element:
+      id: money-focus-years
+    centerElement: true
+    timeout: 90000
+- assertVisible: 'Financial years, 2024–25'
+- assertVisible: 'Receipts, 3,929'
+- takeScreenshot: ${EVIDENCE}/23-focus-years
+- scrollUntilVisible:
+    element:
+      id: money-source
+    centerElement: true
+    timeout: 120000
+- tapOn:
+    id: money-source
+- scrollUntilVisible:
+    element:
+      id: source-destination-url
+    centerElement: true
+    timeout: 30000
+- assertVisible: 'https://transparency\.aec\.gov\.au/'
+- takeScreenshot: ${EVIDENCE}/23-source
+- scrollUntilVisible:
+    element:
+      id: source-destination-ok
+    centerElement: true
+    timeout: 30000
+- tapOn:
+    id: source-destination-ok
+- tapOn: Done
+- scrollUntilVisible:
+    element:
+      id: money-mode-list
+    direction: UP
+    centerElement: true
+    speed: 70
+    timeout: 120000
+- tapOn:
+    id: money-mode-list
+- scrollUntilVisible:
+    element:
+      id: money-donor-0
+    centerElement: true
+    timeout: 120000
+- assertVisible: '1\. Mining and Energy Union, \$4,102,022 disclosed donations.*2024–25'
+- takeScreenshot: ${EVIDENCE}/23-list
+- scrollUntilVisible:
+    element:
+      id: money-donor-parties-0
+    centerElement: true
+    timeout: 30000
+- assertVisible:
+    id: money-donor-parties-0
+    text: Labor
+- scrollUntilVisible:
+    element:
+      id: money-donor-source-0
+    centerElement: true
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/23-list-source

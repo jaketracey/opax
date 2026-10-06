@@ -73,6 +73,20 @@ export default function Layout() {
         >
           <Stack.Screen name="(tabs)" />
           <Stack.Screen
+            name="money"
+            options={{ ...chrome, headerShown: true, title: 'Money map' }}
+          />
+          <Stack.Screen
+            name="money-node"
+            options={{
+              ...sheet,
+              presentation: 'formSheet',
+              title: 'Money record',
+              sheetAllowedDetents: [1],
+              sheetGrabberVisible: true,
+            }}
+          />
+          <Stack.Screen
             name="talk"
             options={{ ...sheet, title: 'Talk to OPAX' }}
           />

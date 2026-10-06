@@ -154,6 +154,12 @@ if [ "${OPAX_VERIFY_MAP_OFFLINE:-0}" = 1 ]; then
   maestro --device "$UDID" test --test-output-dir "$OUT/map-offline-maestro" --debug-output "$OUT/map-offline-maestro" --format junit --output "$OUT/map-offline-report.xml" -e EVIDENCE=screenshots .maestro/support/electorate-map-offline.yaml > "$OUT/map-offline-maestro.log" 2>&1 || { cat "$OUT/map-offline-maestro.log" >&2; exit 1; }
   ./node_modules/.bin/tsx scripts/collect-screenshots.ts "$OUT/screenshots" "$OUT/map-offline-maestro"
 fi
+if [ "${OPAX_VERIFY_MONEY_OFFLINE:-0}" = 1 ]; then
+  if [ -n "$FIXTURE_PID" ]; then kill "$FIXTURE_PID"; wait "$FIXTURE_PID" || true; FIXTURE_PID=; fi
+  assert_device_lock
+  maestro --device "$UDID" test --test-output-dir "$OUT/money-offline-maestro" --debug-output "$OUT/money-offline-maestro" --format junit --output "$OUT/money-offline-report.xml" -e EVIDENCE=screenshots .maestro/support/money-map-offline.yaml > "$OUT/money-offline-maestro.log" 2>&1 || { cat "$OUT/money-offline-maestro.log" >&2; exit 1; }
+  ./node_modules/.bin/tsx scripts/collect-screenshots.ts "$OUT/screenshots" "$OUT/money-offline-maestro"
+fi
 if grep -Eq 'OUTSIDE_ALLOW_LIST|"allowed":false|opax\.com\.au' "$OUT/fixture.log"; then echo "Fixture request boundary failed" >&2; exit 1; fi
 kill "$AUDIT_PID"
 wait "$AUDIT_PID" || { cat "$OUT/connection-audit.log" >&2; AUDIT_PID=; exit 1; }

@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { NativeMoneyScene } from '../src/features/money/NativeMoneyScene';
 import { decodeMoneyGraph } from '../src/features/money/data';
+import { defaultMoneyFilters, moneyView } from '../src/features/money/view';
 import { pinned } from './pinned';
 import type { ExpoWebGLRenderingContext } from 'expo-gl';
 
@@ -99,4 +100,62 @@ test('each submitted frame waits for completion; closing releases owned Three re
   expect(renderer.dispose).toHaveBeenCalledTimes(1);
   expect(root.children).toHaveLength(0);
   expect(() => scene.render(1)).toThrow('released');
+});
+test('year, industry and layer changes keep buffers and geometry; inactive nodes cannot be picked', () => {
+  const { scene } = create();
+  const graph = decodeMoneyGraph(pinned('/graph/money.json'));
+  const filters = defaultMoneyFilters(graph);
+  const renderer = jest.mocked(THREE.WebGLRenderer).mock.results.at(-1)!.value;
+  scene.render(0);
+  const root = renderer.render.mock.calls[0][0] as THREE.Scene;
+  const meshes = root.children.filter(
+    (x) => x instanceof THREE.Mesh,
+  ) as THREE.Mesh[];
+  const geometries = meshes.map((x) => x.geometry);
+  const attributes = meshes.map((x) => x.geometry.attributes);
+  for (let i = 0; i < 100; i++) {
+    scene.setView(
+      moneyView(graph, {
+        ...filters,
+        from: 2024,
+        to: 2024,
+        industry: i % 2 ? 'unions' : null,
+        grants: false,
+        contracts: false,
+      }),
+    );
+    scene.focus('party:Labor');
+    scene.render(i * 34);
+    expect(meshes.map((x) => x.geometry)).toEqual(geometries);
+    meshes.forEach((mesh, index) =>
+      expect(mesh.geometry.attributes).toBe(attributes[index]),
+    );
+  }
+  scene.setView({ meta: graph.meta, nodes: [], edges: [] });
+  scene.render(4000);
+  expect(scene.pick(180, 175)).toBeNull();
+  const nodes = meshes.find(
+    (x) => x instanceof THREE.InstancedMesh,
+  ) as THREE.InstancedMesh;
+  const matrix = new THREE.Matrix4();
+  nodes.getMatrixAt(0, matrix);
+  expect(matrix.elements[0]).toBe(0);
+  scene.dispose();
+});
+test('cleanup continues after the native context has already been destroyed', () => {
+  const { scene } = create();
+  const renderer = jest.mocked(THREE.WebGLRenderer).mock.results.at(-1)!.value;
+  scene.render(0);
+  const root = renderer.render.mock.calls[0][0] as THREE.Scene;
+  const meshes = root.children.filter(
+    (x) => x instanceof THREE.Mesh,
+  ) as THREE.Mesh[];
+  jest.spyOn(meshes[0]!.geometry, 'dispose').mockImplementation(() => {
+    throw new Error('Context destroyed');
+  });
+  const edgeDispose = jest.spyOn(meshes[1]!.geometry, 'dispose');
+  expect(() => scene.dispose()).not.toThrow();
+  expect(edgeDispose).toHaveBeenCalledTimes(1);
+  expect(renderer.dispose).toHaveBeenCalledTimes(1);
+  expect(root.children).toHaveLength(0);
 });

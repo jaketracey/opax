@@ -8,6 +8,7 @@ const productionStubs = [
   'src/design/text-probe',
   'src/onboarding/launch-flag',
   'src/features/electorate-map/outline-probe',
+  'src/features/money/money-probe',
 ].map((module) => path.join(__dirname, module));
 config.resolver.resolveRequest = (context, moduleName, platform) => {
   const target = moduleName.startsWith('.')

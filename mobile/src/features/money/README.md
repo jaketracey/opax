@@ -1,81 +1,82 @@
-# Native money map rendering spike
+# Native money map
 
-Phase 1 lab at `opax://money-map-spike`, development/e2e only. Its route and
-test screen are excluded by the shared production Metro block list. This is
-not a shipping `/money` screen. Continue to Phase 2 only after the full-graph
-rendering, interaction and memory gate is supported by measurements.
+The native `/money` screen uses the held federal, Queensland, Victoria and
+Tasmania graph catalogs. Today links to it after the daily edition; the Person
+party-receipts record links to the party's map focus and preserves its web link.
+State and federal returns are never combined.
 
-**Decision, 5 October 2026: stop at Phase 1.** The assigned surfaces are
-simulators. The 17 Pro simulator exceeded the 300 MB native process-footprint
-limit in the short run, and a longer 16e run exceeded it after allocation
-pooling. Do not promote this lab to a shipping feature. No physical phone was
-connected; these results do not establish phone GPU, thermal or jetsam behaviour.
+The 6 October decision is **continue**. The earlier spike's growth, rather than
+its short steady-state footprint, prompted bounded frame submission. Expo GL
+copies uploaded typed arrays into queued native batches. The adapter now waits
+for each frame's GL work and native batch to finish, uploads settled geometry
+only when it changes, and calculates camera-facing ribbons in the vertex shader.
+It targets 30 completed frames per second. Current profile and gate evidence
+belongs under ignored `mobile/private/`; earlier JS-only intervals below do not
+measure completed GPU frames.
 
-| Simulator | Cold graph-cache first verified frame | 10 s JS frame interval median / p95 | JS submission median / p95 | Native footprint peak |
-| --- | --- | --- | --- | --- |
-| 16e, iOS 18.4 | 1,446.4 ms | 16.67 / 16.74 ms | 6.45 / 12.13 ms | 260.6 MB |
-| 17 Pro, iOS 26.5 | 1,385.7 ms | 16.67 / 16.73 ms | 6.40 / 12.08 ms | 304.7 MB |
+| Historical 5 October spike | Cold graph-cache first verified frame | JS interval median / p95 | Native footprint peak |
+| -------------------------- | ------------------------------------- | ------------------------ | --------------------- |
+| 16e simulator, iOS 18.4    | 1,446.4 ms                            | 16.67 / 16.74 ms         | 260.6 MB              |
+| 17 Pro simulator, iOS 26.5 | 1,385.7 ms                            | 16.67 / 16.73 ms         | 304.7 MB              |
 
-The ten-second adapter runs submitted 602 frames each and verified 108,112
-and 101,521 non-paper pixels respectively. They do **not** prove 602 completed
-GPU frames: Expo GL submits work asynchronously. The pooled 60-second 16e
-experiment verified its first frame in 1,443.7 ms but reached **769.4 MB** and
-was terminated before completion. Shared host load also rose during that run,
-so its timing cannot isolate phone or GPU performance. Peaks use `footprint`
-physical process accounting, not RSS; MB is decimal. Raw evidence, executable
-prototype bundles and orbit images are retained under ignored `mobile/private/`.
+The pooled experiment reached 769.4 MB and stopped before its final readback.
+Memory uses physical process accounting and decimal MB. Simulator measurements
+cannot establish phone GPU performance, thermal behaviour or jetsam limits.
 
-Next options are bounded native frame submission with completion measurement
-and a physical-device check, fewer nodes or folded industry hubs, or a 2D Skia
-map alongside the required ranked list. None is implemented as Phase 2 here.
+## Port and native adapter
 
-The baseline is `7b70d11f`: Three.js **0.185.1**, matching the web lockfile,
-and SDK-matched Expo GL **57.0.2**. `ported/force3d.ts`, `palette.ts` and
-`map-types.ts` are copies of `portal/graph/`, formatted for the native tree.
-The two edge shaders are extracted verbatim from `map3d-engine.ts`; a test
-checks parity. No Three loaders, textures, images, fonts or remote assets are
-used by the scene. Public graph JSON goes through `ApiClient`, the exact
-static route allow-list and the existing disk cache.
+Three.js **0.185.1** matches the web lockfile; Expo GL is **57.0.2**. The force
+simulation, palette, radius helpers and ABS CPI table are copied from
+`portal/graph/`. Edge-shader constants retain web parity; the native vertex
+adapter moves ribbon orientation to the GPU. The lights, fog and force layout
+follow the web. Native views replace DOM labels, controls and the focus card.
+The shipping screen sizes nodes by connectedness, as briefed; the historical
+lab sizes them by donation value. Geometry, materials and typed arrays are
+shared across year, industry and layer changes. A jurisdiction change owns a
+new scene, and releases the old one.
 
-`NativeMoneyScene` replaces the browser adapter: supplied-context canvas
-surface, instanced sphere nodes, merged camera-facing flow ribbons, native
-pan/pinch/tap input and projected native text. `native-context.ts` validates
-OpenGL ES 3 and removes Expo's inherited WebGL1 brand for Three's browser-only
-context check; the native methods stay bound to the original context. The camera, light intensities,
-fog, force layout, palette and logarithmic donation-value sphere sizing come
-from the web. It does not yet port semantic cluster folding, label collision
-measurement, the complete focus card, filters, state catalogs or a list view.
+The context shim validates native OpenGL ES 3 and removes the inherited WebGL1
+brand that Three's browser check rejects. It binds methods to the supplied
+native context. No Three loaders, textures, fonts, images or remote assets are
+requested. Every graph request goes through `ApiClient`, four exact reviewed
+static routes and the existing bounded disk cache. Fixture snapshots pin all
+four files by hash; tests never use production data requests.
 
-Rendering stops on route blur and background. Scene resources are disposed on
-unmount; GLView owns and destroys the native context. A rendering exception
-removes the GLView and offers a fresh context. Expo GL's native
-`isContextLost()` currently returns `false` unconditionally; native context-loss
-notification/recovery needs further work before shipping.
+## Records and accessibility
 
-The lab verifies native `readPixels` after a render, checks GL errors, and
-rejects a blank paper surface. It records cold-cache route-open to verified
-first frame, then ten seconds of continuous camera orbit. Frame intervals and
-JS render-submission time are separate quantities. Neither establishes GPU
-completion time or sustained performance on a physical phone. The fixture-only
-journey captures three orbit positions, the probe, timing and Labor's exact
-disclosed-receipts figure from the pinned graph.
+Native adjustable financial-year rails also have earlier/later buttons and
+VoiceOver increment/decrement actions. Industry, donation, grant, contract and
+inflation controls preserve the web's year semantics, including undated rows.
+Public-money figures stay separate from donation totals. The full-height native
+focus sheet uses the app's figures, record sources and as-at components. An
+explicit native person profile path opens its page; other profiles open the
+website. Party totals remain across all industries within the chosen years,
+with that distinction stated when the relationships are industry-filtered.
 
-For Phase 2, proposed entries are a single Money map row after Today's daily
-edition, and a link beside the existing Person → Party receipts record. Keep
-the original source link. There is no native party page at this baseline.
-Shipping requires the requested VoiceOver-default ranked list, AX5 controls
-and focus sheet, year/industry/layer/jurisdiction controls, all state route
-reviews/pins, offline journeys and release verification. The lab alone is not
-evidence that those requirements are complete.
+The ranked donor list is virtualized and includes party, amount, years and
+sources. It is the initial view while the VoiceOver setting is unknown, and the
+default when VoiceOver is enabled. All controls have accessible names; text is
+uncapped through AX5. Reduce Motion disables the idle orbit before the setting
+has answered. Focus changes are immediate, so no camera fly animation runs.
 
-Measurement evidence belongs under ignored `mobile/private/`; never commit
-device identifiers, screenshots, signing information or private run logs.
+Rendering stops on route blur, background and scrolling the map out of view.
+Switching to the list or leaving releases Three resources; GLView destroys its
+owned native context on unmount. Context errors remove the GL view and offer a
+fresh one. Cleanup continues if the native context has already been destroyed.
+Expo's native `isContextLost()` is a stub, so the adapter also checks GL errors
+and catches invalid-context exceptions.
 
-The optional development/e2e deep link `opax://money-map-spike?benchmark=1`
-automates ten seconds of orbit; `&seconds=60` is the sustained experiment.
-`money-spike-result.json` in the app cache records timings and pixel probes.
-The 60-second experiment did not complete its final GPU readback. Stop the
-app promptly after collecting evidence: continuous rendering currently exceeds
-the memory budget. Do not interpret callback counts as a native presentation
-probe for the shipping journey. The full Phase 2 journey, AX5 list, Today entry
-and source/card controls have deliberately not been built after the failed gate.
+## Verification
+
+Journey 23 starts at Today, verifies native pixels and completed frames, captures
+an orbit sequence, changes year and industry, focuses through the same selection
+callback as a tap, checks held figures, opens the guarded source and reads the
+list. Its diagnostic and accessible journey actions are substituted with a
+production stub before Metro traverses them. A separate cold relaunch verifies
+the map and list from disk cache with the fixture server stopped.
+
+The development/e2e-only `opax://money-map-spike?benchmark=1&seconds=300&leave=1`
+lab automates a five-minute orbit and repeated selection. It records native
+pixel readback, completed-frame count, completion time and interval separately.
+The lab, its route, private device identifiers, traces and screenshots never
+ship in production or in tracked evidence.
