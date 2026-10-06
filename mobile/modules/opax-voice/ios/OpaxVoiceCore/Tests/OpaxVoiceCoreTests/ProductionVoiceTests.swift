@@ -2,6 +2,29 @@ import XCTest
 @testable import OpaxVoiceCore
 
 @MainActor final class ProductionVoiceTests: SafeVoiceTestCase {
+    func testStoredWithdrawalBlocksTheNextCallBeforePermissionOrReservation() async throws {
+        let suite = "opax-withdrawal-test-" + UUID().uuidString
+        defer { UserDefaults(suiteName: suite)?.removePersistentDomain(forName: suite) }
+        let consent = StoredVoiceConsent(suiteName: suite)
+        await consent.setGranted(true)
+        let rig = try await Rig.make(storedConsent: consent)
+        try await rig.live()
+        await consent.setGranted(false)
+        await rig.controller.withdrawConsent()
+        try await eventually { await rig.controller.state == .ended }
+        await rig.controller.start()
+        try await eventually { await rig.recorder.hasError(.consentRequired) }
+        let permissions = await rig.permission.count, reservations = await rig.http.count(.voiceStart)
+        XCTAssertEqual(permissions, 1); XCTAssertEqual(reservations, 1)
+        await rig.close()
+    }
+    func testBuildPolicyMatchesEvaluatedNativeRouteMethodsAndPaths() throws {
+        let policy = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+            .appendingPathComponent("../../../../../../voice-production-policy.json").standardized
+        let json = try JSONSerialization.jsonObject(with: Data(contentsOf: policy)) as! [String: Any]
+        let routes = try XCTUnwrap(json["routes"] as? [String])
+        XCTAssertEqual(routes.sorted(), AuthRoute.allCases.map { $0.method + " " + $0.rawValue }.sorted())
+    }
     func testFreshConsentIsDeniedUntilExplicitGrantAndWithdrawalPersists() async {
         let suite = "opax-consent-test-" + UUID().uuidString
         defer { UserDefaults(suiteName: suite)?.removePersistentDomain(forName: suite) }

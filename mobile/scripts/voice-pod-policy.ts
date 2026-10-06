@@ -3,9 +3,10 @@ import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { productionVoiceEnabled } from '../plugins/voiceProduction';
-const states = [
+const states: [string, string | undefined][] = [
   ['production', '0'],
   ['production', '1'],
+  ['production', undefined],
   ['e2e', '0'],
   ['development', '1'],
 ];
@@ -34,7 +35,7 @@ for (const [variant, switchValue] of states) {
     );
     assert.equal(
       conditions.includes('OPAX_VOICE_PRODUCTION'),
-      productionVoiceEnabled(variant, switchValue),
+      productionVoiceEnabled(variant, switchValue ?? '1'),
       `${name}: production compile gate follows the switch`,
     );
     assert(
@@ -79,7 +80,7 @@ console.log(
 
 // Resolve exactly as use_expo_modules! does, without prebuilding or installing.
 for (const [variant, switchValue] of states) {
-  const enabled = productionVoiceEnabled(variant, switchValue);
+  const enabled = productionVoiceEnabled(variant, switchValue ?? '1');
   const args = ['resolve', '--platform', 'apple', '--json'];
   if (variant === 'production' && !enabled)
     args.push('--exclude', 'opax-voice');

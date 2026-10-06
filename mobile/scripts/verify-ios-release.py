@@ -69,7 +69,7 @@ LOCATION_PURPOSE = "OPAX uses your location once, on your iPhone, to suggest you
 
 
 def production_voice_enabled(value=None):
-    value = os.environ.get("OPAX_PRODUCTION_VOICE", "0") if value is None else value
+    value = os.environ.get("OPAX_PRODUCTION_VOICE", "1") if value is None else value
     require(value in ("0", "1"), "OPAX_PRODUCTION_VOICE must be 0 or 1")
     return value == "1"
 
@@ -120,8 +120,17 @@ def verify_voice_bundle(body, enabled):
     if strings is None:
         strings = {token.decode("latin-1") for token in PATH_TOKENS.findall(body)}
     if enabled:
-        require("./talk.tsx" in strings and bool({"./account.tsx", "./account/index.tsx"} & strings),
-                "production voice requires Talk and Account route keys")
+        require("./talk.tsx" in strings and "./account/index.tsx" in strings and
+                {"./account/sign-in.tsx", "./account/delete.tsx"} <= strings,
+                "production voice requires Talk, Account, sign-in and deletion route keys")
+        found, _ = markers_in_entries(body, ("talk-consent", "account-sign-in-start"))
+        require(set(found) == {"talk-consent", "account-sign-in-start"}, "production voice ships real Talk and Account screens")
+        found, _ = markers_in_entries(body, ("Talk to OPAX is not in this version of the app yet.",
+                                            "Signing in is not in this version of the app yet."))
+        require(not found, "production voice has no Talk or Account placeholder copy")
+    else:
+        require(not {"./account/sign-in.tsx", "./account/delete.tsx"} & strings,
+                "voice-off production excludes sign-in and deletion routes")
     markers = ("voice-bridge-test", "Voice bridge fixture workbench", "example.invalid", "/__fixture/voice",
                "Fixture code:", "OPAX_VOICE_E2E", "DebugSyntheticEngineFactory", "DebugSilentAudioSession")
     found, _ = markers_in_entries(body, markers + (() if enabled else ("NSMicrophoneUsageDescription",)))
@@ -640,6 +649,7 @@ def verify_app(app, args):
         verify_voice_info(config["ios"]["infoPlist"], voice_enabled)
         if voice_enabled:
             check(config["extra"].get("voiceConsentDefault") is False, "embedded consent is denied by default")
+            check(config["extra"].get("supportPageAvailable") is True, "published support page enabled for answer reports")
         check(config["extra"]["variant"] == "production" and
               config["extra"]["apiOrigin"] == "https://opax.com.au" and
               config["extra"]["appBuild"] == args.build and

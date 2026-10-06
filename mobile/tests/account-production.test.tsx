@@ -20,20 +20,25 @@ jest.mock('../src/design/environment', () => ({
 }));
 
 const root = resolve(__dirname, '..');
-function metro(variant: string, script: string) {
+function metro(variant: string, script: string, voiceMode = '0') {
   return JSON.parse(
     execFileSync(process.execPath, ['-e', script], {
       cwd: root,
-      env: { ...process.env, OPAX_VARIANT: variant },
+      env: {
+        ...process.env,
+        OPAX_VARIANT: variant,
+        OPAX_PRODUCTION_VOICE: voiceMode,
+      },
       encoding: 'utf8',
     }),
   );
 }
-const blockList = (variant: string) =>
+const blockList = (variant: string, voiceMode = '0') =>
   (
     metro(
       variant,
       'const c = require("./metro.config.js"); process.stdout.write(JSON.stringify([c.resolver.blockList].flat().filter(Boolean).map((r) => r.source)))',
+      voiceMode,
     ) as string[]
   ).map((source) => new RegExp(source));
 const blocked = (list: RegExp[], path: string) =>
@@ -138,6 +143,31 @@ test('development and e2e builds keep them', () => {
       'src/features/account/SignInFlow.tsx',
     ])
       expect(blocked(blockList(variant), path)).toBe(false);
+});
+
+test('switch-on production resolves the real Account entry and permits its flows', () => {
+  const entry = metro(
+    'production',
+    `
+    const path = require('node:path');
+    const c = require('./metro.config.js');
+    const context = { originModulePath: path.resolve('src/app/account/index.tsx'),
+      resolveRequest: (_context, name) => ({ filePath: path.resolve('src/app/account', name + '.tsx') }) };
+    process.stdout.write(JSON.stringify(c.resolver.resolveRequest(context, '../../features/account/entry', 'ios')));
+  `,
+    '1',
+  );
+  expect(entry.filePath).toBe(resolve(root, 'src/features/account/entry.tsx'));
+  const list = blockList('production', '1');
+  for (const path of [
+    'src/app/account/sign-in.tsx',
+    'src/app/account/delete.tsx',
+    'src/features/account/AccountScreen.tsx',
+    'src/features/account/SignInFlow.tsx',
+    'src/features/account/DeleteAccountFlow.tsx',
+  ])
+    expect(blocked(list, path)).toBe(false);
+  expect(blocked(list, 'src/app/voice-bridge-test.tsx')).toBe(true);
 });
 
 test('the exclusions are valid in the release verifier’s Python syntax', () => {

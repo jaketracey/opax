@@ -1,12 +1,10 @@
 import { ActionSheetIOS } from 'react-native';
 import type { VoiceSource } from '../../voice';
-import { reportAnswerUrl } from '../../voice/report-answer';
+import { reportAnswer, reportAnswerUrl } from '../../voice/report-answer';
 
 export type ReportAnswer = (recordPath: string | null) => void | Promise<void>;
 
-// The production voice lane supplies the reporting path. No answer is stored
-// or sent by this e2e/dev integration point.
-export const reportAnswer: ReportAnswer = () => {};
+export { reportAnswer };
 
 /** Sources describe the call as a whole; captions never travel with a report. */
 export function reportFromSources(

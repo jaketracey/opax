@@ -84,6 +84,13 @@ name: 21 Talk consent, captions, sources, controls and refusal states
     visibilityPercentage: 100
 - takeScreenshot: ${EVIDENCE}/21-report-record-choice
 - tapOn: Public receipt records
+- extendedWaitUntil:
+    visible:
+      id: source-destination-url
+    timeout: 15000
+- assertVisible: 'https://opax.invalid/support\?record=%2Fmoney%2Freceipts'
+- takeScreenshot: ${EVIDENCE}/21-report-support-path
+- tapOn: OK
 - scrollUntilVisible:
     timeout: 60000
     element:

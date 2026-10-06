@@ -71,9 +71,9 @@ test.each(['0', '1'])(
   },
 );
 
-test('the default is off and invalid switches fail closed', () => {
+test('the default is on and invalid switches fail closed', () => {
   delete process.env.OPAX_PRODUCTION_VOICE;
-  expect(productionVoiceEnabled('production')).toBe(false);
+  expect(productionVoiceEnabled('production')).toBe(true);
   for (const value of ['true', 'yes', '', '2'])
     expect(() => productionVoiceEnabled('production', value)).toThrow(
       'must be 0 or 1',
@@ -103,6 +103,7 @@ test('privacy merges existing required reasons without declaring on-device locat
     ),
   ).toContain('NSPrivacyCollectedDataTypeOtherDataTypes');
   for (const entry of manifest.NSPrivacyCollectedDataTypes) {
+    expect(entry.NSPrivacyCollectedDataTypeLinked).toBe(true);
     expect(entry.NSPrivacyCollectedDataTypeTracking).toBe(false);
     expect(entry.NSPrivacyCollectedDataTypePurposes).toEqual([
       'NSPrivacyCollectedDataTypePurposeAppFunctionality',
@@ -117,17 +118,22 @@ test('privacy merges existing required reasons without declaring on-device locat
   expect(voicePrivacyManifest(manifest)).toEqual(manifest);
 });
 
-test('the compiled native route list is exactly the build policy', () => {
+test('the compiled native methods and paths are exactly the build policy', () => {
   const source = readFileSync(
     'modules/opax-voice/ios/OpaxVoiceCore/Sources/OpaxVoiceCore/HTTPClient.swift',
     'utf8',
   );
-  const paths = [...source.matchAll(/= "(\/api\/[^" ]+)"/g)]
-    .map((match) => match[1])
-    .sort();
-  expect(paths).toEqual(
-    policy.routes.map((route: string) => route.split(' ')[1]).sort(),
+  const enumSource = source.split('public struct RoutePolicy')[0]!;
+  const defaultMethod = /default:\s*"([A-Z]+)"/.exec(enumSource)?.[1];
+  expect(defaultMethod).toBeDefined();
+  const methods = new Map<string, string>();
+  for (const match of enumSource.matchAll(/case\s+([^:]+):\s*"([A-Z]+)"/g))
+    for (const name of match[1]!.matchAll(/\.(\w+)/g))
+      methods.set(name[1]!, match[2]!);
+  const routes = [...enumSource.matchAll(/(\w+)\s*=\s*"(\/api\/[^" ]+)"/g)].map(
+    (match) => `${methods.get(match[1]!) ?? defaultMethod} ${match[2]}`,
   );
+  expect(routes.sort()).toEqual([...policy.routes].sort());
   expect(policy.routes).toHaveLength(10);
   expect(policy.consentDefault).toBe(false);
 });
