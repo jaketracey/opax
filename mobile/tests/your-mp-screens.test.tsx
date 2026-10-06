@@ -279,7 +279,7 @@ test('profile credit follows native image decode and disappears with the failed 
     'wd-Q100327610.webp',
   );
   expect(text(r)).not.toContain('Gabagool2005');
-  await act(async () => r.root.findByType(Image).props.onDisplay());
+  await act(async () => r.root.findByType(Image).props.onLoad());
   expect(text(r)).toContain('Gabagool2005');
   expect(text(r)).toContain('CC0');
   await act(async () => r.root.findByType(Image).props.onError());

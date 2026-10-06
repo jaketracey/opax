@@ -793,36 +793,6 @@ class BundleAttackTests(unittest.TestCase):
                     verify.framework_allowlist(app)
                 plant.rmdir()
 
-    def test_portrait_codecs_required_and_extra_or_nested_code_refused(self):
-        codecs = {"ExpoImage.framework", "SDWebImage.framework", "SDWebImageAVIFCoder.framework",
-                  "SDWebImageSVGCoder.framework", "SDWebImageWebPCoder.framework", "libavif.framework"}
-        with tempfile.TemporaryDirectory() as d:
-            app = Path(d)
-            for name in verify.SHIPPED_FRAMEWORKS | codecs:
-                (app / "Frameworks" / name).mkdir(parents=True)
-            verify.framework_allowlist(app)
-            for name in codecs:
-                with self.subTest(missing=name):
-                    path = app / "Frameworks" / name
-                    path.rmdir()
-                    with self.assertRaises(ReleaseError):
-                        verify.framework_allowlist(app)
-                    path.mkdir()
-            nested = app / "Resources" / "ExpoImage.framework"
-            nested.mkdir(parents=True)
-            with self.assertRaises(ReleaseError):
-                verify.framework_allowlist(app)
-            nested.rmdir()
-            extra = app / "Frameworks" / "SDWebImageUnreviewedCoder.framework"
-            extra.mkdir()
-            with self.assertRaises(ReleaseError):
-                verify.framework_allowlist(app)
-            extra.rmdir()
-            dylib = app / "Frameworks" / "unreviewed.dylib"
-            dylib.touch()
-            with self.assertRaises(ReleaseError):
-                verify.framework_allowlist(app)
-
     def test_every_embedded_bundle_entitlement_payload_checked(self):
         with tempfile.TemporaryDirectory() as d:
             import plistlib

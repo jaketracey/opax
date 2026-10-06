@@ -28,13 +28,9 @@ GUARDS = (
 )
 SDK_PATTERN = re.compile(rb"posthog|mixpanel|amplitude|segment\.com|sentry|appsflyer|"
                          rb"firebaseanalytics|appcenter|bugsnag|datadog|fbSDK|crashlytics|heapanalytics", re.I)
-# expo-image 57.0.5 and its declared CocoaPods codecs. App source can use only
-# the reviewed local-file portrait renderer; SDK transport helpers stay blocked.
-PORTRAIT_FRAMEWORKS = {"ExpoImage.framework", "SDWebImage.framework", "SDWebImageAVIFCoder.framework",
-                      "SDWebImageSVGCoder.framework", "SDWebImageWebPCoder.framework", "libavif.framework"}
 SHIPPED_FRAMEWORKS = {"ExpoModulesJSI.framework", "hermesvm.framework", "ExpoFont.framework",
                       "ExpoModulesCore.framework", "React.framework", "ReactNativeDependencies.framework",
-                      "ExpoModulesWorklets.framework", "ExpoFileSystem.framework"} | PORTRAIT_FRAMEWORKS
+                      "ExpoModulesWorklets.framework", "ExpoFileSystem.framework"}
 ANALYTICS_HOSTS = {"segment.io", "segment.com", "segmentapis.com", "posthog.com", "mixpanel.com",
                    "amplitude.com", "sentry.io", "appsflyer.com", "adjust.com", "google-analytics.com",
                    "app-measurement.com", "crashlytics.com", "heap.io", "heapanalytics.com",
@@ -271,7 +267,7 @@ def framework_allowlist(app):
     frameworks = list(app.rglob("*.framework"))
     require({p.name for p in frameworks} == SHIPPED_FRAMEWORKS and
             all(p.parent == app / "Frameworks" for p in frameworks) and not list(app.rglob("*.dylib")),
-            "native framework allowlist matches the reviewed shipped frameworks")
+            "native framework allowlist matches the eight shipped frameworks")
 
 
 def no_app_extensions(app, info):
@@ -429,7 +425,7 @@ def verify_app(app, args):
     check(info.get("DTXcodeBuild") == args.xcode_build, "archive uses the selected release Xcode")
     check(no_app_extensions(app, info), "no app extensions")
     framework_allowlist(app)
-    check(True, "native framework allowlist matches the reviewed shipped frameworks")
+    check(True, "native framework allowlist matches the eight shipped frameworks")
     command("/usr/bin/codesign", "--verify", "--deep", "--strict", str(app))
     check(True, "code signatures valid")
     entitlements = plistlib.loads(command("/usr/bin/codesign", "-d", "--entitlements", ":-", str(app)))

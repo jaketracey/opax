@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { Image } from 'expo-image';
 import { localImageURI } from '../api/image-policy';
 import type { ReactNode } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { useAccessibilitySize } from './accessibility';
 import { Icon } from './icon';
 import type { PartyStatus } from '../api/party-transforms';
@@ -60,10 +59,7 @@ export function Portrait({
         <Image
           source={{ uri: localImageURI(uri) }}
           style={{ width: dimension, height: dimension }}
-          contentFit="contain"
-          cachePolicy="none"
-          useAppleWebpCodec={false}
-          allowDownscaling={false}
+          resizeMode="contain"
           accessible={!decorative}
           accessibilityLabel={
             decorative
@@ -75,7 +71,7 @@ export function Portrait({
             decorative ? 'no-hide-descendants' : 'auto'
           }
           accessibilityIgnoresInvertColors
-          onDisplay={() => onDisplay?.(true)}
+          onLoad={() => onDisplay?.(true)}
           onError={() => {
             setFailedURI(uri!);
             onDisplay?.(false);

@@ -54,7 +54,8 @@ export class PortraitDiskStore implements PortraitStore {
       let moved = false;
       try {
         await temporary.write(bytes);
-        temporary.move(file, { overwrite: true });
+        // The native move is asynchronous: publish the URI only after it exists.
+        await temporary.move(file, { overwrite: true });
         moved = true;
       } finally {
         if (!moved && temporary.exists) temporary.delete();
