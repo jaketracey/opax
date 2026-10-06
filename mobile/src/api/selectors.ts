@@ -71,7 +71,7 @@ export interface Provenance {
   licence?: string;
 }
 export interface Block<T> {
-  status: 'ready' | 'missing' | 'error';
+  status: 'ready' | 'missing' | 'error' | 'loading';
   data: T | null;
   asAt: string | null;
   sources: Provenance[];
