@@ -472,7 +472,8 @@ concentration without its chart, is left out and counted on screen. The web's
 model-backed search, so the app leaves it out. Evidence labels are read into
 amount, payer and payee, detail and register (`leadEvidenceFor`): OPAX's local
 row numbers ("local record 643745") are dropped, AusTender contract notice IDs
-are kept, and a label in any other shape keeps its register link with the label
+are kept, a label with no ID (donations, since the web export's 66d7bf45) reads
+the same, and a label in any other shape keeps its register link with the label
 hidden. `declarations()` reads every `/interests/recent.json` row with Today's
 party and portrait joins and, through the register's ID bridge
 (`declarationProfilesFor`, the same bridge as Search's interest rows), the

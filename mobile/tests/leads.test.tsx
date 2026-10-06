@@ -200,6 +200,58 @@ describe('evidence labels', () => {
       expect(view.url).toBe(item.url);
     }
   });
+  test('all 89 records rewritten as the web export now writes them read the same', () => {
+    // web/discovery-local-id (66d7bf45) drops " · local record N" from
+    // donation labels; contract labels keep " · record CN…".
+    const rewritten = evidence.map((item) => ({
+      ...item,
+      label: item.label.replace(/ · local record \d+$/, ''),
+    }));
+    expect(rewritten.filter((item) => item.table === 'donations')).toHaveLength(
+      32,
+    );
+    for (const [index, item] of rewritten.entries()) {
+      if (item.table === 'donations') {
+        expect(item.label).toMatch(/ · AEC annual receipt$/);
+      } else expect(item.label).toBe(evidence[index]!.label);
+      expect(leadEvidenceFor(item)).toEqual(leadEvidenceFor(evidence[index]!));
+    }
+  });
+  test('a receipt reads the same with or without its local row number; a contract without its ID shows none', () => {
+    const westpac = evidence.find((e) => e.record_id === '643745')!;
+    const read = {
+      amount: '$1,803',
+      amountSpoken: '1,803 dollars',
+      from: 'Westpac Banking Corporation',
+      to: 'Australian Labor Party (ALP)',
+      detail: 'AEC annual receipt · FY 2024–25',
+      register: 'AEC Transparency Register',
+      record: null,
+      url: 'https://transparency.aec.gov.au/',
+      kind: 'register',
+    };
+    expect(westpac.label).toMatch(/ · local record 643745$/);
+    expect(leadEvidenceFor(westpac)).toEqual(read);
+    expect(
+      leadEvidenceFor({
+        ...westpac,
+        label:
+          'Westpac Banking Corporation → Australian Labor Party (ALP): $1,803.00 · FY 2024-25 · AEC annual receipt',
+      }),
+    ).toEqual(read);
+    const contract = evidence.find((e) => e.record_id === 'CN3407266')!;
+    expect(
+      leadEvidenceFor({
+        ...contract,
+        label: contract.label.replace(' · record CN3407266', ''),
+      }),
+    ).toMatchObject({
+      amount: '$4,537,500',
+      detail: 'Contract value · starts 6 Feb 2017',
+      register: 'AusTender register',
+      record: null,
+    });
+  });
   test('the UX example reads as the design shows it', () => {
     const contract = evidence.find((e) => e.record_id === 'CN3407266')!;
     expect(leadEvidenceFor(contract)).toEqual({

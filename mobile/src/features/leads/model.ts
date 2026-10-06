@@ -124,12 +124,15 @@ export function leadEvidenceFor(evidence: Evidence): LeadEvidenceView {
   };
   if (!known) return base;
   const id = evidence.record_id;
-  const tail = [` · local record ${id}`, ` · record ${id}`].find((t) =>
-    evidence.label.endsWith(t),
-  );
-  if (!tail) return base;
+  // The export ends a label with its record ID, or, since the web export
+  // dropped OPAX's local row numbers (66d7bf45), a donation with no ID at
+  // all. Any other ending is an unknown qualifier below and hides the label.
+  const tail =
+    [` · local record ${id}`, ` · record ${id}`].find((t) =>
+      evidence.label.endsWith(t),
+    ) ?? '';
   const [head, ...qualifiers] = evidence.label
-    .slice(0, -tail.length)
+    .slice(0, evidence.label.length - tail.length)
     .split(' · ');
   const colon = head!.lastIndexOf(': $');
   if (colon < 0) return base;
