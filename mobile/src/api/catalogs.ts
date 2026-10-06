@@ -257,20 +257,32 @@ export class Catalogs {
       stale: [members, money, entities, votes].some((b) => b.stale),
     };
   }
-  roster() {
-    return this.client.get('/parliamentarians.json', decode.decodeRoster);
+  roster(refresh = false) {
+    return this.client.get(
+      '/parliamentarians.json',
+      decode.decodeRoster,
+      refresh,
+    );
   }
-  slugs() {
-    return this.client.get('/api/person-slugs', decode.decodeSlugs);
+  slugs(refresh = false) {
+    return this.client.get('/api/person-slugs', decode.decodeSlugs, refresh);
   }
-  manifest() {
-    return this.client.get('/electorates/manifest.json', decode.decodeManifest);
+  manifest(refresh = false) {
+    return this.client.get(
+      '/electorates/manifest.json',
+      decode.decodeManifest,
+      refresh,
+    );
   }
-  people(manifest: Manifest) {
-    return this.client.get(manifest.people_url, decode.decodePeople);
+  people(manifest: Manifest, refresh = false) {
+    return this.client.get(manifest.people_url, decode.decodePeople, refresh);
   }
-  electorates(manifest: Manifest) {
-    return this.client.get(manifest.index_url, decode.decodeElectorateIndex);
+  electorates(manifest: Manifest, refresh = false) {
+    return this.client.get(
+      manifest.index_url,
+      decode.decodeElectorateIndex,
+      refresh,
+    );
   }
   electorate(path: string) {
     return this.client.get(path, decode.decodeElectorate);
@@ -311,11 +323,19 @@ export class Catalogs {
       decode.decodeExpenseCategories,
     );
   }
-  photoPeople() {
-    return this.client.get('/photos/people.json', decode.decodePhotoPeople);
+  photoPeople(refresh = false) {
+    return this.client.get(
+      '/photos/people.json',
+      decode.decodePhotoPeople,
+      refresh,
+    );
   }
-  photoCredits() {
-    return this.client.get('/photos/credits.json', decode.decodePhotoCredits);
+  photoCredits(refresh = false) {
+    return this.client.get(
+      '/photos/credits.json',
+      decode.decodePhotoCredits,
+      refresh,
+    );
   }
   corpus() {
     return this.client.get('/corpus.json', decode.decodeCorpus);
@@ -326,10 +346,10 @@ export class Catalogs {
   }
   /**
    * The declared-interests feed behind Today's recent declarations: every
-   * row of /interests/recent.json, newest first, with Today's party and
-   * portrait joins and the profile slug of each member the register's ID
-   * bridge resolves. Joins are optional: without them a row keeps its text
-   * and source, and shows no party, portrait or profile link.
+   * row of /interests/recent.json, newest first, with Today's party join
+   * and the profile slug of each member the register's ID bridge resolves.
+   * Portraits load per row (CachedPortrait). Joins are optional: without
+   * them a row keeps its text and source, and shows no party or profile link.
    */
   async declarations(refresh = false) {
     const record = await this.client.get(
@@ -339,15 +359,12 @@ export class Catalogs {
     );
     const optional = <T>(path: string, decoder: Decoder<T>) =>
       this.client.get(path, decoder, refresh).catch(() => null);
-    const [roster, photoPeople, photoCredits, slugs, interestIndex, manifest] =
-      await Promise.all([
-        optional('/parliamentarians.json', decode.decodeRoster),
-        optional('/photos/people.json', decode.decodePhotoPeople),
-        optional('/photos/credits.json', decode.decodePhotoCredits),
-        optional('/api/person-slugs', decode.decodeSlugs),
-        optional('/interests/index.json', decode.decodeInterestIndex),
-        optional('/electorates/manifest.json', decode.decodeManifest),
-      ]);
+    const [roster, slugs, interestIndex, manifest] = await Promise.all([
+      optional('/parliamentarians.json', decode.decodeRoster),
+      optional('/api/person-slugs', decode.decodeSlugs),
+      optional('/interests/index.json', decode.decodeInterestIndex),
+      optional('/electorates/manifest.json', decode.decodeManifest),
+    ]);
     const people = manifest
       ? await optional(manifest.data.people_url, decode.decodePeople).then(
           (r) =>
@@ -357,8 +374,6 @@ export class Catalogs {
     const interests = record.data;
     const view = recentDeclarationsFor(interests, interests.items.length, {
       roster: roster?.data,
-      photoPeople: photoPeople?.data,
-      photoCredits: photoCredits?.data,
     });
     const profiles =
       roster && slugs && interestIndex && manifest && people
@@ -375,15 +390,9 @@ export class Catalogs {
         : {};
     const records = [
       record,
-      ...[
-        roster,
-        photoPeople,
-        photoCredits,
-        slugs,
-        interestIndex,
-        manifest,
-        people,
-      ].filter((r) => r !== null),
+      ...[roster, slugs, interestIndex, manifest, people].filter(
+        (r) => r !== null,
+      ),
     ];
     return {
       ...cached(
@@ -468,11 +477,7 @@ export class Catalogs {
     };
     const optional = async <T>(path: string, decoder: Decoder<T>) =>
       this.client.get(path, decoder, refresh).catch(() => null);
-    const metadata = Promise.all([
-      optional('/parliamentarians.json', decode.decodeRoster),
-      optional('/photos/people.json', decode.decodePhotoPeople),
-      optional('/photos/credits.json', decode.decodePhotoCredits),
-    ]);
+    const metadata = optional('/parliamentarians.json', decode.decodeRoster);
     const [bills, declarations] = await Promise.all([
       load(
         this.client.get('/bills/index.json', decode.decodeBillIndex, refresh),
@@ -487,25 +492,21 @@ export class Catalogs {
         // Attach the load handler immediately, including when optional metadata is slow.
         return load(
           pending.then(async (record) => {
-            const [roster, photoPeople, photoCredits] = await metadata;
+            const roster = await metadata;
             return {
               ...record,
               data: {
                 interests: record.data,
                 roster,
-                photoPeople,
-                photoCredits,
               },
             };
           }),
-          ({ interests, roster, photoPeople, photoCredits }) =>
+          ({ interests, roster }) =>
             cached(
               recentDeclarationsFor(interests, limit, {
                 roster: roster?.data,
-                photoPeople: photoPeople?.data,
-                photoCredits: photoCredits?.data,
               }),
-              [roster, photoPeople, photoCredits].filter((r) => r !== null),
+              roster ? [roster] : [],
             ),
         );
       })(),
@@ -550,15 +551,15 @@ export class Catalogs {
       };
     }
   }
-  async directory() {
+  async directory(refresh = false) {
     const [manifest, roster, slugs] = await Promise.all([
-      this.manifest(),
-      this.roster(),
-      this.slugs(),
+      this.manifest(refresh),
+      this.roster(refresh),
+      this.slugs(refresh),
     ]);
     const [people, electorates] = await Promise.all([
-      this.people(manifest.data),
-      this.electorates(manifest.data),
+      this.people(manifest.data, refresh),
+      this.electorates(manifest.data, refresh),
     ]);
     if (
       people.data.meta.release_id !== manifest.data.release_id ||

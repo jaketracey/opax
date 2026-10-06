@@ -221,6 +221,17 @@ export const server = createServer(async (request, response) => {
       );
       cacheControl = 'no-store';
     }
+    if (!body && url.pathname.endsWith('.webp')) {
+      status = 404;
+      response.writeHead(status, {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store',
+      });
+      response.end(
+        JSON.stringify({ error: 'Portrait not in the pinned image subset' }),
+      );
+      return;
+    }
     if (!body) throw new Error('Path not in the pinned journey snapshot');
     const opaque = `"${createHash('sha256').update(body).digest('hex')}"`;
     // The edition answers as appRead does: a weak validator, matched in its

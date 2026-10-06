@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Image } from 'react-native';
+import { CachedPortrait } from '../CachedPortrait';
+import type { PortraitInfo } from '../../api/portrait-index';
 import type { recentDeclarationsFor } from '../../api/selectors';
 import { Group, PersonRow, SourceLink, Text } from '../../design/primitives';
 import { formatDate } from '../../design/format';
 import { chamberName } from '../../design/parliament';
-import { remoteImageURI } from '../../api/image-policy';
 import { registerChangeLabel } from '../your-mp/model';
 
 type Declaration = NonNullable<
@@ -47,9 +47,7 @@ export function TodayDeclaration({
   onOpenPerson?: () => void;
   showTies?: boolean;
 }) {
-  const [failedPath, setFailedPath] = useState<string | null>(null);
-  const portrait =
-    item.portrait?.display === 'permitted' ? item.portrait : null;
+  const [portrait, setPortrait] = useState<PortraitInfo | null>(null);
   return (
     <Group>
       <PersonRow
@@ -62,18 +60,11 @@ export function TodayDeclaration({
         testID={`${testIDPrefix}-person-${index}`}
         onPress={onOpenPerson}
         portrait={
-          portrait && failedPath !== portrait.path ? (
-            <Image
-              source={{ uri: remoteImageURI(portrait.path) }}
-              style={{ width: 44, height: 44, borderRadius: 22 }}
-              resizeMode="contain"
-              accessibilityElementsHidden
-              importantForAccessibility="no-hide-descendants"
-              accessibilityIgnoresInvertColors
-              onError={() => setFailedPath(portrait.path)}
-              testID={`${testIDPrefix}-portrait-${index}`}
-            />
-          ) : undefined
+          <CachedPortrait
+            name={item.name}
+            testID={`${testIDPrefix}-portrait-${index}`}
+            onCredit={setPortrait}
+          />
         }
       />
       {item.description ? <Text>{item.description}</Text> : null}
@@ -88,14 +79,11 @@ export function TodayDeclaration({
           this identifies a shared name across public registers, not wrongdoing.
         </Text>
       ) : null}
-      {portrait && failedPath !== portrait.path ? (
+      {portrait ? (
         <Group>
           <Text variant="fine">
             {portrait.credit} · {portrait.licence}
           </Text>
-          {portrait.notice ? (
-            <Text variant="fine">{portrait.notice}</Text>
-          ) : null}
           {portrait.attribution ? (
             <Text variant="fine">{portrait.attribution}</Text>
           ) : null}
@@ -114,11 +102,6 @@ export function TodayDeclaration({
             kind="record"
           />
         </Group>
-      ) : null}
-      {portrait && failedPath === portrait.path ? (
-        <Text variant="fine">
-          The permitted portrait could not be loaded. A blank circle is shown.
-        </Text>
       ) : null}
       <SourceLink
         citation={item.sourceLabel}

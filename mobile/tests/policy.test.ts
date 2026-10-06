@@ -55,8 +55,6 @@ test.each([
   '/interests/n-../../pay.json',
   '/interests/person_123.json',
   '/interests/10007.json?as_at=2026-09-04',
-  '/photos/10007.webp',
-  '/photos/wd-Q100327610.webp',
   '/photos/10007.jpg',
   '/photos/jpg/10007.jpg',
   '/photos/../../og/x',
@@ -78,10 +76,10 @@ test('ID types validate separate namespaces at runtime', () => {
     expect(operation).toThrow();
 });
 test.each(Object.keys(files).filter((p) => p.endsWith('.webp')))(
-  'pinned portrait %s is image-only and rejected by the JSON client policy',
+  'pinned portrait %s is allowed only by the reviewed WebP policy',
   (path) => {
     expect(() => assertPortraitPath(path)).not.toThrow();
-    expect(() => assertAllowedPath(path)).toThrow();
+    expect(() => assertAllowedPath(path)).not.toThrow();
   },
 );
 test.each([

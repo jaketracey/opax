@@ -43,6 +43,24 @@ name: 08 Independent profile blocks, current senator, former member and local sh
 - assertVisible: https://opax.invalid/subject/person/anthony-albanese
 - takeScreenshot: ${EVIDENCE}/08-share
 - tapOn: OK
+# The portrait is deliberately hidden from VoiceOver beside the name. Sweep
+# the existing record first, then return to its credit after the cold lookup.
+# Scrolling down immediately can pass the credit before it finishes loading.
+- scrollUntilVisible:
+    element:
+      id: person-portrait-attribution
+    direction: UP
+    centerElement: true
+    timeout: 300000
+- assertVisible: Official portrait.*CC BY-NC-ND 4.0.*
+- takeScreenshot: ${EVIDENCE}/08-official-credit
+- scrollUntilVisible:
+    element:
+      id: person-screen-title
+    direction: UP
+    centerElement: true
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/08-official-portrait
 - runFlow:
     file: 08-open-profile.yaml
     env:
@@ -58,26 +76,51 @@ name: 08 Independent profile blocks, current senator, former member and local sh
     env:
       NAME: Sheena Watt
       SLUG: sheena-watt
-- scrollUntilVisible:
-    element:
-      id: person-portrait
-    direction: UP
-    timeout: 300000
-- takeScreenshot: ${EVIDENCE}/08-permitted-portrait
 - runFlow:
     file: review-pages.yaml
     env:
       END: person-end
       PREFIX: 08-watt
+- scrollUntilVisible:
+    element:
+      id: person-portrait-attribution
+    direction: UP
+    centerElement: true
+    timeout: 300000
+- assertVisible: Gabagool2005.*CC0.*Wikimedia Commons.*
+- takeScreenshot: ${EVIDENCE}/08-commons-credit
+- scrollUntilVisible:
+    element:
+      id: person-screen-title
+    direction: UP
+    centerElement: true
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/08-commons-portrait
 - runFlow:
-    file: 06-open-profile.yaml
+    file: 08-open-profile.yaml
     env:
       NAME: Julia Gillard
       SLUG: julia-gillard
-      PARTY: Formerly Labor
-      NOT_PARTY: ^Labor$
+- scrollUntilVisible:
+    element:
+      id: person-party
+    centerElement: true
+    timeout: 300000
+- assertVisible: Formerly Labor
+- assertNotVisible: ^Labor$
 - runFlow:
     file: review-pages.yaml
     env:
       END: person-end
       PREFIX: 08-former
+
+- runFlow:
+    file: 08-open-profile.yaml
+    env:
+      NAME: Madonna Jarrett
+      SLUG: madonna-jarrett
+# The pinned map has no portrait for Madonna Jarrett. Inspect this capture's
+# blank circle; a decorative fallback must also stay out of the AX hierarchy.
+- assertVisible:
+    id: person-screen-title
+- takeScreenshot: ${EVIDENCE}/08-no-portrait
