@@ -43,12 +43,12 @@ name: 08 Independent profile blocks, current senator, former member and local sh
 - assertVisible: https://opax.invalid/subject/person/anthony-albanese
 - takeScreenshot: ${EVIDENCE}/08-share
 - tapOn: OK
-# The portrait is deliberately hidden from VoiceOver beside the name. Its
-# credit and licence are on Sources and licences (checked at the end), not
-# on the profile.
+# The portrait is deliberately hidden from VoiceOver beside the name, so the
+# capture shows it. Its credit and licence are on Sources and licences
+# (checked at the end), not on the profile.
 - scrollUntilVisible:
     element:
-      id: person-portrait
+      id: person-screen-title
     direction: UP
     centerElement: true
     timeout: 300000
@@ -76,7 +76,7 @@ name: 08 Independent profile blocks, current senator, former member and local sh
       PREFIX: 08-watt
 - scrollUntilVisible:
     element:
-      id: person-portrait
+      id: person-screen-title
     direction: UP
     centerElement: true
     timeout: 300000
