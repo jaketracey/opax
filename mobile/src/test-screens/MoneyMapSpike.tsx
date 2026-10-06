@@ -25,6 +25,11 @@ import {
   type ProjectedLabel,
 } from '../features/money/NativeMoneyScene';
 
+import {
+  MoneyMapLabels,
+  moneyLabelGroups,
+} from '../features/money/MoneyMapLabels';
+
 function percentile(values: number[], quantile: number) {
   const sorted = [...values].sort((a, b) => a - b);
   return (
@@ -43,6 +48,10 @@ export default function MoneyMapSpike() {
   const exitTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const started = useRef(0);
   const [record, setRecord] = useState<RecordResult<MoneyGraph> | null>(null);
+  const labelGroups = useMemo(
+    () => (record ? moneyLabelGroups(record.data) : []),
+    [record],
+  );
   const [error, setError] = useState<string | null>(null);
   const [size, setSize] = useState({ width: 0, height: 350 });
   const [generation, setGeneration] = useState(0);
@@ -344,26 +353,13 @@ export default function MoneyMapSpike() {
                   msaaSamples={0}
                   onContextCreate={context}
                 />
-                <View
-                  pointerEvents="none"
-                  style={{ position: 'absolute', inset: 0 }}
-                >
-                  {labels.map((label) => (
-                    <Text
-                      key={label.id}
-                      variant="fine"
-                      style={{
-                        position: 'absolute',
-                        left: label.x - 48,
-                        top: label.y,
-                        width: 100,
-                        color: label.ink,
-                      }}
-                    >
-                      {label.label}
-                    </Text>
-                  ))}
-                </View>
+                <MoneyMapLabels
+                  groups={labelGroups}
+                  labels={labels}
+                  width={size.width}
+                  labelWidth={100}
+                  clamp={false}
+                />
               </View>
             </GestureDetector>
           </GestureHandlerRootView>

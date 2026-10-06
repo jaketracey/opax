@@ -23,6 +23,7 @@ import { colors, spacing } from '../../design/tokens';
 import type { MoneyGraph } from './data';
 import { NativeMoneyScene, type ProjectedLabel } from './NativeMoneyScene';
 import { moneyProbeId } from './money-probe';
+import { MoneyMapLabels, moneyLabelGroups } from './MoneyMapLabels';
 
 export interface NativeMoneyMapHandle {
   focus: (id: string) => void;
@@ -40,6 +41,7 @@ export function NativeMoneyMap({
   onSelect: (id: string) => void;
   ref?: Ref<NativeMoneyMapHandle>;
 }) {
+  const labelGroups = useMemo(() => moneyLabelGroups(graph), [graph]);
   const [size, setSize] = useState({ width: 0, height: 350 });
   const [generation, setGeneration] = useState(0);
   const [labels, setLabels] = useState<ProjectedLabel[]>([]);
@@ -294,33 +296,11 @@ export function NativeMoneyMap({
               />
             ) : null}
             {!accessibilitySize ? (
-              <View
-                pointerEvents="none"
-                accessibilityElementsHidden
-                importantForAccessibility="no-hide-descendants"
-                style={styles.overlay}
-              >
-                {labels.map((label) => (
-                  <Text
-                    key={label.id}
-                    variant="fine"
-                    wordSafe
-                    accessible={false}
-                    style={{
-                      position: 'absolute',
-                      left: Math.max(
-                        0,
-                        Math.min(size.width - 110, label.x - 55),
-                      ),
-                      top: Math.max(0, label.y),
-                      width: 110,
-                      color: label.ink,
-                    }}
-                  >
-                    {label.label}
-                  </Text>
-                ))}
-              </View>
+              <MoneyMapLabels
+                groups={labelGroups}
+                labels={labels}
+                width={size.width}
+              />
             ) : null}
           </View>
         </GestureDetector>
@@ -341,5 +321,4 @@ export function NativeMoneyMap({
 const styles = StyleSheet.create({
   canvas: { height: 350, backgroundColor: colors.paper, overflow: 'hidden' },
   gl: { flex: 1 },
-  overlay: { position: 'absolute', inset: 0 },
 });
