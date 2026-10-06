@@ -397,10 +397,14 @@ describe('the withdrawn-edition fixture', () => {
 
 test('the fixture refuses an unknown edition mode at startup', async () => {
   const fixture = startFixture('preview');
-  await expect(fixture.ready).rejects.toThrow(
-    'OPAX_FIXTURE_EDITION must be pinned, absent or withdrawn',
-  );
-});
+  try {
+    await expect(fixture.ready).rejects.toThrow(
+      'OPAX_FIXTURE_EDITION must be pinned, absent or withdrawn',
+    );
+  } finally {
+    await fixture.stop();
+  }
+}, 20000);
 
 // Journey 26: the follows fixture moves one declaration and one bill stage.
 describe('the changed-data fixture', () => {
@@ -454,7 +458,11 @@ describe('the changed-data fixture', () => {
 
 test('the fixture refuses an unknown data mode at startup', async () => {
   const fixture = startFixture('pinned', 0, { OPAX_FIXTURE_DATA: 'live' });
-  await expect(fixture.ready).rejects.toThrow(
-    'OPAX_FIXTURE_DATA must be pinned or changed',
-  );
-});
+  try {
+    await expect(fixture.ready).rejects.toThrow(
+      'OPAX_FIXTURE_DATA must be pinned or changed',
+    );
+  } finally {
+    await fixture.stop();
+  }
+}, 20000);
