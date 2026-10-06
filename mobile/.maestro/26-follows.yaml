@@ -219,6 +219,23 @@ name: 26 Follow a member, a bill and an electorate; Today shows what changed
 - takeScreenshot: ${EVIDENCE}/26-today-bill-changed
 
 # Opening the bill marks it seen; the member still shows its change.
+# At AX5 the row (about 1,370pt) outgrows the screen, and Maestro taps its
+# centre. A row already a tenth visible is never centred, so come at it from
+# the top: the half-screen scroll then stops with its centre on screen.
+- scrollUntilVisible:
+    element:
+      id: today-screen-message
+    direction: UP
+    timeout: 90000
+- scrollUntilVisible:
+    element:
+      id: today-following-bill-au-federal-r7549
+    direction: DOWN
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- waitForAnimationToEnd
 - tapOn:
     id: today-following-bill-au-federal-r7549
 - extendedWaitUntil:
