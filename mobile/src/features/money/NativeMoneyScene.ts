@@ -64,6 +64,7 @@ export class NativeMoneyScene {
   private layoutDirty = true;
   private completedFrames = 0;
   private flowColors: Float32Array;
+  private probePixels = new Uint8Array(32 * 32 * 4);
 
   constructor(
     private gl: ExpoWebGLRenderingContext,
@@ -465,26 +466,51 @@ void main() {`,
     this.edges.material.uniforms.uPhase!.value = (now / 7000) % 1;
     this.renderer.render(this.scene, this.camera);
   }
-  /** Native GPU readback; rejects a blank clear surface or a GL error. Once per run. */
+  /** Read native pixels at visible nodes without allocating two full framebuffers. */
   verifyPixels(): number {
-    const pixels = new Uint8Array(
-      this.framebufferWidth * this.framebufferHeight * 4,
-    );
-    this.gl.readPixels(
-      0,
-      0,
-      this.framebufferWidth,
-      this.framebufferHeight,
-      this.gl.RGBA,
-      this.gl.UNSIGNED_BYTE,
-      pixels,
-    );
-    const error = this.gl.getError();
-    if (error !== this.gl.NO_ERROR) throw new Error(`GL error ${error}`);
     let ink = 0;
-    for (let i = 0; i < pixels.length; i += 4)
-      if (pixels[i]! < 230 || pixels[i + 1]! < 230 || pixels[i + 2]! < 225)
-        ink++;
+    let patches = 0;
+    const width = Math.min(32, this.framebufferWidth);
+    const height = Math.min(32, this.framebufferHeight);
+    if (width <= 0 || height <= 0) throw new Error('GL surface unavailable');
+    for (const node of this.sim.nodes) {
+      if (!this.active.has(node.id)) continue;
+      const p = this.projected.set(node.x, node.y, node.z).project(this.camera);
+      if (Math.abs(p.x) > 1 || Math.abs(p.y) > 1 || Math.abs(p.z) > 1) continue;
+      const x = Math.max(
+        0,
+        Math.min(
+          this.framebufferWidth - width,
+          Math.round(((p.x + 1) * this.framebufferWidth) / 2 - width / 2),
+        ),
+      );
+      const y = Math.max(
+        0,
+        Math.min(
+          this.framebufferHeight - height,
+          Math.round(((p.y + 1) * this.framebufferHeight) / 2 - height / 2),
+        ),
+      );
+      this.gl.readPixels(
+        x,
+        y,
+        width,
+        height,
+        this.gl.RGBA,
+        this.gl.UNSIGNED_BYTE,
+        this.probePixels,
+      );
+      const error = this.gl.getError();
+      if (error !== this.gl.NO_ERROR) throw new Error(`GL error ${error}`);
+      for (let i = 0; i < width * height * 4; i += 4)
+        if (
+          this.probePixels[i]! < 230 ||
+          this.probePixels[i + 1]! < 230 ||
+          this.probePixels[i + 2]! < 225
+        )
+          ink++;
+      if (ink >= 50 || ++patches >= 16) break;
+    }
     if (ink < 50) throw new Error(`Graph drew no pixels (${ink})`);
     return ink;
   }
