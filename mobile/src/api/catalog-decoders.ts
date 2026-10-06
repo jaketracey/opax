@@ -19,6 +19,7 @@ import {
   isPartialCatalog,
   markPartial,
   filterRows,
+  filterRecords,
   uniqueRows,
   catalogWarning,
   optional,
@@ -467,7 +468,7 @@ export interface Votes {
 }
 export function decodeVotes(v: unknown): Votes {
   const raw = object(v);
-  const decoded = records(
+  let decoded = records(
     vote,
     voteKey,
     'votes',
@@ -478,7 +479,7 @@ export function decodeVotes(v: unknown): Votes {
       ),
     ),
   );
-  const names = recordsOfVoteNames(raw._names);
+  let names = recordsOfVoteNames(raw._names);
   const missing = (key: string) => !Object.hasOwn(decoded, key);
   // An absent raw key is a broken structural reference. A rejected vote row
   // makes the person's entire name entry unavailable; never sum half a person.
@@ -488,18 +489,37 @@ export function decodeVotes(v: unknown): Votes {
     )
   )
     invalid('The voting name index points to a missing record.');
-  let lostNames = false;
-  for (const [name, keys] of Object.entries(names)) {
-    if (keys.some(missing)) {
-      delete names[name];
-      lostNames = true;
+  // Selectors also join by legacy ID. Quarantine every row in an affected
+  // person's group so that bypass cannot restore a subtotal. Propagate across
+  // aliases sharing a key before applying the combined loss budget.
+  const unavailable = new Set<string>();
+  let expanded: boolean;
+  do {
+    expanded = false;
+    for (const keys of Object.values(names)) {
+      if (keys.some((key) => missing(key) || unavailable.has(key)))
+        for (const key of keys)
+          if (!unavailable.has(key)) {
+            unavailable.add(key);
+            expanded = true;
+          }
     }
-  }
+  } while (expanded);
+  decoded = filterRecords(
+    decoded,
+    (key) => !unavailable.has(key),
+    'votes.person',
+  );
+  names = filterRecords(
+    names,
+    (_name, keys) => !keys.some((key) => unavailable.has(key)),
+    'votes.names',
+  );
   const meta = raw._meta == null ? null : votesMeta(raw._meta);
   if (meta && meta.schema !== 1) invalid('The voting schema is unsupported.');
   return markPartial(
     { records: decoded, names, meta },
-    isPartialCatalog(decoded) || isPartialCatalog(names) || lostNames,
+    isPartialCatalog(decoded) || isPartialCatalog(names),
   );
 }
 const tie = shape({

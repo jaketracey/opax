@@ -3,7 +3,7 @@ import { Text as NativeText } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import * as d from '../src/api/catalog-decoders';
 import { ApiClient, type RecordResult } from '../src/api/client';
-import { Catalogs } from '../src/api/catalogs';
+import { Catalogs, profileFor, personId } from '../src/api/catalogs';
 import {
   CatalogCache,
   type CacheEntry,
@@ -212,20 +212,26 @@ test('R5: one lost vote row makes the entire multi-record person unavailable, ne
   expect(
     keys.reduce((sum, k) => sum + good.records[k]!.divisions_total, 0),
   ).toBe(875);
-  const bad = d.decodeVotes(replaceAt(raw, [keys[0]!, 'ayes'], null));
-  expect(bad.names['janelle saffin']).toBeUndefined();
-  expect(bad.records[keys[1]!]).toEqual(good.records[keys[1]!]);
   const person = catalogs.people.people.find(
     (p) => p.name === 'Janelle Saffin',
   )!;
   const follow = { kind: 'person' as const, id: person.person_id, seen: null };
   const seen = ready(followState(follow, sources())).current;
-  const state = ready(
-    followState({ ...follow, seen }, sources({ votes: bad })),
-  );
-  expect(state.changes).toEqual([]);
-  expect(state.current.divisions).toBeUndefined();
-  expect({ ...seen, ...state.current }).toEqual(seen);
+  for (const key of keys) {
+    const bad = d.decodeVotes(replaceAt(raw, [key, 'ayes'], null));
+    expect(bad.names['janelle saffin']).toBeUndefined();
+    for (const k of keys) expect(bad.records[k]).toBeUndefined();
+    expect(
+      profileFor(personId(person.person_id), { ...catalogs, votes: bad }).blocks
+        .votes.data,
+    ).toBeNull();
+    const state = ready(
+      followState({ ...follow, seen }, sources({ votes: bad })),
+    );
+    expect(state.changes).toEqual([]);
+    expect(state.current.divisions).toBeUndefined();
+    expect({ ...seen, ...state.current }).toEqual(seen);
+  }
 });
 test('partial metadata survives memoization, fresh disk reads and followSources, which refuses every flagged file', async () => {
   const raw = replaceAt(pinned('/votes.json'), ['10007', 'ayes'], null);

@@ -136,6 +136,26 @@ export function filterRows<T>(
   });
   return withLoss(out, previous.total, dropped);
 }
+export function filterRecords<T>(
+  input: Record<string, T>,
+  keep: (key: string, row: T) => boolean,
+  label: string,
+): Record<string, T> {
+  const previous = losses.get(input) ?? {
+    total: Object.keys(input).length,
+    dropped: 0,
+  };
+  let dropped = previous.dropped;
+  const out = Object.fromEntries(
+    Object.entries(input).filter(([key, row], index) => {
+      if (keep(key, row)) return true;
+      dropped++;
+      logDroppedRow(label, index);
+      return false;
+    }),
+  );
+  return withLoss(out, previous.total, dropped);
+}
 export const rows =
   <T>(decode: Decoder<T>, label = 'rows'): Decoder<T[]> =>
   (v) => {
