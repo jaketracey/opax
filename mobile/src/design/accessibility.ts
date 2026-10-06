@@ -8,10 +8,13 @@ function setting(
   event: 'boldTextChanged' | 'reduceMotionChanged',
 ) {
   let value = false;
+  // False until the first read or change event: the value is a guess before.
+  let known = false;
   const listeners = new Set<() => void>();
   let subscribed = false;
   const notify = (next: boolean) => {
-    if (next === value) return;
+    if (known && next === value) return;
+    known = true;
     value = next;
     listeners.forEach((listener) => listener());
   };
@@ -26,6 +29,7 @@ function setting(
       return () => listeners.delete(listener);
     },
     get: () => value,
+    getKnown: () => (known ? value : null),
   };
 }
 const boldText = setting(
@@ -46,6 +50,18 @@ export function useReduceMotion(): boolean {
     reduceMotion.subscribe,
     reduceMotion.get,
     reduceMotion.get,
+  );
+}
+/**
+ * Reduce Motion, or null until iOS has answered. Use it where motion would
+ * start at once on mount (a reveal), so nothing starts before the setting is
+ * known.
+ */
+export function useReduceMotionSetting(): boolean | null {
+  return useSyncExternalStore(
+    reduceMotion.subscribe,
+    reduceMotion.getKnown,
+    reduceMotion.getKnown,
   );
 }
 /**

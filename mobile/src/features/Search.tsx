@@ -1,5 +1,6 @@
+import { CachedPortrait } from './CachedPortrait';
 import { useCallback, useRef, useState } from 'react';
-import { Keyboard, RefreshControl } from 'react-native';
+import { Keyboard, RefreshControl, type View } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
 import { catalogs } from '../api/runtime';
 import {
@@ -20,7 +21,7 @@ import {
   OpaxWebLink,
   PersonRow,
   RowList,
-  Screen,
+  KeyboardStableScreen,
   Section,
   SourceLink,
   StaleNotice,
@@ -57,6 +58,7 @@ export default function Search() {
   } | null>(null);
   const [busy, setBusy] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const submit = useRef<View>(null);
   const request = useRef(0);
   const sourceRequest = useRef(0);
   async function loadSources(refresh = false) {
@@ -168,8 +170,9 @@ export default function Search() {
       </Group>
     ) : null;
   return (
-    <Screen
+    <KeyboardStableScreen
       testID="search-screen"
+      keyboardTarget={submit}
       refreshControl={
         <RefreshControl
           refreshing={refreshing}
@@ -191,6 +194,7 @@ export default function Search() {
         <Button
           label={`Search ${kindLabel(kind).toLowerCase()}`}
           variant="primary"
+          ref={submit}
           testID="search-submit"
           onPress={() => void search()}
           loading={busy}
@@ -282,6 +286,7 @@ export default function Search() {
                     key={p.name}
                     {...personRowContext(rosterIdentityFor(p, sources!))}
                     name={p.name}
+                    portrait={<CachedPortrait name={p.name} />}
                     testID={`search-suggestion-person-${p.pid ?? p.name}`}
                     onPress={() => void open(() => openSuggestedPerson(p.name))}
                   />
@@ -403,6 +408,12 @@ export default function Search() {
                               : null,
                           )}
                           name={row.title}
+                          portrait={
+                            <CachedPortrait
+                              name={row.title}
+                              slug={row.personSlug}
+                            />
+                          }
                           testID={`search-result-${row.personSlug}`}
                           onPress={() =>
                             void open(() => openSearchPerson(row.personSlug!))
@@ -470,6 +481,6 @@ export default function Search() {
           ) : null}
         </Section>
       ) : null}
-    </Screen>
+    </KeyboardStableScreen>
   );
 }

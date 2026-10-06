@@ -220,7 +220,7 @@ describe('people', () => {
       <PersonRow
         name="Anthony Albanese"
         party="Labor"
-        partyCurrent
+        partyStatus="current"
         place="Member for Grayndler · NSW"
         onPress={() => undefined}
       />,
@@ -307,9 +307,15 @@ describe('LeadCard', () => {
     ],
     evidence: [
       {
-        label: 'AusTender register',
+        amount: '$4,537,500',
+        amountSpoken: '4,537,500 dollars',
+        from: 'Australian Office of Financial Management',
+        to: 'Westpac Banking Corporation',
+        detail: 'Contract value · starts 6 Feb 2017',
+        register: 'AusTender register',
+        record: 'record CN3407266',
         url: 'https://www.tenders.gov.au/',
-        link_scope: 'source_register',
+        kind: 'register',
       },
     ],
     caveats: [
@@ -341,5 +347,14 @@ describe('LeadCard', () => {
     expect(at('AusTender register')).toBeGreaterThan(
       at('Annual party receipts'),
     );
+    // The example record is one link: amount, who paid whom, what and when,
+    // then the register and its own ID.
+    expect(
+      byLabel(
+        root,
+        '4,537,500 dollars, Australian Office of Financial Management to Westpac Banking Corporation, Contract value · starts 6 Feb 2017, AusTender register, record CN3407266',
+      ).props.accessibilityRole,
+    ).toBe('link');
+    expect(texts(root)).toContain('AusTender register · record CN3407266');
   });
 });

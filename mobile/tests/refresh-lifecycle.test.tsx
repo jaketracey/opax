@@ -10,6 +10,7 @@ import {
   LoadingState,
   PersonRow,
   Screen,
+  KeyboardStableScreen,
 } from '../src/design/primitives';
 import About from '../src/features/About';
 import Electorate from '../src/features/Electorate';
@@ -136,7 +137,9 @@ test.each(['Search', 'About', 'Person', 'Electorate'] as const)(
       renderer = TestRenderer.create(element);
     });
     const control = () =>
-      renderer.root.findByType(Screen).props.refreshControl as ReactElement<{
+      renderer.root.findByType(
+        name === 'Search' ? KeyboardStableScreen : Screen,
+      ).props.refreshControl as ReactElement<{
         refreshing: boolean;
         onRefresh: () => void;
       }>;
@@ -173,7 +176,8 @@ test('a later Search focus restores identity context without native refreshing',
     renderer.root.findByType(Field).props.onChangeText('Anthony Albanese'),
   );
   expect(renderer.root.findByType(PersonRow).props.party).toBeUndefined();
-  const control = () => renderer.root.findByType(Screen).props.refreshControl;
+  const control = () =>
+    renderer.root.findByType(KeyboardStableScreen).props.refreshControl;
   await act(async () => {
     mockFocus.cleanup?.();
     mockFocus.cleanup = mockFocus.effect!();

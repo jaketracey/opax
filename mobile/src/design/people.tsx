@@ -1,95 +1,208 @@
+import { router } from 'expo-router';
+import { partyRoute } from '../navigation/routes';
+import { useState } from 'react';
+import { localImageURI } from '../api/image-policy';
 import type { ReactNode } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { useAccessibilitySize } from './accessibility';
 import { Icon } from './icon';
-import { partyIdentity, partyText, type PartyContext } from './party';
+import type { PartyStatus } from '../api/party-transforms';
+import {
+  isPartyLabel,
+  partyIdentity,
+  partyText,
+  type PartyContext,
+} from './party';
 import { Text } from './text';
 import { nameProbeProps } from './text-probe';
 import { colors, hairline, layout, minimumTarget, spacing } from './tokens';
 
 const portraitSizes = { row: 44, profile: 88 } as const;
 
-/**
- * A parliamentarian's portrait. Until a reviewed portrait path exists in the
- * API client (see src/design/README.md), every portrait is the blank circle:
- * never initials, never a remote image loaded outside the client.
- */
+/** An unchanged local portrait, or the existing blank circle. Never initials. */
 export function Portrait({
   size = 'row',
   testID,
+  localURI,
+  name,
+  official = false,
+  nameBeside = true,
+  onDisplay,
 }: {
   size?: keyof typeof portraitSizes;
   testID?: string;
+  localURI?: string;
+  name?: string;
+  official?: boolean;
+  nameBeside?: boolean;
+  onDisplay?: (visible: boolean) => void;
 }) {
+  const [failedURI, setFailedURI] = useState<string | null>(null);
   const dimension = portraitSizes[size];
+  let uri: string | undefined;
+  try {
+    if (localURI && localURI !== failedURI) uri = localImageURI(localURI);
+  } catch {
+    /* Blank fallback for anything outside the cache. */
+  }
+  const decorative = nameBeside || !name || !uri;
   return (
     <View
       testID={testID}
-      // A blank circle says nothing, so VoiceOver skips it; the name is beside it.
-      accessibilityElementsHidden
-      importantForAccessibility="no-hide-descendants"
+      accessibilityElementsHidden={decorative}
+      importantForAccessibility={decorative ? 'no-hide-descendants' : 'auto'}
       accessibilityIgnoresInvertColors
       style={[
         styles.portrait,
-        { width: dimension, height: dimension, borderRadius: dimension / 2 },
+        {
+          width: dimension,
+          height: dimension,
+          borderRadius: dimension / 2,
+          overflow: 'hidden',
+        },
       ]}
-    />
+    >
+      {uri ? (
+        <Image
+          source={{ uri: localImageURI(uri) }}
+          style={{ width: dimension, height: dimension }}
+          resizeMode="contain"
+          accessible={!decorative}
+          accessibilityLabel={
+            decorative
+              ? undefined
+              : `${official ? 'Official portrait' : 'Photo'} of ${name}`
+          }
+          accessibilityElementsHidden={decorative}
+          importantForAccessibility={
+            decorative ? 'no-hide-descendants' : 'auto'
+          }
+          accessibilityIgnoresInvertColors
+          onLoad={() => onDisplay?.(true)}
+          onError={() => {
+            setFailedURI(uri!);
+            onDisplay?.(false);
+          }}
+        />
+      ) : null}
+    </View>
   );
 }
 
 /**
  * Party identity: a 10pt dot plus the readable label, never colour alone, and
- * never without its context: a historical affiliation reads "Formerly Labor",
- * a sitting member who changed party reads "One Nation · formerly Nationals".
+ * never without its context: a known former member reads "Formerly Labor", a
+ * member who changed party reads "One Nation · formerly Nationals". A party
+ * the data does not date reads plainly ("Labor"), as on the web.
  * Dense rows can show the web's short label (ALP, LIB); VoiceOver still reads
  * the full name. An unrecorded party is said in words, with no dot.
  */
 export function PartyLabel({
   party,
-  current,
+  status,
   formerly,
   dense = false,
   testID,
+  linked = true,
 }: PartyContext & {
   dense?: boolean;
   testID?: string;
+  linked?: boolean;
 }) {
   const identity = partyIdentity(party);
-  const text = partyText({ party, current, formerly }, dense);
+  const text = partyText({ party, status, formerly }, dense);
   const tone = dense ? 'inkSoft' : 'ink';
+  const partyLinked = linked && isPartyLabel(party);
+  const previousLinked = linked && !!text.previous && isPartyLabel(formerly);
+  const Container = partyLinked ? Pressable : View;
   return (
-    <View
-      style={styles.party}
+    <Container
+      style={[
+        styles.party,
+        partyLinked
+          ? {
+              minHeight: minimumTarget,
+              minWidth: minimumTarget,
+              alignSelf: 'flex-start',
+              maxWidth: '100%',
+            }
+          : null,
+      ]}
+      {...(partyLinked
+        ? {
+            accessibilityRole: 'link' as const,
+            accessibilityHint: 'Opens the party record',
+            onPress: () => router.push(partyRoute(identity.name)),
+          }
+        : {})}
+      {...(previousLinked
+        ? {
+            accessibilityActions: formerly
+              ? [
+                  {
+                    name: 'openPreviousParty',
+                    label: `Open ${formerly} party page`,
+                  },
+                ]
+              : undefined,
+            onAccessibilityAction: (event: {
+              nativeEvent: { actionName: string };
+            }) => {
+              if (
+                event.nativeEvent.actionName === 'openPreviousParty' &&
+                formerly &&
+                isPartyLabel(formerly)
+              )
+                router.push(partyRoute(formerly));
+            },
+          }
+        : {})}
       accessible
       accessibilityLabel={text.spoken}
       testID={testID}
     >
-      {identity.color ? (
+      {isPartyLabel(party) && identity.color ? (
         <View
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
           style={[styles.dot, { backgroundColor: identity.color }]}
         />
       ) : null}
-      <Text wordSafe variant={dense ? 'metadata' : 'body'} tone={tone}>
+      <Text
+        wordSafe
+        variant={dense ? 'metadata' : 'body'}
+        tone={tone}
+        style={{ flexShrink: 1 }}
+      >
         {text.visible}
         {text.previous ? (
-          <Text variant={dense ? 'metadata' : 'body'} tone="inkSoft">
+          <Text
+            variant={dense ? 'metadata' : 'body'}
+            tone="inkSoft"
+            onPress={
+              previousLinked && formerly
+                ? (event) => {
+                    event.stopPropagation();
+                    router.push(partyRoute(formerly));
+                  }
+                : undefined
+            }
+          >
             {` · ${text.previous}`}
           </Text>
         ) : null}
       </Text>
-    </View>
+    </Container>
   );
 }
 
 // A party always travels with its status, so no row shows a historical
-// affiliation as if it were current.
+// affiliation as if it were current, or an undated one as if it were former.
 type PersonRowParty =
-  | { party?: undefined; partyCurrent?: undefined; formerly?: undefined }
+  | { party?: undefined; partyStatus?: undefined; formerly?: undefined }
   | {
       party: string | null | undefined;
-      partyCurrent: boolean;
+      partyStatus: PartyStatus;
       formerly?: string | null;
     };
 export type PersonRowProps = PersonRowParty & {
@@ -116,7 +229,7 @@ export function PersonRow({
   name,
   portrait,
   party,
-  partyCurrent,
+  partyStatus,
   formerly,
   place,
   detail,
@@ -128,7 +241,7 @@ export function PersonRow({
   const partyContext =
     party === undefined
       ? null
-      : { party, current: partyCurrent ?? false, formerly };
+      : { party, status: partyStatus ?? 'unknown', formerly };
   const label = [
     name,
     partyContext ? partyText(partyContext).spoken : null,
@@ -184,6 +297,43 @@ export function PersonRow({
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={label}
+      accessibilityActions={
+        partyContext
+          ? [
+              ...(isPartyLabel(partyContext.party)
+                ? [
+                    {
+                      name: 'openParty',
+                      label: `Open ${partyIdentity(partyContext.party).name} party page`,
+                    },
+                  ]
+                : []),
+              ...(isPartyLabel(partyContext.formerly) &&
+              partyContext.formerly !== partyContext.party
+                ? [
+                    {
+                      name: 'openPreviousParty',
+                      label: `Open ${partyContext.formerly} party page`,
+                    },
+                  ]
+                : []),
+            ]
+          : undefined
+      }
+      onAccessibilityAction={(event) => {
+        if (
+          event.nativeEvent.actionName === 'openParty' &&
+          partyContext?.party &&
+          isPartyLabel(partyContext.party)
+        )
+          router.push(partyRoute(partyContext.party));
+        if (
+          event.nativeEvent.actionName === 'openPreviousParty' &&
+          partyContext?.formerly &&
+          isPartyLabel(partyContext.formerly)
+        )
+          router.push(partyRoute(partyContext.formerly));
+      }}
       testID={testID}
       onPress={onPress}
       style={({ pressed }) => [

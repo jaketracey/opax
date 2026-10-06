@@ -1,3 +1,4 @@
+import { CachedPortrait } from '../CachedPortrait';
 import { formatDate } from '../../design/format';
 import { router } from 'expo-router';
 import type { Electorate } from '../../api/catalogs';
@@ -40,8 +41,14 @@ export function RepresentativeRows({
             testDrawnName
             testID={`${id}-${profile?.slug ?? r.person_id}`}
             name={r.person.name}
+            portrait={
+              <CachedPortrait name={r.person.name} slug={profile?.slug} />
+            }
             party={profile?.party ?? r.party}
-            partyCurrent={profile?.partyCurrent ?? observations.length > 0}
+            partyStatus={
+              profile?.partyStatus ??
+              (observations.length > 0 ? 'current' : 'unknown')
+            }
             formerly={profile?.formerly}
             place={
               seat

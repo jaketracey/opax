@@ -2,18 +2,25 @@ const { getDefaultConfig } = require('expo/metro-config');
 const path = require('node:path');
 const config = getDefaultConfig(__dirname);
 const inheritedResolver = config.resolver.resolveRequest;
-const probeModule = path.join(__dirname, 'src/design/text-probe');
+// E2E-only modules with a production stub beside them: the drawn-line probe,
+// the welcome tour's launch argument and the electorate outline probe.
+const productionStubs = [
+  'src/design/text-probe',
+  'src/onboarding/launch-flag',
+  'src/features/electorate-map/outline-probe',
+].map((module) => path.join(__dirname, module));
+// Production keeps the Talk placeholder until the voice switch ships.
 const talkModule = path.join(__dirname, 'src/features/talk/TalkScreen');
 config.resolver.resolveRequest = (context, moduleName, platform) => {
-  const resolved = moduleName.startsWith('.')
+  const target = moduleName.startsWith('.')
     ? path
         .resolve(path.dirname(context.originModulePath), moduleName)
         .replace(/\.[jt]sx?$/, '')
     : null;
-  if (process.env.OPAX_VARIANT === 'production') {
-    if (resolved === probeModule)
-      return { type: 'sourceFile', filePath: `${probeModule}.production.ts` };
-    if (resolved === talkModule)
+  if (process.env.OPAX_VARIANT === 'production' && target !== null) {
+    if (productionStubs.includes(target))
+      return { type: 'sourceFile', filePath: `${target}.production.ts` };
+    if (target === talkModule)
       return { type: 'sourceFile', filePath: `${talkModule}.production.tsx` };
   }
   return typeof inheritedResolver === 'function'

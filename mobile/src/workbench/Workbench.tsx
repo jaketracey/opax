@@ -48,6 +48,7 @@ import {
   type TextVariant,
 } from '../design/tokens';
 import { shareRecord } from '../navigation/share';
+import { leadEvidenceFor } from '../features/leads/model';
 import { canonicalUrl } from '../navigation/external';
 import { isE2E } from '../design/environment';
 import { OpaxShare } from '../../modules/opax-share';
@@ -69,10 +70,14 @@ const westpac: Lead = {
     { label: 'Party receipt records', value: 1041, format: 'number' },
     { label: 'Contract records', value: 4, format: 'number' },
   ],
+  // The export's labels verbatim, read into reader-facing parts as the Leads
+  // screen does (leadEvidenceFor): the internal row number ("local record
+  // 643745"), which means nothing to a reader, never shows.
   evidence: [
     {
       label:
         'Westpac Banking Corporation → Australian Labor Party (ALP): $1,803.00 · FY 2024-25 · AEC annual receipt · local record 643745',
+      table: 'donations',
       url: 'https://transparency.aec.gov.au/',
       link_scope: 'source_register',
       record_id: '643745',
@@ -80,11 +85,12 @@ const westpac: Lead = {
     {
       label:
         'Australian Office of Financial Management → Westpac Banking Corporation: $4,537,500.00 · starts 2017-02-06 · austender · record CN3407266',
+      table: 'contracts',
       url: 'https://www.tenders.gov.au/',
       link_scope: 'source_register',
       record_id: 'CN3407266',
     },
-  ],
+  ].map(leadEvidenceFor),
   caveats: [
     'Matching names are not verified legal identities; unrelated entities can share a name.',
     'The records can cover different years and jurisdictions. No sequence or causal link is inferred.',
@@ -373,18 +379,23 @@ export default function Workbench() {
             "Katter's Australian Party",
             null,
           ].map((party) => (
-            <PartyLabel key={party ?? 'none'} party={party} current />
+            <PartyLabel key={party ?? 'none'} party={party} status="current" />
           ))}
         </Group>
-        <Anchor id="party-context">Former and changed parties</Anchor>
+        <Anchor id="party-context">Former, undated and changed parties</Anchor>
         <Group gap={8}>
-          <PartyLabel party="Labor" current={false} />
-          <PartyLabel party="One Nation" current formerly="Nationals" />
+          <PartyLabel party="Labor" status="former" />
+          <PartyLabel party="Labor" status="unknown" />
+          <PartyLabel
+            party="One Nation"
+            status="current"
+            formerly="Nationals"
+          />
         </Group>
         <Anchor id="party-dense">Dense rows</Anchor>
         <View style={styles.wrap}>
           {['Labor', 'Liberal', 'Greens', 'Independent'].map((party) => (
-            <PartyLabel key={party} party={party} current dense />
+            <PartyLabel key={party} party={party} status="current" dense />
           ))}
         </View>
       </Block>
@@ -394,14 +405,14 @@ export default function Workbench() {
           <PersonRow
             name="Anthony Albanese"
             party="Labor"
-            partyCurrent
+            partyStatus="current"
             place="Member for Grayndler · NSW"
             onPress={notice}
           />
           <PersonRow
             name="Barnaby Joyce"
             party="One Nation"
-            partyCurrent
+            partyStatus="current"
             formerly="Nationals"
             place="Member for New England · NSW"
             onPress={notice}
@@ -409,14 +420,14 @@ export default function Workbench() {
           <PersonRow
             name="Julia Gillard"
             party="Labor"
-            partyCurrent={false}
+            partyStatus="former"
             detail="Recorded representation: Lalor · VIC"
             onPress={notice}
           />
           <PersonRow
             name="Susan McDonald"
             party="LNP"
-            partyCurrent
+            partyStatus="current"
             place="Senator for Queensland"
             detail="Sponsored travel or hospitality, added 2 Sep 2026"
             onPress={notice}
@@ -424,14 +435,14 @@ export default function Workbench() {
           <PersonRow
             name="Zali Steggall"
             party="Independent"
-            partyCurrent
+            partyStatus="current"
             place="Member for Warringah · NSW"
             onPress={notice}
           />
           <PersonRow
             name="Larissa Waters"
             party="Greens"
-            partyCurrent
+            partyStatus="current"
             place="Senator for Queensland"
           />
         </RowList>

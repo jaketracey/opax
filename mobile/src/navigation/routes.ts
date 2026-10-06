@@ -1,10 +1,11 @@
+import { partySlug } from '../design/party';
 export const personRoute = (slug: string) => ({
   pathname: '/person/[slug]' as const,
   params: { slug },
 });
-export const billRoute = (key: string) => ({
+export const billRoute = (key: string, section?: 'divisions') => ({
   pathname: '/bill/[key]' as const,
-  params: { key },
+  params: { key, ...(section ? { section } : {}) },
 });
 // Alignment only. Associated Domains and native universal-link handling belong to a later lane.
 export function fromWebPath(
@@ -22,3 +23,15 @@ export const electorateRoute = (id: string) => ({
   pathname: '/electorate/[id]' as const,
   params: { id },
 });
+
+export const partyRoute = (name: string) => ({
+  pathname: '/party/[slug]' as const,
+  params: { slug: partySlug(name), name },
+});
+// Leads and the declared-interests feed (P1), opened from Today.
+export const leadsRoute = { pathname: '/leads' as const };
+export const leadRoute = (id: string) => ({
+  pathname: '/lead/[id]' as const,
+  params: { id },
+});
+export const declarationsRoute = { pathname: '/declarations' as const };

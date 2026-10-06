@@ -30,12 +30,22 @@ SDK_PATTERN = re.compile(rb"posthog|mixpanel|amplitude|segment\.com|sentry|appsf
                          rb"firebaseanalytics|appcenter|bugsnag|datadog|fbSDK|crashlytics|heapanalytics", re.I)
 SHIPPED_FRAMEWORKS = {"ExpoModulesJSI.framework", "hermesvm.framework", "ExpoFont.framework",
                       "ExpoModulesCore.framework", "React.framework", "ReactNativeDependencies.framework",
-                      "ExpoModulesWorklets.framework", "ExpoFileSystem.framework"}
+                      "ExpoModulesWorklets.framework", "ExpoFileSystem.framework", "ExpoLocation.framework"}
 ANALYTICS_HOSTS = {"segment.io", "segment.com", "segmentapis.com", "posthog.com", "mixpanel.com",
                    "amplitude.com", "sentry.io", "appsflyer.com", "adjust.com", "google-analytics.com",
                    "app-measurement.com", "crashlytics.com", "heap.io", "heapanalytics.com",
                    "appcenter.ms", "bugsnag.com", "datadoghq.com", "graph.facebook.com"}
 ROUTE_KEY = re.compile(r"\./[A-Za-z0-9_(),@%.\[\]/+~-]+\.(?:tsx?|jsx?)")
+# Skia 2.6.2 reads Reanimated's package.json version, so Metro includes its
+# pinned 4.5.1 sideEffects metadata. These eight exact dependency references
+# are not Expo route keys. Never exempt an actual source route or a new path.
+REANIMATED_METADATA_PATHS = {
+    "./src/layoutReanimation/animationsManager.ts",
+    "./lib/module/layoutReanimation/animationsManager.js",
+    "./src/core.ts", "./lib/module/core.js",
+    "./src/initializers.ts", "./lib/module/initializers.js",
+    "./src/index.ts", "./lib/module/index.js",
+}
 PATH_TOKENS = re.compile(rb"[A-Za-z0-9_(),@%.\[\]/+~-]+")
 HERMES_MAGIC = 0x1F1903C103BC1FC6
 HERMES_HEADER_SIZE = 128
@@ -54,6 +64,69 @@ SCENE_DELEGATE = "EXExpoAppSceneDelegate"
 # Files under mobile/scripts/ that shape the shipped app (Metro reads the block
 # list) are application inputs, not tooling, for artifact provenance.
 APP_INPUTS_UNDER_SCRIPTS = {"mobile/scripts/production-block-list.json"}
+VOICE_POLICY = json.loads((Path(__file__).resolve().parent.parent / "voice-production-policy.json").read_text())
+LOCATION_PURPOSE = "OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere."
+
+
+def production_voice_enabled(value=None):
+    value = os.environ.get("OPAX_PRODUCTION_VOICE", "0") if value is None else value
+    require(value in ("0", "1"), "OPAX_PRODUCTION_VOICE must be 0 or 1")
+    return value == "1"
+
+
+def verify_voice_info(info, enabled):
+    permissions = {k: v for k, v in info.items() if re.fullmatch(r"NS.*UsageDescription", k)}
+    # The independent electorate lane uses location on device only.
+    if "NSLocationWhenInUseUsageDescription" in permissions:
+        require(permissions.pop("NSLocationWhenInUseUsageDescription") == LOCATION_PURPOSE,
+                "approved on-device location purpose string")
+    if enabled:
+        require(permissions == {"NSMicrophoneUsageDescription": VOICE_POLICY["microphonePurpose"]},
+                "approved microphone purpose string, no unshipped permissions")
+        require(info.get("OPAXProductionVoiceEnabled") is True and
+                info.get("OPAXVoiceConsentDefault") is False and
+                info.get("OPAXVoiceAllowedRoutes") == VOICE_POLICY["routes"],
+                "production voice route allow-list and denied consent default")
+    else:
+        require(not permissions and not any(k in info for k in (
+            "OPAXProductionVoiceEnabled", "OPAXVoiceConsentDefault", "OPAXVoiceAllowedRoutes")),
+            "no purpose strings or native gates for unshipped voice")
+    require("OPAXVoiceFixturePort" not in info, "production has no native fixture port")
+
+
+def verify_voice_privacy(manifest):
+    require(manifest.get("NSPrivacyTracking") is False and not manifest.get("NSPrivacyTrackingDomains"),
+            "privacy manifest declares no tracking")
+    entries = manifest.get("NSPrivacyCollectedDataTypes", [])
+    expected = {"NSPrivacyCollectedDataType" + name: linked
+                for linked, names in ((True, VOICE_POLICY["linkedDataTypes"]),
+                                      (False, VOICE_POLICY["unlinkedDataTypes"])) for name in names}
+    require(len(entries) == len(expected) and {e.get("NSPrivacyCollectedDataType") for e in entries} == set(expected),
+            "privacy manifest collected types match the conservative production label; location not collected")
+    for entry in entries:
+        require(entry.get("NSPrivacyCollectedDataTypeLinked") is expected[entry["NSPrivacyCollectedDataType"]] and
+                entry.get("NSPrivacyCollectedDataTypeTracking") is False and
+                entry.get("NSPrivacyCollectedDataTypePurposes") == ["NSPrivacyCollectedDataTypePurposeAppFunctionality"],
+                "privacy type linkage, no tracking and App Functionality purpose")
+    reasons = manifest.get("NSPrivacyAccessedAPITypes", [])
+    require(bool(reasons) and all(e.get("NSPrivacyAccessedAPITypeReasons") for e in reasons) and
+            any(e.get("NSPrivacyAccessedAPIType") == "NSPrivacyAccessedAPICategoryUserDefaults" and
+                "CA92.1" in e.get("NSPrivacyAccessedAPITypeReasons", []) for e in reasons),
+            "existing required-reason entries retained, including UserDefaults CA92.1")
+
+
+def verify_voice_bundle(body, enabled):
+    strings = hermes_strings(body)
+    if strings is None:
+        strings = {token.decode("latin-1") for token in PATH_TOKENS.findall(body)}
+    if enabled:
+        require("./talk.tsx" in strings and bool({"./account.tsx", "./account/index.tsx"} & strings),
+                "production voice requires Talk and Account route keys")
+    markers = ("voice-bridge-test", "Voice bridge fixture workbench", "example.invalid", "/__fixture/voice",
+               "Fixture code:", "OPAX_VOICE_E2E", "DebugSyntheticEngineFactory", "DebugSilentAudioSession")
+    found, _ = markers_in_entries(body, markers + (() if enabled else ("NSMicrophoneUsageDescription",)))
+    require(not found, "no voice fixture or synthetic account material in production JS" +
+            (f" (found {', '.join(found)})" if found else ""))
 
 
 def url_hosts(body):
@@ -88,9 +161,14 @@ def has_loopback(body):
 
 
 def has_analytics(body):
-    return bool(SDK_PATTERN.search(body)) or any(
+    # Hermes packs adjacent/overlapping strings: ignoreAllLogs + ENTRY_EXIT
+    # contains raw "sENTRY" without any Sentry string or SDK. Inspect the same
+    # actual entries used by route/probe checks; malformed bytecode fails closed.
+    strings = hermes_strings(body)
+    entries = [body] if strings is None else [entry.encode("utf-8") for entry in strings]
+    return any(bool(SDK_PATTERN.search(entry)) or any(
         host == denied or host.endswith("." + denied)
-        for host in url_hosts(body) for denied in ANALYTICS_HOSTS)
+        for host in url_hosts(entry) for denied in ANALYTICS_HOSTS) for entry in entries)
 
 
 @lru_cache(maxsize=1)
@@ -184,16 +262,47 @@ def hermes_strings(body):
     return strings
 
 
-def verify_no_drawn_diagnostics(body):
-    """Inspect actual Hermes entries, not overlapping raw string storage."""
-    markers = ("-drawn-", "testDrawnText", "drawnTextClipped")
+def markers_in_entries(body, markers):
+    """Markers found inside actual Hermes entries, not overlapping raw string
+    storage; plain JS is searched whole. Returns (found, entry count)."""
     strings = hermes_strings(body)
     found = [marker for marker in markers if (
         any(marker in entry for entry in strings) if strings is not None
         else marker.encode() in body)]
+    return found, len(strings) if strings is not None else None
+
+
+def verify_no_drawn_diagnostics(body):
+    """Inspect actual Hermes entries, not overlapping raw string storage."""
+    found, count = markers_in_entries(body, ("-drawn-", "testDrawnText", "drawnTextClipped"))
     require(not found, "no e2e drawn-line diagnostics in production JS" +
             (f" (found {', '.join(found)})" if found else ""))
-    return len(strings) if strings is not None else None
+    return count
+
+
+# Launch arguments only e2e builds read (src/onboarding/launch-flag.e2e.ts).
+E2E_LAUNCH_FLAGS = ("OPAXWelcomeTour",)
+
+
+def verify_no_e2e_launch_flags(body):
+    """Inspect actual Hermes entries, not overlapping raw string storage."""
+    found, count = markers_in_entries(body, E2E_LAUNCH_FLAGS)
+    require(not found, "no e2e launch arguments in production JS" +
+            (f" (found {', '.join(found)})" if found else ""))
+    return count
+
+
+# Test IDs of the e2e source page (a blocked development route) and of the
+# SourceLink preview that build 3 withdrew. The route name itself ships in the
+# root layout, switched off at runtime, so only these IDs are refused.
+E2E_SOURCE_PREVIEW_IDS = ("source-destination-url", "source-destination-scroll", "source-destination-ok")
+
+
+def verify_no_source_preview_ids(body):
+    found, count = markers_in_entries(body, E2E_SOURCE_PREVIEW_IDS)
+    require(not found, "no e2e source preview test IDs in production JS" +
+            (f" (found {', '.join(found)})" if found else ""))
+    return count
 
 
 def bundle_route_keys(body, routes):
@@ -207,7 +316,9 @@ def bundle_route_keys(body, routes):
     missing = sorted(expected - strings)
     require(bool(expected) and not missing, "every shipping Expo route key is present in shipped JS" +
             (f" (missing {', '.join(missing)})" if missing else ""))
-    unexpected = sorted(string for string in strings if ROUTE_KEY.fullmatch(string) and string not in expected)
+    metadata = REANIMATED_METADATA_PATHS if {"react-native-reanimated", "4.5.1"} <= strings else set()
+    unexpected = sorted(string for string in strings if ROUTE_KEY.fullmatch(string) and string not in expected
+                        and not (string in metadata and not (routes / string).is_file()))
     development = sorted(key for key in expected if DEVELOPMENT_ROUTE.search(key))
     require(not unexpected and not development and not DEVELOPMENT_PATHS.search(body),
             "no unshipped, development or workbench route keys in shipped JS" +
@@ -233,11 +344,38 @@ def verify_no_voice_native_code(app):
             magic = stream.read(4)
         if magic not in MACHO_HEADERS and magic not in FAT_HEADERS:
             continue
-        require(no_voice_native_symbols(without_signature(path.read_bytes())),
+        body = without_signature(path.read_bytes())
+        verify_no_native_voice_fixtures(body)
+        require(no_voice_native_symbols(body),
                 f"No voice or microphone permission code in Mach-O: {path.relative_to(app)}")
         scanned.append(str(path.relative_to(app)))
     require(bool(scanned), "Production app contains Mach-O code to scan")
     return scanned
+
+
+def verify_no_native_voice_fixtures(body):
+    require(not any(marker in body for marker in (b"DebugSyntheticEngineFactory", b"DebugSilentAudioSession",
+                b"OPAXVoiceFixturePort", b"example.invalid", b"/__fixture/voice", b"OPAXWelcomeTour")) and
+            not re.search(rb":89[0-9]{2}", body),
+            "no e2e voice implementation, accounts, relay or fixture ports in production Mach-O")
+
+
+def verify_voice_native_code(app):
+    """Require both statically linked pods, including stripped Swift metadata.
+    Fixture implementations must not be compiled into any production Mach-O."""
+    bodies = []
+    for path in sorted(p for p in app.rglob("*") if p.is_file()):
+        with path.open("rb") as stream:
+            magic = stream.read(4)
+        if magic not in MACHO_HEADERS and magic not in FAT_HEADERS:
+            continue
+        body = without_signature(path.read_bytes())
+        verify_no_native_voice_fixtures(body)
+        bodies.append(body)
+    require(bool(bodies), "Production app contains Mach-O code to scan")
+    for marker in (b"OpaxVoiceModule", b"OpaxVoiceCore", b"StoredVoiceConsent", VOICE_POLICY["consentKey"].encode(),
+                   b"OPAXProductionVoiceEnabled", b"OPAXVoiceAllowedRoutes", b"requestRecordPermission"):
+        require(any(marker in body for body in bodies), "production voice native code linked: " + marker.decode())
 
 
 def scene_manifest_valid(info):
@@ -267,7 +405,7 @@ def framework_allowlist(app):
     frameworks = list(app.rglob("*.framework"))
     require({p.name for p in frameworks} == SHIPPED_FRAMEWORKS and
             all(p.parent == app / "Frameworks" for p in frameworks) and not list(app.rglob("*.dylib")),
-            "native framework allowlist matches the eight shipped frameworks")
+            "native framework allowlist matches the nine shipped frameworks")
 
 
 def no_app_extensions(app, info):
@@ -418,14 +556,30 @@ def verify_app(app, args):
           "Expo scene delegate class linked in the app executable")
     check(info.get("ITSAppUsesNonExemptEncryption") is False, "standard HTTPS encryption compliance")
     check("NSAppTransportSecurity" not in info, "no ATS exception")
-    # Current catalog app has no permission-gated features. This allow-list must
-    # be deliberately reviewed when a permission-requiring feature ships.
-    check(not any(re.fullmatch(r"NS.*UsageDescription", k) for k in info),
-          "no purpose strings for unshipped permission features")
+    voice_enabled = production_voice_enabled()
+    expected_permissions = {"NSLocationWhenInUseUsageDescription": LOCATION_PURPOSE}
+    if voice_enabled:
+        expected_permissions["NSMicrophoneUsageDescription"] = VOICE_POLICY["microphonePurpose"]
+    check({k: v for k, v in info.items() if re.fullmatch(r"NS.*UsageDescription", k)} == expected_permissions,
+          "exact foreground-only location purpose string; no other permissions" if not voice_enabled else
+          "exact foreground-only location and approved microphone purpose strings; no other permissions")
+    check("location" not in info.get("UIBackgroundModes", []), "no background location mode")
+    verify_voice_info(info, voice_enabled)
+    check(True, "approved voice purpose/route/consent policy" if voice_enabled else
+          "no purpose strings for unshipped voice features")
+    privacy = plistlib.loads((app / "PrivacyInfo.xcprivacy").read_bytes())
+    if voice_enabled:
+        verify_voice_privacy(privacy)
+        check(True, "production privacy types, no tracking, existing required reasons retained")
+    else:
+        check(privacy.get("NSPrivacyTracking") is False and
+              privacy.get("NSPrivacyCollectedDataTypes") == [] and
+              not privacy.get("NSPrivacyTrackingDomains"),
+              "app privacy manifest: no collected location or tracking")
     check(info.get("DTXcodeBuild") == args.xcode_build, "archive uses the selected release Xcode")
     check(no_app_extensions(app, info), "no app extensions")
     framework_allowlist(app)
-    check(True, "native framework allowlist matches the eight shipped frameworks")
+    check(True, "native framework allowlist matches the nine shipped frameworks")
     command("/usr/bin/codesign", "--verify", "--deep", "--strict", str(app))
     check(True, "code signatures valid")
     entitlements = plistlib.loads(command("/usr/bin/codesign", "-d", "--entitlements", ":-", str(app)))
@@ -462,15 +616,30 @@ def verify_app(app, args):
     check(not has_loopback(bundle), "no normalized loopback or fixture origin in shipped JS")
     verify_no_drawn_diagnostics(bundle)
     check(True, "no e2e drawn-line diagnostics in production Hermes string entries")
+    verify_no_source_preview_ids(bundle)
+    check(True, "no e2e source preview test IDs in production Hermes string entries")
+    verify_no_e2e_launch_flags(bundle)
+    check(True, "no e2e launch arguments in production Hermes string entries")
     route_keys = bundle_route_keys(bundle, Path("src/app"))
     check(True, "every shipping Expo route key is present in shipped JS")
     check(True, "no unshipped, development or workbench route keys in shipped JS")
-    verify_no_voice_native_code(app)
-    check(True, "no OpaxVoiceCore, OpaxVoice or microphone permission code in any production Mach-O")
+    verify_voice_bundle(bundle, voice_enabled)
+    if voice_enabled:
+        verify_voice_native_code(app)
+        check(True, "both voice pods, permission and denied-by-default consent store linked; no native fixtures")
+        check(True, "Talk and Account routes present")
+    else:
+        verify_no_voice_native_code(app)
+        check(True, "no OpaxVoiceCore, OpaxVoice or microphone permission code in any production Mach-O")
     configs = list(app.rglob("app.config"))
     check(bool(configs), "embedded Expo config exists")
     for path in configs:
         config = json.loads(path.read_bytes())
+        check((config["extra"].get("productionVoiceEnabled") is True) == voice_enabled,
+              "embedded production voice switch matches the release invocation")
+        verify_voice_info(config["ios"]["infoPlist"], voice_enabled)
+        if voice_enabled:
+            check(config["extra"].get("voiceConsentDefault") is False, "embedded consent is denied by default")
         check(config["extra"]["variant"] == "production" and
               config["extra"]["apiOrigin"] == "https://opax.com.au" and
               config["extra"]["appBuild"] == args.build and
@@ -515,12 +684,24 @@ def verify_app(app, args):
                "source": "local" if local else "cloud-managed"}
     print(f"Signing: {signing['source']} {cert_type}; {signing['identity_name']}")
     return {"commit": args.commit, "version": args.version, "build": args.build,
-            "kind": args.kind, "checks": results, "signing": signing,
+            "kind": args.kind, "production_voice_enabled": voice_enabled, "checks": results, "signing": signing,
             "bundle_route_keys": route_keys, "embedded_bundles_checked": embedded_bundles,
             "team_id_in_required_signing_metadata": team_in_metadata}
 
 
 def main():
+    # Shared offline Hermes-aware route/fixture gate used by qa-static. It
+    # intentionally needs no signing credentials and performs no network I/O.
+    if "--bundle-only" in sys.argv:
+        parser = argparse.ArgumentParser()
+        parser.add_argument("--bundle-only", type=Path, required=True)
+        args = parser.parse_args()
+        try:
+            verify_voice_bundle(args.bundle_only.read_bytes(), production_voice_enabled())
+            print("PASS production voice bundle policy")
+        except (ReleaseError, OSError, ValueError) as error:
+            raise SystemExit(str(error))
+        return
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("path", type=Path)
     parser.add_argument("--kind", choices=["archive", "distribution"], required=True)

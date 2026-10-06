@@ -2,12 +2,17 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer EXPO_NO_TELEMETRY=1 MAESTRO_CLI_NO_ANALYTICS=true MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED=true
-UDID=${1:?Usage: scripts/e2e.sh udid [01 02 03 04 05 06 07 08 09 10 11 12 13 14 20]}; shift
+UDID=${1:?Usage: scripts/e2e.sh udid [01 02 03 04 05 06 07 08 09 10 11 12 13 14 20 25]}; shift
 source scripts/qa-env.sh
 source scripts/qa-lock.sh
 source scripts/qa-java.sh
+source scripts/qa-flows.sh
+qa_check_flow_selectors "$@" || exit 2
 PORT=${OPAX_FIXTURE_PORT:-8910}
 SIZE=${OPAX_CONTENT_SIZE:-large}
+# The app is light-only; dark is for checking the launch screen (journey 28b).
+APPEARANCE=${OPAX_APPEARANCE:-light}
+case "$APPEARANCE" in light|dark) ;; *) echo "OPAX_APPEARANCE must be light or dark" >&2; exit 1 ;; esac
 RUN=${OPAX_QA_RUN:-$(date -u +%Y%m%dT%H%M%SZ)-${UDID:0:8}-$SIZE}
 OUT="$PWD/private/qa/$RUN"
 mkdir -p "$OUT/screenshots" "$OUT/maestro"
@@ -123,6 +128,7 @@ until grep -q OPAX_FIXTURE_READY "$OUT/fixture.log"; do
 done
 FLOWS=()
 OFFLINE=${OPAX_VERIFY_OFFLINE:-0}
+MAP_OFFLINE=${OPAX_VERIFY_MAP_OFFLINE:-0}
 if [ "$#" = 0 ]; then set -- 01 02 03 04; fi
 for flow in "$@"; do
   case "$flow" in
@@ -141,7 +147,7 @@ done
 # immediately, TERM this runner (including while queued), or the lock owner.
 rc=0
 # Bash 3.2 treats expansion of an empty array as unset under nounset (04 only).
-DEVICE_ARGS=("$UDID" "$OUT" "$APP" "$SIZE" "$FIXTURE_PID" "$OFFLINE")
+DEVICE_ARGS=("$UDID" "$OUT" "$APP" "$SIZE" "$APPEARANCE" "$FIXTURE_PID" "$OFFLINE" "$MAP_OFFLINE")
 if [ "${#FLOWS[@]}" -gt 0 ]; then DEVICE_ARGS+=("${FLOWS[@]}"); fi
 # A separate waiting group lets a TERM cancel the gate queue without orphans.
 # wait is a shell builtin, so the runner's trap takes effect immediately.
@@ -160,9 +166,20 @@ if [ -f "$OUT/fixture-stopped" ]; then wait "$FIXTURE_PID" 2>/dev/null || true; 
 [ "$rc" = 0 ] || exit "$rc"
 if [ "${#FLOWS[@]}" -gt 0 ]; then
   ./node_modules/.bin/tsx scripts/collect-screenshots.ts "$OUT/screenshots" "$OUT/maestro"
+  # Journey 15 must draw "OPAX is" below the large title. The accessibility tree
+  # kept the sentence while build 2 drew it behind the title, so read the pixels.
+  for flow in "${FLOWS[@]}"; do
+    case "$flow" in
+      *15-cold-first-line.yaml)
+        ./node_modules/.bin/tsx scripts/first-line-check.ts "$OUT/screenshots/15-cold-today-first-line.png" > "$OUT/first-line-check.log" 2>&1 || { cat "$OUT/first-line-check.log" >&2; exit 1; } ;;
+    esac
+  done
 fi
 if [ "$OFFLINE" = 1 ]; then
   ./node_modules/.bin/tsx scripts/collect-screenshots.ts "$OUT/screenshots" "$OUT/offline-maestro"
+fi
+if [ "$MAP_OFFLINE" = 1 ]; then
+  ./node_modules/.bin/tsx scripts/collect-screenshots.ts "$OUT/screenshots" "$OUT/map-offline-maestro"
 fi
 if grep -Eq 'OUTSIDE_ALLOW_LIST|"allowed":false|opax\.com\.au' "$OUT/fixture.log"; then echo "Fixture request boundary failed" >&2; exit 1; fi
 node -e 'const fs=require("fs");const lines=fs.readFileSync(process.argv[1],"utf8").split("\n").filter(x=>x.startsWith("{"));const requests=lines.map(x=>JSON.parse(x));if(requests.some(x=>!x.allowed||x.host!==`127.0.0.1:${process.argv[2]}`))process.exit(1);console.log(JSON.stringify({requests:requests.length,outsideAllowList:0,basis:"logged fixture requests; measured app connections are in connection-audit.json"},null,2))' "$OUT/fixture.log" "$PORT" > "$OUT/request-audit.json"

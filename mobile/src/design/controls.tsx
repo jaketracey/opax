@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, type Ref } from 'react';
 import {
   ActivityIndicator,
   type AccessibilityState,
@@ -60,6 +60,7 @@ export const buttonStates: Record<
 const fill = (role: Fill) => (role ? colors[role] : 'transparent');
 
 export interface ButtonProps {
+  ref?: Ref<View>;
   label: string;
   onPress: () => void;
   /** Primary is the navy action; there is no bronze or gold button. */
@@ -79,6 +80,7 @@ export interface ButtonProps {
 
 /** Actions. Use a text link or row with a real destination for navigation. */
 export function Button({
+  ref,
   label,
   onPress,
   variant = 'default',
@@ -98,6 +100,7 @@ export function Button({
   const resting = disabled && !loading ? states.disabled : states.rest;
   return (
     <Pressable
+      ref={ref}
       accessibilityRole="button"
       accessibilityLabel={label}
       accessibilityHint={accessibilityHint}
@@ -327,19 +330,23 @@ export interface Segment<T extends string> {
 /**
  * One choice among peers (bill status). The whole control is 48pt tall
  * outside; labels wrap, and at accessibility sizes the segments stack.
+ * `stacked` stacks them at every size, for labels whose longest word would
+ * not fit an equal share of the row ("House of Representatives").
  */
 export function SegmentedControl<T extends string>({
   segments,
   value,
   onChange,
+  stacked: alwaysStacked = false,
   testID,
 }: {
   segments: readonly Segment<T>[];
   value: T;
   onChange: (value: T) => void;
+  stacked?: boolean;
   testID?: string;
 }) {
-  const stacked = useAccessibilitySize();
+  const stacked = useAccessibilitySize() || alwaysStacked;
   return (
     <View
       testID={testID}

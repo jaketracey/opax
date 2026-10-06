@@ -1,6 +1,6 @@
 import { catalogs, people, roster } from './pinned';
 import { nameKey, nameValues } from '../src/api/ids';
-import { portraitFor } from '../src/api/selectors';
+import { portraitFor, fullPortraitName } from '../src/api/selectors';
 import { payNameKey } from '../src/api/transforms';
 
 // Freeze the fold preceding 2f1fbfeb, independently of the production helper.
@@ -64,11 +64,15 @@ test.each(Object.entries(indexes))(
   },
 );
 
-test('pinned portraits retain the exact-key-first join before folded lookup', () => {
+test('pinned full-name portraits retain exact-key-first joins; abbreviated names are refused', () => {
   const index = catalogs.photoPeople!,
     credits = catalogs.photoCredits!;
   const before = indexed(index, previousNameKey);
   for (const name of [...names, ...Object.keys(index)]) {
+    if (!fullPortraitName(name)) {
+      expect(portraitFor([name], index, credits)).toBeNull();
+      continue;
+    }
     const exact = index[name.trim().toLowerCase()];
     const expected = [
       ...(exact ? [exact] : (before.get(previousNameKey(name)) ?? [])),

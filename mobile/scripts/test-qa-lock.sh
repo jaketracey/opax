@@ -72,6 +72,9 @@ case "$mode" in
   hold) touch "$SCRATCH/$name.running"; until [ -e "$SCRATCH/$name.release" ] || [ ! -d "$SCRATCH" ]; do sleep 0.1; done ;;
   leave) sleep 30 & echo $! > "$SCRATCH/$name.leftover" ;;
   child) sleep 60 & echo $! > "$SCRATCH/$name.child"; touch "$SCRATCH/$name.running"; wait ;;
+  cleanup)
+    trap 'echo "cleanup lock=$(bash "$SCRATCH/state.sh") gate=${MOCK_IN_GATE:-0}" > "$SCRATCH/$name.cleanup"; exit 143' TERM
+    sleep 60 & touch "$SCRATCH/$name.running"; wait ;;
   critical)
     for i in 1 2 3; do mkdir "$SCRATCH/critical" || { echo overlap >> "$SCRATCH/violations"; exit 1; }; sleep 0.05; rmdir "$SCRATCH/critical"; done ;;
 esac
@@ -328,5 +331,17 @@ pass "valid bounded decimal waits include leading zeroes and zero"
 actual=$(bash -c 'source "$1"; OPAX_PASTE_WAIT_SECONDS="1+1"; qa_gate() { return 7; }; qa_paste_lock_run true; printf "%s" "$QA_PASTE_WAIT_SECONDS"' bash "$SCRIPTS/qa-lock.sh")
 [ "$actual" = 7200 ] || fail "run entry did not revalidate changed wait input"
 pass "run entry revalidates wait input before computing its deadline"
+
+# A device command must finish its TERM cleanup before the wrapper frees the
+# lock, so restoration/shutdown cannot overlap the next lane's boot.
+loads 0
+run_locked device-cleanup -- cleanup
+wait_for "$SCRATCH/device-cleanup.running" || fail "device cleanup command never started"
+owner_pid=$(sed -n 's/^pid=//p' "$LOCK/owner")
+kill -TERM "$owner_pid"
+[ "$(rc_of device-cleanup)" = 143 ] || fail "TERM cleanup status changed"
+grep -qx 'cleanup lock=opax gate=1' "$SCRATCH/device-cleanup.cleanup" || fail "command cleanup ran after release"
+[ ! -e "$LOCK" ] && no_litter || fail "TERM cleanup left a lock"
+pass "TERM waits for command cleanup inside the lock and gate before release"
 
 echo "qa-lock: $PASSED passed"

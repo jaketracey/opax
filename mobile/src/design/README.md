@@ -72,7 +72,19 @@ Design workbench) to see every component and state at the current text size.
   `wordSafe` stops a word splitting across lines: when a laid-out line ends
   inside a word, the text lowers its own Dynamic Type cap in 10% steps until
   the word fits, never below the reader's default size, and starts again from
-  full size when the text size, width or text (nested text included) changes.
+  full size when the text size, window width, role, Bold Text or text (nested
+  text included) changes, or when its column widens. Each cap is drawn by its
+  own native Text (a React key per generation), so every layout event names
+  the instance that measured it and late events from earlier instances are
+  ignored. A capped instance draws one font and one text, so its frame
+  widening means the column widened: it starts again from full size and steps
+  down afresh. Across a step, it restarts only when its widest line scaled to
+  full size fits a frame wider than the one full size broke in. The cap only
+  steps down within a generation, and never at or below the reader's default
+  size. Frames and lines that change nothing drawn never render.
+  The cap scales the role's font size and line height, never
+  `maxFontSizeMultiplier`: React Native's text measure cache ignores that prop,
+  so a cap passed through it keeps the full-size layout and drawing.
   Every role's line height carries a 1/997pt nudge (`LINE_HEIGHT_NUDGE`):
   it keeps RN's ceiled text measurement off exact pixel boundaries. Yoga can
   still round the final frame below that measurement, so every content Text
@@ -114,7 +126,9 @@ Design workbench) to see every component and state at the current text size.
   "Remove the kind filter, Declared interests". 4pt radius, not a capsule.
 - `SegmentedControl`: one choice among peers. 48pt outside height; every
   segment is a real 44 by 44pt target (the selected highlight is inset 3pt
-  inside it), labels wrap, and segments stack at accessibility sizes. Each
+  inside it), labels wrap, and segments stack at accessibility sizes.
+  `stacked` stacks them at every size, for labels whose longest word would
+  not fit an equal share of the row (the Leads and declarations filters). Each
   segment reports selected and "2 of 3". It is a group of buttons, not tabs.
 - `Field`: label (always visible, word-safe), optional `hint`, `error` and
   `required`. The input carries the label, required state, error and hint for
@@ -146,28 +160,42 @@ Design workbench) to see every component and state at the current text size.
 ## People
 
 - `PartyLabel`: 10pt dot plus the party exactly as the data names it, never
-  without its status. `current` is required: `current={false}` reads
-  "Formerly Labor" (a member no longer sitting, or a party the data does not
-  mark as current); `formerly="Nationals"` on a current party reads "One
-  Nation · formerly Nationals" (the web's wording). VoiceOver hears the same.
-  `dense` shows the web's short label (ALP, LIB, GRN) and still reads the full
-  name. A missing party reads "Party not recorded", with no dot. The profile
-  adapter supplies `partyCurrent` and `rosterParty`; compare names with
-  `samePartyLabel` (the web's).
+  without its status. `status` (`PartyStatus` from
+  `src/api/party-transforms.ts`) is required and has three values:
+  - `"current"` (a current dated seat, or a current APH roster row with
+    `party_now`) reads "Labor";
+  - `"former"` (the dated release says the last seat ended, or the roster
+    says the person is not current) reads "Formerly Labor";
+  - `"unknown"` (no dated seat and no roster status: most state members)
+    reads "Labor", plainly, as the web does. It never says "Formerly", and
+    never "sitting"; where a status word is needed, the neutral one is
+    "Parliamentarian".
+
+  `formerly="Nationals"` on a current or undated party reads "One Nation ·
+  formerly Nationals" (the web's wording). VoiceOver hears the same words in
+  every state. `dense` shows the web's short label (ALP, LIB, GRN) and still
+  reads the full name. A missing party reads "Party not recorded", with no
+  dot. The profile adapter (`personPartyFor`) supplies `partyStatus` and
+  `rosterParty`; compare names with `samePartyLabel` (the web's).
+
 - `PersonRow`: portrait, name, party, place, optional detail and chevron. A
-  `party` must come with `partyCurrent` (the type enforces it). One VoiceOver
+  `party` must come with `partyStatus` (the type enforces it). One VoiceOver
   element: "Anthony Albanese, Labor, Member for Grayndler · NSW". Pass
   `onPress` only for roster parliamentarians with a native page.
-- `Portrait`: **always the blank circle for now**, never initials. The
-  harness allow-list has no portrait path, and `<Image>` with a remote URI
-  would be transport outside the API client. **Profiles lane:** add the
-  portrait map (`/photos/people.json`) and a reviewed image route to
-  `src/api/policy.ts` with tests, fetch bytes through the client into the
-  cache, and pass a local file URI to a new `Portrait` prop; show the credit
-  ("Official portrait", CC BY-NC-ND for APH) on the profile, hide the image
-  from VoiceOver when the name is beside it (otherwise "Official portrait of
-  [name]"), and keep `accessibilityIgnoresInvertColors`. The rights review
-  (IOS-APP.md decision 13) decides whether APH portraits can be cached.
+- `Portrait`: the unchanged website 200×200 WebP, scaled into the circle,
+  or the blank fallback; never initials. `localURI` is a file in the current
+  API origin's portrait cache. Native images call `localImageURI`; remote
+  images are refused by the transport gate. `CachedPortrait` resolves through
+  `person-identity.ts`, the slug map and roster, uses full names or a resolved
+  person_id, refuses surname/initials-only matches and conflicting face owners
+  (including reviewed byte-identical files under different keys),
+  and loads through the byte API client (three concurrent reads, one per key).
+  A portrait beside its name is hidden from VoiceOver; otherwise pass
+  `nameBeside={false}` and `name`, with `official` for APH. Both the circle and
+  image preserve `accessibilityIgnoresInvertColors`.
+  Profiles show "Official portrait", CC BY-NC-ND 4.0 and licence/source links,
+  or the web's "Photo" artist, per-file licence and Commons source link.
+  Decision 13 in IOS-APP.md remains open for app distribution and caching.
 
 ## The record
 
@@ -245,10 +273,15 @@ Copy is in `stateCopy` (IOS-UX section 4, "States, everywhere").
 ## Leads
 
 - `LeadCard`: one `/discovery.json` signal (P1). The kicker reads "Lead ·
-  [category]". Title, summary, metric labels, evidence labels and every
-  caveat are shown verbatim and in full; never shorten, reorder or reword
-  them. Reading order: title, each metric as "label, value", the caveats, then
-  the evidence links.
+  [category]". Title, summary, metric labels and every caveat are shown
+  verbatim and in full; never shorten, reorder or reword them. Reading order:
+  title, each metric as "label, value", the caveats, then the example records.
+  Each record (`LeadEvidenceLink`) is one link: amount, payer → payee, detail,
+  then the register and its own ID ("AusTender register · record CN3407266"),
+  read from the export's label by `leadEvidenceFor`
+  (`src/features/leads/model.ts`), which never shows OPAX's local row number.
+  With a `testID`, parts carry `-title`, `-metric-N`, `-caveat-N`,
+  `-evidence-N` and `-as-at`.
 
 Person rows keep their `-name` testID after layout. RepresentativeRows opts
 into `testDrawnName` for journeys 07 and 09, which require the e2e-only

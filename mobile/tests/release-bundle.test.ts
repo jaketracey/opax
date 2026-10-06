@@ -1,5 +1,6 @@
 import {
   assertNoFixtureOrigin,
+  assertNoE2ELaunchFlags,
   assertNoVoiceFixtures,
 } from '../scripts/release-bundle-policy';
 
@@ -9,7 +10,7 @@ test('production bundle rejects the configured non-default fixture port', () => 
   ).toThrow(/configured fixture port/);
   expect(() =>
     assertNoFixtureOrigin(Buffer.from('release :8910'), '8953'),
-  ).not.toThrow();
+  ).toThrow(/fixture port/);
   expect(() =>
     assertNoFixtureOrigin(Buffer.from('fixture :8910'), '8910'),
   ).toThrow(/configured fixture port/);
@@ -36,3 +37,12 @@ test.each([
     /voice test material/,
   );
 });
+
+test.each(['OPAXWelcomeTour', '-OPAXWelcomeTour on'])(
+  'production rejects the e2e launch argument %s',
+  (marker) => {
+    expect(() => assertNoE2ELaunchFlags(Buffer.from(marker))).toThrow(
+      /e2e launch argument/,
+    );
+  },
+);

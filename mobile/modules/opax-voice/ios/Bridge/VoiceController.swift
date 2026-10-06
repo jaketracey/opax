@@ -3,16 +3,21 @@ import OpaxVoiceCore
 
 // Consent starts false in every build. Only an explicit UI choice writes it.
 private struct BridgeConsent: VoiceConsent {
-    static let key = "opax.voice.consent.v1"
-    func isGranted() async -> Bool { UserDefaults.standard.bool(forKey: Self.key) }
+    let store = StoredVoiceConsent()
+    func isGranted() async -> Bool { await store.isGranted() }
 }
 private struct ReleaseGatedMicrophonePermission: MicrophonePermission {
     func request() async -> Bool {
-        // The purpose string is a later, deliberate release decision. Never
-        // request hardware permission until that reviewed input exists.
-        guard let purpose = Bundle.main.object(forInfoDictionaryKey: "NSMicrophoneUsageDescription") as? String,
+        // Only the production switch embeds the purpose string. Development
+        // never requests hardware permission; e2e uses the debug permission.
+        #if OPAX_VOICE_PRODUCTION
+        guard Bundle.main.object(forInfoDictionaryKey: "OPAXProductionVoiceEnabled") as? Bool == true,
+              let purpose = Bundle.main.object(forInfoDictionaryKey: "NSMicrophoneUsageDescription") as? String,
               !purpose.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return false }
         return await AppleMicrophonePermission().request()
+        #else
+        return false
+        #endif
     }
 }
 
@@ -20,6 +25,7 @@ private struct ReleaseGatedMicrophonePermission: MicrophonePermission {
 actor VoiceController {
     let call: VoiceCallController
     private let http: VoiceHTTPClient
+    private let consentSource = BridgeConsent()
     init() {
         let policy: RoutePolicy
         let engines: any VoiceEngineFactory
@@ -36,6 +42,11 @@ actor VoiceController {
         audioSession = DebugSilentAudioSession()
         store = InMemoryCredentialStore()
         #else
+        #if OPAX_VOICE_PRODUCTION
+        // CNG metadata and compiled native routes must agree before any I/O.
+        precondition(RoutePolicy.productionConfigurationMatches(Bundle.main.infoDictionary ?? [:]),
+                     "Invalid production voice configuration")
+        #endif
         policy = RoutePolicy()
         engines = AppleVoiceEngineFactory()
         permission = ReleaseGatedMicrophonePermission()
@@ -46,8 +57,13 @@ actor VoiceController {
         let http = VoiceHTTPClient(policy: policy, store: store, transport: transport)
         self.http = http
         call = VoiceCallController(http: http, relays: URLSessionRelayFactory(session: transport, policy: policy),
-            engines: engines, permission: permission, consent: BridgeConsent(),
+            engines: engines, permission: permission, consent: consentSource,
             audioSession: audioSession, lifecycle: AppleVoiceLifecycle())
+    }
+    func consent() async -> Bool { await consentSource.store.isGranted() }
+    func setConsent(_ granted: Bool) async {
+        await consentSource.store.setGranted(granted)
+        if !granted { await call.withdrawConsent() }
     }
     func snapshot() async -> [String: Any] { VoiceBridgeValue.success(VoiceBridgeValue.snapshot(await call.snapshot())) }
     func status() async -> [String: Any] {
@@ -65,11 +81,6 @@ actor VoiceController {
             try await http.consumeCode(challengeID: challenge, code: code)
             return await status()
         } catch { return VoiceBridgeValue.failure(error) }
-    }
-    func consent() -> Bool { UserDefaults.standard.bool(forKey: BridgeConsent.key) }
-    func setConsent(_ granted: Bool) async {
-        UserDefaults.standard.set(granted, forKey: BridgeConsent.key)
-        if !granted { await call.withdrawConsent() }
     }
     func sendText(_ text: String) async -> [String: Any] {
         do { try await call.sendText(text); return VoiceBridgeValue.success() }

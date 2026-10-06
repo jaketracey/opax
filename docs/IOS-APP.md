@@ -155,7 +155,7 @@ Open product questions (replies under a deleted discussion, legal retention, a r
 - **Not a government app.** The description, Account and about, and the review notes say "OPAX is independent and non-partisan. It is not a government app and is not affiliated with any parliament, government or political party." No national insignia in the icon or screenshots.
 - **Licences, as facts.** Hansard: CC BY-NC-ND terms. They Vote For You divisions: Open Database Licence. Most money data: Creative Commons Attribution. House and Senate registers of interests: CC BY-NC-ND; Queensland's register: no verified licence. APH portraits: CC BY-NC-ND 4.0; Commons portraits: per-file licences. Fonts: SIL Open Font License 1.1. Repository code: AGPL-3.0-only. Their application to App Store distribution is decision 13.
 
-Full notes: [IOS-UX.md, section 8](IOS-UX.md#8-app-store-and-policy-notes) and [IOS-VOICE.md, section 6](IOS-VOICE.md#6-store-and-privacy-notes).
+Full notes: [IOS-UX.md, section 8](IOS-UX.md#8-app-store-and-policy-notes) and [IOS-VOICE.md, section 6](IOS-VOICE.md#6-store-and-privacy-notes). The final App Privacy label, review notes and 4.7 position (6 October 2026) are in [IOS-STORE.md](IOS-STORE.md), sections 2 and 4.
 
 ## 7. Design language on iOS
 
@@ -242,6 +242,8 @@ Lanes without a dependency between them run in parallel.
 | 10 | TestFlight Internal | First internal build | 9 at GO; Jake's go; App Store Connect record; W lane in production |
 
 ## 11. Open decisions
+
+**All settled.** On 6 October 2026 Jake settled every decision still open at its recommended default (4, 5 and 8 to 15) and asked for voice, sign-in and account deletion to ship in production: "unblock all the work that's waiting for me ... Enable the voice and account deletion - do not block for trivial/license related stuff". Decisions 1 to 3, 6 and 7 were no longer open by then. The App Store items that follow from them, each recorded as "decided 6 Oct (default)", are in [IOS-STORE.md, section 8](IOS-STORE.md#8-decisions-recorded).
 
 Each has a recommended default, ordered by what blocks work soonest.
 

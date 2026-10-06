@@ -1,0 +1,37 @@
+appId: au.com.opax.app
+---
+# iOS hierarchy visibility includes controls underneath the native bars.
+# Reveal the physical target before tapping; do not retry the action itself.
+- copyTextFrom:
+    id: search-geometry
+- evalScript: ${output.submitGeometry = JSON.parse(maestro.copiedText)}
+- repeat:
+    times: 4
+    commands:
+      - runFlow:
+          when:
+            true: ${output.submitGeometry.button.y < output.submitGeometry.nav.y + output.submitGeometry.nav.height + 8}
+          commands:
+            - swipe:
+                start: 90%, 30%
+                end: 90%, 70%
+                speed: 20
+            - waitForAnimationToEnd
+            - copyTextFrom:
+                id: search-geometry
+            - evalScript: ${output.submitGeometry = JSON.parse(maestro.copiedText)}
+      - runFlow:
+          when:
+            true: ${output.submitGeometry.button.y + output.submitGeometry.button.height > output.submitGeometry.windowHeight - Math.max(output.submitGeometry.keyboardHeight, output.submitGeometry.adjustedInset.bottom) - 8}
+          commands:
+            - swipe:
+                start: 90%, 70%
+                end: 90%, 30%
+                speed: 20
+            - waitForAnimationToEnd
+            - copyTextFrom:
+                id: search-geometry
+            - evalScript: ${output.submitGeometry = JSON.parse(maestro.copiedText)}
+- assertTrue:
+    condition: ${output.submitGeometry.button.y >= output.submitGeometry.nav.y + output.submitGeometry.nav.height + 8 && output.submitGeometry.button.y + output.submitGeometry.button.height <= output.submitGeometry.windowHeight - Math.max(output.submitGeometry.keyboardHeight, output.submitGeometry.adjustedInset.bottom) - 8}
+    label: The submit button is physically clear of native bars and the keyboard

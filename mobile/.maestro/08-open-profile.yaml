@@ -17,6 +17,9 @@ name: Open a roster profile from the public search
     element:
       id: search-result-${SLUG}
     centerElement: true
+    # At AX5 the row is tall. A speed-40 centring swipe overshoots behind the
+    # navigation bar, where the subsequent tap hits the header instead.
+    speed: 20
     timeout: 300000
 - tapOn:
     id: search-result-${SLUG}

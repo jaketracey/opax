@@ -1,3 +1,4 @@
+import { OutlineMap } from './electorate-map/OutlineMap';
 import {
   formatCount,
   formatDate,
@@ -15,6 +16,7 @@ import {
   ErrorState,
   Group,
   Heading,
+  PartyLabel,
   KeyValueList,
   LoadingState,
   Screen,
@@ -161,6 +163,13 @@ export function ElectorateScreen({
                 jurisdictionName(identity.jurisdiction) ??
                 'Jurisdiction not recorded'}
             </Text>
+            <Section title="Electorate outline" testID="electorate-map">
+              <OutlineMap
+                boundaries={view.boundaries}
+                name={identity.name}
+                state={identity.state}
+              />
+            </Section>
             <RecordBlock
               title="Latest verified representation"
               id="electorate-representatives"
@@ -223,10 +232,14 @@ export function ElectorateScreen({
                                 <Text wordSafe variant="strong">
                                   {c.name}
                                 </Text>
-                                <Text wordSafe variant="metadata">
-                                  {c.party ?? 'Party not recorded'}
-                                  {c.elected ? ' · Elected' : ''}
-                                </Text>
+                                <PartyLabel
+                                  party={c.party}
+                                  status="unknown"
+                                  dense
+                                />
+                                {c.elected ? (
+                                  <Text variant="metadata">Elected</Text>
+                                ) : null}
                                 <KeyValueList
                                   items={c.votes.map((v) => ({
                                     label:

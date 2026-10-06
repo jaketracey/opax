@@ -136,25 +136,25 @@ test('all pinned Search identities agree with the profile header', () => {
     expect({
       slug,
       party: row.party,
-      current: row.partyCurrent,
+      status: row.partyStatus,
       formerly: row.formerly,
     }).toEqual({
       slug,
       party: profile.party ?? undefined,
-      current: profile.partyCurrent,
+      status: profile.partyStatus,
       formerly: profile.formerly,
     });
     if (profile.party)
       expect(
         partyText({
           party: row.party!,
-          current: row.partyCurrent,
+          status: row.partyStatus,
           formerly: row.formerly,
         }),
       ).toEqual(
         partyText({
           party: profile.party,
-          current: profile.partyCurrent,
+          status: profile.partyStatus,
           formerly: profile.formerly,
         }),
       );
@@ -194,7 +194,7 @@ test('dated current seats replace former seats and senator places do not repeat 
   );
   expect(senator).toMatchObject({
     party: 'Greens',
-    partyCurrent: true,
+    partyStatus: 'current',
     place: 'New South Wales · Senate',
   });
   const crewther = personRowContext(

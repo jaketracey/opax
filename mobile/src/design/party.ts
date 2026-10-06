@@ -1,3 +1,4 @@
+import type { PartyStatus } from '../api/party-transforms';
 import { partyColors, type PartyKey } from './palette';
 
 // The web's party map (portal/public/app.js PARTY_MAP): the colour class and
@@ -39,6 +40,20 @@ export interface PartyIdentity {
 
 export const PARTY_NOT_RECORDED = 'Party not recorded';
 
+/** Recorded affiliations and presiding roles are not necessarily parties. */
+export function isPartyLabel(party: string | null | undefined): boolean {
+  const name = party
+    ?.trim()
+    .toLocaleLowerCase('en-AU')
+    .replace(/[‐‑‒–—]/g, '-');
+  return (
+    !!name &&
+    !/^(?:ind(?:ependent)?s?\b|unaligned\b|non[ -]?aligned\b|unaffiliated\b|non[ -]?party\b|pres$|spk$|(?:party )?not recorded$)/.test(
+      name,
+    )
+  );
+}
+
 export function partyIdentity(party: string | null | undefined): PartyIdentity {
   const name = party?.trim();
   if (!name)
@@ -67,28 +82,30 @@ export interface PartyContext {
   /** The party exactly as recorded, or null. */
   party: string | null | undefined;
   /**
-   * False when the party is a historical affiliation: the person is not
-   * sitting, or the data does not mark the party as current.
+   * "former" only when the data says the person no longer sits (an ended
+   * dated seat, or a roster that says so). "unknown" means the data does not
+   * date the party: it is drawn plainly, never as former and never as sitting.
    */
-  current: boolean;
-  /** A sitting member's previous party, when it differs from the current one. */
+  status: PartyStatus;
+  /** The previous party, when it differs from this one. */
   formerly?: string | null;
 }
 
 /**
- * What a party label says, in words, with its current/former context:
- * "Labor", "Formerly Labor", "One Nation, formerly Nationals". Shared by the
- * visible label and the VoiceOver label so they never disagree.
+ * What a party label says, in words, with its status: "Labor" (current, or
+ * not dated), "Formerly Labor" (known former), "One Nation, formerly
+ * Nationals". Shared by the visible label and the VoiceOver label so they
+ * never disagree.
  */
 export function partyText(
-  { party, current, formerly }: PartyContext,
+  { party, status, formerly }: PartyContext,
   dense = false,
 ): { visible: string; previous: string | null; spoken: string } {
   const identity = partyIdentity(party);
   if (!identity.recorded)
     return { visible: identity.name, previous: null, spoken: identity.name };
   const label = dense ? identity.short : identity.name;
-  if (!current)
+  if (status === 'former')
     return {
       visible: `Formerly ${label}`,
       previous: null,
@@ -106,3 +123,11 @@ export function partyText(
       : identity.name,
   };
 }
+
+/** Slugs are derived only from recorded labels; this adds no party aliases. */
+export const partySlug = (name: string) =>
+  name
+    .trim()
+    .toLocaleLowerCase('en-AU')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');

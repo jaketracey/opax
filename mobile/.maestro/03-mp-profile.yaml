@@ -31,8 +31,26 @@ name: 03 Read a sourced profile
 # Sources open in the in-app browser; e2e shows the destination locally.
 - tapOn:
     id: person-source
+- extendedWaitUntil:
+    visible:
+      id: source-destination-url
+      text: https://raw\.githubusercontent\.com/openaustralia/openaustralia-parser/master/data/representatives\.csv
+    timeout: 15000
 - assertVisible: https://raw.githubusercontent.com/openaustralia/openaustralia-parser/master/data/representatives.csv
 - takeScreenshot: ${EVIDENCE}/03-source-destination
+# At AX5 the URL runs past the screen. Scroll the page to its end in a bounded
+# number of swipes (past the end they only bounce) and keep the tail, drawn in
+# full: "representatives.csv", never "representative...".
+- repeat:
+    times: 4
+    commands:
+      - swipe:
+          from:
+            id: source-destination-scroll
+          direction: UP
+- assertVisible:
+    id: source-destination-url
+- takeScreenshot: ${EVIDENCE}/03-source-destination-end
 - tapOn: OK
 # Share uses the canonical web path; e2e carries a non-resolving origin.
 - tapOn: Share Anthony Albanese
