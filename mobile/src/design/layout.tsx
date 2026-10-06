@@ -125,7 +125,10 @@ export function Section({
   children,
   testID,
   headingTestID,
+  rule = true,
 }: {
+  /** False for the first section under a sheet's bar: no top rule. */
+  rule?: boolean;
   title?: string;
   /** An SF Symbol for the section's subject, tinted with the accent. */
   icon?: SFSymbol;
@@ -139,7 +142,10 @@ export function Section({
   headingTestID?: string;
 }) {
   return (
-    <View testID={testID} style={styles.section}>
+    <View
+      testID={testID}
+      style={[styles.section, rule ? null : styles.unruled]}
+    >
       {title || action || info ? (
         <View style={styles.sectionHead}>
           {icon && title ? (
@@ -298,6 +304,7 @@ const styles = StyleSheet.create({
     borderTopColor: colors.dividerDefault,
     paddingTop: rhythm.block + rhythm.line,
   },
+  unruled: { borderTopWidth: 0, paddingTop: 0 },
   sectionHead: {
     flexDirection: 'row',
     alignItems: 'center',

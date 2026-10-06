@@ -66,6 +66,7 @@ export function AccountSection() {
       title="Account"
       icon="person.crop.circle"
       accent="people"
+      rule={false}
       testID="account-section"
     >
       <Group>

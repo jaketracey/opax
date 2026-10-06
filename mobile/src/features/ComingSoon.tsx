@@ -36,7 +36,12 @@ export function TalkComingSoon() {
 export function AccountComingSoon() {
   return (
     <Screen testID="account-sheet">
-      <Section title="Account">
+      <Section
+        title="Account"
+        icon="person.crop.circle"
+        accent="people"
+        rule={false}
+      >
         <Text testID="account-sheet-message">
           Signing in is not in this version of the app yet. An account will only
           be needed to talk to OPAX.
