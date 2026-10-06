@@ -4,7 +4,6 @@ import { router } from 'expo-router';
 import { catalogs } from '../../api/runtime';
 import {
   Button,
-  Divider,
   EmptyState,
   Group,
   LeadCard,
@@ -13,7 +12,7 @@ import {
   Text,
   type Segment,
 } from '../../design/primitives';
-import { chrome, spacing } from '../../design/tokens';
+import { chrome, colors, hairline, radius, spacing } from '../../design/tokens';
 import { leadRoute } from '../../navigation/routes';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { RecordRow } from '../RecordRow';
@@ -134,7 +133,6 @@ export default function Leads() {
             <View>
               {leads.slice(0, visible).map((lead, index) => (
                 <View key={lead.id} style={styles.lead}>
-                  {index > 0 ? <Divider /> : null}
                   <LeadCard
                     lead={lead}
                     category={lead.categoryLabel}
@@ -175,5 +173,16 @@ export default function Leads() {
 }
 
 const styles = StyleSheet.create({
-  lead: { gap: spacing.s4 },
+  // A raised card per lead: the feed scans as separate leads.
+  lead: {
+    gap: spacing.s3,
+    backgroundColor: colors.raised,
+    borderRadius: radius + 10,
+    borderWidth: hairline,
+    borderColor: colors.line,
+    paddingHorizontal: spacing.s4,
+    paddingTop: spacing.s4,
+    paddingBottom: spacing.s2,
+    marginBottom: spacing.s4,
+  },
 });

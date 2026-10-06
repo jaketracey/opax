@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { FlatList, Keyboard, RefreshControl, StyleSheet } from 'react-native';
+import {
+  FlatList,
+  Keyboard,
+  RefreshControl,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { router } from 'expo-router';
 import { catalogs } from '../../api/runtime';
 import {
@@ -9,6 +15,7 @@ import {
   EmptyState,
   Field,
   Group,
+  InfoButton,
   SegmentedControl,
   Text,
 } from '../../design/primitives';
@@ -25,6 +32,9 @@ import {
   noFilters,
   type FeedFilters,
 } from './model';
+
+const coverageNote = (rows: number, available: number) =>
+  `This export holds the newest ${formatCount(rows)} of ${formatCount(available)} dated register alterations. Entries are as declared, not verified by OPAX. Additions and deletions carry the date the register records. A gift or trip with no organisation match names one the AEC and lobbyist registers do not list under that spelling. Organisation matches to AEC Transparency Register returns, the lobbyist registers and FITS use exact normalised names.`;
 
 /**
  * The declared-interests feed behind Today's recent declarations: every row
@@ -136,9 +146,20 @@ export default function Declarations() {
             autoCapitalize="words"
             clearButtonMode="while-editing"
           />
-          <Text variant="metadata" testID="declarations-count">
-            {feedCountLine(rows.length, all.length)} · newest first
-          </Text>
+          <View style={styles.count}>
+            <Text
+              variant="metadata"
+              testID="declarations-count"
+              style={styles.grow}
+            >
+              {feedCountLine(rows.length, all.length)} · newest first
+            </Text>
+            <InfoButton
+              title="About these declarations"
+              notes={[coverageNote(record.meta.rows, record.meta.available)]}
+              testID="declarations-info"
+            />
+          </View>
         </>
       ) : null}
     </Group>
@@ -152,14 +173,8 @@ export default function Declarations() {
         savedAt={record.stale ? record.savedAt : null}
         testID="declarations-as-at"
       />
-      <Text wordSafe variant="fine" testID="declarations-coverage">
-        This export holds the newest {formatCount(record.meta.rows)} of{' '}
-        {formatCount(record.meta.available)} dated register alterations. Entries
-        are as declared, not verified by OPAX. Additions and deletions carry the
-        date the register records. A gift or trip with no organisation match
-        names one the AEC and lobbyist registers do not list under that
-        spelling. Organisation matches to AEC Transparency Register returns, the
-        lobbyist registers and FITS use exact normalised names.
+      <Text wordSafe variant="caption" testID="declarations-coverage">
+        Entries are as declared, not verified by OPAX.
       </Text>
     </Group>
   ) : null;
@@ -231,5 +246,7 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.s7,
   },
   header: { paddingBottom: spacing.s4 },
-  footer: { paddingTop: spacing.s6 },
+  footer: { paddingTop: spacing.s4 },
+  count: { flexDirection: 'row', alignItems: 'center', gap: spacing.s3 },
+  grow: { flex: 1 },
 });

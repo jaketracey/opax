@@ -80,7 +80,12 @@ export function FollowingSection({
     return state?.status === 'ready' && state.changes.length > 0;
   }).length;
   return (
-    <Section title="Following" testID="today-following">
+    <Section
+      title="Following"
+      icon="star.fill"
+      accent="leads"
+      testID="today-following"
+    >
       {follows === null ? (
         <LoadingState
           label="Loading your follows"
@@ -125,6 +130,9 @@ export function FollowingSection({
           </RowList>
           <Button
             label="Manage follows"
+            variant="quiet"
+            size="compact"
+            icon="slider.horizontal.3"
             testID="today-following-manage"
             onPress={() => router.push(followsRoute)}
           />
@@ -173,8 +181,10 @@ function FollowRow({
         {visible.changes.map((c) => (
           <View key={c.marker} style={styles.change}>
             <Text wordSafe>{c.text}</Text>
-            <Text wordSafe variant="fine">
-              {sourceLine(c, 'short')}
+            <Text wordSafe variant="caption">
+              {c.asAt
+                ? `Updated ${formatDate(c.asAt, 'short')}`
+                : 'Date not published'}
             </Text>
           </View>
         ))}

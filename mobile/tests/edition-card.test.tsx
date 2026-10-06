@@ -82,12 +82,17 @@ describe('the edition card', () => {
     expect(textOf(root, 'today-edition-sources')).toBe(
       'Sources and notesExplanatory memorandum on ParlInfo, CC BY-NC-ND 4.0Bill home page on ParlInfo, CC BY-NC-ND 4.0',
     );
-    expect(textOf(root, 'today-edition-link')).toBe(
-      'Read the billOpens on opax.com.au',
-    );
-    expect(textOf(root, 'today-edition-as-at')).toBe(
-      'As at 4 October 2026 · Source: OPAX daily edition',
-    );
+    // The Safari symbol (and VoiceOver's hint) say it opens on opax.com.au.
+    expect(textOf(root, 'today-edition-link')).toBe('Read the bill');
+    // One quiet caption; the source is said to VoiceOver.
+    expect(textOf(root, 'today-edition-as-at')).toBe('Updated 4 Oct 2026');
+    expect(
+      root.find(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.testID === 'today-edition-as-at',
+      ).props.accessibilityLabel,
+    ).toBe('As at 4 October 2026 · Source: OPAX daily edition');
     // The model's label comes before the model's text.
     const order = root
       .findAll(
@@ -228,7 +233,7 @@ describe('the edition card', () => {
       refreshing: true,
     });
     expect(textOf(root, 'today-edition-as-at')).toBe(
-      'As at 4 October 2026 · Source: OPAX daily edition · Saved 4 October 2026',
+      'Updated 4 Oct 2026 · Saved 4 Oct 2026',
     );
     expect(textOf(root, 'today-edition-title')).toBe(pinned.edition.title);
   });

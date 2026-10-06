@@ -1,19 +1,28 @@
 import { PartialNotice, SavedCopyNotice } from '../CatalogNotice';
 import type { ReactNode } from 'react';
+import { StyleSheet, View } from 'react-native';
 import type { EvidenceBlock } from './model';
 import {
   AsAtLine,
   EmptyState,
   ErrorState,
   Group,
-  Heading,
-  OpaxWebLink,
   Section,
-  SourceLink,
   StaleNotice,
   Text,
+  ViewOriginal,
   errorMessage,
+  type InfoNotes,
+  type SFSymbol,
 } from '../../design/primitives';
+import { rhythm, type Accent } from '../../design/tokens';
+
+/**
+ * The foot of a record block: one quiet "Updated 4 Oct 2026" caption and a
+ * small "View original" for the block's own records (one opens directly;
+ * several open a menu). Saved-copy and partial notices follow. Dataset
+ * names and licences are on Sources and licences, in About.
+ */
 export function EvidenceFooter({
   block,
   id,
@@ -24,27 +33,27 @@ export function EvidenceFooter({
   date?: boolean;
 }) {
   return (
-    <Group gap={8}>
-      {date && block.asAt && /^\d{4}$/.test(block.asAt) ? (
-        <Text wordSafe variant="fine" testID={`${id}-as-at`}>
-          As at {block.asAt} · Source:{' '}
-          {block.sources
-            .map((s) => [s.label, s.licence].filter(Boolean).join(', '))
-            .join('; ')}
-        </Text>
-      ) : date ? (
-        <AsAtLine
-          asOf={block.asAt}
-          citation={[...new Set(block.sources.map((s) => s.label))]}
-          licence={[
-            ...new Set(
-              block.sources.flatMap((s) => (s.licence ? [s.licence] : [])),
-            ),
-          ].join('; ')}
-          savedAt={block.stale ? block.savedAt : null}
-          testID={`${id}-as-at`}
-        />
-      ) : null}
+    <Group gap={rhythm.line}>
+      <View style={styles.foot}>
+        {date ? (
+          <View style={styles.caption}>
+            <AsAtLine
+              asOf={block.asAt}
+              citation={[...new Set(block.sources.map((s) => s.label))]}
+              licence={[
+                ...new Set(
+                  block.sources.flatMap((s) => (s.licence ? [s.licence] : [])),
+                ),
+              ].join('; ')}
+              savedAt={block.stale ? block.savedAt : null}
+              testID={`${id}-as-at`}
+            />
+          </View>
+        ) : (
+          <View style={styles.caption} />
+        )}
+        <ViewOriginal sources={block.sources} testID={`${id}-source`} />
+      </View>
       {block.partial ? <PartialNotice testID={`${id}-partial`} /> : null}
       {block.stale ? (
         <>
@@ -60,30 +69,6 @@ export function EvidenceFooter({
           )}
         </>
       ) : null}
-      {block.sources.length ? (
-        block.sources.map((s, i) =>
-          s.url.startsWith('/') ? (
-            <OpaxWebLink
-              key={`${s.url}-${i}`}
-              label={s.label}
-              path={s.url}
-              testID={i === 0 ? `${id}-source` : undefined}
-            />
-          ) : (
-            <SourceLink
-              key={`${s.url}-${i}`}
-              citation={s.label}
-              url={s.url}
-              kind="record"
-              testID={i === 0 ? `${id}-source` : undefined}
-            />
-          ),
-        )
-      ) : (
-        <Text wordSafe variant="fine">
-          No source link is held for this block.
-        </Text>
-      )}
     </Group>
   );
 }
@@ -97,6 +82,9 @@ export function RecordBlock<T>({
   retry,
   children,
   date = true,
+  icon,
+  accent,
+  info,
 }: {
   title: string;
   id: string;
@@ -107,12 +95,21 @@ export function RecordBlock<T>({
   retry: () => void;
   children: (data: T) => ReactNode;
   date?: boolean;
+  icon?: SFSymbol;
+  accent?: Accent;
+  /** Methodology and caveats behind the heading's ⓘ, given the data. */
+  info?: (data: T | null) => InfoNotes | null;
 }) {
+  const notes = info?.(block.data);
   return (
-    <Section testID={id}>
-      <Heading level={2} testID={`${id}-heading`}>
-        {title}
-      </Heading>
+    <Section
+      testID={id}
+      title={title}
+      headingTestID={`${id}-heading`}
+      icon={icon}
+      accent={accent}
+      info={notes ? { ...notes, testID: `${id}-info` } : undefined}
+    >
       {block.status === 'unlinked' ? (
         <EmptyState
           message={
@@ -139,3 +136,14 @@ export function RecordBlock<T>({
     </Section>
   );
 }
+
+const styles = StyleSheet.create({
+  foot: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    columnGap: rhythm.block,
+    rowGap: rhythm.line,
+  },
+  caption: { flexGrow: 1, flexShrink: 1 },
+});
