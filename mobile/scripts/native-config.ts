@@ -91,4 +91,9 @@ assert(
     !/window = UIWindow|factory\.startReactNative/.test(delegate),
   'Expo scene delegate owns the window and React Native startup',
 );
+assert.equal(
+  delegate.includes('OpaxSearchGeometryProbe.start()'),
+  config.extra?.variant === 'e2e',
+  'Native Search geometry instrumentation is fixture-only',
+);
 console.log(`PASS CNG native policy: ${config.extra?.variant}`);

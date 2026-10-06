@@ -105,6 +105,7 @@ const config: ExpoConfig = {
         locationAlwaysAndWhenInUsePermission: false,
       },
     ],
+    ['./plugins/withSearchGeometryProbe.js', { variant }],
     './plugins/withNetworkPolicy.js',
     [
       'expo-splash-screen',

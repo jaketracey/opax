@@ -24,8 +24,8 @@ name: 12 Local suggestions and the four catalog search kinds
 - takeScreenshot: ${EVIDENCE}/12-suggestions
 - assertVisible:
     id: search-suggestion-person-.*
-# Leave the field before submitting. On iOS 27 the first tap after typing
-# only ended editing: the suggestions stayed and no search ran.
+# Retain this journey's keyboard-dismissal step. Keyboard-up single taps
+# are checked independently by 12-search-keyboard.yaml.
 - hideKeyboard
 - scrollUntilVisible:
     element:
@@ -33,6 +33,8 @@ name: 12 Local suggestions and the four catalog search kinds
     timeout: 90000
     direction: UP
 - waitForAnimationToEnd
+# Native frames exclude targets obscured by navigation or tab bars.
+- runFlow: search-submit-reveal.yaml
 - tapOn:
     id: search-submit
 # The results state replaces the suggestions; at AX5 it starts below the fold.
@@ -68,6 +70,8 @@ name: 12 Local suggestions and the four catalog search kinds
     direction: DOWN
     timeout: 90000
 - waitForAnimationToEnd
+# Native frames exclude targets obscured by navigation or tab bars.
+- runFlow: search-submit-reveal.yaml
 - tapOn:
     id: search-submit
 - scrollUntilVisible:
@@ -101,6 +105,8 @@ name: 12 Local suggestions and the four catalog search kinds
     direction: DOWN
     timeout: 90000
 - waitForAnimationToEnd
+# Native frames exclude targets obscured by navigation or tab bars.
+- runFlow: search-submit-reveal.yaml
 - tapOn:
     id: search-submit
 - scrollUntilVisible:
@@ -153,6 +159,8 @@ name: 12 Local suggestions and the four catalog search kinds
     direction: DOWN
     timeout: 90000
 - waitForAnimationToEnd
+# Native frames exclude targets obscured by navigation or tab bars.
+- runFlow: search-submit-reveal.yaml
 - tapOn:
     id: search-submit
 - scrollUntilVisible:
