@@ -36,54 +36,40 @@ name: 23 Native money map, held figures, original source and ranked list
     file: support/money-screen-scroll.yaml
     env:
       TARGET_ID: money-test-year
-      SCROLL_START: "97%, 85%"
-      SCROLL_END: "97%, 30%"
 - tapOn:
     id: money-test-year
 - runFlow:
-    file: support/money-screen-scroll.yaml
+    file: support/money-screen-scroll-up.yaml
     env:
       TARGET_ID: money-filters
-      SCROLL_START: "97%, 30%"
-      SCROLL_END: "97%, 85%"
 - tapOn:
     id: money-filters
 - runFlow:
     file: support/money-screen-scroll.yaml
     env:
       TARGET_ID: money-from-year
-      SCROLL_START: "97%, 85%"
-      SCROLL_END: "97%, 30%"
 - takeScreenshot: ${EVIDENCE}/23-from-year
 - runFlow:
     file: support/money-screen-scroll.yaml
     env:
       TARGET_ID: money-to-year
-      SCROLL_START: "97%, 85%"
-      SCROLL_END: "97%, 30%"
 - takeScreenshot: ${EVIDENCE}/23-to-year
 - runFlow:
     file: support/money-screen-scroll.yaml
     env:
       TARGET_ID: money-industry
-      SCROLL_START: "97%, 85%"
-      SCROLL_END: "97%, 30%"
 - tapOn:
     id: money-industry
 - runFlow:
     file: support/money-screen-scroll.yaml
     env:
       TARGET_ID: money-industry-unions
-      SCROLL_START: "97%, 85%"
-      SCROLL_END: "97%, 30%"
 - tapOn:
     id: money-industry-unions
 - runFlow:
     file: support/money-screen-scroll.yaml
     env:
       TARGET_ID: money-layer-contracts
-      SCROLL_START: "97%, 85%"
-      SCROLL_END: "97%, 30%"
 - tapOn:
     id: money-layer-contracts
 - takeScreenshot: ${EVIDENCE}/23-layers
@@ -92,8 +78,6 @@ name: 23 Native money map, held figures, original source and ranked list
     file: support/money-screen-scroll.yaml
     env:
       TARGET_ID: money-test-focus
-      SCROLL_START: "97%, 85%"
-      SCROLL_END: "97%, 30%"
 - tapOn:
     id: money-test-focus
 - extendedWaitUntil:
@@ -140,11 +124,9 @@ name: 23 Native money map, held figures, original source and ranked list
     id: source-destination-ok
 - tapOn: Done
 - runFlow:
-    file: support/money-screen-scroll.yaml
+    file: support/money-screen-scroll-up.yaml
     env:
       TARGET_ID: money-mode-list
-      SCROLL_START: "97%, 30%"
-      SCROLL_END: "97%, 85%"
 - tapOn:
     id: money-mode-list
 - scrollUntilVisible:

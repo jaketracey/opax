@@ -8,8 +8,8 @@ appId: au.com.opax.app
         id: ${TARGET_ID}
     commands:
       - swipe:
-          start: 97%, 85%
-          end: 97%, 30%
+          start: 97%, 30%
+          end: 97%, 85%
           duration: 600
 - assertVisible:
     id: ${TARGET_ID}
