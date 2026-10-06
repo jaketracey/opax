@@ -187,12 +187,14 @@ export function ProfileScreen({
               {identity.seats.length ? (
                 <RowList>
                   {identity.seats.map((seat) => {
-                    const chamber =
-                      chamberName(seat.chamber, seat.jurisdiction) ??
-                      CHAMBER_NOT_RECORDED;
+                    const named = chamberName(seat.chamber, seat.jurisdiction);
+                    const chamber = named ?? CHAMBER_NOT_RECORDED;
                     const place =
                       jurisdictionName(seat.jurisdiction) ??
                       'Jurisdiction not recorded';
+                    // A named chamber already says where it sits ("House of
+                    // Representatives", "Victorian Legislative Assembly").
+                    const where = named ? chamber : `${chamber} · ${place}`;
                     return (
                       <LinkRow
                         key={seat.electorate_id}
@@ -200,7 +202,7 @@ export function ProfileScreen({
                         accent="places"
                         title={seat.name}
                         detail={[
-                          `${chamber} · ${place}`,
+                          where,
                           identity.seats.length > 1 && seat.as_of
                             ? `As at ${formatDate(seat.as_of, 'short')}`
                             : null,
