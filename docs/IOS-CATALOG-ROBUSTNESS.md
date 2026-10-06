@@ -31,7 +31,7 @@ Partial status is held outside published data in weak metadata, propagated to th
 | Discovery | Bounded whole-signal loss with unreadable count and partial status; metrics, participants, evidence and caveats remain strict. |
 | Search | Bounded independent result loss and partial notice; structural pagination and published total stay intact. |
 | Edition | Strict slides and source rows: retain the whole posted context, cover and attribution. |
-| AEC extras | Bounded whole-party loss; associated entities inside a party are strict against the published total. |
+| AEC extras | Strict party entries and their associated entities: dropping a party entry would turn its recorded total into a false zero. |
 
 Saved-copy UI distinguishes unreadable exports from offline reads. Source and saved dates are unchanged. Optional nulls do not mark a file partial, and valid catalogs keep their existing behavior.
 

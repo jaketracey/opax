@@ -1115,7 +1115,7 @@ export const decodeAecExtras = shape({
     licence: nonempty,
     notes: strings,
   }),
-  parties: records(
+  parties: dict(
     shape({
       associated_entities_total: optional(count),
       associated_entities: optional(

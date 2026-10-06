@@ -379,6 +379,11 @@ const seatPath =
 test.each([
   ['/graph/money.json', d.decodeMoney, ['nodes', 0, 'total']],
   ['/graph/money.json', d.decodeMoney, ['edges', 0, 'total']],
+  [
+    '/graph/aec-extras.json',
+    d.decodeAecExtras,
+    ['parties', 'Labor', 'associated_entities', 0, 'year'],
+  ],
   ['/pay.json', d.decodePay, ['current', 0, 'salary']],
   ['/pay.json', d.decodePay, ['meta', 'sources', 0, 'url']],
   ['/expenses.json', d.decodeExpenses, ['people', '10007', 'total']],
