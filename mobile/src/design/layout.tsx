@@ -15,8 +15,19 @@ import {
 } from 'react-native';
 import { useAccessibilitySize } from './accessibility';
 import { Divider } from './controls';
-import { Heading, Text } from './text';
-import { colors, hairline, layout, spacing } from './tokens';
+import type { SFSymbol } from './icon';
+import { InfoButton, type InfoNotes } from './info';
+import { IconTile } from './rows';
+import { Heading, Text, type TextTone } from './text';
+import {
+  accents,
+  colors,
+  hairline,
+  layout,
+  rhythm,
+  spacing,
+  type Accent,
+} from './tokens';
 import { useStableKeyboard } from './useStableKeyboard';
 
 /**
@@ -97,30 +108,49 @@ export function Group({
 }
 
 /**
- * A major section: a default rule, a serif heading and its content. No card
- * or filled box marks the boundary; the rule and the heading do.
+ * A major section: a default rule, then a header with an optional tinted
+ * symbol tile (the category's accent), a serif heading, an optional ⓘ for
+ * the block's methodology and caveats, and an optional trailing action ("All
+ * bills"). No card or filled box marks the boundary; the rule and the
+ * heading do. Heading to content is 12pt; blocks inside step 16pt.
  */
 export function Section({
   title,
+  icon,
+  accent,
+  info,
   action,
   children,
   testID,
+  headingTestID,
 }: {
   title?: string;
+  /** An SF Symbol for the section's subject, tinted with the accent. */
+  icon?: SFSymbol;
+  accent?: Accent;
+  /** Long notes behind an ⓘ: methodology and caveats, shown in full there. */
+  info?: InfoNotes & { testID?: string };
   /** A trailing link such as "All bills". */
   action?: ReactNode;
   children: ReactNode;
   testID?: string;
+  headingTestID?: string;
 }) {
   return (
     <View testID={testID} style={styles.section}>
-      {title || action ? (
+      {title || action || info ? (
         <View style={styles.sectionHead}>
+          {icon && title ? (
+            <IconTile name={icon} accent={accent} size="section" />
+          ) : null}
           {title ? (
-            <Heading level={2} style={styles.grow}>
+            <Heading level={2} style={styles.grow} testID={headingTestID}>
               {title}
             </Heading>
-          ) : null}
+          ) : (
+            <View style={styles.grow} />
+          )}
+          {info ? <InfoButton {...info} /> : null}
           {action}
         </View>
       ) : null}
@@ -210,8 +240,16 @@ export interface Stat {
  * Figures with their labels, wrapping into a row of tiles; one per line at
  * accessibility sizes. Each tile reads "value, label".
  */
-export function StatRow({ stats }: { stats: readonly Stat[] }) {
+export function StatRow({
+  stats,
+  accent,
+}: {
+  stats: readonly Stat[];
+  /** Tints the figures with a category accent. */
+  accent?: Accent;
+}) {
   const stacked = useAccessibilitySize();
+  const tone = accent ? (accents[accent].ink as TextTone) : undefined;
   return (
     <View style={[styles.stats, stacked ? styles.statsStacked : null]}>
       {stats.map((stat) => (
@@ -222,8 +260,12 @@ export function StatRow({ stats }: { stats: readonly Stat[] }) {
           testID={stat.testID}
           style={stacked ? null : styles.stat}
         >
-          <Text variant="figure">{stat.value}</Text>
-          <Text variant="metadata">{stat.label}</Text>
+          <Text variant="figure" tone={tone}>
+            {stat.value}
+          </Text>
+          <Text wordSafe variant="metadata">
+            {stat.label}
+          </Text>
         </View>
       ))}
     </View>
@@ -239,25 +281,25 @@ const styles = StyleSheet.create({
     gap: layout.sectionGap,
   },
   section: {
-    gap: spacing.s4,
+    gap: rhythm.block,
     borderTopWidth: hairline,
     borderTopColor: colors.dividerDefault,
-    paddingTop: spacing.s4,
+    paddingTop: rhythm.block + rhythm.line,
   },
   sectionHead: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'baseline',
-    justifyContent: 'space-between',
-    gap: spacing.s3,
+    alignItems: 'center',
+    gap: rhythm.heading - rhythm.line,
+    // Heading to content is 12pt: the section's 16pt gap, less 4.
+    marginBottom: rhythm.heading - rhythm.block,
   },
   grow: { flexGrow: 1, flexShrink: 1 },
   subsection: {
-    gap: spacing.s3,
-    marginTop: layout.subGap - spacing.s4,
+    gap: rhythm.tight,
+    marginTop: layout.subGap - rhythm.block,
     borderTopWidth: hairline,
     borderTopColor: colors.dividerSubtle,
-    paddingTop: spacing.s3,
+    paddingTop: rhythm.heading,
   },
   row: { paddingVertical: layout.rowGap },
   kvInline: {
@@ -269,7 +311,7 @@ const styles = StyleSheet.create({
   kvStacked: { gap: spacing.s1 },
   kvLabel: { flex: 1 },
   kvValue: { textAlign: 'right', flexShrink: 1, maxWidth: '60%' },
-  stats: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.s4 },
+  stats: { flexDirection: 'row', flexWrap: 'wrap', gap: rhythm.block },
   statsStacked: { flexDirection: 'column' },
-  stat: { minWidth: 140, flexGrow: 1, flexBasis: 140, gap: spacing.s1 },
+  stat: { minWidth: 96, flexGrow: 1, flexBasis: 96, gap: 2 },
 });

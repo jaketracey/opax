@@ -8,9 +8,9 @@ import {
 import { ApiError } from '../api/errors';
 import { Button } from './controls';
 import { staleText, type DateInput } from './format';
-import { Icon } from './icon';
+import { Icon, type SFSymbol } from './icon';
 import { Text } from './text';
-import { colors, hairline, radius, spacing } from './tokens';
+import { colors, hairline, radius, rhythm, spacing } from './tokens';
 
 // Copy from IOS-UX section 4 ("States, everywhere") and the API client.
 export const stateCopy = {
@@ -97,20 +97,31 @@ export function LoadingState({
 }
 
 /**
- * Says what is absent, in the web's words where it has them. A block with
- * nothing for this person is usually left out instead.
+ * Says what is absent, in the web's words where it has them, beside a quiet
+ * symbol. A block with nothing for this person is usually left out instead.
  */
 export function EmptyState({
   message,
+  icon = 'tray',
   testID,
 }: {
   message: string;
+  icon?: SFSymbol;
   testID?: string;
 }) {
   return (
-    <Text wordSafe variant="body" tone="inkSoft" testID={testID}>
-      {message}
-    </Text>
+    <View style={styles.empty}>
+      <Icon name={icon} size={17} tone="inkSoft" />
+      <Text
+        wordSafe
+        variant="body"
+        tone="inkSoft"
+        testID={testID}
+        style={styles.grow}
+      >
+        {message}
+      </Text>
+    </View>
   );
 }
 
@@ -222,7 +233,14 @@ const styles = StyleSheet.create({
   grow: { flex: 1, gap: spacing.s3 },
   figures: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.s4 },
   figure: { gap: spacing.s3, minWidth: 140 },
-  error: { gap: spacing.s4, alignItems: 'flex-start' },
+  error: {
+    gap: rhythm.heading,
+    alignItems: 'flex-start',
+    backgroundColor: colors.sunken,
+    borderRadius: radius + 6,
+    padding: rhythm.block,
+  },
+  empty: { flexDirection: 'row', gap: rhythm.tight, alignItems: 'flex-start' },
   inline: { flexDirection: 'row', gap: spacing.s3, alignItems: 'flex-start' },
   banner: {
     flexDirection: 'row',

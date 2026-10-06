@@ -1,4 +1,4 @@
-import { light, partyColors, type Role } from './palette';
+import { light, partyColors, partyWashes, type Role } from './palette';
 
 // WCAG 2.x relative luminance and contrast ratio for opaque hex colours.
 function channel(value: number): number {
@@ -190,6 +190,51 @@ export const componentPairs: ColourPair[] = [
   pair('ErrorState icon', 'rest', 'danger', 'paper', 'non-text'),
   pair('OfflineBanner text and icon', 'rest', 'ink', 'paper'),
 
+  // Category accents (UI sweep): symbols, display figures and short labels
+  // in each accent ink, on paper, raised and the accent's own wash; ink and
+  // inkSoft text on every wash (tinted tiles and section headers).
+  ...(
+    [
+      ['moneyInk', 'moneyWash'],
+      ['votesInk', 'votesWash'],
+      ['interestsInk', 'interestsWash'],
+      ['billsInk', 'billsWash'],
+      ['navy', 'navyWash'],
+      ['bronzeInk', 'bronzeWash'],
+    ] as const
+  ).flatMap(([ink, wash]) => [
+    pair(`Accent ${ink}: symbols, figures, labels`, 'rest', ink, 'paper'),
+    pair(`Accent ${ink}: symbols, figures, labels`, 'pressed', ink, 'sunken'),
+    pair(`Accent ${ink} on raised`, 'rest', ink, 'raised'),
+    pair(`Accent ${ink} symbol on its tile`, 'rest', ink, wash),
+    pair(`Text (ink) on ${wash}`, 'rest', 'ink', wash),
+    pair(`Text (inkSoft) on ${wash}`, 'rest', 'inkSoft', wash),
+  ]),
+
+  // Disclosure rows, LinkRow, InfoButton and ViewOriginal.
+  pair('Disclosure and LinkRow label', 'rest', 'ink', 'paper'),
+  pair('Disclosure and LinkRow label', 'pressed', 'ink', 'sunken'),
+  pair('Disclosure value and chevron', 'rest', 'inkSoft', 'paper'),
+  pair('Disclosure value and chevron', 'pressed', 'inkSoft', 'sunken'),
+  pair('InfoButton symbol', 'rest', 'navy', 'paper', 'non-text'),
+  pair('InfoButton symbol', 'pressed', 'navy', 'sunken', 'non-text'),
+  pair('ViewOriginal label and symbol', 'rest', 'bronzeInk', 'paper'),
+  pair('ViewOriginal label and symbol', 'pressed', 'bronzeInk', 'sunken'),
+  pair('Caption (Updated …)', 'rest', 'inkSoft', 'paper'),
+
+  // States: the empty note on paper; the error note on its sunken panel,
+  // with Try again (Button default) inside it.
+  pair('EmptyState message and symbol', 'rest', 'inkSoft', 'paper'),
+  pair('ErrorState message', 'rest', 'ink', 'sunken'),
+  pair(
+    'Button default boundary on the error panel',
+    'rest',
+    'lineStrong',
+    'sunken',
+    'non-text',
+  ),
+  pair('ErrorState symbol', 'rest', 'danger', 'sunken', 'non-text'),
+
   // PartyLabel dots, on the row's resting and pressed surfaces.
   ...Object.entries(partyColors).flatMap(([party, hex]) =>
     (['paper', 'raised'] as const).map((background) => ({
@@ -201,6 +246,20 @@ export const componentPairs: ColourPair[] = [
     })),
   ),
 ];
+
+/**
+ * Party chips and tinted profile headers draw ink and inkSoft text on each
+ * party's wash (not a role: one per party). The dot sits on a raised ring,
+ * so its pair is the PartyLabel dot on raised above.
+ */
+export const partyWashPairs = Object.entries(partyWashes).flatMap(
+  ([party, wash]) =>
+    (['ink', 'inkSoft'] as const).map((role) => ({
+      use: `PartyChip ${role} on the ${party} wash`,
+      foreground: light[role],
+      background: wash,
+    })),
+);
 
 // Pairs IOS-UX records as failing: components must never draw them.
 export const forbiddenPairs: ColourPair[] = [
