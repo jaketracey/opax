@@ -16,7 +16,9 @@ The public catalog client is unchanged. No JS transport or voice SDK is used.
 All results use `{ok:true,value}` or `{ok:false,error:VoiceFailure}`. Command
 success acknowledges dispatch, not a live call; observe the events for call
 refusals, asynchronous connection errors and terminal reasons. Status exposes an
-open row's state/expiry only. Code challenges are proofs, not session credentials;
+open row's state/expiry only, plus `accountHeld`: whether this iPhone holds an
+unrevoked account session, so sign-out and deletion stay offered when voice
+refuses the member (a disabled member keeps the right to delete). Code challenges are proofs, not session credentials;
 keep them and the entered code transient. Native error prose is never forwarded.
 
 Events are a discriminated union: `state` (with nullable end reason), `mode`,

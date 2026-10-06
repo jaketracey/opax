@@ -578,15 +578,21 @@ describe('workbench exclusion', () => {
   );
 });
 
-test('the temporary privacy link preserves its reviewed query in the e2e destination', async () => {
+test('privacy links open the privacy page, keeping a section anchor', async () => {
   const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
-  await openOnWeb('/community?view=privacy', 'Privacy policy');
+  await openOnWeb('/privacy', 'Privacy policy');
   expect(alert).toHaveBeenCalledWith(
     'Opens on opax.com.au: Privacy policy',
-    `${webOrigin}/community?view=privacy`,
+    `${webOrigin}/privacy`,
   );
-  expect(canonicalUrl('/community?view=privacy')).toBe(
-    `${webOrigin}/community`,
+  expect(canonicalUrl('/privacy')).toBe(`${webOrigin}/privacy`);
+  await openOnWeb(
+    '/privacy#privacy-deletion',
+    'Privacy policy: deleting your account',
+  );
+  expect(alert).toHaveBeenLastCalledWith(
+    'Opens on opax.com.au: Privacy policy: deleting your account',
+    `${webOrigin}/privacy#privacy-deletion`,
   );
   alert.mockRestore();
 });

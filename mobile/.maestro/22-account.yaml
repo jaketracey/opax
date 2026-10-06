@@ -1,0 +1,193 @@
+appId: au.com.opax.app
+name: 22 Account sign-in by emailed code, sign-out and deletion
+---
+# Tap targets are reached by scrolling down from above, never centred (see
+# support/account-sign-in.yaml), and each tap waits for the screen to settle.
+# Fixture accounts only (happy@example.invalid, code 01234567); nothing is
+# emailed. Relaunch without clearState keeps journey 04's offline cache.
+# Every check scrolls to its target, so the flow holds at AX5.
+- launchApp
+- tapOn: Account and about
+- extendedWaitUntil:
+    visible: 'Not signed in\. An account is only needed to talk to OPAX\.'
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/22-signed-out
+- scrollUntilVisible:
+    element:
+      id: account-sign-in-start
+    timeout: 30000
+- waitForAnimationToEnd
+- tapOn:
+    id: account-sign-in-start
+- scrollUntilVisible:
+    element:
+      text: '.*same account as the OPAX community on opax\.com\.au.*'
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: account-age-limit
+    timeout: 30000
+- assertVisible: 'Accounts and voice are for people aged 16 and over\.'
+- takeScreenshot: ${EVIDENCE}/22-email
+- scrollUntilVisible:
+    element:
+      id: account-email
+    timeout: 30000
+- waitForAnimationToEnd
+- tapOn:
+    id: account-email
+- inputText: happy@example.invalid
+- pressKey: Enter
+# A wrong code gets the one answer every refused code gets. The code step
+# can open mid-page, so start from its heading; a full code submits itself.
+- scrollUntilVisible:
+    element:
+      text: Enter the code
+    direction: UP
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: account-code
+    timeout: 30000
+- waitForAnimationToEnd
+- tapOn:
+    id: account-code
+- inputText: '76543210'
+- scrollUntilVisible:
+    element:
+      text: 'That code did not work\. Check it, or send a new code\.'
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/22-wrong-code
+- scrollUntilVisible:
+    element:
+      text: 'We sent a code to happy@example\.invalid\. It expires in 15 minutes\.'
+    direction: UP
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/22-code
+- scrollUntilVisible:
+    element:
+      id: account-code
+    timeout: 30000
+# The field selects its code on focus, so typing replaces it.
+- waitForAnimationToEnd
+- tapOn:
+    id: account-code
+- eraseText: 12
+- inputText: '01234567'
+- scrollUntilVisible:
+    element:
+      text: 'Signed in as happy@example\.invalid'
+    direction: UP
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      text: 'Voice time: \d+:\d\d remaining'
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/22-signed-in
+- scrollUntilVisible:
+    element:
+      id: account-sign-out
+    timeout: 30000
+- waitForAnimationToEnd
+- tapOn:
+    id: account-sign-out
+- scrollUntilVisible:
+    element:
+      text: 'Signed out of this iPhone\.'
+    direction: UP
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      text: 'Not signed in\..*'
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/22-signed-out-again
+- runFlow:
+    file: support/account-sign-in.yaml
+    env:
+      ACCOUNT_EMAIL: happy@example.invalid
+- scrollUntilVisible:
+    element:
+      text: 'Signed in as happy@example\.invalid'
+    direction: UP
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: account-delete
+    timeout: 30000
+- waitForAnimationToEnd
+- tapOn:
+    id: account-delete
+- scrollUntilVisible:
+    element:
+      text: What is deleted
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/22-delete-confirm
+- scrollUntilVisible:
+    element:
+      text: What is not deleted
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/22-delete-kept
+- scrollUntilVisible:
+    element:
+      text: 'Voice time is not refunded\..*'
+    timeout: 30000
+# At AX5 this paragraph is taller than the screen (1,060pt), so it can
+# never be fully visible.
+- scrollUntilVisible:
+    element:
+      text: 'Recovery history\..*up to 30 days, then is gone\.'
+    visibilityPercentage: 20
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/22-delete-recovery
+# A presence check near the page end: at AX5 the swipe overshoots full view.
+- scrollUntilVisible:
+    element:
+      id: account-deletion-policy
+    visibilityPercentage: 90
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: account-delete-confirm
+    timeout: 30000
+- waitForAnimationToEnd
+- tapOn:
+    id: account-delete-confirm
+- scrollUntilVisible:
+    element:
+      text: Enter the deletion code
+    direction: UP
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: account-deletion-code
+    timeout: 30000
+- waitForAnimationToEnd
+- tapOn:
+    id: account-deletion-code
+# A full code only hides the keyboard: deleting needs the tap below.
+- inputText: '01234567'
+- takeScreenshot: ${EVIDENCE}/22-deletion-code
+- scrollUntilVisible:
+    element:
+      id: account-delete-final
+    timeout: 30000
+- waitForAnimationToEnd
+- tapOn:
+    id: account-delete-final
+- extendedWaitUntil:
+    visible: Account deleted
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/22-deleted
+- scrollUntilVisible:
+    element:
+      id: account-delete-done
+    timeout: 30000
+- waitForAnimationToEnd
+- tapOn:
+    id: account-delete-done
+- scrollUntilVisible:
+    element:
+      text: 'Not signed in\..*'
+    direction: UP
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/22-signed-out-after-deletion
