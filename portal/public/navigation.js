@@ -43,7 +43,7 @@
     if (/^\/bills?(\/|$)/.test(path)) return 'bills';
     if (path.startsWith('/reports')) return 'reports';
     if (path === '/explore') return ['ledger','grants','wd'].includes(params.get('game')) ? 'money' : 'topics';
-    if (/^\/(about|methods|stats|expenses|privacy)/.test(path)) return 'about';
+    if (/^\/(about|methods|stats|expenses|privacy|support)/.test(path)) return 'about';
     return 'research';
   };
   const esc = s => String(s).replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;');

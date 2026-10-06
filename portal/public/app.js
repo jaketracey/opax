@@ -32,7 +32,7 @@ let lastAsk = { question: "", sources: [] };
 let currentDocSlug = null;
 let currentDoc = null;
 
-const PANELS = ["money-records","connections","discover", "ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "declared", "about", "methods", "stats", "expenses", "privacy", "bill"];
+const PANELS = ["money-records","connections","discover", "ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "declared", "about", "methods", "stats", "expenses", "privacy", "support", "bill"];
 // /bills is the bill panel's index; it has no panel of its own, so isRoute has
 // to be told the word is ours before the click handler will follow it.
 const PANEL_ALIASES = { bills: "bill" };
@@ -966,6 +966,7 @@ const TITLES = {
   stats: "Corpus stats · OPAX",
   expenses: "What the expense categories mean · OPAX",
   privacy: "Privacy · OPAX",
+  support: "Support · OPAX",
   bill: "Bill · OPAX",
   bills: "Federal bills: votes, speeches & summaries · OPAX",
 };
@@ -1860,6 +1861,11 @@ function route() {
     pendingAnchor = "";
     const target = section && $("panel-privacy").querySelector(`[id="${section}"]`);
     if (target) requestAnimationFrame(() => target.scrollIntoView({ block: "start" }));
+  } else if (view === "support") {
+    showPanel("support");
+    document.title = TITLES.support;
+    setCrumbs([{ label: "About", href: "/about" }, { label: "Support" }]);
+    renderSupport(params);
   } else {
     showPanel("ask");
     document.title = TITLES.ask;
@@ -4308,6 +4314,28 @@ async function renderPersonPay(name, sections) {
     pendingAnchor = "";
     settleOn(slot);
   }
+}
+
+// --- /support: a report names its record ------------------------------------
+// The app's "Report this answer" opens /support?record=<path>. A same-site path
+// is named on the page and pre-fills the GitHub issue; anything else is ignored.
+const SUPPORT_ISSUES = "https://github.com/jaketracey/opax/issues/new";
+function supportRecord(raw) {
+  const path = String(raw || "");
+  return /^\/(?!\/)[^\s\\<>"]{0,300}$/.test(path) ? path : "";
+}
+function supportIssueUrl(path) {
+  const body = [path ? `Record: ${SITE_ORIGIN}${path}` : "Record or page:", "", "What is wrong:", "", "The source that shows it:", ""].join("\n");
+  return `${SUPPORT_ISSUES}?${new URLSearchParams({ title: path ? `Correction: ${path}` : "Correction", body })}`;
+}
+function renderSupport(params) {
+  const path = supportRecord(params.get("record"));
+  $("support-record").hidden = !path;
+  if (path) {
+    $("support-record-link").href = path;
+    $("support-record-link").textContent = `opax.com.au${path}`;
+  }
+  $("support-issue-link").href = supportIssueUrl(path);
 }
 
 // --- expense categories: definitions, popover and glossary page --------------
@@ -14099,6 +14127,7 @@ const VIEW_DESCRIPTIONS = {
   stats: "Live counts for every collection in the OPAX index.",
   expenses: "What each category in the Independent Parliamentary Expenses Authority's quarterly reports covers.",
   privacy: "What the OPAX website and app collect, which companies receive it, how long it is kept and how to delete your account.",
+  support: "How to report a wrong record or answer, and help with signing in and deleting an OPAX account.",
 };
 function syncPathMeta() {
   const path = hereRoute();

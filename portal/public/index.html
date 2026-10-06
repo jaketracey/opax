@@ -1163,6 +1163,7 @@
       contracts that sometimes follow the same money, and the registers that record who lobbies
       whom. Every claim on the site links back to the primary record it came from, because a
       blind spot is only worth finding if someone else can check it.</p>
+      <p class="fineprint">OPAX contains the names and images of people who have died.</p>
 
       <h2>What you can do here</h2>
       <ul class="about-list">
@@ -1652,13 +1653,13 @@
       sent to Progress or to a language model. Its requests reach OPAX's servers with your
       phone's IP address, under the same limits and logs as the website. Pages the app opens on
       opax.com.au are the website, and the website sections above apply to them.</p>
-
       <p>If you choose Use my location when picking your electorate, iOS asks for your
       permission, and the app then uses one reading of your location, on your iPhone, to suggest
       an electorate. Your location is never sent to OPAX or anyone else, and is not stored: the
       app downloads every electorate's outline before it reads your location, so its requests
       are the same wherever you are, and only the electorate you confirm is saved. The app never
       asks for your location in the background.</p>
+
       <h2 id="privacy-accounts">Community accounts</h2>
       <p>An account is optional. On the website it lets you keep reading lists, take part in
       discussions, message other members and connect research tools. In the app it is needed
@@ -1860,6 +1861,63 @@
       public source code, so every earlier version, and what changed, is in the history of
       <a href="https://github.com/jaketracey/opax" rel="noopener">github.com/jaketracey/opax</a>.</p>
     </section>
+    <!-- ============================ SUPPORT ============================ -->
+    <!-- The app's "Report this answer" opens /support?record=<path>; app.js
+         names that record and pre-fills the GitHub issue (renderSupport). -->
+    <section id="panel-support" class="panel" hidden aria-labelledby="support-title">
+      <p class="kicker">Support</p>
+      <h1 id="support-title">Help with OPAX</h1>
+      <p class="lede">The Open Parliamentary Accountability Exchange brings together Australian
+      parliamentary speeches, votes, political funding and public disclosures. Search across the
+      records, trace connections and follow claims back to their original sources.</p>
+      <p>OPAX is independent and non-partisan. It is not a government service and is not
+      affiliated with any parliament, government or political party.
+      <a href="/about">More about OPAX</a>.</p>
+
+      <h2 id="support-report">Report a wrong record or a wrong answer</h2>
+      <p id="support-record" hidden>You are reporting
+      <a id="support-record-link" href="/">this record</a>.</p>
+      <p>OPAX copies its records from public sources, and its answers, summaries and voice replies
+      are written by language models from those records, so either can be wrong. To report a
+      mistake, open an issue on GitHub with:</p>
+      <ul class="about-list">
+        <li>the link to the record or page, or, for an answer, the question you asked and the
+        words that are wrong;</li>
+        <li>what is wrong;</li>
+        <li>the source that shows it, if you have one.</li>
+      </ul>
+      <p><a class="ui-button" id="support-issue-link" href="https://github.com/jaketracey/opax/issues/new?title=Correction" rel="noopener">Report it on GitHub</a></p>
+      <p>In the app, Report this answer under a voice reply brings you here with the record it
+      concerns. Corrections made so far are listed on the <a href="/methods">methods page</a>.</p>
+      <p class="fineprint">Issues on GitHub are public, so leave personal details out of them.
+      OPAX does not yet have a private contact address. One is coming, and this page will name
+      it.</p>
+
+      <h2 id="support-account">Your account</h2>
+      <ul class="about-list">
+        <li><strong>Signing in.</strong> Enter your email address and OPAX emails you a sign-in
+        link, and for the app an eight-digit code. Each works once and expires after 15 minutes.
+        If nothing arrives, check your spam folder, then ask for a new one. Signing in for the
+        first time creates your account. An account is only needed to take part in the community
+        and to talk to OPAX by voice; everything else works without one.</li>
+        <li><strong>Signing out.</strong> Sign out on one device, or on every device from your
+        account page on the website.</li>
+        <li><strong>Voice.</strong> Each account has 10 minutes of voice in total. Voice needs
+        microphone access, which you can turn on or off in your iPhone's Settings or your
+        browser.</li>
+        <li><strong>Deleting your account.</strong> On the website, open
+        <a href="/community?view=delete-account">Delete your account</a>; in the app, choose
+        Delete account under Account. OPAX emails you a fresh code, and entering it deletes your
+        account and what you wrote. It cannot be undone.
+        <a href="/privacy#privacy-deletion">What is deleted and what is kept</a>.</li>
+      </ul>
+
+      <h2 id="support-more">Privacy and the source</h2>
+      <p><a href="/privacy">Privacy</a> sets out what OPAX collects and who receives it.
+      <a href="/methods">Methods</a> explains how the record is built and how to cite it. OPAX's
+      code is open source, at
+      <a href="https://github.com/jaketracey/opax" rel="noopener">github.com/jaketracey/opax</a>.</p>
+    </section>
 
   </div>
 </main>
@@ -1890,6 +1948,7 @@
     <p><a href="https://github.com/jaketracey/opax" rel="noopener">Source code on GitHub</a> ·
        <a href="/methods">Methods &amp; how to cite</a> ·
        <a href="/privacy">Privacy</a> ·
+       <a href="/support">Support</a> ·
        Powered by <a href="https://www.progress.com/agentic-rag?utm_source=opax&amp;utm_medium=referral&amp;utm_campaign=powered_by&amp;utm_content=footer" data-analytics-partner="progress_agentic_rag" rel="noopener">Progress Agentic RAG</a>
        and <a href="https://corpuskit.org?utm_source=opax&amp;utm_medium=referral&amp;utm_campaign=powered_by&amp;utm_content=footer" data-analytics-partner="corpuskit" rel="noopener">CorpusKit</a></p>
   </div>
@@ -1899,8 +1958,8 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/navigation.js?v=a7543ac619" defer></script>
+<script src="/navigation.js?v=c996bc7200" defer></script>
 <script src="/quick-search.js?v=206914f32d" defer></script>
-<script src="/app.js?v=c7f426c03e" defer></script>
+<script src="/app.js?v=6ccf821029" defer></script>
 </body>
 </html>
