@@ -215,6 +215,14 @@ name: 21 Talk consent, captions, sources, controls and refusal states
     element:
       id: talk-agree
     centerElement: true
+- runFlow:
+    when:
+      true: ${CONTENT_SIZE === 'accessibility-extra-extra-extra-large'}
+    commands:
+      - swipe:
+          start: 90%, 30%
+          end: 90%, 55%
+          duration: 600
 - tapOn:
     id: talk-agree
 - scrollUntilVisible:
