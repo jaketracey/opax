@@ -1,3 +1,4 @@
+import { OutlineMap } from './electorate-map/OutlineMap';
 import {
   formatCount,
   formatDate,
@@ -160,6 +161,13 @@ function ElectorateScreen({ id }: { id: string }) {
               title={identity.name}
               testID="electorate-follow"
             />
+            <Section title="Electorate outline" testID="electorate-map">
+              <OutlineMap
+                boundaries={view.boundaries}
+                name={identity.name}
+                state={identity.state}
+              />
+            </Section>
             <RecordBlock
               title="Latest verified representation"
               id="electorate-representatives"

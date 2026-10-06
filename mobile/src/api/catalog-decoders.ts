@@ -1,3 +1,4 @@
+import { decodeBoundary } from './electorate-geometry';
 import {
   array,
   boolean,
@@ -222,6 +223,7 @@ const election = shape({
 });
 const electorateShape = shape({
   ...electorateFields,
+  boundaries: array(decodeBoundary),
   elections: array(election),
   sources: dict(source),
   demographics: array(
@@ -280,6 +282,8 @@ export function decodeElectorate(v: unknown) {
     Object.entries(s.people).some(([id, p]) => id !== p.person_id)
   )
     invalid('The seat person IDs do not agree.');
+  if (s.boundaries.some((b) => b.electorate_id !== s.electorate_id))
+    invalid('The outline belongs to another seat.');
   return s;
 }
 export type ElectorateDetail = Decoded<typeof decodeElectorate>;

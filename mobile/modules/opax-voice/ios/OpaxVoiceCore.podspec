@@ -19,6 +19,8 @@ Pod::Spec.new do |s|
   }
   if ENV['OPAX_VARIANT'] == 'e2e'
     xcconfig['SWIFT_ACTIVE_COMPILATION_CONDITIONS'] = '$(inherited) OPAX_VOICE_E2E'
+  elsif ENV['OPAX_VARIANT'] == 'production' && ENV['OPAX_PRODUCTION_VOICE'] == '1'
+    xcconfig['SWIFT_ACTIVE_COMPILATION_CONDITIONS'] = '$(inherited) OPAX_VOICE_PRODUCTION'
   end
   s.pod_target_xcconfig = xcconfig
 end
