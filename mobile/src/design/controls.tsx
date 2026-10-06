@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, type Ref } from 'react';
 import {
   ActivityIndicator,
   type AccessibilityState,
@@ -60,6 +60,7 @@ export const buttonStates: Record<
 const fill = (role: Fill) => (role ? colors[role] : 'transparent');
 
 export interface ButtonProps {
+  ref?: Ref<View>;
   label: string;
   onPress: () => void;
   /** Primary is the navy action; there is no bronze or gold button. */
@@ -79,6 +80,7 @@ export interface ButtonProps {
 
 /** Actions. Use a text link or row with a real destination for navigation. */
 export function Button({
+  ref,
   label,
   onPress,
   variant = 'default',
@@ -98,6 +100,7 @@ export function Button({
   const resting = disabled && !loading ? states.disabled : states.rest;
   return (
     <Pressable
+      ref={ref}
       accessibilityRole="button"
       accessibilityLabel={label}
       accessibilityHint={accessibilityHint}

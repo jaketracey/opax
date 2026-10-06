@@ -1,0 +1,25 @@
+{
+  "microphonePurpose": "OPAX uses your microphone only during a Talk call you start. Your audio is sent to ElevenLabs, OPAX’s voice provider, to understand and answer you.",
+  "consentKey": "opax.voice.consent.v1",
+  "consentDefault": false,
+  "routes": [
+    "GET /api/voice/status",
+    "POST /api/voice/start",
+    "GET /api/voice/connect",
+    "POST /api/voice/finish",
+    "GET /api/community/status",
+    "POST /api/community/auth/request",
+    "POST /api/community/auth/consume-code",
+    "POST /api/community/auth/logout",
+    "POST /api/community/account/deletion-code",
+    "POST /api/community/account/delete"
+  ],
+  "linkedDataTypes": [
+    "EmailAddress",
+    "UserID",
+    "AudioData",
+    "OtherUserContent",
+    "ProductInteraction"
+  ],
+  "unlinkedDataTypes": ["SearchHistory", "OtherDataTypes"]
+}

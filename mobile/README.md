@@ -75,20 +75,39 @@ Configured capacity checks run before builds and devices; a five-minute load of
 a decimal of at most nine digits in `qa-lock.sh`; invalid values default to 7200.
 The e2e runner starts only its own fixture, installs the Release app
 without Metro, saves Maestro/screenshots/request logs in ignored `private/qa/<run>/`,
-restores text size/appearance and shuts down on success or failure. Never commit QA evidence.
+restores text size/appearance and shuts down on success, failure or TERM. Never commit QA evidence.
 `OPAX_QA_RUN` names evidence, `OPAX_QA_APP` selects a prepared app. No audio flows.
 Journey 04 stops the fixture and checks saved data without clearing the app. Default
 runs include 01–04; `OPAX_VERIFY_OFFLINE=1` also adds 04 to a selected warm run.
 
-The pasteboard lock (`scripts/qa-lock.sh`) is shared with other projects, so a run
-never waits on anything while holding it. Every Maestro run goes through
+The pasteboard lock (`scripts/qa-lock.sh`) is shared with other projects. Fixture
+preparation and server startup finish before the runner waits for it; waiting lanes
+keep their simulators shut down. The whole device lifetime goes through
 `qa_paste_lock_run`: holding nothing, it waits for the lock to look free and for
 capacity, then enters the build gate with `scripts/qa-locked.sh`. Inside the gate the
 wrapper makes one non-blocking lock attempt and rechecks the load. If the lock is
 taken or the load has reached 140, it leaves the gate at once and the runner starts
-again; otherwise Maestro runs and the lock is released when it ends. The wrapper leads
-its own process group: Maestro and its children run in it, and release first stops any
-leftovers. `OPAX_PASTE_WAIT_SECONDS` covers all the waiting; every minute `lock.log`
+again; otherwise `scripts/e2e-device.sh` boots, installs, runs every Maestro phase
+(including offline 04), restores settings and shuts down before the lock is released.
+`device-timing.txt` records boot, install, total device setup and cleanup seconds
+added to lock holding time.
+Boot (including a simulator-gate wait) is limited to 300 seconds, install to 240,
+each simulator UI call to 10 and shutdown to 20. `OPAX_BOOT_TIMEOUT_SECONDS`,
+`OPAX_INSTALL_TIMEOUT_SECONDS`, `OPAX_SIMCTL_TIMEOUT_SECONDS` and
+`OPAX_SHUTDOWN_TIMEOUT_SECONDS` override these positive limits. A run never waits
+for host capacity, a build slot or the pasteboard lock while holding the lock;
+the simulator-gate wait and device calls inside it have the limits above.
+The device command gets a 120-second stop grace (`OPAX_E2E_STOP_GRACE_SECONDS`),
+enough for five bounded restore/readback calls and shutdown. The parent attempts
+a bounded fallback shutdown after release if the device started but did not
+confirm shutdown. This fallback does not run for a queued lane that never started.
+The isolated harness tests have a 300-second overall limit
+(`OPAX_E2E_TEST_TIMEOUT_SECONDS`) and clean up their own scratch process groups
+when the limit expires.
+Screenshot collection and fixture teardown follow release (offline 04 stops its
+fixture while locked). The wrapper leads its own process group: the device command,
+Maestro and their children run in it, and release first stops any leftovers.
+`OPAX_PASTE_WAIT_SECONDS` covers all the waiting; every minute `lock.log`
 names the lock, the elapsed time and the holder. Never write your own lock wrapper.
 
 The lock directory appears in one atomic step with its `owner` file (pid and pgid of
@@ -108,8 +127,11 @@ If a lock stays held, read `lock.log` and `<lock>/owner`, then:
   Maestro's leftovers still run. Stop them with `kill -TERM -- -<pgid>`; the next waiter
   then retires the lock.
 - **OPAX owner, live pid:** the run is still going. To stop it now, `kill -TERM <pid>`;
-  the wrapper stops its group and releases. A TERM to `e2e.sh` itself takes effect when
-  the current Maestro run returns.
+  the wrapper stops its group and releases. A TERM to `e2e.sh` itself takes effect
+  promptly, including while waiting for capacity or queued in the build gate:
+  it records cancellation, drains its active lock owner while retaining the build
+  gate, cancels the remaining wait tree and then stops its fixture. A cancelled
+  device command never boots.
 - **No owner file:** the lock belongs to another project or an older OPAX script. Leave
   it. Remove it with `rmdir` only after its owner confirms nothing uses the pasteboard.
 
@@ -123,7 +145,9 @@ OPAX_QA_RUN=<run> nohup scripts/e2e.sh <udid> 01 02 > private/qa/<run>.out 2>&1 
 
 Its first line is `E2E pid=<pid> status=private/qa/<run>/exit-status` (the path is
 absolute). The status file holds the exit code and appears only after cleanup: lock
-released, fixture stopped, simulator shut down. If the pid is gone with no status file,
+released, fixture stopped, simulator shutdown confirmed or its bounded fallback
+attempt finished (read `restore.log` and `fallback-shutdown.log` for errors).
+If the pid is gone with no status file,
 the run was killed: read `lock.log`, then shut the simulator down yourself. Start a
 release the same way, logging under ignored `private/` so the worktree stays clean
 (`nohup scripts/release-ios.sh --build-number N > private/release-N.out 2>&1 &`).
@@ -230,6 +254,76 @@ attack regression tests.
   Scroll to reachable controls, test the minimum
   device and AX5. Test identity/source assertions against real pinned data.
 
+## Launch and welcome tour
+
+**Splash.** `expo-splash-screen` shows the brand mark (the favicon's navy
+square and gold seven-point star, `portal/public/favicon.svg`) above the
+"OPAX" wordmark, centred on paper, with no other text. From `mobile/`,
+`swift scripts/render-splash.swift` writes the SVG sources in
+`assets/splash/` (the star path copied unchanged, the wordmark outlined from
+the bundled Merriweather Bold) and renders every PNG from those SVGs with
+Core Graphics: no Homebrew, npm package or network. Commit the SVGs and PNGs
+together. The app is light-only (`UIUserInterfaceStyle` Light) and iOS draws
+the launch screen in the app's style, so the paper splash shows in both system
+appearances. The navy `splash-dark` artwork is rendered but not configured:
+the plugin would switch the whole app to Automatic to show it, and
+`qa-static` fails if `UIUserInterfaceStyle` is no longer Light.
+
+**Handoff.** `src/launch/splash.ts` holds the native splash until
+`LaunchHandoff` has drawn the same image in the same place, then hides it (no
+seam). A 1pt bronze rule draws out under the wordmark as the veil fades,
+starting the moment the first screen (Today, or the tour) has rendered, with
+no minimum hold and never later than 760ms; the fade takes 440ms, so at most
+1.2s. Content is mounted and touchable under it from the first frame; the
+veil takes no touches and is hidden from VoiceOver. Reduce Motion: no rule, a
+240ms fade. A failsafe hides the native splash after 4s if the handoff never
+draws. Beats are in `src/launch/timing.ts`.
+
+**Welcome tour.** Five pages over the app (`src/onboarding/`): what OPAX is,
+Your MP, profiles, Bills and Today, Search. Each page is a scene built from
+the app's own components (Field, Button, PersonRow, RecordRow, AsAtLine) over
+a few plain sentences; scenes with sample records are labelled "Example" and
+name roles ("Your member"), never a real person, and show no figures. Skip is
+always visible. The last page's button, Choose your electorate, closes the
+tour and opens Your MP's seat chooser (`requestSeatChooser`), even when a
+seat is saved. Nothing advances on its own. Reduce Motion turns off the
+parallax, the scene reveal and animated page turns. VoiceOver hears the
+masthead, Skip, the page ("Page 2 of 5. Your MP. …"), its position and the
+button; pages off screen are hidden and Next moves focus to the new page. At
+accessibility sizes each page scrolls and its words come before the picture.
+The tour shows once per device after the first launch: Skip or finishing
+saves `opax-welcome-v1.json` in the app's documents. Account and about, About
+OPAX, Replay welcome tour closes the sheet and shows it again.
+
+**E2E flag.** Journeys start with cleared state, so e2e builds treat the tour
+as seen. The launch argument `-OPAXWelcomeTour on` restores the production
+behaviour. Its reader (`src/onboarding/launch-flag.e2e.ts`, NSUserDefaults)
+never ships: production Metro resolves `launch-flag` to
+`launch-flag.production.ts`, the production block list refuses the e2e file,
+and `qa-static --production-bundle` and the release verifier fail if
+`OPAXWelcomeTour` appears in release JS. Development builds ignore it. Scene
+reveals wait until iOS has answered whether Reduce Motion is on. In Maestro:
+
+```yaml
+- launchApp:
+    clearState: true
+    arguments:
+      OPAXWelcomeTour: 'on' # quoted: unquoted on is a YAML boolean
+```
+
+Journey 28 covers the first launch, paging by Next and by swipe, Finish into
+the seat chooser, no repeat after a relaunch, and replay and Skip from
+Account. `.maestro/28b-cold-launch.yaml` (run by path) records a cold launch
+with `startRecording`; cut frames from the `.mp4` in the run's Maestro output
+with `ffmpeg -i <mp4> -vf fps=20 <dir>/%03d.png`. `OPAX_APPEARANCE=dark`
+runs a journey with the simulator in dark appearance (default light):
+
+```sh
+scripts/e2e.sh <udid> 28 .maestro/28b-cold-launch.yaml
+OPAX_CONTENT_SIZE=accessibility-extra-extra-extra-large scripts/e2e.sh <udid> 28
+OPAX_APPEARANCE=dark scripts/e2e.sh <udid> .maestro/28b-cold-launch.yaml
+```
+
 ## Never-call rule
 
 Public reading uses only the explicit allow-list in `src/api/policy.ts`:
@@ -250,6 +344,11 @@ file-system downloads and WebView transports fail lint and static checks. Unknow
 routes throw **before** cache lookup or networking. Redirects and cross-origin
 requests fail closed. Transport belongs exclusively to the API
 client; ESLint and the static AST scan enforce this.
+
+Apple Maps tiles are an allowed iOS system service, outside app catalog
+transport. The current Skia electorate outline has no basemap and makes no tile
+requests, so this feature adds no app network host. The one-shot location fix
+stays on the device and never enters the API client.
 
 Both source gates scan JS/TS in `src/` and `modules/`. `modules/*/scripts/` is Node
 tooling, exempt from app transport and origin rules but still scanned for secrets.
@@ -309,8 +408,8 @@ warnings, pay, expenses and party receipts. Roster-only former profiles explicit
 say their records are not linked in this release and link to the web; they do not
 claim those records are absent. Electorates show dated representation, elections,
 Census vintage and sources. Journeys 07–09 cover Your MP, profiles and electorates;
-12–14 cover Search, Today and About. The runner accepts 01–14 and rejects unknown
-numeric flows. Licensed postcode/location lookup, sign-in, voice, universal links
+12–14 cover Search, Today and About; 28 the welcome tour. The runner accepts
+any numbered flow that exists and rejects unknown numeric flows. Precise allocation with licensed postcode/location data, sign-in, voice, universal links
 and wider data coverage belong to their owning lanes.
 
 ## P0 catalog adapters (data only)
@@ -447,3 +546,7 @@ Surname person pages use the release's unique current ID holder (or sole histori
 holder); incompatible roster representations are refused, including the shared
 David/Dorinda Cox ID. Roster-only register results such as Mark Furner retain their
 directory link without inventing a canonical release ID.
+
+### Electorate outline and optional location
+
+The cached seat file now draws a tile-free Skia outline. Your MP can suggest a federal seat from one foreground location fix, entirely on the iPhone, with explicit confirmation. See [IOS-ELECTORATE-MAP.md](../docs/IOS-ELECTORATE-MAP.md) for display limitations, privacy, cache budget, download measurement and the compact-file proposal. Journey 24 sets a simulated fix per case through the harness; `OPAX_VERIFY_MAP_OFFLINE=1` adds a stopped-fixture map check.

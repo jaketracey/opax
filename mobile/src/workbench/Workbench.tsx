@@ -70,8 +70,9 @@ const westpac: Lead = {
     { label: 'Party receipt records', value: 1041, format: 'number' },
     { label: 'Contract records', value: 4, format: 'number' },
   ],
-  // Read into reader-facing parts as the Leads screen does: OPAX's local
-  // row number never shows.
+  // The export's labels verbatim, read into reader-facing parts as the Leads
+  // screen does (leadEvidenceFor): the internal row number ("local record
+  // 643745"), which means nothing to a reader, never shows.
   evidence: [
     {
       label:

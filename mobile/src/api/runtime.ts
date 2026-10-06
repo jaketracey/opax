@@ -32,6 +32,6 @@ export const catalogs = new Catalogs(
     origin: extra.apiOrigin,
     version: extra.appVersion,
     build: extra.appBuild,
-    cache: new CatalogCache(new DiskStore()),
+    cache: new CatalogCache(new DiskStore(), 24 * 1024 * 1024, 220),
   }),
 );

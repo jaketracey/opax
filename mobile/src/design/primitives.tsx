@@ -17,6 +17,7 @@ export {
 export { Icon, type SFSymbol } from './icon';
 export {
   Screen,
+  KeyboardStableScreen,
   Group,
   Section,
   SubSection,
@@ -55,4 +56,5 @@ export {
   useAccessibilitySize,
   useBoldText,
   useReduceMotion,
+  useReduceMotionSetting,
 } from './accessibility';

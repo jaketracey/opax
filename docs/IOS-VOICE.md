@@ -925,6 +925,8 @@ These cost provider credit and play sound, so they are manual only, on a real iP
 
 ## 6. Store and privacy notes
 
+**6 October 2026:** voice ships in v1, and the final store answers are in [IOS-STORE.md](IOS-STORE.md): the App Privacy label (section 4; it adds Product Interaction, Search History and Other Data to the table below), the shipped microphone purpose string (section 4.5, from `mobile/voice-production-policy.json:2`, replacing the draft below), the review notes (section 2.1) and the guideline 4.7 position (section 2.3). The rest of this section is the 3 October analysis.
+
 Checked on 3 October 2026 against the App Review Guidelines (page marked "Last Updated: June 8, 2026"), Apple's account deletion guidance and the App Privacy details page. URLs are listed under sources.
 
 ### App Privacy label for voice

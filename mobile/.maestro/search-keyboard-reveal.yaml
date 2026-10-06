@@ -1,0 +1,13 @@
+appId: au.com.opax.app
+---
+# Accessibility visibility can include controls obscured by the keyboard.
+# Check the native window frame before any journey gesture can mask a failed app reveal.
+- copyTextFrom:
+    id: search-geometry
+- evalScript: ${output.geometry = JSON.parse(maestro.copiedText)}
+- assertTrue:
+    condition: ${output.geometry.button.y + output.geometry.button.height <= output.geometry.windowHeight - output.geometry.keyboardHeight - 8}
+    label: The app already revealed the submit button above the keyboard
+- assertTrue:
+    condition: ${output.geometry.button.y >= output.geometry.nav.y + output.geometry.nav.height && output.geometry.button.y + output.geometry.button.height <= output.geometry.windowHeight - output.geometry.keyboardHeight - 8}
+    label: The entire submit button is between the navigation bar and software keyboard

@@ -1,0 +1,162 @@
+appId: au.com.opax.app
+name: 12 Search keyboard keeps the submit target and delivers a single tap
+---
+# The settled 3 pt check discriminates at standard size; the AX5 baseline was 2 pt.
+# Transients are checked separately from the fixture probe (250 ms samples).
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible:
+      id: today-screen-message
+    timeout: 20000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/12-keyboard-cold-today
+- copyTextFrom:
+    id: search-geometry
+- evalScript: ${output.today = JSON.parse(maestro.copiedText); console.log('COLD_TODAY ' + maestro.copiedText)}
+- assertTrue:
+    condition: ${Math.abs(output.today.offset.y + output.today.adjustedInset.top) <= 3}
+    label: Today cold launch starts at its native top inset
+- stopApp
+- openLink: opax://search
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: search-input
+    timeout: 20000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/12-keyboard-cold-search
+- copyTextFrom:
+    id: search-geometry
+- evalScript: ${output.cold = JSON.parse(maestro.copiedText); console.log('COLD_SEARCH ' + maestro.copiedText)}
+- assertTrue:
+    condition: ${Math.abs(output.cold.offset.y + output.cold.adjustedInset.top) <= 3}
+    label: Search cold launch starts at its native top inset
+- tapOn:
+    id: search-input
+- inputText: Albanese
+- assertVisible:
+    id: search-input
+    text: ^Albanese$
+- extendedWaitUntil:
+    visible: '.*"keyboardHeight":[1-9][0-9]{2}.*'
+    timeout: 10000
+- waitForAnimationToEnd
+- runFlow: search-keyboard-reveal.yaml
+- copyTextFrom:
+    id: search-geometry
+- evalScript: ${output.typed = JSON.parse(maestro.copiedText); console.log('TYPED ' + maestro.copiedText)}
+- assertTrue:
+    condition: ${output.typed.editing && output.typed.keyboardHeight > 100 && !output.typed.results}
+    label: A real software keyboard is open before the first submit
+- takeScreenshot: ${EVIDENCE}/12-keyboard-before-first-tap
+# A single physical tap; Maestro must never retry a swallowed tap.
+- tapOn:
+    id: search-submit
+    retryTapIfNoChange: false
+- extendedWaitUntil:
+    visible: '.*"results":true.*'
+    timeout: 10000
+- waitForAnimationToEnd
+- copyTextFrom:
+    id: search-geometry
+- evalScript: ${output.first = JSON.parse(maestro.copiedText); console.log('FIRST_SUBMIT ' + maestro.copiedText)}
+- assertTrue:
+    condition: ${output.first.results && !output.first.editing && output.first.keyboardHeight == 0}
+    label: One tap submits and dismisses the keyboard
+- assertTrue:
+    condition: ${Math.abs(output.first.button.y - output.typed.button.y) <= 3}
+    label: First submission keeps the button within 3 pt
+- takeScreenshot: ${EVIDENCE}/12-keyboard-after-first-tap
+- scrollUntilVisible:
+    element:
+      id: search-input
+    direction: UP
+    timeout: 30000
+# Put the caret after a short query that fits even at AX5. Re-entering it
+# clears the old results state without relying on the iOS selection menu.
+- tapOn:
+    id: search-input
+    point: 95%,50%
+- eraseText: 50
+- inputText: Albanese
+- assertVisible:
+    id: search-input
+    text: ^Albanese$
+- extendedWaitUntil:
+    visible: '.*"keyboardHeight":[1-9][0-9]{2}.*'
+    timeout: 10000
+- waitForAnimationToEnd
+- runFlow: search-keyboard-reveal.yaml
+- copyTextFrom:
+    id: search-geometry
+- evalScript: ${output.repeat = JSON.parse(maestro.copiedText); console.log('REPEAT_TYPED ' + maestro.copiedText)}
+- assertTrue:
+    condition: ${output.repeat.editing && output.repeat.keyboardHeight > 100 && !output.repeat.results}
+    label: Same-query repeat has the keyboard open and no results yet
+- tapOn:
+    id: search-submit
+    retryTapIfNoChange: false
+- extendedWaitUntil:
+    visible: '.*"results":true.*'
+    timeout: 10000
+- waitForAnimationToEnd
+- copyTextFrom:
+    id: search-geometry
+- evalScript: ${output.second = JSON.parse(maestro.copiedText); console.log('SECOND_SUBMIT ' + maestro.copiedText)}
+- assertTrue:
+    condition: ${output.second.results && !output.second.editing && Math.abs(output.second.button.y - output.repeat.button.y) <= 3}
+    label: Same-query second submission keeps the button within 3 pt
+- takeScreenshot: ${EVIDENCE}/12-keyboard-after-second-tap
+- scrollUntilVisible:
+    element:
+      id: search-input
+    direction: UP
+    timeout: 30000
+- tapOn:
+    id: search-input
+    point: 95%,50%
+- eraseText: 50
+- inputText: Albanese
+- assertVisible:
+    id: search-input
+    text: ^Albanese$
+- extendedWaitUntil:
+    visible: '.*"keyboardHeight":[1-9][0-9]{2}.*'
+    timeout: 10000
+- waitForAnimationToEnd
+- runFlow: search-keyboard-reveal.yaml
+- copyTextFrom:
+    id: search-geometry
+- evalScript: ${output.focus = JSON.parse(maestro.copiedText); console.log('BEFORE_DISMISS ' + maestro.copiedText)}
+- assertTrue:
+    condition: ${output.focus.editing && output.focus.keyboardHeight > 100 && !output.focus.results}
+    label: The query is unsubmitted before dismissing without a search
+# The left paper gutter contains no control. With handled this single tap
+# dismisses the keyboard without submitting or injecting a scroll gesture.
+- tapOn:
+    point: 1%,50%
+    retryTapIfNoChange: false
+- waitForAnimationToEnd
+- copyTextFrom:
+    id: search-geometry
+- evalScript: ${output.dismiss = JSON.parse(maestro.copiedText); console.log('AFTER_DISMISS ' + maestro.copiedText)}
+- assertTrue:
+    condition: ${!output.dismiss.editing && output.dismiss.keyboardHeight == 0 && !output.dismiss.results && Math.abs(output.dismiss.button.y - output.focus.button.y) <= 3}
+    label: Tapping paper dismisses without searching and keeps the button within 3 pt
+- takeScreenshot: ${EVIDENCE}/12-keyboard-dismissed
+# The same scroll view must still drive the native large title.
+- swipe:
+    start: 90%, 70%
+    end: 90%, 30%
+    speed: 20
+- waitForAnimationToEnd
+- copyTextFrom:
+    id: search-geometry
+- evalScript: ${output.collapsed = JSON.parse(maestro.copiedText); console.log('COLLAPSED ' + maestro.copiedText)}
+- assertTrue:
+    condition: ${output.collapsed.nav.height < output.cold.nav.height - 20}
+    label: Scrolling still collapses the native large title
+- takeScreenshot: ${EVIDENCE}/12-keyboard-title-collapsed
