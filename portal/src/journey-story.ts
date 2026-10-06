@@ -1,4 +1,5 @@
 import { buildMoneyJourneys } from '../public/money-journeys-data.js'
+import { shortMoney as compact } from '../public/format.js'
 
 interface GraphNode { id: string; label: string; kind: string }
 interface GraphEdge { source: string; target: string; total: number; flow?: string; byYear?: Record<string, number[]> }
@@ -6,7 +7,6 @@ export interface StoryGraph { meta?: Record<string, unknown>; nodes: GraphNode[]
 export interface StoryStep { title: string; body: string; evidence: string[] }
 export const STORY_VERSION = 'journey-story-6'
 
-const compact = (amount: number) => new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',notation:'compact',maximumFractionDigits:1}).format(amount)
 const dollars = (amount: number) => new Intl.NumberFormat('en-AU', {style:'currency',currency:'AUD',maximumFractionDigits:0}).format(amount)
 
 export function journeyStoryContext(graph: StoryGraph, lens: string, focus: string) {

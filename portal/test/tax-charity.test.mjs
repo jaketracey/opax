@@ -51,7 +51,7 @@ const COMPANY = {
   tn: 'WOOLWORTHS GROUP LIMITED',
 };
 const facts = (html) => html.match(/<dl class="tc-facts">([\s\S]*?)<\/dl>/)?.[1] || '';
-// Block-level ends become spaces, inline tags vanish, so "$351.9M" and the full stop after it stay together.
+// Block-level ends become spaces, inline tags vanish, so "$351.9m" and the full stop after it stay together.
 const text = (html) => html.replace(/<\/(dt|dd|li|p|tr|th|td|summary|details|table)>/g, ' ').replace(/<[^>]+>/g, '')
   .replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ');
 
@@ -79,9 +79,9 @@ test('a charity block shows size, PBI/HPC, revenue, the government share and whe
   const f = text(facts(html));
   assert.match(f, /Large charity · Health Promotion Charity \(HPC\) · registered 1 Apr 2015/);
   assert.match(f, /ACNC name: WA Primary Health Alliance Limited/);
-  assert.match(f, /\$237\.1M revenue \(year to 30 Jun 2024\), of which \$228\.9M \(97%\) from government/);
-  assert.match(f, /\$1\.0K donations and bequests/);
-  assert.match(f, /AIS 2023: \$199\.1M revenue, \$193\.4M \(97%\) from government/);
+  assert.match(f, /\$237\.1m revenue \(year to 30 Jun 2024\), of which \$228\.9m \(97%\) from government/);
+  assert.match(f, /\$1\.0k donations and bequests/);
+  assert.match(f, /AIS 2023: \$199\.1m revenue, \$193\.4m \(97%\) from government/);
   assert.match(html, /https:\/\/www\.acnc\.gov\.au\/charity\/charities\?search=11602416697/);
   // attribution: publisher, licence and a link to the record, per source
   assert.match(html, /<a href="https:\/\/data\.gov\.au\/data\/dataset\/acnc-register"[^>]*>ACNC Registered Charities/);
@@ -95,7 +95,7 @@ test('a charity block shows size, PBI/HPC, revenue, the government share and whe
 test('the ATO row reports the published figures neutrally, with the ATO caveat and its licence', () => {
   const html = T.taxCharityHTML(COMPANY, META, { abn: '88000014675' });
   const f = text(facts(html));
-  assert.match(f, /ATO 2023-24 Total income \$56\.60B · taxable income \$2\.70B · tax payable \$767\.3M/);
+  assert.match(f, /ATO 2023-24 Total income \$56\.60bn · taxable income \$2\.70bn · tax payable \$767\.3m/);
   assert.match(f, /ATO name: WOOLWORTHS GROUP LIMITED/);
   // exact dollars are in the tooltip
   assert.match(html, /title="\$767,268,429"/);
@@ -115,7 +115,7 @@ test('the ATO row reports the published figures neutrally, with the ATO caveat a
 test('a blank ATO amount reads as blank (zero or less), never as $0', () => {
   const html = T.taxCharityHTML({ t: [{ y: '2023-24', inc: 150000000 }, { y: '2022-23', inc: 100000000, tax: 5000000 }] }, META, { abn: '55555555555' });
   const f = text(facts(html));
-  assert.match(f, /Total income \$150\.0M · taxable income blank · tax payable blank/);
+  assert.match(f, /Total income \$150\.0m · taxable income blank · tax payable blank/);
   assert.match(html, /title="The ATO leaves a field blank when the amount is zero or less"/);
   assert.doesNotMatch(f, /\$0\b/);
   assert.match(html, /<td>\$5,000,000<\/td><td><span class="tc-blank"/);   // earlier year: taxable shown, tax payable blank
@@ -123,7 +123,7 @@ test('a blank ATO amount reads as blank (zero or less), never as $0', () => {
 
 test('a PRRT-only listing is described as such', () => {
   const html = T.taxCharityHTML({ t: [{ y: '2023-24', prrt: 351898218 }], tn: 'ESSO AUSTRALIA' }, META, { abn: '62091829819' });
-  assert.match(text(facts(html)), /Petroleum resource rent tax payable \$351\.9M\. Listed on the ATO's PRRT tab; no income tax entry that year\./);
+  assert.match(text(facts(html)), /Petroleum resource rent tax payable \$351\.9m\. Listed on the ATO's PRRT tab; no income tax entry that year\./);
 });
 
 test('an ABN last listed before the latest report says so, without claiming the entity is absent', () => {

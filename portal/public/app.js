@@ -118,9 +118,9 @@ function fmtMoney(value) {
   const n = Number(value) || 0;
   const sign = n < 0 ? "-" : "";
   const a = Math.abs(n);
-  if (a >= 999.95e6) return `${sign}$${(Math.round(a / 1e7) / 100).toFixed(2)}B`;
-  if (a >= 999.95e3) return `${sign}$${(Math.round(a / 1e5) / 10).toFixed(1)}M`;
-  if (a >= 999.995) return `${sign}$${(Math.round(a / 100) / 10).toFixed(1)}K`;
+  if (a >= 999.95e6) return `${sign}$${(Math.round(a / 1e7) / 100).toFixed(2)}bn`;
+  if (a >= 999.95e3) return `${sign}$${(Math.round(a / 1e5) / 10).toFixed(1)}m`;
+  if (a >= 999.995) return `${sign}$${(Math.round(a / 100) / 10).toFixed(1)}k`;
   const cents = Math.round(a * 100) / 100;
   return `${sign}$${Number.isInteger(cents) ? cents : cents.toFixed(2)}`;
 }

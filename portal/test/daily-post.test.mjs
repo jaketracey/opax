@@ -259,7 +259,7 @@ test('grant editions keep the award amount, purpose, start date and exact recipi
   const post = await composeDailyPost('2026-09-14',src,'grant');
   assert.equal(post.subject,'grant:GA123');
   assert.equal(new URL(post.url).searchParams.get('award'),'GA123');
-  assert.match(post.text,/^\$4m grant to redevelop Windsor Park/); assert.match(post.text,/award value, not payments/);
+  assert.match(post.text,/^\$4\.0m grant to redevelop Windsor Park/); assert.match(post.text,/award value, not payments/);
   assert.match(post.text,/Recipient: City of Greater Geelong\. Agreement from 27 Aug 2026/);
   assert.match(post.caption,/City of Greater Geelong/); assert.match(post.caption,/27 Aug 2026/);
   assert.match(post.caption,/netball courts/); assert.ok(xLength(post.text)<=280);
@@ -446,7 +446,7 @@ test('without an approved photograph the cover has none and the caption carries 
 test('short money, day words and the credit paragraph', () => {
   assert.equal(shortMoney(11300000), '$11.3m');
   assert.equal(shortMoney(1449579888), '$1.45bn');
-  assert.equal(shortMoney(4000000), '$4m');
+  assert.equal(shortMoney(4000000), '$4.0m', 'the site\'s one short form keeps its decimal');
   assert.equal(shortMoney(77770), '$77,770');
   assert.equal(dayWords(55), 'Fifty-five');
   assert.equal(dayWords(3), 'Three');
@@ -461,11 +461,11 @@ test('short money, day words and the credit paragraph', () => {
 
 test('the grant hook is the amount and the record\'s own words, without GrantConnect\'s stock opening', () => {
   assert.equal(grantHook(10000000, 'The project will deliver the redevelopment of the Kogarah War Memorial Pool, commonly known as the Carss Park Pool. Works will include a new ancillary building.'),
-    '$10m grant for the redevelopment of the Kogarah War Memorial Pool, commonly known as the Carss Park Pool');
+    '$10.0m grant for the redevelopment of the Kogarah War Memorial Pool, commonly known as the Carss Park Pool');
   assert.equal(grantHook(11300000, 'Construct an airpark roof over four aircraft at the Qantas Founders Museum, Longreach, Qld'),
     '$11.3m grant to construct an airpark roof over four aircraft at the Qantas Founders Museum, Longreach, Qld');
-  assert.equal(grantHook(25000000, 'The project is to design and construct the Devonport Indoor Sports Centre.'), '$25m grant to design and construct the Devonport Indoor Sports Centre');
-  assert.equal(grantHook(6000000, 'The project will deliver upgrades to the Marrickville Golf Club.'), '$6m grant for upgrades to the Marrickville Golf Club');
+  assert.equal(grantHook(25000000, 'The project is to design and construct the Devonport Indoor Sports Centre.'), '$25.0m grant to design and construct the Devonport Indoor Sports Centre');
+  assert.equal(grantHook(6000000, 'The project will deliver upgrades to the Marrickville Golf Club.'), '$6.0m grant for upgrades to the Marrickville Golf Club');
   assert.equal(grantHook(40700000, 'Support for the Australian Associated Press'), '$40.7m grant: Support for the Australian Associated Press', 'a noun "support for" is not a verb');
   assert.equal(grantHook(58300000, 'CRITICAL METALS FOR CRITICAL INDUSTRIES CRC'), '$58.3m grant: CRITICAL METALS FOR CRITICAL INDUSTRIES CRC');
   assert.equal(grantHook(5000, ''), '$5,000 grant');
@@ -496,7 +496,7 @@ test('a program edition names all three groups, in the same order, against their
   assert.doesNotMatch(post.text + post.caption, /pork|rort|corrupt|scandal|rigged/i, 'OPAX never characterises; the reader draws the conclusion');
   assert.match(post.caption, /• Labor-held seats: 10% of the dollars; 45% of House seats at the time\n• Coalition-held seats: 83% of the dollars; 51% of House seats at the time\n• Crossbench-held seats: 7% of the dollars; 4% of House seats at the time/);
   assert.match(post.caption, /Awarded while the Coalition was in government\./);
-  assert.match(post.caption, /• New England \(NSW\), Barnaby Joyce \(Nationals\): \$20m/, 'the member\'s party on the grant date, first and last name');
+  assert.match(post.caption, /• New England \(NSW\), Barnaby Joyce \(Nationals\): \$20\.0m/, 'the member\'s party on the grant date, first and last name');
   assert.match(post.caption, /approximate near boundaries/);
   assert.deepEqual(types(post), ['cover', 'number', 'bars', 'bars', 'ledger', 'bars', 'ledger', 'source']);
   const [cover, , seats, chosen, ledger, when, recipients, source] = post.slides;
@@ -547,7 +547,7 @@ test('the largest-awards edition lists the complete month, one line per recipien
   assert.equal(post.subject, 'largest:2026-08');
   assert.equal(post.url, largestUrl('2026-08'));
   assert.equal(post.url, 'https://opax.com.au/money/grants?jur=federal&largest=2026-08');
-  assert.match(post.text, /^Where did the money go in August 2026\? The largest grant agreements that started that month:\n\n\$150m · Australian Rail Track Corporation\n\$58\.3m · Critical Metals for Critical Industries CRC…\n\$40\.7m · Australian Associated Press Ltd/);
+  assert.match(post.text, /^Where did the money go in August 2026\? The largest grant agreements that started that month:\n\n\$150\.0m · Australian Rail Track Corporation\n\$58\.3m · Critical Metals for Critical Industries CRC…\n\$40\.7m · Australian Associated Press Ltd/);
   assert.ok(xLength(post.text) <= X_LIMIT);
   assert.match(post.caption, /1\. \$150,000,000 to Australian Rail Track Corporation \(and 2 more awards that month\)/);
   assert.match(post.caption, /\$150 million in Australian Government funding to the Replacement of Sleepers/);

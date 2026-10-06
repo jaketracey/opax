@@ -68,14 +68,14 @@ test('concentration bars use percentage points and reconcile an explicit other g
   assert.deepEqual(widths, [41.01, 30, 28.99]);
   assert.ok(Math.abs(widths.reduce((a, b) => a + b) - 100) < 1e-9);
   assert.match(html, /Other 5 suppliers/);
-  assert.match(html, /\$410\.1K/);
+  assert.match(html, /\$410\.1k/);
   assert.match(html, /41(?:\.0)?%/);
 });
 
 test('overlap keeps receipts and awards separate instead of manufacturing a combined total', () => {
   const html = harness().context.discoveryDetailHTML(overlap());
-  assert.match(html, /Party receipts<\/span><strong>\$2\.0M/);
-  assert.match(html, /Government contracts<\/span><strong>\$7\.0M/);
+  assert.match(html, /Party receipts<\/span><strong>\$2\.0m/);
+  assert.match(html, /Government contracts<\/span><strong>\$7\.0m/);
   assert.doesNotMatch(html, /\$9\.0M|style="width:/);
   assert.match(html, /Different money flows and reporting periods/);
 });
