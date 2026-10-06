@@ -111,9 +111,12 @@ describe('seen flag', () => {
     const state = loadState(false);
     expect(await state.tourSeen()).toBe(false);
     await state.leaveTour();
-    expect(JSON.parse(mockFiles.get(SEEN)!)).toEqual({ version: 1 });
+    expect(JSON.parse(mockFiles.get(SEEN)!)).toEqual({
+      version: 1,
+      generation: 1,
+    });
     expect(await state.tourSeen()).toBe(true);
-    // The temporary file is moved into place, not left behind.
+    // The first save creates one whole slot, with no temporary file.
     expect([...mockFiles.keys()]).toEqual([SEEN]);
   });
   test('a later tour version shows again; an unreadable flag counts as seen', async () => {

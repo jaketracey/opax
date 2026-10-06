@@ -48,6 +48,8 @@ import {
   registerCategoryLabel,
   type ProfileView,
 } from './your-mp/model';
+const partialMissing =
+  'No readable record was found for this person. Some rows in the latest public export were unreadable.';
 function Disclosure({
   label,
   id,
@@ -101,6 +103,8 @@ export function ProfileScreen({
         ? await catalogs.profileFor(person.data.canonicalPersonId)
         : uncoveredProfile(person.data);
       if (!person.data.canonicalPersonId) {
+        p.blocks.identity.partial = person.partial;
+        p.blocks.identity.staleReason = person.staleReason;
         p.blocks.identity.stale = person.stale;
         p.blocks.identity.savedAt = person.savedAt;
       }
@@ -284,6 +288,7 @@ export function ProfileScreen({
             <RecordBlock
               title="Voting record"
               id="person-votes"
+              partialMissing={partialMissing}
               block={b.votes}
               missing="No voting summary is held for this person in the release."
               retry={refresh}
@@ -381,6 +386,7 @@ export function ProfileScreen({
             <RecordBlock
               title="Declared interests"
               id="person-interests"
+              partialMissing={partialMissing}
               block={b.interests}
               missing="No register file is held for this person in the covered registers."
               retry={refresh}
@@ -451,6 +457,7 @@ export function ProfileScreen({
             <RecordBlock
               title="Declared ties"
               id="person-ties"
+              partialMissing={partialMissing}
               block={b.ties}
               missing={
                 b.interests.data
@@ -493,6 +500,7 @@ export function ProfileScreen({
             <RecordBlock
               title="Pay for the posts held"
               id="person-pay"
+              partialMissing={partialMissing}
               block={b.pay}
               unlinked="This release does not link this person's salary entitlements. See the record on opax.com.au."
               missing="No covered federal salary entitlement is held for this person. State pay and service before 7 December 1999 are outside this series."
@@ -589,6 +597,7 @@ export function ProfileScreen({
             <RecordBlock
               title="Claimed expenses"
               id="person-expenses"
+              partialMissing={partialMissing}
               block={b.expenses}
               missing="No expense summary is held for this person. IPEA coverage starts in April 2017."
               retry={refresh}
@@ -705,6 +714,7 @@ export function ProfileScreen({
             <RecordBlock
               title="Party receipts"
               id="person-receipts"
+              partialMissing={partialMissing}
               block={b.partyReceipts}
               missing="No receipts projection is linked for this person's party."
               unlinked="This release does not link party receipts for this person's party. See the record on opax.com.au."

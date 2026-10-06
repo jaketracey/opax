@@ -19,6 +19,7 @@ import {
   type CacheIndexEntry,
   type CacheStore,
 } from '../src/api/cache';
+import { isPartialCatalog } from '../src/api/validation';
 import { ApiError } from '../src/api/errors';
 import { LeadCard } from '../src/design/primitives';
 import { chamberName } from '../src/design/parliament';
@@ -175,7 +176,14 @@ describe('the discovery export', () => {
       ],
     });
     expect(odd.unreadable).toBe(2);
-    expect(odd.signals.map((s) => s.id)).toEqual([signals[2]!.id]);
+    expect(odd.signals).toEqual([signals[2]]);
+    expect(isPartialCatalog(odd)).toBe(true);
+    expect(() =>
+      decodeDiscovery({
+        ...raw,
+        signals: raw.signals.map((s) => ({ ...(s as object), caveats: [] })),
+      }),
+    ).toThrow(ApiError);
     expect(discovery.unreadable).toBe(0);
     expect(() => decodeDiscovery({ ...raw, signals: {} })).toThrow(ApiError);
     expect(() =>

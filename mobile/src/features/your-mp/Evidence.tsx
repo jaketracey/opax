@@ -1,3 +1,4 @@
+import { PartialNotice, SavedCopyNotice } from '../CatalogNotice';
 import type { ReactNode } from 'react';
 import type { EvidenceBlock } from './model';
 import {
@@ -44,8 +45,12 @@ export function EvidenceFooter({
           testID={`${id}-as-at`}
         />
       ) : null}
+      {block.partial ? <PartialNotice testID={`${id}-partial`} /> : null}
       {block.stale ? (
         <>
+          {block.staleReason ? (
+            <SavedCopyNotice reason={block.staleReason} />
+          ) : null}
           {block.savedAt !== null ? (
             <StaleNotice savedAt={block.savedAt} />
           ) : (
@@ -87,6 +92,7 @@ export function RecordBlock<T>({
   id,
   block,
   missing,
+  partialMissing,
   unlinked,
   retry,
   children,
@@ -96,6 +102,7 @@ export function RecordBlock<T>({
   id: string;
   block: EvidenceBlock<T>;
   missing: string;
+  partialMissing?: string;
   unlinked?: string;
   retry: () => void;
   children: (data: T) => ReactNode;
@@ -121,7 +128,10 @@ export function RecordBlock<T>({
           testID={`${id}-error`}
         />
       ) : block.data === null ? (
-        <EmptyState message={missing} testID={`${id}-missing`} />
+        <EmptyState
+          message={block.partial ? (partialMissing ?? missing) : missing}
+          testID={`${id}-missing`}
+        />
       ) : (
         children(block.data)
       )}

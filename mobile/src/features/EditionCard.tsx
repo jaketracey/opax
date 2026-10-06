@@ -1,3 +1,4 @@
+import { SavedCopyNotice } from './CatalogNotice';
 import { StyleSheet, View } from 'react-native';
 import type { Block, EditionKind, EditionView } from '../api/catalogs';
 import { formatDate } from '../design/format';
@@ -66,6 +67,7 @@ export function EditionSection({
         <EditionCard
           edition={block.data}
           stale={block.stale}
+          staleReason={block.staleReason}
           savedAt={block.savedAt}
           refreshing={refreshing}
         />
@@ -78,10 +80,12 @@ export function EditionCard({
   edition,
   stale = false,
   savedAt = null,
+  staleReason,
   refreshing = false,
 }: {
   edition: EditionView;
   stale?: boolean;
+  staleReason?: 'unreadable' | 'unavailable';
   savedAt?: number | null;
   refreshing?: boolean;
 }) {
@@ -91,7 +95,12 @@ export function EditionCard({
     <View style={styles.card} testID="today-edition-card">
       {stale ? (
         <View style={styles.group}>
-          <OfflineBanner testID="today-edition-offline" />
+          <SavedCopyNotice
+            reason={staleReason}
+            testID={
+              staleReason ? 'today-edition-saved-copy' : 'today-edition-offline'
+            }
+          />
           {savedAt !== null ? (
             <StaleNotice
               savedAt={savedAt}

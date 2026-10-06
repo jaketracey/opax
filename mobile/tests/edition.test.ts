@@ -65,7 +65,6 @@ describe('the edition decoder', () => {
     ['an empty title', at(['edition', 'title'], ' ')],
     ['missing text', without('text')],
     ['a numeric subject', at(['edition', 'subject'], 7)],
-    ['a null caption', at(['edition', 'caption'], null)],
     ['an http link', at(['edition', 'url'], 'http://opax.com.au/bill/x')],
     ['a foreign host', at(['edition', 'url'], 'https://evil.test/bill/x')],
     [
@@ -99,16 +98,10 @@ describe('the edition decoder', () => {
     ],
     ['no cover first', at(['edition', 'slides', 0, 'type'], 'number')],
     ['no source last', at(['edition', 'slides', 4, 'type'], 'list')],
-    ['an unknown slide type', at(['edition', 'slides', 2, 'type'], 'video')],
-    [
-      'a slide without alt text',
-      at(['edition', 'slides', 1, 'alt'], undefined),
-    ],
     [
       'source rows that are not text',
       at(['edition', 'slides', 4, 'rows'], [1]),
     ],
-    ['a numeric list note', at(['edition', 'slides', 1, 'note'], 3)],
     ['slides as an object', at(['edition', 'slides'], {})],
     ['an array body', [raw()]],
     ['the 404 body', { error: 'edition_not_published', date: '2026-10-04' }],
@@ -126,6 +119,27 @@ describe('the edition decoder', () => {
     const plain = decodeEdition(without('slides'));
     expect(plain.edition.slides).toBeUndefined();
     expect(() => decodeEdition(at(['edition', 'caption'], ''))).not.toThrow();
+  });
+  test.each([
+    at(['edition', 'slides', 2, 'type'], 'video'),
+    at(['edition', 'slides', 1, 'alt'], undefined),
+    at(['edition', 'slides', 1, 'note'], 3),
+  ])(
+    'rejects malformed content slides so context is not silently lost',
+    (input) => {
+      expect(() => decodeEdition(input)).toThrow();
+    },
+  );
+  test('null optional edition fields are missing', () => {
+    expect(decodeEdition(at(['edition', 'caption'], null))).toEqual(
+      decodeEdition(without('caption')),
+    );
+    expect(decodeEdition(at(['edition', 'slides'], null))).toEqual(
+      decodeEdition(without('slides')),
+    );
+    expect(decodeEdition(at(['edition', 'slides', 1, 'note'], null))).toEqual(
+      decodeEdition(at(['edition', 'slides', 1, 'note'], undefined)),
+    );
   });
   test('a fragment on the link is accepted, as the Worker does, and dropped', () => {
     const anchored = decodeEdition(
@@ -516,8 +530,9 @@ describe('todayEdition()', () => {
       await catalogs.todayEdition();
       later(301_000);
       expect(await catalogs.todayEdition()).toMatchObject({
-        status: 'error',
-        error: { code: 'invalid-data' },
+        status: 'ready',
+        stale: true,
+        savedAt: 1000,
       });
       expect(await catalogs.todayEdition()).toMatchObject({
         status: 'ready',
@@ -542,7 +557,7 @@ describe('todayEdition()', () => {
       error: { code: 'invalid-data' },
     });
   });
-  test('a malformed response is an error and never replaces the saved edition', async () => {
+  test('a malformed response serves the last good saved edition', async () => {
     const { catalogs, later } = setup(
       served(),
       served(200, '{"bad":true}'),
@@ -551,8 +566,9 @@ describe('todayEdition()', () => {
     await catalogs.todayEdition();
     later(301_000);
     expect(await catalogs.todayEdition()).toMatchObject({
-      status: 'error',
-      error: { code: 'invalid-data' },
+      status: 'ready',
+      stale: true,
+      savedAt: 1000,
     });
     const saved = await catalogs.todayEdition();
     expect(saved).toMatchObject({ status: 'ready', stale: true });

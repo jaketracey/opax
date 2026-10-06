@@ -1,3 +1,4 @@
+import { PartialNotice, SavedCopyNotice } from '../CatalogNotice';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   FlatList,
@@ -113,7 +114,10 @@ export default function BillsList() {
       </View>
       {record?.stale ? (
         <>
-          <OfflineBanner testID="bills-offline" />
+          <SavedCopyNotice
+            reason={record.staleReason}
+            testID={record.staleReason ? 'bills-saved-copy' : 'bills-offline'}
+          />
           <StaleNotice
             savedAt={record.savedAt}
             refreshing={refreshing}
@@ -127,6 +131,7 @@ export default function BillsList() {
           />
         </>
       ) : null}
+      {record?.partial ? <PartialNotice testID="bills-partial" /> : null}
       {list && index ? (
         <Text variant="metadata" testID="bills-count">
           {countLine(rows.length, index.bills.length)} · latest activity first

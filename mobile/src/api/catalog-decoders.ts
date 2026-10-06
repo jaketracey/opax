@@ -1,3 +1,4 @@
+import { ApiError } from './errors';
 import { decodeBoundary, type Boundary } from './electorate-geometry';
 import {
   array,
@@ -13,6 +14,14 @@ import {
   nullable,
   number,
   object,
+  rows,
+  records,
+  isPartialCatalog,
+  markPartial,
+  filterRows,
+  filterRecords,
+  uniqueRows,
+  catalogWarning,
   optional,
   shape,
   text,
@@ -106,7 +115,7 @@ const rosterPerson = shape({
 });
 export const decodeRoster = shape({
   meta: shape({ generated: date }),
-  people: array(rosterPerson),
+  people: rows(rosterPerson, 'rosterPerson'),
 });
 export type Roster = Decoded<typeof decodeRoster>;
 export type RosterPerson = Decoded<typeof rosterPerson>;
@@ -141,18 +150,16 @@ export function decodeManifest(v: unknown) {
 export type Manifest = ReturnType<typeof decodeManifest>;
 const peopleShape = shape({
   meta: releaseMeta,
-  people: array(electoratePerson),
+  people: uniqueRows(electoratePerson, (p) => p.person_id, 'electoratePerson'),
 });
 export function decodePeople(v: unknown) {
   const p = peopleShape(v);
-  if (new Set(p.people.map((p) => p.person_id)).size !== p.people.length)
-    invalid('Duplicate canonical people.');
   return p;
 }
 export type PeopleCatalog = Decoded<typeof decodePeople>;
 export const decodeSlugs = shape({
   generated: date,
-  slugs: dict(nonempty, personSlug),
+  slugs: records(nonempty, personSlug),
 });
 export type Slugs = Decoded<typeof decodeSlugs>;
 const electorateFields = {
@@ -181,21 +188,31 @@ const electorateFields = {
 };
 const electorate = shape(electorateFields);
 export type Electorate = Decoded<typeof electorate>;
-const indexShape = shape({ meta: releaseMeta, electorates: array(electorate) });
+const indexShape = shape({
+  meta: releaseMeta,
+  electorates: uniqueRows(electorate, (s) => s.electorate_id, 'electorate'),
+});
 export function decodeElectorateIndex(v: unknown) {
   const index = indexShape(v);
+  // If no seat belongs to the declared release, the envelope itself is
+  // crossed. Reject it so a refresh cannot replace a good index with an
+  // empty one. One crossed row beside a healthy seat is still isolated.
   if (
-    new Set(index.electorates.map((s) => s.electorate_id)).size !==
-    index.electorates.length
-  )
-    invalid('Duplicate electorates.');
-  for (const s of index.electorates)
-    if (
-      s.detail_url !==
-        `/electorates/releases/${index.meta.release_id}/${s.electorate_id}.json` ||
-      s.representatives.some((r) => r.person_id !== r.person.person_id)
+    index.electorates.length &&
+    index.electorates.every(
+      (s) => s.detail_url.split('/')[3] !== index.meta.release_id,
     )
-      invalid('The seat IDs do not match their release.');
+  )
+    invalid('The seat release metadata does not match its rows.');
+  index.electorates = filterRows(
+    index.electorates,
+    (s) =>
+      s.detail_url ===
+        `/electorates/releases/${index.meta.release_id}/${s.electorate_id}.json` &&
+      s.representatives.every((r) => r.person_id === r.person.person_id),
+    'electorates.identity',
+  );
+  markPartial(index, isPartialCatalog(index.electorates));
   return index;
 }
 export type ElectorateIndex = Decoded<typeof decodeElectorateIndex>;
@@ -282,21 +299,30 @@ export function decodeElectorate(v: unknown) {
     s.representatives.some((r) => r.person_id !== r.person.person_id) ||
     Object.entries(s.people).some(([id, p]) => id !== p.person_id)
   )
-    invalid('The seat person IDs do not agree.');
-  // A malformed outline, or one for another seat, drops only itself: the
-  // Electorate and Your MP screens still read, with no display outline.
-  const boundaries = outlines.flatMap((outline) => {
+    invalid('The seat identities do not match.');
+  // Display outlines enhance a single valid seat record. Missing outlines do
+  // not change a representation, total or latest fact. Keep ios/app's ability
+  // to read the seat without them, while flagging the incomplete display data.
+  const boundaries: Boundary[] = [];
+  for (const outline of outlines) {
     let boundary: Boundary | null;
     try {
       boundary = decodeBoundary(outline);
-    } catch {
+    } catch (error) {
+      if (!(error instanceof ApiError) || error.code !== 'invalid-data')
+        throw error;
       boundary = null;
     }
-    if (boundary?.electorate_id === s.electorate_id) return [boundary];
-    console.warn(`Skipped a malformed display outline for ${s.electorate_id}`);
-    return [];
-  });
-  return { ...s, boundaries };
+    if (boundary?.electorate_id === s.electorate_id) boundaries.push(boundary);
+    else
+      catalogWarning(
+        `Skipped a malformed display outline for ${s.electorate_id}`,
+      );
+  }
+  return markPartial(
+    { ...s, boundaries },
+    isPartialCatalog(s) || boundaries.length !== outlines.length,
+  );
 }
 export type ElectorateDetail = Decoded<typeof decodeElectorate>;
 const billFields = {
@@ -332,7 +358,7 @@ export const decodeBillIndex = shape({
     party_basis: nonempty,
     party_coverage: partyCoverage,
   }),
-  bills: array(bill),
+  bills: rows(bill, 'bill'),
 });
 export type BillIndex = Decoded<typeof decodeBillIndex>;
 const billSource = shape({
@@ -427,6 +453,8 @@ const vote = shape({
 });
 export type VoteRecord = Decoded<typeof vote>;
 export type VoteBill = Decoded<typeof voteBill>;
+// The name bridge is structural: losing it would enable a legacy-ID subtotal.
+const recordsOfVoteNames = dict(array(voteKey));
 const votesMeta = shape({
   content_changed_at: date,
   latest_division_date: nullable(date),
@@ -441,21 +469,59 @@ export interface Votes {
 }
 export function decodeVotes(v: unknown): Votes {
   const raw = object(v);
-  const records: Record<string, VoteRecord> = {};
-  for (const [k, row] of Object.entries(raw)) {
-    if (k === '_names' || k === '_meta') continue;
-    records[voteKey(k)] = vote(row);
-  }
-  const names = dict(array(voteKey))(raw._names);
+  let decoded = records(
+    vote,
+    voteKey,
+    'votes',
+  )(
+    Object.fromEntries(
+      Object.entries(raw).filter(
+        ([key]) => key !== '_names' && key !== '_meta',
+      ),
+    ),
+  );
+  let names = recordsOfVoteNames(raw._names);
+  const missing = (key: string) => !Object.hasOwn(decoded, key);
+  // An absent raw key is a broken structural reference. A rejected vote row
+  // makes the person's entire name entry unavailable; never sum half a person.
   if (
     Object.values(names).some((keys) =>
-      keys.some((k) => !Object.hasOwn(records, k)),
+      keys.some((key) => missing(key) && !Object.hasOwn(raw, key)),
     )
   )
     invalid('The voting name index points to a missing record.');
-  const meta = raw._meta === undefined ? null : votesMeta(raw._meta);
+  // Selectors also join by legacy ID. Quarantine every row in an affected
+  // person's group so that bypass cannot restore a subtotal. Propagate across
+  // aliases sharing a key before applying the combined loss budget.
+  const unavailable = new Set<string>();
+  let expanded: boolean;
+  do {
+    expanded = false;
+    for (const keys of Object.values(names)) {
+      if (keys.some((key) => missing(key) || unavailable.has(key)))
+        for (const key of keys)
+          if (!unavailable.has(key)) {
+            unavailable.add(key);
+            expanded = true;
+          }
+    }
+  } while (expanded);
+  decoded = filterRecords(
+    decoded,
+    (key) => !unavailable.has(key),
+    'votes.person',
+  );
+  names = filterRecords(
+    names,
+    (_name, keys) => !keys.some((key) => unavailable.has(key)),
+    'votes.names',
+  );
+  const meta = raw._meta == null ? null : votesMeta(raw._meta);
   if (meta && meta.schema !== 1) invalid('The voting schema is unsupported.');
-  return { records, names, meta };
+  return markPartial(
+    { records: decoded, names, meta },
+    isPartialCatalog(decoded) || isPartialCatalog(names),
+  );
 }
 const tie = shape({
   organisation: nonempty,
@@ -495,8 +561,8 @@ const detailTie = shape({
 });
 export const decodeInterestIndex = shape({
   _meta: shape({ generated: date, rows: count, people: count }),
-  _by_name: dict(interestKey),
-  people: dict(shape({ name: nonempty, total: count }), interestKey),
+  _by_name: records(interestKey),
+  people: records(shape({ name: nonempty, total: count }), interestKey),
 });
 export type InterestIndex = Decoded<typeof decodeInterestIndex>;
 export const decodeInterest = shape({
@@ -539,7 +605,7 @@ export const decodeRecentInterests = shape({
     available: count,
     limit: count,
   }),
-  items: array(recentDeclaration),
+  items: rows(recentDeclaration, 'recentDeclaration'),
 });
 export type RecentInterests = Decoded<typeof decodeRecentInterests>;
 const donorTie = shape({
@@ -563,7 +629,7 @@ export const decodeInterestTies = shape({
     donors: count,
     rows: count,
   }),
-  donors: dict(array(donorTie)),
+  donors: records(array(donorTie)),
 });
 export type InterestTies = Decoded<typeof decodeInterestTies>;
 const paySource = shape({
@@ -656,7 +722,7 @@ export const decodePay = shape({
       salary: number,
     }),
   ),
-  names: dict(payId),
+  names: records(payId),
   people: dict(payPerson, payId),
 });
 export type Pay = Decoded<typeof decodePay>;
@@ -690,7 +756,7 @@ export const decodeExpenses = shape({
     rows: count,
     unlinked: shape({ names: count, amount: number }),
   }),
-  names: dict(legacyPersonId),
+  names: records(legacyPersonId),
   people: dict(expensePerson, legacyPersonId),
 });
 export type Expenses = Decoded<typeof decodeExpenses>;
@@ -716,9 +782,9 @@ export const decodeExpenseCategories = shape({
   ),
 });
 export type ExpenseCategories = Decoded<typeof decodeExpenseCategories>;
-export const decodePhotoPeople = dict(portraitKey);
+export const decodePhotoPeople = records(portraitKey);
 export type PhotoPeople = Decoded<typeof decodePhotoPeople>;
-export const decodePhotoCredits = dict(
+export const decodePhotoCredits = records(
   shape({
     artist: text,
     attribution: text,
@@ -862,23 +928,26 @@ const discoveryEnvelope = shape({
  */
 export function decodeDiscovery(value: unknown) {
   const envelope = discoveryEnvelope(value);
-  const signals: Decoded<typeof discoverySignal>[] = [];
-  let unreadable = 0;
-  for (const raw of envelope.signals) {
-    try {
-      signals.push(discoverySignal(raw));
-    } catch {
-      unreadable += 1;
-    }
-  }
-  return { ...envelope, signals, unreadable };
+  const signals = rows(
+    discoverySignal,
+    'discovery.signals',
+    'counted',
+  )(envelope.signals);
+  return markPartial(
+    {
+      ...envelope,
+      signals,
+      unreadable: envelope.signals.length - signals.length,
+    },
+    isPartialCatalog(signals),
+  );
 }
 export type Discovery = ReturnType<typeof decodeDiscovery>;
 export type DiscoverySignal = Discovery['signals'][number];
 export const decodeSearch = shape({
   query: text,
   kind: matching(/^(?:person|interest|pay|expense)$/),
-  results: array(
+  results: rows(
     shape({
       kind: matching(/^(?:person|interest|pay|expense)$/),
       title: nonempty,
@@ -974,15 +1043,17 @@ const slide = (v: unknown): EditionSlide => {
   return { type, ...otherSlide(row) };
 };
 const slides = (v: unknown): EditionSlide[] => {
-  const rows = array(slide)(v);
+  const valid = array(slide)(v);
+  // Cover, source and minimum length are structural: a journal cannot
+  // present a partial slideshow without its opening or attribution.
   if (
-    rows.length < 3 ||
-    rows.length > 10 ||
-    rows[0]!.type !== 'cover' ||
-    rows.at(-1)!.type !== 'source'
+    valid.length < 3 ||
+    valid.length > 10 ||
+    valid[0]!.type !== 'cover' ||
+    valid.at(-1)!.type !== 'source'
   )
     invalid();
-  return rows;
+  return valid;
 };
 const edition = exact({
   date: calendarDay,

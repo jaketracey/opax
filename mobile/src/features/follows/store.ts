@@ -1,5 +1,5 @@
 import { useEffect, useSyncExternalStore } from 'react';
-import { File, Paths } from 'expo-file-system';
+import { readCopies, writeCopy } from '../../storage/two-slot';
 import { billKey, electorateId, personId } from '../../api/ids';
 
 /**
@@ -106,44 +106,19 @@ export function decodeFollows(v: unknown): Follow[] {
   return out;
 }
 
-interface SavedCopy {
-  generation: number;
-  follows: Follow[];
-}
-async function readSlot(name: string): Promise<SavedCopy | null> {
-  try {
-    const saved = new File(Paths.document, name);
-    if (!saved.exists) return null;
-    const raw: unknown = JSON.parse(await saved.text());
-    if (!isRecord(raw) || raw.version !== 1 || !Array.isArray(raw.follows))
-      return null;
-    const generation =
-      typeof raw.generation === 'number' &&
-      Number.isSafeInteger(raw.generation) &&
-      raw.generation >= 0
-        ? raw.generation
-        : 0;
-    return { generation, follows: decodeFollows(raw) };
-  } catch {
-    return null;
-  }
-}
 // The slot holding the newest saved copy, and its number; slot -1 is none.
 let newest = { slot: -1, generation: 0 };
 async function readFollows(): Promise<Follow[]> {
-  const copies = await Promise.all(SLOTS.map(readSlot));
-  const [a, b] = copies;
-  const slot = b && (!a || b.generation > a.generation) ? 1 : a ? 0 : -1;
-  newest = { slot, generation: copies[slot]?.generation ?? 0 };
-  return copies[slot]?.follows ?? [];
+  const copy = await readCopies(SLOTS, (raw) =>
+    isRecord(raw) && raw.version === 1 && Array.isArray(raw.follows)
+      ? decodeFollows(raw)
+      : null,
+  );
+  newest = { slot: copy.slot, generation: copy.generation };
+  return copy.value ?? [];
 }
 function writeFollows(follows: Follow[]) {
-  const slot = newest.slot === 0 ? 1 : 0;
-  const generation = newest.generation + 1;
-  new File(Paths.document, SLOTS[slot]).write(
-    JSON.stringify({ version: 1, generation, follows }),
-  );
-  newest = { slot, generation };
+  newest = writeCopy(SLOTS, newest, { version: 1, follows });
 }
 
 let state: Follow[] | null = null;

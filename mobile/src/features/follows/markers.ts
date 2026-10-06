@@ -1,3 +1,4 @@
+import { isPartialCatalog } from '../../api/validation';
 import type { Catalogs } from '../../api/catalogs';
 import { catalogSources, personId, profileFor } from '../../api/catalogs';
 import { billName, billSentenceCase } from '../../api/bill-transforms';
@@ -475,8 +476,18 @@ export function followState(
   follow: Pick<Follow, 'kind' | 'id' | 'seen'>,
   sources: FollowSources | null,
 ): FollowState {
-  const reading = sources
-    ? fingerprints[follow.kind](follow.id, sources)
+  // Also defend callers holding decoded catalogs directly, outside ApiClient.
+  // Omitted markers stay last-seen: markSeen merges only readable markers.
+  const complete = sources
+    ? (Object.fromEntries(
+        Object.entries(sources).map(([key, value]) => [
+          key,
+          isPartialCatalog(value) ? null : value,
+        ]),
+      ) as FollowSources)
+    : null;
+  const reading = complete
+    ? fingerprints[follow.kind](follow.id, complete)
     : undefined;
   if (reading === undefined) return { status: 'unavailable' };
   if (reading === null) return { status: 'missing' };

@@ -76,6 +76,8 @@ export interface Block<T> {
   asAt: string | null;
   sources: Provenance[];
   stale: boolean;
+  partial?: boolean;
+  staleReason?: 'unreadable' | 'unavailable';
   savedAt: number | null;
   error?: ApiError;
 }

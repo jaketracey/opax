@@ -1,3 +1,4 @@
+import { SavedCopyNotice } from '../CatalogNotice';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 import {
@@ -7,7 +8,6 @@ import {
   Group,
   Icon,
   LoadingState,
-  OfflineBanner,
   RowList,
   Section,
   StaleNotice,
@@ -95,7 +95,7 @@ export function FollowingSection({
         <Group>
           {sources?.stale && sources.savedAt !== null ? (
             <>
-              <OfflineBanner />
+              <SavedCopyNotice reason={sources.staleReason} />
               <StaleNotice
                 savedAt={sources.savedAt}
                 refreshing={refreshing}

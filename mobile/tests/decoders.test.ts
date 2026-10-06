@@ -152,10 +152,43 @@ const cases: {
 describe.each(cases)('$name decoder', ({ path, decode, badPath, bad }) => {
   test('accepts the complete hash-pinned real file', () =>
     expect(() => decode(pinned(path))).not.toThrow());
-  test('rejects a malformed nested variant', () =>
-    expect(() => decode(replaceAt(pinned(path), badPath, bad))).toThrow(
-      ApiError,
-    ));
+  const rowPaths: Record<string, (string | number)[]> = {
+    '/parliamentarians.json': ['people'],
+    [manifest.people_url]: ['people'],
+    [manifest.index_url]: ['electorates'],
+    '/bills/index.json': ['bills'],
+    '/votes.json': ['records', '10007'],
+    '/interests/index.json': ['_by_name', 'aaron violi'],
+    '/interests/recent.json': ['items'],
+    '/interests/ties-by-donor.json': ['donors', 'ASX Limited'],
+    '/photos/people.json': ['anthony albanese'],
+    '/photos/credits.json': ['wd-Q100327610'],
+  };
+  test('isolates malformed records and rejects malformed structural fields', () => {
+    const rowPath = rowPaths[path];
+    const input = replaceAt(pinned(path), badPath, bad);
+    if (!rowPath) {
+      expect(() => decode(input)).toThrow(ApiError);
+      return;
+    }
+    const expected = decode(pinned(path));
+    const parent = rowPath
+      .slice(0, -1)
+      .reduce<unknown>(
+        (v, key) => (v as Record<string | number, unknown>)[key],
+        expected,
+      ) as Record<string | number, unknown>;
+    const key = rowPath.at(-1)!;
+    if (Array.isArray(parent[key]) && path !== '/interests/ties-by-donor.json')
+      parent[key] = (parent[key] as unknown[]).slice(1);
+    else delete parent[key];
+    if (path === '/votes.json') {
+      const names = (expected as d.Votes).names;
+      for (const [name, keys] of Object.entries(names))
+        if (keys.includes('10007')) delete names[name];
+    }
+    expect(decode(input)).toEqual(expected);
+  });
   if (!path.startsWith('/photos/'))
     test('rejects a missing envelope', () =>
       expect(() => decode({})).toThrow(ApiError));
@@ -203,8 +236,8 @@ test('votes metadata may be absent, but malformed metadata fails closed', () => 
     schema: 1,
   };
   expect(d.decodeVotes({ ...raw, _meta: meta }).meta).toEqual(meta);
+  expect(d.decodeVotes({ ...raw, _meta: null }).meta).toBeNull();
   for (const bad of [
-    null,
     {},
     { ...meta, schema: 2 },
     { ...meta, latest_division_date: 1 },
@@ -235,10 +268,12 @@ test('search envelopes validate all shown fields and reject unapproved kinds', (
     warnings: [],
   };
   expect(d.decodeSearch(page).results).toHaveLength(1);
+  expect(() =>
+    d.decodeSearch(replaceAt(page, ['results', 0, 'href'], undefined)),
+  ).toThrow(ApiError);
   for (const p of [
     { ...page, kind: 'bill' },
     { ...page, total: -1 },
-    replaceAt(page, ['results', 0, 'href'], undefined),
   ])
     expect(() => d.decodeSearch(p)).toThrow(ApiError);
 });
@@ -261,13 +296,13 @@ test('crossed IDs, empty pay series and unsafe licence links are malformed', () 
       replaceAt(pinned('/pay.json'), ['people', 'R36', 'by_year'], []),
     ),
   ).toThrow(ApiError);
-  expect(() =>
+  expect(
     d.decodePhotoCredits(
       replaceAt(
         pinned('/photos/credits.json'),
         ['wd-Q100327610', 'licence_url'],
         'javascript:x',
       ),
-    ),
-  ).toThrow(ApiError);
+    )['wd-Q100327610'],
+  ).toBeUndefined();
 });
