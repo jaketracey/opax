@@ -202,7 +202,7 @@ export default function TalkScreen({
         </>
       ) : (
         <Screen testID="talk-sheet" scrollRef={page}>
-          {active ? null : (
+          {active || terminal ? null : (
             <Group>
               <Text variant="lede" testID="talk-sheet-message" wordSafe>
                 Explore the record with your voice

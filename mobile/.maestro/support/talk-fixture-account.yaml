@@ -26,5 +26,5 @@ appId: au.com.opax.app
     optional: true
 - extendedWaitUntil:
     visible:
-      id: talk-sheet-message
+      id: talk-sheet
     timeout: 15000
