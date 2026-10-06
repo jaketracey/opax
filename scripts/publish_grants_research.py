@@ -55,9 +55,14 @@ def records(data, directory=None):
     for p in (directory or {}).get('people',[]):
         if not p.get('representation'):continue
         facts='; '.join(f"{r['jurisdiction']} / {r['chamber']}: {r['electorate']}"+(f", {r['state']}" if r.get('state') and r['jurisdiction']=='federal' and r['chamber']=='representatives' else '') for r in p['representation'])
-        text=(f"{p['name']} — recorded parliamentary representation in Opax's roster: {facts}. "
-              "Matched by exact full name, compatible jurisdiction and chamber, not person ID alone. "
-              "These are recorded affiliations and may include past seats; they do not establish current tenure, service dates or the electorate at the time of a particular speech.")
+        if p.get('speech_scope'):
+            text=(f"{p['name']} — recorded parliamentary representation in Opax's roster: {facts}. "
+                  "Surname print resolved to a reviewed parliamentary identity using dated, sourced own-house evidence, not person ID alone. "
+                  "The dates below bound attribution coverage; they do not establish first election dates or current tenure.")
+        else:
+            text=(f"{p['name']} — recorded parliamentary representation in Opax's roster: {facts}. "
+                  "Matched by exact full name, compatible jurisdiction and chamber, not person ID alone. "
+                  "These are recorded affiliations and may include past seats; they do not establish current tenure, service dates or the electorate at the time of a particular speech.")
         metadata={'record_type':'Derived roster affiliation','representation':p['representation'],'date_meaning':'Enrichment snapshot, not tenure or speech date'}
         if p.get('full'):
             text+=f" The uniquely matched parliamentary name is {p['full']}."
@@ -65,6 +70,8 @@ def records(data, directory=None):
         if p.get('speech_scope'):
             metadata['speech_scope']=p['speech_scope']
             text+=f" This identity applies only to non-witness speech rows in {p['speech_scope']['state']} / {p['speech_scope']['chamber']}. Witness testimony and other transcript scopes are separate and unattributed."
+            text+=' Reviewed service-date coverage: '+'; '.join(
+                f"{term['start']} to {term['end']} (inclusive)" for term in p['speech_scope']['service'])+'. Rows without a date or outside these intervals are excluded.'
         if p.get('affiliations'):
             metadata['affiliations']=p['affiliations']
             text+=' Dated parliamentary service: '+'; '.join(

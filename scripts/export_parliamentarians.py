@@ -72,7 +72,7 @@ from parli.ingest.arag_sync import (  # noqa: E402
 )
 from parli.ingest.speaker_names import normalize_speaker  # noqa: E402
 from scripts.roster_identity import COMMITTEES, agrees, member, same_person, state_member_matches, usable_alias, verify, weak  # noqa: E402
-from scripts.enrich_profile_jurisdictions import pinned_reference, repair, REVIEWED  # noqa: E402
+from scripts.enrich_profile_jurisdictions import pinned_reference, repair, REVIEWED, REPRESENTATION_METHOD  # noqa: E402
 
 DB = "file:" + (os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")) + "?mode=ro"
 FLOOR = 5
@@ -372,6 +372,7 @@ def main(argv=()) -> None:
             "below_floor": below,
             "malformed": malformed,
             "source": "parli.db speeches under the arag_sync corpus rule; names via normalize_speaker",
+            "representation": {"method": REPRESENTATION_METHOD, "matched": sum(bool(p.get('representation')) for p in out)},
         },
         "people": out,
     }

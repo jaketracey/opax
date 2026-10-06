@@ -5,6 +5,9 @@ import io
 import json
 import os
 import sqlite3
+import subprocess
+import sys
+import tempfile
 import unittest
 from unittest.mock import patch
 from pathlib import Path
@@ -27,6 +30,20 @@ IOS_ROSTER_FIELDS = ('name', 'pid', 'party', 'party_now', 'current', 'speeches',
 
 
 class PinnedSplitTests(unittest.TestCase):
+    def test_pinned_and_split_replays_share_the_export_method_without_changing_people(self):
+        doc=json.loads((profiles.PUBLIC/'parliamentarians.json').read_text())
+        before=copy.deepcopy(doc['people'])
+        split_pinned(doc,profiles.pinned_reference(),json.loads(profiles.REVIEWED.read_text()))
+        self.assertEqual(doc['meta']['representation']['method'],profiles.REPRESENTATION_METHOD)
+        with tempfile.TemporaryDirectory() as tmp:
+            path=Path(tmp)/'roster.json'
+            path.write_text(json.dumps(doc))
+            subprocess.run([sys.executable,str(ROOT/'scripts/enrich_profile_jurisdictions.py'),
+                            '--pinned','--directory',str(path)],check=True,capture_output=True)
+            result=json.loads(path.read_text())
+        self.assertEqual(result['people'],before)
+        self.assertEqual(result['meta']['representation']['method'],doc['meta']['representation']['method'])
+
     def test_exported_roster_has_no_null_values_in_ios_decoder_fields(self):
         doc = json.loads((profiles.PUBLIC / 'parliamentarians.json').read_text())
         self.assertIsNotNone(doc['meta']['generated'])
@@ -182,6 +199,7 @@ class SqlSplitTests(unittest.TestCase):
         code, err, output = self.export(box)
         self.assertEqual(code, 0, err)
         doc = json.loads(output); actual = {p['name']: p for p in doc['people']}
+        self.assertEqual(doc['meta']['representation']['method'],profiles.REPRESENTATION_METHOD)
         self.assertEqual(sum(bool(p.get('speech_scope')) for p in actual.values()),16)
         for case in rows:
             row = actual[case['before']['name']]

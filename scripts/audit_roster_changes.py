@@ -61,7 +61,7 @@ def markdown(result, before, after, baseline):
         sample = [p['name'] for p in result['changes'] if p['category'] == category][:5]
         lines.append(f'| {category} | {count} | {", ".join(sample) or "—"} |')
     lines += ['', f'**{result["changed"]} changed; {result["unchanged"]} exactly unchanged; zero clean record changed is required.**', '',
-              'Categories are exclusive. Witness splits must exactly reproduce the independent scoped resolver, conserve aggregate counts, keep witnesses unattributed and enforce an own-house retrieval scope. Other changes retain the existing evidence categories.', '',
+              'Categories are exclusive. Witness splits must exactly reproduce the shared scoped resolver, conserve aggregate counts, keep witnesses unattributed and enforce an own-house retrieval scope. This checks consistency with the resolver; correctness depends on the reviewed source evidence. Other changes retain the existing evidence categories.', '',
               '| Party rows / facet | Main | Split | Change |', '|---|---:|---:|---:|']
     for label, jur, party in [('Total rows with party', None, None), ('SA rows with party', 'sa', None),
             ('SA Labor', 'sa', 'Labor'), ('SA Liberal', 'sa', 'Liberal'), ('QLD rows with party', 'qld', None),

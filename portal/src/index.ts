@@ -5,7 +5,7 @@ import { paidAnswer, mentionsPay } from './ask-pay'
 import { slugIndex } from './person-slug'
 import { type MoneyFacts, moneyOverviewPrompt, verifiedOverview } from './ask-money-overview'
 import {readGenerationCache, storeGenerationCache} from './generation-cache'
-import { isWitness, isUnattributed, belongsToScope, scopeFilter, speakerHref, type SpeechScope } from '../public/speech-attribution.js'
+import { isWitness, isUnattributed, belongsToScope, scopeFilter, speakerHref, splitSpeakers, personScope, scopedCollaborators, type SpeechScope } from '../public/speech-attribution.js'
 /**
  * OPAX portal Worker — thin proxy over the Progress Agentic RAG knowledge box.
  *
@@ -420,10 +420,10 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
     ).toString()
   // Version only search caches for the added topics payload. Old windows lack
   // classifications; rebuilding one is retrieval only. Answer caches stay intact.
-  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\nyears-topics-v2-witness-split\n${keyParams(['nocache'])}`))
+  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\nyears-topics-v3-split-speakers\n${keyParams(['nocache'])}`))
   const windowKey = cacheRequest(
     'search-window',
-    await sha256Hex(`${env.CACHE_EPOCH}\ntopics-v1-witness-split\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
+    await sha256Hex(`${env.CACHE_EPOCH}\ntopics-v2-split-speakers\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
   )
   const bypass = cacheBypass(request, url)
   if (!bypass) {
@@ -570,7 +570,8 @@ async function searchWindow(
   const attribution = await speakerAttribution(env, url.searchParams.get('speaker'))
   if (attribution) {
     const own = scopeFilter(attribution)
-    body.filter_expression = { field: { and: [filters?.field ?? {},
+    body.filter_expression = { field: { and: [url.searchParams.get('attribution') === 'unattributed'
+      ? filters?.field ?? {} : scopedCollaborators(filters?.field ?? {}, attribution),
       url.searchParams.get('attribution') === 'unattributed' ? { not: own } : own] } }
   }
 
@@ -593,8 +594,8 @@ async function searchWindow(
       witness_name: typeof meta.witness_name === 'string' ? meta.witness_name : null,
       person_id: typeof meta.person_id === 'string' || typeof meta.person_id === 'number' ? meta.person_id : null })
     const speaker = resource.origin?.collaborators?.[0] ?? null
-    const rowScope = speaker ? speakerDirectory.byFold.get(foldName(speaker))?.speech_scope : null
-    const outside = rowScope && !belongsToScope({kind: label(resource, 'kind'), state: label(resource, 'state'),
+    const rowScope = speaker ? personScope(speakerDirectory.byFold.get(foldName(speaker))) : null
+    const outside = rowScope && !belongsToScope({speaker, kind: label(resource, 'kind'), state: label(resource, 'state'),
       chamber: label(resource, 'chamber'), date: typeof meta.date === 'string' ? meta.date : null,
       speaker_type: witness ? 'witness' : label(resource, 'speaker_type')}, rowScope)
     // Compare paragraphs on the CALIBRATED scale — raw BM25 (unbounded) would
@@ -931,7 +932,7 @@ function askPayload(answer: AskAnswer, records: AskRecords = { records: [], cove
         person_id: typeof meta.person_id === 'string' || typeof meta.person_id === 'number' ? meta.person_id : null })
       const speaker = r.origin?.collaborators?.[0] ?? null
       const rowScope = speaker && people?.byFold.get(foldName(speaker))?.speech_scope
-      const outside = rowScope && !belongsToScope({ kind: label(r, 'kind'), state: label(r, 'state'),
+      const outside = rowScope && !belongsToScope({ speaker, kind: label(r, 'kind'), state: label(r, 'state'),
         chamber: label(r, 'chamber'), date: typeof meta.date === 'string' ? meta.date : null,
         speaker_type: witness ? 'witness' : label(r, 'speaker_type') }, rowScope)
       return {
@@ -2432,7 +2433,7 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
   const witness = isWitness({ ...labels, ...metadata })
   const speaker = DIVISION_SLUG_RE.test(slug) ? null : r.origin?.collaborators?.[0] ?? null
   const scope = witness ? null : await speakerAttribution(env, speaker)
-  const outside = scope && !belongsToScope({ ...labels, ...metadata }, scope)
+  const outside = scope && !belongsToScope({ ...labels, ...metadata, speaker }, scope)
   if (witness || outside) {
     if (witness) labels.speaker_type = 'witness'
     delete labels.party
@@ -2910,10 +2911,11 @@ async function apiPersonTopics(url: URL, env: Env): Promise<Response> {
     return json({ error: 'bad name' }, 400)
   }
   const name = canonicalSpeaker(raw)
-  return cachedJson(`/api/person-topics?name=${encodeURIComponent(name)}&scope=witness-split-v1`, async () => {
+  return cachedJson(`/api/person-topics?name=${encodeURIComponent(name)}&scope=split-speakers-v2`, async () => {
     const collaborator = { prop: 'origin_collaborator', collaborator: name }
     const attribution = await speakerAttribution(env, name)
-    const speakerClauses = [collaborator, ...(attribution ? [scopeFilter(attribution)] : [])]
+    const speakerClauses = [attribution ? scopedCollaborators(collaborator, attribution) as Record<string, unknown> : collaborator,
+      ...(attribution ? [scopeFilter(attribution)] : [])]
     const topic = { prop: 'label', labelset: 'topic' }
     const catalog = (clauses: Record<string, unknown>[], faceted = true) => kbFetch(env, '/catalog', {
       body: {
@@ -3306,14 +3308,14 @@ interface PeopleData { generated: string; people: Person[]; byName: Map<string, 
 async function speakerAttribution(env: Env, raw: string | null | undefined): Promise<SpeechScope | null> {
   if (!raw) return null
   const people = await loadPeople(env)
-  return people.byFold.get(foldName(raw))?.speech_scope ?? null
+  return personScope(people.byFold.get(foldName(raw)))
 }
 
 async function scopeSpeakerBody(body: Record<string, unknown>, env: Env, raw: string | undefined): Promise<void> {
   const scope = await speakerAttribution(env, raw)
   if (!scope) return
   const existing = body.filter_expression as { field?: unknown } | undefined
-  body.filter_expression = { field: { and: [...(existing?.field ? [existing.field] : []), scopeFilter(scope)] } }
+  body.filter_expression = { field: { and: [...(existing?.field ? [scopedCollaborators(existing.field, scope)] : []), scopeFilter(scope)] } }
   // Prior citations cannot bypass the newly restricted identity scope.
   if (Array.isArray(body.rag_strategies)) body.rag_strategies = body.rag_strategies.filter(s =>
     typeof s !== 'object' || s === null || !('name' in s) || s.name !== 'prequeries')
@@ -3420,7 +3422,7 @@ function loadPeople(env: Env): Promise<PeopleData> {
   peopleMemo ??= assetJson<{ meta?: { generated?: string }; people: Person[] }>(env, '/parliamentarians.json')
     .then(async (raw) => {
       const reference = await loadElectorates(env).catch(() => null)
-      const names = new Set(raw.people.map((p) => foldName(p.name)))
+      const names = new Set(raw.people.flatMap((p) => [p.name, ...splitSpeakers(p)].map(foldName)))
       for (const p of reference?.people || []) {
         if ([p.name, ...p.aliases].some((n) => names.has(foldName(n)))) continue
         const seats = p.electorates.filter((e) => e.current)
@@ -3438,6 +3440,11 @@ function loadPeople(env: Env): Promise<PeopleData> {
         const f = foldName(p.name)
         const prev = byFold.get(f)
         if (!prev || (p.speeches ?? 0) > (prev.speeches ?? 0)) byFold.set(f, p) // curly/straight twins: keep the fuller entry
+      }
+      // Alias only reviewed splits. Full-name routes use the print's scoped identity.
+      for (const p of raw.people) for (const alias of splitSpeakers(p)) {
+        const f = foldName(alias)
+        if (!byFold.has(f)) byFold.set(f, p)
       }
       return { generated: raw.meta?.generated ?? '', people: raw.people, byName, byFold, ...slugIndex(raw.people) }
     })
@@ -4088,8 +4095,8 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   const interests = await hasInterestsRegister(env, display, p.pid)
   title = personTitle(display, role, federal ? (interests ? 'Speeches, votes & interests' : 'Speeches & votes') : 'Speeches')
   const count = p.speech_count_basis ? `Count pending exact export; only own-house, in-service speeches in the ${where}.` : `${num(p.speeches ?? 0)} speeches in Hansard.`
-  const period = p.speech_count_basis ? `Transcript aggregate: ${years(p.first, p.last)}.` : `${years(p.first, p.last)}.`
-  const facts = `${display}${role ? `, ${roleLine(role)}` : who ? ` (${who})` : ''}: ${count} ${period}`
+  const period = p.speech_scope ? '' : p.speech_count_basis ? `Transcript aggregate: ${years(p.first, p.last)}.` : `${years(p.first, p.last)}.`
+  const facts = `${display}${role ? `, ${roleLine(role)}` : who ? ` (${who})` : ''}: ${count}${period ? ` ${period}` : ''}`
   const holds = andList([federal ? 'votes' : '', interests ? 'register of interests' : '', p.party ? 'who funds their party' : ''].filter(Boolean))
   const tail = holds ? `Their ${holds}.` : 'Every speech linked to the official record.'
   return {
@@ -4112,7 +4119,7 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
     card: {
       kicker: 'Parliamentarian',
       title: display,
-      lines: [[p.party, where].filter(Boolean).join(' · '), `${p.speech_count_basis ? 'Transcript aggregate' : 'Collected records'}: ${years(p.first, p.last)}`],
+      lines: [[p.party, where].filter(Boolean).join(' · '), ...(p.speech_scope ? [] : [`${p.speech_count_basis ? 'Transcript aggregate' : 'Collected records'}: ${years(p.first, p.last)}`])],
       ...(p.speech_count_basis ? {} : { stat: { value: num(p.speeches ?? 0), label: 'speeches in the Opax record' } }),
       dot: partyColour(moneyData, p.party),
       portraitId,

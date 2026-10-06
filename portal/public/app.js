@@ -3,11 +3,14 @@
 
 "use strict";
 let attributionHelpers;
-const attributionReady = import('./speech-attribution.js?v=20261006-2').then(module => { attributionHelpers = module; });
+const attributionReady = import('./speech-attribution.js?v=20261006-3').then(module => { attributionHelpers = module; });
 const isWitness = row => attributionHelpers ? attributionHelpers.isWitness(row) : true;
 const isUnattributed = row => attributionHelpers ? attributionHelpers.isUnattributed(row) : true;
 const belongsToScope = (row, scope) => attributionHelpers ? attributionHelpers.belongsToScope(row, scope) : false;
 const speakerHref = (row, href) => attributionHelpers ? attributionHelpers.speakerHref(row, href) : `${href}?attribution=unattributed`;
+const splitPerson = (people, name) => attributionHelpers?.splitPerson(people, name) || null;
+const splitSpeakers = person => attributionHelpers?.splitSpeakers(person) || [];
+const personScope = person => attributionHelpers?.personScope(person) || person?.speech_scope || null;
 
 const $ = (id) => document.getElementById(id);
 
@@ -5275,8 +5278,11 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   const sections = $("subject-sections");
   const box = $("subject-infobox");
   const unattributed = params.get('attribution') === 'unattributed';
-  const record = (await loadParliamentarians())?.people?.find((p) => p.name.toLowerCase() === String(name).toLowerCase());
+  const people = (await loadParliamentarians())?.people || [];
+  const record = splitPerson(people, name) || people.find((p) => p.name.toLowerCase() === String(name).toLowerCase());
   const roster = unattributed ? null : record;
+  const speechSpeaker = splitSpeakers(roster)[0] || name;
+  const speechScope = personScope(roster);
   if (currentSubjectKey !== key) return;
   loadPhotoMap().then(() => {
     if (currentSubjectKey !== key || unattributed) return;
@@ -5287,9 +5293,9 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   });
   let speeches = [];
   try {
-    const data = await api(`/api/search?${new URLSearchParams({ q: name, speaker: name, top_k: "20", ...(unattributed ? { attribution: 'unattributed' } : {}) })}`);
+    const data = await api(`/api/search?${new URLSearchParams({ q: speechScope ? '*' : speechSpeaker, speaker: speechSpeaker, top_k: "20", ...(speechScope ? { mode: 'keyword' } : {}), ...(unattributed ? { attribution: 'unattributed' } : {}) })}`);
     speeches = data.results || [];
-    if (roster?.speech_scope) speeches = speeches.filter(r => belongsToScope(r, roster.speech_scope));
+    if (speechScope) speeches = speeches.filter(r => belongsToScope(r, speechScope));
   } catch { /* fall through to the empty state */ }
   if (currentSubjectKey !== key) return;
   const partyCount = new Map();
@@ -5303,7 +5309,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   const { profileJurisdictions, profileAffiliations } = await import('/profile-jurisdictions.js?v=20261006-1');
   if (currentSubjectKey !== key) return;
   const representation = profileJurisdictions(roster);
-  const party = partyNow || roster?.party || spokeAs;
+  const party = partyNow || (roster?.speech_scope ? roster.party || spokeAs : spokeAs);
   const formerly = partyNow && spokeAs && !samePartyLabel(partyNow, spokeAs) ? spokeAs : null;
   const dates = speeches.map((r) => r.date).filter(Boolean).sort();
   const chambers = [...new Set(speeches.map((r) => STATE_NAMES[r.state] || r.state).filter(Boolean))];
@@ -5319,7 +5325,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   if (roster?.speech_scope) {
     $('subject-title').textContent = roster.full || name;
     document.title = `${roster.full || name} · OPAX`;
-    sections.insertAdjacentHTML('beforeend', `<p class="fineprint">Only speeches in the ${esc(roster.speech_scope.state.toUpperCase())} parliamentary chamber are attributed here. <a href="${esc(subjectHash('person', name))}?attribution=unattributed">Witness testimony and other unattributed records printed as ${esc(name)}</a>.</p>`);
+    sections.insertAdjacentHTML('beforeend', `<p class="fineprint">Only own-house speeches within the reviewed service dates in the ${esc(roster.speech_scope.state.toUpperCase())} parliamentary chamber are attributed here. <a href="${esc(subjectHash('person', roster.name))}?attribution=unattributed">Witness testimony and other unattributed records printed as ${esc(roster.name)}</a>.</p>`);
   }
   const witness = !roster && speeches.length > 0 &&
     speeches.every((r) => r.speaker_type === "witness" || (isCommitteeChamber(r.chamber) && r.person_id == null));
@@ -5396,7 +5402,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     dates.length && ["Indexed speeches span", `${esc(fmtDate(dates[0]))} – ${esc(fmtDate(dates[dates.length - 1]))}`],
     fitsInfoRow(fits, "people", name),
   ], "", [
-    actionBtn("speeches", searchHash("", { speaker: name, kind: "speech" }), "View all their speeches", { primary: true }),
+    actionBtn("speeches", roster?.speech_scope ? splitSpeechSearch(speechSpeaker) : searchHash("", { speaker: speechSpeaker, kind: "speech" }), "View all their speeches", { primary: true }),
     ...(roster?.states?.includes('federal') ? [actionBtn("external", `https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=${q}`, "Parliamentary profile", { external: true })] : []),
     actionBtn("external", `https://en.wikipedia.org/w/index.php?search=${q}%20Australian%20politician`, "Wikipedia", { external: true }),
   ]);
@@ -5425,7 +5431,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // Records by the roster's verified pid (none for a print that holds more than one person).
   renderPersonVotes(name, roster?.pid ?? null, sections).then(() => refreshPersonJumps(sections));
   renderPersonInterests(name, roster?.pid ?? null, sections).then(() => refreshPersonJumps(sections));
-  renderPersonSpeeches(name, speeches, chambers, sections).then(() => refreshPersonJumps(sections));
+  renderPersonSpeeches(speechSpeaker, speeches, chambers, sections, { scope: speechScope }).then(() => refreshPersonJumps(sections));
   renderPersonDiary(name, sections, chambers).then(() => polishPersonSections(sections));
   const news = document.createElement("section");
   sections.appendChild(news);
@@ -5512,8 +5518,9 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
   let newest = [];
   let latest = true;
   try {
-    const data = await api(`/api/search?${new URLSearchParams({ q: name, speaker: name, page: "1", per: "8", sort: "newest", ...(opts.unattributed ? { attribution: 'unattributed' } : {}) })}`);
+    const data = await api(`/api/search?${new URLSearchParams({ q: opts.scope ? '*' : name, speaker: name, page: "1", per: "8", sort: "newest", ...(opts.scope ? { mode: 'keyword' } : {}), ...(opts.unattributed ? { attribution: 'unattributed' } : {}) })}`);
     newest = data.results || [];
+    if (opts.scope) newest = newest.filter(r => belongsToScope(r, opts.scope));
   } catch {
     latest = false;
     newest = [...fallback].sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).slice(0, 8);
@@ -5535,7 +5542,7 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
           </span></a></li>`;
       }).join("")}</ul>
       <p class="fineprint">${latest ? "Newest results within the indexed retrieval window." : "Newest retrieval is unavailable; showing a sample of indexed matches."} Machine briefs are automated summaries; passages are extracts from the record.</p>
-      ${opts.unattributed ? '' : `<p class="person-more"><a href="${esc(searchHash("", { speaker: name }, 1, "newest"))}">View all their ${noun} →</a></p>`}`;
+      ${opts.unattributed ? '' : `<p class="person-more"><a href="${esc(opts.scope ? splitSpeechSearch(name) : searchHash("", { speaker: name }, 1, "newest"))}">View all their ${noun} →</a></p>`}`;
   };
   paint({});
   refreshPersonJumps(sections);
@@ -5548,6 +5555,10 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
     link.querySelector(".person-speech-kind").textContent = "Machine brief";
     link.querySelector(".person-speech-text").textContent = brief.trim();
   });
+}
+
+function splitSpeechSearch(speaker) {
+  return `/search?${new URLSearchParams({ q: '*', speaker, kind: 'speech', mode: 'keyword', sort: 'newest' })}`;
 }
 
 function polishPersonSections(sections) {
@@ -6278,7 +6289,7 @@ function loadParliamentarians() {
         const module = await loadElectorateModule();
         const reference = await module.loadPeople();
         data ||= { people: [] };
-        const names = new Set(data.people.map((p) => p.name.toLowerCase()));
+        const names = new Set(data.people.flatMap((p) => [p.name, ...splitSpeakers(p)]).map((name) => name.toLowerCase()));
         for (const p of reference.people) {
           if ([p.name, ...(p.aliases || [])].some((n) => names.has(n.toLowerCase()))) continue;
           const current = p.electorates.filter((e) => e.current);
@@ -6587,7 +6598,7 @@ async function buildPeopleDirectory() {
       p.party ? partyChipHTML(p.party) : `<span class="dir-muted">No party recorded</span>`,
       (p.parties || []).length > 1 ? `<span class="dir-muted">also ${esc(p.parties.slice(1).join(", "))}</span>` : "",
       where ? esc(where) : "",
-      yearSpan(p.first, p.last) ? `${p.speech_count_basis ? 'Transcript years: ' : ''}${esc(yearSpan(p.first, p.last))}` : "",
+      !p.speech_scope && yearSpan(p.first, p.last) ? `${p.speech_count_basis ? 'Transcript years: ' : ''}${esc(yearSpan(p.first, p.last))}` : "",
     ].filter(Boolean).join(" · ");
     return `<li class="dir-row">
       ${portrait}

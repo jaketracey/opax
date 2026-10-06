@@ -13,7 +13,7 @@ Baseline: `origin/main (8e1977cfe8681e09536ac8573fadf0c825654416)`. Every field 
 
 **16 changed; 1684 exactly unchanged; zero clean record changed is required.**
 
-Categories are exclusive. Witness splits must exactly reproduce the independent scoped resolver, conserve aggregate counts, keep witnesses unattributed and enforce an own-house retrieval scope. Other changes retain the existing evidence categories.
+Categories are exclusive. Witness splits must exactly reproduce the shared scoped resolver, conserve aggregate counts, keep witnesses unattributed and enforce an own-house retrieval scope. This checks consistency with the resolver; correctness depends on the reviewed source evidence. Other changes retain the existing evidence categories.
 
 | Party rows / facet | Main | Split | Change |
 |---|---:|---:|---:|

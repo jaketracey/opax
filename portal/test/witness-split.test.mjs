@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 import ts from 'typescript';
 import { personSpeechCount } from '../../scripts/build_search_catalog.mjs';
-import { isWitness, isUnattributed, belongsToScope, scopeFilter, speakerHref } from '../public/speech-attribution.js';
+import { isWitness, isUnattributed, belongsToScope, scopeFilter, speakerHref, splitSpeakers, splitPerson, personScope, scopedCollaborators } from '../public/speech-attribution.js';
 
 const source = ts.createSourceFile('index.ts', readFileSync(new URL('../src/index.ts', import.meta.url), 'utf8'), ts.ScriptTarget.Latest, true);
 const select = names => source.statements.filter(n => ts.isFunctionDeclaration(n) ? names.includes(n.name?.text) :
@@ -65,7 +65,7 @@ test('real search code sends own-house filters and drops witness or other-house 
   add('5','qld','qld_la','unknown',null);
   const calls = [];
   const api = runInNewContext(ts.transpile(select(['searchWindow', 'filterExpression', 'canonicalSpeaker', 'TOPIC_SLUGS', 'speakerAttribution', 'foldName'])) + ';searchWindow', {
-    URL, isWitness, belongsToScope, scopeFilter, SLUG_RE: /^speech-(\d+)$/, DIVISION_SLUG_RE: /^division-/,
+    URL, isWitness, belongsToScope, scopeFilter, personScope, scopedCollaborators, SLUG_RE: /^speech-(\d+)$/, DIVISION_SLUG_RE: /^division-/,
     stripListingBoilerplate: s => s, calibrate: s => s, lower_bound: () => 0,
     label: (r, key) => r.usermetadata.classifications.find(c => c.labelset === key)?.label,
     loadPeople: async () => ({ byFold: new Map([['stewart', { speech_scope: scope }]]) }),
@@ -107,7 +107,7 @@ test('real answer source cards preserve own-house attribution and clear testimon
 test('Ask scope and topic catalog use the same partition; prior citations cannot reintroduce witnesses', async () => {
   const calls = [];
   const api = runInNewContext(ts.transpile(select(['scopeSpeakerBody', 'reasonedPositionAnswer', 'apiPersonTopics', 'speakerAttribution', 'foldName', 'canonicalSpeaker', 'TOPIC_SLUGS'])) + ';({scopeSpeakerBody,reasonedPositionAnswer,apiPersonTopics})', {
-    URL, AbortSignal, scopeFilter, MAX_SPEAKER_CHARS: 160, NAME_RE: /^[\w ]+$/, TOPIC_FILTER_PREFIX: '/classification.labels/topic', ASK_SYNC_TIMEOUT_MS:1000,
+    URL, AbortSignal, scopeFilter, personScope, scopedCollaborators, MAX_SPEAKER_CHARS: 160, NAME_RE: /^[\w ]+$/, TOPIC_FILTER_PREFIX: '/classification.labels/topic', ASK_SYNC_TIMEOUT_MS:1000,
     buildAskBody:()=>({rag_strategies:[{name:'prequeries'}]}),isRefusal:()=>false,hasUnsupportedQuotes:()=>false,
     askPayload:()=>({answer:'Grounded answer.',citations:{p:[[0,1]]},sources:[]}),
     loadPeople: async () => ({ byFold: new Map([['stewart', { speech_scope: scope }]]) }),
@@ -168,6 +168,8 @@ test('pending counts cannot credit committee parliamentarians in catalog, descri
     assert.match(meta.description,/Count pending exact export/);
     assert.equal(meta.card.stat,undefined);
     assert.doesNotMatch(meta.description,/178|120|Up to|≤/);
+    assert.doesNotMatch(meta.description,/2024–2026|Transcript aggregate/);
+    assert.doesNotMatch(meta.card.lines.join(' '),/2024–2026|Transcript aggregate/);
   }
 });
 
@@ -179,4 +181,81 @@ test('a failed attribution import still starts routing and the Ask builder', asy
   await runInNewContext(boot,{attributionReady:ready,
     loadPersonSlugs:()=>called.push('slugs'),initAskBuilder:()=>called.push('ask'),route:()=>called.push('route')});
   assert.deepEqual(called,['slugs','ask','route']);
+});
+
+test('full-name and reviewed KB aliases resolve to one scoped print, including Pugh and Crawford', () => {
+  for (const p of roster.people.filter(p => p.speech_scope)) {
+    for (const alias of splitSpeakers(p)) assert.equal(splitPerson(roster.people, alias.toLowerCase()), p);
+    const scoped = personScope(p);
+    const row = { kind: 'speech', state: 'qld', chamber: 'qld_la', date: p.speech_scope.service[0].start,
+      speaker: splitSpeakers(p)[0] };
+    assert.equal(belongsToScope(row, scoped), true);
+    assert.equal(belongsToScope({ ...row, speaker: 'An unrelated person' }, scoped), false);
+    assert.equal(belongsToScope({ ...row, date: '2027-01-01' }, scoped), false);
+    assert.equal(belongsToScope({ ...row, speaker_type: 'witness' }, scoped), false);
+    assert.equal(belongsToScope({ ...row, date: null }, scoped), false);
+  }
+  assert.equal(splitPerson(roster.people, 'Jess Pugh').name, 'Pugh');
+  assert.equal(splitPerson(roster.people, 'Cd Crawford').full, 'Craig Crawford');
+  const pugh = splitPerson(roster.people, 'Jess Pugh');
+  assert.equal(splitPerson([pugh, { ...pugh, name: 'Another print' }], 'Jess Pugh'), null);
+  assert.equal(splitPerson(roster.people, 'John Howard'), null);
+});
+
+test('full-name routing merges roster-only Pugh, keeps clean pages, and redirects to the print canonical', async () => {
+  const reference = { people: [{ name: 'Jess Pugh', aliases: [], electorates: [{ current: true, name: 'Mount Ommaney' }] }] };
+  const data = runInNewContext(ts.transpile(select(['loadPeople', 'personAt', 'personSlugRedirect', 'foldName'])) + ';({loadPeople,personAt,personSlugRedirect})', {
+    peopleMemo: null, splitSpeakers, Response,
+    assetJson: async () => structuredClone(roster), loadElectorates: async () => reference,
+    slugIndex: people => ({ slugOf: new Map(people.map(p => [p.name, p.name.toLowerCase()])), bySlug: new Map(people.map(p => [p.name.toLowerCase(), p])) }),
+  });
+  const people = await data.loadPeople({});
+  assert.equal(people.people.length, roster.people.length);
+  assert.equal(data.personAt(people, 'Jess Pugh').name, 'Pugh');
+  const redirect = await data.personSlugRedirect('Jess Pugh', new URL('https://local.test/subject/person/Jess%20Pugh'), {});
+  assert.equal(redirect.status, 301);
+  assert.equal(redirect.headers.get('location'), '/subject/person/pugh');
+  for (const p of roster.people.filter(p => !p.speech_scope)) assert.deepEqual(plain(people.byName.get(p.name)), p);
+  const app = ts.createSourceFile('app.js',readFileSync(new URL('../public/app.js',import.meta.url),'utf8'),ts.ScriptTarget.Latest,true);
+  const loader = app.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text==='loadParliamentarians').getText(app);
+  const load = runInNewContext(loader+';loadParliamentarians', {
+    parliamentariansPromise:null, splitSpeakers, fetch:async()=>Response.json(structuredClone(roster)),
+    loadElectorateModule:async()=>({loadPeople:async()=>reference}),
+  });
+  const browserRoster = await load();
+  assert.equal(browserRoster.people.length,roster.people.length);
+  assert.equal(browserRoster.people.filter(p=>p.full==='Jess Pugh'||p.name==='Jess Pugh').length,1);
+});
+
+test('own-speaker search expands aliases without admitting another speaker; testimony keeps the bare print', async () => {
+  const person = roster.people.find(p => p.name === 'Stewart');
+  const calls = [];
+  const own = { slug: 'speech-1', title: 'Resources', origin: { collaborators: ['Scott Stewart'] },
+    usermetadata: { classifications: Object.entries({ kind: 'speech', state: 'qld', chamber: 'qld_la' }).map(([labelset,label]) => ({labelset,label})) },
+    extra: { metadata: { date: '2024-06-01', person_id: 'qld_stewart' } }, fields: {} };
+  const api = runInNewContext(ts.transpile(select(['searchWindow', 'filterExpression', 'canonicalSpeaker', 'TOPIC_SLUGS', 'speakerAttribution', 'foldName'])) + ';searchWindow', {
+    URL, isWitness, belongsToScope, scopeFilter, personScope, scopedCollaborators,
+    SLUG_RE: /^speech-(\d+)$/, DIVISION_SLUG_RE: /^division-/, stripListingBoilerplate: s=>s, calibrate:s=>s,
+    label:(r,key)=>r.usermetadata.classifications.find(c=>c.labelset===key)?.label,
+    loadPeople:async()=>({byFold:new Map(splitSpeakers(person).map(n=>[n.toLowerCase(),person]))}),
+    kbFetch:async(_env,_path,{body})=>{calls.push(body);return Response.json({resources:{own,wrong:{...own,slug:'speech-2',origin:{collaborators:['Jana Stewart']}}}});},
+  });
+  const result = await api({}, {q:'*',mode:'keyword',kind:'speech',topK:200,url:new URL('https://local.test/api/search?speaker=Stewart')});
+  assert.deepEqual(plain(result.results.map(r=>r.slug)), ['speech-1']);
+  assert.match(JSON.stringify(calls[0].filter_expression), /Scott Stewart/);
+  assert.match(JSON.stringify(calls[0].filter_expression), /2024-09-30/);
+  await api({}, {q:'Stewart',mode:'keyword',kind:'speech',topK:200,url:new URL('https://local.test/api/search?speaker=Stewart&attribution=unattributed')});
+  const field = calls[1].filter_expression.field.and[0];
+  assert.match(JSON.stringify(field), /"collaborator":"Stewart"/);
+  assert.doesNotMatch(JSON.stringify(field), /Scott Stewart/);
+});
+
+test('only split profiles take roster party ahead of speech party, and clean pages keep their former behavior', () => {
+  const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
+  const partyLine = app.match(/  const party = partyNow \|\|.*;/)[0];
+  const party = (roster, spokeAs) => runInNewContext(partyLine + ';party', {roster, spokeAs, partyNow:roster?.party_now || null});
+  for (const p of roster.people.filter(p=>!p.speech_scope)) for (const spokeAs of ['Labor','Independent',null]) {
+    assert.equal(party(p,spokeAs),p.party_now || spokeAs,p.name);
+  }
+  assert.equal(party(roster.people.find(p=>p.name==='Sullivan'),'Labor'),'Independent');
 });

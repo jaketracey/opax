@@ -9,6 +9,21 @@ from scripts.queue_grants_enrichment import tasks
 ROOT=Path(__file__).resolve().parents[1]
 
 class GrantsResearchTests(unittest.TestCase):
+    def test_only_split_profile_bodies_change_and_include_all_service_intervals(self):
+        directory=json.loads((ROOT/'portal/public/parliamentarians.json').read_text())
+        data=json.loads((ROOT/'portal/public/research/mlci.json').read_text())
+        rows=iter(r for r in records(data,directory) if r['slug'].startswith('roster-profile-'))
+        for p in directory['people']:
+            if not p.get('representation'):continue
+            row=next(rows)
+            text=row['texts']['t-body']['body']
+            if p.get('speech_scope'):
+                self.assertNotIn('Matched by exact full name',text)
+                self.assertIn('Surname print resolved',text)
+                for term in p['speech_scope']['service']:
+                    self.assertIn(term['start']+' to '+term['end'],text)
+            else:self.assertIn('Matched by exact full name',text)
+
     def test_roster_join_rejects_wrong_jurisdiction_and_chamber(self):
         people=[{'name':'Alex Smith','states':['vic'],'chambers':['vic_la']}]
         members=[{'full_name':'Alex Smith','state':'federal','chamber':'representatives','electorate':'Indi'},

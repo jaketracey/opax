@@ -74,7 +74,7 @@ def split_pinned(doc, reference, reviewed):
     doc['meta']['speech_counts_pending'] = sum(p.get('speeches') is None for p in doc['people'])
     if 'representation' in doc['meta']:
         doc['meta']['representation']['matched'] = sum(bool(p.get('representation')) for p in doc['people'])
-        doc['meta']['representation']['method'] = 'Evidence-gated corrections only; clean records pass through intact. Scoped witness splits use dated Queensland Assembly identities, exclude testimony and require an own-house, in-service retrieval filter. Legacy aggregates are preserved under transcript; own counts await the SQL refresh.'
+        doc['meta']['representation']['method'] = profiles.REPRESENTATION_METHOD
     return changed
 
 

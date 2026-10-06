@@ -22,6 +22,10 @@ PUBLIC = ROOT / 'portal/public'
 REVIEWED = ROOT / 'scripts/roster_service.json'
 STATE_EVIDENCE = ROOT / 'scripts/roster_state_evidence.json'
 WITNESS_SERVICE = ROOT / 'scripts/roster_witness_service.json'
+REPRESENTATION_METHOD = ('Evidence-gated corrections only; clean records pass through intact. '
+    'Scoped witness splits use reviewed, dated own-house identities and service-date retrieval filters. '
+    'SQL exports partition testimony and count only eligible speeches; pinned own counts remain pending. '
+    'Weak multi-parliament or contradictory prints require a unique compatible identity. Transcript aggregates are retained.')
 
 REGIONS={'ACT':'Australian Capital Territory','NSW':'New South Wales','VIC':'Victoria','QLD':'Queensland','SA':'South Australia','WA':'Western Australia','TAS':'Tasmania','NT':'Northern Territory'}
 
@@ -557,7 +561,7 @@ def main():
         if not a.members:p.error('--members is required unless --pinned is set')
         enrich(data['people'],json.loads(a.members.read_text()),json.loads(a.research.read_text())['seats'],reference,reviewed)
     data['meta']['representation']={'updated':'2026-10-06','matched':sum(bool(p['representation']) for p in data['people']),
-        'method':'Evidence-gated corrections only; clean records pass through intact. SQL exports partition witnesses before resolving parliamentary identity. Legacy witness-majority aggregates remain neutral unless an independently verified own-house scope is enforced. Weak multi-parliament or contradictory prints require a unique compatible identity. Transcript aggregates are retained.'}
+        'method':REPRESENTATION_METHOD}
     a.directory.write_text(json.dumps(data,ensure_ascii=False,separators=(',',':'))+'\n')
     print(data['meta']['representation'])
 

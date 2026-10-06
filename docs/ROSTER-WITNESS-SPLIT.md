@@ -134,15 +134,9 @@ inventory can produce a different plan. Plans and QA logs are ignored.
   counts and scoped identities verified. No KB credentials were supplied.
 - Search build output is excluded from the commit.
 
-## Audit follow-up list — deferred P3s
+## P3 follow-ups
 
-1. Full-name speaker lookup: the KB generally indexes these MPs under full names,
-   so restored surname pages often have no retrieved speeches; link or resolve
-   the matching full-name speaker without broadening attribution.
-2. Transcript years: hide or revise the 2024–2026 aggregate years for departed
-   MPs so they cannot be mistaken for service years.
-3. KB wording: replace "Matched by exact full name" on surname-derived profiles.
-4. Audit wording: the shared resolver proves reproducibility, not independent
-   correctness; revise its current "independent scoped resolver" wording.
-5. Party preference: review the global roster-over-retrieved-party preference
-   separately, including clean person pages.
+[ROSTER-P3.md](ROSTER-P3.md) records the full-name retrieval fixes, canonical
+Pugh route, wording changes, shared method, clean-page party audit, gates and
+before/after speech retrieval counts. The changes are local and committed;
+no deployment or production write was performed.
