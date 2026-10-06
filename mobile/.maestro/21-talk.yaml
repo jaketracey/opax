@@ -88,7 +88,9 @@ name: 21 Talk consent, captions, sources, controls and refusal states
     visible:
       id: source-destination-url
     timeout: 15000
-- assertVisible: 'https://opax.invalid/support\?record=%2Fmoney%2Freceipts'
+- assertVisible:
+    id: source-destination-url
+    text: '^https://opax\.invalid/support\?record=/money/receipts$'
 - takeScreenshot: ${EVIDENCE}/21-report-support-path
 - tapOn: OK
 - scrollUntilVisible:
