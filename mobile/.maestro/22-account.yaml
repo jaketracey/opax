@@ -139,9 +139,11 @@ name: 22 Account sign-in by emailed code, sign-out and deletion
     visibilityPercentage: 20
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/22-delete-recovery
+# A presence check near the page end: at AX5 the swipe overshoots full view.
 - scrollUntilVisible:
     element:
       id: account-deletion-policy
+    visibilityPercentage: 90
     timeout: 30000
 - scrollUntilVisible:
     element:
