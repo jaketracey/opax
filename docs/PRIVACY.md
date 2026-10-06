@@ -20,12 +20,12 @@ Verified facts came from read-only checks; where none was checkable, the page sa
 | P6 | Cloudflare's traffic and security analytics record requests with IP addresses, kept 31 days | Cloudflare [GraphQL limits](https://developers.cloudflare.com/analytics/graphql-api/limits/) (adaptive datasets 31 days on every plan) and Security Events (up to 31 days); zone plan Free Website |
 | P7 | PostHog receives the forwarded IP and "may store the address with the event" | `src/posthog.ts`; no PostHog key or MCP was available (**verify** "Discard client IP data" in project 507367; if on, say it is discarded after the lookup) |
 | P8 | Progress's own terms apply, with its privacy policy linked | No retention found |
-| P9 | The model OPAX chose in OpenRouter is currently a DeepSeek model; OpenRouter's policy and the routed provider's apply | `src/index.ts` comments and the `openai-compatible` pins; no OpenRouter key read |
-| P10 | The agent is configured with recording off and each conversation's text deleted after one day | [VOICE-ASSISTANT.md](VOICE-ASSISTANT.md), 9 September 2026 (**verify** in the ElevenLabs dashboard) |
-| P11 | The agent is configured to use Google's Gemini 3.5 Flash Lite | VOICE-ASSISTANT.md (**verify**) |
+| P9 | Generation goes through OpenRouter, called by Progress; no model is named, because `portal/` pins only an `openai-compatible` slot and the preset's model lives in OpenRouter. OpenRouter's policy and the routed provider's apply | `ASK_MODEL` and the other `*_MODEL` vars in `wrangler.jsonc` |
+| P10 | "When OPAX last checked (9 September 2026), its voice assistant was set at ElevenLabs not to record audio and to delete transcripts after one day. ElevenLabs' own privacy policy also applies." A dated configuration, not a guarantee | [VOICE-ASSISTANT.md](VOICE-ASSISTANT.md), 9 September 2026 (**verify** in the ElevenLabs dashboard, then update the date) |
+| P11 | No model named: "a language model that ElevenLabs runs for the assistant" | The model is an ElevenLabs agent setting, not pinned in `portal/` |
 | P12 | Standard service, not a residency service; ElevenLabs states data is stored in the United States, with processing possible elsewhere | `PROVIDER_ORIGIN = https://api.elevenlabs.io` in `src/voice.ts`; ElevenLabs [data residency](https://elevenlabs.io/docs/overview/administration/data-residency) |
 | P13 | Community database in Cloudflare's Oceania region | `wrangler d1 info opax-community`: `running_in_region OC`, no jurisdiction |
-| P14 | Accounts and voice are for people aged 16 and over; no date of birth asked or checked | Jake's decision, 6 October 2026 (conservative, given Australia's social media minimum age rules) |
+| P14 | Accounts and voice are for people aged 16 and over; no date of birth asked or checked | Jake's decision, 6 October 2026 (conservative, given Australia's social media minimum age rules); the same line is on the community sign-in form, the web voice panel and `/support` |
 | P15 | D1 recovery history covers the last 30 days; no other scheduled backup or export | `wrangler d1 time-travel info`: a 16-day-old bookmark exists and the limit is "the last 30 days" (Workers Paid); no export or backup in the repository |
 | P16 | Both analytics services keep events for the retention period of OPAX's account, under their policies | No PostHog or GA settings read (**verify**) |
 
@@ -73,24 +73,24 @@ Then update the "Last updated" date. The page's history is this repository's his
 | MCP keys hashed, 90 days, three active, last-used time | `src/community.ts`, `src/community-mcp.ts` |
 | ElevenLabs gets audio, typed text, a random call ID and the time limit from OPAX's code, never email or member ID; it can receive the IP | `voiceClientEvent()` and `connect()` in `src/voice.ts`; the Cloudflare subrequest behaviour above; `api.elevenlabs.io` resolved to a non-Cloudflare address on 3 October 2026 |
 | Voice tool searches go through OPAX search | `runVoiceTool()` in `src/voice-tools.ts` |
-| Recording off, transcripts one day, Gemini 3.5 Flash Lite | [VOICE-ASSISTANT.md](VOICE-ASSISTANT.md), configured 9 September 2026; **not verified live** (P10, P11) |
+| Recording off and one-day transcripts as of the last check (9 September 2026) | [VOICE-ASSISTANT.md](VOICE-ASSISTANT.md); **not verified live** (P10). The model is not named (P11) |
 | Voice rows, 600 seconds, 40,000 a month, two calls; unused reservations returned or expire free; time can stay charged once connection setup starts | `src/voice.ts` (`claimVoiceSession()` moves the row to `connecting` before the provider calls; `finish` cancels only `reserved` rows); `migrations/0003`, `0004`, `0012`; [IOS-VOICE.md, routes](IOS-VOICE.md#routes); `portal/test/voice.test.mjs` |
 | Deletion removes live rows at once; kept rows, five-minute housekeeping, one-day provider reference clean-up, fresh allowance | `src/community-deletion.ts`, `expireVoiceSessions()`, `wrangler.jsonc` crons; [COMMUNITY.md](COMMUNITY.md#account-deletion-w5-and-w6-live-since-3-october-2026), live since 3 October 2026 |
 | Recovery history keeps deleted data for the plan's window | D1 [Time Travel](https://developers.cloudflare.com/d1/reference/time-travel/) is always on: 7 days Free, 30 days Paid (the plan is P15) |
 | Progress knowledge box in the AWS Sydney zone | `ARAG_ZONE` = `aws-ap-southeast-2-1` in `wrangler.jsonc` |
 | PostHog in the United States | `us.i.posthog.com` in `src/posthog.ts` |
-| App electorate suggestion: location used once on the iPhone, never sent or stored, outlines fetched before the fix, no background location | iOS lane `ios/electorate-map`: `docs/IOS-ELECTORATE-MAP.md`, `mobile/src/features/electorate-map/location.ts`, `NSLocationWhenInUseUsageDescription`, `tests/location-privacy.test.ts` |
-| App voice consent stored on the iPhone, withdrawn on the voice screen; calls end when the app leaves the foreground | Decision 10 (6 October 2026); iOS lane `ios/talk-sheet` (`TalkScreen.tsx`) |
+| App (in testing): if you use Use my location, one reading on the iPhone, never sent or stored, outlines fetched before the fix, no background location | iOS lane `ios/electorate-map`: `docs/IOS-ELECTORATE-MAP.md`, `mobile/src/features/electorate-map/location.ts`, `NSLocationWhenInUseUsageDescription`, `tests/location-privacy.test.ts`. Worded conditionally: sign-in, voice, deletion and location are not in a released build yet |
+| App (in testing): if you use voice, consent is stored on the iPhone and withdrawn on the voice screen; calls end when the app leaves the foreground | Decision 10 (6 October 2026); iOS lane `ios/talk-sheet` (`TalkScreen.tsx`). Conditional wording, as above |
 
 ## Voice consent and notice strings
 
-Drafted for the app's one-time consent step ([IOS-UX.md, 4.10](IOS-UX.md#410-talk-to-opax-voice); guideline 5.1.2(i)) and for the web voice panel, which decision 10 adds later. The app ships its own wording in `TalkScreen.tsx` (lane `ios/talk-sheet`); keep it and these consistent with the page's voice section. `voice.consent.kept` states the configured ElevenLabs settings (P10); if Jake's dashboard check shows otherwise, change it with the page. "OPAX" follows the app's casing; the web panel still says "Opax" (IOS-UX open question 12).
+Drafted for the app's one-time consent step ([IOS-UX.md, 4.10](IOS-UX.md#410-talk-to-opax-voice); guideline 5.1.2(i)) and for the web voice panel, which decision 10 adds later. The app ships its own wording in `TalkScreen.tsx` (lane `ios/talk-sheet`); keep it and these consistent with the page's voice section. `voice.consent.kept` gives the ElevenLabs settings as of the last check (P10); after Jake's dashboard check, update the date in it and on the page together. "OPAX" follows the app's casing; the web panel still says "Opax" (IOS-UX open question 12).
 
 | Key | Text |
 | --- | --- |
 | `voice.consent.title` | Before your first call |
 | `voice.consent.what` | Talk to OPAX uses ElevenLabs, a third-party AI provider. During a call, your voice and anything you type go through OPAX to ElevenLabs, which turns your speech into text, writes the replies with a language model and speaks them. |
-| `voice.consent.kept` (configured settings, P10) | ElevenLabs does not record the audio and deletes the conversation text after one day. OPAX keeps no recording or transcript. For each call it keeps the seconds reserved and used, the times, and ElevenLabs' reference for the conversation, to count your 10 free minutes. |
+| `voice.consent.kept` (dated, P10) | When OPAX last checked (9 September 2026), its voice assistant was set at ElevenLabs not to record audio and to delete transcripts after one day. ElevenLabs' own privacy policy also applies. OPAX keeps no recording or transcript. For each call it keeps the seconds reserved and used, the times, and ElevenLabs' reference for the conversation, to count your 10 free minutes. |
 | `voice.consent.identity` | OPAX does not give ElevenLabs your email address. |
 | `voice.consent.accuracy` | Answers may be mistaken; check the linked records. |
 | `voice.consent.link` | Voice privacy (opens `https://opax.com.au/privacy#voice`) |

@@ -1493,7 +1493,7 @@
       website and iPhone app collect when you use them, which other companies receive it, how long
       it is kept and how to have it deleted.</p>
       <p class="fineprint">Last updated 6 October 2026. This page covers the OPAX website and the
-      OPAX app for iPhone.</p>
+      OPAX app for iPhone, which is in testing.</p>
 
       <h2 id="privacy-summary">In short</h2>
       <ul class="about-list">
@@ -1578,8 +1578,7 @@
       code adds no account details or other identifier to these requests. Progress can still
       receive your IP address with them: Cloudflare, which runs OPAX's server, documents that it
       adds the visitor's IP address to requests the server makes to services outside Cloudflare,
-      and Progress is outside it. OpenRouter is called by Progress, not by OPAX's server, and the
-      model OPAX has chosen there is currently a DeepSeek model.</p>
+      and Progress is outside it. OpenRouter is called by Progress, not by OPAX's server.</p>
       <p>What these services keep, and for how long, is set by their own terms:
       <a href="https://www.progress.com/legal/privacy-policy" rel="noopener">Progress's privacy
       policy</a>, <a href="https://openrouter.ai/privacy" rel="noopener">OpenRouter's privacy
@@ -1646,24 +1645,25 @@
       address.</p>
 
       <h3>In the iPhone app</h3>
-      <p>The app needs no account to read. It has no analytics, no advertising and no tracking,
-      and sends no device identifier. The seat you choose, the records it keeps for offline
-      reading and your voice consent stay on your phone. Its searches look up OPAX's own
+      <p>The OPAX iPhone app is in testing. It needs no account to read. It has no analytics, no
+      advertising and no tracking, and sends no device identifier. The seat you choose and the
+      records it keeps for offline reading stay on your phone. Its searches look up OPAX's own
       catalogs of people, declared interests, pay and expenses on OPAX's server, and are not
       sent to Progress or to a language model. Its requests reach OPAX's servers with your
       phone's IP address, under the same limits and logs as the website. Pages the app opens on
       opax.com.au are the website, and the website sections above apply to them.</p>
-      <p>If you choose Use my location when picking your electorate, iOS asks for your
-      permission, and the app then uses one reading of your location, on your iPhone, to suggest
-      an electorate. Your location is never sent to OPAX or anyone else, and is not stored: the
+      <p>If you use the app's Use my location option when picking your electorate, iOS asks for
+      your permission, and the app then uses one reading of your location, on your iPhone, to
+      suggest an electorate. Your location is never sent to OPAX or anyone else, and is not stored: the
       app downloads every electorate's outline before it reads your location, so its requests
       are the same wherever you are, and only the electorate you confirm is saved. The app never
       asks for your location in the background.</p>
 
       <h2 id="privacy-accounts">Community accounts</h2>
       <p>An account is optional. On the website it lets you keep reading lists, take part in
-      discussions, message other members and connect research tools. In the app it is needed
-      only to talk to OPAX by voice. It is the same account in both places.</p>
+      discussions, message other members and connect research tools. If you sign in to the
+      iPhone app, it is the same account, and there it is needed only to talk to OPAX by
+      voice.</p>
       <h3>What an account holds</h3>
       <ul class="about-list">
         <li><strong>Your email address</strong>, to sign you in and send the emails described
@@ -1687,13 +1687,14 @@
       discussions while you are signed in.</p>
 
       <h3>Signing in</h3>
-      <p>OPAX emails you a sign-in link, and for the app an eight-digit code. Each expires after
+      <p>OPAX emails you a sign-in link and, when you sign in from the app, an eight-digit code
+      as well. Each expires after
       15 minutes and works once. OPAX stores only a hash of the link and a keyed hash of the
       code, with your email address, and deletes them a day or more after they expire, during
       later sign-in requests.</p>
       <p>Signing in starts a session that lasts up to 30 days. On the website it is held in a
-      secure cookie that page scripts cannot read; in the app it is held in the iPhone's
-      Keychain, on that device only. OPAX stores a hash of the session token, the account it
+      secure cookie that page scripts cannot read; if you sign in to the app, it is held in the
+      iPhone's Keychain, on that device only. OPAX stores a hash of the session token, the account it
       belongs to, when it started and ends, and whether it began on the website or in the app.
       It does not store your IP address or device details with a session. You can sign out on
       one device or on every device.</p>
@@ -1719,16 +1720,15 @@
       <h3>Your microphone</h3>
       <p>OPAX uses your microphone only during a call you start. On the website, opening the
       voice panel does not touch the microphone: it starts when you choose Start talking, and
-      stops when the call ends, when you close the panel and when you leave the tab. In the app,
-      you agree to the terms in this section once, then iOS asks for microphone permission the
-      first time you start a call. Your agreement is stored on your iPhone; you can withdraw it
+      stops when the call ends, when you close the panel and when you leave the tab. If you use
+      voice in the app, you agree to the terms in this section once, then iOS asks for microphone
+      permission the first time you start a call. Your agreement is stored on your iPhone; you can withdraw it
       at any time on the voice screen, and the app asks again before your next call. A call ends
       when you leave the app.</p>
       <h3>What is sent, and to whom</h3>
       <p>During a call, your voice streams through OPAX's server to ElevenLabs. ElevenLabs turns
-      your speech into text, writes the replies with a language model and speaks them back. OPAX's
-      ElevenLabs agent is configured to use Google's Gemini 3.5 Flash Lite as that model.
-      Anything you type during a call goes the same way. OPAX gives ElevenLabs a
+      your speech into text, writes the replies with a language model that ElevenLabs runs for
+      the assistant, and speaks them back. Anything you type during a call goes the same way. OPAX gives ElevenLabs a
       random identifier for the call and the call's time limit; its code does not give
       ElevenLabs your email address or account details. ElevenLabs can receive your IP address
       with the connection, because Cloudflare adds the visitor's IP address to requests that
@@ -1736,8 +1736,9 @@
       its search runs through OPAX's own search, as described under
       <a href="#privacy-questions">Questions and searches</a>.</p>
       <h3>What is kept</h3>
-      <p>OPAX's ElevenLabs agent is configured with audio recording off and with each
-      conversation's text deleted after one day. OPAX itself keeps no recording and no transcript. The transcript
+      <p>When OPAX last checked (9 September 2026), its voice assistant was set at ElevenLabs
+      not to record audio and to delete transcripts after one day. ElevenLabs' own
+      <a href="https://elevenlabs.io/privacy-policy" rel="noopener">privacy policy</a> also applies. OPAX itself keeps no recording and no transcript. The transcript
       you see during a call is not saved in your browser or in the app, and is never sent to
       analytics.</p>
       <p>For each call, OPAX keeps a record linked to your account: its state, the seconds
@@ -1757,7 +1758,8 @@
 
       <h2 id="privacy-deletion">Deleting your account</h2>
       <p>On the website, open <a href="/community?view=delete-account">Delete your account</a>
-      from your account page. In the app, choose Delete account under Account. OPAX emails you a
+      from your account page. If you have signed in to the iPhone app, Delete account under
+      Account does the same. OPAX emails you a
       fresh code, and entering it removes the account from OPAX's live database at once.
       Deletion cannot be undone. Anyone who can receive the account's email can do it, since
       both signing in and the deletion code go to that address.</p>
@@ -1815,8 +1817,7 @@
         summaries.</li>
         <li><strong>ElevenLabs</strong> receives voice audio, messages typed during a call and
         the call's random identifier, and can receive your IP address with the connection. The
-        language model it runs for the assistant, named under
-        <a href="#voice">Talking to OPAX by voice</a>, receives the words of the conversation
+        language model ElevenLabs runs for the assistant receives the words of the conversation
         through ElevenLabs. OPAX uses ElevenLabs' standard service, not one of its regional data
         residency services, and ElevenLabs
         <a href="https://elevenlabs.io/docs/overview/administration/data-residency" rel="noopener">states</a>
@@ -1844,9 +1845,9 @@
       <p>OPAX does not yet have a private contact address. One is coming, and this page will name
       it. Until then:</p>
       <ul class="about-list">
-        <li>to delete your account and everything it holds, use Delete your account on the
-        website or Delete account in the app, once signed in; it asks for a fresh code sent to
-        your email address;</li>
+        <li>to delete your account and everything it holds, sign in and use Delete your account
+        on the website (or, if you have signed in to the iPhone app, Delete account there); it
+        asks for a fresh code sent to your email address;</li>
         <li>to see or change what your account holds, sign in: you can change your profile and
         settings, and delete your reading lists, discussions, replies and saved
         conversations;</li>
@@ -1887,8 +1888,7 @@
         <li>the source that shows it, if you have one.</li>
       </ul>
       <p><a class="ui-button" id="support-issue-link" href="https://github.com/jaketracey/opax/issues/new?title=Correction" rel="noopener">Report it on GitHub</a></p>
-      <p>In the app, Report this answer under a voice reply brings you here with the record it
-      concerns. Corrections made so far are listed on the <a href="/methods">methods page</a>.</p>
+      <p>Corrections made so far are listed on the <a href="/methods">methods page</a>.</p>
       <p class="fineprint">Issues on GitHub are public, so leave personal details out of them.
       OPAX does not yet have a private contact address. One is coming, and this page will name
       it.</p>
@@ -1896,18 +1896,21 @@
       <h2 id="support-account">Your account</h2>
       <ul class="about-list">
         <li><strong>Signing in.</strong> Enter your email address and OPAX emails you a sign-in
-        link, and for the app an eight-digit code. Each works once and expires after 15 minutes.
-        If nothing arrives, check your spam folder, then ask for a new one. Signing in for the
-        first time creates your account. An account is only needed to take part in the community
-        and to talk to OPAX by voice; everything else works without one.</li>
+        link and, when you sign in from the iPhone app (which is in testing), an eight-digit code
+        as well. Each works once and expires after 15 minutes. If nothing arrives, check your
+        spam folder, then ask for a new one. Signing in for the first time creates your account.
+        An account is only needed to take part in the community and to talk to OPAX by voice;
+        everything else works without one. Accounts and voice are for people aged 16 and
+        over.</li>
         <li><strong>Signing out.</strong> Sign out on one device, or on every device from your
         account page on the website.</li>
         <li><strong>Voice.</strong> Each account has 10 minutes of voice in total. Voice needs
-        microphone access, which you can turn on or off in your iPhone's Settings or your
-        browser.</li>
+        microphone access, which you can turn on or off in your browser's settings, or for the
+        iPhone app in Settings.</li>
         <li><strong>Deleting your account.</strong> On the website, open
-        <a href="/community?view=delete-account">Delete your account</a>; in the app, choose
-        Delete account under Account. OPAX emails you a fresh code, and entering it deletes your
+        <a href="/community?view=delete-account">Delete your account</a>; if you have signed in
+        to the iPhone app, Delete account under Account does the same. OPAX emails you a fresh
+        code, and entering it deletes your
         account and what you wrote. It cannot be undone.
         <a href="/privacy#privacy-deletion">What is deleted and what is kept</a>.</li>
       </ul>
