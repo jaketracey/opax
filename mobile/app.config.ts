@@ -109,7 +109,10 @@ const config: ExpoConfig = {
         resizeMode: 'contain',
       },
     ],
-    ['./plugins/withVoiceAutolinking.js', { variant, productionVoice }],
+    [
+      './plugins/withVoiceAutolinking.js',
+      { variant, ...(productionVoice ? { productionVoice: true } : {}) },
+    ],
   ],
   extra: {
     variant,
