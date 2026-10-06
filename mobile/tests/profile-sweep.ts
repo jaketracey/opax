@@ -14,6 +14,7 @@ import {
   decodeMoney,
   decodeInterestTies,
   interestKey,
+  commonsLicenceShown,
   type PersonId,
 } from '../src/api/catalogs';
 import { object, matching } from '../src/api/validation';
@@ -29,6 +30,16 @@ function statuses(profile: unknown) {
       matching(/^(ready|missing|error)$/)(object(data[key]).status),
     ]),
   ) as Record<(typeof blocks)[number], Status>;
+}
+// Approved change (6 Oct store defaults): a Commons portrait whose recorded
+// licence is GFDL or "copyrighted free use" is left out, so that block alone
+// may go from ready to missing.
+function licenceRefused(profile: unknown) {
+  const portrait = object(object(object(profile).blocks).portrait);
+  const key = portrait.data ? object(portrait.data).key : undefined;
+  const credit =
+    typeof key === 'string' ? catalogs.photoCredits![key] : undefined;
+  return !!credit && !commonsLicenceShown(credit.licence);
 }
 function historicalSelector(revision: string) {
   const modules = new Map<string, Record<string, unknown>>();
@@ -104,6 +115,7 @@ const counts = Object.fromEntries(
 ) as Record<(typeof blocks)[number], Record<Status, number>>;
 let comparisons = 0,
   verifiedStatePay = 0;
+const portraitLicenceRefused = new Set<string>();
 for (const person of current) {
   const view = profileFor(person.person_id, input);
   const selected = withInterest(person.person_id, (id, data) =>
@@ -122,9 +134,18 @@ for (const person of current) {
   );
   for (const key of blocks) counts[key][actual[key]]++;
   for (const baseline of baselineSelectors) {
-    const before = statuses(withInterest(person.person_id, baseline));
+    const previous = withInterest(person.person_id, baseline);
+    const before = statuses(previous);
     for (const key of blocks) {
       comparisons++;
+      if (
+        key === 'portrait' &&
+        actual[key] === 'missing' &&
+        licenceRefused(previous)
+      ) {
+        portraitLicenceRefused.add(person.name);
+        continue;
+      }
       ok(
         rank[actual[key]] >= rank[before[key]],
         `${person.name}: ${key} regressed from ${before[key]} to ${actual[key]}`,
@@ -150,5 +171,6 @@ console.log(
     regressions: 0,
     counts,
     verifiedStatePay,
+    portraitLicenceRefused: [...portraitLicenceRefused].sort(),
   }),
 );

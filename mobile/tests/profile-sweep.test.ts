@@ -1,6 +1,6 @@
 import { execFileSync } from 'node:child_process';
 import { resolve } from 'node:path';
-import { shape, dict, count } from '../src/api/validation';
+import { shape, dict, count, array, text } from '../src/api/validation';
 test('all 354 current members retain five block statuses against round 1 and its approved fix', () => {
   const report = shape({
     members: count,
@@ -8,6 +8,7 @@ test('all 354 current members retain five block statuses against round 1 and its
     regressions: count,
     counts: dict(shape({ ready: count, missing: count, error: count })),
     verifiedStatePay: count,
+    portraitLicenceRefused: array(text),
   })(
     JSON.parse(
       execFileSync(
@@ -31,4 +32,6 @@ test('all 354 current members retain five block statuses against round 1 and its
     expect(statuses.error).toBe(0);
   }
   expect(report.verifiedStatePay).toBe(2);
+  // The only approved portrait change: a GFDL Commons file, left out by licence.
+  expect(report.portraitLicenceRefused).toEqual(['Tim Bull']);
 }, 70000);
