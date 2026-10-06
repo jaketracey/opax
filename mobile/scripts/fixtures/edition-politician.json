@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-06",
+  "created_at": "2026-10-05T22:00:00.000Z",
+  "edition": {
+    "date": "2026-10-06",
+    "kind": "politician",
+    "subject": "person:Alex Hawke",
+    "title": "Alex Hawke",
+    "text": "Alex Hawke: 768 speeches in the Opax record.\n\nTop topic labels: Tax & budget 19%; Climate & environment 12%.\n\nShares of labelled speeches; labels overlap.\n\nRecords: 2008–2026.\n\nhttps://opax.com.au/subject/person/Alex%20Hawke",
+    "url": "https://opax.com.au/subject/person/Alex%20Hawke",
+    "slides": [
+      {
+        "type": "cover",
+        "kicker": "Parliamentarian · Mitchell, NSW",
+        "title": "Alex Hawke",
+        "line": "Liberal · House of Representatives · records 2008 to 2026",
+        "photo": null,
+        "inset": "10290",
+        "insetCredit": "Portrait: Parliament of Australia via OpenAustralia",
+        "alt": "Alex Hawke, Liberal, Member for Mitchell."
+      },
+      {
+        "type": "number",
+        "kicker": "The record",
+        "title": "What OPAX holds",
+        "lines": [
+          "Collected parliamentary records, 2008 to 2026.",
+          "Counts describe the collected record, not all parliamentary activity."
+        ],
+        "value": "768",
+        "label": "speeches in the Opax record",
+        "alt": "The record: 768 speeches by Alex Hawke in the Opax record, 2008 to 2026."
+      },
+      {
+        "type": "bars",
+        "kicker": "What they talk about",
+        "title": "Most common topic labels",
+        "lines": [],
+        "items": [
+          {
+            "label": "Tax & budget",
+            "pct": 19
+          },
+          {
+            "label": "Climate & environment",
+            "pct": 12
+          }
+        ],
+        "note": "Shares of labelled speeches; a speech can carry several labels.",
+        "alt": "Most common topic labels: Tax & budget 19 per cent, Climate & environment 12 per cent of labelled speeches."
+      },
+      {
+        "type": "source",
+        "kicker": "Read the speeches",
+        "title": "What do 768 speeches actually say?",
+        "rows": [
+          "Every speech in the record is cited back to Hansard",
+          "Topic labels, votes, declared interests and the money map on one page",
+          "Hansard: Commonwealth copyright, reproduced under CC BY-NC-ND"
+        ],
+        "url": "opax.com.au/subject/person",
+        "path": "Alex Hawke",
+        "alt": "Read the speeches at opax.com.au, subject: Alex Hawke."
+      }
+    ]
+  }
+}
