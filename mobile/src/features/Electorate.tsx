@@ -32,6 +32,7 @@ import {
 import { electorateRoute } from '../navigation/routes';
 import { shareHeaderItem } from '../navigation/share';
 import { RecordBlock } from './your-mp/Evidence';
+import { FollowToggle } from './follows/FollowToggle';
 import { RepresentativeRows } from './your-mp/RepresentativeRows';
 import type { Directory, ElectorateView } from './your-mp/model';
 const indicators: Record<string, [string, 'count' | 'money' | 'percent']> = {
@@ -155,6 +156,12 @@ function ElectorateScreen({ id }: { id: string }) {
                 jurisdictionName(identity.jurisdiction) ??
                 'Jurisdiction not recorded'}
             </Text>
+            <FollowToggle
+              kind="electorate"
+              id={identity.id}
+              title={identity.name}
+              testID="electorate-follow"
+            />
             <Section title="Electorate outline" testID="electorate-map">
               <OutlineMap
                 boundaries={view.boundaries}

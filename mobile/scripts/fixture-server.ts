@@ -50,6 +50,35 @@ const editionMode = process.env.OPAX_FIXTURE_EDITION ?? 'pinned';
 if (!editionModes.includes(editionMode))
   throw new Error('OPAX_FIXTURE_EDITION must be pinned, absent or withdrawn');
 let editionWithdrawn = editionMode === 'absent';
+// Local follows (journey 26). OPAX_FIXTURE_DATA picks the catalogs:
+// - pinned: the pinned bytes, as always;
+// - changed: one declaration and one bill stage move on, as after a nightly
+//   refresh, once the app revalidates either changed file (a conditional GET,
+//   as a pull to refresh sends). Until then both are served pinned with a
+//   day's max-age, so no expiry mid-journey revalidates them early. The
+//   bumps are synthetic: Anthony Albanese's register index count (28 to 29)
+//   and the Ending Financial Abuse bill's status (before parliament to
+//   passed, as at 1 October 2026). Never used outside this mode.
+const dataModes = ['pinned', 'changed'];
+const dataMode = process.env.OPAX_FIXTURE_DATA ?? 'pinned';
+if (!dataModes.includes(dataMode))
+  throw new Error('OPAX_FIXTURE_DATA must be pinned or changed');
+let dataChanged = false;
+const changedFiles = new Map<string, Buffer>();
+if (dataMode === 'changed') {
+  const register = JSON.parse(files.get('/interests/index.json')!.toString());
+  register.people['10007'].total += 1;
+  changedFiles.set(
+    '/interests/index.json',
+    Buffer.from(JSON.stringify(register)),
+  );
+  const index = JSON.parse(files.get('/bills/index.json')!.toString());
+  const moved = index.bills.find(
+    (row: { key: string }) => row.key === 'au-federal-r7549',
+  );
+  Object.assign(moved, { status: 'passed', status_as_of: '2026-10-01' });
+  changedFiles.set('/bills/index.json', Buffer.from(JSON.stringify(index)));
+}
 const edition = responseBytes(snapshot, editionPath);
 const editionDate = decodeEdition(JSON.parse(edition.toString())).date;
 const manifest = JSON.parse(
@@ -232,6 +261,11 @@ export const server = createServer(async (request, response) => {
       );
       return;
     }
+    if (changedFiles.has(url.pathname)) {
+      if (request.headers['if-none-match'] !== undefined) dataChanged = true;
+      if (dataChanged) body = changedFiles.get(url.pathname);
+      cacheControl = 'public, max-age=86400';
+    }
     if (!body) throw new Error('Path not in the pinned journey snapshot');
     const opaque = `"${createHash('sha256').update(body).digest('hex')}"`;
     // The edition answers as appRead does: a weak validator, matched in its
@@ -295,7 +329,7 @@ server.listen(port, '127.0.0.1', async () => {
     );
   }
   console.log(
-    `OPAX_FIXTURE_READY port=${port} files=${files.size} edition=${editionMode} offline=true`,
+    `OPAX_FIXTURE_READY port=${port} files=${files.size} edition=${editionMode} data=${dataMode} offline=true`,
   );
 });
 for (const signal of ['SIGTERM', 'SIGINT'] as const)

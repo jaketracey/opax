@@ -238,7 +238,10 @@ attack regression tests.
   The v2 layout discards the earlier snapshot cache; system cache storage can also
   be reclaimed by iOS. Offline data is opportunistic, not permanent storage. HTTP freshness
   expires at max-age (capped to one day); no-store search is revalidated on every
-  read and retained only for the current app session. `savedAt`, `validatedAt`, `asOf` and
+  read and retained only for the current app session. A forced read (pull to refresh)
+  sends `Cache-Control: no-cache`: expo/fetch's URLSession keeps its own HTTP cache,
+  which otherwise answers a fresh entry under about 512 KB itself, even with
+  `If-None-Match`. `savedAt`, `validatedAt`, `asOf` and
   `stale` are distinct. Transient failures can return stale data; 4xx identity,
   invalid data and forbidden routes do not. Display saved and source dates.
 - `scripts/fixture-snapshot.json` pins SHA-256 and byte sizes of the reviewed public P0 files. Startup verifies hashes and freezes bytes in memory.
@@ -521,7 +524,18 @@ variant on its own, by path:
 `OPAX_FIXTURE_EDITION=absent scripts/e2e.sh <udid> .maestro/13b-today-no-edition.yaml`
 and
 `OPAX_FIXTURE_EDITION=withdrawn scripts/e2e.sh <udid> .maestro/13c-today-edition-withdrawn.yaml`.
-The `13` shorthand runs only `13-today.yaml`. To repin, fetch the route once and
+The `13` shorthand runs only `13-today.yaml`.
+
+**Local follows (journey 26).** Follows are saved on the device and compared
+on the device with the shared catalogs (`src/features/follows/README.md` has
+the markers, their source fields and dates). `OPAX_FIXTURE_DATA=changed` makes
+the fixture serve `/bills/index.json` and `/interests/index.json` pinned, with a
+day's max-age, until the app revalidates either (Today's pull to refresh); from
+then on both carry one synthetic change: Anthony Albanese's register count
+28 to 29, and the Ending Financial Abuse bill (`au-federal-r7549`) passed as at
+1 October 2026. Run it on its own, by path:
+`OPAX_FIXTURE_DATA=changed scripts/e2e.sh <udid> .maestro/26-follows.yaml`.
+The `26` shorthand without the variable never sees the change and fails. To repin, fetch the route once and
 update the file, hash, size and fetch time together.
 
 Fixture startup and tests read git blobs at `fixture-snapshot.json`'s `sourceCommit`,

@@ -149,6 +149,48 @@ test('expiry revalidates with ETag; preserves original saved date on 304', async
     headers: { 'User-Agent': 'OPAX-iOS/0.1.0 (1)' },
   });
 });
+test('a forced read reaches the network while a fresh copy is saved, and tells the HTTP cache to revalidate', async () => {
+  // URLSession's own HTTP cache answers a fresh entry itself, even with an
+  // If-None-Match; only a request no-cache makes it ask the origin.
+  let time = 1000;
+  const transport = jest
+    .fn()
+    .mockResolvedValueOnce(
+      response(200, { ETag: '"index-v1"', 'Cache-Control': 'max-age=300' }),
+    )
+    .mockResolvedValueOnce(
+      new Response(null, {
+        status: 304,
+        headers: { 'Cache-Control': 'max-age=300' },
+      }),
+    )
+    .mockResolvedValueOnce(
+      response(200, { ETag: '"index-v2"', 'Cache-Control': 'max-age=300' }),
+    );
+  const { client } = setup(transport, () => time);
+  await client.get('/interests/index.json', decode);
+  expect(transport.mock.calls[0]?.[1].headers).not.toHaveProperty(
+    'Cache-Control',
+  );
+  time = 2000;
+  // Still fresh: an ordinary read stays on the device.
+  await client.get('/interests/index.json', decode);
+  expect(transport).toHaveBeenCalledTimes(1);
+  const refreshed = await client.get('/interests/index.json', decode, true);
+  expect(transport).toHaveBeenCalledTimes(2);
+  expect(transport.mock.calls[1]?.[1].headers).toMatchObject({
+    'If-None-Match': '"index-v1"',
+    'Cache-Control': 'no-cache',
+  });
+  expect(refreshed.stale).toBe(false);
+  // An expiry revalidation is ordinary: no request directive.
+  time = 1000 + 301_000 + 2000;
+  await client.get('/interests/index.json', decode);
+  expect(transport).toHaveBeenCalledTimes(3);
+  expect(transport.mock.calls[2]?.[1].headers).not.toHaveProperty(
+    'Cache-Control',
+  );
+});
 test('offline fallback has its saved/as-of dates, uncached offline maps to error', async () => {
   const transport = jest
     .fn()

@@ -29,6 +29,7 @@ import { billRoute, electorateRoute } from '../navigation/routes';
 import { InlineLink } from './bills/parts';
 import { EvidenceFooter, RecordBlock } from './your-mp/Evidence';
 import { RepresentativeRows } from './your-mp/RepresentativeRows';
+import { FollowingEntry } from './follows/FollowingEntry';
 import { loadChoice, saveChoice } from './your-mp/choice-store';
 import { useSeatChooserRequest } from './your-mp/chooser-request';
 import {
@@ -275,6 +276,7 @@ export default function YourMP() {
           ) : null}
         </Group>
       ) : null}
+      {chooser && !choice ? <FollowingEntry /> : null}
       {view && directory && !chooser ? (
         <>
           <Group>
@@ -547,6 +549,7 @@ export default function YourMP() {
               )}
             </Section>
           ) : null}
+          <FollowingEntry />
           <Button
             label="Change seat"
             testID="change-seat"

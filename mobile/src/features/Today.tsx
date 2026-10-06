@@ -10,6 +10,7 @@ import { EditionSection } from './EditionCard';
 import { RecordRow } from './RecordRow';
 import { billRoute, declarationsRoute, leadsRoute } from '../navigation/routes';
 import { TodayDeclaration } from './today/TodayDeclaration';
+import { FollowingSection } from './follows/FollowingSection';
 
 export default function Today() {
   const [data, setData] = useState<Awaited<
@@ -60,6 +61,11 @@ export default function Today() {
         block={edition}
         onRetry={refresh}
         refreshing={refreshing}
+      />
+      <FollowingSection
+        refresh={retry}
+        refreshing={refreshing}
+        onRetry={refresh}
       />
       <Section title="Recently introduced bills" testID="today-bills">
         <CatalogState

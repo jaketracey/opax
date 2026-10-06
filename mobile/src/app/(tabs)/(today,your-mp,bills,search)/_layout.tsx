@@ -57,6 +57,7 @@ export default function TabStack({ segment }: { segment: string }) {
         name="declarations"
         options={{ title: 'Declared interests' }}
       />
+      <Stack.Screen name="follows" options={{ title: 'Following' }} />
     </Stack>
   );
 }
