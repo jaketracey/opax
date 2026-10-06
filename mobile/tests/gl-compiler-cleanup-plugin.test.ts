@@ -1,8 +1,32 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-const { configureContext } = jest.requireActual(
+const { configureContext, configureCamera } = jest.requireActual(
   '../plugins/withGLCompilerCleanup.js',
+);
+test.each([
+  'EXGLCameraObject.h',
+  'EXGLCameraObject.mm',
+  'EXGLObjectManager.h',
+  'EXGLObjectManager.mm',
+  'ExpoGLModule.swift',
+])(
+  'camera path %s is disabled without capture references, version guarded and idempotent',
+  (file) => {
+    const input = readFileSync(
+      resolve('node_modules/expo-gl/ios', file),
+      'utf8',
+    );
+    const patched = configureCamera(input, file, '57.0.2');
+    expect(patched).not.toMatch(/AVCapture|AVKit|EXCameraInterface/);
+    if (file.endsWith('.mm') || file.endsWith('.swift'))
+      expect(patched).not.toContain('[[EXGLCameraObject alloc]');
+    expect(configureCamera(patched, file, '57.0.2')).toBe(patched);
+    expect(() => configureCamera(input, file, '57.0.3')).toThrow('reviewed');
+    expect(() =>
+      configureCamera(input + '\n// changed', file, '57.0.2'),
+    ).toThrow('changed unexpectedly');
+  },
 );
 const source = readFileSync(
   resolve('node_modules/expo-gl/ios/EXGLContext.mm'),
