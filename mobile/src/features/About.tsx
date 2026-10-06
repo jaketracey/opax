@@ -311,7 +311,7 @@ export default function About() {
         </Text>
         <OpaxWebLink
           label="Privacy policy"
-          path="/community?view=privacy"
+          path="/privacy"
           testID="about-privacy"
         />
       </Section>

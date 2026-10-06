@@ -107,6 +107,8 @@ private func deletionResponse(_ name: String) throws -> HTTPResponse {
         await rig.http.setResponse(.deletionCode, try deletionResponse("requestDisabled"))
         let voice = try await rig.client.status(); XCTAssertFalse(voice.signedIn)
         XCTAssertEqual(voice.refusal, .signedOut) // retention never grants voice access
+        // ...but the account stays held, so sign-out and deletion stay offered.
+        XCTAssertTrue(voice.accountHeld); XCTAssertTrue(voice.bridgeValue.accountHeld)
         let challenge = try await rig.client.requestDeletionCode(); XCTAssertTrue(challenge.sent)
         let requests = await rig.http.requests
         XCTAssertEqual(requests.map { $0.url!.path }, [AuthRoute.voiceStatus.rawValue, AuthRoute.communityStatus.rawValue, AuthRoute.deletionCode.rawValue])
@@ -123,10 +125,21 @@ private func deletionResponse(_ name: String) throws -> HTTPResponse {
             var body = try JSONSerialization.jsonObject(with: deletionResponse("request401Status").body) as! [String: Any]
             body.removeValue(forKey: "can_delete_account"); if let flag { body["can_delete_account"] = flag }
             await rig.http.setResponse(.communityStatus, HTTPResponse(status: 200, body: json(body)))
-            _ = try await rig.client.status()
+            let voice = try await rig.client.status(); XCTAssertFalse(voice.bridgeValue.accountHeld)
             let stored = await rig.store.read(); XCTAssertNil(stored)
             let reads = await rig.http.count(.communityStatus); XCTAssertEqual(reads, 1); await rig.close()
         }
+    }
+    func testAccountHeldFollowsTheSessionNotVoiceAccess() async throws {
+        let rig = try await Rig.make()
+        await rig.http.configure(status: signedStatus())
+        let signedIn = try await rig.client.status()
+        XCTAssertTrue(signedIn.signedIn); XCTAssertTrue(signedIn.bridgeValue.accountHeld)
+        await rig.store.clear()
+        await rig.http.configure(status: signedStatus(signedIn: false))
+        let signedOut = try await rig.client.status()
+        XCTAssertFalse(signedOut.bridgeValue.accountHeld)
+        let reads = await rig.http.count(.communityStatus); XCTAssertEqual(reads, 0); await rig.close()
     }
     func testVoiceSignOutWithExistingMemberOrUnconfirmedCommunityKeepsCredential() async throws {
         let responses = [try deletionResponse("requestPausedStatus"),
@@ -138,6 +151,7 @@ private func deletionResponse(_ name: String) throws -> HTTPResponse {
             await rig.http.configure(status: signedStatus(signedIn: false))
             await rig.http.setResponse(.communityStatus, response)
             let status = try await rig.client.status(); XCTAssertFalse(status.signedIn)
+            XCTAssertTrue(status.accountHeld) // unconfirmed revocation keeps the controls
             let stored = await rig.store.read(); XCTAssertNotNil(stored); await rig.close()
         }
     }

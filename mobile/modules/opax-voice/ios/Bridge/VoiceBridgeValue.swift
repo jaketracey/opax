@@ -27,7 +27,8 @@ enum VoiceBridgeValue {
                 "unlimited": value.unlimited.map { $0 as Any } ?? NSNull(),
                 "totalSeconds": value.totalSeconds.map { $0 as Any } ?? NSNull(),
                 "remainingSeconds": value.remainingSeconds, "activeSession": open,
-                "budgetOpen": value.budgetOpen.map { $0 as Any } ?? NSNull()]
+                "budgetOpen": value.budgetOpen.map { $0 as Any } ?? NSNull(),
+                "accountHeld": value.accountHeld]
     }
     static func event(_ event: VoiceEvent) -> [String: Any] {
         switch event {

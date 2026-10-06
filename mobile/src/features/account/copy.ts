@@ -15,7 +15,7 @@ export const accountCopy = {
   unlimited: 'Unlimited voice access · up to 10 minutes per call',
   voiceOff: 'Voice is taking a break. You can still search the public records.',
   unavailableAccount:
-    'This account is unavailable. You can still delete it, or sign out of this iPhone.',
+    'Voice is not available for this account. You can still sign out of this iPhone or delete the account.',
   statusFailed: 'We could not check your account.',
   signOut: 'Sign out of this iPhone',
   signedOutNotice: 'Signed out of this iPhone.',
@@ -49,7 +49,10 @@ export const accountCopy = {
   deleteIntro:
     'Your OPAX community account is also used on opax.com.au. Deleting it here deletes it there too.',
   deletedHeading: 'What is deleted',
-  // Decision 5 (IOS-APP section 11) and IOS-UX 4.12.
+  // Decision 5 (IOS-APP section 11), IOS-UX 4.12 and the privacy page's
+  // "Deleting your account" (opax.com.au/privacy#privacy-deletion).
+  deletedNote:
+    'Deleting removes these from OPAX’s live database straight away. It cannot be undone.',
   deleted: [
     'Your account and its personal data, including your email address.',
     'Your own discussions and replies on opax.com.au, with your reading lists, saved chats and messages.',
@@ -58,10 +61,12 @@ export const accountCopy = {
   keptHeading: 'What is not deleted',
   kept: [
     'Other members’ replies under a discussion you started. The discussion stays as a stub with no personal data. Other members also keep their own messages.',
-    'Your voice usage, kept without a link to you, because the shared monthly voice limit depends on it. Each record keeps the voice provider’s reference to its conversation until OPAX’s housekeeping removes it, a day after the call is recorded as closed. A call cut off by a failure is recorded as closed shortly after its time limit.',
+    'Your voice usage, kept without a link to you, because the shared monthly voice limit depends on it. Each record keeps the voice provider’s reference to its conversation until OPAX’s housekeeping removes it, a day after the call is recorded as closed. A call cut off by a failure is recorded as closed shortly after its time limit. Removing the reference does not delete the provider’s own copy, which follows the provider’s settings.',
     'Voice time is not refunded. Deleting the account does not give back time already used.',
+    'Recovery history. Cloudflare keeps a rolling history of OPAX’s database so that it can be restored if something goes wrong. Your deleted data stays in it for up to 30 days, then is gone.',
     'The public parliamentary record.',
   ],
+  deletionPolicy: 'Privacy policy: deleting your account',
   deleteConfirmNote:
     'To confirm, we will email a deletion code to the address on your account.',
   cancel: 'Cancel',
@@ -73,7 +78,7 @@ export const accountCopy = {
   sendNewDeletionCode: 'Send a new deletion code',
   accountDeleted: 'Account deleted',
   accountDeletedDetail:
-    'Your OPAX account, its personal data and your own discussions and replies have been deleted. This iPhone is signed out. Everything public in the app keeps working.',
+    'Your OPAX account, its personal data and your own discussions and replies have been removed from OPAX’s live database. Its recovery history keeps them for up to 30 days, then they are gone. This iPhone is signed out. Everything public in the app keeps working.',
   done: 'Done',
 } as const;
 
@@ -81,13 +86,8 @@ export const refusalCopy = {
   invalidEmail: 'Enter a valid email address.',
   codeIncomplete: 'Enter all 8 digits of the code.',
   codeFailed: 'That code did not work. Check it, or send a new code.',
-  codeExpired: 'That code has expired. Send a new code.',
-  codeSpent: 'That code can no longer be used. Send a new code.',
   deletionCodeFailed:
     'That code did not work. Check it, or send a new deletion code.',
-  deletionCodeExpired: 'That code has expired. Send a new deletion code.',
-  deletionCodeSpent:
-    'That code can no longer be used. Send a new deletion code.',
   tooManyCodes: 'Too many codes requested. Try again later.',
   tooManyAttempts: 'Too many attempts. Try again later.',
   network: 'OPAX could not be reached. Check your connection and try again.',

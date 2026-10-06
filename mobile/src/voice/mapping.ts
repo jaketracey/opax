@@ -41,6 +41,9 @@ export function mapStatus(value: unknown): VoiceStatus {
     totalSeconds: nullable(v.totalSeconds, seconds),
     remainingSeconds: seconds(v.remainingSeconds),
     budgetOpen: nullable(v.budgetOpen, boolean),
+    ...(v.accountHeld === undefined
+      ? {}
+      : { accountHeld: boolean(v.accountHeld) }),
     activeSession: nullable(v.activeSession, (value) => {
       const open = object(value);
       return {

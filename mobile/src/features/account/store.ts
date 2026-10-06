@@ -10,9 +10,8 @@ export type AccountState = {
   status: VoiceStatus | null;
   error: VoiceFailure | null;
   checking: boolean;
+  /** Set only by a confirmed code exchange; dropped when no account is held. */
   email: string | null;
-  /** A code was accepted, but voice treats the member as signed out (disabled). */
-  unavailable: boolean;
   /** The native controller cleared its status; the account is unknown. */
   cleared: boolean;
   notice: string | null;
@@ -29,7 +28,6 @@ const initial: AccountState = {
   error: null,
   checking: false,
   email: null,
-  unavailable: false,
   cleared: false,
   notice: null,
 };
@@ -37,18 +35,22 @@ let state = initial;
 let request = 0;
 const listeners = new Set<() => void>();
 
+const held = (status: VoiceStatus | null) =>
+  status !== null && (status.signedIn || status.accountHeld === true);
+
 function update(next: Partial<AccountState>) {
   state = { ...state, ...next };
-  if (state.status?.signedIn) state = { ...state, unavailable: false };
-  else if (state.status && !state.unavailable)
-    state = { ...state, email: null };
+  if (state.status && !held(state.status)) state = { ...state, email: null };
   for (const listener of listeners) listener();
 }
 
 export function accountView(value: AccountState): AccountView {
   if (value.status?.signedIn)
     return { kind: 'signedIn', status: value.status, email: value.email };
-  if (value.unavailable) return { kind: 'unavailable' };
+  // Voice refuses the member, but the account is still held on this iPhone
+  // (a disabled member): sign-out and deletion stay offered, after a relaunch
+  // or a later moderation too, because the native status says so.
+  if (held(value.status)) return { kind: 'unavailable' };
   if (value.status) return { kind: 'signedOut' };
   if (value.checking) return { kind: 'checking' };
   return value.error || value.cleared
@@ -72,7 +74,10 @@ export async function refreshAccount(): Promise<void> {
   else update({ error: result.error, checking: false });
 }
 
-/** After an accepted code: the status the exchange returned. */
+/**
+ * After a confirmed code exchange only: the status it returned, labelled with
+ * the address the code went to. Never after a failed or unknown exchange.
+ */
 export function codeAccepted(email: string, status: VoiceStatus) {
   request++;
   update({
@@ -80,7 +85,6 @@ export function codeAccepted(email: string, status: VoiceStatus) {
     error: null,
     checking: false,
     email: email.trim().toLowerCase(),
-    unavailable: !status.signedIn,
     cleared: false,
     notice: null,
   });
@@ -91,7 +95,6 @@ export async function signOut(): Promise<void> {
   // The token is removed on this iPhone even when the server cannot be told.
   update({
     status: null,
-    unavailable: false,
     email: null,
     notice: result.ok
       ? accountCopy.signedOutNotice
@@ -101,13 +104,13 @@ export async function signOut(): Promise<void> {
 }
 
 export function accountDeleted() {
-  update({ status: null, unavailable: false, email: null, notice: null });
+  update({ status: null, email: null, notice: null });
   void refreshAccount();
 }
 
 /** The session ended on the server (401): show signed out. */
 export function sessionEnded() {
-  update({ status: null, unavailable: false, email: null });
+  update({ status: null, email: null });
   void refreshAccount();
 }
 

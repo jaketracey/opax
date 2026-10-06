@@ -133,6 +133,15 @@ name: 22 Account sign-in by emailed code, sign-out and deletion
     timeout: 30000
 - scrollUntilVisible:
     element:
+      text: 'Recovery history\..*up to 30 days, then is gone\.'
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/22-delete-recovery
+- scrollUntilVisible:
+    element:
+      id: account-deletion-policy
+    timeout: 30000
+- scrollUntilVisible:
+    element:
       id: account-delete-confirm
     timeout: 30000
 - waitForAnimationToEnd

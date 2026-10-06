@@ -57,6 +57,9 @@ const status = (value: Partial<VoiceStatus> = {}): VoiceStatus => ({
   ...value,
 });
 const signedOut = status({ signedIn: false, unlimited: null });
+// A disabled member: voice refuses them, but the native core keeps the
+// session so the account can still be signed out and deleted.
+const disabled = status({ signedIn: false, enabled: false, accountHeld: true });
 
 type Renderer = TestRenderer.ReactTestRenderer;
 function texts(renderer: Renderer): string[] {
@@ -189,14 +192,13 @@ describe('refusals', () => {
 });
 
 describe('account store', () => {
-  test('status decides the view; a code accepted for a disabled member is unavailable', () => {
+  test('status decides the view; a held account voice refuses is unavailable', () => {
     expect(
       accountView({
         status: status(),
         error: null,
         checking: false,
         email: 'happy@example.invalid',
-        unavailable: false,
         cleared: false,
         notice: null,
       }),
@@ -207,11 +209,10 @@ describe('account store', () => {
     });
     expect(
       accountView({
-        status: signedOut,
+        status: disabled,
         error: null,
         checking: false,
         email: null,
-        unavailable: true,
         cleared: false,
         notice: null,
       }).kind,
@@ -222,7 +223,6 @@ describe('account store', () => {
         error: null,
         checking: false,
         email: null,
-        unavailable: false,
         cleared: true,
         notice: null,
       }).kind,
@@ -263,6 +263,34 @@ describe('Account section', () => {
     await press(renderer, 'account-sign-out');
     expect(mocked.logout).toHaveBeenCalledTimes(1);
     expect(shows(renderer, accountCopy.signedOutNotice)).toBe(true);
+    expect(shows(renderer, accountCopy.signedOut)).toBe(true);
+  });
+  test('a held account keeps sign-out and deletion after a relaunch, though voice refuses it', async () => {
+    // A fresh store, as after a relaunch: only the native status knows.
+    mocked.status.mockResolvedValue({ ok: true, value: disabled });
+    const renderer = await render(<AccountSection />);
+    expect(shows(renderer, accountCopy.unavailableAccount)).toBe(true);
+    expect(button(renderer, 'account-sign-out')).toBeTruthy();
+    expect(button(renderer, 'account-delete')).toBeTruthy();
+    expect(button(renderer, 'account-sign-in-start')).toBeUndefined();
+  });
+  test('moderation after sign-in keeps sign-out and deletion', async () => {
+    let listener!: (event: VoiceEvent) => void;
+    mocked.subscribe.mockImplementation((value) => {
+      listener = value;
+      return () => {};
+    });
+    mocked.status.mockResolvedValue({ ok: true, value: status() });
+    const renderer = await render(<AccountSection />);
+    await act(async () => {
+      codeAccepted('happy@example.invalid', status());
+    });
+    await act(async () => listener({ type: 'status', status: disabled }));
+    expect(shows(renderer, accountCopy.unavailableAccount)).toBe(true);
+    expect(button(renderer, 'account-delete')).toBeTruthy();
+    // Once no account is held, the controls and the label go.
+    await act(async () => listener({ type: 'status', status: signedOut }));
+    expect(button(renderer, 'account-delete')).toBeUndefined();
     expect(shows(renderer, accountCopy.signedOut)).toBe(true);
   });
   test('unlimited and switched-off voice', async () => {
@@ -379,10 +407,8 @@ describe('Sign in by code', () => {
     expect(onSignedIn).not.toHaveBeenCalled();
   });
   test('a disabled member is told the account is unavailable', async () => {
-    mocked.consumeCode.mockResolvedValueOnce({
-      ok: true,
-      value: status({ signedIn: false, enabled: false }),
-    });
+    mocked.consumeCode.mockResolvedValueOnce({ ok: true, value: disabled });
+    mocked.status.mockResolvedValue({ ok: true, value: disabled });
     const onSignedIn = jest.fn();
     const renderer = await toCode(onSignedIn);
     await type(renderer, 'account-code', '01234567');
@@ -391,13 +417,38 @@ describe('Sign in by code', () => {
     expect(shows(section, accountCopy.unavailableAccount)).toBe(true);
     expect(button(section, 'account-delete')).toBeTruthy();
   });
-  test('an accepted code whose status read failed still signs in', async () => {
-    mocked.consumeCode.mockResolvedValueOnce({ ok: false, error: 'network' });
-    mocked.status.mockResolvedValueOnce({ ok: true, value: status() });
+  test('a refused code never signs in, nor relabels the account already held', async () => {
+    // Account A is signed in; a code for B is refused while a general status
+    // read would still say "signed in" (A's session).
+    codeAccepted('a@example.invalid', status());
+    mocked.status.mockResolvedValue({ ok: true, value: status() });
+    for (const error of [
+      'invalidResponse',
+      'network',
+      'unavailable',
+    ] as const) {
+      mocked.consumeCode.mockResolvedValueOnce({ ok: false, error });
+      const onSignedIn = jest.fn();
+      const renderer = await render(<SignInFlow onSignedIn={onSignedIn} />);
+      await type(renderer, 'account-email', 'b@example.invalid');
+      await press(renderer, 'account-send-code');
+      await type(renderer, 'account-code', '01234567');
+      expect(onSignedIn).not.toHaveBeenCalled();
+      expect(refusal(renderer)).toBe(consumeRefusal(error));
+    }
+    // The flow never read a general status in place of the exchange.
+    expect(mocked.status).not.toHaveBeenCalled();
+    const section = await render(<AccountSection />);
+    expect(shows(section, 'Signed in as a@example.invalid')).toBe(true);
+    expect(shows(section, 'b@example.invalid')).toBe(false);
+  });
+  test('an exchange that holds no account is not a sign-in', async () => {
+    mocked.consumeCode.mockResolvedValueOnce({ ok: true, value: signedOut });
     const onSignedIn = jest.fn();
     const renderer = await toCode(onSignedIn);
     await type(renderer, 'account-code', '01234567');
-    expect(onSignedIn).toHaveBeenCalledWith('signedIn');
+    expect(onSignedIn).not.toHaveBeenCalled();
+    expect(refusal(renderer)).toBe(refusalCopy.generic);
   });
   test('offline and too many attempts', async () => {
     mocked.consumeCode
@@ -418,7 +469,7 @@ describe('Sign in by code', () => {
     await type(renderer, 'account-code', '76543210');
     for (let i = 0; i < 5; i++) await press(renderer, 'account-sign-in-code');
     expect(mocked.consumeCode).toHaveBeenCalledTimes(5);
-    expect(refusal(renderer)).toBe(refusalCopy.codeSpent);
+    expect(refusal(renderer)).toBe(refusalCopy.codeFailed);
   });
   test('an incomplete code is not sent', async () => {
     const renderer = await toCode();
@@ -453,7 +504,7 @@ describe('Sign in by code', () => {
     });
     await type(renderer, 'account-code', '01234567');
     expect(mocked.consumeCode).not.toHaveBeenCalled();
-    expect(refusal(renderer)).toBe(refusalCopy.codeExpired);
+    expect(refusal(renderer)).toBe(refusalCopy.codeFailed);
   });
   test('Use a different email returns to the address and drops the challenge', async () => {
     const renderer = await toCode();
@@ -514,6 +565,32 @@ describe('Delete account', () => {
       page.indexOf('Voice time is not refunded'),
     );
   });
+  test('the confirmation discloses recovery history and links the policy', async () => {
+    const { renderer } = await toCode();
+    const page = texts(renderer).join('\n');
+    expect(page).toMatch(
+      /Deleting removes these from OPAX’s live database straight away\. It cannot be undone\./,
+    );
+    expect(page).toMatch(
+      /Recovery history\..*Your deleted data stays in it for up to 30 days, then is gone\./,
+    );
+    const policy = renderer.root.findByProps({
+      testID: 'account-deletion-policy',
+    });
+    expect(policy.props.path).toBe('/privacy#privacy-deletion');
+  });
+  test('after five deletion codes the challenge is not tried again', async () => {
+    mocked.deleteAccount.mockResolvedValue({
+      ok: false,
+      error: 'deletionVerificationFailed',
+    });
+    const { renderer } = await toCode();
+    await press(renderer, 'account-delete-confirm');
+    await type(renderer, 'account-deletion-code', '76543210');
+    for (let i = 0; i < 6; i++) await press(renderer, 'account-delete-final');
+    expect(mocked.deleteAccount).toHaveBeenCalledTimes(5);
+    expect(refusal(renderer)).toBe(refusalCopy.deletionCodeFailed);
+  });
   test('a fresh code, a deliberate tap, then the result', async () => {
     mocked.status.mockResolvedValue({ ok: true, value: signedOut });
     const { renderer, onDone } = await toCode();
@@ -529,6 +606,9 @@ describe('Delete account', () => {
     expect(mocked.deleteAccount).toHaveBeenCalledWith(challengeId, '01234567');
     expect(shows(renderer, accountCopy.accountDeleted)).toBe(true);
     expect(shows(renderer, accountCopy.accountDeletedDetail)).toBe(true);
+    expect(accountCopy.accountDeletedDetail).toMatch(
+      /removed from OPAX’s live database\. Its recovery history keeps them for up to 30 days/,
+    );
     expect(mocked.status).toHaveBeenCalled();
     await press(renderer, 'account-delete-done');
     expect(onDone).toHaveBeenCalled();

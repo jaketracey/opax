@@ -36,13 +36,24 @@ name: 22 Account refusals, an invalid address and a disabled account
     file: support/account-sign-in.yaml
     env:
       ACCOUNT_EMAIL: disabled@example.invalid
-# The code is accepted, but voice treats a disabled member as signed out.
+# The code is accepted, but voice refuses a disabled member; the account is
+# still held, so sign-out and deletion stay offered.
 - scrollUntilVisible:
     element:
-      text: 'This account is unavailable\..*'
+      text: 'Voice is not available for this account\..*'
     direction: UP
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/22-disabled
+# Reopening reads status afresh: the controls come from the native status.
+- tapOn: Done
+- tapOn: Account and about
+- extendedWaitUntil:
+    visible: 'Voice is not available for this account\..*'
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: account-delete
+    timeout: 30000
 - scrollUntilVisible:
     element:
       id: account-sign-out

@@ -8,6 +8,7 @@ import {
   Field,
   Group,
   Heading,
+  OpaxWebLink,
   Screen,
   Text,
 } from '../../design/primitives';
@@ -71,9 +72,9 @@ export function DeleteAccountFlow({
   async function remove() {
     if (inFlight.current || !challenge.challenge) return;
     if (code.length !== CODE_LENGTH) return refuse(refusalCopy.codeIncomplete);
-    const gate = challenge.gate();
-    if (gate === 'expired') return refuse(refusalCopy.deletionCodeExpired);
-    if (gate === 'spent') return refuse(refusalCopy.deletionCodeSpent);
+    // Same limits as sign-in, and the same answer as any refused code.
+    if (challenge.gate() !== 'open')
+      return refuse(refusalCopy.deletionCodeFailed);
     Keyboard.dismiss();
     inFlight.current = true;
     setBusy('delete');
@@ -173,6 +174,7 @@ export function DeleteAccountFlow({
     <Group testID="account-delete-confirm-step">
       <Text variant="lede">{accountCopy.deleteIntro}</Text>
       <Heading level={2}>{accountCopy.deletedHeading}</Heading>
+      <Text>{accountCopy.deletedNote}</Text>
       {accountCopy.deleted.map((item) => (
         <Text key={item}>{item}</Text>
       ))}
@@ -180,6 +182,11 @@ export function DeleteAccountFlow({
       {accountCopy.kept.map((item) => (
         <Text key={item}>{item}</Text>
       ))}
+      <OpaxWebLink
+        label={accountCopy.deletionPolicy}
+        path="/privacy#privacy-deletion"
+        testID="account-deletion-policy"
+      />
       <Text>{accountCopy.deleteConfirmNote}</Text>
       {error ? (
         <ErrorState message={error} testID="account-delete-error" />

@@ -47,7 +47,7 @@ name: 14 About, coverage, original sources, privacy and font notices
     timeout: 90000
 - tapOn:
     id: about-privacy
-- assertVisible: https://opax.invalid/community\?view=privacy
+- assertVisible: https://opax.invalid/privacy
 - takeScreenshot: ${EVIDENCE}/14-privacy-alert
 - tapOn: OK
 - scrollUntilVisible:

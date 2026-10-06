@@ -45,9 +45,13 @@ export function SignInFlow({
 
   // ErrorState draws the sentence as an alert and moves VoiceOver to it.
   const refuse = (message: string) => setError(message);
+  // Only a confirmed exchange for this attempt signs in and labels the
+  // account with this address; status the exchange returned says which.
   function accepted(address: string, status: VoiceStatus) {
     challenge.clear();
     setCode('');
+    if (!status.signedIn && !status.accountHeld)
+      return refuse(refusalCopy.generic);
     codeAccepted(address, status);
     onSignedIn(status.signedIn ? 'signedIn' : 'unavailable');
   }
@@ -79,9 +83,9 @@ export function SignInFlow({
   async function verify(value: string) {
     if (inFlight.current || !sentTo || !challenge.challenge) return;
     if (value.length !== CODE_LENGTH) return refuse(refusalCopy.codeIncomplete);
-    const gate = challenge.gate();
-    if (gate === 'expired') return refuse(refusalCopy.codeExpired);
-    if (gate === 'spent') return refuse(refusalCopy.codeSpent);
+    // A code past 15 minutes or five tries is not sent, which also spares the
+    // address's daily attempts; it gets the same answer as any refused code.
+    if (challenge.gate() !== 'open') return refuse(refusalCopy.codeFailed);
     Keyboard.dismiss();
     inFlight.current = true;
     setBusy('verify');
@@ -89,14 +93,11 @@ export function SignInFlow({
     setNotice(null);
     challenge.tried();
     const result = await voice.consumeCode(challenge.challenge.id, value);
-    // The exchange can succeed and the status read after it fail; the token
-    // is then already stored, and the used code would be refused next time.
-    const status = result.ok ? result : await voice.status();
     inFlight.current = false;
     setBusy(null);
     if (result.ok) return accepted(sentTo, result.value);
-    if (status.ok && status.value.signedIn)
-      return accepted(sentTo, status.value);
+    // A failure leaves the account as it was. A general status read cannot
+    // say whose session it sees, so it never stands in for this exchange.
     refuse(consumeRefusal(result.error));
   }
 
