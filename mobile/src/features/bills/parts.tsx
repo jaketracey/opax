@@ -9,7 +9,7 @@ import type {
 } from '../../api/bill-transforms';
 import { sourceUrl } from '../../navigation/external';
 import { formatCount, formatDate } from '../../design/format';
-import { isPartyLabel, partyIdentity } from '../../design/party';
+import { isPartyLabel, partyDot, partyIdentity } from '../../design/party';
 import {
   Icon,
   SourceLink,
@@ -158,7 +158,8 @@ const countText = (s: { ayes: number; noes: number }) =>
 /** What VoiceOver reads for one party's split: "Greens, 9 ayes, no noes". */
 export const splitLabel = (s: BillSplit) =>
   `${s.label}, ${ayeWords(s.ayes)}, ${noWords(s.noes)}`;
-// Register codes for people who are not a party: no party dot for them.
+// Register codes for people who are not a party: no party link for them,
+// and no dot except the Independent grey.
 const notParty = (split: BillSplit) =>
   !isPartyLabel(split.party) || !isPartyLabel(split.label);
 
@@ -179,7 +180,7 @@ function SplitRow({
 }) {
   const stacked = useAccessibilitySize();
   const Container = notParty(split) ? View : Pressable;
-  const dot = notParty(split) ? null : partyIdentity(split.label).color;
+  const dot = partyDot(split.party) && partyDot(split.label);
   return (
     <Container
       {...(notParty(split)
@@ -510,6 +511,7 @@ export function Bullet({ children }: { children: string }) {
 export function RecordedParty({ party }: { party: string }) {
   const identity = partyIdentity(party);
   const recorded = isPartyLabel(party);
+  const dot = partyDot(party);
   const Container = recorded ? Pressable : View;
   return (
     <Container
@@ -523,11 +525,11 @@ export function RecordedParty({ party }: { party: string }) {
         : {})}
       accessibilityLabel={identity.name}
     >
-      {recorded && identity.color ? (
+      {dot ? (
         <View
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
-          style={[styles.dot, { backgroundColor: identity.color }]}
+          style={[styles.dot, { backgroundColor: dot }]}
         />
       ) : null}
       <Text wordSafe variant="metadata" style={styles.grow}>

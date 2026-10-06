@@ -159,19 +159,36 @@ test('recorded affiliations require full names and exclude every current person 
   const seats = people.people.flatMap((p) =>
     p.electorates.filter((s) => s.current),
   );
+  const held = (rep: {
+    jurisdiction: string;
+    chamber: string;
+    electorate?: string | null;
+  }) =>
+    seats.some(
+      (seat) =>
+        seat.jurisdiction === rep.jurisdiction &&
+        seat.chamber === rep.chamber &&
+        nameKey(seat.name) === nameKey(rep.electorate ?? ''),
+    );
   for (const member of members.recorded) {
     expect(member.name.trim()).toMatch(/\S+\s+\S+/);
     expect(currentNames.has(nameKey(member.name))).toBe(false);
     const profile = joinPerson(member.slug, slugs, roster, people, manifest);
-    for (const rep of profile.rosterRow?.representation ?? [])
+    const reps = profile.rosterRow?.representation ?? [];
+    // Some parliament and chamber the person sat in has no current holder
+    // of their seat on record.
+    if (reps.length)
       expect(
-        seats.some(
-          (seat) =>
-            seat.jurisdiction === rep.jurisdiction &&
-            seat.chamber === rep.chamber &&
-            nameKey(seat.name) === nameKey(rep.electorate ?? ''),
+        reps.some(
+          (rep) =>
+            !reps.some(
+              (other) =>
+                other.jurisdiction === rep.jurisdiction &&
+                other.chamber === rep.chamber &&
+                held(other),
+            ),
         ),
-      ).toBe(false);
+      ).toBe(true);
     // Undated roster representation cannot assign a state person to a
     // federal electorate, even when the upstream roster mixes those fields.
     expect(member).toMatchObject({ jurisdiction: '', chamber: '', place: '' });
@@ -186,16 +203,44 @@ test('recorded affiliations require full names and exclude every current person 
     manifest,
   );
   expect(recordedShorten.partyStatus).toBe('unknown');
-  expect(
-    recordedShorten.rosterRow?.representation?.some((rep) =>
-      seats.some(
-        (seat) =>
-          seat.jurisdiction === rep.jurisdiction &&
-          seat.chamber === rep.chamber &&
-          nameKey(seat.name) === nameKey(rep.electorate ?? ''),
-      ),
+  expect(recordedShorten.rosterRow?.representation?.some(held)).toBe(true);
+  expect(members.recorded.some((m) => m.slug === 'bill-shorten')).toBe(false);
+});
+test('a seat held by someone else rules out only its own parliament and chamber', () => {
+  // Janelle Saffin, the sitting Labor MLA for Lismore: her former federal
+  // seat, Page, is Kevin Hogan's, and NSW seats carry no dated data.
+  const saffin = joinPerson('janelle-saffin', slugs, roster, people, manifest);
+  expect(saffin.partyStatus).toBe('unknown');
+  const reps = saffin.rosterRow?.representation ?? [];
+  expect(reps).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        jurisdiction: 'federal',
+        chamber: 'representatives',
+        electorate: 'Page',
+      }),
+      expect.objectContaining({
+        jurisdiction: 'nsw',
+        chamber: 'nsw_la',
+        electorate: 'Lismore',
+      }),
+    ]),
+  );
+  const page = people.people.filter((p) =>
+    p.electorates.some(
+      (s) =>
+        s.current &&
+        s.jurisdiction === 'federal' &&
+        s.chamber === 'representatives' &&
+        s.name === 'Page',
     ),
-  ).toBe(true);
+  );
+  expect(page.map((p) => p.name)).toEqual(['Kevin Hogan']);
+  const rows = members.recorded.filter((m) => m.slug === 'janelle-saffin');
+  expect(rows).toHaveLength(1);
+  expect(rows[0]).toMatchObject({ jurisdiction: '', chamber: '', place: '' });
+  expect(members.current.some((m) => m.slug === 'janelle-saffin')).toBe(false);
+  // One house, held by someone else: still ruled out.
   expect(members.recorded.some((m) => m.slug === 'bill-shorten')).toBe(false);
 });
 test('Labor total is pinned independently at JSON pointer /nodes/0/total, never the displayed donor sum', () => {

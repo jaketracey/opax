@@ -225,6 +225,59 @@ test('electorate preserves Census vintage and renders candidates as plain public
   await act(async () => r.unmount());
 });
 
+test('a malformed outline drops only itself: the Electorate screen still reads', async () => {
+  const seat = index.electorates.find((s) => s.name === 'Grayndler')!;
+  const raw = pinned(seat.detail_url) as {
+    boundaries: { geometry_kind: string }[];
+  };
+  // An unclosed ring in the named outlines; the rest of the file is pinned.
+  const broken = (kinds: string[]) => ({
+    ...raw,
+    boundaries: raw.boundaries.map((b) =>
+      kinds.includes(b.geometry_kind)
+        ? {
+            ...b,
+            geometry: {
+              type: 'Polygon',
+              coordinates: [
+                [
+                  [151, -33],
+                  [151.1, -33],
+                  [151.1, -33.1],
+                ],
+              ],
+            },
+          }
+        : b,
+    ),
+  });
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  const official = c.decodeElectorate(broken(['official']));
+  expect(official.boundaries.map((b) => b.geometry_kind)).toEqual([
+    'statistical',
+  ]);
+  expect(warn).toHaveBeenCalledWith(
+    `Skipped a malformed display outline for ${seat.electorate_id}`,
+  );
+  mock.electorateFor.mockResolvedValue(result(c.electorateFor(official)));
+  let r = await render(<Electorate />);
+  expect(text(r)).toContain('2021 Census geography');
+  expect(text(r)).toContain('Display outline · ABS statistical geography');
+  await act(async () => r.unmount());
+  mock.electorateFor.mockResolvedValue(
+    result(
+      c.electorateFor(c.decodeElectorate(broken(['official', 'statistical']))),
+    ),
+  );
+  r = await render(<Electorate />);
+  expect(text(r)).toContain('2021 Census geography');
+  expect(
+    r.root.findAll((n) => n.props.testID === 'outline-unavailable').length,
+  ).toBeGreaterThan(0);
+  await act(async () => r.unmount());
+  warn.mockRestore();
+});
+
 test('roster-only member shows limited coverage without fabricating figures', async () => {
   mockParams.slug = 'tony-abbott';
   mock.person.mockResolvedValue(

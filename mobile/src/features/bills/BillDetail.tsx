@@ -95,7 +95,10 @@ export default function BillDetail({
   const params = useLocalSearchParams<{ key: string; section?: string }>();
   const key = recordKey ?? params.key;
   const focusedDivisions = params.section === 'divisions';
-  const load = useCallback(() => catalogs.billFor(String(key)), [key]);
+  const load = useCallback(
+    (refresh: boolean) => catalogs.billFor(String(key), refresh),
+    [key],
+  );
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
   const [sponsors, setSponsors] = useState<Record<string, PersonSlug>>({});
   const view = record?.data;

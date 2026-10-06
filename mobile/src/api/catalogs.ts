@@ -120,8 +120,7 @@ export class Catalogs {
         for (const r of batch) {
           if (r.status === 'fulfilled') {
             if (files.length < 32) files.push(r.value);
-          }
-          else failed++;
+          } else failed++;
         }
       }
       if (candidates.length && !files.length)
@@ -287,11 +286,19 @@ export class Catalogs {
   electorate(path: string) {
     return this.client.get(path, decode.decodeElectorate);
   }
-  bills() {
-    return this.client.get('/bills/index.json', decode.decodeBillIndex);
+  bills(refresh = false) {
+    return this.client.get(
+      '/bills/index.json',
+      decode.decodeBillIndex,
+      refresh,
+    );
   }
-  bill(key: string) {
-    return this.client.get(`/bills/${billKey(key)}.json`, decode.decodeBill);
+  bill(key: string, refresh = false) {
+    return this.client.get(
+      `/bills/${billKey(key)}.json`,
+      decode.decodeBill,
+      refresh,
+    );
   }
   votes() {
     return this.client.get('/votes.json', decode.decodeVotes);
@@ -417,8 +424,11 @@ export class Catalogs {
     );
     return { ...result, data: cached(coverageFor(result.data), [result]) };
   }
-  async billFor(key: string) {
-    const [bill, index] = await Promise.all([this.bill(key), this.bills()]);
+  async billFor(key: string, refresh = false) {
+    const [bill, index] = await Promise.all([
+      this.bill(key, refresh),
+      this.bills(refresh),
+    ]);
     const view = billFor(bill.data, index.data);
     for (const block of [
       view.identity,

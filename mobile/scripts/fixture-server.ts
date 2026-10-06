@@ -29,14 +29,6 @@ if (!Number.isInteger(port) || (port !== 0 && (port < 8900 || port > 8999)))
   throw new Error(
     'Fixture port must be 8900–8999 or 0 (OS-assigned loopback port)',
   );
-const files = new Map<string, Buffer>();
-const pinnedBytes = fixtureBytes(snapshot);
-for (const path of Object.keys(snapshot.files)) {
-  if (snapshot.testOnlyFiles.includes(path)) continue;
-  if (path.endsWith('.webp')) assertPortraitPath(path);
-  else assertAllowedPath(path);
-  files.set(path, pinnedBytes(path));
-}
 // W13 edition reader: the pinned production response, served verbatim with
 // the Worker's validators (appRead). OPAX_FIXTURE_EDITION picks the journal:
 // - pinned: the edition is posted;
@@ -49,6 +41,14 @@ const editionModes = ['pinned', 'absent', 'withdrawn'];
 const editionMode = process.env.OPAX_FIXTURE_EDITION ?? 'pinned';
 if (!editionModes.includes(editionMode))
   throw new Error('OPAX_FIXTURE_EDITION must be pinned, absent or withdrawn');
+const files = new Map<string, Buffer>();
+const pinnedBytes = fixtureBytes(snapshot);
+for (const path of Object.keys(snapshot.files)) {
+  if (snapshot.testOnlyFiles.includes(path)) continue;
+  if (path.endsWith('.webp')) assertPortraitPath(path);
+  else assertAllowedPath(path);
+  files.set(path, pinnedBytes(path));
+}
 let editionWithdrawn = editionMode === 'absent';
 // Local follows (journey 26). OPAX_FIXTURE_DATA picks the catalogs:
 // - pinned: the pinned bytes, as always;

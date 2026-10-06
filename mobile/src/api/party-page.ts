@@ -13,32 +13,10 @@ import {
   billName,
   billQuestionParts,
 } from './bill-transforms';
-import {
-  isPartyLabel,
-  partyIdentity,
-  samePartyLabel,
-  partySlug,
-} from '../design/party';
+import { isPartyLabel, samePartyLabel } from '../design/party';
 import { nameKey } from './ids';
+export { resolveParty } from '../design/party';
 
-export function resolveParty(input: string, labels: string[]): string | null {
-  if (!isPartyLabel(input)) return null;
-  labels = labels.filter(isPartyLabel);
-  const exactName = labels.find((label) => label === input);
-  const slugMatches = labels.filter((label) => partySlug(label) === input);
-  const candidates = exactName
-    ? [exactName]
-    : slugMatches.length
-      ? slugMatches
-      : [input];
-  const matches = labels.filter((label) =>
-    candidates.some((candidate) => samePartyLabel(label, candidate)),
-  );
-  const identities = new Set(
-    matches.map((label) => partyIdentity(label).short),
-  );
-  return identities.size === 1 ? matches[0]! : null;
-}
 export function partyLabels(
   roster: Roster,
   people: PeopleCatalog,
@@ -159,14 +137,25 @@ export function partyMembers(
           });
       }
     } else if (p.party && samePartyLabel(p.party, label)) {
+      // A recorded seat now held by someone else rules out only its own
+      // parliament and chamber: a former federal MP can sit in a state house
+      // whose seats carry no dated data (Janelle Saffin: Page, then Lismore).
+      const houses = new Map<string, boolean>();
+      for (const r of p.rosterRow?.representation ?? []) {
+        const house = `${r.jurisdiction}|${r.chamber}`;
+        houses.set(
+          house,
+          (houses.get(house) ?? false) ||
+            (!!r.electorate &&
+              currentSeats.has(
+                seatKey(r.jurisdiction, r.chamber, r.electorate),
+              )),
+        );
+      }
       if (
         !p.name.trim().includes(' ') ||
         currentNames.has(nameKey(p.name)) ||
-        p.rosterRow?.representation?.some(
-          (r) =>
-            r.electorate &&
-            currentSeats.has(seatKey(r.jurisdiction, r.chamber, r.electorate)),
-        )
+        (houses.size > 0 && [...houses.values()].every(Boolean))
       )
         continue;
       recorded.push({
