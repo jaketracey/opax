@@ -3,72 +3,119 @@ import TestRenderer from 'react-test-renderer';
 import { ActionSheetIOS } from 'react-native';
 import { Button } from '../src/design/primitives';
 import { AnswerCaption } from '../src/features/talk/AnswerCaption';
+import { canReport, talkMenu } from '../src/features/talk/menu';
 import type { TranscriptTurn, VoiceSource } from '../src/voice';
 import { reportFromSources } from '../src/features/talk/reportAnswer';
+
+// Reporting moved from each caption to Talk's More menu.
+function menuFor(transcript: TranscriptTurn[], onReport = jest.fn()) {
+  const item = talkMenu({
+    live: true,
+    active: true,
+    typing: false,
+    report: canReport(transcript),
+    consent: true,
+    onType: jest.fn(),
+    onReport,
+    onPrivacy: jest.fn(),
+    onWithdraw: jest.fn(),
+  });
+  if (item.type !== 'menu') throw new Error('Expected the More menu');
+  return item.menu.items.flatMap((entry) =>
+    entry.type === 'action' ? [entry] : [],
+  );
+}
+const reportItem = (transcript: TranscriptTurn[], onReport = jest.fn()) =>
+  menuFor(transcript, onReport).find(
+    (entry) => entry.label === 'Report this answer',
+  );
 
 test.each<TranscriptTurn>([
   { role: 'user', id: 1, text: 'Synthetic question' },
   { role: 'agent', id: 2, text: ' ' },
 ])('does not offer reporting for $role caption "$text"', (turn) => {
-  const report = jest.fn();
+  expect(canReport([turn])).toBe(false);
+  expect(reportItem([turn])).toBeUndefined();
+});
+
+test('captions carry no report control and name their speaker', () => {
   let renderer!: TestRenderer.ReactTestRenderer;
   act(() => {
     renderer = TestRenderer.create(
-      <AnswerCaption turn={turn} onReport={report} />,
+      <AnswerCaption
+        turn={{ role: 'agent', id: 1, text: 'First synthetic answer' }}
+      />,
     );
   });
   expect(renderer.root.findAllByType(Button)).toHaveLength(0);
-  expect(report).not.toHaveBeenCalled();
+  expect(
+    renderer.root.findByProps({ testID: 'talk-turn-agent' }).props
+      .accessibilityLabel,
+  ).toBe('OPAX said First synthetic answer');
   act(() => renderer.unmount());
 });
 
 test('an explicit report tap passes no caption words or answer ID', () => {
   const report = jest.fn();
-  let renderer!: TestRenderer.ReactTestRenderer;
-  act(() => {
-    renderer = TestRenderer.create(
-      <>
-        <AnswerCaption
-          turn={{ role: 'agent', id: 1, text: 'First synthetic answer' }}
-          onReport={report}
-        />
-        <AnswerCaption
-          turn={{ role: 'agent', id: 2, text: 'Second synthetic answer' }}
-          onReport={report}
-        />
-      </>,
-    );
-  });
+  const item = reportItem(
+    [
+      { role: 'agent', id: 1, text: 'First synthetic answer' },
+      { role: 'agent', id: 2, text: 'Second synthetic answer' },
+    ],
+    report,
+  );
   expect(report).not.toHaveBeenCalled();
-  const button = renderer.root.findAllByType(Button)[1]!;
-  expect(button.props.label).toBe('Report this answer');
-  act(() => button.props.onPress());
+  act(() => item!.onPress());
   expect(report).toHaveBeenCalledTimes(1);
   expect(report).toHaveBeenCalledWith();
-  act(() => renderer.unmount());
 });
 
 test('caption corrections cannot change the data sent by the report control', () => {
   const report = jest.fn();
-  let renderer!: TestRenderer.ReactTestRenderer;
-  act(() => {
-    renderer = TestRenderer.create(
-      <AnswerCaption
-        turn={{ role: 'agent', id: 1, text: 'Original synthetic answer' }}
-        onReport={report}
-      />,
-    );
-    renderer.update(
-      <AnswerCaption
-        turn={{ role: 'agent', id: 1, text: 'Corrected synthetic answer' }}
-        onReport={report}
-      />,
-    );
+  const original = reportItem(
+    [{ role: 'agent', id: 1, text: 'Original synthetic answer' }],
+    report,
+  );
+  const corrected = reportItem(
+    [{ role: 'agent', id: 1, text: 'Corrected synthetic answer' }],
+    report,
+  );
+  act(() => original!.onPress());
+  act(() => corrected!.onPress());
+  expect(report.mock.calls).toEqual([[], []]);
+});
+
+test('the menu keeps web pages out of a call and offers withdrawal only after consent', () => {
+  const during = talkMenu({
+    live: true,
+    active: true,
+    typing: false,
+    report: false,
+    consent: true,
+    onType: jest.fn(),
+    onReport: jest.fn(),
+    onPrivacy: jest.fn(),
+    onWithdraw: jest.fn(),
   });
-  expect(report).not.toHaveBeenCalled();
-  act(() => renderer.root.findByType(Button).props.onPress());
-  expect(report).toHaveBeenCalledWith();
-  act(() => renderer.unmount());
+  const before = talkMenu({
+    live: false,
+    active: false,
+    typing: false,
+    report: false,
+    consent: false,
+    onType: jest.fn(),
+    onReport: jest.fn(),
+    onPrivacy: jest.fn(),
+    onWithdraw: jest.fn(),
+  });
+  const labels = (item: typeof during) =>
+    item.type === 'menu'
+      ? item.menu.items.map((entry) =>
+          entry.type === 'action' ? entry.label : '',
+        )
+      : [];
+  expect(labels(during)).toEqual(['Type a message', 'Withdraw voice consent']);
+  expect(labels(before)).toEqual(['Voice privacy']);
 });
 
 test.each<{ sources: VoiceSource[] }>([
