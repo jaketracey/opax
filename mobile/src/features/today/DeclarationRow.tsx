@@ -5,7 +5,7 @@ import type { recentDeclarationsFor } from '../../api/selectors';
 import { formatDate } from '../../design/format';
 import { chamberName } from '../../design/parliament';
 import { partyText } from '../../design/party';
-import { Icon, Text } from '../../design/primitives';
+import { Icon, Text, useAccessibilitySize } from '../../design/primitives';
 import { colors, light, minimumTarget, spacing } from '../../design/tokens';
 import { openSource } from '../../navigation/external';
 import { declarationsRoute } from '../../navigation/routes';
@@ -36,6 +36,8 @@ export function DeclarationRow({
   item: Declaration;
   index: number;
 }) {
+  // The portrait sits above the text at accessibility sizes, as in PersonRow.
+  const stacked = useAccessibilitySize();
   const [expanded, setExpanded] = useState(false);
   const [lines, setLines] = useState(0);
   const long = lines > 2;
@@ -90,7 +92,14 @@ export function DeclarationRow({
       style={styles.frame}
     >
       {({ pressed }) => (
-        <View style={[styles.row, pressed && long ? styles.pressed : null]}>
+        <View
+          testID={`today-declaration-layout-${index}`}
+          style={[
+            styles.row,
+            stacked ? styles.stacked : null,
+            pressed && long ? styles.pressed : null,
+          ]}
+        >
           <CachedPortrait
             name={item.name}
             testID={`today-declaration-portrait-${index}`}
@@ -172,8 +181,15 @@ const styles = StyleSheet.create({
     minHeight: minimumTarget,
     paddingVertical: spacing.s3,
   },
+  stacked: { flexDirection: 'column' },
   pressed: { backgroundColor: colors.raised },
-  main: { flex: 1, gap: spacing.s1 + 2 },
+  // flex: 1 would become a zero height basis when the row stacks.
+  main: {
+    flexGrow: 1,
+    flexShrink: 1,
+    alignSelf: 'stretch',
+    gap: spacing.s1 + 2,
+  },
   head: {
     flexDirection: 'row',
     flexWrap: 'wrap',

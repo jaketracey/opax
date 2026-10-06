@@ -13,6 +13,7 @@ import {
   StaleNotice,
   Text,
   errorMessage,
+  useAccessibilitySize,
 } from '../../design/primitives';
 import { formatCount, formatDate } from '../../design/format';
 import { light, minimumTarget, spacing } from '../../design/tokens';
@@ -181,6 +182,23 @@ function FollowRow({
     ...spoken.changes.map((c) => `${c.text}, ${sourceLine(c, 'long')}`),
   ].join(', ');
   const hasChanges = visible.changes.length > 0;
+  // The badge sits above the text at accessibility sizes.
+  const stacked = useAccessibilitySize();
+  const badge = (
+    <View
+      style={[
+        styles.badge,
+        hasChanges ? styles.badgeChanged : styles.badgeQuiet,
+      ]}
+    >
+      <Icon
+        name={kindIcons[f.kind]}
+        size={16}
+        tone={hasChanges ? 'onNavy' : 'navy'}
+      />
+    </View>
+  );
+  const chevron = <Icon name="chevron.right" size={14} tone="inkSoft" />;
   return (
     <Pressable
       testID={`today-following-${f.kind}-${f.id}`}
@@ -198,20 +216,16 @@ function FollowRow({
           ground={
             pressed ? light.sunken : hasChanges ? changedGround : undefined
           }
-          style={styles.card}
+          style={[styles.card, stacked ? styles.cardStacked : null]}
         >
-          <View
-            style={[
-              styles.badge,
-              hasChanges ? styles.badgeChanged : styles.badgeQuiet,
-            ]}
-          >
-            <Icon
-              name={kindIcons[f.kind]}
-              size={16}
-              tone={hasChanges ? 'onNavy' : 'navy'}
-            />
-          </View>
+          {stacked ? (
+            <View style={styles.stackTop}>
+              {badge}
+              {chevron}
+            </View>
+          ) : (
+            badge
+          )}
           <View style={styles.text}>
             <Text wordSafe variant="strong">
               {title}
@@ -235,7 +249,7 @@ function FollowRow({
               </View>
             ))}
           </View>
-          <Icon name="chevron.right" size={14} tone="inkSoft" />
+          {stacked ? null : chevron}
         </TodayCard>
       )}
     </Pressable>
@@ -250,6 +264,12 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.s3 + spacing.s1,
     paddingHorizontal: spacing.s4,
   },
+  cardStacked: { flexDirection: 'column', alignItems: 'stretch' },
+  stackTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   badge: {
     width: 36,
     height: 36,
@@ -260,7 +280,7 @@ const styles = StyleSheet.create({
   },
   badgeQuiet: { backgroundColor: washOf(light.navy, 0.1) },
   badgeChanged: { backgroundColor: light.bronzeInk },
-  text: { flex: 1, gap: 2 },
+  text: { flexGrow: 1, flexShrink: 1, alignSelf: 'stretch', gap: 2 },
   change: {
     flexDirection: 'row',
     alignItems: 'flex-start',

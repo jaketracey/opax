@@ -171,6 +171,22 @@ describe('a recent declaration', () => {
     expect(row.props.accessibilityLabel).toContain(item.category);
     expect(row.props.accessibilityLabel).toContain(item.description!);
   });
+  test.each([
+    [standard, 'row'],
+    [ax5, 'column'],
+  ])(
+    'the portrait sits beside the text, and above it at AX5',
+    (size, direction) => {
+      jest.mocked(useWindowDimensions).mockReturnValue(size);
+      const { root } = render(<DeclarationRow item={item} index={0} />);
+      const layout = host(root, 'today-declaration-layout-0')[0]!;
+      const style = Object.assign(
+        {},
+        ...[layout.props.style].flat(Infinity).filter(Boolean),
+      );
+      expect(style.flexDirection).toBe(direction);
+    },
+  );
   test('no credit, licence or register link rows', () => {
     const { root } = render(<DeclarationRow item={item} index={0} />);
     expect(strings(root)).not.toMatch(/licence|credit|Register of/i);
