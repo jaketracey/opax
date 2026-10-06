@@ -13,6 +13,8 @@ const MONEY = [
   [999.94e6, '$999.9m'], [999.96e6, '$1.00bn'], [2.345e9, '$2.35bn'], [198.68e9, '$198.68bn'],
   // Halves round up, as Intl did: toFixed alone reads 6.05 as 6.0499...
   [6.05e6, '$6.1m'], [1.005e9, '$1.01bn'], [6250, '$6.3k'],
+  // The exact promotion points: the last thousands and millions, then the first of the next unit.
+  [999500, '$999.5k'], [1e6, '$1.0m'], [999.95e6, '$1.00bn'], [1e9, '$1.00bn'],
   [-2.5e6, '-$2.5m'], ['1250000', '$1.3m'], [null, '$0'], [undefined, '$0'], [Number.NaN, '$0'],
 ];
 const DATES = [
