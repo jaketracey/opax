@@ -242,8 +242,13 @@ name: 26 Follow a member, a bill and an electorate; Today shows what changed
     visible:
       id: bill-screen
     timeout: 15000
-- assertVisible:
-    id: bill-follow-on
+# At AX5 the title alone outgrows the screen; scroll to the switch.
+- scrollUntilVisible:
+    element:
+      id: bill-follow-on
+    timeout: 90000
+    centerElement: true
+    speed: 20
 - tapOn: Today
 - assertVisible:
     id: today-screen
