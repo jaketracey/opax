@@ -90,7 +90,11 @@ export function logDroppedRow(label: string, row: string | number) {
 }
 // Metadata stays outside the published data and is retained by decode memoization.
 const partialCatalogs = new WeakSet<object>();
-const losses = new WeakMap<object, { total: number; dropped: number }>();
+type LossPolicy = 'bounded' | 'counted';
+const losses = new WeakMap<
+  object,
+  { total: number; dropped: number; policy: LossPolicy }
+>();
 export function isPartialCatalog(value: unknown): boolean {
   return (
     value !== null && typeof value === 'object' && partialCatalogs.has(value)
@@ -106,14 +110,21 @@ function markFromChildren<T extends object>(value: T): T {
 }
 /** At most 1% loss, with a one-row allowance for small catalogs. A nonempty
  * export may never become empty. Lists used for totals, latest facts or
- * attribution use array/dict instead, with no allowance. */
-function withLoss<T extends object>(out: T, total: number, dropped: number): T {
+ * attribution use array/dict instead, with no allowance. Discovery counts
+ * and announces omitted signals, so its policy has no percentage cap. */
+function withLoss<T extends object>(
+  out: T,
+  total: number,
+  dropped: number,
+  policy: LossPolicy = 'bounded',
+): T {
   if (
     dropped &&
-    (dropped === total || dropped > Math.max(1, Math.floor(total / 100)))
+    (dropped === total ||
+      (policy === 'bounded' && dropped > Math.max(1, Math.floor(total / 100))))
   )
     invalid('Too many catalog rows could not be read.');
-  losses.set(out, { total, dropped });
+  losses.set(out, { total, dropped, policy });
   return markPartial(
     out,
     dropped > 0 || Object.values(out).some(isPartialCatalog),
@@ -126,7 +137,11 @@ export function filterRows<T>(
   keep: (row: T) => boolean,
   label: string,
 ): T[] {
-  const previous = losses.get(input) ?? { total: input.length, dropped: 0 };
+  const previous = losses.get(input) ?? {
+    total: input.length,
+    dropped: 0,
+    policy: 'bounded' as const,
+  };
   let dropped = previous.dropped;
   const out = input.filter((row, index) => {
     if (keep(row)) return true;
@@ -134,7 +149,7 @@ export function filterRows<T>(
     logDroppedRow(label, index);
     return false;
   });
-  return withLoss(out, previous.total, dropped);
+  return withLoss(out, previous.total, dropped, previous.policy);
 }
 export function filterRecords<T>(
   input: Record<string, T>,
@@ -144,6 +159,7 @@ export function filterRecords<T>(
   const previous = losses.get(input) ?? {
     total: Object.keys(input).length,
     dropped: 0,
+    policy: 'bounded' as const,
   };
   let dropped = previous.dropped;
   const out = Object.fromEntries(
@@ -154,10 +170,14 @@ export function filterRecords<T>(
       return false;
     }),
   );
-  return withLoss(out, previous.total, dropped);
+  return withLoss(out, previous.total, dropped, previous.policy);
 }
 export const rows =
-  <T>(decode: Decoder<T>, label = 'rows'): Decoder<T[]> =>
+  <T>(
+    decode: Decoder<T>,
+    label = 'rows',
+    policy: LossPolicy = 'bounded',
+  ): Decoder<T[]> =>
   (v) => {
     if (!Array.isArray(v)) invalid();
     const out: T[] = [];
@@ -170,7 +190,7 @@ export const rows =
         logDroppedRow(label, index);
       }
     });
-    return withLoss(out, v.length, v.length - out.length);
+    return withLoss(out, v.length, v.length - out.length, policy);
   };
 export const uniqueRows =
   <T>(

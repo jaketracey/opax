@@ -456,7 +456,7 @@ test('the fixture refuses an unknown data mode at startup', async () => {
   await expect(fixture.ready).rejects.toThrow(
     'OPAX_FIXTURE_DATA must be pinned or changed',
   );
-}, 20000);
+});
 
 test('null-optional roster mode changes one field and preserves the People record', async () => {
   const fixture = startFixture('pinned', 0, {
@@ -484,3 +484,10 @@ test('null-optional roster mode changes one field and preserves the People recor
     await fixture.stop();
   }
 }, 20000);
+
+test('the fixture refuses an unknown roster mode at startup', async () => {
+  const fixture = startFixture('pinned', 0, { OPAX_FIXTURE_ROSTER: 'live' });
+  await expect(fixture.ready).rejects.toThrow(
+    'OPAX_FIXTURE_ROSTER must be pinned or null-optional',
+  );
+});

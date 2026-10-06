@@ -23,6 +23,7 @@ import {
   followState,
   type FollowSources,
 } from '../src/features/follows/markers';
+import { RecordBlock } from '../src/features/your-mp/Evidence';
 import { RecordStatus } from '../src/features/RecordStatus';
 import { CatalogState } from '../src/features/CatalogState';
 import { catalogs, index, manifest, pinned, replaceAt, slugs } from './pinned';
@@ -439,3 +440,47 @@ test('a malformed voting name bridge fails the file instead of enabling a legacy
     d.decodeVotes(replaceAt(raw, ['_names', 'janelle saffin', 0], null)),
   ).toThrow(ApiError);
 });
+
+test.each([true, false])(
+  'an absent Person vote block distinguishes unreadable data (partial=%s) from no held record',
+  (partial) => {
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        <RecordBlock
+          title="Voting"
+          id="person-votes"
+          block={{
+            status: 'missing',
+            data: null,
+            partial,
+            asAt: null,
+            sources: [],
+            stale: false,
+            savedAt: null,
+          }}
+          missing="No voting summary is held for this person in the release."
+          retry={() => {}}
+        >
+          {() => null}
+        </RecordBlock>,
+      );
+    });
+    const words = renderer.root
+      .findAllByType(NativeText)
+      .map((n) => [n.props.children].flat(3).join(''))
+      .join(' ');
+    if (partial) {
+      expect(words).toContain(
+        'This record could not be read in the latest public export.',
+      );
+      expect(words).not.toContain('No voting summary is held');
+    } else {
+      expect(words).toContain(
+        'No voting summary is held for this person in the release.',
+      );
+      expect(words).not.toContain('This record could not be read');
+    }
+    act(() => renderer.unmount());
+  },
+);

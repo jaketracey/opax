@@ -19,6 +19,7 @@ import {
   type CacheIndexEntry,
   type CacheStore,
 } from '../src/api/cache';
+import { isPartialCatalog } from '../src/api/validation';
 import { ApiError } from '../src/api/errors';
 import { LeadCard } from '../src/design/primitives';
 import { chamberName } from '../src/design/parliament';
@@ -165,18 +166,22 @@ describe('the discovery export', () => {
     // format the app does not know) never hides the others.
     const odd = decodeDiscovery({
       ...raw,
-      signals: [{ ...signals[0], caveats: [] }, signals[1], signals[2]],
+      signals: [
+        { ...(raw.signals[0] as object), caveats: [] },
+        {
+          ...(raw.signals[1] as object),
+          metrics: [{ label: 'Ratio', value: 2, format: 'ratio' }],
+        },
+        raw.signals[2],
+      ],
     });
-    expect(odd.unreadable).toBe(1);
-    expect(odd.signals).toEqual(signals.slice(1, 3));
+    expect(odd.unreadable).toBe(2);
+    expect(odd.signals).toEqual([signals[2]]);
+    expect(isPartialCatalog(odd)).toBe(true);
     expect(() =>
       decodeDiscovery({
         ...raw,
-        signals: [
-          { ...signals[0], caveats: [] },
-          { ...signals[1], caveats: [] },
-          signals[2],
-        ],
+        signals: raw.signals.map((s) => ({ ...(s as object), caveats: [] })),
       }),
     ).toThrow(ApiError);
     expect(discovery.unreadable).toBe(0);

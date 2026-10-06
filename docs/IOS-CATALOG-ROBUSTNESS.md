@@ -2,7 +2,7 @@
 
 Optional null fields are missing. Required containers and structural keys still fail validation. Independent malformed records can be omitted only within the loss budget; failures retain the last good cached bytes and original source/save dates.
 
-The budget is `max(1, floor(input rows / 100))`. A nonempty collection losing all its rows always fails. The one-row allowance keeps isolated errors tolerable in small catalogs; the 1% limit prevents a renamed or retyped field from silently replacing the cache with a substantially truncated catalog. Schema, duplicate and identity losses in the same collection share the budget. Valid empty collections stay valid. Strict collections have no loss allowance.
+The budget is `max(1, floor(input rows / 100))`. A nonempty collection losing all its rows always fails. The one-row allowance keeps isolated errors tolerable in small catalogs; the 1% limit prevents a renamed or retyped field from silently replacing the cache with a substantially truncated catalog. Schema, duplicate and identity losses in the same collection share the budget. Valid empty collections stay valid. Discovery alone has no percentage cap: Leads counts and announces each unreadable signal, while losing all signals still fails the file. Strict collections have no loss allowance.
 
 Partial status is held outside published data in weak metadata, propagated to the decoded root, and exposed as `RecordResult.partial`. Cached raw bytes are decoded again after relaunch, so the status cannot be lost on disk. Follows excludes every partial source: unavailable markers are omitted and the saved fingerprint is preserved. A voting name bridge referencing a rejected row is removed whole, together with all vote rows in that person group. This prevents direct legacy-ID joins from restoring a subtotal. Overlapping aliases are quarantined together, within the same combined loss budget.
 
@@ -28,7 +28,7 @@ Partial status is held outside published data in weak metadata, propagated to th
 | Photo people / credits | Bounded independent lookup loss; an uncredited or unlinked portrait stays hidden. |
 | Money | Strict nodes, edges and yearly amounts: rankings, donor top lists and graph totals require the complete cohort. |
 | Corpus | Strict source coverage, counts and limitations. |
-| Discovery | Bounded whole-signal loss with unreadable count and partial status; metrics, participants, evidence and caveats remain strict. |
+| Discovery | Counted whole-signal loss without a percentage cap; all rows lost fails. Unreadable count and partial status are retained; metrics, participants, evidence and caveats remain strict. |
 | Search | Bounded independent result loss and partial notice; structural pagination and published total stay intact. |
 | Edition | Strict slides and source rows: retain the whole posted context, cover and attribution. |
 | AEC extras | Strict party entries and their associated entities: dropping a party entry would turn its recorded total into a false zero. |

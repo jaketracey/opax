@@ -928,7 +928,11 @@ const discoveryEnvelope = shape({
  */
 export function decodeDiscovery(value: unknown) {
   const envelope = discoveryEnvelope(value);
-  const signals = rows(discoverySignal, 'discovery.signals')(envelope.signals);
+  const signals = rows(
+    discoverySignal,
+    'discovery.signals',
+    'counted',
+  )(envelope.signals);
   return markPartial(
     {
       ...envelope,

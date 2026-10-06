@@ -126,7 +126,14 @@ export function RecordBlock<T>({
           testID={`${id}-error`}
         />
       ) : block.data === null ? (
-        <EmptyState message={missing} testID={`${id}-missing`} />
+        <EmptyState
+          message={
+            block.partial
+              ? 'This record could not be read in the latest public export.'
+              : missing
+          }
+          testID={`${id}-missing`}
+        />
       ) : (
         children(block.data)
       )}

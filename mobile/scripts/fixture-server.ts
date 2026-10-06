@@ -42,29 +42,6 @@ const editionModes = ['pinned', 'absent', 'withdrawn'];
 const editionMode = process.env.OPAX_FIXTURE_EDITION ?? 'pinned';
 if (!editionModes.includes(editionMode))
   throw new Error('OPAX_FIXTURE_EDITION must be pinned, absent or withdrawn');
-const files = new Map<string, Buffer>();
-const pinnedBytes = fixtureBytes(snapshot);
-for (const path of Object.keys(snapshot.files)) {
-  if (snapshot.testOnlyFiles.includes(path)) continue;
-  if (path.endsWith('.webp')) assertPortraitPath(path);
-  else assertAllowedPath(path);
-  files.set(path, pinnedBytes(path));
-}
-// Robustness-only opt-in: change one optional field, preserving every
-// source fact and all other pinned bytes in the normal fixture mode.
-const rosterMode = process.env.OPAX_FIXTURE_ROSTER ?? 'pinned';
-if (!['pinned', 'null-optional'].includes(rosterMode))
-  throw new Error('OPAX_FIXTURE_ROSTER must be pinned or null-optional');
-if (rosterMode === 'null-optional') {
-  const path = '/parliamentarians.json';
-  const raw = JSON.parse(files.get(path)!.toString());
-  const row = raw.people.find((p: { pid?: string }) => p.pid === '10007');
-  if (!row) throw new Error('Null-optional fixture person is absent');
-  row.speeches = null;
-  files.set(path, Buffer.from(JSON.stringify(raw)));
-  console.log('OPAX_FIXTURE_ROSTER null-optional: pid=10007 speeches=null');
-}
-let editionWithdrawn = editionMode === 'absent';
 // Local follows (journey 26). OPAX_FIXTURE_DATA picks the catalogs:
 // - pinned: the pinned bytes, as always;
 // - changed: one declaration and one bill stage move on, as after a nightly
@@ -78,6 +55,29 @@ const dataModes = ['pinned', 'changed'];
 const dataMode = process.env.OPAX_FIXTURE_DATA ?? 'pinned';
 if (!dataModes.includes(dataMode))
   throw new Error('OPAX_FIXTURE_DATA must be pinned or changed');
+const rosterMode = process.env.OPAX_FIXTURE_ROSTER ?? 'pinned';
+if (!['pinned', 'null-optional'].includes(rosterMode))
+  throw new Error('OPAX_FIXTURE_ROSTER must be pinned or null-optional');
+const files = new Map<string, Buffer>();
+const pinnedBytes = fixtureBytes(snapshot);
+for (const path of Object.keys(snapshot.files)) {
+  if (snapshot.testOnlyFiles.includes(path)) continue;
+  if (path.endsWith('.webp')) assertPortraitPath(path);
+  else assertAllowedPath(path);
+  files.set(path, pinnedBytes(path));
+}
+// Robustness-only opt-in: change one optional field, preserving every
+// source fact and all other pinned bytes in the normal fixture mode.
+if (rosterMode === 'null-optional') {
+  const path = '/parliamentarians.json';
+  const raw = JSON.parse(files.get(path)!.toString());
+  const row = raw.people.find((p: { pid?: string }) => p.pid === '10007');
+  if (!row) throw new Error('Null-optional fixture person is absent');
+  row.speeches = null;
+  files.set(path, Buffer.from(JSON.stringify(raw)));
+  console.log('OPAX_FIXTURE_ROSTER null-optional: pid=10007 speeches=null');
+}
+let editionWithdrawn = editionMode === 'absent';
 let dataChanged = false;
 const changedFiles = new Map<string, Buffer>();
 if (dataMode === 'changed') {
