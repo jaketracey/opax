@@ -8,6 +8,7 @@ import { boundaryFiles } from './boundary-files';
 import { scanSwift } from './swift-boundary';
 import { scanNative } from './native-boundary';
 import {
+  assertNoE2ELaunchFlags,
   assertNoFixtureOrigin,
   assertNoVoiceFixtures,
 } from './release-bundle-policy';
@@ -38,6 +39,28 @@ for (const variant of ['production', 'e2e']) {
   );
   const native = introspected._internal.modResults.ios.infoPlist;
   assert(!native.NSMicrophoneUsageDescription);
+  // The app is light-only. expo-splash-screen switches the whole app to
+  // Automatic when a dark splash is configured, so guard the result.
+  assert.equal(
+    native.UIUserInterfaceStyle,
+    'Light',
+    'The app stays light-only',
+  );
+  assert.equal(native.UILaunchStoryboardName, 'SplashScreen');
+  assert.equal(
+    native.NSLocationWhenInUseUsageDescription,
+    'OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere.',
+  );
+  assert(
+    !native.NSLocationAlwaysUsageDescription &&
+      !native.NSLocationAlwaysAndWhenInUseUsageDescription,
+  );
+  assert(!native.UIBackgroundModes?.includes('location'));
+  assert.deepEqual(
+    Object.keys(native).filter((k) => /^NS.*UsageDescription$/.test(k)),
+    ['NSLocationWhenInUseUsageDescription'],
+  );
+
   assert.deepEqual(native.UIApplicationSceneManifest, {
     UIApplicationSupportsMultipleScenes: false,
     UISceneConfigurations: {
@@ -203,10 +226,16 @@ if (productionIndex !== -1) {
       'Production bundle contains the design workbench',
     );
     assertNoVoiceFixtures(body);
-    assert(
-      !body.includes(Buffer.from('source-destination-url')),
-      'Production bundle contains the e2e source destination preview',
-    );
+    assertNoE2ELaunchFlags(body);
+    for (const testID of [
+      'source-destination-url',
+      'source-destination-scroll',
+      'source-destination-ok',
+    ])
+      assert(
+        !body.includes(Buffer.from(testID)),
+        `Production bundle contains the e2e source destination preview (${testID})`,
+      );
   }
   const bodies = bundles.map((path) => readFileSync(path));
   for (const marker of [
@@ -237,6 +266,16 @@ if (appIndex !== -1) {
   assert.equal(plist.CFBundleVersion, process.env.OPAX_BUILD_NUMBER ?? '1');
   assert.equal(plist.MinimumOSVersion, '18.4');
   assert(!plist.NSMicrophoneUsageDescription);
+  assert.equal(
+    plist.NSLocationWhenInUseUsageDescription,
+    'OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere.',
+  );
+  assert(
+    !plist.NSLocationAlwaysUsageDescription &&
+      !plist.NSLocationAlwaysAndWhenInUseUsageDescription,
+  );
+  assert(!plist.UIBackgroundModes?.includes('location'));
+
   assert.equal(
     plist.OPAXVoiceFixturePort,
     Number(process.env.OPAX_FIXTURE_PORT ?? 8910),

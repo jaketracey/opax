@@ -69,6 +69,10 @@ def run(step, mobile, out):
     # Only command output is logged; arguments are never echoed. Remove signing
     # variables before Expo or Xcode build phases inherit the environment.
     run_logged(cmd, out / f"{step}-command.log", public_env=True)
+    if step == "dependencies":
+        # Reviewed pinned Skia installer copies bundled platform libraries; no network.
+        run_logged(["node", "node_modules/@shopify/react-native-skia/scripts/install-libs.js"],
+                   out / "native-libs-command.log", public_env=True)
     print(f"PASS release step: {step}")
 
 

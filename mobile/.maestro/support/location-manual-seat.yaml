@@ -1,0 +1,23 @@
+appId: au.com.opax.app
+---
+- scrollUntilVisible:
+    element:
+      id: seat-search
+    centerElement: true
+    timeout: 300000
+- tapOn:
+    id: seat-search
+- inputText: Grayndler
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: seat-choice-federal-representatives-nsw-grayndler
+    centerElement: true
+    timeout: 300000
+- tapOn:
+    id: seat-choice-federal-representatives-nsw-grayndler
+- extendedWaitUntil:
+    visible:
+      id: your-seat-name
+    timeout: 30000
+- assertVisible: Grayndler

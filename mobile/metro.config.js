@@ -2,18 +2,27 @@ const { getDefaultConfig } = require('expo/metro-config');
 const path = require('node:path');
 const config = getDefaultConfig(__dirname);
 const inheritedResolver = config.resolver.resolveRequest;
-const probeModule = path.join(__dirname, 'src/design/text-probe');
+// E2E-only modules with a production stub beside them: the drawn-line probe,
+// the welcome tour's launch argument and the electorate outline probe.
+const productionStubs = [
+  'src/design/text-probe',
+  'src/onboarding/launch-flag',
+  'src/features/electorate-map/outline-probe',
+].map((module) => path.join(__dirname, module));
 config.resolver.resolveRequest = (context, moduleName, platform) => {
+  const target = moduleName.startsWith('.')
+    ? path
+        .resolve(path.dirname(context.originModulePath), moduleName)
+        .replace(/\.[jt]sx?$/, '')
+    : null;
   if (
     process.env.OPAX_VARIANT === 'production' &&
-    moduleName.startsWith('.') &&
-    path
-      .resolve(path.dirname(context.originModulePath), moduleName)
-      .replace(/\.[jt]sx?$/, '') === probeModule
+    target !== null &&
+    productionStubs.includes(target)
   ) {
     return {
       type: 'sourceFile',
-      filePath: `${probeModule}.production.ts`,
+      filePath: `${target}.production.ts`,
     };
   }
   return typeof inheritedResolver === 'function'

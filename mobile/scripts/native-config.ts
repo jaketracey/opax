@@ -10,6 +10,15 @@ const plist = JSON.parse(
     { encoding: 'utf8' },
   ),
 );
+assert.equal(
+  plist.NSLocationWhenInUseUsageDescription,
+  'OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere.',
+);
+assert(
+  !plist.NSLocationAlwaysUsageDescription &&
+    !plist.NSLocationAlwaysAndWhenInUseUsageDescription,
+);
+assert(!plist.UIBackgroundModes?.includes('location'));
 assert(
   !plist.NSMicrophoneUsageDescription,
   'Microphone permission is deferred',

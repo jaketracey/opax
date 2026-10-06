@@ -30,12 +30,22 @@ SDK_PATTERN = re.compile(rb"posthog|mixpanel|amplitude|segment\.com|sentry|appsf
                          rb"firebaseanalytics|appcenter|bugsnag|datadog|fbSDK|crashlytics|heapanalytics", re.I)
 SHIPPED_FRAMEWORKS = {"ExpoModulesJSI.framework", "hermesvm.framework", "ExpoFont.framework",
                       "ExpoModulesCore.framework", "React.framework", "ReactNativeDependencies.framework",
-                      "ExpoModulesWorklets.framework", "ExpoFileSystem.framework"}
+                      "ExpoModulesWorklets.framework", "ExpoFileSystem.framework", "ExpoLocation.framework"}
 ANALYTICS_HOSTS = {"segment.io", "segment.com", "segmentapis.com", "posthog.com", "mixpanel.com",
                    "amplitude.com", "sentry.io", "appsflyer.com", "adjust.com", "google-analytics.com",
                    "app-measurement.com", "crashlytics.com", "heap.io", "heapanalytics.com",
                    "appcenter.ms", "bugsnag.com", "datadoghq.com", "graph.facebook.com"}
 ROUTE_KEY = re.compile(r"\./[A-Za-z0-9_(),@%.\[\]/+~-]+\.(?:tsx?|jsx?)")
+# Skia 2.6.2 reads Reanimated's package.json version, so Metro includes its
+# pinned 4.5.1 sideEffects metadata. These eight exact dependency references
+# are not Expo route keys. Never exempt an actual source route or a new path.
+REANIMATED_METADATA_PATHS = {
+    "./src/layoutReanimation/animationsManager.ts",
+    "./lib/module/layoutReanimation/animationsManager.js",
+    "./src/core.ts", "./lib/module/core.js",
+    "./src/initializers.ts", "./lib/module/initializers.js",
+    "./src/index.ts", "./lib/module/index.js",
+}
 PATH_TOKENS = re.compile(rb"[A-Za-z0-9_(),@%.\[\]/+~-]+")
 HERMES_MAGIC = 0x1F1903C103BC1FC6
 HERMES_HEADER_SIZE = 128
@@ -88,9 +98,14 @@ def has_loopback(body):
 
 
 def has_analytics(body):
-    return bool(SDK_PATTERN.search(body)) or any(
+    # Hermes packs adjacent/overlapping strings: ignoreAllLogs + ENTRY_EXIT
+    # contains raw "sENTRY" without any Sentry string or SDK. Inspect the same
+    # actual entries used by route/probe checks; malformed bytecode fails closed.
+    strings = hermes_strings(body)
+    entries = [body] if strings is None else [entry.encode("utf-8") for entry in strings]
+    return any(bool(SDK_PATTERN.search(entry)) or any(
         host == denied or host.endswith("." + denied)
-        for host in url_hosts(body) for denied in ANALYTICS_HOSTS)
+        for host in url_hosts(entry) for denied in ANALYTICS_HOSTS) for entry in entries)
 
 
 @lru_cache(maxsize=1)
@@ -184,16 +199,47 @@ def hermes_strings(body):
     return strings
 
 
-def verify_no_drawn_diagnostics(body):
-    """Inspect actual Hermes entries, not overlapping raw string storage."""
-    markers = ("-drawn-", "testDrawnText", "drawnTextClipped")
+def markers_in_entries(body, markers):
+    """Markers found inside actual Hermes entries, not overlapping raw string
+    storage; plain JS is searched whole. Returns (found, entry count)."""
     strings = hermes_strings(body)
     found = [marker for marker in markers if (
         any(marker in entry for entry in strings) if strings is not None
         else marker.encode() in body)]
+    return found, len(strings) if strings is not None else None
+
+
+def verify_no_drawn_diagnostics(body):
+    """Inspect actual Hermes entries, not overlapping raw string storage."""
+    found, count = markers_in_entries(body, ("-drawn-", "testDrawnText", "drawnTextClipped"))
     require(not found, "no e2e drawn-line diagnostics in production JS" +
             (f" (found {', '.join(found)})" if found else ""))
-    return len(strings) if strings is not None else None
+    return count
+
+
+# Launch arguments only e2e builds read (src/onboarding/launch-flag.e2e.ts).
+E2E_LAUNCH_FLAGS = ("OPAXWelcomeTour",)
+
+
+def verify_no_e2e_launch_flags(body):
+    """Inspect actual Hermes entries, not overlapping raw string storage."""
+    found, count = markers_in_entries(body, E2E_LAUNCH_FLAGS)
+    require(not found, "no e2e launch arguments in production JS" +
+            (f" (found {', '.join(found)})" if found else ""))
+    return count
+
+
+# Test IDs of the e2e source page (a blocked development route) and of the
+# SourceLink preview that build 3 withdrew. The route name itself ships in the
+# root layout, switched off at runtime, so only these IDs are refused.
+E2E_SOURCE_PREVIEW_IDS = ("source-destination-url", "source-destination-scroll", "source-destination-ok")
+
+
+def verify_no_source_preview_ids(body):
+    found, count = markers_in_entries(body, E2E_SOURCE_PREVIEW_IDS)
+    require(not found, "no e2e source preview test IDs in production JS" +
+            (f" (found {', '.join(found)})" if found else ""))
+    return count
 
 
 def bundle_route_keys(body, routes):
@@ -207,7 +253,9 @@ def bundle_route_keys(body, routes):
     missing = sorted(expected - strings)
     require(bool(expected) and not missing, "every shipping Expo route key is present in shipped JS" +
             (f" (missing {', '.join(missing)})" if missing else ""))
-    unexpected = sorted(string for string in strings if ROUTE_KEY.fullmatch(string) and string not in expected)
+    metadata = REANIMATED_METADATA_PATHS if {"react-native-reanimated", "4.5.1"} <= strings else set()
+    unexpected = sorted(string for string in strings if ROUTE_KEY.fullmatch(string) and string not in expected
+                        and not (string in metadata and not (routes / string).is_file()))
     development = sorted(key for key in expected if DEVELOPMENT_ROUTE.search(key))
     require(not unexpected and not development and not DEVELOPMENT_PATHS.search(body),
             "no unshipped, development or workbench route keys in shipped JS" +
@@ -267,7 +315,7 @@ def framework_allowlist(app):
     frameworks = list(app.rglob("*.framework"))
     require({p.name for p in frameworks} == SHIPPED_FRAMEWORKS and
             all(p.parent == app / "Frameworks" for p in frameworks) and not list(app.rglob("*.dylib")),
-            "native framework allowlist matches the eight shipped frameworks")
+            "native framework allowlist matches the nine shipped frameworks")
 
 
 def no_app_extensions(app, info):
@@ -418,14 +466,20 @@ def verify_app(app, args):
           "Expo scene delegate class linked in the app executable")
     check(info.get("ITSAppUsesNonExemptEncryption") is False, "standard HTTPS encryption compliance")
     check("NSAppTransportSecurity" not in info, "no ATS exception")
-    # Current catalog app has no permission-gated features. This allow-list must
-    # be deliberately reviewed when a permission-requiring feature ships.
-    check(not any(re.fullmatch(r"NS.*UsageDescription", k) for k in info),
-          "no purpose strings for unshipped permission features")
+    purpose = "OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere."
+    check({k: v for k, v in info.items() if re.fullmatch(r"NS.*UsageDescription", k)} ==
+          {"NSLocationWhenInUseUsageDescription": purpose},
+          "exact foreground-only location purpose string; no other permissions")
+    check("location" not in info.get("UIBackgroundModes", []), "no background location mode")
+    privacy = plistlib.loads((app / "PrivacyInfo.xcprivacy").read_bytes())
+    check(privacy.get("NSPrivacyTracking") is False and
+          privacy.get("NSPrivacyCollectedDataTypes") == [] and
+          not privacy.get("NSPrivacyTrackingDomains"),
+          "app privacy manifest: no collected location or tracking")
     check(info.get("DTXcodeBuild") == args.xcode_build, "archive uses the selected release Xcode")
     check(no_app_extensions(app, info), "no app extensions")
     framework_allowlist(app)
-    check(True, "native framework allowlist matches the eight shipped frameworks")
+    check(True, "native framework allowlist matches the nine shipped frameworks")
     command("/usr/bin/codesign", "--verify", "--deep", "--strict", str(app))
     check(True, "code signatures valid")
     entitlements = plistlib.loads(command("/usr/bin/codesign", "-d", "--entitlements", ":-", str(app)))
@@ -462,6 +516,10 @@ def verify_app(app, args):
     check(not has_loopback(bundle), "no normalized loopback or fixture origin in shipped JS")
     verify_no_drawn_diagnostics(bundle)
     check(True, "no e2e drawn-line diagnostics in production Hermes string entries")
+    verify_no_source_preview_ids(bundle)
+    check(True, "no e2e source preview test IDs in production Hermes string entries")
+    verify_no_e2e_launch_flags(bundle)
+    check(True, "no e2e launch arguments in production Hermes string entries")
     route_keys = bundle_route_keys(bundle, Path("src/app"))
     check(True, "every shipping Expo route key is present in shipped JS")
     check(True, "no unshipped, development or workbench route keys in shipped JS")

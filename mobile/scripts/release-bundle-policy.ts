@@ -31,3 +31,13 @@ export function assertNoVoiceFixtures(body: Buffer) {
       `Production bundle contains voice test material: ${marker}`,
     );
 }
+
+/** E2E launch arguments (the welcome tour's opt-in) never ship. */
+export const E2E_LAUNCH_FLAGS = ['OPAXWelcomeTour'] as const;
+export function assertNoE2ELaunchFlags(body: Buffer) {
+  for (const marker of E2E_LAUNCH_FLAGS)
+    assert(
+      !body.includes(Buffer.from(marker)),
+      `Production bundle contains an e2e launch argument: ${marker}`,
+    );
+}

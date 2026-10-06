@@ -61,8 +61,14 @@ const config: ExpoConfig = {
     buildNumber,
     deploymentTarget: '18.4',
     supportsTablet: false,
+    privacyManifests: {
+      NSPrivacyTracking: false,
+      NSPrivacyCollectedDataTypes: [],
+    },
     infoPlist: {
       ITSAppUsesNonExemptEncryption: false,
+      NSLocationWhenInUseUsageDescription:
+        'OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere.',
       ...(variant === 'e2e' ? { OPAXVoiceFixturePort: port } : {}),
       ...(variant === 'e2e' || localDevelopment
         ? {
@@ -83,7 +89,36 @@ const config: ExpoConfig = {
   plugins: [
     ['expo-router', { sitemap: variant !== 'production' }],
     './plugins/withSceneLifecycle.js',
+    [
+      'expo-location',
+      {
+        locationWhenInUsePermission:
+          'OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere.',
+        locationAlwaysPermission: false,
+        motionUsagePermission: false,
+        locationAlwaysAndWhenInUsePermission: false,
+      },
+    ],
     './plugins/withNetworkPolicy.js',
+    [
+      'expo-splash-screen',
+      {
+        // The star mark and the "OPAX" wordmark, centred on paper, with no
+        // other text. Rendered from assets/splash/*.svg by
+        // scripts/render-splash.swift. The lockup is 200pt wide;
+        // src/launch/LaunchHandoff.tsx draws the same image.
+        //
+        // No `dark` block: the app is light-only (UIUserInterfaceStyle Light)
+        // and iOS draws the launch screen in the app's style, so a dark splash
+        // could never show. The plugin would also switch the whole app to
+        // Automatic to make it show. The navy artwork (splash-dark) is
+        // rendered and ready for when a dark palette is approved.
+        backgroundColor: '#FAF9F6',
+        image: './assets/splash/splash@3x.png',
+        imageWidth: 200,
+        resizeMode: 'contain',
+      },
+    ],
     ['./plugins/withVoiceAutolinking.js', { variant }],
   ],
   extra: {
