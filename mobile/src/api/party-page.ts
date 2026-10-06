@@ -13,10 +13,17 @@ import {
   billName,
   billQuestionParts,
 } from './bill-transforms';
-import { partyIdentity, samePartyLabel, partySlug } from '../design/party';
+import {
+  isPartyLabel,
+  partyIdentity,
+  samePartyLabel,
+  partySlug,
+} from '../design/party';
+import { nameKey } from './ids';
 
 export function resolveParty(input: string, labels: string[]): string | null {
-  if (!partyIdentity(input).recorded) return null;
+  if (!isPartyLabel(input)) return null;
+  labels = labels.filter(isPartyLabel);
   const exactName = labels.find((label) => label === input);
   const slugMatches = labels.filter((label) => partySlug(label) === input);
   const candidates = exactName
@@ -45,7 +52,7 @@ export function partyLabels(
           .flatMap((n) => [n.label, ...(n.aliases ?? [])]) ?? []),
         ...people.people.flatMap((p) => p.electorates.map((s) => s.party)),
         ...roster.people.flatMap((p) => [p.party_now, p.party]),
-      ].filter((p): p is string => !!p?.trim()),
+      ].filter((p): p is string => isPartyLabel(p)),
     ),
   ];
 }
@@ -60,6 +67,35 @@ export function partyMembers(
     recorded: PartyMember[] = [];
   const seen = new Set<string>();
   const sources = new Map<string, Manifest['sources'][number]>();
+  const currentNames = new Set(
+    people.people
+      .filter((p) => p.electorates.some((s) => s.current))
+      .flatMap((p) => [p.name, ...p.aliases])
+      .map(nameKey),
+  );
+  const seatKey = (jurisdiction: string, chamber: string, place: string) =>
+    `${jurisdiction}|${chamber}|${nameKey(place)}`;
+  const currentSeats = new Set(
+    people.people.flatMap((p) =>
+      p.electorates
+        .filter((s) => s.current && s.name)
+        .map((s) => seatKey(s.jurisdiction, s.chamber, s.name)),
+    ),
+  );
+  for (const row of roster.people.filter(
+    (r) => r.current === true && r.party_now,
+  )) {
+    currentNames.add(nameKey(row.name));
+    for (const seat of row.representation ?? [])
+      if (
+        seat.jurisdiction === 'federal' &&
+        ['representatives', 'senate'].includes(seat.chamber) &&
+        seat.electorate
+      )
+        currentSeats.add(
+          seatKey(seat.jurisdiction, seat.chamber, seat.electorate),
+        );
+  }
   // Full-name profiles precede surname stubs for the same canonical ID.
   const orderedSlugs = Object.keys(slugs.slugs).sort(
     (a, b) =>
@@ -123,13 +159,24 @@ export function partyMembers(
           });
       }
     } else if (p.party && samePartyLabel(p.party, label)) {
-      const r = p.rosterRow?.representation?.[0];
+      if (
+        !p.name.trim().includes(' ') ||
+        currentNames.has(nameKey(p.name)) ||
+        p.rosterRow?.representation?.some(
+          (r) =>
+            r.electorate &&
+            currentSeats.has(seatKey(r.jurisdiction, r.chamber, r.electorate)),
+        )
+      )
+        continue;
       recorded.push({
         name: p.name,
         slug,
-        jurisdiction: r?.jurisdiction ?? p.rosterRow?.states?.[0] ?? '',
-        chamber: r?.chamber ?? rosterChambersFor(p.rosterRow)[0] ?? '',
-        place: r?.electorate ?? '',
+        // Undated roster places can mix state and federal records. Show the
+        // recorded name without assigning unverified representation.
+        jurisdiction: '',
+        chamber: '',
+        place: '',
         asAt: roster.meta.generated,
       });
     }
@@ -231,6 +278,5 @@ export function partyDivisions(label: string, bills: BillDetail[]) {
 }
 export const partyPageCopy = {
   caption: 'Received (disclosed)',
-  receipts: 'Party disclosures, not this person’s finances.',
   aec: 'AEC disclosure data: donations under the disclosure threshold are not reported and cannot appear here, so totals are a floor, not a ceiling.',
 };

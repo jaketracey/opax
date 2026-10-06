@@ -14,7 +14,8 @@ import {
   resolveParty,
 } from '../src/api/party-page';
 import { partyRoute, billRoute } from '../src/navigation/routes';
-import { partySlug, samePartyLabel } from '../src/design/party';
+import { isPartyLabel, partySlug, samePartyLabel } from '../src/design/party';
+import { nameKey } from '../src/api/ids';
 import {
   catalogs,
   files,
@@ -48,6 +49,32 @@ test('party resolution uses only recorded identities and derived slugs, never pr
   });
   expect(partySlug("Katter's Australian Party")).toBe(
     'katter-s-australian-party',
+  );
+});
+test.each([
+  'Independent',
+  'IND',
+  'Independents',
+  'Independent (formerly Labor)',
+  'Independent Liberal',
+  'Unaligned',
+  'Non-aligned',
+  'Non aligned',
+  'Non–aligned',
+  'Unaffiliated',
+  'Non-party',
+  'PRES',
+  'SPK',
+  'Party not recorded',
+])('%s remains an affiliation or role, never a party identity', (label) => {
+  expect(isPartyLabel(label)).toBe(false);
+  expect(resolveParty(label, [...labels, label])).toBeNull();
+  expect(resolveParty(partySlug(label), [...labels, label])).toBeNull();
+});
+test('the party catalog omits non-party labels while preserving unknown recorded parties', () => {
+  expect(labels.some((label) => !isPartyLabel(label))).toBe(false);
+  expect(resolveParty('fixture-party', ['Fixture Party'])).toBe(
+    'Fixture Party',
   );
 });
 test('current members have matching current party evidence; unknowns are separately recorded', () => {
@@ -95,6 +122,81 @@ test('undated or ended evidence never turns a real public member into a current 
   expect(
     partyMembers('Labor', undated, ended, slugs, manifest).current,
   ).toHaveLength(0);
+});
+test('recorded Labor affiliations exclude the review Bailey, Horne, Richards and Theophanous duplicates', () => {
+  expect(members.currentCount).toBe(193);
+  for (const name of ['Bailey', 'Horne', 'Richards', 'Theophanous'])
+    expect(members.recorded.some((m) => m.name === name)).toBe(false);
+  expect(members.recorded.filter((m) => m.name === 'MC Bailey')).toHaveLength(
+    1,
+  );
+  for (const [name, place] of [
+    ['Melissa Horne', 'Williamstown'],
+    ['Pauline Richards', 'Cranbourne'],
+    ['Kat Theophanous', 'Northcote'],
+  ]) {
+    const rows = members.current.filter((m) => m.name === name);
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({
+      jurisdiction: 'vic',
+      chamber: 'vic_la',
+      place,
+    });
+    expect(members.recorded.some((m) => m.name === name)).toBe(false);
+  }
+  // The full-name former federal politician is a separate recorded person.
+  expect(members.recorded.some((m) => m.name === 'Andrew Theophanous')).toBe(
+    true,
+  );
+});
+test('recorded affiliations require full names and exclude every current person and seat', () => {
+  const currentNames = new Set(
+    people.people
+      .filter((p) => p.electorates.some((s) => s.current))
+      .flatMap((p) => [p.name, ...p.aliases])
+      .map(nameKey),
+  );
+  const seats = people.people.flatMap((p) =>
+    p.electorates.filter((s) => s.current),
+  );
+  for (const member of members.recorded) {
+    expect(member.name.trim()).toMatch(/\S+\s+\S+/);
+    expect(currentNames.has(nameKey(member.name))).toBe(false);
+    const profile = joinPerson(member.slug, slugs, roster, people, manifest);
+    for (const rep of profile.rosterRow?.representation ?? [])
+      expect(
+        seats.some(
+          (seat) =>
+            seat.jurisdiction === rep.jurisdiction &&
+            seat.chamber === rep.chamber &&
+            nameKey(seat.name) === nameKey(rep.electorate ?? ''),
+        ),
+      ).toBe(false);
+    // Undated roster representation cannot assign a state person to a
+    // federal electorate, even when the upstream roster mixes those fields.
+    expect(member).toMatchObject({ jurisdiction: '', chamber: '', place: '' });
+  }
+  // A full-name recorded row can also overlap a current seat; the surname
+  // guard alone must not be the reason it disappears.
+  const recordedShorten = joinPerson(
+    'bill-shorten',
+    slugs,
+    roster,
+    people,
+    manifest,
+  );
+  expect(recordedShorten.partyStatus).toBe('unknown');
+  expect(
+    recordedShorten.rosterRow?.representation?.some((rep) =>
+      seats.some(
+        (seat) =>
+          seat.jurisdiction === rep.jurisdiction &&
+          seat.chamber === rep.chamber &&
+          nameKey(seat.name) === nameKey(rep.electorate ?? ''),
+      ),
+    ),
+  ).toBe(true);
+  expect(members.recorded.some((m) => m.slug === 'bill-shorten')).toBe(false);
 });
 test('Labor total is pinned independently at JSON pointer /nodes/0/total, never the displayed donor sum', () => {
   const raw = pinned('/graph/money.json') as {
@@ -203,7 +305,9 @@ test('a partially failed batch never exceeds 32 readable bill files', async () =
     savedAt: 1000,
     asOf: null,
   });
-  jest.spyOn(api, 'bill').mockRejectedValueOnce(new Error('fixture unavailable'));
+  jest
+    .spyOn(api, 'bill')
+    .mockRejectedValueOnce(new Error('fixture unavailable'));
   const view = (await api.partyPage('Labor')).data!;
   expect(view.divisions.data?.scanned).toBe(32);
   expect(view.divisions.data?.failed).toBe(1);

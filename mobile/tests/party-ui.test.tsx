@@ -93,23 +93,152 @@ test('profile chips and grouped person-row VoiceOver actions open the same nativ
   expect(router.push).toHaveBeenLastCalledWith(partyRoute('Labor'));
   act(() => r.unmount());
 });
+test.each([
+  'Independent',
+  'IND',
+  'Independent Liberal',
+  'Unaligned',
+  'Non-aligned',
+])(
+  '%s chips, vote labels and VoiceOver actions are plain affiliations',
+  (party) => {
+    let r!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      r = TestRenderer.create(
+        <PartyLabel party={party} status="current" testID="chip" />,
+      );
+    });
+    expect(
+      r.root.findAll(
+        (n) =>
+          typeof n.type === 'string' && n.props.accessibilityRole === 'link',
+      ),
+    ).toHaveLength(0);
+    expect(
+      r.root.findAll((n) => typeof n.props.onPress === 'function'),
+    ).toHaveLength(0);
+    act(() => r.update(<RecordedParty party={party} />));
+    expect(
+      r.root.findAll((n) => n.props.accessibilityRole === 'link'),
+    ).toHaveLength(0);
+    const openProfile = jest.fn();
+    act(() =>
+      r.update(
+        <PersonRow
+          name="Fixture member"
+          party={party}
+          formerly={party}
+          partyStatus="current"
+          onPress={openProfile}
+          testID="person"
+        />,
+      ),
+    );
+    const row = r.root.find(
+      (n) => typeof n.type === 'string' && n.props.testID === 'person',
+    );
+    expect(row.props.accessibilityActions).toEqual([]);
+    act(() => {
+      for (const actionName of ['openParty', 'openPreviousParty'])
+        row.props.onAccessibilityAction({ nativeEvent: { actionName } });
+    });
+    expect(router.push).not.toHaveBeenCalled();
+    press(r, 'person');
+    expect(openProfile).toHaveBeenCalledTimes(1);
+    act(() => r.unmount());
+  },
+);
+test('previous party links remain available for an Independent, while previous Independent actions are omitted', () => {
+  let r!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    r = TestRenderer.create(
+      <PartyLabel
+        party="Independent"
+        formerly="Labor"
+        status="current"
+        testID="chip"
+      />,
+    );
+  });
+  const chip = r.root.find(
+    (n) => typeof n.type === 'string' && n.props.testID === 'chip',
+  );
+  expect(chip.props.onPress).toBeUndefined();
+  expect(chip.props.accessibilityActions).toEqual([
+    { name: 'openPreviousParty', label: 'Open Labor party page' },
+  ]);
+  act(() =>
+    chip.props.onAccessibilityAction({
+      nativeEvent: { actionName: 'openPreviousParty' },
+    }),
+  );
+  expect(router.push).toHaveBeenCalledWith(partyRoute('Labor'));
+  jest.mocked(router.push).mockClear();
+  act(() =>
+    r.update(
+      <PartyLabel
+        party="Labor"
+        formerly="Independent"
+        status="current"
+        testID="chip"
+      />,
+    ),
+  );
+  const changed = r.root.find(
+    (n) => typeof n.type === 'string' && n.props.testID === 'chip',
+  );
+  expect(changed.props.accessibilityActions).toBeUndefined();
+  act(() =>
+    r.update(
+      <PersonRow
+        name="Fixture member"
+        party="Labor"
+        formerly="Independent"
+        partyStatus="current"
+        onPress={() => undefined}
+        testID="person"
+      />,
+    ),
+  );
+  const row = r.root.find(
+    (n) => typeof n.type === 'string' && n.props.testID === 'person',
+  );
+  expect(row.props.accessibilityActions).toEqual([
+    { name: 'openParty', label: 'Open Labor party page' },
+  ]);
+  act(() =>
+    row.props.onAccessibilityAction({
+      nativeEvent: { actionName: 'openPreviousParty' },
+    }),
+  );
+  expect(router.push).not.toHaveBeenCalled();
+  act(() => r.unmount());
+});
 test('bill links exclude presiding roles and unrecorded affiliations, including folded splits', () => {
   // UI-only synthetic parties and anonymous roles; no public person's votes
   // or bill record is changed. These rare role codes are register fields.
   const row = (party: string, label: string, ayes = 1) => ({
-    party, label, ayes, noes: 0,
+    party,
+    label,
+    ayes,
+    noes: 0,
   });
   const splits = {
     drawn: Array.from({ length: 5 }, (_, i) =>
       row(`Fixture party ${i + 1}`, `Fixture party ${i + 1}`, 5),
-    ),
+    ).concat(row('Independent', 'Independent', 2)),
     folded: [
       row('Fixture small party', 'Fixture small party'),
       row('PRES', 'Presiding officer'),
       row('SPK', 'Speaker'),
       row('', 'Not recorded'),
+      row('Independent Liberal', 'Independent Liberal'),
+      row('Unaligned', 'Unaligned'),
+      row('Non-aligned', 'Non-aligned'),
     ],
-    max: 5, notes: [], recorded: true,
+    max: 5,
+    notes: [],
+    recorded: true,
   };
   let r!: TestRenderer.ReactTestRenderer;
   act(() => {
@@ -124,8 +253,16 @@ test('bill links exclude presiding roles and unrecorded affiliations, including 
   expect(links).toHaveLength(6);
   for (const link of links)
     expect(link.props.accessibilityLabel).not.toMatch(
-      /^(Presiding officer|Speaker|Not recorded)/,
+      /^(Presiding officer|Speaker|Not recorded|Independent|Unaligned|Non-aligned)/,
     );
+  const independent = r.root.find(
+    (n) =>
+      typeof n.type === 'string' && n.props.testID === 'splits-independent',
+  );
+  expect(independent.props.accessibilityLabel).toBe(
+    'Independent, 2 ayes, no noes',
+  );
+  expect(independent.props.onPress).toBeUndefined();
   for (const party of [' ', 'PRES', 'SPK']) {
     act(() => r.update(<RecordedParty party={party} />));
     expect(

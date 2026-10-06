@@ -9,7 +9,7 @@ import type {
 } from '../../api/bill-transforms';
 import { sourceUrl } from '../../navigation/external';
 import { formatCount, formatDate } from '../../design/format';
-import { partyIdentity } from '../../design/party';
+import { isPartyLabel, partyIdentity } from '../../design/party';
 import {
   Icon,
   SourceLink,
@@ -159,7 +159,8 @@ const countText = (s: { ayes: number; noes: number }) =>
 export const splitLabel = (s: BillSplit) =>
   `${s.label}, ${ayeWords(s.ayes)}, ${noWords(s.noes)}`;
 // Register codes for people who are not a party: no party dot for them.
-const notParty = new Set(['', 'PRES', 'SPK']);
+const notParty = (split: BillSplit) =>
+  !isPartyLabel(split.party) || !isPartyLabel(split.label);
 
 /**
  * One party's ayes and noes: the party as a dot and its name, the counts in
@@ -177,13 +178,11 @@ function SplitRow({
   testID?: string;
 }) {
   const stacked = useAccessibilitySize();
-  const Container = notParty.has(split.party.trim()) ? View : Pressable;
-  const dot = notParty.has(split.party.trim())
-    ? null
-    : partyIdentity(split.label).color;
+  const Container = notParty(split) ? View : Pressable;
+  const dot = notParty(split) ? null : partyIdentity(split.label).color;
   return (
     <Container
-      {...(notParty.has(split.party.trim())
+      {...(notParty(split)
         ? {}
         : {
             accessibilityRole: 'link' as const,
@@ -293,7 +292,7 @@ export function PartySplits({
         </Text>
       ) : null}
       {splits.folded
-        .filter((split) => !notParty.has(split.party.trim()))
+        .filter((split) => !notParty(split))
         .map((split) => (
           <InlineLink
             key={split.party}
@@ -510,7 +509,7 @@ export function Bullet({ children }: { children: string }) {
 /** A party dot and its label as the record names it (no current/former claim). */
 export function RecordedParty({ party }: { party: string }) {
   const identity = partyIdentity(party);
-  const recorded = identity.recorded && !notParty.has(party.trim());
+  const recorded = isPartyLabel(party);
   const Container = recorded ? Pressable : View;
   return (
     <Container

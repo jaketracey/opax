@@ -3,6 +3,7 @@ import { RefreshControl } from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../api/runtime';
 import { partyPageCopy, type PartyMember } from '../api/party-page';
+import { billSentenceCase } from '../api/bill-transforms';
 import {
   formatCount,
   formatDate,
@@ -37,6 +38,7 @@ import { CatalogState } from './CatalogState';
 import { InlineLink } from './bills/parts';
 import { useCatalogRecord } from './bills/useCatalogRecord';
 import { MoneyMapLink } from './party/MoneyMapLink';
+import { chamberLabel } from './bills/filters';
 
 function Members({
   rows,
@@ -57,7 +59,11 @@ function Members({
       {[...groups].map(([key, members]) => (
         <SubSection
           key={key}
-          title={`${jurisdictionName(members[0]!.jurisdiction) ?? 'Jurisdiction not recorded'} · ${chamberName(members[0]!.chamber, members[0]!.jurisdiction) ?? 'Chamber not recorded'}`}
+          title={
+            recorded
+              ? 'Recorded affiliations'
+              : `${jurisdictionName(members[0]!.jurisdiction) ?? 'Jurisdiction not recorded'} · ${chamberName(members[0]!.chamber, members[0]!.jurisdiction) ?? 'Chamber not recorded'}`
+          }
         >
           <RowList>
             {members.map((member) => (
@@ -149,7 +155,6 @@ export function PartyPage({ input }: { input: string }) {
                 {view.label}
               </Heading>
               <PartyLabel party={view.label} status="unknown" linked={false} />
-              <Text wordSafe>{partyPageCopy.receipts}</Text>
             </Group>
             <Section title="Members">
               <CatalogState
@@ -295,18 +300,6 @@ export function PartyPage({ input }: { input: string }) {
               {view.moneyMeta ? (
                 <Group>
                   <Text wordSafe variant="fine">
-                    {view.moneyMeta.coverage}.{' '}
-                    {view.moneyMeta.party_totals_note}
-                  </Text>
-                  <Text wordSafe variant="fine">
-                    {view.moneyMeta.methodology}
-                  </Text>
-                  {view.moneyMeta.exclusions.map((note) => (
-                    <Text wordSafe variant="fine" key={note}>
-                      Excluded: {note}
-                    </Text>
-                  ))}
-                  <Text wordSafe variant="fine">
                     Top donors are the displayed donor-to-party flows, not all
                     party receipts. Year keys use the first year of each
                     financial year; election returns use polling year. No
@@ -411,7 +404,13 @@ export function PartyPage({ input }: { input: string }) {
                             </Text>
                             <Text wordSafe variant="metadata">
                               {formatDate(row.division.date)} ·{' '}
-                              {row.division.house} · {row.division.outcome}
+                              {chamberLabel(row.division.house)} ·{' '}
+                              {row.division.outcome === 'affirmative'
+                                ? 'Agreed to'
+                                : row.division.outcome === 'negative'
+                                  ? 'Negatived'
+                                  : billSentenceCase(row.division.outcome) ||
+                                    'Outcome not recorded'}
                             </Text>
                             <Text wordSafe variant="strong">
                               {row.ayes} for, {row.noes} against

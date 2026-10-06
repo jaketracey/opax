@@ -501,14 +501,18 @@ The cached seat file now draws a tile-free Skia outline. Your MP can suggest a f
 
 ## Native party page
 
-Party labels push `/party/<slug>` in the current tab's stack. Slugs come
+Recorded party labels push `/party/<slug>` in the current tab's stack. Independent,
+unaligned and other non-party affiliations stay plain text and never resolve as
+parties. Slugs come
 from recorded labels; `partyIdentity` and `samePartyLabel` provide the existing
 identity rules, with no prefix matching or new aliases. A catalog-confirmed
 absence opens the existing web party page; a failed read offers retry.
 
 The page reads the roster and dated people release for current members, with
 unknown affiliation status in a separate Recorded disclosure and former members
-excluded. Each member opens its native profile. Receipt totals and rank read
+excluded. Recorded rows require full names, omit current-person/current-seat
+overlaps, and show no unverified roster place or chamber. Each member opens its
+native profile. Receipt totals and rank read
 `/graph/money.json` directly; displayed donor flows do not replace the party
 node total. Donors retain year keys and the graph's exclusions. Associated
 entities read `/graph/aec-extras.json`, retain their own annual-return years,

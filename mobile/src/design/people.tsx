@@ -5,7 +5,12 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { useAccessibilitySize } from './accessibility';
 import { Icon } from './icon';
 import type { PartyStatus } from '../api/party-transforms';
-import { partyIdentity, partyText, type PartyContext } from './party';
+import {
+  isPartyLabel,
+  partyIdentity,
+  partyText,
+  type PartyContext,
+} from './party';
 import { Text } from './text';
 import { nameProbeProps } from './text-probe';
 import { colors, hairline, layout, minimumTarget, spacing } from './tokens';
@@ -63,12 +68,14 @@ export function PartyLabel({
   const identity = partyIdentity(party);
   const text = partyText({ party, status, formerly }, dense);
   const tone = dense ? 'inkSoft' : 'ink';
-  const Container = linked && identity.recorded ? Pressable : View;
+  const partyLinked = linked && isPartyLabel(party);
+  const previousLinked = linked && !!text.previous && isPartyLabel(formerly);
+  const Container = partyLinked ? Pressable : View;
   return (
     <Container
       style={[
         styles.party,
-        linked && identity.recorded
+        partyLinked
           ? {
               minHeight: minimumTarget,
               minWidth: minimumTarget,
@@ -77,26 +84,30 @@ export function PartyLabel({
             }
           : null,
       ]}
-      {...(linked && identity.recorded
+      {...(partyLinked
         ? {
             accessibilityRole: 'link' as const,
             accessibilityHint: 'Opens the party record',
             onPress: () => router.push(partyRoute(identity.name)),
-            accessibilityActions:
-              text.previous && formerly
-                ? [
-                    {
-                      name: 'openPreviousParty',
-                      label: `Open ${formerly} party page`,
-                    },
-                  ]
-                : undefined,
+          }
+        : {})}
+      {...(previousLinked
+        ? {
+            accessibilityActions: formerly
+              ? [
+                  {
+                    name: 'openPreviousParty',
+                    label: `Open ${formerly} party page`,
+                  },
+                ]
+              : undefined,
             onAccessibilityAction: (event: {
               nativeEvent: { actionName: string };
             }) => {
               if (
                 event.nativeEvent.actionName === 'openPreviousParty' &&
-                formerly
+                formerly &&
+                isPartyLabel(formerly)
               )
                 router.push(partyRoute(formerly));
             },
@@ -106,7 +117,7 @@ export function PartyLabel({
       accessibilityLabel={text.spoken}
       testID={testID}
     >
-      {identity.color ? (
+      {isPartyLabel(party) && identity.color ? (
         <View
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
@@ -125,7 +136,7 @@ export function PartyLabel({
             variant={dense ? 'metadata' : 'body'}
             tone="inkSoft"
             onPress={
-              linked && formerly
+              previousLinked && formerly
                 ? (event) => {
                     event.stopPropagation();
                     router.push(partyRoute(formerly));
@@ -243,13 +254,17 @@ export function PersonRow({
       accessibilityRole="button"
       accessibilityLabel={label}
       accessibilityActions={
-        partyContext?.party
+        partyContext
           ? [
-              {
-                name: 'openParty',
-                label: `Open ${partyIdentity(partyContext.party).name} party page`,
-              },
-              ...(partyContext.formerly &&
+              ...(isPartyLabel(partyContext.party)
+                ? [
+                    {
+                      name: 'openParty',
+                      label: `Open ${partyIdentity(partyContext.party).name} party page`,
+                    },
+                  ]
+                : []),
+              ...(isPartyLabel(partyContext.formerly) &&
               partyContext.formerly !== partyContext.party
                 ? [
                     {
@@ -262,11 +277,16 @@ export function PersonRow({
           : undefined
       }
       onAccessibilityAction={(event) => {
-        if (event.nativeEvent.actionName === 'openParty' && partyContext?.party)
+        if (
+          event.nativeEvent.actionName === 'openParty' &&
+          partyContext?.party &&
+          isPartyLabel(partyContext.party)
+        )
           router.push(partyRoute(partyContext.party));
         if (
           event.nativeEvent.actionName === 'openPreviousParty' &&
-          partyContext?.formerly
+          partyContext?.formerly &&
+          isPartyLabel(partyContext.formerly)
         )
           router.push(partyRoute(partyContext.formerly));
       }}
