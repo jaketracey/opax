@@ -47,6 +47,20 @@ for (const variant of ['production', 'e2e']) {
     'The app stays light-only',
   );
   assert.equal(native.UILaunchStoryboardName, 'SplashScreen');
+  assert.equal(
+    native.NSLocationWhenInUseUsageDescription,
+    'OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere.',
+  );
+  assert(
+    !native.NSLocationAlwaysUsageDescription &&
+      !native.NSLocationAlwaysAndWhenInUseUsageDescription,
+  );
+  assert(!native.UIBackgroundModes?.includes('location'));
+  assert.deepEqual(
+    Object.keys(native).filter((k) => /^NS.*UsageDescription$/.test(k)),
+    ['NSLocationWhenInUseUsageDescription'],
+  );
+
   assert.deepEqual(native.UIApplicationSceneManifest, {
     UIApplicationSupportsMultipleScenes: false,
     UISceneConfigurations: {
@@ -252,6 +266,16 @@ if (appIndex !== -1) {
   assert.equal(plist.CFBundleVersion, process.env.OPAX_BUILD_NUMBER ?? '1');
   assert.equal(plist.MinimumOSVersion, '18.4');
   assert(!plist.NSMicrophoneUsageDescription);
+  assert.equal(
+    plist.NSLocationWhenInUseUsageDescription,
+    'OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere.',
+  );
+  assert(
+    !plist.NSLocationAlwaysUsageDescription &&
+      !plist.NSLocationAlwaysAndWhenInUseUsageDescription,
+  );
+  assert(!plist.UIBackgroundModes?.includes('location'));
+
   assert.equal(
     plist.OPAXVoiceFixturePort,
     Number(process.env.OPAX_FIXTURE_PORT ?? 8910),

@@ -2,11 +2,12 @@ const { getDefaultConfig } = require('expo/metro-config');
 const path = require('node:path');
 const config = getDefaultConfig(__dirname);
 const inheritedResolver = config.resolver.resolveRequest;
-// E2E-only modules with a production stub beside them: the drawn-line probe
-// and the welcome tour's launch argument.
+// E2E-only modules with a production stub beside them: the drawn-line probe,
+// the welcome tour's launch argument and the electorate outline probe.
 const productionStubs = [
   'src/design/text-probe',
   'src/onboarding/launch-flag',
+  'src/features/electorate-map/outline-probe',
 ].map((module) => path.join(__dirname, module));
 config.resolver.resolveRequest = (context, moduleName, platform) => {
   const target = moduleName.startsWith('.')

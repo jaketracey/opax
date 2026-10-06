@@ -318,7 +318,7 @@ Stopping query-string logging on `/api/search-all` would remove the Search Histo
 | Source records | Opened in an in-app Safari view on the source's own site | Third-party sites the reader navigates to | None: Apple exempts "enabling the user to navigate the open web" | `external.ts:266-293`; see risk R6 |
 | Crash reports, analytics, SDKs | None from OPAX. Eight shipped frameworks and no analytics or crash-reporting SDK. Apple's own diagnostics are Apple's to disclose | No | None | `verify-ios-release.py:29-36,266-270,487-492`. In the build 2 archive, the app's privacy manifest and the seven SDK manifests each declare no collected data types and `NSPrivacyTracking` false |
 | Credentials | None. Public requests omit credentials and refuse redirects | No | None | `client.ts:126-127` |
-| Permissions | None. The build has no purpose strings, so it cannot ask for the microphone, location, contacts or photos | No | None | `verify-ios-release.py:423` |
+| Permissions | Optional When In Use location, requested only after Use my location; one on-device display-outline suggestion requires confirmation | No location collection or tracking | Location not collected; exact purpose string and privacy proof in [IOS-ELECTORATE-MAP.md](IOS-ELECTORATE-MAP.md) | `verify-ios-release.py`; `location-privacy.test.ts` |
 
 ### 4.3 Answers in App Store Connect
 

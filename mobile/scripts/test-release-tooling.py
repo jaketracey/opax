@@ -9,6 +9,7 @@ import io
 import json
 import os
 from pathlib import Path
+import re
 import struct
 import subprocess
 import sys
@@ -485,6 +486,35 @@ class ReleaseStepTests(unittest.TestCase):
 
 
 class BundleAttackTests(unittest.TestCase):
+    def test_pinned_reanimated_metadata_is_not_a_route_but_new_paths_are_refused(self):
+        with tempfile.TemporaryDirectory() as d:
+            routes = Path(d)
+            (routes / "_layout.tsx").write_text("shipping route")
+            entries = ["./_layout.tsx", "react-native-reanimated", "4.5.1",
+                       *sorted(verify.REANIMATED_METADATA_PATHS)]
+            storage = "\0".join(entries).encode()
+            bundle = hermes_bundle(storage, [packed(storage, entry.encode()) for entry in entries])
+            self.assertEqual(verify.bundle_route_keys(bundle, routes), ["./_layout.tsx"])
+            for plant in ("./src/unexpected.ts", "./lib/module/workbench.js", "./src/core.ts.workbench.tsx"):
+                with self.subTest(plant=plant), self.assertRaises(ReleaseError):
+                    body = storage + b"\0" + plant.encode()
+                    verify.bundle_route_keys(hermes_bundle(body, [packed(body, entry.encode())
+                                             for entry in [*entries, plant]]), routes)
+            # A source route with an exempt-looking name must still fail when
+            # Metro excludes it; dependency metadata cannot conceal that route.
+            (routes / "src").mkdir()
+            (routes / "src/core.ts").write_text("unshipped route")
+            with patch.object(verify, "production_block_list", return_value=(re.compile(r"/src/core\.ts$"),)):
+                with self.assertRaises(ReleaseError):
+                    verify.bundle_route_keys(bundle, routes)
+
+    def test_dependency_paths_without_pinned_package_identity_are_refused(self):
+        with tempfile.TemporaryDirectory() as d:
+            routes = Path(d)
+            (routes / "_layout.tsx").write_text("shipping route")
+            with self.assertRaises(ReleaseError):
+                verify.bundle_route_keys(b"\0./_layout.tsx\0./src/core.ts\0", routes)
+
     def test_app_extensions_refused(self):
         with tempfile.TemporaryDirectory() as d:
             app = Path(d)
@@ -823,6 +853,16 @@ class BundleAttackTests(unittest.TestCase):
                 with self.assertRaises(ReleaseError):
                     verify.framework_allowlist(app)
                 plant.rmdir()
+
+    def test_analytics_check_reads_hermes_entries_and_still_refuses_sdk_and_host_plants(self):
+        storage = b"ignoreAllLogsENTRY_EXIT"
+        safe = hermes_bundle(storage, [packed(storage, entry) for entry in (b"ignoreAllLogs", b"ENTRY_EXIT")])
+        self.assertFalse(verify.has_analytics(safe))
+        for entry in (b"sentry", b"https://us.i.posthog.com/capture", b"HTTPS://API.HEAP.IO/track"):
+            with self.subTest(entry=entry):
+                self.assertTrue(verify.has_analytics(hermes_bundle(entry, [packed(entry, entry)])))
+        with self.assertRaises(ReleaseError):
+            verify.has_analytics(safe[:-1])
 
     def test_every_embedded_bundle_entitlement_payload_checked(self):
         with tempfile.TemporaryDirectory() as d:

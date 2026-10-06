@@ -321,6 +321,11 @@ routes throw **before** cache lookup or networking. Redirects and cross-origin
 requests fail closed. Transport belongs exclusively to the API
 client; ESLint and the static AST scan enforce this.
 
+Apple Maps tiles are an allowed iOS system service, outside app catalog
+transport. The current Skia electorate outline has no basemap and makes no tile
+requests, so this feature adds no app network host. The one-shot location fix
+stays on the device and never enters the API client.
+
 Both source gates scan JS/TS in `src/` and `modules/`. `modules/*/scripts/` is Node
 tooling, exempt from app transport and origin rules but still scanned for secrets.
 App and module source cannot import that tooling, including via re-exports or
@@ -380,7 +385,7 @@ say their records are not linked in this release and link to the web; they do no
 claim those records are absent. Electorates show dated representation, elections,
 Census vintage and sources. Journeys 07–09 cover Your MP, profiles and electorates;
 12–14 cover Search, Today and About; 28 the welcome tour. The runner accepts
-any numbered flow that exists and rejects unknown numeric flows. Licensed postcode/location lookup, sign-in, voice, universal links
+any numbered flow that exists and rejects unknown numeric flows. Precise allocation with licensed postcode/location data, sign-in, voice, universal links
 and wider data coverage belong to their owning lanes.
 
 ## P0 catalog adapters (data only)
@@ -489,3 +494,7 @@ Surname person pages use the release's unique current ID holder (or sole histori
 holder); incompatible roster representations are refused, including the shared
 David/Dorinda Cox ID. Roster-only register results such as Mark Furner retain their
 directory link without inventing a canonical release ID.
+
+### Electorate outline and optional location
+
+The cached seat file now draws a tile-free Skia outline. Your MP can suggest a federal seat from one foreground location fix, entirely on the iPhone, with explicit confirmation. See [IOS-ELECTORATE-MAP.md](../docs/IOS-ELECTORATE-MAP.md) for display limitations, privacy, cache budget, download measurement and the compact-file proposal. Journey 24 sets a simulated fix per case through the harness; `OPAX_VERIFY_MAP_OFFLINE=1` adds a stopped-fixture map check.

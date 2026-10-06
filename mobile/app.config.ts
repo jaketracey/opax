@@ -61,8 +61,14 @@ const config: ExpoConfig = {
     buildNumber,
     deploymentTarget: '18.4',
     supportsTablet: false,
+    privacyManifests: {
+      NSPrivacyTracking: false,
+      NSPrivacyCollectedDataTypes: [],
+    },
     infoPlist: {
       ITSAppUsesNonExemptEncryption: false,
+      NSLocationWhenInUseUsageDescription:
+        'OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere.',
       ...(variant === 'e2e' ? { OPAXVoiceFixturePort: port } : {}),
       ...(variant === 'e2e' || localDevelopment
         ? {
@@ -83,6 +89,16 @@ const config: ExpoConfig = {
   plugins: [
     ['expo-router', { sitemap: variant !== 'production' }],
     './plugins/withSceneLifecycle.js',
+    [
+      'expo-location',
+      {
+        locationWhenInUsePermission:
+          'OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere.',
+        locationAlwaysPermission: false,
+        motionUsagePermission: false,
+        locationAlwaysAndWhenInUsePermission: false,
+      },
+    ],
     './plugins/withNetworkPolicy.js',
     [
       'expo-splash-screen',
