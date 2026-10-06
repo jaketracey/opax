@@ -23,7 +23,7 @@ test('13 QLD review cases restore named parties; witnesses are conserved separat
     assert.equal(p.speech_scope.state, scope.state);
     assert.equal(p.speech_scope.chamber, scope.chamber);
     assert.ok(p.speech_scope.service.length);
-    assert.equal(p.speeches, null);
+    assert.equal(Object.hasOwn(p, 'speeches'), false);
     assert.equal(p.transcript.speeches, expected.before.speeches);
     assert.equal(p.witness_rows, undefined);
     for (const key of ['pid', 'party', 'full', 'representation', 'affiliations', 'current']) assert.equal(p.separated_witnesses[key], undefined);

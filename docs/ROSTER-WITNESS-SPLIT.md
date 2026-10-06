@@ -1,7 +1,7 @@
-# Roster witness split — review fixes, round 1
+# Roster witness split — review fixes, round 2
 
 Baseline: refreshed `origin/main` (`8e1977cfe8681e09536ac8573fadf0c825654416`).
-Previous branch commit: `4a60eab4`. The desktop database remains unreachable.
+Previous branch commit: `c4106f4e` (initial split: `4a60eab4`). The desktop database remains unreachable.
 No deployment, production write or reconciliation apply was performed.
 
 ## Nightly identity and count gate
@@ -45,7 +45,11 @@ speech, rather than the dominant historical party or a 2024 roster snapshot.
 His coverage ends on 9 April 2026, supported by the
 [official vacancy notice](https://www.parliament.qld.gov.au/Work-of-the-Assembly/Tabled-Papers/docs/5826t0542/5826t542.pdf).
 
-All 16 pinned `speeches` values are **null**, with a pending count basis. The
+All 16 pinned `speeches` keys are **omitted**, with a pending count basis. The
+existing iOS decoder accepts an absent count but rejects JSON null; the full
+export is checked against its roster field list to prevent that regression.
+The real `ios/app` decoder also accepts all 1,700 records, including the 16
+missing counts; reintroducing a null count is rejected. The
 old totals and scopes remain under `transcript` for provenance. Neither 178
 nor 120 is presented as Scott Stewart's or Les Walker's own speech count.
 The directory, search description and search catalog say **Count pending exact
@@ -121,8 +125,8 @@ inventory can produce a different plan. Plans and QA logs are ignored.
 
 ## Validation
 
-- Python: 122 roster/export/identity, 12 reconciliation, 19 discovery, four
-  research and 96 committee/ingestion/evidence tests: **253 passed**.
+- Python: 123 roster/export/identity, 12 reconciliation, 19 discovery, four
+  research and 96 committee/ingestion/evidence tests: **254 passed**.
 - Node 24.21.0: `npm run build:search`, then `npm test`: **872 passed**.
 - `npm run check` and strict photo identity audit: passed.
 - Reviewer A/B replay and categorised diff: passed.

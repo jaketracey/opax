@@ -38,7 +38,7 @@ def restored_scope(row, reference, reviewed, peers=()):
         return None
     profiles.guard_print(own, force=True)
     own.update(full=latest['name'], party=profiles.split_party(service, min(f"{row['last']}-12-31", scope['service'][-1]['end'])),
-               speech_scope=scope, speeches=None,
+               speech_scope=scope,
                speech_count_basis='pending own-house, in-service SQL export',
                transcript={k: copy.deepcopy(row[k]) for k in
                            ('speeches', 'states', 'chambers', 'first', 'last', 'witness_rows') if k in row},
@@ -50,6 +50,7 @@ def restored_scope(row, reference, reviewed, peers=()):
                representation=list({(r['jurisdiction'], r['chamber'], r['electorate']): profiles.representation(r)
                                     for r in evidence}.values()))
     own.pop('recorded_parties', None)
+    own.pop('speeches', None)  # Optional to iOS readers; JSON null rejects the whole roster.
     if service.get('party_periods'):
         own['parties'] = [own['party'], *dict.fromkeys(p['party'] for p in service['party_periods'] if p['party'] != own['party'])]
     return own
@@ -67,10 +68,10 @@ def split_pinned(doc, reference, reviewed):
             row.clear()
             row.update(own)
             changed.append(row['name'])
-    doc['meta']['speeches'] = sum(p['speeches'] or 0 for p in doc['people'])
+    doc['meta']['speeches'] = sum(p.get('speeches') or 0 for p in doc['people'])
     doc['meta']['witness_speeches_separated'] = sum(p.get('separated_witnesses', {}).get('speeches', 0) for p in doc['people'])
     doc['meta'].pop('speech_counts_include_upper_bounds', None)
-    doc['meta']['speech_counts_pending'] = sum(p['speeches'] is None for p in doc['people'])
+    doc['meta']['speech_counts_pending'] = sum(p.get('speeches') is None for p in doc['people'])
     if 'representation' in doc['meta']:
         doc['meta']['representation']['matched'] = sum(bool(p.get('representation')) for p in doc['people'])
         doc['meta']['representation']['method'] = 'Evidence-gated corrections only; clean records pass through intact. Scoped witness splits use dated Queensland Assembly identities, exclude testimony and require an own-house, in-service retrieval filter. Legacy aggregates are preserved under transcript; own counts await the SQL refresh.'

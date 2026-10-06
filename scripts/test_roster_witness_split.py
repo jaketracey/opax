@@ -19,9 +19,23 @@ from scripts.test_roster_export_wrappers import RealWrapperTests
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = json.loads((ROOT / 'tests/fixtures/roster-export/witness-split-8e1977cf.json').read_text())
+# rosterPerson in ios/app@3a1d11ab, mobile/src/api/catalog-decoders.ts.
+# Optional fields can be absent. Keep the public roster free of explicit nulls
+# in these reader fields; optional(count), in particular, rejects JSON null.
+IOS_ROSTER_FIELDS = ('name', 'pid', 'party', 'party_now', 'current', 'speeches',
+                     'full', 'states', 'chambers', 'first', 'last', 'representation')
 
 
 class PinnedSplitTests(unittest.TestCase):
+    def test_exported_roster_has_no_null_values_in_ios_decoder_fields(self):
+        doc = json.loads((profiles.PUBLIC / 'parliamentarians.json').read_text())
+        self.assertIsNotNone(doc['meta']['generated'])
+        for row in doc['people']:
+            for field in IOS_ROSTER_FIELDS:
+                if field in row:
+                    with self.subTest(name=row['name'], field=field):
+                        self.assertIsNotNone(row[field])
+
     def test_thirteen_review_cases_and_three_historical_cases_restore_only_scoped_identity(self):
         reference = profiles.pinned_reference()
         reviewed = json.loads(profiles.REVIEWED.read_text())
@@ -37,7 +51,7 @@ class PinnedSplitTests(unittest.TestCase):
                 self.assertEqual(own['party'], case['expected_party'])
                 self.assertEqual({k: own['speech_scope'][k] for k in ('state', 'chamber')}, {'state': 'qld', 'chamber': 'qld_la'})
                 self.assertTrue(own['speech_scope']['service'])
-                self.assertIsNone(own['speeches'])
+                self.assertNotIn('speeches', own)
                 self.assertEqual(own['speech_count_basis'], 'pending own-house, in-service SQL export')
                 self.assertEqual(own['transcript']['speeches'], before['speeches'])
                 self.assertEqual(attribution_refusals([own]), [])

@@ -92,7 +92,7 @@ class MainPreservationTests(unittest.TestCase):
                 preserved = q.get('transcript', q) if field not in ('name','pid') else q
                 self.assertEqual(p.get(field),preserved.get(field),(name,field))
             if q.get('separated_witnesses'):
-                self.assertIsNone(q['speeches'])
+                self.assertNotIn('speeches', q)
                 self.assertEqual(q['transcript']['speeches'],p['speeches'])
 
     def test_missing_positive_evidence_and_undated_new_seat_do_not_change_clean_record(self):

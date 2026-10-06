@@ -74,7 +74,7 @@ test('state records never take a federal committee namesake, and witness-majorit
     assert.deepEqual(people.get(name).representation, [], name);
   }
   for (const p of roster.people) {
-    if ((p.witness_rows || 0) * 2 <= p.speeches) continue;
+    if ((p.witness_rows || 0) * 2 <= (p.speeches ?? 0)) continue;
     for (const field of ['pid', 'full', 'current', 'party_now', 'party', 'parties', 'identity_evidence', 'affiliations']) {
       assert.equal(p[field], undefined, `${p.name}: ${field}`);
     }
