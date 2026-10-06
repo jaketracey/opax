@@ -194,6 +194,10 @@ def map_speech(row: sqlite3.Row) -> dict:
     # is at the table. A witness is never a member; the label lets the portal
     # say so, and the position and organisation come from the attendance list.
     speaker_type = _optional_column(row, "speaker_type")
+    is_witness = bool(_optional_column(row, 'witness_name')) or speaker_type == 'witness'
+    if is_witness:
+        speaker_type = 'witness'
+        party = None
     witness_position = _optional_column(row, "witness_position")
     witness_organisation = _optional_column(row, "witness_organisation")
     return {
@@ -219,9 +223,9 @@ def map_speech(row: sqlite3.Row) -> dict:
         "extra": {
             "metadata": {
                 "speech_id": row["speech_id"],
-                "person_id": row["person_id"],
+                "person_id": None if is_witness else row["person_id"],
                 "speaker_raw": row["speaker_name"],
-                "electorate": row["electorate"],
+                "electorate": None if is_witness else row["electorate"],
                 "word_count": row["word_count"],
                 "date": date,
                 **({"witness_position": witness_position} if witness_position else {}),

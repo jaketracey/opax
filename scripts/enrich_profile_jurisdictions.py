@@ -262,6 +262,8 @@ def change_reason(person,records,reference,reviewed,printed_people=(),catalog=No
     This gate applies equally to pinned repair and the database export. Ordinary
     records, including state initials and two-house careers, pass through intact.
     """
+    if person.get('separated_witnesses'):
+        return 'witness split','Witness rows partitioned before resolving parliamentary identity'
     if witness_dominated(person):return 'witness-dominated','More than 50% witness rows'
     own=[]
     if weak(person['name']) and len(set(person.get('states',[])))>1:
@@ -353,6 +355,8 @@ def repair(people,reference,reviewed):
     for e in reference.get('electorates',[]):catalog[(e['jurisdiction'],e['chamber'])].add(key(e['name']))
     changed=[]
     for p in people:
+        if p.get('speech_scope') and p.get('transcript'):
+            continue
         before=copy.deepcopy(p)
         tokens=parts(p['name'])
         peers=prints.get(tokens[-1] if tokens else None,())
@@ -365,6 +369,13 @@ def repair(people,reference,reviewed):
         contradictory=False
         if weak(p['name']):
             own=print_identity(p,records,reference,peers)
+            if p.get('separated_witnesses'):
+                # A one-row residue or an ambiguous namesake is no MP identity.
+                if p['speeches'] < 5: own=[]
+                guard_print(p,force=True)
+                if not own:
+                    if p!=before:changed.append((p['name'],before,copy.deepcopy(p)))
+                    continue
             contradictory=not own and reason[0]=='mix-up corrected'
             # Absence of evidence is not evidence of a mix-up. Only actual
             # contradictions or multiple-parliament aggregates go neutral.
@@ -385,6 +396,10 @@ def repair(people,reference,reviewed):
                     p['party']=p['recorded_parties'][0]
                 p.pop('recorded_parties',None)
                 evidence=own
+                if p.get('separated_witnesses'):
+                    p['representation']=list({(r['jurisdiction'],r['chamber'],r['electorate']):representation(r) for r in own}.values())
+                    if len(p.get('states',[]))==1 and len(p.get('chambers',[]))==1 and p['chambers'][0] not in COMMITTEES:
+                        p['speech_scope']={'state':p['states'][0],'chamber':p['chambers'][0]}
                 if before.get('full') and not usable_alias(before['full']):
                     # Repair compact/byline aliases with their dated state seat.
                     # This also preserves correct Gaven/Nudgee/Gladstone KB rows.
@@ -496,7 +511,7 @@ def main():
         if not a.members:p.error('--members is required unless --pinned is set')
         enrich(data['people'],json.loads(a.members.read_text()),json.loads(a.research.read_text())['seats'],reference,reviewed)
     data['meta']['representation']={'updated':'2026-10-06','matched':sum(bool(p['representation']) for p in data['people']),
-        'method':'Evidence-gated corrections only; clean records pass through intact. Committee rows may contradict, never establish, an identity. More than 50% witness rows means neutral; weak multi-parliament or contradictory prints require a unique compatible identity. Transcript aggregates are retained.'}
+        'method':'Evidence-gated corrections only; clean records pass through intact. SQL exports partition witnesses before resolving parliamentary identity. Legacy witness-majority aggregates remain neutral unless an independently verified own-house scope is enforced. Weak multi-parliament or contradictory prints require a unique compatible identity. Transcript aggregates are retained.'}
     a.directory.write_text(json.dumps(data,ensure_ascii=False,separators=(',',':'))+'\n')
     print(data['meta']['representation'])
 

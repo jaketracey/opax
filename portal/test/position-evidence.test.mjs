@@ -74,7 +74,7 @@ function harness({rows,texts={},recover=true,unavailable=false,reasoned}={}){
   buildAskBody:(input,records,options)=>{reasonedOptions=options;return {query:input.question,prompt:{system:'ordinary'}};},
   kbFetch:async(env,path,{body})=>{reasonedBody=body;return Response.json(reasoned);},
   askPayload:(answer,records,scope)=>({answer:answer.answer,citations:answer.citations||{},sources:[],scope})}:{};
- const fn=runInNewContext(code+';documentedPositionAnswer',{...helpers,...reasoning,URL,Request,canonicalSpeaker:s=>s,EVIDENCE_GAP_ANSWER:'This selection does not establish their position on that topic.',
+ const fn=runInNewContext(code+';documentedPositionAnswer',{...helpers,...reasoning,scopeSpeakerBody:async()=>{},loadPeople:async()=>({byFold:new Map()}),URL,Request,canonicalSpeaker:s=>s,EVIDENCE_GAP_ANSWER:'This selection does not establish their position on that topic.',
   searchWindow:async(e,args)=>{query=args;return rows===null?null:{results:rows||[{slug:'speech-1',speaker:'Example MP',title:'Example MP — 2025-02-11',date:'2025-02-11',kind:'speech',resource:'rid'}]};},
   apiResource:async(r,u,slug)=>{reads++;return unavailable?Response.json({error:'down'},{status:503}):Response.json(texts[slug]||{speaker:'Example MP',text:proposal+'\n\n1:08 pm\n\n'+other});},
   quotedPositionAnswer:()=>null, positionExcerptsAnswer:(payload)=>({...payload,answer_status:'evidence_only'}), recoverPositionAnswer:async(payload,body)=>{generated=payload;generationBody=body;return recover?{...payload,answer:'Verified proposal',answer_status:undefined}:null;},

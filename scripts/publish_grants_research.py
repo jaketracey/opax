@@ -62,6 +62,9 @@ def records(data, directory=None):
         if p.get('full'):
             text+=f" The uniquely matched parliamentary name is {p['full']}."
             metadata['identity_name']=p['full']
+        if p.get('speech_scope'):
+            metadata['speech_scope']=p['speech_scope']
+            text+=f" This identity applies only to non-witness speech rows in {p['speech_scope']['state']} / {p['speech_scope']['chamber']}. Witness testimony and other transcript scopes are separate and unattributed."
         if p.get('affiliations'):
             metadata['affiliations']=p['affiliations']
             text+=' Dated parliamentary service: '+'; '.join(

@@ -46,6 +46,11 @@ COMMITTEES = {"senate_committee", "house_committee", "joint_committee"}
 FEDERAL = {"representatives", "senate"}
 
 
+def witness_row(row):
+    """Either witness marker is authoritative, even with a stale MP link."""
+    return bool(row.get('witness_name')) or row.get('speaker_type') == 'witness'
+
+
 def parts(name):
     s = "".join(c for c in unicodedata.normalize("NFKD", str(name or "")) if not unicodedata.combining(c))
     s = s.lower().replace("’", "'").replace("‘", "'").replace("`", "'").replace(".", " ")
@@ -203,6 +208,8 @@ def verify(row, ids, members, same, now_year):
     """(pid or None, why) for a roster row. ids: Counter of the row's speech person_ids;
     members: pid -> member(); same: print -> pid."""
     name = row["name"]
+    if witness_row(row):
+        return None, "committee witness"
     key = name.strip().lower()
     if key in same:
         return same[key], "listed as the same person"

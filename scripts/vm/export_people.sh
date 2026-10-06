@@ -5,6 +5,8 @@
 # Prints the finished JSON to stdout (scripts/vm/export_step.sh json installs it only if it moved by more than a
 # timestamp). The bare export alone would drop every person's `representation`, which portal tests and the person
 # pages need (found by the first VM rehearsal, 2026-09-29: David Pocock lost his territory).
+# Witness rows are partitioned before identity resolution; the final check refuses
+# any MP identity or party on the separated testimony, even with OPAX_ROSTER_ACCEPT.
 # Needs PY (default .venv/bin/python), OPAX_DB (default ~/.cache/autoresearch/parli.db), sqlite3, run from the repo root.
 set -euo pipefail
 PY="${PY:-.venv/bin/python}"

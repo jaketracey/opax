@@ -110,6 +110,11 @@ the MP only for their own speeches. This is deliberately not implemented now.
 The 13 Queensland majority-witness prints identified in review remain neutral,
 so their 840 parliamentary-speaker rows remain available under printed names.
 
+The subsequent [P2 witness split](ROSTER-WITNESS-SPLIT.md) restores 16 scoped QLD
+Assembly identities, including all 13 review cases, and leaves testimony
+unattributed. Its [diff against this roster](ROSTER-WITNESS-SPLIT-DIFF.md) records
+the precise counts and the limits of the offline aggregate.
+
 ## 3. Alias and original seat corrections
 
 Alias source normalization remains in place: `LEO McLEAY` becomes `Leo McLeay`,

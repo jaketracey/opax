@@ -25,7 +25,7 @@ class MainPreservationTests(unittest.TestCase):
     def test_every_changed_record_has_evidence_and_all_clean_records_are_exact_main(self):
         result=audit.audit(self.main,self.shipped,self.reference,self.reviewed)
         self.assertEqual(result['counts']['clean record changed'],0)
-        self.assertEqual(result['counts'],{'mix-up corrected':17,'witness-dominated':131,
+        self.assertEqual(result['counts'],{'witness split':16,'mix-up corrected':17,'witness-dominated':115,
                                          'spans parliaments':108,'alias normalisation':11,'clean record changed':0})
         changed={r['name'] for r in result['changes']}
         for name in self.old.keys()-changed:self.assertEqual(self.new[name],self.old[name],name)
@@ -89,7 +89,10 @@ class MainPreservationTests(unittest.TestCase):
         for name,p in self.old.items():
             q=self.new[name]
             for field in ['name','speeches','states','chambers','first','last','witness_rows','pid']:
-                self.assertEqual(p.get(field),q.get(field),(name,field))
+                preserved = q.get('transcript', q) if field not in ('name','pid') else q
+                self.assertEqual(p.get(field),preserved.get(field),(name,field))
+            if q.get('separated_witnesses'):
+                self.assertEqual(q['speeches']+q['separated_witnesses']['speeches'],p['speeches'])
 
     def test_missing_positive_evidence_and_undated_new_seat_do_not_change_clean_record(self):
         p=dict(name='Unknown',full='Alex Unknown',party='Labor',speeches=12,states=['sa'],

@@ -2,7 +2,7 @@
 """Account for every changed roster record against a frozen JSON or Git baseline.
 
 Whole records are compared, including provenance and representation basis. A
-change without one of the four evidence-backed reasons makes the audit fail.
+change without an evidence-backed reason makes the audit fail.
 """
 import argparse
 import json
@@ -13,8 +13,9 @@ from pathlib import Path
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from scripts import enrich_profile_jurisdictions as profiles
+from scripts.split_roster_witnesses import restored_scope
 
-CATEGORIES = ('mix-up corrected', 'witness-dominated', 'spans parliaments', 'alias normalisation')
+CATEGORIES = ('witness split', 'mix-up corrected', 'witness-dominated', 'spans parliaments', 'alias normalisation')
 
 
 def party_rows(rows, jurisdiction=None, party=None):
@@ -36,7 +37,16 @@ def audit(before, after, reference, reviewed):
     for name, p in old.items():
         q = new[name]
         if p == q:continue
-        reason = profiles.change_reason(p, records, reference, reviewed, prints[profiles.parts(name)[-1]])
+        if q.get('speech_scope') and q.get('transcript'):
+            expected = restored_scope(p, reference, reviewed, prints[profiles.parts(name)[-1]])
+            if expected != q:
+                raise ValueError('Unproven or modified witness split: '+name)
+            reason = ('witness split', 'Dated QLD Assembly identity; witness rows separate; own-house filter required; count is an upper bound')
+        elif profiles.witness_dominated(p) and any(q.get(k) for k in
+                ('pid', 'full', 'party', 'parties', 'party_now', 'current', 'representation', 'affiliations')):
+            raise ValueError('Unproven unscoped identity on witness-dominated print: '+name)
+        else:
+            reason = profiles.change_reason(p, records, reference, reviewed, prints[profiles.parts(name)[-1]])
         changes.append(dict(name=name, category=reason[0] if reason else 'clean record changed',
                             reason=reason[1] if reason else 'No evidence permits a repair',
                             fields=sorted(k for k in p.keys() | q.keys() if p.get(k) != q.get(k))))
@@ -45,14 +55,14 @@ def audit(before, after, reference, reviewed):
 
 
 def markdown(result, before, after, baseline):
-    lines = ['# Roster diff against main — round 4', '', f'Baseline: `{baseline}`. Every field of every record is compared; metadata is excluded.', '',
+    lines = ['# Roster witness-split diff against main', '', f'Baseline: `{baseline}`. Every field of every record is compared; metadata is excluded.', '',
              '| Category | Changed records | Sample |', '|---|---:|---|']
     for category, count in result['counts'].items():
         sample = [p['name'] for p in result['changes'] if p['category'] == category][:5]
         lines.append(f'| {category} | {count} | {", ".join(sample) or "—"} |')
     lines += ['', f'**{result["changed"]} changed; {result["unchanged"]} exactly unchanged; zero clean record changed is required.**', '',
-              'Categories are exclusive: majority-witness first, then unresolved weak multi-parliament prints, malformed aliases, and evidenced seat/party/name contradictions. Reviewed consistent same-person careers pass through exactly unchanged.', '',
-              '| Party rows / facet | Main | Round 4 | Change |', '|---|---:|---:|---:|']
+              'Categories are exclusive. Witness splits must exactly reproduce the independent scoped resolver, conserve aggregate counts, keep witnesses unattributed and enforce an own-house retrieval scope. Other changes retain the existing evidence categories.', '',
+              '| Party rows / facet | Main | Split | Change |', '|---|---:|---:|---:|']
     for label, jur, party in [('Total rows with party', None, None), ('SA rows with party', 'sa', None),
             ('SA Labor', 'sa', 'Labor'), ('SA Liberal', 'sa', 'Liberal'), ('QLD rows with party', 'qld', None),
             ('QLD Labor', 'qld', 'Labor'), ('QLD LNP', 'qld', 'LNP')]:
@@ -62,7 +72,7 @@ def markdown(result, before, after, baseline):
               '## Every changed record', '', '| Print | Category | Changed fields | Evidence permitting change |', '|---|---|---|---|']
     for p in result['changes']:
         lines.append(f'| {p["name"]} | {p["category"]} | {", ".join(p["fields"])} | {p["reason"]} |')
-    lines += ['', 'Witness splitting is a P2 follow-up: retain the MP identity only for their parliamentary-speaker rows and keep witness testimony separate. It is deliberately not implemented here.', '']
+    lines += ['', 'Offline split counts are non-witness upper bounds, not exact per-house counts. The original aggregate remains under `transcript`; separated witnesses have no MP identity, party or seat. The nightly SQL export computes the exact partition before resolving identity.', '']
     return '\n'.join(lines)
 
 

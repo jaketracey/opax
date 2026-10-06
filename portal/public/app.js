@@ -2,6 +2,12 @@
    The hash is the single source of truth for navigation; route() renders it. */
 
 "use strict";
+let attributionHelpers;
+const attributionReady = import('./speech-attribution.js?v=20261006-1').then(module => { attributionHelpers = module; });
+const isWitness = row => attributionHelpers ? attributionHelpers.isWitness(row) : true;
+const isUnattributed = row => attributionHelpers ? attributionHelpers.isUnattributed(row) : true;
+const belongsToScope = (row, scope) => attributionHelpers ? attributionHelpers.belongsToScope(row, scope) : false;
+const speakerHref = (row, href) => attributionHelpers ? attributionHelpers.speakerHref(row, href) : `${href}?attribution=unattributed`;
 
 const $ = (id) => document.getElementById(id);
 
@@ -349,16 +355,16 @@ function metaHTML(item, { linkSpeaker = false, linkParty = false, portrait = fal
   const bits = [];
   // The portrait slot sits outside the dot-separated run, so a speaker with
   // no photo leaves no stray separator. Filled by decorateMetaPortraits.
-  const slot = portrait && item.speaker
+  const slot = portrait && item.speaker && !isUnattributed(item)
     ? `<span class="meta-portrait" data-speaker="${esc(item.speaker)}"></span>` : "";
-  if (item.party) {
+  if (item.party && !isUnattributed(item)) {
     bits.push(linkParty
       ? `<a class="meta-party" href="${esc(subjectHash("party", item.party))}">${partyChipHTML(item.party)}</a>`
       : partyChipHTML(item.party));
   }
   if (item.speaker && !hideSpeaker) {
     bits.push(linkSpeaker
-      ? `<a class="meta-speaker" href="${esc(subjectHash("person", item.speaker))}">${esc(item.speaker)}</a>`
+      ? `<a class="meta-speaker" href="${esc(speakerHref(item, subjectHash("person", item.speaker)))}">${esc(item.speaker)}</a>`
       : esc(item.speaker));
   }
   if (item.state) bits.push(esc(STATE_NAMES[item.state] || item.state));
@@ -2754,12 +2760,12 @@ function sourceItem(s, num, passage = false) {
     const where = [STATE_NAMES[s.state] || (s.state ? String(s.state) : "Federal"), s.date ? fmtDate(s.date) : ""].filter(Boolean).join(" · ");
     by.innerHTML = `<span class="source-face" aria-hidden="true">${esc(String(s.speaker).split(/\s+/).map((w) => w[0] || "").slice(0, 2).join(""))}</span>
       <span class="source-byline-text">
-        <span class="source-byline-name"><a class="meta-speaker" href="${esc(subjectHash("person", s.speaker))}">${esc(s.speaker)}</a>${s.party ? ` <a class="meta-party" href="${esc(subjectHash("party", s.party))}">${partyChipHTML(s.party)}</a>` : ""}</span>
+        <span class="source-byline-name"><a class="meta-speaker" href="${esc(speakerHref(s, subjectHash("person", s.speaker)))}">${esc(s.speaker)}</a>${s.party && !isUnattributed(s) ? ` <a class="meta-party" href="${esc(subjectHash("party", s.party))}">${partyChipHTML(s.party)}</a>` : ""}</span>
         <span class="source-byline-sub">${esc(where)}</span>
       </span>`;
     li.appendChild(by);
     loadPhotoMap().then(() => {
-      const url = photoUrlFor(s.speaker);
+      const url = !isUnattributed(s) ? photoUrlFor(s.speaker) : null;
       const face = by.querySelector(".source-face");
       if (url && face) face.innerHTML = `<img src="${esc(url)}" alt="" width="40" height="40" loading="lazy">`;
     });
@@ -2820,7 +2826,7 @@ function keySpeechItem(speech) {
   if (speech.speaker) {
     const speaker = document.createElement("a");
     speaker.className = "report-speech-speaker";
-    speaker.href = subjectHash("person", speech.speaker);
+    speaker.href = speakerHref(speech, subjectHash("person", speech.speaker));
     speaker.textContent = speech.speaker;
     nameLine.appendChild(speaker);
   }
@@ -5090,7 +5096,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // A bare surname with one holder in the speaker index ("Albanese"; a state
   // stub the roster has since named, so "Picton" is Chris Picton): open the
   // full name, so an old link or a typed surname lands on the person.
-  if (kind === "person" && !String(name).trim().includes(" ")) {
+  const scopedPerson = kind === 'person' && (await loadParliamentarians())?.people?.find(p => p.name === name && p.speech_scope);
+  if (kind === "person" && !scopedPerson && params.get('attribution') !== 'unattributed' && !String(name).trim().includes(" ")) {
     const holders = ((await loadSpeakersDir())?.bySurname.get(speakerKey(name)) || [])
       .filter(([n]) => speakerKey(n) !== speakerKey(name));
     if (holders.length === 1) {
@@ -5099,7 +5106,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       return;
     }
   }
-  let key = `${kind}:${name}${kind === "electorate" ? `:${params.get("asof") || ""}` : ""}`;
+  let key = `${kind}:${name}${kind === "electorate" ? `:${params.get("asof") || ""}` : ""}${params.get('attribution') === 'unattributed' ? ':unattributed' : ''}`;
   if (currentSubjectKey === key) { if (manageFocus) $("subject-title")?.focus(); return; }
   currentSubjectKey = key;
   destroySubjectMap();
@@ -5267,8 +5274,12 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // person
   const sections = $("subject-sections");
   const box = $("subject-infobox");
+  const unattributed = params.get('attribution') === 'unattributed';
+  const record = (await loadParliamentarians())?.people?.find((p) => p.name.toLowerCase() === String(name).toLowerCase());
+  const roster = unattributed ? null : record;
+  if (currentSubjectKey !== key) return;
   loadPhotoMap().then(() => {
-    if (currentSubjectKey !== key) return;
+    if (currentSubjectKey !== key || unattributed) return;
     const url = photoUrlFor(name);
     const official = /^\d+$/.test(photoIdFor(name) || "");
     if (url) $("subject-title")?.insertAdjacentHTML("beforebegin",
@@ -5276,8 +5287,9 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   });
   let speeches = [];
   try {
-    const data = await api(`/api/search?${new URLSearchParams({ q: name, speaker: name, top_k: "20" })}`);
+    const data = await api(`/api/search?${new URLSearchParams({ q: name, speaker: name, top_k: "20", ...(unattributed ? { attribution: 'unattributed' } : {}) })}`);
     speeches = data.results || [];
+    if (roster?.speech_scope) speeches = speeches.filter(r => belongsToScope(r, roster.speech_scope));
   } catch { /* fall through to the empty state */ }
   if (currentSubjectKey !== key) return;
   const partyCount = new Map();
@@ -5286,16 +5298,29 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // A sitting parliamentarian is shown under the party they sit for today (members table via
   // parliamentarians.json "party_now", refreshed from the APH list); the speeches say which
   // party they spoke for, so a defector reads "One Nation · formerly Nationals".
-  const roster = (await loadParliamentarians())?.people?.find((p) => p.name.toLowerCase() === String(name).toLowerCase());
   if (currentSubjectKey !== key) return;
   const partyNow = roster?.party_now || null;
   const { profileJurisdictions, profileAffiliations } = await import('/profile-jurisdictions.js?v=20261006-1');
   if (currentSubjectKey !== key) return;
   const representation = profileJurisdictions(roster);
-  const party = partyNow || spokeAs;
+  const party = partyNow || roster?.party || spokeAs;
   const formerly = partyNow && spokeAs && !samePartyLabel(partyNow, spokeAs) ? spokeAs : null;
   const dates = speeches.map((r) => r.date).filter(Boolean).sort();
   const chambers = [...new Set(speeches.map((r) => STATE_NAMES[r.state] || r.state).filter(Boolean))];
+  if (unattributed) {
+    document.title = `${name} — unattributed evidence · OPAX`;
+    body.querySelector('.kicker').textContent = 'Unattributed evidence';
+    subjectTag(body).innerHTML = '<span>Unattributed evidence</span>';
+    box.innerHTML = infoboxHTML([['Type', 'Unattributed transcript records']], '', []);
+    sections.insertAdjacentHTML('beforeend', `<p class="fineprint">Evidence printed as ${esc(name)} is kept separate from parliamentary speeches. No MP identity, party or portrait is assigned to these records.</p>`);
+    renderPersonSpeeches(name, speeches, chambers, sections, { unattributed: true });
+    return;
+  }
+  if (roster?.speech_scope) {
+    $('subject-title').textContent = roster.full || name;
+    document.title = `${roster.full || name} · OPAX`;
+    sections.insertAdjacentHTML('beforeend', `<p class="fineprint">Only speeches in the ${esc(roster.speech_scope.state.toUpperCase())} parliamentary chamber are attributed here. <a href="${esc(subjectHash('person', name))}?attribution=unattributed">Witness testimony and other unattributed records printed as ${esc(name)}</a>.</p>`);
+  }
   const witness = !roster && speeches.length > 0 &&
     speeches.every((r) => r.speaker_type === "witness" || (isCommitteeChamber(r.chamber) && r.person_id == null));
   if (witness) {
@@ -5487,7 +5512,7 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
   let newest = [];
   let latest = true;
   try {
-    const data = await api(`/api/search?${new URLSearchParams({ q: name, speaker: name, page: "1", per: "8", sort: "newest" })}`);
+    const data = await api(`/api/search?${new URLSearchParams({ q: name, speaker: name, page: "1", per: "8", sort: "newest", ...(opts.unattributed ? { attribution: 'unattributed' } : {}) })}`);
     newest = data.results || [];
   } catch {
     latest = false;
@@ -5496,7 +5521,7 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
   if (currentSubjectKey !== key || !slot.isConnected) return;
   if (!newest.length) { slot.remove(); return; }
   const paint = (briefs) => {
-    const noun = opts.evidence ? "evidence" : "speeches";
+    const noun = opts.evidence || opts.unattributed ? "evidence" : "speeches";
     slot.innerHTML = `<h3 class="subject-section-title">${latest ? `Latest indexed ${noun}` : `Indexed ${noun}`}</h3>
       <ul class="speech-rows" role="list">${newest.map((r) => {
         const brief = typeof briefs[r.resource] === "string" ? briefs[r.resource].trim() : "";
@@ -5510,7 +5535,7 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
           </span></a></li>`;
       }).join("")}</ul>
       <p class="fineprint">${latest ? "Newest results within the indexed retrieval window." : "Newest retrieval is unavailable; showing a sample of indexed matches."} Machine briefs are automated summaries; passages are extracts from the record.</p>
-      <p class="person-more"><a href="${esc(searchHash("", { speaker: name }, 1, "newest"))}">View all their ${noun} →</a></p>`;
+      ${opts.unattributed ? '' : `<p class="person-more"><a href="${esc(searchHash("", { speaker: name }, 1, "newest"))}">View all their ${noun} →</a></p>`}`;
   };
   paint({});
   refreshPersonJumps(sections);
@@ -5745,16 +5770,16 @@ function topicArcItemHTML(item, brief, showYear) {
   const generic = !committee && GENERIC_DEBATE_RE.test(subject.trim());
   const heading = generic ? "" : subject;
   const passage = cleanPassage(item.snippet);
-  const portrait = item.speaker && !witness ? photoUrlFor(item.speaker) : null;
+  const portrait = item.speaker && !isUnattributed(item) ? photoUrlFor(item.speaker) : null;
   const where = PARLIAMENT_NAMES[item.state] || STATE_NAMES[item.state] || item.state || "";
   const role = witness ? [item.role, item.organisation].filter(Boolean).join(", ") : "";
   return `<li class="topic-arc-item${showYear ? " topic-arc-item-first" : ""}" data-arc-resource="${esc(item.resource || '')}">
     <time class="topic-arc-year"${date ? ` datetime="${esc(date)}"` : ""}${showYear ? "" : ' aria-hidden="true"'}>${showYear ? esc(year) : ""}</time>
     <div class="topic-arc-entry">
       <div class="topic-arc-who">
-        ${item.speaker ? `<a class="topic-arc-face" href="${esc(subjectHash('person', item.speaker))}" aria-hidden="true" tabindex="-1">${portrait ? `<img src="${esc(portrait)}" alt="" width="40" height="40" loading="lazy">` : ""}</a>` : `<span class="topic-arc-face topic-arc-face-none" aria-hidden="true"></span>`}
+        ${item.speaker ? `<a class="topic-arc-face" href="${esc(speakerHref(item, subjectHash('person', item.speaker)))}" aria-hidden="true" tabindex="-1">${portrait ? `<img src="${esc(portrait)}" alt="" width="40" height="40" loading="lazy">` : ""}</a>` : `<span class="topic-arc-face topic-arc-face-none" aria-hidden="true"></span>`}
         <span class="topic-arc-byline">
-          <span class="topic-arc-name">${item.speaker ? `<a href="${esc(subjectHash('person', item.speaker))}">${esc(item.speaker)}</a>` : "Speaker not named"}${item.party ? ` ${partyChipHTML(item.party)}` : ""}${witness ? ` <span class="topic-arc-witness">witness</span>` : ""}</span>
+          <span class="topic-arc-name">${item.speaker ? `<a href="${esc(speakerHref(item, subjectHash('person', item.speaker)))}">${esc(item.speaker)}</a>` : "Speaker not named"}${item.party ? ` ${partyChipHTML(item.party)}` : ""}${witness ? ` <span class="topic-arc-witness">witness</span>` : ""}</span>
           <span class="topic-arc-when">${role ? `${esc(role)} · ` : ""}${esc(where)}${committee ? " · committee" : ""}${date ? ` · <time datetime="${esc(date)}">${esc(fmtDate(date))}</time>` : ""}${generic ? ` · ${esc(subject.trim())}` : ""}</span>
         </span>
       </div>
@@ -6562,7 +6587,7 @@ async function buildPeopleDirectory() {
       p.party ? partyChipHTML(p.party) : `<span class="dir-muted">No party recorded</span>`,
       (p.parties || []).length > 1 ? `<span class="dir-muted">also ${esc(p.parties.slice(1).join(", "))}</span>` : "",
       where ? esc(where) : "",
-      yearSpan(p.first, p.last) ? esc(yearSpan(p.first, p.last)) : "",
+      yearSpan(p.first, p.last) ? `${p.speech_count_basis ? 'Transcript years: ' : ''}${esc(yearSpan(p.first, p.last))}` : "",
     ].filter(Boolean).join(" · ");
     return `<li class="dir-row">
       ${portrait}
@@ -6571,7 +6596,7 @@ async function buildPeopleDirectory() {
         <span class="result-meta">${metaLine}</span>
       </div>
       <div class="dir-figs">
-        ${p.roster_only ? '<span class="dir-fig">From the member roster<br>Speech total not yet indexed</span>' : `<span class="dir-fig"><b>${num(p.speeches)}</b>speech${p.speeches === 1 ? "" : "es"}</span>`}
+        ${p.roster_only ? '<span class="dir-fig">From the member roster<br>Speech total not yet indexed</span>' : p.speech_count_basis ? `<span class="dir-fig"><b>≤ ${num(p.speeches)}</b>non-witness rows<br>Own chamber only</span>` : `<span class="dir-fig"><b>${num(p.speeches)}</b>speech${p.speeches === 1 ? "" : "es"}</span>`}
         ${p._divisions ? `<span class="dir-fig"><b>${num(p._divisions)}</b>division${p._divisions === 1 ? "" : "s"}</span>` : ""}
       </div>
     </li>`;
@@ -6605,7 +6630,7 @@ async function buildPeopleDirectory() {
     fineprint: `Names appear as Hansard prints them, so a surname-only print ("Shoebridge") is its own entry, with the
       members register's full name beside it where the record knows it. Speech counts follow the site's corpus rule
       (speeches since the 1993 election, 200+ characters, procedural rows removed) and are counted from the
-      corpus itself, so they can run ahead of what the index has loaded so far; speakers with fewer than
+      corpus itself, so they can run ahead of what the index has loaded so far. A ≤ count is the non-witness upper bound from an older aggregate; attribution is restricted to the MP's own chamber until an exact export is available. Speakers with fewer than
       ${num(meta.floor || 5)} indexed speeches${meta.witnesses_excluded ? ` and ${num(meta.witnesses_excluded)} people who appear only as committee witnesses` : ""}
       are not listed from the speech export. Verified representatives are included independently of that threshold; their missing speech totals are labelled explicitly. Party is the label the person's speeches carry, or the members register's where they carry none;
       many state Hansard rows record neither. Portraits are official APH and OpenAustralia photos; divisions come from
@@ -11453,7 +11478,7 @@ function renderResults(results) {
         : `<p id="search-passage-${index}" class="search-result-text snippet">${searchReadMode === "briefs" ? `<span class="search-passage-tag">Passage · ${lastSearch.briefsLoading ? "checking for a brief…" : "no brief available"}</span>` : ""}${highlightHTML(cleanPassage(r.snippet), lastSearch.query)}</p>`;
       const title = r.speaker && r.title === `${r.speaker} — ${r.date}` ? `Speech by ${r.speaker}` : displayTitle(r);
       const meta = [
-        r.speaker ? `<a href="${esc(subjectHash("person", r.speaker))}">${esc(r.speaker)}</a>` : "",
+        r.speaker ? `<a href="${esc(speakerHref(r, subjectHash("person", r.speaker)))}">${esc(r.speaker)}</a>` : "",
         r.party ? partyChipHTML(r.party) : "",
         isCommitteeChamber(r.chamber) ? `${esc(committeeHouse(r.chamber))} committee evidence` : "",
         r.state ? esc(STATE_NAMES[r.state] || r.state) : "",
@@ -12109,7 +12134,7 @@ async function openDocPage(slug, manageFocus) {
     }]);
     // Headshot floats beside the headline; the name is already in the
     // headline, so the image is decorative (alt "").
-    if (doc.speaker) {
+    if (doc.speaker && !isUnattributed({ ...doc.labels, person_id: doc.metadata?.person_id, speaker_attribution: doc.speaker_attribution })) {
       loadPhotoMap().then(() => {
         if (currentDocSlug !== slug) return;
         const url = photoUrlFor(doc.speaker);
@@ -12163,8 +12188,8 @@ async function openDocPage(slug, manageFocus) {
       $("doc-meta").insertAdjacentHTML("afterbegin",
         `${[doc.metadata.witness_position, doc.metadata.witness_organisation].filter(Boolean).map(esc).join(", ")} · `);
     }
-    if (doc.speaker && docWitness) {
-      speakerLinks.innerHTML = `Committee witness, named as the transcript names them. <a href="${esc(subjectHash("person", doc.speaker))}">Their evidence on OPAX</a>`;
+    if (doc.speaker && (docWitness || doc.speaker_attribution === 'unattributed')) {
+      speakerLinks.innerHTML = `${docWitness ? 'Committee witness' : 'Unattributed speaker'}, named as the transcript names them. <a href="${esc(subjectHash("person", doc.speaker))}?attribution=unattributed">Their evidence on OPAX</a>`;
       speakerLinks.hidden = false;
     } else if (doc.speaker) {
       const q = encodeURIComponent(doc.speaker);
@@ -14176,6 +14201,8 @@ function syncPathMeta() {
 }
 
 // Person links are written as slugs once this lands; nothing waits on it.
-loadPersonSlugs();
-initAskBuilder();
-route();
+attributionReady.then(() => {
+  loadPersonSlugs();
+  initAskBuilder();
+  route();
+});

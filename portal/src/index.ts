@@ -5,6 +5,7 @@ import { paidAnswer, mentionsPay } from './ask-pay'
 import { slugIndex } from './person-slug'
 import { type MoneyFacts, moneyOverviewPrompt, verifiedOverview } from './ask-money-overview'
 import {readGenerationCache, storeGenerationCache} from './generation-cache'
+import { isWitness, isUnattributed, belongsToScope, scopeFilter, speakerHref, type SpeechScope } from '../public/speech-attribution.js'
 /**
  * OPAX portal Worker — thin proxy over the Progress Agentic RAG knowledge box.
  *
@@ -419,10 +420,10 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
     ).toString()
   // Version only search caches for the added topics payload. Old windows lack
   // classifications; rebuilding one is retrieval only. Answer caches stay intact.
-  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\nyears-topics-v2\n${keyParams(['nocache'])}`))
+  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\nyears-topics-v2-witness-split\n${keyParams(['nocache'])}`))
   const windowKey = cacheRequest(
     'search-window',
-    await sha256Hex(`${env.CACHE_EPOCH}\ntopics-v1\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
+    await sha256Hex(`${env.CACHE_EPOCH}\ntopics-v1-witness-split\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
   )
   const bypass = cacheBypass(request, url)
   if (!bypass) {
@@ -539,6 +540,7 @@ async function searchWindow(
   opts: { q: string; mode: string; kind: string; topK: number; url: URL },
 ): Promise<SearchWindow | null> {
   const { q, mode, kind, topK, url } = opts
+  const speakerDirectory = await loadPeople(env)
   const phrases = [...q.matchAll(/"([^"]{2,})"/g)].map((m) => m[1].toLowerCase().trim())
   const queryTerms = phrases.length
     ? phrases
@@ -565,6 +567,12 @@ async function searchWindow(
     to: url.searchParams.get('to'),
   })
   if (filters) body.filter_expression = filters
+  const attribution = await speakerAttribution(env, url.searchParams.get('speaker'))
+  if (attribution) {
+    const own = scopeFilter(attribution)
+    body.filter_expression = { field: { and: [filters?.field ?? {},
+      url.searchParams.get('attribution') === 'unattributed' ? { not: own } : own] } }
+  }
 
   const res = await kbFetch(env, '/find', { body })
   if (!res.ok) return null
@@ -581,6 +589,13 @@ async function searchWindow(
     const slug = resource.slug ?? ''
     const m = SLUG_RE.exec(slug)
     const meta = resource.extra?.metadata ?? {}
+    const witness = isWitness({ speaker_type: label(resource, 'speaker_type'), chamber: label(resource, 'chamber'),
+      witness_name: typeof meta.witness_name === 'string' ? meta.witness_name : null,
+      person_id: typeof meta.person_id === 'string' || typeof meta.person_id === 'number' ? meta.person_id : null })
+    const speaker = resource.origin?.collaborators?.[0] ?? null
+    const rowScope = speaker ? speakerDirectory.byFold.get(foldName(speaker))?.speech_scope : null
+    const outside = rowScope && !belongsToScope({kind: label(resource, 'kind'), state: label(resource, 'state'),
+      chamber: label(resource, 'chamber'), speaker_type: witness ? 'witness' : label(resource, 'speaker_type')}, rowScope)
     // Compare paragraphs on the CALIBRATED scale — raw BM25 (unbounded) would
     // always beat raw semantic (0-1), hijacking snippet choice and ranking.
     // The snippet, though, should be the passage that actually says what the
@@ -626,11 +641,12 @@ async function searchWindow(
       title: resource.title ?? slug,
       // A division's collaborators are its voters, not a speaker.
       speaker: division || billText ? null : (resource.origin?.collaborators?.[0] ?? null),
-      party: label(resource, 'party'),
+      party: witness || outside ? null : label(resource, 'party'),
       state: label(resource, 'state'),
       chamber: label(resource, 'chamber'),
-      person_id: typeof meta.person_id === 'number' || (typeof meta.person_id === 'string' && meta.person_id !== '') ? meta.person_id : null,
-      speaker_type: label(resource, 'speaker_type'),
+      person_id: witness || outside ? null : typeof meta.person_id === 'number' || (typeof meta.person_id === 'string' && meta.person_id !== '') ? meta.person_id : null,
+      speaker_type: witness ? 'witness' : label(resource, 'speaker_type'),
+      speaker_attribution: witness || outside ? 'unattributed' : null,
       role: typeof meta.witness_position === 'string' ? meta.witness_position : null,
       organisation: typeof meta.witness_organisation === 'string' ? meta.witness_organisation : null,
       // Divisions carry their date on origin.created rather than in metadata.
@@ -646,6 +662,10 @@ async function searchWindow(
       score: Math.round(bestScore * 1000) / 1000, // already calibrated above
     }
   })
+  if (attribution) {
+    const separate = url.searchParams.get('attribution') === 'unattributed'
+    for (let i = results.length - 1; i >= 0; i--) if (belongsToScope(results[i], attribution) === separate) results.splice(i, 1)
+  }
   results.sort((a, b) => b.score - a.score)
   // A full batch means retrieval hit its ceiling, not that the record is spent.
   return { total: results.length, truncated: (found.best_matches?.length ?? 0) >= topK, results }
@@ -844,7 +864,7 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
 }
 
 /** The portal's answer payload: the same shape from the sync and streamed paths. */
-function askPayload(answer: AskAnswer, records: AskRecords = { records: [], coverage: '', total: 0 }, scope?: AskScope): { answer: string; citations: Record<string, unknown>; sources: unknown[]; scope?: AskScope; answer_status?: string; evidence_excerpts?: { resource: string; text: string }[] } {
+function askPayload(answer: AskAnswer, records: AskRecords = { records: [], coverage: '', total: 0 }, scope?: AskScope, people?: PeopleData): { answer: string; citations: Record<string, unknown>; sources: unknown[]; scope?: AskScope; answer_status?: string; evidence_excerpts?: { resource: string; text: string }[] } {
   const resources = Object.fromEntries(Object.entries(answer.retrieval_results?.resources ?? {})
     .filter(([, r]) => !/^(da-|news-)/.test(r.slug ?? '')))
   const knownContexts = new Set<string>(records.records.map((_, i) => `USER_CONTEXT_${i}`))
@@ -905,6 +925,13 @@ function askPayload(answer: AskAnswer, records: AskRecords = { records: [], cove
       for (const [id, block] of Object.entries(augmented)) {
         if (id.split('/')[0] === rid && citedParas.has(id) && !citedText && typeof block.text === 'string') citedText = block.text
       }
+      const witness = isWitness({ speaker_type: label(r, 'speaker_type'), chamber: label(r, 'chamber'),
+        witness_name: typeof meta.witness_name === 'string' ? meta.witness_name : null,
+        person_id: typeof meta.person_id === 'string' || typeof meta.person_id === 'number' ? meta.person_id : null })
+      const speaker = r.origin?.collaborators?.[0] ?? null
+      const rowScope = speaker && people?.byFold.get(foldName(speaker))?.speech_scope
+      const outside = rowScope && !belongsToScope({ kind: label(r, 'kind'), state: label(r, 'state'),
+        chamber: label(r, 'chamber'), speaker_type: witness ? 'witness' : label(r, 'speaker_type') }, rowScope)
       return {
         resource: rid,
         slug: r.slug ?? '',
@@ -913,8 +940,11 @@ function askPayload(answer: AskAnswer, records: AskRecords = { records: [], cove
           ? `/bill/${encodeURIComponent(meta.bill_key)}${typeof meta.version_id === 'string' ? '?text-version=' + encodeURIComponent(meta.version_id) : ''}#bill-full-text`
           : (r.slug ?? '').startsWith('bill-') && !(r.slug ?? '').startsWith('bill-text-') ? `/bill/${(r.slug ?? '').slice(5)}` : `/doc/${r.slug ?? ''}`,
         kind: label(r, 'kind'),
-        speaker: r.origin?.collaborators?.[0] ?? null,
-        party: label(r, 'party'),
+        speaker,
+        party: witness || outside ? null : label(r, 'party'),
+        speaker_type: witness ? 'witness' : label(r, 'speaker_type'),
+        person_id: witness || outside ? null : typeof meta.person_id === 'string' || typeof meta.person_id === 'number' ? meta.person_id : null,
+        speaker_attribution: witness || outside ? 'unattributed' : null,
         state: label(r, 'state'),
         chamber: label(r, 'chamber'),
         date: (meta.date as string) ?? null,
@@ -1065,7 +1095,7 @@ function askCacheInput(input: AskInput, epoch: string): string | null {
     epoch,
     pipeline: ASK_PIPELINE_VERSION + (input.speaker && input.kind === 'speech' && isPositionBody(buildAskBody(input)) ? ':original-turns-v7' + (input.from || input.to ? ':dated-topic-v1' : '') : '')
       // Pay evidence arrived on 2026-09-17: answers written without it retire, and only those.
-      + (mentionsPay(input.question) ? ':pay-v1' : ''),
+      + (mentionsPay(input.question) ? ':pay-v1' : '') + ':witness-split-v1',
     question: str(input.question).toLowerCase(),
     kind: kind && kind !== 'all' ? kind : 'all',
     speaker: str(input.speaker) ? canonicalSpeaker(input.speaker as string) : '',
@@ -1281,6 +1311,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   }
   mark('records')
   const body = buildAskBody(input, records)
+  await scopeSpeakerBody(body, env, input.speaker)
   // Pinned per pipeline through wrangler vars (see env.d.ts). Every pipeline
   // rides the KB's OpenRouter slot: generation bills to OpenRouter only.
   body.generative_model = askModel
@@ -1320,14 +1351,14 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     if (!(again instanceof Response) && !isRefusal(again)) answer = again
   }
   mark('retry')
-  let payload = askPayload(answer, records, scope)
+  let payload = askPayload(answer, records, scope, await loadPeople(env))
   if (isPositionBody(body) && payload.sources.length && (isEvidenceGap(payload.answer) || !Object.keys(payload.citations).length || hasUnsupportedQuotes(payload, answer))) {
     payload = await recoverPositionAnswer(payload, body, env) || payload
   }
   if (!isPositionBody(body) && !isRefusal(answer) && payload.sources.length && (!Object.keys(payload.citations).length || hasUnsupportedQuotes(payload, answer))) {
     const retryBody = Object.keys(payload.citations).length ? body : legacyCitationsAsk(body)
     const fallback = await askOnce(hasUnsupportedQuotes(payload, answer) ? quoteRecoveryAsk(retryBody) : retryBody, ASK_SYNC_TIMEOUT_MS)
-    if (!(fallback instanceof Response) && !isRefusal(fallback)) { answer = fallback; payload = askPayload(fallback, records, scope) }
+    if (!(fallback instanceof Response) && !isRefusal(fallback)) { answer = fallback; payload = askPayload(fallback, records, scope, await loadPeople(env)) }
   }
   payload = looseAnswer(payload, answer)
   mark('verify')
@@ -1454,12 +1485,13 @@ async function reasonedPositionAnswer(input: AskInput, verified: AskPayload, env
   // One attempt; anything that goes wrong means the excerpts, as before.
   try {
     const body = buildAskBody(input, undefined, { reasoned: true })
+    await scopeSpeakerBody(body, env, input.speaker)
     body.generative_model = env.ASK_MODEL || 'openai-compatible'
     const res = await kbFetch(env, '/ask', { body, headers: { 'x-synchronous': 'true' }, signal: AbortSignal.timeout(ASK_SYNC_TIMEOUT_MS) })
     if (!res.ok) return null
     const answer = (await res.json()) as AskAnswer
     if (isRefusal(answer)) return null
-    const payload = askPayload(answer, undefined, verified.scope)
+    const payload = askPayload(answer, undefined, verified.scope, await loadPeople(env))
     if (!Object.keys(payload.citations).length || hasUnsupportedQuotes(payload, answer)) return null
     return { ...payload, answer_status: 'reasoned' }
   } catch { return null }
@@ -2011,7 +2043,7 @@ function apiAskStream(
           if (!isRefusal(again)) result = again
         }
         result = guardPositionAnswer(result, body)
-        let payload = askPayload(result, opts.records, opts.scope)
+        let payload = askPayload(result, opts.records, opts.scope, await loadPeople(env))
         if (!clientGone && isPositionBody(body) && payload.sources.length && (isEvidenceGap(payload.answer) || !Object.keys(payload.citations).length || hasUnsupportedQuotes(payload, result))) {
           payload = await recoverPositionAnswer(payload, body, env) || payload
         }
@@ -2020,7 +2052,7 @@ function apiAskStream(
           try {
             const retryBody = Object.keys(payload.citations).length ? body : legacyCitationsAsk(body)
             const fallback = await streamAskGuarded(env, hasUnsupportedQuotes(payload, result) ? quoteRecoveryAsk(retryBody) : retryBody, checkedSend, upstream.signal, ASK_STALL_MS)
-            if (!isRefusal(fallback)) { result = guardPositionAnswer(fallback, body); payload = askPayload(result, opts.records, opts.scope) }
+            if (!isRefusal(fallback)) { result = guardPositionAnswer(fallback, body); payload = askPayload(result, opts.records, opts.scope, await loadPeople(env)) }
           } catch {
             // The final quotation check below falls back to evidence if recovery fails.
           }
@@ -2360,7 +2392,7 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
 async function apiResource(request: Request, url: URL, slug: string, env: Env, ctx: ExecutionContext): Promise<Response> {
   if (/^news-\d+$/.test(slug)) return json({ error: 'News articles are no longer part of the corpus' }, 410)
   if (!isPublicSlug(slug)) return json({ error: 'bad slug' }, 400)
-  const cacheKey = cacheRequest('resource-body-v2', `${encodeURIComponent(env.CACHE_EPOCH)}/${slug}`)
+  const cacheKey = cacheRequest('resource-body-v3-witness', `${encodeURIComponent(env.CACHE_EPOCH)}/${slug}`)
   const bypass = cacheBypass(request, url)
   if (!bypass) {
     const hit = await caches.default.match(cacheKey)
@@ -2394,6 +2426,17 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
     .join('')
   const labels: Record<string, string> = {}
   for (const c of r.usermetadata?.classifications ?? []) labels[c.labelset] = c.label
+  const metadata = { ...r.extra?.metadata }
+  const witness = isWitness({ ...labels, ...metadata })
+  const speaker = DIVISION_SLUG_RE.test(slug) ? null : r.origin?.collaborators?.[0] ?? null
+  const scope = witness ? null : await speakerAttribution(env, speaker)
+  const outside = scope && !belongsToScope({ ...labels, ...metadata }, scope)
+  if (witness || outside) {
+    if (witness) labels.speaker_type = 'witness'
+    delete labels.party
+    metadata.person_id = null
+    metadata.electorate = null
+  }
   // Topic labels are written by the enrichment task at the FIELD level
   // (computedmetadata.field_classifications — the level the /find topic
   // filter matches), never resource usermetadata, and a speech can carry
@@ -2410,11 +2453,12 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
   const out = json({
     slug,
     title: r.title ?? slug,
-    speaker: DIVISION_SLUG_RE.test(slug) ? null : (r.origin?.collaborators?.[0] ?? null), // voters are not a speaker
+    speaker, // voters are not a speaker
+    speaker_attribution: witness || outside ? 'unattributed' : null,
     url: r.origin?.url ?? null,
     labels, // kind / source / party / state / chamber — for chips + provenance caveats
     topics, // machine topic labels (multi-label; empty until the pass reaches this doc)
-    metadata: r.extra?.metadata ?? {},
+    metadata,
     summary: brief,
     text: bodyText,
   })
@@ -2864,8 +2908,10 @@ async function apiPersonTopics(url: URL, env: Env): Promise<Response> {
     return json({ error: 'bad name' }, 400)
   }
   const name = canonicalSpeaker(raw)
-  return cachedJson(`/api/person-topics?name=${encodeURIComponent(name)}`, async () => {
+  return cachedJson(`/api/person-topics?name=${encodeURIComponent(name)}&scope=witness-split-v1`, async () => {
     const collaborator = { prop: 'origin_collaborator', collaborator: name }
+    const attribution = await speakerAttribution(env, name)
+    const speakerClauses = [collaborator, ...(attribution ? [scopeFilter(attribution)] : [])]
     const topic = { prop: 'label', labelset: 'topic' }
     const catalog = (clauses: Record<string, unknown>[], faceted = true) => kbFetch(env, '/catalog', {
       body: {
@@ -2875,10 +2921,10 @@ async function apiPersonTopics(url: URL, env: Env): Promise<Response> {
       },
     })
     const [indexedRes, allRes, thenRes, nowRes] = await Promise.all([
-      catalog([collaborator], false),
-      catalog([collaborator, topic]),
-      catalog([collaborator, topic, { prop: 'label', labelset: 'decade', label: '2010s' }]),
-      catalog([collaborator, topic, { prop: 'label', labelset: 'decade', label: '2020s' }]),
+      catalog(speakerClauses, false),
+      catalog([...speakerClauses, topic]),
+      catalog([...speakerClauses, topic, { prop: 'label', labelset: 'decade', label: '2010s' }]),
+      catalog([...speakerClauses, topic, { prop: 'label', labelset: 'decade', label: '2020s' }]),
     ])
     if (![indexedRes, allRes, thenRes, nowRes].every((response) => response.ok)) {
       return json({ error: 'catalog failed' }, 502)
@@ -3236,6 +3282,9 @@ function matchSeoRoute(url: URL): SeoRoute | null {
 // replaces both the files and the isolates, so nothing here goes stale) -----
 
 interface Person {
+  full?: string
+  speech_scope?: SpeechScope
+  speech_count_basis?: string
   name: string
   speeches: number
   party: string | null
@@ -3251,6 +3300,22 @@ interface Person {
   rosterOnly?: { asOf?: string; seats: string[] }
 }
 interface PeopleData { generated: string; people: Person[]; byName: Map<string, Person>; byFold: Map<string, Person>; bySlug: Map<string, Person>; slugOf: Map<string, string> }
+
+async function speakerAttribution(env: Env, raw: string | null | undefined): Promise<SpeechScope | null> {
+  if (!raw) return null
+  const people = await loadPeople(env)
+  return people.byFold.get(foldName(raw))?.speech_scope ?? null
+}
+
+async function scopeSpeakerBody(body: Record<string, unknown>, env: Env, raw: string | undefined): Promise<void> {
+  const scope = await speakerAttribution(env, raw)
+  if (!scope) return
+  const existing = body.filter_expression as { field?: unknown } | undefined
+  body.filter_expression = { field: { and: [...(existing?.field ? [existing.field] : []), scopeFilter(scope)] } }
+  // Prior citations cannot bypass the newly restricted identity scope.
+  if (Array.isArray(body.rag_strategies)) body.rag_strategies = body.rag_strategies.filter(s =>
+    typeof s !== 'object' || s === null || !('name' in s) || s.name !== 'prequeries')
+}
 
 interface MoneyNode {
   id: string
@@ -3979,8 +4044,16 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
     loadMoney(env).catch(() => null),
   ])
   const p = (people ? personAt(people, name) : null)
-  const display = p?.name ?? name
-  const canonical = `${SITE_ORIGIN}${personPath(people, display)}`
+  if (url.searchParams.get('attribution') === 'unattributed') {
+    const print = p?.name ?? name
+    const description = `Unattributed testimony and other records printed as ${print}. Parliamentary identity, party and portrait are not assigned to this evidence.`
+    return { title: `${print} — unattributed evidence · OPAX`, description,
+      canonical: `${SITE_ORIGIN}${personPath(people, print)}?attribution=unattributed`, status: 200, ogType: 'website', jsonLd: null,
+      prerender: prerenderBlock(print, description, 'Unattributed evidence'),
+      card: { kicker: 'Unattributed evidence', title: print, lines: [description] } }
+  }
+  const display = p?.speech_scope ? p.full || p.name : p?.name ?? name
+  const canonical = `${SITE_ORIGIN}${personPath(people, p?.name ?? name)}`
   let title = `${display} · OPAX`
   const portraitId = photoIdFor(photos, display)
   const credit = await creditLine(env, portraitId)
@@ -4009,10 +4082,12 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   const federal = p.states.includes('federal')
   // The title a search result shows: their role and seat as the parliament
   // names them, then what the page holds (see seo-titles.ts).
-  const role = personRole(p, new Date().getUTCFullYear())
+  const role = p.speech_scope ? null : personRole(p, new Date().getUTCFullYear())
   const interests = await hasInterestsRegister(env, display, p.pid)
   title = personTitle(display, role, federal ? (interests ? 'Speeches, votes & interests' : 'Speeches & votes') : 'Speeches')
-  const facts = `${display}${role ? `, ${roleLine(role)}` : who ? ` (${who})` : ''}: ${num(p.speeches)} speeches in Hansard, ${years(p.first, p.last)}.`
+  const count = p.speech_count_basis ? `Up to ${num(p.speeches)} non-witness rows; attribution restricted to the ${where}.` : `${num(p.speeches)} speeches in Hansard.`
+  const period = p.speech_count_basis ? `Transcript aggregate: ${years(p.first, p.last)}.` : `${years(p.first, p.last)}.`
+  const facts = `${display}${role ? `, ${roleLine(role)}` : who ? ` (${who})` : ''}: ${count} ${period}`
   const holds = andList([federal ? 'votes' : '', interests ? 'register of interests' : '', p.party ? 'who funds their party' : ''].filter(Boolean))
   const tail = holds ? `Their ${holds}.` : 'Every speech linked to the official record.'
   return {
@@ -4035,8 +4110,8 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
     card: {
       kicker: 'Parliamentarian',
       title: display,
-      lines: [[p.party, where].filter(Boolean).join(' · '), `Collected records: ${years(p.first, p.last)}`],
-      stat: { value: num(p.speeches), label: 'speeches in the Opax record' },
+      lines: [[p.party, where].filter(Boolean).join(' · '), `${p.speech_count_basis ? 'Transcript aggregate' : 'Collected records'}: ${years(p.first, p.last)}`],
+      stat: { value: (p.speech_count_basis ? '≤ ' : '') + num(p.speeches), label: p.speech_count_basis ? 'non-witness rows; own house only' : 'speeches in the Opax record' },
       dot: partyColour(moneyData, p.party),
       portraitId,
       credit,
@@ -4368,6 +4443,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
   const r = (await res.json()) as {
     title: string
     speaker: string | null
+    speaker_attribution?: string | null
     labels: Record<string, string>
     metadata: Record<string, unknown>
     summary: string | null
@@ -4457,7 +4533,9 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
   const committee = r.labels.speaker_type === 'witness' || /committee/.test(String(r.labels.chamber ?? ''))
   const who = [r.labels.party, chamber].filter(Boolean).join(', ')
   const [photos, moneyData] = await Promise.all([loadPhotos(env).catch(() => null), loadMoney(env).catch(() => null)])
-  const portraitId = r.speaker ? photoIdFor(photos, r.speaker) : null
+  const witness = isWitness({ speaker_type: r.labels.speaker_type, chamber: r.labels.chamber,
+    person_id: typeof r.metadata.person_id === 'string' || typeof r.metadata.person_id === 'number' ? r.metadata.person_id : null })
+  const portraitId = r.speaker && !isUnattributed(r) && !witness ? photoIdFor(photos, r.speaker) : null
   const recordOf = `the official ${r.labels.state === 'federal' ? 'federal' : (r.labels.state ?? '').toUpperCase()} parliamentary record`
   const words = typeof r.metadata.word_count === 'number' ? `${num(r.metadata.word_count)} words` : 'a speech'
   const description = clip(
@@ -4475,7 +4553,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
       description,
       url: canonical,
       ...(date ? { datePublished: date } : {}),
-      ...(r.speaker ? { author: { '@type': 'Person', name: r.speaker, url: `${SITE_ORIGIN}/subject/person/${encodeURIComponent(r.speaker)}` } } : {}),
+      ...(r.speaker ? { author: { '@type': 'Person', name: r.speaker, url: speakerHref({ speaker_type: r.labels.speaker_type, chamber: r.labels.chamber, speaker_attribution: r.speaker_attribution, person_id: witness ? null : 'member' }, `${SITE_ORIGIN}/subject/person/${encodeURIComponent(r.speaker)}`) } } : {}),
       publisher,
     },
     card: {

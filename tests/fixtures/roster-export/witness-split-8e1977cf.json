@@ -1,0 +1,615 @@
+{
+  "source_commit": "8e1977cf",
+  "note": "Public aggregate facts, not captured individual speeches. SQL rows made from these facts are schema-shaped synthetic fixtures. Counts by house are unavailable offline.",
+  "qld_review_names": [
+    "Stewart",
+    "Walker",
+    "Stevens",
+    "Pugh",
+    "Bennett",
+    "Kirkland",
+    "Bourne",
+    "Sullivan",
+    "Field",
+    "Young",
+    "Hutton",
+    "Dillon",
+    "Hart"
+  ],
+  "additional_historical_names": [
+    "Robinson",
+    "Harper",
+    "Crawford"
+  ],
+  "cases": [
+    {
+      "before": {
+        "name": "Stewart",
+        "speeches": 381,
+        "states": [
+          "federal",
+          "qld"
+        ],
+        "chambers": [
+          "senate_committee",
+          "qld_la",
+          "joint_committee",
+          "house_committee"
+        ],
+        "first": 2024,
+        "last": 2026,
+        "witness_rows": 203,
+        "representation": [],
+        "recorded_parties": [
+          "Labor"
+        ]
+      },
+      "expected_full": "Scott Stewart",
+      "expected_party": "Labor"
+    },
+    {
+      "before": {
+        "name": "Walker",
+        "speeches": 272,
+        "states": [
+          "federal",
+          "qld"
+        ],
+        "chambers": [
+          "senate_committee",
+          "qld_la",
+          "joint_committee",
+          "house_committee"
+        ],
+        "first": 2024,
+        "last": 2026,
+        "witness_rows": 152,
+        "representation": [],
+        "recorded_parties": [
+          "Labor"
+        ]
+      },
+      "expected_full": "Les Walker",
+      "expected_party": "Labor"
+    },
+    {
+      "before": {
+        "name": "Stevens",
+        "speeches": 164,
+        "states": [
+          "federal",
+          "qld"
+        ],
+        "chambers": [
+          "qld_la",
+          "senate_committee",
+          "joint_committee",
+          "house_committee"
+        ],
+        "first": 2024,
+        "last": 2026,
+        "witness_rows": 88,
+        "representation": [],
+        "recorded_parties": [
+          "LNP"
+        ]
+      },
+      "expected_full": "Ray Stevens",
+      "expected_party": "LNP"
+    },
+    {
+      "before": {
+        "name": "Pugh",
+        "speeches": 353,
+        "states": [
+          "federal",
+          "qld"
+        ],
+        "chambers": [
+          "senate_committee",
+          "qld_la",
+          "house_committee"
+        ],
+        "first": 2024,
+        "last": 2026,
+        "witness_rows": 288,
+        "representation": [],
+        "recorded_parties": [
+          "Labor"
+        ]
+      },
+      "expected_full": "Jess Pugh",
+      "expected_party": "Labor"
+    },
+    {
+      "before": {
+        "name": "Bennett",
+        "speeches": 199,
+        "states": [
+          "federal",
+          "qld"
+        ],
+        "chambers": [
+          "senate_committee",
+          "qld_la",
+          "joint_committee"
+        ],
+        "first": 2024,
+        "last": 2026,
+        "witness_rows": 134,
+        "representation": [],
+        "recorded_parties": [
+          "LNP"
+        ]
+      },
+      "expected_full": "Stephen Bennett",
+      "expected_party": "LNP"
+    },
+    {
+      "before": {
+        "name": "Kirkland",
+        "speeches": 137,
+        "states": [
+          "federal",
+          "qld"
+        ],
+        "chambers": [
+          "qld_la",
+          "joint_committee",
+          "senate_committee"
+        ],
+        "first": 2024,
+        "last": 2026,
+        "witness_rows": 82,
+        "representation": [],
+        "recorded_parties": [
+          "LNP"
+        ]
+      },
+      "expected_full": "Donna Kirkland",
+      "expected_party": "LNP"
+    },
+    {
+      "before": {
+        "name": "Bourne",
+        "speeches": 135,
+        "states": [
+          "federal",
+          "qld"
+        ],
+        "chambers": [
+          "senate_committee",
+          "qld_la",
+          "joint_committee"
+        ],
+        "first": 2025,
+        "last": 2026,
+        "witness_rows": 109,
+        "representation": [],
+        "recorded_parties": [
+          "Labor"
+        ]
+      },
+      "expected_full": "Wendy Bourne",
+      "expected_party": "Labor"
+    },
+    {
+      "before": {
+        "name": "Sullivan",
+        "speeches": 134,
+        "states": [
+          "federal",
+          "qld"
+        ],
+        "chambers": [
+          "senate_committee",
+          "qld_la"
+        ],
+        "first": 2024,
+        "last": 2026,
+        "witness_rows": 74,
+        "representation": [],
+        "recorded_parties": [
+          "Labor"
+        ]
+      },
+      "expected_full": "Jimmy Sullivan",
+      "expected_party": "Labor"
+    },
+    {
+      "before": {
+        "name": "Field",
+        "speeches": 129,
+        "states": [
+          "federal",
+          "qld"
+        ],
+        "chambers": [
+          "senate_committee",
+          "qld_la",
+          "house_committee"
+        ],
+        "first": 2024,
+        "last": 2026,
+        "witness_rows": 90,
+        "representation": [],
+        "recorded_parties": [
+          "LNP"
+        ]
+      },
+      "expected_full": "Russell Field",
+      "expected_party": "LNP"
+    },
+    {
+      "before": {
+        "name": "Young",
+        "speeches": 107,
+        "states": [
+          "federal",
+          "qld"
+        ],
+        "chambers": [
+          "qld_la",
+          "senate_committee",
+          "joint_committee"
+        ],
+        "first": 2024,
+        "last": 2026,
+        "witness_rows": 61,
+        "representation": [],
+        "recorded_parties": [
+          "LNP"
+        ]
+      },
+      "expected_full": "Rebecca Young",
+      "expected_party": "LNP"
+    },
+    {
+      "before": {
+        "name": "Hutton",
+        "speeches": 99,
+        "states": [
+          "federal",
+          "qld"
+        ],
+        "chambers": [
+          "qld_la",
+          "joint_committee",
+          "senate_committee"
+        ],
+        "first": 2024,
+        "last": 2026,
+        "witness_rows": 58,
+        "representation": [],
+        "recorded_parties": [
+          "LNP"
+        ]
+      },
+      "expected_full": "Nigel Hutton",
+      "expected_party": "LNP"
+    },
+    {
+      "before": {
+        "name": "Dillon",
+        "speeches": 94,
+        "states": [
+          "federal",
+          "qld"
+        ],
+        "chambers": [
+          "qld_la",
+          "house_committee",
+          "joint_committee",
+          "senate_committee"
+        ],
+        "first": 2024,
+        "last": 2026,
+        "witness_rows": 51,
+        "representation": [],
+        "recorded_parties": [
+          "LNP"
+        ]
+      },
+      "expected_full": "Sean Dillon",
+      "expected_party": "LNP"
+    },
+    {
+      "before": {
+        "name": "Hart",
+        "speeches": 62,
+        "states": [
+          "federal",
+          "qld"
+        ],
+        "chambers": [
+          "qld_la",
+          "house_committee",
+          "senate_committee",
+          "joint_committee"
+        ],
+        "first": 2024,
+        "last": 2026,
+        "witness_rows": 38,
+        "representation": [],
+        "recorded_parties": [
+          "LNP"
+        ]
+      },
+      "expected_full": "Michael Hart",
+      "expected_party": "LNP"
+    },
+    {
+      "before": {
+        "name": "Robinson",
+        "speeches": 96,
+        "states": [
+          "federal",
+          "qld"
+        ],
+        "chambers": [
+          "senate_committee",
+          "qld_la",
+          "joint_committee",
+          "house_committee"
+        ],
+        "first": 2024,
+        "last": 2026,
+        "witness_rows": 87,
+        "representation": [],
+        "recorded_parties": [
+          "LNP"
+        ]
+      },
+      "expected_full": "Mark Robinson",
+      "expected_party": "LNP"
+    },
+    {
+      "before": {
+        "name": "Harper",
+        "speeches": 95,
+        "states": [
+          "federal",
+          "qld"
+        ],
+        "chambers": [
+          "senate_committee",
+          "joint_committee",
+          "qld_la"
+        ],
+        "first": 2024,
+        "last": 2026,
+        "witness_rows": 67,
+        "representation": [],
+        "recorded_parties": [
+          "Labor"
+        ]
+      },
+      "expected_full": "Aaron Harper",
+      "expected_party": "Labor"
+    },
+    {
+      "before": {
+        "name": "Crawford",
+        "speeches": 31,
+        "states": [
+          "federal",
+          "qld"
+        ],
+        "chambers": [
+          "house_committee",
+          "qld_la",
+          "senate_committee"
+        ],
+        "first": 2024,
+        "last": 2026,
+        "witness_rows": 25,
+        "representation": [],
+        "recorded_parties": [
+          "Labor"
+        ]
+      },
+      "expected_full": "Craig Crawford",
+      "expected_party": "Labor"
+    },
+    {
+      "before": {
+        "name": "Anderson",
+        "speeches": 450,
+        "states": [
+          "federal"
+        ],
+        "chambers": [
+          "senate_committee",
+          "joint_committee",
+          "representatives"
+        ],
+        "first": 2004,
+        "last": 2026,
+        "witness_rows": 449,
+        "representation": [],
+        "recorded_parties": [
+          "Nationals"
+        ]
+      },
+      "expected_full": null,
+      "expected_party": null
+    },
+    {
+      "before": {
+        "name": "Bishop",
+        "speeches": 33,
+        "states": [
+          "federal"
+        ],
+        "chambers": [
+          "senate_committee",
+          "representatives"
+        ],
+        "first": 2017,
+        "last": 2026,
+        "witness_rows": 32,
+        "representation": [],
+        "recorded_parties": [
+          "Liberal"
+        ]
+      },
+      "expected_full": null,
+      "expected_party": null
+    },
+    {
+      "before": {
+        "name": "Cook",
+        "speeches": 804,
+        "states": [
+          "federal",
+          "sa"
+        ],
+        "chambers": [
+          "senate_committee",
+          "sa_ha",
+          "joint_committee",
+          "house_committee"
+        ],
+        "first": 2020,
+        "last": 2026,
+        "witness_rows": 513,
+        "representation": [],
+        "recorded_parties": [
+          "Labor"
+        ]
+      },
+      "expected_full": null,
+      "expected_party": null
+    },
+    {
+      "before": {
+        "name": "Kelly",
+        "speeches": 187,
+        "states": [
+          "federal",
+          "qld"
+        ],
+        "chambers": [
+          "joint_committee",
+          "senate_committee",
+          "qld_la",
+          "house_committee"
+        ],
+        "first": 2024,
+        "last": 2026,
+        "witness_rows": 140,
+        "representation": [],
+        "recorded_parties": [
+          "Labor"
+        ]
+      },
+      "expected_full": null,
+      "expected_party": null
+    },
+    {
+      "before": {
+        "name": "Morton",
+        "speeches": 122,
+        "states": [
+          "federal",
+          "qld"
+        ],
+        "chambers": [
+          "senate_committee",
+          "qld_la",
+          "joint_committee",
+          "house_committee"
+        ],
+        "first": 2024,
+        "last": 2026,
+        "witness_rows": 92,
+        "representation": [],
+        "recorded_parties": [
+          "LNP"
+        ]
+      },
+      "expected_full": null,
+      "expected_party": null
+    },
+    {
+      "before": {
+        "name": "Brown",
+        "speeches": 595,
+        "states": [
+          "federal",
+          "sa",
+          "qld"
+        ],
+        "chambers": [
+          "senate_committee",
+          "sa_ha",
+          "joint_committee",
+          "house_committee",
+          "qld_la"
+        ],
+        "first": 2020,
+        "last": 2026,
+        "witness_rows": 439,
+        "representation": [],
+        "recorded_parties": [
+          "Labor"
+        ]
+      },
+      "expected_full": null,
+      "expected_party": null
+    },
+    {
+      "before": {
+        "name": "Smith",
+        "speeches": 496,
+        "states": [
+          "federal",
+          "qld",
+          "nsw"
+        ],
+        "chambers": [
+          "senate_committee",
+          "qld_la",
+          "joint_committee",
+          "house_committee",
+          "nsw_la"
+        ],
+        "first": 2022,
+        "last": 2026,
+        "witness_rows": 338,
+        "representation": [],
+        "recorded_parties": [
+          "Labor"
+        ]
+      },
+      "expected_full": null,
+      "expected_party": null
+    },
+    {
+      "before": {
+        "name": "King",
+        "speeches": 203,
+        "states": [
+          "federal",
+          "qld"
+        ],
+        "chambers": [
+          "qld_la",
+          "senate_committee",
+          "house_committee",
+          "joint_committee",
+          "representatives"
+        ],
+        "first": 2004,
+        "last": 2026,
+        "witness_rows": 103,
+        "representation": [],
+        "recorded_parties": [
+          "Labor"
+        ]
+      },
+      "expected_full": null,
+      "expected_party": null
+    }
+  ]
+}

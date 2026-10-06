@@ -22,8 +22,8 @@ origin.collaborators value, so each `name` is an entry-page URL
 People who appear ONLY as committee witnesses (speeches.witness_name set on
 every one of their rows) are not parliamentarians and are left out; their
 number is reported in meta.witnesses_excluded. A surname shared by a senator
-and a witness ("Cook") stays in, with every row counted, because that is what
-the entry page and the speaker filter show for that name.
+and a witness ("Cook") is partitioned before identity resolution. Witness
+counts/scopes are exported separately, with no MP identity or party.
 
 Party is the dominant canonical label on the person's speeches (the sync's
 clean_party vocabulary); when the speeches carry none, the members table's
@@ -128,7 +128,7 @@ def member_party(pid, name, state, chamber, raw, canonical):
 def refusals(previous, new, max_changes=MAX_IDENTITY_CHANGES):
     """Why the `new` roster rows must not replace the `previous` (shipped) ones; empty when they may.
     Rows are matched by name, the roster's key."""
-    reasons = []
+    reasons = attribution_refusals(new)
     if len(new) < len(previous):
         reasons.append(f"the row count drops from {len(previous):,} to {len(new):,}")
     now = {p["name"]: p for p in new}
@@ -151,6 +151,18 @@ def refusals(previous, new, max_changes=MAX_IDENTITY_CHANGES):
     if len(changed) > max_changes:
         reasons.append(f"{len(changed)} rows change {'/'.join(IDENTITY_FIELDS)} (more than {max_changes}): "
                        f"{', '.join(changed[:8])} and {len(changed) - 8} more")
+    return reasons
+
+
+def attribution_refusals(rows):
+    reasons = []
+    for row in rows:
+        witness = row.get('separated_witnesses')
+        if witness and (witness.get('speaker_type') != 'witness' or any(witness.get(k) for k in
+                ('pid', 'person_id', 'full', 'party', 'parties', 'party_now', 'current', 'representation', 'affiliations'))):
+            reasons.append(f"{row['name']}: separated witness testimony carries an MP attribution")
+        if row.get('speech_scope') and (row.get('witness_rows') or 'committee' in row['speech_scope'].get('chamber', '')):
+            reasons.append(f"{row['name']}: scoped MP record includes witness/committee rows")
     return reasons
 
 
@@ -193,10 +205,12 @@ def main(argv=()) -> None:
         sys.stdout = real_stdout
     where = (f"text IS NOT NULL AND LENGTH(text) >= {MIN_SPEECH_CHARS} AND date >= {DEFAULT_SINCE!r} "
              f"{JUNK_PREDICATES} {DEDUPE_PREDICATES}")
+    columns = {r[1] for r in db.execute('PRAGMA table_info(speeches)')}
+    witness_type = "OR speaker_type = 'witness'" if 'speaker_type' in columns else ''
     rows = db.execute(f"""
         SELECT speaker_name, person_id, party, party_canonical, state, chamber,
                substr(date, 1, 4) AS yr,
-               (witness_name IS NOT NULL AND witness_name != '') AS is_witness,
+               ((witness_name IS NOT NULL AND witness_name != '') {witness_type}) AS is_witness,
                COUNT(*) AS n
         FROM speeches WHERE {where}
         GROUP BY 1, 2, 3, 4, 5, 6, 7, 8""").fetchall()
@@ -229,12 +243,17 @@ def main(argv=()) -> None:
         p = people.get(name)
         if p is None:
             p = people[name] = {
-                "n": 0, "witness": 0, "parties": Counter(), "states": Counter(),
+                "n": 0, "witness": 0, "witness_states": Counter(), "witness_chambers": Counter(),
+                "witness_years": [], "parties": Counter(), "states": Counter(),
                 "chambers": Counter(), "years": [], "pids": Counter(),
             }
-        p["n"] += n
         if is_witness:
             p["witness"] += n
+            p['witness_states'][state or 'federal'] += n
+            if chamber: p['witness_chambers'][chamber] += n
+            if yr and yr.isdigit(): p['witness_years'].append(int(yr))
+            continue  # No witness party, pid, era or chamber can influence the MP.
+        p["n"] += n
         label = canon_party(party, canonical)
         if label:
             p["parties"][label] += n
@@ -248,10 +267,10 @@ def main(argv=()) -> None:
 
     out, witnesses, below, malformed, speeches_total = [], 0, 0, 0, 0
     for name, p in people.items():
-        if p["witness"] == p["n"]:
+        if not p['n']:
             witnesses += 1
             continue
-        if p["n"] < FLOOR:
+        if p["n"] + p['witness'] < FLOOR:
             below += 1
             continue
         if not NAME_RE.match(name) or len(name) > 40:
@@ -269,7 +288,10 @@ def main(argv=()) -> None:
         if p["years"]:
             rec["first"], rec["last"] = min(p["years"]), max(p["years"])
         if p["witness"]:
-            rec["witness_rows"] = p["witness"]
+            rec['separated_witnesses'] = {'name': name, 'speaker_type': 'witness', 'speeches': p['witness'],
+                'states': list(p['witness_states']), 'chambers': list(p['witness_chambers'])}
+            if p['witness_years']:
+                rec['separated_witnesses'].update(first=min(p['witness_years']), last=max(p['witness_years']))
         # The federal id only on evidence; a state member's id (non-numeric, name-built) still
         # supplies a missing party.
         pid, _why = verify(rec, p["pids"], federal, same, now_year)
@@ -308,7 +330,7 @@ def main(argv=()) -> None:
                 rec['full']=raw['name']
         # Key order as before: name, speeches, party, parties, states, chambers, first, last, pid, ...
         order = ["name", "speeches", "party", "parties", "states", "chambers", "first", "last", "pid",
-                 "current", "party_now", "full", "witness_rows", "recorded_parties"]
+                 "current", "party_now", "full", "witness_rows", "recorded_parties", "separated_witnesses"]
         out.append({k: rec[k] for k in order if k in rec})
 
     out.sort(key=lambda r: (-r["speeches"], r["name"]))
@@ -321,6 +343,7 @@ def main(argv=()) -> None:
             "floor": FLOOR,
             "people": len(out),
             "speeches": speeches_total,
+            "witness_speeches_separated": sum(p.get('separated_witnesses', {}).get('speeches', 0) for p in out),
             "witnesses_excluded": witnesses,
             "below_floor": below,
             "malformed": malformed,
@@ -337,7 +360,7 @@ def main(argv=()) -> None:
 def check_roster(out):
     previous, unusable = shipped_roster()
     if os.environ.get("OPAX_ROSTER_ACCEPT") == "1":
-        held = []
+        held = attribution_refusals(out)
     else:
         held = [unusable] if unusable else refusals(previous, out)
     if held:

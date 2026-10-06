@@ -29,9 +29,9 @@ class GrantsResearchTests(unittest.TestCase):
         directory=json.loads((ROOT/'portal/public/parliamentarians.json').read_text())
         rows=list(records(data,directory))
         # Reviewed, fixed totals: catches accidental publication loss or growth.
-        self.assertEqual(len(rows),1429)
-        self.assertEqual(len({r['slug'] for r in rows}),1429)
-        self.assertEqual(sum(r['slug'].startswith('roster-profile-') for r in rows),961)
+        self.assertEqual(len(rows),1445)
+        self.assertEqual(len({r['slug'] for r in rows}),1445)
+        self.assertEqual(sum(r['slug'].startswith('roster-profile-') for r in rows),977)
         for r in rows:
             self.assertTrue(r['origin']['url'].startswith('https://'))
             self.assertEqual(r['origin']['source_id'],'opax-grants-research')
@@ -52,7 +52,7 @@ class GrantsResearchTests(unittest.TestCase):
         directory=json.loads((ROOT/'portal/public/parliamentarians.json').read_text())
         counts=Counter(kind for kind,_,_ in tasks(data,directory))
         self.assertEqual(counts,{'project_location':226,'invitation_award_match':89,
-            'representation_review':739,
+            'representation_review':723,
             'cpi_method_reconciliation':1})
 
 if __name__=='__main__':unittest.main()

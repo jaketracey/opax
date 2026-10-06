@@ -23,3 +23,18 @@ to the earlier `23cad95a` raw export snapshot. The round-3 audit compares every
 field and rejects clean-record changes. The raw SQL replay fixture remains unchanged.
 Witness neutralisation now applies only above 50%; ties retain main unless there
 is separate evidence of a mix-up.
+
+`witness-split-8e1977cf.json` freezes complete public records from the P1 roster
+at `8e1977cf`: the 13 QLD review cases, three further historical restorations,
+and eight witness-heavy or ambiguous controls. Expected names and parties are
+checked against the independently dated parliamentary snapshots. The aggregate
+does not establish an exact per-house count: offline results disclose the
+non-witness upper bound and preserve the old aggregate under `transcript`.
+
+`scripts.test_roster_witness_split` builds synthetic SQL rows with those observed
+counts, including both witness markers and stale MP IDs/parties. It runs the real
+nightly wrapper and checks that only the parliamentary partition establishes
+identity. These SQL rows are a regression fixture, not captured desktop speeches.
+The older all-roster export-shape fixture remains unchanged; after witness
+partitioning its artificial scopes exceed the existing 25-identity cap, so its
+test now requires the wrapper to hold and preserve the shipped file.
