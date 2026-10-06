@@ -93,6 +93,20 @@ name: 21 Talk consent, captions, sources, controls and refusal states
     text: '^https://opax\.invalid/support\?record=/money/receipts$'
 - takeScreenshot: ${EVIDENCE}/21-report-support-path
 - tapOn: OK
+# The e2e browser preview is a separate native-stack route. Leaving Talk ends
+# its call and discards evidence, so explicitly start a fresh fixture call.
+# Stored consent must let this call start without another consent prompt.
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: talk-start
+    direction: UP
+    centerElement: true
+- tapOn:
+    id: talk-start
+- extendedWaitUntil:
+    visible: Listening to you|OPAX is speaking
+    timeout: 15000
 - scrollUntilVisible:
     timeout: 60000
     element:
