@@ -105,6 +105,7 @@ const foldCalls = (members: typeof partyMembers) => {
   const original = String.prototype.toLocaleLowerCase;
   let calls = 0;
   const names = new Set<string>();
+  // eslint-disable-next-line no-extend-native
   String.prototype.toLocaleLowerCase = function (...args) {
     calls++;
     names.add(String(this));
@@ -113,6 +114,7 @@ const foldCalls = (members: typeof partyMembers) => {
   try {
     members('Labor', r, p, s, m);
   } finally {
+    // eslint-disable-next-line no-extend-native
     String.prototype.toLocaleLowerCase = original;
   }
   return { calls, distinctStrings: names.size };

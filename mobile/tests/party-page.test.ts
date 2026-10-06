@@ -1,4 +1,5 @@
 import { joinPerson } from '../src/api/person-identity';
+import * as partyTransforms from '../src/api/party-page';
 import {
   Catalogs,
   decodeAecExtras,
@@ -419,7 +420,7 @@ test('publishes title and first block while independent optional catalogs are pe
     receipts = resolve;
   });
   const updates: import('../src/api/catalogs').PartyPageRecord[] = [];
-  const pending = api.partyPage('Labor', true, (record) => {
+  const pending = api.partyPage('Labor', false, (record) => {
     updates.push(record);
     first();
     if (record.data?.receipts.status === 'ready') receipts();
@@ -437,5 +438,97 @@ test('publishes title and first block while independent optional catalogs are pe
   releaseVotes();
   const final = await pending;
   expect(final.data?.divisions.status).toBe('ready');
+  expect(reads.every((r) => !r.refresh)).toBe(true);
+});
+
+test('refresh publishes no partial record while optional catalogs are pending and forces all reads', async () => {
+  let release!: () => void;
+  let started!: () => void;
+  const optional = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  const optionalStarted = new Promise<void>((resolve) => {
+    started = resolve;
+  });
+  const reads: { path: string; refresh: boolean }[] = [];
+  const api = new Catalogs({
+    get: async (path, decoder, refresh = false) => {
+      reads.push({ path, refresh });
+      if (path === '/bills/index.json') {
+        started();
+        await optional;
+      }
+      return get(path, decoder);
+    },
+  });
+  const publish = jest.fn();
+  const pending = api.partyPage('Labor', true, publish);
+  await optionalStarted;
+  expect(publish).not.toHaveBeenCalled();
+  release();
+  const final = await pending;
+  expect(publish).not.toHaveBeenCalled();
+  for (const block of ['receipts', 'associated', 'divisions'] as const)
+    expect(final.data?.[block].status).toBe('ready');
+  expect(
+    reads.some(
+      (r) =>
+        /^\/bills\/.+\.json$/.test(r.path) && r.path !== '/bills/index.json',
+    ),
+  ).toBe(true);
   expect(reads.every((r) => r.refresh)).toBe(true);
 });
+
+test.each(['receipts', 'associated', 'divisions'] as const)(
+  '%s transform failure settles its block as an error, while other blocks remain readable',
+  async (failed) => {
+    const fail = () => {
+      throw new Error('transform failed');
+    };
+    const spy =
+      failed === 'receipts'
+        ? jest.spyOn(partyTransforms, 'partyMoney').mockImplementation(fail)
+        : failed === 'divisions'
+          ? jest
+              .spyOn(partyTransforms, 'partyDivisions')
+              .mockImplementation(fail)
+          : null;
+    const api = new Catalogs({
+      get: async (path, decoder) => {
+        const record = await get(path, decoder);
+        return failed === 'associated' && path === '/graph/aec-extras.json'
+          ? {
+              ...record,
+              data: {
+                ...record.data,
+                get parties() {
+                  return fail();
+                },
+              },
+            }
+          : record;
+      },
+    });
+    const updates: import('../src/api/catalogs').PartyPageRecord[] = [];
+    try {
+      const final = await api.partyPage('Labor', false, (r) => updates.push(r));
+      expect(final.data?.[failed]).toMatchObject({
+        status: 'error',
+        data: null,
+      });
+      expect(final.data?.[failed].error?.code).toBe('invalid-data');
+      expect(updates.some((r) => r.data?.[failed].status === 'error')).toBe(
+        true,
+      );
+      for (const block of [
+        'members',
+        'receipts',
+        'associated',
+        'divisions',
+      ] as const)
+        if (block !== failed) expect(final.data?.[block].status).toBe('ready');
+    } finally {
+      spy?.mockRestore();
+    }
+  },
+);

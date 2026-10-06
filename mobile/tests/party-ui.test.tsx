@@ -1,5 +1,9 @@
 import { act } from 'react';
-import { Text as NativeText, useWindowDimensions } from 'react-native';
+import {
+  AppState,
+  Text as NativeText,
+  useWindowDimensions,
+} from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import { router } from 'expo-router';
 import { catalogs as runtime } from '../src/api/runtime';
@@ -473,3 +477,94 @@ test('title and Members render before receipts, associations and splits settle',
   // Progress from an obsolete request must be ignored along with its completion.
   act(() => publish(view));
 });
+
+test.each(['pull', 'foreground'] as const)(
+  '%s refresh of a saved record keeps loaded sections and disclosures mounted',
+  async (trigger) => {
+    let release!: () => void;
+    let started!: () => void;
+    let activate!: () => void;
+    const optional = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const optionalStarted = new Promise<void>((resolve) => {
+      started = resolve;
+    });
+    const subscription = jest
+      .spyOn(AppState, 'addEventListener')
+      .mockImplementation((_event, listener) => {
+        activate = () => listener('active');
+        return { remove: jest.fn() };
+      });
+    const saved = new Catalogs({
+      get: async (path, decoder, refresh = false) => {
+        if (refresh && path === '/bills/index.json') {
+          started();
+          await optional;
+        }
+        return {
+          data: decoder(path === '/api/person-slugs' ? slugs : pinned(path)),
+          stale: true,
+          savedAt: 1000,
+          asOf: null,
+        };
+      },
+    });
+    jest
+      .mocked(runtime.partyPage)
+      .mockImplementation((...args) => saved.partyPage(...args));
+    const r = await render();
+    try {
+      press(r, 'party-donor-years-toggle');
+      press(r, 'party-recorded-toggle');
+      const ids = [
+        'party-receipts-total',
+        'party-associated-as-at',
+        'party-divisions-as-at',
+      ];
+      const nodes = ids.map((id) =>
+        r.root.find((n) => typeof n.type === 'string' && n.props.testID === id),
+      );
+      await act(async () => {
+        if (trigger === 'foreground') activate();
+        else
+          r.root
+            .findAll((n) => !!n.props.refreshControl)[0]!
+            .props.refreshControl.props.onRefresh();
+        await optionalStarted;
+      });
+      for (const [i, id] of ids.entries())
+        expect(
+          r.root.find(
+            (n) => typeof n.type === 'string' && n.props.testID === id,
+          ),
+        ).toBe(nodes[i]);
+      expect(
+        r.root.findAll((n) =>
+          /party-(receipts|associated|divisions)-loading/.test(
+            n.props.testID ?? '',
+          ),
+        ),
+      ).toHaveLength(0);
+      for (const id of ['party-donor-years-toggle', 'party-recorded-toggle'])
+        expect(
+          r.root.find(
+            (n) => typeof n.type === 'string' && n.props.testID === id,
+          ).props.accessibilityState.expanded,
+        ).toBe(true);
+      await act(async () => {
+        release();
+        await jest.mocked(runtime.partyPage).mock.results.at(-1)!.value;
+      });
+      expect(
+        r.root.findAll(
+          (n) => n.props.refreshControl?.props.refreshing === true,
+        ),
+      ).toHaveLength(0);
+    } finally {
+      release();
+      act(() => r.unmount());
+      subscription.mockRestore();
+    }
+  },
+);

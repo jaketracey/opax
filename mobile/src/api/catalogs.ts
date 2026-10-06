@@ -96,6 +96,14 @@ const loadingPartyBlock = <T>(): Block<T> => ({
   stale: false,
   savedAt: null,
 });
+const failedPartyBlock = (error: unknown): Block<never> => ({
+  ...loadingPartyBlock<never>(),
+  status: 'error',
+  error:
+    error instanceof ApiError
+      ? error
+      : new ApiError('invalid-data', 'This catalog could not be read.'),
+});
 export class Catalogs {
   private suggestionData?: Promise<SuggestionSources>;
   private suggestionIdentityRetry: 'unused' | 'available' | 'used' = 'unused';
@@ -105,6 +113,8 @@ export class Catalogs {
     refresh = false,
     publish?: (record: PartyPageRecord) => void,
   ): Promise<PartyPageRecord> {
+    // Keep the complete shown record until a refresh replaces it atomically.
+    const progress = refresh ? undefined : publish;
     const read = async <T>(
       pending: Promise<RecordResult<T>>,
       source: string,
@@ -120,18 +130,7 @@ export class Catalogs {
           savedAt: r.savedAt,
         };
       } catch (e) {
-        return {
-          data: null,
-          status: 'error',
-          asAt: null,
-          sources: [],
-          stale: false,
-          savedAt: null,
-          error:
-            e instanceof ApiError
-              ? e
-              : new ApiError('invalid-data', 'This catalog could not be read.'),
-        };
+        return failedPartyBlock(e);
       }
     };
     // Optional reads start after publishing the core; each settles independently.
@@ -279,62 +278,77 @@ export class Catalogs {
         view.divisions,
       ].some((b) => b.stale),
     });
-    publish?.(result());
+    progress?.(result());
     // Give React a turn to commit the title and Members before optional decode work.
     await new Promise<void>((resolve) => setTimeout(resolve, 0));
     await Promise.all([
-      (money ? Promise.resolve(money) : readMoney()).then((block) => {
-        view = {
-          ...view,
-          receipts: {
-            ...block,
-            data: block.data ? partyMoney(label, block.data) : null,
-            asAt: block.data?.meta.generated ?? null,
-          },
-          moneyMeta: block.data?.meta ?? null,
-        };
-        publish?.(result());
-      }),
-      readEntities().then((block) => {
-        const association = block.data
-          ? Object.entries(block.data.parties).find(([party]) =>
-              samePartyLabel(party, label),
-            )?.[1]
-          : null;
-        view = {
-          ...view,
-          associated: {
-            ...block,
-            data: block.data
-              ? {
-                  rows: association?.associated_entities?.slice(0, 6) ?? [],
-                  total: association?.associated_entities_total ?? 0,
-                  notes: block.data.meta.notes,
-                }
-              : null,
-            asAt: block.data?.meta.generated ?? null,
-          },
-        };
-        publish?.(result());
-      }),
-      readVotes().then((block) => {
-        view = {
-          ...view,
-          divisions: {
-            ...block,
-            data: block.data
-              ? {
-                  rows: partyDivisions(label, block.data.files),
-                  scanned: block.data.files.length,
-                  failed: block.data.failed,
-                  basisNote: block.data.index.meta.party_basis_note,
-                }
-              : null,
-            asAt: block.data?.index.generated_at ?? null,
-          },
-        };
-        publish?.(result());
-      }),
+      (money ? Promise.resolve(money) : readMoney())
+        .then((block) => {
+          view = {
+            ...view,
+            receipts: {
+              ...block,
+              data: block.data ? partyMoney(label, block.data) : null,
+              asAt: block.data?.meta.generated ?? null,
+            },
+            moneyMeta: block.data?.meta ?? null,
+          };
+          progress?.(result());
+        })
+        .catch((error: unknown) => {
+          view = { ...view, receipts: failedPartyBlock(error) };
+          progress?.(result());
+        }),
+      readEntities()
+        .then((block) => {
+          const association = block.data
+            ? Object.entries(block.data.parties).find(([party]) =>
+                samePartyLabel(party, label),
+              )?.[1]
+            : null;
+          view = {
+            ...view,
+            associated: {
+              ...block,
+              data: block.data
+                ? {
+                    rows: association?.associated_entities?.slice(0, 6) ?? [],
+                    total: association?.associated_entities_total ?? 0,
+                    notes: block.data.meta.notes,
+                  }
+                : null,
+              asAt: block.data?.meta.generated ?? null,
+            },
+          };
+          progress?.(result());
+        })
+        .catch((error: unknown) => {
+          view = { ...view, associated: failedPartyBlock(error) };
+          progress?.(result());
+        }),
+      readVotes()
+        .then((block) => {
+          view = {
+            ...view,
+            divisions: {
+              ...block,
+              data: block.data
+                ? {
+                    rows: partyDivisions(label, block.data.files),
+                    scanned: block.data.files.length,
+                    failed: block.data.failed,
+                    basisNote: block.data.index.meta.party_basis_note,
+                  }
+                : null,
+              asAt: block.data?.index.generated_at ?? null,
+            },
+          };
+          progress?.(result());
+        })
+        .catch((error: unknown) => {
+          view = { ...view, divisions: failedPartyBlock(error) };
+          progress?.(result());
+        }),
     ]);
     return result();
   }
