@@ -1,29 +1,33 @@
 # OPAX privacy page and voice consent text
 
-Drafted 3 October 2026 for W7 in [IOS-APP.md](IOS-APP.md#9-worker-changes). **Draft: Jake approves the wording before it deploys.** The page carries marked placeholders (`<mark class="privacy-confirm" data-confirm="P…">`) for facts and decisions that could not be verified from the repository.
+Drafted 3 October 2026 for W7 in [IOS-APP.md](IOS-APP.md#9-worker-changes) and published on 6 October 2026, when Jake asked for the remaining placeholders to be filled with verified facts or honest interim wording ("Any placeholder stuff can be filled in quickly later"). `/support` shipped with it.
 
 ## The placeholder guard
 
-`scripts/check_privacy_placeholders.mjs` fails while any placeholder remains on the page, listing each ID. It fails closed: a placeholder element counts whatever its attribute quoting (double, single or none), and so does any other mention of `privacy-confirm` or `data-confirm`, or any "[To confirm" or "[To decide" text that has lost its wrapper (reported as `?`). Comments and `<style>` blocks are ignored. It runs at the end of `npm run check` and first in `npm run deploy` and `npm run deploy:staging`; the GitHub deploy workflow (`.github/workflows/deploy.yml`) deploys through `npm run deploy`, so the nightly refresh cannot publish an unfinished page either. A bare `npx wrangler deploy` bypasses it, as it already bypasses asset stamping; never deploy that way. `portal/test/privacy-placeholders.test.mjs` tests the detection, the command's exit codes on fixture pages, and that `check`, `deploy` and `deploy:staging` all run it (the deploys first). To fill a placeholder, replace the whole `<mark>` with the confirmed wording, then run `npm run check`.
+`scripts/check_privacy_placeholders.mjs` fails while any placeholder (`<mark class="privacy-confirm" data-confirm="P…">`) remains on the page, listing each ID. It fails closed: a placeholder element counts whatever its attribute quoting (double, single or none), and so does any other mention of `privacy-confirm` or `data-confirm`, or any "[To confirm" or "[To decide" text that has lost its wrapper (reported as `?`). Comments and `<style>` blocks are ignored. It runs at the end of `npm run check` and first in `npm run deploy` and `npm run deploy:staging`; the GitHub deploy workflow (`.github/workflows/deploy.yml`) deploys through `npm run deploy`. A bare `npx wrangler deploy` bypasses it, as it already bypasses asset stamping; never deploy that way. `portal/test/privacy-placeholders.test.mjs` tests the detection, the command's exit codes on fixture pages, and that `check`, `deploy` and `deploy:staging` all run it (the deploys first). The page has none today; keep the guard for any future draft.
 
-| ID | What is needed |
-| --- | --- |
-| P1 | Publication date |
-| P2 | Person or organisation responsible for the policy, matching the App Store seller |
-| P3 | A private contact address for privacy and deletion requests |
-| P4 | How long Cloudflare Email Sending keeps delivery records with recipient addresses |
-| P5 | Workers Logs retention on OPAX's plan (3 days Free, 7 days Paid) and whether log entries record IP addresses |
-| P6 | How long Cloudflare security and traffic analytics keep IP addresses |
-| P7 | What the PostHog project does with the forwarded IP address after the location lookup ("Discard client IP data") |
-| P8 | How long Progress keeps query text |
-| P9 | The provider OpenRouter routes the generation preset to, and whether OpenRouter or it keeps prompts |
-| P10 | ElevenLabs audio recording still off and transcript deletion after one day, checked in the dashboard |
-| P11 | The voice agent's language model (documented as Gemini 3.5 Flash Lite) |
-| P12 | Where ElevenLabs processes and stores call data |
-| P13 | Region of the `opax-community` D1 database |
-| P14 | A minimum age for accounts and voice, if any |
-| P15 | D1 Time Travel window on OPAX's plan (7 days Free, 30 days Paid) and any other backup or export of the community database |
-| P16 | How long Google Analytics and PostHog keep event data under OPAX's settings and plans |
+## How the sixteen placeholders were filled (6 October 2026)
+
+Verified facts came from read-only checks; where none was checkable, the page says what OPAX does and links to the provider's own terms. Items marked **verify** need Jake to confirm in a dashboard; the page's wording stays true either way.
+
+| ID | Now on the page | Source |
+| --- | --- | --- |
+| P1 | Last updated 6 October 2026 | Publication date |
+| P2 | Run by Jake Tracey, as an independent side project, who is responsible for the policy | The About page ("a side project of Jake Tracey, of Noice") |
+| P3 | No private contact address yet, one is coming; until then delete the account yourself, change it while signed in, or use public GitHub issues | Cloudflare API GET: Email Routing on `opax.com.au` is `unconfigured`; no MX records for `opax.com.au` or `login.opax.com.au` |
+| P4 | Cloudflare's email service keeps its own delivery records, under Cloudflare's privacy policy | Cloudflare documents email logs for Email Service; no retention period found |
+| P5 | Worker logs kept 7 days; each entry has the URL, so search words; Cloudflare may record connection details such as the IP | Workers Paid (see P15); Cloudflare documents 7 days on Paid; script settings GET: `invocation_logs: true`, `redact_query_string: false`. IP fields not readable by GET (**verify** in the Workers Logs view) |
+| P6 | Cloudflare's traffic and security analytics record requests with IP addresses, kept 31 days | Cloudflare [GraphQL limits](https://developers.cloudflare.com/analytics/graphql-api/limits/) (adaptive datasets 31 days on every plan) and Security Events (up to 31 days); zone plan Free Website |
+| P7 | PostHog receives the forwarded IP and "may store the address with the event" | `src/posthog.ts`; no PostHog key or MCP was available (**verify** "Discard client IP data" in project 507367; if on, say it is discarded after the lookup) |
+| P8 | Progress's own terms apply, with its privacy policy linked | No retention found |
+| P9 | The model OPAX chose in OpenRouter is currently a DeepSeek model; OpenRouter's policy and the routed provider's apply | `src/index.ts` comments and the `openai-compatible` pins; no OpenRouter key read |
+| P10 | The agent is configured with recording off and each conversation's text deleted after one day | [VOICE-ASSISTANT.md](VOICE-ASSISTANT.md), 9 September 2026 (**verify** in the ElevenLabs dashboard) |
+| P11 | The agent is configured to use Google's Gemini 3.5 Flash Lite | VOICE-ASSISTANT.md (**verify**) |
+| P12 | Standard service, not a residency service; ElevenLabs states data is stored in the United States, with processing possible elsewhere | `PROVIDER_ORIGIN = https://api.elevenlabs.io` in `src/voice.ts`; ElevenLabs [data residency](https://elevenlabs.io/docs/overview/administration/data-residency) |
+| P13 | Community database in Cloudflare's Oceania region | `wrangler d1 info opax-community`: `running_in_region OC`, no jurisdiction |
+| P14 | Accounts and voice are for people aged 16 and over; no date of birth asked or checked | Jake's decision, 6 October 2026 (conservative, given Australia's social media minimum age rules) |
+| P15 | D1 recovery history covers the last 30 days; no other scheduled backup or export | `wrangler d1 time-travel info`: a 16-day-old bookmark exists and the limit is "the last 30 days" (Workers Paid); no export or backup in the repository |
+| P16 | Both analytics services keep events for the retention period of OPAX's account, under their policies | No PostHog or GA settings read (**verify**) |
 
 ## Where it lives
 
@@ -62,7 +66,7 @@ Then update the "Last updated" date. The page's history is this repository's his
 | Analytics events and removals; browser details sent; identifiers, `_ga` two years, PostHog cookie one year plus local storage; first-visit URL in the PostHog cookie, stripped from events; Do Not Track; opax.com.au only; none on community pages | [ANALYTICS.md](ANALYTICS.md); `portal/analytics/index.js`, `privacy.mjs` (`beforeSend`), `ga.js`; posthog-js 1.427.2 defaults (`cookie_expiration: 365`, `localStorage+cookie`); Google's [cookie reference](https://business.safety.google/adscookies/); `community.html` loads no analytics |
 | PostHog receives the reader's IP | `src/posthog.ts` forwards `cf-connecting-ip` as `x-forwarded-for` to `us.i.posthog.com`; `ip: false` is a no-op in posthog-js 1.427.2 (what PostHog keeps is P7) |
 | Grants map tiles from OpenStreetMap | `portal/grants-map/index.js` |
-| App: no analytics, no device identifier, seat and consent on device, catalog searches never reach Progress, Keychain session | [IOS-APP.md](IOS-APP.md) sections 1, 4 and 6 (design, not shipped code); `apiUnifiedSearch()` catalog branch |
+| App: no analytics, no device identifier, seat and consent on device, catalog searches never reach Progress, Keychain session | [IOS-APP.md](IOS-APP.md) sections 1, 4 and 6; the app's privacy manifest (`NSPrivacyTracking` false, no collected types); `apiUnifiedSearch()` catalog branch |
 | Account contents, public and private fields, 50 saved conversations, message policy, reply emails | `migrations/0001`, `0006`, `0009`, `0010`; [COMMUNITY.md](COMMUNITY.md) |
 | Sign-in link and code: 15 minutes, single use, hash and keyed hash; sessions 30 days, no IP or device stored | `src/community-auth.ts`, `src/community-signin-code.ts`, `migrations/0001`, `0011` |
 | Email through Cloudflare from login.opax.com.au | `wrangler.jsonc` `send_email`, `COMMUNITY_EMAIL_FROM` |
@@ -75,16 +79,18 @@ Then update the "Last updated" date. The page's history is this repository's his
 | Recovery history keeps deleted data for the plan's window | D1 [Time Travel](https://developers.cloudflare.com/d1/reference/time-travel/) is always on: 7 days Free, 30 days Paid (the plan is P15) |
 | Progress knowledge box in the AWS Sydney zone | `ARAG_ZONE` = `aws-ap-southeast-2-1` in `wrangler.jsonc` |
 | PostHog in the United States | `us.i.posthog.com` in `src/posthog.ts` |
+| App electorate suggestion: location used once on the iPhone, never sent or stored, outlines fetched before the fix, no background location | iOS lane `ios/electorate-map`: `docs/IOS-ELECTORATE-MAP.md`, `mobile/src/features/electorate-map/location.ts`, `NSLocationWhenInUseUsageDescription`, `tests/location-privacy.test.ts` |
+| App voice consent stored on the iPhone, withdrawn on the voice screen; calls end when the app leaves the foreground | Decision 10 (6 October 2026); iOS lane `ios/talk-sheet` (`TalkScreen.tsx`) |
 
-## Voice consent and notice strings (draft)
+## Voice consent and notice strings
 
-For the app's one-time consent step ([IOS-UX.md, 4.10](IOS-UX.md#410-talk-to-opax-voice); guideline 5.1.2(i)) and for the web voice panel if Jake adds the same step there (IOS-APP decision 10). **Do not adopt `voice.consent.kept` until P10 is confirmed**, and name the language model's provider consistently with the page once P11 is. "OPAX" follows the app's casing; the web panel still says "Opax" (IOS-UX open question 12).
+Drafted for the app's one-time consent step ([IOS-UX.md, 4.10](IOS-UX.md#410-talk-to-opax-voice); guideline 5.1.2(i)) and for the web voice panel, which decision 10 adds later. The app ships its own wording in `TalkScreen.tsx` (lane `ios/talk-sheet`); keep it and these consistent with the page's voice section. `voice.consent.kept` states the configured ElevenLabs settings (P10); if Jake's dashboard check shows otherwise, change it with the page. "OPAX" follows the app's casing; the web panel still says "Opax" (IOS-UX open question 12).
 
 | Key | Text |
 | --- | --- |
 | `voice.consent.title` | Before your first call |
 | `voice.consent.what` | Talk to OPAX uses ElevenLabs, a third-party AI provider. During a call, your voice and anything you type go through OPAX to ElevenLabs, which turns your speech into text, writes the replies with a language model and speaks them. |
-| `voice.consent.kept` (depends on P10) | ElevenLabs does not record the audio and deletes the conversation text after one day. OPAX keeps no recording or transcript. For each call it keeps the seconds reserved and used, the times, and ElevenLabs' reference for the conversation, to count your 10 free minutes. |
+| `voice.consent.kept` (configured settings, P10) | ElevenLabs does not record the audio and deletes the conversation text after one day. OPAX keeps no recording or transcript. For each call it keeps the seconds reserved and used, the times, and ElevenLabs' reference for the conversation, to count your 10 free minutes. |
 | `voice.consent.identity` | OPAX does not give ElevenLabs your email address. |
 | `voice.consent.accuracy` | Answers may be mistaken; check the linked records. |
 | `voice.consent.link` | Voice privacy (opens `https://opax.com.au/privacy#voice`) |

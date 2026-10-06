@@ -1491,9 +1491,8 @@
       record of Australian politics. Reading it needs no account. This page sets out what the OPAX
       website and iPhone app collect when you use them, which other companies receive it, how long
       it is kept and how to have it deleted.</p>
-      <p class="fineprint">Last updated <mark class="privacy-confirm" data-confirm="P1">[To confirm:
-      the publication date]</mark>. The iPhone app is not yet released. What this page says about
-      the app describes how it is being built, and applies from its release.</p>
+      <p class="fineprint">Last updated 6 October 2026. This page covers the OPAX website and the
+      OPAX app for iPhone.</p>
 
       <h2 id="privacy-summary">In short</h2>
       <ul class="about-list">
@@ -1546,12 +1545,15 @@
       analytics events passed on to PostHog. Each log entry records the address requested,
       which for a search includes the search words. Files the site serves as they are, such as
       scripts, styles and most published data files, come straight from Cloudflare's network
-      without reaching the server, so they are not in these logs.
-      <mark class="privacy-confirm" data-confirm="P5">[To confirm: how long these logs are kept on
-      OPAX's plan (Cloudflare documents 3 days on Workers Free and 7 days on Workers Paid), and
-      whether they record IP addresses.]</mark> <mark class="privacy-confirm" data-confirm="P6">[To
-      confirm: how long Cloudflare's security and traffic analytics for opax.com.au keep IP
-      addresses.]</mark></p>
+      without reaching the server, so they are not in these logs. On OPAX's Cloudflare plan the
+      logs are kept for 7 days, as
+      <a href="https://developers.cloudflare.com/workers/observability/logs/workers-logs/" rel="noopener">Cloudflare
+      documents</a>, and then deleted. Cloudflare may record connection details, such as your IP
+      address, with each entry.</p>
+      <p>Cloudflare's own traffic and security analytics for opax.com.au also record requests
+      with their IP addresses. Cloudflare
+      <a href="https://developers.cloudflare.com/analytics/graphql-api/limits/" rel="noopener">documents</a>
+      that it keeps these request-level records for 31 days.</p>
 
       <h3 id="privacy-questions">Questions and searches</h3>
       <p>Where the words you type go depends on what you are doing.</p>
@@ -1575,11 +1577,12 @@
       code adds no account details or other identifier to these requests. Progress can still
       receive your IP address with them: Cloudflare, which runs OPAX's server, documents that it
       adds the visitor's IP address to requests the server makes to services outside Cloudflare,
-      and Progress is outside it. OpenRouter is called by Progress, not by OPAX's server.
-      <mark class="privacy-confirm" data-confirm="P8">[To confirm: how long Progress keeps query
-      text in its logs.]</mark> <mark class="privacy-confirm" data-confirm="P9">[To confirm: the
-      model provider OpenRouter routes to (DeepSeek, per the current configuration), and whether
-      OpenRouter or that provider keeps prompts.]</mark></p>
+      and Progress is outside it. OpenRouter is called by Progress, not by OPAX's server, and the
+      model OPAX has chosen there is currently a DeepSeek model.</p>
+      <p>What these services keep, and for how long, is set by their own terms:
+      <a href="https://www.progress.com/legal/privacy-policy" rel="noopener">Progress's privacy
+      policy</a>, <a href="https://openrouter.ai/privacy" rel="noopener">OpenRouter's privacy
+      policy</a>, and the policy of the provider OpenRouter sends the request to.</p>
       <p>So that a repeated question needs no new work, Cloudflare keeps copies of answers to
       opening questions, search results and summaries for between ten minutes and seven days.
       The copies are filed by the question, not by who asked it.</p>
@@ -1629,11 +1632,12 @@
       <p>Your browser sends Google Analytics events straight to Google, so Google receives your
       IP address. PostHog events pass through OPAX's server, which forwards your IP address to
       PostHog's ingestion service in the United States, so that PostHog places visits by your
-      location rather than by the server's.
-      <mark class="privacy-confirm" data-confirm="P7">[To confirm: what the PostHog project does
-      with the IP address after that, and whether it keeps it.]</mark> Both services keep the
-      events they receive. <mark class="privacy-confirm" data-confirm="P16">[To confirm: how long
-      Google Analytics and PostHog keep event data under OPAX's settings and plans.]</mark></p>
+      location rather than by the server's. PostHog may store the address with the event.</p>
+      <p>Both services keep the events they receive for the retention period of OPAX's account
+      with them, under their own terms:
+      <a href="https://policies.google.com/privacy" rel="noopener">Google's privacy policy</a>
+      and <a href="https://posthog.com/privacy" rel="noopener">PostHog's privacy
+      policy</a>.</p>
       <p>If your browser sends a Do Not Track signal, neither service receives anything, though
       PostHog may still store its identifier in your browser. Analytics run only on opax.com.au,
       and community pages load none at all.</p>
@@ -1649,6 +1653,12 @@
       phone's IP address, under the same limits and logs as the website. Pages the app opens on
       opax.com.au are the website, and the website sections above apply to them.</p>
 
+      <p>If you choose Use my location when picking your electorate, iOS asks for your
+      permission, and the app then uses one reading of your location, on your iPhone, to suggest
+      an electorate. Your location is never sent to OPAX or anyone else, and is not stored: the
+      app downloads every electorate's outline before it reads your location, so its requests
+      are the same wherever you are, and only the electorate you confirm is saved. The app never
+      asks for your location in the background.</p>
       <h2 id="privacy-accounts">Community accounts</h2>
       <p>An account is optional. On the website it lets you keep reading lists, take part in
       discussions, message other members and connect research tools. In the app it is needed
@@ -1692,8 +1702,8 @@
       OPAX sends sign-in emails, account deletion codes and, when someone replies to a
       discussion you started, a reply notification. You can turn reply emails off in Privacy
       &amp; messages, and each one has an unsubscribe link. OPAX sends no newsletters or
-      marketing email. <mark class="privacy-confirm" data-confirm="P4">[To confirm: how long
-      Cloudflare's email service keeps delivery records, including recipient addresses.]</mark></p>
+      marketing email. Cloudflare's email service keeps its own delivery records, under
+      <a href="https://www.cloudflare.com/privacypolicy/" rel="noopener">Cloudflare's privacy policy</a>.</p>
 
       <h3>Research tools</h3>
       <p>Members can create keys that let research tools search the record through OPAX's MCP
@@ -1710,14 +1720,14 @@
       voice panel does not touch the microphone: it starts when you choose Start talking, and
       stops when the call ends, when you close the panel and when you leave the tab. In the app,
       you agree to the terms in this section once, then iOS asks for microphone permission the
-      first time you start a call. A call ends when you leave the app. You can withdraw your
-      agreement in Account and about, and the app will ask again before your next call.</p>
+      first time you start a call. Your agreement is stored on your iPhone; you can withdraw it
+      at any time on the voice screen, and the app asks again before your next call. A call ends
+      when you leave the app.</p>
       <h3>What is sent, and to whom</h3>
       <p>During a call, your voice streams through OPAX's server to ElevenLabs. ElevenLabs turns
-      your speech into text, writes the replies with a language model and speaks them back.
-      <mark class="privacy-confirm" data-confirm="P11">[To confirm: the language model is
-      Google's Gemini 3.5 Flash Lite, run through ElevenLabs, as configured on 9 September
-      2026.]</mark> Anything you type during a call goes the same way. OPAX gives ElevenLabs a
+      your speech into text, writes the replies with a language model and speaks them back. OPAX's
+      ElevenLabs agent is configured to use Google's Gemini 3.5 Flash Lite as that model.
+      Anything you type during a call goes the same way. OPAX gives ElevenLabs a
       random identifier for the call and the call's time limit; its code does not give
       ElevenLabs your email address or account details. ElevenLabs can receive your IP address
       with the connection, because Cloudflare adds the visitor's IP address to requests that
@@ -1725,11 +1735,8 @@
       its search runs through OPAX's own search, as described under
       <a href="#privacy-questions">Questions and searches</a>.</p>
       <h3>What is kept</h3>
-      <p>Audio recording is turned off in OPAX's ElevenLabs settings, and ElevenLabs is set to
-      delete the text of each conversation after one day.
-      <mark class="privacy-confirm" data-confirm="P10">[To confirm: both settings are still live
-      in the ElevenLabs dashboard. They were recorded on 9 September 2026 and have not been
-      checked since.]</mark> OPAX itself keeps no recording and no transcript. The transcript
+      <p>OPAX's ElevenLabs agent is configured with audio recording off and with each
+      conversation's text deleted after one day. OPAX itself keeps no recording and no transcript. The transcript
       you see during a call is not saved in your browser or in the app, and is never sent to
       analytics.</p>
       <p>For each call, OPAX keeps a record linked to your account: its state, the seconds
@@ -1751,9 +1758,8 @@
       <p>On the website, open <a href="/community?view=delete-account">Delete your account</a>
       from your account page. In the app, choose Delete account under Account. OPAX emails you a
       fresh code, and entering it removes the account from OPAX's live database at once.
-      Deletion cannot be undone. If you
-      cannot sign in, write to the address under <a href="#privacy-contact">Questions and
-      requests</a>.</p>
+      Deletion cannot be undone. Anyone who can receive the account's email can do it, since
+      both signing in and the deletion code go to that address.</p>
       <h3>What is deleted</h3>
       <ul class="about-list">
         <li>Your email address, display name, bio and settings, and any voice access OPAX gave
@@ -1783,10 +1789,10 @@
         <li><strong>Emails already sent</strong> cannot be recalled.</li>
         <li><strong>Recovery history.</strong> Cloudflare keeps a rolling history of OPAX's
         database so that it can be restored to an earlier point if something goes wrong. It is
-        always on, and your deleted data stays in it until it ages out.
-        <mark class="privacy-confirm" data-confirm="P15">[To confirm: how long that history lasts
-        on OPAX's plan (Cloudflare documents 7 days on Workers Free and 30 days on Workers Paid),
-        and whether any other backup or export of the community database exists.]</mark></li>
+        always on, and on OPAX's plan it covers the last 30 days, as
+        <a href="https://developers.cloudflare.com/d1/reference/time-travel/" rel="noopener">Cloudflare
+        documents</a>. Your deleted data stays in it for up to 30 days, then is gone. OPAX runs
+        no other scheduled backup or export of the database.</li>
       </ul>
       <p>After deletion, OPAX's live database keeps no record of your email address. Signing up
       again with it creates a new account, with a fresh 10 minutes of voice. The browser you delete from
@@ -1796,9 +1802,8 @@
       <h2 id="privacy-providers">Who else receives data</h2>
       <ul class="about-list">
         <li><strong>Cloudflare</strong> runs OPAX's servers, database, logs, rate limits and
-        email, and handles every request with your IP address.
-        <mark class="privacy-confirm" data-confirm="P13">[To confirm: the region where OPAX's
-        community database is stored.]</mark></li>
+        email, and handles every request with your IP address. OPAX's community database is held
+        in Cloudflare's Oceania region.</li>
         <li><strong>Progress Agentic RAG</strong> receives questions, searches of the record's
         documents and the inputs to search summaries, as set out under
         <a href="#privacy-questions">Questions and searches</a>, including those made by the
@@ -1811,8 +1816,13 @@
         the call's random identifier, and can receive your IP address with the connection. The
         language model it runs for the assistant, named under
         <a href="#voice">Talking to OPAX by voice</a>, receives the words of the conversation
-        through ElevenLabs. <mark class="privacy-confirm" data-confirm="P12">[To confirm: where
-        ElevenLabs processes and stores this data.]</mark></li>
+        through ElevenLabs. OPAX uses ElevenLabs' standard service, not one of its regional data
+        residency services, and ElevenLabs
+        <a href="https://elevenlabs.io/docs/overview/administration/data-residency" rel="noopener">states</a>
+        that it stores this data in the United States, while processing can also happen
+        elsewhere, through its affiliates and subprocessors. Its
+        <a href="https://elevenlabs.io/privacy-policy" rel="noopener">privacy policy</a>
+        applies.</li>
         <li><strong>Google</strong>, through Analytics and Tag Manager, receives page addresses,
         the events and browser details listed above and your IP address, on the website
         only.</li>
@@ -1823,20 +1833,27 @@
       </ul>
 
       <h2 id="privacy-children">Children</h2>
-      <p>Reading OPAX needs no account at any age. Accounts and voice do not ask for a date of
-      birth or check anyone's age. <mark class="privacy-confirm" data-confirm="P14">[To decide: a
-      minimum age for community accounts and voice, if any.]</mark> A parent or guardian can ask
-      for a child's account to be deleted by writing to the address below.</p>
+      <p>Reading OPAX needs no account at any age. Community accounts and voice are for people
+      aged 16 and over. OPAX does not ask for a date of birth or check anyone's age. Anyone who
+      can receive an account's email can sign in to it and delete it at any time.</p>
 
       <h2 id="privacy-contact">Questions and requests</h2>
-      <p>To ask what OPAX holds about you, to have it corrected, or to have your account deleted
-      when you cannot sign in, write to <mark class="privacy-confirm" data-confirm="P3">[To
-      confirm: a privacy contact address]</mark>. This policy is the responsibility of
-      <mark class="privacy-confirm" data-confirm="P2">[To confirm: the person or organisation
-      responsible, matching the App Store seller]</mark>.</p>
-      <p>Errors in the public record itself are best reported as an issue on
-      <a href="https://github.com/jaketracey/opax" rel="noopener">GitHub</a>. Issues there are
-      public, so leave personal details out of them.</p>
+      <p>OPAX is run by Jake Tracey, as an independent side project, and he is responsible for
+      this policy.</p>
+      <p>OPAX does not yet have a private contact address. One is coming, and this page will name
+      it. Until then:</p>
+      <ul class="about-list">
+        <li>to delete your account and everything it holds, use Delete your account on the
+        website or Delete account in the app, once signed in; it asks for a fresh code sent to
+        your email address;</li>
+        <li>to see or change what your account holds, sign in: you can change your profile and
+        settings, and delete your reading lists, discussions, replies and saved
+        conversations;</li>
+        <li>for anything that is not private, such as a question about this page or an error in
+        the record, open an issue on <a href="https://github.com/jaketracey/opax/issues" rel="noopener">GitHub</a>.
+        Issues there are public, so leave personal details out of them.</li>
+      </ul>
+      <p>More help is on the <a href="/support">support page</a>.</p>
 
       <h2 id="privacy-changes">Changes to this page</h2>
       <p>When this page changes, the date at the top changes with it. The page is part of OPAX's
