@@ -97,7 +97,8 @@ class PinnedServiceTests(unittest.TestCase):
         for p in rows:
             if identity.weak(p['name']) and len(p.get('states',[]))>1:
                 own = profiles.print_identity(p, profiles.dated_records(self.reference, self.reviewed), self.reference)
-                if not own:
+                if not own and not profiles.consistent_career(p,
+                        profiles.dated_records(self.reference,self.reviewed),self.reference,self.reviewed):
                     for field in ('pid', 'full', 'party', 'parties', 'current', 'party_now'):
                         self.assertNotIn(field, p, p['name'])
                     self.assertFalse(p.get('representation'), p['name'])

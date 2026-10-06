@@ -3129,6 +3129,14 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
     title: 'What the expense categories mean · OPAX',
     description: 'Plain definitions of every parliamentary work expense category the Independent Parliamentary Expenses Authority publishes, from COMCAR and travel allowance to the private-plated vehicle.',
   },
+  support: {
+    title: 'Support · OPAX',
+    description: 'How to report a wrong record or a wrong answer to OPAX, and help with signing in to and deleting an OPAX account.',
+  },
+  privacy: {
+    title: 'Privacy · OPAX',
+    description: 'What the OPAX website and iPhone app collect, which companies receive it, how long it is kept, what voice sends to ElevenLabs and how to delete your account.',
+  },
 }
 
 type SeoRoute =
@@ -4766,7 +4774,7 @@ async function sitemapXml(env: Env): Promise<Response> {
       rows.push(`<url><loc>${escXml(`${SITE_ORIGIN}${path}`)}</loc>${mod}</url>`)
     }
     add('/')
-    for (const page of ['search', 'money', 'connections', 'reports', 'explore', 'discover', 'about', 'methods', 'stats', 'expenses']) add(`/${page}`)
+    for (const page of ['search', 'money', 'connections', 'reports', 'explore', 'discover', 'about', 'methods', 'stats', 'expenses', 'privacy', 'support']) add(`/${page}`)
     for (const a of agencies?.agencies ?? []) add(`/subject/agency/${a.id}`, agencies?.meta?.generated_at)
     for (const r of reports.reports) add(`/reports/${r.slug}`, r.updated)
     add('/subject/topic')

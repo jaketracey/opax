@@ -41,6 +41,31 @@ PARTY_WORD_RE = re.compile(
     r"\bnational party\b|\bdemocrats\b", re.I)
 
 
+METHODOLOGY = [
+    "This snapshot uses annual AEC party-receipt records with a canonical party recipient and ingestion classification direct. These are disclosed receipts, not a verified gifts-only dataset.",
+    "Associated-entity revenues, nonpolitical/employer/philanthropic/flagged records, public funding, government entities, internal party transfers and nonannual sources are excluded.",
+    "Donor spellings use the current ext_donor_aliases/ext_donor_entities register. Supplier names then match a canonical donor name exactly after trimming/case folding; unresolved aliases and corporate-group relationships are not inferred.",
+    "State, election and referendum disclosures are not added to annual federal receipts. Concentration includes all eligible classified and unclassified donors without a display-size floor.",
+    "Amounts span all available reporting years. Annual receipts and contract awards are separate money flows and are never summed; matching names and periods do not establish causation or misconduct.",
+    "Concentration requires at least two positive records and a largest-participant share of at least 25%. Cards alternate signal families and rank within each family by recorded value.",
+    "Concentration charts show the five largest named participants by recorded value; Other includes every remaining participant. Recorded date or financial-year spans exclude missing/invalid dates, counted separately, while their values remain in totals.",
+    "Contracts reflect recorded award values, not expenditure, and are a partial corpus. Date errors and future start dates are possible; no timing inference is made.",
+    "Source links open the official source register, not an individual receipt or notice. Evidence labels carry original reported names and row amounts, and contract labels the AusTender CN ID; each is one example behind the aggregate.",
+    "Reporting thresholds, incomplete coverage and duplicated/amended disclosures can affect totals. Absence of a signal is not evidence of absence.",
+]
+
+
+def donation_label(donor_name, recipient, amount, financial_year):
+    # The AEC annual receipts file carries no return or transaction ID, and
+    # donation_id is OPAX's own row number, so the label names the register only.
+    return (f"{donor_name} → {recipient}: ${amount:,.2f}"
+            f" · FY {financial_year or 'unknown'} · AEC annual receipt")
+
+
+def dump(data):
+    return json.dumps(data, ensure_ascii=False, allow_nan=False, indent=2) + "\n"
+
+
 def _analysis():
     if "opax_discovery_analysis" in sys.modules:
         return sys.modules["opax_discovery_analysis"]
@@ -124,9 +149,8 @@ def export_discovery(source, limit=60):
         for evidence in signal["evidence"]:
             if evidence["table"] == "donations":
                 r = original_donations[evidence["record_id"]]
-                evidence["label"] = (f"{r['donor_name']} → {r['recipient']}: ${r['amount']:,.2f}"
-                                     f" · FY {r['financial_year'] or 'unknown'} · AEC annual receipt"
-                                     f" · local record {r['donation_id']}")
+                evidence["label"] = donation_label(r["donor_name"], r["recipient"], r["amount"],
+                                                   r["financial_year"])
                 evidence["url"] = "https://transparency.aec.gov.au/"
                 evidence["link_scope"] = "source_register"
             else:
@@ -146,18 +170,7 @@ def export_discovery(source, limit=60):
         "receipt_scope": "AEC annual returns to canonical parties, direct classification only",
         "snapshot_at": datetime.now(timezone.utc).isoformat(),
     })
-    result["methodology"] = [
-        "This snapshot uses annual AEC party-receipt records with a canonical party recipient and ingestion classification direct. These are disclosed receipts, not a verified gifts-only dataset.",
-        "Associated-entity revenues, nonpolitical/employer/philanthropic/flagged records, public funding, government entities, internal party transfers and nonannual sources are excluded.",
-        "Donor spellings use the current ext_donor_aliases/ext_donor_entities register. Supplier names then match a canonical donor name exactly after trimming/case folding; unresolved aliases and corporate-group relationships are not inferred.",
-        "State, election and referendum disclosures are not added to annual federal receipts. Concentration includes all eligible classified and unclassified donors without a display-size floor.",
-        "Amounts span all available reporting years. Annual receipts and contract awards are separate money flows and are never summed; matching names and periods do not establish causation or misconduct.",
-        "Concentration requires at least two positive records and a largest-participant share of at least 25%. Cards alternate signal families and rank within each family by recorded value.",
-        "Concentration charts show the five largest named participants by recorded value; Other includes every remaining participant. Recorded date or financial-year spans exclude missing/invalid dates, counted separately, while their values remain in totals.",
-        "Contracts reflect recorded award values, not expenditure, and are a partial corpus. Date errors and future start dates are possible; no timing inference is made.",
-        "Source links open the official source register, not an individual receipt or notice. Evidence labels carry original reported names, row amounts and local source IDs; each is one example behind the aggregate.",
-        "Reporting thresholds, incomplete coverage and duplicated/amended disclosures can affect totals. Absence of a signal is not evidence of absence.",
-    ]
+    result["methodology"] = list(METHODOLOGY)
     result["generated_at"] = result["coverage"]["snapshot_at"]
     result["export_seconds"] = round(time.monotonic() - started, 3)
     source.rollback()
@@ -185,7 +198,7 @@ def main(argv=None):
     else:
         with closing(sqlite3.connect("file:" + quote(str(Path(args.db).expanduser()), safe="/") + "?mode=ro", uri=True)) as source:
             data = export_discovery(source, args.limit)
-    output = json.dumps(data, ensure_ascii=False, allow_nan=False, indent=2) + "\n"
+    output = dump(data)
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         temporary = args.output.with_suffix(args.output.suffix + ".tmp")

@@ -31,9 +31,9 @@ const government = [['2013-09-18', '2022-05-23', 'Coalition'], ['2022-05-23', nu
 const blocs = { Liberal: 'Coalition', Nationals: 'Coalition', LNP: 'Coalition', Labor: 'Labor' }
 
 test('formatting helpers', () => {
-  assert.equal(fmtMoney(1_250_000_000), '$1.25B')
-  assert.equal(fmtMoney(3_400_000), '$3.4M')
-  assert.equal(fmtMoney(12_500), '$12.5K')
+  assert.equal(fmtMoney(1_250_000_000), '$1.25bn')
+  assert.equal(fmtMoney(3_400_000), '$3.4m')
+  assert.equal(fmtMoney(12_500), '$12.5k')
   assert.equal(fmtMoney(0), '$0')
   assert.equal(fyStart('2023-24'), 2023)
   assert.equal(fyShort('2023-24'), '23–24')

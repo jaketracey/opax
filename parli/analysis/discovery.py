@@ -47,7 +47,8 @@ def _signal(category, entity, title, summary, metrics, evidence, caveats):
 
 
 def _evidence(table, record_id):
-    return [{"label": f"{'Donation' if table == 'donations' else 'Contract'} record {record_id}",
+    # A donation_id is OPAX's own row number, so only contract IDs reach a label.
+    return [{"label": "Donation record" if table == "donations" else f"Contract record {record_id}",
              "table": table, "record_id": str(record_id), "url": None}]
 
 
@@ -84,7 +85,7 @@ def _enrich_evidence(db, signals, columns):
                     detail += f" · starts {row['start_date']}"
             if row.get("source"):
                 detail += f" · {row['source']}"
-            item["label"] = detail + f" · record {row['record_id']}"
+            item["label"] = detail if donation else detail + f" · record {row['record_id']}"
             for field in ("source_url", "url"):
                 url = str(row.get(field) or "").strip()
                 try:

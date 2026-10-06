@@ -229,6 +229,33 @@ def witness_dominated(person):
     return person.get('witness_rows',0)*2 > person.get('speeches',0)
 
 
+def consistent_career(person,records,reference,reviewed,printed_people=()):
+    """Corroborate a reviewed same-person career without adding any labels.
+
+    Dated service in the print's actual houses establishes the identity;
+    committee candidates and other printed names can still contradict it.
+    This only permits preservation, never enrichment or witness attribution.
+    """
+    fact=reviewed.get('same_person',{}).get(person['name'])
+    if not fact or person.get('witness_rows',0):return []
+    if not agrees(person['name'],fact['name']):return []
+    if person.get('full') and not agrees(person['full'],fact['name']):return []
+    labels=[person.get('party'),person.get('party_now'),
+            *person.get('parties',[]),*person.get('recorded_parties',[])]
+    if any(label and label!=fact['party'] for label in labels):return []
+    careers=[dict(r,name=fact['name'],party=fact['party'],identity='same-person:'+key(fact['name']))
+             for r in fact['service']]
+    if not set(person.get('states',[])) <= {r['jurisdiction'] for r in careers}:return []
+    if not set(person.get('chambers',[]))-COMMITTEES <= {r['chamber'] for r in careers}:return []
+    evidence=[*records,*careers]
+    own=print_identity(person,evidence,reference,printed_people)
+    if not own or any(not agrees(r['name'],fact['name']) for r in own):return []
+    compatible=dict(person,chambers=list(set(person.get('chambers',[]))-COMMITTEES | FEDERAL))
+    possible=matching_records(compatible,evidence,{},unique=False,allow_weak=True)
+    if any(r.get('party') and r['party']!=fact['party'] for r in possible):return []
+    return own
+
+
 def change_reason(person,records,reference,reviewed,printed_people=(),catalog=None):
     """Evidence permitting an edit. Missing positive evidence permits no edit.
 
@@ -236,10 +263,12 @@ def change_reason(person,records,reference,reviewed,printed_people=(),catalog=No
     records, including state initials and two-house careers, pass through intact.
     """
     if witness_dominated(person):return 'witness-dominated','More than 50% witness rows'
+    own=[]
     if weak(person['name']) and len(set(person.get('states',[])))>1:
-        return 'spans parliaments','Weak printed name aggregates multiple parliaments'
-    own=(print_identity(person,records,reference,printed_people) if weak(person['name'])
-         else matching_records(person,records,reviewed))
+        own=consistent_career(person,records,reference,reviewed,printed_people)
+        if not own:return 'spans parliaments','Weak printed name aggregates multiple parliaments'
+    own=own or (print_identity(person,records,reference,printed_people) if weak(person['name'])
+                else matching_records(person,records,reviewed))
     if weak(person['name']) and not str(person.get('pid','')).isdigit() and own and usable_alias(person.get('full')) and any(
             r.get('start') and not any(agrees(person['full'],n) for n in [r['name'],*r.get('aliases',[])]) for r in own):
         return 'mix-up corrected','Alias contradicts the dated member in the recorded chamber'

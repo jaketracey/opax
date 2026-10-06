@@ -5,6 +5,7 @@
  * See docs/DAILY-POST.md for connection and preview instructions.
  */
 import { TOPIC_NAMES } from './topic-names.mjs'
+import { shortMoney as compactMoney } from '../public/format.js'
 import { photosFor, photoFor, validStory, type PhotoCatalogue, type StorySlide, type StoryPhoto } from './story'
 
 export const DAILY_POST_KINDS = ['politician', 'bill', 'grant', 'topic', 'program', 'largest'] as const
@@ -202,12 +203,9 @@ export function prettyParty(raw: string | null | undefined): string {
 
 // ---------------------------------------------------------------- the story
 
-/** Whole dollars in short form for a headline: $11.3m, $1.45bn, $77,770. */
+/** A headline's dollars: the site's one short form from a million up ($11.3m, $1.45bn), exact below ($77,770). */
 export function shortMoney(amount: number): string {
-  const trim = (n: number, d: number) => n.toFixed(d).replace(/\.0+$/, '').replace(/(\.\d*[1-9])0+$/, '$1')
-  if (amount >= 1e9) return `$${trim(amount / 1e9, 2)}bn`
-  if (amount >= 1e6) return `$${trim(amount / 1e6, 1)}m`
-  return formatMoney(amount)
+  return amount >= 1e6 ? compactMoney(amount) : formatMoney(amount)
 }
 
 /** "The Trustee for the Qantas Foundation Memorial Trust" → "Qantas Foundation Memorial Trust". */

@@ -31,6 +31,7 @@
       ['/methods', 'Methods & how to cite', 'Sources, limitations and citation formats.'],
       ['/stats', 'Sources & coverage', 'What is available in the record.'],
       ['/expenses', 'Expense definitions', 'How to read expenditure categories.'],
+      ['/privacy', 'Privacy', 'What OPAX collects and who receives it.'],
       ['/explore', 'Interactive tools', 'Compare debates, travel through time and try the record quiz.'],
     ] },
   ];
@@ -42,7 +43,7 @@
     if (/^\/bills?(\/|$)/.test(path)) return 'bills';
     if (path.startsWith('/reports')) return 'reports';
     if (path === '/explore') return ['ledger','grants','wd'].includes(params.get('game')) ? 'money' : 'topics';
-    if (/^\/(about|methods|stats|expenses)/.test(path)) return 'about';
+    if (/^\/(about|methods|stats|expenses|privacy|support)/.test(path)) return 'about';
     return 'research';
   };
   const esc = s => String(s).replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;');

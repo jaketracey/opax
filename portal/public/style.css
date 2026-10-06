@@ -2770,6 +2770,28 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 .defs dd p { margin: 0.25rem 0 0; font-size: 0.9375rem; line-height: 1.55; color: var(--ink-soft); max-width: 68ch; }
 .defs dd .defs-src { font: 400 0.75rem/1.5 var(--sans); color: var(--ink-faint); }
 
+/* /privacy: a reference page. Its h1/h2/h3 take the shared heading roles; a
+   hairline rule opens each major section because the page is long and flat. */
+#panel-privacy > .kicker { margin-top: 0; }
+#panel-privacy > h1 { margin: 0 0 var(--space-4); }
+#panel-privacy .lede { font: 400 1.0625rem/1.65 var(--serif); color: var(--ink); margin: 0 0 var(--space-3); }
+#panel-privacy p, #panel-privacy li { max-width: 68ch; }
+#panel-privacy p { margin-block: var(--space-3); line-height: 1.7; }
+#panel-privacy > h2 { margin: var(--space-6) 0 var(--space-3); padding-top: var(--space-5); border-top: 1px solid var(--divider-default); }
+#panel-privacy > h3 { margin: var(--space-5) 0 var(--space-2); }
+#panel-privacy code { background: var(--paper-sunken); border-radius: 4px; padding: 0.1em 0.35em; font-size: 0.875em; }
+.privacy-contents { margin: var(--space-5) 0 0; }
+.privacy-contents .kicker { margin: 0 0 var(--space-2); }
+.privacy-contents ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); }
+.privacy-contents a { display: inline-block; padding-block: var(--space-1); }
+/* A fact or decision the maintainer has not yet confirmed. Visible on purpose:
+   the page must not be published while any of these remain. */
+mark.privacy-confirm {
+  background: var(--paper-sunken); color: var(--ink); padding: 0 0.2em; border-radius: 2px;
+  outline: 1px dashed var(--bronze-ink); outline-offset: 1px;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
+}
+
 @media (max-width: 560px) {
   .term-tip { padding: 0.55rem 0.7rem 0.7rem; }
 }

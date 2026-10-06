@@ -5,15 +5,17 @@ import { runInNewContext } from 'node:vm';
 import { MONTHS, shortDate, shortMoney } from '../public/format.js';
 
 const MONEY = [
-  [0, '$0'], [950, '$950'], [950.5, '$950.50'], [999.4, '$999.40'], [999.996, '$1.0K'],
+  [0, '$0'], [950, '$950'], [950.5, '$950.50'], [999.4, '$999.40'], [999.996, '$1.0k'],
   // The cases the review found: thousands keep their decimal (State Street's
   // 2021-22 tax payable, Richmond Fellowship's 2024 donations).
-  [6260, '$6.3K'], [4490, '$4.5K'], [4537, '$4.5K'], [24400, '$24.4K'], [410100, '$410.1K'], [507000, '$507.0K'],
-  [999940, '$999.9K'], [999960, '$1.0M'], [2.3e6, '$2.3M'], [24.4e6, '$24.4M'], [211.6e6, '$211.6M'],
-  [999.94e6, '$999.9M'], [999.96e6, '$1.00B'], [2.345e9, '$2.35B'], [198.68e9, '$198.68B'],
+  [6260, '$6.3k'], [4490, '$4.5k'], [4537, '$4.5k'], [24400, '$24.4k'], [410100, '$410.1k'], [507000, '$507.0k'],
+  [999940, '$999.9k'], [999960, '$1.0m'], [2.3e6, '$2.3m'], [24.4e6, '$24.4m'], [211.6e6, '$211.6m'],
+  [999.94e6, '$999.9m'], [999.96e6, '$1.00bn'], [2.345e9, '$2.35bn'], [198.68e9, '$198.68bn'],
   // Halves round up, as Intl did: toFixed alone reads 6.05 as 6.0499...
-  [6.05e6, '$6.1M'], [1.005e9, '$1.01B'], [6250, '$6.3K'],
-  [-2.5e6, '-$2.5M'], ['1250000', '$1.3M'], [null, '$0'], [undefined, '$0'], [Number.NaN, '$0'],
+  [6.05e6, '$6.1m'], [1.005e9, '$1.01bn'], [6250, '$6.3k'],
+  // The exact promotion points: the last thousands and millions, then the first of the next unit.
+  [999500, '$999.5k'], [1e6, '$1.0m'], [999.95e6, '$1.00bn'], [1e9, '$1.00bn'],
+  [-2.5e6, '-$2.5m'], ['1250000', '$1.3m'], [null, '$0'], [undefined, '$0'], [Number.NaN, '$0'],
 ];
 const DATES = [
   ['2026-09-04', '4 Sep 2026'], ['2024-06-30', '30 Jun 2024'], ['2025-07-01', '1 Jul 2025'],
@@ -21,7 +23,7 @@ const DATES = [
   ['2026-13-01', '2026-13-01'], ['2026-09', '2026-09'], ['Not recorded', 'Not recorded'], ['', ''], [null, ''], [undefined, ''],
 ];
 
-test('short money is one style: two decimals of a billion, one of a million or a thousand, exact below that', () => {
+test('short money is one style: lowercase k, m and bn; two decimals of a billion, one of a million or a thousand, exact below that', () => {
   for (const [value, expected] of MONEY) assert.equal(shortMoney(value), expected, String(value));
 });
 

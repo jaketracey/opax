@@ -1,4 +1,4 @@
-"""Round 3: no clean record may drift from the immutable main export."""
+"""No clean record may drift from the immutable main export."""
 import copy
 import hashlib
 import json
@@ -26,7 +26,7 @@ class MainPreservationTests(unittest.TestCase):
         result=audit.audit(self.main,self.shipped,self.reference,self.reviewed)
         self.assertEqual(result['counts']['clean record changed'],0)
         self.assertEqual(result['counts'],{'mix-up corrected':17,'witness-dominated':131,
-                                         'spans parliaments':109,'alias normalisation':11,'clean record changed':0})
+                                         'spans parliaments':108,'alias normalisation':11,'clean record changed':0})
         changed={r['name'] for r in result['changes']}
         for name in self.old.keys()-changed:self.assertEqual(self.new[name],self.old[name],name)
 
@@ -44,6 +44,46 @@ class MainPreservationTests(unittest.TestCase):
                 p=self.new[name]
                 for field in ['pid','full','party','parties','party_now','current']:self.assertNotIn(field,p)
                 self.assertEqual(p['representation'],[])
+
+    def test_shoebridge_consistent_career_preserves_main_exactly_without_enrichment(self):
+        p=copy.deepcopy(self.old['Shoebridge'])
+        self.assertEqual(profiles.repair([p],self.reference,self.reviewed),[])
+        self.assertEqual(p,self.old['Shoebridge'])
+        self.assertEqual(self.new['Shoebridge'],p)
+        self.assertEqual(p['party'],'Greens')
+        self.assertNotIn('full',p)
+        self.assertEqual(p['representation'],[])
+
+    def test_reviewed_same_person_cannot_override_contradictions_or_witnesses(self):
+        records=profiles.dated_records(self.reference,self.reviewed)
+        p=copy.deepcopy(self.old['Shoebridge'])
+        self.assertTrue(profiles.consistent_career(p,records,self.reference,self.reviewed))
+        contrary=dict(name='Casey Shoebridge',identity='other',jurisdiction='federal',
+                      chamber='senate',start='2022',end=None,party='Greens')
+        for row,evidence,peers in [
+            (p,[*records,contrary],()),
+            (dict(p,party='Labor'),records,()),
+            (dict(p,witness_rows=1),records,()),
+            (dict(p,full='Casey Shoebridge'),records,()),
+            (p,records,[dict(p,name='Casey Shoebridge')]),
+            (dict(p,states=['federal'],chambers=['senate_committee']),records,()),
+        ]:
+            with self.subTest(row=row,evidence=contrary in evidence,peers=bool(peers)):
+                self.assertEqual(profiles.consistent_career(row,evidence,self.reference,self.reviewed,peers),[])
+
+    def test_only_shoebridge_gets_the_reviewed_same_person_exception(self):
+        records=profiles.dated_records(self.reference,self.reviewed)
+        names=[p['name'] for p in self.main if
+               profiles.consistent_career(p,records,self.reference,self.reviewed)]
+        self.assertEqual(names,['Shoebridge'])
+
+    def test_shoebridge_party_restoration_does_not_change_kb_resources(self):
+        before=copy.deepcopy(self.shipped)
+        row=next(p for p in before if p['name']=='Shoebridge')
+        row['recorded_parties']=[row.pop('party')]
+        research=json.loads((profiles.PUBLIC/'research/mlci.json').read_text())
+        self.assertEqual(list(records(research,{'people':before})),
+                         list(records(research,{'people':self.shipped})))
 
     def test_transcript_counts_scopes_dates_and_verified_numeric_ids_are_unchanged(self):
         for name,p in self.old.items():

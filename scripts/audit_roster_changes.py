@@ -45,14 +45,14 @@ def audit(before, after, reference, reviewed):
 
 
 def markdown(result, before, after, baseline):
-    lines = ['# Roster diff against main — round 3', '', f'Baseline: `{baseline}`. Every field of every record is compared; metadata is excluded.', '',
+    lines = ['# Roster diff against main — round 4', '', f'Baseline: `{baseline}`. Every field of every record is compared; metadata is excluded.', '',
              '| Category | Changed records | Sample |', '|---|---:|---|']
     for category, count in result['counts'].items():
         sample = [p['name'] for p in result['changes'] if p['category'] == category][:5]
         lines.append(f'| {category} | {count} | {", ".join(sample) or "—"} |')
     lines += ['', f'**{result["changed"]} changed; {result["unchanged"]} exactly unchanged; zero clean record changed is required.**', '',
-              'Categories are exclusive: majority-witness first, then weak multi-parliament prints, malformed aliases, and evidenced seat/party/name contradictions.', '',
-              '| Party rows / facet | Main | Round 3 | Change |', '|---|---:|---:|---:|']
+              'Categories are exclusive: majority-witness first, then unresolved weak multi-parliament prints, malformed aliases, and evidenced seat/party/name contradictions. Reviewed consistent same-person careers pass through exactly unchanged.', '',
+              '| Party rows / facet | Main | Round 4 | Change |', '|---|---:|---:|---:|']
     for label, jur, party in [('Total rows with party', None, None), ('SA rows with party', 'sa', None),
             ('SA Labor', 'sa', 'Labor'), ('SA Liberal', 'sa', 'Liberal'), ('QLD rows with party', 'qld', None),
             ('QLD Labor', 'qld', 'Labor'), ('QLD LNP', 'qld', 'LNP')]:

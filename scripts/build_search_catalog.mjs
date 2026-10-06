@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { resolve, join } from 'node:path';
 import { createHash } from 'node:crypto';
 import { normalize, tokens, bucket } from '../portal/src/catalog-query.mjs';
+import { recordPathIndex } from '../portal/public/record-paths.js';
 import { moneyFlowType } from '../portal/public/money-records.js';
 import { recordsWithLocations } from '../portal/public/grants-research.js';
 import { payPersonRecord, payPersonOrder, payGeneralRecords } from '../portal/src/pay-records.mjs';
@@ -22,7 +23,7 @@ function add(key, kind, title, href, text, extra={}) {
   const { aliases='', from=year(extra.date), to=year(extra.date), state='', parties=[], speakers=[], topics=[], slug='', ...rest }=extra;
   const record={kind,title,href,snippet:String(text || ''),...rest};
   record.slug=slug||'catalog-'+docs.length; record.resource='';
-  docs.push({record, meta:[kind,from||0,to||from||0,(Array.isArray(state)?state:[state]).join('|'),parties.map(party).filter(Boolean).join('|'),speakers.map(normalize).filter(Boolean).join('|'),topics.join('|')],titleTokens:tokens(title+' '+aliases),bodyTokens:tokens(text+' '+kind+' '+({receipt:'donations political funding',donor:'donations political funding',contract:'procurement contracts',grant:'grants funding',pay:'salary salaries paid earn earns earnings remuneration wage income'}[kind]||'')+' '+(rest.source||''))});
+  docs.push({key, record, meta:[kind,from||0,to||from||0,(Array.isArray(state)?state:[state]).join('|'),parties.map(party).filter(Boolean).join('|'),speakers.map(normalize).filter(Boolean).join('|'),topics.join('|')],titleTokens:tokens(title+' '+aliases),bodyTokens:tokens(text+' '+kind+' '+({receipt:'donations political funding',donor:'donations political funding',contract:'procurement contracts',grant:'grants funding',pay:'salary salaries paid earn earns earnings remuneration wage income'}[kind]||'')+' '+(rest.source||''))});
   counts[kind]=(counts[kind]||0)+1;
 }
 // Grant program rows (contract 2026-09-13, section 3): one record per listed program, kind grant.
@@ -163,6 +164,9 @@ async function main() {
  await put('meta.json',meta);
  for(let i=0;i<64;i++)await put('terms-'+i+'.json',postings[i]);
  for(let i=0;i<docs.length;i+=256)await put('records-'+Math.floor(i/256)+'.json',docs.slice(i,i+256).map(d=>d.record));
+ // /support names a reported record only when its path is exactly one of these (portal/public/record-paths.js).
+ // A grant recipient's own record owns its page; the award records only link to it.
+ for(const [i,shard] of recordPathIndex(docs.map(d=>d.key.includes(':grant-recipient:')?{...d.record,owner:true}:d.record)).entries())await put('paths-'+i+'.json',shard);
  const manifest={version,count:docs.length,counts,recordShardSize:256,coverage:'Searches the records and profiles published on OPAX. Map connections, expense totals and recipient profiles are aggregates and may overlap individual records. Published grant and interest detail exports are samples of their source registers; document search returns a ranked retrieval window.'};
  await writeFile(join(output,'manifest.json'),JSON.stringify(manifest));
  console.log(JSON.stringify(manifest,null,2));

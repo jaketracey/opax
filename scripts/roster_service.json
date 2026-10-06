@@ -30,6 +30,32 @@
       "note": "AEC lists Bernie Ripoll in Oxley in 1998; the pinned dated OpenAustralia term names Bernard Fernando Ripoll for that seat and election."
     }
   },
+  "same_person": {
+    "Shoebridge": {
+      "name": "David Shoebridge",
+      "party": "Greens",
+      "note": "Reviewed same-person career; year precision follows the APH biography. Preserve the main transcript record exactly, without adding a name or representation. Committee rows remain negative evidence only.",
+      "service": [
+        {
+          "jurisdiction": "nsw",
+          "chamber": "nsw_lc",
+          "electorate": "New South Wales",
+          "start": "2010",
+          "end": "2022",
+          "source_url": "https://www.aph.gov.au/Senators_and_Members/Parliamentarian?MPID=169119",
+          "party_source_url": "https://www.parliament.nsw.gov.au/lc/department/Documents/WEB%20VERSION%20-%202021-2022%20LC%20Annual%20report.PDF"
+        },
+        {
+          "jurisdiction": "federal",
+          "chamber": "senate",
+          "electorate": "New South Wales",
+          "start": "2022",
+          "end": null,
+          "source_url": "https://www.aph.gov.au/Senators_and_Members/Parliamentarian?MPID=169119"
+        }
+      ]
+    }
+  },
   "service": [
     {
       "name": "Mark Latham",

@@ -1,6 +1,10 @@
 """Run with: python -m unittest discover -s tests -p test_discovery.py."""
 
+import contextlib
+import copy
+import io
 import sqlite3
+import tempfile
 import unittest
 import importlib.util
 from pathlib import Path
@@ -11,6 +15,10 @@ _export_spec = importlib.util.spec_from_file_location(
     "export_discovery", Path(__file__).resolve().parents[1] / "scripts/export_discovery.py")
 _export_module = importlib.util.module_from_spec(_export_spec)
 _export_spec.loader.exec_module(_export_module)
+_rewrite_spec = importlib.util.spec_from_file_location(
+    "rewrite_discovery_labels", Path(__file__).resolve().parents[1] / "scripts/rewrite_discovery_labels.py")
+_rewrite_module = importlib.util.module_from_spec(_rewrite_spec)
+_rewrite_spec.loader.exec_module(_rewrite_module)
 
 
 class DiscoveryTests(unittest.TestCase):
@@ -171,9 +179,11 @@ class DiscoveryTests(unittest.TestCase):
         donation, contract = overlap["evidence"]
         self.assertIn("Acme → Party A: $60.00", donation["label"])
         self.assertIn("FY 2024-25", donation["label"])
+        self.assertNotIn("record", donation["label"])  # donation_id is OPAX's own row number.
         self.assertIsNone(donation["url"])
         self.assertIn("Agency A → ACME: $1,000.00", contract["label"])
         self.assertIn("starts 2025-01-02", contract["label"])
+        self.assertTrue(contract["label"].endswith(" · record CN1"))
         self.assertEqual(contract["url"], "https://example.org/record/CN1")
 
     def test_evidence_is_batched_and_only_for_selected_cards(self):
@@ -186,17 +196,55 @@ class DiscoveryTests(unittest.TestCase):
         self.assertTrue(all(" IN (" in q for q in evidence_queries))
 
 
+PRODUCTION_SCHEMA = """
+    CREATE TABLE donations (donation_id INTEGER PRIMARY KEY, donor_name TEXT,
+        recipient TEXT, recipient_canonical TEXT, amount REAL, financial_year TEXT,
+        industry TEXT, source TEXT, donation_type TEXT);
+    CREATE TABLE contracts (contract_id TEXT PRIMARY KEY, supplier_name TEXT,
+        agency TEXT, amount REAL, start_date TEXT, source TEXT);
+    CREATE TABLE ext_donor_aliases (alias_raw TEXT, entity_id TEXT);
+    CREATE TABLE ext_donor_entities (entity_id TEXT, canonical_name TEXT, kind TEXT);
+"""
+
+
+def _two_receipt_export():
+    """All three card families, with production-sized donation row numbers."""
+    db = sqlite3.connect(":memory:")
+    db.executescript(PRODUCTION_SCHEMA + """
+        INSERT INTO contracts VALUES ('CN3407266', 'Acme Limited', 'Agency', 300, '2024-10-01', 'austender');
+        INSERT INTO contracts VALUES ('CN3407267', 'Other Supplier', 'Agency', 100, '2024-11-01', 'austender');
+    """)
+    db.executemany('INSERT INTO donations VALUES (?,?,?,?,?,?,?,?,?)', [
+        (643745, 'Acme Limited', 'Branch A', 'Party A', 90, '2024-25', 'retail', 'aec_annual', 'direct'),
+        (643746, 'Other', 'Branch A', 'Party A', 10, None, 'other', 'aec_annual', 'direct'),
+    ])
+    db.commit()
+    result = _export_module.export_discovery(db)
+    db.close()
+    return result
+
+
+# What exports before 6 Oct 2026 wrote: the row-number tail and this methodology line.
+OLD_SOURCE_LINE = ("Source links open the official source register, not an individual receipt or notice. "
+                   "Evidence labels carry original reported names, row amounts and local source IDs; "
+                   "each is one example behind the aggregate.")
+
+
+def _old_snapshot(result):
+    old = copy.deepcopy(result)
+    for signal in old['signals']:
+        for evidence in signal['evidence']:
+            if evidence['table'] == 'donations':
+                evidence['label'] += f" · local record {evidence['record_id']}"
+    old['methodology'] = [OLD_SOURCE_LINE if line.startswith('Source links open') else line
+                          for line in old['methodology']]
+    return old
+
+
 class ProductionExportTests(unittest.TestCase):
     def test_filters_receipts_and_preserves_source_data(self):
         db = sqlite3.connect(":memory:")
-        db.executescript("""
-            CREATE TABLE donations (donation_id INTEGER PRIMARY KEY, donor_name TEXT,
-                recipient TEXT, recipient_canonical TEXT, amount REAL, financial_year TEXT,
-                industry TEXT, source TEXT, donation_type TEXT);
-            CREATE TABLE contracts (contract_id TEXT PRIMARY KEY, supplier_name TEXT,
-                agency TEXT, amount REAL, start_date TEXT, source TEXT);
-            CREATE TABLE ext_donor_aliases (alias_raw TEXT, entity_id TEXT);
-            CREATE TABLE ext_donor_entities (entity_id TEXT, canonical_name TEXT, kind TEXT);
+        db.executescript(PRODUCTION_SCHEMA + """
             INSERT INTO ext_donor_entities VALUES ('acme', 'Acme Limited', 'company');
             INSERT INTO ext_donor_aliases VALUES ('ACME LTD', 'acme');
             INSERT INTO ext_donor_entities VALUES ('dept', 'Public Department', 'government');
@@ -238,6 +286,68 @@ class ProductionExportTests(unittest.TestCase):
         with self.assertRaises(sqlite3.OperationalError):
             db.execute('DELETE FROM donations')
         db.close()
+
+    def test_labels_carry_register_ids_not_local_row_numbers(self):
+        result = _two_receipt_export()
+        self.assertEqual({s['category'] for s in result['signals']},
+                         {'donor_contract_overlap', 'recipient_concentration', 'procurement_concentration'})
+        evidence = [e for s in result['signals'] for e in s['evidence']]
+        self.assertEqual({e['table'] for e in evidence}, {'donations', 'contracts'})
+        for item in evidence:
+            self.assertNotIn('local record', item['label'])
+            self.assertNotIn('64374', item['label'])  # No donation row number, in any form.
+        labels = {e['label'] for e in evidence}
+        self.assertIn('Acme Limited → Branch A: $90.00 · FY 2024-25 · AEC annual receipt', labels)
+        self.assertIn('Agency → Acme Limited: $300.00 · starts 2024-10-01 · austender · record CN3407266', labels)
+        self.assertFalse(any('local' in line for line in result['methodology']))
+
+
+class RewriteLabelsTests(unittest.TestCase):
+    def test_old_snapshot_rewrites_to_the_fixed_export(self):
+        result = _two_receipt_export()
+        old = _old_snapshot(result)
+        donations = sum(e['table'] == 'donations' for s in old['signals'] for e in s['evidence'])
+        self.assertGreater(donations, 0)
+        self.assertNotEqual(old, result)
+        self.assertEqual(_rewrite_module.rewrite(old, _export_module), (donations, True))
+        self.assertEqual(old, result)  # Contract labels and record_id are untouched.
+
+    def test_rewrite_is_idempotent(self):
+        result = _two_receipt_export()
+        expected = copy.deepcopy(result)
+        self.assertEqual(_rewrite_module.rewrite(result, _export_module), (0, False))
+        self.assertEqual(result, expected)
+
+    def test_rebuilds_unknown_years_and_arrows_in_names(self):
+        data = {'methodology': [], 'signals': [{'evidence': [{
+            'table': 'donations', 'record_id': '5',
+            'label': 'A → B Pty Ltd → Party: $1,234,567.89 · FY unknown · AEC annual receipt · local record 5'}]}]}
+        self.assertEqual(_rewrite_module.rewrite(data, _export_module), (1, True))
+        self.assertEqual(data['signals'][0]['evidence'][0]['label'],
+                         'A → B Pty Ltd → Party: $1,234,567.89 · FY unknown · AEC annual receipt')
+
+    def test_refuses_labels_it_cannot_rebuild(self):
+        for label, record_id in [
+            ('Acme → Party: $90.00 · FY 2024-25 · AEC annual receipt · local record 7', '8'),
+            ('Donation record', '7'),
+            ('Acme → Party: $90 · FY 2024-25 · AEC annual receipt', '7'),
+        ]:
+            data = {'methodology': [], 'signals': [{'evidence': [
+                {'table': 'donations', 'record_id': record_id, 'label': label}]}]}
+            with self.subTest(label=label), self.assertRaises(ValueError):
+                _rewrite_module.rewrite(data, _export_module)
+
+    def test_command_writes_the_export_format_and_reruns_clean(self):
+        result = _two_receipt_export()
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'discovery.json'
+            path.write_text(_export_module.dump(_old_snapshot(result)))
+            for expected in ('Rewrote 2 donation labels and the methodology', 'Rewrote 0 donation labels in'):
+                with contextlib.redirect_stderr(io.StringIO()) as message:
+                    _rewrite_module.main([str(path)])
+                self.assertIn(expected, message.getvalue())
+                self.assertEqual(path.read_text(), _export_module.dump(result))
+            self.assertEqual([p.name for p in Path(directory).iterdir()], ['discovery.json'])
 
 
 if __name__ == "__main__":

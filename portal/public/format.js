@@ -22,22 +22,24 @@ export function shortDate(value) {
 }
 
 /**
- * Abbreviated dollars for charts and tight figures: $2.35B, $24.4M, $6.3K,
- * $950. Billions keep two decimals and millions and thousands one, so no
+ * Abbreviated dollars for charts and tight figures: $2.35bn, $24.4m, $6.3k,
+ * $950. Lowercase k, m and bn, as the iOS app writes them, and the one short
+ * form on the site: the daily edition and the journey stories use it too.
+ * Billions keep two decimals and millions and thousands one, so no
  * figure is coarser than any short form the site used before; under $1,000
  * the dollars are exact, with cents when there are any. A figure that would
- * round up to 1000 of one unit takes the next ($999,960 is $1.0M). A record's
+ * round up to 1000 of one unit takes the next ($999,960 is $1.0m). A record's
  * own figure in a table is not abbreviated at all: tables show exact dollars.
  */
 export function shortMoney(value) {
   const n = Number(value) || 0;
   const sign = n < 0 ? '-' : '';
   const a = Math.abs(n);
-  // Rounded in whole steps, not by toFixed on a fraction: 6,050,000 is $6.1M,
+  // Rounded in whole steps, not by toFixed on a fraction: 6,050,000 is $6.1m,
   // where (6.05).toFixed(1) would give the binary 6.0499... and "6.0".
-  if (a >= 999.95e6) return `${sign}$${(Math.round(a / 1e7) / 100).toFixed(2)}B`;
-  if (a >= 999.95e3) return `${sign}$${(Math.round(a / 1e5) / 10).toFixed(1)}M`;
-  if (a >= 999.995) return `${sign}$${(Math.round(a / 100) / 10).toFixed(1)}K`;
+  if (a >= 999.95e6) return `${sign}$${(Math.round(a / 1e7) / 100).toFixed(2)}bn`;
+  if (a >= 999.95e3) return `${sign}$${(Math.round(a / 1e5) / 10).toFixed(1)}m`;
+  if (a >= 999.995) return `${sign}$${(Math.round(a / 100) / 10).toFixed(1)}k`;
   const cents = Math.round(a * 100) / 100;
   return `${sign}$${Number.isInteger(cents) ? cents : cents.toFixed(2)}`;
 }

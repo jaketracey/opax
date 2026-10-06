@@ -22,6 +22,12 @@ python3 scripts/export_discovery.py --ssh desktop --output portal/public/discove
 python3 -m unittest discover -s tests -p test_discovery.py -v
 ```
 
+The export needs the database and runs in the monthly refresh group. Between runs,
+`python3 scripts/rewrite_discovery_labels.py portal/public/discovery.json` brings the
+committed snapshot's donation labels and methodology up to the current export without
+it, and refuses any label it cannot rebuild exactly. It was used on 6 October 2026 to
+drop OPAX's own donation row numbers ("local record N"); a second run changes nothing.
+
 The initial production export contains 60 leads from 92,646 eligible annual AEC
 party-receipt rows and 18,042 contract rows. Receipt years run from 1998–99 to
 2024–25. Annual receipts are not a verified gifts-only dataset. The export includes

@@ -1,22 +1,22 @@
-# Roster diff against main — round 3
+# Roster diff against main — round 4
 
-Baseline: `origin/main (66e75d748402287359095bd10d70949a557aead3)`. Every field of every record is compared; metadata is excluded.
+Baseline: `origin/main (f1ea5a831f3e33be31789c1f7dabe811c3af12be)`. Every field of every record is compared; metadata is excluded.
 
 | Category | Changed records | Sample |
 |---|---:|---|
 | mix-up corrected | 17 | Mark Latham, McKenzie, J.M.A. Lensink, David Kemp, Collins |
 | witness-dominated | 131 | Cook, Brown, Hall, Smith, Anderson |
-| spans parliaments | 109 | Shoebridge, McDonald, Paterson, Roberts, Watt |
+| spans parliaments | 108 | McDonald, Paterson, Roberts, Watt, Steel |
 | alias normalisation | 11 | Staley, Scanlon, Fentiman, Butcher, Enoch |
 | clean record changed | 0 | — |
 
-**268 changed; 1432 exactly unchanged; zero clean record changed is required.**
+**267 changed; 1433 exactly unchanged; zero clean record changed is required.**
 
-Categories are exclusive: majority-witness first, then weak multi-parliament prints, malformed aliases, and evidenced seat/party/name contradictions.
+Categories are exclusive: majority-witness first, then unresolved weak multi-parliament prints, malformed aliases, and evidenced seat/party/name contradictions. Reviewed consistent same-person careers pass through exactly unchanged.
 
-| Party rows / facet | Main | Round 3 | Change |
+| Party rows / facet | Main | Round 4 | Change |
 |---|---:|---:|---:|
-| Total rows with party | 1177 | 1057 | -120 |
+| Total rows with party | 1177 | 1058 | -119 |
 | SA rows with party | 83 | 74 | -9 |
 | SA Labor | 38 | 33 | -5 |
 | SA Liberal | 36 | 35 | -1 |
@@ -30,7 +30,6 @@ Party facets include both `party` and `parties`, matching the website. These are
 
 | Print | Category | Changed fields | Evidence permitting change |
 |---|---|---|---|
-| Shoebridge | spans parliaments | party, recorded_parties | Weak printed name aggregates multiple parliaments |
 | Mark Latham | mix-up corrected | affiliations, current, parties, party, party_now, representation | Seat contradicts dated service in the recorded chamber |
 | McKenzie | mix-up corrected | parties, party, recorded_parties | Different dated parliamentarians match the same print |
 | McDonald | spans parliaments | party, recorded_parties | Weak printed name aggregates multiple parliaments |

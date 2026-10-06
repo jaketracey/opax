@@ -1,11 +1,24 @@
-# Roster identity and era audit — round 3, 6 October 2026
+# Roster identity and era audit — round 4, 6 October 2026
 
-Baseline: `origin/main` (`66e75d74`); previous repair: `7029e209`. The desktop
+Baseline: `origin/main` (`66e75d74`); previous repair: `735689be`. The desktop
 DB is unreachable. Only the roster is regenerated, using manifest-pinned
 release `b56417062ccc33cf`, the verified votes/pay exports used by the photo
 guard, and existing reviewed official evidence in `roster_service.json` and
 `roster_state_evidence.json`. No production write, deploy or push was performed.
 The approved KB reconciler and nightly safety implementation are unchanged.
+
+Round 4 restores **only Shoebridge**, exactly as on main: Greens, 4,769 speeches,
+no witnesses, no full-name alias and no representation. The reviewed same-person
+entry links David Shoebridge's NSW Council service (2010–2022) to his Senate
+service (from 2022), using the [APH biography](https://www.aph.gov.au/Senators_and_Members/Parliamentarian?MPID=169119)
+and NSW Council annual report. The preservation guard requires actual-house
+evidence, consistent names and party, and zero witness rows. Committee and
+printed namesakes still contradict it. This entry supplies no new labels or
+seats. Every other record is identical to round 3; the entire KB plan is identical.
+
+`origin/main` at `66e75d74` is merged. The sole conflict was the `app.js?v=`
+stamp in `index.html`; `node scripts/stamp_assets.mjs` regenerated it after
+the merge. Privacy, support and discovery-label changes are included.
 
 ## First, do no harm against main
 
@@ -18,18 +31,18 @@ careers spanning two houses pass through unchanged. Ros Spence keeps main's
 Kalkallo and Yuroke records, and verified federal nicknames keep their aliases.
 
 [The complete diff report](ROSTER-DIFF-main.md) compares every field of all
-1,700 records, including representation basis and provenance. All 268 changed
-records have exactly one category; **1,432 records are identical to main**:
+1,700 records, including representation basis and provenance. All 267 changed
+records have exactly one category; **1,433 records are identical to main**:
 
 | Category | Changed records | Sample |
 |---|---:|---|
 | Mix-up corrected | 17 | Bob Horne, Mark Latham, David Kemp |
 | Witness-dominated (>50%) | 131 | Anderson, Bishop, Cook |
-| Spans parliaments | 109 | Paterson, Roberts, Watt |
+| Spans parliaments | 108 | Paterson, Roberts, Watt |
 | Alias normalisation | 11 | Staley, Fentiman, Butcher |
 | Clean record changed | **0** | — |
 
-Against round 2, 367 records change; **334 are restored exactly to main**.
+Against round 2, 368 records change; **335 are restored exactly to main**.
 Both Malinauskas records, Chapman, Marshall, Koutsantonis, both Picton records,
 Cupper, Halse, Brayne, Greenwich and McGirr retain every main field. Maher,
 Lucas, Wade and Scriven also retain every main field. Lensink's party/seat
@@ -122,28 +135,28 @@ or contaminated member-stub text supplies evidence of the problem.
 These are transcript-directory rows, including historical aggregates. Party
 facets include both `party` and `parties`, matching the website.
 
-| Count | Main | Round 2 | Round 3 |
-|---|---:|---:|---:|
-| All roster rows | 1,700 | 1,700 | 1,700 |
-| Speech rows | 605,149 | 605,149 | 605,149 |
-| Rows with party | 1,177 | 1,002 | 1,057 |
-| Rows with full alias | 420 | 324 | 304 |
-| Rows with representation | 985 | 950 | 961 |
-| SA rows with party | 83 | 30 | 74 |
-| SA Labor facet | 38 | 12 | 33 |
-| SA Liberal facet | 36 | 13 | 35 |
-| QLD rows with party | 120 | 84 | 81 |
-| QLD Labor facet | 57 | 37 | 37 |
-| QLD LNP facet | 56 | 41 | 38 |
+| Count | Main | Round 2 | Round 3 | Round 4 |
+|---|---:|---:|---:|---:|
+| All roster rows | 1,700 | 1,700 | 1,700 | 1,700 |
+| Speech rows | 605,149 | 605,149 | 605,149 | 605,149 |
+| Rows with party | 1,177 | 1,002 | 1,057 | 1,058 |
+| Rows with full alias | 420 | 324 | 304 | 304 |
+| Rows with representation | 985 | 950 | 961 | 961 |
+| SA rows with party | 83 | 30 | 74 | 74 |
+| SA Labor facet | 38 | 12 | 33 | 33 |
+| SA Liberal facet | 36 | 13 | 35 | 35 |
+| QLD rows with party | 120 | 84 | 81 | 81 |
+| QLD Labor facet | 57 | 37 | 37 | 37 |
+| QLD LNP facet | 56 | 41 | 38 | 38 |
 
 Every party removal is evidenced and classified: 84 majority-witness records,
-44 multi-parliament records and 6 contradictory-name records. No clean record
+43 multi-parliament records and 6 contradictory-name records. No clean record
 loses its party. Four mix-up fixes, nine compatible multi-parliament resolutions
-and one alias fix add a party that main omitted (net party rows: -120).
+and one alias fix add a party that main omitted (net party rows: -119).
 
 ## 4. Regenerated KB preview
 
-The round-3 preview has **52 replacements, 27 retirements and 5 creates**, from
+The round-4 preview has **52 replacements, 27 retirements and 5 creates**, from
 983 captured live profiles to 961 desired. All four correct SA seat resources
 are present in the captured inventory and **unchanged**, with no retirement:
 
@@ -161,7 +174,7 @@ witness/MP split remains the P2 follow-up, not an asserted single-person seat.
 A local `sa-seat-preservation.json` records the four inventory/plan checks.
 
 Exact operations, before/after bodies and hashes are in the ignored review path:
-`scripts/_photos_work/qa-roster-mixups/round3/roster-profile-plan.json`.
+`scripts/_photos_work/qa-roster-mixups/round4/roster-profile-plan.json`.
 The dry-run output is beside it in `roster-profile-plan.log`. The native/public
 comparison limitations and approved apply cap are unchanged.
 
@@ -186,7 +199,7 @@ The latter needs no env file:
 ```sh
 python3 scripts/reconcile_roster_profiles.py --dry-run \
   --inventory scripts/_photos_work/qa-roster-mixups/round2/roster-profile-plan.inventory.json \
-  --output scripts/_photos_work/qa-roster-mixups/round3/roster-profile-plan.json
+  --output scripts/_photos_work/qa-roster-mixups/round4/roster-profile-plan.json
 ```
 
 Nightly reconciliation defaults to **dry-run**. Only explicit
@@ -202,7 +215,7 @@ KB, verifies ownership/fingerprints before the first write and again before each
 mutation, and checks read-back. Offline/public plans cannot be applied. Apply
 re-inventories the native KB and checks that model generation is disabled.
 
-Round-3 replay of the round-2 read-only public inventory: **983 existing profiles**, **961 desired**, **52 replacements, 27 retirements, 5 creates**. The 79 retirements/replacements exceed the apply cap; do not apply as one run. The public route omits native source_id and collapses each labelset to one value. This preview states those limits; native inventory/ownership can change the plan. Exact before/after bodies and hashes are in the ignored `round3/roster-profile-plan.json` and dry-run log, using the unchanged captured `round2/roster-profile-plan.inventory.json`. No fresh production read or write was needed.
+Round-4 replay of the round-2 read-only public inventory: **983 existing profiles**, **961 desired**, **52 replacements, 27 retirements, 5 creates**. The plan is identical to round 3, including all before/after bodies and hashes. The 79 retirements/replacements exceed the apply cap; do not apply as one run. The public route omits native source_id and collapses each labelset to one value. This preview states those limits; native inventory/ownership can change the plan. Exact before/after bodies and hashes are in the ignored `round4/roster-profile-plan.json` and dry-run log, using the unchanged captured `round2/roster-profile-plan.inventory.json`. No fresh production read or write was needed.
 
 The orchestrator supervises these commands **after approval**, on the refresh
 box at the reviewed commit. Keep the dedicated switch off for the first plan:
@@ -262,7 +275,25 @@ full dry-run and verify zero drift. Only after supervised reconciliation should
 the orchestrator explicitly enable `OPAX_ROSTER_SYNC_KB=1` for unattended future
 runs; the cap still applies. No apply command above was executed in this repair.
 
-## Validation and local browser evidence
+## Round-4 validation
+
+Run with Node **24.21.0** and the installed lockfile dependencies:
+
+- `npm run build:search`, then `npm test`: **860 passed**, 0 failures/skips.
+- `npm run check`: passed (types, TypeScript, stamps and privacy placeholders).
+- Python roster/export/reconciliation/grants tests: **81 passed**; merged discovery
+  tests: **19 passed** (100 total). Box-shaped export replay: **3 identity changes**
+  against the limit of 25, with no hold.
+- Photo identity audit: **OK**.
+- Diff audit: **17 mix-up / 131 witness / 108 spans / 11 alias / 0 clean changed**;
+  Shoebridge identical to main, and the only changed record against `735689be`.
+- KB dry-run: **52 replace / 27 retire / 5 create**; entire plan identical to round 3.
+- Search build output excluded. No push, deploy or production writes.
+
+Gate logs, the diff against round 3 and the full dry-run plan are in the
+ignored `scripts/_photos_work/qa-roster-mixups/round4/` directory.
+
+## Round-3 validation and local browser evidence
 
 Run with Node **24.21.0** and the installed lockfile dependencies:
 
