@@ -453,7 +453,8 @@ const vote = shape({
 });
 export type VoteRecord = Decoded<typeof vote>;
 export type VoteBill = Decoded<typeof voteBill>;
-const recordsOfVoteNames = records(array(voteKey));
+// The name bridge is structural: losing it would enable a legacy-ID subtotal.
+const recordsOfVoteNames = dict(array(voteKey));
 const votesMeta = shape({
   content_changed_at: date,
   latest_division_date: nullable(date),

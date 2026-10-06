@@ -17,7 +17,7 @@ Partial status is held outside published data in weak metadata, propagated to th
 | Seat detail | Strict representatives, elections/candidates/votes, census vintages, relations, rosters, terms, identities and citations. Missing rows could select the wrong latest fact, change representation or remove attribution. Display outlines are optional enhancements to one valid seat record: incoming `ios/app` behavior omits unusable outlines and flags the file partial, while keeping the seat readable. |
 | Bill index | Bounded whole-bill loss, flagged to readers and excluded from Follows. |
 | Bill detail | Strict dates, relationships, sources, divisions, speeches and acts: coherent timeline and evidence. |
-| Votes | Bounded whole vote-record/name-entry loss. Nested vote lists and years are strict; all records for a name must survive together before any total is calculated, including direct legacy-ID joins. Broken references to an absent raw key fail the file. |
+| Votes | Bounded whole vote-record loss. Name-bridge syntax, nested vote lists and years are strict; all records for a name must survive together before any total is calculated, including direct legacy-ID joins. Broken references to an absent raw key fail the file. |
 | Interest index | Bounded independent name/holder entries, with partial provenance and no Follows comparison. |
 | Interest detail | Strict categories, items, ties, flows and register evidence: declared counts cannot accompany truncated lists. |
 | Recent interests | Bounded independent declarations with a partial notice. Each declaration's ties remain strict. |

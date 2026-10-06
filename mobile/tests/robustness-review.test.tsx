@@ -427,3 +427,10 @@ test('a partial representation never becomes a shortened history for the same pe
   expect(bad.people).toEqual(good.people.filter((_, i) => i !== row));
   expect(isPartialCatalog(bad)).toBe(true);
 });
+
+test('a malformed voting name bridge fails the file instead of enabling a legacy-ID subtotal', () => {
+  const raw = pinned('/votes.json');
+  expect(() =>
+    d.decodeVotes(replaceAt(raw, ['_names', 'janelle saffin', 0], null)),
+  ).toThrow(ApiError);
+});

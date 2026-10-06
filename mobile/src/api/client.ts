@@ -113,15 +113,16 @@ export class ApiClient {
         cached = undefined;
       }
     }
-    const result = (entry: CacheEntry, stale: boolean): RecordResult<T> => ({
-      data: this.decodeBody(entry.body, decode),
-      ...(isPartialCatalog(this.decodeBody(entry.body, decode))
-        ? { partial: true }
-        : {}),
-      stale,
-      savedAt: entry.savedAt,
-      asOf: entry.asOf,
-    });
+    const result = (entry: CacheEntry, stale: boolean): RecordResult<T> => {
+      const data = this.decodeBody(entry.body, decode);
+      return {
+        data,
+        ...(isPartialCatalog(data) ? { partial: true } : {}),
+        stale,
+        savedAt: entry.savedAt,
+        asOf: entry.asOf,
+      };
+    };
     if (cached && !force && isFresh(cached, this.now()))
       return result(cached, false);
     let lastError = new ApiError(
