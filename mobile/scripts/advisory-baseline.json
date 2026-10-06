@@ -20,6 +20,12 @@
       "reason": "Expo CLI signing tooling; no app import or signing in this lane."
     },
     {
+      "package": "sprintf-js",
+      "advisory": "GHSA-hp3w-g68c-fv3c",
+      "exposure": "tooling",
+      "reason": "Jest coverage tooling only: jest-expo -> babel-jest -> babel-plugin-istanbul -> @istanbuljs/load-nyc-config -> js-yaml 3 -> argparse 1 -> sprintf-js 1.0.3. Not in the app bundle; the only fix is a major Jest upgrade outside the Expo SDK 57 pin. Accepted 6 Oct 2026; review on the next jest-expo update."
+    },
+    {
       "package": "uuid",
       "advisory": "GHSA-w5hq-g745-h8pq",
       "exposure": "tooling",
