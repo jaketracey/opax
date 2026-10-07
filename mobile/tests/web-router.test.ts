@@ -86,7 +86,6 @@ function guardFrom(source: string): Guard {
     './routes': { searchRouteFromWebPath: () => null },
     'react-native': {},
     'expo-router': { router: {} },
-    './routes': {},
     'expo-web-browser': {},
     '../design/environment': { webOrigin: origin, isE2E: true },
     '../design/tokens': { light: {} },
