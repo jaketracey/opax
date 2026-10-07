@@ -13,6 +13,7 @@ import {
   Text,
   ViewOriginal,
   errorMessage,
+  useAccessibilitySize,
   type InfoNotes,
   type SFSymbol,
 } from '../../design/primitives';
@@ -36,9 +37,11 @@ export function EvidenceFooter({
   /** The block's own caption in place of its as-at line (the votes record). */
   caption?: ReactNode;
 }) {
+  // At accessibility sizes the caption and View original take a line each.
+  const stacked = useAccessibilitySize();
   return (
     <Group gap={rhythm.line}>
-      <View style={styles.foot}>
+      <View style={[styles.foot, stacked ? styles.footStacked : null]}>
         {caption ? (
           <View style={styles.caption}>{caption}</View>
         ) : date ? (
@@ -178,6 +181,7 @@ const styles = StyleSheet.create({
     rowGap: rhythm.line,
   },
   caption: { flexGrow: 1, flexShrink: 1 },
+  footStacked: { flexDirection: 'column', alignItems: 'stretch' },
   sub: { gap: rhythm.tight },
   subRuled: {
     marginTop: rhythm.tight,

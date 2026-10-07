@@ -39,13 +39,15 @@ export function BillStatus({
   status: string;
   asAt?: string | null;
 }) {
+  // At accessibility sizes the date takes its own line under the label.
+  const stacked = useAccessibilitySize();
   const tone = /passed|assent|act\b/i.test(status)
     ? { fill: colors.moneyWash, ink: 'moneyInk' as const }
     : /before|introduced|draft|consultation|reading|committee/i.test(status)
       ? { fill: colors.billsWash, ink: 'billsInk' as const }
       : { fill: colors.sunken, ink: 'inkSoft' as const };
   return (
-    <View style={styles.statusLine}>
+    <View style={[styles.statusLine, stacked ? styles.stacked : null]}>
       <View style={[styles.status, { backgroundColor: tone.fill }]}>
         <Text variant="chip" tone={tone.ink}>
           {status}
