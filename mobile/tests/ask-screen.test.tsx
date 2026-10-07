@@ -3,9 +3,11 @@ import AskScreen from '../src/features/ask/AskScreen';
 import { client } from '../src/api/runtime';
 import { askSession } from '../src/features/ask/session';
 import { reconcileChats, pushChat } from '../src/features/ask/sync';
+import { useLocalSearchParams } from 'expo-router';
+import { chatsSnapshot } from '../src/features/ask/store';
 jest.mock('expo-router', () => ({
   Stack: { Screen: () => null },
-  useLocalSearchParams: () => ({}),
+  useLocalSearchParams: jest.fn(() => ({})),
   router: { push: jest.fn() },
 }));
 jest.mock('../src/api/runtime', () => ({
@@ -23,7 +25,7 @@ jest.mock('../src/features/account/store', () => ({
 jest.mock('../src/features/ask/store', () => {
   const saved = { v: 1, active: null, chats: [] };
   return {
-    chatsSnapshot: () => saved,
+    chatsSnapshot: jest.fn(() => saved),
     subscribeChats: () => () => {},
     subscribeChatDeletion: () => () => {},
     loadChats: jest.fn().mockResolvedValue(undefined),
@@ -67,6 +69,48 @@ jest.mock('../src/features/ask/Options', () => ({
   topics: { housing: 'Housing' },
   Options: () => null,
 }));
+test('a scoped cold-start draft takes precedence over the previous saved conversation', async () => {
+  (useLocalSearchParams as jest.Mock).mockReturnValue({
+    entry: 'scoped-entry',
+    question: 'What has Anthony Albanese said in parliament?',
+    speaker: 'Anthony Albanese',
+    kind: 'speech',
+  });
+  jest.mocked(chatsSnapshot).mockReturnValue({
+    v: 1,
+    active: 'previous-chat',
+    chats: [
+      {
+        id: 'previous-chat',
+        title: 'Previous question',
+        kind: 'all',
+        speaker: '',
+        created: 1,
+        updated: 1,
+        thread: [{ role: 'answer', text: 'A previous saved answer.' }],
+      },
+    ],
+  });
+  let view: ReactTestRenderer;
+  await act(async () => {
+    view = create(<AskScreen />);
+  });
+  expect(
+    view!.root.findAllByProps({ testID: 'ask-question' })[0]!.props.value,
+  ).toBe('What has Anthony Albanese said in parliament?');
+  expect(askSession.snapshot().options).toMatchObject({
+    speaker: 'Anthony Albanese',
+    kind: 'speech',
+  });
+  expect(askSession.snapshot().thread).toEqual([]);
+  expect(client.askPost).not.toHaveBeenCalled();
+  await act(async () => {
+    view!.unmount();
+    askSession.start();
+  });
+  (useLocalSearchParams as jest.Mock).mockReturnValue({});
+  jest.mocked(chatsSnapshot).mockReturnValue({ v: 1, active: null, chats: [] });
+});
 test('signed-in Ask mount, typing, options and tab remount never call paid routes', async () => {
   let view: ReactTestRenderer;
   await act(async () => {

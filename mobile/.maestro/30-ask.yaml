@@ -122,3 +122,17 @@ name: 30 Build a question, streamed answer, native bill citation and grounded fo
     timeout: 180000
 - assertVisible: 'Understood as: Who spoke for and against the Interactive Gambling.*'
 - takeScreenshot: ${EVIDENCE}/30-understood
+# A scoped draft returns the composer to view after a scrolled answer.
+- openLink: opax://bill/au-federal-r7534
+- scrollUntilVisible:
+    element:
+      id: bill-ask
+    centerElement: true
+    speed: 20
+    timeout: 90000
+- tapOn:
+    id: bill-ask
+- assertVisible:
+    id: ask-question
+- assertVisible: What did parliament say about the Interactive Gambling.*
+- takeScreenshot: ${EVIDENCE}/30-new-draft

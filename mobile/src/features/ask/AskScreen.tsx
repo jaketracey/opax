@@ -107,7 +107,7 @@ export default function AskScreen() {
     void loadChats()
       .then(() => {
         const active = chatsSnapshot().active;
-        if (active && !askSession.snapshot().thread.length)
+        if (!entry.current && active && !askSession.snapshot().thread.length)
           askSession.open(active);
       })
       .catch(() => setSyncNotice('Saved conversations could not be read.'));
@@ -128,6 +128,11 @@ export default function AskScreen() {
     o.kind = params.kind === 'speech' ? 'speech' : 'all';
     askSession.start(o);
     setDraft(params.question || '');
+    setInputError('');
+    setBuilderOpen(false);
+    requestAnimationFrame(() =>
+      scroll.current?.scrollTo({ y: 0, animated: false }),
+    );
   }, [params]);
   useEffect(() => {
     if (s.stage && s.stage !== lastStage.current) {
