@@ -302,6 +302,10 @@ test.each([
     `import { NativeTabs } from 'expo-router/unstable-native-tabs'`,
   ],
   ['src/tabs.tsx', `import { router } from 'expo-router'`],
+  [
+    'src/header.ts',
+    `import { HeaderHeightContext } from 'expo-router/react-navigation'`,
+  ],
   ['src/icon.tsx', `import Icons from '@expo/vector-icons'`],
   [
     shareModule,

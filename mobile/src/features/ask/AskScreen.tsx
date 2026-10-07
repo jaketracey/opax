@@ -6,6 +6,8 @@ import {
   StyleSheet,
   View,
   ScrollView,
+  useWindowDimensions,
+  type LayoutChangeEvent,
 } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../../api/runtime';
@@ -26,11 +28,14 @@ import {
   LinkRow,
   RowList,
 } from '../../design/primitives';
-import { colors, rhythm } from '../../design/tokens';
+import { colors, layout, rhythm, spacing } from '../../design/tokens';
+import { useReduceMotion } from '../../design/accessibility';
+import { useHeaderBottom } from '../../design/useHeaderBottom';
+import { AskProgress } from './AskProgress';
 import { AskSheet } from './AskSheet';
 import { rootHeaderItems } from '../../navigation/chrome';
 import { accountSnapshot, useAccount } from '../account/store';
-import { AnswerView, machineNote } from './AnswerView';
+import { AnswerView } from './AnswerView';
 import { Builder } from './QuestionBuilder';
 import { Options, topics } from './Options';
 import {
@@ -71,6 +76,9 @@ export default function AskScreen() {
     ),
     saved = useSyncExternalStore(subscribeChats, chatsSnapshot, chatsSnapshot),
     account = useAccount();
+  const headerBottom = useHeaderBottom(),
+    { height: windowHeight } = useWindowDimensions(),
+    reduceMotion = useReduceMotion();
   const params = useLocalSearchParams<{
     question?: string;
     entry?: string;
@@ -102,9 +110,32 @@ export default function AskScreen() {
     entry = useRef<string | undefined>(undefined),
     lastStage = useRef<string | null>(null),
     lastAnswer = useRef<object | null>(null),
-    answerY = useRef(0),
+    turnY = useRef(0),
+    pinTurn = useRef(false),
     syncVersion = useRef(0),
     namesLoaded = useRef(false);
+  // The scroll view runs under the native header: content y 0 sits behind the
+  // bar, and the top at rest is minus the header's height.
+  function scrollToTop() {
+    scroll.current?.scrollTo({ y: -headerBottom, animated: false });
+  }
+  // Bring the current turn (the question as asked, then its stages, answer or
+  // error) to just below the header. It runs from the turn's own layout, once
+  // the submitted question has been laid out, never from a stale position.
+  function revealTurn() {
+    if (!pinTurn.current) return;
+    pinTurn.current = false;
+    scroll.current?.scrollTo({
+      y: Math.max(turnY.current - headerBottom - rhythm.heading, -headerBottom),
+      animated: !reduceMotion,
+    });
+  }
+  function pinCurrentTurn() {
+    pinTurn.current = true;
+    // The turn's onLayout normally reveals it; this covers a turn whose frame
+    // did not change. Two frames on, the layout has been committed.
+    requestAnimationFrame(() => requestAnimationFrame(revealTurn));
+  }
   useEffect(
     () =>
       subscribeChatDeletion(() => {
@@ -141,9 +172,8 @@ export default function AskScreen() {
     setInputError('');
     setBuilderOpen(false);
     setEditingFollowup(false);
-    requestAnimationFrame(() =>
-      scroll.current?.scrollTo({ y: 0, animated: false }),
-    );
+    requestAnimationFrame(scrollToTop);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
   useEffect(() => {
     if (s.stage && s.stage !== lastStage.current) {
@@ -154,6 +184,10 @@ export default function AskScreen() {
     }
     if (!s.stage) lastStage.current = null;
   }, [s.stage]);
+  useEffect(() => {
+    if (s.error) pinCurrentTurn();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [s.error]);
   const answer = s.thread.filter((m) => m.role === 'answer').at(-1);
   useEffect(() => {
     if (answer && answer !== lastAnswer.current) {
@@ -222,9 +256,7 @@ export default function AskScreen() {
     setDraft('');
     setBuilderOpen(false);
     const promise = askSession.submit(question, carry);
-    requestAnimationFrame(() =>
-      scroll.current?.scrollTo({ y: answerY.current, animated: false }),
-    );
+    pinCurrentTurn();
     await promise;
   }
   async function history() {
@@ -306,6 +338,34 @@ export default function AskScreen() {
     );
   }
   const names = [...people.keys()].sort((a, b) => a.localeCompare(b));
+  // The current turn starts at the last question. A failed question has
+  // already left the thread, so it is shown from the retry copy instead.
+  const failed = !!s.error && s.error.code !== 'empty',
+    lastQuestion = s.thread.map((m) => m.role).lastIndexOf('user'),
+    split = failed || lastQuestion < 0 ? s.thread.length : lastQuestion,
+    earlier = s.thread.slice(0, split),
+    current = s.thread.slice(split);
+  function renderTurn(turn: (typeof s.thread)[number], i: number) {
+    return turn.role === 'user' ? (
+      <Group key={i}>
+        <Heading level={2} testID="ask-user-question">
+          {turn.text}
+        </Heading>
+        {turn.askedAs ? (
+          <Text wordSafe variant="metadata" testID="ask-understood">
+            Understood as: {turn.askedAs}
+          </Text>
+        ) : null}
+      </Group>
+    ) : (
+      <AnswerView
+        key={i}
+        turn={turn}
+        question={s.thread[i - 1]!}
+        people={people}
+      />
+    );
+  }
   const communityAccount = account.status
     ? !!(account.status.signedIn || account.status.accountHeld)
     : accountSynced;
@@ -385,13 +445,13 @@ export default function AskScreen() {
               onPress={() => {
                 askSession.start();
                 setDraft('');
-                scroll.current?.scrollTo({ y: 0, animated: false });
+                scrollToTop();
               }}
               testID="ask-new"
             />
           ) : null}
         </Group>
-        {!s.thread.length && !s.busy ? (
+        {!s.thread.length && !s.busy && !s.error ? (
           <Group gap={rhythm.heading}>
             <RowList>
               {sampleQuestions.map((q, i) => (
@@ -434,145 +494,104 @@ export default function AskScreen() {
             </RowList>
           </Group>
         ) : null}
-        {s.thread.map((turn, i) =>
-          turn.role === 'user' ? (
-            <Group
-              key={i}
-              onLayout={(e) => {
-                if (i === s.thread.length - 1 || i === s.thread.length - 2)
-                  answerY.current = e.nativeEvent.layout.y;
-              }}
-            >
-              <Heading level={2} testID="ask-user-question">
-                {turn.text}
-              </Heading>
-              {turn.askedAs ? (
-                <Text wordSafe variant="metadata" testID="ask-understood">
-                  Understood as: {turn.askedAs}
-                </Text>
-              ) : null}
-            </Group>
-          ) : (
-            <AnswerView
-              key={i}
-              turn={turn}
-              question={s.thread[i - 1]!}
-              people={people}
-            />
-          ),
-        )}
-        {s.busy ? (
-          <Group testID="ask-progress">
-            {[
-              'Reading your question',
-              'Searching the record',
-              'Writing the answer',
-            ].map((label, i) => {
-              const active =
-                s.stage === 'Reading your question'
-                  ? 0
-                  : s.stage === 'Searching the record'
-                    ? 1
-                    : 2;
-              return (
-                <Text
-                  key={label}
-                  variant={i === active ? 'strong' : 'metadata'}
-                >
-                  {label}
-                  {i < active
-                    ? ' · done'
-                    : i === active
-                      ? ' · in progress'
-                      : ''}
-                </Text>
-              );
-            })}
-            {s.stage === 'Reading the record again.' ? (
-              <Text wordSafe>{s.stage}</Text>
-            ) : null}
-            {s.reading.length ? (
-              <Text wordSafe>Reading {s.reading.join(' · ')}</Text>
-            ) : null}
-            {s.streaming ? (
-              <>
-                <Text wordSafe variant="fine">
-                  {machineNote}
-                </Text>
-                <Text
-                  selectable
-                  testID="ask-streaming"
-                  accessibilityLiveRegion="none"
-                >
-                  {s.streaming}
-                </Text>
-              </>
-            ) : null}
-            <Button
-              label="Cancel"
-              onPress={() => askSession.cancel()}
-              testID="ask-cancel"
-            />
-          </Group>
-        ) : null}
-        {s.error ? (
-          <Group testID={`ask-error-${s.error.code}`}>
-            <ErrorState
-              message={
-                s.error.code === 'partial' && s.streaming
-                  ? `${s.error.message} This is an incomplete answer.`
-                  : s.error.message
-              }
-            />
-            {s.streaming ? (
-              <Text wordSafe selectable>
-                {s.streaming}
-              </Text>
-            ) : null}
-            <Button
-              label="Try again"
-              onPress={() => void submit(retryQuestion)}
-              testID="ask-retry"
-            />
-          </Group>
-        ) : null}
-        {s.notice ? <Text wordSafe>{s.notice}</Text> : null}
-        {answer && !s.busy ? (
-          <Section
-            title="Ask next"
-            icon="text.bubble"
-            accent="people"
-            testID="ask-followups"
+        {earlier.map((turn, i) => renderTurn(turn, i))}
+        {current.length || s.busy || s.error || s.notice ? (
+          <View
+            testID="ask-turn"
+            style={[
+              styles.turn,
+              s.thread.length || s.busy || s.error
+                ? {
+                    // Room below the turn for it to sit under the header
+                    // whatever the answer's length, so the reveal never
+                    // scrolls past the end of the content.
+                    minHeight: Math.max(
+                      0,
+                      windowHeight - headerBottom - rhythm.heading - spacing.s7,
+                    ),
+                  }
+                : null,
+            ]}
+            onLayout={(e: LayoutChangeEvent) => {
+              turnY.current = e.nativeEvent.layout.y;
+              revealTurn();
+            }}
           >
-            <RowList>
-              {answer.next?.map((next, i) => (
-                <LinkRow
-                  key={next.question}
-                  title={next.question}
-                  onPress={() => void submit(next.question, next)}
-                  testID={`ask-followup-${i}`}
+            {current.map((turn, i) => renderTurn(turn, split + i))}
+            {failed && retryQuestion ? (
+              <Heading level={2} testID="ask-failed-question">
+                {retryQuestion}
+              </Heading>
+            ) : null}
+            {s.busy ? (
+              <AskProgress
+                stage={s.stage}
+                reading={s.reading}
+                streaming={s.streaming}
+                onCancel={() => askSession.cancel()}
+              />
+            ) : null}
+            {s.error ? (
+              <Group testID={`ask-error-${s.error.code}`}>
+                <ErrorState
+                  message={
+                    s.error.code === 'partial' && s.streaming
+                      ? `${s.error.message} This is an incomplete answer.`
+                      : s.error.message
+                  }
                 />
-              ))}
-            </RowList>
-            <Field
-              label="Ask a follow-up"
-              placeholder="Ask a follow-up…"
-              value={draft}
-              onChangeText={setDraft}
-              onFocus={() => setEditingFollowup(true)}
-              multiline
-              maxLength={2000}
-              testID="ask-followup-field"
-            />
-            <Button
-              ref={followupTarget}
-              label="Ask"
-              variant="primary"
-              disabled={!draft.trim()}
-              onPress={() => void submit()}
-              testID="ask-followup-submit"
-            />
-          </Section>
+                {s.streaming ? (
+                  <Text wordSafe selectable>
+                    {s.streaming}
+                  </Text>
+                ) : null}
+                <Button
+                  label="Try again"
+                  icon="arrow.clockwise"
+                  onPress={() => void submit(retryQuestion)}
+                  testID="ask-retry"
+                />
+              </Group>
+            ) : null}
+            {s.notice ? <Text wordSafe>{s.notice}</Text> : null}
+            {answer && !s.busy ? (
+              <Section
+                title="Ask next"
+                icon="text.bubble"
+                accent="people"
+                testID="ask-followups"
+              >
+                <RowList>
+                  {answer.next?.map((next, i) => (
+                    <LinkRow
+                      key={next.question}
+                      title={next.question}
+                      onPress={() => void submit(next.question, next)}
+                      testID={`ask-followup-${i}`}
+                    />
+                  ))}
+                </RowList>
+                <Field
+                  label="Ask a follow-up"
+                  placeholder="Ask a follow-up…"
+                  value={draft}
+                  onChangeText={setDraft}
+                  onFocus={() => setEditingFollowup(true)}
+                  multiline
+                  maxLength={2000}
+                  testID="ask-followup-field"
+                />
+                <Button
+                  ref={followupTarget}
+                  label="Ask"
+                  variant="primary"
+                  disabled={!draft.trim()}
+                  onPress={() => void submit()}
+                  testID="ask-followup-submit"
+                />
+              </Section>
+            ) : null}
+          </View>
         ) : null}
       </KeyboardStableScreen>
       {optionsOpen ? (
@@ -614,10 +633,7 @@ export default function AskScreen() {
                     onPress={() => {
                       askSession.open(c.id);
                       setHistoryOpen(false);
-                      scroll.current?.scrollTo({
-                        y: answerY.current,
-                        animated: false,
-                      });
+                      pinCurrentTurn();
                     }}
                     testID={`ask-restore-${i}`}
                   />
@@ -662,6 +678,7 @@ const styles = StyleSheet.create({
     gap: rhythm.tight,
   },
   conversationTitle: { flex: 1 },
+  turn: { gap: layout.sectionGap },
   composer: {
     backgroundColor: colors.navyWash,
     padding: rhythm.block,
