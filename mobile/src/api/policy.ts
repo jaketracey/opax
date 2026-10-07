@@ -31,8 +31,6 @@ const staticPaths = new Set([
   '/photos/credits.json',
   '/corpus.json',
   '/graph/money.json',
-  '/graph/money.qld.json',
-  '/graph/money.vic.json',
   '/graph/aec-extras.json',
   // Leads (P1): the static discovery export, 60 signals with their caveats.
   '/discovery.json',

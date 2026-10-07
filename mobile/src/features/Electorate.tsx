@@ -70,7 +70,8 @@ export function ElectorateScreen({
   embedded?: boolean;
   initialDate?: string;
 }) {
-  const [asof, setAsOf] = useState(validDate(initialDate) ? initialDate : '');
+  const [localDate, setAsOf] = useState(validDate(initialDate) ? initialDate : '');
+  const asof = embedded ? localDate : validDate(initialDate) ? initialDate : '';
   const [view, setView] = useState<ElectorateView | null>(null),
     [directory, setDirectory] = useState<Directory | null>(null),
     [error, setError] = useState<string | null>(null),
@@ -192,7 +193,7 @@ export function ElectorateScreen({
                 state={identity.state}
               />
             </View>
-            <ElectorateDate view={view} directory={directory} asof={asof} onDate={(date) => { setAsOf(date); if (!embedded) router.setParams({ asof: date || undefined }); }} />
+            <ElectorateDate view={view} directory={directory} asof={asof} onDate={(date) => { if (embedded) setAsOf(date); else router.setParams({ asof: date || undefined }); }} />
             {asof ? null : <RecordBlock
               title="Latest verified representation"
               icon="person.fill"

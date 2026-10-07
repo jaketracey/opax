@@ -26,6 +26,17 @@ export const statement = [
 
 export const datasets: Dataset[] = [
   {
+    id: 'parliamentary-directory',
+    name: 'Parliamentarian and party directories',
+    publisher: 'OPAX parliamentary roster; parliamentary member registers',
+    terms: [
+      'The native directories use the dated static parliamentary roster for speech totals and roster membership. The website’s party speech totals use its live index and can differ.',
+      'Names and recorded affiliations come from Hansard and the parliamentary member registers. The records retain their publishers’ copyright and licence; the directory does not grant a new licence over them.',
+      'Portrait attribution and licences are listed under Portrait credits on this screen. Division records retain the terms listed under Divisions and voting records.',
+    ],
+    links: [{ label: 'OPAX parliamentarians', url: canonicalUrl('/subject/person') }],
+  },
+  {
     id: 'reports-preview', name: 'Reports, topic labels and homepage previews', publisher: 'OPAX',
     terms: ['Reports and their machine-written sections cite the retrieved parliamentary record. Topic counts and decade shares describe the labelled record, with the labelling pass still running. Original records retain their own copyright and licence.', 'Homepage previews are copied from OPAX’s static homepage. The export supplies no snapshot date.', 'AGPL-3.0. Source and issue tracker: github.com/jaketracey/opax. Data errors are corrections we want, so please report them.'],
     links: [{ label: 'Reports', url: canonicalUrl('/reports') }, { label: 'Methods and how to cite', url: canonicalUrl('/methods') }],

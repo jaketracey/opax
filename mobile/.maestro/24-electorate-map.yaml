@@ -68,7 +68,7 @@ name: 24 Electorate outline and on-device location suggestion
       id: outline-label
     centerElement: true
     timeout: 300000
-- assertVisible: Display outline · AEC · 2025 election
+- assertVisible: Display outline · 2025 election
 - takeScreenshot: ${EVIDENCE}/24-vintage
 - scrollUntilVisible:
     element:

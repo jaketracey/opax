@@ -35,6 +35,7 @@ export default function TabStack({ segment }: { segment: string }) {
           unstable_headerRightItems: rootHeaderItems,
         }}
       />
+      <Stack.Screen name="directory-filters" options={{ presentation: 'modal', headerShown: false }} />
       <Stack.Screen name="party/[slug]" options={{ title: '' }} />
       <Stack.Screen name="person/[slug]" options={{ title: '' }} />
       <Stack.Screen name="doc/[slug]" options={{ title: '' }} />

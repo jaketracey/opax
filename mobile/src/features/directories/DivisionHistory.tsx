@@ -1,4 +1,4 @@
-import { RecordRow } from '../RecordRow';
+import { divisionNotes } from './notes';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import {
   AccessibilityInfo,
@@ -6,6 +6,7 @@ import {
   Keyboard,
   RefreshControl,
   StyleSheet,
+  View,
   type ListRenderItemInfo,
 } from 'react-native';
 import { router, Stack } from 'expo-router';
@@ -18,13 +19,16 @@ import {
   Field,
   Group,
   LoadingState,
+  LinkRow,
+  InfoButton,
   StaleNotice,
   Text,
   errorMessage,
+  useAccessibilitySize,
 } from '../../design/primitives';
-import { colors, layout, spacing } from '../../design/tokens';
+import { colors, layout, rhythm } from '../../design/tokens';
 import { formatCount, formatDate } from '../../design/format';
-import { chamberName } from '../../design/parliament';
+import { CHAMBER_NOT_RECORDED, chamberName } from '../../design/parliament';
 import { billFoldText } from '../../api/bill-transforms';
 import { billRoute } from '../../navigation/routes';
 import { shareHeaderItem } from '../../navigation/share';
@@ -33,20 +37,36 @@ import { SavedCopyNotice, PartialNotice } from '../CatalogNotice';
 import { loadDivisionHistory } from './division-data';
 import type { DivisionRow } from './model';
 const Division = memo(function Division({ item }: { item: DivisionRow }) {
+  const stacked = useAccessibilitySize();
+  const key = `${item.billKey}-${item.key.split(':').slice(1).join('-')}`;
   return (
-    <RecordRow
-      title={item.title}
-      testID={`division-history-${item.billKey}-${item.key.split(':').slice(1).join('-')}`}
-      detail={[
-        formatDate(item.date),
-        chamberName(item.house, 'federal') ?? item.house,
-        item.question,
-        `${formatCount(item.ayes)} ayes · ${formatCount(item.noes)} noes`,
-      ]
-        .filter(Boolean)
-        .join('\n')}
-      onPress={() => router.push(billRoute(item.billKey, 'divisions'))}
-    />
+    <View>
+      <LinkRow
+        icon={stacked ? undefined : 'checkmark.seal'}
+        accent="votes"
+        title={item.title}
+        testID={`division-history-${key}`}
+        titleTestID={`division-title-${key}`}
+        detailTestID={`division-details-${key}`}
+        detail={[
+          formatDate(item.date),
+          chamberName(item.house, 'federal') ?? CHAMBER_NOT_RECORDED,
+          `${formatCount(item.ayes)} ayes · ${formatCount(item.noes)} noes`,
+        ]
+          .filter(Boolean)
+          .join('\n')}
+        onPress={() => router.push(billRoute(item.billKey, 'divisions'))}
+      />
+      {item.question ? (
+        <View style={styles.question}>
+          <InfoButton
+            title="Division question"
+            notes={[item.question, `${item.title} · ${formatDate(item.date)}`]}
+            testID={`division-question-${key}`}
+          />
+        </View>
+      ) : null}
+    </View>
   );
 });
 const renderRow = ({ item }: ListRenderItemInfo<DivisionRow>) => (
@@ -131,13 +151,24 @@ export default function DivisionHistory() {
             />
             {record ? (
               <>
-                <Text variant="metadata" testID="division-history-count">
-                  {formatCount(rows.length)} division records · newest first
-                </Text>
-                <Text variant="fine" testID="division-history-coverage">
-                  {record.loaded} of {record.total} bill files loaded
-                  {record.failed ? `; ${record.failed} unavailable` : ''}.{' '}
-                  {complete ? '' : 'The chronological list is still loading.'}
+                <View style={styles.summary}>
+                  <Text
+                    variant="metadata"
+                    testID="division-history-count"
+                    style={styles.grow}
+                  >
+                    {formatCount(rows.length)} division records · newest first
+                  </Text>
+                  <InfoButton
+                    title="About division history"
+                    notes={divisionNotes}
+                    testID="division-history-info"
+                  />
+                </View>
+                <Text variant="caption" testID="division-history-coverage">
+                  {complete && !record.failed
+                    ? 'All bill files loaded'
+                    : `${formatCount(record.loaded)} of ${formatCount(record.total)} bill files loaded${record.failed ? `; ${formatCount(record.failed)} unavailable` : ''}`}
                 </Text>
                 {record.failed ? (
                   <Button
@@ -161,13 +192,6 @@ export default function DivisionHistory() {
                   citation="ParlInfo bill records; They Vote For You, ODbL"
                   savedAt={record.stale ? record.savedAt : null}
                 />
-                <Text wordSafe variant="fine">
-                  Only formal divisions are counted; most questions are decided
-                  on the voices and leave no per-member record. Division records
-                  on federal bills in this static register are listed here. A
-                  bill missing from this list is not evidence it does not exist:
-                  the register is still being built.
-                </Text>
               </>
             ) : !error ? (
               <LoadingState label="Loading division history" />
@@ -191,8 +215,11 @@ const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
   content: {
     paddingHorizontal: layout.screenMargin,
-    paddingTop: spacing.s4,
-    paddingBottom: spacing.s7,
+    paddingTop: rhythm.block,
+    paddingBottom: rhythm.section,
   },
-  header: { paddingBottom: spacing.s4 },
+  summary: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
+  grow: { flex: 1 },
+  header: { paddingBottom: rhythm.block },
+  question: { alignItems: 'flex-end', paddingBottom: rhythm.tight },
 });

@@ -1,6 +1,5 @@
 import {
   Button,
-  Text,
   LoadingState,
   RowList,
   Screen,
@@ -15,7 +14,7 @@ import {
   type BillFilters as Filters,
 } from './filters';
 import { OptionRow } from './parts';
-import { Pressable } from 'react-native';
+import { ToggleRow } from '../directories/ToggleRow';
 
 /**
  * The bill list's filters, as a sheet: status, the chamber a bill was
@@ -31,20 +30,62 @@ export default function BillFilters() {
         <LoadingState shape="rows" count={4} label="Loading filters" />
       </Screen>
     );
-  const any = filters.status || filters.chamber || filters.year !== undefined || filters.parliament !== undefined || filters.divided || filters.sort;
+  const any =
+    filters.status ||
+    filters.chamber ||
+    filters.year !== undefined ||
+    filters.parliament !== undefined ||
+    filters.divided ||
+    filters.sort;
   return (
     <Screen testID="bill-filters-screen">
-      <Section title="Parliament">
+      <Section
+        title="Parliament"
+        icon="building.columns"
+        accent="bills"
+        rule={false}
+      >
         <RowList>
-          <OptionRow label="All parliaments" count={facets.total} selected={filters.parliament === undefined} onPress={() => set({ ...filters, parliament: undefined })} testID="bill-filter-parliament-all" />
-          {facets.parliaments.map(p => <OptionRow key={p.value} label={parliamentLabel(p.value)} count={p.count} selected={filters.parliament === p.value} onPress={() => set({ ...filters, parliament: p.value })} testID={`bill-filter-parliament-${p.value}`} />)}
+          <OptionRow
+            label="All parliaments"
+            count={facets.total}
+            selected={filters.parliament === undefined}
+            onPress={() => set({ ...filters, parliament: undefined })}
+            testID="bill-filter-parliament-all"
+          />
+          {facets.parliaments.map((p) => (
+            <OptionRow
+              key={p.value}
+              label={parliamentLabel(p.value)}
+              count={p.count}
+              selected={filters.parliament === p.value}
+              onPress={() => set({ ...filters, parliament: p.value })}
+              testID={`bill-filter-parliament-${p.value}`}
+            />
+          ))}
         </RowList>
       </Section>
-      <Section title="Division records">
-        <Pressable accessibilityRole="switch" accessibilityState={{ checked: !!filters.divided }} accessibilityLabel="Divided on" testID="bill-filter-divided" onPress={() => set({ ...filters, divided: !filters.divided })} style={{ minHeight: 44, paddingVertical: 12 }}><Text wordSafe>{filters.divided ? '✓ Divided on' : 'Divided on'}</Text></Pressable>
+      <Section title="Division records" icon="checkmark.seal" accent="votes">
+        <ToggleRow
+          label="Divided on"
+          checked={!!filters.divided}
+          testID="bill-filter-divided"
+          onChange={() => set({ ...filters, divided: !filters.divided })}
+        />
       </Section>
-      <Section title="Sort">
-        <RowList>{billSorts.map(s => <OptionRow key={s.value} label={s.label} count={facets.total} selected={(filters.sort ?? 'newest') === s.value} onPress={() => set({ ...filters, sort: s.value })} testID={`bill-filter-sort-${s.value}`} />)}</RowList>
+      <Section title="Sort" icon="arrow.up.arrow.down" accent="bills">
+        <RowList>
+          {billSorts.map((s) => (
+            <OptionRow
+              key={s.value}
+              label={s.label}
+              count={facets.total}
+              selected={(filters.sort ?? 'newest') === s.value}
+              onPress={() => set({ ...filters, sort: s.value })}
+              testID={`bill-filter-sort-${s.value}`}
+            />
+          ))}
+        </RowList>
       </Section>
       <Section title="Status">
         <RowList>

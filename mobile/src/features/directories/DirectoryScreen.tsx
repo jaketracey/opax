@@ -1,4 +1,5 @@
-import { RecordRow } from '../RecordRow';
+import { PartyDirectoryRow } from './PartyDirectoryRow';
+import { directoryNotes } from './notes';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import {
   AccessibilityInfo,
@@ -20,22 +21,19 @@ import {
   FilterChip,
   Group,
   LoadingState,
+  LinkRow,
+  InfoButton,
   OfflineBanner,
   PersonRow,
   StaleNotice,
   Text,
   errorMessage,
 } from '../../design/primitives';
-import { colors, layout, spacing } from '../../design/tokens';
-import { formatCount, formatDate, formatMoney } from '../../design/format';
-import { billFoldText } from '../../api/bill-transforms';
+import { colors, layout, rhythm } from '../../design/tokens';
+import { formatCount, formatYearRange } from '../../design/format';
 import { ApiError } from '../../api/errors';
 import type { Electorate } from '../../api/catalog-decoders';
-import {
-  personRoute,
-  partyRoute,
-  electorateRoute,
-} from '../../navigation/routes';
+import { personRoute, electorateRoute } from '../../navigation/routes';
 import { shareHeaderItem } from '../../navigation/share';
 import { CachedPortrait } from '../CachedPortrait';
 import { PartialNotice, SavedCopyNotice } from '../CatalogNotice';
@@ -80,7 +78,7 @@ const DirectoryRow = memo(function DirectoryRow({ item }: { item: Row }) {
             : `${formatCount(item.row.speeches)} speeches`,
           item.divisions ? `${formatCount(item.divisions)} divisions` : null,
           item.row?.first
-            ? `${item.row.first}–${item.row.last ?? item.row.first}`
+            ? formatYearRange(item.row.first, item.row.last ?? item.row.first)
             : null,
         ]
           .filter(Boolean)
@@ -88,44 +86,23 @@ const DirectoryRow = memo(function DirectoryRow({ item }: { item: Row }) {
         onPress={() => router.push(personRoute(item.key))}
       />
     );
-  if ('money' in item)
-    return (
-      <RecordRow
-        title={item.name}
-        testID={`directory-party-${billFoldText(item.name).replace(/ /g, '-')}`}
-        detail={[
-          `${formatCount(item.speeches)} speeches in the static roster`,
-          `${formatCount(item.members)} parliamentary roster members`,
-          ...Object.values(item.money).map(
-            (m) =>
-              `${formatMoney(m.total)} · ${m.source} · as at ${formatDate(m.asAt)}`,
-          ),
-        ].join('\n')}
-        onPress={() => router.push(partyRoute(item.name))}
-      />
-    );
+  if ('money' in item) return <PartyDirectoryRow item={item} />;
   return (
-    <PersonRow
-      name={item.name}
+    <LinkRow
+      title={item.name}
+      icon="map"
+      accent="places"
       testID={`directory-electorate-${item.slug}`}
-      portrait={
-        item.representatives[0] ? (
-          <CachedPortrait name={item.representatives[0].person.name} />
-        ) : undefined
-      }
-      place={seatContext(item)}
       detail={[
+        seatContext(item),
         item.status === 'historical' ? 'Historical' : null,
         item.representatives.length
           ? item.representatives
               .map((r) => [r.person.name, r.party].filter(Boolean).join(' · '))
               .join('; ')
           : 'Representation not yet verified',
-        item.representation_as_of
-          ? `Verified ${formatDate(item.representation_as_of)}`
-          : null,
         item.election_count
-          ? `${item.election_count} elections indexed`
+          ? `${formatCount(item.election_count)} elections indexed`
           : 'Results not yet indexed',
       ]
         .filter(Boolean)
@@ -140,9 +117,14 @@ const renderRow = ({ item }: ListRenderItemInfo<Row>) => (
 );
 const rowKey = (item: Row) => ('key' in item ? item.key : item.electorate_id);
 export default function DirectoryScreen() {
-  const params = useLocalSearchParams<{ kind: string }>(),
-    kind = directoryKind(params.kind),
-    title = titles[kind];
+  const params = useLocalSearchParams<{ kind: string }>();
+  const kind = directoryKind(params.kind);
+  // A directory deep link can replace kind on this same route. Keep each view’s
+  // query and record local, so the previous kind never filters or flashes here.
+  return <DirectoryView key={kind} kind={kind} />;
+}
+function DirectoryView({ kind }: { kind: keyof typeof titles }) {
+  const title = titles[kind];
   const load = useCallback(
     (refresh: boolean) => loadDirectory(kind, refresh),
     [kind],
@@ -236,6 +218,8 @@ export default function DirectoryScreen() {
               label={
                 chips.length ? `Filters (${chips.length})` : 'Filters and sort'
               }
+              icon="line.3.horizontal.decrease.circle"
+              size="compact"
               testID="directory-filters"
               disabled={!record}
               onPress={() => {
@@ -246,36 +230,50 @@ export default function DirectoryScreen() {
                 });
               }}
             />
-            <View style={styles.chips}>
-              {chips.map(([key, value]) => (
-                <FilterChip
-                  key={key}
-                  filter={facets.find((f) => f.key === key)?.label ?? key}
-                  value={
-                    facets
-                      .find((f) => f.key === key)
-                      ?.choices?.find((c) => c.value === value)?.label ?? 'Yes'
-                  }
-                  onRemove={() => {
-                    const next = { ...filters };
-                    delete next[key];
-                    directoryStore.set(kind, next);
-                  }}
-                />
-              ))}
-            </View>
+            {chips.length ? (
+              <View style={styles.chips}>
+                {chips.map(([key, value]) => (
+                  <FilterChip
+                    key={key}
+                    filter={facets.find((f) => f.key === key)?.label ?? key}
+                    value={
+                      facets
+                        .find((f) => f.key === key)
+                        ?.choices?.find((c) => c.value === value)?.label ??
+                      'Yes'
+                    }
+                    onRemove={() => {
+                      const next = { ...filters };
+                      delete next[key];
+                      directoryStore.set(kind, next);
+                    }}
+                  />
+                ))}
+              </View>
+            ) : null}
             {record ? (
               <>
-                <Text variant="metadata" testID="directory-count">
-                  {count} ·{' '}
-                  {
-                    directorySorts[kind].find(
-                      (s) =>
-                        s.value ===
-                        (filters.sort || directorySorts[kind][0]!.value),
-                    )?.label
-                  }
-                </Text>
+                <View style={styles.summary}>
+                  <Text
+                    variant="metadata"
+                    testID="directory-count"
+                    style={styles.grow}
+                  >
+                    {count} ·{' '}
+                    {
+                      directorySorts[kind].find(
+                        (s) =>
+                          s.value ===
+                          (filters.sort || directorySorts[kind][0]!.value),
+                      )?.label
+                    }
+                  </Text>
+                  <InfoButton
+                    title={`About ${title.toLowerCase()}`}
+                    notes={directoryNotes[kind]}
+                    testID="directory-info"
+                  />
+                </View>
                 {record.stale ? (
                   <>
                     <SavedCopyNotice reason={record.staleReason} />
@@ -287,14 +285,16 @@ export default function DirectoryScreen() {
                   </>
                 ) : null}
                 {record.partial ? <PartialNotice /> : null}
-                {record.sources.map((s) => (
-                  <AsAtLine
-                    key={s.label}
-                    asOf={s.asAt}
-                    citation={s.label}
-                    savedAt={record.stale ? record.savedAt : null}
-                  />
-                ))}
+                <AsAtLine
+                  asOf={
+                    record.sources
+                      .map((s) => s.asAt)
+                      .filter((date): date is string => !!date)
+                      .sort()[0] ?? null
+                  }
+                  citation={record.sources.map((s) => s.label)}
+                  savedAt={record.stale ? record.savedAt : null}
+                />
               </>
             ) : error ? (
               <>
@@ -309,11 +309,6 @@ export default function DirectoryScreen() {
                 label={`Loading ${title.toLowerCase()}`}
               />
             )}
-            {kind === 'electorate' ? (
-              <Text variant="fine">
-                Places, representatives and the elections that shaped them.
-              </Text>
-            ) : null}
           </Group>
         }
         ListHeaderComponentStyle={styles.header}
@@ -331,19 +326,6 @@ export default function DirectoryScreen() {
             </Group>
           ) : null
         }
-        ListFooterComponent={
-          record ? (
-            <Group style={styles.footer}>
-              <Text wordSafe variant="fine" testID="directory-caveat">
-                {kind === 'person'
-                  ? 'Names appear as Hansard prints them. Speech counts follow the site’s corpus rule (speeches since the 1993 election, 200+ characters, procedural rows removed). Verified representatives are included independently of that threshold; their missing speech totals are labelled explicitly. Party is the label the person’s speeches carry, or the members register’s where they carry none; many state Hansard rows record neither. Portraits are official APH, OpenAustralia and credited Wikimedia Commons photos; divisions come from They Vote For You and the NSW, Victorian and Queensland Hansard.'
-                  : kind === 'party'
-                    ? 'Speech totals and directory membership come from the dated static parliamentary roster. A speech with no party label is not counted. Receipts are per commission and are not summed: AEC totals already include state branches. Party receipts include internal party transfers; donor totals exclude them.'
-                    : 'Coverage varies by parliament. A missing representative or result means it has not been verified in this release. ABS state outlines use 2025 statistical geography.'}
-              </Text>
-            </Group>
-          ) : null
-        }
       />
     </>
   );
@@ -352,10 +334,11 @@ const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
   content: {
     paddingHorizontal: layout.screenMargin,
-    paddingTop: spacing.s4,
-    paddingBottom: spacing.s7,
+    paddingTop: rhythm.block,
+    paddingBottom: rhythm.section,
   },
-  header: { paddingBottom: spacing.s4 },
-  footer: { paddingTop: spacing.s6 },
-  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.s3 },
+  header: { paddingBottom: rhythm.block },
+  summary: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
+  grow: { flex: 1 },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: rhythm.tight },
 });

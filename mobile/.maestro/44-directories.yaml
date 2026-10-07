@@ -10,11 +10,12 @@ name: 44 Native people and parties directories
     centerElement: true
     speed: 20
     timeout: 180000
+- takeScreenshot: ${EVIDENCE}/44-search-browse
 - tapOn:
     id: search-browse-person
 - extendedWaitUntil:
     visible:
-      id: directory-filters
+      id: directory-count
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/44-people-directory
 - tapOn:
@@ -95,11 +96,9 @@ name: 44 Native people and parties directories
     timeout: 30000
 - assertVisible: Anthony Albanese
 - takeScreenshot: ${EVIDENCE}/44-native-person
+- tapOn: Parliamentarians
 - tapOn:
-    text: Back
-    index: 0
-- tapOn:
-    text: Back
+    text: Search
     index: 0
 - scrollUntilVisible:
     element:

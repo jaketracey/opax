@@ -68,7 +68,9 @@ export default function BillsList() {
   }, [facets]);
   const list = useMemo(
     () =>
-      index ? billsFor(index, { ...filters, query, sort: filters.sort ?? 'newest' }) : null,
+      index
+        ? billsFor(index, { ...filters, query, sort: filters.sort ?? 'newest' })
+        : null,
     [index, filters, query],
   );
   const rows = list?.data ?? [];
@@ -138,7 +140,10 @@ export default function BillsList() {
       {list && index ? (
         <View style={styles.count}>
           <Text variant="metadata" testID="bills-count" style={styles.grow}>
-            {countLine(rows.length, index.bills.length)} · {billSorts.find(s => s.value === (filters.sort ?? 'newest'))?.label.toLowerCase()}
+            {countLine(rows.length, index.bills.length)} ·{' '}
+            {billSorts
+              .find((s) => s.value === (filters.sort ?? 'newest'))
+              ?.label.toLowerCase()}
           </Text>
           <InfoButton
             title="About the bill list"
@@ -147,7 +152,13 @@ export default function BillsList() {
           />
         </View>
       ) : null}
-      <LinkRow title="Division history" icon="checkmark.seal" accent="votes" testID="bills-division-history" onPress={() => router.push('/division-history')} />
+      <LinkRow
+        title="Division history"
+        icon="checkmark.seal"
+        accent="votes"
+        testID="bills-division-history"
+        onPress={() => router.push('/division-history')}
+      />
       {offline && !record ? (
         <>
           <OfflineBanner cached={false} testID="bills-offline-uncached" />

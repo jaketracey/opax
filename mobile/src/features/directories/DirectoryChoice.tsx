@@ -1,7 +1,7 @@
 import { FlatList, Pressable, StyleSheet } from 'react-native';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { Divider, Icon, Text } from '../../design/primitives';
-import { colors, layout, minimumTarget, spacing } from '../../design/tokens';
+import { colors, layout, minimumTarget, rhythm } from '../../design/tokens';
 import { directorySorts } from './model';
 import { directoryKind, directoryStore, useDirectoryState } from './store';
 export default function DirectoryChoice() {
@@ -40,7 +40,10 @@ export default function DirectoryChoice() {
             accessibilityState={{ checked: selected === item.value }}
             accessibilityLabel={item.label}
             testID={`directory-choice-${item.value || 'all'}`}
-            style={styles.row}
+            style={({ pressed }) => [
+              styles.row,
+              pressed && { backgroundColor: colors.sunken },
+            ]}
             onPress={() => {
               directoryStore.set(kind, { ...filters, [field]: item.value });
               router.back();
@@ -60,14 +63,14 @@ const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
   content: {
     paddingHorizontal: layout.screenMargin,
-    paddingBottom: spacing.s7,
+    paddingBottom: rhythm.section,
   },
   row: {
     minHeight: minimumTarget,
-    paddingVertical: spacing.s4,
+    paddingVertical: rhythm.heading,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.s3,
+    gap: rhythm.tight,
   },
   label: { flex: 1 },
 });

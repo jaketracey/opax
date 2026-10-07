@@ -413,7 +413,10 @@ describe('bills and division history use static files only', () => {
         if (sort === 'oldest')
           expect(a.introduced! <= b.introduced!).toBe(true);
         if (sort === 'divisions') expect(a.divisions >= b.divisions).toBe(true);
-        if (sort === 'title') expect(billFoldText(billName(a)).localeCompare(billFoldText(billName(b)))).toBeLessThanOrEqual(0);
+        if (sort === 'title')
+          expect(
+            billFoldText(billName(a)).localeCompare(billFoldText(billName(b))),
+          ).toBeLessThanOrEqual(0);
       }
       expect(
         d.billFacetsFor(bills).data!.parliaments.find((p) => p.value === 48)!
@@ -472,7 +475,7 @@ describe('bills and division history use static files only', () => {
       expect(() => assertAllowedPath(path)).not.toThrow();
     for (const path of [
       '/api/parties',
-      '/api/resource/division-test',
+      '/api/resource/INVALID/',
       '/api/search',
       '/graph/money.nsw.json',
       '/graph/money.qld.json?x=1',

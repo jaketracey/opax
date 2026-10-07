@@ -81,7 +81,7 @@ export function OutlineMap({
       <View style={styles.caption}>
         <View style={styles.grow}>
           <Text wordSafe variant="metadata" testID="outline-label">
-            Display outline · {origin} · {boundary.vintage}
+            Display outline · {boundary.vintage}
           </Text>
           <Text wordSafe variant="caption" testID="outline-limit">
             Not for address allocation.
@@ -97,8 +97,7 @@ export function OutlineMap({
       </View>
       {boundary.source_geometry_url ? (
         <SourceLink
-          label="Source geometry"
-          citation="Source geometry"
+          citation="Electorate boundary"
           url={boundary.source_geometry_url}
           kind="record"
           testID="outline-source"

@@ -22,7 +22,16 @@ export interface BillFilters {
 export type BillFilterKey = keyof BillFilters;
 export const parliamentLabel = (value: number) => {
   const lastTwo = value % 100;
-  const suffix = lastTwo >= 11 && lastTwo <= 13 ? 'th' : value % 10 === 1 ? 'st' : value % 10 === 2 ? 'nd' : value % 10 === 3 ? 'rd' : 'th';
+  const suffix =
+    lastTwo >= 11 && lastTwo <= 13
+      ? 'th'
+      : value % 10 === 1
+        ? 'st'
+        : value % 10 === 2
+          ? 'nd'
+          : value % 10 === 3
+            ? 'rd'
+            : 'th';
   return `${value}${suffix} parliament`;
 };
 
@@ -98,7 +107,11 @@ export function appliedFilters(filters: BillFilters) {
   if (filters.year !== undefined)
     chips.push({ key: 'year', filter: 'year', value: String(filters.year) });
   if (filters.parliament !== undefined)
-    chips.push({ key: 'parliament', filter: 'parliament', value: parliamentLabel(filters.parliament) });
+    chips.push({
+      key: 'parliament',
+      filter: 'parliament',
+      value: parliamentLabel(filters.parliament),
+    });
   if (filters.divided)
     chips.push({ key: 'divided', filter: 'divided on', value: 'Yes' });
   return chips;

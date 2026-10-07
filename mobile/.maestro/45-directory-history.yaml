@@ -14,7 +14,7 @@ name: 45 Electorates, dated representation, bill filters and division history
     id: search-browse-electorate
 - extendedWaitUntil:
     visible:
-      id: directory-search
+      id: directory-count
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/45-electorates-directory
 - tapOn:
@@ -70,7 +70,7 @@ name: 45 Electorates, dated representation, bill filters and division history
     id: electorate-date-view
 - scrollUntilVisible:
     element:
-      id: electorate-dated-representation
+      text: Representation on 1 January 2024
     visibilityPercentage: 10
     centerElement: true
     speed: 20
@@ -85,7 +85,7 @@ name: 45 Electorates, dated representation, bill filters and division history
 - tapOn: OK
 - scrollUntilVisible:
     element:
-      id: electorate-history
+      text: Representation history
     visibilityPercentage: 10
     centerElement: true
     speed: 20
@@ -152,7 +152,7 @@ name: 45 Electorates, dated representation, bill filters and division history
     speed: 20
     timeout: 180000
 - extendedWaitUntil:
-    visible: 1003 of 1003 bill files loaded.*
+    visible: All bill files loaded
     timeout: 600000
 - takeScreenshot: ${EVIDENCE}/45-division-history-complete
 - scrollUntilVisible:
