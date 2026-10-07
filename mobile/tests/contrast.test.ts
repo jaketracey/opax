@@ -78,4 +78,27 @@ describe('Increase Contrast', () => {
         contrastRatio(lightHighContrast.inkFaint!, surface),
       ).toBeGreaterThanOrEqual(4.5);
   });
+  test('category inks and bronzeInk strengthen to 7:1 on their wash and every surface', () => {
+    const inks = [
+      ['bronzeInk', 'bronzeWash'],
+      ['moneyInk', 'moneyWash'],
+      ['votesInk', 'votesWash'],
+      ['interestsInk', 'interestsWash'],
+      ['billsInk', 'billsWash'],
+    ] as const;
+    for (const [ink, wash] of inks) {
+      const strong = lightHighContrast[ink]!;
+      for (const surface of [
+        light[wash],
+        light.paper,
+        light.raised,
+        light.sunken,
+      ]) {
+        expect(contrastRatio(strong, surface)).toBeGreaterThanOrEqual(7);
+        expect(contrastRatio(strong, surface)).toBeGreaterThan(
+          contrastRatio(light[ink], surface),
+        );
+      }
+    }
+  });
 });

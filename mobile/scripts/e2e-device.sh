@@ -4,7 +4,9 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 source scripts/qa-env.sh
 UDID=${1:?}; OUT=${2:?}; APP=${3:?}; SIZE=${4:?}; APPEARANCE=${5:?}; FIXTURE_PID=${6:?}; OFFLINE=${7:?}; MAP_OFFLINE=${8:?}; MONEY_OFFLINE=${9:?}; shift 9
-AUDIT_PID=; OWN_DEVICE=0; ORIGINAL_SIZE=large; ORIGINAL_APPEARANCE=light
+AUDIT_PID=; OWN_DEVICE=0; ORIGINAL_SIZE=large; ORIGINAL_APPEARANCE=light; ORIGINAL_CONTRAST=disabled
+# Opt-in: run with iOS Increase Contrast on (OPAX_INCREASE_CONTRAST=1).
+CONTRAST=disabled; [ "${OPAX_INCREASE_CONTRAST:-0}" = 1 ] && CONTRAST=enabled
 BOOT_TIMEOUT=${OPAX_BOOT_TIMEOUT_SECONDS:-300}
 INSTALL_TIMEOUT=${OPAX_INSTALL_TIMEOUT_SECONDS:-240}
 UI_TIMEOUT=${OPAX_SIMCTL_TIMEOUT_SECONDS:-10}
@@ -44,6 +46,7 @@ cleanup() {
   if [ "$OWN_DEVICE" = 1 ]; then
     timed "$UI_TIMEOUT" xcrun simctl ui "$UDID" content_size "$ORIGINAL_SIZE" > "$OUT/restore.log" 2>&1 || true
     timed "$UI_TIMEOUT" xcrun simctl ui "$UDID" appearance "$ORIGINAL_APPEARANCE" >> "$OUT/restore.log" 2>&1 || true
+    timed "$UI_TIMEOUT" xcrun simctl ui "$UDID" increase_contrast "$ORIGINAL_CONTRAST" >> "$OUT/restore.log" 2>&1 || true
     timed "$UI_TIMEOUT" xcrun simctl ui "$UDID" content_size >> "$OUT/restore.log" 2>&1 || true
     timed "$UI_TIMEOUT" xcrun simctl ui "$UDID" appearance >> "$OUT/restore.log" 2>&1 || true
     timed "$UI_TIMEOUT" xcrun simctl location "$UDID" clear >> "$OUT/restore.log" 2>&1 || true
@@ -80,8 +83,10 @@ fi
 boot_seconds=$((SECONDS - start))
 ORIGINAL_SIZE=$(timed "$UI_TIMEOUT" xcrun simctl ui "$UDID" content_size)
 ORIGINAL_APPEARANCE=$(timed "$UI_TIMEOUT" xcrun simctl ui "$UDID" appearance)
+case "$(timed "$UI_TIMEOUT" xcrun simctl ui "$UDID" increase_contrast)" in enabled) ORIGINAL_CONTRAST=enabled ;; esac
 timed "$UI_TIMEOUT" xcrun simctl ui "$UDID" content_size "$SIZE"
 timed "$UI_TIMEOUT" xcrun simctl ui "$UDID" appearance "$APPEARANCE"
+timed "$UI_TIMEOUT" xcrun simctl ui "$UDID" increase_contrast "$CONTRAST"
 start=$SECONDS
 timed "$INSTALL_TIMEOUT" xcrun simctl install "$UDID" "$APP"
 install_seconds=$((SECONDS - start))

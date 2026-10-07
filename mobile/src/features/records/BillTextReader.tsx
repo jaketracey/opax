@@ -182,8 +182,10 @@ export default function BillTextReader({
                   </Disclosure>
                 </Section>
                 {!requestedId ? (
-                  <Button
-                    label="Read full bill text"
+                  <LinkRow
+                    title="Read full bill text"
+                    icon="doc.text"
+                    accent="bills"
                     onPress={() => {
                       if (id) setChosen({ key, id });
                     }}

@@ -9,6 +9,8 @@ import {
   mix,
   moneyAccent,
   partyAccent,
+  strongAccent,
+  strongOn,
   topicAccent,
   washOf,
   type Accent,
@@ -141,4 +143,34 @@ test.each([
   ['', 'unknown'],
 ])('bill status %s has the %s tone', (status, tone) => {
   expect(billTone(status)).toBe(tone);
+});
+
+describe.each(accents)('%s accent under Increase Contrast', (_name, accent) => {
+  const strong = strongAccent(accent);
+  test('header, soft line and accent text reach 7:1; the mark 4.5:1', () => {
+    expect(contrastRatio('#FFFFFF', strong.deep)).toBeGreaterThanOrEqual(7);
+    expect(contrastRatio(strong.soft, strong.deep)).toBeGreaterThanOrEqual(7);
+    expect(contrastRatio(strong.ink, strong.wash)).toBeGreaterThanOrEqual(7);
+    expect(contrastRatio(strong.base, strong.wash)).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(strong.ink, strong.wash)).toBeGreaterThanOrEqual(
+      contrastRatio(accent.ink, accent.wash),
+    );
+  });
+});
+
+test('Today chips and the leads mark strengthen to 7:1 on their grounds', () => {
+  const grounds = [
+    light.raised,
+    light.bronzeWash,
+    ...Object.values(partyColors).map((hex) => washOf(hex, 0.14)),
+  ];
+  for (const ground of grounds)
+    for (const color of [light.ink, light.bronzeInk, light.inkSoft])
+      expect(
+        contrastRatio(strongOn(color, ground), ground),
+      ).toBeGreaterThanOrEqual(7);
+  for (const ground of [light.navy, light.navyRaised])
+    expect(
+      contrastRatio(strongOn(light.bronzeBright, light.navyRaised), ground),
+    ).toBeGreaterThanOrEqual(7);
 });
