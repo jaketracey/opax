@@ -112,6 +112,27 @@ enum PlaybackLimits {
     static let maximumSeconds = 30 // scheduled output; another 30 seconds in encoded backlog
     static let backlogSeconds = 30
 }
+/// Coarse loudness for the call screen's animation, never audio: 0 is -60 dBFS
+/// or quieter, 1 is full scale. Read about 15 times a second while live.
+public struct AudioLevels: Sendable, Equatable {
+    public var input: Float
+    public var output: Float
+    public init(input: Float, output: Float) { self.input = input; self.output = output }
+    public static let silent = AudioLevels(input: 0, output: 0)
+}
+public enum LevelMeter {
+    /// RMS of one buffer, mapped linearly in decibels from -60 dBFS (0) to 0 dBFS (1).
+    public static func level(_ samples: UnsafeBufferPointer<Float>) -> Float {
+        guard !samples.isEmpty else { return 0 }
+        var sum: Float = 0
+        for sample in samples where sample.isFinite { sum += sample * sample }
+        return level(rms: (sum / Float(samples.count)).squareRoot())
+    }
+    public static func level(rms: Float) -> Float {
+        guard rms.isFinite, rms > 0.001 else { return 0 } // below -60 dBFS
+        return min(1, max(0, (20 * log10(rms) + 60) / 60))
+    }
+}
 public protocol VoiceAudioEngine: Sendable {
     func start(input: AudioFormat, output: AudioFormat) async throws
     /// Suspends until a capture arrives; nil means capture stopped.
@@ -125,6 +146,11 @@ public protocol VoiceAudioEngine: Sendable {
     func setMuted(_ muted: Bool) async
     func reconfigure() async throws
     func stop() async
+    /// Latest input (after voice processing) and output loudness.
+    func levels() async -> AudioLevels
+}
+public extension VoiceAudioEngine {
+    func levels() async -> AudioLevels { .silent }
 }
 public protocol VoiceEngineFactory: Sendable { func make() async throws -> any VoiceAudioEngine }
 /// One converter instance per hardware rate, retained across tap drains. Does not open audio I/O.
