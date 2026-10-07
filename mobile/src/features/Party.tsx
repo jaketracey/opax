@@ -1,3 +1,7 @@
+import { partyTimingID } from './people/party-timing';
+import { PartyAccess, PartyFunding } from './people/PartyDepth';
+import { RecordSection, NewsSection } from './people/Sections';
+import { FollowToggle } from './follows/FollowToggle';
 import { AskAbout } from './ask/AskAbout';
 import { useCallback, useEffect, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
@@ -36,7 +40,7 @@ import {
   Text,
   errorMessage,
 } from '../design/primitives';
-import { partyDot, partyWash } from '../design/party';
+import { partyDot, partyWash, partySlug } from '../design/party';
 import { colors, radius, rhythm } from '../design/tokens';
 import { openOnWeb } from '../navigation/external';
 import { billRoute, personRoute } from '../navigation/routes';
@@ -109,6 +113,7 @@ export function PartyPage({ input }: { input: string }) {
     [input],
   );
   const { record, error, refresh, retry, refreshing } = useCatalogRecord(load);
+  const [titleTiming, setTitleTiming] = useState<string | undefined>(undefined);
   const [membersOpen, setMembersOpen] = useState(false);
   const [recordedOpen, setRecordedOpen] = useState(false);
   const [yearsOpen, setYearsOpen] = useState(false);
@@ -160,6 +165,7 @@ export function PartyPage({ input }: { input: string }) {
         {view ? (
           <>
             <View
+              testID={titleTiming}
               style={[styles.hero, { backgroundColor: partyWash(view.label) }]}
             >
               <View style={styles.kicker}>
@@ -175,9 +181,21 @@ export function PartyPage({ input }: { input: string }) {
                 ) : null}
                 <Text variant="kicker">Political party</Text>
               </View>
-              <Heading level={1} testID="party-title">
+              <Heading
+                level={1}
+                testID="party-title"
+                onTextLayout={() => {
+                  if (!titleTiming) setTitleTiming(partyTimingID());
+                }}
+              >
                 {view.label}
               </Heading>
+              <FollowToggle
+                kind="party"
+                id={partySlug(view.label)}
+                title={view.label}
+                testID="party-follow"
+              />
             </View>
             <AskAbout kind="party" name={view.label} />
             <Section
@@ -358,6 +376,7 @@ export function PartyPage({ input }: { input: string }) {
                 <MoneyMapLink party={view.label} />
               </RowList>
             </Section>
+            <PartyFunding name={view.label} />
             <Section
               title="Associated entities"
               icon="building.2"
@@ -513,6 +532,9 @@ export function PartyPage({ input }: { input: string }) {
                 )}
               </CatalogState>
             </Section>
+            <PartyAccess name={view.label} />
+            <RecordSection name={view.label} kind="party" />
+            <NewsSection name={view.label} />
             <Text variant="caption" testID="party-end">
               End of party page
             </Text>

@@ -19,7 +19,7 @@ jest.mock('expo-router', () => ({
   router: { push: jest.fn() },
   Stack: { Screen: () => null },
 }));
-jest.mock('../src/api/runtime', () => ({ catalogs: { partyPage: jest.fn() } }));
+jest.mock('../src/api/runtime', () => ({ catalogs: { partyPage: jest.fn(), followSources: jest.fn() }, peopleDepth: { access: jest.fn(async () => { throw new Error('offline'); }), funding: jest.fn(async () => { throw new Error('offline'); }), mentions: jest.fn(), news: jest.fn() } }));
 jest.mock('../src/navigation/external', () => ({
   openOnWeb: jest.fn(),
   openSource: jest.fn(),

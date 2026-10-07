@@ -1,8 +1,13 @@
+import { startPartyTiming } from '../features/people/party-timing';
 import { partySlug } from '../design/party';
 import { webOrigin } from '../design/environment';
 import { assertAllowedPath } from '../api/policy';
 import { isMoreKind } from '../features/search/contracts';
 import { isRecordSlug } from '../api/record-policy';
+export const expenseGlossaryRoute = {
+  pathname: '/expense-glossary' as const,
+  params: {},
+};
 export const docRoute = (slug: string) => ({
   pathname: '/doc/[slug]' as const,
   params: { slug },
@@ -40,7 +45,10 @@ export function fromWebPath(
   | ReturnType<typeof docRoute>
   | ReturnType<typeof billTextRoute>
   | typeof recentRecordsRoute
+  | typeof expenseGlossaryRoute
   | null {
+  if (path === '/expenses' || path === '/expenses/')
+    return expenseGlossaryRoute;
   const search = searchRouteFromWebPath(path);
   if (search) return search;
   if (/^\/ask(?:\?|\/?$)/.test(path)) {
@@ -118,10 +126,13 @@ export const electorateRoute = (id: string) => ({
   params: { id },
 });
 
-export const partyRoute = (name: string) => ({
-  pathname: '/party/[slug]' as const,
-  params: { slug: partySlug(name), name },
-});
+export const partyRoute = (name: string) => {
+  startPartyTiming();
+  return {
+    pathname: '/party/[slug]' as const,
+    params: { slug: partySlug(name), name },
+  };
+};
 // Leads and the declared-interests feed (P1), opened from Today.
 export const leadsRoute = { pathname: '/leads' as const };
 export const leadRoute = (id: string) => ({

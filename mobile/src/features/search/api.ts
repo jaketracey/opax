@@ -26,11 +26,13 @@ export class RecordSearch {
   ): Promise<RecordResult<T>> {
     const cached = this.session.get(path);
     if (cached) return cached as Promise<RecordResult<T>>;
-    const pending = this.client.get(path, decode, false, {
-      retries: 0,
-      timeoutMs: summaryStream ? 85000 : 15000,
-      summaryStream,
-    });
+    const pending = path.startsWith('/api/brief?')
+      ? this.client.getForAction(path, decode)
+      : this.client.get(path, decode, false, {
+          retries: 0,
+          timeoutMs: summaryStream ? 85000 : 15000,
+          summaryStream,
+        });
     while (this.session.size >= 128)
       this.session.delete(this.session.keys().next().value!);
     this.session.set(path, pending);

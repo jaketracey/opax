@@ -1,3 +1,4 @@
+import { PayBlock, PartyReceiptsBlock } from './people/FinancialBlocks';
 import { PartialNotice, SavedCopyNotice } from './CatalogNotice';
 import { LocationSuggestion } from './electorate-map/LocationSuggestion';
 import { formatDate } from '../design/format';
@@ -357,6 +358,8 @@ export default function YourMP() {
           ) : null}
           {memberProfile ? (
             <>
+              <PayBlock block={memberProfile.blocks.pay} retry={retry} id="your-pay" />
+              <PartyReceiptsBlock block={memberProfile.blocks.partyReceipts} retry={retry} id="your-receipts" />
               <RecordBlock
                 title="Recent bill votes"
                 id="your-votes"

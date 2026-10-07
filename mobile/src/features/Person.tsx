@@ -1,8 +1,15 @@
+import { PayBlock, PartyReceiptsBlock } from './people/FinancialBlocks';
+import {
+  PersonTopics,
+  RecordSection,
+  NewsSection,
+  PersonDiary,
+  QuickFacts,
+} from './people/Sections';
 import { AskAbout } from './ask/AskAbout';
 import {
   formatCount,
   formatDate,
-  formatFinancialYear,
   formatMoney,
   formatPercent,
   formatYearRange,
@@ -45,8 +52,7 @@ import { shareHeaderItem } from '../navigation/share';
 import {
   billRoute,
   electorateRoute,
-  moneyRoute,
-  partyRoute,
+  expenseGlossaryRoute,
 } from '../navigation/routes';
 import { FollowToggle } from './follows/FollowToggle';
 import { EvidenceFooter, RecordBlock } from './your-mp/Evidence';
@@ -245,6 +251,14 @@ export function ProfileScreen({
               <EvidenceFooter block={b.identity} id="person" />
               <AskAbout kind="person" name={identity.name} />
             </Group>
+            <QuickFacts identity={identity} />
+            <PartyReceiptsBlock
+              block={b.partyReceipts}
+              retry={refresh}
+              id="person-receipts"
+              jurisdiction={identity.seats[0]?.jurisdiction}
+            />
+            <PersonTopics name={identity.name} />
             <RecordBlock
               title="Voting record"
               id="person-votes"
@@ -488,106 +502,10 @@ export function ProfileScreen({
                 </Group>
               )}
             </RecordBlock>
-            <RecordBlock
-              title="Pay for the posts held"
-              id="person-pay"
-              icon="dollarsign.circle"
-              accent="money"
-              partialMissing={partialMissing}
-              block={b.pay}
-              unlinked="This release does not link this person's salary entitlements. See the record on opax.com.au."
-              missing="No covered federal salary entitlement is held for this person. State pay and service before 7 December 1999 are outside this series."
-              retry={refresh}
-              info={(p) =>
-                p
-                  ? {
-                      title: 'About pay',
-                      notes: [p.method, ...p.notCovered.map((n) => n.text)],
-                    }
-                  : null
-              }
-            >
-              {(p) => (
-                <Group>
-                  {p.person.now ? (
-                    <Group gap={rhythm.tight}>
-                      <BigFigure
-                        value={formatMoney(p.person.now.salary)}
-                        spoken={`${moneyAccessibilityLabel(p.person.now.salary)} a year`}
-                        label={`a year · ${p.person.now.post}${
-                          p.person.now.assumed
-                            ? ' (if named in the Opposition Leader’s notice)'
-                            : ''
-                        }`}
-                        accent="money"
-                      />
-                      <Text wordSafe variant="metadata">
-                        Base salary {formatMoney(p.base.amount)}
-                        {p.person.now.pct
-                          ? ` plus a ${formatPercent(p.person.now.pct, Number.isInteger(p.person.now.pct) ? 0 : 1)} loading`
-                          : ''}
-                        . Post held since {formatDate(p.person.now.since)}.
-                      </Text>
-                    </Group>
-                  ) : (
-                    <Text wordSafe>
-                      No current pay rate is held. Historical entitlements are
-                      listed below.
-                    </Text>
-                  )}
-                  <Text wordSafe variant="caption">
-                    These are entitlements set by instrument, not payslips.
-                  </Text>
-                  <RowList>
-                    <Disclosure
-                      label="Salary by financial year"
-                      value={formatCount(p.person.by_year.length)}
-                      testID="person-pay-years"
-                    >
-                      {() => (
-                        <KeyValueList
-                          items={p.person.by_year.map(([year, amount]) => ({
-                            label: formatFinancialYear(year),
-                            value: formatMoney(amount),
-                          }))}
-                        />
-                      )}
-                    </Disclosure>
-                    <Disclosure
-                      label="Posts held"
-                      value={formatCount(p.person.spells.length)}
-                      testID="person-pay-posts"
-                    >
-                      {() => (
-                        <RowList>
-                          {[...p.person.spells]
-                            .reverse()
-                            .map(([from, to, post, pct, salary], i) => (
-                              <Group key={i} gap={rhythm.line}>
-                                <Text wordSafe variant="strong">
-                                  {post}
-                                </Text>
-                                <Text wordSafe variant="metadata">
-                                  {formatDate(from, 'short')} to{' '}
-                                  {to ? formatDate(to, 'short') : 'present'}
-                                </Text>
-                                <Text wordSafe>
-                                  {formatMoney(salary)} a year ·{' '}
-                                  {formatPercent(
-                                    pct,
-                                    Number.isInteger(pct) ? 0 : 1,
-                                  )}{' '}
-                                  loading at the end of this spell
-                                </Text>
-                              </Group>
-                            ))}
-                        </RowList>
-                      )}
-                    </Disclosure>
-                  </RowList>
-                </Group>
-              )}
-            </RecordBlock>
+            <RecordSection name={identity.name} kind="speeches" />
+            <PersonDiary identity={identity} />
+            <NewsSection name={identity.name} />
+            <PayBlock block={b.pay} retry={refresh} id="person-pay" />
             <RecordBlock
               title="Claimed expenses"
               id="person-expenses"
@@ -634,6 +552,13 @@ export function ProfileScreen({
                     The comparison is a lead, not a finding.
                   </Text>
                   <RowList>
+                    <LinkRow
+                      title="Expense category glossary"
+                      icon="list.bullet"
+                      accent="money"
+                      testID="person-expense-glossary"
+                      onPress={() => router.push(expenseGlossaryRoute)}
+                    />
                     <Disclosure
                       label="Expenses by year"
                       value={formatCount(e.person.by_year.length)}
@@ -710,61 +635,11 @@ export function ProfileScreen({
                 </Group>
               )}
             </RecordBlock>
-            <RecordBlock
-              title="Party receipts"
-              id="person-receipts"
-              icon="building.columns"
-              accent="money"
-              partialMissing={partialMissing}
-              block={b.partyReceipts}
-              missing="No receipts projection is linked for this person's party."
-              unlinked="This release does not link party receipts for this person's party. See the record on opax.com.au."
-              retry={refresh}
-            >
-              {(p) => (
-                <Group gap={rhythm.tight}>
-                  <Text wordSafe variant="metadata">
-                    {p.caption}
-                  </Text>
-                  <RowList>
-                    {p.party ? (
-                      <LinkRow
-                        title="Party receipts"
-                        detail={p.party}
-                        icon="banknote"
-                        accent="money"
-                        onPress={() => router.push(partyRoute(p.party!))}
-                        testID="person-party-receipts"
-                      />
-                    ) : (
-                      <OpaxWebLink
-                        label="Party receipts"
-                        path={p.url}
-                        testID="person-party-receipts"
-                      />
-                    )}
-                    <LinkRow
-                      title="Money map"
-                      icon="point.3.connected.trianglepath.dotted"
-                      accent="money"
-                      onPress={() =>
-                        router.push(
-                          moneyRoute(
-                            identity.party ?? p.party,
-                            identity.seats[0]?.jurisdiction,
-                          ),
-                        )
-                      }
-                      testID="person-money-map"
-                    />
-                  </RowList>
-                </Group>
-              )}
-            </RecordBlock>
+            <RecordSection name={identity.name} kind="mentions" />
             <Section>
               <RowList>
                 <OpaxWebLink
-                  label="Speeches, topics and mentions"
+                  label="Public record on opax.com.au"
                   path={webPath}
                   testID="person-web"
                 />

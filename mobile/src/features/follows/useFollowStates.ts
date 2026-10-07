@@ -39,7 +39,7 @@ export function useFollowStates(refresh: number) {
   const handledRefresh = useRef(refresh);
   const needs = needsFor(follows ?? []);
   const any = !!follows?.length;
-  const needsKey = `${needs.people}|${needs.bills}|${needs.electorates}`;
+  const needsKey = `${needs.people}|${needs.bills}|${needs.electorates}|${needs.parties}`;
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (state) => {
       if (state === 'active') setForeground((v) => v + 1);

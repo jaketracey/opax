@@ -62,6 +62,15 @@ export default function TabStack({ segment }: { segment: string }) {
         options={{ title: 'Declared interests' }}
       />
       <Stack.Screen name="follows" options={{ title: 'Following' }} />
+      <Stack.Screen
+        name="expense-glossary"
+        options={{
+          title: 'Expense glossary',
+          presentation: 'modal',
+          headerLargeTitleEnabled: false,
+          unstable_headerRightItems: () => [closeSheetItem()],
+        }}
+      />
     </Stack>
   );
 }

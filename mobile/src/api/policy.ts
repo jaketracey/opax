@@ -1,3 +1,4 @@
+import { isPeoplePaidPath } from '../features/people/policy';
 import { isPortraitPath } from './portrait-policy';
 import {
   documentKinds,
@@ -6,7 +7,11 @@ import {
   topics,
   sorts,
 } from '../features/search/contracts';
-import { isRecordSlug, billTextPathPattern, isSimilarRequest } from './record-policy';
+import {
+  isRecordSlug,
+  billTextPathPattern,
+  isSimilarRequest,
+} from './record-policy';
 // Public GETs; paid search and briefs require an explicit action in the UI.
 // Adding a path requires a source/cost review and test.
 export const catalogKinds = ['person', 'interest', 'pay', 'expense'] as const;
@@ -28,6 +33,7 @@ const staticPaths = new Set([
   '/graph/aec-extras.json',
   // Leads (P1): the static discovery export, 60 signals with their caveats.
   '/discovery.json',
+  '/access.json',
   '/search-catalog/manifest.json',
   '/reports/index.json',
   // Reviewed immutable state graph exports for the native money map: no Worker/model/auth request.
@@ -110,6 +116,7 @@ export function assertAllowedPath(path: string): void {
     throw new Error('Route is outside the public catalog allow-list');
   const params = new URLSearchParams(query);
   if (path.split('?').length > 2) throw new Error('Invalid catalog query');
+  if (isPeoplePaidPath(path)) return;
   // Build 7 Ask. POST admission is separate from the catalog GET client.
   if (pathname === '/api/ask' && query === 'stream=1') return;
   if (pathname === '/api/followups' && !path.includes('?')) return;
@@ -141,7 +148,11 @@ export function assertAllowedPath(path: string): void {
     assertSearchParams(params, pathname === '/api/search-summary');
     // This lane reviews the web's 20-row search pages. The records lane's
     // exact six-row related-speech contract is handled above.
-    if (pathname === '/api/search' && params.has('per') && params.get('per') !== '20')
+    if (
+      pathname === '/api/search' &&
+      params.has('per') &&
+      params.get('per') !== '20'
+    )
       throw new Error('Records search requires the web page size');
     if (
       pathname === '/api/search-summary' &&
@@ -200,7 +211,8 @@ export function assertAllowedPath(path: string): void {
     pathname === '/api/person-slugs' ||
     pathname === editionPath ||
     pathname === '/api/recent' ||
-    (pathname?.startsWith('/api/resource/') && isRecordSlug(pathname.slice(14))) ||
+    (pathname?.startsWith('/api/resource/') &&
+      isRecordSlug(pathname.slice(14))) ||
     billTextPathPattern.test(pathname!) ||
     staticPaths.has(pathname!) ||
     releasePath.test(pathname!) ||

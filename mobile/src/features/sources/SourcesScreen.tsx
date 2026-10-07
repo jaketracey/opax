@@ -37,6 +37,8 @@ interface Loaded {
     licence: string;
     note: string;
     licenceURL: string;
+    definitions: DatasetLink[];
+    definitionSources: string[];
   };
   pay?: { label: string; url: string }[];
   release?: { label: string; url: string; licence?: string }[];
@@ -84,7 +86,9 @@ export function SourcesScreen() {
           url: categories.data.meta.source_url,
           licence: categories.data.meta.licence,
           note: categories.data.meta.licence_note,
-          licenceURL: categories.data.meta.licence_url,
+          licenceURL: categories.data.meta.licence_url.replace(/^http:\/\/creativecommons\.org\//, 'https://creativecommons.org/'),
+          definitionSources: [...new Set(categories.data.categories.map((c) => c.source))],
+          definitions: categories.data.categories.flatMap((c) => c.url ? [{ label: c.source, url: c.url }] : []),
         },
         pay: pay?.data.meta.sources.map((s) => ({
           label: `${s.publisher}: ${s.title}`,
@@ -195,7 +199,8 @@ function withLoaded(base: Dataset[], loaded: Loaded): Dataset[] {
           links.push({ label: 'Quarterly reports', url: loaded.expenses.url });
         }
         if (loaded.categories) {
-          terms.push(loaded.categories.note);
+          terms.push(loaded.categories.note, ...loaded.categories.definitionSources);
+          links.push(...loaded.categories.definitions);
           links.push(
             { label: 'Category notes', url: loaded.categories.url },
             { label: 'Category licence', url: loaded.categories.licenceURL },

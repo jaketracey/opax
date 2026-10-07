@@ -26,6 +26,7 @@ import {
 
 const groups: [FollowKind, string][] = [
   ['person', 'Parliamentarians'],
+  ['party', 'Parties'],
   ['bill', 'Bills'],
   ['electorate', 'Electorates'],
 ];

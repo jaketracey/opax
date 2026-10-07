@@ -705,7 +705,7 @@ export class Catalogs {
    * leaves its markers unchecked instead of failing the others.
    */
   async followSources(
-    needs: { people?: boolean; bills?: boolean; electorates?: boolean },
+    needs: { people?: boolean; bills?: boolean; electorates?: boolean; parties?: boolean },
     refresh = false,
   ) {
     const records: RecordResult<unknown>[] = [];
@@ -770,6 +770,7 @@ export class Catalogs {
         decode.decodeElectorateIndex,
       ),
     ]);
+    const money = await read(needs.parties, "/graph/money.json", decode.decodeMoney);
     // Seats and people from two different releases never answer who sits where.
     const sameRelease = (release: string | undefined) =>
       release !== undefined && release === manifest?.release_id;
@@ -797,6 +798,7 @@ export class Catalogs {
       interestIndex,
       pay,
       expenses,
+      money,
       ...recordFlags(records),
       stale: records.some((r) => r.stale),
       savedAt: records.length

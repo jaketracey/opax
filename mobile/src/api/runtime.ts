@@ -5,6 +5,7 @@ import Constants from 'expo-constants';
 import { ApiClient } from './client';
 import { CatalogCache } from './cache';
 import { DiskStore } from './disk-store';
+import { PeopleDepth } from '../features/people/data';
 import { Catalogs } from './catalogs';
 import { setCatalogDiagnostics } from './validation';
 import { RecordSearch } from '../features/search/api';
@@ -42,6 +43,7 @@ export const apiClient = new ApiClient({
 // Ask and records search share the same configured client.
 export const client = apiClient;
 export const catalogs = new Catalogs(apiClient);
+export const peopleDepth = new PeopleDepth(apiClient);
 export const recordSearch = new RecordSearch(apiClient);
 // Paid reader calls: no disk persistence and no automatic retry. Records owns
 // the session promises, so opening a cached record costs no new request.

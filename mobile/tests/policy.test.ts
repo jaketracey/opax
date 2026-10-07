@@ -46,7 +46,7 @@ test.each([
   '/api/resource?id=x',
   '/api/brief',
   '/topics.json',
-  '/api/topics',
+  '/api/topics?unknown=1',
   '/api/daily-post/preview',
   '/bills/../votes.json',
   '/bills/au-federal-r7534.json?nocache=1',

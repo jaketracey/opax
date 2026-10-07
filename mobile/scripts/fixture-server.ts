@@ -110,6 +110,7 @@ if (dataMode === 'changed') {
   Object.assign(moved, { status: 'passed', status_as_of: '2026-10-01' });
   changedFiles.set('/bills/index.json', Buffer.from(JSON.stringify(index)));
 }
+const peopleFixtures = JSON.parse(responseBytes(snapshot, '/people-fixtures').toString()) as { responses: Record<string, unknown> };
 const edition =
   editionMode === 'politician'
     ? readFileSync(join(__dirname, 'fixtures/edition-politician.json'))
@@ -202,7 +203,8 @@ export const server = createServer(async (request, response) => {
     if (path.endsWith('.webp')) assertPortraitPath(path);
     else assertAllowedPath(path);
     const url = new URL(path, `http://127.0.0.1:${port}`);
-    const search = searchFixture(url, roster);
+    const peopleResponse = Object.hasOwn(peopleFixtures.responses, path);
+    const search = peopleResponse ? null : searchFixture(url, roster);
     if (search) {
       response.writeHead(200, {
         'Content-Type': search.contentType ?? 'application/json; charset=utf-8',
@@ -211,8 +213,9 @@ export const server = createServer(async (request, response) => {
       response.end(search.body);
       return;
     }
-    let body =
-      files.get(url.pathname) ?? searchResourceFixture(url.pathname) ?? undefined;
+    let body = peopleResponse
+      ? Buffer.from(JSON.stringify(peopleFixtures.responses[path]))
+      : files.get(url.pathname) ?? searchResourceFixture(url.pathname) ?? undefined;
     let cacheControl = 'public, max-age=300';
     const isEdition = url.pathname === editionPath;
     if (
@@ -235,7 +238,7 @@ export const server = createServer(async (request, response) => {
     if (isEdition) {
       body = edition;
       cacheControl = snapshot.responses[editionPath].cacheControl;
-    } else if (url.pathname === '/api/search') {
+    } else if (url.pathname === '/api/search' && !Object.hasOwn(peopleFixtures.responses, path)) {
       body = Buffer.from(JSON.stringify(recordFixtures.responses['/api/search']));
     } else if (url.pathname === '/api/person-slugs') {
       body = Buffer.from(

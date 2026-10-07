@@ -83,6 +83,7 @@ const sources = (over: Partial<FollowSources> = {}): FollowSources => ({
   stale: false,
   savedAt: 1,
   error: null,
+  money: null,
   ...over,
 });
 const readyState = (s: ReturnType<typeof followState>) => {
@@ -312,6 +313,18 @@ describe('the follows store', () => {
     mockFailAt = 0;
     resetFollowsForTests();
   });
+  test('party follows retain the cap, alternate saves and recover after a torn save', async () => {
+    await follow({kind:'party', id:'labor', title:'Labor'});
+    await follow({kind:'person', id:ALBANESE, title:'Anthony Albanese'});
+    expect([...mockDisk.keys()].sort()).toEqual(['opax-follows-v1.b.json','opax-follows-v1.json']);
+    mockFailAt=1;mockChanges=0;
+    await expect(follow({kind:'party',id:'greens',title:'Greens'})).rejects.toThrow();
+    mockFailAt=0;resetFollowsForTests();
+    expect((await loadFollows()).map(followKey)).toEqual(['party:labor', 'person:'+ALBANESE]);
+    for (let i=0;i<48;i++) await follow({kind:'party',id:'fixture-party-'+i,title:'Fixture party '+i});
+    expect(await follow({kind:'party',id:'extra',title:'Extra'})).toBe('limit');
+    expect((await loadFollows()).length).toBe(50);
+  });
   test('saved follows decode strictly: known kinds, valid IDs, no duplicates, at most the cap', () => {
     const row = (id: string, kind = 'bill') => ({
       kind,
@@ -475,7 +488,7 @@ describe('Following on Today and the follow switch', () => {
       <FollowingSection refresh={0} refreshing={false} onRetry={jest.fn()} />,
     );
     expect(mock.followSources).toHaveBeenLastCalledWith(
-      { people: true, bills: true, electorates: false },
+      { people: true, bills: true, electorates: false, parties: false },
       false,
     );
     const row = (id: string) =>
@@ -497,7 +510,7 @@ describe('Following on Today and the follow switch', () => {
       ),
     );
     expect(mock.followSources).toHaveBeenLastCalledWith(
-      { people: true, bills: true, electorates: false },
+      { people: true, bills: true, electorates: false, parties: false },
       true,
     );
     expect(row(ALBANESE).props.accessibilityLabel).toMatch(
