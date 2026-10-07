@@ -241,7 +241,9 @@
     "/photos/10956.webp": "854d831dde2d67c9a6e186f4e80939ae6b22bbceeb7a73b500cb4da0096cdf9d",
     "/graph/money.qld.json": "a86e13dc48bac9c7a65f2f14206e6379fa6f0b1071619d068e6cfa2f097c08f0",
     "/graph/money.vic.json": "e4a6d027af6b02434f329804c392c65c2609f4237574ea7a7c22eff71fe0e71f",
-    "/graph/money.tas.json": "f3c091832c8b3120a56b6340c123969e27cea62189c2aa017833daa559dc1374"
+    "/graph/money.tas.json": "f3c091832c8b3120a56b6340c123969e27cea62189c2aa017833daa559dc1374",
+    "/interests/10081.json": "a6212e59f9a530999cdf85cecb77d7865307ce29aa75cd961d541585fe4256d8",
+    "/photos/10081.webp": "b089126130e5d1033a5796295da6cb4fd0f52efc3998cf455730af9dedf6813a"
   },
   "sizes": {
     "/parliamentarians.json": 405665,
@@ -483,7 +485,9 @@
     "/photos/10956.webp": 4708,
     "/graph/money.qld.json": 209891,
     "/graph/money.vic.json": 110918,
-    "/graph/money.tas.json": 67774
+    "/graph/money.tas.json": 67774,
+    "/interests/10081.json": 3069,
+    "/photos/10081.webp": 4460
   },
   "testOnlyFiles": [
     "/interests/ties-by-donor.json"

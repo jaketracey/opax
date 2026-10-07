@@ -14,6 +14,23 @@ import { resolve } from 'node:path';
 let child: ChildProcess;
 let output = '';
 let port = 0; // Each unit-test fixture reserves its own loopback port atomically.
+// HTTP completion and the child process's stderr pipe are independent. Wait
+// for the actual refusal log rather than assuming it reached Jest first.
+function waitForOutput(expected: string): Promise<void> {
+  if (output.includes(expected)) return Promise.resolve();
+  return new Promise((resolve, reject) => {
+    const finish = (error?: Error) => {
+      clearTimeout(timer);
+      child.stdout!.removeListener('data', check);
+      child.stderr!.removeListener('data', check);
+      if (error) reject(error); else resolve();
+    };
+    const check = () => { if (output.includes(expected)) finish(); };
+    const timer = setTimeout(() => finish(new Error(`Missing fixture refusal: ${expected}`)), 3000);
+    child.stdout!.on('data', check);
+    child.stderr!.on('data', check);
+  });
+}
 function request(
   path: string,
   headers: Record<string, string> = {},
@@ -125,6 +142,7 @@ test.each([
 ])('unknown fixture route %s returns 404 and logs loudly', async (path) => {
   const result = await request(path);
   expect(result.status).toBe(404);
+  await waitForOutput(`OUTSIDE_ALLOW_LIST GET ${path}`);
   expect(output).toContain(`OUTSIDE_ALLOW_LIST GET ${path}`);
 });
 

@@ -149,10 +149,11 @@ export const datasets: Dataset[] = [
   },
   {
     id: 'bills',
-    name: 'ParlInfo bill records',
+    name: 'Bills and collected bill texts',
     publisher: 'Parliament of Australia',
     terms: [
       'Bills, their dates and their divisions come from the parliamentary record; each bill page links the official source it was read from.',
+      'Collected bill texts are transcribed from original parliamentary documents. Each version links its original document; its copyright and reuse conditions remain those of the original publisher.',
     ],
     links: [{ label: 'ParlInfo', url: 'https://parlinfo.aph.gov.au/' }],
   },
