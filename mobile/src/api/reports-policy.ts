@@ -1,4 +1,6 @@
 import { arcPath, reportSlugs, topicNames } from '../features/reports/model';
+export const isReportsPaidPath = (path: string) =>
+  path.startsWith('/api/') && allowsReportsPath(path);
 // Exact web requests, enabled by build 7 for reader-chosen screens only.
 export function allowsReportsPath(path: string): boolean {
   if (

@@ -205,8 +205,9 @@ export const server = createServer(async (request, response) => {
     if (path.endsWith('.webp')) assertPortraitPath(path);
     else assertAllowedPath(path);
     const url = new URL(path, `http://127.0.0.1:${port}`);
+    const reportBody = reportBytes(path);
     const peopleResponse = Object.hasOwn(peopleFixtures.responses, path);
-    const search = peopleResponse ? null : searchFixture(url, roster);
+    const search = peopleResponse || reportBody || files.has(url.pathname) ? null : searchFixture(url, roster);
     if (search) {
       response.writeHead(200, {
         'Content-Type': search.contentType ?? 'application/json; charset=utf-8',
@@ -215,9 +216,9 @@ export const server = createServer(async (request, response) => {
       response.end(search.body);
       return;
     }
-    let body = peopleResponse
+    let body = files.get(url.pathname) ?? searchResourceFixture(url.pathname) ?? reportBody ?? (peopleResponse
       ? Buffer.from(JSON.stringify(peopleFixtures.responses[path]))
-      : reportBytes(path) ?? files.get(url.pathname) ?? searchResourceFixture(url.pathname) ?? undefined;
+      : undefined);
     let cacheControl = 'public, max-age=300';
     const isEdition = url.pathname === editionPath;
     if (

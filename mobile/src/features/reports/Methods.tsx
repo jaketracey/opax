@@ -1,16 +1,33 @@
-import { Stack } from 'expo-router';
+import { Stack, router } from 'expo-router';
 import { reports } from '../../api/runtime';
 import {
   Group,
   Heading,
+  LinkRow,
   Screen,
-  SourceLink,
+  Section,
   Text,
 } from '../../design/primitives';
 import { shareHeaderItem } from '../../navigation/share';
 import copy from './methods-copy.json';
-import { ReadState, useRead } from './parts';
+import { useRead } from './parts';
 
+const sections = copy.flatMap((block, index) =>
+  block.kind === 'h3'
+    ? [
+        {
+          title: block.text,
+          index,
+          body: copy.slice(
+            index + 1,
+            copy.findIndex((b, i) => i > index && b.kind === 'h3') === -1
+              ? copy.length
+              : copy.findIndex((b, i) => i > index && b.kind === 'h3'),
+          ),
+        },
+      ]
+    : [],
+);
 export default function Methods() {
   const corpus = useRead(reports.corpus);
   return (
@@ -24,63 +41,66 @@ export default function Methods() {
         }}
       />
       <Screen testID="methods-screen">
-        {copy.map((block, i) => (
-          <Group key={i}>
-            {block.kind === 'h2' || block.kind === 'h3' ? (
-              <Heading
-                level={block.kind === 'h2' ? 1 : 2}
-                testID={`methods-${i}`}
-              >
-                {block.text}
-              </Heading>
-            ) : (
-              <Text wordSafe testID={`methods-${i}`}>
-                {block.text.startsWith(
-                  'State coverage windows differ by parliament',
-                )
-                  ? `State coverage windows differ by parliament.${
-                      corpus.record
-                        ? ' ' +
-                          corpus.record.data.sources
-                            .filter((s) =>
-                              /^(NSW Parliament|Victorian Parliament|QLD Parliament)$/.test(
-                                s.name,
-                              ),
-                            )
-                            .map((s) => `${s.name}: ${s.coverage}`)
-                            .join('; ') +
-                          '.'
-                        : ''
-                    }`
-                  : block.text}
-              </Text>
-            )}
-            {block.text === 'Known limitations' ? (
-              <ReadState
-                read={corpus}
-                citation="OPAX corpus manifest"
-                testID="methods-defects"
-              >
-                {(data) => (
-                  <Group>
-                    {data.known_defects.map((d) => (
-                      <Text wordSafe key={d}>
-                        {d}
-                      </Text>
-                    ))}
-                  </Group>
-                )}
-              </ReadState>
-            ) : null}
-            {block.text === 'Licence, code and corrections' ? (
-              <SourceLink
-                citation="github.com/jaketracey/opax"
-                url="https://github.com/jaketracey/opax"
-                kind="register"
+        <Heading level={1} testID="methods-1">
+          {copy[1]!.text}
+        </Heading>
+        {sections.map(({ title, index, body }) => {
+          if (title === 'Licence, code and corrections')
+            return (
+              <LinkRow
+                key={title}
+                title="Sources and licences"
+                icon="checkmark.seal"
+                accent="leads"
+                onPress={() => router.push('/account/sources')}
+                testID="methods-sources"
               />
-            ) : null}
-          </Group>
-        ))}
+            );
+          const texts = body.map((block) =>
+            block.text.startsWith('State coverage windows differ by parliament')
+              ? `State coverage windows differ by parliament.${
+                  corpus.record
+                    ? ' ' +
+                      corpus.record.data.sources
+                        .filter((s) =>
+                          /^(NSW Parliament|Victorian Parliament|QLD Parliament)$/.test(
+                            s.name,
+                          ),
+                        )
+                        .map((s) => `${s.name}: ${s.coverage}`)
+                        .join('; ') +
+                      '.'
+                    : ''
+                }`
+              : block.text,
+          );
+          const notes =
+            title === 'Known limitations'
+              ? [...texts, ...(corpus.record?.data.known_defects ?? [])]
+              : texts;
+          const folded =
+            title === 'Known limitations' || title === 'Corrections';
+          return (
+            <Section
+              key={title}
+              title={title}
+              headingTestID={`methods-${index}`}
+              icon="text.book.closed"
+              accent="bills"
+              info={folded ? { title, notes } : undefined}
+            >
+              {folded ? null : (
+                <Group>
+                  {texts.map((text, i) => (
+                    <Text key={i} wordSafe testID={`methods-${index + i + 1}`}>
+                      {text}
+                    </Text>
+                  ))}
+                </Group>
+              )}
+            </Section>
+          );
+        })}
       </Screen>
     </>
   );

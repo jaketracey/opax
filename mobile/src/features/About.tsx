@@ -22,7 +22,7 @@ import {
 import { formatCount, formatDate } from '../design/format';
 import { rhythm } from '../design/tokens';
 import { CatalogState, isOffline } from './CatalogState';
-import { RecordRow } from './RecordRow';
+
 import { openRecord } from './reports/open';
 import { deceasedPersonsNotice } from '../onboarding/pages';
 
@@ -78,11 +78,24 @@ export default function About() {
           is not affiliated with any parliament, government or political party.
         </Text>
       </Group>
-      <Section title="Read the record">
-        <RecordRow title="Reports" onPress={() => openRecord('/reports', 'Reports')} testID="about-reports" />
-        <RecordRow title="Topics A–Z" onPress={() => openRecord('/subject/topic', 'Topics A–Z')} testID="about-topics" />
-        <RecordRow title="Sources & coverage" onPress={() => openRecord('/stats', 'Sources & coverage')} testID="about-stats" />
-        <RecordRow title="Methods and source terms" onPress={() => openRecord('/methods', 'Methods')} testID="about-methods" />
+      <Section title="Read the record" icon="books.vertical" accent="leads">
+        <RowList>
+          <LinkRow
+            title="Reports"
+            onPress={() => openRecord('/reports', 'Reports')}
+            testID="about-reports"
+          />
+          <LinkRow
+            title="Topics A–Z"
+            onPress={() => openRecord('/subject/topic', 'Topics A–Z')}
+            testID="about-topics"
+          />
+          <LinkRow
+            title="Sources & coverage"
+            onPress={() => openRecord('/stats', 'Sources & coverage')}
+            testID="about-stats"
+          />
+        </RowList>
       </Section>
       <Section title="Cultural notice" icon="info.circle" accent="people">
         <Text testID="about-deceased-notice">{deceasedPersonsNotice}</Text>
@@ -228,9 +241,11 @@ export default function About() {
             onPress={() => router.push('/account/sources')}
             testID="about-sources-open"
           />
-          <OpaxWebLink
-            label="Methods and source terms"
-            path="/methods"
+          <LinkRow
+            title="Methods and source terms"
+            icon="text.book.closed"
+            accent="bills"
+            onPress={() => openRecord('/methods', 'Methods')}
             testID="about-methods"
           />
         </RowList>

@@ -280,6 +280,22 @@ export type SpeechFilters = {
   to?: string;
   debate?: string;
 };
+export function decadeWindow(
+  label: string,
+): { from: string; to: string } | null {
+  const decade = /^(\d{4})s$/.exec(label);
+  const span = /^(\d{4})[–-](\d{2}|\d{4})$/.exec(label);
+  const from = decade?.[1] ?? span?.[1];
+  if (!from) return null;
+  const to = decade
+    ? String(Number(from) + 9)
+    : span![2]!.length === 2
+      ? from.slice(0, 2) + span![2]
+      : span![2]!;
+  return Number(from) >= 1993 && Number(to) <= 2026 && from <= to
+    ? { from, to }
+    : null;
+}
 export function arcPath(slug: string, filters: SpeechFilters = {}) {
   if (!topicNames[slug]) throw new Error('Unknown topic');
   const params = new URLSearchParams({

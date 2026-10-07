@@ -1,5 +1,5 @@
 appId: au.com.opax.app
-name: 39 Topics A–Z, topic, stats and Methods (standard and AX5)
+name: 39 Topics A–Z, topic, stats and Methods
 ---
 - launchApp:
     clearState: true
@@ -61,15 +61,14 @@ name: 39 Topics A–Z, topic, stats and Methods (standard and AX5)
 - takeScreenshot: ${EVIDENCE}/39-decades
 - scrollUntilVisible:
     element:
-      id: topic-arc
+      text: The arc of this debate
     direction: DOWN
     timeout: 300000
-    visibilityPercentage: 5
     centerElement: true
 - takeScreenshot: ${EVIDENCE}/39-arc
 # Use the native header to leave the long, paginated speech window.
 - tapOn:
-    text: Back
+    text: Topics A–Z
     index: 0
 - scrollUntilVisible:
     element:

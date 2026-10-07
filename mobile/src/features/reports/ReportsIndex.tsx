@@ -1,7 +1,7 @@
 import { Stack } from 'expo-router';
 import { reports } from '../../api/runtime';
 import { RecordRow } from '../RecordRow';
-import { Screen, Section, Text } from '../../design/primitives';
+import { Screen, Section, RowList, Text } from '../../design/primitives';
 import { shareHeaderItem } from '../../navigation/share';
 import { formatDate } from '../../design/format';
 import { ReadState, useRead } from './parts';
@@ -30,16 +30,18 @@ export default function ReportsIndex() {
           testID="reports-index"
         >
           {(index) => (
-            <Section title="Reports">
-              {index.reports.map((r) => (
-                <RecordRow
-                  key={r.slug}
-                  title={r.title}
-                  detail={`${r.blurb} · Updated ${formatDate(r.updated)}`}
-                  onPress={() => openRecord(`/reports/${r.slug}`, r.title)}
-                  testID={`report-open-${r.slug}`}
-                />
-              ))}
+            <Section title="Reports" icon="books.vertical" accent="leads">
+              <RowList>
+                {index.reports.map((r) => (
+                  <RecordRow
+                    key={r.slug}
+                    title={r.title}
+                    detail={`${r.blurb} · Updated ${formatDate(r.updated)}`}
+                    onPress={() => openRecord(`/reports/${r.slug}`, r.title)}
+                    testID={`report-open-${r.slug}`}
+                  />
+                ))}
+              </RowList>
             </Section>
           )}
         </ReadState>

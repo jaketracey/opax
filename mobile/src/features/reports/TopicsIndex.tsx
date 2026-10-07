@@ -3,6 +3,7 @@ import { Stack } from 'expo-router';
 import { reports } from '../../api/runtime';
 import {
   Button,
+  InfoButton,
   Group,
   Screen,
   Section,
@@ -18,7 +19,6 @@ export default function TopicsIndex() {
   const read = useRead(reports.topics),
     tide = useRead(reports.tide);
   const [order, setOrder] = useState<'name' | 'count'>('name');
-  const [coverage, setCoverage] = useState(false);
   return (
     <>
       <Stack.Screen
@@ -60,11 +60,13 @@ export default function TopicsIndex() {
                   );
                 }}
               />
-              <Text variant="fine">
-                Counts are speeches labelled so far. The small bars are each
-                topic’s share of federal speeches by decade, 1993 to 2026,
-                scaled within the topic.
-              </Text>
+              <InfoButton
+                title="About these numbers"
+                notes={[
+                  'Counts are speeches labelled so far. The small bars are each topic’s share of federal speeches by decade, 1993 to 2026, scaled within the topic.',
+                  'A speech can carry more than one topic label, so the shares do not sum to one hundred. The decade bars use federal speeches only, the longest comparable run; each is that topic’s share of the decade’s labelled speeches, scaled to the topic’s own peak. The labelling pass is still running.',
+                ]}
+              />
               {[...data.topics]
                 .filter((t) => topicNames[t.slug])
                 .sort((a, b) =>
@@ -95,6 +97,7 @@ export default function TopicsIndex() {
                       </Text>
                       {points.length ? (
                         <ShareBars
+                          compact
                           label="Share of federal speeches by decade"
                           points={points.map((p) => ({
                             ...p,
@@ -107,20 +110,6 @@ export default function TopicsIndex() {
                     </Section>
                   );
                 })}
-              <Button
-                label="About these numbers"
-                expanded={coverage}
-                onPress={() => setCoverage((v) => !v)}
-              />
-              {coverage ? (
-                <Text variant="fine">
-                  A speech can carry more than one topic label, so the shares do
-                  not sum to one hundred. The decade bars use federal speeches
-                  only, the longest comparable run; each is that topic’s share
-                  of the decade’s labelled speeches, scaled to the topic’s own
-                  peak. The labelling pass is still running.
-                </Text>
-              ) : null}
             </Group>
           )}
         </ReadState>

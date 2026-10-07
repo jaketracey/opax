@@ -36,7 +36,7 @@ jest.mock('../src/api/runtime', () => {
     savedAt: null,
   };
   return {
-    reports: new ReportsRepository({ get }),
+    reports: new ReportsRepository({ get, getForAction: get }),
     catalogs: {
       today: jest.fn(async () => ({ bills: block, declarations: block })),
       todayEdition: jest.fn(async () => ({

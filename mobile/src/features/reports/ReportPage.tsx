@@ -4,10 +4,14 @@ import { Stack, useLocalSearchParams } from 'expo-router';
 import { reports } from '../../api/runtime';
 import {
   Button,
+  BigFigure,
+  Disclosure,
   EmptyState,
   Group,
   Heading,
   KeyValueList,
+  InfoButton,
+  PartyChip,
   Screen,
   Section,
   SegmentedControl,
@@ -19,6 +23,7 @@ import { shareHeaderItem, shareRecord } from '../../navigation/share';
 import { RecordRow } from '../RecordRow';
 import {
   allSources,
+  decadeWindow,
   moneyPairings,
   moneyRows,
   numberedSections,
@@ -49,7 +54,11 @@ function EssayView({
   number: number;
 }) {
   return (
-    <Section title={item.question} testID={`report-section-${number}`}>
+    <Section
+      title={item.question}
+      accent="leads"
+      testID={`report-section-${number}`}
+    >
       {item.label ? <Text variant="metadata">{item.label}</Text> : null}
       <Prose
         value={item.answer}
@@ -82,8 +91,17 @@ function Money({ slug }: { slug: string }) {
       <EmptyState message="No donor industry is paired with this report." />
     );
   return (
-    <Section title="Follow the money" testID="report-money">
-      <Text>{`Disclosed donations from ${cfg.label} donors to the parties, from the AEC returns.`}</Text>
+    <Section
+      title="Follow the money"
+      icon="dollarsign.circle"
+      accent="money"
+      testID="report-money"
+      info={{
+        title: 'About the disclosed money',
+        notes: [AEC_NOTE, read.record?.data.meta.coverage],
+      }}
+    >
+      <Text>{`Disclosed donations from ${cfg.label} donors to the parties.`}</Text>
       <ReadState
         read={read}
         citation="AEC returns · OPAX money graph"
@@ -99,81 +117,82 @@ function Money({ slug }: { slug: string }) {
                   value: formatMoney(row.money),
                 }))}
               />
-              <Text variant="fine">{AEC_NOTE}</Text>
-              <Text variant="fine">{money.meta.coverage}</Text>
               <RecordRow
                 title="Open the full money map"
                 onPress={() => openRecord('/money', 'Money map')}
               />
-              <Heading level={3}>Words per dollar</Heading>
-              <Text>{WORDS_NOTE}</Text>
-              <ReadState
-                read={matrix}
-                citation="OPAX labelled speech matrix"
-                testID="report-words"
-              >
-                {(m) => {
-                  const comparison = moneyRows(
-                    money,
-                    cfg.industries,
-                    m,
-                    cfg.topic,
-                  );
-                  return (
-                    <Group>
-                      {comparison.rows.map((row) => (
-                        <Group key={row.party}>
-                          <Heading level={3}>{row.party}</Heading>
-                          <RecordRow
-                            title={`${formatMoney(row.money)} disclosed`}
-                            onPress={() =>
-                              openRecord('/money', `${row.party} disclosures`)
-                            }
-                          />
-                          <View
-                            aria-hidden
-                            style={{
-                              height: 5,
-                              backgroundColor: colors.bronze,
-                              width: `${(row.money / Math.max(...comparison.rows.map((r) => r.money), 1)) * 100}%`,
-                            }}
-                          />
-                          <RecordRow
-                            title={
-                              row.share === null
-                                ? 'Not separated'
-                                : `${(row.share * 100).toFixed(1)}% · ${formatCount(row.count ?? 0)} labelled speeches`
-                            }
-                            onPress={() =>
-                              openTopicWindow(
-                                cfg.topic,
-                                { party: row.party },
-                                row.party,
-                              )
-                            }
-                          />
-                          <View
-                            aria-hidden
-                            style={{
-                              height: 5,
-                              backgroundColor: colors.ink,
-                              width: `${((row.share ?? 0) / Math.max(...comparison.rows.map((r) => r.share ?? 0), Number.EPSILON)) * 100}%`,
-                            }}
-                          />
-                        </Group>
-                      ))}
-                      <Text variant="fine">
-                        Shown together for comparison. OPAX does not claim one
-                        series causes the other. A machine pass is still
-                        labelling the corpus by subject, so speech counts are
-                        floors and shares will settle as it runs. Bars scale
-                        within their own panel and series: compare the numbers,
-                        not bar lengths, across panels.
-                      </Text>
-                    </Group>
-                  );
+              <Section
+                title="Words per dollar"
+                icon="chart.bar.xaxis"
+                accent="money"
+                info={{
+                  title: 'About words per dollar',
+                  notes: [
+                    WORDS_NOTE,
+                    'Shown together for comparison. OPAX does not claim one series causes the other. A machine pass is still labelling the corpus by subject, so speech counts are floors and shares will settle as it runs. Bars scale within their own panel and series: compare the numbers, not bar lengths, across panels.',
+                  ],
                 }}
-              </ReadState>
+              >
+                <ReadState
+                  read={matrix}
+                  citation="OPAX labelled speech matrix"
+                  testID="report-words"
+                >
+                  {(m) => {
+                    const comparison = moneyRows(
+                      money,
+                      cfg.industries,
+                      m,
+                      cfg.topic,
+                    );
+                    return (
+                      <Group>
+                        {comparison.rows.map((row) => (
+                          <Group key={row.party}>
+                            <PartyChip status="unknown" party={row.party} />
+                            <RecordRow
+                              title={`${formatMoney(row.money)} disclosed`}
+                              onPress={() =>
+                                openRecord('/money', `${row.party} disclosures`)
+                              }
+                            />
+                            <View
+                              aria-hidden
+                              style={{
+                                height: 5,
+                                backgroundColor: colors.moneyInk,
+                                width: `${(row.money / Math.max(...comparison.rows.map((r) => r.money), 1)) * 100}%`,
+                              }}
+                            />
+                            <RecordRow
+                              title={
+                                row.share === null
+                                  ? 'Not separated'
+                                  : `${(row.share * 100).toFixed(1)}% · ${formatCount(row.count ?? 0)} labelled speeches`
+                              }
+                              onPress={() =>
+                                openTopicWindow(
+                                  cfg.topic,
+                                  { party: row.party },
+                                  row.party,
+                                )
+                              }
+                            />
+                            <View
+                              aria-hidden
+                              style={{
+                                height: 5,
+                                backgroundColor: colors.ink,
+                                width: `${((row.share ?? 0) / Math.max(...comparison.rows.map((r) => r.share ?? 0), Number.EPSILON)) * 100}%`,
+                              }}
+                            />
+                          </Group>
+                        ))}
+                      </Group>
+                    );
+                  }}
+                </ReadState>
+              </Section>
             </Group>
           );
         }}
@@ -233,7 +252,7 @@ function ReportContent({
           />
           <SourcesFold
             sources={report.lede.sources}
-            label="Sources for this opening"
+            label="Records for this opening"
             testID="report-lede-sources"
           />
         </Group>
@@ -323,16 +342,21 @@ function ReportContent({
               />
             ))}
           {report.key_stats?.length ? (
-            <Section title="The figures this turns on">
+            <Section
+              title="The figures this turns on"
+              icon="chart.bar"
+              accent="votes"
+            >
               {report.key_stats.map((s, i) => (
                 <Group key={i}>
-                  <Heading level={3}>{s.value}</Heading>
-                  <Text>{s.label}</Text>
-                  {s.detail ? <Text>{s.detail}</Text> : null}
+                  <BigFigure value={s.value} label={s.label} accent="votes" />
+                  {s.detail ? (
+                    <InfoButton title={s.label} notes={[s.detail]} />
+                  ) : null}
                   <Text variant="fine">{s.as_of}</Text>
                   {s.slug ? (
                     <RecordRow
-                      title={s.source_title ?? 'Source record'}
+                      title="Read the supporting record"
                       onPress={() => openRecord(`/doc/${s.slug}`, s.label)}
                     />
                   ) : null}
@@ -344,7 +368,7 @@ function ReportContent({
             <Section title="Where the parties stand">
               {report.positions.map((p, i) => (
                 <Group key={i}>
-                  <Heading level={3}>{p.party}</Heading>
+                  <PartyChip status="unknown" party={p.party} />
                   <Text>{p.position}</Text>
                   <Text variant="fine">
                     {p.speaker} · {p.date ? formatDate(p.date) : ''}
@@ -377,21 +401,38 @@ function ReportContent({
               />
             ))}
           {report.over_time?.tide.length ? (
-            <Section title="The share of the labelled record, decade by decade">
+            <Section
+              title="The share of the labelled record, decade by decade"
+              accent="votes"
+              icon="chart.bar.xaxis"
+              info={{
+                title: 'About the decade bars',
+                notes: [
+                  'Each bar is this subject’s share of the federal speeches carrying any topic label in that decade; the small figure is the count. Labelled so far, not the whole record: the labeller is still working through the corpus, so a bar is a floor. Each decade opens the speeches behind it.',
+                ],
+              }}
+            >
               <ShareBars
                 label="Share of federal speeches by decade"
+                onSelect={(i) => {
+                  const window = decadeWindow(
+                    report.over_time!.tide[i]!.decade,
+                  );
+                  const topic = Object.entries(topicReport).find(
+                    ([, reportSlug]) => reportSlug === report.slug,
+                  )?.[0];
+                  if (window && topic)
+                    openTopicWindow(
+                      topic,
+                      { state: 'federal', ...window },
+                      report.title,
+                    );
+                }}
                 points={report.over_time.tide.map((p) => ({
                   ...p,
                   label: p.decade,
                 }))}
               />
-              <Text variant="fine">
-                Each bar is this subject&apos;s share of the federal speeches
-                carrying any topic label in that decade; the small figure is the
-                count. Labelled so far, not the whole record: the labeller is
-                still working through the corpus, so a bar is a floor. Each
-                decade opens the speeches behind it.
-              </Text>
             </Section>
           ) : null}
           <Section title="Start reading: the speeches that moved it">
@@ -443,12 +484,12 @@ function ReportContent({
         ))}
       </Section>
       <Section title={`Every record behind this report (${sources.length})`}>
-        <Button
-          label={sourceCount ? 'Hide records' : 'Show every record'}
-          onPress={() => setSourceCount(sourceCount ? 0 : 30)}
+        <Disclosure
+          label="Show every record"
+          open={sourceCount > 0}
+          onToggle={(open) => setSourceCount(open ? 30 : 0)}
           testID="report-all-sources"
-        />
-        {sourceCount ? (
+        >
           <>
             <SourceRows
               sources={sources.slice(0, sourceCount)}
@@ -461,7 +502,7 @@ function ReportContent({
               />
             ) : null}
           </>
-        ) : null}
+        </Disclosure>
       </Section>
       {report.stats ? (
         <Section title="The parliamentary record">
@@ -482,10 +523,6 @@ function ReportContent({
           />
         </Section>
       ) : null}
-      <Text variant="fine">
-        Generated {formatDate(report.generated_at)} · every claim cited to the
-        record
-      </Text>
     </Group>
   );
 }

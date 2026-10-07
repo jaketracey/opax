@@ -35,7 +35,12 @@ import Today from '../src/features/Today';
 import { responseBytes } from './fixture-bytes';
 import { replaceAt, roster, slugs } from './pinned';
 
-jest.mock('../src/features/reports/TodayReports', () => ({Spotlight: () => null, ReportsEntry: () => null, FromRecord: () => null, TodayCoverage: () => null}));
+jest.mock('../src/features/reports/TodayReports', () => ({
+  Spotlight: () => null,
+  ReportsEntry: () => null,
+  FromRecord: () => null,
+  TodayCoverage: () => null,
+}));
 jest.mock('../src/api/runtime', () => ({
   catalogs: { today: jest.fn(), todayEdition: jest.fn(), directory: jest.fn() },
 }));
@@ -320,7 +325,7 @@ describe('the edition card', () => {
       kind: 'topic' as const,
       kindLabel: 'Topic',
       machineWritten: null,
-      path: '/reports/housing',
+      path: '/reports/grants-allocation',
     };
     const { root } = render(<EditionCard edition={report} />);
     expect(host(root, 'today-edition-open')).toHaveLength(0);
@@ -330,10 +335,29 @@ describe('the edition card', () => {
     await press(root, 'today-edition-link');
     expect(alert).toHaveBeenCalledWith(
       'Opens on opax.com.au: Read the report',
-      `${webOrigin}/reports/housing`,
+      `${webOrigin}/reports/grants-allocation`,
     );
     expect(webOrigin).not.toContain('opax.com.au');
     alert.mockRestore();
+  });
+  test('a standing report opens through the shared native resolver', async () => {
+    jest.mocked(router.push).mockClear();
+    const { root } = render(
+      <EditionCard
+        edition={{
+          ...edition,
+          kind: 'topic',
+          kindLabel: 'Topic',
+          machineWritten: null,
+          path: '/reports/housing',
+        }}
+      />,
+    );
+    await press(root, 'today-edition-open');
+    expect(router.push).toHaveBeenCalledWith({
+      pathname: '/report/[slug]',
+      params: { slug: 'housing' },
+    });
   });
   test.each([
     '/subject/person/Tony%20Abbott',

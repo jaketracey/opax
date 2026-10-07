@@ -2,6 +2,7 @@ import { Stack } from 'expo-router';
 import { reports } from '../../api/runtime';
 import {
   Group,
+  BigFigure,
   KeyValueList,
   Screen,
   Section,
@@ -16,6 +17,7 @@ const kinds: Readonly<Record<string, string>> = {
   speech: 'Speeches',
   division: 'Recorded divisions',
   bill: 'Bills',
+  bill_text: 'Full bill texts',
   press_release: 'Government transcripts and releases',
   legal: 'Legislation',
   grant_invitation: 'Grant invitations',
@@ -45,13 +47,14 @@ export default function Stats() {
         >
           {(data) => (
             <Group>
+              <BigFigure
+                value={data.resources.toLocaleString()}
+                label="documents in the index"
+                accent="votes"
+                testID="stats-resources"
+              />
               <KeyValueList
                 items={[
-                  {
-                    label: 'documents in the index',
-                    value: data.resources.toLocaleString(),
-                    testID: 'stats-resources',
-                  },
                   {
                     label: 'passages indexed',
                     value: data.paragraphs.toLocaleString(),
@@ -64,7 +67,11 @@ export default function Stats() {
                   },
                 ]}
               />
-              <Section title="Speeches by parliament">
+              <Section
+                title="Speeches by parliament"
+                icon="building.columns"
+                accent="people"
+              >
                 {data.speeches_by_state ? (
                   <KeyValueList
                     items={Object.entries(data.speeches_by_state).map(
@@ -78,7 +85,11 @@ export default function Stats() {
                   <Text>Live figures are unavailable right now.</Text>
                 )}
               </Section>
-              <Section title="Documents by kind">
+              <Section
+                title="Documents by kind"
+                icon="text.book.closed"
+                accent="bills"
+              >
                 {data.kinds ? (
                   <KeyValueList
                     items={Object.entries(data.kinds).map(([kind, n]) => ({
@@ -99,7 +110,11 @@ export default function Stats() {
           testID="stats-corpus"
         >
           {(data) => (
-            <Section title="Sources loaded">
+            <Section
+              title="Collection coverage"
+              icon="chart.bar.doc.horizontal"
+              accent="votes"
+            >
               <KeyValueList
                 items={data.sources.map((s) => ({
                   label: s.name,

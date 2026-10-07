@@ -117,10 +117,34 @@ export function reportsFixture(bytes: (path: string) => Buffer) {
     cells,
     totals: Object.fromEntries(topics.map((t) => [t.slug, t.count])),
   });
+  // Reader handoff uses a pinned citation excerpt, never an invented full speech.
+  // The fixture says explicitly that it is not the complete source document.
+  for (const report of Object.values(reports)) {
+    for (const source of allSources(report)) {
+      if (!source.slug.startsWith('speech-') || !source.passage) continue;
+      put(`/api/resource/${source.slug}`, {
+        slug: source.slug,
+        title: source.title ?? source.source_title ?? source.slug,
+        speaker: source.speaker,
+        labels: {
+          kind: 'speech',
+          ...(source.party ? { party: source.party } : {}),
+          ...(source.state ? { state: source.state } : {}),
+        },
+        topics: [],
+        metadata: { date: source.date, fixture: true },
+        text:
+          'Pinned report citation excerpt. This fixture does not include the full source document.\n\n' +
+          source.passage,
+      });
+    }
+  }
   return (path: string) => {
     if (result.has(path)) return result.get(path);
     if (!path.startsWith('/api/search?')) return undefined;
     const params = new URLSearchParams(path.split('?')[1]);
+    if (params.get('per') !== '200' || !topicNames[params.get('topic') ?? ''])
+      return undefined;
     const base = result.get(arcPath(params.get('topic')!));
     if (!base) return undefined;
     const data = JSON.parse(base.toString()) as {

@@ -3,6 +3,11 @@ import { Stack, useLocalSearchParams } from 'expo-router';
 import { reports } from '../../api/runtime';
 import {
   Button,
+  BigFigure,
+  InfoButton,
+  PartyChip,
+  LinkRow,
+  RowList,
   EmptyState,
   Group,
   KeyValueList,
@@ -50,15 +55,21 @@ function TopicMoney({ slug }: { slug: string }) {
           ' and ',
         );
         return (
-          <Section title="The money beside the words">
+          <Section
+            title="The money beside the words"
+            icon="dollarsign.circle"
+            accent="money"
+            info={{
+              title: 'About the disclosed money',
+              notes: [AEC_NOTE, money.meta.coverage],
+            }}
+          >
             <Text>{`While parliament debated this, ${label} interests disclosed ${formatMoney(data.donors.reduce((n, d) => n + d.total, 0))} in donations to political parties.`}</Text>
             <KeyValueList
-              items={data.donors
+              items={data.rows
                 .slice(0, 6)
-                .map((d) => ({ label: d.label, value: formatMoney(d.total) }))}
+                .map((d) => ({ label: d.party, value: formatMoney(d.money) }))}
             />
-            <Text variant="fine">{AEC_NOTE}</Text>
-            <Text variant="fine">{money.meta.coverage}</Text>
             <RecordRow
               title="Explore on the money map"
               onPress={() => openRecord('/money', 'Money map')}
@@ -112,13 +123,19 @@ function TopicContent({
   const [order, setOrder] = useState<'newest' | 'oldest'>('newest'),
     [visible, setVisible] = useState(30);
   const title = topicNames[slug] ?? 'Topic';
+  const shareFilters = new URLSearchParams();
+  for (const [key, value] of Object.entries(filters))
+    if (value) shareFilters.set(key, value);
   return (
     <>
       <Stack.Screen
         options={{
           title,
           unstable_headerRightItems: () => [
-            shareHeaderItem({ path: `/subject/topic/${slug}`, title }),
+            shareHeaderItem({
+              path: `/subject/topic/${slug}${shareFilters.size ? '?' + shareFilters.toString() : ''}`,
+              title,
+            }),
           ],
         }}
       />
@@ -179,7 +196,18 @@ function TopicContent({
         >
           {(data) => (
             <Group>
-              <Text testID="topic-count">{`${data.count.toLocaleString()} speeches carry this label so far, of ${data.labelled.toLocaleString()} labelled to date. The labelling pass is still running.`}</Text>
+              <BigFigure
+                value={data.count.toLocaleString()}
+                label="speeches carry this label so far"
+                accent="votes"
+                testID="topic-count"
+              />
+              <InfoButton
+                title="About the topic count"
+                notes={[
+                  `${data.count.toLocaleString()} speeches carry this label so far, of ${data.labelled.toLocaleString()} labelled to date. The labelling pass is still running.`,
+                ]}
+              />
               {topicReport[slug] ? (
                 <RecordRow
                   title={`Read the ${title} report`}
@@ -189,22 +217,50 @@ function TopicContent({
                   testID="topic-report"
                 />
               ) : null}
-              <Section title="Who speaks on it, by party">
-                {data.parties.slice(0, 8).map(([party, n]) => (
-                  <RecordRow
-                    key={party}
-                    title={party}
-                    detail={`${n.toLocaleString()} speeches`}
-                    onPress={() => openTopicWindow(slug, { party }, title)}
-                  />
-                ))}
-                <Text variant="fine">
-                  Labelled so far. A party name opens its speeches on this
-                  topic. Some speeches carry no party label, so the bars can sum
-                  below the total.
-                </Text>
+              <Section
+                title="Who speaks on it, by party"
+                icon="person.2"
+                accent="people"
+                info={{
+                  title: 'About party counts',
+                  notes: [
+                    'Labelled so far. A party name opens its speeches on this topic. Some speeches carry no party label, so the bars can sum below the total.',
+                  ],
+                }}
+              >
+                <RowList>
+                  {data.parties.slice(0, 8).map(([party, n]) => (
+                    <LinkRow
+                      key={party}
+                      title={`${n.toLocaleString()} speeches`}
+                      leading={<PartyChip status="unknown" party={party} />}
+                      accessibilityLabel={`${party}, ${n.toLocaleString()} speeches`}
+                      onPress={() => openTopicWindow(slug, { party }, title)}
+                    />
+                  ))}
+                </RowList>
               </Section>
-              <Section title="Which parliament argues it">
+              <Section
+                title="Which parliament argues it"
+                icon="building.columns"
+                accent="people"
+                info={{
+                  title: 'About parliament counts',
+                  notes: [
+                    'Share of that parliament’s labelled record, then the count.',
+                    corpus.record
+                      ? `Years held: ${corpus.record.data.sources
+                          .filter((s) =>
+                            /Federal Hansard:|NSW Parliament|Victorian Parliament|SA Parliament|QLD Parliament|ACT Legislative Assembly/.test(
+                              s.name,
+                            ),
+                          )
+                          .map((s) => `${s.name} ${s.coverage}`)
+                          .join(' · ')}.`
+                      : null,
+                  ],
+                }}
+              >
                 {data.states
                   .filter(([state]) => parliamentNames[state])
                   .map(([state, n, share]) => (
@@ -215,24 +271,6 @@ function TopicContent({
                       onPress={() => openTopicWindow(slug, { state }, title)}
                     />
                   ))}
-                <Text variant="fine">
-                  Share of that parliament&apos;s labelled record, then the
-                  count.
-                </Text>
-                {corpus.record ? (
-                  <Text variant="fine">
-                    Years held:{' '}
-                    {corpus.record.data.sources
-                      .filter((s) =>
-                        /Federal Hansard:|NSW Parliament|Victorian Parliament|SA Parliament|QLD Parliament|ACT Legislative Assembly/.test(
-                          s.name,
-                        ),
-                      )
-                      .map((s) => `${s.name} ${s.coverage}`)
-                      .join(' · ')}
-                    .
-                  </Text>
-                ) : null}
               </Section>
             </Group>
           )}
@@ -246,7 +284,25 @@ function TopicContent({
           {(data) => {
             const points = data.topics[slug] ?? [];
             return points.length ? (
-              <Section title="The share over time">
+              <Section
+                title="The share over time"
+                icon="chart.bar.xaxis"
+                accent="votes"
+                info={{
+                  title: 'About the decade bars',
+                  notes: [
+                    'Each bar is this topic’s share of federal speeches carrying any topic label in that decade; the small figure is the count. Federal is the longest comparable run. Labels are applied so far, and each decade opens the speeches behind it.',
+                  ],
+                  extra: (
+                    <KeyValueList
+                      items={data.decades.map((d) => ({
+                        label: d.label,
+                        value: `${(d.coverage * 100).toFixed(1)}% · ${d.labelled.toLocaleString()} of ${d.total.toLocaleString()}`,
+                      }))}
+                    />
+                  ),
+                }}
+              >
                 <ShareBars
                   label="Share of federal speeches by decade"
                   onSelect={(i) => {
@@ -271,27 +327,22 @@ function TopicContent({
                       p.decade,
                   }))}
                 />
-                <Text variant="fine">
-                  Topic labels cover this share of each decade’s indexed
-                  speeches:
-                </Text>
-                <KeyValueList
-                  items={data.decades.map((d) => ({
-                    label: d.label,
-                    value: `${(d.coverage * 100).toFixed(1)}% · ${d.labelled.toLocaleString()} of ${d.total.toLocaleString()}`,
-                  }))}
-                />
-                <Text variant="fine">
-                  Each bar is this topic&apos;s share of federal speeches
-                  carrying any topic label in that decade; the small figure is
-                  the count. Federal is the longest comparable run. Labels are
-                  applied so far, and each decade opens the speeches behind it.
-                </Text>
               </Section>
             ) : null;
           }}
         </ReadState>
-        <Section title="The arc of this debate" testID="topic-arc">
+        <Section
+          title="The arc of this debate"
+          icon="text.book.closed"
+          accent="bills"
+          testID="topic-arc"
+          info={{
+            title: 'About this speech window',
+            notes: [
+              'The chronological view covers the retrieved window of up to 200 speeches. Passages are from the record.',
+            ],
+          }}
+        >
           <ReadState
             read={arc}
             citation="OPAX labelled speech search"
@@ -317,10 +368,6 @@ function TopicContent({
                       announce(`Speeches ordered ${v} first`);
                     }}
                   />
-                  <Text variant="fine">
-                    The chronological view covers the retrieved window of up to
-                    200 speeches. Passages are from the record.
-                  </Text>
                   <SourceRows
                     sources={rows.slice(0, visible).map((s) => ({
                       ...s,

@@ -4,7 +4,15 @@ Native Reports index and six standing report readers, report-section routes,
 Topics A–Z and topic readers, Sources & coverage, and Methods. Today adds
 Spotlight on (Gambling, Housing, Climate), static collection counts and the
 static homepage's From the record previews. Reports is linked from Today and
-About; Methods is linked from About. Search's Browse links are unchanged.
+About; Methods is linked from About. The lane is merged with build 14
+(`9c3c8768`), including the shared native record reader. Search's Browse links
+remain owned by the directories lane.
+
+The resumed screens use the current design system: category accents,
+BigFigure, compact topic sparklines, party chips, disclosures and info sheets.
+Long caveats retain their wording behind info buttons. Report and preview
+attribution and licence/code text live in Sources and licences. Records open
+through the shared resolver, and Methods links to Sources and licences.
 
 ## Matrix
 
@@ -16,7 +24,7 @@ About; Methods is linked from About. Search's Browse links are unchanged.
 | I1 | Seven report entries; six readers with exact lede/essay prose, citations, Now/Over time/Money, comparison figures and every deduplicated source. Grants allocation resolves through fromWebPath and remains on the web until its owning lane is integrated. Immigration and First Nations have no donor-industry Money tab, matching the web. |
 | I2 | /reports/slug/s/n resolves to the selected numbered section and shares that canonical path. Sections are numbered across Now and the historical eras, as on the web. |
 | I3 | Topics A–Z, counts, share, descriptions and decade sparklines; A–Z/most-discussed ordering. |
-| I4 | Party/parliament counts, money where the web pairs a donor industry, share and label coverage by decade, chronological speech window and cited record links. No Ask box. |
+| I4 | Party/parliament counts, money where the web pairs a donor industry, share and label coverage by decade, chronological speech window and cited record links. The topic's money list uses party aggregates rather than unverified donor identities (decision 3). Filtered topic shares retain their selection. No Ask box. |
 | I5 | Reader-chosen live corpus statistics and manifest/source coverage, including missing facet handling. |
 | I6 | Native Methods and citation guidance copied from index.html, with manifest defects and source links. One false coverage sentence is corrected below. |
 
@@ -39,6 +47,7 @@ automatic retries and no foreground/timer refresh. No paid read runs on Today.
 | /api/search | Open a topic's chronological speech window, or choose a party/parliament/decade/debate | 1 per distinct topic/filter window for the session; speech, hybrid, page 1, per 200, newest, matching web parameters |
 | /api/stats | Open Sources & coverage | 1; session reused |
 | /api/matrix | Tap a report's Money tab for Words per dollar | 1; session reused |
+| /api/resource/slug | Tap a citation or speech; delegated to the records lane | 1 per record for the session; no row prefetch |
 
 Report prose, citations, source lists and Today coverage use static JSON. The
 matrix is necessary only for the web's party shares in Words per dollar; ranked
@@ -65,9 +74,27 @@ public exports, never calls a Worker or the live paid endpoints, and invents
 no quotations or facts about people. Its topic totals cover the six reports,
 party counts cover their ranked voices, and its speech window is the report
 source set. These are fixture response contracts, not a captured live index.
+The native citation handoff serves a pinned excerpt only, explicitly labelled
+as incomplete. Existing search and reader fixture responses take precedence
+where the same resource is shared.
 
-Journeys 38 and 39 cover the required routes, citation fallback and section
-sharing. They run at standard text size and AX5. Regressions are 01, the
-canonical 13 Today flow, and 14 About. Private logs and screenshots are under
-mobile/private/qa/reports/. Final measured gate results accompany the lane SHA
-in the handoff; this document does not claim simulator proof before that run.
+Journeys 38 and 39 cover the required routes, the native citation handoff and
+section sharing, once at standard text size. Regressions are 01 and 13. AX5 is
+screenshot-only for the six new screens and the report-section destination.
+The About entry is checked in the screenshot capture. The single assigned
+simulator uses the shared lock and is shut down after each run.
+
+Private before/after evidence and measured gate results are indexed at
+`mobile/private/qa/reports/index.md`. `npm run qa` passed: 121 Jest suites,
+3,655 tests; 70 release-tooling tests, 12 privacy-scan tests, 27 lock checks,
+36 simulator-harness checks, typecheck, lint, static policy and the advisory
+baseline. Native build passed. Standard journeys 38, 39, 01 and 13 completed;
+seven AX5 destinations were visually reviewed without horizontal clipping or
+overlap. Final spacing/statistics captures passed after a source-only JS refresh
+in the unchanged native container. Earlier selector failures and the per-flow
+success evidence are documented in the private index. All connection audits
+passed with zero observed production/non-loopback connections and no fixture
+request outside the allow-list. The simulator is shut down and the lock released.
+
+There is no `web/reports` branch and no Worker, production paid call,
+deployment, push or release upload in this lane.

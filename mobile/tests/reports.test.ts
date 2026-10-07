@@ -296,3 +296,37 @@ test('reader construction, static report reading, session revisits and failures 
   await expect(errorReader.stats()).rejects.toThrow();
   expect(failing).toHaveBeenCalledTimes(2);
 });
+
+test.each([
+  '/api/topics',
+  '/api/tide',
+  '/api/topic/gambling',
+  d.arcPath('gambling'),
+  '/api/stats',
+  '/api/matrix',
+])(
+  'generic catalog reading refuses the paid report action %s before transport',
+  async (path) => {
+    const transport = jest.fn();
+    const client = new ApiClient({
+      origin: 'http://127.0.0.1:8944',
+      version: 'test',
+      build: '14',
+      cache: new CatalogCache(new MemoryStore()),
+      transport,
+    });
+    await expect(client.get(path, (value) => value)).rejects.toThrow(
+      'explicit action',
+    );
+    expect(transport).not.toHaveBeenCalled();
+  },
+);
+
+test('report decade labels resolve only their published year windows', () => {
+  expect(d.decadeWindow('1993–99')).toEqual({ from: '1993', to: '1999' });
+  expect(d.decadeWindow('2000s')).toEqual({ from: '2000', to: '2009' });
+  expect(d.decadeWindow('2010s')).toEqual({ from: '2010', to: '2019' });
+  expect(d.decadeWindow('2020–26')).toEqual({ from: '2020', to: '2026' });
+  expect(d.decadeWindow('unknown')).toBeNull();
+  expect(d.decadeWindow('1980s')).toBeNull();
+});

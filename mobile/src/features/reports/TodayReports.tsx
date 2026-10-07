@@ -1,26 +1,35 @@
 import { useCallback, useState } from 'react';
 import { reports } from '../../api/runtime';
 import {
-  AsAtLine,
+  BigFigure,
   Button,
+  Disclosure,
   Group,
   Heading,
   KeyValueList,
   Section,
-  SegmentedControl,
+  ChoiceChips,
   Text,
+  ViewOriginal,
 } from '../../design/primitives';
 import { RecordRow } from '../RecordRow';
 import previews from './record-previews.json';
-import { Prose, ReadState, announce, useRead } from './parts';
+import { ReadState, announce, useRead } from './parts';
 import { openRecord } from './open';
+import { TodayCard } from '../today/parts';
+import { rhythm } from '../../design/tokens';
 
 export function Spotlight() {
   const [slug, setSlug] = useState('gambling');
   const load = useCallback(() => reports.report(slug), [slug]);
   return (
-    <Section title="Spotlight on:" testID="today-spotlight">
-      <SegmentedControl
+    <Section
+      title="Spotlight on"
+      icon="sparkle.magnifyingglass"
+      accent="leads"
+      testID="today-spotlight"
+    >
+      <ChoiceChips
         value={slug}
         segments={[
           {
@@ -53,30 +62,22 @@ function SpotlightContent({
       testID="today-spotlight-data"
     >
       {(report) => (
-        <Group>
+        <TodayCard style={{ padding: rhythm.block, gap: rhythm.heading }}>
           <Heading level={3}>{report.title}</Heading>
-          {report.lede ? (
-            <Prose
-              value={report.lede.text}
-              sources={report.lede.sources}
-              testID="spotlight-lede"
-            />
-          ) : (
-            <Text>{report.blurb}</Text>
-          )}
+          <Text testID="spotlight-lede">{report.blurb}</Text>
           <RecordRow
             title={`Read the ${report.title} report`}
             onPress={() => openRecord(`/reports/${report.slug}`, report.title)}
             testID="today-spotlight-open"
           />
-        </Group>
+        </TodayCard>
       )}
     </ReadState>
   );
 }
 export function ReportsEntry() {
   return (
-    <Section title="Reports">
+    <Section title="Reports" icon="books.vertical" accent="leads">
       <RecordRow
         title="Reports"
         detail="Standing investigations across the public record"
@@ -94,11 +95,18 @@ export function ReportsEntry() {
 export function TodayCoverage() {
   const read = useRead(reports.corpus);
   return (
-    <Section title="Collection & coverage">
-      <Text>
-        Sources cover different periods and record types. Check coverage when
-        comparing parliaments or years.
-      </Text>
+    <Section
+      title="Collection & coverage"
+      icon="chart.bar.doc.horizontal"
+      accent="votes"
+      info={{
+        title: 'About the coverage',
+        notes: [
+          'Sources cover different periods and record types. Check coverage when comparing parliaments or years.',
+          'Snapshot counts describe collected records. They are not live search totals.',
+        ],
+      }}
+    >
       <ReadState
         read={read}
         citation="OPAX corpus manifest"
@@ -106,12 +114,13 @@ export function TodayCoverage() {
       >
         {(data) => (
           <Group>
+            <BigFigure
+              value={data.collected_speeches.toLocaleString()}
+              label="speeches collected"
+              accent="votes"
+            />
             <KeyValueList
               items={[
-                {
-                  label: 'speeches collected',
-                  value: data.collected_speeches.toLocaleString(),
-                },
                 {
                   label: 'expected resources',
                   value: data.expected_resources.toLocaleString(),
@@ -124,10 +133,6 @@ export function TodayCoverage() {
                   })),
               ]}
             />
-            <Text variant="fine">
-              Snapshot counts describe collected records. They are not live
-              search totals.
-            </Text>
           </Group>
         )}
       </ReadState>
@@ -143,6 +148,10 @@ export function FromRecord() {
   const [index, setIndex] = useState(0);
   const [expanded, setExpanded] = useState(false);
   const item = previews[index]!;
+  const path = item.path.replaceAll('&amp;', '&');
+  const body = item.blocks.filter(
+    (b) => b.kind !== 'p' && b.text !== item.name,
+  );
   const change = (next: number) => {
     setIndex(next);
     setExpanded(false);
@@ -151,38 +160,71 @@ export function FromRecord() {
     );
   };
   return (
-    <Section title="From the record" testID="today-from-record">
+    <Section
+      title="From the record"
+      icon="text.book.closed"
+      accent="bills"
+      testID="today-from-record"
+      info={{
+        title: 'About these previews',
+        notes: [
+          'OPAX static homepage previews. The source supplies no snapshot date.',
+        ],
+      }}
+    >
       <Group>
         <Heading level={3}>{item.name}</Heading>
         {item.blocks
-          .filter((b) => b.text !== item.name && (expanded || b.kind === 'p'))
-          .map((b, i) =>
-            b.kind === 'h3' ? (
-              <Heading key={i} level={3}>
-                {b.text}
-              </Heading>
-            ) : (
-              <Text
+          .filter(
+            (b) =>
+              b.kind === 'p' &&
+              b.text !== item.name &&
+              b.text !== 'GrantConnect',
+          )
+          .map((b, i) => {
+            const figure = /^(\$[\d,]+)(.*)$/.exec(b.text);
+            return figure ? (
+              <BigFigure
                 key={i}
-                variant={b.kind === 'p' ? 'metadata' : 'body'}
-                wordSafe
-              >
+                value={figure[1]!}
+                label={figure[2]!.trim()}
+                accent="money"
+              />
+            ) : (
+              <Text key={i} variant="metadata" wordSafe>
                 {b.text}
               </Text>
-            ),
-          )}
-        <Button
-          label={expanded ? 'Hide preview' : 'Read preview'}
-          expanded={expanded}
-          onPress={() => setExpanded((v) => !v)}
-        />
-        <RecordRow
-          title="Open the entry"
-          onPress={() =>
-            openRecord(item.path.replaceAll('&amp;', '&'), item.name)
-          }
-          testID="from-record-open"
-        />
+            );
+          })}
+        {body.length ? (
+          <Disclosure label="Read preview" open={expanded} onToggle={setExpanded}>
+            <Group>
+              {body.map((b, i) =>
+                b.kind === 'h3' ? (
+                  <Heading key={i} level={3}>
+                    {b.text}
+                  </Heading>
+                ) : (
+                  <Text key={i} wordSafe>
+                    {b.text}
+                  </Text>
+                ),
+              )}
+            </Group>
+          </Disclosure>
+        ) : null}
+        {path.startsWith('https://') ? (
+          <ViewOriginal
+            sources={[{ url: path, label: item.name }]}
+            testID="from-record-open"
+          />
+        ) : (
+          <RecordRow
+            title="Open the entry"
+            onPress={() => openRecord(path, item.name)}
+            testID="from-record-open"
+          />
+        )}
         <Text variant="metadata">
           {index + 1} of {previews.length}
         </Text>
@@ -198,7 +240,6 @@ export function FromRecord() {
           disabled={index === previews.length - 1}
           testID="from-record-next"
         />
-        <AsAtLine asOf={null} citation="OPAX static homepage previews" />
       </Group>
     </Section>
   );

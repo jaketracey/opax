@@ -22,16 +22,16 @@ import {
 // retried only by a new explicit Try again action.
 export class ReportsRepository {
   private session = new Map<string, Promise<unknown>>();
-  constructor(private client: Pick<ApiClient, 'get'>) {}
+  constructor(private client: Pick<ApiClient, 'get' | 'getForAction'>) {}
   private read<T>(path: string, decoder: (v: unknown) => T, paid = false) {
     const existing = this.session.get(path);
     if (existing)
       return existing as ReturnType<ApiClient['get']> as Promise<
         import('../../api/client').RecordResult<T>
       >;
-    const request = this.client.get(path, decoder, false, {
-      retries: paid ? 0 : undefined,
-    });
+    const request = paid
+      ? this.client.getForAction(path, decoder)
+      : this.client.get(path, decoder);
     this.session.set(path, request);
     void request
       .then((result) => {

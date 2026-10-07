@@ -4,6 +4,7 @@ import type { RecordResult } from '../../api/client';
 import {
   AsAtLine,
   Button,
+  Disclosure,
   EmptyState,
   ErrorState,
   Group,
@@ -14,11 +15,11 @@ import {
   Text,
   errorMessage,
 } from '../../design/primitives';
-import { colors } from '../../design/tokens';
+import { colors, rhythm } from '../../design/tokens';
 import { formatDate } from '../../design/format';
 import { isOffline } from '../CatalogState';
 import { RecordRow } from '../RecordRow';
-import { citedParagraphs, type Source } from './model';
+import { citedParagraphs, parliamentNames, type Source } from './model';
 import { openRecord } from './open';
 
 export const MODEL_NOTE =
@@ -109,12 +110,6 @@ export function ReadState<T>({
         savedAt={read.record.stale ? read.record.savedAt : null}
         testID={`${testID}-as-at`}
       />
-      {!read.record.asOf ? (
-        <Text variant="fine">
-          Read {formatDate(new Date(read.record.savedAt).toISOString())}. Cached
-          for this session.
-        </Text>
-      ) : null}
     </Group>
   );
 }
@@ -135,7 +130,7 @@ export function SourceRows({
               detail={[
                 s.speaker,
                 s.party,
-                s.state,
+                s.state ? parliamentNames[s.state] : null,
                 s.date ? formatDate(s.date) : null,
               ]
                 .filter(Boolean)
@@ -158,7 +153,7 @@ export function SourceRows({
 }
 export function SourcesFold({
   sources,
-  label = 'Sources',
+  label = 'Records',
   testID,
 }: {
   sources: Source[];
@@ -174,13 +169,12 @@ export function SourcesFold({
     : `${label} (${sources.length})`;
   return (
     <Group>
-      <Button
+      <Disclosure
         label={title}
-        expanded={expanded}
-        onPress={() => setExpanded((v) => !v)}
+        open={expanded}
+        onToggle={setExpanded}
         testID={testID}
-      />
-      {expanded ? (
+      >
         <Group>
           <SourceRows sources={cited} testID={`${testID}-cited`} />
           {rest.length ? (
@@ -192,7 +186,7 @@ export function SourcesFold({
             </>
           ) : null}
         </Group>
-      ) : null}
+      </Disclosure>
     </Group>
   );
 }
@@ -250,24 +244,26 @@ export function ShareBars({
   points,
   label,
   onSelect,
+  compact = false,
 }: {
   points: { label: string; share: number; count?: number }[];
   label: string;
   onSelect?: (index: number) => void;
+  compact?: boolean;
 }) {
   const max = Math.max(...points.map((p) => p.share), Number.EPSILON);
   return (
     <View
       accessible={!onSelect}
       accessibilityLabel={`${label}: ${points.map((p) => `${p.label} ${(p.share * 100).toFixed(1)}%${p.count === undefined ? '' : `, ${p.count.toLocaleString()} speeches`}`).join('; ')}`}
-      style={{ gap: 10 }}
+      style={{ gap: rhythm.tight }}
     >
       <View
         style={{
-          height: 48,
+          height: compact ? 24 : 48,
           flexDirection: 'row',
           alignItems: 'flex-end',
-          gap: 8,
+          gap: rhythm.tight,
         }}
         aria-hidden
       >
@@ -276,28 +272,30 @@ export function ShareBars({
             key={i}
             style={{
               flex: 1,
-              backgroundColor: colors.bronze,
-              height: Math.max(2, (p.share / max) * 48),
+              backgroundColor: colors.votesInk,
+              height: Math.max(2, (p.share / max) * (compact ? 24 : 48)),
             }}
           />
         ))}
       </View>
-      {points.map((p, i) =>
-        onSelect ? (
-          <RecordRow
-            key={i}
-            title={`${p.label}: ${(p.share * 100).toFixed(1)}%${p.count === undefined ? '' : ` · ${p.count.toLocaleString()} speeches`}`}
-            onPress={() => onSelect(i)}
-          />
-        ) : (
-          <Text key={i} wordSafe variant="metadata" accessible={false}>
-            {p.label}: {(p.share * 100).toFixed(1)}%
-            {p.count === undefined
-              ? ''
-              : ` · ${p.count.toLocaleString()} speeches`}
-          </Text>
-        ),
-      )}
+      {compact
+        ? null
+        : points.map((p, i) =>
+            onSelect ? (
+              <RecordRow
+                key={i}
+                title={`${p.label}: ${(p.share * 100).toFixed(1)}%${p.count === undefined ? '' : ` · ${p.count.toLocaleString()} speeches`}`}
+                onPress={() => onSelect(i)}
+              />
+            ) : (
+              <Text key={i} wordSafe variant="metadata" accessible={false}>
+                {p.label}: {(p.share * 100).toFixed(1)}%
+                {p.count === undefined
+                  ? ''
+                  : ` · ${p.count.toLocaleString()} speeches`}
+              </Text>
+            ),
+          )}
     </View>
   );
 }

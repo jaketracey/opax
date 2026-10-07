@@ -26,6 +26,11 @@ export const statement = [
 
 export const datasets: Dataset[] = [
   {
+    id: 'reports-preview', name: 'Reports, topic labels and homepage previews', publisher: 'OPAX',
+    terms: ['Reports and their machine-written sections cite the retrieved parliamentary record. Topic counts and decade shares describe the labelled record, with the labelling pass still running. Original records retain their own copyright and licence.', 'Homepage previews are copied from OPAX’s static homepage. The export supplies no snapshot date.', 'AGPL-3.0. Source and issue tracker: github.com/jaketracey/opax. Data errors are corrections we want, so please report them.'],
+    links: [{ label: 'Reports', url: canonicalUrl('/reports') }, { label: 'Methods and how to cite', url: canonicalUrl('/methods') }],
+  },
+  {
     id: 'money-qld',
     name: 'ECQ gifts register',
     publisher: 'Electoral Commission of Queensland',
