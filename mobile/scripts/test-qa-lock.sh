@@ -92,6 +92,10 @@ wait_for() {
   local deadline=$((SECONDS + ${2:-15}))
   until [ -e "$1" ]; do [ "$SECONDS" -lt "$deadline" ] || return 1; sleep 0.1; done
 }
+wait_for_line() {
+  local deadline=$((SECONDS + ${3:-15}))
+  until grep -q -- "$2" "$1" 2>/dev/null; do [ "$SECONDS" -lt "$deadline" ] || return 1; sleep 0.1; done
+}
 rc_of() { wait_for "$SCRATCH/$1.rc" "${2:-15}" || fail "$1 did not finish"; cat "$SCRATCH/$1.rc"; }
 dead_pid() { bash -c 'echo $$'; }
 no_litter() { [ -z "$(/bin/ls "$STATE" 2>/dev/null | grep -v '^reap$')" ]; }
@@ -137,12 +141,11 @@ pass "a load spike releases the lock, leaves the gate and waits outside"
 loads 50
 mkdir "$LOCK"
 run_locked paused -- quick
-wait_for "$SCRATCH/paused.log" && sleep 0.5
+wait_for_line "$SCRATCH/paused.log" 'Waiting for pasteboard lock' || fail "paused run did not observe the foreign lock"
 touch "$SCRATCH/pause"
 rmdir "$LOCK"
-sleep 1
+wait_for_line "$SCRATCH/gate.trace" '^gate-wait lock=free$' || fail "gate did not see the pause"
 [ ! -s "$SCRATCH/cmd.trace" ] || fail "command ran during the pause"
-grep -q 'gate-wait' "$SCRATCH/gate.trace" || fail "gate did not see the pause"
 /bin/rm -f "$SCRATCH/pause"
 [ "$(rc_of paused)" = 0 ] || fail "paused run failed"
 grep -qx 'run paused lock=opax pause=no gate=1' "$SCRATCH/cmd.trace" || fail "command ran during the pause or unlocked"

@@ -130,7 +130,7 @@ test('recorded Labor affiliations exclude the review Bailey, Horne, Richards and
   for (const name of ['Bailey', 'Horne', 'Richards', 'Theophanous'])
     expect(members.recorded.some((m) => m.name === name)).toBe(false);
   expect(members.recorded.filter((m) => m.name === 'MC Bailey')).toHaveLength(
-    1,
+    0,
   );
   for (const [name, place] of [
     ['Melissa Horne', 'Williamstown'],
@@ -146,9 +146,9 @@ test('recorded Labor affiliations exclude the review Bailey, Horne, Richards and
     });
     expect(members.recorded.some((m) => m.name === name)).toBe(false);
   }
-  // The full-name former federal politician is a separate recorded person.
+  // A separate historical name still needs a verified native profile.
   expect(members.recorded.some((m) => m.name === 'Andrew Theophanous')).toBe(
-    true,
+    false,
   );
 });
 test('recorded affiliations require full names and exclude every current person and seat', () => {

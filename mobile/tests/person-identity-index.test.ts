@@ -3,6 +3,7 @@ import {
   personSlugForResult,
   namedRosterRow,
   rosterRowFor,
+  personSlugForId,
 } from '../src/api/person-identity';
 import { partyLabels, partyMembers } from '../src/api/party-page';
 import {
@@ -13,20 +14,170 @@ import {
 } from './reference/person-identity-before';
 import { partyMembers as membersBefore } from './reference/party-page-before';
 import { decodeMoney } from '../src/api/catalog-decoders';
-import { catalogs, manifest, people, pinned, roster, slugs } from './pinned';
+import { profileFor, suggestionsFor } from '../src/api/selectors';
+import {
+  memberSearchResults,
+  memberSearchRows,
+  memberSlugFor,
+  memberSuggestionRoster,
+} from '../src/api/catalog-search';
+import {
+  bills,
+  catalogs,
+  index,
+  manifest,
+  people,
+  pinned,
+  roster,
+  slugs,
+} from './pinned';
 
-// Compare whole outputs, including row order, dates, sources and counts. The
-// oracle uses the original scans and guards, with no production indexes.
+// The oracle follows the unfiltered profile path; it never uses search guards.
+const nativeProfiles = new Map<string, { slug: string; name: string }>();
+const nativeSlugs = new Set<string>();
+for (const slug of Object.keys(slugs.slugs)) {
+  try {
+    const id = joinPerson(
+      slug,
+      slugs,
+      roster,
+      people,
+      manifest,
+    ).canonicalPersonId;
+    if (!id) continue;
+    const canonical = personSlugForId(id, slugs, roster, people, manifest);
+    profileFor(id, catalogs);
+    nativeProfiles.set(id, { slug: canonical, name: slugs.slugs[canonical]! });
+    nativeSlugs.add(slug);
+  } catch {
+    /* The real native profile path refuses this identity. */
+  }
+}
 test.each(
   partyLabels(roster, people, decodeMoney(pinned('/graph/money.json'))),
 )(
-  '%s current and recorded lists equal the pre-index implementation',
+  '%s native lists retain unfiltered pre-index identities, order and provenance',
   (label) => {
-    expect(partyMembers(label, roster, people, slugs, manifest)).toEqual(
-      membersBefore(label, roster, people, slugs, manifest),
-    );
+    const original = membersBefore(label, roster, people, slugs, manifest);
+    const current = original.current.filter((p) => nativeSlugs.has(p.slug));
+    const recorded = original.recorded.filter((p) => nativeSlugs.has(p.slug));
+    expect(partyMembers(label, roster, people, slugs, manifest)).toEqual({
+      ...original,
+      current,
+      recorded,
+      currentCount: current.length,
+    });
   },
 );
+test('every identity reachable through native profile navigation stays searchable and suggestible', () => {
+  expect(nativeProfiles.size).toBe(595);
+  const sources = memberSuggestionRoster(roster, catalogs);
+  const suggestedIds = new Set(
+    sources.people.map((person) => {
+      const slug = memberSlugFor(
+        {
+          kind: 'person',
+          title: person.name,
+          href: '/subject/person/' + encodeURIComponent(person.name),
+          slug: '',
+          snippet: '',
+          resource: '',
+        },
+        catalogs,
+      );
+      expect(slug).toBeDefined();
+      return joinPerson(slug!, slugs, roster, people, manifest)
+        .canonicalPersonId;
+    }),
+  );
+  expect(suggestedIds).toEqual(new Set(nativeProfiles.keys()));
+  for (const [id, profile] of nativeProfiles) {
+    const record = {
+      kind: 'person',
+      title: profile.name,
+      href: `/subject/person/${profile.slug}`,
+      slug: id,
+      snippet: '',
+      resource: '',
+    };
+    expect(memberSearchRows([record], catalogs)).toEqual([record]);
+    const found = memberSearchResults([], catalogs, profile.name);
+    expect(
+      found.some((row) => memberSlugFor(row, catalogs) === profile.slug),
+    ).toBe(true);
+    const suggestions = suggestionsFor(
+      profile.name,
+      sources,
+      index,
+      bills,
+    ).people;
+    expect(suggestions.some((p) => p.name === profile.name)).toBe(true);
+  }
+}, 30000);
+test.each([
+  ["Deb O'Neill", "O'Neill", 'deb-oneill'],
+  ['Chris Crewther', 'Chris Crewther', 'chris-crewther'],
+  ['Darren Cheeseman', 'Cheeseman', 'darren-cheeseman'],
+  ['Chris Gatenby', 'Gatenby', 'chris-gatenby'],
+  ['Stephen Smith', 'Stephen Smith', 'stephen-smith'],
+  ['Vanessa Bleyer', 'Vanessa Bleyer', 'vanessa-bleyer'],
+  ['Maree Edwards', 'Maree Edwards', 'maree-edwards'],
+  ['Julia Gillard', 'Julia Gillard', 'julia-gillard'],
+  ['Penny Wong', 'Penny Wong', 'penny-wong'],
+  ['Janelle Saffin', 'Janelle Saffin', 'janelle-saffin'],
+])(
+  '%s keeps its native search and suggestion path, including legacy hrefs',
+  (name, href, slug) => {
+    const record = {
+      kind: 'person',
+      title: name,
+      href: '/subject/person/' + encodeURIComponent(href),
+      slug: 'catalog-fixture',
+      snippet: '',
+      resource: '',
+    };
+    expect(memberSlugFor(record, catalogs)).toBe(
+      personSlugForId(
+        joinPerson(slug, slugs, roster, people, manifest).canonicalPersonId!,
+        slugs,
+        roster,
+        people,
+        manifest,
+      ),
+    );
+    expect(memberSearchRows([record], catalogs)).toEqual([record]);
+    const canonical = slugs.slugs[memberSlugFor(record, catalogs)!]!;
+    const suggestions = memberSuggestionRoster(roster, catalogs);
+    expect(
+      suggestionsFor(name, suggestions, index, bills).people.some(
+        (p) => p.name === canonical,
+      ),
+    ).toBe(true);
+  },
+);
+test('Stephen Smith and the Stephen-Smith surname collision resolve as separate exact names', () => {
+  const collision = {
+    ...catalogs,
+    roster: {
+      ...roster,
+      people: [
+        ...roster.people,
+        { name: 'Stephen-Smith', full: 'Rachel Stephen-Smith', party: null },
+      ],
+    },
+  };
+  const records = ['Stephen Smith', 'Rachel Stephen-Smith'].map((title, i) => ({
+    kind: 'person',
+    title,
+    href: '/subject/person/' + encodeURIComponent(i ? 'Stephen-Smith' : title),
+    slug: `catalog-${i}`,
+    snippet: '',
+    resource: '',
+  }));
+  expect(memberSearchRows(records, collision)).toEqual([records[0]]);
+  expect(memberSlugFor(records[0]!, collision)).toBe('stephen-smith');
+  expect(memberSlugFor(records[1]!, collision)).toBeUndefined();
+});
 function outcome(join: typeof joinPerson, slug: string) {
   try {
     return { profile: join(slug, slugs, roster, people, manifest) };

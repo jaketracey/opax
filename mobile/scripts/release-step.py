@@ -50,6 +50,8 @@ def run(step, mobile, out, expected_voice_mode=None):
     if step == "dependencies":
         cmd = dependency_command(mobile)
     elif step == "prebuild":
+        run_logged(["python3", "scripts/apply-privacy-patches.py"],
+                   out / "privacy-patches-prebuild.log", public_env=True)
         cmd = ["nice", "-n", "10", "./node_modules/.bin/expo", "prebuild", "--platform", "ios", "--clean"]
     else:
         load_credentials()  # Source the local mode-600 file inside the gated process.
@@ -76,6 +78,8 @@ def run(step, mobile, out, expected_voice_mode=None):
     # variables before Expo or Xcode build phases inherit the environment.
     run_logged(cmd, out / f"{step}-command.log", public_env=True)
     if step == "dependencies":
+        run_logged(["python3", "scripts/apply-privacy-patches.py"],
+                   out / "privacy-patches-command.log", public_env=True)
         # Reviewed pinned Skia installer copies bundled platform libraries; no network.
         run_logged(["node", "node_modules/@shopify/react-native-skia/scripts/install-libs.js"],
                    out / "native-libs-command.log", public_env=True)
@@ -91,7 +95,7 @@ def main():
         mobile = Path(__file__).resolve().parent.parent
         build = os.environ["OPAX_BUILD_NUMBER"]
         out = Path(os.environ["OPAX_RELEASE_OUT"])
-        if not re.fullmatch(r"[1-9][0-9]*", build) or out != mobile / f"private/release/0.1.0-{build}" or out.resolve() != out:
+        if not re.fullmatch(r"[1-9][0-9]*", build) or out != mobile / f"private/release/1.0.0-{build}" or out.resolve() != out:
             raise ReleaseError("Release evidence path must identify this worktree's build.")
         run(args.step, mobile, out, args.expected_voice_mode)
     except (ReleaseError, OSError, ValueError, KeyError) as error:
