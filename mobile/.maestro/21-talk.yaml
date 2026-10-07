@@ -3,6 +3,7 @@ name: 21 Talk consent, captions, sources, controls and refusal states
 ---
 - launchApp:
     clearState: true
+    permissions: {}
 - openLink: opax://talk
 - tapOn:
     text: Open
