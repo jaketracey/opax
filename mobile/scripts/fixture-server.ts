@@ -94,6 +94,7 @@ if (dataMode === 'changed') {
   Object.assign(moved, { status: 'passed', status_as_of: '2026-10-01' });
   changedFiles.set('/bills/index.json', Buffer.from(JSON.stringify(index)));
 }
+const peopleFixtures = JSON.parse(responseBytes(snapshot, '/people-fixtures').toString()) as { responses: Record<string, unknown> };
 const edition = responseBytes(snapshot, editionPath);
 const editionDate = decodeEdition(JSON.parse(edition.toString())).date;
 const manifest = JSON.parse(
@@ -179,7 +180,7 @@ export const server = createServer(async (request, response) => {
     if (path.endsWith('.webp')) assertPortraitPath(path);
     else assertAllowedPath(path);
     const url = new URL(path, `http://127.0.0.1:${port}`);
-    let body = files.get(url.pathname);
+    let body = Object.hasOwn(peopleFixtures.responses, path) ? Buffer.from(JSON.stringify(peopleFixtures.responses[path])) : files.get(url.pathname);
     let cacheControl = 'public, max-age=300';
     const isEdition = url.pathname === editionPath;
     if (

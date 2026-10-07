@@ -13,7 +13,7 @@ export function FollowingEntry() {
       <Text wordSafe testID="your-following-count">
         {follows.length
           ? `${formatCount(follows.length)} ${follows.length === 1 ? 'follow' : 'follows'} saved on this iPhone. Today shows what changed in each.`
-          : 'Nothing followed yet. Follow a parliamentarian, bill or electorate from its page.'}
+          : 'Nothing followed yet. Follow a parliamentarian, party, bill or electorate from its page.'}
       </Text>
       <Button
         label="Manage follows"

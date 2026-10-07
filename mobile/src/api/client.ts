@@ -3,6 +3,7 @@ import { CatalogCache, isFresh, type CacheEntry } from './cache';
 import { ApiError, httpError } from './errors';
 import { allowedURL } from './policy';
 import { isPartialCatalog } from './validation';
+import { isPeoplePaidPath } from '../features/people/policy';
 import {
   assertPortraitPath,
   assertPortraitBytes,
@@ -64,6 +65,39 @@ function freezeSnapshot(...values: unknown[]) {
   }
 }
 export class ApiClient {
+  private actionReads = new Map<string, Promise<RecordResult<unknown>>>();
+  /** Explicit actions only: one attempt, session memory, no disk or retry. */
+  getForAction<T>(path: string, decode: Decoder<T>): Promise<RecordResult<T>> {
+    const url = allowedURL(this.options.origin, path);
+    if (!isPeoplePaidPath(path)) throw new ApiError('forbidden', 'Not an action read.');
+    const previous = this.actionReads.get(path);
+    if (previous) return previous as Promise<RecordResult<T>>;
+    const pending = this.readAction(url, decode);
+    this.actionReads.set(path, pending);
+    // Failed actions can be retried explicitly; never retry automatically.
+    void pending.catch(() => this.actionReads.delete(path));
+    return pending;
+  }
+  private async readAction<T>(url: string, decode: Decoder<T>): Promise<RecordResult<T>> {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), this.options.timeoutMs ?? 8000);
+    try {
+      const response = await this.transport(url, {
+        method: 'GET', credentials: 'omit', redirect: 'manual', signal: controller.signal,
+        headers: { Accept: 'application/json', 'User-Agent': `OPAX-iOS/${this.options.version} (${this.options.build})` },
+      });
+      if (response.redirected || (response.status >= 300 && response.status < 400) || (response.url && response.url !== url))
+        throw new ApiError('forbidden', 'Redirects are not allowed for catalog data.');
+      if (!response.ok) throw httpError(response.status);
+      let data: T;
+      try { data = this.decodeBody(await response.json(), decode); }
+      catch { throw new ApiError('invalid-data', 'The catalog response could not be read.'); }
+      return { data, stale: false, savedAt: this.now(), asOf: dataAsOf(data) };
+    } catch (e) {
+      if (e instanceof ApiError) throw e;
+      throw new ApiError(controller.signal.aborted ? 'timeout' : 'offline', controller.signal.aborted ? 'The public record took too long to load. Try again.' : 'This section is not saved for this session. It will load when you are back online.');
+    } finally { clearTimeout(timer); }
+  }
   private transport: typeof fetch;
   private now: () => number;
   private sleep: (ms: number) => Promise<void>;
@@ -101,6 +135,7 @@ export class ApiClient {
     { absence = false }: { absence?: boolean } = {},
   ): Promise<RecordResult<T>> {
     const url = allowedURL(this.options.origin, path); // before cache or networking
+    if (isPeoplePaidPath(path)) throw new ApiError('forbidden', 'Paid sections require an explicit action read.');
     if (isPortraitPath(path))
       throw new ApiError('forbidden', 'Images require the byte client.');
     const requestStartedAt = this.now();

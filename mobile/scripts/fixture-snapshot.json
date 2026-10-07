@@ -235,7 +235,8 @@
     "/photos/wd-Q133500279.webp": "39a16739d4e181f06f57bbef358798f90b5becde508635254361af15178ce0e8",
     "/photos/10257.webp": "5d7acf340f0cf73f556cc18b53394127b0bf0de8317f4e59d0e0a993e7310a8b",
     "/photos/10001.webp": "a01454c6a792423388e65311735aee72832c93b837a771d35b42e9717c125156",
-    "/photos/10956.webp": "854d831dde2d67c9a6e186f4e80939ae6b22bbceeb7a73b500cb4da0096cdf9d"
+    "/photos/10956.webp": "854d831dde2d67c9a6e186f4e80939ae6b22bbceeb7a73b500cb4da0096cdf9d",
+    "/access.json": "8c1085f35287f3104bb0c7669e0ceab9652b4d1a322b41037cef2e9c9aa3904b"
   },
   "sizes": {
     "/parliamentarians.json": 405665,
@@ -471,7 +472,8 @@
     "/photos/wd-Q133500279.webp": 4202,
     "/photos/10257.webp": 3408,
     "/photos/10001.webp": 3326,
-    "/photos/10956.webp": 4708
+    "/photos/10956.webp": 4708,
+    "/access.json": 249364
   },
   "testOnlyFiles": [
     "/interests/ties-by-donor.json"
@@ -484,6 +486,12 @@
       "fetchedAt": "2026-10-04T03:24:09Z",
       "readerContract": "origin/main d74b35d8 portal/src/app-edition.ts",
       "cacheControl": "public, max-age=300, must-revalidate"
+    },
+    "/people-fixtures": {
+      "file": "fixtures/people-fixtures.json",
+      "sha256": "94ba175d7740b2ea4e8fcf999eff9c29a50225fad77853609a0514a410677a74",
+      "size": 5478,
+      "cacheControl": "no-store"
     }
   }
 }

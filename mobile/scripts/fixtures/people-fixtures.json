@@ -1,0 +1,138 @@
+{
+  "provenance": [
+    {
+      "file": "portal/public/bills/au-federal-r7375.json",
+      "sha256": "f80e57038e2bd59e0a75a31a166af02f07bb34223d7324e904eeb47582cd9a99",
+      "slug": "speech-1199549",
+      "resource": "62db46b60f1c209603228613971943d1",
+      "note": "Fixture-only resource ID; brief copied from public bill detail."
+    },
+    {
+      "file": "portal/public/bills/au-federal-r6955.json",
+      "sha256": "4bd6e9f5a8f7806c0750e09b610271352d2720927eb472d97d3ae5a1e29f3524",
+      "slug": "speech-828032",
+      "resource": "f189883e0b2d6c8d2a90274ce39b9712",
+      "note": "Fixture-only resource ID; brief copied from public bill detail."
+    }
+  ],
+  "responses": {
+    "/api/person-topics?name=Anthony+Albanese": {
+      "name": "Anthony Albanese",
+      "indexed": 0,
+      "profiles": {
+        "all": {
+          "label": "All years",
+          "from": 1993,
+          "to": 2026,
+          "labelled": 0,
+          "topics": []
+        },
+        "then": {
+          "label": "2010s",
+          "from": 2010,
+          "to": 2019,
+          "labelled": 0,
+          "topics": []
+        },
+        "now": {
+          "label": "2020–26",
+          "from": 2020,
+          "to": 2026,
+          "labelled": 0,
+          "topics": []
+        }
+      },
+      "coverage": "Local empty-catalogue contract fixture. These are not production speech counts."
+    },
+    "/api/topics": {
+      "labelled": 0,
+      "topics": []
+    },
+    "/api/search?q=Anthony+Albanese&speaker=Anthony+Albanese&page=1&per=8&sort=newest": {
+      "results": [
+        {
+          "slug": "speech-1199549",
+          "resource": "62db46b60f1c209603228613971943d1",
+          "title": "Excise Tariff Amendment (Draught Beer) Bill 2025",
+          "speaker": "Anthony Albanese",
+          "date": "2026-02-04",
+          "state": "federal"
+        },
+        {
+          "slug": "speech-828032",
+          "resource": "f189883e0b2d6c8d2a90274ce39b9712",
+          "title": "National Reconstruction Fund Corporation Bill 2023",
+          "speaker": "Anthony Albanese",
+          "date": "2023-03-07",
+          "state": "federal"
+        }
+      ],
+      "coverage": "Pinned public bill speech sample; not a complete or live retrieval window."
+    },
+    "/api/search?q=%22Anthony+Albanese%22&top_k=6": {
+      "results": [
+        {
+          "slug": "speech-1199549",
+          "resource": "62db46b60f1c209603228613971943d1",
+          "title": "Excise Tariff Amendment (Draught Beer) Bill 2025",
+          "speaker": "Anthony Albanese",
+          "date": "2026-02-04",
+          "state": "federal"
+        },
+        {
+          "slug": "speech-828032",
+          "resource": "f189883e0b2d6c8d2a90274ce39b9712",
+          "title": "National Reconstruction Fund Corporation Bill 2023",
+          "speaker": "Anthony Albanese",
+          "date": "2023-03-07",
+          "state": "federal"
+        }
+      ],
+      "coverage": "Pinned public bill speech sample; not a complete or live retrieval window."
+    },
+    "/api/search?q=%22Labor%22&top_k=6": {
+      "results": [
+        {
+          "slug": "speech-1199549",
+          "resource": "62db46b60f1c209603228613971943d1",
+          "title": "Excise Tariff Amendment (Draught Beer) Bill 2025",
+          "speaker": "Anthony Albanese",
+          "date": "2026-02-04",
+          "state": "federal"
+        },
+        {
+          "slug": "speech-828032",
+          "resource": "f189883e0b2d6c8d2a90274ce39b9712",
+          "title": "National Reconstruction Fund Corporation Bill 2023",
+          "speaker": "Anthony Albanese",
+          "date": "2023-03-07",
+          "state": "federal"
+        }
+      ],
+      "coverage": "Pinned public bill speech sample; not a complete or live retrieval window."
+    },
+    "/api/brief?rids=62db46b60f1c209603228613971943d1%2Cf189883e0b2d6c8d2a90274ce39b9712": {
+      "briefs": {
+        "62db46b60f1c209603228613971943d1": "Supported a two-year freeze on draught beer excise under the Excise Tariff Amendment (Draught Beer) Bill 2025 and associated bill, presenting it as cost-of-living relief and support for pubs, clubs, breweries, jobs and community organisations. The proceeding also considered amendments on spirits and other alcohol taxes, with the government opposing them.",
+        "f189883e0b2d6c8d2a90274ce39b9712": "The Prime Minister argued for the National Reconstruction Fund to boost Australian manufacturing, jobs, and economic sovereignty, citing the Clean Energy Finance Corporation’s success in unlocking $2.60 in private investment per dollar and listing seven priority areas including renewables, medical science, and defence."
+      }
+    },
+    "/api/news": {
+      "items": [
+        {
+          "title": "Here's how Labor, the Coalition and One Nation's migration cuts compare",
+          "url": "https://www.abc.net.au/news/2026-10-06/migration-cuts-comparison-labor-coalition-one-nation/107232222",
+          "source": "ABC News",
+          "published": "2026-10-06T06:22:26+00:00"
+        },
+        {
+          "title": "Is Anthony Albanese destined to be the most disappointing prime minister ever? | First Dog on the Moon",
+          "url": "https://www.theguardian.com/commentisfree/picture/2026/oct/05/is-anthony-albanese-destined-to-be-the-most-disappointing-prime-minister-ever",
+          "source": "The Guardian",
+          "published": "2026-10-05T05:42:09+00:00"
+        }
+      ],
+      "fetched_at": "2026-10-06T19:32:33.398068+00:00"
+    }
+  }
+}

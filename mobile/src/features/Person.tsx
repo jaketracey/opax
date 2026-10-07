@@ -1,11 +1,12 @@
 import {
   formatCount,
   formatDate,
-  formatFinancialYear,
   formatMoney,
   formatPercent,
   formatYearRange,
 } from '../design/format';
+import { PayBlock, PartyReceiptsBlock } from './people/FinancialBlocks';
+import { PersonTopics, RecordSection, NewsSection, PersonDiary, QuickFacts } from './people/Sections';
 import { useEffect, useState } from 'react';
 import { RefreshControl } from 'react-native';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
@@ -37,7 +38,7 @@ import {
   jurisdictionName,
 } from '../design/parliament';
 import { shareHeaderItem } from '../navigation/share';
-import { billRoute, electorateRoute, partyRoute } from '../navigation/routes';
+import { billRoute, electorateRoute, expenseGlossaryRoute } from '../navigation/routes';
 import { InlineLink } from './bills/parts';
 import { FollowToggle } from './follows/FollowToggle';
 import { EvidenceFooter, RecordBlock } from './your-mp/Evidence';
@@ -285,6 +286,9 @@ export function ProfileScreen({
                 </Group>
               </Section>
             ) : null}
+            <QuickFacts identity={identity} registerCount={b.interests.data?.total} expensesTotal={b.expenses.data?.person.total} />
+            <PartyReceiptsBlock block={b.partyReceipts} retry={refresh} id="person-receipts" />
+            <PersonTopics name={identity.name} />
             <RecordBlock
               title="Voting record"
               id="person-votes"
@@ -497,103 +501,10 @@ export function ProfileScreen({
                 </Group>
               )}
             </RecordBlock>
-            <RecordBlock
-              title="Pay for the posts held"
-              id="person-pay"
-              partialMissing={partialMissing}
-              block={b.pay}
-              unlinked="This release does not link this person's salary entitlements. See the record on opax.com.au."
-              missing="No covered federal salary entitlement is held for this person. State pay and service before 7 December 1999 are outside this series."
-              retry={refresh}
-            >
-              {(p) => (
-                <Group>
-                  {p.person.now ? (
-                    <>
-                      <Text wordSafe variant="figureInline">
-                        {formatMoney(p.person.now.salary)} a year
-                      </Text>
-                      <Text wordSafe>
-                        {p.person.now.post}
-                        {p.person.now.assumed
-                          ? ' (if named in the Opposition Leader’s notice)'
-                          : ''}
-                      </Text>
-                      <Text wordSafe>
-                        Base salary {formatMoney(p.base.amount)}
-                        {p.person.now.pct
-                          ? ` plus a ${formatPercent(p.person.now.pct, Number.isInteger(p.person.now.pct) ? 0 : 1)} loading`
-                          : ''}
-                        .
-                      </Text>
-                      <Text wordSafe variant="metadata">
-                        Post held since {formatDate(p.person.now.since)}
-                      </Text>
-                    </>
-                  ) : (
-                    <Text wordSafe>
-                      No current pay rate is held. Historical entitlements are
-                      listed below.
-                    </Text>
-                  )}
-                  <Text wordSafe>
-                    These are entitlements set by instrument, not payslips.
-                  </Text>
-                  <Text wordSafe>{p.method}</Text>
-                  <Disclosure
-                    label="Salary by financial year"
-                    id="person-pay-years"
-                  >
-                    {() => (
-                      <KeyValueList
-                        items={p.person.by_year.map(([year, amount]) => ({
-                          label: formatFinancialYear(year),
-                          value: formatMoney(amount),
-                        }))}
-                      />
-                    )}
-                  </Disclosure>
-                  <Disclosure label="Posts held" id="person-pay-posts">
-                    {() => (
-                      <Group>
-                        {[...p.person.spells]
-                          .reverse()
-                          .map(([from, to, post, pct, salary], i) => (
-                            <Group key={i} gap={4}>
-                              <Text wordSafe variant="strong">
-                                {post}
-                              </Text>
-                              <Text wordSafe variant="metadata">
-                                {formatDate(from)} to{' '}
-                                {to ? formatDate(to) : 'present'}
-                              </Text>
-                              <Text wordSafe>
-                                {formatMoney(salary)} a year ·{' '}
-                                {formatPercent(
-                                  pct,
-                                  Number.isInteger(pct) ? 0 : 1,
-                                )}{' '}
-                                loading at the end of this spell
-                              </Text>
-                            </Group>
-                          ))}
-                      </Group>
-                    )}
-                  </Disclosure>
-                  <Disclosure label="Pay coverage" id="person-pay-coverage">
-                    {() => (
-                      <Group>
-                        {p.notCovered.map((note) => (
-                          <Text wordSafe key={note.id}>
-                            {note.text}
-                          </Text>
-                        ))}
-                      </Group>
-                    )}
-                  </Disclosure>
-                </Group>
-              )}
-            </RecordBlock>
+            <RecordSection name={identity.name} kind="speeches" />
+            <PersonDiary identity={identity} />
+            <NewsSection name={identity.name} />
+            <PayBlock block={b.pay} retry={refresh} id="person-pay" />
             <RecordBlock
               title="Claimed expenses"
               id="person-expenses"
@@ -635,6 +546,7 @@ export function ProfileScreen({
                     the supplied total divided by its covered calendar years.
                     This comparison is a lead, not a finding.
                   </Text>
+                  <Button label="Expense category glossary" testID="person-expense-glossary" onPress={() => router.push(expenseGlossaryRoute)} />
                   <Disclosure
                     label="Expenses by year"
                     id="person-expense-years"
@@ -711,37 +623,10 @@ export function ProfileScreen({
                 </Group>
               )}
             </RecordBlock>
-            <RecordBlock
-              title="Party receipts"
-              id="person-receipts"
-              partialMissing={partialMissing}
-              block={b.partyReceipts}
-              missing="No receipts projection is linked for this person's party."
-              unlinked="This release does not link party receipts for this person's party. See the record on opax.com.au."
-              retry={refresh}
-            >
-              {(p) => (
-                <Group>
-                  <Text wordSafe>{p.caption}</Text>
-                  {p.party ? (
-                    <Button
-                      label="Party receipts"
-                      onPress={() => router.push(partyRoute(p.party!))}
-                      testID="person-party-receipts"
-                    />
-                  ) : (
-                    <OpaxWebLink
-                      label="Party receipts"
-                      path={p.url}
-                      testID="person-party-receipts"
-                    />
-                  )}
-                </Group>
-              )}
-            </RecordBlock>
+            <RecordSection name={identity.name} kind="mentions" />
             <Section>
               <OpaxWebLink
-                label="Speeches, topics and mentions"
+                label="Public record on opax.com.au"
                 path={webPath}
                 testID="person-web"
               />

@@ -21,13 +21,14 @@ import {
   electorateRoute,
   followsRoute,
   personRoute,
+  partyRoute,
 } from '../../navigation/routes';
 import { kindLabels, type Change, type FollowState } from './markers';
 import { followKey, markSeen, type Follow } from './store';
 import { useFollowStates } from './useFollowStates';
 
 export const routeFor = (f: Pick<Follow, 'kind' | 'id'>) =>
-  f.kind === 'person'
+  f.kind === 'party' ? partyRoute(f.id) : f.kind === 'person'
     ? personRoute(f.id)
     : f.kind === 'bill'
       ? billRoute(f.id)
@@ -88,7 +89,7 @@ export function FollowingSection({
         />
       ) : !follows.length ? (
         <EmptyState
-          message="Follow a parliamentarian, bill or electorate from its page. Today then shows what changed in the published record since you last looked. Follows are saved on this iPhone only."
+          message="Follow a parliamentarian, party, bill or electorate from its page. Today then shows what changed in the published record since you last looked. Follows are saved on this iPhone only."
           testID="today-following-empty"
         />
       ) : (

@@ -1,0 +1,140 @@
+appId: au.com.opax.app
+name: 36 Person topics, speeches, mentions, news, ministerial diary and glossary
+---
+- launchApp:
+    clearState: true
+- runFlow:
+    file: support/people-open-profile.yaml
+    env:
+      NAME: Anthony Albanese
+      SLUG: anthony-albanese
+- scrollUntilVisible:
+    element: { id: person-quick-facts }
+    direction: DOWN
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/36-quick-facts
+- scrollUntilVisible:
+    element: { id: person-topics-toggle }
+    direction: DOWN
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- tapOn: { id: person-topics-toggle }
+- scrollUntilVisible:
+    element: { text: Then }
+    direction: DOWN
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- tapOn: Then
+- scrollUntilVisible:
+    element: { text: Now }
+    direction: DOWN
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- tapOn: Now
+- takeScreenshot: ${EVIDENCE}/36-topics-now
+- scrollUntilVisible:
+    element: { id: person-topics-toggle }
+    direction: UP
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- tapOn: { id: person-topics-toggle }
+- scrollUntilVisible:
+    element: { id: person-speeches-toggle }
+    direction: DOWN
+    speed: 30
+    centerElement: true
+    timeout: 180000
+- tapOn: { id: person-speeches-toggle }
+- scrollUntilVisible:
+    element: { text: Machine brief }
+    direction: DOWN
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/36-speech-brief
+- scrollUntilVisible:
+    element: { id: person-speeches-open-0 }
+    direction: UP
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- tapOn: { id: person-speeches-open-0 }
+- assertVisible: { id: source-destination-url }
+- takeScreenshot: ${EVIDENCE}/36-speech-destination
+- tapOn: { id: source-destination-ok }
+- scrollUntilVisible:
+    element: { id: person-speeches-toggle }
+    direction: UP
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- tapOn: { id: person-speeches-toggle }
+- scrollUntilVisible:
+    element: { id: person-mentions-toggle }
+    direction: DOWN
+    speed: 30
+    centerElement: true
+    timeout: 180000
+- tapOn: { id: person-mentions-toggle }
+- scrollUntilVisible:
+    element: { id: person-mentions-open-0 }
+    direction: DOWN
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/36-mentions
+- scrollUntilVisible:
+    element: { id: people-news-toggle }
+    direction: UP
+    speed: 30
+    centerElement: true
+    timeout: 180000
+- tapOn: { id: people-news-toggle }
+- scrollUntilVisible:
+    element: { id: people-news-0 }
+    direction: DOWN
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/36-news
+- tapOn: { text: Back, index: 0 }
+- runFlow:
+    file: support/people-open-profile.yaml
+    env:
+      NAME: Chris Minns
+      SLUG: chris-minns
+- scrollUntilVisible:
+    element: { id: person-diary }
+    direction: DOWN
+    speed: 40
+    centerElement: true
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/36-diary
+- tapOn: { text: Back, index: 0 }
+- runFlow:
+    file: support/people-open-profile.yaml
+    env:
+      NAME: Anthony Albanese
+      SLUG: anthony-albanese
+- scrollUntilVisible:
+    element: { id: person-expense-glossary }
+    direction: DOWN
+    speed: 40
+    centerElement: true
+    timeout: 180000
+- tapOn: { id: person-expense-glossary }
+- assertVisible: Expense category glossary
+- takeScreenshot: ${EVIDENCE}/36-glossary
+- scrollUntilVisible:
+    element: { id: expense-glossary-end }
+    direction: DOWN
+    speed: 50
+    centerElement: true
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/36-glossary-source

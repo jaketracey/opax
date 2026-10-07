@@ -3,7 +3,7 @@ import type { Catalogs } from '../../api/catalogs';
 import { catalogSources, personId, profileFor } from '../../api/catalogs';
 import { billName, billSentenceCase } from '../../api/bill-transforms';
 import { formatCount, formatDate, formatMoney } from '../../design/format';
-import { partyText } from '../../design/party';
+import { partySlug, partyText } from '../../design/party';
 import type { Fingerprint, Follow, FollowKind, Reading } from './store';
 
 /**
@@ -37,12 +37,14 @@ export type FollowState =
 
 export const kindLabels: Record<FollowKind, string> = {
   person: 'Parliamentarian',
+  party: 'Party',
   bill: 'Bill',
   electorate: 'Electorate',
 };
 /** Which shared catalogs a set of follows needs. */
 export function needsFor(follows: readonly Pick<Follow, 'kind'>[]) {
   return {
+    parties: follows.some((f) => f.kind === 'party'),
     people: follows.some((f) => f.kind === 'person'),
     bills: follows.some((f) => f.kind === 'bill'),
     electorates: follows.some((f) => f.kind === 'electorate'),
@@ -461,12 +463,23 @@ function electorateChanges(before: Fingerprint, after: Fingerprint): Change[] {
 
 // ---- Shared ---------------------------------------------------------------
 
+function partyFingerprint(id: string, sources: FollowSources) {
+  if (!sources.money) return undefined;
+  const node = sources.money.nodes.find(n => n.kind === 'party' && partySlug(n.label) === id);
+  if (!node) return null;
+  return { title: node.label, markers: { receipts: { value: node.total, asAt: sources.money.meta.generated }, donations: { value: node.count, asAt: sources.money.meta.generated } } };
+}
+function partyChanges(before: Fingerprint, after: Fingerprint): Change[] {
+  return ['receipts', 'donations'].flatMap(marker => pairOf(before, after, marker) ? [{ marker, text: marker === 'receipts' ? 'Recorded party receipts revised to ' + formatMoney(Number(after[marker]!.value)) : 'Donations counted revised to ' + formatCount(Number(after[marker]!.value)), citation: 'AEC disclosure returns, CC BY 4.0', asAt: after[marker]!.asAt }] : []);
+}
 const fingerprints = {
+  party: partyFingerprint,
   person: personFingerprint,
   bill: billFingerprint,
   electorate: electorateFingerprint,
 };
 const changesFor = {
+  party: partyChanges,
   person: personChanges,
   bill: billChanges,
   electorate: electorateChanges,

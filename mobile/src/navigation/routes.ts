@@ -1,4 +1,6 @@
+import { startPartyTiming } from '../features/people/party-timing';
 import { partySlug } from '../design/party';
+export const expenseGlossaryRoute = { pathname: '/expense-glossary' as const, params: {} };
 export const personRoute = (slug: string) => ({
   pathname: '/person/[slug]' as const,
   params: { slug },
@@ -10,7 +12,10 @@ export const billRoute = (key: string, section?: 'divisions') => ({
 // Alignment only. Associated Domains and native universal-link handling belong to a later lane.
 export function fromWebPath(
   path: string,
-): ReturnType<typeof personRoute> | ReturnType<typeof billRoute> | null {
+): ReturnType<typeof personRoute> | ReturnType<typeof billRoute> | typeof expenseGlossaryRoute | ReturnType<typeof partyRoute> | null {
+  if (path === '/expenses' || path === '/expenses/') return expenseGlossaryRoute;
+  const party = /^\/subject\/party\/([^/?#]+)\/?$/.exec(path);
+  if (party?.[1]) { try { return partyRoute(decodeURIComponent(party[1])); } catch { return null; } }
   const match = /^\/subject\/person\/([a-z0-9-]+)\/?$/.exec(path);
   if (match?.[1]) return personRoute(match[1]);
   const bill = /^\/bill\/([a-z0-9-]+)\/?$/.exec(path);
@@ -24,10 +29,13 @@ export const electorateRoute = (id: string) => ({
   params: { id },
 });
 
-export const partyRoute = (name: string) => ({
+export const partyRoute = (name: string) => {
+  startPartyTiming();
+  return ({
   pathname: '/party/[slug]' as const,
   params: { slug: partySlug(name), name },
 });
+};
 // Leads and the declared-interests feed (P1), opened from Today.
 export const leadsRoute = { pathname: '/leads' as const };
 export const leadRoute = (id: string) => ({

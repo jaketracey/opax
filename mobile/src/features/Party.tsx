@@ -1,3 +1,8 @@
+import { partyTimingID } from './people/party-timing';
+import { PartyAccess, PartyFunding } from './people/PartyDepth';
+import { RecordSection, NewsSection } from './people/Sections';
+import { FollowToggle } from './follows/FollowToggle';
+import { partySlug } from '../design/party';
 import { useCallback, useEffect, useState } from 'react';
 import { RefreshControl } from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
@@ -104,6 +109,7 @@ export function PartyPage({ input }: { input: string }) {
     [input],
   );
   const { record, error, refresh, retry, refreshing } = useCatalogRecord(load);
+  const [titleTiming, setTitleTiming] = useState<string | undefined>(undefined);
   const [membersOpen, setMembersOpen] = useState(false);
   const [recordedOpen, setRecordedOpen] = useState(false);
   const [yearsOpen, setYearsOpen] = useState(false);
@@ -154,12 +160,13 @@ export function PartyPage({ input }: { input: string }) {
         ) : null}
         {view ? (
           <>
-            <Group>
+            <Group testID={titleTiming}>
               <Text variant="metadata">Political party</Text>
-              <Heading level={1} testID="party-title">
+              <Heading level={1} testID="party-title" onTextLayout={() => { if (!titleTiming) setTitleTiming(partyTimingID()); }}>
                 {view.label}
               </Heading>
               <PartyLabel party={view.label} status="unknown" linked={false} />
+              <FollowToggle kind="party" id={partySlug(view.label)} title={view.label} testID="party-follow" />
             </Group>
             <Section title="Members">
               <CatalogState
@@ -319,6 +326,7 @@ export function PartyPage({ input }: { input: string }) {
               />
               <MoneyMapLink />
             </Section>
+            <PartyFunding name={view.label} />
             <Section title="Associated entities">
               <CatalogState
                 block={view.associated}
@@ -467,6 +475,9 @@ export function PartyPage({ input }: { input: string }) {
                 )}
               </CatalogState>
             </Section>
+            <PartyAccess name={view.label} />
+            <RecordSection name={view.label} kind="party" />
+            <NewsSection name={view.label} />
             <Text variant="fine" testID="party-end">
               End of party page
             </Text>

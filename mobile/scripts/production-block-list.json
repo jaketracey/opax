@@ -7,5 +7,6 @@
   "[/\\\\]src[/\\\\]onboarding[/\\\\]launch-flag\\.e2e\\.ts$",
   "[/\\\\]src[/\\\\]features[/\\\\]electorate-map[/\\\\]outline-probe\\.e2e\\.ts$",
   "[/\\\\]src[/\\\\]app[/\\\\]source-destination\\.tsx$",
-  "[/\\\\]modules[/\\\\]opax-voice[/\\\\]scripts[/\\\\].*"
+  "[/\\\\]modules[/\\\\]opax-voice[/\\\\]scripts[/\\\\].*",
+  "[/\\\\]src[/\\\\]features[/\\\\]people[/\\\\]party-timing\\.e2e\\.ts$"
 ]
