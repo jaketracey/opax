@@ -76,6 +76,8 @@ export interface Block<T> {
   asAt: string | null;
   sources: Provenance[];
   stale: boolean;
+  partial?: boolean;
+  staleReason?: 'unreadable' | 'unavailable';
   savedAt: number | null;
   error?: ApiError;
 }
@@ -783,6 +785,69 @@ export interface EditionView {
   machineWritten: { attribution: string } | null;
   /** The closing slide's source rows and qualifications, verbatim. */
   sourceRows: string[];
+  /** What the slides say, verbatim, for Today's front page. */
+  facts: EditionFacts;
+}
+export interface EditionFacts {
+  /** The cover's kicker and line: "Parliamentarian · Mitchell, NSW". */
+  kicker: string | null;
+  line: string | null;
+  /** Each number slide's figure and label, in the run's order. */
+  figures: { value: string; label: string }[];
+  /** The first bars slide: its title, rows (rounded shares) and note. */
+  bars: {
+    title: string;
+    items: { label: string; pct: number }[];
+    note: string | null;
+  } | null;
+  /** The first timeline slide's dated events. */
+  events: { date: string; text: string }[];
+  /** The division slide's counts. */
+  division: { ayes: number; noes: number } | null;
+}
+/** The slides' own facts; an edition without slides has none. */
+function editionFacts(slides: AppEdition['edition']['slides']): EditionFacts {
+  const all = slides ?? [];
+  const cover = all.find((s) => s.type === 'cover');
+  const bars = all.find((s) => s.type === 'bars' && s.items?.length);
+  const timeline = all.find((s) => s.type === 'timeline' && s.events?.length);
+  const division = all.find(
+    (s) =>
+      s.type === 'division' && s.ayes !== undefined && s.noes !== undefined,
+  );
+  return {
+    kicker: cover?.kicker.trim() || null,
+    line: (cover?.type === 'cover' && cover.line?.trim()) || null,
+    figures: all.flatMap((s) =>
+      s.type === 'number' && s.value?.trim() && s.label?.trim()
+        ? [{ value: s.value.trim(), label: s.label.trim() }]
+        : [],
+    ),
+    bars:
+      bars?.type === 'bars' && bars.items
+        ? {
+            title: bars.title.trim(),
+            items: bars.items.map((i) => ({
+              label: i.label.trim(),
+              pct: i.pct,
+            })),
+            note: bars.note?.trim() || null,
+          }
+        : null,
+    events:
+      timeline?.type === 'timeline' && timeline.events
+        ? timeline.events.map((e) => ({
+            date: e.date.trim(),
+            text: e.text.trim(),
+          }))
+        : [],
+    division:
+      division?.type === 'division' &&
+      division.ayes !== undefined &&
+      division.noes !== undefined
+        ? { ayes: division.ayes, noes: division.noes }
+        : null,
+  };
 }
 /**
  * The card's view of a frozen edition. Nothing is composed or reworded: the
@@ -818,6 +883,7 @@ export function editionFor({ edition }: AppEdition) {
       closing?.type === 'source'
         ? closing.rows.map((row) => row.trim()).filter(Boolean)
         : [],
+    facts: editionFacts(edition.slides),
   };
   return block(view, edition.date, [
     { label: 'OPAX daily edition', url: view.path },

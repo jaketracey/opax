@@ -21,13 +21,14 @@ import {
 import Person from '../src/features/Person';
 import YourMP from '../src/features/YourMP';
 import Electorate from '../src/features/Electorate';
-import { InlineLink } from '../src/features/bills/parts';
+import { VoteSide } from '../src/features/your-mp/VoteSide';
 import { billRoute } from '../src/navigation/routes';
 import {
   PersonRow,
   PartyLabel,
   Text,
   Button,
+  LinkRow,
   OpaxWebLink,
 } from '../src/design/primitives';
 import { loadChoice, saveChoice } from '../src/features/your-mp/choice-store';
@@ -75,6 +76,11 @@ async function render(element: ReactElement) {
   });
   return r;
 }
+// Buttons, disclosure rows and link rows: the pressable with the test ID.
+const pressable = (r: TestRenderer.ReactTestRenderer, testID: string) =>
+  r.root.findAll(
+    (n) => n.props.testID === testID && typeof n.props.onPress === 'function',
+  )[0]!;
 const text = (r: TestRenderer.ReactTestRenderer) =>
   r.root
     .findAllByType(Text)
@@ -201,9 +207,13 @@ test('electorate preserves Census vintage and renders candidates as plain public
   );
   const r = await render(<Electorate />);
   expect(text(r)).toContain('2021 Census geography');
-  expect(text(r)).toContain('As at 2021');
+  expect(text(r)).toContain('Updated 2021');
   expect(text(r)).not.toContain('1 January 2021');
   expect(text(r)).toContain('not been redistributed');
+  // The representation caveat is behind the block's ⓘ, in full.
+  await act(async () =>
+    pressable(r, 'electorate-representatives-info').props.onPress(),
+  );
   expect(text(r)).toContain(
     'Election winners and present-day representation can differ',
   );
@@ -312,7 +322,7 @@ test('unverified private identity is refused before any name or profile blocks r
   await act(async () => r.unmount());
 });
 
-test('profile credit follows native image decode and disappears with the failed image', async () => {
+test('the profile shows the portrait without credit or licence text, and drops a failed image', async () => {
   mockParams.slug = 'sheena-watt';
   const identity = c.joinPerson('sheena-watt', slugs, roster, people, manifest);
   mock.person.mockResolvedValue(result(identity));
@@ -333,8 +343,9 @@ test('profile credit follows native image decode and disappears with the failed 
   );
   expect(text(r)).not.toContain('Gabagool2005');
   await act(async () => r.root.findByType(Image).props.onLoad());
-  expect(text(r)).toContain('Gabagool2005');
-  expect(text(r)).toContain('CC0');
+  // Credits and licences live on Sources and licences (tests/sources-screen).
+  expect(text(r)).not.toContain('Gabagool2005');
+  expect(text(r)).not.toContain('CC0');
   await act(async () => r.root.findByType(Image).props.onError());
   expect(r.root.findAllByType(Image)).toHaveLength(0);
   expect(text(r)).not.toContain('Gabagool2005');
@@ -370,12 +381,7 @@ test.each([
     expect(text(r)).not.toContain('43.0%');
     expect(text(r)).not.toContain('52.0%');
     expect(text(r)).not.toContain('160.0%');
-    await act(async () =>
-      r.root
-        .findAllByType(Button)
-        .find((n) => n.props.testID === 'person-pay-posts')!
-        .props.onPress(),
-    );
+    await act(async () => pressable(r, 'person-pay-posts').props.onPress());
     expect(text(r)).toContain(`${loading} loading at the end`);
     expect(text(r)).not.toContain('160.0%');
     await act(async () => r.unmount());
@@ -525,12 +531,7 @@ test('state district correction and removal retain the federal choice', async ()
   mock.profileFor.mockImplementation(async (id) => c.profileFor(id, catalogs));
   const r = await render(<YourMP />);
   const press = async (id: string) =>
-    act(async () =>
-      r.root
-        .findAllByType(Button)
-        .find((n) => n.props.testID === id)!
-        .props.onPress(),
-    );
+    act(async () => pressable(r, id).props.onPress());
   await press('choose-state-seat');
   await act(async () =>
     r.root
@@ -579,13 +580,11 @@ test('Your MP register disclosure is lazy and renders plain category/change labe
     seat.representatives[0]!.person_id,
     { includeInterests: false },
   );
-  expect(text(r)).not.toContain('Register changes');
-  await act(async () =>
-    r.root
-      .findAllByType(Button)
-      .find((n) => n.props.testID === 'your-register-toggle')!
-      .props.onPress(),
-  );
+  // Closed: the disclosure row only; no register block is drawn or loaded.
+  expect(
+    r.root.findAll((n) => n.props.testID === 'your-register-heading'),
+  ).toHaveLength(0);
+  await act(async () => pressable(r, 'your-register-toggle').props.onPress());
   expect(mock.profileFor).toHaveBeenLastCalledWith(
     seat.representatives[0]!.person_id,
     { includeInterests: true },
@@ -594,11 +593,7 @@ test('Your MP register disclosure is lazy and renders plain category/change labe
   expect(text(r)).toContain('Gifts · deleted');
   expect(text(r)).not.toContain('real_estate');
   expect(text(r)).not.toContain('addition');
-  const toggle = () =>
-    r.root
-      .findAllByType(Button)
-      .find((n) => n.props.testID === 'your-register-toggle')!
-      .props.onPress();
+  const toggle = () => pressable(r, 'your-register-toggle').props.onPress();
   await act(async () => toggle());
   let finish!: (value: Awaited<ReturnType<typeof mock.profileFor>>) => void;
   const pending = new Promise<Awaited<ReturnType<typeof mock.profileFor>>>(
@@ -637,8 +632,8 @@ test('picker passes distinct chamber hints for repeated seat names', async () =>
       .props.onChangeText('Melbourne'),
   );
   const buttons = r.root
-    .findAllByType(Button)
-    .filter((n) => n.props.label === 'Melbourne');
+    .findAllByType(LinkRow)
+    .filter((n) => n.props.title === 'Melbourne');
   expect(buttons.map((n) => n.props.accessibilityHint)).toEqual(
     expect.arrayContaining([
       'House of Representatives · Victoria',
@@ -663,13 +658,16 @@ test('Your MP shows six recorded bill votes in each direction', async () => {
   expect(profile.blocks.votes.data!.against.length).toBeGreaterThanOrEqual(6);
   mock.profileFor.mockResolvedValue(profile);
   const r = await render(<YourMP />);
-  expect(text(r).match(/Voted for ·/g)).toHaveLength(6);
-  expect(text(r).match(/Voted against ·/g)).toHaveLength(6);
+  const sides = r.root.findAllByType(VoteSide).map((n) => n.props.side);
+  expect(sides.filter((side) => side === 'for')).toHaveLength(6);
+  expect(sides.filter((side) => side === 'against')).toHaveLength(6);
   const matched = [
     ...profile.blocks.votes.data!.for.slice(0, 6),
     ...profile.blocks.votes.data!.against.slice(0, 6),
   ].filter((row) => row.billKey);
-  const links = r.root.findAllByType(InlineLink);
+  const links = r.root
+    .findAllByType(LinkRow)
+    .filter((n) => n.props.testID?.startsWith('your-mp-bill-'));
   expect(links).toHaveLength(matched.length);
   expect(matched.length).toBeGreaterThan(0);
   const first = links[0]!;
@@ -696,14 +694,11 @@ test('profile bill votes push the matched native bill route and keep unmatched v
   mock.person.mockResolvedValue(result(identity));
   mock.profileFor.mockResolvedValue(profile);
   const r = await render(<Person />);
-  await act(async () =>
-    r.root
-      .findAllByType(Button)
-      .find((n) => n.props.testID === 'person-bill-votes')!
-      .props.onPress(),
-  );
+  await act(async () => pressable(r, 'person-bill-votes').props.onPress());
   const votes = profile.blocks.votes.data!;
-  const links = r.root.findAllByType(InlineLink);
+  const links = r.root
+    .findAllByType(LinkRow)
+    .filter((n) => n.props.testID?.startsWith('person-bill-'));
   expect(links).toHaveLength(
     [...votes.for, ...votes.against].filter((row) => row.billKey).length,
   );
@@ -756,6 +751,8 @@ test('missing register ties do not refer to an existing file; expense copy uses 
   const a = await render(<Person />);
   expect(text(a)).toContain('about $2,440,277');
   expect(text(a)).not.toContain('A bar past its tick');
+  // The benchmark method is behind the section's ⓘ, in full.
+  await act(async () => pressable(a, 'person-expenses-info').props.onPress());
   expect(text(a)).toContain('divided by its covered calendar years');
   await act(async () => a.unmount());
 });
@@ -776,11 +773,7 @@ test('closed salary disclosure does no row formatting; opening renders every ret
   try {
     r = await render(<Person />);
     expect(years).not.toHaveBeenCalled();
-    const toggle = () =>
-      r!.root
-        .findAllByType(Button)
-        .find((n) => n.props.testID === 'person-pay-years')!
-        .props.onPress();
+    const toggle = () => pressable(r!, 'person-pay-years').props.onPress();
     await act(async () => toggle());
     expect(years).toHaveBeenCalledTimes(
       profile.blocks.pay.data!.person.by_year.length,

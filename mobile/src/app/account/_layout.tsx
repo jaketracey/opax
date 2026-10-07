@@ -11,7 +11,11 @@ export default function AccountStack() {
           unstable_headerRightItems: () => [closeSheetItem()],
         }}
       />
-      <Stack.Screen name="about" options={{ title: 'About and sources' }} />
+      <Stack.Screen name="about" options={{ title: 'About OPAX' }} />
+      <Stack.Screen
+        name="sources"
+        options={{ title: 'Sources and licences' }}
+      />
     </Stack>
   );
 }

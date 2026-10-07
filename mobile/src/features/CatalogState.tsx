@@ -1,3 +1,4 @@
+import { PartialNotice, SavedCopyNotice } from './CatalogNotice';
 import type { ReactNode } from 'react';
 import type { Block } from '../api/catalogs';
 import { ApiError } from '../api/errors';
@@ -8,7 +9,6 @@ import {
   Group,
   LoadingState,
   OfflineBanner,
-  SourceLink,
   StaleNotice,
   errorMessage,
 } from '../design/primitives';
@@ -19,7 +19,6 @@ export function CatalogState<T>({
   onRetry,
   testID,
   children,
-  links = true,
   refreshing = false,
 }: {
   block: Block<T> | null;
@@ -27,6 +26,10 @@ export function CatalogState<T>({
   onRetry: () => void;
   testID: string;
   children: (data: T) => ReactNode;
+  /**
+   * No longer draws anything: dataset links and licences moved to Sources
+   * and licences (About). Kept so existing callers need no change.
+   */
   links?: boolean;
   refreshing?: boolean;
 }) {
@@ -54,7 +57,7 @@ export function CatalogState<T>({
     <Group>
       {block.stale ? (
         <>
-          <OfflineBanner />
+          <SavedCopyNotice reason={block.staleReason} />
           {block.savedAt !== null ? (
             <StaleNotice
               savedAt={block.savedAt}
@@ -64,6 +67,7 @@ export function CatalogState<T>({
           ) : null}
         </>
       ) : null}
+      {block.partial ? <PartialNotice testID={`${testID}-partial`} /> : null}
       {block.data === null ||
       (Array.isArray(block.data) && block.data.length === 0) ? (
         <EmptyState message={empty} testID={`${testID}-empty`} />
@@ -76,19 +80,6 @@ export function CatalogState<T>({
         savedAt={block.stale ? block.savedAt : null}
         testID={`${testID}-as-at`}
       />
-      {links
-        ? block.sources
-            .filter((s) => s.url.startsWith('https://'))
-            .map((s, i) => (
-              <SourceLink
-                key={s.url}
-                citation={s.label}
-                url={s.url}
-                kind="register"
-                testID={`${testID}-source-${i}`}
-              />
-            ))
-        : null}
     </Group>
   );
 }

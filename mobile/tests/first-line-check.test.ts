@@ -26,6 +26,8 @@ describe('journey 15 first-line check', () => {
     '16e-ax5-cold-3',
     '17pro-standard-cold',
     '16e-ax5-money-map-r3',
+    // Today's dated masthead at AX5: Vision read "OPАХ is" (Cyrillic А, Х).
+    '17pro-ax5-masthead-lookalikes',
   ])('passes the drawn capture %s', (name) => {
     const verdict = firstLineVerdict(capture(name));
     expect(verdict).toMatchObject({ pass: true });

@@ -65,7 +65,6 @@ describe('the edition decoder', () => {
     ['an empty title', at(['edition', 'title'], ' ')],
     ['missing text', without('text')],
     ['a numeric subject', at(['edition', 'subject'], 7)],
-    ['a null caption', at(['edition', 'caption'], null)],
     ['an http link', at(['edition', 'url'], 'http://opax.com.au/bill/x')],
     ['a foreign host', at(['edition', 'url'], 'https://evil.test/bill/x')],
     [
@@ -99,16 +98,10 @@ describe('the edition decoder', () => {
     ],
     ['no cover first', at(['edition', 'slides', 0, 'type'], 'number')],
     ['no source last', at(['edition', 'slides', 4, 'type'], 'list')],
-    ['an unknown slide type', at(['edition', 'slides', 2, 'type'], 'video')],
-    [
-      'a slide without alt text',
-      at(['edition', 'slides', 1, 'alt'], undefined),
-    ],
     [
       'source rows that are not text',
       at(['edition', 'slides', 4, 'rows'], [1]),
     ],
-    ['a numeric list note', at(['edition', 'slides', 1, 'note'], 3)],
     ['slides as an object', at(['edition', 'slides'], {})],
     ['an array body', [raw()]],
     ['the 404 body', { error: 'edition_not_published', date: '2026-10-04' }],
@@ -126,6 +119,27 @@ describe('the edition decoder', () => {
     const plain = decodeEdition(without('slides'));
     expect(plain.edition.slides).toBeUndefined();
     expect(() => decodeEdition(at(['edition', 'caption'], ''))).not.toThrow();
+  });
+  test.each([
+    at(['edition', 'slides', 2, 'type'], 'video'),
+    at(['edition', 'slides', 1, 'alt'], undefined),
+    at(['edition', 'slides', 1, 'note'], 3),
+  ])(
+    'rejects malformed content slides so context is not silently lost',
+    (input) => {
+      expect(() => decodeEdition(input)).toThrow();
+    },
+  );
+  test('null optional edition fields are missing', () => {
+    expect(decodeEdition(at(['edition', 'caption'], null))).toEqual(
+      decodeEdition(without('caption')),
+    );
+    expect(decodeEdition(at(['edition', 'slides'], null))).toEqual(
+      decodeEdition(without('slides')),
+    );
+    expect(decodeEdition(at(['edition', 'slides', 1, 'note'], null))).toEqual(
+      decodeEdition(at(['edition', 'slides', 1, 'note'], undefined)),
+    );
   });
   test('a fragment on the link is accepted, as the Worker does, and dropped', () => {
     const anchored = decodeEdition(
@@ -172,11 +186,139 @@ describe('the edition selector', () => {
         'Explanatory memorandum on ParlInfo, CC BY-NC-ND 4.0',
         'Bill home page on ParlInfo, CC BY-NC-ND 4.0',
       ],
+      facts: {
+        kicker: 'Bill · Education portfolio',
+        line: 'This bill would keep funding grants that support pay for early childhood education and care workers. Passed 18 Sep 2026.',
+        figures: [],
+        bars: null,
+        events: [
+          {
+            date: '12 Aug 2026',
+            text: 'Introduced in the House of Representatives',
+          },
+          {
+            date: '10 Sep 2026',
+            text: 'Third reading, House of Representatives',
+          },
+          { date: '14 Sep 2026', text: 'Introduced in the Senate' },
+          { date: '15 Sep 2026', text: 'Passed the Senate' },
+          { date: '18 Sep 2026', text: 'Royal Assent' },
+        ],
+        division: null,
+      },
     });
     for (const paragraph of view.data!.paragraphs)
       expect(decoded.edition.text).toContain(paragraph);
     for (const row of view.data!.sourceRows)
       expect(JSON.stringify(decoded.edition.slides)).toContain(row);
+  });
+  test("the front page's facts are the slides' own, and a field it cannot read is left out", () => {
+    const slides = decoded.edition.slides!;
+    const withNumbers = decodeEdition(
+      at(
+        ['edition', 'slides'],
+        [
+          slides[0],
+          {
+            type: 'number',
+            kicker: 'The record',
+            title: 'What OPAX holds',
+            alt: 'a',
+            lines: [],
+            value: '768',
+            label: 'speeches in the Opax record',
+          },
+          {
+            type: 'bars',
+            kicker: 'k',
+            title: 'Most common topic labels',
+            alt: 'a',
+            lines: [],
+            items: [{ label: 'Tax & budget', pct: 19 }],
+            note: 'Shares of labelled speeches.',
+          },
+          {
+            type: 'division',
+            kicker: 'k',
+            title: 't',
+            alt: 'a',
+            ayes: 85,
+            noes: 50,
+            ayeParties: [],
+            noParties: [],
+            line: '',
+          },
+          slides.at(-1),
+        ],
+      ),
+    );
+    expect(editionFor(withNumbers).data!.facts).toMatchObject({
+      figures: [{ value: '768', label: 'speeches in the Opax record' }],
+      bars: {
+        title: 'Most common topic labels',
+        items: [{ label: 'Tax & budget', pct: 19 }],
+        note: 'Shares of labelled speeches.',
+      },
+      division: { ayes: 85, noes: 50 },
+      events: [],
+    });
+    // Unreadable optional fields drop out; the edition still reads.
+    const odd = decodeEdition(
+      at(
+        ['edition', 'slides'],
+        [
+          { ...slides[0], line: 42 },
+          {
+            type: 'number',
+            kicker: 'k',
+            title: 't',
+            alt: 'a',
+            value: '',
+            label: 'x',
+          },
+          {
+            type: 'bars',
+            kicker: 'k',
+            title: 't',
+            alt: 'a',
+            items: [{ label: 'x', pct: 140 }],
+          },
+          {
+            type: 'timeline',
+            kicker: 'k',
+            title: 't',
+            alt: 'a',
+            events: 'soon',
+          },
+          {
+            type: 'division',
+            kicker: 'k',
+            title: 't',
+            alt: 'a',
+            ayes: -1,
+            noes: 2,
+          },
+          slides.at(-1),
+        ],
+      ),
+    );
+    expect(editionFor(odd).data!.facts).toEqual({
+      kicker: 'Bill · Education portfolio',
+      line: null,
+      figures: [],
+      bars: null,
+      events: [],
+      division: null,
+    });
+    // An edition without slides has no facts, only its text.
+    expect(editionFor(decodeEdition(without('slides'))).data!.facts).toEqual({
+      kicker: null,
+      line: null,
+      figures: [],
+      bars: null,
+      events: [],
+      division: null,
+    });
   });
   test("a bill's attribution: its summary slide, else the caption's line, else the web's", () => {
     const own = decodeEdition(
@@ -516,8 +658,9 @@ describe('todayEdition()', () => {
       await catalogs.todayEdition();
       later(301_000);
       expect(await catalogs.todayEdition()).toMatchObject({
-        status: 'error',
-        error: { code: 'invalid-data' },
+        status: 'ready',
+        stale: true,
+        savedAt: 1000,
       });
       expect(await catalogs.todayEdition()).toMatchObject({
         status: 'ready',
@@ -542,7 +685,7 @@ describe('todayEdition()', () => {
       error: { code: 'invalid-data' },
     });
   });
-  test('a malformed response is an error and never replaces the saved edition', async () => {
+  test('a malformed response serves the last good saved edition', async () => {
     const { catalogs, later } = setup(
       served(),
       served(200, '{"bad":true}'),
@@ -551,8 +694,9 @@ describe('todayEdition()', () => {
     await catalogs.todayEdition();
     later(301_000);
     expect(await catalogs.todayEdition()).toMatchObject({
-      status: 'error',
-      error: { code: 'invalid-data' },
+      status: 'ready',
+      stale: true,
+      savedAt: 1000,
     });
     const saved = await catalogs.todayEdition();
     expect(saved).toMatchObject({ status: 'ready', stale: true });

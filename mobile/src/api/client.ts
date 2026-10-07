@@ -2,6 +2,7 @@ import { fetch as expoFetch } from 'expo/fetch';
 import { CatalogCache, isFresh, type CacheEntry } from './cache';
 import { ApiError, httpError } from './errors';
 import { allowedURL } from './policy';
+import { isPartialCatalog } from './validation';
 import {
   assertPortraitPath,
   assertPortraitBytes,
@@ -13,6 +14,8 @@ import {
 export interface RecordResult<T> {
   data: T;
   stale: boolean;
+  partial?: boolean;
+  staleReason?: 'unreadable' | 'unavailable';
   savedAt: number;
   asOf: string | null;
 }
@@ -110,12 +113,16 @@ export class ApiClient {
         cached = undefined;
       }
     }
-    const result = (entry: CacheEntry, stale: boolean): RecordResult<T> => ({
-      data: this.decodeBody(entry.body, decode),
-      stale,
-      savedAt: entry.savedAt,
-      asOf: entry.asOf,
-    });
+    const result = (entry: CacheEntry, stale: boolean): RecordResult<T> => {
+      const data = this.decodeBody(entry.body, decode);
+      return {
+        data,
+        ...(isPartialCatalog(data) ? { partial: true } : {}),
+        stale,
+        savedAt: entry.savedAt,
+        asOf: entry.asOf,
+      };
+    };
     if (cached && !force && isFresh(cached, this.now()))
       return result(cached, false);
     let lastError = new ApiError(
@@ -272,6 +279,9 @@ export class ApiClient {
                   'offline',
                   'This record is not saved on this iPhone yet. It will load when you are back online.',
                 );
+        // A bad export is not evidence that the last validated record went
+        // away. Stop retrying and serve its original source/save dates.
+        if (lastError.code === 'invalid-data') break;
         if (
           !['offline', 'timeout', 'server', 'rate-limited'].includes(
             lastError.code,
@@ -286,8 +296,25 @@ export class ApiClient {
         await this.sleep(retryDelay);
       }
     }
-    cached = (await this.options.cache.get(url)) ?? cached;
-    if (cached) return result(cached, true);
+    const latest = await this.options.cache.get(url);
+    if (latest) {
+      try {
+        this.decodeBody(latest.body, decode);
+        cached = latest;
+      } catch {
+        // Keep this request's known-good copy if another decoder cached a
+        // body this reader cannot use.
+      }
+    }
+    if (cached)
+      return {
+        ...result(cached, true),
+        ...(lastError.code === 'invalid-data'
+          ? { staleReason: 'unreadable' as const }
+          : ['offline', 'timeout'].includes(lastError.code)
+            ? {}
+            : { staleReason: 'unavailable' as const }),
+      };
     throw lastError;
   }
   private async readBytes(

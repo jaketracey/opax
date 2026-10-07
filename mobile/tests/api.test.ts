@@ -207,7 +207,7 @@ test('offline fallback has its saved/as-of dates, uncached offline maps to error
     code: 'offline',
   });
 });
-test('404 and invalid data cannot silently fall back to stale data', async () => {
+test('404 cannot silently fall back to stale data', async () => {
   const transport = jest
     .fn()
     .mockResolvedValueOnce(response(200, { 'Cache-Control': 'no-store' }))
@@ -998,7 +998,7 @@ test('memoized decoding still checks expiry and returns source/save dates on off
   expect(validate).toHaveBeenCalledTimes(1);
 });
 
-test('failed validation is never memoized; invalid forced refresh cannot use the validated old snapshot', async () => {
+test('failed validation is never memoized; invalid forced refresh serves the last good snapshot', async () => {
   const transport = jest
     .fn()
     .mockResolvedValueOnce(response(200, { 'cache-control': 'max-age=60' }))
@@ -1008,10 +1008,10 @@ test('failed validation is never memoized; invalid forced refresh cannot use the
     if (typeof decode(value).generated !== 'string') throw new Error('invalid');
     return decode(value);
   });
-  await client.get('/parliamentarians.json', validate);
+  const first = await client.get('/parliamentarians.json', validate);
   await expect(
     client.get('/parliamentarians.json', validate, true),
-  ).rejects.toMatchObject({ code: 'invalid-data' });
+  ).resolves.toEqual({ ...first, stale: true, staleReason: 'unreadable' });
   expect(validate).toHaveBeenCalledTimes(2);
 });
 
@@ -1197,4 +1197,66 @@ describe('reviewed portrait byte transport', () => {
       setup(transport).client.get(path, decode),
     ).rejects.toMatchObject({ code: 'invalid-data' });
   });
+});
+
+describe.each([false, true])('last good copy, force=%s', (force) => {
+  test.each(['schema', 'json'])(
+    'bad %s keeps the cached bytes and original dates after relaunch',
+    async (kind) => {
+      const transport = jest
+        .fn()
+        .mockResolvedValueOnce(
+          response(200, { 'cache-control': 'max-age=1', etag: 'good' }),
+        )
+        .mockResolvedValueOnce(
+          new Response(kind === 'schema' ? '{"generated":1}' : '{broken', {
+            headers: { etag: 'bad' },
+          }),
+        )
+        .mockRejectedValue(new TypeError('offline'));
+      let time = 1000;
+      const { client, cache, store } = setup(transport, () => time);
+      const validate = (v: unknown) => {
+        if (
+          !v ||
+          typeof v !== 'object' ||
+          typeof (v as { generated?: unknown }).generated !== 'string'
+        )
+          throw new ApiError('invalid-data', 'bad schema');
+        return decode(v);
+      };
+      const first = await client.get('/parliamentarians.json', validate);
+      const saved = await cache.get(`${origin}/parliamentarians.json`);
+      const writes = jest.spyOn(store, 'write');
+      time = 3000;
+      expect(
+        await client.get('/parliamentarians.json', validate, force),
+      ).toEqual({ ...first, stale: true, staleReason: 'unreadable' });
+      expect(await cache.get(`${origin}/parliamentarians.json`)).toBe(saved);
+      expect(writes).not.toHaveBeenCalled();
+      const relaunched = new ApiClient({
+        origin,
+        version: '0.1.0',
+        build: '1',
+        cache: new CatalogCache(store),
+        transport,
+        now: () => time,
+        retries: 0,
+      });
+      expect(await relaunched.get('/parliamentarians.json', validate)).toEqual({
+        ...first,
+        stale: true,
+      });
+      expect(store.entries[0]!.etag).toBe('good');
+    },
+  );
+});
+test('an undecodable download with no good cache still fails and writes nothing', async () => {
+  const { client, store } = setup(
+    jest.fn().mockResolvedValue(new Response('{broken')),
+  );
+  await expect(
+    client.get('/parliamentarians.json', decode),
+  ).rejects.toMatchObject({ code: 'invalid-data' });
+  expect(store.entries).toEqual([]);
 });

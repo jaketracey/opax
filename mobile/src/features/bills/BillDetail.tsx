@@ -1,3 +1,4 @@
+import { SavedCopyNotice } from '../CatalogNotice';
 import { useCallback, useEffect, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
@@ -32,7 +33,7 @@ import {
   Text,
   errorMessage,
 } from '../../design/primitives';
-import { chrome, spacing } from '../../design/tokens';
+import { chrome, colors, radius, spacing } from '../../design/tokens';
 import { billRoute, personRoute } from '../../navigation/routes';
 import { shareHeaderItem } from '../../navigation/share';
 import { chamberLabel } from './filters';
@@ -41,6 +42,7 @@ import {
   DivisionNote,
   InlineLink,
   MachineBrief,
+  MachineLabel,
   PartySplits,
   RecordedParty,
   dateSpan,
@@ -64,7 +66,6 @@ const copy = {
     "Ayes and noes are the division's own totals. Party is each member's recorded affiliation, not a reconstruction of who they sat with on the day, and a member the record does not name is counted but not attributed. Only formal divisions leave a per-member record.",
   briefs:
     'A brief under a name was written from that speech by a model, not by a person.',
-  acts: 'Act text on the Federal Register of Legislation, CC BY 4.0.',
   fineprint:
     'Bills, their dates and their divisions come from the parliamentary record; each bill page links the official source it was read from. Summaries are written by a model from the explanatory memorandum or the Bills Digest, are marked as such wherever they appear, and are not the record.',
 };
@@ -208,7 +209,12 @@ export default function BillDetail({
               <>
                 {record.stale ? (
                   <Group>
-                    <OfflineBanner testID="bill-offline" />
+                    <SavedCopyNotice
+                      reason={record.staleReason}
+                      testID={
+                        record.staleReason ? 'bill-saved-copy' : 'bill-offline'
+                      }
+                    />
                     <StaleNotice
                       savedAt={record.savedAt}
                       refreshing={refreshing}
@@ -225,6 +231,7 @@ export default function BillDetail({
                   view={view}
                   sponsors={sponsors}
                   stale={record.stale}
+                  staleReason={record.staleReason}
                   savedAt={record.savedAt}
                   refreshing={refreshing}
                   onRefresh={refresh}
@@ -236,19 +243,32 @@ export default function BillDetail({
                 <Acts view={view} />
               </>
             )}
-            <Section title="Sources" testID="bill-sources">
+            <Section
+              title="Original records"
+              icon="doc.on.doc"
+              accent="bills"
+              testID="bill-sources"
+              info={{
+                title: 'About this record',
+                notes: [copy.fineprint],
+                testID: 'bill-sources-info',
+              }}
+            >
               {view.identity.sources.length ? (
-                view.identity.sources.map((source, index) => (
-                  <SourceLink
-                    key={`${source.label}-${index}`}
-                    citation={source.label}
-                    url={source.url}
-                    kind="record"
-                    testID={`bill-source-${index}`}
-                  />
-                ))
+                <View style={styles.originals}>
+                  {view.identity.sources.map((source, index) => (
+                    <SourceLink
+                      key={`${source.label}-${index}`}
+                      label={source.label}
+                      citation={source.label}
+                      url={source.url}
+                      kind="record"
+                      testID={`bill-source-${index}`}
+                    />
+                  ))}
+                </View>
               ) : (
-                <Text variant="fine">
+                <Text variant="caption">
                   No original source link is held for this bill.
                 </Text>
               )}
@@ -262,12 +282,13 @@ export default function BillDetail({
                 savedAt={record.stale ? record.savedAt : null}
                 testID="bill-as-at"
               />
-              <OpaxWebLink
-                label="This bill on opax.com.au"
-                path={`/bill/${identity.key}`}
-                testID="bill-web"
-              />
-              <Text variant="fine">{copy.fineprint}</Text>
+              <RowList>
+                <OpaxWebLink
+                  label="This bill on opax.com.au"
+                  path={`/bill/${identity.key}`}
+                  testID="bill-web"
+                />
+              </RowList>
             </Section>
           </>
         ) : null}
@@ -280,6 +301,7 @@ function BillHead({
   view,
   sponsors,
   stale,
+  staleReason,
   savedAt,
   refreshing,
   onRefresh,
@@ -287,6 +309,7 @@ function BillHead({
   view: BillView;
   sponsors: Record<string, PersonSlug>;
   stale: boolean;
+  staleReason?: 'unreadable' | 'unavailable';
   savedAt: number;
   refreshing: boolean;
   onRefresh: () => void;
@@ -298,7 +321,10 @@ function BillHead({
     <Group gap={spacing.s3}>
       {stale ? (
         <>
-          <OfflineBanner testID="bill-offline" />
+          <SavedCopyNotice
+            reason={staleReason}
+            testID={staleReason ? 'bill-saved-copy' : 'bill-offline'}
+          />
           <StaleNotice
             savedAt={savedAt}
             refreshing={refreshing}
@@ -312,7 +338,9 @@ function BillHead({
           />
         </>
       ) : null}
-      <Text variant="kicker">{draft ? 'Exposure draft' : 'Bill'}</Text>
+      <Text variant="kicker" tone="billsInk">
+        {draft ? 'Exposure draft' : 'Bill'}
+      </Text>
       <Heading level={1} testID="bill-title">
         {identity.title}
       </Heading>
@@ -411,9 +439,10 @@ function BillHead({
               : `Open for consultation from ${formatDate(consultation.opens)}`}
           </Text>
           {consultation.note ? (
-            <Text variant="fine">{consultation.note}</Text>
+            <Text variant="caption">{consultation.note}</Text>
           ) : null}
           <SourceLink
+            label="Consultation page"
             citation="Consultation page"
             url={consultation.url}
             kind="record"
@@ -429,9 +458,14 @@ function Summary({ view }: { view: BillView }) {
   const summary = view.summary.data;
   if (!summary)
     return (
-      <Section title="In short" testID="bill-summary">
+      <Section
+        title="In short"
+        icon="text.alignleft"
+        accent="bills"
+        testID="bill-summary"
+      >
         <EmptyState message="No summary yet." testID="bill-summary-none" />
-        <Text variant="fine">{copy.noSummary}</Text>
+        <Text variant="caption">{copy.noSummary}</Text>
       </Section>
     );
   const sentences = summary.sentences.filter(Boolean);
@@ -447,14 +481,17 @@ function Summary({ view }: { view: BillView }) {
     .filter(Boolean)
     .join(' ');
   return (
-    <Section title="In short" testID="bill-summary">
+    <Section
+      title="In short"
+      icon="text.alignleft"
+      accent="bills"
+      testID="bill-summary"
+    >
       {/* The attribution comes first, so no reader meets the summary as the
           record: the label, then the stored attribution in full. */}
       <Group gap={spacing.s1}>
-        <Text variant="kicker" testID="bill-summary-label">
-          Machine summary
-        </Text>
-        <Text variant="fine" testID="bill-summary-attribution">
+        <MachineLabel testID="bill-summary-label">Machine summary</MachineLabel>
+        <Text variant="caption" testID="bill-summary-attribution">
           {summary.attribution}.
         </Text>
       </Group>
@@ -477,16 +514,21 @@ function Summary({ view }: { view: BillView }) {
           <Text variant="body">{summary.affected}</Text>
         </SubSection>
       ) : null}
-      {about ? <Text variant="fine">{about}</Text> : null}
-      {view.summary.sources.map((source, index) => (
-        <SourceLink
-          key={`${source.label}-${index}`}
-          citation={source.label}
-          url={source.url}
-          kind="record"
-          testID={`bill-summary-source-${index}`}
-        />
-      ))}
+      {about ? <Text variant="caption">{about}</Text> : null}
+      {view.summary.sources.length ? (
+        <View style={styles.originals}>
+          {view.summary.sources.map((source, index) => (
+            <SourceLink
+              key={`${source.label}-${index}`}
+              label={source.label}
+              citation={source.label}
+              url={source.url}
+              kind="record"
+              testID={`bill-summary-source-${index}`}
+            />
+          ))}
+        </View>
+      ) : null}
     </Section>
   );
 }
@@ -494,7 +536,23 @@ function Summary({ view }: { view: BillView }) {
 function KeyDates({ view }: { view: BillView }) {
   const timeline = billTimeline(view.keyDates.data ?? []);
   return (
-    <Section title="Key dates" testID="bill-key-dates">
+    <Section
+      title="Key dates"
+      icon="calendar"
+      accent="bills"
+      testID="bill-key-dates"
+      info={
+        timeline.folded
+          ? {
+              title: 'About these dates',
+              notes: [
+                `The register records a stage on each day it was before the house. These ${timeline.runs} stages carry ${timeline.dates} such dates: a stage that ran across sitting days is one stage with its span, not one a day.`,
+              ],
+              testID: 'bill-key-dates-info',
+            }
+          : undefined
+      }
+    >
       {timeline.entries.length ? (
         <RowList>
           {timeline.entries.map((entry, index) => (
@@ -505,26 +563,21 @@ function KeyDates({ view }: { view: BillView }) {
               testID={`bill-date-${index}`}
               style={styles.date}
             >
-              <Text variant="strong">{dateSpan(entry.from, entry.to)}</Text>
-              {entry.stages.map((stage, i) => (
-                <Text key={i} variant="metadata" wordSafe>
-                  {stageText(stage)}
-                </Text>
-              ))}
+              <View style={styles.dot} />
+              <View style={styles.dateText}>
+                <Text variant="strong">{dateSpan(entry.from, entry.to)}</Text>
+                {entry.stages.map((stage, i) => (
+                  <Text key={i} variant="metadata" wordSafe>
+                    {stageText(stage)}
+                  </Text>
+                ))}
+              </View>
             </View>
           ))}
         </RowList>
       ) : (
         <EmptyState message="No dates recorded." testID="bill-dates-none" />
       )}
-      {timeline.folded ? (
-        <Text variant="fine">
-          The register records a stage on each day it was before the house.
-          These {timeline.runs} stages carry {timeline.dates} such dates: a
-          stage that ran across sitting days is one stage with its span, not one
-          a day.
-        </Text>
-      ) : null}
       <AsAtLine
         asOf={view.keyDates.asAt}
         citation={
@@ -554,7 +607,26 @@ function Divisions({
   const shown = all ? rows : rows.slice(0, DIVISIONS_SHOWN);
   const rest = rows.length - shown.length;
   return (
-    <Section title={focused ? undefined : 'Divisions'} testID="bill-divisions">
+    <Section
+      title={focused ? undefined : 'Divisions'}
+      icon="checkmark.square"
+      accent="votes"
+      testID="bill-divisions"
+      info={
+        rows.length
+          ? {
+              title: 'About divisions',
+              notes: [
+                copy.divisions,
+                data.collapsed
+                  ? `The source records some divisions more than once; ${data.collapsed} ${data.collapsed === 1 ? 'row' : 'rows'} identical in day, stage and counts ${data.collapsed === 1 ? 'is' : 'are'} shown here once.`
+                  : null,
+              ],
+              testID: 'bill-divisions-info',
+            }
+          : undefined
+      }
+    >
       {focused ? (
         <Group>
           <Heading level={1} testID="bill-divisions-title">
@@ -590,23 +662,17 @@ function Divisions({
             message="No divisions recorded."
             testID="bill-divisions-none"
           />
-          <Text variant="fine">{copy.noDivisions}</Text>
+          <Text variant="caption">{copy.noDivisions}</Text>
         </>
       )}
       {rest > 0 ? (
         <Button
           label={`Show more (${formatCount(rest)} more)`}
+          variant="quiet"
+          icon="chevron.down"
           onPress={() => setAll(true)}
           testID="bill-divisions-more"
         />
-      ) : null}
-      {rows.length ? (
-        <Text variant="fine">
-          {copy.divisions}
-          {data.collapsed
-            ? ` The source records some divisions more than once; ${data.collapsed} ${data.collapsed === 1 ? 'row' : 'rows'} identical in day, stage and counts ${data.collapsed === 1 ? 'is' : 'are'} shown here once.`
-            : ''}
-        </Text>
       ) : null}
       {rows.length ? (
         <AsAtLine
@@ -649,13 +715,19 @@ function DivisionItem({
           {meta}
         </Text>
       ) : null}
-      <Text
-        variant="body"
+      <View
+        accessible
         accessibilityLabel={`${outcome}, ${counts}`}
         testID={`bill-division-${index}-outcome`}
+        style={styles.outcome}
       >
-        <Text variant="strong">{outcome}</Text> · {counts}
-      </Text>
+        <View style={styles.outcomeLabel}>
+          <Text variant="chip" tone="votesInk">
+            {outcome}
+          </Text>
+        </View>
+        <Text variant="figureInline">{counts}</Text>
+      </View>
       <PartySplits
         splits={division.splits}
         basisNote={basisNote}
@@ -683,7 +755,12 @@ function Speeches({ view }: { view: BillView }) {
   const speeches = (view.speeches.data ?? []).filter((s) => s.slug);
   const briefs = speeches.some((s) => s.brief);
   return (
-    <Section title="Speeches" testID="bill-speeches">
+    <Section
+      title="Speeches"
+      icon="text.bubble"
+      accent="bills"
+      testID="bill-speeches"
+    >
       {speeches.length ? (
         <RowList>
           {speeches.map((speech, index) => {
@@ -735,7 +812,7 @@ function Speeches({ view }: { view: BillView }) {
         />
       )}
       {speeches.length ? (
-        <Text variant="fine">
+        <Text variant="caption">
           Speeches the record attaches to this bill.{' '}
           {briefs ? copy.briefs : 'Open a speech to read it in full.'}
         </Text>
@@ -749,33 +826,75 @@ function Acts({ view }: { view: BillView }) {
   const passed = /passed|assent/i.test(view.identity.data?.status ?? '');
   if (!acts.length && !passed) return null;
   return (
-    <Section title="What became law" testID="bill-acts">
+    <Section
+      title="What became law"
+      icon="building.columns"
+      accent="bills"
+      testID="bill-acts"
+    >
       {acts.length ? (
-        acts.map((act, index) => (
-          <SourceLink
-            key={act.frl_uri}
-            citation={act.title}
-            record={
-              act.assent_date
-                ? `assented ${formatDate(act.assent_date, 'short')}`
-                : 'assent date not recorded'
-            }
-            url={act.frl_uri}
-            kind="record"
-            testID={`bill-act-${index}`}
-          />
-        ))
+        <RowList>
+          {acts.map((act, index) => (
+            <Group key={act.frl_uri} gap={spacing.s1}>
+              <Text wordSafe variant="strong">
+                {act.title}
+              </Text>
+              <Text variant="metadata">
+                {act.assent_date
+                  ? `Assented ${formatDate(act.assent_date, 'short')}`
+                  : 'Assent date not recorded'}
+              </Text>
+              <SourceLink
+                label="Act text"
+                citation={act.title}
+                record={
+                  act.assent_date
+                    ? `assented ${formatDate(act.assent_date, 'short')}`
+                    : 'assent date not recorded'
+                }
+                url={act.frl_uri}
+                kind="record"
+                testID={`bill-act-${index}`}
+              />
+            </Group>
+          ))}
+        </RowList>
       ) : (
         <EmptyState message="No Act matched to this bill yet." />
       )}
-      {acts.length ? <Text variant="fine">{copy.acts}</Text> : null}
     </Section>
   );
 }
 
 const styles = StyleSheet.create({
   sponsor: { gap: spacing.s1 },
-  date: { gap: spacing.s1 },
+  date: { flexDirection: 'row', gap: spacing.s3, alignItems: 'flex-start' },
+  dateText: { flex: 1, gap: 2 },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginTop: 8,
+    backgroundColor: colors.billsInk,
+  },
+  originals: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    columnGap: spacing.s4,
+    rowGap: spacing.s1,
+  },
+  outcome: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: spacing.s3,
+  },
+  outcomeLabel: {
+    backgroundColor: colors.votesWash,
+    borderRadius: radius,
+    paddingHorizontal: 6,
+    paddingVertical: 1,
+  },
   division: { gap: spacing.s3 },
   speech: { gap: spacing.s2 },
   speechMeta: {

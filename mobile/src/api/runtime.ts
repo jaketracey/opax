@@ -6,6 +6,7 @@ import { ApiClient } from './client';
 import { CatalogCache } from './cache';
 import { DiskStore } from './disk-store';
 import { Catalogs } from './catalogs';
+import { setCatalogDiagnostics } from './validation';
 const extra = Constants.expoConfig?.extra;
 if (
   !extra ||
@@ -30,6 +31,7 @@ if (
 )
   throw new Error('API origin does not match the build variant');
 export const isE2E = extra.variant === 'e2e';
+setCatalogDiagnostics(isE2E);
 export const apiClient = new ApiClient({
   origin: extra.apiOrigin,
   version: extra.appVersion,

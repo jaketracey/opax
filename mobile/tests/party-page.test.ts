@@ -23,6 +23,7 @@ import {
   manifest,
   people,
   pinned,
+  replaceAt,
   roster,
   slugs,
 } from './pinned';
@@ -530,5 +531,35 @@ test.each(['receipts', 'associated', 'divisions'] as const)(
     } finally {
       spy?.mockRestore();
     }
+  },
+);
+
+test.each(['roster', 'people'] as const)(
+  'a partial %s refuses membership counts while optional party blocks still load',
+  async (source) => {
+    const path =
+      source === 'roster' ? '/parliamentarians.json' : manifest.people_url;
+    const api = new Catalogs({
+      get: async (requested, decoder) => {
+        if (requested !== path) return get(requested, decoder);
+        return {
+          data: decoder(replaceAt(pinned(path), ['people', 0, 'name'], 7)),
+          stale: false,
+          savedAt: 1000,
+          asOf: null,
+        };
+      },
+    });
+    const view = (await api.partyPage('Labor')).data!;
+    expect(view.members.status).toBe('error');
+    expect(view.members.error?.message).toBe(
+      'Some membership rows could not be read.',
+    );
+    expect(view.members.data).toBeNull();
+    expect(view.receipts.status).toBe('ready');
+    expect(view.receipts.data?.node.total).toBe(graph.nodes[0]!.total);
+    expect(view.associated.status).toBe('ready');
+    expect(view.divisions.status).toBe('ready');
+    expect(view.divisions.data?.scanned).toBe(32);
   },
 );

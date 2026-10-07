@@ -225,6 +225,55 @@ export function asAtText({
   return parts.join(' · ');
 }
 
+/**
+ * The one quiet caption under a block (UI sweep): "Updated 4 Oct 2026", with
+ * coverage detail ("to the June quarter 2026") and "Saved [date]" for a
+ * stale copy. Source names and licences are not repeated here; they live on
+ * the Sources and licences screen. A year-only date reads "Updated 2021".
+ */
+export function captionText({
+  asOf,
+  detail,
+  savedAt,
+}: Pick<AsAt, 'asOf' | 'detail' | 'savedAt'>): string {
+  const year = typeof asOf === 'string' && /^\d{4}$/.test(asOf) ? asOf : null;
+  const date = year ?? (asOf == null ? '' : formatDate(asOf, 'short'));
+  const parts = [date ? `Updated ${date}` : 'Date not published'];
+  if (detail) parts.push(detail);
+  if (savedAt != null) {
+    const saved = formatDate(savedAt, 'short');
+    if (saved) parts.push(`Saved ${saved}`);
+  }
+  return parts.join(' · ');
+}
+
+/** The voting record's caption: "Updated 3 Oct 2026 · Divisions to 25 Sep 2026". */
+export function votesCaptionText(
+  meta: VotesMeta | null | undefined,
+  jurisdiction?: string,
+  savedAt?: DateInput | null,
+): string {
+  const changed = meta?.content_changed_at
+    ? formatDate(meta.content_changed_at, 'short')
+    : '';
+  const through =
+    (jurisdiction
+      ? meta?.latest_division_date_by_jurisdiction?.[jurisdiction]
+      : undefined) ?? meta?.latest_division_date;
+  const parts: string[] = [];
+  if (changed) parts.push(`Updated ${changed}`);
+  if (through) {
+    const date = formatDate(through, 'short');
+    if (date) parts.push(`Divisions to ${date}`);
+  }
+  if (!parts.length) parts.push('Record date not published');
+  if (savedAt != null) {
+    const saved = formatDate(savedAt, 'short');
+    if (saved) parts.push(`Saved ${saved}`);
+  }
+  return parts.join(' · ');
+}
+
 /** "Saved 3 October 2026", for a copy kept on this iPhone. */
 export function savedText(savedAt: DateInput): string {
   const saved = formatDate(savedAt);
