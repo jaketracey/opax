@@ -11,7 +11,11 @@ import {
   SourceLink,
   Text,
 } from '../../design/primitives';
-import { formatCount, formatMoneyCompact } from '../../design/format';
+import {
+  formatCount,
+  formatMoneyCompact,
+  moneyAccessibilityLabel,
+} from '../../design/format';
 import { ApiError } from '../../api/errors';
 import { RecordStatus } from '../RecordStatus';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
@@ -123,6 +127,7 @@ export default function Program() {
                 <Text wordSafe>{program.agency}</Text>
                 <BigFigure
                   value={formatMoneyCompact(program.total)}
+                  spoken={moneyAccessibilityLabel(program.total, true)}
                   label={
                     jur === 'qld'
                       ? 'Recorded annual expenditure in this program'

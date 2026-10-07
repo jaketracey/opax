@@ -14,6 +14,7 @@ import {
 import {
   formatCount,
   formatMoneyCompact,
+  moneyAccessibilityLabel,
   formatPercent,
 } from '../../design/format';
 import { RecordStatus } from '../RecordStatus';
@@ -309,6 +310,7 @@ export function SeatGrants({
           {seat ? (
             <BigFigure
               value={formatMoneyCompact(seat.total)}
+              spoken={moneyAccessibilityLabel(seat.total, true)}
               label={`In ${formatCount(seat.count)} Commonwealth grants`}
               accent="money"
               testID="seat-grants-total"

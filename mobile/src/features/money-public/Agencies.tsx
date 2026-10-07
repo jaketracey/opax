@@ -13,6 +13,7 @@ import {
 import {
   formatCount,
   formatMoneyCompact,
+  moneyAccessibilityLabel,
   formatDate,
 } from '../../design/format';
 import { RecordRow } from '../RecordRow';
@@ -192,6 +193,7 @@ export function Agency() {
               <>
                 <BigFigure
                   value={formatMoneyCompact(profile.total)}
+                  spoken={moneyAccessibilityLabel(profile.total, true)}
                   label="Recorded contract value"
                   detail={`${formatCount(profile.count)} contracts`}
                   accent="money"
