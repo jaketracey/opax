@@ -2,7 +2,7 @@ import type { ReactNode, RefObject } from 'react';
 import { Modal, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
-  Button,
+  IconButton,
   Heading,
   KeyboardStableScreen,
   Screen,
@@ -42,9 +42,9 @@ export function AskSheet({
           <Heading level={2} style={styles.title}>
             {title}
           </Heading>
-          <Button
-            label="Done"
-            variant="quiet"
+          <IconButton
+            symbol="xmark"
+            accessibilityLabel="Done"
             onPress={onDone}
             testID={doneID}
           />
