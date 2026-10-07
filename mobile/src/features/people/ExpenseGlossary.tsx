@@ -48,7 +48,6 @@ export default function ExpenseGlossary() {
       <Stack.Screen
         options={{
           title: 'Expense category glossary',
-          presentation: 'modal',
           unstable_headerRightItems: () => [
             shareHeaderItem({
               path: '/expenses',

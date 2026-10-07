@@ -119,8 +119,7 @@ name: 36 Person topics, speeches, mentions, news, ministerial diary and glossary
       NAME: Chris Minns
       SLUG: chris-minns
 - scrollUntilVisible:
-    element: { id: person-diary }
-    visibilityPercentage: 10
+    element: { text: Ministerial diary }
     direction: DOWN
     speed: 40
     centerElement: true
@@ -149,4 +148,10 @@ name: 36 Person topics, speeches, mentions, news, ministerial diary and glossary
     timeout: 180000
 - takeScreenshot: ${EVIDENCE}/36-glossary-source
 - tapOn: Done
+- scrollUntilVisible:
+    element: { id: person-screen-title }
+    direction: UP
+    speed: 50
+    centerElement: true
+    timeout: 180000
 - assertVisible: { id: person-screen-title }

@@ -46,7 +46,7 @@ real parliamentarians. Labor has no access match in the pinned web export, so
 journey 37 checks honest empty meetings/lobbying states. The NSW diary journey
 uses Chris Minns's published rows; decoder tests cover jurisdiction refusal.
 
-Journeys 36 and 37 run at standard size. The light process captures each new screen at AX5. The local timing probe records
+Journeys 36 and 37 run at standard size. The resumed light process captures each new section at AX5, with standard journeys 36, 37, 01 and 13 once. The local timing probe records
 party-link resolution in its press handler through the title's first native
 TextKit layout. `check-people-party-timing.ts` reads that native identifier from
 Maestro evidence and requires it to be below 2,000 ms. Current Maestro records

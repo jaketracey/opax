@@ -111,12 +111,12 @@ test('Queensland awards link to their own register, separate from Commonwealth a
   expect(publicMoneySource(federal, 'grants').label).toBe('GrantConnect');
   expect(publicMoneySource(federal, 'contracts').label).toBe('AusTender');
 });
-test('only an explicit native person path opens a native profile; party pages remain on the website', () => {
+test('explicit person and party paths use their native destinations', () => {
   const graph = decodeMoneyGraph(pinned('/graph/money.json'));
   const party = graph.nodes.find((n) => n.id === 'party:Labor')!;
   expect(moneyProfile(party)).toEqual({
     path: '/subject/party/Labor',
-    native: null,
+    native: { pathname: '/party/[slug]', params: { slug: 'labor', name: 'Labor' } },
   });
   expect(
     moneyProfile({ ...party, profileUrl: '/subject/person/anthony-albanese' })
