@@ -201,6 +201,7 @@ export function Results({
       ) : null}
       <Button
         label="Summarise these results"
+        icon="text.quote"
         onPress={onSummary}
         loading={summaryBusy}
         disabled={!p.results.length || !summaryAllowed}

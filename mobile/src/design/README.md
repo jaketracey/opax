@@ -43,7 +43,9 @@ Design workbench) to see every component and state at the current text size.
   About and the Account sheet). Screens show no licence text, credits,
   "Source:" lines or source rows. `AsAtLine` draws only "Updated [date]"
   (VoiceOver still hears the full as-at sentence with its sources);
-  `SourceLink` is a small "View original" link for a record's own document;
+  `SourceLink` is a small "View original" link for a record's own document
+  (full column width at accessibility sizes, so word-safe text never chases
+  a frame that follows its own size);
   `ViewOriginal` gives a block one such link, or a menu when it has several.
 - **Long notes go behind ⓘ:** `Section info={{ title, notes }}` (or
   `InfoButton`) opens a page sheet with the methodology and caveats in full.
@@ -59,7 +61,10 @@ Design workbench) to see every component and state at the current text size.
 
 - **Colour through roles only.** Use `colors.<role>` from `tokens.ts`, never a
   hex value in a screen. Roles resolve Increase Contrast natively (faint steps
-  to soft, soft to ink, subtle rules to default). A dark palette is added in
+  to soft, soft to ink, onNavySoft to onNavy, subtle rules to default, and the
+  category inks and bronzeInk to 7:1 on their wash and every surface).
+  Derived hexes (Today's tints in `features/today/tint.ts`) read
+  `useIncreaseContrast()` and strengthen through `strongOn`/`strongAccent`. A dark palette is added in
   `palette.ts` and wired in `tokens.ts`; components do not change.
 - **Text tones.** `inkFaint` is for paper and raised surfaces only. On sunken
   surfaces, tags and chips use `inkSoft`. `bronze` is never text.
@@ -148,9 +153,14 @@ Design workbench) to see every component and state at the current text size.
 
 ## Controls
 
-- `Button`: `variant`: `primary` (navy; one per view), `default` (outlined),
-  `quiet`, `danger` (destructive). `size`: `compact` 44, `default` 48,
-  `large` 56 (minimum heights; text wraps, word-safe). `loading` keeps the
+- `Button`: `variant`: `primary` (navy; one per view), `default` (a navy-wash
+  capsule with no outline, as Follow and `ChoiceChips` draw), `quiet`,
+  `danger` (destructive, outlined). Every variant is a capsule; at
+  accessibility sizes a button takes its column's full width (a fixed frame
+  for its word-safe label) with 14pt corners, and a quiet one reads from the
+  leading edge. `size`: `compact` 44, `default` 48, `large` 56 (minimum
+  heights; text wraps, word-safe). Use a `LinkRow`, not a button, for an
+  action that opens another screen ("Read full bill text"). `loading` keeps the
   label, width and accessible name and reports busy; `disabled` is announced
   and drawn in ink-soft on sunken (5.97:1), not faded. Pressed states darken
   the fill (`buttonStates` in `controls.tsx`). `icon` adds a leading SF
@@ -163,7 +173,8 @@ Design workbench) to see every component and state at the current text size.
   pressed keeps its 4.67:1 label and adds an outline and underline. Never a
   filter or a submit button.
 - `FilterChip`: an applied filter; the whole chip removes it and reads
-  "Remove the kind filter, Declared interests". 4pt radius, not a capsule.
+  "Remove the kind filter, Declared interests". A navy-wash capsule with a
+  close symbol (40pt drawn, 44pt to touch); full width at accessibility sizes.
 - `SegmentedControl`: one choice among peers. 48pt outside height; every
   segment is a real 44 by 44pt target (the selected highlight is inset 3pt
   inside it), labels wrap, and segments stack at accessibility sizes.
@@ -187,7 +198,11 @@ Design workbench) to see every component and state at the current text size.
 - `Screen`: the scrolling page on paper under the native bar. Put it first
   in the screen so large titles collapse. `refreshControl` for pull to refresh.
 - `Section`: a default rule, an optional serif `title` and an optional
-  trailing `action` (an "All bills" link). No cards for boundaries.
+  trailing `action` (an "All bills" link). No cards for boundaries. At
+  accessibility sizes the title takes its own line and the action and ⓘ sit
+  on the line below, so a large "See all" never squeezes the heading.
+- `EdgeFade`: a decorative fade from paper to clear over the top edge of a
+  scrolling panel (Talk's captions), shown once lines have scrolled above.
 - `SubSection`: a second list within a section: subtle rule, level 3 heading.
 - `Group`: vertical spacing (16pt default).
 - `RowList`: rows with subtle hairlines, 8pt either side.

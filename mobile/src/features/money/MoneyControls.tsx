@@ -5,6 +5,7 @@ import {
   Button,
   Disclosure,
   Group,
+  IconButton,
   LinkRow,
   RowList,
   Section,
@@ -66,10 +67,27 @@ export function MoneyYearSlider({
   const shown = preview ?? value;
   const fraction = (shown - min) / Math.max(1, max - min);
   return (
-    <Group gap={rhythm.heading}>
-      <Text variant="control" wordSafe>
-        {label}: {formatDisclosureYear(shown)}
-      </Text>
+    <Group gap={rhythm.tight}>
+      {/* The year, and a stepper so every year is reachable by touch too. */}
+      <View style={styles.yearHead}>
+        <Text variant="control" wordSafe style={styles.grow}>
+          {label}: {formatDisclosureYear(shown)}
+        </Text>
+        <IconButton
+          symbol="chevron.left"
+          accessibilityLabel={`Earlier ${label.toLowerCase()}`}
+          disabled={value <= min}
+          onPress={() => onChange(clamp(value - 1))}
+          testID={`${testID}-earlier`}
+        />
+        <IconButton
+          symbol="chevron.right"
+          accessibilityLabel={`Later ${label.toLowerCase()}`}
+          disabled={value >= max}
+          onPress={() => onChange(clamp(value + 1))}
+          testID={`${testID}-later`}
+        />
+      </View>
       <GestureDetector gesture={gesture}>
         <View
           accessible
@@ -103,24 +121,6 @@ export function MoneyYearSlider({
           </View>
         </View>
       </GestureDetector>
-      <Group style={styles.wrap}>
-        <Button
-          variant="quiet"
-          size="compact"
-          label={`Earlier ${label.toLowerCase()}`}
-          disabled={value <= min}
-          onPress={() => onChange(clamp(value - 1))}
-          testID={`${testID}-earlier`}
-        />
-        <Button
-          variant="quiet"
-          size="compact"
-          label={`Later ${label.toLowerCase()}`}
-          disabled={value >= max}
-          onPress={() => onChange(clamp(value + 1))}
-          testID={`${testID}-later`}
-        />
-      </Group>
     </Group>
   );
 }
@@ -305,7 +305,7 @@ export function MoneyControls({
   );
 }
 const styles = StyleSheet.create({
-  wrap: { flexDirection: 'row', flexWrap: 'wrap', gap: rhythm.heading },
+  yearHead: { flexDirection: 'row', alignItems: 'center', gap: rhythm.line },
   grow: { flex: 1 },
   toggle: {
     flexDirection: 'row',
