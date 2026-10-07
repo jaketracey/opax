@@ -317,19 +317,6 @@ export default function Search({
               title={showSuggestions ? undefined : 'Browse'}
               icon="square.grid.2x2"
               accent="people"
-              action={
-                !showSuggestions ? (
-                  <Button
-                    label="Refresh suggestions"
-                    variant="quiet"
-                    size="compact"
-                    icon="arrow.clockwise"
-                    testID="search-refresh"
-                    onPress={() => void loadSources(true)}
-                    loading={refreshing}
-                  />
-                ) : undefined
-              }
             >
               {sourceError ? (
                 <Group>
@@ -380,6 +367,15 @@ export default function Search({
                   <Text variant="caption">
                     Bill searches use the saved bill titles in Bills.
                   </Text>
+                  <Button
+                    label="Refresh suggestions"
+                    variant="quiet"
+                    size="compact"
+                    icon="arrow.clockwise"
+                    testID="search-refresh"
+                    onPress={() => void loadSources(true)}
+                    loading={refreshing}
+                  />
                 </>
               ) : null}
             </Section>

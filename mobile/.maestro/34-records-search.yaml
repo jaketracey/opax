@@ -187,16 +187,30 @@ name: 34 Records, filters, sort, cited summary and explicitly chosen briefs
       - takeScreenshot: ${EVIDENCE}/34-result-notes
       - tapOn:
           id: records-info-sheet-done
+          retryTapIfNoChange: false
+      - extendedWaitUntil:
+          notVisible:
+            id: records-info-sheet-done
+          timeout: 10000
 
 # The 2025–26 filtered records have no prewritten briefs. A pinned 2023
 # public speech also proves the machine-written view when one is available.
 - scrollUntilVisible:
     element:
-      text: Clear all
+      id: search-clear-all
     direction: UP
     centerElement: true
     timeout: 90000
-- tapOn: Clear all
+- tapOn:
+    id: search-clear-all
+    retryTapIfNoChange: false
+- extendedWaitUntil:
+    notVisible:
+      id: search-clear-all
+    timeout: 10000
+- assertNotVisible:
+    id: search-filters-sheet
+- takeScreenshot: ${EVIDENCE}/34-cleared-filters
 - scrollUntilVisible:
     element:
       id: search-input
@@ -208,6 +222,12 @@ name: 34 Records, filters, sort, cited summary and explicitly chosen briefs
 - eraseText
 - inputText: Don Farrell
 - hideKeyboard
+- scrollUntilVisible:
+    element:
+      id: search-kind-menu
+    direction: UP
+    centerElement: true
+    timeout: 90000
 - scrollUntilVisible:
     element:
       id: search-submit

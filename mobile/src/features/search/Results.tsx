@@ -60,7 +60,11 @@ export function ResultFilters({
         />
       ))}
       {chips.length > 1 ? (
-        <Button label="Clear all" onPress={() => onRemove('all')} />
+        <Button
+          label="Clear all"
+          testID="search-clear-all"
+          onPress={() => onRemove('all')}
+        />
       ) : null}
     </Group>
   );
