@@ -55,3 +55,34 @@ describe('journey selectors', () => {
     expect(check(...selectors).status).toBe(0);
   });
 });
+
+describe('Maestro lane ports', () => {
+  const port = (fixture: string) =>
+    spawnSync(
+      '/bin/bash',
+      [
+        '-c',
+        'OPAX_FIXTURE_PORT=$1; source scripts/qa-maestro.sh; qa_maestro_port || exit $?; echo "$OPAX_MAESTRO_DRIVER_PORT"',
+        'port-test',
+        fixture,
+      ],
+      { encoding: 'utf8' },
+    );
+  test.each([
+    ['8900', '9000'],
+    ['8973', '9073'],
+    ['8999', '9099'],
+  ])('fixture %s isolates its driver on %s', (fixture, expected) => {
+    const result = port(fixture);
+    expect(result.status).toBe(0);
+    expect(result.stdout.trim()).toBe(expected);
+  });
+  test.each(['8800', '9000', '59000', '08973', '8973+1', '$(exit 99)'])(
+    'invalid fixture %s fails before starting a driver',
+    (fixture) => {
+      const result = port(fixture);
+      expect(result.status).toBe(2);
+      expect(result.stderr).toContain('OPAX_FIXTURE_PORT must be in 8900..8999');
+    },
+  );
+});
