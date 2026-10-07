@@ -1,5 +1,6 @@
 // Offline, data-only server. No Worker import, proxy, fetch, email or model path.
 import { createVoiceFixture } from './voice-fixture';
+import { askFixture } from './ask-fixture';
 import { createServer } from 'node:http';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
@@ -189,6 +190,10 @@ export const server = createServer(async (request, response) => {
       throw new Error('Host is outside the loopback fixture boundary');
     if (request.socket.remoteAddress !== '127.0.0.1')
       throw new Error('Peer is outside the loopback boundary');
+    if (await askFixture(request, response)) {
+      status = response.statusCode;
+      return;
+    }
     if (await voice?.route(request, response)) {
       status = response.statusCode;
       return;

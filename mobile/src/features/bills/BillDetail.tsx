@@ -1,3 +1,4 @@
+import { AskAbout } from '../ask/AskAbout';
 import { SavedCopyNotice } from '../CatalogNotice';
 import { useCallback, useEffect, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
@@ -224,6 +225,7 @@ export default function BillDetail({
                     <Button label="Try again" onPress={retry} />
                   </Group>
                 ) : null}
+                <AskAbout kind="bill" name={name} />
                 <Divisions view={view} focused />
               </>
             ) : (
@@ -237,6 +239,7 @@ export default function BillDetail({
                   refreshing={refreshing}
                   onRefresh={refresh}
                 />
+                <AskAbout kind="bill" name={name} />
                 <LinkRow
                   title="Read the bill text"
                   icon="doc.text"

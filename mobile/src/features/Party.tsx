@@ -1,3 +1,4 @@
+import { AskAbout } from './ask/AskAbout';
 import { useCallback, useEffect, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
@@ -178,6 +179,7 @@ export function PartyPage({ input }: { input: string }) {
                 {view.label}
               </Heading>
             </View>
+            <AskAbout kind="party" name={view.label} />
             <Section
               title="Members"
               icon="person.3.fill"

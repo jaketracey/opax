@@ -1,3 +1,4 @@
+import { AskAbout } from './ask/AskAbout';
 import {
   formatCount,
   formatDate,
@@ -242,6 +243,7 @@ export function ProfileScreen({
                 since collection.
               </Text>
               <EvidenceFooter block={b.identity} id="person" />
+              <AskAbout kind="person" name={identity.name} />
             </Group>
             <RecordBlock
               title="Voting record"

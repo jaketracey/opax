@@ -1,11 +1,24 @@
 import { partySlug } from '../design/party';
+import { webOrigin } from '../design/environment';
 import { assertAllowedPath } from '../api/policy';
 import { isMoreKind } from '../features/search/contracts';
 import { isRecordSlug } from '../api/record-policy';
-export const docRoute = (slug: string) => ({ pathname: '/doc/[slug]' as const, params: { slug } });
-export const citeRoute = (slug: string) => ({ pathname: '/doc-cite/[slug]' as const, params: { slug } });
-export const billTextRoute = (key: string, version?: string) => ({ pathname: '/bill-text/[key]' as const, params: { key, ...(version ? { version } : {}) } });
-export const recentRecordsRoute = { pathname: '/recent-records' as const, params: {} };
+export const docRoute = (slug: string) => ({
+  pathname: '/doc/[slug]' as const,
+  params: { slug },
+});
+export const citeRoute = (slug: string) => ({
+  pathname: '/doc-cite/[slug]' as const,
+  params: { slug },
+});
+export const billTextRoute = (key: string, version?: string) => ({
+  pathname: '/bill-text/[key]' as const,
+  params: { key, ...(version ? { version } : {}) },
+});
+export const recentRecordsRoute = {
+  pathname: '/recent-records' as const,
+  params: {},
+};
 export const personRoute = (slug: string) => ({
   pathname: '/person/[slug]' as const,
   params: { slug },
@@ -20,6 +33,9 @@ export function fromWebPath(
 ):
   | ReturnType<typeof personRoute>
   | ReturnType<typeof billRoute>
+  | ReturnType<typeof electorateRoute>
+  | ReturnType<typeof partyRoute>
+  | ReturnType<typeof askRoute>
   | { pathname: '/search'; params: Record<string, string> }
   | ReturnType<typeof docRoute>
   | ReturnType<typeof billTextRoute>
@@ -27,12 +43,40 @@ export function fromWebPath(
   | null {
   const search = searchRouteFromWebPath(path);
   if (search) return search;
+  if (/^\/ask(?:\?|\/?$)/.test(path)) {
+    const url = new URL(path, webOrigin);
+    if (url.pathname === '/ask' && !url.searchParams.has('view'))
+      return askRoute({
+        question: url.searchParams.get('q') || '',
+        ...Object.fromEntries(
+          ['speaker', 'party', 'state', 'topic', 'from', 'to', 'kind'].flatMap(
+            (k) =>
+              url.searchParams.has(k) ? [[k, url.searchParams.get(k)!]] : [],
+          ),
+        ),
+      });
+    return null;
+  }
+  const electorate = /^\/subject\/electorate\/([a-z0-9-]+)\/?$/.exec(path);
+  if (electorate?.[1]) return electorateRoute(electorate[1]);
+  const party = /^\/subject\/party\/([^/?#]+)\/?$/.exec(path);
+  if (party?.[1]) {
+    try {
+      return partyRoute(decodeURIComponent(party[1]));
+    } catch {
+      return null;
+    }
+  }
   // The web also accepts legacy #/doc links. Keep unsafe/query-bearing paths
   // out of this resolver; external.ts checks the complete URL first.
   const document = /^(?:#)?\/doc\/([a-z0-9-]+)\/?$/.exec(path);
   if (document?.[1] && isRecordSlug(document[1])) return docRoute(document[1]);
-  if (path === '/#hp-indexed-title' || path === '/#mod-added') return recentRecordsRoute;
-  const text = /^\/bill\/(au-federal-[a-z0-9-]+)(?:\?text-version=([rs]\d+-[a-z0-9-]+))?#bill-full-text$/.exec(path);
+  if (path === '/#hp-indexed-title' || path === '/#mod-added')
+    return recentRecordsRoute;
+  const text =
+    /^\/bill\/(au-federal-[a-z0-9-]+)(?:\?text-version=([rs]\d+-[a-z0-9-]+))?#bill-full-text$/.exec(
+      path,
+    );
   if (text?.[1]) return billTextRoute(text[1], text[2]);
   const match = /^\/subject\/person\/([a-z0-9-]+)\/?$/.exec(path);
   if (match?.[1]) return personRoute(match[1]);
@@ -87,6 +131,24 @@ export const leadRoute = (id: string) => ({
 export const declarationsRoute = { pathname: '/declarations' as const };
 // Local follows: the list and its management, pushed within the current tab.
 export const followsRoute = '/follows';
+
+/** A draft in native Ask. Arrival never submits a paid request. */
+export const askRoute = (scope: {
+  question: string;
+  speaker?: string;
+  party?: string;
+  state?: string;
+  topic?: string;
+  from?: string;
+  to?: string;
+  kind?: string;
+}) => ({
+  pathname: '/(tabs)/(ask)/ask' as const,
+  params: {
+    ...scope,
+    entry: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+  },
+});
 export const moneyRoute = (party?: string | null, jurisdiction = 'federal') => {
   const state = ['qld', 'vic', 'tas'].find(
     (key) => jurisdiction === key || jurisdiction === `au-${key}`,

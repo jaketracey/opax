@@ -1,3 +1,4 @@
+import { AskAbout } from './ask/AskAbout';
 import { OutlineMap } from './electorate-map/OutlineMap';
 import {
   formatCount,
@@ -178,6 +179,7 @@ export function ElectorateScreen({
                 testID="electorate-follow"
               />
             </Group>
+            <AskAbout kind="electorate" name={identity.name} />
             <View testID="electorate-map">
               <OutlineMap
                 boundaries={view.boundaries}

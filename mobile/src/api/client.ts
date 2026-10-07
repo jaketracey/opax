@@ -1,7 +1,12 @@
 import { fetch as expoFetch } from 'expo/fetch';
 import { CatalogCache, isFresh, type CacheEntry } from './cache';
 import { ApiError, httpError } from './errors';
-import { allowedURL } from './policy';
+import { allowedURL, assertAskPostPath } from './policy';
+import {
+  AskFailure,
+  AskStream,
+  type StreamHandlers,
+} from '../features/ask/stream';
 import { isPartialCatalog } from './validation';
 import { summaryStreamBody } from '../features/search/decoders';
 import {
@@ -111,6 +116,8 @@ export class ApiClient {
       summaryStream?: boolean;
     } = {},
   ): Promise<RecordResult<T>> {
+    if (path.startsWith('/api/ask') || path.startsWith('/api/followups'))
+      throw new ApiError('forbidden', 'Ask requires an explicit submission.');
     const url = allowedURL(this.options.origin, path); // before cache or networking
     if (isPortraitPath(path))
       throw new ApiError('forbidden', 'Images require the byte client.');
@@ -336,6 +343,93 @@ export class ApiClient {
             : { staleReason: 'unavailable' as const }),
       };
     throw lastError;
+  }
+  /** Explicit submission only. One HTTP request, no retry or disk cache. */
+  async askPost(
+    path: string,
+    body: object,
+    signal: AbortSignal,
+    on?: StreamHandlers,
+  ): Promise<unknown> {
+    assertAskPostPath(path);
+    const url = allowedURL(this.options.origin, path);
+    let shown = false;
+    try {
+      const response = await this.transport(url, {
+        method: 'POST',
+        credentials: 'omit',
+        redirect: 'manual',
+        signal,
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: on ? 'text/event-stream' : 'application/json',
+          'User-Agent': `OPAX-iOS/${this.options.version} (${this.options.build})`,
+        },
+        body: JSON.stringify(body),
+      });
+      if (
+        response.redirected ||
+        (response.status >= 300 && response.status < 400) ||
+        (response.url && response.url !== url)
+      )
+        throw new AskFailure('blocked', 'The answer request was blocked.');
+      if (!response.ok) {
+        const raw = await response.json().catch(() => ({}));
+        const detail =
+          typeof raw?.error === 'string'
+            ? raw.error
+            : `Request failed (${response.status})`;
+        throw new AskFailure(
+          response.status === 429
+            ? 'rate-limited'
+            : response.status === 403 || response.status === 401
+              ? 'blocked'
+              : 'invalid',
+          detail,
+        );
+      }
+      if (
+        !on ||
+        !response.headers.get('content-type')?.includes('text/event-stream')
+      )
+        return await response.json();
+      if (!response.body) throw new AskFailure('empty', 'No answer came back.');
+      on.stage('Searching the record');
+      const stream = new AskStream({
+          ...on,
+          delta: (text) => {
+            if (text) shown = true;
+            on.delta(text);
+          },
+          retry: () => {
+            shown = false;
+            on.retry();
+          },
+        }),
+        decoder = new TextDecoder(),
+        reader = response.body.getReader();
+      try {
+        for (;;) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          stream.push(decoder.decode(value, { stream: true }));
+        }
+        stream.push(decoder.decode(), true);
+        return stream.result();
+      } finally {
+        await reader.cancel().catch(() => undefined);
+        reader.releaseLock();
+      }
+    } catch (e) {
+      if (signal.aborted) throw new AskFailure('cancelled', 'Cancelled.');
+      if (e instanceof AskFailure) throw e;
+      if (shown)
+        throw new AskFailure('partial', 'The answer stream ended early.');
+      throw new AskFailure(
+        'offline',
+        'The record could not be reached. Check your connection and try again.',
+      );
+    }
   }
   private async readBytes(
     response: Response,
