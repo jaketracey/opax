@@ -139,11 +139,18 @@ Phase = Struct.new(:name, :shell_script)
 Target = Struct.new(:name, :build_phases)
 Project = Struct.new(:targets)
 Installer = Struct.new(:pods_project)
+class Phases < Array
+  def move_from(from, to)
+    insert(to, delete_at(from))
+  end
+end
 replacement = Phase.new('[CP-User] [RNCore] Replace React Native Core for the right configuration, if needed', ARGV.fetch(1))
 copy = Phase.new('[CP] Copy XCFrameworks', 'test -f "$PODS_ROOT/React.xcframework/ios-arm64/React.framework/PrivacyInfo.xcprivacy"')
-phases = ARGV[2] == 'reverse' ? [copy, replacement] : [replacement, copy]
+phases = Phases.new(ARGV[2] == 'reverse' ? [copy, replacement] : [replacement, copy])
+phases.delete(copy) if ARGV[2] == 'missing'
 installer = Installer.new(Project.new([Target.new('React-Core-prebuilt', phases)]))
 2.times { install_react_privacy_staging(installer) }
+raise 'replacement must precede copy' unless phases.index(replacement) < phases.index(copy)
 puts replacement.shell_script
 ''')
             def hook(command, order='normal'):
@@ -168,8 +175,10 @@ puts replacement.shell_script
             self.assertEqual(result.returncode, 1)
             self.assertFalse(manifest.exists())
             reversed_order = hook('true\n', 'reverse')
-            self.assertNotEqual(reversed_order.returncode, 0)
-            self.assertIn('phase order changed', reversed_order.stderr)
+            self.assertEqual(reversed_order.returncode, 0, reversed_order.stderr)
+            missing = hook('true\n', 'missing')
+            self.assertNotEqual(missing.returncode, 0)
+            self.assertIn('phases missing', missing.stderr)
 
     def test_react_manifest_is_inside_each_local_slice_and_shared_slice_is_refused(self):
         spec = importlib.util.spec_from_file_location('privacy_stage', Path(__file__).parent / 'stage-privacy-manifests.py')

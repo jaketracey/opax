@@ -67,7 +67,8 @@ future build actually links that API and the feature meets that reason.
 CocoaPods stages React's own metadata/default/timer declarations inside each
 local prebuilt React framework slice after pod install and again after React's
 build-time Debug/Release replacement, before CocoaPods copies, embeds and signs
-it. The hook checks phase ordering and preserves a replacement failure. It also
+it. The hook orders replacement/staging before copying on React's aggregate
+target; native-config verifies that order. It preserves a replacement failure and
 keeps the upstream resource bundles. The staging step refuses shared artifacts.
 
 `verify-ios-release.py` scans every Mach-O with `nm`, `otool` (loads and ObjC

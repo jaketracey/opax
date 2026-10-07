@@ -5,8 +5,11 @@ def install_react_privacy_staging(installer)
   raise 'Expected prebuilt React target for privacy staging' unless target
   replacement = target.build_phases.find { |phase| phase.respond_to?(:shell_script) && phase.name&.include?('[RNCore] Replace React Native Core') }
   copy = target.build_phases.find { |phase| phase.respond_to?(:shell_script) && phase.name == '[CP] Copy XCFrameworks' }
-  unless replacement && copy && target.build_phases.index(replacement) < target.build_phases.index(copy)
-    raise 'React replacement/copy phase order changed; review privacy staging'
+  raise 'React replacement/copy phases missing; review privacy staging' unless replacement && copy
+  # CocoaPods cannot honor :before_compile on PBXAggregateTarget (no Sources
+  # phase), so it appends replacement after Copy XCFrameworks. Pin the order.
+  if target.build_phases.index(replacement) > target.build_phases.index(copy)
+    target.build_phases.move_from(target.build_phases.index(replacement), target.build_phases.index(copy))
   end
   marker = '# OPAX: restage privacy after React configuration replacement'
   return if replacement.shell_script.include?(marker)

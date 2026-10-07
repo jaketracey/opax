@@ -88,6 +88,32 @@ assert.deepEqual(plist.UIApplicationSceneManifest, {
 // The actual Sources phase must compile the patched modules rather than a
 // prebuilt framework. Grepping node_modules alone cannot prove this.
 const sources = readFileSync('ios/Pods/Pods.xcodeproj/project.pbxproj', 'utf8');
+const pods = JSON.parse(
+  execFileSync(
+    '/usr/bin/plutil',
+    ['-convert', 'json', '-o', '-', 'ios/Pods/Pods.xcodeproj/project.pbxproj'],
+    { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 },
+  ),
+);
+const reactTarget = Object.values(pods.objects).find(
+  (item: any) => item.name === 'React-Core-prebuilt' && item.buildPhases,
+) as { buildPhases: string[] } | undefined;
+assert(reactTarget, 'Prebuilt React target is present');
+const phases = reactTarget.buildPhases.map((id) => pods.objects[id]);
+const replacement = phases.findIndex((item) =>
+  item.name?.includes('[RNCore] Replace React Native Core'),
+);
+const copy = phases.findIndex((item) => item.name === '[CP] Copy XCFrameworks');
+assert(
+  replacement >= 0 && copy > replacement,
+  'React replacement and privacy staging precede XCFramework copying',
+);
+assert(
+  phases[replacement].shellScript.includes(
+    'python3 "$PODS_ROOT/../../scripts/stage-privacy-manifests.py"',
+  ),
+  'React build replacement restages its executable-bundle privacy manifest',
+);
 for (const file of [
   'LocationModule.swift',
   'FileSystemModule.swift',
