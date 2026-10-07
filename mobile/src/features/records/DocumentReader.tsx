@@ -1,3 +1,4 @@
+import { headerItems } from '../../navigation/chrome';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../../api/runtime';
@@ -99,14 +100,16 @@ export default function DocumentReader({
           options={{
             title: 'Record',
             headerTitle: '',
-            unstable_headerRightItems: doc
-              ? () => [
-                  shareHeaderItem({
-                    path: `/doc/${doc.slug}`,
-                    title: doc.title,
-                  }),
-                ]
-              : undefined,
+            ...headerItems(
+              doc
+                ? () => [
+                    shareHeaderItem({
+                      path: `/doc/${doc.slug}`,
+                      title: doc.title,
+                    }),
+                  ]
+                : undefined,
+            ),
           }}
         />
       )}

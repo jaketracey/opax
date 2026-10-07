@@ -1,5 +1,10 @@
+import {
+  headerItems,
+  closeSheetItem,
+  useStackChrome,
+} from '../../navigation/chrome';
+import { Platform } from 'react-native';
 import { Stack } from 'expo-router';
-import { closeSheetItem, useStackChrome } from '../../navigation/chrome';
 export default function AccountStack() {
   const chrome = useStackChrome();
   return (
@@ -8,9 +13,15 @@ export default function AccountStack() {
         name="index"
         options={{
           title: 'Account and about',
-          unstable_headerRightItems: () => [closeSheetItem()],
+          ...headerItems(() => [closeSheetItem()]),
         }}
       />
+      {Platform.OS === 'android' ? (
+        <Stack.Protected guard={false}>
+          <Stack.Screen name="sign-in" />
+          <Stack.Screen name="delete" />
+        </Stack.Protected>
+      ) : null}
       <Stack.Screen name="about" options={{ title: 'About OPAX' }} />
       <Stack.Screen
         name="sources"

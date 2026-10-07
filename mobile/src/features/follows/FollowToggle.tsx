@@ -1,3 +1,4 @@
+import { phoneCopy } from '../../design/phone-copy';
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import { Group, Icon, Text, haptic } from '../../design/primitives';
@@ -56,7 +57,9 @@ export function FollowToggle({
         );
       else haptic('success');
     } catch {
-      setMessage('Your follows could not be saved on this iPhone. Try again.');
+      setMessage(
+        phoneCopy('Your follows could not be saved on this iPhone. Try again.'),
+      );
     } finally {
       setBusy(false);
     }

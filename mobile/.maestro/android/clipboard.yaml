@@ -1,0 +1,17 @@
+appId: au.com.opax.app
+name: Read the native Android clipboard through a foreground app text field
+---
+- openLink: opax://ask
+- extendedWaitUntil:
+    visible:
+      id: ask-question
+    timeout: 30000
+- tapOn:
+    id: ask-question
+- longPressOn:
+    id: ask-question
+- tapOn: ^Paste$
+- assertVisible:
+    id: ask-question
+    text: '(?s)^@misc\{opax-speech-1205524,.*'
+- takeScreenshot: ${EVIDENCE}/32-native-clipboard

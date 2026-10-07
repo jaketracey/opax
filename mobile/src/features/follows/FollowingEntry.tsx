@@ -1,3 +1,4 @@
+import { phoneCopy } from '../../design/phone-copy';
 import { router } from 'expo-router';
 import { LinkRow, RowList, Section } from '../../design/primitives';
 import { formatCount } from '../../design/format';
@@ -20,7 +21,9 @@ export function FollowingEntry() {
           title="Manage follows"
           detail={
             follows.length
-              ? `${formatCount(follows.length)} ${follows.length === 1 ? 'follow' : 'follows'} saved on this iPhone. Today shows what changed in each.`
+              ? phoneCopy(
+                  `${formatCount(follows.length)} ${follows.length === 1 ? 'follow' : 'follows'} saved on this iPhone. Today shows what changed in each.`,
+                )
               : 'Nothing followed yet. Follow a parliamentarian, bill or electorate from its page.'
           }
           detailTestID="your-following-count"

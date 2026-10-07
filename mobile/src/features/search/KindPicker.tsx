@@ -1,4 +1,5 @@
-import { ActionSheetIOS } from 'react-native';
+import { ActionSheetIOS, Platform } from 'react-native';
+import { showMenu } from '../../design/menu';
 import { LinkRow } from '../../design/primitives';
 import { chrome } from '../../design/tokens';
 import { kindLabel, scopeKinds, type SearchKind } from './model';
@@ -16,7 +17,17 @@ export function KindPicker({
       title="Kind"
       detail={kindLabel(value)}
       testID="search-kind-menu"
-      onPress={() =>
+      onPress={() => {
+        if (Platform.OS === 'android') {
+          showMenu(
+            'Search kind',
+            scopeKinds.map((kind) => ({
+              title: kind.label,
+              onPress: () => onChange(kind.value),
+            })),
+          );
+          return;
+        }
         ActionSheetIOS.showActionSheetWithOptions(
           {
             title: 'Search kind',
@@ -29,8 +40,8 @@ export function KindPicker({
             const kind = scopeKinds[index];
             if (kind) onChange(kind.value);
           },
-        )
-      }
+        );
+      }}
     />
   );
 }

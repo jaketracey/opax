@@ -4,6 +4,7 @@ import {
   namedRosterRow,
   rosterRowFor,
   personSlugForId,
+  indexedPersonSlugForId,
 } from '../src/api/person-identity';
 import { partyLabels, partyMembers } from '../src/api/party-page';
 import {
@@ -31,9 +32,10 @@ import {
   roster,
   slugs,
 } from './pinned';
+import type { PersonId } from '../src/api/ids';
 
 // The oracle follows the unfiltered profile path; it never uses search guards.
-const nativeProfiles = new Map<string, { slug: string; name: string }>();
+const nativeProfiles = new Map<PersonId, { slug: string; name: string }>();
 const nativeSlugs = new Set<string>();
 for (const slug of Object.keys(slugs.slugs)) {
   try {
@@ -53,6 +55,13 @@ for (const slug of Object.keys(slugs.slugs)) {
     /* The real native profile path refuses this identity. */
   }
 }
+test('Android indexed handoff preserves every verified pinned canonical route', () => {
+  for (const [id, native] of nativeProfiles)
+    expect(indexedPersonSlugForId(id, slugs, roster, people, manifest)).toBe(
+      native.slug,
+    );
+});
+
 test.each(
   partyLabels(roster, people, decodeMoney(pinned('/graph/money.json'))),
 )(

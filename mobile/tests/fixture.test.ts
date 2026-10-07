@@ -25,10 +25,16 @@ function waitForOutput(expected: string): Promise<void> {
       clearTimeout(timer);
       child.stdout!.removeListener('data', check);
       child.stderr!.removeListener('data', check);
-      if (error) reject(error); else resolve();
+      if (error) reject(error);
+      else resolve();
     };
-    const check = () => { if (output.includes(expected)) finish(); };
-    const timer = setTimeout(() => finish(new Error(`Missing fixture refusal: ${expected}`)), 3000);
+    const check = () => {
+      if (output.includes(expected)) finish();
+    };
+    const timer = setTimeout(
+      () => finish(new Error(`Missing fixture refusal: ${expected}`)),
+      3000,
+    );
     child.stdout!.on('data', check);
     child.stderr!.on('data', check);
   });
@@ -64,7 +70,11 @@ beforeAll(async () => {
     ['--import', 'tsx', 'scripts/fixture-server.ts'],
     {
       cwd: resolve(__dirname, '..'),
-      env: { ...process.env, OPAX_FIXTURE_PORT: String(port) },
+      env: {
+        ...process.env,
+        OPAX_FIXTURE_PORT: String(port),
+        OPAX_TARGET_PLATFORM: 'ios',
+      },
       stdio: ['ignore', 'pipe', 'pipe'],
     },
   );
@@ -288,6 +298,10 @@ test('a production Host header is rejected even on the loopback socket', async (
   expect(
     (await request('/parliamentarians.json', { Host: 'opax.com.au' })).status,
   ).toBe(404);
+  expect(
+    (await request('/parliamentarians.json', { Host: `10.0.2.2:${port}` }))
+      .status,
+  ).toBe(404);
   expect(output).toContain('Host is outside the loopback fixture boundary');
 });
 
@@ -369,6 +383,36 @@ function getAt(
   });
 }
 const notPublished = { error: 'edition_not_published', date: '2026-10-04' };
+
+test('Android opts into only its emulator host alias and keeps the path boundary', async () => {
+  const fixture = startFixture('pinned', 0, {
+    OPAX_TARGET_PLATFORM: 'android',
+  });
+  try {
+    await fixture.ready;
+    const port = fixture.port();
+    expect(
+      (
+        await getAt(port, '/parliamentarians.json', {
+          Host: `10.0.2.2:${port}`,
+        })
+      ).status,
+    ).toBe(200);
+    for (const Host of [
+      `10.0.2.3:${port}`,
+      `10.0.2.2:${port + 1}`,
+      'opax.com.au',
+    ])
+      expect(
+        (await getAt(port, '/parliamentarians.json', { Host })).status,
+      ).toBe(404);
+    expect(
+      (await getAt(port, '/api/report', { Host: `10.0.2.2:${port}` })).status,
+    ).toBe(404);
+  } finally {
+    await fixture.stop();
+  }
+}, 20000);
 
 describe('the no-edition fixture', () => {
   let fixture: ReturnType<typeof startFixture>;
@@ -532,7 +576,9 @@ test('the fixture refuses an unknown roster mode at startup', async () => {
 }, 20000);
 
 test('search results open matching native excerpt resources and preserve related-speech fixtures', async () => {
-  const response = await request('/api/search?q=housing&kind=speech&party=Labor&from=2025&to=2026&sort=newest&per=20&page=1&mode=hybrid');
+  const response = await request(
+    '/api/search?q=housing&kind=speech&party=Labor&from=2025&to=2026&sort=newest&per=20&page=1&mode=hybrid',
+  );
   const row = decodeRecords(JSON.parse(response.body)).results[0]!;
   const resource = await request('/api/resource/' + row.slug);
   expect(resource.status).toBe(200);

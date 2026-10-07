@@ -1,0 +1,24 @@
+appId: au.com.opax.app
+name: Android native link share chooser presents and dismisses without sending
+---
+- launchApp:
+    permissions: {}
+- openLink: opax://workbench
+- extendedWaitUntil:
+    visible:
+      id: wb-native-share
+    timeout: 30000
+- tapOn:
+    id: wb-native-share
+- extendedWaitUntil:
+    visible: .*opax\.com\.au.*
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/native-share
+- pressKey: Back
+- runFlow:
+    when:
+      visible: Native share completed
+    commands:
+      - tapOn: OK
+- assertVisible:
+    id: workbench-screen

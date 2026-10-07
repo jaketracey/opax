@@ -2,6 +2,7 @@ const { getDefaultConfig } = require('expo/metro-config');
 const path = require('node:path');
 const { productionVoiceEnabled } = require('./plugins/voiceProduction');
 const variant = process.env.OPAX_VARIANT ?? 'development';
+const androidBuild = process.env.OPAX_TARGET_PLATFORM === 'android';
 const voiceEnabled = productionVoiceEnabled(variant);
 const config = getDefaultConfig(__dirname);
 const inheritedResolver = config.resolver.resolveRequest;
@@ -23,6 +24,8 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
         .resolve(path.dirname(context.originModulePath), moduleName)
         .replace(/\.[jt]sx?$/, '')
     : null;
+  if (platform === 'android' && target === voiceEntries[0])
+    return { type: 'sourceFile', filePath: `${target}.android.tsx` };
   if (process.env.OPAX_VARIANT === 'production' && target !== null) {
     if (productionStubs.includes(target))
       return { type: 'sourceFile', filePath: `${target}.production.ts` };
@@ -42,9 +45,20 @@ const accountSignIn = [
   /[/\\]src[/\\]app[/\\]account[/\\](?:sign-in|delete)\.tsx$/,
   /[/\\]src[/\\]features[/\\]account[/\\](?!entry\.production\.ts$).*/,
 ];
-config.cacheVersion = `opax-${variant}-voice-${voiceEnabled ? 'on' : 'off'}`;
+config.cacheVersion = `opax-${variant}-voice-${voiceEnabled ? 'on' : 'off'}${androidBuild ? '-android' : ''}`;
 const existing = config.resolver.blockList;
 config.resolver.blockList = [
+  ...(androidBuild
+    ? [
+        /[/\\]src[/\\]app[/\\](?:talk|voice-bridge-test)\.tsx$/,
+        /[/\\]src[/\\]app[/\\]account[/\\](?:sign-in|delete)\.tsx$/,
+        // Development excludes test-screens below; exclude this importing
+        // route too. E2e keeps its existing GL fixture screen.
+        ...(!['production', 'e2e'].includes(variant)
+          ? [/[/\\]src[/\\]app[/\\]money-map-spike\.tsx$/]
+          : []),
+      ]
+    : []),
   ...(Array.isArray(existing) ? existing : existing ? [existing] : []),
   ...(process.env.OPAX_VARIANT === 'production'
     ? [...productionBlockList, ...(!voiceEnabled ? accountSignIn : [])]

@@ -1,9 +1,17 @@
+import { phoneCopy } from '../design/phone-copy';
 import { PartialNotice, SavedCopyNotice } from './CatalogNotice';
 import { LocationSuggestion } from './electorate-map/LocationSuggestion';
 import { formatDate } from '../design/format';
 import { useCallback, useEffect, useState } from 'react';
 import { router } from 'expo-router';
-import { Keyboard, RefreshControl, StyleSheet, View } from 'react-native';
+import { AndroidFocusBack } from '../navigation/AndroidFocusBack';
+import {
+  Keyboard,
+  Platform,
+  RefreshControl,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { catalogs } from '../api/runtime';
 import type { Electorate } from '../api/catalogs';
 import {
@@ -172,7 +180,9 @@ export default function YourMP() {
       setQuery('');
       setError(null);
     } catch {
-      setError('Your seat could not be saved on this iPhone. Try again.');
+      setError(
+        phoneCopy('Your seat could not be saved on this iPhone. Try again.'),
+      );
     } finally {
       setSaving(false);
     }
@@ -191,6 +201,15 @@ export default function YourMP() {
       testID="your-mp-screen"
       refreshControl={<RefreshControl refreshing={busy} onRefresh={retry} />}
     >
+      {Platform.OS === 'android' ? (
+        <AndroidFocusBack
+          active={choosing || stateChoosing}
+          onBack={() => {
+            setChoosing(false);
+            setStateChoosing(false);
+          }}
+        />
+      ) : null}
       {error ? (
         <ErrorState message={error} onRetry={retry} testID="your-mp-error" />
       ) : null}

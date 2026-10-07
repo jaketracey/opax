@@ -1,3 +1,4 @@
+import { headerItems } from '../../navigation/chrome';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AccessibilityInfo } from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
@@ -93,15 +94,17 @@ export default function BillTextReader({
           options={{
             title: 'Bill text',
             headerTitle: '',
-            unstable_headerRightItems: manifest
-              ? () => [
-                  shareHeaderItem({
-                    path: `/bill/${key}`,
-                    anchor: 'bill-full-text',
-                    title: manifest.title,
-                  }),
-                ]
-              : undefined,
+            ...headerItems(
+              manifest
+                ? () => [
+                    shareHeaderItem({
+                      path: `/bill/${key}`,
+                      anchor: 'bill-full-text',
+                      title: manifest.title,
+                    }),
+                  ]
+                : undefined,
+            ),
           }}
         />
       )}

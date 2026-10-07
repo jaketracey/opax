@@ -1,5 +1,6 @@
-import { useWindowDimensions } from 'react-native';
+import { Platform, useWindowDimensions } from 'react-native';
 import { SymbolView, type SFSymbol } from 'expo-symbols';
+import { androidSymbol } from './android-symbols';
 import { colors, type Role } from './tokens';
 
 export type { SFSymbol };
@@ -28,8 +29,10 @@ export function Icon({
   const scaled = Math.round(size * Math.min(Math.max(fontScale, 1), maxScale));
   return (
     <SymbolView
-      name={name}
-      size={scaled}
+      name={Platform.OS === 'android' ? { android: androidSymbol(name) } : name}
+      // Android's Material glyph is a Text: its native font scaling supplies
+      // the factor already included in our box. Avoid applying it twice.
+      size={Platform.OS === 'android' ? scaled / fontScale : scaled}
       tintColor={colors[tone]}
       style={{ width: scaled, height: scaled }}
       accessible={!!accessibilityLabel}

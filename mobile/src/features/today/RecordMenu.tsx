@@ -1,4 +1,4 @@
-import { ActionSheetIOS } from 'react-native';
+import { showMenu } from '../../design/menu';
 
 export interface MenuAction {
   title: string;
@@ -12,12 +12,5 @@ export interface MenuAction {
  * from VoiceOver, so it is not used for rows.)
  */
 export function showRecordMenu(title: string, actions: MenuAction[]) {
-  ActionSheetIOS.showActionSheetWithOptions(
-    {
-      title,
-      options: [...actions.map((action) => action.title), 'Cancel'],
-      cancelButtonIndex: actions.length,
-    },
-    (index) => actions[index]?.onPress(),
-  );
+  showMenu(title, actions);
 }

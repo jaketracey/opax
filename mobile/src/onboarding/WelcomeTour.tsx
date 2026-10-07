@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import {
   AccessibilityInfo,
+  BackHandler,
   Animated,
   Easing,
   Image,
+  Platform,
   ScrollView,
   StyleSheet,
   Text as NativeText,
@@ -162,6 +164,15 @@ export function WelcomeTour({
     : Math.round(Math.max(230, Math.min(330, height * 0.34)));
 
   // A rotation changes the page width: stay on the same page.
+  useEffect(() => {
+    if (Platform.OS !== 'android') return;
+    const back = BackHandler.addEventListener('hardwareBackPress', () => {
+      leave('skip');
+      return true;
+    });
+    return () => back.remove();
+  });
+
   useEffect(() => {
     pager.current?.scrollTo({ x: page * width, animated: false });
     // Only when the width changes.

@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { phoneCopy } from '../../design/phone-copy';
 import {
+  Platform,
   AccessibilityInfo,
   Alert,
   Keyboard,
@@ -7,6 +8,8 @@ import {
   View,
   ScrollView,
 } from 'react-native';
+import { headerItems, rootHeaderItems } from '../../navigation/chrome';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../../api/runtime';
 import {
@@ -28,7 +31,6 @@ import {
 } from '../../design/primitives';
 import { colors, rhythm } from '../../design/tokens';
 import { AskSheet } from './AskSheet';
-import { rootHeaderItems } from '../../navigation/chrome';
 import { accountSnapshot, useAccount } from '../account/store';
 import { AnswerView, machineNote } from './AnswerView';
 import { Builder } from './QuestionBuilder';
@@ -230,7 +232,11 @@ export default function AskScreen() {
   async function history() {
     setHistoryOpen(true);
     const status = accountSnapshot().status;
-    if (!status || status.signedIn || status.accountHeld) await sync();
+    if (
+      Platform.OS !== 'android' &&
+      (!status || status.signedIn || status.accountHeld)
+    )
+      await sync();
   }
   async function sync() {
     if (syncBusy) return;
@@ -246,7 +252,7 @@ export default function AskScreen() {
       await saveChats(next);
       setAccountSynced(true);
       if (askSession.snapshot().id) askSession.open(askSession.snapshot().id!);
-      setSyncNotice('Saved to your account and on this iPhone.');
+      setSyncNotice(phoneCopy('Saved to your account and on this iPhone.'));
     } catch (e) {
       if (e instanceof ChatSyncError && e.code === 'signed-out') {
         setAccountSynced(false);
@@ -270,20 +276,26 @@ export default function AskScreen() {
       active: store.active === id ? null : store.active,
       chats: store.chats.filter((c) => c.id !== id),
     }).catch(() =>
-      setSyncNotice('This conversation could not be deleted from this iPhone.'),
+      setSyncNotice(
+        phoneCopy('This conversation could not be deleted from this iPhone.'),
+      ),
     );
     if (s.id === id) askSession.start();
     if (communityAccount)
       await deleteRemoteChat(id).catch(() =>
         setSyncNotice(
-          'Deleted on this iPhone. Account deletion could not complete.',
+          phoneCopy(
+            'Deleted on this iPhone. Account deletion could not complete.',
+          ),
         ),
       );
   }
   function removeAll() {
     Alert.alert(
       'Delete all conversations?',
-      'This removes your saved conversations on this iPhone and, when signed in, from your account.',
+      Platform.OS === 'android'
+        ? 'This removes your saved conversations on this phone.'
+        : 'This removes your saved conversations on this iPhone and, when signed in, from your account.',
       [
         { text: 'Cancel', style: 'cancel' },
         {
@@ -312,7 +324,7 @@ export default function AskScreen() {
   return (
     <>
       <Stack.Screen
-        options={{ title: 'Ask', unstable_headerRightItems: rootHeaderItems }}
+        options={{ title: 'Ask', ...headerItems(rootHeaderItems) }}
       />
       <KeyboardStableScreen
         testID="ask-screen"
@@ -595,8 +607,12 @@ export default function AskScreen() {
         >
           <Text wordSafe variant="caption">
             {communityAccount
-              ? 'Saved on this iPhone.'
-              : 'Saved on this iPhone. Sign in to keep them across devices.'}
+              ? phoneCopy('Saved on this iPhone.')
+              : Platform.OS === 'android'
+                ? 'Saved on this phone.'
+                : phoneCopy(
+                    'Saved on this iPhone. Sign in to keep them across devices.',
+                  )}
           </Text>
           {!saved.chats.length ? (
             <EmptyState message="No saved conversations." />

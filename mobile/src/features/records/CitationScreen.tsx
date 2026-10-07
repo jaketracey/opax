@@ -1,3 +1,4 @@
+import { headerItems } from '../../navigation/chrome';
 import { useCallback, useEffect, useState } from 'react';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { rhythm } from '../../design/tokens';
@@ -48,11 +49,16 @@ export default function Citations() {
       <Stack.Screen
         options={{
           title: 'Cite',
-          unstable_headerRightItems: doc
-            ? () => [
-                shareHeaderItem({ path: `/doc/${doc.slug}`, title: doc.title }),
-              ]
-            : undefined,
+          ...headerItems(
+            doc
+              ? () => [
+                  shareHeaderItem({
+                    path: `/doc/${doc.slug}`,
+                    title: doc.title,
+                  }),
+                ]
+              : undefined,
+          ),
         }}
       />
       <Screen testID="doc-citations">

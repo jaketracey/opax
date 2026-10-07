@@ -2,6 +2,7 @@ import { PortraitCache } from './portrait-cache';
 import { PortraitDiskStore } from './portrait-disk-store';
 import { PeoplePortraits } from './people-portraits';
 import Constants from 'expo-constants';
+import { Platform } from 'react-native';
 import { ApiClient } from './client';
 import { CatalogCache } from './cache';
 import { DiskStore } from './disk-store';
@@ -19,7 +20,8 @@ const origin = new URL(extra.apiOrigin);
 if (
   extra.variant === 'e2e'
     ? origin.protocol !== 'http:' ||
-      origin.hostname !== '127.0.0.1' ||
+      origin.hostname !==
+        (Platform.OS === 'android' ? '10.0.2.2' : '127.0.0.1') ||
       Number(origin.port) < 8900 ||
       Number(origin.port) > 8999
     : extra.variant === 'development'
@@ -51,8 +53,11 @@ export const recordClient = new ApiClient({
   build: extra.appBuild,
   retries: 0,
   cache: new CatalogCache({
-    readIndex: async () => [], writeIndex: async () => {},
-    read: async () => undefined, write: async () => {}, remove: async () => {},
+    readIndex: async () => [],
+    writeIndex: async () => {},
+    read: async () => undefined,
+    write: async () => {},
+    remove: async () => {},
   }),
 });
 export const portraits = new PeoplePortraits(

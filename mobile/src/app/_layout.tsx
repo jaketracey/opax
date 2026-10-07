@@ -1,7 +1,13 @@
 // First: holds the native splash until the launch handoff replaces it.
 import '../launch/splash';
+import {
+  headerItems,
+  closeSheetItem,
+  useStackChrome,
+} from '../navigation/chrome';
+import { AndroidMenuHost } from '../design/menu';
 import { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { Stack, router, type Href } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
@@ -10,7 +16,6 @@ import { hasSourcePreview, isProduction } from '../design/environment';
 import { fonts, light } from '../design/tokens';
 import { requestSeatChooser } from '../features/your-mp/chooser-request';
 import { LaunchHandoff } from '../launch/LaunchHandoff';
-import { closeSheetItem, useStackChrome } from '../navigation/chrome';
 import {
   checkFirstLaunch,
   hideTour,
@@ -59,12 +64,13 @@ export default function Layout() {
     ...chrome,
     headerShown: true,
     presentation: 'modal' as const,
-    unstable_headerRightItems: () => [closeSheetItem()],
+    ...headerItems(() => [closeSheetItem()]),
   };
   return (
     <SafeAreaProvider>
       <StatusBar style="dark" />
       <View style={styles.app} onLayout={() => setLaidOut(true)}>
+        <AndroidMenuHost />
         <Stack
           screenOptions={{
             headerShown: false,
@@ -86,10 +92,12 @@ export default function Layout() {
               sheetGrabberVisible: true,
             }}
           />
-          <Stack.Screen
-            name="talk"
-            options={{ ...sheet, title: 'Talk to OPAX' }}
-          />
+          <Stack.Protected guard={Platform.OS !== 'android'}>
+            <Stack.Screen
+              name="talk"
+              options={{ ...sheet, title: 'Talk to OPAX' }}
+            />
+          </Stack.Protected>
           <Stack.Screen
             name="account"
             options={{ ...sheet, headerShown: false }}

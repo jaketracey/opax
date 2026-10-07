@@ -1,0 +1,97 @@
+appId: au.com.opax.app
+name: Android location consent, chooser Back, detail Back and edge gestures
+---
+- launchApp:
+    permissions: {}
+- openLink: opax://your-mp
+- extendedWaitUntil:
+    visible:
+      id: your-seat-name
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: change-seat
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: change-seat
+- scrollUntilVisible:
+    element:
+      id: use-my-location
+    direction: UP
+    timeout: 90000
+- assertNotVisible:
+    id: .*permissioncontroller:id/permission_deny_button
+- tapOn:
+    id: use-my-location
+- extendedWaitUntil:
+    visible:
+      id: .*permissioncontroller:id/permission_deny_button
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/location-consent
+- tapOn:
+    id: .*permissioncontroller:id/permission_deny_button
+- assertVisible:
+    id: location-denied
+- takeScreenshot: ${EVIDENCE}/location-denied
+- pressKey: Back
+- assertVisible:
+    id: your-seat-name
+- scrollUntilVisible:
+    element:
+      id: your-member-anthony-albanese
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: your-member-anthony-albanese
+- assertVisible:
+    id: person-screen-title
+- pressKey: Back
+- assertVisible:
+    id: your-seat-name
+- scrollUntilVisible:
+    element:
+      id: your-member-anthony-albanese
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: your-member-anthony-albanese
+- assertVisible:
+    id: person-screen-title
+- swipe:
+    start: 1%, 50%
+    end: 95%, 50%
+    duration: 500
+- assertVisible:
+    id: your-seat-name
+- openLink: opax://account
+- assertVisible:
+    id: account-about
+- swipe:
+    start: 1%, 50%
+    end: 95%, 50%
+    duration: 500
+- assertNotVisible:
+    id: account-about
+- assertVisible:
+    id: your-seat-name
+- openLink: opax://money
+- extendedWaitUntil:
+    visible:
+      id: money-screen
+    timeout: 30000
+- tapOn:
+    id: money-info
+- assertVisible:
+    id: money-info-sheet
+- swipe:
+    start: 1%, 50%
+    end: 95%, 50%
+    duration: 500
+- assertNotVisible:
+    id: money-info-sheet
+- assertVisible:
+    id: money-screen
+- pressKey: Back
+- assertVisible:
+    id: your-seat-name
