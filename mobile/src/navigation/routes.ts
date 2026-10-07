@@ -28,8 +28,8 @@ export function fromWebPath(
   const bill = /^\/bill\/([a-z0-9-]+)\/?$/.exec(path);
   return bill?.[1] ? billRoute(bill[1]) : null;
 }
-// Reserved Talk sheet presentation seam; no permission or transport is installed.
-export const voiceSlot = { enabled: false, module: 'src/voice' } as const;
+// Talk is shipped when the production voice build switch is enabled.
+export const voiceSlot = { enabled: true, module: 'src/voice' } as const;
 
 export const electorateRoute = (id: string) => ({
   pathname: '/electorate/[id]' as const,

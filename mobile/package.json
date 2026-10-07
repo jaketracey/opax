@@ -13,7 +13,8 @@
     "qa-advisories": "tsx scripts/qa-advisories.ts",
     "qa-static": "tsx scripts/qa-static.ts",
     "fixture": "tsx scripts/fixture-server.ts",
-    "qa": "bash scripts/qa.sh"
+    "qa": "bash scripts/qa.sh",
+    "postinstall": "python3 scripts/apply-privacy-patches.py"
   },
   "dependencies": {
     "@shopify/react-native-skia": "2.6.2",
@@ -58,5 +59,17 @@
     "node": ">=24 <25",
     "npm": ">=11 <12"
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
+  "expo": {
+    "autolinking": {
+      "ios": {
+        "buildFromSource": [
+          "expo-location",
+          "expo-file-system",
+          "react-native-reanimated",
+          "react-native-worklets"
+        ]
+      }
+    }
+  }
 }

@@ -42,6 +42,68 @@ native identity and embedded Expo config. Production origin is always
 `https://opax.com.au`. Every run refuses root `.env*` files, disables Expo dotenv
 loading, and runs `npm ci --include=dev --ignore-scripts` from the committed
 lockfile before QA and clean prebuild. It refuses a symlinked `node_modules`.
+After each install, `scripts/apply-privacy-patches.py` validates package versions
+and pristine/patched SHA-256s, replays the reviewed patches without offsets or
+fuzz, and verifies every output. The same check runs before prebuild and in its
+config plugin. SDK upgrades must deliberately regenerate and review the patches.
+`expo-location` 57.0.20 retains location/heading support but rejects its four
+motion APIs explicitly on iOS. Reanimated 4.5.1 keeps the sensor bridge and
+returns its existing unavailable sentinel (`-1`); its CoreMotion implementation
+is excluded. Animation code is unchanged. `buildFromSource` includes these
+packages and the coupled Worklets package, plus `expo-file-system` 57.0.7.
+The file-system patch removes the legacy Photos imports, resource manager,
+photo helpers and asset-library handler sources. Its legacy info/copy methods
+reject photo-library URIs with the existing unsupported-scheme/invalid-file
+errors. Local files, downloads and cache operations retain their implementation.
+Building from source also retains its privacy resource bundle.
+
+The app manifest declares local file metadata (`C617.1`), event timers
+(`35F9.1`), storage-aware offline cache writes (`E174.1`), and app-only defaults
+(`CA92.1`). The cache skips persistence when there is insufficient free space,
+while a successful online read remains usable. No disk-space value leaves the
+device. Active keyboards are scanned; declare a suitable reason only if a
+future build actually links that API and the feature meets that reason.
+CocoaPods stages React's own metadata/default/timer declarations inside each
+local prebuilt React framework slice after pod install and again after React's
+build-time Debug/Release replacement, before CocoaPods copies, embeds and signs
+it. The hook orders replacement/staging before copying on React's aggregate
+target; native-config verifies that order. It preserves a replacement failure and
+keeps the upstream resource bundles. The staging step refuses shared artifacts.
+
+`verify-ios-release.py` scans every Mach-O with `nm`, `otool` (loads and ObjC
+metadata), and `strings`. Both archive/IPA verification and `qa-static.ts`'s
+production native-app checks run this gate. Each used required-reason category must have a
+valid declaration in its executable bundle and in the app manifest; sibling
+SDK manifests cannot mask a missing declaration. Reports and full tool output
+are saved as `privacy-scan-archive.json` / `privacy-scan-distribution.json` and
+`privacy-symbols-archive/` / `privacy-symbols-distribution/` in release evidence.
+A signing-free scan is available with:
+
+```sh
+python3 scripts/verify-ios-release.py --privacy-only "$APP" \
+  --privacy-output "$EVIDENCE/privacy-scan.json" \
+  --privacy-evidence "$EVIDENCE/privacy-symbols"
+```
+
+CoreMotion, Photos/AssetsLibrary and their unused purpose strings are forbidden.
+The former unused-class exceptions are removed; UIPasteboard remains for explicit
+clipboard writes. The purpose rules cover camera,
+recording/microphone, location, contacts, photo read/write, Bluetooth, health
+read/write, calendar/reminders, tracking, Bonjour/local discovery and speech
+recognition. Playback-only AVAudioSession and ordinary internet sockets do not
+imply recording or local discovery. This conservative inventory is a static
+release gate; permissions/access modes and declared reason intent still require
+source review. The scanner cannot discover dynamically constructed API names.
+Apple's [required-reason definitions](https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api)
+are the authority for code selection.
+
+The money-map-3d lane's narrow AVCapture absence gate agrees with this gate:
+AVCapture camera imports require `NSCameraUsageDescription`, and OPAX's shipped
+permission allow-list excludes camera. When both merge, keep the single general
+binary inventory and the map lane's source/build exclusions; remove a duplicate
+camera scan if it merely repeats this rule. Never add a purpose string to excuse
+unused camera code.
+
 This replaces ignored dependency edits before bundling. With `--upload`, an
 explicit number must be at least the next number ASC reports, checked before
 archiving; missing app records or API access fail before the build.
@@ -65,12 +127,13 @@ embedded runtime config), purpose strings, default signing entitlements, code si
 OPAX provisioning and font notices. Bundle route keys must exactly match the
 shipping source routes. Loopback URLs are normalized, case insensitive and
 include abbreviated IPv4 and expanded IPv6. Embedded frameworks must match the
-reviewed eight-framework allowlist; JS also rejects known analytics hosts. Any
+reviewed seven-framework allowlist; JS also rejects known analytics hosts. Any
 app extension is refused, and every executable/resource bundle is checked for
 unexpected entitlements. Reports count each distinct check once.
-The verifier permits the exact on-device location purpose string, the current
-unused-library motion disclosure and, with production voice on, the approved
-microphone purpose string. It refuses other purpose strings.
+The verifier permits the exact on-device location purpose string and, with
+production voice on, the approved microphone purpose string. Motion and photo
+purpose strings are forbidden together with the unused APIs removed above.
+It refuses other purpose strings.
 
 The tracked-file scan rejects the actual credential path, key ID, issuer ID and
 team ID. The IPA scan rejects credential path/key/issuer values everywhere and
