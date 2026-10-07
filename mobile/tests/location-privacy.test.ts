@@ -53,7 +53,7 @@ test('a real ApiClient request and cache-write audit never receive the device fi
   mockCatalogs = new Catalogs(
     new ApiClient({
       origin: 'https://fixture.invalid',
-      version: '0.1.0',
+      version: '1.0.0',
       build: '4',
       cache,
       transport: request,
