@@ -52,6 +52,11 @@ name: 35 Grants programs and local party, topic and report suggestions, also at 
 - tapOn:
     id: records-result-grant-program-.*
     index: 0
+- scrollUntilVisible:
+    element:
+      id: source-destination-url
+    visibilityPercentage: 10
+    timeout: 90000
 - assertVisible:
     id: source-destination-url
 - takeScreenshot: ${EVIDENCE}/35-grant-browser
@@ -123,6 +128,11 @@ name: 35 Grants programs and local party, topic and report suggestions, also at 
 - takeScreenshot: ${EVIDENCE}/35-topic-suggestion
 - tapOn:
     id: search-suggestion-topic-housing
+- scrollUntilVisible:
+    element:
+      id: source-destination-url
+    visibilityPercentage: 10
+    timeout: 90000
 - assertVisible:
     id: source-destination-url
 - takeScreenshot: ${EVIDENCE}/35-topic-browser
