@@ -111,6 +111,7 @@ name: 25 Native party members, pinned receipts, bill divisions and web fallback
     direction: DOWN
     centerElement: true
     timeout: 120000
+- takeScreenshot: ${EVIDENCE}/25-party-entry
 - tapOn:
     id: party-money-map
 - extendedWaitUntil:

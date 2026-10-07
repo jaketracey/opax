@@ -10,26 +10,28 @@ import { FlatList, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
-  Button,
+  Disclosure,
   Divider,
   EmptyState,
   ErrorState,
   Group,
-  Heading,
+  InfoButton,
+  LinkRow,
+  RowList,
+  Section,
   LoadingState,
   SegmentedControl,
-  SourceLink,
+  ViewOriginal,
   Text,
   errorMessage,
 } from '../../design/primitives';
 import { formatCount, formatMoney } from '../../design/format';
 import { samePartyLabel } from '../../design/party';
-import { colors, layout, spacing } from '../../design/tokens';
-import { RecordRow } from '../RecordRow';
+import { colors, rhythm } from '../../design/tokens';
 import type { MoneyJurisdiction, MoneyNode } from './data';
 import { useMoneyRecord, useMoneyScreenReader } from './hooks';
 import { MoneyControls } from './MoneyControls';
-import { MoneyAttribution, MoneyRecordStatus } from './MoneyRecord';
+import { MoneyAttribution, MoneyRecordStatus, moneyNotes } from './MoneyRecord';
 import { NativeMoneyMap, type NativeMoneyMapHandle } from './NativeMoneyMap';
 import { MoneyTestHooks } from './money-probe';
 import {
@@ -173,21 +175,22 @@ function MoneyCatalogScreen({
     return result;
   }, [record, filters]);
   const renderDonor = ({ item, index }: { item: MoneyNode; index: number }) => (
-    <Group gap={spacing.s3} style={styles.donor}>
-      <RecordRow
+    <Group gap={rhythm.line} style={styles.donor}>
+      <LinkRow
         title={
           ranks.has(item.id)
             ? `${formatCount(ranks.get(item.id)!)}. ${item.label}`
             : item.label
         }
         testID={`money-donor-${index}`}
-        detail={`${formatMoney(item.total)} disclosed donations · ${moneyWindowYears(item, filters!)}`}
+        value={formatMoney(item.total)}
+        detail={`Disclosed donations · ${moneyWindowYears(item, filters!)}`}
+        accessibilityLabel={`${ranks.has(item.id) ? `${formatCount(ranks.get(item.id)!)}. ` : ''}${item.label}, ${formatMoney(item.total)} disclosed donations · ${moneyWindowYears(item, filters!)}`}
         onPress={() => select(item.id)}
       />
       {item.via === 'public_money' ? (
         <Text wordSafe variant="fine">
-          On the map for the public money it holds, not for the size of its
-          donations.
+          Public-money record
         </Text>
       ) : null}
       <Text wordSafe variant="metadata" testID={`money-donor-parties-${index}`}>
@@ -195,10 +198,8 @@ function MoneyCatalogScreen({
           'No disclosed party flow in these years'}
       </Text>
       {source ? (
-        <SourceLink
-          citation={source.label}
-          url={source.url}
-          kind="register"
+        <ViewOriginal
+          sources={[{ label: source.label, url: source.url }]}
           testID={`money-donor-source-${index}`}
         />
       ) : null}
@@ -230,7 +231,18 @@ function MoneyCatalogScreen({
         ItemSeparatorComponent={Divider}
         ListHeaderComponent={
           <Group style={styles.header}>
-            <Text wordSafe>Political donations &amp; public money map</Text>
+            <View style={styles.intro}>
+              <Text wordSafe variant="metadata" style={styles.grow}>
+                Political donations &amp; public money map
+              </Text>
+              {record ? (
+                <InfoButton
+                  title="About the money map"
+                  notes={moneyNotes(record.data)}
+                  testID="money-info"
+                />
+              ) : null}
+            </View>
             <SegmentedControl
               value={mode}
               segments={[
@@ -305,21 +317,27 @@ function MoneyCatalogScreen({
                     )}
                   </View>
                 ) : null}
-                <Button
-                  label="Filters and years"
-                  expanded={controlsOpen}
-                  onPress={() => setControlsOpen((value) => !value)}
-                  testID="money-filters"
-                />
-                {controlsOpen ? (
-                  <MoneyControls
-                    graph={record.data}
-                    filters={filters}
-                    onChange={setFilters}
-                    jurisdiction={jurisdiction}
-                    onJurisdiction={onJurisdiction}
-                  />
-                ) : null}
+                <Text wordSafe variant="fine">
+                  Totals are a floor.
+                </Text>
+                <RowList>
+                  <Disclosure
+                    label="Filters and years"
+                    icon="slider.horizontal.3"
+                    accent="money"
+                    open={controlsOpen}
+                    onToggle={setControlsOpen}
+                    testID="money-filters"
+                  >
+                    <MoneyControls
+                      graph={record.data}
+                      filters={filters}
+                      onChange={setFilters}
+                      jurisdiction={jurisdiction}
+                      onJurisdiction={onJurisdiction}
+                    />
+                  </Disclosure>
+                </RowList>
                 <MoneyTestHooks
                   graph={view}
                   onYear={(year) =>
@@ -332,29 +350,38 @@ function MoneyCatalogScreen({
                 />
                 {mode === 'list' ? (
                   <>
-                    <Heading level={2}>Parties and public money</Heading>
-                    <Button
-                      label={`${recordsOpen ? 'Hide' : 'Show'} parties and public money`}
-                      expanded={recordsOpen}
-                      onPress={() => setRecordsOpen((value) => !value)}
-                      testID="money-list-records-toggle"
-                    />
-                    {recordsOpen
-                      ? otherRecords.map((node) => (
-                          <RecordRow
-                            key={node.id}
-                            title={node.label}
-                            detail={`${formatMoney(node.total)} · ${node.kind === 'grantor' ? publicMoneyLabel(node) : 'Disclosed receipts'} · ${moneyWindowYears(node, filters, node.kind === 'grantor')}`}
-                            testID={`money-list-record-${node.id}`}
-                            onPress={() => select(node.id)}
-                          />
-                        ))
-                      : null}
-                    <Heading level={2}>Ranked donors</Heading>
-                    <Text wordSafe variant="fine">
-                      Disclosed donations, largest first. Public grants and
-                      contracts are recorded separately in each donor’s record.
-                    </Text>
+                    <RowList>
+                      <Disclosure
+                        label="Parties and public money"
+                        icon="building.columns"
+                        accent="money"
+                        open={recordsOpen}
+                        onToggle={setRecordsOpen}
+                        testID="money-list-records-toggle"
+                      >
+                        <RowList>
+                          {otherRecords.map((node) => (
+                            <LinkRow
+                              key={node.id}
+                              title={node.label}
+                              value={formatMoney(node.total)}
+                              detail={`${node.kind === 'grantor' ? publicMoneyLabel(node) : 'Disclosed receipts'} · ${moneyWindowYears(node, filters, node.kind === 'grantor')}`}
+                              testID={`money-list-record-${node.id}`}
+                              onPress={() => select(node.id)}
+                            />
+                          ))}
+                        </RowList>
+                      </Disclosure>
+                    </RowList>
+                    <Section
+                      title="Ranked donors"
+                      icon="banknote"
+                      accent="money"
+                    >
+                      <Text wordSafe variant="metadata">
+                        Disclosed donations, largest first.
+                      </Text>
+                    </Section>
                     {!donors.length ? (
                       <EmptyState
                         message="No donors have a recorded flow in this view."
@@ -371,9 +398,7 @@ function MoneyCatalogScreen({
           record ? (
             <Group style={styles.footer}>
               <MoneyAttribution record={record} />
-              <Text wordSafe variant="fine" testID="money-end">
-                End of money map
-              </Text>
+              <View testID="money-end" />
             </Group>
           ) : null
         }
@@ -384,11 +409,13 @@ function MoneyCatalogScreen({
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
   content: {
-    paddingHorizontal: layout.screenMargin,
-    paddingTop: spacing.s4,
-    paddingBottom: spacing.s7,
+    paddingHorizontal: rhythm.screen,
+    paddingTop: rhythm.block,
+    paddingBottom: rhythm.section,
   },
-  header: { marginBottom: spacing.s4 },
-  footer: { marginTop: spacing.s6 },
-  donor: { paddingVertical: spacing.s3 },
+  header: { marginBottom: rhythm.block },
+  footer: { marginTop: rhythm.group },
+  donor: { paddingVertical: rhythm.tight },
+  intro: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
+  grow: { flex: 1 },
 });

@@ -1,26 +1,28 @@
 import { useMemo } from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import {
-  Button,
+  BigFigure,
   EmptyState,
   ErrorState,
   Group,
-  Heading,
   KeyValueList,
   LoadingState,
-  MoneyFigure,
+  LinkRow,
   OpaxWebLink,
   RowList,
   Screen,
   Section,
-  SourceLink,
+  ViewOriginal,
   Text,
   errorMessage,
 } from '../../design/primitives';
-import { formatCount, formatMoney } from '../../design/format';
-import { RecordRow } from '../RecordRow';
+import {
+  formatCount,
+  formatMoney,
+  moneyAccessibilityLabel,
+} from '../../design/format';
 import { useMoneyRecord } from './hooks';
-import { MoneyAttribution, MoneyRecordStatus } from './MoneyRecord';
+import { MoneyAttribution, MoneyRecordStatus, moneyNotes } from './MoneyRecord';
 import {
   filtersFromParams,
   moneyFocusRoute,
@@ -34,6 +36,8 @@ import {
   type MoneyParams,
 } from './records';
 import { moneyView, moneyWindowNodes } from './view';
+import { moneySource } from './records';
+import { rhythm } from '../../design/tokens';
 
 export default function MoneyNodeScreen() {
   const params = useLocalSearchParams<MoneyParams>();
@@ -100,60 +104,93 @@ export default function MoneyNodeScreen() {
             : 'Recorded grant awards';
   return (
     <Screen testID="money-focus-sheet">
-      <MoneyRecordStatus record={record} />
-      <Heading testID="money-focus-name">{node.label}</Heading>
-      <Text wordSafe>
-        {node.kind === 'party'
-          ? 'Political party'
-          : node.kind === 'grantor'
-            ? 'Public money'
-            : node.industry.replace(/_/g, ' ')}
-      </Text>
-      <MoneyFigure
-        amount={node.total}
-        label={label}
-        testID="money-focus-amount"
-      />
-      <KeyValueList
-        items={[
-          {
-            label: 'Return years',
-            value: moneyWindowYears(node, filters, node.kind === 'grantor'),
-            testID: 'money-focus-years',
-          },
-          {
-            label:
-              node.kind === 'party'
-                ? 'Receipts'
-                : node.kind === 'donor'
-                  ? 'Donations'
-                  : node.flow === 'contracts' ||
-                      node.kind === 'agency' ||
-                      node.kind === 'supplier'
-                    ? 'Contracts'
-                    : 'Grants',
-            value: formatCount(node.count),
-          },
-        ]}
-      />
-      {node.undated?.[1] ? (
-        <Text wordSafe variant="fine">
-          Undated disclosures stay in every year window.
+      <Section
+        rule={false}
+        title={node.label}
+        headingTestID="money-focus-name"
+        icon={node.kind === 'party' ? 'building.columns' : 'banknote'}
+        accent="money"
+        info={{
+          title: 'About these figures',
+          notes: [
+            ...moneyNotes(record.data),
+            node.undated?.[1]
+              ? 'Undated disclosures stay in every year window.'
+              : null,
+            node.kind === 'party' && filters.industry
+              ? 'The party total covers all industries in these return years. The relationships below follow the industry filter.'
+              : null,
+            filters.inflation
+              ? 'Adjusted to 2025–26 dollars with the ABS Consumer Price Index (all groups, Australia, financial-year average). Nominal figures are on the returns.'
+              : null,
+            node.kind === 'grantor' &&
+            node.flow === 'contracts' &&
+            typeof record.data.meta.contracts_coverage === 'string'
+              ? `${record.data.meta.contracts_coverage}.`
+              : null,
+            node.kind === 'grantor'
+              ? `Public money is drawn the other way from donations and never summed with them; a donor ${node.flow === 'contracts' ? 'holding a contract' : 'receiving a grant'} is a fact, not a finding.`
+              : null,
+          ],
+          testID: 'money-focus-info',
+        }}
+      >
+        <MoneyRecordStatus record={record} />
+        <Text wordSafe variant="metadata">
+          {node.kind === 'party'
+            ? 'Political party'
+            : node.kind === 'grantor'
+              ? 'Public money'
+              : `${node.via === 'public_money' ? 'Public-money record · ' : ''}${node.industry.replace(/_/g, ' ')}`}
         </Text>
-      ) : null}
-      {node.kind === 'party' && filters.industry ? (
+        <BigFigure
+          value={formatMoney(node.total)}
+          spoken={moneyAccessibilityLabel(node.total)}
+          label={label}
+          accent="money"
+          testID="money-focus-amount"
+        />
+        <KeyValueList
+          items={[
+            {
+              label: 'Return years',
+              value: moneyWindowYears(node, filters, node.kind === 'grantor'),
+              testID: 'money-focus-years',
+            },
+            {
+              label:
+                node.kind === 'party'
+                  ? 'Receipts'
+                  : node.kind === 'donor'
+                    ? 'Donations'
+                    : node.flow === 'contracts' ||
+                        node.kind === 'agency' ||
+                        node.kind === 'supplier'
+                      ? 'Contracts'
+                      : 'Grants',
+              value: formatCount(node.count),
+            },
+          ]}
+        />
         <Text wordSafe variant="fine">
-          The party total covers all industries in these return years. The
-          relationships below follow the industry filter.
+          {node.kind === 'grantor'
+            ? node.flow === 'contracts'
+              ? 'Commitments, not verified payments.'
+              : 'Never summed with donations.'
+            : 'Totals are a floor.'}
         </Text>
-      ) : null}
-      {filters.inflation ? (
-        <Text wordSafe variant="fine">
-          Adjusted to 2025–26 dollars with the ABS Consumer Price Index (all
-          groups, Australia, financial-year average). Nominal figures are on the
-          returns.
-        </Text>
-      ) : null}
+        <MoneyAttribution record={record} />
+        <ViewOriginal
+          sources={[
+            node.kind === 'grantor'
+              ? node.flow === 'contracts'
+                ? contractsSource
+                : grantsSource
+              : moneySource(record.data),
+          ]}
+          testID="money-source"
+        />
+      </Section>
       <Section
         title={
           node.kind === 'party'
@@ -164,6 +201,8 @@ export default function MoneyNodeScreen() {
                 ? 'Largest contractors among the donors on this map'
                 : 'Largest recipients among the donors on this map'
         }
+        icon="arrow.triangle.branch"
+        accent="money"
       >
         <RowList>
           {flows.map((edge) => {
@@ -172,10 +211,11 @@ export default function MoneyNodeScreen() {
                 n.id === (edge.source === node.id ? edge.target : edge.source),
             );
             return other ? (
-              <RecordRow
+              <LinkRow
                 key={`${edge.source}:${edge.target}:${edge.flow ?? 'donations'}`}
                 title={other.label}
-                detail={`${formatMoney(edge.total)} · ${moneyYears(edge.firstYear, edge.lastYear)}`}
+                value={formatMoney(edge.total)}
+                detail={moneyYears(edge.firstYear, edge.lastYear)}
                 onPress={() =>
                   router.replace(
                     moneyFocusRoute(other.id, jurisdiction, filters),
@@ -189,112 +229,64 @@ export default function MoneyNodeScreen() {
       {node.kind === 'donor' &&
       ((filters.grants && node.grants) ||
         (filters.contracts && node.contracts)) ? (
-        <Section title="Public money received">
+        <Section
+          title="Public money received"
+          icon="banknote"
+          accent="money"
+          info={{
+            title: 'About public money',
+            notes: [
+              'Public money going the other way: shown beside the donations, never summed with them.',
+              'Recorded contract commitments, not verified payments.',
+            ],
+            testID: 'money-public-info',
+          }}
+        >
           {filters.grants && node.grants ? (
-            <Group>
-              <MoneyFigure
-                amount={node.grants.total}
+            <Group gap={rhythm.tight}>
+              <BigFigure
+                value={formatMoney(node.grants.total)}
+                spoken={moneyAccessibilityLabel(node.grants.total)}
                 label={`Recorded grant awards · ${formatCount(node.grants.count)} grants`}
+                detail={moneyWindowYears(node.grants, filters, true)}
+                accent="money"
               />
-              <Text wordSafe>
-                {moneyWindowYears(node.grants, filters, true)}
-              </Text>
-              {record.data.meta.grants_source ? (
-                <Text wordSafe variant="fine">
-                  {record.data.meta.grants_source}
-                </Text>
-              ) : null}
-              <SourceLink
-                citation={grantsSource.label}
-                url={grantsSource.url}
-                kind="register"
-              />
+              <ViewOriginal sources={[grantsSource]} />
             </Group>
           ) : null}
           {filters.contracts && node.contracts ? (
-            <Group>
-              <MoneyFigure
-                amount={node.contracts.total}
+            <Group gap={rhythm.tight}>
+              <BigFigure
+                value={formatMoney(node.contracts.total)}
+                spoken={moneyAccessibilityLabel(node.contracts.total)}
                 label={`Recorded contract commitments · ${formatCount(node.contracts.count)} contracts`}
+                detail={moneyWindowYears(node.contracts, filters, true)}
+                accent="money"
               />
-              <Text wordSafe>
-                {moneyWindowYears(node.contracts, filters, true)}
-              </Text>
               <Text wordSafe variant="fine">
-                Recorded contract commitments, not verified payments.
+                Commitments, not verified payments.
               </Text>
-              {record.data.meta.contracts_source ? (
-                <Text wordSafe variant="fine">
-                  {record.data.meta.contracts_source}
-                </Text>
-              ) : null}
-              <SourceLink
-                citation={contractsSource.label}
-                url={contractsSource.url}
-                kind="register"
-              />
+              <ViewOriginal sources={[contractsSource]} />
             </Group>
           ) : null}
-          <Text wordSafe variant="fine">
-            Public money going the other way: shown beside the donations, never
-            summed with them.
-          </Text>
         </Section>
       ) : null}
-      {node.via === 'public_money' ? (
-        <Text wordSafe variant="fine">
-          On the map for the public money it holds, not for the size of its
-          donations.
-        </Text>
-      ) : null}
-      {node.kind === 'grantor' ? (
-        <Group>
-          <Text wordSafe variant="fine">
-            {node.flow === 'contracts'
-              ? contractsSource.citation
-              : grantsSource.citation}
-          </Text>
-          {node.flow === 'contracts' &&
-          typeof record.data.meta.contracts_coverage === 'string' ? (
-            <Text wordSafe variant="fine">
-              {record.data.meta.contracts_coverage}.
-            </Text>
-          ) : null}
-          <SourceLink
-            citation={
-              node.flow === 'contracts'
-                ? contractsSource.label
-                : grantsSource.label
-            }
-            url={
-              node.flow === 'contracts' ? contractsSource.url : grantsSource.url
-            }
-            kind="register"
+      <RowList>
+        {profile.native ? (
+          <LinkRow
+            title="View person profile"
+            icon="person.crop.circle"
+            onPress={() => router.push(profile.native!)}
+            testID="money-native-profile"
           />
-          <Text wordSafe variant="fine">
-            Public money is drawn the other way from donations and never summed
-            with them; a donor{' '}
-            {node.flow === 'contracts'
-              ? 'holding a contract'
-              : 'receiving a grant'}{' '}
-            is a fact, not a finding.
-          </Text>
-        </Group>
-      ) : null}
-      <MoneyAttribution record={record} />
-      {profile.native ? (
-        <Button
-          label="View person profile"
-          onPress={() => router.push(profile.native!)}
-          testID="money-native-profile"
-        />
-      ) : (
-        <OpaxWebLink
-          label="View profile"
-          path={profile.path}
-          testID="money-web-profile"
-        />
-      )}
+        ) : (
+          <OpaxWebLink
+            label="View profile"
+            path={profile.path}
+            testID="money-web-profile"
+          />
+        )}
+      </RowList>
     </Screen>
   );
 }

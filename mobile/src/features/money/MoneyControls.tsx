@@ -3,14 +3,17 @@ import { StyleSheet, Switch, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import {
   Button,
+  Disclosure,
   Group,
-  Heading,
+  LinkRow,
+  RowList,
+  Section,
   SegmentedControl,
   Text,
   useAccessibilitySize,
 } from '../../design/primitives';
 import { formatDisclosureYear } from '../../design/format';
-import { colors, minimumTarget, spacing } from '../../design/tokens';
+import { colors, minimumTarget, rhythm } from '../../design/tokens';
 import { moneyCatalogs, type MoneyGraph, type MoneyJurisdiction } from './data';
 import { yearExtent, type MoneyFilters } from './view';
 
@@ -63,7 +66,7 @@ export function MoneyYearSlider({
   const shown = preview ?? value;
   const fraction = (shown - min) / Math.max(1, max - min);
   return (
-    <Group gap={spacing.s3}>
+    <Group gap={rhythm.heading}>
       <Text variant="control" wordSafe>
         {label}: {formatDisclosureYear(shown)}
       </Text>
@@ -102,12 +105,16 @@ export function MoneyYearSlider({
       </GestureDetector>
       <Group style={styles.wrap}>
         <Button
+          variant="quiet"
+          size="compact"
           label={`Earlier ${label.toLowerCase()}`}
           disabled={value <= min}
           onPress={() => onChange(clamp(value - 1))}
           testID={`${testID}-earlier`}
         />
         <Button
+          variant="quiet"
+          size="compact"
           label={`Later ${label.toLowerCase()}`}
           disabled={value >= max}
           onPress={() => onChange(clamp(value + 1))}
@@ -131,11 +138,16 @@ export function MoneyToggle({
   const stacked = useAccessibilitySize();
   return (
     <View style={[styles.toggle, stacked ? styles.stacked : null]}>
-      <Text wordSafe variant="control" style={styles.grow}>
+      <Text
+        wordSafe
+        variant="control"
+        style={stacked ? undefined : styles.grow}
+      >
         {label}
       </Text>
       <Switch
         value={value}
+        trackColor={{ false: colors.lineStrong, true: colors.moneyInk }}
         onValueChange={onChange}
         accessibilityLabel={label}
         testID={testID}
@@ -165,7 +177,6 @@ export function MoneyControls({
   const extent = yearExtent(graph);
   return (
     <Group testID="money-controls">
-      <Heading level={2}>View the records</Heading>
       <SegmentedControl
         segments={(Object.keys(moneyCatalogs) as MoneyJurisdiction[]).map(
           (value) => ({
@@ -177,9 +188,6 @@ export function MoneyControls({
         value={jurisdiction}
         onChange={onJurisdiction}
       />
-      <Text wordSafe variant="fine">
-        State and federal returns are not summed.
-      </Text>
       <MoneyYearSlider
         label="From year"
         value={filters.from}
@@ -210,79 +218,99 @@ export function MoneyControls({
       />
       <Button
         label="All years"
+        variant="quiet"
+        size="compact"
         onPress={() => onChange({ ...filters, ...extent })}
         testID="money-all-years"
       />
-      <Button
-        label={`Industry: ${filters.industry ?? 'All industries'}`}
-        expanded={industriesOpen}
-        onPress={() => setIndustriesOpen((v) => !v)}
-        testID="money-industry"
-      />
-      {industriesOpen ? (
-        <Group>
-          <Button
-            label="All industries"
-            onPress={() => {
-              onChange({ ...filters, industry: null });
-              setIndustriesOpen(false);
-            }}
-            testID="money-industry-all"
-          />
-          {industries.map((industry) => (
-            <Button
-              key={industry}
-              label={industry}
-              testID={`money-industry-${industry.replace(/[^a-z0-9]+/g, '-')}`}
+      <RowList>
+        <Disclosure
+          label="Industry"
+          detail={filters.industry ?? 'All industries'}
+          icon="building.2"
+          accent="money"
+          open={industriesOpen}
+          onToggle={setIndustriesOpen}
+          testID="money-industry"
+        >
+          <RowList>
+            <LinkRow
+              title="All industries"
               onPress={() => {
-                onChange({ ...filters, industry });
+                onChange({ ...filters, industry: null });
                 setIndustriesOpen(false);
               }}
+              testID="money-industry-all"
+            />
+            {industries.map((industry) => (
+              <LinkRow
+                key={industry}
+                title={industry}
+                testID={`money-industry-${industry.replace(/[^a-z0-9]+/g, '-')}`}
+                onPress={() => {
+                  onChange({ ...filters, industry });
+                  setIndustriesOpen(false);
+                }}
+              />
+            ))}
+          </RowList>
+        </Disclosure>
+      </RowList>
+      <Section
+        title="Layers"
+        icon="square.3.layers.3d"
+        accent="money"
+        info={{
+          title: 'About these layers',
+          notes: [
+            'State and federal returns are not summed.',
+            'Public money going the other way: shown beside the donations, never summed with them.',
+            'Adjusted to 2025–26 dollars with the ABS Consumer Price Index (all groups, Australia, financial-year average). Nominal figures are on the returns.',
+          ],
+          testID: 'money-layers-info',
+        }}
+      >
+        {(['donations', 'grants', 'contracts'] as const)
+          .filter(
+            (kind) => kind === 'donations' || graph.meta[`${kind}_source`],
+          )
+          .map((kind) => (
+            <MoneyToggle
+              key={kind}
+              label={
+                kind === 'donations'
+                  ? 'Political donations'
+                  : kind === 'grants'
+                    ? 'Public grants'
+                    : 'Public contracts'
+              }
+              value={filters[kind]}
+              onChange={(value) => onChange({ ...filters, [kind]: value })}
+              testID={`money-layer-${kind}`}
             />
           ))}
-        </Group>
-      ) : null}
-      <Heading level={3}>Layers</Heading>
-      {(['donations', 'grants', 'contracts'] as const)
-        .filter((kind) => kind === 'donations' || graph.meta[`${kind}_source`])
-        .map((kind) => (
-          <MoneyToggle
-            key={kind}
-            label={
-              kind === 'donations'
-                ? 'Political donations'
-                : kind === 'grants'
-                  ? 'Public grants'
-                  : 'Public contracts'
-            }
-            value={filters[kind]}
-            onChange={(value) => onChange({ ...filters, [kind]: value })}
-            testID={`money-layer-${kind}`}
-          />
-        ))}
-      <MoneyToggle
-        label="Adjust for inflation"
-        value={filters.inflation}
-        onChange={(inflation) => onChange({ ...filters, inflation })}
-        testID="money-inflation"
-      />
-      {filters.inflation ? (
-        <Text wordSafe variant="fine">
-          Adjusted to 2025–26 dollars with the ABS Consumer Price Index (all
-          groups, Australia, financial-year average). Nominal figures are on the
-          returns.
-        </Text>
-      ) : null}
+        <MoneyToggle
+          label="Adjust for inflation"
+          value={filters.inflation}
+          onChange={(inflation) => onChange({ ...filters, inflation })}
+          testID="money-inflation"
+        />
+        {filters.inflation ? (
+          <Text wordSafe variant="fine">
+            In 2025–26 dollars.
+          </Text>
+        ) : null}
+      </Section>
     </Group>
   );
 }
 const styles = StyleSheet.create({
-  wrap: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.s3 },
+  wrap: { flexDirection: 'row', flexWrap: 'wrap', gap: rhythm.heading },
   grow: { flex: 1 },
   toggle: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.s4,
+    gap: rhythm.block,
     minHeight: minimumTarget,
   },
   stacked: { flexDirection: 'column', alignItems: 'flex-start' },
@@ -292,7 +320,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   rail: { height: 4, backgroundColor: colors.lineStrong },
-  fill: { height: 4, backgroundColor: colors.navy },
+  fill: { height: 4, backgroundColor: colors.moneyInk },
   thumb: {
     position: 'absolute',
     top: -10,
@@ -300,6 +328,6 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: colors.navy,
+    backgroundColor: colors.moneyInk,
   },
 });

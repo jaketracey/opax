@@ -321,12 +321,10 @@ export function NativeMoneyMap({
           </View>
         </GestureDetector>
       )}
-      <Text wordSafe variant="fine">
-        Position is the category cluster, colour the category, size the
-        connectedness, and depth fades through fog.
-      </Text>
       <Button
         label="Fit map"
+        variant="quiet"
+        size="compact"
         disabled={error}
         onPress={() => engine.current?.focus(null)}
         testID="money-fit"

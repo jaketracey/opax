@@ -8,20 +8,22 @@ import { NativeMoneyMap } from '../src/features/money/NativeMoneyMap';
 import {
   Button,
   KeyValueList,
-  MoneyFigure,
+  BigFigure,
+  Disclosure,
+  InfoButton,
+  LinkRow,
   SegmentedControl,
-  SourceLink,
+  ViewOriginal,
 } from '../src/design/primitives';
 import { pinned } from './pinned';
-import { RecordRow } from '../src/features/RecordRow';
 
 test('the accessible list opens every party and public-money hub without the canvas', async () => {
   const r = await render(<MoneyScreen />);
   await act(async () =>
     r.root
-      .findAllByType(Button)
+      .findAllByType(Disclosure)
       .find((x) => x.props.testID === 'money-list-records-toggle')!
-      .props.onPress(),
+      .props.onToggle(true),
   );
   const raw = pinned('/graph/money.json') as {
     nodes: { id: string; kind: string }[];
@@ -31,7 +33,7 @@ test('the accessible list opens every party and public-money hub without the can
   );
   for (const node of targets) {
     const row = r.root
-      .findAllByType(RecordRow)
+      .findAllByType(LinkRow)
       .find((x) => x.props.testID === `money-list-record-${node.id}`)!;
     expect(row).toBeDefined();
     await act(async () => row.props.onPress());
@@ -115,7 +117,7 @@ test('VoiceOver defaults to the ranked list, including before its asynchronous s
   expect(NativeMoneyMap).not.toHaveBeenCalled();
   await act(async () => readerAnswer(true));
   expect(r.root.findByType(SegmentedControl).props.value).toBe('list');
-  expect(r.root.findAllByType(SourceLink).length).toBeGreaterThan(0);
+  expect(r.root.findAllByType(ViewOriginal).length).toBeGreaterThan(0);
   await act(async () => r.unmount());
   expect(removed).toHaveBeenCalled();
 });
@@ -150,13 +152,21 @@ test('the native focus record shows the pinned selected-year figure, years and o
     layers: 'donations',
   });
   const r = await render(<MoneyNodeScreen />);
-  expect(r.root.findAllByType(MoneyFigure)[0]!.props.amount).toBe(69010542);
+  expect(r.root.findAllByType(BigFigure)[0]!.props.value).toBe('$69,010,542');
+  expect(r.root.findAllByType(BigFigure)[0]!.props.spoken).toBe(
+    '69,010,542 dollars',
+  );
   const rows = r.root.findByType(KeyValueList).props.items;
   expect(rows).toContainEqual(expect.objectContaining({ value: '2024' }));
   expect(
     r.root
-      .findAllByType(SourceLink)
-      .some((x) => x.props.url === 'https://transparency.aec.gov.au/'),
+      .findAllByType(ViewOriginal)
+      .some((x) =>
+        x.props.sources.some(
+          (source: { url: string }) =>
+            source.url === 'https://transparency.aec.gov.au/',
+        ),
+      ),
   ).toBe(true);
   await act(async () => r.unmount());
 });
@@ -171,9 +181,13 @@ test('a public-money focus figure states the mapped-donor scope and contract cov
   )!;
   Object.assign(mockParams, { node: hub.id });
   const r = await render(<MoneyNodeScreen />);
-  expect(r.root.findAllByType(MoneyFigure)[0]!.props.label).toContain(
+  expect(r.root.findAllByType(BigFigure)[0]!.props.label).toContain(
     'held by donors on this map across',
   );
-  expect(JSON.stringify(r.toJSON())).toContain(raw.meta.contracts_coverage);
+  expect(
+    r.root
+      .findAllByType(InfoButton)
+      .find((x) => x.props.testID === 'money-focus-info')!.props.notes,
+  ).toContain(`${raw.meta.contracts_coverage}.`);
   await act(async () => r.unmount());
 });

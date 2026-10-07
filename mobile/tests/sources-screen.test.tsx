@@ -5,7 +5,7 @@ import * as c from '../src/api/catalogs';
 import { Text } from '../src/design/primitives';
 import { SourcesScreen } from '../src/features/sources/SourcesScreen';
 import { datasets } from '../src/features/sources/datasets';
-import { catalogs as pinnedCatalogs } from './pinned';
+import { catalogs as pinnedCatalogs, pinned } from './pinned';
 
 jest.mock('../src/api/runtime', () => ({
   portraits: { list: jest.fn() },
@@ -118,4 +118,20 @@ test('portrait credits are listed and searchable, Commons crops said so', async 
   await press(r, 'sources-font-Merriweather');
   expect(texts(r)).toContain('Copyright Merriweather.');
   await act(async () => r.unmount());
+});
+
+test('central sources preserve every held money-map attribution and reuse term', () => {
+  const all = JSON.stringify(datasets);
+  expect(all).toContain(
+    'AEC disclosure returns as aggregated in the money map · CC BY 4.0',
+  );
+  for (const suffix of ['', '.qld', '.vic', '.tas']) {
+    const graph = pinned(`/graph/money${suffix}.json`) as {
+      meta: Record<string, string>;
+    };
+    for (const key of ['licence', 'grants_source', 'contracts_source']) {
+      if (graph.meta[key]) expect(all).toContain(graph.meta[key]);
+    }
+    if (graph.meta.source_url) expect(all).toContain(graph.meta.source_url);
+  }
 });

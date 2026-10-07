@@ -14,6 +14,7 @@ name: 23 Native money map, held figures, original source and ranked list
       id: today-money-map
     centerElement: true
     timeout: 120000
+- takeScreenshot: ${EVIDENCE}/23-today-entry
 - tapOn:
     id: today-money-map
     waitToSettleTimeoutMs: 1000

@@ -16,11 +16,24 @@ export function MoneyMapCard() {
       onPress={() => router.push(moneyRoute())}
     >
       {({ pressed }) => (
-        <TodayCard ground={pressed ? colors.sunken : colors.moneyWash} style={styles.card}>
-          <IconTile name="point.3.connected.trianglepath.dotted" accent="money" size="section" />
+        <TodayCard
+          style={[
+            styles.card,
+            { backgroundColor: pressed ? colors.sunken : colors.moneyWash },
+          ]}
+        >
+          <IconTile
+            name="point.3.connected.trianglepath.dotted"
+            accent="money"
+            size="section"
+          />
           <View style={styles.text}>
-            <Text wordSafe variant="subheading" tone="moneyInk">Money map</Text>
-            <Text wordSafe variant="metadata" tone="ink">Political donations &amp; public money map</Text>
+            <Text wordSafe variant="subheading" tone="moneyInk">
+              Money map
+            </Text>
+            <Text wordSafe variant="metadata" tone="ink">
+              Political donations &amp; public money map
+            </Text>
           </View>
           <Icon name="arrow.right" size={16} tone="moneyInk" />
         </TodayCard>
@@ -29,6 +42,11 @@ export function MoneyMapCard() {
   );
 }
 const styles = StyleSheet.create({
-  card: { padding: rhythm.block, flexDirection: 'row', alignItems: 'center', gap: rhythm.heading },
+  card: {
+    padding: rhythm.block,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.heading,
+  },
   text: { flex: 1, gap: rhythm.line },
 });
