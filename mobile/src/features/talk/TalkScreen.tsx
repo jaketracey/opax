@@ -1,28 +1,18 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import {
   AccessibilityInfo,
-  findNodeHandle,
   Alert,
+  findNodeHandle,
   Linking,
-  Pressable,
   ScrollView,
   StyleSheet,
   View,
+  type LayoutChangeEvent,
 } from 'react-native';
 import { Stack, router } from 'expo-router';
-import {
-  Button,
-  Icon,
-  Field,
-  Group,
-  Heading,
-  OpaxWebLink,
-  Screen,
-  Section,
-  Text,
-} from '../../design/primitives';
-import { colors, spacing } from '../../design/tokens';
-import { isE2E } from '../../design/environment';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Button, Field, Text, useReduceMotion } from '../../design/primitives';
+import { chrome, colors, layout, spacing } from '../../design/tokens';
 import { openOnWeb, webPageUrl } from '../../navigation/external';
 import { ProfileScreen } from '../Person';
 import { ElectorateScreen } from '../Electorate';
@@ -30,28 +20,50 @@ import BillDetail from '../bills/BillDetail';
 import DocumentReader from '../records/DocumentReader';
 import BillTextReader from '../records/BillTextReader';
 import type { VoiceSource } from '../../voice';
-import { clock, endCopy, failureCopy, refusal, timeLabel } from './model';
+import { endCopy, failureCopy, refusal, timeLabel } from './model';
 import { recordDestination } from './sources';
 import { useTalk } from './useTalk';
 import { AnswerCaption } from './AnswerCaption';
-import {
-  reportAnswer,
-  reportFromSources,
-  type ReportAnswer,
-} from './reportAnswer';
+import { reportAnswer, reportChoices, type ReportAnswer } from './reportAnswer';
+import { VoiceOrb, type OrbPhase } from './VoiceOrb';
+import { useVoiceLevels } from './useVoiceLevels';
+import { useCaptionsPreference } from './captions-preference';
+import { canReport, minutesLeft, talkMenu, timeLeft } from './menu';
+import { ControlRow, RoundButton } from './CallControls';
+import { openableSources, SourcesSheet } from './SourcesSheet';
+import { Consent, VoiceDisclosure } from './Consent';
+
+type Action = 'start' | 'signIn' | 'search' | 'settings' | 'retry';
+
+/**
+ * UIKit drops a sheet, browser or keyboard presented while a menu is still
+ * closing, so a menu action that presents waits for the menu to go.
+ */
+const afterMenu = (action: () => void) => setTimeout(action, 600);
 
 export default function TalkScreen({
   onReportAnswer = reportAnswer,
 }: { onReportAnswer?: ReportAnswer } = {}) {
   const call = useTalk();
   const { snapshot: s } = call;
+  const insets = useSafeAreaInsets();
+  const reduceMotion = useReduceMotion();
   const [askingConsent, setAskingConsent] = useState(false);
   const [record, setRecord] = useState<VoiceSource | null>(null);
   const [queuedSource, setQueuedSource] = useState<VoiceSource | null>(null);
+  const [sourcesOpen, setSourcesOpen] = useState(false);
+  const [chosenSource, setChosenSource] = useState<VoiceSource | null>(null);
+  const [typing, setTyping] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
+  const [captions, setCaptions] = useCaptionsPreference();
   const [screenReader, setScreenReader] = useState(false);
+  const [stage, setStage] = useState<{ width: number; height: number } | null>(
+    null,
+  );
   const priorAnnouncement = useRef('');
   const statusNode = useRef<View>(null);
   const page = useRef<ScrollView>(null);
+  const captionsList = useRef<ScrollView>(null);
   const focusedEntry = useRef(false);
   const terminal = call.terminal;
   const live = s.state === 'live';
@@ -59,29 +71,57 @@ export default function TalkScreen({
   const active = call.active && (s.state !== 'checking' || call.busy);
   const blocked = refusal(s.status);
   const failure = call.error === 'signedOut' ? null : call.error;
+  // Newest first: a failure, then this sheet's own notice (it follows any
+  // ending it replaces), then how the last call ended, then a refusal.
   const message = failure
     ? failureCopy[failure]
-    : terminal
-      ? endCopy[terminal]
-      : blocked
-        ? failureCopy[blocked]
-        : null;
+    : (notice ??
+      (terminal ? endCopy[terminal] : blocked ? failureCopy[blocked] : null));
+  const lastTurn = s.transcript[s.transcript.length - 1];
+  const phase: OrbPhase = !active
+    ? 'rest'
+    : s.state === 'ending'
+      ? 'rest'
+      : !live
+        ? 'connecting'
+        : s.mode === 'muted'
+          ? 'muted'
+          : s.mode === 'speaking'
+            ? 'speaking'
+            : lastTurn?.role === 'user'
+              ? 'thinking'
+              : 'listening';
+  // Spoken by VoiceOver on every change; the screen itself shows no labels.
   const stateText =
     s.state === 'ending'
-      ? 'Ending the conversation…'
-      : s.state === 'reserving' || s.state === 'connecting'
-        ? 'Connecting…'
+      ? 'Ending the call'
+      : active && !live
+        ? 'Connecting'
         : live
           ? s.mode === 'muted'
-            ? 'Your microphone is muted'
+            ? 'Microphone muted'
             : s.mode === 'speaking'
               ? 'OPAX is speaking'
-              : 'Listening to you'
+              : 'Listening'
           : (message ??
-            (s.status
-              ? 'Ready when you are. Your microphone is off.'
-              : 'Checking voice availability…'));
-  const seconds = live ? s.remaining : s.status?.remainingSeconds;
+            (s.status ? 'Ready to talk. Microphone off.' : 'Checking voice'));
+  const action: Action | null = !s.status
+    ? failure
+      ? 'retry'
+      : null
+    : s.status.enabled && !s.status.signedIn
+      ? 'signIn'
+      : blocked === 'callOpen'
+        ? 'retry'
+        : blocked
+          ? 'search'
+          : failure === 'microphoneDenied'
+            ? 'settings'
+            : 'start';
+  const sources = openableSources(s.sources);
+  const showCaptions = captions && s.transcript.length > 0;
+  const levels = useVoiceLevels(live);
+
   useEffect(() => {
     void AccessibilityInfo.isScreenReaderEnabled().then(setScreenReader);
     const subscription = AccessibilityInfo.addEventListener(
@@ -97,10 +137,6 @@ export default function TalkScreen({
     }
     // Captions, sources and countdown never trigger announcements.
   }, [stateText]);
-  function focusStatus() {
-    const node = statusNode.current ? findNodeHandle(statusNode.current) : null;
-    if (screenReader && node) AccessibilityInfo.setAccessibilityFocus(node);
-  }
   useEffect(() => {
     if (terminal && screenReader) {
       const node = statusNode.current
@@ -110,10 +146,10 @@ export default function TalkScreen({
     }
   }, [terminal, screenReader]);
   useEffect(() => {
-    // Explicit Start and call completion reveal the status and first captions.
-    // Countdown/correction events leave the reader's scroll position alone.
+    // Start and the end of a call bring the orb and controls back into view.
     page.current?.scrollTo({ y: 0, animated: false });
   }, [active]);
+
   const close = () => {
     if (active)
       Alert.alert('End the conversation?', undefined, [
@@ -150,7 +186,100 @@ export default function TalkScreen({
       ],
     );
   }
+  const withdraw = () =>
+    void call.changeConsent(false).then((stored) => {
+      setAskingConsent(false);
+      if (stored) setNotice(endCopy.consentWithdrawn);
+    });
+  const start = () => {
+    setNotice(null);
+    setTyping(false);
+    if (call.consent) void call.start();
+    else setAskingConsent(true);
+  };
+  // Header items are native: rebuild them only when the menu changes, never
+  // on each countdown tick, so an open menu is not replaced under a finger.
+  const handlers = useRef({
+    close,
+    withdraw,
+    report: onReportAnswer,
+  });
+  useLayoutEffect(() => {
+    handlers.current = { close, withdraw, report: onReportAnswer };
+  });
+  const menuTitle = timeLeft(live, s.remaining, s.status);
+  const reportable = canReport(s.transcript);
+  const records = useMemo(() => reportChoices(s.sources), [s.sources]);
+  const screenOptions = useMemo(
+    () => ({
+      title: active ? '' : 'Talk to OPAX',
+      gestureEnabled: !active,
+      unstable_headerRightItems: () => [
+        talkMenu({
+          title: menuTitle,
+          live,
+          active,
+          typing,
+          report: reportable,
+          records,
+          consent: call.consent,
+          onType: () => afterMenu(() => setTyping(true)),
+          onReport: (path) =>
+            afterMenu(() => void handlers.current.report(path)),
+          onPrivacy: () =>
+            afterMenu(() => void openOnWeb('/privacy', 'Voice privacy')),
+          onWithdraw: () => handlers.current.withdraw(),
+        }),
+        {
+          type: 'button' as const,
+          label: 'Done',
+          tintColor: chrome.tint,
+          accessibilityLabel: 'Done',
+          onPress: () => handlers.current.close(),
+        },
+      ],
+    }),
+    [menuTitle, live, active, typing, reportable, records, call.consent],
+  );
+
   const destination = record ? recordDestination(record.path) : null;
+  const onStage = (event: LayoutChangeEvent) => {
+    const { width, height } = event.nativeEvent.layout;
+    setStage((prior) =>
+      prior && prior.width === width && prior.height === height
+        ? prior
+        : { width, height },
+    );
+  };
+  // Consent needs the room: the orb steps back to whatever space is left,
+  // and leaves altogether when that is too small to read as the orb.
+  const consenting = askingConsent && !call.consent && !active;
+  const fitted = stage ? Math.min(stage.width, stage.height, 380) : 0;
+  const orbSize = consenting && fitted < 64 ? 0 : fitted;
+  const captionsButton = (
+    <RoundButton
+      symbol={captions ? 'captions.bubble.fill' : 'captions.bubble'}
+      label="Captions"
+      size="small"
+      look={captions ? 'on' : 'plain'}
+      selected={captions}
+      testID="talk-captions"
+      onPress={() => setCaptions(!captions)}
+    />
+  );
+  const sourcesButton = sources.length ? (
+    <RoundButton
+      symbol="books.vertical"
+      label={`Sources, ${sources.length}`}
+      size="small"
+      badge={sources.length}
+      testID="talk-sources"
+      onPress={() => setSourcesOpen(true)}
+    />
+  ) : (
+    <View style={styles.slot} />
+  );
+
   return (
     <View
       style={styles.page}
@@ -158,46 +287,44 @@ export default function TalkScreen({
         if (live) void call.mute();
       }}
     >
-      <Stack.Screen
-        options={{
-          gestureEnabled: !active,
-          unstable_headerRightItems: () => [
-            {
-              type: 'button',
-              label: 'Done',
-              accessibilityLabel: 'Done',
-              onPress: close,
-            },
-          ],
-        }}
-      />
+      <Stack.Screen options={screenOptions} />
       {destination ? (
         <>
-          <Group style={styles.recordControls}>
+          <View style={styles.recordBar}>
+            <Button
+              label="Back to call"
+              icon="chevron.left"
+              variant="quiet"
+              size="compact"
+              testID="talk-record-back"
+              onPress={() => setRecord(null)}
+            />
             <View
               ref={statusNode}
               accessible
               accessibilityLanguage="en-AU"
               testID="talk-record-status"
               accessibilityLabel={stateText}
+              style={styles.recordStatus}
             >
-              <Text variant="fine" wordSafe>
-                {stateText}
-              </Text>
+              <VoiceOrb
+                phase={phase}
+                levels={levels}
+                size={44}
+                reduceMotion={reduceMotion}
+              />
             </View>
-            <Button
-              label="Back to conversation"
-              testID="talk-record-back"
-              onPress={() => setRecord(null)}
-            />
             {active ? (
-              <Button
+              <RoundButton
+                symbol="phone.down.fill"
                 label="End call"
+                look="danger"
+                size="bar"
                 testID="talk-record-end"
                 onPress={() => void call.end()}
               />
             ) : null}
-          </Group>
+          </View>
           {destination.pathname === '/bill/[key]' ? (
             <BillDetail recordKey={destination.params.key} embedded />
           ) : destination.pathname === '/person/[slug]' ? (
@@ -211,297 +338,294 @@ export default function TalkScreen({
           ) : null}
         </>
       ) : (
-        <Screen testID="talk-sheet" scrollRef={page}>
-          {active || terminal ? null : (
-            <Group>
-              <Text variant="lede" testID="talk-sheet-message" wordSafe>
-                Explore the record with your voice
-              </Text>
-              <Text>
-                Ask about Australian politics, spending and the public record.
-                You can interrupt or ask a follow-up.
-              </Text>
-              {isE2E ? (
-                <Text variant="fine">
-                  This fixture uses synthetic input and silent playback.
-                </Text>
-              ) : null}
-            </Group>
-          )}
-          <Section>
-            <View
-              ref={statusNode}
-              accessible
-              accessibilityLanguage="en-AU"
-              accessibilityLabel={stateText}
-              testID="talk-status"
-              onLayout={() => {
-                if (!focusedEntry.current && screenReader) {
-                  focusedEntry.current = true;
-                  focusStatus();
+        <ScrollView
+          ref={page}
+          testID="talk-sheet"
+          style={styles.page}
+          // The sheet's bar is opaque and the dock pads the home indicator,
+          // so the page fits the screen exactly at standard sizes.
+          contentInsetAdjustmentBehavior="never"
+          keyboardShouldPersistTaps="handled"
+          automaticallyAdjustKeyboardInsets
+          contentContainerStyle={[
+            styles.body,
+            { paddingBottom: Math.max(insets.bottom, spacing.s4) + spacing.s4 },
+          ]}
+        >
+          <View
+            style={[styles.stage, consenting ? styles.emblem : null]}
+            onLayout={onStage}
+          >
+            {/* Absolute, so the orb never props the stage open: the stage
+                is exactly the room the dock and captions leave. */}
+            <View style={styles.orbFrame}>
+              <View
+                ref={statusNode}
+                accessible
+                accessibilityLanguage="en-AU"
+                accessibilityLabel={stateText}
+                accessibilityHint={
+                  screenReader && active
+                    ? 'Headphones keep VoiceOver speech out of the microphone.'
+                    : undefined
                 }
-              }}
-            >
-              <Text wordSafe>{stateText}</Text>
-            </View>
-            {seconds === undefined ? (
-              <Text testID="talk-allowance">
-                Remaining allowance is unavailable until a fresh status check
-                succeeds.
-              </Text>
-            ) : (
-              <Text
-                variant="figureInline"
-                testID="talk-allowance"
-                accessibilityLabel={
-                  s.status?.unlimited
-                    ? 'Unlimited voice access, up to 10 minutes per call'
-                    : timeLabel(seconds)
-                }
+                testID="talk-status"
+                onLayout={() => {
+                  if (!focusedEntry.current && screenReader) {
+                    focusedEntry.current = true;
+                    const node = statusNode.current
+                      ? findNodeHandle(statusNode.current)
+                      : null;
+                    if (node) AccessibilityInfo.setAccessibilityFocus(node);
+                  }
+                }}
+                style={{ width: orbSize, height: orbSize }}
               >
-                {s.status?.unlimited
-                  ? 'Unlimited voice access · up to 10 minutes per call'
-                  : `${clock(seconds)} remaining${s.status?.totalSeconds == null ? '' : ` · ${clock(s.status.totalSeconds)} free in total`}`}
-              </Text>
-            )}
-            {active ? (
-              <Group>
-                <Button
-                  label={
-                    live
-                      ? s.mode === 'muted'
-                        ? 'Unmute mic'
-                        : 'Mute mic'
-                      : 'Cancel connection'
-                  }
-                  testID="talk-mute"
-                  disabled={call.busy}
-                  onPress={() => void (live ? call.mute() : call.end())}
-                />
-                <Button
-                  label="End call"
-                  testID="talk-end"
-                  variant="danger"
-                  onPress={() => void call.end()}
-                />
-                <Icon name="waveform" tone="navy" />
-                <Text
-                  testID="talk-playback"
-                  accessibilityLabel={`Playback: ${s.playback}`}
-                >
-                  {s.playback === 'truncated'
-                    ? 'Playback was cut short. The captions show the available words.'
-                    : s.playback === 'buffering'
-                      ? 'Playback is buffering.'
-                      : 'Playback is flowing.'}
-                </Text>
-                {screenReader ? (
-                  <Text>
-                    Headphones can keep VoiceOver speech out of the microphone.
-                  </Text>
-                ) : null}
-              </Group>
-            ) : !s.status?.signedIn && s.status?.enabled ? (
-              <Group>
-                <Text>
-                  Voice needs a free OPAX account. Everything else in the app
-                  works without one.
-                </Text>
-                <Button
-                  label="Sign in to talk for free"
-                  testID="talk-sign-in"
-                  onPress={() => router.replace('/account')}
-                />
-              </Group>
-            ) : askingConsent && !call.consent ? (
-              <Group testID="talk-consent">
-                <Heading level={2}>Voice privacy and consent</Heading>
-                <Text>
-                  Your voice audio and the words of the conversation are sent to
-                  ElevenLabs, OPAX’s voice provider, to understand and answer
-                  you.
-                </Text>
-                <Text>
-                  OPAX keeps a record of each call, linked to your account: the
-                  seconds used, when it started and ended, and ElevenLabs&apos;
-                  reference for it. OPAX keeps no recording and no transcript.
-                  When OPAX last checked (9 September 2026), ElevenLabs was set
-                  not to record audio and to delete transcripts after one day.
-                  ElevenLabs&apos; own privacy policy also applies.
-                </Text>
-                <Text>
-                  This choice is stored on this device. You can withdraw it here
-                  at any time.
-                </Text>
-                <OpaxWebLink
-                  label="Voice privacy"
-                  path="/privacy"
-                  testID="talk-consent-privacy"
-                />
-                <VoiceDisclosure />
-                <Button
-                  label="Agree and start"
-                  testID="talk-agree"
-                  variant="primary"
-                  disabled={call.busy || !call.consentLoaded}
-                  onPress={() =>
-                    void call
-                      .agreeAndStart()
-                      .then(() => setAskingConsent(false))
-                  }
-                />
-                <Button
-                  label="Not now"
-                  testID="talk-not-now"
-                  onPress={() => setAskingConsent(false)}
-                />
-              </Group>
-            ) : (
-              <Group>
-                {s.status && !blocked ? (
-                  <>
-                    <VoiceDisclosure />
-                    <Button
-                      label="Start talking"
-                      testID="talk-start"
-                      variant="primary"
-                      disabled={call.busy || !call.consentLoaded}
-                      onPress={() =>
-                        call.consent
-                          ? void call.start()
-                          : setAskingConsent(true)
-                      }
-                    />
-                  </>
-                ) : null}
-                <Button
-                  label="Check availability"
-                  testID="talk-refresh"
-                  disabled={call.busy}
-                  onPress={() => void call.refresh()}
-                />
-                {blocked === 'allowanceExhausted' ||
-                blocked === 'disabled' ||
-                blocked === 'budgetClosed' ? (
-                  <Button
-                    label="Search public records"
-                    testID="talk-search"
-                    onPress={() => router.replace('/(tabs)/(search)')}
+                {orbSize ? (
+                  <VoiceOrb
+                    phase={phase}
+                    levels={levels}
+                    size={orbSize}
+                    reduceMotion={reduceMotion}
                   />
                 ) : null}
-                {failure === 'microphoneDenied' ? (
-                  <Button
-                    label="Open Settings"
-                    testID="talk-settings"
-                    onPress={() => void Linking.openSettings()}
-                  />
-                ) : null}
-                {s.status?.activeSession ? (
-                  <Text testID="talk-open-session">
-                    The previous conversation is still closing.
-                    {s.status.activeSession.expiresAt
-                      ? ` Its current expiry is ${new Date(s.status.activeSession.expiresAt * 1000).toLocaleString('en-AU')}.`
-                      : ''}{' '}
-                    Check availability before starting again.
-                  </Text>
-                ) : null}
-              </Group>
-            )}
-          </Section>
-          {s.transcript.length ? (
-            <Section title="Captions">
+              </View>
+            </View>
+          </View>
+          {showCaptions ? (
+            <ScrollView
+              ref={captionsList}
+              testID="talk-captions-list"
+              style={styles.captions}
+              contentContainerStyle={styles.captionsContent}
+              onContentSizeChange={() =>
+                captionsList.current?.scrollToEnd({ animated: !reduceMotion })
+              }
+            >
               {s.transcript.map((turn) => (
-                <AnswerCaption
-                  key={`${turn.role}-${turn.id}`}
-                  turn={turn}
-                  onReport={() => reportFromSources(s.sources, onReportAnswer)}
-                />
+                <AnswerCaption key={`${turn.role}-${turn.id}`} turn={turn} />
               ))}
-            </Section>
+            </ScrollView>
           ) : null}
-          {s.sources.length ? (
-            <Section title="Sources">
-              {s.sources
-                .filter((source) => webPageUrl(source.path))
-                .map((source, index) => (
-                  <Pressable
-                    key={source.path}
-                    testID={`talk-source-${index}`}
-                    accessibilityRole="link"
-                    accessibilityLabel={source.title}
-                    accessibilityHint={
-                      recordDestination(source.path)
-                        ? 'Opens the record within the conversation'
-                        : 'Opens on opax.com.au after the conversation'
-                    }
-                    onPress={() => openRecord(source)}
-                    style={styles.source}
-                  >
-                    <Text tone="bronzeInk" wordSafe>
-                      {source.title}
+          <View style={styles.dock} testID="talk-sheet-message">
+            {active ? (
+              <>
+                {typing && live ? (
+                  <TypedMessage
+                    send={call.send}
+                    busy={call.busy}
+                    onClose={() => setTyping(false)}
+                  />
+                ) : null}
+                {s.playback === 'truncated' && !captions ? (
+                  <View style={styles.inline} testID="talk-playback">
+                    <Text variant="fine" style={styles.centre}>
+                      Playback was cut short.
                     </Text>
-                  </Pressable>
-                ))}
-            </Section>
-          ) : null}
-          <Section>
-            {active ? <VoiceDisclosure /> : null}
-            <Text>
-              Your microphone starts only after you choose Start talking, agree
-              to voice processing and allow microphone access.
-            </Text>
-            <OpaxWebLink label="Voice privacy" path="/privacy" />
-            <Text testID="talk-consent-state">
-              {call.consent
-                ? 'Voice processing consent is given on this device.'
-                : 'Voice processing consent has not been given on this device.'}
-            </Text>
-            {call.consent ? (
-              <Button
-                label="Withdraw voice consent"
-                testID="talk-withdraw"
-                onPress={() =>
-                  void call
-                    .changeConsent(false)
-                    .then(() => setAskingConsent(false))
+                    <Button
+                      label="Show captions"
+                      variant="quiet"
+                      size="compact"
+                      onPress={() => setCaptions(true)}
+                    />
+                  </View>
+                ) : null}
+                <ControlRow>
+                  {captionsButton}
+                  <RoundButton
+                    symbol={s.mode === 'muted' ? 'mic.slash.fill' : 'mic.fill'}
+                    label={s.mode === 'muted' ? 'Unmute' : 'Mute'}
+                    look={s.mode === 'muted' ? 'on' : 'plain'}
+                    selected={s.mode === 'muted'}
+                    disabled={!live || call.busy}
+                    testID="talk-mute"
+                    onPress={() => void call.mute()}
+                  />
+                  <RoundButton
+                    symbol="phone.down.fill"
+                    label={live ? 'End call' : 'Cancel call'}
+                    look="danger"
+                    disabled={s.state === 'ending'}
+                    testID="talk-end"
+                    onPress={() => void call.end()}
+                  />
+                  {sourcesButton}
+                </ControlRow>
+              </>
+            ) : askingConsent && !call.consent ? (
+              <Consent
+                busy={call.busy || !call.consentLoaded}
+                onAgree={() =>
+                  void call.agreeAndStart().then(() => setAskingConsent(false))
                 }
+                onDecline={() => setAskingConsent(false)}
               />
-            ) : null}
-          </Section>
-          {live ? <TypedMessage send={call.send} busy={call.busy} /> : null}
-          {!active && queuedSource ? (
-            <Button
-              label={`Open record: ${queuedSource.title}`}
-              testID="talk-queued-source"
-              onPress={() => {
-                void openOnWeb(queuedSource.path, queuedSource.title);
-                setQueuedSource(null);
-              }}
-            />
-          ) : null}
-        </Screen>
+            ) : (
+              <>
+                {message ? (
+                  <Text
+                    style={styles.centre}
+                    testID="talk-message"
+                    accessibilityElementsHidden
+                    importantForAccessibility="no-hide-descendants"
+                  >
+                    {message}
+                  </Text>
+                ) : null}
+                {queuedSource ? (
+                  <Button
+                    label={`Open ${queuedSource.title}`}
+                    variant="quiet"
+                    testID="talk-queued-source"
+                    onPress={() => {
+                      void openOnWeb(queuedSource.path, queuedSource.title);
+                      setQueuedSource(null);
+                    }}
+                  />
+                ) : null}
+                {action ? (
+                  <ControlRow>
+                    {s.transcript.length ? captionsButton : null}
+                    <View style={styles.primary}>
+                      <PrimaryAction
+                        action={action}
+                        busy={
+                          call.busy ||
+                          (action === 'start' && !call.consentLoaded)
+                        }
+                        onStart={start}
+                        onRetry={() => void call.refresh()}
+                      />
+                    </View>
+                    {s.transcript.length || sources.length
+                      ? sourcesButton
+                      : null}
+                  </ControlRow>
+                ) : null}
+                {s.status?.signedIn ? (
+                  <Text
+                    variant="fine"
+                    style={styles.centre}
+                    testID="talk-allowance"
+                    accessibilityLabel={
+                      s.status.unlimited
+                        ? 'Unlimited voice minutes, up to 10 minutes per call'
+                        : timeLabel(s.status.remainingSeconds)
+                    }
+                  >
+                    {s.status.unlimited
+                      ? 'Unlimited minutes'
+                      : `${minutesLeft(s.status.remainingSeconds)} left`}
+                  </Text>
+                ) : null}
+                {action === 'start' ? <VoiceDisclosure /> : null}
+              </>
+            )}
+          </View>
+        </ScrollView>
       )}
+      <SourcesSheet
+        visible={sourcesOpen}
+        sources={s.sources}
+        active={active}
+        onOpen={(source) => {
+          setChosenSource(source);
+          setSourcesOpen(false);
+        }}
+        onClose={() => setSourcesOpen(false)}
+        onDismiss={() => {
+          // Open the record only once the sheet has gone, so an alert or the
+          // embedded record never appears beneath it.
+          if (chosenSource) openRecord(chosenSource);
+          setChosenSource(null);
+        }}
+      />
     </View>
   );
 }
-function VoiceDisclosure() {
-  return (
-    <Text testID="talk-disclosure">
-      AI voice powered by ElevenLabs. Answers may be mistaken; check the linked
-      records.
-    </Text>
-  );
+
+function PrimaryAction({
+  action,
+  busy,
+  onStart,
+  onRetry,
+}: {
+  action: Action;
+  busy: boolean;
+  onStart: () => void;
+  onRetry: () => void;
+}) {
+  switch (action) {
+    case 'start':
+      return (
+        <Button
+          label="Start"
+          icon="mic.fill"
+          variant="primary"
+          size="large"
+          fullWidth
+          testID="talk-start"
+          disabled={busy}
+          onPress={onStart}
+        />
+      );
+    case 'signIn':
+      return (
+        <Button
+          label="Sign in"
+          variant="primary"
+          size="large"
+          fullWidth
+          testID="talk-sign-in"
+          onPress={() => router.replace('/account')}
+        />
+      );
+    case 'search':
+      return (
+        <Button
+          label="Search the record"
+          size="large"
+          fullWidth
+          testID="talk-search"
+          onPress={() => router.replace('/(tabs)/(search)')}
+        />
+      );
+    case 'settings':
+      return (
+        <Button
+          label="Open Settings"
+          size="large"
+          fullWidth
+          testID="talk-settings"
+          onPress={() => void Linking.openSettings()}
+        />
+      );
+    case 'retry':
+      return (
+        <Button
+          label="Try again"
+          size="large"
+          fullWidth
+          testID="talk-refresh"
+          disabled={busy}
+          onPress={onRetry}
+        />
+      );
+  }
 }
+
 function TypedMessage({
   send,
   busy,
+  onClose,
 }: {
   send: ReturnType<typeof useTalk>['send'];
   busy: boolean;
+  onClose: () => void;
 }) {
   const [text, setText] = useState('');
   return (
-    <Section title="Type instead">
+    <View style={styles.typed}>
       <Field
         label="Message to OPAX"
         testID="talk-text"
@@ -509,27 +633,80 @@ function TypedMessage({
         onChangeText={setText}
         multiline
         maxLength={2000}
+        autoFocus
       />
-      <Text variant="fine">Typed messages still use call time.</Text>
-      <Button
-        label="Send message"
-        testID="talk-send"
-        disabled={!text.trim() || busy}
-        onPress={() =>
-          void send(text).then((result) => {
-            if (result?.ok) setText('');
-          })
-        }
-      />
-    </Section>
+      <View style={styles.typedActions}>
+        <Button
+          label="Close"
+          variant="quiet"
+          size="compact"
+          testID="talk-text-close"
+          onPress={onClose}
+        />
+        <Button
+          label="Send"
+          variant="primary"
+          size="compact"
+          testID="talk-send"
+          disabled={!text.trim() || busy}
+          onPress={() =>
+            void send(text).then((result) => {
+              if (result?.ok) setText('');
+            })
+          }
+        />
+      </View>
+    </View>
   );
 }
+
 const styles = StyleSheet.create({
   page: { flex: 1, backgroundColor: colors.paper },
-  recordControls: { padding: spacing.s4 },
-  source: {
-    minHeight: 44,
+  body: {
+    flexGrow: 1,
+    paddingHorizontal: layout.screenMargin,
+    gap: spacing.s5,
+  },
+  stage: {
+    flex: 1,
+    minHeight: 200,
+    alignItems: 'center',
     justifyContent: 'center',
+  },
+  captions: { flexGrow: 0, maxHeight: 260 },
+  captionsContent: { gap: spacing.s4, paddingVertical: spacing.s3 },
+  dock: { gap: spacing.s4, alignItems: 'stretch' },
+  centre: { textAlign: 'center' },
+  inline: { alignItems: 'center' },
+  slot: { width: 54, height: 54 },
+  primary: { flexGrow: 1, flexShrink: 1, maxWidth: 280 },
+  typed: { gap: spacing.s3 },
+  typedActions: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    flexWrap: 'wrap',
+    gap: spacing.s3,
+  },
+  recordBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    gap: spacing.s3,
+    paddingHorizontal: spacing.s4,
     paddingVertical: spacing.s3,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.dividerSubtle,
+  },
+  recordStatus: { width: 44, height: 44 },
+  emblem: { minHeight: 0 },
+  orbFrame: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

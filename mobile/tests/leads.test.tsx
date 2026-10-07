@@ -524,7 +524,9 @@ describe('the Leads screen', () => {
     );
     for (const caveat of signals[0]!.caveats)
       expect(texts(root)).toContain(caveat);
-    expect(texts(root)).toContain(
+    // One quiet caption on screen; VoiceOver hears the sources too.
+    expect(texts(root)).toContain('Updated 21 Sep 2026');
+    expect(labels(root)).toContain(
       'As at 21 September 2026 · Source: AEC annual returns; AusTender',
     );
     // Ten cards, then Show more.
@@ -748,6 +750,8 @@ describe('the declared-interests feed', () => {
         ),
       ),
     ).toBe(true);
+    // The export's coverage note is behind the count's ⓘ, in full.
+    await press(root, 'declarations-info');
     expect(texts(root)).toContain(
       'This export holds the newest 300 of 1,660 dated register alterations. Entries are as declared, not verified by OPAX. Additions and deletions carry the date the register records. A gift or trip with no organisation match names one the AEC and lobbyist registers do not list under that spelling. Organisation matches to AEC Transparency Register returns, the lobbyist registers and FITS use exact normalised names.',
     );

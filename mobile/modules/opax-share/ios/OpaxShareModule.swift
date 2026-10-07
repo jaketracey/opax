@@ -125,5 +125,19 @@ public final class OpaxShareModule: Module {
       presenter.present(controller, animated: true)
     }
     .runOnQueue(.main)
+
+    // Light confirmation for Follow and Share. The system respects the
+    // reader's System Haptics setting; this plays no sound.
+    AsyncFunction("haptic") { (kind: String) in
+      switch kind {
+      case "success":
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
+      case "selection":
+        UISelectionFeedbackGenerator().selectionChanged()
+      default:
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+      }
+    }
+    .runOnQueue(.main)
   }
 }

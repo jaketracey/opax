@@ -13,6 +13,15 @@ import AVFAudio
             for (a, b) in zip(samples, decoded) { XCTAssertEqual(a, b, accuracy: codec == "pcm" ? 0.00004 : 0.021) }
         } }
     }
+    func testLevelMeterMapsRMSDecibelsToUnitRange() {
+        func level(_ samples: [Float]) -> Float { samples.withUnsafeBufferPointer { LevelMeter.level($0) } }
+        XCTAssertEqual(level([]), 0)
+        XCTAssertEqual(level([Float](repeating: 0, count: 1024)), 0)
+        XCTAssertEqual(level([Float](repeating: 1, count: 1024)), 1, accuracy: 0.0001)
+        XCTAssertEqual(level([Float](repeating: -0.1, count: 1024)), 2.0 / 3, accuracy: 0.001) // -20 dBFS
+        XCTAssertEqual(level([Float](repeating: 0.0005, count: 1024)), 0) // under -60 dBFS
+        XCTAssertEqual(level([.nan, .infinity, 1, 1]), LevelMeter.level(rms: Float(0.5).squareRoot()), accuracy: 0.0001) // non-finite counts as silence
+    }
     func testFormatParserFailsClosed() {
         for input in ["opus_48000", "pcm_abc", "pcm_0", "pcm_96000", "pcm_016000", "pcm_16000_extra", "", "ulaw_-8000", "PCM_16000"] {
             XCTAssertThrowsError(try AudioFormat(input))

@@ -454,7 +454,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.raised,
     borderColor: colors.line,
     borderWidth: hairline,
-    borderRadius: radius,
+    borderRadius: radius + 12,
     padding: 16,
     gap: spacing.s3,
   },

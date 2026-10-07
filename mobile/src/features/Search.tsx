@@ -234,16 +234,24 @@ export default function Search() {
           !sources ||
           sourcesStale ||
           noSuggestions ? (
-            <Section title={showSuggestions ? undefined : 'Browse'}>
-              {!showSuggestions ? (
-                <Button
-                  label="Refresh suggestions"
-                  size="compact"
-                  testID="search-refresh"
-                  onPress={() => void loadSources(true)}
-                  loading={refreshing}
-                />
-              ) : null}
+            <Section
+              title={showSuggestions ? undefined : 'Browse'}
+              icon="square.grid.2x2"
+              accent="people"
+              action={
+                !showSuggestions ? (
+                  <Button
+                    label="Refresh suggestions"
+                    variant="quiet"
+                    size="compact"
+                    icon="arrow.clockwise"
+                    testID="search-refresh"
+                    onPress={() => void loadSources(true)}
+                    loading={refreshing}
+                  />
+                ) : undefined
+              }
+            >
               {sourceError ? (
                 <Group>
                   {isOffline(sourceError) && !sources ? (
@@ -280,12 +288,17 @@ export default function Search() {
               ) : null}
               {!showSuggestions ? (
                 <>
-                  <OpaxWebLink
-                    label="Parliamentarians"
-                    path="/subject/person"
-                  />
-                  <OpaxWebLink label="Electorates" path="/subject/electorate" />
-                  <Text variant="fine">
+                  <RowList>
+                    <OpaxWebLink
+                      label="Parliamentarians"
+                      path="/subject/person"
+                    />
+                    <OpaxWebLink
+                      label="Electorates"
+                      path="/subject/electorate"
+                    />
+                  </RowList>
+                  <Text variant="caption">
                     Bill searches use the saved bill titles in Bills.
                   </Text>
                 </>
@@ -293,7 +306,12 @@ export default function Search() {
             </Section>
           ) : null}
           {showSuggestions && suggestions?.people.length ? (
-            <Section title="People" testID="search-suggestions-people">
+            <Section
+              title="People"
+              icon="person.2.fill"
+              accent="people"
+              testID="search-suggestions-people"
+            >
               <RowList>
                 {suggestions.people.slice(0, 8).map((p) => (
                   <PersonRow
@@ -312,6 +330,8 @@ export default function Search() {
           {showSuggestions && suggestions?.electorates.length ? (
             <Section
               title="Electorates"
+              icon="map"
+              accent="places"
               testID="search-suggestions-electorates"
             >
               <RowList>
@@ -333,7 +353,12 @@ export default function Search() {
             </Section>
           ) : null}
           {showSuggestions && suggestions?.bills.length ? (
-            <Section title="Bills" testID="search-suggestions-bills">
+            <Section
+              title="Bills"
+              icon="doc.text"
+              accent="bills"
+              testID="search-suggestions-bills"
+            >
               <RowList>
                 {suggestions.bills.slice(0, 8).map((b) => (
                   <RecordRow
@@ -348,21 +373,23 @@ export default function Search() {
             </Section>
           ) : null}
           {showSuggestions ? (
-            <Section>
-              <Button
-                label="Refresh suggestions"
-                size="compact"
-                testID="search-refresh"
-                onPress={() => void loadSources(true)}
-                loading={refreshing}
-              />
-            </Section>
+            <Button
+              label="Refresh suggestions"
+              variant="quiet"
+              size="compact"
+              icon="arrow.clockwise"
+              testID="search-refresh"
+              onPress={() => void loadSources(true)}
+              loading={refreshing}
+            />
           ) : null}
         </>
       ) : null}
       {submitted ? (
         <Section
           title={`Results for “${result?.data.query ?? query.trim()}” · ${kindLabel(kind)}`}
+          icon="magnifyingglass"
+          accent="people"
         >
           {kind === 'pay' ? (
             <Text variant="metadata" testID="search-pay-caveat">
@@ -395,7 +422,7 @@ export default function Search() {
                   />
                 </>
               ) : (
-                <Text variant="fine" testID="search-cache-state">
+                <Text variant="caption" testID="search-cache-state">
                   Public catalog results
                 </Text>
               )}
@@ -469,12 +496,12 @@ export default function Search() {
                 </RowList>
               )}
               {result.data.warnings.map((warning) => (
-                <Text key={warning} variant="fine">
+                <Text key={warning} variant="caption">
                   {warning}
                 </Text>
               ))}
               {result.data.coverage ? (
-                <Text variant="fine">{result.data.coverage}</Text>
+                <Text variant="caption">{result.data.coverage}</Text>
               ) : null}
               <AsAtLine
                 asOf={result.asOf}
@@ -491,6 +518,8 @@ export default function Search() {
               {result.data.page > 1 ? (
                 <Button
                   label="Previous results"
+                  variant="quiet"
+                  icon="chevron.up"
                   onPress={() => void search(result.data.page - 1)}
                   disabled={busy}
                 />
@@ -498,6 +527,8 @@ export default function Search() {
               {result.data.page * result.data.per_page < result.data.total ? (
                 <Button
                   label="More results"
+                  variant="quiet"
+                  icon="chevron.down"
                   onPress={() => void search(result.data.page + 1)}
                   disabled={busy}
                 />

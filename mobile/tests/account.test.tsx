@@ -4,7 +4,7 @@ import { ScrollView } from 'react-native';
 import { router } from 'expo-router';
 import * as voice from '../src/voice';
 import type { VoiceEvent, VoiceStatus } from '../src/voice';
-import { Button, ErrorState, Field } from '../src/design/primitives';
+import { ErrorState, Field } from '../src/design/primitives';
 import {
   codeDigits,
   codeGate,
@@ -75,10 +75,12 @@ function texts(renderer: Renderer): string[] {
 }
 const shows = (renderer: Renderer, text: string) =>
   texts(renderer).join('\n').includes(text);
+// Buttons and link rows: the pressable that carries the test ID.
 const button = (renderer: Renderer, testID: string) =>
-  renderer.root
-    .findAllByType(Button)
-    .find((node) => node.props.testID === testID)!;
+  renderer.root.findAll(
+    (node) =>
+      node.props.testID === testID && typeof node.props.onPress === 'function',
+  )[0]!;
 const field = (renderer: Renderer, testID: string) =>
   renderer.root
     .findAllByType(Field)

@@ -61,12 +61,13 @@ export function LocationSuggestion({
     <Group>
       <Button
         label="Use my location"
+        icon="location"
         testID="use-my-location"
         onPress={() => void locate()}
         disabled={busy || disabled}
         accessibilityHint="Optional. Suggests a federal electorate using a display outline; you confirm the choice."
       />
-      <Text wordSafe variant="fine">
+      <Text wordSafe variant="caption">
         Your location is used once on your iPhone to suggest a federal seat. It
         is not sent, saved or logged. Display outlines are not for address
         allocation.

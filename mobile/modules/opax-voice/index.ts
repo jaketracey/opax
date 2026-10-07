@@ -18,7 +18,7 @@ export type NativeVoice = {
   requestDeletionCode(): Promise<unknown>;
   deleteAccount(challengeId: string, code: string): Promise<unknown>;
   addListener(
-    name: 'onVoiceEvent',
+    name: 'onVoiceEvent' | 'onVoiceLevel',
     listener: (value: unknown) => void,
   ): { remove(): void };
 };

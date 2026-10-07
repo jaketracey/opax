@@ -52,6 +52,7 @@ import { leadEvidenceFor } from '../features/leads/model';
 import { canonicalUrl } from '../navigation/external';
 import { isE2E } from '../design/environment';
 import { OpaxShare } from '../../modules/opax-share';
+import { TalkOrbs } from './TalkOrbs';
 
 // Searched for by the release bundle scan: it must never appear in production.
 export const WORKBENCH_MARKER = 'OPAX_DESIGN_WORKBENCH';
@@ -596,6 +597,9 @@ export default function Workbench() {
             onPress={() => router.push('/talk')}
           />
         </Group>
+      </Block>
+      <Block id="talk" title="Talk call animation">
+        <TalkOrbs />
       </Block>
       <Text variant="fine" testID="wb-end">
         End of workbench
