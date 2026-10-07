@@ -44,7 +44,18 @@ name: 35 Grants programs and local party, topic and report suggestions, also at 
 - assertVisible:
     id: source-destination-url
 - takeScreenshot: ${EVIDENCE}/35-grant-browser
-- tapOn: OK
+- tapOn:
+    text: OK
+    retryTapIfNoChange: false
+- extendedWaitUntil:
+    notVisible:
+      id: source-destination-url
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertNotVisible:
+    id: search-filters-sheet
+- takeScreenshot: ${EVIDENCE}/35-after-grant-close
 - scrollUntilVisible:
     element:
       id: search-input
@@ -89,7 +100,17 @@ name: 35 Grants programs and local party, topic and report suggestions, also at 
 - assertVisible:
     id: source-destination-url
 - takeScreenshot: ${EVIDENCE}/35-topic-browser
-- tapOn: OK
+- tapOn:
+    text: OK
+    retryTapIfNoChange: false
+- extendedWaitUntil:
+    notVisible:
+      id: source-destination-url
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertNotVisible:
+    id: search-filters-sheet
 - scrollUntilVisible:
     element:
       id: search-suggestion-report-housing

@@ -140,7 +140,17 @@ name: 34 Records, filters, sort, cited summary and explicitly chosen briefs
     timeout: 90000
 - assertVisible: https://opax\.invalid/doc/speech-.*
 - takeScreenshot: ${EVIDENCE}/34-record-browser
-- tapOn: OK
+- tapOn:
+    text: OK
+    retryTapIfNoChange: false
+- extendedWaitUntil:
+    notVisible:
+      id: source-destination-url
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertNotVisible:
+    id: search-filters-sheet
 - scrollUntilVisible:
     element:
       id: records-summary
@@ -166,7 +176,17 @@ name: 34 Records, filters, sort, cited summary and explicitly chosen briefs
 - takeScreenshot: ${EVIDENCE}/34-summary-citation
 - tapOn:
     id: records-citation-1
-- tapOn: OK
+- tapOn:
+    text: OK
+    retryTapIfNoChange: false
+- extendedWaitUntil:
+    notVisible:
+      id: source-destination-url
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertNotVisible:
+    id: search-filters-sheet
 - scrollUntilVisible:
     element:
       id: records-briefs
