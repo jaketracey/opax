@@ -126,7 +126,7 @@ test('undated or ended evidence never turns a real public member into a current 
   ).toHaveLength(0);
 });
 test('recorded Labor affiliations exclude the review Bailey, Horne, Richards and Theophanous duplicates', () => {
-  expect(members.currentCount).toBe(192);
+  expect(members.currentCount).toBe(193);
   for (const name of ['Bailey', 'Horne', 'Richards', 'Theophanous'])
     expect(members.recorded.some((m) => m.name === name)).toBe(false);
   expect(members.recorded.filter((m) => m.name === 'MC Bailey')).toHaveLength(

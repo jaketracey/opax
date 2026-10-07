@@ -1251,9 +1251,12 @@ export function yourMPFor(
     stateRosterVerified: stateSeats.length > 0,
   };
 }
+export type SuggestionRoster = Omit<Roster, 'people'> & {
+  people: (Roster['people'][number] & { aliases?: string[] })[];
+};
 export function suggestionsFor(
   query: string,
-  roster: Roster,
+  roster: SuggestionRoster,
   seats: ElectorateIndex,
   bills: BillIndex,
 ) {
@@ -1261,17 +1264,18 @@ export function suggestionsFor(
   if (q.length < 2) return { people: [], electorates: [], bills: [] };
   // Keep the fuller spelling, as the web's slug index does. A folded name
   // identifies a row; a roster pid is not a canonical profile ID.
-  const people = new Map<string, Roster['people'][number]>();
+  const people = new Map<string, SuggestionRoster['people'][number]>();
   for (const person of roster.people) {
     const key = nameKey(person.name);
-    if (!fullPortraitName(person.name)) continue;
     const previous = people.get(key);
     if (!previous || (person.speeches ?? 0) > (previous.speeches ?? 0))
       people.set(key, person);
   }
   return {
     people: [...people.values()].filter((p) =>
-      titleKey(nameKey(p.name)).includes(q),
+      [p.name, ...(p.aliases ?? [])].some((name) =>
+        titleKey(nameKey(name)).includes(q),
+      ),
     ),
     electorates: seats.electorates.filter(
       (s) =>

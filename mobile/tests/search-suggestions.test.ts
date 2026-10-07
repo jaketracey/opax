@@ -87,12 +87,8 @@ test.each(twinNames)(
         index,
         bills,
       ).people.filter((p) => nameKey(p.name) === key);
-      if (['M O’Brien', 'D O’Brien', 'D’Ambrosio'].includes(name))
-        expect(rows).toEqual([]);
-      else {
-        expect(rows).toHaveLength(1);
-        expect(rows[0]?.name).toBe(holder);
-      }
+      expect(rows).toHaveLength(1);
+      expect(rows[0]?.name).toBe(holder);
     }
   },
 );

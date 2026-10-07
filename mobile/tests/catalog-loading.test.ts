@@ -128,6 +128,7 @@ test('typing suggestions reuses one source snapshot until explicit refresh', asy
   expect(calls.length).toBeGreaterThan(count);
 });
 test.each([
+  ['/parliamentarians.json'],
   ['/api/person-slugs'],
   [data.manifest.people_url],
   ['/api/person-slugs', data.manifest.people_url],
@@ -166,6 +167,7 @@ test('explicit suggestion refresh retries optional identity context', async () =
   });
 });
 test.each([
+  ['/parliamentarians.json'],
   ['/api/person-slugs'],
   [data.manifest.people_url],
   ['/api/person-slugs', data.manifest.people_url],

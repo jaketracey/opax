@@ -7,6 +7,8 @@ import {
 } from '../src/api/catalogs';
 import {
   memberSearchRows,
+  memberSearchResults,
+  memberSlugFor,
   memberSuggestionRoster,
 } from '../src/api/catalog-search';
 import { suggestionsFor } from '../src/api/selectors';
@@ -37,8 +39,8 @@ const fixtures = {
     ...roster,
     people: [
       roster.people.find((p) => p.name === member.name)!,
-      { name: 'Albanese', pid: member.legacy_person_id, party: null },
-      { name: 'A Albanese', pid: member.legacy_person_id, party: null },
+      { name: 'Unresolved', party: null },
+      { name: 'U Unresolved', party: null },
       { name: 'Casey Witness', chambers: ['senate_committee'], party: null },
       { name: ambiguous.name, pid: ambiguous.legacy_person_id, party: null },
       { name: 'Taylor Unresolved', party: null },
@@ -47,8 +49,14 @@ const fixtures = {
   people: {
     ...people,
     people: [
-      { ...member, aliases: ['Albanese', 'A Albanese'] },
-      ambiguous,
+      member,
+      {
+        ...ambiguous,
+        electorates: ambiguous.electorates.map((seat) => ({
+          ...seat,
+          current: false,
+        })),
+      },
       {
         ...ambiguous,
         person_id: personId('person_000000000000000000000002'),
@@ -63,8 +71,8 @@ const fixtures = {
     ...slugs,
     slugs: {
       'anthony-albanese': member.name,
-      albanese: 'Albanese',
-      'a-albanese': 'A Albanese',
+      unresolved: 'Unresolved',
+      'u-unresolved': 'U Unresolved',
       'casey-witness': 'Casey Witness',
       'robin-example': ambiguous.name,
       'taylor-unresolved': 'Taylor Unresolved',
@@ -125,43 +133,46 @@ test('a different people release fails closed', () => {
     }),
   ).toEqual([]);
 });
-test('a roster full-name conflict cannot be hidden by a unique people row', () => {
-  expect(
-    memberSearchRows([personRows[0]!], {
-      ...fixtures,
-      roster: {
-        ...fixtures.roster,
-        people: [
-          fixtures.roster.people[0]!,
-          { ...fixtures.roster.people[0]!, pid: rosterId('99992') },
-        ],
-      },
-    }),
-  ).toEqual([]);
+test('a surname href is accepted only through the real legacy profile bridge', () => {
+  const bridged = {
+    ...fixtures,
+    roster: {
+      ...fixtures.roster,
+      people: [
+        ...fixtures.roster.people,
+        {
+          name: 'Albanese',
+          full: member.name,
+          pid: member.legacy_person_id,
+          party: null,
+        },
+      ],
+    },
+    slugs: {
+      ...fixtures.slugs,
+      slugs: { ...fixtures.slugs.slugs, albanese: 'Albanese' },
+    },
+  };
+  const record = { ...row(member.name), href: '/subject/person/Albanese' };
+  expect(memberSlugFor(record, bridged)).toBe('anthony-albanese');
+  expect(memberSearchRows([record], bridged)).toEqual([record]);
 });
-test('a conflicting roster ID cannot borrow a member with the same name', () => {
+test('different native title and href identities are refused', () => {
+  const other = people.people.find((p) => p.name === 'Penny Wong')!;
+  const both = {
+    ...fixtures,
+    people: { ...fixtures.people, people: [member, other] },
+    slugs: {
+      ...fixtures.slugs,
+      slugs: { ...fixtures.slugs.slugs, 'penny-wong': other.name },
+    },
+  };
   expect(
-    memberSearchRows([personRows[0]!], {
-      ...fixtures,
-      roster: {
-        ...fixtures.roster,
-        people: [{ ...fixtures.roster.people[0]!, pid: rosterId('99992') }],
-      },
-    }),
-  ).toEqual([]);
-});
-test('a committee-only witness cannot borrow a member with the same name', () => {
-  expect(
-    memberSearchRows([personRows[0]!], {
-      ...fixtures,
-      roster: {
-        ...fixtures.roster,
-        people: [
-          { name: member.name, party: null, chambers: ['senate_committee'] },
-        ],
-      },
-    }),
-  ).toEqual([]);
+    memberSlugFor(
+      { ...row(member.name), href: '/subject/person/penny-wong' },
+      both,
+    ),
+  ).toBeUndefined();
 });
 test('an incomplete roster cannot establish a unique member identity', () => {
   const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
@@ -182,7 +193,7 @@ test('an incomplete roster cannot establish a unique member identity', () => {
 });
 test('the Search suggestion roster drops stubs, initials, witnesses and ambiguous or unresolved names', () => {
   const sources = memberSuggestionRoster(fixtures.roster, fixtures);
-  expect(sources.people).toEqual([fixtures.roster.people[0]]);
+  expect(sources.people.map((p) => p.name)).toEqual([member.name]);
   expect(suggestionsFor('Albanese', sources, index, bills).people).toEqual(
     sources.people,
   );
@@ -242,7 +253,7 @@ function loader(failedPath?: string) {
       return { data: decode(raw), stale: false, savedAt: 1, asOf: null };
     },
   };
-  return { catalogs: new Catalogs(client), calls };
+  return { catalogs: new Catalogs(client), client, calls };
 }
 test('the search API filters before returning rows to the screen', async () => {
   const { catalogs } = loader();
@@ -264,5 +275,128 @@ test.each([
   async (path) => {
     const result = await loader(path).catalogs.search('fixture');
     expect(result.data.results.map((r) => r.kind)).toEqual(['pay']);
+  },
+);
+
+test('native directory members absent from compiled results remain searchable', () => {
+  const results = memberSearchResults([], catalogs, 'Vanessa Bleyer');
+  expect(results.map((record) => record.title)).toEqual(['Vanessa Bleyer']);
+  expect(memberSlugFor(results[0]!, catalogs)).toBe('vanessa-bleyer');
+});
+test('person paging filters the complete relevance window before slicing', async () => {
+  const records = Array.from({ length: 45 }, (_, i) => ({
+    ...personRows[0]!,
+    slug: `catalog-${i}`,
+  }));
+  records.push(
+    ...Array.from({ length: 55 }, (_, i) => ({
+      ...personRows[3]!,
+      slug: `witness-${i}`,
+    })),
+  );
+  const calls: string[] = [];
+  const underlying = loader().client;
+  const client: Pick<ApiClient, 'get'> = {
+    async get<T>(
+      path: string,
+      decode: (raw: unknown) => T,
+    ): Promise<RecordResult<T>> {
+      if (!path.startsWith('/api/search-all?'))
+        return underlying.get(path, decode);
+      calls.push(path);
+      return {
+        data: decode({
+          query: 'senate',
+          kind: 'person',
+          results: records,
+          total: records.length,
+          page: 1,
+          per_page: 200,
+          warnings: [],
+        }),
+        stale: false,
+        savedAt: 1,
+        asOf: null,
+      };
+    },
+  };
+  const api = new Catalogs(client);
+  for (const [page, count] of [
+    [1, 20],
+    [2, 20],
+    [3, 5],
+    [5, 5],
+  ]) {
+    const result = (await api.search('senate', 'person', page)).data;
+    expect(result).toMatchObject({
+      total: 45,
+      page: Math.min(page!, 3),
+      per_page: 20,
+    });
+    expect(result.results).toHaveLength(count!);
+    expect(result.page * result.per_page < result.total).toBe(page! < 3);
+  }
+  expect(calls.every((path) => path.endsWith('page=1&per=200'))).toBe(true);
+});
+test('non-person paging retains the original page and totals', async () => {
+  const result = (
+    await loader('/parliamentarians.json').catalogs.search('fixture', 'pay')
+  ).data;
+  expect(result).toMatchObject({ total: 7, page: 1, per_page: 20 });
+});
+
+test('native aliases stay suggestible while navigation uses the canonical member name', () => {
+  const source = memberSuggestionRoster(roster, catalogs);
+  const matched = suggestionsFor('Libby Coker', source, index, bills).people;
+  expect(matched.some((p) => p.aliases?.includes('Libby Coker'))).toBe(true);
+  for (const person of matched)
+    expect(memberSlugFor(row(person.name), catalogs)).toBeDefined();
+});
+
+test.each(['Vanessa Bleyer', 'Maree Edwards'])(
+  'the API finds %s even when the compiled catalog returns no rows',
+  async (name) => {
+    const client: Pick<ApiClient, 'get'> = {
+      async get<T>(
+        path: string,
+        decode: (raw: unknown) => T,
+      ): Promise<RecordResult<T>> {
+        const raw = path.startsWith('/api/search-all?')
+          ? {
+              query: name,
+              kind: 'person',
+              results: [],
+              total: 0,
+              page: 1,
+              per_page: 200,
+              warnings: [],
+            }
+          : path === '/api/person-slugs'
+            ? slugs
+            : path === '/parliamentarians.json'
+              ? roster
+              : path === '/electorates/manifest.json'
+                ? manifest
+                : path === manifest.people_url
+                  ? people
+                  : null;
+        return { data: decode(raw), stale: false, savedAt: 1, asOf: null };
+      },
+    };
+    const result = (await new Catalogs(client).search(name)).data;
+    expect(result.total).toBe(1);
+    expect(result.results[0]).toMatchObject({ title: name, profileName: name });
+    expect(result.results[0]!.personSlug).toBeDefined();
+    const missing: Pick<ApiClient, 'get'> = {
+      async get<T>(
+        path: string,
+        decode: (raw: unknown) => T,
+      ): Promise<RecordResult<T>> {
+        if (path === '/parliamentarians.json')
+          throw new ApiError('offline', 'Offline fixture.');
+        return client.get(path, decode);
+      },
+    };
+    expect((await new Catalogs(missing).search(name)).data.results).toEqual([]);
   },
 );

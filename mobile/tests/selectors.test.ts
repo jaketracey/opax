@@ -1,3 +1,4 @@
+import { memberSuggestionRoster } from '../src/api/catalog-search';
 import { ApiError } from '../src/api/errors';
 import * as d from '../src/api/catalogs';
 import { bills, catalogs, index, manifest, people, pinned } from './pinned';
@@ -327,15 +328,16 @@ test('suggestions use catalog names, seats and bill titles on device', () => {
     [],
   );
 });
-test('suggestions exclude the Senator role token and surname-only rows', () => {
+test('verified suggestions exclude the Senator role token and unresolved surname rows', () => {
+  const verified = memberSuggestionRoster(catalogs.roster, catalogs);
   expect(
     d
-      .suggestionsFor('Senator', catalogs.roster, index, bills)
+      .suggestionsFor('Senator', verified, index, bills)
       .people.some((p) => p.name === 'Senator'),
   ).toBe(false);
   expect(
     d
-      .suggestionsFor('Canavan', catalogs.roster, index, bills)
+      .suggestionsFor('Canavan', verified, index, bills)
       .people.some((p) => p.name === 'Canavan'),
   ).toBe(false);
 });
