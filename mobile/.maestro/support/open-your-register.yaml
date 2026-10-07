@@ -10,21 +10,25 @@ appId: au.com.opax.app
 - takeScreenshot: ${EVIDENCE}/${REGISTER_PREFIX}-register-target-settled
 - tapOn:
     id: your-register-toggle
-# A floating iOS header can intercept the first tap. Retry only while the
-# control still says Show, so a register that is opening is never closed.
+# A floating iOS header can intercept the first tap. Retry only while neither
+# the register block nor its loading placeholder is drawn, so a register that
+# is opening is never closed.
 - runFlow:
     when:
-      visible:
-        id: your-register-toggle
-        text: Show register changes
+      notVisible:
+        id: your-register-heading
     commands:
-      # JsConsole records only executed markers; the harness counts these.
-      - evalScript: ${console.log('OPAX_REGISTER_RETRY ' + JSON.stringify({registerPrefix:REGISTER_PREFIX}))}
-      - swipe:
-          start: 90%,35%
-          end: 90%,55%
-          duration: 600
-      - waitForAnimationToEnd
-      - takeScreenshot: ${EVIDENCE}/${REGISTER_PREFIX}-register-target-repositioned
-      - tapOn:
-          id: your-register-toggle
+      - runFlow:
+          when:
+            notVisible: Loading the member’s register
+          commands:
+            # JsConsole records only executed markers; the harness counts these.
+            - evalScript: ${console.log('OPAX_REGISTER_RETRY ' + JSON.stringify({registerPrefix:REGISTER_PREFIX}))}
+            - swipe:
+                start: 90%,35%
+                end: 90%,55%
+                duration: 600
+            - waitForAnimationToEnd
+            - takeScreenshot: ${EVIDENCE}/${REGISTER_PREFIX}-register-target-repositioned
+            - tapOn:
+                id: your-register-toggle

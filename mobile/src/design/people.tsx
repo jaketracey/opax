@@ -1,4 +1,5 @@
 import { router } from 'expo-router';
+import { ownsRowPadding } from './row-padding';
 import { partyRoute } from '../navigation/routes';
 import { useState } from 'react';
 import { localImageURI } from '../api/image-policy';
@@ -12,13 +13,14 @@ import {
   partyDot,
   partyIdentity,
   partyText,
+  partyWash,
   type PartyContext,
 } from './party';
 import { Text } from './text';
 import { nameProbeProps } from './text-probe';
-import { colors, hairline, layout, minimumTarget, spacing } from './tokens';
+import { colors, hairline, minimumTarget, rhythm, spacing } from './tokens';
 
-const portraitSizes = { row: 44, profile: 88 } as const;
+const portraitSizes = { row: 44, profile: 96 } as const;
 
 /** An unchanged local portrait, or the existing blank circle. Never initials. */
 export function Portrait({
@@ -28,6 +30,7 @@ export function Portrait({
   name,
   official = false,
   nameBeside = true,
+  ring,
   onDisplay,
 }: {
   size?: keyof typeof portraitSizes;
@@ -36,6 +39,8 @@ export function Portrait({
   name?: string;
   official?: boolean;
   nameBeside?: boolean;
+  /** A party colour drawn as a ring around a profile portrait. */
+  ring?: string | null;
   onDisplay?: (visible: boolean) => void;
 }) {
   const [failedURI, setFailedURI] = useState<string | null>(null);
@@ -61,6 +66,7 @@ export function Portrait({
           borderRadius: dimension / 2,
           overflow: 'hidden',
         },
+        ring ? { borderWidth: 3, borderColor: ring, padding: 0 } : null,
       ]}
     >
       {uri ? (
@@ -105,10 +111,13 @@ export function PartyLabel({
   dense = false,
   testID,
   linked = true,
+  chip = false,
 }: PartyContext & {
   dense?: boolean;
   testID?: string;
   linked?: boolean;
+  /** Draw as a tinted capsule (profile headers); still a 44pt link. */
+  chip?: boolean;
 }) {
   const identity = partyIdentity(party);
   const dot = partyDot(party);
@@ -163,38 +172,112 @@ export function PartyLabel({
       accessibilityLabel={text.spoken}
       testID={testID}
     >
-      {dot ? (
+      {chip ? (
+        <>
+          <PartyChip
+            party={party}
+            status={status}
+            formerly={formerly}
+            short={false}
+            nested
+          />
+          {partyLinked ? (
+            <Icon name="chevron.right" size={11} tone="inkSoft" />
+          ) : null}
+        </>
+      ) : null}
+      {!chip && dot ? (
         <View
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
           style={[styles.dot, { backgroundColor: dot }]}
         />
       ) : null}
-      <Text
-        wordSafe
-        variant={dense ? 'metadata' : 'body'}
-        tone={tone}
-        style={{ flexShrink: 1 }}
-      >
+      {chip ? null : (
+        <Text
+          wordSafe
+          variant={dense ? 'metadata' : 'body'}
+          tone={tone}
+          style={{ flexShrink: 1 }}
+        >
+          {text.visible}
+          {text.previous ? (
+            <Text
+              variant={dense ? 'metadata' : 'body'}
+              tone="inkSoft"
+              onPress={
+                previousLinked && formerly
+                  ? (event) => {
+                      event.stopPropagation();
+                      router.push(partyRoute(formerly));
+                    }
+                  : undefined
+              }
+            >
+              {` · ${text.previous}`}
+            </Text>
+          ) : null}
+        </Text>
+      )}
+    </Container>
+  );
+}
+
+/**
+ * A party as a small tinted capsule: the dot on a raised ring and the short
+ * label (ALP, LIB, GRN), "Formerly ALP" for a known former member. Reads as
+ * the full name. Not a link on its own: the row around it carries the
+ * "Open party page" action. An unrecorded party is said in plain words.
+ */
+export function PartyChip({
+  party,
+  status,
+  formerly,
+  short = true,
+  nested = false,
+  testID,
+}: PartyContext & {
+  short?: boolean;
+  /** Inside a control that carries the accessible name. */
+  nested?: boolean;
+  testID?: string;
+}) {
+  const dot = partyDot(party);
+  const text = partyText({ party, status, formerly }, short);
+  const wash = partyWash(party);
+  if (!partyIdentity(party).recorded)
+    return (
+      <Text variant="metadata" testID={testID} accessible={!nested}>
+        {text.visible}
+      </Text>
+    );
+  return (
+    <View
+      accessible={!nested}
+      accessibilityLabel={nested ? undefined : text.spoken}
+      testID={testID}
+      style={[
+        styles.chip,
+        nested ? styles.chipNested : null,
+        { backgroundColor: wash },
+      ]}
+    >
+      {dot ? (
+        <View
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          style={[styles.chipDot, { backgroundColor: dot }]}
+        />
+      ) : null}
+      <Text variant="chip" style={styles.chipText}>
         {text.visible}
         {text.previous ? (
-          <Text
-            variant={dense ? 'metadata' : 'body'}
-            tone="inkSoft"
-            onPress={
-              previousLinked && formerly
-                ? (event) => {
-                    event.stopPropagation();
-                    router.push(partyRoute(formerly));
-                  }
-                : undefined
-            }
-          >
+          <Text variant="chip" tone="inkSoft">
             {` · ${text.previous}`}
           </Text>
         ) : null}
       </Text>
-    </Container>
+    </View>
   );
 }
 
@@ -268,14 +351,23 @@ export function PersonRow({
           >
             {name}
           </Text>
-          {partyContext ? <PartyLabel {...partyContext} dense /> : null}
-          {place ? (
-            <Text wordSafe variant="metadata">
-              {place}
-            </Text>
+          {partyContext || place ? (
+            <View
+              style={[
+                styles.personMeta,
+                stacked ? styles.personMetaWrap : null,
+              ]}
+            >
+              {partyContext ? <PartyChip {...partyContext} /> : null}
+              {place ? (
+                <Text wordSafe variant="metadata" style={styles.shrink}>
+                  {place}
+                </Text>
+              ) : null}
+            </View>
           ) : null}
           {detail ? (
-            <Text wordSafe variant="metadata">
+            <Text wordSafe variant="caption">
               {detail}
             </Text>
           ) : null}
@@ -357,23 +449,60 @@ const styles = StyleSheet.create({
   },
   party: { flexDirection: 'row', alignItems: 'center', gap: spacing.s3 },
   dot: { width: 10, height: 10, borderRadius: 5 },
+  chip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    gap: 5,
+    maxWidth: '100%',
+    paddingLeft: 6,
+    paddingRight: rhythm.tight,
+    paddingVertical: 2,
+    borderRadius: 999,
+  },
+  // The raised ring keeps every party colour at 3:1 against what touches it.
+  chipDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    borderWidth: 1.5,
+    borderColor: colors.raised,
+    boxSizing: 'content-box',
+  },
+  chipText: { flexShrink: 1 },
+  chipNested: { alignSelf: 'center' },
   person: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.s4,
+    gap: rhythm.heading,
     minHeight: minimumTarget,
-    paddingVertical: layout.rowGap,
+    paddingVertical: 6,
   },
   personMain: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: spacing.s4,
+    alignItems: 'center',
+    gap: rhythm.heading,
   },
-  personStacked: { flexDirection: 'column', gap: spacing.s3 },
+  personStacked: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: rhythm.tight,
+  },
   // flex: 1 allocates width beside the portrait, but becomes a zero height
   // basis when the main axis stacks. Let the column measure all its lines.
-  personText: { gap: spacing.s1, alignSelf: 'stretch' },
+  personText: { gap: rhythm.line, alignSelf: 'stretch' },
   personTextInline: { flex: 1 },
   personName: { flexShrink: 0 },
+  // The chip and the role share a line; the role wraps beside the chip.
+  personMeta: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    columnGap: rhythm.tight,
+    rowGap: rhythm.line,
+  },
+  personMetaWrap: { flexWrap: 'wrap' },
+  shrink: { flexShrink: 1 },
 });
+
+ownsRowPadding(PersonRow);

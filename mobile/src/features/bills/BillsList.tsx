@@ -20,6 +20,7 @@ import {
   Field,
   FilterChip,
   Group,
+  InfoButton,
   LoadingState,
   OfflineBanner,
   StaleNotice,
@@ -133,9 +134,16 @@ export default function BillsList() {
       ) : null}
       {record?.partial ? <PartialNotice testID="bills-partial" /> : null}
       {list && index ? (
-        <Text variant="metadata" testID="bills-count">
-          {countLine(rows.length, index.bills.length)} · latest activity first
-        </Text>
+        <View style={styles.count}>
+          <Text variant="metadata" testID="bills-count" style={styles.grow}>
+            {countLine(rows.length, index.bills.length)} · latest activity first
+          </Text>
+          <InfoButton
+            title="About the bill list"
+            notes={[FINEPRINT]}
+            testID="bills-info"
+          />
+        </View>
       ) : null}
       {offline && !record ? (
         <>
@@ -171,7 +179,6 @@ export default function BillsList() {
         savedAt={record?.stale ? record.savedAt : null}
         testID="bills-as-at"
       />
-      <Text variant="fine">{FINEPRINT}</Text>
     </Group>
   ) : null;
 
@@ -236,5 +243,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.s3,
   },
-  footer: { paddingTop: spacing.s6 },
+  footer: { paddingTop: spacing.s4 },
+  count: { flexDirection: 'row', alignItems: 'center', gap: spacing.s3 },
+  grow: { flex: 1 },
 });

@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { partyRoute } from '../../navigation/routes';
-import { useState, type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import type {
   BillNoteLink,
@@ -11,14 +11,56 @@ import { sourceUrl } from '../../navigation/external';
 import { formatCount, formatDate } from '../../design/format';
 import { isPartyLabel, partyDot, partyIdentity } from '../../design/party';
 import {
+  Disclosure as DisclosureRow,
   Icon,
   SourceLink,
   Text,
   useAccessibilitySize,
   type SFSymbol,
 } from '../../design/primitives';
-import { colors, fonts, minimumTarget, spacing } from '../../design/tokens';
+import {
+  colors,
+  fonts,
+  minimumTarget,
+  radius,
+  rhythm,
+  spacing,
+} from '../../design/tokens';
 import { billRowText, type BillListRow } from './filters';
+
+/**
+ * A bill's status as a small tinted label: passed (green), before
+ * parliament (teal), anything else (neutral). The word carries the meaning.
+ */
+export function BillStatus({
+  status,
+  asAt,
+}: {
+  status: string;
+  asAt?: string | null;
+}) {
+  // At accessibility sizes the date takes its own line under the label.
+  const stacked = useAccessibilitySize();
+  const tone = /passed|assent|act\b/i.test(status)
+    ? { fill: colors.moneyWash, ink: 'moneyInk' as const }
+    : /before|introduced|draft|consultation|reading|committee/i.test(status)
+      ? { fill: colors.billsWash, ink: 'billsInk' as const }
+      : { fill: colors.sunken, ink: 'inkSoft' as const };
+  return (
+    <View style={[styles.statusLine, stacked ? styles.stacked : null]}>
+      <View style={[styles.status, { backgroundColor: tone.fill }]}>
+        <Text variant="chip" tone={tone.ink}>
+          {status}
+        </Text>
+      </View>
+      {asAt ? (
+        <Text variant="caption" style={styles.grow}>
+          {asAt}
+        </Text>
+      ) : null}
+    </View>
+  );
+}
 
 /** One bill in the list: a single VoiceOver element that opens the bill. */
 export function BillRow({
@@ -37,17 +79,12 @@ export function BillRow({
       onPress={onPress}
       style={({ pressed }) => [
         styles.row,
-        pressed ? { backgroundColor: colors.raised } : null,
+        pressed ? { backgroundColor: colors.sunken } : null,
       ]}
     >
       <View style={styles.rowText}>
+        <BillStatus status={text.status} asAt={text.asAt} />
         <Text variant="strong">{text.name}</Text>
-        <Text variant="metadata">
-          <Text variant="metadata" tone="ink" style={styles.semibold}>
-            {text.status}
-          </Text>
-          {text.asAt ? ` · ${text.asAt}` : ''}
-        </Text>
         {/* Chamber names are long single words at AX5 ("Representatives"):
             word-safe steps the line down rather than splitting the word. */}
         {text.where ? (
@@ -310,8 +347,8 @@ export function PartySplits({
 }
 
 /**
- * A control that shows and hides a block: its label, a chevron, and the
- * expanded state for VoiceOver. Collapsed by default.
+ * A control that shows and hides a block: the design system's disclosure
+ * row (label, chevron, expanded state). Collapsed by default.
  */
 export function Disclosure({
   label,
@@ -327,31 +364,15 @@ export function Disclosure({
   bodyTestID?: string;
   children: ReactNode;
 }) {
-  const [open, setOpen] = useState(false);
   return (
-    <View style={styles.splits}>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={accessibilityLabel ?? label}
-        accessibilityState={{ expanded: open }}
-        testID={testID}
-        onPress={() => setOpen((value) => !value)}
-        style={({ pressed }) => [
-          styles.disclosure,
-          pressed ? { backgroundColor: colors.sunken } : null,
-        ]}
-      >
-        <Text variant="control" tone="navy" wordSafe style={styles.grow}>
-          {label}
-        </Text>
-        <Icon name={open ? 'chevron.up' : 'chevron.down'} size={14} />
-      </Pressable>
-      {open ? (
-        <View style={styles.splitList} testID={bodyTestID ?? `${testID}-body`}>
-          {children}
-        </View>
-      ) : null}
-    </View>
+    <DisclosureRow
+      label={label}
+      accessibilityLabel={accessibilityLabel}
+      testID={testID}
+      bodyTestID={bodyTestID ?? `${testID}-body`}
+    >
+      <View style={styles.splitList}>{children}</View>
+    </DisclosureRow>
   );
 }
 
@@ -416,6 +437,7 @@ export function DivisionNote({
           {citations.map((c, i) => (
             <SourceLink
               key={c.url}
+              label={c.label}
               citation={c.host}
               record={c.label}
               url={c.url}
@@ -444,6 +466,33 @@ export function DivisionNote({
   );
 }
 
+/**
+ * The machine-written label, small and tidy: a sparkle and the words
+ * ("Machine summary", "Machine brief"). Honesty about model text matters, so
+ * it always shows above the text it labels.
+ */
+export function MachineLabel({
+  children,
+  testID,
+}: {
+  children: string;
+  testID?: string;
+}) {
+  return (
+    <View
+      accessible
+      accessibilityLabel={children}
+      testID={testID}
+      style={styles.machine}
+    >
+      <Icon name="sparkles" size={12} tone="billsInk" />
+      <Text variant="chip" tone="billsInk">
+        {children}
+      </Text>
+    </View>
+  );
+}
+
 /** A stored machine brief: its label always shows; a long brief folds. */
 export function MachineBrief({
   label,
@@ -456,9 +505,7 @@ export function MachineBrief({
 }) {
   return (
     <View style={styles.citations}>
-      <Text variant="kicker" testID={`${testID}-label`}>
-        {label}
-      </Text>
+      <MachineLabel testID={`${testID}-label`}>{label}</MachineLabel>
       {brief.length <= BRIEF_INLINE_LIMIT ? (
         <Text variant="body" testID={`${testID}-text`}>
           {brief}
@@ -545,9 +592,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.s4,
     minHeight: minimumTarget,
-    paddingVertical: spacing.s3,
+    paddingVertical: rhythm.heading,
   },
-  rowText: { flex: 1, gap: spacing.s1 },
+  rowText: { flex: 1, gap: rhythm.line },
+  statusLine: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: rhythm.tight,
+  },
+  status: {
+    borderRadius: radius,
+    paddingHorizontal: 6,
+    paddingVertical: 1,
+  },
   semibold: { fontFamily: fonts.sansSemiBold },
   option: {
     flexDirection: 'row',
@@ -596,4 +654,14 @@ const styles = StyleSheet.create({
   track: { height: 6, borderRadius: 3, backgroundColor: colors.sunken },
   bar: { height: 6, borderRadius: 3 },
   bullet: { flexDirection: 'row', gap: spacing.s3 },
+  machine: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    gap: 4,
+    backgroundColor: colors.billsWash,
+    borderRadius: radius,
+    paddingHorizontal: 6,
+    paddingVertical: 1,
+  },
 });
