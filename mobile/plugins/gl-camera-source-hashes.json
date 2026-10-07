@@ -1,0 +1,22 @@
+{
+  "EXGLCameraObject.h": [
+    "96a6084c16401997e3dbe0322ee6988a578f2f2c346e8cdacda5adc11fa4b367",
+    "b117dfe5903aa9b7db619fb8985ab30746f8936e2e699c3e98868aa261097c7a"
+  ],
+  "EXGLCameraObject.mm": [
+    "effe22243db67ef8d5a7fd05199a0f1beac3ee9ead9bf0f43985f7392780eac0",
+    "dcc827de5ee10dd7a83d6b78a4f1fbf6065c15b6e5782cfa86e29f4a7814f304"
+  ],
+  "EXGLObjectManager.h": [
+    "1bd9edf7fe492b47214c05a8969a0aad2902d00eb3cca695a034eaaa8b9f131d",
+    "452f5a0061b47be72666792a026de4a1eb4a4d900457623c41b9db83aaa484eb"
+  ],
+  "EXGLObjectManager.mm": [
+    "d7a53e5238804e0665ec9843a9e5ebf550af6718a036f180d2e58f482bcfbda0",
+    "4168589debd0b225d54cc93d39888cf94f74e186a7eb3a44035b7d2327004a6c"
+  ],
+  "ExpoGLModule.swift": [
+    "c9fbf4e40a266531f67e417a0288e04130cf9de21db15805d38d3912d7e8bb98",
+    "a0b382254d924a7f5f72e338b21c411f19d7ed7e129fa62ea3b537dfc13ca813"
+  ]
+}

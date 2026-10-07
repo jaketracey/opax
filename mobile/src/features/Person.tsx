@@ -41,7 +41,12 @@ import {
   jurisdictionName,
 } from '../design/parliament';
 import { shareHeaderItem } from '../navigation/share';
-import { billRoute, electorateRoute, partyRoute } from '../navigation/routes';
+import {
+  billRoute,
+  electorateRoute,
+  moneyRoute,
+  partyRoute,
+} from '../navigation/routes';
 import { FollowToggle } from './follows/FollowToggle';
 import { EvidenceFooter, RecordBlock } from './your-mp/Evidence';
 import {
@@ -736,6 +741,20 @@ export function ProfileScreen({
                         testID="person-party-receipts"
                       />
                     )}
+                    <LinkRow
+                      title="Money map"
+                      icon="point.3.connected.trianglepath.dotted"
+                      accent="money"
+                      onPress={() =>
+                        router.push(
+                          moneyRoute(
+                            identity.party ?? p.party,
+                            identity.seats[0]?.jurisdiction,
+                          ),
+                        )
+                      }
+                      testID="person-money-map"
+                    />
                   </RowList>
                 </Group>
               )}

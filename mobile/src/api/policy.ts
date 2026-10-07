@@ -30,6 +30,10 @@ const staticPaths = new Set([
   '/discovery.json',
   '/search-catalog/manifest.json',
   '/reports/index.json',
+  // Reviewed immutable state graph exports for the native money map: no Worker/model/auth request.
+  '/graph/money.qld.json',
+  '/graph/money.vic.json',
+  '/graph/money.tas.json',
 ]);
 // W13 frozen daily edition: one D1 read of the posted journal, no model,
 // preview or OG path (docs/IOS-API-CONTRACT.md, "App readers"). Only `latest`:
