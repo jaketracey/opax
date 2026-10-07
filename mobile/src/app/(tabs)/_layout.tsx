@@ -1,7 +1,6 @@
 import { NativeTabs } from 'expo-router/unstable-native-tabs';
 import { chrome } from '../../design/tokens';
-// Four tabs; Talk and Account are navigation-bar buttons on each root screen
-// (decision 2). A fifth slot stays free for Money (navigation/routes.ts).
+// Ask is the fifth tab. Talk and Account keep their navigation-bar positions.
 // The native tab bar keeps system type and offers the Large Content Viewer
 // at accessibility text sizes.
 export default function TabsLayout() {
@@ -16,20 +15,33 @@ export default function TabsLayout() {
     >
       <NativeTabs.Trigger name="(today)" testID="tab-today">
         <NativeTabs.Trigger.Label>Today</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon sf="newspaper" />
+        <NativeTabs.Trigger.Icon
+          sf={{ default: 'newspaper', selected: 'newspaper.fill' }}
+        />
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="(your-mp)" testID="tab-your-mp">
         <NativeTabs.Trigger.Label>Your MP</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon sf="mappin.and.ellipse" />
+        <NativeTabs.Trigger.Icon
+          sf={{
+            default: 'building.columns',
+            selected: 'building.columns.fill',
+          }}
+        />
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="(bills)" testID="tab-bills">
         <NativeTabs.Trigger.Label>Bills</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon sf="doc.text" />
+        <NativeTabs.Trigger.Icon
+          sf={{ default: 'doc.text', selected: 'doc.text.fill' }}
+        />
       </NativeTabs.Trigger>
-      {/* The system search role: on iOS 26 it sits apart at the trailing end. */}
-      <NativeTabs.Trigger name="(search)" testID="tab-search" role="search">
+      {/* Keep the requested tab order on every supported iOS version. */}
+      <NativeTabs.Trigger name="(search)" testID="tab-search">
         <NativeTabs.Trigger.Label>Search</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf="magnifyingglass" />
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="(ask)" testID="tab-ask">
+        <NativeTabs.Trigger.Label>Ask</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon sf="text.bubble" />
       </NativeTabs.Trigger>
     </NativeTabs>
   );

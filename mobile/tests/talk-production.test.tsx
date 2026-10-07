@@ -19,7 +19,7 @@ jest.mock('expo-constants', () => ({
         variant: 'production',
         apiOrigin: 'https://opax.com.au',
         webOrigin: 'https://opax.com.au',
-        appVersion: '0.1.0',
+        appVersion: '1.0.0',
         appBuild: '5',
       },
     },

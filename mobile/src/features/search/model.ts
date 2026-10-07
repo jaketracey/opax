@@ -26,8 +26,41 @@ export const groupSuggestions = (data: Suggestions) => [
   },
   { kind: 'bills' as const, label: 'Bills', rows: data.bills },
 ];
-export const kindLabel = (kind: CatalogKind) =>
-  searchKinds.find((k) => k.value === kind)!.label;
+export type SearchKind =
+  | CatalogKind
+  | 'records'
+  | 'party'
+  | 'agency'
+  | 'grant'
+  | 'report'
+  | 'bill';
+export const scopeKinds = [
+  ...searchKinds,
+  {
+    value: 'records' as const,
+    label: 'Records',
+    testID: 'search-kind-records',
+  },
+  {
+    value: 'party' as const,
+    label: 'Political parties',
+    testID: 'search-kind-party',
+  },
+  {
+    value: 'agency' as const,
+    label: 'Government agencies',
+    testID: 'search-kind-agency',
+  },
+  { value: 'grant' as const, label: 'Grants', testID: 'search-kind-grant' },
+  { value: 'bill' as const, label: 'Bills', testID: 'search-kind-bill' },
+  {
+    value: 'report' as const,
+    label: 'Research reports',
+    testID: 'search-kind-report',
+  },
+];
+export const kindLabel = (kind: SearchKind) =>
+  scopeKinds.find((k) => k.value === kind)!.label;
 
 /** Reader-facing context from the roster selector, including historical parties. */
 export function personRowContext(

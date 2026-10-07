@@ -1,5 +1,6 @@
 import { useEffect, useSyncExternalStore } from 'react';
 import { readCopies, writeCopy } from '../../storage/two-slot';
+import { partySlug } from '../../design/party';
 import { billKey, electorateId, personId } from '../../api/ids';
 
 /**
@@ -7,7 +8,7 @@ import { billKey, electorateId, personId } from '../../api/ids';
  * showed for each. Saved in the app's documents beside the saved seat; never
  * sent anywhere. Device backups may include the file.
  */
-export type FollowKind = 'person' | 'bill' | 'electorate';
+export type FollowKind = 'person' | 'bill' | 'electorate' | 'party';
 /** One marker as last seen: a comparable value, its words and its date. */
 export interface Reading {
   value: string | number | null;
@@ -34,6 +35,7 @@ const ids: Record<FollowKind, (v: unknown) => string> = {
   person: personId,
   bill: billKey,
   electorate: electorateId,
+  party: (v) => { if (typeof v !== "string" || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(v) || v.length > 200 || partySlug(v) !== v) throw new Error("Invalid party identifier"); return v; },
 };
 
 // Two slots, written alternately. Each save writes a complete, numbered copy

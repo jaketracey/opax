@@ -1,0 +1,77 @@
+--- a/node_modules/react-native-reanimated/RNReanimated.podspec
++++ b/node_modules/react-native-reanimated/RNReanimated.podspec
+@@ -44,6 +44,8 @@
+ 
+   s.subspec "apple" do |ss|
+     ss.source_files = "apple/reanimated/**/*.{mm,h,m}"
++    # OPAX does not register sensors. Keep the bridge, exclude CoreMotion implementation.
++    ss.exclude_files = "apple/reanimated/apple/sensor/ReanimatedSensor.{h,m}"
+     ss.public_header_files = "apple/reanimated/**/*.h"
+     ss.header_mappings_dir = "apple/reanimated"
+   end
+--- a/node_modules/react-native-reanimated/apple/reanimated/apple/sensor/ReanimatedSensorContainer.m
++++ b/node_modules/react-native-reanimated/apple/reanimated/apple/sensor/ReanimatedSensorContainer.m
+@@ -1,17 +1,11 @@
+ #import <Foundation/Foundation.h>
+-#import <reanimated/apple/sensor/ReanimatedSensor.h>
+ #import <reanimated/apple/sensor/ReanimatedSensorContainer.h>
+-
+-static NSNumber *_nextSensorId = nil;
+ 
+ @implementation ReanimatedSensorContainer
+ 
+ - (instancetype)init
+ {
+-  self = [super init];
+-  _sensors = [[NSMutableDictionary alloc] init];
+-  _nextSensorId = @0;
+-  return self;
++  return [super init];
+ }
+ 
+ - (int)registerSensor:(ReanimatedSensorType)sensorType
+@@ -19,28 +13,13 @@
+     iosReferenceFrame:(int)iosReferenceFrame
+                setter:(void (^)(double[], int))setter
+ {
+-  ReanimatedSensor *sensor = [[ReanimatedSensor alloc] init:sensorType
+-                                                   interval:interval
+-                                          iosReferenceFrame:iosReferenceFrame
+-                                                     setter:setter];
+-  if ([sensor initialize]) {
+-    NSNumber *sensorId = [_nextSensorId copy];
+-    _nextSensorId = [NSNumber numberWithInt:[_nextSensorId intValue] + 1];
+-    [_sensors setObject:sensor forKey:sensorId];
+-    return [sensorId intValue];
+-  } else {
+-    return -1;
+-  }
++  // The bridge already treats -1 as unavailable. Animation paths are unchanged.
++  return -1;
+ }
+ 
+ - (void)unregisterSensor:(int)sensorId
+ {
+-  NSNumber *_sensorId = [NSNumber numberWithInt:sensorId];
+-  if (_sensors[_sensorId] == nil) {
+-    return;
+-  }
+-  [_sensors[_sensorId] cancel];
+-  [_sensors removeObjectForKey:_sensorId];
++  // No sensor was registered in this build.
+ }
+ 
+ @end
+--- a/node_modules/react-native-reanimated/apple/reanimated/apple/sensor/ReanimatedSensorContainer.h
++++ b/node_modules/react-native-reanimated/apple/reanimated/apple/sensor/ReanimatedSensorContainer.h
+@@ -1,9 +1,6 @@
+ #import <reanimated/apple/sensor/ReanimatedSensorType.h>
+ 
+-@interface ReanimatedSensorContainer : NSObject {
+-  NSNumber *_nextSensorId;
+-  NSMutableDictionary *_sensors;
+-}
++@interface ReanimatedSensorContainer : NSObject
+ 
+ - (instancetype)init;
+ - (int)registerSensor:(ReanimatedSensorType)sensorType

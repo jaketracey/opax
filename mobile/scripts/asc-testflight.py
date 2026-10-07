@@ -81,7 +81,6 @@ def run(args, api):
     app = api.app()
     if args.next_build:
         builds = api.list("/v1/builds", **{"filter[app]": app["id"],
-            "filter[preReleaseVersion.version]": args.version,
             "filter[preReleaseVersion.platform]": "IOS"})
         numbers = [int(b["attributes"]["version"]) for b in builds
                    if b["attributes"]["version"].isdigit()]
@@ -184,7 +183,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("version")
     parser.add_argument("build", nargs="?")
-    parser.add_argument("--next-build", action="store_true", help="Read next integer build for this iOS version")
+    parser.add_argument("--next-build", action="store_true", help="Read next integer build across all OPAX iOS versions")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--what-to-test")
     parser.add_argument("--tester", help="Email of the existing team user to enable for internal testing")

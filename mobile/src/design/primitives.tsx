@@ -8,6 +8,7 @@ export {
   Tag,
   FilterChip,
   SegmentedControl,
+  ChoiceChips,
   Field,
   Divider,
   type ButtonProps,
@@ -21,22 +22,34 @@ export {
   Group,
   Section,
   SubSection,
+  EdgeFade,
   RowList,
   KeyValueList,
   StatRow,
   type KeyValue,
   type Stat,
 } from './layout';
-export { Portrait, PartyLabel, PersonRow, type PersonRowProps } from './people';
+export {
+  Portrait,
+  PartyLabel,
+  PartyChip,
+  PersonRow,
+  type PersonRowProps,
+} from './people';
 export {
   AsAtLine,
   SourceLink,
   OpaxWebLink,
   Figure,
   MoneyFigure,
+  BigFigure,
   type AsAtLineProps,
   type SourceLinkProps,
 } from './record';
+export { Disclosure, animateLayout } from './disclosure';
+export { InfoButton, InfoSheet, type InfoNotes } from './info';
+export { LinkRow, IconTile, ViewOriginal, type Original } from './rows';
+export { haptic, type HapticKind } from './haptics';
 export {
   LoadingState,
   EmptyState,

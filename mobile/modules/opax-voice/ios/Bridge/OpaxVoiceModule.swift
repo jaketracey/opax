@@ -4,14 +4,15 @@ import OpaxVoiceCore
 public final class OpaxVoiceModule: Module {
     private let controller = VoiceController()
     private var eventTask: Task<Void, Never>?
+    private var levelTask: Task<Void, Never>?
     deinit {
-        eventTask?.cancel()
+        eventTask?.cancel(); levelTask?.cancel()
         let owner = controller
         Task { await owner.shutdown() }
     }
     public func definition() -> ModuleDefinition {
         Name("OpaxVoice")
-        Events("onVoiceEvent")
+        Events("onVoiceEvent", "onVoiceLevel")
         OnCreate { [weak self] in
             guard let self else { return }
             eventTask = Task { [weak self, controller] in
@@ -21,10 +22,16 @@ public final class OpaxVoiceModule: Module {
                     self?.sendEvent("onVoiceEvent", VoiceBridgeValue.event(event))
                 }
             }
+            levelTask = Task { [weak self, controller] in
+                for await levels in controller.call.levels {
+                    guard !Task.isCancelled else { break }
+                    self?.sendEvent("onVoiceLevel", VoiceBridgeValue.levels(levels))
+                }
+            }
         }
         OnDestroy { [weak self] in
             guard let self else { return }
-            eventTask?.cancel(); eventTask = nil
+            eventTask?.cancel(); eventTask = nil; levelTask?.cancel(); levelTask = nil
             Task { [controller] in await controller.shutdown() }
         }
         AsyncFunction("snapshot") { await self.controller.snapshot() }
@@ -42,5 +49,6 @@ public final class OpaxVoiceModule: Module {
         AsyncFunction("logout") { await self.controller.logout() }
         AsyncFunction("requestDeletionCode") { await self.controller.requestDeletionCode() }
         AsyncFunction("deleteAccount") { (challenge: String, code: String) in await self.controller.deleteAccount(challenge, code) }
+        AsyncFunction("chatRequest") { (path: String, method: String, body: String?) in await self.controller.chatRequest(path, method, body) }
     }
 }

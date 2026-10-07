@@ -13,7 +13,7 @@
 #   waiting on the gate or the load, and a gate slot is never held while
 #   waiting on the lock.
 # - The wrapper leads its own process group and the command tree runs in it.
-#   The lock's `owner` file records pid and pgid (both the wrapper), script,
+#   The lock's `owner` file records pid, lstart and pgid (both the wrapper), script,
 #   worktree basename, UTC start and a random token.
 # - Publication is atomic: the lock is built as a staging directory holding its
 #   owner file, then renamed into place with renamex_np(RENAME_EXCL), which
@@ -52,6 +52,9 @@ qa_log() {
 }
 
 qa_elapsed() { printf '%dm%02ds' $(($1 / 60)) $(($1 % 60)); }
+qa_wait_now() {
+  if [ -n "${QA_WAIT_CLOCK_FILE:-}" ]; then cat "$QA_WAIT_CLOCK_FILE"; else date +%s; fi
+}
 
 # Capacity checks follow OPAX_CAPACITY_CMD: blank skips them, as documented.
 qa_capacity_configured() { [ -n "${OPAX_CAPACITY_CMD:-}${OPAX_LOAD_PROBE:-}" ]; }
@@ -69,13 +72,13 @@ qa_load5() {
 # resume level: waiting for 100 starved runs for an hour on the shared host.
 # Fails at the epoch-seconds deadline in $1 (default one hour).
 qa_wait_for_capacity() {
-  local deadline=${1:-$(($(date +%s) + 3600))} load
+  local deadline=${1:-$(($(qa_wait_now) + 3600))} load
   qa_capacity_configured || return 0
   load=$(qa_load5)
   [ "$load" -ge "$QA_LOAD_LIMIT" ] || return 0
   qa_log "Shared load is $load; waiting for it to fall below $QA_LOAD_LIMIT (no lock held)."
   until [ "$load" -lt "$QA_LOAD_LIMIT" ]; do
-    [ "$(date +%s)" -lt "$deadline" ] || { qa_log "Capacity wait expired; retry later."; return 1; }
+    [ "$(qa_wait_now)" -lt "$deadline" ] || { qa_log "Capacity wait expired; retry later."; return 1; }
     sleep "${OPAX_CAPACITY_POLL_SECONDS:-20}"
     load=$(qa_load5)
   done
@@ -99,6 +102,7 @@ qa_owner_field() { printf '%s\n' "$1" | sed -n "s/^$2=\\([0-9][0-9]*\\)\$/\\1/p"
 
 # True while the pid, or any process in the group, exists (EPERM counts).
 qa_alive() { /usr/bin/perl -e 'exit((kill(0, $ARGV[0]) || $!{EPERM}) ? 0 : 1)' -- "$1"; }
+qa_lstart() { /bin/ps -o lstart= -p "$1" 2>/dev/null | sed 's/^ *//;s/ *$//'; }
 
 # Atomic no-replace rename: 0 renamed, 1 the target exists, 2 any other error.
 qa_rename_excl() {
@@ -134,12 +138,18 @@ qa_clean_state() {
 # Retires a lock whose owner names a dead pid and an empty process group.
 # Returns 0 only if it did.
 qa_reap_stale_lock() {
-  local lock=$1 state owner pid pgid retired
+  local lock=$1 state owner pid pgid retired lstart current
   owner=$(cat "$lock/owner" 2>/dev/null) || return 1
   pid=$(qa_owner_field "$owner" pid)
   pgid=$(qa_owner_field "$owner" pgid)
   [ -n "$pid" ] && [ -n "$pgid" ] || return 1
-  qa_alive "$pid" && return 1
+  lstart=$(printf '%s\n' "$owner" | sed -n 's/^lstart=//p')
+  current=$(qa_lstart "$pid")
+  # Legacy owners have no lstart; protect any live PID. An unverifiable live
+  # PID is protected too. A mismatched start identifies a reused PID.
+  if qa_alive "$pid"; then
+    [ -n "$lstart" ] && [ -n "$current" ] && [ "$current" != "$lstart" ] || return 1
+  fi
   qa_alive "-$pgid" && return 1
   state="$lock.opax"
   mkdir -p "$state" || return 1
@@ -157,11 +167,18 @@ qa_reap_stale_lock() {
     exit 1 unless $now eq $expected;
     my ($pid) = $now =~ /^pid=(\d+)$/m or exit 1;
     my ($pgid) = $now =~ /^pgid=(\d+)$/m or exit 1;
-    for my $target ($pid, -$pgid) { exit 1 if kill(0, $target) || $!{EPERM}; }
+    exit 1 unless $pid > 1 && $pgid > 1;
+    my ($start) = $now =~ /^lstart=(.+)$/m;
+    if (kill(0, $pid) || $!{EPERM}) {
+      my $current = qx{/bin/ps -o lstart= -p $pid 2>/dev/null};
+      $current =~ s/^\s+|\s+$//g;
+      exit 1 unless defined($start) && length($current) && $current ne $start;
+    }
+    exit 1 if kill(0, -$pgid) || $!{EPERM};
     rename($lock, $retired) or exit 2;
     exit 0;
   ' "$lock" "$state" "$owner" "$retired" || return 1
-  qa_log "Removed stale pasteboard lock $lock: its pid and process group are gone ($(printf '%s\n' "$owner" | qa_owner_fields))."
+  qa_log "Removed stale pasteboard lock $lock: its pid identity and process group are gone ($(printf '%s\n' "$owner" | qa_owner_fields)); verified pid + lstart."
   qa_delete_retired "$retired"
 }
 
@@ -188,6 +205,7 @@ qa_paste_lock_try() {
   mkdir "$stage" && {
     echo "pid=$$"
     echo "pgid=$$"
+    echo "lstart=$(qa_lstart "$$")"
     echo "script=${QA_LOCK_SCRIPT:-$(basename "$0")}"
     echo "worktree=$worktree"
     echo "started=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
@@ -271,14 +289,29 @@ qa_gate() {
 # lock attempt inside it (see the protocol above). Returns the command's exit
 # code, or 1 when OPAX_PASTE_WAIT_SECONDS (default 7200) expires first.
 qa_paste_lock_run() {
+  local QA_WAIT_CLOCK_FILE clock_pid rc=0
+  QA_WAIT_CLOCK_FILE=$(mktemp "${TMPDIR:-/tmp}/opax-wait-clock.XXXXXX") || return 1
+  printf '0\n' > "$QA_WAIT_CLOCK_FILE"
+  python3 "$(dirname "${BASH_SOURCE[0]}")/qa-wait-clock.py" "$$" "$QA_WAIT_CLOCK_FILE" &
+  clock_pid=$!
+  qa_paste_lock_wait "$@" || rc=$?
+  kill "$clock_pid" 2>/dev/null || true
+  wait "$clock_pid" 2>/dev/null || true
+  /bin/rm -f "$QA_WAIT_CLOCK_FILE" "$QA_WAIT_CLOCK_FILE.tmp"
+  return "$rc"
+}
+
+# Deadlines use active sampled time. A stopped waiter (or its entire tree) does
+# not spend its lock/capacity allowance while another lane has priority.
+qa_paste_lock_wait() {
   local lock=${OPAX_PASTE_LOCK:-} wrapper start deadline now rc last_log=
   wrapper="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/qa-locked.sh"
   QA_PASTE_WAIT_SECONDS=$(qa_paste_lock_wait_seconds)
-  start=$(date +%s)
+  start=$(qa_wait_now)
   deadline=$((start + QA_PASTE_WAIT_SECONDS))
   while :; do
     if [ -n "$lock" ] && [ -e "$lock" ] && ! qa_reap_stale_lock "$lock"; then
-      now=$(date +%s)
+      now=$(qa_wait_now)
       if [ -z "$last_log" ] || [ $((now - last_log)) -ge "${OPAX_PASTE_LOG_SECONDS:-60}" ]; then
         qa_log "Waiting for pasteboard lock $lock; elapsed $(qa_elapsed $((now - start))) of $(qa_elapsed "$QA_PASTE_WAIT_SECONDS"); holder: $(qa_lock_holder "$lock")."
         last_log=$now
@@ -296,8 +329,8 @@ qa_paste_lock_run() {
     rc=0
     qa_gate "$wrapper" "$@" || rc=$?
     [ "$rc" = "$QA_RETRY" ] || return "$rc"
-    if [ "$(date +%s)" -ge "$deadline" ]; then
-      qa_log "Pasteboard lock wait expired after $(qa_elapsed $(($(date +%s) - start)))."
+    if [ "$(qa_wait_now)" -ge "$deadline" ]; then
+      qa_log "Pasteboard lock wait expired after $(qa_elapsed $(($(qa_wait_now) - start)))."
       return 1
     fi
     sleep "${OPAX_PASTE_POLL_SECONDS:-5}"

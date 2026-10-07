@@ -20,6 +20,8 @@ const proxyNames = new Set([
 const reviewedExpoSubpaths = new Set([
   'expo/fetch',
   'expo-router/unstable-native-tabs',
+  // The router's own navigation contexts (header height): no I/O.
+  'expo-router/react-navigation',
 ]);
 const globals = new Set(['globalThis', 'window', 'global', 'self']);
 const banned = new Set([

@@ -1,2 +1,2 @@
-// Development and e2e only: excluded from production by the block list.
+// Included in production when the voice build switch enables account routes.
 export { DeleteAccountScreen as default } from '../../features/account/DeleteAccountScreen';

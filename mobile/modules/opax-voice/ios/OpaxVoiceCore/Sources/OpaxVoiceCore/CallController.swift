@@ -11,6 +11,9 @@ public struct CallTiming: Sendable {
 public actor VoiceCallController {
     public nonisolated let events: AsyncStream<VoiceEvent>
     private let continuation: AsyncStream<VoiceEvent>.Continuation
+    /// Call-screen animation only, kept apart so levels never displace events.
+    public nonisolated let levels: AsyncStream<AudioLevels>
+    private let levelContinuation: AsyncStream<AudioLevels>.Continuation
     public private(set) var state: CallState = .idle
     public private(set) var latestStatus: VoiceStatusSnapshot?
     public private(set) var playbackState: PlaybackState = .flowing
@@ -39,6 +42,7 @@ public actor VoiceCallController {
     private var sendTask: Task<Void, Never>?
     private var timerTask: Task<Void, Never>?
     private var countdownTask: Task<Void, Never>?
+    private var meterTask: Task<Void, Never>?
     private var pollTask: Task<Void, Never>?
     private var socket: (any RelayTransport)?
     private var engine: (any VoiceAudioEngine)?
@@ -67,6 +71,8 @@ public actor VoiceCallController {
         self.clock = clock; self.timing = timing
         let stream = AsyncStream<VoiceEvent>.makeStream(bufferingPolicy: .bufferingNewest(128))
         events = stream.stream; continuation = stream.continuation
+        let meters = AsyncStream<AudioLevels>.makeStream(bufferingPolicy: .bufferingNewest(1))
+        levels = meters.stream; levelContinuation = meters.continuation
     }
     /// Reads actor-owned values atomically; does not refresh, emit or open a call.
     public func snapshot() -> VoiceSnapshot {
@@ -231,6 +237,9 @@ public actor VoiceCallController {
             countdownTask = Task { [weak self, clock] in
                 do { while !Task.isCancelled { try await clock.sleep(seconds: 1); await self?.tick(attempt) } } catch {}
             }
+            meterTask = Task { [weak self, clock] in
+                do { while !Task.isCancelled { try await clock.sleep(seconds: 1.0 / 15); await self?.meter(attempt) } } catch {}
+            }
         case .ping(let eventID):
             guard let socket else { return }
             let data = try ClientMessage.pong(eventID).data(), id = UUID()
@@ -353,6 +362,12 @@ public actor VoiceCallController {
             await transportEnded(error, fallback: .network)
         }
     }
+    private func meter(_ attempt: Int) async {
+        guard epoch == attempt, state == .live, let engine else { return }
+        let value = await engine.levels()
+        guard epoch == attempt, state == .live else { return }
+        levelContinuation.yield(value)
+    }
     private func tick(_ attempt: Int) { guard epoch == attempt, state == .live else { return }
         remaining = max(0, remaining - 1); continuation.yield(.remainingTime(remaining))
         // Display only. Never end locally at zero; the relay deadline is authoritative.
@@ -421,9 +436,10 @@ public actor VoiceCallController {
         guard state != .ending, state != .ended, state != .failed, state != .idle else { return }
         epoch += 1; let endingEpoch = epoch; change(.ending)
         defer { for waiter in endWaiters { waiter.resume() }; endWaiters.removeAll() }
-        for task in [receiveTask, captureTask, sendTask, timerTask, countdownTask, pollTask, playbackTask, playbackDrainTask] { task?.cancel() }
+        for task in [receiveTask, captureTask, sendTask, timerTask, countdownTask, meterTask, pollTask, playbackTask, playbackDrainTask] { task?.cancel() }
         for task in pongTasks.values { task.cancel() }; pongTasks.removeAll()
-        receiveTask = nil; captureTask = nil; sendTask = nil; timerTask = nil; countdownTask = nil; pollTask = nil; playbackTask = nil
+        receiveTask = nil; captureTask = nil; sendTask = nil; timerTask = nil; countdownTask = nil; meterTask = nil; pollTask = nil; playbackTask = nil
+        levelContinuation.yield(.silent)
         playbackDrainTask = nil; playbackBacklog.clear(); playbackInFlight = 0; playbackEpoch += 1; changePlayback(.flowing)
         let oldEngine = engine; engine = nil; await oldEngine?.stop()
         let oldSocket = socket; socket = nil; await oldSocket?.close(code: 1000)
@@ -501,7 +517,7 @@ public actor VoiceCallController {
     }
     public func shutdown() async {
         await end(); lifecycleTask?.cancel(); lifecycleTask = nil; pollTask?.cancel(); pollTask = nil
-        continuation.finish()
+        continuation.finish(); levelContinuation.finish()
     }
     static func failure(_ error: any Error) -> VoiceFailure {
         if let api = error as? APIFailure { return api.failure }
@@ -511,8 +527,8 @@ public actor VoiceCallController {
         return .network
     }
     deinit {
-        for task in [lifecycleTask, receiveTask, captureTask, sendTask, timerTask, countdownTask, pollTask, playbackTask, playbackDrainTask] { task?.cancel() }
+        for task in [lifecycleTask, receiveTask, captureTask, sendTask, timerTask, countdownTask, meterTask, pollTask, playbackTask, playbackDrainTask] { task?.cancel() }
         for task in pongTasks.values { task.cancel() }
-        continuation.finish()
+        continuation.finish(); levelContinuation.finish()
     }
 }

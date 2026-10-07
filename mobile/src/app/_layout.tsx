@@ -71,7 +71,21 @@ export default function Layout() {
             contentStyle: { backgroundColor: light.paper },
           }}
         >
-          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="(tabs)" options={{ title: 'Back' }} />
+          <Stack.Screen
+            name="money"
+            options={{ ...chrome, headerShown: true, title: 'Money map' }}
+          />
+          <Stack.Screen
+            name="money-node"
+            options={{
+              ...sheet,
+              presentation: 'formSheet',
+              title: 'Money record',
+              sheetAllowedDetents: [1],
+              sheetGrabberVisible: true,
+            }}
+          />
           <Stack.Screen
             name="talk"
             options={{ ...sheet, title: 'Talk to OPAX' }}
@@ -99,6 +113,16 @@ export default function Layout() {
                 ...sheet,
                 presentation: 'fullScreenModal',
                 title: 'Workbench',
+              }}
+            />
+          )}
+          {isProduction ? null : (
+            <Stack.Screen
+              name="money-map-spike"
+              options={{
+                ...chrome,
+                headerShown: true,
+                title: 'Money map spike',
               }}
             />
           )}

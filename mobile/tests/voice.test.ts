@@ -3,6 +3,7 @@ import * as voice from '../src/voice';
 import {
   mapChallenge as voiceMappingChallenge,
   mapEvent,
+  mapLevels,
   mapResult,
   mapStatus,
 } from '../src/voice/mapping';
@@ -181,6 +182,36 @@ test('subscription filters payloads and cancels the native listener', () => {
   callback({ type: 'mode', mode: 'listening' });
   expect(listener).toHaveBeenCalledTimes(1);
   expect(listener).toHaveBeenCalledWith({ type: 'mode', mode: 'listening' });
+  unsubscribe();
+  expect(remove).toHaveBeenCalledTimes(1);
+});
+
+test.each([
+  null,
+  [0.2, 0.4],
+  { input: 0.2 },
+  { input: -0.1, output: 0.4 },
+  { input: 0.2, output: 1.01 },
+  { input: Number.NaN, output: 0.4 },
+  { input: '0.2', output: 0.4 },
+])('drops malformed levels %p', (value) => expect(mapLevels(value)).toBeNull());
+test('levels are a separate stream of two numbers, never call events or audio', () => {
+  const remove = jest.fn();
+  let callback: (value: unknown) => void = () => {};
+  mockNative.addListener.mockImplementation((_name, listener) => {
+    callback = listener;
+    return { remove };
+  });
+  const listener = jest.fn();
+  const unsubscribe = voice.subscribeLevels(listener);
+  expect(mockNative.addListener).toHaveBeenCalledWith(
+    'onVoiceLevel',
+    expect.any(Function),
+  );
+  callback({ input: 0.25, output: 0.75, audio: 'private' });
+  callback({ type: 'mode', mode: 'listening' });
+  expect(listener).toHaveBeenCalledTimes(1);
+  expect(listener).toHaveBeenCalledWith({ input: 0.25, output: 0.75 });
   unsubscribe();
   expect(remove).toHaveBeenCalledTimes(1);
 });

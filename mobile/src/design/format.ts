@@ -164,6 +164,16 @@ export function formatFinancialYear(startYear: number): string {
   return `${startYear}–${String((startYear + 1) % 100).padStart(2, '0')}`;
 }
 
+/** Money exports mix annual FY-start keys and election polling years without
+ * per-cell return types. Preserve the bare source year, as the web does; never
+ * infer a financial year from an election key. Shared by map and party page.
+ */
+export function formatDisclosureYear(year: number): string {
+  return String(year);
+}
+export const disclosureYearNote =
+  'Annual returns use the first year of the financial year; election returns use polling year.';
+
 /** Ranges in prose: "1998 to 2026". */
 export function formatYearRange(from: number, to: number): string {
   return from === to ? String(from) : `${from} to ${to}`;
@@ -212,6 +222,55 @@ export function asAtText({
   if (named.length) parts.push(`Source: ${named.join(', ')}`);
   const saved = savedAt == null ? '' : savedText(savedAt);
   if (saved) parts.push(saved);
+  return parts.join(' · ');
+}
+
+/**
+ * The one quiet caption under a block (UI sweep): "Updated 4 Oct 2026", with
+ * coverage detail ("to the June quarter 2026") and "Saved [date]" for a
+ * stale copy. Source names and licences are not repeated here; they live on
+ * the Sources and licences screen. A year-only date reads "Updated 2021".
+ */
+export function captionText({
+  asOf,
+  detail,
+  savedAt,
+}: Pick<AsAt, 'asOf' | 'detail' | 'savedAt'>): string {
+  const year = typeof asOf === 'string' && /^\d{4}$/.test(asOf) ? asOf : null;
+  const date = year ?? (asOf == null ? '' : formatDate(asOf, 'short'));
+  const parts = [date ? `Updated ${date}` : 'Date not published'];
+  if (detail) parts.push(detail);
+  if (savedAt != null) {
+    const saved = formatDate(savedAt, 'short');
+    if (saved) parts.push(`Saved ${saved}`);
+  }
+  return parts.join(' · ');
+}
+
+/** The voting record's caption: "Updated 3 Oct 2026 · Divisions to 25 Sep 2026". */
+export function votesCaptionText(
+  meta: VotesMeta | null | undefined,
+  jurisdiction?: string,
+  savedAt?: DateInput | null,
+): string {
+  const changed = meta?.content_changed_at
+    ? formatDate(meta.content_changed_at, 'short')
+    : '';
+  const through =
+    (jurisdiction
+      ? meta?.latest_division_date_by_jurisdiction?.[jurisdiction]
+      : undefined) ?? meta?.latest_division_date;
+  const parts: string[] = [];
+  if (changed) parts.push(`Updated ${changed}`);
+  if (through) {
+    const date = formatDate(through, 'short');
+    if (date) parts.push(`Divisions to ${date}`);
+  }
+  if (!parts.length) parts.push('Record date not published');
+  if (savedAt != null) {
+    const saved = formatDate(savedAt, 'short');
+    if (saved) parts.push(`Saved ${saved}`);
+  }
   return parts.join(' · ');
 }
 

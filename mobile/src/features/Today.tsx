@@ -1,23 +1,34 @@
 import { useEffect, useState } from 'react';
-import { RefreshControl } from 'react-native';
+import { RefreshControl, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 import type { Block, EditionView } from '../api/catalogs';
 import { catalogs } from '../api/runtime';
-import { RowList, Screen, Section, Text } from '../design/primitives';
-import { formatDate } from '../design/format';
-import { CatalogState } from './CatalogState';
+import { Button, LinkRow, Screen, Section, Text } from '../design/primitives';
+import { colors, hairline, spacing } from '../design/tokens';
 import { EditionSection } from './EditionCard';
-import { RecordRow } from './RecordRow';
-import { billRoute, declarationsRoute, leadsRoute } from '../navigation/routes';
-import { TodayDeclaration } from './today/TodayDeclaration';
+import { declarationsRoute, recentRecordsRoute } from '../navigation/routes';
 import { FollowingSection } from './follows/FollowingSection';
+import { FromRecord, ReportsEntry, Spotlight, TodayCoverage } from './reports/TodayReports';
+import { BillCarousel } from './today/BillCarousel';
+import { DeclarationRow } from './today/DeclarationRow';
+import { LeadsCard } from './today/LeadsCard';
+import { MoneyMapCard } from './today/MoneyMapCard';
+import { Masthead } from './today/Masthead';
+import { Entrance, TodayCard } from './today/parts';
+import { TodayBlock } from './today/TodayBlock';
 
+/**
+ * Today, the app's front page: the dated masthead, the daily edition as its
+ * hero, what changed in what you follow, recently introduced bills, the way
+ * into Leads, and the newest register declarations. Every block loads on its
+ * own and keeps its saved copy offline; a pull to refresh revalidates all.
+ */
 export default function Today() {
   const [data, setData] = useState<Awaited<
     ReturnType<typeof catalogs.today>
   > | null>(null);
   const [edition, setEdition] = useState<Block<EditionView> | null>(null);
-  // CatalogState shows the initial fetch. The native control belongs to a
+  // TodayBlock shows the initial fetch. The native control belongs to a
   // user refresh; starting it on mount moves the large-title scroll offset.
   const [refreshing, setRefreshing] = useState(false);
   const [retry, setRetry] = useState(0);
@@ -49,26 +60,25 @@ export default function Today() {
         <RefreshControl refreshing={refreshing} onRefresh={refresh} />
       }
     >
-      <Text
-        variant="fine"
-        testID="today-screen-message"
-        wordSafe
-        style={{ flexShrink: 0 }}
-      >
-        OPAX is independent and non-partisan. It is not a government app.
-      </Text>
-      <EditionSection
-        block={edition}
-        onRetry={refresh}
-        refreshing={refreshing}
-      />
+      <View style={styles.front}>
+        <Masthead />
+        <EditionSection
+          block={edition}
+          onRetry={refresh}
+          refreshing={refreshing}
+        />
+      </View>
       <FollowingSection
         refresh={retry}
         refreshing={refreshing}
         onRetry={refresh}
       />
+      <ReportsEntry />
+      <Spotlight />
+      <FromRecord />
+      <TodayCoverage />
       <Section title="Recently introduced bills" testID="today-bills">
-        <CatalogState
+        <TodayBlock
           block={data?.bills ?? null}
           empty="No recently introduced bills are available in this snapshot."
           onRetry={refresh}
@@ -76,64 +86,61 @@ export default function Today() {
           testID="today-bills"
         >
           {(bills) => (
-            <RowList>
-              {bills.map((bill, i) => (
-                <RecordRow
-                  key={bill.key}
-                  title={bill.title}
-                  detail={[
-                    bill.portfolio,
-                    bill.introduced
-                      ? `Introduced ${formatDate(bill.introduced, 'short')}`
-                      : null,
-                  ]
-                    .filter(Boolean)
-                    .join(' · ')}
-                  onPress={() => router.push(billRoute(bill.key))}
-                  testID={`today-bill-${i}`}
-                />
-              ))}
-            </RowList>
+            <Entrance>
+              <BillCarousel bills={bills} />
+            </Entrance>
           )}
-        </CatalogState>
+        </TodayBlock>
       </Section>
-      {/* Static: the Leads screen loads its export when it opens. */}
-      <Section title="Leads" testID="today-leads">
-        <Text wordSafe>
-          Where recorded contract value or party receipts concentrate, and
-          companies that appear in both. Each lead keeps its caveats; a lead is
-          not a finding.
-        </Text>
-        <RecordRow
-          title="All leads"
-          detail="Government contracts, party funding, companies in both"
-          onPress={() => router.push(leadsRoute)}
-          testID="today-leads-open"
+      <Section testID="today-records">
+        <LinkRow
+          title="Just added to the record"
+          detail="Newly indexed records"
+          icon="tray.full"
+          accent="bills"
+          onPress={() => router.push(recentRecordsRoute)}
+          testID="today-records-open"
         />
       </Section>
-      <Section title="Recent declarations" testID="today-declarations">
-        <CatalogState
+      <MoneyMapCard />
+      {/* Static: the Leads screen loads its export when it opens. */}
+      <View testID="today-leads">
+        <LeadsCard />
+      </View>
+      <Section
+        title="Recent declarations"
+        testID="today-declarations"
+        action={
+          <Button
+            label="See all"
+            variant="quiet"
+            size="compact"
+            accessibilityHint="Opens all recent declarations"
+            testID="today-declarations-all"
+            onPress={() => router.push(declarationsRoute)}
+          />
+        }
+      >
+        <TodayBlock
           block={data?.declarations ?? null}
           empty="No recent declarations are available in this snapshot."
           onRetry={refresh}
           refreshing={refreshing}
           testID="today-declarations"
-          links={false}
+          placeholder="people"
         >
           {(declarations) => (
-            <RowList>
-              {declarations.map((item, i) => (
-                <TodayDeclaration key={item.id} item={item} index={i} />
-              ))}
-              <RecordRow
-                title="All recent declarations"
-                detail="By chamber, jurisdiction and member"
-                onPress={() => router.push(declarationsRoute)}
-                testID="today-declarations-all"
-              />
-            </RowList>
+            <Entrance>
+              <TodayCard style={styles.list}>
+                {declarations.map((item, i) => (
+                  <View key={item.id} style={i > 0 ? styles.divided : null}>
+                    <DeclarationRow item={item} index={i} />
+                  </View>
+                ))}
+              </TodayCard>
+            </Entrance>
           )}
-        </CatalogState>
+        </TodayBlock>
       </Section>
       <Text variant="fine" testID="today-screen-footer">
         Patterns in the public record are leads, not findings. Check the linked
@@ -142,3 +149,9 @@ export default function Today() {
     </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  front: { gap: spacing.s4 },
+  list: { paddingHorizontal: spacing.s4, paddingVertical: spacing.s1 },
+  divided: { borderTopWidth: hairline, borderTopColor: colors.dividerSubtle },
+});

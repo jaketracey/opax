@@ -3,14 +3,14 @@ name: 02 Search the public people catalog
 ---
 - launchApp:
     clearState: true
+    permissions: {}
 - tapOn:
     id: tab-search
-- scrollUntilVisible:
-    element:
-      id: search-input
-- tapOn:
-    id: search-input
-- inputText: Anthony Albanese
+- runFlow:
+    file: support/search-query.yaml
+    env:
+      QUERY: Anthony Albanese
+      PREFIX: 02
 # Return submits and dismisses the keyboard; a swipe can land on the
 # keyboard itself at AX5.
 - pressKey: Enter

@@ -11,6 +11,7 @@ import { Screen } from '../src/design/primitives';
 import Today from '../src/features/Today';
 import { bills, catalogs, pinned } from './pinned';
 
+jest.mock('../src/features/reports/TodayReports', () => ({Spotlight: () => null, ReportsEntry: () => null, FromRecord: () => null, TodayCoverage: () => null}));
 jest.mock('../src/api/runtime', () => ({
   catalogs: {
     today: jest.fn(),

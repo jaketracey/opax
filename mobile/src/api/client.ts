@@ -1,8 +1,16 @@
 import { fetch as expoFetch } from 'expo/fetch';
 import { CatalogCache, isFresh, type CacheEntry } from './cache';
 import { ApiError, httpError } from './errors';
-import { allowedURL } from './policy';
+import { allowedURL, assertAskPostPath } from './policy';
+import {
+  AskFailure,
+  AskStream,
+  type StreamHandlers,
+} from '../features/ask/stream';
 import { isPartialCatalog } from './validation';
+import { isPeoplePaidPath } from '../features/people/policy';
+import { isReportsPaidPath } from './reports-policy';
+import { summaryStreamBody } from '../features/search/decoders';
 import {
   assertPortraitPath,
   assertPortraitBytes,
@@ -64,6 +72,39 @@ function freezeSnapshot(...values: unknown[]) {
   }
 }
 export class ApiClient {
+  private actionReads = new Map<string, Promise<RecordResult<unknown>>>();
+  /** Explicit actions only: one attempt, session memory, no disk or retry. */
+  getForAction<T>(path: string, decode: Decoder<T>): Promise<RecordResult<T>> {
+    const url = allowedURL(this.options.origin, path);
+    if (!isPeoplePaidPath(path) && !isReportsPaidPath(path)) throw new ApiError('forbidden', 'Not an action read.');
+    const previous = this.actionReads.get(path);
+    if (previous) return previous as Promise<RecordResult<T>>;
+    const pending = this.readAction(url, decode);
+    this.actionReads.set(path, pending);
+    // Failed actions can be retried explicitly; never retry automatically.
+    void pending.catch(() => this.actionReads.delete(path));
+    return pending;
+  }
+  private async readAction<T>(url: string, decode: Decoder<T>): Promise<RecordResult<T>> {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), this.options.timeoutMs ?? 8000);
+    try {
+      const response = await this.transport(url, {
+        method: 'GET', credentials: 'omit', redirect: 'manual', signal: controller.signal,
+        headers: { Accept: 'application/json', 'User-Agent': `OPAX-iOS/${this.options.version} (${this.options.build})` },
+      });
+      if (response.redirected || (response.status >= 300 && response.status < 400) || (response.url && response.url !== url))
+        throw new ApiError('forbidden', 'Redirects are not allowed for catalog data.');
+      if (!response.ok) throw httpError(response.status);
+      let data: T;
+      try { data = this.decodeBody(await response.json(), decode); }
+      catch { throw new ApiError('invalid-data', 'The catalog response could not be read.'); }
+      return { data, stale: false, savedAt: this.now(), asOf: dataAsOf(data) };
+    } catch (e) {
+      if (e instanceof ApiError) throw e;
+      throw new ApiError(controller.signal.aborted ? 'timeout' : 'offline', controller.signal.aborted ? 'The public record took too long to load. Try again.' : 'This section is not saved for this session. It will load when you are back online.');
+    } finally { clearTimeout(timer); }
+  }
   private transport: typeof fetch;
   private now: () => number;
   private sleep: (ms: number) => Promise<void>;
@@ -98,13 +139,26 @@ export class ApiClient {
     path: string,
     decode: Decoder<T>,
     force = false,
-    { absence = false }: { absence?: boolean } = {},
+    {
+      absence = false,
+      retries = this.options.retries ?? 2,
+      timeoutMs = this.options.timeoutMs ?? 8000,
+      summaryStream = false,
+    }: {
+      absence?: boolean;
+      retries?: number;
+      timeoutMs?: number;
+      summaryStream?: boolean;
+    } = {},
   ): Promise<RecordResult<T>> {
+    if (path.startsWith('/api/ask') || path.startsWith('/api/followups'))
+      throw new ApiError('forbidden', 'Ask requires an explicit submission.');
     const url = allowedURL(this.options.origin, path); // before cache or networking
+    if (isPeoplePaidPath(path) || isReportsPaidPath(path)) throw new ApiError('forbidden', 'Paid sections require an explicit action read.');
     if (isPortraitPath(path))
       throw new ApiError('forbidden', 'Images require the byte client.');
     const requestStartedAt = this.now();
-    const deadline = requestStartedAt + (this.options.timeoutMs ?? 8000);
+    const deadline = requestStartedAt + timeoutMs;
     let cached = await this.options.cache.get(url);
     if (cached) {
       try {
@@ -129,7 +183,7 @@ export class ApiClient {
       'offline',
       'This record is not saved on this iPhone yet. It will load when you are back online.',
     );
-    for (let attempt = 0; attempt <= (this.options.retries ?? 2); attempt++) {
+    for (let attempt = 0; attempt <= retries; attempt++) {
       const remaining = deadline - this.now();
       if (remaining <= 0) break;
       let retryDelay = 300 * 2 ** attempt;
@@ -189,16 +243,25 @@ export class ApiClient {
           body =
             response.status === 304
               ? cached!.body
-              : portraitMetadataLimits[path]
-                ? JSON.parse(
+              : summaryStream &&
+                  response.headers
+                    .get('content-type')
+                    ?.includes('text/event-stream')
+                ? summaryStreamBody(
                     new TextDecoder().decode(
-                      await this.readBytes(
-                        response,
-                        portraitMetadataLimits[path]!,
-                      ),
+                      await this.readBytes(response, 512 * 1024),
                     ),
                   )
-                : await response.json();
+                : portraitMetadataLimits[path]
+                  ? JSON.parse(
+                      new TextDecoder().decode(
+                        await this.readBytes(
+                          response,
+                          portraitMetadataLimits[path]!,
+                        ),
+                      ),
+                    )
+                  : await response.json();
         } catch (error) {
           if (controller.signal.aborted)
             throw new ApiError(
@@ -291,7 +354,7 @@ export class ApiClient {
       } finally {
         clearTimeout(timer);
       }
-      if (attempt < (this.options.retries ?? 2)) {
+      if (attempt < retries) {
         if (retryDelay >= deadline - this.now()) break;
         await this.sleep(retryDelay);
       }
@@ -316,6 +379,93 @@ export class ApiClient {
             : { staleReason: 'unavailable' as const }),
       };
     throw lastError;
+  }
+  /** Explicit submission only. One HTTP request, no retry or disk cache. */
+  async askPost(
+    path: string,
+    body: object,
+    signal: AbortSignal,
+    on?: StreamHandlers,
+  ): Promise<unknown> {
+    assertAskPostPath(path);
+    const url = allowedURL(this.options.origin, path);
+    let shown = false;
+    try {
+      const response = await this.transport(url, {
+        method: 'POST',
+        credentials: 'omit',
+        redirect: 'manual',
+        signal,
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: on ? 'text/event-stream' : 'application/json',
+          'User-Agent': `OPAX-iOS/${this.options.version} (${this.options.build})`,
+        },
+        body: JSON.stringify(body),
+      });
+      if (
+        response.redirected ||
+        (response.status >= 300 && response.status < 400) ||
+        (response.url && response.url !== url)
+      )
+        throw new AskFailure('blocked', 'The answer request was blocked.');
+      if (!response.ok) {
+        const raw = await response.json().catch(() => ({}));
+        const detail =
+          typeof raw?.error === 'string'
+            ? raw.error
+            : `Request failed (${response.status})`;
+        throw new AskFailure(
+          response.status === 429
+            ? 'rate-limited'
+            : response.status === 403 || response.status === 401
+              ? 'blocked'
+              : 'invalid',
+          detail,
+        );
+      }
+      if (
+        !on ||
+        !response.headers.get('content-type')?.includes('text/event-stream')
+      )
+        return await response.json();
+      if (!response.body) throw new AskFailure('empty', 'No answer came back.');
+      on.stage('Searching the record');
+      const stream = new AskStream({
+          ...on,
+          delta: (text) => {
+            if (text) shown = true;
+            on.delta(text);
+          },
+          retry: () => {
+            shown = false;
+            on.retry();
+          },
+        }),
+        decoder = new TextDecoder(),
+        reader = response.body.getReader();
+      try {
+        for (;;) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          stream.push(decoder.decode(value, { stream: true }));
+        }
+        stream.push(decoder.decode(), true);
+        return stream.result();
+      } finally {
+        await reader.cancel().catch(() => undefined);
+        reader.releaseLock();
+      }
+    } catch (e) {
+      if (signal.aborted) throw new AskFailure('cancelled', 'Cancelled.');
+      if (e instanceof AskFailure) throw e;
+      if (shown)
+        throw new AskFailure('partial', 'The answer stream ended early.');
+      throw new AskFailure(
+        'offline',
+        'The record could not be reached. Check your connection and try again.',
+      );
+    }
   }
   private async readBytes(
     response: Response,

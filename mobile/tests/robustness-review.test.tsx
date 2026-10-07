@@ -28,6 +28,7 @@ import { RecordStatus } from '../src/features/RecordStatus';
 import { CatalogState } from '../src/features/CatalogState';
 import { catalogs, index, manifest, pinned, replaceAt, slugs } from './pinned';
 
+jest.mock('../src/features/reports/TodayReports', () => ({Spotlight: () => null, ReportsEntry: () => null, FromRecord: () => null, TodayCoverage: () => null}));
 jest.mock('../src/api/runtime', () => ({
   catalogs: { followSources: jest.fn() },
 }));

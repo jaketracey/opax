@@ -1,0 +1,37 @@
+appId: au.com.opax.app
+name: People lane profile helper
+---
+- launchApp: { permissions: {} }
+- tapOn:
+    id: tab-search
+- scrollUntilVisible:
+    element: { id: search-input }
+    direction: UP
+    speed: 20
+    centerElement: true
+    timeout: 90000
+- extendedWaitUntil:
+    notVisible: { id: search-suggestions-loading }
+    timeout: 90000
+- longPressOn: { id: search-input }
+- eraseText
+- inputText: ${NAME}
+- assertVisible:
+    id: search-input
+    text: ^${NAME}$
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: search-result-${SLUG}
+    centerElement: true
+    # At AX5 the row is tall. A speed-40 centring swipe overshoots behind the
+    # navigation bar, where the subsequent tap hits the header instead.
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: search-result-${SLUG}
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/08-${SLUG}-identity

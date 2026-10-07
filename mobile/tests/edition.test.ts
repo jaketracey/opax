@@ -186,11 +186,139 @@ describe('the edition selector', () => {
         'Explanatory memorandum on ParlInfo, CC BY-NC-ND 4.0',
         'Bill home page on ParlInfo, CC BY-NC-ND 4.0',
       ],
+      facts: {
+        kicker: 'Bill · Education portfolio',
+        line: 'This bill would keep funding grants that support pay for early childhood education and care workers. Passed 18 Sep 2026.',
+        figures: [],
+        bars: null,
+        events: [
+          {
+            date: '12 Aug 2026',
+            text: 'Introduced in the House of Representatives',
+          },
+          {
+            date: '10 Sep 2026',
+            text: 'Third reading, House of Representatives',
+          },
+          { date: '14 Sep 2026', text: 'Introduced in the Senate' },
+          { date: '15 Sep 2026', text: 'Passed the Senate' },
+          { date: '18 Sep 2026', text: 'Royal Assent' },
+        ],
+        division: null,
+      },
     });
     for (const paragraph of view.data!.paragraphs)
       expect(decoded.edition.text).toContain(paragraph);
     for (const row of view.data!.sourceRows)
       expect(JSON.stringify(decoded.edition.slides)).toContain(row);
+  });
+  test("the front page's facts are the slides' own, and a field it cannot read is left out", () => {
+    const slides = decoded.edition.slides!;
+    const withNumbers = decodeEdition(
+      at(
+        ['edition', 'slides'],
+        [
+          slides[0],
+          {
+            type: 'number',
+            kicker: 'The record',
+            title: 'What OPAX holds',
+            alt: 'a',
+            lines: [],
+            value: '768',
+            label: 'speeches in the Opax record',
+          },
+          {
+            type: 'bars',
+            kicker: 'k',
+            title: 'Most common topic labels',
+            alt: 'a',
+            lines: [],
+            items: [{ label: 'Tax & budget', pct: 19 }],
+            note: 'Shares of labelled speeches.',
+          },
+          {
+            type: 'division',
+            kicker: 'k',
+            title: 't',
+            alt: 'a',
+            ayes: 85,
+            noes: 50,
+            ayeParties: [],
+            noParties: [],
+            line: '',
+          },
+          slides.at(-1),
+        ],
+      ),
+    );
+    expect(editionFor(withNumbers).data!.facts).toMatchObject({
+      figures: [{ value: '768', label: 'speeches in the Opax record' }],
+      bars: {
+        title: 'Most common topic labels',
+        items: [{ label: 'Tax & budget', pct: 19 }],
+        note: 'Shares of labelled speeches.',
+      },
+      division: { ayes: 85, noes: 50 },
+      events: [],
+    });
+    // Unreadable optional fields drop out; the edition still reads.
+    const odd = decodeEdition(
+      at(
+        ['edition', 'slides'],
+        [
+          { ...slides[0], line: 42 },
+          {
+            type: 'number',
+            kicker: 'k',
+            title: 't',
+            alt: 'a',
+            value: '',
+            label: 'x',
+          },
+          {
+            type: 'bars',
+            kicker: 'k',
+            title: 't',
+            alt: 'a',
+            items: [{ label: 'x', pct: 140 }],
+          },
+          {
+            type: 'timeline',
+            kicker: 'k',
+            title: 't',
+            alt: 'a',
+            events: 'soon',
+          },
+          {
+            type: 'division',
+            kicker: 'k',
+            title: 't',
+            alt: 'a',
+            ayes: -1,
+            noes: 2,
+          },
+          slides.at(-1),
+        ],
+      ),
+    );
+    expect(editionFor(odd).data!.facts).toEqual({
+      kicker: 'Bill · Education portfolio',
+      line: null,
+      figures: [],
+      bars: null,
+      events: [],
+      division: null,
+    });
+    // An edition without slides has no facts, only its text.
+    expect(editionFor(decodeEdition(without('slides'))).data!.facts).toEqual({
+      kicker: null,
+      line: null,
+      figures: [],
+      bars: null,
+      events: [],
+      division: null,
+    });
   });
   test("a bill's attribution: its summary slide, else the caption's line, else the web's", () => {
     const own = decodeEdition(
@@ -351,7 +479,7 @@ function setup(...responses: (Response | Error)[]) {
     new Catalogs(
       new ApiClient({
         origin,
-        version: '0.1.0',
+        version: '1.0.0',
         build: '3',
         cache: new CatalogCache(store),
         transport: transport as unknown as typeof fetch,

@@ -4,10 +4,14 @@
  * Search). Each page's scene is a picture built from the app's components;
  * pages marked `example` show sample records and say so.
  */
+export const deceasedPersonsNotice =
+  'Aboriginal and Torres Strait Islander readers are advised that this app contains names and images of people who have died.';
+
 export interface WelcomePage {
   id: 'about' | 'your-mp' | 'profiles' | 'bills-today' | 'search';
   title: string;
   body: string;
+  notice?: string;
   /** The scene shows sample records, labelled "Example". */
   example: boolean;
 }
@@ -15,6 +19,7 @@ export interface WelcomePage {
 export const welcomePages: readonly WelcomePage[] = [
   {
     id: 'about',
+    notice: deceasedPersonsNotice,
     title: 'Welcome to OPAX',
     body: 'OPAX brings together Australian parliamentary speeches, votes, political funding and public disclosures, with links to the records behind them. It is independent and non-partisan. It is not a government app.',
     example: false,
@@ -28,7 +33,7 @@ export const welcomePages: readonly WelcomePage[] = [
   {
     id: 'profiles',
     title: 'Profiles',
-    body: 'A profile brings together votes, pay, claimed expenses and declared interests. Each part names its source and gives an as-at date.',
+    body: 'A profile brings together votes, pay, claimed expenses and declared interests. Each part shows when its record was updated and links to the original.',
     example: true,
   },
   {
@@ -50,5 +55,5 @@ export const finishLabel = 'Choose your electorate';
 /** VoiceOver's reading of a page: its position, title and words. */
 export function pageAnnouncement(index: number, count = welcomePages.length) {
   const page = welcomePages[index]!;
-  return `Page ${index + 1} of ${count}. ${page.title}. ${page.body}`;
+  return `Page ${index + 1} of ${count}. ${page.title}. ${page.body}${page.notice ? ` ${page.notice}` : ''}`;
 }

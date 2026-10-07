@@ -8,4 +8,5 @@ allow_simulator "$UDID"
 scripts/capacity.sh
 trap 'xcrun simctl shutdown "$UDID" 2>/dev/null || true' EXIT
 boot_simulator "$UDID"
+python3 scripts/apply-privacy-patches.py
 build_command env OPAX_VARIANT=development ./node_modules/.bin/expo run:ios --device "$UDID" --no-build-cache

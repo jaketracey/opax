@@ -26,6 +26,7 @@ import {
 
 const groups: [FollowKind, string][] = [
   ['person', 'Parliamentarians'],
+  ['party', 'Parties'],
   ['bill', 'Bills'],
   ['electorate', 'Electorates'],
 ];
@@ -50,7 +51,7 @@ export default function ManageFollows() {
   return (
     <Screen testID="follows-screen">
       <Group>
-        <Text wordSafe testID="follows-privacy">
+        <Text wordSafe variant="metadata" testID="follows-privacy">
           Follows are saved on this iPhone only. Nothing about them is sent to
           OPAX or anyone else. Device backups may include them.
         </Text>
@@ -90,6 +91,7 @@ export default function ManageFollows() {
                         label={`Unfollow ${f.title}`}
                         variant="quiet"
                         size="compact"
+                        icon="minus.circle"
                         disabled={busy}
                         testID={`follows-unfollow-${f.kind}-${f.id}`}
                         onPress={() => void run(() => unfollow(followKey(f)))}
@@ -124,7 +126,7 @@ export default function ManageFollows() {
           </Section>
         </>
       )}
-      <Text wordSafe variant="fine" testID="follows-end">
+      <Text wordSafe variant="caption" testID="follows-end">
         Today compares each follow with the published records when you open the
         app or pull to refresh. The comparison runs on this iPhone.
       </Text>

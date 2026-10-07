@@ -2,6 +2,7 @@ import {
   componentPairs,
   contrastRatio,
   forbiddenPairs,
+  partyWashPairs,
   requiredRatio,
 } from '../src/design/contrast';
 import { light, lightHighContrast, partyColors } from '../src/design/palette';
@@ -15,6 +16,14 @@ describe('contrast of every pair the components draw', () => {
     (_, pair) => {
       const value = contrastRatio(pair.foreground, light[pair.background]);
       expect(value).toBeGreaterThanOrEqual(requiredRatio[pair.kind]);
+    },
+  );
+  test.each(partyWashPairs.map((pair) => [pair.use, pair] as const))(
+    '%s',
+    (_, pair) => {
+      expect(
+        contrastRatio(pair.foreground, pair.background),
+      ).toBeGreaterThanOrEqual(requiredRatio.text);
     },
   );
   test('the pairs IOS-UX forbids really fail', () => {
@@ -68,5 +77,28 @@ describe('Increase Contrast', () => {
       expect(
         contrastRatio(lightHighContrast.inkFaint!, surface),
       ).toBeGreaterThanOrEqual(4.5);
+  });
+  test('category inks and bronzeInk strengthen to 7:1 on their wash and every surface', () => {
+    const inks = [
+      ['bronzeInk', 'bronzeWash'],
+      ['moneyInk', 'moneyWash'],
+      ['votesInk', 'votesWash'],
+      ['interestsInk', 'interestsWash'],
+      ['billsInk', 'billsWash'],
+    ] as const;
+    for (const [ink, wash] of inks) {
+      const strong = lightHighContrast[ink]!;
+      for (const surface of [
+        light[wash],
+        light.paper,
+        light.raised,
+        light.sunken,
+      ]) {
+        expect(contrastRatio(strong, surface)).toBeGreaterThanOrEqual(7);
+        expect(contrastRatio(strong, surface)).toBeGreaterThan(
+          contrastRatio(light[ink], surface),
+        );
+      }
+    }
   });
 });

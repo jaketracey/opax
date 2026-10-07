@@ -3,6 +3,13 @@ import { Text as NativeText } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { router } from 'expo-router';
 import { catalogs as runtime } from '../src/api/runtime';
+// Reports' launch/static-read boundary is exercised in reports-boundary.test.
+jest.mock('../src/features/reports/TodayReports', () => ({
+  Spotlight: () => null,
+  ReportsEntry: () => null,
+  FromRecord: () => null,
+  TodayCoverage: () => null,
+}));
 import {
   Catalogs,
   decodeDiscovery,
@@ -524,7 +531,9 @@ describe('the Leads screen', () => {
     );
     for (const caveat of signals[0]!.caveats)
       expect(texts(root)).toContain(caveat);
-    expect(texts(root)).toContain(
+    // One quiet caption on screen; VoiceOver hears the sources too.
+    expect(texts(root)).toContain('Updated 21 Sep 2026');
+    expect(labels(root)).toContain(
       'As at 21 September 2026 · Source: AEC annual returns; AusTender',
     );
     // Ten cards, then Show more.
@@ -748,6 +757,8 @@ describe('the declared-interests feed', () => {
         ),
       ),
     ).toBe(true);
+    // The export's coverage note is behind the count's ⓘ, in full.
+    await press(root, 'declarations-info');
     expect(texts(root)).toContain(
       'This export holds the newest 300 of 1,660 dated register alterations. Entries are as declared, not verified by OPAX. Additions and deletions carry the date the register records. A gift or trip with no organisation match names one the AEC and lobbyist registers do not list under that spelling. Organisation matches to AEC Transparency Register returns, the lobbyist registers and FITS use exact normalised names.',
     );
@@ -867,7 +878,7 @@ describe('pull to refresh', () => {
     }) as typeof fetch;
     const client = new ApiClient({
       origin: 'https://example.test',
-      version: '0.1.0',
+      version: '1.0.0',
       build: '1',
       cache: new CatalogCache(new MemoryStore()),
       transport,

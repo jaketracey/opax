@@ -1,5 +1,6 @@
 import { bills, catalogs, index, roster, slugs } from './pinned';
 import { nameKey } from '../src/api/ids';
+import { memberSuggestionRoster } from '../src/api/catalog-search';
 import {
   suggestionsFor,
   rosterIdentityFor,
@@ -98,18 +99,16 @@ test.each([
   ['Renée Example', 'Rene\u0301e Example'],
   ['Jean–Example', 'Jean Example'],
 ])(
-  'punctuation and accent twins %s / %s collapse to the fuller row',
+  'unresolved punctuation and accent twins %s / %s are not suggested as members',
   (name, twin) => {
     const fuller = { ...roster.people[0]!, name, speeches: 10 };
     const sources = {
       ...roster,
       people: [{ ...fuller, name: twin, speeches: 1 }, fuller],
     };
-    for (const query of [name, twin]) {
-      expect(suggestionsFor(query, sources, index, bills).people).toEqual([
-        fuller,
-      ]);
-    }
+    const verified = memberSuggestionRoster(sources, catalogs);
+    for (const query of [name, twin])
+      expect(suggestionsFor(query, verified, index, bills).people).toEqual([]);
   },
 );
 

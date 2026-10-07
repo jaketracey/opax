@@ -12,6 +12,9 @@ The public catalog client is unchanged. No JS transport or voice SDK is used.
 - `requestDeletionCode(): Promise<VoiceResult<CodeChallenge>>`
 - `deleteAccount(challengeId, code): Promise<VoiceResult<AccountDeletion>>`
 - `subscribe(listener)` returns an unsubscribe function.
+- `subscribeLevels(listener)` receives `{input, output}` loudness (0 to 1, about
+  15 a second while live) for the call animation; a separate native event, so
+  levels never displace call events. Malformed levels are dropped.
 
 All results use `{ok:true,value}` or `{ok:false,error:VoiceFailure}`. Command
 success acknowledges dispatch, not a live call; observe the events for call
@@ -34,13 +37,13 @@ projects every result/event again, strips extra fields and drops malformed event
 Release checklist completed for production build 5:
 
 - [x] `OPAX_PRODUCTION_VOICE` defaults to `1` and selects both real Talk and
-  Account entries, both pods, permission metadata and the native route policy.
+      Account entries, both pods, permission metadata and the native route policy.
 - [x] Explicit `0` preserves the placeholders and excludes both voice pods;
-  both states have production tests and archive/IPA verification.
+      both states have production tests and archive/IPA verification.
 - [x] All seven privacy types are linked, none track, and location stays on-device.
 - [x] Consent reads the stored choice in every build; withdrawal blocks the next call.
 - [x] Report this answer opens published support with a record path or no record;
-  captions never leave the app through reporting.
+      captions never leave the app through reporting.
 - [x] Upload requires an explicit expected mode matching `release.json`.
 
 See `plugins/voiceProduction.js` and `voice-production-policy.json`. No runtime
