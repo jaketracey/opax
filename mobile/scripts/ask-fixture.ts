@@ -25,6 +25,54 @@ const json = (res: ServerResponse, status: number, data: unknown) => {
   });
   res.end(JSON.stringify(data));
 };
+// Production pacing (20–40 s from submit to the last stage), chunked over one
+// open response, so a device build proves the transport streams. Only these
+// synthetic questions are slow; every other journey keeps the quick replay.
+const slowModes = new Set([
+  'fixture slow stream',
+  'fixture stages only',
+  'fixture slow error',
+]);
+const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+async function slowStream(res: ServerResponse, mode: string) {
+  const blocks = recorded.toString().trim().split('\n\n');
+  const send = async (block: string, ms: number) => {
+    if (res.destroyed) return;
+    res.write(block + '\n\n');
+    await wait(ms);
+  };
+  const event = (name: string, data: unknown) =>
+    `event: ${name}\ndata: ${JSON.stringify(data)}`;
+  const [searching, retrieved, writing] = blocks;
+  const done = blocks.find((b) => b.startsWith('event: done'))!;
+  const answer: string = JSON.parse(
+    done.slice(done.indexOf('data: ') + 6),
+  ).answer;
+  // Headers go first, alone: the app shows its first stage before any event.
+  await wait(3000);
+  await send(searching!, 9000);
+  await send(retrieved!, 7000);
+  await send(writing!, 5000);
+  if (mode === 'fixture stages only')
+    // The model is still thinking: stage events only, for a long while.
+    for (let words = 40; words <= 400; words += 40)
+      await send(event('status', { phase: 'reading', words }), 3000);
+  const parts = answer.match(/.{1,24}(\s|$)/g) || [answer];
+  for (const [i, text] of parts.entries()) {
+    if (mode === 'fixture slow error' && i === 2) {
+      await send(
+        event('error', {
+          error: 'The answer could not be finished. Try again.',
+        }),
+        0,
+      );
+      return res.end();
+    }
+    await send(event('delta', { text }), 1500);
+  }
+  await send(done, 0);
+  res.end();
+}
 export async function askFixture(
   req: IncomingMessage,
   res: ServerResponse,
@@ -62,6 +110,10 @@ export async function askFixture(
     'Content-Type': 'text/event-stream; charset=utf-8',
     'Cache-Control': 'no-store',
   });
+  if (slowModes.has(input.question)) {
+    await slowStream(res, input.question);
+    return true;
+  }
   for (const block of recorded.toString().trim().split('\n\n')) {
     if (res.destroyed) break;
     if (
