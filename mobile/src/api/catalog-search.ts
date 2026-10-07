@@ -13,6 +13,7 @@ import {
   personSlugForResult,
 } from './person-identity';
 import {
+  fullPortraitName,
   profileFor,
   type SearchIdentityCatalogs,
   type SuggestionRoster,
@@ -89,7 +90,16 @@ function memberDirectory(catalogs: MemberCatalogs) {
         });
       }
       const member = identities.get(id);
-      if (member) members.set(slug, member);
+      if (member) {
+        members.set(slug, member);
+        // Each directory spelling has resolved to this same native identity.
+        // Preserve full names for matching while navigation stays canonical;
+        // do not widen the aliases used by the search membership guard.
+        if (fullPortraitName(profile.name))
+          member.row.aliases = [
+            ...new Set([...(member.row.aliases ?? []), profile.name]),
+          ];
+      }
     } catch {
       // Unresolved and ambiguous profile paths never become person entities.
     }

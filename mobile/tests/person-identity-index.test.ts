@@ -70,8 +70,9 @@ test.each(
   },
 );
 test('every identity reachable through native profile navigation stays searchable and suggestible', () => {
-  expect(nativeProfiles.size).toBeGreaterThan(590);
+  expect(nativeProfiles.size).toBe(595);
   const sources = memberSuggestionRoster(roster, catalogs);
+  expect(sources.people).toHaveLength(595);
   for (const [id, profile] of nativeProfiles) {
     const record = {
       kind: 'person',
@@ -130,7 +131,7 @@ test.each([
     const canonical = slugs.slugs[memberSlugFor(record, catalogs)!]!;
     const suggestions = memberSuggestionRoster(roster, catalogs);
     expect(
-      suggestionsFor(canonical, suggestions, index, bills).people.some(
+      suggestionsFor(name, suggestions, index, bills).people.some(
         (p) => p.name === canonical,
       ),
     ).toBe(true);
