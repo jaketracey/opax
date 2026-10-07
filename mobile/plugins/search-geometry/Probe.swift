@@ -31,13 +31,18 @@ private enum OpaxSearchGeometryProbe {
   static func sample() {
     guard let window = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).flatMap({ $0.windows }).first(where: { $0.isKeyWindow }) else { return }
     let all = views(window)
-    guard let screen = all.first(where: { ["search-screen", "today-screen"].contains($0.accessibilityIdentifier ?? "") && !$0.isHidden }),
+    guard let screen = all.first(where: { ["search-screen", "today-screen", "ask-screen"].contains($0.accessibilityIdentifier ?? "") && !$0.isHidden }),
           let scroll = views(screen).compactMap({ $0 as? UIScrollView }).first else { return }
     if label.superview !== window {
       label.frame = CGRect(x: 2, y: window.bounds.midY, width: 2, height: 2)
       window.addSubview(label)
     }
-    let button = views(screen).first(where: { $0.accessibilityIdentifier == "search-submit" })
+    let inScreen = views(screen)
+    let button = inScreen.first(where: { $0.accessibilityIdentifier == "search-submit" })
+    // Ask: the current question (asked or failed), its stage timeline and error.
+    let askQuestion = inScreen.last { ["ask-user-question", "ask-failed-question"].contains($0.accessibilityIdentifier ?? "") }
+    let askStages = inScreen.first { $0.accessibilityIdentifier == "ask-stages" }
+    let askError = inScreen.first { ($0.accessibilityIdentifier ?? "").hasPrefix("ask-error-") }
     let nav = all.compactMap { $0 as? UINavigationBar }.first { !$0.isHidden && $0.window != nil && $0.convert($0.bounds, to: window).minX >= 0 }
     let large = nav.flatMap { views($0).first { String(describing: type(of: $0)).contains("LargeTitleView") } }
     let data: [String: Any] = [
@@ -51,6 +56,7 @@ private enum OpaxSearchGeometryProbe {
       "keyboardHeight": keyboardHeight,
       "editing": views(screen).contains { $0.isFirstResponder },
       "results": views(screen).contains { $0.accessibilityIdentifier == "search-cache-state" },
+      "askQuestion": rect(askQuestion, window), "askStages": rect(askStages, window), "askError": rect(askError, window),
     ]
     guard let raw = try? JSONSerialization.data(withJSONObject: data, options: [.sortedKeys]), let text = String(data: raw, encoding: .utf8) else { return }
     if text == last { return }; last = text

@@ -1,0 +1,22 @@
+appId: au.com.opax.app
+---
+# iOS hierarchy visibility includes views underneath the native bars (build 14
+# drew the stages behind the navigation bar and still "passed"). Read the real
+# frames: the current question and its stages, or its error, sit between the
+# navigation bar and the tab bar. Re-read while the reveal scroll settles.
+- copyTextFrom:
+    id: search-geometry
+- evalScript: ${output.ask = JSON.parse(maestro.copiedText); output.askBlock = (output.ask.askStages.height && output.ask.askStages) || output.ask.askError}
+- repeat:
+    while:
+      true: ${!(output.ask.askQuestion.height && output.askBlock.height && output.ask.askQuestion.y >= output.ask.nav.y + output.ask.nav.height && output.askBlock.y + output.askBlock.height <= output.ask.windowHeight - output.ask.adjustedInset.bottom)}
+    times: 8
+    commands:
+      - waitForAnimationToEnd:
+          timeout: 1000
+      - copyTextFrom:
+          id: search-geometry
+      - evalScript: ${output.ask = JSON.parse(maestro.copiedText); output.askBlock = (output.ask.askStages.height && output.ask.askStages) || output.ask.askError}
+- assertTrue:
+    condition: ${output.ask.askQuestion.height > 0 && output.askBlock.height > 0 && output.ask.askQuestion.y >= output.ask.nav.y + output.ask.nav.height && output.askBlock.y + output.askBlock.height <= output.ask.windowHeight - output.ask.adjustedInset.bottom}
+    label: The question and its stages (or error) are on screen, clear of the navigation and tab bars
