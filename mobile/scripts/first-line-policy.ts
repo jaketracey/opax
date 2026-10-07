@@ -50,7 +50,15 @@ export function firstLineVerdict(ocr: Ocr): FirstLineVerdict {
     .filter((line) => line !== title && line.top > bottom(title))
     .sort((a, b) => b.top - a.top)[0];
   const prefix = ocr.lines
-    .filter((line) => line.text.trim().startsWith(PREFIX))
+    // Vision can transcribe the drawn Latin A as Cyrillic А at AX5.
+    // Maestro still asserts the app's exact ASCII sentence; accept only this
+    // observed glyph equivalent here, with every geometry check unchanged.
+    .filter((line) =>
+      line.text
+        .trim()
+        .replace(/\u0410/g, 'A')
+        .startsWith(PREFIX),
+    )
     .sort((a, b) => a.top - b.top)[0];
   const found = { title, tabLabel, prefix };
   if (!prefix)
