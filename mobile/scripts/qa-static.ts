@@ -132,7 +132,7 @@ assert(
 assert(!JSON.stringify(e2e).includes('opax.com.au'));
 for (const app of [release, e2e]) {
   assert.equal(app.name, 'OPAX');
-  assert.equal(app.version, '0.1.0');
+  assert.equal(app.version, '1.0.0');
   assert.equal(app.ios.bundleIdentifier, 'au.com.opax.app');
   assert.equal(app.ios.buildNumber, process.env.OPAX_BUILD_NUMBER ?? '1');
   assert.equal(
@@ -295,7 +295,7 @@ if (appIndex !== -1) {
     ),
   );
   assert.equal(plist.CFBundleIdentifier, 'au.com.opax.app');
-  assert.equal(plist.CFBundleShortVersionString, '0.1.0');
+  assert.equal(plist.CFBundleShortVersionString, '1.0.0');
   assert.equal(plist.CFBundleVersion, process.env.OPAX_BUILD_NUMBER ?? '1');
   assert.equal(plist.MinimumOSVersion, '18.4');
   assert(!plist.NSMicrophoneUsageDescription);

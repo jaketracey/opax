@@ -1,12 +1,11 @@
 # OPAX iOS release
 
 Release tooling produces a production-only, signed App Store Connect IPA for
-`au.com.opax.app`, version `0.1.0`. Upload and TestFlight distribution are separate
+`au.com.opax.app`, version `1.0.0`. Upload and TestFlight distribution are separate
 steps. Only the orchestrator uploads a commit that has passed the QA gate.
 App Store listing, review notes, questionnaires and gaps: [IOS-STORE.md](IOS-STORE.md).
 The App Store submission is version 1.0.0, built with `OPAX_PRODUCTION_VOICE=1`
-(decided 6 October 2026; IOS-STORE.md, sections 6.2 and 8); the tooling still says
-`0.1.0` until the build-5 gate changes it.
+(decided 6 October 2026; IOS-STORE.md, sections 6.2 and 8); submission uses build 11.
 
 Use Node 24, npm 11, Python 3 with PyJWT, CocoaPods and the released Xcode at
 `/Applications/Xcode.app`. The tool checks the Xcode build against a reviewed
@@ -31,13 +30,13 @@ From a clean committed worktree:
 ```sh
 cd mobile
 npm run qa
-scripts/release-ios.sh --build-number 1
-python3 scripts/asc-testflight.py 0.1.0 1 --tester "$OPAX_INTERNAL_TESTER_EMAIL" --dry-run
+scripts/release-ios.sh --build-number 11
+python3 scripts/asc-testflight.py 1.0.0 11 --tester "$OPAX_INTERNAL_TESTER_EMAIL" --dry-run
 ```
 
 Omit `--build-number` to select one greater than the highest integer build App
-Store Connect reports for this iOS version. An explicit number supports local
-export before the app record exists. Build numbers are not reserved by reads;
+Store Connect reports across all OPAX iOS marketing versions. An explicit number
+supports local export before the app record exists. Build numbers are not reserved by reads;
 coordinate concurrent releases. `OPAX_BUILD_NUMBER` supplies the number to both
 native identity and embedded Expo config. Production origin is always
 `https://opax.com.au`. Every run refuses root `.env*` files, disables Expo dotenv
@@ -69,9 +68,9 @@ include abbreviated IPv4 and expanded IPv6. Embedded frameworks must match the
 reviewed eight-framework allowlist; JS also rejects known analytics hosts. Any
 app extension is refused, and every executable/resource bundle is checked for
 unexpected entitlements. Reports count each distinct check once.
-The current app ships no permission-gated
-features, so no `NS*UsageDescription` purpose strings are permitted. Review that
-allow-list when a permission-requiring feature ships.
+The verifier permits the exact on-device location purpose string, the current
+unused-library motion disclosure and, with production voice on, the approved
+microphone purpose string. It refuses other purpose strings.
 
 The tracked-file scan rejects the actual credential path, key ID, issuer ID and
 team ID. The IPA scan rejects credential path/key/issuer values everywhere and
@@ -91,14 +90,14 @@ may differ. Reports retain the artifact commit and separately record the commit
 that performed verification:
 
 ```sh
-EVIDENCE="private/release/0.1.0-$BUILD"
+EVIDENCE="private/release/1.0.0-$BUILD"
 ARTIFACT_COMMIT=$(cat "$EVIDENCE/commit.txt")
 XCODE_BUILD=$(cat "$EVIDENCE/xcode-build.txt")
 python3 scripts/verify-ios-release.py "$EVIDENCE/OPAX.xcarchive/Products/Applications/OPAX.app" \
-  --kind archive --version 0.1.0 --build "$BUILD" --commit "$ARTIFACT_COMMIT" \
+  --kind archive --version 1.0.0 --build "$BUILD" --commit "$ARTIFACT_COMMIT" \
   --xcode-build "$XCODE_BUILD" --output "$EVIDENCE/verification-archive.json"
 python3 scripts/verify-ios-release.py "$EVIDENCE/export/OPAX.ipa" \
-  --kind distribution --version 0.1.0 --build "$BUILD" --commit "$ARTIFACT_COMMIT" \
+  --kind distribution --version 1.0.0 --build "$BUILD" --commit "$ARTIFACT_COMMIT" \
   --xcode-build "$XCODE_BUILD" --output "$EVIDENCE/verification-distribution.json"
 ```
 
@@ -107,8 +106,8 @@ the approved full commit:
 
 ```sh
 scripts/release-ios.sh --build-number "$BUILD" \
-  --upload --expected-commit "$QA_APPROVED_COMMIT"
-python3 scripts/asc-testflight.py 0.1.0 "$BUILD" \
+  --upload --expected-commit "$QA_APPROVED_COMMIT" --expected-voice-mode 1
+python3 scripts/asc-testflight.py 1.0.0 "$BUILD" \
   --tester "$OPAX_INTERNAL_TESTER_EMAIL" \
   --what-to-test 'Check public catalog browsing, search and saved data.'
 ```

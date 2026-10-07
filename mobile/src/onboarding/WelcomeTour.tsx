@@ -361,7 +361,7 @@ function Page({
         <Scene
           page={page}
           width={plateInner}
-          height={stageHeight}
+          height={page.notice && !wordsFirst ? 180 : stageHeight}
           fontScale={fontScale}
           active={revealed}
           reduced={motion}
@@ -379,6 +379,11 @@ function Page({
     >
       <Heading level={1}>{page.title}</Heading>
       <Text variant="lede">{page.body}</Text>
+      {page.notice ? (
+        <Text variant="metadata" testID="tour-deceased-notice">
+          {page.notice}
+        </Text>
+      ) : null}
     </Animated.View>
   );
   return (

@@ -54,7 +54,7 @@ const webOrigin = variant === 'e2e' ? 'https://opax.invalid' : origin;
 const config: ExpoConfig = {
   name: 'OPAX',
   slug: 'opax',
-  version: '0.1.0',
+  version: '1.0.0',
   scheme: 'opax',
   platforms: ['ios'],
   userInterfaceStyle: 'light',
@@ -142,7 +142,7 @@ const config: ExpoConfig = {
       : {}),
     apiOrigin: origin,
     webOrigin,
-    appVersion: '0.1.0',
+    appVersion: '1.0.0',
     appBuild: buildNumber,
     fontAcknowledgements: ['Merriweather', 'PublicSans'].map((name) => ({
       name,

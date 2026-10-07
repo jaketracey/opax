@@ -22,6 +22,7 @@ import {
 import { formatCount, formatDate } from '../design/format';
 import { rhythm } from '../design/tokens';
 import { CatalogState, isOffline } from './CatalogState';
+import { deceasedPersonsNotice } from '../onboarding/pages';
 
 export default function About() {
   const [record, setRecord] = useState<Awaited<
@@ -75,6 +76,9 @@ export default function About() {
           is not affiliated with any parliament, government or political party.
         </Text>
       </Group>
+      <Section title="Cultural notice" icon="info.circle" accent="people">
+        <Text testID="about-deceased-notice">{deceasedPersonsNotice}</Text>
+      </Section>
       <Section
         title="Coverage"
         icon="chart.bar.doc.horizontal"
@@ -245,7 +249,7 @@ export default function About() {
           Report a correction or contact OPAX through the support page.
         </Text>
         <OpaxWebLink
-          label="Support and corrections"
+          label="Corrections and contact"
           path="/support"
           testID="about-support"
         />
@@ -254,12 +258,26 @@ export default function About() {
         <Text>
           Public reading needs no account and sends no account or device
           identifier. Requests reach OPAX’s servers with this iPhone’s IP
-          address, which is used for rate limits and security. The privacy
-          policy explains what is kept and for how long. Submitted searches are
-          sent only to OPAX’s servers. Search queries and their results stay in
-          memory during this app session and are not saved on this phone. Other
-          public catalogs are saved on this phone for offline reading. Voice
-          uses an email address, member ID, audio and words.
+          address, used for rate limits and security. Request URLs, including
+          submitted searches, may be kept in server logs for 7 days. Cloudflare
+          traffic and security analytics may keep IP addresses, paths and
+          queries for up to 31 days.
+        </Text>
+        <Text>
+          Search queries and results stay in memory during this app session and
+          are not saved on this phone. Other public catalogs are saved on this
+          phone for offline reading.
+        </Text>
+        <Text>
+          Voice sends your audio and the conversation’s words to ElevenLabs and
+          the language model it runs. OPAX keeps your email address and member
+          ID until account deletion, and call times, seconds used and the
+          provider’s conversation reference. OPAX keeps no audio or transcript.
+          The reference is removed a day after the call is recorded as closed;
+          account deletion keeps usage without a link to you. ElevenLabs was set
+          to keep no audio and delete transcripts after a day when checked on 9
+          September 2026. Deleted account data stays in database recovery
+          history for up to 30 days.
         </Text>
         <OpaxWebLink
           label="Privacy policy"

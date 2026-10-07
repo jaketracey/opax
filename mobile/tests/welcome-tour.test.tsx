@@ -71,7 +71,7 @@ test('pages read in order with their position; Skip is on every page', () => {
     const words = byID(root, `tour-page-${page.id}`);
     expect(words.props.accessible).toBe(true);
     expect(words.props.accessibilityLabel).toBe(
-      `Page ${index + 1} of 5. ${page.title}. ${page.body}`,
+      `Page ${index + 1} of 5. ${page.title}. ${page.body}${page.notice ? ` ${page.notice}` : ''}`,
     );
     // Only the current page is in VoiceOver's reach.
     expect(pageHidden(root, page.id)).toBe(index !== 0);
