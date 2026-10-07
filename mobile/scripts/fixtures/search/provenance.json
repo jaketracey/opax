@@ -43,5 +43,6 @@
     "portal/public/bills/au-federal-alrc-2354.json": "780f3c3cd6ae0ea5e4f9fdcc6f17efb07c1de175f20cdf49cd819393f1039812",
     "portal/public/bills/au-federal-alrc-2355.json": "c6cad098851c8ee7b85504bce99f8bd74fcb18b644f75bd3dc7496ee2f5a84a1"
   },
-  "note": "Offline projections from public static exports. Search envelope and SSE summary contracts come from Worker and web client. Retrieval ranking is local. Missing resource IDs use explicitly synthetic fixture hashes."
+  "note": "Offline projections from public static exports. Search envelope and SSE summary contracts come from Worker and web client. Retrieval ranking is local. Missing resource IDs use explicitly synthetic fixture hashes.",
+  "nativeReaderSeam": "Search result resources reuse their pinned public snippets as fixture excerpts, with fixture_excerpt metadata. This tests native navigation and decoding, not full source-text parity. Existing records-lane resource and related-speech fixtures keep precedence."
 }

@@ -14,7 +14,7 @@ import {
 import { assertPortraitPath } from '../src/api/portrait-policy';
 import { fixtureBytes, responseBytes } from '../tests/fixture-bytes';
 import { catalogSearchRows } from '../src/api/catalog-search';
-import { searchFixture } from './search-fixture';
+import { searchFixture, searchResourceFixture } from './search-fixture';
 import {
   decodeEdition,
   decodePay,
@@ -206,7 +206,8 @@ export const server = createServer(async (request, response) => {
       response.end(search.body);
       return;
     }
-    let body = files.get(url.pathname);
+    let body =
+      files.get(url.pathname) ?? searchResourceFixture(url.pathname) ?? undefined;
     let cacheControl = 'public, max-age=300';
     const isEdition = url.pathname === editionPath;
     if (

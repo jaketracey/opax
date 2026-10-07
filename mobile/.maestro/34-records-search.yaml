@@ -133,22 +133,21 @@ name: 34 Records, filters, sort, cited summary and explicitly chosen briefs
 - tapOn:
     id: records-result-.*
     index: 0
-- scrollUntilVisible:
-    element:
-      id: source-destination-url
-    visibilityPercentage: 10
-    timeout: 90000
-- assertVisible: https://opax\.invalid/doc/speech-.*
-- takeScreenshot: ${EVIDENCE}/34-record-browser
+- extendedWaitUntil:
+    visible:
+      id: doc-title
+    timeout: 20000
+- assertVisible:
+    id: doc-reader
+- takeScreenshot: ${EVIDENCE}/34-native-record
 - tapOn:
-    text: OK
+    text: Search
+    index: 0
     retryTapIfNoChange: false
 - extendedWaitUntil:
     notVisible:
-      id: source-destination-url
+      id: doc-reader
     timeout: 10000
-- waitForAnimationToEnd:
-    timeout: 5000
 - assertNotVisible:
     id: search-filters-sheet
 - scrollUntilVisible:
@@ -176,15 +175,19 @@ name: 34 Records, filters, sort, cited summary and explicitly chosen briefs
 - takeScreenshot: ${EVIDENCE}/34-summary-citation
 - tapOn:
     id: records-citation-1
+- extendedWaitUntil:
+    visible:
+      id: doc-title
+    timeout: 20000
+- takeScreenshot: ${EVIDENCE}/34-citation-native-record
 - tapOn:
-    text: OK
+    text: Search
+    index: 0
     retryTapIfNoChange: false
 - extendedWaitUntil:
     notVisible:
-      id: source-destination-url
+      id: doc-reader
     timeout: 10000
-- waitForAnimationToEnd:
-    timeout: 5000
 - assertNotVisible:
     id: search-filters-sheet
 - scrollUntilVisible:

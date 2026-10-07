@@ -9,12 +9,15 @@ import reports from './fixtures/search/reports-index.json';
 import { decodeRecord } from '../src/features/search/decoders';
 import type { Roster } from '../src/api/catalog-decoders';
 import { typeLabel } from '../src/features/search/contracts';
+import { isRecordSlug, isSimilarRequest } from '../src/api/record-policy';
 
 export function searchFixture(
   url: URL,
   roster: Roster,
 ): { body: Buffer; contentType?: string } | null {
   const p = url.searchParams;
+  // Preserve the records lane's separate, pinned related-speech contract.
+  if (url.pathname === '/api/search' && isSimilarRequest(p)) return null;
   const json = (data: unknown) => ({ body: Buffer.from(JSON.stringify(data)) });
   if (url.pathname === '/search-catalog/manifest.json') return json(manifest);
   if (url.pathname === '/reports/index.json') return json(reports);
@@ -157,4 +160,30 @@ export function searchFixture(
     coverage:
       'Pinned public source extracts; local fixture matching, not production retrieval or ranking.',
   });
+}
+
+/** Native-reader seam: the same pinned public excerpt, never an invented body. */
+export function searchResourceFixture(path: string): Buffer | null {
+  if (!path.startsWith('/api/resource/')) return null;
+  const slug = path.slice('/api/resource/'.length);
+  if (!isRecordSlug(slug)) return null;
+  const row = records.map(decodeRecord).find((r) => r.slug === slug);
+  if (!row) return null;
+  return Buffer.from(
+    JSON.stringify({
+      slug: row.slug,
+      title: row.title,
+      speaker: row.speaker,
+      url: row.url,
+      labels: {
+        kind: row.kind,
+        ...(row.state ? { state: row.state } : {}),
+        ...(row.party ? { party: row.party } : {}),
+      },
+      topics: [],
+      metadata: { date: row.date, fixture_excerpt: true },
+      summary: null,
+      text: row.snippet,
+    }),
+  );
 }
