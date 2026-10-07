@@ -80,6 +80,8 @@ export function Options({
           value={o.from}
           onChangeText={(v) => update('from', v)}
           keyboardType="number-pad"
+          returnKeyType="done"
+          submitBehavior="blurAndSubmit"
           placeholder="1993"
           maxLength={4}
           testID="ask-from"
@@ -90,6 +92,8 @@ export function Options({
             value={o.to}
             onChangeText={(v) => update('to', v)}
             keyboardType="number-pad"
+            returnKeyType="done"
+            submitBehavior="blurAndSubmit"
             placeholder="2026"
             maxLength={4}
             testID="ask-to"

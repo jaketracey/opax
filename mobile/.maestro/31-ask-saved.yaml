@@ -23,6 +23,7 @@ name: 31 Ask options, chips, saved conversation after relaunch and delete (stand
 - tapOn:
     id: ask-from
 - inputText: '2020'
+- takeScreenshot: ${EVIDENCE}/31-year-keypad
 - hideKeyboard
 - scrollUntilVisible:
     element:
