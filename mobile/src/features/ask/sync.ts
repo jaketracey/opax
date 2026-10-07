@@ -7,6 +7,15 @@ import {
   type ChatStore,
 } from './model';
 let queue: Promise<unknown> = Promise.resolve();
+export class ChatSyncError extends Error {
+  constructor(public readonly code: 'signed-out' | 'unavailable') {
+    super(
+      code === 'signed-out'
+        ? 'Sign in to sync conversations.'
+        : 'Your conversations are saved on this iPhone. Account sync could not complete.',
+    );
+  }
+}
 export function chatRequest(
   path: string,
   method: 'GET' | 'PUT' | 'DELETE',
@@ -28,15 +37,27 @@ async function performChatRequest(
     body ? JSON.stringify(body) : null,
   )) as { ok?: boolean; value?: unknown; error?: string };
   if (!raw.ok || typeof raw.value !== 'string')
-    throw new Error(
-      raw.error === 'signedOut'
-        ? 'Sign in to sync conversations.'
-        : 'Your conversations are saved on this iPhone. Account sync could not complete.',
+    throw new ChatSyncError(
+      raw.error === 'signedOut' ? 'signed-out' : 'unavailable',
     );
   return JSON.parse(raw.value);
 }
 export const pushChat = (c: Chat) =>
   chatRequest(`/api/community/chats/${c.id}`, 'PUT', syncBody(c));
+/** Native credential preflight handles a relaunch without a voice status read. */
+export async function syncSubmittedChat(
+  c: Chat,
+  status?: { signedIn?: boolean; accountHeld?: boolean } | null,
+) {
+  if (status && !status.signedIn && !status.accountHeld) return;
+  try {
+    await pushChat(c);
+  } catch (e) {
+    if (!status && e instanceof ChatSyncError && e.code === 'signed-out')
+      return;
+    throw e;
+  }
+}
 export const deleteRemoteChat = (id: string) =>
   chatRequest(`/api/community/chats/${id}`, 'DELETE');
 export async function reconcileChats(

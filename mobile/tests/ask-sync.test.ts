@@ -4,11 +4,12 @@ import {
   deleteRemoteChat,
   reconcileChats,
   pushChat,
+  syncSubmittedChat,
 } from '../src/features/ask/sync';
 import type { Chat, ChatStore } from '../src/features/ask/model';
 jest.mock('../modules/opax-voice', () => ({
   __esModule: true,
-  default: { chatRequest: jest.fn() },
+  default: { chatRequest: jest.fn(), status: jest.fn() },
 }));
 const request = native!.chatRequest as jest.Mock;
 const c: Chat = {
@@ -28,7 +29,35 @@ const response = (value: unknown) => ({
   ok: true,
   value: JSON.stringify(value),
 });
-beforeEach(() => request.mockReset());
+beforeEach(() => {
+  request.mockReset();
+  (native!.status as jest.Mock).mockReset();
+});
+test('unknown account status uses chat credential preflight, with no voice status read', async () => {
+  request.mockResolvedValue(response({ ok: true }));
+  await syncSubmittedChat(c);
+  expect(request).toHaveBeenCalledTimes(1);
+  expect(request.mock.calls[0]?.slice(0, 2)).toEqual([
+    `/api/community/chats/${c.id}`,
+    'PUT',
+  ]);
+  expect(native!.status).not.toHaveBeenCalled();
+});
+test('unknown signed-out credentials keep a submitted conversation local', async () => {
+  request.mockResolvedValue({ ok: false, error: 'signedOut' });
+  await expect(syncSubmittedChat(c)).resolves.toBeUndefined();
+  expect(request).toHaveBeenCalledTimes(1);
+  expect(native!.status).not.toHaveBeenCalled();
+});
+test('known sign-out skips sync, while known sign-in reports revoked credentials', async () => {
+  await syncSubmittedChat(c, { signedIn: false });
+  expect(request).not.toHaveBeenCalled();
+  request.mockResolvedValue({ ok: false, error: 'signedOut' });
+  await expect(syncSubmittedChat(c, { signedIn: true })).rejects.toThrow(
+    'Sign in',
+  );
+  expect(request).toHaveBeenCalledTimes(1);
+});
 test('a newer remote chat wins without rewriting the newer record', async () => {
   request
     .mockResolvedValueOnce(response({ chats: [{ id: c.id, updated_at: 20 }] }))

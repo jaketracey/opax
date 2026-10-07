@@ -6,6 +6,10 @@ name: 30 Scoped Ask drafts from native records; arrival never submits
       all: unset
     clearState: true
 - openLink: opax://person/anthony-albanese
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+    timeout: 60000
 - scrollUntilVisible:
     element:
       id: person-ask
@@ -20,6 +24,10 @@ name: 30 Scoped Ask drafts from native records; arrival never submits
 - assertVisible: What has Anthony Albanese said in parliament\?
 - takeScreenshot: ${EVIDENCE}/30-speaker-draft
 - openLink: opax://party/labor
+- extendedWaitUntil:
+    visible:
+      id: party-title
+    timeout: 60000
 - scrollUntilVisible:
     element:
       id: party-ask
@@ -33,6 +41,10 @@ name: 30 Scoped Ask drafts from native records; arrival never submits
     id: ask-question
 - assertVisible: What has parliament said about Labor\?
 - openLink: opax://electorate/el_5d600e7f6dca5b72ae04d686
+- extendedWaitUntil:
+    visible:
+      id: electorate-name
+    timeout: 60000
 - scrollUntilVisible:
     element:
       id: electorate-ask
@@ -45,6 +57,10 @@ name: 30 Scoped Ask drafts from native records; arrival never submits
 - assertVisible:
     id: ask-question
 - openLink: opax://bill/au-federal-r7534
+- extendedWaitUntil:
+    visible:
+      id: bill-title
+    timeout: 60000
 - scrollUntilVisible:
     element:
       id: bill-ask

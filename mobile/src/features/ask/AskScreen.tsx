@@ -29,7 +29,7 @@ import {
 import { colors, rhythm } from '../../design/tokens';
 import { AskSheet } from './AskSheet';
 import { rootHeaderItems } from '../../navigation/chrome';
-import { accountSnapshot, refreshAccount, useAccount } from '../account/store';
+import { accountSnapshot, useAccount } from '../account/store';
 import { AnswerView, machineNote } from './AnswerView';
 import { Builder } from './QuestionBuilder';
 import { Options, topics } from './Options';
@@ -49,7 +49,12 @@ import {
   subscribeChatDeletion,
   clearAskConversations,
 } from './store';
-import { deleteRemoteChat, reconcileChats, deleteAllRemoteChats } from './sync';
+import {
+  ChatSyncError,
+  deleteRemoteChat,
+  reconcileChats,
+  deleteAllRemoteChats,
+} from './sync';
 const slugOf = (name: string) =>
   name
     .normalize('NFKD')
@@ -89,6 +94,7 @@ export default function AskScreen() {
     [inputError, setInputError] = useState(''),
     [syncBusy, setSyncBusy] = useState(false),
     [syncNotice, setSyncNotice] = useState(''),
+    [accountSynced, setAccountSynced] = useState(false),
     [retryQuestion, setRetryQuestion] = useState('');
   const scroll = useRef<ScrollView>(null),
     submitTarget = useRef<View>(null),
@@ -103,6 +109,7 @@ export default function AskScreen() {
     () =>
       subscribeChatDeletion(() => {
         syncVersion.current++;
+        setAccountSynced(false);
       }),
     [],
   );
@@ -222,9 +229,8 @@ export default function AskScreen() {
   }
   async function history() {
     setHistoryOpen(true);
-    // A relaunch has no cached account status. This tap may check it; mount never does.
-    if (!accountSnapshot().status) await refreshAccount();
-    if (accountSnapshot().status?.signedIn) await sync();
+    const status = accountSnapshot().status;
+    if (!status || status.signedIn || status.accountHeld) await sync();
   }
   async function sync() {
     if (syncBusy) return;
@@ -238,9 +244,17 @@ export default function AskScreen() {
       );
       if (mine !== syncVersion.current) return;
       await saveChats(next);
+      setAccountSynced(true);
       if (askSession.snapshot().id) askSession.open(askSession.snapshot().id!);
       setSyncNotice('Saved to your account and on this iPhone.');
     } catch (e) {
+      if (e instanceof ChatSyncError && e.code === 'signed-out') {
+        setAccountSynced(false);
+        if (!accountSnapshot().status) {
+          setSyncNotice('');
+          return;
+        }
+      }
       setSyncNotice(
         e instanceof Error ? e.message : 'Account sync could not complete.',
       );
@@ -259,7 +273,7 @@ export default function AskScreen() {
       setSyncNotice('This conversation could not be deleted from this iPhone.'),
     );
     if (s.id === id) askSession.start();
-    if (account.status?.signedIn)
+    if (communityAccount)
       await deleteRemoteChat(id).catch(() =>
         setSyncNotice(
           'Deleted on this iPhone. Account deletion could not complete.',
@@ -281,7 +295,7 @@ export default function AskScreen() {
               askSession.start();
               try {
                 await clearAskConversations();
-                if (account.status?.signedIn) await deleteAllRemoteChats();
+                if (communityAccount) await deleteAllRemoteChats();
               } catch {
                 setSyncNotice('Account sync could not complete. Try again.');
               }
@@ -292,6 +306,9 @@ export default function AskScreen() {
     );
   }
   const names = [...people.keys()].sort((a, b) => a.localeCompare(b));
+  const communityAccount = account.status
+    ? !!(account.status.signedIn || account.status.accountHeld)
+    : accountSynced;
   return (
     <>
       <Stack.Screen
@@ -577,7 +594,7 @@ export default function AskScreen() {
           doneID="ask-history-done"
         >
           <Text wordSafe variant="caption">
-            {account.status?.signedIn
+            {communityAccount
               ? 'Saved to your account and on this iPhone.'
               : 'Saved on this iPhone. Sign in to keep them across devices.'}
           </Text>
@@ -616,7 +633,7 @@ export default function AskScreen() {
               {syncNotice}
             </Text>
           ) : null}
-          {account.status?.signedIn ? (
+          {communityAccount ? (
             <Button
               label="Sync conversations"
               loading={syncBusy}
