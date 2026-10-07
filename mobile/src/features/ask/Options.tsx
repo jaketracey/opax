@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { View } from 'react-native';
 import {
   Button,
   ErrorState,
@@ -52,6 +53,7 @@ export function Options({
 }) {
   const [o, setO] = useState(value),
     [error, setError] = useState('');
+  const yearsTarget = useRef<View>(null);
   const update = (key: keyof AskOptions, v: string) => setO({ ...o, [key]: v });
   function done() {
     if (
@@ -70,6 +72,7 @@ export function Options({
       onClose={onCancel}
       testID="ask-options-screen"
       doneID="ask-options-done"
+      keyboardTarget={yearsTarget}
     >
       <Section title="Years" rule={false}>
         <Field
@@ -81,15 +84,17 @@ export function Options({
           maxLength={4}
           testID="ask-from"
         />
-        <Field
-          label="To year"
-          value={o.to}
-          onChangeText={(v) => update('to', v)}
-          keyboardType="number-pad"
-          placeholder="2026"
-          maxLength={4}
-          testID="ask-to"
-        />
+        <View ref={yearsTarget} collapsable={false}>
+          <Field
+            label="To year"
+            value={o.to}
+            onChangeText={(v) => update('to', v)}
+            keyboardType="number-pad"
+            placeholder="2026"
+            maxLength={4}
+            testID="ask-to"
+          />
+        </View>
       </Section>
       <Section
         title="Narrow the record"

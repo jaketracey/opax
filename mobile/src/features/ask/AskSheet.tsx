@@ -1,7 +1,12 @@
-import type { ReactNode } from 'react';
+import type { ReactNode, RefObject } from 'react';
 import { Modal, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Button, Heading, Screen } from '../../design/primitives';
+import {
+  Button,
+  Heading,
+  KeyboardStableScreen,
+  Screen,
+} from '../../design/primitives';
 import { colors, rhythm } from '../../design/tokens';
 
 /** The options and conversation sheets keep Done within reach at every size. */
@@ -11,6 +16,7 @@ export function AskSheet({
   onClose = onDone,
   testID,
   doneID,
+  keyboardTarget,
   children,
 }: {
   title: string;
@@ -18,6 +24,7 @@ export function AskSheet({
   onClose?: () => void;
   testID: string;
   doneID: string;
+  keyboardTarget?: RefObject<View | null>;
   children: ReactNode;
 }) {
   return (
@@ -42,7 +49,13 @@ export function AskSheet({
             testID={doneID}
           />
         </View>
-        <Screen testID={testID}>{children}</Screen>
+        {keyboardTarget ? (
+          <KeyboardStableScreen testID={testID} keyboardTarget={keyboardTarget}>
+            {children}
+          </KeyboardStableScreen>
+        ) : (
+          <Screen testID={testID}>{children}</Screen>
+        )}
       </SafeAreaView>
     </Modal>
   );
