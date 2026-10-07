@@ -2,6 +2,8 @@ appId: au.com.opax.app
 name: 30 Scoped Ask drafts from native records; arrival never submits
 ---
 - launchApp:
+    permissions:
+      all: unset
     clearState: true
 - openLink: opax://person/anthony-albanese
 - scrollUntilVisible:

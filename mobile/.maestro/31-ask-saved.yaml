@@ -2,6 +2,8 @@ appId: au.com.opax.app
 name: 31 Ask options, chips, saved conversation after relaunch and delete (standard and AX5)
 ---
 - launchApp:
+    permissions:
+      all: unset
     clearState: true
 - tapOn:
     id: tab-ask
@@ -78,7 +80,9 @@ name: 31 Ask options, chips, saved conversation after relaunch and delete (stand
     timeout: 180000
 - takeScreenshot: ${EVIDENCE}/31-saved-answer
 - stopApp
-- launchApp
+- launchApp:
+    permissions:
+      all: unset
 - tapOn:
     id: tab-ask
 - scrollUntilVisible:

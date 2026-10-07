@@ -2,6 +2,8 @@ appId: au.com.opax.app
 name: 30 Build a question, streamed answer, native bill citation and grounded follow-up
 ---
 - launchApp:
+    permissions:
+      all: unset
     clearState: true
 - tapOn:
     id: tab-ask
