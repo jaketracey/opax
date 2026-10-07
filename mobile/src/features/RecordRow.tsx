@@ -1,6 +1,5 @@
-import { Pressable, StyleSheet, View } from 'react-native';
-import { Icon, Text } from '../design/primitives';
-import { colors, minimumTarget, spacing } from '../design/tokens';
+import { LinkRow } from '../design/primitives';
+import { ownsRowPadding } from '../design/row-padding';
 
 /** A wrapping native navigation row; all visible record text is in its label. */
 export function RecordRow({
@@ -15,35 +14,8 @@ export function RecordRow({
   testID?: string;
 }) {
   return (
-    <Pressable
-      testID={testID}
-      accessibilityRole="button"
-      accessibilityLabel={[title, detail].filter(Boolean).join(', ')}
-      onPress={onPress}
-      style={({ pressed }) => [styles.row, pressed ? styles.pressed : null]}
-    >
-      <View style={styles.text}>
-        <Text wordSafe variant="strong">
-          {title}
-        </Text>
-        {detail ? (
-          <Text wordSafe variant="metadata">
-            {detail}
-          </Text>
-        ) : null}
-      </View>
-      <Icon name="chevron.right" size={14} tone="inkSoft" />
-    </Pressable>
+    <LinkRow title={title} detail={detail} onPress={onPress} testID={testID} />
   );
 }
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.s3,
-    minHeight: minimumTarget,
-    paddingVertical: spacing.s3,
-  },
-  text: { flex: 1, gap: spacing.s1 },
-  pressed: { backgroundColor: colors.raised },
-});
+
+ownsRowPadding(RecordRow);

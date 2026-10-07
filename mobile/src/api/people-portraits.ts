@@ -2,6 +2,13 @@ import type { Catalogs } from './catalogs';
 import type { PortraitCache } from './portrait-cache';
 import { buildPortraitIndexAsync, type PortraitInfo } from './portrait-index';
 import { nameKey } from './ids';
+
+/** One verified portrait and whose it is, for Sources and licences. */
+export interface PortraitListing {
+  slug: string;
+  name: string;
+  info: PortraitInfo;
+}
 export class PeoplePortraits {
   private index?: Promise<Awaited<ReturnType<typeof buildPortraitIndexAsync>>>;
   private snapshot?: readonly unknown[];
@@ -52,6 +59,25 @@ export class PeoplePortraits {
     });
     this.reading = reading;
     return reading;
+  }
+  /**
+   * Every portrait the app can show, from the same verified index the
+   * screens use (refused and conflicting faces are not in it), one row per
+   * file, by name. No image is read.
+   */
+  async list(): Promise<PortraitListing[]> {
+    const index = await this.directory();
+    const rows = new Map<string, PortraitListing>();
+    for (const [slug, info] of index.portraits) {
+      const name = index.identities.get(slug)?.name ?? slug;
+      const seen = rows.get(info.key);
+      // Twin spellings share one file: keep the fuller name.
+      if (!seen || name.length > seen.name.length)
+        rows.set(info.key, { slug, name, info });
+    }
+    return [...rows.values()].sort((a, b) =>
+      a.name.localeCompare(b.name, 'en-AU'),
+    );
   }
   async get({
     slug,

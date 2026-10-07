@@ -29,6 +29,20 @@ export const light = {
   // Surface outlines (cards, chips) and control boundaries (3.33:1).
   line: '#DFDCD2',
   lineStrong: '#8D897B',
+  // Category accents (UI sweep, Oct 2026): an ink for symbols, figures and
+  // short labels (AA text on paper, raised and its own wash) and a wash for
+  // tinted tiles and headers (ink and inkSoft stay AA on it). Never rainbow:
+  // one accent per block, on top of paper, ink, navy and bronze.
+  moneyInk: '#2B6447',
+  moneyWash: '#E5EAE5',
+  votesInk: '#3A4C96',
+  votesWash: '#E7E8EC',
+  interestsInk: '#7B3A63',
+  interestsWash: '#EDE6E7',
+  billsInk: '#1F5F6B',
+  billsWash: '#E4EAE8',
+  // People and places use navy on its own wash.
+  navyWash: '#E4E6E7',
 } as const;
 
 export type Role = keyof typeof light;
@@ -54,3 +68,17 @@ export const partyColors = {
   other: '#7C6690',
 } as const;
 export type PartyKey = keyof typeof partyColors;
+
+// Party tints: each party colour at 12% over paper, for party chips and
+// profile headers. Ink (11.9:1 or more) and inkSoft (5.4:1 or more) stay AA
+// on every wash; the dot sits on a raised ring, so it keeps its 3:1.
+export const partyWashes: Record<PartyKey, string> = {
+  labor: '#F1E1DF',
+  liberal: '#DFE5EA',
+  nationals: '#EDE8D8',
+  lnp: '#E5ECF3',
+  greens: '#E2EADE',
+  oneNation: '#F3E6DB',
+  independent: '#E3E6E7',
+  other: '#EBE7EA',
+};

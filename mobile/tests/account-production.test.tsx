@@ -54,7 +54,8 @@ test('the production entry is the unchanged placeholder', async () => {
   expect(text).toContain(
     'Signing in is not in this version of the app yet. An account will only be needed to talk to OPAX.',
   );
-  expect(text).toContain('About and sources');
+  expect(text).toContain('About OPAX');
+  expect(text).toContain('Sources and licences');
   for (const absent of [
     'Sign in for voice',
     'Send code',

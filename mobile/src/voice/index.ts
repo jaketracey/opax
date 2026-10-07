@@ -3,11 +3,12 @@ import {
   mapChallenge,
   mapDeletion,
   mapEvent,
+  mapLevels,
   mapResult,
   mapStatus,
   mapSnapshot,
 } from './mapping';
-import type { VoiceResult, VoiceEvent } from './types';
+import type { VoiceResult, VoiceEvent, VoiceLevels } from './types';
 export * from './types';
 async function invoke<T>(
   call: () => Promise<unknown>,
@@ -43,6 +44,17 @@ export function subscribe(listener: (event: VoiceEvent) => void): () => void {
   const subscription = native!.addListener('onVoiceEvent', (value) => {
     const event = mapEvent(value);
     if (event) listener(event);
+  });
+  return () => subscription.remove();
+}
+/** Call loudness for animation only; a separate stream from call events. */
+export function subscribeLevels(
+  listener: (levels: VoiceLevels) => void,
+): () => void {
+  if (!native) return () => {};
+  const subscription = native!.addListener('onVoiceLevel', (value) => {
+    const levels = mapLevels(value);
+    if (levels) listener(levels);
   });
   return () => subscription.remove();
 }

@@ -398,6 +398,71 @@ export function SegmentedControl<T extends string>({
   );
 }
 
+/**
+ * One choice among several longer labels ("Contracts by agency"), as wrapping
+ * capsules instead of a tall stack of segments: navy when chosen, a navy wash
+ * otherwise. 36pt drawn, 44pt to touch. Each reads its label, "selected" and
+ * "2 of 4", as a segmented control does.
+ */
+export function ChoiceChips<T extends string>({
+  segments,
+  value,
+  onChange,
+  testID,
+}: {
+  segments: readonly Segment<T>[];
+  value: T;
+  onChange: (value: T) => void;
+  testID?: string;
+}) {
+  // A hugging chip's width follows its text, so word-safe sizing (which
+  // re-measures when its column changes) could chase its own frame. At
+  // accessibility sizes the chips take the full width, a fixed column for
+  // word-safe text; at other sizes the short labels wrap normally.
+  const stacked = useAccessibilitySize();
+  return (
+    <View testID={testID} style={styles.chips}>
+      {segments.map((segment, index) => {
+        const selected = segment.value === value;
+        return (
+          <Pressable
+            key={segment.value}
+            accessibilityRole="button"
+            accessibilityLabel={segment.label}
+            accessibilityState={{ selected }}
+            accessibilityValue={{ text: `${index + 1} of ${segments.length}` }}
+            testID={segment.testID}
+            hitSlop={{ top: 4, bottom: 4 }}
+            onPress={() => onChange(segment.value)}
+            style={({ pressed }) => [
+              styles.choice,
+              stacked ? styles.choiceStacked : null,
+              {
+                backgroundColor: selected
+                  ? pressed
+                    ? colors.navyRaised
+                    : colors.navy
+                  : pressed
+                    ? colors.sunken
+                    : colors.navyWash,
+              },
+            ]}
+          >
+            <Text
+              variant="control"
+              tone={selected ? 'onNavy' : 'navy'}
+              wordSafe={stacked}
+              style={styles.center}
+            >
+              {segment.label}
+            </Text>
+          </Pressable>
+        );
+      })}
+    </View>
+  );
+}
+
 /** A labelled text field with optional hint, error and required marker. */
 export function Field({
   label,
@@ -639,6 +704,16 @@ const styles = StyleSheet.create({
     borderRadius: radius,
   },
   segmentInline: { flex: 1, flexBasis: 0 },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.s3 },
+  choiceStacked: { alignSelf: 'stretch', borderRadius: radius + 12 },
+  choice: {
+    minHeight: 36,
+    maxWidth: '100%',
+    justifyContent: 'center',
+    paddingHorizontal: 14,
+    paddingVertical: spacing.s1,
+    borderRadius: 999,
+  },
   field: { gap: spacing.s3, alignSelf: 'stretch' },
   input: {
     minHeight: controlHeight.default,

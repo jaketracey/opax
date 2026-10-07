@@ -1,14 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
-import { Group, Icon, Text } from '../../design/primitives';
-import {
-  colors,
-  controlHeight,
-  hairline,
-  minimumTarget,
-  radius,
-  spacing,
-} from '../../design/tokens';
+import { Group, Icon, Text, haptic } from '../../design/primitives';
+import { colors, minimumTarget, spacing } from '../../design/tokens';
 import {
   FOLLOW_LIMIT,
   follow,
@@ -54,11 +47,14 @@ export function FollowToggle({
     setBusy(true);
     setMessage(null);
     try {
-      if (following) await unfollow(key);
-      else if ((await follow({ kind, id, title })) === 'limit')
+      if (following) {
+        await unfollow(key);
+        haptic('selection');
+      } else if ((await follow({ kind, id, title })) === 'limit')
         setMessage(
           `You are following ${FOLLOW_LIMIT} items, the most this app keeps. Unfollow one under Manage follows to add another.`,
         );
+      else haptic('success');
     } catch {
       setMessage('Your follows could not be saved on this iPhone. Try again.');
     } finally {
@@ -74,22 +70,18 @@ export function FollowToggle({
         accessibilityState={{ checked: following, disabled: inert }}
         testID={`${testID}-${following ? 'on' : 'off'}`}
         disabled={inert}
+        hitSlop={4}
         onPress={() => void toggle()}
         style={({ pressed }) => [
           styles.toggle,
           following
-            ? {
-                backgroundColor: pressed ? colors.navyRaised : colors.navy,
-                borderColor: pressed ? colors.navyRaised : colors.navy,
-              }
-            : {
-                backgroundColor: pressed ? colors.sunken : colors.raised,
-                borderColor: colors.lineStrong,
-              },
+            ? { backgroundColor: pressed ? colors.navyRaised : colors.navy }
+            : { backgroundColor: pressed ? colors.sunken : colors.navyWash },
         ]}
       >
         <Icon
           name={following ? 'checkmark' : 'plus'}
+          size={16}
           tone={following ? 'onNavy' : 'navy'}
         />
         <Text
@@ -110,18 +102,18 @@ export function FollowToggle({
   );
 }
 const styles = StyleSheet.create({
+  // A capsule, as iOS draws Follow: 40pt drawn, 48pt with its hit slop.
   toggle: {
     alignSelf: 'flex-start',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.s3,
+    gap: spacing.s2,
     minWidth: minimumTarget,
-    minHeight: controlHeight.default,
+    minHeight: 40,
     maxWidth: '100%',
-    borderRadius: radius,
-    borderWidth: hairline,
+    borderRadius: 999,
     paddingHorizontal: spacing.s4,
-    paddingVertical: spacing.s3,
+    paddingVertical: spacing.s2,
   },
   label: { flexShrink: 1 },
 });

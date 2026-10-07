@@ -15,6 +15,46 @@ import { Screen, Section, PersonRow, AsAtLine } from '../design/primitives';
 Open the workbench (development and e2e builds: Account and about, then
 Design workbench) to see every component and state at the current text size.
 
+## UI sweep (Oct 2026): rhythm, colour, licences
+
+- **One vertical rhythm** (`rhythm` in `tokens.ts`): `line` 4 (a line bound
+  to the one above), `tight` 8 (inside a row or group), `heading` 12 (a
+  section heading to its first block), `block` 16 (between blocks),
+  `group` 24 (a second list inside a section), `section` 36 (between
+  sections), `screen` 20 (margin). `spacing` and `layout` keep working;
+  `layout` now reads from `rhythm`. In a `RowList`, control rows (`LinkRow`,
+  `Disclosure`, `PersonRow`, `RecordRow`, `OpaxWebLink`) own their 44pt and
+  sit 2pt from each hairline (48pt for one line); content rows keep 10pt.
+- **Category accents** (`accents` in `tokens.ts`, roles in `palette.ts`):
+  `money` (`moneyInk` #2B6447 / `moneyWash` #E5EAE5), `votes` (`votesInk`
+  #3A4C96 / `votesWash`), `interests` (`interestsInk` #7B3A63 /
+  `interestsWash`), `bills` (`billsInk` #1F5F6B / `billsWash`), `people`
+  and `places` (`navy` / `navyWash`), `leads` (`bronzeInk` / `bronzeWash`).
+  Inks are AA text on paper, raised, sunken and their wash; ink and inkSoft
+  are AA on every wash. One accent per block, never rainbow.
+- **Party washes** (`partyWashes`, `partyWash(party)`): each party colour at
+  12% over paper, for `PartyChip` and party headers; ink and inkSoft stay AA
+  (`partyWashPairs` in `contrast.ts`).
+- **Type roles added:** `display` (Merriweather Bold 34, the number a block
+  is about, via `BigFigure`), `caption` (12pt, the one "Updated 4 Oct 2026"
+  line per block), `chip` (13pt semibold, party chips and small tinted
+  labels).
+- **Licences and sources live on one screen** (`/account/sources`, from
+  About and the Account sheet). Screens show no licence text, credits,
+  "Source:" lines or source rows. `AsAtLine` draws only "Updated [date]"
+  (VoiceOver still hears the full as-at sentence with its sources);
+  `SourceLink` is a small "View original" link for a record's own document;
+  `ViewOriginal` gives a block one such link, or a menu when it has several.
+- **Long notes go behind ⓘ:** `Section info={{ title, notes }}` (or
+  `InfoButton`) opens a page sheet with the methodology and caveats in full.
+  Keep at most one short caveat line on screen where a number would mislead.
+- **Controls:** `Disclosure` (label, trailing value, turning chevron,
+  animated with Reduce Motion respected) replaces bordered Show/Hide
+  buttons; `LinkRow` (optional `IconTile`, title, detail, value, chevron or
+  Safari symbol) replaces full-width text links; `Section` takes `icon`,
+  `accent` and `info`. `haptic('success' | 'selection' | 'light')` on
+  Follow and Share only.
+
 ## Rules that apply everywhere
 
 - **Colour through roles only.** Use `colors.<role>` from `tokens.ts`, never a
@@ -193,31 +233,37 @@ Design workbench) to see every component and state at the current text size.
   A portrait beside its name is hidden from VoiceOver; otherwise pass
   `nameBeside={false}` and `name`, with `official` for APH. Both the circle and
   image preserve `accessibilityIgnoresInvertColors`.
-  Profiles show "Official portrait", CC BY-NC-ND 4.0 and licence/source links,
-  or the web's "Photo" artist, per-file licence and Commons source link.
-  Decision 13 in IOS-APP.md remains open for app distribution and caching.
+  Credits are not shown beside portraits: Sources and licences lists every
+  verified portrait (`PeoplePortraits.list`) with "Official portrait", CC
+  BY-NC-ND 4.0, or the web's "Photo" artist, per-file licence and Commons
+  source link, searchable. Decision 13 in IOS-APP.md remains open for app
+  distribution and caching.
 
 ## The record
 
 Citation props are named `citation`, never `source`: `source` is reserved for
 image sources, which the transport gate checks.
 
-- `AsAtLine`: under every data block: "As at 17 September 2026 · Source:
-  Remuneration Tribunal; Parliamentary Handbook". `asOf` and `citation` (the
-  source names; one string or several), with optional `licence`, `detail` and
-  `savedAt` (a stale copy adds "Saved [date]"). Use the source
-  file's own date (`meta.as_of`, `generated_at`). The votes variant takes the
-  W12 `_meta` from `votes.json` plus the record's `jurisdiction`: "Record last
-  changed 3 October 2026 · Divisions through 25 September 2026"; with no
-  `_meta` it says "Record date not published" rather than borrowing a date.
-- `SourceLink`: the original record or register, opened in
-  `SFSafariViewController`. `citation` names who holds it ("They Vote For
-  You"). `kind="record"` for a stable page for this record;
-  `kind="register"` for a register's home or search page, with the ID in
-  `record` ("AusTender register · record CN3407266"). E2E builds show the
-  destination in a scrollable local view instead of opening a browser.
+- `AsAtLine`: one quiet caption under every data block: "Updated 17 Sep
+  2026". `asOf` and `citation` (the source names; one string or several),
+  with optional `licence`, `detail` (shown) and `savedAt` (a stale copy adds
+  "Saved [date]"). The visible line carries no source names; its VoiceOver
+  label is the full "As at 17 September 2026 · Source: …" sentence. Use the
+  source file's own date (`meta.as_of`, `generated_at`). The votes variant
+  takes the W12 `_meta` from `votes.json` plus the record's `jurisdiction`:
+  "Updated 3 Oct 2026 · Divisions to 25 Sep 2026"; with no `_meta` it says
+  "Record date not published" rather than borrowing a date.
+- `SourceLink`: a small link to the original record, opened in
+  `SFSafariViewController`: an arrow symbol and "View original" (or a short
+  `label`, such as "Act text"). `citation` names who holds it ("They Vote
+  For You") for VoiceOver ("View original, They Vote For You, division, 19
+  Aug 2026") and the destination title. `kind="record"` for a stable page
+  for this record; `kind="register"` for a register's home or search page,
+  with the ID in `record`. E2E builds show the destination in a scrollable
+  local view instead of opening a browser.
 - `OpaxWebLink`: a web-only OPAX page (community, the money map, Methods),
-  opened in Safari with the "Opens on opax.com.au" cue. `canonicalUrl` checks
+  opened in Safari: a compact row with the Safari symbol; VoiceOver hears
+  "Opens on opax.com.au". `canonicalUrl` checks
   the path raw, parses it and requires the configured origin and the same
   path back: foreign hosts, protocol-relative and backslash paths, dot
   segments, encoded slashes or dots, user information, and every route
