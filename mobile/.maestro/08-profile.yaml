@@ -43,23 +43,16 @@ name: 08 Independent profile blocks, current senator, former member and local sh
 - assertVisible: https://opax.invalid/subject/person/anthony-albanese
 - takeScreenshot: ${EVIDENCE}/08-share
 - tapOn: OK
-# The portrait is deliberately hidden from VoiceOver beside the name. Sweep
-# the existing record first, then return to its credit after the cold lookup.
-# Scrolling down immediately can pass the credit before it finishes loading.
-- scrollUntilVisible:
-    element:
-      id: person-portrait-attribution
-    direction: UP
-    centerElement: true
-    timeout: 300000
-- assertVisible: Official portrait.*CC BY-NC-ND 4.0.*
-- takeScreenshot: ${EVIDENCE}/08-official-credit
+# The portrait is deliberately hidden from VoiceOver beside the name, so the
+# capture shows it. Its credit and licence are on Sources and licences
+# (checked at the end), not on the profile.
 - scrollUntilVisible:
     element:
       id: person-screen-title
     direction: UP
     centerElement: true
     timeout: 300000
+- assertNotVisible: Official portrait.*CC BY-NC-ND 4.0.*
 - takeScreenshot: ${EVIDENCE}/08-official-portrait
 - runFlow:
     file: 08-open-profile.yaml
@@ -83,18 +76,11 @@ name: 08 Independent profile blocks, current senator, former member and local sh
       PREFIX: 08-watt
 - scrollUntilVisible:
     element:
-      id: person-portrait-attribution
-    direction: UP
-    centerElement: true
-    timeout: 300000
-- assertVisible: Gabagool2005.*CC0.*Wikimedia Commons, cropped.*
-- takeScreenshot: ${EVIDENCE}/08-commons-credit
-- scrollUntilVisible:
-    element:
       id: person-screen-title
     direction: UP
     centerElement: true
     timeout: 300000
+- assertNotVisible: Gabagool2005.*
 - takeScreenshot: ${EVIDENCE}/08-commons-portrait
 - runFlow:
     file: 08-open-profile.yaml
@@ -124,3 +110,48 @@ name: 08 Independent profile blocks, current senator, former member and local sh
 - assertVisible:
     id: person-screen-title
 - takeScreenshot: ${EVIDENCE}/08-no-portrait
+# Portrait credits and licences live on Sources and licences, searchable.
+- launchApp:
+    permissions: {}
+- tapOn: Account and about
+- scrollUntilVisible:
+    element:
+      id: account-sources
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: account-sources
+- scrollUntilVisible:
+    element:
+      id: sources-portrait-search
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: sources-portrait-search
+- inputText: Sheena Watt
+- hideKeyboard
+- scrollUntilVisible:
+    element:
+      id: sources-portrait-sheena-watt
+    centerElement: true
+    timeout: 90000
+- assertVisible: Gabagool2005.*CC0.*Wikimedia Commons, cropped.*
+- takeScreenshot: ${EVIDENCE}/08-commons-credit
+- scrollUntilVisible:
+    element:
+      id: sources-portrait-search
+    direction: UP
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: sources-portrait-search
+- eraseText: 20
+- inputText: Anthony Albanese
+- hideKeyboard
+- scrollUntilVisible:
+    element:
+      id: sources-portrait-anthony-albanese
+    centerElement: true
+    timeout: 90000
+- assertVisible: Official portrait.*CC BY-NC-ND 4.0.*
+- takeScreenshot: ${EVIDENCE}/08-official-credit

@@ -10,8 +10,6 @@ import {
 type Variant = 'development' | 'e2e' | 'production';
 const variant = (process.env.OPAX_VARIANT ?? 'development') as Variant;
 const productionVoice = productionVoiceEnabled(variant);
-const motionPurpose =
-  'OPAX doesn\'t use motion or fitness data. iOS requires this note because the location library behind "Use my location" includes motion features that OPAX never turns on.';
 const buildNumber = process.env.OPAX_BUILD_NUMBER ?? '1';
 if (!/^[1-9][0-9]*$/.test(buildNumber)) {
   throw new Error('OPAX_BUILD_NUMBER must be a positive integer');
@@ -54,7 +52,7 @@ const webOrigin = variant === 'e2e' ? 'https://opax.invalid' : origin;
 const config: ExpoConfig = {
   name: 'OPAX',
   slug: 'opax',
-  version: '0.1.0',
+  version: '1.0.0',
   scheme: 'opax',
   platforms: ['ios'],
   userInterfaceStyle: 'light',
@@ -72,12 +70,32 @@ const config: ExpoConfig = {
     privacyManifests: {
       NSPrivacyTracking: false,
       NSPrivacyCollectedDataTypes: [],
+      // Local cache metadata, animation timers, storage-aware cache writes and
+      // app-only preferences. No signal or derived value is sent off device.
+      NSPrivacyAccessedAPITypes: [
+        {
+          NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategoryFileTimestamp',
+          NSPrivacyAccessedAPITypeReasons: ['C617.1'],
+        },
+        {
+          NSPrivacyAccessedAPIType:
+            'NSPrivacyAccessedAPICategorySystemBootTime',
+          NSPrivacyAccessedAPITypeReasons: ['35F9.1'],
+        },
+        {
+          NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategoryDiskSpace',
+          NSPrivacyAccessedAPITypeReasons: ['E174.1'],
+        },
+        {
+          NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategoryUserDefaults',
+          NSPrivacyAccessedAPITypeReasons: ['CA92.1'],
+        },
+      ],
     },
     infoPlist: {
       ITSAppUsesNonExemptEncryption: false,
       NSLocationWhenInUseUsageDescription:
         'OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere.',
-      NSMotionUsageDescription: motionPurpose,
       ...(variant === 'e2e' ? { OPAXVoiceFixturePort: port } : {}),
       ...(variant === 'e2e' || localDevelopment
         ? {
@@ -98,18 +116,20 @@ const config: ExpoConfig = {
   plugins: [
     ['expo-router', { sitemap: variant !== 'production' }],
     './plugins/withSceneLifecycle.js',
+    './plugins/withPrivacyPatches.js',
     [
       'expo-location',
       {
         locationWhenInUsePermission:
           'OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere.',
         locationAlwaysPermission: false,
-        motionUsagePermission: motionPurpose,
+        motionUsagePermission: false,
         locationAlwaysAndWhenInUsePermission: false,
       },
     ],
     ['./plugins/withSearchGeometryProbe.js', { variant }],
     './plugins/withNetworkPolicy.js',
+    './plugins/withGLCompilerCleanup.js',
     [
       'expo-splash-screen',
       {
@@ -142,7 +162,7 @@ const config: ExpoConfig = {
       : {}),
     apiOrigin: origin,
     webOrigin,
-    appVersion: '0.1.0',
+    appVersion: '1.0.0',
     appBuild: buildNumber,
     fontAcknowledgements: ['Merriweather', 'PublicSans'].map((name) => ({
       name,

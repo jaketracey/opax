@@ -281,6 +281,14 @@ test('captions are replaced, not appended, and source navigation is guarded agai
     pathname: '/bill/[key]',
     params: { key: 'au-federal-r7534' },
   });
+  expect(recordDestination('/doc/speech-1205524')).toEqual({
+    pathname: '/doc/[slug]',
+    params: { slug: 'speech-1205524' },
+  });
+  expect(recordDestination('/bill/au-federal-r7534#bill-full-text')).toEqual({
+    pathname: '/bill-text/[key]',
+    params: { key: 'au-federal-r7534' },
+  });
   for (const path of [
     'https://attacker.invalid/bill/x',
     '//attacker.invalid/bill/x',
@@ -294,13 +302,25 @@ test('captions are replaced, not appended, and source navigation is guarded agai
     recoverSnapshot(ready, { ...ready, remaining: 50 }, new Set(['status'])),
   ).toEqual({ ...ready, remaining: 50 });
 });
-test.each(failures)('specific copy exists for refusal %s', (reason) => {
-  expect(failureCopy[reason].length).toBeGreaterThan(30);
+// The call screen shows one short sentence and one action for each state.
+const short = (copy: string) => {
+  expect(copy).toMatch(/^[A-Z].{9,}[.]$/);
+  expect(copy.length).toBeLessThanOrEqual(64);
+};
+test.each(failures)('one specific short sentence for refusal %s', (reason) => {
+  short(failureCopy[reason]);
+  expect(
+    Object.values(failureCopy).filter((copy) => copy === failureCopy[reason]),
+  ).toHaveLength(1);
 });
 test.each(endReasons)(
-  'specific copy exists for terminal reason %s',
+  'one specific short sentence for terminal reason %s, saying the microphone is off',
   (reason) => {
-    expect(endCopy[reason]).toContain('microphone is off');
+    short(endCopy[reason]);
+    expect(endCopy[reason]).toMatch(/ Microphone off[.]$/);
+    expect(
+      Object.values(endCopy).filter((copy) => copy === endCopy[reason]),
+    ).toHaveLength(1);
   },
 );
 test('allowance and unknown budget are taken from status, never inferred from a close', () => {

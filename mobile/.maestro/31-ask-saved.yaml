@@ -1,0 +1,147 @@
+appId: au.com.opax.app
+name: 31 Ask options, chips, saved conversation after relaunch and delete (standard and AX5)
+---
+- launchApp:
+    permissions:
+      all: unset
+    clearState: true
+- tapOn:
+    id: tab-ask
+- scrollUntilVisible:
+    element:
+      id: ask-options
+    centerElement: false
+    timeout: 180000
+- tapOn:
+    id: ask-options
+- takeScreenshot: ${EVIDENCE}/31-options
+- scrollUntilVisible:
+    element:
+      id: ask-from
+    centerElement: false
+    timeout: 180000
+- tapOn:
+    id: ask-from
+- inputText: '2020'
+- takeScreenshot: ${EVIDENCE}/31-year-keypad
+- tapOn:
+    text: Done
+    index: 1
+- scrollUntilVisible:
+    element:
+      id: ask-party
+    centerElement: false
+    timeout: 180000
+- tapOn:
+    id: ask-party
+- scrollUntilVisible:
+    element:
+      id: ask-party-choice-1
+    centerElement: false
+    timeout: 180000
+- tapOn:
+    id: ask-party-choice-1
+- scrollUntilVisible:
+    element:
+      id: ask-options-done
+    centerElement: false
+    speed: 40
+    timeout: 300000
+- tapOn:
+    id: ask-options-done
+- scrollUntilVisible:
+    element:
+      id: ask-chip-party
+    centerElement: false
+    timeout: 180000
+- assertVisible: Remove the party filter, Labor
+- takeScreenshot: ${EVIDENCE}/31-chips
+- tapOn:
+    id: ask-chip-party
+- assertNotVisible:
+    id: ask-chip-party
+- scrollUntilVisible:
+    element:
+      id: ask-question
+    direction: UP
+    centerElement: true
+    timeout: 180000
+- tapOn:
+    id: ask-question
+- inputText: What did parliament say about this bill?
+- scrollUntilVisible:
+    element:
+      id: ask-submit
+    centerElement: true
+    timeout: 180000
+- tapOn:
+    id: ask-submit
+    enabled: true
+- scrollUntilVisible:
+    element:
+      id: ask-machine-label
+    centerElement: false
+    visibilityPercentage: 10
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/31-saved-answer
+- stopApp
+- launchApp:
+    permissions:
+      all: unset
+- tapOn:
+    id: tab-ask
+- scrollUntilVisible:
+    element:
+      id: ask-saved
+    direction: DOWN
+    centerElement: true
+    timeout: 180000
+- tapOn:
+    id: ask-saved
+- scrollUntilVisible:
+    element:
+      id: ask-restore-0
+    centerElement: false
+    timeout: 180000
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: ask-history-done
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/31-history
+- tapOn:
+    id: ask-restore-0
+- scrollUntilVisible:
+    element:
+      id: ask-machine-label
+    direction: DOWN
+    centerElement: false
+    visibilityPercentage: 10
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/31-restored
+- scrollUntilVisible:
+    element:
+      id: ask-saved
+    direction: UP
+    centerElement: true
+    timeout: 180000
+- tapOn:
+    id: ask-saved
+- scrollUntilVisible:
+    element:
+      id: ask-delete-0
+    centerElement: false
+    visibilityPercentage: 10
+    timeout: 180000
+- tapOn:
+    id: ask-delete-0
+- assertVisible: No saved conversations\.
+- takeScreenshot: ${EVIDENCE}/31-deleted
+- scrollUntilVisible:
+    element:
+      id: ask-history-done
+    centerElement: false
+    timeout: 180000
+- tapOn:
+    id: ask-history-done

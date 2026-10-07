@@ -7,8 +7,11 @@ source scripts/qa-env.sh
 source scripts/qa-lock.sh
 source scripts/qa-java.sh
 source scripts/qa-flows.sh
+source scripts/qa-maestro.sh
 qa_check_flow_selectors "$@" || exit 2
 PORT=${OPAX_FIXTURE_PORT:-8910}
+export OPAX_FIXTURE_PORT=$PORT
+qa_maestro_port || exit 2
 SIZE=${OPAX_CONTENT_SIZE:-large}
 # The app is light-only; dark is for checking the launch screen (journey 28b).
 APPEARANCE=${OPAX_APPEARANCE:-light}
@@ -85,7 +88,7 @@ cancel_wait() {
 cleanup() {
   rc=$?
   trap - EXIT
-  trap '' INT TERM
+  trap '' INT TERM HUP
   cancel_wait || { [ "$rc" != 0 ] || rc=1; }
   fallback_shutdown || { [ "$rc" != 0 ] || rc=1; }
   if [ -n "$FIXTURE_PID" ]; then
@@ -105,6 +108,7 @@ cleanup() {
 trap cleanup EXIT
 trap 'touch "$OUT/cancelled"; exit 130' INT
 trap 'touch "$OUT/cancelled"; exit 143' TERM
+trap 'touch "$OUT/cancelled"; exit 129' HUP
 configure_java
 export PATH="$HOME/.maestro/bin:$PATH"
 allow_simulator "$UDID"
@@ -118,6 +122,7 @@ wait "$WAITER_PID"
 WAITER_PID=
 # Do not stop or reuse another lane's listener.
 if lsof -nP -iTCP:"$PORT" -sTCP:LISTEN >/dev/null 2>&1; then echo "Fixture port $PORT is occupied" >&2; exit 1; fi
+qa_maestro_check_port || exit $?
 OPAX_FIXTURE_PORT="$PORT" ./node_modules/.bin/tsx scripts/fixture-server.ts > "$OUT/fixture.log" 2>&1 &
 FIXTURE_PID=$!
 deadline=$((SECONDS + 30))
@@ -129,6 +134,7 @@ done
 FLOWS=()
 OFFLINE=${OPAX_VERIFY_OFFLINE:-0}
 MAP_OFFLINE=${OPAX_VERIFY_MAP_OFFLINE:-0}
+MONEY_OFFLINE=${OPAX_VERIFY_MONEY_OFFLINE:-0}
 if [ "$#" = 0 ]; then set -- 01 02 03 04; fi
 for flow in "$@"; do
   case "$flow" in
@@ -147,7 +153,7 @@ done
 # immediately, TERM this runner (including while queued), or the lock owner.
 rc=0
 # Bash 3.2 treats expansion of an empty array as unset under nounset (04 only).
-DEVICE_ARGS=("$UDID" "$OUT" "$APP" "$SIZE" "$APPEARANCE" "$FIXTURE_PID" "$OFFLINE" "$MAP_OFFLINE")
+DEVICE_ARGS=("$UDID" "$OUT" "$APP" "$SIZE" "$APPEARANCE" "$FIXTURE_PID" "$OFFLINE" "$MAP_OFFLINE" "$MONEY_OFFLINE")
 if [ "${#FLOWS[@]}" -gt 0 ]; then DEVICE_ARGS+=("${FLOWS[@]}"); fi
 # A separate waiting group lets a TERM cancel the gate queue without orphans.
 # wait is a shell builtin, so the runner's trap takes effect immediately.
@@ -180,6 +186,9 @@ if [ "$OFFLINE" = 1 ]; then
 fi
 if [ "$MAP_OFFLINE" = 1 ]; then
   ./node_modules/.bin/tsx scripts/collect-screenshots.ts "$OUT/screenshots" "$OUT/map-offline-maestro"
+fi
+if [ "$MONEY_OFFLINE" = 1 ]; then
+  ./node_modules/.bin/tsx scripts/collect-screenshots.ts "$OUT/screenshots" "$OUT/money-offline-maestro"
 fi
 if grep -Eq 'OUTSIDE_ALLOW_LIST|"allowed":false|opax\.com\.au' "$OUT/fixture.log"; then echo "Fixture request boundary failed" >&2; exit 1; fi
 node -e 'const fs=require("fs");const lines=fs.readFileSync(process.argv[1],"utf8").split("\n").filter(x=>x.startsWith("{"));const requests=lines.map(x=>JSON.parse(x));if(requests.some(x=>!x.allowed||x.host!==`127.0.0.1:${process.argv[2]}`))process.exit(1);console.log(JSON.stringify({requests:requests.length,outsideAllowList:0,basis:"logged fixture requests; measured app connections are in connection-audit.json"},null,2))' "$OUT/fixture.log" "$PORT" > "$OUT/request-audit.json"

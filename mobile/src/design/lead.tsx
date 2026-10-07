@@ -112,12 +112,16 @@ export function LeadEvidenceLink({
             {item.detail}
           </Text>
         ) : null}
-        <Text wordSafe variant="body" tone={item.url ? 'bronzeInk' : 'ink'}>
+        <Text
+          wordSafe
+          variant="caption"
+          tone={item.url ? 'bronzeInk' : 'inkSoft'}
+        >
           {citation}
         </Text>
       </View>
       {item.url ? (
-        <Icon name="arrow.up.right.square" size={16} tone="bronzeInk" />
+        <Icon name="arrow.up.right.square" size={15} tone="bronzeInk" />
       ) : null}
     </>
   );
@@ -183,7 +187,9 @@ export function LeadCard({
         testID={part('title')}
         style={styles.head}
       >
-        <Text variant="kicker">Lead · {category}</Text>
+        <Text variant="kicker" tone="bronzeInk">
+          Lead · {category}
+        </Text>
         <Text wordSafe variant="subheading">
           {lead.title}
         </Text>
@@ -208,6 +214,7 @@ export function LeadCard({
                 <Text
                   wordSafe
                   variant="figureInline"
+                  tone="bronzeInk"
                   style={stacked ? null : styles.metricValue}
                 >
                   {text}
@@ -222,20 +229,23 @@ export function LeadCard({
       </View>
       <View style={styles.caveats}>
         {lead.caveats.map((caveat, index) => (
-          <Text
-            key={index}
-            wordSafe
-            variant="fine"
-            tone="ink"
-            testID={part(`caveat-${index}`)}
-          >
-            {caveat}
-          </Text>
+          <View key={index} style={styles.caveat}>
+            <Icon name="exclamationmark.triangle" size={13} tone="inkSoft" />
+            <Text
+              wordSafe
+              variant="fine"
+              tone="ink"
+              testID={part(`caveat-${index}`)}
+              style={styles.grow}
+            >
+              {caveat}
+            </Text>
+          </View>
         ))}
       </View>
       {lead.evidence.length ? (
         <View>
-          <Text variant="kicker">
+          <Text variant="kicker" tone="bronzeInk">
             Example records ({formatCount(lead.evidence.length)})
           </Text>
           {lead.evidence.map((item, index) => (
@@ -257,16 +267,17 @@ export function LeadCard({
 const styles = StyleSheet.create({
   card: { gap: spacing.s4 },
   head: { gap: spacing.s1 },
+  caveat: { flexDirection: 'row', gap: spacing.s3, alignItems: 'flex-start' },
   metric: {
     flexDirection: 'row',
     alignItems: 'baseline',
     gap: spacing.s4,
-    paddingVertical: spacing.s3,
+    paddingVertical: spacing.s2,
   },
   metricStacked: { flexDirection: 'column', gap: spacing.s1 },
   metricValue: { minWidth: 140 },
   grow: { flex: 1 },
-  caveats: { gap: spacing.s3 },
+  caveats: { gap: spacing.s2 },
   evidence: {
     flexDirection: 'row',
     alignItems: 'center',

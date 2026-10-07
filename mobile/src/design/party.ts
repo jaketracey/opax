@@ -1,5 +1,5 @@
 import type { PartyStatus } from '../api/party-transforms';
-import { partyColors, type PartyKey } from './palette';
+import { partyColors, partyWashes, type PartyKey } from './palette';
 
 // The web's party map (portal/public/app.js PARTY_MAP): the colour class and
 // the short label used only in dense rows. Names stay as the data gives them.
@@ -86,6 +86,12 @@ export function partyDot(party: string | null | undefined): string | null {
   return isPartyLabel(party) || knownParty(identity.name)?.key === 'independent'
     ? identity.color
     : null;
+}
+
+/** The party's tint for chips and headers; the neutral "other" wash otherwise. */
+export function partyWash(party: string | null | undefined): string {
+  const name = party?.trim();
+  return partyWashes[(name && knownParty(name)?.key) || 'other'];
 }
 
 /** The web's samePartyLabel: two names for one party compare equal ("Labor", "ALP"). */

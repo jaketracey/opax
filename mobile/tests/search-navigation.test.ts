@@ -5,7 +5,10 @@ import { ApiError, PersonIdentityError } from '../src/api/errors';
 import { joinPerson } from '../src/api/person-identity';
 import { personRoute } from '../src/navigation/routes';
 import { openOnWeb } from '../src/navigation/external';
-import { openSuggestedPerson } from '../src/features/search/navigation';
+import {
+  openSuggestedPerson,
+  openSearchPerson,
+} from '../src/features/search/navigation';
 import { manifest, people, roster, slugs } from './pinned';
 
 jest.mock('../src/api/runtime', () => ({
@@ -132,4 +135,40 @@ test('a directory record disappearing during resolution opens the web name addre
     'Anthony Albanese',
   );
   expect(router.push).not.toHaveBeenCalled();
+});
+
+test('R1 Search does not promote a roster-only name into a native profile', async () => {
+  const identity = joinPerson('chris-minns', slugs, roster, people, manifest);
+  expect(identity.canonicalPersonId).toBeUndefined();
+  jest
+    .mocked(catalogs.person)
+    .mockResolvedValue({ data: identity } as Awaited<
+      ReturnType<typeof catalogs.person>
+    >);
+  await openSearchPerson(identity.slug);
+  expect(router.push).not.toHaveBeenCalled();
+  expect(openOnWeb).toHaveBeenCalledWith(
+    `/subject/person/${identity.slug}`,
+    identity.name,
+  );
+});
+
+test('a private witness without a canonical member identity cannot open a native profile', async () => {
+  const identity = joinPerson('chris-minns', slugs, roster, people, manifest);
+  const witness = {
+    ...identity,
+    name: 'Private Witness',
+    rosterPersonId: undefined,
+  };
+  jest
+    .mocked(catalogs.person)
+    .mockResolvedValue({ data: witness } as Awaited<
+      ReturnType<typeof catalogs.person>
+    >);
+  await openSearchPerson(witness.slug);
+  expect(router.push).not.toHaveBeenCalled();
+  expect(openOnWeb).toHaveBeenCalledWith(
+    `/subject/person/${witness.slug}`,
+    witness.name,
+  );
 });

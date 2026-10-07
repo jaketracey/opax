@@ -109,7 +109,10 @@ actor FakeAudioEngine: VoiceAudioEngine, VoiceEngineFactory {
     var acceptedPlaybackEpoch = 0
     var muted = false
     var failStart = false, failRoute = false
+    var meter = AudioLevels.silent
     func make() -> any VoiceAudioEngine { self }
+    func levels() -> AudioLevels { meter }
+    func setMeter(_ value: AudioLevels) { meter = value }
     func start(input: AudioFormat, output: AudioFormat) throws {
         acceptedPlaybackEpoch = 0
         starts += 1; if failStart { throw VoiceFailure.audio }

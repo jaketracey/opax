@@ -1,0 +1,18 @@
+event: status
+data: {"phase": "searching"}
+
+event: status
+data: {"phase": "retrieved", "sources": [{"resource": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "slug": "bill-au-federal-r7534", "title": "Interactive Gambling (Cost Recovery Levy) Bill 2026", "href": "/bill/au-federal-r7534", "snippet": "Interactive Gambling (Cost Recovery Levy) Bill 2026", "cited": true, "date": "2026-08-17", "speaker": null, "party": null, "state": "federal"}, {"resource": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "slug": "bill-au-federal-r7549", "title": "Child Support and Family Assistance Legislation Amendment (Ending Financial Abuse in the Child Support Scheme No. 1) Bill 2026", "href": "/bill/au-federal-r7549", "snippet": "Child Support and Family Assistance Legislation Amendment (Ending Financial Abuse in the Child Support Scheme No. 1) Bill 2026", "cited": false, "date": "2026-09-17"}]}
+
+event: status
+data: {"phase": "writing"}
+
+event: delta
+data: {"text": "The linked record is Interactive Ga"}
+
+event: delta
+data: {"text": "mbling (Cost Recovery Levy) Bill 2026. Open the cited bill to read its dates, divisions and speeches."}
+
+event: done
+data: {"answer": "The linked record is Interactive Gambling (Cost Recovery Levy) Bill 2026. Open the cited bill to read its dates, divisions and speeches.", "citations": {"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/f/text/p/0": [[0, 73]]}, "sources": [{"resource": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "slug": "bill-au-federal-r7534", "title": "Interactive Gambling (Cost Recovery Levy) Bill 2026", "href": "/bill/au-federal-r7534", "snippet": "Interactive Gambling (Cost Recovery Levy) Bill 2026", "cited": true, "date": "2026-08-17", "speaker": null, "party": null, "state": "federal"}, {"resource": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "slug": "bill-au-federal-r7549", "title": "Child Support and Family Assistance Legislation Amendment (Ending Financial Abuse in the Child Support Scheme No. 1) Bill 2026", "href": "/bill/au-federal-r7549", "snippet": "Child Support and Family Assistance Legislation Amendment (Ending Financial Abuse in the Child Support Scheme No. 1) Bill 2026", "cited": false, "date": "2026-09-17"}]}
+

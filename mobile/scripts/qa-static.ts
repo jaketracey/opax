@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import assert from 'node:assert/strict';
 import { scanSource } from './source-boundary';
@@ -14,8 +14,6 @@ import {
   assertNoVoiceFixtures,
 } from './release-bundle-policy';
 const productionVoice = productionVoiceEnabled('production');
-const motionPurpose =
-  'OPAX doesn\'t use motion or fitness data. iOS requires this note because the location library behind "Use my location" includes motion features that OPAX never turns on.';
 function config(variant: string) {
   return JSON.parse(
     execFileSync(
@@ -64,7 +62,7 @@ for (const variant of ['production', 'e2e', 'development']) {
     native.NSLocationWhenInUseUsageDescription,
     'OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere.',
   );
-  assert.equal(native.NSMotionUsageDescription, motionPurpose);
+  assert.equal(native.NSMotionUsageDescription, undefined);
   assert(
     !native.NSLocationAlwaysUsageDescription &&
       !native.NSLocationAlwaysAndWhenInUseUsageDescription,
@@ -76,7 +74,6 @@ for (const variant of ['production', 'e2e', 'development']) {
       .sort(),
     [
       'NSLocationWhenInUseUsageDescription',
-      'NSMotionUsageDescription',
       ...(variant === 'production' && productionVoice
         ? ['NSMicrophoneUsageDescription']
         : []),
@@ -132,7 +129,7 @@ assert(
 assert(!JSON.stringify(e2e).includes('opax.com.au'));
 for (const app of [release, e2e]) {
   assert.equal(app.name, 'OPAX');
-  assert.equal(app.version, '0.1.0');
+  assert.equal(app.version, '1.0.0');
   assert.equal(app.ios.bundleIdentifier, 'au.com.opax.app');
   assert.equal(app.ios.buildNumber, process.env.OPAX_BUILD_NUMBER ?? '1');
   assert.equal(
@@ -141,7 +138,7 @@ for (const app of [release, e2e]) {
       ? policy.microphonePurpose
       : undefined,
   );
-  assert.equal(app.ios.infoPlist.NSMotionUsageDescription, motionPurpose);
+  assert.equal(app.ios.infoPlist.NSMotionUsageDescription, undefined);
   assert.equal(app.updates.enabled, false);
   // SDK 57's built-in deployment target; the scene plugin passes no deprecated
   // expo-build-properties target.
@@ -242,7 +239,8 @@ assert.deepEqual(
 const appIndex = process.argv.indexOf('--app');
 const productionIndex = process.argv.indexOf('--production-bundle');
 if (productionIndex !== -1) {
-  const bundles = walk(process.argv[productionIndex + 1]!).filter((path) =>
+  const directory = process.argv[productionIndex + 1]!;
+  const bundles = walk(directory).filter((path) =>
     /\.(?:hbc|js|jsbundle)$/.test(path),
   );
   assert(bundles.length, 'Production JS bundle missing');
@@ -264,6 +262,9 @@ if (productionIndex !== -1) {
       'source-destination-url',
       'source-destination-scroll',
       'source-destination-ok',
+      'money-test-focus',
+      'money-test-year',
+      'money-map-drawn-frames-',
     ])
       assert(
         !body.includes(Buffer.from(testID)),
@@ -281,6 +282,12 @@ if (productionIndex !== -1) {
       bodies.some((body) => body.includes(Buffer.from(marker))),
       `Shipped allow-list guard missing: ${marker}`,
     );
+  if (existsSync(join(directory, 'Info.plist')))
+    execFileSync(
+      'python3',
+      ['scripts/verify-ios-release.py', '--privacy-only', directory],
+      { stdio: 'inherit' },
+    );
   console.log(
     'PASS production embedded JS: no fixture/loopback origin or workbench; shipped route/origin/redirect guards present',
   );
@@ -295,7 +302,7 @@ if (appIndex !== -1) {
     ),
   );
   assert.equal(plist.CFBundleIdentifier, 'au.com.opax.app');
-  assert.equal(plist.CFBundleShortVersionString, '0.1.0');
+  assert.equal(plist.CFBundleShortVersionString, '1.0.0');
   assert.equal(plist.CFBundleVersion, process.env.OPAX_BUILD_NUMBER ?? '1');
   assert.equal(plist.MinimumOSVersion, '18.4');
   assert(!plist.NSMicrophoneUsageDescription);
@@ -303,12 +310,12 @@ if (appIndex !== -1) {
     plist.NSLocationWhenInUseUsageDescription,
     'OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere.',
   );
-  assert.equal(plist.NSMotionUsageDescription, motionPurpose);
+  assert.equal(plist.NSMotionUsageDescription, undefined);
   assert.deepEqual(
     Object.keys(plist)
       .filter((key) => /^NS.*UsageDescription$/.test(key))
       .sort(),
-    ['NSLocationWhenInUseUsageDescription', 'NSMotionUsageDescription'].sort(),
+    ['NSLocationWhenInUseUsageDescription'].sort(),
   );
   assert(
     !plist.NSLocationAlwaysUsageDescription &&

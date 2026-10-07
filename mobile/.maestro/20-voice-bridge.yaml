@@ -3,7 +3,8 @@ name: 20 Silent native voice bridge and account lifecycle
 ---
 # Preserve the catalog cache populated by journeys 02/03 for offline journey 04.
 # Account state is exercised explicitly through sign-in, logout and deletion.
-- launchApp
+- launchApp:
+    permissions: {}
 - openLink: opax://voice-bridge-test
 - tapOn:
     text: Open

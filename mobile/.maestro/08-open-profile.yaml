@@ -1,17 +1,15 @@
 appId: au.com.opax.app
 name: Open a roster profile from the public search
 ---
-- launchApp
+- launchApp:
+    permissions: {}
 - tapOn:
     id: tab-search
-- scrollUntilVisible:
-    element:
-      id: search-input
-    centerElement: true
-    timeout: 300000
-- tapOn:
-    id: search-input
-- inputText: ${NAME}
+- runFlow:
+    file: support/search-query.yaml
+    env:
+      QUERY: ${NAME}
+      PREFIX: 08-${SLUG}
 - pressKey: Enter
 - scrollUntilVisible:
     element:

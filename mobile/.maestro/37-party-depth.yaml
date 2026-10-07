@@ -1,0 +1,136 @@
+appId: au.com.opax.app
+name: 37 Party access, creditors, all years, follow and Your MP pay
+---
+- launchApp:
+    clearState: true
+    permissions: {}
+- runFlow:
+    file: support/people-open-profile.yaml
+    env:
+      NAME: Anthony Albanese
+      SLUG: anthony-albanese
+- scrollUntilVisible:
+    element: { id: person-party }
+    direction: UP
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- tapOn: { id: person-party }
+- extendedWaitUntil:
+    visible: { id: party-title }
+    timeout: 15000
+- assertVisible: { id: '^people-party-title-ms-([0-9]|[1-9][0-9]|[1-9][0-9][0-9]|1[0-9]{3})$' }
+- takeScreenshot: ${EVIDENCE}/37-party-title
+- scrollUntilVisible:
+    element: { id: party-access }
+    direction: DOWN
+    speed: 40
+    centerElement: true
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/37-party-access
+- scrollUntilVisible:
+    element: { id: party-mentions-toggle }
+    direction: DOWN
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- tapOn: { id: party-mentions-toggle }
+- scrollUntilVisible:
+    element: { text: Machine brief }
+    direction: DOWN
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/37-party-mentions
+- scrollUntilVisible:
+    element: { id: people-news-toggle }
+    direction: DOWN
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- tapOn: { id: people-news-toggle }
+- scrollUntilVisible:
+    element: { id: people-news-0 }
+    direction: DOWN
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/37-party-news
+- scrollUntilVisible:
+    element: { id: party-debts }
+    direction: UP
+    speed: 40
+    visibilityPercentage: 10
+    centerElement: true
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/37-party-debts
+- scrollUntilVisible:
+    element: { id: party-all-years }
+    direction: UP
+    speed: 40
+    centerElement: true
+    timeout: 180000
+- tapOn: { id: party-all-years }
+- scrollUntilVisible:
+    element: { id: party-return-1998-99 }
+    direction: DOWN
+    speed: 50
+    visibilityPercentage: 10
+    centerElement: true
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/37-all-27-years
+- scrollUntilVisible:
+    element: { id: party-follow-off }
+    direction: UP
+    speed: 70
+    centerElement: true
+    timeout: 180000
+- tapOn: { id: party-follow-off }
+- assertVisible: { id: party-follow-on }
+- takeScreenshot: ${EVIDENCE}/37-party-followed
+- tapOn: { id: tab-your-mp }
+- scrollUntilVisible:
+    element: { id: your-following-manage }
+    direction: DOWN
+    speed: 40
+    centerElement: true
+    timeout: 180000
+- tapOn: { id: your-following-manage }
+- assertVisible: Parties
+- assertVisible: { id: follows-open-party-labor }
+- takeScreenshot: ${EVIDENCE}/37-following-party
+- tapOn: { id: BackButton }
+- scrollUntilVisible:
+    element: { id: seat-search }
+    direction: UP
+    speed: 40
+    centerElement: true
+    timeout: 180000
+- tapOn: { id: seat-search }
+- inputText: Grayndler
+- pressKey: Enter
+- scrollUntilVisible:
+    element: { id: seat-choice-federal-representatives-nsw-grayndler }
+    direction: DOWN
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- tapOn: { id: seat-choice-federal-representatives-nsw-grayndler }
+- scrollUntilVisible:
+    element: { id: your-pay-heading }
+    direction: DOWN
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/37-your-mp-pay
+- scrollUntilVisible:
+    element: { id: your-receipts-link }
+    direction: DOWN
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/37-your-mp-receipts
+- tapOn: { id: your-receipts-link }
+- extendedWaitUntil:
+    visible: { id: party-title }
+    timeout: 15000

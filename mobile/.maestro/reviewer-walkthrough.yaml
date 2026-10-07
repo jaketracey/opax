@@ -1,0 +1,272 @@
+appId: au.com.opax.app
+name: Submission reviewer reading walkthrough
+---
+- launchApp:
+    clearState: true
+    permissions: {}
+    arguments:
+      OPAXWelcomeTour: 'on'
+- extendedWaitUntil:
+    visible: Page 1 of 5
+    timeout: 60000
+- extendedWaitUntil:
+    notVisible:
+      id: launch-handoff
+    timeout: 60000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/review-01-welcome
+- scrollUntilVisible:
+    element:
+      id: tour-page-about
+    visibilityPercentage: 90
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/review-01-welcome-notice
+- tapOn:
+    id: tour-skip
+- assertVisible:
+    id: today-screen-message
+- takeScreenshot: ${EVIDENCE}/review-02-today
+- tapOn:
+    id: tab-your-mp
+- assertVisible:
+    id: seat-search
+- takeScreenshot: ${EVIDENCE}/review-03-chooser
+- tapOn:
+    id: seat-search
+- inputText: Grayndler
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: seat-choice-federal-representatives-nsw-grayndler
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: seat-choice-federal-representatives-nsw-grayndler
+- extendedWaitUntil:
+    visible:
+      id: your-seat-name
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/review-04-your-mp
+- scrollUntilVisible:
+    element:
+      id: your-member-anthony-albanese
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: your-member-anthony-albanese
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/review-05-profile
+- scrollUntilVisible:
+    element:
+      id: person-votes-heading
+    centerElement: true
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/review-05a-votes
+- scrollUntilVisible:
+    element:
+      id: person-interests-heading
+    centerElement: true
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/review-05b-interests
+- scrollUntilVisible:
+    element:
+      id: person-pay-heading
+    centerElement: true
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/review-05c-pay
+- scrollUntilVisible:
+    element:
+      id: person-expenses-heading
+    centerElement: true
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/review-05d-expenses
+- tapOn:
+    text: Your MP
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: your-seat-name
+    direction: UP
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: your-electorate
+    direction: UP
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: your-electorate
+- extendedWaitUntil:
+    visible:
+      id: electorate-screen
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/review-06-electorate
+- scrollUntilVisible:
+    element:
+      text: Elections
+    centerElement: true
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/review-06a-elections
+- scrollUntilVisible:
+    element:
+      text: Local context
+    centerElement: true
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/review-06b-context
+- openLink: opax://
+- tapOn:
+    id: tab-bills
+- extendedWaitUntil:
+    visible:
+      id: bills-count
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/review-07a-bills-list
+- tapOn:
+    id: bills-search
+- inputText: Interactive Gambling
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: bill-row-au-federal-r7534
+    centerElement: true
+    speed: 20
+    timeout: 90000
+- tapOn:
+    id: bill-row-au-federal-r7534
+- extendedWaitUntil:
+    visible:
+      id: bill-title
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/review-07-bill
+- scrollUntilVisible:
+    element:
+      id: bill-speech-0-web
+    centerElement: true
+    speed: 70
+    timeout: 120000
+- takeScreenshot: ${EVIDENCE}/review-08-bill-speeches
+- tapOn:
+    id: bill-speech-0-web
+- extendedWaitUntil:
+    visible:
+      id: doc-title
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/review-09-reader
+- scrollUntilVisible:
+    element:
+      id: doc-cite
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: doc-cite
+- assertVisible:
+    id: doc-citations
+- takeScreenshot: ${EVIDENCE}/review-10-cite
+- openLink: opax://doc/speech-1205524
+- extendedWaitUntil:
+    visible:
+      id: doc-title
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: doc-similar
+    centerElement: true
+    timeout: 120000
+- tapOn:
+    id: doc-similar
+- scrollUntilVisible:
+    element:
+      id: doc-similar-0
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: ${EVIDENCE}/review-11-similar
+- openLink: opax://
+- tapOn: Account and about
+- scrollUntilVisible:
+    element:
+      id: account-about
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: account-about
+- extendedWaitUntil:
+    visible:
+      id: about-screen
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: about-deceased-notice
+    centerElement: false
+    speed: 20
+    timeout: 60000
+- takeScreenshot: ${EVIDENCE}/review-12-about-notice
+- scrollUntilVisible:
+    element:
+      id: about-support
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: about-support
+- assertVisible: https://opax.invalid/support
+- takeScreenshot: ${EVIDENCE}/review-13-support
+- tapOn: OK
+- scrollUntilVisible:
+    element:
+      id: about-privacy
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: about-privacy
+- assertVisible: https://opax.invalid/privacy
+- takeScreenshot: ${EVIDENCE}/review-14-privacy
+- tapOn: OK
+- scrollUntilVisible:
+    element:
+      id: about-sources-open
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: about-sources-open
+- extendedWaitUntil:
+    visible:
+      id: sources-screen
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/review-15-sources
+- scrollUntilVisible:
+    element:
+      id: sources-portrait-search
+    centerElement: true
+    speed: 70
+    timeout: 120000
+- tapOn:
+    id: sources-portrait-search
+- inputText: Sheena Watt
+- hideKeyboard
+- scrollUntilVisible:
+    element:
+      id: sources-portrait-sheena-watt
+    centerElement: true
+    timeout: 60000
+- assertVisible: Gabagool2005.*CC0.*Wikimedia Commons, cropped.*
+- takeScreenshot: ${EVIDENCE}/review-16-cropped-credit
+- openLink: opax://
+- tapOn:
+    id: tab-search
+- assertVisible: Search people, places and bills
+- takeScreenshot: ${EVIDENCE}/review-17-search
+- runFlow:
+    file: support/search-query.yaml
+    env:
+      QUERY: Albanese
+      PREFIX: review-17
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: search-result-anthony-albanese
+    centerElement: true
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/review-18-search-results

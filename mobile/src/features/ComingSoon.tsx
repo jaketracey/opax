@@ -1,7 +1,14 @@
 import { router } from 'expo-router';
 import { isProduction } from '../design/environment';
 import { showTour } from '../onboarding/state';
-import { Button, Group, Screen, Section, Text } from '../design/primitives';
+import {
+  Group,
+  LinkRow,
+  RowList,
+  Screen,
+  Section,
+  Text,
+} from '../design/primitives';
 
 const independence =
   'OPAX is independent and non-partisan. It is not a government app and is not affiliated with any parliament, government or political party.';
@@ -29,13 +36,18 @@ export function TalkComingSoon() {
 export function AccountComingSoon() {
   return (
     <Screen testID="account-sheet">
-      <Section title="Account">
+      <Section
+        title="Account"
+        icon="person.crop.circle"
+        accent="people"
+        rule={false}
+      >
         <Text testID="account-sheet-message">
           Signing in is not in this version of the app yet. An account will only
           be needed to talk to OPAX.
         </Text>
       </Section>
-      <Section title="About OPAX">
+      <Section title="About OPAX" icon="building.columns" accent="people">
         <Text variant="subheading">
           Open Parliamentary Accountability Exchange
         </Text>
@@ -44,30 +56,49 @@ export function AccountComingSoon() {
           Australian parliamentary speeches, votes, political funding and public
           disclosures.
         </Text>
-        <Text>{independence}</Text>
-        <Button
-          label="About and sources"
-          testID="account-about"
-          onPress={() => router.push('/account/about')}
-        />
-        <Button
-          label="Replay welcome tour"
-          testID="account-replay-tour"
-          onPress={() => {
-            // The tour draws above the tabs, so the sheet closes first.
-            router.back();
-            showTour();
-          }}
-        />
+        <Text variant="metadata">{independence}</Text>
+        <RowList>
+          <LinkRow
+            title="About OPAX"
+            detail="Coverage, corrections and privacy"
+            icon="info.circle"
+            accent="people"
+            testID="account-about"
+            onPress={() => router.push('/account/about')}
+          />
+          <LinkRow
+            title="Sources and licences"
+            detail="Datasets, portrait credits and fonts"
+            icon="books.vertical"
+            accent="leads"
+            testID="account-sources"
+            onPress={() => router.push('/account/sources')}
+          />
+          <LinkRow
+            title="Replay welcome tour"
+            icon="sparkles"
+            accent="bills"
+            testID="account-replay-tour"
+            onPress={() => {
+              // The tour draws above the tabs, so the sheet closes first.
+              router.back();
+              showTour();
+            }}
+          />
+        </RowList>
       </Section>
       {isProduction ? null : (
         // Development and e2e builds only; the workbench route is not in release bundles.
-        <Section title="Development">
-          <Button
-            label="Design workbench"
-            testID="account-workbench"
-            onPress={() => router.push('/workbench')}
-          />
+        <Section title="Development" icon="hammer" accent="people">
+          <RowList>
+            <LinkRow
+              title="Design workbench"
+              icon="square.grid.2x2"
+              accent="people"
+              testID="account-workbench"
+              onPress={() => router.push('/workbench')}
+            />
+          </RowList>
         </Section>
       )}
     </Screen>

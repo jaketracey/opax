@@ -17,7 +17,7 @@ case $? in
 esac
 finish() {
   local rc=$?
-  trap - EXIT INT TERM
+  trap - EXIT INT TERM HUP
   # Stop the command's leftovers first; if any survive, keep the lock so no
   # one else can use the pasteboard until the group is gone.
   if qa_stop_group; then qa_paste_lock_release; fi
@@ -26,6 +26,7 @@ finish() {
 trap finish EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
+trap 'exit 129' HUP
 # In the background so a TERM is handled at once; still inside our group.
 "$@" &
 wait $!

@@ -1,0 +1,770 @@
+{
+  "provenance": {
+    "record": "portal/src/index.ts apiResource",
+    "billText": "portal/src/bill-text.ts handleBillText",
+    "division": "portal/public/bills/au-federal-r7534.json divisions[0]",
+    "notice": "Speech and bill source bodies and press release are explicitly synthetic. No quoted statement or legal provision is invented for a real person."
+  },
+  "seeds": {
+    "speech-1205524": {
+      "title": "Synthetic reader layout fixture — not a parliamentary quotation",
+      "origin": {
+        "collaborators": [
+          "Tony Burke"
+        ],
+        "url": "https://www.aph.gov.au/Parliamentary_Business/Hansard"
+      },
+      "usermetadata": {
+        "classifications": [
+          {
+            "labelset": "kind",
+            "label": "speech"
+          },
+          {
+            "labelset": "state",
+            "label": "federal"
+          },
+          {
+            "labelset": "chamber",
+            "label": "representatives"
+          },
+          {
+            "labelset": "party",
+            "label": "Labor"
+          }
+        ]
+      },
+      "extra": {
+        "metadata": {
+          "date": "2026-08-18",
+          "fixture": true,
+          "bill_ref": "Interactive Gambling (Cost Recovery Levy) Bill 2026"
+        }
+      },
+      "computedmetadata": {
+        "field_classifications": [
+          {
+            "classifications": [
+              {
+                "labelset": "topic",
+                "label": "gambling"
+              }
+            ]
+          }
+        ]
+      },
+      "data": {
+        "texts": {
+          "body": {
+            "value": {
+              "body": "Synthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 1 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 2 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 3 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 4 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 5 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 6 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 7 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 8 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 9 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 10 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 11 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 12 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 13 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 14 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 15 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 16 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 17 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 18 exercises readable full text without a preview cutoff. All source characters remain available.\n\n"
+            }
+          },
+          "da-summary-t-body": {
+            "value": {
+              "body": "Synthetic machine-summary fixture for the reader, not a summary of this person’s remarks."
+            }
+          }
+        }
+      }
+    },
+    "division-federal-senate-10701": {
+      "title": "Senate division, 2026-08-19: Sue Lines Pursuant to the order agreed to on 18 August, the time allotted for the second reading of the interactive gambling bills has expired. I will now put the question before the chair and then put the remaining questions required to complete the second reading stage. I will first deal with the amendment moved by Senator David Pocock.The question is that the amendment on sheet 4005 be agreed to.",
+      "origin": {
+        "collaborators": [
+          "Voters are not a speaker"
+        ],
+        "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-19/6"
+      },
+      "usermetadata": {
+        "classifications": [
+          {
+            "labelset": "kind",
+            "label": "division"
+          },
+          {
+            "labelset": "state",
+            "label": "federal"
+          },
+          {
+            "labelset": "chamber",
+            "label": "senate"
+          },
+          {
+            "labelset": "result",
+            "label": "negative"
+          }
+        ]
+      },
+      "extra": {
+        "metadata": {
+          "date": "2026-08-19",
+          "ayes_count": 11,
+          "noes_count": 24,
+          "bill_ref": "Interactive Gambling (Cost Recovery Levy) Bill 2026"
+        }
+      },
+      "data": {
+        "texts": {
+          "body": {
+            "value": {
+              "body": "Sue Lines Pursuant to the order agreed to on 18 August, the time allotted for the second reading of the interactive gambling bills has expired. I will now put the question before the chair and then put the remaining questions required to complete the second reading stage. I will first deal with the amendment moved by Senator David Pocock.The question is that the amendment on sheet 4005 be agreed to."
+            }
+          }
+        }
+      }
+    },
+    "press-pmt-reader-fixture": {
+      "title": "Synthetic government release fixture",
+      "origin": {
+        "collaborators": [
+          "Fixture government office"
+        ],
+        "url": "https://example.org/government-release"
+      },
+      "usermetadata": {
+        "classifications": [
+          {
+            "labelset": "kind",
+            "label": "press_release"
+          },
+          {
+            "labelset": "state",
+            "label": "federal"
+          }
+        ]
+      },
+      "extra": {
+        "metadata": {
+          "date": "2026-10-01",
+          "headline": "Synthetic government release fixture",
+          "fixture": true
+        }
+      },
+      "data": {
+        "texts": {
+          "t-body": {
+            "value": {
+              "body": "Synthetic government release fixture. This test record contains no statement by a real person.\n\nAll paragraphs are selectable."
+            }
+          }
+        }
+      }
+    },
+    "speech-999999998": {
+      "title": "Synthetic related speech fixture",
+      "origin": {
+        "collaborators": [
+          "Fixture speaker"
+        ]
+      },
+      "usermetadata": {
+        "classifications": [
+          {
+            "labelset": "kind",
+            "label": "speech"
+          },
+          {
+            "labelset": "state",
+            "label": "federal"
+          }
+        ]
+      },
+      "extra": {
+        "metadata": {
+          "date": "2026-10-01",
+          "fixture": true
+        }
+      },
+      "data": {
+        "texts": {
+          "body": {
+            "value": {
+              "body": "Synthetic related record. There is no real parliamentary quotation in this fixture."
+            }
+          }
+        }
+      }
+    },
+    "grant-site-evidence-ga566033": {
+      "title": "Synthetic grant-evidence fixture",
+      "usermetadata": {
+        "classifications": [
+          {
+            "labelset": "kind",
+            "label": "research_report"
+          }
+        ]
+      },
+      "extra": {
+        "metadata": {
+          "date": "2026-10-01",
+          "fixture": true
+        }
+      },
+      "data": {
+        "texts": {
+          "t-body": {
+            "value": {
+              "body": "Synthetic evidence fixture. Invitations, awards and payments are distinct stages."
+            }
+          }
+        }
+      }
+    },
+    "bill-text-au-federal-r7534-aspassed": {
+      "slug": "bill-text-au-federal-r7534-aspassed",
+      "title": "Synthetic bill-text reader fixture",
+      "usermetadata": {
+        "classifications": [
+          {
+            "labelset": "kind",
+            "label": "bill_text"
+          },
+          {
+            "labelset": "bill_key",
+            "label": "au-federal-r7534"
+          }
+        ]
+      },
+      "origin": {
+        "url": "https://example.org/synthetic-bill.pdf"
+      },
+      "extra": {
+        "metadata": {
+          "bill_key": "au-federal-r7534",
+          "title": "Synthetic bill-text reader fixture",
+          "version_id": "r7534-aspassed",
+          "source_version": "r7534_aspassed",
+          "stage": "aspassed",
+          "stage_label": "As passed — synthetic fixture",
+          "date": "2026-10-01",
+          "complete": true,
+          "source_url": "https://example.org/synthetic-bill.pdf",
+          "characters": 279,
+          "source_text_sha256": "797a6f3785df5bfb8750d0b185ac716be75aab2b8092d453b88c0a0321e4270c",
+          "section_count": 2,
+          "section_offset_unit": "utf16",
+          "sections": [
+            {
+              "id": "part-1",
+              "title": "Part 1 — synthetic fixture",
+              "start": 0,
+              "end": 144
+            },
+            {
+              "id": "schedule-1",
+              "title": "Schedule 1 — synthetic fixture",
+              "start": 146,
+              "end": 279
+            }
+          ],
+          "codex_enrichment": {
+            "bill_key": "au-federal-r7534",
+            "version_id": "r7534-aspassed",
+            "source_sha256": "797a6f3785df5bfb8750d0b185ac716be75aab2b8092d453b88c0a0321e4270c",
+            "review_scope": "selected-provisions",
+            "confidence": "high",
+            "brief": "Synthetic overview fixture. This is not a description of an actual legal provision.",
+            "topics": [
+              "justice-law"
+            ],
+            "evidence": [
+              {
+                "topic": "justice-law",
+                "quote": "Synthetic bill text fixture. These are test characters, not proposed legisl",
+                "section_id": "part-1"
+              }
+            ],
+            "model": "synthetic-fixture"
+          }
+        }
+      },
+      "data": {
+        "texts": {
+          "body": {
+            "value": {
+              "body": "Synthetic bill text fixture. These are test characters, not proposed legislation.\n1 Short title\nThis section exercises selection and navigation.\n\nSynthetic schedule for the aspassed test version. No legal provision is asserted by this fixture.\nThe final sentence remains visible."
+            }
+          }
+        }
+      }
+    },
+    "bill-text-au-federal-r7534-first-reps": {
+      "slug": "bill-text-au-federal-r7534-first-reps",
+      "title": "Synthetic bill-text reader fixture",
+      "usermetadata": {
+        "classifications": [
+          {
+            "labelset": "kind",
+            "label": "bill_text"
+          },
+          {
+            "labelset": "bill_key",
+            "label": "au-federal-r7534"
+          }
+        ]
+      },
+      "origin": {
+        "url": "https://example.org/synthetic-bill.pdf"
+      },
+      "extra": {
+        "metadata": {
+          "bill_key": "au-federal-r7534",
+          "title": "Synthetic bill-text reader fixture",
+          "version_id": "r7534-first-reps",
+          "source_version": "r7534_first_reps",
+          "stage": "first-reps",
+          "stage_label": "First reading — synthetic fixture",
+          "date": "2026-10-01",
+          "complete": true,
+          "source_url": "https://example.org/synthetic-bill.pdf",
+          "characters": 281,
+          "source_text_sha256": "5e58978c2d44d10c46cfa649fdddce34a21400572b01d3fdecb03c23c9e2218e",
+          "section_count": 2,
+          "section_offset_unit": "utf16",
+          "sections": [
+            {
+              "id": "part-1",
+              "title": "Part 1 — synthetic fixture",
+              "start": 0,
+              "end": 144
+            },
+            {
+              "id": "schedule-1",
+              "title": "Schedule 1 — synthetic fixture",
+              "start": 146,
+              "end": 281
+            }
+          ],
+          "codex_enrichment": {
+            "bill_key": "au-federal-r7534",
+            "version_id": "r7534-first-reps",
+            "source_sha256": "5e58978c2d44d10c46cfa649fdddce34a21400572b01d3fdecb03c23c9e2218e",
+            "review_scope": "selected-provisions",
+            "confidence": "high",
+            "brief": "Synthetic overview fixture. This is not a description of an actual legal provision.",
+            "topics": [
+              "justice-law"
+            ],
+            "evidence": [
+              {
+                "topic": "justice-law",
+                "quote": "Synthetic bill text fixture. These are test characters, not proposed legisl",
+                "section_id": "part-1"
+              }
+            ],
+            "model": "synthetic-fixture"
+          }
+        }
+      },
+      "data": {
+        "texts": {
+          "body": {
+            "value": {
+              "body": "Synthetic bill text fixture. These are test characters, not proposed legislation.\n1 Short title\nThis section exercises selection and navigation.\n\nSynthetic schedule for the first-reps test version. No legal provision is asserted by this fixture.\nThe final sentence remains visible."
+            }
+          }
+        }
+      }
+    }
+  },
+  "responses": {
+    "/api/resource/speech-1205524": {
+      "slug": "speech-1205524",
+      "title": "Synthetic reader layout fixture — not a parliamentary quotation",
+      "speaker": "Tony Burke",
+      "url": "https://www.aph.gov.au/Parliamentary_Business/Hansard",
+      "labels": {
+        "kind": "speech",
+        "state": "federal",
+        "chamber": "representatives",
+        "party": "Labor"
+      },
+      "topics": [
+        "gambling"
+      ],
+      "metadata": {
+        "date": "2026-08-18",
+        "fixture": true,
+        "bill_ref": "Interactive Gambling (Cost Recovery Levy) Bill 2026"
+      },
+      "summary": "Synthetic machine-summary fixture for the reader, not a summary of this person’s remarks.",
+      "text": "Synthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 1 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 2 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 3 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 4 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 5 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 6 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 7 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 8 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 9 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 10 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 11 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 12 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 13 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 14 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 15 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 16 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 17 exercises readable full text without a preview cutoff. All source characters remain available.\n\nSynthetic reader fixture. This text is a layout and selection test, not a parliamentary quotation or a statement attributed to the roster entry. Paragraph 18 exercises readable full text without a preview cutoff. All source characters remain available.\n\n"
+    },
+    "/api/resource/division-federal-senate-10701": {
+      "slug": "division-federal-senate-10701",
+      "title": "Senate division, 2026-08-19: Sue Lines Pursuant to the order agreed to on 18 August, the time allotted for the second reading of the interactive gambling bills has expired. I will now put the question before the chair and then put the remaining questions required to complete the second reading stage. I will first deal with the amendment moved by Senator David Pocock.The question is that the amendment on sheet 4005 be agreed to.",
+      "speaker": null,
+      "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-19/6",
+      "labels": {
+        "kind": "division",
+        "state": "federal",
+        "chamber": "senate",
+        "result": "negative"
+      },
+      "topics": [],
+      "metadata": {
+        "date": "2026-08-19",
+        "ayes_count": 11,
+        "noes_count": 24,
+        "bill_ref": "Interactive Gambling (Cost Recovery Levy) Bill 2026"
+      },
+      "summary": null,
+      "text": "Sue Lines Pursuant to the order agreed to on 18 August, the time allotted for the second reading of the interactive gambling bills has expired. I will now put the question before the chair and then put the remaining questions required to complete the second reading stage. I will first deal with the amendment moved by Senator David Pocock.The question is that the amendment on sheet 4005 be agreed to."
+    },
+    "/api/resource/press-pmt-reader-fixture": {
+      "slug": "press-pmt-reader-fixture",
+      "title": "Synthetic government release fixture",
+      "speaker": "Fixture government office",
+      "url": "https://example.org/government-release",
+      "labels": {
+        "kind": "press_release",
+        "state": "federal"
+      },
+      "topics": [],
+      "metadata": {
+        "date": "2026-10-01",
+        "headline": "Synthetic government release fixture",
+        "fixture": true
+      },
+      "summary": null,
+      "text": "Synthetic government release fixture. This test record contains no statement by a real person.\n\nAll paragraphs are selectable."
+    },
+    "/api/resource/speech-999999998": {
+      "slug": "speech-999999998",
+      "title": "Synthetic related speech fixture",
+      "speaker": "Fixture speaker",
+      "url": null,
+      "labels": {
+        "kind": "speech",
+        "state": "federal"
+      },
+      "topics": [],
+      "metadata": {
+        "date": "2026-10-01",
+        "fixture": true
+      },
+      "summary": null,
+      "text": "Synthetic related record. There is no real parliamentary quotation in this fixture."
+    },
+    "/api/resource/grant-site-evidence-ga566033": {
+      "slug": "grant-site-evidence-ga566033",
+      "title": "Synthetic grant-evidence fixture",
+      "speaker": null,
+      "url": null,
+      "labels": {
+        "kind": "research_report"
+      },
+      "topics": [],
+      "metadata": {
+        "date": "2026-10-01",
+        "fixture": true
+      },
+      "summary": null,
+      "text": "Synthetic evidence fixture. Invitations, awards and payments are distinct stages."
+    },
+    "/api/resource/bill-text-au-federal-r7534-aspassed": {
+      "slug": "bill-text-au-federal-r7534-aspassed",
+      "title": "Synthetic bill-text reader fixture",
+      "speaker": null,
+      "url": "https://example.org/synthetic-bill.pdf",
+      "labels": {
+        "kind": "bill_text",
+        "bill_key": "au-federal-r7534"
+      },
+      "topics": [],
+      "metadata": {
+        "bill_key": "au-federal-r7534",
+        "title": "Synthetic bill-text reader fixture",
+        "version_id": "r7534-aspassed",
+        "source_version": "r7534_aspassed",
+        "stage": "aspassed",
+        "stage_label": "As passed — synthetic fixture",
+        "date": "2026-10-01",
+        "complete": true,
+        "source_url": "https://example.org/synthetic-bill.pdf",
+        "characters": 279,
+        "source_text_sha256": "797a6f3785df5bfb8750d0b185ac716be75aab2b8092d453b88c0a0321e4270c",
+        "section_count": 2,
+        "section_offset_unit": "utf16",
+        "sections": [
+          {
+            "id": "part-1",
+            "title": "Part 1 — synthetic fixture",
+            "start": 0,
+            "end": 144
+          },
+          {
+            "id": "schedule-1",
+            "title": "Schedule 1 — synthetic fixture",
+            "start": 146,
+            "end": 279
+          }
+        ],
+        "codex_enrichment": {
+          "bill_key": "au-federal-r7534",
+          "version_id": "r7534-aspassed",
+          "source_sha256": "797a6f3785df5bfb8750d0b185ac716be75aab2b8092d453b88c0a0321e4270c",
+          "review_scope": "selected-provisions",
+          "confidence": "high",
+          "brief": "Synthetic overview fixture. This is not a description of an actual legal provision.",
+          "topics": [
+            "justice-law"
+          ],
+          "evidence": [
+            {
+              "topic": "justice-law",
+              "quote": "Synthetic bill text fixture. These are test characters, not proposed legisl",
+              "section_id": "part-1"
+            }
+          ],
+          "model": "synthetic-fixture"
+        }
+      },
+      "summary": null,
+      "text": "Synthetic bill text fixture. These are test characters, not proposed legislation.\n1 Short title\nThis section exercises selection and navigation.\n\nSynthetic schedule for the aspassed test version. No legal provision is asserted by this fixture.\nThe final sentence remains visible."
+    },
+    "/api/resource/bill-text-au-federal-r7534-first-reps": {
+      "slug": "bill-text-au-federal-r7534-first-reps",
+      "title": "Synthetic bill-text reader fixture",
+      "speaker": null,
+      "url": "https://example.org/synthetic-bill.pdf",
+      "labels": {
+        "kind": "bill_text",
+        "bill_key": "au-federal-r7534"
+      },
+      "topics": [],
+      "metadata": {
+        "bill_key": "au-federal-r7534",
+        "title": "Synthetic bill-text reader fixture",
+        "version_id": "r7534-first-reps",
+        "source_version": "r7534_first_reps",
+        "stage": "first-reps",
+        "stage_label": "First reading — synthetic fixture",
+        "date": "2026-10-01",
+        "complete": true,
+        "source_url": "https://example.org/synthetic-bill.pdf",
+        "characters": 281,
+        "source_text_sha256": "5e58978c2d44d10c46cfa649fdddce34a21400572b01d3fdecb03c23c9e2218e",
+        "section_count": 2,
+        "section_offset_unit": "utf16",
+        "sections": [
+          {
+            "id": "part-1",
+            "title": "Part 1 — synthetic fixture",
+            "start": 0,
+            "end": 144
+          },
+          {
+            "id": "schedule-1",
+            "title": "Schedule 1 — synthetic fixture",
+            "start": 146,
+            "end": 281
+          }
+        ],
+        "codex_enrichment": {
+          "bill_key": "au-federal-r7534",
+          "version_id": "r7534-first-reps",
+          "source_sha256": "5e58978c2d44d10c46cfa649fdddce34a21400572b01d3fdecb03c23c9e2218e",
+          "review_scope": "selected-provisions",
+          "confidence": "high",
+          "brief": "Synthetic overview fixture. This is not a description of an actual legal provision.",
+          "topics": [
+            "justice-law"
+          ],
+          "evidence": [
+            {
+              "topic": "justice-law",
+              "quote": "Synthetic bill text fixture. These are test characters, not proposed legisl",
+              "section_id": "part-1"
+            }
+          ],
+          "model": "synthetic-fixture"
+        }
+      },
+      "summary": null,
+      "text": "Synthetic bill text fixture. These are test characters, not proposed legislation.\n1 Short title\nThis section exercises selection and navigation.\n\nSynthetic schedule for the first-reps test version. No legal provision is asserted by this fixture.\nThe final sentence remains visible."
+    },
+    "/bill-texts/au-federal-r7534/index.json": {
+      "bill_key": "au-federal-r7534",
+      "title": "Synthetic bill-text reader fixture",
+      "generated_at": "2026-10-07T00:00:00.000Z",
+      "default_version_id": "r7534-aspassed",
+      "versions": [
+        {
+          "id": "r7534-aspassed",
+          "source_version": "r7534_aspassed",
+          "stage": "aspassed",
+          "stage_label": "As passed — synthetic fixture",
+          "date": "2026-10-01",
+          "source_url": "https://example.org/synthetic-bill.pdf",
+          "format": "pdf",
+          "status": "complete",
+          "text_url": "/bill-texts/au-federal-r7534/r7534-aspassed.json",
+          "characters": 279,
+          "pages": null,
+          "sections": 2,
+          "coverage_note": "Original source text, with all collected sections preserved.",
+          "sha256": "797a6f3785df5bfb8750d0b185ac716be75aab2b8092d453b88c0a0321e4270c"
+        },
+        {
+          "id": "r7534-first-reps",
+          "source_version": "r7534_first_reps",
+          "stage": "first-reps",
+          "stage_label": "First reading — synthetic fixture",
+          "date": "2026-10-01",
+          "source_url": "https://example.org/synthetic-bill.pdf",
+          "format": "pdf",
+          "status": "complete",
+          "text_url": "/bill-texts/au-federal-r7534/r7534-first-reps.json",
+          "characters": 281,
+          "pages": null,
+          "sections": 2,
+          "coverage_note": "Original source text, with all collected sections preserved.",
+          "sha256": "5e58978c2d44d10c46cfa649fdddce34a21400572b01d3fdecb03c23c9e2218e"
+        }
+      ],
+      "coverage_note": "Complete source versions published so far. Other versions may still be awaiting collection; this is not a list of every version issued by Parliament."
+    },
+    "/bill-texts/au-federal-r7534/r7534-aspassed.json": {
+      "bill_key": "au-federal-r7534",
+      "title": "Synthetic bill-text reader fixture",
+      "version": {
+        "id": "r7534-aspassed",
+        "source_version": "r7534_aspassed",
+        "stage": "aspassed",
+        "stage_label": "As passed — synthetic fixture",
+        "date": "2026-10-01",
+        "source_url": "https://example.org/synthetic-bill.pdf",
+        "format": "pdf",
+        "status": "complete",
+        "text_url": "/bill-texts/au-federal-r7534/r7534-aspassed.json",
+        "characters": 279,
+        "pages": null,
+        "sections": 2,
+        "coverage_note": "Original source text, with all collected sections preserved.",
+        "sha256": "797a6f3785df5bfb8750d0b185ac716be75aab2b8092d453b88c0a0321e4270c"
+      },
+      "text": "Synthetic bill text fixture. These are test characters, not proposed legislation.\n1 Short title\nThis section exercises selection and navigation.\n\nSynthetic schedule for the aspassed test version. No legal provision is asserted by this fixture.\nThe final sentence remains visible.",
+      "sections": [
+        {
+          "id": "part-1",
+          "title": "Part 1 — synthetic fixture",
+          "text": "Synthetic bill text fixture. These are test characters, not proposed legislation.\n1 Short title\nThis section exercises selection and navigation.",
+          "source_url": "https://example.org/synthetic-bill.pdf"
+        },
+        {
+          "id": "schedule-1",
+          "title": "Schedule 1 — synthetic fixture",
+          "text": "Synthetic schedule for the aspassed test version. No legal provision is asserted by this fixture.\nThe final sentence remains visible.",
+          "source_url": "https://example.org/synthetic-bill.pdf"
+        }
+      ],
+      "complete": true,
+      "enrichment": {
+        "brief": "Synthetic overview fixture. This is not a description of an actual legal provision.",
+        "topics": [
+          "justice-law"
+        ],
+        "evidence": [
+          {
+            "topic": "justice-law",
+            "quote": "Synthetic bill text fixture. These are test characters, not proposed legisl",
+            "section_id": "part-1"
+          }
+        ],
+        "model": "synthetic-fixture",
+        "review_scope": "selected-provisions"
+      }
+    },
+    "/bill-texts/au-federal-r7534/r7534-first-reps.json": {
+      "bill_key": "au-federal-r7534",
+      "title": "Synthetic bill-text reader fixture",
+      "version": {
+        "id": "r7534-first-reps",
+        "source_version": "r7534_first_reps",
+        "stage": "first-reps",
+        "stage_label": "First reading — synthetic fixture",
+        "date": "2026-10-01",
+        "source_url": "https://example.org/synthetic-bill.pdf",
+        "format": "pdf",
+        "status": "complete",
+        "text_url": "/bill-texts/au-federal-r7534/r7534-first-reps.json",
+        "characters": 281,
+        "pages": null,
+        "sections": 2,
+        "coverage_note": "Original source text, with all collected sections preserved.",
+        "sha256": "5e58978c2d44d10c46cfa649fdddce34a21400572b01d3fdecb03c23c9e2218e"
+      },
+      "text": "Synthetic bill text fixture. These are test characters, not proposed legislation.\n1 Short title\nThis section exercises selection and navigation.\n\nSynthetic schedule for the first-reps test version. No legal provision is asserted by this fixture.\nThe final sentence remains visible.",
+      "sections": [
+        {
+          "id": "part-1",
+          "title": "Part 1 — synthetic fixture",
+          "text": "Synthetic bill text fixture. These are test characters, not proposed legislation.\n1 Short title\nThis section exercises selection and navigation.",
+          "source_url": "https://example.org/synthetic-bill.pdf"
+        },
+        {
+          "id": "schedule-1",
+          "title": "Schedule 1 — synthetic fixture",
+          "text": "Synthetic schedule for the first-reps test version. No legal provision is asserted by this fixture.\nThe final sentence remains visible.",
+          "source_url": "https://example.org/synthetic-bill.pdf"
+        }
+      ],
+      "complete": true,
+      "enrichment": {
+        "brief": "Synthetic overview fixture. This is not a description of an actual legal provision.",
+        "topics": [
+          "justice-law"
+        ],
+        "evidence": [
+          {
+            "topic": "justice-law",
+            "quote": "Synthetic bill text fixture. These are test characters, not proposed legisl",
+            "section_id": "part-1"
+          }
+        ],
+        "model": "synthetic-fixture",
+        "review_scope": "selected-provisions"
+      }
+    },
+    "/api/recent": {
+      "items": [
+        {
+          "slug": "speech-1205524",
+          "title": "Synthetic reader layout fixture — not a parliamentary quotation",
+          "indexed": "2026-10-07T00:00:00.000Z"
+        },
+        {
+          "slug": "division-federal-senate-10701",
+          "title": "Senate division, 2026-08-19: Sue Lines Pursuant to the order agreed to on 18 August, the time allotted for the second reading of the interactive gambling bills has expired. I will now put the question before the chair and then put the remaining questions required to complete the second reading stage. I will first deal with the amendment moved by Senator David Pocock.The question is that the amendment on sheet 4005 be agreed to.",
+          "indexed": "2026-10-07T00:00:00.000Z"
+        },
+        {
+          "slug": "press-pmt-reader-fixture",
+          "title": "Synthetic government release fixture",
+          "indexed": "2026-10-07T00:00:00.000Z"
+        }
+      ]
+    },
+    "/api/search": {
+      "results": [
+        {
+          "slug": "speech-1205524",
+          "title": "Synthetic reader layout fixture — not a parliamentary quotation",
+          "speaker": "Tony Burke",
+          "date": "2026-08-18",
+          "snippet": "Synthetic matching source."
+        },
+        {
+          "slug": "speech-999999998",
+          "title": "Synthetic related speech fixture",
+          "speaker": "Fixture speaker",
+          "date": "2026-10-01",
+          "snippet": "Synthetic related passage. This is not a parliamentary quotation."
+        }
+      ]
+    }
+  }
+}

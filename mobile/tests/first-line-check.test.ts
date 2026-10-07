@@ -25,6 +25,9 @@ describe('journey 15 first-line check', () => {
     '16e-ax5-cold-2',
     '16e-ax5-cold-3',
     '17pro-standard-cold',
+    '16e-ax5-money-map-r3',
+    // Today's dated masthead at AX5: Vision read "OPАХ is" (Cyrillic А, Х).
+    '17pro-ax5-masthead-lookalikes',
   ])('passes the drawn capture %s', (name) => {
     const verdict = firstLineVerdict(capture(name));
     expect(verdict).toMatchObject({ pass: true });
@@ -44,6 +47,15 @@ describe('journey 15 first-line check', () => {
         width: 1170,
         height: 2532,
         lines: [line('Today', 300, 180), line('OPAX is', 440, 100)],
+      }),
+    ).toMatchObject({ pass: false, reason: expect.stringContaining('inside') });
+  });
+  test('still rejects the observed OCR glyph equivalent inside the title', () => {
+    expect(
+      firstLineVerdict({
+        width: 1170,
+        height: 2532,
+        lines: [line('Today', 300, 180), line('OP\u0410X is', 440, 100)],
       }),
     ).toMatchObject({ pass: false, reason: expect.stringContaining('inside') });
   });

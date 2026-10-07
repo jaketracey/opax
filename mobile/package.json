@@ -1,7 +1,7 @@
 {
   "name": "opax-mobile",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start --localhost",
@@ -13,7 +13,8 @@
     "qa-advisories": "tsx scripts/qa-advisories.ts",
     "qa-static": "tsx scripts/qa-static.ts",
     "fixture": "tsx scripts/fixture-server.ts",
-    "qa": "bash scripts/qa.sh"
+    "qa": "bash scripts/qa.sh",
+    "postinstall": "python3 scripts/apply-privacy-patches.py"
   },
   "dependencies": {
     "@shopify/react-native-skia": "2.6.2",
@@ -22,6 +23,7 @@
     "expo-constants": "57.0.20",
     "expo-file-system": "57.0.7",
     "expo-font": "57.0.4",
+    "expo-gl": "57.0.2",
     "expo-linking": "57.0.11",
     "expo-location": "57.0.20",
     "expo-router": "57.0.24",
@@ -36,13 +38,15 @@
     "react-native-reanimated": "4.5.1",
     "react-native-safe-area-context": "5.7.0",
     "react-native-screens": "4.26.0",
-    "react-native-worklets": "0.10.1"
+    "react-native-worklets": "0.10.1",
+    "three": "0.185.1"
   },
   "devDependencies": {
     "@types/jest": "29.5.14",
     "@types/node": "26.6.3",
     "@types/react": "19.2.4",
     "@types/react-test-renderer": "19.1.0",
+    "@types/three": "0.185.4",
     "@types/ws": "8.18.2",
     "eslint": "9.39.5",
     "eslint-config-expo": "57.0.2",
@@ -58,5 +62,17 @@
     "node": ">=24 <25",
     "npm": ">=11 <12"
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
+  "expo": {
+    "autolinking": {
+      "ios": {
+        "buildFromSource": [
+          "expo-location",
+          "expo-file-system",
+          "react-native-reanimated",
+          "react-native-worklets"
+        ]
+      }
+    }
+  }
 }

@@ -1,4 +1,3 @@
-import { ActionSheetIOS } from 'react-native';
 import type { VoiceSource } from '../../voice';
 import { reportAnswer, reportAnswerUrl } from '../../voice/report-answer';
 
@@ -6,11 +5,12 @@ export type ReportAnswer = (recordPath: string | null) => void | Promise<void>;
 
 export { reportAnswer };
 
-/** Sources describe the call as a whole; captions never travel with a report. */
-export function reportFromSources(
-  sources: VoiceSource[],
-  report: ReportAnswer,
-) {
+/**
+ * The records a report can name. Sources describe the call as a whole;
+ * captions never travel with a report. More than one record is offered as
+ * a choice in the More menu (menu.ts).
+ */
+export function reportChoices(sources: readonly VoiceSource[]): VoiceSource[] {
   const records = new Map<string, VoiceSource>();
   for (const source of sources) {
     try {
@@ -21,20 +21,5 @@ export function reportFromSources(
       // Electorates, queries, fragments and other non-record paths are omitted.
     }
   }
-  const choices = [...records.values()];
-  if (choices.length < 2) {
-    void report(choices[0]?.path ?? null);
-    return;
-  }
-  ActionSheetIOS.showActionSheetWithOptions(
-    {
-      title: 'Report a linked record',
-      options: [...choices.map((source) => source.title), 'Cancel'],
-      cancelButtonIndex: choices.length,
-    },
-    (index) => {
-      const source = choices[index];
-      if (source) void report(source.path);
-    },
-  );
+  return [...records.values()];
 }

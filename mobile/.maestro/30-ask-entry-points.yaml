@@ -1,0 +1,93 @@
+appId: au.com.opax.app
+name: 30 Scoped Ask drafts from native records; arrival never submits
+---
+- launchApp:
+    permissions:
+      all: unset
+    clearState: true
+- openLink: opax://person/anthony-albanese
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: person-ask
+    centerElement: true
+    speed: 20
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/30-person-entry
+- tapOn:
+    id: person-ask
+- assertVisible:
+    id: ask-question
+- assertVisible: What has Anthony Albanese said in parliament\?
+- takeScreenshot: ${EVIDENCE}/30-speaker-draft
+- openLink: opax://party/labor
+- extendedWaitUntil:
+    visible:
+      id: party-title
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: party-ask
+    centerElement: true
+    speed: 20
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/30-party-entry
+- tapOn:
+    id: party-ask
+- assertVisible:
+    id: ask-question
+- assertVisible: What has parliament said about Labor\?
+- openLink: opax://electorate/el_5d600e7f6dca5b72ae04d686
+- extendedWaitUntil:
+    visible:
+      id: electorate-name
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: electorate-ask
+    centerElement: true
+    speed: 20
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/30-electorate-entry
+- tapOn:
+    id: electorate-ask
+- assertVisible:
+    id: ask-question
+- openLink: opax://bill/au-federal-r7534
+- extendedWaitUntil:
+    visible:
+      id: bill-title
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: bill-ask
+    centerElement: true
+    speed: 20
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/30-bill-entry
+- tapOn:
+    id: bill-ask
+- assertVisible:
+    id: ask-question
+- takeScreenshot: ${EVIDENCE}/30-bill-draft
+- openLink: opax://doc/speech-1205524
+- extendedWaitUntil:
+    visible:
+      id: doc-title
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: doc-ask
+    centerElement: true
+    speed: 20
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/30-doc-entry
+- tapOn:
+    id: doc-ask
+- assertVisible:
+    id: ask-question
+- assertVisible: What did .* say about .*\?
+- takeScreenshot: ${EVIDENCE}/30-doc-draft

@@ -1,9 +1,13 @@
 // Offline, data-only server. No Worker import, proxy, fetch, email or model path.
 import { createVoiceFixture } from './voice-fixture';
 import { reportsFixture } from './reports-fixture';
+import { askFixture } from './ask-fixture';
 import { createServer } from 'node:http';
 import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import snapshot from './fixture-snapshot.json';
+import recordFixtures from './fixtures/records/contracts.json';
 import {
   assertAllowedPath,
   editionPath,
@@ -12,6 +16,7 @@ import {
 import { assertPortraitPath } from '../src/api/portrait-policy';
 import { fixtureBytes, responseBytes } from '../tests/fixture-bytes';
 import { catalogSearchRows } from '../src/api/catalog-search';
+import { searchFixture, searchResourceFixture } from './search-fixture';
 import {
   decodeEdition,
   decodePay,
@@ -39,7 +44,13 @@ if (!Number.isInteger(port) || (port !== 0 && (port < 8900 || port > 8999)))
 //   conditional GET, as a pull to refresh sends), then 404 from then on, as
 //   when the posted edition goes, journey 13c. Unconditional launches,
 //   including e2e.sh's warm-up, cannot withdraw it early.
-const editionModes = ['pinned', 'absent', 'withdrawn'];
+// - politician: a parliamentarian's edition, for Today's party-coloured
+//   front page (scripts/fixtures/edition-politician.json). It is the 6 Oct
+//   2026 Alex Hawke post as the build-4 Today showed it (text and source
+//   rows verbatim), with its slides rebuilt by portal/src/daily-post.ts's
+//   rules from those figures and the pinned roster row (pid 10290). Its
+//   third topic label was not shown, so it is left out, not guessed.
+const editionModes = ['pinned', 'absent', 'withdrawn', 'politician'];
 const editionMode = process.env.OPAX_FIXTURE_EDITION ?? 'pinned';
 if (!editionModes.includes(editionMode))
   throw new Error('OPAX_FIXTURE_EDITION must be pinned, absent or withdrawn');
@@ -60,6 +71,11 @@ const rosterMode = process.env.OPAX_FIXTURE_ROSTER ?? 'pinned';
 if (!['pinned', 'null-optional'].includes(rosterMode))
   throw new Error('OPAX_FIXTURE_ROSTER must be pinned or null-optional');
 const files = new Map<string, Buffer>();
+for (const [path, body] of Object.entries(recordFixtures.responses)) {
+  if (path === '/api/search') continue;
+  assertAllowedPath(path);
+  files.set(path, Buffer.from(JSON.stringify(body)));
+}
 const pinnedBytes = fixtureBytes(snapshot);
 const reportBytes = reportsFixture(pinnedBytes);
 for (const path of Object.keys(snapshot.files)) {
@@ -96,7 +112,11 @@ if (dataMode === 'changed') {
   Object.assign(moved, { status: 'passed', status_as_of: '2026-10-01' });
   changedFiles.set('/bills/index.json', Buffer.from(JSON.stringify(index)));
 }
-const edition = responseBytes(snapshot, editionPath);
+const peopleFixtures = JSON.parse(responseBytes(snapshot, '/people-fixtures').toString()) as { responses: Record<string, unknown> };
+const edition =
+  editionMode === 'politician'
+    ? readFileSync(join(__dirname, 'fixtures/edition-politician.json'))
+    : responseBytes(snapshot, editionPath);
 const editionDate = decodeEdition(JSON.parse(edition.toString())).date;
 const manifest = JSON.parse(
   files.get('/electorates/manifest.json')!.toString(),
@@ -173,6 +193,10 @@ export const server = createServer(async (request, response) => {
       throw new Error('Host is outside the loopback fixture boundary');
     if (request.socket.remoteAddress !== '127.0.0.1')
       throw new Error('Peer is outside the loopback boundary');
+    if (await askFixture(request, response)) {
+      status = response.statusCode;
+      return;
+    }
     if (await voice?.route(request, response)) {
       status = response.statusCode;
       return;
@@ -181,7 +205,19 @@ export const server = createServer(async (request, response) => {
     if (path.endsWith('.webp')) assertPortraitPath(path);
     else assertAllowedPath(path);
     const url = new URL(path, `http://127.0.0.1:${port}`);
-    let body = reportBytes(path) ?? files.get(url.pathname);
+    const peopleResponse = Object.hasOwn(peopleFixtures.responses, path);
+    const search = peopleResponse ? null : searchFixture(url, roster);
+    if (search) {
+      response.writeHead(200, {
+        'Content-Type': search.contentType ?? 'application/json; charset=utf-8',
+        'Cache-Control': 'no-store',
+      });
+      response.end(search.body);
+      return;
+    }
+    let body = peopleResponse
+      ? Buffer.from(JSON.stringify(peopleFixtures.responses[path]))
+      : reportBytes(path) ?? files.get(url.pathname) ?? searchResourceFixture(url.pathname) ?? undefined;
     let cacheControl = 'public, max-age=300';
     const isEdition = url.pathname === editionPath;
     if (
@@ -204,6 +240,8 @@ export const server = createServer(async (request, response) => {
     if (isEdition) {
       body = edition;
       cacheControl = snapshot.responses[editionPath].cacheControl;
+    } else if (url.pathname === '/api/search' && !Object.hasOwn(peopleFixtures.responses, path)) {
+      body = Buffer.from(JSON.stringify(recordFixtures.responses['/api/search']));
     } else if (url.pathname === '/api/person-slugs') {
       body = Buffer.from(
         JSON.stringify({ generated: roster.meta.generated, slugs }),

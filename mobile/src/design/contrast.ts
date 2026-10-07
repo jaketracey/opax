@@ -1,4 +1,4 @@
-import { light, partyColors, type Role } from './palette';
+import { light, partyColors, partyWashes, type Role } from './palette';
 
 // WCAG 2.x relative luminance and contrast ratio for opaque hex colours.
 function channel(value: number): number {
@@ -97,18 +97,10 @@ export const componentPairs: ColourPair[] = [
   ),
   pair('Button primary label', 'pressed', 'onNavy', 'navyRaised'),
   pair('Button primary spinner', 'loading', 'onNavy', 'navy', 'non-text'),
-  // Button, default.
-  pair('Button default label', 'rest', 'navy', 'raised'),
-  pair('Button default boundary', 'rest', 'lineStrong', 'paper', 'non-text'),
+  // Button, default: a tinted capsule with no outline.
+  pair('Button default label', 'rest', 'navy', 'navyWash'),
   pair('Button default label', 'pressed', 'navy', 'sunken'),
-  pair(
-    'Button default boundary',
-    'pressed',
-    'lineStrong',
-    'sunken',
-    'non-text',
-  ),
-  pair('Button default spinner', 'loading', 'navy', 'raised', 'non-text'),
+  pair('Button default spinner', 'loading', 'navy', 'navyWash', 'non-text'),
   // Button, quiet.
   pair('Button quiet label', 'rest', 'navy', 'paper'),
   pair('Button quiet label', 'pressed', 'navy', 'sunken'),
@@ -118,7 +110,8 @@ export const componentPairs: ColourPair[] = [
   pair('Button danger boundary', 'rest', 'danger', 'paper', 'non-text'),
   pair('Button danger label', 'pressed', 'danger', 'sunken'),
   pair('Button danger boundary', 'pressed', 'danger', 'sunken', 'non-text'),
-  // Disabled primary, default and danger share one look.
+  // Disabled buttons share one label: inkSoft on sunken (primary and danger
+  // keep a line-strong outline; the default capsule has none).
   pair('Button disabled label', 'disabled', 'inkSoft', 'sunken'),
   pair(
     'Button disabled boundary',
@@ -141,17 +134,21 @@ export const componentPairs: ColourPair[] = [
   pair('Tag outline', 'pressed', 'bronzeInk', 'paper', 'non-text'),
 
   // FilterChip.
-  pair('FilterChip key', 'rest', 'inkSoft', 'sunken'),
-  pair('FilterChip value and close icon', 'rest', 'ink', 'sunken'),
-  pair('FilterChip boundary', 'rest', 'lineStrong', 'paper', 'non-text'),
-  pair('FilterChip key', 'pressed', 'inkSoft', 'raised'),
-  pair('FilterChip value and close icon', 'pressed', 'ink', 'raised'),
+  pair('FilterChip key', 'rest', 'inkSoft', 'navyWash'),
+  pair('FilterChip value and close icon', 'rest', 'ink', 'navyWash'),
+  pair('FilterChip key', 'pressed', 'inkSoft', 'sunken'),
+  pair('FilterChip value and close icon', 'pressed', 'ink', 'sunken'),
 
   // SegmentedControl.
   pair('Segment label', 'rest', 'navy', 'raised'),
   pair('Segment label', 'pressed', 'navy', 'sunken'),
   pair('Segment label', 'selected', 'onNavy', 'navy'),
   pair('Segmented boundary', 'rest', 'lineStrong', 'paper', 'non-text'),
+  // ChoiceChips.
+  pair('Choice chip label', 'rest', 'navy', 'navyWash'),
+  pair('Choice chip label', 'pressed', 'navy', 'sunken'),
+  pair('Choice chip label', 'selected', 'onNavy', 'navy'),
+  pair('Choice chip label', 'pressed', 'onNavy', 'navyRaised'),
 
   // Field.
   pair('Field value', 'rest', 'ink', 'raised'),
@@ -190,6 +187,51 @@ export const componentPairs: ColourPair[] = [
   pair('ErrorState icon', 'rest', 'danger', 'paper', 'non-text'),
   pair('OfflineBanner text and icon', 'rest', 'ink', 'paper'),
 
+  // Category accents (UI sweep): symbols, display figures and short labels
+  // in each accent ink, on paper, raised and the accent's own wash; ink and
+  // inkSoft text on every wash (tinted tiles and section headers).
+  ...(
+    [
+      ['moneyInk', 'moneyWash'],
+      ['votesInk', 'votesWash'],
+      ['interestsInk', 'interestsWash'],
+      ['billsInk', 'billsWash'],
+      ['navy', 'navyWash'],
+      ['bronzeInk', 'bronzeWash'],
+    ] as const
+  ).flatMap(([ink, wash]) => [
+    pair(`Accent ${ink}: symbols, figures, labels`, 'rest', ink, 'paper'),
+    pair(`Accent ${ink}: symbols, figures, labels`, 'pressed', ink, 'sunken'),
+    pair(`Accent ${ink} on raised`, 'rest', ink, 'raised'),
+    pair(`Accent ${ink} symbol on its tile`, 'rest', ink, wash),
+    pair(`Text (ink) on ${wash}`, 'rest', 'ink', wash),
+    pair(`Text (inkSoft) on ${wash}`, 'rest', 'inkSoft', wash),
+  ]),
+
+  // Disclosure rows, LinkRow, InfoButton and ViewOriginal.
+  pair('Disclosure and LinkRow label', 'rest', 'ink', 'paper'),
+  pair('Disclosure and LinkRow label', 'pressed', 'ink', 'sunken'),
+  pair('Disclosure value and chevron', 'rest', 'inkSoft', 'paper'),
+  pair('Disclosure value and chevron', 'pressed', 'inkSoft', 'sunken'),
+  pair('InfoButton symbol', 'rest', 'navy', 'paper', 'non-text'),
+  pair('InfoButton symbol', 'pressed', 'navy', 'sunken', 'non-text'),
+  pair('ViewOriginal label and symbol', 'rest', 'bronzeInk', 'paper'),
+  pair('ViewOriginal label and symbol', 'pressed', 'bronzeInk', 'sunken'),
+  pair('Caption (Updated …)', 'rest', 'inkSoft', 'paper'),
+
+  // States: the empty note on paper; the error note on its sunken panel,
+  // with Try again (Button default) inside it.
+  pair('EmptyState message and symbol', 'rest', 'inkSoft', 'paper'),
+  pair('ErrorState message', 'rest', 'ink', 'sunken'),
+  pair(
+    'Button default boundary on the error panel',
+    'rest',
+    'lineStrong',
+    'sunken',
+    'non-text',
+  ),
+  pair('ErrorState symbol', 'rest', 'danger', 'sunken', 'non-text'),
+
   // PartyLabel dots, on the row's resting and pressed surfaces.
   ...Object.entries(partyColors).flatMap(([party, hex]) =>
     (['paper', 'raised'] as const).map((background) => ({
@@ -201,6 +243,20 @@ export const componentPairs: ColourPair[] = [
     })),
   ),
 ];
+
+/**
+ * Party chips and tinted profile headers draw ink and inkSoft text on each
+ * party's wash (not a role: one per party). The dot sits on a raised ring,
+ * so its pair is the PartyLabel dot on raised above.
+ */
+export const partyWashPairs = Object.entries(partyWashes).flatMap(
+  ([party, wash]) =>
+    (['ink', 'inkSoft'] as const).map((role) => ({
+      use: `PartyChip ${role} on the ${party} wash`,
+      foreground: light[role],
+      background: wash,
+    })),
+);
 
 // Pairs IOS-UX records as failing: components must never draw them.
 export const forbiddenPairs: ColourPair[] = [

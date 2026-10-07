@@ -108,4 +108,8 @@ actor VoiceController {
         } catch { return VoiceBridgeValue.failure(error) }
     }
     func shutdown() async { await call.shutdown() }
+    func chatRequest(_ path: String, _ method: String, _ body: String?) async -> [String: Any] {
+        do { return VoiceBridgeValue.success(try await http.chatRequest(path: path, method: method, body: body)) }
+        catch { return VoiceBridgeValue.failure(error) }
+    }
 }

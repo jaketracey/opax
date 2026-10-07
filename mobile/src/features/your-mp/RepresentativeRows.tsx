@@ -52,10 +52,18 @@ export function RepresentativeRows({
             formerly={profile?.formerly}
             place={
               seat
-                ? `${seat.chamber === 'senate' ? 'Senator for' : 'Member for'} ${seat.name} · ${chamberName(seat.chamber, seat.jurisdiction) ?? CHAMBER_NOT_RECORDED} · ${jurisdictionName(state ?? seat.jurisdiction) ?? 'Jurisdiction not recorded'}`
+                ? `${seat.chamber === 'senate' ? 'Senator for' : 'Member for'} ${seat.name} · ${jurisdictionName(state ?? seat.jurisdiction) ?? 'Jurisdiction not recorded'}`
                 : undefined
             }
-            detail={asAt ? `As at ${formatDate(asAt)}` : 'Date not published'}
+            // The chamber and the block's date are in its heading and caption.
+            detail={
+              seat
+                ? (chamberName(seat.chamber, seat.jurisdiction) ??
+                  CHAMBER_NOT_RECORDED)
+                : asAt
+                  ? `As at ${formatDate(asAt, 'short')}`
+                  : 'Date not published'
+            }
             onPress={
               profile ? () => router.push(personRoute(profile.slug)) : undefined
             }
