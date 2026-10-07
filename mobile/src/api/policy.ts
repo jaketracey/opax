@@ -1,4 +1,11 @@
 import { isPortraitPath } from './portrait-policy';
+import {
+  documentKinds,
+  moreCatalogKinds,
+  jurisdictions,
+  topics,
+  sorts,
+} from '../features/search/contracts';
 // Public, catalog-only GETs. Adding a path requires a source/cost review and test.
 export const catalogKinds = ['person', 'interest', 'pay', 'expense'] as const;
 export type CatalogKind = (typeof catalogKinds)[number];
@@ -19,6 +26,8 @@ const staticPaths = new Set([
   '/graph/aec-extras.json',
   // Leads (P1): the static discovery export, 60 signals with their caveats.
   '/discovery.json',
+  '/search-catalog/manifest.json',
+  '/reports/index.json',
 ]);
 // W13 frozen daily edition: one D1 read of the posted journal, no model,
 // preview or OG path (docs/IOS-API-CONTRACT.md, "App readers"). Only `latest`:
@@ -30,6 +39,54 @@ const releasePath =
 const billPath =
   /^\/bills\/au-federal-(?:[rs]\d+|alrc-\d+|ed-[a-z0-9]+(?:-[a-z0-9]+)*)\.json$/;
 const interestPath = /^\/interests\/(?:\d+|n-[a-z0-9]+(?:-[a-z0-9]+)*)\.json$/;
+
+function assertSearchParams(p: URLSearchParams, summary = false) {
+  const keys = [
+    'q',
+    'kind',
+    'mode',
+    'page',
+    'per',
+    'sort',
+    'speaker',
+    'party',
+    'state',
+    'topic',
+    'from',
+    'to',
+    ...(summary ? ['stream'] : []),
+  ];
+  const name = /^[\p{L}\p{N} .,'’&()\/-]+$/u;
+  if (
+    !p.get('q')?.trim() ||
+    p.get('q')!.length > 2000 ||
+    [...p.keys()].some((k) => !keys.includes(k) || p.getAll(k).length !== 1) ||
+    ['page', 'per'].some(
+      (k) => p.has(k) && !/^[1-9]\d{0,3}$/.test(p.get(k)!),
+    ) ||
+    (p.has('per') && Number(p.get('per')) > 200) ||
+    (p.has('mode') &&
+      !['hybrid', 'semantic', 'keyword'].includes(p.get('mode')!)) ||
+    (p.has('sort') && !sorts.some((s) => s.value === p.get('sort'))) ||
+    (p.has('state') &&
+      !jurisdictions.some((j) => j.value === p.get('state'))) ||
+    (p.has('topic') && !Object.hasOwn(topics, p.get('topic')!)) ||
+    ['from', 'to'].some(
+      (k) =>
+        p.has(k) &&
+        (!/^\d{4}$/.test(p.get(k)!) ||
+          Number(p.get(k)) < 1993 ||
+          Number(p.get(k)) > 2026),
+    ) ||
+    ['speaker', 'party'].some(
+      (k) => p.has(k) && (p.get(k)!.length > 200 || !name.test(p.get(k)!)),
+    ) ||
+    (p.has('from') &&
+      p.has('to') &&
+      Number(p.get('from')) > Number(p.get('to')))
+  )
+    throw new Error('Invalid explicit search parameters');
+}
 
 export function assertAllowedPath(path: string): void {
   const [pathname, query] = path.split('?');
@@ -47,6 +104,43 @@ export function assertAllowedPath(path: string): void {
     throw new Error('Route is outside the public catalog allow-list');
   const params = new URLSearchParams(query);
   if (path.split('?').length > 2) throw new Error('Invalid catalog query');
+  if (pathname === '/api/brief') {
+    const ids = params.get('rids')?.split(',') ?? [];
+    if (
+      [...params.keys()].length !== 1 ||
+      params.getAll('rids').length !== 1 ||
+      !ids.length ||
+      ids.length > 24 ||
+      new Set(ids).size !== ids.length ||
+      ids.some((id) => !/^[a-f0-9]{32}$/.test(id))
+    )
+      throw new Error('Briefs require one batch of up to 24 resource IDs');
+    return;
+  }
+  if (pathname === '/api/search' || pathname === '/api/search-summary') {
+    const kind = params.get('kind') ?? '';
+    if (
+      !(documentKinds as readonly string[]).includes(kind) &&
+      !(
+        pathname === '/api/search-summary' &&
+        (moreCatalogKinds as readonly string[]).includes(kind)
+      )
+    )
+      throw new Error('Records search requires an explicit supported kind');
+    assertSearchParams(params, pathname === '/api/search-summary');
+    if (
+      pathname === '/api/search-summary' &&
+      (params.get('stream') !== '1' ||
+        params.get('page') !== '1' ||
+        params.get('per') !== '20' ||
+        params.get('sort') !== 'relevance' ||
+        kind === 'grant')
+    )
+      throw new Error(
+        'Summary requires the web overview parameters and unfiltered public records',
+      );
+    return;
+  }
   if (pathname === '/api/search-all') {
     const kind = params.get('kind');
     const allowedParams = [
@@ -60,10 +154,14 @@ export function assertAllowedPath(path: string): void {
       'speaker',
       'from',
       'to',
+      'mode',
+      'topic',
     ];
     if (
       !kind ||
-      !catalogKinds.includes(kind as CatalogKind) ||
+      !([...catalogKinds, ...moreCatalogKinds] as readonly string[]).includes(
+        kind,
+      ) ||
       !params.get('q')?.trim() ||
       params.get('q')!.length > 2000 ||
       ['page', 'per'].some(
@@ -78,6 +176,7 @@ export function assertAllowedPath(path: string): void {
       throw new Error(
         'Search requires one explicit non-bill catalog kind and a query',
       );
+    assertSearchParams(params);
     return;
   }
   if (path.includes('?'))

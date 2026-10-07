@@ -31,6 +31,12 @@ test('the native kind menu submits only its allowed selection and honours Cancel
     'Declared interests',
     'Pay',
     'Expenses',
+    'Records',
+    'Political parties',
+    'Government agencies',
+    'Grants',
+    'Bills',
+    'Research reports',
     'Cancel',
   ]);
   select(options.cancelButtonIndex!);

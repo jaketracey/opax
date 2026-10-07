@@ -83,6 +83,7 @@ function guardFrom(source: string): Guard {
   });
   const module = { exports: {} as { forbiddenOpaxRoute: Guard } };
   const stubs: Record<string, unknown> = {
+    './routes': { searchRouteFromWebPath: () => null },
     'react-native': {},
     'expo-web-browser': {},
     '../design/environment': { webOrigin: origin, isE2E: true },

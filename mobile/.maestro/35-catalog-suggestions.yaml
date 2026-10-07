@@ -1,0 +1,98 @@
+appId: au.com.opax.app
+name: 35 Grants programs and local party, topic and report suggestions, also at AX5
+---
+- launchApp:
+    clearState: true
+- tapOn:
+    id: tab-search
+- tapOn:
+    id: search-input
+- inputText: Community
+- hideKeyboard
+- scrollUntilVisible:
+    element:
+      id: search-kind-menu
+    direction: UP
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: search-kind-menu
+- tapOn: Grants
+- scrollUntilVisible:
+    element:
+      id: search-submit
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: search-submit
+- scrollUntilVisible:
+    element:
+      id: records-count
+    centerElement: true
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/35-grants-count
+- scrollUntilVisible:
+    element:
+      id: records-result-grant-program-.*
+    centerElement: true
+    visibilityPercentage: 10
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/35-grant-program
+- tapOn:
+    id: records-result-grant-program-.*
+    index: 0
+- assertVisible:
+    id: source-destination-url
+- takeScreenshot: ${EVIDENCE}/35-grant-browser
+- tapOn: OK
+- scrollUntilVisible:
+    element:
+      id: search-input
+    direction: UP
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: search-input
+- eraseText
+- inputText: Labor
+- hideKeyboard
+- scrollUntilVisible:
+    element:
+      id: search-suggestion-party-Labor
+    centerElement: true
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/35-party-suggestion
+- tapOn:
+    id: search-suggestion-party-Labor
+- assertVisible:
+    id: party-screen
+- tapOn: Search
+- scrollUntilVisible:
+    element:
+      id: search-input
+    direction: UP
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: search-input
+- eraseText
+- inputText: Housing
+- hideKeyboard
+- scrollUntilVisible:
+    element:
+      id: search-suggestion-topic-housing
+    centerElement: true
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/35-topic-suggestion
+- tapOn:
+    id: search-suggestion-topic-housing
+- assertVisible:
+    id: source-destination-url
+- takeScreenshot: ${EVIDENCE}/35-topic-browser
+- tapOn: OK
+- scrollUntilVisible:
+    element:
+      id: search-suggestion-report-housing
+    centerElement: true
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/35-report-suggestion

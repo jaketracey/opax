@@ -3,6 +3,7 @@ import * as WebBrowser from 'expo-web-browser';
 import { hasSourcePreview, isE2E, webOrigin } from '../design/environment';
 import { light } from '../design/tokens';
 import { presentSourceDestination } from './source-destination';
+import { searchRouteFromWebPath } from './routes';
 
 // Where the Worker or the web app turns an OPAX address into a page the app
 // never sends a reader to (portal/src/page-entry.ts, portal/src/index.ts,
@@ -216,6 +217,10 @@ export function canonicalUrl(path: string, anchor?: string): string {
   )
     throw new Error('Canonical paths have no dot segments');
   const base = new URL(webOrigin);
+  // This Search view now has a native draft screen. Preserve its reviewed
+  // filters in shares, while sourceUrl still refuses opening paid web Search.
+  if (anchor === undefined && searchRouteFromWebPath(path))
+    return new URL(path, base).toString();
   const url = new URL(pathname, base);
   if (
     url.origin !== base.origin ||

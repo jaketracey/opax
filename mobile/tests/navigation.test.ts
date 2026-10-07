@@ -50,7 +50,7 @@ describe('canonical share links', () => {
     '/API/search',
     '/mcp',
     '/ask',
-    '/ask?view=search&q=housing',
+    '/ask?view=search&q=housing&kind=donor',
     '/chat',
     '/ingest/x',
     '/.well-known/apple-app-site-association',
