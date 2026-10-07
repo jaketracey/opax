@@ -102,6 +102,8 @@ name: 31 Ask options, chips, saved conversation after relaunch and delete (stand
       id: ask-restore-0
     centerElement: false
     timeout: 180000
+- waitForAnimationToEnd:
+    timeout: 5000
 - takeScreenshot: ${EVIDENCE}/31-history
 - tapOn:
     id: ask-restore-0

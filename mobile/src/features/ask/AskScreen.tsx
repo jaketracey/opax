@@ -601,33 +601,36 @@ export default function AskScreen() {
           {!saved.chats.length ? (
             <EmptyState message="No saved conversations." />
           ) : null}
-          {saved.chats.map((c, i) => (
-            <View key={c.id} style={styles.conversation}>
-              <View style={styles.conversationTitle}>
-                <LinkRow
-                  title={c.title}
-                  detail={`${c.thread.filter((m) => m.role === 'user').length} questions`}
-                  icon="bubble.left.and.bubble.right"
-                  accent="people"
-                  onPress={() => {
-                    askSession.open(c.id);
-                    setHistoryOpen(false);
-                    scroll.current?.scrollTo({
-                      y: answerY.current,
-                      animated: false,
-                    });
-                  }}
-                  testID={`ask-restore-${i}`}
+          {saved.chats.map((c, i) => {
+            const questions = c.thread.filter((m) => m.role === 'user').length;
+            return (
+              <View key={c.id} style={styles.conversation}>
+                <View style={styles.conversationTitle}>
+                  <LinkRow
+                    title={c.title}
+                    detail={`${questions} question${questions === 1 ? '' : 's'}`}
+                    icon="bubble.left.and.bubble.right"
+                    accent="people"
+                    onPress={() => {
+                      askSession.open(c.id);
+                      setHistoryOpen(false);
+                      scroll.current?.scrollTo({
+                        y: answerY.current,
+                        animated: false,
+                      });
+                    }}
+                    testID={`ask-restore-${i}`}
+                  />
+                </View>
+                <IconButton
+                  symbol="trash"
+                  accessibilityLabel={`Delete conversation: ${c.title}`}
+                  onPress={() => void remove(c.id)}
+                  testID={`ask-delete-${i}`}
                 />
               </View>
-              <IconButton
-                symbol="trash"
-                accessibilityLabel={`Delete conversation: ${c.title}`}
-                onPress={() => void remove(c.id)}
-                testID={`ask-delete-${i}`}
-              />
-            </View>
-          ))}
+            );
+          })}
           {syncNotice ? (
             <Text wordSafe testID="ask-sync-notice">
               {syncNotice}
