@@ -7,8 +7,15 @@ name: 35 Grants programs and local party, topic and report suggestions, also at 
     id: tab-search
 - tapOn:
     id: search-input
+    point: 95%,50%
 - inputText: Community
-- hideKeyboard
+- assertVisible:
+    id: search-input
+    text: ^Community$
+- tapOn:
+    point: 1%,50%
+    retryTapIfNoChange: false
+- waitForAnimationToEnd
 - scrollUntilVisible:
     element:
       id: search-kind-menu
@@ -60,13 +67,22 @@ name: 35 Grants programs and local party, topic and report suggestions, also at 
     element:
       id: search-input
     direction: UP
-    centerElement: true
     timeout: 90000
+- takeScreenshot: ${EVIDENCE}/35-returned-form
 - tapOn:
     id: search-input
+    point: 95%,50%
+- takeScreenshot: ${EVIDENCE}/35-before-party-edit
 - eraseText
 - inputText: Labor
-- hideKeyboard
+- assertVisible:
+    id: search-input
+    text: ^Labor$
+- takeScreenshot: ${EVIDENCE}/35-party-query-typed
+- tapOn:
+    point: 1%,50%
+    retryTapIfNoChange: false
+- waitForAnimationToEnd
 - scrollUntilVisible:
     element:
       id: search-suggestion-party-Labor
@@ -82,13 +98,19 @@ name: 35 Grants programs and local party, topic and report suggestions, also at 
     element:
       id: search-input
     direction: UP
-    centerElement: true
     timeout: 90000
 - tapOn:
     id: search-input
+    point: 95%,50%
 - eraseText
 - inputText: Housing
-- hideKeyboard
+- assertVisible:
+    id: search-input
+    text: ^Housing$
+- tapOn:
+    point: 1%,50%
+    retryTapIfNoChange: false
+- waitForAnimationToEnd
 - scrollUntilVisible:
     element:
       id: search-suggestion-topic-housing
