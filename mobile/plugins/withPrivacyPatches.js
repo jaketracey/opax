@@ -41,6 +41,20 @@ module.exports = (config) => {
         '    system("python3", File.join(__dir__, "../scripts/stage-privacy-manifests.py")) or raise "React privacy staging failed"\n' +
         mod.modResults.contents.slice(end);
     }
+    const buildMarker = '# OPAX: React privacy survives build-time replacement';
+    if (!mod.modResults.contents.includes(buildMarker)) {
+      const end = mod.modResults.contents.lastIndexOf('  end\nend');
+      if (end < 0 || !mod.modResults.contents.includes('post_install do'))
+        throw new Error(
+          'Podfile post_install layout changed; review privacy staging',
+        );
+      mod.modResults.contents =
+        mod.modResults.contents.slice(0, end) +
+        `    ${buildMarker}\n` +
+        "    require_relative '../plugins/privacy-staging'\n" +
+        '    install_react_privacy_staging(installer)\n' +
+        mod.modResults.contents.slice(end);
+    }
     return mod;
   });
 };

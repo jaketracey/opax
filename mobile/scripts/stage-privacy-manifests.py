@@ -3,7 +3,8 @@
 
 CocoaPods copies React's privacy resource bundles beside the app; Apple's
 per-executable rule also requires them INSIDE the prebuilt React.framework.
-This runs in post_install before Xcode embeds/signs the frameworks, and only
+This runs in post_install and after React's build-time configuration replacement,
+before CocoaPods copies/embeds/signs the frameworks, and only
 modifies this worktree's Pods. Never mutate shared download/cache artifacts.
 """
 from pathlib import Path

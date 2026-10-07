@@ -2,6 +2,7 @@
 """Negative privacy gates with synthetic binaries; no Apple/network access."""
 import importlib.util
 import json
+import os
 from pathlib import Path
 import plistlib
 import re
@@ -116,6 +117,60 @@ class PrivacyScanTests(unittest.TestCase):
 
 
 class ManifestStagingTests(unittest.TestCase):
+    def test_build_replacement_restages_before_copy_and_preserves_failure(self):
+        mobile = Path(__file__).resolve().parent.parent
+        with tempfile.TemporaryDirectory(prefix='opax privacy ') as directory:
+            root = Path(directory)
+            (root / 'scripts').mkdir()
+            shutil.copyfile(mobile / 'scripts/stage-privacy-manifests.py', root / 'scripts/stage-privacy-manifests.py')
+            for name in ('React/Resources', 'ReactCommon/react/timing'):
+                source = root / 'node_modules/react-native' / name
+                source.mkdir(parents=True)
+                (source / 'PrivacyInfo.xcprivacy').write_bytes(plistlib.dumps({'NSPrivacyAccessedAPITypes': [{
+                    'NSPrivacyAccessedAPIType': 'NSPrivacyAccessedAPICategoryUserDefaults',
+                    'NSPrivacyAccessedAPITypeReasons': ['CA92.1']}]}))
+            framework = root / 'ios/Pods/React.xcframework/ios-arm64/React.framework'
+            framework.mkdir(parents=True)
+            manifest = framework / 'PrivacyInfo.xcprivacy'
+            manifest.write_bytes(plistlib.dumps({}))
+            harness = root / 'hook.rb'
+            harness.write_text('''require ARGV.fetch(0)
+Phase = Struct.new(:name, :shell_script)
+Target = Struct.new(:name, :build_phases)
+Project = Struct.new(:targets)
+Installer = Struct.new(:pods_project)
+replacement = Phase.new('[CP-User] [RNCore] Replace React Native Core for the right configuration, if needed', ARGV.fetch(1))
+copy = Phase.new('[CP] Copy XCFrameworks', 'test -f "$PODS_ROOT/React.xcframework/ios-arm64/React.framework/PrivacyInfo.xcprivacy"')
+phases = ARGV[2] == 'reverse' ? [copy, replacement] : [replacement, copy]
+installer = Installer.new(Project.new([Target.new('React-Core-prebuilt', phases)]))
+2.times { install_react_privacy_staging(installer) }
+puts replacement.shell_script
+''')
+            def hook(command, order='normal'):
+                return subprocess.run(['ruby', str(harness), str(mobile / 'plugins/privacy-staging.rb'), command, order],
+                                      capture_output=True, text=True)
+            result = hook('rm "$PODS_ROOT/React.xcframework/ios-arm64/React.framework/PrivacyInfo.xcprivacy"\n')
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(result.stdout.count('# OPAX: restage privacy'), 1)
+            env = {**os.environ, 'PODS_ROOT': str(root / 'ios/Pods')}
+            # Execute the replacement and immediately simulate CocoaPods copying
+            # the framework. The old post-install-only staging fails this case.
+            copied = root / 'embedded.xcprivacy'
+            result = subprocess.run(['/bin/sh'], input=result.stdout +
+                                    'cp "$PODS_ROOT/React.xcframework/ios-arm64/React.framework/PrivacyInfo.xcprivacy" "$PODS_ROOT/../../embedded.xcprivacy"\n',
+                                    env=env, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(privacy.declarations(plistlib.loads(copied.read_bytes())),
+                             {'UserDefaults': ['CA92.1'], 'SystemBootTime': ['35F9.1']})
+            manifest.unlink()
+            failure = hook('false\n')
+            result = subprocess.run(['/bin/sh'], input=failure.stdout, env=env, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 1)
+            self.assertFalse(manifest.exists())
+            reversed_order = hook('true\n', 'reverse')
+            self.assertNotEqual(reversed_order.returncode, 0)
+            self.assertIn('phase order changed', reversed_order.stderr)
+
     def test_react_manifest_is_inside_each_local_slice_and_shared_slice_is_refused(self):
         spec = importlib.util.spec_from_file_location('privacy_stage', Path(__file__).parent / 'stage-privacy-manifests.py')
         stage = importlib.util.module_from_spec(spec); spec.loader.exec_module(stage)

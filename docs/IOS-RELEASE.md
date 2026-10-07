@@ -65,7 +65,9 @@ while a successful online read remains usable. No disk-space value leaves the
 device. Active keyboards are scanned; declare a suitable reason only if a
 future build actually links that API and the feature meets that reason.
 CocoaPods stages React's own metadata/default/timer declarations inside each
-local prebuilt React framework slice before Xcode embeds and signs it. It also
+local prebuilt React framework slice after pod install and again after React's
+build-time Debug/Release replacement, before CocoaPods copies, embeds and signs
+it. The hook checks phase ordering and preserves a replacement failure. It also
 keeps the upstream resource bundles. The staging step refuses shared artifacts.
 
 `verify-ios-release.py` scans every Mach-O with `nm`, `otool` (loads and ObjC
