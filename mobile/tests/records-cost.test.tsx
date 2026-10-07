@@ -171,6 +171,15 @@ test('a non-roster release never gets a native speaker/profile button', async ()
   expect(view.root.findAllByProps({ testID: 'doc-more' })).toHaveLength(0);
   await act(async () => view.unmount());
 });
+test('a synchronously rejected record identifier shows the reader error state', async () => {
+  jest.mocked(records.document).mockImplementation(() => {
+    throw new Error('This record identifier cannot be read.');
+  });
+  const view = await mount(<DocumentReader />);
+  expect(view.root.findByProps({ testID: 'doc-error' })).toBeTruthy();
+  expect(records.similar).not.toHaveBeenCalled();
+  await act(async () => view.unmount());
+});
 test('opening recent calls recent once and does not fan out a resource read per row', async () => {
   jest
     .mocked(records.recent)

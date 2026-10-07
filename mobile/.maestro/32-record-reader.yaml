@@ -1,7 +1,9 @@
 appId: au.com.opax.app
 name: 32 Bill to native speech, cite BibTeX, similar on tap and roster profile
 ---
-- launchApp
+- launchApp:
+    permissions:
+      all: unset
 - openLink: opax://bill/au-federal-r7534
 - extendedWaitUntil:
     visible:

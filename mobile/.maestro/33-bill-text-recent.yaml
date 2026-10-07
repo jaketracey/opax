@@ -1,7 +1,9 @@
 appId: au.com.opax.app
 name: 33 Bill text versions, source navigation, Just added and native records
 ---
-- launchApp
+- launchApp:
+    permissions:
+      all: unset
 - openLink: opax://bill/au-federal-r7534
 - extendedWaitUntil:
     visible:

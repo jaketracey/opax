@@ -5,6 +5,8 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
 # leading edge, so no scroll can start a back-swipe.
 - launchApp:
     clearState: true
+    permissions:
+      all: unset
 - assertVisible:
     id: today-screen
 - assertVisible:

@@ -11,7 +11,8 @@ export function useRead<T>(load: () => Promise<T>) {
   } | null>(null);
   useEffect(() => {
     let active = true;
-    load()
+    Promise.resolve()
+      .then(load)
       .then((value) => {
         if (active) setSettled({ load, attempt, value, error: null });
       })
