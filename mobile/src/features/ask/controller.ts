@@ -1,3 +1,4 @@
+import { phoneCopy } from '../../design/phone-copy';
 import {
   decodeAnswer,
   decodeFollowups,
@@ -124,7 +125,9 @@ export class AskController {
       });
     } catch {
       this.update({
-        notice: 'This conversation could not be saved on this iPhone.',
+        notice: phoneCopy(
+          'This conversation could not be saved on this iPhone.',
+        ),
       });
     }
   }
@@ -203,7 +206,9 @@ export class AskController {
       if (mine === this.sequence && this.state.id)
         await this.io.sync?.(this.state.id).catch(() =>
           this.update({
-            notice: 'Saved on this iPhone. Account sync could not complete.',
+            notice: phoneCopy(
+              'Saved on this iPhone. Account sync could not complete.',
+            ),
           }),
         );
     } catch (e) {

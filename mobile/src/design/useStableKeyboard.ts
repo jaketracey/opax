@@ -1,6 +1,7 @@
 import { useContext, useEffect, useRef, useState, type RefObject } from 'react';
 import {
   Keyboard,
+  Platform,
   useWindowDimensions,
   type ScrollView,
   type View,
@@ -41,7 +42,11 @@ export function useStableKeyboard(
           target?.current?.measureInWindow((_x, y, _width, height) => {
             if (keyboard.current <= 0) return;
             const obscured =
-              y + height - (windowHeight - keyboard.current - spacing.s4);
+              y +
+              height -
+              (windowHeight -
+                (Platform.OS === 'android' ? 0 : keyboard.current) -
+                spacing.s4);
             if (obscured > 0)
               scroll.current?.scrollTo({
                 y: offset.current + obscured,
@@ -62,10 +67,20 @@ export function useStableKeyboard(
         if (height > 0) reveal();
       },
     );
-    const shown = Keyboard.addListener('keyboardDidShow', reveal);
+    const shown = Keyboard.addListener('keyboardDidShow', (event) => {
+      if (Platform.OS === 'android') {
+        keyboard.current = event.endCoordinates.height;
+        setOffsetFloor(offset.current);
+      }
+      reveal();
+    });
+    const hidden = Keyboard.addListener('keyboardDidHide', () => {
+      if (Platform.OS === 'android') keyboard.current = 0;
+    });
     return () => {
       subscription.remove();
       shown.remove();
+      hidden.remove();
       if (frame !== undefined) cancelAnimationFrame(frame);
     };
   }, [windowHeight, scroll, target]);

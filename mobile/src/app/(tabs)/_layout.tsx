@@ -1,9 +1,12 @@
 import { NativeTabs } from 'expo-router/unstable-native-tabs';
+import { Platform } from 'react-native';
+import { AndroidTabs } from '../../navigation/AndroidTabs';
 import { chrome } from '../../design/tokens';
 // Ask is the fifth tab. Talk and Account keep their navigation-bar positions.
 // The native tab bar keeps system type and offers the Large Content Viewer
 // at accessibility text sizes.
 export default function TabsLayout() {
+  if (Platform.OS === 'android') return <AndroidTabs />;
   return (
     <NativeTabs
       tintColor={chrome.tint}
@@ -17,11 +20,13 @@ export default function TabsLayout() {
         <NativeTabs.Trigger.Label>Today</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
           sf={{ default: 'newspaper', selected: 'newspaper.fill' }}
+          md="newspaper"
         />
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="(your-mp)" testID="tab-your-mp">
         <NativeTabs.Trigger.Label>Your MP</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
+          md="account_balance"
           sf={{
             default: 'building.columns',
             selected: 'building.columns.fill',
@@ -32,16 +37,17 @@ export default function TabsLayout() {
         <NativeTabs.Trigger.Label>Bills</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
           sf={{ default: 'doc.text', selected: 'doc.text.fill' }}
+          md="description"
         />
       </NativeTabs.Trigger>
       {/* Keep the requested tab order on every supported iOS version. */}
       <NativeTabs.Trigger name="(search)" testID="tab-search">
         <NativeTabs.Trigger.Label>Search</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon sf="magnifyingglass" />
+        <NativeTabs.Trigger.Icon sf="magnifyingglass" md="search" />
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="(ask)" testID="tab-ask">
         <NativeTabs.Trigger.Label>Ask</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon sf="text.bubble" />
+        <NativeTabs.Trigger.Icon sf="text.bubble" md="chat_bubble" />
       </NativeTabs.Trigger>
     </NativeTabs>
   );

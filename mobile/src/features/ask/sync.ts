@@ -1,4 +1,5 @@
 import native from '../../../modules/opax-voice';
+import { Platform } from 'react-native';
 import {
   decodeRemoteChat,
   decodeRemoteIndex,
@@ -49,6 +50,7 @@ export async function syncSubmittedChat(
   c: Chat,
   status?: { signedIn?: boolean; accountHeld?: boolean } | null,
 ) {
+  if (Platform.OS === 'android') return;
   if (status && !status.signedIn && !status.accountHeld) return;
   try {
     await pushChat(c);

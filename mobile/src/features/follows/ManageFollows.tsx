@@ -1,3 +1,4 @@
+import { phoneCopy } from '../../design/phone-copy';
 import { useState } from 'react';
 import { Alert } from 'react-native';
 import { router } from 'expo-router';
@@ -30,7 +31,9 @@ const groups: [FollowKind, string][] = [
   ['bill', 'Bills'],
   ['electorate', 'Electorates'],
 ];
-const failed = 'Your follows could not be saved on this iPhone. Try again.';
+const failed = phoneCopy(
+  'Your follows could not be saved on this iPhone. Try again.',
+);
 
 /** The follows saved on this iPhone: open one, unfollow one or clear them all. */
 export default function ManageFollows() {
@@ -52,8 +55,9 @@ export default function ManageFollows() {
     <Screen testID="follows-screen">
       <Group>
         <Text wordSafe variant="metadata" testID="follows-privacy">
-          Follows are saved on this iPhone only. Nothing about them is sent to
-          OPAX or anyone else. Device backups may include them.
+          {phoneCopy(
+            'Follows are saved on this iPhone only. Nothing about them is sent to OPAX or anyone else. Device backups may include them.',
+          )}
         </Text>
       </Group>
       {error ? (
@@ -111,7 +115,9 @@ export default function ManageFollows() {
               onPress={() =>
                 Alert.alert(
                   `Unfollow all ${formatCount(follows.length)}?`,
-                  'They are removed from this iPhone, and Today stops showing their changes.',
+                  phoneCopy(
+                    'They are removed from this iPhone, and Today stops showing their changes.',
+                  ),
                   [
                     { text: 'Cancel', style: 'cancel' },
                     {
@@ -127,8 +133,9 @@ export default function ManageFollows() {
         </>
       )}
       <Text wordSafe variant="caption" testID="follows-end">
-        Today compares each follow with the published records when you open the
-        app or pull to refresh. The comparison runs on this iPhone.
+        {phoneCopy(
+          'Today compares each follow with the published records when you open the app or pull to refresh. The comparison runs on this iPhone.',
+        )}
       </Text>
     </Screen>
   );

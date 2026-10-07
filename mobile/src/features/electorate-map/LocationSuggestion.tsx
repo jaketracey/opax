@@ -1,5 +1,6 @@
+import { phoneCopy } from '../../design/phone-copy';
 import { useEffect, useRef, useState } from 'react';
-import { AccessibilityInfo } from 'react-native';
+import { AccessibilityInfo, Platform } from 'react-native';
 import type { Electorate } from '../../api/catalogs';
 import { Button, Group, Text } from '../../design/primitives';
 import { suggestFromLocation } from './location';
@@ -40,7 +41,7 @@ export function LocationSuggestion({
         if (!controller.signal.aborted)
           setProgress(
             done === total
-              ? 'Checking once on your iPhone'
+              ? phoneCopy('Checking once on your iPhone')
               : `Preparing federal outlines ${done} of ${total}`,
           );
       },
@@ -68,9 +69,10 @@ export function LocationSuggestion({
         accessibilityHint="Optional. Suggests a federal electorate using a display outline; you confirm the choice."
       />
       <Text wordSafe variant="caption">
-        Your location is used once on your iPhone to suggest a federal seat. It
-        is not sent, saved or logged. Display outlines are not for address
-        allocation.
+        Your location is used once on your{' '}
+        {Platform.OS === 'android' ? 'phone' : phoneCopy('iPhone')} to suggest a
+        federal seat. It is not sent, saved or logged. Display outlines are not
+        for address allocation.
       </Text>
       {busy ? (
         <Group>

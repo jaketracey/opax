@@ -1,5 +1,5 @@
 import type { ReactNode, RefObject } from 'react';
-import { Modal, StyleSheet, View } from 'react-native';
+import { Modal, Platform, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   IconButton,
@@ -34,7 +34,7 @@ export function AskSheet({
       onRequestClose={onClose}
     >
       <SafeAreaView
-        edges={['bottom']}
+        edges={Platform.OS === 'android' ? ['top', 'bottom'] : ['bottom']}
         style={styles.sheet}
         accessibilityViewIsModal
       >

@@ -7,6 +7,7 @@ import {
   QuickFacts,
 } from './people/Sections';
 import { AskAbout } from './ask/AskAbout';
+import { headerItems } from '../navigation/chrome';
 import {
   formatCount,
   formatDate,
@@ -134,9 +135,13 @@ export function ProfileScreen({
           options={{
             title: identity?.name ?? '',
             headerTitle: '',
-            unstable_headerRightItems: identity
-              ? () => [shareHeaderItem({ path: webPath, title: identity.name })]
-              : undefined,
+            ...headerItems(
+              identity
+                ? () => [
+                    shareHeaderItem({ path: webPath, title: identity.name }),
+                  ]
+                : undefined,
+            ),
           }}
         />
       )}

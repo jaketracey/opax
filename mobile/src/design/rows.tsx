@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { ownsRowPadding } from './row-padding';
+import { showMenu } from './menu';
 import {
   ActionSheetIOS,
   Platform,
@@ -180,8 +181,18 @@ export function ViewOriginal({
       ? openOnWeb(s.url, s.label)
       : openSource(s.url, s.label);
   const press = () => {
-    if (usable.length === 1 || Platform.OS !== 'ios') {
+    if (usable.length === 1) {
       void open(usable[0]!);
+      return;
+    }
+    if (Platform.OS === 'android') {
+      showMenu(
+        'Original records',
+        usable.map((source) => ({
+          title: source.label,
+          onPress: () => void open(source),
+        })),
+      );
       return;
     }
     ActionSheetIOS.showActionSheetWithOptions(
