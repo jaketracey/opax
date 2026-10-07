@@ -72,7 +72,7 @@ function client(server: Server) {
   }) as typeof fetch;
   const api = new ApiClient({
     origin: 'https://example.test',
-    version: '0.1.0',
+    version: '1.0.0',
     build: '1',
     cache: new CatalogCache(new MemoryStore(), 64 * 1024 * 1024, 500),
     transport,

@@ -95,7 +95,7 @@ def main():
         mobile = Path(__file__).resolve().parent.parent
         build = os.environ["OPAX_BUILD_NUMBER"]
         out = Path(os.environ["OPAX_RELEASE_OUT"])
-        if not re.fullmatch(r"[1-9][0-9]*", build) or out != mobile / f"private/release/0.1.0-{build}" or out.resolve() != out:
+        if not re.fullmatch(r"[1-9][0-9]*", build) or out != mobile / f"private/release/1.0.0-{build}" or out.resolve() != out:
             raise ReleaseError("Release evidence path must identify this worktree's build.")
         run(args.step, mobile, out, args.expected_voice_mode)
     except (ReleaseError, OSError, ValueError, KeyError) as error:
