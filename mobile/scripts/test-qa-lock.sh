@@ -121,7 +121,8 @@ pgid=$(cat "$SCRATCH/first.pgid")
 grep -qx "pid=$pgid" "$owner" && grep -qx "pgid=$pgid" "$owner" || fail "owner pid/pgid is not the command's group leader"
 grep -qx 'script=runner.sh' "$owner" && grep -qx "worktree=$WORKTREE" "$owner" || fail "owner script or worktree missing"
 grep -Eqx 'started=[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z' "$owner" && grep -Eqx 'token=[0-9a-f]{16}' "$owner" || fail "owner start or token missing"
-[ "$(wc -l < "$owner")" -eq 6 ] && ! grep -q / "$owner" || fail "owner has extra fields or a path"
+[ "$(wc -l < "$owner")" -eq 7 ] && ! grep -q / "$owner" || fail "owner has extra fields or a path"
+grep -Eqx 'lstart=[A-Za-z]{3} [A-Za-z]{3} .* [0-9]{4}' "$owner" || fail "owner lacks process start identity"
 [ ! -e "$LOCK" ] && no_litter || fail "release left the lock or staging behind"
 mkdir "$LOCK" && rmdir "$LOCK" || fail "plain mkdir/rmdir failed after release"
 pass "owner records pid and pgid of the wrapper, script, worktree and start"
@@ -185,7 +186,7 @@ kill -TERM -- "-$holder_pgid"
 deadline=$((SECONDS + 5)); while pgrep -g "$holder_pgid" >/dev/null; do [ "$SECONDS" -lt "$deadline" ] || fail "group did not stop"; sleep 0.1; done
 run_locked after -- quick
 [ "$(rc_of after)" = 0 ] || fail "lock not reaped once the group was gone"
-grep -q "Removed stale pasteboard lock .*pid and process group are gone (pid=$holder_pgid pgid=$holder_pgid" "$SCRATCH/after.log" || fail "reap not logged"
+grep -q "Removed stale pasteboard lock .*pid identity and process group are gone (pid=$holder_pgid pgid=$holder_pgid" "$SCRATCH/after.log" || fail "reap not logged"
 pass "a dead wrapper with a live command tree is never reaped; reaped once the group is gone"
 
 # 7. Release stops and waits for leftover processes of the command first.
@@ -346,5 +347,39 @@ kill -TERM "$owner_pid"
 grep -qx 'cleanup lock=opax gate=1' "$SCRATCH/device-cleanup.cleanup" || fail "command cleanup ran after release"
 [ ! -e "$LOCK" ] && no_litter || fail "TERM cleanup left a lock"
 pass "TERM waits for command cleanup inside the lock and gate before release"
+
+# PID reuse: only a matching live identity is an owner; a legacy live PID is
+# still protected. A live original process group continues to protect orphans.
+loads 0
+sleep 60 & identity_pid=$!; LIVE+=("$identity_pid")
+identity_start=$(/bin/ps -o lstart= -p "$identity_pid" | sed 's/^ *//;s/ *$//')
+mkdir "$LOCK"; stale_owner "$identity_pid" "$(dead_pid)" > "$LOCK/owner"
+printf 'lstart=%s\n' "$identity_start" >> "$LOCK/owner"
+run_locked matched-owner OPAX_PASTE_WAIT_SECONDS=1 -- quick
+[ "$(rc_of matched-owner)" = 1 ] && [ -d "$LOCK" ] || fail "matching live owner reaped"
+sed -i '' 's/^lstart=.*/lstart=Wed Oct  7 01:00:00 2026/' "$LOCK/owner"
+run_locked reused-owner -- quick
+[ "$(rc_of reused-owner)" = 0 ] && kill -0 "$identity_pid" || fail "reused owner PID not safely reaped"
+grep -q 'verified pid + lstart' "$SCRATCH/reused-owner.log" || fail "identity reap not logged"
+pass "protects a matching live owner and reaps an exited identity without signalling a reused PID"
+
+# A stopped waiter spends no wall-clock allowance while another lane runs.
+mkdir "$LOCK"
+run_locked stopped-wait OPAX_PASTE_WAIT_SECONDS=2 -- quick
+wait_for_line "$SCRATCH/stopped-wait.log" 'Waiting for pasteboard lock' || fail "no stopped waiter"
+waiter=${LIVE[${#LIVE[@]}-1]}
+kill -STOP "$waiter"
+sleep 3
+rmdir "$LOCK"
+kill -CONT "$waiter"
+[ "$(rc_of stopped-wait)" = 0 ] || fail "SIGSTOP spent the lock-wait deadline"
+pass "SIGSTOP time does not consume a waiter's deadline"
+
+loads 0
+run_locked hupped -- hold
+wait_for "$SCRATCH/hupped.running" || fail "HUP holder never ran"
+kill -HUP "$(cat "$SCRATCH/hupped.pgid")"
+[ "$(rc_of hupped)" = 129 ] && [ ! -e "$LOCK" ] || fail "HUP left the lock or lost status"
+pass "HUP to the owner drains its group and frees the lock"
 
 echo "qa-lock: $PASSED passed"

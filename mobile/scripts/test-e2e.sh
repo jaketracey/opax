@@ -69,11 +69,12 @@ trap cleanup EXIT
 trap 'exit 143' TERM
 trap 'exit 130' INT
 mkdir -p "$MOBILE/scripts" "$MOBILE/node_modules/.bin" "$MOBILE/.maestro" "$SCRATCH/bin" "$SCRATCH/jdk/bin" "$SCRATCH/app"
-/bin/cp "$SCRIPTS"/{e2e.sh,e2e-device.sh,qa-env.sh,qa-lock.sh,qa-locked.sh,qa-java.sh,capacity.sh} "$MOBILE/scripts/"
+/bin/cp "$SCRIPTS"/{e2e.sh,e2e-device.sh,qa-env.sh,qa-lock.sh,qa-locked.sh,qa-java.sh,capacity.sh,qa-maestro.sh,maestro-watch.py,qa-wait-clock.py} "$MOBILE/scripts/"
 # polish-b3 adds this source; keep its merge tests isolated too.
 if [ -f "$SCRIPTS/qa-flows.sh" ]; then /bin/cp "$SCRIPTS/qa-flows.sh" "$MOBILE/scripts/"; fi
 touch "$SCRATCH/app/main.jsbundle" "$MOBILE/.maestro/01-start.yaml" "$MOBILE/.maestro/04-offline.yaml"
 export SCRATCH MOBILE OPAX_PASTE_LOCK="$LOCK" OPAX_BUILD_GATE="$SCRATCH/gate.sh" OPAX_SIM_GATE="$SCRATCH/sim-gate.sh"
+export OPAX_FIXTURE_PORT=8973
 export OPAX_ALLOWED_UDIDS='lane-a lane-b' OPAX_QA_APP="$SCRATCH/app" OPAX_CONTENT_SIZE=large
 export OPAX_CAPACITY_CMD= OPAX_LOAD_PROBE='echo 0' OPAX_PASTE_WAIT_SECONDS=10 OPAX_LOAD_LIMIT=140
 export OPAX_PASTE_POLL_SECONDS=0.1 OPAX_STOP_GRACE_SECONDS=4 JAVA_HOME="$SCRATCH/jdk"
@@ -112,6 +113,7 @@ echo 'openjdk version "21.0.1"' >&2
 EOF
 cat > "$SCRATCH/bin/lsof" <<'EOF'
 #!/usr/bin/env bash
+if [ "${MOCK_DRIVER_PORT_BUSY:-0}" = 1 ] && [[ "$*" = *iTCP:9073* ]]; then exit 0; fi
 exit 1
 EOF
 cat > "$SCRATCH/bin/tee" <<'EOF'
@@ -157,6 +159,11 @@ EOF
 cat > "$SCRATCH/bin/maestro" <<'EOF'
 #!/usr/bin/env bash
 set -eu
+if [ "${MOCK_NO_LOCK:-0}" != 1 ]; then
+  own_group=$(/bin/ps -o pgid= -p $$ | tr -d ' ')
+  owner_group=$(sed -n 's/^pgid=//p' "$OPAX_PASTE_LOCK/owner")
+  [ "$own_group" = "$owner_group" ] || { echo driver-outside-group >> "$SCRATCH/violations"; exit 94; }
+fi
 phase=online; [[ "$*" != *04-offline.yaml* ]] || phase=offline
 { [ -f "$OPAX_PASTE_LOCK/owner" ] || [ "${MOCK_NO_LOCK:-0}" = 1 ]; } && [ -d "$SCRATCH/booted" ] && [ "${MOCK_IN_GATE:-0}" = 1 ] && [ -e "$SCRATCH/$MOCK_LANE.gate-active" ] || { echo maestro-unlocked >> "$SCRATCH/violations"; exit 92; }
 if [ "${MOCK_NO_LOCK:-0}" = 1 ]; then echo none; else sed -n 's/^token=//p' "$OPAX_PASTE_LOCK/owner"; fi > "$SCRATCH/$MOCK_LANE.$phase.token"
@@ -164,6 +171,16 @@ lock=held; [ "${MOCK_NO_LOCK:-0}" != 1 ] || lock=unconfigured
 echo "$MOCK_LANE maestro $phase lock=$lock gate=1" >> "$SCRATCH/trace"
 printf '%s\n' "$@" > "$SCRATCH/$MOCK_LANE.$phase.maestro-args"
 touch "$SCRATCH/$MOCK_LANE.maestro"
+case "${MOCK_DRIVER_ERROR:-}" in
+  403) echo 'HTTP response status 403 Forbidden from XCTest driver'; sleep 60 ;;
+  connection) echo 'java.net.ConnectException: Failed to connect to /127.0.0.1:9073'; sleep 60 ;;
+  debug)
+    out=; while [ "$#" -gt 0 ]; do [ "$1" != --debug-output ] || out=$2; shift; done
+    mkdir -p "$out/mock"; echo 'Request failed (403)' > "$out/mock/maestro.log"; sleep 60 ;;
+  timeout) sleep 60 ;;
+  startup) echo '[Failed] Perform XCUITest driver status check on simulator, exception: java.net.ConnectException: Connection refused' ;;
+  split) printf 'HTTP response status '; sleep 0.4; echo '403 Forbidden'; sleep 60 ;;
+esac
 if [ "${MOCK_PAUSE:-}" = maestro ]; then
   until [ -e "$SCRATCH/$MOCK_LANE.release" ]; do sleep 0.1; done
 fi
@@ -207,7 +224,7 @@ run_lane() {
 check_rc() {
   local name=$1 expected=$2
   wait_for "$MOBILE/private/qa/$name/exit-status"
-  [ "$(cat "$MOBILE/private/qa/$name/exit-status")" = "$expected" ] || fail "$name exit status"
+  [ "$(cat "$MOBILE/private/qa/$name/exit-status")" = "$expected" ] || fail "$name exit status: expected $expected, got $(cat "$MOBILE/private/qa/$name/exit-status")"
   [ -f "$SCRATCH/$name.shutdown" ] && [ ! -d "$SCRATCH/booted" ] && [ ! -e "$LOCK" ] || fail "$name shutdown/release"
   [ ! -s "$SCRATCH/violations" ] || fail "$name protocol violation"
 }
@@ -217,6 +234,7 @@ grep -qx 'CONTENT_SIZE=large' "$SCRATCH/success.online.maestro-args" || fail 'fl
 grep -q 'success ui content_size extra-large lock=held' "$SCRATCH/trace" && grep -q 'success ui appearance dark lock=held' "$SCRATCH/trace" || fail 'restore original settings'
 grep -q 'success fixture-stop lock=free' "$SCRATCH/trace" || fail 'fixture teardown before release'
 [ -f "$MOBILE/private/qa/success/device-timing.txt" ] || fail 'no boot/install timing'
+grep -qx -- '--driver-host-port' "$SCRATCH/success.online.maestro-args" && grep -qx '9073' "$SCRATCH/success.online.maestro-args" || fail 'driver port is not fixture + 100'
 pass 'boot/install/Maestro/restore/shutdown inside lock and gate; teardown after release; timings saved'
 for phase in online offline install boot restore; do
   export MOCK_FAIL=$phase
@@ -378,6 +396,38 @@ wait_for "$MOBILE/private/qa/failed-shutdown/exit-status"
 /bin/rm -rf "$SCRATCH/booted"
 unset MOCK_FAIL MOCK_ALLOW_FALLBACK
 pass 'failed inner and fallback shutdown makes a successful Maestro run fail'
+
+# Driver transport failures abort immediately, rather than retrying for minutes
+# while holding the simulator and lock. Debug-only failures are supervised too.
+for error in 403 connection debug split timeout; do
+  export MOCK_DRIVER_ERROR=$error OPAX_MAESTRO_TIMEOUT_SECONDS=2
+  start=$SECONDS
+  run_lane "driver-$error" 01
+  expected=1; [ "$error" != timeout ] || expected=124
+  check_rc "driver-$error" "$expected"
+  [ $((SECONDS - start)) -lt 10 ] || fail "driver $error hung"
+  pass "driver $error aborts promptly, writes status, shuts down and releases"
+done
+unset MOCK_DRIVER_ERROR OPAX_MAESTRO_TIMEOUT_SECONDS
+export MOCK_DRIVER_ERROR=startup
+run_lane driver-startup-probe 01
+check_rc driver-startup-probe 0
+unset MOCK_DRIVER_ERROR
+pass 'the expected pre-install driver probe is allowed during bounded startup'
+export MOCK_DRIVER_PORT_BUSY=1
+run_lane driver-port-busy 01
+wait_for "$MOBILE/private/qa/driver-port-busy/exit-status"
+[ "$(cat "$MOBILE/private/qa/driver-port-busy/exit-status")" = 1 ] && [ ! -e "$SCRATCH/driver-port-busy.boot" ] && [ ! -e "$LOCK" ] || fail 'occupied driver port booted or lost status'
+[ ! -e "$SCRATCH/driver-port-busy.maestro" ] || fail 'occupied driver port was used'
+unset MOCK_DRIVER_PORT_BUSY
+pass 'an occupied pinned driver port fails before boot without touching its listener'
+export MOCK_PAUSE=maestro
+run_lane hup-parent 01
+wait_for "$SCRATCH/hup-parent.maestro"
+kill -HUP "$LANE_PID"
+check_rc hup-parent 129
+unset MOCK_PAUSE
+pass 'HUP writes runner status after locked device cleanup'
 
 # The nested suite cannot reach this point before its one-second outer limit.
 rc=0
