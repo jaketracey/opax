@@ -3,6 +3,7 @@ name: 35 Grants programs and local party, topic and report suggestions, also at 
 ---
 - launchApp:
     clearState: true
+    permissions: {}
 - tapOn:
     id: tab-search
 - tapOn:

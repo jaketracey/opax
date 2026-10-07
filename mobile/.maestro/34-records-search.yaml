@@ -3,6 +3,7 @@ name: 34 Records, filters, sort, cited summary and explicitly chosen briefs
 ---
 - launchApp:
     clearState: true
+    permissions: {}
 - tapOn:
     id: tab-search
 - takeScreenshot: ${EVIDENCE}/34-search-form
