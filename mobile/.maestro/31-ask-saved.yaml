@@ -24,7 +24,9 @@ name: 31 Ask options, chips, saved conversation after relaunch and delete (stand
     id: ask-from
 - inputText: '2020'
 - takeScreenshot: ${EVIDENCE}/31-year-keypad
-- hideKeyboard
+- tapOn:
+    text: Done
+    index: 1
 - scrollUntilVisible:
     element:
       id: ask-party
