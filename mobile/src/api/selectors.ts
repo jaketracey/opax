@@ -24,6 +24,7 @@ import {
   billDedupeDivisions,
   billDisplay,
   billFoldText,
+  billName,
   billNoteLinks,
   billNoteText,
   billQuestionParts,
@@ -878,7 +879,8 @@ export function billsFor(
     /** Every word must appear, as in the web's bill directory. */
     query?: string;
     /** "activity": most recent status date first, then newest introduced. */
-    sort?: 'activity';
+    sort?: 'activity' | 'newest' | 'oldest' | 'title' | 'divisions';
+    divided?: boolean;
   } = {},
 ) {
   const terms = filter.query
@@ -893,6 +895,7 @@ export function billsFor(
         Number(b.introduced?.slice(0, 4)) === filter.year) &&
       (filter.parliament === undefined || b.parliament === filter.parliament) &&
       (!filter.chamber || b.originating_house === filter.chamber) &&
+      (!filter.divided || b.divisions > 0) &&
       (filter.hasSummary === undefined ||
         b.has_summary === filter.hasSummary) &&
       (!terms.length || terms.every((t) => searchTextFor(b).includes(t))),
@@ -906,6 +909,16 @@ export function billsFor(
       (a, b) =>
         (billActivityDate(b) ?? '').localeCompare(billActivityDate(a) ?? '') ||
         (b.introduced ?? '').localeCompare(a.introduced ?? ''),
+    );
+  else if (filter.sort)
+    rows = [...rows].sort((a, b) =>
+      filter.sort === 'title'
+        ? billFoldText(billName(a)).localeCompare(billFoldText(billName(b)))
+        : filter.sort === 'divisions'
+          ? b.divisions - a.divisions || billFoldText(billName(a)).localeCompare(billFoldText(billName(b)))
+          : filter.sort === 'oldest'
+            ? (a.introduced ?? '').localeCompare(b.introduced ?? '')
+            : (b.introduced ?? '').localeCompare(a.introduced ?? ''),
     );
   return block(rows.map(billDisplayRow), index.generated_at, [
     catalogSources.bills,
@@ -956,8 +969,11 @@ export function billFacetsFor(index: BillIndex) {
   const years = [...tally((b) => Number(b.introduced?.slice(0, 4)) || null)]
     .sort(([a], [b]) => b - a)
     .map(([value, count]) => ({ value, count }));
+  const parliaments = [...tally((b) => b.parliament)]
+    .sort(([a], [b]) => b - a)
+    .map(([value, count]) => ({ value, count }));
   return block(
-    { total: index.bills.length, statuses, chambers, years },
+    { total: index.bills.length, statuses, chambers, years, parliaments },
     index.generated_at,
     [catalogSources.bills],
   );
@@ -1125,6 +1141,8 @@ export function electorateFor(seat: ElectorateDetail) {
     related: seat.relations,
     rosters: seat.rosters,
     terms: seat.terms,
+    people: seat.people,
+    capacity: seat.capacity,
     coverageNote: 'Gaps indicate missing coverage.',
   };
 }

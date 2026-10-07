@@ -1,3 +1,5 @@
+import { ElectorateDate, ElectorateHistory } from './directories/ElectorateHistory';
+import { validDate } from './directories/model';
 import { OutlineMap } from './electorate-map/OutlineMap';
 import {
   formatCount,
@@ -52,16 +54,19 @@ const indicators: Record<string, [string, 'count' | 'money' | 'percent']> = {
   university_pct: ['University qualification', 'percent'],
 };
 export default function Electorate() {
-  const { id } = useLocalSearchParams<{ id: string }>();
-  return <ElectorateScreen key={id} id={id} />;
+  const { id, asof } = useLocalSearchParams<{ id: string; asof?: string }>();
+  return <ElectorateScreen key={id} id={id} initialDate={asof} />;
 }
 export function ElectorateScreen({
   id,
   embedded = false,
+  initialDate = '',
 }: {
   id: string;
   embedded?: boolean;
+  initialDate?: string;
 }) {
+  const [asof, setAsOf] = useState(validDate(initialDate) ? initialDate : '');
   const [view, setView] = useState<ElectorateView | null>(null),
     [directory, setDirectory] = useState<Directory | null>(null),
     [error, setError] = useState<string | null>(null),
@@ -73,7 +78,7 @@ export function ElectorateScreen({
     (async () => {
       const d = await catalogs.directory();
       const seat = d.electorates.data.electorates.find(
-        (s) => s.electorate_id === id,
+        (s) => s.electorate_id === id || s.slug === id,
       );
       if (!seat)
         throw new ApiError(
@@ -81,7 +86,7 @@ export function ElectorateScreen({
           'This electorate is not in the release.',
         );
       const v = await catalogs.electorateFor(seat.detail_url);
-      if (v.data.identity.data?.id !== id)
+      if (v.data.identity.data?.id !== seat.electorate_id)
         throw new ApiError(
           'invalid-data',
           'The electorate record does not match the selected seat. Try again.',
@@ -111,7 +116,7 @@ export function ElectorateScreen({
     },
     identity = view?.identity.data,
     seat = directory?.electorates.data.electorates.find(
-      (s) => s.electorate_id === id,
+      (s) => s.electorate_id === id || s.slug === id,
     );
   return (
     <>
@@ -123,7 +128,7 @@ export function ElectorateScreen({
             unstable_headerRightItems:
               identity && seat
                 ? () => [
-                    shareHeaderItem({ path: seat.url, title: identity.name }),
+                    shareHeaderItem({ path: seat.url + (asof ? `?asof=${asof}` : ''), title: identity.name }),
                   ]
                 : undefined,
           }}
@@ -176,8 +181,10 @@ export function ElectorateScreen({
                 name={identity.name}
                 state={identity.state}
               />
+              {asof ? <Text variant="fine">This outline is not a reconstruction of the selected date.</Text> : null}
             </Section>
-            <RecordBlock
+            <ElectorateDate view={view} directory={directory} asof={asof} onDate={(date) => { setAsOf(date); if (!embedded) router.setParams({ asof: date || undefined }); }} />
+            {asof ? null : <RecordBlock
               title="Latest verified representation"
               id="electorate-representatives"
               block={view.representatives}
@@ -201,7 +208,8 @@ export function ElectorateScreen({
                   </Text>
                 </Group>
               )}
-            </RecordBlock>
+            </RecordBlock>}
+            <ElectorateHistory view={view} directory={directory} />
             <Section title="Elections" testID="electorate-elections">
               {view.elections.length ? (
                 view.elections.map((b, i) => (

@@ -1,4 +1,5 @@
 import type { ApiClient, RecordResult } from './client';
+import { decodePartyFile } from '../features/directories/party-file';
 import {
   partyLabels,
   resolveParty,
@@ -259,6 +260,17 @@ export class Catalogs {
             .flatMap((n) => [n.label, ...(n.aliases ?? [])]) ?? []);
       label = resolveParty(input, labels);
       if (!label) {
+        const stateParties = await Promise.allSettled([
+          this.partyFile('qld', refresh),
+          this.partyFile('vic', refresh),
+        ]);
+        label = resolveParty(input, stateParties.flatMap((result) =>
+          result.status === 'fulfilled'
+            ? result.value.data.parties.map((party) => party.label)
+            : [],
+        ));
+      }
+      if (!label) {
         if (core.status === 'error' || money.status === 'error')
           throw core.error ?? money.error;
         return { data: null, stale: false };
@@ -385,6 +397,13 @@ export class Catalogs {
     return this.client.get(
       '/parliamentarians.json',
       decode.decodeRoster,
+      refresh,
+    );
+  }
+  partyFile(jurisdiction: 'federal' | 'qld' | 'vic', refresh = false) {
+    return this.client.get(
+      jurisdiction === 'federal' ? '/graph/money.json' : `/graph/money.${jurisdiction}.json`,
+      decodePartyFile,
       refresh,
     );
   }

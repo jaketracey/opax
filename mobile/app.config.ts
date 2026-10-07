@@ -96,6 +96,7 @@ const config: ExpoConfig = {
     },
   },
   plugins: [
+    '@react-native-community/datetimepicker',
     ['expo-router', { sitemap: variant !== 'production' }],
     './plugins/withSceneLifecycle.js',
     [

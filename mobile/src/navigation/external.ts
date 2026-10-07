@@ -229,6 +229,20 @@ export function canonicalUrl(path: string, anchor?: string): string {
       throw new Error('Section anchors are plain identifiers');
     url.hash = anchor;
   }
+  // A dated representation is a different record. Retain only its validated
+  // date; other directory/filter/share state keeps the existing query-free policy.
+  if (/^\/subject\/electorate\/[^/]+\/?$/.test(pathname)) {
+    const params = new URLSearchParams(path.split('?')[1]?.split('#')[0]);
+    const asof = params.get('asof');
+    if (params.has('asof')) {
+      if (params.getAll('asof').length !== 1 || !asof || !/^\d{4}-\d{2}-\d{2}$/.test(asof) || !Number.isFinite(Date.parse(asof)) || new Date(asof).toISOString().slice(0, 10) !== asof)
+        throw new Error('Representation dates must be valid calendar dates');
+      url.searchParams.set('asof', asof);
+    }
+  }
+  if (pathname === '/bills' && path.split('?')[1]?.split('#')[0] === 'view=divisions') {
+    url.search = '?view=divisions';
+  }
   // The anchor too: "token", "code" or "ask" is no section.
   const reason = forbiddenOpaxRoute(url);
   if (reason) throw new Error(`Not a page the app links to: ${reason}`);

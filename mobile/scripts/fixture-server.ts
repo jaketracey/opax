@@ -3,6 +3,7 @@ import { createVoiceFixture } from './voice-fixture';
 import { createServer } from 'node:http';
 import { createHash } from 'node:crypto';
 import snapshot from './fixture-snapshot.json';
+import directorySnapshot from './fixtures/directory-snapshot.json';
 import {
   assertAllowedPath,
   editionPath,
@@ -60,6 +61,7 @@ if (!['pinned', 'null-optional'].includes(rosterMode))
   throw new Error('OPAX_FIXTURE_ROSTER must be pinned or null-optional');
 const files = new Map<string, Buffer>();
 const pinnedBytes = fixtureBytes(snapshot);
+const directoryBytes = fixtureBytes(directorySnapshot);
 for (const path of Object.keys(snapshot.files)) {
   if (snapshot.testOnlyFiles.includes(path)) continue;
   if (path.endsWith('.webp')) assertPortraitPath(path);
@@ -180,6 +182,10 @@ export const server = createServer(async (request, response) => {
     else assertAllowedPath(path);
     const url = new URL(path, `http://127.0.0.1:${port}`);
     let body = files.get(url.pathname);
+    // Directory history has many bill files. Verify each source blob lazily
+    // instead of blocking fixture startup on a thousand git reads.
+    if (!body && Object.hasOwn(directorySnapshot.files, url.pathname))
+      body = directoryBytes(url.pathname);
     let cacheControl = 'public, max-age=300';
     const isEdition = url.pathname === editionPath;
     if (

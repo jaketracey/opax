@@ -30,6 +30,7 @@ import { chrome, colors, layout, spacing } from '../../design/tokens';
 import { billRoute } from '../../navigation/routes';
 import {
   appliedFilters,
+  billSorts,
   billFilterStore,
   countLine,
   useBillFilterState,
@@ -65,7 +66,7 @@ export default function BillsList() {
   }, [facets]);
   const list = useMemo(
     () =>
-      index ? billsFor(index, { ...filters, query, sort: 'activity' }) : null,
+      index ? billsFor(index, { ...filters, query, sort: filters.sort ?? 'newest' }) : null,
     [index, filters, query],
   );
   const rows = list?.data ?? [];
@@ -134,9 +135,10 @@ export default function BillsList() {
       {record?.partial ? <PartialNotice testID="bills-partial" /> : null}
       {list && index ? (
         <Text variant="metadata" testID="bills-count">
-          {countLine(rows.length, index.bills.length)} · latest activity first
+          {countLine(rows.length, index.bills.length)} · {billSorts.find(s => s.value === (filters.sort ?? 'newest'))?.label.toLowerCase()}
         </Text>
       ) : null}
+      <Button label="Division history" testID="bills-division-history" onPress={() => router.push('/division-history')} />
       {offline && !record ? (
         <>
           <OfflineBanner cached={false} testID="bills-offline-uncached" />

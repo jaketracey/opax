@@ -279,11 +279,9 @@ export default function Search() {
               ) : null}
               {!showSuggestions ? (
                 <>
-                  <OpaxWebLink
-                    label="Parliamentarians"
-                    path="/subject/person"
-                  />
-                  <OpaxWebLink label="Electorates" path="/subject/electorate" />
+                  <Button label="Parliamentarians" testID="search-browse-person" onPress={() => router.push({ pathname: '/directory', params: { kind: 'person' } })} />
+                  <Button label="Parties" testID="search-browse-party" onPress={() => router.push({ pathname: '/directory', params: { kind: 'party' } })} />
+                  <Button label="Electorates" testID="search-browse-electorate" onPress={() => router.push({ pathname: '/directory', params: { kind: 'electorate' } })} />
                   <Text variant="fine">
                     Bill searches use the saved bill titles in Bills.
                   </Text>

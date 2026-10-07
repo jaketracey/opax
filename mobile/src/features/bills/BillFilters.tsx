@@ -1,5 +1,6 @@
 import {
   Button,
+  Text,
   LoadingState,
   RowList,
   Screen,
@@ -7,11 +8,14 @@ import {
 } from '../../design/primitives';
 import {
   billFilterStore,
+  billSorts,
   chamberLabel,
+  parliamentLabel,
   useBillFilterState,
   type BillFilters as Filters,
 } from './filters';
 import { OptionRow } from './parts';
+import { Pressable } from 'react-native';
 
 /**
  * The bill list's filters, as a sheet: status, the chamber a bill was
@@ -27,9 +31,21 @@ export default function BillFilters() {
         <LoadingState shape="rows" count={4} label="Loading filters" />
       </Screen>
     );
-  const any = filters.status || filters.chamber || filters.year !== undefined;
+  const any = filters.status || filters.chamber || filters.year !== undefined || filters.parliament !== undefined || filters.divided || filters.sort;
   return (
     <Screen testID="bill-filters-screen">
+      <Section title="Parliament">
+        <RowList>
+          <OptionRow label="All parliaments" count={facets.total} selected={filters.parliament === undefined} onPress={() => set({ ...filters, parliament: undefined })} testID="bill-filter-parliament-all" />
+          {facets.parliaments.map(p => <OptionRow key={p.value} label={parliamentLabel(p.value)} count={p.count} selected={filters.parliament === p.value} onPress={() => set({ ...filters, parliament: p.value })} testID={`bill-filter-parliament-${p.value}`} />)}
+        </RowList>
+      </Section>
+      <Section title="Division records">
+        <Pressable accessibilityRole="switch" accessibilityState={{ checked: !!filters.divided }} accessibilityLabel="Divided on" testID="bill-filter-divided" onPress={() => set({ ...filters, divided: !filters.divided })} style={{ minHeight: 44, paddingVertical: 12 }}><Text wordSafe>{filters.divided ? '✓ Divided on' : 'Divided on'}</Text></Pressable>
+      </Section>
+      <Section title="Sort">
+        <RowList>{billSorts.map(s => <OptionRow key={s.value} label={s.label} count={facets.total} selected={(filters.sort ?? 'newest') === s.value} onPress={() => set({ ...filters, sort: s.value })} testID={`bill-filter-sort-${s.value}`} />)}</RowList>
+      </Section>
       <Section title="Status">
         <RowList>
           <OptionRow

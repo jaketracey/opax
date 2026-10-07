@@ -16,6 +16,7 @@
     "qa": "bash scripts/qa.sh"
   },
   "dependencies": {
+    "@react-native-community/datetimepicker": "9.1.0",
     "@shopify/react-native-skia": "2.6.2",
     "expo": "57.0.26",
     "expo-build-properties": "57.0.22",
