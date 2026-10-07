@@ -62,7 +62,9 @@ test('index includes all seven; grants stays delegated to its owning lane', () =
   const index = d.decodeReportIndex(pinned('/reports/index.json'));
   expect(index.reports).toHaveLength(7);
   expect(index.reports.some((r) => r.slug === 'grants-allocation')).toBe(true);
-  expect(fromWebPath('/reports/grants-allocation')).toBeNull();
+  expect(fromWebPath('/reports/grants-allocation')).toEqual({
+    pathname: '/grants-allocation',
+  });
   expect(() => d.decodeReportIndex({ reports: [{ slug: '../x' }] })).toThrow();
 });
 test('Unicode citation offsets preserve paragraphs and source numbers; retrieved sources stay separate', () => {
@@ -186,7 +188,6 @@ test.each([
 );
 test.each([
   '/reports/unknown.json',
-  '/reports/grants-allocation.json',
   '/api/topic/not-a-topic',
   '/api/topics?',
   '/api/stats?retry=1',

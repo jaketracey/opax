@@ -1,3 +1,4 @@
+import { moneyFromWebPath } from '../features/money-public/routes';
 import { startPartyTiming } from '../features/people/party-timing';
 import { partySlug } from '../design/party';
 import { webOrigin } from '../design/environment';
@@ -44,12 +45,16 @@ export function fromWebPath(
   | { pathname: '/search'; params: Record<string, string> }
   | ReturnType<typeof docRoute>
   | ReturnType<typeof billTextRoute>
+  | ReturnType<typeof moneyRoute>
   | typeof recentRecordsRoute
   | typeof expenseGlossaryRoute
   | ReturnType<typeof reportRoute>
   | ReturnType<typeof topicRoute>
   | { pathname: '/reports' | '/topics' | '/stats' | '/methods' }
-  | null {
+  | ReturnType<typeof moneyFromWebPath> {
+  const money = moneyFromWebPath(path);
+  if (money) return money;
+  if (path === '/money' || path === '/money/') return moneyRoute();
   if (path === '/reports') return {pathname:'/reports'};
   if (path === '/subject/topic') return {pathname:'/topics'};
   if (path === '/stats' || path === '/methods') return {pathname:path};
