@@ -29,6 +29,9 @@ meeting attendees, diary organisations, lobbyists and creditors are plain text.
 A minister diary additionally requires the guarded identity to have the diary's
 jurisdiction. No new people searches, witness pages or donor pages are added.
 Document rows use `fromWebPath`, then the existing web fallback.
+R1 Search retains the upstream canonical-member filter and navigation; this
+lane does not promote state aliases into Search. The diary journey opens a
+public state profile directly, through Person’s existing membership guard.
 
 `/expenses` maps to the native glossary sheet. Party canonical paths map to the
 existing native Party route. Pay and Party receipts blocks are shared by Person

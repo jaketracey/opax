@@ -65,7 +65,7 @@ export default function TabStack({ segment }: { segment: string }) {
       <Stack.Screen
         name="expense-glossary"
         options={{
-          title: 'Expense category glossary',
+          title: 'Expense glossary',
           presentation: 'modal',
           headerLargeTitleEnabled: false,
           unstable_headerRightItems: () => [closeSheetItem()],
