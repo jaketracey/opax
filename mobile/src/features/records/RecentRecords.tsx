@@ -1,16 +1,16 @@
 import { useCallback } from 'react';
 import { Stack, router } from 'expo-router';
 import {
-  AsAtLine,
-  Button,
-  Group,
+  LinkRow,
+  RowList,
+  Section,
   EmptyState,
   ErrorState,
   Heading,
   LoadingState,
-  Text,
   errorMessage,
 } from '../../design/primitives';
+import { formatDate } from '../../design/format';
 import { docRoute } from '../../navigation/routes';
 import { shareHeaderItem } from '../../navigation/share';
 import { records } from './runtime';
@@ -40,35 +40,47 @@ export default function RecentRecords() {
         header={
           <>
             <Heading level={1}>Just added to the record</Heading>
-            <Text variant="fine">
-              Newly indexed records. The indexed date is when the record entered
-              OPAX, rather than when it was published.
-            </Text>
-            {error ? (
-              <ErrorState
-                message={errorMessage(error)}
-                onRetry={retry}
-                testID="recent-error"
-              />
-            ) : !value ? (
-              <LoadingState label="Loading newly indexed records" />
-            ) : value.data.length ? (
-              value.data.map((row, index) => (
-                <Group key={row.slug}>
-                  <Button
-                    label={row.title}
-                    onPress={() => router.push(docRoute(row.slug))}
-                    testID={`recent-record-${index}`}
-                  />
-                  <AsAtLine
-                    asOf={row.indexed}
-                    citation="OPAX index · indexed date"
-                  />
-                </Group>
-              ))
-            ) : (
-              <EmptyState message="No newly indexed records are available." />
-            )}
+            <Section
+              title="Newly indexed"
+              icon="tray.full"
+              accent="bills"
+              rule={false}
+              info={{
+                title: 'About indexed dates',
+                notes: [
+                  'Newly indexed records. The indexed date is when the record entered OPAX, rather than when it was published.',
+                ],
+                testID: 'recent-info',
+              }}
+            >
+              {error ? (
+                <ErrorState
+                  message={errorMessage(error)}
+                  onRetry={retry}
+                  testID="recent-error"
+                />
+              ) : !value ? (
+                <LoadingState label="Loading newly indexed records" />
+              ) : value.data.length ? (
+                <RowList>
+                  {value.data.map((row, index) => (
+                    <LinkRow
+                      key={row.slug}
+                      title={row.title}
+                      detail={
+                        row.indexed
+                          ? `Indexed ${formatDate(row.indexed, 'short')}`
+                          : 'Indexed date not published'
+                      }
+                      onPress={() => router.push(docRoute(row.slug))}
+                      testID={`recent-record-${index}`}
+                    />
+                  ))}
+                </RowList>
+              ) : (
+                <EmptyState message="No newly indexed records are available." />
+              )}
+            </Section>
           </>
         }
       />

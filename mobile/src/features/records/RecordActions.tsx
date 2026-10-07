@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { router } from 'expo-router';
+import { rhythm } from '../../design/tokens';
 import { Button, Group } from '../../design/primitives';
 import { isRecordSlug } from '../../api/record-policy';
 import { canonicalUrl } from '../../navigation/external';
@@ -10,13 +11,22 @@ export function RecordActions({ slug }: { slug: string }) {
   const [copied, setCopied] = useState(false);
   if (!isRecordSlug(slug)) return null;
   return (
-    <Group>
+    <Group
+      gap={rhythm.tight}
+      style={{ flexDirection: 'row', flexWrap: 'wrap' }}
+    >
       <Button
+        variant="quiet"
+        size="compact"
+        icon="quote.opening"
         label="Cite"
         onPress={() => router.push(citeRoute(slug))}
         testID={`result-cite-${slug}`}
       />
       <Button
+        variant="quiet"
+        size="compact"
+        icon="link"
         label={copied ? 'Link copied' : 'Copy link'}
         onPress={() => {
           void copyText(canonicalUrl(`/doc/${slug}`)).then(setCopied);

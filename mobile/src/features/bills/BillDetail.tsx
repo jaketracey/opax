@@ -22,6 +22,7 @@ import {
   Group,
   Heading,
   LoadingState,
+  LinkRow,
   OfflineBanner,
   OpaxWebLink,
   RowList,
@@ -236,8 +237,10 @@ export default function BillDetail({
                   refreshing={refreshing}
                   onRefresh={refresh}
                 />
-                <Button
-                  label="Read the bill text"
+                <LinkRow
+                  title="Read the bill text"
+                  icon="doc.text"
+                  accent="bills"
                   onPress={() => router.push(billTextRoute(identity.key))}
                   testID="bill-read-text"
                 />

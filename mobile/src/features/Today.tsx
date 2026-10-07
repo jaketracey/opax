@@ -3,10 +3,9 @@ import { RefreshControl, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 import type { Block, EditionView } from '../api/catalogs';
 import { catalogs } from '../api/runtime';
-import { Button, Screen, Section, Text } from '../design/primitives';
+import { Button, LinkRow, Screen, Section, Text } from '../design/primitives';
 import { colors, hairline, spacing } from '../design/tokens';
 import { EditionSection } from './EditionCard';
-import { RecordRow } from './RecordRow';
 import { declarationsRoute, recentRecordsRoute } from '../navigation/routes';
 import { FollowingSection } from './follows/FollowingSection';
 import { BillCarousel } from './today/BillCarousel';
@@ -88,9 +87,11 @@ export default function Today() {
         </TodayBlock>
       </Section>
       <Section testID="today-records">
-        <RecordRow
+        <LinkRow
           title="Just added to the record"
-          detail="Newly indexed source records"
+          detail="Newly indexed records"
+          icon="tray.full"
+          accent="bills"
           onPress={() => router.push(recentRecordsRoute)}
           testID="today-records-open"
         />

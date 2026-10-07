@@ -1,5 +1,6 @@
 import { Alert, AccessibilityInfo } from 'react-native';
 import { OpaxShare } from '../../../modules/opax-share';
+import { haptic } from '../../design/haptics';
 import { isE2E } from '../../design/environment';
 export async function copyText(text: string): Promise<boolean> {
   try {
@@ -16,6 +17,7 @@ export async function shareTextFile(
   text: string,
   filename: string,
 ): Promise<void> {
+  haptic('light');
   if (isE2E) {
     Alert.alert(`Share file: ${filename}`, text);
     return;

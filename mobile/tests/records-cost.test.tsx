@@ -143,17 +143,17 @@ test('opening reader loads one record; similar loads only on tap and reopening t
   expect(records.document).toHaveBeenCalledTimes(1);
   expect(records.similar).not.toHaveBeenCalled();
   await act(async () => {
-    view.root.findByProps({ testID: 'doc-similar' }).props.onPress();
+    view.root.findByProps({ testID: 'doc-similar' }).props.onToggle(true);
   });
   expect(records.similar).toHaveBeenCalledTimes(1);
   await act(async () => {
-    view.root.findByProps({ testID: 'doc-similar' }).props.onPress();
+    view.root.findByProps({ testID: 'doc-similar' }).props.onToggle(false);
   });
   await act(async () => {
-    view.root.findByProps({ testID: 'doc-similar' }).props.onPress();
+    view.root.findByProps({ testID: 'doc-similar' }).props.onToggle(true);
   });
   expect(records.similar).toHaveBeenCalledTimes(1);
-  expect(view.root.findByProps({ testID: 'doc-speaker' }).props.label).toBe(
+  expect(view.root.findByProps({ testID: 'doc-more' }).props.title).toBe(
     speech.speaker,
   );
   await act(async () => view.unmount());
@@ -191,7 +191,7 @@ test('bill text switches chosen bytes and never presents the old version as the 
   await act(async () =>
     view.root
       .findByProps({ testID: 'bill-text-version-picker' })
-      .props.onPress(),
+      .props.onToggle(true),
   );
   await act(async () =>
     view.root.findByProps({ testID: 'bill-text-version-1' }).props.onPress(),

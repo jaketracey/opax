@@ -12,10 +12,13 @@ import {
   Heading,
   LoadingState,
   Section,
-  SourceLink,
+  Disclosure,
+  LinkRow,
+  ViewOriginal,
   Text,
   errorMessage,
 } from '../../design/primitives';
+import { rhythm } from '../../design/tokens';
 import { canonicalUrl } from '../../navigation/external';
 import {
   billRoute,
@@ -121,35 +124,61 @@ export default function DocumentReader({
               <LoadingState label="Loading the record" />
             ) : (
               <>
-                <Text variant="kicker">
-                  {kindNames[doc.labels.kind ?? ''] ?? 'Source record'}
-                </Text>
-                <Heading level={1} testID="doc-title">
-                  {titleSubject(doc) || doc.title}
-                </Heading>
-                <Speaker key={`speaker-${doc.slug}`} doc={doc} />
-                <Text variant="metadata" wordSafe>
-                  {[
-                    chamberName(doc.labels.chamber),
-                    jurisdictionName(doc.labels.state),
-                  ]
-                    .filter(Boolean)
-                    .join(' · ') || 'Jurisdiction not recorded'}
-                </Text>
-                <AsAtLine
-                  asOf={metaString(doc, 'date') || null}
-                  citation={
-                    doc.url ? new URL(doc.url).hostname : 'OPAX public record'
-                  }
-                  testID="doc-as-at"
-                />
-                <Group>
+                <Group gap={rhythm.tight}>
+                  <Text
+                    variant="kicker"
+                    tone={
+                      doc.labels.kind === 'bill_text'
+                        ? 'billsInk'
+                        : doc.labels.kind === 'division'
+                          ? 'votesInk'
+                          : 'navy'
+                    }
+                  >
+                    {kindNames[doc.labels.kind ?? ''] ?? 'Source record'}
+                  </Text>
+                  <Heading level={1} testID="doc-title">
+                    {titleSubject(doc) || doc.title}
+                  </Heading>
+                  <Speaker key={`speaker-${doc.slug}`} doc={doc} />
+                  <Text variant="metadata" wordSafe>
+                    {[
+                      chamberName(doc.labels.chamber),
+                      jurisdictionName(doc.labels.state),
+                    ]
+                      .filter(Boolean)
+                      .join(' · ') || 'Jurisdiction not recorded'}
+                  </Text>
+                  <AsAtLine
+                    asOf={metaString(doc, 'date') || null}
+                    citation={
+                      doc.url ? new URL(doc.url).hostname : 'OPAX public record'
+                    }
+                    testID="doc-as-at"
+                  />
+                  {doc.url ? (
+                    <ViewOriginal
+                      sources={[{ label: 'Original record', url: doc.url }]}
+                      testID="doc-source"
+                    />
+                  ) : null}
+                </Group>
+                <Group
+                  gap={rhythm.tight}
+                  style={{ flexDirection: 'row', flexWrap: 'wrap' }}
+                >
                   <Button
+                    variant="quiet"
+                    size="compact"
+                    icon="quote.opening"
                     label="Cite"
                     onPress={() => router.push(citeRoute(doc.slug))}
                     testID="doc-cite"
                   />
                   <Button
+                    variant="quiet"
+                    size="compact"
+                    icon="link"
                     label={copied ? 'Link copied' : 'Copy link'}
                     onPress={() => {
                       void copyText(canonicalUrl(`/doc/${doc.slug}`)).then(
@@ -160,14 +189,25 @@ export default function DocumentReader({
                   />
                 </Group>
                 {doc.summary ? (
-                  <Section title="In brief" testID="doc-brief">
-                    <Text variant="kicker">Machine summary</Text>
-                    <Text variant="fine" testID="doc-brief-label">
-                      {doc.labels.kind === 'bill_text'
-                        ? 'Written from this document by a model, not part of the original bill text.'
-                        : doc.labels.kind === 'speech'
-                          ? 'Written from this speech by a model, not by a person, and not part of the record.'
-                          : 'Machine summary · not part of the record'}
+                  <Section
+                    title="In brief"
+                    icon="text.alignleft"
+                    accent="bills"
+                    testID="doc-brief"
+                    info={{
+                      title: 'About this summary',
+                      notes: [
+                        doc.labels.kind === 'bill_text'
+                          ? 'Written from this document by a model, not part of the original bill text.'
+                          : doc.labels.kind === 'speech'
+                            ? 'Written from this speech by a model, not by a person, and not part of the record.'
+                            : 'Machine summary · not part of the record',
+                      ],
+                      testID: 'doc-brief-info',
+                    }}
+                  >
+                    <Text variant="caption" testID="doc-brief-label">
+                      Machine summary · not part of the record
                     </Text>
                     <Text selectable>{doc.summary}</Text>
                     <AsAtLine
@@ -180,30 +220,30 @@ export default function DocumentReader({
                 {doc.labels.kind === 'speech' ? (
                   <Similar key={`similar-${doc.slug}`} doc={doc} />
                 ) : null}
-                {doc.url ? (
-                  <SourceLink
-                    citation="View original"
-                    url={doc.url}
-                    kind="record"
-                    testID="doc-source"
-                  />
-                ) : null}
-                {doc.labels.source === 'openaustralia' ? (
-                  <Text variant="fine">
-                    This text is reproduced from a third-party Hansard
-                    transcription and may contain concatenation artefacts
-                    (“toSenator”); verify wording against the official record
-                    before quoting.
-                  </Text>
-                ) : null}
-                {doc.labels.kind === 'bill_text' ? (
-                  <Text variant="fine">
-                    {doc.metadata.complete === false
-                      ? 'Incomplete extracted bill text. Use the original document for the complete bill.'
-                      : 'Published bill text. Check the original document for authoritative wording and formatting.'}
-                  </Text>
-                ) : null}
-                <Heading level={2}>Full text</Heading>
+                <Section
+                  title="Full text"
+                  icon="doc.text"
+                  accent={doc.labels.kind === 'division' ? 'votes' : 'bills'}
+                  info={{
+                    title: 'About this text',
+                    notes: [
+                      doc.labels.source === 'openaustralia' &&
+                        'This text is reproduced from a third-party Hansard transcription and may contain concatenation artefacts (“toSenator”); verify wording against the official record before quoting.',
+                      doc.labels.kind === 'bill_text' &&
+                        (doc.metadata.complete === false
+                          ? 'Incomplete extracted bill text. Use the original document for the complete bill.'
+                          : 'Published bill text. Check the original document for authoritative wording and formatting.'),
+                    ],
+                    testID: 'doc-text-info',
+                  }}
+                >
+                  {doc.labels.kind === 'bill_text' &&
+                  doc.metadata.complete === false ? (
+                    <Text variant="caption">
+                      Incomplete extracted bill text
+                    </Text>
+                  ) : null}
+                </Section>
                 {!doc.text ? (
                   <EmptyState message="No text is held for this record." />
                 ) : null}
@@ -231,28 +271,20 @@ function Speaker({ doc }: { doc: DocumentRecord }) {
     };
   }, [doc]);
   if (!doc.speaker) return null;
-  return (
-    <Group>
-      {slug ? (
-        <Button
-          label={doc.speaker}
-          variant="quiet"
-          onPress={() => router.push(personRoute(slug))}
-          testID="doc-speaker"
-        />
-      ) : (
-        <Text variant="strong" wordSafe>
-          {doc.speaker}
-        </Text>
-      )}
-      {slug ? (
-        <Button
-          label="More by this speaker"
-          onPress={() => router.push(personRoute(slug))}
-          testID="doc-more"
-        />
-      ) : null}
-    </Group>
+  return slug ? (
+    <LinkRow
+      title={doc.speaker}
+      detail="More by this speaker"
+      icon="person"
+      accent="people"
+      onPress={() => router.push(personRoute(slug))}
+      testID="doc-more"
+      titleTestID="doc-speaker"
+    />
+  ) : (
+    <Text variant="strong" wordSafe>
+      {doc.speaker}
+    </Text>
   );
 }
 function LinkedBill({ doc }: { doc: DocumentRecord }) {
@@ -301,19 +333,30 @@ function LinkedBill({ doc }: { doc: DocumentRecord }) {
   const key = metaString(doc, 'bill_key');
   if (doc.labels.kind === 'bill_text' && /^au-federal-[a-z0-9-]+$/.test(key))
     return (
-      <Button
-        label="Bill page and text versions"
-        onPress={() =>
-          router.push(
-            billTextRoute(key, metaString(doc, 'version_id') || undefined),
-          )
-        }
-      />
+      <Section
+        title="The bill"
+        icon="doc.text"
+        accent="bills"
+        testID="doc-bill"
+      >
+        <LinkRow
+          title="Bill page"
+          onPress={() => router.push(billRoute(key))}
+          testID="doc-bill-open"
+        />
+        <LinkRow
+          title="Text versions"
+          onPress={() =>
+            router.push(
+              billTextRoute(key, metaString(doc, 'version_id') || undefined),
+            )
+          }
+        />
+      </Section>
     );
   if (!bill) return null;
   return (
-    <Section title="The bill" testID="doc-bill">
-      <Text variant="kicker">Register</Text>
+    <Section title="The bill" icon="doc.text" accent="bills" testID="doc-bill">
       <Text variant="strong" wordSafe>
         {bill.title}
       </Text>
@@ -325,8 +368,8 @@ function LinkedBill({ doc }: { doc: DocumentRecord }) {
       ) : (
         <Text variant="fine">No summary written for this bill yet.</Text>
       )}
-      <Button
-        label="Bill page"
+      <LinkRow
+        title="Bill page"
         onPress={() => router.push(billRoute(bill.key))}
         testID="doc-bill-open"
       />
@@ -353,13 +396,15 @@ function Similar({ doc }: { doc: DocumentRecord }) {
       .finally(() => setLoading(false));
   };
   return (
-    <Section title={open ? "Similar speeches" : undefined}>
-      <Button
-        label={open ? 'Close similar' : 'Similar speeches'}
-        onPress={open ? () => setOpen(false) : loadSimilar}
+    <Section>
+      <Disclosure
+        label="Similar speeches"
+        icon="text.bubble"
+        accent="bills"
+        open={open}
+        onToggle={(next) => (next ? loadSimilar() : setOpen(false))}
         testID="doc-similar"
-      />
-      {open ? (
+      >
         <>
           {loading ? <LoadingState label="Finding related speeches…" /> : null}
           {error ? (
@@ -372,8 +417,8 @@ function Similar({ doc }: { doc: DocumentRecord }) {
             value.data.length ? (
               value.data.map((row, index) => (
                 <Group key={row.slug}>
-                  <Button
-                    label={titleSubject(row) || row.title}
+                  <LinkRow
+                    title={titleSubject(row) || row.title}
                     onPress={() => router.push(docRoute(row.slug))}
                     testID={`doc-similar-${index}`}
                   />
@@ -390,7 +435,7 @@ function Similar({ doc }: { doc: DocumentRecord }) {
             )
           ) : null}
         </>
-      ) : null}
+      </Disclosure>
     </Section>
   );
 }

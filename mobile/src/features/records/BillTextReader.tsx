@@ -10,10 +10,14 @@ import {
   Heading,
   LoadingState,
   Section,
-  SourceLink,
+  Disclosure,
+  LinkRow,
+  RowList,
+  ViewOriginal,
   Text,
   errorMessage,
 } from '../../design/primitives';
+import { rhythm } from '../../design/tokens';
 import { formatDate } from '../../design/format';
 import { billRoute } from '../../navigation/routes';
 import { shareHeaderItem } from '../../navigation/share';
@@ -118,35 +122,48 @@ export default function BillTextReader({
               <LoadingState label="Loading collected versions" />
             ) : (
               <>
-                <Text variant="strong" wordSafe>
-                  {manifest.title}
-                </Text>
-                <Button
-                  label="Bill page"
-                  onPress={() => router.push(billRoute(key))}
-                />
-                <Text variant="fine">{manifest.coverage_note}</Text>
-                <AsAtLine
-                  asOf={manifest.generated_at}
-                  citation="Collected original bill texts"
-                />
-                <Section title="Version">
+                <Group gap={rhythm.tight}>
+                  <Text variant="strong" wordSafe>
+                    {manifest.title}
+                  </Text>
+                  <LinkRow
+                    title="Bill page"
+                    icon="doc.text"
+                    accent="bills"
+                    onPress={() => router.push(billRoute(key))}
+                  />
+                  <AsAtLine
+                    asOf={manifest.generated_at}
+                    citation="Collected original bill texts"
+                  />
+                </Group>
+                <Section
+                  title="Version"
+                  icon="doc.on.doc"
+                  accent="bills"
+                  info={{
+                    title: 'About collected versions',
+                    notes: [manifest.coverage_note],
+                    testID: 'bill-text-coverage-info',
+                  }}
+                >
                   <Text wordSafe testID="bill-text-version-label">
                     {
                       manifest.versions.find((row) => row.id === id)
                         ?.stage_label
                     }
                   </Text>
-                  <Button
-                    label={picker ? 'Close versions' : 'Choose version'}
-                    onPress={() => setPicker((value) => !value)}
+                  <Disclosure
+                    label="Choose version"
+                    open={picker}
+                    onToggle={setPicker}
                     testID="bill-text-version-picker"
-                  />
-                  {picker
-                    ? manifest.versions.map((row, index) => (
-                        <Button
+                  >
+                    <RowList>
+                      {manifest.versions.map((row, index) => (
+                        <LinkRow
                           key={row.id}
-                          label={[
+                          title={[
                             row.stage_label,
                             row.date ? formatDate(row.date) : null,
                           ]
@@ -160,8 +177,9 @@ export default function BillTextReader({
                           }}
                           testID={`bill-text-version-${index}`}
                         />
-                      ))
-                    : null}
+                      ))}
+                    </RowList>
+                  </Disclosure>
                 </Section>
                 {!requestedId ? (
                   <Button
@@ -181,49 +199,57 @@ export default function BillTextReader({
                   <LoadingState label="Loading this bill text version" />
                 ) : (
                   <>
-                    <Text variant="fine">
-                      Published bill text, transcribed from the original
-                      document. Check the original for authoritative formatting.
-                    </Text>
-                    <SourceLink
-                      citation="Original bill document"
-                      url={current.version.source_url}
-                      kind="record"
-                      testID="bill-text-source"
-                    />
-                    <AsAtLine
-                      asOf={current.version.date}
-                      citation="Original bill document"
-                    />
+                    <Group gap={rhythm.tight}>
+                      <ViewOriginal
+                        sources={[
+                          {
+                            label: 'Original bill document',
+                            url: current.version.source_url,
+                          },
+                        ]}
+                        testID="bill-text-source"
+                      />
+                      <AsAtLine
+                        asOf={current.version.date}
+                        citation="Original bill document"
+                      />
+                    </Group>
                     {current.enrichment ? (
                       <Section
                         title="In this version"
+                        icon="text.alignleft"
+                        accent="bills"
                         testID="bill-text-overview"
+                        info={{
+                          title: 'About this overview',
+                          notes: [
+                            'AI overview of selected provisions in this version. Read the full text for all proposed changes.',
+                          ],
+                          testID: 'bill-text-overview-info',
+                        }}
                       >
-                        <Text variant="fine" testID="bill-text-overview-label">
+                        <Text
+                          variant="caption"
+                          testID="bill-text-overview-label"
+                        >
                           AI overview of selected provisions in this version.
-                          Read the full text for all proposed changes.
                         </Text>
                         <Text selectable>{current.enrichment.brief}</Text>
-                        <Button
-                          label={
-                            supporting
-                              ? 'Close supporting passages'
-                              : 'Supporting passages'
-                          }
-                          onPress={() => setSupporting((value) => !value)}
-                        />
-                        {supporting
-                          ? current.enrichment.evidence.map((row, index) => (
-                              <Group key={index}>
-                                <Text selectable>{row.quote}</Text>
-                                <Button
-                                  label="Read this section"
-                                  onPress={() => jump(row.section_id)}
-                                />
-                              </Group>
-                            ))
-                          : null}
+                        <Disclosure
+                          label="Supporting passages"
+                          open={supporting}
+                          onToggle={setSupporting}
+                        >
+                          {current.enrichment.evidence.map((row, index) => (
+                            <Group key={index}>
+                              <Text selectable>{row.quote}</Text>
+                              <LinkRow
+                                title="Read this section"
+                                onPress={() => jump(row.section_id)}
+                              />
+                            </Group>
+                          ))}
+                        </Disclosure>
                       </Section>
                     ) : (
                       <Text variant="fine">
@@ -231,6 +257,9 @@ export default function BillTextReader({
                       </Text>
                     )}
                     <Button
+                      variant="quiet"
+                      size="compact"
+                      icon="square.and.arrow.up"
                       label="Download displayed text"
                       onPress={() => {
                         void shareTextFile(
@@ -240,26 +269,39 @@ export default function BillTextReader({
                       }}
                       testID="bill-text-download"
                     />
-                    <Button
-                      label={
-                        navigation
-                          ? 'Close text navigation'
-                          : 'Jump to section or page'
-                      }
-                      onPress={() => setNavigation((value) => !value)}
+                    <Disclosure
+                      label="Jump to section or page"
+                      icon="list.bullet"
+                      accent="bills"
+                      open={navigation}
+                      onToggle={setNavigation}
                       testID="bill-text-navigation"
-                    />
-                    {navigation
-                      ? current.sections.map((section, index) => (
-                          <Button
+                    >
+                      <RowList>
+                        {current.sections.map((section, index) => (
+                          <LinkRow
                             key={section.id}
-                            label={section.title}
+                            title={section.title}
                             onPress={() => jump(section.id)}
                             testID={`bill-text-section-${index}`}
                           />
-                        ))
-                      : null}
-                    <Heading level={2}>Full text</Heading>
+                        ))}
+                      </RowList>
+                    </Disclosure>
+                    <Section
+                      title="Full text"
+                      icon="doc.text"
+                      accent="bills"
+                      info={{
+                        title: 'About this text',
+                        notes: [
+                          'Published bill text, transcribed from the original document. Check the original for authoritative formatting.',
+                        ],
+                        testID: 'bill-text-info',
+                      }}
+                    >
+                      {null}
+                    </Section>
                     {!current.text ? (
                       <EmptyState message="No text is available for this version." />
                     ) : null}

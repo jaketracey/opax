@@ -51,5 +51,15 @@ download, recent records, a division and a release.
 
 The web's generic summary caption says “this speech” even for releases and
 research documents. Those native records instead use its truthful label,
-“Machine summary · not part of the record”. Speech and bill-text summary captions
-retain the web's exact wording.
+“Machine summary · not part of the record”. Speech and bill-text summary notes
+retain the web's exact wording behind an info button. The reading flow keeps
+a short machine-written label.
+
+The reader uses the shared rhythm and category accents, compact link rows,
+and disclosures for related speeches, versions and text navigation. Long
+coverage, transcription and citation notes open in InfoSheet. Each original
+record keeps one small View original action; source terms live on Sources and
+licences. Full source text remains selectable and virtualised at every size.
+
+`askRoute` is absent at the merged `origin/ios/app` base (`a2d7c51a`), so the
+reader does not add an Ask entry point. The Ask lane owns that seam.

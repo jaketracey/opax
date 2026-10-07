@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Stack, useLocalSearchParams } from 'expo-router';
+import { rhythm } from '../../design/tokens';
 import { webOrigin } from '../../design/environment';
 import { catalogs } from '../../api/runtime';
 import {
@@ -61,8 +62,12 @@ export default function Citations() {
           <LoadingState label="Loading citations" />
         ) : (
           <>
-            <Heading level={1}>Cite this record</Heading>
-            <Text wordSafe>{doc.title}</Text>
+            <Group gap={rhythm.tight}>
+              <Heading level={1}>Cite this record</Heading>
+              <Text variant="metadata" wordSafe>
+                {doc.title}
+              </Text>
+            </Group>
             {citationsFor(doc, {
               origin: webOrigin,
               corpusVersion: version,
@@ -71,39 +76,58 @@ export default function Citations() {
               <Section
                 key={citation.id}
                 title={citation.label}
+                icon="quote.opening"
+                accent="bills"
+                info={
+                  citation.note
+                    ? {
+                        title: `About ${citation.label}`,
+                        notes: [citation.note],
+                      }
+                    : undefined
+                }
                 testID={`cite-${citation.id}`}
               >
-                {citation.note ? (
-                  <Text variant="fine">{citation.note}</Text>
-                ) : null}
-                <Group>
-                  <Button
-                    label={
-                      copied === citation.id
-                        ? `Copied ${citation.label}`
-                        : `Copy ${citation.label}`
-                    }
-                    testID={`cite-copy-${citation.id}`}
-                    onPress={() => {
-                      void copyText(citation.text).then((ok) => {
-                        if (ok) setCopied(citation.id);
-                      });
-                    }}
-                  />
-                  <Button
-                    label={`Share ${citation.label} as a text file`}
-                    testID={`cite-share-${citation.id}`}
-                    onPress={() => {
-                      void shareTextFile(
-                        citation.text,
-                        `opax-${doc.slug}-${citation.id}.${citation.extension}`,
-                      );
-                    }}
-                  />
+                <Group gap={rhythm.tight}>
+                  <Text selectable testID={`cite-text-${citation.id}`}>
+                    {citation.text}
+                  </Text>
+                  <Group
+                    gap={rhythm.tight}
+                    style={{ flexDirection: 'row', flexWrap: 'wrap' }}
+                  >
+                    <Button
+                      variant="quiet"
+                      size="compact"
+                      icon="doc.on.doc"
+                      label={
+                        copied === citation.id
+                          ? `Copied ${citation.label}`
+                          : `Copy ${citation.label}`
+                      }
+                      testID={`cite-copy-${citation.id}`}
+                      onPress={() => {
+                        void copyText(citation.text).then((ok) => {
+                          if (ok) setCopied(citation.id);
+                        });
+                      }}
+                    />
+                    <Button
+                      variant="quiet"
+                      size="compact"
+                      icon="square.and.arrow.up"
+                      label={`Share ${citation.label}`}
+                      accessibilityHint="Shares the citation as a text file"
+                      testID={`cite-share-${citation.id}`}
+                      onPress={() => {
+                        void shareTextFile(
+                          citation.text,
+                          `opax-${doc.slug}-${citation.id}.${citation.extension}`,
+                        );
+                      }}
+                    />
+                  </Group>
                 </Group>
-                <Text selectable testID={`cite-text-${citation.id}`}>
-                  {citation.text}
-                </Text>
               </Section>
             ))}
           </>

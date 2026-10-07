@@ -1,7 +1,7 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { Group, Heading, Text, useReduceMotion } from '../../design/primitives';
-import { colors, layout, spacing } from '../../design/tokens';
+import { colors, layout, rhythm } from '../../design/tokens';
 export interface ReaderPart {
   id: string;
   text: string;
@@ -53,7 +53,7 @@ export function ReaderList({
       maxToRenderPerBatch={4}
       windowSize={7}
       removeClippedSubviews={false}
-      ListHeaderComponent={<Group>{header}</Group>}
+      ListHeaderComponent={<Group gap={rhythm.section}>{header}</Group>}
       ListFooterComponent={footer ? <Group>{footer}</Group> : null}
       onScrollToIndexFailed={({ index, averageItemLength }) => {
         list.current?.scrollToOffset({
@@ -77,7 +77,7 @@ export function ReaderList({
               {item.title}
             </Heading>
           ) : null}
-          <Text selectable testID={`reader-text-${index}`}>
+          <Text variant="record" selectable testID={`reader-text-${index}`}>
             {item.text}
           </Text>
         </View>
@@ -89,8 +89,8 @@ const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
   content: {
     paddingHorizontal: layout.screenMargin,
-    paddingTop: spacing.s4,
-    paddingBottom: spacing.s7,
+    paddingTop: rhythm.block,
+    paddingBottom: rhythm.section * 2,
   },
-  part: { paddingVertical: spacing.s3, gap: spacing.s3 },
+  part: { paddingVertical: rhythm.tight, gap: rhythm.heading },
 });
