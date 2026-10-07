@@ -6,6 +6,7 @@ export default function AskLayout() {
     <Stack
       screenOptions={{ ...useStackChrome(), headerLargeTitleEnabled: true }}
     >
+      <Stack.Screen name="ask" />
       <Stack.Screen
         name="follows"
         options={{ title: 'Following', headerLargeTitleEnabled: false }}
