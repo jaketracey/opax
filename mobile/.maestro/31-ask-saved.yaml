@@ -64,7 +64,7 @@ name: 31 Ask options, chips, saved conversation after relaunch and delete (stand
     element:
       id: ask-question
     direction: UP
-    centerElement: false
+    centerElement: true
     timeout: 180000
 - tapOn:
     id: ask-question
@@ -72,10 +72,11 @@ name: 31 Ask options, chips, saved conversation after relaunch and delete (stand
 - scrollUntilVisible:
     element:
       id: ask-submit
-    centerElement: false
+    centerElement: true
     timeout: 180000
 - tapOn:
     id: ask-submit
+    enabled: true
 - scrollUntilVisible:
     element:
       id: ask-machine-label
@@ -92,8 +93,8 @@ name: 31 Ask options, chips, saved conversation after relaunch and delete (stand
 - scrollUntilVisible:
     element:
       id: ask-saved
-    direction: UP
-    centerElement: false
+    direction: DOWN
+    centerElement: true
     timeout: 180000
 - tapOn:
     id: ask-saved
@@ -104,6 +105,10 @@ name: 31 Ask options, chips, saved conversation after relaunch and delete (stand
     timeout: 180000
 - waitForAnimationToEnd:
     timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: ask-history-done
+    timeout: 30000
 - takeScreenshot: ${EVIDENCE}/31-history
 - tapOn:
     id: ask-restore-0
@@ -119,7 +124,7 @@ name: 31 Ask options, chips, saved conversation after relaunch and delete (stand
     element:
       id: ask-saved
     direction: UP
-    centerElement: false
+    centerElement: true
     timeout: 180000
 - tapOn:
     id: ask-saved
