@@ -113,6 +113,7 @@ export function FollowingSection({
           </View>
           <View style={styles.text}>
             <EmptyState
+              icon={null}
               message="Follow a parliamentarian, bill or electorate from its page. Today then shows what changed in the published record since you last looked. Follows are saved on this iPhone only."
               testID="today-following-empty"
             />

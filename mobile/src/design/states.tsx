@@ -106,12 +106,13 @@ export function EmptyState({
   testID,
 }: {
   message: string;
-  icon?: SFSymbol;
+  /** A quiet symbol before the message; null where the block draws its own. */
+  icon?: SFSymbol | null;
   testID?: string;
 }) {
   return (
     <View style={styles.empty}>
-      <Icon name={icon} size={17} tone="inkSoft" />
+      {icon ? <Icon name={icon} size={17} tone="inkSoft" /> : null}
       <Text
         wordSafe
         variant="body"
