@@ -1,5 +1,12 @@
 import { PayBlock, PartyReceiptsBlock } from './people/FinancialBlocks';
-import { PersonTopics, RecordSection, NewsSection, PersonDiary, QuickFacts } from './people/Sections';
+import {
+  PersonTopics,
+  RecordSection,
+  NewsSection,
+  PersonDiary,
+  QuickFacts,
+} from './people/Sections';
+import { AskAbout } from './ask/AskAbout';
 import {
   formatCount,
   formatDate,
@@ -42,7 +49,11 @@ import {
   jurisdictionName,
 } from '../design/parliament';
 import { shareHeaderItem } from '../navigation/share';
-import { billRoute, electorateRoute, expenseGlossaryRoute } from '../navigation/routes';
+import {
+  billRoute,
+  electorateRoute,
+  expenseGlossaryRoute,
+} from '../navigation/routes';
 import { FollowToggle } from './follows/FollowToggle';
 import { EvidenceFooter, RecordBlock } from './your-mp/Evidence';
 import {
@@ -238,9 +249,15 @@ export function ProfileScreen({
                 since collection.
               </Text>
               <EvidenceFooter block={b.identity} id="person" />
+              <AskAbout kind="person" name={identity.name} />
             </Group>
             <QuickFacts identity={identity} />
-            <PartyReceiptsBlock block={b.partyReceipts} retry={refresh} id="person-receipts" jurisdiction={identity.seats[0]?.jurisdiction} />
+            <PartyReceiptsBlock
+              block={b.partyReceipts}
+              retry={refresh}
+              id="person-receipts"
+              jurisdiction={identity.seats[0]?.jurisdiction}
+            />
             <PersonTopics name={identity.name} />
             <RecordBlock
               title="Voting record"
@@ -535,7 +552,13 @@ export function ProfileScreen({
                     The comparison is a lead, not a finding.
                   </Text>
                   <RowList>
-                    <LinkRow title="Expense category glossary" icon="list.bullet" accent="money" testID="person-expense-glossary" onPress={() => router.push(expenseGlossaryRoute)} />
+                    <LinkRow
+                      title="Expense category glossary"
+                      icon="list.bullet"
+                      accent="money"
+                      testID="person-expense-glossary"
+                      onPress={() => router.push(expenseGlossaryRoute)}
+                    />
                     <Disclosure
                       label="Expenses by year"
                       value={formatCount(e.person.by_year.length)}

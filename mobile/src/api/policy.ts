@@ -7,7 +7,11 @@ import {
   topics,
   sorts,
 } from '../features/search/contracts';
-import { isRecordSlug, billTextPathPattern, isSimilarRequest } from './record-policy';
+import {
+  isRecordSlug,
+  billTextPathPattern,
+  isSimilarRequest,
+} from './record-policy';
 // Public GETs; paid search and briefs require an explicit action in the UI.
 // Adding a path requires a source/cost review and test.
 export const catalogKinds = ['person', 'interest', 'pay', 'expense'] as const;
@@ -113,6 +117,9 @@ export function assertAllowedPath(path: string): void {
   const params = new URLSearchParams(query);
   if (path.split('?').length > 2) throw new Error('Invalid catalog query');
   if (isPeoplePaidPath(path)) return;
+  // Build 7 Ask. POST admission is separate from the catalog GET client.
+  if (pathname === '/api/ask' && query === 'stream=1') return;
+  if (pathname === '/api/followups' && !path.includes('?')) return;
   // Explicitly opened readers and the related-speech button (build 7).
   if (pathname === '/api/search' && isSimilarRequest(params)) return;
   if (pathname === '/api/brief') {
@@ -141,7 +148,11 @@ export function assertAllowedPath(path: string): void {
     assertSearchParams(params, pathname === '/api/search-summary');
     // This lane reviews the web's 20-row search pages. The records lane's
     // exact six-row related-speech contract is handled above.
-    if (pathname === '/api/search' && params.has('per') && params.get('per') !== '20')
+    if (
+      pathname === '/api/search' &&
+      params.has('per') &&
+      params.get('per') !== '20'
+    )
       throw new Error('Records search requires the web page size');
     if (
       pathname === '/api/search-summary' &&
@@ -200,7 +211,8 @@ export function assertAllowedPath(path: string): void {
     pathname === '/api/person-slugs' ||
     pathname === editionPath ||
     pathname === '/api/recent' ||
-    (pathname?.startsWith('/api/resource/') && isRecordSlug(pathname.slice(14))) ||
+    (pathname?.startsWith('/api/resource/') &&
+      isRecordSlug(pathname.slice(14))) ||
     billTextPathPattern.test(pathname!) ||
     staticPaths.has(pathname!) ||
     releasePath.test(pathname!) ||
@@ -210,6 +222,11 @@ export function assertAllowedPath(path: string): void {
   )
     return;
   throw new Error('Route is outside the public catalog allow-list');
+}
+
+export function assertAskPostPath(path: string): void {
+  if (path !== '/api/ask?stream=1' && path !== '/api/followups')
+    throw new Error('Route is outside the Ask POST allow-list');
 }
 
 export function allowedURL(origin: string, path: string): string {

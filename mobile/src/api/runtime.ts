@@ -40,6 +40,8 @@ export const apiClient = new ApiClient({
   build: extra.appBuild,
   cache: new CatalogCache(new DiskStore(), 24 * 1024 * 1024, 220),
 });
+// Ask and records search share the same configured client.
+export const client = apiClient;
 export const catalogs = new Catalogs(apiClient);
 export const peopleDepth = new PeopleDepth(apiClient);
 export const recordSearch = new RecordSearch(apiClient);

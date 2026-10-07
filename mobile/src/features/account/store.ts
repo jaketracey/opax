@@ -125,6 +125,7 @@ const subscribe = (listener: () => void) => {
   };
 };
 const snapshot = () => state;
+export const accountSnapshot = () => state;
 
 /** The account as the Account and about sheet shows it. */
 export function useAccount(): AccountState {
