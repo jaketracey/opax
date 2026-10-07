@@ -76,7 +76,7 @@ test('opening all native directories and division history issues only static rea
     const people = await loadDirectory('person');
     const parties = await loadDirectory('party');
     const electorates = await loadDirectory('electorate');
-    expect(people.people.length).toBeGreaterThan(1200);
+    expect(people.people).toHaveLength(1090);
     expect(parties.parties.length).toBeGreaterThan(10);
     expect(electorates.electorates).toHaveLength(625);
     const beforeReturn = paths.length;

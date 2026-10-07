@@ -34,6 +34,8 @@ import {
 } from '../src/features/bills/filters';
 import { readDivisionHistory } from '../src/features/directories/division-data';
 import { billFoldText, billName } from '../src/api/bill-transforms';
+import { partyMembers } from '../src/api/party-page';
+import { representativeProfile } from '../src/features/your-mp/model';
 jest.mock('../src/api/runtime', () => ({ catalogs: {} }));
 const record = <T>(data: T) => ({ data, stale: false, savedAt: 1, asOf: null });
 const directory = {
@@ -65,7 +67,7 @@ const bill = d.decodeBill(pinned('/bills/au-federal-r7534.json'));
 
 describe('static directory transforms', () => {
   test('only guarded parliamentary identities enter the people list, with unique keys', () => {
-    expect(persons.length).toBeGreaterThan(1200);
+    expect(persons).toHaveLength(1090);
     expect(persons.length).toBeLessThanOrEqual(Object.keys(slugs.slugs).length);
     expect(new Set(persons.map((p) => p.key)).size).toBe(persons.length);
     expect(
@@ -74,6 +76,73 @@ describe('static directory transforms', () => {
         .map((p) => p.name),
     ).toEqual([]);
     expect(persons.some((p) => p.name === 'Anthony Albanese')).toBe(true);
+  });
+  test('pinned directory emits each canonical person once and never a surname-only profile', () => {
+    const canonical = persons.flatMap((p) =>
+      p.profile.canonicalPersonId ? [p.profile.canonicalPersonId] : [],
+    );
+    expect(new Set(canonical).size).toBe(canonical.length);
+    expect(persons.every((p) => p.name.trim().includes(' '))).toBe(true);
+    for (const [stub, full, speeches, divisions] of [
+      ['Abbott', 'Tony Abbott', 5878, 1392],
+      ['Howard', 'John Howard', 5562, 39],
+      ['Albanese', 'Anthony Albanese', 5408, 2929],
+    ] as const) {
+      const alias = [...portraits.identities.values()].find(
+        (p) => p.name === stub,
+      )!;
+      const row = persons.find((p) => p.name === full)!;
+      expect(row).toBeDefined();
+      expect(persons.some((p) => p.name === stub)).toBe(false);
+      if (alias.canonicalPersonId)
+        expect(row.profile.canonicalPersonId).toBe(alias.canonicalPersonId);
+      else expect(alias.rosterPersonId).toBeDefined();
+      expect(row.profile.rosterPersonId).toBe(alias.rosterPersonId);
+      expect(row.row?.pid).toBe(alias.rosterRow?.pid);
+      expect(row.row).toBe(alias.rosterRow);
+      expect(row.row?.speeches).toBe(speeches);
+      expect(row.divisions).toBe(divisions);
+    }
+  });
+  test('reused roster/vote IDs do not merge unrelated full-name people', () => {
+    for (const name of [
+      'Patrick Farmer',
+      'Patrick Conaghan',
+      'Kathryn Sullivan',
+      'Kathy Sullivan',
+      'Jon Sullivan',
+      'Peter Sidebottom',
+      'Sid Sidebottom',
+    ])
+      expect(persons.some((p) => p.name === name)).toBe(true);
+  });
+  test('history preserves source spelling and resolves only full-name profiles', () => {
+    const leo = people.people.find((p) => p.name === 'LEO McLEAY')!;
+    expect(seat.people[leo.person_id]?.name).toBe('LEO McLEAY');
+    for (const term of seat.terms) {
+      const profile = representativeProfile(term.person_id, directory);
+      if (profile) {
+        expect(profile.canonicalPersonId).toBe(term.person_id);
+        expect(profile.name.trim().includes(' ')).toBe(true);
+      }
+    }
+  });
+  test('pinned party member lists use full names and one profile per canonical person', () => {
+    for (const label of parties.map((p) => p.name)) {
+      const members = partyMembers(label, roster, people, slugs, manifest);
+      const rows = [...members.current, ...members.recorded];
+      expect(rows.every((p) => p.name.trim().includes(' '))).toBe(true);
+      const profiles = new Map(
+        rows.map((p) => [
+          p.slug,
+          d.joinPerson(p.slug, slugs, roster, people, manifest),
+        ]),
+      );
+      const ids = [...profiles.values()].flatMap((p) =>
+        p.canonicalPersonId ? [p.canonicalPersonId] : [],
+      );
+      expect(new Set(ids).size).toBe(ids.length);
+    }
   });
   test('party and chamber and parliament filters compose; no committee-only profiles', () => {
     const found = matchingPeople(

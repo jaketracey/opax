@@ -16,7 +16,10 @@ import {
   billStage,
 } from '../../api/bill-transforms';
 import { hasParliamentaryMembership, type Directory } from '../your-mp/model';
-import type { buildPortraitIndex } from '../../api/portrait-index';
+import {
+  samePortraitPerson,
+  type buildPortraitIndex,
+} from '../../api/portrait-index';
 import { chamberName, jurisdictionName } from '../../design/parliament';
 import type { PartyFile } from './party-file';
 
@@ -56,8 +59,36 @@ export function peopleRows(
   }
   const release = new Map(d.people.data.people.map((p) => [p.person_id, p]));
   const out: PeopleRow[] = [];
-  for (const [key, profile] of portraits.identities) {
+  // The resolver deliberately retains surname aliases, but directory rows
+  // follow Search/party membership: a full-name native identity, once per
+  // canonical person (or the roster identity when no dated ID exists).
+  const identities = new Map<string, [string, PersonProfile][]>();
+  for (const entry of portraits.identities) {
+    const [key, profile] = entry;
+    if (!profile.name.trim().includes(' ')) continue;
     if (!hasParliamentaryMembership(profile, d)) continue;
+    const id =
+      profile.canonicalPersonId ??
+      profile.rosterPersonId ??
+      nameKey(profile.name);
+    const group = identities.get(id) ?? [];
+    // A reused roster/vote ID alone must not collapse unrelated full names.
+    // Reuse the portrait index's established identity compatibility guard.
+    const duplicate = group.findIndex(([, p]) =>
+      samePortraitPerson(p, profile),
+    );
+    const canonicalName = profile.canonicalPersonId
+      ? release.get(profile.canonicalPersonId)?.name
+      : undefined;
+    if (duplicate === -1) group.push([key, profile]);
+    else if (
+      profile.name === canonicalName &&
+      group[duplicate]![1].name !== canonicalName
+    )
+      group[duplicate] = [key, profile];
+    identities.set(id, group);
+  }
+  for (const [key, profile] of [...identities.values()].flat()) {
     const candidates = named.get(nameKey(profile.name)) ?? [];
     const row =
       profile.rosterRow ??
