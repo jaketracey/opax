@@ -239,7 +239,7 @@ export function ProfileScreen({
               </Text>
               <EvidenceFooter block={b.identity} id="person" />
             </Group>
-            <QuickFacts identity={identity} registerCount={b.interests.data?.total} expensesTotal={b.expenses.data?.person.total} />
+            <QuickFacts identity={identity} />
             <PartyReceiptsBlock block={b.partyReceipts} retry={refresh} id="person-receipts" />
             <PersonTopics name={identity.name} />
             <RecordBlock

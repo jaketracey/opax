@@ -6,6 +6,8 @@ import {
   ErrorState,
   Group,
   Heading,
+  InfoButton,
+  RowList,
   LoadingState,
   Screen,
   Section,
@@ -14,7 +16,9 @@ import {
   Text,
   errorMessage,
 } from '../../design/primitives';
+import { rhythm } from '../../design/tokens';
 import { shareHeaderItem } from '../../navigation/share';
+import { closeSheetItem } from '../../navigation/chrome';
 
 export default function ExpenseGlossary() {
   const [record, setRecord] = useState<Awaited<
@@ -50,6 +54,7 @@ export default function ExpenseGlossary() {
               path: '/expenses',
               title: 'Expense category glossary',
             }),
+            closeSheetItem(),
           ],
         }}
       />
@@ -62,32 +67,36 @@ export default function ExpenseGlossary() {
           <Group>
             <Heading level={1}>Expense category glossary</Heading>
             {record.data.groups.map((g) => (
-              <Section key={g.id} title={g.title}>
-                <Text wordSafe>{g.blurb}</Text>
-                {record.data.categories
-                  .filter((c) => c.group === g.id)
-                  .map((c) => (
-                    <Group key={c.name}>
-                      <Heading level={3}>{c.name}</Heading>
-                      <Text wordSafe>{c.text}</Text>
-                      {c.note ? (
-                        <Text wordSafe variant="fine">
-                          {c.note}
-                        </Text>
-                      ) : null}
-                      {c.url ? (
-                        <SourceLink
-                          citation={c.source}
-                          url={c.url}
-                          kind="record"
-                        />
-                      ) : (
-                        <Text wordSafe variant="fine">
-                          {c.source}
-                        </Text>
-                      )}
-                    </Group>
-                  ))}
+              <Section
+                key={g.id}
+                title={g.title}
+                icon="list.bullet"
+                accent="money"
+                info={{ title: g.title, notes: [g.blurb] }}
+              >
+                <RowList>
+                  {record.data.categories
+                    .filter((c) => c.group === g.id)
+                    .map((c) => (
+                      <Group key={c.name} gap={rhythm.tight}>
+                        <Heading level={3}>{c.name}</Heading>
+                        <Text wordSafe>{c.text}</Text>
+                        {c.note ? (
+                          <InfoButton
+                            title={'About ' + c.name.toLowerCase()}
+                            notes={[c.note]}
+                          />
+                        ) : null}
+                        {c.url ? (
+                          <SourceLink
+                            citation={c.source}
+                            url={c.url}
+                            kind="record"
+                          />
+                        ) : null}
+                      </Group>
+                    ))}
+                </RowList>
               </Section>
             ))}
             <AsAtLine
@@ -96,20 +105,7 @@ export default function ExpenseGlossary() {
               licence={record.data.meta.licence}
             />
             {record.stale ? <StaleNotice savedAt={record.savedAt} /> : null}
-            <Text wordSafe variant="fine">
-              {record.data.meta.licence_note}
-            </Text>
-            <SourceLink
-              citation="IPEA explanatory notes"
-              url={record.data.meta.source_url}
-              kind="record"
-            />
-            <SourceLink
-              citation="Expense category licence"
-              url={record.data.meta.licence_url}
-              kind="record"
-            />
-            <Text testID="expense-glossary-end" variant="fine">
+            <Text testID="expense-glossary-end" variant="caption">
               End of glossary
             </Text>
           </Group>

@@ -499,8 +499,8 @@
     },
     "/people-fixtures": {
       "file": "fixtures/people-fixtures.json",
-      "sha256": "94ba175d7740b2ea4e8fcf999eff9c29a50225fad77853609a0514a410677a74",
-      "size": 5478,
+      "sha256": "ceb06c12f799390621b8b2bacc309b1478762de7fd97331a146da80230673ac8",
+      "size": 7456,
       "cacheControl": "no-store"
     }
   }

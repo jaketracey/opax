@@ -2,7 +2,6 @@ import { partyTimingID } from './people/party-timing';
 import { PartyAccess, PartyFunding } from './people/PartyDepth';
 import { RecordSection, NewsSection } from './people/Sections';
 import { FollowToggle } from './follows/FollowToggle';
-import { partySlug } from '../design/party';
 import { useCallback, useEffect, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
@@ -39,7 +38,7 @@ import {
   Text,
   errorMessage,
 } from '../design/primitives';
-import { partyDot, partyWash } from '../design/party';
+import { partyDot, partyWash, partySlug } from '../design/party';
 import { colors, radius, rhythm } from '../design/tokens';
 import { openOnWeb } from '../navigation/external';
 import { billRoute, personRoute } from '../navigation/routes';

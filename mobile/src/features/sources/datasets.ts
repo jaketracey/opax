@@ -148,6 +148,50 @@ export const datasets: Dataset[] = [
   },
 ];
 
+// Source review: docs/DATA-MONEY.md sections 1.3 and 1.4. A combined
+// export keeps each publisher's own terms, rather than claiming one licence.
+datasets.push(
+  {
+    id: 'ministerial-diaries', name: 'Ministerial diary disclosures',
+    publisher: 'NSW Cabinet Office; Queensland Cabinet',
+    licence: 'NSW: CC BY 4.0; Queensland: CC BY',
+    terms: [
+      'NSW Cabinet Office ministers’ diary disclosures are published under the NSW Government CC BY 4.0 copyright statement. Queensland Cabinet ministerial diary disclosures carry CC BY terms. Attribution: NSW Cabinet Office; Queensland Government.',
+      'OPAX’s access export joins the published diary disclosures to the guarded parliamentary roster. The original documents retain their publishers’ copyright and licence.',
+    ],
+    links: [
+      { label: 'NSW ministers’ diary disclosures', url: 'https://www.nsw.gov.au/departments-and-agencies/cabinet-office/access-to-information/ministers-diary-disclosures' },
+      { label: 'Queensland Cabinet and Ministerial Directory', url: 'https://cabinet.qld.gov.au/ministers-portfolios.aspx' },
+    ],
+  },
+  {
+    id: 'lobbyist-registers', name: 'Lobbyist registers',
+    publisher: 'Attorney-General’s Department; NSW Electoral Commission; Queensland Integrity Commissioner; Victorian Public Sector Commission; South Australian Department of the Premier and Cabinet; Western Australian Public Sector Commission',
+    terms: [
+      'Attribution: the six register publishers listed above. Federal, Queensland and Victorian registers carry CC BY 4.0 terms. The NSW source review records CC BY-SA 3.0 AU as unverified. The South Australian register does not state a licence. Western Australian material retains Crown copyright; its website terms discourage automated access.',
+      'OPAX’s access export does not publish one combined reuse licence. Check the original register’s terms before reuse.',
+    ],
+    links: [
+      { label: 'Federal register', url: 'https://lobbyists.ag.gov.au/register' },
+      { label: 'NSW register', url: 'https://lobbyists.elections.nsw.gov.au/' },
+      { label: 'Queensland register', url: 'https://lobbyists.integrity.qld.gov.au/Lobbying-Register/' },
+      { label: 'Victorian register', url: 'https://www.lobbyists.vic.gov.au/' },
+      { label: 'South Australian register', url: 'https://www.lobbyists.sa.gov.au/' },
+      { label: 'Western Australian register', url: 'https://www.lobbyists.wa.gov.au/' },
+    ],
+  },
+  {
+    id: 'news', name: 'Politics headlines', publisher: 'ABC News; The Guardian',
+    terms: [
+      'Headlines are read from the publishers’ public RSS feeds. Copyright remains with ABC News and The Guardian. The news export does not publish a reuse licence. Each headline opens its original article.',
+    ],
+    links: [
+      { label: 'ABC News', url: 'https://www.abc.net.au/news/' },
+      { label: 'The Guardian', url: 'https://www.theguardian.com/australia-news' },
+    ],
+  },
+);
+
 export const portraitTerms = {
   official: {
     credit: 'Official portrait',

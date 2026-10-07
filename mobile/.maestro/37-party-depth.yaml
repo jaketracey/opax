@@ -1,5 +1,5 @@
 appId: au.com.opax.app
-name: 37 Party access, creditors, all years, follow and Your MP pay (also AX5)
+name: 37 Party access, creditors, all years, follow and Your MP pay
 ---
 - launchApp:
     clearState: true
@@ -96,6 +96,7 @@ name: 37 Party access, creditors, all years, follow and Your MP pay (also AX5)
     timeout: 180000
 - tapOn: { id: your-following-manage }
 - assertVisible: Parties
+- assertVisible: { id: follows-open-party-labor }
 - takeScreenshot: ${EVIDENCE}/37-following-party
 - tapOn: { text: Back, index: 0 }
 - scrollUntilVisible:

@@ -470,7 +470,7 @@ function partyFingerprint(id: string, sources: FollowSources) {
   return { title: node.label, markers: { receipts: { value: node.total, asAt: sources.money.meta.generated }, donations: { value: node.count, asAt: sources.money.meta.generated } } };
 }
 function partyChanges(before: Fingerprint, after: Fingerprint): Change[] {
-  return ['receipts', 'donations'].flatMap(marker => pairOf(before, after, marker) ? [{ marker, text: marker === 'receipts' ? 'Recorded party receipts revised to ' + formatMoney(Number(after[marker]!.value)) : 'Donations counted revised to ' + formatCount(Number(after[marker]!.value)), citation: 'AEC disclosure returns, CC BY 4.0', asAt: after[marker]!.asAt }] : []);
+  return ['receipts', 'donations'].flatMap(marker => pairOf(before, after, marker) ? [{ marker, text: marker === 'receipts' ? 'Donations counted revised to ' + formatMoney(Number(after[marker]!.value)) : 'Donation records counted revised to ' + formatCount(Number(after[marker]!.value)), citation: 'AEC disclosure returns, CC BY 4.0', asAt: after[marker]!.asAt }] : []);
 }
 const fingerprints = {
   party: partyFingerprint,

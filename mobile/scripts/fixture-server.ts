@@ -220,7 +220,7 @@ export const server = createServer(async (request, response) => {
     if (isEdition) {
       body = edition;
       cacheControl = snapshot.responses[editionPath].cacheControl;
-    } else if (url.pathname === '/api/search') {
+    } else if (url.pathname === '/api/search' && !Object.hasOwn(peopleFixtures.responses, path)) {
       body = Buffer.from(JSON.stringify(recordFixtures.responses['/api/search']));
     } else if (url.pathname === '/api/person-slugs') {
       body = Buffer.from(

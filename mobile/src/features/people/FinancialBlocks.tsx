@@ -1,43 +1,27 @@
-import { useState, type ReactNode } from 'react';
 import { router } from 'expo-router';
 import {
-  Button,
+  BigFigure,
+  Disclosure,
   Group,
   KeyValueList,
+  LinkRow,
   OpaxWebLink,
+  RowList,
   Text,
 } from '../../design/primitives';
+import { rhythm } from '../../design/tokens';
 import {
+  formatCount,
   formatDate,
   formatFinancialYear,
   formatMoney,
   formatPercent,
+  moneyAccessibilityLabel,
 } from '../../design/format';
 import { partyRoute } from '../../navigation/routes';
 import { RecordBlock } from '../your-mp/Evidence';
 import type { ProfileView } from '../your-mp/model';
-function Disclosure({
-  label,
-  id,
-  children,
-}: {
-  label: string;
-  id: string;
-  children: () => ReactNode;
-}) {
-  const [open, setOpen] = useState(false);
-  return (
-    <Group gap={8}>
-      <Button
-        label={open ? 'Hide ' + label.toLowerCase() : label}
-        expanded={open}
-        testID={id}
-        onPress={() => setOpen((v) => !v)}
-      />
-      {open ? children() : null}
-    </Group>
-  );
-}
+
 export function PayBlock({
   block,
   retry,
@@ -51,33 +35,47 @@ export function PayBlock({
     <RecordBlock
       title="Pay for the posts held"
       id={id}
-      partialMissing="No readable record was found for this person. Some rows in the latest public export were unreadable."
       block={block}
+      retry={retry}
+      icon="banknote"
+      accent="money"
+      partialMissing="No readable record was found for this person. Some rows in the latest public export were unreadable."
       unlinked="This release does not link this person's salary entitlements. See the record on opax.com.au."
       missing="No covered federal salary entitlement is held for this person. State pay and service before 7 December 1999 are outside this series."
-      retry={retry}
+      info={(p) =>
+        p
+          ? {
+              title: 'About these entitlements',
+              notes: [p.method, ...p.notCovered.map((note) => note.text)],
+            }
+          : null
+      }
     >
       {(p) => (
         <Group>
           {p.person.now ? (
             <>
-              <Text wordSafe variant="figureInline">
-                {formatMoney(p.person.now.salary)} a year
-              </Text>
-              <Text wordSafe>
+              <BigFigure
+                value={formatMoney(p.person.now.salary)}
+                spoken={moneyAccessibilityLabel(p.person.now.salary)}
+                label="a year"
+                accent="money"
+                testID={`${id}-salary`}
+              />
+              <Text wordSafe variant="strong">
                 {p.person.now.post}
                 {p.person.now.assumed
                   ? ' (if named in the Opposition Leader’s notice)'
                   : ''}
               </Text>
-              <Text wordSafe>
+              <Text wordSafe variant="metadata">
                 Base salary {formatMoney(p.base.amount)}
                 {p.person.now.pct
                   ? ` plus a ${formatPercent(p.person.now.pct, Number.isInteger(p.person.now.pct) ? 0 : 1)} loading`
                   : ''}
                 .
               </Text>
-              <Text wordSafe variant="metadata">
+              <Text wordSafe variant="caption">
                 Post held since {formatDate(p.person.now.since)}
               </Text>
             </>
@@ -87,59 +85,61 @@ export function PayBlock({
               below.
             </Text>
           )}
-          <Text wordSafe>
+          <Text wordSafe variant="caption">
             These are entitlements set by instrument, not payslips.
           </Text>
-          <Text wordSafe>{p.method}</Text>
-          <Disclosure label="Salary by financial year" id={`${id}-years`}>
-            {() => (
-              <KeyValueList
-                items={p.person.by_year.map(([year, amount]) => ({
-                  label: formatFinancialYear(year),
-                  value: formatMoney(amount),
-                }))}
-              />
-            )}
-          </Disclosure>
-          <Disclosure label="Posts held" id={`${id}-posts`}>
-            {() => (
-              <Group>
-                {[...p.person.spells]
-                  .reverse()
-                  .map(([from, to, post, pct, salary], i) => (
-                    <Group key={i} gap={4}>
-                      <Text wordSafe variant="strong">
-                        {post}
-                      </Text>
-                      <Text wordSafe variant="metadata">
-                        {formatDate(from)} to {to ? formatDate(to) : 'present'}
-                      </Text>
-                      <Text wordSafe>
-                        {formatMoney(salary)} a year ·{' '}
-                        {formatPercent(pct, Number.isInteger(pct) ? 0 : 1)}{' '}
-                        loading at the end of this spell
-                      </Text>
-                    </Group>
-                  ))}
-              </Group>
-            )}
-          </Disclosure>
-          <Disclosure label="Pay coverage" id={`${id}-coverage`}>
-            {() => (
-              <Group>
-                {p.notCovered.map((note) => (
-                  <Text wordSafe key={note.id}>
-                    {note.text}
-                  </Text>
-                ))}
-              </Group>
-            )}
-          </Disclosure>
+          <RowList>
+            <Disclosure
+              label="Salary by financial year"
+              value={formatCount(p.person.by_year.length)}
+              testID={`${id}-years`}
+            >
+              {() => (
+                <KeyValueList
+                  items={p.person.by_year.map(([year, amount]) => ({
+                    label: formatFinancialYear(year),
+                    value: formatMoney(amount),
+                  }))}
+                />
+              )}
+            </Disclosure>
+            <Disclosure
+              label="Posts held"
+              value={formatCount(p.person.spells.length)}
+              testID={`${id}-posts`}
+            >
+              {() => (
+                <RowList>
+                  {[...p.person.spells]
+                    .reverse()
+                    .map(([from, to, post, pct, salary], i) => (
+                      <Group key={i} gap={rhythm.line}>
+                        <Text wordSafe variant="strong">
+                          {post}
+                        </Text>
+                        <Text wordSafe variant="caption">
+                          {formatDate(from)} to{' '}
+                          {to ? formatDate(to) : 'present'}
+                        </Text>
+                        <Text wordSafe variant="figureInline" tone="moneyInk">
+                          {formatMoney(salary)} a year
+                        </Text>
+                        <Text wordSafe variant="metadata">
+                          {formatPercent(pct, Number.isInteger(pct) ? 0 : 1)}{' '}
+                          loading at the end of this spell
+                        </Text>
+                      </Group>
+                    ))}
+                </RowList>
+              )}
+            </Disclosure>
+          </RowList>
         </Group>
       )}
     </RecordBlock>
   );
 }
+
 export function PartyReceiptsBlock({
   block,
   retry,
@@ -149,40 +149,43 @@ export function PartyReceiptsBlock({
   retry: () => void;
   id: string;
 }) {
+  const linkID =
+    id === 'person-receipts' ? 'person-party-receipts' : `${id}-link`;
   return (
     <RecordBlock
       title="Party receipts"
       id={id}
-      partialMissing="No readable record was found for this person. Some rows in the latest public export were unreadable."
       block={block}
+      retry={retry}
+      icon="building.columns"
+      accent="money"
+      partialMissing="No readable record was found for this person. Some rows in the latest public export were unreadable."
       missing="No receipts projection is linked for this person's party."
       unlinked="This release does not link party receipts for this person's party. See the record on opax.com.au."
-      retry={retry}
     >
       {(p) => (
-        <Group>
-          <Text wordSafe>{p.caption}</Text>
-          {p.party ? (
-            <Button
-              label="Party receipts"
-              onPress={() => router.push(partyRoute(p.party!))}
-              testID={
-                id === 'person-receipts'
-                  ? 'person-party-receipts'
-                  : `${id}-link`
-              }
-            />
-          ) : (
-            <OpaxWebLink
-              label="Party receipts"
-              path={p.url}
-              testID={
-                id === 'person-receipts'
-                  ? 'person-party-receipts'
-                  : `${id}-link`
-              }
-            />
-          )}
+        <Group gap={rhythm.tight}>
+          <Text wordSafe variant="metadata">
+            {p.caption}
+          </Text>
+          <RowList>
+            {p.party ? (
+              <LinkRow
+                title="Party receipts"
+                detail={p.party}
+                icon="banknote"
+                accent="money"
+                testID={linkID}
+                onPress={() => router.push(partyRoute(p.party!))}
+              />
+            ) : (
+              <OpaxWebLink
+                label="Party receipts"
+                path={p.url}
+                testID={linkID}
+              />
+            )}
+          </RowList>
         </Group>
       )}
     </RecordBlock>

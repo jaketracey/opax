@@ -6,7 +6,13 @@ import type { PersonProfile } from '../../api/person-identity';
 import type { RecordResult } from '../../api/client';
 import {
   AsAtLine,
-  Button,
+  ChoiceChips,
+  Disclosure,
+  InfoButton,
+  LinkRow,
+  RowList,
+  type InfoNotes,
+  type SFSymbol,
   EmptyState,
   ErrorState,
   Group,
@@ -14,7 +20,6 @@ import {
   KeyValueList,
   LoadingState,
   Section,
-  SegmentedControl,
   SourceLink,
   StaleNotice,
   Text,
@@ -24,13 +29,12 @@ import {
   formatCount,
   formatDate,
   formatPercent,
-  formatMoney,
 } from '../../design/format';
 import { chamberName, jurisdictionName } from '../../design/parliament';
 import { partyText } from '../../design/party';
 import { fromWebPath } from '../../navigation/routes';
-import { openOnWeb } from '../../navigation/external';
-import { InlineLink } from '../bills/parts';
+import { openOnWeb, openSource } from '../../navigation/external';
+import { rhythm, type Accent } from '../../design/tokens';
 import {
   diaryFor,
   matchingNews,
@@ -68,7 +72,13 @@ export function ActionSection<T>({
   id,
   load,
   children,
+  icon,
+  accent = 'people',
+  info,
 }: {
+  icon?: SFSymbol;
+  accent?: Accent;
+  info?: InfoNotes;
   title: string;
   label: string;
   id: string;
@@ -111,30 +121,31 @@ export function ActionSection<T>({
     }
   };
   return (
-    <Section title={title} testID={id}>
-      <Button
-        label={(open ? 'Hide ' : 'Show ') + label}
-        expanded={open}
-        loading={busy}
-        testID={id + '-toggle'}
-        onPress={() => {
-          setOpen(!open);
-          if (!open && value === null && !error) void read();
-        }}
-      />
-      {open ? (
-        busy ? (
-          <LoadingState label={'Loading ' + label} />
-        ) : error ? (
-          <ErrorState
-            message={error}
-            onRetry={() => void read()}
-            testID={id + '-error'}
-          />
-        ) : value !== null ? (
-          children(value)
-        ) : null
-      ) : null}
+    <Section title={title} testID={id} icon={icon} accent={accent} info={info}>
+      <RowList>
+        <Disclosure
+          label={(open ? 'Hide ' : 'Show ') + label}
+          accessibilityLabel={open ? 'Hide ' + label : 'Show ' + label}
+          open={open}
+          testID={id + '-toggle'}
+          onToggle={(next) => {
+            setOpen(next);
+            if (next && value === null && !error) void read();
+          }}
+        >
+          {busy ? (
+            <LoadingState label={'Loading ' + label} />
+          ) : error ? (
+            <ErrorState
+              message={error}
+              onRetry={() => void read()}
+              testID={id + '-error'}
+            />
+          ) : value !== null ? (
+            children(value)
+          ) : null}
+        </Disclosure>
+      </RowList>
     </Section>
   );
 }
@@ -146,7 +157,7 @@ export function ReadDate({
   citation: string;
 }) {
   return (
-    <Group gap={4}>
+    <Group gap={rhythm.line}>
       <AsAtLine asOf={record.asOf} citation={citation} />
       {record.stale ? <StaleNotice savedAt={record.savedAt} /> : null}
     </Group>
@@ -154,12 +165,8 @@ export function ReadDate({
 }
 export function QuickFacts({
   identity,
-  registerCount,
-  expensesTotal,
 }: {
   identity: PersonProfile;
-  registerCount?: number;
-  expensesTotal?: number;
 }) {
   const jurisdictions = [
     ...new Set([
@@ -170,18 +177,23 @@ export function QuickFacts({
   const chambers = [
     ...new Set(
       identity.seats.map(
-        (s) => chamberName(s.chamber, s.jurisdiction) ?? s.chamber,
+        (s) => chamberName(s.chamber, s.jurisdiction) ?? 'Chamber not recorded',
       ),
     ),
   ];
   return (
-    <Section title="Quick facts" testID="person-quick-facts">
+    <Section
+      title="Quick facts"
+      icon="person.text.rectangle"
+      accent="people"
+      testID="person-quick-facts"
+    >
       <KeyValueList
         items={[
           {
             label: 'Type',
             value:
-              identity.seats.length > 0 || identity.rosterRow?.current === true
+              identity.partyStatus === 'current'
                 ? 'Sitting parliamentarian'
                 : 'Parliamentarian',
           },
@@ -196,8 +208,9 @@ export function QuickFacts({
           {
             label: 'Jurisdiction',
             value:
-              jurisdictions.map((j) => jurisdictionName(j) ?? j).join(', ') ||
-              'Not recorded',
+              jurisdictions
+                .map((j) => jurisdictionName(j) ?? 'Jurisdiction not recorded')
+                .join(', ') || 'Not recorded',
           },
           { label: 'Chamber', value: chambers.join(', ') || 'Not recorded' },
           {
@@ -206,17 +219,6 @@ export function QuickFacts({
               identity.seats.map((s) => s.name).join(', ') ||
               'No current electorate observation held',
           },
-          ...(registerCount !== undefined
-            ? [
-                {
-                  label: 'Declared interests',
-                  value: formatCount(registerCount),
-                },
-              ]
-            : []),
-          ...(expensesTotal !== undefined
-            ? [{ label: 'Claimed expenses', value: formatMoney(expensesTotal) }]
-            : []),
         ]}
       />
       <AsAtLine
@@ -231,6 +233,7 @@ export function PersonTopics({ name }: { name: string }) {
     <ActionSection
       title="What they talk about"
       label="topics"
+      icon="chart.bar"
       id="person-topics"
       load={() => peopleDepth.topics(name)}
     >
@@ -247,7 +250,7 @@ function Topics({
   const profile = data.person.data.profiles[era];
   return (
     <Group>
-      <SegmentedControl<'all' | 'then' | 'now'>
+      <ChoiceChips<'all' | 'then' | 'now'>
         value={era}
         onChange={setEra}
         segments={[
@@ -262,9 +265,11 @@ function Topics({
         far
       </Text>
       {data.person.data.coverage ? (
-        <Text wordSafe variant="fine">
-          {data.person.data.coverage}
-        </Text>
+        <InfoButton
+          title="About the topic profile"
+          notes={[data.person.data.coverage]}
+          testID="person-topic-info"
+        />
       ) : null}
       {profile.topics.length ? (
         profile.topics.slice(0, 8).map((t) => {
@@ -272,9 +277,9 @@ function Topics({
             (b) => b.slug === t.slug,
           );
           return (
-            <Group key={t.slug} gap={4}>
+            <Group key={t.slug} gap={rhythm.line}>
               <Heading level={3}>{topicNames[t.slug] ?? t.slug}</Heading>
-              <Text wordSafe>
+              <Text wordSafe variant="metadata">
                 Their share of labelled speeches:{' '}
                 {formatPercent(t.share * 100, 1)} · {formatCount(t.count)}{' '}
                 speeches
@@ -307,6 +312,12 @@ export function openRecord(row: RecordRow) {
   if (native) router.push(native);
   else void openOnWeb(path, displayedRecordTitle(row));
 }
+function partyPassage(value: string | undefined) {
+  const passage = String(value || '').trim();
+  return passage.length > 240
+    ? passage.slice(0, 240).replace(/\s+\S*$/, '') + '…'
+    : passage;
+}
 export function RecordSection({
   name,
   kind,
@@ -326,6 +337,17 @@ export function RecordSection({
       title={title}
       label={kind === 'party' ? 'mentions' : kind}
       id={id}
+      icon="text.bubble"
+      info={{
+        title: 'About this parliamentary record',
+        notes: [
+          kind === 'speeches'
+            ? 'Newest results within the indexed retrieval window. Machine briefs are automated summaries; passages are extracts from the record.'
+            : kind === 'party'
+              ? 'Machine briefs are automated summaries; passages are extracts from the record.'
+              : null,
+        ],
+      }}
       load={() =>
         kind === 'speeches'
           ? peopleDepth.speeches(name)
@@ -338,16 +360,23 @@ export function RecordSection({
             ? data.records.data.results
             : data.records.data.results.slice(0, 5)
           ).map((r, i) => (
-            <Group key={r.slug + i} gap={8} testID={id + '-row-' + i}>
-              <InlineLink
-                label={displayedRecordTitle(r)}
+            <Group
+              key={r.slug + i}
+              gap={rhythm.tight}
+              testID={id + '-row-' + i}
+            >
+              <LinkRow
+                title={displayedRecordTitle(r)}
                 onPress={() => openRecord(r)}
                 testID={id + '-open-' + i}
               />
               <Text wordSafe variant="metadata">
                 {r.speaker ? r.speaker + ' · ' : ''}
                 {r.date ? formatDate(r.date) : 'Undated'}
-                {r.state ? ' · ' + (jurisdictionName(r.state) ?? r.state) : ''}
+                {r.state
+                  ? ' · ' +
+                    (jurisdictionName(r.state) ?? 'Jurisdiction not recorded')
+                  : ''}
               </Text>
               <Text wordSafe variant="metadata">
                 {data.briefs[r.resource ?? '']
@@ -360,29 +389,22 @@ export function RecordSection({
                 {data.briefs[r.resource ?? ''] ||
                   (kind === 'speeches'
                     ? cleanPassage(r.snippet)
-                    : r.snippet?.slice(0, kind === 'party' ? 240 : 220)) ||
+                    : kind === 'party'
+                      ? partyPassage(r.snippet)
+                      : r.snippet?.slice(0, 220)) ||
                   'Open the speech to read the record.'}
               </Text>
             </Group>
           ))}
           {data.records.data.coverage ? (
-            <Text wordSafe variant="fine">
-              {data.records.data.coverage}
-            </Text>
+            <InfoButton
+              title="About this retrieval window"
+              notes={[data.records.data.coverage]}
+              testID={id + '-coverage'}
+            />
           ) : null}
           {!data.records.data.results.length ? (
             <EmptyState message="No mentions found in the indexed record." />
-          ) : null}
-          {kind === 'speeches' ? (
-            <Text wordSafe variant="fine">
-              Newest results within the indexed retrieval window. Machine briefs
-              are automated summaries; passages are extracts from the record.
-            </Text>
-          ) : kind === 'party' ? (
-            <Text wordSafe variant="fine">
-              Machine briefs are automated summaries; passages are extracts from
-              the record.
-            </Text>
           ) : null}
           <ReadDate
             record={data.records}
@@ -398,6 +420,7 @@ export function NewsSection({ name }: { name: string }) {
     <ActionSection
       title="News headlines"
       label="news"
+      icon="newspaper"
       id="people-news"
       load={() => peopleDepth.news()}
     >
@@ -407,43 +430,20 @@ export function NewsSection({ name }: { name: string }) {
           <Group>
             <Heading level={2}>In the news</Heading>
             {items.map((item, i) => (
-              <Group key={item.url} gap={4}>
-                <SourceLink
-                  citation={item.title}
-                  url={item.url}
-                  kind="record"
+              <Group key={item.url} gap={rhythm.line}>
+                <LinkRow
+                  title={item.title}
+                  external
+                  onPress={() => void openSource(item.url, item.title)}
                   testID={'people-news-' + i}
                 />
-                <Text wordSafe variant="metadata">
-                  {item.source === 'ABC'
-                    ? 'ABC News'
-                    : item.source === 'Guardian'
-                      ? 'The Guardian'
-                      : item.source}
-                  {item.published ? ' · ' + formatDate(item.published) : ''}
-                </Text>
+                {item.published ? (
+                  <Text wordSafe variant="caption">
+                    {formatDate(item.published)}
+                  </Text>
+                ) : null}
               </Group>
             ))}
-            <Text wordSafe variant="fine">
-              Search the outlets:
-            </Text>
-            <SourceLink
-              citation="ABC News"
-              url={
-                'https://www.abc.net.au/news/search?query=' +
-                encodeURIComponent(name)
-              }
-              kind="record"
-            />
-            <SourceLink
-              citation="The Guardian"
-              url={
-                'https://www.theguardian.com/australia-news?query=' +
-                encodeURIComponent(name) +
-                '#search'
-              }
-              kind="record"
-            />
             <ReadDate record={data} citation="ABC News; The Guardian" />
           </Group>
         ) : (
@@ -490,7 +490,27 @@ function Diary({ identity }: { identity: PersonProfile }) {
   const m = record ? diaryFor(identity, record.data) : null;
   if (record && !m) return null;
   return (
-    <Section title="Ministerial diary" testID="person-diary">
+    <Section
+      title="Ministerial diary"
+      icon="calendar"
+      accent="people"
+      testID="person-diary"
+      info={
+        m
+          ? {
+              title: 'About the ministerial diary',
+              notes: [
+                m.jurisdiction === 'qld'
+                  ? "From the Queensland Government's monthly ministerial diary disclosures, published for " +
+                    m.name +
+                    '.'
+                  : "From the NSW Cabinet Office's quarterly ministers' diary disclosures. NSW diaries are published by office, so meetings are attributed to the minister holding that office on the date.",
+                'Staff, cabinet, departmental and other government meetings are counted but left out of the lists.',
+              ],
+            }
+          : undefined
+      }
+    >
       {error ? (
         <ErrorState message={error} onRetry={() => setRetry((v) => v + 1)} />
       ) : !m || !record ? (
@@ -518,7 +538,7 @@ function Diary({ identity }: { identity: PersonProfile }) {
           />
           <Heading level={3}>Recent meetings</Heading>
           {m.recent.map((r, i) => (
-            <Group key={i} gap={4}>
+            <Group key={i} gap={rhythm.line}>
               <Text wordSafe variant="strong">
                 {r.org}
               </Text>
@@ -528,15 +548,6 @@ function Diary({ identity }: { identity: PersonProfile }) {
               {r.purpose ? <Text wordSafe>{r.purpose}</Text> : null}
             </Group>
           ))}
-          <Text wordSafe variant="fine">
-            {m.jurisdiction === 'qld'
-              ? "From the Queensland Government's monthly ministerial diary disclosures, published for " +
-                m.name +
-                '.'
-              : "From the NSW Cabinet Office's quarterly ministers' diary disclosures. NSW diaries are published by office, so meetings are attributed to the minister holding that office on the date."}{' '}
-            Staff, cabinet, departmental and other government meetings are
-            counted but left out of the lists.
-          </Text>
           {m.latest_pdf ? (
             <SourceLink
               citation="Latest diary (PDF)"

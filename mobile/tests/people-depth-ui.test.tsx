@@ -1,4 +1,5 @@
 import { act } from 'react';
+import { router } from 'expo-router';
 import TestRenderer from 'react-test-renderer';
 import { Text as NativeText } from 'react-native';
 import { catalogs, peopleDepth } from '../src/api/runtime';
@@ -7,6 +8,7 @@ import {
   NewsSection,
   PersonTopics,
   RecordSection,
+  openRecord,
 } from '../src/features/people/Sections';
 import { PartyAccess, PartyFunding } from '../src/features/people/PartyDepth';
 import ExpenseGlossary from '../src/features/people/ExpenseGlossary';
@@ -196,16 +198,36 @@ test('meetings, attendees, lobbying firms and creditors remain plain text; all 2
   ).toHaveLength(0);
   await act(async () => r.unmount());
 });
-test('glossary preserves every definition, note and group blurb verbatim from the web export', async () => {
+test('glossary preserves definitions on screen and full notes in info sheets from the web export', async () => {
   const data = decodeExpenseCategories(pinned('/expense-categories.json'));
   jest.mocked(catalogs.expenseCategories).mockResolvedValue(result(data));
   const r = await render(<ExpenseGlossary />);
   const output = words(r);
-  for (const c of data.categories) {
-    expect(output).toContain(c.text);
-    if (c.note) expect(output).toContain(c.note);
-  }
-  for (const g of data.groups) expect(output).toContain(g.blurb);
+  for (const c of data.categories) expect(output).toContain(c.text);
+  const note = async (label: string, body: string) => {
+    await act(async () =>
+      r.root
+        .find(
+          (n) =>
+            n.props?.accessibilityLabel === label &&
+            typeof n.props.onPress === 'function',
+        )
+        .props.onPress(),
+    );
+    expect(words(r)).toContain(body);
+    await act(async () =>
+      r.root
+        .find(
+          (n) =>
+            n.props?.accessibilityLabel === 'Done' &&
+            typeof n.props.onPress === 'function',
+        )
+        .props.onPress(),
+    );
+  };
+  for (const c of data.categories)
+    if (c.note) await note('About ' + c.name.toLowerCase(), c.note);
+  for (const g of data.groups) await note(g.title, g.blurb);
   await act(async () => r.unmount());
 });
 
@@ -252,7 +274,21 @@ test('a populated access match shows its disclosure wording without linking meet
   ])
     expect(output).toContain(value);
   expect(
-    r.root.findAll((n) => typeof n.props?.onPress === 'function'),
+    r.root.findAll(
+      (n) =>
+        (n.props?.accessibilityLabel?.includes('Fixture Attendee') ||
+          n.props?.accessibilityLabel?.includes('Fixture Lobbying Firm')) &&
+        typeof n.props?.onPress === 'function',
+    ),
   ).toHaveLength(0);
   await act(async () => r.unmount());
+});
+
+// The records lane owns the reader; both speech and mention rows use its resolver.
+test('speech and mention rows open the existing native document reader', () => {
+  openRecord({ slug: 'speech-1199549' } as Parameters<typeof openRecord>[0]);
+  expect(router.push).toHaveBeenCalledWith({
+    pathname: '/doc/[slug]',
+    params: { slug: 'speech-1199549' },
+  });
 });

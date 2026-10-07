@@ -65,9 +65,11 @@ name: 36 Person topics, speeches, mentions, news, ministerial diary and glossary
     centerElement: true
     timeout: 180000
 - tapOn: { id: person-speeches-open-0 }
-- assertVisible: { id: source-destination-url }
+- extendedWaitUntil:
+    visible: { id: doc-title }
+    timeout: 30000
 - takeScreenshot: ${EVIDENCE}/36-speech-destination
-- tapOn: { id: source-destination-ok }
+- tapOn: { text: Back, index: 0 }
 - scrollUntilVisible:
     element: { id: person-speeches-toggle }
     direction: UP
@@ -89,6 +91,12 @@ name: 36 Person topics, speeches, mentions, news, ministerial diary and glossary
     centerElement: true
     timeout: 180000
 - takeScreenshot: ${EVIDENCE}/36-mentions
+- tapOn: { id: person-mentions-open-0 }
+- extendedWaitUntil:
+    visible: { id: doc-title }
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/36-mention-destination
+- tapOn: { text: Back, index: 0 }
 - scrollUntilVisible:
     element: { id: people-news-toggle }
     direction: UP
@@ -138,3 +146,5 @@ name: 36 Person topics, speeches, mentions, news, ministerial diary and glossary
     centerElement: true
     timeout: 180000
 - takeScreenshot: ${EVIDENCE}/36-glossary-source
+- tapOn: Done
+- assertVisible: { id: person-screen-title }

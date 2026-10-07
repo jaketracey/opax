@@ -133,6 +133,42 @@
         }
       ],
       "fetched_at": "2026-10-06T19:32:33.398068+00:00"
+    },
+    "/api/resource/speech-1199549": {
+      "slug": "speech-1199549",
+      "title": "Excise Tariff Amendment (Draught Beer) Bill 2025",
+      "speaker": "Anthony Albanese",
+      "url": "https://www.aph.gov.au/Parliamentary_Business/Hansard",
+      "labels": {
+        "kind": "speech",
+        "state": "federal",
+        "chamber": "representatives"
+      },
+      "topics": [],
+      "metadata": {
+        "date": "2026-02-04",
+        "fixture": true
+      },
+      "summary": "Supported a two-year freeze on draught beer excise under the Excise Tariff Amendment (Draught Beer) Bill 2025 and associated bill, presenting it as cost-of-living relief and support for pubs, clubs, breweries, jobs and community organisations. The proceeding also considered amendments on spirits and other alcohol taxes, with the government opposing them.",
+      "text": "Local reader contract fixture. Full source text is not present in this pinned sample. Open the original Hansard document to read the speech."
+    },
+    "/api/resource/speech-828032": {
+      "slug": "speech-828032",
+      "title": "National Reconstruction Fund Corporation Bill 2023",
+      "speaker": "Anthony Albanese",
+      "url": "https://www.aph.gov.au/Parliamentary_Business/Hansard",
+      "labels": {
+        "kind": "speech",
+        "state": "federal",
+        "chamber": "representatives"
+      },
+      "topics": [],
+      "metadata": {
+        "date": "2023-03-07",
+        "fixture": true
+      },
+      "summary": "The Prime Minister argued for the National Reconstruction Fund to boost Australian manufacturing, jobs, and economic sovereignty, citing the Clean Energy Finance Corporation’s success in unlocking $2.60 in private investment per dollar and listing seven priority areas including renewables, medical science, and defence.",
+      "text": "Local reader contract fixture. Full source text is not present in this pinned sample. Open the original Hansard document to read the speech."
     }
   }
 }
