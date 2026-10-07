@@ -72,7 +72,25 @@ test.each(
 test('every identity reachable through native profile navigation stays searchable and suggestible', () => {
   expect(nativeProfiles.size).toBe(595);
   const sources = memberSuggestionRoster(roster, catalogs);
-  expect(sources.people).toHaveLength(595);
+  const suggestedIds = new Set(
+    sources.people.map((person) => {
+      const slug = memberSlugFor(
+        {
+          kind: 'person',
+          title: person.name,
+          href: '/subject/person/' + encodeURIComponent(person.name),
+          slug: '',
+          snippet: '',
+          resource: '',
+        },
+        catalogs,
+      );
+      expect(slug).toBeDefined();
+      return joinPerson(slug!, slugs, roster, people, manifest)
+        .canonicalPersonId;
+    }),
+  );
+  expect(suggestedIds).toEqual(new Set(nativeProfiles.keys()));
   for (const [id, profile] of nativeProfiles) {
     const record = {
       kind: 'person',

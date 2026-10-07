@@ -1,0 +1,23 @@
+appId: au.com.opax.app
+name: Focus Search and verify real keyboard input
+---
+- scrollUntilVisible:
+    element:
+      id: search-input
+    direction: UP
+    centerElement: true
+    speed: 20
+    timeout: 90000
+- extendedWaitUntil:
+    notVisible:
+      id: search-suggestions-loading
+    timeout: 90000
+# On iOS a completed short tap can leave this field without keyboard focus.
+# A sustained press activates editing; assert the actual value before submit.
+- longPressOn:
+    id: search-input
+- inputText: ${QUERY}
+- assertVisible:
+    id: search-input
+    text: ^${QUERY}$
+- takeScreenshot: ${EVIDENCE}/${PREFIX}-typed-query

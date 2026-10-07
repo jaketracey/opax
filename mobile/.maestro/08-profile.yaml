@@ -111,7 +111,8 @@ name: 08 Independent profile blocks, current senator, former member and local sh
     id: person-screen-title
 - takeScreenshot: ${EVIDENCE}/08-no-portrait
 # Portrait credits and licences live on Sources and licences, searchable.
-- launchApp
+- launchApp:
+    permissions: {}
 - tapOn: Account and about
 - scrollUntilVisible:
     element:

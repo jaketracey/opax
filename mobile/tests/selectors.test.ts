@@ -328,7 +328,7 @@ test('suggestions use catalog names, seats and bill titles on device', () => {
     [],
   );
 });
-test('verified suggestions exclude the Senator role token and unresolved surname rows', () => {
+test('verified suggestions exclude role tokens and retain an explicit native surname bridge', () => {
   const verified = memberSuggestionRoster(catalogs.roster, catalogs);
   expect(
     d
@@ -338,8 +338,8 @@ test('verified suggestions exclude the Senator role token and unresolved surname
   expect(
     d
       .suggestionsFor('Canavan', verified, index, bills)
-      .people.some((p) => p.name === 'Canavan'),
-  ).toBe(false);
+      .people.find((p) => p.name === 'Canavan'),
+  ).toMatchObject({ full: 'Matthew Canavan', pid: '10827' });
 });
 
 test('every current canonical person in the pinned release resolves through the slug API', () => {

@@ -353,6 +353,48 @@ test('native aliases stay suggestible while navigation uses the canonical member
     expect(memberSlugFor(row(person.name), catalogs)).toBeDefined();
 });
 
+test('Walsh keeps its explicit verified surname suggestion and native Jess Walsh profile', () => {
+  const sources = memberSuggestionRoster(roster, catalogs);
+  const matched = suggestionsFor('Walsh', sources, index, bills).people;
+  const surname = matched.find((person) => person.name === 'Walsh')!;
+  expect(surname).toMatchObject({
+    pid: rosterId('10956'),
+    full: 'Jess Walsh',
+    chambers: ['senate'],
+  });
+  expect(matched).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({ name: 'Jess Walsh', pid: rosterId('10956') }),
+    ]),
+  );
+  expect(memberSlugFor(row(surname.name), catalogs)).toBe('jess-walsh');
+});
+
+test.each([
+  { full: 'Casey Witness' },
+  { pid: rosterId('99991') },
+  { full: undefined },
+  { pid: undefined },
+  { name: 'Casey' },
+])('a surname cannot survive with an unverified bridge: %o', (change) => {
+  const changed = {
+    ...roster,
+    people: roster.people.map((person) =>
+      person.name === 'Walsh' ? { ...person, ...change } : person,
+    ),
+  };
+  const sources = memberSuggestionRoster(changed, {
+    ...catalogs,
+    roster: changed,
+  });
+  expect(
+    sources.people.some((person) => person.name === (change.name ?? 'Walsh')),
+  ).toBe(false);
+  expect(sources.people.some((person) => person.name === 'Jess Walsh')).toBe(
+    true,
+  );
+});
+
 test.each(['Vanessa Bleyer', 'Maree Edwards'])(
   'the API finds %s even when the compiled catalog returns no rows',
   async (name) => {
@@ -400,3 +442,62 @@ test.each(['Vanessa Bleyer', 'Maree Edwards'])(
     expect((await new Catalogs(missing).search(name)).data.results).toEqual([]);
   },
 );
+
+test('the API keeps verified surname display routes without attaching their full-name face', async () => {
+  const directory = {
+    ...slugs,
+    slugs: { ...slugs.slugs, 'casey-witness': 'Casey Witness' },
+  };
+  const records = [
+    row('Walsh'),
+    row('Jess Walsh'),
+    {
+      ...row('Walsh'),
+      href: '/subject/person/casey-witness',
+      slug: 'mismatched-href',
+    },
+  ];
+  const client: Pick<ApiClient, 'get'> = {
+    async get<T>(
+      path: string,
+      decode: (raw: unknown) => T,
+    ): Promise<RecordResult<T>> {
+      const raw = path.startsWith('/api/search-all?')
+        ? {
+            query: 'Walsh',
+            kind: 'person',
+            results: records,
+            total: records.length,
+            page: 1,
+            per_page: 200,
+            warnings: [],
+          }
+        : path === '/api/person-slugs'
+          ? directory
+          : path === '/parliamentarians.json'
+            ? roster
+            : path === '/electorates/manifest.json'
+              ? manifest
+              : path === manifest.people_url
+                ? people
+                : null;
+      return { data: decode(raw), stale: false, savedAt: 1, asOf: null };
+    },
+  };
+  const result = (await new Catalogs(client).search('Walsh')).data.results;
+  expect(
+    result.find(
+      (record) => record.title === 'Walsh' && record.slug !== 'mismatched-href',
+    ),
+  ).toMatchObject({ personSlug: 'walsh', profileName: 'Jess Walsh' });
+  expect(result.find((record) => record.title === 'Jess Walsh')).toMatchObject({
+    personSlug: 'jess-walsh',
+    profileName: 'Jess Walsh',
+  });
+  expect(
+    result.find((record) => record.slug === 'mismatched-href'),
+  ).toMatchObject({ personSlug: 'jess-walsh' });
+  expect(result.some((record) => record.personSlug === 'casey-witness')).toBe(
+    false,
+  );
+});

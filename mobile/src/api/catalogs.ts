@@ -1142,6 +1142,18 @@ export class Catalogs {
       kind === 'person'
         ? rows.slice((currentPage - 1) * 20, currentPage * 20)
         : rows;
+    // A verified surname keeps its original display route, so the portrait
+    // index can refuse a face for that short label. Navigation still resolves
+    // that route to the same canonical native identity.
+    const surnameNames = new Set(
+      kind === 'person' && memberCatalogs.roster
+        ? memberSuggestionRoster(memberCatalogs.roster, memberCatalogs)
+            .people.filter(
+              (person) => person.full && !/\s/.test(person.name.trim()),
+            )
+            .map((person) => person.name)
+        : [],
+    );
     return {
       ...result,
       ...recordFlags(records),
@@ -1160,7 +1172,7 @@ export class Catalogs {
             people?.data,
           );
           // Keep every non-person record, but only offer a native member link.
-          const personSlug =
+          const nativeSlug =
             row.kind === 'person'
               ? memberSlugFor(row, memberCatalogs)
               : candidate &&
@@ -1173,11 +1185,19 @@ export class Catalogs {
                   },
                   memberCatalogs,
                 );
+          const personSlug =
+            row.kind === 'person' &&
+            nativeSlug &&
+            candidate &&
+            surnameNames.has(row.title) &&
+            slugs.data.slugs[candidate] === row.title
+              ? candidate
+              : nativeSlug;
           return {
             ...row,
             personSlug,
             // The verified slug bridge also resolves formal register names.
-            profileName: personSlug ? slugs.data.slugs[personSlug] : undefined,
+            profileName: nativeSlug ? slugs.data.slugs[nativeSlug] : undefined,
           };
         }),
       },

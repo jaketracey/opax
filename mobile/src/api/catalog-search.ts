@@ -191,16 +191,46 @@ export function memberSuggestionRoster(
   roster: Roster,
   catalogs: MemberCatalogs,
 ): SuggestionRoster {
+  const members = memberDirectory(catalogs);
+  const canonical = [...new Set(members.values())]
+    .filter((member) =>
+      memberSlugFor(
+        { ...personRow(member.name), href: `/subject/person/${member.slug}` },
+        catalogs,
+      ),
+    )
+    .map((member) => member.row);
+  const names = new Set(canonical.map((row) => nameKey(row.name)));
+  const legacy: SuggestionRoster['people'] = [];
+  for (const row of roster.people) {
+    // Preserve an explicit surname entry only when BOTH its legacy ID and
+    // full-name bridge agree with the verified native member. Never infer a
+    // person from a surname, or borrow the raw row's mixed-chamber metadata.
+    if (
+      !row.pid ||
+      !row.full ||
+      /\s/.test(row.name.trim()) ||
+      identityName(row.name) !==
+        identityName(row.full.trim().split(/\s+/).at(-1)!)
+    )
+      continue;
+    const slug = memberSlugFor(personRow(row.name), catalogs);
+    const member = slug ? members.get(slug) : undefined;
+    if (
+      !member ||
+      member.row.pid !== row.pid ||
+      !member.row.aliases?.some(
+        (name) => identityName(name) === identityName(row.full!),
+      ) ||
+      names.has(nameKey(row.name))
+    )
+      continue;
+    names.add(nameKey(row.name));
+    legacy.push({ ...member.row, name: row.name, full: row.full, aliases: [] });
+  }
   return {
     ...roster,
-    people: [...new Set(memberDirectory(catalogs).values())]
-      .filter((member) =>
-        memberSlugFor(
-          { ...personRow(member.name), href: `/subject/person/${member.slug}` },
-          catalogs,
-        ),
-      )
-      .map((member) => member.row),
+    people: [...canonical, ...legacy],
   };
 }
 

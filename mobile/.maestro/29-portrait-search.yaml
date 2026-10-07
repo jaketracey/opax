@@ -3,11 +3,14 @@ name: 29 Surname search stays blank while the full-name entry keeps its face
 ---
 - launchApp:
     clearState: true
+    permissions: {}
 - tapOn:
     id: tab-search
-- tapOn:
-    id: search-input
-- inputText: Walsh
+- runFlow:
+    file: support/search-query.yaml
+    env:
+      QUERY: Walsh
+      PREFIX: 29
 - hideKeyboard
 - scrollUntilVisible:
     element:
@@ -50,9 +53,11 @@ name: 29 Surname search stays blank while the full-name entry keeps its face
 - scrollUntilVisible:
     element:
       id: search-result-jess-walsh
+      text: Jess Walsh.*
     direction: DOWN
     centerElement: true
     timeout: 90000
 - assertVisible:
     id: search-result-jess-walsh
+    text: Jess Walsh.*
 - takeScreenshot: ${EVIDENCE}/15-jess-walsh-portrait

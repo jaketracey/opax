@@ -165,7 +165,7 @@ test('an unresolved full spelling stays excluded without its verified native bri
   ).toEqual([]);
 });
 
-test('suggestion aliases exclude surname and initial bridges to a retained member', () => {
+test('verified surname rows stay separate from aliases while initials stay excluded', () => {
   const member = people.people.find(
     (person) => person.name === 'Anthony Albanese',
   )!;
@@ -208,8 +208,13 @@ test('suggestion aliases exclude surname and initial bridges to a retained membe
         manifest,
       ).canonicalPersonId,
     ).toBe(member.person_id);
-  expect(sources.people).toHaveLength(1);
+  expect(sources.people.map((person) => person.name)).toEqual([
+    member.name,
+    'Albanese',
+  ]);
   expect(sources.people[0]?.name).toBe(member.name);
   for (const name of names)
     expect(sources.people[0]?.aliases).not.toContain(name);
+  for (const name of names.slice(1))
+    expect(sources.people.some((person) => person.name === name)).toBe(false);
 });
