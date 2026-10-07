@@ -10,7 +10,7 @@ name: 31 Ask options, chips, saved conversation after relaunch and delete (stand
 - scrollUntilVisible:
     element:
       id: ask-options
-    centerElement: true
+    centerElement: false
     timeout: 180000
 - tapOn:
     id: ask-options
@@ -18,7 +18,7 @@ name: 31 Ask options, chips, saved conversation after relaunch and delete (stand
 - scrollUntilVisible:
     element:
       id: ask-from
-    centerElement: true
+    centerElement: false
     timeout: 180000
 - tapOn:
     id: ask-from
@@ -30,21 +30,21 @@ name: 31 Ask options, chips, saved conversation after relaunch and delete (stand
 - scrollUntilVisible:
     element:
       id: ask-party
-    centerElement: true
+    centerElement: false
     timeout: 180000
 - tapOn:
     id: ask-party
 - scrollUntilVisible:
     element:
       id: ask-party-choice-1
-    centerElement: true
+    centerElement: false
     timeout: 180000
 - tapOn:
     id: ask-party-choice-1
 - scrollUntilVisible:
     element:
       id: ask-options-done
-    centerElement: true
+    centerElement: false
     speed: 40
     timeout: 300000
 - tapOn:
@@ -52,7 +52,7 @@ name: 31 Ask options, chips, saved conversation after relaunch and delete (stand
 - scrollUntilVisible:
     element:
       id: ask-chip-party
-    centerElement: true
+    centerElement: false
     timeout: 180000
 - assertVisible: Remove the party filter, Labor
 - takeScreenshot: ${EVIDENCE}/31-chips
@@ -64,7 +64,7 @@ name: 31 Ask options, chips, saved conversation after relaunch and delete (stand
     element:
       id: ask-question
     direction: UP
-    centerElement: true
+    centerElement: false
     timeout: 180000
 - tapOn:
     id: ask-question
@@ -72,14 +72,14 @@ name: 31 Ask options, chips, saved conversation after relaunch and delete (stand
 - scrollUntilVisible:
     element:
       id: ask-submit
-    centerElement: true
+    centerElement: false
     timeout: 180000
 - tapOn:
     id: ask-submit
 - scrollUntilVisible:
     element:
       id: ask-machine-label
-    centerElement: true
+    centerElement: false
     visibilityPercentage: 10
     timeout: 180000
 - takeScreenshot: ${EVIDENCE}/31-saved-answer
@@ -93,14 +93,14 @@ name: 31 Ask options, chips, saved conversation after relaunch and delete (stand
     element:
       id: ask-saved
     direction: UP
-    centerElement: true
+    centerElement: false
     timeout: 180000
 - tapOn:
     id: ask-saved
 - scrollUntilVisible:
     element:
       id: ask-restore-0
-    centerElement: true
+    centerElement: false
     timeout: 180000
 - takeScreenshot: ${EVIDENCE}/31-history
 - tapOn:
@@ -109,7 +109,7 @@ name: 31 Ask options, chips, saved conversation after relaunch and delete (stand
     element:
       id: ask-machine-label
     direction: DOWN
-    centerElement: true
+    centerElement: false
     visibilityPercentage: 10
     timeout: 180000
 - takeScreenshot: ${EVIDENCE}/31-restored
@@ -117,14 +117,14 @@ name: 31 Ask options, chips, saved conversation after relaunch and delete (stand
     element:
       id: ask-saved
     direction: UP
-    centerElement: true
+    centerElement: false
     timeout: 180000
 - tapOn:
     id: ask-saved
 - scrollUntilVisible:
     element:
       id: ask-delete-0
-    centerElement: true
+    centerElement: false
     visibilityPercentage: 10
     timeout: 180000
 - tapOn:
@@ -134,7 +134,7 @@ name: 31 Ask options, chips, saved conversation after relaunch and delete (stand
 - scrollUntilVisible:
     element:
       id: ask-history-done
-    centerElement: true
+    centerElement: false
     timeout: 180000
 - tapOn:
     id: ask-history-done
