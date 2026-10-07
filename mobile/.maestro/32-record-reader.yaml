@@ -2,8 +2,7 @@ appId: au.com.opax.app
 name: 32 Bill to native speech, cite BibTeX, similar on tap and roster profile
 ---
 - launchApp:
-    permissions:
-      all: unset
+    permissions: {}
 - openLink: opax://bill/au-federal-r7534
 - extendedWaitUntil:
     visible:
@@ -115,3 +114,21 @@ name: 32 Bill to native speech, cite BibTeX, similar on tap and roster profile
       id: person-screen-title
     timeout: 20000
 - takeScreenshot: ${EVIDENCE}/32-linked-person
+# End on the copied citation so the locked native clipboard audit reads it
+# immediately, before unrelated host clipboard changes can replace it.
+- openLink: opax://doc-cite/speech-1205524
+- extendedWaitUntil:
+    visible:
+      id: doc-citations
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      id: cite-copy-bibtex
+    direction: DOWN
+    centerElement: true
+    speed: 70
+    timeout: 180000
+- waitForAnimationToEnd
+- tapOn:
+    id: cite-copy-bibtex
+- assertVisible: Copied BibTeX

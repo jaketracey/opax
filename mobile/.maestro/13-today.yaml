@@ -7,8 +7,7 @@ name: 13 Today front page, its native records and dated original sources
 # under it still counts as visible: on iOS 27 a source tap hit the Your MP
 # tab. Each group of steps first checks the page is still shown.
 - launchApp:
-    permissions:
-      all: unset
+    permissions: {}
 - assertVisible:
     id: today-screen-message
 # The daily edition: the fixture's pinned production response, as posted.
