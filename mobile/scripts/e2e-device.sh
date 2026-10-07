@@ -3,6 +3,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 source scripts/qa-env.sh
+source scripts/qa-maestro.sh
 UDID=${1:?}; OUT=${2:?}; APP=${3:?}; SIZE=${4:?}; APPEARANCE=${5:?}; FIXTURE_PID=${6:?}; OFFLINE=${7:?}; MAP_OFFLINE=${8:?}; MONEY_OFFLINE=${9:?}; shift 9
 AUDIT_PID=; OWN_DEVICE=0; ORIGINAL_SIZE=large; ORIGINAL_APPEARANCE=light; ORIGINAL_CONTRAST=disabled
 # Opt-in: run with iOS Increase Contrast on (OPAX_INCREASE_CONTRAST=1).
@@ -41,7 +42,8 @@ stop_fixture() {
 cleanup() {
   local rc=$? cleanup_start=$SECONDS
   trap - EXIT
-  trap '' INT TERM
+  trap '' INT TERM HUP
+  qa_maestro_stop
   if [ -n "$AUDIT_PID" ]; then kill "$AUDIT_PID" 2>/dev/null || true; fi
   if [ "$OWN_DEVICE" = 1 ]; then
     timed "$UI_TIMEOUT" xcrun simctl ui "$UDID" content_size "$ORIGINAL_SIZE" > "$OUT/restore.log" 2>&1 || true
@@ -62,6 +64,7 @@ cleanup() {
 trap cleanup EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
+trap 'exit 129' HUP
 { printf '%s\n' "$PPID"; /bin/ps -o lstart= -p "$PPID"; } > "$OUT/device-wrapper.tmp"
 /bin/mv -f "$OUT/device-wrapper.tmp" "$OUT/device-wrapper"
 if [ -n "${OPAX_PASTE_LOCK:-}" ] && [ -f "$OPAX_PASTE_LOCK/owner" ]; then
@@ -107,8 +110,8 @@ for journey in "$@"; do
   esac
   journey_name=$(basename "$journey" .yaml)
   assert_device_lock
-  maestro --device "$UDID" test --test-output-dir "$OUT/maestro" --debug-output "$OUT/maestro" --format junit --output "$OUT/$journey_name-report.xml" -e EVIDENCE=screenshots -e FIXTURE_PORT="${OPAX_FIXTURE_PORT:-8910}" -e REMOTE_SHARE_UI="${OPAX_REMOTE_SHARE_UI:-false}" -e CONTENT_SIZE="$SIZE" "$journey" >> "$OUT/maestro.log" 2>&1 &
-  rc=0; wait $! || rc=$?
+  rc=0
+  qa_maestro_run "$OUT/maestro.log" "$OUT/maestro" --device "$UDID" test --test-output-dir "$OUT/maestro" --debug-output "$OUT/maestro" --format junit --output "$OUT/$journey_name-report.xml" -e EVIDENCE=screenshots -e FIXTURE_PORT="${OPAX_FIXTURE_PORT:-8910}" -e REMOTE_SHARE_UI="${OPAX_REMOTE_SHARE_UI:-false}" -e CONTENT_SIZE="$SIZE" "$journey" || rc=$?
   if [ "$rc" != 0 ]; then cat "$OUT/maestro.log" >&2; exit "$rc"; fi
   # Journey 32 copies BibTeX in the native reader. Verify its actual clipboard
   # bytes before this same lock owner restores and shuts down the simulator.
@@ -121,22 +124,22 @@ done
 if [ "$OFFLINE" = 1 ]; then
   stop_fixture
   assert_device_lock
-  maestro --device "$UDID" test --test-output-dir "$OUT/offline-maestro" --debug-output "$OUT/offline-maestro" --format junit --output "$OUT/offline-report.xml" -e EVIDENCE=screenshots -e FIXTURE_PORT="${OPAX_FIXTURE_PORT:-8910}" -e REMOTE_SHARE_UI="${OPAX_REMOTE_SHARE_UI:-false}" .maestro/04-offline.yaml > "$OUT/offline-maestro.log" 2>&1 &
-  rc=0; wait $! || rc=$?
+  rc=0
+  qa_maestro_run "$OUT/offline-maestro.log" "$OUT/offline-maestro" --device "$UDID" test --test-output-dir "$OUT/offline-maestro" --debug-output "$OUT/offline-maestro" --format junit --output "$OUT/offline-report.xml" -e EVIDENCE=screenshots -e FIXTURE_PORT="${OPAX_FIXTURE_PORT:-8910}" -e REMOTE_SHARE_UI="${OPAX_REMOTE_SHARE_UI:-false}" .maestro/04-offline.yaml || rc=$?
   if [ "$rc" != 0 ]; then cat "$OUT/offline-maestro.log" >&2; exit "$rc"; fi
 fi
 if [ "$MAP_OFFLINE" = 1 ]; then
   stop_fixture
   assert_device_lock
-  maestro --device "$UDID" test --test-output-dir "$OUT/map-offline-maestro" --debug-output "$OUT/map-offline-maestro" --format junit --output "$OUT/map-offline-report.xml" -e EVIDENCE=screenshots .maestro/support/electorate-map-offline.yaml > "$OUT/map-offline-maestro.log" 2>&1 &
-  rc=0; wait $! || rc=$?
+  rc=0
+  qa_maestro_run "$OUT/map-offline-maestro.log" "$OUT/map-offline-maestro" --device "$UDID" test --test-output-dir "$OUT/map-offline-maestro" --debug-output "$OUT/map-offline-maestro" --format junit --output "$OUT/map-offline-report.xml" -e EVIDENCE=screenshots .maestro/support/electorate-map-offline.yaml || rc=$?
   if [ "$rc" != 0 ]; then cat "$OUT/map-offline-maestro.log" >&2; exit "$rc"; fi
 fi
 if [ "$MONEY_OFFLINE" = 1 ]; then
   stop_fixture
   assert_device_lock
-  maestro --device "$UDID" test --test-output-dir "$OUT/money-offline-maestro" --debug-output "$OUT/money-offline-maestro" --format junit --output "$OUT/money-offline-report.xml" -e EVIDENCE=screenshots .maestro/support/money-map-offline.yaml > "$OUT/money-offline-maestro.log" 2>&1 &
-  rc=0; wait $! || rc=$?
+  rc=0
+  qa_maestro_run "$OUT/money-offline-maestro.log" "$OUT/money-offline-maestro" --device "$UDID" test --test-output-dir "$OUT/money-offline-maestro" --debug-output "$OUT/money-offline-maestro" --format junit --output "$OUT/money-offline-report.xml" -e EVIDENCE=screenshots .maestro/support/money-map-offline.yaml || rc=$?
   if [ "$rc" != 0 ]; then cat "$OUT/money-offline-maestro.log" >&2; exit "$rc"; fi
 fi
 kill "$AUDIT_PID"

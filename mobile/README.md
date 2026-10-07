@@ -75,7 +75,7 @@ Configured capacity checks run before builds and devices; a five-minute load of
 a decimal of at most nine digits in `qa-lock.sh`; invalid values default to 7200.
 The e2e runner starts only its own fixture, installs the Release app
 without Metro, saves Maestro/screenshots/request logs in ignored `private/qa/<run>/`,
-restores text size/appearance and shuts down on success, failure or TERM. Never commit QA evidence.
+restores text size/appearance and shuts down on success, failure, TERM or HUP. Never commit QA evidence.
 `OPAX_QA_RUN` names evidence, `OPAX_QA_APP` selects a prepared app. No audio flows.
 Journey 04 stops the fixture and checks saved data without clearing the app. Default
 runs include 01–04; `OPAX_VERIFY_OFFLINE=1` also adds 04 to a selected warm run.
@@ -107,19 +107,30 @@ when the limit expires.
 Screenshot collection and fixture teardown follow release (offline 04 stops its
 fixture while locked). The wrapper leads its own process group: the device command,
 Maestro and their children run in it, and release first stops any leftovers.
-`OPAX_PASTE_WAIT_SECONDS` covers all the waiting; every minute `lock.log`
+`OPAX_PASTE_WAIT_SECONDS` covers active waiting time, excluding SIGSTOP and host suspend gaps; every minute `lock.log`
 names the lock, the elapsed time and the holder. Never write your own lock wrapper.
 
 The lock directory appears in one atomic step with its `owner` file (pid and pgid of
-the wrapper, script, worktree name, UTC start, random token) and is released by renaming
+the wrapper, process start time (`ps -o lstart=`), script, worktree name, UTC start, random token) and is released by renaming
 it aside, so a crash never leaves an OPAX lock without an owner. Other projects' plain
 `mkdir`/`rmdir` keep working: publication never replaces an existing directory, and
 OPAX never writes into a lock it did not create. A waiter retires a lock only when its
-owner's pid is dead and no process in its group is alive, and logs it. A lock with a
+owner's PID/start-time identity is gone and no process in its group is alive, and logs it.
+A reused PID does not identify the original owner. Legacy locks with no start-time
+field still protect any live PID. A lock with a
 live holder, a live group member or no owner file is never removed, whatever its age.
 `<lock>.opax/` holds the reap guard plus staging and retired copies from crashed runs,
 which are cleaned once their pid is dead. `scripts/test-qa-lock.sh`, part of
 `npm run qa`, tests all of this with a mocked gate in a scratch directory.
+
+The fixture port must be in `8900..8999`; Maestro uses `--driver-host-port` at
+fixture port + 100 (`9000..9099`). Occupied fixture or driver ports fail before
+boot, and the driver port is checked again under the lock. No listener is stopped
+or reused. Verbose console/debug logs are supervised: a driver 403 or transport
+error stops its identified command tree immediately. The named pre-install driver
+status probe gets a bounded 60-second startup allowance (`MAESTRO_DRIVER_STARTUP_TIMEOUT`
+defaults to 60000 milliseconds). Each Maestro invocation has a 900-second ceiling,
+overridden by positive `OPAX_MAESTRO_TIMEOUT_SECONDS`.
 
 If a lock stays held, read `lock.log` and `<lock>/owner`, then:
 

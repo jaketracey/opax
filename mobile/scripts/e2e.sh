@@ -7,8 +7,11 @@ source scripts/qa-env.sh
 source scripts/qa-lock.sh
 source scripts/qa-java.sh
 source scripts/qa-flows.sh
+source scripts/qa-maestro.sh
 qa_check_flow_selectors "$@" || exit 2
 PORT=${OPAX_FIXTURE_PORT:-8910}
+export OPAX_FIXTURE_PORT=$PORT
+qa_maestro_port || exit 2
 SIZE=${OPAX_CONTENT_SIZE:-large}
 # The app is light-only; dark is for checking the launch screen (journey 28b).
 APPEARANCE=${OPAX_APPEARANCE:-light}
@@ -85,7 +88,7 @@ cancel_wait() {
 cleanup() {
   rc=$?
   trap - EXIT
-  trap '' INT TERM
+  trap '' INT TERM HUP
   cancel_wait || { [ "$rc" != 0 ] || rc=1; }
   fallback_shutdown || { [ "$rc" != 0 ] || rc=1; }
   if [ -n "$FIXTURE_PID" ]; then
@@ -105,6 +108,7 @@ cleanup() {
 trap cleanup EXIT
 trap 'touch "$OUT/cancelled"; exit 130' INT
 trap 'touch "$OUT/cancelled"; exit 143' TERM
+trap 'touch "$OUT/cancelled"; exit 129' HUP
 configure_java
 export PATH="$HOME/.maestro/bin:$PATH"
 allow_simulator "$UDID"
@@ -118,6 +122,7 @@ wait "$WAITER_PID"
 WAITER_PID=
 # Do not stop or reuse another lane's listener.
 if lsof -nP -iTCP:"$PORT" -sTCP:LISTEN >/dev/null 2>&1; then echo "Fixture port $PORT is occupied" >&2; exit 1; fi
+qa_maestro_check_port || exit $?
 OPAX_FIXTURE_PORT="$PORT" ./node_modules/.bin/tsx scripts/fixture-server.ts > "$OUT/fixture.log" 2>&1 &
 FIXTURE_PID=$!
 deadline=$((SECONDS + 30))
