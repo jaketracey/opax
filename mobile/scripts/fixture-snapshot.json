@@ -241,7 +241,8 @@
     "/photos/10956.webp": "854d831dde2d67c9a6e186f4e80939ae6b22bbceeb7a73b500cb4da0096cdf9d",
     "/interests/10081.json": "a6212e59f9a530999cdf85cecb77d7865307ce29aa75cd961d541585fe4256d8",
     "/photos/10081.webp": "b089126130e5d1033a5796295da6cb4fd0f52efc3998cf455730af9dedf6813a",
-    "/access.json": "8c1085f35287f3104bb0c7669e0ceab9652b4d1a322b41037cef2e9c9aa3904b"
+    "/access.json": "8c1085f35287f3104bb0c7669e0ceab9652b4d1a322b41037cef2e9c9aa3904b",
+    "/bills/au-federal-r7375.json": "f80e57038e2bd59e0a75a31a166af02f07bb34223d7324e904eeb47582cd9a99"
   },
   "sizes": {
     "/parliamentarians.json": 405665,
@@ -483,7 +484,8 @@
     "/photos/10956.webp": 4708,
     "/interests/10081.json": 3069,
     "/photos/10081.webp": 4460,
-    "/access.json": 249364
+    "/access.json": 249364,
+    "/bills/au-federal-r7375.json": 27119
   },
   "testOnlyFiles": [
     "/interests/ties-by-donor.json"
