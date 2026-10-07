@@ -84,27 +84,35 @@ function votes(label, rows) { return rows?.length ? `<div><h3>${label}</h3><ul>$
 function card(kind, body, url, label='Open the entry →') { return `<article class="hp-ency-card" data-record-type="${kind}">${body}<a class="hp-ency-open" href="${esc(url)}">${label}</a></article>`; }
 function facts(rows) { return `<dl class="hp-record-facts">${rows.map(([k,v])=>`<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>`; }
 
-export async function hydrateRecordCards(onChange) {
+export async function hydrateRecordCards(onChange, now = new Date()) {
   const track = document.querySelector('#hp-ency-track');
   const groups = await Promise.allSettled([
     (async () => {
       const [photos, ballots] = await Promise.all([read('/photos/people.json', IDENTITY),read('/votes.json', IDENTITY)]);
       // Official portrait-backed voting records; Wikimedia credits remain on profile pages.
       const pool = Object.values(ballots).filter(p => p?.name && /^\d+$/.test(photos[p.name.toLowerCase()] || '') && (p.for?.length || p.against?.length));
-      return dailySelection(pool,p=>p.name,8).map(p => card('parliamentarian', `<div class="hp-ency-head"><img src="/photos/${encodeURIComponent(photos[p.name.toLowerCase()])}.webp" alt="" width="64" height="64" loading="lazy"><div><span class="hp-meta">Parliamentarian</span><h3><a href="${href('person',p.name)}">${esc(p.name)}</a></h3>${party(p.party)}</div></div><div class="hp-ency-votes">${votes('Voted for',p.for)}${votes('Voted against',p.against)}</div><p class="hp-meta">${count(p.divisions_total)} recorded votes${p.years ? `, ${esc(p.years[0])} to ${esc(p.years[1])}` : ''}</p>`,href('person',p.name)));
+      return dailySelection(pool,p=>p.name,8,now).map(p => card('parliamentarian', `<div class="hp-ency-head"><img src="/photos/${encodeURIComponent(photos[p.name.toLowerCase()])}.webp" alt="" width="64" height="64" loading="lazy"><div><span class="hp-meta">Parliamentarian</span><h3><a href="${href('person',p.name)}">${esc(p.name)}</a></h3>${party(p.party)}</div></div><div class="hp-ency-votes">${votes('Voted for',p.for)}${votes('Voted against',p.against)}</div><p class="hp-meta">${count(p.divisions_total)} recorded votes${p.years ? `, ${esc(p.years[0])} to ${esc(p.years[1])}` : ''}</p>`,href('person',p.name)));
     })(),
     (async () => {
       const graph = await read('/graph/money.json');
-      return dailySelection(graph.nodes.filter(n=>n.kind==='donor'),n=>n.id,1).map(n => card('donor',`<div><span class="hp-meta">Donor</span><h3><a href="${href('donor',n.label)}">${esc(n.label)}</a></h3></div><p>${cash(n.total)} disclosed to parties.</p><p class="hp-meta">${esc(n.firstYear)} to ${esc(n.lastYear)}</p>`,href('donor',n.label)));
+      return dailySelection(graph.nodes.filter(n=>n.kind==='donor'),n=>n.id,1,now).map(n => card('donor',`<div><span class="hp-meta">Donor</span><h3><a href="${href('donor',n.label)}">${esc(n.label)}</a></h3></div><p>${cash(n.total)} disclosed to parties.</p><p class="hp-meta">${esc(n.firstYear)} to ${esc(n.lastYear)}</p>`,href('donor',n.label)));
     })(),
     (async () => {
       const graph = await read('/graph/grants.federal.json');
-      const selected = dailySelection(graph.programs.filter(p=>p.key && p.c),p=>p.key,1)[0];
-      if (!selected) return [];
-      const p = await read(`/grants/federal/programs/${encodeURIComponent(selected.key)}.json`);
+      // Today's program, or the next of today's picks when it has no linkable grant (at most 3 reads).
+      const [first,...rest] = dailySelection(graph.programs.filter(p=>p.key && p.c),p=>p.key,3,now);
+      if (!first) return [];
+      const file = c => read(`/grants/federal/programs/${encodeURIComponent(c.key)}.json`);
+      const linkable = q => (q.grants || []).some(g=>g.guid);
+      let p = await file(first);
+      for (const c of rest) {
+        if (linkable(p)) break;
+        const next = await file(c).catch(()=>null);
+        if (next && linkable(next)) p = next;
+      }
       const url = '/money/grants?' + new URLSearchParams({jur:'federal',program:p.id});
       const program = card('program',`<div><span class="hp-meta">Program · Federal</span><h3><a href="${esc(url)}">${esc(p.n)}</a></h3></div><p class="hp-record-amount">${cash(p.t)}<span>Recorded award value · ${esc(p.y0)} to ${esc(p.y1)}</span></p>${facts([['Awards',count(p.c)],['Recipients',count(p.r)]])}<p class="hp-meta">GrantConnect</p>`,url,'Explore program →');
-      const g = dailySelection((p.grants || []).filter(g=>g.guid),g=>g.id,1)[0];
+      const g = dailySelection((p.grants || []).filter(g=>g.guid),g=>g.id,1,now)[0];
       if (!g) return [program];
       const source = `https://www.grants.gov.au/Ga/Show/${encodeURIComponent(g.guid)}`;
       const grant = card('grant',`<div><span class="hp-meta">Grant · Federal</span><h3><a href="${source}">${esc(g.rn || g.n)}</a></h3></div><p class="hp-record-amount">${cash(g.v)}<span>Published award value</span></p><dl class="hp-record-facts"><div><dt>Program</dt><dd><a href="${esc(url)}">${esc(p.n)}</a></dd></div><div><dt>Financial year</dt><dd>${esc(g.fy)}</dd></div></dl>`,source,'View grant record ↗');

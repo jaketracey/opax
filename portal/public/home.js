@@ -575,7 +575,7 @@ OpaxQuickSearch.attach($('mast-q'), $('mast-sugg'), {idPrefix:'ms', source:heade
 OpaxQuickSearch.attach($('drawer-q'), $('drawer-sugg'), {idPrefix:'ds', source:headerSuggestions, navigate:href => location.assign(href), searchHref, beforeGo:() => navDrawer.close()});
 
 // Keep the approved layout while replacing prototype snapshots with source data.
-import { hydrateCollections, hydrateRecordCards } from '/home-data.js?v=99bb3b03ff';
+import { hydrateCollections, hydrateRecordCards } from '/home-data.js?v=e08eec41ee';
 hydrateCollections();
 const recordObserver = new IntersectionObserver(entries => {
   if (entries.some(entry => entry.isIntersecting)) {
