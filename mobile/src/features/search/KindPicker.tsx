@@ -1,5 +1,5 @@
 import { ActionSheetIOS } from 'react-native';
-import { Button } from '../../design/primitives';
+import { LinkRow } from '../../design/primitives';
 import { chrome } from '../../design/tokens';
 import { kindLabel, scopeKinds, type SearchKind } from './model';
 
@@ -12,9 +12,9 @@ export function KindPicker({
   onChange: (kind: SearchKind) => void;
 }) {
   return (
-    <Button
-      label={`Kind: ${kindLabel(value)}`}
-      icon="chevron.down"
+    <LinkRow
+      title="Kind"
+      detail={kindLabel(value)}
       testID="search-kind-menu"
       onPress={() =>
         ActionSheetIOS.showActionSheetWithOptions(

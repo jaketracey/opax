@@ -61,7 +61,16 @@ export function decodeRecords(value: unknown) {
     p.total < p.count
   )
     invalid();
-  if (p.results.some((r) => p.kind !== 'all' && r.kind !== p.kind)) invalid();
+  // Unified bill search combines catalog bills and indexed bill text.
+  if (
+    p.results.some(
+      (r) =>
+        p.kind !== 'all' &&
+        r.kind !== p.kind &&
+        !(p.kind === 'bill' && r.kind === 'bill_text'),
+    )
+  )
+    invalid();
   return { ...p, warnings: p.warnings ?? [] };
 }
 export type RecordsPage = ReturnType<typeof decodeRecords>;

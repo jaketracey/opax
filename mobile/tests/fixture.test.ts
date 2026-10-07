@@ -102,7 +102,7 @@ test.each([
   '/interests/ties-by-donor.json',
   '/api/ask',
   '/api/search?q=x',
-  '/api/search-all?q=x&kind=bill',
+  '/api/search-all?q=x&kind=contract',
   '/api/search-all?q=x',
   '/unlisted.json',
   '/api/search-all?q=x&kind=all',

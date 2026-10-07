@@ -192,8 +192,11 @@ export const server = createServer(async (request, response) => {
     else assertAllowedPath(path);
     const url = new URL(path, `http://127.0.0.1:${port}`);
     const search = searchFixture(url, roster);
-    if(search) {
-      response.writeHead(200, {'Content-Type':search.contentType??'application/json; charset=utf-8','Cache-Control':'no-store'});
+    if (search) {
+      response.writeHead(200, {
+        'Content-Type': search.contentType ?? 'application/json; charset=utf-8',
+        'Cache-Control': 'no-store',
+      });
       response.end(search.body);
       return;
     }

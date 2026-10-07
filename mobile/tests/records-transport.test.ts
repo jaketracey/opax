@@ -50,16 +50,18 @@ test('a failing paid action is one request, with no automatic retry; a later exp
   expect(transport).toHaveBeenCalledTimes(2);
 });
 test('session and in-flight reuse covers search, summary and briefs, with the public client headers and the exact web SSE request', async () => {
-  const transport = jest.fn(async (url: RequestInfo | URL, init?: RequestInit) => {
-    expect(init?.credentials).toBe('omit');
-    const fixture = searchFixture(new URL(String(url)), roster)!;
-    return new Response(fixture.body.toString(), {
-      headers: {
-        'content-type': fixture.contentType ?? 'application/json',
-        'cache-control': 'no-store',
-      },
-    });
-  });
+  const transport = jest.fn(
+    async (url: RequestInfo | URL, init?: RequestInit) => {
+      expect(init?.credentials).toBe('omit');
+      const fixture = searchFixture(new URL(String(url)), roster)!;
+      return new Response(fixture.body.toString(), {
+        headers: {
+          'content-type': fixture.contentType ?? 'application/json',
+          'cache-control': 'no-store',
+        },
+      });
+    },
+  );
   const api = service(transport);
   expect(transport).not.toHaveBeenCalled();
   const f = { ...defaultFilters, kind: 'speech' };

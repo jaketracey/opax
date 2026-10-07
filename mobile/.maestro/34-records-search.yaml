@@ -5,6 +5,7 @@ name: 34 Records, filters, sort, cited summary and explicitly chosen briefs
     clearState: true
 - tapOn:
     id: tab-search
+- takeScreenshot: ${EVIDENCE}/34-search-form
 - tapOn:
     id: search-input
 - inputText: housing
@@ -48,7 +49,6 @@ name: 34 Records, filters, sort, cited summary and explicitly chosen briefs
 - tapOn:
     id: search-filter-from
 - inputText: 2025
-- hideKeyboard
 - scrollUntilVisible:
     element:
       id: search-filter-to
@@ -57,7 +57,6 @@ name: 34 Records, filters, sort, cited summary and explicitly chosen briefs
 - tapOn:
     id: search-filter-to
 - inputText: 2026
-- hideKeyboard
 - scrollUntilVisible:
     element:
       id: search-filter-party
@@ -177,3 +176,55 @@ name: 34 Records, filters, sort, cited summary and explicitly chosen briefs
 - tapOn:
     id: records-briefs
 - takeScreenshot: ${EVIDENCE}/34-briefs-selected
+
+- runFlow:
+    when:
+      visible:
+        id: records-info
+    commands:
+      - tapOn:
+          id: records-info
+      - takeScreenshot: ${EVIDENCE}/34-result-notes
+      - tapOn:
+          id: records-info-sheet-done
+
+# The 2025–26 filtered records have no prewritten briefs. A pinned 2023
+# public speech also proves the machine-written view when one is available.
+- scrollUntilVisible:
+    element:
+      text: Clear all
+    direction: UP
+    centerElement: true
+    timeout: 90000
+- tapOn: Clear all
+- scrollUntilVisible:
+    element:
+      id: search-input
+    direction: UP
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: search-input
+- eraseText
+- inputText: Don Farrell
+- hideKeyboard
+- scrollUntilVisible:
+    element:
+      id: search-submit
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: search-submit
+- scrollUntilVisible:
+    element:
+      id: records-briefs
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: records-briefs
+- scrollUntilVisible:
+    element:
+      text: Machine brief
+    centerElement: true
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/34-brief-content

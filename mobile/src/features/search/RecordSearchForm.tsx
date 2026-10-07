@@ -8,6 +8,7 @@ import {
   ErrorState,
   Group,
   LoadingState,
+  LinkRow,
   OfflineBanner,
   errorMessage,
 } from '../../design/primitives';
@@ -81,6 +82,11 @@ export function RecordSearchForm({
   const summaryActive = useRef(false);
   const briefActive = useRef(false);
   const actionQuery = useRef(query);
+  const resetFilters = () =>
+    normaliseFilters({
+      ...defaultFilters,
+      kind: scope === 'records' ? 'all' : scope,
+    });
   useEffect(() => {
     if (currentQuery.current === query) return;
     currentQuery.current = query;
@@ -162,7 +168,10 @@ export function RecordSearchForm({
   }
   useImperativeHandle(submitAction, () => submit);
   function apply(next: SearchFilters) {
-    const f = normaliseFilters(next);
+    const f = normaliseFilters({
+      ...next,
+      kind: scope === 'records' ? next.kind : scope,
+    });
     setSheet(false);
     setFilters(f);
     if (!query.trim() && !f.speaker) {
@@ -191,7 +200,7 @@ export function RecordSearchForm({
   ) {
     const f =
       id === 'all'
-        ? defaultFilters
+        ? resetFilters()
         : id === 'years'
           ? { ...filters, from: '', to: '' }
           : { ...filters, [id]: defaultFilters[id] };
@@ -264,19 +273,26 @@ export function RecordSearchForm({
         disabled={!(query.trim() || filters.speaker) || !roster}
         onPress={submit}
       />
-      <Button
-        label="Filters"
+      <LinkRow
+        title="Filters"
+        icon="slider.horizontal.3"
+        accent="people"
         testID="search-filters"
         onPress={() => {
           Keyboard.dismiss();
           setSheet(true);
         }}
       />
-      <ResultFilters filters={filters} onRemove={remove} />
+      <ResultFilters
+        filters={filters}
+        fixedKind={scope !== 'records'}
+        onRemove={remove}
+      />
       {sheet ? (
         <FiltersSheet
           value={filters}
           roster={roster}
+          fixedKind={scope === 'records' ? undefined : scope}
           onApply={apply}
           onClose={() => setSheet(false)}
         />
@@ -302,6 +318,9 @@ export function RecordSearchForm({
         <>
           <Button
             label="Share search"
+            icon="square.and.arrow.up"
+            variant="quiet"
+            size="compact"
             testID="records-share"
             onPress={() =>
               void shareRecord({
@@ -364,8 +383,9 @@ export function RecordSearchForm({
             onExample={(q) => {
               currentQuery.current = q;
               onQuery(q);
-              setFilters(defaultFilters);
-              void run(q, defaultFilters);
+              const f = resetFilters();
+              setFilters(f);
+              void run(q, f);
             }}
           />
         </>

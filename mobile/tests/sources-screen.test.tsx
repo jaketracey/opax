@@ -30,6 +30,7 @@ jest.mock('expo-constants', () => ({
 jest.mock('../src/navigation/external', () => ({
   openSource: jest.fn(),
   openOnWeb: jest.fn(),
+  canonicalUrl: (path: string) => `https://opax.invalid${path}`,
 }));
 
 const mock = runtime as jest.Mocked<typeof runtime>;

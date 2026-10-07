@@ -1,8 +1,8 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { Button } from '../src/design/primitives';
+import { Button, LinkRow } from '../src/design/primitives';
 import { RecordSearchForm } from '../src/features/search/RecordSearchForm';
-import { Results } from '../src/features/search/Results';
+import { ResultFilters, Results } from '../src/features/search/Results';
 import { FiltersSheet } from '../src/features/search/FiltersSheet';
 import { recordSearch } from '../src/api/runtime';
 import { defaultFilters } from '../src/features/search/contracts';
@@ -35,23 +35,19 @@ const props = {
 beforeEach(() => {
   jest.clearAllMocks();
   jest.useFakeTimers();
-  jest
-    .mocked(recordSearch.search)
-    .mockResolvedValue({
-      data: decodeRecords(parsed('/api/search?q=housing&kind=all')),
-      savedAt: 1000,
-      stale: false,
-      asOf: null,
-    });
+  jest.mocked(recordSearch.search).mockResolvedValue({
+    data: decodeRecords(parsed('/api/search?q=housing&kind=all')),
+    savedAt: 1000,
+    stale: false,
+    asOf: null,
+  });
   jest.mocked(recordSearch.briefs).mockResolvedValue(null);
-  jest
-    .mocked(recordSearch.summary)
-    .mockResolvedValue({
-      data: decodeSummary({ status: 'empty' }),
-      savedAt: 1000,
-      stale: false,
-      asOf: null,
-    });
+  jest.mocked(recordSearch.summary).mockResolvedValue({
+    data: decodeSummary({ status: 'empty' }),
+    savedAt: 1000,
+    stale: false,
+    asOf: null,
+  });
 });
 afterEach(() => jest.useRealTimers());
 async function mount() {
@@ -62,7 +58,10 @@ async function mount() {
   return r;
 }
 function button(r: TestRenderer.ReactTestRenderer, id: string) {
-  return r.root.findAllByType(Button).find((b) => b.props.testID === id)!;
+  return [
+    ...r.root.findAllByType(Button),
+    ...r.root.findAllByType(LinkRow),
+  ].find((b) => b.props.testID === id)!;
 }
 async function submit(r: TestRenderer.ReactTestRenderer) {
   await act(async () => button(r, 'search-submit').props.onPress());
@@ -138,4 +137,42 @@ test('changing the query before the debounce and unmounting cancel pending submi
   await act(async () => r.unmount());
   await act(async () => jest.advanceTimersByTime(400));
   expect(recordSearch.search).not.toHaveBeenCalled();
+});
+test('clearing filters and choosing an example preserve the selected grant catalog', async () => {
+  let r!: TestRenderer.ReactTestRenderer;
+  const base = { ...defaultFilters, kind: 'grant', mode: 'keyword' as const };
+  await act(async () => {
+    r = TestRenderer.create(
+      <RecordSearchForm {...props} scope="grant" query="Community" />,
+    );
+  });
+  await submit(r);
+  await act(async () => button(r, 'search-filters').props.onPress());
+  expect(r.root.findByType(FiltersSheet).props.fixedKind).toBe('grant');
+  await act(async () =>
+    r.root
+      .findByType(FiltersSheet)
+      .props.onApply({ ...defaultFilters, party: 'Labor' }),
+  );
+  expect(recordSearch.search).toHaveBeenLastCalledWith(
+    'Community',
+    { ...base, party: 'Labor' },
+    1,
+    'relevance',
+  );
+  await act(async () => r.root.findByType(ResultFilters).props.onRemove('all'));
+  expect(recordSearch.search).toHaveBeenLastCalledWith(
+    'Community',
+    base,
+    1,
+    'relevance',
+  );
+  await act(async () => r.root.findByType(Results).props.onExample('Woodside'));
+  expect(recordSearch.search).toHaveBeenLastCalledWith(
+    'Woodside',
+    base,
+    1,
+    'relevance',
+  );
+  await act(async () => r.unmount());
 });

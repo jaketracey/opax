@@ -1,7 +1,22 @@
 import { useState } from 'react';
-import { Modal } from 'react-native';
-import { Button, Field, Group, Screen, Text } from '../../design/primitives';
-import { useReduceMotion } from '../../design/accessibility';
+import { Modal, Pressable, StyleSheet, View } from 'react-native';
+import {
+  Button,
+  Field,
+  Group,
+  Heading,
+  Icon,
+  LinkRow,
+  RowList,
+  Screen,
+  Section,
+  Text,
+} from '../../design/primitives';
+import { colors, minimumTarget, rhythm } from '../../design/tokens';
+import {
+  useAccessibilitySize,
+  useReduceMotion,
+} from '../../design/accessibility';
 import {
   defaultFilters,
   excludedKinds,
@@ -25,6 +40,7 @@ export function Choices({
   onChange,
   onClose,
   testID,
+  closeLabel = 'Back to filters',
 }: {
   label: string;
   choices: readonly Choice[];
@@ -32,16 +48,19 @@ export function Choices({
   onChange: (value: string) => void;
   onClose: () => void;
   testID: string;
+  closeLabel?: string;
 }) {
   const [query, setQuery] = useState('');
   return (
     <Group>
-      <Text variant="heading">{label}</Text>
       <Button
-        label="Back to filters"
+        label={closeLabel}
+        variant="quiet"
+        icon="chevron.left"
         onPress={onClose}
         testID={`${testID}-back`}
       />
+      <Heading level={2}>{label}</Heading>
       {choices.length > 12 ? (
         <Field
           label={`Find ${label.toLowerCase()}`}
@@ -51,34 +70,56 @@ export function Choices({
           autoCorrect={false}
         />
       ) : null}
-      {choices
-        .filter((c) => c.label.toLowerCase().includes(query.toLowerCase()))
-        .map((c) => (
-          <Group key={c.value}>
-            <Button
-              label={c.label}
-              testID={`${testID}-option-${c.value || 'any'}`}
+      <RowList>
+        {choices
+          .filter((c) => c.label.toLowerCase().includes(query.toLowerCase()))
+          .map((c) => (
+            <Pressable
+              key={c.value}
+              accessibilityRole="button"
+              accessibilityLabel={c.label}
+              accessibilityHint={c.reason}
+              accessibilityState={{
+                selected: value === c.value,
+                disabled: !!c.reason,
+              }}
               disabled={!!c.reason}
-              accessibilityHint={value === c.value ? 'Selected' : undefined}
+              testID={`${testID}-option-${c.value || 'any'}`}
               onPress={() => {
                 onChange(c.value);
                 onClose();
               }}
-            />
-            {c.reason ? <Text variant="fine">{c.reason}</Text> : null}
-          </Group>
-        ))}
+              style={({ pressed }) => [
+                styles.choice,
+                pressed ? { backgroundColor: colors.sunken } : null,
+              ]}
+            >
+              <Text
+                wordSafe
+                variant="strong"
+                tone={c.reason ? 'inkSoft' : 'navy'}
+                style={styles.grow}
+              >
+                {c.label}
+              </Text>
+              {value === c.value ? <Icon name="checkmark" tone="navy" /> : null}
+              {c.reason ? <Icon name="minus.circle" tone="inkSoft" /> : null}
+            </Pressable>
+          ))}
+      </RowList>
     </Group>
   );
 }
 export function FiltersSheet({
   value,
   roster,
+  fixedKind,
   onApply,
   onClose,
 }: {
   value: SearchFilters;
   roster: Roster | null;
+  fixedKind?: string;
   onApply: (value: SearchFilters) => void;
   onClose: () => void;
 }) {
@@ -87,6 +128,7 @@ export function FiltersSheet({
     'speaker' | 'party' | 'state' | 'topic' | 'kind' | 'mode' | null
   >(null);
   const reduced = useReduceMotion();
+  const stacked = useAccessibilitySize();
   const set = (key: keyof SearchFilters, v: string) =>
     setDraft((d) => ({ ...d, [key]: v }));
   const yearError = [draft.from, draft.to].some(
@@ -167,6 +209,7 @@ export function FiltersSheet({
         <Group accessibilityViewIsModal>
           <Button
             label="Close search filters"
+            variant="quiet"
             onPress={onClose}
             testID="search-filters-close"
           />
@@ -181,58 +224,100 @@ export function FiltersSheet({
             />
           ) : (
             <>
-              <Text variant="title">Search filters</Text>
-              <Group>
+              <Section
+                title="Search filters"
+                icon="slider.horizontal.3"
+                accent="people"
+                rule={false}
+                info={{
+                  title: 'About search filters',
+                  testID: 'search-filters-info',
+                  notes: [
+                    'Results are limited to public records and roster parliamentarians. This page excludes recipient profiles and records without a reliable organisation classification.',
+                    'Document search is not available for Tasmania, Western Australia or the Northern Territory. Those jurisdictions remain available for public-record catalogs.',
+                    'Unavailable record types are shown in the list. Choose people, interests, expenses or pay from Search kind.',
+                  ],
+                }}
+              >
                 <Text variant="strong">Years</Text>
-                <Field
-                  label="From year"
-                  value={draft.from}
-                  onChangeText={(v) => set('from', v)}
-                  testID="search-filter-from"
-                  keyboardType="number-pad"
-                  maxLength={4}
-                  placeholder="1993"
-                />
-                <Field
-                  label="To year"
-                  value={draft.to}
-                  onChangeText={(v) => set('to', v)}
-                  testID="search-filter-to"
-                  keyboardType="number-pad"
-                  maxLength={4}
-                  placeholder="2026"
-                />
+                <View style={stacked ? styles.yearsStacked : styles.years}>
+                  <View style={stacked ? undefined : styles.grow}>
+                    <Field
+                      label="From year"
+                      value={draft.from}
+                      onChangeText={(v) => set('from', v)}
+                      testID="search-filter-from"
+                      keyboardType="number-pad"
+                      maxLength={4}
+                      placeholder="1993"
+                    />
+                  </View>
+                  <View style={stacked ? undefined : styles.grow}>
+                    <Field
+                      label="To year"
+                      value={draft.to}
+                      onChangeText={(v) => set('to', v)}
+                      testID="search-filter-to"
+                      keyboardType="number-pad"
+                      maxLength={4}
+                      placeholder="2026"
+                    />
+                  </View>
+                </View>
                 {yearError ? (
                   <Text tone="danger">Choose years from 1993 to 2026.</Text>
                 ) : null}
-              </Group>
-              {(
-                ['speaker', 'party', 'state', 'topic', 'kind', 'mode'] as const
-              ).map((key) => (
+                <RowList>
+                  {(
+                    [
+                      'speaker',
+                      'party',
+                      'state',
+                      'topic',
+                      'kind',
+                      'mode',
+                    ] as const
+                  ).map((key) => (
+                    <LinkRow
+                      key={key}
+                      title={options[key].label}
+                      detail={
+                        options[key].choices.find((c) => c.value === draft[key])
+                          ?.label ?? draft[key]
+                      }
+                      onPress={() => setChoice(key)}
+                      disabled={key === 'kind' && !!fixedKind}
+                      testID={`search-filter-${key}`}
+                    />
+                  ))}
+                </RowList>
+                {stateError ? (
+                  <Text tone="danger">
+                    Choose a supported document jurisdiction or any
+                    jurisdiction.
+                  </Text>
+                ) : null}
                 <Button
-                  key={key}
-                  label={`${options[key].label}: ${options[key].choices.find((c) => c.value === draft[key])?.label ?? draft[key]}`}
-                  onPress={() => setChoice(key)}
-                  testID={`search-filter-${key}`}
+                  label="Apply filters"
+                  variant="primary"
+                  disabled={yearError || stateError}
+                  onPress={() => onApply(normaliseFilters(draft))}
+                  testID="search-filters-apply"
                 />
-              ))}
-              <Button
-                label="Reset filters"
-                onPress={() => setDraft(defaultFilters)}
-                testID="search-filters-reset"
-              />
-              {stateError ? (
-                <Text tone="danger">
-                  Choose a supported document jurisdiction or any jurisdiction.
-                </Text>
-              ) : null}
-              <Button
-                label="Apply filters"
-                variant="primary"
-                disabled={yearError || stateError}
-                onPress={() => onApply(normaliseFilters(draft))}
-                testID="search-filters-apply"
-              />
+                <Button
+                  label="Reset filters"
+                  variant="quiet"
+                  onPress={() =>
+                    setDraft(
+                      normaliseFilters({
+                        ...defaultFilters,
+                        kind: fixedKind ?? 'all',
+                      }),
+                    )
+                  }
+                  testID="search-filters-reset"
+                />
+              </Section>
             </>
           )}
         </Group>
@@ -240,3 +325,14 @@ export function FiltersSheet({
     </Modal>
   );
 }
+const styles = StyleSheet.create({
+  choice: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.heading,
+    minHeight: minimumTarget,
+  },
+  grow: { flex: 1 },
+  years: { flexDirection: 'row', gap: rhythm.block },
+  yearsStacked: { gap: rhythm.block },
+});

@@ -244,6 +244,27 @@ test('private people and grant recipients are excluded without guessing entity n
   expect(eligibleRecord({ ...row, kind: 'contract' }, roster)).toBe(false);
   expect(eligibleRecord({ ...row, kind: 'grant' }, roster)).toBe(false);
 });
+test('unified bill search accepts bill text beside catalog bills, but refuses unrelated kinds', () => {
+  const envelope = JSON.parse(
+    searchFixture(
+      new URL('/api/search-all?q=Bill&kind=bill', 'http://127.0.0.1:8942'),
+      roster,
+    )!.body.toString(),
+  );
+  const bill = bills[0]!;
+  const text = {
+    ...bill,
+    kind: 'bill_text',
+    href: '/doc/bill-text-fixture',
+    resource: 'a'.repeat(32),
+  };
+  const page = { ...envelope, results: [bill, text], count: 2, total: 2 };
+  expect(decodeRecords(page).results).toHaveLength(2);
+  expect(eligibleRecord(decodeRecords(page).results[1]!, roster)).toBe(true);
+  expect(() =>
+    decodeRecords({ ...page, results: [bill, { ...text, kind: 'contract' }] }),
+  ).toThrow();
+});
 test('richer suggestions use only static catalogs and the roster, with canonical destinations', () => {
   const sources = [
     roster,

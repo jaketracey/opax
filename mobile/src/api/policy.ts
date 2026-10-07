@@ -6,7 +6,8 @@ import {
   topics,
   sorts,
 } from '../features/search/contracts';
-// Public, catalog-only GETs. Adding a path requires a source/cost review and test.
+// Public GETs; paid search and briefs require an explicit action in the UI.
+// Adding a path requires a source/cost review and test.
 export const catalogKinds = ['person', 'interest', 'pay', 'expense'] as const;
 export type CatalogKind = (typeof catalogKinds)[number];
 const staticPaths = new Set([

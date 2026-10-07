@@ -454,7 +454,12 @@ export default function Search({
           {showSuggestions && richer ? (
             <>
               {richer.parties.length ? (
-                <Section title="Parties" testID="search-suggestions-parties">
+                <Section
+                  title="Parties"
+                  icon="person.2.fill"
+                  accent="people"
+                  testID="search-suggestions-parties"
+                >
                   <RowList>
                     {richer.parties.map((p) => (
                       <RecordRow
@@ -476,7 +481,12 @@ export default function Search({
                 </Section>
               ) : null}
               {richer.topics.length ? (
-                <Section title="Topics" testID="search-suggestions-topics">
+                <Section
+                  title="Topics"
+                  icon="tag"
+                  accent="bills"
+                  testID="search-suggestions-topics"
+                >
                   <RowList>
                     {richer.topics.map((t) => (
                       <RecordRow
@@ -495,7 +505,12 @@ export default function Search({
                 </Section>
               ) : null}
               {richer.reports.length ? (
-                <Section title="Reports" testID="search-suggestions-reports">
+                <Section
+                  title="Reports"
+                  icon="doc.text"
+                  accent="leads"
+                  testID="search-suggestions-reports"
+                >
                   <RowList>
                     {richer.reports.map((r) => (
                       <Group key={r.slug}>
@@ -552,6 +567,14 @@ export default function Search({
           title={`Results for “${result?.data.query ?? query.trim()}” · ${kindLabel(kind)}`}
           icon="magnifyingglass"
           accent="people"
+          info={
+            result
+              ? {
+                  title: 'About these results',
+                  notes: [...result.data.warnings, result.data.coverage],
+                }
+              : undefined
+          }
         >
           {kind === 'pay' ? (
             <Text variant="metadata" testID="search-pay-caveat">
@@ -656,14 +679,6 @@ export default function Search({
                   ))}
                 </RowList>
               )}
-              {result.data.warnings.map((warning) => (
-                <Text key={warning} variant="caption">
-                  {warning}
-                </Text>
-              ))}
-              {result.data.coverage ? (
-                <Text variant="caption">{result.data.coverage}</Text>
-              ) : null}
               <AsAtLine
                 asOf={result.asOf}
                 citation={[

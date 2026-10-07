@@ -4,6 +4,10 @@ import type { RecordResult } from '../../api/client';
 import type { RecordsPage, SearchSummary } from './decoders';
 import {
   AsAtLine,
+  BigFigure,
+  ChoiceChips,
+  LinkRow,
+  ViewOriginal,
   Button,
   EmptyState,
   ErrorState,
@@ -13,7 +17,6 @@ import {
   RowList,
   Screen,
   Section,
-  SegmentedControl,
   Text,
   errorMessage,
 } from '../../design/primitives';
@@ -31,15 +34,21 @@ import {
 } from './contracts';
 import { Choices } from './FiltersSheet';
 import { useReduceMotion } from '../../design/accessibility';
+import { formatCount, formatDate } from '../../design/format';
 
 export function ResultFilters({
   filters,
+  fixedKind = false,
   onRemove,
 }: {
   filters: SearchFilters;
+  fixedKind?: boolean;
   onRemove: (id: ReturnType<typeof filterChips>[number]['id'] | 'all') => void;
 }) {
-  const chips = filterChips(filters);
+  const chips = filterChips(filters).filter(
+    (c) => !fixedKind || (c.id !== 'kind' && c.id !== 'mode'),
+  );
+  if (!chips.length) return null;
   return (
     <Group>
       {chips.map((c) => (
@@ -103,31 +112,40 @@ export function Results({
   const reduced = useReduceMotion();
   const p = result.data;
   return (
-    <Section title={`Results for “${p.query}”`} testID="records-results">
+    <Section
+      title="Results"
+      icon="magnifyingglass"
+      accent={p.kind === 'grant' || p.kind === 'agency' ? 'money' : 'bills'}
+      testID="records-results"
+      info={{
+        title: 'About these results',
+        testID: 'records-info',
+        notes: [
+          filtered
+            ? 'Results are limited to public records and roster parliamentarians. This page excludes recipient profiles and records without a reliable organisation classification.'
+            : null,
+          p.truncated
+            ? 'The record holds more. Narrow your search to go further.'
+            : null,
+          !summaryAllowed
+            ? 'A program-only summary is not available. The summary service also reviews recipient records.'
+            : null,
+          ...p.warnings,
+          p.coverage,
+        ],
+      }}
+    >
       {result.stale ? <SavedCopyNotice reason={result.staleReason} /> : null}
-      <Text
-        variant="strong"
+      <BigFigure
+        value={`${formatCount(filtered ? p.results.length : p.total)}${!filtered && p.truncated ? '+' : ''}`}
+        label={filtered ? 'eligible records on this page' : 'matches'}
+        detail={`For “${p.query}”`}
+        accent={p.kind === 'grant' || p.kind === 'agency' ? 'money' : 'bills'}
         testID="records-count"
-        accessibilityLiveRegion="polite"
-      >
-        {filtered
-          ? `${p.results.length} eligible records on this page`
-          : `${p.total.toLocaleString('en-AU')}${p.truncated ? '+' : ''} matches`}
-      </Text>
-      {filtered ? (
-        <Text variant="fine">
-          Results are limited to public records and roster parliamentarians.
-          This page excludes recipient profiles and records without a reliable
-          organisation classification.
-        </Text>
-      ) : null}
-      {p.truncated ? (
-        <Text variant="fine">
-          The record holds more. Narrow your search to go further.
-        </Text>
-      ) : null}
-      <Button
-        label={`Sort matches: ${sorts.find((s) => s.value === sort)!.label}`}
+      />
+      <LinkRow
+        title="Sort matches"
+        detail={sorts.find((s) => s.value === sort)!.label}
         onPress={() => setSortOpen(true)}
         testID="records-sort"
         disabled={busy}
@@ -143,6 +161,7 @@ export function Results({
             <Group accessibilityViewIsModal>
               <Choices
                 label="Sort matches"
+                closeLabel="Done"
                 choices={sorts}
                 value={sort}
                 onChange={(v) => onSort(v as SearchSort)}
@@ -154,7 +173,7 @@ export function Results({
         </Modal>
       ) : null}
       {p.results.some((r) => r.resource) ? (
-        <SegmentedControl
+        <ChoiceChips
           segments={[
             {
               value: 'passages',
@@ -183,12 +202,6 @@ export function Results({
         disabled={!p.results.length || !summaryAllowed}
         testID="records-summary"
       />
-      {!summaryAllowed ? (
-        <Text variant="fine">
-          A program-only summary is not available. The summary service also
-          reviews recipient records.
-        </Text>
-      ) : null}
       {summaryError ? (
         <ErrorState
           message={errorMessage(summaryError)}
@@ -197,7 +210,20 @@ export function Results({
         />
       ) : null}
       {summary ? (
-        <Section title="Cited summary" testID="records-summary-panel">
+        <Section
+          title="Cited summary"
+          icon="text.quote"
+          accent="bills"
+          testID="records-summary-panel"
+          info={{
+            title: 'Cited records',
+            testID: 'records-summary-info',
+            notes: summary.data.sources.flatMap((s) => [
+              s.title,
+              ...s.evidence,
+            ]),
+          }}
+        >
           {summary.stale ? (
             <SavedCopyNotice reason={summary.staleReason} />
           ) : null}
@@ -205,7 +231,7 @@ export function Results({
             <EmptyState message="No matching records are available for a cited summary." />
           ) : (
             <>
-              <Text variant="fine" testID="records-summary-label">
+              <Text wordSafe variant="caption" testID="records-summary-label">
                 AI summary of {summary.data.reviewed_count} matching records.
                 {summary.data.partial
                   ? ' Some sources are temporarily unavailable.'
@@ -221,9 +247,9 @@ export function Results({
                     const s = summary.data.sources[index]!;
                     const n = index + 1;
                     return (
-                      <Button
+                      <LinkRow
                         key={id}
-                        label={`Source ${n}: ${s.title}`}
+                        title={`${n}. ${s.title}`}
                         onPress={() => onOpen(s.href, s.title)}
                         testID={`records-citation-${n}`}
                       />
@@ -231,19 +257,6 @@ export function Results({
                   })}
                 </Group>
               ))}
-              <Section title={`Sources (${summary.data.sources.length})`}>
-                {summary.data.sources.map((s) => (
-                  <Group key={s.id}>
-                    <RecordRow
-                      title={s.title}
-                      onPress={() => onOpen(s.href, s.title)}
-                    />
-                    {s.evidence.map((quote, i) => (
-                      <Text key={i}>{quote}</Text>
-                    ))}
-                  </Group>
-                ))}
-              </Section>
             </>
           )}
           <AsAtLine
@@ -281,9 +294,11 @@ export function Results({
             onPress={() => onRecover('unfiltered')}
           />
           <Text variant="strong">Try:</Text>
-          {examples.slice(0, 6).map((q) => (
-            <Button key={q} label={q} onPress={() => onExample(q)} />
-          ))}
+          <ChoiceChips
+            segments={examples.slice(0, 6).map((q) => ({ value: q, label: q }))}
+            value=""
+            onChange={onExample}
+          />
         </Group>
       ) : (
         <RowList>
@@ -293,10 +308,9 @@ export function Results({
                 title={r.title}
                 detail={[
                   typeLabel(r.kind),
-                  r.dateLabel || r.date,
+                  r.dateLabel || (r.date ? formatDate(r.date, 'short') : null),
                   r.speaker,
                   r.party,
-                  r.source,
                 ]
                   .filter(Boolean)
                   .join(' · ')}
@@ -321,20 +335,20 @@ export function Results({
                   <Excerpt snippet={r.snippet} />
                 </Group>
               )}
-              <AsAtLine
-                asOf={r.date || null}
-                citation={r.source || typeLabel(r.kind)}
-              />
+              {/automated summary/.test(r.source ?? '') ? (
+                <Text variant="caption">automated summary</Text>
+              ) : null}
+              {r.url ? (
+                <ViewOriginal
+                  sources={[
+                    { label: r.source || typeLabel(r.kind), url: r.url },
+                  ]}
+                />
+              ) : null}
             </Group>
           ))}
         </RowList>
       )}
-      {p.warnings.map((w) => (
-        <Text variant="fine" key={w}>
-          {w}
-        </Text>
-      ))}
-      {p.coverage ? <Text variant="fine">{p.coverage}</Text> : null}
       <AsAtLine
         asOf={result.asOf}
         citation="OPAX public record search"
