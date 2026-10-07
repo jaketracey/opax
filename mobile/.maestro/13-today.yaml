@@ -1,12 +1,13 @@
 appId: au.com.opax.app
-name: 13 Today feeds and their dated original sources
+name: 13 Today front page, its native records and dated original sources
 ---
 # scrollUntilVisible always swipes from the centre of the screen. Tap
 # targets are centred with speed-20 swipes (about half a screen each). From
 # iOS 26 the tab bar floats over the bottom of the page, and a link drawn
 # under it still counts as visible: on iOS 27 a source tap hit the Your MP
 # tab. Each group of steps first checks the page is still shown.
-- launchApp
+- launchApp:
+    permissions: {}
 - assertVisible:
     id: today-screen-message
 # The daily edition: the fixture's pinned production response, as posted.
@@ -28,30 +29,31 @@ name: 13 Today feeds and their dated original sources
     visibilityPercentage: 10
     centerElement: true
 - takeScreenshot: ${EVIDENCE}/13-edition-machine
+# One action opens the record on its native screen: a bill by its key.
 - scrollUntilVisible:
     element:
-      id: today-edition-link
+      id: today-edition-open
+      text: Open the bill
     timeout: 90000
     visibilityPercentage: 10
     centerElement: true
 - waitForAnimationToEnd
 - tapOn:
-    id: today-edition-link
-# E2E shows the guarded web address on the build's reserved origin instead.
+    id: today-edition-open
+- extendedWaitUntil:
+    visible:
+      id: bill-screen
+    timeout: 30000
 - scrollUntilVisible:
     element:
-      text: https://opax\.invalid/bill/au-federal-r7529
-    timeout: 20000
-- takeScreenshot: ${EVIDENCE}/13-edition-link-alert
-- tapOn: OK
-- scrollUntilVisible:
-    element:
-      id: today-edition-as-at
+      id: bill-title
+      text: Wage Justice for Early Childhood.*
     timeout: 90000
     visibilityPercentage: 10
-    centerElement: true
-- assertVisible: 'As at 4 October 2026 · Source: OPAX daily edition'
-- takeScreenshot: ${EVIDENCE}/13-edition-as-at
+- takeScreenshot: ${EVIDENCE}/13-edition-open-bill
+- tapOn: Today
+- assertVisible:
+    id: today-screen
 - scrollUntilVisible:
     element:
       id: today-bill-0
@@ -65,7 +67,11 @@ name: 13 Today feeds and their dated original sources
       id: today-bills-as-at
     direction: DOWN
     timeout: 90000
-- assertVisible: As at .* Source.*ParlInfo.*
+# One quiet caption per block: the record's date, no source names.
+- assertVisible:
+    id: today-bills-as-at
+    text: Updated \d{1,2} \w{3}.*
+- assertNotVisible: .*Source:.*
 - takeScreenshot: ${EVIDENCE}/13-bills-as-at
 - scrollUntilVisible:
     element:
@@ -108,13 +114,6 @@ name: 13 Today feeds and their dated original sources
     id: today-screen
 - scrollUntilVisible:
     element:
-      id: today-declaration-person-0
-    timeout: 90000
-    visibilityPercentage: 1
-    centerElement: true
-- takeScreenshot: ${EVIDENCE}/13-declaration-person
-- scrollUntilVisible:
-    element:
       id: today-declaration-0
     direction: DOWN
     timeout: 90000
@@ -124,8 +123,10 @@ name: 13 Today feeds and their dated original sources
 - takeScreenshot: ${EVIDENCE}/13-declaration
 - assertVisible:
     id: today-screen
-- tapOn:
+# The register page is "View original" on touch and hold (an action sheet).
+- longPressOn:
     id: today-declaration-0
+- tapOn: View original
 - assertVisible: https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Senators_Interests/Senators_Interests_Register/123072
 - takeScreenshot: ${EVIDENCE}/13-declaration-source-alert
 # The local destination view scrolls a long URL at AX5. Capture its end too.
@@ -168,5 +169,5 @@ name: 13 Today feeds and their dated original sources
     timeout: 300000
 - assertVisible:
     id: today-declarations-as-at
-    text: As at .* Source.*
+    text: Updated \d{1,2} \w{3}.*
 - takeScreenshot: ${EVIDENCE}/13-declarations-as-at

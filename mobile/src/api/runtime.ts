@@ -39,6 +39,18 @@ const client = new ApiClient({
   cache: new CatalogCache(new DiskStore(), 24 * 1024 * 1024, 220),
 });
 export const catalogs = new Catalogs(client);
+// Paid reader calls: no disk persistence and no automatic retry. Records owns
+// the session promises, so opening a cached record costs no new request.
+export const recordClient = new ApiClient({
+  origin: extra.apiOrigin,
+  version: extra.appVersion,
+  build: extra.appBuild,
+  retries: 0,
+  cache: new CatalogCache({
+    readIndex: async () => [], writeIndex: async () => {},
+    read: async () => undefined, write: async () => {}, remove: async () => {},
+  }),
+});
 export const portraits = new PeoplePortraits(
   catalogs,
   new PortraitCache(new PortraitDiskStore(extra.apiOrigin), client),

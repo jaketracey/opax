@@ -222,8 +222,8 @@ describe('long division notes and briefs', () => {
     );
     expect(labels(root)).toEqual(
       expect.arrayContaining([
-        'aph.gov.au, bills digest',
-        'theyvoteforyou.org.au, policy',
+        'bills digest, aph.gov.au',
+        'policy, theyvoteforyou.org.au',
       ]),
     );
     expect(byID(root, 'cited-link-2')).toHaveLength(0);
@@ -234,7 +234,9 @@ describe('long division notes and briefs', () => {
     const root = render(
       <MachineBrief label="Machine brief" brief={brief} testID="b" />,
     );
-    expect(byID(root, 'b-label')[0]!.props.children).toBe('Machine brief');
+    expect(byID(root, 'b-label')[0]!.props.accessibilityLabel).toBe(
+      'Machine brief',
+    );
     expect(byID(root, 'b-text')).toHaveLength(0);
     expect(byID(root, 'b-more')[0]!.props.accessibilityLabel).toBe(
       'Read the machine brief, 120 words',

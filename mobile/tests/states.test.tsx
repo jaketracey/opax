@@ -589,6 +589,7 @@ describe('word-safe text', () => {
     act(() => {
       renderer = TestRenderer.create(
         <SourceLink
+          label="Parliamentary Library · Bills Digest"
           citation="Parliamentary Library"
           record="Bills Digest"
           url="https://www.aph.gov.au/"
@@ -601,19 +602,19 @@ describe('word-safe text', () => {
         .findAllByType(NativeText)
         .find((node) => typeof node.props.onTextLayout === 'function')!;
     expect(label().props.children).toBe('Parliamentary Library · Bills Digest');
-    expect(capScale(label(), 'body')).toBe(1);
+    expect(capScale(label(), 'kicker')).toBe(1);
     act(() => {
       label().props.onTextLayout({
         nativeEvent: {
           lines: [
-            { text: 'Parliamentar', height: 25 * 3 },
-            { text: 'y Library · Bills Digest', height: 25 * 3 },
+            { text: 'Parliamentar', height: 18 * 3 },
+            { text: 'y Library · Bills Digest', height: 18 * 3 },
           ],
         },
       });
     });
     // 2.7 of the uncapped 3, through the role's own size and line height.
-    expect(capScale(label(), 'body')).toBeCloseTo(0.9, 6);
+    expect(capScale(label(), 'kicker')).toBeCloseTo(0.9, 6);
   });
   test('a heading lowers its own size after a mid-word break, and only then', () => {
     let renderer!: TestRenderer.ReactTestRenderer;

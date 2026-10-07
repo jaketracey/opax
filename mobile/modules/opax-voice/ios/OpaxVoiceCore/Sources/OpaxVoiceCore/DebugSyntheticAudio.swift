@@ -53,6 +53,15 @@ actor DebugSyntheticEngine: VoiceAudioEngine {
     }
     func flush(playbackEpoch: Int) { acceptedPlaybackEpoch = max(acceptedPlaybackEpoch, playbackEpoch); playbackEnd = .distantPast }
     func setMuted(_ muted: Bool) {}
+    /// Silent playback still moves the call animation: a speech-shaped
+    /// envelope while synthetic playback is due. Input stays silent.
+    func levels() async -> AudioLevels {
+        let now = await clock.now()
+        guard cadence != nil, playbackEnd > now else { return .silent }
+        let t = now.timeIntervalSinceReferenceDate
+        let syllable = 0.5 + 0.5 * sin(t * 2 * .pi * 4.1), phrase = 0.7 + 0.3 * sin(t * 2 * .pi * 0.31)
+        return AudioLevels(input: 0, output: Float(0.5 + 0.35 * syllable * phrase))
+    }
     func reconfigure() {}
     func stop() { acceptedPlaybackEpoch += 1; cadence = nil; playbackEnd = .distantPast }
 }

@@ -1,8 +1,7 @@
-import { useState } from 'react';
-import { CachedPortrait, portraitCreditLine } from '../CachedPortrait';
-import type { PortraitInfo } from '../../api/portrait-index';
+import { CachedPortrait } from '../CachedPortrait';
 import type { recentDeclarationsFor } from '../../api/selectors';
 import { Group, PersonRow, SourceLink, Text } from '../../design/primitives';
+import { rhythm } from '../../design/tokens';
 import { formatDate } from '../../design/format';
 import { chamberName } from '../../design/parliament';
 import { registerChangeLabel } from '../your-mp/model';
@@ -29,9 +28,10 @@ function tieText(tie: Tie) {
 
 /**
  * One register alteration: the member, what changed and when, the entry in
- * the member's own words, and its source. Today shows the newest six; the
- * declared-interests feed shows every row with the member's profile link
- * and any name match the export found.
+ * the member's own words, and a small "View original" for the register page.
+ * Today shows the newest six; the declared-interests feed shows every row
+ * with the member's profile link and any name match the export found.
+ * Portrait credits are on Sources and licences, in About.
  */
 export function TodayDeclaration({
   item,
@@ -47,9 +47,8 @@ export function TodayDeclaration({
   onOpenPerson?: () => void;
   showTies?: boolean;
 }) {
-  const [portrait, setPortrait] = useState<PortraitInfo | null>(null);
   return (
-    <Group>
+    <Group gap={rhythm.tight}>
       <PersonRow
         name={item.name}
         party={item.party}
@@ -63,7 +62,6 @@ export function TodayDeclaration({
           <CachedPortrait
             name={item.name}
             testID={`${testIDPrefix}-portrait-${index}`}
-            onCredit={setPortrait}
           />
         }
       />
@@ -78,28 +76,6 @@ export function TodayDeclaration({
           Name match: {item.ties.map(tieText).join('; ')}. Exact names only;
           this identifies a shared name across public registers, not wrongdoing.
         </Text>
-      ) : null}
-      {portrait ? (
-        <Group>
-          <Text variant="fine">{portraitCreditLine(portrait)}</Text>
-          {portrait.attribution ? (
-            <Text variant="fine">{portrait.attribution}</Text>
-          ) : null}
-          <SourceLink
-            citation="Portrait credit"
-            url={portrait.sourceURL}
-            kind="record"
-          />
-          <SourceLink
-            citation="Portrait licence"
-            url={
-              portrait.licenceURL.startsWith('https:')
-                ? portrait.licenceURL
-                : portrait.sourceURL
-            }
-            kind="record"
-          />
-        </Group>
       ) : null}
       <SourceLink
         citation={item.sourceLabel}

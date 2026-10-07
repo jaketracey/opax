@@ -13,16 +13,19 @@ export function Icon({
   name,
   size = 20,
   tone = 'navy',
+  maxScale = 2,
   accessibilityLabel,
 }: {
   name: SFSymbol;
   size?: number;
   tone?: Role;
+  /** The most the symbol grows with text size (a tile caps it lower). */
+  maxScale?: number;
   /** Only for an icon that conveys meaning on its own. */
   accessibilityLabel?: string;
 }) {
   const { fontScale } = useWindowDimensions();
-  const scaled = Math.round(size * Math.min(Math.max(fontScale, 1), 2));
+  const scaled = Math.round(size * Math.min(Math.max(fontScale, 1), maxScale));
   return (
     <SymbolView
       name={name}
