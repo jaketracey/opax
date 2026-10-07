@@ -161,6 +161,7 @@ export function PartyPage({ input }: { input: string }) {
               </Heading>
               <PartyLabel party={view.label} status="unknown" linked={false} />
             </Group>
+            <Button label="Public money" testID="party-public-money" onPress={() => router.push('/public-money')} />
             <Section title="Members">
               <CatalogState
                 block={view.members}

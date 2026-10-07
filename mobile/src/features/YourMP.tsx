@@ -1,3 +1,4 @@
+import { SeatGrants } from './money-public/Grants';
 import { PartialNotice, SavedCopyNotice } from './CatalogNotice';
 import { LocationSuggestion } from './electorate-map/LocationSuggestion';
 import { formatDate } from '../design/format';
@@ -314,6 +315,7 @@ export default function YourMP() {
               }
             />
           </Group>
+          <SeatGrants name={view.seat.data!.name} state={view.seat.data!.state_code} eligible={view.seat.data!.jurisdiction === 'federal' && view.seat.data!.chamber === 'representatives'} />
           {view.seat.data!.chamber !== 'senate' ? (
             <RecordBlock
               title={

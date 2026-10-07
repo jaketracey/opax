@@ -19,6 +19,17 @@ const staticPaths = new Set([
   '/graph/aec-extras.json',
   // Leads (P1): the static discovery export, 60 signals with their caveats.
   '/discovery.json',
+  // Public money: the web's static grants, procurement and research exports.
+  '/graph/grants.federal.json',
+  '/graph/grants.qld.json',
+  '/grants/program-notes.json',
+  '/social/grants-largest.json',
+  '/agencies.json',
+  '/reports/grants-allocation.json',
+  '/research/mlci.json',
+  '/research/grants-history.json',
+  '/research/grant-locations.json',
+  '/evidence/index.json',
 ]);
 // W13 frozen daily edition: one D1 read of the posted journal, no model,
 // preview or OG path (docs/IOS-API-CONTRACT.md, "App readers"). Only `latest`:
@@ -89,6 +100,9 @@ export function assertAllowedPath(path: string): void {
     releasePath.test(pathname!) ||
     billPath.test(pathname!) ||
     interestPath.test(pathname!) ||
+    /^\/grants\/(?:federal|qld)\/programs\/[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*\.json$/.test(pathname!) ||
+    /^\/agencies\/a-[a-f0-9]{20}\.json$/.test(pathname!) ||
+    /^\/evidence\/[a-f0-9]{2}\.json$/.test(pathname!) ||
     isPortraitPath(pathname!)
   )
     return;

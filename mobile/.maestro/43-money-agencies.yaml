@@ -1,0 +1,197 @@
+appId: au.com.opax.app
+name: 43 Agencies, contracts and Discover companies in both (standard and AX5)
+---
+- launchApp
+- openLink: opax://public-money
+- tapOn:
+    text: Open
+    optional: true
+- scrollUntilVisible:
+    element:
+      id: money-agencies
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: money-agencies
+- scrollUntilVisible:
+    element:
+      id: agencies-title
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/43-agencies
+- scrollUntilVisible:
+    element:
+      id: agencies-search
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: agencies-search
+- inputText: Digital Transformation Agency
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: agency-row-0
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: agency-row-0
+- scrollUntilVisible:
+    element:
+      id: agency-title
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/43-agency
+- scrollUntilVisible:
+    element:
+      id: agency-years
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/43-value-over-time
+- scrollUntilVisible:
+    element:
+      id: agency-suppliers
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: agency-suppliers
+- scrollUntilVisible:
+    element:
+      id: agency-search
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/43-suppliers
+- scrollUntilVisible:
+    element:
+      id: agency-contracts
+    direction: UP
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: agency-contracts
+- scrollUntilVisible:
+    element:
+      id: agency-contract-0
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/43-contracts
+- scrollUntilVisible:
+    element:
+      id: agency-source-0
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: agency-source-0
+- assertVisible: https://www.tenders.gov.au/
+- takeScreenshot: ${EVIDENCE}/43-austender
+- tapOn: OK
+- scrollUntilVisible:
+    element:
+      id: agency-discover-both
+    direction: UP
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: agency-discover-both
+- scrollUntilVisible:
+    element:
+      id: discover-title
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/43-discover
+- scrollUntilVisible:
+    element:
+      id: discover-card-0
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/43-companies-both
+- scrollUntilVisible:
+    element:
+      id: discover-procurement_concentration
+    direction: UP
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: discover-procurement_concentration
+- scrollUntilVisible:
+    element:
+      id: discover-card-0
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/43-top-supplier-share
+- scrollUntilVisible:
+    element:
+      id: discover-source-0-0
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: discover-source-0-0
+- assertVisible: https://www.tenders.gov.au/
+- takeScreenshot: ${EVIDENCE}/43-share-austender
+- tapOn: OK
+- scrollUntilVisible:
+    element:
+      id: discover-recipient_concentration
+    direction: UP
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: discover-recipient_concentration
+- scrollUntilVisible:
+    element:
+      id: discover-card-0
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/43-party-funding

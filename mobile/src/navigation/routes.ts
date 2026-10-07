@@ -1,4 +1,5 @@
 import { partySlug } from '../design/party';
+import { moneyFromWebPath } from '../features/money-public/routes';
 export const personRoute = (slug: string) => ({
   pathname: '/person/[slug]' as const,
   params: { slug },
@@ -10,7 +11,9 @@ export const billRoute = (key: string, section?: 'divisions') => ({
 // Alignment only. Associated Domains and native universal-link handling belong to a later lane.
 export function fromWebPath(
   path: string,
-): ReturnType<typeof personRoute> | ReturnType<typeof billRoute> | null {
+): ReturnType<typeof personRoute> | ReturnType<typeof billRoute> | ReturnType<typeof moneyFromWebPath> {
+  const money = moneyFromWebPath(path);
+  if (money) return money;
   const match = /^\/subject\/person\/([a-z0-9-]+)\/?$/.exec(path);
   if (match?.[1]) return personRoute(match[1]);
   const bill = /^\/bill\/([a-z0-9-]+)\/?$/.exec(path);

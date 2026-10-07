@@ -1,3 +1,4 @@
+import { SeatGrants } from './money-public/Grants';
 import { OutlineMap } from './electorate-map/OutlineMap';
 import {
   formatCount,
@@ -170,6 +171,7 @@ export function ElectorateScreen({
               title={identity.name}
               testID="electorate-follow"
             />
+            <SeatGrants name={identity.name} state={identity.state} eligible={identity.jurisdiction === 'federal' && identity.chamber === 'representatives'} />
             <Section title="Electorate outline" testID="electorate-map">
               <OutlineMap
                 boundaries={view.boundaries}

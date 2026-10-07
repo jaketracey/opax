@@ -3,7 +3,7 @@ import { RefreshControl } from 'react-native';
 import { router } from 'expo-router';
 import type { Block, EditionView } from '../api/catalogs';
 import { catalogs } from '../api/runtime';
-import { RowList, Screen, Section, Text } from '../design/primitives';
+import { Button, RowList, Screen, Section, Text } from '../design/primitives';
 import { formatDate } from '../design/format';
 import { CatalogState } from './CatalogState';
 import { EditionSection } from './EditionCard';
@@ -57,6 +57,7 @@ export default function Today() {
       >
         OPAX is independent and non-partisan. It is not a government app.
       </Text>
+      <Button label="Public money" testID="today-public-money" onPress={() => router.push('/public-money')} />
       <EditionSection
         block={edition}
         onRetry={refresh}
