@@ -23,6 +23,7 @@ import {
   Group,
   Heading,
   LoadingState,
+  LinkRow,
   OfflineBanner,
   OpaxWebLink,
   RowList,
@@ -35,7 +36,7 @@ import {
   errorMessage,
 } from '../../design/primitives';
 import { chrome, colors, radius, spacing } from '../../design/tokens';
-import { billRoute, personRoute } from '../../navigation/routes';
+import { billRoute, personRoute, billTextRoute } from '../../navigation/routes';
 import { shareHeaderItem } from '../../navigation/share';
 import { chamberLabel } from './filters';
 import {
@@ -239,6 +240,13 @@ export default function BillDetail({
                   onRefresh={refresh}
                 />
                 <AskAbout kind="bill" name={name} />
+                <LinkRow
+                  title="Read the bill text"
+                  icon="doc.text"
+                  accent="bills"
+                  onPress={() => router.push(billTextRoute(identity.key))}
+                  testID="bill-read-text"
+                />
                 <Summary view={view} />
                 <KeyDates view={view} />
                 <Divisions view={view} />

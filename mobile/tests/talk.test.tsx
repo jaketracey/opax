@@ -281,6 +281,14 @@ test('captions are replaced, not appended, and source navigation is guarded agai
     pathname: '/bill/[key]',
     params: { key: 'au-federal-r7534' },
   });
+  expect(recordDestination('/doc/speech-1205524')).toEqual({
+    pathname: '/doc/[slug]',
+    params: { slug: 'speech-1205524' },
+  });
+  expect(recordDestination('/bill/au-federal-r7534#bill-full-text')).toEqual({
+    pathname: '/bill-text/[key]',
+    params: { key: 'au-federal-r7534' },
+  });
   for (const path of [
     'https://attacker.invalid/bill/x',
     '//attacker.invalid/bill/x',

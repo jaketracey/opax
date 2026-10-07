@@ -17,6 +17,8 @@ import { openOnWeb, webPageUrl } from '../../navigation/external';
 import { ProfileScreen } from '../Person';
 import { ElectorateScreen } from '../Electorate';
 import BillDetail from '../bills/BillDetail';
+import DocumentReader from '../records/DocumentReader';
+import BillTextReader from '../records/BillTextReader';
 import type { VoiceSource } from '../../voice';
 import { endCopy, failureCopy, refusal, timeLabel } from './model';
 import { recordDestination } from './sources';
@@ -327,9 +329,13 @@ export default function TalkScreen({
             <BillDetail recordKey={destination.params.key} embedded />
           ) : destination.pathname === '/person/[slug]' ? (
             <ProfileScreen slug={destination.params.slug} embedded />
-          ) : (
+          ) : destination.pathname === '/doc/[slug]' ? (
+            <DocumentReader recordSlug={destination.params.slug} embedded />
+          ) : destination.pathname === '/bill-text/[key]' ? (
+            <BillTextReader recordKey={destination.params.key} embedded />
+          ) : destination.pathname === '/electorate/[id]' ? (
             <ElectorateScreen id={destination.params.id} embedded />
-          )}
+          ) : null}
         </>
       ) : (
         <ScrollView
