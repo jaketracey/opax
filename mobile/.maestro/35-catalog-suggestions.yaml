@@ -24,6 +24,10 @@ name: 35 Grants programs and local party, topic and report suggestions, also at 
     timeout: 90000
 - tapOn:
     id: search-kind-menu
+- scrollUntilVisible:
+    element:
+      text: ^Grants$
+    timeout: 90000
 - tapOn: Grants
 - scrollUntilVisible:
     element:
