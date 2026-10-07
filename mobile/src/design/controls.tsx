@@ -127,10 +127,10 @@ export function Button({
           fullWidth || stacked ? styles.full : styles.hug,
           stacked ? styles.buttonStacked : null,
           // A frameless button's label lines up with the text column; its
-          // pressed wash bleeds into the margin. Once it stretches it reads
-          // from the leading edge.
+          // pressed wash bleeds into the margin. A stretched button reads
+          // from the leading edge, its symbol beside its label.
           variant === 'quiet' ? styles.quiet : null,
-          stacked && variant === 'quiet' ? styles.leading : null,
+          stacked ? styles.leading : null,
           {
             backgroundColor: fill(state.fill),
             borderColor: fill(state.border),
@@ -150,9 +150,7 @@ export function Button({
                 variant="control"
                 tone={state.label}
                 wordSafe
-                style={
-                  stacked && variant === 'quiet' ? undefined : styles.center
-                }
+                style={stacked ? styles.shrink : styles.center}
               >
                 {label}
               </Text>
@@ -624,6 +622,7 @@ const styles = StyleSheet.create({
   buttonStacked: { borderRadius: radius + 10 },
   leading: { alignItems: 'flex-start' },
   quiet: { marginHorizontal: -spacing.s4 },
+  shrink: { flexShrink: 1 },
   hug: { alignSelf: 'flex-start' },
   full: { alignSelf: 'stretch' },
   buttonContent: {

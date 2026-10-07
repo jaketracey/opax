@@ -157,8 +157,9 @@ Design workbench) to see every component and state at the current text size.
   capsule with no outline, as Follow and `ChoiceChips` draw), `quiet`,
   `danger` (destructive, outlined). Every variant is a capsule; at
   accessibility sizes a button takes its column's full width (a fixed frame
-  for its word-safe label) with 14pt corners, and a quiet one reads from the
-  leading edge. `size`: `compact` 44, `default` 48, `large` 56 (minimum
+  for its word-safe label) with 14pt corners and reads from the leading edge.
+  A quiet button pulls out by its padding, so its label lines up with the
+  text column. `size`: `compact` 44, `default` 48, `large` 56 (minimum
   heights; text wraps, word-safe). Use a `LinkRow`, not a button, for an
   action that opens another screen ("Read full bill text"). `loading` keeps the
   label, width and accessible name and reports busy; `disabled` is announced
