@@ -9,7 +9,7 @@ import {
   LinkRow,
   RowList,
   Section,
-  SegmentedControl,
+  ChoiceChips,
   Text,
   useAccessibilitySize,
 } from '../../design/primitives';
@@ -177,7 +177,8 @@ export function MoneyControls({
   const extent = yearExtent(graph);
   return (
     <Group testID="money-controls">
-      <SegmentedControl
+      {/* Capsules wrap whole names; equal segments split "Queensland". */}
+      <ChoiceChips
         segments={(Object.keys(moneyCatalogs) as MoneyJurisdiction[]).map(
           (value) => ({
             value,
