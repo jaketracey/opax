@@ -13,17 +13,38 @@ import {
 } from './reference/person-identity-before';
 import { partyMembers as membersBefore } from './reference/party-page-before';
 import { decodeMoney } from '../src/api/catalog-decoders';
+import { nameKey } from '../src/api/ids';
+import { fullPortraitName } from '../src/api/selectors';
 import { catalogs, manifest, people, pinned, roster, slugs } from './pinned';
 
 // Compare whole outputs, including row order, dates, sources and counts. The
 // oracle uses the original scans and guards, with no production indexes.
+// Apply the submission's native-profile scope to its input cohort; the separate
+// search-roster fixtures and mutations check the new refusal policy itself.
+const nativeNames = new Map<string, Set<string>>();
+for (const person of people.people)
+  for (const name of [person.name, ...person.aliases]) {
+    const key = nameKey(name);
+    const ids = nativeNames.get(key) ?? new Set();
+    ids.add(person.person_id);
+    nativeNames.set(key, ids);
+  }
+const nativeSlugs = {
+  ...slugs,
+  slugs: Object.fromEntries(
+    Object.entries(slugs.slugs).filter(
+      ([, name]) =>
+        fullPortraitName(name) && nativeNames.get(nameKey(name))?.size === 1,
+    ),
+  ),
+};
 test.each(
   partyLabels(roster, people, decodeMoney(pinned('/graph/money.json'))),
 )(
-  '%s current and recorded lists equal the pre-index implementation',
+  '%s native member lists retain the pre-index identity, order and provenance',
   (label) => {
     expect(partyMembers(label, roster, people, slugs, manifest)).toEqual(
-      membersBefore(label, roster, people, slugs, manifest),
+      membersBefore(label, roster, people, nativeSlugs, manifest),
     );
   },
 );

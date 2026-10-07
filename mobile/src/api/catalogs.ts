@@ -10,6 +10,11 @@ import {
 import { samePartyLabel } from '../design/party';
 import { ApiError } from './errors';
 import {
+  memberSearchRows,
+  memberSlugFor,
+  memberSuggestionRoster,
+} from './catalog-search';
+import {
   joinPerson,
   personSlugForResult,
   type PersonProfile,
@@ -895,7 +900,12 @@ export class Catalogs {
           bills: bills.asOf,
         });
         return {
-          roster: roster.data,
+          roster: memberSuggestionRoster(roster.data, {
+            roster: roster.data,
+            manifest: manifest.data,
+            slugs: slugs?.data,
+            people: people?.data,
+          }),
           manifest: manifest.data,
           slugs: slugs?.data,
           people: people?.data,
@@ -1077,11 +1087,29 @@ export class Catalogs {
         'invalid-data',
         'The person release does not match its manifest.',
       );
+    const membership = result.data.results.some((row) =>
+      ['person', 'interest', 'pay', 'expense'].includes(row.kind),
+    )
+      ? await Promise.all([this.roster(), bridge?.[1] ?? this.manifest()])
+          .then(async ([roster, manifest]) => ({
+            roster,
+            manifest,
+            people: people ?? (await this.people(manifest.data)),
+          }))
+          .catch(() => null)
+      : null;
+    const memberCatalogs = {
+      roster: membership?.roster.data,
+      manifest: membership?.manifest.data,
+      people: membership?.people.data,
+      slugs: slugs.data,
+    };
     const records = [
       result,
       slugs,
       ...(bridge ?? []),
       ...(people ? [people] : []),
+      ...(membership ? Object.values(membership) : []),
     ];
     return {
       ...result,
@@ -1090,15 +1118,27 @@ export class Catalogs {
       savedAt: Math.min(...records.map((r) => r.savedAt)),
       data: {
         ...result.data,
-        results: result.data.results
+        results: memberSearchRows(result.data.results, memberCatalogs)
           .filter((row) => !row.href.startsWith('/ask'))
           .map((row) => {
-            const personSlug = personSlugForResult(
+            const candidate = personSlugForResult(
               row,
               slugs.data,
               bridge?.[0].data,
               people?.data,
             );
+            // Keep every non-person record, but only offer a native member link.
+            const personSlug =
+              candidate &&
+              memberSlugFor(
+                {
+                  ...row,
+                  kind: 'person',
+                  title: slugs.data.slugs[candidate]!,
+                  href: `/subject/person/${candidate}`,
+                },
+                memberCatalogs,
+              );
             return {
               ...row,
               personSlug,

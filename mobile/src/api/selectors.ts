@@ -1264,15 +1264,7 @@ export function suggestionsFor(
   const people = new Map<string, Roster['people'][number]>();
   for (const person of roster.people) {
     const key = nameKey(person.name);
-    if (
-      !(
-        person.name.trim().includes(' ') ||
-        person.pid ||
-        person.full ||
-        person.representation?.length
-      )
-    )
-      continue;
+    if (!fullPortraitName(person.name)) continue;
     const previous = people.get(key);
     if (!previous || (person.speeches ?? 0) > (previous.speeches ?? 0))
       people.set(key, person);

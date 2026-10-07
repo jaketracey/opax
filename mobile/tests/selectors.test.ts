@@ -327,7 +327,7 @@ test('suggestions use catalog names, seats and bill titles on device', () => {
     [],
   );
 });
-test('suggestions exclude the Senator role token while retaining identified surnames', () => {
+test('suggestions exclude the Senator role token and surname-only rows', () => {
   expect(
     d
       .suggestionsFor('Senator', catalogs.roster, index, bills)
@@ -337,7 +337,7 @@ test('suggestions exclude the Senator role token while retaining identified surn
     d
       .suggestionsFor('Canavan', catalogs.roster, index, bills)
       .people.some((p) => p.name === 'Canavan'),
-  ).toBe(true);
+  ).toBe(false);
 });
 
 test('every current canonical person in the pinned release resolves through the slug API', () => {
