@@ -126,7 +126,10 @@ export function Button({
           { minHeight: controlHeight[size] },
           fullWidth || stacked ? styles.full : styles.hug,
           stacked ? styles.buttonStacked : null,
-          // A frameless button reads from the leading edge once it stretches.
+          // A frameless button's label lines up with the text column; its
+          // pressed wash bleeds into the margin. Once it stretches it reads
+          // from the leading edge.
+          variant === 'quiet' ? styles.quiet : null,
           stacked && variant === 'quiet' ? styles.leading : null,
           {
             backgroundColor: fill(state.fill),
@@ -620,6 +623,7 @@ const styles = StyleSheet.create({
   },
   buttonStacked: { borderRadius: radius + 10 },
   leading: { alignItems: 'flex-start' },
+  quiet: { marginHorizontal: -spacing.s4 },
   hug: { alignSelf: 'flex-start' },
   full: { alignSelf: 'stretch' },
   buttonContent: {
