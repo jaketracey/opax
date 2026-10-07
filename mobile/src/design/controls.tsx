@@ -415,6 +415,11 @@ export function ChoiceChips<T extends string>({
   onChange: (value: T) => void;
   testID?: string;
 }) {
+  // A hugging chip's width follows its text, so word-safe sizing (which
+  // re-measures when its column changes) could chase its own frame. At
+  // accessibility sizes the chips take the full width, a fixed column for
+  // word-safe text; at other sizes the short labels wrap normally.
+  const stacked = useAccessibilitySize();
   return (
     <View testID={testID} style={styles.chips}>
       {segments.map((segment, index) => {
@@ -431,6 +436,7 @@ export function ChoiceChips<T extends string>({
             onPress={() => onChange(segment.value)}
             style={({ pressed }) => [
               styles.choice,
+              stacked ? styles.choiceStacked : null,
               {
                 backgroundColor: selected
                   ? pressed
@@ -445,7 +451,7 @@ export function ChoiceChips<T extends string>({
             <Text
               variant="control"
               tone={selected ? 'onNavy' : 'navy'}
-              wordSafe
+              wordSafe={stacked}
               style={styles.center}
             >
               {segment.label}
@@ -699,6 +705,7 @@ const styles = StyleSheet.create({
   },
   segmentInline: { flex: 1, flexBasis: 0 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.s3 },
+  choiceStacked: { alignSelf: 'stretch', borderRadius: radius + 12 },
   choice: {
     minHeight: 36,
     maxWidth: '100%',
