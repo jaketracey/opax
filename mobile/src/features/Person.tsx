@@ -1,3 +1,4 @@
+import { AskAbout } from './ask/AskAbout';
 import {
   formatCount,
   formatDate,
@@ -190,6 +191,7 @@ export function ProfileScreen({
                 formerly={identity.formerly}
                 testID="person-party"
               />
+            <AskAbout kind="person" name={identity.name}/>
               {profile.personId ? (
                 <FollowToggle
                   kind="person"

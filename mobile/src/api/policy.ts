@@ -47,6 +47,9 @@ export function assertAllowedPath(path: string): void {
     throw new Error('Route is outside the public catalog allow-list');
   const params = new URLSearchParams(query);
   if (path.split('?').length > 2) throw new Error('Invalid catalog query');
+  // Build 7 Ask. POST admission is separate from the catalog GET client.
+  if (pathname === '/api/ask' && query === 'stream=1') return;
+  if (pathname === '/api/followups' && !path.includes('?')) return;
   if (pathname === '/api/search-all') {
     const kind = params.get('kind');
     const allowedParams = [
@@ -93,6 +96,11 @@ export function assertAllowedPath(path: string): void {
   )
     return;
   throw new Error('Route is outside the public catalog allow-list');
+}
+
+export function assertAskPostPath(path: string): void {
+  if (path !== '/api/ask?stream=1' && path !== '/api/followups')
+    throw new Error('Route is outside the Ask POST allow-list');
 }
 
 export function allowedURL(origin: string, path: string): string {

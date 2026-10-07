@@ -1,3 +1,4 @@
+import { AskAbout } from '../ask/AskAbout';
 import { SavedCopyNotice } from '../CatalogNotice';
 import { useCallback, useEffect, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
@@ -205,6 +206,7 @@ export default function BillDetail({
         ) : null}
         {view && identity && record ? (
           <>
+            <AskAbout kind="bill" name={name}/>
             {focusedDivisions ? (
               <>
                 {record.stale ? (

@@ -7,6 +7,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import type { Duplex } from 'node:stream';
 import { WebSocketServer, WebSocket } from 'ws';
 import statusFixture from '../modules/opax-voice/ios/OpaxVoiceCore/Tests/OpaxVoiceCoreTests/Fixtures/worker-status.json';
+import { chatFixture } from './chat-fixture';
 import {
   assertWorkerContract,
   workerMessageFilter,
@@ -182,6 +183,7 @@ export async function createVoiceFixture(
     request: IncomingMessage,
     response: ServerResponse,
   ): Promise<boolean> {
+    if (await chatFixture(request, response, accountFor(request))) return true;
     const path = request.url ?? '';
     const routes: Record<string, string> = {
       '/api/voice/status': 'GET',

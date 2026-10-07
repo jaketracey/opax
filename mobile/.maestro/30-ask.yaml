@@ -1,0 +1,113 @@
+appId: au.com.opax.app
+name: 30 Build a question, streamed answer, native bill citation and grounded follow-up
+---
+- launchApp:
+    clearState: true
+- tapOn:
+    id: tab-ask
+- assertVisible:
+    id: ask-screen
+- takeScreenshot: ${EVIDENCE}/30-ask
+- scrollUntilVisible:
+    element:
+      id: ask-builder-toggle
+    centerElement: true
+    timeout: 180000
+    speed: 20
+- tapOn:
+    id: ask-builder-toggle
+- scrollUntilVisible:
+    element:
+      id: ask-builder-shape
+    centerElement: true
+    timeout: 180000
+- tapOn:
+    id: ask-builder-shape
+- scrollUntilVisible:
+    element:
+      text: a bill
+    centerElement: true
+    timeout: 180000
+- tapOn: a bill
+- scrollUntilVisible:
+    element:
+      id: ask-builder-bill-pick
+    centerElement: true
+    timeout: 180000
+- tapOn:
+    id: ask-builder-bill-pick
+- scrollUntilVisible:
+    element:
+      id: ask-builder-bill-pick-choice-0
+    centerElement: true
+    timeout: 180000
+- tapOn:
+    id: ask-builder-bill-pick-choice-0
+- scrollUntilVisible:
+    element:
+      id: ask-builder-sentence
+    visibilityPercentage: 10
+    centerElement: true
+    timeout: 180000
+- assertVisible: What does the .* change\?
+- takeScreenshot: ${EVIDENCE}/30-builder
+- scrollUntilVisible:
+    element:
+      id: ask-builder-submit
+    centerElement: true
+    timeout: 180000
+- tapOn:
+    id: ask-builder-submit
+- scrollUntilVisible:
+    element:
+      id: ask-machine-label
+    direction: DOWN
+    centerElement: true
+    visibilityPercentage: 10
+    timeout: 180000
+- assertVisible: Machine-written from the retrieved passages; not the record\.
+- takeScreenshot: ${EVIDENCE}/30-answer
+- scrollUntilVisible:
+    element:
+      id: ask-citation-1
+    direction: DOWN
+    centerElement: true
+    visibilityPercentage: 10
+    timeout: 180000
+- tapOn:
+    id: ask-citation-1
+- scrollUntilVisible:
+    element:
+      id: bill-title
+    centerElement: true
+    visibilityPercentage: 10
+    timeout: 180000
+- assertVisible: Interactive Gambling \(Cost Recovery Levy\) Bill 2026
+- takeScreenshot: ${EVIDENCE}/30-native-bill
+# An intentional native back swipe, inside this journey's held device lock.
+- swipe:
+    start: 1%,50%
+    end: 90%,50%
+    duration: 500
+- assertVisible:
+    id: ask-screen
+- scrollUntilVisible:
+    element:
+      id: ask-followup-0
+    direction: DOWN
+    centerElement: true
+    visibilityPercentage: 10
+    speed: 40
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/30-followups
+- tapOn:
+    id: ask-followup-0
+- scrollUntilVisible:
+    element:
+      id: ask-understood
+    direction: DOWN
+    centerElement: true
+    visibilityPercentage: 10
+    timeout: 180000
+- assertVisible: 'Understood as: Who spoke for and against the Interactive Gambling.*'
+- takeScreenshot: ${EVIDENCE}/30-understood

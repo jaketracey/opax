@@ -16,6 +16,7 @@ import { CODE_LENGTH, codeDigits } from './code';
 import { accountCopy, deletionRefusal, refusalCopy } from './copy';
 import { accountDeleted, sessionEnded } from './store';
 import { useCodeChallenge } from './useCodeChallenge';
+import { clearAskConversations } from '../ask/store';
 
 /**
  * Account deletion (IOS-UX 4.12, IOS-APP section 6): what is and is not
@@ -85,6 +86,11 @@ export function DeleteAccountFlow({
     inFlight.current = false;
     setBusy(null);
     if (!result.ok) return refused(result.error);
+    await clearAskConversations().catch(() => {
+      setError(
+        'The account was deleted. Local conversations could not be cleared. Try deleting all conversations in Ask.',
+      );
+    });
     challenge.clear();
     setCode('');
     accountDeleted();
@@ -106,6 +112,21 @@ export function DeleteAccountFlow({
           {accountCopy.accountDeleted}
         </Heading>
         <Text>{accountCopy.accountDeletedDetail}</Text>
+        {error ? (
+          <ErrorState
+            message={error}
+            onRetry={() => {
+              void clearAskConversations()
+                .then(() => setError(null))
+                .catch(() =>
+                  setError(
+                    'The account was deleted. Local conversations could not be cleared. Try again.',
+                  ),
+                );
+            }}
+            testID="account-local-chats-error"
+          />
+        ) : null}
         <Button
           variant="primary"
           label={accountCopy.done}

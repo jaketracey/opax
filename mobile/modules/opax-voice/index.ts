@@ -2,6 +2,7 @@ import { requireOptionalNativeModule } from 'expo';
 
 // Static name is registered as an exact grant in native-review-policy.js.
 export type NativeVoice = {
+  chatRequest(path: string, method: string, body: string | null): Promise<unknown>;
   snapshot(): Promise<unknown>;
   status(): Promise<unknown>;
   requestCode(email: string): Promise<unknown>;

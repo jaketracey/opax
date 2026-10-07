@@ -1,3 +1,4 @@
+import { AskAbout } from './ask/AskAbout';
 import { useCallback, useEffect, useState } from 'react';
 import { RefreshControl } from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
@@ -160,6 +161,7 @@ export function PartyPage({ input }: { input: string }) {
                 {view.label}
               </Heading>
               <PartyLabel party={view.label} status="unknown" linked={false} />
+              <AskAbout kind="party" name={view.label}/>
             </Group>
             <Section title="Members">
               <CatalogState

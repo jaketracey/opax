@@ -1,3 +1,4 @@
+import { AskAbout } from './ask/AskAbout';
 import { OutlineMap } from './electorate-map/OutlineMap';
 import {
   formatCount,
@@ -150,6 +151,7 @@ export function ElectorateScreen({
             <Heading level={1} testID="electorate-name">
               {identity.name}
             </Heading>
+            <AskAbout kind="electorate" name={identity.name}/>
             {identity.status === 'historical' ? (
               <Text wordSafe testID="electorate-abolished">
                 Abolished; not a current seat. This record describes a

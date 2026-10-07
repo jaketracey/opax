@@ -32,7 +32,7 @@ if (
   throw new Error('API origin does not match the build variant');
 export const isE2E = extra.variant === 'e2e';
 setCatalogDiagnostics(isE2E);
-const client = new ApiClient({
+export const client = new ApiClient({
   origin: extra.apiOrigin,
   version: extra.appVersion,
   build: extra.appBuild,
