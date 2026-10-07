@@ -710,7 +710,8 @@ No reliable figure can be given without a device. Measure battery and data on a 
 ### Accessibility
 
 - **Transcript as captions.**
-  - The live transcript of both sides is the primary channel for deaf and hard-of-hearing people. Show it from the first turn, apply corrections in place, and keep it until the call screen closes.
+  - The live transcript of both sides is the primary channel for deaf and hard-of-hearing people. Apply corrections in place and keep it until the call screen closes.
+  - The call screen shows it behind a CC switch, off by default (Jake, 7 October 2026: the call screen is an animation, not text). The switch is remembered on the device, so someone who relies on captions turns it on once; only the switch is stored.
   - It is never persisted, as on the web.
   - Audio `alignment` data, when the agent sends it, can highlight words as they are spoken.
 - **Typing instead of speaking.** The relay forwards `user_message` text up to 2,000 characters (`portal/src/voice.ts:104`). A "Type instead" field during a call helps people who cannot or prefer not to speak; it still uses call time. Ask remains the text-only alternative.
@@ -721,7 +722,7 @@ No reliable figure can be given without a device. Measure battery and data on a 
   - Support the Magic Tap gesture to toggle mute.
   - VoiceOver's own speech is a separate system output and may not be removed by echo cancellation, so the agent could hear it. Suggest headphones when VoiceOver is running; this is a device check.
 - **Dynamic Type.** Support all sizes, including the accessibility sizes. Controls stack vertically at large sizes; the countdown uses monospaced digits; there are no fixed heights.
-- **Motion and colour.** Under Reduce Motion, the waveform becomes a static indicator. No state is shown by colour alone.
+- **Motion and colour.** The call animation follows real input and output loudness. Under Reduce Motion it becomes a slow fade pulse while connecting or speaking, and is still while listening. No state is shown by colour alone: the mute control changes its symbol, and VoiceOver announces each state.
 
 ### Which architecture voice favours
 
