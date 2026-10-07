@@ -1,6 +1,5 @@
-import { useState } from 'react';
 import { router } from 'expo-router';
-import { Button, Field, Group } from '../../design/primitives';
+import { LinkRow } from '../../design/primitives';
 import { askRoute } from '../../navigation/routes';
 export function scopedQuestion(
   kind: 'person' | 'bill' | 'party' | 'electorate',
@@ -28,25 +27,13 @@ export function AskAbout({
   kind: 'person' | 'bill' | 'party' | 'electorate';
   name: string;
 }) {
-  const [topic, setTopic] = useState('');
   return (
-    <Group>
-      {kind === 'person' ? (
-        <Field
-          label="Topic"
-          value={topic}
-          onChangeText={setTopic}
-          placeholder="Enter a topic…"
-          testID="person-ask-topic"
-        />
-      ) : null}
-      <Button
-        label={
-          kind === 'person' ? 'Ask about their speeches' : 'Ask about this'
-        }
-        onPress={() => router.push(askRoute(scopedQuestion(kind, name, topic)))}
-        testID={`${kind}-ask`}
-      />
-    </Group>
+    <LinkRow
+      title={kind === 'person' ? 'Ask about their speeches' : 'Ask about this'}
+      onPress={() => router.dismissTo(askRoute(scopedQuestion(kind, name)))}
+      testID={`${kind}-ask`}
+      icon="text.bubble"
+      accent="people"
+    />
   );
 }

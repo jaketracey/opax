@@ -91,7 +91,7 @@ export function Builder({
             </Group>
           );
         })}
-      <Text variant="lede" testID="ask-builder-sentence">
+      <Text wordSafe variant="heading" testID="ask-builder-sentence">
         {q ||
           parts
             .map((p) => (typeof p === 'string' ? p : `[${p.slot}]`))

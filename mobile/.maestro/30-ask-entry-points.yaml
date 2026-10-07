@@ -1,0 +1,57 @@
+appId: au.com.opax.app
+name: 30 Scoped Ask drafts from native records; arrival never submits
+---
+- launchApp:
+    clearState: true
+- openLink: opax://person/anthony-albanese
+- scrollUntilVisible:
+    element:
+      id: person-ask
+    centerElement: true
+    speed: 20
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/30-person-entry
+- tapOn:
+    id: person-ask
+- assertVisible:
+    id: ask-question
+- assertVisible: What has Anthony Albanese said in parliament\?
+- takeScreenshot: ${EVIDENCE}/30-speaker-draft
+- openLink: opax://party/labor
+- scrollUntilVisible:
+    element:
+      id: party-ask
+    centerElement: true
+    speed: 20
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/30-party-entry
+- tapOn:
+    id: party-ask
+- assertVisible:
+    id: ask-question
+- assertVisible: What has parliament said about Labor\?
+- openLink: opax://electorate/el_5d600e7f6dca5b72ae04d686
+- scrollUntilVisible:
+    element:
+      id: electorate-ask
+    centerElement: true
+    speed: 20
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/30-electorate-entry
+- tapOn:
+    id: electorate-ask
+- assertVisible:
+    id: ask-question
+- openLink: opax://bill/au-federal-r7534
+- scrollUntilVisible:
+    element:
+      id: bill-ask
+    centerElement: true
+    speed: 20
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/30-bill-entry
+- tapOn:
+    id: bill-ask
+- assertVisible:
+    id: ask-question
+- takeScreenshot: ${EVIDENCE}/30-bill-draft

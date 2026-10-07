@@ -206,7 +206,6 @@ export default function BillDetail({
         ) : null}
         {view && identity && record ? (
           <>
-            <AskAbout kind="bill" name={name}/>
             {focusedDivisions ? (
               <>
                 {record.stale ? (
@@ -225,6 +224,7 @@ export default function BillDetail({
                     <Button label="Try again" onPress={retry} />
                   </Group>
                 ) : null}
+                <AskAbout kind="bill" name={name} />
                 <Divisions view={view} focused />
               </>
             ) : (
@@ -238,6 +238,7 @@ export default function BillDetail({
                   refreshing={refreshing}
                   onRefresh={refresh}
                 />
+                <AskAbout kind="bill" name={name} />
                 <Summary view={view} />
                 <KeyDates view={view} />
                 <Divisions view={view} />

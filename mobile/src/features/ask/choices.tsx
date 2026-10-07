@@ -1,5 +1,13 @@
 import { useState } from 'react';
-import { Button, Field, Group, Text } from '../../design/primitives';
+import { Keyboard } from 'react-native';
+import {
+  Disclosure,
+  Field,
+  Group,
+  LinkRow,
+  RowList,
+  Text,
+} from '../../design/primitives';
 /** Native wrapping choices. The roster supplies every person suggestion. */
 export function Choice({
   label,
@@ -18,13 +26,16 @@ export function Choice({
     [query, setQuery] = useState('');
   return (
     <Group gap={4}>
-      <Button
-        label={`${label}: ${values.find((x) => x.value === value)?.label || value || 'any'}`}
-        onPress={() => setOpen(!open)}
-        expanded={open}
+      <Disclosure
+        label={label}
+        detail={values.find((x) => x.value === value)?.label || value || 'any'}
+        open={open}
+        onToggle={(next) => {
+          Keyboard.dismiss();
+          setOpen(next);
+        }}
         testID={testID}
-      />
-      {open ? (
+      >
         <Group>
           {values.length > 10 ? (
             <Field
@@ -34,26 +45,33 @@ export function Choice({
               testID={`${testID}-query`}
             />
           ) : null}
-          {values
-            .filter((x) => x.label.toLowerCase().includes(query.toLowerCase()))
-            .slice(0, 30)
-            .map((x, i) => (
-              <Button
-                key={x.value}
-                label={x.label}
-                onPress={() => {
-                  onChange(x.value);
-                  setOpen(false);
-                  setQuery('');
-                }}
-                testID={`${testID}-choice-${i}`}
-              />
-            ))}
+          <RowList>
+            {values
+              .filter((x) =>
+                x.label.toLowerCase().includes(query.toLowerCase()),
+              )
+              .slice(0, 30)
+              .map((x, i) => (
+                <LinkRow
+                  key={x.value}
+                  title={x.label}
+                  onPress={() => {
+                    Keyboard.dismiss();
+                    onChange(x.value);
+                    setOpen(false);
+                    setQuery('');
+                  }}
+                  testID={`${testID}-choice-${i}`}
+                />
+              ))}
+          </RowList>
           {values.length > 30 && !query ? (
-            <Text variant="fine">Type a name to find another record.</Text>
+            <Text wordSafe variant="fine">
+              Type a name to find another record.
+            </Text>
           ) : null}
         </Group>
-      ) : null}
+      </Disclosure>
     </Group>
   );
 }

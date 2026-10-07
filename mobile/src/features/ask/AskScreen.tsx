@@ -3,14 +3,15 @@ import {
   AccessibilityInfo,
   Alert,
   Keyboard,
-  Modal,
+  StyleSheet,
+  View,
   ScrollView,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../../api/runtime';
 import {
   Button,
+  IconButton,
   EmptyState,
   ErrorState,
   Field,
@@ -21,10 +22,14 @@ import {
   Screen,
   Section,
   Text,
+  Disclosure,
+  LinkRow,
+  RowList,
 } from '../../design/primitives';
-import { colors } from '../../design/tokens';
+import { colors, rhythm } from '../../design/tokens';
+import { AskSheet } from './AskSheet';
 import { rootHeaderItems } from '../../navigation/chrome';
-import { useAccount } from '../account/store';
+import { accountSnapshot, refreshAccount, useAccount } from '../account/store';
 import { AnswerView, machineNote } from './AnswerView';
 import { Builder } from './QuestionBuilder';
 import { Options, topics } from './Options';
@@ -89,7 +94,8 @@ export default function AskScreen() {
     lastStage = useRef<string | null>(null),
     lastAnswer = useRef<object | null>(null),
     answerY = useRef(0),
-    syncVersion = useRef(0);
+    syncVersion = useRef(0),
+    namesLoaded = useRef(false);
   useEffect(
     () =>
       subscribeChatDeletion(() => {
@@ -144,12 +150,15 @@ export default function AskScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [answer]);
   async function loadNames() {
-    if (namesBusy || people.size) return;
+    if (namesBusy || namesLoaded.current) return;
     setNamesBusy(true);
     setNamesError('');
     try {
-      const roster = await catalogs.roster(),
-        slugs = await catalogs.slugs();
+      const [roster, slugs, index] = await Promise.all([
+        catalogs.roster(),
+        catalogs.slugs(),
+        catalogs.bills(),
+      ]);
       const known = new Map<string, string>();
       for (const p of roster.data.people) {
         const slug =
@@ -159,7 +168,6 @@ export default function AskScreen() {
         known.set(p.name, slug);
       }
       setPeople(known);
-      const index = await catalogs.bills();
       setBills(
         index.data.bills
           .filter(
@@ -167,6 +175,7 @@ export default function AskScreen() {
           )
           .map((b) => b.short_title || b.title),
       );
+      namesLoaded.current = true;
     } catch {
       setNamesError('Names from the record could not be loaded. Try again.');
     } finally {
@@ -204,7 +213,9 @@ export default function AskScreen() {
   }
   async function history() {
     setHistoryOpen(true);
-    if (account.status?.signedIn) await sync();
+    // A relaunch has no cached account status. This tap may check it; mount never does.
+    if (!accountSnapshot().status) await refreshAccount();
+    if (accountSnapshot().status?.signedIn) await sync();
   }
   async function sync() {
     if (syncBusy) return;
@@ -278,7 +289,7 @@ export default function AskScreen() {
         options={{ title: 'Ask', unstable_headerRightItems: rootHeaderItems }}
       />
       <Screen testID="ask-screen" scrollRef={scroll}>
-        <Group>
+        <Group style={styles.composer} gap={rhythm.heading}>
           <Field
             label="Your question"
             placeholder="Ask a question about the public record…"
@@ -297,15 +308,28 @@ export default function AskScreen() {
             onPress={() => void submit()}
             testID="ask-submit"
           />
-          <Button
-            label="Options"
-            disabled={s.busy}
-            onPress={() => {
-              void loadNames();
-              setOptionsOpen(true);
-            }}
-            testID="ask-options"
-          />
+          <RowList>
+            <LinkRow
+              title="Options"
+              icon="line.3.horizontal.decrease"
+              accent="people"
+              disabled={s.busy}
+              onPress={() => {
+                void loadNames();
+                setOptionsOpen(true);
+              }}
+              testID="ask-options"
+            />
+            <LinkRow
+              title="Your conversations"
+              value={String(saved.chats.length)}
+              icon="bubble.left.and.bubble.right"
+              accent="people"
+              disabled={s.busy}
+              onPress={() => void history()}
+              testID="ask-saved"
+            />
+          </RowList>
           {chips(s.options).map((c) => (
             <FilterChip
               key={c.id}
@@ -321,15 +345,10 @@ export default function AskScreen() {
               onPress={() => askSession.options({ ...defaultOptions })}
             />
           ) : null}
-          <Button
-            label={`Your conversations (${saved.chats.length})`}
-            disabled={s.busy}
-            onPress={() => void history()}
-            testID="ask-saved"
-          />
           {s.thread.length ? (
             <Button
               label="Start a new conversation"
+              variant="quiet"
               disabled={s.busy}
               onPress={() => {
                 askSession.start();
@@ -341,44 +360,46 @@ export default function AskScreen() {
           ) : null}
         </Group>
         {!s.thread.length && !s.busy ? (
-          <Group>
-            {sampleQuestions.map((q, i) => (
-              <Button
-                key={q}
-                label={q}
-                variant="quiet"
-                onPress={() => void submit(q)}
-                testID={`ask-sample-${i}`}
-              />
-            ))}
-            <Button
-              label="Build a question"
-              expanded={builderOpen}
-              onPress={() => {
-                void loadNames();
-                setBuilderOpen(!builderOpen);
-              }}
-              testID="ask-builder-toggle"
-            />
-            {builderOpen ? (
-              <>
-                {namesBusy ? (
-                  <LoadingState label="Loading names from the record" />
-                ) : null}
-                {namesError ? (
-                  <ErrorState
-                    message={namesError}
-                    onRetry={() => void loadNames()}
-                  />
-                ) : null}
-                <Builder
-                  people={names}
-                  bills={bills}
-                  onSubmit={(q) => void submit(q)}
-                  busy={s.busy}
+          <Group gap={rhythm.heading}>
+            <RowList>
+              {sampleQuestions.map((q, i) => (
+                <LinkRow
+                  key={q}
+                  title={q}
+                  onPress={() => void submit(q)}
+                  testID={`ask-sample-${i}`}
                 />
-              </>
-            ) : null}
+              ))}
+              <Disclosure
+                label="Build a question"
+                icon="text.badge.plus"
+                accent="people"
+                open={builderOpen}
+                onToggle={(open) => {
+                  if (open) void loadNames();
+                  setBuilderOpen(open);
+                }}
+                testID="ask-builder-toggle"
+              >
+                <Group>
+                  {namesBusy ? (
+                    <LoadingState label="Loading names from the record" />
+                  ) : null}
+                  {namesError ? (
+                    <ErrorState
+                      message={namesError}
+                      onRetry={() => void loadNames()}
+                    />
+                  ) : null}
+                  <Builder
+                    people={names}
+                    bills={bills}
+                    onSubmit={(q) => void submit(q)}
+                    busy={s.busy}
+                  />
+                </Group>
+              </Disclosure>
+            </RowList>
           </Group>
         ) : null}
         {s.thread.map((turn, i) =>
@@ -394,7 +415,7 @@ export default function AskScreen() {
                 {turn.text}
               </Heading>
               {turn.askedAs ? (
-                <Text variant="metadata" testID="ask-understood">
+                <Text wordSafe variant="metadata" testID="ask-understood">
                   Understood as: {turn.askedAs}
                 </Text>
               ) : null}
@@ -436,14 +457,16 @@ export default function AskScreen() {
               );
             })}
             {s.stage === 'Reading the record again.' ? (
-              <Text>{s.stage}</Text>
+              <Text wordSafe>{s.stage}</Text>
             ) : null}
             {s.reading.length ? (
-              <Text>Reading {s.reading.join(' · ')}</Text>
+              <Text wordSafe>Reading {s.reading.join(' · ')}</Text>
             ) : null}
             {s.streaming ? (
               <>
-                <Text variant="fine">{machineNote}</Text>
+                <Text wordSafe variant="fine">
+                  {machineNote}
+                </Text>
                 <Text
                   selectable
                   testID="ask-streaming"
@@ -469,7 +492,11 @@ export default function AskScreen() {
                   : s.error.message
               }
             />
-            {s.streaming ? <Text selectable>{s.streaming}</Text> : null}
+            {s.streaming ? (
+              <Text wordSafe selectable>
+                {s.streaming}
+              </Text>
+            ) : null}
             <Button
               label="Try again"
               onPress={() => void submit(retryQuestion)}
@@ -477,23 +504,31 @@ export default function AskScreen() {
             />
           </Group>
         ) : null}
-        {s.notice ? <Text>{s.notice}</Text> : null}
+        {s.notice ? <Text wordSafe>{s.notice}</Text> : null}
         {answer && !s.busy ? (
-          <Section title="Ask next" testID="ask-followups">
-            {answer.next?.map((next, i) => (
-              <Button
-                key={next.question}
-                label={next.question}
-                onPress={() => void submit(next.question, next)}
-                testID={`ask-followup-${i}`}
-              />
-            ))}
+          <Section
+            title="Ask next"
+            icon="text.bubble"
+            accent="people"
+            testID="ask-followups"
+          >
+            <RowList>
+              {answer.next?.map((next, i) => (
+                <LinkRow
+                  key={next.question}
+                  title={next.question}
+                  onPress={() => void submit(next.question, next)}
+                  testID={`ask-followup-${i}`}
+                />
+              ))}
+            </RowList>
             <Field
               label="Ask a follow-up"
               placeholder="Ask a follow-up…"
               value={draft}
               onChangeText={setDraft}
               multiline
+              maxLength={2000}
               testID="ask-followup-field"
             />
             <Button
@@ -518,79 +553,81 @@ export default function AskScreen() {
         />
       ) : null}
       {historyOpen ? (
-        <Modal
-          animationType="none"
-          presentationStyle="pageSheet"
-          onRequestClose={() => setHistoryOpen(false)}
+        <AskSheet
+          title="Your conversations"
+          onDone={() => setHistoryOpen(false)}
+          testID="ask-history-screen"
+          doneID="ask-history-done"
         >
-          <SafeAreaView
-            style={{ flex: 1, backgroundColor: colors.paper }}
-            accessibilityViewIsModal
-          >
-            <Screen testID="ask-history-screen">
-              <Heading level={1}>
-                Your conversations ({saved.chats.length})
-              </Heading>
-              <Text>
-                {account.status?.signedIn
-                  ? 'Saved to your account and on this iPhone.'
-                  : 'Saved on this iPhone. Sign in to keep them across devices.'}
-              </Text>
-              {!saved.chats.length ? (
-                <EmptyState message="No saved conversations." />
-              ) : null}
-              {saved.chats.map((c, i) => (
-                <Group key={c.id}>
-                  <Button
-                    label={c.title}
-                    onPress={() => {
-                      askSession.open(c.id);
-                      setHistoryOpen(false);
-                      scroll.current?.scrollTo({
-                        y: answerY.current,
-                        animated: false,
-                      });
-                    }}
-                    testID={`ask-restore-${i}`}
-                  />
-                  <Text variant="metadata">
-                    {c.thread.filter((m) => m.role === 'user').length} questions
-                  </Text>
-                  <Button
-                    label={`Delete conversation: ${c.title}`}
-                    variant="danger"
-                    onPress={() => void remove(c.id)}
-                    testID={`ask-delete-${i}`}
-                  />
-                </Group>
-              ))}
-              {syncNotice ? (
-                <Text testID="ask-sync-notice">{syncNotice}</Text>
-              ) : null}
-              {account.status?.signedIn ? (
-                <Button
-                  label="Sync conversations"
-                  loading={syncBusy}
-                  onPress={() => void sync()}
+          <Text wordSafe variant="caption">
+            {account.status?.signedIn
+              ? 'Saved to your account and on this iPhone.'
+              : 'Saved on this iPhone. Sign in to keep them across devices.'}
+          </Text>
+          {!saved.chats.length ? (
+            <EmptyState message="No saved conversations." />
+          ) : null}
+          {saved.chats.map((c, i) => (
+            <View key={c.id} style={styles.conversation}>
+              <View style={styles.conversationTitle}>
+                <LinkRow
+                  title={c.title}
+                  detail={`${c.thread.filter((m) => m.role === 'user').length} questions`}
+                  icon="bubble.left.and.bubble.right"
+                  accent="people"
+                  onPress={() => {
+                    askSession.open(c.id);
+                    setHistoryOpen(false);
+                    scroll.current?.scrollTo({
+                      y: answerY.current,
+                      animated: false,
+                    });
+                  }}
+                  testID={`ask-restore-${i}`}
                 />
-              ) : null}
-              <Button
-                label="Delete all conversations"
-                variant="danger"
-                disabled={!saved.chats.length}
-                onPress={removeAll}
-                testID="ask-delete-all"
+              </View>
+              <IconButton
+                symbol="trash"
+                accessibilityLabel={`Delete conversation: ${c.title}`}
+                onPress={() => void remove(c.id)}
+                testID={`ask-delete-${i}`}
               />
-              <Button
-                label="Done"
-                variant="primary"
-                onPress={() => setHistoryOpen(false)}
-                testID="ask-history-done"
-              />
-            </Screen>
-          </SafeAreaView>
-        </Modal>
+            </View>
+          ))}
+          {syncNotice ? (
+            <Text wordSafe testID="ask-sync-notice">
+              {syncNotice}
+            </Text>
+          ) : null}
+          {account.status?.signedIn ? (
+            <Button
+              label="Sync conversations"
+              loading={syncBusy}
+              onPress={() => void sync()}
+            />
+          ) : null}
+          <Button
+            label="Delete all conversations"
+            variant="danger"
+            disabled={!saved.chats.length}
+            onPress={removeAll}
+            testID="ask-delete-all"
+          />
+        </AskSheet>
       ) : null}
     </>
   );
 }
+const styles = StyleSheet.create({
+  conversation: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: rhythm.tight,
+  },
+  conversationTitle: { flex: 1 },
+  composer: {
+    backgroundColor: colors.navyWash,
+    padding: rhythm.block,
+    borderRadius: 8,
+  },
+});

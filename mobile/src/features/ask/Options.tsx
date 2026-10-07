@@ -1,16 +1,13 @@
 import { useState } from 'react';
-import { Modal } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   Button,
   ErrorState,
   Field,
   Group,
-  Heading,
-  Screen,
-  Text,
+  ChoiceChips,
+  Section,
 } from '../../design/primitives';
-import { colors } from '../../design/tokens';
+import { AskSheet } from './AskSheet';
 import {
   defaultOptions,
   normaliseOptions,
@@ -67,110 +64,115 @@ export function Options({
   }
   const any = { value: '', label: 'any' };
   return (
-    <Modal
-      animationType="none"
-      presentationStyle="pageSheet"
-      onRequestClose={onCancel}
+    <AskSheet
+      title="Ask options"
+      onDone={done}
+      onClose={onCancel}
+      testID="ask-options-screen"
+      doneID="ask-options-done"
     >
-      <SafeAreaView
-        style={{ flex: 1, backgroundColor: colors.paper }}
-        accessibilityViewIsModal
+      <Section title="Years" rule={false}>
+        <Field
+          label="From year"
+          value={o.from}
+          onChangeText={(v) => update('from', v)}
+          keyboardType="number-pad"
+          placeholder="1993"
+          maxLength={4}
+          testID="ask-from"
+        />
+        <Field
+          label="To year"
+          value={o.to}
+          onChangeText={(v) => update('to', v)}
+          keyboardType="number-pad"
+          placeholder="2026"
+          maxLength={4}
+          testID="ask-to"
+        />
+      </Section>
+      <Section
+        title="Narrow the record"
+        icon="line.3.horizontal.decrease"
+        accent="people"
       >
-        <Screen testID="ask-options-screen">
-          <Heading level={1}>Ask options</Heading>
-          <Group>
-            <Text>Years 1993–2026</Text>
-            <Field
-              label="From year"
-              value={o.from}
-              onChangeText={(v) => update('from', v)}
-              keyboardType="number-pad"
-              placeholder="1993"
-              testID="ask-from"
-            />
-            <Field
-              label="To year"
-              value={o.to}
-              onChangeText={(v) => update('to', v)}
-              keyboardType="number-pad"
-              placeholder="2026"
-              testID="ask-to"
-            />
-            <Choice
-              label="Speaker"
-              value={o.speaker}
-              values={[
-                any,
-                ...people.map((name) => ({ value: name, label: name })),
-              ]}
-              onChange={(v) => update('speaker', v)}
-              testID="ask-speaker"
-            />
-            <Choice
-              label="Party"
-              value={o.party}
-              values={[any, ...parties.map((v) => ({ value: v, label: v }))]}
-              onChange={(v) => update('party', v)}
-              testID="ask-party"
-            />
-            <Choice
-              label="Parliament"
-              value={o.state}
-              values={[
-                any,
-                ...Object.entries(parliaments).map(([value, label]) => ({
-                  value,
-                  label,
-                })),
-              ]}
-              onChange={(v) => update('state', v)}
-              testID="ask-state"
-            />
-            <Choice
-              label="Topic"
-              value={o.topic}
-              values={[
-                any,
-                ...Object.entries(topics).map(([value, label]) => ({
-                  value,
-                  label,
-                })),
-              ]}
-              onChange={(v) => update('topic', v)}
-              testID="ask-topic"
-            />
-            <Choice
-              label="Record type"
-              value={o.kind}
-              values={[
-                { value: 'all', label: 'All records' },
-                { value: 'speech', label: 'Speeches' },
-              ]}
-              onChange={(v) => update('kind', v)}
-              testID="ask-kind"
-            />
-            <Button
-              label={`Search all records, including political funding, contracts and grants: ${o.kind === 'all' ? 'on' : 'off'}`}
-              onPress={() =>
-                update('kind', o.kind === 'all' ? 'speech' : 'all')
-              }
-              testID="ask-include-money"
-            />
-            {error ? <ErrorState message={error} /> : null}
-            <Button
-              label="Done"
-              variant="primary"
-              onPress={done}
-              testID="ask-options-done"
-            />
-            <Button
-              label="Clear all"
-              onPress={() => setO({ ...defaultOptions })}
-            />
-            <Button label="Cancel" variant="quiet" onPress={onCancel} />
-          </Group>
-        </Screen>
-      </SafeAreaView>
-    </Modal>
+        <Choice
+          label="Speaker"
+          value={o.speaker}
+          values={[
+            any,
+            ...people.map((name) => ({ value: name, label: name })),
+          ]}
+          onChange={(v) => update('speaker', v)}
+          testID="ask-speaker"
+        />
+        <Choice
+          label="Party"
+          value={o.party}
+          values={[any, ...parties.map((v) => ({ value: v, label: v }))]}
+          onChange={(v) => update('party', v)}
+          testID="ask-party"
+        />
+        <Choice
+          label="Parliament"
+          value={o.state}
+          values={[
+            any,
+            ...Object.entries(parliaments).map(([value, label]) => ({
+              value,
+              label,
+            })),
+          ]}
+          onChange={(v) => update('state', v)}
+          testID="ask-state"
+        />
+        <Choice
+          label="Topic"
+          value={o.topic}
+          values={[
+            any,
+            ...Object.entries(topics).map(([value, label]) => ({
+              value,
+              label,
+            })),
+          ]}
+          onChange={(v) => update('topic', v)}
+          testID="ask-topic"
+        />
+      </Section>
+      <Section
+        title="Include"
+        icon="doc.text"
+        accent="bills"
+        info={{
+          title: 'About record types',
+          notes: [
+            'Search all records, including political funding, contracts and grants. Choose Speeches to search speeches only.',
+          ],
+          testID: 'ask-record-types-info',
+        }}
+      >
+        <ChoiceChips
+          value={o.kind}
+          segments={[
+            { value: 'all', label: 'All records', testID: 'ask-include-money' },
+            { value: 'speech', label: 'Speeches only' },
+          ]}
+          onChange={(v) => update('kind', v)}
+          testID="ask-kind"
+        />
+      </Section>
+      <Group>
+        {error ? <ErrorState message={error} /> : null}
+        <Button
+          label="Apply options"
+          variant="primary"
+          onPress={done}
+          testID="ask-options-apply"
+        />
+        <Button label="Clear all" onPress={() => setO({ ...defaultOptions })} />
+        <Button label="Cancel" variant="quiet" onPress={onCancel} />
+      </Group>
+    </AskSheet>
   );
 }

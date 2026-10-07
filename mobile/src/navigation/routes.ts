@@ -20,13 +20,9 @@ export function fromWebPath(
   | null {
   if (/^\/ask(?:\?|\/?$)/.test(path)) {
     const url = new URL(path, webOrigin);
-    if (
-      url.pathname === '/ask' &&
-      !url.searchParams.has('view') &&
-      url.searchParams.get('q')
-    )
+    if (url.pathname === '/ask' && !url.searchParams.has('view'))
       return askRoute({
-        question: url.searchParams.get('q')!,
+        question: url.searchParams.get('q') || '',
         ...Object.fromEntries(
           ['speaker', 'party', 'state', 'topic', 'from', 'to', 'kind'].flatMap(
             (k) =>

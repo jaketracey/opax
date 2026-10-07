@@ -2,14 +2,17 @@ import { useState } from 'react';
 import { router } from 'expo-router';
 import { webOrigin } from '../../design/environment';
 import {
-  Button,
+  LinkRow,
+  RowList,
+  Disclosure,
+  ViewOriginal,
   Group,
   Heading,
   PersonRow,
   Section,
   Text,
 } from '../../design/primitives';
-import { colors, spacing } from '../../design/tokens';
+import { colors, rhythm } from '../../design/tokens';
 import { formatDate } from '../../design/format';
 import { fromWebPath, personRoute } from '../../navigation/routes';
 import { openSource, sourceUrl } from '../../navigation/external';
@@ -17,6 +20,7 @@ import { shareRecord } from '../../navigation/share';
 import {
   dateRuler,
   defaultOptions,
+  parliaments,
   sourceGroups,
   type Answer,
   type Source,
@@ -121,13 +125,13 @@ export function AnswerBody({
           <Group
             key={i}
             style={{
-              paddingVertical: spacing.s3,
+              paddingVertical: rhythm.heading,
               borderBottomWidth: 1,
               borderBottomColor: colors.dividerSubtle,
             }}
           >
             {cells.map((v, j) => (
-              <Text key={j}>
+              <Text wordSafe key={j}>
                 {heads[j]}: {v}
               </Text>
             ))}
@@ -141,7 +145,7 @@ export function AnswerBody({
             {line.replace(/^#+\s/, '')}
           </Heading>
         ) : (
-          <Text key={i} selectable>
+          <Text wordSafe key={i} selectable>
             {inline(line.replace(/^[-*]\s/, '• '))}
           </Text>
         ),
@@ -151,9 +155,9 @@ export function AnswerBody({
     <Group>
       {blocks}
       {links.map((link, i) => (
-        <Button
+        <LinkRow
           key={`${i}-${link.href}`}
-          label={link.label}
+          title={link.label}
           onPress={() => openAnswerLink(link.href)}
         />
       ))}
@@ -163,23 +167,27 @@ export function AnswerBody({
 function SourceRow({ s, n }: { s: Source; n?: number }) {
   return (
     <Group gap={4}>
-      <Button
-        label={`${n ? `${n}. ` : ''}${s.title}`}
+      <LinkRow
+        title={`${n ? `${n}. ` : ''}${s.title}`}
         onPress={() => openAnswerLink(s.href)}
         testID={n ? `ask-source-${n}` : undefined}
       />
-      <Text variant="metadata">
+      <Text wordSafe variant="metadata">
         {[
           s.speaker,
           s.party,
-          s.state,
+          s.state ? parliaments[s.state] || '' : '',
           s.date ? formatDate(s.date) : '',
-          s.source,
         ]
           .filter(Boolean)
           .join(' · ')}
       </Text>
-      {s.snippet ? <Text selectable>{s.snippet}</Text> : null}
+      {s.snippet ? (
+        <Text wordSafe selectable variant="record">
+          {s.snippet}
+        </Text>
+      ) : null}
+      <ViewOriginal sources={s.url ? [{ label: s.title, url: s.url }] : []} />
     </Group>
   );
 }
@@ -212,6 +220,25 @@ export function AnswerView({
   return (
     <Section
       testID="ask-answer"
+      icon={calculated ? 'dollarsign.circle' : 'text.bubble'}
+      accent={calculated ? 'money' : 'people'}
+      info={{
+        title: 'About this answer',
+        testID: 'ask-answer-info',
+        notes: [
+          calculated
+            ? data.pay_answer
+              ? payNote
+              : moneyNote
+            : 'Answers may be cached. Cite the sources, not this text.',
+          data.money_context,
+          turn.carried
+            ? turn.carried.source
+              ? `This suggested follow-up drew on a passage from “${turn.carried.source}”, retrieved for the previous answer.`
+              : 'This suggested follow-up drew on a passage retrieved for the previous answer.'
+            : null,
+        ],
+      }}
       title={
         data.answer_status === 'calculated'
           ? data.pay_answer
@@ -225,24 +252,37 @@ export function AnswerView({
       }
     >
       {data.money_overview ? (
-        <Group style={{ backgroundColor: colors.sunken, padding: spacing.s4 }}>
-          <Text variant="fine">{machineNote}</Text>
+        <Group
+          style={{ backgroundColor: colors.moneyWash, padding: rhythm.block }}
+        >
+          <Text wordSafe variant="fine">
+            {machineNote}
+          </Text>
           <AnswerBody text={data.money_overview} />
         </Group>
       ) : null}
       {!calculated && data.answer_status !== 'evidence_only' ? (
-        <Text variant="fine" testID="ask-machine-label">
+        <Text wordSafe variant="fine" testID="ask-machine-label">
           {machineNote}
         </Text>
       ) : null}
-      <Group testID={calculated ? 'ask-money-panel' : 'ask-answer-body'}>
+      <Group
+        style={
+          calculated
+            ? { backgroundColor: colors.moneyWash, padding: rhythm.block }
+            : undefined
+        }
+        testID={calculated ? 'ask-money-panel' : 'ask-answer-body'}
+      >
         <AnswerBody text={citedText(data)} sources={groups.cited} />
       </Group>
       {data.evidence_excerpts?.map((e, i) => (
         <Group key={i}>
-          <Text selectable>“{e.text}”</Text>
-          <Button
-            label="Read the source passage"
+          <Text wordSafe selectable variant="record">
+            “{e.text}”
+          </Text>
+          <LinkRow
+            title="Read the source passage"
             onPress={() => {
               const s = data.sources.find((s) => s.resource === e.resource);
               if (s) openAnswerLink(s.href);
@@ -251,26 +291,40 @@ export function AnswerView({
         </Group>
       ))}
       {calculated ? (
-        <Text variant="fine">{data.pay_answer ? payNote : moneyNote}</Text>
+        <Text wordSafe variant="caption">
+          {data.pay_answer
+            ? 'Entitlements, not payslips.'
+            : 'Selected disclosed receipts; not every donor.'}
+        </Text>
       ) : null}
       {data.pay_next?.map((s) => (
-        <Button
+        <LinkRow
           key={s.href}
-          label={s.label}
+          title={s.label}
           onPress={() => openAnswerLink(s.href)}
         />
       ))}
       {/* Every citation has a 44pt button, independent of the text's font size. */}
-      {groups.cited.map((s, i) => (
-        <Button
-          key={s.resource}
-          label={`${s.cited ? `[${i + 1}]` : `Source ${i + 1}`} ${s.title}`}
-          onPress={() => openAnswerLink(s.href)}
-          testID={`ask-citation-${i + 1}`}
-        />
-      ))}
+      <RowList>
+        {groups.cited.map((s, i) => (
+          <LinkRow
+            key={s.resource}
+            title={`${s.cited ? `[${i + 1}]` : `Record ${i + 1}`} ${s.title}`}
+            detail={[s.speaker, s.date ? formatDate(s.date, 'short') : '']
+              .filter(Boolean)
+              .join(' · ')}
+            onPress={() => openAnswerLink(s.href)}
+            testID={`ask-citation-${i + 1}`}
+          />
+        ))}
+      </RowList>
       {roster.length ? (
-        <Section title="People in this answer" testID="ask-people-card">
+        <Section
+          title="People in this answer"
+          icon="person.3.fill"
+          accent="people"
+          testID="ask-people-card"
+        >
           {roster.map((name) => (
             <PersonRow
               key={name}
@@ -281,85 +335,93 @@ export function AnswerView({
         </Section>
       ) : null}
       {groups.cited.some((s) => s.snippet) ? (
-        <Section title="From the record" testID="ask-quote-rail">
+        <Disclosure
+          label="From the record"
+          icon="quote.bubble"
+          accent="people"
+          testID="ask-quote-rail"
+        >
           {groups.cited
             .filter((s) => s.snippet)
             .slice(0, 5)
             .map((s) => (
-              <Group key={s.resource}>
-                <Text selectable>“{s.snippet}”</Text>
-                <Button
-                  label={[s.speaker, s.date ? formatDate(s.date) : '', s.title]
+              <Group
+                key={s.resource}
+                gap={rhythm.tight}
+                style={{
+                  borderLeftWidth: 3,
+                  borderLeftColor: colors.navy,
+                  paddingLeft: rhythm.heading,
+                }}
+              >
+                <Text wordSafe selectable variant="record">
+                  “{s.snippet}”
+                </Text>
+                <LinkRow
+                  title={s.title}
+                  detail={[s.speaker, s.date ? formatDate(s.date, 'short') : '']
                     .filter(Boolean)
                     .join(' · ')}
                   onPress={() => openAnswerLink(s.href)}
                 />
+                <ViewOriginal
+                  sources={s.url ? [{ label: s.title, url: s.url }] : []}
+                />
               </Group>
             ))}
-        </Section>
+        </Disclosure>
       ) : null}
-      <Button
-        label={`Sources (${data.sources.length})`}
-        onPress={() => setSourcesOpen(!sourcesOpen)}
-        expanded={sourcesOpen}
+      <Disclosure
+        label="Retrieved records"
+        value={String(data.sources.length)}
+        open={sourcesOpen}
+        onToggle={setSourcesOpen}
         testID="ask-sources-toggle"
-      />
-      {sourcesOpen ? (
+      >
         <Group testID="ask-sources">
-          <Text variant="fine">
-            {calculated
-              ? data.pay_answer
-                ? payNote
-                : moneyNote
-              : 'Answers may be cached. Cite the sources, not this text.'}
-          </Text>
           {groups.cited.map((s, i) => (
             <SourceRow key={s.resource} s={s} n={i + 1} />
           ))}
           {groups.also.length ? (
-            <>
-              <Button
-                label="Also retrieved, not cited in the answer"
-                onPress={() => setAlsoOpen(!alsoOpen)}
-                expanded={alsoOpen}
-                testID="ask-also-toggle"
-              />
-              {alsoOpen
-                ? groups.also.map((s) => <SourceRow key={s.resource} s={s} />)
-                : null}
-            </>
+            <Disclosure
+              label="Also retrieved, not cited in the answer"
+              open={alsoOpen}
+              onToggle={setAlsoOpen}
+              testID="ask-also-toggle"
+            >
+              {groups.also.map((s) => (
+                <SourceRow key={s.resource} s={s} />
+              ))}
+            </Disclosure>
           ) : null}
         </Group>
-      ) : null}
+      </Disclosure>
       {dates.length ? (
-        <Group testID="ask-date-ruler">
-          <Heading level={3}>Dates in the record</Heading>
-          {dates.map((s) => (
-            <Group key={s.resource} gap={4}>
-              <Text variant="metadata">
-                {formatDate(s.date!)} · {s.cited ? 'Cited' : 'Retrieved'}
-              </Text>
-              <Button label={s.title} onPress={() => openAnswerLink(s.href)} />
-            </Group>
-          ))}
-        </Group>
+        <Disclosure
+          label="Dates in the record"
+          icon="calendar"
+          accent="people"
+          testID="ask-date-ruler"
+        >
+          <RowList>
+            {dates.map((s) => (
+              <LinkRow
+                key={s.resource}
+                title={s.title}
+                detail={`${formatDate(s.date!, 'short')} · ${s.cited ? 'Cited' : 'Retrieved'}`}
+                onPress={() => openAnswerLink(s.href)}
+              />
+            ))}
+          </RowList>
+        </Disclosure>
       ) : null}
-      {data.money_context ? (
-        <Text variant="fine">{data.money_context}</Text>
-      ) : null}
-      {turn.carried ? (
-        <Text variant="fine">
-          {turn.carried.source
-            ? `This suggested follow-up drew on a passage from “${turn.carried.source}”, retrieved for the previous answer.`
-            : 'This suggested follow-up drew on a passage retrieved for the previous answer.'}
-        </Text>
-      ) : null}
-      <Text variant="metadata">
-        Viewed {formatDate(new Date().toISOString().slice(0, 10))} · Source:
-        OPAX retrieved records
+      <Text wordSafe variant="caption">
+        Viewed {formatDate(new Date().toISOString().slice(0, 10), 'short')}
       </Text>
-      <Button
-        label="Share answer"
+      <LinkRow
+        title="Share answer"
+        icon="square.and.arrow.up"
+        accent="people"
         onPress={() =>
           void shareRecord({
             path: '/ask',

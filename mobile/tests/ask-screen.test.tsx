@@ -2,6 +2,7 @@ import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import AskScreen from '../src/features/ask/AskScreen';
 import { client } from '../src/api/runtime';
 import { askSession } from '../src/features/ask/session';
+import { reconcileChats, pushChat } from '../src/features/ask/sync';
 jest.mock('expo-router', () => ({
   Stack: { Screen: () => null },
   useLocalSearchParams: () => ({}),
@@ -16,8 +17,8 @@ jest.mock('../src/api/runtime', () => ({
   },
 }));
 jest.mock('../src/features/account/store', () => ({
-  useAccount: () => ({ status: null }),
-  accountSnapshot: () => ({ status: null }),
+  useAccount: () => ({ status: { signedIn: true } }),
+  accountSnapshot: () => ({ status: { signedIn: true } }),
 }));
 jest.mock('../src/features/ask/store', () => {
   const saved = { v: 1, active: null, chats: [] };
@@ -46,12 +47,16 @@ jest.mock('../src/design/primitives', () => {
     [
       'Screen',
       'Button',
+      'IconButton',
       'Field',
       'Group',
       'Heading',
       'FilterChip',
       'Text',
       'Section',
+      'LinkRow',
+      'RowList',
+      'Disclosure',
       'ErrorState',
       'EmptyState',
       'LoadingState',
@@ -62,7 +67,7 @@ jest.mock('../src/features/ask/Options', () => ({
   topics: { housing: 'Housing' },
   Options: () => null,
 }));
-test('Ask mount, typing, options and tab remount never call paid routes', async () => {
+test('signed-in Ask mount, typing, options and tab remount never call paid routes', async () => {
   let view: ReactTestRenderer;
   await act(async () => {
     view = create(<AskScreen />);
@@ -83,6 +88,8 @@ test('Ask mount, typing, options and tab remount never call paid routes', async 
     view = create(<AskScreen />);
   });
   expect(client.askPost).not.toHaveBeenCalled();
+  expect(reconcileChats).not.toHaveBeenCalled();
+  expect(pushChat).not.toHaveBeenCalled();
   await act(async () => {
     view!.unmount();
     askSession.start();

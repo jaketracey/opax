@@ -69,6 +69,17 @@ name: 30 Build a question, streamed answer, native bill citation and grounded fo
 - takeScreenshot: ${EVIDENCE}/30-answer
 - scrollUntilVisible:
     element:
+      id: ask-answer-info
+    direction: UP
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: ask-answer-info
+- takeScreenshot: ${EVIDENCE}/30-answer-notes
+- tapOn:
+    id: ask-answer-info-sheet-done
+- scrollUntilVisible:
+    element:
       id: ask-citation-1
     direction: DOWN
     centerElement: true

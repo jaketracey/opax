@@ -154,7 +154,6 @@ export function ProfileScreen({
         ) : null}
         {identity && b ? (
           <>
-            <AskAbout kind="person" name={identity.name} />
             <Group gap={rhythm.heading}>
               <View style={styles.hero}>
                 <CachedPortrait
@@ -239,6 +238,7 @@ export function ProfileScreen({
                 since collection.
               </Text>
               <EvidenceFooter block={b.identity} id="person" />
+              <AskAbout kind="person" name={identity.name} />
             </Group>
             <RecordBlock
               title="Voting record"
