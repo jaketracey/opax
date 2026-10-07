@@ -19,7 +19,7 @@ import {
   Group,
   Heading,
   LoadingState,
-  Screen,
+  KeyboardStableScreen,
   Section,
   Text,
   Disclosure,
@@ -90,6 +90,7 @@ export default function AskScreen() {
     [syncNotice, setSyncNotice] = useState(''),
     [retryQuestion, setRetryQuestion] = useState('');
   const scroll = useRef<ScrollView>(null),
+    submitTarget = useRef<View>(null),
     entry = useRef<string | undefined>(undefined),
     lastStage = useRef<string | null>(null),
     lastAnswer = useRef<object | null>(null),
@@ -293,7 +294,11 @@ export default function AskScreen() {
       <Stack.Screen
         options={{ title: 'Ask', unstable_headerRightItems: rootHeaderItems }}
       />
-      <Screen testID="ask-screen" scrollRef={scroll}>
+      <KeyboardStableScreen
+        testID="ask-screen"
+        scrollRef={scroll}
+        keyboardTarget={submitTarget}
+      >
         <Group style={styles.composer} gap={rhythm.heading}>
           <Field
             label="Your question"
@@ -306,6 +311,7 @@ export default function AskScreen() {
           />
           {inputError ? <ErrorState message={inputError} /> : null}
           <Button
+            ref={submitTarget}
             label="Ask the record"
             variant="primary"
             disabled={!draft.trim()}
@@ -545,7 +551,7 @@ export default function AskScreen() {
             />
           </Section>
         ) : null}
-      </Screen>
+      </KeyboardStableScreen>
       {optionsOpen ? (
         <Options
           value={s.options}

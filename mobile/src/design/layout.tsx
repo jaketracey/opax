@@ -65,19 +65,22 @@ export function Screen({
   );
 }
 
-/** Search's form owns keyboard space; UIKit retains navigation/tab insets. */
+/** The form owns keyboard space; UIKit retains navigation/tab insets. */
 export function KeyboardStableScreen({
   testID,
   children,
   refreshControl,
   keyboardTarget,
+  scrollRef,
 }: {
   testID?: string;
   children: ReactNode;
   refreshControl?: ReactElement<RefreshControlProps>;
   keyboardTarget: RefObject<View | null>;
+  scrollRef?: RefObject<ScrollView | null>;
 }) {
-  const scroll = useRef<ScrollView>(null);
+  const ownScroll = useRef<ScrollView>(null);
+  const scroll = scrollRef ?? ownScroll;
   const keyboard = useStableKeyboard(scroll, keyboardTarget);
   return (
     <ScrollView

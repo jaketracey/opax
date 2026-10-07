@@ -48,6 +48,7 @@ jest.mock('../src/design/primitives', () => {
   return Object.fromEntries(
     [
       'Screen',
+      'KeyboardStableScreen',
       'Button',
       'IconButton',
       'Field',
