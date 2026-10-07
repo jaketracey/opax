@@ -21,24 +21,21 @@ name: 30 Ask progress over a production-paced stream, a stages-only wait and an 
 - tapOn:
     id: ask-submit
     enabled: true
+# Taps settle for seconds, so wait on states with wide windows, not on a
+# particular early stage (the stage-by-stage order is covered in Jest).
 - extendedWaitUntil:
     visible:
-      id: ask-stage-0-active
+      id: ask-stages
     timeout: 10000
 - runFlow: support/ask-progress-geometry.yaml
 - assertVisible:
     id: ask-cancel
-- takeScreenshot: ${EVIDENCE}/30-progress-reading
+- takeScreenshot: ${EVIDENCE}/30-progress-live
 - extendedWaitUntil:
     visible:
-      id: ask-stage-1-active
-    timeout: 20000
-- runFlow: support/ask-progress-geometry.yaml
-- takeScreenshot: ${EVIDENCE}/30-progress-searching
-- extendedWaitUntil:
-    visible:
-      id: ask-stage-2-active
+      id: ask-reading
     timeout: 30000
+- runFlow: support/ask-progress-geometry.yaml
 - takeScreenshot: ${EVIDENCE}/30-progress-writing
 # Text on screen while the stream is still open: the transport delivers
 # events incrementally, not the whole body at the end.
@@ -56,15 +53,15 @@ name: 30 Ask progress over a production-paced stream, a stages-only wait and an 
 - assertNotVisible:
     id: ask-progress
 - takeScreenshot: ${EVIDENCE}/30-progress-answer
-# 2. Stage events only for a long while (the model is still thinking).
+# 2. Stage events only for a long while (the model is still thinking), asked
+# from the top composer under an answered question: build 14 scrolled this
+# turn behind the navigation bar and left a lone Cancel on an empty page.
 - scrollUntilVisible:
     element:
-      id: ask-new
+      id: ask-question
     direction: UP
     centerElement: true
     timeout: 90000
-- tapOn:
-    id: ask-new
 - tapOn:
     id: ask-question
 - inputText: fixture stages only
@@ -94,25 +91,25 @@ name: 30 Ask progress over a production-paced stream, a stages-only wait and an 
     visible:
       id: ask-machine-label
     timeout: 90000
-# 3. The stream errors after the stages: a calm error with the question kept.
+# 3. From the follow-up field, the stream errors after the stages: a calm
+# error with the question kept and Try again.
 - scrollUntilVisible:
     element:
-      id: ask-new
-    direction: UP
+      id: ask-followup-field
     centerElement: true
+    speed: 20
     timeout: 90000
 - tapOn:
-    id: ask-new
-- tapOn:
-    id: ask-question
+    id: ask-followup-field
 - inputText: fixture slow error
 - scrollUntilVisible:
     element:
-      id: ask-submit
+      id: ask-followup-submit
     centerElement: true
-    timeout: 60000
+    speed: 20
+    timeout: 90000
 - tapOn:
-    id: ask-submit
+    id: ask-followup-submit
     enabled: true
 - extendedWaitUntil:
     visible:

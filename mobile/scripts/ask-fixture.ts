@@ -68,7 +68,7 @@ async function slowStream(res: ServerResponse, mode: string) {
       );
       return res.end();
     }
-    await send(event('delta', { text }), 1500);
+    await send(event('delta', { text }), 2500);
   }
   await send(done, 0);
   res.end();
