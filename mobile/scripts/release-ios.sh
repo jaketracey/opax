@@ -80,11 +80,11 @@ print(build)
 PY
 )
 if [ -z "$BUILD_NUMBER" ]; then
-  BUILD_NUMBER=$(python3 scripts/asc-testflight.py 0.1.0 --next-build)
+  BUILD_NUMBER=$(python3 scripts/asc-testflight.py 1.0.0 --next-build)
 fi
 case "$BUILD_NUMBER" in ''|*[!0-9]*|0|0*) echo 'Build number must be a positive integer without leading zeroes.' >&2; exit 2 ;; esac
 if [ "$UPLOAD" = 1 ]; then
-  NEXT_ASC_BUILD=$(python3 scripts/asc-testflight.py 0.1.0 --next-build)
+  NEXT_ASC_BUILD=$(python3 scripts/asc-testflight.py 1.0.0 --next-build)
   python3 - "$BUILD_NUMBER" "$NEXT_ASC_BUILD" <<'PY'
 import sys
 sys.path.insert(0, 'scripts')
@@ -93,7 +93,7 @@ check_upload_build(sys.argv[1], sys.argv[2])
 PY
 fi
 export OPAX_BUILD_NUMBER=$BUILD_NUMBER
-VERSION=0.1.0
+VERSION=1.0.0
 OUT="$PWD/private/release/$VERSION-$BUILD_NUMBER"
 if [ -e "$OUT" ]; then
   echo 'Release evidence directory already exists; retain it and choose a new build number.' >&2

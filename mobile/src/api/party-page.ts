@@ -8,6 +8,7 @@ import type {
   Slugs,
 } from './catalog-decoders';
 import { joinPerson, rosterChambersFor } from './person-identity';
+import { memberSlugFor } from './catalog-search';
 import {
   billDedupeDivisions,
   billName,
@@ -81,6 +82,20 @@ export function partyMembers(
       Number(slugs.slugs[a]!.includes(' ')),
   );
   for (const slug of orderedSlugs) {
+    if (
+      !memberSlugFor(
+        {
+          kind: 'person',
+          title: slugs.slugs[slug]!,
+          href: `/subject/person/${slug}`,
+          slug,
+          snippet: '',
+          resource: '',
+        },
+        { roster, people, slugs, manifest },
+      )
+    )
+      continue;
     let p;
     try {
       p = joinPerson(slug, slugs, roster, people, manifest);

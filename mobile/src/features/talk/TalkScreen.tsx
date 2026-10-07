@@ -38,6 +38,7 @@ import { canReport, minutesLeft, talkMenu, timeLeft } from './menu';
 import { ControlRow, RoundButton } from './CallControls';
 import { openableSources, SourcesSheet } from './SourcesSheet';
 import { Consent, VoiceDisclosure } from './Consent';
+import { accountCopy } from '../account/copy';
 
 type Action = 'start' | 'signIn' | 'search' | 'settings' | 'retry';
 
@@ -536,6 +537,15 @@ export default function TalkScreen({
                     {s.status.unlimited
                       ? 'Unlimited minutes'
                       : `${minutesLeft(s.status.remainingSeconds)} left`}
+                  </Text>
+                ) : null}
+                {action === 'signIn' ? (
+                  <Text
+                    variant="metadata"
+                    style={styles.centre}
+                    testID="talk-age-limit"
+                  >
+                    {accountCopy.ageLimit}
                   </Text>
                 ) : null}
                 {action === 'start' ? <VoiceDisclosure /> : null}

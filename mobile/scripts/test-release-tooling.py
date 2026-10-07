@@ -94,7 +94,7 @@ class FakeConnect:
 
 
 def args(**values):
-    return argparse.Namespace(**{"version": "0.1.0", "build": "7", "next_build": False,
+    return argparse.Namespace(**{"version": "1.0.0", "build": "7", "next_build": False,
         "dry_run": True, "wait_minutes": 0, "what_to_test": "Check public browsing",
         "locale": "en-AU", "tester": "tester@example.invalid", **values})
 
@@ -109,9 +109,27 @@ class SafetyTests(unittest.TestCase):
         self.run_quiet(args(), api)
         self.assertFalse(api.writes)
         filters = next(f for p, f in api.reads if p == "/v1/builds")
-        self.assertEqual(filters["filter[preReleaseVersion.version]"], "0.1.0")
+        self.assertEqual(filters["filter[preReleaseVersion.version]"], "1.0.0")
         self.assertEqual(filters["filter[version]"], "7")
         self.assertEqual(filters["filter[preReleaseVersion.platform]"], "IOS")
+
+    def test_next_build_stays_monotonic_across_marketing_versions(self):
+        class HistoricalBuilds(FakeConnect):
+            def list(self, path, **filters):
+                self.reads.append((path, filters))
+                return [
+                    {"attributes": {"version": "9"}},  # 0.1.0
+                    {"attributes": {"version": "10"}},  # 0.1.0
+                    {"attributes": {"version": "2"}},  # 1.0.0
+                ]
+        api = HistoricalBuilds()
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            asc.run(args(next_build=True), api)
+        self.assertEqual(output.getvalue().strip(), "11")
+        self.assertEqual(api.reads, [("/v1/builds", {
+            "filter[app]": "opax-app", "filter[preReleaseVersion.platform]": "IOS"})])
+        self.assertFalse(api.writes)
 
     def test_dry_run_processing_and_missing_group_do_not_create(self):
         api = FakeConnect(state="PROCESSING", group=False)
@@ -284,7 +302,7 @@ class PrivacyTests(unittest.TestCase):
             with zipfile.ZipFile(ipa, "w") as archive:
                 archive.writestr("Payload/OPAX.app/Info.plist", b"fixture")
                 archive.writestr("Payload/extra.log", b"SYNTHETIC_TEAM")
-            argv = ["verify", str(ipa), "--kind", "distribution", "--version", "0.1.0",
+            argv = ["verify", str(ipa), "--kind", "distribution", "--version", "1.0.0",
                     "--build", "5", "--commit", commit, "--xcode-build", "fixture",
                     "--output", str(directory / "verification.json")]
             with patch.object(sys, "argv", argv), patch.object(verify, "load_credentials"), \
@@ -832,7 +850,7 @@ class BundleAttackTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             directory = Path(d)
             (directory / "commit.txt").write_text("a" * 40)
-            argv = ["verify", str(directory / "OPAX.app"), "--kind", "archive", "--version", "0.1.0",
+            argv = ["verify", str(directory / "OPAX.app"), "--kind", "archive", "--version", "1.0.0",
                     "--build", "5", "--commit", "a" * 40, "--xcode-build", "fixture",
                     "--output", str(directory / "verification.json")]
             rules = subprocess.CompletedProcess([], 0, json.dumps([{"source": "[^]", "flags": ""}]), "")
@@ -918,8 +936,7 @@ class BundleAttackTests(unittest.TestCase):
 
 class ProductionVoiceTests(unittest.TestCase):
     def info(self):
-        return {"NSMotionUsageDescription": verify.MOTION_PURPOSE,
-                "NSMicrophoneUsageDescription": verify.VOICE_POLICY["microphonePurpose"],
+        return {"NSMicrophoneUsageDescription": verify.VOICE_POLICY["microphonePurpose"],
                 "OPAXProductionVoiceEnabled": True, "OPAXVoiceConsentDefault": False,
                 "OPAXVoiceAllowedRoutes": verify.VOICE_POLICY["routes"]}
 
@@ -947,28 +964,23 @@ class ProductionVoiceTests(unittest.TestCase):
             with self.assertRaises(ReleaseError): verify.production_voice_enabled(value)
 
     def test_both_purpose_modes_and_on_device_location(self):
-        verify.verify_voice_info({"NSMotionUsageDescription": verify.MOTION_PURPOSE}, False)
+        verify.verify_voice_info({}, False)
         verify.verify_voice_info(self.info(), True)
-        for enabled, info in ((False, {"NSMotionUsageDescription": verify.MOTION_PURPOSE}), (True, self.info())):
+        for enabled, info in ((False, {}), (True, self.info())):
             info["NSLocationWhenInUseUsageDescription"] = verify.LOCATION_PURPOSE
             verify.verify_voice_info(info, enabled)
         for enabled, info in ((True, {}), (False, self.info())):
             with self.assertRaises(ReleaseError): verify.verify_voice_info(info, enabled)
 
-    def test_motion_purpose_is_required_and_exact_in_both_voice_modes(self):
+    def test_unused_motion_purpose_is_refused_in_both_voice_modes(self):
         for enabled in (False, True):
-            info = self.info() if enabled else {"NSMotionUsageDescription": verify.MOTION_PURPOSE}
+            info = self.info() if enabled else {}
             verify.verify_voice_info(info, enabled)
-            for key, value in (("NSMotionUsageDescription", "draft"),
-                               ("NSMotionUsageDescription", "Allow motion activity"),
-                               ("NSMotionUsageDescription", verify.MOTION_PURPOSE + " "),
+            for key, value in (("NSMotionUsageDescription", "unused motion"),
                                ("NSCameraUsageDescription", "unshipped"),
                                ("NSLocationAlwaysUsageDescription", verify.LOCATION_PURPOSE)):
-                with self.subTest(enabled=enabled, key=key, value=value), self.assertRaises(ReleaseError):
+                with self.subTest(enabled=enabled, key=key), self.assertRaises(ReleaseError):
                     verify.verify_voice_info({**info, key: value}, enabled)
-            info.pop("NSMotionUsageDescription")
-            with self.subTest(enabled=enabled, missing=True), self.assertRaises(ReleaseError):
-                verify.verify_voice_info(info, enabled)
 
     def test_wrong_purpose_routes_auto_consent_and_fixture_metadata_fail(self):
         for key, value in (("NSMicrophoneUsageDescription", "draft"), ("OPAXVoiceConsentDefault", True),
