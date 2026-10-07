@@ -898,6 +898,11 @@ class BundleAttackTests(unittest.TestCase):
         for url in (b"https://api.segment.io/v1/track", b"https://us.i.posthog.com/capture", b"crashlytics", b"HTTPS://API.HEAP.IO/track"):
             self.assertTrue(verify.has_analytics(url))
         self.assertFalse(verify.has_analytics(b"https://opax.com.au/api/bills"))
+        # camelCase app identifiers that merely contain "sentry" are not the SDK (build 15 false positive).
+        for safe in (b"ReportsEntry", b"ignoreAllLogsENTRY_EXIT"):
+            self.assertFalse(verify.SDK_PATTERN.search(safe), safe)
+        for sdk in (b"@sentry/react-native", b"RNSentry", b"io.sentry.android", b"Sentry", b"SentrySDK"):
+            self.assertTrue(verify.SDK_PATTERN.search(sdk), sdk)
         with tempfile.TemporaryDirectory() as d:
             app = Path(d)
             for name in verify.SHIPPED_FRAMEWORKS:

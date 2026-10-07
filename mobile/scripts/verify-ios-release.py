@@ -27,7 +27,7 @@ GUARDS = (
     "Cross-origin API requests are forbidden",
     "Redirects are not allowed for catalog data",
 )
-SDK_PATTERN = re.compile(rb"posthog|mixpanel|amplitude|segment\.com|sentry|appsflyer|"
+SDK_PATTERN = re.compile(rb"posthog|mixpanel|amplitude|segment\.com|(?-i:(?<![a-z]))sentry|appsflyer|"
                          rb"firebaseanalytics|appcenter|bugsnag|datadog|fbSDK|crashlytics|heapanalytics", re.I)
 SHIPPED_FRAMEWORKS = {"ExpoModulesJSI.framework", "hermesvm.framework", "ExpoFont.framework",
                       "ExpoModulesCore.framework", "React.framework", "ReactNativeDependencies.framework",
