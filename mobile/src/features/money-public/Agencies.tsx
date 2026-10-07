@@ -2,7 +2,9 @@ import { useCallback, useMemo, useState } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
   AsAtLine,
-  Button,
+  LinkRow,
+  BigFigure,
+  InfoButton,
   Field,
   Group,
   SourceLink,
@@ -19,6 +21,7 @@ import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { money } from './runtime';
 import {
   MoneyHeader,
+  MoneyChoices,
   MoneyList,
   OrganisationWebLink,
   Provenance,
@@ -73,22 +76,16 @@ export default function Agencies() {
               testID="agencies-search"
               returnKeyType="done"
             />
-            <Group>
-              {(
-                [
-                  ['total', 'Contract value'],
-                  ['count', 'Number of contracts'],
-                  ['suppliers', 'Number of suppliers'],
-                  ['name', 'Name'],
-                ] as const
-              ).map(([value, label]) => (
-                <Button
-                  key={value}
-                  label={`Sort by ${label}`}
-                  onPress={() => setSort(value)}
-                />
-              ))}
-            </Group>
+            <MoneyChoices
+              value={sort}
+              onChange={setSort}
+              options={[
+                ['total', 'Contract value'],
+                ['count', 'Contracts'],
+                ['suppliers', 'Suppliers'],
+                ['name', 'Name'],
+              ]}
+            />
             <ResultCount
               count={data ? rows.length : null}
               noun="agencies in the available records"
@@ -114,10 +111,12 @@ export default function Agencies() {
         footer={
           data ? (
             <Group>
-              <Text wordSafe>
-                Agency names appear as recorded. Renamed departments are
-                separate entries; no succession or combined history is assumed.
-              </Text>
+              <InfoButton
+                title="About agency names"
+                notes={[
+                  'Agency names appear as recorded. Renamed departments are separate entries; no succession or combined history is assumed.',
+                ]}
+              />
               <Provenance meta={data.meta} />
             </Group>
           ) : null
@@ -191,39 +190,29 @@ export function Agency() {
             />
             {profile ? (
               <>
-                <Text wordSafe variant="figureInline">
-                  {formatMoneyCompact(profile.total)} ·{' '}
-                  {formatCount(profile.count)} contracts
-                </Text>
+                <BigFigure
+                  value={formatMoneyCompact(profile.total)}
+                  label="Recorded contract value"
+                  detail={`${formatCount(profile.count)} contracts`}
+                  accent="money"
+                />
                 <AsAtLine asOf={data!.meta.asOf} citation="AusTender" />
               </>
             ) : null}
-            <Button
-              label="Value over time"
-              testID="agency-years"
-              onPress={() => {
-                setView('years');
+            <MoneyChoices
+              value={view}
+              onChange={(v) => {
+                setView(v);
                 setQuery('');
               }}
+              options={[
+                ['years', 'Value over time', 'agency-years'],
+                ['suppliers', 'Suppliers', 'agency-suppliers'],
+                ['contracts', 'Contracts', 'agency-contracts'],
+              ]}
             />
-            <Button
-              label="Suppliers"
-              testID="agency-suppliers"
-              onPress={() => {
-                setView('suppliers');
-                setQuery('');
-              }}
-            />
-            <Button
-              label="Contracts"
-              testID="agency-contracts"
-              onPress={() => {
-                setView('contracts');
-                setQuery('');
-              }}
-            />
-            <Button
-              label="Discover: companies in both"
+            <LinkRow
+              title="Discover: companies in both"
               testID="agency-discover-both"
               onPress={() =>
                 router.push({

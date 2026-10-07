@@ -3,6 +3,7 @@
 // was shown (About, Person, Party, Bill, Leads); it now lives in one place.
 // Coverage files do not publish licence fields: never infer an open licence.
 import { canonicalUrl } from '../../navigation/external';
+import { publicMoneyDatasets } from '../money-public/attribution';
 
 export interface DatasetLink {
   label: string;
@@ -278,7 +279,9 @@ export const datasets: Dataset[] = [
     id: 'austender-agencies',
     name: 'Government agency contract records',
     publisher: 'Department of Finance, AusTender',
+    licence: 'CC BY 3.0 AU',
     terms: [
+      'AusTender, Department of Finance. Latest contract notice per amendment lineage. CC BY 3.0 AU.',
       'Agency search results are derived from published AusTender contract records. Refer to the original record for its reuse terms.',
     ],
     links: [{ label: 'AusTender', url: 'https://www.tenders.gov.au/' }],
@@ -298,6 +301,7 @@ export const datasets: Dataset[] = [
 // Source review: docs/DATA-MONEY.md sections 1.3 and 1.4. A combined
 // export keeps each publisher's own terms, rather than claiming one licence.
 datasets.push(
+  ...publicMoneyDatasets,
   {
     id: 'ministerial-diaries', name: 'Ministerial diary disclosures',
     publisher: 'NSW Cabinet Office; Queensland Cabinet',

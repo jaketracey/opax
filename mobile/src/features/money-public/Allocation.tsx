@@ -1,7 +1,8 @@
 import { useCallback, useMemo, useState } from 'react';
 import {
   AsAtLine,
-  Button,
+  Disclosure,
+  InfoButton,
   Field,
   Group,
   KeyValueList,
@@ -18,7 +19,13 @@ import { RecordStatus } from '../RecordStatus';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { combine } from './catalog';
 import { money } from './runtime';
-import { MoneyHeader, MoneyList, ResultCount, Title } from './parts';
+import {
+  MoneyHeader,
+  MoneyChoices,
+  MoneyList,
+  ResultCount,
+  Title,
+} from './parts';
 export default function Allocation() {
   const load = useCallback(async (refresh: boolean) => {
     const [report, allocation, history, locations] = await Promise.all([
@@ -41,7 +48,8 @@ export default function Allocation() {
     [state, setState] = useState(''),
     [through, setThrough] = useState(''),
     [seat, setSeat] = useState(''),
-    [comparison, setComparison] = useState(false);
+    [comparison, setComparison] = useState(false),
+    [marginOpen, setMarginOpen] = useState(false);
   const rows = useMemo(
     () =>
       (stage === 'history'
@@ -107,20 +115,14 @@ export default function Allocation() {
               label="Loading community funding"
               testID="allocation-status"
             />
-            <Button
-              label="Published awards"
-              testID="allocation-awards"
-              onPress={() => setStage('awards')}
-            />
-            <Button
-              label="Invitations"
-              testID="allocation-invitations"
-              onPress={() => setStage('invitations')}
-            />
-            <Button
-              label="Earlier grants"
-              testID="allocation-history"
-              onPress={() => setStage('history')}
+            <MoneyChoices
+              value={stage}
+              onChange={setStage}
+              options={[
+                ['awards', 'Published awards', 'allocation-awards'],
+                ['invitations', 'Invitations', 'allocation-invitations'],
+                ['history', 'Earlier grants', 'allocation-history'],
+              ]}
             />
             {data ? (
               <>
@@ -159,99 +161,116 @@ export default function Allocation() {
                 </Text>
               </>
             ) : null}
-            <Button
-              label={
-                comparison
-                  ? 'Hide the wider picture'
-                  : 'Compare the wider picture'
-              }
+            <Disclosure
+              label="Compare the wider picture"
               testID="allocation-comparison"
-              onPress={() => setComparison((v) => !v)}
-              expanded={comparison}
-            />
-            {comparison && data ? (
-              <Section title="How invitations were shared">
-                <Text wordSafe>
-                  These comparisons use the department’s November 2025
-                  invitation list.
-                </Text>
-                {data.allocation.comparison.map((r) => (
-                  <Group key={r.name}>
+              open={comparison}
+              onToggle={setComparison}
+            >
+              {data ? (
+                <Section
+                  title="How invitations were shared"
+                  icon="chart.bar"
+                  accent="money"
+                  info={{
+                    title: 'About the seat comparison',
+                    notes: [
+                      data.allocation.provenance,
+                      'The seat comparison reproduces the Centre for Public Integrity’s published Table 3, including its by-election adjustments and Brisbane exception. Opax has not independently reproduced it from every project’s location. The electorate picker uses the AEC’s unadjusted 2025 baseline.',
+                    ],
+                  }}
+                >
+                  <Text wordSafe>
+                    These comparisons use the department’s November 2025
+                    invitation list.
+                  </Text>
+                  {data.allocation.comparison.map((r) => (
+                    <Group key={r.name}>
+                      <Text wordSafe variant="strong">
+                        {r.name}
+                      </Text>
+                      <KeyValueList
+                        items={[
+                          {
+                            label: 'Published comparison',
+                            value: formatMoneyCompact(r.actual),
+                          },
+                          {
+                            label: 'if shared in proportion to seat numbers',
+                            value: formatMoneyCompact(r.expected),
+                          },
+                        ]}
+                      />
+                    </Group>
+                  ))}
+                  <AsAtLine
+                    asOf={data.allocation.asOf}
+                    citation="Centre for Public Integrity, Table 3"
+                  />
+                  <SourceLink
+                    citation="Centre for Public Integrity report"
+                    url={data.allocation.sources.cpi!}
+                    kind="record"
+                  />
+                </Section>
+              ) : null}
+            </Disclosure>
+            <Disclosure
+              label="Look up an electorate’s election margin"
+              testID="allocation-margin"
+              open={marginOpen}
+              onToggle={setMarginOpen}
+            >
+              <Section
+                title="Election margin"
+                accent="money"
+                icon="chart.bar"
+                info={{
+                  title: 'About election margins',
+                  notes: [
+                    'These margins describe seats before the 2025 federal election.',
+                  ],
+                }}
+              >
+                <Field
+                  label="Electorate"
+                  value={seat}
+                  onChangeText={setSeat}
+                  testID="allocation-margin-search"
+                  returnKeyType="done"
+                />
+                {seats.map((s) => (
+                  <Group key={`${s.name}-${s.state}`}>
                     <Text wordSafe variant="strong">
-                      {r.name}
+                      {s.name} · {s.state}
                     </Text>
-                    <KeyValueList
-                      items={[
-                        {
-                          label: 'Published comparison',
-                          value: formatMoneyCompact(r.actual),
-                        },
-                        {
-                          label: 'if shared in proportion to seat numbers',
-                          value: formatMoneyCompact(r.expected),
-                        },
-                      ]}
+                    <Text wordSafe>
+                      {s.party} · {formatPercent(s.margin)} · {s.baseline}
+                    </Text>
+                    <AsAtLine
+                      asOf={data!.allocation.asOf}
+                      citation="AEC seat status, 2025 election"
                     />
                   </Group>
                 ))}
-                <AsAtLine
-                  asOf={data.allocation.asOf}
-                  citation="Centre for Public Integrity, Table 3"
-                />
-                <Text wordSafe>{data.allocation.provenance}</Text>
-                <Text wordSafe>
-                  The seat comparison reproduces the Centre for Public
-                  Integrity’s published Table 3, including its by-election
-                  adjustments and Brisbane exception. Opax has not independently
-                  reproduced it from every project’s location. The electorate
-                  picker uses the AEC’s unadjusted 2025 baseline.
-                </Text>
-                <SourceLink
-                  citation="Centre for Public Integrity report"
-                  url={data.allocation.sources.cpi!}
-                  kind="record"
-                />
-              </Section>
-            ) : null}
-            <Section title="Look up an electorate’s election margin">
-              <Text wordSafe>
-                These margins describe seats before the 2025 federal election.
-              </Text>
-              <Field
-                label="Electorate"
-                value={seat}
-                onChangeText={setSeat}
-                testID="allocation-margin-search"
-                returnKeyType="done"
-              />
-              {seats.map((s) => (
-                <Group key={`${s.name}-${s.state}`}>
-                  <Text wordSafe variant="strong">
-                    {s.name} · {s.state}
-                  </Text>
+                {seat && !seats.length ? (
                   <Text wordSafe>
-                    {s.party} · {formatPercent(s.margin)} · {s.baseline}
+                    No electorate matches the available AEC baseline.
                   </Text>
-                  <AsAtLine
-                    asOf={data!.allocation.asOf}
+                ) : null}
+                {data ? (
+                  <SourceLink
                     citation="AEC seat status, 2025 election"
+                    url={data.allocation.sources.aec!}
+                    kind="record"
                   />
-                </Group>
-              ))}
-              {seat && !seats.length ? (
-                <Text wordSafe>
-                  No electorate matches the available AEC baseline.
-                </Text>
-              ) : null}
-              {data ? (
-                <SourceLink
-                  citation="AEC seat status, 2025 election"
-                  url={data.allocation.sources.aec!}
-                  kind="record"
-                />
-              ) : null}
-            </Section>
-            <ResultCount count={data ? rows.length : null} noun="project records" />
+                ) : null}
+              </Section>
+            </Disclosure>
+            <ResultCount
+              count={data ? rows.length : null}
+              noun="project records"
+            />
           </>
         }
         render={(r, i) => {
@@ -309,33 +328,19 @@ export default function Allocation() {
         }}
         footer={
           data ? (
-            <Group>
-              <Text wordSafe variant="fine">
-                A difference in funding does not establish that a project lacked
-                merit. The government describes this program as delivering
-                election commitments. Assessment scores and unsuccessful
-                applications would be needed to test merit.
-              </Text>
-              <Text wordSafe variant="fine">
-                The earlier-grants view is a selection of sourced project
-                examples from other programs, not a complete national or state
-                total. Its year slider uses each notice’s original publication
-                year, with the latest known award value. It does not reconstruct
-                the record as it stood that year.
-              </Text>
-              {stage === 'history'
-                ? data.history.methodology.map((m, i) => (
-                    <Text key={i} wordSafe variant="fine">
-                      {m}
-                    </Text>
-                  ))
-                : null}
-              <SourceLink
-                citation="Departmental invitation list (one withdrawn project excluded)"
-                url={data.allocation.sources.department!}
-                kind="record"
-              />
-            </Group>
+            <InfoButton
+              title="About community funding"
+              notes={[
+                'A difference in funding does not establish that a project lacked merit. The government describes this program as delivering election commitments. Assessment scores and unsuccessful applications would be needed to test merit.',
+                'The earlier-grants view is a selection of sourced project examples from other programs, not a complete national or state total. Its year slider uses each notice’s original publication year, with the latest known award value. It does not reconstruct the record as it stood that year.',
+                ...data.locations.methodology,
+                ...(stage === 'history'
+                  ? data.history.methodology.filter(
+                      (m) => !m.includes('© OpenStreetMap'),
+                    )
+                  : []),
+              ]}
+            />
           ) : null
         }
       />

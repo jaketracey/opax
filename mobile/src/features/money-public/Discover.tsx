@@ -4,10 +4,11 @@ import { catalogs } from '../../api/runtime';
 import {
   AsAtLine,
   Button,
+  InfoButton,
+  ViewOriginal,
   Field,
   Group,
   KeyValueList,
-  SourceLink,
   Text,
 } from '../../design/primitives';
 import {
@@ -27,6 +28,7 @@ import { publicSignal } from './discovery';
 import { isOrganisation } from './privacy';
 import {
   MoneyHeader,
+  MoneyChoices,
   MoneyList,
   OrganisationWebLink,
   ResultCount,
@@ -81,14 +83,13 @@ export default function Discover() {
               label="Loading Discover"
               testID="discover-status"
             />
-            {leadCategories.map((c) => (
-              <Button
-                key={c}
-                label={categoryOption(c)}
-                testID={`discover-${c}`}
-                onPress={() => setCategory(c)}
-              />
-            ))}
+            <MoneyChoices
+              value={category}
+              onChange={setCategory}
+              options={leadCategories.map(
+                (c) => [c, categoryOption(c), `discover-${c}`] as const,
+              )}
+            />
             <Field
               label="Find in the available records"
               value={query}
@@ -145,11 +146,11 @@ export default function Discover() {
                 ))}
               </Group>
             ) : null}
-            {s.caveats.map((c, j) => (
-              <Text key={j} wordSafe variant="fine">
-                {c}
-              </Text>
-            ))}
+            <InfoButton
+              title="About this lead"
+              testID={`discover-notes-${i}`}
+              notes={s.caveats}
+            />
             <AsAtLine asOf={data!.generated_at} citation={s.citation} />
             {s.category !== 'recipient_concentration' &&
             isOrganisation(s.entity) ? (
@@ -158,29 +159,24 @@ export default function Discover() {
                 path={`/subject/supplier/${encodeURIComponent(s.entity)}`}
               />
             ) : null}
-            {s.evidence.map((e, j) =>
-              e.url ? (
-                <SourceLink
-                  key={j}
-                  citation={e.register}
-                  record={e.record ?? undefined}
-                  url={e.url}
-                  kind={e.kind}
-                  testID={`discover-source-${i}-${j}`}
-                />
-              ) : null,
-            )}
+            <ViewOriginal
+              testID={`discover-source-${i}-0`}
+              sources={s.evidence.flatMap((e) =>
+                e.url
+                  ? [
+                      {
+                        label: `${e.register}${e.record ? ` · ${e.record}` : ''}`,
+                        url: e.url,
+                      },
+                    ]
+                  : [],
+              )}
+            />
           </Group>
         )}
         footer={
           data ? (
-            <Group>
-              {data.methodology.map((m, i) => (
-                <Text key={i} wordSafe variant="fine">
-                  {m}
-                </Text>
-              ))}
-            </Group>
+            <InfoButton title="About Discover" notes={data.methodology} />
           ) : null
         }
       />

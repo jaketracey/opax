@@ -230,6 +230,12 @@ name: 42 Electorate grants, programs and monthly largest; static public-money sc
 - takeScreenshot: ${EVIDENCE}/42-seat-comparison
 - scrollUntilVisible:
     element:
+      id: allocation-margin
+    centerElement: true
+- tapOn:
+    id: allocation-margin
+- scrollUntilVisible:
+    element:
       id: allocation-margin-search
     direction: DOWN
     visibilityPercentage: 10

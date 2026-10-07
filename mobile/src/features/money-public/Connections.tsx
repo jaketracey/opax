@@ -1,7 +1,8 @@
 import { useCallback, useDeferredValue, useMemo, useState } from 'react';
 import {
   AsAtLine,
-  Button,
+  InfoButton,
+  Disclosure,
   Field,
   Group,
   SourceLink,
@@ -14,6 +15,7 @@ import type { decodeEvidence } from './data';
 import type { RecordResult } from '../../api/client';
 import {
   MoneyHeader,
+  MoneyChoices,
   MoneyList,
   OrganisationWebLink,
   ResultCount,
@@ -86,13 +88,17 @@ export default function Connections() {
               onChangeText={setQuery}
               returnKeyType="done"
             />
-            {['', 'program', 'place', 'electorate', 'organisation'].map((k) => (
-              <Button
-                key={k}
-                label={k || 'All kinds'}
-                onPress={() => setKind(k)}
-              />
-            ))}
+            <MoneyChoices
+              value={kind}
+              onChange={setKind}
+              options={[
+                ['', 'All kinds'],
+                ['program', 'Programs'],
+                ['place', 'Places'],
+                ['electorate', 'Electorates'],
+                ['organisation', 'Organisations'],
+              ]}
+            />
             <ResultCount count={data ? rows.length : null} noun="connections" />
             {data ? (
               <>
@@ -100,7 +106,10 @@ export default function Connections() {
                   asOf={data.asOf}
                   citation="OPAX collected source corpus"
                 />
-                <Text wordSafe>{data.note}</Text>
+                <InfoButton
+                  title="About programs and places"
+                  notes={[data.note]}
+                />
               </>
             ) : null}
           </>
@@ -124,43 +133,47 @@ export default function Connections() {
               />
             ) : (
               <>
-                <Button
+                <Disclosure
                   label="Source excerpts"
                   testID={`connection-open-${r.id}`}
-                  onPress={() => open(r.id)}
-                />
-                {selected?.id === r.id ? (
-                  <Group>
-                    <RecordStatus
-                      record={selected.record ?? null}
-                      error={selected.error}
-                      refreshing={false}
-                      refresh={() => open(r.id, true)}
-                      retry={() => open(r.id)}
-                      label="Opening source excerpts"
-                      testID={`connection-evidence-${r.id}`}
-                    />
-                    {selected.excerpts
-                      ? selected.excerpts.map((e, i) => (
-                          <Group key={i}>
-                            <Text wordSafe>{e.text}</Text>
-                            <AsAtLine
-                              asOf={e.date || data!.asOf}
-                              citation={e.source}
-                            />
-
-                            {e.url ? (
-                              <SourceLink
+                  open={selected?.id === r.id}
+                  onToggle={(expanded) =>
+                    expanded ? void open(r.id) : setSelected(undefined)
+                  }
+                >
+                  {selected?.id === r.id ? (
+                    <Group>
+                      <RecordStatus
+                        record={selected.record ?? null}
+                        error={selected.error}
+                        refreshing={false}
+                        refresh={() => open(r.id, true)}
+                        retry={() => open(r.id)}
+                        label="Opening source excerpts"
+                        testID={`connection-evidence-${r.id}`}
+                      />
+                      {selected.excerpts
+                        ? selected.excerpts.map((e, i) => (
+                            <Group key={i}>
+                              <Text wordSafe>{e.text}</Text>
+                              <AsAtLine
+                                asOf={e.date || data!.asOf}
                                 citation={e.source}
-                                url={e.url}
-                                kind="record"
                               />
-                            ) : null}
-                          </Group>
-                        ))
-                      : null}
-                  </Group>
-                ) : null}
+
+                              {e.url ? (
+                                <SourceLink
+                                  citation={e.source}
+                                  url={e.url}
+                                  kind="record"
+                                />
+                              ) : null}
+                            </Group>
+                          ))
+                        : null}
+                    </Group>
+                  ) : null}
+                </Disclosure>
               </>
             )}
           </Group>

@@ -45,6 +45,7 @@ export function fromWebPath(
   | { pathname: '/search'; params: Record<string, string> }
   | ReturnType<typeof docRoute>
   | ReturnType<typeof billTextRoute>
+  | ReturnType<typeof moneyRoute>
   | typeof recentRecordsRoute
   | typeof expenseGlossaryRoute
   | ReturnType<typeof reportRoute>

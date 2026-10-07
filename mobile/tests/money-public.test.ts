@@ -294,7 +294,6 @@ describe('route and transport boundaries', () => {
   test.each([
     '/api/ask',
     '/api/search',
-    '/api/search-all?kind=grant&q=x',
     '/grants/federal/shard-00.json',
     '/grants/vic/programs/a.json',
     '/grants/federal/programs/../secret.json',
@@ -323,7 +322,6 @@ describe('route and transport boundaries', () => {
     '/subject/supplier/s-123',
     '/money/grants/federal/recipient/person%3Aada',
     '/money/grants?open=person%3Aada',
-    '/money',
   ])('no new private profile or money-map ownership %s', (path) =>
     expect(fromWebPath(path)).toBeNull(),
   );

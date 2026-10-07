@@ -2,7 +2,9 @@ import { useCallback, useMemo, useState } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
   AsAtLine,
-  Button,
+  LinkRow,
+  BigFigure,
+  InfoButton,
   Field,
   Group,
   KeyValueList,
@@ -21,6 +23,7 @@ import { money } from './runtime';
 import type { Jurisdiction } from './data';
 import {
   MoneyHeader,
+  MoneyChoices,
   MoneyList,
   Provenance,
   ResultCount,
@@ -67,7 +70,6 @@ function GrantList({
   const [query, setQuery] = useState(
     initialView === 'electorates' ? (seat ?? '') : '',
   );
-  const [coverage, setCoverage] = useState(false);
   const rows = useMemo(
     () =>
       (view === 'programs' ? (data?.programs ?? []) : (data?.seats ?? []))
@@ -95,8 +97,8 @@ function GrantList({
             <Title id="grants-title">
               {jur === 'federal' ? 'Commonwealth' : 'Queensland'} grants
             </Title>
-            <Button
-              label={
+            <LinkRow
+              title={
                 jur === 'federal'
                   ? 'Switch to Queensland'
                   : 'Switch to Commonwealth'
@@ -108,24 +110,21 @@ function GrantList({
                 })
               }
             />
-            <Button
-              label="Programs"
-              testID="grants-programs"
-              onPress={() => {
-                setView('programs');
-                setQuery('');
+            <MoneyChoices
+              value={view}
+              onChange={(v) => {
+                setView(v);
+                setQuery(v === 'electorates' ? (seat ?? '') : '');
               }}
+              options={[
+                ['programs', 'Programs', 'grants-programs'],
+                ['electorates', 'Electorates', 'grants-electorates'],
+              ]}
             />
-            <Button
-              label="Electorates"
-              testID="grants-electorates"
-              onPress={() => {
-                setView('electorates');
-                setQuery(seat ?? '');
-              }}
-            />
-            <Button
-              label="The month’s largest grants"
+            <LinkRow
+              title="The month’s largest grants"
+              accent="money"
+              icon="chart.bar"
               testID="grants-largest"
               onPress={() => router.push('/largest-grants')}
             />
@@ -158,12 +157,15 @@ function GrantList({
                   {formatMoneyCompact(data.counts.donorDollars)}, went to those
                   donors
                 </Text>
-                <Button
-                  label={coverage ? 'Hide source caveats' : 'Source caveats'}
-                  onPress={() => setCoverage((v) => !v)}
-                  expanded={coverage}
+                <InfoButton
+                  title="About donor overlap"
+                  testID="grants-notes"
+                  notes={[
+                    data.meta.coverage,
+                    data.meta.threshold,
+                    ...data.meta.caveats,
+                  ]}
                 />
-                {coverage ? <Provenance meta={data.meta} /> : null}
               </Group>
             ) : null}
             <ResultCount count={data ? rows.length : null} noun={view} />
@@ -216,7 +218,15 @@ function GrantList({
         footer={
           data ? (
             <>
-              <Section title="Donor overlap">
+              <Section
+                title="Donor overlap"
+                icon="banknote"
+                accent="money"
+                info={{
+                  title: 'About donor overlap',
+                  notes: data.meta.caveats,
+                }}
+              >
                 <KeyValueList
                   items={[
                     {
@@ -272,7 +282,23 @@ export function SeatGrants({
       )
     : undefined;
   return (
-    <Section title="Grants in this seat" testID="seat-grants">
+    <Section
+      title="Grants in this seat"
+      icon="banknote"
+      accent="money"
+      testID="seat-grants"
+      info={
+        data
+          ? {
+              title: 'About grants in this seat',
+              notes: [
+                'Electorate mappings are approximate and use the award’s delivery or recipient postcode.',
+                ...data.meta.caveats,
+              ],
+            }
+          : undefined
+      }
+    >
       <RecordStatus
         {...status}
         label="Loading grants in this seat"
@@ -281,23 +307,21 @@ export function SeatGrants({
       {data ? (
         <Group>
           {seat ? (
-            <Text wordSafe testID="seat-grants-total">
-              {formatMoneyCompact(seat.total)} in {formatCount(seat.count)}{' '}
-              Commonwealth grants
-            </Text>
+            <BigFigure
+              value={formatMoneyCompact(seat.total)}
+              label={`In ${formatCount(seat.count)} Commonwealth grants`}
+              accent="money"
+              testID="seat-grants-total"
+            />
           ) : (
             <Text wordSafe>
               No matching federal division is recorded in the grant export. This
               is not a zero total.
             </Text>
           )}
-          <Text wordSafe>
-            Electorate mappings are approximate and use the award’s delivery or
-            recipient postcode.
-          </Text>
           <AsAtLine asOf={data.meta.asOf} citation={data.meta.source} />
-          <Button
-            label="See all"
+          <LinkRow
+            title="See all"
             testID="seat-grants-all"
             onPress={() =>
               router.push({
@@ -313,8 +337,8 @@ export function SeatGrants({
           />
         </Group>
       ) : null}
-      <Button
-        label="Public money"
+      <LinkRow
+        title="Public money"
         testID="seat-public-money"
         onPress={() => router.push('/public-money')}
       />

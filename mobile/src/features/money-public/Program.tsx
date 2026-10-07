@@ -2,11 +2,12 @@ import { useCallback, useMemo, useState } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
   AsAtLine,
-  Button,
+  LinkRow,
+  BigFigure,
+  InfoButton,
+  ViewOriginal,
   Field,
   Group,
-  KeyValueList,
-  Section,
   SourceLink,
   Text,
 } from '../../design/primitives';
@@ -19,6 +20,7 @@ import { programRecipients } from './data';
 import { money } from './runtime';
 import {
   MoneyHeader,
+  MoneyChoices,
   MoneyList,
   OrganisationWebLink,
   Provenance,
@@ -111,28 +113,23 @@ export default function Program() {
               label="Loading the program"
               testID="program-status"
             />
-            <Button
-              label="The month’s largest grants"
+            <LinkRow
+              title="The month’s largest grants"
               testID="program-largest"
               onPress={() => router.push('/largest-grants')}
             />
             {program ? (
               <>
                 <Text wordSafe>{program.agency}</Text>
-                <KeyValueList
-                  items={[
-                    {
-                      label:
-                        jur === 'qld'
-                          ? 'Recorded annual expenditure in this program'
-                          : 'Awarded in this program',
-                      value: formatMoneyCompact(program.total),
-                    },
-                    {
-                      label: 'Grant records',
-                      value: formatCount(program.count),
-                    },
-                  ]}
+                <BigFigure
+                  value={formatMoneyCompact(program.total)}
+                  label={
+                    jur === 'qld'
+                      ? 'Recorded annual expenditure in this program'
+                      : 'Awarded in this program'
+                  }
+                  detail={`${formatCount(program.count)} grant records`}
+                  accent="money"
                 />
                 <AsAtLine
                   asOf={program.asOf}
@@ -152,22 +149,36 @@ export default function Program() {
               </>
             ) : null}
             {note ? (
-              <Section title="Program notes">
-                <Text wordSafe>{note.summary}</Text>
-                {note.audits.map((a, i) => (
-                  <Group key={i}>
-                    <Text wordSafe variant="strong">
-                      {a.title}
-                    </Text>
-                    <Text wordSafe>{a.finding}</Text>
-                    <SourceLink citation={a.title} url={a.url} kind="record" />
+              <InfoButton
+                title="Program notes"
+                testID="program-notes"
+                notes={[note.summary]}
+                extra={
+                  <Group>
+                    {note.audits.map((a, i) => (
+                      <Group key={i}>
+                        <Text wordSafe variant="strong">
+                          {a.title}
+                        </Text>
+                        <Text wordSafe>{a.finding}</Text>
+                        <ViewOriginal
+                          sources={[{ label: a.title, url: a.url }]}
+                        />
+                      </Group>
+                    ))}
+                    <ViewOriginal
+                      sources={note.sources.map((s) => ({
+                        label: s.title,
+                        url: s.url,
+                      }))}
+                    />
+                    <AsAtLine
+                      asOf={data!.notes.asOf}
+                      citation="OPAX program notes"
+                    />
                   </Group>
-                ))}
-                <AsAtLine
-                  asOf={data!.notes.asOf}
-                  citation="OPAX program notes; sources linked above"
-                />
-              </Section>
+                }
+              />
             ) : null}
             <Field
               label="Find a listed grant or organisation"
@@ -176,15 +187,13 @@ export default function Program() {
               testID="program-search"
               returnKeyType="done"
             />
-            <Button
-              label="Recipients"
-              testID="program-recipients"
-              onPress={() => setView('recipients')}
-            />
-            <Button
-              label="Grant records"
-              testID="program-grants"
-              onPress={() => setView('grants')}
+            <MoneyChoices
+              value={view}
+              onChange={setView}
+              options={[
+                ['recipients', 'Recipients', 'program-recipients'],
+                ['grants', 'Grant records', 'program-grants'],
+              ]}
             />
             <ResultCount
               count={data ? rows.length : null}

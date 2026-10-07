@@ -12,10 +12,12 @@ import {
   EmptyState,
   Group,
   Heading,
+  InfoButton,
+  ChoiceChips,
   SourceLink,
   Text,
 } from '../../design/primitives';
-import { colors, layout, spacing } from '../../design/tokens';
+import { colors, layout, rhythm } from '../../design/tokens';
 import { shareHeaderItem } from '../../navigation/share';
 import { webPageUrl } from '../../navigation/external';
 import type { decodeMeta } from './data';
@@ -38,22 +40,10 @@ export function Provenance({ meta }: { meta: ReturnType<typeof decodeMeta> }) {
         citation={meta.source}
         licence={meta.licence}
       />
-      {meta.coverage ? (
-        <Text wordSafe variant="fine">
-          {meta.coverage}
-        </Text>
-      ) : null}
-      {meta.threshold ? (
-        <Text wordSafe variant="fine">
-          {meta.threshold}
-        </Text>
-      ) : null}
-      {meta.caveats.map((c, i) => (
-        <Text key={i} wordSafe variant="fine">
-          {c}
-        </Text>
-      ))}
-      <SourceLink citation={meta.source} url={meta.sourceUrl} kind="register" />
+      <InfoButton
+        title="About these figures"
+        notes={[meta.coverage, meta.threshold, ...meta.caveats]}
+      />
     </Group>
   );
 }
@@ -66,10 +56,32 @@ export function OrganisationWebLink({
 }) {
   return (
     <SourceLink
+      label="Open on opax.com.au"
       citation="Open on opax.com.au"
       record={name}
       url={webPageUrl(path)!}
       kind="record"
+    />
+  );
+}
+export function MoneyChoices<T extends string>({
+  value,
+  onChange,
+  options,
+}: {
+  value: T;
+  onChange: (value: T) => void;
+  options: readonly (readonly [T, string, string?])[];
+}) {
+  return (
+    <ChoiceChips
+      value={value}
+      onChange={onChange}
+      segments={options.map(([value, label, testID]) => ({
+        value,
+        label,
+        testID,
+      }))}
     />
   );
 }
@@ -135,7 +147,13 @@ export function MoneyList<T>({
     />
   );
 }
-export function ResultCount({ count, noun }: { count: number | null; noun: string }) {
+export function ResultCount({
+  count,
+  noun,
+}: {
+  count: number | null;
+  noun: string;
+}) {
   useEffect(() => {
     if (count === null) return;
     const timer = setTimeout(
@@ -149,14 +167,14 @@ export function ResultCount({ count, noun }: { count: number | null; noun: strin
   }, [count, noun]);
   if (count === null) return null;
   return (
-    <Text wordSafe accessibilityLiveRegion="polite">
+    <Text wordSafe variant="metadata" accessibilityLiveRegion="polite">
       {count.toLocaleString('en-AU')} {noun}
     </Text>
   );
 }
 export function Title({ children, id }: { children: ReactNode; id: string }) {
   return (
-    <Heading level={1} testID={id}>
+    <Heading level={1} tone="moneyInk" testID={id}>
       {children}
     </Heading>
   );
@@ -165,9 +183,9 @@ const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
   content: {
     paddingHorizontal: layout.screenMargin,
-    paddingTop: spacing.s4,
-    paddingBottom: spacing.s7,
-    gap: spacing.s4,
+    paddingTop: rhythm.block,
+    paddingBottom: rhythm.section,
+    gap: rhythm.block,
   },
-  row: { paddingVertical: spacing.s3 },
+  row: { paddingVertical: rhythm.tight },
 });

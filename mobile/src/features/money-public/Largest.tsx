@@ -3,6 +3,7 @@ import { useLocalSearchParams } from 'expo-router';
 import {
   AsAtLine,
   Button,
+  InfoButton,
   Group,
   SourceLink,
   Text,
@@ -128,13 +129,10 @@ export default function Largest() {
         )}
         footer={
           data ? (
-            <Group>
-              {data.largest.basis.map((b, i) => (
-                <Text key={i} wordSafe variant="fine">
-                  {b}
-                </Text>
-              ))}
-            </Group>
+            <InfoButton
+              title="About the month’s largest grants"
+              notes={data.largest.basis}
+            />
           ) : null
         }
       />
