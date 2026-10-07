@@ -78,6 +78,7 @@ export default function AskScreen() {
     to?: string;
   }>();
   const [draft, setDraft] = useState(''),
+    [editingFollowup, setEditingFollowup] = useState(false),
     [builderOpen, setBuilderOpen] = useState(false),
     [optionsOpen, setOptionsOpen] = useState(false),
     [historyOpen, setHistoryOpen] = useState(false),
@@ -91,6 +92,7 @@ export default function AskScreen() {
     [retryQuestion, setRetryQuestion] = useState('');
   const scroll = useRef<ScrollView>(null),
     submitTarget = useRef<View>(null),
+    followupTarget = useRef<View>(null),
     entry = useRef<string | undefined>(undefined),
     lastStage = useRef<string | null>(null),
     lastAnswer = useRef<object | null>(null),
@@ -131,6 +133,7 @@ export default function AskScreen() {
     setDraft(params.question || '');
     setInputError('');
     setBuilderOpen(false);
+    setEditingFollowup(false);
     requestAnimationFrame(() =>
       scroll.current?.scrollTo({ y: 0, animated: false }),
     );
@@ -297,7 +300,7 @@ export default function AskScreen() {
       <KeyboardStableScreen
         testID="ask-screen"
         scrollRef={scroll}
-        keyboardTarget={submitTarget}
+        keyboardTarget={editingFollowup ? followupTarget : submitTarget}
       >
         <Group style={styles.composer} gap={rhythm.heading}>
           <Field
@@ -305,6 +308,7 @@ export default function AskScreen() {
             placeholder="Ask a question about the public record…"
             value={draft}
             onChangeText={setDraft}
+            onFocus={() => setEditingFollowup(false)}
             multiline
             maxLength={2000}
             testID="ask-question"
@@ -538,11 +542,13 @@ export default function AskScreen() {
               placeholder="Ask a follow-up…"
               value={draft}
               onChangeText={setDraft}
+              onFocus={() => setEditingFollowup(true)}
               multiline
               maxLength={2000}
               testID="ask-followup-field"
             />
             <Button
+              ref={followupTarget}
               label="Ask"
               variant="primary"
               disabled={!draft.trim()}
