@@ -1,0 +1,323 @@
+--- a/node_modules/expo-location/ios/LocationModule.swift
++++ b/node_modules/expo-location/ios/LocationModule.swift
+@@ -1,17 +1,14 @@
+ // Copyright 2023-present 650 Industries. All rights reserved.
+ 
+ import CoreLocation
+-import CoreMotion
+ import ExpoModulesCore
+ 
+ private let EVENT_LOCATION_CHANGED = "Expo.locationChanged"
+ private let EVENT_HEADING_CHANGED = "Expo.headingChanged"
+ private let EVENT_LOCATION_ERROR = "Expo.locationError"
+-private let EVENT_MOTION_ACTIVITY_CHANGED = "Expo.motionActivityChanged"
+ 
+ public final class LocationModule: Module {
+   private lazy var locationStreamers = [Int: BaseStreamer]()
+-  private lazy var motionActivityStreamers = [Int: MotionActivityStreamer]()
+ 
+   private var taskManager: EXTaskManagerInterface {
+     get throws {
+@@ -25,7 +22,7 @@
+   public func definition() -> ModuleDefinition {
+     Name("ExpoLocation")
+ 
+-    Events(EVENT_LOCATION_CHANGED, EVENT_HEADING_CHANGED, EVENT_LOCATION_ERROR, EVENT_MOTION_ACTIVITY_CHANGED)
++    Events(EVENT_LOCATION_CHANGED, EVENT_HEADING_CHANGED, EVENT_LOCATION_ERROR)
+ 
+     OnCreate {
+       let permissionsManager = self.appContext?.permissions
+@@ -33,8 +30,7 @@
+         [
+           EXLocationPermissionRequester(),
+           EXForegroundPermissionRequester(),
+-          EXBackgroundLocationPermissionRequester(),
+-          MotionActivityPermissionRequester()
++          EXBackgroundLocationPermissionRequester()
+         ],
+         withPermissionsManager: permissionsManager
+       )
+@@ -121,61 +117,11 @@
+       }
+     }
+ 
+-    AsyncFunction("watchMotionActivityImplAsync") { (watchId: Int) in
+-      guard CMMotionActivityManager.isActivityAvailable() else {
+-        throw Exceptions.MotionActivityUnavailable()
+-      }
+-      let authorizationStatus = CMMotionActivityManager.authorizationStatus()
+-      guard authorizationStatus != .denied && authorizationStatus != .restricted else {
+-        throw Exceptions.MotionActivityUnauthorized()
+-      }
+-
+-      let streamer = MotionActivityStreamer()
+-      motionActivityStreamers[watchId] = streamer
+-
+-      // Start streaming in a detached task so the returned promise resolves immediately.
+-      Task {
+-        do {
+-          for try await activity in try streamer.streamMotionActivity() {
+-            // CMMotionActivity reports one confidence value for the whole reading.
+-            // Detected entries receive that confidence; undetected entries receive 0 (Low).
+-            let confidence = activity.confidence.rawValue
+-            func entry(_ detected: Bool) -> [String: Any] {
+-              ["detected": detected, "confidence": detected ? confidence : 0]
+-            }
+-            sendEvent(EVENT_MOTION_ACTIVITY_CHANGED, [
+-              "watchId": watchId,
+-              "activity": [
+-                "activities": [
+-                  "automotive": entry(activity.automotive),
+-                  "cycling":    entry(activity.cycling),
+-                  "running":    entry(activity.running),
+-                  "walking":    entry(activity.walking),
+-                  "stationary": entry(activity.stationary),
+-                  "unknown":    entry(activity.unknown),
+-                ],
+-                "timestamp": activity.startDate.timeIntervalSince1970 * 1000
+-              ]
+-            ])
+-          }
+-        } catch let exception as Exception {
+-          sendEvent(EVENT_LOCATION_ERROR, ["watchId": watchId, "reason": exception.reason])
+-        } catch {
+-          sendEvent(EVENT_LOCATION_ERROR, ["watchId": watchId, "reason": error.localizedDescription])
+-        }
+-      }
+-    }
+-
+     AsyncFunction("removeWatchAsync") { (watchId: Int) in
+       if let streamer = locationStreamers[watchId] {
+         streamer.stopStreaming()
+       }
+       locationStreamers[watchId] = nil
+-
+-      if let streamer = motionActivityStreamers[watchId] {
+-        streamer.stopStreaming()
+-      }
+-      motionActivityStreamers[watchId] = nil
+     }
+ 
+     AsyncFunction("geocodeAsync") { (address: String) in
+@@ -184,14 +130,6 @@
+ 
+     AsyncFunction("reverseGeocodeAsync") { (location: CLLocation) in
+       return try await Geocoder.reverseGeocode(location: location)
+-    }
+-
+-    AsyncFunction("getMotionActivityPermissionsAsync") { (promise: Promise) in
+-      try getPermissionUsingRequester(MotionActivityPermissionRequester.self, appContext: appContext, promise: promise)
+-    }
+-
+-    AsyncFunction("requestMotionActivityPermissionsAsync") { (promise: Promise) in
+-      try askForPermissionUsingRequester(MotionActivityPermissionRequester.self, appContext: appContext, promise: promise)
+     }
+ 
+     AsyncFunction("getPermissionsAsync") { (promise: Promise) in
+--- a/node_modules/expo-location/ios/LocationExceptions.swift
++++ b/node_modules/expo-location/ios/LocationExceptions.swift
+@@ -69,18 +69,4 @@
+     }
+   }
+ 
+-  internal final class MotionActivityUnavailable: Exception {
+-    override var reason: String {
+-      "Motion activity is not available on this device. " +
+-        "CMMotionActivityManager requires a physical device with a motion coprocessor (iPhone 5s or later). " +
+-        "It is not supported on the iOS Simulator."
+-    }
+-  }
+-
+-  internal final class MotionActivityUnauthorized: Exception {
+-    override var reason: String {
+-      "Motion activity access has been denied. Add NSMotionUsageDescription to Info.plist, " +
+-        "then direct the user to Settings > Privacy > Motion and Fitness to re-enable access"
+-    }
+-  }
+ }
+--- a/node_modules/expo-location/ios/Providers/MotionActivityStreamer.swift
++++ /dev/null
+@@ -1,49 +0,0 @@
+-// Copyright 2024-present 650 Industries. All rights reserved.
+-
+-import CoreMotion
+-import ExpoModulesCore
+-
+-internal final class MotionActivityStreamer {
+-  typealias MotionActivityStream = AsyncThrowingStream<CMMotionActivity, Error>
+-
+-  private let manager = CMMotionActivityManager()
+-  private var activityStream: MotionActivityStream?
+-  private var continuation: MotionActivityStream.Continuation?
+-
+-  deinit {
+-    if continuation != nil {
+-      stopStreaming()
+-    }
+-  }
+-
+-  func streamMotionActivity() throws -> MotionActivityStream {
+-    if let stream = activityStream {
+-      return stream
+-    }
+-    let stream = MotionActivityStream { continuation in
+-      self.continuation = continuation
+-      self.manager.startActivityUpdates(to: .main) { [weak self] activity in
+-        guard let self else { return }
+-        if let activity {
+-          self.continuation?.yield(activity)
+-        } else if CMMotionActivityManager.authorizationStatus() == .denied
+-          || CMMotionActivityManager.authorizationStatus() == .restricted
+-        {
+-          self.continuation?.finish(throwing: Exceptions.MotionActivityUnauthorized())
+-          self.activityStream = nil
+-          self.continuation = nil
+-        }
+-        // nil update with .notDetermined or .authorized is a transient gap - skip it.
+-      }
+-    }
+-    activityStream = stream
+-    return stream
+-  }
+-
+-  func stopStreaming() {
+-    manager.stopActivityUpdates()
+-    continuation?.finish()
+-    activityStream = nil
+-    continuation = nil
+-  }
+-}
+--- a/node_modules/expo-location/ios/Requesters/MotionActivityPermissionRequester.swift
++++ /dev/null
+@@ -1,47 +0,0 @@
+-import CoreMotion
+-import ExpoModulesCore
+-
+-class MotionActivityPermissionRequester: NSObject, EXPermissionsRequester {
+-  // Retained until the query callback fires, then cleared.
+-  private var manager: CMMotionActivityManager?
+-
+-  static func permissionType() -> String {
+-    "motionActivity"
+-  }
+-
+-  func getPermissions() -> [AnyHashable: Any] {
+-    var status: EXPermissionStatus
+-    switch CMMotionActivityManager.authorizationStatus() {
+-    case .authorized:
+-      status = EXPermissionStatusGranted
+-    case .denied, .restricted:
+-      status = EXPermissionStatusDenied
+-    case .notDetermined:
+-      status = EXPermissionStatusUndetermined
+-    @unknown default:
+-      status = EXPermissionStatusUndetermined
+-    }
+-    return ["status": status.rawValue]
+-  }
+-
+-  func requestPermissions(resolver resolve: @escaping EXPromiseResolveBlock, rejecter reject: @escaping EXPromiseRejectBlock) {
+-    guard CMMotionActivityManager.isActivityAvailable() else {
+-      resolve(getPermissions())
+-      return
+-    }
+-    guard CMMotionActivityManager.authorizationStatus() == .notDetermined else {
+-      resolve(getPermissions())
+-      return
+-    }
+-    // Issuing a short historical query is the standard way to trigger the system
+-    // Motion and Fitness permission prompt when the status is .notDetermined.
+-    manager = CMMotionActivityManager()
+-    manager?.queryActivityStarting(from: Date(timeIntervalSinceNow: -1), to: Date(), to: .main) { [weak self] _, _ in
+-      guard let self else {
+-        return
+-      }
+-      self.manager = nil
+-      resolve(self.getPermissions())
+-    }
+-  }
+-}
+--- a/node_modules/expo-location/src/Location.ts
++++ b/node_modules/expo-location/src/Location.ts
+@@ -354,6 +354,9 @@
+  * @platform ios
+  */
+ export async function getMotionActivityPermissionsAsync(): Promise<PermissionResponse> {
++  if (Platform.OS === "ios") {
++    throw new Error("Motion activity is unavailable in OPAX iOS builds.");
++  }
+   return await ExpoLocation.getMotionActivityPermissionsAsync();
+ }
+ 
+@@ -367,6 +370,9 @@
+  * @platform ios
+  */
+ export async function requestMotionActivityPermissionsAsync(): Promise<PermissionResponse> {
++  if (Platform.OS === "ios") {
++    throw new Error("Motion activity is unavailable in OPAX iOS builds.");
++  }
+   return await ExpoLocation.requestMotionActivityPermissionsAsync();
+ }
+ 
+@@ -408,6 +414,9 @@
+  * @platform ios
+  */
+ export async function getMotionActivityAsync(): Promise<MotionActivityObject> {
++  if (Platform.OS === "ios") {
++    throw new Error("Motion activity is unavailable in OPAX iOS builds.");
++  }
+   return new Promise(async (resolve, reject) => {
+     let subscriber: LocationSubscription | undefined;
+     try {
+@@ -447,6 +456,9 @@
+   callback: MotionActivityCallback,
+   errorHandler?: LocationErrorCallback
+ ): Promise<LocationSubscription> {
++  if (Platform.OS === "ios") {
++    throw new Error("Motion activity is unavailable in OPAX iOS builds.");
++  }
+   const watchId = MotionActivitySubscriber.registerCallback(callback);
+   errorHandler && LocationErrorSubscriber.registerCallbackForId(watchId, errorHandler);
+ 
+--- a/node_modules/expo-location/build/Location.js
++++ b/node_modules/expo-location/build/Location.js
+@@ -281,6 +281,9 @@
+  * @platform ios
+  */
+ export async function getMotionActivityPermissionsAsync() {
++  if (Platform.OS === "ios") {
++    throw new Error("Motion activity is unavailable in OPAX iOS builds.");
++  }
+     return await ExpoLocation.getMotionActivityPermissionsAsync();
+ }
+ /**
+@@ -293,6 +296,9 @@
+  * @platform ios
+  */
+ export async function requestMotionActivityPermissionsAsync() {
++  if (Platform.OS === "ios") {
++    throw new Error("Motion activity is unavailable in OPAX iOS builds.");
++  }
+     return await ExpoLocation.requestMotionActivityPermissionsAsync();
+ }
+ /**
+@@ -331,6 +337,9 @@
+  * @platform ios
+  */
+ export async function getMotionActivityAsync() {
++  if (Platform.OS === "ios") {
++    throw new Error("Motion activity is unavailable in OPAX iOS builds.");
++  }
+     return new Promise(async (resolve, reject) => {
+         let subscriber;
+         try {
+@@ -364,6 +373,9 @@
+  * @platform ios
+  */
+ export async function watchMotionActivityAsync(callback, errorHandler) {
++  if (Platform.OS === "ios") {
++    throw new Error("Motion activity is unavailable in OPAX iOS builds.");
++  }
+     const watchId = MotionActivitySubscriber.registerCallback(callback);
+     errorHandler && LocationErrorSubscriber.registerCallbackForId(watchId, errorHandler);
+     await ExpoLocation.watchMotionActivityImplAsync(watchId);

@@ -268,6 +268,40 @@ export function personSlugForResult(
   if (Object.hasOwn(slugs.slugs, segment)) return personSlug(segment);
   return resolveName(segment);
 }
+/** The canonical-ID handoff used by Person and profile navigation. */
+export function personSlugForId(
+  id: PersonId,
+  slugs: Slugs,
+  roster: Roster,
+  people: PeopleCatalog,
+  manifest: Manifest,
+) {
+  const person = people.people.find((p) => p.person_id === id);
+  const names = new Set(
+    [person?.name, ...(person?.aliases ?? [])]
+      .filter((name): name is string => !!name)
+      .map(nameKey),
+  );
+  const resolved = Object.keys(slugs.slugs).filter((key) => {
+    if (!names.has(nameKey(slugs.slugs[key]!))) return false;
+    try {
+      return (
+        joinPerson(key, slugs, roster, people, manifest).canonicalPersonId ===
+        id
+      );
+    } catch {
+      return false;
+    }
+  });
+  if (!resolved.length)
+    throw new ApiError(
+      'not-found',
+      'This person is not in the public directory.',
+    );
+  return (
+    resolved.find((key) => slugs.slugs[key] === person?.name) ?? resolved[0]!
+  );
+}
 export function joinPerson(
   slug: string,
   slugs: Slugs,

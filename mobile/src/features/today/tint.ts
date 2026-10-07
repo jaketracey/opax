@@ -116,3 +116,30 @@ const billHues: Record<BillTone, string> = {
 };
 export const billAccent = (status: string | null | undefined) =>
   accentOf(billHues[billTone(status)]);
+
+// Increase Contrast. Role colours resolve it natively; Today's derived hexes
+// step here instead: text to 7:1 on its ground, marks to 4.5:1, the deep
+// header until white reads at 7:1. tests/today-tint.test.ts checks them.
+const lightGround = (ground: string) =>
+  contrastRatio(ground, '#000000') > contrastRatio(ground, '#FFFFFF');
+/** `hex` stepped toward ink (or white, on a dark ground) until it reads at `target` on `ground`. */
+export function strongOn(hex: string, ground: string, target = 7): string {
+  const toward = lightGround(ground) ? light.ink : '#FFFFFF';
+  let out = hex;
+  for (let step = 1; contrastRatio(out, ground) < target && step <= 20; step++)
+    out = mix(hex, toward, step * 0.05);
+  return out;
+}
+/** The accent under Increase Contrast. */
+export function strongAccent(accent: Accent): Accent {
+  let deep = accent.deep;
+  for (let step = 1; contrastRatio(deep, '#FFFFFF') < 7 && step <= 20; step++)
+    deep = mix(accent.deep, '#000000', step * 0.04);
+  return {
+    base: strongOn(accent.base, accent.wash, 4.5),
+    deep,
+    soft: strongOn(accent.soft, deep),
+    wash: accent.wash,
+    ink: strongOn(accent.ink, accent.wash),
+  };
+}

@@ -22,6 +22,7 @@ export {
   Group,
   Section,
   SubSection,
+  EdgeFade,
   RowList,
   KeyValueList,
   StatRow,

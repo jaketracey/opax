@@ -479,7 +479,7 @@ function setup(...responses: (Response | Error)[]) {
     new Catalogs(
       new ApiClient({
         origin,
-        version: '0.1.0',
+        version: '1.0.0',
         build: '3',
         cache: new CatalogCache(store),
         transport: transport as unknown as typeof fetch,

@@ -166,6 +166,9 @@ export function ViewOriginal({
   testID?: string;
   children?: ReactNode;
 }) {
+  // Fixed width at accessibility sizes, as SourceLink: the label's frame never
+  // follows its own text size.
+  const fixed = useAccessibilitySize();
   const usable = sources.filter(
     (s, i) =>
       (s.url.startsWith('https://') || s.url.startsWith('/')) &&
@@ -208,6 +211,7 @@ export function ViewOriginal({
       hitSlop={{ top: 8, bottom: 8 }}
       style={({ pressed }) => [
         styles.original,
+        fixed ? styles.fixedWidth : null,
         pressed ? { backgroundColor: colors.sunken } : null,
       ]}
     >
@@ -220,7 +224,12 @@ export function ViewOriginal({
         size={14}
         tone="bronzeInk"
       />
-      <Text variant="fine" tone="bronzeInk" style={styles.originalText}>
+      <Text
+        wordSafe={fixed}
+        variant="fine"
+        tone="bronzeInk"
+        style={styles.originalText}
+      >
         {label}
       </Text>
     </Pressable>
@@ -257,6 +266,7 @@ const styles = StyleSheet.create({
     borderRadius: radius,
   },
   originalText: { flexShrink: 1 },
+  fixedWidth: { alignSelf: 'stretch', width: '100%' },
 });
 
 ownsRowPadding(LinkRow);

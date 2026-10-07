@@ -46,7 +46,7 @@ function setup(transport: typeof fetch, now = () => 1000, options = {}) {
     cache,
     client: new ApiClient({
       origin,
-      version: '0.1.0',
+      version: '1.0.0',
       build: '1',
       cache,
       transport,
@@ -145,7 +145,7 @@ test('expiry revalidates with ETag; preserves original saved date on 304', async
     method: 'GET',
     credentials: 'omit',
     redirect: 'manual',
-    headers: { 'User-Agent': 'OPAX-iOS/0.1.0 (1)' },
+    headers: { 'User-Agent': 'OPAX-iOS/1.0.0 (1)' },
   });
 });
 test('a forced read reaches the network while a fresh copy is saved, and tells the HTTP cache to revalidate', async () => {
@@ -851,7 +851,7 @@ describe.each(['remove', 'writeIndex'] as const)(
       const transport = jest.fn().mockResolvedValue(response());
       const client = new ApiClient({
         origin,
-        version: '0.1.0',
+        version: '1.0.0',
         build: '1',
         cache,
         transport,
@@ -1235,7 +1235,7 @@ describe.each([false, true])('last good copy, force=%s', (force) => {
       expect(writes).not.toHaveBeenCalled();
       const relaunched = new ApiClient({
         origin,
-        version: '0.1.0',
+        version: '1.0.0',
         build: '1',
         cache: new CatalogCache(store),
         transport,

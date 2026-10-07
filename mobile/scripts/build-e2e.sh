@@ -14,6 +14,7 @@ mkdir -p "$OUT"
 start=$SECONDS
 PREBUILD_FLAGS=(--platform ios)
 if [ "${OPAX_CLEAN_PREBUILD:-0}" = 1 ]; then PREBUILD_FLAGS+=(--clean); fi
+python3 scripts/apply-privacy-patches.py
 ./node_modules/.bin/expo prebuild "${PREBUILD_FLAGS[@]}" > "$OUT/prebuild.log" 2>&1 || { tail -60 "$OUT/prebuild.log" >&2; exit 1; }
 # Prebuild templates may add ATS developer defaults: enforce the reviewed variant in the generated plist.
 ./node_modules/.bin/tsx scripts/native-config.ts
