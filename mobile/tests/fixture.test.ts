@@ -1,4 +1,6 @@
 import { createHash } from 'node:crypto';
+import { decodeDocument, decodeSimilar } from '../src/features/records/model';
+import { decodeRecords } from '../src/features/search/decoders';
 import snapshot from '../scripts/fixture-snapshot.json';
 import { files, servedFiles } from './pinned';
 import {
@@ -511,8 +513,6 @@ test('the fixture refuses an unknown roster mode at startup', async () => {
 });
 
 test('search results open matching native excerpt resources and preserve related-speech fixtures', async () => {
-  const { decodeDocument, decodeSimilar } = await import('../src/features/records/model');
-  const { decodeRecords } = await import('../src/features/search/decoders');
   const response = await request('/api/search?q=housing&kind=speech&party=Labor&from=2025&to=2026&sort=newest&per=20&page=1&mode=hybrid');
   const row = decodeRecords(JSON.parse(response.body)).results[0]!;
   const resource = await request('/api/resource/' + row.slug);

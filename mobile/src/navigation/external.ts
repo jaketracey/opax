@@ -1,11 +1,10 @@
 import { Alert, Linking } from 'react-native';
 import { router } from 'expo-router';
-import { fromWebPath } from './routes';
+import { fromWebPath, searchRouteFromWebPath } from './routes';
 import * as WebBrowser from 'expo-web-browser';
 import { hasSourcePreview, isE2E, webOrigin } from '../design/environment';
 import { light } from '../design/tokens';
 import { presentSourceDestination } from './source-destination';
-import { searchRouteFromWebPath } from './routes';
 
 // Where the Worker or the web app turns an OPAX address into a page the app
 // never sends a reader to (portal/src/page-entry.ts, portal/src/index.ts,

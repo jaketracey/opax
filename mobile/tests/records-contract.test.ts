@@ -315,3 +315,11 @@ test('year normalisation, removable chips and sharing preserve filter state with
   expect(() => sourceUrl(canonicalUrl(path))).toThrow();
   expect(fromWebPath('/ask?view=search&q=Example&kind=donor')).toBeNull();
 });
+
+test('generic records search keeps 20-row pages beside the distinct six-row related-speech route', () => {
+  const path = '/api/search?' + searchParams('housing', defaultFilters);
+  expect(() => assertAllowedPath(path)).not.toThrow();
+  for (const per of ['6', '7', '200'])
+    expect(() => assertAllowedPath(path.replace('per=20', 'per=' + per))).toThrow();
+  expect(() => assertAllowedPath('/api/search?q=Housing&kind=speech&per=6&topic=housing')).not.toThrow();
+});

@@ -132,6 +132,10 @@ export function assertAllowedPath(path: string): void {
     )
       throw new Error('Records search requires an explicit supported kind');
     assertSearchParams(params, pathname === '/api/search-summary');
+    // This lane reviews the web's 20-row search pages. The records lane's
+    // exact six-row related-speech contract is handled above.
+    if (pathname === '/api/search' && params.has('per') && params.get('per') !== '20')
+      throw new Error('Records search requires the web page size');
     if (
       pathname === '/api/search-summary' &&
       (params.get('stream') !== '1' ||
