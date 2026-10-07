@@ -2,6 +2,7 @@ import { Alert } from 'react-native';
 import type { NativeStackHeaderItem } from 'expo-router';
 import { OpaxShare } from '../../modules/opax-share';
 import { isE2E, webOrigin } from '../design/environment';
+import { haptic } from '../design/haptics';
 import { chrome } from '../design/tokens';
 import { canonicalUrl } from './external';
 import type { AskOptions } from '../features/ask/model';
@@ -30,6 +31,7 @@ export async function shareRecord({
   const url = question
     ? questionShareURL(question.text, question.options)
     : canonicalUrl(path, anchor);
+  haptic('light');
   if (isE2E) {
     Alert.alert(`Share: ${title}`, url);
     return;

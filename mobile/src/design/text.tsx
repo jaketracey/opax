@@ -32,6 +32,10 @@ export type TextTone = Extract<
   | 'navy'
   | 'onNavy'
   | 'onNavySoft'
+  | 'moneyInk'
+  | 'votesInk'
+  | 'interestsInk'
+  | 'billsInk'
 >;
 export interface OpaxTextProps extends TextProps {
   variant?: TextVariant;

@@ -2,6 +2,7 @@ import {
   componentPairs,
   contrastRatio,
   forbiddenPairs,
+  partyWashPairs,
   requiredRatio,
 } from '../src/design/contrast';
 import { light, lightHighContrast, partyColors } from '../src/design/palette';
@@ -15,6 +16,14 @@ describe('contrast of every pair the components draw', () => {
     (_, pair) => {
       const value = contrastRatio(pair.foreground, light[pair.background]);
       expect(value).toBeGreaterThanOrEqual(requiredRatio[pair.kind]);
+    },
+  );
+  test.each(partyWashPairs.map((pair) => [pair.use, pair] as const))(
+    '%s',
+    (_, pair) => {
+      expect(
+        contrastRatio(pair.foreground, pair.background),
+      ).toBeGreaterThanOrEqual(requiredRatio.text);
     },
   );
   test('the pairs IOS-UX forbids really fail', () => {

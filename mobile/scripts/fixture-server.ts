@@ -3,6 +3,8 @@ import { createVoiceFixture } from './voice-fixture';
 import { askFixture } from './ask-fixture';
 import { createServer } from 'node:http';
 import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import snapshot from './fixture-snapshot.json';
 import {
   assertAllowedPath,
@@ -39,7 +41,13 @@ if (!Number.isInteger(port) || (port !== 0 && (port < 8900 || port > 8999)))
 //   conditional GET, as a pull to refresh sends), then 404 from then on, as
 //   when the posted edition goes, journey 13c. Unconditional launches,
 //   including e2e.sh's warm-up, cannot withdraw it early.
-const editionModes = ['pinned', 'absent', 'withdrawn'];
+// - politician: a parliamentarian's edition, for Today's party-coloured
+//   front page (scripts/fixtures/edition-politician.json). It is the 6 Oct
+//   2026 Alex Hawke post as the build-4 Today showed it (text and source
+//   rows verbatim), with its slides rebuilt by portal/src/daily-post.ts's
+//   rules from those figures and the pinned roster row (pid 10290). Its
+//   third topic label was not shown, so it is left out, not guessed.
+const editionModes = ['pinned', 'absent', 'withdrawn', 'politician'];
 const editionMode = process.env.OPAX_FIXTURE_EDITION ?? 'pinned';
 if (!editionModes.includes(editionMode))
   throw new Error('OPAX_FIXTURE_EDITION must be pinned, absent or withdrawn');
@@ -95,7 +103,10 @@ if (dataMode === 'changed') {
   Object.assign(moved, { status: 'passed', status_as_of: '2026-10-01' });
   changedFiles.set('/bills/index.json', Buffer.from(JSON.stringify(index)));
 }
-const edition = responseBytes(snapshot, editionPath);
+const edition =
+  editionMode === 'politician'
+    ? readFileSync(join(__dirname, 'fixtures/edition-politician.json'))
+    : responseBytes(snapshot, editionPath);
 const editionDate = decodeEdition(JSON.parse(edition.toString())).date;
 const manifest = JSON.parse(
   files.get('/electorates/manifest.json')!.toString(),

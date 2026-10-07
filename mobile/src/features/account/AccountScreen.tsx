@@ -1,6 +1,12 @@
 import { router } from 'expo-router';
 import { isProduction } from '../../design/environment';
-import { Button, Screen, Section, Text } from '../../design/primitives';
+import {
+  LinkRow,
+  RowList,
+  Screen,
+  Section,
+  Text,
+} from '../../design/primitives';
 import { showTour } from '../../onboarding/state';
 import { AccountSection } from './AccountSection';
 
@@ -15,7 +21,7 @@ export function AccountScreen() {
   return (
     <Screen testID="account-sheet">
       <AccountSection />
-      <Section title="About OPAX">
+      <Section title="About OPAX" icon="building.columns" accent="people">
         <Text variant="subheading">
           Open Parliamentary Accountability Exchange
         </Text>
@@ -24,31 +30,50 @@ export function AccountScreen() {
           Australian parliamentary speeches, votes, political funding and public
           disclosures.
         </Text>
-        <Text>{independence}</Text>
-        <Button
-          label="About and sources"
-          testID="account-about"
-          onPress={() => router.push('/account/about')}
-        />
-        <Button
-          label="Replay welcome tour"
-          testID="account-replay-tour"
-          onPress={() => {
-            // The tour draws above the tabs, so the sheet closes first.
-            router.back();
-            showTour();
-          }}
-        />
+        <Text variant="metadata">{independence}</Text>
+        <RowList>
+          <LinkRow
+            title="About OPAX"
+            detail="Coverage, corrections and privacy"
+            icon="info.circle"
+            accent="people"
+            testID="account-about"
+            onPress={() => router.push('/account/about')}
+          />
+          <LinkRow
+            title="Sources and licences"
+            detail="Datasets, portrait credits and fonts"
+            icon="books.vertical"
+            accent="leads"
+            testID="account-sources"
+            onPress={() => router.push('/account/sources')}
+          />
+          <LinkRow
+            title="Replay welcome tour"
+            icon="sparkles"
+            accent="bills"
+            testID="account-replay-tour"
+            onPress={() => {
+              // The tour draws above the tabs, so the sheet closes first.
+              router.back();
+              showTour();
+            }}
+          />
+        </RowList>
       </Section>
       {isProduction ? null : (
         // Development and e2e only, whatever the voice switch says; the
         // workbench route is not in release bundles.
-        <Section title="Development">
-          <Button
-            label="Design workbench"
-            testID="account-workbench"
-            onPress={() => router.push('/workbench')}
-          />
+        <Section title="Development" icon="hammer" accent="people">
+          <RowList>
+            <LinkRow
+              title="Design workbench"
+              icon="square.grid.2x2"
+              accent="people"
+              testID="account-workbench"
+              onPress={() => router.push('/workbench')}
+            />
+          </RowList>
         </Section>
       )}
     </Screen>

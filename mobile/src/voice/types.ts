@@ -79,6 +79,11 @@ export type TranscriptTurn = {
   text: string;
 };
 export type VoiceSource = { title: string; path: string };
+/**
+ * Coarse loudness for the call screen's animation, about 15 a second while
+ * live: 0 is -60 dBFS or quieter, 1 is full scale. Never audio.
+ */
+export type VoiceLevels = { input: number; output: number };
 export type VoiceEvent =
   | { type: 'state'; state: CallState; reason: EndReason | null }
   | { type: 'mode'; mode: 'listening' | 'speaking' | 'muted' }
