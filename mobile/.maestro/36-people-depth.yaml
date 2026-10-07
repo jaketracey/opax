@@ -3,6 +3,7 @@ name: 36 Person topics, speeches, mentions, news, ministerial diary and glossary
 ---
 - launchApp:
     clearState: true
+    permissions: {}
 - runFlow:
     file: support/people-open-profile.yaml
     env:

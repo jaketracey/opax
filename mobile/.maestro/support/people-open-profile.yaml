@@ -1,7 +1,7 @@
 appId: au.com.opax.app
 name: People lane profile helper
 ---
-- launchApp
+- launchApp: { permissions: {} }
 - tapOn:
     id: tab-search
 - scrollUntilVisible:

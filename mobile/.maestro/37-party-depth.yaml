@@ -3,6 +3,7 @@ name: 37 Party access, creditors, all years, follow and Your MP pay
 ---
 - launchApp:
     clearState: true
+    permissions: {}
 - runFlow:
     file: support/people-open-profile.yaml
     env:
