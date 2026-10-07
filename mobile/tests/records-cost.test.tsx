@@ -22,6 +22,13 @@ import { billFor, decodeBill } from '../src/api/catalogs';
 import { pinned, bills, roster, slugs } from './pinned';
 const responses: Record<string, unknown> = fixtures.responses;
 const speech = decodeDocument(responses['/api/resource/speech-1205524']);
+// Reports' launch/static-read boundary is exercised in reports-boundary.test.
+jest.mock('../src/features/reports/TodayReports', () => ({
+  Spotlight: () => null,
+  ReportsEntry: () => null,
+  FromRecord: () => null,
+  TodayCoverage: () => null,
+}));
 const record = <T,>(data: T) => ({
   data,
   stale: false,

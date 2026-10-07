@@ -46,6 +46,7 @@ test.each([
   '/api/resource?id=x',
   '/api/brief',
   '/topics.json',
+  '/api/topics?background=1',
   '/api/topics?unknown=1',
   '/api/daily-post/preview',
   '/bills/../votes.json',

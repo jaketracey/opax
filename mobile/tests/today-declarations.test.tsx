@@ -13,6 +13,7 @@ import { Portrait } from '../src/design/primitives';
 import { FeedRow } from '../src/features/declarations/FeedRow';
 import { originalLabel } from '../src/features/today/DeclarationRow';
 import { formatDate } from '../src/design/format';
+jest.mock('../src/features/reports/TodayReports', () => ({Spotlight: () => null, ReportsEntry: () => null, FromRecord: () => null, TodayCoverage: () => null}));
 jest.mock('../src/api/runtime', () => ({
   portraits: { get: jest.fn(async () => null) },
 }));

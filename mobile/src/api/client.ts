@@ -9,6 +9,7 @@ import {
 } from '../features/ask/stream';
 import { isPartialCatalog } from './validation';
 import { isPeoplePaidPath } from '../features/people/policy';
+import { isReportsPaidPath } from './reports-policy';
 import { summaryStreamBody } from '../features/search/decoders';
 import {
   assertPortraitPath,
@@ -75,7 +76,7 @@ export class ApiClient {
   /** Explicit actions only: one attempt, session memory, no disk or retry. */
   getForAction<T>(path: string, decode: Decoder<T>): Promise<RecordResult<T>> {
     const url = allowedURL(this.options.origin, path);
-    if (!isPeoplePaidPath(path)) throw new ApiError('forbidden', 'Not an action read.');
+    if (!isPeoplePaidPath(path) && !isReportsPaidPath(path)) throw new ApiError('forbidden', 'Not an action read.');
     const previous = this.actionReads.get(path);
     if (previous) return previous as Promise<RecordResult<T>>;
     const pending = this.readAction(url, decode);
@@ -153,7 +154,7 @@ export class ApiClient {
     if (path.startsWith('/api/ask') || path.startsWith('/api/followups'))
       throw new ApiError('forbidden', 'Ask requires an explicit submission.');
     const url = allowedURL(this.options.origin, path); // before cache or networking
-    if (isPeoplePaidPath(path)) throw new ApiError('forbidden', 'Paid sections require an explicit action read.');
+    if (isPeoplePaidPath(path) || isReportsPaidPath(path)) throw new ApiError('forbidden', 'Paid sections require an explicit action read.');
     if (isPortraitPath(path))
       throw new ApiError('forbidden', 'Images require the byte client.');
     const requestStartedAt = this.now();

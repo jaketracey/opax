@@ -71,7 +71,12 @@ name: 13 Today front page, its native records and dated original sources
 - assertVisible:
     id: today-bills-as-at
     text: Updated \d{1,2} \w{3}.*
-- assertNotVisible: .*Source:.*
+# AsAtLine deliberately retains provenance in its VoiceOver sentence
+# ("As at ... · Source: ..."). Maestro also searches that label, so a
+# global substring match rejects a quiet Updated caption in another block.
+# Reject standalone source rows; the dated caption above and screenshot
+# check its visible presentation.
+- assertNotVisible: ^Source:.*
 - takeScreenshot: ${EVIDENCE}/13-bills-as-at
 - scrollUntilVisible:
     element:

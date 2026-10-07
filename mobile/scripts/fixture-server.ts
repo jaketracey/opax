@@ -1,5 +1,6 @@
 // Offline, data-only server. No Worker import, proxy, fetch, email or model path.
 import { createVoiceFixture } from './voice-fixture';
+import { reportsFixture } from './reports-fixture';
 import { askFixture } from './ask-fixture';
 import { createServer } from 'node:http';
 import { createHash } from 'node:crypto';
@@ -76,6 +77,7 @@ for (const [path, body] of Object.entries(recordFixtures.responses)) {
   files.set(path, Buffer.from(JSON.stringify(body)));
 }
 const pinnedBytes = fixtureBytes(snapshot);
+const reportBytes = reportsFixture(pinnedBytes);
 for (const path of Object.keys(snapshot.files)) {
   if (snapshot.testOnlyFiles.includes(path)) continue;
   if (path.endsWith('.webp')) assertPortraitPath(path);
@@ -203,8 +205,9 @@ export const server = createServer(async (request, response) => {
     if (path.endsWith('.webp')) assertPortraitPath(path);
     else assertAllowedPath(path);
     const url = new URL(path, `http://127.0.0.1:${port}`);
+    const reportBody = reportBytes(path);
     const peopleResponse = Object.hasOwn(peopleFixtures.responses, path);
-    const search = peopleResponse ? null : searchFixture(url, roster);
+    const search = peopleResponse || reportBody || files.has(url.pathname) ? null : searchFixture(url, roster);
     if (search) {
       response.writeHead(200, {
         'Content-Type': search.contentType ?? 'application/json; charset=utf-8',
@@ -213,9 +216,9 @@ export const server = createServer(async (request, response) => {
       response.end(search.body);
       return;
     }
-    let body = peopleResponse
+    let body = files.get(url.pathname) ?? searchResourceFixture(url.pathname) ?? reportBody ?? (peopleResponse
       ? Buffer.from(JSON.stringify(peopleFixtures.responses[path]))
-      : files.get(url.pathname) ?? searchResourceFixture(url.pathname) ?? undefined;
+      : undefined);
     let cacheControl = 'public, max-age=300';
     const isEdition = url.pathname === editionPath;
     if (

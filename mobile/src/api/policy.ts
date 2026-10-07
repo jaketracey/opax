@@ -1,5 +1,6 @@
 import { isPeoplePaidPath } from '../features/people/policy';
 import { isPortraitPath } from './portrait-policy';
+import { allowsReportsPath } from './reports-policy';
 import {
   documentKinds,
   moreCatalogKinds,
@@ -116,6 +117,7 @@ export function assertAllowedPath(path: string): void {
     throw new Error('Route is outside the public catalog allow-list');
   const params = new URLSearchParams(query);
   if (path.split('?').length > 2) throw new Error('Invalid catalog query');
+  if (allowsReportsPath(path)) return;
   if (isPeoplePaidPath(path)) return;
   // Build 7 Ask. POST admission is separate from the catalog GET client.
   if (pathname === '/api/ask' && query === 'stream=1') return;

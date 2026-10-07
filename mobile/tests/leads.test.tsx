@@ -3,6 +3,13 @@ import { Text as NativeText } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { router } from 'expo-router';
 import { catalogs as runtime } from '../src/api/runtime';
+// Reports' launch/static-read boundary is exercised in reports-boundary.test.
+jest.mock('../src/features/reports/TodayReports', () => ({
+  Spotlight: () => null,
+  ReportsEntry: () => null,
+  FromRecord: () => null,
+  TodayCoverage: () => null,
+}));
 import {
   Catalogs,
   decodeDiscovery,

@@ -8,6 +8,7 @@ import { colors, hairline, spacing } from '../design/tokens';
 import { EditionSection } from './EditionCard';
 import { declarationsRoute, recentRecordsRoute } from '../navigation/routes';
 import { FollowingSection } from './follows/FollowingSection';
+import { FromRecord, ReportsEntry, Spotlight, TodayCoverage } from './reports/TodayReports';
 import { BillCarousel } from './today/BillCarousel';
 import { DeclarationRow } from './today/DeclarationRow';
 import { LeadsCard } from './today/LeadsCard';
@@ -72,6 +73,10 @@ export default function Today() {
         refreshing={refreshing}
         onRetry={refresh}
       />
+      <ReportsEntry />
+      <Spotlight />
+      <FromRecord />
+      <TodayCoverage />
       <Section title="Recently introduced bills" testID="today-bills">
         <TodayBlock
           block={data?.bills ?? null}
