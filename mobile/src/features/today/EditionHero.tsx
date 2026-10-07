@@ -11,7 +11,7 @@ import { openOnWeb, webPageUrl } from '../../navigation/external';
 import { fromWebPath, personRoute } from '../../navigation/routes';
 import { sponsorSlug } from '../bills/sponsors';
 import { CachedPortrait } from '../CachedPortrait';
-import { Chip, TodayCard, shortDay } from './parts';
+import { Chip, TodayCard, shortDay, useTodayAccent } from './parts';
 import {
   brandAccent,
   moneyAccent,
@@ -120,7 +120,7 @@ async function openRecord(edition: EditionView) {
  */
 export function EditionHero({ edition }: { edition: EditionView }) {
   const stacked = useAccessibilitySize();
-  const accent = editionAccent(edition);
+  const accent = useTodayAccent(editionAccent(edition));
   const person = edition.kind === 'politician' ? personFacts(edition) : null;
   const detail = person ? person.place : kickerDetail(edition);
   const figures = editionFigures(edition);

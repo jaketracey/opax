@@ -50,10 +50,18 @@ export type Palette = Record<Role, string>;
 
 // Increase Contrast: each text token steps to the next stronger one and the
 // subtle divider takes the default divider colour (IOS-UX section 5).
+// The category inks and bronzeInk step toward ink until they read at 7:1 on
+// their wash, paper, raised and sunken (UI polish, Oct 2026).
 export const lightHighContrast: Partial<Palette> = {
   inkFaint: light.inkSoft,
   inkSoft: light.ink,
   dividerSubtle: light.dividerDefault,
+  onNavySoft: light.onNavy,
+  bronzeInk: '#5C4318',
+  moneyInk: '#29553D',
+  votesInk: '#374684',
+  interestsInk: '#72385C',
+  billsInk: '#205158',
 };
 
 // Party identity: a dot with a readable label, never colour alone.
