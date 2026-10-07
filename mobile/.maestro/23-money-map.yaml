@@ -3,11 +3,11 @@ name: 23 Native money map, held figures, original source and ranked list
 ---
 - launchApp:
     clearState: true
-# The Edition can expand after the initial Today layout. Wait before locating its next row.
-- scrollUntilVisible:
-    element:
-      id: today-edition-as-at
-    centerElement: true
+# Wait for the loaded Edition hero before locating the Money map card.
+# Its quiet update caption is now present only for a saved stale copy.
+- extendedWaitUntil:
+    visible:
+      id: today-edition-head
     timeout: 120000
 - scrollUntilVisible:
     element:
