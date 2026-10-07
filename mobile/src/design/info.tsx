@@ -3,6 +3,7 @@ import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { Heading, Text } from './text';
 import { Icon } from './icon';
 import { colors, hairline, minimumTarget, rhythm } from './tokens';
+import { useReduceMotion } from './accessibility';
 
 export interface InfoNotes {
   /** The sheet's title: "About these figures". */
@@ -70,10 +71,11 @@ export function InfoSheet({
   onClose: () => void;
   testID?: string;
 }) {
+  const reduced = useReduceMotion();
   return (
     <Modal
       visible={visible}
-      animationType="slide"
+      animationType={reduced ? 'none' : 'slide'}
       presentationStyle="pageSheet"
       onRequestClose={onClose}
     >
@@ -98,7 +100,7 @@ function SheetBody({
   testID,
 }: InfoNotes & { onClose: () => void; testID?: string }) {
   return (
-    <View style={styles.sheet} testID={testID}>
+    <View style={styles.sheet} testID={testID} accessibilityViewIsModal>
       <View style={styles.bar}>
         <View style={styles.grab} />
         <View style={styles.head}>

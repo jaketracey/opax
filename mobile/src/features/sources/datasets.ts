@@ -2,6 +2,7 @@
 // the screens used to print inline. The wording is unchanged from where it
 // was shown (About, Person, Party, Bill, Leads); it now lives in one place.
 // Coverage files do not publish licence fields: never infer an open licence.
+import { canonicalUrl } from '../../navigation/external';
 
 export interface DatasetLink {
   label: string;
@@ -145,6 +146,54 @@ export const datasets: Dataset[] = [
         url: 'https://www.legislation.gov.au/',
       },
     ],
+  },
+  {
+    id: 'grantconnect',
+    name: 'Commonwealth grant programs and awards',
+    publisher: 'Department of Finance, GrantConnect',
+    licence: 'CC BY 3.0 AU',
+    terms: [
+      'GrantConnect (Department of Finance), Grant Award records, via parli.db ext_grants / ext_grant_details',
+      'CC BY 3.0 AU (GrantConnect, Department of Finance)',
+    ],
+    links: [
+      { label: 'GrantConnect', url: 'https://www.grants.gov.au/Ga/List' },
+    ],
+  },
+  {
+    id: 'qld-grants',
+    name: 'Queensland grant programs',
+    publisher: 'Queensland Government, data.qld.gov.au',
+    licence: 'CC BY 4.0',
+    terms: [
+      'Queensland Government Investment Portal consolidated expenditure data (data.qld.gov.au), via parli.db government_grants',
+      'CC BY 4.0 (Queensland Government, data.qld.gov.au)',
+    ],
+    links: [
+      {
+        label: 'Government Investment Portal',
+        url: 'https://www.data.qld.gov.au/dataset/b102c881-2c7f-484a-a8b6-b056fe318964',
+      },
+    ],
+  },
+  {
+    id: 'austender-agencies',
+    name: 'Government agency contract records',
+    publisher: 'Department of Finance, AusTender',
+    terms: [
+      'Agency search results are derived from published AusTender contract records. Refer to the original record for its reuse terms.',
+    ],
+    links: [{ label: 'AusTender', url: 'https://www.tenders.gov.au/' }],
+  },
+  {
+    id: 'search-catalog',
+    name: 'Search catalog, topic taxonomy and research reports',
+    publisher: 'OPAX',
+    terms: [
+      'OPAX indexes public source records and publishes its topic taxonomy and research reports. Source records retain their original copyright and licence.',
+      'Machine briefs are automated summaries; passages are extracts from the record.',
+    ],
+    links: [{ label: 'OPAX reports', url: canonicalUrl('/reports') }],
   },
 ];
 

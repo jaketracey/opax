@@ -3,6 +3,7 @@ import { CatalogCache, isFresh, type CacheEntry } from './cache';
 import { ApiError, httpError } from './errors';
 import { allowedURL } from './policy';
 import { isPartialCatalog } from './validation';
+import { summaryStreamBody } from '../features/search/decoders';
 import {
   assertPortraitPath,
   assertPortraitBytes,
@@ -98,13 +99,23 @@ export class ApiClient {
     path: string,
     decode: Decoder<T>,
     force = false,
-    { absence = false }: { absence?: boolean } = {},
+    {
+      absence = false,
+      retries = this.options.retries ?? 2,
+      timeoutMs = this.options.timeoutMs ?? 8000,
+      summaryStream = false,
+    }: {
+      absence?: boolean;
+      retries?: number;
+      timeoutMs?: number;
+      summaryStream?: boolean;
+    } = {},
   ): Promise<RecordResult<T>> {
     const url = allowedURL(this.options.origin, path); // before cache or networking
     if (isPortraitPath(path))
       throw new ApiError('forbidden', 'Images require the byte client.');
     const requestStartedAt = this.now();
-    const deadline = requestStartedAt + (this.options.timeoutMs ?? 8000);
+    const deadline = requestStartedAt + timeoutMs;
     let cached = await this.options.cache.get(url);
     if (cached) {
       try {
@@ -129,7 +140,7 @@ export class ApiClient {
       'offline',
       'This record is not saved on this iPhone yet. It will load when you are back online.',
     );
-    for (let attempt = 0; attempt <= (this.options.retries ?? 2); attempt++) {
+    for (let attempt = 0; attempt <= retries; attempt++) {
       const remaining = deadline - this.now();
       if (remaining <= 0) break;
       let retryDelay = 300 * 2 ** attempt;
@@ -189,16 +200,25 @@ export class ApiClient {
           body =
             response.status === 304
               ? cached!.body
-              : portraitMetadataLimits[path]
-                ? JSON.parse(
+              : summaryStream &&
+                  response.headers
+                    .get('content-type')
+                    ?.includes('text/event-stream')
+                ? summaryStreamBody(
                     new TextDecoder().decode(
-                      await this.readBytes(
-                        response,
-                        portraitMetadataLimits[path]!,
-                      ),
+                      await this.readBytes(response, 512 * 1024),
                     ),
                   )
-                : await response.json();
+                : portraitMetadataLimits[path]
+                  ? JSON.parse(
+                      new TextDecoder().decode(
+                        await this.readBytes(
+                          response,
+                          portraitMetadataLimits[path]!,
+                        ),
+                      ),
+                    )
+                  : await response.json();
         } catch (error) {
           if (controller.signal.aborted)
             throw new ApiError(
@@ -291,7 +311,7 @@ export class ApiClient {
       } finally {
         clearTimeout(timer);
       }
-      if (attempt < (this.options.retries ?? 2)) {
+      if (attempt < retries) {
         if (retryDelay >= deadline - this.now()) break;
         await this.sleep(retryDelay);
       }

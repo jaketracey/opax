@@ -7,6 +7,7 @@ import { CatalogCache } from './cache';
 import { DiskStore } from './disk-store';
 import { Catalogs } from './catalogs';
 import { setCatalogDiagnostics } from './validation';
+import { RecordSearch } from '../features/search/api';
 const extra = Constants.expoConfig?.extra;
 if (
   !extra ||
@@ -39,6 +40,7 @@ const client = new ApiClient({
   cache: new CatalogCache(new DiskStore(), 24 * 1024 * 1024, 220),
 });
 export const catalogs = new Catalogs(client);
+export const recordSearch = new RecordSearch(client);
 // Paid reader calls: no disk persistence and no automatic retry. Records owns
 // the session promises, so opening a cached record costs no new request.
 export const recordClient = new ApiClient({

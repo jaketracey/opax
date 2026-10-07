@@ -1,4 +1,6 @@
 import { createHash } from 'node:crypto';
+import { decodeDocument, decodeSimilar } from '../src/features/records/model';
+import { decodeRecords } from '../src/features/search/decoders';
 import snapshot from '../scripts/fixture-snapshot.json';
 import { files, servedFiles } from './pinned';
 import {
@@ -119,7 +121,7 @@ test.each([
   '/interests/ties-by-donor.json',
   '/api/ask',
   '/api/search?q=x',
-  '/api/search-all?q=x&kind=bill',
+  '/api/search-all?q=x&kind=contract',
   '/api/search-all?q=x',
   '/unlisted.json',
   '/api/search-all?q=x&kind=all',
@@ -508,4 +510,20 @@ test('the fixture refuses an unknown roster mode at startup', async () => {
   await expect(fixture.ready).rejects.toThrow(
     'OPAX_FIXTURE_ROSTER must be pinned or null-optional',
   );
+});
+
+test('search results open matching native excerpt resources and preserve related-speech fixtures', async () => {
+  const response = await request('/api/search?q=housing&kind=speech&party=Labor&from=2025&to=2026&sort=newest&per=20&page=1&mode=hybrid');
+  const row = decodeRecords(JSON.parse(response.body)).results[0]!;
+  const resource = await request('/api/resource/' + row.slug);
+  expect(resource.status).toBe(200);
+  const doc = decodeDocument(JSON.parse(resource.body));
+  expect(doc.slug).toBe(row.slug);
+  expect(doc.title).toBe(row.title);
+  expect(doc.text).toBe(row.snippet);
+  expect(doc.metadata.fixture_excerpt).toBe(true);
+  const related = await request('/api/search?q=fixture&kind=speech&per=6');
+  expect(decodeSimilar(JSON.parse(related.body)).length).toBeGreaterThan(0);
+  const unknown = await request('/api/resource/speech-999999997');
+  expect(unknown.status).toBe(404);
 });
