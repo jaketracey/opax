@@ -1,4 +1,5 @@
 import { AskAbout } from '../ask/AskAbout';
+import { headerItems } from '../../navigation/chrome';
 import { SavedCopyNotice } from '../CatalogNotice';
 import { useCallback, useEffect, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
@@ -151,14 +152,16 @@ export default function BillDetail({
             // screen for the back stack.
             title: name,
             headerTitle: '',
-            unstable_headerRightItems: identity
-              ? () => [
-                  shareHeaderItem({
-                    path: `/bill/${identity.key}`,
-                    title: name,
-                  }),
-                ]
-              : undefined,
+            ...headerItems(
+              identity
+                ? () => [
+                    shareHeaderItem({
+                      path: `/bill/${identity.key}`,
+                      title: name,
+                    }),
+                  ]
+                : undefined,
+            ),
           }}
         />
       )}

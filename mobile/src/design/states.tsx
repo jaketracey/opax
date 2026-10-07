@@ -1,3 +1,4 @@
+import { phoneCopy } from './phone-copy';
 import { useEffect, useRef } from 'react';
 import {
   AccessibilityInfo,
@@ -14,9 +15,12 @@ import { colors, hairline, radius, rhythm, spacing } from './tokens';
 
 // Copy from IOS-UX section 4 ("States, everywhere") and the API client.
 export const stateCopy = {
-  offlineUncached:
+  offlineUncached: phoneCopy(
     'This record is not saved on this iPhone yet. It will load when you are back online.',
-  offlineCached: 'Offline. Records saved on this iPhone stay readable.',
+  ),
+  offlineCached: phoneCopy(
+    'Offline. Records saved on this iPhone stay readable.',
+  ),
   genericError: 'The public record could not be loaded. Try again.',
   searchBusy: 'Search is busy. Try again in a minute.',
   searchUnavailable: 'Search is temporarily unavailable.',

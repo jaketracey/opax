@@ -1,0 +1,177 @@
+appId: au.com.opax.app
+name: 13 Today front page, its native records and dated original sources
+---
+# scrollUntilVisible always swipes from the centre of the screen. Tap
+# targets are centred with speed-20 swipes (about half a screen each). From
+# iOS 26 the tab bar floats over the bottom of the page, and a link drawn
+# under it still counts as visible: on iOS 27 a source tap hit the Your MP
+# tab. Each group of steps first checks the page is still shown.
+- launchApp:
+    permissions: {}
+- assertVisible:
+    id: today-screen-message
+# The daily edition: the fixture's pinned production response, as posted.
+# At AX5 the title alone can outgrow the screen, so match a tenth of it.
+- extendedWaitUntil:
+    visible:
+      id: today-edition-head
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: today-edition-head
+      text: 'Daily edition, Bill, 4 October 2026: Wage Justice for Early Childhood.*'
+    timeout: 300000
+    visibilityPercentage: 10
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/13-edition
+# A bill edition's text is a model's summary: its label comes first.
+- scrollUntilVisible:
+    element:
+      id: today-edition-machine
+      text: 'Machine-written\. Written by a model from the explanatory memorandum; not the record\.'
+    timeout: 300000
+    visibilityPercentage: 10
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/13-edition-machine
+# One action opens the record on its native screen: a bill by its key.
+- scrollUntilVisible:
+    element:
+      id: today-edition-open
+      text: Open the bill
+    timeout: 300000
+    visibilityPercentage: 10
+    centerElement: true
+- waitForAnimationToEnd
+- tapOn:
+    id: today-edition-open
+- extendedWaitUntil:
+    visible:
+      id: bill-screen
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: bill-title
+      text: Wage Justice for Early Childhood.*
+    timeout: 300000
+    visibilityPercentage: 10
+- takeScreenshot: ${EVIDENCE}/13-edition-open-bill
+- pressKey: Back
+- assertVisible:
+    id: today-screen
+- scrollUntilVisible:
+    element:
+      id: today-bill-0
+    direction: DOWN
+    timeout: 300000
+    visibilityPercentage: 1
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/13-bills
+- scrollUntilVisible:
+    element:
+      id: today-bills-as-at
+    direction: DOWN
+    timeout: 300000
+# One quiet caption per block: the record's date, no source names.
+- assertVisible:
+    id: today-bills-as-at
+    text: Updated \d{1,2} \w{3}.*
+- assertNotVisible: .*Source:.*
+- takeScreenshot: ${EVIDENCE}/13-bills-as-at
+- scrollUntilVisible:
+    element:
+      id: today-bill-0
+    timeout: 300000
+    visibilityPercentage: 1
+    centerElement: true
+    speed: 40
+    direction: UP
+- waitForAnimationToEnd
+- tapOn:
+    id: today-bill-0
+- scrollUntilVisible:
+    element:
+      id: bill-title
+    direction: DOWN
+    timeout: 300000
+    visibilityPercentage: 1
+- takeScreenshot: ${EVIDENCE}/13-open-bill
+# On iOS 27 an uncentred source link can sit under the tab bar.
+- assertVisible:
+    id: bill-screen
+- scrollUntilVisible:
+    element:
+      id: bill-source-0
+    direction: DOWN
+    timeout: 300000
+    centerElement: true
+    speed: 40
+- waitForAnimationToEnd
+- assertVisible:
+    id: bill-screen
+- tapOn:
+    id: bill-source-0
+- assertVisible: https://parlinfo.aph.gov.au/.*
+- takeScreenshot: ${EVIDENCE}/13-bill-source-alert
+- tapOn: OK
+- pressKey: Back
+- assertVisible:
+    id: today-screen
+- scrollUntilVisible:
+    element:
+      id: today-declaration-0
+    direction: DOWN
+    timeout: 300000
+    centerElement: true
+    speed: 40
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/13-declaration
+- assertVisible:
+    id: today-screen
+# The register page is "View original" on touch and hold (an action sheet).
+- longPressOn:
+    id: today-declaration-0
+- tapOn: View original
+- assertVisible: https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Senators_Interests/Senators_Interests_Register/123072
+- takeScreenshot: ${EVIDENCE}/13-declaration-source-alert
+# The local destination view scrolls a long URL at AX5. Capture its end too.
+- repeat:
+    times: 8
+    commands:
+      - swipe:
+          start: 50%, 65%
+          end: 50%, 35%
+          duration: 1000
+- takeScreenshot: ${EVIDENCE}/13-declaration-source-alert-end
+- tapOn: OK
+- assertVisible:
+    id: today-screen
+# At AX5 this as-at line is about 520pt tall. Centring lands it differently
+# on each screen (the 17 Pro shows all of it; a centre stopped by the page end
+# clips its date), so a fixed drag after centring can push it off either edge.
+# Start from the page end, where every device places it the same way, then
+# drag its date back below the navigation bar before requiring full visibility.
+- scrollUntilVisible:
+    element:
+      id: today-screen-footer
+    direction: DOWN
+    timeout: 300000
+    visibilityPercentage: 1
+- swipe:
+    start: 90%, 70%
+    end: 90%, 20%
+    duration: 300
+- waitForAnimationToEnd
+- swipe:
+    start: 90%, 30%
+    end: 90%, 60%
+    duration: 1000
+- waitForAnimationToEnd
+- scrollUntilVisible:
+    element:
+      id: today-declarations-as-at
+    direction: DOWN
+    timeout: 300000
+- assertVisible:
+    id: today-declarations-as-at
+    text: Updated \d{1,2} \w{3}.*
+- takeScreenshot: ${EVIDENCE}/13-declarations-as-at

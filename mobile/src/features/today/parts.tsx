@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import {
   Animated,
   Easing,
+  Platform,
   StyleSheet,
   View,
   useWindowDimensions,
@@ -9,6 +10,7 @@ import {
   type ViewStyle,
 } from 'react-native';
 import { SymbolView, type SFSymbol } from 'expo-symbols';
+import { androidSymbol } from '../../design/android-symbols';
 import { calendarDate, formatDate } from '../../design/format';
 import { partyDot, partyText, type PartyContext } from '../../design/party';
 import { Text, useReduceMotionSetting } from '../../design/primitives';
@@ -127,8 +129,8 @@ export function TintIcon({
   const scaled = Math.round(size * Math.min(Math.max(fontScale, 1), 2));
   return (
     <SymbolView
-      name={name}
-      size={scaled}
+      name={Platform.OS === 'android' ? { android: androidSymbol(name) } : name}
+      size={Platform.OS === 'android' ? scaled / fontScale : scaled}
       tintColor={color}
       style={{ width: scaled, height: scaled }}
       accessibilityElementsHidden

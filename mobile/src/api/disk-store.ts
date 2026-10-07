@@ -1,5 +1,7 @@
 import { Directory, File, Paths } from 'expo-file-system';
+import { Platform } from 'react-native';
 import type { CacheEntry, CacheIndexEntry, CacheStore } from './cache';
+import { catalogWarning } from './validation';
 // Stable compact filename; the full URL is checked in the body before reuse.
 // Two independent 32-bit hashes avoid OS filename limits on long search URLs.
 const key = (url: string) => {
@@ -14,6 +16,19 @@ const key = (url: string) => {
 export class DiskStore implements CacheStore {
   private directory = new Directory(Paths.cache, 'opax-catalog-v2');
   private index = new File(this.directory, 'index.json');
+  private async readText(file: File) {
+    const start = Date.now();
+    if (Platform.OS === 'android')
+      catalogWarning(`Android cache read start: ${file.name}`);
+    try {
+      return await file.text();
+    } finally {
+      if (Platform.OS === 'android')
+        catalogWarning(
+          `Android cache read end: ${file.name} (${Date.now() - start}ms)`,
+        );
+    }
+  }
   private prepare() {
     this.directory.create({ idempotent: true, intermediates: true });
     const legacy = new Directory(Paths.cache, 'opax-catalog-v1');
@@ -29,13 +44,20 @@ export class DiskStore implements CacheStore {
     this.prepare();
     const temporary = new File(this.directory, `${file.name}.tmp`);
     await temporary.write(payload);
-    temporary.move(file, { overwrite: true });
+    const moved = temporary.move(file, { overwrite: true });
+    // Android's native move is asynchronous. Keep serialized cache writes
+    // ordered until the destination exists, including the shared index file.
+    if (Platform.OS === 'android') {
+      catalogWarning(`Android cache move start: ${file.name}`);
+      await moved;
+      catalogWarning(`Android cache move end: ${file.name}`);
+    }
   }
   async readIndex(): Promise<CacheIndexEntry[]> {
     let rows: unknown = [];
     if (this.index.exists) {
       try {
-        rows = JSON.parse(await this.index.text());
+        rows = JSON.parse(await this.readText(this.index));
       } catch {
         /* Reclaim an interrupted/corrupt index. */
       }
@@ -71,7 +93,7 @@ export class DiskStore implements CacheStore {
   async read(url: string): Promise<CacheEntry | undefined> {
     const file = new File(this.directory, key(url));
     if (!file.exists) return;
-    const entry = JSON.parse(await file.text());
+    const entry = JSON.parse(await this.readText(file));
     if (
       entry?.url !== url ||
       typeof entry.savedAt !== 'number' ||
@@ -87,7 +109,7 @@ export class DiskStore implements CacheStore {
     if (file.exists) {
       let existing;
       try {
-        existing = JSON.parse(await file.text());
+        existing = JSON.parse(await this.readText(file));
       } catch {
         /* Repair corrupt cache bytes. */
       }

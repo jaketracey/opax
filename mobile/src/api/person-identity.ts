@@ -9,6 +9,7 @@ import {
   type RosterId,
 } from './ids';
 import { ApiError, PersonIdentityError } from './errors';
+import { indexedIdentityHandoff } from './identity-platform';
 import { personPartyFor, type PartyStatus } from './party-transforms';
 import type {
   Roster,
@@ -276,6 +277,8 @@ export function personSlugForId(
   people: PeopleCatalog,
   manifest: Manifest,
 ) {
+  if (indexedIdentityHandoff)
+    return indexedPersonSlugForId(id, slugs, roster, people, manifest);
   const person = people.people.find((p) => p.person_id === id);
   const names = new Set(
     [person?.name, ...(person?.aliases ?? [])]
@@ -301,6 +304,52 @@ export function personSlugForId(
   return (
     resolved.find((key) => slugs.slugs[key] === person?.name) ?? resolved[0]!
   );
+}
+// Canonical membership still requires the same native join. Index only the
+// candidate names, preserving original directory order and refusal behavior.
+const canonicalCandidates = snapshotIndex((slugs: Slugs) => {
+  const names = new Map<string, { slug: string; order: number }[]>();
+  Object.entries(slugs.slugs).forEach(([slug, name], order) =>
+    append(names, nameKey(name), { slug, order }),
+  );
+  return names;
+});
+export function indexedPersonSlugForId(
+  id: PersonId,
+  slugs: Slugs,
+  roster: Roster,
+  people: PeopleCatalog,
+  manifest: Manifest,
+) {
+  const person = people.people.find((p) => p.person_id === id);
+  const names = new Set(
+    [person?.name, ...(person?.aliases ?? [])]
+      .filter((name): name is string => !!name)
+      .map(nameKey),
+  );
+  const index = canonicalCandidates(slugs);
+  const candidates = [...names]
+    .flatMap((name) => index.get(name) ?? [])
+    .sort((a, b) => a.order - b.order);
+  const resolved = candidates.filter(({ slug }) => {
+    try {
+      return (
+        joinPerson(slug, slugs, roster, people, manifest).canonicalPersonId ===
+        id
+      );
+    } catch {
+      return false;
+    }
+  });
+  if (!resolved.length)
+    throw new ApiError(
+      'not-found',
+      'This person is not in the public directory.',
+    );
+  return (
+    resolved.find(({ slug }) => slugs.slugs[slug] === person?.name) ??
+    resolved[0]!
+  ).slug;
 }
 export function joinPerson(
   slug: string,

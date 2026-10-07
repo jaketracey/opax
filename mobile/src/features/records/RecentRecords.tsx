@@ -1,3 +1,4 @@
+import { headerItems } from '../../navigation/chrome';
 import { useCallback } from 'react';
 import { Stack, router } from 'expo-router';
 import {
@@ -25,13 +26,13 @@ export default function RecentRecords() {
         options={{
           title: 'Just added',
           headerTitle: '',
-          unstable_headerRightItems: () => [
+          ...headerItems(() => [
             shareHeaderItem({
               path: '/',
               anchor: 'hp-indexed-title',
               title: 'Just added to the record',
             }),
-          ],
+          ]),
         }}
       />
       <ReaderList

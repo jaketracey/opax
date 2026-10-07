@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 
 export function assertNoFixtureOrigin(body: Buffer, fixturePort: string) {
   for (const prefix of [
+    'http://10.0.2.2',
+    'https://10.0.2.2',
     'http://127.0.0.1',
     'http://localhost',
     'https://127.0.0.1',

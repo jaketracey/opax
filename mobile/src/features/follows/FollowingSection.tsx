@@ -1,3 +1,4 @@
+import { phoneCopy } from '../../design/phone-copy';
 import { SavedCopyNotice } from '../CatalogNotice';
 import { Pressable, StyleSheet, View } from 'react-native';
 import type { SFSymbol } from 'expo-symbols';
@@ -115,7 +116,9 @@ export function FollowingSection({
           <View style={styles.text}>
             <EmptyState
               icon={null}
-              message="Follow a parliamentarian, party, bill or electorate from its page. Today then shows what changed in the published record since you last looked. Follows are saved on this iPhone only."
+              message={phoneCopy(
+                'Follow a parliamentarian, party, bill or electorate from its page. Today then shows what changed in the published record since you last looked. Follows are saved on this iPhone only.',
+              )}
               testID="today-following-empty"
             />
           </View>

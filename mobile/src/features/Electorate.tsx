@@ -1,6 +1,7 @@
 import { ElectorateDate, ElectorateHistory } from './directories/ElectorateHistory';
 import { validDate } from './directories/model';
 import { AskAbout } from './ask/AskAbout';
+import { headerItems } from '../navigation/chrome';
 import { OutlineMap } from './electorate-map/OutlineMap';
 import {
   formatCount,
@@ -130,12 +131,13 @@ export function ElectorateScreen({
           options={{
             title: identity?.name ?? '',
             headerTitle: '',
-            unstable_headerRightItems:
+            ...headerItems(
               identity && seat
                 ? () => [
                     shareHeaderItem({ path: seat.url + (asof ? `?asof=${asof}` : ''), title: identity.name }),
                   ]
                 : undefined,
+            ),
           }}
         />
       )}
