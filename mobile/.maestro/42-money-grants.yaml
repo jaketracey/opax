@@ -1,0 +1,321 @@
+appId: au.com.opax.app
+name: 42 Electorate grants, programs and monthly largest; static public-money screens
+---
+- launchApp
+- tapOn:
+    id: tab-your-mp
+- runFlow:
+    when:
+      notVisible:
+        id: seat-search
+    commands:
+      - scrollUntilVisible:
+          element:
+            id: change-seat
+          centerElement: true
+          timeout: 300000
+      - tapOn:
+          id: change-seat
+- scrollUntilVisible:
+    element:
+      id: seat-search
+    direction: UP
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: seat-search
+- inputText: Grayndler
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: seat-choice-federal-representatives-nsw-grayndler
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: seat-choice-federal-representatives-nsw-grayndler
+- scrollUntilVisible:
+    element:
+      id: seat-grants-total
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/42-your-mp-grants
+- scrollUntilVisible:
+    element:
+      id: your-electorate
+    direction: UP
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: your-electorate
+- scrollUntilVisible:
+    element:
+      id: electorate-name
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/42-electorate
+- scrollUntilVisible:
+    element:
+      id: seat-grants-total
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/42-seat-grants
+- scrollUntilVisible:
+    element:
+      id: seat-grants-all
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: seat-grants-all
+- scrollUntilVisible:
+    element:
+      id: grants-title
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/42-grants-electorates
+- scrollUntilVisible:
+    element:
+      id: grants-row-0
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: grants-row-0
+- scrollUntilVisible:
+    element:
+      id: grants-search
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: grants-search
+- inputText: Community Development Grants
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: grants-row-0
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: grants-row-0
+- scrollUntilVisible:
+    element:
+      id: program-title
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/42-program
+- scrollUntilVisible:
+    element:
+      id: program-notes
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: program-notes
+- assertVisible:
+    id: program-notes-sheet
+- takeScreenshot: ${EVIDENCE}/42-program-notes
+- tapOn:
+    id: program-notes-sheet-done
+- scrollUntilVisible:
+    element:
+      id: program-largest
+    direction: UP
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: program-largest
+- scrollUntilVisible:
+    element:
+      id: largest-title
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/42-largest
+- scrollUntilVisible:
+    element:
+      id: largest-recipient-0
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/42-largest-recipient
+- openLink: opax://public-money
+- tapOn:
+    text: Open
+    optional: true
+- scrollUntilVisible:
+    element:
+      id: money-hub-title
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/42-public-money-hub
+- scrollUntilVisible:
+    element:
+      id: money-qld
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: money-qld
+- scrollUntilVisible:
+    element:
+      id: grants-title
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/42-qld-grants
+- openLink: opax://grants-allocation
+- tapOn:
+    text: Open
+    optional: true
+- scrollUntilVisible:
+    element:
+      id: allocation-title
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/42-allocation
+- scrollUntilVisible:
+    element:
+      id: allocation-comparison
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: allocation-comparison
+- takeScreenshot: ${EVIDENCE}/42-seat-comparison
+- scrollUntilVisible:
+    element:
+      id: allocation-margin
+    centerElement: true
+- tapOn:
+    id: allocation-margin
+- scrollUntilVisible:
+    element:
+      id: allocation-margin-search
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: allocation-margin-search
+- inputText: Grayndler
+- pressKey: Enter
+- takeScreenshot: ${EVIDENCE}/42-margin
+- scrollUntilVisible:
+    element:
+      id: allocation-project-0
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/42-project
+- scrollUntilVisible:
+    element:
+      id: allocation-invitations
+    direction: UP
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: allocation-invitations
+- takeScreenshot: ${EVIDENCE}/42-invitations
+- scrollUntilVisible:
+    element:
+      id: allocation-history
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: allocation-history
+- takeScreenshot: ${EVIDENCE}/42-history
+- openLink: opax://connections
+- tapOn:
+    text: Open
+    optional: true
+- scrollUntilVisible:
+    element:
+      id: connections-title
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/42-programs-places
+- scrollUntilVisible:
+    element:
+      id: connections-search
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: connections-search
+- inputText: Community Development Grants
+- pressKey: Enter
+- takeScreenshot: ${EVIDENCE}/42-connections-search
+- scrollUntilVisible:
+    element:
+      id: connection-open-c87ef697d1bd69e428442b36
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: connection-open-c87ef697d1bd69e428442b36
+- takeScreenshot: ${EVIDENCE}/42-source-excerpts

@@ -379,6 +379,7 @@ export function PartyPage({ input }: { input: string }) {
                 <MoneyMapLink party={view.label} />
               </RowList>
             </Section>
+            <LinkRow title="Public money" accent="money" icon="banknote" testID="party-public-money" onPress={() => router.push('/public-money')} />
             <PartyFunding name={view.label} />
             <Section
               title="Associated entities"

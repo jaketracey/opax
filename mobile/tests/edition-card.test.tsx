@@ -318,8 +318,8 @@ describe('the edition card', () => {
     );
     alert.mockRestore();
   });
-  test('kinds without a native screen open the page on the web (e2e shows it)', async () => {
-    const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
+  test('the community-funding report opens through the public money lane', async () => {
+    jest.mocked(router.push).mockClear();
     const report = {
       ...edition,
       kind: 'topic' as const,
@@ -328,17 +328,10 @@ describe('the edition card', () => {
       path: '/reports/grants-allocation',
     };
     const { root } = render(<EditionCard edition={report} />);
-    expect(host(root, 'today-edition-open')).toHaveLength(0);
-    const link = host(root, 'today-edition-link')[0]!;
-    expect(link.props.accessibilityLabel).toBe('Read the report');
-    expect(link.props.accessibilityHint).toBe('Opens on opax.com.au');
-    await press(root, 'today-edition-link');
-    expect(alert).toHaveBeenCalledWith(
-      'Opens on opax.com.au: Read the report',
-      `${webOrigin}/reports/grants-allocation`,
-    );
-    expect(webOrigin).not.toContain('opax.com.au');
-    alert.mockRestore();
+    await press(root, 'today-edition-open');
+    expect(router.push).toHaveBeenCalledWith({
+      pathname: '/grants-allocation',
+    });
   });
   test('a standing report opens through the shared native resolver', async () => {
     jest.mocked(router.push).mockClear();

@@ -1,5 +1,6 @@
 import { ElectorateDate, ElectorateHistory } from './directories/ElectorateHistory';
 import { validDate } from './directories/model';
+import { SeatGrants } from './money-public/Grants';
 import { AskAbout } from './ask/AskAbout';
 import { headerItems } from '../navigation/chrome';
 import { OutlineMap } from './electorate-map/OutlineMap';
@@ -188,6 +189,7 @@ export function ElectorateScreen({
               />
             </Group>
             <AskAbout kind="electorate" name={identity.name} />
+            <SeatGrants name={identity.name} state={identity.state} eligible={identity.jurisdiction === 'federal' && identity.chamber === 'representatives'} />
             <View testID="electorate-map">
               <OutlineMap
                 boundaries={view.boundaries}

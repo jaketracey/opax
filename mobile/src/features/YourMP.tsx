@@ -1,3 +1,4 @@
+import { SeatGrants } from './money-public/Grants';
 import { PayBlock, PartyReceiptsBlock } from './people/FinancialBlocks';
 import { phoneCopy } from '../design/phone-copy';
 import { PartialNotice, SavedCopyNotice } from './CatalogNotice';
@@ -347,6 +348,7 @@ export default function YourMP() {
             </RowList>
             <EvidenceFooter block={view.seat} id="your-seat" />
           </Group>
+          <SeatGrants name={view.seat.data!.name} state={view.seat.data!.state_code} eligible={view.seat.data!.jurisdiction === 'federal' && view.seat.data!.chamber === 'representatives'} />
           {view.seat.data!.chamber !== 'senate' ? (
             <RecordBlock
               title={

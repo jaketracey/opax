@@ -73,6 +73,9 @@ export default function Today() {
         refreshing={refreshing}
         onRetry={refresh}
       />
+      <Section accent="money" icon="banknote" testID="today-money">
+        <LinkRow title="Public money" detail="Grants, contracts and agencies" accent="money" icon="banknote" testID="today-public-money" onPress={() => router.push('/public-money')} />
+      </Section>
       <ReportsEntry />
       <Spotlight />
       <FromRecord />
