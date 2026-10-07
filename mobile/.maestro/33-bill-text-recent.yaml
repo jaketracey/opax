@@ -1,0 +1,157 @@
+appId: au.com.opax.app
+name: 33 Bill text versions, source navigation, Just added and native records
+---
+- launchApp:
+    permissions: {}
+- openLink: opax://bill/au-federal-r7534
+- extendedWaitUntil:
+    visible:
+      id: bill-screen
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      id: bill-read-text
+    direction: DOWN
+    centerElement: true
+    speed: 70
+    timeout: 180000
+- waitForAnimationToEnd
+- tapOn:
+    id: bill-read-text
+- extendedWaitUntil:
+    visible:
+      id: bill-text-reader
+    timeout: 20000
+- takeScreenshot: ${EVIDENCE}/33-bill-text
+- scrollUntilVisible:
+    element:
+      id: bill-text-read
+    direction: DOWN
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- waitForAnimationToEnd
+- tapOn:
+    id: bill-text-read
+- scrollUntilVisible:
+    element:
+      id: bill-text-overview-label
+    direction: DOWN
+    visibilityPercentage: 10
+    speed: 20
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/33-overview
+- scrollUntilVisible:
+    element:
+      id: bill-text-download
+    direction: DOWN
+    centerElement: true
+    speed: 70
+    timeout: 180000
+- waitForAnimationToEnd
+- tapOn:
+    id: bill-text-download
+- assertVisible: 'Share file: au-federal-r7534-r7534-aspassed.txt'
+- takeScreenshot: ${EVIDENCE}/33-text-file
+- tapOn: OK
+- scrollUntilVisible:
+    element:
+      id: bill-text-version-picker
+    direction: UP
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- waitForAnimationToEnd
+- tapOn:
+    id: bill-text-version-picker
+- scrollUntilVisible:
+    element:
+      id: bill-text-version-1
+    direction: DOWN
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/33-version-picker
+- waitForAnimationToEnd
+- tapOn:
+    id: bill-text-version-1
+- scrollUntilVisible:
+    element:
+      id: bill-text-version-label
+    direction: UP
+    speed: 20
+    timeout: 180000
+- assertVisible: First reading — synthetic fixture
+- takeScreenshot: ${EVIDENCE}/33-version-switched
+- scrollUntilVisible:
+    element:
+      id: bill-text-navigation
+    direction: DOWN
+    centerElement: true
+    speed: 70
+    timeout: 180000
+- waitForAnimationToEnd
+- tapOn:
+    id: bill-text-navigation
+- scrollUntilVisible:
+    element:
+      id: bill-text-section-1
+    direction: DOWN
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- waitForAnimationToEnd
+- tapOn:
+    id: bill-text-section-1
+- extendedWaitUntil:
+    visible:
+      id: reader-part-title-1
+    timeout: 20000
+- takeScreenshot: ${EVIDENCE}/33-text-navigation
+- tapOn:
+    id: tab-today
+- scrollUntilVisible:
+    element:
+      id: today-records-open
+    direction: DOWN
+    centerElement: true
+    speed: 70
+    timeout: 180000
+- waitForAnimationToEnd
+- tapOn:
+    id: today-records-open
+- extendedWaitUntil:
+    visible:
+      id: recent-records
+    timeout: 20000
+- takeScreenshot: ${EVIDENCE}/33-just-added
+- scrollUntilVisible:
+    element:
+      id: recent-record-1
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- waitForAnimationToEnd
+- tapOn:
+    id: recent-record-1
+- extendedWaitUntil:
+    visible:
+      id: doc-title
+    timeout: 20000
+- takeScreenshot: ${EVIDENCE}/33-division-reader
+- openLink: opax://doc/press-pmt-reader-fixture
+- extendedWaitUntil:
+    visible:
+      id: doc-title
+    timeout: 20000
+- takeScreenshot: ${EVIDENCE}/33-release-reader
+- scrollUntilVisible:
+    element:
+      id: reader-text-0
+    direction: DOWN
+    visibilityPercentage: 10
+    speed: 70
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/33-release-text

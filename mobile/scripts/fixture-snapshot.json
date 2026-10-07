@@ -238,7 +238,9 @@
     "/photos/10257.webp": "5d7acf340f0cf73f556cc18b53394127b0bf0de8317f4e59d0e0a993e7310a8b",
     "/photos/10290.webp": "71d1a5aace132a879918fc38ba25be3468413e2ed6b7f202e42c78eacf2231d2",
     "/photos/10001.webp": "a01454c6a792423388e65311735aee72832c93b837a771d35b42e9717c125156",
-    "/photos/10956.webp": "854d831dde2d67c9a6e186f4e80939ae6b22bbceeb7a73b500cb4da0096cdf9d"
+    "/photos/10956.webp": "854d831dde2d67c9a6e186f4e80939ae6b22bbceeb7a73b500cb4da0096cdf9d",
+    "/interests/10081.json": "a6212e59f9a530999cdf85cecb77d7865307ce29aa75cd961d541585fe4256d8",
+    "/photos/10081.webp": "b089126130e5d1033a5796295da6cb4fd0f52efc3998cf455730af9dedf6813a"
   },
   "sizes": {
     "/parliamentarians.json": 405665,
@@ -477,7 +479,9 @@
     "/photos/10257.webp": 3408,
     "/photos/10290.webp": 3276,
     "/photos/10001.webp": 3326,
-    "/photos/10956.webp": 4708
+    "/photos/10956.webp": 4708,
+    "/interests/10081.json": 3069,
+    "/photos/10081.webp": 4460
   },
   "testOnlyFiles": [
     "/interests/ties-by-donor.json"

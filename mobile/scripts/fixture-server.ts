@@ -5,6 +5,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import snapshot from './fixture-snapshot.json';
+import recordFixtures from './fixtures/records/contracts.json';
 import {
   assertAllowedPath,
   editionPath,
@@ -68,6 +69,11 @@ const rosterMode = process.env.OPAX_FIXTURE_ROSTER ?? 'pinned';
 if (!['pinned', 'null-optional'].includes(rosterMode))
   throw new Error('OPAX_FIXTURE_ROSTER must be pinned or null-optional');
 const files = new Map<string, Buffer>();
+for (const [path, body] of Object.entries(recordFixtures.responses)) {
+  if (path === '/api/search') continue;
+  assertAllowedPath(path);
+  files.set(path, Buffer.from(JSON.stringify(body)));
+}
 const pinnedBytes = fixtureBytes(snapshot);
 for (const path of Object.keys(snapshot.files)) {
   if (snapshot.testOnlyFiles.includes(path)) continue;
@@ -223,6 +229,8 @@ export const server = createServer(async (request, response) => {
     if (isEdition) {
       body = edition;
       cacheControl = snapshot.responses[editionPath].cacheControl;
+    } else if (url.pathname === '/api/search') {
+      body = Buffer.from(JSON.stringify(recordFixtures.responses['/api/search']));
     } else if (url.pathname === '/api/person-slugs') {
       body = Buffer.from(
         JSON.stringify({ generated: roster.meta.generated, slugs }),

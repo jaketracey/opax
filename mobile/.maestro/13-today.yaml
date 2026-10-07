@@ -6,7 +6,8 @@ name: 13 Today front page, its native records and dated original sources
 # iOS 26 the tab bar floats over the bottom of the page, and a link drawn
 # under it still counts as visible: on iOS 27 a source tap hit the Your MP
 # tab. Each group of steps first checks the page is still shown.
-- launchApp
+- launchApp:
+    permissions: {}
 - assertVisible:
     id: today-screen-message
 # The daily edition: the fixture's pinned production response, as posted.

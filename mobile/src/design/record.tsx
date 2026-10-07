@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import { ownsRowPadding } from './row-padding';
 import { openOnWeb, openSource } from '../navigation/external';
+import { fromWebPath } from '../navigation/routes';
 import {
   asAtText,
   captionText,
@@ -159,11 +160,16 @@ export function OpaxWebLink({
   path: string;
   testID?: string;
 }) {
+  const route = fromWebPath(path);
+  const nativeReader =
+    route?.pathname === '/doc/[slug]' || route?.pathname === '/bill-text/[key]';
   return (
     <Pressable
       accessibilityRole="link"
       accessibilityLabel={accessibilityLabel ?? label}
-      accessibilityHint="Opens on opax.com.au"
+      accessibilityHint={
+        nativeReader ? 'Opens the reader' : 'Opens on opax.com.au'
+      }
       testID={testID}
       onPress={() => openOnWeb(path, label)}
       style={({ pressed }) => [styles.link, pressed ? styles.pressed : null]}
@@ -171,7 +177,11 @@ export function OpaxWebLink({
       <Text wordSafe variant="body" tone="navy" style={styles.shrink}>
         {label}
       </Text>
-      <Icon name="safari" size={16} tone="navy" />
+      <Icon
+        name={nativeReader ? 'chevron.right' : 'safari'}
+        size={16}
+        tone="navy"
+      />
     </Pressable>
   );
 }
