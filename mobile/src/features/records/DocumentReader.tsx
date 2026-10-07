@@ -29,6 +29,7 @@ import {
 } from '../../navigation/routes';
 import { shareHeaderItem } from '../../navigation/share';
 import { sponsorSlug } from '../bills/sponsors';
+import { DocumentAsk } from '../ask/DocumentAsk';
 import { Records } from './data';
 import { records } from './runtime';
 import { metaString, textChunks, type DocumentRecord } from './model';
@@ -188,6 +189,7 @@ export default function DocumentReader({
                     testID="doc-copy-link"
                   />
                 </Group>
+                <DocumentAsk doc={doc} />
                 {doc.summary ? (
                   <Section
                     title="In brief"

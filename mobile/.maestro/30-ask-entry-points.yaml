@@ -73,3 +73,21 @@ name: 30 Scoped Ask drafts from native records; arrival never submits
 - assertVisible:
     id: ask-question
 - takeScreenshot: ${EVIDENCE}/30-bill-draft
+- openLink: opax://doc/speech-1205524
+- extendedWaitUntil:
+    visible:
+      id: doc-title
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: doc-ask
+    centerElement: true
+    speed: 20
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/30-doc-entry
+- tapOn:
+    id: doc-ask
+- assertVisible:
+    id: ask-question
+- assertVisible: What did .* say about .*\?
+- takeScreenshot: ${EVIDENCE}/30-doc-draft

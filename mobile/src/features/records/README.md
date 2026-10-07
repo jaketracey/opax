@@ -61,5 +61,5 @@ coverage, transcription and citation notes open in InfoSheet. Each original
 record keeps one small View original action; source terms live on Sources and
 licences. Full source text remains selectable and virtualised at every size.
 
-`askRoute` is absent at the merged `origin/ios/app` base (`a2d7c51a`), so the
-reader does not add an Ask entry point. The Ask lane owns that seam.
+The Ask lane supplies the reader's compact Ask action through `askRoute`.
+It carries the web's document question into a draft; arrival never submits.
