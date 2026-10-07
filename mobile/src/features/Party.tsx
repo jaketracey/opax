@@ -3,6 +3,7 @@ import { PartyAccess, PartyFunding } from './people/PartyDepth';
 import { RecordSection, NewsSection } from './people/Sections';
 import { FollowToggle } from './follows/FollowToggle';
 import { AskAbout } from './ask/AskAbout';
+import { headerItems } from '../navigation/chrome';
 import { useCallback, useEffect, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
@@ -131,9 +132,11 @@ export function PartyPage({ input }: { input: string }) {
         options={{
           title: view?.label ?? '',
           headerTitle: '',
-          unstable_headerRightItems: view
-            ? () => [shareHeaderItem({ path: webPath, title: view.label })]
-            : undefined,
+          ...headerItems(
+            view
+              ? () => [shareHeaderItem({ path: webPath, title: view.label })]
+              : undefined,
+          ),
         }}
       />
       <Screen

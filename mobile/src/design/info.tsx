@@ -1,5 +1,13 @@
 import { useState, type ReactNode } from 'react';
-import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  Modal,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Heading, Text } from './text';
 import { Icon } from './icon';
 import { colors, hairline, minimumTarget, rhythm } from './tokens';
@@ -99,8 +107,9 @@ function SheetBody({
   onClose,
   testID,
 }: InfoNotes & { onClose: () => void; testID?: string }) {
+  const Container = Platform.OS === 'android' ? SafeAreaView : View;
   return (
-    <View style={styles.sheet} testID={testID} accessibilityViewIsModal>
+    <Container style={styles.sheet} testID={testID} accessibilityViewIsModal>
       <View style={styles.bar}>
         <View style={styles.grab} />
         <View style={styles.head}>
@@ -131,7 +140,7 @@ function SheetBody({
           ))}
         {extra}
       </ScrollView>
-    </View>
+    </Container>
   );
 }
 

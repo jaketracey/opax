@@ -189,7 +189,13 @@ export const server = createServer(async (request, response) => {
     ),
   );
   try {
-    if (request.headers.host !== `127.0.0.1:${port}`)
+    if (
+      request.headers.host !== `127.0.0.1:${port}` &&
+      !(
+        process.env.OPAX_TARGET_PLATFORM === 'android' &&
+        request.headers.host === `10.0.2.2:${port}`
+      )
+    )
       throw new Error('Host is outside the loopback fixture boundary');
     if (request.socket.remoteAddress !== '127.0.0.1')
       throw new Error('Peer is outside the loopback boundary');

@@ -1,3 +1,4 @@
+import { phoneCopy } from '../design/phone-copy';
 import { fetch as expoFetch } from 'expo/fetch';
 import { CatalogCache, isFresh, type CacheEntry } from './cache';
 import { ApiError, httpError } from './errors';
@@ -181,7 +182,9 @@ export class ApiClient {
       return result(cached, false);
     let lastError = new ApiError(
       'offline',
-      'This record is not saved on this iPhone yet. It will load when you are back online.',
+      phoneCopy(
+        'This record is not saved on this iPhone yet. It will load when you are back online.',
+      ),
     );
     for (let attempt = 0; attempt <= retries; attempt++) {
       const remaining = deadline - this.now();
@@ -340,7 +343,9 @@ export class ApiClient {
                 )
               : new ApiError(
                   'offline',
-                  'This record is not saved on this iPhone yet. It will load when you are back online.',
+                  phoneCopy(
+                    'This record is not saved on this iPhone yet. It will load when you are back online.',
+                  ),
                 );
         // A bad export is not evidence that the last validated record went
         // away. Stop retrying and serve its original source/save dates.

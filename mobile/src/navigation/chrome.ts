@@ -1,4 +1,11 @@
-import { Platform, useWindowDimensions } from 'react-native';
+import { createElement } from 'react';
+import {
+  Platform,
+  Pressable,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import { router, type NativeStackHeaderItem } from 'expo-router';
 import { chrome, fonts, light, navigationTitleSizes } from '../design/tokens';
 
@@ -11,7 +18,8 @@ import { chrome, fonts, light, navigationTitleSizes } from '../design/tokens';
 // react-native-screens#3100), so there the system's glass bar is left alone.
 // Earlier versions keep an opaque paper bar, so content never shows through.
 const opaqueBar =
-  Platform.OS === 'ios' && parseInt(String(Platform.Version), 10) < 26
+  Platform.OS === 'android' ||
+  (Platform.OS === 'ios' && parseInt(String(Platform.Version), 10) < 26)
     ? {
         headerStyle: { backgroundColor: light.paper },
         headerLargeStyle: { backgroundColor: light.paper },
@@ -46,14 +54,18 @@ export function useStackChrome() {
  */
 export function rootHeaderItems(): NativeStackHeaderItem[] {
   return [
-    {
-      type: 'button',
-      label: 'Talk',
-      accessibilityLabel: 'Talk to OPAX',
-      tintColor: chrome.tint,
-      icon: { type: 'sfSymbol', name: 'waveform' },
-      onPress: () => router.push('/talk'),
-    },
+    ...(Platform.OS === 'android'
+      ? []
+      : [
+          {
+            type: 'button',
+            label: 'Talk',
+            accessibilityLabel: 'Talk to OPAX',
+            tintColor: chrome.tint,
+            icon: { type: 'sfSymbol', name: 'waveform' },
+            onPress: () => router.push('/talk'),
+          } as NativeStackHeaderItem,
+        ]),
     {
       type: 'button',
       label: 'Account',
@@ -63,6 +75,57 @@ export function rootHeaderItems(): NativeStackHeaderItem[] {
       onPress: () => router.push('/account'),
     },
   ];
+}
+
+/** The item API is iOS-only. Android gets labelled, scalable touch targets. */
+export function headerItems(
+  items: (() => NativeStackHeaderItem[]) | undefined,
+) {
+  return {
+    unstable_headerRightItems: items,
+    ...(Platform.OS === 'android'
+      ? {
+          headerRight: () =>
+            createElement(
+              View,
+              { style: { flexDirection: 'row' } },
+              ...(items?.() ?? []).map((item, index) =>
+                item.type === 'button'
+                  ? createElement(
+                      Pressable,
+                      {
+                        key: index,
+                        accessibilityRole: 'button',
+                        accessibilityLabel:
+                          item.accessibilityLabel ?? item.label,
+                        onPress: item.onPress,
+                        hitSlop: 4,
+                        style: {
+                          minWidth: 48,
+                          minHeight: 48,
+                          justifyContent: 'center',
+                          paddingHorizontal: 8,
+                        },
+                      },
+                      createElement(
+                        Text,
+                        {
+                          maxFontSizeMultiplier: 1.5,
+                          style: {
+                            color: chrome.tint,
+                            fontFamily: fonts.sansSemiBold,
+                            fontSize: 14,
+                          },
+                        },
+                        item.label,
+                      ),
+                    )
+                  : null,
+              ),
+            ),
+        }
+      : {}),
+  };
 }
 
 /** The Done button that closes a sheet. */

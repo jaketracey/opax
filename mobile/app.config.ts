@@ -9,7 +9,9 @@ import {
 
 type Variant = 'development' | 'e2e' | 'production';
 const variant = (process.env.OPAX_VARIANT ?? 'development') as Variant;
-const productionVoice = productionVoiceEnabled(variant);
+// Explicit for native Android builds; the iOS invocation keeps its config.
+const androidBuild = process.env.OPAX_TARGET_PLATFORM === 'android';
+const productionVoice = !androidBuild && productionVoiceEnabled(variant);
 const buildNumber = process.env.OPAX_BUILD_NUMBER ?? '1';
 if (!/^[1-9][0-9]*$/.test(buildNumber)) {
   throw new Error('OPAX_BUILD_NUMBER must be a positive integer');
@@ -24,7 +26,7 @@ if (!Number.isInteger(port) || port < 8900 || port > 8999) {
 // These branches run at build time. Never put origin fallbacks in app JS.
 const origin =
   variant === 'e2e'
-    ? `http://127.0.0.1:${port}`
+    ? `http://${androidBuild ? '10.0.2.2' : '127.0.0.1'}:${port}`
     : variant === 'development'
       ? (process.env.OPAX_DEV_ORIGIN ?? 'https://opax.com.au')
       : 'https://opax.com.au';
@@ -54,9 +56,25 @@ const config: ExpoConfig = {
   slug: 'opax',
   version: '1.0.0',
   scheme: 'opax',
-  platforms: ['ios'],
+  platforms: ['ios', 'android'],
   userInterfaceStyle: 'light',
   orientation: 'default',
+  android: {
+    package: 'au.com.opax.app',
+    versionCode: Number(buildNumber),
+    icon: './assets/icon/icon.png',
+    permissions: ['ACCESS_COARSE_LOCATION', 'ACCESS_FINE_LOCATION'],
+    blockedPermissions: [
+      'android.permission.RECORD_AUDIO',
+      'android.permission.CAMERA',
+      'android.permission.ACCESS_BACKGROUND_LOCATION',
+      'android.permission.FOREGROUND_SERVICE',
+      'android.permission.FOREGROUND_SERVICE_LOCATION',
+      'android.permission.READ_EXTERNAL_STORAGE',
+      'android.permission.WRITE_EXTERNAL_STORAGE',
+      'android.permission.SYSTEM_ALERT_WINDOW',
+    ],
+  },
   ios: {
     bundleIdentifier: 'au.com.opax.app',
     icon: {
@@ -114,6 +132,7 @@ const config: ExpoConfig = {
     },
   },
   plugins: [
+    './plugins/withAndroidPolicy.js',
     ['expo-router', { sitemap: variant !== 'production' }],
     './plugins/withSceneLifecycle.js',
     './plugins/withPrivacyPatches.js',
@@ -155,6 +174,12 @@ const config: ExpoConfig = {
     ],
   ],
   extra: {
+    ...(androidBuild && variant === 'e2e'
+      ? {
+          androidShareQaUrl:
+            'https://opax.com.au/subject/person/anthony-albanese',
+        }
+      : {}),
     variant,
     supportPageAvailable: true,
     ...(productionVoice

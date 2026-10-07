@@ -1,5 +1,8 @@
 {
-  "platforms": ["apple"],
+  "platforms": ["apple", "android"],
+  "android": {
+    "modules": ["au.com.opax.share.OpaxShareModule"]
+  },
   "apple": {
     "modules": ["OpaxShareModule"]
   }

@@ -1,5 +1,6 @@
 import { SeatGrants } from './money-public/Grants';
 import { AskAbout } from './ask/AskAbout';
+import { headerItems } from '../navigation/chrome';
 import { OutlineMap } from './electorate-map/OutlineMap';
 import {
   formatCount,
@@ -125,12 +126,13 @@ export function ElectorateScreen({
           options={{
             title: identity?.name ?? '',
             headerTitle: '',
-            unstable_headerRightItems:
+            ...headerItems(
               identity && seat
                 ? () => [
                     shareHeaderItem({ path: seat.url, title: identity.name }),
                   ]
                 : undefined,
+            ),
           }}
         />
       )}

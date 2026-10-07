@@ -1,9 +1,12 @@
-# OPAX iOS foundation
+# OPAX mobile foundation
 
 Expo SDK 57 / React Native 0.86, strict TypeScript, expo-router. iOS 18.4 (`ios.deploymentTarget`) is
-the minimum. Light mode only; Android is possible later and is not built here.
-App identity: OPAX, `au.com.opax.app`, version `0.1.0`, build `1`.
-No push, analytics, crash reporter or microphone permission. Production release
+the iOS minimum. Android targets API 36, with API 24 as the native minimum.
+Both platforms use light mode. Android bringup and its remaining parity work are
+described in [Android notes](../docs/ANDROID-BRINGUP.md).
+App identity: OPAX, `au.com.opax.app`, version `1.0.0`.
+No push, analytics or crash reporter. Android has no microphone permission.
+Production release
 tooling uses locally supplied Apple credentials; none are part of the app config.
 
 ## Install and develop
@@ -13,7 +16,7 @@ Use Node 24 and npm 11. Check `/bin/ls -ld mobile/node_modules` first. Never run
 Development defaults to public production catalogs. Set `OPAX_DEV_ORIGIN` to an
 HTTPS origin or a loopback HTTP origin (for example a local `wrangler dev` server).
 Only explicit loopback development adds an ATS exception. To build locally, use `npm run ios -- <assigned-udid>`; it boots and builds through the shared
-configured gates and shuts down when the process exits. The Mac stays muted; never enable speech or VoiceOver audio.
+configured gates and shuts down when the process exits. Never change the Mac's volume or enable speech or VoiceOver audio.
 
 `OPAX_VARIANT=development|e2e|production` selects configuration at build time.
 Production always reads `https://opax.com.au`. E2E embeds only

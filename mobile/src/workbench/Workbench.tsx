@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react';
-import { Alert, Image, StyleSheet, View } from 'react-native';
+import { Alert, Image, Platform, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 import {
   AsAtLine,
@@ -52,6 +52,7 @@ import { leadEvidenceFor } from '../features/leads/model';
 import { canonicalUrl } from '../navigation/external';
 import { isE2E } from '../design/environment';
 import { OpaxShare } from '../../modules/opax-share';
+import Constants from 'expo-constants';
 import { TalkOrbs } from './TalkOrbs';
 
 // Searched for by the release bundle scan: it must never appear in production.
@@ -162,8 +163,18 @@ export default function Workbench() {
               Alert.alert('Native share unavailable');
               return;
             }
+            // The Android QA-only canonical link comes from build config.
+            // The chooser receives text; this action does not fetch it.
+            const url =
+              Platform.OS === 'android'
+                ? Constants.expoConfig?.extra?.androidShareQaUrl
+                : canonicalUrl('/subject/person/anthony-albanese');
+            if (typeof url !== 'string') {
+              Alert.alert('Native share unavailable');
+              return;
+            }
             void OpaxShare.share({
-              url: canonicalUrl('/subject/person/anthony-albanese'),
+              url,
               title: 'Anthony Albanese',
             }).then(
               (completed) =>
@@ -592,15 +603,19 @@ export default function Workbench() {
               })
             }
           />
-          <Button
-            label="Open the Talk sheet"
-            onPress={() => router.push('/talk')}
-          />
+          {Platform.OS === 'android' ? null : (
+            <Button
+              label="Open the Talk sheet"
+              onPress={() => router.push('/talk')}
+            />
+          )}
         </Group>
       </Block>
-      <Block id="talk" title="Talk call animation">
-        <TalkOrbs />
-      </Block>
+      {Platform.OS === 'android' ? null : (
+        <Block id="talk" title="Talk call animation">
+          <TalkOrbs />
+        </Block>
+      )}
       <Text variant="fine" testID="wb-end">
         End of workbench
       </Text>
