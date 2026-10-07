@@ -591,7 +591,7 @@ def verify_app(app, args):
     binary_privacy = scan_binary_privacy(app,
         output=Path(args.output).with_name("privacy-scan-" + args.kind + ".json"),
         evidence_dir=Path(args.output).parent / ("privacy-symbols-" + args.kind))
-    check(True, "all Mach-O privacy APIs have purpose strings and bundle/app required reasons; CoreMotion absent")
+    check(True, "all Mach-O privacy APIs have purpose strings and bundle/app required reasons; CoreMotion and Photos absent")
     check(info.get("DTXcodeBuild") == args.xcode_build, "archive uses the selected release Xcode")
     check(no_app_extensions(app, info), "no app extensions")
     framework_allowlist(app)
@@ -727,7 +727,7 @@ def main():
         args = parser.parse_args()
         try:
             report = scan_binary_privacy(args.privacy_only, output=args.privacy_output, evidence_dir=args.privacy_evidence)
-            print(f"PASS binary privacy scan: {len(report['binaries'])} binaries, {len(report['manifests'])} manifests; CoreMotion absent")
+            print(f"PASS binary privacy scan: {len(report['binaries'])} binaries, {len(report['manifests'])} manifests; CoreMotion and Photos absent")
         except (ReleaseError, OSError, ValueError) as error:
             raise SystemExit(str(error))
         return

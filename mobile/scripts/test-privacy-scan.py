@@ -31,11 +31,31 @@ class PrivacyScanTests(unittest.TestCase):
             with self.subTest(name=name):
                 _, found = privacy.findings('_OBJC_CLASS_$_' + symbol)
                 self.assertIn(name, found)
-                self.assertTrue(privacy.check_purposes(found, {}, forbid_motion=False))
+                self.assertTrue(privacy.check_purposes(found, {}, forbid_motion=False, forbid_photos=False))
                 info = {keys[0]: ['_opax._tcp'] if keys[0] == 'NSBonjourServices' else 'Purpose'
                         for group in found for keys in privacy.PURPOSES[group][1]}
-                self.assertEqual(privacy.check_purposes(found, info, forbid_motion=False), [])
-                self.assertTrue(privacy.check_purposes(found, {k: '' for k in info}, forbid_motion=False))
+                self.assertEqual(privacy.check_purposes(found, info, forbid_motion=False, forbid_photos=False), [])
+                self.assertTrue(privacy.check_purposes(found, {k: '' for k in info}, forbid_motion=False, forbid_photos=False))
+
+    def test_former_unused_class_exceptions_are_detected_and_refused(self):
+        for symbol in ('PHAsset', 'PHAssetResource', 'PHAssetResourceManager',
+                       'PHAssetResourceRequestOptions', 'PHImageManager', 'PHPhotoLibrary',
+                       'ALAssetsLibrary', 'CMMotionActivityManager', 'CMMotionActivity', 'CMMotionManager'):
+            with self.subTest(symbol=symbol):
+                _, found = privacy.findings('_OBJC_CLASS_$_' + symbol)
+                self.assertTrue(found)
+                self.assertTrue(privacy.check_purposes(found, {
+                    'NSPhotoLibraryUsageDescription': 'Unused library code',
+                    'NSMotionUsageDescription': 'Unused library code'}))
+        self.assertEqual(privacy.findings('_OBJC_CLASS_$_UIPasteboard')[1], {})
+
+    def test_photos_are_refused_even_with_a_purpose_or_only_an_unused_key(self):
+        for symbol in ('Photos.framework/Photos', 'AssetsLibrary.framework/AssetsLibrary',
+                       'PHAssetCreationRequest', 'UIImageWriteToSavedPhotosAlbum'):
+            _, found = privacy.findings(symbol)
+            self.assertTrue(privacy.check_purposes(found, {'NSPhotoLibraryUsageDescription': 'Unused'}))
+        for key in ('NSPhotoLibraryUsageDescription', 'NSPhotoLibraryAddUsageDescription'):
+            self.assertTrue(privacy.check_purposes({}, {key: 'Unused'}))
 
     def test_motion_is_refused_even_if_a_note_is_present(self):
         _, found = privacy.findings('/System/Library/Frameworks/CoreMotion.framework/CoreMotion')

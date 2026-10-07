@@ -45,7 +45,7 @@ PURPOSES = {
     "Microphone": (r"AVAudioRecorder|AudioQueueNewInput|AVAudioSessionCategory(?:PlayAnd)?Record|requestRecordPermission|recordPermission|AVAudioSessionRecordPermission|AVAudioApplication.*Record|\binputNode\b|\bAVCaptureAudioDataOutput\b", [("NSMicrophoneUsageDescription",)]),
     "CoreLocation": (r"CoreLocation|\bCLLocationManager\b", [("NSLocationWhenInUseUsageDescription", "NSLocationAlwaysAndWhenInUseUsageDescription")]),
     "Contacts": (r"Contacts\.framework|\bCNContactStore\b|\bABAddressBook(?:Create\w*|RequestAccessWithCompletion)\b", [("NSContactsUsageDescription",)]),
-    "PhotosRead": (r"Photos\.framework|\bPHAsset\b|\bPHAssetCollection\b|\bPHImageManager\b|\bPHCachingImageManager\b|\bALAssetsLibrary\b", [("NSPhotoLibraryUsageDescription",)]),
+    "PhotosRead": (r"Photos(?:\.framework)?/Photos|Photos\.framework|AssetsLibrary\.framework|\bPH(?:Asset\w*|Fetch\w*|Image\w*|CachingImage\w*|PhotoLibrary|Collection\w*)\b|\bALAsset\w*\b", [("NSPhotoLibraryUsageDescription",)]),
     "PhotosWrite": (r"\bPHPhotoLibrary\b|\bPHAssetCreationRequest\b|\bPHAssetChangeRequest\b|UIImageWriteToSavedPhotosAlbum|UISaveVideoAtPathToSavedPhotosAlbum", [("NSPhotoLibraryUsageDescription", "NSPhotoLibraryAddUsageDescription")]),
     "Bluetooth": (r"CoreBluetooth|\bCB(?:CentralManager|PeripheralManager|Peripheral|Manager)\b", [("NSBluetoothAlwaysUsageDescription",)]),
     "HealthRead": (r"HealthKit|\bHKHealthStore\b|\bHK(?:SampleQuery|ObserverQuery|StatisticsQuery|AnchoredObjectQuery)\b", [("NSHealthShareUsageDescription",)]),
@@ -88,10 +88,13 @@ def declarations(manifest):
     return {k: sorted(v) for k, v in result.items()}
 
 
-def check_purposes(found, info, *, forbid_motion=True):
+def check_purposes(found, info, *, forbid_motion=True, forbid_photos=True):
     errors = []
     if forbid_motion and ("CoreMotion" in found or "NSMotionUsageDescription" in info):
         errors.append("CoreMotion must be absent, including its unused purpose string")
+    if forbid_photos and (set(found) & {"PhotosRead", "PhotosWrite"} or
+                          set(info) & {"NSPhotoLibraryUsageDescription", "NSPhotoLibraryAddUsageDescription"}):
+        errors.append("Photos must be absent, including its unused purpose strings")
     for name in found:
         for alternatives in PURPOSES[name][1]:
             if not any((isinstance(info.get(key), list) and bool(info[key]) and all(isinstance(service, str) and service.strip() for service in info[key])) if key == "NSBonjourServices" else (isinstance(info.get(key), str) and bool(info[key].strip())) for key in alternatives):
@@ -99,7 +102,7 @@ def check_purposes(found, info, *, forbid_motion=True):
     return errors
 
 
-def scan(app, *, output=None, evidence_dir=None, forbid_motion=True):
+def scan(app, *, output=None, evidence_dir=None, forbid_motion=True, forbid_photos=True):
     app = Path(app)
     info = plistlib.loads((app / "Info.plist").read_bytes())
     manifests = []
@@ -140,7 +143,7 @@ def scan(app, *, output=None, evidence_dir=None, forbid_motion=True):
                 if (app / manifest["path"]).is_relative_to(bundle):
                     for category, reasons in manifest["declared"].items():
                         local.setdefault(category, []).extend(reasons)
-        errors = check_purposes(sensitive, info, forbid_motion=forbid_motion)
+        errors = check_purposes(sensitive, info, forbid_motion=forbid_motion, forbid_photos=forbid_photos)
         for category in required:
             if not local.get(category):
                 errors.append(category + " has no declaration in its executable bundle")

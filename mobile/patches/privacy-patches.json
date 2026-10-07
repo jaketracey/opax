@@ -59,5 +59,33 @@
         "after": "8f68e9f1c9d31e431b89b2ab4d03b1a48bebc5b492da919666d0a77b79a85969"
       }
     ]
+  },
+  {
+    "package": "expo-file-system",
+    "version": "57.0.7",
+    "patch": "expo-file-system+57.0.7.patch",
+    "sha256": "d73378b282315a9b96ca648ee05ee534652cb6e67f69caf48d7d4f41f3bb6843",
+    "files": [
+      {
+        "path": "ios/Legacy/FileSystemLegacyModule.swift",
+        "before": "2ac8316891c3eda48e0db89615436e3215afb5ea2b154c254543274661baeba4",
+        "after": "812061825f81dd8ab46b810ccc03aedfd8547eac33d272a939d66ca09ae7cc15"
+      },
+      {
+        "path": "ios/Legacy/FileSystemHelpers.swift",
+        "before": "42215f6d5141fd3cf4922c43dd7a05700351be79e677962dba470a9ca204c134",
+        "after": "6a3644f2e30b9a9261fa21f7d54b376de1730bb5c9a463046cbd5571fe07a192"
+      },
+      {
+        "path": "ios/Legacy/EXFileSystemAssetLibraryHandler.h",
+        "before": "69ba87e0d2ec5dc0914db783a6b4d3acfb4bc0545ea837253a964281c33576ee",
+        "after": null
+      },
+      {
+        "path": "ios/Legacy/EXFileSystemAssetLibraryHandler.m",
+        "before": "f33b1e715939b8b1d6821ec9270742f61ee3578a0fbbc09a071b6839bb679b60",
+        "after": null
+      }
+    ]
   }
 ]

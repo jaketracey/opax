@@ -51,8 +51,12 @@ config plugin. SDK upgrades must deliberately regenerate and review the patches.
 motion APIs explicitly on iOS. Reanimated 4.5.1 keeps the sensor bridge and
 returns its existing unavailable sentinel (`-1`); its CoreMotion implementation
 is excluded. Animation code is unchanged. `buildFromSource` includes these
-packages and the coupled Worklets package, plus `expo-file-system` to retain
-its privacy resource bundle.
+packages and the coupled Worklets package, plus `expo-file-system` 57.0.7.
+The file-system patch removes the legacy Photos imports, resource manager,
+photo helpers and asset-library handler sources. Its legacy info/copy methods
+reject photo-library URIs with the existing unsupported-scheme/invalid-file
+errors. Local files, downloads and cache operations retain their implementation.
+Building from source also retains its privacy resource bundle.
 
 The app manifest declares local file metadata (`C617.1`), event timers
 (`35F9.1`), storage-aware offline cache writes (`E174.1`), and app-only defaults
@@ -79,7 +83,9 @@ python3 scripts/verify-ios-release.py --privacy-only "$APP" \
   --privacy-evidence "$EVIDENCE/privacy-symbols"
 ```
 
-CoreMotion and its purpose string are forbidden. The purpose rules cover camera,
+CoreMotion, Photos/AssetsLibrary and their unused purpose strings are forbidden.
+The former unused-class exceptions are removed; UIPasteboard remains for explicit
+clipboard writes. The purpose rules cover camera,
 recording/microphone, location, contacts, photo read/write, Bluetooth, health
 read/write, calendar/reminders, tracking, Bonjour/local discovery and speech
 recognition. Playback-only AVAudioSession and ordinary internet sockets do not
