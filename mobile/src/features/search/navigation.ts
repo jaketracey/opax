@@ -1,7 +1,6 @@
 import { router } from 'expo-router';
 import { catalogs } from '../../api/runtime';
 import { nameKey } from '../../api/ids';
-import { hasParliamentaryMembership } from '../your-mp/model';
 import { ApiError, PersonIdentityError } from '../../api/errors';
 import { personRoute, fromWebPath, partyRoute } from '../../navigation/routes';
 import { openOnWeb, openSource, webPageUrl } from '../../navigation/external';
@@ -29,8 +28,6 @@ export async function openSearchPerson(slug: string) {
   const person = (await catalogs.person(slug)).data;
   if (person.canonicalPersonId)
     router.push(personRoute(person.canonicalPersonId));
-  else if (hasParliamentaryMembership(person, await catalogs.directory()))
-    router.push(personRoute(person.slug));
   else await openOnWeb(`/subject/person/${person.slug}`, person.name);
 }
 export async function openSuggestedPerson(name: string) {

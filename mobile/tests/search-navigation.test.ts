@@ -9,16 +9,10 @@ import {
   openSuggestedPerson,
   openSearchPerson,
 } from '../src/features/search/navigation';
-import {
-  catalogs as pinnedCatalogs,
-  manifest,
-  people,
-  roster,
-  slugs,
-} from './pinned';
+import { manifest, people, roster, slugs } from './pinned';
 
 jest.mock('../src/api/runtime', () => ({
-  catalogs: { slugs: jest.fn(), person: jest.fn(), directory: jest.fn() },
+  catalogs: { slugs: jest.fn(), person: jest.fn() },
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 jest.mock('../src/navigation/external', () => ({ openOnWeb: jest.fn() }));
@@ -143,7 +137,7 @@ test('a directory record disappearing during resolution opens the web name addre
   expect(router.push).not.toHaveBeenCalled();
 });
 
-test('a roster-only state parliamentarian opens natively through the same membership guard as Person', async () => {
+test('R1 Search does not promote a roster-only name into a native profile', async () => {
   const identity = joinPerson('chris-minns', slugs, roster, people, manifest);
   expect(identity.canonicalPersonId).toBeUndefined();
   jest
@@ -151,60 +145,26 @@ test('a roster-only state parliamentarian opens natively through the same member
     .mockResolvedValue({ data: identity } as Awaited<
       ReturnType<typeof catalogs.person>
     >);
-  jest
-    .mocked(catalogs.directory)
-    .mockResolvedValue(
-      Object.fromEntries(
-        Object.entries(pinnedCatalogs).map(([key, data]) => [
-          key,
-          { data, stale: false, savedAt: 0, asOf: null },
-        ]),
-      ) as Awaited<ReturnType<typeof catalogs.directory>>,
-    );
-  await openSearchPerson('chris-minns');
-  expect(router.push).toHaveBeenCalledWith(personRoute(identity.slug));
-  expect(openOnWeb).not.toHaveBeenCalled();
+  await openSearchPerson(identity.slug);
+  expect(router.push).not.toHaveBeenCalled();
+  expect(openOnWeb).toHaveBeenCalledWith(
+    `/subject/person/${identity.slug}`,
+    identity.name,
+  );
 });
 
-test('a private witness with no parliamentary representation cannot open a native profile', async () => {
+test('a private witness without a canonical member identity cannot open a native profile', async () => {
   const identity = joinPerson('chris-minns', slugs, roster, people, manifest);
   const witness = {
     ...identity,
     name: 'Private Witness',
     rosterPersonId: undefined,
-    slug: identity.slug,
-  };
-  const directory = Object.fromEntries(
-    Object.entries(pinnedCatalogs).map(([key, data]) => [
-      key,
-      { data, stale: false, savedAt: 0, asOf: null },
-    ]),
-  );
-  directory.roster = {
-    data: {
-      ...roster,
-      people: [
-        {
-          name: 'Private Witness',
-          speeches: 1,
-          chambers: ['senate_committee'],
-        },
-      ],
-    },
-    stale: false,
-    savedAt: 0,
-    asOf: null,
   };
   jest
     .mocked(catalogs.person)
     .mockResolvedValue({ data: witness } as Awaited<
       ReturnType<typeof catalogs.person>
     >);
-  jest
-    .mocked(catalogs.directory)
-    .mockResolvedValue(
-      directory as Awaited<ReturnType<typeof catalogs.directory>>,
-    );
   await openSearchPerson(witness.slug);
   expect(router.push).not.toHaveBeenCalled();
   expect(openOnWeb).toHaveBeenCalledWith(

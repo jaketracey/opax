@@ -113,11 +113,12 @@ name: 36 Person topics, speeches, mentions, news, ministerial diary and glossary
     timeout: 180000
 - takeScreenshot: ${EVIDENCE}/36-news
 - tapOn: { id: BackButton }
-- runFlow:
-    file: support/people-open-profile.yaml
-    env:
-      NAME: Chris Minns
-      SLUG: chris-minns
+# R1 Search keeps canonical native members only. This public, roster-guarded
+# state profile exercises the diary without widening the Search membership set.
+- openLink: opax://person/chris-minns
+- extendedWaitUntil:
+    visible: { id: person-screen-title }
+    timeout: 30000
 - scrollUntilVisible:
     element: { text: Ministerial diary }
     direction: DOWN
