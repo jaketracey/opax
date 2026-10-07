@@ -240,7 +240,7 @@ export function ProfileScreen({
               <EvidenceFooter block={b.identity} id="person" />
             </Group>
             <QuickFacts identity={identity} />
-            <PartyReceiptsBlock block={b.partyReceipts} retry={refresh} id="person-receipts" />
+            <PartyReceiptsBlock block={b.partyReceipts} retry={refresh} id="person-receipts" jurisdiction={identity.seats[0]?.jurisdiction} />
             <PersonTopics name={identity.name} />
             <RecordBlock
               title="Voting record"

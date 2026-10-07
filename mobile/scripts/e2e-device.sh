@@ -3,7 +3,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 source scripts/qa-env.sh
-UDID=${1:?}; OUT=${2:?}; APP=${3:?}; SIZE=${4:?}; APPEARANCE=${5:?}; FIXTURE_PID=${6:?}; OFFLINE=${7:?}; MAP_OFFLINE=${8:?}; shift 8
+UDID=${1:?}; OUT=${2:?}; APP=${3:?}; SIZE=${4:?}; APPEARANCE=${5:?}; FIXTURE_PID=${6:?}; OFFLINE=${7:?}; MAP_OFFLINE=${8:?}; MONEY_OFFLINE=${9:?}; shift 9
 AUDIT_PID=; OWN_DEVICE=0; ORIGINAL_SIZE=large; ORIGINAL_APPEARANCE=light
 BOOT_TIMEOUT=${OPAX_BOOT_TIMEOUT_SECONDS:-300}
 INSTALL_TIMEOUT=${OPAX_INSTALL_TIMEOUT_SECONDS:-240}
@@ -126,6 +126,13 @@ if [ "$MAP_OFFLINE" = 1 ]; then
   maestro --device "$UDID" test --test-output-dir "$OUT/map-offline-maestro" --debug-output "$OUT/map-offline-maestro" --format junit --output "$OUT/map-offline-report.xml" -e EVIDENCE=screenshots .maestro/support/electorate-map-offline.yaml > "$OUT/map-offline-maestro.log" 2>&1 &
   rc=0; wait $! || rc=$?
   if [ "$rc" != 0 ]; then cat "$OUT/map-offline-maestro.log" >&2; exit "$rc"; fi
+fi
+if [ "$MONEY_OFFLINE" = 1 ]; then
+  stop_fixture
+  assert_device_lock
+  maestro --device "$UDID" test --test-output-dir "$OUT/money-offline-maestro" --debug-output "$OUT/money-offline-maestro" --format junit --output "$OUT/money-offline-report.xml" -e EVIDENCE=screenshots .maestro/support/money-map-offline.yaml > "$OUT/money-offline-maestro.log" 2>&1 &
+  rc=0; wait $! || rc=$?
+  if [ "$rc" != 0 ]; then cat "$OUT/money-offline-maestro.log" >&2; exit "$rc"; fi
 fi
 kill "$AUDIT_PID"
 rc=0; wait "$AUDIT_PID" || rc=$?

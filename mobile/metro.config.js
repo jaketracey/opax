@@ -13,6 +13,7 @@ const productionStubs = [
   'src/features/people/party-timing',
   'src/onboarding/launch-flag',
   'src/features/electorate-map/outline-probe',
+  'src/features/money/money-probe',
 ].map((module) => path.join(__dirname, module));
 const voiceEntries = ['account', 'talk'].map((feature) =>
   path.join(__dirname, `src/features/${feature}/entry`),

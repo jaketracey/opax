@@ -1,6 +1,6 @@
 import { Alert, Linking } from 'react-native';
 import { router } from 'expo-router';
-import { fromWebPath } from './routes';
+import { fromWebPath, searchRouteFromWebPath } from './routes';
 import * as WebBrowser from 'expo-web-browser';
 import { hasSourcePreview, isE2E, webOrigin } from '../design/environment';
 import { light } from '../design/tokens';
@@ -218,6 +218,10 @@ export function canonicalUrl(path: string, anchor?: string): string {
   )
     throw new Error('Canonical paths have no dot segments');
   const base = new URL(webOrigin);
+  // This Search view now has a native draft screen. Preserve its reviewed
+  // filters in shares, while sourceUrl still refuses opening paid web Search.
+  if (anchor === undefined && searchRouteFromWebPath(path))
+    return new URL(path, base).toString();
   const url = new URL(pathname, base);
   if (
     url.origin !== base.origin ||

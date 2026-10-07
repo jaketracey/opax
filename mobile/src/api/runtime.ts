@@ -8,6 +8,7 @@ import { DiskStore } from './disk-store';
 import { PeopleDepth } from '../features/people/data';
 import { Catalogs } from './catalogs';
 import { setCatalogDiagnostics } from './validation';
+import { RecordSearch } from '../features/search/api';
 const extra = Constants.expoConfig?.extra;
 if (
   !extra ||
@@ -33,14 +34,15 @@ if (
   throw new Error('API origin does not match the build variant');
 export const isE2E = extra.variant === 'e2e';
 setCatalogDiagnostics(isE2E);
-const client = new ApiClient({
+export const apiClient = new ApiClient({
   origin: extra.apiOrigin,
   version: extra.appVersion,
   build: extra.appBuild,
   cache: new CatalogCache(new DiskStore(), 24 * 1024 * 1024, 220),
 });
-export const catalogs = new Catalogs(client);
-export const peopleDepth = new PeopleDepth(client);
+export const catalogs = new Catalogs(apiClient);
+export const peopleDepth = new PeopleDepth(apiClient);
+export const recordSearch = new RecordSearch(apiClient);
 // Paid reader calls: no disk persistence and no automatic retry. Records owns
 // the session promises, so opening a cached record costs no new request.
 export const recordClient = new ApiClient({
@@ -55,5 +57,5 @@ export const recordClient = new ApiClient({
 });
 export const portraits = new PeoplePortraits(
   catalogs,
-  new PortraitCache(new PortraitDiskStore(extra.apiOrigin), client),
+  new PortraitCache(new PortraitDiskStore(extra.apiOrigin), apiClient),
 );

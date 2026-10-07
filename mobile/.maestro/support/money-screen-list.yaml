@@ -1,0 +1,16 @@
+appId: au.com.opax.app
+---
+- runFlow:
+    file: money-screen-scroll-up.yaml
+    env:
+      TARGET_ID: money-mode-list
+# A hierarchy element can be reported visible while UIKit's bar covers its centre.
+- swipe:
+    start: 97%, 30%
+    end: 97%, 85%
+    duration: 600
+- tapOn:
+    id: money-mode-list
+- assertVisible:
+    id: money-mode-list
+    selected: true

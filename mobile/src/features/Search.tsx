@@ -3,7 +3,15 @@ import { CachedPortrait } from './CachedPortrait';
 import { useCallback, useRef, useState } from 'react';
 import { Keyboard, RefreshControl, type View } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
-import { catalogs } from '../api/runtime';
+import { catalogs, recordSearch } from '../api/runtime';
+import { RecordSearchForm } from './search/RecordSearchForm';
+import { richerSuggestions } from './search/suggestions';
+import {
+  isMoreKind,
+  type SearchFilters,
+  type SearchSort,
+} from './search/contracts';
+import type { SearchKind } from './search/model';
 import {
   suggestionsFor,
   rosterIdentityFor,
@@ -41,14 +49,36 @@ import {
   searchKinds,
   personRowContext,
 } from './search/model';
-import { openSearchPerson, openSuggestedPerson } from './search/navigation';
+import {
+  openSearchPerson,
+  openSuggestedPerson,
+  openSearchPath,
+} from './search/navigation';
 import { billRoute, electorateRoute } from '../navigation/routes';
 
 type Sources = Awaited<ReturnType<typeof catalogs.suggestionSources>>;
 type Results = Awaited<ReturnType<typeof catalogs.search>>;
-export default function Search() {
-  const [query, setQuery] = useState('');
-  const [kind, setKind] = useState<CatalogKind>('person');
+export default function Search({
+  initialQuery = '',
+  initialFilters,
+  initialSort,
+  initialPage,
+}: {
+  initialQuery?: string;
+  initialFilters?: SearchFilters;
+  initialSort?: SearchSort;
+  initialPage?: number;
+} = {}) {
+  const [query, setQuery] = useState(initialQuery);
+  const [kind, setKind] = useState<SearchKind>(
+    initialFilters ? 'records' : 'person',
+  );
+  const extended = kind === 'records' || isMoreKind(kind);
+  const recordSubmit = useRef<(() => void) | null>(null);
+  const [extraSources, setExtraSources] = useState<Awaited<
+    ReturnType<typeof recordSearch.suggestions>
+  > | null>(null);
+  const [extraError, setExtraError] = useState<unknown>(null);
   const [sources, setSources] = useState<Sources | null>(null);
   const [sourceError, setSourceError] = useState<unknown>(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -75,11 +105,31 @@ export default function Search() {
     } finally {
       if (token === sourceRequest.current) setRefreshing(false);
     }
+    try {
+      const data = await recordSearch.suggestions(refresh);
+      if (token === sourceRequest.current) {
+        setExtraSources(data);
+        setExtraError(null);
+      }
+    } catch (e) {
+      if (token === sourceRequest.current) setExtraError(e);
+    }
   }
   useFocusEffect(
     useCallback(() => {
       let active = true;
       const token = ++sourceRequest.current;
+      void recordSearch
+        ?.suggestions()
+        .then((data) => {
+          if (active && token === sourceRequest.current) {
+            setExtraSources(data);
+            setExtraError(null);
+          }
+        })
+        .catch((e) => {
+          if (active && token === sourceRequest.current) setExtraError(e);
+        });
       void catalogs
         .suggestionSourcesOnFocus()
         .then((data) => {
@@ -99,7 +149,7 @@ export default function Search() {
       };
     }, []),
   );
-  function change(nextQuery: string, nextKind = kind) {
+  function change(nextQuery: string, nextKind: SearchKind = kind) {
     request.current++;
     setQuery(nextQuery);
     setKind(nextKind);
@@ -109,7 +159,7 @@ export default function Search() {
     setOpenError(null);
     setBusy(false);
   }
-  async function search(page = 1, nextKind = kind) {
+  async function search(page = 1, nextKind: CatalogKind = kind as CatalogKind) {
     if (!query.trim() || busy) return;
     Keyboard.dismiss();
     const token = ++request.current;
@@ -143,6 +193,15 @@ export default function Search() {
     ? suggestionsFor(query, sources.roster, sources.electorates, sources.bills)
     : null;
   const showSuggestions = query.trim().length >= 2 && !submitted;
+  const richer =
+    sources && extraSources
+      ? richerSuggestions(
+          query,
+          sources.roster,
+          extraSources.manifest.data,
+          extraSources.reports.data,
+        )
+      : null;
   const sourcesStale =
     sources && Object.values(sources.provenance).some((block) => block.stale);
   const sourceReason =
@@ -152,7 +211,8 @@ export default function Search() {
   const noSuggestions =
     showSuggestions &&
     suggestions &&
-    groupSuggestions(suggestions).every((group) => group.rows.length === 0);
+    groupSuggestions(suggestions).every((group) => group.rows.length === 0) &&
+    (!richer || Object.values(richer).every((rows) => !rows.length));
   const resultRows = result?.data.results ?? [];
   const metadata = (group: keyof Sources['provenance']) =>
     sources ? (
@@ -189,24 +249,44 @@ export default function Search() {
     >
       <Group>
         <Field
-          label="Search people, places and bills"
+          label={
+            extended ? 'Find source records' : 'Search people, places and bills'
+          }
           testID="search-input"
           value={query}
           onChangeText={(text) => change(text)}
-          onSubmitEditing={() => void search()}
+          onSubmitEditing={() =>
+            extended ? recordSubmit.current?.() : void search()
+          }
           returnKeyType="search"
           autoCorrect={false}
         />
         <KindPicker value={kind} onChange={(value) => change(query, value)} />
-        <Button
-          label={`Search ${kindLabel(kind).toLowerCase()}`}
-          variant="primary"
-          ref={submit}
-          testID="search-submit"
-          onPress={() => void search()}
-          loading={busy}
-          disabled={!query.trim()}
-        />
+        {extended ? (
+          <RecordSearchForm
+            key={kind}
+            query={query}
+            scope={kind}
+            roster={sources?.roster ?? null}
+            onSubmitted={() => setSubmitted(true)}
+            onQuery={setQuery}
+            submitRef={submit}
+            submitAction={recordSubmit}
+            initialFilters={kind === 'records' ? initialFilters : undefined}
+            initialSort={kind === 'records' ? initialSort : undefined}
+            initialPage={kind === 'records' ? initialPage : undefined}
+          />
+        ) : (
+          <Button
+            label={`Search ${kindLabel(kind).toLowerCase()}`}
+            variant="primary"
+            ref={submit}
+            testID="search-submit"
+            onPress={() => void search()}
+            loading={busy}
+            disabled={!query.trim()}
+          />
+        )}
       </Group>
       {error ? (
         <Group>
@@ -238,19 +318,6 @@ export default function Search() {
               title={showSuggestions ? undefined : 'Browse'}
               icon="square.grid.2x2"
               accent="people"
-              action={
-                !showSuggestions ? (
-                  <Button
-                    label="Refresh suggestions"
-                    variant="quiet"
-                    size="compact"
-                    icon="arrow.clockwise"
-                    testID="search-refresh"
-                    onPress={() => void loadSources(true)}
-                    loading={refreshing}
-                  />
-                ) : undefined
-              }
             >
               {sourceError ? (
                 <Group>
@@ -301,6 +368,15 @@ export default function Search() {
                   <Text variant="caption">
                     Bill searches use the saved bill titles in Bills.
                   </Text>
+                  <Button
+                    label="Refresh suggestions"
+                    variant="quiet"
+                    size="compact"
+                    icon="arrow.clockwise"
+                    testID="search-refresh"
+                    onPress={() => void loadSources(true)}
+                    loading={refreshing}
+                  />
                 </>
               ) : null}
             </Section>
@@ -372,6 +448,104 @@ export default function Search() {
               {metadata('bills')}
             </Section>
           ) : null}
+          {showSuggestions && richer ? (
+            <>
+              {richer.parties.length ? (
+                <Section
+                  title="Parties"
+                  icon="person.2.fill"
+                  accent="people"
+                  testID="search-suggestions-parties"
+                >
+                  <RowList>
+                    {richer.parties.map((p) => (
+                      <RecordRow
+                        key={p}
+                        title={p}
+                        testID={`search-suggestion-party-${p}`}
+                        onPress={() =>
+                          void open(() =>
+                            openSearchPath(
+                              `/subject/party/${encodeURIComponent(p)}`,
+                              p,
+                            ),
+                          )
+                        }
+                      />
+                    ))}
+                  </RowList>
+                  {metadata('people')}
+                </Section>
+              ) : null}
+              {richer.topics.length ? (
+                <Section
+                  title="Topics"
+                  icon="tag"
+                  accent="bills"
+                  testID="search-suggestions-topics"
+                >
+                  <RowList>
+                    {richer.topics.map((t) => (
+                      <RecordRow
+                        key={t.slug}
+                        title={t.title}
+                        testID={`search-suggestion-topic-${t.slug}`}
+                        onPress={() =>
+                          void open(() =>
+                            openSearchPath(`/subject/topic/${t.slug}`, t.title),
+                          )
+                        }
+                      />
+                    ))}
+                  </RowList>
+                  <AsAtLine asOf={null} citation="OPAX topic taxonomy" />
+                </Section>
+              ) : null}
+              {richer.reports.length ? (
+                <Section
+                  title="Reports"
+                  icon="doc.text"
+                  accent="leads"
+                  testID="search-suggestions-reports"
+                >
+                  <RowList>
+                    {richer.reports.map((r) => (
+                      <Group key={r.slug}>
+                        <RecordRow
+                          title={r.title}
+                          detail={r.blurb}
+                          testID={`search-suggestion-report-${r.slug}`}
+                          onPress={() =>
+                            void open(() =>
+                              openSearchPath(`/reports/${r.slug}`, r.title),
+                            )
+                          }
+                        />
+                        <AsAtLine
+                          asOf={r.updated}
+                          citation="OPAX reports index"
+                        />
+                      </Group>
+                    ))}
+                  </RowList>
+                </Section>
+              ) : null}
+              {extraSources?.manifest.stale || extraSources?.reports.stale ? (
+                <SavedCopyNotice
+                  reason={
+                    extraSources.manifest.staleReason ??
+                    extraSources.reports.staleReason
+                  }
+                />
+              ) : null}
+            </>
+          ) : null}
+          {showSuggestions && extraError ? (
+            <ErrorState
+              message="Party, topic and report suggestions are temporarily unavailable."
+              onRetry={() => void loadSources(true)}
+            />
+          ) : null}
           {showSuggestions ? (
             <Button
               label="Refresh suggestions"
@@ -385,11 +559,19 @@ export default function Search() {
           ) : null}
         </>
       ) : null}
-      {submitted ? (
+      {submitted && !extended ? (
         <Section
           title={`Results for “${result?.data.query ?? query.trim()}” · ${kindLabel(kind)}`}
           icon="magnifyingglass"
           accent="people"
+          info={
+            result
+              ? {
+                  title: 'About these results',
+                  notes: [...result.data.warnings, result.data.coverage],
+                }
+              : undefined
+          }
         >
           {kind === 'pay' ? (
             <Text variant="metadata" testID="search-pay-caveat">
@@ -495,14 +677,6 @@ export default function Search() {
                   ))}
                 </RowList>
               )}
-              {result.data.warnings.map((warning) => (
-                <Text key={warning} variant="caption">
-                  {warning}
-                </Text>
-              ))}
-              {result.data.coverage ? (
-                <Text variant="caption">{result.data.coverage}</Text>
-              ) : null}
               <AsAtLine
                 asOf={result.asOf}
                 citation={[

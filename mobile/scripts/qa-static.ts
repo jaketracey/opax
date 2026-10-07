@@ -264,6 +264,9 @@ if (productionIndex !== -1) {
       'source-destination-url',
       'source-destination-scroll',
       'source-destination-ok',
+      'money-test-focus',
+      'money-test-year',
+      'money-map-drawn-frames-',
     ])
       assert(
         !body.includes(Buffer.from(testID)),

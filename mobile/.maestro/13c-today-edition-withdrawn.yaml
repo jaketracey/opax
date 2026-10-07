@@ -8,6 +8,12 @@ name: 13c A withdrawn daily edition stays gone after a relaunch
 # so the first read is the edition itself.
 - launchApp:
     clearState: true
+# Wait at the top for the posted card before scrolling: the first response
+# can arrive after launch while scrollUntilVisible already swipes past it.
+- extendedWaitUntil:
+    visible:
+      id: today-edition-head
+    timeout: 30000
 - scrollUntilVisible:
     element:
       id: today-edition-head

@@ -2,6 +2,7 @@
 // the screens used to print inline. The wording is unchanged from where it
 // was shown (About, Person, Party, Bill, Leads); it now lives in one place.
 // Coverage files do not publish licence fields: never infer an open licence.
+import { canonicalUrl } from '../../navigation/external';
 
 export interface DatasetLink {
   label: string;
@@ -24,6 +25,97 @@ export const statement = [
 ];
 
 export const datasets: Dataset[] = [
+  {
+    id: 'money-qld',
+    name: 'ECQ gifts register',
+    publisher: 'Electoral Commission of Queensland',
+    licence:
+      "CC BY 4.0 (data.qld.gov.au dataset 'Electronic Disclosure System - State and Local Election Funding and Donations')",
+    terms: [
+      'Source: Electoral Commission of Queensland, financial years 2012-13 to 2026-27.',
+      'Electoral Commission of Queensland, Electronic Disclosure System (gifts to registered political parties) via parli.db `ext_donations` (source qld_ecq)',
+    ],
+    links: [
+      {
+        label: 'Electoral Commission of Queensland',
+        url: 'https://disclosures.ecq.qld.gov.au/Map',
+      },
+    ],
+  },
+  {
+    id: 'money-vic',
+    name: 'VEC disclosures',
+    publisher: 'Victorian Electoral Commission',
+    licence:
+      'Crown copyright (State of Victoria); published under Electoral Act 2002 s 217; no explicit open licence is stated on the portal',
+    terms: [
+      'Source: Victorian Electoral Commission, financial years 2020-21 to 2026-27.',
+      'Victorian Electoral Commission, VEC Disclosures public portal (donations to registered political parties) via parli.db `ext_donations` (source vic_vec)',
+    ],
+    links: [
+      {
+        label: 'Victorian Electoral Commission',
+        url: 'https://disclosures.vec.vic.gov.au/public-donations/',
+      },
+    ],
+  },
+  {
+    id: 'money-tas',
+    name: 'TEC disclosures',
+    publisher: 'Tasmanian Electoral Commission',
+    licence:
+      "CC BY 4.0 (TEC copyright statement, tec.tas.gov.au/info/Copyright.html); attribute '© Tasmanian Electoral Commission'",
+    terms: [
+      'Source: Tasmanian Electoral Commission, financial years 2025-26 to 2026-27.',
+      'Tasmanian Electoral Commission: the monthly and seven-day reportable political donation reports on tec.tas.gov.au (1 July 2025 to 2 July 2026 and continuing) together with the TEC Disclosures portal (disclosures lodged from 3 July 2026), via parli.db `ext_donations` (source tas_tec)',
+    ],
+    links: [
+      {
+        label: 'Tasmanian Electoral Commission',
+        url: 'https://www.tec.tas.gov.au/disclosure-and-funding/registers-and-reports/',
+      },
+    ],
+  },
+  {
+    id: 'money-commonwealth',
+    name: 'Commonwealth grants and contracts',
+    publisher: 'Department of Finance',
+    licence: 'CC BY 3.0 AU',
+    terms: [
+      'GrantConnect grant awards (Department of Finance), CC BY 3.0 AU',
+      "AusTender contract notices (Department of Finance), CC BY 3.0 AU; a varied contract counts once, at its latest notice's value",
+    ],
+    links: [
+      {
+        label: 'GrantConnect',
+        url: 'https://www.grants.gov.au/',
+      },
+      {
+        label: 'AusTender',
+        url: 'https://www.tenders.gov.au/',
+      },
+    ],
+  },
+  {
+    id: 'money-qld-public',
+    name: 'Queensland grants and contracts',
+    publisher: 'Queensland Government',
+    licence: 'CC BY 4.0',
+    terms: [
+      'Queensland Government Investment Portal expenditure (data.qld.gov.au), CC BY 4.0',
+      "Queensland agencies' contract disclosure reports, contracts of $10,000 and over (data.qld.gov.au), CC BY 4.0; a varied contract counts once, at its varied total",
+    ],
+    links: [
+      {
+        label: 'Queensland Government Investment Portal',
+        url: 'https://www.data.qld.gov.au/dataset/b102c881-2c7f-484a-a8b6-b056fe318964',
+      },
+      {
+        label: 'Queensland contract disclosure reports',
+        url: 'https://www.data.qld.gov.au/',
+      },
+    ],
+  },
   {
     id: 'hansard',
     name: 'Hansard and parliamentary records',
@@ -86,6 +178,8 @@ export const datasets: Dataset[] = [
     licence: 'CC BY 4.0',
     terms: [
       'AEC disclosure returns, CC BY 4.0.',
+      'AEC disclosure returns as aggregated in the money map · CC BY 4.0',
+      'Source: Australian Electoral Commission annual and election returns, financial years 1998-99 to 2025-26.',
       'AEC returns and GrantConnect awards carry Creative Commons Attribution terms. Versions vary by source.',
     ],
     links: [
@@ -145,6 +239,54 @@ export const datasets: Dataset[] = [
         url: 'https://www.legislation.gov.au/',
       },
     ],
+  },
+  {
+    id: 'grantconnect',
+    name: 'Commonwealth grant programs and awards',
+    publisher: 'Department of Finance, GrantConnect',
+    licence: 'CC BY 3.0 AU',
+    terms: [
+      'GrantConnect (Department of Finance), Grant Award records, via parli.db ext_grants / ext_grant_details',
+      'CC BY 3.0 AU (GrantConnect, Department of Finance)',
+    ],
+    links: [
+      { label: 'GrantConnect', url: 'https://www.grants.gov.au/Ga/List' },
+    ],
+  },
+  {
+    id: 'qld-grants',
+    name: 'Queensland grant programs',
+    publisher: 'Queensland Government, data.qld.gov.au',
+    licence: 'CC BY 4.0',
+    terms: [
+      'Queensland Government Investment Portal consolidated expenditure data (data.qld.gov.au), via parli.db government_grants',
+      'CC BY 4.0 (Queensland Government, data.qld.gov.au)',
+    ],
+    links: [
+      {
+        label: 'Government Investment Portal',
+        url: 'https://www.data.qld.gov.au/dataset/b102c881-2c7f-484a-a8b6-b056fe318964',
+      },
+    ],
+  },
+  {
+    id: 'austender-agencies',
+    name: 'Government agency contract records',
+    publisher: 'Department of Finance, AusTender',
+    terms: [
+      'Agency search results are derived from published AusTender contract records. Refer to the original record for its reuse terms.',
+    ],
+    links: [{ label: 'AusTender', url: 'https://www.tenders.gov.au/' }],
+  },
+  {
+    id: 'search-catalog',
+    name: 'Search catalog, topic taxonomy and research reports',
+    publisher: 'OPAX',
+    terms: [
+      'OPAX indexes public source records and publishes its topic taxonomy and research reports. Source records retain their original copyright and licence.',
+      'Machine briefs are automated summaries; passages are extracts from the record.',
+    ],
+    links: [{ label: 'OPAX reports', url: canonicalUrl('/reports') }],
   },
 ];
 

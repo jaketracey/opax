@@ -1,0 +1,274 @@
+appId: au.com.opax.app
+name: 34 Records, filters, sort, cited summary and explicitly chosen briefs
+---
+- launchApp:
+    clearState: true
+    permissions: {}
+- tapOn:
+    id: tab-search
+- takeScreenshot: ${EVIDENCE}/34-search-form
+- tapOn:
+    id: search-input
+- inputText: housing
+- hideKeyboard
+- scrollUntilVisible:
+    element:
+      id: search-kind-menu
+    direction: UP
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: search-kind-menu
+- tapOn: Records
+- scrollUntilVisible:
+    element:
+      id: search-submit
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: search-submit
+- scrollUntilVisible:
+    element:
+      id: records-count
+    timeout: 90000
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/34-records
+- scrollUntilVisible:
+    element:
+      id: search-filters
+    direction: UP
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: search-filters
+- takeScreenshot: ${EVIDENCE}/34-filters
+- scrollUntilVisible:
+    element:
+      id: search-filter-from
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: search-filter-from
+- inputText: 2025
+- scrollUntilVisible:
+    element:
+      id: search-filter-to
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: search-filter-to
+- inputText: 2026
+- scrollUntilVisible:
+    element:
+      id: search-filter-party
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: search-filter-party
+- scrollUntilVisible:
+    element:
+      id: search-filter-party-option-Labor
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: search-filter-party-option-Labor
+- scrollUntilVisible:
+    element:
+      id: search-filter-kind
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: search-filter-kind
+- scrollUntilVisible:
+    element:
+      id: search-filter-kind-find
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: search-filter-kind-find
+- inputText: Speeches
+- hideKeyboard
+- scrollUntilVisible:
+    element:
+      id: search-filter-kind-option-speech
+    centerElement: true
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/34-record-types
+- tapOn:
+    id: search-filter-kind-option-speech
+- scrollUntilVisible:
+    element:
+      id: search-filters-apply
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: search-filters-apply
+- scrollUntilVisible:
+    element:
+      id: records-count
+    centerElement: true
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/34-applied-filters
+- scrollUntilVisible:
+    element:
+      id: records-sort
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: records-sort
+- scrollUntilVisible:
+    element:
+      id: records-sort-option-newest
+    centerElement: true
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/34-sorts
+- tapOn:
+    id: records-sort-option-newest
+- scrollUntilVisible:
+    element:
+      id: records-result-.*
+    centerElement: true
+    visibilityPercentage: 10
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/34-result-row
+- tapOn:
+    id: records-result-.*
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: doc-title
+    timeout: 20000
+- assertVisible:
+    id: doc-reader
+- takeScreenshot: ${EVIDENCE}/34-native-record
+- tapOn:
+    text: Search
+    index: 0
+    retryTapIfNoChange: false
+- extendedWaitUntil:
+    notVisible:
+      id: doc-reader
+    timeout: 10000
+- assertNotVisible:
+    id: search-filters-sheet
+- scrollUntilVisible:
+    element:
+      id: records-summary
+    direction: UP
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: records-summary
+- scrollUntilVisible:
+    element:
+      id: records-summary-label
+    centerElement: true
+    visibilityPercentage: 10
+    timeout: 90000
+- assertVisible: AI summary of .* matching records\.
+- takeScreenshot: ${EVIDENCE}/34-summary
+- scrollUntilVisible:
+    element:
+      id: records-citation-1
+    centerElement: true
+    visibilityPercentage: 10
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/34-summary-citation
+- tapOn:
+    id: records-citation-1
+- extendedWaitUntil:
+    visible:
+      id: doc-title
+    timeout: 20000
+- takeScreenshot: ${EVIDENCE}/34-citation-native-record
+- tapOn:
+    text: Search
+    index: 0
+    retryTapIfNoChange: false
+- extendedWaitUntil:
+    notVisible:
+      id: doc-reader
+    timeout: 10000
+- assertNotVisible:
+    id: search-filters-sheet
+- scrollUntilVisible:
+    element:
+      id: records-briefs
+    direction: UP
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: records-briefs
+- takeScreenshot: ${EVIDENCE}/34-briefs-selected
+
+- runFlow:
+    when:
+      visible:
+        id: records-info
+    commands:
+      - tapOn:
+          id: records-info
+      - takeScreenshot: ${EVIDENCE}/34-result-notes
+      - tapOn:
+          id: records-info-sheet-done
+          retryTapIfNoChange: false
+      - extendedWaitUntil:
+          notVisible:
+            id: records-info-sheet-done
+          timeout: 10000
+
+# The 2025–26 filtered records have no prewritten briefs. A pinned 2023
+# public speech also proves the machine-written view when one is available.
+- scrollUntilVisible:
+    element:
+      id: search-clear-all
+    direction: UP
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: search-clear-all
+    retryTapIfNoChange: false
+- extendedWaitUntil:
+    notVisible:
+      id: search-clear-all
+    timeout: 10000
+- assertNotVisible:
+    id: search-filters-sheet
+- takeScreenshot: ${EVIDENCE}/34-cleared-filters
+- scrollUntilVisible:
+    element:
+      id: search-input
+    direction: UP
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: search-input
+- eraseText
+- inputText: Don Farrell
+- hideKeyboard
+- scrollUntilVisible:
+    element:
+      id: search-kind-menu
+    direction: UP
+    centerElement: true
+    timeout: 90000
+- scrollUntilVisible:
+    element:
+      id: search-submit
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: search-submit
+- scrollUntilVisible:
+    element:
+      id: records-briefs
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: records-briefs
+- scrollUntilVisible:
+    element:
+      text: Machine brief
+    centerElement: true
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/34-brief-content

@@ -18,7 +18,7 @@ import {
   formatPercent,
   moneyAccessibilityLabel,
 } from '../../design/format';
-import { partyRoute } from '../../navigation/routes';
+import { moneyRoute, partyRoute } from '../../navigation/routes';
 import { RecordBlock } from '../your-mp/Evidence';
 import type { ProfileView } from '../your-mp/model';
 
@@ -144,8 +144,10 @@ export function PartyReceiptsBlock({
   block,
   retry,
   id,
+  jurisdiction,
 }: {
   block: ProfileView['blocks']['partyReceipts'];
+  jurisdiction?: string;
   retry: () => void;
   id: string;
 }) {
@@ -185,6 +187,17 @@ export function PartyReceiptsBlock({
                 testID={linkID}
               />
             )}
+            <LinkRow
+              title="Money map"
+              icon="point.3.connected.trianglepath.dotted"
+              accent="money"
+              onPress={() => router.push(moneyRoute(p.party, jurisdiction))}
+              testID={
+                id === 'person-receipts'
+                  ? 'person-money-map'
+                  : `${id}-money-map`
+              }
+            />
           </RowList>
         </Group>
       )}

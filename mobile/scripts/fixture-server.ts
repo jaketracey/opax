@@ -14,6 +14,7 @@ import {
 import { assertPortraitPath } from '../src/api/portrait-policy';
 import { fixtureBytes, responseBytes } from '../tests/fixture-bytes';
 import { catalogSearchRows } from '../src/api/catalog-search';
+import { searchFixture, searchResourceFixture } from './search-fixture';
 import {
   decodeEdition,
   decodePay,
@@ -197,7 +198,19 @@ export const server = createServer(async (request, response) => {
     if (path.endsWith('.webp')) assertPortraitPath(path);
     else assertAllowedPath(path);
     const url = new URL(path, `http://127.0.0.1:${port}`);
-    let body = Object.hasOwn(peopleFixtures.responses, path) ? Buffer.from(JSON.stringify(peopleFixtures.responses[path])) : files.get(url.pathname);
+    const peopleResponse = Object.hasOwn(peopleFixtures.responses, path);
+    const search = peopleResponse ? null : searchFixture(url, roster);
+    if (search) {
+      response.writeHead(200, {
+        'Content-Type': search.contentType ?? 'application/json; charset=utf-8',
+        'Cache-Control': 'no-store',
+      });
+      response.end(search.body);
+      return;
+    }
+    let body = peopleResponse
+      ? Buffer.from(JSON.stringify(peopleFixtures.responses[path]))
+      : files.get(url.pathname) ?? searchResourceFixture(url.pathname) ?? undefined;
     let cacheControl = 'public, max-age=300';
     const isEdition = url.pathname === editionPath;
     if (

@@ -616,6 +616,20 @@ class BundleAttackTests(unittest.TestCase):
                 with self.subTest(marker=marker), self.assertRaises(ReleaseError):
                     verify.bundle_route_keys(b"./_layout.tsx\0" + marker, routes)
 
+    def test_capture_metadata_refused_in_every_binary_even_when_stripped(self):
+        header = struct.pack("<8I", 0xfeedfacf, 0, 0, 0, 0, 0, 0, 0)
+        for name in ("OPAX", "Frameworks/Test.framework/Test", "PlugIns/Test.appex/Test"):
+            for marker in (b"_OBJC_CLASS_$_AVCaptureVideoDataOutput", b"AVCaptureSession", b"AVCaptureDevice"):
+                with self.subTest(name=name, marker=marker), tempfile.TemporaryDirectory() as d:
+                    app = Path(d)
+                    (app / "OPAX").write_bytes(header + b"shipping code")
+                    path = app / name
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    path.write_bytes(header + marker)
+                    with self.assertRaisesRegex(ReleaseError, "No camera capture references"):
+                        verify.verify_no_camera_native_code(app)
+        self.assertTrue(verify.no_camera_native_symbols(b"AVAudioSession OpaxVoiceCore"))
+
     def test_voice_and_microphone_symbols_are_refused(self):
         self.assertTrue(verify.no_voice_native_symbols(b"_OBJC_CLASS_$_EXExpoAppSceneDelegate"))
         for symbol in (b"_$s13OpaxVoiceCore", b"_OBJC_CLASS_$_OpaxVoiceModule", b"_requestRecordPermission"):
