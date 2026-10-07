@@ -137,13 +137,17 @@ name: 42 Electorate grants, programs and monthly largest; static public-money sc
 - takeScreenshot: ${EVIDENCE}/42-program
 - scrollUntilVisible:
     element:
-      id: program-search
+      id: program-notes
     direction: DOWN
-    visibilityPercentage: 10
     centerElement: true
-    speed: 20
-    timeout: 300000
+    timeout: 60000
+- tapOn:
+    id: program-notes
+- assertVisible:
+    id: program-notes-sheet
 - takeScreenshot: ${EVIDENCE}/42-program-notes
+- tapOn:
+    id: program-notes-sheet-done
 - scrollUntilVisible:
     element:
       id: program-largest
