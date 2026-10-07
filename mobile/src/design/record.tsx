@@ -15,6 +15,7 @@ import {
   type AsAt,
   type VotesMeta,
 } from './format';
+import { useAccessibilitySize } from './accessibility';
 import { Icon } from './icon';
 import { Text, type TextTone } from './text';
 import {
@@ -116,6 +117,11 @@ export function SourceLink({
   testID,
 }: SourceLinkProps) {
   const destination = record ? `${citation} · ${record}` : citation;
+  // A hugging link's width follows its text, so word-safe sizing could chase
+  // its own frame (in a wrapping row above all). At accessibility sizes the
+  // link takes its column's full width, a fixed frame for word-safe text; at
+  // other sizes the short label never breaks inside a word.
+  const fixed = useAccessibilitySize();
   return (
     <Pressable
       accessibilityRole="link"
@@ -132,10 +138,19 @@ export function SourceLink({
       testID={testID}
       hitSlop={{ top: 8, bottom: 8 }}
       onPress={() => openSource(url, destination)}
-      style={({ pressed }) => [styles.small, pressed ? styles.pressed : null]}
+      style={({ pressed }) => [
+        styles.small,
+        fixed ? styles.fixedWidth : null,
+        pressed ? styles.pressed : null,
+      ]}
     >
       <Icon name="arrow.up.right.square" size={14} tone="bronzeInk" />
-      <Text wordSafe variant="kicker" tone="bronzeInk" style={styles.shrink}>
+      <Text
+        wordSafe={fixed}
+        variant="kicker"
+        tone="bronzeInk"
+        style={styles.shrink}
+      >
         {label}
       </Text>
     </Pressable>
@@ -348,6 +363,8 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   shrink: { flexShrink: 1 },
+  // The column's full width, whatever row the link sits in.
+  fixedWidth: { alignSelf: 'stretch', width: '100%' },
   pressed: { backgroundColor: colors.sunken },
   figure: { gap: spacing.s1 },
   big: { gap: 2 },

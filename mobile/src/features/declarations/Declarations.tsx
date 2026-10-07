@@ -24,7 +24,7 @@ import { chrome, colors, layout, spacing } from '../../design/tokens';
 import { personRoute } from '../../navigation/routes';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { RecordStatus } from '../RecordStatus';
-import { TodayDeclaration } from '../today/TodayDeclaration';
+import { FeedRow } from './FeedRow';
 import {
   feedCountLine,
   feedFacets,
@@ -39,8 +39,8 @@ const coverageNote = (rows: number, available: number) =>
 /**
  * The declared-interests feed behind Today's recent declarations: every row
  * of /interests/recent.json, newest first, filtered on the device by
- * chamber, jurisdiction and member. Rows are Today's register rows, with the
- * member's profile and any name match the export found.
+ * chamber, jurisdiction and member. Rows are Today's compact register rows,
+ * with the member's profile and any name match the export found.
  */
 export default function Declarations() {
   const load = useCallback(
@@ -196,11 +196,9 @@ export default function Declarations() {
       data={rows}
       keyExtractor={(row) => String(row.id)}
       renderItem={({ item, index }) => (
-        <TodayDeclaration
+        <FeedRow
           item={item}
           index={index}
-          testIDPrefix="declaration"
-          showTies
           onOpenPerson={
             item.profileSlug
               ? () => router.push(personRoute(item.profileSlug!))
@@ -250,6 +248,6 @@ const styles = StyleSheet.create({
   header: { paddingBottom: spacing.s4 },
   footer: { paddingTop: spacing.s4 },
   count: { flexDirection: 'row', alignItems: 'center', gap: spacing.s3 },
-  separator: { paddingVertical: 12 },
+  separator: { paddingVertical: 4 },
   grow: { flex: 1 },
 });

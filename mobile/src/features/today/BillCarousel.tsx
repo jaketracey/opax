@@ -7,7 +7,7 @@ import { partyDot } from '../../design/party';
 import { Text, useAccessibilitySize } from '../../design/primitives';
 import { layout, light, spacing } from '../../design/tokens';
 import { billRoute } from '../../navigation/routes';
-import { Chip, TodayCard, shortDay } from './parts';
+import { Chip, TodayCard, shortDay, useTodayAccent } from './parts';
 import { billAccent } from './tint';
 
 type Bill = NonNullable<ReturnType<typeof recentBillsFor>['data']>[number];
@@ -52,7 +52,7 @@ function BillCard({
   fill: boolean;
 }) {
   const text = billCardText(bill);
-  const tone = billAccent(bill.status);
+  const tone = useTodayAccent(billAccent(bill.status));
   const dot = !bill.portfolio ? partyDot(bill.sponsor_party) : null;
   return (
     <Pressable

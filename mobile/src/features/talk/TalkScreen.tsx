@@ -11,7 +11,13 @@ import {
 } from 'react-native';
 import { Stack, router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Button, Field, Text, useReduceMotion } from '../../design/primitives';
+import {
+  Button,
+  EdgeFade,
+  Field,
+  Text,
+  useReduceMotion,
+} from '../../design/primitives';
 import { chrome, colors, layout, spacing } from '../../design/tokens';
 import { openOnWeb, webPageUrl } from '../../navigation/external';
 import { ProfileScreen } from '../Person';
@@ -65,6 +71,8 @@ export default function TalkScreen({
   const statusNode = useRef<View>(null);
   const page = useRef<ScrollView>(null);
   const captionsList = useRef<ScrollView>(null);
+  // Older caption lines scrolled above the panel fade out at its top edge.
+  const [captionsAbove, setCaptionsAbove] = useState(false);
   const focusedEntry = useRef(false);
   const terminal = call.terminal;
   const live = s.state === 'live';
@@ -394,19 +402,31 @@ export default function TalkScreen({
             </View>
           </View>
           {showCaptions ? (
-            <ScrollView
-              ref={captionsList}
-              testID="talk-captions-list"
-              style={styles.captions}
-              contentContainerStyle={styles.captionsContent}
-              onContentSizeChange={() =>
-                captionsList.current?.scrollToEnd({ animated: !reduceMotion })
-              }
-            >
-              {s.transcript.map((turn) => (
-                <AnswerCaption key={`${turn.role}-${turn.id}`} turn={turn} />
-              ))}
-            </ScrollView>
+            <View>
+              <ScrollView
+                ref={captionsList}
+                testID="talk-captions-list"
+                style={styles.captions}
+                contentContainerStyle={styles.captionsContent}
+                onContentSizeChange={() =>
+                  captionsList.current?.scrollToEnd({
+                    animated: !reduceMotion,
+                  })
+                }
+                onScroll={(event) => {
+                  const above = event.nativeEvent.contentOffset.y > 1;
+                  if (above !== captionsAbove) setCaptionsAbove(above);
+                }}
+                scrollEventThrottle={32}
+              >
+                {s.transcript.map((turn) => (
+                  <AnswerCaption key={`${turn.role}-${turn.id}`} turn={turn} />
+                ))}
+              </ScrollView>
+              {captionsAbove ? (
+                <EdgeFade height={40} testID="talk-captions-fade" />
+              ) : null}
+            </View>
           ) : null}
           <View style={styles.dock} testID="talk-sheet-message">
             {active ? (

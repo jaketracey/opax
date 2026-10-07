@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { Icon, Text } from '../../design/primitives';
 import { light, spacing } from '../../design/tokens';
 import { leadsRoute } from '../../navigation/routes';
-import { TintIcon, TodayCard } from './parts';
+import { TintIcon, TodayCard, useTodayInk } from './parts';
 import { mix } from './tint';
 
 /**
@@ -11,6 +11,8 @@ import { mix } from './tint';
  * Leads screen loads its export when it opens.
  */
 export function LeadsCard() {
+  // The mark colour as text: 7:1 on navy under Increase Contrast.
+  const mark = useTodayInk(light.bronzeBright, light.navyRaised);
   return (
     <Pressable
       accessibilityRole="button"
@@ -29,13 +31,13 @@ export function LeadsCard() {
               <TintIcon
                 name="point.3.connected.trianglepath.dotted"
                 size={18}
-                color={light.bronzeBright}
+                color={mark}
               />
             </View>
             <Text
               wordSafe
               variant="kicker"
-              style={[styles.kicker, { color: light.bronzeBright }]}
+              style={[styles.kicker, { color: mark }]}
             >
               LEADS
             </Text>

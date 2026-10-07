@@ -24,6 +24,7 @@ import { Heading, Text, type TextTone } from './text';
 import {
   accents,
   colors,
+  light,
   hairline,
   layout,
   rhythm,
@@ -141,29 +142,80 @@ export function Section({
   testID?: string;
   headingTestID?: string;
 }) {
+  const stacked = useAccessibilitySize();
   return (
     <View
       testID={testID}
       style={[styles.section, rule ? null : styles.unruled]}
     >
       {title || action || info ? (
-        <View style={styles.sectionHead}>
-          {icon && title ? (
-            <IconTile name={icon} accent={accent} size="section" />
-          ) : null}
-          {title ? (
-            <Heading level={2} style={styles.grow} testID={headingTestID}>
-              {title}
-            </Heading>
-          ) : (
-            <View style={styles.grow} />
-          )}
-          {info ? <InfoButton {...info} /> : null}
-          {action}
-        </View>
+        stacked && title && (action || info) ? (
+          // At accessibility sizes the title takes the whole line and the
+          // ⓘ and action sit on their own line below: a large "See all"
+          // never squeezes the heading into a narrow column.
+          <View style={styles.sectionHeadStacked}>
+            <View style={styles.sectionHead}>
+              {icon ? (
+                <IconTile name={icon} accent={accent} size="section" />
+              ) : null}
+              <Heading level={2} style={styles.grow} testID={headingTestID}>
+                {title}
+              </Heading>
+            </View>
+            <View style={styles.sectionTools}>
+              {/* A column of fixed width for the action's word-safe label. */}
+              {action ? <View style={styles.grow}>{action}</View> : null}
+              {info ? <InfoButton {...info} /> : null}
+            </View>
+          </View>
+        ) : (
+          <View style={[styles.sectionHead, styles.sectionHeadSpaced]}>
+            {icon && title ? (
+              <IconTile name={icon} accent={accent} size="section" />
+            ) : null}
+            {title ? (
+              <Heading level={2} style={styles.grow} testID={headingTestID}>
+                {title}
+              </Heading>
+            ) : (
+              <View style={styles.grow} />
+            )}
+            {info ? <InfoButton {...info} /> : null}
+            {action}
+          </View>
+        )
       ) : null}
       {children}
     </View>
+  );
+}
+
+/**
+ * A soft fade over the top edge of a scrolling panel, from the paper to
+ * clear, so lines that have scrolled up read as "more above" rather than cut
+ * off. Decorative; place it last inside a relatively positioned wrapper.
+ */
+export function EdgeFade({
+  height = 32,
+  testID,
+}: {
+  height?: number;
+  testID?: string;
+}) {
+  return (
+    <View
+      pointerEvents="none"
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants"
+      testID={testID}
+      style={[
+        styles.fade,
+        {
+          height,
+          experimental_backgroundImage: `linear-gradient(to bottom, ${light.paper} 0%, ${light.paper}00 100%)`,
+        },
+      ]}
+    />
   );
 }
 
@@ -305,12 +357,23 @@ const styles = StyleSheet.create({
     paddingTop: rhythm.block + rhythm.line,
   },
   unruled: { borderTopWidth: 0, paddingTop: 0 },
+  fade: { position: 'absolute', top: 0, left: 0, right: 0 },
   sectionHead: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: rhythm.heading - rhythm.line,
-    // Heading to content is 12pt: the section's 16pt gap, less 4.
+  },
+  // Heading to content is 12pt: the section's 16pt gap, less 4.
+  sectionHeadSpaced: { marginBottom: rhythm.heading - rhythm.block },
+  sectionHeadStacked: {
+    gap: rhythm.line,
     marginBottom: rhythm.heading - rhythm.block,
+  },
+  sectionTools: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: rhythm.tight,
   },
   grow: { flexGrow: 1, flexShrink: 1 },
   subsection: {

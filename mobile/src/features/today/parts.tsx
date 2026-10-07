@@ -12,8 +12,18 @@ import { SymbolView, type SFSymbol } from 'expo-symbols';
 import { calendarDate, formatDate } from '../../design/format';
 import { partyDot, partyText, type PartyContext } from '../../design/party';
 import { Text, useReduceMotionSetting } from '../../design/primitives';
+import { useIncreaseContrast } from '../../design/accessibility';
 import { colors, hairline, light, spacing } from '../../design/tokens';
-import { markOn, washOf } from './tint';
+import { markOn, strongAccent, strongOn, washOf, type Accent } from './tint';
+
+/** A Today accent, strengthened under Increase Contrast. */
+export function useTodayAccent(accent: Accent): Accent {
+  return useIncreaseContrast() ? strongAccent(accent) : accent;
+}
+/** A Today text colour on its ground, strengthened under Increase Contrast. */
+export function useTodayInk(color: string, ground: string): string {
+  return useIncreaseContrast() ? strongOn(color, ground) : color;
+}
 
 /** Today's cards: continuous 16pt corners on the raised surface. */
 export const cardRadius = 16;
@@ -177,6 +187,12 @@ export function Chip({
   icon?: SFSymbol;
   testID?: string;
 }) {
+  // Increase Contrast: the label reads at 7:1 and the dot at 4.5:1.
+  const strong = useIncreaseContrast();
+  if (strong) {
+    color = strongOn(color, ground);
+    if (dot) dot = strongOn(dot, ground, 4.5);
+  }
   return (
     <View testID={testID} style={[styles.chip, { backgroundColor: ground }]}>
       {dot ? <View style={[styles.chipDot, { backgroundColor: dot }]} /> : null}

@@ -97,18 +97,10 @@ export const componentPairs: ColourPair[] = [
   ),
   pair('Button primary label', 'pressed', 'onNavy', 'navyRaised'),
   pair('Button primary spinner', 'loading', 'onNavy', 'navy', 'non-text'),
-  // Button, default.
-  pair('Button default label', 'rest', 'navy', 'raised'),
-  pair('Button default boundary', 'rest', 'lineStrong', 'paper', 'non-text'),
+  // Button, default: a tinted capsule with no outline.
+  pair('Button default label', 'rest', 'navy', 'navyWash'),
   pair('Button default label', 'pressed', 'navy', 'sunken'),
-  pair(
-    'Button default boundary',
-    'pressed',
-    'lineStrong',
-    'sunken',
-    'non-text',
-  ),
-  pair('Button default spinner', 'loading', 'navy', 'raised', 'non-text'),
+  pair('Button default spinner', 'loading', 'navy', 'navyWash', 'non-text'),
   // Button, quiet.
   pair('Button quiet label', 'rest', 'navy', 'paper'),
   pair('Button quiet label', 'pressed', 'navy', 'sunken'),
@@ -118,7 +110,8 @@ export const componentPairs: ColourPair[] = [
   pair('Button danger boundary', 'rest', 'danger', 'paper', 'non-text'),
   pair('Button danger label', 'pressed', 'danger', 'sunken'),
   pair('Button danger boundary', 'pressed', 'danger', 'sunken', 'non-text'),
-  // Disabled primary, default and danger share one look.
+  // Disabled buttons share one label: inkSoft on sunken (primary and danger
+  // keep a line-strong outline; the default capsule has none).
   pair('Button disabled label', 'disabled', 'inkSoft', 'sunken'),
   pair(
     'Button disabled boundary',
@@ -141,11 +134,10 @@ export const componentPairs: ColourPair[] = [
   pair('Tag outline', 'pressed', 'bronzeInk', 'paper', 'non-text'),
 
   // FilterChip.
-  pair('FilterChip key', 'rest', 'inkSoft', 'sunken'),
-  pair('FilterChip value and close icon', 'rest', 'ink', 'sunken'),
-  pair('FilterChip boundary', 'rest', 'lineStrong', 'paper', 'non-text'),
-  pair('FilterChip key', 'pressed', 'inkSoft', 'raised'),
-  pair('FilterChip value and close icon', 'pressed', 'ink', 'raised'),
+  pair('FilterChip key', 'rest', 'inkSoft', 'navyWash'),
+  pair('FilterChip value and close icon', 'rest', 'ink', 'navyWash'),
+  pair('FilterChip key', 'pressed', 'inkSoft', 'sunken'),
+  pair('FilterChip value and close icon', 'pressed', 'ink', 'sunken'),
 
   // SegmentedControl.
   pair('Segment label', 'rest', 'navy', 'raised'),
