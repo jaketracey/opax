@@ -49,6 +49,11 @@ struct ShareRequest: Record {
   @Field var title: String = ""
 }
 
+struct TextShareRequest: Record {
+  @Field var text: String = ""
+  @Field var filename: String = "record.txt"
+}
+
 final class InvalidShareURLException: Exception {
   override var reason: String { "Only canonical https links can be shared" }
 }
@@ -68,6 +73,34 @@ public final class OpaxShareModule: Module {
 
   public func definition() -> ModuleDefinition {
     Name("OpaxShare")
+
+    AsyncFunction("copyText") { (text: String) in
+      UIPasteboard.general.string = text
+    }.runOnQueue(.main)
+
+    AsyncFunction("shareText") { (request: TextShareRequest, promise: Promise) in
+      guard request.filename.range(of: "^[a-z0-9-]+\\.(txt|bib|ris)$", options: .regularExpression) != nil else {
+        throw InvalidShareURLException()
+      }
+      guard let scene = SceneGeometry.foregroundScene(),
+        let window = scene.windows.first(where: { $0.isKeyWindow }),
+        var presenter = window.rootViewController else {
+        throw NoPresenterException()
+      }
+      while let presented = presenter.presentedViewController, !presented.isBeingDismissed { presenter = presented }
+      let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+      try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+      let file = directory.appendingPathComponent(request.filename)
+      do { try request.text.write(to: file, atomically: true, encoding: .utf8) }
+      catch { try? FileManager.default.removeItem(at: directory); throw error }
+      let controller = UIActivityViewController(activityItems: [file], applicationActivities: nil)
+      controller.popoverPresentationController?.sourceView = presenter.view
+      controller.completionWithItemsHandler = { _, completed, _, _ in
+        try? FileManager.default.removeItem(at: directory)
+        promise.resolve(completed)
+      }
+      presenter.present(controller, animated: true)
+    }.runOnQueue(.main)
 
     AsyncFunction("share") { (request: ShareRequest, promise: Promise) in
       guard let url = URL(string: request.url), url.scheme == "https", url.host != nil else {
