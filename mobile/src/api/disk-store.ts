@@ -20,9 +20,15 @@ export class DiskStore implements CacheStore {
     if (legacy.exists) legacy.delete();
   }
   private async atomic(file: File, value: unknown) {
+    const payload = JSON.stringify(value);
+    // E174.1: retain free space for the user's device instead of saving an
+    // offline copy that cannot fit. ApiClient still returns the online result.
+    // Three bytes per UTF-16 code unit safely bounds the UTF-8 payload size.
+    if (Paths.availableDiskSpace < payload.length * 3 + 1024 * 1024)
+      throw new Error('Not enough device storage to save this offline copy');
     this.prepare();
     const temporary = new File(this.directory, `${file.name}.tmp`);
-    await temporary.write(JSON.stringify(value));
+    await temporary.write(payload);
     temporary.move(file, { overwrite: true });
   }
   async readIndex(): Promise<CacheIndexEntry[]> {

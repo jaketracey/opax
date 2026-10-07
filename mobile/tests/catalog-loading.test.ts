@@ -128,25 +128,28 @@ test('typing suggestions reuses one source snapshot until explicit refresh', asy
   expect(calls.length).toBeGreaterThan(count);
 });
 test.each([
+  ['/parliamentarians.json'],
   ['/api/person-slugs'],
   [data.manifest.people_url],
   ['/api/person-slugs', data.manifest.people_url],
 ])(
-  'optional identity failure preserves every suggestion group: %j',
+  'optional identity failure hides people and preserves other suggestion groups: %j',
   async (...paths) => {
     const { catalogs } = loader(paths);
     const sources = await catalogs.suggestionSources();
     for (const query of ['Albanese', 'Grayndler', 'support']) {
-      expect(await catalogs.suggestions(query)).toEqual(
-        suggestionsFor(query, data.roster, sources.electorates, data.bills!),
+      const expected = suggestionsFor(
+        query,
+        data.roster,
+        sources.electorates,
+        data.bills!,
       );
+      expect(await catalogs.suggestions(query)).toEqual({
+        ...expected,
+        people: [],
+      });
     }
-    const row = (await catalogs.suggestions('Albanese')).people[0]!;
-    expect(row.name).toBe('Anthony Albanese');
-    expect(personRowContext(rosterIdentityFor(row, sources))).toMatchObject({
-      party: undefined,
-      place: undefined,
-    });
+    expect(sources.roster.people).toEqual([]);
     expect(sources.provenance.people.sources).toHaveLength(1);
   },
 );
@@ -164,6 +167,7 @@ test('explicit suggestion refresh retries optional identity context', async () =
   });
 });
 test.each([
+  ['/parliamentarians.json'],
   ['/api/person-slugs'],
   [data.manifest.people_url],
   ['/api/person-slugs', data.manifest.people_url],
@@ -173,16 +177,15 @@ test.each([
     const failures = [...paths];
     const { catalogs, calls } = loader(failures);
     const first = await catalogs.suggestionSourcesOnFocus();
-    const row = (await catalogs.suggestions('Albanese')).people[0]!;
-    expect(
-      personRowContext(rosterIdentityFor(row, first)).place,
-    ).toBeUndefined();
+    expect((await catalogs.suggestions('Albanese')).people).toEqual([]);
+    expect(first.roster.people).toEqual([]);
     const initialCalls = calls.length;
     // Typing does not consume the retry before Search regains focus.
     await catalogs.suggestions('Grayndler');
     expect(calls).toHaveLength(initialCalls);
     failures.length = 0;
     const recovered = await catalogs.suggestionSourcesOnFocus();
+    const row = (await catalogs.suggestions('Albanese')).people[0]!;
     expect(personRowContext(rosterIdentityFor(row, recovered))).toMatchObject({
       party: 'Labor',
       place: 'Grayndler · House of Representatives · New South Wales',

@@ -6,7 +6,8 @@ name: 22 Account sign-in by emailed code, sign-out and deletion
 # Fixture accounts only (happy@example.invalid, code 01234567); nothing is
 # emailed. Relaunch without clearState keeps journey 04's offline cache.
 # Every check scrolls to its target, so the flow holds at AX5.
-- launchApp
+- launchApp:
+    permissions: {}
 - tapOn: Account and about
 - extendedWaitUntil:
     visible: 'Not signed in\. An account is only needed to talk to OPAX\.'

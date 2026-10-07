@@ -10,7 +10,14 @@ import {
 import { samePartyLabel } from '../design/party';
 import { ApiError } from './errors';
 import {
+  memberSearchResults,
+  memberSearchRows,
+  memberSlugFor,
+  memberSuggestionRoster,
+} from './catalog-search';
+import {
   joinPerson,
+  personSlugForId,
   personSlugForResult,
   type PersonProfile,
 } from './person-identity';
@@ -18,7 +25,7 @@ import { editionPath, type CatalogKind } from './policy';
 import * as decode from './catalog-decoders';
 import { isPartialCatalog, type Decoder } from './validation';
 import type { Manifest } from './catalog-decoders';
-import { billKey, interestKey, personId, nameKey, type PersonId } from './ids';
+import { billKey, interestKey, personId, type PersonId } from './ids';
 import {
   declarationProfilesFor,
   profileFor,
@@ -861,11 +868,9 @@ export class Catalogs {
             decode.decodeManifest,
             refresh,
           ),
-          this.client.get(
-            '/parliamentarians.json',
-            decode.decodeRoster,
-            refresh,
-          ),
+          this.client
+            .get('/parliamentarians.json', decode.decodeRoster, refresh)
+            .catch(() => null),
           this.client.get('/bills/index.json', decode.decodeBillIndex, refresh),
           this.client
             .get('/api/person-slugs', decode.decodeSlugs, refresh)
@@ -892,12 +897,23 @@ export class Catalogs {
             'The seat release does not match its manifest.',
           );
         const provenance = suggestionProvenanceFor({
-          people: roster.asOf,
+          people: roster?.asOf ?? null,
           electorates: electorates.asOf ?? manifest.asOf,
           bills: bills.asOf,
         });
         return {
-          roster: roster.data,
+          roster: memberSuggestionRoster(
+            roster?.data ?? {
+              meta: { generated: '' },
+              people: [],
+            },
+            {
+              roster: roster?.data,
+              manifest: manifest.data,
+              slugs: slugs?.data,
+              people: people?.data,
+            },
+          ),
           manifest: manifest.data,
           slugs: slugs?.data,
           people: people?.data,
@@ -908,14 +924,17 @@ export class Catalogs {
               {
                 ...provenance.people,
                 sources:
-                  slugs && people
+                  roster && slugs && people
                     ? [
                         ...provenance.people.sources,
                         ...provenance.electorates.sources,
                       ]
                     : provenance.people.sources,
               },
-              [roster, ...(slugs && people ? [slugs, people, manifest] : [])],
+              [
+                ...(roster ? [roster] : []),
+                ...(roster && slugs && people ? [slugs, people, manifest] : []),
+              ],
             ),
             electorates: cached(provenance.electorates, [
               manifest,
@@ -933,7 +952,9 @@ export class Catalogs {
             this.suggestionIdentityRetry !== 'used'
           )
             this.suggestionIdentityRetry =
-              sources.slugs && sources.people ? 'unused' : 'available';
+              sources.slugs && sources.people && sources.roster.people.length
+                ? 'unused'
+                : 'available';
         },
         () => {
           if (this.suggestionData === pending) this.suggestionData = undefined;
@@ -1062,8 +1083,10 @@ export class Catalogs {
     const params = new URLSearchParams({
       q: query,
       kind,
-      page: String(page),
-      per: '20',
+      // The API exposes one bounded 200-row relevance window. Fetch that
+      // window for people, then filter and paginate the verified set locally.
+      page: kind === 'person' ? '1' : String(page),
+      per: kind === 'person' ? '200' : '20',
     });
     const [result, slugs] = await Promise.all([
       this.client.get(`/api/search-all?${params}`, decode.decodeSearch),
@@ -1079,12 +1102,60 @@ export class Catalogs {
         'invalid-data',
         'The person release does not match its manifest.',
       );
+    const membership =
+      kind === 'person' ||
+      result.data.results.some((row) =>
+        ['person', 'interest', 'pay', 'expense'].includes(row.kind),
+      )
+        ? await Promise.all([this.roster(), bridge?.[1] ?? this.manifest()])
+            .then(async ([roster, manifest]) => ({
+              roster,
+              manifest,
+              people: people ?? (await this.people(manifest.data)),
+            }))
+            .catch(() => null)
+        : null;
+    const memberCatalogs = {
+      roster: membership?.roster.data,
+      manifest: membership?.manifest.data,
+      people: membership?.people.data,
+      slugs: slugs.data,
+    };
     const records = [
       result,
       slugs,
       ...(bridge ?? []),
       ...(people ? [people] : []),
+      ...(membership ? Object.values(membership) : []),
     ];
+    const readableRows = result.data.results.filter(
+      (row) => !row.href.startsWith('/ask'),
+    );
+    const rows =
+      kind === 'person'
+        ? memberSearchResults(readableRows, memberCatalogs, query)
+        : memberSearchRows(readableRows, memberCatalogs);
+    const total = kind === 'person' ? rows.length : result.data.total;
+    const currentPage =
+      kind === 'person'
+        ? Math.min(Math.max(1, page), Math.max(1, Math.ceil(total / 20)))
+        : result.data.page;
+    const pageRows =
+      kind === 'person'
+        ? rows.slice((currentPage - 1) * 20, currentPage * 20)
+        : rows;
+    // A verified surname keeps its original display route, so the portrait
+    // index can refuse a face for that short label. Navigation still resolves
+    // that route to the same canonical native identity.
+    const surnameNames = new Set(
+      kind === 'person' && memberCatalogs.roster
+        ? memberSuggestionRoster(memberCatalogs.roster, memberCatalogs)
+            .people.filter(
+              (person) => person.full && !/\s/.test(person.name.trim()),
+            )
+            .map((person) => person.name)
+        : [],
+    );
     return {
       ...result,
       ...recordFlags(records),
@@ -1092,24 +1163,45 @@ export class Catalogs {
       savedAt: Math.min(...records.map((r) => r.savedAt)),
       data: {
         ...result.data,
-        results: result.data.results
-          .filter((row) => !row.href.startsWith('/ask'))
-          .map((row) => {
-            const personSlug = personSlugForResult(
-              row,
-              slugs.data,
-              bridge?.[0].data,
-              people?.data,
-            );
-            return {
-              ...row,
-              personSlug,
-              // The verified slug bridge also resolves formal register names.
-              profileName: personSlug
-                ? slugs.data.slugs[personSlug]
-                : undefined,
-            };
-          }),
+        total,
+        page: currentPage,
+        per_page: kind === 'person' ? 20 : result.data.per_page,
+        results: pageRows.map((row) => {
+          const candidate = personSlugForResult(
+            row,
+            slugs.data,
+            bridge?.[0].data,
+            people?.data,
+          );
+          // Keep every non-person record, but only offer a native member link.
+          const nativeSlug =
+            row.kind === 'person'
+              ? memberSlugFor(row, memberCatalogs)
+              : candidate &&
+                memberSlugFor(
+                  {
+                    ...row,
+                    kind: 'person',
+                    title: slugs.data.slugs[candidate]!,
+                    href: `/subject/person/${candidate}`,
+                  },
+                  memberCatalogs,
+                );
+          const personSlug =
+            row.kind === 'person' &&
+            nativeSlug &&
+            candidate &&
+            surnameNames.has(row.title) &&
+            slugs.data.slugs[candidate] === row.title
+              ? candidate
+              : nativeSlug;
+          return {
+            ...row,
+            personSlug,
+            // The verified slug bridge also resolves formal register names.
+            profileName: nativeSlug ? slugs.data.slugs[nativeSlug] : undefined,
+          };
+        }),
       },
     };
   }
@@ -1119,32 +1211,13 @@ export class Catalogs {
     // Identifier-only handoff to the profile lane. Keep the existing slug route
     // working while allowing callers to carry the canonical person ID.
     if (slug.startsWith('person_')) {
-      const id = personId(slug);
-      const person = people.data.people.find((p) => p.person_id === id);
-      const names = new Set(
-        [person?.name, ...(person?.aliases ?? [])]
-          .filter(Boolean)
-          .map((name) => nameKey(name!)),
+      slug = personSlugForId(
+        personId(slug),
+        slugs.data,
+        roster.data,
+        people.data,
+        manifest.data,
       );
-      const resolved = Object.keys(slugs.data.slugs).filter((key) => {
-        if (!names.has(nameKey(slugs.data.slugs[key]!))) return false;
-        try {
-          return (
-            joinPerson(key, slugs.data, roster.data, people.data, manifest.data)
-              .canonicalPersonId === id
-          );
-        } catch {
-          return false;
-        }
-      });
-      if (!resolved.length)
-        throw new ApiError(
-          'not-found',
-          'This person is not in the public directory.',
-        );
-      slug =
-        resolved.find((key) => slugs.data.slugs[key] === person?.name) ??
-        resolved[0]!;
     }
     return {
       data: joinPerson(
