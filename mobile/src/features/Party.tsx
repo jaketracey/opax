@@ -9,7 +9,8 @@ import { billSentenceCase } from '../api/bill-transforms';
 import {
   formatCount,
   formatDate,
-  formatFinancialYear,
+  formatDisclosureYear,
+  disclosureYearNote,
   formatMoney,
 } from '../design/format';
 import { chamberName, jurisdictionName } from '../design/parliament';
@@ -252,7 +253,8 @@ export function PartyPage({ input }: { input: string }) {
                   ? {
                       title: 'About party receipts',
                       notes: [
-                        'Top donors are the displayed donor-to-party flows, not all party receipts. Year keys use the first year of each financial year; election returns use polling year. No sequence or causal link is inferred.',
+                        'Top donors are the displayed donor-to-party flows, not all party receipts. No sequence or causal link is inferred.',
+                        disclosureYearNote,
                       ],
                       testID: 'party-receipts-info',
                     }
@@ -330,7 +332,7 @@ export function PartyPage({ input }: { input: string }) {
                                 title={
                                   row.year === 'undated'
                                     ? 'Undated'
-                                    : formatFinancialYear(Number(row.year))
+                                    : formatDisclosureYear(Number(row.year))
                                 }
                               >
                                 <RowList>
@@ -353,7 +355,7 @@ export function PartyPage({ input }: { input: string }) {
                 {partyPageCopy.aec}
               </Text>
               <RowList>
-                <MoneyMapLink />
+                <MoneyMapLink party={view.label} />
               </RowList>
             </Section>
             <Section

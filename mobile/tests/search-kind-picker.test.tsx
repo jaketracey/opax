@@ -1,7 +1,7 @@
 import { act } from 'react';
 import { ActionSheetIOS } from 'react-native';
 import TestRenderer from 'react-test-renderer';
-import { Button } from '../src/design/primitives';
+import { LinkRow } from '../src/design/primitives';
 import { chrome } from '../src/design/tokens';
 import { KindPicker } from '../src/features/search/KindPicker';
 
@@ -21,7 +21,7 @@ test('the native kind menu submits only its allowed selection and honours Cancel
       <KindPicker value="person" onChange={change} />,
     );
   });
-  act(() => renderer.root.findByType(Button).props.onPress());
+  act(() => renderer.root.findByType(LinkRow).props.onPress());
   const [options, select] = sheet.mock.calls[0]!;
   // ActionSheetIOS rejects DynamicColorIOS objects before its native call.
   expect(typeof options.tintColor).toBe('string');
@@ -31,9 +31,15 @@ test('the native kind menu submits only its allowed selection and honours Cancel
     'Declared interests',
     'Pay',
     'Expenses',
+    'Records',
+    'Political parties',
+    'Government agencies',
+    'Grants',
+    'Bills',
+    'Research reports',
     'Cancel',
   ]);
-  select(options.cancelButtonIndex!);
+  select(options.cancelLinkRowIndex!);
   expect(change).not.toHaveBeenCalled();
   select(2);
   expect(change).toHaveBeenCalledWith('pay');

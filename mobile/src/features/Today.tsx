@@ -11,6 +11,7 @@ import { FollowingSection } from './follows/FollowingSection';
 import { BillCarousel } from './today/BillCarousel';
 import { DeclarationRow } from './today/DeclarationRow';
 import { LeadsCard } from './today/LeadsCard';
+import { MoneyMapCard } from './today/MoneyMapCard';
 import { Masthead } from './today/Masthead';
 import { Entrance, TodayCard } from './today/parts';
 import { TodayBlock } from './today/TodayBlock';
@@ -96,6 +97,7 @@ export default function Today() {
           testID="today-records-open"
         />
       </Section>
+      <MoneyMapCard />
       {/* Static: the Leads screen loads its export when it opens. */}
       <View testID="today-leads">
         <LeadsCard />

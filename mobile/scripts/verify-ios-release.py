@@ -342,6 +342,25 @@ def no_voice_native_symbols(symbols):
     return not re.search(rb"OpaxVoiceCore|OpaxVoice|requestRecordPermission", symbols, re.I)
 
 
+def no_camera_native_symbols(body):
+    return not re.search(rb"AVCapture[A-Za-z0-9_]*", body)
+
+
+def verify_no_camera_native_code(app):
+    """Scan every Mach-O, including stripped Objective-C/Swift metadata."""
+    scanned = []
+    for path in sorted(p for p in app.rglob("*") if p.is_file()):
+        with path.open("rb") as stream:
+            magic = stream.read(4)
+        if magic not in MACHO_HEADERS and magic not in FAT_HEADERS:
+            continue
+        require(no_camera_native_symbols(without_signature(path.read_bytes())),
+                f"No camera capture references in Mach-O: {path.relative_to(app)}")
+        scanned.append(str(path.relative_to(app)))
+    require(bool(scanned), "Production app contains Mach-O code to scan")
+    return scanned
+
+
 MACHO_HEADERS = {b"\xcf\xfa\xed\xfe": ("<", 32), b"\xce\xfa\xed\xfe": ("<", 28),
                  b"\xfe\xed\xfa\xcf": (">", 32), b"\xfe\xed\xfa\xce": (">", 28)}
 FAT_HEADERS = {b"\xca\xfe\xba\xbe": (">", 20), b"\xbe\xba\xfe\xca": ("<", 20),
@@ -637,6 +656,8 @@ def verify_app(app, args):
     check(True, "every shipping Expo route key is present in shipped JS")
     check(True, "no unshipped, development or workbench route keys in shipped JS")
     verify_voice_bundle(bundle, voice_enabled)
+    verify_no_camera_native_code(app)
+    check(True, "no AVCapture references in any production Mach-O")
     if voice_enabled:
         verify_voice_native_code(app)
         check(True, "both voice pods, permission and denied-by-default consent store linked; no native fixtures")
