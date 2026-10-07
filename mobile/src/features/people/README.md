@@ -49,7 +49,9 @@ uses Chris Minns's published rows; decoder tests cover jurisdiction refusal.
 Journeys 36 and 37 run at standard size. The light process captures each new screen at AX5. The local timing probe records
 party-link resolution in its press handler through the title's first native
 TextKit layout. `check-people-party-timing.ts` reads that native identifier from
-Maestro evidence and requires it to be below 2,000 ms. Metro replaces the probe
+Maestro evidence and requires it to be below 2,000 ms. Current Maestro records
+the exact hierarchy only on failure; a completed, anchored under-2-second
+native-ID assertion proves the upper bound on a passing run. Metro replaces the probe
 with a no-op in production and excludes the e2e module.
 
 The resumed lane uses the October design system: category sections, native

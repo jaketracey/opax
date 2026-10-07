@@ -69,7 +69,7 @@ name: 36 Person topics, speeches, mentions, news, ministerial diary and glossary
     visible: { id: doc-title }
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/36-speech-destination
-- tapOn: { text: Back, index: 0 }
+- tapOn: { id: BackButton }
 - scrollUntilVisible:
     element: { id: person-speeches-toggle }
     direction: UP
@@ -96,7 +96,7 @@ name: 36 Person topics, speeches, mentions, news, ministerial diary and glossary
     visible: { id: doc-title }
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/36-mention-destination
-- tapOn: { text: Back, index: 0 }
+- tapOn: { id: BackButton }
 - scrollUntilVisible:
     element: { id: people-news-toggle }
     direction: UP
@@ -111,7 +111,7 @@ name: 36 Person topics, speeches, mentions, news, ministerial diary and glossary
     centerElement: true
     timeout: 180000
 - takeScreenshot: ${EVIDENCE}/36-news
-- tapOn: { text: Back, index: 0 }
+- tapOn: { id: BackButton }
 - runFlow:
     file: support/people-open-profile.yaml
     env:
@@ -119,12 +119,13 @@ name: 36 Person topics, speeches, mentions, news, ministerial diary and glossary
       SLUG: chris-minns
 - scrollUntilVisible:
     element: { id: person-diary }
+    visibilityPercentage: 10
     direction: DOWN
     speed: 40
     centerElement: true
     timeout: 180000
 - takeScreenshot: ${EVIDENCE}/36-diary
-- tapOn: { text: Back, index: 0 }
+- tapOn: { id: BackButton }
 - runFlow:
     file: support/people-open-profile.yaml
     env:

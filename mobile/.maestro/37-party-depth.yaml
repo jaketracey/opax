@@ -18,7 +18,7 @@ name: 37 Party access, creditors, all years, follow and Your MP pay
 - extendedWaitUntil:
     visible: { id: party-title }
     timeout: 15000
-- assertVisible: { id: 'people-party-title-ms-([0-9]|[1-9][0-9]|[1-9][0-9][0-9]|1[0-9]{3})' }
+- assertVisible: { id: '^people-party-title-ms-([0-9]|[1-9][0-9]|[1-9][0-9][0-9]|1[0-9]{3})$' }
 - takeScreenshot: ${EVIDENCE}/37-party-title
 - scrollUntilVisible:
     element: { id: party-access }
@@ -98,7 +98,7 @@ name: 37 Party access, creditors, all years, follow and Your MP pay
 - assertVisible: Parties
 - assertVisible: { id: follows-open-party-labor }
 - takeScreenshot: ${EVIDENCE}/37-following-party
-- tapOn: { text: Back, index: 0 }
+- tapOn: { id: BackButton }
 - scrollUntilVisible:
     element: { id: seat-search }
     direction: UP
