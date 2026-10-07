@@ -45,6 +45,11 @@ enum VoiceBridgeValue {
             return ["type": "sources", "sources": sources.map { ["title": $0.title, "path": $0.path] }]
         }
     }
+    /// Two rounded loudness values: coarse enough to animate, never audio.
+    static func levels(_ value: AudioLevels) -> [String: Any] {
+        let round = { (level: Float) in (Double(min(1, max(0, level.isFinite ? level : 0))) * 100).rounded() / 100 }
+        return ["input": round(value.input), "output": round(value.output)]
+    }
     static func success(_ value: Any = NSNull()) -> [String: Any] { ["ok": true, "value": value] }
     static func failure(_ error: any Error) -> [String: Any] {
         let failure = (error as? VoiceFailure) ?? (error as? APIFailure)?.failure

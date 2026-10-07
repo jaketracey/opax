@@ -1,0 +1,158 @@
+appId: au.com.opax.app
+name: 35 Grants programs and local party, topic and report suggestions, also at AX5
+---
+- launchApp:
+    clearState: true
+    permissions: {}
+- tapOn:
+    id: tab-search
+- tapOn:
+    id: search-input
+    point: 95%,50%
+- inputText: Community
+- assertVisible:
+    id: search-input
+    text: ^Community$
+- tapOn:
+    point: 1%,50%
+    retryTapIfNoChange: false
+- waitForAnimationToEnd
+- scrollUntilVisible:
+    element:
+      id: search-kind-menu
+    direction: UP
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: search-kind-menu
+- scrollUntilVisible:
+    element:
+      text: ^Grants$
+    timeout: 90000
+- tapOn: Grants
+- scrollUntilVisible:
+    element:
+      id: search-submit
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: search-submit
+- scrollUntilVisible:
+    element:
+      id: records-count
+    centerElement: true
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/35-grants-count
+- scrollUntilVisible:
+    element:
+      id: records-result-grant-program-.*
+    centerElement: true
+    visibilityPercentage: 10
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/35-grant-program
+- tapOn:
+    id: records-result-grant-program-.*
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: source-destination-url
+    visibilityPercentage: 10
+    timeout: 90000
+- assertVisible:
+    id: source-destination-url
+- takeScreenshot: ${EVIDENCE}/35-grant-browser
+- tapOn:
+    text: OK
+    retryTapIfNoChange: false
+- extendedWaitUntil:
+    notVisible:
+      id: source-destination-url
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertNotVisible:
+    id: search-filters-sheet
+- takeScreenshot: ${EVIDENCE}/35-after-grant-close
+- scrollUntilVisible:
+    element:
+      id: search-input
+    direction: UP
+    centerElement: true
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/35-returned-form
+- tapOn:
+    id: search-input
+    point: 95%,50%
+- takeScreenshot: ${EVIDENCE}/35-before-party-edit
+- eraseText
+- inputText: Labor
+- assertVisible:
+    id: search-input
+    text: ^Labor$
+- takeScreenshot: ${EVIDENCE}/35-party-query-typed
+- tapOn:
+    point: 1%,50%
+    retryTapIfNoChange: false
+- waitForAnimationToEnd
+- scrollUntilVisible:
+    element:
+      id: search-suggestion-party-Labor
+    centerElement: true
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/35-party-suggestion
+- tapOn:
+    id: search-suggestion-party-Labor
+- assertVisible:
+    id: party-screen
+- tapOn: Search
+- scrollUntilVisible:
+    element:
+      id: search-input
+    direction: UP
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: search-input
+    point: 95%,50%
+- eraseText
+- inputText: Housing
+- assertVisible:
+    id: search-input
+    text: ^Housing$
+- tapOn:
+    point: 1%,50%
+    retryTapIfNoChange: false
+- waitForAnimationToEnd
+- scrollUntilVisible:
+    element:
+      id: search-suggestion-topic-housing
+    centerElement: true
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/35-topic-suggestion
+- tapOn:
+    id: search-suggestion-topic-housing
+- scrollUntilVisible:
+    element:
+      id: source-destination-url
+    visibilityPercentage: 10
+    timeout: 90000
+- assertVisible:
+    id: source-destination-url
+- takeScreenshot: ${EVIDENCE}/35-topic-browser
+- tapOn:
+    text: OK
+    retryTapIfNoChange: false
+- extendedWaitUntil:
+    notVisible:
+      id: source-destination-url
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertNotVisible:
+    id: search-filters-sheet
+- scrollUntilVisible:
+    element:
+      id: search-suggestion-report-housing
+    centerElement: true
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/35-report-suggestion

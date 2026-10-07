@@ -41,10 +41,13 @@ export const buttonStates: Record<
     pressed: { fill: 'navyRaised', border: 'navyRaised', label: 'onNavy' },
     disabled: { fill: 'sunken', border: 'lineStrong', label: 'inkSoft' },
   },
+  // A tinted capsule (UI polish, Oct 2026), as Follow and the choice chips
+  // draw: navy on its wash, no outline. The border takes the fill's colour so
+  // the geometry matches the outlined variants.
   default: {
-    rest: { fill: 'raised', border: 'lineStrong', label: 'navy' },
-    pressed: { fill: 'sunken', border: 'lineStrong', label: 'navy' },
-    disabled: { fill: 'sunken', border: 'lineStrong', label: 'inkSoft' },
+    rest: { fill: 'navyWash', border: 'navyWash', label: 'navy' },
+    pressed: { fill: 'sunken', border: 'sunken', label: 'navy' },
+    disabled: { fill: 'sunken', border: 'sunken', label: 'inkSoft' },
   },
   quiet: {
     rest: { fill: null, border: null, label: 'navy' },
@@ -95,6 +98,10 @@ export function Button({
 }: ButtonProps) {
   const states = buttonStates[variant];
   const reduceMotion = useReduceMotion();
+  // At accessibility sizes a hugging button takes the column's width: a
+  // fixed frame for word-safe text, which could otherwise chase a width that
+  // follows its own size. The capsule becomes a rounded rectangle there.
+  const stacked = useAccessibilitySize();
   const inert = disabled || loading;
   // Loading keeps the resting look; only a disabled button changes colour.
   const resting = disabled && !loading ? states.disabled : states.rest;
@@ -117,7 +124,13 @@ export function Button({
         return [
           styles.button,
           { minHeight: controlHeight[size] },
-          fullWidth ? styles.full : styles.hug,
+          fullWidth || stacked ? styles.full : styles.hug,
+          stacked ? styles.buttonStacked : null,
+          // A frameless button's label lines up with the text column; its
+          // pressed wash bleeds into the margin. A stretched button reads
+          // from the leading edge, its symbol beside its label.
+          variant === 'quiet' ? styles.quiet : null,
+          stacked ? styles.leading : null,
           {
             backgroundColor: fill(state.fill),
             borderColor: fill(state.border),
@@ -137,7 +150,7 @@ export function Button({
                 variant="control"
                 tone={state.label}
                 wordSafe
-                style={styles.center}
+                style={stacked ? styles.shrink : styles.center}
               >
                 {label}
               </Text>
@@ -294,15 +307,18 @@ export function FilterChip({
   onRemove: () => void;
   testID?: string;
 }) {
+  const stacked = useAccessibilitySize();
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={`Remove the ${filter} filter, ${value}`}
       testID={testID}
+      hitSlop={{ top: 2, bottom: 2 }}
       onPress={onRemove}
       style={({ pressed }) => [
         styles.chip,
-        { backgroundColor: pressed ? colors.raised : colors.sunken },
+        stacked ? styles.chipStacked : null,
+        { backgroundColor: pressed ? colors.sunken : colors.navyWash },
       ]}
     >
       <Text variant="metadata" style={styles.chipText} accessible={false}>
@@ -391,6 +407,71 @@ export function SegmentedControl<T extends string>({
                 </Text>
               </>
             )}
+          </Pressable>
+        );
+      })}
+    </View>
+  );
+}
+
+/**
+ * One choice among several longer labels ("Contracts by agency"), as wrapping
+ * capsules instead of a tall stack of segments: navy when chosen, a navy wash
+ * otherwise. 36pt drawn, 44pt to touch. Each reads its label, "selected" and
+ * "2 of 4", as a segmented control does.
+ */
+export function ChoiceChips<T extends string>({
+  segments,
+  value,
+  onChange,
+  testID,
+}: {
+  segments: readonly Segment<T>[];
+  value: T;
+  onChange: (value: T) => void;
+  testID?: string;
+}) {
+  // A hugging chip's width follows its text, so word-safe sizing (which
+  // re-measures when its column changes) could chase its own frame. At
+  // accessibility sizes the chips take the full width, a fixed column for
+  // word-safe text; at other sizes the short labels wrap normally.
+  const stacked = useAccessibilitySize();
+  return (
+    <View testID={testID} style={styles.chips}>
+      {segments.map((segment, index) => {
+        const selected = segment.value === value;
+        return (
+          <Pressable
+            key={segment.value}
+            accessibilityRole="button"
+            accessibilityLabel={segment.label}
+            accessibilityState={{ selected }}
+            accessibilityValue={{ text: `${index + 1} of ${segments.length}` }}
+            testID={segment.testID}
+            hitSlop={{ top: 4, bottom: 4 }}
+            onPress={() => onChange(segment.value)}
+            style={({ pressed }) => [
+              styles.choice,
+              stacked ? styles.choiceStacked : null,
+              {
+                backgroundColor: selected
+                  ? pressed
+                    ? colors.navyRaised
+                    : colors.navy
+                  : pressed
+                    ? colors.sunken
+                    : colors.navyWash,
+              },
+            ]}
+          >
+            <Text
+              variant="control"
+              tone={selected ? 'onNavy' : 'navy'}
+              wordSafe={stacked}
+              style={styles.center}
+            >
+              {segment.label}
+            </Text>
           </Pressable>
         );
       })}
@@ -526,15 +607,22 @@ const segmentPadding = (controlHeight.default - minimumTarget) / 2 - hairline;
 const segmentInset = spacing.s1 - segmentPadding;
 
 const styles = StyleSheet.create({
+  // Capsules, as iOS draws text buttons; a 14pt corner once the label can
+  // wrap (accessibility sizes), so a two-line label is not a lozenge.
   button: {
     minWidth: minimumTarget,
-    borderRadius: radius,
+    borderRadius: 999,
+    borderCurve: 'continuous',
     borderWidth: hairline,
     paddingHorizontal: spacing.s4,
     paddingVertical: spacing.s3,
     justifyContent: 'center',
     alignItems: 'center',
   },
+  buttonStacked: { borderRadius: radius + 10 },
+  leading: { alignItems: 'flex-start' },
+  quiet: { marginHorizontal: -spacing.s4 },
+  shrink: { flexShrink: 1 },
   hug: { alignSelf: 'flex-start' },
   full: { alignSelf: 'stretch' },
   buttonContent: {
@@ -594,20 +682,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.s3,
     paddingVertical: spacing.s1,
   },
+  // A tinted capsule (UI polish, Oct 2026): the close symbol and the wash
+  // mark it as a control; no outline.
   chip: {
     alignSelf: 'flex-start',
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.s3,
-    minHeight: minimumTarget,
+    minHeight: minimumTarget - 4,
     maxWidth: '100%',
-    paddingHorizontal: 10,
+    paddingLeft: 14,
+    paddingRight: 12,
     paddingVertical: spacing.s2,
-    borderRadius: radius,
-    borderWidth: hairline,
-    // A control boundary, so line-strong (3:1), not the decorative line.
-    borderColor: colors.lineStrong,
+    borderRadius: 999,
+    borderCurve: 'continuous',
   },
+  chipStacked: { alignSelf: 'stretch', borderRadius: radius + 10 },
   chipText: { flexShrink: 1 },
   segmented: {
     flexDirection: 'row',
@@ -639,6 +729,16 @@ const styles = StyleSheet.create({
     borderRadius: radius,
   },
   segmentInline: { flex: 1, flexBasis: 0 },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.s3 },
+  choiceStacked: { alignSelf: 'stretch', borderRadius: radius + 12 },
+  choice: {
+    minHeight: 36,
+    maxWidth: '100%',
+    justifyContent: 'center',
+    paddingHorizontal: 14,
+    paddingVertical: spacing.s1,
+    borderRadius: 999,
+  },
   field: { gap: spacing.s3, alignSelf: 'stretch' },
   input: {
     minHeight: controlHeight.default,

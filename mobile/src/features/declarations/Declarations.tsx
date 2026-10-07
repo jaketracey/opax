@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { FlatList, Keyboard, RefreshControl, StyleSheet } from 'react-native';
+import {
+  FlatList,
+  Keyboard,
+  RefreshControl,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { router } from 'expo-router';
 import { catalogs } from '../../api/runtime';
 import {
@@ -9,7 +15,8 @@ import {
   EmptyState,
   Field,
   Group,
-  SegmentedControl,
+  InfoButton,
+  ChoiceChips,
   Text,
 } from '../../design/primitives';
 import { formatCount } from '../../design/format';
@@ -17,7 +24,7 @@ import { chrome, colors, layout, spacing } from '../../design/tokens';
 import { personRoute } from '../../navigation/routes';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { RecordStatus } from '../RecordStatus';
-import { TodayDeclaration } from '../today/TodayDeclaration';
+import { FeedRow } from './FeedRow';
 import {
   feedCountLine,
   feedFacets,
@@ -26,11 +33,14 @@ import {
   type FeedFilters,
 } from './model';
 
+const coverageNote = (rows: number, available: number) =>
+  `This export holds the newest ${formatCount(rows)} of ${formatCount(available)} dated register alterations. Entries are as declared, not verified by OPAX. Additions and deletions carry the date the register records. A gift or trip with no organisation match names one the AEC and lobbyist registers do not list under that spelling. Organisation matches to AEC Transparency Register returns, the lobbyist registers and FITS use exact normalised names.`;
+
 /**
  * The declared-interests feed behind Today's recent declarations: every row
  * of /interests/recent.json, newest first, filtered on the device by
- * chamber, jurisdiction and member. Rows are Today's register rows, with the
- * member's profile and any name match the export found.
+ * chamber, jurisdiction and member. Rows are Today's compact register rows,
+ * with the member's profile and any name match the export found.
  */
 export default function Declarations() {
   const load = useCallback(
@@ -77,7 +87,7 @@ export default function Declarations() {
             <Text wordSafe variant="control" accessibilityRole="header">
               Chamber
             </Text>
-            <SegmentedControl
+            <ChoiceChips
               segments={[
                 {
                   value: 'all',
@@ -92,7 +102,6 @@ export default function Declarations() {
               ]}
               value={filters.chamber}
               onChange={(chamber) => setFilters((f) => ({ ...f, chamber }))}
-              stacked
               testID="declarations-chamber"
             />
           </Group>
@@ -100,7 +109,7 @@ export default function Declarations() {
             <Text wordSafe variant="control" accessibilityRole="header">
               Jurisdiction
             </Text>
-            <SegmentedControl
+            <ChoiceChips
               segments={[
                 {
                   value: 'all',
@@ -117,7 +126,6 @@ export default function Declarations() {
               onChange={(jurisdiction) =>
                 setFilters((f) => ({ ...f, jurisdiction }))
               }
-              stacked
               testID="declarations-jurisdiction"
             />
           </Group>
@@ -136,9 +144,20 @@ export default function Declarations() {
             autoCapitalize="words"
             clearButtonMode="while-editing"
           />
-          <Text variant="metadata" testID="declarations-count">
-            {feedCountLine(rows.length, all.length)} · newest first
-          </Text>
+          <View style={styles.count}>
+            <Text
+              variant="metadata"
+              testID="declarations-count"
+              style={styles.grow}
+            >
+              {feedCountLine(rows.length, all.length)} · newest first
+            </Text>
+            <InfoButton
+              title="About these declarations"
+              notes={[coverageNote(record.meta.rows, record.meta.available)]}
+              testID="declarations-info"
+            />
+          </View>
         </>
       ) : null}
     </Group>
@@ -152,14 +171,8 @@ export default function Declarations() {
         savedAt={record.stale ? record.savedAt : null}
         testID="declarations-as-at"
       />
-      <Text wordSafe variant="fine" testID="declarations-coverage">
-        This export holds the newest {formatCount(record.meta.rows)} of{' '}
-        {formatCount(record.meta.available)} dated register alterations. Entries
-        are as declared, not verified by OPAX. Additions and deletions carry the
-        date the register records. A gift or trip with no organisation match
-        names one the AEC and lobbyist registers do not list under that
-        spelling. Organisation matches to AEC Transparency Register returns, the
-        lobbyist registers and FITS use exact normalised names.
+      <Text wordSafe variant="caption" testID="declarations-coverage">
+        Entries are as declared, not verified by OPAX.
       </Text>
     </Group>
   ) : null;
@@ -183,11 +196,9 @@ export default function Declarations() {
       data={rows}
       keyExtractor={(row) => String(row.id)}
       renderItem={({ item, index }) => (
-        <TodayDeclaration
+        <FeedRow
           item={item}
           index={index}
-          testIDPrefix="declaration"
-          showTies
           onOpenPerson={
             item.profileSlug
               ? () => router.push(personRoute(item.profileSlug!))
@@ -195,7 +206,11 @@ export default function Declarations() {
           }
         />
       )}
-      ItemSeparatorComponent={() => <Divider variant="subtle" />}
+      ItemSeparatorComponent={() => (
+        <View style={styles.separator}>
+          <Divider variant="subtle" />
+        </View>
+      )}
       ListHeaderComponent={header}
       ListEmptyComponent={
         record ? (
@@ -231,5 +246,8 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.s7,
   },
   header: { paddingBottom: spacing.s4 },
-  footer: { paddingTop: spacing.s6 },
+  footer: { paddingTop: spacing.s4 },
+  count: { flexDirection: 'row', alignItems: 'center', gap: spacing.s3 },
+  separator: { paddingVertical: 4 },
+  grow: { flex: 1 },
 });

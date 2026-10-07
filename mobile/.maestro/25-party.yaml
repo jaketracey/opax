@@ -67,7 +67,9 @@ name: 25 Native party members, pinned receipts, bill divisions and web fallback
     centerElement: true
     speed: 20
     timeout: 180000
-- assertVisible: Hide current members
+# Still open after the round trip: the member row is drawn under the toggle.
+- assertVisible:
+    id: party-member-.*
 - tapOn:
     id: party-current-toggle
 - runScript: support/party-figures.js
@@ -102,6 +104,24 @@ name: 25 Native party members, pinned receipts, bill divisions and web fallback
     speed: 20
     timeout: 180000
 - takeScreenshot: ${EVIDENCE}/25-money-caveat
+# The party seam opens the native map with the pinned canonical party ID.
+- scrollUntilVisible:
+    element:
+      id: party-money-map
+    direction: DOWN
+    centerElement: true
+    timeout: 120000
+- takeScreenshot: ${EVIDENCE}/25-party-entry
+- tapOn:
+    id: party-money-map
+- extendedWaitUntil:
+    visible:
+      id: money-focus-name
+      text: Labor
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/25-native-money-focus
+- tapOn: Done
+- tapOn: Back
 - scrollUntilVisible:
     element:
       id: party-bill-au-federal-r7501

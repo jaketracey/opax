@@ -1,0 +1,188 @@
+appId: au.com.opax.app
+name: 23 Native money map, held figures, original source and ranked list
+---
+- launchApp:
+    clearState: true
+# Wait for the loaded Edition hero before locating the Money map card.
+# Its quiet update caption is now present only for a saved stale copy.
+- extendedWaitUntil:
+    visible:
+      id: today-edition-head
+    timeout: 120000
+- scrollUntilVisible:
+    element:
+      id: today-money-map
+    centerElement: true
+    timeout: 120000
+- takeScreenshot: ${EVIDENCE}/23-today-entry
+- tapOn:
+    id: today-money-map
+    waitToSettleTimeoutMs: 1000
+- scrollUntilVisible:
+    element:
+      id: money-map-(canvas|drawn-frames-.*-pixels-.*)
+    centerElement: true
+    visibilityPercentage: 10
+    timeout: 120000
+- extendedWaitUntil:
+    visible:
+      id: money-map-drawn-frames-[2-9][0-9]*-pixels-[1-9][0-9]*
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/23-orbit-0
+- swipe:
+    start: 30%, 42%
+    end: 70%, 42%
+    duration: 1000
+- takeScreenshot: ${EVIDENCE}/23-orbit-1
+- swipe:
+    start: 70%, 44%
+    end: 30%, 39%
+    duration: 1000
+- takeScreenshot: ${EVIDENCE}/23-orbit-2
+# This accessible action uses the same year setter as the adjustable rails.
+- runFlow:
+    file: support/money-screen-scroll.yaml
+    env:
+      TARGET_ID: money-test-year
+- tapOn:
+    id: money-test-year
+- runFlow:
+    file: support/money-screen-scroll-up.yaml
+    env:
+      TARGET_ID: money-filters
+- tapOn:
+    id: money-filters
+- runFlow:
+    file: support/money-screen-scroll.yaml
+    env:
+      TARGET_ID: money-from-year
+- takeScreenshot: ${EVIDENCE}/23-from-year
+- runFlow:
+    file: support/money-screen-scroll.yaml
+    env:
+      TARGET_ID: money-to-year
+- takeScreenshot: ${EVIDENCE}/23-to-year
+- runFlow:
+    file: support/money-screen-scroll.yaml
+    env:
+      TARGET_ID: money-industry
+- tapOn:
+    id: money-industry
+- runFlow:
+    file: support/money-screen-scroll.yaml
+    env:
+      TARGET_ID: money-industry-unions
+- tapOn:
+    id: money-industry-unions
+# The options collapse after selection; restore the selected control as the scroll anchor.
+- runFlow:
+    file: support/money-screen-scroll-up.yaml
+    env:
+      TARGET_ID: money-industry
+- runFlow:
+    file: support/money-screen-scroll.yaml
+    env:
+      TARGET_ID: money-layer-contracts
+- tapOn:
+    id: money-layer-contracts
+- takeScreenshot: ${EVIDENCE}/23-layers
+# The focus action invokes the same scene focus and sheet callback as a tap.
+- runFlow:
+    file: support/money-screen-scroll.yaml
+    env:
+      TARGET_ID: money-test-focus
+- tapOn:
+    id: money-test-focus
+- extendedWaitUntil:
+    visible:
+      id: money-focus-name
+      text: Labor
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: money-focus-amount
+    centerElement: true
+    visibilityPercentage: 10
+    timeout: 90000
+- assertVisible: '69,010,542 dollars, Disclosed receipts'
+- takeScreenshot: ${EVIDENCE}/23-focus-amount
+- scrollUntilVisible:
+    element:
+      id: money-focus-years
+    centerElement: true
+    timeout: 90000
+- assertVisible: 'Return years, 2024'
+- assertVisible: 'Receipts, 3,929'
+- takeScreenshot: ${EVIDENCE}/23-focus-years
+- scrollUntilVisible:
+    element:
+      id: money-source
+    centerElement: true
+    timeout: 120000
+- tapOn:
+    id: money-source
+- scrollUntilVisible:
+    element:
+      id: source-destination-url
+    centerElement: true
+    timeout: 30000
+- assertVisible: 'https://transparency\.aec\.gov\.au/'
+- takeScreenshot: ${EVIDENCE}/23-source
+- tapOn: OK
+- tapOn: Done
+- runFlow:
+    file: support/money-screen-list.yaml
+- scrollUntilVisible:
+    element:
+      id: money-donor-0
+    centerElement: true
+    timeout: 120000
+- assertVisible: '1\. Mining and Energy Union, \$4,102,022 disclosed donations.*2024'
+- takeScreenshot: ${EVIDENCE}/23-list
+- scrollUntilVisible:
+    element:
+      id: money-donor-parties-0
+    centerElement: true
+    timeout: 30000
+- assertVisible:
+    id: money-donor-parties-0
+    text: Labor
+- scrollUntilVisible:
+    element:
+      id: money-donor-source-0
+    centerElement: true
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/23-list-source
+
+# Every party and public-money hub is reachable from the accessible list.
+- runFlow:
+    file: support/money-screen-scroll-up.yaml
+    env:
+      TARGET_ID: money-list-records-toggle
+- tapOn:
+    id: money-list-records-toggle
+- runFlow:
+    file: support/money-screen-scroll.yaml
+    env:
+      TARGET_ID: money-list-record-party:Labor
+- tapOn:
+    id: money-list-record-party:Labor
+- extendedWaitUntil:
+    visible:
+      id: money-focus-name
+      text: Labor
+    timeout: 30000
+- tapOn: Done
+- runFlow:
+    file: support/money-screen-scroll.yaml
+    env:
+      TARGET_ID: money-list-record-grantor:contracts
+- tapOn:
+    id: money-list-record-grantor:contracts
+- extendedWaitUntil:
+    visible:
+      id: money-focus-amount
+    timeout: 30000
+- assertVisible: .*held by donors on this map across.*contracts
+- takeScreenshot: ${EVIDENCE}/23-list-public-money
+- tapOn: Done

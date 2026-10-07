@@ -49,6 +49,29 @@ beforeEach(() => {
     provenance: { people: source, electorates: source, bills: source },
   } as unknown as Awaited<ReturnType<typeof catalogs.suggestionSources>>);
 });
+test('typing before suggestions load keeps the same input and query after roster arrival', async () => {
+  const sources = await catalogs.suggestionSourcesOnFocus();
+  let resolve!: (value: typeof sources) => void;
+  jest.mocked(catalogs.suggestionSourcesOnFocus).mockImplementationOnce(
+    () =>
+      new Promise((done) => {
+        resolve = done;
+      }),
+  );
+  let renderer!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    renderer = TestRenderer.create(<Search />);
+  });
+  const input = renderer.root.findByType(Field);
+  await act(async () => input.props.onChangeText('Anthony'));
+  expect(input.props.value).toBe('Anthony');
+  await act(async () => resolve(sources));
+  expect(renderer.root.findByType(Field)).toBe(input);
+  expect(input.props.value).toBe('Anthony');
+  await act(async () => input.props.onChangeText('Anthony Albanese'));
+  expect(input.props.value).toBe('Anthony Albanese');
+  await act(async () => renderer.unmount());
+});
 test('Try again repeats the failed suggestion open without submitting a search', async () => {
   jest
     .mocked(openSuggestedPerson)

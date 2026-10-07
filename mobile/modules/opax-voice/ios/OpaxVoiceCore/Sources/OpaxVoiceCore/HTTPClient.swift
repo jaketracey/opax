@@ -30,6 +30,7 @@ public struct RoutePolicy: Sendable {
     #endif
     private init(origin: URL, loopback: Bool) { self.origin = origin; self.loopback = loopback }
     func permits(_ url: URL, method: String, webSocket: Bool = false) -> Bool {
+        if !webSocket, permitsChat(url, method: method) { return true }
         guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
               components.user == nil, components.password == nil, components.fragment == nil,
               url.host == origin.host, url.port == origin.port,
@@ -37,6 +38,17 @@ public struct RoutePolicy: Sendable {
               (route == .voiceConnect) == webSocket else { return false }
         if loopback { return url.host == "127.0.0.1" && url.scheme == (webSocket ? "ws" : "http") }
         return url.scheme == (webSocket ? "wss" : "https")
+    }
+    // Only saved-chat data uses this additional credential-bearing surface.
+    // No arbitrary native URL or headers may arrive from JavaScript.
+    func permitsChat(_ url: URL, method: String) -> Bool {
+        guard let c = URLComponents(url: url, resolvingAgainstBaseURL: false),
+              c.user == nil, c.password == nil, c.fragment == nil, c.query == nil,
+              url.host == origin.host, url.port == origin.port,
+              url.scheme == (loopback ? "http" : "https") else { return false }
+        if c.percentEncodedPath == "/api/community/chats" { return method == "GET" }
+        return ["GET", "PUT", "DELETE"].contains(method) &&
+            c.percentEncodedPath.range(of: "^/api/community/chats/[A-Za-z0-9_-]{8,64}$", options: .regularExpression) != nil
     }
     func decorate(_ original: URLRequest, credential: SessionCredential?, webSocket: Bool = false) -> URLRequest {
         var request = original
@@ -124,6 +136,23 @@ public actor VoiceHTTPClient {
         guard !revokedCredentials.contains(value) else { return nil }
         guard value.expiresAt > (await clock.now()) else { try await clearCredential(value); return nil }
         return value
+    }
+    public func chatRequest(path: String, method: String, body: String?) async throws -> String {
+        guard path.hasPrefix("/api/community/chats"),
+              let url = URL(string: path, relativeTo: policy.origin)?.absoluteURL,
+              policy.permitsChat(url, method: method),
+              (method == "PUT") == (body != nil),
+              (body?.utf8.count ?? 0) <= 600000 else { throw VoiceFailure.forbidden }
+        guard let sent = try await credential() else { throw VoiceFailure.signedOut }
+        var request = URLRequest(url: url)
+        request.httpMethod = method; request.httpBody = body.map { Data($0.utf8) }; request.timeoutInterval = 15
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        if body != nil { request.setValue("application/json", forHTTPHeaderField: "Content-Type") }
+        let response = try await transport.send(policy.decorate(request, credential: sent))
+        if response.status == 401 { try await clearCredential(sent); throw VoiceFailure.signedOut }
+        guard (200..<300).contains(response.status), response.body.count <= 2 * 1024 * 1024,
+              let text = String(data: response.body, encoding: .utf8) else { throw VoiceFailure.invalidResponse }
+        return text
     }
     private func prepare(_ route: AuthRoute, body: Data? = nil) async throws -> CredentialRequest {
         let sent = try await credential()

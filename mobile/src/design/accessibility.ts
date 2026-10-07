@@ -5,7 +5,10 @@ import { isAccessibilityCategory } from './tokens';
 // One subscription per setting for the whole app, not one per Text.
 function setting(
   read: () => Promise<boolean>,
-  event: 'boldTextChanged' | 'reduceMotionChanged',
+  event:
+    | 'boldTextChanged'
+    | 'reduceMotionChanged'
+    | 'darkerSystemColorsChanged',
 ) {
   let value = false;
   // False until the first read or change event: the value is a guess before.
@@ -40,10 +43,26 @@ const reduceMotion = setting(
   () => AccessibilityInfo.isReduceMotionEnabled(),
   'reduceMotionChanged',
 );
+const increaseContrast = setting(
+  () =>
+    AccessibilityInfo.isDarkerSystemColorsEnabled?.() ?? Promise.resolve(false),
+  'darkerSystemColorsChanged',
+);
 
 /** iOS Bold Text: the bundled fonts step up one weight (they are not system fonts). */
 export function useBoldText(): boolean {
   return useSyncExternalStore(boldText.subscribe, boldText.get, boldText.get);
+}
+/**
+ * iOS Increase Contrast. Role colours resolve it natively (`colors` in
+ * tokens.ts); computed hexes (Today's tints) read it here and strengthen.
+ */
+export function useIncreaseContrast(): boolean {
+  return useSyncExternalStore(
+    increaseContrast.subscribe,
+    increaseContrast.get,
+    increaseContrast.get,
+  );
 }
 export function useReduceMotion(): boolean {
   return useSyncExternalStore(

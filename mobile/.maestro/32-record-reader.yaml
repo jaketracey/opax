@@ -1,0 +1,134 @@
+appId: au.com.opax.app
+name: 32 Bill to native speech, cite BibTeX, similar on tap and roster profile
+---
+- launchApp:
+    permissions: {}
+- openLink: opax://bill/au-federal-r7534
+- extendedWaitUntil:
+    visible:
+      id: bill-screen
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      id: bill-speech-0-web
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 70
+    timeout: 180000
+- waitForAnimationToEnd
+- tapOn:
+    id: bill-speech-0-web
+- extendedWaitUntil:
+    visible:
+      id: doc-title
+    timeout: 20000
+- takeScreenshot: ${EVIDENCE}/32-reader-header
+- scrollUntilVisible:
+    element:
+      id: doc-cite
+    direction: DOWN
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- waitForAnimationToEnd
+- tapOn:
+    id: doc-cite
+- extendedWaitUntil:
+    visible:
+      id: doc-citations
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      id: cite-copy-bibtex
+    direction: DOWN
+    centerElement: true
+    speed: 70
+    timeout: 180000
+- waitForAnimationToEnd
+- tapOn:
+    id: cite-copy-bibtex
+- assertVisible: Copied BibTeX
+- takeScreenshot: ${EVIDENCE}/32-cite-bibtex
+- openLink: opax://doc/speech-1205524
+- extendedWaitUntil:
+    visible:
+      id: doc-title
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      id: doc-brief-label
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/32-machine-summary
+- scrollUntilVisible:
+    element:
+      id: doc-bill-open
+    direction: DOWN
+    centerElement: true
+    speed: 70
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/32-linked-bill
+- scrollUntilVisible:
+    element:
+      id: doc-similar
+    direction: DOWN
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- waitForAnimationToEnd
+- tapOn:
+    id: doc-similar
+- scrollUntilVisible:
+    element:
+      id: doc-similar-0
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/32-similar
+- scrollUntilVisible:
+    element:
+      id: reader-text-0
+    direction: DOWN
+    visibilityPercentage: 10
+    speed: 70
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/32-full-text
+- scrollUntilVisible:
+    element:
+      id: doc-more
+    direction: UP
+    centerElement: true
+    speed: 70
+    timeout: 180000
+- waitForAnimationToEnd
+- tapOn:
+    id: doc-more
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+    timeout: 20000
+- takeScreenshot: ${EVIDENCE}/32-linked-person
+# End on the copied citation so the locked native clipboard audit reads it
+# immediately, before unrelated host clipboard changes can replace it.
+- openLink: opax://doc-cite/speech-1205524
+- extendedWaitUntil:
+    visible:
+      id: doc-citations
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      id: cite-copy-bibtex
+    direction: DOWN
+    centerElement: true
+    speed: 70
+    timeout: 180000
+- waitForAnimationToEnd
+- tapOn:
+    id: cite-copy-bibtex
+- assertVisible: Copied BibTeX

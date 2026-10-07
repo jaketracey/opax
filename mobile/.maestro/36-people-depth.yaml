@@ -1,0 +1,158 @@
+appId: au.com.opax.app
+name: 36 Person topics, speeches, mentions, news, ministerial diary and glossary
+---
+- launchApp:
+    clearState: true
+    permissions: {}
+- runFlow:
+    file: support/people-open-profile.yaml
+    env:
+      NAME: Anthony Albanese
+      SLUG: anthony-albanese
+- scrollUntilVisible:
+    element: { id: person-quick-facts }
+    direction: DOWN
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/36-quick-facts
+- scrollUntilVisible:
+    element: { id: person-topics-toggle }
+    direction: DOWN
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- tapOn: { id: person-topics-toggle }
+- scrollUntilVisible:
+    element: { text: Then }
+    direction: DOWN
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- tapOn: Then
+- scrollUntilVisible:
+    element: { text: Now }
+    direction: DOWN
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- tapOn: Now
+- takeScreenshot: ${EVIDENCE}/36-topics-now
+- scrollUntilVisible:
+    element: { id: person-topics-toggle }
+    direction: UP
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- tapOn: { id: person-topics-toggle }
+- scrollUntilVisible:
+    element: { id: person-speeches-toggle }
+    direction: DOWN
+    speed: 30
+    centerElement: true
+    timeout: 180000
+- tapOn: { id: person-speeches-toggle }
+- scrollUntilVisible:
+    element: { text: Machine brief }
+    direction: DOWN
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/36-speech-brief
+- scrollUntilVisible:
+    element: { id: person-speeches-open-0 }
+    direction: UP
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- tapOn: { id: person-speeches-open-0 }
+- extendedWaitUntil:
+    visible: { id: doc-title }
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/36-speech-destination
+- tapOn: { id: BackButton }
+- scrollUntilVisible:
+    element: { id: person-speeches-toggle }
+    direction: UP
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- tapOn: { id: person-speeches-toggle }
+- scrollUntilVisible:
+    element: { id: person-mentions-toggle }
+    direction: DOWN
+    speed: 30
+    centerElement: true
+    timeout: 180000
+- tapOn: { id: person-mentions-toggle }
+- scrollUntilVisible:
+    element: { id: person-mentions-open-0 }
+    direction: DOWN
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/36-mentions
+- tapOn: { id: person-mentions-open-0 }
+- extendedWaitUntil:
+    visible: { id: doc-title }
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/36-mention-destination
+- tapOn: { id: BackButton }
+- scrollUntilVisible:
+    element: { id: people-news-toggle }
+    direction: UP
+    speed: 30
+    centerElement: true
+    timeout: 180000
+- tapOn: { id: people-news-toggle }
+- scrollUntilVisible:
+    element: { id: people-news-0 }
+    direction: DOWN
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/36-news
+- tapOn: { id: BackButton }
+# R1 Search keeps canonical native members only. This public, roster-guarded
+# state profile exercises the diary without widening the Search membership set.
+- openLink: opax://person/chris-minns
+- extendedWaitUntil:
+    visible: { id: person-screen-title }
+    timeout: 30000
+- scrollUntilVisible:
+    element: { text: Ministerial diary }
+    direction: DOWN
+    speed: 40
+    centerElement: true
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/36-diary
+- tapOn: { id: BackButton }
+- runFlow:
+    file: support/people-open-profile.yaml
+    env:
+      NAME: Anthony Albanese
+      SLUG: anthony-albanese
+- scrollUntilVisible:
+    element: { id: person-expense-glossary }
+    direction: DOWN
+    speed: 40
+    centerElement: true
+    timeout: 180000
+- tapOn: { id: person-expense-glossary }
+- assertVisible: Expense category glossary
+- takeScreenshot: ${EVIDENCE}/36-glossary
+- scrollUntilVisible:
+    element: { id: expense-glossary-end }
+    direction: DOWN
+    speed: 50
+    centerElement: true
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/36-glossary-source
+- tapOn: Done
+- scrollUntilVisible:
+    element: { id: person-screen-title }
+    direction: UP
+    speed: 50
+    centerElement: true
+    timeout: 180000
+- assertVisible: { id: person-screen-title }

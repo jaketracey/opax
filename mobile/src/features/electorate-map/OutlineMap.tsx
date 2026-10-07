@@ -1,7 +1,14 @@
 import { useState } from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Canvas, Path, useCanvasRef } from '@shopify/react-native-skia';
-import { Group, Text, SourceLink, EmptyState } from '../../design/primitives';
+import {
+  EmptyState,
+  Group,
+  InfoButton,
+  SourceLink,
+  Text,
+} from '../../design/primitives';
+import { light, radius, rhythm } from '../../design/tokens';
 import { useOutlineProbe } from './outline-probe';
 import {
   displayBoundary,
@@ -36,14 +43,19 @@ export function OutlineMap({
   const origin =
     boundary.geometry_kind === 'official' ? 'AEC' : 'ABS statistical geography';
   return (
-    <Group>
+    <Group gap={rhythm.tight}>
       <View
         accessible
         accessibilityRole="image"
         accessibilityLabel={`Outline of ${name}, ${state.toUpperCase()}; display outline from the ${origin} ${boundary.vintage} boundaries`}
         testID={probeID}
         onLayout={(e) => setWidth(e.nativeEvent.layout.width)}
-        style={{ height, backgroundColor: '#F1EFE8' }}
+        style={{
+          height,
+          backgroundColor: light.sunken,
+          borderRadius: radius + 10,
+          overflow: 'hidden',
+        }}
       >
         <Canvas
           ref={ref}
@@ -53,20 +65,39 @@ export function OutlineMap({
           importantForAccessibility="no-hide-descendants"
         >
           {path ? (
-            <Path path={path} style="stroke" color="#142A43" strokeWidth={2} />
+            <>
+              <Path path={path} style="fill" color={light.navyWash} />
+              <Path
+                path={path}
+                style="stroke"
+                color={light.navy}
+                strokeWidth={2}
+                strokeJoin="round"
+              />
+            </>
           ) : null}
         </Canvas>
       </View>
-      <Text wordSafe testID="outline-label">
-        Display outline · {origin} · {boundary.vintage}
-      </Text>
-      <Text wordSafe variant="fine" testID="outline-limit">
-        Not for address allocation. This simplified outline does not establish
-        your current electorate. North is up. No basemap is shown; the saved
-        outline works offline.
-      </Text>
+      <View style={styles.caption}>
+        <View style={styles.grow}>
+          <Text wordSafe variant="metadata" testID="outline-label">
+            Display outline · {origin} · {boundary.vintage}
+          </Text>
+          <Text wordSafe variant="caption" testID="outline-limit">
+            Not for address allocation.
+          </Text>
+        </View>
+        <InfoButton
+          title="About this outline"
+          notes={[
+            'Not for address allocation. This simplified outline does not establish your current electorate. North is up. No basemap is shown; the saved outline works offline.',
+          ]}
+          testID="outline-info"
+        />
+      </View>
       {boundary.source_geometry_url ? (
         <SourceLink
+          label="Source geometry"
           citation="Source geometry"
           url={boundary.source_geometry_url}
           kind="record"
@@ -76,3 +107,11 @@ export function OutlineMap({
     </Group>
   );
 }
+const styles = StyleSheet.create({
+  caption: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: rhythm.tight,
+  },
+  grow: { flex: 1, gap: 2 },
+});

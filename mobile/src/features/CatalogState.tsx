@@ -9,7 +9,6 @@ import {
   Group,
   LoadingState,
   OfflineBanner,
-  SourceLink,
   StaleNotice,
   errorMessage,
 } from '../design/primitives';
@@ -20,7 +19,6 @@ export function CatalogState<T>({
   onRetry,
   testID,
   children,
-  links = true,
   refreshing = false,
 }: {
   block: Block<T> | null;
@@ -28,6 +26,10 @@ export function CatalogState<T>({
   onRetry: () => void;
   testID: string;
   children: (data: T) => ReactNode;
+  /**
+   * No longer draws anything: dataset links and licences moved to Sources
+   * and licences (About). Kept so existing callers need no change.
+   */
   links?: boolean;
   refreshing?: boolean;
 }) {
@@ -78,19 +80,6 @@ export function CatalogState<T>({
         savedAt={block.stale ? block.savedAt : null}
         testID={`${testID}-as-at`}
       />
-      {links
-        ? block.sources
-            .filter((s) => s.url.startsWith('https://'))
-            .map((s, i) => (
-              <SourceLink
-                key={s.url}
-                citation={s.label}
-                url={s.url}
-                kind="register"
-                testID={`${testID}-source-${i}`}
-              />
-            ))
-        : null}
     </Group>
   );
 }

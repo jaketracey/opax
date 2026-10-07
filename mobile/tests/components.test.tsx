@@ -250,10 +250,14 @@ describe('record', () => {
         kind="register"
       />,
     );
-    const link = byLabel(root, 'AusTender register, record CN3407266');
+    // The visible label stays short; the name says it, then where it goes.
+    const link = byLabel(
+      root,
+      'View original, AusTender register, record CN3407266',
+    );
     expect(link.props.accessibilityRole).toBe('link');
     expect(link.props.accessibilityHint).toBe('Opens the register');
-    expect(texts(root)).toContain('AusTender register · record CN3407266');
+    expect(texts(root)).toContain('View original');
   });
   test('money reads as words, value first', () => {
     const root = render(

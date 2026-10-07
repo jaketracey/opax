@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { act, type ReactElement } from 'react';
 import { Alert } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
@@ -18,14 +20,29 @@ import {
   OfflineBanner,
   StaleNotice,
 } from '../src/design/primitives';
+import { router } from 'expo-router';
+import { light, partyColors } from '../src/design/tokens';
+import { CachedPortrait } from '../src/features/CachedPortrait';
 import { EditionCard, EditionSection } from '../src/features/EditionCard';
+import {
+  editionAccent,
+  editionFigures,
+  personFacts,
+} from '../src/features/today/EditionHero';
 import { webPageUrl } from '../src/navigation/external';
+import { billRoute, personRoute } from '../src/navigation/routes';
 import Today from '../src/features/Today';
 import { responseBytes } from './fixture-bytes';
-import { replaceAt } from './pinned';
+import { replaceAt, roster, slugs } from './pinned';
 
+jest.mock('../src/features/reports/TodayReports', () => ({
+  Spotlight: () => null,
+  ReportsEntry: () => null,
+  FromRecord: () => null,
+  TodayCoverage: () => null,
+}));
 jest.mock('../src/api/runtime', () => ({
-  catalogs: { today: jest.fn(), todayEdition: jest.fn() },
+  catalogs: { today: jest.fn(), todayEdition: jest.fn(), directory: jest.fn() },
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
@@ -67,46 +84,73 @@ const textOf = (root: ReactTestInstance, testID: string) =>
     .join('');
 const labelOf = (root: ReactTestInstance, testID: string) =>
   host(root, testID)[0]?.props.accessibilityLabel as string | undefined;
+const renderToJSON = (root: ReactTestInstance) =>
+  root
+    .findAll((node) => typeof node.type === 'string')
+    .map((node) =>
+      ([] as unknown[])
+        .concat(node.props.children)
+        .filter((child) => typeof child === 'string'),
+    );
+
+const politicianJSON = JSON.parse(
+  readFileSync(
+    join(__dirname, '../scripts/fixtures/edition-politician.json'),
+    'utf8',
+  ),
+);
+const politician = editionFor(decodeEdition(politicianJSON)).data!;
+const ids = (root: ReactTestInstance, pattern: RegExp) =>
+  root
+    .findAll(
+      (node) =>
+        typeof node.type === 'string' && pattern.test(node.props.testID ?? ''),
+    )
+    .map((node) => node.props.testID as string);
+const press = async (root: ReactTestInstance, testID: string) =>
+  act(async () =>
+    root
+      .find(
+        (node) =>
+          node.props.testID === testID &&
+          typeof node.props.onPress === 'function',
+      )
+      .props.onPress(),
+  );
 
 describe('the edition card', () => {
-  test('shows the frozen edition: kind and date, title, attribution, text, sources, link and as-at line', () => {
+  test('a bill edition: kicker, title, the model label before its text, the timeline and one native action; no sources', () => {
     const { root } = render(<EditionCard edition={edition} />);
-    expect(textOf(root, 'today-edition-kicker')).toBe('Bill · 4 October 2026');
+    expect(textOf(root, 'today-edition-kicker')).toMatch(
+      /^DAILY EDITION · BILL · 4 OCT( 2026)?$/,
+    );
     expect(textOf(root, 'today-edition-title')).toBe(pinned.edition.title);
+    expect(textOf(root, 'today-edition-detail')).toBe('Education portfolio');
     expect(textOf(root, 'today-edition-machine')).toBe(
       'Machine-writtenWritten by a model from the explanatory memorandum; not the record.',
     );
     expect(textOf(root, 'today-edition-text')).toBe(
       'This bill would keep funding grants that support pay for early childhood education and care workers.Passed 18 Sep 2026.',
     );
-    expect(textOf(root, 'today-edition-sources')).toBe(
-      'Sources and notesExplanatory memorandum on ParlInfo, CC BY-NC-ND 4.0Bill home page on ParlInfo, CC BY-NC-ND 4.0',
+    expect(labelOf(root, 'today-edition-events')).toBe(
+      '12 Aug 2026, Introduced in the House of Representatives. 10 Sep 2026, Third reading, House of Representatives. 14 Sep 2026, Introduced in the Senate. 15 Sep 2026, Passed the Senate. 18 Sep 2026, Royal Assent',
     );
-    expect(textOf(root, 'today-edition-link')).toBe(
-      'Read the billOpens on opax.com.au',
-    );
-    expect(textOf(root, 'today-edition-as-at')).toBe(
-      'As at 4 October 2026 · Source: OPAX daily edition',
-    );
+    // Sources and licences live on their own screen.
+    expect(host(root, 'today-edition-sources')).toHaveLength(0);
+    expect(JSON.stringify(renderToJSON(root))).not.toMatch(/CC BY|ParlInfo/);
+    expect(host(root, 'today-edition-link')).toHaveLength(0);
     // The model's label comes before the model's text.
-    const order = root
-      .findAll(
-        (node) =>
-          typeof node.type === 'string' &&
-          /^today-edition-(?:head|machine|text|sources|link|as-at)$/.test(
-            node.props.testID,
-          ),
-      )
-      .map((node) => node.props.testID);
-    expect(order).toEqual([
+    expect(
+      ids(root, /^today-edition-(?:head|machine|text|events|open)$/),
+    ).toEqual([
       'today-edition-head',
       'today-edition-machine',
       'today-edition-text',
-      'today-edition-sources',
-      'today-edition-link',
-      'today-edition-as-at',
+      'today-edition-events',
+      'today-edition-open',
     ]);
     expect(host(root, 'today-edition-stale')).toHaveLength(0);
+    expect(host(root, 'today-edition-as-at')).toHaveLength(0);
   });
   test('VoiceOver labels are set by props, with the title as a header', () => {
     const { root } = render(<EditionCard edition={edition} />);
@@ -114,7 +158,7 @@ describe('the edition card', () => {
       'header',
     );
     expect(labelOf(root, 'today-edition-head')).toBe(
-      `Daily edition, Bill, 4 October 2026: ${pinned.edition.title}`,
+      `Daily edition, Bill, 4 October 2026: ${pinned.edition.title}, Education portfolio`,
     );
     expect(labelOf(root, 'today-edition-machine')).toBe(
       'Machine-written. Written by a model from the explanatory memorandum; not the record.',
@@ -122,39 +166,114 @@ describe('the edition card', () => {
     expect(labelOf(root, 'today-edition-text')).toBe(
       edition.paragraphs.join('\n'),
     );
-    expect(labelOf(root, 'today-edition-sources')).toBe(
-      'Sources and notes: Explanatory memorandum on ParlInfo, CC BY-NC-ND 4.0. Bill home page on ParlInfo, CC BY-NC-ND 4.0',
-    );
-    const link = host(root, 'today-edition-link')[0]!;
-    expect(link.props.accessibilityRole).toBe('link');
-    expect(link.props.accessibilityLabel).toBe(
-      `Read the bill: ${pinned.edition.title}`,
-    );
-    expect(link.props.accessibilityHint).toBe('Opens on opax.com.au');
+    const open = host(root, 'today-edition-open')[0]!;
+    expect(open.props.accessibilityRole).toBe('button');
+    expect(open.props.accessibilityLabel).toBe('Open the bill');
+    expect(open.props.accessibilityHint).toBe('Opens the record in the app');
   });
-  test('nothing in the card limits lines or fixes heights, so it reads to AX5', () => {
-    const { root } = render(
-      <EditionCard edition={edition} stale savedAt={1} />,
+  test('a parliamentarian: party colour, portrait, the figures and topic labels in place of the text', () => {
+    const { root } = render(<EditionCard edition={politician} />);
+    expect(textOf(root, 'today-edition-kicker')).toMatch(
+      /^DAILY EDITION · PARLIAMENTARIAN · 6 OCT( 2026)?$/,
     );
-    expect(
-      root.findAll((node) => node.props.numberOfLines !== undefined),
-    ).toHaveLength(0);
-    // SF Symbols are sized by the design system's Icon, which scales them.
-    expect(
-      root.findAll(
-        (node) =>
-          typeof node.type === 'string' &&
-          !node.type.includes('Symbol') &&
-          [node.props.style]
-            .flat(Infinity)
-            .some(
-              (style) => style && ('height' in style || 'maxHeight' in style),
-            ),
-      ),
-    ).toHaveLength(0);
-    expect(
-      root.findAll((node) => node.props.adjustsFontSizeToFit === true),
-    ).toHaveLength(0);
+    expect(textOf(root, 'today-edition-title')).toBe('Alex Hawke');
+    expect(textOf(root, 'today-edition-party')).toBe('Liberal');
+    expect(textOf(root, 'today-edition-detail')).toBe('Mitchell, NSW');
+    expect(labelOf(root, 'today-edition-head')).toBe(
+      'Daily edition, Parliamentarian, 6 October 2026: Alex Hawke, Liberal, Mitchell, NSW',
+    );
+    expect(root.findByType(CachedPortrait).props).toMatchObject({
+      name: 'Alex Hawke',
+      size: 'profile',
+    });
+    // The Liberal blue, deepened only as far as white text needs.
+    const head = host(root, 'today-edition-head')[0]!;
+    expect([head.props.style].flat()).toContainEqual({
+      backgroundColor: editionAccent(politician).deep,
+    });
+    expect(editionAccent(politician).base).toBe(partyColors.liberal);
+    expect(labelOf(root, 'today-edition-figure-0')).toBe(
+      '768, speeches in the Opax record',
+    );
+    expect(labelOf(root, 'today-edition-figure-1')).toBe(
+      '2008–2026, Years in the record',
+    );
+    expect(labelOf(root, 'today-edition-topics')).toBe(
+      'Most common topic labels: Tax & budget, 19 percent; Climate & environment, 12 percent. Shares of labelled speeches; a speech can carry several labels.',
+    );
+    expect(textOf(root, 'today-edition-topics')).toContain('Tax & budget 19%');
+    // The post says the same in words; the figures replace it.
+    expect(host(root, 'today-edition-text')).toHaveLength(0);
+    expect(host(root, 'today-edition-machine')).toHaveLength(0);
+    expect(textOf(root, 'today-edition-open')).toBe("Open Alex Hawke's record");
+  });
+  test('an edition without slides keeps its own words, and a cover line that names no party colours nothing', () => {
+    const bare = {
+      ...politician,
+      facts: {
+        ...politician.facts,
+        figures: [],
+        bars: null,
+        line: 'House of Representatives · records 2008 to 2026',
+      },
+    };
+    expect(personFacts(bare).party).toBeNull();
+    expect(editionAccent(bare).base).toBe(light.navy);
+    const none = {
+      ...politician,
+      facts: {
+        kicker: null,
+        line: null,
+        figures: [],
+        bars: null,
+        events: [],
+        division: null,
+      },
+    };
+    const { root } = render(<EditionCard edition={none} />);
+    expect(textOf(root, 'today-edition-text')).toBe(
+      'Alex Hawke: 768 speeches in the Opax record.Top topic labels: Tax & budget 19%; Climate & environment 12%.Shares of labelled speeches; labels overlap.Records: 2008–2026.',
+    );
+    expect(host(root, 'today-edition-figures')).toHaveLength(0);
+    expect(host(root, 'today-edition-party')).toHaveLength(0);
+  });
+  test('a division gives the hero its ayes and noes', () => {
+    const counted = {
+      ...edition,
+      facts: { ...edition.facts, division: { ayes: 85, noes: 50 } },
+    };
+    expect(editionFigures(counted)).toEqual([
+      { value: '85', label: 'Ayes' },
+      { value: '50', label: 'Noes' },
+    ]);
+  });
+  test('nothing in the card limits lines or fixes the height of content, so it reads to AX5', () => {
+    for (const shown of [edition, politician]) {
+      const { root } = render(
+        <EditionCard edition={shown} stale savedAt={1} />,
+      );
+      expect(
+        root.findAll((node) => node.props.numberOfLines !== undefined),
+      ).toHaveLength(0);
+      // Fixed sizes only on empty decorative marks (dots, rails); SF Symbols
+      // are sized by the design system's Icon, which scales them.
+      expect(
+        root.findAll(
+          (node) =>
+            typeof node.type === 'string' &&
+            !node.type.includes('Symbol') &&
+            node.children.length > 0 &&
+            [node.props.style]
+              .flat(Infinity)
+              .some(
+                (style) => style && ('height' in style || 'maxHeight' in style),
+              ),
+        ),
+      ).toHaveLength(0);
+      expect(
+        root.findAll((node) => node.props.adjustsFontSizeToFit === true),
+      ).toHaveLength(0);
+    }
   });
   test('server text is plain text: markup is shown as written, never parsed', () => {
     const marked = editionFor(
@@ -172,24 +291,73 @@ describe('the edition card', () => {
     );
     expect(root.findAll((node) => node.type === 'b')).toHaveLength(0);
   });
-  test('tapping opens the page on the web through the link guard (e2e shows it)', async () => {
-    const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
+  test('a bill opens on its native screen', async () => {
     const { root } = render(<EditionCard edition={edition} />);
-    await act(async () =>
-      root
-        .find(
-          (node) =>
-            node.props.testID === 'today-edition-link' &&
-            typeof node.props.onPress === 'function',
-        )
-        .props.onPress(),
-    );
+    await press(root, 'today-edition-open');
+    expect(router.push).toHaveBeenLastCalledWith(billRoute('au-federal-r7529'));
+  });
+  test('a parliamentarian opens natively when the name settles on one roster person and slug', async () => {
+    jest.mocked(catalogs.directory).mockResolvedValue({
+      roster: { data: roster },
+      slugs: { data: slugs },
+    } as unknown as Awaited<ReturnType<typeof catalogs.directory>>);
+    const { root } = render(<EditionCard edition={politician} />);
+    await press(root, 'today-edition-open');
+    expect(router.push).toHaveBeenLastCalledWith(personRoute('alex-hawke'));
+  });
+  test('a parliamentarian the directory cannot settle opens on the web through the link guard', async () => {
+    const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
+    jest.mocked(router.push).mockClear();
+    jest.mocked(catalogs.directory).mockRejectedValue(new Error('offline'));
+    const { root } = render(<EditionCard edition={politician} />);
+    await press(root, 'today-edition-open');
+    expect(router.push).not.toHaveBeenCalled();
     expect(alert).toHaveBeenCalledWith(
-      'Opens on opax.com.au: Read the bill',
-      `${webOrigin}/bill/au-federal-r7529`,
+      "Opens on opax.com.au: Read the parliamentarian's record",
+      `${webOrigin}/subject/person/Alex%20Hawke`,
+    );
+    alert.mockRestore();
+  });
+  test('kinds without a native screen open the page on the web (e2e shows it)', async () => {
+    const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
+    const report = {
+      ...edition,
+      kind: 'topic' as const,
+      kindLabel: 'Topic',
+      machineWritten: null,
+      path: '/reports/grants-allocation',
+    };
+    const { root } = render(<EditionCard edition={report} />);
+    expect(host(root, 'today-edition-open')).toHaveLength(0);
+    const link = host(root, 'today-edition-link')[0]!;
+    expect(link.props.accessibilityLabel).toBe('Read the report');
+    expect(link.props.accessibilityHint).toBe('Opens on opax.com.au');
+    await press(root, 'today-edition-link');
+    expect(alert).toHaveBeenCalledWith(
+      'Opens on opax.com.au: Read the report',
+      `${webOrigin}/reports/grants-allocation`,
     );
     expect(webOrigin).not.toContain('opax.com.au');
     alert.mockRestore();
+  });
+  test('a standing report opens through the shared native resolver', async () => {
+    jest.mocked(router.push).mockClear();
+    const { root } = render(
+      <EditionCard
+        edition={{
+          ...edition,
+          kind: 'topic',
+          kindLabel: 'Topic',
+          machineWritten: null,
+          path: '/reports/housing',
+        }}
+      />,
+    );
+    await press(root, 'today-edition-open');
+    expect(router.push).toHaveBeenCalledWith({
+      pathname: '/report/[slug]',
+      params: { slug: 'housing' },
+    });
   });
   test.each([
     '/subject/person/Tony%20Abbott',
@@ -207,10 +375,15 @@ describe('the edition card', () => {
   test('a link the guard refuses is not drawn', () => {
     const { root } = render(
       <EditionCard
-        edition={{ ...edition, path: '/bill/au-federal-r7529?token=abc' }}
+        edition={{
+          ...edition,
+          kind: 'topic',
+          path: '/reports/housing?token=abc',
+        }}
       />,
     );
     expect(host(root, 'today-edition-link')).toHaveLength(0);
+    expect(host(root, 'today-edition-open')).toHaveLength(0);
     expect(textOf(root, 'today-edition-title')).toBe(pinned.edition.title);
   });
   test('a stale copy says it is saved, beside the edition date', () => {
@@ -227,8 +400,8 @@ describe('the edition card', () => {
       savedAt,
       refreshing: true,
     });
-    expect(textOf(root, 'today-edition-as-at')).toBe(
-      'As at 4 October 2026 · Source: OPAX daily edition · Saved 4 October 2026',
+    expect(textOf(root, 'today-edition-as-at')).toMatch(
+      /^Updated 4 Oct( 2026)? · Saved 4 Oct( 2026)?$/,
     );
     expect(textOf(root, 'today-edition-title')).toBe(pinned.edition.title);
   });

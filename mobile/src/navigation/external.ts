@@ -1,4 +1,6 @@
 import { Alert, Linking } from 'react-native';
+import { router } from 'expo-router';
+import { fromWebPath, searchRouteFromWebPath } from './routes';
 import * as WebBrowser from 'expo-web-browser';
 import { hasSourcePreview, isE2E, webOrigin } from '../design/environment';
 import { light } from '../design/tokens';
@@ -216,6 +218,10 @@ export function canonicalUrl(path: string, anchor?: string): string {
   )
     throw new Error('Canonical paths have no dot segments');
   const base = new URL(webOrigin);
+  // This Search view now has a native draft screen. Preserve its reviewed
+  // filters in shares, while sourceUrl still refuses opening paid web Search.
+  if (anchor === undefined && searchRouteFromWebPath(path))
+    return new URL(path, base).toString();
   const url = new URL(pathname, base);
   if (
     url.origin !== base.origin ||
@@ -278,6 +284,7 @@ export async function openSource(
     Alert.alert('Source record', 'This source link could not be opened.');
     return;
   }
+  if (openNativeRecord(checked)) return;
   if (isE2E) {
     if (hasSourcePreview) presentSourceDestination({ url: checked, citation });
     else Alert.alert(`Source record: ${citation}`, checked);
@@ -320,6 +327,7 @@ export async function openOnWeb(path: string, label: string): Promise<void> {
     Alert.alert('opax.com.au', 'This page could not be opened.');
     return;
   }
+  if (openNativeRecord(url)) return;
   if (isE2E) {
     Alert.alert(`Opens on opax.com.au: ${label}`, url);
     return;
@@ -327,4 +335,17 @@ export async function openOnWeb(path: string, label: string): Promise<void> {
   await Linking.openURL(url).catch(() =>
     Alert.alert('opax.com.au', 'This page could not be opened.'),
   );
+}
+
+/** Record links from Bill, Talk and other lanes converge on the same reader. */
+function openNativeRecord(address: string): boolean {
+  const url = new URL(address);
+  const canonicalHost = url.hostname === 'opax.com.au' || url.hostname === new URL(webOrigin).hostname;
+  if (!canonicalHost) return false;
+  const path = url.hash.startsWith('#/doc/') ? url.hash : `${url.pathname}${url.search}${url.hash}`;
+  const route = fromWebPath(path);
+  // Only these record routes change the external fallback in this lane.
+  if (!route || !['/doc/[slug]', '/bill-text/[key]', '/recent-records'].includes(route.pathname)) return false;
+  router.push(route);
+  return true;
 }

@@ -1,4 +1,5 @@
 import { SeatGrants } from './money-public/Grants';
+import { AskAbout } from './ask/AskAbout';
 import { OutlineMap } from './electorate-map/OutlineMap';
 import {
   formatCount,
@@ -7,24 +8,27 @@ import {
   formatPercent,
 } from '../design/format';
 import { useEffect, useState } from 'react';
-import { RefreshControl } from 'react-native';
+import { RefreshControl, View } from 'react-native';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../api/runtime';
 import { ApiError } from '../api/errors';
 import {
-  Button,
+  Disclosure,
   EmptyState,
   ErrorState,
   Group,
   Heading,
-  PartyLabel,
+  PartyChip,
   KeyValueList,
+  LinkRow,
   LoadingState,
+  RowList,
   Screen,
   Section,
   Text,
   errorMessage,
 } from '../design/primitives';
+import { rhythm } from '../design/tokens';
 import {
   CHAMBER_NOT_RECORDED,
   chamberName,
@@ -32,7 +36,7 @@ import {
 } from '../design/parliament';
 import { electorateRoute } from '../navigation/routes';
 import { shareHeaderItem } from '../navigation/share';
-import { RecordBlock } from './your-mp/Evidence';
+import { EvidenceFooter, RecordBlock } from './your-mp/Evidence';
 import { FollowToggle } from './follows/FollowToggle';
 import { RepresentativeRows } from './your-mp/RepresentativeRows';
 import type { Directory, ElectorateView } from './your-mp/model';
@@ -148,39 +152,54 @@ export function ElectorateScreen({
         ) : null}
         {view && identity && directory ? (
           <>
-            <Heading level={1} testID="electorate-name">
-              {identity.name}
-            </Heading>
-            {identity.status === 'historical' ? (
-              <Text wordSafe testID="electorate-abolished">
-                Abolished; not a current seat. This record describes a
-                historical electorate.
+            <Group gap={rhythm.tight}>
+              <Text variant="kicker" tone="navy">
+                Electorate
               </Text>
-            ) : null}
-            <Text wordSafe variant="metadata">
-              {chamberName(identity.chamber, identity.jurisdiction) ??
-                CHAMBER_NOT_RECORDED}{' '}
-              ·{' '}
-              {jurisdictionName(identity.state) ??
-                jurisdictionName(identity.jurisdiction) ??
-                'Jurisdiction not recorded'}
-            </Text>
-            <FollowToggle
-              kind="electorate"
-              id={identity.id}
-              title={identity.name}
-              testID="electorate-follow"
-            />
+              <Heading level={1} testID="electorate-name">
+                {identity.name}
+              </Heading>
+              {identity.status === 'historical' ? (
+                <Text wordSafe testID="electorate-abolished">
+                  Abolished; not a current seat. This record describes a
+                  historical electorate.
+                </Text>
+              ) : null}
+              <Text wordSafe variant="metadata">
+                {chamberName(identity.chamber, identity.jurisdiction) ??
+                  CHAMBER_NOT_RECORDED}{' '}
+                ·{' '}
+                {jurisdictionName(identity.state) ??
+                  jurisdictionName(identity.jurisdiction) ??
+                  'Jurisdiction not recorded'}
+              </Text>
+              <FollowToggle
+                kind="electorate"
+                id={identity.id}
+                title={identity.name}
+                testID="electorate-follow"
+              />
+            </Group>
+            <AskAbout kind="electorate" name={identity.name} />
             <SeatGrants name={identity.name} state={identity.state} eligible={identity.jurisdiction === 'federal' && identity.chamber === 'representatives'} />
-            <Section title="Electorate outline" testID="electorate-map">
+            <View testID="electorate-map">
               <OutlineMap
                 boundaries={view.boundaries}
                 name={identity.name}
                 state={identity.state}
               />
-            </Section>
+            </View>
             <RecordBlock
               title="Latest verified representation"
+              icon="person.fill"
+              accent="people"
+              info={() => ({
+                title: 'About representation',
+                notes: [
+                  'Election winners and present-day representation can differ.',
+                  'Representation is shown only as recorded in the dated release.',
+                ],
+              })}
               id="electorate-representatives"
               block={view.representatives}
               retry={refresh}
@@ -191,24 +210,25 @@ export function ElectorateScreen({
               }
             >
               {(rows) => (
-                <Group>
-                  <RepresentativeRows
-                    rows={rows}
-                    directory={directory}
-                    asAt={view.representatives.asAt}
-                    id="electorate-member"
-                  />
-                  <Text wordSafe>
-                    Election winners and present-day representation can differ.
-                  </Text>
-                </Group>
+                <RepresentativeRows
+                  rows={rows}
+                  directory={directory}
+                  asAt={view.representatives.asAt}
+                  id="electorate-member"
+                />
               )}
             </RecordBlock>
-            <Section title="Elections" testID="electorate-elections">
+            <Section
+              title="Elections"
+              icon="checkmark.seal"
+              accent="votes"
+              testID="electorate-elections"
+            >
               {view.elections.length ? (
                 view.elections.map((b, i) => (
                   <RecordBlock
                     key={i}
+                    sub={i ? 'ruled' : 'first'}
                     title={b.data?.election.name ?? 'Election'}
                     id={`electorate-election-${i}`}
                     block={b}
@@ -216,53 +236,57 @@ export function ElectorateScreen({
                     retry={refresh}
                   >
                     {(e) => (
-                      <Group>
+                      <Group gap={rhythm.tight}>
                         <Text wordSafe variant="metadata">
                           {formatDate(e.election.poll_date)} · {e.election.kind}
                         </Text>
-                        <Button
-                          label={
-                            expanded.includes(e.election_id)
-                              ? 'Hide candidates'
-                              : 'Candidates and recorded votes'
-                          }
-                          testID={`election-expand-${i}`}
-                          onPress={() =>
-                            setExpanded((v) =>
-                              v.includes(e.election_id)
-                                ? v.filter((x) => x !== e.election_id)
-                                : [...v, e.election_id],
-                            )
-                          }
-                        />
-                        {expanded.includes(e.election_id)
-                          ? e.candidates.map((c, j) => (
-                              <Group key={j} gap={4}>
-                                <Text wordSafe variant="strong">
-                                  {c.name}
-                                </Text>
-                                <PartyLabel
-                                  party={c.party}
-                                  status="unknown"
-                                  dense
-                                />
-                                {c.elected ? (
-                                  <Text variant="metadata">Elected</Text>
-                                ) : null}
-                                <KeyValueList
-                                  items={c.votes.map((v) => ({
-                                    label:
-                                      v.kind === 'primary'
-                                        ? 'Primary votes'
-                                        : v.kind === 'tcp'
-                                          ? 'Two-candidate votes'
-                                          : v.kind.replaceAll('_', ' '),
-                                    value: formatCount(v.votes),
-                                  }))}
-                                />
-                              </Group>
-                            ))
-                          : null}
+                        <RowList>
+                          <Disclosure
+                            label="Candidates and recorded votes"
+                            value={String(e.candidates.length)}
+                            open={expanded.includes(e.election_id)}
+                            testID={`election-expand-${i}`}
+                            onToggle={() =>
+                              setExpanded((v) =>
+                                v.includes(e.election_id)
+                                  ? v.filter((x) => x !== e.election_id)
+                                  : [...v, e.election_id],
+                              )
+                            }
+                          >
+                            {() => (
+                              <RowList>
+                                {e.candidates.map((c, j) => (
+                                  <Group key={j} gap={rhythm.line}>
+                                    <Text wordSafe variant="strong">
+                                      {c.name}
+                                      {c.elected ? (
+                                        <Text variant="strong" tone="votesInk">
+                                          {'  ·  Elected'}
+                                        </Text>
+                                      ) : null}
+                                    </Text>
+                                    <PartyChip
+                                      party={c.party}
+                                      status="unknown"
+                                    />
+                                    <KeyValueList
+                                      items={c.votes.map((v) => ({
+                                        label:
+                                          v.kind === 'primary'
+                                            ? 'Primary votes'
+                                            : v.kind === 'tcp'
+                                              ? 'Two-candidate votes'
+                                              : v.kind.replaceAll('_', ' '),
+                                        value: formatCount(v.votes),
+                                      }))}
+                                    />
+                                  </Group>
+                                ))}
+                              </RowList>
+                            )}
+                          </Disclosure>
+                        </RowList>
                       </Group>
                     )}
                   </RecordBlock>
@@ -271,11 +295,17 @@ export function ElectorateScreen({
                 <EmptyState message="No election records are held for this electorate." />
               )}
             </Section>
-            <Section title="Local context" testID="electorate-census">
+            <Section
+              title="Local context"
+              icon="person.3"
+              accent="places"
+              testID="electorate-census"
+            >
               {view.census.length ? (
                 view.census.map((b, i) => (
                   <RecordBlock
                     key={i}
+                    sub={i ? 'ruled' : 'first'}
                     title={`Census ${b.data?.year ?? ''}`}
                     id={`electorate-census-${i}`}
                     block={b}
@@ -283,11 +313,13 @@ export function ElectorateScreen({
                     retry={refresh}
                   >
                     {(d) => (
-                      <Group>
+                      <Group gap={rhythm.tight}>
                         <Text wordSafe variant="strong">
                           {d.vintage}
                         </Text>
-                        <Text wordSafe>{d.note}</Text>
+                        <Text wordSafe variant="metadata">
+                          {d.note}
+                        </Text>
                         <KeyValueList
                           items={Object.entries(d.indicators).map(
                             ([key, value]) => {
@@ -317,52 +349,46 @@ export function ElectorateScreen({
                 <EmptyState message="No Census context is held for this electorate." />
               )}
             </Section>
-            <Section title="Related constituencies">
+            <Section
+              title="Related constituencies"
+              icon="square.on.square"
+              accent="places"
+            >
               {view.related.length ? (
-                view.related.map((r, i) => (
-                  <Group key={i}>
-                    <Text wordSafe>
-                      {(
-                        {
-                          within_upper_house:
-                            'Upper-house region covering this electorate',
-                          within_lower_house:
-                            'Lower-house district covering this electorate',
-                          overlaps: 'Overlapping electorate',
-                        } as Record<string, string>
-                      )[r.kind] ?? 'Related electorate'}{' '}
-                      · {r.vintage}
-                    </Text>
-                    <Button
-                      label={r.related.name}
+                <RowList>
+                  {view.related.map((r, i) => (
+                    <LinkRow
+                      key={i}
+                      title={r.related.name}
+                      detail={`${
+                        (
+                          {
+                            within_upper_house:
+                              'Upper-house region covering this electorate',
+                            within_lower_house:
+                              'Lower-house district covering this electorate',
+                            overlaps: 'Overlapping electorate',
+                          } as Record<string, string>
+                        )[r.kind] ?? 'Related electorate'
+                      } · ${r.vintage}`}
                       onPress={() =>
                         router.push(electorateRoute(r.related.electorate_id))
                       }
                     />
-                  </Group>
-                ))
+                  ))}
+                </RowList>
               ) : (
                 <EmptyState message="No related constituencies are recorded." />
               )}
             </Section>
-            <RecordBlock
-              title="Sources and coverage"
-              id="electorate-coverage"
-              block={view.identity}
-              missing="No source information is held."
-              retry={refresh}
-            >
-              {() => (
-                <Group>
-                  <Text wordSafe>{view.coverageNote}</Text>
-                  <Text wordSafe>
-                    Representation is shown only as recorded in the dated
-                    release.
-                  </Text>
-                </Group>
-              )}
-            </RecordBlock>
-            <Text wordSafe variant="fine" testID="electorate-end">
+            <Group gap={rhythm.line} testID="electorate-coverage">
+              <Text wordSafe variant="caption">
+                {view.coverageNote} Representation is shown only as recorded in
+                the dated release.
+              </Text>
+              <EvidenceFooter block={view.identity} id="electorate-coverage" />
+            </Group>
+            <Text wordSafe variant="caption" testID="electorate-end">
               End of electorate record
             </Text>
           </>

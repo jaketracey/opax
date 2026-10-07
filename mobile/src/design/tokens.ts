@@ -3,11 +3,12 @@ import {
   light,
   lightHighContrast,
   partyColors,
+  partyWashes,
   type Palette,
   type Role,
 } from './palette';
 
-export { light, partyColors };
+export { light, partyColors, partyWashes };
 export type { Palette, Role };
 
 // Every colour goes through a role. iOS resolves Increase Contrast natively;
@@ -36,14 +37,60 @@ export const chrome = {
 
 // The web's phone spacing scale, rounded to points (IOS-UX section 5).
 export const spacing = { s1: 4, s2: 6, s3: 8, s4: 16, s5: 26, s6: 32, s7: 52 };
+
+/**
+ * Vertical rhythm: one scale, applied everywhere (UI sweep, Oct 2026).
+ * Section → heading → body → rows always step by these, never ad hoc gaps.
+ */
+export const rhythm = {
+  /** A line bound to the line above: a date under a title, a value's label. */
+  line: 4,
+  /** Inside a row or group: a name to its party line, a label to its value. */
+  tight: 8,
+  /** A section heading to its first block. */
+  heading: 12,
+  /** Between blocks inside a section. */
+  block: 16,
+  /** A second list or group inside a section. */
+  group: 24,
+  /** Between sections (the rule sits at the top of each). */
+  section: 36,
+  /** Screen edge to content. */
+  screen: 20,
+} as const;
+
 export const layout = {
-  screenMargin: 20,
-  // 8pt either side of a hairline between rows.
-  rowGap: spacing.s3,
-  // A second list within a section starts 32pt down.
-  subGap: spacing.s6,
-  // A section starts 52pt down.
-  sectionGap: spacing.s7,
+  screenMargin: rhythm.screen,
+  // 10pt either side of a hairline between rows.
+  rowGap: 10,
+  // A second list within a section.
+  subGap: rhythm.group,
+  // Sections start 36pt down.
+  sectionGap: rhythm.section,
+};
+
+/**
+ * Category accents for symbols, figures, tinted tiles and section headers:
+ * money (green), votes (indigo), interests (plum), bills (teal), people and
+ * places (navy), leads (bronze). `ink` is text-safe on paper, raised and the
+ * accent's own `wash`.
+ */
+export type Accent =
+  | 'money'
+  | 'votes'
+  | 'interests'
+  | 'bills'
+  | 'people'
+  | 'places'
+  | 'leads';
+export const accents: Record<Accent, { ink: Role; wash: Role }> = {
+  money: { ink: 'moneyInk', wash: 'moneyWash' },
+  votes: { ink: 'votesInk', wash: 'votesWash' },
+  interests: { ink: 'interestsInk', wash: 'interestsWash' },
+  bills: { ink: 'billsInk', wash: 'billsWash' },
+  people: { ink: 'navy', wash: 'navyWash' },
+  places: { ink: 'navy', wash: 'navyWash' },
+  leads: { ink: 'bronzeInk', wash: 'bronzeWash' },
 };
 // One CSS pixel is one point: rules are 1pt, not the device hairline.
 export const hairline = 1;
@@ -154,6 +201,15 @@ export const textStyles = {
     dynamicTypeRamp: 'footnote',
     color: 'inkSoft',
   },
+  // The number a block is about ("$1,284,310"): Merriweather, display size.
+  display: {
+    fontFamily: fonts.serifBold,
+    fontSize: 34,
+    lineHeight: 42,
+    dynamicTypeRamp: 'largeTitle',
+    color: 'ink',
+    tabular: true,
+  },
   // Figures in tiles: tabular so columns of numbers align.
   figure: {
     fontFamily: fonts.sansBold,
@@ -185,6 +241,22 @@ export const textStyles = {
     lineHeight: 18,
     dynamicTypeRamp: 'footnote',
     color: 'inkSoft',
+  },
+  // One quiet line per block: "Updated 4 Oct 2026".
+  caption: {
+    fontFamily: fonts.sans,
+    fontSize: 12,
+    lineHeight: 16,
+    dynamicTypeRamp: 'caption1',
+    color: 'inkSoft',
+  },
+  // Party chips and small labels in tinted capsules.
+  chip: {
+    fontFamily: fonts.sansSemiBold,
+    fontSize: 13,
+    lineHeight: 17,
+    dynamicTypeRamp: 'footnote',
+    color: 'ink',
   },
   // Button and control labels.
   control: {

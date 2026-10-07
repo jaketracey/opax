@@ -10,7 +10,8 @@ compiles only the core sources with Swift 6, and `ios/OpaxVoice.podspec` compile
 Package.swift are excluded from pod compilation. One `VoiceController` actor owns
 one HTTP client and one `VoiceCallController`; one cancellable Expo task consumes
 its sanitised event stream. `VoiceBridgeValue` explicitly projects each approved
-field; it never encodes arbitrary objects or response bodies.
+field; it never encodes arbitrary objects or response bodies. A second task
+forwards `onVoiceLevel`: two rounded loudness values for the call animation.
 
 The e2e Release pods compile `OPAX_VOICE_E2E`, retaining the synthetic engine and
 numeric-loopback execution guard without compiling the app as DEBUG. Production
@@ -41,7 +42,7 @@ scripts/generate-status-fixtures.mjs
 scripts/generate-deletion-fixtures.mjs
 ```
 
-Every hardware, permission, audio-session, lifecycle, clock, credential, HTTP and relay dependency is injectable. The tap copies into a preallocated two-second ring and yields a coalesced signal after unlocking. Capture suspends until data arrives; conversion and encoding run off the tap with no 5 ms wake loop. One long-lived converter carries resampler state across buffers. Route notifications only yield events; the core rebuilds the graph/converter and keeps the socket. Interruption, background and media reset end the call; scene inactivity and resumption do not restart it.
+Every hardware, permission, audio-session, lifecycle, clock, credential, HTTP and relay dependency is injectable. Loudness for the call screen is metered, never recorded: the input tap and a tap on the main mixer each store one RMS value (`LevelMeter`, -60 to 0 dBFS as 0 to 1) in `LevelBox`; while live, the controller reads them 15 times a second into its own newest-only `levels` stream, apart from call events, and sends silence at the end. The synthetic e2e engine reports a speech-shaped output level while its silent playback is due. The tap copies into a preallocated two-second ring and yields a coalesced signal after unlocking. Capture suspends until data arrives; conversion and encoding run off the tap with no 5 ms wake loop. One long-lived converter carries resampler state across buffers. Route notifications only yield events; the core rebuilds the graph/converter and keeps the socket. Interruption, background and media reset end the call; scene inactivity and resumption do not restart it.
 
 Both metadata formats must validate before engine/converter allocation. Accepted codecs are PCM16 little-endian and G.711 µ-law, at 8,000, 16,000, 22,050, 24,000, 44,100 or 48,000 Hz; only missing input defaults to PCM16/16k. Encoding matches SDK sample scaling/rounding. Fractional 25 ms chunks sum to exactly one second every 40 chunks. Capture and upload bounds remain two seconds; stalled upload beyond the bound ends the call. Mute sends encoded zero samples and mutes voice-processing input.
 
@@ -114,12 +115,12 @@ The relay fixture enforces single first initiation within ten seconds after upgr
 
 Final source checked on 2026-10-03 (AEST):
 
-| Check | Result | Completed | Time |
-| --- | --- | --- | --- |
-| Host `swift test -j 2` | 110 passed, 0 failed | 21:23:35 | 23.089 s tests; 33 s command |
-| Assigned iOS 27 simulator, both required gates | 110 passed, 0 failed; TEST SUCCEEDED | 21:24:55 | 23.796 s tests; 45 s build/test command |
-| Deterministic loopback close race | 200 iterations, 0 failures on each platform | In both suites | Both write/receive orders, personal/budget deadlines |
-| Both Worker fixture drift checks | Passed | Before tests | — |
+| Check                                          | Result                                      | Completed      | Time                                                 |
+| ---------------------------------------------- | ------------------------------------------- | -------------- | ---------------------------------------------------- |
+| Host `swift test -j 2`                         | 110 passed, 0 failed                        | 21:23:35       | 23.089 s tests; 33 s command                         |
+| Assigned iOS 27 simulator, both required gates | 110 passed, 0 failed; TEST SUCCEEDED        | 21:24:55       | 23.796 s tests; 45 s build/test command              |
+| Deterministic loopback close race              | 200 iterations, 0 failures on each platform | In both suites | Both write/receive orders, personal/budget deadlines |
+| Both Worker fixture drift checks               | Passed                                      | Before tests   | —                                                    |
 
 Both ordinary-test audits measured attempted input opens=0, output opens=0 and hosts exactly `127.0.0.1`; every test's teardown checked the cumulative guard. Refused-attempt self-tests remained isolated and dirty as expected. Disabled-member voice status preserved the cookie on the subsequent deletion-code request; absent-member confirmations cleared only their original credential, including sign-in races. A real TCP abort also recovered exhausted allowance using fresh status, while unconfirmed network/policy/provider failures remained failures. No Swift compiler warnings occurred; the simulator emitted the skipped AppIntents metadata-extraction warning. Builds paused above load5=140 and resumed below 100; host started at load5=95, simulator boot at 81 and simulator build at 85. Shutdown completed at 21:24:58 and was confirmed; the Mac remained muted. This lane's intermediates/caches are pruned, retaining products and private result bundles. All changes remain within this module.
 
@@ -127,12 +128,12 @@ Both ordinary-test audits measured attempted input opens=0, output opens=0 and h
 
 Final source checked on 2026-10-03 (AEST):
 
-| Check | Result | Completed | Time |
-| --- | --- | --- | --- |
-| Host `swift test -j 2` | 102 passed, 0 failed | 20:57:15 | 4.872 s tests; 10 s command |
-| Assigned iOS 27 simulator, both required gates | 102 passed, 0 failed; TEST SUCCEEDED | 20:57:59 | 5.179 s tests; 18 s build/test command |
-| Release generic iOS compile, required build gate, signing disabled | BUILD SUCCEEDED; no device launch | 20:57:25 | 9 s |
-| Both Worker fixture drift checks | Passed | Before tests | — |
+| Check                                                              | Result                               | Completed    | Time                                   |
+| ------------------------------------------------------------------ | ------------------------------------ | ------------ | -------------------------------------- |
+| Host `swift test -j 2`                                             | 102 passed, 0 failed                 | 20:57:15     | 4.872 s tests; 10 s command            |
+| Assigned iOS 27 simulator, both required gates                     | 102 passed, 0 failed; TEST SUCCEEDED | 20:57:59     | 5.179 s tests; 18 s build/test command |
+| Release generic iOS compile, required build gate, signing disabled | BUILD SUCCEEDED; no device launch    | 20:57:25     | 9 s                                    |
+| Both Worker fixture drift checks                                   | Passed                               | Before tests | —                                      |
 
 The final ordinary-test audits measured attempted input opens=0, output opens=0 and hosts exactly `127.0.0.1`. All test classes enforce the cumulative audit in tearDown. Deliberate guard self-tests separately recorded one refused input/output attempt and every refused host, and asserted dirty audits; no hardware or external connection was opened. The real redirect destination accepted zero connections. No Swift compiler warnings occurred; the simulator emitted one skipped AppIntents metadata-extraction warning. Builds paused when load5 exceeded 140 and resumed below 100; all final heavy checks started below 100. The simulator's EXIT trap completed, shutdown was confirmed, and the Mac remained muted. This lane's intermediates/caches are pruned, retaining products and private result bundles.
 
@@ -142,12 +143,12 @@ The independent round-3 review subsequently reproduced a rare pong/close observa
 
 Final source checked on 2026-10-03 (AEST):
 
-| Check | Result | Completed | Time |
-| --- | --- | --- | --- |
-| Host `swift test -j 2` | 85 passed, 0 failed | 19:36:00 | 3.119 s tests |
-| Assigned iOS 27 simulator, both required gates | 85 passed, 0 failed; TEST SUCCEEDED | 19:34:08 | 3.474 s tests; 23 s build/test command |
-| Release generic iOS compile, required build gate, signing disabled | BUILD SUCCEEDED; no device launch | 19:36:29 | 10 s |
-| Worker fixture drift check | Passed | Before tests | — |
+| Check                                                              | Result                              | Completed    | Time                                   |
+| ------------------------------------------------------------------ | ----------------------------------- | ------------ | -------------------------------------- |
+| Host `swift test -j 2`                                             | 85 passed, 0 failed                 | 19:36:00     | 3.119 s tests                          |
+| Assigned iOS 27 simulator, both required gates                     | 85 passed, 0 failed; TEST SUCCEEDED | 19:34:08     | 3.474 s tests; 23 s build/test command |
+| Release generic iOS compile, required build gate, signing disabled | BUILD SUCCEEDED; no device launch   | 19:36:29     | 10 s                                   |
+| Worker fixture drift check                                         | Passed                              | Before tests | —                                      |
 
 Both test audits measured input opens=0, output opens=0 and permitted hosts only `127.0.0.1`. The redirect destination accepted zero connections. There were no Swift compiler warnings; the simulator build emitted one skipped AppIntents metadata-extraction warning. Final heavy runs started below load5=100. The simulator was shut down by the EXIT trap and confirmed shut down; the Mac remained muted. Lane build intermediates/caches are pruned, with products and private result bundles retained.
 
@@ -187,37 +188,37 @@ Jake alone checks echo cancellation on physical hardware, Siri/calls/alarms, Blu
 
 ## Contract implementation map
 
-| Contract point | Implementation |
-| --- | --- |
-| Swift 6, iOS 18.4, separate package | [Package.swift:3](ios/OpaxVoiceCore/Package.swift#L3) |
-| Nullable Worker status, unknown open states, disabled priority, ID-free bridge status | [Models.swift:39](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/Models.swift#L39) |
-| Opaque credential and storage DTO | [Credentials.swift:5](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/Credentials.swift#L5) |
-| Origin-scoped Keychain and atomic compare-and-clear | [Credentials.swift:29](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/Credentials.swift#L29) |
-| Ten exact routes/methods and scoped Cookie/Origin | [HTTPClient.swift:3](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/HTTPClient.swift#L3) |
-| Request snapshot, fresh 403 classification, code exchange and logout | [HTTPClient.swift:97](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/HTTPClient.swift#L97) |
-| Malformed start cleanup and no device-clock reservation veto | [HTTPClient.swift:222](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/HTTPClient.swift#L222) |
-| Cookie-free session and redirect refusal | [HTTPClient.swift:319](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/HTTPClient.swift#L319) |
-| convai WebSocket, first initiation, all messages/events, close codes | [Relay.swift:15](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/Relay.swift#L15) |
-| PCM/ulaw, all rates, exact fractional cadence, queues and converter | [AudioPipeline.swift:4](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/AudioPipeline.swift#L4) |
-| Event-driven tap and one voice-processing engine | [AppleAudio.swift:9](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/AppleAudio.swift#L9) |
-| Playback completion capacity and epoch-protected flush | [AppleAudio.swift:111](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/AppleAudio.swift#L111) |
-| All states, cancellation, lifecycle and typed public errors | [CallController.swift:11](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/CallController.swift#L11) |
-| Continuous socket reads, immediate controls and close classification | [CallController.swift:179](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/CallController.swift#L179) |
-| Bounded playback backlog, independent drain and truncation event | [CallController.swift:249](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/CallController.swift#L249) |
-| Fresh status after finish/end/failure | [CallController.swift:404](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/CallController.swift#L404) |
-| Expiry-aware polling with backoff/interval/attempt caps | [CallController.swift:449](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/CallController.swift#L449) |
-| Capped transcript/corrections and source allow-list | [Evidence.swift:3](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/Evidence.swift#L3) |
-| DEBUG synthetic input and silent timed output | [DebugSyntheticAudio.swift:11](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/DebugSyntheticAudio.swift#L11) |
-| Test-wide guard, attempted I/O/host audit and dirty self-test scopes | [RuntimeSafety.swift:5](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/RuntimeSafety.swift#L5) |
-| Real loopback WebSocket fixture and required refusal/drop rows | [LoopbackRelay.swift:7](ios/OpaxVoiceCore/Tests/OpaxVoiceCoreTests/LoopbackRelay.swift#L7) |
-| Real loopback HTTP/WebSocket redirect proof | [RedirectTests.swift:65](ios/OpaxVoiceCore/Tests/OpaxVoiceCoreTests/RedirectTests.swift#L65) |
-| Review regressions | [ReviewRegressionTests.swift:5](ios/OpaxVoiceCore/Tests/OpaxVoiceCoreTests/ReviewRegressionTests.swift#L5) |
-| Deep playback, interruption/pong/deadline/overflow real-socket regressions | [ContinuousReadTests.swift:5](ios/OpaxVoiceCore/Tests/OpaxVoiceCoreTests/ContinuousReadTests.swift#L5) |
-| Disabled-member credential confirmation | [HTTPClient.swift:162](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/HTTPClient.swift#L162) |
-| Fresh-status classification of abnormal 1006 | [CallController.swift:432](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/CallController.swift#L432) |
-| Deterministic loopback close/write ordering | [OrderedTerminationRelay.swift:4](ios/OpaxVoiceCore/Tests/OpaxVoiceCoreTests/OrderedTerminationRelay.swift#L4) |
-| W5 deletion requests, typed responses and credential clearing | [HTTPClient.swift:184](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/HTTPClient.swift#L184) |
-| W5 controller call cleanup and bridge-safe results | [CallController.swift:375](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/CallController.swift#L375) |
-| Worker-derived deletion responses, disabled members and credential races | [AccountDeletionTests.swift:13](ios/OpaxVoiceCore/Tests/OpaxVoiceCoreTests/AccountDeletionTests.swift#L13) |
-| Actual Worker deletion/community-status fixture generation | [generate-deletion-fixtures.mjs:10](scripts/generate-deletion-fixtures.mjs#L10) |
-| Cached, broadcast close signal and terminal delegate callbacks | [HTTPClient.swift:262](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/HTTPClient.swift#L262) |
+| Contract point                                                                        | Implementation                                                                                                 |
+| ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Swift 6, iOS 18.4, separate package                                                   | [Package.swift:3](ios/OpaxVoiceCore/Package.swift#L3)                                                          |
+| Nullable Worker status, unknown open states, disabled priority, ID-free bridge status | [Models.swift:39](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/Models.swift#L39)                                    |
+| Opaque credential and storage DTO                                                     | [Credentials.swift:5](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/Credentials.swift#L5)                            |
+| Origin-scoped Keychain and atomic compare-and-clear                                   | [Credentials.swift:29](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/Credentials.swift#L29)                          |
+| Ten exact routes/methods and scoped Cookie/Origin                                     | [HTTPClient.swift:3](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/HTTPClient.swift#L3)                              |
+| Request snapshot, fresh 403 classification, code exchange and logout                  | [HTTPClient.swift:97](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/HTTPClient.swift#L97)                            |
+| Malformed start cleanup and no device-clock reservation veto                          | [HTTPClient.swift:222](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/HTTPClient.swift#L222)                          |
+| Cookie-free session and redirect refusal                                              | [HTTPClient.swift:319](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/HTTPClient.swift#L319)                          |
+| convai WebSocket, first initiation, all messages/events, close codes                  | [Relay.swift:15](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/Relay.swift#L15)                                      |
+| PCM/ulaw, all rates, exact fractional cadence, queues and converter                   | [AudioPipeline.swift:4](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/AudioPipeline.swift#L4)                        |
+| Event-driven tap and one voice-processing engine                                      | [AppleAudio.swift:9](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/AppleAudio.swift#L9)                              |
+| Playback completion capacity and epoch-protected flush                                | [AppleAudio.swift:111](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/AppleAudio.swift#L111)                          |
+| All states, cancellation, lifecycle and typed public errors                           | [CallController.swift:11](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/CallController.swift#L11)                    |
+| Continuous socket reads, immediate controls and close classification                  | [CallController.swift:179](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/CallController.swift#L179)                  |
+| Bounded playback backlog, independent drain and truncation event                      | [CallController.swift:249](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/CallController.swift#L249)                  |
+| Fresh status after finish/end/failure                                                 | [CallController.swift:404](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/CallController.swift#L404)                  |
+| Expiry-aware polling with backoff/interval/attempt caps                               | [CallController.swift:449](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/CallController.swift#L449)                  |
+| Capped transcript/corrections and source allow-list                                   | [Evidence.swift:3](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/Evidence.swift#L3)                                  |
+| DEBUG synthetic input and silent timed output                                         | [DebugSyntheticAudio.swift:11](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/DebugSyntheticAudio.swift#L11)          |
+| Test-wide guard, attempted I/O/host audit and dirty self-test scopes                  | [RuntimeSafety.swift:5](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/RuntimeSafety.swift#L5)                        |
+| Real loopback WebSocket fixture and required refusal/drop rows                        | [LoopbackRelay.swift:7](ios/OpaxVoiceCore/Tests/OpaxVoiceCoreTests/LoopbackRelay.swift#L7)                     |
+| Real loopback HTTP/WebSocket redirect proof                                           | [RedirectTests.swift:65](ios/OpaxVoiceCore/Tests/OpaxVoiceCoreTests/RedirectTests.swift#L65)                   |
+| Review regressions                                                                    | [ReviewRegressionTests.swift:5](ios/OpaxVoiceCore/Tests/OpaxVoiceCoreTests/ReviewRegressionTests.swift#L5)     |
+| Deep playback, interruption/pong/deadline/overflow real-socket regressions            | [ContinuousReadTests.swift:5](ios/OpaxVoiceCore/Tests/OpaxVoiceCoreTests/ContinuousReadTests.swift#L5)         |
+| Disabled-member credential confirmation                                               | [HTTPClient.swift:162](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/HTTPClient.swift#L162)                          |
+| Fresh-status classification of abnormal 1006                                          | [CallController.swift:432](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/CallController.swift#L432)                  |
+| Deterministic loopback close/write ordering                                           | [OrderedTerminationRelay.swift:4](ios/OpaxVoiceCore/Tests/OpaxVoiceCoreTests/OrderedTerminationRelay.swift#L4) |
+| W5 deletion requests, typed responses and credential clearing                         | [HTTPClient.swift:184](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/HTTPClient.swift#L184)                          |
+| W5 controller call cleanup and bridge-safe results                                    | [CallController.swift:375](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/CallController.swift#L375)                  |
+| Worker-derived deletion responses, disabled members and credential races              | [AccountDeletionTests.swift:13](ios/OpaxVoiceCore/Tests/OpaxVoiceCoreTests/AccountDeletionTests.swift#L13)     |
+| Actual Worker deletion/community-status fixture generation                            | [generate-deletion-fixtures.mjs:10](scripts/generate-deletion-fixtures.mjs#L10)                                |
+| Cached, broadcast close signal and terminal delegate callbacks                        | [HTTPClient.swift:262](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/HTTPClient.swift#L262)                          |

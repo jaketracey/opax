@@ -5,8 +5,15 @@ export function recordDestination(path: string) {
   // Recheck at the navigation boundary, including queries and fragments.
   if (!webPageUrl(path)) return null;
   const native = fromWebPath(path);
-  if (native?.pathname === '/person/[slug]' || native?.pathname === '/bill/[key]') return native;
-  // This sheet embeds only these readers; other native screens use their own stack.
+  if (
+    native &&
+    (native.pathname === '/person/[slug]' ||
+      native.pathname === '/bill/[key]' ||
+      native.pathname === '/electorate/[id]' ||
+      native.pathname === '/doc/[slug]' ||
+      native.pathname === '/bill-text/[key]')
+  )
+    return native;
   const electorate = /^\/subject\/electorate\/([a-z0-9-]+)\/?$/.exec(path);
   return electorate?.[1] ? electorateRoute(electorate[1]) : null;
 }
