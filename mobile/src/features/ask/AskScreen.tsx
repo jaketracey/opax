@@ -595,7 +595,7 @@ export default function AskScreen() {
         >
           <Text wordSafe variant="caption">
             {communityAccount
-              ? 'Saved to your account and on this iPhone.'
+              ? 'Saved on this iPhone.'
               : 'Saved on this iPhone. Sign in to keep them across devices.'}
           </Text>
           {!saved.chats.length ? (

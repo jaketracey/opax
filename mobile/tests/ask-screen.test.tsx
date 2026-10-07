@@ -34,6 +34,7 @@ jest.mock('../src/features/ask/store', () => {
   };
 });
 jest.mock('../src/features/ask/sync', () => ({
+  ChatSyncError: jest.requireActual('../src/features/ask/sync').ChatSyncError,
   pushChat: jest.fn(),
   deleteRemoteChat: jest.fn(),
   reconcileChats: jest.fn(),
@@ -134,6 +135,28 @@ test('signed-in Ask mount, typing, options and tab remount never call paid route
   });
   expect(client.askPost).not.toHaveBeenCalled();
   expect(reconcileChats).not.toHaveBeenCalled();
+  expect(pushChat).not.toHaveBeenCalled();
+  await act(async () => {
+    view!.unmount();
+    askSession.start();
+  });
+});
+test('failed account sync preserves local history without claiming an account save', async () => {
+  jest.mocked(reconcileChats).mockRejectedValueOnce(new Error('Unavailable'));
+  let view: ReactTestRenderer;
+  await act(async () => {
+    view = create(<AskScreen />);
+  });
+  await act(async () => {
+    await view!.root.findAllByProps({ testID: 'ask-saved' })[0]!.props.onPress();
+  });
+  const rendered = view!.root
+    .findAll((node) => typeof node.props.children === 'string')
+    .map((node) => node.props.children);
+  expect(rendered).toContain('Saved on this iPhone.');
+  expect(rendered).not.toContain('Saved to your account and on this iPhone.');
+  expect(reconcileChats).toHaveBeenCalledTimes(1);
+  expect(client.askPost).not.toHaveBeenCalled();
   expect(pushChat).not.toHaveBeenCalled();
   await act(async () => {
     view!.unmount();
