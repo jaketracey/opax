@@ -5,9 +5,9 @@ import Constants from 'expo-constants';
 import { ApiClient } from './client';
 import { CatalogCache } from './cache';
 import { DiskStore } from './disk-store';
+import { PeopleDepth } from '../features/people/data';
 import { Catalogs } from './catalogs';
 import { setCatalogDiagnostics } from './validation';
-import { PeopleDepth } from '../features/people/data';
 const extra = Constants.expoConfig?.extra;
 if (
   !extra ||
@@ -41,6 +41,18 @@ const client = new ApiClient({
 });
 export const catalogs = new Catalogs(client);
 export const peopleDepth = new PeopleDepth(client);
+// Paid reader calls: no disk persistence and no automatic retry. Records owns
+// the session promises, so opening a cached record costs no new request.
+export const recordClient = new ApiClient({
+  origin: extra.apiOrigin,
+  version: extra.appVersion,
+  build: extra.appBuild,
+  retries: 0,
+  cache: new CatalogCache({
+    readIndex: async () => [], writeIndex: async () => {},
+    read: async () => undefined, write: async () => {}, remove: async () => {},
+  }),
+});
 export const portraits = new PeoplePortraits(
   catalogs,
   new PortraitCache(new PortraitDiskStore(extra.apiOrigin), client),

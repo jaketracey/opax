@@ -6,67 +6,44 @@ import type {
   VoiceStatus,
 } from '../../voice/types';
 
+// One short sentence each: the call screen shows it with one action.
 export const failureCopy: Record<VoiceFailure, string> = {
-  signedOut: 'Voice needs an OPAX account. Sign in to talk for free.',
-  disabled: 'Voice is taking a break. You can still search the public records.',
-  allowanceExhausted:
-    'You have used your free voice allowance. You can keep exploring the public records.',
-  budgetClosed:
-    'Voice is closed for the rest of this month. The public records are still here.',
-  capacity: 'Voice is busy right now. Please try again in a little while.',
-  rateLimited:
-    'Voice has received too many start requests. Wait a little while before trying again.',
-  callOpen:
-    'A voice conversation is already open on your account. End it there, then check availability again.',
-  forbidden:
-    'OPAX could not authorise this voice request. Your microphone is off.',
-  unavailable: 'Voice is unavailable right now. Your microphone is off.',
-  network:
-    'The connection ended. Your microphone is off. Check availability before starting again.',
-  policy:
-    'The voice connection did not meet OPAX’s connection rules. Your microphone is off.',
-  unsupportedFormat:
-    'The voice provider sent an audio format OPAX cannot play. Your microphone is off.',
-  audio: 'OPAX could not use the audio device. Your microphone is off.',
-  queueOverflow:
-    'The voice connection could not keep up with the audio. Your microphone is off.',
-  microphoneDenied:
-    'Microphone access is off for OPAX. Turn it on in Settings to talk.',
-  consentRequired:
-    'Agree to third-party voice processing before starting a conversation.',
-  timeout:
-    'We could not connect in time. Your microphone is off. Check availability before starting again.',
-  invalidResponse:
-    'OPAX received an unexpected voice response. Your microphone is off.',
-  cancelled: 'The voice request was cancelled. Your microphone is off.',
-  statusChecking:
-    'Voice availability is still being checked. Wait for the check to finish.',
+  signedOut: 'Voice needs a free OPAX account.',
+  disabled: 'Voice is taking a break.',
+  allowanceExhausted: 'You have used your free voice minutes.',
+  budgetClosed: 'Voice is closed for the rest of this month.',
+  capacity: 'Voice is busy right now. Try again soon.',
+  rateLimited: 'Too many tries. Wait a little, then try again.',
+  callOpen: 'A call is still open on your account.',
+  forbidden: 'OPAX could not authorise voice. Microphone off.',
+  unavailable: 'Voice is unavailable right now. Microphone off.',
+  network: 'Can’t reach OPAX. Check your connection.',
+  policy: 'The voice connection was refused. Microphone off.',
+  unsupportedFormat: 'OPAX could not play the voice audio. Microphone off.',
+  audio: 'OPAX could not use the microphone or speaker.',
+  queueOverflow: 'The connection fell behind. Microphone off.',
+  microphoneDenied: 'Turn on microphone access to talk.',
+  consentRequired: 'Agree to voice processing to start.',
+  timeout: 'Could not connect in time. Microphone off.',
+  invalidResponse: 'OPAX got an unexpected voice reply. Microphone off.',
+  cancelled: 'Voice request cancelled. Microphone off.',
+  statusChecking: 'Still checking voice. One moment.',
   deletionVerificationFailed:
-    'OPAX could not verify the account deletion code. Check it in Account and about.',
+    'OPAX could not verify the deletion code. Check it in Account.',
 };
 export const endCopy: Record<EndReason, string> = {
-  user: 'Conversation ended. Your microphone is off.',
-  interruption:
-    'The conversation ended because another app needed audio. Your microphone is off.',
-  background:
-    'The conversation ended when you left OPAX. Your microphone is off.',
-  mediaReset:
-    'The conversation ended because the audio system reset. Your microphone is off.',
-  provider:
-    'The voice provider ended the conversation. Your microphone is off.',
-  deadline: 'The conversation reached its time limit. Your microphone is off.',
-  network:
-    'The connection ended. Your microphone is off. Check availability before starting again.',
-  consentWithdrawn:
-    'Voice consent withdrawn. The conversation ended. Your microphone is off.',
-  allowanceExhausted:
-    'Your free voice allowance is complete. Your microphone is off.',
-  budgetClosed:
-    'Voice is closed for the rest of this month. Your microphone is off.',
-  callLimit:
-    'This call has finished. Your microphone is off. You can start another call.',
-  failed:
-    'Voice ran into a problem. Your microphone is off. Check availability before starting again.',
+  user: 'Call ended. Microphone off.',
+  interruption: 'Another app took the audio. Microphone off.',
+  background: 'The call ended when you left OPAX. Microphone off.',
+  mediaReset: 'The audio system reset. Microphone off.',
+  provider: 'The voice provider ended the call. Microphone off.',
+  deadline: 'The call reached its time limit. Microphone off.',
+  network: 'The connection dropped. Microphone off.',
+  consentWithdrawn: 'Consent withdrawn. Microphone off.',
+  allowanceExhausted: 'Your free minutes are used up. Microphone off.',
+  budgetClosed: 'Voice is closed for this month. Microphone off.',
+  callLimit: 'This call reached its limit. Microphone off.',
+  failed: 'Voice ran into a problem. Microphone off.',
 };
 export function refusal(status: VoiceStatus | null): VoiceFailure | null {
   if (!status) return null;

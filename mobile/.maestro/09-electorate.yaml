@@ -80,6 +80,10 @@ name: 09 Electorate representation, elections, Census context and sources
     timeout: 300000
 - tapOn:
     id: electorate-coverage-source
+- assertVisible: Original records
+- takeScreenshot: ${EVIDENCE}/09-original-records
+- tapOn: OPAX federal roster reconciled against APH, 2026-09-04
+- assertVisible: https://www.aph.gov.au/Senators_and_Members
 - takeScreenshot: ${EVIDENCE}/09-source
 - tapOn: OK
 - tapOn: Share Grayndler

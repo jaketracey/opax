@@ -2,6 +2,7 @@ import { Alert } from 'react-native';
 import type { NativeStackHeaderItem } from 'expo-router';
 import { OpaxShare } from '../../modules/opax-share';
 import { isE2E } from '../design/environment';
+import { haptic } from '../design/haptics';
 import { chrome } from '../design/tokens';
 import { canonicalUrl } from './external';
 
@@ -25,6 +26,7 @@ export async function shareRecord({
   anchor,
 }: ShareTarget): Promise<void> {
   const url = canonicalUrl(path, anchor);
+  haptic('light');
   if (isE2E) {
     Alert.alert(`Share: ${title}`, url);
     return;

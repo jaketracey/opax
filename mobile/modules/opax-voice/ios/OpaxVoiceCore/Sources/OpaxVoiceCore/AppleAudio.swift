@@ -4,8 +4,9 @@ import AVFAudio
 import UIKit
 #endif
 
-/// Allocated before installing the tap. The tap copies hardware samples only;
-/// downmixing, conversion, JSON and socket work happen later on actors.
+/// Allocated before installing the tap. The tap copies hardware samples (and
+/// LevelBox keeps one loudness value); downmixing, conversion, JSON and socket
+/// work happen later on actors.
 final class TapRing: @unchecked Sendable {
     private let lock = NSLock()
     private var storage: [Float]
@@ -46,6 +47,20 @@ final class TapRing: @unchecked Sendable {
         count -= frames; return CaptureBuffer(samples: mono, rate: rate)
     }
 }
+/// The latest loudness from each tap. Taps write one Float under a short lock;
+/// the engine actor reads both. No samples are kept.
+final class LevelBox: @unchecked Sendable {
+    private let lock = NSLock()
+    private var input: Float = 0, output: Float = 0
+    func setInput(_ buffer: AVAudioPCMBuffer) { let value = Self.level(buffer); lock.lock(); input = value; lock.unlock() }
+    func setOutput(_ buffer: AVAudioPCMBuffer) { let value = Self.level(buffer); lock.lock(); output = value; lock.unlock() }
+    func read() -> AudioLevels { lock.lock(); defer { lock.unlock() }; return AudioLevels(input: input, output: output) }
+    func reset() { lock.lock(); input = 0; output = 0; lock.unlock() }
+    private static func level(_ buffer: AVAudioPCMBuffer) -> Float {
+        guard let channel = buffer.floatChannelData?[0] else { return 0 }
+        return LevelMeter.level(UnsafeBufferPointer(start: channel, count: Int(buffer.frameLength)))
+    }
+}
 public struct AppleVoiceEngineFactory: VoiceEngineFactory {
     public init() {}
     public func make() async throws -> any VoiceAudioEngine { AppleVoiceEngine() }
@@ -59,6 +74,8 @@ actor AppleVoiceEngine: VoiceAudioEngine {
     private var hardwareRate = 0
     private var hardwareChannels = 0
     private var tapInstalled = false
+    private var meterTapInstalled = false
+    private let meter = LevelBox()
     private var output: AudioFormat?
     private var queued = 0
     private var playbackGeneration = 0
@@ -91,8 +108,12 @@ actor AppleVoiceEngine: VoiceAudioEngine {
         hardwareRate = Int(hardware.sampleRate); hardwareChannels = Int(hardware.channelCount)
         let ring = TapRing(rate: hardwareRate, channels: Int(hardware.channelCount)); self.ring = ring
         graph.connect(player, to: graph.mainMixerNode, format: playback)
-        graph.inputNode.installTap(onBus: 0, bufferSize: 1024, format: hardware) { buffer, _ in ring.copy(buffer) }
+        let meter = self.meter
+        graph.inputNode.installTap(onBus: 0, bufferSize: 1024, format: hardware) { buffer, _ in ring.copy(buffer); meter.setInput(buffer) }
         tapInstalled = true
+        // Output loudness for the call animation: what the mixer actually plays.
+        graph.mainMixerNode.installTap(onBus: 0, bufferSize: 1024, format: nil) { buffer, _ in meter.setOutput(buffer) }
+        meterTapInstalled = true
         graph.inputNode.isVoiceProcessingInputMuted = muted
     }
     func capture() async throws -> CaptureBuffer? {
@@ -155,13 +176,19 @@ actor AppleVoiceEngine: VoiceAudioEngine {
         guard let graph else { throw VoiceFailure.audio }
         let hardware = graph.inputNode.outputFormat(forBus: 0)
         if graph.isRunning, Int(hardware.sampleRate) == hardwareRate, Int(hardware.channelCount) == hardwareChannels { return }
-        ring?.finish(); graph.stop(); if tapInstalled { graph.inputNode.removeTap(onBus: 0); tapInstalled = false }; flushPlayback()
+        ring?.finish(); graph.stop(); if tapInstalled { graph.inputNode.removeTap(onBus: 0); tapInstalled = false }
+        removeMeterTap(graph); flushPlayback()
         graph.disconnectNodeOutput(player!)
         try establishGraph(); graph.prepare(); try graph.start(); player?.play()
     }
+    func levels() -> AudioLevels { muted ? AudioLevels(input: 0, output: meter.read().output) : meter.read() }
+    private func removeMeterTap(_ graph: AVAudioEngine) {
+        if meterTapInstalled { graph.mainMixerNode.removeTap(onBus: 0); meterTapInstalled = false }
+    }
     func stop() {
         acceptedPlaybackEpoch += 1
-        if let graph { graph.stop(); if tapInstalled { graph.inputNode.removeTap(onBus: 0); tapInstalled = false } }
+        if let graph { graph.stop(); if tapInstalled { graph.inputNode.removeTap(onBus: 0); tapInstalled = false }; removeMeterTap(graph) }
+        meter.reset()
         ring?.finish(); playbackGeneration += 1; player?.stop(); queued = 0; wakePlaybackWaiters(); ring = nil; player = nil; graph = nil
     }
 }

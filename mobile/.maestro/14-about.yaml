@@ -1,5 +1,5 @@
 appId: au.com.opax.app
-name: 14 About, coverage, original sources, privacy and font notices
+name: 14 About, coverage, privacy, then Sources and licences with source terms and font notices
 ---
 - launchApp
 - tapOn: Account and about
@@ -33,16 +33,6 @@ name: 14 About, coverage, original sources, privacy and font notices
 - takeScreenshot: ${EVIDENCE}/14-coverage-as-at
 - scrollUntilVisible:
     element:
-      id: about-source-aph
-    timeout: 90000
-- takeScreenshot: ${EVIDENCE}/14-sources
-- tapOn:
-    id: about-source-aph
-- assertVisible: https://www.aph.gov.au/Help/Disclaimer_Privacy_Copyright
-- takeScreenshot: ${EVIDENCE}/14-source-alert
-- tapOn: OK
-- scrollUntilVisible:
-    element:
       id: about-privacy
     timeout: 90000
 - tapOn:
@@ -50,15 +40,46 @@ name: 14 About, coverage, original sources, privacy and font notices
 - assertVisible: https://opax.invalid/privacy
 - takeScreenshot: ${EVIDENCE}/14-privacy-alert
 - tapOn: OK
+# Licences, credits and source terms are on one screen, from About.
 - scrollUntilVisible:
     element:
-      id: about-font-Merriweather
+      id: about-sources-open
+    direction: UP
+    centerElement: true
     timeout: 90000
 - tapOn:
-    id: about-font-Merriweather
+    id: about-sources-open
+- extendedWaitUntil:
+    visible:
+      id: sources-screen
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/14-sources
 - scrollUntilVisible:
     element:
-      id: about-notice-Merriweather
+      id: sources-dataset-hansard
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    id: sources-dataset-hansard
+- assertVisible: .*Hansard is reproduced under CC BY-NC-ND terms.*
+- scrollUntilVisible:
+    element:
+      text: Copyright and disclaimer
+    centerElement: true
+    timeout: 90000
+- tapOn: Copyright and disclaimer
+- assertVisible: https://www.aph.gov.au/Help/Disclaimer_Privacy_Copyright
+- takeScreenshot: ${EVIDENCE}/14-source-alert
+- tapOn: OK
+- scrollUntilVisible:
+    element:
+      id: sources-font-Merriweather
+    timeout: 90000
+- tapOn:
+    id: sources-font-Merriweather
+- scrollUntilVisible:
+    element:
+      id: sources-notice-Merriweather
     timeout: 90000
     visibilityPercentage: 1
 - takeScreenshot: ${EVIDENCE}/14-font-notice

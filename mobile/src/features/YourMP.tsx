@@ -4,17 +4,20 @@ import { LocationSuggestion } from './electorate-map/LocationSuggestion';
 import { formatDate } from '../design/format';
 import { useCallback, useEffect, useState } from 'react';
 import { router } from 'expo-router';
-import { Keyboard, RefreshControl } from 'react-native';
+import { Keyboard, RefreshControl, StyleSheet, View } from 'react-native';
 import { catalogs } from '../api/runtime';
 import type { Electorate } from '../api/catalogs';
 import {
   Button,
+  Disclosure,
   EmptyState,
   ErrorState,
   Field,
   Group,
   Heading,
+  LinkRow,
   LoadingState,
+  RowList,
   Screen,
   Section,
   SourceLink,
@@ -22,13 +25,14 @@ import {
   AsAtLine,
   errorMessage,
 } from '../design/primitives';
+import { rhythm } from '../design/tokens';
+import { VoteSide } from './your-mp/VoteSide';
 import {
   CHAMBER_NOT_RECORDED,
   chamberName,
   jurisdictionName,
 } from '../design/parliament';
 import { billRoute, electorateRoute } from '../navigation/routes';
-import { InlineLink } from './bills/parts';
 import { EvidenceFooter, RecordBlock } from './your-mp/Evidence';
 import { RepresentativeRows } from './your-mp/RepresentativeRows';
 import { FollowingEntry } from './follows/FollowingEntry';
@@ -232,6 +236,7 @@ export default function YourMP() {
           />
           {!query.trim() ? (
             <EmptyState
+              icon="magnifyingglass"
               message="Search by electorate or member name. Your choice is saved on this device. Device backups may include it."
               testID="seat-empty"
             />
@@ -241,32 +246,31 @@ export default function YourMP() {
               testID="seat-no-results"
             />
           ) : (
-            matches.map((s) => (
-              <Group key={s.electorate_id} gap={4}>
-                <Button
-                  label={s.name}
+            <RowList>
+              {matches.map((s) => (
+                <LinkRow
+                  key={s.electorate_id}
+                  title={s.name}
+                  detail={[
+                    s.representatives.map((r) => r.person.name).join('; ') ||
+                      'No verified representative recorded',
+                    `${chamberName(s.chamber, s.jurisdiction) ?? CHAMBER_NOT_RECORDED} · ${
+                      jurisdictionName(s.state_code) ??
+                      jurisdictionName(s.jurisdiction) ??
+                      'Jurisdiction not recorded'
+                    }`,
+                  ].join('\n')}
                   accessibilityHint={seatContext(s)}
                   testID={`seat-choice-${s.slug}`}
                   onPress={() => void choose(s)}
                   disabled={saving}
                 />
-                <Text wordSafe variant="metadata">
-                  {chamberName(s.chamber, s.jurisdiction) ??
-                    CHAMBER_NOT_RECORDED}{' '}
-                  ·{' '}
-                  {jurisdictionName(s.state_code) ??
-                    jurisdictionName(s.jurisdiction) ??
-                    'Jurisdiction not recorded'}
-                </Text>
-                <Text wordSafe variant="fine">
-                  {s.representatives.map((r) => r.person.name).join('; ') ||
-                    'No verified representative recorded'}
-                </Text>
-              </Group>
-            ))
+              ))}
+            </RowList>
           )}
           {!stateChoosing ? (
             <SourceLink
+              label="Check your electorate with the AEC"
               citation="AEC electorate finder"
               url="https://electorate.aec.gov.au/"
               kind="register"
@@ -275,6 +279,7 @@ export default function YourMP() {
           {choice ? (
             <Button
               label="Cancel"
+              variant="quiet"
               onPress={() => {
                 setChoosing(false);
                 setStateChoosing(false);
@@ -287,8 +292,11 @@ export default function YourMP() {
       {chooser && !choice ? <FollowingEntry /> : null}
       {view && directory && !chooser ? (
         <>
-          <Group>
-            <Heading level={2} testID="your-seat-name">
+          <Group gap={rhythm.tight}>
+            <Text variant="kicker" tone="navy">
+              Your electorate
+            </Text>
+            <Heading level={1} testID="your-seat-name">
               {view.seat.data!.name}
             </Heading>
             <Text wordSafe variant="metadata">
@@ -300,20 +308,25 @@ export default function YourMP() {
               {jurisdictionName(view.seat.data!.state_code) ??
                 'Jurisdiction not recorded'}
             </Text>
-            <EvidenceFooter block={view.seat} id="your-seat" />
             {view.seat.data!.status === 'historical' ? (
               <Text wordSafe testID="your-seat-abolished">
                 Abolished; not a current seat. Choose a current electorate to
                 update your saved choice.
               </Text>
             ) : null}
-            <Button
-              label="Electorate record"
-              testID="your-electorate"
-              onPress={() =>
-                router.push(electorateRoute(view.seat.data!.electorate_id))
-              }
-            />
+            <RowList>
+              <LinkRow
+                title="Electorate record"
+                detail="Outline, elections and local context"
+                icon="map"
+                accent="places"
+                testID="your-electorate"
+                onPress={() =>
+                  router.push(electorateRoute(view.seat.data!.electorate_id))
+                }
+              />
+            </RowList>
+            <EvidenceFooter block={view.seat} id="your-seat" />
           </Group>
           {view.seat.data!.chamber !== 'senate' ? (
             <RecordBlock
@@ -322,6 +335,8 @@ export default function YourMP() {
                   ? 'Your representatives'
                   : 'Your member'
               }
+              icon="person.fill"
+              accent="people"
               id="your-member"
               block={view.members}
               missing={
@@ -348,82 +363,111 @@ export default function YourMP() {
               <RecordBlock
                 title="Recent bill votes"
                 id="your-votes"
+                icon="checkmark.square"
+                accent="votes"
                 block={memberProfile.blocks.votes}
                 missing="No recorded bill votes are held for this member."
                 retry={retry}
                 date={false}
+                caption={
+                  memberProfile.blocks.votes.data ? (
+                    <Group gap={rhythm.line}>
+                      {memberProfile.blocks.votes.data.jurisdictions.map(
+                        (jur) => (
+                          <AsAtLine
+                            key={jur}
+                            votes={votingMetaFor(memberProfile.blocks.votes)}
+                            jurisdiction={jur}
+                          />
+                        ),
+                      )}
+                    </Group>
+                  ) : undefined
+                }
+                info={(v) =>
+                  v ? { title: 'About these votes', notes: [v.method] } : null
+                }
               >
                 {(v) => (
-                  <Group>
-                    {[
-                      ...[...v.for]
+                  <Group gap={rhythm.tight}>
+                    <RowList>
+                      {[
+                        ...[...v.for]
+                          .sort((a, b) => b.date.localeCompare(a.date))
+                          .slice(0, 6)
+                          .map((row) => ({ ...row, side: 'Voted for' })),
+                        ...[...v.against]
+                          .sort((a, b) => b.date.localeCompare(a.date))
+                          .slice(0, 6)
+                          .map((row) => ({
+                            ...row,
+                            side: 'Voted against',
+                          })),
+                      ]
                         .sort((a, b) => b.date.localeCompare(a.date))
-                        .slice(0, 6)
-                        .map((row) => ({ ...row, side: 'Voted for' })),
-                      ...[...v.against]
-                        .sort((a, b) => b.date.localeCompare(a.date))
-                        .slice(0, 6)
-                        .map((row) => ({
-                          ...row,
-                          side: 'Voted against',
-                        })),
-                    ]
-                      .sort((a, b) => b.date.localeCompare(a.date))
-                      .map((row, i) => (
-                        <Group key={i} gap={4}>
-                          <Text wordSafe variant="strong">
-                            {row.side} · {row.name}
-                          </Text>
-                          <Text wordSafe variant="metadata">
-                            {row.stage} · {formatDate(row.date!)}
-                          </Text>
-                          {row.billKey ? (
-                            <InlineLink
-                              label="Bill record"
-                              accessibilityLabel={`Bill record: ${row.name}`}
+                        .map((row, i) =>
+                          row.billKey ? (
+                            <LinkRow
+                              key={i}
+                              leading={
+                                <VoteSide
+                                  side={
+                                    row.side === 'Voted for' ? 'for' : 'against'
+                                  }
+                                />
+                              }
+                              title={row.name}
+                              detail={`${row.stage} · ${formatDate(row.date!, 'short')}`}
+                              accessibilityLabel={`${row.side}, ${row.name}, ${row.stage}, ${formatDate(row.date!)}. Bill record`}
                               onPress={() =>
                                 router.push(billRoute(row.billKey!))
                               }
                               testID={`your-mp-bill-${row.billKey}`}
                             />
                           ) : (
-                            <Text wordSafe variant="fine">
-                              Not matched to a bill record
-                            </Text>
-                          )}
-                        </Group>
-                      ))}
+                            <View
+                              key={i}
+                              accessible
+                              accessibilityLabel={`${row.side}, ${row.name}, ${row.stage}, ${formatDate(row.date!)}. Not matched to a bill record`}
+                              style={styles.vote}
+                            >
+                              <VoteSide
+                                side={
+                                  row.side === 'Voted for' ? 'for' : 'against'
+                                }
+                              />
+                              <Text wordSafe variant="strong">
+                                {row.name}
+                              </Text>
+                              <Text wordSafe variant="metadata">
+                                {row.stage} · {formatDate(row.date!, 'short')} ·
+                                Not matched to a bill record
+                              </Text>
+                            </View>
+                          ),
+                        )}
+                    </RowList>
                     {!v.for.length && !v.against.length ? (
                       <EmptyState message="None of their recorded divisions was a vote on a bill itself." />
                     ) : null}
-                    <Text wordSafe>{v.method}</Text>
-                    {v.jurisdictions.map((jur) => (
-                      <Group key={jur} gap={4}>
-                        <Text wordSafe variant="fine">
-                          {jurisdictionName(jur) ?? 'Jurisdiction not recorded'}{' '}
-                          voting record
-                        </Text>
-                        <AsAtLine
-                          votes={votingMetaFor(memberProfile.blocks.votes)}
-                          jurisdiction={jur}
-                        />
-                      </Group>
-                    ))}
                   </Group>
                 )}
               </RecordBlock>
-              <Button
-                label={
-                  registerOpen
-                    ? 'Hide register changes'
-                    : 'Show register changes'
-                }
-                testID="your-register-toggle"
-                onPress={() => {
-                  setRegisterLoadedFor(null);
-                  setRegisterOpen((v) => !v);
-                }}
-              />
+              <RowList>
+                <Disclosure
+                  label="Register changes"
+                  icon="list.clipboard"
+                  accent="interests"
+                  open={registerOpen}
+                  testID="your-register-toggle"
+                  onToggle={(open) => {
+                    setRegisterLoadedFor(null);
+                    setRegisterOpen(open);
+                  }}
+                >
+                  {null}
+                </Disclosure>
+              </RowList>
               {registerOpen && registerLoadedFor !== memberProfile.personId ? (
                 memberFailure?.id === memberProfile.personId ? (
                   <ErrorState message={memberFailure.message} onRetry={retry} />
@@ -435,12 +479,21 @@ export default function YourMP() {
                 <RecordBlock
                   title="Register changes"
                   id="your-register"
+                  icon="list.clipboard"
+                  accent="interests"
                   block={memberProfile.blocks.interests}
                   missing="No register file is held for this member in the covered registers."
                   retry={retry}
+                  info={() => ({
+                    title: 'About register changes',
+                    notes: [
+                      'Changes are shown only where the register records a date.',
+                      'Entries read by OCR from scanned pages may contain transcription errors; check the original register.',
+                    ],
+                  })}
                 >
                   {(r) => (
-                    <Group>
+                    <RowList>
                       {Object.entries(r.buckets)
                         .flatMap(([category, bucket]) =>
                           bucket.items
@@ -452,25 +505,21 @@ export default function YourMP() {
                         )
                         .slice(0, 3)
                         .map((row, i) => (
-                          <Group key={i} gap={4}>
-                            <Text wordSafe>
+                          <Group key={i} gap={rhythm.line}>
+                            <Text wordSafe variant="kicker" tone="interestsInk">
                               {registerCategoryLabel(row.category)} ·{' '}
                               {registerChangeLabel(row.kind)}{' '}
-                              {formatDate(row.date!)}
+                              {formatDate(row.date!, 'short')}
                             </Text>
                             <Text wordSafe>{row.description}</Text>
                             {row.ocr ? (
-                              <Text wordSafe variant="fine">
+                              <Text wordSafe variant="caption">
                                 OCR transcription; check the original register.
                               </Text>
                             ) : null}
                           </Group>
                         ))}
-                      <Text wordSafe variant="fine">
-                        Changes are shown only where the register records a
-                        date.
-                      </Text>
-                    </Group>
+                    </RowList>
                   )}
                 </RecordBlock>
               ) : null}
@@ -482,7 +531,12 @@ export default function YourMP() {
             <LoadingState label="Loading the member’s public record" />
           ) : null}
           {view.seat.data!.status !== 'historical' ? (
-            <Section title="Your senators" testID="your-senators">
+            <Section
+              title="Your senators"
+              icon="person.2.fill"
+              accent="people"
+              testID="your-senators"
+            >
               {view.senators.length ? (
                 view.senators.map((b, i) => (
                   <Group key={i}>
@@ -498,13 +552,18 @@ export default function YourMP() {
               ) : (
                 <EmptyState message="No verified Senate roster is held for this jurisdiction." />
               )}
-              <Text wordSafe testID="your-senators-end" variant="fine">
+              <Text wordSafe testID="your-senators-end" variant="caption">
                 Senators are shown as recorded in the dated release.
               </Text>
             </Section>
           ) : null}
           {view.seat.data!.status !== 'historical' ? (
-            <Section title="State members" testID="your-state">
+            <Section
+              title="State members"
+              icon="building.columns"
+              accent="people"
+              testID="your-state"
+            >
               {view.stateRosterVerified ? (
                 <>
                   {view.stateMembers.map((b, i) => (
@@ -519,6 +578,9 @@ export default function YourMP() {
                       {choice && selectedStateSeats[i] ? (
                         <Button
                           label={`Remove ${selectedStateSeats[i]!.name}`}
+                          variant="quiet"
+                          size="compact"
+                          icon="minus.circle"
                           testID={`remove-state-seat-${selectedStateSeats[i]!.electorate_id}`}
                           disabled={saving}
                           onPress={() =>
@@ -542,6 +604,8 @@ export default function YourMP() {
                   ) : null}
                   <Button
                     label="Choose state electorate"
+                    icon="plus"
+                    size="compact"
                     testID="choose-state-seat"
                     onPress={() => {
                       setStateChoosing(true);
@@ -562,13 +626,15 @@ export default function YourMP() {
           <FollowingEntry />
           <Button
             label="Change seat"
+            variant="quiet"
+            icon="arrow.triangle.2.circlepath"
             testID="change-seat"
             onPress={() => {
               setChoosing(true);
               setQuery('');
             }}
           />
-          <Text wordSafe variant="fine" testID="your-mp-end">
+          <Text wordSafe variant="caption" testID="your-mp-end">
             Your choice is saved on this device. Device backups may include it.
           </Text>
         </>
@@ -576,3 +642,6 @@ export default function YourMP() {
     </Screen>
   );
 }
+const styles = StyleSheet.create({
+  vote: { gap: rhythm.line, paddingVertical: rhythm.tight + 2 },
+});

@@ -28,9 +28,12 @@ name: 03 Read a sourced profile
 - assertVisible:
     id: person-source
 - takeScreenshot: ${EVIDENCE}/03-source
-# Sources open in the in-app browser; e2e shows the destination locally.
+# The profile's original records open from one small "View original": with
+# several, a native menu names each. Sources open in the in-app browser; e2e
+# shows the destination locally.
 - tapOn:
     id: person-source
+- tapOn: OpenAustralia parliamentary service records
 - extendedWaitUntil:
     visible:
       id: source-destination-url

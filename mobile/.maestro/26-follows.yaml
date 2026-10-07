@@ -100,14 +100,15 @@ name: 26 Follow a member, a bill and an electorate; Today shows what changed
     timeout: 15000
 - takeScreenshot: ${EVIDENCE}/26-person-following
 
-# An electorate, from the member's seat.
+# An electorate, from the member's seat row ("Grayndler electorate, House
+# of Representatives, …").
 - scrollUntilVisible:
     element:
-      text: Grayndler electorate
+      text: Grayndler electorate.*
     timeout: 90000
     centerElement: true
     speed: 20
-- tapOn: Grayndler electorate
+- tapOn: Grayndler electorate.*
 - extendedWaitUntil:
     visible:
       id: electorate-name
