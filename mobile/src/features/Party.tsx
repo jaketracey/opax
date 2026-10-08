@@ -4,6 +4,7 @@ import { RecordSection, NewsSection } from './people/Sections';
 import { FollowToggle } from './follows/FollowToggle';
 import { AskAbout } from './ask/AskAbout';
 import { CachedPortrait } from './CachedPortrait';
+import { profileGrid } from './split/grid';
 import { headerItems } from '../navigation/chrome';
 import { useCallback, useEffect, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
@@ -33,6 +34,7 @@ import {
   LinkRow,
   LoadingState,
   OpaxWebLink,
+  PadGrid,
   PersonRow,
   RowList,
   Screen,
@@ -111,7 +113,14 @@ export default function Party() {
   }>();
   return <PartyPage key={slug} input={name ?? slug} />;
 }
-export function PartyPage({ input }: { input: string }) {
+export function PartyPage({
+  input,
+  embedded = false,
+}: {
+  input: string;
+  /** In an iPad split pane: no navigation bar items, no automatic web hop. */
+  embedded?: boolean;
+}) {
   const load = useCallback(
     (refresh: boolean, publish: (record: PartyPageRecord) => void) =>
       catalogs.partyPage(input, refresh, publish),
@@ -127,23 +136,28 @@ export function PartyPage({ input }: { input: string }) {
   const webPath = `/subject/party/${encodeURIComponent(view?.label ?? input)}`;
   // A resolved catalog absence is different from a failed read. Only the
   // former automatically follows the existing web fallback.
+  // A pane never leaves the app on its own: it shows the web link instead.
   useEffect(() => {
-    if (record && record.data === null) void openOnWeb(webPath, input);
-  }, [record, webPath, input]);
+    if (!embedded && record && record.data === null)
+      void openOnWeb(webPath, input);
+  }, [embedded, record, webPath, input]);
   return (
     <>
-      <Stack.Screen
-        options={{
-          title: view?.label ?? '',
-          headerTitle: '',
-          ...headerItems(
-            view
-              ? () => [shareHeaderItem({ path: webPath, title: view.label })]
-              : undefined,
-          ),
-        }}
-      />
+      {embedded ? null : (
+        <Stack.Screen
+          options={{
+            title: view?.label ?? '',
+            headerTitle: '',
+            ...headerItems(
+              view
+                ? () => [shareHeaderItem({ path: webPath, title: view.label })]
+                : undefined,
+            ),
+          }}
+        />
+      )}
       <Screen
+        column="wide"
         testID="party-screen"
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={refresh} />
@@ -205,182 +219,187 @@ export function PartyPage({ input }: { input: string }) {
               />
             </View>
             <AskAbout kind="party" name={view.label} />
-            <Section
-              title="Members"
-              accent="people"
-              info={{
-                title: 'About the member count',
-                notes: [
-                  'Current members use their current party. A directory snapshot is not a live roster. Undated affiliations appear separately as recorded; former members are excluded.',
-                ],
-                testID: 'party-members-info',
-              }}
-            >
-              <CatalogState
-                block={view.members}
-                empty="No member observations held."
-                onRetry={retry}
-                testID="party-members"
+            {/* iPad: members beside receipts, then associated entities
+                beside the divisions (PadGrid; the phone is unchanged). */}
+            <PadGrid {...profileGrid}>
+              <Section
+                title="Members"
+                accent="people"
+                info={{
+                  title: 'About the member count',
+                  notes: [
+                    'Current members use their current party. A directory snapshot is not a live roster. Undated affiliations appear separately as recorded; former members are excluded.',
+                  ],
+                  testID: 'party-members-info',
+                }}
               >
-                {(data) => (
-                  <>
-                    <BigFigure
-                      value={formatCount(data.currentCount)}
-                      label="current members with current evidence"
-                      detail={
-                        view.rosterAsAt
-                          ? `Roster as at ${formatDate(view.rosterAsAt, 'short')}`
-                          : undefined
-                      }
-                      accessibilityLabel={`${formatCount(data.currentCount)} current members with current evidence`}
-                      accent="people"
-                      testID="party-current-count"
-                    />
-                    <RowList>
-                      <Disclosure
-                        label="Current members"
-                        value={formatCount(data.current.length)}
-                        open={membersOpen}
-                        onToggle={setMembersOpen}
-                        testID="party-current-toggle"
-                      >
-                        {() =>
-                          data.current.length ? (
-                            <Members rows={data.current} />
-                          ) : (
-                            <EmptyState message="No current member evidence is held for this party." />
-                          )
+                <CatalogState
+                  block={view.members}
+                  empty="No member observations held."
+                  onRetry={retry}
+                  testID="party-members"
+                >
+                  {(data) => (
+                    <>
+                      <BigFigure
+                        value={formatCount(data.currentCount)}
+                        label="current members with current evidence"
+                        detail={
+                          view.rosterAsAt
+                            ? `Roster as at ${formatDate(view.rosterAsAt, 'short')}`
+                            : undefined
                         }
-                      </Disclosure>
-                      {data.recorded.length ? (
-                        <Disclosure
-                          label="Recorded affiliations"
-                          value={formatCount(data.recorded.length)}
-                          open={recordedOpen}
-                          onToggle={setRecordedOpen}
-                          testID="party-recorded-toggle"
-                        >
-                          {() => <Members rows={data.recorded} recorded />}
-                        </Disclosure>
-                      ) : null}
-                    </RowList>
-                  </>
-                )}
-              </CatalogState>
-            </Section>
-            <Section
-              title="Party receipts"
-              accent="money"
-              info={
-                view.moneyMeta
-                  ? {
-                      title: 'About party receipts',
-                      notes: [
-                        'Top donors are the displayed donor-to-party flows, not all party receipts. No sequence or causal link is inferred.',
-                        disclosureYearNote,
-                      ],
-                      testID: 'party-receipts-info',
-                    }
-                  : undefined
-              }
-            >
-              <CatalogState
-                block={view.receipts}
-                empty="No receipts total is recorded for this party in the money graph."
-                onRetry={retry}
-                testID="party-receipts"
-              >
-                {(data) => (
-                  <>
-                    <BigFigure
-                      value={formatMoney(data.node.total)}
-                      label={partyPageCopy.caption}
-                      accessibilityLabel={`${partyPageCopy.caption}, ${formatMoney(data.node.total)}`}
-                      accent="money"
-                      testID="party-receipts-total"
-                    />
-                    <KeyValueList
-                      items={[
-                        {
-                          label: 'Rank',
-                          value: `#${data.rank} of ${data.parties} parties`,
-                        },
-                        {
-                          label: 'Donations counted',
-                          value: formatCount(data.node.count),
-                        },
-                        ...(data.node.firstYear !== undefined &&
-                        data.node.lastYear !== undefined
-                          ? [
-                              {
-                                label: 'Active years',
-                                value: `${data.node.firstYear}–${data.node.lastYear}`,
-                              },
-                            ]
-                          : []),
-                      ]}
-                    />
-                    <SubSection title="Where it came from">
+                        accessibilityLabel={`${formatCount(data.currentCount)} current members with current evidence`}
+                        accent="people"
+                        testID="party-current-count"
+                      />
                       <RowList>
-                        {data.donors.map((donor) => (
-                          <View
-                            key={donor.id}
-                            accessible
-                            accessibilityLabel={`${donor.name}, ${formatMoney(donor.amount)}`}
-                            style={styles.donor}
+                        <Disclosure
+                          label="Current members"
+                          value={formatCount(data.current.length)}
+                          open={membersOpen}
+                          onToggle={setMembersOpen}
+                          testID="party-current-toggle"
+                        >
+                          {() =>
+                            data.current.length ? (
+                              <Members rows={data.current} />
+                            ) : (
+                              <EmptyState message="No current member evidence is held for this party." />
+                            )
+                          }
+                        </Disclosure>
+                        {data.recorded.length ? (
+                          <Disclosure
+                            label="Recorded affiliations"
+                            value={formatCount(data.recorded.length)}
+                            open={recordedOpen}
+                            onToggle={setRecordedOpen}
+                            testID="party-recorded-toggle"
                           >
-                            <Text wordSafe variant="body" style={styles.grow}>
-                              {donor.name}
-                            </Text>
-                            <Text variant="figureInline" tone="moneyInk">
-                              {formatMoney(donor.amount)}
-                            </Text>
-                          </View>
-                        ))}
+                            {() => <Members rows={data.recorded} recorded />}
+                          </Disclosure>
+                        ) : null}
                       </RowList>
-                    </SubSection>
-                    <RowList>
-                      <Disclosure
-                        label="Top donors by year"
-                        value={formatCount(data.byYear.length)}
-                        open={yearsOpen}
-                        onToggle={setYearsOpen}
-                        testID="party-donor-years-toggle"
-                      >
-                        {() => (
-                          <Group>
-                            {data.byYear.map((row) => (
-                              <SubSection
-                                key={row.year}
-                                title={
-                                  row.year === 'undated'
-                                    ? 'Undated'
-                                    : formatDisclosureYear(Number(row.year))
-                                }
-                              >
-                                <RowList>
-                                  {row.donors.map((donor) => (
-                                    <Text wordSafe key={donor.id}>
-                                      {donor.name}: {formatMoney(donor.amount)}
-                                    </Text>
-                                  ))}
-                                </RowList>
-                              </SubSection>
-                            ))}
-                          </Group>
-                        )}
-                      </Disclosure>
-                    </RowList>
-                  </>
-                )}
-              </CatalogState>
-              <Text wordSafe variant="caption" testID="party-money-caveat">
-                {partyPageCopy.aec}
-              </Text>
-              <RowList>
-                <MoneyMapLink party={view.label} />
-              </RowList>
-            </Section>
+                    </>
+                  )}
+                </CatalogState>
+              </Section>
+              <Section
+                title="Party receipts"
+                accent="money"
+                info={
+                  view.moneyMeta
+                    ? {
+                        title: 'About party receipts',
+                        notes: [
+                          'Top donors are the displayed donor-to-party flows, not all party receipts. No sequence or causal link is inferred.',
+                          disclosureYearNote,
+                        ],
+                        testID: 'party-receipts-info',
+                      }
+                    : undefined
+                }
+              >
+                <CatalogState
+                  block={view.receipts}
+                  empty="No receipts total is recorded for this party in the money graph."
+                  onRetry={retry}
+                  testID="party-receipts"
+                >
+                  {(data) => (
+                    <>
+                      <BigFigure
+                        value={formatMoney(data.node.total)}
+                        label={partyPageCopy.caption}
+                        accessibilityLabel={`${partyPageCopy.caption}, ${formatMoney(data.node.total)}`}
+                        accent="money"
+                        testID="party-receipts-total"
+                      />
+                      <KeyValueList
+                        items={[
+                          {
+                            label: 'Rank',
+                            value: `#${data.rank} of ${data.parties} parties`,
+                          },
+                          {
+                            label: 'Donations counted',
+                            value: formatCount(data.node.count),
+                          },
+                          ...(data.node.firstYear !== undefined &&
+                          data.node.lastYear !== undefined
+                            ? [
+                                {
+                                  label: 'Active years',
+                                  value: `${data.node.firstYear}–${data.node.lastYear}`,
+                                },
+                              ]
+                            : []),
+                        ]}
+                      />
+                      <SubSection title="Where it came from">
+                        <RowList>
+                          {data.donors.map((donor) => (
+                            <View
+                              key={donor.id}
+                              accessible
+                              accessibilityLabel={`${donor.name}, ${formatMoney(donor.amount)}`}
+                              style={styles.donor}
+                            >
+                              <Text wordSafe variant="body" style={styles.grow}>
+                                {donor.name}
+                              </Text>
+                              <Text variant="figureInline" tone="moneyInk">
+                                {formatMoney(donor.amount)}
+                              </Text>
+                            </View>
+                          ))}
+                        </RowList>
+                      </SubSection>
+                      <RowList>
+                        <Disclosure
+                          label="Top donors by year"
+                          value={formatCount(data.byYear.length)}
+                          open={yearsOpen}
+                          onToggle={setYearsOpen}
+                          testID="party-donor-years-toggle"
+                        >
+                          {() => (
+                            <Group>
+                              {data.byYear.map((row) => (
+                                <SubSection
+                                  key={row.year}
+                                  title={
+                                    row.year === 'undated'
+                                      ? 'Undated'
+                                      : formatDisclosureYear(Number(row.year))
+                                  }
+                                >
+                                  <RowList>
+                                    {row.donors.map((donor) => (
+                                      <Text wordSafe key={donor.id}>
+                                        {donor.name}:{' '}
+                                        {formatMoney(donor.amount)}
+                                      </Text>
+                                    ))}
+                                  </RowList>
+                                </SubSection>
+                              ))}
+                            </Group>
+                          )}
+                        </Disclosure>
+                      </RowList>
+                    </>
+                  )}
+                </CatalogState>
+                <Text wordSafe variant="caption" testID="party-money-caveat">
+                  {partyPageCopy.aec}
+                </Text>
+                <RowList>
+                  <MoneyMapLink party={view.label} />
+                </RowList>
+              </Section>
+            </PadGrid>
             <LinkRow
               title="Public money"
               accent="money"
@@ -389,159 +408,163 @@ export function PartyPage({ input }: { input: string }) {
               onPress={() => router.push('/public-money')}
             />
             <PartyFunding name={view.label} />
-            <Section
-              title="Associated entities"
-              accent="money"
-              info={{
-                title: 'About associated entities',
-                notes: [
-                  'These are the entities’ own annual returns. They are not added to the party’s receipts. Names are matched on case, punctuation and company suffixes only; the same body under two spellings appears twice. Debts are the balances owed at 30 June, not new borrowing. Creditors under the disclosure threshold are not itemised.',
-                ],
-                testID: 'party-associated-info',
-              }}
-            >
-              <CatalogState
-                block={view.associated}
-                empty="No associated-entity return is held for this party."
-                onRetry={retry}
-                testID="party-associated"
+            <PadGrid {...profileGrid}>
+              <Section
+                title="Associated entities"
+                accent="money"
+                info={{
+                  title: 'About associated entities',
+                  notes: [
+                    'These are the entities’ own annual returns. They are not added to the party’s receipts. Names are matched on case, punctuation and company suffixes only; the same body under two spellings appears twice. Debts are the balances owed at 30 June, not new borrowing. Creditors under the disclosure threshold are not itemised.',
+                  ],
+                  testID: 'party-associated-info',
+                }}
               >
-                {(data) => (
-                  <>
-                    {!data.rows.length ? (
-                      <EmptyState message="No associated-entity return is held for this party." />
-                    ) : null}
-                    <RowList>
-                      {data.rows.map((entity) => (
-                        <Group key={entity.name} gap={4}>
-                          <OpaxWebLink
-                            label={entity.name}
-                            path={`/subject/campaigner/${encodeURIComponent(entity.name)}`}
-                          />
-                          <Text wordSafe variant="metadata">
-                            {entity.year}
-                            {entity.receipts !== null
-                              ? ` · receipts ${formatMoney(entity.receipts)}`
-                              : ''}
-                            {entity.payments !== null
-                              ? ` · payments ${formatMoney(entity.payments)}`
-                              : ''}
-                            {entity.debts
-                              ? ` · debts ${formatMoney(entity.debts)}`
-                              : ''}
-                          </Text>
-                        </Group>
-                      ))}
-                    </RowList>
-                    {data.total > data.rows.length ? (
-                      <Text wordSafe variant="caption">
-                        {data.total} entities have named {view.label} on an
-                        associated-entity return; the {data.rows.length} with
-                        the largest receipts on their latest return are shown,
-                        each with that return&apos;s year.
-                      </Text>
-                    ) : null}
-                  </>
-                )}
-              </CatalogState>
-            </Section>
-            <Section
-              title="Bills they divided on"
-              accent="votes"
-              info={{
-                title: 'About these divisions',
-                notes: [
-                  view.divisions.data
-                    ? `This party’s own ayes and noes, newest first, read from the ${view.divisions.data.scanned} most recently decided bills the register could open — not the party’s whole voting history, and not every bill it divided on. Party is each member’s recorded affiliation, not a reconstruction of who they sat with on the day. A division on an amendment is not a vote on the bill itself.`
-                    : null,
-                  view.divisions.data?.basisNote,
-                ],
-                testID: 'party-divisions-info',
-              }}
-            >
-              <CatalogState
-                block={view.divisions}
-                empty="Bill divisions could not be read."
-                onRetry={retry}
-                testID="party-divisions"
-              >
-                {(data) => (
-                  <>
-                    {data.rows.length ? (
+                <CatalogState
+                  block={view.associated}
+                  empty="No associated-entity return is held for this party."
+                  onRetry={retry}
+                  testID="party-associated"
+                >
+                  {(data) => (
+                    <>
+                      {!data.rows.length ? (
+                        <EmptyState message="No associated-entity return is held for this party." />
+                      ) : null}
                       <RowList>
-                        {(allDivisions
-                          ? data.rows
-                          : data.rows.slice(0, 10)
-                        ).map((row) => (
-                          <Group
-                            key={`${row.billKey}:${row.division.key}`}
-                            gap={rhythm.line}
-                          >
-                            <LinkRow
-                              title={row.title}
-                              detail={[
-                                row.question ||
-                                  row.division.stage ||
-                                  'Division',
-                                `${formatDate(row.division.date, 'short')} · ${chamberLabel(row.division.house)} · ${
-                                  row.division.outcome === 'affirmative'
-                                    ? 'Agreed to'
-                                    : row.division.outcome === 'negative'
-                                      ? 'Negatived'
-                                      : billSentenceCase(
-                                          row.division.outcome,
-                                        ) || 'Outcome not recorded'
-                                }`,
-                              ].join('\n')}
-                              leading={
-                                <Text variant="chip" tone="votesInk">
-                                  {row.ayes} for, {row.noes} against
-                                </Text>
-                              }
-                              onPress={() =>
-                                router.push(billRoute(row.billKey, 'divisions'))
-                              }
-                              testID={`party-bill-${row.billKey}`}
+                        {data.rows.map((entity) => (
+                          <Group key={entity.name} gap={4}>
+                            <OpaxWebLink
+                              label={entity.name}
+                              path={`/subject/campaigner/${encodeURIComponent(entity.name)}`}
                             />
-                            <SourceLink
-                              citation="They Vote For You"
-                              record={`division, ${formatDate(row.division.date)}`}
-                              url={row.division.url}
-                              kind="record"
-                            />
+                            <Text wordSafe variant="metadata">
+                              {entity.year}
+                              {entity.receipts !== null
+                                ? ` · receipts ${formatMoney(entity.receipts)}`
+                                : ''}
+                              {entity.payments !== null
+                                ? ` · payments ${formatMoney(entity.payments)}`
+                                : ''}
+                              {entity.debts
+                                ? ` · debts ${formatMoney(entity.debts)}`
+                                : ''}
+                            </Text>
                           </Group>
                         ))}
                       </RowList>
-                    ) : (
-                      <EmptyState
-                        message={`No division in the ${data.scanned} most recent bills the register could open records a vote by this party.`}
-                      />
-                    )}
-                    {!allDivisions && data.rows.length > 10 ? (
-                      <Button
-                        label={`Show more (${data.rows.length - 10} more)`}
-                        variant="quiet"
-                        icon="chevron.down"
-                        onPress={() => setAllDivisions(true)}
-                      />
-                    ) : null}
-                    {data.failed ? (
-                      <Text wordSafe variant="caption">
-                        {data.failed} bill files could not be read. This block
-                        is partial.
-                      </Text>
-                    ) : null}
-                    {data.rows.length ? (
-                      <AsAtLine
-                        asOf={data.rows[0]!.division.date}
-                        citation="They Vote For You"
-                        licence="ODbL"
-                      />
-                    ) : null}
-                  </>
-                )}
-              </CatalogState>
-            </Section>
+                      {data.total > data.rows.length ? (
+                        <Text wordSafe variant="caption">
+                          {data.total} entities have named {view.label} on an
+                          associated-entity return; the {data.rows.length} with
+                          the largest receipts on their latest return are shown,
+                          each with that return&apos;s year.
+                        </Text>
+                      ) : null}
+                    </>
+                  )}
+                </CatalogState>
+              </Section>
+              <Section
+                title="Bills they divided on"
+                accent="votes"
+                info={{
+                  title: 'About these divisions',
+                  notes: [
+                    view.divisions.data
+                      ? `This party’s own ayes and noes, newest first, read from the ${view.divisions.data.scanned} most recently decided bills the register could open — not the party’s whole voting history, and not every bill it divided on. Party is each member’s recorded affiliation, not a reconstruction of who they sat with on the day. A division on an amendment is not a vote on the bill itself.`
+                      : null,
+                    view.divisions.data?.basisNote,
+                  ],
+                  testID: 'party-divisions-info',
+                }}
+              >
+                <CatalogState
+                  block={view.divisions}
+                  empty="Bill divisions could not be read."
+                  onRetry={retry}
+                  testID="party-divisions"
+                >
+                  {(data) => (
+                    <>
+                      {data.rows.length ? (
+                        <RowList>
+                          {(allDivisions
+                            ? data.rows
+                            : data.rows.slice(0, 10)
+                          ).map((row) => (
+                            <Group
+                              key={`${row.billKey}:${row.division.key}`}
+                              gap={rhythm.line}
+                            >
+                              <LinkRow
+                                title={row.title}
+                                detail={[
+                                  row.question ||
+                                    row.division.stage ||
+                                    'Division',
+                                  `${formatDate(row.division.date, 'short')} · ${chamberLabel(row.division.house)} · ${
+                                    row.division.outcome === 'affirmative'
+                                      ? 'Agreed to'
+                                      : row.division.outcome === 'negative'
+                                        ? 'Negatived'
+                                        : billSentenceCase(
+                                            row.division.outcome,
+                                          ) || 'Outcome not recorded'
+                                  }`,
+                                ].join('\n')}
+                                leading={
+                                  <Text variant="chip" tone="votesInk">
+                                    {row.ayes} for, {row.noes} against
+                                  </Text>
+                                }
+                                onPress={() =>
+                                  router.push(
+                                    billRoute(row.billKey, 'divisions'),
+                                  )
+                                }
+                                testID={`party-bill-${row.billKey}`}
+                              />
+                              <SourceLink
+                                citation="They Vote For You"
+                                record={`division, ${formatDate(row.division.date)}`}
+                                url={row.division.url}
+                                kind="record"
+                              />
+                            </Group>
+                          ))}
+                        </RowList>
+                      ) : (
+                        <EmptyState
+                          message={`No division in the ${data.scanned} most recent bills the register could open records a vote by this party.`}
+                        />
+                      )}
+                      {!allDivisions && data.rows.length > 10 ? (
+                        <Button
+                          label={`Show more (${data.rows.length - 10} more)`}
+                          variant="quiet"
+                          icon="chevron.down"
+                          onPress={() => setAllDivisions(true)}
+                        />
+                      ) : null}
+                      {data.failed ? (
+                        <Text wordSafe variant="caption">
+                          {data.failed} bill files could not be read. This block
+                          is partial.
+                        </Text>
+                      ) : null}
+                      {data.rows.length ? (
+                        <AsAtLine
+                          asOf={data.rows[0]!.division.date}
+                          citation="They Vote For You"
+                          licence="ODbL"
+                        />
+                      ) : null}
+                    </>
+                  )}
+                </CatalogState>
+              </Section>
+            </PadGrid>
             <PartyAccess name={view.label} />
             <RecordSection name={view.label} kind="party" />
             <NewsSection name={view.label} />

@@ -38,6 +38,8 @@ export function RecordSearchForm({
   initialFilters,
   initialSort = 'relevance',
   initialPage = 1,
+  openInPane,
+  selectedPath,
 }: {
   query: string;
   scope: string;
@@ -49,6 +51,14 @@ export function RecordSearchForm({
   initialFilters?: SearchFilters;
   initialSort?: SearchSort;
   initialPage?: number;
+  /**
+   * iPad split: opens a record in the detail pane and returns true, or
+   * returns false for a record the pane does not draw (it then opens as
+   * before).
+   */
+  openInPane?: (path: string, title: string) => boolean;
+  /** iPad split: whether a result's path is the record in the pane. */
+  selectedPath?: (path: string) => boolean | undefined;
 }) {
   const [filters, setFilters] = useState<SearchFilters>(
     normaliseFilters(
@@ -256,6 +266,7 @@ export function RecordSearchForm({
   async function open(path: string, title: string) {
     const token = seq.current;
     setOpenError(null);
+    if (openInPane?.(path, title)) return;
     try {
       await openSearchPath(path, title);
     } catch (e) {
@@ -346,6 +357,7 @@ export function RecordSearchForm({
             }}
             onPage={(p) => void run(query, filters, p)}
             onOpen={(p, t) => void open(p, t)}
+            selectedPath={selectedPath}
             readMode={readMode}
             onRead={(mode) => {
               setReadMode(mode);

@@ -90,6 +90,7 @@ export function Results({
   summaryAllowed,
   onRecover,
   onExample,
+  selectedPath,
 }: {
   result: RecordResult<RecordsPage>;
   busy: boolean;
@@ -111,6 +112,8 @@ export function Results({
   summaryAllowed: boolean;
   onRecover: (action: 'unquoted' | 'meaning' | 'unfiltered') => void;
   onExample: (q: string) => void;
+  /** iPad split: whether a result is the record in the detail pane. */
+  selectedPath?: (path: string) => boolean | undefined;
 }) {
   const [sortOpen, setSortOpen] = useState(false);
   const reduced = useReduceMotion();
@@ -318,6 +321,7 @@ export function Results({
                   .filter(Boolean)
                   .join(' · ')}
                 testID={`records-result-${r.slug}`}
+                selected={selectedPath?.(r.href || `/doc/${r.slug}`)}
                 onPress={() => onOpen(r.href || `/doc/${r.slug}`, r.title)}
               />
               {readMode === 'briefs' && briefs[r.resource] ? (

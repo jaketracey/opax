@@ -20,6 +20,7 @@ export type KeyCommandId =
   | 'section-5'
   | 'list-up'
   | 'list-down'
+  | 'list-open'
   | 'list-escape';
 
 export const keyCommandSpecs: readonly (KeyCommandSpec & {
@@ -37,9 +38,10 @@ export const keyCommandSpecs: readonly (KeyCommandSpec & {
   { id: 'section-3', input: '3', modifiers: ['command'], title: 'Bills' },
   { id: 'section-4', input: '4', modifiers: ['command'], title: 'Search' },
   { id: 'section-5', input: '5', modifiers: ['command'], title: 'Ask' },
-  // No title: arrows and Escape are not listed in the shortcut overlay.
+  // No title: arrows, Return and Escape are not listed in the shortcut overlay.
   { id: 'list-up', input: 'up', modifiers: [], title: '' },
   { id: 'list-down', input: 'down', modifiers: [], title: '' },
+  { id: 'list-open', input: 'return', modifiers: [], title: '' },
   { id: 'list-escape', input: 'escape', modifiers: [], title: '' },
 ];
 

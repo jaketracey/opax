@@ -33,6 +33,7 @@ import {
   LinkRow,
   LoadingState,
   OpaxWebLink,
+  PadGrid,
   PartyLabel,
   Portrait,
   RowList,
@@ -57,6 +58,7 @@ import {
   expenseGlossaryRoute,
 } from '../navigation/routes';
 import { FollowToggle } from './follows/FollowToggle';
+import { profileGrid } from './split/grid';
 import { EvidenceFooter, RecordBlock } from './your-mp/Evidence';
 import { DeclaredInterests } from './people/DeclaredInterests';
 import {
@@ -147,6 +149,7 @@ export function ProfileScreen({
         />
       )}
       <Screen
+        column="wide"
         testID={identity ? 'person-screen' : 'person-pending-screen'}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={refresh} />
@@ -182,100 +185,110 @@ export function ProfileScreen({
         ) : null}
         {identity && b ? (
           <>
-            <Group gap={rhythm.heading}>
-              <View style={styles.hero}>
-                <CachedPortrait
-                  name={identity.name}
-                  slug={slug}
-                  size="profile"
-                  testID="person-portrait"
-                  retryKey={retry}
-                  ring={partyDot(identity.party)}
-                />
-                {profile.personId ? (
-                  <FollowToggle
-                    kind="person"
-                    id={profile.personId}
-                    title={identity.name}
-                    testID="person-follow"
+            {/* iPad: identity beside the quick facts, then the money,
+                interests and pay blocks in pairs (PadGrid; the phone's
+                blocks are unchanged siblings). */}
+            <PadGrid {...profileGrid}>
+              <Group gap={rhythm.heading}>
+                <View style={styles.hero}>
+                  <CachedPortrait
+                    name={identity.name}
+                    slug={slug}
+                    size="profile"
+                    testID="person-portrait"
+                    retryKey={retry}
+                    ring={partyDot(identity.party)}
                   />
+                  {profile.personId ? (
+                    <FollowToggle
+                      kind="person"
+                      id={profile.personId}
+                      title={identity.name}
+                      testID="person-follow"
+                    />
+                  ) : null}
+                </View>
+                <Group gap={rhythm.line}>
+                  <Heading level={1} testID="person-screen-title">
+                    {identity.name}
+                  </Heading>
+                  <PartyLabel
+                    party={identity.party}
+                    status={identity.partyStatus}
+                    formerly={identity.formerly}
+                    chip
+                    testID="person-party"
+                  />
+                </Group>
+                {identity.seats.length ? (
+                  <RowList>
+                    {identity.seats.map((seat) => {
+                      const named = chamberName(
+                        seat.chamber,
+                        seat.jurisdiction,
+                      );
+                      const chamber = named ?? CHAMBER_NOT_RECORDED;
+                      const place =
+                        jurisdictionName(seat.jurisdiction) ??
+                        'Jurisdiction not recorded';
+                      // A named chamber already says where it sits ("House of
+                      // Representatives", "Victorian Legislative Assembly").
+                      const where = named ? chamber : `${chamber} · ${place}`;
+                      return (
+                        <LinkRow
+                          key={seat.electorate_id}
+                          icon="map"
+                          accent="places"
+                          title={seat.name}
+                          detail={[
+                            where,
+                            identity.seats.length > 1 && seat.as_of
+                              ? `As at ${formatDate(seat.as_of, 'short')}`
+                              : null,
+                          ]
+                            .filter(Boolean)
+                            .join('\n')}
+                          accessibilityLabel={`${seat.name} electorate, ${chamber}, ${place}`}
+                          titleTestID="person-electorate"
+                          detailTestID="person-chamber"
+                          onPress={() =>
+                            router.push(electorateRoute(seat.electorate_id))
+                          }
+                        />
+                      );
+                    })}
+                  </RowList>
+                ) : (
+                  <EmptyState
+                    icon="map"
+                    message="No current electorate observation is held in this release."
+                  />
+                )}
+                {profile.personId === null ? (
+                  <Text wordSafe variant="metadata">
+                    The electorate release does not include this person. Only
+                    the public directory identity is linked here. Other records
+                    may be available on opax.com.au.
+                  </Text>
                 ) : null}
-              </View>
-              <Group gap={rhythm.line}>
-                <Heading level={1} testID="person-screen-title">
-                  {identity.name}
-                </Heading>
-                <PartyLabel
-                  party={identity.party}
-                  status={identity.partyStatus}
-                  formerly={identity.formerly}
-                  chip
-                  testID="person-party"
-                />
-              </Group>
-              {identity.seats.length ? (
-                <RowList>
-                  {identity.seats.map((seat) => {
-                    const named = chamberName(seat.chamber, seat.jurisdiction);
-                    const chamber = named ?? CHAMBER_NOT_RECORDED;
-                    const place =
-                      jurisdictionName(seat.jurisdiction) ??
-                      'Jurisdiction not recorded';
-                    // A named chamber already says where it sits ("House of
-                    // Representatives", "Victorian Legislative Assembly").
-                    const where = named ? chamber : `${chamber} · ${place}`;
-                    return (
-                      <LinkRow
-                        key={seat.electorate_id}
-                        icon="map"
-                        accent="places"
-                        title={seat.name}
-                        detail={[
-                          where,
-                          identity.seats.length > 1 && seat.as_of
-                            ? `As at ${formatDate(seat.as_of, 'short')}`
-                            : null,
-                        ]
-                          .filter(Boolean)
-                          .join('\n')}
-                        accessibilityLabel={`${seat.name} electorate, ${chamber}, ${place}`}
-                        titleTestID="person-electorate"
-                        detailTestID="person-chamber"
-                        onPress={() =>
-                          router.push(electorateRoute(seat.electorate_id))
-                        }
-                      />
-                    );
-                  })}
-                </RowList>
-              ) : (
-                <EmptyState
-                  icon="map"
-                  message="No current electorate observation is held in this release."
-                />
-              )}
-              {profile.personId === null ? (
-                <Text wordSafe variant="metadata">
-                  The electorate release does not include this person. Only the
-                  public directory identity is linked here. Other records may be
-                  available on opax.com.au.
+                <Text wordSafe variant="caption">
+                  These are dated public records. Representation may have
+                  changed since collection.
                 </Text>
-              ) : null}
-              <Text wordSafe variant="caption">
-                These are dated public records. Representation may have changed
-                since collection.
-              </Text>
-              <EvidenceFooter block={b.identity} id="person" />
-              <AskAbout kind="person" name={identity.name} />
-            </Group>
-            <QuickFacts identity={identity} />
-            <PartyReceiptsBlock
-              block={b.partyReceipts}
-              retry={refresh}
-              id="person-receipts"
-              jurisdiction={identity.seats[0]?.jurisdiction}
-            />
-            <PersonTopics name={identity.name} />
+                <EvidenceFooter block={b.identity} id="person" />
+                <AskAbout kind="person" name={identity.name} />
+              </Group>
+              <QuickFacts identity={identity} />
+            </PadGrid>
+            <PadGrid {...profileGrid}>
+              <PartyReceiptsBlock
+                block={b.partyReceipts}
+                retry={refresh}
+                id="person-receipts"
+                jurisdiction={identity.seats[0]?.jurisdiction}
+              />
+              <PersonTopics name={identity.name} />
+            </PadGrid>
             <RecordBlock
               title="Voting record"
               id="person-votes"
@@ -398,198 +411,205 @@ export function ProfileScreen({
             {b.votes.data === null ? (
               <AsAtLine votes={null} testID="person-votes-as-at" />
             ) : null}
-            <RecordBlock
-              title="Declared interests"
-              id="person-interests"
-              accent="interests"
-              partialMissing={partialMissing}
-              block={b.interests}
-              missing="No register file is held for this person in the covered registers."
-              retry={refresh}
-            >
-              {(r) => <DeclaredInterests register={r} />}
-            </RecordBlock>
-            <RecordBlock
-              title="Declared ties"
-              id="person-ties"
-              accent="interests"
-              partialMissing={partialMissing}
-              block={b.ties}
-              missing={
-                b.interests.data
-                  ? 'No declared organisation ties are held in this register file.'
-                  : 'No linked register file is available for declared organisation ties.'
-              }
-              retry={refresh}
-            >
-              {(ties) => (
-                <Group>
-                  <Text wordSafe variant="metadata">
-                    Declared ties are public disclosures, not findings of
-                    wrongdoing.
-                  </Text>
-                  <RowList>
-                    <Disclosure
-                      label="Declared organisations"
-                      value={formatCount(ties.length)}
-                      testID="person-ties-detail"
-                    >
-                      {() => (
-                        <RowList>
-                          {ties.map((tie, i) => (
-                            <Group key={i} gap={rhythm.line}>
-                              <Text wordSafe variant="strong">
-                                {tie.organisation}
-                              </Text>
-                              <Text wordSafe variant="caption">
-                                {tie.kinds.join('; ')}
-                              </Text>
-                              {tie.declarations.map((d, j) => (
-                                <Text wordSafe key={j}>
-                                  {d.category}: {d.description}
+            <PadGrid {...profileGrid}>
+              <RecordBlock
+                title="Declared interests"
+                id="person-interests"
+                accent="interests"
+                partialMissing={partialMissing}
+                block={b.interests}
+                missing="No register file is held for this person in the covered registers."
+                retry={refresh}
+              >
+                {(r) => <DeclaredInterests register={r} />}
+              </RecordBlock>
+              <RecordBlock
+                title="Declared ties"
+                id="person-ties"
+                accent="interests"
+                partialMissing={partialMissing}
+                block={b.ties}
+                missing={
+                  b.interests.data
+                    ? 'No declared organisation ties are held in this register file.'
+                    : 'No linked register file is available for declared organisation ties.'
+                }
+                retry={refresh}
+              >
+                {(ties) => (
+                  <Group>
+                    <Text wordSafe variant="metadata">
+                      Declared ties are public disclosures, not findings of
+                      wrongdoing.
+                    </Text>
+                    <RowList>
+                      <Disclosure
+                        label="Declared organisations"
+                        value={formatCount(ties.length)}
+                        testID="person-ties-detail"
+                      >
+                        {() => (
+                          <RowList>
+                            {ties.map((tie, i) => (
+                              <Group key={i} gap={rhythm.line}>
+                                <Text wordSafe variant="strong">
+                                  {tie.organisation}
                                 </Text>
-                              ))}
-                            </Group>
-                          ))}
-                        </RowList>
-                      )}
-                    </Disclosure>
-                  </RowList>
-                </Group>
-              )}
-            </RecordBlock>
+                                <Text wordSafe variant="caption">
+                                  {tie.kinds.join('; ')}
+                                </Text>
+                                {tie.declarations.map((d, j) => (
+                                  <Text wordSafe key={j}>
+                                    {d.category}: {d.description}
+                                  </Text>
+                                ))}
+                              </Group>
+                            ))}
+                          </RowList>
+                        )}
+                      </Disclosure>
+                    </RowList>
+                  </Group>
+                )}
+              </RecordBlock>
+            </PadGrid>
             <RecordSection name={identity.name} kind="speeches" />
             <PersonDiary identity={identity} />
             <NewsSection name={identity.name} />
-            <PayBlock block={b.pay} retry={refresh} id="person-pay" />
-            <RecordBlock
-              title="Claimed expenses"
-              id="person-expenses"
-              accent="money"
-              partialMissing={partialMissing}
-              block={b.expenses}
-              missing="No expense summary is held for this person. IPEA coverage starts in April 2017."
-              retry={refresh}
-              info={(e) =>
-                e
-                  ? {
-                      title: 'About these expenses',
-                      notes: [
-                        `Coverage: ${e.coverage.from} to ${e.coverage.to}.`,
-                        e.note,
-                        `Benchmark: ${formatCount(e.benchmarks.count)} members with records through ${e.benchmarks.latestQuarter}, starting in ${e.benchmarks.fromCutoff} or earlier. Partial calendar years can affect the comparison. The recorded annual average is the supplied total divided by its covered calendar years. This comparison is a lead, not a finding.`,
-                      ],
-                    }
-                  : null
-              }
-            >
-              {(e) => (
-                <Group>
-                  <BigFigure
-                    value={formatMoney(e.person.total)}
-                    spoken={moneyAccessibilityLabel(e.person.total)}
-                    label={`Recorded expenses, ${formatYearRange(e.person.from, e.person.to)}`}
-                    accent="money"
-                  />
-                  <KeyValueList
-                    items={[
-                      {
-                        label: 'Recorded annual average',
-                        value: `about ${formatMoney(e.annual)}`,
-                      },
-                      {
-                        label: 'Benchmark annual median',
-                        value: formatMoney(e.benchmarks.totalMedian),
-                      },
-                    ]}
-                  />
-                  <Text wordSafe variant="caption">
-                    The comparison is a lead, not a finding.
-                  </Text>
-                  <RowList>
-                    <LinkRow
-                      title="Expense category glossary"
-                      icon="list.bullet"
+            <PadGrid {...profileGrid}>
+              <PayBlock block={b.pay} retry={refresh} id="person-pay" />
+              <RecordBlock
+                title="Claimed expenses"
+                id="person-expenses"
+                accent="money"
+                partialMissing={partialMissing}
+                block={b.expenses}
+                missing="No expense summary is held for this person. IPEA coverage starts in April 2017."
+                retry={refresh}
+                info={(e) =>
+                  e
+                    ? {
+                        title: 'About these expenses',
+                        notes: [
+                          `Coverage: ${e.coverage.from} to ${e.coverage.to}.`,
+                          e.note,
+                          `Benchmark: ${formatCount(e.benchmarks.count)} members with records through ${e.benchmarks.latestQuarter}, starting in ${e.benchmarks.fromCutoff} or earlier. Partial calendar years can affect the comparison. The recorded annual average is the supplied total divided by its covered calendar years. This comparison is a lead, not a finding.`,
+                        ],
+                      }
+                    : null
+                }
+              >
+                {(e) => (
+                  <Group>
+                    <BigFigure
+                      value={formatMoney(e.person.total)}
+                      spoken={moneyAccessibilityLabel(e.person.total)}
+                      label={`Recorded expenses, ${formatYearRange(e.person.from, e.person.to)}`}
                       accent="money"
-                      testID="person-expense-glossary"
-                      onPress={() => router.push(expenseGlossaryRoute)}
                     />
-                    <Disclosure
-                      label="Expenses by year"
-                      value={formatCount(e.person.by_year.length)}
-                      testID="person-expense-years"
-                    >
-                      {() => (
-                        <KeyValueList
-                          items={e.person.by_year.map(([y, a]) => ({
-                            label: String(y),
-                            value: formatMoney(a),
-                          }))}
-                        />
-                      )}
-                    </Disclosure>
-                    <Disclosure
-                      label="Expense categories"
-                      value={formatCount(e.person.by_category.length)}
-                      testID="person-expense-categories"
-                    >
-                      {() => (
-                        <RowList>
-                          {e.person.by_category.map(([name, amount]) => {
-                            const category = e.categories?.categories.find(
-                              (c) => c.name === name,
-                            );
-                            return (
-                              <Group key={name} gap={rhythm.line}>
-                                <View style={styles.category}>
-                                  <Text
-                                    wordSafe
-                                    variant="strong"
-                                    style={styles.grow}
-                                  >
-                                    {name}
-                                  </Text>
-                                  <Text variant="figureInline" tone="moneyInk">
-                                    {formatMoney(amount)}
-                                  </Text>
-                                </View>
-                                {category ? (
-                                  <>
-                                    <Text wordSafe variant="metadata">
-                                      {category.text}
+                    <KeyValueList
+                      items={[
+                        {
+                          label: 'Recorded annual average',
+                          value: `about ${formatMoney(e.annual)}`,
+                        },
+                        {
+                          label: 'Benchmark annual median',
+                          value: formatMoney(e.benchmarks.totalMedian),
+                        },
+                      ]}
+                    />
+                    <Text wordSafe variant="caption">
+                      The comparison is a lead, not a finding.
+                    </Text>
+                    <RowList>
+                      <LinkRow
+                        title="Expense category glossary"
+                        icon="list.bullet"
+                        accent="money"
+                        testID="person-expense-glossary"
+                        onPress={() => router.push(expenseGlossaryRoute)}
+                      />
+                      <Disclosure
+                        label="Expenses by year"
+                        value={formatCount(e.person.by_year.length)}
+                        testID="person-expense-years"
+                      >
+                        {() => (
+                          <KeyValueList
+                            items={e.person.by_year.map(([y, a]) => ({
+                              label: String(y),
+                              value: formatMoney(a),
+                            }))}
+                          />
+                        )}
+                      </Disclosure>
+                      <Disclosure
+                        label="Expense categories"
+                        value={formatCount(e.person.by_category.length)}
+                        testID="person-expense-categories"
+                      >
+                        {() => (
+                          <RowList>
+                            {e.person.by_category.map(([name, amount]) => {
+                              const category = e.categories?.categories.find(
+                                (c) => c.name === name,
+                              );
+                              return (
+                                <Group key={name} gap={rhythm.line}>
+                                  <View style={styles.category}>
+                                    <Text
+                                      wordSafe
+                                      variant="strong"
+                                      style={styles.grow}
+                                    >
+                                      {name}
                                     </Text>
-                                    {category.note ? (
-                                      <Text wordSafe variant="caption">
-                                        {category.note}
+                                    <Text
+                                      variant="figureInline"
+                                      tone="moneyInk"
+                                    >
+                                      {formatMoney(amount)}
+                                    </Text>
+                                  </View>
+                                  {category ? (
+                                    <>
+                                      <Text wordSafe variant="metadata">
+                                        {category.text}
                                       </Text>
-                                    ) : null}
-                                  </>
-                                ) : (
-                                  <Text wordSafe variant="caption">
-                                    Category definition not held.
-                                  </Text>
-                                )}
-                              </Group>
-                            );
-                          })}
-                          {e.categories ? (
-                            <AsAtLine
-                              asOf={e.categories.meta.updated}
-                              citation={e.categories.meta.source}
-                              licence={e.categories.meta.licence}
-                            />
-                          ) : (
-                            <Text wordSafe variant="caption">
-                              Category definitions could not be loaded.
-                            </Text>
-                          )}
-                        </RowList>
-                      )}
-                    </Disclosure>
-                  </RowList>
-                </Group>
-              )}
-            </RecordBlock>
+                                      {category.note ? (
+                                        <Text wordSafe variant="caption">
+                                          {category.note}
+                                        </Text>
+                                      ) : null}
+                                    </>
+                                  ) : (
+                                    <Text wordSafe variant="caption">
+                                      Category definition not held.
+                                    </Text>
+                                  )}
+                                </Group>
+                              );
+                            })}
+                            {e.categories ? (
+                              <AsAtLine
+                                asOf={e.categories.meta.updated}
+                                citation={e.categories.meta.source}
+                                licence={e.categories.meta.licence}
+                              />
+                            ) : (
+                              <Text wordSafe variant="caption">
+                                Category definitions could not be loaded.
+                              </Text>
+                            )}
+                          </RowList>
+                        )}
+                      </Disclosure>
+                    </RowList>
+                  </Group>
+                )}
+              </RecordBlock>
+            </PadGrid>
             <RecordSection name={identity.name} kind="mentions" />
             <Section>
               <RowList>

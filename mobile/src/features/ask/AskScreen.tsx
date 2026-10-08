@@ -5,6 +5,7 @@ import {
   AccessibilityInfo,
   Alert,
   Keyboard,
+  KeyboardAvoidingView,
   StyleSheet,
   View,
   ScrollView,
@@ -33,7 +34,15 @@ import {
   LinkRow,
   RowList,
 } from '../../design/primitives';
-import { layout, rhythm, spacing } from '../../design/tokens';
+import { colors, hairline, layout, rhythm, spacing } from '../../design/tokens';
+import {
+  LayoutRegion,
+  SidebarSafe,
+  columns,
+  isPad,
+  useLayout,
+} from '../../design/adaptive';
+import { AskPaneProvider, useAskSources } from './SourcesPane';
 import { useReduceMotion } from '../../design/accessibility';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { AskProgress } from './AskProgress';
@@ -104,6 +113,12 @@ export default function AskScreen() {
   // Cmd-N on iPad (src/navigation/KeyboardShortcuts.tsx) focuses the question.
   const questionInput = useRef<TextInput>(null);
   useFocusRequest('ask', questionInput);
+  // iPad regular width: the conversation beside its sources, the composer
+  // docked under the conversation.
+  const regular = useLayout().regular;
+  const docked = isPad && regular;
+  const sources = useAskSources(s.thread);
+  const noTarget = useRef<View>(null);
   const scroll = useRef<ScrollView>(null),
     submitTarget = useRef<View>(null),
     followupTarget = useRef<View>(null),
@@ -376,223 +391,228 @@ export default function AskScreen() {
         turn={turn}
         question={s.thread[i - 1]!}
         people={people}
+        index={i}
       />
     );
   }
   const communityAccount = account.status
     ? !!(account.status.signedIn || account.status.accountHeld)
     : accountSynced;
-  return (
-    <>
-      <Stack.Screen
-        options={{ title: 'Ask', ...headerItems(rootHeaderItems) }}
-      />
-      <KeyboardStableScreen
-        testID="ask-screen"
-        scrollRef={scroll}
-        keyboardTarget={editingFollowup ? followupTarget : submitTarget}
-      >
-        <Group gap={rhythm.heading}>
-          <Composer
-            ref={submitTarget}
-            inputRef={questionInput}
-            label="Your question"
-            submitLabel="Ask the record"
-            placeholder="Ask a question about the public record…"
-            value={draft}
-            onChangeText={setDraft}
-            onFocus={() => setEditingFollowup(false)}
-            onSubmit={() => void submit()}
-            busy={s.busy}
-            maxLength={2000}
-            testID="ask-question"
-            submitTestID="ask-submit"
-          />
-          {inputError ? <ErrorState message={inputError} /> : null}
-          <RowList>
-            <LinkRow
-              title="Options"
-              disabled={s.busy}
-              onPress={() => {
-                void loadNames();
-                setOptionsOpen(true);
-              }}
-              testID="ask-options"
-            />
-            <LinkRow
-              title="Your conversations"
-              value={String(saved.chats.length)}
-              disabled={s.busy}
-              onPress={() => void history()}
-              testID="ask-saved"
-            />
-          </RowList>
-          {chips(s.options).map((c) => (
-            <FilterChip
-              key={c.id}
-              filter={c.key.toLowerCase()}
-              value={c.id === 'topic' ? topics[c.value] || c.value : c.value}
-              onRemove={() => askSession.options(clearChip(s.options, c.id))}
-              testID={`ask-chip-${c.id}`}
-            />
-          ))}
-          {chips(s.options).length > 1 ? (
-            <Button
-              label="Clear all"
-              onPress={() => askSession.options({ ...defaultOptions })}
-            />
-          ) : null}
-          {s.thread.length ? (
-            <Button
-              label="Start a new conversation"
-              variant="quiet"
-              disabled={s.busy}
-              onPress={() => {
-                askSession.start();
-                setDraft('');
-                scrollToTop();
-              }}
-              testID="ask-new"
-            />
-          ) : null}
-        </Group>
-        {!s.thread.length && !s.busy && !s.error ? (
-          <Group gap={rhythm.heading}>
-            <RowList>
-              {sampleQuestions.map((q, i) => (
-                <LinkRow
-                  key={q}
-                  title={q}
-                  onPress={() => void submit(q)}
-                  testID={`ask-sample-${i}`}
-                />
-              ))}
-              <Disclosure
-                label="Build a question"
-                icon="text.badge.plus"
-                accent="people"
-                open={builderOpen}
-                onToggle={(open) => {
-                  if (open) void loadNames();
-                  setBuilderOpen(open);
-                }}
-                testID="ask-builder-toggle"
-              >
-                <Group>
-                  {namesBusy ? (
-                    <LoadingState label="Loading names from the record" />
-                  ) : null}
-                  {namesError ? (
-                    <ErrorState
-                      message={namesError}
-                      onRetry={() => void loadNames()}
-                    />
-                  ) : null}
-                  <Builder
-                    people={names}
-                    bills={bills}
-                    onSubmit={(q) => void submit(q)}
-                    busy={s.busy}
-                  />
-                </Group>
-              </Disclosure>
-            </RowList>
-          </Group>
-        ) : null}
-        {earlier.map((turn, i) => renderTurn(turn, i))}
-        {current.length || s.busy || s.error || s.notice || s.clarify ? (
-          <View
-            testID="ask-turn"
-            style={[
-              styles.turn,
-              s.thread.length || s.busy || s.error
-                ? {
-                    // Room below the turn for it to sit under the header
-                    // whatever the answer's length, so the reveal never
-                    // scrolls past the end of the content.
-                    minHeight: Math.max(
-                      0,
-                      windowHeight - headerBottom - rhythm.heading - spacing.s7,
-                    ),
-                  }
-                : null,
-            ]}
-            onLayout={(e: LayoutChangeEvent) => {
-              turnY.current = e.nativeEvent.layout.y;
-              revealTurn();
+  const composer = (
+    <Composer
+      ref={submitTarget}
+      inputRef={questionInput}
+      label="Your question"
+      submitLabel="Ask the record"
+      placeholder="Ask a question about the public record…"
+      value={draft}
+      onChangeText={setDraft}
+      onFocus={() => setEditingFollowup(false)}
+      onSubmit={() => void submit()}
+      busy={s.busy}
+      maxLength={2000}
+      testID="ask-question"
+      submitTestID="ask-submit"
+    />
+  );
+  const conversation = (
+    <KeyboardStableScreen
+      testID="ask-screen"
+      scrollRef={scroll}
+      keyboardTarget={
+        docked ? noTarget : editingFollowup ? followupTarget : submitTarget
+      }
+      onScroll={docked ? sources.onScroll : undefined}
+    >
+      <Group gap={rhythm.heading}>
+        {docked ? null : composer}
+        {inputError ? <ErrorState message={inputError} /> : null}
+        <RowList>
+          <LinkRow
+            title="Options"
+            disabled={s.busy}
+            onPress={() => {
+              void loadNames();
+              setOptionsOpen(true);
             }}
-          >
-            {current.map((turn, i) => renderTurn(turn, split + i))}
-            {failed && retryQuestion ? (
-              <Heading level={2} testID="ask-failed-question">
-                {retryQuestion}
-              </Heading>
-            ) : null}
-            {s.clarify && !s.busy ? (
-              <Group testID="ask-clarify">
-                <Heading level={2} testID="ask-clarify-question">
-                  {s.clarify.question}
-                </Heading>
-                <EmptyState
-                  icon="text.bubble"
-                  message={clarifyCopy(!!s.clarify.suggestion)}
-                  testID="ask-clarify-message"
-                />
-                {s.clarify.suggestion ? (
-                  <RowList>
-                    <LinkRow
-                      title={s.clarify.suggestion}
-                      onPress={() => void submit(s.clarify!.suggestion)}
-                      accessibilityHint="Asks this question"
-                      testID="ask-clarify-suggestion"
-                    />
-                  </RowList>
-                ) : null}
-              </Group>
-            ) : null}
-            {s.busy ? (
-              <AskProgress
-                stage={s.stage}
-                reading={s.reading}
-                streaming={s.streaming}
-                onCancel={() => askSession.cancel()}
+            testID="ask-options"
+          />
+          <LinkRow
+            title="Your conversations"
+            value={String(saved.chats.length)}
+            disabled={s.busy}
+            onPress={() => void history()}
+            testID="ask-saved"
+          />
+        </RowList>
+        {chips(s.options).map((c) => (
+          <FilterChip
+            key={c.id}
+            filter={c.key.toLowerCase()}
+            value={c.id === 'topic' ? topics[c.value] || c.value : c.value}
+            onRemove={() => askSession.options(clearChip(s.options, c.id))}
+            testID={`ask-chip-${c.id}`}
+          />
+        ))}
+        {chips(s.options).length > 1 ? (
+          <Button
+            label="Clear all"
+            onPress={() => askSession.options({ ...defaultOptions })}
+          />
+        ) : null}
+        {s.thread.length ? (
+          <Button
+            label="Start a new conversation"
+            variant="quiet"
+            disabled={s.busy}
+            onPress={() => {
+              askSession.start();
+              setDraft('');
+              scrollToTop();
+            }}
+            testID="ask-new"
+          />
+        ) : null}
+      </Group>
+      {!s.thread.length && !s.busy && !s.error ? (
+        <Group gap={rhythm.heading}>
+          <RowList>
+            {sampleQuestions.map((q, i) => (
+              <LinkRow
+                key={q}
+                title={q}
+                onPress={() => void submit(q)}
+                testID={`ask-sample-${i}`}
               />
-            ) : null}
-            {s.error ? (
-              <Group testID={`ask-error-${s.error.code}`}>
-                <ErrorState
-                  message={
-                    s.error.code === 'partial' && s.streaming
-                      ? `${s.error.message} This is an incomplete answer.`
-                      : s.error.message
-                  }
-                />
-                {s.streaming ? (
-                  <Text wordSafe selectable>
-                    {s.streaming}
-                  </Text>
+            ))}
+            <Disclosure
+              label="Build a question"
+              icon="text.badge.plus"
+              accent="people"
+              open={builderOpen}
+              onToggle={(open) => {
+                if (open) void loadNames();
+                setBuilderOpen(open);
+              }}
+              testID="ask-builder-toggle"
+            >
+              <Group>
+                {namesBusy ? (
+                  <LoadingState label="Loading names from the record" />
                 ) : null}
-                <Button
-                  label="Try again"
-                  icon="arrow.clockwise"
-                  onPress={() => void submit(retryQuestion)}
-                  testID="ask-retry"
+                {namesError ? (
+                  <ErrorState
+                    message={namesError}
+                    onRetry={() => void loadNames()}
+                  />
+                ) : null}
+                <Builder
+                  people={names}
+                  bills={bills}
+                  onSubmit={(q) => void submit(q)}
+                  busy={s.busy}
                 />
               </Group>
-            ) : null}
-            {s.notice ? <Text wordSafe>{s.notice}</Text> : null}
-            {answer && !s.busy && !s.error ? (
-              <Section title="Ask next" accent="people" testID="ask-followups">
+            </Disclosure>
+          </RowList>
+        </Group>
+      ) : null}
+      {earlier.map((turn, i) => renderTurn(turn, i))}
+      {current.length || s.busy || s.error || s.notice || s.clarify ? (
+        <View
+          testID="ask-turn"
+          style={[
+            styles.turn,
+            s.thread.length || s.busy || s.error
+              ? {
+                  // Room below the turn for it to sit under the header
+                  // whatever the answer's length, so the reveal never
+                  // scrolls past the end of the content.
+                  minHeight: Math.max(
+                    0,
+                    windowHeight - headerBottom - rhythm.heading - spacing.s7,
+                  ),
+                }
+              : null,
+          ]}
+          onLayout={(e: LayoutChangeEvent) => {
+            turnY.current = e.nativeEvent.layout.y;
+            revealTurn();
+          }}
+        >
+          {current.map((turn, i) => renderTurn(turn, split + i))}
+          {failed && retryQuestion ? (
+            <Heading level={2} testID="ask-failed-question">
+              {retryQuestion}
+            </Heading>
+          ) : null}
+          {s.clarify && !s.busy ? (
+            <Group testID="ask-clarify">
+              <Heading level={2} testID="ask-clarify-question">
+                {s.clarify.question}
+              </Heading>
+              <EmptyState
+                icon="text.bubble"
+                message={clarifyCopy(!!s.clarify.suggestion)}
+                testID="ask-clarify-message"
+              />
+              {s.clarify.suggestion ? (
                 <RowList>
-                  {answer.next?.map((next, i) => (
-                    <LinkRow
-                      key={next.question}
-                      title={next.question}
-                      onPress={() => void submit(next.question, next)}
-                      testID={`ask-followup-${i}`}
-                    />
-                  ))}
+                  <LinkRow
+                    title={s.clarify.suggestion}
+                    onPress={() => void submit(s.clarify!.suggestion)}
+                    accessibilityHint="Asks this question"
+                    testID="ask-clarify-suggestion"
+                  />
                 </RowList>
+              ) : null}
+            </Group>
+          ) : null}
+          {s.busy ? (
+            <AskProgress
+              stage={s.stage}
+              reading={s.reading}
+              streaming={s.streaming}
+              onCancel={() => askSession.cancel()}
+            />
+          ) : null}
+          {s.error ? (
+            <Group testID={`ask-error-${s.error.code}`}>
+              <ErrorState
+                message={
+                  s.error.code === 'partial' && s.streaming
+                    ? `${s.error.message} This is an incomplete answer.`
+                    : s.error.message
+                }
+              />
+              {s.streaming ? (
+                <Text wordSafe selectable>
+                  {s.streaming}
+                </Text>
+              ) : null}
+              <Button
+                label="Try again"
+                icon="arrow.clockwise"
+                onPress={() => void submit(retryQuestion)}
+                testID="ask-retry"
+              />
+            </Group>
+          ) : null}
+          {s.notice ? <Text wordSafe>{s.notice}</Text> : null}
+          {answer && !s.busy && !s.error ? (
+            <Section title="Ask next" accent="people" testID="ask-followups">
+              <RowList>
+                {answer.next?.map((next, i) => (
+                  <LinkRow
+                    key={next.question}
+                    title={next.question}
+                    onPress={() => void submit(next.question, next)}
+                    testID={`ask-followup-${i}`}
+                  />
+                ))}
+              </RowList>
+              {/* On iPad the docked composer asks the follow-up. */}
+              {docked ? null : (
                 <Composer
                   ref={followupTarget}
                   label="Ask a follow-up"
@@ -606,11 +626,48 @@ export default function AskScreen() {
                   testID="ask-followup-field"
                   submitTestID="ask-followup-submit"
                 />
-              </Section>
-            ) : null}
-          </View>
-        ) : null}
-      </KeyboardStableScreen>
+              )}
+            </Section>
+          ) : null}
+        </View>
+      ) : null}
+    </KeyboardStableScreen>
+  );
+  return (
+    <>
+      <Stack.Screen
+        options={{
+          title: 'Ask',
+          ...headerItems(rootHeaderItems),
+          // Two panes: an inline title (large titles over two scroll views
+          // collapse with whichever scrolls first).
+          ...(isPad ? { headerLargeTitleEnabled: !docked } : null),
+        }}
+      />
+      {docked ? (
+        <SidebarSafe style={styles.fill}>
+          <LayoutRegion style={[styles.fill, styles.split]}>
+            <KeyboardAvoidingView behavior="padding" style={styles.fill}>
+              <AskPaneProvider value={sources.context}>
+                {conversation}
+              </AskPaneProvider>
+              <View style={styles.dock} testID="ask-dock">
+                <View
+                  style={[
+                    styles.dockColumn,
+                    { maxWidth: columns.readable - layout.screenMargin * 2 },
+                  ]}
+                >
+                  {composer}
+                </View>
+              </View>
+            </KeyboardAvoidingView>
+            {sources.pane}
+          </LayoutRegion>
+        </SidebarSafe>
+      ) : (
+        conversation
+      )}
       {optionsOpen ? (
         <Options
           value={s.options}
@@ -706,4 +763,16 @@ const styles = StyleSheet.create({
   },
   conversationTitle: { flex: 1 },
   turn: { gap: layout.sectionGap },
+  fill: { flex: 1, backgroundColor: colors.paper },
+  split: { flexDirection: 'row' },
+  dock: {
+    borderTopWidth: hairline,
+    borderTopColor: colors.dividerDefault,
+    backgroundColor: colors.paper,
+    paddingHorizontal: layout.screenMargin,
+    paddingTop: rhythm.tight,
+    paddingBottom: rhythm.heading,
+  },
+  // The composer keeps the conversation's readable measure.
+  dockColumn: { width: '100%', alignSelf: 'center' },
 });

@@ -1,4 +1,5 @@
 import { useLocalSearchParams } from 'expo-router';
+import { isPad } from '../../../design/primitives';
 import Search from '../../../features/Search';
 import {
   defaultFilters,
@@ -15,9 +16,13 @@ export default function SearchRoute() {
         ]),
       ) as SearchFilters)
     : undefined;
+  // On iPad the split writes its selection (`open`) and the query (`q`) to
+  // the route; neither starts the search again (Search applies a new `q`).
+  const { open: _open, ...rest } = params;
+  const { q: _q, ...withoutQuery } = rest;
   return (
     <Search
-      key={JSON.stringify(params)}
+      key={JSON.stringify(isPad ? withoutQuery : params)}
       initialQuery={params.q ?? ''}
       initialFilters={filters}
       initialSort={

@@ -1,14 +1,27 @@
 import { PartialNotice, SavedCopyNotice } from './CatalogNotice';
 import { useFocusRequest } from '../design/keyboard';
 import { CachedPortrait } from './CachedPortrait';
-import { useCallback, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactElement,
+} from 'react';
 import {
   Keyboard,
   RefreshControl,
+  StyleSheet,
+  type ScrollView,
   type TextInput,
   type View,
 } from 'react-native';
-import { router, useFocusEffect } from 'expo-router';
+import {
+  Stack,
+  router,
+  useFocusEffect,
+  useLocalSearchParams,
+} from 'expo-router';
 import { catalogs, recordSearch } from '../api/runtime';
 import { RecordSearchForm } from './search/RecordSearchForm';
 import { richerSuggestions } from './search/suggestions';
@@ -43,7 +56,23 @@ import {
   StaleNotice,
   Text,
   errorMessage,
+  LayoutRegion,
+  SidebarSafe,
+  SplitEmpty,
+  SplitLayout,
+  isPad,
+  useLayout,
 } from '../design/primitives';
+import { colors } from '../design/tokens';
+import { CursorRow, useCursorReveal } from './split/cursor';
+import {
+  decodeEntry,
+  encodeEntry,
+  entryForWebPath,
+  entryLabel,
+  type RecordEntry,
+} from './split/entry';
+import { RecordDetail, RecordShare } from './split/RecordDetail';
 import { billStatus } from '../design/parliament';
 import { RecordRow } from './RecordRow';
 import { Excerpt } from './search/Excerpt';
@@ -65,17 +94,42 @@ import { billRoute, electorateRoute } from '../navigation/routes';
 
 type Sources = Awaited<ReturnType<typeof catalogs.suggestionSources>>;
 type Results = Awaited<ReturnType<typeof catalogs.search>>;
-export default function Search({
-  initialQuery = '',
-  initialFilters,
-  initialSort,
-  initialPage,
-}: {
+type SearchProps = {
   initialQuery?: string;
   initialFilters?: SearchFilters;
   initialSort?: SearchSort;
   initialPage?: number;
-} = {}) {
+};
+/**
+ * Search. On iPad regular width it is a split: the results on the left and
+ * the chosen person, bill, party, electorate or record in the detail pane,
+ * with the selection kept in the route (`/search?q=…&open=person:…`).
+ */
+export default function Search(props: SearchProps = {}) {
+  // The region a split measures; iPhone keeps the bare screen (no wrapper).
+  if (!isPad) return <SearchScreen {...props} />;
+  return <SearchSplit {...props} />;
+}
+function SearchSplit(props: SearchProps) {
+  const params = useLocalSearchParams<{ q?: string; open?: string }>();
+  return (
+    <SidebarSafe style={styles.screen}>
+      <LayoutRegion style={styles.screen}>
+        <SearchScreen {...props} route={params} />
+      </LayoutRegion>
+    </SidebarSafe>
+  );
+}
+function SearchScreen({
+  initialQuery = '',
+  initialFilters,
+  initialSort,
+  initialPage,
+  route = {},
+}: SearchProps & {
+  /** iPad: the route's query and selection (`/search?q=…&open=…`). */
+  route?: { q?: string; open?: string };
+}) {
   const [query, setQuery] = useState(initialQuery);
   const [kind, setKind] = useState<SearchKind>(
     initialFilters ? 'records' : 'person',
@@ -101,6 +155,65 @@ export default function Search({
   // Cmd-F on iPad (src/navigation/KeyboardShortcuts.tsx) focuses the field.
   const input = useRef<TextInput>(null);
   useFocusRequest('search', input);
+  // iPad regular width: the split, its selection in the route.
+  const split = useLayout().regular;
+  const params = route;
+  const selected = split ? decodeEntry(params.open) : null;
+  const selectedKey = selected ? encodeEntry(selected) : null;
+  const scroll = useRef<ScrollView>(null);
+  const cursor = useCursorReveal(scroll);
+  // On iPad the route keeps this screen mounted when `q` changes (the split
+  // writes it with the selection), so a new `q` from a link is applied here.
+  const wroteQuery = useRef(initialQuery);
+  useEffect(() => {
+    if (!isPad || params.q === undefined || params.q === wroteQuery.current)
+      return;
+    wroteQuery.current = params.q;
+    change(params.q);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.q]);
+  function select(entry: RecordEntry | null) {
+    // Choosing a result puts the search keyboard away, as Mail does.
+    Keyboard.dismiss();
+    wroteQuery.current = query.trim();
+    router.setParams({
+      open: entry ? encodeEntry(entry) : '',
+      q: query.trim(),
+    });
+  }
+  // The keyboard's rows, in the order they are drawn, and how each opens.
+  const openers = new Map<string, () => void>();
+  /**
+   * A result row. On the phone (and a compact window) it is the row as it
+   * always was; in the split it opens in the pane when it is a record the
+   * pane draws, shows its selection, and joins the keyboard's order.
+   */
+  function cursorRow(
+    key: string,
+    entry: RecordEntry | null,
+    push: () => void,
+    draw: (
+      state: { selected?: boolean; highlighted?: boolean },
+      onPress: () => void,
+    ) => ReactElement,
+  ) {
+    if (!split) return draw({}, push);
+    const open = entry ? () => select(entry) : push;
+    openers.set(key, open);
+    return (
+      <CursorRow key={key} rowKey={key} rows={cursor.rows}>
+        {(highlighted) =>
+          draw(
+            {
+              selected: entry ? selectedKey === key : undefined,
+              highlighted,
+            },
+            open,
+          )
+        }
+      </CursorRow>
+    );
+  }
   const request = useRef(0);
   const sourceRequest = useRef(0);
   async function loadSources(refresh = false) {
@@ -246,8 +359,10 @@ export default function Search({
         />
       </Group>
     ) : null;
-  return (
+  const screen = (
     <KeyboardStableScreen
+      scrollRef={scroll}
+      onScroll={split ? cursor.onScroll : undefined}
       testID="search-screen"
       keyboardTarget={submit}
       refreshControl={
@@ -286,6 +401,25 @@ export default function Search({
             initialFilters={kind === 'records' ? initialFilters : undefined}
             initialSort={kind === 'records' ? initialSort : undefined}
             initialPage={kind === 'records' ? initialPage : undefined}
+            openInPane={
+              split
+                ? (path, title) => {
+                    const entry = entryForWebPath(path, title);
+                    if (entry) select(entry);
+                    return !!entry;
+                  }
+                : undefined
+            }
+            selectedPath={
+              split
+                ? (path) => {
+                    const entry = entryForWebPath(path);
+                    return entry
+                      ? encodeEntry(entry) === selectedKey
+                      : undefined;
+                  }
+                : undefined
+            }
           />
         ) : (
           <Button
@@ -426,16 +560,24 @@ export default function Search({
               testID="search-suggestions-people"
             >
               <RowList>
-                {suggestions.people.slice(0, 8).map((p) => (
-                  <PersonRow
-                    key={p.name}
-                    {...personRowContext(rosterIdentityFor(p, sources!))}
-                    name={p.name}
-                    portrait={<CachedPortrait name={p.name} />}
-                    testID={`search-suggestion-person-${p.pid ?? p.name}`}
-                    onPress={() => void open(() => openSuggestedPerson(p.name))}
-                  />
-                ))}
+                {suggestions.people.slice(0, 8).map((p) =>
+                  cursorRow(
+                    `person-name:${p.name}`,
+                    { kind: 'person-name', key: p.name, title: p.name },
+                    () => void open(() => openSuggestedPerson(p.name)),
+                    (state, onPress) => (
+                      <PersonRow
+                        key={p.name}
+                        {...personRowContext(rosterIdentityFor(p, sources!))}
+                        {...state}
+                        name={p.name}
+                        portrait={<CachedPortrait name={p.name} />}
+                        testID={`search-suggestion-person-${p.pid ?? p.name}`}
+                        onPress={onPress}
+                      />
+                    ),
+                  ),
+                )}
               </RowList>
               {metadata('people')}
             </Section>
@@ -447,19 +589,25 @@ export default function Search({
               testID="search-suggestions-electorates"
             >
               <RowList>
-                {suggestions.electorates.slice(0, 8).map((s) => (
-                  <RecordRow
-                    key={s.electorate_id}
-                    title={s.name}
-                    detail={s.representatives
-                      .map((r) => r.person.name)
-                      .join('; ')}
-                    testID={`search-suggestion-electorate-${s.electorate_id}`}
-                    onPress={() =>
-                      router.push(electorateRoute(s.electorate_id))
-                    }
-                  />
-                ))}
+                {suggestions.electorates.slice(0, 8).map((s) =>
+                  cursorRow(
+                    `electorate:${s.electorate_id}`,
+                    { kind: 'electorate', key: s.electorate_id, title: s.name },
+                    () => router.push(electorateRoute(s.electorate_id)),
+                    (state, onPress) => (
+                      <RecordRow
+                        key={s.electorate_id}
+                        {...state}
+                        title={s.name}
+                        detail={s.representatives
+                          .map((r) => r.person.name)
+                          .join('; ')}
+                        testID={`search-suggestion-electorate-${s.electorate_id}`}
+                        onPress={onPress}
+                      />
+                    ),
+                  ),
+                )}
               </RowList>
               {metadata('electorates')}
             </Section>
@@ -471,14 +619,23 @@ export default function Search({
               testID="search-suggestions-bills"
             >
               <RowList>
-                {suggestions.bills.slice(0, 8).map((b) => (
-                  <RecordRow
-                    key={b.key}
-                    title={b.title}
-                    detail={billStatus(b.status)}
-                    onPress={() => router.push(billRoute(b.key))}
-                  />
-                ))}
+                {suggestions.bills.slice(0, 8).map((b) =>
+                  cursorRow(
+                    `bill:${b.key}`,
+                    { kind: 'bill', key: b.key, title: b.title },
+                    () => router.push(billRoute(b.key)),
+                    (state, onPress) => (
+                      <RecordRow
+                        key={b.key}
+                        {...state}
+                        accent="bills"
+                        title={b.title}
+                        detail={billStatus(b.status)}
+                        onPress={onPress}
+                      />
+                    ),
+                  ),
+                )}
               </RowList>
               {metadata('bills')}
             </Section>
@@ -492,21 +649,28 @@ export default function Search({
                   testID="search-suggestions-parties"
                 >
                   <RowList>
-                    {richer.parties.map((p) => (
-                      <RecordRow
-                        key={p}
-                        title={p}
-                        testID={`search-suggestion-party-${p}`}
-                        onPress={() =>
+                    {richer.parties.map((p) =>
+                      cursorRow(
+                        `party:${p}`,
+                        { kind: 'party', key: p, title: p },
+                        () =>
                           void open(() =>
                             openSearchPath(
                               `/subject/party/${encodeURIComponent(p)}`,
                               p,
                             ),
-                          )
-                        }
-                      />
-                    ))}
+                          ),
+                        (state, onPress) => (
+                          <RecordRow
+                            key={p}
+                            {...state}
+                            title={p}
+                            testID={`search-suggestion-party-${p}`}
+                            onPress={onPress}
+                          />
+                        ),
+                      ),
+                    )}
                   </RowList>
                   {metadata('people')}
                 </Section>
@@ -518,18 +682,25 @@ export default function Search({
                   testID="search-suggestions-topics"
                 >
                   <RowList>
-                    {richer.topics.map((t) => (
-                      <RecordRow
-                        key={t.slug}
-                        title={t.title}
-                        testID={`search-suggestion-topic-${t.slug}`}
-                        onPress={() =>
+                    {richer.topics.map((t) =>
+                      cursorRow(
+                        `topic:${t.slug}`,
+                        null,
+                        () =>
                           void open(() =>
                             openSearchPath(`/subject/topic/${t.slug}`, t.title),
-                          )
-                        }
-                      />
-                    ))}
+                          ),
+                        (state, onPress) => (
+                          <RecordRow
+                            key={t.slug}
+                            {...state}
+                            title={t.title}
+                            testID={`search-suggestion-topic-${t.slug}`}
+                            onPress={onPress}
+                          />
+                        ),
+                      ),
+                    )}
                   </RowList>
                   <AsAtLine asOf={null} citation="OPAX topic taxonomy" />
                 </Section>
@@ -543,16 +714,23 @@ export default function Search({
                   <RowList>
                     {richer.reports.map((r) => (
                       <Group key={r.slug}>
-                        <RecordRow
-                          title={r.title}
-                          detail={r.blurb}
-                          testID={`search-suggestion-report-${r.slug}`}
-                          onPress={() =>
+                        {cursorRow(
+                          `report:${r.slug}`,
+                          null,
+                          () =>
                             void open(() =>
                               openSearchPath(`/reports/${r.slug}`, r.title),
-                            )
-                          }
-                        />
+                            ),
+                          (state, onPress) => (
+                            <RecordRow
+                              {...state}
+                              title={r.title}
+                              detail={r.blurb}
+                              testID={`search-suggestion-report-${r.slug}`}
+                              onPress={onPress}
+                            />
+                          ),
+                        )}
                         <AsAtLine
                           asOf={r.updated}
                           citation="OPAX reports index"
@@ -665,24 +843,35 @@ export default function Search({
                   {resultRows.map((row) => (
                     <Group key={row.slug}>
                       {row.personSlug ? (
-                        <PersonRow
-                          {...personRowContext(
-                            sources
-                              ? searchPersonFor(row.personSlug, sources)
-                              : null,
-                          )}
-                          name={row.title}
-                          portrait={
-                            <CachedPortrait
+                        cursorRow(
+                          `search-person:${row.personSlug}`,
+                          {
+                            kind: 'search-person',
+                            key: row.personSlug,
+                            title: row.title,
+                          },
+                          () =>
+                            void open(() => openSearchPerson(row.personSlug!)),
+                          (state, onPress) => (
+                            <PersonRow
+                              {...personRowContext(
+                                sources
+                                  ? searchPersonFor(row.personSlug!, sources)
+                                  : null,
+                              )}
+                              {...state}
                               name={row.title}
-                              slug={row.personSlug}
+                              portrait={
+                                <CachedPortrait
+                                  name={row.title}
+                                  slug={row.personSlug}
+                                />
+                              }
+                              testID={`search-result-${row.personSlug}`}
+                              onPress={onPress}
                             />
-                          }
-                          testID={`search-result-${row.personSlug}`}
-                          onPress={() =>
-                            void open(() => openSearchPerson(row.personSlug!))
-                          }
-                        />
+                          ),
+                        )
                       ) : (
                         <Text wordSafe variant="strong">
                           {row.title}
@@ -744,4 +933,37 @@ export default function Search({
       ) : null}
     </KeyboardStableScreen>
   );
+  if (!isPad) return screen;
+  const keys = [...openers.keys()];
+  return (
+    <>
+      {/* The list column keeps an inline title; large titles over two
+          panes would collapse with whichever scrolls first. */}
+      <Stack.Screen options={{ headerLargeTitleEnabled: !split }} />
+      <SplitLayout<RecordEntry>
+        id="search"
+        testID="search-split"
+        list={screen}
+        selected={selected}
+        onSelect={select}
+        entryKey={encodeEntry}
+        entryTitle={entryLabel}
+        renderDetail={(entry) => <RecordDetail entry={entry} />}
+        detailActions={(entry) => <RecordShare entry={entry} />}
+        keys={keys}
+        onOpenKey={(key) => openers.get(key)?.()}
+        onCursor={cursor.reveal}
+        empty={
+          <SplitEmpty
+            icon="magnifyingglass"
+            title="Nothing open"
+            testID="search-split-empty"
+          />
+        }
+      />
+    </>
+  );
 }
+const styles = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: colors.paper },
+});

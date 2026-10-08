@@ -67,6 +67,15 @@ export function usePaneBar(): ReactNode {
   return useContext(PaneBarContext);
 }
 
+/**
+ * The keyboard's place in a cursor-mode list (Search): rows draw it as the
+ * hover tint, and the screen scrolls it into view. Null elsewhere.
+ */
+const CursorContext = createContext<string | null>(null);
+export function useSplitCursor(): string | null {
+  return useContext(CursorContext);
+}
+
 // List widths survive remounts (a tab switch, a rotation through compact).
 const savedWidths = new Map<string, number>();
 
@@ -89,12 +98,21 @@ export interface SplitLayoutProps<T> {
   empty: ReactNode;
   /**
    * Keyboard selection: the list's keys in order. Up and Down move the
-   * selection while the split is on screen and no field has focus; Escape
-   * clears it.
+   * selection while the split is on screen and no field has focus, Return
+   * selects the first row when nothing is selected, and Escape steps back
+   * in the pane, then clears the selection.
    */
   keys?: readonly string[];
   /** Turns a key from `keys` into an entry to select. */
   entryForKey?: (key: string) => T;
+  /**
+   * Cursor mode, for lists whose rows may load before they open or leave
+   * the split (Search): Up and Down move a highlight (`useSplitCursor()`)
+   * without opening anything, and Return opens the highlighted row.
+   */
+  onOpenKey?: (key: string) => void;
+  /** Called when the cursor moves, to scroll its row into view. */
+  onCursor?: (key: string) => void;
   testID?: string;
 }
 
@@ -117,6 +135,8 @@ export function SplitLayout<T>({
   empty,
   keys,
   entryForKey,
+  onOpenKey,
+  onCursor,
   testID,
 }: SplitLayoutProps<T>) {
   const layout = useLayout();
@@ -157,26 +177,57 @@ export function SplitLayout<T>({
       return () => setFocused(false);
     }, []),
   );
-  const keyboard = layout.regular && focused && !!keys && !!entryForKey;
-  const move = (step: number) => {
-    if (!keys?.length || !entryForKey) return;
+  const cursorMode = !!onOpenKey;
+  const keyboard =
+    layout.regular && focused && !!keys && (!!entryForKey || cursorMode);
+  const [cursorState, setCursor] = useState<string | null>(null);
+  // A cursor whose row has gone (a new search) is no cursor.
+  const cursor =
+    cursorMode && cursorState && keys?.includes(cursorState)
+      ? cursorState
+      : null;
+  const step = (index: number, delta: number, length: number) =>
+    index < 0
+      ? delta > 0
+        ? 0
+        : length - 1
+      : Math.min(Math.max(index + delta, 0), length - 1);
+  const move = (delta: number) => {
+    if (!keys?.length) return;
+    if (cursorMode) {
+      const index = cursor ? keys.indexOf(cursor) : -1;
+      const next = keys[step(index, delta, keys.length)]!;
+      setCursor(next);
+      onCursor?.(next);
+      return;
+    }
+    if (!entryForKey) return;
     const index = selectedKey
       ? keys.findIndex((key) => entryKey(entryForKey(key)) === selectedKey)
       : -1;
-    const next =
-      index < 0
-        ? step > 0
-          ? 0
-          : keys.length - 1
-        : Math.min(Math.max(index + step, 0), keys.length - 1);
+    const next = step(index, delta, keys.length);
     if (next !== index) onSelect(entryForKey(keys[next]!));
+  };
+  const open = () => {
+    if (!keys?.length) return;
+    if (cursorMode) {
+      if (cursor) onOpenKey(cursor);
+      return;
+    }
+    if (!selected && entryForKey) onSelect(entryForKey(keys[0]!));
   };
   useKeyCommand('list-down', () => move(1), keyboard);
   useKeyCommand('list-up', () => move(-1), keyboard);
+  useKeyCommand('list-open', open, keyboard);
   useKeyCommand(
     'list-escape',
-    () => (stack.length > 1 ? pane.back() : onSelect(null)),
-    keyboard && !!selected,
+    () =>
+      stack.length > 1
+        ? pane.back()
+        : selected
+          ? onSelect(null)
+          : setCursor(null),
+    keyboard && (!!selected || !!cursor),
   );
 
   // At accessibility sizes the list starts at 45% of the region (up to half)
@@ -201,6 +252,11 @@ export function SplitLayout<T>({
   const [onDetailLayout, detailRegion] = useMeasuredRegion();
 
   if (!layout.regular) return <>{list}</>;
+  const listContent = cursorMode ? (
+    <CursorContext.Provider value={cursor}>{list}</CursorContext.Provider>
+  ) : (
+    list
+  );
   const below = stack.length > 1 ? stack.at(-2)! : null;
   const bar =
     top && (below || detailActions) ? (
@@ -222,7 +278,7 @@ export function SplitLayout<T>({
         onLayout={onListLayout}
         testID={testID ? `${testID}-list` : undefined}
       >
-        <RegionProvider value={listRegion}>{list}</RegionProvider>
+        <RegionProvider value={listRegion}>{listContent}</RegionProvider>
       </View>
       <Divider width={width} onResize={resize} />
       <View
@@ -244,6 +300,47 @@ export function SplitLayout<T>({
           </PaneContext.Provider>
         </RegionProvider>
       </View>
+    </View>
+  );
+}
+
+/**
+ * A detail pane drawn outside `SplitLayout` (Ask's sources pane): screens
+ * inside read `pane` through `useSplitPane()` and draw `bar` (Back and
+ * actions) first in their content, exactly as in a split.
+ */
+export function PaneHost<T>({
+  pane,
+  bar,
+  children,
+}: {
+  pane: SplitPane<T>;
+  bar: ReactNode;
+  children: ReactNode;
+}) {
+  return (
+    <PaneContext.Provider value={pane as SplitPane<unknown>}>
+      <PaneBarContext.Provider value={bar}>{children}</PaneBarContext.Provider>
+    </PaneContext.Provider>
+  );
+}
+
+/** The pane bar: Back to the entry below, then trailing actions. */
+export function PaneBar({
+  back,
+  onBack,
+  actions,
+}: {
+  /** The entry below's name ("Sources"), or null at the bottom. */
+  back: string | null;
+  onBack: () => void;
+  actions?: ReactNode;
+}) {
+  return (
+    <View style={styles.paneBar} testID="split-pane-bar">
+      {back ? <PaneBack label={back} onPress={onBack} /> : null}
+      <View style={styles.grow} />
+      {actions}
     </View>
   );
 }
