@@ -24,6 +24,10 @@ export interface PointerHoverProps extends ViewProps {
   /** The pointer platter's corner radius; the child's bounds otherwise. */
   cornerRadius?: number;
   onHoverChange?: (event: { nativeEvent: { hovered: boolean } }) => void;
+  dragUrl?: string;
+  dragTitle?: string;
+  keyboardFocusable?: boolean;
+  onActivate?: () => void;
 }
 
 // iPad only. Null on iPhone, Android and in unit tests, where nothing renders

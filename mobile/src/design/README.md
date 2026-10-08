@@ -96,7 +96,7 @@ Bills `LayoutRegion`) render nothing extra there.
 ### Size classes: `useLayout()`
 
 - `useLayout()` returns `{ size, regular, wide, width, height, window,
-  landscape }`. `size` is `regular` from **700pt** (`breakpoints.regular`)
+landscape }`. `size` is `regular` from **700pt** (`breakpoints.regular`)
   on an iPad, else `compact`; `wide` is regular and at least 1100pt (three
   columns). It follows the live window, not the device: rotation, a 1/3
   Split View window and a Stage Manager resize all re-render.
@@ -174,12 +174,12 @@ Bills `LayoutRegion`) render nothing extra there.
   and, at most, one sentence. No instructions.
 - Rows in the list take a `selected` state: the category wash with a 3pt ink
   mark, no chevron (the pane is the destination), `accessibilityState
-  selected`.
+selected`.
 
 ### Navigation
 
 - The tabs are UIKit's sidebar-adaptable tab bar on iPad (`NativeTabs
-  sidebarAdaptable`): a sidebar, or the top tab bar the reader expands into
+sidebarAdaptable`): a sidebar, or the top tab bar the reader expands into
   one, on regular width; the bottom bar in a compact window; no change on
   iPhone. Talk and Account stay in each root's navigation bar.
 - Root screens with two panes turn their large title off on regular width
@@ -215,7 +215,7 @@ Bills `LayoutRegion`) render nothing extra there.
 - **Split list keys:** a `SplitLayout` with `keys` and `entryForKey` takes Up
   and Down (select the previous or next row, scrolled into view) and Escape
   (back within the pane, then clear) while its screen is focused. A focused
-  text field keeps its own arrows and Escape.
+  text field keeps its own arrows and Return; Escape closes the active sheet.
 - **Pointer:** `Hoverable` gives a control the system pointer effect:
   `highlight` (buttons; `Button` and `IconButton` already have it), `lift`
   (cards: Today's bill, Leads and money map cards), `hover` (rows), or
@@ -560,3 +560,28 @@ stable name ID; production excludes the probe implementation in both cases.
   page or its share image. The origin comes from the build configuration
   (`extra.webOrigin`); e2e builds use `https://opax.invalid` and show the link
   in an alert instead.
+
+### Remaining iPad screens (lane 3)
+
+- Use `column="wide"` on hubs and card collections. `PadGrid` applies `Grid`
+  to regular iPad windows and returns the original children on compact;
+  `RowList grid` does the same for row collections. `PadReading` keeps prose
+  inside a wide report at a readable measure. All three preserve the phone
+  view tree. Public-money lists and declarations use `useScreenColumn` and
+  `SidebarSafe`; the record reader retains its readable column.
+- Cmd-[ goes Back, including a bill reader's pane stack. Cmd-R runs the
+  visible screen's Refresh when available and idle. Return opens a focused
+  native row. Escape closes notes, machine-written explanations, sources,
+  popovers and route sheets, or clears the split selection. The shortcuts
+  have UIKit discoverability titles in the Cmd-hold overlay.
+- `Hoverable` accepts `onActivate` for native keyboard focus and
+  `drag={{ path, title }}` for a copy-only outbound drag. `LinkRow.dragPath`
+  and `RecordRow.path` carry a canonical public path. Person rows derive it
+  from their explicitly identified portrait slug, or accept `dragPath`.
+  Bills and report rows carry their own paths. Unknown identities are never
+  guessed from a name. The drag supplies `public.url` plus title and URL as
+  plain text; it makes no request and installs no drop target. iPad only.
+  Release builds use `opax.com.au`; fixture builds use the reserved
+  `opax.invalid` origin so a QA drag cannot point at production.
+- Pass a native node handle as `showMenu`'s third argument to anchor a
+  popover to its control. Original-record menus and declaration menus do so.

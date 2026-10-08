@@ -20,6 +20,7 @@ import { Stack, router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Button,
+  isPad,
   EdgeFade,
   Field,
   Text,
@@ -371,6 +372,9 @@ export default function TalkScreen({
           automaticallyAdjustKeyboardInsets
           contentContainerStyle={[
             styles.body,
+            isPad
+              ? { width: '100%', maxWidth: 700, alignSelf: 'center' }
+              : null,
             { paddingBottom: Math.max(insets.bottom, spacing.s4) + spacing.s4 },
           ]}
         >

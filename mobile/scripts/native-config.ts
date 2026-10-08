@@ -14,7 +14,7 @@ const plist = JSON.parse(
 );
 assert.equal(
   plist.NSLocationWhenInUseUsageDescription,
-  'OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere.',
+  'OPAX uses your location once, on this device, to suggest your electorate. It is not sent anywhere.',
 );
 assert.equal(plist.NSMotionUsageDescription, undefined);
 assert(

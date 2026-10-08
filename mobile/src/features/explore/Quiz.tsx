@@ -133,7 +133,11 @@ export default function Quiz() {
   return (
     <>
       <ExploreHeader title="Quiz" game="quiz" />
-      <Screen key={round ? index : 'intro'} testID="explore-quiz-screen">
+      <Screen
+        column="wide"
+        key={round ? index : 'intro'}
+        testID="explore-quiz-screen"
+      >
         {!round ? (
           <Section title="The record quiz">
             <Text variant="lede" wordSafe>

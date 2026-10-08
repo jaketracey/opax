@@ -1,7 +1,5 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { AccessibilityInfo, View } from 'react-native';
-import type { RecordResult } from '../../api/client';
 import {
+  PadReading,
   AsAtLine,
   Button,
   Disclosure,
@@ -16,6 +14,9 @@ import {
   Text,
   errorMessage,
 } from '../../design/primitives';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { AccessibilityInfo, View } from 'react-native';
+import type { RecordResult } from '../../api/client';
 import { colors, rhythm } from '../../design/tokens';
 import { formatDate } from '../../design/format';
 import { isOffline } from '../CatalogState';
@@ -144,6 +145,7 @@ export function SourceRows({
             <Group key={`${s.slug}-${i}`} gap={6}>
               <RecordRow
                 title={subject || s.speaker || title}
+                path={`/doc/${s.slug}`}
                 detail={[
                   bySpeaker ? null : s.speaker,
                   s.party,
@@ -218,14 +220,16 @@ export function Prose({
   testID: string;
 }) {
   return (
-    <Group>
-      <ProseBlocks
-        paragraphs={citedParagraphs(value, sources)}
-        sources={sources}
-        testID={testID}
-      />
-      <MachineWritten explanation={MODEL_NOTE} testID={`${testID}-machine`} />
-    </Group>
+    <PadReading>
+      <Group>
+        <ProseBlocks
+          paragraphs={citedParagraphs(value, sources)}
+          sources={sources}
+          testID={testID}
+        />
+        <MachineWritten explanation={MODEL_NOTE} testID={`${testID}-machine`} />
+      </Group>
+    </PadReading>
   );
 }
 export function ReportLede({
@@ -240,28 +244,30 @@ export function ReportLede({
   const [open, setOpen] = useState(false);
   const paragraphs = ledeParagraphs(value, sources);
   return (
-    <Group>
-      <ProseBlocks
-        paragraphs={paragraphs.slice(0, 2)}
-        sources={sources}
-        testID={testID}
-      />
-      {paragraphs.length > 2 ? (
-        <Disclosure
-          label={open ? 'Read less' : 'Read more'}
-          open={open}
-          onToggle={setOpen}
-          testID={`${testID}-toggle`}
-        >
-          <ProseBlocks
-            paragraphs={paragraphs.slice(2)}
-            sources={sources}
-            testID={`${testID}-more`}
-          />
-        </Disclosure>
-      ) : null}
-      <MachineWritten explanation={MODEL_NOTE} testID={`${testID}-machine`} />
-    </Group>
+    <PadReading>
+      <Group>
+        <ProseBlocks
+          paragraphs={paragraphs.slice(0, 2)}
+          sources={sources}
+          testID={testID}
+        />
+        {paragraphs.length > 2 ? (
+          <Disclosure
+            label={open ? 'Read less' : 'Read more'}
+            open={open}
+            onToggle={setOpen}
+            testID={`${testID}-toggle`}
+          >
+            <ProseBlocks
+              paragraphs={paragraphs.slice(2)}
+              sources={sources}
+              testID={`${testID}-more`}
+            />
+          </Disclosure>
+        ) : null}
+        <MachineWritten explanation={MODEL_NOTE} testID={`${testID}-machine`} />
+      </Group>
+    </PadReading>
   );
 }
 function ProseBlocks({

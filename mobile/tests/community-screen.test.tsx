@@ -41,6 +41,7 @@ jest.mock('../src/design/primitives', () => {
         'ErrorState',
         'Field',
         'Group',
+        'PadGrid',
         'Heading',
         'Icon',
         'IconButton',

@@ -1,3 +1,4 @@
+import { webOrigin } from './environment';
 import {
   Children,
   createContext,
@@ -272,6 +273,33 @@ export function Grid({
   );
 }
 
+/** Card collections on iPad; preserves the compact view tree and spacing. */
+export function PadGrid({ children }: { children: ReactNode }) {
+  const { regular } = useLayout();
+  if (!isPad || !regular) return <>{children}</>;
+  const items = Children.toArray(children);
+  return (
+    <Grid
+      columns={{ regular: 2, wide: Math.min(3, items.length) }}
+      minItemWidth={320}
+      rowGap={rhythm.section}
+    >
+      {items}
+    </Grid>
+  );
+}
+
+/** Prose inside a wide spread keeps a readable measure on iPad. */
+export function PadReading({ children }: { children: ReactNode }) {
+  const { regular } = useLayout();
+  if (!isPad || !regular) return <>{children}</>;
+  return (
+    <ReadableColumn style={{ alignSelf: 'flex-start' }}>
+      {children}
+    </ReadableColumn>
+  );
+}
+
 /** How many columns a grid `width` wide draws. */
 export function gridColumns(
   width: number,
@@ -313,12 +341,16 @@ export function Hoverable({
   cornerRadius,
   onHover,
   style,
+  drag,
+  onActivate,
 }: {
   children: ReactNode;
   effect?: PointerHoverProps['effect'];
   cornerRadius?: number;
   onHover?: (hovered: boolean) => void;
   style?: StyleProp<ViewStyle>;
+  drag?: { path: string; title: string };
+  onActivate?: () => void;
 }) {
   if (!PointerHoverView) return <>{children}</>;
   return (
@@ -329,10 +361,26 @@ export function Hoverable({
         onHover ? (event) => onHover(event.nativeEvent.hovered) : undefined
       }
       style={style}
+      dragUrl={drag ? (dragWebUrl(drag.path) ?? undefined) : undefined}
+      dragTitle={drag?.title}
+      keyboardFocusable={!!onActivate}
+      onActivate={onActivate}
     >
       {children}
     </PointerHoverView>
   );
+}
+
+/** Public record URLs only. Creating a drag never requests the destination. */
+export function dragWebUrl(path: string, origin = webOrigin): string | null {
+  try {
+    if (!path.startsWith('/') && !path.startsWith(`${origin}/`)) return null;
+    const url = new URL(path, origin);
+    if (url.origin !== origin || url.username || url.password) return null;
+    return url.href;
+  } catch {
+    return null;
+  }
 }
 
 /** A drawn hover state for rows: true while the pointer is over it. */

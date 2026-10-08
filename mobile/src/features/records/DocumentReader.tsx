@@ -301,6 +301,7 @@ function Speaker({ doc }: { doc: DocumentRecord }) {
   return slug ? (
     <LinkRow
       title={doc.speaker}
+      dragPath={`/subject/person/${slug}`}
       detail="More by this speaker"
       icon="person"
       accent="people"
@@ -363,6 +364,7 @@ function LinkedBill({ doc }: { doc: DocumentRecord }) {
       <Section title="The bill" accent="bills" testID="doc-bill">
         <LinkRow
           title="Bill page"
+          dragPath={`/bill/${key}`}
           onPress={() => router.push(billRoute(key))}
           testID="doc-bill-open"
         />
@@ -398,6 +400,7 @@ function LinkedBill({ doc }: { doc: DocumentRecord }) {
       )}
       <LinkRow
         title="Bill page"
+        dragPath={`/bill/${bill.key}`}
         onPress={() => router.push(billRoute(bill.key))}
         testID="doc-bill-open"
       />
@@ -449,6 +452,7 @@ function Similar({ doc }: { doc: DocumentRecord }) {
                     title={titleSubject(row) || row.title}
                     onPress={() => router.push(docRoute(row.slug))}
                     testID={`doc-similar-${index}`}
+                    dragPath={`/doc/${row.slug}`}
                   />
                   <Text variant="metadata">{row.speaker}</Text>
                   <Text selectable>

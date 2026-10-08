@@ -20,7 +20,7 @@ export default function ReportsIndex() {
           ]),
         }}
       />
-      <Screen testID="reports-screen">
+      <Screen column="wide" testID="reports-screen">
         <Text>
           Standing investigations across the public record. Every claim links to
           its sources.
@@ -32,10 +32,11 @@ export default function ReportsIndex() {
         >
           {(index) => (
             <Section title="Reports" accent="leads">
-              <RowList>
+              <RowList grid>
                 {index.reports.map((r) => (
                   <RecordRow
                     key={r.slug}
+                    path={`/reports/${r.slug}`}
                     title={r.title}
                     detail={`${r.blurb} · Updated ${formatDate(r.updated)}`}
                     onPress={() => openRecord(`/reports/${r.slug}`, r.title)}

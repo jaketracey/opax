@@ -1,3 +1,4 @@
+import { useRefreshCommand } from '../../design/keyboard';
 import { headerItems } from '../../navigation/chrome';
 import { useEffect, type ReactNode } from 'react';
 import {
@@ -5,10 +6,16 @@ import {
   FlatList,
   RefreshControl,
   StyleSheet,
+  useWindowDimensions,
 } from 'react-native';
 import { Stack } from 'expo-router';
 import {
   AsAtLine,
+  useScreenColumn,
+  useLayout,
+  gridColumns,
+  SidebarSafe,
+  RegionProvider,
   Divider,
   EmptyState,
   Group,
@@ -107,45 +114,66 @@ export function MoneyList<T>({
   id: string;
   loaded: boolean;
 }) {
+  const column = useScreenColumn('wide');
+  const adaptive = useLayout();
+  const { fontScale } = useWindowDimensions();
+  const count = gridColumns(column.inner?.width ?? adaptive.width, {
+    columns: { regular: 2, wide: 2 },
+    minItemWidth: 320 * Math.min(Math.max(fontScale, 1), 2),
+  });
+  useRefreshCommand(refresh, refreshing);
   return (
-    <FlatList
-      data={rows}
-      keyExtractor={rowKey}
-      testID={id}
-      style={styles.screen}
-      contentContainerStyle={styles.content}
-      contentInsetAdjustmentBehavior="automatic"
-      automaticallyAdjustKeyboardInsets
-      keyboardShouldPersistTaps="handled"
-      keyboardDismissMode="on-drag"
-      initialNumToRender={6}
-      maxToRenderPerBatch={8}
-      windowSize={5}
-      removeClippedSubviews={false}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={refresh} />
-      }
-      ListHeaderComponent={<Group>{header}</Group>}
-      ListFooterComponent={
-        <Group>
-          {footer}
-          <Text wordSafe variant="fine" testID={`${id}-end`}>
-            End of record
-          </Text>
-        </Group>
-      }
-      ListEmptyComponent={
-        loaded ? (
-          <EmptyState message="No matching records in the available export." />
-        ) : null
-      }
-      renderItem={({ item, index }) => (
-        <Group style={styles.row}>
-          {render(item, index)}
-          <Divider variant="subtle" />
-        </Group>
-      )}
-    />
+    <SidebarSafe style={styles.screen}>
+      <FlatList
+        key={`columns-${count}`}
+        numColumns={count}
+        columnWrapperStyle={count > 1 ? { gap: rhythm.block } : undefined}
+        data={rows}
+        keyExtractor={rowKey}
+        testID={id}
+        style={styles.screen}
+        contentContainerStyle={[styles.content, column.content]}
+        onLayout={column.onLayout}
+        contentInsetAdjustmentBehavior="automatic"
+        automaticallyAdjustKeyboardInsets
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
+        initialNumToRender={6}
+        maxToRenderPerBatch={8}
+        windowSize={5}
+        removeClippedSubviews={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+        }
+        ListHeaderComponent={
+          <RegionProvider value={column.inner}>
+            {column.bar}
+            <Group>{header}</Group>
+          </RegionProvider>
+        }
+        ListFooterComponent={
+          <Group>
+            {footer}
+            <Text wordSafe variant="fine" testID={`${id}-end`}>
+              End of record
+            </Text>
+          </Group>
+        }
+        ListEmptyComponent={
+          loaded ? (
+            <EmptyState message="No matching records in the available export." />
+          ) : null
+        }
+        renderItem={({ item, index }) => (
+          <Group
+            style={[styles.row, count > 1 ? { flex: 1, minWidth: 0 } : null]}
+          >
+            {render(item, index)}
+            <Divider variant="subtle" />
+          </Group>
+        )}
+      />
+    </SidebarSafe>
   );
 }
 export function ResultCount({

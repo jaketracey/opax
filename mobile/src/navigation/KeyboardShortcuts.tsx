@@ -1,5 +1,10 @@
 import { useEffect } from 'react';
-import { router, type Href } from 'expo-router';
+import {
+  router,
+  useNavigationContainerRef,
+  usePathname,
+  type Href,
+} from 'expo-router';
 import {
   installKeyCommands,
   requestFocus,
@@ -25,6 +30,8 @@ export const sectionRoutes = [
  * sections. Hold Cmd to see them listed.
  */
 export function KeyboardShortcuts() {
+  const path = usePathname();
+  const root = useNavigationContainerRef();
   useEffect(() => {
     installKeyCommands();
   }, []);
@@ -43,5 +50,15 @@ export function KeyboardShortcuts() {
   useKeyCommand('section-3', () => router.navigate(sectionRoutes[2] as Href));
   useKeyCommand('section-4', () => router.navigate(sectionRoutes[3] as Href));
   useKeyCommand('section-5', () => router.navigate(sectionRoutes[4] as Href));
+  useKeyCommand('back', () => {
+    if (router.canGoBack()) router.back();
+  });
+  useKeyCommand('list-escape', () => {
+    if (/^\/(talk|account|community)(\/|$)/.test(path)) {
+      const state = root.current?.getRootState();
+      if (state) root.current?.dispatch({ type: 'GO_BACK', target: state.key });
+    } else if (/filters|glossary/.test(path) && router.canDismiss())
+      router.dismiss();
+  });
   return null;
 }

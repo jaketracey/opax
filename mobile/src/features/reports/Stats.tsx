@@ -45,7 +45,7 @@ export default function Stats() {
           ]),
         }}
       />
-      <Screen testID="stats-screen">
+      <Screen column="wide" testID="stats-screen">
         <ReadState
           read={read}
           citation="OPAX live index counters"
@@ -120,6 +120,7 @@ export default function Stats() {
           )}
         </ReadState>
         <RecordRow
+          path={'/methods'}
           title="Methods"
           onPress={() => openRecord('/methods', 'Methods')}
           testID="stats-methods"

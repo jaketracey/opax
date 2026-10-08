@@ -39,12 +39,12 @@ export default function ExploreHub() {
   return (
     <>
       <ExploreHeader title="Explore" />
-      <Screen testID="explore-screen">
+      <Screen column="wide" testID="explore-screen">
         <Text variant="lede" wordSafe>
           Play with the parliamentary record
         </Text>
         <Section>
-          <RowList>
+          <RowList grid>
             {tools.map((tool) => (
               <LinkRow
                 key={tool.game}

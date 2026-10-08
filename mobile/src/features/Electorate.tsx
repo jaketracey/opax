@@ -1,4 +1,21 @@
 import {
+  PadGrid,
+  Disclosure,
+  EmptyState,
+  ErrorState,
+  Group,
+  Heading,
+  PartyChip,
+  KeyValueList,
+  LinkRow,
+  LoadingState,
+  RowList,
+  Screen,
+  Section,
+  Text,
+  errorMessage,
+} from '../design/primitives';
+import {
   ElectorateDate,
   ElectorateHistory,
 } from './directories/ElectorateHistory';
@@ -18,22 +35,6 @@ import { RefreshControl, View } from 'react-native';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../api/runtime';
 import { ApiError } from '../api/errors';
-import {
-  Disclosure,
-  EmptyState,
-  ErrorState,
-  Group,
-  Heading,
-  PartyChip,
-  KeyValueList,
-  LinkRow,
-  LoadingState,
-  RowList,
-  Screen,
-  Section,
-  Text,
-  errorMessage,
-} from '../design/primitives';
 import { rhythm } from '../design/tokens';
 import {
   CHAMBER_NOT_RECORDED,
@@ -151,6 +152,7 @@ export function ElectorateScreen({
         />
       )}
       <Screen
+        column="wide"
         testID="electorate-screen"
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={refresh} />
@@ -197,21 +199,23 @@ export function ElectorateScreen({
               />
             </Group>
             <AskAbout kind="electorate" name={identity.name} />
-            <SeatGrants
-              name={identity.name}
-              state={identity.state}
-              eligible={
-                identity.jurisdiction === 'federal' &&
-                identity.chamber === 'representatives'
-              }
-            />
-            <View testID="electorate-map">
-              <OutlineMap
-                boundaries={view.boundaries}
+            <PadGrid>
+              <SeatGrants
                 name={identity.name}
                 state={identity.state}
+                eligible={
+                  identity.jurisdiction === 'federal' &&
+                  identity.chamber === 'representatives'
+                }
               />
-            </View>
+              <View testID="electorate-map">
+                <OutlineMap
+                  boundaries={view.boundaries}
+                  name={identity.name}
+                  state={identity.state}
+                />
+              </View>
+            </PadGrid>
             <ElectorateDate
               view={view}
               directory={directory}
@@ -252,135 +256,141 @@ export function ElectorateScreen({
               </RecordBlock>
             )}
             <ElectorateHistory view={view} directory={directory} />
-            <Section
-              title="Elections"
-              accent="votes"
-              testID="electorate-elections"
-            >
-              {view.elections.length ? (
-                view.elections.map((b, i) => (
-                  <RecordBlock
-                    key={i}
-                    sub={i ? 'ruled' : 'first'}
-                    title={b.data?.election.name ?? 'Election'}
-                    id={`electorate-election-${i}`}
-                    block={b}
-                    missing="No election record is held."
-                    retry={refresh}
-                  >
-                    {(e) => (
-                      <Group gap={rhythm.tight}>
-                        <Text wordSafe variant="metadata">
-                          {formatDate(e.election.poll_date)} · {e.election.kind}
-                        </Text>
-                        <RowList>
-                          <Disclosure
-                            label="Candidates and recorded votes"
-                            value={String(e.candidates.length)}
-                            open={expanded.includes(e.election_id)}
-                            testID={`election-expand-${i}`}
-                            onToggle={() =>
-                              setExpanded((v) =>
-                                v.includes(e.election_id)
-                                  ? v.filter((x) => x !== e.election_id)
-                                  : [...v, e.election_id],
-                              )
-                            }
-                          >
-                            {() => (
-                              <RowList>
-                                {e.candidates.map((c, j) => (
-                                  <Group key={j} gap={rhythm.line}>
-                                    <Text wordSafe variant="strong">
-                                      {c.name}
-                                      {c.elected ? (
-                                        <Text variant="strong" tone="votesInk">
-                                          {'  ·  Elected'}
-                                        </Text>
-                                      ) : null}
-                                    </Text>
-                                    <PartyChip
-                                      party={c.party}
-                                      status="unknown"
-                                    />
-                                    <KeyValueList
-                                      items={c.votes.map((v) => ({
-                                        label:
-                                          v.kind === 'primary'
-                                            ? 'Primary votes'
-                                            : v.kind === 'tcp'
-                                              ? 'Two-candidate votes'
-                                              : v.kind.replaceAll('_', ' '),
-                                        value: formatCount(v.votes),
-                                      }))}
-                                    />
-                                  </Group>
-                                ))}
-                              </RowList>
+            <PadGrid>
+              <Section
+                title="Elections"
+                accent="votes"
+                testID="electorate-elections"
+              >
+                {view.elections.length ? (
+                  view.elections.map((b, i) => (
+                    <RecordBlock
+                      key={i}
+                      sub={i ? 'ruled' : 'first'}
+                      title={b.data?.election.name ?? 'Election'}
+                      id={`electorate-election-${i}`}
+                      block={b}
+                      missing="No election record is held."
+                      retry={refresh}
+                    >
+                      {(e) => (
+                        <Group gap={rhythm.tight}>
+                          <Text wordSafe variant="metadata">
+                            {formatDate(e.election.poll_date)} ·{' '}
+                            {e.election.kind}
+                          </Text>
+                          <RowList>
+                            <Disclosure
+                              label="Candidates and recorded votes"
+                              value={String(e.candidates.length)}
+                              open={expanded.includes(e.election_id)}
+                              testID={`election-expand-${i}`}
+                              onToggle={() =>
+                                setExpanded((v) =>
+                                  v.includes(e.election_id)
+                                    ? v.filter((x) => x !== e.election_id)
+                                    : [...v, e.election_id],
+                                )
+                              }
+                            >
+                              {() => (
+                                <RowList>
+                                  {e.candidates.map((c, j) => (
+                                    <Group key={j} gap={rhythm.line}>
+                                      <Text wordSafe variant="strong">
+                                        {c.name}
+                                        {c.elected ? (
+                                          <Text
+                                            variant="strong"
+                                            tone="votesInk"
+                                          >
+                                            {'  ·  Elected'}
+                                          </Text>
+                                        ) : null}
+                                      </Text>
+                                      <PartyChip
+                                        party={c.party}
+                                        status="unknown"
+                                      />
+                                      <KeyValueList
+                                        items={c.votes.map((v) => ({
+                                          label:
+                                            v.kind === 'primary'
+                                              ? 'Primary votes'
+                                              : v.kind === 'tcp'
+                                                ? 'Two-candidate votes'
+                                                : v.kind.replaceAll('_', ' '),
+                                          value: formatCount(v.votes),
+                                        }))}
+                                      />
+                                    </Group>
+                                  ))}
+                                </RowList>
+                              )}
+                            </Disclosure>
+                          </RowList>
+                        </Group>
+                      )}
+                    </RecordBlock>
+                  ))
+                ) : (
+                  <EmptyState message="No election records are held for this electorate." />
+                )}
+              </Section>
+              <Section
+                title="Local context"
+                accent="places"
+                testID="electorate-census"
+              >
+                {view.census.length ? (
+                  view.census.map((b, i) => (
+                    <RecordBlock
+                      key={i}
+                      sub={i ? 'ruled' : 'first'}
+                      title={`Census ${b.data?.year ?? ''}`}
+                      id={`electorate-census-${i}`}
+                      block={b}
+                      missing="No Census indicators are held."
+                      retry={refresh}
+                    >
+                      {(d) => (
+                        <Group gap={rhythm.tight}>
+                          <Text wordSafe variant="strong">
+                            {d.vintage}
+                          </Text>
+                          <Text wordSafe variant="metadata">
+                            {d.note}
+                          </Text>
+                          <KeyValueList
+                            items={Object.entries(d.indicators).map(
+                              ([key, value]) => {
+                                const [label, kind] = indicators[key] ?? [
+                                  key.replaceAll('_', ' '),
+                                  'count',
+                                ];
+                                return {
+                                  label,
+                                  value:
+                                    value === null
+                                      ? 'Not recorded'
+                                      : kind === 'money'
+                                        ? formatMoney(value)
+                                        : kind === 'percent'
+                                          ? formatPercent(value)
+                                          : formatCount(value),
+                                };
+                              },
                             )}
-                          </Disclosure>
-                        </RowList>
-                      </Group>
-                    )}
-                  </RecordBlock>
-                ))
-              ) : (
-                <EmptyState message="No election records are held for this electorate." />
-              )}
-            </Section>
-            <Section
-              title="Local context"
-              accent="places"
-              testID="electorate-census"
-            >
-              {view.census.length ? (
-                view.census.map((b, i) => (
-                  <RecordBlock
-                    key={i}
-                    sub={i ? 'ruled' : 'first'}
-                    title={`Census ${b.data?.year ?? ''}`}
-                    id={`electorate-census-${i}`}
-                    block={b}
-                    missing="No Census indicators are held."
-                    retry={refresh}
-                  >
-                    {(d) => (
-                      <Group gap={rhythm.tight}>
-                        <Text wordSafe variant="strong">
-                          {d.vintage}
-                        </Text>
-                        <Text wordSafe variant="metadata">
-                          {d.note}
-                        </Text>
-                        <KeyValueList
-                          items={Object.entries(d.indicators).map(
-                            ([key, value]) => {
-                              const [label, kind] = indicators[key] ?? [
-                                key.replaceAll('_', ' '),
-                                'count',
-                              ];
-                              return {
-                                label,
-                                value:
-                                  value === null
-                                    ? 'Not recorded'
-                                    : kind === 'money'
-                                      ? formatMoney(value)
-                                      : kind === 'percent'
-                                        ? formatPercent(value)
-                                        : formatCount(value),
-                              };
-                            },
-                          )}
-                        />
-                      </Group>
-                    )}
-                  </RecordBlock>
-                ))
-              ) : (
-                <EmptyState message="No Census context is held for this electorate." />
-              )}
-            </Section>
+                          />
+                        </Group>
+                      )}
+                    </RecordBlock>
+                  ))
+                ) : (
+                  <EmptyState message="No Census context is held for this electorate." />
+                )}
+              </Section>
+            </PadGrid>
             <Section title="Related constituencies" accent="places">
               {view.related.length ? (
                 <RowList>

@@ -119,6 +119,7 @@ export function SourcesScreen() {
   const all = useMemo(() => withLoaded(datasets, loaded), [loaded]);
   return (
     <Screen
+      column="wide"
       testID="sources-screen"
       refreshControl={
         <RefreshControl
@@ -138,7 +139,7 @@ export function SourcesScreen() {
         ))}
       </Group>
       <Section title="Datasets" testID="sources-datasets">
-        <RowList>
+        <RowList grid>
           {all.map((dataset) => (
             <DatasetRow key={dataset.id} dataset={dataset} />
           ))}

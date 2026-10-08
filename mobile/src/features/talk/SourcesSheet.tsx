@@ -5,6 +5,7 @@ import { colors, hairline, layout, spacing } from '../../design/tokens';
 import { webPageUrl } from '../../navigation/external';
 import type { VoiceSource } from '../../voice';
 import { recordDestination } from './sources';
+import { useKeyCommand } from '../../design/keyboard';
 
 /** Sources a call can open: validated OPAX record paths only. */
 export const openableSources = (sources: readonly VoiceSource[]) =>
@@ -29,6 +30,7 @@ export function SourcesSheet({
   onClose: () => void;
   onDismiss: () => void;
 }) {
+  useKeyCommand('list-escape', onClose, visible);
   return (
     <Modal
       visible={visible}

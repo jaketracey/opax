@@ -12,6 +12,7 @@ import { Heading, Text } from './text';
 import { Icon } from './icon';
 import { colors, hairline, minimumTarget, rhythm } from './tokens';
 import { useReduceMotion } from './accessibility';
+import { useKeyCommand } from './keyboard';
 
 export interface InfoNotes {
   /** The sheet's title: "About these figures". */
@@ -80,6 +81,7 @@ export function InfoSheet({
   testID?: string;
 }) {
   const reduced = useReduceMotion();
+  useKeyCommand('list-escape', onClose, visible);
   return (
     <Modal
       visible={visible}

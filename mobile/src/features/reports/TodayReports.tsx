@@ -62,6 +62,7 @@ function SpotlightContent({
           <Text testID="spotlight-lede">{report.blurb}</Text>
           <RecordRow
             title={`Read the ${report.title} report`}
+            path={`/reports/${report.slug}`}
             onPress={() => openRecord(`/reports/${report.slug}`, report.title)}
             testID="today-spotlight-open"
           />
@@ -75,12 +76,14 @@ export function ReportsEntry() {
     <Section title="Reports" accent="leads">
       <RecordRow
         title="Reports"
+        path="/reports"
         detail="Standing investigations across the public record"
         onPress={() => openRecord('/reports', 'Reports')}
         testID="today-reports"
       />
       <RecordRow
         title="Topics A–Z"
+        path="/subject/topic"
         onPress={() => openRecord('/subject/topic', 'Topics A–Z')}
         testID="today-topics"
       />
@@ -132,6 +135,7 @@ export function TodayCoverage() {
       </ReadState>
       <RecordRow
         title="Coverage & datasets"
+        path="/stats"
         onPress={() => openRecord('/stats', 'Sources & coverage')}
         testID="today-stats"
       />
@@ -218,6 +222,7 @@ export function FromRecord() {
         ) : (
           <RecordRow
             title="Open the entry"
+            path={path}
             onPress={() => openRecord(path, item.name)}
             testID="from-record-open"
           />

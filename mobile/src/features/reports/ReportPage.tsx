@@ -1,9 +1,5 @@
-import { headerItems } from '../../navigation/chrome';
-import { useCallback, useState } from 'react';
-import { View } from 'react-native';
-import { Stack, useLocalSearchParams } from 'expo-router';
-import { reports } from '../../api/runtime';
 import {
+  PadGrid,
   Button,
   BigFigure,
   Disclosure,
@@ -19,6 +15,11 @@ import {
   SegmentedControl,
   Text,
 } from '../../design/primitives';
+import { headerItems } from '../../navigation/chrome';
+import { useCallback, useState } from 'react';
+import { View } from 'react-native';
+import { Stack, useLocalSearchParams } from 'expo-router';
+import { reports } from '../../api/runtime';
 import { formatCount, formatDate, formatMoney } from '../../design/format';
 import { colors } from '../../design/tokens';
 import { shareHeaderItem, shareRecord } from '../../navigation/share';
@@ -121,6 +122,7 @@ function Money({ slug }: { slug: string }) {
                 }))}
               />
               <RecordRow
+                path={'/money'}
                 title="Open the full money map"
                 onPress={() => openRecord('/money', 'Money map')}
               />
@@ -149,47 +151,53 @@ function Money({ slug }: { slug: string }) {
                     );
                     return (
                       <Group>
-                        {comparison.rows.map((row) => (
-                          <Group key={row.party}>
-                            <PartyChip status="unknown" party={row.party} />
-                            <RecordRow
-                              title={`${formatMoney(row.money)} disclosed`}
-                              onPress={() =>
-                                openRecord('/money', `${row.party} disclosures`)
-                              }
-                            />
-                            <View
-                              aria-hidden
-                              style={{
-                                height: 5,
-                                backgroundColor: colors.moneyInk,
-                                width: `${(row.money / Math.max(...comparison.rows.map((r) => r.money), 1)) * 100}%`,
-                              }}
-                            />
-                            <RecordRow
-                              title={
-                                row.share === null
-                                  ? 'Not separated'
-                                  : `${(row.share * 100).toFixed(1)}% · ${formatCount(row.count ?? 0)} labelled speeches`
-                              }
-                              onPress={() =>
-                                openTopicWindow(
-                                  cfg.topic,
-                                  { party: row.party },
-                                  row.party,
-                                )
-                              }
-                            />
-                            <View
-                              aria-hidden
-                              style={{
-                                height: 5,
-                                backgroundColor: colors.ink,
-                                width: `${((row.share ?? 0) / Math.max(...comparison.rows.map((r) => r.share ?? 0), Number.EPSILON)) * 100}%`,
-                              }}
-                            />
-                          </Group>
-                        ))}
+                        <PadGrid>
+                          {comparison.rows.map((row) => (
+                            <Group key={row.party}>
+                              <PartyChip status="unknown" party={row.party} />
+                              <RecordRow
+                                path={'/money'}
+                                title={`${formatMoney(row.money)} disclosed`}
+                                onPress={() =>
+                                  openRecord(
+                                    '/money',
+                                    `${row.party} disclosures`,
+                                  )
+                                }
+                              />
+                              <View
+                                aria-hidden
+                                style={{
+                                  height: 5,
+                                  backgroundColor: colors.moneyInk,
+                                  width: `${(row.money / Math.max(...comparison.rows.map((r) => r.money), 1)) * 100}%`,
+                                }}
+                              />
+                              <RecordRow
+                                title={
+                                  row.share === null
+                                    ? 'Not separated'
+                                    : `${(row.share * 100).toFixed(1)}% · ${formatCount(row.count ?? 0)} labelled speeches`
+                                }
+                                onPress={() =>
+                                  openTopicWindow(
+                                    cfg.topic,
+                                    { party: row.party },
+                                    row.party,
+                                  )
+                                }
+                              />
+                              <View
+                                aria-hidden
+                                style={{
+                                  height: 5,
+                                  backgroundColor: colors.ink,
+                                  width: `${((row.share ?? 0) / Math.max(...comparison.rows.map((r) => r.share ?? 0), Number.EPSILON)) * 100}%`,
+                                }}
+                              />
+                            </Group>
+                          ))}
+                        </PadGrid>
                       </Group>
                     );
                   }}
@@ -232,6 +240,7 @@ function ReportContent({
           number={selected.number}
         />
         <RecordRow
+          path={`/reports/${report.slug}`}
           title="Read the full report"
           onPress={() => openRecord(`/reports/${report.slug}`, report.title)}
           testID="report-full"
@@ -299,87 +308,97 @@ function ReportContent({
                   ? `What the chamber has actually been arguing about since ${since}. Each opens its speeches.`
                   : 'What the chamber has actually been arguing about. Each opens its speeches.'}
               </Text>
-              {report.now.discovered.map((d) => (
-                <Group key={d.title}>
-                  <RecordRow
-                    title={d.title}
-                    onPress={() =>
-                      openTopicWindow(
-                        Object.entries(topicReport).find(
-                          ([, r]) => r === report.slug,
-                        )?.[0] ?? report.slug,
-                        {
-                          debate:
-                            new URLSearchParams(d.search?.split('?')[1]).get(
-                              'q',
-                            ) ?? d.title,
-                          ...Object.fromEntries(
-                            [
-                              ...new URLSearchParams(d.search?.split('?')[1]),
-                            ].filter(([k]) => ['from', 'to'].includes(k)),
-                          ),
-                        },
-                        d.title,
-                      )
-                    }
-                  />
-                  <Text variant="metadata">
-                    {formatCount(d.count)} speeches ·{' '}
-                    {[d.first, d.last]
-                      .filter((date): date is string => !!date)
-                      .map((date) => formatDate(date))
-                      .join(' to ')}
-                  </Text>
-                </Group>
-              ))}
+              <PadGrid>
+                {report.now.discovered.map((d) => (
+                  <Group key={d.title}>
+                    <RecordRow
+                      title={d.title}
+                      onPress={() =>
+                        openTopicWindow(
+                          Object.entries(topicReport).find(
+                            ([, r]) => r === report.slug,
+                          )?.[0] ?? report.slug,
+                          {
+                            debate:
+                              new URLSearchParams(d.search?.split('?')[1]).get(
+                                'q',
+                              ) ?? d.title,
+                            ...Object.fromEntries(
+                              [
+                                ...new URLSearchParams(d.search?.split('?')[1]),
+                              ].filter(([k]) => ['from', 'to'].includes(k)),
+                            ),
+                          },
+                          d.title,
+                        )
+                      }
+                    />
+                    <Text variant="metadata">
+                      {formatCount(d.count)} speeches ·{' '}
+                      {[d.first, d.last]
+                        .filter((date): date is string => !!date)
+                        .map((date) => formatDate(date))
+                        .join(' to ')}
+                    </Text>
+                  </Group>
+                ))}
+              </PadGrid>
             </Group>
           ) : null}
-          {sections
-            .filter((s) => s.tab === 'now')
-            .map((s) => (
-              <EssayView
-                key={s.number}
-                item={s.item}
-                slug={report.slug}
-                number={s.number}
-              />
-            ))}
+          <PadGrid>
+            {sections
+              .filter((s) => s.tab === 'now')
+              .map((s) => (
+                <EssayView
+                  key={s.number}
+                  item={s.item}
+                  slug={report.slug}
+                  number={s.number}
+                />
+              ))}
+          </PadGrid>
           {report.key_stats?.length ? (
             <Section title="The figures this turns on" accent="votes">
-              {report.key_stats.map((s, i) => (
-                <Group key={i}>
-                  <BigFigure value={s.value} label={s.label} accent="votes" />
-                  {s.detail ? (
-                    <InfoButton title={s.label} notes={[s.detail]} />
-                  ) : null}
-                  <Text variant="fine">{s.as_of}</Text>
-                  {s.slug ? (
-                    <RecordRow
-                      title="Read the supporting record"
-                      onPress={() => openRecord(`/doc/${s.slug}`, s.label)}
-                    />
-                  ) : null}
-                </Group>
-              ))}
+              <PadGrid>
+                {report.key_stats.map((s, i) => (
+                  <Group key={i}>
+                    <BigFigure value={s.value} label={s.label} accent="votes" />
+                    {s.detail ? (
+                      <InfoButton title={s.label} notes={[s.detail]} />
+                    ) : null}
+                    <Text variant="fine">{s.as_of}</Text>
+                    {s.slug ? (
+                      <RecordRow
+                        path={`/doc/${s.slug}`}
+                        title="Read the supporting record"
+                        onPress={() => openRecord(`/doc/${s.slug}`, s.label)}
+                      />
+                    ) : null}
+                  </Group>
+                ))}
+              </PadGrid>
             </Section>
           ) : null}
           {report.positions?.length ? (
             <Section title="Where the parties stand">
-              {report.positions.map((p, i) => (
-                <Group key={i}>
-                  <PartyChip status="unknown" party={p.party} />
-                  <Text>{p.position}</Text>
-                  <Text variant="fine">
-                    {p.speaker} · {p.date ? formatDate(p.date) : ''}
-                  </Text>
-                  {p.slug ? (
-                    <RecordRow
-                      title={p.source_title ?? 'Read the speech'}
-                      onPress={() => openRecord(`/doc/${p.slug}`, p.party)}
-                    />
-                  ) : null}
-                </Group>
-              ))}
+              <PadGrid>
+                {report.positions.map((p, i) => (
+                  <Group key={i}>
+                    <PartyChip status="unknown" party={p.party} />
+                    <Text>{p.position}</Text>
+                    <Text variant="fine">
+                      {p.speaker} · {p.date ? formatDate(p.date) : ''}
+                    </Text>
+                    {p.slug ? (
+                      <RecordRow
+                        path={`/doc/${p.slug}`}
+                        title={p.source_title ?? 'Read the speech'}
+                        onPress={() => openRecord(`/doc/${p.slug}`, p.party)}
+                      />
+                    ) : null}
+                  </Group>
+                ))}
+              </PadGrid>
               <MachineWritten explanation={MODEL_NOTE} />
             </Section>
           ) : null}
@@ -387,16 +406,18 @@ function ReportContent({
       ) : tab === 'over' ? (
         <Group>
           <Heading level={2}>How it has moved</Heading>
-          {sections
-            .filter((s) => s.tab === 'over')
-            .map((s) => (
-              <EssayView
-                key={s.number}
-                item={s.item}
-                slug={report.slug}
-                number={s.number}
-              />
-            ))}
+          <PadGrid>
+            {sections
+              .filter((s) => s.tab === 'over')
+              .map((s) => (
+                <EssayView
+                  key={s.number}
+                  item={s.item}
+                  slug={report.slug}
+                  number={s.number}
+                />
+              ))}
+          </PadGrid>
           {report.over_time?.tide.length ? (
             <Section
               title="The share of the labelled record, decade by decade"
@@ -465,19 +486,22 @@ function ReportContent({
         <Money slug={report.slug} />
       )}
       <Section title="Sections" testID="report-sections-index">
-        {sections.map((s) => (
-          <RecordRow
-            key={s.number}
-            title={`${s.number}. ${s.item.question}`}
-            onPress={() =>
-              openRecord(
-                `/reports/${report.slug}/s/${s.number}`,
-                s.item.question,
-              )
-            }
-            testID={`report-open-section-${s.number}`}
-          />
-        ))}
+        <PadGrid>
+          {sections.map((s) => (
+            <RecordRow
+              path={`/reports/${report.slug}/s/${s.number}`}
+              key={s.number}
+              title={`${s.number}. ${s.item.question}`}
+              onPress={() =>
+                openRecord(
+                  `/reports/${report.slug}/s/${s.number}`,
+                  s.item.question,
+                )
+              }
+              testID={`report-open-section-${s.number}`}
+            />
+          ))}
+        </PadGrid>
       </Section>
       <Section title={`Every record behind this report (${sources.length})`}>
         <Disclosure
@@ -543,7 +567,7 @@ export default function ReportPage() {
           ]),
         }}
       />
-      <Screen testID="report-screen">
+      <Screen column="wide" testID="report-screen">
         <Heading level={1} testID="report-title">
           {title}
         </Heading>

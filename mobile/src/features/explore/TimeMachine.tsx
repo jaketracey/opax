@@ -30,7 +30,7 @@ export default function TimeMachine() {
   return (
     <>
       <ExploreHeader title="Time machine" game="tm" />
-      <Screen testID="explore-tm-screen">
+      <Screen column="wide" testID="explore-tm-screen">
         <Section title="Time machine">
           <Field
             label="Year, 1998 to 2026"

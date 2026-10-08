@@ -1,0 +1,40 @@
+appId: au.com.opax.app
+name: iPad rest public-money AX5 landscape
+---
+- launchApp:
+    appId: com.apple.Preferences
+- waitForAnimationToEnd
+- tapOn:
+    text: Multitasking & Gestures
+    waitToSettleTimeoutMs: 3000
+- tapOn:
+    text: Full-Screen Apps
+    waitToSettleTimeoutMs: 3000
+- launchApp:
+    clearState: true
+    permissions: {}
+- extendedWaitUntil:
+    visible:
+      id: today-screen-message
+    timeout: 90000
+- setOrientation: LANDSCAPE_LEFT
+- openLink: opax://public-money
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: money-hub-title
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/ax5-public-money-landscape
+- setOrientation: PORTRAIT
+- launchApp:
+    appId: com.apple.Preferences
+- waitForAnimationToEnd
+- tapOn:
+    text: Multitasking & Gestures
+    waitToSettleTimeoutMs: 3000
+- tapOn:
+    text: Windowed Apps
+    waitToSettleTimeoutMs: 3000

@@ -19,10 +19,15 @@ const independence =
  */
 export function AccountScreen() {
   return (
-    <Screen testID="account-sheet">
+    <Screen column="wide" testID="account-sheet">
       <AccountSection />
       <Section title="Community" accent="people">
-        <LinkRow title="Community discussions" detail="Follow the record together" testID="account-community" onPress={() => router.push('/community/home')} />
+        <LinkRow
+          title="Community discussions"
+          detail="Follow the record together"
+          testID="account-community"
+          onPress={() => router.push('/community/home')}
+        />
       </Section>
       <Section title="About OPAX" accent="people">
         <Text variant="subheading">
@@ -34,7 +39,7 @@ export function AccountScreen() {
           disclosures.
         </Text>
         <Text variant="metadata">{independence}</Text>
-        <RowList>
+        <RowList grid>
           <LinkRow
             title="About OPAX"
             detail="Coverage, corrections and privacy"
@@ -68,7 +73,7 @@ export function AccountScreen() {
         // Development and e2e only, whatever the voice switch says; the
         // workbench route is not in release bundles.
         <Section title="Development" accent="people">
-          <RowList>
+          <RowList grid>
             <LinkRow
               title="Design workbench"
               icon="square.grid.2x2"

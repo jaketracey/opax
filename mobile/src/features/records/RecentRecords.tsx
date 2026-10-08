@@ -66,6 +66,7 @@ export default function RecentRecords() {
                   {value.data.map((row, index) => (
                     <LinkRow
                       key={row.slug}
+                      dragPath={`/doc/${row.slug}`}
                       title={row.title}
                       detail={
                         row.indexed

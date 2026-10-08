@@ -83,7 +83,12 @@ export function BillRow({
   const inSplit = selected !== undefined;
   const [hovered, onHover] = useHover();
   return (
-    <Hoverable effect="none" onHover={onHover}>
+    <Hoverable
+      effect="none"
+      onHover={onHover}
+      onActivate={onPress}
+      drag={{ path: `/bill/${bill.key}`, title: text.name }}
+    >
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={text.label}

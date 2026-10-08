@@ -1,5 +1,5 @@
-import { useCallback, useState } from 'react';
 import {
+  PadGrid,
   Screen,
   Section,
   Group,
@@ -8,6 +8,7 @@ import {
   LinkRow,
   Disclosure,
 } from '../../design/primitives';
+import { useCallback, useState } from 'react';
 import { topicNames } from '../reports/model';
 import { useRead, ReadState, ShareBars } from '../reports/parts';
 import { openTopicWindow } from '../reports/open';
@@ -22,7 +23,7 @@ export default function Tide() {
   return (
     <>
       <ExploreHeader title="The tide" game="tide" />
-      <Screen testID="explore-tide-screen">
+      <Screen column="wide" testID="explore-tide-screen">
         <Section
           title="The tide"
           info={{
@@ -90,44 +91,46 @@ export default function Tide() {
                 <Text variant="fine" wordSafe>
                   Shares of labelled speeches, not the whole corpus
                 </Text>
-                {slugs.map((slug) => (
-                  <Section key={slug} title={topicNames[slug]}>
-                    <LinkRow
-                      title={`${order === 'now' ? (metric(slug).now * 100).toFixed(1) + '%' : `${metric(slug).change >= 0 ? '+' : '−'}${Math.abs(metric(slug).change * 100).toFixed(1)} pp`}`}
-                      onPress={() =>
-                        openTopicWindow(slug, {}, topicNames[slug]!)
-                      }
-                    />
-                    <ShareBars
-                      label={topicNames[slug]!}
-                      points={(data.topics[slug] ?? []).map((p) => ({
-                        label:
-                          data.decades.find((d) => d.slug === p.decade)
-                            ?.label ?? p.decade,
-                        share: p.share,
-                        count: p.count,
-                      }))}
-                      onSelect={(i) => {
-                        const point = data.topics[slug]?.[i],
-                          d = data.decades.find(
-                            (d) => d.slug === point?.decade,
-                          );
-                        if (d)
-                          openTopicWindow(
-                            slug,
-                            {
-                              from: String(d.from),
-                              to: String(d.to),
-                              ...(scope === 'federal'
-                                ? { state: 'federal' }
-                                : {}),
-                            },
-                            topicNames[slug]!,
-                          );
-                      }}
-                    />
-                  </Section>
-                ))}
+                <PadGrid>
+                  {slugs.map((slug) => (
+                    <Section key={slug} title={topicNames[slug]}>
+                      <LinkRow
+                        title={`${order === 'now' ? (metric(slug).now * 100).toFixed(1) + '%' : `${metric(slug).change >= 0 ? '+' : '−'}${Math.abs(metric(slug).change * 100).toFixed(1)} pp`}`}
+                        onPress={() =>
+                          openTopicWindow(slug, {}, topicNames[slug]!)
+                        }
+                      />
+                      <ShareBars
+                        label={topicNames[slug]!}
+                        points={(data.topics[slug] ?? []).map((p) => ({
+                          label:
+                            data.decades.find((d) => d.slug === p.decade)
+                              ?.label ?? p.decade,
+                          share: p.share,
+                          count: p.count,
+                        }))}
+                        onSelect={(i) => {
+                          const point = data.topics[slug]?.[i],
+                            d = data.decades.find(
+                              (d) => d.slug === point?.decade,
+                            );
+                          if (d)
+                            openTopicWindow(
+                              slug,
+                              {
+                                from: String(d.from),
+                                to: String(d.to),
+                                ...(scope === 'federal'
+                                  ? { state: 'federal' }
+                                  : {}),
+                              },
+                              topicNames[slug]!,
+                            );
+                        }}
+                      />
+                    </Section>
+                  ))}
+                </PadGrid>
                 <Section title="Coverage">
                   <Disclosure label="Labelled record by decade">
                     <Group>

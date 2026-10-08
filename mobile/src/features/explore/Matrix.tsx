@@ -21,7 +21,7 @@ export default function Matrix() {
   return (
     <>
       <ExploreHeader title="Debates" game="matrix" />
-      <Screen testID="explore-matrix-screen">
+      <Screen column="wide" testID="explore-matrix-screen">
         <Section
           title="Who owns which debate"
           info={{ title: 'How to read this grid', notes: [MATRIX_NOTE] }}

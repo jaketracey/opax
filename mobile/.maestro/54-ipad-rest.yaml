@@ -1,0 +1,265 @@
+appId: au.com.opax.app
+name: 54 iPad remaining screens and rotation
+---
+- launchApp:
+    appId: com.apple.Preferences
+- waitForAnimationToEnd
+- tapOn:
+    text: Multitasking & Gestures
+    waitToSettleTimeoutMs: 3000
+- tapOn:
+    text: Full-Screen Apps
+    waitToSettleTimeoutMs: 3000
+- waitForAnimationToEnd
+- launchApp:
+    clearState: true
+    permissions: {}
+- extendedWaitUntil:
+    visible:
+      id: today-screen-message
+    timeout: 90000
+- setOrientation: LANDSCAPE_LEFT
+- openLink: opax://your-mp
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: seat-search
+    timeout: 90000
+- tapOn:
+    id: seat-search
+- inputText: Grayndler
+- pressKey: Enter
+- tapOn:
+    id: seat-choice-federal-representatives-nsw-grayndler
+- extendedWaitUntil:
+    visible:
+      id: your-seat-name
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/54-your-mp-landscape
+- scrollUntilVisible:
+    element:
+      id: your-pay
+    direction: DOWN
+    centerElement: true
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/54-your-mp-money-landscape
+- openLink: opax://electorate/federal-representatives-nsw-grayndler
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: electorate-name
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/54-electorate-landscape
+- openLink: opax://public-money
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: money-hub-title
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/54-public-money-landscape
+- openLink: opax://grants
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: grants-title
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/54-grants-landscape
+- openLink: opax://grant-program?jur=federal&id=GO3141
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible: Community Development Grants
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/54-program-landscape
+- openLink: opax://money
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: money-view-summary
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/54-money-map-landscape
+- openLink: opax://largest-grants
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: largest-title
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/54-largest-grants-landscape
+- openLink: opax://agencies
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: agencies-title
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/54-agencies-landscape
+- openLink: opax://discover
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: discover-title
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/54-discover-landscape
+- openLink: opax://grants-allocation
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: allocation-title
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/54-community-funding-landscape
+- openLink: opax://reports
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: report-open-gambling
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/54-reports-landscape
+- openLink: opax://report/gambling
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: report-title
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/54-report-landscape
+- openLink: opax://topics
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: topics-count
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/54-topics-landscape
+- openLink: opax://explore
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: explore-quiz
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/54-explore-landscape
+- openLink: opax://explore/tide
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: explore-tide-screen
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/54-tide-landscape
+- openLink: opax://doc/speech-1205524
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: doc-reader
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/54-reader-landscape
+- openLink: opax://community/home
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: community-thread-discussion-a
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/54-community-landscape
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd
+- assertVisible:
+    id: community-thread-discussion-a
+- takeScreenshot: ${EVIDENCE}/54-community-portrait
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd
+- openLink: opax://account
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: account-sheet-message
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/54-account-landscape
+- openLink: opax://account/about
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: about-name
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/54-about-landscape
+- openLink: opax://account/sources
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: sources-datasets
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/54-sources-landscape
+- openLink: opax://talk
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: talk-sheet-message
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/54-talk-landscape
+- setOrientation: PORTRAIT
+- launchApp:
+    appId: com.apple.Preferences
+- waitForAnimationToEnd
+- tapOn:
+    text: Multitasking & Gestures
+    waitToSettleTimeoutMs: 3000
+- tapOn:
+    text: Windowed Apps
+    waitToSettleTimeoutMs: 3000
+- waitForAnimationToEnd

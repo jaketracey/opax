@@ -1,7 +1,8 @@
 import { router } from 'expo-router';
 import { ownsRowPadding } from './row-padding';
 import { partyRoute } from '../navigation/routes';
-import { useEffect, useState } from 'react';
+import { isValidElement, useEffect, useState } from 'react';
+import { Hoverable } from './adaptive';
 import { localImageURI } from '../api/image-policy';
 import type { ReactNode } from 'react';
 import {
@@ -403,6 +404,8 @@ export type PersonRowProps = PersonRowParty & {
   testID?: string;
   /** Opt in only for journeys that inspect native drawn-line bounds. */
   testDrawnName?: boolean;
+  /** Canonical public profile path for iPad dragging. */
+  dragPath?: string;
 };
 /**
  * A row for a roster parliamentarian: portrait (blank circle without one)
@@ -423,7 +426,12 @@ export function PersonRow({
   onPress,
   testID,
   testDrawnName = false,
+  dragPath,
 }: PersonRowProps) {
+  const slug = isValidElement<{ slug?: string }>(portrait)
+    ? portrait.props.slug
+    : undefined;
+  const path = dragPath ?? (slug ? `/subject/person/${slug}` : undefined);
   const stacked = useAccessibilitySize();
   const partyContext =
     party === undefined
@@ -485,56 +493,62 @@ export function PersonRow({
       </View>
     );
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      accessibilityActions={
-        partyContext
-          ? [
-              ...(isPartyLabel(partyContext.party)
-                ? [
-                    {
-                      name: 'openParty',
-                      label: `Open ${partyIdentity(partyContext.party).name} party page`,
-                    },
-                  ]
-                : []),
-              ...(isPartyLabel(partyContext.formerly) &&
-              partyContext.formerly !== partyContext.party
-                ? [
-                    {
-                      name: 'openPreviousParty',
-                      label: `Open ${partyContext.formerly} party page`,
-                    },
-                  ]
-                : []),
-            ]
-          : undefined
-      }
-      onAccessibilityAction={(event) => {
-        if (
-          event.nativeEvent.actionName === 'openParty' &&
-          partyContext?.party &&
-          isPartyLabel(partyContext.party)
-        )
-          router.push(partyRoute(partyContext.party));
-        if (
-          event.nativeEvent.actionName === 'openPreviousParty' &&
-          partyContext?.formerly &&
-          isPartyLabel(partyContext.formerly)
-        )
-          router.push(partyRoute(partyContext.formerly));
-      }}
-      testID={testID}
-      onPress={onPress}
-      style={({ pressed }) => [
-        styles.person,
-        // Raised, not sunken: every party dot keeps 3:1 against the highlight.
-        pressed ? { backgroundColor: colors.raised } : null,
-      ]}
+    <Hoverable
+      effect="hover"
+      onActivate={onPress}
+      drag={path ? { path, title: name } : undefined}
     >
-      {body}
-    </Pressable>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={label}
+        accessibilityActions={
+          partyContext
+            ? [
+                ...(isPartyLabel(partyContext.party)
+                  ? [
+                      {
+                        name: 'openParty',
+                        label: `Open ${partyIdentity(partyContext.party).name} party page`,
+                      },
+                    ]
+                  : []),
+                ...(isPartyLabel(partyContext.formerly) &&
+                partyContext.formerly !== partyContext.party
+                  ? [
+                      {
+                        name: 'openPreviousParty',
+                        label: `Open ${partyContext.formerly} party page`,
+                      },
+                    ]
+                  : []),
+              ]
+            : undefined
+        }
+        onAccessibilityAction={(event) => {
+          if (
+            event.nativeEvent.actionName === 'openParty' &&
+            partyContext?.party &&
+            isPartyLabel(partyContext.party)
+          )
+            router.push(partyRoute(partyContext.party));
+          if (
+            event.nativeEvent.actionName === 'openPreviousParty' &&
+            partyContext?.formerly &&
+            isPartyLabel(partyContext.formerly)
+          )
+            router.push(partyRoute(partyContext.formerly));
+        }}
+        testID={testID}
+        onPress={onPress}
+        style={({ pressed }) => [
+          styles.person,
+          // Raised, not sunken: every party dot keeps 3:1 against the highlight.
+          pressed ? { backgroundColor: colors.raised } : null,
+        ]}
+      >
+        {body}
+      </Pressable>
+    </Hoverable>
   );
 }
 

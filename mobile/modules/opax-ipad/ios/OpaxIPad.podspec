@@ -1,8 +1,8 @@
 Pod::Spec.new do |s|
   s.name           = 'OpaxIPad'
   s.version        = '0.1.0'
-  s.summary        = 'iPad keyboard commands and pointer effects'
-  s.description    = 'Hardware-keyboard commands registered on the application delegate and the system pointer effect over buttons, rows and cards. No data is read or sent.'
+  s.summary        = 'iPad keyboard commands, pointer effects and URL drags'
+  s.description    = 'Hardware-keyboard commands registered on the application delegate pointer effects and explicit outbound title and URL drags over rows and cards. No network requests.'
   s.license        = 'AGPL-3.0-only'
   s.author         = 'OPAX contributors'
   s.homepage       = 'https://github.com/jaketracey/opax'

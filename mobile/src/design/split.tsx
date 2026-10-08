@@ -174,6 +174,20 @@ export function SplitLayout<T>({
   useKeyCommand('list-down', () => move(1), keyboard);
   useKeyCommand('list-up', () => move(-1), keyboard);
   useKeyCommand(
+    'back',
+    () => {
+      pane.back();
+    },
+    keyboard && stack.length > 1,
+  );
+  useKeyCommand(
+    'list-return',
+    () => {
+      if (selected) onSelect(selected);
+    },
+    keyboard && !!selected,
+  );
+  useKeyCommand(
     'list-escape',
     () => (stack.length > 1 ? pane.back() : onSelect(null)),
     keyboard && !!selected,

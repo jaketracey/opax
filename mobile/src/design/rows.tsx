@@ -1,13 +1,13 @@
-import type { ReactNode } from 'react';
+import { useRef, type ReactNode } from 'react';
 import { ownsRowPadding } from './row-padding';
 import { showMenu } from './menu';
 import {
-  ActionSheetIOS,
   Platform,
   Pressable,
   StyleSheet,
   View,
   useWindowDimensions,
+  findNodeHandle,
 } from 'react-native';
 import { openOnWeb, openSource } from '../navigation/external';
 import { useAccessibilitySize } from './accessibility';
@@ -43,6 +43,7 @@ export function LinkRow({
   testID,
   titleTestID,
   detailTestID,
+  dragPath,
 }: {
   title: string;
   detail?: string;
@@ -60,11 +61,17 @@ export function LinkRow({
   testID?: string;
   titleTestID?: string;
   detailTestID?: string;
+  dragPath?: string;
 }) {
   const stacked = useAccessibilitySize();
   const [hovered, onHover] = useHover();
   return (
-    <Hoverable effect="none" onHover={disabled ? undefined : onHover}>
+    <Hoverable
+      effect="none"
+      onHover={disabled ? undefined : onHover}
+      onActivate={disabled ? undefined : onPress}
+      drag={dragPath ? { path: dragPath, title } : undefined}
+    >
       <Pressable
         accessibilityRole={external ? 'link' : 'button'}
         accessibilityLabel={
@@ -177,6 +184,7 @@ export function ViewOriginal({
   // Fixed width at accessibility sizes, as SourceLink: the label's frame never
   // follows its own text size.
   const fixed = useAccessibilitySize();
+  const anchor = useRef<View>(null);
   const usable = sources.filter(
     (s, i) =>
       (s.url.startsWith('https://') || s.url.startsWith('/')) &&
@@ -192,25 +200,13 @@ export function ViewOriginal({
       void open(usable[0]!);
       return;
     }
-    if (Platform.OS === 'android') {
-      showMenu(
-        'Original records',
-        usable.map((source) => ({
-          title: source.label,
-          onPress: () => void open(source),
-        })),
-      );
-      return;
-    }
-    ActionSheetIOS.showActionSheetWithOptions(
-      {
-        title: 'Original records',
-        options: [...usable.map((s) => s.label), 'Cancel'],
-        cancelButtonIndex: usable.length,
-      },
-      (index) => {
-        if (index < usable.length) void open(usable[index]!);
-      },
+    showMenu(
+      'Original records',
+      usable.map((source) => ({
+        title: source.label,
+        onPress: () => void open(source),
+      })),
+      findNodeHandle(anchor.current) ?? undefined,
     );
   };
   const spoken =
@@ -219,6 +215,7 @@ export function ViewOriginal({
       : `${label}, ${usable.length} records`;
   return (
     <Pressable
+      ref={anchor}
       accessibilityRole="link"
       accessibilityLabel={spoken}
       accessibilityHint={

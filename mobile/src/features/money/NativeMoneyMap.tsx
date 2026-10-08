@@ -14,6 +14,7 @@ import { GLView, type ExpoWebGLRenderingContext } from 'expo-gl';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import {
   Button,
+  useLayout,
   Group,
   Text,
   useAccessibilitySize,
@@ -45,6 +46,10 @@ export function NativeMoneyMap({
   ref?: Ref<NativeMoneyMapHandle>;
 }) {
   const labelGroups = useMemo(() => moneyLabelGroups(graph), [graph]);
+  const adaptive = useLayout();
+  const canvasHeight = adaptive.regular
+    ? Math.max(350, adaptive.window.height - 300)
+    : 350;
   const [size, setSize] = useState({ width: 0, height: 350 });
   const [generation, setGeneration] = useState(0);
   const [labels, setLabels] = useState<ProjectedLabel[]>([]);
@@ -292,11 +297,16 @@ export function NativeMoneyMap({
             accessible
             accessibilityRole="image"
             accessibilityLabel="Three dimensional money map. Drag with one finger to orbit, pinch to zoom, tap a node for its record. The list gives the same recorded figures."
-            style={styles.canvas}
+            style={[
+              styles.canvas,
+              adaptive.regular ? { height: canvasHeight } : null,
+            ]}
             onLayout={(event) => {
-              const width = event.nativeEvent.layout.width;
+              const { width, height } = event.nativeEvent.layout;
               setSize((previous) =>
-                previous.width === width ? previous : { width, height: 350 },
+                previous.width === width && previous.height === height
+                  ? previous
+                  : { width, height },
               );
             }}
           >

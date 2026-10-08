@@ -84,6 +84,8 @@ export {
   ReadableColumn,
   readableInset,
   Grid,
+  PadGrid,
+  PadReading,
   gridColumns,
   Hoverable,
   SidebarSafe,

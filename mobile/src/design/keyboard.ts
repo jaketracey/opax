@@ -1,4 +1,12 @@
-import { useEffect, useRef, type RefObject } from 'react';
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useSyncExternalStore,
+  type RefObject,
+} from 'react';
+import { NavigationContext } from 'expo-router/react-navigation';
 import { InteractionManager } from 'react-native';
 import { OpaxIPad, type KeyCommandSpec } from '../../modules/opax-ipad';
 
@@ -20,6 +28,9 @@ export type KeyCommandId =
   | 'section-5'
   | 'list-up'
   | 'list-down'
+  | 'back'
+  | 'refresh'
+  | 'list-return'
   | 'list-escape';
 
 export const keyCommandSpecs: readonly (KeyCommandSpec & {
@@ -37,10 +48,18 @@ export const keyCommandSpecs: readonly (KeyCommandSpec & {
   { id: 'section-3', input: '3', modifiers: ['command'], title: 'Bills' },
   { id: 'section-4', input: '4', modifiers: ['command'], title: 'Search' },
   { id: 'section-5', input: '5', modifiers: ['command'], title: 'Ask' },
-  // No title: arrows and Escape are not listed in the shortcut overlay.
+  { id: 'back', input: '[', modifiers: ['command'], title: 'Back' },
+  { id: 'refresh', input: 'r', modifiers: ['command'], title: 'Refresh' },
+  {
+    id: 'list-return',
+    input: 'return',
+    modifiers: [],
+    title: 'Open focused row',
+  },
+  // Arrows retain native text-field behavior and stay out of the overlay.
   { id: 'list-up', input: 'up', modifiers: [], title: '' },
   { id: 'list-down', input: 'down', modifiers: [], title: '' },
-  { id: 'list-escape', input: 'escape', modifiers: [], title: '' },
+  { id: 'list-escape', input: 'escape', modifiers: [], title: 'Close sheet' },
 ];
 
 type Handler = () => void;
@@ -83,6 +102,28 @@ export function useKeyCommand(
     if (!enabled) return;
     return onKeyCommand(id, () => latest.current());
   }, [id, enabled]);
+}
+
+/** Refresh belongs to the visible route, including lists retained in a stack. */
+export function useRefreshCommand(refresh?: () => void, busy = false) {
+  const navigation = useContext(NavigationContext);
+  const subscribe = useCallback(
+    (listener: () => void) => {
+      if (!navigation) return () => {};
+      const focus = navigation.addListener('focus', listener);
+      const blur = navigation.addListener('blur', listener);
+      return () => {
+        focus();
+        blur();
+      };
+    },
+    [navigation],
+  );
+  const focused = useSyncExternalStore(
+    subscribe,
+    () => navigation?.isFocused() ?? true,
+  );
+  useKeyCommand('refresh', () => refresh?.(), focused && !!refresh && !busy);
 }
 
 let installed = false;

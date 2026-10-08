@@ -4,8 +4,9 @@ import UIKit
 
 // iPad support that React Native does not provide on iOS: hardware-keyboard
 // commands (Cmd-F, Cmd-N, Cmd-1…5, arrows in a split list) and the system
-// pointer effect over buttons, rows and cards. Nothing here reads or sends
-// data; a key press only tells JavaScript which command ran.
+// pointer effect and outbound URL drags over buttons, rows and cards.
+// Nothing is fetched: a key press emits an action; a drag exports its title
+// and public URL only after the reader starts dragging.
 
 struct KeyCommandSpec: Record {
   @Field var id: String = ""
@@ -33,8 +34,9 @@ final class KeyCommandCenter {
         modifierFlags: Self.flags(spec.modifiers),
         propertyList: spec.id
       )
-      // A focused text field keeps its own arrows, Return and Escape.
-      command.wantsPriorityOverSystemBehavior = false
+      command.discoverabilityTitle = spec.title.isEmpty ? nil : spec.title
+      // Text input keeps arrows and Return. Escape closes the active sheet.
+      command.wantsPriorityOverSystemBehavior = spec.input == "escape"
       return command
     }
     Self.adoptAppDelegate()
@@ -101,15 +103,52 @@ extension UIResponder {
 /// The system pointer effect over its one child: "highlight" for buttons
 /// (the pointer becomes the button's platter), "lift" for cards, "hover" for
 /// rows (an overlay tint), "none" for hover events only.
-final class PointerHoverView: ExpoView, UIPointerInteractionDelegate {
+final class PointerHoverView: ExpoView, UIPointerInteractionDelegate, UIDragInteractionDelegate {
   let onHoverChange = EventDispatcher()
+  let onActivate = EventDispatcher()
   var effect = "highlight"
   var cornerRadius: CGFloat = -1
+  var dragUrl = ""
+  var dragTitle = ""
+  var keyboardFocusable = false
+
+  override var canBecomeFocused: Bool { keyboardFocusable && !isHidden }
+  override var canBecomeFirstResponder: Bool { keyboardFocusable }
+
+  override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+    super.didUpdateFocus(in: context, with: coordinator)
+    if context.nextFocusedView === self { becomeFirstResponder() }
+    if context.previouslyFocusedView === self { resignFirstResponder() }
+    onHoverChange(["hovered": isFocused])
+  }
+
+  override var keyCommands: [UIKeyCommand]? {
+    guard keyboardFocusable, isFirstResponder else { return nil }
+    return [UIKeyCommand(title: "Open focused row", action: #selector(activateRow), input: "\r", modifierFlags: [])]
+  }
+
+  @objc private func activateRow() { onActivate([:]) }
 
   required init(appContext: AppContext? = nil) {
     super.init(appContext: appContext)
     addInteraction(UIPointerInteraction(delegate: self))
+    if UIDevice.current.userInterfaceIdiom == .pad {
+      addInteraction(UIDragInteraction(delegate: self))
+    }
   }
+
+  func dragInteraction(_ interaction: UIDragInteraction, itemsForBeginning session: UIDragSession) -> [UIDragItem] {
+    guard UIDevice.current.userInterfaceIdiom == .pad,
+      let url = URL(string: dragUrl), url.scheme == "https",
+      (url.host == "opax.com.au" || url.host == "opax.invalid"), url.user == nil, url.password == nil else { return [] }
+    let provider = NSItemProvider(object: url as NSURL)
+    provider.suggestedName = dragTitle
+    provider.registerObject("\(dragTitle)\n\(url.absoluteString)" as NSString, visibility: .all)
+    return [UIDragItem(itemProvider: provider)]
+  }
+
+  func dragInteraction(_ interaction: UIDragInteraction, sessionAllowsMoveOperation session: UIDragSession) -> Bool { false }
+  func dragInteraction(_ interaction: UIDragInteraction, sessionIsRestrictedToDraggingApplication session: UIDragSession) -> Bool { false }
 
   func pointerInteraction(
     _ interaction: UIPointerInteraction,
@@ -169,7 +208,10 @@ public final class OpaxIPadModule: Module {
     .runOnQueue(.main)
 
     View(PointerHoverView.self) {
-      Events("onHoverChange")
+      Events("onHoverChange", "onActivate")
+      Prop("dragUrl") { (view: PointerHoverView, value: String?) in view.dragUrl = value ?? "" }
+      Prop("dragTitle") { (view: PointerHoverView, value: String?) in view.dragTitle = value ?? "" }
+      Prop("keyboardFocusable") { (view: PointerHoverView, value: Bool) in view.keyboardFocusable = value }
       Prop("effect") { (view: PointerHoverView, effect: String) in
         view.effect = effect
       }

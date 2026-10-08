@@ -1,3 +1,4 @@
+import { phoneCopy } from '../../design/phone-copy';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Button, Heading, Icon, Text } from '../../design/primitives';
 import { spacing } from '../../design/tokens';
@@ -66,7 +67,9 @@ export function Consent({
         day (checked 9 September 2026). Its own privacy policy also applies.
       </Text>
       <Text variant="metadata">
-        Stored on this iPhone. Withdraw it any time from the More menu.
+        {phoneCopy(
+          'Stored on this iPhone. Withdraw it any time from the More menu.',
+        )}
       </Text>
       <PrivacyLink testID="talk-consent-privacy" />
       <View style={styles.actions}>

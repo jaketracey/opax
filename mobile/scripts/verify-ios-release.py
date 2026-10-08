@@ -66,7 +66,7 @@ SCENE_DELEGATE = "EXExpoAppSceneDelegate"
 # list) are application inputs, not tooling, for artifact provenance.
 APP_INPUTS_UNDER_SCRIPTS = {"mobile/scripts/production-block-list.json"}
 VOICE_POLICY = json.loads((Path(__file__).resolve().parent.parent / "voice-production-policy.json").read_text())
-LOCATION_PURPOSE = "OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere."
+LOCATION_PURPOSE = "OPAX uses your location once, on this device, to suggest your electorate. It is not sent anywhere."
 
 
 

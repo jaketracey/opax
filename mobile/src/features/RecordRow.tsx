@@ -7,14 +7,23 @@ export function RecordRow({
   detail,
   onPress,
   testID,
+  path,
 }: {
   title: string;
   detail?: string;
   onPress: () => void;
   testID?: string;
+  /** Canonical public web path, used only by an explicit iPad drag. */
+  path?: string;
 }) {
   return (
-    <LinkRow title={title} detail={detail} onPress={onPress} testID={testID} />
+    <LinkRow
+      title={title}
+      detail={detail}
+      onPress={onPress}
+      testID={testID}
+      dragPath={path}
+    />
   );
 }
 

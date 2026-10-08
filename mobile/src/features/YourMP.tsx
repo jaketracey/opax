@@ -1,3 +1,22 @@
+import {
+  PadGrid,
+  Button,
+  Disclosure,
+  EmptyState,
+  ErrorState,
+  Field,
+  Group,
+  Heading,
+  LinkRow,
+  LoadingState,
+  RowList,
+  Screen,
+  Section,
+  SourceLink,
+  Text,
+  AsAtLine,
+  errorMessage,
+} from '../design/primitives';
 import { SeatGrants } from './money-public/Grants';
 import { PayBlock, PartyReceiptsBlock } from './people/FinancialBlocks';
 import { phoneCopy } from '../design/phone-copy';
@@ -16,24 +35,6 @@ import {
 } from 'react-native';
 import { catalogs } from '../api/runtime';
 import type { Electorate } from '../api/catalogs';
-import {
-  Button,
-  Disclosure,
-  EmptyState,
-  ErrorState,
-  Field,
-  Group,
-  Heading,
-  LinkRow,
-  LoadingState,
-  RowList,
-  Screen,
-  Section,
-  SourceLink,
-  Text,
-  AsAtLine,
-  errorMessage,
-} from '../design/primitives';
 import { rhythm } from '../design/tokens';
 import { VoteSide } from './your-mp/VoteSide';
 import {
@@ -200,6 +201,7 @@ export default function YourMP() {
     ) ?? [];
   return (
     <Screen
+      column="wide"
       testID="your-mp-screen"
       refreshControl={<RefreshControl refreshing={busy} onRefresh={retry} />}
     >
@@ -385,16 +387,18 @@ export default function YourMP() {
           ) : null}
           {memberProfile ? (
             <>
-              <PayBlock
-                block={memberProfile.blocks.pay}
-                retry={retry}
-                id="your-pay"
-              />
-              <PartyReceiptsBlock
-                block={memberProfile.blocks.partyReceipts}
-                retry={retry}
-                id="your-receipts"
-              />
+              <PadGrid>
+                <PayBlock
+                  block={memberProfile.blocks.pay}
+                  retry={retry}
+                  id="your-pay"
+                />
+                <PartyReceiptsBlock
+                  block={memberProfile.blocks.partyReceipts}
+                  retry={retry}
+                  id="your-receipts"
+                />
+              </PadGrid>
               <RecordBlock
                 title="Recent bill votes"
                 id="your-votes"
@@ -451,6 +455,7 @@ export default function YourMP() {
                                 />
                               }
                               title={row.name}
+                              dragPath={`/bill/${row.billKey}`}
                               detail={`${row.stage} · ${formatDate(row.date!, 'short')}`}
                               accessibilityLabel={`${row.side}, ${row.name}, ${row.stage}, ${formatDate(row.date!)}. Bill record`}
                               onPress={() =>

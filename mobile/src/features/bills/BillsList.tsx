@@ -1,4 +1,5 @@
 import { PartialNotice, SavedCopyNotice } from '../CatalogNotice';
+import { useRefreshCommand } from '../../design/keyboard';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   FlatList,
@@ -79,6 +80,7 @@ export default function BillsList() {
 function BillsScreen() {
   const load = useCallback((refresh: boolean) => catalogs.bills(refresh), []);
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
+  useRefreshCommand(refresh, refreshing);
   const [text, setText] = useState('');
   const [query, setQuery] = useState('');
   const { filters } = useBillFilterState();

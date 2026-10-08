@@ -62,6 +62,8 @@ function BillCard({
   return (
     <Hoverable
       effect="lift"
+      onActivate={() => router.push(billRoute(bill.key))}
+      drag={{ path: `/bill/${bill.key}`, title: bill.title }}
       cornerRadius={cardRadius}
       style={fill ? styles.fill : null}
     >

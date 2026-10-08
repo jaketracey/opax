@@ -136,7 +136,7 @@ export default function Ballot() {
   return (
     <>
       <ExploreHeader title="Ballot" game="ballot" />
-      <Screen testID="explore-ballot-screen">
+      <Screen column="wide" testID="explore-ballot-screen">
         <Section
           title="Build your ballot"
           info={{ title: 'How the practice ballot works', notes: BALLOT_NOTES }}
