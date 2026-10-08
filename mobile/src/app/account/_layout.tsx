@@ -5,6 +5,7 @@ import {
 } from '../../navigation/chrome';
 import { Platform } from 'react-native';
 import { Stack } from 'expo-router';
+import { AndroidReadingHeader } from '../../navigation/AndroidReadingHeader';
 export default function AccountStack() {
   const chrome = useStackChrome();
   return (
@@ -14,6 +15,9 @@ export default function AccountStack() {
         options={{
           title: 'Account and about',
           ...headerItems(() => [closeSheetItem()]),
+          ...(Platform.OS === 'android'
+            ? { header: AndroidReadingHeader }
+            : {}),
         }}
       />
       {Platform.OS === 'android' ? (
@@ -25,7 +29,12 @@ export default function AccountStack() {
       <Stack.Screen name="about" options={{ title: 'About OPAX' }} />
       <Stack.Screen
         name="sources"
-        options={{ title: 'Sources and licences' }}
+        options={{
+          title: 'Sources and licences',
+          ...(Platform.OS === 'android'
+            ? { header: AndroidReadingHeader }
+            : {}),
+        }}
       />
     </Stack>
   );

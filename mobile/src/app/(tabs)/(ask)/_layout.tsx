@@ -1,3 +1,4 @@
+import { headerItems } from '../../../navigation/chrome';
 import { Stack } from 'expo-router';
 import { closeSheetItem, useStackChrome } from '../../../navigation/chrome';
 export const unstable_settings = { anchor: 'ask' };
@@ -17,7 +18,7 @@ export default function AskLayout() {
           title: 'Expense glossary',
           presentation: 'modal',
           headerLargeTitleEnabled: false,
-          unstable_headerRightItems: () => [closeSheetItem()],
+          ...headerItems(() => [closeSheetItem()]),
         }}
       />
     </Stack>

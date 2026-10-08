@@ -26,7 +26,7 @@ import { billRoute } from '../../navigation/routes';
 import { shareHeaderItem } from '../../navigation/share';
 import { records } from './runtime';
 import { textChunks } from './model';
-import { ReaderList } from './ReaderList';
+import { ReaderList, readerChunkTarget } from './ReaderList';
 import { shareTextFile } from './actions';
 import { useRead } from './useRead';
 export default function BillTextReader({
@@ -82,7 +82,7 @@ export default function BillTextReader({
   const parts = useMemo(
     () =>
       current?.sections.flatMap((section) =>
-        textChunks(section.text).map((text, index) => ({
+        textChunks(section.text, readerChunkTarget).map((text, index) => ({
           id: `${section.id}-${index}`,
           text,
           ...(index === 0 ? { title: section.title } : {}),

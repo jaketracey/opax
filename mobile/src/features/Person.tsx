@@ -17,7 +17,7 @@ import {
   moneyAccessibilityLabel,
 } from '../design/format';
 import { useEffect, useState } from 'react';
-import { RefreshControl, StyleSheet, View } from 'react-native';
+import { Platform, RefreshControl, StyleSheet, View } from 'react-native';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../api/runtime';
 import { CachedPortrait } from './CachedPortrait';
@@ -34,6 +34,7 @@ import {
   LoadingState,
   OpaxWebLink,
   PartyLabel,
+  Portrait,
   RowList,
   Screen,
   Section,
@@ -161,12 +162,23 @@ export function ProfileScreen({
           </Group>
         ) : null}
         {!profile && !error && !noNativeProfile ? (
-          <LoadingState
-            shape="people"
-            count={1}
-            label="Loading the public record"
-            testID="person-loading"
-          />
+          Platform.OS === 'android' ? (
+            <Group testID="person-loading">
+              <Portrait size="profile" testID="person-cold-portrait" />
+              <LoadingState
+                shape="text"
+                count={2}
+                label="Loading the public record"
+              />
+            </Group>
+          ) : (
+            <LoadingState
+              shape="people"
+              count={1}
+              label="Loading the public record"
+              testID="person-loading"
+            />
+          )
         ) : null}
         {identity && b ? (
           <>

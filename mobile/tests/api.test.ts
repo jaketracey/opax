@@ -1,4 +1,5 @@
 import { pinnedBytes } from './pinned';
+import { Platform } from 'react-native';
 import { ApiClient } from '../src/api/client';
 import {
   CatalogCache,
@@ -56,6 +57,39 @@ function setup(transport: typeof fetch, now = () => 1000, options = {}) {
     }),
   };
 }
+test.each(['android', 'ios'] as const)(
+  'catalog requests label %s while preserving their transport boundary',
+  async (platform) => {
+    const original = Platform.OS;
+    try {
+      Object.defineProperty(Platform, 'OS', {
+        value: platform,
+        configurable: true,
+      });
+      const transport = jest.fn().mockResolvedValue(response());
+      const { client } = setup(transport);
+      await client.get('/parliamentarians.json', decode);
+      expect(transport.mock.calls[0]).toEqual([
+        `${origin}/parliamentarians.json`,
+        expect.objectContaining({
+          method: 'GET',
+          credentials: 'omit',
+          redirect: 'manual',
+          headers: expect.objectContaining({
+            'User-Agent': `OPAX-${platform === 'android' ? 'Android' : 'iOS'}/1.0.0 (1)`,
+          }),
+        }),
+      ]);
+      await expect(client.get('/api/ask', decode)).rejects.toThrow();
+      expect(transport).toHaveBeenCalledTimes(1);
+    } finally {
+      Object.defineProperty(Platform, 'OS', {
+        value: original,
+        configurable: true,
+      });
+    }
+  },
+);
 describe('the never-call boundary', () => {
   test.each([
     '/api/ask',

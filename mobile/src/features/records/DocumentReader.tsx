@@ -36,7 +36,7 @@ import { records } from './runtime';
 import { metaString, textChunks, type DocumentRecord } from './model';
 import { titleSubject } from './citations';
 import { copyText } from './actions';
-import { ReaderList } from './ReaderList';
+import { ReaderList, readerChunkTarget } from './ReaderList';
 import { useRead } from './useRead';
 import { RecordLoadError } from './RecordLoadError';
 
@@ -88,7 +88,7 @@ export default function DocumentReader({
   const [copied, setCopied] = useState(false);
   const parts = useMemo(
     () =>
-      textChunks(doc?.text ?? '').map((text, index) => ({
+      textChunks(doc?.text ?? '', readerChunkTarget).map((text, index) => ({
         id: String(index),
         text,
       })),

@@ -1,3 +1,4 @@
+import { phoneCopy } from '../../design/phone-copy';
 import native from '../../../modules/opax-voice';
 import { Platform } from 'react-native';
 import {
@@ -13,7 +14,9 @@ export class ChatSyncError extends Error {
     super(
       code === 'signed-out'
         ? 'Sign in to sync conversations.'
-        : 'Your conversations are saved on this iPhone. Account sync could not complete.',
+        : phoneCopy(
+            'Your conversations are saved on this iPhone. Account sync could not complete.',
+          ),
     );
   }
 }

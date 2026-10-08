@@ -9,6 +9,7 @@ import {
 } from 'react';
 import {
   ScrollView,
+  Platform,
   StyleSheet,
   View,
   type RefreshControlProps,
@@ -152,7 +153,7 @@ export function Section({
       style={[styles.section, rule ? null : styles.unruled]}
     >
       {title || action || info ? (
-        stacked && title && (action || info) ? (
+        stacked && title && (action || (info && Platform.OS !== 'android')) ? (
           // At accessibility sizes the title takes the whole line and the
           // ⓘ and action sit on their own line below: a large "See all"
           // never squeezes the heading into a narrow column.
