@@ -1,5 +1,7 @@
 import { NativeTabs } from 'expo-router/unstable-native-tabs';
 import { Platform } from 'react-native';
+import { useEffect } from 'react';
+import { OpaxIPad } from '../../../modules/opax-ipad';
 import { AndroidTabs } from '../../navigation/AndroidTabs';
 import { chrome } from '../../design/tokens';
 // Ask is the fifth tab. Talk and Account keep their navigation-bar positions.
@@ -9,6 +11,9 @@ import { chrome } from '../../design/tokens';
 // expand into it) on regular width, and this bottom bar in a compact window.
 // `sidebarAdaptable` has no effect on iPhone.
 export default function TabsLayout() {
+  useEffect(() => {
+    void OpaxIPad?.configureWordSafeSidebarLabels();
+  }, []);
   if (Platform.OS === 'android') return <AndroidTabs />;
   return (
     <NativeTabs

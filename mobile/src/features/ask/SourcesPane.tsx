@@ -40,6 +40,8 @@ import {
 } from '../../design/selection';
 import { colors, hairline, rhythm } from '../../design/tokens';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
+import { useListKeys } from '../../design/list-keys';
+import { useCursorReveal } from '../split/cursor';
 import { entryForWebPath, entryLabel, type RecordEntry } from '../split/entry';
 import { RecordDetail, RecordShare } from '../split/RecordDetail';
 import { openAnswerLink } from './AnswerView';
@@ -252,6 +254,16 @@ function SourceList({
   const sources = answer.result?.sources ?? answer.sources ?? [];
   const groups = sourceGroups(sources);
   const scroll = useRef<ScrollView>(null);
+  const reveal = useCursorReveal(scroll);
+  const ordered = [...groups.cited, ...groups.also];
+  const cursor = useListKeys(
+    ordered.map((source) => source.resource),
+    (key) => {
+      const source = ordered.find((item) => item.resource === key);
+      if (source) open(source.href, source.title);
+    },
+    reveal.reveal,
+  );
   const markedRef = useRef<View>(null);
   const headerBottom = useHeaderBottom();
   // A tapped citation scrolls its source into view in the pane.
@@ -271,7 +283,11 @@ function SourceList({
   }, [marked, headerBottom]);
   const cited = groups.cited.some((source) => source.cited);
   return (
-    <Screen testID="ask-sources-list" scrollRef={scroll}>
+    <Screen
+      testID="ask-sources-list"
+      scrollRef={scroll}
+      onScroll={reveal.onScroll}
+    >
       <Group gap={rhythm.line}>
         <Heading level={2}>Sources</Heading>
         {question ? (
@@ -289,6 +305,8 @@ function SourceList({
               n={cited ? i + 1 : undefined}
               marked={marked === i + 1}
               itemRef={marked === i + 1 ? markedRef : undefined}
+              highlighted={cursor === source.resource}
+              rows={reveal.rows}
               open={open}
             />
           ))}
@@ -306,6 +324,8 @@ function SourceList({
                 key={source.resource}
                 record={source}
                 marked={false}
+                highlighted={cursor === source.resource}
+                rows={reveal.rows}
                 open={open}
               />
             ))}
@@ -321,15 +341,26 @@ function SourceItem({
   n,
   marked,
   itemRef,
+  highlighted,
+  rows,
   open,
 }: {
   record: Source;
   n?: number;
   marked: boolean;
   itemRef?: RefObject<View | null>;
+  highlighted: boolean;
+  rows: ReturnType<typeof useCursorReveal>['rows'];
   open: (href: string, title: string) => void;
 }) {
   const [hovered, onHover] = useHover();
+  const row = useRef<View>(null);
+  useEffect(() => {
+    rows.set(source.resource, row);
+    return () => {
+      rows.delete(source.resource);
+    };
+  }, [rows, source.resource]);
   const meta = [
     source.speaker,
     source.party,
@@ -340,40 +371,42 @@ function SourceItem({
     .join(' · ');
   const title = `${n ? `[${n}] ` : ''}${source.title}`;
   return (
-    <View ref={itemRef} collapsable={false} style={styles.item}>
-      <Hoverable effect="none" onHover={onHover}>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={[title, meta].filter(Boolean).join(', ')}
-          accessibilityState={{ selected: marked }}
-          testID={n ? `ask-pane-source-${n}` : undefined}
-          onPress={() => open(source.href, source.title)}
-          style={({ pressed }) => [
-            styles.source,
-            splitRowStyles.bleed,
-            marked
-              ? selectedWash('people')
-              : pressed || hovered
-                ? { backgroundColor: colors.sunken }
-                : null,
-          ]}
-        >
-          {marked ? <SelectedMark accent="people" /> : null}
-          <Text wordSafe variant="strong">
-            {title}
-          </Text>
-          {meta ? (
-            <Text wordSafe variant="metadata">
-              {meta}
+    <View ref={row} collapsable={false} style={styles.item}>
+      <View ref={itemRef} collapsable={false}>
+        <Hoverable effect="none" onHover={onHover}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={[title, meta].filter(Boolean).join(', ')}
+            accessibilityState={{ selected: marked }}
+            testID={n ? `ask-pane-source-${n}` : undefined}
+            onPress={() => open(source.href, source.title)}
+            style={({ pressed }) => [
+              styles.source,
+              splitRowStyles.bleed,
+              marked
+                ? selectedWash('people')
+                : pressed || hovered || highlighted
+                  ? { backgroundColor: colors.sunken }
+                  : null,
+            ]}
+          >
+            {marked ? <SelectedMark accent="people" /> : null}
+            <Text wordSafe variant="strong">
+              {title}
             </Text>
-          ) : null}
-          {source.snippet ? (
-            <Text wordSafe variant="record">
-              {source.snippet}
-            </Text>
-          ) : null}
-        </Pressable>
-      </Hoverable>
+            {meta ? (
+              <Text wordSafe variant="metadata">
+                {meta}
+              </Text>
+            ) : null}
+            {source.snippet ? (
+              <Text wordSafe variant="record">
+                {source.snippet}
+              </Text>
+            ) : null}
+          </Pressable>
+        </Hoverable>
+      </View>
       <ViewOriginal
         sources={source.url ? [{ label: source.title, url: source.url }] : []}
       />

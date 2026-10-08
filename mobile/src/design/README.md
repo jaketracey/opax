@@ -74,7 +74,9 @@ Design workbench) to see every component and state at the current text size.
   (navy with text, drawn disabled until then, a spinner while working). The
   screen title names the task, so the input's label is spoken, not drawn.
   Ask's question and follow-up use it; Options and Your conversations sit
-  below as plain rows.
+  below as plain rows. Its multiline input scrolls after reaching 40% of
+  the live window height above the software keyboard, keeping Send and the
+  conversation visible on both iPhone and iPad.
 - **`StepButtons`**: previous and next on one row ("‹ June", "August ›"),
   each with a full spoken name; a disabled end stays drawn disabled. They
   stack full width at accessibility sizes.
@@ -203,7 +205,10 @@ selected`. `LinkRow`, `PersonRow`, `RecordRow` and the party directory
 - The tabs are UIKit's sidebar-adaptable tab bar on iPad (`NativeTabs
 sidebarAdaptable`): a sidebar, or the top tab bar the reader expands into
   one, on regular width; the bottom bar in a compact window; no change on
-  iPhone. Talk and Account stay in each root's navigation bar.
+  iPhone. Talk and Account stay in each root's navigation bar. Sidebar
+  labels use UIKit's word-wrapped item configuration, fitting a long word
+  down only as far as the default body size at accessibility sizes.
+  Incoming `opax://directory` links select Search's shared directory route.
 - Root screens with two panes turn their large title off on regular width
   (Bills); large titles over two scroll views collapse with whichever
   scrolls first.
@@ -290,7 +295,9 @@ sidebarAdaptable`): a sidebar, or the top tab bar the reader expands into
   so `KeyboardAvoidingView` under-lifts it), and a sources pane on the
   right (`features/ask/SourcesPane.tsx`): the answer being read (it follows
   the scroll), its citations numbered as in the answer, then what was
-  retrieved but not cited. A citation in the answer marks its source in the
+  retrieved but not cited. Up/Down move a highlight through both groups;
+  Return opens that source in the pane. Source-record search results use
+  the same cursor behavior. A citation in the answer marks its source in the
   pane; a source, a citation row or a person opens in the pane with Back to
   the sources. The answer's own "Retrieved records" list is not drawn there.
 - **Parliamentarians, Parties, Electorates**: splits as Bills (`open` in

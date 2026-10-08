@@ -420,6 +420,7 @@ function SearchScreen({
                   }
                 : undefined
             }
+            cursorReveal={split ? cursor : undefined}
           />
         ) : (
           <Button
@@ -950,7 +951,9 @@ function SearchScreen({
         entryTitle={entryLabel}
         renderDetail={(entry) => <RecordDetail entry={entry} />}
         detailActions={(entry) => <RecordShare entry={entry} />}
-        keys={keys}
+        // RecordSearchForm owns its loaded result order and keyboard cursor.
+        // The outer split must not reclaim those keys when the tab refocuses.
+        keys={extended ? undefined : keys}
         onOpenKey={(key) => openers.get(key)?.()}
         onCursor={cursor.reveal}
         empty={
