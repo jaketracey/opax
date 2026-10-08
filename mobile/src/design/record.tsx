@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, View } from 'react-native';
 import { ownsRowPadding } from './row-padding';
 import { openOnWeb, openSource } from '../navigation/external';
 import { fromWebPath } from '../navigation/routes';
@@ -136,7 +136,7 @@ export function SourceLink({
         kind === 'register' ? 'Opens the register' : 'Opens the source'
       }
       testID={testID}
-      hitSlop={{ top: 8, bottom: 8 }}
+      hitSlop={Platform.OS === 'android' ? 0 : { top: 8, bottom: 8 }}
       onPress={() => openSource(url, destination)}
       style={({ pressed }) => [
         styles.small,
@@ -349,7 +349,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'flex-start',
     gap: spacing.s2,
-    minHeight: 28,
+    minHeight: Platform.OS === 'android' ? minimumTarget : 28,
     maxWidth: '100%',
     paddingHorizontal: rhythm.line,
     marginHorizontal: -rhythm.line,
