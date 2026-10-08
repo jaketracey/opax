@@ -1,5 +1,6 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
+import { Text } from 'react-native';
 import { ApiClient } from '../src/api/client';
 import { CatalogCache } from '../src/api/cache';
 import { Records } from '../src/features/records/data';
@@ -62,6 +63,7 @@ jest.mock('../src/features/follows/FollowingSection', () => ({
   FollowingSection: () => null,
 }));
 jest.mock('expo-router', () => ({
+  useSegments: () => [],
   router: { push: jest.fn() },
   Stack: { Screen: () => null },
   useLocalSearchParams: () => ({
@@ -222,6 +224,71 @@ test('bill text switches chosen bytes and never presents the old version as the 
   ).toBe('First reading — synthetic fixture');
   await act(async () => view.unmount());
 });
+test('bill text leads with the bill page summary, labelled as machine-written', async () => {
+  const bill = decodeBill(pinned('/bills/au-federal-r7534.json'));
+  const view = await mount(<BillTextReader />);
+  const text = (testID: string) =>
+    JSON.stringify(view.root.findByProps({ testID }).props.children);
+  expect(text('bill-text-summary-label')).toContain('Machine summary');
+  expect(text('bill-text-summary-attribution')).toContain(
+    bill.summary!.attribution,
+  );
+  expect(
+    view.root
+      .findByProps({ testID: 'bill-text-summary-text' })
+      .findAllByType(Text)
+      .map((node) => node.props.children),
+  ).toEqual(bill.summary!.sentences);
+  // The summary sits above the version and the reading action.
+  const order = view.root
+    .findAll((node) => typeof node.props.testID === 'string')
+    .map((node) => node.props.testID as string);
+  expect(order.indexOf('bill-text-summary')).toBeLessThan(
+    order.indexOf('bill-text-version'),
+  );
+  expect(order.indexOf('bill-text-version')).toBeLessThan(
+    order.indexOf('bill-text-read'),
+  );
+  await act(async () => view.unmount());
+});
+test.each([
+  [
+    'has no summary',
+    () => {
+      const bill = decodeBill(pinned('/bills/au-federal-r7534.json'));
+      jest
+        .mocked(catalogs.billFor)
+        .mockResolvedValue(
+          record(billFor({ ...bill, summary: null }, bills)) as never,
+        );
+    },
+  ],
+  [
+    'cannot be read',
+    () => {
+      jest.mocked(catalogs.billFor).mockRejectedValue(new Error('offline'));
+    },
+  ],
+])(
+  'bill text for a bill that %s shows the reading actions and no placeholder',
+  async (_case, arrange) => {
+    arrange();
+    const view = await mount(<BillTextReader />);
+    expect(
+      view.root.findAllByProps({ testID: 'bill-text-summary' }),
+    ).toHaveLength(0);
+    expect(
+      view.root.findAllByProps({ testID: 'bill-summary-none' }),
+    ).toHaveLength(0);
+    expect(
+      view.root.findAllByProps({ testID: 'bill-text-read' }).length,
+    ).toBeGreaterThan(0);
+    expect(
+      view.root.findAllByProps({ testID: 'bill-text-version-picker' }).length,
+    ).toBeGreaterThan(0);
+    await act(async () => view.unmount());
+  },
+);
 test('real request client sends one GET per action, shares in-flight and session records, no retries after failure', async () => {
   const transport = jest.fn(async (url: string) =>
     Response.json(responses[new URL(url).pathname]),

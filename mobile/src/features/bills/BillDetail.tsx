@@ -45,7 +45,7 @@ import {
   DivisionNote,
   InlineLink,
   MachineBrief,
-  MachineLabel,
+  MachineSummary,
   PartySplits,
   RecordedParty,
   dateSpan,
@@ -501,21 +501,11 @@ function Summary({ view }: { view: BillView }) {
       accent="bills"
       testID="bill-summary"
     >
-      {/* The attribution comes first, so no reader meets the summary as the
-          record: the label, then the stored attribution in full. */}
-      <Group gap={spacing.s1}>
-        <MachineLabel testID="bill-summary-label">Machine summary</MachineLabel>
-        <Text variant="caption" testID="bill-summary-attribution">
-          {summary.attribution}.
-        </Text>
-      </Group>
-      <Group gap={spacing.s3} testID="bill-summary-text">
-        {sentences.map((sentence, index) => (
-          <Text key={index} variant="body">
-            {sentence}
-          </Text>
-        ))}
-      </Group>
+      <MachineSummary
+        attribution={summary.attribution}
+        sentences={sentences}
+        testID="bill-summary"
+      />
       {changes.length ? (
         <SubSection title="What it changes">
           {changes.map((change, index) => (

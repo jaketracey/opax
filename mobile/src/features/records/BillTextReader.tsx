@@ -1,6 +1,6 @@
 import { headerItems } from '../../navigation/chrome';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { AccessibilityInfo } from 'react-native';
+import { AccessibilityInfo, StyleSheet, View } from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import {
   AsAtLine,
@@ -18,8 +18,10 @@ import {
   Text,
   errorMessage,
 } from '../../design/primitives';
-import { rhythm } from '../../design/tokens';
-import { formatDate } from '../../design/format';
+import { colors, radius, rhythm } from '../../design/tokens';
+import { formatCount, formatDate } from '../../design/format';
+import { catalogs } from '../../api/runtime';
+import { Bullet, MachineSummary } from '../bills/parts';
 import { billRoute } from '../../navigation/routes';
 import { shareHeaderItem } from '../../navigation/share';
 import { records } from './runtime';
@@ -37,6 +39,13 @@ export default function BillTextReader({
   const load = useCallback(() => records.billManifest(key), [key]);
   const manifestState = useRead(load);
   const manifest = manifestState.value?.data;
+  // The bill page's own "In short": same record, same label. A bill without
+  // one (or a read that fails) shows the reading actions and nothing else.
+  const loadSummary = useCallback(() => catalogs.billFor(key), [key]);
+  const summaryState = useRead(loadSummary);
+  const summarySettled = !!(summaryState.value || summaryState.error);
+  const summary = summaryState.value?.data.summary.data ?? null;
+  const changes = summary?.changes.filter(Boolean) ?? [];
   const [chosen, setChosen] = useState<{ key: string; id: string } | null>(
     null,
   );
@@ -46,6 +55,7 @@ export default function BillTextReader({
       ? version
       : manifest?.default_version_id);
   const requestedId = chosen?.key === key ? chosen.id : null;
+  const shown = manifest?.versions.find((row) => row.id === id);
   const loadVersion = useCallback(
     () =>
       requestedId
@@ -114,87 +124,139 @@ export default function BillTextReader({
         jumpTo={jumpTo}
         header={
           <>
-            <Heading level={1}>Bill text</Heading>
             {manifestState.error ? (
-              <ErrorState
-                message={errorMessage(manifestState.error)}
-                onRetry={manifestState.retry}
-                testID="bill-text-error"
-              />
-            ) : !manifest ? (
-              <LoadingState label="Loading collected versions" />
+              <>
+                <Heading level={1}>Bill text</Heading>
+                <ErrorState
+                  message={errorMessage(manifestState.error)}
+                  onRetry={manifestState.retry}
+                  testID="bill-text-error"
+                />
+              </>
+            ) : !manifest || !summarySettled ? (
+              <>
+                <Heading level={1}>Bill text</Heading>
+                <LoadingState label="Loading collected versions" />
+              </>
             ) : (
               <>
-                <Group gap={rhythm.tight}>
-                  <Text variant="strong" wordSafe>
-                    {manifest.title}
+                <Group gap={rhythm.tight} testID="bill-text-head">
+                  <Text variant="kicker" tone="billsInk">
+                    Bill text
                   </Text>
-                  <LinkRow
-                    title="Bill page"
-                    icon="doc.text"
-                    accent="bills"
-                    onPress={() => router.push(billRoute(key))}
-                  />
+                  <Heading level={1} testID="bill-text-title">
+                    {manifest.title}
+                  </Heading>
                   <AsAtLine
                     asOf={manifest.generated_at}
                     citation="Collected original bill texts"
                   />
                 </Group>
+                {summary ? (
+                  <Section
+                    title="In short"
+                    icon="text.alignleft"
+                    accent="bills"
+                    testID="bill-text-summary"
+                  >
+                    <MachineSummary
+                      attribution={summary.attribution}
+                      sentences={summary.sentences}
+                      testID="bill-text-summary"
+                    />
+                    {changes.length ? (
+                      <Disclosure
+                        label="What it changes"
+                        value={formatCount(changes.length)}
+                        testID="bill-text-changes"
+                      >
+                        <Group gap={rhythm.tight}>
+                          {changes.map((change, index) => (
+                            <Bullet key={index}>{change}</Bullet>
+                          ))}
+                        </Group>
+                      </Disclosure>
+                    ) : null}
+                  </Section>
+                ) : null}
                 <Section
-                  title="Version"
-                  icon="doc.on.doc"
+                  title="Read the bill"
+                  icon="doc.text"
                   accent="bills"
+                  testID="bill-text-version"
                   info={{
                     title: 'About collected versions',
                     notes: [manifest.coverage_note],
                     testID: 'bill-text-coverage-info',
                   }}
                 >
-                  <Text wordSafe testID="bill-text-version-label">
-                    {
-                      manifest.versions.find((row) => row.id === id)
-                        ?.stage_label
-                    }
-                  </Text>
-                  <Disclosure
-                    label="Choose version"
-                    open={picker}
-                    onToggle={setPicker}
-                    testID="bill-text-version-picker"
-                  >
-                    <RowList>
-                      {manifest.versions.map((row, index) => (
-                        <LinkRow
-                          key={row.id}
-                          title={[
-                            row.stage_label,
-                            row.date ? formatDate(row.date) : null,
-                          ]
-                            .filter(Boolean)
-                            .join(' · ')}
-                          onPress={() => {
-                            setChosen({ key, id: row.id });
-                            setPicker(false);
-                            setSupporting(false);
-                            setJump(null);
-                          }}
-                          testID={`bill-text-version-${index}`}
-                        />
-                      ))}
-                    </RowList>
-                  </Disclosure>
+                  <View style={styles.version}>
+                    <Text variant="kicker" tone="billsInk">
+                      Version
+                    </Text>
+                    <Text
+                      variant="strong"
+                      wordSafe
+                      testID="bill-text-version-label"
+                    >
+                      {shown?.stage_label}
+                    </Text>
+                    {shown?.date ? (
+                      <Text variant="metadata">{formatDate(shown.date)}</Text>
+                    ) : null}
+                  </View>
+                  <RowList>
+                    {manifest.versions.length > 1 ? (
+                      <Disclosure
+                        label="Choose version"
+                        value={formatCount(manifest.versions.length)}
+                        accessibilityLabel={`Choose version, ${formatCount(manifest.versions.length)} collected`}
+                        open={picker}
+                        onToggle={setPicker}
+                        testID="bill-text-version-picker"
+                      >
+                        <RowList>
+                          {manifest.versions.map((row, index) => (
+                            <LinkRow
+                              key={row.id}
+                              title={row.stage_label}
+                              detail={
+                                row.date ? formatDate(row.date) : undefined
+                              }
+                              onPress={() => {
+                                setChosen({ key, id: row.id });
+                                setPicker(false);
+                                setSupporting(false);
+                                setJump(null);
+                              }}
+                              testID={`bill-text-version-${index}`}
+                            />
+                          ))}
+                        </RowList>
+                      </Disclosure>
+                    ) : null}
+                    {!requestedId ? (
+                      <LinkRow
+                        title="Read full bill text"
+                        icon="doc.text"
+                        accent="bills"
+                        onPress={() => {
+                          if (id) setChosen({ key, id });
+                        }}
+                        testID="bill-text-read"
+                      />
+                    ) : null}
+                    <LinkRow
+                      title="Bill page"
+                      detail="Dates, divisions and speeches"
+                      icon="building.columns"
+                      accent="bills"
+                      onPress={() => router.push(billRoute(key))}
+                      testID="bill-text-bill-page"
+                    />
+                  </RowList>
                 </Section>
-                {!requestedId ? (
-                  <LinkRow
-                    title="Read full bill text"
-                    icon="doc.text"
-                    accent="bills"
-                    onPress={() => {
-                      if (id) setChosen({ key, id });
-                    }}
-                    testID="bill-text-read"
-                  />
-                ) : versionState.error ? (
+                {!requestedId ? null : versionState.error ? (
                   <ErrorState
                     message={errorMessage(versionState.error)}
                     onRetry={versionState.retry}
@@ -320,3 +382,13 @@ export default function BillTextReader({
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  version: {
+    gap: rhythm.line,
+    backgroundColor: colors.billsWash,
+    borderRadius: radius,
+    paddingHorizontal: rhythm.block,
+    paddingVertical: rhythm.heading,
+  },
+});

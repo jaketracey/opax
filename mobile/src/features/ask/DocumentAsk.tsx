@@ -1,9 +1,8 @@
-import { router } from 'expo-router';
 import { LinkRow } from '../../design/primitives';
-import { askRoute } from '../../navigation/routes';
 import { titleSubject } from '../records/citations';
 import { metaString, type DocumentRecord } from '../records/model';
 import { topics } from './Options';
+import { useOpenAsk } from './open';
 
 /** portal/public/app.js docAskQuestion: a draft, never a submitted request. */
 export function documentQuestion(doc: DocumentRecord) {
@@ -54,15 +53,14 @@ export function documentQuestion(doc: DocumentRecord) {
 }
 
 export function DocumentAsk({ doc }: { doc: DocumentRecord }) {
+  const openAsk = useOpenAsk();
   return (
     <LinkRow
       title="Ask about this"
       icon="text.bubble"
       accent="people"
       testID="doc-ask"
-      onPress={() =>
-        router.dismissTo(askRoute({ question: documentQuestion(doc) }))
-      }
+      onPress={() => openAsk({ question: documentQuestion(doc) })}
     />
   );
 }

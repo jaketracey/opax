@@ -17,6 +17,7 @@ import { pinned, pinnedBytes, slugs } from './pinned';
 
 const mockParams: { key: string } = { key: 'au-federal-r7501' };
 jest.mock('expo-router', () => ({
+  useSegments: () => [],
   useLocalSearchParams: () => mockParams,
   router: { push: jest.fn() },
   Stack: { Screen: () => null },
