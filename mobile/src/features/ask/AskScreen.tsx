@@ -5,7 +5,6 @@ import {
   AccessibilityInfo,
   Alert,
   Keyboard,
-  KeyboardAvoidingView,
   StyleSheet,
   View,
   ScrollView,
@@ -14,7 +13,13 @@ import {
   type LayoutChangeEvent,
 } from 'react-native';
 import { headerItems, rootHeaderItems } from '../../navigation/chrome';
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import {
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type RefObject,
+} from 'react';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../../api/runtime';
 import {
@@ -119,6 +124,8 @@ export default function AskScreen() {
   const docked = isPad && regular;
   const sources = useAskSources(s.thread);
   const noTarget = useRef<View>(null);
+  const column = useRef<View>(null);
+  const lift = useKeyboardLift(column, docked);
   const scroll = useRef<ScrollView>(null),
     submitTarget = useRef<View>(null),
     followupTarget = useRef<View>(null),
@@ -647,7 +654,7 @@ export default function AskScreen() {
       {docked ? (
         <SidebarSafe style={styles.fill}>
           <LayoutRegion style={[styles.fill, styles.split]}>
-            <KeyboardAvoidingView behavior="padding" style={styles.fill}>
+            <View ref={column} style={[styles.fill, { paddingBottom: lift }]}>
               <AskPaneProvider value={sources.context}>
                 {conversation}
               </AskPaneProvider>
@@ -661,7 +668,7 @@ export default function AskScreen() {
                   {composer}
                 </View>
               </View>
-            </KeyboardAvoidingView>
+            </View>
             {sources.pane}
           </LayoutRegion>
         </SidebarSafe>
@@ -748,6 +755,32 @@ export default function AskScreen() {
       ) : null}
     </>
   );
+}
+/**
+ * The docked composer's lift above the software keyboard: how far the
+ * keyboard overlaps the bottom of `ref` (the conversation column) in the
+ * window. Measured, because the column does not start at the window's top.
+ */
+function useKeyboardLift(ref: RefObject<View | null>, enabled: boolean) {
+  const [lift, setLift] = useState(0);
+  useEffect(() => {
+    if (!enabled) return;
+    const subscription = Keyboard.addListener(
+      'keyboardWillChangeFrame',
+      (event) => {
+        const top = event.endCoordinates.screenY;
+        ref.current?.measureInWindow((_x, y, _width, height) =>
+          setLift(Math.max(0, Math.round(y + height - top))),
+        );
+      },
+    );
+    const hidden = Keyboard.addListener('keyboardWillHide', () => setLift(0));
+    return () => {
+      subscription.remove();
+      hidden.remove();
+    };
+  }, [ref, enabled]);
+  return enabled ? lift : 0;
 }
 // Nothing was searched for a follow-up like "High" or "ok": say so gently.
 function clarifyCopy(suggested: boolean) {

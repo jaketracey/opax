@@ -1,0 +1,203 @@
+appId: au.com.opax.app
+name: 53 iPad splits, Search, Ask with its sources pane, directories, rotation
+---
+# iPad only (OPAX QA iPad 13). As in journey 52, taps miss under iPadOS 26
+# Windowed Apps, so the journey sets Full-Screen Apps first and restores
+# Windowed Apps, the mode it found the device in, at the end.
+- runFlow: support/ipad-full-screen-apps.yaml
+- launchApp:
+    clearState: true
+    permissions: {}
+- extendedWaitUntil:
+    visible:
+      id: today-screen
+    timeout: 90000
+# Search: results on the left, the calm empty pane, then a suggestion opens
+# its native profile in the pane, the row marked selected.
+- openLink: opax://search
+- extendedWaitUntil:
+    visible:
+      id: search-split-empty
+    timeout: 60000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/53-search-empty
+- tapOn:
+    id: search-input
+- inputText: Anthony Albanese
+- extendedWaitUntil:
+    visible:
+      id: search-suggestion-person-.*
+    timeout: 60000
+- tapOn:
+    id: search-suggestion-person-.*
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+    timeout: 60000
+- assertVisible:
+    id: search-split-list
+- assertVisible:
+    id: search-input
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/53-search-portrait
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/53-search-landscape
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd
+# The selection lives in the route: a link restores the query and the pane.
+- openLink: opax://search?q=gambling&open=bill:au-federal-r7534
+- extendedWaitUntil:
+    visible:
+      id: bill-title
+    timeout: 60000
+- assertVisible:
+    id: record-pane-share
+- assertVisible: Interactive Gambling \(Cost Recovery Levy\) Bill 2026
+- takeScreenshot: ${EVIDENCE}/53-search-route
+# Ask: the conversation, the composer docked under it, and the answer's
+# sources in the pane; a source opens in the pane with Back to the sources.
+- openLink: opax://ask
+- extendedWaitUntil:
+    visible:
+      id: ask-sources-empty
+    timeout: 60000
+- assertVisible:
+    id: ask-dock
+- takeScreenshot: ${EVIDENCE}/53-ask-empty
+- tapOn:
+    id: ask-question
+- inputText: Who spoke on the interactive gambling levy bill?
+- tapOn:
+    id: ask-submit
+    enabled: true
+- extendedWaitUntil:
+    visible:
+      id: ask-pane-source-1
+    timeout: 120000
+- assertVisible:
+    id: ask-sources-question
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/53-ask-portrait
+- tapOn:
+    id: ask-pane-source-1
+- extendedWaitUntil:
+    visible:
+      id: bill-title
+    timeout: 60000
+- assertVisible:
+    id: split-pane-back
+- assertVisible:
+    id: ask-answer-body
+- takeScreenshot: ${EVIDENCE}/53-ask-source-open
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: bill-title
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/53-ask-landscape
+- tapOn:
+    id: split-pane-back
+- extendedWaitUntil:
+    visible:
+      id: ask-pane-source-1
+    timeout: 30000
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd
+# Directories: list left, profile right, for people, parties and seats.
+- openLink: opax://directory?kind=person
+- extendedWaitUntil:
+    visible:
+      id: directory-split-empty
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/53-directory-empty
+- tapOn:
+    id: directory-search
+- inputText: Anthony Albanese
+- extendedWaitUntil:
+    visible:
+      id: directory-person-anthony-albanese
+    timeout: 30000
+- tapOn:
+    id: directory-person-anthony-albanese
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+    timeout: 60000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/53-directory-person-portrait
+# Rotation keeps the selection and the split.
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+    timeout: 30000
+- assertVisible:
+    id: directory-person-anthony-albanese
+- takeScreenshot: ${EVIDENCE}/53-directory-person-landscape
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd
+- openLink: opax://directory?kind=party
+- extendedWaitUntil:
+    visible:
+      id: directory-party-labor
+    timeout: 90000
+- tapOn:
+    id: directory-party-labor
+- extendedWaitUntil:
+    visible:
+      id: party-title
+    timeout: 60000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/53-directory-party
+- openLink: opax://directory?kind=electorate
+- extendedWaitUntil:
+    visible:
+      id: directory-split-empty
+    timeout: 90000
+- tapOn:
+    id: directory-electorate-.*
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: electorate-screen
+    timeout: 60000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/53-directory-electorate
+# A pushed profile on the full width: the wide column, blocks in pairs.
+- openLink: opax://person/anthony-albanese
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+    timeout: 60000
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd
+- scrollUntilVisible:
+    element:
+      id: person-interests.*
+    direction: DOWN
+    timeout: 60000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/53-person-wide-landscape
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd
+- openLink: opax://party/labor
+- extendedWaitUntil:
+    visible:
+      id: party-title
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: party-receipts-total
+    direction: DOWN
+    timeout: 60000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/53-party-wide-portrait
+- runFlow: support/ipad-windowed-apps.yaml
