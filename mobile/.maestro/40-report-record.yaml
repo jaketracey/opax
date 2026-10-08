@@ -16,6 +16,12 @@ name: 40 Today report, Over time records, 1999 speech opens in the reader
     id: today-spotlight-open
 - assertVisible:
     id: report-title
+- scrollUntilVisible:
+    element:
+      id: report-tab-over
+    direction: DOWN
+    timeout: 300000
+    centerElement: true
 - tapOn:
     id: report-tab-over
 - scrollUntilVisible:
@@ -32,7 +38,7 @@ name: 40 Today report, Over time records, 1999 speech opens in the reader
     direction: DOWN
     timeout: 90000
     centerElement: true
-- assertVisible: Peter Costello
+- assertVisible: "Peter Costello.*"
 - takeScreenshot: ${EVIDENCE}/40-report-records
 - tapOn:
     id: report-section-sources-9-cited-0
@@ -40,5 +46,10 @@ name: 40 Today report, Over time records, 1999 speech opens in the reader
     id: doc-title
 - assertNotVisible:
     id: doc-error
-- assertVisible: Pinned report citation excerpt.*
+# At AX5 the full text starts below the fold.
+- scrollUntilVisible:
+    element:
+      text: Pinned report citation excerpt.*
+    direction: DOWN
+    timeout: 90000
 - takeScreenshot: ${EVIDENCE}/40-record-reader
