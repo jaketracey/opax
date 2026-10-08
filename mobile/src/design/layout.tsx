@@ -80,10 +80,12 @@ export function Screen({
   children,
   refreshControl,
   scrollRef,
+  onScroll,
   column = 'readable',
 }: {
   testID?: string;
   scrollRef?: Ref<ScrollView>;
+  onScroll?: (y: number) => void;
   children: ReactNode;
   refreshControl?: ReactElement<RefreshControlProps>;
   /** The content column on regular width: `readable` (700pt) or `wide`. */
@@ -107,6 +109,12 @@ export function Screen({
         refreshControl={refreshControl}
         contentContainerStyle={[styles.content, content]}
         onLayout={onLayout}
+        onScroll={
+          onScroll
+            ? (event) => onScroll(event.nativeEvent.contentOffset.y)
+            : undefined
+        }
+        scrollEventThrottle={onScroll ? 16 : undefined}
       >
         <RegionProvider value={inner}>
           {bar}

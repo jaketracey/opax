@@ -26,6 +26,7 @@ import { ResultFilters, Results } from './Results';
 import { openSearchPath } from './navigation';
 import { shareRecord } from '../../navigation/share';
 import { isOffline } from '../CatalogState';
+import type { useCursorReveal } from '../split/cursor';
 
 export function RecordSearchForm({
   query,
@@ -40,6 +41,7 @@ export function RecordSearchForm({
   initialPage = 1,
   openInPane,
   selectedPath,
+  cursorReveal,
 }: {
   query: string;
   scope: string;
@@ -59,6 +61,7 @@ export function RecordSearchForm({
   openInPane?: (path: string, title: string) => boolean;
   /** iPad split: whether a result's path is the record in the pane. */
   selectedPath?: (path: string) => boolean | undefined;
+  cursorReveal?: ReturnType<typeof useCursorReveal>;
 }) {
   const [filters, setFilters] = useState<SearchFilters>(
     normaliseFilters(
@@ -358,6 +361,7 @@ export function RecordSearchForm({
             onPage={(p) => void run(query, filters, p)}
             onOpen={(p, t) => void open(p, t)}
             selectedPath={selectedPath}
+            cursorReveal={cursorReveal}
             readMode={readMode}
             onRead={(mode) => {
               setReadMode(mode);

@@ -2,6 +2,60 @@ import ExpoModulesCore
 import ObjectiveC
 import UIKit
 
+/// UIKit owns the sidebar labels, so configure them through its public item
+/// delegate rather than touching private label views. Unlimited word-wrapped
+/// lines retain the reader's type size; fitting may step down to body default
+/// when a single word is wider than the sidebar.
+@available(iOS 18.0, *)
+final class SidebarLabels: NSObject, UITabBarController.Sidebar.Delegate {
+  static let shared = SidebarLabels()
+
+  static func install(attempt: Int = 0) {
+    guard UIDevice.current.userInterfaceIdiom == .pad else { return }
+    func tabs(in controller: UIViewController) -> UITabBarController? {
+      if let tabs = controller as? UITabBarController { return tabs }
+      for child in controller.children {
+        if let found = tabs(in: child) { return found }
+      }
+      return nil
+    }
+    let windows = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.flatMap { $0.windows }
+    for window in windows where window.isKeyWindow {
+      if let root = window.rootViewController, let controller = tabs(in: root) {
+        // Do not replace another owner's delegate.
+        guard controller.sidebar.delegate == nil || controller.sidebar.delegate === shared else { return }
+        controller.sidebar.delegate = shared
+        for tab in controller.tabs { controller.sidebar.reconfigureItem(for: tab) }
+        return
+      }
+    }
+    // The JS tab layout can mount before UIKit has attached its controller.
+    if attempt < 20 {
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { install(attempt: attempt + 1) }
+    }
+  }
+
+  func tabBarController(_ tabBarController: UITabBarController, sidebar: UITabBarController.Sidebar, update item: UITabSidebarItem) {
+    var content = item.defaultContentConfiguration()
+    content.textProperties.numberOfLines = 0
+    content.textProperties.lineBreakMode = .byWordWrapping
+    if tabBarController.traitCollection.preferredContentSizeCategory.isAccessibilityCategory {
+      // Reserve 128pt for uninterrupted words beside the sidebar symbol. Fit the longest word, not the entire label, so
+      // "Your MP" can still wrap between words. UILabel autoshrink alone
+      // only supports one line; keep all lines and the default-size floor.
+      let font = content.textProperties.font
+      let widest = (content.text ?? "").split(whereSeparator: { $0.isWhitespace })
+        .map { (String($0) as NSString).size(withAttributes: [.font: font]).width }
+        .max() ?? 0
+      if widest > 128 {
+        content.textProperties.font = font.withSize(max(17, font.pointSize * 128 / widest))
+        content.textProperties.adjustsFontForContentSizeCategory = false
+      }
+    }
+    item.contentConfiguration = content
+  }
+}
+
 // iPad support that React Native does not provide on iOS: hardware-keyboard
 // commands (Cmd-F, Cmd-N, Cmd-1…5, arrows in a split list) and the system
 // pointer effect and outbound URL drags over buttons, rows and cards.
@@ -204,6 +258,11 @@ public final class OpaxIPadModule: Module {
 
     AsyncFunction("setKeyCommands") { (specs: [KeyCommandSpec]) in
       KeyCommandCenter.shared.install(specs)
+    }
+    .runOnQueue(.main)
+
+    AsyncFunction("configureWordSafeSidebarLabels") {
+      if #available(iOS 18.0, *) { SidebarLabels.install() }
     }
     .runOnQueue(.main)
 

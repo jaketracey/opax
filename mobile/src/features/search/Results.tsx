@@ -1,5 +1,7 @@
-import { Modal } from 'react-native';
-import { useState } from 'react';
+import { Modal, View } from 'react-native';
+import { useEffect, useRef, useState, type ReactElement } from 'react';
+import { useListKeys } from '../../design/list-keys';
+import type { useCursorReveal } from '../split/cursor';
 import type { RecordResult } from '../../api/client';
 import type { RecordsPage, SearchSummary } from './decoders';
 import {
@@ -69,6 +71,34 @@ export function ResultFilters({
     </Group>
   );
 }
+
+/** Register only split results; the phone keeps its existing row tree. */
+function ResultCursorRow({
+  rowKey,
+  reveal,
+  children,
+}: {
+  rowKey: string;
+  reveal?: ReturnType<typeof useCursorReveal>;
+  children: ReactElement;
+}) {
+  const row = useRef<View>(null);
+  const rows = reveal?.rows;
+  useEffect(() => {
+    if (!rows) return;
+    rows.set(rowKey, row);
+    return () => {
+      rows.delete(rowKey);
+    };
+  }, [rows, rowKey]);
+  return rows ? (
+    <View ref={row} collapsable={false}>
+      {children}
+    </View>
+  ) : (
+    children
+  );
+}
 export function Results({
   result,
   busy,
@@ -91,6 +121,7 @@ export function Results({
   onRecover,
   onExample,
   selectedPath,
+  cursorReveal,
 }: {
   result: RecordResult<RecordsPage>;
   busy: boolean;
@@ -114,10 +145,20 @@ export function Results({
   onExample: (q: string) => void;
   /** iPad split: whether a result is the record in the detail pane. */
   selectedPath?: (path: string) => boolean | undefined;
+  cursorReveal?: ReturnType<typeof useCursorReveal>;
 }) {
   const [sortOpen, setSortOpen] = useState(false);
   const reduced = useReduceMotion();
   const p = result.data;
+  const cursor = useListKeys(
+    p.results.map((record) => record.slug),
+    (key) => {
+      const record = p.results.find((item) => item.slug === key);
+      if (record) onOpen(record.href || `/doc/${record.slug}`, record.title);
+    },
+    (key) => cursorReveal?.reveal(key),
+    !!cursorReveal,
+  );
   return (
     <Section
       title="Results"
@@ -310,20 +351,24 @@ export function Results({
         <RowList>
           {p.results.map((r) => (
             <Group key={r.slug}>
-              <RecordRow
-                title={r.title}
-                detail={[
-                  typeLabel(r.kind),
-                  r.dateLabel || (r.date ? formatDate(r.date, 'short') : null),
-                  r.speaker,
-                  r.party,
-                ]
-                  .filter(Boolean)
-                  .join(' · ')}
-                testID={`records-result-${r.slug}`}
-                selected={selectedPath?.(r.href || `/doc/${r.slug}`)}
-                onPress={() => onOpen(r.href || `/doc/${r.slug}`, r.title)}
-              />
+              <ResultCursorRow rowKey={r.slug} reveal={cursorReveal}>
+                <RecordRow
+                  title={r.title}
+                  detail={[
+                    typeLabel(r.kind),
+                    r.dateLabel ||
+                      (r.date ? formatDate(r.date, 'short') : null),
+                    r.speaker,
+                    r.party,
+                  ]
+                    .filter(Boolean)
+                    .join(' · ')}
+                  testID={`records-result-${r.slug}`}
+                  selected={selectedPath?.(r.href || `/doc/${r.slug}`)}
+                  highlighted={cursorReveal ? cursor === r.slug : undefined}
+                  onPress={() => onOpen(r.href || `/doc/${r.slug}`, r.title)}
+                />
+              </ResultCursorRow>
               {readMode === 'briefs' && briefs[r.resource] ? (
                 <Group>
                   <Text variant="fine">Machine brief</Text>

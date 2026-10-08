@@ -1,9 +1,10 @@
-import { useRef, useState, type Ref, type RefObject } from 'react';
+import { useEffect, useRef, useState, type Ref, type RefObject } from 'react';
 import {
   ActivityIndicator,
   type AccessibilityState,
   Pressable,
   Platform,
+  Keyboard,
   StyleSheet,
   TextInput,
   View,
@@ -690,7 +691,27 @@ export function Composer({
 }) {
   const [focused, setFocused] = useState(false);
   const reduceMotion = useReduceMotion();
-  const { fontScale } = useWindowDimensions();
+  const { fontScale, height } = useWindowDimensions();
+  const [keyboardTop, setKeyboardTop] = useState<number | null>(() =>
+    Platform.OS === 'ios' ? (Keyboard.metrics()?.screenY ?? null) : null,
+  );
+  useEffect(() => {
+    if (Platform.OS !== 'ios') return;
+    const changed = Keyboard.addListener('keyboardWillChangeFrame', (event) =>
+      setKeyboardTop(event.endCoordinates.screenY),
+    );
+    const hidden = Keyboard.addListener('keyboardWillHide', () =>
+      setKeyboardTop(null),
+    );
+    return () => {
+      changed.remove();
+      hidden.remove();
+    };
+  }, []);
+  // Android already resizes its window for the keyboard. On iOS reserve
+  // conversation space above it, including the shorter iPad landscape view.
+  const visibleHeight =
+    keyboardTop === null ? height : Math.max(0, Math.min(height, keyboardTop));
   const ready = !!value.trim();
   const inert = !ready || busy;
   // The circle grows with the text a little, never past 1.35x.
@@ -706,6 +727,7 @@ export function Composer({
         onChangeText={onChangeText}
         placeholder={placeholder}
         multiline
+        scrollEnabled
         maxLength={maxLength}
         testID={testID}
         accessibilityLabel={label}
@@ -717,7 +739,18 @@ export function Composer({
         allowFontScaling
         maxFontSizeMultiplier={0}
         placeholderTextColor={colors.inkFaint}
-        style={styles.composerInput}
+        // The native multiline input scrolls once it reaches the cap. Keep
+        // the send action visible and room above for the conversation, on
+        // either device and as the window rotates or resizes.
+        style={[
+          styles.composerInput,
+          {
+            maxHeight: Math.max(
+              minimumTarget,
+              visibleHeight * 0.4 - spacing.s1 * 2,
+            ),
+          },
+        ]}
       />
       <Pressable
         accessibilityRole="button"

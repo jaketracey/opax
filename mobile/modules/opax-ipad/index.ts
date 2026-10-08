@@ -12,6 +12,7 @@ export interface KeyCommandSpec {
 }
 
 interface OpaxIPadModule {
+  configureWordSafeSidebarLabels(): Promise<void>;
   setKeyCommands(commands: KeyCommandSpec[]): Promise<void>;
   addListener(
     event: 'onKeyCommand',

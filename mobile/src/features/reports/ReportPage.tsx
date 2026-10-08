@@ -12,7 +12,7 @@ import {
   PartyChip,
   Screen,
   Section,
-  SegmentedControl,
+  ChoiceChips,
   Text,
 } from '../../design/primitives';
 import { headerItems } from '../../navigation/chrome';
@@ -271,7 +271,7 @@ function ReportContent({
       ) : (
         <Text>{report.blurb}</Text>
       )}
-      <SegmentedControl
+      <ChoiceChips
         value={tab}
         segments={[
           { value: 'now', label: 'Now', testID: 'report-tab-now' },
