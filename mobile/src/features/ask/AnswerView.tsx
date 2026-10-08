@@ -18,6 +18,7 @@ import { formatDate } from '../../design/format';
 import { fromWebPath, personRoute } from '../../navigation/routes';
 import { openSource, sourceUrl } from '../../navigation/external';
 import { shareRecord } from '../../navigation/share';
+import { CachedPortrait } from '../CachedPortrait';
 import {
   dateRuler,
   defaultOptions,
@@ -324,6 +325,13 @@ export function AnswerView({
             <PersonRow
               key={name}
               name={name}
+              portrait={
+                <CachedPortrait
+                  name={name}
+                  slug={people.get(name)}
+                  testID={`ask-person-portrait-${people.get(name)}`}
+                />
+              }
               onPress={() => router.push(personRoute(people.get(name)!))}
             />
           ))}

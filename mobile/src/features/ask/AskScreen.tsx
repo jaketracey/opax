@@ -44,6 +44,7 @@ import {
   chips,
   clearChip,
   defaultOptions,
+  rosterPeople,
   sampleQuestions,
   type Followup,
 } from './model';
@@ -62,14 +63,6 @@ import {
   reconcileChats,
   deleteAllRemoteChats,
 } from './sync';
-const slugOf = (name: string) =>
-  name
-    .normalize('NFKD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/['’‘ʼ`.]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
 export default function AskScreen() {
   const s = useSyncExternalStore(
       askSession.subscribe,
@@ -218,15 +211,7 @@ export default function AskScreen() {
         catalogs.slugs(),
         catalogs.bills(),
       ]);
-      const known = new Map<string, string>();
-      for (const p of roster.data.people) {
-        const slug =
-          Object.entries(slugs.data.slugs).find(
-            ([, name]) => name === p.name,
-          )?.[0] || slugOf(p.name);
-        known.set(p.name, slug);
-      }
-      setPeople(known);
+      setPeople(rosterPeople(roster.data, slugs.data));
       setBills(
         index.data.bills
           .filter(

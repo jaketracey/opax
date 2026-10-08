@@ -3,6 +3,7 @@ import { PartyAccess, PartyFunding } from './people/PartyDepth';
 import { RecordSection, NewsSection } from './people/Sections';
 import { FollowToggle } from './follows/FollowToggle';
 import { AskAbout } from './ask/AskAbout';
+import { CachedPortrait } from './CachedPortrait';
 import { headerItems } from '../navigation/chrome';
 import { useCallback, useEffect, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
@@ -81,6 +82,9 @@ function Members({
               <PersonRow
                 key={member.slug}
                 name={member.name}
+                portrait={
+                  <CachedPortrait name={member.name} slug={member.slug} />
+                }
                 place={member.place || undefined}
                 detail={
                   recorded
