@@ -1,0 +1,22 @@
+appId: au.com.opax.app
+---
+- launchApp:
+    permissions: {}
+- extendedWaitUntil:
+    notVisible:
+      id: launch-handoff
+    timeout: 30000
+- assertVisible:
+    id: today-screen
+- takeScreenshot: ${EVIDENCE}/community-after-today
+- scrollUntilVisible:
+    element:
+      id: today-community
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/community-after-today-entry
+- tapOn: Account and about
+- scrollUntilVisible:
+    element:
+      id: account-community
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/community-after-account

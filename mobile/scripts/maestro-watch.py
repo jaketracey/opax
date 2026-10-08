@@ -14,7 +14,13 @@ if limit <= 0:
     raise SystemExit('OPAX_MAESTRO_TIMEOUT_SECONDS must be positive')
 # Driver failures are emitted in the verbose console or debug log while the
 # CLI retries. Ordinary app assertions and fixture HTTP responses are excluded.
-forbidden = re.compile(r'(?:HTTP|response|status|request).*\b403\b', re.IGNORECASE)
+# Match an HTTP status or an explicit request failure, never a byte count
+# such as Apple's response_status=200,...response_bytes=403 telemetry.
+forbidden = re.compile(
+    r'\b(?:HTTP(?:/\d(?:\.\d)?)?(?:\s+response)?(?:\s+status(?:\s+code)?)?|'
+    r'response[_\s]+(?:status|code)|status(?:[_\s]+code)?|request\s+failed)'
+    r'\s*[:=(]?\s*403\b', re.IGNORECASE,
+)
 connection = re.compile(
     r'ConnectException|Connection (?:refused|reset)|Failed to connect to /?127\.0\.0\.1|'
     r'(?:driver|XCTest).*?(?:connection error|unreachable)', re.IGNORECASE,

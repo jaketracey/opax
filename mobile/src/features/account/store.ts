@@ -1,3 +1,4 @@
+import { clearCommunity } from '../community/session';
 import { useEffect, useSyncExternalStore } from 'react';
 import * as voice from '../../voice';
 import type { VoiceFailure, VoiceStatus } from '../../voice';
@@ -79,6 +80,7 @@ export async function refreshAccount(): Promise<void> {
  * the address the code went to. Never after a failed or unknown exchange.
  */
 export function codeAccepted(email: string, status: VoiceStatus) {
+  clearCommunity();
   request++;
   update({
     status,
@@ -91,6 +93,7 @@ export function codeAccepted(email: string, status: VoiceStatus) {
 }
 
 export async function signOut(): Promise<void> {
+  clearCommunity();
   const result = await voice.logout();
   // The token is removed on this iPhone even when the server cannot be told.
   update({
@@ -104,12 +107,14 @@ export async function signOut(): Promise<void> {
 }
 
 export function accountDeleted() {
+  clearCommunity();
   update({ status: null, email: null, notice: null });
   void refreshAccount();
 }
 
 /** The session ended on the server (401): show signed out. */
 export function sessionEnded() {
+  clearCommunity();
   update({ status: null, email: null });
   void refreshAccount();
 }

@@ -1,0 +1,127 @@
+appId: au.com.opax.app
+---
+# Screenshot review only. The numbered journeys run once at standard size.
+- launchApp:
+    clearState: true
+    permissions: {}
+- tapOn: Account and about
+- runFlow:
+    file: account-sign-in.yaml
+    env:
+      ACCOUNT_EMAIL: community@example.invalid
+- extendedWaitUntil:
+    visible:
+      id: account-sheet
+    timeout: 30000
+- extendedWaitUntil:
+    notVisible:
+      id: launch-handoff
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/community-ax5-account
+- tapOn: Done
+- scrollUntilVisible:
+    element:
+      id: today-community
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/community-ax5-today-entry
+- tapOn:
+    id: today-community
+- extendedWaitUntil:
+    visible: Questions, sources and conversations worth following.
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/community-ax5-feed
+- openLink: opax://community/thread?id=discussion-a
+- extendedWaitUntil:
+    visible: Reading a bill together
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/community-ax5-thread
+- scrollUntilVisible:
+    element:
+      id: community-report-thread
+    timeout: 60000
+- takeScreenshot: ${EVIDENCE}/community-ax5-thread-actions
+- openLink: opax://community/guidelines
+- assertVisible:
+    id: community-guidelines
+- takeScreenshot: ${EVIDENCE}/community-ax5-guidelines
+- scrollUntilVisible:
+    element:
+      id: community-agree
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/community-ax5-guidelines-terms
+- openLink: opax://community/new-thread
+- assertVisible:
+    id: community-new-thread
+- takeScreenshot: ${EVIDENCE}/community-ax5-new-thread
+- openLink: opax://community/members
+- extendedWaitUntil:
+    visible: Find people exploring the public record.
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/community-ax5-members
+- openLink: opax://community/member?id=reader-a
+- extendedWaitUntil:
+    visible: Casey Fixture
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/community-ax5-member
+- scrollUntilVisible:
+    element:
+      id: community-block
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/community-ax5-member-actions
+- openLink: opax://community/messages
+- extendedWaitUntil:
+    visible:
+      id: community-conversation-conversation-a
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/community-ax5-inbox
+- openLink: opax://community/conversation?id=conversation-a
+- extendedWaitUntil:
+    visible:
+      id: community-conversation-member
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/community-ax5-conversation
+- scrollUntilVisible:
+    element:
+      id: community-compose
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/community-ax5-message-composer
+- openLink: opax://community/activity
+- extendedWaitUntil:
+    visible: Replies, likes and new followers.
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/community-ax5-activity
+- openLink: opax://community/lists
+- extendedWaitUntil:
+    visible:
+      id: community-list-list-a
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/community-ax5-lists
+- openLink: opax://community/list?id=list-a
+- extendedWaitUntil:
+    visible: Source notes
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/community-ax5-list
+- openLink: opax://community/profile
+- extendedWaitUntil:
+    visible:
+      id: community-profile-name
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/community-ax5-profile-edit
+- openLink: opax://community/settings
+- extendedWaitUntil:
+    visible: Who can send you messages?
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/community-ax5-settings
+- scrollUntilVisible:
+    element:
+      id: community-show-blocks
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/community-ax5-settings-blocks
+- openLink: opax://community/report?id=reader-a&kind=profile
+- assertVisible:
+    id: community-report
+- takeScreenshot: ${EVIDENCE}/community-ax5-report
+- tapOn: Contact OPAX support
+- assertVisible: https://opax.invalid/support
+- takeScreenshot: ${EVIDENCE}/community-ax5-support
+- tapOn: OK

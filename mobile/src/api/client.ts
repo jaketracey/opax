@@ -159,6 +159,8 @@ export class ApiClient {
       summaryStream?: boolean;
     } = {},
   ): Promise<RecordResult<T>> {
+    if (path.startsWith('/api/community/'))
+      throw new ApiError('forbidden', 'Community requires the native session client.');
     if (path.startsWith('/api/ask') || path.startsWith('/api/followups'))
       throw new ApiError('forbidden', 'Ask requires an explicit submission.');
     const url = allowedURL(this.options.origin, path); // before cache or networking

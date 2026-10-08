@@ -103,6 +103,7 @@ export default function Layout() {
               options={{ ...sheet, title: 'Talk to OPAX' }}
             />
           </Stack.Protected>
+          <Stack.Screen name="community" options={{ ...sheet, presentation: 'fullScreenModal', headerShown: false }} />
           <Stack.Screen
             name="account"
             options={{ ...sheet, headerShown: false }}
