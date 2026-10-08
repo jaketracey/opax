@@ -13,10 +13,6 @@ export interface KeyCommandSpec {
 
 interface OpaxIPadModule {
   setKeyCommands(commands: KeyCommandSpec[]): Promise<void>;
-  /** E2E builds only: runs a command as a key press would. */
-  runKeyCommand(id: string): Promise<void>;
-  /** E2E builds only: asks the window for a narrow maximum width (0 clears). */
-  constrainWindowWidth(width: number): Promise<boolean>;
   addListener(
     event: 'onKeyCommand',
     listener: (event: { id: string }) => void,

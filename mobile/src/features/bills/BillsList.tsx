@@ -24,6 +24,7 @@ import {
   IconButton,
   InfoButton,
   LayoutRegion,
+  SidebarSafe,
   LinkRow,
   LoadingState,
   OfflineBanner,
@@ -67,9 +68,11 @@ export default function BillsList() {
   // The region a split measures; iPhone keeps the bare list (no wrapper).
   if (!isPad) return <BillsScreen />;
   return (
-    <LayoutRegion style={styles.screen}>
-      <BillsScreen />
-    </LayoutRegion>
+    <SidebarSafe style={styles.screen}>
+      <LayoutRegion style={styles.screen}>
+        <BillsScreen />
+      </LayoutRegion>
+    </SidebarSafe>
   );
 }
 
@@ -131,6 +134,8 @@ function BillsScreen() {
   );
   const select = useCallback(
     (entry: BillEntry | null) => {
+      // Choosing a result puts the search keyboard away, as Mail does.
+      Keyboard.dismiss();
       router.setParams({ bill: entry?.key ?? '' });
       // A keyboard step past the visible rows brings the row into view.
       const at = entry ? rows.findIndex((bill) => bill.key === entry.key) : -1;

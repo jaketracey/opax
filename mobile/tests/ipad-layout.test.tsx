@@ -1,4 +1,4 @@
-import { act } from 'react';
+import { act, useEffect } from 'react';
 import { Text as NativeText, View } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 
@@ -23,8 +23,7 @@ jest.mock('../src/design/adaptive', () => {
 jest.mock('expo-router', () => ({
   router: { push: jest.fn(), navigate: jest.fn(), setParams: jest.fn() },
   useFocusEffect: (effect: () => void | (() => void)) => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    require('react').useEffect(effect, []);
+    jest.requireActual('react').useEffect(effect, []);
   },
 }));
 
@@ -173,9 +172,14 @@ describe('SplitLayout', () => {
     expect(hosts(tree, 'empty')).toBeGreaterThan(0);
   });
   test('the pane pushes within itself, Back returns, and a new selection starts again', () => {
-    let pane: ReturnType<typeof useSplitPane<Entry>> = null;
+    const held: { pane: ReturnType<typeof useSplitPane<Entry>> } = {
+      pane: null,
+    };
     function Capture({ entry }: { entry: Entry }) {
-      pane = useSplitPane<Entry>();
+      const current = useSplitPane<Entry>();
+      useEffect(() => {
+        held.pane = current;
+      });
       return <Detail entry={entry} />;
     }
     const onSelect = jest.fn();
@@ -197,17 +201,17 @@ describe('SplitLayout', () => {
     });
     mounted.push(tree);
     expect(hosts(tree, 'detail-item-a')).toBe(1);
-    act(() => pane!.push({ kind: 'more', key: 'a' }));
+    act(() => held.pane!.push({ kind: 'more', key: 'a' }));
     expect(hosts(tree, 'detail-more-a')).toBe(1);
-    expect(pane!.depth).toBe(2);
+    expect(held.pane!.depth).toBe(2);
     act(() => {
-      pane!.back();
+      held.pane!.back();
     });
     expect(hosts(tree, 'detail-item-a')).toBe(1);
-    act(() => pane!.push({ kind: 'more', key: 'a' }));
+    act(() => held.pane!.push({ kind: 'more', key: 'a' }));
     act(() => tree.update(make({ kind: 'item', key: 'b' })));
     expect(hosts(tree, 'detail-item-b')).toBe(1);
-    expect(pane!.depth).toBe(1);
+    expect(held.pane!.depth).toBe(1);
   });
   test('Down and Up move the selection through the list keys', () => {
     const onSelect = jest.fn();

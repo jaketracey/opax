@@ -18,6 +18,7 @@ import {
 import { useAccessibilitySize } from './accessibility';
 import {
   RegionProvider,
+  SidebarSafe,
   columns,
   readableInset,
   useLayout,
@@ -87,23 +88,25 @@ export function Screen({
 }) {
   const { onLayout, content, inner, bar } = useScreenColumn(column);
   return (
-    <ScrollView
-      ref={scrollRef}
-      testID={testID}
-      style={styles.screen}
-      contentInsetAdjustmentBehavior="automatic"
-      keyboardShouldPersistTaps="handled"
-      automaticallyAdjustKeyboardInsets
-      keyboardDismissMode="on-drag"
-      refreshControl={refreshControl}
-      contentContainerStyle={[styles.content, content]}
-      onLayout={onLayout}
-    >
-      <RegionProvider value={inner}>
-        {bar}
-        {children}
-      </RegionProvider>
-    </ScrollView>
+    <SidebarSafe style={styles.screen}>
+      <ScrollView
+        ref={scrollRef}
+        testID={testID}
+        style={styles.screen}
+        contentInsetAdjustmentBehavior="automatic"
+        keyboardShouldPersistTaps="handled"
+        automaticallyAdjustKeyboardInsets
+        keyboardDismissMode="on-drag"
+        refreshControl={refreshControl}
+        contentContainerStyle={[styles.content, content]}
+        onLayout={onLayout}
+      >
+        <RegionProvider value={inner}>
+          {bar}
+          {children}
+        </RegionProvider>
+      </ScrollView>
+    </SidebarSafe>
   );
 }
 
@@ -128,29 +131,31 @@ export function KeyboardStableScreen({
   const keyboard = useStableKeyboard(scroll, keyboardTarget);
   const { onLayout, content, inner, bar } = useScreenColumn(column);
   return (
-    <ScrollView
-      ref={scroll}
-      testID={testID}
-      style={styles.screen}
-      contentInsetAdjustmentBehavior="automatic"
-      keyboardShouldPersistTaps="handled"
-      automaticallyAdjustKeyboardInsets={false}
-      scrollToOverflowEnabled
-      keyboardDismissMode="on-drag"
-      refreshControl={refreshControl}
-      contentContainerStyle={[styles.content, content, keyboard.contentStyle]}
-      onLayout={(event) => {
-        onLayout(event);
-        keyboard.onLayout(event);
-      }}
-      onScroll={keyboard.onScroll}
-      scrollEventThrottle={16}
-    >
-      <RegionProvider value={inner}>
-        {bar}
-        {children}
-      </RegionProvider>
-    </ScrollView>
+    <SidebarSafe style={styles.screen}>
+      <ScrollView
+        ref={scroll}
+        testID={testID}
+        style={styles.screen}
+        contentInsetAdjustmentBehavior="automatic"
+        keyboardShouldPersistTaps="handled"
+        automaticallyAdjustKeyboardInsets={false}
+        scrollToOverflowEnabled
+        keyboardDismissMode="on-drag"
+        refreshControl={refreshControl}
+        contentContainerStyle={[styles.content, content, keyboard.contentStyle]}
+        onLayout={(event) => {
+          onLayout(event);
+          keyboard.onLayout(event);
+        }}
+        onScroll={keyboard.onScroll}
+        scrollEventThrottle={16}
+      >
+        <RegionProvider value={inner}>
+          {bar}
+          {children}
+        </RegionProvider>
+      </ScrollView>
+    </SidebarSafe>
   );
 }
 

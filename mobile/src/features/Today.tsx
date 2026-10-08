@@ -10,6 +10,7 @@ import {
   Screen,
   Section,
   Text,
+  useAccessibilitySize,
   useLayout,
 } from '../design/primitives';
 import { colors, hairline, rhythm, spacing } from '../design/tokens';
@@ -186,18 +187,27 @@ function TodayRegular({
   refresh,
   wide,
 }: FrontProps & { wide: boolean }) {
+  // At accessibility sizes the rail would be a narrow column of single
+  // words: the edition and the rail stack, each at the full width.
+  const large = useAccessibilitySize();
   return (
     <>
       <Masthead broadsheet />
-      <View style={styles.heroRow}>
-        <View style={styles.hero}>
+      <View style={large ? styles.heroStack : styles.heroRow}>
+        <View style={large ? null : styles.hero}>
           <EditionSection
             block={edition}
             onRetry={refresh}
             refreshing={refreshing}
           />
         </View>
-        <View style={[styles.rail, wide ? styles.railWide : null]}>
+        <View
+          style={
+            large
+              ? styles.railStack
+              : [styles.rail, wide ? styles.railWide : null]
+          }
+        >
           <FollowingSection
             refresh={retry}
             refreshing={refreshing}
@@ -379,6 +389,8 @@ const styles = StyleSheet.create({
   hero: { flex: 3, minWidth: 0 },
   rail: { flex: 2, minWidth: 0, gap: rhythm.group },
   railWide: { flex: 1.6 },
+  heroStack: { gap: rhythm.section },
+  railStack: { gap: rhythm.group },
   tile: {
     paddingHorizontal: spacing.s4,
     paddingVertical: spacing.s1,

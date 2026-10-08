@@ -86,6 +86,7 @@ export {
   Grid,
   gridColumns,
   Hoverable,
+  SidebarSafe,
   useHover,
   isPad,
   breakpoints,

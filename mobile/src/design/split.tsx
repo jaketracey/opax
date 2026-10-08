@@ -3,7 +3,6 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useMemo,
   useRef,
   useState,
   type ReactNode,
@@ -23,6 +22,7 @@ import {
   useLayout,
   useMeasuredRegion,
 } from './adaptive';
+import { useAccessibilitySize } from './accessibility';
 import { Icon, type SFSymbol } from './icon';
 import { useKeyCommand } from './keyboard';
 import { Heading, Text } from './text';
@@ -179,18 +179,23 @@ export function SplitLayout<T>({
     keyboard && !!selected,
   );
 
-  const [width, setWidth] = useState(
-    () => savedWidths.get(id) ?? splitPane.width,
+  // At accessibility sizes the list starts at 45% of the region (up to half)
+  // so its rows keep whole words; a width the reader drags is kept per mode.
+  const large = useAccessibilitySize();
+  const widthKey = large ? `${id}:large` : id;
+  const maxWidth = large
+    ? Math.round(layout.width * 0.5)
+    : Math.min(splitPane.max, Math.round(layout.width * 0.5));
+  const clampWidth = (next: number) =>
+    Math.round(Math.min(Math.max(next, splitPane.min), maxWidth));
+  const [, setResized] = useState(0);
+  const width = clampWidth(
+    savedWidths.get(widthKey) ??
+      (large ? layout.width * 0.45 : splitPane.width),
   );
   const resize = (next: number) => {
-    const clamped = Math.round(
-      Math.min(
-        Math.max(next, splitPane.min),
-        Math.min(splitPane.max, layout.width * 0.5),
-      ),
-    );
-    savedWidths.set(id, clamped);
-    setWidth(clamped);
+    savedWidths.set(widthKey, clampWidth(next));
+    setResized((count) => count + 1);
   };
   const [onListLayout, listRegion] = useMeasuredRegion();
   const [onDetailLayout, detailRegion] = useMeasuredRegion();
@@ -205,9 +210,8 @@ export function SplitLayout<T>({
             label={entryTitle?.(below) ?? 'Back'}
             onPress={() => pane.back()}
           />
-        ) : (
-          <View style={styles.grow} />
-        )}
+        ) : null}
+        <View style={styles.grow} />
         {detailActions?.(top)}
       </View>
     ) : null;

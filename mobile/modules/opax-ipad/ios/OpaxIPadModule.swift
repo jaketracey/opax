@@ -168,31 +168,6 @@ public final class OpaxIPadModule: Module {
     }
     .runOnQueue(.main)
 
-    // E2E harness only (the JS caller is gated to e2e builds): run a command
-    // through the same path a key press takes after UIKit matches it.
-    AsyncFunction("runKeyCommand") { (id: String) in
-      KeyCommandCenter.shared.emit?(id)
-    }
-    .runOnQueue(.main)
-
-    // E2E harness only: ask the window scene for a narrow maximum width, as a
-    // Split View or Stage Manager window would be. iPadOS honours it only in
-    // windowed multitasking; it returns false where scenes cannot resize.
-    AsyncFunction("constrainWindowWidth") { (width: Double) -> Bool in
-      guard let scene = UIApplication.shared.connectedScenes
-        .compactMap({ $0 as? UIWindowScene })
-        .first(where: { $0.activationState == .foregroundActive }),
-        let restrictions = scene.sizeRestrictions
-      else { return false }
-      if width > 0 {
-        restrictions.maximumSize = CGSize(width: width, height: .greatestFiniteMagnitude)
-      } else {
-        restrictions.maximumSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: .greatestFiniteMagnitude)
-      }
-      return true
-    }
-    .runOnQueue(.main)
-
     View(PointerHoverView.self) {
       Events("onHoverChange")
       Prop("effect") { (view: PointerHoverView, effect: String) in

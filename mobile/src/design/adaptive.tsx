@@ -19,6 +19,7 @@ import {
   PointerHoverView,
   type PointerHoverProps,
 } from '../../modules/opax-ipad';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { rhythm } from './tokens';
 
 /**
@@ -340,11 +341,46 @@ export function useHover() {
   return [hovered, PointerHoverView ? setHovered : undefined] as const;
 }
 
+/**
+ * Keeps a screen's content clear of the iPad sidebar. On iPadOS 26 the
+ * sidebar floats over the content and reports itself as a leading safe-area
+ * inset; the navigation bar follows it, but a scroll view's content does
+ * not. This native safe-area view pads its leading and trailing edges by the
+ * insets of the screen it sits in; nested ones defer to the outermost. `Screen`, `KeyboardStableScreen`, the
+ * reader and the Bills split already use it; wrap any other full-screen
+ * FlatList in it. On iPhone and Android it renders its child alone.
+ */
+// The native view pads by its screen's insets, not by its own overlap with
+// them, so only the outermost one applies (a pane inside the Bills split).
+const SidebarSafeContext = createContext(false);
+export function SidebarSafe({
+  children,
+  style,
+}: {
+  children: ReactNode;
+  style?: StyleProp<ViewStyle>;
+}) {
+  const inside = useContext(SidebarSafeContext);
+  if (!isPad || inside) return <>{children}</>;
+  return (
+    <SafeAreaView
+      edges={['left', 'right']}
+      mode="padding"
+      style={[styles.safe, style]}
+    >
+      <SidebarSafeContext.Provider value>
+        {children}
+      </SidebarSafeContext.Provider>
+    </SafeAreaView>
+  );
+}
+
 /** True where pointer effects exist (iPad). */
 export const pointerAvailable = PointerHoverView !== null;
 
 const styles = StyleSheet.create({
   column: { width: '100%', alignSelf: 'center' },
+  safe: { flex: 1 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'stretch' },
   gridSingle: { flexDirection: 'column', flexWrap: 'nowrap' },
   cell: { flexDirection: 'column' },
