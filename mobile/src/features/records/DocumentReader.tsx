@@ -38,6 +38,7 @@ import { titleSubject } from './citations';
 import { copyText } from './actions';
 import { ReaderList } from './ReaderList';
 import { useRead } from './useRead';
+import { RecordLoadError } from './RecordLoadError';
 
 // The web's taxonomy; unknown topics must not alter the search request.
 const topics = new Set([
@@ -119,8 +120,9 @@ export default function DocumentReader({
         header={
           <>
             {error ? (
-              <ErrorState
-                message={errorMessage(error)}
+              <RecordLoadError
+                error={error}
+                slug={slug}
                 onRetry={retry}
                 testID="doc-error"
               />

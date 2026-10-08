@@ -6,20 +6,19 @@ import { webOrigin } from '../../design/environment';
 import { catalogs } from '../../api/runtime';
 import {
   Button,
-  ErrorState,
   Group,
   Heading,
   LoadingState,
   Screen,
   Section,
   Text,
-  errorMessage,
 } from '../../design/primitives';
 import { shareHeaderItem } from '../../navigation/share';
 import { records } from './runtime';
 import { citationsFor } from './citations';
 import { copyText, shareTextFile } from './actions';
 import { useRead } from './useRead';
+import { RecordLoadError } from './RecordLoadError';
 function localISODate() {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -63,7 +62,7 @@ export default function Citations() {
       />
       <Screen testID="doc-citations">
         {error ? (
-          <ErrorState message={errorMessage(error)} onRetry={retry} />
+          <RecordLoadError error={error} slug={slug} onRetry={retry} />
         ) : !doc ? (
           <LoadingState label="Loading citations" />
         ) : (

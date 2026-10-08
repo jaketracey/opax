@@ -27,6 +27,16 @@ export function recordSlug(value: unknown): string {
     ? slug
     : invalid('This record identifier cannot be read.');
 }
+// /api/resource sends origin.url as-is, so records without an official link
+// (the 1990s federal speeches from Zenodo) arrive with url ''. A blank or
+// unreadable link only drops "View original"; it never hides the record.
+function sourceLink(value: unknown): string | null {
+  try {
+    return optional(url)(value) ?? null;
+  } catch {
+    return null;
+  }
+}
 export function decodeDocument(value: unknown): DocumentRecord {
   const raw = object(value),
     labels = object(raw.labels);
@@ -39,7 +49,7 @@ export function decodeDocument(value: unknown): DocumentRecord {
       kind === 'division' || kind === 'bill_text'
         ? null
         : (optional(text)(raw.speaker) ?? null),
-    url: optional(url)(raw.url) ?? null,
+    url: sourceLink(raw.url),
     labels: Object.fromEntries(
       Object.entries(labels).map(([key, value]) => [key, text(value)]),
     ),
