@@ -62,7 +62,7 @@ const releasePath =
   /^\/electorates\/releases\/[a-f0-9]{16}\/(?:index|people|el_[a-f0-9]{24})\.json$/;
 const billPath =
   /^\/bills\/au-federal-(?:[rs]\d+|alrc-\d+|ed-[a-z0-9]+(?:-[a-z0-9]+)*)\.json$/;
-const interestPath = /^\/interests\/(?:\d+|n-[a-z0-9]+(?:-[a-z0-9]+)*)\.json$/;
+const interestPath = /^\/interests\/(?:\d+|aph_\d+|n-[a-z0-9]+(?:-[a-z0-9]+)*)\.json$/;
 
 function assertSearchParams(p: URLSearchParams, summary = false) {
   const keys = [

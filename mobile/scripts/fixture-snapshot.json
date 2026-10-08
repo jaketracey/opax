@@ -272,7 +272,8 @@
     "/agencies/a-7431f054588d4251c0b4.json": "5d7d4ae3587b28c3f462b6d2437cbdc946ac0860b2a1a965d09b95be1b8bf78a",
     "/evidence/37.json": "9e08dd4f1e86bc466f552db64c5864c8607e7448da49544bd9871a9d1107700a",
     "/research/grant-locations.json": "f1dc6e363af613404d0ff7658668f00fe338cde672702e4c0a591551bbe17bb8",
-    "/evidence/c8.json": "d50f46422b97e5ccae8ccc63a41abf653946ddcaa511e841405d720c10980d04"
+    "/evidence/c8.json": "d50f46422b97e5ccae8ccc63a41abf653946ddcaa511e841405d720c10980d04",
+    "/interests/10758.json": "7d55162209b0daa9efe23f0ef9f229bea22896ae1f551d78da9e66db29c2602c"
   },
   "sizes": {
     "/parliamentarians.json": 405665,
@@ -545,7 +546,8 @@
     "/agencies/a-7431f054588d4251c0b4.json": 116977,
     "/evidence/37.json": 750512,
     "/research/grant-locations.json": 170250,
-    "/evidence/c8.json": 617639
+    "/evidence/c8.json": 617639,
+    "/interests/10758.json": 10255
   },
   "testOnlyFiles": [
     "/interests/ties-by-donor.json"

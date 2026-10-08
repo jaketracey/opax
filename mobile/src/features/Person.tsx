@@ -57,11 +57,11 @@ import {
 } from '../navigation/routes';
 import { FollowToggle } from './follows/FollowToggle';
 import { EvidenceFooter, RecordBlock } from './your-mp/Evidence';
+import { DeclaredInterests } from './people/DeclaredInterests';
 import {
   uncoveredProfile,
   hasParliamentaryMembership,
   votingMetaFor,
-  registerCategoryLabel,
   type ProfileView,
 } from './your-mp/model';
 const partialMissing =
@@ -397,65 +397,7 @@ export function ProfileScreen({
               missing="No register file is held for this person in the covered registers."
               retry={refresh}
             >
-              {(r) => (
-                <Group>
-                  <BigFigure
-                    value={formatCount(r.total)}
-                    label="Declared entries"
-                    detail={`${formatCount(r.alterations.added)} added · ${formatCount(r.alterations.deleted)} deleted${r.statement_date ? ` · statement dated ${formatDate(r.statement_date, 'short')}` : ''}`}
-                    accent="interests"
-                  />
-                  {r.ocr_rows > 0 ? (
-                    <Text wordSafe variant="caption" testID="person-ocr">
-                      {formatCount(r.ocr_rows)} entries were read by OCR from
-                      scanned pages. Transcription may contain errors; check the
-                      original register.
-                    </Text>
-                  ) : null}
-                  {r.unread_pages ? (
-                    <Text wordSafe variant="caption">
-                      {formatCount(r.unread_pages)} pages could not be read. The
-                      register may be incomplete.
-                    </Text>
-                  ) : null}
-                  <RowList>
-                    {Object.entries(r.buckets).map(([name, bucket]) => (
-                      <Disclosure
-                        key={name}
-                        label={registerCategoryLabel(name)}
-                        value={formatCount(bucket.count)}
-                        testID={`interest-bucket-${name}`}
-                      >
-                        {() => (
-                          <RowList>
-                            {bucket.items.map((row, i) => (
-                              <Group key={i} gap={rhythm.line}>
-                                <Text wordSafe variant="strong">
-                                  {row.holder}
-                                </Text>
-                                <Text wordSafe>
-                                  {row.description ||
-                                    'Description not recorded'}
-                                </Text>
-                                <Text wordSafe variant="caption">
-                                  {row.kind}
-                                  {row.date
-                                    ? ` · ${formatDate(row.date, 'short')}`
-                                    : ''}
-                                  {row.page
-                                    ? ` · page ${formatCount(row.page)}`
-                                    : ''}
-                                  {row.ocr ? ' · OCR transcription' : ''}
-                                </Text>
-                              </Group>
-                            ))}
-                          </RowList>
-                        )}
-                      </Disclosure>
-                    ))}
-                  </RowList>
-                </Group>
-              )}
+              {(r) => <DeclaredInterests register={r} />}
             </RecordBlock>
             <RecordBlock
               title="Declared ties"
