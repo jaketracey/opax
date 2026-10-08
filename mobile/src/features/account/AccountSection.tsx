@@ -64,7 +64,6 @@ export function AccountSection() {
   return (
     <Section
       title="Account"
-      icon="person.crop.circle"
       accent="people"
       rule={false}
       testID="account-section"

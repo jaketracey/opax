@@ -118,7 +118,7 @@ test('the reader opened from a topic record loads the 1999 speech', async () => 
   expect(new URL(mockTransport.mock.calls[0][0]).pathname).toBe(zenodo);
   expect(view.root.findAllByProps({ testID: 'doc-error' })).toHaveLength(0);
   expect(textOf(view.root.findByProps({ testID: 'doc-title' }))).toBe(
-    'Peter Costello — 1999-02-09',
+    'Speech · 9 February 1999',
   );
   expect(view.root.findAllByProps({ testID: 'doc-source' })).toHaveLength(0);
   await act(async () => view.unmount());

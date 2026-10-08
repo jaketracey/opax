@@ -126,9 +126,8 @@ describe('the edition card', () => {
     );
     expect(textOf(root, 'today-edition-title')).toBe(pinned.edition.title);
     expect(textOf(root, 'today-edition-detail')).toBe('Education portfolio');
-    expect(textOf(root, 'today-edition-machine')).toBe(
-      'Machine-writtenWritten by a model from the explanatory memorandum; not the record.',
-    );
+    // Only the pill shows; its attribution opens from it (and is spoken).
+    expect(textOf(root, 'today-edition-machine')).toBe('Machine-written');
     expect(textOf(root, 'today-edition-text')).toBe(
       'This bill would keep funding grants that support pay for early childhood education and care workers.Passed 18 Sep 2026.',
     );

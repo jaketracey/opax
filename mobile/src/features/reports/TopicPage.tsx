@@ -58,7 +58,6 @@ function TopicMoney({ slug }: { slug: string }) {
         return (
           <Section
             title="The money beside the words"
-            icon="dollarsign.circle"
             accent="money"
             info={{
               title: 'About the disclosed money',
@@ -220,7 +219,6 @@ function TopicContent({
               ) : null}
               <Section
                 title="Who speaks on it, by party"
-                icon="person.2"
                 accent="people"
                 info={{
                   title: 'About party counts',
@@ -243,7 +241,6 @@ function TopicContent({
               </Section>
               <Section
                 title="Which parliament argues it"
-                icon="building.columns"
                 accent="people"
                 info={{
                   title: 'About parliament counts',
@@ -287,7 +284,6 @@ function TopicContent({
             return points.length ? (
               <Section
                 title="The share over time"
-                icon="chart.bar.xaxis"
                 accent="votes"
                 info={{
                   title: 'About the decade bars',
@@ -334,7 +330,6 @@ function TopicContent({
         </ReadState>
         <Section
           title="The arc of this debate"
-          icon="text.book.closed"
           accent="bills"
           testID="topic-arc"
           info={{

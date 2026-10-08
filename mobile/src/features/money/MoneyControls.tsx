@@ -259,7 +259,6 @@ export function MoneyControls({
       </RowList>
       <Section
         title="Layers"
-        icon="square.3.layers.3d"
         accent="money"
         info={{
           title: 'About these layers',

@@ -86,7 +86,6 @@ export default function Methods() {
               key={title}
               title={title}
               headingTestID={`methods-${index}`}
-              icon="text.book.closed"
               accent="bills"
               info={folded ? { title, notes } : undefined}
             >

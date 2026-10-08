@@ -36,6 +36,9 @@ import {
   stateCopy,
   useAccessibilitySize,
   type Lead,
+  Composer,
+  MachineWritten,
+  StepButtons,
 } from '../design/primitives';
 import {
   formatMoney,
@@ -55,6 +58,7 @@ import { isE2E } from '../design/environment';
 import { OpaxShare } from '../../modules/opax-share';
 import Constants from 'expo-constants';
 import { TalkOrbs } from './TalkOrbs';
+import { LocationProgress } from '../features/electorate-map/LocationSuggestion';
 
 // Searched for by the release bundle scan: it must never appear in production.
 export const WORKBENCH_MARKER = 'OPAX_DESIGN_WORKBENCH';
@@ -142,6 +146,7 @@ export default function Workbench() {
     { filter: 'parliament', value: 'Victoria' },
   ]);
   const [loading, setLoading] = useState(false);
+  const [draft, setDraft] = useState('');
   const stacked = useAccessibilitySize();
   return (
     <Screen testID="workbench-screen">
@@ -377,6 +382,25 @@ export default function Workbench() {
           defaultValue="not an address"
           error="Enter the email address for your OPAX account."
         />
+        <Anchor id="composer">Composer</Anchor>
+        <Composer
+          label="Your question"
+          submitLabel="Ask the record"
+          placeholder="Ask a question about the public record…"
+          value={draft}
+          onChangeText={setDraft}
+          onSubmit={notice}
+          testID="wb-composer"
+          submitTestID="wb-composer-send"
+        />
+        <Composer
+          label="Your question"
+          submitLabel="Ask the record"
+          placeholder="Ask a question about the public record…"
+          value="Who has spoken most about housing affordability?"
+          onChangeText={() => {}}
+          onSubmit={notice}
+        />
       </Block>
 
       <Block id="party" title="Party labels">
@@ -463,6 +487,11 @@ export default function Workbench() {
         <View style={styles.inline}>
           <Portrait />
           <Portrait size="profile" />
+        </View>
+        <Anchor id="portraits-loading">Portraits, loading</Anchor>
+        <View style={styles.inline}>
+          <Portrait loading />
+          <Portrait size="profile" loading />
         </View>
       </Block>
 
@@ -562,6 +591,50 @@ export default function Workbench() {
             Income Tax Rates Amendment (Tax Reform No. 1) Bill 2026 · 2026
           </Text>
         </SubSection>
+      </Block>
+
+      <Block id="machine" title="Machine-written label">
+        <MachineWritten
+          explanation="Written by a model from the explanatory memorandum; not the record."
+          testID="wb-machine"
+        />
+        <MachineWritten
+          label="Machine brief"
+          explanation="An automated summary written by a model; not the record."
+        />
+      </Block>
+
+      <Block id="steps" title="Previous and next">
+        <StepButtons
+          previous={{
+            label: 'June',
+            accessibilityLabel: 'Previous month, June 2026',
+            onPress: notice,
+          }}
+          next={{
+            label: 'August',
+            accessibilityLabel: 'Next month, August 2026',
+            onPress: notice,
+          }}
+        />
+        <StepButtons
+          previous={{
+            label: 'December 2025',
+            accessibilityLabel: 'Previous month, December 2025',
+            onPress: notice,
+          }}
+          next={{
+            label: 'Next month',
+            accessibilityLabel: 'Next month',
+            onPress: notice,
+            disabled: true,
+          }}
+        />
+      </Block>
+
+      <Block id="progress" title="Location progress">
+        <LocationProgress done={9} total={150} />
+        <LocationProgress done={104} total={150} />
       </Block>
 
       <Block id="states" title="States">

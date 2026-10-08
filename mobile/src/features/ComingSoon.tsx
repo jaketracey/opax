@@ -36,18 +36,13 @@ export function TalkComingSoon() {
 export function AccountComingSoon() {
   return (
     <Screen testID="account-sheet">
-      <Section
-        title="Account"
-        icon="person.crop.circle"
-        accent="people"
-        rule={false}
-      >
+      <Section title="Account" accent="people" rule={false}>
         <Text testID="account-sheet-message">
           Signing in is not in this version of the app yet. An account will only
           be needed to talk to OPAX.
         </Text>
       </Section>
-      <Section title="About OPAX" icon="building.columns" accent="people">
+      <Section title="About OPAX" accent="people">
         <Text variant="subheading">
           Open Parliamentary Accountability Exchange
         </Text>
@@ -89,7 +84,7 @@ export function AccountComingSoon() {
       </Section>
       {isProduction ? null : (
         // Development and e2e builds only; the workbench route is not in release bundles.
-        <Section title="Development" icon="hammer" accent="people">
+        <Section title="Development" accent="people">
           <RowList>
             <LinkRow
               title="Design workbench"

@@ -81,7 +81,6 @@ export default function Citations() {
               <Section
                 key={citation.id}
                 title={citation.label}
-                icon="quote.opening"
                 accent="bills"
                 info={
                   citation.note

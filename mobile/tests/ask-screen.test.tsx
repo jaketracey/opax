@@ -70,6 +70,18 @@ jest.mock('../src/design/primitives', () => {
         'LoadingState',
       ].map((k) => [k, basic]),
     ),
+    // The input and its send button, under their own test IDs.
+    Composer: (p: Record<string, unknown> & { onSubmit: () => void }) =>
+      React.createElement(
+        View,
+        null,
+        React.createElement(View, { ...p, onSubmit: undefined }),
+        React.createElement(View, {
+          testID: p.submitTestID,
+          accessibilityLabel: p.submitLabel,
+          onPress: p.onSubmit,
+        }),
+      ),
     // The real screen's scroll view, as far as the reveal needs it.
     KeyboardStableScreen: (p: { scrollRef?: { current: unknown } }) => {
       if (p.scrollRef) p.scrollRef.current = mockScroll;

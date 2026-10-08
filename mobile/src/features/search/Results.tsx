@@ -118,7 +118,6 @@ export function Results({
   return (
     <Section
       title="Results"
-      icon="magnifyingglass"
       accent={p.kind === 'grant' || p.kind === 'agency' ? 'money' : 'bills'}
       testID="records-results"
       info={{
@@ -217,7 +216,6 @@ export function Results({
       {summary ? (
         <Section
           title="Cited summary"
-          icon="text.quote"
           accent="bills"
           testID="records-summary-panel"
           info={{

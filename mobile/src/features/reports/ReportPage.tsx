@@ -12,6 +12,7 @@ import {
   Heading,
   KeyValueList,
   InfoButton,
+  MachineWritten,
   PartyChip,
   Screen,
   Section,
@@ -34,6 +35,7 @@ import {
 } from './model';
 import {
   AEC_NOTE,
+  MODEL_NOTE,
   Prose,
   ReadState,
   ShareBars,
@@ -94,7 +96,6 @@ function Money({ slug }: { slug: string }) {
   return (
     <Section
       title="Follow the money"
-      icon="dollarsign.circle"
       accent="money"
       testID="report-money"
       info={{
@@ -124,7 +125,6 @@ function Money({ slug }: { slug: string }) {
               />
               <Section
                 title="Words per dollar"
-                icon="chart.bar.xaxis"
                 accent="money"
                 info={{
                   title: 'About words per dollar',
@@ -343,11 +343,7 @@ function ReportContent({
               />
             ))}
           {report.key_stats?.length ? (
-            <Section
-              title="The figures this turns on"
-              icon="chart.bar"
-              accent="votes"
-            >
+            <Section title="The figures this turns on" accent="votes">
               {report.key_stats.map((s, i) => (
                 <Group key={i}>
                   <BigFigure value={s.value} label={s.label} accent="votes" />
@@ -382,9 +378,7 @@ function ReportContent({
                   ) : null}
                 </Group>
               ))}
-              <Text variant="fine">
-                Machine-written from the retrieved passages; not the record.
-              </Text>
+              <MachineWritten explanation={MODEL_NOTE} />
             </Section>
           ) : null}
         </Group>
@@ -405,7 +399,6 @@ function ReportContent({
             <Section
               title="The share of the labelled record, decade by decade"
               accent="votes"
-              icon="chart.bar.xaxis"
               info={{
                 title: 'About the decade bars',
                 notes: [

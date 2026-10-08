@@ -235,7 +235,7 @@ describe('long division notes and briefs', () => {
       <MachineBrief label="Machine brief" brief={brief} testID="b" />,
     );
     expect(byID(root, 'b-label')[0]!.props.accessibilityLabel).toBe(
-      'Machine brief',
+      'Machine brief. An automated summary written by a model; not the record.',
     );
     expect(byID(root, 'b-text')).toHaveLength(0);
     expect(byID(root, 'b-more')[0]!.props.accessibilityLabel).toBe(

@@ -51,26 +51,28 @@ name: 11 Read a bill, its machine summary, divisions and speeches
     timeout: 180000
 - assertVisible: Passed, as at 26 August 2026
 - takeScreenshot: ${EVIDENCE}/11-bill
-# The machine summary sits under its stored attribution, never as the record.
+# The machine summary's pill comes first; its stored attribution opens from it.
 - assertVisible:
     id: bill-screen
 # Long jumps aim fast at the element (any part showing counts), then step
 # gently until the whole of it shows.
 - scrollUntilVisible:
     element:
-      id: bill-summary-attribution
+      id: bill-summary-label
     direction: DOWN
     visibilityPercentage: 1
     speed: 70
     timeout: 180000
 - scrollUntilVisible:
     element:
-      id: bill-summary-attribution
+      id: bill-summary-label
     direction: DOWN
     speed: 20
     timeout: 60000
-- assertVisible: Machine summary
-- assertVisible: Written by a model from the explanatory memorandum; not the record\.
+# Only the pill shows; VoiceOver (and Maestro) read the attribution on it.
+- assertVisible:
+    id: bill-summary-label
+    text: 'Machine summary\. Written by a model from the explanatory memorandum; not the record\.'
 - takeScreenshot: ${EVIDENCE}/11-summary
 # At AX5 the whole Divisions section is too tall to appear in the iOS
 # hierarchy; the first division's container does.
@@ -183,7 +185,7 @@ name: 11 Read a bill, its machine summary, divisions and speeches
     direction: DOWN
     speed: 20
     timeout: 60000
-- assertVisible: Machine brief
+- assertVisible: 'Machine brief\. An automated summary written by a model; not the record\.'
 - scrollUntilVisible:
     element:
       text: Tony Burke
@@ -257,16 +259,18 @@ name: 11 Read a bill, its machine summary, divisions and speeches
     id: bill-screen
 - scrollUntilVisible:
     element:
-      id: bill-summary-attribution
+      id: bill-summary-label
     direction: DOWN
     visibilityPercentage: 1
     speed: 70
     timeout: 180000
 - scrollUntilVisible:
     element:
-      id: bill-summary-attribution
+      id: bill-summary-label
     direction: DOWN
     speed: 20
     timeout: 60000
-- assertVisible: Written by a model from the exposure draft text; not the record\.
+- assertVisible:
+    id: bill-summary-label
+    text: 'Machine summary\. Written by a model from the exposure draft text; not the record\.'
 - takeScreenshot: ${EVIDENCE}/11-exposure-summary

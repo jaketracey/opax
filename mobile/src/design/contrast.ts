@@ -159,6 +159,23 @@ export const componentPairs: ColourPair[] = [
   pair('Field error text and icon', 'error', 'danger', 'paper'),
   pair('Field value', 'disabled', 'ink', 'sunken'),
   pair('Field placeholder', 'disabled', 'inkSoft', 'sunken'),
+
+  // Composer: one raised surface, the send circle inline (primary colours).
+  pair('Composer value', 'rest', 'ink', 'raised'),
+  pair('Composer placeholder', 'rest', 'inkFaint', 'raised'),
+  pair('Composer boundary', 'rest', 'lineStrong', 'paper', 'non-text'),
+  pair('Composer boundary (2pt)', 'focused', 'navy', 'paper', 'non-text'),
+  pair('Composer send circle', 'rest', 'navy', 'raised', 'non-text'),
+  pair('Composer send arrow', 'rest', 'onNavy', 'navy'),
+  pair('Composer send arrow', 'pressed', 'onNavy', 'navyRaised'),
+  pair('Composer send arrow', 'disabled', 'inkSoft', 'sunken'),
+
+  // MachineWritten pill: the bills accent; pressed takes sunken.
+  pair('MachineWritten label and sparkle', 'rest', 'billsInk', 'billsWash'),
+  pair('MachineWritten label and sparkle', 'pressed', 'billsInk', 'sunken'),
+
+  // Location progress: a navy bar on its sunken track.
+  pair('Location progress bar', 'rest', 'navy', 'sunken', 'non-text'),
   pair('Field boundary', 'disabled', 'lineStrong', 'paper', 'non-text'),
 
   // SourceLink and OpaxWebLink.

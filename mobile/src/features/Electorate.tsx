@@ -1,4 +1,7 @@
-import { ElectorateDate, ElectorateHistory } from './directories/ElectorateHistory';
+import {
+  ElectorateDate,
+  ElectorateHistory,
+} from './directories/ElectorateHistory';
 import { validDate } from './directories/model';
 import { SeatGrants } from './money-public/Grants';
 import { AskAbout } from './ask/AskAbout';
@@ -72,7 +75,9 @@ export function ElectorateScreen({
   embedded?: boolean;
   initialDate?: string;
 }) {
-  const [localDate, setAsOf] = useState(validDate(initialDate) ? initialDate : '');
+  const [localDate, setAsOf] = useState(
+    validDate(initialDate) ? initialDate : '',
+  );
   const asof = embedded ? localDate : validDate(initialDate) ? initialDate : '';
   const [view, setView] = useState<ElectorateView | null>(null),
     [directory, setDirectory] = useState<Directory | null>(null),
@@ -135,7 +140,10 @@ export function ElectorateScreen({
             ...headerItems(
               identity && seat
                 ? () => [
-                    shareHeaderItem({ path: seat.url + (asof ? `?asof=${asof}` : ''), title: identity.name }),
+                    shareHeaderItem({
+                      path: seat.url + (asof ? `?asof=${asof}` : ''),
+                      title: identity.name,
+                    }),
                   ]
                 : undefined,
             ),
@@ -189,7 +197,14 @@ export function ElectorateScreen({
               />
             </Group>
             <AskAbout kind="electorate" name={identity.name} />
-            <SeatGrants name={identity.name} state={identity.state} eligible={identity.jurisdiction === 'federal' && identity.chamber === 'representatives'} />
+            <SeatGrants
+              name={identity.name}
+              state={identity.state}
+              eligible={
+                identity.jurisdiction === 'federal' &&
+                identity.chamber === 'representatives'
+              }
+            />
             <View testID="electorate-map">
               <OutlineMap
                 boundaries={view.boundaries}
@@ -197,40 +212,48 @@ export function ElectorateScreen({
                 state={identity.state}
               />
             </View>
-            <ElectorateDate view={view} directory={directory} asof={asof} onDate={(date) => { if (embedded) setAsOf(date); else router.setParams({ asof: date || undefined }); }} />
-            {asof ? null : <RecordBlock
-              title="Latest verified representation"
-              icon="person.fill"
-              accent="people"
-              info={() => ({
-                title: 'About representation',
-                notes: [
-                  'Election winners and present-day representation can differ.',
-                  'Representation is shown only as recorded in the dated release.',
-                ],
-              })}
-              id="electorate-representatives"
-              block={view.representatives}
-              retry={refresh}
-              missing={
-                identity.status === 'historical'
-                  ? 'Abolished; not a current seat. Past winners are listed under Elections.'
-                  : 'No verified representative is recorded for this date. This does not establish a vacancy.'
-              }
-            >
-              {(rows) => (
-                <RepresentativeRows
-                  rows={rows}
-                  directory={directory}
-                  asAt={view.representatives.asAt}
-                  id="electorate-member"
-                />
-              )}
-            </RecordBlock>}
+            <ElectorateDate
+              view={view}
+              directory={directory}
+              asof={asof}
+              onDate={(date) => {
+                if (embedded) setAsOf(date);
+                else router.setParams({ asof: date || undefined });
+              }}
+            />
+            {asof ? null : (
+              <RecordBlock
+                title="Latest verified representation"
+                accent="people"
+                info={() => ({
+                  title: 'About representation',
+                  notes: [
+                    'Election winners and present-day representation can differ.',
+                    'Representation is shown only as recorded in the dated release.',
+                  ],
+                })}
+                id="electorate-representatives"
+                block={view.representatives}
+                retry={refresh}
+                missing={
+                  identity.status === 'historical'
+                    ? 'Abolished; not a current seat. Past winners are listed under Elections.'
+                    : 'No verified representative is recorded for this date. This does not establish a vacancy.'
+                }
+              >
+                {(rows) => (
+                  <RepresentativeRows
+                    rows={rows}
+                    directory={directory}
+                    asAt={view.representatives.asAt}
+                    id="electorate-member"
+                  />
+                )}
+              </RecordBlock>
+            )}
             <ElectorateHistory view={view} directory={directory} />
             <Section
               title="Elections"
-              icon="checkmark.seal"
               accent="votes"
               testID="electorate-elections"
             >
@@ -307,7 +330,6 @@ export function ElectorateScreen({
             </Section>
             <Section
               title="Local context"
-              icon="person.3"
               accent="places"
               testID="electorate-census"
             >
@@ -359,11 +381,7 @@ export function ElectorateScreen({
                 <EmptyState message="No Census context is held for this electorate." />
               )}
             </Section>
-            <Section
-              title="Related constituencies"
-              icon="square.on.square"
-              accent="places"
-            >
+            <Section title="Related constituencies" accent="places">
               {view.related.length ? (
                 <RowList>
                   {view.related.map((r, i) => (

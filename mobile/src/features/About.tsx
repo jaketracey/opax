@@ -79,7 +79,7 @@ export default function About() {
           is not affiliated with any parliament, government or political party.
         </Text>
       </Group>
-      <Section title="Read the record" icon="books.vertical" accent="leads">
+      <Section title="Read the record" accent="leads">
         <RowList>
           <LinkRow
             title="Reports"
@@ -98,12 +98,11 @@ export default function About() {
           />
         </RowList>
       </Section>
-      <Section title="Cultural notice" icon="info.circle" accent="people">
+      <Section title="Cultural notice" accent="people">
         <Text testID="about-deceased-notice">{deceasedPersonsNotice}</Text>
       </Section>
       <Section
         title="Coverage"
-        icon="chart.bar.doc.horizontal"
         accent="people"
         testID="about-coverage"
         info={{
@@ -226,7 +225,6 @@ export default function About() {
       </Section>
       <Section
         title="Sources and licences"
-        icon="books.vertical"
         accent="leads"
         testID="about-sources"
       >
@@ -251,11 +249,7 @@ export default function About() {
           />
         </RowList>
       </Section>
-      <Section
-        title="Machine-written text"
-        icon="text.badge.star"
-        accent="bills"
-      >
+      <Section title="Machine-written text" accent="bills">
         <Text>
           Stored machine briefs are labelled “Machine brief”. Bill summaries
           carry their attribution: “Written by a model from the explanatory
@@ -265,7 +259,6 @@ export default function About() {
       </Section>
       <Section
         title="Corrections and contact"
-        icon="envelope"
         accent="people"
         testID="about-contact"
       >
@@ -278,7 +271,7 @@ export default function About() {
           testID="about-support"
         />
       </Section>
-      <Section title="Privacy" icon="hand.raised" accent="people">
+      <Section title="Privacy" accent="people">
         <Text>
           {phoneCopy(
             'Public reading needs no account and sends no account or device identifier. Requests reach OPAX’s servers with this iPhone’s IP address, used for rate limits and security. Request URLs, including submitted searches, may be kept in server logs for 7 days. Cloudflare traffic and security analytics may keep IP addresses, paths and queries for up to 31 days.',

@@ -32,12 +32,7 @@ export function AboutLeads({
   testID: string;
 }) {
   return (
-    <Section
-      title="About these numbers"
-      icon="info.circle"
-      accent="leads"
-      testID={testID}
-    >
+    <Section title="About these numbers" accent="leads" testID={testID}>
       {lede ? (
         <Text wordSafe testID={`${testID}-lede`}>
           {aboutLede(discovery)}

@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Animated, Easing, StyleSheet, View } from 'react-native';
-import { Button, Group, Icon, Text } from '../../design/primitives';
+import {
+  Button,
+  Group,
+  Icon,
+  MachineWritten,
+  Text,
+} from '../../design/primitives';
 import { useReduceMotion } from '../../design/accessibility';
 import { colors, hairline, rhythm, spacing } from '../../design/tokens';
 import { machineNote } from './AnswerView';
@@ -58,9 +64,7 @@ export function AskProgress({
       </View>
       {streaming ? (
         <Group gap={rhythm.tight}>
-          <Text wordSafe variant="fine">
-            {machineNote}
-          </Text>
+          <MachineWritten explanation={machineNote} />
           <Text
             selectable
             testID="ask-streaming"

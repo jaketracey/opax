@@ -86,9 +86,16 @@ export function SourcesScreen() {
           url: categories.data.meta.source_url,
           licence: categories.data.meta.licence,
           note: categories.data.meta.licence_note,
-          licenceURL: categories.data.meta.licence_url.replace(/^http:\/\/creativecommons\.org\//, 'https://creativecommons.org/'),
-          definitionSources: [...new Set(categories.data.categories.map((c) => c.source))],
-          definitions: categories.data.categories.flatMap((c) => c.url ? [{ label: c.source, url: c.url }] : []),
+          licenceURL: categories.data.meta.licence_url.replace(
+            /^http:\/\/creativecommons\.org\//,
+            'https://creativecommons.org/',
+          ),
+          definitionSources: [
+            ...new Set(categories.data.categories.map((c) => c.source)),
+          ],
+          definitions: categories.data.categories.flatMap((c) =>
+            c.url ? [{ label: c.source, url: c.url }] : [],
+          ),
         },
         pay: pay?.data.meta.sources.map((s) => ({
           label: `${s.publisher}: ${s.title}`,
@@ -129,7 +136,7 @@ export function SourcesScreen() {
           </Text>
         ))}
       </Group>
-      <Section title="Datasets" icon="tray.full" testID="sources-datasets">
+      <Section title="Datasets" testID="sources-datasets">
         <RowList>
           {all.map((dataset) => (
             <DatasetRow key={dataset.id} dataset={dataset} />
@@ -138,11 +145,7 @@ export function SourcesScreen() {
       </Section>
       <PortraitCredits />
       {loaded.collected?.length ? (
-        <Section
-          title="Collected sources"
-          icon="books.vertical"
-          testID="sources-collected"
-        >
+        <Section title="Collected sources" testID="sources-collected">
           <RowList>
             {loaded.collected.map((item) => (
               <Disclosure
@@ -163,7 +166,7 @@ export function SourcesScreen() {
         </Section>
       ) : null}
       <Fonts />
-      <Section title="OPAX" icon="chevron.left.forwardslash.chevron.right">
+      <Section title="OPAX">
         <Text wordSafe>{code.terms}</Text>
         <View style={styles.links}>
           <SourceLink
@@ -199,7 +202,10 @@ function withLoaded(base: Dataset[], loaded: Loaded): Dataset[] {
           links.push({ label: 'Quarterly reports', url: loaded.expenses.url });
         }
         if (loaded.categories) {
-          terms.push(loaded.categories.note, ...loaded.categories.definitionSources);
+          terms.push(
+            loaded.categories.note,
+            ...loaded.categories.definitionSources,
+          );
           links.push(...loaded.categories.definitions);
           links.push(
             { label: 'Category notes', url: loaded.categories.url },
@@ -315,11 +321,7 @@ function PortraitCredits() {
       row.info.credit.toLocaleLowerCase('en-AU').includes(needle),
   );
   return (
-    <Section
-      title="Portraits"
-      icon="person.crop.circle"
-      testID="sources-portraits"
-    >
+    <Section title="Portraits" testID="sources-portraits">
       <Text wordSafe>{portraitTerms.official.terms}</Text>
       <Text wordSafe>{portraitTerms.commons}</Text>
       <Links links={portraitTerms.official.links} />
@@ -404,7 +406,7 @@ function Fonts() {
       )
     : [];
   return (
-    <Section title="Fonts" icon="textformat" testID="sources-fonts">
+    <Section title="Fonts" testID="sources-fonts">
       {fonts.length ? (
         <RowList>
           {fonts.map((item) => (

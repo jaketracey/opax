@@ -8,6 +8,7 @@ const symbols: Record<string, AndroidSymbol> = {
   'text.badge.plus': 'edit_note',
   trash: 'delete',
   'arrow.clockwise': 'refresh',
+  'arrow.up': 'arrow_upward',
   'arrow.right': 'arrow_forward',
   'arrow.triangle.2.circlepath': 'sync',
   'arrow.triangle.branch': 'fork_right',

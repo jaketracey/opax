@@ -53,9 +53,36 @@ Design workbench) to see every component and state at the current text size.
 - **Controls:** `Disclosure` (label, trailing value, turning chevron,
   animated with Reduce Motion respected) replaces bordered Show/Hide
   buttons; `LinkRow` (optional `IconTile`, title, detail, value, chevron or
-  Safari symbol) replaces full-width text links; `Section` takes `icon`,
-  `accent` and `info`. `haptic('success' | 'selection' | 'light')` on
+  Safari symbol) replaces full-width text links; `Section` takes `accent`
+  and `info`. `haptic('success' | 'selection' | 'light')` on
   Follow and Share only.
+
+## TestFlight polish (8 Oct 2026)
+
+- **Section headings carry no icon tile** (too busy). A section's `accent`
+  draws a short 2pt mark in its ink over the start of the top rule. Icons
+  stay on rows and links (`LinkRow`, cards), where they help scanning.
+- **`MachineWritten`**: the machine-written label is only the pill (a
+  sparkle and "Machine-written", "Machine summary" or "Machine brief"),
+  never a pill plus an attribution paragraph. Tapping it opens a sheet with
+  the text's own attribution and `MACHINE_GUIDANCE`; VoiceOver hears the
+  whole disclosure on the pill ("Machine-written. Written by a model from
+  the explanatory memorandum; not the record."). Bills, the record reader,
+  Today's edition card (its own tinted face via `children`), reports and
+  Ask all use it.
+- **`Composer`**: one rounded raised surface with the send circle inline
+  (navy with text, drawn disabled until then, a spinner while working). The
+  screen title names the task, so the input's label is spoken, not drawn.
+  Ask's question and follow-up use it; Options and Your conversations sit
+  below as plain rows.
+- **`StepButtons`**: previous and next on one row ("‹ June", "August ›"),
+  each with a full spoken name; a disabled end stays drawn disabled. They
+  stack full width at accessibility sizes.
+- **Portraits load quietly**: while the lookup runs or the image decodes,
+  a veil over the blank circle breathes between sunken and the hairline
+  colour (one shared beat, colour only, no opacity); the photo then fades
+  in as the veil clears. Under Reduce Motion the veil is still and clears
+  at once. Nothing changes size.
 
 ## Rules that apply everywhere
 
@@ -199,7 +226,7 @@ Design workbench) to see every component and state at the current text size.
 - `Screen`: the scrolling page on paper under the native bar. Put it first
   in the screen so large titles collapse. `refreshControl` for pull to refresh.
 - `Section`: a default rule, an optional serif `title` and an optional
-  trailing `action` (an "All bills" link). No cards for boundaries. At
+  trailing `action` (an "All bills" link); no icon tile. No cards for boundaries. At
   accessibility sizes the title takes its own line and the action and ⓘ sit
   on the line below, so a large "See all" never squeezes the heading.
 - `EdgeFade`: a decorative fade from paper to clear over the top edge of a
@@ -234,7 +261,8 @@ Design workbench) to see every component and state at the current text size.
   dot. The profile adapter (`personPartyFor`) supplies `partyStatus` and
   `rosterParty`; compare names with `samePartyLabel` (the web's).
 
-- `PersonRow`: portrait, name, party, place, optional detail and chevron. A
+- `PersonRow`: portrait (top-aligned with the name), then the name, the
+  party chip on its own line, the place, an optional detail, and a chevron. A
   `party` must come with `partyStatus` (the type enforces it). One VoiceOver
   element: "Anthony Albanese, Labor, Member for Grayndler · NSW". Pass
   `onPress` only for roster parliamentarians with a native page.
@@ -318,7 +346,8 @@ Copy is in `stateCopy` (IOS-UX section 4, "States, everywhere").
 
 - `LoadingState`: layout-stable placeholders in the block's final shape
   (`rows`, `people`, `figures`, `text`); no spinner over content already
-  shown, no shimmer. `label` is what VoiceOver announces.
+  shown, no shimmer. (A portrait's own breathing veil is the one exception:
+  it marks a photo still on its way, inside the circle it will fill.) `label` is what VoiceOver announces.
 - `EmptyState`: says what is absent, in the web's words where it has them.
   Often a block with nothing for this person is better left out.
 - `ErrorState`: a plain sentence plus Try again; VoiceOver focus moves to the
