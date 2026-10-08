@@ -2,6 +2,7 @@ import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, 
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
 import { rankedMoneyAnswer } from './ask-money'
 import { paidAnswer, mentionsPay } from './ask-pay'
+import { rewriteFollowUp, clarifyPayload, REWRITE_SYSTEM, type FollowUpRewrite } from './ask-rewrite'
 import { slugIndex } from './person-slug'
 import { type MoneyFacts, moneyOverviewPrompt, verifiedOverview } from './ask-money-overview'
 import {readGenerationCache, storeGenerationCache} from './generation-cache'
@@ -1266,7 +1267,11 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   if (conversation) {
     const limited = await rateLimited(env.ASK_LIMITER, request)
     if (limited) return limited
-    askedAs = await standaloneQuestion(rawInput, env)
+    const rewrite = await standaloneQuestion(rawInput, env)
+    // "High", "ok", "?": nothing to search on, and never the last question
+    // over again. A free request for a full question, no answer generated.
+    if (rewrite && typeof rewrite === 'object') { mark('rewrite'); return timed(json(clarifyPayload(rawInput.question ?? '', rewrite.suggestion))) }
+    askedAs = rewrite
     if (askedAs) {
       rawInput.question = askedAs
       // "And the Liberals?" after a pay answer only reads as one once rewritten.
@@ -1381,52 +1386,22 @@ function withAskedAs<T extends object>(payload: T, askedAs: string | null | unde
  * be searched on it. One small generation-only call on the OpenRouter slot
  * (the followups model), bounded to a few seconds; null means "search the
  * words as typed", which is what happened before. A message that already
- * stands alone comes back unchanged and is reported as null too.
+ * stands alone comes back unchanged and is reported as null too; one with
+ * nothing to search on is { unclear } (ask-rewrite.ts).
  */
-async function standaloneQuestion(input: AskInput, env: Env): Promise<string | null> {
-  const question = String(input.question ?? '').replace(/\s+/g, ' ').trim()
-  const turns = (input.context ?? [])
-    .filter((t) => typeof t?.text === 'string' && t.text.trim().length > 0)
-    .slice(-8)
-  if (!question || question.length > 2000 || !turns.some((t) => t.author !== 'answer')) return null
-  const transcript = turns
-    .map((t) => `${t.author === 'answer' ? 'Answer' : 'Reader'}: ${String(t.text).replace(/\s+/g, ' ').trim().slice(0, 1500)}`)
-    .join('\n')
-  const user = (
-    `Conversation so far:\n${transcript}\n\n` +
-    'Rewrite the reader\'s latest message, given below, as ONE standalone question about the Australian public record that names its subject explicitly - the person, organisation, program, place or topic the conversation is about - so the record can be searched on it alone. ' +
-    'Keep the reader\'s intent, and keep any names, dates, places, figures and other specifics they gave. Keep their own wording wherever it already stands alone; add nothing the conversation does not contain; do not answer, judge, soften or comment. ' +
-    'A message about the conversation itself (who or what are we talking about, look again) becomes a question about the conversation\'s subject. ' +
-    'A message asking for more (is that all, anything else, what else, more, go on) becomes a question asking what ELSE the subject said or did on the topic, beyond the points the last answer already gave, naming those points briefly so they are not repeated. ' +
-    'If the message already names its subject and stands on its own, return it exactly as written. Return only the question, on one line, with no quotation marks or preamble.\n\n' +
-    'Examples, where the conversation so far was about Barnaby Joyce and grants:\n' +
-    '"no he has been in tons of grants, look more" -> What grants has Barnaby Joyce been involved in?\n' +
-    '"who are we talking about?" -> Who is Barnaby Joyce?\n' +
-    '"is that all?" (after an answer listing drought grants and a dam grant) -> What else has Barnaby Joyce been involved in with grants, beyond the drought grants and the dam grant already given?\n' +
-    '"and in 2019?" -> What grants was Barnaby Joyce involved in during 2019?\n' +
-    '"What did Pauline Hanson say about housing affordability?" -> What did Pauline Hanson say about housing affordability?\n\n' +
-    'Latest reader message: {question}'
-  ).replace(/[{}]/g, (brace) => brace === '{' ? '{{' : '}}').replace('{{question}}', '{question}')
-  try {
-    const res = await kbFetch(env, '/ask', {
-      body: {
-        query: question,
-        top_k: 1,
-        reranker: 'noop',
-        generative_model: env.FOLLOWUPS_MODEL || 'openai-compatible',
-        max_tokens: 200,
-        prompt: { system: 'You rewrite follow-up messages as standalone questions. You output only the rewritten question and nothing else.', user },
-      },
-      headers: { 'x-synchronous': 'true' },
-      signal: AbortSignal.timeout(9_000),
-    })
-    const text = (await summaryModelAnswer(res) ?? '').replace(/\s+/g, ' ').trim().replace(/^["“'‘]+|["”'’]+$/g, '').trim()
-    if (!text || text.length > 400 || text.length < 4) return null
-    if (text.toLowerCase() === question.toLowerCase()) return null
-    return text
-  } catch {
-    return null
-  }
+async function standaloneQuestion(input: AskInput, env: Env): Promise<FollowUpRewrite> {
+  return rewriteFollowUp(input, async (user, question) => summaryModelAnswer(await kbFetch(env, '/ask', {
+    body: {
+      query: question,
+      top_k: 1,
+      reranker: 'noop',
+      generative_model: env.FOLLOWUPS_MODEL || 'openai-compatible',
+      max_tokens: 200,
+      prompt: { system: REWRITE_SYSTEM, user },
+    },
+    headers: { 'x-synchronous': 'true' },
+    signal: AbortSignal.timeout(9_000),
+  })))
 }
 
 /** Retrieve once, then generate only from original turns belonging to the index speaker. */
