@@ -305,7 +305,7 @@ Nine jurisdictions are enumerated for each generally applicable record family. C
 
 | Area | Source (publisher + URL) | Status | What OPAX holds (rows and years) | Licence | Update cadence | Surface | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Federal | Office of Parliamentary Counsel / FRL [source][S58] | partial | 23 dated salary steps and selected determination references in [pay registry](../scripts/pay_registry/base_salary.json); 0 verified comprehensive instrument-series rows/years | CC BY 4.0; Coat of Arms and marked third-party exceptions | Source: registrations/amendments/compilations; OPAX: no general instrument feed | Web: pay source references; app: Pay planned | FRL Acts linked to bills are a separate weekly loader (words_parlinfo.py), not evidence of instrument coverage. legal_corpus.py and arag_sync.py have a legacy legal path; manifest has no legal kind or attested current count. |
+| Federal | Office of Parliamentary Counsel / FRL [source][S58] | partial | Metadata-only lane on `web/frl-instruments`: 5,299 expanded title rows cached against `@odata.count` 24,146 (9 Oct); **0 accepted comprehensive snapshot rows**, years pending reconciliation. Existing 23 dated salary steps remain in [pay registry](../scripts/pay_registry/base_salary.json). | CC BY 4.0; dated FRL attribution; Coat of Arms and marked third-party exceptions | Source: registrations/amendments/compilations; OPAX: weekly metadata wiring held until source approval and orchestrator merge | Web: directory/detail implementation held; app: instruments list/detail in a later lane | [Phase 1 evidence and remaining gate](coverage/frl-phase1.md). Ordered plain title paging independently reconciles counts; expanded pages can omit parents. No bodies, summaries, person entities or joins. Commencement is unknown where the API supplies no date. One returned version can be historical; complete history/current-version supplementation is phase 2. FRL Acts linked to bills remain separate. |
 
 ## Electoral
 
@@ -406,6 +406,13 @@ Every recommendation shares these guards: **public records only; original source
 | App surface (proposed) | Instruments list and read-only versioned detail, backed by bounded static exports/catalogue. New screen/allowlist contract work required; it is outside currently documented v1 and not shipped by this task. |
 | Specific guardrails | Private individuals may appear in schedules, licence conditions or exemptions. Keep them within authorised record text; no private-person profiles, identity joins or name-search entities. Flag restricted/third-party material; preserve authorised wording/redactions. Distinguish as-made from compiled/in-force text and scheduled future commencement; link the authoritative version and avoid representing a model summary as law. |
 
+Phase 1 implementation is held on `web/frl-instruments` at the source/production gate.
+The 9 October API scope count is **24,146**, with **5,299 expanded rows cached**
+and **no accepted comprehensive snapshot** yet. An expanded page omitted a parent;
+the loader now enumerates plain title pages independently and joins navigation metadata
+by FRL id. Acquisition is held during the publisher's busy hours. See the
+[phase 1 report](coverage/frl-phase1.md) for counts, limits and remaining gates.
+
 ## Source access limits
 
 Ordinary robots checks for APH/ParlInfo, NSW Parliament, Queensland Parliament’s main site, WA Parliament, NT government/NTEC, some Finance/ANAO/Directory hosts and several other publishers returned an error/challenge or could not be read in this environment. NSW lobbyist and data.gov.au paths were disallowed by their robots policy. No record pages behind those barriers were scraped, no browser challenge was attempted, and no alternate proxy or archive was used. A successful Queensland PDF-host check does not clear its main site.
@@ -414,7 +421,7 @@ For those publishers the source cell links to the existing repo source registry/
 
 Do not carry older repo statements about donation law, universal government licences or scraping permission forward as current findings. Federal/state register copyright, parliamentary material, third-party submissions, agency attachments and boundary maps require their own checks. Existing restricted publication is a review issue, not a precedent authorising new ingestion.
 
-This task changes documentation only. No ingestion/export command, remote database write, paid service call, production write, deploy, native build, push or merge is authorised or performed here.
+The 8 October source audit changed documentation only. The 9 October FRL metadata lane stages inside its isolated worktree and is held at the production gate; no production database/KB write, deploy, push or merge is authorised.
 
 ## URL receipt ledger
 

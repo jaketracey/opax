@@ -5,6 +5,7 @@ import { paidAnswer, mentionsPay } from './ask-pay'
 import { rewriteFollowUp, clarifyPayload, REWRITE_SYSTEM, type FollowUpRewrite } from './ask-rewrite'
 import { slugIndex } from './person-slug'
 import { missingEntitySlug } from './crawl-hygiene'
+import { instrumentPage } from './instruments'
 import { runIndexNow, INDEXNOW_CRON } from './indexnow'
 import { type MoneyFacts, moneyOverviewPrompt, verifiedOverview } from './ask-money-overview'
 import {readGenerationCache, storeGenerationCache} from './generation-cache'
@@ -3183,6 +3184,7 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
 }
 
 type SeoRoute =
+  | { kind: 'instruments'; id: string | null }
   | { kind: 'static'; page: keyof typeof STATIC_PAGES }
   | { kind: 'report'; slug: string }
   | { kind: 'index'; dir: DirectoryKind }
@@ -3231,6 +3233,11 @@ const GRANT_RECIPIENT_ID_RE = /^(?:abn:\d{11}|name:[a-z0-9 .&'()-]{2,120}|person
 /** Route table for real paths. Trailing slashes tolerated, never canonical. */
 function matchSeoRoute(url: URL): SeoRoute | null {
   const path = url.pathname.replace(/\/+$/, '') || '/'
+  if (path === '/instruments') return { kind: 'instruments', id: null }
+  if (path === '/instrument' || path.startsWith('/instrument/')) {
+    try { return { kind: 'instruments', id: decodeURIComponent(path.slice('/instrument/'.length)) } }
+    catch { return { kind: 'instruments', id: '' } }
+  }
   if (path === '/') return null // an asset hit; index.html carries the home tags
   const segs = path.slice(1).split('/')
   let dec: string[]
@@ -3701,9 +3708,9 @@ const indexLinks = (): string =>
   `<a href="/subject/donor">Donors</a> · <a href="/subject/supplier">Government suppliers</a> · <a href="/subject/agency">Government agencies</a> · <a href="/subject/campaigner">Campaigners</a> · ` +
   `<a href="/subject/topic">Topics</a></p>`
 
-function prerenderBlock(heading: string, sentence: string, kicker: string): string {
+function prerenderBlock(heading: string, sentence: string, kicker: string, links = indexLinks()): string {
   return `<section id="prerender" class="wrap"><p class="kicker">${escHtml(kicker)}</p>` +
-    `<h1>${escHtml(heading)}</h1><p>${escHtml(sentence)}</p>${indexLinks()}</section>`
+    `<h1>${escHtml(heading)}</h1><p>${escHtml(sentence)}</p>${links}</section>`
 }
 
 /** Canonical for a route: the clean path, plus the query only where it names the page. */
@@ -3729,6 +3736,7 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
   })
 
   switch (route.kind) {
+    case 'instruments': return base(await instrumentPage(route.id, url, <T>(path: string) => assetJson<T>(env, path), prerenderBlock))
     case 'grant-recipient': return grantRecipientMeta(route.jurisdiction, route.id, url, env)
     case 'static': {
       // Existing shared query links retain their behavior and point search engines
@@ -4679,6 +4687,9 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
         for(const [rel,href] of [['prev',meta.prev],['next',meta.next]]) if(href) el.append(`<link rel="${rel}" href="${escHtml(href)}">`,{html:true})
       },
     })
+  if (route.kind === 'instruments') rewriter.on('script[src]', { element(el) {
+    if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
+  } }).on('a[href^="/subject/person"]', { element(el) { el.remove() } })
   rewriter.on('main#main', { element(el) { el.setAttribute('data-server-rendered',''); el.setInnerContent(meta.prerender || '', { html: true }) } })
   const out = rewriter.transform(shell)
   const headers = new Headers(out.headers)

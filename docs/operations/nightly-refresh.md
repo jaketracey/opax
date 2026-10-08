@@ -328,6 +328,47 @@ just that group when the check fails; it also puts every periodic file back to H
 its end line (killed, lock held). A loader that exits 3 ("the source refused to change the register") is logged STALE, keeps
 the last good rows, and shows up as a `warnings` entry in `status.json`, not as a failure. Time: see "How long it takes".
 
+**FRL instruments, phase 1 (held on `web/frl-instruments`).** The weekly group runs
+`frl_instruments` (`python -m parli.ingest.frl_instruments`), then `x_instruments`
+(`scripts/export_instruments.py`) only after complete count reconciliation. This wiring
+is inert until the orchestrator merges the branch after Jake approves the source.
+No deploy, push, merge, refresh-box change, DB write or KB write was performed in the lane.
+The loader uses a persistent, gitignored checkpoint and snapshot under
+`scripts/state/frl/` in the checkout. It never opens `parli.db`. A failed, empty,
+moving-count or more-than-2%-shrunk acquisition exits 3 and keeps the last good export.
+If a checkpoint's count/scope changes, retain it for diagnosis and select a fresh
+checkpoint directory inside the checkout; do not export an incomplete snapshot.
+Completed checkpoints are discarded on the next successful acquisition attempt,
+so an unchanged title count cannot hide later metadata changes. The current API's
+unbounded/bulk filtered version expansions time out. The phase 1 query bounds
+`versions` to one returned row per title, retaining every field and the source's
+current/latest flags without asserting the returned version is either. Detail pages
+link the authoritative FRL latest version when a latest row was not returned.
+Plain title pages and expanded metadata pages are read independently with
+`$orderby=id`, `$top=100` and fixed `$skip` increments of 100. FRL's expanded
+pages can omit a parent title. Navigation metadata is matched by explicit FRL id;
+missing expansions are listed in the receipt and manifest, and their pages say
+“not returned”, without treating them as empty relationships. The unique plain
+title ids must still reconcile exactly with the count before and after the run.
+Full version history and complete current/latest supplementation remain phase 2.
+
+The `instruments` data group owns `portal/public/instruments`. Its year chunks and
+manifest are validated before publication, capped at 400 files / 25,000,000 bytes,
+and wrapped with `export_step.sh dir` / `keep_if_unchanged.py --sweep`. Timestamp-only
+refreshes retain HEAD's bytes. The portal gate rebuilds crawl assets from the new
+manifest; sitemap URLs contain FRL ids only. It creates no instrument person entities,
+joins or person search rows. The schema-1 `votes.json` contract is unaffected.
+
+FRL requests share a ceiling of 600 attempts, a minimum interval of two seconds,
+and backoff on 429, 5xx and transport failures. The current website robots delay is
+ten seconds; the API host returns 404 for robots.txt. Policy reads are repeated each
+run. Acquisition observes FRL's 08:00–20:00 **UTC+10** busy period (including a stop
+if the period begins mid-run). Schedule this weekly step before that window or after
+20:00 UTC+10. This is scoped API title/version metadata; consult the publisher before
+a full-site/document crawl. Bodies and a public history reader require a later licence
+review, source approval and a separate lane. The later app lane adds an iOS instruments
+list and detail with its own static-export contract and device validation.
+
 **Roster KB reconciliation.** After final data validation and the portal gate,
 `reconcile_roster_profiles.py` previews changes to owned `roster-profile-*`
 resources. It is **dry-run by default**. Only explicit `OPAX_ROSTER_SYNC_KB=1`

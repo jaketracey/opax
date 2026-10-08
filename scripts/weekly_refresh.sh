@@ -44,7 +44,7 @@ ALLOW_FAIL=",${OPAX_ALLOW_FAIL:-},"
 # exit 3 from these means the source refused to change the register (empty or shrunken upstream; for ipea, a
 # quarter whose data.gov.au licence changed): the last good rows are kept, so it is reported as stale, not failed
 # (periodic-refresh.md, exit codes)
-STALE_OK=",donations_qld,donations_vic,donations_tas,donations_apply,lobbyists_fetch,lobbyists_apply,fits_fetch,fits_apply,rosters_fetch,qld_contracts,ipea,x_people,"
+STALE_OK=",frl_instruments,x_instruments,donations_qld,donations_vic,donations_tas,donations_apply,lobbyists_fetch,lobbyists_apply,fits_fetch,fits_apply,rosters_fetch,qld_contracts,ipea,x_people,"
 
 # log, count, run_step, FAILED_STEPS, STEP_DELTA (shared with daily_refresh.sh)
 . "$REPO/scripts/lib/refresh_lib.sh"
@@ -85,6 +85,14 @@ log "===== weekly refresh start (groups: $*; timeout/step=$STEP_TIMEOUT, host=$(
 
 if [ "$want_weekly" = 1 ]; then
   # --- loaders ------------------------------------------------------------------------------------------
+  # Metadata-only FRL group. Persistent local checkpoint survives weekly scratch cleanup.
+  # This wiring is held on web/frl-instruments until the orchestrator merges it.
+  if run_step frl_instruments "" "$PY" -m parli.ingest.frl_instruments; then
+    run_step x_instruments "" "$EXPORT" dir portal/public/instruments -- \
+      "$PY" scripts/export_instruments.py
+  else
+    log "[x_instruments] SKIP: FRL acquisition held; last good export kept"
+  fi
   # Federal Register of Legislation Acts (INSERT OR REPLACE on act_id; feeds "became law" on the bill pages)
   run_step frl_acts "SELECT COUNT(*) FROM ext_frl_acts" \
     "$PY" -m parli.ingest.words_parlinfo --db "$DB" frl-acts

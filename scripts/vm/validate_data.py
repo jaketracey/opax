@@ -466,7 +466,55 @@ def check_taxcharity() -> list[str]:
     return errs + _check_dir(d, r"[0-9]{2}\.json", TAXCHARITY_MIN_RATIO)
 
 
-CHECKS = {"bills": check_bills, "votes": check_votes, "divisions": check_divisions, "seovotes": check_seovotes,
+def check_instruments() -> list[str]:
+    """Reconciled, bounded metadata export; compare rows, not year-file counts."""
+    directory = ROOT / PUBLIC / "instruments"
+    try:
+        manifest = json.loads((directory / "manifest.json").read_text())
+        rows = json.loads((directory / "index.json").read_text())["records"]
+        count = manifest["count"]
+        if not count or count != manifest["odata_count"] or count != len(rows):
+            return ["instruments counts do not reconcile"]
+        if not manifest["metadata_only"] or len(manifest["lookup"]) != count:
+            return ["instruments metadata scope or lookup mismatch"]
+        old = head_bytes("portal/public/instruments/manifest.json")
+        if old and count < json.loads(old)["count"] * .98:
+            return ["instruments snapshot shrank more than 2%"]
+        files = list(directory.glob("*.json"))
+        if len(files) > 400 or sum(p.stat().st_size for p in files) > 25_000_000:
+            return ["instruments asset budget exceeded"]
+        schemas, strings, ids = manifest["schemas"], manifest.get("strings", []), set()
+        def unpack(value):
+            if isinstance(value, list): return [unpack(v) for v in value]
+            if isinstance(value, dict):
+                if "s" in value: return strings[value["s"]]
+                fields = schemas[value["o"]]
+                if len(fields) != len(value["v"]): raise ValueError("invalid packed metadata")
+                return dict(zip(fields, [unpack(v) for v in value["v"]]))
+            return value
+        for i, chunk in enumerate(manifest["chunks"]):
+            filename = Path(chunk["path"]).name
+            if chunk["path"] != "/instruments/" + filename: return ["unsafe instrument chunk path"]
+            records = json.loads((directory / filename).read_text())["records"]
+            if len(records) != chunk["count"]: return ["instruments chunk count mismatch"]
+            for packed in records:
+                row = unpack(packed); key = row["id"]
+                if not re.fullmatch(r"[CF]\d{4}[A-Z]\d{5}", key) or key in ids:
+                    return ["invalid or duplicate FRL id"]
+                if manifest["lookup"].get(key) != i or row["canonical_url"] != f"https://www.legislation.gov.au/{key}/latest":
+                    return ["instruments lookup or canonical URL mismatch"]
+                if row["collection"] != "LegislativeInstrument" or row["isInForce"] is not True:
+                    return ["out-of-scope instrument"]
+                ids.add(key)
+        if len(ids) != count or {r[0] for r in rows} != ids: return ["instrument ids do not reconcile"]
+        if manifest["attribution"]["licence_url"] != "https://creativecommons.org/licenses/by/4.0/":
+            return ["FRL licence missing"]
+        return []
+    except (OSError, ValueError, KeyError, TypeError, IndexError) as e:
+        return [f"instrument export unreadable: {e}"]
+
+
+CHECKS = {"bills": check_bills, "instruments": check_instruments, "votes": check_votes, "divisions": check_divisions, "seovotes": check_seovotes,
           "corpus": check_corpus, "wrangler": check_wrangler,
           "money": check_money, "grants": check_grants, "suppliers": check_suppliers, "access": check_access,
           "expenses": check_expenses, "interests": check_interests, "fits": check_fits, "speakers": check_speakers,

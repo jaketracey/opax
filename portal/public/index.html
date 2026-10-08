@@ -60,7 +60,7 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=84dd52b4ea">
+<link rel="stylesheet" href="/style.css?v=585bb90fbe">
 <link rel="stylesheet" href="/ui-controls.css?v=db6b9cac33">
 <link rel="stylesheet" href="/voice.css?v=a09a39c243">
 </head>
@@ -86,6 +86,7 @@
         <li class="nav-item"><a class="nav-link" data-panel="money" href="/money">Money map</a></li>
         <li class="nav-item"><a class="nav-link" data-panel="discover" href="/discover">Discover</a></li>
         <li class="nav-item"><a class="nav-link" data-panel="bills" href="/bills">Bills</a></li>
+        <li class="nav-item"><a class="nav-link" href="/instruments">Instruments</a></li>
         <li class="nav-item has-menu">
           <button type="button" class="nav-link" data-panel="reports" aria-expanded="false" aria-controls="menu-reports">Reports<svg class="nav-caret" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           <div class="megamenu megamenu-wide" id="menu-reports" hidden>
@@ -218,6 +219,7 @@
       <summary class="drawer-section">Explore</summary>
       <ul class="drawer-list">
         <li><a class="drawer-link" data-panel="bills" href="/bills">Bills</a></li>
+        <li><a class="drawer-link" href="/instruments">Instruments</a></li>
         <li><a class="drawer-link" data-panel="discover" href="/discover">Discover patterns</a></li>
         <li><a class="drawer-link" data-panel="explore" href="/explore">Explore</a></li>
         <li><a class="drawer-sub" href="/explore" data-game="tm">Time machine</a></li>
@@ -1283,6 +1285,17 @@
       reach a linked speech only 24% of the time, against 74–84% in every other parliament since
       2013. Neither gap is a fault in the bill registry; both close only as more Hansard is loaded.</p>
 
+      <h2>Federal legislative instruments</h2>
+      <p>The <a href="/instruments">instruments catalogue</a> carries in-force title metadata
+      from the Office of Parliamentary Counsel's <a href="https://www.legislation.gov.au/">Federal
+      Register of Legislation</a>. OPAX shows titles, dates, departments, portfolios, status and
+      bounded version metadata, with FRL's current/latest flags retained verbatim. The returned
+      version may be earlier than the latest; every page links FRL's authoritative latest text.
+      No document bodies or model summaries appear in this catalogue.
+      Missing commencement dates stay unknown; FRL's in-force listing includes legislation made but
+      not yet commenced. Every detail page links the authoritative text on FRL. Names in instrument
+      titles remain authorised record text and create no person profiles or identity joins.</p>
+
       <h2>People</h2>
       <p>1,557 names appear as speakers in the corpus since 1993; 313 of them currently sit in a
       state or federal parliament. 829 portrait photographs cover just over a thousand of those
@@ -1382,6 +1395,12 @@
       issue on GitHub, below.</p>
 
       <h2>Licences and reuse</h2>
+      <p>Source: <a href="https://www.legislation.gov.au/">Federal Register of Legislation
+      (legislation.gov.au)</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
+      Instrument metadata is arranged into a catalogue with titles verbatim and current/latest
+      version metadata selected; OPAX shows metadata only. Each export carries FRL's dated attribution.
+      The Commonwealth Coat of Arms and content marked as third party are exceptions. See the
+      <a href="https://www.legislation.gov.au/terms-of-use">FRL terms of use</a>; no endorsement is implied.</p>
       <p>OPAX's own code is open source under AGPL-3.0, at
       <a href="https://github.com/jaketracey/opax" rel="noopener">github.com/jaketracey/opax</a>.
       The data behind it is not ours, and it carries a patchwork of licences rather than one. The
@@ -1415,6 +1434,10 @@
     <section id="panel-methods" class="panel" hidden aria-label="Methods">
       <p class="kicker">Methods</p>
       <h2>How OPAX works, and how to cite it</h2>
+      <p>Federal legislative instruments are a separate <a href="/instruments">metadata catalogue</a>.
+      Cite the FRL id and the authoritative version linked on its detail page. Source: Federal
+      Register of Legislation (legislation.gov.au), <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
+      OPAX shows metadata only; version start, registration and commencement are distinct dates.</p>
 
       <h3>What OPAX is, and is not</h3>
       <p>OPAX is a retrieval and analysis layer over public records. It is not the official
@@ -1965,8 +1988,8 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=ee0f5a3fdb" defer></script>
-<script src="/navigation.js?v=c996bc7200" defer></script>
+<script src="/spa-shell.js?v=3eafd4c7da" defer></script>
+<script src="/navigation.js?v=47b43ebd05" defer></script>
 <script src="/quick-search.js?v=206914f32d" defer></script>
 <script src="/app.js?v=2268e387d0" defer></script>
 </body>

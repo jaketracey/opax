@@ -113,6 +113,22 @@
 .spa-booting:not(.spa-routed) #main .panel,
 .spa-failed #main .panel { display: none; }
 #prerender { padding-bottom: 1.5rem; }
+.instrument-content { padding-bottom: var(--space-7); }
+.instrument-filters { display: grid; grid-template-columns: 2fr repeat(4, 1fr); gap: 1rem; align-items: end; margin: 1.5rem 0; }
+.instrument-filters label { display: grid; gap: .5rem; min-width: 0; font-weight: 600; }
+.instrument-filters input, .instrument-filters select { width: 100%; min-width: 0; min-height: 44px; padding: .65rem; color: var(--ink); background: var(--paper); border: 1px solid currentColor; border-radius: 2px; font: inherit; }
+.instrument-list { list-style: none; padding: 0; }
+.instrument-list li { border-top: 1px solid var(--line); padding: 1.25rem 0; }
+.instrument-list h2 { font-size: 1.2rem; margin: 0 0 .5rem; overflow-wrap: anywhere; }
+.instrument-list p { margin: .4rem 0; }
+.instrument-facts { display: grid; grid-template-columns: minmax(10rem, 1fr) 3fr; gap: .75rem 1.5rem; max-width: 64rem; }
+.instrument-facts dt { font-weight: 600; }
+.instrument-facts dd { margin: 0; overflow-wrap: anywhere; }
+.instrument-content nav { display: flex; flex-wrap: wrap; gap: 1.5rem; margin: 1.5rem 0; }
+.instrument-content pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: .85rem; }
+.instrument-attribution { margin-top: 2rem; border-top: 1px solid var(--line); padding-top: 1rem; font-size: .85rem; }
+@media (max-width: 900px) { .instrument-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 540px) { .instrument-filters, .instrument-facts { grid-template-columns: minmax(0, 1fr); } .instrument-facts { gap: .4rem; } .instrument-facts dd { margin-bottom: .8rem; } }
 html {
   scroll-padding-top: calc(var(--header-h) + 0.5rem);
   /* iOS Safari otherwise inflates text after rotating to landscape while the

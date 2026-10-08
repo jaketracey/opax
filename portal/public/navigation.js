@@ -15,6 +15,7 @@
     ] },
     { id: 'money', label: 'Money', href: '/money' },
     { id: 'bills', label: 'Bills', href: '/bills' },
+    { id: 'instruments', label: 'Instruments', href: '/instruments' },
     { id: 'reports', label: 'Reports', children: [
       ['/reports', 'All reports', 'Sourced reading paths through the record.'],
       ['/reports/grants-allocation', 'Where community funding goes', 'Grant invitations, awards and seat competitiveness.'],
@@ -41,6 +42,7 @@
     if (path.startsWith('/subject/topic')) return 'topics';
     if (/^\/(subject|declared)(\/|$)/.test(path)) return 'people';
     if (/^\/bills?(\/|$)/.test(path)) return 'bills';
+    if (/^\/instruments?(\/|$)/.test(path)) return 'instruments';
     if (path.startsWith('/reports')) return 'reports';
     if (path === '/explore') return ['ledger','grants','wd'].includes(params.get('game')) ? 'money' : 'topics';
     if (/^\/(about|methods|stats|expenses|privacy|support)/.test(path)) return 'about';
@@ -202,9 +204,15 @@
   }
   globalThis.OpaxNavigation = { sections, money, active, moneyNav, mountDesktop, mountDrawer };
   if (typeof document === 'undefined') return;
+  const instrumentPage = /^\/instruments?(\/|$)/.test(location.pathname);
+  const pageSections = instrumentPage ? sections.map(s => s.children ? { ...s, children: s.children.filter(([href]) => !href.startsWith('/subject/person')) } : s) : sections;
   const desktop = document.querySelector('#primary-nav .nav-list');
   const mobile = document.querySelector('#nav-drawer nav');
-  if (desktop) desktop.innerHTML = sections.map(s => s.children ? `<li class="nav-item has-menu"><button type="button" class="nav-link" data-panel="${s.id}" aria-expanded="false" aria-controls="menu-${s.id}">${esc(s.label)}<svg class="nav-caret" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button><div class="megamenu megamenu-wide" id="menu-${s.id}" hidden><div class="mm-grid"${s.id==='reports'?' id="menu-reports-list"':''}>${s.children.map(([href,label,desc])=>`<a class="mm-link" href="${href}"><span class="mm-title">${esc(label)}</span><span class="mm-blurb">${esc(desc)}</span></a>`).join('')}</div>${s.id==='reports'?'<a class="mm-all" href="/reports">All reports</a>':''}</div></li>` : `<li class="nav-item"><a class="nav-link" data-panel="${s.id}" href="${s.href}">${esc(s.label)}</a></li>`).join('');
-  if (mobile) mobile.innerHTML = sections.map(s => s.children ? `<details class="drawer-group" id="drawer-group-${s.id}"><summary class="drawer-section">${esc(s.label)}</summary><ul class="drawer-list">${s.children.map(([href,label])=>`<li><a class="drawer-link" data-panel="${s.id}" href="${href}">${esc(label)}</a></li>`).join('')}</ul></details>` : `<a class="drawer-link drawer-primary" data-panel="${s.id}" href="${s.href}">${esc(s.label)}</a>`).join('');
+  if (desktop) desktop.innerHTML = pageSections.map(s => s.children ? `<li class="nav-item has-menu"><button type="button" class="nav-link" data-panel="${s.id}" aria-expanded="false" aria-controls="menu-${s.id}">${esc(s.label)}<svg class="nav-caret" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button><div class="megamenu megamenu-wide" id="menu-${s.id}" hidden><div class="mm-grid"${s.id==='reports'?' id="menu-reports-list"':''}>${s.children.map(([href,label,desc])=>`<a class="mm-link" href="${href}"><span class="mm-title">${esc(label)}</span><span class="mm-blurb">${esc(desc)}</span></a>`).join('')}</div>${s.id==='reports'?'<a class="mm-all" href="/reports">All reports</a>':''}</div></li>` : `<li class="nav-item"><a class="nav-link" data-panel="${s.id}" href="${s.href}">${esc(s.label)}</a></li>`).join('');
+  if (mobile) mobile.innerHTML = pageSections.map(s => s.children ? `<details class="drawer-group" id="drawer-group-${s.id}"><summary class="drawer-section">${esc(s.label)}</summary><ul class="drawer-list">${s.children.map(([href,label])=>`<li><a class="drawer-link" data-panel="${s.id}" href="${href}">${esc(label)}</a></li>`).join('')}</ul></details>` : `<a class="drawer-link drawer-primary" data-panel="${s.id}" href="${s.href}">${esc(s.label)}</a>`).join('');
+  if (instrumentPage) {
+    mountDesktop(); mountDrawer();
+    for (const link of document.querySelectorAll('a[href="/instruments"]')) link.setAttribute('aria-current', 'page');
+  }
   for (const node of document.querySelectorAll('[data-money-navigation]')) node.innerHTML = moneyNav(location.pathname, new URLSearchParams(location.search).get('jur'));
 })();
