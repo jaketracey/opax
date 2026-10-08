@@ -44,7 +44,7 @@ ALLOW_FAIL=",${OPAX_ALLOW_FAIL:-},"
 # exit 3 from these means the source refused to change the register (empty or shrunken upstream; for ipea, a
 # quarter whose data.gov.au licence changed): the last good rows are kept, so it is reported as stale, not failed
 # (periodic-refresh.md, exit codes)
-STALE_OK=",frl_instruments,x_instruments,donations_qld,donations_vic,donations_tas,donations_apply,lobbyists_fetch,lobbyists_apply,fits_fetch,fits_apply,rosters_fetch,qld_contracts,ipea,x_people,"
+STALE_OK=",frl_acts,frl_instruments,x_instruments,donations_qld,donations_vic,donations_tas,donations_apply,lobbyists_fetch,lobbyists_apply,fits_fetch,fits_apply,rosters_fetch,qld_contracts,ipea,x_people,"
 
 # log, count, run_step, FAILED_STEPS, STEP_DELTA (shared with daily_refresh.sh)
 . "$REPO/scripts/lib/refresh_lib.sh"
@@ -86,8 +86,11 @@ log "===== weekly refresh start (groups: $*; timeout/step=$STEP_TIMEOUT, host=$(
 if [ "$want_weekly" = 1 ]; then
   # --- loaders ------------------------------------------------------------------------------------------
   # Metadata-only FRL group. Persistent local checkpoint survives weekly scratch cleanup.
-  # This wiring is held on web/frl-instruments until the orchestrator merges it.
-  if run_step frl_instruments "" "$PY" -m parli.ingest.frl_instruments; then
+  # Bootstrap belongs to the manual acquisition lane: an untracked first export
+  # would obstruct a later fast-forward when the catalogue lands on main.
+  if [ -z "$(git ls-tree --name-only HEAD -- portal/public/instruments 2>/dev/null)" ]; then
+    log "[frl_instruments/x_instruments] SKIP: catalogue not yet tracked on main"
+  elif run_step frl_instruments "" "$PY" -m parli.ingest.frl_instruments; then
     run_step x_instruments "" "$EXPORT" dir portal/public/instruments -- \
       "$PY" scripts/export_instruments.py
   else

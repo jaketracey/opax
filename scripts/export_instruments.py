@@ -134,6 +134,8 @@ def plan_export(snapshot):
                                  "No document bodies, model summaries, person entities or identity joins.",
                                  "One API-returned version per title is acquired. It is not necessarily current/latest; use the authoritative FRL latest link where a latest version was not returned. Full history is phase 2."]}
     payloads["manifest.json"] = encoded(manifest)
+    payloads["ready.json"] = encoded({"complete": True, "count": manifest["count"],
+                                      "export_date": generated[:10]})
     check_budget(payloads)
     return payloads, manifest
 

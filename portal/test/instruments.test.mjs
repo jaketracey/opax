@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { runInNewContext } from 'node:vm';
 import { build } from 'esbuild';
@@ -25,6 +25,9 @@ test('FRL loader stubbed HTTP paging, count reconciliation, resume, shrink and e
 
 test('instrument export stays within file/byte budget and reconciles every unique source id', () => {
   const files = Object.keys(fixtureFiles);
+  const ready=json('instruments/ready.json');
+  assert.deepEqual(ready,{complete:true,count:manifest.count,export_date:manifest.generated_at.slice(0,10)});
+  assert.ok(Buffer.byteLength(fixtureFiles['ready.json'])<128);
   assert.ok(files.length <= 400);
   assert.ok(files.reduce((n,f) => n + Buffer.byteLength(fixtureFiles[f]),0) <= 25_000_000);
   assert.equal(manifest.count, manifest.odata_count);
@@ -146,21 +149,27 @@ test('missing and incomplete catalogues omit sitemap type and llms discovery', (
   assert.match(llmsText(corpus,grants,manifest),/https:\/\/opax.com.au\/instruments/);
 });
 
-test('navigation adds Instruments only for a complete manifest and preserves menus', async () => {
-  const source=readFileSync(new URL('navigation.js',root),'utf8').replace(/import\('\/instruments.js\?v=[^']+'\)/,"Promise.resolve({ catalogueComplete })");
-  for(const m of [null,{...manifest,complete:false},manifest]) {
+test('navigation reads only the tiny readiness flag and preserves menus', async () => {
+  const source=readFileSync(new URL('navigation.js',root),'utf8');
+  const ready=json('instruments/ready.json');
+  for(const m of [null,{...ready,complete:false},{...ready,complete:'true'},ready]) {
     const inserted=[];
     const bills={closest(){return this},insertAdjacentHTML(where,html){inserted.push(html)}};
     const desktop={innerHTML:'',querySelector(){return bills}},mobile={innerHTML:'',querySelector(){return bills}};
-    const context={catalogueComplete,URLSearchParams,location:{pathname:'/',search:''},document:{querySelector(s){return s.includes('primary-nav')?desktop:mobile},querySelectorAll(){return []}},fetch:async()=>({ok:m!==null,json:async()=>m})};
+    const requested=[];
+    const context={URLSearchParams,location:{pathname:'/',search:''},document:{querySelector(s){return s.includes('primary-nav')?desktop:mobile},querySelectorAll(){return []}},fetch:async path=>{requested.push(path);return {ok:m!==null,json:async()=>m}}};
     runInNewContext(source,context);
     await context.OpaxNavigation.instrumentsReady;
+    assert.deepEqual(requested,['/instruments/ready.json']);
     assert.doesNotMatch(desktop.innerHTML,/href="\/instruments"/);
-    assert.equal(inserted.length,m===manifest?2:0);
-    assert.equal(context.OpaxNavigation.sections.some(s=>s.id==='instruments'),m===manifest);
-    if(m===manifest) assert.ok(inserted.every(s=>s.includes('href="/instruments"')));
+    assert.equal(inserted.length,m===ready?2:0);
+    assert.equal(context.OpaxNavigation.sections.some(s=>s.id==='instruments'),m===ready);
+    if(m===ready) assert.ok(inserted.every(s=>s.includes('href="/instruments"')));
   }
-  for(const file of ['index.html','home.html','home-prototype.html']) assert.doesNotMatch(readFileSync(new URL(file,root),'utf8'),/data-panel="instruments"/);
+});
+
+test('every shipped HTML file has no static instruments href before catalogue availability', () => {
+  for(const file of readdirSync(root,{recursive:true}).filter(f=>f.endsWith('.html'))) assert.doesNotMatch(readFileSync(new URL(file,root),'utf8'),/\bhref\s*=\s*["']\/instruments\/?["']/i,file);
 });
 
 test('parsed catalogue is reused per isolate and failed reads can recover', async () => {
@@ -186,4 +195,9 @@ test('source block is verbatim, OPAX fields separate, authoritative link unique 
   assert.doesNotMatch(licence,/current\/latest\s+version metadata selected/);
   assert.match(licence,/one API-returned version per title, which may be historical/);
   assert.match(manifest.attribution.dated,/9 October 2026/);
+});
+
+
+test('weekly first-catalogue guard and nightly directory staging use offline git fixtures', () => {
+  execFileSync('python3',[new URL('../../scripts/vm/test_frl_refresh.py',import.meta.url).pathname],{stdio:['ignore','pipe','pipe']});
 });

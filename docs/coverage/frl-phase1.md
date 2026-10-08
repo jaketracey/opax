@@ -3,8 +3,11 @@
 This branch implements metadata ingestion, a bounded export, server-rendered
 instrument directory/detail pages and held weekly refresh wiring. **Phase 1 is
 not complete:** there is no accepted comprehensive snapshot or public catalogue.
-Do not merge, push or deploy this branch until acquisition and the release gate
-finish and Jake approves the source. The orchestrator owns promotion.
+Jake approved the source on 9 October. The code is safe to merge before data exists;
+the catalogue stays hidden and weekly bootstrap is held until its first accepted
+export is tracked on main. The separate release gate must pass before catalogue
+promotion. The orchestrator owns merging and promotion; no push or deploy occurs
+in this lane.
 
 ## Acquisition evidence
 
@@ -151,3 +154,26 @@ more than 50 recovery ids holds publication. Shared spacing, quiet hours and the
 600-attempt cap apply to these reads too. Requested/recovered ids and source responses
 are recorded under `individual-fetches.json`, including held-run evidence; the final
 run receipt lists the ids. No acquisition is started or scheduled in either fix round.
+
+## Round 3: merge readiness
+
+Jake approved the source. This round changes code only and makes zero publisher
+requests. Static instruments anchors are removed from every shipped HTML file;
+desktop and drawer navigation insert the entry only after a complete `ready.json`
+flag. The exporter writes this tiny count/date flag within the existing asset budget,
+and validation checks it against the full manifest.
+
+Weekly acquisition and export skip until the catalogue directory is tracked in HEAD
+on main. Nightly commit staging refreshes its directory allowlist and includes new
+and deleted chunks without staging unrelated files. Five offline Git fixture tests
+exercise these production shell blocks. Default all-group validation reports
+`SKIP instruments (no catalogue)` for an unpublished missing catalogue; explicit
+validation and deletion of an already tracked catalogue remain failures. Weekly
+Acts ingestion now shares the FRL transport's quiet-window checks before its first
+request, after spacing and on retries; busy hours exit 3 as STALE.
+
+Validation: **946/946 Node tests pass without a catalogue**, **32/32 loader/export
+tests pass**, and **120 VM Python tests run (119 pass, one existing clean-tree skip)**:
+48 keep-if-unchanged, 67 data-validation and 5 refresh fixture tests. TypeScript and
+shell syntax checks pass. The separate release gate exits 1 with "complete catalogue
+absent", as expected. `votes.json` remains byte-identical to `origin/main`, schema 1.

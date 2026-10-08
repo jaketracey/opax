@@ -211,11 +211,10 @@
   if (mobile) mobile.innerHTML = pageSections.map(s => s.children ? `<details class="drawer-group" id="drawer-group-${s.id}"><summary class="drawer-section">${esc(s.label)}</summary><ul class="drawer-list">${s.children.map(([href,label])=>`<li><a class="drawer-link" data-panel="${s.id}" href="${href}">${esc(label)}</a></li>`).join('')}</ul></details>` : `<a class="drawer-link drawer-primary" data-panel="${s.id}" href="${s.href}">${esc(s.label)}</a>`).join('');
   // A missing or incomplete optional catalogue must not advertise a dead route.
   // Insert only the new anchors, preserving the existing menu event handlers.
-  const instrumentsReady = Promise.all([
-    fetch('/instruments/manifest.json').then(r => r.ok ? r.json() : null),
-    import('/instruments.js?v=48fb79fb35')
-  ]).then(([manifest, { catalogueComplete }]) => {
-    if (!catalogueComplete(manifest)) return;
+  const instrumentsReady = fetch('/instruments/ready.json').then(r => r.ok ? r.json() : null).then(ready => {
+    if (ready?.complete !== true || !Number.isInteger(ready.count) || ready.count < 1
+      || !/^\d{4}-\d{2}-\d{2}$/.test(ready.export_date || '')
+      || !Number.isFinite(Date.parse(ready.export_date))) return;
     sections.splice(sections.findIndex(s => s.id === 'bills') + 1, 0,
       { id: 'instruments', label: 'Instruments', href: '/instruments' });
     desktop?.querySelector('[data-panel="bills"]')?.closest('li')?.insertAdjacentHTML('afterend',

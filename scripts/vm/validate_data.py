@@ -484,6 +484,9 @@ def check_instruments(directory=None, compare_head=True) -> list[str]:
             return ["instruments source scope mismatch"]
         if not manifest.get("generated_at") or manifest.get("downloaded_at") != manifest["generated_at"]:
             return ["instruments latest download date missing"]
+        ready = json.loads((directory / "ready.json").read_text())
+        if ready.get("complete") is not True or ready.get("count") != count or ready.get("export_date") != manifest["generated_at"][:10]:
+            return ["instruments readiness flag mismatch"]
         old = head_bytes("portal/public/instruments/manifest.json") if compare_head else None
         if old and count < json.loads(old)["count"] * .98:
             return ["instruments snapshot shrank more than 2%"]
@@ -539,6 +542,11 @@ def main() -> int:
         if g not in CHECKS:
             print(f"unknown group {g!r}; choose from {', '.join(CHECKS)}", file=sys.stderr)
             return 64
+        if (not sys.argv[1:] and g == "instruments"
+                and not (ROOT / PUBLIC / "instruments/manifest.json").is_file()
+                and _head_names(PUBLIC + "/instruments", r".*") is None):
+            print("SKIP instruments (no catalogue)")
+            continue
         errs = CHECKS[g]()
         if errs:
             bad += 1

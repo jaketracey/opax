@@ -8,6 +8,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 import sys
+from types import SimpleNamespace
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
@@ -326,6 +327,39 @@ class FRLTests(unittest.TestCase):
             with self.assertRaises(Held): PoliteSession(initial_requests=600, now=lambda: QUIET).get(loader.API)
             http.assert_not_called()
 
+    def test_acts_busy_guard_runs_before_publisher_or_database_access(self):
+        from parli.ingest import words_parlinfo as acts
+        busy = datetime.fromisoformat('2026-10-09T21:30:00+00:00')
+        session = PoliteSession(now=lambda: busy)
+        args = SimpleNamespace(rps=.7, db='unused', skip=0, limit=None)
+        with patch.object(acts, 'FRLSession', return_value=session), patch.object(acts, 'connect_db') as db, patch.object(loader.subprocess, 'run') as transport, patch.object(loader, 'quiet_window', wraps=quiet_window) as guard:
+            with self.assertRaises(Held): acts.run_frl_acts(args)
+            db.assert_not_called(); transport.assert_not_called(); guard.assert_called_once()
+
+    def test_acts_guard_checks_again_after_spacing_crosses_busy_boundary(self):
+        from parli.ingest import words_parlinfo as acts
+        current = [datetime.fromisoformat('2026-10-09T20:59:59+00:00')]
+        def sleep(_): current[0] += timedelta(seconds=2)
+        session = PoliteSession(now=lambda: current[0], sleep=sleep, clock=lambda: 0)
+        args = SimpleNamespace(rps=.7, db='unused', skip=0, limit=None)
+        with patch.object(acts, 'FRLSession', return_value=session), patch.object(acts, 'connect_db'), patch.object(acts, 'ensure_table'), patch.object(loader.subprocess, 'run') as transport:
+            with self.assertRaises(Held): acts.run_frl_acts(args)
+            transport.assert_not_called(); self.assertEqual(session.requests, 0)
+
+    def test_acts_quiet_run_uses_guarded_transport_with_stubbed_api_and_db(self):
+        from parli.ingest import words_parlinfo as acts
+        session = PoliteSession(now=lambda: QUIET, sleep=lambda _: None, clock=lambda: 0)
+        args = SimpleNamespace(rps=.7, db='unused', skip=0, limit=None)
+        row = {'id':'C2026A00001','name':'Fixture Act','makingDate':'2026-01-01','isPrincipal':True,'isInForce':True}
+        body = json.dumps({'@odata.count':1,'value':[row]}).encode()
+        reply = subprocess.CompletedProcess([],0,b'HTTP/2 200\r\n\r\n'+body+b'\n200',b'')
+        with patch.object(acts, 'FRLSession', return_value=session), patch.object(acts, 'connect_db') as db, patch.object(acts, 'ensure_table'), patch.object(acts, 'upsert', return_value=1) as store, patch.object(loader.subprocess, 'run', return_value=reply):
+            db.return_value.execute.return_value.fetchone.return_value = (1,0,0)
+            acts.run_frl_acts(args)
+            self.assertEqual(session.requests, 1)
+            self.assertGreaterEqual(session.delay,2)
+            self.assertEqual(store.call_args.args[2][0]['act_id'],row['id'])
+
     def test_export_budget_projection_and_release_gate(self):
         row = title(1); staged = snapshot([row])
         payloads, manifest = plan_export(staged)
@@ -336,6 +370,12 @@ class FRLTests(unittest.TestCase):
         with self.assertRaises(Held): check_budget({'big': b'x' * 25_000_001})
         atomic_json(self.out, staged); dest = self.base / 'export'; export(self.out, dest)
         self.assertEqual(check_instruments(dest, compare_head=False), [])
+        ready=json.loads((dest / 'ready.json').read_text())
+        self.assertEqual(ready,{'complete':True,'count':1,'export_date':staged['downloaded_at'][:10]})
+        for wrong in ({**ready,'complete':False},{**ready,'count':2},{**ready,'export_date':'2026-10-08'}):
+            atomic_json(dest / 'ready.json',wrong)
+            self.assertEqual(check_instruments(dest,compare_head=False),['instruments readiness flag mismatch'])
+        atomic_json(dest / 'ready.json',ready)
         result = subprocess.run([sys.executable, str(ROOT / 'scripts/check_instruments_release.py'), '--directory', str(dest)], capture_output=True)
         self.assertEqual(result.returncode, 0, result.stderr.decode())
         before = {p.name: p.read_bytes() for p in dest.iterdir()}; export(self.out, dest)

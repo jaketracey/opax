@@ -328,11 +328,15 @@ just that group when the check fails; it also puts every periodic file back to H
 its end line (killed, lock held). A loader that exits 3 ("the source refused to change the register") is logged STALE, keeps
 the last good rows, and shows up as a `warnings` entry in `status.json`, not as a failure. Time: see "How long it takes".
 
-**FRL instruments, phase 1 (held on `web/frl-instruments`).** The weekly group runs
+**FRL instruments, phase 1 (`web/frl-instruments`).** Jake approved the source on
+9 October; the orchestrator owns the merge and catalogue promotion. The weekly group runs
 `frl_instruments` (`python -m parli.ingest.frl_instruments`), then `x_instruments`
 (`scripts/export_instruments.py`) only after complete count reconciliation. This wiring
-is inert until the orchestrator merges the branch after Jake approves the source.
-No deploy, push, merge, refresh-box change, DB write or KB write was performed in the lane.
+is inert until the orchestrator merges the branch and the first accepted catalogue
+is tracked on main. `weekly_refresh.sh` checks HEAD for `portal/public/instruments`
+and skips both steps when it is unpublished, even if an untracked export exists.
+The first acquisition/export is performed in the separate lane and committed there;
+the weekly job cannot leave a first untracked export that obstructs a fast-forward.
 The loader uses a persistent, gitignored checkpoint and snapshot under
 `scripts/state/frl/` in the checkout. It never opens `parli.db`. A failed, empty,
 moving-count or more-than-2%-shrunk acquisition exits 3 and keeps the last good export.
@@ -361,13 +365,22 @@ title ids must still reconcile exactly with the count before and after the run.
 Full version history and complete current/latest supplementation remain phase 2.
 
 The `instruments` data group owns `portal/public/instruments`. Its year chunks and
-manifest are validated before publication, capped at 400 files / 25,000,000 bytes,
+manifest and tiny `ready.json` flag are validated before publication, capped at
+400 files / 25,000,000 bytes,
 and wrapped with `export_step.sh dir` / `keep_if_unchanged.py --sweep`. Timestamp-only
 refreshes retain HEAD's bytes for unchanged chunks. The attribution line carries the
 latest full download date, so a new download day updates the manifest even when titles
 are unchanged. Source metadata and OPAX-derived canonical links are separate. The portal gate rebuilds crawl assets from the new
 manifest; sitemap URLs contain FRL ids only. It creates no instrument person entities,
 joins or person search rows. The schema-1 `votes.json` contract is unaffected.
+Navigation reads only `ready.json` (`complete`, `count`, `export_date`) and adds its
+desktop/drawer entry only for a complete flag. Shipped HTML contains no static link.
+Nightly staging re-reads the tracked group roots before committing, so new chunks,
+the readiness flag and deleted chunks within a published directory are all included.
+`scripts/vm/test_frl_refresh.py` exercises the weekly guard and actual commit block
+with offline Git fixtures: absent/untracked catalogue skips both steps; tracked
+catalogue runs acquisition then export; held acquisition skips export; new/deleted
+chunks are staged without unrelated edits; no tracked roots stages nothing.
 
 FRL requests share a ceiling of 600 attempts, a minimum interval of two seconds,
 and backoff on 429, 5xx and transport failures. The current website robots delay is
@@ -375,7 +388,10 @@ ten seconds; the API host returns 404 for robots.txt. Policy reads are repeated 
 run. Before every publisher request, including robots and terms, acquisition blocks
 08:00–20:00 in **both fixed UTC+10 and Australia/Melbourne**. It stops if either busy
 period begins mid-run. Their quiet-window intersection is 21:00–08:00 Melbourne
-during AEDT and 20:00–08:00 during AEST. This is scoped API title/version metadata; consult the publisher before
+during AEDT and 20:00–08:00 during AEST. The pre-existing weekly `frl_acts` loader
+uses the same guarded FRL transport and quiet-window function. Its first check is
+before database access; each request/retry checks again, including after spacing.
+Busy hours exit 3 and report STALE while preserving existing Acts. This is scoped API title/version metadata; consult the publisher before
 a full-site/document crawl. Bodies and a public history reader require a later licence
 review, source approval and a separate lane. The later app lane adds an iOS instruments
 list and detail with its own static-export contract and device validation.
@@ -385,6 +401,9 @@ Absent/incomplete catalogues return noindex 404s and have no navigation or sitem
 The orchestrator must separately run `cd portal && npm run check:instruments-release`
 before source promotion. That explicit gate fails until a complete, fully expanded,
 reconciled export exists; it is deliberately outside nightly/deploy routine tests.
+With no group arguments, `validate_data.py` reports `SKIP instruments (no catalogue)`
+for a missing, unpublished catalogue. Explicit `instruments` validation still fails;
+a deleted catalogue tracked in HEAD also fails instead of being skipped.
 
 **Roster KB reconciliation.** After final data validation and the portal gate,
 `reconcile_roster_profiles.py` previews changes to owned `roster-profile-*`

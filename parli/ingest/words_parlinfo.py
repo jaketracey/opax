@@ -61,6 +61,7 @@ import sys
 from html import unescape
 from typing import Optional
 
+from parli.ingest.frl_instruments import Held, PoliteSession as FRLSession
 from parli.ingest.speaker_names import normalize_speaker
 from parli.ingest.words_common import (
     BROWSER_UA, DB_PATH, PoliteSession, connect_db, decade_of, ensure_table,
@@ -503,7 +504,9 @@ def run_frl_acts(args) -> None:
     """Every Act title on the Federal Register of Legislation (OData, honest
     UA). 100 per page via $skip ordered by id; ~138 requests for the full
     register. Date filters and $orderby on dates 500 on this API (probed)."""
-    session = PoliteSession(min_interval=1.0 / args.rps, timeout=60)
+    session = FRLSession()
+    session.delay = max(2.0, 1.0 / args.rps)
+    session.check_window()  # Same quiet-window function, before requests or DB access.
     db = connect_db(args.db)
     ensure_table(db, ACTS_TABLE, ACTS_DDL, ACTS_INDEXES)
     skip, total, stored = args.skip, None, 0
@@ -514,11 +517,7 @@ def run_frl_acts(args) -> None:
                   "$select": select}
         if total is None:
             params["$count"] = "true"
-        resp = session.get(FRL_TITLES, params=params)
-        if resp.status_code != 200:
-            warn(f"  skip={skip}: HTTP {resp.status_code} {resp.text[:200]}")
-            break
-        data = resp.json()
+        data = session.json(params)
         total = total or data.get("@odata.count")
         vals = data.get("value", [])
         rows = [{
@@ -537,7 +536,7 @@ def run_frl_acts(args) -> None:
         f"SELECT COUNT(*), SUM(bill_code IS NOT NULL), "
         f"SUM(bill_code IN (SELECT bill_code FROM {TABLE} WHERE dataset='billhome')) FROM {ACTS_TABLE}").fetchone()
     log(f"[frl-acts] {n:,} Acts stored; {with_bill or 0:,} carry a bill code; "
-        f"{joined or 0:,} join a stored billhome row ({session.requests_made} requests)")
+        f"{joined or 0:,} join a stored billhome row ({session.requests} requests)")
 
 
 def _norm_title(t: str) -> str:
@@ -761,7 +760,11 @@ def main() -> None:
     s.set_defaults(func=run_map)
 
     args = p.parse_args()
-    args.func(args)
+    try:
+        args.func(args)
+    except Held as error:
+        print(f"FRL ACTS HELD: {error}", file=sys.stderr)
+        raise SystemExit(3) from None
 
 
 if __name__ == "__main__":

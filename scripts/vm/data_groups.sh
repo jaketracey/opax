@@ -37,3 +37,13 @@ all_data_paths() {
   local g
   for g in "${DATA_GROUPS[@]}"; do echo ${GROUP_PATHS[$g]}; done | tr ' ' '\n'
 }
+
+# Keep directory roots in the allowlist, so git add -A includes new/deleted chunks
+# inside an already published group. Entirely unpublished groups remain held.
+tracked_data_paths() {
+  local p
+  while IFS= read -r p; do
+    [ -n "$(git ls-tree --name-only HEAD -- "$p" 2>/dev/null)" ] && echo "$p"
+  done < <(all_data_paths)
+  return 0
+}

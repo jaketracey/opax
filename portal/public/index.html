@@ -86,7 +86,6 @@
         <li class="nav-item"><a class="nav-link" data-panel="money" href="/money">Money map</a></li>
         <li class="nav-item"><a class="nav-link" data-panel="discover" href="/discover">Discover</a></li>
         <li class="nav-item"><a class="nav-link" data-panel="bills" href="/bills">Bills</a></li>
-        <li class="nav-item"><a class="nav-link" href="/instruments">Instruments</a></li>
         <li class="nav-item has-menu">
           <button type="button" class="nav-link" data-panel="reports" aria-expanded="false" aria-controls="menu-reports">Reports<svg class="nav-caret" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           <div class="megamenu megamenu-wide" id="menu-reports" hidden>
@@ -219,7 +218,6 @@
       <summary class="drawer-section">Explore</summary>
       <ul class="drawer-list">
         <li><a class="drawer-link" data-panel="bills" href="/bills">Bills</a></li>
-        <li><a class="drawer-link" href="/instruments">Instruments</a></li>
         <li><a class="drawer-link" data-panel="discover" href="/discover">Discover patterns</a></li>
         <li><a class="drawer-link" data-panel="explore" href="/explore">Explore</a></li>
         <li><a class="drawer-sub" href="/explore" data-game="tm">Time machine</a></li>
@@ -1286,7 +1284,7 @@
       2013. Neither gap is a fault in the bill registry; both close only as more Hansard is loaded.</p>
 
       <h2>Federal legislative instruments</h2>
-      <p>The <a href="/instruments">instruments catalogue</a> carries in-force title metadata
+      <p>The instruments catalogue carries in-force title metadata
       from the Office of Parliamentary Counsel's <a href="https://www.legislation.gov.au/">Federal
       Register of Legislation</a>. OPAX shows titles, dates, departments, portfolios, status and
       bounded version metadata, with FRL's current/latest flags retained verbatim. The returned
@@ -1435,7 +1433,7 @@
     <section id="panel-methods" class="panel" hidden aria-label="Methods">
       <p class="kicker">Methods</p>
       <h2>How OPAX works, and how to cite it</h2>
-      <p>Federal legislative instruments are a separate <a href="/instruments">metadata catalogue</a>.
+      <p>Federal legislative instruments are a separate metadata catalogue.
       Cite the FRL id and the authoritative version linked on its detail page. Source: Federal
       Register of Legislation (legislation.gov.au), <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
       OPAX shows metadata only; version start, registration and commencement are distinct dates.</p>
@@ -1989,8 +1987,8 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=8610238a87" defer></script>
-<script src="/navigation.js?v=e317e30a16" defer></script>
+<script src="/spa-shell.js?v=97e05fed76" defer></script>
+<script src="/navigation.js?v=aab3db270f" defer></script>
 <script src="/quick-search.js?v=206914f32d" defer></script>
 <script src="/app.js?v=2268e387d0" defer></script>
 </body>

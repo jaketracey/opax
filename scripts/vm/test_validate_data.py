@@ -188,6 +188,38 @@ class EveryGroupTests(Base):
         groups = re.search(r"^DATA_GROUPS=\(([^)]+)\)", registry, re.M).group(1).split()
         self.assertEqual(list(vd.CHECKS), groups)
 
+    def test_all_groups_skips_absent_unpublished_instruments(self):
+        checks = {g: mock.Mock(return_value=[]) for g in vd.CHECKS}
+        checks['instruments'] = mock.Mock(side_effect=vd.check_instruments)
+        for empty_directory in (False, True):
+            if empty_directory:
+                (self.root / P / 'instruments').mkdir()
+            out = io.StringIO()
+            with mock.patch.object(vd, 'CHECKS', checks), mock.patch.object(sys, 'argv', ['validate_data.py']), contextlib.redirect_stdout(out):
+                self.assertEqual(vd.main(), 0)
+            self.assertIn('SKIP instruments (no catalogue)', out.getvalue())
+        checks['instruments'].assert_not_called()
+
+    def test_explicit_instruments_check_still_fails_without_catalogue(self):
+        out = io.StringIO()
+        with mock.patch.object(sys, 'argv', ['validate_data.py', 'instruments']), contextlib.redirect_stdout(out):
+            self.assertEqual(vd.main(), 1)
+        self.assertIn('FAIL instruments', out.getvalue())
+
+    def test_deleted_tracked_catalogue_is_not_skipped(self):
+        rel = P + '/instruments/manifest.json'
+        self.write(rel, {})
+        self.git('add', rel)
+        self.git('-c', 'user.name=t', '-c', 'user.email=t@example.invalid', '-c', 'commit.gpgsign=false', 'commit', '-q', '-m', 'catalogue fixture')
+        (self.root / rel).unlink(); (self.root / P / 'instruments').rmdir()
+        checks = {g: mock.Mock(return_value=[]) for g in vd.CHECKS}
+        checks['instruments'] = vd.check_instruments
+        out = io.StringIO()
+        with mock.patch.object(vd, 'CHECKS', checks), mock.patch.object(sys, 'argv', ['validate_data.py']), contextlib.redirect_stdout(out):
+            self.assertEqual(vd.main(), 1)
+        self.assertNotIn('SKIP instruments', out.getvalue())
+        self.assertIn('FAIL instruments', out.getvalue())
+
     def test_truncated_below_tolerance_fails_and_at_tolerance_passes(self):
         for g, (rel, _, path, keep) in self.SINGLE.items():
             with self.subTest(g):

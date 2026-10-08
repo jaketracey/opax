@@ -115,7 +115,7 @@ export GIT_TERMINAL_PROMPT=0
 PY="$REPO/.venv/bin/python"
 cd "$REPO" || { fail "cannot cd $REPO"; exit 1; }
 # only paths HEAD tracks can be checked out or cleaned; a group's file that does not exist yet needs a first manual commit
-mapfile -t DATA_PATHS < <(all_data_paths | while read -r p; do [ -n "$(git ls-tree --name-only HEAD -- "$p" 2>/dev/null)" ] && echo "$p"; done)
+mapfile -t DATA_PATHS < <(tracked_data_paths)
 
 # Fetching works over HTTPS (the repository is public); pushing goes over SSH with the deploy
 # key. BatchMode makes a missing or refused key fail at once instead of waiting for a prompt,
@@ -204,7 +204,7 @@ sync_repo() {
 }
 log "syncing $BRANCH"
 if ! sync_repo; then fail "could not sync the checkout with origin/$BRANCH"; finish; fi
-mapfile -t DATA_PATHS < <(all_data_paths | while read -r p; do [ -n "$(git ls-tree --name-only HEAD -- "$p" 2>/dev/null)" ] && echo "$p"; done)
+mapfile -t DATA_PATHS < <(tracked_data_paths)
 log "checkout at $(git rev-parse --short HEAD): $(git log -1 --format=%s | cut -c1-90)"
 
 # the last line matching $2 inside the LAST run block of a step log ($1 = daily.log or weekly.log): the logs only
@@ -457,7 +457,12 @@ else
 fi
 
 # ---- 6. commit -----------------------------------------------------------------------------------------------
-git add -A -- "${DATA_PATHS[@]}"
+# Re-read HEAD after sync/validation; stage whole published directory roots,
+# including new chunks and deletions, without admitting untracked first exports.
+mapfile -t DATA_PATHS < <(tracked_data_paths)
+if [ "${#DATA_PATHS[@]}" -gt 0 ]; then
+  git add -A -- "${DATA_PATHS[@]}" || { fail "could not stage data changes"; finish; }
+fi
 others=""
 while IFS= read -r line; do
   f=${line:3}; ours=false
