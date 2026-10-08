@@ -18,12 +18,16 @@ export class PortraitCache {
     private client: { getPortrait(path: string): Promise<Uint8Array> },
     private concurrency = 3,
     private now = Date.now,
+    private files = {
+      keyPattern: portraitKeyPattern,
+      path: (key: string) => `/photos/${key}.webp`,
+    },
   ) {
     if (!Number.isInteger(concurrency) || concurrency < 1 || concurrency > 6)
       throw new Error('Invalid portrait concurrency');
   }
   get(key: string, force = false): Promise<string> {
-    if (!portraitKeyPattern.test(key))
+    if (!this.files.keyPattern.test(key))
       return Promise.reject(new Error('Invalid portrait key'));
     const previous = this.pending.get(key);
     if (previous) return previous;
@@ -45,7 +49,7 @@ export class PortraitCache {
       )
         return saved.localURI;
       try {
-        const bytes = await this.client.getPortrait(`/photos/${key}.webp`);
+        const bytes = await this.client.getPortrait(this.files.path(key));
         return (await this.store.write(key, bytes)).localURI;
       } catch (error) {
         if (

@@ -1,0 +1,342 @@
+appId: au.com.opax.app
+name: 48 Record quiz, eight questions, copied result and saved streak
+---
+- launchApp:
+    permissions: {}
+- openLink: opax://explore
+- assertVisible:
+    id: explore-screen
+- takeScreenshot: ${EVIDENCE}/48-explore
+- tapOn:
+    id: explore-quiz
+- assertVisible:
+    id: explore-quiz-screen
+- takeScreenshot: ${EVIDENCE}/48-quiz-intro
+- tapOn:
+    id: quiz-start
+- scrollUntilVisible:
+    element:
+      id: quiz-question
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: quiz-number
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-number
+- inputText: '929297'
+- swipe:
+    start: 90%,45%
+    end: 90%,30%
+    duration: 500
+- scrollUntilVisible:
+    element:
+      id: quiz-confirm
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-confirm
+- scrollUntilVisible:
+    element:
+      id: quiz-next
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: ${EVIDENCE}/48-quiz-answer
+- tapOn:
+    id: quiz-next
+- scrollUntilVisible:
+    element:
+      id: quiz-question
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: quiz-answer-0
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-answer-0
+- scrollUntilVisible:
+    element:
+      id: quiz-confirm
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-confirm
+- scrollUntilVisible:
+    element:
+      id: quiz-next
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-next
+- scrollUntilVisible:
+    element:
+      id: quiz-question
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: quiz-number
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-number
+- inputText: '2013'
+- swipe:
+    start: 90%,45%
+    end: 90%,30%
+    duration: 500
+- scrollUntilVisible:
+    element:
+      id: quiz-confirm
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-confirm
+- scrollUntilVisible:
+    element:
+      id: quiz-next
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-next
+- scrollUntilVisible:
+    element:
+      id: quiz-question
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: quiz-answer-1
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-answer-1
+- scrollUntilVisible:
+    element:
+      id: quiz-confirm
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-confirm
+- scrollUntilVisible:
+    element:
+      id: quiz-next
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-next
+- scrollUntilVisible:
+    element:
+      id: quiz-question
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: quiz-answer-2
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-answer-2
+- scrollUntilVisible:
+    element:
+      id: quiz-confirm
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-confirm
+- scrollUntilVisible:
+    element:
+      id: quiz-next
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-next
+- scrollUntilVisible:
+    element:
+      id: quiz-question
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: quiz-answer-2
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-answer-2
+- scrollUntilVisible:
+    element:
+      id: quiz-answer-0
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-answer-0
+- scrollUntilVisible:
+    element:
+      id: quiz-answer-1
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-answer-1
+- scrollUntilVisible:
+    element:
+      id: quiz-confirm
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-confirm
+- scrollUntilVisible:
+    element:
+      id: quiz-next
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-next
+- scrollUntilVisible:
+    element:
+      id: quiz-question
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: quiz-number
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-number
+- inputText: '3335'
+- swipe:
+    start: 90%,45%
+    end: 90%,30%
+    duration: 500
+- scrollUntilVisible:
+    element:
+      id: quiz-confirm
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-confirm
+- scrollUntilVisible:
+    element:
+      id: quiz-next
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-next
+- scrollUntilVisible:
+    element:
+      id: quiz-question
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: quiz-answer-1
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-answer-1
+- scrollUntilVisible:
+    element:
+      id: quiz-answer-2
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-answer-2
+- scrollUntilVisible:
+    element:
+      id: quiz-answer-0
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-answer-0
+- scrollUntilVisible:
+    element:
+      id: quiz-confirm
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-confirm
+- scrollUntilVisible:
+    element:
+      id: quiz-next
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-next
+- scrollUntilVisible:
+    element:
+      id: quiz-result
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible:
+    id: quiz-result
+    text: 8/8 right · best streak 8
+- scrollUntilVisible:
+    element:
+      id: quiz-save
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- assertVisible: Streak saved on this device
+- takeScreenshot: ${EVIDENCE}/48-quiz-result
+- scrollUntilVisible:
+    element:
+      id: quiz-copy
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-copy
+- assertVisible: Copied
+- stopApp
+- launchApp:
+    permissions: {}
+- openLink: opax://explore/quiz
+- assertVisible:
+    id: quiz-best
+    text: Best streak 8
+- takeScreenshot: ${EVIDENCE}/48-streak-restored
+- openLink: opax://explore
+- assertVisible: Play with the parliamentary record
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/48-explore

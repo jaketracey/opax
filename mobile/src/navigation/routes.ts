@@ -52,12 +52,15 @@ export function fromWebPath(
   | ReturnType<typeof moneyRoute>
   | typeof recentRecordsRoute
   | typeof expenseGlossaryRoute
+  | ReturnType<typeof exploreFromWebPath>
   | ReturnType<typeof reportRoute>
   | ReturnType<typeof topicRoute>
   | { pathname: '/reports' | '/topics' | '/stats' | '/methods' }
   | ReturnType<typeof moneyFromWebPath> {
   const community = communityFromWebPath(path);
   if (community) return community;
+  const explore = exploreFromWebPath(path);
+  if (explore) return explore;
   const money = moneyFromWebPath(path);
   if (money) return money;
   if (path === '/money' || path === '/money/') return moneyRoute();
@@ -216,3 +219,9 @@ export const directoryRoute = (kind: 'person' | 'party' | 'electorate') => ({
   params: { kind },
 });
 export const divisionHistoryRoute = { pathname: '/division-history' as const };
+
+export function exploreFromWebPath(path: string): {pathname:'/explore'} | {pathname:'/explore/[tool]';params:{tool:string}} | null {
+  if (path === '/explore' || path === '/explore/') return {pathname:'/explore'};
+  const match = /^\/explore\?game=(quiz|ballot|tm|tide|matrix|wd)$/.exec(path);
+  return match?.[1] ? {pathname:'/explore/[tool]',params:{tool:match[1]}} : null;
+}

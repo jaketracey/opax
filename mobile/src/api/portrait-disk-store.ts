@@ -1,6 +1,10 @@
 import { Directory, File, Paths } from 'expo-file-system';
 import type { PortraitStore, SavedPortrait } from './portrait-cache';
 import { assertPortraitBytes, portraitKeyPattern } from './portrait-policy';
+import {
+  assertYearPictureBytes,
+  yearPictureKeyPattern,
+} from './year-picture-policy';
 // Separate fixture/development/production origins. Never reuse another server's file.
 export function portraitNamespace(origin: string): string {
   let hash = 2166136261;
@@ -15,6 +19,13 @@ export function portraitDirectory(origin: string) {
     portraitNamespace(origin),
   );
 }
+export function yearPictureDirectory(origin: string) {
+  return new Directory(
+    Paths.cache,
+    'opax-year-pictures-v1',
+    portraitNamespace(origin),
+  );
+}
 export class PortraitDiskStore implements PortraitStore {
   private directory: Directory;
   private writes: Promise<unknown> = Promise.resolve();
@@ -22,11 +33,21 @@ export class PortraitDiskStore implements PortraitStore {
     origin: string,
     private maxBytes = 12 * 1024 * 1024,
     private maxEntries = 1024,
+    private kind: 'portrait' | 'year-picture' = 'portrait',
   ) {
-    this.directory = portraitDirectory(origin);
+    this.directory =
+      kind === 'portrait'
+        ? portraitDirectory(origin)
+        : yearPictureDirectory(origin);
+  }
+  private validate(bytes: Uint8Array) {
+    if (this.kind === 'portrait') assertPortraitBytes(bytes);
+    else assertYearPictureBytes(bytes);
   }
   private file(key: string) {
-    if (!portraitKeyPattern.test(key)) throw new Error('Invalid portrait key');
+    const pattern =
+      this.kind === 'portrait' ? portraitKeyPattern : yearPictureKeyPattern;
+    if (!pattern.test(key)) throw new Error('Invalid image cache key');
     return new File(this.directory, `${key}.webp`);
   }
   async read(key: string): Promise<SavedPortrait | undefined> {
@@ -34,7 +55,7 @@ export class PortraitDiskStore implements PortraitStore {
     const file = this.file(key);
     if (!file.exists) return;
     try {
-      assertPortraitBytes(await file.bytes());
+      this.validate(await file.bytes());
     } catch {
       file.delete();
       return;
@@ -42,7 +63,7 @@ export class PortraitDiskStore implements PortraitStore {
     return { localURI: file.uri, savedAt: file.modificationTime ?? 0 };
   }
   write(key: string, bytes: Uint8Array): Promise<SavedPortrait> {
-    assertPortraitBytes(bytes);
+    this.validate(bytes);
     const file = this.file(key);
     const task = this.writes.then(async () => {
       this.directory.create({ idempotent: true, intermediates: true });

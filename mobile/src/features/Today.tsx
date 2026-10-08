@@ -92,6 +92,9 @@ export default function Today() {
         <LinkRow title="Community" detail="Questions, sources and conversations worth following" testID="today-community" onPress={() => router.push('/community/home')} />
       </Section>
       <ReportsEntry />
+      <Section testID="today-explore">
+        <LinkRow title="Explore" detail="Play with the parliamentary record" testID="today-explore-open" onPress={() => router.push('/explore')} />
+      </Section>
       <Spotlight />
       <FromRecord />
       <TodayCoverage />

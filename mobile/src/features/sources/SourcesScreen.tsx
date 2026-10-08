@@ -4,6 +4,7 @@ import Constants from 'expo-constants';
 import { catalogs, portraits } from '../../api/runtime';
 import type { PortraitListing } from '../../api/people-portraits';
 import { leadRegisters } from '../leads/About';
+import { ExplorePhotoCredits } from '../explore/PhotoCredits';
 import { portraitCreditLine } from '../CachedPortrait';
 import { formatCount } from '../../design/format';
 import {
@@ -144,6 +145,7 @@ export function SourcesScreen() {
         </RowList>
       </Section>
       <PortraitCredits />
+      <ExplorePhotoCredits />
       {loaded.collected?.length ? (
         <Section title="Collected sources" testID="sources-collected">
           <RowList>

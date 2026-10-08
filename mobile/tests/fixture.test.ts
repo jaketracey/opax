@@ -109,6 +109,20 @@ afterAll(async () => {
     });
   }
 });
+test('year-photo manifest and pinned WebP subset are served as free static files; absent pictures stay offline', async () => {
+  const manifest = await request('/years/pictures.json');
+  expect(manifest.status).toBe(200);
+  expect(JSON.parse(manifest.body)['2025']).toHaveLength(6);
+  const picture = await request(
+    '/years/pictures/2025/cooper-polling-place.webp',
+  );
+  expect(picture.status).toBe(200);
+  expect(picture.headers['content-type']).toBe('image/webp');
+  expect(picture.body.slice(0, 4)).toBe('RIFF');
+  expect((await request('/years/pictures/2025/not-pinned.webp')).status).toBe(
+    404,
+  );
+});
 test('serves pinned public data, catalog search and conditional ETag responses offline', async () => {
   const roster = await request('/parliamentarians.json');
   expect(roster.status).toBe(200);

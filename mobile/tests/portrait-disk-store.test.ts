@@ -1,5 +1,7 @@
 import { PortraitDiskStore } from '../src/api/portrait-disk-store';
 import { pinnedBytes } from './pinned';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 const mockFiles = new Map<string, { bytes: Uint8Array; at: number }>();
 let mockClock = 1000;
 let mockMoveDelay: Promise<void> | undefined;
@@ -136,4 +138,36 @@ test('cleans the temporary file and rejects an asynchronous move failure', async
   await failure;
   expect(mockFiles.size).toBe(0);
   expect(await store.read('10007')).toBeUndefined();
+});
+test('year photographs retain their exact bytes in a separate origin cache without relaxing portrait validation', async () => {
+  const bytes = new Uint8Array(
+    readFileSync(
+      resolve(
+        __dirname,
+        '../scripts/fixtures/explore-pictures/cooper-polling-place.webp',
+      ),
+    ),
+  );
+  const store = new PortraitDiskStore(
+    'https://example.test',
+    8 * 1024 * 1024,
+    96,
+    'year-picture',
+  );
+  const saved = await store.write('2025-cooper-polling-place', bytes);
+  expect(saved.localURI).toContain('/opax-year-pictures-v1/');
+  expect((await store.read('2025-cooper-polling-place'))?.localURI).toBe(
+    saved.localURI,
+  );
+  expect(mockFiles.get(saved.localURI)?.bytes).toEqual(bytes);
+  expect(() => new PortraitDiskStore('https://example.test').write('10007', bytes)).toThrow();
+  expect(
+    await new PortraitDiskStore(
+      'http://127.0.0.1:8951',
+      8 * 1024 * 1024,
+      96,
+      'year-picture',
+    ).read('2025-cooper-polling-place'),
+  ).toBeUndefined();
+  await expect(store.read('../2025-cooper-polling-place')).rejects.toThrow();
 });
