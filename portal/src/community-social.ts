@@ -93,7 +93,7 @@ export async function socialRoute(req:Request,env:Env):Promise<Response|null>{
    return json({member:publicMember(peer),stats,relationship,can_message:viewer?await mayMessage(env,id,peer):false,conversation_id:conversation?.id||null,lists:lists.results,threads:threads.results})
   }
  }
- const socialPath=path==='members'||path==='conversations'||path==='notifications'||path==='notifications/read'||path==='preferences'||path==='blocks'||/^members\/[\w-]+\/(follow|block)$/.test(path)||/^threads\/[\w-]+\/(like|save)$/.test(path)||/^conversations\/[\w-]+(?:\/(read|messages))?$/.test(path)||/^messages\/[\w-]+\/report$/.test(path)
+ const socialPath=/^members\/[\w-]+\/report$/.test(path)||path==='members'||path==='conversations'||path==='notifications'||path==='notifications/read'||path==='preferences'||path==='blocks'||/^members\/[\w-]+\/(follow|block)$/.test(path)||/^threads\/[\w-]+\/(like|save)$/.test(path)||/^conversations\/[\w-]+(?:\/(read|messages))?$/.test(path)||/^messages\/[\w-]+\/report$/.test(path)
  if(!socialPath)return null
  const m=await requireMember(req,env)
  if(path==='members'&&read){
@@ -123,6 +123,15 @@ export async function socialRoute(req:Request,env:Env):Promise<Response|null>{
   }
  }
  if(path==='blocks'&&read){const rows=await env.COMMUNITY_DB.prepare('SELECT m.id,m.display_name AS name FROM member_blocks b JOIN members m ON m.id=b.blocked_id WHERE b.member_id=? ORDER BY b.created_at DESC LIMIT 200').bind(m.id).all();return json({members:rows.results})}
+ const reportProfile=path.match(/^members\/([\w-]+)\/report$/)?.[1]
+ if(reportProfile&&req.method==='POST'){
+  const peer=await peerMember(env,reportProfile)
+  if(!peer.display_name||peer.id===m.id)throw new CommunityError(404,'This public profile is unavailable.')
+  const d=await body(req),reason=text(d.reason,5,500,'Reason')
+  await limit(env,'report:'+m.id,20,86400)
+  await env.COMMUNITY_DB.prepare('INSERT INTO community_reports VALUES (?,?,?,?) ON CONFLICT(member_id,target_id) DO NOTHING').bind(m.id,'member:'+peer.id,reason,t).run()
+  return json({reported:true})
+ }
  const relationship=path.match(/^members\/([\w-]+)\/(follow|block)$/)
  if(relationship&&['PUT','DELETE'].includes(req.method)){
   const [,id,action]=relationship

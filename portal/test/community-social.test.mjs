@@ -194,3 +194,25 @@ test('message and conversation insertion roll back together when the database re
   assert.equal(f.db.prepare('SELECT count(*) n FROM direct_messages').get().n,0);
  }finally{f.db.close()}
 });
+
+
+test('public profile reports require a session and same origin, deduplicate, and appear without private account data',async()=>{
+ const f=fixture();try{
+  assert.equal((await f.call('members/bob/report','POST',{reason:'Abusive public bio'},null)).status,401);
+  assert.equal((await f.call('members/bob/report','POST',{reason:'Abusive public bio'},'alice','https://other.test')).status,403);
+  assert.equal((await f.call('members/alice/report','POST',{reason:'Own profile'})).status,404);
+  assert.equal((await f.call('members/missing/report','POST',{reason:'Missing profile'})).status,404);
+  assert.equal((await f.call('members/bob/report','POST',{reason:'bad'})).status,400);
+  await payload(await f.call('members/bob/report','POST',{reason:'Abusive public bio'}));
+  await payload(await f.call('members/bob/report','POST',{reason:'Abusive public bio'}));
+  assert.equal(f.db.prepare('SELECT count(*) n FROM community_reports').get().n,1);
+  assert.equal((await f.call('reports')).status,403);
+  const reports=await payload(await f.call('reports','GET',undefined,'mod'));
+  assert.equal(reports.reports[0].kind,'profile');
+  assert.equal(reports.reports[0].target_id,'member:bob');
+  assert.match(reports.reports[0].body,/Bob Researcher/);
+  assert.doesNotMatch(JSON.stringify(reports),/@example/);
+  f.db.prepare("UPDATE members SET display_name='' WHERE id='carol'").run();
+  assert.equal((await f.call('members/carol/report','POST',{reason:'No public profile'})).status,404);
+ }finally{f.db.close()}
+});
