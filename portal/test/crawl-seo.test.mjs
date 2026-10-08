@@ -61,6 +61,10 @@ test('sitemap index and every type file have export lastmod, unique canonical UR
   assert.match(read('crawl/sitemaps/electorates-1.xml'),new RegExp(`<lastmod>${json('electorates/manifest.json').generated}</lastmod>`));
   const grantsXml = read('crawl/sitemaps/grant-recipients-1.xml');
   for (const r of recipients.filter(r=>['individual','person'].includes(r.k))) assert.ok(!grantsXml.includes(encodeURIComponent(r.id)));
+  const donorsXml = read('crawl/sitemaps/donors-1.xml');
+  for (const name of ['money.json','money.qld.json','money.vic.json'])
+    for (const n of json(`graph/${name}`).nodes.filter(n=>n.kind==='donor'&&n.industry==='individual'))
+      assert.ok(!donorsXml.includes(`/subject/donor/${encodeURIComponent(n.label)}<`), `individual donor in sitemap: ${name}`);
   const robots = await (await get('/robots.txt')).text();
   assert.match(robots,/Sitemap: https:\/\/opax.com.au\/sitemap.xml/);
 });

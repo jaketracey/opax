@@ -114,6 +114,8 @@ export async function buildCrawl(root) {
     const money = await read(`graph/${name}`);
     for (const n of money.nodes) {
       if (!validId(n.label)) continue;
+      // Individual donors stay out of the sitemap, as individual grant recipients do.
+      if (n.kind === 'donor' && n.industry === 'individual') continue;
       const map = n.kind === 'party' ? partyLabels : n.kind === 'donor' ? donors : null;
       if (map && !map.has(fold(n.label))) map.set(fold(n.label),{label:n.label,date:money.meta.generated});
     }
