@@ -373,11 +373,7 @@ function MoneyCatalogScreen({
                         </RowList>
                       </Disclosure>
                     </RowList>
-                    <Section
-                      title="Ranked donors"
-                      icon="banknote"
-                      accent="money"
-                    >
+                    <Section title="Ranked donors" accent="money">
                       <Text wordSafe variant="metadata">
                         Disclosed donations, largest first.
                       </Text>

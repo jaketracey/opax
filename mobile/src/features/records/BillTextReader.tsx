@@ -155,7 +155,6 @@ export default function BillTextReader({
                 {summary ? (
                   <Section
                     title="In short"
-                    icon="text.alignleft"
                     accent="bills"
                     testID="bill-text-summary"
                   >
@@ -181,7 +180,6 @@ export default function BillTextReader({
                 ) : null}
                 <Section
                   title="Read the bill"
-                  icon="doc.text"
                   accent="bills"
                   testID="bill-text-version"
                   info={{
@@ -284,7 +282,6 @@ export default function BillTextReader({
                     {current.enrichment ? (
                       <Section
                         title="In this version"
-                        icon="text.alignleft"
                         accent="bills"
                         testID="bill-text-overview"
                         info={{
@@ -357,7 +354,6 @@ export default function BillTextReader({
                     </Disclosure>
                     <Section
                       title="Full text"
-                      icon="doc.text"
                       accent="bills"
                       info={{
                         title: 'About this text',

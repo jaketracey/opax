@@ -23,12 +23,7 @@ export function Spotlight() {
   const [slug, setSlug] = useState('gambling');
   const load = useCallback(() => reports.report(slug), [slug]);
   return (
-    <Section
-      title="Spotlight on"
-      icon="sparkle.magnifyingglass"
-      accent="leads"
-      testID="today-spotlight"
-    >
+    <Section title="Spotlight on" accent="leads" testID="today-spotlight">
       <ChoiceChips
         value={slug}
         segments={[
@@ -77,7 +72,7 @@ function SpotlightContent({
 }
 export function ReportsEntry() {
   return (
-    <Section title="Reports" icon="books.vertical" accent="leads">
+    <Section title="Reports" accent="leads">
       <RecordRow
         title="Reports"
         detail="Standing investigations across the public record"
@@ -97,7 +92,6 @@ export function TodayCoverage() {
   return (
     <Section
       title="Collection & coverage"
-      icon="chart.bar.doc.horizontal"
       accent="votes"
       info={{
         title: 'About the coverage',
@@ -162,7 +156,6 @@ export function FromRecord() {
   return (
     <Section
       title="From the record"
-      icon="text.book.closed"
       accent="bills"
       testID="today-from-record"
       info={{
@@ -197,7 +190,11 @@ export function FromRecord() {
             );
           })}
         {body.length ? (
-          <Disclosure label="Read preview" open={expanded} onToggle={setExpanded}>
+          <Disclosure
+            label="Read preview"
+            open={expanded}
+            onToggle={setExpanded}
+          >
             <Group>
               {body.map((b, i) =>
                 b.kind === 'h3' ? (

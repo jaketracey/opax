@@ -16,10 +16,8 @@ import {
 } from 'react-native';
 import { useAccessibilitySize } from './accessibility';
 import { Divider } from './controls';
-import type { SFSymbol } from './icon';
 import { InfoButton, type InfoNotes } from './info';
 import { ROW_OWNS_PADDING } from './row-padding';
-import { IconTile } from './rows';
 import { Heading, Text, type TextTone } from './text';
 import {
   accents,
@@ -114,15 +112,15 @@ export function Group({
 }
 
 /**
- * A major section: a default rule, then a header with an optional tinted
- * symbol tile (the category's accent), a serif heading, an optional ⓘ for
+ * A major section: a default rule, then a serif heading, an optional ⓘ for
  * the block's methodology and caveats, and an optional trailing action ("All
- * bills"). No card or filled box marks the boundary; the rule and the
- * heading do. Heading to content is 12pt; blocks inside step 16pt.
+ * bills"). No card, filled box or icon tile marks the boundary; the rule and
+ * the heading do (TestFlight, 8 Oct: an icon on a section heading is too
+ * busy). A category `accent` draws a short 2pt mark in its ink over the
+ * start of the rule. Heading to content is 12pt; blocks inside step 16pt.
  */
 export function Section({
   title,
-  icon,
   accent,
   info,
   action,
@@ -134,8 +132,7 @@ export function Section({
   /** False for the first section under a sheet's bar: no top rule. */
   rule?: boolean;
   title?: string;
-  /** An SF Symbol for the section's subject, tinted with the accent. */
-  icon?: SFSymbol;
+  /** The category's accent, as a short mark over the rule. */
   accent?: Accent;
   /** Long notes behind an ⓘ: methodology and caveats, shown in full there. */
   info?: InfoNotes & { testID?: string };
@@ -151,20 +148,25 @@ export function Section({
       testID={testID}
       style={[styles.section, rule ? null : styles.unruled]}
     >
+      {rule && accent ? (
+        <View
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          style={[
+            styles.accentMark,
+            { backgroundColor: colors[accents[accent].ink] },
+          ]}
+        />
+      ) : null}
       {title || action || info ? (
         stacked && title && (action || info) ? (
           // At accessibility sizes the title takes the whole line and the
           // ⓘ and action sit on their own line below: a large "See all"
           // never squeezes the heading into a narrow column.
           <View style={styles.sectionHeadStacked}>
-            <View style={styles.sectionHead}>
-              {icon ? (
-                <IconTile name={icon} accent={accent} size="section" />
-              ) : null}
-              <Heading level={2} style={styles.grow} testID={headingTestID}>
-                {title}
-              </Heading>
-            </View>
+            <Heading level={2} testID={headingTestID}>
+              {title}
+            </Heading>
             <View style={styles.sectionTools}>
               {/* A column of fixed width for the action's word-safe label. */}
               {action ? <View style={styles.grow}>{action}</View> : null}
@@ -173,9 +175,6 @@ export function Section({
           </View>
         ) : (
           <View style={[styles.sectionHead, styles.sectionHeadSpaced]}>
-            {icon && title ? (
-              <IconTile name={icon} accent={accent} size="section" />
-            ) : null}
             {title ? (
               <Heading level={2} style={styles.grow} testID={headingTestID}>
                 {title}
@@ -360,11 +359,20 @@ const styles = StyleSheet.create({
     paddingTop: rhythm.block + rhythm.line,
   },
   unruled: { borderTopWidth: 0, paddingTop: 0 },
+  // Sits over the start of the hairline rule, which it replaces there.
+  accentMark: {
+    position: 'absolute',
+    top: -hairline - 0.5,
+    left: 0,
+    width: 28,
+    height: 2,
+    borderRadius: 1,
+  },
   fade: { position: 'absolute', top: 0, left: 0, right: 0 },
   sectionHead: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: rhythm.heading - rhythm.line,
+    gap: rhythm.tight,
   },
   // Heading to content is 12pt: the section's 16pt gap, less 4.
   sectionHeadSpaced: { marginBottom: rhythm.heading - rhythm.block },

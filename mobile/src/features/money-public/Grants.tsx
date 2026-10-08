@@ -221,7 +221,6 @@ function GrantList({
             <>
               <Section
                 title="Donor overlap"
-                icon="banknote"
                 accent="money"
                 info={{
                   title: 'About donor overlap',
@@ -285,7 +284,6 @@ export function SeatGrants({
   return (
     <Section
       title="Grants in this seat"
-      icon="banknote"
       accent="money"
       testID="seat-grants"
       info={

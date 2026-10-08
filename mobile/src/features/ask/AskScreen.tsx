@@ -567,12 +567,7 @@ export default function AskScreen() {
             ) : null}
             {s.notice ? <Text wordSafe>{s.notice}</Text> : null}
             {answer && !s.busy ? (
-              <Section
-                title="Ask next"
-                icon="text.bubble"
-                accent="people"
-                testID="ask-followups"
-              >
+              <Section title="Ask next" accent="people" testID="ask-followups">
                 <RowList>
                   {answer.next?.map((next, i) => (
                     <LinkRow

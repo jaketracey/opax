@@ -170,7 +170,6 @@ export default function Allocation() {
               {data ? (
                 <Section
                   title="How invitations were shared"
-                  icon="chart.bar"
                   accent="money"
                   info={{
                     title: 'About the seat comparison',
@@ -224,7 +223,6 @@ export default function Allocation() {
               <Section
                 title="Election margin"
                 accent="money"
-                icon="chart.bar"
                 info={{
                   title: 'About election margins',
                   notes: [

@@ -8,7 +8,12 @@ import { colors, hairline, spacing } from '../design/tokens';
 import { EditionSection } from './EditionCard';
 import { declarationsRoute, recentRecordsRoute } from '../navigation/routes';
 import { FollowingSection } from './follows/FollowingSection';
-import { FromRecord, ReportsEntry, Spotlight, TodayCoverage } from './reports/TodayReports';
+import {
+  FromRecord,
+  ReportsEntry,
+  Spotlight,
+  TodayCoverage,
+} from './reports/TodayReports';
 import { BillCarousel } from './today/BillCarousel';
 import { DeclarationRow } from './today/DeclarationRow';
 import { LeadsCard } from './today/LeadsCard';
@@ -73,8 +78,15 @@ export default function Today() {
         refreshing={refreshing}
         onRetry={refresh}
       />
-      <Section accent="money" icon="banknote" testID="today-money">
-        <LinkRow title="Public money" detail="Grants, contracts and agencies" accent="money" icon="banknote" testID="today-public-money" onPress={() => router.push('/public-money')} />
+      <Section accent="money" testID="today-money">
+        <LinkRow
+          title="Public money"
+          detail="Grants, contracts and agencies"
+          accent="money"
+          icon="banknote"
+          testID="today-public-money"
+          onPress={() => router.push('/public-money')}
+        />
       </Section>
       <ReportsEntry />
       <Spotlight />

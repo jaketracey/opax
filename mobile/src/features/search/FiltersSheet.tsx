@@ -226,7 +226,6 @@ export function FiltersSheet({
             <>
               <Section
                 title="Search filters"
-                icon="slider.horizontal.3"
                 accent="people"
                 rule={false}
                 info={{

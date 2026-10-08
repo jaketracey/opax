@@ -348,7 +348,14 @@ export default function YourMP() {
             </RowList>
             <EvidenceFooter block={view.seat} id="your-seat" />
           </Group>
-          <SeatGrants name={view.seat.data!.name} state={view.seat.data!.state_code} eligible={view.seat.data!.jurisdiction === 'federal' && view.seat.data!.chamber === 'representatives'} />
+          <SeatGrants
+            name={view.seat.data!.name}
+            state={view.seat.data!.state_code}
+            eligible={
+              view.seat.data!.jurisdiction === 'federal' &&
+              view.seat.data!.chamber === 'representatives'
+            }
+          />
           {view.seat.data!.chamber !== 'senate' ? (
             <RecordBlock
               title={
@@ -356,7 +363,6 @@ export default function YourMP() {
                   ? 'Your representatives'
                   : 'Your member'
               }
-              icon="person.fill"
               accent="people"
               id="your-member"
               block={view.members}
@@ -379,12 +385,19 @@ export default function YourMP() {
           ) : null}
           {memberProfile ? (
             <>
-              <PayBlock block={memberProfile.blocks.pay} retry={retry} id="your-pay" />
-              <PartyReceiptsBlock block={memberProfile.blocks.partyReceipts} retry={retry} id="your-receipts" />
+              <PayBlock
+                block={memberProfile.blocks.pay}
+                retry={retry}
+                id="your-pay"
+              />
+              <PartyReceiptsBlock
+                block={memberProfile.blocks.partyReceipts}
+                retry={retry}
+                id="your-receipts"
+              />
               <RecordBlock
                 title="Recent bill votes"
                 id="your-votes"
-                icon="checkmark.square"
                 accent="votes"
                 block={memberProfile.blocks.votes}
                 missing="No recorded bill votes are held for this member."
@@ -500,7 +513,6 @@ export default function YourMP() {
                 <RecordBlock
                   title="Register changes"
                   id="your-register"
-                  icon="list.clipboard"
                   accent="interests"
                   block={memberProfile.blocks.interests}
                   missing="No register file is held for this member in the covered registers."
@@ -554,7 +566,6 @@ export default function YourMP() {
           {view.seat.data!.status !== 'historical' ? (
             <Section
               title="Your senators"
-              icon="person.2.fill"
               accent="people"
               testID="your-senators"
             >
@@ -579,12 +590,7 @@ export default function YourMP() {
             </Section>
           ) : null}
           {view.seat.data!.status !== 'historical' ? (
-            <Section
-              title="State members"
-              icon="building.columns"
-              accent="people"
-              testID="your-state"
-            >
+            <Section title="State members" accent="people" testID="your-state">
               {view.stateRosterVerified ? (
                 <>
                   {view.stateMembers.map((b, i) => (

@@ -317,7 +317,6 @@ export default function Search({
           noSuggestions ? (
             <Section
               title={showSuggestions ? undefined : 'Browse'}
-              icon="square.grid.2x2"
               accent="people"
             >
               {sourceError ? (
@@ -357,9 +356,42 @@ export default function Search({
               {!showSuggestions ? (
                 <>
                   <RowList>
-                    <LinkRow title="Parliamentarians" icon="person.2" accent="people" testID="search-browse-person" onPress={() => router.push({ pathname: '/directory', params: { kind: 'person' } })} />
-                    <LinkRow title="Parties" icon="person.3" accent="people" testID="search-browse-party" onPress={() => router.push({ pathname: '/directory', params: { kind: 'party' } })} />
-                    <LinkRow title="Electorates" icon="map" accent="places" testID="search-browse-electorate" onPress={() => router.push({ pathname: '/directory', params: { kind: 'electorate' } })} />
+                    <LinkRow
+                      title="Parliamentarians"
+                      icon="person.2"
+                      accent="people"
+                      testID="search-browse-person"
+                      onPress={() =>
+                        router.push({
+                          pathname: '/directory',
+                          params: { kind: 'person' },
+                        })
+                      }
+                    />
+                    <LinkRow
+                      title="Parties"
+                      icon="person.3"
+                      accent="people"
+                      testID="search-browse-party"
+                      onPress={() =>
+                        router.push({
+                          pathname: '/directory',
+                          params: { kind: 'party' },
+                        })
+                      }
+                    />
+                    <LinkRow
+                      title="Electorates"
+                      icon="map"
+                      accent="places"
+                      testID="search-browse-electorate"
+                      onPress={() =>
+                        router.push({
+                          pathname: '/directory',
+                          params: { kind: 'electorate' },
+                        })
+                      }
+                    />
                   </RowList>
                   <Text variant="caption">
                     Bill searches use the saved bill titles in Bills.
@@ -380,7 +412,6 @@ export default function Search({
           {showSuggestions && suggestions?.people.length ? (
             <Section
               title="People"
-              icon="person.2.fill"
               accent="people"
               testID="search-suggestions-people"
             >
@@ -402,7 +433,6 @@ export default function Search({
           {showSuggestions && suggestions?.electorates.length ? (
             <Section
               title="Electorates"
-              icon="map"
               accent="places"
               testID="search-suggestions-electorates"
             >
@@ -427,7 +457,6 @@ export default function Search({
           {showSuggestions && suggestions?.bills.length ? (
             <Section
               title="Bills"
-              icon="doc.text"
               accent="bills"
               testID="search-suggestions-bills"
             >
@@ -449,7 +478,6 @@ export default function Search({
               {richer.parties.length ? (
                 <Section
                   title="Parties"
-                  icon="person.2.fill"
                   accent="people"
                   testID="search-suggestions-parties"
                 >
@@ -476,7 +504,6 @@ export default function Search({
               {richer.topics.length ? (
                 <Section
                   title="Topics"
-                  icon="tag"
                   accent="bills"
                   testID="search-suggestions-topics"
                 >
@@ -500,7 +527,6 @@ export default function Search({
               {richer.reports.length ? (
                 <Section
                   title="Reports"
-                  icon="doc.text"
                   accent="leads"
                   testID="search-suggestions-reports"
                 >
@@ -558,7 +584,6 @@ export default function Search({
       {submitted && !extended ? (
         <Section
           title={`Results for “${result?.data.query ?? query.trim()}” · ${kindLabel(kind)}`}
-          icon="magnifyingglass"
           accent="people"
           info={
             result

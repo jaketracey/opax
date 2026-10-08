@@ -56,7 +56,6 @@ export function ElectorateDate({
     <>
       <Section
         title="View on a date"
-        icon="calendar"
         accent="places"
         testID="electorate-date-section"
         info={{
@@ -147,11 +146,7 @@ export function ElectorateDate({
               }}
             />
             {dates.length ? (
-              <Section
-                title="Roster observation dates"
-                icon="calendar"
-                accent="places"
-              >
+              <Section title="Roster observation dates" accent="places">
                 <RowList>
                   {dates.map((date) => (
                     <LinkRow
@@ -170,7 +165,6 @@ export function ElectorateDate({
       {selected ? (
         <Section
           title={`Representation on ${formatDate(asof)}`}
-          icon="person.fill"
           accent="people"
           testID="electorate-dated-representation"
         >
@@ -246,7 +240,6 @@ export function ElectorateHistory({
   return (
     <Section
       title="Representation history"
-      icon="clock.arrow.circlepath"
       accent="people"
       testID="electorate-history"
       info={{

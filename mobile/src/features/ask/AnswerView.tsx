@@ -220,7 +220,6 @@ export function AnswerView({
   return (
     <Section
       testID="ask-answer"
-      icon={calculated ? 'dollarsign.circle' : 'text.bubble'}
       accent={calculated ? 'money' : 'people'}
       info={{
         title: 'About this answer',
@@ -321,7 +320,6 @@ export function AnswerView({
       {roster.length ? (
         <Section
           title="People in this answer"
-          icon="person.3.fill"
           accent="people"
           testID="ask-people-card"
         >

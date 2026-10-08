@@ -58,7 +58,6 @@ export function PartyAccess({ name }: { name: string }) {
   return (
     <Section
       title="Meetings and lobbyists"
-      icon="person.2"
       accent="people"
       testID="party-access"
       info={{
@@ -182,7 +181,6 @@ export function PartyFunding({ name }: { name: string }) {
     <>
       <Section
         title="Receipts on the return"
-        icon="banknote"
         accent="money"
         testID="party-annual-returns"
         info={{
@@ -233,7 +231,6 @@ export function PartyFunding({ name }: { name: string }) {
       </Section>
       <Section
         title="Debts and other funding"
-        icon="building.columns"
         accent="money"
         testID="party-debts"
         info={{

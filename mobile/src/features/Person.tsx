@@ -267,7 +267,6 @@ export function ProfileScreen({
             <RecordBlock
               title="Voting record"
               id="person-votes"
-              icon="checkmark.square"
               accent="votes"
               partialMissing={partialMissing}
               block={b.votes}
@@ -390,7 +389,6 @@ export function ProfileScreen({
             <RecordBlock
               title="Declared interests"
               id="person-interests"
-              icon="list.clipboard"
               accent="interests"
               partialMissing={partialMissing}
               block={b.interests}
@@ -402,7 +400,6 @@ export function ProfileScreen({
             <RecordBlock
               title="Declared ties"
               id="person-ties"
-              icon="link"
               accent="interests"
               partialMissing={partialMissing}
               block={b.ties}
@@ -456,7 +453,6 @@ export function ProfileScreen({
             <RecordBlock
               title="Claimed expenses"
               id="person-expenses"
-              icon="creditcard"
               accent="money"
               partialMissing={partialMissing}
               block={b.expenses}

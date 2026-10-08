@@ -198,7 +198,6 @@ export default function DocumentReader({
                 {doc.summary ? (
                   <Section
                     title="In brief"
-                    icon="text.alignleft"
                     accent="bills"
                     testID="doc-brief"
                     info={{
@@ -229,7 +228,6 @@ export default function DocumentReader({
                 ) : null}
                 <Section
                   title="Full text"
-                  icon="doc.text"
                   accent={doc.labels.kind === 'division' ? 'votes' : 'bills'}
                   info={{
                     title: 'About this text',
@@ -340,12 +338,7 @@ function LinkedBill({ doc }: { doc: DocumentRecord }) {
   const key = metaString(doc, 'bill_key');
   if (doc.labels.kind === 'bill_text' && /^au-federal-[a-z0-9-]+$/.test(key))
     return (
-      <Section
-        title="The bill"
-        icon="doc.text"
-        accent="bills"
-        testID="doc-bill"
-      >
+      <Section title="The bill" accent="bills" testID="doc-bill">
         <LinkRow
           title="Bill page"
           onPress={() => router.push(billRoute(key))}
@@ -363,7 +356,7 @@ function LinkedBill({ doc }: { doc: DocumentRecord }) {
     );
   if (!bill) return null;
   return (
-    <Section title="The bill" icon="doc.text" accent="bills" testID="doc-bill">
+    <Section title="The bill" accent="bills" testID="doc-bill">
       <Text variant="strong" wordSafe>
         {bill.title}
       </Text>

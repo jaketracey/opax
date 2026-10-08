@@ -30,7 +30,7 @@ export default function ReportsIndex() {
           testID="reports-index"
         >
           {(index) => (
-            <Section title="Reports" icon="books.vertical" accent="leads">
+            <Section title="Reports" accent="leads">
               <RowList>
                 {index.reports.map((r) => (
                   <RecordRow
