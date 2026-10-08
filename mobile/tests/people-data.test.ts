@@ -1,7 +1,11 @@
 import { joinPerson, profileFor } from '../src/api/catalogs';
 import { chamberName, jurisdictionName } from '../src/design/parliament';
 import { partyText } from '../src/design/party';
-import { partyStatusFor, personPartyFor } from '../src/api/party-transforms';
+import {
+  partyStatusFor,
+  partyStatusSeatsFor,
+  personPartyFor,
+} from '../src/api/party-transforms';
 import type {
   RosterPerson,
   SeatObservation,
@@ -206,7 +210,11 @@ describe('party status from the real adapter', () => {
       const person = people.people.find(
         (x) => x.person_id === p.canonicalPersonId,
       );
-      const seats = person?.electorates ?? [];
+      const seats = partyStatusSeatsFor(
+        person?.electorates ?? [],
+        p.rosterRow,
+        people,
+      );
       if (p.partyStatus === 'current')
         expect(
           p.seats.length > 0 || (row.current === true && !!row.party_now),

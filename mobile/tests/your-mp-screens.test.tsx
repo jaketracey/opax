@@ -300,9 +300,9 @@ test('roster-only member shows limited coverage without fabricating figures', as
   const r = await render(<Person />);
   expect(text(r)).toContain('Only the public directory identity');
   expect(mock.profileFor).not.toHaveBeenCalled();
-  // No dated seat joins and the roster has no status: the party reads plainly.
-  expect(r.root.findByType(PartyLabel).props.status).toBe('unknown');
-  expect(text(r)).not.toContain('Formerly');
+  // The dated Warringah term establishes status without expanding identity coverage.
+  expect(r.root.findByType(PartyLabel).props.status).toBe('former');
+  expect(text(r)).toContain('Formerly Liberal');
   await act(async () => r.unmount());
 });
 test('unverified private identity is refused before any name or profile blocks render', async () => {
