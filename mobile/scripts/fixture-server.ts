@@ -16,6 +16,7 @@ import {
   type CatalogKind,
 } from '../src/api/policy';
 import { assertPortraitPath } from '../src/api/portrait-policy';
+import { isYearPicturePath } from '../src/api/year-picture-policy';
 import { fixtureBytes, responseBytes } from '../tests/fixture-bytes';
 import { catalogSearchRows } from '../src/api/catalog-search';
 import { searchFixture, searchResourceFixture } from './search-fixture';
@@ -211,7 +212,7 @@ export const server = createServer(async (request, response) => {
       return;
     }
     if (request.method !== 'GET') throw new Error('Only GET is allowed');
-    if (path.endsWith('.webp')) assertPortraitPath(path);
+    if (path.endsWith('.webp') && !isYearPicturePath(path)) assertPortraitPath(path);
     else assertAllowedPath(path);
     const url = new URL(path, `http://127.0.0.1:${port}`);
     const reportBody = exploreFixture(path, reportBytes) ?? reportBytes(path);

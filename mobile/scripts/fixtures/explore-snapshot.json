@@ -29,7 +29,8 @@
     "/years/2023.json": "f0ed32068bb33652d05a8a2427d1a83904390c7faf585adc363c54443e25c893",
     "/years/2024.json": "cb34907b697a5b8ec688a9b3549b45547ead03e6221d88437420a5dc9fcdcb76",
     "/years/2025.json": "c900b1544b0ec4974219d316024410d7adde7721c49c8c46de83d31504828431",
-    "/years/2026.json": "6dc5c6fcf3c01bd05795185494eceee03ebf7746cadf896d5956b28919a081e2"
+    "/years/2026.json": "6dc5c6fcf3c01bd05795185494eceee03ebf7746cadf896d5956b28919a081e2",
+    "/years/pictures.json": "d68d7476c1350aca3c8646dc1dd934d7bfc900f7267e0356711dc8c276961d80"
   },
   "sizes": {
     "/years/1998.json": 8670,
@@ -60,6 +61,7 @@
     "/years/2023.json": 9402,
     "/years/2024.json": 10661,
     "/years/2025.json": 9772,
-    "/years/2026.json": 10183
+    "/years/2026.json": 10183,
+    "/years/pictures.json": 168540
   }
 }

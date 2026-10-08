@@ -1,4 +1,7 @@
-import { portraitDirectory } from '../src/api/portrait-disk-store';
+import {
+  portraitDirectory,
+  yearPictureDirectory,
+} from '../src/api/portrait-disk-store';
 
 import { unacceptedAdvisories } from '../scripts/advisory-policy';
 import { scanSource, secretPattern } from '../scripts/source-boundary';
@@ -469,6 +472,21 @@ test('native images accept only local cache files from the configured origin', (
     'file:///other/10007.webp',
   ])
     expect(() => localImageURI(value)).toThrow();
+});
+test("event photographs accept only this origin's year-photo cache, never a remote or escaped URI", () => {
+  const root =
+    yearPictureDirectory('https://example.test').uri.replace(/\/$/, '') + '/';
+  expect(localImageURI(root + '2025-cooper-polling-place.webp')).toBe(
+    root + '2025-cooper-polling-place.webp',
+  );
+  for (const uri of [
+    root + '../2025-a.webp',
+    root + '2025-a.webp?q=x',
+    root + '10007.webp',
+    'https://opax.com.au/years/pictures/2025/a.webp',
+    yearPictureDirectory('http://127.0.0.1:8951').uri + '/2025-a.webp',
+  ])
+    expect(() => localImageURI(uri)).toThrow();
 });
 test('secret signatures cover text files as well as source', () => {
   expect(secretPattern.test(`access_token="${'x'.repeat(32)}"`)).toBe(true);

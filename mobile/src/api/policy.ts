@@ -1,6 +1,10 @@
 import { isPeoplePaidPath } from '../features/people/policy';
-import { isExplorePaidPath, isExploreStaticPath } from '../features/explore/policy';
+import {
+  isExplorePaidPath,
+  isExploreStaticPath,
+} from '../features/explore/policy';
 import { isPortraitPath } from './portrait-policy';
+import { isYearPicturePath } from './year-picture-policy';
 import { allowsReportsPath } from './reports-policy';
 import {
   documentKinds,
@@ -63,7 +67,8 @@ const releasePath =
   /^\/electorates\/releases\/[a-f0-9]{16}\/(?:index|people|el_[a-f0-9]{24})\.json$/;
 const billPath =
   /^\/bills\/au-federal-(?:[rs]\d+|alrc-\d+|ed-[a-z0-9]+(?:-[a-z0-9]+)*)\.json$/;
-const interestPath = /^\/interests\/(?:\d+|aph_\d+|n-[a-z0-9]+(?:-[a-z0-9]+)*)\.json$/;
+const interestPath =
+  /^\/interests\/(?:\d+|aph_\d+|n-[a-z0-9]+(?:-[a-z0-9]+)*)\.json$/;
 
 function assertSearchParams(p: URLSearchParams, summary = false) {
   const keys = [
@@ -131,6 +136,7 @@ export function assertAllowedPath(path: string): void {
   if (path.split('?').length > 2) throw new Error('Invalid catalog query');
   if (allowsReportsPath(path)) return;
   if (isExplorePaidPath(path) || isExploreStaticPath(path)) return;
+  if (isYearPicturePath(path)) return;
   if (isPeoplePaidPath(path)) return;
   // Build 7 Ask. POST admission is separate from the catalog GET client.
   if (pathname === '/api/ask' && query === 'stream=1') return;
@@ -233,7 +239,9 @@ export function assertAllowedPath(path: string): void {
     releasePath.test(pathname!) ||
     billPath.test(pathname!) ||
     interestPath.test(pathname!) ||
-    /^\/grants\/(?:federal|qld)\/programs\/[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*\.json$/.test(pathname!) ||
+    /^\/grants\/(?:federal|qld)\/programs\/[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*\.json$/.test(
+      pathname!,
+    ) ||
     /^\/agencies\/a-[a-f0-9]{20}\.json$/.test(pathname!) ||
     /^\/evidence\/[a-f0-9]{2}\.json$/.test(pathname!) ||
     isPortraitPath(pathname!)

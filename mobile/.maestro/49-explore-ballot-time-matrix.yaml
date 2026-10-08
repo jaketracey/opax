@@ -142,9 +142,26 @@ name: 49 Saved-seat practice ballot, export, year and native debate cell
 - tapOn:
     id: explore-machine-pill
 - assertVisible:
-    id: explore-machine-note
+    id: explore-machine-pill-sheet
 - takeScreenshot: ${EVIDENCE}/49-machine-note
 - tapOn: Done
+- scrollUntilVisible:
+    element:
+      id: tm-photos
+    direction: DOWN
+    centerElement: true
+    timeout: 90000
+    speed: 20
+- tapOn:
+    id: tm-photos
+- scrollUntilVisible:
+    element:
+      id: tm-photo-2025-cooper-polling-place-loaded
+    direction: DOWN
+    centerElement: true
+    timeout: 30000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/49-time-machine-photo-loaded
 - openLink: opax://explore/matrix
 - scrollUntilVisible:
     element:

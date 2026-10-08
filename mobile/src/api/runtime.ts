@@ -1,5 +1,6 @@
 import { PortraitCache } from './portrait-cache';
 import { PortraitDiskStore } from './portrait-disk-store';
+import { yearPictureKeyPattern, yearPicturePath } from './year-picture-policy';
 import { PeoplePortraits } from './people-portraits';
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
@@ -67,4 +68,13 @@ export const recordClient = new ApiClient({
 export const portraits = new PeoplePortraits(
   catalogs,
   new PortraitCache(new PortraitDiskStore(extra.apiOrigin), apiClient),
+);
+// Same bounded, deduplicated, origin-separated disk cache as portraits.
+// Constructing it performs no read. A photo disclosure mounts its pictures.
+export const yearPictures = new PortraitCache(
+  new PortraitDiskStore(extra.apiOrigin, 8 * 1024 * 1024, 96, 'year-picture'),
+  { getPortrait: (path) => apiClient.getYearPicture(path) },
+  3,
+  Date.now,
+  { keyPattern: yearPictureKeyPattern, path: yearPicturePath },
 );

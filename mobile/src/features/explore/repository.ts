@@ -2,10 +2,12 @@ import type { ApiClient } from '../../api/client';
 import { decodeTide } from '../reports/model';
 import { decodeYear, decodeBallot } from './model';
 import { invalid } from '../../api/validation';
+import { decodePictures } from './pictures';
 export class ExploreRepository {
   constructor(private client: Pick<ApiClient, 'get' | 'getForAction'>) {}
   year = (year: number) =>
     this.client.get(`/years/${year}.json`, (raw) => decodeYear(raw, year));
+  pictures = () => this.client.get('/years/pictures.json', decodePictures);
   ballot = (path: string) =>
     this.client.get(path, (raw) =>
       decodeBallot(

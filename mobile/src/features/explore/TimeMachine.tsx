@@ -1,5 +1,4 @@
 import { useCallback, useMemo, useState } from 'react';
-import { View } from 'react-native';
 import { catalogs } from '../../api/runtime';
 import {
   Screen,
@@ -8,23 +7,21 @@ import {
   Text,
   Field,
   Button,
-  IconButton,
+  StepButtons,
+  MachineWritten,
   LinkRow,
   RowList,
   Disclosure,
   EmptyState,
 } from '../../design/primitives';
-import { rhythm } from '../../design/tokens';
 import { formatDate } from '../../design/format';
 import { useRead, ReadState, SourcesFold } from '../reports/parts';
 import { openRecord } from '../reports/open';
 import { explore } from './runtime';
 import { voicesNote, yearMachineNote, yearOpening } from './model';
-import { ExploreHeader, MachinePill } from './parts';
-import pictures from './pictures.json';
-import { Picture } from './Picture';
+import { ExploreHeader } from './parts';
+import { YearPictures } from './YearPictures';
 const loadBills = () => catalogs.bills();
-type Photo = (typeof pictures)['1998'][number];
 export default function TimeMachine() {
   const [input, setInput] = useState('2025'),
     [year, setYear] = useState<number | null>(null);
@@ -73,7 +70,6 @@ function YearView({
   const load = useCallback(() => explore.year(year), [year]),
     read = useRead(load),
     bills = useRead(loadBills);
-  const photos = (pictures as Record<string, Photo[]>)[year] ?? [];
   const prose = yearOpening(read.record?.data.brief.answer ?? '');
   const yearBills = useMemo(
     () =>
@@ -86,32 +82,25 @@ function YearView({
   );
   return (
     <Group>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: rhythm.tight,
+      <Text variant="figure" testID="tm-selected-year">
+        {year}
+      </Text>
+      <StepButtons
+        previous={{
+          label: 'Previous year',
+          accessibilityLabel: `Previous year, ${year - 1}`,
+          disabled: year === 1998,
+          onPress: () => onYear(year - 1),
+          testID: 'tm-previous',
         }}
-      >
-        <IconButton
-          symbol="chevron.left"
-          accessibilityLabel="Previous year"
-          disabled={year === 1998}
-          onPress={() => onYear(year - 1)}
-          testID="tm-previous"
-        />
-        <Text variant="figure" testID="tm-selected-year">
-          {year}
-        </Text>
-        <IconButton
-          symbol="chevron.right"
-          accessibilityLabel="Next year"
-          disabled={year === 2026}
-          onPress={() => onYear(year + 1)}
-          testID="tm-next"
-        />
-      </View>
+        next={{
+          label: 'Next year',
+          accessibilityLabel: `Next year, ${year + 1}`,
+          disabled: year === 2026,
+          onPress: () => onYear(year + 1),
+          testID: 'tm-next',
+        }}
+      />
       <ReadState
         read={read}
         citation="OPAX pre-generated year brief and voices"
@@ -120,7 +109,10 @@ function YearView({
         {(data) => (
           <Group>
             <Section title="The year in brief">
-              <MachinePill note={yearMachineNote(data)} />
+              <MachineWritten
+                explanation={yearMachineNote(data)}
+                testID="explore-machine-pill"
+              />
               <Text wordSafe testID="tm-brief">
                 {prose.lead}
               </Text>
@@ -198,18 +190,8 @@ function YearView({
               </Disclosure>
             </Section>
             <Section title="The year in pictures">
-              <Disclosure
-                label={`Photographs (${photos.length})`}
-                testID="tm-photos"
-              >
-                <Group>
-                  {photos.map((p) => (
-                    <Group key={p.file}>
-                      <Picture file={p.file} ratio={p.width / p.height} />
-                      <Text wordSafe>{p.caption}</Text>
-                    </Group>
-                  ))}
-                </Group>
+              <Disclosure label="Photographs" testID="tm-photos">
+                {() => <YearPictures year={year} />}
               </Disclosure>
             </Section>
           </Group>

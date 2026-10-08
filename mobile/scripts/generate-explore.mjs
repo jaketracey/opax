@@ -1,5 +1,5 @@
 // Regenerate from checked-in public exports only. Never fetch the live Worker.
-import { readFileSync, writeFileSync, mkdirSync, copyFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { Buffer } from 'node:buffer';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
@@ -68,35 +68,4 @@ writeFileSync(
     2,
   ) + '\n',
 );
-const pictures = read('years/pictures.json');
-const assetRoot = resolve(mobile, 'assets/explore');
-mkdirSync(assetRoot, { recursive: true });
-const assets = [];
-for (const [year, rows] of Object.entries(pictures)) {
-  for (const picture of rows) {
-    if (
-      !picture.file.startsWith(`years/pictures/${year}/`) ||
-      picture.file.includes('..')
-    )
-      throw new Error('Unsafe picture');
-    const filename = `${year}-${picture.file.split('/').at(-1)}`;
-    copyFileSync(
-      resolve(publicRoot, picture.file),
-      resolve(assetRoot, filename),
-    );
-    assets.push(
-      `    case ${JSON.stringify(picture.file)}: return <Image source={require('../../../assets/explore/${filename}')} style={style} resizeMode="contain" accessible={false} />;`,
-    );
-  }
-}
-writeFileSync(
-  resolve(output, 'pictures.json'),
-  JSON.stringify(pictures, null, 2) + '\n',
-);
-writeFileSync(
-  resolve(output, 'Picture.tsx'),
-  `// Unchanged, bundled web photographs; credits are in Sources and licences.\nimport { Image } from 'react-native';\nexport function Picture({file,ratio}:{file:string;ratio:number}) {\n  const style={width:'100%' as const,height:undefined,aspectRatio:ratio};\n  switch(file) {\n${assets.join('\n')}\n    default: return null;\n  }\n}\n`,
-);
-console.log(
-  `Generated 48 eight-question rounds and ${assets.length} unchanged photographs from local exports.`,
-);
+console.log('Generated 48 eight-question rounds from local exports.');
