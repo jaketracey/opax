@@ -1,0 +1,145 @@
+appId: au.com.opax.app
+name: 50 Community public reading, guidelines and discussion actions
+---
+- launchApp:
+    clearState: true
+    permissions: {}
+- assertVisible:
+    id: today-screen
+- extendedWaitUntil:
+    notVisible:
+      id: launch-handoff
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/50-today-entry
+- tapOn: Account and about
+- takeScreenshot: ${EVIDENCE}/50-account-entry
+- scrollUntilVisible:
+    element:
+      id: account-community
+    timeout: 30000
+- tapOn:
+    id: account-community
+- extendedWaitUntil:
+    visible:
+      id: community-thread-discussion-a
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/50-public-feed
+- tapOn:
+    id: community-thread-discussion-a
+- assertVisible: Reading a bill together
+- takeScreenshot: ${EVIDENCE}/50-public-thread
+- tapOn: Contact OPAX support
+- assertVisible: https://opax.invalid/support
+- takeScreenshot: ${EVIDENCE}/50-support
+- tapOn: OK
+- tapOn: Done
+- tapOn: Done
+- runFlow:
+    file: support/account-sign-in.yaml
+    env:
+      ACCOUNT_EMAIL: community@example.invalid
+- extendedWaitUntil:
+    visible:
+      id: account-sheet
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: account-community
+    timeout: 30000
+- tapOn:
+    id: account-community
+- scrollUntilVisible:
+    element:
+      id: community-thread-discussion-a
+    timeout: 30000
+- tapOn:
+    id: community-thread-discussion-a
+- scrollUntilVisible:
+    element:
+      id: community-compose
+    timeout: 30000
+- tapOn:
+    id: community-compose
+- inputText: A fixture-only reply about the original record.
+- tapOn:
+    id: community-send
+- assertVisible:
+    id: community-guidelines
+- takeScreenshot: ${EVIDENCE}/50-guidelines
+- scrollUntilVisible:
+    element:
+      id: community-agree
+    timeout: 60000
+- takeScreenshot: ${EVIDENCE}/50-guidelines-terms
+- tapOn:
+    id: community-agree
+- scrollUntilVisible:
+    element:
+      id: community-send
+    timeout: 30000
+- tapOn:
+    id: community-send
+- scrollUntilVisible:
+    element:
+      id: community-notice
+    direction: UP
+    timeout: 30000
+- assertVisible: Reply posted.*
+- takeScreenshot: ${EVIDENCE}/50-reply-posted
+- scrollUntilVisible:
+    element:
+      id: community-like
+    timeout: 30000
+- tapOn:
+    id: community-like
+- assertVisible: Unlike
+- scrollUntilVisible:
+    element:
+      id: community-save
+    timeout: 30000
+- tapOn:
+    id: community-save
+- assertVisible: Unsave
+- scrollUntilVisible:
+    element:
+      id: community-report-thread
+    timeout: 30000
+- tapOn:
+    id: community-report-thread
+- tapOn:
+    id: community-report-reason
+- inputText: Fixture report for moderator review.
+- hideKeyboard
+- tapOn:
+    id: community-report-submit
+- assertVisible: Your report has been sent to moderators.
+- takeScreenshot: ${EVIDENCE}/50-report-discussion
+- tapOn: Discussion
+- scrollUntilVisible:
+    element:
+      id: community-report-reply-reply-a
+    timeout: 30000
+- tapOn:
+    id: community-report-reply-reply-a
+- tapOn:
+    id: community-report-reason
+- inputText: Fixture reply concern for moderator review.
+- hideKeyboard
+- tapOn:
+    id: community-report-submit
+- assertVisible: Your report has been sent to moderators.
+- takeScreenshot: ${EVIDENCE}/50-report-reply
+- scrollUntilVisible:
+    element:
+      id: community-home
+    timeout: 30000
+- tapOn:
+    id: community-home
+- scrollUntilVisible:
+    element:
+      id: community-new
+    direction: UP
+    timeout: 30000
+- tapOn:
+    id: community-new
+- takeScreenshot: ${EVIDENCE}/50-new-discussion

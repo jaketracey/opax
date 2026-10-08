@@ -1,3 +1,4 @@
+import { communityFromWebPath } from '../features/community/routes';
 import { moneyFromWebPath } from '../features/money-public/routes';
 import { startPartyTiming } from '../features/people/party-timing';
 import { partySlug } from '../design/party';
@@ -37,6 +38,7 @@ export const billRoute = (key: string, section?: 'divisions') => ({
 export function fromWebPath(
   path: string,
 ):
+  | ReturnType<typeof communityFromWebPath>
   | ReturnType<typeof personRoute>
   | ReturnType<typeof billRoute>
   | ReturnType<typeof directoryRoute>
@@ -54,6 +56,8 @@ export function fromWebPath(
   | ReturnType<typeof topicRoute>
   | { pathname: '/reports' | '/topics' | '/stats' | '/methods' }
   | ReturnType<typeof moneyFromWebPath> {
+  const community = communityFromWebPath(path);
+  if (community) return community;
   const money = moneyFromWebPath(path);
   if (money) return money;
   if (path === '/money' || path === '/money/') return moneyRoute();

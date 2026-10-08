@@ -1,3 +1,4 @@
+import { communityFixture } from './community-fixture';
 // Test server only. No provider, email delivery, Worker imports or outbound I/O.
 import { randomBytes, randomUUID } from 'node:crypto';
 import { readFileSync } from 'node:fs';
@@ -15,6 +16,7 @@ import {
 import deletionFixture from '../modules/opax-voice/ios/OpaxVoiceCore/Tests/OpaxVoiceCoreTests/Fixtures/worker-deletion.json';
 
 type Scenario =
+  | 'community'
   | 'happy'
   | 'deadline'
   | 'exhausted'
@@ -183,6 +185,7 @@ export async function createVoiceFixture(
     request: IncomingMessage,
     response: ServerResponse,
   ): Promise<boolean> {
+    if (await communityFixture(request, response, accountFor(request))) return true;
     if (await chatFixture(request, response, accountFor(request))) return true;
     const path = request.url ?? '';
     const routes: Record<string, string> = {
@@ -261,6 +264,7 @@ export async function createVoiceFixture(
         const scenario = email.split('@')[0] as Scenario;
         if (
           ![
+            'community',
             'happy',
             'deadline',
             'exhausted',

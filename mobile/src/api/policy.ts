@@ -1,3 +1,4 @@
+import { communityRequestAllowed } from '../features/community/policy';
 import { isPeoplePaidPath } from '../features/people/policy';
 import { isPortraitPath } from './portrait-policy';
 import { allowsReportsPath } from './reports-policy';
@@ -128,6 +129,7 @@ export function assertAllowedPath(path: string): void {
     throw new Error('Route is outside the public catalog allow-list');
   const params = new URLSearchParams(query);
   if (path.split('?').length > 2) throw new Error('Invalid catalog query');
+  if (communityRequestAllowed(path)) return;
   if (allowsReportsPath(path)) return;
   if (isPeoplePaidPath(path)) return;
   // Build 7 Ask. POST admission is separate from the catalog GET client.

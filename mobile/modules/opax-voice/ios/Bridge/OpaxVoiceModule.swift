@@ -49,6 +49,7 @@ public final class OpaxVoiceModule: Module {
         AsyncFunction("logout") { await self.controller.logout() }
         AsyncFunction("requestDeletionCode") { await self.controller.requestDeletionCode() }
         AsyncFunction("deleteAccount") { (challenge: String, code: String) in await self.controller.deleteAccount(challenge, code) }
+        AsyncFunction("communityRequest") { (path: String, method: String, body: String?) in await self.controller.communityRequest(path, method, body) }
         AsyncFunction("chatRequest") { (path: String, method: String, body: String?) in await self.controller.chatRequest(path, method, body) }
     }
 }

@@ -4,15 +4,31 @@
 set -euo pipefail
 if [ "${OPAX_E2E_TEST_SUPERVISED:-0}" != 1 ]; then
   # A stuck/stopped child must fail QA, not hold the suite forever. The parent
-  # supervises only process groups whose command names this unique scratch tree.
+  # supervises only process groups descended from its own child; no arguments are read.
   exec python3 - "$0" "${OPAX_E2E_TEST_TIMEOUT_SECONDS:-300}" <<'PY'
-import os, shutil, signal, subprocess, sys, tempfile
+import os, shutil, signal, subprocess, sys, tempfile, time
 limit = int(sys.argv[2])
 if limit <= 0:
     raise SystemExit('Test timeout must be positive')
 scratch = tempfile.mkdtemp(prefix='opax-e2e-test.')
 env = dict(os.environ, OPAX_E2E_TEST_SUPERVISED='1', OPAX_E2E_TEST_SCRATCH=scratch)
 child = subprocess.Popen(['bash', sys.argv[1]], env=env, start_new_session=True)
+owned_groups = {child.pid}
+def observe_children():
+    pending = [child.pid]
+    seen = set()
+    while pending:
+        pid = pending.pop()
+        if pid in seen:
+            continue
+        seen.add(pid)
+        result = subprocess.run(['pgrep', '-P', str(pid)], capture_output=True, text=True)
+        pending.extend(int(v) for v in result.stdout.split() if v.isdigit())
+        try:
+            owned_groups.add(os.getpgid(pid))
+        except ProcessLookupError:
+            pass
+
 def stop():
     try:
         os.killpg(child.pid, signal.SIGCONT)
@@ -30,7 +46,13 @@ signal.signal(signal.SIGTERM, interrupted)
 signal.signal(signal.SIGINT, interrupted)
 try:
     try:
-        rc = child.wait(timeout=limit)
+        deadline = time.monotonic() + limit
+        while child.poll() is None:
+            observe_children()
+            if time.monotonic() >= deadline:
+                raise subprocess.TimeoutExpired('owned harness', limit)
+            time.sleep(0.2)
+        rc = child.returncode
     except subprocess.TimeoutExpired:
         print(f'e2e harness: overall timeout after {limit}s', file=sys.stderr)
         stop()
@@ -38,9 +60,7 @@ try:
 finally:
     # qa-locked and the gate waiter lead separate groups; remove any leftovers
     # even if the supervised shell was killed before its EXIT trap ran.
-    rows = subprocess.check_output(['/bin/ps', '-axo', 'pid=,pgid=,command='], text=True)
-    groups = {int(r[1]) for line in rows.splitlines() if len(r := line.split(None, 2)) == 3 and scratch in r[2]}
-    for group in groups:
+    for group in owned_groups:
         if group != os.getpgrp():
             try:
                 os.killpg(group, signal.SIGKILL)

@@ -1,3 +1,4 @@
+import { communityFromWebPath, communitySharePath } from '../features/community/routes';
 import { Alert, Linking } from 'react-native';
 import { router } from 'expo-router';
 import { fromWebPath, searchRouteFromWebPath } from './routes';
@@ -248,6 +249,12 @@ export function canonicalUrl(path: string, anchor?: string): string {
   }
   if (pathname === '/bills' && path.split('?')[1]?.split('#')[0] === 'view=divisions') {
     url.search = '?view=divisions';
+  }
+  if (pathname === '/community') {
+    const route = communityFromWebPath(path);
+    if (!route) throw new Error('Invalid community share link');
+    const canonical = communitySharePath(route.params.view, route.params.id);
+    url.search = canonical.split('?')[1] ?? '';
   }
   // The anchor too: "token", "code" or "ask" is no section.
   const reason = forbiddenOpaxRoute(url);

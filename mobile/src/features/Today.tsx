@@ -88,6 +88,9 @@ export default function Today() {
           onPress={() => router.push('/public-money')}
         />
       </Section>
+      <Section accent="people">
+        <LinkRow title="Community" detail="Questions, sources and conversations worth following" testID="today-community" onPress={() => router.push('/community/home')} />
+      </Section>
       <ReportsEntry />
       <Spotlight />
       <FromRecord />
