@@ -1,5 +1,6 @@
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import AskScreen from '../src/features/ask/AskScreen';
+import clarify from '../scripts/fixtures/ask-clarify.json';
 import { client } from '../src/api/runtime';
 import { askSession } from '../src/features/ask/session';
 import { reconcileChats, pushChat } from '../src/features/ask/sync';
@@ -76,6 +77,10 @@ jest.mock('../src/design/primitives', () => {
     },
   };
 });
+// An answer's own rendering is covered elsewhere; here it only has to exist.
+jest.mock('../src/features/ask/AnswerView', () => ({
+  AnswerView: () => null,
+}));
 jest.mock('../src/features/ask/Options', () => ({
   topics: { housing: 'Housing' },
   Options: () => null,
@@ -239,6 +244,83 @@ test('a submitted question shows its live stages with Cancel and is revealed bel
   );
   await act(async () => {
     // Let the reveal's fallback frames run before teardown.
+    await new Promise((r) => setTimeout(r, 50));
+    view!.unmount();
+    askSession.start();
+  });
+});
+test('a follow-up with nothing to search on asks for a full question, with the suggestion one tap away', async () => {
+  const answer = {
+    answer: 'David Pocock’s proposals centre on surplus Commonwealth land.',
+    citations: {},
+    sources: [],
+  };
+  jest
+    .mocked(client.askPost)
+    .mockReset()
+    .mockResolvedValueOnce(answer)
+    .mockResolvedValueOnce(clarify)
+    .mockResolvedValueOnce(answer);
+  let view: ReactTestRenderer;
+  await act(async () => {
+    view = create(<AskScreen />);
+  });
+  const byId = (id: string) => view!.root.findAllByProps({ testID: id });
+  await act(async () => {
+    byId('ask-question')[0]!.props.onChangeText(
+      'What has David Pocock proposed about housing affordability?',
+    );
+  });
+  await act(async () => {
+    await byId('ask-submit')[0]!.props.onPress();
+  });
+  await act(async () => {
+    byId('ask-followup-field')[0]!.props.onChangeText('High');
+  });
+  await act(async () => {
+    await byId('ask-followup-submit')[0]!.props.onPress();
+  });
+  // Sent as a follow-up, with the conversation as context.
+  expect(jest.mocked(client.askPost).mock.calls[1]?.[1]).toMatchObject({
+    question: 'High',
+    context: [
+      {
+        author: 'user',
+        text: 'What has David Pocock proposed about housing affordability?',
+      },
+      { author: 'answer', text: answer.answer },
+    ],
+  });
+  const turn = byId('ask-turn')[0]!;
+  expect(
+    turn.findAllByProps({ testID: 'ask-clarify-question' })[0]!.props.children,
+  ).toBe('High');
+  expect(
+    turn.findAllByProps({ testID: 'ask-clarify-message' })[0]!.props.message,
+  ).toBe('That’s too short to search the record on. Did you mean:');
+  const suggestion = turn.findAllByProps({
+    testID: 'ask-clarify-suggestion',
+  })[0]!;
+  expect(suggestion.props.title).toBe(clarify.suggested_question);
+  // No answer, no "Understood as", and the earlier answer's follow-up box stays.
+  expect(byId('ask-understood')).toEqual([]);
+  expect(byId('ask-user-question').map((n) => n.props.children)).not.toContain(
+    'High',
+  );
+  expect(byId('ask-followup-field')).not.toEqual([]);
+  expect(askSession.snapshot().thread).toHaveLength(2);
+  await act(async () => {
+    await suggestion.props.onPress();
+  });
+  const asked = jest.mocked(client.askPost).mock.calls[2]?.[1] as {
+    question: string;
+    context: { text: string }[];
+  };
+  expect(asked.question).toBe(clarify.suggested_question);
+  expect(asked.context.map((c) => c.text)).not.toContain('High');
+  expect(byId('ask-clarify')).toEqual([]);
+  expect(askSession.snapshot().thread).toHaveLength(4);
+  await act(async () => {
     await new Promise((r) => setTimeout(r, 50));
     view!.unmount();
     askSession.start();

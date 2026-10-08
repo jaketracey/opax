@@ -153,6 +153,49 @@ name: 30 Build a question, streamed answer, native bill citation and grounded fo
     id: ask-user-question
     text: What else was discussed\?
 - takeScreenshot: ${EVIDENCE}/30-typed-followup
+# A follow-up with nothing to search on is a prompt, not an answer to the
+# previous question (Jake's "High", 8 Oct), with its suggestion one tap away.
+- scrollUntilVisible:
+    element:
+      id: ask-followup-field
+    centerElement: true
+    speed: 20
+    timeout: 90000
+- tapOn:
+    id: ask-followup-field
+- inputText: High
+- scrollUntilVisible:
+    element:
+      id: ask-followup-submit
+    centerElement: true
+    speed: 20
+    timeout: 90000
+- tapOn:
+    id: ask-followup-submit
+- scrollUntilVisible:
+    element:
+      id: ask-clarify-question
+    direction: DOWN
+    centerElement: true
+    visibilityPercentage: 10
+    timeout: 90000
+- assertVisible: That’s too short to search the record on\. Did you mean:
+- assertNotVisible: 'Understood as: .*'
+- assertVisible:
+    id: ask-clarify-suggestion
+- takeScreenshot: ${EVIDENCE}/30-clarify
+- tapOn:
+    id: ask-clarify-suggestion
+- scrollUntilVisible:
+    element:
+      id: ask-user-question
+      text: What did parliament say about the Interactive Gambling.*
+    direction: DOWN
+    centerElement: true
+    visibilityPercentage: 10
+    timeout: 90000
+- assertNotVisible:
+    id: ask-clarify
 # A scoped draft returns the composer to view after a scrolled answer.
 - openLink: opax://bill/au-federal-r7534
 - scrollUntilVisible:

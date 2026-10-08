@@ -187,6 +187,13 @@ export default function AskScreen() {
     if (!s.stage) lastStage.current = null;
   }, [s.stage]);
   useEffect(() => {
+    if (s.clarify)
+      AccessibilityInfo.announceForAccessibilityWithOptions(
+        clarifyCopy(!!s.clarify.suggestion),
+        { queue: true },
+      );
+  }, [s.clarify]);
+  useEffect(() => {
     if (s.error) pinCurrentTurn();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [s.error]);
@@ -352,11 +359,13 @@ export default function AskScreen() {
     );
   }
   const names = [...people.keys()].sort((a, b) => a.localeCompare(b));
-  // The current turn starts at the last question. A failed question has
-  // already left the thread, so it is shown from the retry copy instead.
+  // The current turn starts at the last question. A failed question, or one
+  // the Worker asked to have put in full, never joined the thread, so it is
+  // shown from its own copy instead.
   const failed = !!s.error && s.error.code !== 'empty',
     lastQuestion = s.thread.map((m) => m.role).lastIndexOf('user'),
-    split = failed || lastQuestion < 0 ? s.thread.length : lastQuestion,
+    split =
+      failed || s.clarify || lastQuestion < 0 ? s.thread.length : lastQuestion,
     earlier = s.thread.slice(0, split),
     current = s.thread.slice(split);
   function renderTurn(turn: (typeof s.thread)[number], i: number) {
@@ -509,7 +518,7 @@ export default function AskScreen() {
           </Group>
         ) : null}
         {earlier.map((turn, i) => renderTurn(turn, i))}
-        {current.length || s.busy || s.error || s.notice ? (
+        {current.length || s.busy || s.error || s.notice || s.clarify ? (
           <View
             testID="ask-turn"
             style={[
@@ -536,6 +545,28 @@ export default function AskScreen() {
               <Heading level={2} testID="ask-failed-question">
                 {retryQuestion}
               </Heading>
+            ) : null}
+            {s.clarify && !s.busy ? (
+              <Group testID="ask-clarify">
+                <Heading level={2} testID="ask-clarify-question">
+                  {s.clarify.question}
+                </Heading>
+                <EmptyState
+                  icon="text.bubble"
+                  message={clarifyCopy(!!s.clarify.suggestion)}
+                  testID="ask-clarify-message"
+                />
+                {s.clarify.suggestion ? (
+                  <RowList>
+                    <LinkRow
+                      title={s.clarify.suggestion}
+                      onPress={() => void submit(s.clarify!.suggestion)}
+                      accessibilityHint="Asks this question"
+                      testID="ask-clarify-suggestion"
+                    />
+                  </RowList>
+                ) : null}
+              </Group>
             ) : null}
             {s.busy ? (
               <AskProgress
@@ -688,6 +719,12 @@ export default function AskScreen() {
       ) : null}
     </>
   );
+}
+// Nothing was searched for a follow-up like "High" or "ok": say so gently.
+function clarifyCopy(suggested: boolean) {
+  return suggested
+    ? 'That’s too short to search the record on. Did you mean:'
+    : 'That’s too short to search the record on. Ask a full question, naming the person, party or topic.';
 }
 const styles = StyleSheet.create({
   conversation: {
