@@ -21,6 +21,9 @@ export function AccountScreen() {
   return (
     <Screen testID="account-sheet">
       <AccountSection />
+      <Section title="Community" accent="people">
+        <LinkRow title="Community discussions" detail="Follow the record together" testID="account-community" onPress={() => router.push('/community/home')} />
+      </Section>
       <Section title="About OPAX" accent="people">
         <Text variant="subheading">
           Open Parliamentary Accountability Exchange

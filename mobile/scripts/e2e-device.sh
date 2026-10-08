@@ -112,6 +112,7 @@ for journey in "$@"; do
   assert_device_lock
   rc=0
   qa_maestro_run "$OUT/maestro.log" "$OUT/maestro" --device "$UDID" test --test-output-dir "$OUT/maestro" --debug-output "$OUT/maestro" --format junit --output "$OUT/$journey_name-report.xml" -e EVIDENCE=screenshots -e FIXTURE_PORT="${OPAX_FIXTURE_PORT:-8910}" -e REMOTE_SHARE_UI="${OPAX_REMOTE_SHARE_UI:-false}" -e CONTENT_SIZE="$SIZE" "$journey" || rc=$?
+  printf '%s exit=%s\n' "$journey_name" "$rc" >> "$OUT/maestro-exits.txt"
   if [ "$rc" != 0 ]; then cat "$OUT/maestro.log" >&2; exit "$rc"; fi
   # Journey 32 copies BibTeX in the native reader. Verify its actual clipboard
   # bytes before this same lock owner restores and shuts down the simulator.

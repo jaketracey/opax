@@ -1,0 +1,17 @@
+appId: au.com.opax.app
+---
+- launchApp:
+    clearState: true
+    permissions: {}
+- assertVisible:
+    id: today-screen
+- extendedWaitUntil:
+    notVisible:
+      id: launch-handoff
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/community-before-today
+- tapOn: Account and about
+- assertVisible:
+    id: account-sheet
+- takeScreenshot: ${EVIDENCE}/community-before-account
+- tapOn: Done

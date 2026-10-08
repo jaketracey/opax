@@ -75,7 +75,7 @@ cancel_wait() {
   kill -CONT -- "-$WAITER_PID" 2>/dev/null || true
   deadline=$(($(date +%s) + 2))
   while kill -0 "$WAITER_PID" 2>/dev/null && [ "$(date +%s)" -lt "$deadline" ]; do sleep 0.1; done
-  if pgrep -g "$WAITER_PID" >/dev/null 2>&1; then
+  if /bin/ps -axo pgid= | awk -v group="$WAITER_PID" '$1 == group {found=1} END {exit !found}'; then
     kill -KILL -- "-$WAITER_PID" 2>/dev/null || true
   fi
   wait "$WAITER_PID" 2>/dev/null || true

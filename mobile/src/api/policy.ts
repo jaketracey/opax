@@ -1,3 +1,4 @@
+import { communityRequestAllowed } from '../features/community/policy';
 import { isPeoplePaidPath } from '../features/people/policy';
 import {
   isExplorePaidPath,
@@ -134,6 +135,7 @@ export function assertAllowedPath(path: string): void {
     throw new Error('Route is outside the public catalog allow-list');
   const params = new URLSearchParams(query);
   if (path.split('?').length > 2) throw new Error('Invalid catalog query');
+  if (communityRequestAllowed(path)) return;
   if (allowsReportsPath(path)) return;
   if (isExplorePaidPath(path) || isExploreStaticPath(path)) return;
   if (isYearPicturePath(path)) return;

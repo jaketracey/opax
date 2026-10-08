@@ -1,0 +1,225 @@
+appId: au.com.opax.app
+name: 51 Community members, safety, messages, activity and reading lists
+---
+- launchApp:
+    clearState: true
+    permissions: {}
+- tapOn: Account and about
+- runFlow:
+    file: support/account-sign-in.yaml
+    env:
+      ACCOUNT_EMAIL: community@example.invalid
+- extendedWaitUntil:
+    visible:
+      id: account-sign-out
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: account-community
+    timeout: 30000
+- tapOn:
+    id: account-community
+- scrollUntilVisible:
+    element:
+      id: community-open-members
+    timeout: 30000
+- tapOn:
+    id: community-open-members
+- takeScreenshot: ${EVIDENCE}/51-members
+- tapOn:
+    id: community-member-reader-a
+- takeScreenshot: ${EVIDENCE}/51-profile
+- scrollUntilVisible:
+    element:
+      id: community-follow
+    timeout: 30000
+- tapOn:
+    id: community-follow
+- assertVisible: Unfollow
+- scrollUntilVisible:
+    element:
+      id: community-report-profile
+    timeout: 30000
+- tapOn:
+    id: community-report-profile
+- tapOn:
+    id: community-report-reason
+- inputText: Fixture public profile concern.
+- hideKeyboard
+- tapOn:
+    id: community-report-submit
+- assertVisible: Your report has been sent to moderators.
+- takeScreenshot: ${EVIDENCE}/51-report-profile
+- tapOn: Member
+- scrollUntilVisible:
+    element:
+      id: community-block
+    timeout: 30000
+- tapOn:
+    id: community-block
+- tapOn: Block
+- assertVisible:
+    id: community-blocked
+- takeScreenshot: ${EVIDENCE}/51-blocked
+- scrollUntilVisible:
+    element:
+      id: community-home
+    timeout: 30000
+- tapOn:
+    id: community-home
+- assertNotVisible:
+    id: community-thread-discussion-a
+- takeScreenshot: ${EVIDENCE}/51-blocked-feed
+- scrollUntilVisible:
+    element:
+      id: community-open-members
+    timeout: 30000
+- tapOn:
+    id: community-open-members
+- assertNotVisible:
+    id: community-member-reader-a
+- tapOn:
+    id: community-member-reader-b
+- scrollUntilVisible:
+    element:
+      id: community-message
+    timeout: 30000
+- tapOn:
+    id: community-message
+- takeScreenshot: ${EVIDENCE}/51-message-thread
+- scrollUntilVisible:
+    element:
+      id: community-report-message-message-a
+    timeout: 30000
+- tapOn:
+    id: community-report-message-message-a
+- tapOn:
+    id: community-report-reason
+- inputText: Fixture received message concern.
+- hideKeyboard
+- tapOn:
+    id: community-report-submit
+- assertVisible: Your report has been sent to moderators.
+- takeScreenshot: ${EVIDENCE}/51-report-message
+- tapOn: Conversation
+- scrollUntilVisible:
+    element:
+      id: community-mark-read
+    timeout: 30000
+- tapOn:
+    id: community-mark-read
+- scrollUntilVisible:
+    element:
+      id: community-compose
+    timeout: 30000
+- tapOn:
+    id: community-compose
+- inputText: Thanks for linking the original record.
+- tapOn:
+    id: community-send
+- runFlow:
+    when:
+      visible:
+        id: community-guidelines
+    commands:
+      - scrollUntilVisible:
+          element:
+            id: community-agree
+          timeout: 60000
+      - tapOn:
+          id: community-agree
+      - scrollUntilVisible:
+          element:
+            id: community-send
+          timeout: 30000
+      - tapOn:
+          id: community-send
+- scrollUntilVisible:
+    element:
+      id: community-inbox
+    timeout: 30000
+- tapOn:
+    id: community-inbox
+- takeScreenshot: ${EVIDENCE}/51-inbox
+- scrollUntilVisible:
+    element:
+      id: community-home
+    timeout: 30000
+- tapOn:
+    id: community-home
+- scrollUntilVisible:
+    element:
+      id: community-open-activity
+    timeout: 30000
+- tapOn:
+    id: community-open-activity
+- takeScreenshot: ${EVIDENCE}/51-activity
+- scrollUntilVisible:
+    element:
+      id: community-activity-read
+    timeout: 30000
+- tapOn:
+    id: community-activity-read
+- scrollUntilVisible:
+    element:
+      id: community-home
+    timeout: 30000
+- tapOn:
+    id: community-home
+- scrollUntilVisible:
+    element:
+      id: community-open-lists
+    timeout: 30000
+- tapOn:
+    id: community-open-lists
+- takeScreenshot: ${EVIDENCE}/51-reading-lists
+- tapOn:
+    id: community-list-list-a
+- takeScreenshot: ${EVIDENCE}/51-reading-list
+- scrollUntilVisible:
+    element:
+      id: community-list-share
+    timeout: 30000
+- tapOn:
+    id: community-list-share
+- assertVisible: https://opax.invalid/community\?view=list&id=list-a
+- takeScreenshot: ${EVIDENCE}/51-list-share
+- tapOn: OK
+- scrollUntilVisible:
+    element:
+      id: community-home
+    timeout: 30000
+- tapOn:
+    id: community-home
+- scrollUntilVisible:
+    element:
+      id: community-open-profile
+    timeout: 30000
+- tapOn:
+    id: community-open-profile
+- takeScreenshot: ${EVIDENCE}/51-own-profile
+- scrollUntilVisible:
+    element:
+      id: community-home
+    timeout: 30000
+- tapOn:
+    id: community-home
+- scrollUntilVisible:
+    element:
+      id: community-open-settings
+    timeout: 30000
+- tapOn:
+    id: community-open-settings
+- takeScreenshot: ${EVIDENCE}/51-settings
+- scrollUntilVisible:
+    element:
+      id: community-show-blocks
+    timeout: 30000
+- tapOn:
+    id: community-show-blocks
+- scrollUntilVisible:
+    element:
+      text: Casey Fixture
+    timeout: 30000
+- assertVisible: Unblock
+- takeScreenshot: ${EVIDENCE}/51-blocked-list

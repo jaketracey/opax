@@ -1,0 +1,26 @@
+appId: au.com.opax.app
+name: Community design review at AX5
+---
+- launchApp:
+    clearState: true
+    permissions: {}
+- extendedWaitUntil:
+    notVisible:
+      id: launch-handoff
+    timeout: 30000
+- openLink: opax://community/thread?id=discussion-a
+- extendedWaitUntil:
+    visible: Reading a bill together
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/community-design-ax5-thread
+- scrollUntilVisible:
+    element:
+      id: community-report-thread
+    timeout: 60000
+- assertVisible:
+    id: community-like
+- assertVisible:
+    id: community-save
+- assertVisible:
+    id: community-share-thread
+- takeScreenshot: ${EVIDENCE}/community-design-ax5-actions

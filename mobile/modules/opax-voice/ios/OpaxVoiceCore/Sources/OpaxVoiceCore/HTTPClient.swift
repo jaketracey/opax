@@ -30,7 +30,7 @@ public struct RoutePolicy: Sendable {
     #endif
     private init(origin: URL, loopback: Bool) { self.origin = origin; self.loopback = loopback }
     func permits(_ url: URL, method: String, webSocket: Bool = false) -> Bool {
-        if !webSocket, permitsChat(url, method: method) { return true }
+        if !webSocket, permitsCommunity(url, method: method) || permitsChat(url, method: method) { return true }
         guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
               components.user == nil, components.password == nil, components.fragment == nil,
               url.host == origin.host, url.port == origin.port,
@@ -136,6 +136,30 @@ public actor VoiceHTTPClient {
         guard !revokedCredentials.contains(value) else { return nil }
         guard value.expiresAt > (await clock.now()) else { try await clearCredential(value); return nil }
         return value
+    }
+    public func communityRequest(path: String, method: String, body: String?) async throws -> CommunityResponse {
+        guard path.hasPrefix("/api/community/"), !path.contains("\\"), !path.contains("#"),
+              path.rangeOfCharacter(from: .whitespacesAndNewlines) == nil,
+              let url = URL(string: path, relativeTo: policy.origin)?.absoluteURL,
+              policy.permitsCommunity(url, method: method),
+              (["POST", "PATCH"].contains(method)) == (body != nil),
+              (body?.utf8.count ?? 0) <= 16000 else { throw VoiceFailure.forbidden }
+        let sent = try await credential()
+        let name = String(url.path.dropFirst(15))
+        let publicRead = method == "GET" && (name == "status" || name == "threads" || name.range(of: "^(threads|members|lists)/[A-Za-z0-9_-]{1,64}$", options: .regularExpression) != nil)
+        guard publicRead || sent != nil else { throw VoiceFailure.signedOut }
+        var request = URLRequest(url: url)
+        request.httpMethod = method; request.httpBody = body.map { Data($0.utf8) }; request.timeoutInterval = 15
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        if body != nil { request.setValue("application/json", forHTTPHeaderField: "Content-Type") }
+        #if DEBUG || OPAX_VOICE_E2E
+        try VoiceTestSafety.validate(request)
+        #endif
+        let response = try await transport.send(policy.decorate(request, credential: sent))
+        if response.status == 401 { try await clearCredential(sent) }
+        guard !(300..<400).contains(response.status), response.body.count <= 2 * 1024 * 1024,
+              let text = String(data: response.body, encoding: .utf8) else { throw VoiceFailure.invalidResponse }
+        return CommunityResponse(status: response.status, body: text)
     }
     public func chatRequest(path: String, method: String, body: String?) async throws -> String {
         guard path.hasPrefix("/api/community/chats"),
