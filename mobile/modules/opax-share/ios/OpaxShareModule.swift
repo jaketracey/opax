@@ -44,6 +44,18 @@ final class OpaxLinkItem: NSObject, UIActivityItemSource {
   }
 }
 
+// On iPad the sheet is a popover. Share actions sit in the navigation bar's
+// trailing buttons, so it points up at that corner, under the bar, rather
+// than at the window's top-left origin. On iPhone there is no popover.
+func anchorPopover(_ controller: UIViewController, in presenter: UIViewController) {
+  guard let popover = controller.popoverPresentationController, let view = presenter.view else { return }
+  let insets = view.safeAreaInsets
+  popover.sourceView = view
+  popover.sourceRect = CGRect(
+    x: view.bounds.maxX - insets.right - 44, y: insets.top, width: 1, height: 1)
+  popover.permittedArrowDirections = [.up]
+}
+
 struct ShareRequest: Record {
   @Field var url: String = ""
   @Field var title: String = ""
@@ -94,7 +106,7 @@ public final class OpaxShareModule: Module {
       do { try request.text.write(to: file, atomically: true, encoding: .utf8) }
       catch { try? FileManager.default.removeItem(at: directory); throw error }
       let controller = UIActivityViewController(activityItems: [file], applicationActivities: nil)
-      controller.popoverPresentationController?.sourceView = presenter.view
+      anchorPopover(controller, in: presenter)
       controller.completionWithItemsHandler = { _, completed, _, _ in
         try? FileManager.default.removeItem(at: directory)
         promise.resolve(completed)
@@ -118,7 +130,7 @@ public final class OpaxShareModule: Module {
       }
       let item = OpaxLinkItem(url: url, title: request.title, icon: self.appIcon())
       let controller = UIActivityViewController(activityItems: [item], applicationActivities: nil)
-      controller.popoverPresentationController?.sourceView = presenter.view
+      anchorPopover(controller, in: presenter)
       controller.completionWithItemsHandler = { _, completed, _, _ in
         promise.resolve(completed)
       }

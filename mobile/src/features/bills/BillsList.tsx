@@ -1,13 +1,14 @@
 import { PartialNotice, SavedCopyNotice } from '../CatalogNotice';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   FlatList,
   Keyboard,
   RefreshControl,
   StyleSheet,
   View,
+  type ViewToken,
 } from 'react-native';
-import { router } from 'expo-router';
+import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { ApiError } from '../../api/errors';
 import { billFacetsFor, billsFor } from '../../api/catalogs';
 import { catalogs } from '../../api/runtime';
@@ -20,14 +21,24 @@ import {
   Field,
   FilterChip,
   Group,
+  IconButton,
   InfoButton,
+  LayoutRegion,
   LinkRow,
   LoadingState,
   OfflineBanner,
+  SplitEmpty,
+  SplitLayout,
   StaleNotice,
   Text,
   errorMessage,
+  isPad,
+  useLayout,
 } from '../../design/primitives';
+import { shareRecord } from '../../navigation/share';
+import BillTextReader from '../records/BillTextReader';
+import BillDetail from './BillDetail';
+import type { BillEntry } from './navigation';
 import { chrome, colors, layout, spacing } from '../../design/tokens';
 import { billRoute } from '../../navigation/routes';
 import {
@@ -47,8 +58,22 @@ import { useCatalogRecord } from './useCatalogRecord';
 const FINEPRINT =
   'Bills, their dates and their divisions come from the parliamentary record; each bill page links the official source it was read from. Summaries are written by a model from the explanatory memorandum or the Bills Digest, are marked as such wherever they appear, and are not the record. A bill missing from this list is not evidence it does not exist: the register is still being built.';
 
-/** The Bills tab: every federal bill in the index, filtered and searched on the device. */
+/**
+ * The Bills tab: every federal bill in the index, filtered and searched on
+ * the device. On iPad regular width it is the reference split view: this
+ * list on the left, the selected bill (and its text) in the detail pane.
+ */
 export default function BillsList() {
+  // The region a split measures; iPhone keeps the bare list (no wrapper).
+  if (!isPad) return <BillsScreen />;
+  return (
+    <LayoutRegion style={styles.screen}>
+      <BillsScreen />
+    </LayoutRegion>
+  );
+}
+
+function BillsScreen() {
   const load = useCallback((refresh: boolean) => catalogs.bills(refresh), []);
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
   const [text, setText] = useState('');
@@ -73,8 +98,51 @@ export default function BillsList() {
         : null,
     [index, filters, query],
   );
-  const rows = list?.data ?? [];
+  const rows = useMemo(() => list?.data ?? [], [list]);
   const chips = appliedFilters(filters);
+
+  // iPad regular width: the selection lives in the route (`/bills?bill=…`),
+  // so it survives tab switches and a deep link can open a bill in the pane.
+  const layout = useLayout();
+  const split = layout.regular;
+  const params = useLocalSearchParams<{ bill?: string }>();
+  const selectedKey = params.bill || null;
+  const titleFor = useCallback(
+    (key: string) => index?.bills.find((bill) => bill.key === key)?.title,
+    [index],
+  );
+  const selected = useMemo<BillEntry | null>(
+    () =>
+      selectedKey
+        ? { kind: 'bill', key: selectedKey, title: titleFor(selectedKey) }
+        : null,
+    [selectedKey, titleFor],
+  );
+  const listRef = useRef<FlatList<(typeof rows)[number]>>(null);
+  const visible = useRef(new Set<string>());
+  // FlatList needs one stable callback for its whole life.
+  const [onViewable] = useState(
+    () =>
+      ({ viewableItems }: { viewableItems: ViewToken[] }) => {
+        visible.current = new Set(
+          viewableItems.map((item) => String(item.key)),
+        );
+      },
+  );
+  const select = useCallback(
+    (entry: BillEntry | null) => {
+      router.setParams({ bill: entry?.key ?? '' });
+      // A keyboard step past the visible rows brings the row into view.
+      const at = entry ? rows.findIndex((bill) => bill.key === entry.key) : -1;
+      if (at >= 0 && !visible.current.has(entry!.key))
+        listRef.current?.scrollToIndex({
+          index: at,
+          viewPosition: 0.5,
+          animated: true,
+        });
+    },
+    [rows],
+  );
   const offline = error instanceof ApiError && error.code === 'offline';
 
   const header = (
@@ -196,8 +264,9 @@ export default function BillsList() {
     </Group>
   ) : null;
 
-  return (
+  const listView = (
     <FlatList
+      ref={listRef}
       testID="bills-screen"
       refreshControl={
         <RefreshControl
@@ -214,9 +283,30 @@ export default function BillsList() {
       automaticallyAdjustKeyboardInsets
       data={list ? rows : []}
       keyExtractor={(bill) => bill.key}
-      renderItem={({ item }) => (
-        <BillRow bill={item} onPress={() => router.push(billRoute(item.key))} />
-      )}
+      renderItem={({ item }) =>
+        split ? (
+          <BillRow
+            bill={item}
+            selected={item.key === selectedKey}
+            onPress={() =>
+              select({ kind: 'bill', key: item.key, title: item.title })
+            }
+          />
+        ) : (
+          <BillRow
+            bill={item}
+            onPress={() => router.push(billRoute(item.key))}
+          />
+        )
+      }
+      extraData={split ? selectedKey : undefined}
+      onViewableItemsChanged={split ? onViewable : undefined}
+      onScrollToIndexFailed={({ index: at, averageItemLength }) =>
+        listRef.current?.scrollToOffset({
+          offset: averageItemLength * at,
+          animated: true,
+        })
+      }
       ItemSeparatorComponent={() => <Divider variant="subtle" />}
       ListHeaderComponent={header}
       ListHeaderComponentStyle={styles.header}
@@ -240,6 +330,58 @@ export default function BillsList() {
       ListFooterComponent={footer}
       initialNumToRender={12}
     />
+  );
+  if (!isPad) return listView;
+  return (
+    <>
+      {/* The list column keeps an inline title; large titles over two
+          panes would collapse with whichever scrolls first. */}
+      <Stack.Screen options={{ headerLargeTitleEnabled: !split }} />
+      <SplitLayout<BillEntry>
+        id="bills"
+        testID="bills-split"
+        list={listView}
+        selected={selected}
+        onSelect={select}
+        entryKey={(entry) => `${entry.kind}:${entry.key}`}
+        entryTitle={(entry) => (entry.kind === 'bill' ? 'Bill' : 'Bill text')}
+        renderDetail={(entry) =>
+          entry.kind === 'bill' ? (
+            <BillDetail recordKey={entry.key} embedded />
+          ) : (
+            <BillTextReader recordKey={entry.key} embedded />
+          )
+        }
+        detailActions={(entry) => (
+          <IconButton
+            symbol="square.and.arrow.up"
+            accessibilityLabel="Share"
+            testID="bill-pane-share"
+            onPress={() =>
+              void shareRecord({
+                path: `/bill/${entry.key}`,
+                title: entry.title ?? titleFor(entry.key) ?? 'Bill',
+              })
+            }
+          />
+        )}
+        keys={rows.map((bill) => bill.key)}
+        entryForKey={(key) => ({ kind: 'bill', key, title: titleFor(key) })}
+        empty={
+          <SplitEmpty
+            icon="doc.text"
+            accent="bills"
+            title="No bill selected"
+            message={
+              list && index
+                ? countLine(rows.length, index.bills.length)
+                : undefined
+            }
+            testID="bills-split-empty"
+          />
+        }
+      />
+    </>
   );
 }
 

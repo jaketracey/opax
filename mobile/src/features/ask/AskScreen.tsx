@@ -1,4 +1,5 @@
 import { phoneCopy } from '../../design/phone-copy';
+import { useFocusRequest } from '../../design/keyboard';
 import {
   Platform,
   AccessibilityInfo,
@@ -7,6 +8,7 @@ import {
   StyleSheet,
   View,
   ScrollView,
+  type TextInput,
   useWindowDimensions,
   type LayoutChangeEvent,
 } from 'react-native';
@@ -99,6 +101,9 @@ export default function AskScreen() {
     [syncNotice, setSyncNotice] = useState(''),
     [accountSynced, setAccountSynced] = useState(false),
     [retryQuestion, setRetryQuestion] = useState('');
+  // Cmd-N on iPad (src/navigation/KeyboardShortcuts.tsx) focuses the question.
+  const questionInput = useRef<TextInput>(null);
+  useFocusRequest('ask', questionInput);
   const scroll = useRef<ScrollView>(null),
     submitTarget = useRef<View>(null),
     followupTarget = useRef<View>(null),
@@ -390,6 +395,7 @@ export default function AskScreen() {
         <Group gap={rhythm.heading}>
           <Composer
             ref={submitTarget}
+            inputRef={questionInput}
             label="Your question"
             submitLabel="Ask the record"
             placeholder="Ask a question about the public record…"

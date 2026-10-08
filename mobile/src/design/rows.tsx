@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { openOnWeb, openSource } from '../navigation/external';
 import { useAccessibilitySize } from './accessibility';
+import { Hoverable, useHover } from './adaptive';
 import { Icon, type SFSymbol } from './icon';
 import { Text } from './text';
 import {
@@ -61,47 +62,53 @@ export function LinkRow({
   detailTestID?: string;
 }) {
   const stacked = useAccessibilitySize();
+  const [hovered, onHover] = useHover();
   return (
-    <Pressable
-      accessibilityRole={external ? 'link' : 'button'}
-      accessibilityLabel={
-        accessibilityLabel ?? [title, value, detail].filter(Boolean).join(', ')
-      }
-      accessibilityHint={accessibilityHint}
-      accessibilityState={{ disabled }}
-      disabled={disabled}
-      testID={testID}
-      onPress={onPress}
-      style={({ pressed }) => [
-        styles.row,
-        pressed ? { backgroundColor: colors.sunken } : null,
-      ]}
-    >
-      {icon ? <IconTile name={icon} accent={accent} /> : null}
-      <View style={[styles.text, stacked ? styles.stacked : styles.inline]}>
-        <View style={[styles.titles, stacked ? null : styles.grow]}>
-          {leading}
-          <Text wordSafe variant="strong" testID={titleTestID}>
-            {title}
-          </Text>
-          {detail ? (
-            <Text wordSafe variant="metadata" testID={detailTestID}>
-              {detail}
+    <Hoverable effect="none" onHover={disabled ? undefined : onHover}>
+      <Pressable
+        accessibilityRole={external ? 'link' : 'button'}
+        accessibilityLabel={
+          accessibilityLabel ??
+          [title, value, detail].filter(Boolean).join(', ')
+        }
+        accessibilityHint={accessibilityHint}
+        accessibilityState={{ disabled }}
+        disabled={disabled}
+        testID={testID}
+        onPress={onPress}
+        style={({ pressed }) => [
+          styles.row,
+          pressed || (hovered && !disabled)
+            ? { backgroundColor: colors.sunken }
+            : null,
+        ]}
+      >
+        {icon ? <IconTile name={icon} accent={accent} /> : null}
+        <View style={[styles.text, stacked ? styles.stacked : styles.inline]}>
+          <View style={[styles.titles, stacked ? null : styles.grow]}>
+            {leading}
+            <Text wordSafe variant="strong" testID={titleTestID}>
+              {title}
+            </Text>
+            {detail ? (
+              <Text wordSafe variant="metadata" testID={detailTestID}>
+                {detail}
+              </Text>
+            ) : null}
+          </View>
+          {value ? (
+            <Text variant="figureInline" tone="inkSoft">
+              {value}
             </Text>
           ) : null}
         </View>
-        {value ? (
-          <Text variant="figureInline" tone="inkSoft">
-            {value}
-          </Text>
-        ) : null}
-      </View>
-      <Icon
-        name={external ? 'safari' : 'chevron.right'}
-        size={external ? 16 : 13}
-        tone={external ? 'navy' : 'inkSoft'}
-      />
-    </Pressable>
+        <Icon
+          name={external ? 'safari' : 'chevron.right'}
+          size={external ? 16 : 13}
+          tone={external ? 'navy' : 'inkSoft'}
+        />
+      </Pressable>
+    </Hoverable>
   );
 }
 

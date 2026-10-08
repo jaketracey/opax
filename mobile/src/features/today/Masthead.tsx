@@ -48,8 +48,9 @@ function useToday() {
  * date, and the independence line. Nothing here animates, so the first line
  * is drawn at once on a cold launch.
  */
-export function Masthead() {
+export function Masthead({ broadsheet = false }: { broadsheet?: boolean }) {
   const date = mastheadDate(useToday());
+  if (broadsheet) return <BroadsheetMasthead date={date} />;
   return (
     <View style={styles.masthead} testID="today-masthead">
       <View
@@ -79,7 +80,67 @@ export function Masthead() {
   );
 }
 
+/**
+ * iPad regular width: the same three things on one line, the date at the
+ * leading edge and the independence line at the trailing edge, over a
+ * bronze double rule (a thick and a thin hairline), as a broadsheet's
+ * masthead is ruled. The rule is decorative.
+ */
+function BroadsheetMasthead({ date }: { date: string }) {
+  return (
+    <View style={styles.broadsheet} testID="today-masthead">
+      <View style={styles.broadsheetRow}>
+        <View
+          accessible
+          accessibilityRole="header"
+          accessibilityLabel={date}
+          style={styles.row}
+        >
+          <Image
+            source={require('../../../assets/splash/mark.png')}
+            style={styles.markLarge}
+            accessibilityIgnoresInvertColors
+          />
+          <Text wordSafe variant="kicker" tone="navy" testID="today-date">
+            {date.toLocaleUpperCase('en-AU')}
+          </Text>
+        </View>
+        <Text
+          variant="fine"
+          testID="today-screen-message"
+          wordSafe
+          style={styles.broadsheetLine}
+        >
+          OPAX is independent and non-partisan. It is not a government app.
+        </Text>
+      </View>
+      <View
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+        style={styles.doubleRule}
+      >
+        <View style={styles.ruleThick} />
+        <View style={styles.ruleThin} />
+      </View>
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
+  broadsheet: { gap: spacing.s3 },
+  broadsheetRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    columnGap: spacing.s4,
+    rowGap: spacing.s2,
+  },
+  broadsheetLine: { flexShrink: 1, textAlign: 'right' },
+  markLarge: { width: 26, height: 26 },
+  doubleRule: { gap: 2 },
+  ruleThick: { height: 2, backgroundColor: colors.bronze },
+  ruleThin: { height: hairline, backgroundColor: colors.bronze },
   masthead: {
     gap: spacing.s2,
     paddingBottom: spacing.s3,

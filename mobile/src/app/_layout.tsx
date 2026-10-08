@@ -24,6 +24,8 @@ import {
   useTourState,
 } from '../onboarding/state';
 import { WelcomeTour } from '../onboarding/WelcomeTour';
+import { isPad } from '../design/adaptive';
+import { KeyboardShortcuts } from '../navigation/KeyboardShortcuts';
 import {
   presentSourceDestination,
   sourceDestination,
@@ -72,6 +74,7 @@ export default function Layout() {
       <StatusBar style="dark" />
       <View style={styles.app} onLayout={() => setLaidOut(true)}>
         <AndroidMenuHost />
+        {isPad ? <KeyboardShortcuts /> : null}
         <Stack
           screenOptions={{
             headerShown: false,

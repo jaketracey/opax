@@ -1,7 +1,13 @@
 import { PartialNotice, SavedCopyNotice } from './CatalogNotice';
+import { useFocusRequest } from '../design/keyboard';
 import { CachedPortrait } from './CachedPortrait';
 import { useCallback, useRef, useState } from 'react';
-import { Keyboard, RefreshControl, type View } from 'react-native';
+import {
+  Keyboard,
+  RefreshControl,
+  type TextInput,
+  type View,
+} from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
 import { catalogs, recordSearch } from '../api/runtime';
 import { RecordSearchForm } from './search/RecordSearchForm';
@@ -92,6 +98,9 @@ export default function Search({
   const [busy, setBusy] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const submit = useRef<View>(null);
+  // Cmd-F on iPad (src/navigation/KeyboardShortcuts.tsx) focuses the field.
+  const input = useRef<TextInput>(null);
+  useFocusRequest('search', input);
   const request = useRef(0);
   const sourceRequest = useRef(0);
   async function loadSources(refresh = false) {
@@ -253,6 +262,7 @@ export default function Search({
           label={
             extended ? 'Find source records' : 'Search people, places and bills'
           }
+          inputRef={input}
           testID="search-input"
           value={query}
           onChangeText={(text) => change(text)}

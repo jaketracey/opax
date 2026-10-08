@@ -4,10 +4,15 @@ import type { recentBillsFor } from '../../api/selectors';
 import { billSentenceCase } from '../../api/bill-transforms';
 import { formatDate } from '../../design/format';
 import { partyDot } from '../../design/party';
-import { Text, useAccessibilitySize } from '../../design/primitives';
+import {
+  Grid,
+  Hoverable,
+  Text,
+  useAccessibilitySize,
+} from '../../design/primitives';
 import { layout, light, spacing } from '../../design/tokens';
 import { billRoute } from '../../navigation/routes';
-import { Chip, TodayCard, shortDay, useTodayAccent } from './parts';
+import { Chip, TodayCard, cardRadius, shortDay, useTodayAccent } from './parts';
 import { billAccent } from './tint';
 
 type Bill = NonNullable<ReturnType<typeof recentBillsFor>['data']>[number];
@@ -55,60 +60,82 @@ function BillCard({
   const tone = useTodayAccent(billAccent(bill.status));
   const dot = !bill.portfolio ? partyDot(bill.sponsor_party) : null;
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={text.label}
-      accessibilityHint="Opens the bill"
-      testID={`today-bill-${index}`}
-      onPress={() => router.push(billRoute(bill.key))}
-      style={fill ? null : styles.slot}
+    <Hoverable
+      effect="lift"
+      cornerRadius={cardRadius}
+      style={fill ? styles.fill : null}
     >
-      {({ pressed }) => (
-        <TodayCard
-          ground={pressed ? light.sunken : undefined}
-          style={styles.card}
-        >
-          <View style={[styles.band, { backgroundColor: tone.base }]} />
-          <View style={styles.inner}>
-            <Chip
-              label={text.status}
-              ground={tone.wash}
-              color={tone.ink}
-              dot={tone.base}
-            />
-            <Text variant="strong" style={styles.title}>
-              {bill.title}
-            </Text>
-            <View style={styles.foot}>
-              {text.by ? (
-                <View style={styles.by}>
-                  {dot ? (
-                    <View style={[styles.dot, { backgroundColor: dot }]} />
-                  ) : null}
-                  <Text wordSafe variant="metadata" style={styles.byText}>
-                    {text.by}
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={text.label}
+        accessibilityHint="Opens the bill"
+        testID={`today-bill-${index}`}
+        onPress={() => router.push(billRoute(bill.key))}
+        style={fill ? styles.fill : styles.slot}
+      >
+        {({ pressed }) => (
+          <TodayCard
+            ground={pressed ? light.sunken : undefined}
+            style={styles.card}
+          >
+            <View style={[styles.band, { backgroundColor: tone.base }]} />
+            <View style={styles.inner}>
+              <Chip
+                label={text.status}
+                ground={tone.wash}
+                color={tone.ink}
+                dot={tone.base}
+              />
+              <Text variant="strong" style={styles.title}>
+                {bill.title}
+              </Text>
+              <View style={styles.foot}>
+                {text.by ? (
+                  <View style={styles.by}>
+                    {dot ? (
+                      <View style={[styles.dot, { backgroundColor: dot }]} />
+                    ) : null}
+                    <Text wordSafe variant="metadata" style={styles.byText}>
+                      {text.by}
+                    </Text>
+                  </View>
+                ) : null}
+                {text.introduced ? (
+                  <Text wordSafe variant="fine">
+                    {text.introduced}
                   </Text>
-                </View>
-              ) : null}
-              {text.introduced ? (
-                <Text wordSafe variant="fine">
-                  {text.introduced}
-                </Text>
-              ) : null}
+                ) : null}
+              </View>
             </View>
-          </View>
-        </TodayCard>
-      )}
-    </Pressable>
+          </TodayCard>
+        )}
+      </Pressable>
+    </Hoverable>
   );
 }
 
 /**
  * Recently introduced bills as a carousel of cards in status colour; one
  * card per row at accessibility sizes, where a swipe would hide most of it.
+ * On iPad regular width (`grid`) every card shows at once, two or three
+ * across, each row's cards the same height.
  */
-export function BillCarousel({ bills }: { bills: Bill[] }) {
+export function BillCarousel({
+  bills,
+  grid = false,
+}: {
+  bills: Bill[];
+  grid?: boolean;
+}) {
   const stacked = useAccessibilitySize();
+  if (grid)
+    return (
+      <Grid columns={{ regular: 2, wide: 3 }} minItemWidth={250}>
+        {bills.map((bill, i) => (
+          <BillCard key={bill.key} bill={bill} index={i} fill />
+        ))}
+      </Grid>
+    );
   if (stacked)
     return (
       <View style={styles.stack}>
@@ -142,6 +169,8 @@ const styles = StyleSheet.create({
     gap: GAP,
   },
   slot: { width: CARD_WIDTH },
+  // Fills its grid cell (or the stacked column) so a row's cards align.
+  fill: { flexGrow: 1 },
   stack: { gap: spacing.s3 },
   card: { flexGrow: 1 },
   band: { height: 4 },

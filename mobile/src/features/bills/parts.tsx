@@ -12,11 +12,13 @@ import { formatCount, formatDate } from '../../design/format';
 import { isPartyLabel, partyDot, partyIdentity } from '../../design/party';
 import {
   Disclosure as DisclosureRow,
+  Hoverable,
   Icon,
   MachineWritten,
   SourceLink,
   Text,
   useAccessibilitySize,
+  useHover,
   type SFSymbol,
 } from '../../design/primitives';
 import {
@@ -67,40 +69,59 @@ export function BillStatus({
 export function BillRow({
   bill,
   onPress,
+  selected,
 }: {
   bill: BillListRow;
   onPress: () => void;
+  /**
+   * In the iPad split list: true for the bill in the detail pane, false for
+   * the others (no chevron; the pane is the destination). Undefined pushes.
+   */
+  selected?: boolean;
 }) {
   const text = billRowText(bill);
+  const inSplit = selected !== undefined;
+  const [hovered, onHover] = useHover();
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={text.label}
-      testID={`bill-row-${bill.key}`}
-      onPress={onPress}
-      style={({ pressed }) => [
-        styles.row,
-        pressed ? { backgroundColor: colors.sunken } : null,
-      ]}
-    >
-      <View style={styles.rowText}>
-        <BillStatus status={text.status} asAt={text.asAt} />
-        <Text variant="strong">{text.name}</Text>
-        {/* Chamber names are long single words at AX5 ("Representatives"):
-            word-safe steps the line down rather than splitting the word. */}
-        {text.where ? (
-          <Text variant="metadata" wordSafe>
-            {text.where}
-          </Text>
-        ) : null}
-        {text.people ? (
-          <Text wordSafe variant="metadata">
-            {text.people}
-          </Text>
-        ) : null}
-      </View>
-      <Icon name="chevron.right" size={14} tone="inkSoft" />
-    </Pressable>
+    <Hoverable effect="none" onHover={onHover}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={text.label}
+        accessibilityState={inSplit ? { selected } : undefined}
+        testID={`bill-row-${bill.key}`}
+        onPress={onPress}
+        style={({ pressed }) => [
+          styles.row,
+          inSplit ? styles.rowInSplit : null,
+          selected
+            ? { backgroundColor: colors.billsWash }
+            : pressed || hovered
+              ? { backgroundColor: colors.sunken }
+              : null,
+        ]}
+      >
+        {selected ? <View style={styles.selectedMark} /> : null}
+        <View style={styles.rowText}>
+          <BillStatus status={text.status} asAt={text.asAt} />
+          <Text variant="strong">{text.name}</Text>
+          {/* Chamber names are long single words at AX5 ("Representatives"):
+              word-safe steps the line down rather than splitting the word. */}
+          {text.where ? (
+            <Text variant="metadata" wordSafe>
+              {text.where}
+            </Text>
+          ) : null}
+          {text.people ? (
+            <Text wordSafe variant="metadata">
+              {text.people}
+            </Text>
+          ) : null}
+        </View>
+        {inSplit ? null : (
+          <Icon name="chevron.right" size={14} tone="inkSoft" />
+        )}
+      </Pressable>
+    </Hoverable>
   );
 }
 
@@ -609,6 +630,23 @@ const styles = StyleSheet.create({
     paddingVertical: rhythm.heading,
   },
   rowText: { flex: 1, gap: rhythm.line },
+  // The split list: the row bleeds 12pt into the margin so its selected
+  // wash has room around the text, and a 3pt bills-ink mark leads it.
+  rowInSplit: {
+    marginHorizontal: -rhythm.heading,
+    paddingHorizontal: rhythm.heading,
+    borderRadius: 10,
+    borderCurve: 'continuous',
+  },
+  selectedMark: {
+    position: 'absolute',
+    left: 0,
+    top: rhythm.heading,
+    bottom: rhythm.heading,
+    width: 3,
+    borderRadius: 1.5,
+    backgroundColor: colors.billsInk,
+  },
   statusLine: {
     flexDirection: 'row',
     flexWrap: 'wrap',

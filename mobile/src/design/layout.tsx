@@ -16,6 +16,13 @@ import {
   type ViewProps,
 } from 'react-native';
 import { useAccessibilitySize } from './accessibility';
+import {
+  RegionProvider,
+  columns,
+  readableInset,
+  useLayout,
+  useMeasuredRegion,
+} from './adaptive';
 import { Divider } from './controls';
 import { InfoButton, type InfoNotes } from './info';
 import { ROW_OWNS_PADDING } from './row-padding';
@@ -30,24 +37,55 @@ import {
   spacing,
   type Accent,
 } from './tokens';
+import { usePaneBar } from './split';
 import { useStableKeyboard } from './useStableKeyboard';
+
+/**
+ * The column a screen's content sits in. On compact width (every iPhone,
+ * and a narrow iPad window) content runs edge to edge inside the 20pt
+ * margin, as before. On regular width it is centred at `readable` (700pt,
+ * long text) or `wide` (1180pt, front pages and grids), and the children
+ * read the column's width from `useLayout()`. Screens built on a FlatList
+ * use it directly: `onLayout` on the list, `content` in its
+ * contentContainerStyle, `inner` in a `RegionProvider` around the rows, and
+ * `bar` (a split pane's Back and actions, or null) first in the header.
+ */
+export function useScreenColumn(column: keyof typeof columns = 'readable') {
+  const [onLayout, region] = useMeasuredRegion();
+  const outer = useLayout();
+  const width = region?.width ?? outer.width;
+  const inset = readableInset(width, columns[column]);
+  const content =
+    inset === layout.screenMargin ? null : { paddingHorizontal: inset };
+  const inner = region
+    ? { width: region.width - inset * 2, height: region.height }
+    : null;
+  // Inside a split pane: its Back and actions, first in the content.
+  const bar = usePaneBar();
+  return { onLayout, content, inner, bar };
+}
 
 /**
  * A scrolling screen on paper, under the native navigation bar. It is the
  * first scroll view in the screen, so the large title collapses and the
  * content clears the bars. Root screens take their title from the stack.
+ * On iPad regular width its content is a centred column (`column`).
  */
 export function Screen({
   testID,
   children,
   refreshControl,
   scrollRef,
+  column = 'readable',
 }: {
   testID?: string;
   scrollRef?: Ref<ScrollView>;
   children: ReactNode;
   refreshControl?: ReactElement<RefreshControlProps>;
+  /** The content column on regular width: `readable` (700pt) or `wide`. */
+  column?: keyof typeof columns;
 }) {
+  const { onLayout, content, inner, bar } = useScreenColumn(column);
   return (
     <ScrollView
       ref={scrollRef}
@@ -58,9 +96,13 @@ export function Screen({
       automaticallyAdjustKeyboardInsets
       keyboardDismissMode="on-drag"
       refreshControl={refreshControl}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[styles.content, content]}
+      onLayout={onLayout}
     >
-      {children}
+      <RegionProvider value={inner}>
+        {bar}
+        {children}
+      </RegionProvider>
     </ScrollView>
   );
 }
@@ -72,16 +114,19 @@ export function KeyboardStableScreen({
   refreshControl,
   keyboardTarget,
   scrollRef,
+  column = 'readable',
 }: {
   testID?: string;
   children: ReactNode;
   refreshControl?: ReactElement<RefreshControlProps>;
   keyboardTarget: RefObject<View | null>;
   scrollRef?: RefObject<ScrollView | null>;
+  column?: keyof typeof columns;
 }) {
   const ownScroll = useRef<ScrollView>(null);
   const scroll = scrollRef ?? ownScroll;
   const keyboard = useStableKeyboard(scroll, keyboardTarget);
+  const { onLayout, content, inner, bar } = useScreenColumn(column);
   return (
     <ScrollView
       ref={scroll}
@@ -93,12 +138,18 @@ export function KeyboardStableScreen({
       scrollToOverflowEnabled
       keyboardDismissMode="on-drag"
       refreshControl={refreshControl}
-      contentContainerStyle={[styles.content, keyboard.contentStyle]}
-      onLayout={keyboard.onLayout}
+      contentContainerStyle={[styles.content, content, keyboard.contentStyle]}
+      onLayout={(event) => {
+        onLayout(event);
+        keyboard.onLayout(event);
+      }}
       onScroll={keyboard.onScroll}
       scrollEventThrottle={16}
     >
-      {children}
+      <RegionProvider value={inner}>
+        {bar}
+        {children}
+      </RegionProvider>
     </ScrollView>
   );
 }

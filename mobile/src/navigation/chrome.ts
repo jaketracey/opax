@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { router, type NativeStackHeaderItem } from 'expo-router';
 import { chrome, fonts, light, navigationTitleSizes } from '../design/tokens';
+import { isPad } from '../design/adaptive';
 
 /**
  * Header styling shared by every stack: Merriweather titles at the size the
@@ -140,3 +141,17 @@ export function closeSheetItem(): NativeStackHeaderItem {
     onPress: () => router.back(),
   };
 }
+
+/**
+ * A short, single-screen sheet (filters, a glossary): a centred form sheet
+ * on iPad, which UIKit turns into a bottom sheet in a compact window, and
+ * the existing page sheet on iPhone. Sheets with their own stack (Account,
+ * directory filters) and Talk stay `modal`: a page sheet, centred on iPad.
+ */
+export const shortSheet = isPad
+  ? {
+      presentation: 'formSheet' as const,
+      sheetAllowedDetents: [1] as number[],
+      sheetGrabberVisible: false,
+    }
+  : { presentation: 'modal' as const };
