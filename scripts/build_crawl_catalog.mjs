@@ -8,6 +8,8 @@ import { splitSpeakers } from '../portal/public/speech-attribution.js';
 import { TOPIC_NAMES } from '../portal/src/topic-names.mjs';
 import { fileKey } from '../portal/public/grants.js';
 
+import { catalogueComplete } from '../portal/public/instruments.js';
+
 export const ORIGIN = 'https://opax.com.au';
 export const SITEMAP_LIMIT = 49_999;
 export const validId = id => typeof id === 'string' && !!id.trim() && !/^(null|undefined)$/i.test(id.trim());
@@ -39,7 +41,7 @@ export function sitemapFiles(groups, limit = SITEMAP_LIMIT) {
   return {files,index,counts};
 }
 
-export function llmsText(corpus, grants) {
+export function llmsText(corpus, grants, instruments = null) {
   return `# OPAX
 
 > OPAX is an independent, non-partisan record of Australian parliament and public money. It connects parliamentary speeches, votes and bills with disclosed political funding, public contracts and grants.
@@ -64,7 +66,7 @@ OPAX code is AGPL-3.0. Source data retains its own terms: parliamentary material
 - [Parties](${ORIGIN}/subject/party): \`/subject/party/{encoded-name}\`; disclosed funding and parliamentary records.
 - [Electorates](${ORIGIN}/subject/electorate): \`/subject/electorate/{slug}\`; jurisdiction-specific seat records.
 - [Bills](${ORIGIN}/bills): \`/bill/{bill-key}\`; stages, original bill text and linked divisions.
-- [Federal legislative instruments](${ORIGIN}/instruments): \`/instrument/{frl-id}\`; metadata only, with dates and links to authoritative FRL versions. No model summaries or person entities.
+${catalogueComplete(instruments) ? '- [Federal legislative instruments](' + ORIGIN + '/instruments): \`/instrument/{frl-id}\`; metadata only, with dates and links to authoritative FRL versions. No model summaries or person entities.\n' : ''}
 - [Divisions and source records](${ORIGIN}/search): \`/doc/division-{division-key}\` for votes; \`/doc/{resource-slug}\` for speeches and other source records.
 - [Grant programs and organisation recipients](${ORIGIN}/money/grants): Programs use \`/money/grants?jur={federal|qld}&program={encoded-program-id}\`; recipients use \`/money/grants/{federal|qld}/recipient/{encoded-recipient-id}\`; a particular award adds \`?award={award-id}\`.
 - [Donors](${ORIGIN}/subject/donor): \`/subject/donor/{encoded-name}\`.
@@ -79,6 +81,7 @@ OPAX code is AGPL-3.0. Source data retains its own terms: parliamentary material
 
 /** Metadata catalogue discovery uses source ids only, never title/person fields. */
 export function instrumentCrawlEntries(manifest) {
+  if (!catalogueComplete(manifest)) return [];
   const ids = Object.keys(manifest.lookup);
   if (!manifest.metadata_only || !ids.length || ids.length !== manifest.count || manifest.count !== manifest.odata_count) throw new Error('Unreconciled instruments export');
   const lastmod = exportDate(manifest.generated_at);
@@ -87,6 +90,13 @@ export function instrumentCrawlEntries(manifest) {
     if (!/^[CF]\d{4}[A-Z]\d{5}$/.test(id)) throw new Error('Invalid FRL id');
     return {path: `/instrument/${id}`, lastmod};
   });
+}
+
+/** Optional type is absent until the manifest certifies a complete catalogue. */
+export function addInstrumentDiscovery(groups, manifest) {
+  if (!catalogueComplete(manifest)) return;
+  groups.instruments = instrumentCrawlEntries(manifest);
+  groups.static.push({ path: '/instruments', lastmod: exportDate(manifest.generated_at) });
 }
 
 export async function buildCrawl(root) {
@@ -105,7 +115,7 @@ export async function buildCrawl(root) {
     people.push({name:p.name,pid:p.legacy_person_id || p.person_id,speeches:0,party:current[0].party || null,states:[...new Set(current.map(e=>e.jurisdiction))],chambers:[...new Set(current.map(e=>e.chamber))],first:null,last:null,rosterOnly:{asOf:current[0].as_of,seats:current.map(e=>e.name)}});
     known.add(fold(p.name));
   }
-  const groups = Object.fromEntries(['people','parties','electorates','bills','instruments','divisions','grant-programs','grant-recipients','topics-reports','static','suppliers','donors','campaigners','agencies'].map(t=>[t,[]]));
+  const groups = Object.fromEntries(['people','parties','electorates','bills','divisions','grant-programs','grant-recipients','topics-reports','static','suppliers','donors','campaigners','agencies'].map(t=>[t,[]]));
   const add = (type,path,date,priority) => {
     if (!path || path.split('/').some(s => /^(null|undefined)$/i.test(decodeURIComponent(s)))) return;
     const lastmod = exportDate(date);
@@ -113,12 +123,8 @@ export async function buildCrawl(root) {
     groups[type].push({path,lastmod,...(priority != null ? {priority} : {})});
   };
   const snapshot = new Map();
-  const instruments = await optional('instruments/manifest.json');
-  if (instruments) {
-    for (const row of instrumentCrawlEntries(instruments))
-      add('instruments', row.path, row.lastmod);
-    add('static','/instruments',instruments.generated_at);
-  }
+  const instruments = await optional('instruments/manifest.json').catch(() => null);
+  addInstrumentDiscovery(groups, instruments);
   const slugs = slugIndex(people).slugOf;
   const peopleDate = [roster.meta.generated,roster.meta.representation?.updated,seatManifest.generated].filter(Boolean).sort().at(-1);
   for (const p of people) {
@@ -188,7 +194,7 @@ export async function buildCrawl(root) {
   await mkdir(join(out,'sitemaps'),{recursive:true});
   await writeFile(join(out,'sitemap.xml'),result.index);
   for (const f of result.files) await writeFile(join(out,f.path.slice(1)),f.body);
-  await writeFile(join(out,'llms.txt'),llmsText(corpus,grants));
+  await writeFile(join(out,'llms.txt'),llmsText(corpus,grants,instruments));
   const entries = [...snapshot].sort(([a],[b])=>a.localeCompare(b,'en'));
   await writeFile(join(out,'indexnow.json'),JSON.stringify({entries}));
   await writeFile(join(out,'manifest.json'),JSON.stringify({counts:result.counts,files:result.files.map(({body,...f})=>f)},null,2)+'\n');

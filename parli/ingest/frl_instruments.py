@@ -8,7 +8,10 @@ are requested, and no identities or inferred legal relationships are created.
 from __future__ import annotations
 
 import argparse
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, time as day_time, timedelta, timezone
+from zoneinfo import ZoneInfo
+import hashlib
+import shutil
 from email.utils import parsedate_to_datetime
 from html.parser import HTMLParser
 import json
@@ -32,6 +35,10 @@ SCOPE = "collection eq 'LegislativeInstrument' and isInForce eq true"
 EXPAND = "administeringDepartments,versions($top=1)"
 ID = re.compile(r"^[CF]\d{4}[A-Z]\d{5}$")
 PAGE_SIZE = 100
+FIELDS = "*"  # All public title fields; default publisher projection, no $select.
+EXPANSION_TRIES = 3
+MELBOURNE = ZoneInfo("Australia/Melbourne")
+FIXED_AEST = timezone(timedelta(hours=10))
 UA = "OPAX metadata research (https://opax.com.au)"
 LICENCE = "https://creativecommons.org/licenses/by/4.0/"
 
@@ -61,6 +68,95 @@ def guard_count(count: int, expected: int, previous: int = 0) -> None:
         raise Held(f"Snapshot would shrink more than 2%: {previous} -> {count}")
 
 
+def utc_now():
+    return datetime.now(timezone.utc)
+
+
+def quiet_window(now: datetime) -> dict:
+    """Intersection of 20:00–08:00 in fixed AEST and Melbourne local time."""
+    intervals = []
+    for zone in (FIXED_AEST, MELBOURNE):
+        local = now.astimezone(zone)
+        if 8 <= local.hour < 20:
+            raise Held("Publisher busy hours: 08:00–20:00 in UTC+10 or Australia/Melbourne")
+        start_day = local.date() if local.hour >= 20 else local.date() - timedelta(days=1)
+        start = datetime.combine(start_day, day_time(20), tzinfo=zone).astimezone(timezone.utc)
+        end = datetime.combine(start_day + timedelta(days=1), day_time(8), tzinfo=zone).astimezone(timezone.utc)
+        intervals.append((start, end))
+    return {"start": max(v[0] for v in intervals).isoformat(),
+            "end": min(v[1] for v in intervals).isoformat()}
+
+
+def checkpoint_config(count: int, window: dict) -> dict:
+    query = {"filter": SCOPE, "fields": FIELDS, "expand": EXPAND,
+             "count": count, "orderby": "id", "page_size": PAGE_SIZE}
+    fingerprint = hashlib.sha256(json.dumps(query, sort_keys=True).encode()).hexdigest()
+    return {"schema": 2, **query, "fingerprint": fingerprint, "quiet_window": window}
+
+
+def prepare_checkpoint(checkpoint: Path, config: dict) -> None:
+    """Keep the most recent rejected/completed checkpoint beside its replacement."""
+    if checkpoint.exists():
+        try: old = json.loads((checkpoint / "config.json").read_text())
+        except (OSError, ValueError): old = None
+        if old != config or (checkpoint / "complete.json").exists():
+            previous = local_path(checkpoint.with_name(checkpoint.name + ".previous"))
+            if previous.exists(): shutil.rmtree(previous)
+            checkpoint.replace(previous)
+            print("[frl-instruments] checkpoint rotated; previous evidence retained", flush=True)
+    checkpoint.mkdir(parents=True, exist_ok=True)
+    atomic_json(checkpoint / "config.json", config)
+
+
+def validate_expansion(page: dict, values: list, expected: int) -> dict:
+    if not isinstance(page, dict) or page.get("@odata.count") != expected:
+        raise Held("Expanded scope count changed")
+    extras = page.get("value")
+    if not isinstance(extras, list) or len(extras) != len(values):
+        raise Held("Expanded metadata omitted a parent title")
+    base = {r["id"]: r for r in values}
+    matched = {}
+    for row in extras:
+        validate_title(row)
+        key = row["id"]
+        if key not in base or key in matched:
+            raise Held("Expanded title ids do not match the plain page")
+        if any(row.get(k) != v for k, v in base[key].items()):
+            raise Held("Title metadata moved between plain and expanded reads")
+        # Explicit [] on a returned id is legitimate source evidence of an
+        # empty relationship. An absent parent/field is never treated as [].
+        if not all(isinstance(row.get(k), list) for k in ("versions", "administeringDepartments")):
+            raise Held("Expanded public fields missing")
+        if any(k.endswith("@odata.nextLink") for k in row):
+            raise Held("Unfollowed metadata continuation")
+        matched[key] = row
+    return matched
+
+
+def expanded_page(session, checkpoint: Path, offset: int, params: dict, values: list, expected: int) -> dict:
+    path = checkpoint / f"page-{offset:06d}.json"
+    if path.exists():
+        try: return validate_expansion(json.loads(path.read_text()), values, expected)
+        except (Held, ValueError, TypeError):
+            path.replace(checkpoint / f"rejected-cached-{offset:06d}.json")
+    reason = "Expanded metadata unavailable"
+    for attempt in range(EXPANSION_TRIES):
+        try:
+            page = session.json({**params, "$expand": EXPAND})
+        except json.JSONDecodeError:
+            page = {"error": "Invalid JSON response from expansion read"}
+        try:
+            matched = validate_expansion(page, values, expected)
+            atomic_json(path, page)
+            return matched
+        except (Held, ValueError, TypeError) as error:
+            reason = str(error)
+            atomic_json(checkpoint / f"rejected-{offset:06d}-{attempt + 1}.json", page)
+            if attempt + 1 < EXPANSION_TRIES:
+                getattr(session, "sleep", lambda _: None)(5 * 2 ** attempt)
+    raise Held(f"Expanded page {offset} incomplete after {EXPANSION_TRIES} attempts: {reason}; snapshot kept")
+
+
 class Text(HTMLParser):
     def __init__(self):
         super().__init__(); self.parts = []; self.skip = 0
@@ -81,32 +177,37 @@ class PoliteSession:
     Capture subprocess output; never log command lines or arguments. curl's
     implicit retry/redirect behaviour is disabled so every request is counted.
     """
-    def __init__(self, max_requests=600, initial_requests=0, sleep=time.sleep, clock=time.monotonic):
+    def __init__(self, max_requests=600, initial_requests=0, sleep=time.sleep, clock=time.monotonic, now=utc_now):
         self.max_requests = min(600, max_requests)
         self.requests = initial_requests
         self.sleep, self.clock = sleep, clock
         self.last = self.clock()
         self.delay = 2.0
         self.policies: dict[str, RobotFileParser] = {}
-        self.guard_hours = False
+        self.now = now
+        self.window = None
+
+    def check_window(self):
+        current = quiet_window(self.now())
+        if self.window is not None and current != self.window:
+            raise Held("Acquisition quiet window expired")
+        self.window = current
 
     def get(self, url: str, allow_missing=False) -> bytes:
         host = urlsplit(url).netloc
+        publisher = host == "legislation.gov.au" or host.endswith(".legislation.gov.au")
+        if publisher: self.check_window()
         policy = self.policies.get(host)
         if policy and not policy.can_fetch(UA, url):
             raise Held("Publisher robots policy disallows this metadata path")
         delay = max(self.delay, 10 if host == "www.legislation.gov.au" else 2,
                     (policy.crawl_delay(UA) or policy.crawl_delay("*") or 2) if policy else 2)
         for attempt in range(5):
-            if self.guard_hours and url.startswith(API):
-                hour = datetime.now(timezone(timedelta(hours=10))).hour
-                if 8 <= hour < 20: raise Held("Publisher busy hours began; resume outside 08:00–20:00 UTC+10")
+            if publisher: self.check_window()
             if self.requests >= self.max_requests:
                 raise Held("Request budget reached; resume from the checkpoint")
             self.sleep(max(0, delay - (self.clock() - self.last)))
-            if self.guard_hours and url.startswith(API):
-                hour = datetime.now(timezone(timedelta(hours=10))).hour
-                if 8 <= hour < 20: raise Held("Publisher busy hours began; checkpoint kept")
+            if publisher: self.check_window()
             self.requests += 1
             print(f"[frl-instruments] HTTP request {self.requests} (attempt {attempt + 1})", flush=True)
             result = subprocess.run([
@@ -144,6 +245,7 @@ class PoliteSession:
         return json.loads(self.get(API + "?" + urlencode(params)))
 
     def access_policy(self) -> dict:
+        self.check_window()  # Before robots, terms or any other publisher probe.
         receipts = {}
         for base in (SITE, "https://api.prod.legislation.gov.au"):
             robots = self.get(base + "/robots.txt", allow_missing=True).decode()
@@ -161,15 +263,12 @@ class PoliteSession:
         parsed = Text(); parsed.feed(reuse); reuse_text = " ".join(parsed.parts)
         if not re.search(r"0800\s+to\s+2000.*UTC\s*\+10", reuse_text):
             raise Held("Publisher acquisition hours changed; review before fetching")
-        # The publisher specifies UTC+10, not Sydney daylight-saving time.
-        hour = datetime.now(timezone(timedelta(hours=10))).hour
-        if 8 <= hour < 20:
-            raise Held("Publisher busy hours (08:00–20:00 UTC+10); checkpoint kept")
-        self.guard_hours = True
-        return {"checked_at": datetime.now(timezone.utc).isoformat(), "robots": receipts,
+        window = quiet_window(self.now())
+        return {"checked_at": self.now().isoformat(), "robots": receipts,
                 "terms_url": SITE + "/terms-of-use", "licence_url": LICENCE,
                 "website_delay_seconds": 10, "api_delay_seconds": self.delay,
-                "busy_hours": "08:00–20:00 UTC+10", "document_bodies": False}
+                "busy_hours": "08:00–20:00 in UTC+10 or Australia/Melbourne",
+                "quiet_window": window, "document_bodies": False}
 
 
 def count_page(session) -> int:
@@ -188,35 +287,26 @@ def validate_title(row) -> None:
         raise Held("Title missing its authorised name")
 
 
-def acquire(session, out: Path, checkpoint: Path, policy=None) -> dict:
+def acquire(session, out: Path, checkpoint: Path, policy=None, now=None) -> dict:
     """Injectable HTTP session for offline paging/reconciliation tests."""
     out, checkpoint = local_path(out), local_path(checkpoint)
     started = time.monotonic()
+    now = now or getattr(session, "now", utc_now)
+    window = quiet_window(now())
     expected = count_page(session)
     previous = json.loads(out.read_text())["count"] if out.exists() else 0
     guard_count(expected, expected, previous)
-    checkpoint.mkdir(parents=True, exist_ok=True)
-    # Completed pages are never reused on a later weekly run: unchanged counts
-    # do not mean unchanged titles, departments, status or versions.
-    if (checkpoint / "complete.json").exists():
-        for pattern in ("page-*.json", "titles-*.json"):
-            for page_path in checkpoint.glob(pattern): page_path.unlink()
-        (checkpoint / "complete.json").unlink()
-        (checkpoint / "config.json").unlink(missing_ok=True)
-    config = {"count": expected, "scope": SCOPE, "expand": EXPAND, "page_size": PAGE_SIZE}
-    receipt = checkpoint / "config.json"
-    if receipt.exists() and json.loads(receipt.read_text()) != config:
-        raise Held("Checkpoint scope/count changed; start a fresh checkpoint directory")
-    atomic_json(receipt, config)
+    prepare_checkpoint(checkpoint, checkpoint_config(expected, window))
     rows, seen, expanded_seen = [], set(), set()
-    missing_expansions = []
     for offset in range(0, expected, PAGE_SIZE):
+        if quiet_window(now()) != window: raise Held("Acquisition quiet window expired")
         # Expanded FRL results can omit a parent title. Enumerate the plain
         # title collection independently; never derive $skip from row counts
         # in a navigation expansion, and join metadata only by explicit id.
         base_path = checkpoint / f"titles-{offset:06d}.json"
         params = {"$filter": SCOPE, "$orderby": "id", "$top": PAGE_SIZE,
                   "$skip": offset, "$count": "true"}
+        if FIELDS != "*": params["$select"] = FIELDS
         base = json.loads(base_path.read_text()) if base_path.exists() else session.json(params)
         values = base.get("value")
         if base.get("@odata.count") != expected:
@@ -230,56 +320,33 @@ def acquire(session, out: Path, checkpoint: Path, policy=None) -> dict:
                 raise Held("Duplicate or non-increasing title ids; snapshot held")
             seen.add(key); rows.append(row)
         if not base_path.exists(): atomic_json(base_path, base)
-        page_path = checkpoint / f"page-{offset:06d}.json"
-        page = json.loads(page_path.read_text()) if page_path.exists() else session.json({**params, "$expand": EXPAND})
-        if page.get("@odata.count") != expected:
-            raise Held("Scope count changed during metadata paging; snapshot held")
-        extras = page.get("value")
-        if not isinstance(extras, list) or len(extras) > PAGE_SIZE:
-            raise Held("Malformed expanded metadata page")
-        by_id = {r["id"]: r for r in values}
-        for row in extras:
-            validate_title(row)
-            key = row["id"]
-            if key not in by_id or key in expanded_seen:
-                raise Held("Expanded title ids do not match the plain page; snapshot held")
-            original = by_id[key]
-            if any(row.get(k) != v for k, v in original.items()):
-                raise Held("Title metadata moved between plain and expanded reads; snapshot held")
-            if not isinstance(row.get("versions"), list) or not isinstance(row.get("administeringDepartments"), list):
-                raise Held("Expanded public metadata missing")
-            if any(k.endswith("@odata.nextLink") for k in row):
-                raise Held("Unfollowed metadata continuation; snapshot held")
-            original.update(row)
-            expanded_seen.add(key)
+        matched = expanded_page(session, checkpoint, offset, params, values, expected)
         for row in values:
-            if row["id"] not in expanded_seen:
-                # An absent navigation result is not an empty relationship or
-                # evidence that the publisher supplied no departments/version.
-                row["_opax_metadata"] = {"expansion_returned": False}
-                missing_expansions.append(row["id"])
-        if not page_path.exists(): atomic_json(page_path, page)
+            row.update(matched[row["id"]])
+            expanded_seen.add(row["id"])
         print(f"[frl-instruments] reconciled {len(seen):,}/{expected:,} titles; "
               f"{len(expanded_seen):,} expanded metadata rows", flush=True)
     final_count = count_page(session)
     guard_count(len(seen), final_count, previous)
     if final_count != expected: raise Held("Count moved during acquisition")
-    now = datetime.now(timezone.utc).isoformat()
-    snapshot = {"schema": 1, "generated_at": now, "scope": SCOPE, "count": len(seen),
+    if quiet_window(now()) != window: raise Held("Acquisition quiet window expired")
+    downloaded = now().isoformat()
+    snapshot = {"schema": 1, "generated_at": downloaded, "downloaded_at": downloaded, "scope": SCOPE, "count": len(seen),
                 "odata_count": final_count, "metadata_only": True,
                 "version_scope": "First API-returned version per title; current/latest flags retained verbatim. Full history not acquired.",
                 "metadata_coverage": {"expanded_titles": len(expanded_seen),
-                                      "missing_expansion_ids": missing_expansions},
+                                      "missing_expansion_ids": []},
                 "titles": rows}
     if out.exists() and json.loads(out.read_text()).get("titles") == rows:
-        snapshot = json.loads(out.read_text())
-    else: atomic_json(out, snapshot)
+        snapshot["generated_at"] = json.loads(out.read_text())["generated_at"]
+    # Content can be identical, but the latest download receipt must advance.
+    atomic_json(out, snapshot)
     run = {"rows": len(seen), "odata_count": final_count, "requests": session.requests,
-           "runtime_seconds": round(time.monotonic() - started, 2), "completed_at": now,
+           "runtime_seconds": round(time.monotonic() - started, 2), "completed_at": downloaded,
            "metadata_coverage": snapshot["metadata_coverage"],
            "policy": policy, "snapshot": str(out.relative_to(ROOT))}
     atomic_json(out.parent / "run-receipt.json", run)
-    atomic_json(checkpoint / "complete.json", {"completed_at": now, "count": len(seen)})
+    atomic_json(checkpoint / "complete.json", {"completed_at": downloaded, "count": len(seen)})
     print(json.dumps(run, ensure_ascii=False), flush=True)
     return snapshot
 

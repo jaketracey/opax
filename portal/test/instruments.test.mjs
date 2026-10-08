@@ -1,23 +1,18 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
+import { runInNewContext } from 'node:vm';
 import { build } from 'esbuild';
-import { instrumentCrawlEntries, sitemapFiles } from '../../scripts/build_crawl_catalog.mjs';
-import { filterInstruments, unpack } from '../public/instruments.js';
-import { instrumentPage } from '../src/instruments.ts';
+import { instrumentCrawlEntries, addInstrumentDiscovery, llmsText, sitemapFiles } from '../../scripts/build_crawl_catalog.mjs';
+import { catalogueComplete, filterInstruments, unpack } from '../public/instruments.js';
+import { instrumentPage, instrumentReader } from '../src/instruments.ts';
 
 const root = new URL('../public/', import.meta.url);
-// Route tests remain offline even while a first acquisition is held. The
-// separate release gate below still requires the real reconciled export.
-const hasExport = existsSync(new URL('instruments/manifest.json',root));
-const fixture = {schema:1,generated_at:'2026-10-09T00:00:00Z',scope:"collection eq 'LegislativeInstrument' and isInForce eq true",count:1,odata_count:1,metadata_only:true,titles:[{id:'F2026L00001',name:'Exemption for Jane Citizen',collection:'LegislativeInstrument',isInForce:true,status:'InForce',subCollection:'Rules',isPrincipal:true,makingDate:'2026-01-02T00:00:00',asMadeRegisteredAt:'2026-01-03T00:00:00',administeringDepartments:[{name:'Example department',portfolio:'Finance'}],versions:[{registerId:'F2026L00001',isCurrent:true,isLatest:true,start:'2026-01-10T00:00:00',registeredAt:'2026-01-03T00:00:00',compilationNumber:'0'}],statusHistory:[],statusPossibleFuture:[]}]};
+// Every FRL response is an offline fixture, independently of local acquisition state.
+const fixture = {schema:1,generated_at:'2026-10-09T00:00:00Z',downloaded_at:'2026-10-09T11:00:00Z',metadata_coverage:{expanded_titles:1,missing_expansion_ids:[]},scope:"collection eq 'LegislativeInstrument' and isInForce eq true",count:1,odata_count:1,metadata_only:true,titles:[{id:'F2026L00001',name:'Exemption for Jane Citizen',collection:'LegislativeInstrument',isInForce:true,status:'InForce',subCollection:'Rules',isPrincipal:true,makingDate:'2026-01-02T00:00:00',asMadeRegisteredAt:'2026-01-03T00:00:00',administeringDepartments:[{name:'Example department',portfolio:'Finance'}],sourceObjectShapes:[{s:2},{o:1,v:[3]},{source:{opax:"source value"}}],versions:[{registerId:'F2026L00001',isCurrent:true,isLatest:true,start:'2026-01-10T00:00:00',registeredAt:'2026-01-03T00:00:00',compilationNumber:'0'}],statusHistory:[],statusPossibleFuture:[]}]};
 const fixtureFiles = JSON.parse(execFileSync('python3',['-c',"import json,sys; from scripts.export_instruments import plan_export; p,m=plan_export(json.load(sys.stdin)); print(json.dumps({k:v.decode() for k,v in p.items()}))"],{cwd:new URL('../../',import.meta.url).pathname,input:JSON.stringify(fixture),encoding:'utf8'}));
-const json = p => {
-  const name=p.replace(/^\//,'');
-  if(!hasExport && name.startsWith('instruments/')) return JSON.parse(fixtureFiles[name.slice('instruments/'.length)]);
-  return JSON.parse(readFileSync(new URL(name,root),'utf8'));
-};
+const json = p => JSON.parse(fixtureFiles[p.replace(/^\/?instruments\//,'')]);
 const manifest = json('instruments/manifest.json');
 const index = json('instruments/index.json');
 const read = async p => json(p);
@@ -28,15 +23,10 @@ test('FRL loader stubbed HTTP paging, count reconciliation, resume, shrink and e
   assert.match(output,/reconciled/);
 });
 
-test('release gate requires a complete accepted FRL export', () => {
-  assert.ok(hasExport, 'FRL acquisition is held: no accepted metadata export exists');
-});
-
 test('instrument export stays within file/byte budget and reconciles every unique source id', () => {
-  const dir = new URL('instruments/', root);
-  const files = hasExport ? readdirSync(dir) : Object.keys(fixtureFiles);
+  const files = Object.keys(fixtureFiles);
   assert.ok(files.length <= 400);
-  assert.ok(files.reduce((n,f) => n + (hasExport ? statSync(new URL(f,dir)).size : Buffer.byteLength(fixtureFiles[f])),0) <= 25_000_000);
+  assert.ok(files.reduce((n,f) => n + Buffer.byteLength(fixtureFiles[f]),0) <= 25_000_000);
   assert.equal(manifest.count, manifest.odata_count);
   assert.equal(index.records.length, manifest.count);
   const ids = new Set();
@@ -44,10 +34,10 @@ test('instrument export stays within file/byte budget and reconciles every uniqu
     const packed = json(c.path).records;
     assert.equal(packed.length,c.count);
     for (const value of packed) {
-      const r=unpack(value,manifest.schemas,manifest.strings);
+      const record=unpack(value,manifest.schemas,manifest.strings); const r=record.source;
       assert.ok(!ids.has(r.id));ids.add(r.id);
       assert.equal(manifest.lookup[r.id],i);
-      assert.equal(r.canonical_url,`https://www.legislation.gov.au/${r.id}/latest`);
+      assert.equal(record.opax.canonical_url,`https://www.legislation.gov.au/${r.id}/latest`);
       assert.equal(r.isInForce,true);assert.equal(r.collection,'LegislativeInstrument');
       assert.ok((r.versions || []).length <= 1);
       assert.ok(!('summary' in r));assert.ok(!('person_id' in r));
@@ -71,7 +61,7 @@ test('directory filters title, portfolio, type, commencement year and status wit
 
 test('detail has SSR facts, exact date labels, licence and authoritative version, without inferred commencement', async () => {
   const id = index.records[0][0];
-  const r = unpack(json(manifest.chunks[manifest.lookup[id]].path).records.find(v => unpack(v,manifest.schemas,manifest.strings).id===id),manifest.schemas,manifest.strings);
+  const r = unpack(json(manifest.chunks[manifest.lookup[id]].path).records.find(v => unpack(v,manifest.schemas,manifest.strings).source.id===id),manifest.schemas,manifest.strings).source;
   const result=await instrumentPage(id,new URL('https://opax.com.au/instrument/'+id),read,block);
   assert.equal(result.status,200);assert.match(result.prerender,/id="prerender"/);
   for(const label of ['Made','Registered','Commenced','Status','Portfolio','Type']) assert.ok(result.prerender.includes(`<dt>${label}</dt>`));
@@ -94,10 +84,8 @@ test('instruments sitemap contains ids only and its type count/lastmod equal the
     assert.ok([...f.body.matchAll(/<loc>(.*?)<\/loc>/g)].every(([,url])=>/^https:\/\/opax.com.au\/instrument\/[CF]\d{4}[A-Z]\d{5}$/.test(url)));
     assert.doesNotMatch(f.body,/<(?:name|title)>/);
   }
-  if(hasExport) {
-    const crawl=json('crawl/manifest.json');assert.equal(crawl.counts.instruments,manifest.count);
-    assert.equal(crawl.files.filter(f=>f.path.startsWith('/sitemaps/instruments-')).reduce((n,f)=>n+f.count,0),manifest.count);
-  }
+  const groups={static:[]}; addInstrumentDiscovery(groups,manifest);
+  assert.equal(sitemapFiles(groups).counts.instruments,manifest.count);
 
 });
 
@@ -107,7 +95,7 @@ test('null/unknown ids return noindex 404 through the actual Worker and no paid 
   const missing=await instrumentPage(null,new URL('https://opax.com.au/instrument/null'),read,block);assert.equal(missing.status,404);
   globalThis.HTMLRewriter=class { on(){return this} transform(res){return res} };
   const paths=[];
-  const env={COMMUNITY_ORIGIN:'https://opax.com.au',ASSETS:{async fetch(req){const p=new URL(req.url).pathname;paths.push(p);try{return new Response(!hasExport && p.startsWith('/instruments/') ? fixtureFiles[p.slice('/instruments/'.length)] : readFileSync(new URL(p==='/'?'index.html':p.slice(1),root)))}catch{return new Response('Not found',{status:404})}}}};
+  const env={COMMUNITY_ORIGIN:'https://opax.com.au',ASSETS:{async fetch(req){const p=new URL(req.url).pathname;paths.push(p);try{return new Response(p.startsWith('/instruments/') ? fixtureFiles[p.slice('/instruments/'.length)] : readFileSync(new URL(p==='/'?'index.html':p.slice(1),root)))}catch{return new Response('Not found',{status:404})}}}};
   for(const id of ['null','NULL','%6Eull','undefined','unknown','F9999L99999','']) {
     const res=await worker.fetch(new Request('https://opax.com.au/instrument/'+id),env,{});
     assert.equal(res.status,404,id);assert.equal(res.headers.get('x-robots-tag'),'noindex');
@@ -116,4 +104,86 @@ test('null/unknown ids return noindex 404 through the actual Worker and no paid 
     const res=await worker.fetch(new Request('https://opax.com.au'+path),env,{});assert.equal(res.status,200);
   }
   assert.ok(paths.every(p=>p==='/'||p.startsWith('/instruments/')));
+  for(const m of [null,{...manifest,complete:false}]) {
+    const missingEnv={...env,ASSETS:{async fetch(req){const p=new URL(req.url).pathname;
+      if(p==='/')return new Response(readFileSync(new URL('index.html',root)));
+      return m && p==='/instruments/manifest.json'?new Response(JSON.stringify(m)):new Response('missing',{status:404});
+    }}};
+    for(const path of ['/instruments','/instrument/F2026L00001']) {
+      const res=await worker.fetch(new Request('https://opax.com.au'+path),missingEnv,{});
+      assert.equal(res.status,404,path);assert.equal(res.headers.get('x-robots-tag'),'noindex');
+    }
+  }
+});
+
+
+test('missing or incomplete catalogue gives directory and valid-id detail 404', async () => {
+  for (const read of [async () => { throw new Error('asset 404') }, async () => ({...manifest,complete:false})]) {
+    for (const [id,path] of [[null,'/instruments'],['F2026L00001','/instrument/F2026L00001']]) {
+      const result=await instrumentPage(id,new URL('https://opax.com.au'+path),read,block);
+      assert.equal(result.status,404); assert.match(result.prerender,/not yet available/);
+      assert.doesNotMatch(result.prerender,/\/subject\/person\//);
+    }
+  }
+  for(const missing of [manifest.index_url,manifest.chunks[0].path]) {
+    const result=await instrumentPage(missing===manifest.index_url?null:'F2026L00001',new URL('https://opax.com.au/instruments'),async path=>{
+      if(path===missing)throw new Error('asset 404');return json(path);
+    },block); assert.equal(result.status,404);
+  }
+});
+
+test('missing and incomplete catalogues omit sitemap type and llms discovery', () => {
+  const corpus={version:'fixture',expected_resources:0,sources:[]};
+  const grants={federal:{meta:{generated:'2026-10-09',coverage:'fixture'}},qld:{meta:{generated:'2026-10-09',coverage:'fixture'}}};
+  for(const m of [null,{}, {...manifest,complete:false}, {...manifest,metadata_coverage:{expanded_titles:0,missing_expansion_ids:['F2026L00001']}}]) {
+    const groups={static:[]}; addInstrumentDiscovery(groups,m);
+    assert.equal('instruments' in groups,false);
+    assert.equal('instruments' in sitemapFiles(groups).counts,false);
+    assert.deepEqual(instrumentCrawlEntries(m),[]);
+    assert.doesNotMatch(llmsText(corpus,grants,m),/\/instruments|\/instrument\//);
+    assert.equal(catalogueComplete(m),false);
+  }
+  assert.match(llmsText(corpus,grants,manifest),/https:\/\/opax.com.au\/instruments/);
+});
+
+test('navigation adds Instruments only for a complete manifest and preserves menus', async () => {
+  const source=readFileSync(new URL('navigation.js',root),'utf8').replace(/import\('\/instruments.js\?v=[^']+'\)/,"Promise.resolve({ catalogueComplete })");
+  for(const m of [null,{...manifest,complete:false},manifest]) {
+    const inserted=[];
+    const bills={closest(){return this},insertAdjacentHTML(where,html){inserted.push(html)}};
+    const desktop={innerHTML:'',querySelector(){return bills}},mobile={innerHTML:'',querySelector(){return bills}};
+    const context={catalogueComplete,URLSearchParams,location:{pathname:'/',search:''},document:{querySelector(s){return s.includes('primary-nav')?desktop:mobile},querySelectorAll(){return []}},fetch:async()=>({ok:m!==null,json:async()=>m})};
+    runInNewContext(source,context);
+    await context.OpaxNavigation.instrumentsReady;
+    assert.doesNotMatch(desktop.innerHTML,/href="\/instruments"/);
+    assert.equal(inserted.length,m===manifest?2:0);
+    assert.equal(context.OpaxNavigation.sections.some(s=>s.id==='instruments'),m===manifest);
+    if(m===manifest) assert.ok(inserted.every(s=>s.includes('href="/instruments"')));
+  }
+  for(const file of ['index.html','home.html','home-prototype.html']) assert.doesNotMatch(readFileSync(new URL(file,root),'utf8'),/data-panel="instruments"/);
+});
+
+test('parsed catalogue is reused per isolate and failed reads can recover', async () => {
+  const calls=[];
+  const assets={async fetch(req){const p=new URL(req.url).pathname;calls.push(p);return new Response(fixtureFiles[p.slice('/instruments/'.length)])}};
+  const read=instrumentReader(assets);assert.equal(read,instrumentReader(assets));
+  await Promise.all([instrumentPage(null,new URL('https://opax.com.au/instruments'),read,block),instrumentPage(null,new URL('https://opax.com.au/instruments?q=jane'),read,block)]);
+  assert.deepEqual(calls.sort(),['/instruments/index.json','/instruments/manifest.json']);
+  let available=false;
+  const recovering=instrumentReader({async fetch(){return available?new Response(fixtureFiles['manifest.json']):new Response('',{status:404})}});
+  await assert.rejects(recovering('/instruments/manifest.json'));
+  available=true; assert.equal((await recovering('/instruments/manifest.json')).count,1);
+});
+
+test('source block is verbatim, OPAX fields separate, authoritative link unique and licence accurate', async () => {
+  const result=await instrumentPage('F2026L00001',new URL('https://opax.com.au/instrument/F2026L00001'),read,block);
+  assert.equal((result.prerender.match(/href="https:\/\/www.legislation.gov.au\/F2026L00001\/latest"/g)||[]).length,1);
+  const source=result.prerender.match(/All exported source metadata<\/summary><pre>(.*?)<\/pre>/s)[1];
+  assert.doesNotMatch(source,/canonical_url|_opax_metadata|commencementDate/);
+  assert.match(result.prerender,/OPAX-derived fields/);
+  assert.deepEqual(unpack(json(manifest.chunks[0].path).records[0],manifest.schemas,manifest.strings).source,fixture.titles[0]);
+  const licence=readFileSync(new URL('index.html',root),'utf8');
+  assert.doesNotMatch(licence,/current\/latest\s+version metadata selected/);
+  assert.match(licence,/one API-returned version per title, which may be historical/);
+  assert.match(manifest.attribution.dated,/9 October 2026/);
 });

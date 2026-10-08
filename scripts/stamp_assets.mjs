@@ -121,7 +121,7 @@ async function refreshFonts() {
 // --- stamping ---------------------------------------------------------------
 
 /** [importer, module]: modules that fetch photos/people.json or the roster themselves. */
-export const MODULE_STAMPS = [['app.js', 'quiz.js'], ['app.js', 'timemachine.js'], ['home.js', 'home-data.js']]
+export const MODULE_STAMPS = [['app.js', 'quiz.js'], ['app.js', 'timemachine.js'], ['home.js', 'home-data.js'], ['navigation.js', 'instruments.js']]
 
 /** Write each MODULE_STAMPS module's content hash into its importer; returns the importers that were stale. */
 function stampModules({ check }) {

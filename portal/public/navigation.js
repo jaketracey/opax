@@ -15,7 +15,6 @@
     ] },
     { id: 'money', label: 'Money', href: '/money' },
     { id: 'bills', label: 'Bills', href: '/bills' },
-    { id: 'instruments', label: 'Instruments', href: '/instruments' },
     { id: 'reports', label: 'Reports', children: [
       ['/reports', 'All reports', 'Sourced reading paths through the record.'],
       ['/reports/grants-allocation', 'Where community funding goes', 'Grant invitations, awards and seat competitiveness.'],
@@ -210,6 +209,22 @@
   const mobile = document.querySelector('#nav-drawer nav');
   if (desktop) desktop.innerHTML = pageSections.map(s => s.children ? `<li class="nav-item has-menu"><button type="button" class="nav-link" data-panel="${s.id}" aria-expanded="false" aria-controls="menu-${s.id}">${esc(s.label)}<svg class="nav-caret" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button><div class="megamenu megamenu-wide" id="menu-${s.id}" hidden><div class="mm-grid"${s.id==='reports'?' id="menu-reports-list"':''}>${s.children.map(([href,label,desc])=>`<a class="mm-link" href="${href}"><span class="mm-title">${esc(label)}</span><span class="mm-blurb">${esc(desc)}</span></a>`).join('')}</div>${s.id==='reports'?'<a class="mm-all" href="/reports">All reports</a>':''}</div></li>` : `<li class="nav-item"><a class="nav-link" data-panel="${s.id}" href="${s.href}">${esc(s.label)}</a></li>`).join('');
   if (mobile) mobile.innerHTML = pageSections.map(s => s.children ? `<details class="drawer-group" id="drawer-group-${s.id}"><summary class="drawer-section">${esc(s.label)}</summary><ul class="drawer-list">${s.children.map(([href,label])=>`<li><a class="drawer-link" data-panel="${s.id}" href="${href}">${esc(label)}</a></li>`).join('')}</ul></details>` : `<a class="drawer-link drawer-primary" data-panel="${s.id}" href="${s.href}">${esc(s.label)}</a>`).join('');
+  // A missing or incomplete optional catalogue must not advertise a dead route.
+  // Insert only the new anchors, preserving the existing menu event handlers.
+  const instrumentsReady = Promise.all([
+    fetch('/instruments/manifest.json').then(r => r.ok ? r.json() : null),
+    import('/instruments.js?v=48fb79fb35')
+  ]).then(([manifest, { catalogueComplete }]) => {
+    if (!catalogueComplete(manifest)) return;
+    sections.splice(sections.findIndex(s => s.id === 'bills') + 1, 0,
+      { id: 'instruments', label: 'Instruments', href: '/instruments' });
+    desktop?.querySelector('[data-panel="bills"]')?.closest('li')?.insertAdjacentHTML('afterend',
+      '<li class="nav-item"><a class="nav-link" data-panel="instruments" href="/instruments">Instruments</a></li>');
+    mobile?.querySelector('[data-panel="bills"]')?.insertAdjacentHTML('afterend',
+      '<a class="drawer-link drawer-primary" data-panel="instruments" href="/instruments">Instruments</a>');
+    if (instrumentPage) for (const link of document.querySelectorAll('a[href="/instruments"]')) link.setAttribute('aria-current', 'page');
+  }).catch(() => {});
+  globalThis.OpaxNavigation.instrumentsReady = instrumentsReady;
   if (instrumentPage) {
     mountDesktop(); mountDrawer();
     for (const link of document.querySelectorAll('a[href="/instruments"]')) link.setAttribute('aria-current', 'page');

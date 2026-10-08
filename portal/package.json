@@ -19,6 +19,7 @@
     "test:community": "node --test test/community.test.mjs",
     "build:grants-map": "node grants-map/build.mjs",
     "build:voice": "node voice/build.mjs",
+    "check:instruments-release": "python3 ../scripts/check_instruments_release.py",
     "test": "node --test test/*.test.mjs",
     "build:social": "node ../scripts/build_social_catalog.mjs",
     "insights": "node ../scripts/insights.mjs"

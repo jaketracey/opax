@@ -22,3 +22,26 @@ export function filterInstruments(records, params) {
     && (!type || r[3] === type) && (!status || r[5] === status)
     && (!year || (r[4]?.slice(0,4) || 'unknown') === year));
 }
+
+/** One availability rule for navigation, SSR and crawl discovery. */
+export function catalogueComplete(m) {
+  if (!m || m.complete !== true || m.metadata_only !== true
+    || m.scope !== "collection eq 'LegislativeInstrument' and isInForce eq true"
+    || !Number.isInteger(m.count) || m.count < 1 || m.count !== m.odata_count
+    || m.metadata_coverage?.expanded_titles !== m.count
+    || !Array.isArray(m.metadata_coverage?.missing_expansion_ids)
+    || m.metadata_coverage.missing_expansion_ids.length
+    || !m.lookup || !Array.isArray(m.chunks) || !m.chunks.length
+    || m.index_url !== '/instruments/index.json' || !Array.isArray(m.schemas)
+    || typeof m.generated_at !== 'string' || !Number.isFinite(Date.parse(m.generated_at))
+    || !/^\d{4}-\d{2}-\d{2}T/.test(m.generated_at)
+    || new Date(m.generated_at.slice(0,10) + 'T00:00:00Z').toISOString().slice(0,10) !== m.generated_at.slice(0,10)
+    || !m.attribution || m.attribution.licence_url !== 'https://creativecommons.org/licenses/by/4.0/'
+    || !m.facets || !['portfolio','type','status','commencement_year'].every(k => Array.isArray(m.facets[k]))) return false;
+  const ids = Object.keys(m.lookup);
+  return ids.length === m.count && ids.every(id => FRL_ID.test(id)
+    && Number.isInteger(m.lookup[id]) && m.lookup[id] >= 0 && m.lookup[id] < m.chunks.length)
+    && m.chunks.every(c => c && /^\/instruments\/catalogue-[a-z0-9-]+\.json$/.test(c.path)
+      && Number.isInteger(c.count) && c.count > 0 && c.count <= 512)
+    && m.chunks.reduce((n,c) => n + c.count, 0) === m.count;
+}

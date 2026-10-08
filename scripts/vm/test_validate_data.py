@@ -14,6 +14,7 @@ import importlib.util
 import io
 import json
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -183,7 +184,9 @@ class EveryGroupTests(Base):
     def test_group_registry_has_every_group(self):
         for g in GROUPS:
             self.assertIn(g, vd.CHECKS)
-        self.assertEqual(list(vd.CHECKS)[:4], ["bills", "votes", "corpus", "wrangler"])
+        registry = (SCRIPT.parent / "data_groups.sh").read_text()
+        groups = re.search(r"^DATA_GROUPS=\(([^)]+)\)", registry, re.M).group(1).split()
+        self.assertEqual(list(vd.CHECKS), groups)
 
     def test_truncated_below_tolerance_fails_and_at_tolerance_passes(self):
         for g, (rel, _, path, keep) in self.SINGLE.items():

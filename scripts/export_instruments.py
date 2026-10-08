@@ -12,7 +12,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from parli.ingest.frl_instruments import Held, ID, LICENCE, SCOPE, guard_count, local_path
+from parli.ingest.frl_instruments import Held, ID, LICENCE, SCOPE, guard_count, local_path, validate_title
 
 MAX_FILES, MAX_BYTES, CHUNK_ROWS = 400, 25_000_000, 512
 SOURCE = "Source: Federal Register of Legislation (legislation.gov.au), CC BY 4.0"
@@ -65,7 +65,16 @@ def plan_export(snapshot):
     if snapshot.get("scope") != SCOPE or not snapshot.get("metadata_only"):
         raise Held("Only reconciled in-force metadata snapshots may be exported")
     if len(rows) != snapshot["count"]: raise Held("Duplicate or mismatched staged rows")
-    generated = snapshot["generated_at"]
+    coverage = snapshot.get("metadata_coverage", {})
+    if coverage.get("expanded_titles") != len(rows) or coverage.get("missing_expansion_ids") != []:
+        raise Held("Incomplete expanded metadata: every title must have source-returned relationships")
+    for row in rows:
+        validate_title(row)
+        if not all(isinstance(row.get(k), list) for k in ("versions", "administeringDepartments")):
+            raise Held("Incomplete expanded metadata fields")
+        if "_opax_metadata" in row:
+            raise Held("Legacy incomplete metadata must be reacquired")
+    generated = snapshot.get("downloaded_at") or snapshot["generated_at"]
     date = datetime.fromisoformat(generated.replace("Z", "+00:00")).strftime("%-d %B %Y")
     attribution = {
         "source": SOURCE, "source_url": "https://www.legislation.gov.au/",
@@ -81,7 +90,10 @@ def plan_export(snapshot):
         year = (r.get("makingDate") or "")[:4]
         if not re.fullmatch(r"\d{4}", year): year = "unknown"
         groups[year].append(r)
-    schemas, strings, pack = packer(rows)
+    records = {r["id"]: {"source": dict(r), "opax": {
+        "canonical_url": f"https://www.legislation.gov.au/{r['id']}/latest"
+    }} for r in rows}
+    schemas, strings, pack = packer(list(records.values()))
     chunks, lookup, catalogue, payloads = [], {}, [], {}
     portfolios, types, statuses, commencement_years = set(), set(), set(), set()
     for year, items in sorted(groups.items()):
@@ -91,24 +103,21 @@ def plan_export(snapshot):
             chunk_index = len(chunks)
             projected = []
             for r in batch:
-                metadata = dict(r)
-                metadata["canonical_url"] = f"https://www.legislation.gov.au/{r['id']}/latest"
                 # Version start/status start are not an instrument's commencement.
                 commenced = r.get("commencementDate")
-                metadata["commencementDate"] = commenced
                 portfolio = sorted({d["portfolio"] for d in r.get("administeringDepartments", []) if d.get("portfolio")})
                 kind, status = instrument_type(r), r.get("status") or "Not supplied"
                 catalogue.append([r["id"], r["name"], portfolio, kind, commenced, status, chunk_index])
                 lookup[r["id"]] = chunk_index
                 portfolios.update(portfolio); types.add(kind); statuses.add(status)
                 commencement_years.add(commenced[:4] if commenced else "unknown")
-                projected.append(pack(metadata))
+                projected.append(pack(records[r["id"]]))
             body = encoded({"records": projected})
             payloads[filename] = body
             chunks.append({"path": "/instruments/" + filename, "year": year, "count": len(batch), "bytes": len(body)})
     catalogue.sort(key=lambda r: (r[1].casefold(), r[0]))
     payloads["index.json"] = encoded({"fields": ["id", "title", "portfolios", "type", "commenced", "status", "chunk"], "records": catalogue})
-    manifest = {"schema": 1, "generated_at": generated, "count": len(rows),
+    manifest = {"schema": 1, "complete": True, "generated_at": generated, "downloaded_at": generated, "count": len(rows),
                 "odata_count": snapshot["odata_count"], "scope": SCOPE, "metadata_only": True,
                 "index_url": "/instruments/index.json", "attribution": attribution,
                 "schemas": schemas, "strings": strings, "lookup": lookup, "chunks": chunks,
@@ -121,7 +130,7 @@ def plan_export(snapshot):
                 "limitations": ["InForce includes legislation made but not yet commenced.",
                                  "The titles/version API does not supply a whole-instrument commencement date; missing dates stay unknown.",
                                  "Unbounded/bulk filtered version expansions timed out; combined latest/current filtering and combined relationship expansion failed source probes. No relationships inferred.",
-                                 "Expanded navigation pages can omit a title. Plain title pages are independently reconciled; missing expansion ids are listed in metadata_coverage, without inferred relationships.",
+                                 "Plain and expanded pages are independently matched by id. Any omitted title or expansion field holds publication; explicit source-returned empty arrays are retained.",
                                  "No document bodies, model summaries, person entities or identity joins.",
                                  "One API-returned version per title is acquired. It is not necessarily current/latest; use the authoritative FRL latest link where a latest version was not returned. Full history is phase 2."]}
     payloads["manifest.json"] = encoded(manifest)

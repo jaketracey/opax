@@ -466,9 +466,9 @@ def check_taxcharity() -> list[str]:
     return errs + _check_dir(d, r"[0-9]{2}\.json", TAXCHARITY_MIN_RATIO)
 
 
-def check_instruments() -> list[str]:
+def check_instruments(directory=None, compare_head=True) -> list[str]:
     """Reconciled, bounded metadata export; compare rows, not year-file counts."""
-    directory = ROOT / PUBLIC / "instruments"
+    directory = Path(directory) if directory is not None else ROOT / PUBLIC / "instruments"
     try:
         manifest = json.loads((directory / "manifest.json").read_text())
         rows = json.loads((directory / "index.json").read_text())["records"]
@@ -477,7 +477,14 @@ def check_instruments() -> list[str]:
             return ["instruments counts do not reconcile"]
         if not manifest["metadata_only"] or len(manifest["lookup"]) != count:
             return ["instruments metadata scope or lookup mismatch"]
-        old = head_bytes("portal/public/instruments/manifest.json")
+        coverage = manifest.get("metadata_coverage", {})
+        if manifest.get("complete") is not True or coverage.get("expanded_titles") != count or coverage.get("missing_expansion_ids") != []:
+            return ["instruments expanded metadata incomplete"]
+        if manifest.get("scope") != "collection eq 'LegislativeInstrument' and isInForce eq true":
+            return ["instruments source scope mismatch"]
+        if not manifest.get("generated_at") or manifest.get("downloaded_at") != manifest["generated_at"]:
+            return ["instruments latest download date missing"]
+        old = head_bytes("portal/public/instruments/manifest.json") if compare_head else None
         if old and count < json.loads(old)["count"] * .98:
             return ["instruments snapshot shrank more than 2%"]
         files = list(directory.glob("*.json"))
@@ -498,13 +505,17 @@ def check_instruments() -> list[str]:
             records = json.loads((directory / filename).read_text())["records"]
             if len(records) != chunk["count"]: return ["instruments chunk count mismatch"]
             for packed in records:
-                row = unpack(packed); key = row["id"]
+                record = unpack(packed); row = record["source"]; key = row["id"]
                 if not re.fullmatch(r"[CF]\d{4}[A-Z]\d{5}", key) or key in ids:
                     return ["invalid or duplicate FRL id"]
-                if manifest["lookup"].get(key) != i or row["canonical_url"] != f"https://www.legislation.gov.au/{key}/latest":
+                if manifest["lookup"].get(key) != i or record["opax"]["canonical_url"] != f"https://www.legislation.gov.au/{key}/latest":
                     return ["instruments lookup or canonical URL mismatch"]
                 if row["collection"] != "LegislativeInstrument" or row["isInForce"] is not True:
                     return ["out-of-scope instrument"]
+                if not all(isinstance(row.get(k), list) for k in ("versions", "administeringDepartments")) or "_opax_metadata" in row:
+                    return ["instrument expanded fields incomplete"]
+                if not isinstance(row.get("name"), str) or not row["name"]:
+                    return ["instrument title missing"]
                 ids.add(key)
         if len(ids) != count or {r[0] for r in rows} != ids: return ["instrument ids do not reconcile"]
         if manifest["attribution"]["licence_url"] != "https://creativecommons.org/licenses/by/4.0/":

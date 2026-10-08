@@ -24,8 +24,9 @@ finish and Jake approves the source. The orchestrator owns promotion.
 The website robots policy requires a ten-second delay. The API host's robots
 path returned 404. The reuse guidance prefers subsequent incremental website
 crawls outside **08:00–20:00 UTC+10**. This lane conservatively observes that
-window for API acquisition too, including a stop if it begins mid-run. No source
-requests were made after the busy window began. The next quiet period begins at
+window for API acquisition too. The review identified that the final hour was inside
+Melbourne's AEDT busy period; round 1 now blocks both timezone readings before every
+request, including policy probes. The next quiet period begins at
 **21:00 Melbourne / 10:00 UTC on 9 October**. Jake was asked whether this initial,
 metadata-only API run may continue during the busy period; no answer has been
 assumed. The weekly implementation keeps the quiet-hours guard.
@@ -42,14 +43,14 @@ An expanded page at offset 5,200 returned only 99 parents against the same scope
 count. The previous reconciliation rejected the resulting duplicate instead of
 writing a partial snapshot. The corrected loader independently enumerates plain
 title pages with `$orderby=id`, `$top=100` and fixed `$skip` increments of 100.
-Expanded navigation metadata is matched by explicit id. It preserves every
-returned field and identifies missing expansions without asserting empty
-relationships. Plain unique ids must match the source count before and after
+Expanded navigation metadata is matched by explicit id. Round 1 retries any omitted
+parent or field up to three times and holds publication if it remains missing. Only
+explicit source-returned empty arrays count as empty relationships. Plain unique ids must match the source count before and after
 acquisition. Empty snapshots and shrinkage exceeding 2% are refused.
 
-Interrupted pages resume from the checkpoint. Completed checkpoints are cleared
-for the next weekly acquisition, even if the count is unchanged. A count/scope
-change requires a fresh checkpoint directory; the existing evidence is retained.
+Interrupted pages resume only within their original quiet window and full query/count
+fingerprint. Legacy, expired, completed or mismatched checkpoints automatically rotate
+to `<checkpoint>.previous`, preserving the most recent evidence and restarting fresh.
 Each run is capped at 600 HTTP attempts, with at least two seconds between API
 requests and backoff for 429, 5xx and transport failures.
 
@@ -87,13 +88,13 @@ checked-in search manifest; that unrelated manifest change is excluded.
 
 ## Validation and remaining gate
 
-Eight offline Python tests cover ordered paging/count reconciliation, missing
-expanded parents, resume/idempotence, fresh weekly metadata, moving counts,
-empty/shrink refusal, request backoff/budget and export budget/preservation.
-The portal suite has **940 tests: 939 pass and one release-gate failure**, because
-the complete accepted export does not yet exist. TypeScript and the deploy
-workflow's build/stamping/privacy/photo checks pass; `wrangler deploy` was not
-run. The held wiring passes shell syntax checks.
+Round 1 passes **944/944 default Node tests with no catalogue**. The separate
+`check:instruments-release` gate exits 1 with "complete catalogue absent", as expected.
+Offline Python gates pass: **23/23** loader/export tests, **48/48** keep-if-unchanged
+checks, and **64** validation tests (**63 pass, one existing skip**). TypeScript passes.
+The stale registry-order test now compares the validator with `data_groups.sh`.
+No publisher requests or data acquisition occur in round 1. Initial implementation
+build and UI validation evidence below used local fixtures; no deployment occurred.
 
 The full asset-tree watcher produces `spawn EBADF` on this Mac. The actual portal
 Worker runs in local Wrangler with a smaller copied asset set. Curl verifies
@@ -105,8 +106,7 @@ The fixture exists only under gitignored local test state.
 `votes.json` remains byte-identical, `_meta.schema` 1, SHA-256
 `a77128dc0e1e1b3fdaa4bf84501e2c94af3125dea3cf0b2dffbc688a49d68546`.
 
-Resume in the quiet period (or after Jake answers the initial-run timing
-question), reconcile the complete title set, export, update coverage counts and
+Resume in a later acquisition round after 21:00 Melbourne, reconcile the complete title set, export, update coverage counts and
 years, rebuild crawl/search, and rerun all gates against actual source records.
 Then commit the catalogue locally for source review; the orchestrator alone
 merges after Jake approves it.
@@ -121,3 +121,27 @@ repeal/disallowance/supersession relationships without inference. Build a source
 version reader that clearly distinguishes as-made, compilation and authoritative
 text. A separate app lane adds an iOS instruments list/detail and its export
 contract, with device validation; no native work belongs to this lane.
+
+## Round 1: offline review fixes
+
+This round makes no publisher requests and acquires no data. The release check is
+`cd portal && npm run check:instruments-release`, separate from the default Node suite.
+The default suite is valid without an FRL catalogue. Routes return noindex 404s until
+it is complete; navigation, llms discovery and the instruments sitemap type are held.
+Parsed manifest/index assets are cached per Worker isolate for five minutes. The detail
+page has one authoritative link and separate source/OPAX metadata blocks. Licence copy
+allows a historical returned version. Attribution uses the latest download receipt.
+
+In the later acquisition round after 21:00 Melbourne on 9 October, use the existing
+`scripts/state/frl/checkpoint-bounded` checkpoint path. Its legacy configuration lacks
+a quiet-window stamp and complete scope fingerprint. It will automatically move to
+`checkpoint-bounded.previous`, and **none of its 5,299 rows will be reused**. The run
+reads policy receipts and a fresh count, then starts plain/expanded id-ordered paging
+at offset zero, retries missing expansions, checks the final count, stages the snapshot
+and exports only after full reconciliation. At the last count of 24,146: 242 page pairs,
+four policy reads and two count reads = **490 requests without retries**, bounded at
+600 attempts. Expect roughly **50–70 minutes**, allowing for plain-page reads beyond
+the cached expanded-page median of 9.92 seconds. This is an estimate, not a run receipt.
+If the known 99-parent expansion at offset 5,200 persists on all three reads, publication
+will hold after **113 requests** (without transport retries), preserving the checkpoint
+and any last accepted snapshot. No acquisition is started or scheduled in this round.
