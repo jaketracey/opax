@@ -4,15 +4,32 @@
 set -euo pipefail
 if [ "${OPAX_E2E_TEST_SUPERVISED:-0}" != 1 ]; then
   # A stuck/stopped child must fail QA, not hold the suite forever. The parent
-  # supervises only process groups whose command names this unique scratch tree.
+  # supervises only descendants of its own child, pinned by start time.
   exec python3 - "$0" "${OPAX_E2E_TEST_TIMEOUT_SECONDS:-300}" <<'PY'
-import os, shutil, signal, subprocess, sys, tempfile
+import os, shutil, signal, subprocess, sys, tempfile, time
 limit = int(sys.argv[2])
 if limit <= 0:
     raise SystemExit('Test timeout must be positive')
 scratch = tempfile.mkdtemp(prefix='opax-e2e-test.')
 env = dict(os.environ, OPAX_E2E_TEST_SUPERVISED='1', OPAX_E2E_TEST_SCRATCH=scratch)
 child = subprocess.Popen(['bash', sys.argv[1]], env=env, start_new_session=True)
+tracked = {}
+def remember():
+    rows = subprocess.check_output(['/bin/ps', '-axo', 'pid=,ppid=,pgid=,lstart='], text=True)
+    current = {}
+    for line in rows.splitlines():
+        fields = line.split(None, 3)
+        if len(fields) == 4:
+            current[int(fields[0])] = (int(fields[1]), int(fields[2]), fields[3])
+    if child.pid in current and child.pid not in tracked:
+        tracked[child.pid] = current[child.pid][2]
+    parents = {pid for pid, start in tracked.items() if pid in current and current[pid][2] == start}
+    while parents:
+        children = {pid for pid, (parent, _, start) in current.items() if parent in parents and pid not in tracked}
+        for pid in children:
+            tracked[pid] = current[pid][2]
+        parents = children
+    return {current[pid][1] for pid, start in tracked.items() if pid in current and current[pid][2] == start}
 def stop():
     try:
         os.killpg(child.pid, signal.SIGCONT)
@@ -30,7 +47,16 @@ signal.signal(signal.SIGTERM, interrupted)
 signal.signal(signal.SIGINT, interrupted)
 try:
     try:
-        rc = child.wait(timeout=limit)
+        deadline = time.monotonic() + limit
+        while child.poll() is None:
+            remember()
+            if time.monotonic() >= deadline:
+                raise subprocess.TimeoutExpired(child.args, limit)
+            try:
+                child.wait(timeout=0.1)
+            except subprocess.TimeoutExpired:
+                pass
+        rc = child.returncode
     except subprocess.TimeoutExpired:
         print(f'e2e harness: overall timeout after {limit}s', file=sys.stderr)
         stop()
@@ -38,8 +64,7 @@ try:
 finally:
     # qa-locked and the gate waiter lead separate groups; remove any leftovers
     # even if the supervised shell was killed before its EXIT trap ran.
-    rows = subprocess.check_output(['/bin/ps', '-axo', 'pid=,pgid=,command='], text=True)
-    groups = {int(r[1]) for line in rows.splitlines() if len(r := line.split(None, 2)) == 3 and scratch in r[2]}
+    groups = remember()
     for group in groups:
         if group != os.getpgrp():
             try:
