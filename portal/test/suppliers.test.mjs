@@ -122,12 +122,13 @@ test('directory metadata reports real coverage and unavailable status', async ()
 });
 
 test('sitemap publishes stable supplier IDs, not ambiguous name aliases', async () => {
-  const h = harness([supplier(), supplier({ id: otherId })]);
-  const xml = await (await h.context.sitemapXml({})).text();
-  assert.match(xml, /\/subject\/supplier<\/loc>/);
-  assert.ok(xml.includes(`/subject/supplier/${id}</loc>`));
-  assert.ok(xml.includes(`/subject/supplier/${otherId}</loc>`));
-  assert.ok(!xml.includes('Acme'));
+  const h = harness();
+  const body = readFileSync(new URL('../public/crawl/sitemaps/suppliers-1.xml', import.meta.url), 'utf8');
+  const xml = await (await h.context.sitemapXml({ ASSETS: { fetch: async () => new Response(body) } }, '/sitemaps/suppliers-1.xml')).text();
+  const rows = JSON.parse(readFileSync(new URL('../public/suppliers.json', import.meta.url), 'utf8')).suppliers;
+  assert.ok(xml.includes(`/subject/supplier/${rows[0].id}</loc>`));
+  assert.ok(xml.includes(`<priority>0.2</priority>`));
+  assert.ok(!xml.includes(encodeURIComponent(rows[0].name)));
 });
 
 test('published supplier index is accepted and canonicalizes a real profile', async () => {

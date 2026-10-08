@@ -32,7 +32,8 @@ function add(key, kind, title, href, text, extra={}) {
 // recognise a program row without relying on catalog position.
 export const programKey = id => String(id).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,80);
 export function programRecord(jur, row, agencies=[]) {
- const id=String(row.id), key=programKey(id), name=String(row.n||id);
+ if (typeof row?.id !== 'string' || !row.id.trim() || /^(null|undefined)$/i.test(row.id)) return null;
+ const id=row.id, key=programKey(id), name=String(row.n||id);
  const agency=Number.isInteger(row.ag)?agencies[row.ag]:typeof row.ag==='string'?row.ag:'';
  const cnc=Number(row.cnc)||0, selk=Number(row.selk)||0;
  const clause=selk>0?`; ${Math.round(100*cnc/selk)}% closed non-competitive where recorded`:'';
@@ -101,8 +102,9 @@ async function main() {
  }
  for(const jur of ['federal','qld']) {
   const index=await read(`graph/grants.${jur}.json`);
-  for(const p of index.programs||[]){const r=programRecord(jur,p,index.agencies||[]);add(r.key,r.kind,r.title,r.href,r.snippet,r.extra)}
+  for(const p of index.programs||[]){const r=programRecord(jur,p,index.agencies||[]);if(!r)continue;add(r.key,r.kind,r.title,r.href,r.snippet,r.extra)}
   for(const file of await files('grants/'+jur)) for(const r of Object.values(await read(`grants/${jur}/${file}`))) {
+   if (typeof r.id !== 'string' || !r.id.trim() || /^(null|undefined)$/i.test(r.id)) continue;
    const href='/money/grants/'+jur+'/recipient/'+encodeURIComponent(r.id);
    add(`${jur}:grant-recipient:${r.id}`,'grant',r.n,href,`${cash(r.t)} across ${r.c} grant records. ${(r.programs||[]).map(p=>p[0]).join('; ')}. ${(r.agencies||[]).map(a=>a[0]).join('; ')}.`,{aliases:[r.abn||'',...(r.aliases||[])].join(' '),from:year(r.y0),to:year(r.y1),state:jur,source:'Grant recipient profile',dateLabel:period(r.y0,r.y1)});
    for(const g of r.grants||[]) add(`${jur}:grant:${r.id}:${g.id}:${g.fy}`,'grant',`${g.n||g.pr||g.id} — ${r.n}`,href,`${cash(g.v)}. ${g.ag||''}. ${g.pr||''}. ${g.cat||''}. ${g.desc||''} ${g.el||''}.`,{aliases:`${r.n} ${r.abn||''} ${g.id}`,date:g.s||null,from:year(g.fy)||year(g.s),to:year(g.fy)||year(g.s),state:jur,source:index.meta.sourceShort,record_id:g.id,dateLabel:g.s?undefined:g.fy,url:g.guid?`https://www.grants.gov.au/Ga/Show/${g.guid}`:index.meta.source_url});

@@ -16,7 +16,7 @@ const dayLabel = (iso) => {
   return m ? `${Number(m[3])} ${DAY_MONTHS[Number(m[2]) - 1]} ${m[1]}` : '';
 };
 /** The recipient page with the award open above the overview. */
-export const awardHref = (row) => `/money/grants/federal/recipient/${encodeURIComponent(row.recipientId)}?award=${encodeURIComponent(row.id)}`;
+export const awardHref = (row) => row && /^abn:\d{11}$/.test(row.recipientId || '') && /^GA\d+(?:-A\d+)?$/.test(row.id || '') ? `/money/grants/federal/recipient/${encodeURIComponent(row.recipientId)}?award=${encodeURIComponent(row.id)}` : null;
 
 /** The rows the page lists for a month: well-formed awards only, in the file's order. */
 export function largestRows(data, month) {
@@ -30,7 +30,7 @@ const node = (tag, text, className) => {
   if (className) element.className = className;
   return element;
 };
-const link = (href, text) => { const a = node('a', text); a.href = href; return a; };
+const link = (href, text) => { if (!href) return node('span', text); const a = node('a', text); a.href = href; return a; };
 
 export function mountLargestGrants(root, { month, onTitle } = {}) {
   let destroyed = false;

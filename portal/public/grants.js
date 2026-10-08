@@ -105,6 +105,7 @@ export function fileKey (rid) {
 }
 
 export function grantRecipientUrl (jurisdiction, id) {
+  if (![jurisdiction, id].every(value => typeof value === 'string' && value.trim() && !/^(null|undefined)$/i.test(value.trim()))) return null
   return `/money/grants/${encodeURIComponent(jurisdiction)}/recipient/${encodeURIComponent(id)}`
 }
 
@@ -777,6 +778,7 @@ function moneyCell (v) {
 }
 
 function link (href, text, className) {
+  if (!href) return el('span', className, text)
   const a = el('a', className, text)
   a.href = href
   return a
@@ -788,7 +790,7 @@ function link (href, text, className) {
 
 export function mountGrants (container, opts = {}) {
   injectStyles()
-  const subjectHash = opts.subjectHash || ((kind, label) => `/subject/${kind}/${encodeURIComponent(label)}`)
+  const subjectHash = opts.subjectHash || ((kind, label) => typeof label === 'string' && label.trim() && !/^(null|undefined)$/i.test(label.trim()) ? `/subject/${kind}/${encodeURIComponent(label)}` : null)
   const searchHash = opts.searchHash || ((q) => `/search?q=${encodeURIComponent(q)}`)
 
   const state = {

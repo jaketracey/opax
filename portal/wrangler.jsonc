@@ -12,7 +12,7 @@
     // Page entry points must canonicalise www before serving the app, so
     // sign-in requests and host-only account cookies share one origin.
     // Other static assets still bypass the Worker. Share images are dynamic.
-    "run_worker_first": ["/", "/*.html", "/community", "/community/", "/connections", "/connections/", "/map", "/map/", "/api/*", "/bill-texts/*", "/og/*", "/ingest/*", "/mcp"]
+    "run_worker_first": ["/", "/*.html", "/community", "/community/", "/connections", "/connections/", "/map", "/map/", "/api/*", "/bill-texts/*", "/og/*", "/ingest/*", "/mcp", "/sitemap.xml", "/sitemaps/*", "/llms.txt"]
   },
 
   "kv_namespaces": [{"binding":"GENERATION_CACHE","id":"e0b56c0457374743b580e7210e7b4515"}],
@@ -63,6 +63,8 @@
     // the convention is the date of the corpus change. See docs/STREAMING.md
     // "Caching" and the MIGRATION-ARAG.md invariants.
     "CACHE_EPOCH": "2026-10-08-nightly",
+    "INDEXNOW_ENABLED": "true",
+    "INDEXNOW_DRY_RUN": "false",
     "DAILY_POST_ENABLED": "true",
     "X_ACCOUNT_ID": "2099044188113485825",
     "X_USERNAME": "OpaxAustralia",
@@ -143,7 +145,9 @@
       "workers_dev": true,
       "routes": [{ "pattern": "staging.opax.com.au", "custom_domain": true }],
       "services": [{ "binding": "STAGING_API", "service": "opax-portal" }],
-      "vars": { "APP_MINIMUM_VERSION":"0.0.0", "VOICE_ENABLED":"true", "VOICE_AGENT_ID":"agent_1501m22syqc3fhqsjkxnfy7d0xag", "VOICE_MONTHLY_SECONDS":"3000", "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-10-08-nightly", "DAILY_POST_ENABLED": "false", "BLUESKY_POST_ENABLED": "false", "BLOCKED_ASNS": "45102,24429,37963", "GENERATION_BLOCKED_ASNS": "32934", "GENERATION_BLOCKED_CIDRS": "116.179.32.0/21,220.181.108.0/24,119.249.100.0/24,180.97.39.0/24" },
+      "vars": { "APP_MINIMUM_VERSION":"0.0.0", "VOICE_ENABLED":"true", "VOICE_AGENT_ID":"agent_1501m22syqc3fhqsjkxnfy7d0xag", "VOICE_MONTHLY_SECONDS":"3000", "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-10-08-nightly",
+        "INDEXNOW_ENABLED": "false",
+        "INDEXNOW_DRY_RUN": "true", "DAILY_POST_ENABLED": "false", "BLUESKY_POST_ENABLED": "false", "BLOCKED_ASNS": "45102,24429,37963", "GENERATION_BLOCKED_ASNS": "32934", "GENERATION_BLOCKED_CIDRS": "116.179.32.0/21,220.181.108.0/24,119.249.100.0/24,180.97.39.0/24" },
       "ratelimits": [],
       // Never post from staging; triggers would otherwise be inherited.
       "triggers": { "crons": [] },

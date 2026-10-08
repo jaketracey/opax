@@ -4,6 +4,8 @@ import { rankedMoneyAnswer } from './ask-money'
 import { paidAnswer, mentionsPay } from './ask-pay'
 import { rewriteFollowUp, clarifyPayload, REWRITE_SYSTEM, type FollowUpRewrite } from './ask-rewrite'
 import { slugIndex } from './person-slug'
+import { missingEntitySlug } from './crawl-hygiene'
+import { runIndexNow, INDEXNOW_CRON } from './indexnow'
 import { type MoneyFacts, moneyOverviewPrompt, verifiedOverview } from './ask-money-overview'
 import {readGenerationCache, storeGenerationCache} from './generation-cache'
 import { isWitness, isUnattributed, belongsToScope, scopeFilter, speakerHref, splitSpeakers, personScope, scopedCollaborators, type SpeechScope } from '../public/speech-attribution.js'
@@ -3688,7 +3690,7 @@ function prerenderBlock(heading: string, sentence: string, kicker: string): stri
 /** Canonical for a route: the clean path, plus the query only where it names the page. */
 function canonicalFor(url: URL, keepQuery: boolean): string {
   const path = url.pathname.replace(/\/+$/, '') || '/'
-  return `${SITE_ORIGIN}${path}${keepQuery && url.search ? url.search : ''}`
+  return `${SITE_ORIGIN}${path}${keepQuery && path !== '/money' && url.search ? url.search : ''}`
 }
 
 const publisher = { '@type': 'Organization', name: 'OPAX', url: SITE_ORIGIN, logo: `${SITE_ORIGIN}/favicon.svg` }
@@ -4574,6 +4576,7 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
     buildMeta(route, url, request, env, ctx),
   ])
   if (!shell.ok) return shell
+  const noindex = meta.status === 404 || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
   // JSON-LD sits in a <script>: keep "</script>" from ever appearing in it.
   const ld = meta.jsonLd ? JSON.stringify(meta.jsonLd).replace(/</g, '\\u003c') : null
   // The share image is drawn per route (see "Share images" below); a page
@@ -4601,7 +4604,7 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
     })
     .on('head', {
       element(el) {
-        if (meta.status === 404) el.append('<meta name="robots" content="noindex">', { html: true })
+        if (noindex) el.append('<meta name="robots" content="noindex">', { html: true })
       },
     })
   if (meta.prerender) {
@@ -4612,7 +4615,7 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
   headers.delete('etag') // the asset's tag describes the unrewritten file
   headers.delete('content-length')
   headers.set('content-type', 'text/html; charset=utf-8')
-  headers.set('x-robots-tag', meta.status === 404 ? 'noindex' : 'all')
+  headers.set('x-robots-tag', noindex ? 'noindex' : 'all')
   return new Response(request.method === 'HEAD' ? null : out.body, { status: meta.status, headers })
 }
 
@@ -4816,56 +4819,18 @@ function robotsTxt(): Response {
   return new Response(body, { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=86400' } })
 }
 
-/** Every indexable page, rebuilt from the data files and cached a day. */
-async function sitemapXml(env: Env): Promise<Response> {
-  return cachedJson('/sitemap.xml', async () => {
-    const [people, moneyData, reports, campaigners, suppliers, agencies, electorates] = await Promise.all([
-      loadPeople(env),
-      loadMoney(env),
-      loadReports(env),
-      // The only optional one. A campaigners.json the exporter has not written
-      // yet must cost the sitemap its campaigner rows, not the whole sitemap.
-      loadCampaigners(env).catch(() => null),
-      loadSuppliers(env).catch(() => null),
-      loadAgencies(env).catch(() => null),
-      loadElectorates(env).catch(() => null),
-    ])
-    const rows: string[] = []
-    const add = (path: string, lastmod?: string) => {
-      const mod = lastmod ? `<lastmod>${lastmod.slice(0, 10)}</lastmod>` : ''
-      rows.push(`<url><loc>${escXml(`${SITE_ORIGIN}${path}`)}</loc>${mod}</url>`)
-    }
-    add('/')
-    for (const page of ['search', 'money', 'connections', 'reports', 'explore', 'discover', 'about', 'methods', 'stats', 'expenses', 'privacy', 'support']) add(`/${page}`)
-    for (const a of agencies?.agencies ?? []) add(`/subject/agency/${a.id}`, agencies?.meta?.generated_at)
-    for (const r of reports.reports) add(`/reports/${r.slug}`, r.updated)
-    add('/subject/topic')
-    for (const slug of Object.keys(TOPIC_NAMES)) add(`/subject/topic/${slug}`)
-    for (const dir of ['person', 'party', 'donor', 'campaigner', 'supplier', 'agency', 'electorate']) add(`/subject/${dir}`)
-    for (const e of electorates?.electorates || []) add(e.url, electorates?.generated)
-    // Parties: every label the money data or the people data knows.
-    const partyLabels = new Map<string, string>()
-    for (const n of moneyData.parties.values()) partyLabels.set(foldName(n.label), n.label)
-    for (const p of people.people) if (p.party) partyLabels.set(foldName(p.party), partyLabels.get(foldName(p.party)) ?? p.party)
-    for (const label of [...partyLabels.values()].sort()) add(`/subject/party/${encodeURIComponent(label)}`, moneyData.generated || people.generated)
-    // One row per page: a spelling that lost its slug to a fuller twin still has its own.
-    for (const p of people.people) add(personPath(people, p.name), people.generated)
-    for (const n of moneyData.donors.values()) add(`/subject/donor/${encodeURIComponent(n.label)}`, n.generated || moneyData.generated)
-    // byFold, not the raw list: two spellings of one name resolve to one page,
-    // and the length bound is the one matchSeoRoute enforces, so nothing listed
-    // here can 404 on the way the route was parsed.
-    if (campaigners) {
-      for (const c of campaigners.byFold.values()) {
-        if (c.name.length > CAMPAIGNER_NAME_MAX) continue
-        add(`/subject/campaigner/${encodeURIComponent(c.name)}`, campaigners.generated)
-      }
-    }
-    if (suppliers) {
-      for (const supplier of suppliers.suppliers) add(`/subject/supplier/${encodeURIComponent(supplier.id)}`, suppliers.generated)
-    }
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${rows.join('\n')}\n</urlset>\n`
-    return new Response(xml, { headers: { 'content-type': 'application/xml; charset=utf-8' } })
-  }, 86400)
+/** Generated from the published exports by build:crawl; each child is bounded. */
+async function sitemapXml(env: Env, path = '/sitemap.xml'): Promise<Response> {
+  if (path !== '/sitemap.xml' && !/^\/sitemaps\/[a-z-]+-[1-9]\d*\.xml$/.test(path)) return new Response('Not found', { status: 404, headers: { 'x-robots-tag': 'noindex' } })
+  const asset = await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/crawl${path}`))
+  if (!asset.ok) return new Response('Sitemap unavailable', { status: 503, headers: { 'cache-control': 'no-store' } })
+  return new Response(asset.body, { headers: { 'content-type': 'application/xml; charset=utf-8', 'cache-control': 'public, max-age=3600' } })
+}
+
+async function llmsTxt(env: Env): Promise<Response> {
+  const asset = await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/crawl/llms.txt`))
+  if (!asset.ok) return new Response('Corpus guide unavailable', { status: 503, headers: { 'cache-control': 'no-store' } })
+  return new Response(asset.body, { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=3600' } })
 }
 
 
@@ -5233,7 +5198,9 @@ async function route(
       // no asset answers reach here, so index.html itself is never rewritten.
       if (request.method === 'GET' || request.method === 'HEAD') {
         if (url.pathname.startsWith('/og/')) return await serveOgImage(url, request, env, ctx)
-        if (url.pathname === '/sitemap.xml') return await sitemapXml(env)
+        if (url.pathname === '/sitemap.xml' || url.pathname.startsWith('/sitemaps/')) return await sitemapXml(env, url.pathname)
+        if (url.pathname === '/llms.txt') return await llmsTxt(env)
+        if (missingEntitySlug(url.pathname)) return new Response(request.method === 'HEAD' ? null : 'Not found', { status: 404, headers: { 'x-robots-tag': 'noindex', 'content-type': 'text/plain; charset=utf-8' } })
         if (url.pathname === '/robots.txt') return robotsTxt()
         // The connections directory used to be a file of its own; its old address
         // (linked from evidence panels and corpus.json) forwards to the route.
@@ -5275,7 +5242,10 @@ export default {
     if (url.pathname === '/api/app/v1/manifest') return communityResponse(await appManifest(request, env))
     if (url.pathname.startsWith('/api/app/')) return communityResponse(appJson(request, {error:'not_found'}, 404))
     const entry = await pageEntry(request, env.ASSETS)
-    if (entry) return communityResponse(entry)
+    if (entry) {
+      if (/^\/search\/?$/.test(url.pathname)) entry.headers.set('x-robots-tag', url.search ? 'noindex' : 'all')
+      return communityResponse(entry)
+    }
     if (url.pathname.startsWith('/api/community/')) return communityResponse(await communityRoute(request, env, ctx))
     if (url.pathname.startsWith('/api/voice/')) return communityResponse(await voiceRoute(request, env, ctx, async path => {
       const target = new URL(path, env.COMMUNITY_ORIGIN)
@@ -5341,6 +5311,7 @@ export default {
 
   // Cron: one daily edition across connected channels. See docs/DAILY-POST.md.
   async scheduled(controller: ScheduledController, env: Env, _ctx: ExecutionContext): Promise<void> {
+    if (controller.cron === INDEXNOW_CRON) await runIndexNow(env, controller.scheduledTime)
     if (controller.cron === REPLY_EMAIL_CRON) {
       // Expiry and provider-ID cleanup also run while voice/community are paused.
       try {await expireVoiceSessions(env)} catch {console.error(JSON.stringify({event:'voice_housekeeping_failed'}))}

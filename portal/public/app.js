@@ -55,6 +55,20 @@ function esc(s) {
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 }
 
+/** Missing entity IDs are text, never a URL segment. */
+function hasEntityId(value) {
+  return typeof value === "string" && !!value.trim() && !/^(null|undefined)$/i.test(value.trim());
+}
+function entityHrefAttr(href) {
+  if (!hasEntityId(href)) return "";
+  try {
+    const path = new URL(href, "https://opax.com.au").pathname;
+    if (/^\/(doc|bill)\/?$/.test(path)) return "";
+    if (path.split("/").some(part => /^(null|undefined)$/i.test(decodeURIComponent(part).trim()))) return "";
+  } catch { return ""; }
+  return `href="${esc(href)}"`;
+}
+
 /** Only http(s) URLs from the corpus may render as links. */
 function safeUrl(u) {
   return typeof u === "string" && /^https?:\/\//i.test(u) ? u : null;
@@ -363,12 +377,12 @@ function metaHTML(item, { linkSpeaker = false, linkParty = false, portrait = fal
     ? `<span class="meta-portrait" data-speaker="${esc(item.speaker)}"></span>` : "";
   if (item.party && !isUnattributed(item)) {
     bits.push(linkParty
-      ? `<a class="meta-party" href="${esc(subjectHash("party", item.party))}">${partyChipHTML(item.party)}</a>`
+      ? `<a class="meta-party" ${entityHrefAttr(subjectHash("party", item.party))}>${partyChipHTML(item.party)}</a>`
       : partyChipHTML(item.party));
   }
   if (item.speaker && !hideSpeaker) {
     bits.push(linkSpeaker
-      ? `<a class="meta-speaker" href="${esc(speakerHref(item, subjectHash("person", item.speaker)))}">${esc(item.speaker)}</a>`
+      ? `<a class="meta-speaker" ${entityHrefAttr(speakerHref(item, subjectHash("person", item.speaker)))}>${esc(item.speaker)}</a>`
       : esc(item.speaker));
   }
   if (item.state) bits.push(esc(STATE_NAMES[item.state] || item.state));
@@ -1805,10 +1819,11 @@ function route() {
       const jurisdiction = segs[3] === 'recipient' ? segs[2] : (params.get('jur') || 'federal');
       let id;
       try { id = segs[3] === 'recipient' ? decodeURIComponent(segs[4]) : params.get('open'); } catch { id = ''; }
-      if (segs[3] !== 'recipient') replaceRoute(`/money/grants/${encodeURIComponent(jurisdiction)}/recipient/${encodeURIComponent(id)}`);
+      if (segs[3] !== 'recipient' && hasEntityId(id)) replaceRoute(`/money/grants/${encodeURIComponent(jurisdiction)}/recipient/${encodeURIComponent(id)}`);
       document.title = 'Grant recipient · OPAX';
       setCrumbs([{ label: 'Money', href: '/money' }, { label: 'Government grants', href: '/money/grants' }, { label: 'Recipient' }]);
-      openGrantRecipient(jurisdiction, id, manageFocus);
+      if (hasEntityId(id)) openGrantRecipient(jurisdiction, id, manageFocus);
+      else $("money-records-body").textContent = "Recipient not recorded.";
     } else if (segs[1] === 'grants' && /^\d{4}-\d{2}$/.test(params.get('largest') || '')) {
       // /money/grants?jur=federal&largest=2026-08: the month's largest awards (the daily edition links here).
       document.title = 'Largest grants · OPAX';
@@ -2764,7 +2779,7 @@ function sourceItem(s, num, passage = false) {
     const where = [STATE_NAMES[s.state] || (s.state ? String(s.state) : "Federal"), s.date ? fmtDate(s.date) : ""].filter(Boolean).join(" · ");
     by.innerHTML = `<span class="source-face" aria-hidden="true">${esc(String(s.speaker).split(/\s+/).map((w) => w[0] || "").slice(0, 2).join(""))}</span>
       <span class="source-byline-text">
-        <span class="source-byline-name"><a class="meta-speaker" href="${esc(speakerHref(s, subjectHash("person", s.speaker)))}">${esc(s.speaker)}</a>${s.party && !isUnattributed(s) ? ` <a class="meta-party" href="${esc(subjectHash("party", s.party))}">${partyChipHTML(s.party)}</a>` : ""}</span>
+        <span class="source-byline-name"><a class="meta-speaker" ${entityHrefAttr(speakerHref(s, subjectHash("person", s.speaker)))}>${esc(s.speaker)}</a>${s.party && !isUnattributed(s) ? ` <a class="meta-party" ${entityHrefAttr(subjectHash("party", s.party))}>${partyChipHTML(s.party)}</a>` : ""}</span>
         <span class="source-byline-sub">${esc(where)}</span>
       </span>`;
     li.appendChild(by);
@@ -2830,14 +2845,14 @@ function keySpeechItem(speech) {
   if (speech.speaker) {
     const speaker = document.createElement("a");
     speaker.className = "report-speech-speaker";
-    speaker.href = speakerHref(speech, subjectHash("person", speech.speaker));
+    if (hasEntityId(speech.speaker)) speaker.href = speakerHref(speech, subjectHash("person", speech.speaker));
     speaker.textContent = speech.speaker;
     nameLine.appendChild(speaker);
   }
   if (speech.party) {
     const party = document.createElement("a");
     party.className = "meta-party";
-    party.href = subjectHash("party", speech.party);
+    if (hasEntityId(speech.party)) party.href = subjectHash("party", speech.party);
     party.innerHTML = partyChipHTML(speech.party);
     nameLine.appendChild(party);
   }
@@ -3020,7 +3035,7 @@ function peopleCardHTML(people) {
       ? partyChipHTML(p.party_now || p.party)
       : (p.state ? esc(STATE_NAMES[p.state] || p.state) : "");
     return `<li>` +
-      `<a class="people-row" href="${esc(subjectHash("person", p.name))}" tabindex="-1">` +
+      `<a class="people-row" ${entityHrefAttr(subjectHash("person", p.name))} tabindex="-1">` +
       `<span class="people-face" data-speaker="${esc(p.name)}">` +
       `<span class="people-face-mono">${esc(p.name.slice(0, 1))}</span></span>` +
       `<span><span class="people-name">${esc(p.name)}</span>` +
@@ -3425,6 +3440,7 @@ function iconSvg(name) {
 
 /** An action link on the shared button: icon + label; primary = navy fill. */
 function actionBtn(icon, href, label, { external = false, primary = false } = {}) {
+  if (!entityHrefAttr(href)) return `<span class="ui-button">${iconSvg(icon)}<span>${esc(label)}</span></span>`;
   const ext = external ? ` rel="noopener" target="_blank"` : "";
   return `<a class="ui-button"${primary ? ' data-variant="primary"' : ""} href="${esc(href)}"${ext}>` +
     `${iconSvg(icon)}<span>${esc(label)}${external ? " ↗︎" : ""}</span></a>`;
@@ -3507,7 +3523,8 @@ function subjectHash(kind, label) {
   // A person in the roster is addressed by slug (/subject/person/tony-abbott);
   // anyone else, and every link written before the slugs arrive, by name. The
   // name form still opens the page and is rewritten to the slug on arrival.
-  const slug = kind === "person" ? personSlugs.byName.get(String(label)) : null;
+  if (!hasEntityId(label) || !hasEntityId(kind)) return null;
+  const slug = kind === "person" ? personSlugs.byName.get(label) : null;
   return `/subject/${kind}/${slug || encodeURIComponent(label)}`;
 }
 
@@ -3579,7 +3596,7 @@ function declaredTieHTML(ties) {
     if (kinds.includes("lobbyist")) labels.push("registered lobbying firm");
     if (kinds.includes("fits")) labels.push("FITS registrant");
     const org = tie.donor_id
-      ? `<a href="${esc(subjectHash("donor", tie.organisation))}">${esc(tie.organisation)}</a>`
+      ? `<a ${entityHrefAttr(subjectHash("donor", tie.organisation))}>${esc(tie.organisation)}</a>`
       : safeUrl(tie.fits_url)
         ? `<a href="${esc(tie.fits_url)}" rel="noopener" target="_blank">${esc(tie.organisation)} ↗︎</a>`
         : `<span>${esc(tie.organisation)}</span>`;
@@ -3602,7 +3619,7 @@ function declaredRowHTML(item, partyByName, { showDate = true } = {}) {
       ? `<img src="${esc(photo)}" width="48" height="48" loading="lazy" decoding="async" alt="">`
       : `<span aria-hidden="true"></span>`}</span>
     <div class="declared-entry">
-      <div class="declared-person"><a href="${esc(subjectHash("person", item.name))}">${esc(item.name)}</a>${party ? ` ${partyChipHTML(party)}` : ""}${chamber ? ` <span class="result-meta">${esc(chamber)}</span>` : ""}</div>
+      <div class="declared-person"><a ${entityHrefAttr(subjectHash("person", item.name))}>${esc(item.name)}</a>${party ? ` ${partyChipHTML(party)}` : ""}${chamber ? ` <span class="result-meta">${esc(chamber)}</span>` : ""}</div>
       <div class="declared-kind">${esc(kind)} · ${esc(category)}${item.ocr ? ` <span class="result-meta">· machine-read from a scan</span>` : ""}</div>
       <p class="declared-description">“${esc(item.description || "")}”${source ? ` <a class="declared-source-link" href="${esc(source)}" rel="noopener" target="_blank">${esc(sourceText)} ↗︎</a>` : ""}</p>
       ${declaredTieHTML(item.ties)}
@@ -3681,7 +3698,7 @@ async function renderDeclaredPage(params, manageFocus) {
     category: bucketSelect.value, party: partySelect.value, person, q: query, page: params.get("page") || 1,
   });
   $("declared-summary").hidden = !person;
-  $("declared-summary").innerHTML = person ? `For <a href="${esc(subjectHash("person", person))}">${esc(person)}</a> · <a href="/declared">View everyone</a>` : "";
+  $("declared-summary").innerHTML = person ? `For <a ${entityHrefAttr(subjectHash("person", person))}>${esc(person)}</a> · <a href="/declared">View everyone</a>` : "";
   const pageHref = (page) => {
     const next = new URLSearchParams(params);
     if (page > 1) next.set("page", String(page)); else next.delete("page");
@@ -3794,7 +3811,7 @@ async function renderPersonInterests(name, personId, sections) {
         const sourceTie = orgTies.find((t) => t.kind === "donor") || orgTies[0];
         const lead = { ...sourceTie, kinds: [...new Set(orgTies.flatMap((t) => t.kinds || [t.kind]))] };
         const orgLabel = lead.donor_id
-          ? `<a class="source-title" href="${esc(subjectHash("donor", org))}">${esc(org)}</a>`
+          ? `<a class="source-title" ${entityHrefAttr(subjectHash("donor", org))}>${esc(org)}</a>`
           : `<span class="source-title">${esc(org)}</span>`;
         const declarations = orgTies.map((tie) => {
           const row = tie.register || {};
@@ -3901,7 +3918,7 @@ async function renderDonorInterests(name, sections) {
           ? `<img src="${esc(photo)}" width="48" height="48" loading="lazy" decoding="async" alt="">`
           : `<span aria-hidden="true"></span>`}</span>
         <div class="declared-entry">
-          <div class="declared-person"><a href="${esc(subjectHash("person", row.name))}">${esc(row.name)}</a>${party ? ` ${partyChipHTML(party)}` : ""}<span class="result-meta">${esc(chamberName[row.chamber] || row.chamber || "Register")}</span></div>
+          <div class="declared-person"><a ${entityHrefAttr(subjectHash("person", row.name))}>${esc(row.name)}</a>${party ? ` ${partyChipHTML(party)}` : ""}<span class="result-meta">${esc(chamberName[row.chamber] || row.chamber || "Register")}</span></div>
           <div class="declared-kind tie-tags"><span class="tie-tag">${esc(category.charAt(0).toUpperCase() + category.slice(1))}</span>${holder ? `<span class="tie-tag tie-tag-holder">${esc(holder)}</span>` : ""}</div>
           <p class="declared-description">“${esc(row.description || "")}”${source ? ` <a class="declared-source-link" href="${esc(source)}" rel="noopener" target="_blank">register ↗︎</a>` : ""}</p>
         </div>
@@ -4655,7 +4672,7 @@ async function renderDonorAccess(label, container) {
           : `<span aria-hidden="true"></span>`}</span>
         <div class="declared-entry">
           ${m.page
-            ? `<a class="source-title" href="${esc(subjectHash("person", m.page))}">${esc(m.minister)}</a>`
+            ? `<a class="source-title" ${entityHrefAttr(subjectHash("person", m.page))}>${esc(m.minister)}</a>`
             : `<span class="source-title">${esc(m.minister)}</span>`}
           <span class="result-meta">${[party ? partyChipHTML(party) : "", when].filter(Boolean).join(" · ")}</span>
           ${m.purpose ? `<p class="snippet">${esc(m.purpose)}</p>` : ""}
@@ -4830,7 +4847,7 @@ async function renderPartyDebts(label, sections) {
     const shown = ents.slice(0, 6);
     html += `<h3 class="subject-section-title">Associated entities</h3>
       <ul class="subject-list" role="list">${shown.map((e) => `
-      <li><a class="source-title" href="${esc(subjectHash("campaigner", e.name))}">${esc(e.name)}</a>
+      <li><a class="source-title" ${entityHrefAttr(subjectHash("campaigner", e.name))}>${esc(e.name)}</a>
         <span class="result-meta">${esc([e.year, e.receipts != null ? `receipts ${fmtMoney(e.receipts)}` : "",
           e.payments != null ? `payments ${fmtMoney(e.payments)}` : "", e.debts ? `debts ${fmtMoney(e.debts)}` : ""].filter(Boolean).join(" · "))}</span></li>`).join("")}</ul>
       ${(p.associated_entities_total || 0) > shown.length ? `<p class="fineprint" style="margin-top:0.5rem">${p.associated_entities_total} entities have named ${esc(label)} on an associated-entity return; the ${shown.length} with the largest receipts on their latest return are shown, each with that return's year.</p>` : ""}`;
@@ -4910,7 +4927,7 @@ async function renderPartyMentions(label, sections, key) {
           const brief = briefs[result.resource];
           const passage = String(result.snippet || "").trim();
           const excerpt = passage.length > 240 ? `${passage.slice(0, 240).replace(/\s+\S*$/, "")}…` : passage;
-          return `<li><a href="/doc/${encodeURIComponent(result.slug)}" class="source-title doc-title">${esc(displayTitle(result))}</a>
+          return `<li><a ${entityHrefAttr(`/doc/${encodeURIComponent(result.slug)}`)} class="source-title doc-title">${esc(displayTitle(result))}</a>
             <span class="result-meta">${metaHTML(result, { linkSpeaker: true, linkParty: true })}</span>
             <p class="${brief ? "party-mention-brief" : "snippet"}">${brief ? `<span class="party-brief-label">Machine brief</span>` : ""}${esc(brief || excerpt || "Open the speech to read the passage.")}</p></li>`;
         }).join("")}</ul>` : `<p class="status">No mentions found in the indexed record.</p>`}${allLink}`;
@@ -5332,7 +5349,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   if (roster?.speech_scope) {
     $('subject-title').textContent = roster.full || name;
     document.title = `${roster.full || name} · OPAX`;
-    sections.insertAdjacentHTML('beforeend', `<p class="fineprint">Only own-house speeches within the reviewed service dates in the ${esc(roster.speech_scope.state.toUpperCase())} parliamentary chamber are attributed here. <a href="${esc(subjectHash('person', roster.name))}?attribution=unattributed">Witness testimony and other unattributed records printed as ${esc(roster.name)}</a>.</p>`);
+    sections.insertAdjacentHTML('beforeend', `<p class="fineprint">Only own-house speeches within the reviewed service dates in the ${esc(roster.speech_scope.state.toUpperCase())} parliamentary chamber are attributed here. <a ${entityHrefAttr(hasEntityId(roster.name) ? subjectHash('person', roster.name) + "?attribution=unattributed" : null)}>Witness testimony and other unattributed records printed as ${esc(roster.name)}</a>.</p>`);
   }
   const witness = !roster && speeches.length > 0 &&
     speeches.every((r) => r.speaker_type === "witness" || (isCommitteeChamber(r.chamber) && r.person_id == null));
@@ -5361,7 +5378,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     ]);
     if (holders.length) {
       box.insertAdjacentHTML("beforeend", `<p class="fineprint">People in the record with this surname:</p>
-        <ul class="subject-list">${holders.map(([n, c]) => `<li><a href="${esc(subjectHash("person", n))}">${esc(n)}</a> <span class="meta">${c.toLocaleString()} speeches</span></li>`).join("")}</ul>`);
+        <ul class="subject-list">${holders.map(([n, c]) => `<li><a ${entityHrefAttr(subjectHash("person", n))}>${esc(n)}</a> <span class="meta">${c.toLocaleString()} speeches</span></li>`).join("")}</ul>`);
     }
     box.insertAdjacentHTML("beforeend", `<p class="fineprint">The record names its speakers as the transcripts do,
       so a person may be indexed under a fuller or shorter form of this name. The search looks across every spelling.</p>`);
@@ -5795,16 +5812,16 @@ function topicArcItemHTML(item, brief, showYear) {
     <time class="topic-arc-year"${date ? ` datetime="${esc(date)}"` : ""}${showYear ? "" : ' aria-hidden="true"'}>${showYear ? esc(year) : ""}</time>
     <div class="topic-arc-entry">
       <div class="topic-arc-who">
-        ${item.speaker ? `<a class="topic-arc-face" href="${esc(speakerHref(item, subjectHash('person', item.speaker)))}" aria-hidden="true" tabindex="-1">${portrait ? `<img src="${esc(portrait)}" alt="" width="40" height="40" loading="lazy">` : ""}</a>` : `<span class="topic-arc-face topic-arc-face-none" aria-hidden="true"></span>`}
+        ${item.speaker ? `<a class="topic-arc-face" ${entityHrefAttr(speakerHref(item, subjectHash('person', item.speaker)))} aria-hidden="true" tabindex="-1">${portrait ? `<img src="${esc(portrait)}" alt="" width="40" height="40" loading="lazy">` : ""}</a>` : `<span class="topic-arc-face topic-arc-face-none" aria-hidden="true"></span>`}
         <span class="topic-arc-byline">
-          <span class="topic-arc-name">${item.speaker ? `<a href="${esc(speakerHref(item, subjectHash('person', item.speaker)))}">${esc(item.speaker)}</a>` : "Speaker not named"}${item.party ? ` ${partyChipHTML(item.party)}` : ""}${witness ? ` <span class="topic-arc-witness">witness</span>` : ""}</span>
+          <span class="topic-arc-name">${item.speaker ? `<a ${entityHrefAttr(speakerHref(item, subjectHash('person', item.speaker)))}>${esc(item.speaker)}</a>` : "Speaker not named"}${item.party ? ` ${partyChipHTML(item.party)}` : ""}${witness ? ` <span class="topic-arc-witness">witness</span>` : ""}</span>
           <span class="topic-arc-when">${role ? `${esc(role)} · ` : ""}${esc(where)}${committee ? " · committee" : ""}${date ? ` · <time datetime="${esc(date)}">${esc(fmtDate(date))}</time>` : ""}${generic ? ` · ${esc(subject.trim())}` : ""}</span>
         </span>
       </div>
-      ${heading ? `<a class="topic-arc-source" href="/doc/${encodeURIComponent(item.slug)}">${esc(heading)}</a>` : ""}
+      ${heading ? `<a class="topic-arc-source" ${entityHrefAttr(`/doc/${encodeURIComponent(item.slug)}`)}>${esc(heading)}</a>` : ""}
       ${brief
-        ? `<p class="topic-arc-brief"><span class="topic-arc-tag">Machine brief</span>${esc(brief)}</p><a class="topic-arc-open ui-button" data-ui-size="compact" href="/doc/${encodeURIComponent(item.slug)}">Read the speech</a>`
-        : `<a class="topic-arc-passage" href="/doc/${encodeURIComponent(item.slug)}">${esc(passage || "Open the speech to read the passage.")}</a>`}
+        ? `<p class="topic-arc-brief"><span class="topic-arc-tag">Machine brief</span>${esc(brief)}</p><a class="topic-arc-open ui-button" data-ui-size="compact" ${entityHrefAttr(`/doc/${encodeURIComponent(item.slug)}`)}>Read the speech</a>`
+        : `<a class="topic-arc-passage" ${entityHrefAttr(`/doc/${encodeURIComponent(item.slug)}`)}>${esc(passage || "Open the speech to read the passage.")}</a>`}
     </div>
   </li>`;
 }
@@ -6136,7 +6153,7 @@ async function openTopicsIndex(manageFocus) {
   const li = (t) => {
     const count = Number(t.count) || 0;
     const description = topicIndexDescription(t.slug);
-    return `<li data-count="${count}" data-name="${esc(TOPICS[t.slug])}"><a href="${esc(subjectHash("topic", t.slug))}" class="topic-index-row">
+    return `<li data-count="${count}" data-name="${esc(TOPICS[t.slug])}"><a ${entityHrefAttr(subjectHash("topic", t.slug))} class="topic-index-row">
     <span class="topic-index-cell">
       <span class="topic-index-name">${esc(TOPICS[t.slug])}</span>
       ${description ? `<span class="topic-index-description">${esc(description)}</span>` : ""}
@@ -6610,7 +6627,7 @@ async function buildPeopleDirectory() {
     return `<li class="dir-row">
       ${portrait}
       <div class="dir-main">
-        <a class="source-title dir-name" href="${esc(subjectHash("person", p.name))}">${esc(p.name)}</a>${p.full ? `<span class="dir-alt">${esc(p.full)}</span>` : ""}
+        <a class="source-title dir-name" ${entityHrefAttr(subjectHash("person", p.name))}>${esc(p.name)}</a>${p.full ? `<span class="dir-alt">${esc(p.full)}</span>` : ""}
         <span class="result-meta">${metaLine}</span>
       </div>
       <div class="dir-figs">
@@ -6710,7 +6727,7 @@ async function buildPartiesDirectory() {
     ].join("");
     return `<li class="dir-row dir-row-plain">
       <div class="dir-main">
-        <a class="source-title dir-name" href="${esc(subjectHash("party", p.label))}">${anyPartyDotHTML(p.label, colours)}${esc(p.label)}</a>
+        <a class="source-title dir-name" ${entityHrefAttr(subjectHash("party", p.label))}>${anyPartyDotHTML(p.label, colours)}${esc(p.label)}</a>
         <span class="result-meta">${meta}</span>
       </div>
       <div class="dir-figs">${figs}</div>
@@ -6809,7 +6826,7 @@ async function buildDonorsDirectory() {
     const shownParties = d._partyList.slice(0, 3);
     const more = d._partyList.length - shownParties.length;
     const partiesHTML = shownParties.length
-      ? `<span class="dir-parties"><span>to</span>${shownParties.map((p) => `<a class="dir-party-link" href="${esc(subjectHash("party", p))}">${anyPartyDotHTML(p, colours)}${esc(p)}</a>`).join("")}${more > 0 ? `<span>and ${more} more</span>` : ""}</span>`
+      ? `<span class="dir-parties"><span>to</span>${shownParties.map((p) => `<a class="dir-party-link" ${entityHrefAttr(subjectHash("party", p))}>${anyPartyDotHTML(p, colours)}${esc(p)}</a>`).join("")}${more > 0 ? `<span>and ${more} more</span>` : ""}</span>`
       : "";
     const marks = [
       d._lobbyists ? `<span class="dir-mark" title="${esc(`${d._lobbyists} registered lobbying firm${d._lobbyists === 1 ? "" : "s"}`)}">lobbyists</span>` : "",
@@ -6829,7 +6846,7 @@ async function buildDonorsDirectory() {
     ].join("");
     return `<li class="dir-row dir-row-plain">
       <div class="dir-main">
-        <a class="source-title dir-name" href="${esc(subjectHash("donor", d.label))}">${esc(d.label)}</a>
+        <a class="source-title dir-name" ${entityHrefAttr(subjectHash("donor", d.label))}>${esc(d.label)}</a>
         <span class="result-meta">${meta}</span>
       </div>
       <div class="dir-figs">${figs}</div>
@@ -7023,7 +7040,7 @@ async function buildCampaignersDirectory() {
     const metaLine = [campaignerKindChip(e.kind), e._span ? esc(e._span) : "", partiesHTML].filter(Boolean).join(" · ");
     return `<li class="dir-row dir-row-plain">
       <div class="dir-main">
-        <a class="source-title dir-name" href="${esc(subjectHash("campaigner", e.name))}">${esc(e.name)}</a>
+        <a class="source-title dir-name" ${entityHrefAttr(subjectHash("campaigner", e.name))}>${esc(e.name)}</a>
         <span class="result-meta">${metaLine}</span>
       </div>
       <div class="dir-figs">
@@ -7156,7 +7173,7 @@ async function renderCampaignerEntry(name, key) {
     // "None" and not "independent": a return with no party on it records an
     // absence on a form, not a political stance.
     ["Party named on the return", parties.length
-      ? parties.map((p) => `${anyPartyDotHTML(p)}<a href="${esc(subjectHash("party", p))}">${esc(p)}</a>`).join(", ")
+      ? parties.map((p) => `${anyPartyDotHTML(p)}<a ${entityHrefAttr(subjectHash("party", p))}>${esc(p)}</a>`).join(", ")
       : `<span class="dir-muted">None</span>`],
     e.abn && ["ABN", esc(String(e.abn))],
     // An organisation can change category between returns, and which forms it
@@ -7283,7 +7300,7 @@ async function billForTitle(title) {
   return map.get(titleKey(title)) || null;
 }
 
-const billHash = (key) => `/bill/${encodeURIComponent(key)}`;
+const billHash = (key) => hasEntityId(key) ? `/bill/${encodeURIComponent(key)}` : null;
 
 /* The projection writes the registry's own vocabulary: chambers as codes,
    stages and statuses as the register's lowercase tokens, an outcome as the
@@ -7402,7 +7419,7 @@ function billRowHTML(b) {
     Number(b.acts) ? "became law" : "",
   ].filter(Boolean);
   return `<li>
-    <a class="source-title bill-row-title" href="${esc(billHash(b.key))}">${esc(billName(b))}</a>
+    <a class="source-title bill-row-title" ${entityHrefAttr(billHash(b.key))}>${esc(billName(b))}</a>
     <span class="result-meta bill-row-meta">${[
       b.status ? `<b class="bill-row-status">${esc(sentenceCase(b.status))}</b>` : "",
       year ? esc(year) : "",
@@ -7672,7 +7689,7 @@ function billSplitHTML(division) {
 /** A division's own page in the record: the registry's key is the resource slug without its kind. */
 function billDivisionHref(d) {
   const key = String(d?.key || "");
-  if (!key) return null;
+  if (!hasEntityId(key)) return null;
   return `/doc/${encodeURIComponent(key.startsWith("division-") ? key : `division-${key}`)}`;
 }
 
@@ -7887,7 +7904,7 @@ function billSpeechesHTML(bill) {
   // A speech the record leaves unattributed has one fact — its date — so the
   // date is what opens it, rather than nine rows all reading the same absence.
   const rows = speeches.slice(0, 24).map((s) => `<li>
-    <a class="source-title" href="/doc/${encodeURIComponent(s.slug)}">${
+    <a class="source-title" ${entityHrefAttr(`/doc/${encodeURIComponent(s.slug)}`)}>${
       s.speaker ? esc(s.speaker) : `Speech${s.date ? ` on ${esc(fmtDate(s.date))}` : ", speaker not named"}`}</a>
     <span class="result-meta">${[
       s.party ? partyChipHTML(s.party) : "",
@@ -7968,9 +7985,9 @@ function billRelatedHTML(bill) {
   for (const r of bill?.related || []) {
     if (!r?.key || !r?.title) continue;
     const rel = r.relation === "predecessor" ? "Builds on" : sentenceCase(r.relation || "Related");
-    lines.push(`${esc(rel)} <a href="/bill/${encodeURIComponent(r.key)}">${esc(r.title)}</a>${r.note ? ` — ${esc(r.note)}` : ""}`);
+    lines.push(`${esc(rel)} <a ${entityHrefAttr(`/bill/${encodeURIComponent(r.key)}`)}>${esc(r.title)}</a>${r.note ? ` — ${esc(r.note)}` : ""}`);
   }
-  if (bill?.became) lines.push(`Introduced to Parliament as <a href="/bill/${encodeURIComponent(bill.became)}">this bill</a>.`);
+  if (bill?.became) lines.push(`Introduced to Parliament as <a ${entityHrefAttr(`/bill/${encodeURIComponent(bill.became)}`)}>this bill</a>.`);
   const c = bill?.consultation;
   if (bill?.status === "exposure_draft" && c?.url) {
     const when = c.closes ? `Consultation closes ${esc(fmtDate(c.closes))}` : "Open for consultation";
@@ -8027,8 +8044,8 @@ async function openBill(key, manageFocus) {
   const members = billSponsorFromPortfolio(bill.portfolio);
   // Each co-sponsor is a person with an entry of their own, so each is a link.
   const sponsorLinks = bill.sponsor
-    ? [`<a href="${esc(subjectHash("person", billSponsorName(bill.sponsor)))}">${esc(billSponsorName(bill.sponsor))}</a>`]
-    : (members || []).map((m) => `<a href="${esc(subjectHash("person", m.name))}">${esc(m.name)}</a>${
+    ? [`<a ${entityHrefAttr(subjectHash("person", billSponsorName(bill.sponsor)))}>${esc(billSponsorName(bill.sponsor))}</a>`]
+    : (members || []).map((m) => `<a ${entityHrefAttr(subjectHash("person", m.name))}>${esc(m.name)}</a>${
       m.suffix ? ` ${esc(m.suffix)}` : ""}`);
   const sponsorBits = [
     sponsorLinks.length
@@ -8124,7 +8141,7 @@ async function decoratePersonVoteBills(slot) {
 
 async function fillBillPeek(details, entry) {
   const box = details.querySelector(".bill-peek-body");
-  const foot = `<p class="bill-peek-link"><a class="ui-button" href="${esc(billHash(entry.key))}">${
+  const foot = `<p class="bill-peek-link"><a class="ui-button" ${entityHrefAttr(billHash(entry.key))}>${
     iconSvg("entry")}<span>Bill page</span></a></p>`;
   // No summary written: the dated status is the honest thing to show instead.
   if (!entry.has_summary) {
@@ -8225,7 +8242,7 @@ async function renderPartyBillDivisions(label, sections, key) {
     </span>
   </li>`;
   const rowHTML = (g) => `<li class="party-bill">
-    <a class="source-title" href="${esc(billHash(g.bill.key))}">${esc(billName(g.bill))}</a>
+    <a class="source-title" ${entityHrefAttr(billHash(g.bill.key))}>${esc(billName(g.bill))}</a>
     ${g.rows.length > 1
       ? `<span class="party-bill-count">${g.rows.length} divisions</span>` : ""}
     <ul class="party-bill-divs" role="list">${g.rows.map(divHTML).join("")}</ul>
@@ -8272,7 +8289,7 @@ async function renderDocBillPanel(doc, slug) {
     .map((t) => titleKey(t || "")).filter(Boolean);
   const repeats = above.some((h) => h === titleKey(entry.title) || h === titleKey(billName(entry)));
   const line = `<p class="doc-bill-status">${esc(billStatusLine(entry))}</p>`;
-  const link = `<p class="doc-bill-link"><a href="${esc(billHash(entry.key))}">Bill page</a></p>`;
+  const link = `<p class="doc-bill-link"><a ${entityHrefAttr(billHash(entry.key))}>Bill page</a></p>`;
   const head = `<div class="doc-brief-head">
       <h3 class="subject-section-title" id="doc-bill-head">The bill</h3>
       <span class="doc-brief-tag">Register</span>
@@ -8647,7 +8664,7 @@ async function renderFrontTopic() {
     // the topic's live encyclopedia entry.
     const mwTopic = REPORT_TOPIC[today.slug];
     $("h-mw").innerHTML = mwTopic
-      ? `Money &amp; words: <a href="${esc(subjectHash("topic", mwTopic))}">${esc(report.title)}</a>`
+      ? `Money &amp; words: <a ${entityHrefAttr(subjectHash("topic", mwTopic))}>${esc(report.title)}</a>`
       : `Money &amp; words: ${esc(report.title)}`;
 
     // The module's name, enacted: the words and the money in one sentence.
@@ -8689,7 +8706,7 @@ async function renderFrontTopic() {
       </nav>` : ""}
       <p class="fineprint" style="margin-top:0.9rem">The topic rotates daily.
       <a href="/reports/${esc(today.slug)}">Read the full ${esc(report.title)} report</a> ·
-      ${mwTopic ? `<a href="${esc(subjectHash("topic", mwTopic))}">Topic page: ${esc(TOPICS[mwTopic] || report.title)}</a> · ` : ""}
+      ${mwTopic ? `<a ${entityHrefAttr(subjectHash("topic", mwTopic))}>Topic page: ${esc(TOPICS[mwTopic] || report.title)}</a> · ` : ""}
       <a href="/reports">All reports</a></p>`;
     $("mod-mw").hidden = false;
 
@@ -8781,7 +8798,7 @@ async function renderFrontEncy(dayIdx, todayReport, don) {
         <img class="ency-portrait" src="${esc(photoUrlFor(p.name))}" alt="" width="64" height="64">
         <div class="ency-id">
           <span class="card-kicker">Parliamentarian</span>
-          <a class="card-title ency-name" href="${esc(subjectHash("person", p.name))}">${esc(p.name)}</a>
+          <a class="card-title ency-name" ${entityHrefAttr(subjectHash("person", p.name))}>${esc(p.name)}</a>
           ${v?.party || r?.party ? partyChipHTML(v?.party || r.party) : ""}
         </div>
       </div>
@@ -8803,7 +8820,7 @@ async function renderFrontEncy(dayIdx, todayReport, don) {
     cards.push(`<article class="report-card ency-card">
       <div class="ency-id">
         <span class="card-kicker">Donor${node?.industry ? ` · ${esc(industryLabel(node.industry))}` : ""}</span>
-        <a class="card-title ency-name" href="${esc(subjectHash("donor", topDonor[0]))}">${esc(topDonor[0])}</a>
+        <a class="card-title ency-name" ${entityHrefAttr(subjectHash("donor", topDonor[0]))}>${esc(topDonor[0])}</a>
       </div>
       <p class="card-blurb">${esc(fmtMoney(topDonor[1]))} disclosed${node ? `, ${node.firstYear} to ${node.lastYear}` : " to parties"}.</p>
       ${actionBtn("entry", subjectHash("donor", topDonor[0]), "Open the entry")}
@@ -8914,7 +8931,7 @@ async function renderFrontBills() {
         Number(b.acts) ? "became law" : "",
       ].filter(Boolean);
       return `<li class="front-bill">
-        <a class="source-title bill-row-title" href="${esc(billHash(b.key))}">${esc(billName(b))}</a>
+        <a class="source-title bill-row-title" ${entityHrefAttr(billHash(b.key))}>${esc(billName(b))}</a>
         <span class="result-meta bill-row-meta">${[
           `Introduced ${esc(fmtDate(b.introduced))}`,
           house(b) ? esc(house(b)) : "",
@@ -11496,7 +11513,7 @@ function renderResults(results) {
         : `<p id="search-passage-${index}" class="search-result-text snippet">${searchReadMode === "briefs" ? `<span class="search-passage-tag">Passage · ${lastSearch.briefsLoading ? "checking for a brief…" : "no brief available"}</span>` : ""}${highlightHTML(cleanPassage(r.snippet), lastSearch.query)}</p>`;
       const title = r.speaker && r.title === `${r.speaker} — ${r.date}` ? `Speech by ${r.speaker}` : displayTitle(r);
       const meta = [
-        r.speaker ? `<a href="${esc(speakerHref(r, subjectHash("person", r.speaker)))}">${esc(r.speaker)}</a>` : "",
+        r.speaker ? `<a ${entityHrefAttr(speakerHref(r, subjectHash("person", r.speaker)))}>${esc(r.speaker)}</a>` : "",
         r.party ? partyChipHTML(r.party) : "",
         isCommitteeChamber(r.chamber) ? `${esc(committeeHouse(r.chamber))} committee evidence` : "",
         r.state ? esc(STATE_NAMES[r.state] || r.state) : "",
@@ -11505,10 +11522,10 @@ function renderResults(results) {
       const topics = [...new Set((Array.isArray(r.topics) ? r.topics : []).filter((t) => typeof t === "string" && t.trim()))];
       // Opening a speech row loads the whole speech in place, so its button says so.
       const more = r.kind === "speech" ? "Read the full speech here" : "Read more";
-      li.innerHTML = `<h3 class="search-result-heading"><a class="result-title" href="/doc/${encodeURIComponent(r.slug)}">${esc(title)}</a></h3>
+      li.innerHTML = `<h3 class="search-result-heading"><a class="result-title" ${entityHrefAttr(`/doc/${encodeURIComponent(r.slug)}`)}>${esc(title)}</a></h3>
         <div class="result-meta">${recordTypeLink(r.kind, lastSearch.query, lastSearch.filters)}${meta ? ` · ${meta}` : ""}</div>${text}
         <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false" data-more="${esc(more)}">${esc(more)}</button>
-        ${topics.length ? `<nav class="search-result-topics" aria-label="Topics for ${esc(title)}">${topics.map((topic) => `<a class="ui-tag" href="${esc(subjectHash("topic", topic))}">${esc(TOPICS[topic] || topic)}</a>`).join("")}</nav>` : ""}`;
+        ${topics.length ? `<nav class="search-result-topics" aria-label="Topics for ${esc(title)}">${topics.map((topic) => `<a class="ui-tag" ${entityHrefAttr(subjectHash("topic", topic))}>${esc(TOPICS[topic] || topic)}</a>`).join("")}</nav>` : ""}`;
       return li;
     }),
   );
@@ -12195,7 +12212,7 @@ async function openDocPage(slug, manageFocus) {
     const topicSlugs = (Array.isArray(doc.topics) ? doc.topics : []).filter((t) => TOPICS[t]);
     if (topicSlugs.length) {
       $("doc-topics").innerHTML = topicSlugs.map((t) =>
-        `<a class="topic-chip" href="${esc(subjectHash("topic", t))}">${esc(TOPICS[t])}</a>`).join("");
+        `<a class="topic-chip" ${entityHrefAttr(subjectHash("topic", t))}>${esc(TOPICS[t])}</a>`).join("");
       $("doc-topics").hidden = false;
     }
     // Ways into this speaker's wider record. External links are SEARCHES, so
@@ -12207,7 +12224,7 @@ async function openDocPage(slug, manageFocus) {
         `${[doc.metadata.witness_position, doc.metadata.witness_organisation].filter(Boolean).map(esc).join(", ")} · `);
     }
     if (doc.speaker && (docWitness || doc.speaker_attribution === 'unattributed')) {
-      speakerLinks.innerHTML = `${docWitness ? 'Committee witness' : 'Unattributed speaker'}, named as the transcript names them. <a href="${esc(subjectHash("person", doc.speaker))}?attribution=unattributed">Their evidence on OPAX</a>`;
+      speakerLinks.innerHTML = `${docWitness ? 'Committee witness' : 'Unattributed speaker'}, named as the transcript names them. <a ${entityHrefAttr(hasEntityId(doc.speaker) ? subjectHash("person", doc.speaker) + "?attribution=unattributed" : null)}>Their evidence on OPAX</a>`;
       speakerLinks.hidden = false;
     } else if (doc.speaker) {
       const q = encodeURIComponent(doc.speaker);
@@ -12368,7 +12385,7 @@ async function renderDocSimilar(doc) {
         const title = displayTitle(row);
         const label = titleSubject(row) === query && row.speaker ? row.speaker
           : title.length > 110 ? `${title.slice(0, 110).replace(/\s+\S*$/, "")}…` : title;
-        return `<li><a href="/doc/${encodeURIComponent(row.slug)}" title="${esc(title)}">${esc(label)}</a>
+        return `<li><a ${entityHrefAttr(`/doc/${encodeURIComponent(row.slug)}`)} title="${esc(title)}">${esc(label)}</a>
           <p class="doc-related-meta">${esc([label === row.speaker ? "" : row.speaker, fmtDate(row.date)].filter(Boolean).join(" · "))}</p>
           <p>${esc(excerpt(brief || row.snippet || "No passage available."))}</p>
           <p class="doc-related-meta">${brief ? "Machine summary · not part of the record" : "Passage from the record"}</p></li>`;
@@ -12533,7 +12550,7 @@ function columnChart(pairs, { fmt = String, heading, note, noteHTML, linkTo }) {
       const bar = `<path class="chart-bar" d="M${x},${base} V${y + r} Q${x},${y} ${x + r},${y} H${x + bw - r} Q${x + bw},${y} ${x + bw},${y + r} V${base} Z"/>`;
       const tip = `<title>${esc(String(k))}: ${esc(fmt(v))}${linkTo ? ". Open these speeches" : ""}</title>`;
       bars += linkTo
-        ? `<a class="chart-bar-link" href="${esc(linkTo(k))}" tabindex="-1">${tip}<rect class="chart-hit" x="${x}" y="0" width="${bw}" height="${base}"/>${bar}</a>`
+        ? `<a class="chart-bar-link" ${entityHrefAttr(linkTo(k))} tabindex="-1">${tip}<rect class="chart-hit" x="${x}" y="0" width="${bw}" height="${base}"/>${bar}</a>`
         : bar.replace("/>", `>${tip}</path>`);
     }
     if (i === peakIdx) {
@@ -12551,7 +12568,7 @@ function columnChart(pairs, { fmt = String, heading, note, noteHTML, linkTo }) {
   // paints its caption over whatever follows it.
   const srTable = `<div class="visually-hidden"><table><caption>${esc(heading)}</caption>
     <thead><tr><th scope="col">Year</th><th scope="col">Value</th></tr></thead>
-    <tbody>${pairs.map(([k, v]) => `<tr><td>${linkTo ? `<a href="${esc(linkTo(k))}">${esc(String(k))}</a>` : esc(String(k))}</td><td>${esc(fmt(v))}</td></tr>`).join("")}</tbody></table></div>`;
+    <tbody>${pairs.map(([k, v]) => `<tr><td>${linkTo ? `<a ${entityHrefAttr(linkTo(k))}>${esc(String(k))}</a>` : esc(String(k))}</td><td>${esc(fmt(v))}</td></tr>`).join("")}</tbody></table></div>`;
   return `<figure class="chart">
     <figcaption>${esc(heading)}</figcaption>
     <svg viewBox="0 0 ${W} ${H}" aria-hidden="true">
@@ -13040,13 +13057,13 @@ function reportSourceRow(s, num) {
   if (s.speaker) {
     const who = document.createElement("a");
     who.className = "meta-speaker";
-    who.href = subjectHash("person", s.speaker);
+    if (hasEntityId(s.speaker)) who.href = subjectHash("person", s.speaker);
     who.textContent = s.speaker;
     name.appendChild(who);
     if (s.party) {
       const party = document.createElement("a");
       party.className = "meta-party";
-      party.href = subjectHash("party", s.party);
+      if (hasEntityId(s.party)) party.href = subjectHash("party", s.party);
       party.innerHTML = partyChipHTML(s.party); // fixed map lookup, not model text
       name.appendChild(party);
     }
@@ -13344,7 +13361,7 @@ function reportPositions(positions, win) {
     const li = document.createElement("li");
     const head = document.createElement("a");
     head.className = "position-party";
-    head.href = subjectHash("party", p.party); // the chip opens the party's page
+    if (hasEntityId(p.party)) head.href = subjectHash("party", p.party); // the chip opens the party's page
     head.innerHTML = partyChipHTML(p.party); // fixed map lookup, not model text
     if (!head.firstChild) head.textContent = p.party;
     const text = document.createElement("span");
@@ -13425,7 +13442,7 @@ function reportVoiceRow(v, max) {
   const line = document.createElement("p");
   line.className = "report-voice-name";
   const who = document.createElement("a");
-  who.href = subjectHash("person", v.speaker);
+  if (hasEntityId(v.speaker)) who.href = subjectHash("person", v.speaker);
   who.textContent = v.speaker;
   line.appendChild(who);
   if (v.party) {

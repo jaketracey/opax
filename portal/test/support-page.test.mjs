@@ -285,7 +285,8 @@ test('/support is a shell route with metadata and a sitemap entry', () => {
   assert.match(html, /<section id="panel-support" class="panel" hidden/);
   assert.match(app, /const PANELS = \[[^\]]*"support"/);
   assert.match(worker, /support: \{\n\s+title: 'Support · OPAX'/);
-  assert.match(worker, /'privacy', 'support'\]\) add\(`\/\$\{page\}`\)/);
+  const sitemap = readFileSync(new URL('../public/crawl/sitemaps/static-1.xml', import.meta.url), 'utf8');
+  assert.match(sitemap, /<loc>https:\/\/opax.com.au\/support<\/loc>/);
   for (const page of ['index.html', 'home.html', 'community.html']) {
     assert.match(readFileSync(new URL(`../public/${page}`, import.meta.url), 'utf8'), /href="\/support"/, page);
   }

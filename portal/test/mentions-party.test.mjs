@@ -51,7 +51,7 @@ test('unknown dates, conflicting affiliations and unattributed evidence get no i
 });
 
 const app = ts.createSourceFile('app.js', readFileSync(new URL('../public/app.js', import.meta.url), 'utf8'), ts.ScriptTarget.Latest, true);
-const selected = ['subjectMentions','renderPartyMentions','fillDatedMentionParties'];
+const selected = ['subjectMentions','renderPartyMentions','fillDatedMentionParties','hasEntityId','entityHrefAttr'];
 const code = app.statements.filter(n=>ts.isFunctionDeclaration(n)&&selected.includes(n.name?.text)).map(n=>n.getText(app)).join('\n');
 
 for (const renderer of ['subjectMentions','renderPartyMentions']) test(`${renderer} preserves labelled parties and uses dated evidence for missing labels`, async () => {
@@ -66,7 +66,7 @@ for (const renderer of ['subjectMentions','renderPartyMentions']) test(`${render
   const slot = {isConnected:true,innerHTML:''};
   const container = {appendChild(){},insertAdjacentHTML(){}};
   const api = runInNewContext(code+';({subjectMentions,renderPartyMentions})', {
-    currentSubjectKey:'mentions',URLSearchParams,datedAffiliationParty,splitPerson,
+    currentSubjectKey:'mentions',URL,URLSearchParams,datedAffiliationParty,splitPerson,
     api:async()=>({results:structuredClone(results)}),loadParliamentarians:async()=>roster,
     document:{createElement:()=>slot},esc:s=>String(s??''),displayTitle:r=>r.slug,
     metaHTML:r=>{metadata.push({slug:r.slug,party:r.party});return String(r.party??'');},

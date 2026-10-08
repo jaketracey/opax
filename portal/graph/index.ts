@@ -753,7 +753,7 @@ export function planCardActions(node: MoneyNode, ctx: CardActionContext): CardAc
   actions.push({ id: 'explain', label: 'Explain', name: 'Explain this flow' })
   actions.push({ id: 'sources', label: 'Sources', name: 'Sources: mentions in the source records' })
   if (ctx.grantsOn) {
-    if (node.grants?.rid) {
+    if (node.grants?.rid && !/^(null|undefined)$/i.test(node.grants.rid)) {
       actions.push({
         id: 'grants', label: 'Open grants file', name: 'Open their grants file',
         href: `${ctx.routeBase}/explore?game=grants&jur=${encodeURIComponent(node.grants.jur ?? 'federal')}&open=${encodeURIComponent(node.grants.rid)}`,
@@ -1927,7 +1927,7 @@ export async function mountMoneyMap(
     }
     const fine = el('p', 'mm-card-fine', card)
     fine.textContent = 'Public money going the other way; not summed with the donations. A donor receiving a grant is a fact, not a finding.'
-    if (donor.grants?.rid) {
+    if (donor.grants?.rid && !/^(null|undefined)$/i.test(donor.grants.rid)) {
       action(actionRow(card), 'Open grants file', {
         name: 'Open their grants file',
         href: `${routeBase}/explore?game=grants&jur=${encodeURIComponent(donor.grants.jur ?? 'federal')}&open=${encodeURIComponent(donor.grants.rid)}`,
