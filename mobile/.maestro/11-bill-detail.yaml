@@ -270,5 +270,7 @@ name: 11 Read a bill, its machine summary, divisions and speeches
     direction: DOWN
     speed: 20
     timeout: 60000
-- assertVisible: Written by a model from the exposure draft text; not the record\.
+- assertVisible:
+    id: bill-summary-label
+    text: 'Machine summary\. Written by a model from the exposure draft text; not the record\.'
 - takeScreenshot: ${EVIDENCE}/11-exposure-summary
