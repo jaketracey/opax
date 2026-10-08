@@ -1,3 +1,4 @@
+import type { Roster, Slugs } from '../../api/catalog-decoders';
 // Contracts: portal/src/index.ts AskInput, askPayload, withAskedAs;
 // portal/public/app.js sendChat, trimTurn, filterChipSpecs and home.js.
 export type AskOptions = {
@@ -478,4 +479,23 @@ export function syncBody(c: Chat) {
       };
     }),
   };
+}
+const slugOf = (name: string) =>
+  name
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/['’‘ʼ`.]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+/** Roster name → person slug, the only names "People in this answer" lists. */
+export function rosterPeople(roster: Roster, slugs: Slugs) {
+  const known = new Map<string, string>();
+  for (const p of roster.people) {
+    const slug =
+      Object.entries(slugs.slugs).find(([, name]) => name === p.name)?.[0] ||
+      slugOf(p.name);
+    known.set(p.name, slug);
+  }
+  return known;
 }
