@@ -19,7 +19,7 @@ import {
   IconButton,
   EmptyState,
   ErrorState,
-  Field,
+  Composer,
   FilterChip,
   Group,
   Heading,
@@ -31,7 +31,7 @@ import {
   LinkRow,
   RowList,
 } from '../../design/primitives';
-import { colors, layout, rhythm, spacing } from '../../design/tokens';
+import { layout, rhythm, spacing } from '../../design/tokens';
 import { useReduceMotion } from '../../design/accessibility';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { AskProgress } from './AskProgress';
@@ -391,32 +391,25 @@ export default function AskScreen() {
         scrollRef={scroll}
         keyboardTarget={editingFollowup ? followupTarget : submitTarget}
       >
-        <Group style={styles.composer} gap={rhythm.heading}>
-          <Field
+        <Group gap={rhythm.heading}>
+          <Composer
+            ref={submitTarget}
             label="Your question"
+            submitLabel="Ask the record"
             placeholder="Ask a question about the public record…"
             value={draft}
             onChangeText={setDraft}
             onFocus={() => setEditingFollowup(false)}
-            multiline
+            onSubmit={() => void submit()}
+            busy={s.busy}
             maxLength={2000}
             testID="ask-question"
+            submitTestID="ask-submit"
           />
           {inputError ? <ErrorState message={inputError} /> : null}
-          <Button
-            ref={submitTarget}
-            label="Ask the record"
-            variant="primary"
-            disabled={!draft.trim()}
-            loading={s.busy}
-            onPress={() => void submit()}
-            testID="ask-submit"
-          />
           <RowList>
             <LinkRow
               title="Options"
-              icon="line.3.horizontal.decrease"
-              accent="people"
               disabled={s.busy}
               onPress={() => {
                 void loadNames();
@@ -427,8 +420,6 @@ export default function AskScreen() {
             <LinkRow
               title="Your conversations"
               value={String(saved.chats.length)}
-              icon="bubble.left.and.bubble.right"
-              accent="people"
               disabled={s.busy}
               onPress={() => void history()}
               testID="ask-saved"
@@ -578,23 +569,18 @@ export default function AskScreen() {
                     />
                   ))}
                 </RowList>
-                <Field
+                <Composer
+                  ref={followupTarget}
                   label="Ask a follow-up"
+                  submitLabel="Ask"
                   placeholder="Ask a follow-up…"
                   value={draft}
                   onChangeText={setDraft}
                   onFocus={() => setEditingFollowup(true)}
-                  multiline
+                  onSubmit={() => void submit()}
                   maxLength={2000}
                   testID="ask-followup-field"
-                />
-                <Button
-                  ref={followupTarget}
-                  label="Ask"
-                  variant="primary"
-                  disabled={!draft.trim()}
-                  onPress={() => void submit()}
-                  testID="ask-followup-submit"
+                  submitTestID="ask-followup-submit"
                 />
               </Section>
             ) : null}
@@ -690,9 +676,4 @@ const styles = StyleSheet.create({
   },
   conversationTitle: { flex: 1 },
   turn: { gap: layout.sectionGap },
-  composer: {
-    backgroundColor: colors.navyWash,
-    padding: rhythm.block,
-    borderRadius: 8,
-  },
 });
