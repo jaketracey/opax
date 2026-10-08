@@ -1,3 +1,4 @@
+import { headerItems } from '../../navigation/chrome';
 import { useEffect, type ReactNode } from 'react';
 import {
   AccessibilityInfo,
@@ -27,7 +28,7 @@ export function MoneyHeader({ title, path }: { title: string; path: string }) {
       options={{
         title,
         headerTitle: '',
-        unstable_headerRightItems: () => [shareHeaderItem({ title, path })],
+        ...headerItems(() => [shareHeaderItem({ title, path })]),
       }}
     />
   );

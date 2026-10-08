@@ -1,5 +1,6 @@
 import { Tabs } from 'expo-router';
-import { Text } from 'react-native';
+import type { Ref } from 'react';
+import { Pressable, Text, type View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Icon } from '../design/icon';
 import { chrome, fonts, light } from '../design/tokens';
@@ -41,6 +42,14 @@ export function AndroidTabs() {
             title,
             tabBarButtonTestID: `tab-${id}`,
             tabBarAccessibilityLabel: title,
+            tabBarButton: (props) => (
+              <Pressable
+                {...props}
+                ref={props.ref as Ref<View>}
+                accessible
+                accessibilityRole="tab"
+              />
+            ),
             tabBarIcon: ({ focused }) => (
               <Icon
                 name={symbol}

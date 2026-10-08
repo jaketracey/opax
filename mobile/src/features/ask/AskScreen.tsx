@@ -327,7 +327,9 @@ export default function AskScreen() {
       'Delete all conversations?',
       Platform.OS === 'android'
         ? 'This removes your saved conversations on this phone.'
-        : 'This removes your saved conversations on this iPhone and, when signed in, from your account.',
+        : phoneCopy(
+            'This removes your saved conversations on this iPhone and, when signed in, from your account.',
+          ),
       [
         { text: 'Cancel', style: 'cancel' },
         {

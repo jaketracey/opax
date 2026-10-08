@@ -1,3 +1,4 @@
+import { headerItems } from '../../navigation/chrome';
 import { Stack, router } from 'expo-router';
 import { reports } from '../../api/runtime';
 import {
@@ -35,9 +36,9 @@ export default function Methods() {
       <Stack.Screen
         options={{
           title: 'Methods',
-          unstable_headerRightItems: () => [
+          ...headerItems(() => [
             shareHeaderItem({ path: '/methods', title: 'Methods' }),
-          ],
+          ]),
         }}
       />
       <Screen testID="methods-screen">

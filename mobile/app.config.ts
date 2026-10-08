@@ -63,6 +63,12 @@ const config: ExpoConfig = {
     package: 'au.com.opax.app',
     versionCode: Number(buildNumber),
     icon: './assets/icon/icon.png',
+    adaptiveIcon: {
+      foregroundImage: './assets/icon/android-foreground.png',
+      backgroundImage: './assets/icon/android-background.png',
+      backgroundColor: '#142A43',
+      monochromeImage: './assets/icon/android-monochrome.png',
+    },
     permissions: ['ACCESS_COARSE_LOCATION', 'ACCESS_FINE_LOCATION'],
     blockedPermissions: [
       'android.permission.RECORD_AUDIO',

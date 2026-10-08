@@ -1,3 +1,4 @@
+import { headerItems } from '../../navigation/chrome';
 import { useCallback, useState } from 'react';
 import { View } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
@@ -532,12 +533,12 @@ export default function ReportPage() {
       <Stack.Screen
         options={{
           title,
-          unstable_headerRightItems: () => [
+          ...headerItems(() => [
             shareHeaderItem({
               path: `/reports/${slug}${section ? `/s/${section}` : ''}`,
               title,
             }),
-          ],
+          ]),
         }}
       />
       <Screen testID="report-screen">

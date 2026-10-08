@@ -1,4 +1,7 @@
+import { headerItems } from '../../navigation/chrome';
 import { Stack } from 'expo-router';
+import { Platform } from 'react-native';
+import { AndroidReadingHeader } from '../../navigation/AndroidReadingHeader';
 import { reports } from '../../api/runtime';
 import {
   Group,
@@ -34,9 +37,12 @@ export default function Stats() {
       <Stack.Screen
         options={{
           title: 'Sources & coverage',
-          unstable_headerRightItems: () => [
+          ...(Platform.OS === 'android'
+            ? { header: AndroidReadingHeader }
+            : {}),
+          ...headerItems(() => [
             shareHeaderItem({ path: '/stats', title: 'Sources & coverage' }),
-          ],
+          ]),
         }}
       />
       <Screen testID="stats-screen">

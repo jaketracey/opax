@@ -7,6 +7,7 @@ import {
 } from 'react';
 import {
   Text as NativeText,
+  Platform,
   useWindowDimensions,
   type TextLayoutEvent,
   type TextProps,
@@ -364,6 +365,12 @@ export function Text({
   const guardDrawing = () => {
     const { frame, lines } = measured.current;
     if (!frame || frame.height <= 0 || frame.width <= 0) return;
+    // The height floor repairs TextKit rounding on iOS. Android measures its
+    // own glyph bounds; adding a floor there re-lays out every mounted Text.
+    if (Platform.OS === 'android') {
+      if (probe.enabled) probe.update(lines, frame);
+      return;
+    }
     // One whole point survives Yoga rounding; a physical pixel may round away.
     // Only the first natural frame sets the minimum, never the guarded frame.
     // Guard every content Text, including a completely missing first line:
@@ -406,30 +413,37 @@ export function Text({
       onTextLayout={
         wordSafe || probe.enabled || onTextLayout ? onLayoutLines : undefined
       }
-      onLayout={(event) => {
-        onLayout?.(event);
-        const frame = event.nativeEvent.layout;
-        if (frame.width <= 0 || frame.height <= 0) return;
-        if (wordSafe)
-          advance((state) => wordSafeOnFrame(state, instance, frame.width));
-        // This event may still include the old floor. Forget that frame and
-        // its lines before removing the floor, then wait for a fresh layout.
-        if (
-          heightGuard.key === heightKey &&
-          Math.abs(heightGuard.width - frame.width) > 0.01
-        ) {
-          measured.current = { key: heightKey };
-          setHeightGuard({
-            key: heightKey,
-            width: frame.width,
-            minimum: 0,
-          });
-          probe.reset();
-          return;
-        }
-        currentMeasurement().frame = frame;
-        guardDrawing();
-      }}
+      onLayout={
+        Platform.OS === 'android' && !wordSafe && !probe.enabled && !onLayout
+          ? undefined
+          : (event) => {
+              onLayout?.(event);
+              const frame = event.nativeEvent.layout;
+              if (frame.width <= 0 || frame.height <= 0) return;
+              if (wordSafe)
+                advance((state) =>
+                  wordSafeOnFrame(state, instance, frame.width),
+                );
+              // This event may still include the old floor. Forget that frame and
+              // its lines before removing the floor, then wait for a fresh layout.
+              if (
+                Platform.OS !== 'android' &&
+                heightGuard.key === heightKey &&
+                Math.abs(heightGuard.width - frame.width) > 0.01
+              ) {
+                measured.current = { key: heightKey };
+                setHeightGuard({
+                  key: heightKey,
+                  width: frame.width,
+                  minimum: 0,
+                });
+                probe.reset();
+                return;
+              }
+              currentMeasurement().frame = frame;
+              guardDrawing();
+            }
+      }
       allowFontScaling
       maxFontSizeMultiplier={0}
       dynamicTypeRamp={role.dynamicTypeRamp}

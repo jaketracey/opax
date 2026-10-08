@@ -70,7 +70,7 @@ export default function TabStack({ segment }: { segment: string }) {
           title: 'Expense glossary',
           presentation: 'modal',
           headerLargeTitleEnabled: false,
-          unstable_headerRightItems: () => [closeSheetItem()],
+          ...headerItems(() => [closeSheetItem()]),
         }}
       />
     </Stack>

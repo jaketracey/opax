@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Stack } from 'expo-router';
+import { Platform } from 'react-native';
+import { AndroidReadingHeader } from '../../navigation/AndroidReadingHeader';
 import { catalogs } from '../../api/runtime';
 import {
   AsAtLine,
@@ -18,7 +20,7 @@ import {
 } from '../../design/primitives';
 import { rhythm } from '../../design/tokens';
 import { shareHeaderItem } from '../../navigation/share';
-import { closeSheetItem } from '../../navigation/chrome';
+import { closeSheetItem, headerItems } from '../../navigation/chrome';
 
 export default function ExpenseGlossary() {
   const [record, setRecord] = useState<Awaited<
@@ -48,13 +50,16 @@ export default function ExpenseGlossary() {
       <Stack.Screen
         options={{
           title: 'Expense glossary',
-          unstable_headerRightItems: () => [
+          ...(Platform.OS === 'android'
+            ? { header: AndroidReadingHeader }
+            : {}),
+          ...headerItems(() => [
             shareHeaderItem({
               path: '/expenses',
               title: 'Expense category glossary',
             }),
             closeSheetItem(),
-          ],
+          ]),
         }}
       />
       <Screen testID="expense-glossary">

@@ -1,3 +1,4 @@
+import { headerItems } from '../../navigation/chrome';
 import { useState } from 'react';
 import { Stack } from 'expo-router';
 import { reports } from '../../api/runtime';
@@ -24,9 +25,9 @@ export default function TopicsIndex() {
       <Stack.Screen
         options={{
           title: 'Topics A–Z',
-          unstable_headerRightItems: () => [
+          ...headerItems(() => [
             shareHeaderItem({ path: '/subject/topic', title: 'Topics A–Z' }),
-          ],
+          ]),
         }}
       />
       <Screen testID="topics-screen">

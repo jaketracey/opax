@@ -95,6 +95,7 @@ export function headerItems(
                       Pressable,
                       {
                         key: index,
+                        testID: `header-${item.label.toLowerCase().replaceAll(' ', '-')}`,
                         accessibilityRole: 'button',
                         accessibilityLabel:
                           item.accessibilityLabel ?? item.label,

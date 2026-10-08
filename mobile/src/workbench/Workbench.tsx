@@ -1,3 +1,4 @@
+import { phoneCopy } from '../design/phone-copy';
 import { useState, type ReactNode } from 'react';
 import { Alert, Image, Platform, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
@@ -372,7 +373,7 @@ export default function Workbench() {
         <Field
           label="Find your MP"
           placeholder="Electorate or member's name"
-          hint="Your choice is saved on this iPhone only."
+          hint={phoneCopy('Your choice is saved on this iPhone only.')}
         />
         <Field label="Email address" required keyboardType="email-address" />
         <Field

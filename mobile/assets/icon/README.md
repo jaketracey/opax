@@ -17,3 +17,10 @@ iOS 26 derives the clear appearance from these. To re-render after a change:
 for n in icon icon-dark icon-tinted; do rsvg-convert -w 1024 -h 1024 $n.svg -o $n.png; done
 magick icon.png -background '#142A43' -alpha remove -alpha off icon.png
 ```
+
+Android uses separate adaptive layers: `android-foreground` retains the same
+Australia paths in gold, `android-background` is opaque navy, and
+`android-monochrome` supplies an alpha mask for Android 13+ themed icons. The
+foreground is inset to stay inside the adaptive icon's central safe circle;
+the launcher supplies the outer mask. Render their SVGs with the same command.
+These assets affect only Android; the three iOS icons above are unchanged.
