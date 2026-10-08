@@ -1,0 +1,55 @@
+appId: au.com.opax.app
+name: 40 Today report, Over time records, 1999 speech opens in the reader
+---
+# Jake, build 17/18: the first era's "Peter Costello" row opened a reader
+# that never loaded. The 1990s federal speeches have no official link
+# (/api/resource url ''); the pinned contract keeps that shape.
+- launchApp:
+    clearState: true
+- scrollUntilVisible:
+    element:
+      id: today-spotlight-open
+    direction: DOWN
+    timeout: 300000
+    centerElement: true
+- tapOn:
+    id: today-spotlight-open
+- assertVisible:
+    id: report-title
+- scrollUntilVisible:
+    element:
+      id: report-tab-over
+    direction: DOWN
+    timeout: 300000
+    centerElement: true
+- tapOn:
+    id: report-tab-over
+- scrollUntilVisible:
+    element:
+      id: report-section-sources-9
+    direction: DOWN
+    timeout: 300000
+    centerElement: true
+- tapOn:
+    id: report-section-sources-9
+- scrollUntilVisible:
+    element:
+      id: report-section-sources-9-cited-0
+    direction: DOWN
+    timeout: 90000
+    centerElement: true
+- assertVisible: "Peter Costello.*"
+- takeScreenshot: ${EVIDENCE}/40-report-records
+- tapOn:
+    id: report-section-sources-9-cited-0
+- assertVisible:
+    id: doc-title
+- assertNotVisible:
+    id: doc-error
+# At AX5 the full text starts below the fold.
+- scrollUntilVisible:
+    element:
+      text: Pinned report citation excerpt.*
+    direction: DOWN
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/40-record-reader

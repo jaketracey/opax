@@ -21,6 +21,7 @@ import { isOffline } from '../CatalogState';
 import { RecordRow } from '../RecordRow';
 import { citedParagraphs, parliamentNames, type Source } from './model';
 import { openRecord } from './open';
+import { titleSubject } from '../records/citations';
 
 export const MODEL_NOTE =
   'Machine-written from the retrieved passages; not the record.';
@@ -123,28 +124,39 @@ export function SourceRows({
   return (
     <Group>
       {sources.length ? (
-        sources.map((s, i) => (
-          <Group key={`${s.slug}-${i}`} gap={6}>
-            <RecordRow
-              title={s.title ?? s.source_title ?? s.slug}
-              detail={[
-                s.speaker,
-                s.party,
-                s.state ? parliamentNames[s.state] : null,
-                s.date ? formatDate(s.date) : null,
-              ]
-                .filter(Boolean)
-                .join(' · ')}
-              onPress={() => openRecord(`/doc/${s.slug}`, s.title ?? s.slug)}
-              testID={`${testID}-${i}`}
-            />
-            {s.passage ? (
-              <Text wordSafe variant="metadata">
-                {s.passage}
-              </Text>
-            ) : null}
-          </Group>
-        ))
+        sources.map((s, i) => {
+          const title = s.title ?? s.source_title ?? s.slug;
+          // "Speaker — 1999-02-09" titles repeat the detail line: keep the
+          // subject if there is one, else the speaker, and the date once below.
+          const subject = titleSubject({
+            title,
+            speaker: s.speaker,
+            date: s.date,
+          });
+          const bySpeaker = !subject && !!s.speaker;
+          return (
+            <Group key={`${s.slug}-${i}`} gap={6}>
+              <RecordRow
+                title={subject || s.speaker || title}
+                detail={[
+                  bySpeaker ? null : s.speaker,
+                  s.party,
+                  s.state ? parliamentNames[s.state] : null,
+                  s.date ? formatDate(s.date) : null,
+                ]
+                  .filter(Boolean)
+                  .join(' · ')}
+                onPress={() => openRecord(`/doc/${s.slug}`, title)}
+                testID={`${testID}-${i}`}
+              />
+              {s.passage ? (
+                <Text wordSafe variant="metadata">
+                  {s.passage}
+                </Text>
+              ) : null}
+            </Group>
+          );
+        })
       ) : (
         <EmptyState message="No source records are available in this snapshot." />
       )}

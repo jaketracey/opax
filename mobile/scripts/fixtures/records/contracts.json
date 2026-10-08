@@ -3,7 +3,7 @@
     "record": "portal/src/index.ts apiResource",
     "billText": "portal/src/bill-text.ts handleBillText",
     "division": "portal/public/bills/au-federal-r7534.json divisions[0]",
-    "notice": "Speech and bill source bodies and press release are explicitly synthetic. No quoted statement or legal provision is invented for a real person."
+    "notice": "Speech and bill source bodies and press release are explicitly synthetic, except speech-18098, which carries only the gambling report's pinned citation passage. No quoted statement or legal provision is invented for a real person."
   },
   "seeds": {
     "speech-1205524": {
@@ -207,6 +207,71 @@
           "t-body": {
             "value": {
               "body": "Synthetic evidence fixture. Invitations, awards and payments are distinct stages."
+            }
+          }
+        }
+      }
+    },
+    "speech-18098": {
+      "title": "Peter Costello — 1999-02-09",
+      "origin": {
+        "collaborators": [
+          "Peter Costello"
+        ],
+        "url": ""
+      },
+      "usermetadata": {
+        "classifications": [
+          {
+            "labelset": "kind",
+            "label": "speech"
+          },
+          {
+            "labelset": "source",
+            "label": "zenodo"
+          },
+          {
+            "labelset": "state",
+            "label": "federal"
+          },
+          {
+            "labelset": "party",
+            "label": "Liberal"
+          },
+          {
+            "labelset": "chamber",
+            "label": "representatives"
+          },
+          {
+            "labelset": "decade",
+            "label": "1990s"
+          }
+        ]
+      },
+      "extra": {
+        "metadata": {
+          "speech_id": 18098,
+          "date": "1999-02-09",
+          "fixture": true
+        }
+      },
+      "computedmetadata": {
+        "field_classifications": [
+          {
+            "classifications": [
+              {
+                "labelset": "topic",
+                "label": "gambling"
+              }
+            ]
+          }
+        ]
+      },
+      "data": {
+        "texts": {
+          "body": {
+            "value": {
+              "body": "Pinned report citation excerpt. This fixture does not include the full source document.\n\nBackground (2) There is a need for a better understanding of the performance of the gambling industries and their economic and social impacts across Australia, including their impact on the retail, tourism and entertainment industries and on Commonwealth and State/Territory Budgets. Little is known about the social impacts of the rapid growth in gambling. Scope of Inquiry (3) In particular, the…"
             }
           }
         }
@@ -463,6 +528,30 @@
       },
       "summary": null,
       "text": "Synthetic evidence fixture. Invitations, awards and payments are distinct stages."
+    },
+    "/api/resource/speech-18098": {
+      "slug": "speech-18098",
+      "title": "Peter Costello — 1999-02-09",
+      "speaker": "Peter Costello",
+      "url": "",
+      "labels": {
+        "kind": "speech",
+        "source": "zenodo",
+        "state": "federal",
+        "party": "Liberal",
+        "chamber": "representatives",
+        "decade": "1990s"
+      },
+      "topics": [
+        "gambling"
+      ],
+      "metadata": {
+        "speech_id": 18098,
+        "date": "1999-02-09",
+        "fixture": true
+      },
+      "summary": null,
+      "text": "Pinned report citation excerpt. This fixture does not include the full source document.\n\nBackground (2) There is a need for a better understanding of the performance of the gambling industries and their economic and social impacts across Australia, including their impact on the retail, tourism and entertainment industries and on Commonwealth and State/Territory Budgets. Little is known about the social impacts of the rapid growth in gambling. Scope of Inquiry (3) In particular, the…"
     },
     "/api/resource/bill-text-au-federal-r7534-aspassed": {
       "slug": "bill-text-au-federal-r7534-aspassed",
