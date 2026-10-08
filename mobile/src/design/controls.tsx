@@ -1,4 +1,4 @@
-import { useRef, useState, type Ref } from 'react';
+import { useRef, useState, type Ref, type RefObject } from 'react';
 import {
   ActivityIndicator,
   type AccessibilityState,
@@ -11,6 +11,7 @@ import {
   type TextInputProps,
 } from 'react-native';
 import { useAccessibilitySize, useReduceMotion } from './accessibility';
+import { Hoverable } from './adaptive';
 import { Icon, type SFSymbol } from './icon';
 import { Text, type TextTone } from './text';
 import {
@@ -114,76 +115,82 @@ export function Button({
   // Loading keeps the resting look; only a disabled button changes colour.
   const resting = disabled && !loading ? states.disabled : states.rest;
   return (
-    <Pressable
-      ref={ref}
-      accessibilityRole="button"
-      accessibilityLabel={accessibilityLabel ?? label}
-      accessibilityHint={accessibilityHint}
-      accessibilityState={{
-        disabled: inert,
-        busy: loading,
-        ...(expanded === undefined ? {} : { expanded }),
-      }}
-      testID={testID}
-      disabled={inert}
-      onPress={onPress}
-      style={({ pressed }) => {
-        const state = pressed && !inert ? states.pressed : resting;
-        return [
-          styles.button,
-          { minHeight: controlHeight[size] },
-          fullWidth || stacked ? styles.full : styles.hug,
-          stacked ? styles.buttonStacked : null,
-          // A frameless button's label lines up with the text column; its
-          // pressed wash bleeds into the margin. A stretched button reads
-          // from the leading edge, its symbol beside its label.
-          variant === 'quiet' ? styles.quiet : null,
-          stacked ? styles.leading : null,
-          {
-            backgroundColor: fill(state.fill),
-            borderColor: fill(state.border),
-          },
-        ];
-      }}
+    <Hoverable
+      effect={inert ? 'none' : 'highlight'}
+      cornerRadius={stacked ? radius + 10 : 999}
+      style={fullWidth || stacked ? styles.full : styles.hug}
     >
-      {({ pressed }) => {
-        const state = pressed && !inert ? states.pressed : resting;
-        return (
-          <>
-            <View
-              style={[styles.buttonContent, loading ? styles.hidden : null]}
-            >
-              {icon ? <Icon name={icon} tone={state.label} /> : null}
-              <Text
-                variant="control"
-                tone={state.label}
-                wordSafe
-                style={stacked ? styles.shrink : styles.center}
+      <Pressable
+        ref={ref}
+        accessibilityRole="button"
+        accessibilityLabel={accessibilityLabel ?? label}
+        accessibilityHint={accessibilityHint}
+        accessibilityState={{
+          disabled: inert,
+          busy: loading,
+          ...(expanded === undefined ? {} : { expanded }),
+        }}
+        testID={testID}
+        disabled={inert}
+        onPress={onPress}
+        style={({ pressed }) => {
+          const state = pressed && !inert ? states.pressed : resting;
+          return [
+            styles.button,
+            { minHeight: controlHeight[size] },
+            fullWidth || stacked ? styles.full : styles.hug,
+            stacked ? styles.buttonStacked : null,
+            // A frameless button's label lines up with the text column; its
+            // pressed wash bleeds into the margin. A stretched button reads
+            // from the leading edge, its symbol beside its label.
+            variant === 'quiet' ? styles.quiet : null,
+            stacked ? styles.leading : null,
+            {
+              backgroundColor: fill(state.fill),
+              borderColor: fill(state.border),
+            },
+          ];
+        }}
+      >
+        {({ pressed }) => {
+          const state = pressed && !inert ? states.pressed : resting;
+          return (
+            <>
+              <View
+                style={[styles.buttonContent, loading ? styles.hidden : null]}
               >
-                {label}
-              </Text>
-              {trailingIcon ? (
-                <Icon name={trailingIcon} tone={state.label} />
-              ) : null}
-            </View>
-            {loading ? (
-              <View style={styles.spinner} pointerEvents="none">
-                {reduceMotion ? (
-                  <View
-                    style={[
-                      styles.staticSpinner,
-                      { borderColor: colors[state.label] },
-                    ]}
-                  />
-                ) : (
-                  <ActivityIndicator color={colors[state.label]} />
-                )}
+                {icon ? <Icon name={icon} tone={state.label} /> : null}
+                <Text
+                  variant="control"
+                  tone={state.label}
+                  wordSafe
+                  style={stacked ? styles.shrink : styles.center}
+                >
+                  {label}
+                </Text>
+                {trailingIcon ? (
+                  <Icon name={trailingIcon} tone={state.label} />
+                ) : null}
               </View>
-            ) : null}
-          </>
-        );
-      }}
-    </Pressable>
+              {loading ? (
+                <View style={styles.spinner} pointerEvents="none">
+                  {reduceMotion ? (
+                    <View
+                      style={[
+                        styles.staticSpinner,
+                        { borderColor: colors[state.label] },
+                      ]}
+                    />
+                  ) : (
+                    <ActivityIndicator color={colors[state.label]} />
+                  )}
+                </View>
+              ) : null}
+            </>
+          );
+        }}
+      </Pressable>
+    </Hoverable>
   );
 }
 
@@ -255,46 +262,48 @@ export function IconButton({
 }) {
   const states = buttonStates[variant];
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={accessibilityLabel}
-      accessibilityState={{ disabled }}
-      // Voice Control and the Large Content Viewer use the same name.
-      accessibilityShowsLargeContentViewer
-      accessibilityLargeContentTitle={accessibilityLabel}
-      testID={testID}
-      disabled={disabled}
-      onPress={onPress}
-      style={({ pressed }) => {
-        const state = disabled
-          ? states.disabled
-          : pressed
-            ? states.pressed
-            : states.rest;
-        return [
-          styles.iconButton,
-          {
-            backgroundColor: fill(state.fill),
-            borderColor: fill(state.border),
-          },
-        ];
-      }}
-    >
-      {({ pressed }) => (
-        <Icon
-          name={symbol}
-          size={22}
-          tone={
-            (disabled
-              ? states.disabled
-              : pressed
-                ? states.pressed
-                : states.rest
-            ).label
-          }
-        />
-      )}
-    </Pressable>
+    <Hoverable effect={disabled ? 'none' : 'highlight'} cornerRadius={radius}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={accessibilityLabel}
+        accessibilityState={{ disabled }}
+        // Voice Control and the Large Content Viewer use the same name.
+        accessibilityShowsLargeContentViewer
+        accessibilityLargeContentTitle={accessibilityLabel}
+        testID={testID}
+        disabled={disabled}
+        onPress={onPress}
+        style={({ pressed }) => {
+          const state = disabled
+            ? states.disabled
+            : pressed
+              ? states.pressed
+              : states.rest;
+          return [
+            styles.iconButton,
+            {
+              backgroundColor: fill(state.fill),
+              borderColor: fill(state.border),
+            },
+          ];
+        }}
+      >
+        {({ pressed }) => (
+          <Icon
+            name={symbol}
+            size={22}
+            tone={
+              (disabled
+                ? states.disabled
+                : pressed
+                  ? states.pressed
+                  : states.rest
+              ).label
+            }
+          />
+        )}
+      </Pressable>
+    </Hoverable>
   );
 }
 
@@ -547,6 +556,7 @@ export function Field({
   error,
   required = false,
   testID,
+  inputRef,
   ...input
 }: Omit<
   TextInputProps,
@@ -557,8 +567,11 @@ export function Field({
   error?: string | null;
   required?: boolean;
   testID?: string;
+  /** The text input itself, to focus it from a keyboard shortcut. */
+  inputRef?: RefObject<TextInput | null>;
 }) {
-  const ref = useRef<TextInput>(null);
+  const ownRef = useRef<TextInput>(null);
+  const ref = inputRef ?? ownRef;
   const [focused, setFocused] = useState(false);
   const disabled = input.editable === false;
   const description = [error ? `Error: ${error}` : null, hint]
@@ -656,8 +669,11 @@ export function Composer({
   maxLength,
   testID,
   submitTestID,
+  inputRef,
 }: {
   ref?: Ref<View>;
+  /** The text input itself, to focus it from a keyboard shortcut. */
+  inputRef?: Ref<TextInput>;
   /** The input's spoken name: "Your question". */
   label: string;
   /** The send button's spoken name: "Ask the record". */
@@ -685,6 +701,7 @@ export function Composer({
       style={[styles.composer, focused ? styles.composerFocused : null]}
     >
       <TextInput
+        ref={inputRef}
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}

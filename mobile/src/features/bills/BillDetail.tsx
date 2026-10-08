@@ -37,7 +37,7 @@ import {
   errorMessage,
 } from '../../design/primitives';
 import { chrome, colors, radius, spacing } from '../../design/tokens';
-import { billRoute, personRoute, billTextRoute } from '../../navigation/routes';
+import { billRoute, personRoute } from '../../navigation/routes';
 import { shareHeaderItem } from '../../navigation/share';
 import { chamberLabel } from './filters';
 import {
@@ -53,6 +53,7 @@ import {
 import { sponsorSlug } from './sponsors';
 import { FollowToggle } from '../follows/FollowToggle';
 import { useCatalogRecord } from './useCatalogRecord';
+import { useBillNavigation } from './navigation';
 
 type BillRecord = Awaited<ReturnType<typeof catalogs.billFor>>;
 type BillView = BillRecord['data'];
@@ -104,6 +105,7 @@ export default function BillDetail({
     [key],
   );
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
+  const bills = useBillNavigation();
   const [sponsors, setSponsors] = useState<Record<string, PersonSlug>>({});
   const view = record?.data;
   const identity = view?.identity.data ?? null;
@@ -247,7 +249,7 @@ export default function BillDetail({
                   title="Read the bill text"
                   icon="doc.text"
                   accent="bills"
-                  onPress={() => router.push(billTextRoute(identity.key))}
+                  onPress={() => bills.openText(identity.key, name)}
                   testID="bill-read-text"
                 />
                 <Summary view={view} />
@@ -328,6 +330,7 @@ function BillHead({
   onRefresh: () => void;
 }) {
   const identity = view.identity.data!;
+  const bills = useBillNavigation();
   const draft = identity.status === 'exposure_draft';
   const consultation = view.consultation.data;
   return (
@@ -432,7 +435,7 @@ function BillHead({
           </Text>
           <InlineLink
             label={related.title}
-            onPress={() => router.push(billRoute(related.key))}
+            onPress={() => bills.openBill(related.key, related.title)}
           />
           {related.note ? <Text variant="fine">{related.note}</Text> : null}
         </View>
@@ -440,7 +443,7 @@ function BillHead({
       {view.became ? (
         <InlineLink
           label="Introduced to Parliament as a bill"
-          onPress={() => router.push(billRoute(view.became!))}
+          onPress={() => bills.openBill(view.became!)}
           testID="bill-became"
         />
       ) : null}

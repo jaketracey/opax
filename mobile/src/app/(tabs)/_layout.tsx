@@ -4,11 +4,15 @@ import { AndroidTabs } from '../../navigation/AndroidTabs';
 import { chrome } from '../../design/tokens';
 // Ask is the fifth tab. Talk and Account keep their navigation-bar positions.
 // The native tab bar keeps system type and offers the Large Content Viewer
-// at accessibility text sizes.
+// at accessibility text sizes. On iPad the same tabs are UIKit's
+// sidebar-adaptable bar: a sidebar (or the top tab bar, which the reader can
+// expand into it) on regular width, and this bottom bar in a compact window.
+// `sidebarAdaptable` has no effect on iPhone.
 export default function TabsLayout() {
   if (Platform.OS === 'android') return <AndroidTabs />;
   return (
     <NativeTabs
+      sidebarAdaptable
       tintColor={chrome.tint}
       iconColor={{ default: chrome.inactive, selected: chrome.tint }}
       labelStyle={{

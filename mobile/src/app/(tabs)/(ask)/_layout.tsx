@@ -1,6 +1,10 @@
 import { headerItems } from '../../../navigation/chrome';
 import { Stack } from 'expo-router';
-import { closeSheetItem, useStackChrome } from '../../../navigation/chrome';
+import {
+  closeSheetItem,
+  shortSheet,
+  useStackChrome,
+} from '../../../navigation/chrome';
 export const unstable_settings = { anchor: 'ask' };
 export default function AskLayout() {
   return (
@@ -16,7 +20,7 @@ export default function AskLayout() {
         name="expense-glossary"
         options={{
           title: 'Expense glossary',
-          presentation: 'modal',
+          ...shortSheet,
           headerLargeTitleEnabled: false,
           ...headerItems(() => [closeSheetItem()]),
         }}

@@ -84,6 +84,169 @@ Design workbench) to see every component and state at the current text size.
   in as the veil clears. Under Reduce Motion the veil is still and clears
   at once. Nothing changes size.
 
+## iPad (Oct 2026): designed for the larger screen
+
+TestFlight builds from `ios/app` run natively on iPad (`supportsTablet`,
+all four iPad orientations, Split View, Slide Over and Stage Manager
+windows). The App Store 1.0 build (`ios/release-1.0`) stays iPhone-only.
+**The iPhone never changes:** every adaptive decision below is `compact` on
+an iPhone in any orientation, and the iPad-only wrappers (`Hoverable`, the
+Bills `LayoutRegion`) render nothing extra there.
+
+### Size classes: `useLayout()`
+
+- `useLayout()` returns `{ size, regular, wide, width, height, window,
+  landscape }`. `size` is `regular` from **700pt** (`breakpoints.regular`)
+  on an iPad, else `compact`; `wide` is regular and at least 1100pt (three
+  columns). It follows the live window, not the device: rotation, a 1/3
+  Split View window and a Stage Manager resize all re-render.
+- Inside a measured region it reads that region instead of the window: a
+  `Screen` gives its children the width of its content column, and each
+  `SplitLayout` pane gives its own width, so a screen drawn in the 480pt
+  detail pane lays out as compact. Wrap anything else that must know its
+  real width (a full-screen FlatList) in `LayoutRegion`.
+- Decide per block, never per device: `const { regular } = useLayout()`.
+  Don't read `Dimensions`, `Platform.isPad` or the orientation for layout;
+  `isPad` exists only for iPad-only wrappers that must not touch the
+  iPhone's view tree.
+
+### Columns: `Screen`, `ReadableColumn`
+
+- `Screen` and `KeyboardStableScreen` centre their content on regular
+  width: `column="readable"` (default, 700pt, for long text and every
+  existing screen) or `column="wide"` (1180pt, front pages and grids).
+  Nothing else is needed: every screen built on `Screen` already stops
+  stretching edge to edge on iPad. Compact keeps the 20pt margin.
+- FlatList screens use the same column through `useScreenColumn()`:
+  `onLayout` on the list, `content` in `contentContainerStyle`, `inner` in a
+  `RegionProvider` around the header, and `bar` first in the header (the
+  reader's `ReaderList` is the example).
+- `ReadableColumn` centres long text outside a `Screen` (a sheet's body).
+
+### The sidebar's inset: `SidebarSafe`
+
+- On iPadOS 26 the sidebar floats over the content and reports itself as a
+  leading safe-area inset. The navigation bar follows it; scroll content
+  does not. `Screen`, `KeyboardStableScreen`, the reader and the Bills split
+  wrap themselves in `SidebarSafe` (a native safe-area view, leading and
+  trailing edges, iPad only); wrap any other full-screen FlatList in it.
+  Nested ones defer to the outermost (the native view pads by its screen's
+  insets, not its own overlap). In portrait the sidebar overlays the
+  content while open, as UIKit intends.
+
+### Grids: `Grid`
+
+- `<Grid columns={{ regular: 2, wide: 3 }} minItemWidth={280}>` lays card
+  fronts in columns from its own measured width: `compact` (default 1),
+  `regular` (2) and `wide` (3), never narrower than `minItemWidth` times the
+  text scale (capped at 2x), so at accessibility sizes it steps down to
+  fewer, wider cards. Cells in a row share the row's height; give a card
+  `flexGrow: 1` (Today's bill cards use `fill`) to fill its cell.
+- Sections can be grid items: their top rules then read as a broadsheet's
+  column rules (Today's "ways in" and reports rows).
+
+### Two panes: `SplitLayout`
+
+- `SplitLayout<T>` draws a list pane (360pt, dragged between 300 and 440pt
+  on the hairline divider; at accessibility sizes it starts at 45% of the
+  region and drags up to half, so rows keep whole words, which VoiceOver adjusts in 40pt steps and which
+  thickens in bronze under the pointer) beside a detail pane, on regular
+  width. On compact it renders the list alone: the screen then pushes its
+  detail route exactly as before, so check `useLayout().regular` in the row's
+  `onPress`.
+- **Selection lives in the route** (`router.setParams({ bill: key })` on the
+  root screen, read back with `useLocalSearchParams`): it survives tab
+  switches, rotation through compact and back, and a link such as
+  `/bills?bill=<key>` opens the item in the pane.
+- **The detail pane has its own small stack.** `renderDetail(entry)` draws
+  an entry; screens inside call `useSplitPane()` and `pane.push(entry)` to
+  open a follow-on page in the pane ("Read the bill text"), with a Back to
+  the entry below drawn first in the pane's content (`entryTitle` names it).
+  `pane.select(entry)` makes another item the selection (a related bill). A
+  new selection starts the stack again. Outside a pane `useSplitPane()` is
+  null; wrap the decision in a feature hook (`useBillNavigation()`:
+  `openText`, `openBill`) so the same screen pushes routes when it is pushed.
+- Links that leave the item (a sponsor's profile, Ask about this) keep
+  pushing or switching tabs; Back returns to the split with its selection.
+- Detail screens render `embedded` (no `Stack.Screen` title or bar items);
+  the pane bar carries `detailActions` (Share).
+- `empty` is a `SplitEmpty`: a symbol on its category wash, one serif line
+  and, at most, one sentence. No instructions.
+- Rows in the list take a `selected` state: the category wash with a 3pt ink
+  mark, no chevron (the pane is the destination), `accessibilityState
+  selected`.
+
+### Navigation
+
+- The tabs are UIKit's sidebar-adaptable tab bar on iPad (`NativeTabs
+  sidebarAdaptable`): a sidebar, or the top tab bar the reader expands into
+  one, on regular width; the bottom bar in a compact window; no change on
+  iPhone. Talk and Account stay in each root's navigation bar.
+- Root screens with two panes turn their large title off on regular width
+  (Bills); large titles over two scroll views collapse with whichever
+  scrolls first.
+
+### Sheets
+
+- `shortSheet` (`src/navigation/chrome.ts`) for a short single-screen sheet
+  (filters, a glossary): a centred form sheet on iPad, a bottom sheet in a
+  compact window, unchanged on iPhone. Sheets with their own stack
+  (Account, directory filters) and Talk stay `modal`, which iPadOS draws as
+  a centred page sheet.
+- The share sheet's iPad popover points up at the bar's trailing buttons
+  (`anchorPopover` in `modules/opax-share`). Action sheets
+  (`showMenu`, `ActionSheetIOS`) present as centred popovers; pass an anchor
+  when a lane adds one beside its control.
+
+### Keyboard, pointer, focus
+
+- **Shortcuts** (`src/design/keyboard.ts`, installed by
+  `src/navigation/KeyboardShortcuts.tsx`, registered with UIKit by
+  `modules/opax-ipad` and listed in the Cmd-hold overlay): Cmd-F Search
+  (field focused), Cmd-N a new Ask question (composer focused; nothing is
+  sent, and a question being answered keeps running), Cmd-1…5 the five
+  sections. Add one by giving it an id and spec in `keyCommandSpecs`, then
+  `useKeyCommand(id, handler, enabled)` where it applies: the newest
+  registered handler runs, so a screen can take a key while it is shown.
+- **Focus requests:** `requestFocus('search' | 'ask')` before navigating;
+  the target screen calls `useFocusRequest(target, inputRef)`, which waits
+  for the screen to mount and the transition to settle. `Field` and
+  `Composer` take `inputRef`.
+- **Split list keys:** a `SplitLayout` with `keys` and `entryForKey` takes Up
+  and Down (select the previous or next row, scrolled into view) and Escape
+  (back within the pane, then clear) while its screen is focused. A focused
+  text field keeps its own arrows and Escape.
+- **Pointer:** `Hoverable` gives a control the system pointer effect:
+  `highlight` (buttons; `Button` and `IconButton` already have it), `lift`
+  (cards: Today's bill, Leads and money map cards), `hover` (rows), or
+  `none` with `onHover` for a drawn hover state (`useHover()`: `LinkRow` and
+  bill rows tint `sunken`, the same colour as pressed). Give the wrapper the
+  child's own `alignSelf`. Hover is never the only way to see or reach
+  anything.
+
+### Testing on iPad (journey 52)
+
+- Use only the OPAX QA iPad 13 simulator. iPadOS 26 opens apps in movable
+  windows (Windowed Apps); in that mode Maestro's taps land beside their
+  targets (a tap on "Bills" opened Ask, a Settings row tapped the one
+  above), though `assertVisible` still works. Journey 52 therefore sets
+  Settings > Multitasking & Gestures > Full-Screen Apps first, then returns
+  to Windowed Apps for its last step and drags the window's corner grabber
+  to about a third of the screen (iPadOS stops at about 375pt).
+- The top tab bar's sidebar button is "Toggle sidebar". `hideKeyboard`
+  does not work on the iPad keyboard; dismiss it from the app (choosing a
+  bill does) or submit the field.
+- Settings' rows move during its launch animation: wait for the row to be
+  visible and let the tap settle (`waitToSettleTimeoutMs`).
+- Hardware-keyboard shortcuts and pointer effects cannot be driven by
+  Maestro; `tests/ipad-layout.test.tsx` covers the command handlers, and
+  they are checked by hand on a device with a keyboard and trackpad.
+
+### Copy
+
+- `phoneCopy()` says "iPad" on an iPad ("saved on this iPad"). Wrap any new
+  string that names the device in it.
+
 ## Rules that apply everywhere
 
 - **Colour through roles only.** Use `colors.<role>` from `tokens.ts`, never a

@@ -1,7 +1,7 @@
 import { headerItems } from '../../navigation/chrome';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AccessibilityInfo, StyleSheet, View } from 'react-native';
-import { Stack, router, useLocalSearchParams } from 'expo-router';
+import { Stack, useLocalSearchParams } from 'expo-router';
 import {
   AsAtLine,
   Button,
@@ -22,13 +22,13 @@ import { colors, radius, rhythm } from '../../design/tokens';
 import { formatCount, formatDate } from '../../design/format';
 import { catalogs } from '../../api/runtime';
 import { Bullet, MachineSummary } from '../bills/parts';
-import { billRoute } from '../../navigation/routes';
 import { shareHeaderItem } from '../../navigation/share';
 import { records } from './runtime';
 import { textChunks } from './model';
 import { ReaderList, readerChunkTarget } from './ReaderList';
 import { shareTextFile } from './actions';
 import { useRead } from './useRead';
+import { useBillNavigation } from '../bills/navigation';
 export default function BillTextReader({
   recordKey,
   embedded = false,
@@ -36,6 +36,7 @@ export default function BillTextReader({
   const params = useLocalSearchParams<{ key: string; version?: string }>();
   const key = recordKey ?? params.key ?? '',
     version = params.version;
+  const bills = useBillNavigation();
   const load = useCallback(() => records.billManifest(key), [key]);
   const manifestState = useRead(load);
   const manifest = manifestState.value?.data;
@@ -249,7 +250,7 @@ export default function BillTextReader({
                       detail="Dates, divisions and speeches"
                       icon="building.columns"
                       accent="bills"
-                      onPress={() => router.push(billRoute(key))}
+                      onPress={() => bills.openBill(key)}
                       testID="bill-text-bill-page"
                     />
                   </RowList>

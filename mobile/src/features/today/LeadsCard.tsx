@@ -1,9 +1,9 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
-import { Icon, Text } from '../../design/primitives';
+import { Hoverable, Icon, Text } from '../../design/primitives';
 import { light, spacing } from '../../design/tokens';
 import { leadsRoute } from '../../navigation/routes';
-import { TintIcon, TodayCard, useTodayInk } from './parts';
+import { TintIcon, TodayCard, cardRadius, useTodayInk } from './parts';
 import { mix } from './tint';
 
 /**
@@ -14,51 +14,58 @@ export function LeadsCard() {
   // The mark colour as text: 7:1 on navy under Increase Contrast.
   const mark = useTodayInk(light.bronzeBright, light.navyRaised);
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel="Leads. Where recorded contract value or party receipts concentrate, and companies that appear in both. Each lead keeps its caveats; a lead is not a finding."
-      accessibilityHint="Opens all leads"
-      testID="today-leads-open"
-      onPress={() => router.push(leadsRoute)}
-    >
-      {({ pressed }) => (
-        <TodayCard
-          ground={pressed ? light.navyRaised : light.navy}
-          style={styles.card}
-        >
-          <View style={styles.top}>
-            <View style={styles.badge}>
-              <TintIcon
-                name="point.3.connected.trianglepath.dotted"
-                size={18}
-                color={mark}
-              />
+    <Hoverable effect="lift" cornerRadius={cardRadius}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Leads. Where recorded contract value or party receipts concentrate, and companies that appear in both. Each lead keeps its caveats; a lead is not a finding."
+        accessibilityHint="Opens all leads"
+        testID="today-leads-open"
+        onPress={() => router.push(leadsRoute)}
+      >
+        {({ pressed }) => (
+          <TodayCard
+            ground={pressed ? light.navyRaised : light.navy}
+            style={styles.card}
+          >
+            <View style={styles.top}>
+              <View style={styles.badge}>
+                <TintIcon
+                  name="point.3.connected.trianglepath.dotted"
+                  size={18}
+                  color={mark}
+                />
+              </View>
+              <Text
+                wordSafe
+                variant="kicker"
+                style={[styles.kicker, { color: mark }]}
+              >
+                LEADS
+              </Text>
             </View>
-            <Text
-              wordSafe
-              variant="kicker"
-              style={[styles.kicker, { color: mark }]}
-            >
-              LEADS
+            <Text wordSafe variant="subheading" tone="onNavy">
+              Government contracts, party funding, companies in both
             </Text>
-          </View>
-          <Text wordSafe variant="subheading" tone="onNavy">
-            Government contracts, party funding, companies in both
-          </Text>
-          <Text wordSafe variant="metadata" tone="onNavySoft">
-            Where recorded contract value or party receipts concentrate, and
-            companies that appear in both. Each lead keeps its caveats; a lead
-            is not a finding.
-          </Text>
-          <View style={styles.action}>
-            <Text wordSafe variant="control" tone="onNavy" style={styles.grow}>
-              All leads
+            <Text wordSafe variant="metadata" tone="onNavySoft">
+              Where recorded contract value or party receipts concentrate, and
+              companies that appear in both. Each lead keeps its caveats; a lead
+              is not a finding.
             </Text>
-            <Icon name="arrow.right" size={16} tone="onNavy" />
-          </View>
-        </TodayCard>
-      )}
-    </Pressable>
+            <View style={styles.action}>
+              <Text
+                wordSafe
+                variant="control"
+                tone="onNavy"
+                style={styles.grow}
+              >
+                All leads
+              </Text>
+              <Icon name="arrow.right" size={16} tone="onNavy" />
+            </View>
+          </TodayCard>
+        )}
+      </Pressable>
+    </Hoverable>
   );
 }
 

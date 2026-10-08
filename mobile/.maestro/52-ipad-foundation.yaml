@@ -1,0 +1,171 @@
+appId: au.com.opax.app
+name: 52 iPad foundation, Today grid, sidebar, Bills split view, rotation and a 1/3 window
+---
+# iPad only (OPAX QA iPad 13). iPadOS 26 opens apps in movable windows; in
+# that mode Maestro's taps land beside their targets, so the journey first
+# sets Full-Screen Apps, where a tap lands where it aims, and ends in a
+# 1/3-width window under Windowed Apps, the mode it found the device in.
+- launchApp:
+    appId: com.apple.Preferences
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      text: Multitasking & Gestures
+    timeout: 30000
+- tapOn:
+    text: Multitasking & Gestures
+    waitToSettleTimeoutMs: 3000
+- extendedWaitUntil:
+    visible:
+      text: Full-Screen Apps
+    timeout: 30000
+- tapOn:
+    text: Full-Screen Apps
+    waitToSettleTimeoutMs: 3000
+- waitForAnimationToEnd
+- launchApp:
+    clearState: true
+    permissions: {}
+# Today on regular width: the broadsheet masthead, the edition beside its
+# rail (Following, Public money, Leads), then the bills in a grid.
+- extendedWaitUntil:
+    visible:
+      id: today-edition-head
+    timeout: 90000
+- assertVisible:
+    id: today-following
+- assertVisible:
+    id: today-leads-open
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/52-today-portrait
+- scrollUntilVisible:
+    element:
+      id: today-bill-1
+    direction: DOWN
+    timeout: 60000
+    centerElement: true
+# Grid, not a carousel: the first two bill cards sit side by side.
+- assertVisible:
+    id: today-bill-0
+- takeScreenshot: ${EVIDENCE}/52-today-portrait-grid
+# The sidebar: the top tab bar's leading button expands it, and it lists
+# the five sections; Bills opens from it.
+- tapOn: Toggle sidebar
+- waitForAnimationToEnd
+- assertVisible: Your MP
+- takeScreenshot: ${EVIDENCE}/52-sidebar
+- tapOn: Bills
+- extendedWaitUntil:
+    visible:
+      id: bills-split-empty
+    timeout: 120000
+- takeScreenshot: ${EVIDENCE}/52-bills-empty
+# The list filters on the device; selecting a row opens it in the pane.
+- tapOn:
+    id: bills-search
+- inputText: interactive gambling levy
+- extendedWaitUntil:
+    visible:
+      id: bill-row-au-federal-r7534
+    timeout: 30000
+- tapOn:
+    id: bill-row-au-federal-r7534
+- extendedWaitUntil:
+    visible:
+      id: bill-title
+    timeout: 60000
+- assertVisible:
+    id: bills-split-list
+- assertVisible:
+    id: bill-pane-share
+- takeScreenshot: ${EVIDENCE}/52-bills-portrait
+# Read the bill text inside the pane, then Back to the bill.
+- tapOn:
+    id: bill-read-text
+- extendedWaitUntil:
+    visible:
+      id: bill-text-reader
+    timeout: 60000
+- assertVisible:
+    id: split-pane-back
+- assertVisible:
+    id: bill-row-au-federal-r7534
+- takeScreenshot: ${EVIDENCE}/52-bill-text-pane
+- tapOn:
+    id: split-pane-back
+- extendedWaitUntil:
+    visible:
+      id: bill-title
+    timeout: 30000
+# Rotation keeps the selection and the split.
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: bill-title
+    timeout: 30000
+- assertVisible:
+    id: bill-row-au-federal-r7534
+- takeScreenshot: ${EVIDENCE}/52-bills-landscape
+# The sidebar stays open in landscape. Today keeps its scroll position.
+- tapOn: Today
+- extendedWaitUntil:
+    visible:
+      id: today-screen
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: today-masthead
+    direction: UP
+    timeout: 60000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/52-today-landscape
+- scrollUntilVisible:
+    element:
+      id: today-bill-2
+    direction: DOWN
+    timeout: 60000
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/52-today-landscape-grid
+- setOrientation: PORTRAIT
+# A 1/3-width window. iPadOS 26 tiles resizable windows rather than offering
+# Split View: under Windowed Apps the window opens at its full size, and the
+# reader drags its corner grabber to a third of the screen. Taps are
+# unreliable in that mode, so this step only resizes, checks and records.
+- launchApp:
+    appId: com.apple.Preferences
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      text: Multitasking & Gestures
+    timeout: 30000
+- tapOn:
+    text: Multitasking & Gestures
+    waitToSettleTimeoutMs: 3000
+- extendedWaitUntil:
+    visible:
+      text: Windowed Apps
+    timeout: 30000
+- tapOn:
+    text: Windowed Apps
+    waitToSettleTimeoutMs: 3000
+- waitForAnimationToEnd
+- launchApp:
+    permissions: {}
+- extendedWaitUntil:
+    visible:
+      id: today-screen
+    timeout: 60000
+- waitForAnimationToEnd
+- swipe:
+    start: 98%,98%
+    end: 34%,98%
+    duration: 2500
+- waitForAnimationToEnd
+# Compact width: the bottom tab bar returns and the sidebar toggle is gone.
+- extendedWaitUntil:
+    notVisible: Toggle sidebar
+    timeout: 15000
+- assertVisible:
+    id: today-screen-message
+- takeScreenshot: ${EVIDENCE}/52-compact-third

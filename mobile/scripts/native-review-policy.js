@@ -2,6 +2,7 @@
 // review; neither a reviewed file nor a module directory grants other names.
 const reviewedNativeModules = Object.freeze({
   'modules/opax-share/index.ts': Object.freeze(['OpaxShare']),
+  'modules/opax-ipad/index.ts': Object.freeze(['OpaxIPad']),
   'modules/opax-voice/index.ts': Object.freeze(['OpaxVoice']),
 });
 

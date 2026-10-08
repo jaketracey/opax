@@ -1,4 +1,5 @@
 import {
+  shortSheet,
   headerItems,
   closeSheetItem,
   rootHeaderItems,
@@ -50,7 +51,7 @@ export default function TabStack({ segment }: { segment: string }) {
           name="bill-filters"
           options={{
             title: 'Filter bills',
-            presentation: 'modal',
+            ...shortSheet,
             headerLargeTitleEnabled: false,
             ...headerItems(() => [closeSheetItem()]),
           }}
@@ -68,7 +69,7 @@ export default function TabStack({ segment }: { segment: string }) {
         name="expense-glossary"
         options={{
           title: 'Expense glossary',
-          presentation: 'modal',
+          ...shortSheet,
           headerLargeTitleEnabled: false,
           ...headerItems(() => [closeSheetItem()]),
         }}
