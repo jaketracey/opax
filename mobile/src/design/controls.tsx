@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TextInput,
   View,
+  useWindowDimensions,
   type TextInputProps,
 } from 'react-native';
 import { useAccessibilitySize, useReduceMotion } from './accessibility';
@@ -71,6 +72,10 @@ export interface ButtonProps {
   size?: ControlSize;
   /** Leading SF Symbol, decorative. */
   icon?: SFSymbol;
+  /** Trailing SF Symbol, decorative: the chevron on a "next" step. */
+  trailingIcon?: SFSymbol;
+  /** The spoken name when the visible label is short ("Next month, August 2026"). */
+  accessibilityLabel?: string;
   disabled?: boolean;
   /** Keeps the label (and so the width and accessible name) while working. */
   loading?: boolean;
@@ -89,9 +94,11 @@ export function Button({
   variant = 'default',
   size = 'default',
   icon,
+  trailingIcon,
   disabled = false,
   loading = false,
   fullWidth = false,
+  accessibilityLabel,
   accessibilityHint,
   expanded,
   testID,
@@ -109,7 +116,7 @@ export function Button({
     <Pressable
       ref={ref}
       accessibilityRole="button"
-      accessibilityLabel={label}
+      accessibilityLabel={accessibilityLabel ?? label}
       accessibilityHint={accessibilityHint}
       accessibilityState={{
         disabled: inert,
@@ -154,6 +161,9 @@ export function Button({
               >
                 {label}
               </Text>
+              {trailingIcon ? (
+                <Icon name={trailingIcon} tone={state.label} />
+              ) : null}
             </View>
             {loading ? (
               <View style={styles.spinner} pointerEvents="none">
@@ -173,6 +183,56 @@ export function Button({
         );
       }}
     </Pressable>
+  );
+}
+
+export interface Step {
+  /** The visible destination, short: "June". */
+  label: string;
+  /** The full spoken name: "Previous month, June 2026". */
+  accessibilityLabel: string;
+  onPress: () => void;
+  /** An end of the range: drawn disabled (ink-soft on sunken), never hidden. */
+  disabled?: boolean;
+  testID?: string;
+}
+/**
+ * A previous and next pair on one row: previous at the leading edge with a
+ * leading chevron, next at the trailing edge with a trailing one. A disabled
+ * end stays in place, drawn disabled, so the pair never shifts. At
+ * accessibility sizes each takes the full width, one above the other.
+ */
+export function StepButtons({
+  previous,
+  next,
+  testID,
+}: {
+  previous: Step;
+  next: Step;
+  testID?: string;
+}) {
+  const stacked = useAccessibilitySize();
+  return (
+    <View testID={testID} style={stacked ? styles.stepsStacked : styles.steps}>
+      <Button
+        label={previous.label}
+        accessibilityLabel={previous.accessibilityLabel}
+        icon="chevron.left"
+        size="compact"
+        disabled={previous.disabled}
+        onPress={previous.onPress}
+        testID={previous.testID}
+      />
+      <Button
+        label={next.label}
+        accessibilityLabel={next.accessibilityLabel}
+        trailingIcon="chevron.right"
+        size="compact"
+        disabled={next.disabled}
+        onPress={next.onPress}
+        testID={next.testID}
+      />
+    </View>
   );
 }
 
@@ -572,6 +632,133 @@ export function Field({
   );
 }
 
+const SEND_SCALE = 1.35;
+/**
+ * A question composer: one rounded input surface with its send action inline
+ * at the trailing edge, as Messages draws it. The send circle is navy once
+ * there is text and drawn disabled (ink-soft on sunken) until then; while
+ * working it keeps its place and shows a spinner. The screen's title names
+ * the task, so the label is spoken, not drawn: the input reads as
+ * `label` and the send button as `submitLabel`. `ref` is the whole surface,
+ * so a keyboard-aware screen keeps the input and its action in view.
+ */
+export function Composer({
+  ref,
+  label,
+  submitLabel,
+  value,
+  onChangeText,
+  onSubmit,
+  onFocus,
+  placeholder,
+  busy = false,
+  maxLength,
+  testID,
+  submitTestID,
+}: {
+  ref?: Ref<View>;
+  /** The input's spoken name: "Your question". */
+  label: string;
+  /** The send button's spoken name: "Ask the record". */
+  submitLabel: string;
+  value: string;
+  onChangeText: (text: string) => void;
+  onSubmit: () => void;
+  onFocus?: TextInputProps['onFocus'];
+  placeholder: string;
+  busy?: boolean;
+  maxLength?: number;
+  testID?: string;
+  submitTestID?: string;
+}) {
+  const [focused, setFocused] = useState(false);
+  const reduceMotion = useReduceMotion();
+  const { fontScale } = useWindowDimensions();
+  const ready = !!value.trim();
+  const inert = !ready || busy;
+  // The circle grows with the text a little, never past 1.35x.
+  const circle = Math.round(34 * Math.min(Math.max(fontScale, 1), SEND_SCALE));
+  return (
+    <View
+      ref={ref}
+      style={[styles.composer, focused ? styles.composerFocused : null]}
+    >
+      <TextInput
+        value={value}
+        onChangeText={onChangeText}
+        placeholder={placeholder}
+        multiline
+        maxLength={maxLength}
+        testID={testID}
+        accessibilityLabel={label}
+        onFocus={(event) => {
+          setFocused(true);
+          onFocus?.(event);
+        }}
+        onBlur={() => setFocused(false)}
+        allowFontScaling
+        maxFontSizeMultiplier={0}
+        placeholderTextColor={colors.inkFaint}
+        style={styles.composerInput}
+      />
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={submitLabel}
+        accessibilityState={{ disabled: inert, busy }}
+        accessibilityShowsLargeContentViewer
+        accessibilityLargeContentTitle={submitLabel}
+        testID={submitTestID}
+        disabled={inert}
+        onPress={onSubmit}
+        hitSlop={4}
+        style={styles.sendTarget}
+      >
+        {({ pressed }) => {
+          const state =
+            !ready && !busy
+              ? buttonStates.primary.disabled
+              : pressed && !inert
+                ? buttonStates.primary.pressed
+                : buttonStates.primary.rest;
+          return (
+            <View
+              style={[
+                styles.send,
+                {
+                  width: circle,
+                  height: circle,
+                  borderRadius: circle / 2,
+                  backgroundColor: fill(state.fill),
+                },
+              ]}
+            >
+              {busy ? (
+                reduceMotion ? (
+                  <View
+                    style={[
+                      styles.staticSpinner,
+                      { borderColor: colors[state.label] },
+                    ]}
+                  />
+                ) : (
+                  <ActivityIndicator color={colors[state.label]} />
+                )
+              ) : (
+                <Icon
+                  name="arrow.up"
+                  size={17}
+                  maxScale={SEND_SCALE}
+                  tone={state.label}
+                />
+              )}
+            </View>
+          );
+        }}
+      </Pressable>
+    </View>
+  );
+}
+
 /**
  * Content rules. Default between major sections, subtle for rows and
  * subheadings, accent (bronze) only for intentional emphasis. Layouts own the
@@ -625,6 +812,13 @@ const styles = StyleSheet.create({
   shrink: { flexShrink: 1 },
   hug: { alignSelf: 'flex-start' },
   full: { alignSelf: 'stretch' },
+  steps: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: spacing.s3,
+  },
+  stepsStacked: { gap: spacing.s3 },
   buttonContent: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -753,6 +947,46 @@ const styles = StyleSheet.create({
     backgroundColor: colors.raised,
   },
   inputDisabled: { backgroundColor: colors.sunken },
+  // Focus thickens the boundary to 2pt and the padding gives the extra back,
+  // so the text never moves.
+  composer: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    gap: spacing.s2,
+    borderWidth: hairline,
+    borderColor: colors.lineStrong,
+    borderRadius: 24,
+    borderCurve: 'continuous',
+    backgroundColor: colors.raised,
+    paddingLeft: spacing.s4,
+    paddingRight: spacing.s1,
+    paddingVertical: spacing.s1,
+  },
+  composerFocused: {
+    borderWidth: 2,
+    borderColor: colors.navy,
+    paddingLeft: spacing.s4 - (2 - hairline),
+    paddingRight: spacing.s1 - (2 - hairline),
+    paddingVertical: spacing.s1 - (2 - hairline),
+  },
+  composerInput: {
+    flex: 1,
+    minHeight: minimumTarget,
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingHorizontal: 0,
+    fontFamily: fonts.sans,
+    fontSize: 17,
+    lineHeight: 23,
+    color: colors.ink,
+  },
+  sendTarget: {
+    minWidth: minimumTarget,
+    minHeight: minimumTarget,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  send: { alignItems: 'center', justifyContent: 'center' },
   inputFocused: { borderColor: colors.navy, borderWidth: 2 },
   inputError: { borderColor: colors.danger, borderWidth: 2 },
   error: { flexDirection: 'row', gap: spacing.s2, alignItems: 'flex-start' },

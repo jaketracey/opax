@@ -203,7 +203,6 @@ export function PartyPage({ input }: { input: string }) {
             <AskAbout kind="party" name={view.label} />
             <Section
               title="Members"
-              icon="person.3.fill"
               accent="people"
               info={{
                 title: 'About the member count',
@@ -267,7 +266,6 @@ export function PartyPage({ input }: { input: string }) {
             </Section>
             <Section
               title="Party receipts"
-              icon="banknote"
               accent="money"
               info={
                 view.moneyMeta
@@ -379,11 +377,16 @@ export function PartyPage({ input }: { input: string }) {
                 <MoneyMapLink party={view.label} />
               </RowList>
             </Section>
-            <LinkRow title="Public money" accent="money" icon="banknote" testID="party-public-money" onPress={() => router.push('/public-money')} />
+            <LinkRow
+              title="Public money"
+              accent="money"
+              icon="banknote"
+              testID="party-public-money"
+              onPress={() => router.push('/public-money')}
+            />
             <PartyFunding name={view.label} />
             <Section
               title="Associated entities"
-              icon="building.2"
               accent="money"
               info={{
                 title: 'About associated entities',
@@ -440,7 +443,6 @@ export function PartyPage({ input }: { input: string }) {
             </Section>
             <Section
               title="Bills they divided on"
-              icon="checkmark.square"
               accent="votes"
               info={{
                 title: 'About these divisions',

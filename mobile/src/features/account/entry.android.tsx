@@ -18,7 +18,7 @@ const independence =
 export default function AndroidAboutScreen() {
   return (
     <Screen testID="account-sheet">
-      <Section title="About OPAX" icon="building.columns" accent="people">
+      <Section title="About OPAX" accent="people">
         <Text variant="subheading">
           Open Parliamentary Accountability Exchange
         </Text>
@@ -61,7 +61,7 @@ export default function AndroidAboutScreen() {
       {isProduction ? null : (
         // Development and e2e only, whatever the voice switch says; the
         // workbench route is not in release bundles.
-        <Section title="Development" icon="hammer" accent="people">
+        <Section title="Development" accent="people">
           <RowList>
             <LinkRow
               title="Design workbench"

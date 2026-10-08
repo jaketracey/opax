@@ -74,7 +74,6 @@ export default function ExpenseGlossary() {
               <Section
                 key={g.id}
                 title={g.title}
-                icon="list.bullet"
                 accent="money"
                 info={{ title: g.title, notes: [g.blurb] }}
               >

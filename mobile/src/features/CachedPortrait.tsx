@@ -36,6 +36,8 @@ export function CachedPortrait({
     request: object;
     onDisplay: (visible: boolean) => void;
   } | null>(null);
+  // The request the lookup last answered, with or without a portrait.
+  const [answered, setAnswered] = useState<object | null>(null);
   const identity = slug ?? name;
   const request = useMemo(
     () => ({ name, slug, retryKey }),
@@ -48,6 +50,7 @@ export function CachedPortrait({
     Promise.resolve(portraits.get({ name, slug, refresh: retryKey > 0 }))
       .then((value) => {
         if (active) {
+          setAnswered(request);
           let failed = false;
           setSaved(
             value
@@ -66,6 +69,7 @@ export function CachedPortrait({
       })
       .catch(() => {
         if (active) {
+          setAnswered(request);
           setSaved(null);
           onCredit?.(null);
         }
@@ -83,6 +87,7 @@ export function CachedPortrait({
       name={name}
       localURI={current?.localURI}
       onDisplay={current?.onDisplay}
+      loading={!!portraits && answered !== request}
       official={current ? /^\d+$/.test(current.info.key) : undefined}
       testID={current ? testID : testID ? `${testID}-blank` : undefined}
     />

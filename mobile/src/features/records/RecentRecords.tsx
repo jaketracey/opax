@@ -43,7 +43,6 @@ export default function RecentRecords() {
             <Heading level={1}>Just added to the record</Heading>
             <Section
               title="Newly indexed"
-              icon="tray.full"
               accent="bills"
               rule={false}
               info={{

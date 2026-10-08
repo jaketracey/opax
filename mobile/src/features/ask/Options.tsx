@@ -100,11 +100,7 @@ export function Options({
           />
         </View>
       </Section>
-      <Section
-        title="Narrow the record"
-        icon="line.3.horizontal.decrease"
-        accent="people"
-      >
+      <Section title="Narrow the record" accent="people">
         <Choice
           label="Speaker"
           value={o.speaker}
@@ -151,7 +147,6 @@ export function Options({
       </Section>
       <Section
         title="Include"
-        icon="doc.text"
         accent="bills"
         info={{
           title: 'About record types',

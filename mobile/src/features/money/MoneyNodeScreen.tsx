@@ -108,7 +108,6 @@ export default function MoneyNodeScreen() {
         rule={false}
         title={node.label}
         headingTestID="money-focus-name"
-        icon={node.kind === 'party' ? 'building.columns' : 'banknote'}
         accent="money"
         info={{
           title: 'About these figures',
@@ -201,7 +200,6 @@ export default function MoneyNodeScreen() {
                 ? 'Largest contractors among the donors on this map'
                 : 'Largest recipients among the donors on this map'
         }
-        icon="arrow.triangle.branch"
         accent="money"
       >
         <RowList>
@@ -231,7 +229,6 @@ export default function MoneyNodeScreen() {
         (filters.contracts && node.contracts)) ? (
         <Section
           title="Public money received"
-          icon="banknote"
           accent="money"
           info={{
             title: 'About public money',

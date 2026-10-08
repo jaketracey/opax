@@ -39,12 +39,7 @@ export default function BillFilters() {
     filters.sort;
   return (
     <Screen testID="bill-filters-screen">
-      <Section
-        title="Parliament"
-        icon="building.columns"
-        accent="bills"
-        rule={false}
-      >
+      <Section title="Parliament" accent="bills" rule={false}>
         <RowList>
           <OptionRow
             label="All parliaments"
@@ -65,7 +60,7 @@ export default function BillFilters() {
           ))}
         </RowList>
       </Section>
-      <Section title="Division records" icon="checkmark.seal" accent="votes">
+      <Section title="Division records" accent="votes">
         <ToggleRow
           label="Divided on"
           checked={!!filters.divided}
@@ -73,7 +68,7 @@ export default function BillFilters() {
           onChange={() => set({ ...filters, divided: !filters.divided })}
         />
       </Section>
-      <Section title="Sort" icon="arrow.up.arrow.down" accent="bills">
+      <Section title="Sort" accent="bills">
         <RowList>
           {billSorts.map((s) => (
             <OptionRow

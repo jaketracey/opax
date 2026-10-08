@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import { resolve } from 'node:path';
 import pin from './fixtures/ask-recorded.json';
 import followups from './fixtures/ask-followups.json';
+import clarify from './fixtures/ask-clarify.json';
 const recorded = readFileSync(resolve(__dirname, 'fixtures/ask-recorded.sse'));
 if (
   recorded.length !== pin.size ||
@@ -100,6 +101,16 @@ export async function askFixture(
   }
   if (input.question === 'fixture blocked') {
     json(res, 403, { error: 'This answer request was blocked.' });
+    return true;
+  }
+  // A follow-up with nothing to search on: the Worker's free request for a
+  // full question (portal/src/ask-rewrite.ts clarifyPayload), sent as JSON.
+  if (
+    input.question === 'High' &&
+    Array.isArray(input.context) &&
+    input.context.length
+  ) {
+    json(res, 200, clarify);
     return true;
   }
   if (input.question === 'fixture empty') {

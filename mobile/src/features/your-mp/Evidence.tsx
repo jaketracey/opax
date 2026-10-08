@@ -15,7 +15,6 @@ import {
   errorMessage,
   useAccessibilitySize,
   type InfoNotes,
-  type SFSymbol,
 } from '../../design/primitives';
 import { colors, hairline, rhythm, type Accent } from '../../design/tokens';
 
@@ -91,7 +90,6 @@ export function RecordBlock<T>({
   retry,
   children,
   date = true,
-  icon,
   accent,
   info,
   sub,
@@ -113,7 +111,6 @@ export function RecordBlock<T>({
   retry: () => void;
   children: (data: T) => ReactNode;
   date?: boolean;
-  icon?: SFSymbol;
   accent?: Accent;
   /** Methodology and caveats behind the heading's ⓘ, given the data. */
   info?: (data: T | null) => InfoNotes | null;
@@ -163,7 +160,6 @@ export function RecordBlock<T>({
       testID={id}
       title={title}
       headingTestID={`${id}-heading`}
-      icon={icon}
       accent={accent}
       info={notes ? { ...notes, testID: `${id}-info` } : undefined}
     >

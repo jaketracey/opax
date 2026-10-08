@@ -10,12 +10,7 @@ export function FollowingEntry() {
   const follows = useFollows();
   if (follows === null) return null;
   return (
-    <Section
-      title="Following"
-      icon="star.fill"
-      accent="leads"
-      testID="your-following"
-    >
+    <Section title="Following" accent="leads" testID="your-following">
       <RowList>
         <LinkRow
           title="Manage follows"

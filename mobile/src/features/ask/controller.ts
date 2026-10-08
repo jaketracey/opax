@@ -22,6 +22,9 @@ export type AskState = {
   streaming: string;
   error: AskFailure | null;
   notice: string | null;
+  // A follow-up with nothing to search on ("High", "ok"): the Worker asked
+  // for a full question instead of answering. Never part of the thread.
+  clarify: { question: string; suggestion?: string } | null;
 };
 export type AskIO = {
   post: (
@@ -47,6 +50,7 @@ export class AskController {
     streaming: '',
     error: null,
     notice: null,
+    clarify: null,
   };
   private listeners = new Set<() => void>();
   private abort: AbortController | null = null;
@@ -81,6 +85,7 @@ export class AskController {
         error: null,
         streaming: '',
         stage: null,
+        clarify: null,
       });
   }
   start(options: AskOptions = { ...defaultOptions }) {
@@ -96,6 +101,7 @@ export class AskController {
       stage: null,
       reading: [],
       notice: null,
+      clarify: null,
     });
   }
   cancel() {
@@ -149,6 +155,7 @@ export class AskController {
       reading: [],
       error: null,
       notice: null,
+      clarify: null,
     });
     try {
       const data = decodeAnswer(
@@ -175,6 +182,19 @@ export class AskController {
         ),
       );
       if (mine !== this.sequence) return;
+      if (data.answer_status === 'needs_question') {
+        // Nothing was searched or written: the conversation stays as it was,
+        // so the next question is not read against this one.
+        const suggestion = data.suggested_question?.trim();
+        this.update({
+          thread: before,
+          busy: false,
+          stage: null,
+          streaming: '',
+          clarify: { question: q, ...(suggestion ? { suggestion } : {}) },
+        });
+        return;
+      }
       if (data.asked_as?.trim() && data.asked_as.trim() !== q)
         user.askedAs = data.asked_as.trim();
       if (data.money_ranking && data.money_question)

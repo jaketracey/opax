@@ -18,7 +18,7 @@ export default function Hub() {
         <Text wordSafe>
           Read the published grants and Commonwealth contract records.
         </Text>
-        <Section title="Grants" icon="banknote" accent="money">
+        <Section title="Grants" accent="money">
           <RowList>
             <LinkRow
               accent="money"
@@ -50,7 +50,7 @@ export default function Hub() {
             />
           </RowList>
         </Section>
-        <Section title="Contracts" icon="building.2" accent="money">
+        <Section title="Contracts" accent="money">
           <RowList>
             <LinkRow
               accent="money"
@@ -66,11 +66,7 @@ export default function Hub() {
             />
           </RowList>
         </Section>
-        <Section
-          title="Programs & places"
-          icon="mappin.and.ellipse"
-          accent="money"
-        >
+        <Section title="Programs & places" accent="money">
           <LinkRow
             accent="money"
             title="Programs & places"
@@ -78,11 +74,7 @@ export default function Hub() {
             onPress={() => router.push('/connections')}
           />
         </Section>
-        <Section
-          title="Money map"
-          icon="point.3.connected.trianglepath.dotted"
-          accent="money"
-        >
+        <Section title="Money map" accent="money">
           <LinkRow
             accent="money"
             title="3D money map"

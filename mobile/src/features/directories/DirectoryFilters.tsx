@@ -24,12 +24,7 @@ export default function DirectoryFilters() {
         }}
       />
       <Screen testID="directory-filters-screen">
-        <Section
-          title="Filter the list"
-          icon="line.3.horizontal.decrease.circle"
-          accent="people"
-          rule={false}
-        >
+        <Section title="Filter the list" accent="people" rule={false}>
           <RowList>
             {facets.map((f) =>
               f.choices ? (
@@ -65,7 +60,7 @@ export default function DirectoryFilters() {
             )}
           </RowList>
         </Section>
-        <Section title="Sort" icon="arrow.up.arrow.down" accent="people">
+        <Section title="Sort" accent="people">
           <LinkRow
             title={
               directorySorts[kind].find(

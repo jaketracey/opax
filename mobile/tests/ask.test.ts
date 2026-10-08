@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { resolve } from 'node:path';
 import pin from '../scripts/fixtures/ask-recorded.json';
+import clarifyFixture from '../scripts/fixtures/ask-clarify.json';
 import { builderQuestion, shapes } from '../src/features/ask/builder';
 import { AskController } from '../src/features/ask/controller';
 import { AskFailure, AskStream } from '../src/features/ask/stream';
@@ -377,6 +378,57 @@ test('typed follow-up sends context and shows Understood as without local rewrit
   expect(h.controller.snapshot().thread[2]?.askedAs).toBe(
     'The standalone follow-up',
   );
+});
+test('a follow-up the Worker could not read is a prompt, not a turn: no follow-ups, nothing saved', async () => {
+  const clarify = {
+    answer: '“ok” doesn’t say enough to search the record on.',
+    citations: {},
+    sources: [],
+    answer_status: 'needs_question',
+  };
+  const post = jest
+    .fn()
+    .mockResolvedValueOnce(payload)
+    .mockResolvedValueOnce({ questions: [] })
+    .mockResolvedValueOnce(clarify)
+    .mockResolvedValueOnce({ ...clarify, suggested_question: ' A full one? ' })
+    .mockResolvedValueOnce(payload)
+    .mockResolvedValueOnce({ questions: [] });
+  const h = harness(post);
+  await h.controller.submit('Question');
+  const saved = JSON.stringify(h.store());
+  await h.controller.submit('ok');
+  expect(post).toHaveBeenCalledTimes(3);
+  expect(h.controller.snapshot()).toMatchObject({
+    busy: false,
+    error: null,
+    clarify: { question: 'ok' },
+  });
+  expect(h.controller.snapshot().clarify).not.toHaveProperty('suggestion');
+  expect(h.controller.snapshot().thread).toHaveLength(2);
+  expect(JSON.stringify(h.store())).toBe(saved);
+  await h.controller.submit('High');
+  expect(h.controller.snapshot().clarify).toEqual({
+    question: 'High',
+    suggestion: 'A full one?',
+  });
+  // The next question clears the prompt and is read against the real thread.
+  await h.controller.submit('A full one?');
+  expect(h.controller.snapshot().clarify).toBeNull();
+  expect(
+    (post.mock.calls[4]?.[1] as { context: { text: string }[] }).context.map(
+      (c) => c.text,
+    ),
+  ).toEqual(['Question', payload.answer]);
+  expect(h.controller.snapshot().thread).toHaveLength(4);
+});
+test('the pinned clarify fixture is the Worker contract', () => {
+  const fixture = clarifyFixture;
+  const a = decodeAnswer(fixture);
+  expect(a.answer_status).toBe('needs_question');
+  expect(a.suggested_question).toBe(fixture.suggested_question);
+  expect(a.sources).toEqual([]);
+  expect(a.asked_as).toBeUndefined();
 });
 test.each(['rate-limited', 'blocked', 'partial', 'offline'] as const)(
   'failed %s submission never retries paid routes',

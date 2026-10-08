@@ -13,6 +13,7 @@ import { isPartyLabel, partyDot, partyIdentity } from '../../design/party';
 import {
   Disclosure as DisclosureRow,
   Icon,
+  MachineWritten,
   SourceLink,
   Text,
   useAccessibilitySize,
@@ -466,37 +467,14 @@ export function DivisionNote({
   );
 }
 
-/**
- * The machine-written label, small and tidy: a sparkle and the words
- * ("Machine summary", "Machine brief"). Honesty about model text matters, so
- * it always shows above the text it labels.
- */
-export function MachineLabel({
-  children,
-  testID,
-}: {
-  children: string;
-  testID?: string;
-}) {
-  return (
-    <View
-      accessible
-      accessibilityLabel={children}
-      testID={testID}
-      style={styles.machine}
-    >
-      <Icon name="sparkles" size={12} tone="billsInk" />
-      <Text variant="chip" tone="billsInk">
-        {children}
-      </Text>
-    </View>
-  );
-}
+/** What a stored machine brief is, for its pill's sheet and VoiceOver. */
+export const BRIEF_EXPLANATION =
+  'An automated summary written by a model; not the record.';
 
 /**
- * A bill's stored machine summary. The label and the record's own
- * attribution come first, so no reader meets the summary as the record.
- * `testID` prefixes the label, attribution and text.
+ * A bill's stored machine summary. Its pill comes first, so no reader meets
+ * the summary as the record; the record's own attribution opens from it and
+ * VoiceOver hears it there. `testID` prefixes the label and text.
  */
 export function MachineSummary({
   attribution,
@@ -509,12 +487,11 @@ export function MachineSummary({
 }) {
   return (
     <>
-      <View style={styles.machineHead}>
-        <MachineLabel testID={`${testID}-label`}>Machine summary</MachineLabel>
-        <Text variant="caption" testID={`${testID}-attribution`}>
-          {attribution.replace(/\.?$/, '.')}
-        </Text>
-      </View>
+      <MachineWritten
+        label="Machine summary"
+        explanation={attribution}
+        testID={`${testID}-label`}
+      />
       <View style={styles.machineText} testID={`${testID}-text`}>
         {sentences.filter(Boolean).map((sentence, index) => (
           <Text key={index} variant="body">
@@ -538,7 +515,11 @@ export function MachineBrief({
 }) {
   return (
     <View style={styles.citations}>
-      <MachineLabel testID={`${testID}-label`}>{label}</MachineLabel>
+      <MachineWritten
+        label={label}
+        explanation={BRIEF_EXPLANATION}
+        testID={`${testID}-label`}
+      />
       {brief.length <= BRIEF_INLINE_LIMIT ? (
         <Text variant="body" testID={`${testID}-text`}>
           {brief}
@@ -687,16 +668,5 @@ const styles = StyleSheet.create({
   track: { height: 6, borderRadius: 3, backgroundColor: colors.sunken },
   bar: { height: 6, borderRadius: 3 },
   bullet: { flexDirection: 'row', gap: spacing.s3 },
-  machineHead: { gap: rhythm.line },
   machineText: { gap: spacing.s3 },
-  machine: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    gap: 4,
-    backgroundColor: colors.billsWash,
-    borderRadius: radius,
-    paddingHorizontal: 6,
-    paddingVertical: 1,
-  },
 });

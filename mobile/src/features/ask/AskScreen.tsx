@@ -19,7 +19,7 @@ import {
   IconButton,
   EmptyState,
   ErrorState,
-  Field,
+  Composer,
   FilterChip,
   Group,
   Heading,
@@ -31,7 +31,7 @@ import {
   LinkRow,
   RowList,
 } from '../../design/primitives';
-import { colors, layout, rhythm, spacing } from '../../design/tokens';
+import { layout, rhythm, spacing } from '../../design/tokens';
 import { useReduceMotion } from '../../design/accessibility';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { AskProgress } from './AskProgress';
@@ -186,6 +186,13 @@ export default function AskScreen() {
     }
     if (!s.stage) lastStage.current = null;
   }, [s.stage]);
+  useEffect(() => {
+    if (s.clarify)
+      AccessibilityInfo.announceForAccessibilityWithOptions(
+        clarifyCopy(!!s.clarify.suggestion),
+        { queue: true },
+      );
+  }, [s.clarify]);
   useEffect(() => {
     if (s.error) pinCurrentTurn();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -352,11 +359,13 @@ export default function AskScreen() {
     );
   }
   const names = [...people.keys()].sort((a, b) => a.localeCompare(b));
-  // The current turn starts at the last question. A failed question has
-  // already left the thread, so it is shown from the retry copy instead.
+  // The current turn starts at the last question. A failed question, or one
+  // the Worker asked to have put in full, never joined the thread, so it is
+  // shown from its own copy instead.
   const failed = !!s.error && s.error.code !== 'empty',
     lastQuestion = s.thread.map((m) => m.role).lastIndexOf('user'),
-    split = failed || lastQuestion < 0 ? s.thread.length : lastQuestion,
+    split =
+      failed || s.clarify || lastQuestion < 0 ? s.thread.length : lastQuestion,
     earlier = s.thread.slice(0, split),
     current = s.thread.slice(split);
   function renderTurn(turn: (typeof s.thread)[number], i: number) {
@@ -393,32 +402,25 @@ export default function AskScreen() {
         scrollRef={scroll}
         keyboardTarget={editingFollowup ? followupTarget : submitTarget}
       >
-        <Group style={styles.composer} gap={rhythm.heading}>
-          <Field
+        <Group gap={rhythm.heading}>
+          <Composer
+            ref={submitTarget}
             label="Your question"
+            submitLabel="Ask the record"
             placeholder="Ask a question about the public record…"
             value={draft}
             onChangeText={setDraft}
             onFocus={() => setEditingFollowup(false)}
-            multiline
+            onSubmit={() => void submit()}
+            busy={s.busy}
             maxLength={2000}
             testID="ask-question"
+            submitTestID="ask-submit"
           />
           {inputError ? <ErrorState message={inputError} /> : null}
-          <Button
-            ref={submitTarget}
-            label="Ask the record"
-            variant="primary"
-            disabled={!draft.trim()}
-            loading={s.busy}
-            onPress={() => void submit()}
-            testID="ask-submit"
-          />
           <RowList>
             <LinkRow
               title="Options"
-              icon="line.3.horizontal.decrease"
-              accent="people"
               disabled={s.busy}
               onPress={() => {
                 void loadNames();
@@ -429,8 +431,6 @@ export default function AskScreen() {
             <LinkRow
               title="Your conversations"
               value={String(saved.chats.length)}
-              icon="bubble.left.and.bubble.right"
-              accent="people"
               disabled={s.busy}
               onPress={() => void history()}
               testID="ask-saved"
@@ -509,7 +509,7 @@ export default function AskScreen() {
           </Group>
         ) : null}
         {earlier.map((turn, i) => renderTurn(turn, i))}
-        {current.length || s.busy || s.error || s.notice ? (
+        {current.length || s.busy || s.error || s.notice || s.clarify ? (
           <View
             testID="ask-turn"
             style={[
@@ -536,6 +536,28 @@ export default function AskScreen() {
               <Heading level={2} testID="ask-failed-question">
                 {retryQuestion}
               </Heading>
+            ) : null}
+            {s.clarify && !s.busy ? (
+              <Group testID="ask-clarify">
+                <Heading level={2} testID="ask-clarify-question">
+                  {s.clarify.question}
+                </Heading>
+                <EmptyState
+                  icon="text.bubble"
+                  message={clarifyCopy(!!s.clarify.suggestion)}
+                  testID="ask-clarify-message"
+                />
+                {s.clarify.suggestion ? (
+                  <RowList>
+                    <LinkRow
+                      title={s.clarify.suggestion}
+                      onPress={() => void submit(s.clarify!.suggestion)}
+                      accessibilityHint="Asks this question"
+                      testID="ask-clarify-suggestion"
+                    />
+                  </RowList>
+                ) : null}
+              </Group>
             ) : null}
             {s.busy ? (
               <AskProgress
@@ -569,12 +591,7 @@ export default function AskScreen() {
             ) : null}
             {s.notice ? <Text wordSafe>{s.notice}</Text> : null}
             {answer && !s.busy ? (
-              <Section
-                title="Ask next"
-                icon="text.bubble"
-                accent="people"
-                testID="ask-followups"
-              >
+              <Section title="Ask next" accent="people" testID="ask-followups">
                 <RowList>
                   {answer.next?.map((next, i) => (
                     <LinkRow
@@ -585,23 +602,18 @@ export default function AskScreen() {
                     />
                   ))}
                 </RowList>
-                <Field
+                <Composer
+                  ref={followupTarget}
                   label="Ask a follow-up"
+                  submitLabel="Ask"
                   placeholder="Ask a follow-up…"
                   value={draft}
                   onChangeText={setDraft}
                   onFocus={() => setEditingFollowup(true)}
-                  multiline
+                  onSubmit={() => void submit()}
                   maxLength={2000}
                   testID="ask-followup-field"
-                />
-                <Button
-                  ref={followupTarget}
-                  label="Ask"
-                  variant="primary"
-                  disabled={!draft.trim()}
-                  onPress={() => void submit()}
-                  testID="ask-followup-submit"
+                  submitTestID="ask-followup-submit"
                 />
               </Section>
             ) : null}
@@ -689,6 +701,12 @@ export default function AskScreen() {
     </>
   );
 }
+// Nothing was searched for a follow-up like "High" or "ok": say so gently.
+function clarifyCopy(suggested: boolean) {
+  return suggested
+    ? 'That’s too short to search the record on. Did you mean:'
+    : 'That’s too short to search the record on. Ask a full question, naming the person, party or topic.';
+}
 const styles = StyleSheet.create({
   conversation: {
     flexDirection: 'row',
@@ -697,9 +715,4 @@ const styles = StyleSheet.create({
   },
   conversationTitle: { flex: 1 },
   turn: { gap: layout.sectionGap },
-  composer: {
-    backgroundColor: colors.navyWash,
-    padding: rhythm.block,
-    borderRadius: 8,
-  },
 });

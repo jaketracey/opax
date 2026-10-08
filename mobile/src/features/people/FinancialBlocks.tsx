@@ -37,7 +37,6 @@ export function PayBlock({
       id={id}
       block={block}
       retry={retry}
-      icon="banknote"
       accent="money"
       partialMissing="No readable record was found for this person. Some rows in the latest public export were unreadable."
       unlinked="This release does not link this person's salary entitlements. See the record on opax.com.au."
@@ -159,7 +158,6 @@ export function PartyReceiptsBlock({
       id={id}
       block={block}
       retry={retry}
-      icon="building.columns"
       accent="money"
       partialMissing="No readable record was found for this person. Some rows in the latest public export were unreadable."
       missing="No receipts projection is linked for this person's party."

@@ -10,6 +10,7 @@ import {
   Group,
   Heading,
   LoadingState,
+  MachineWritten,
   OfflineBanner,
   StaleNotice,
   Text,
@@ -24,7 +25,7 @@ import { openRecord } from './open';
 import { titleSubject } from '../records/citations';
 
 export const MODEL_NOTE =
-  'Machine-written from the retrieved passages; not the record.';
+  'Written by a model from the retrieved passages; not the record.';
 export const AEC_NOTE =
   'AEC disclosure data: donations under the disclosure threshold are not reported and cannot appear here, so totals are a floor, not a ceiling.';
 export const WORDS_NOTE =
@@ -246,9 +247,7 @@ export function Prose({
           ) : null}
         </Group>
       ))}
-      <Text variant="fine" testID={`${testID}-machine`}>
-        {MODEL_NOTE}
-      </Text>
+      <MachineWritten explanation={MODEL_NOTE} testID={`${testID}-machine`} />
     </Group>
   );
 }

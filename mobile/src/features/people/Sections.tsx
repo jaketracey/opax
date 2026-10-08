@@ -12,7 +12,6 @@ import {
   LinkRow,
   RowList,
   type InfoNotes,
-  type SFSymbol,
   EmptyState,
   ErrorState,
   Group,
@@ -25,11 +24,7 @@ import {
   Text,
   errorMessage,
 } from '../../design/primitives';
-import {
-  formatCount,
-  formatDate,
-  formatPercent,
-} from '../../design/format';
+import { formatCount, formatDate, formatPercent } from '../../design/format';
 import { chamberName, jurisdictionName } from '../../design/parliament';
 import { partyText } from '../../design/party';
 import { fromWebPath } from '../../navigation/routes';
@@ -72,11 +67,9 @@ export function ActionSection<T>({
   id,
   load,
   children,
-  icon,
   accent = 'people',
   info,
 }: {
-  icon?: SFSymbol;
   accent?: Accent;
   info?: InfoNotes;
   title: string;
@@ -121,7 +114,7 @@ export function ActionSection<T>({
     }
   };
   return (
-    <Section title={title} testID={id} icon={icon} accent={accent} info={info}>
+    <Section title={title} testID={id} accent={accent} info={info}>
       <RowList>
         <Disclosure
           label={(open ? 'Hide ' : 'Show ') + label}
@@ -163,11 +156,7 @@ export function ReadDate({
     </Group>
   );
 }
-export function QuickFacts({
-  identity,
-}: {
-  identity: PersonProfile;
-}) {
+export function QuickFacts({ identity }: { identity: PersonProfile }) {
   const jurisdictions = [
     ...new Set([
       ...identity.seats.map((s) => s.jurisdiction),
@@ -182,12 +171,7 @@ export function QuickFacts({
     ),
   ];
   return (
-    <Section
-      title="Quick facts"
-      icon="person.text.rectangle"
-      accent="people"
-      testID="person-quick-facts"
-    >
+    <Section title="Quick facts" accent="people" testID="person-quick-facts">
       <KeyValueList
         items={[
           {
@@ -233,7 +217,6 @@ export function PersonTopics({ name }: { name: string }) {
     <ActionSection
       title="What they talk about"
       label="topics"
-      icon="chart.bar"
       id="person-topics"
       load={() => peopleDepth.topics(name)}
     >
@@ -337,7 +320,6 @@ export function RecordSection({
       title={title}
       label={kind === 'party' ? 'mentions' : kind}
       id={id}
-      icon="text.bubble"
       info={{
         title: 'About this parliamentary record',
         notes: [
@@ -420,7 +402,6 @@ export function NewsSection({ name }: { name: string }) {
     <ActionSection
       title="News headlines"
       label="news"
-      icon="newspaper"
       id="people-news"
       load={() => peopleDepth.news()}
     >
@@ -492,7 +473,6 @@ function Diary({ identity }: { identity: PersonProfile }) {
   return (
     <Section
       title="Ministerial diary"
-      icon="calendar"
       accent="people"
       testID="person-diary"
       info={

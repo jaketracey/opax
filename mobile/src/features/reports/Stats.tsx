@@ -73,11 +73,7 @@ export default function Stats() {
                   },
                 ]}
               />
-              <Section
-                title="Speeches by parliament"
-                icon="building.columns"
-                accent="people"
-              >
+              <Section title="Speeches by parliament" accent="people">
                 {data.speeches_by_state ? (
                   <KeyValueList
                     items={Object.entries(data.speeches_by_state).map(
@@ -91,11 +87,7 @@ export default function Stats() {
                   <Text>Live figures are unavailable right now.</Text>
                 )}
               </Section>
-              <Section
-                title="Documents by kind"
-                icon="text.book.closed"
-                accent="bills"
-              >
+              <Section title="Documents by kind" accent="bills">
                 {data.kinds ? (
                   <KeyValueList
                     items={Object.entries(data.kinds).map(([kind, n]) => ({
@@ -116,11 +108,7 @@ export default function Stats() {
           testID="stats-corpus"
         >
           {(data) => (
-            <Section
-              title="Collection coverage"
-              icon="chart.bar.doc.horizontal"
-              accent="votes"
-            >
+            <Section title="Collection coverage" accent="votes">
               <KeyValueList
                 items={data.sources.map((s) => ({
                   label: s.name,

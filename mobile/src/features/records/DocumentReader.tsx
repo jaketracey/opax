@@ -12,6 +12,7 @@ import {
   Group,
   Heading,
   LoadingState,
+  MachineWritten,
   Section,
   Disclosure,
   LinkRow,
@@ -19,6 +20,7 @@ import {
   Text,
   errorMessage,
 } from '../../design/primitives';
+import { formatDate } from '../../design/format';
 import { rhythm } from '../../design/tokens';
 import { canonicalUrl } from '../../navigation/external';
 import {
@@ -74,6 +76,34 @@ const kindNames: Record<string, string> = {
   research_report: 'Research source note',
   legal: 'Legal record',
 };
+/**
+ * The record's own date, named for what it is ("Speech date 9 Feb 1999"),
+ * never as an update. Null when the record has no calendar date.
+ */
+function recordDate(doc: DocumentRecord, style: 'short' | 'long' = 'short') {
+  const iso = metaString(doc, 'date').slice(0, 10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return null;
+  const name =
+    doc.labels.kind === 'speech'
+      ? 'Speech date'
+      : doc.labels.kind === 'division'
+        ? 'Division date'
+        : 'Dated';
+  return `${name} ${formatDate(iso, style)}`;
+}
+/**
+ * The subject when the title has one; a title that is only the speaker and
+ * the date ("Peter Costello — 1999-02-09") reads "Speech · 9 February 1999",
+ * since the speaker row sits directly below.
+ */
+function heading(doc: DocumentRecord) {
+  const subject = titleSubject(doc);
+  if (subject) return subject;
+  const iso = metaString(doc, 'date').slice(0, 10);
+  return /^\d{4}-\d{2}-\d{2}$/.test(iso)
+    ? `${kindNames[doc.labels.kind ?? ''] ?? 'Source record'} · ${formatDate(iso)}`
+    : doc.title;
+}
 const titleKey = (value: string) =>
   value.replace(/\s+/g, ' ').trim().toLowerCase();
 export default function DocumentReader({
@@ -144,7 +174,7 @@ export default function DocumentReader({
                     {kindNames[doc.labels.kind ?? ''] ?? 'Source record'}
                   </Text>
                   <Heading level={1} testID="doc-title">
-                    {titleSubject(doc) || doc.title}
+                    {heading(doc)}
                   </Heading>
                   <Speaker key={`speaker-${doc.slug}`} doc={doc} />
                   <Text variant="metadata" wordSafe>
@@ -155,13 +185,16 @@ export default function DocumentReader({
                       .filter(Boolean)
                       .join(' · ') || 'Jurisdiction not recorded'}
                   </Text>
-                  <AsAtLine
-                    asOf={metaString(doc, 'date') || null}
-                    citation={
-                      doc.url ? new URL(doc.url).hostname : 'OPAX public record'
-                    }
-                    testID="doc-as-at"
-                  />
+                  {recordDate(doc) && titleSubject(doc) ? (
+                    <Text
+                      variant="caption"
+                      wordSafe
+                      accessibilityLabel={recordDate(doc, 'long') ?? undefined}
+                      testID="doc-date"
+                    >
+                      {recordDate(doc)}
+                    </Text>
+                  ) : null}
                   {doc.url ? (
                     <ViewOriginal
                       sources={[{ label: 'Original record', url: doc.url }]}
@@ -196,31 +229,19 @@ export default function DocumentReader({
                 </Group>
                 <DocumentAsk doc={doc} />
                 {doc.summary ? (
-                  <Section
-                    title="In brief"
-                    icon="text.alignleft"
-                    accent="bills"
-                    testID="doc-brief"
-                    info={{
-                      title: 'About this summary',
-                      notes: [
+                  <Section title="In brief" accent="bills" testID="doc-brief">
+                    <MachineWritten
+                      label="Machine summary"
+                      explanation={
                         doc.labels.kind === 'bill_text'
                           ? 'Written from this document by a model, not part of the original bill text.'
                           : doc.labels.kind === 'speech'
                             ? 'Written from this speech by a model, not by a person, and not part of the record.'
-                            : 'Machine summary · not part of the record',
-                      ],
-                      testID: 'doc-brief-info',
-                    }}
-                  >
-                    <Text variant="caption" testID="doc-brief-label">
-                      Machine summary · not part of the record
-                    </Text>
-                    <Text selectable>{doc.summary}</Text>
-                    <AsAtLine
-                      asOf={metaString(doc, 'date') || null}
-                      citation="This source record"
+                            : 'Written by a model; not part of the record.'
+                      }
+                      testID="doc-brief-label"
                     />
+                    <Text selectable>{doc.summary}</Text>
                   </Section>
                 ) : null}
                 <LinkedBill key={`bill-${doc.slug}`} doc={doc} />
@@ -229,7 +250,6 @@ export default function DocumentReader({
                 ) : null}
                 <Section
                   title="Full text"
-                  icon="doc.text"
                   accent={doc.labels.kind === 'division' ? 'votes' : 'bills'}
                   info={{
                     title: 'About this text',
@@ -340,12 +360,7 @@ function LinkedBill({ doc }: { doc: DocumentRecord }) {
   const key = metaString(doc, 'bill_key');
   if (doc.labels.kind === 'bill_text' && /^au-federal-[a-z0-9-]+$/.test(key))
     return (
-      <Section
-        title="The bill"
-        icon="doc.text"
-        accent="bills"
-        testID="doc-bill"
-      >
+      <Section title="The bill" accent="bills" testID="doc-bill">
         <LinkRow
           title="Bill page"
           onPress={() => router.push(billRoute(key))}
@@ -363,13 +378,19 @@ function LinkedBill({ doc }: { doc: DocumentRecord }) {
     );
   if (!bill) return null;
   return (
-    <Section title="The bill" icon="doc.text" accent="bills" testID="doc-bill">
+    <Section title="The bill" accent="bills" testID="doc-bill">
       <Text variant="strong" wordSafe>
         {bill.title}
       </Text>
       {bill.summary ? (
         <>
-          <Text variant="fine">{bill.attribution}.</Text>
+          <MachineWritten
+            label="Machine summary"
+            explanation={
+              bill.attribution ?? 'Written by a model; not the record.'
+            }
+            testID="doc-bill-label"
+          />
           <Text>{bill.summary}</Text>
         </>
       ) : (

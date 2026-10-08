@@ -259,7 +259,6 @@ export default function BillDetail({
             )}
             <Section
               title="Original records"
-              icon="doc.on.doc"
               accent="bills"
               testID="bill-sources"
               info={{
@@ -472,12 +471,7 @@ function Summary({ view }: { view: BillView }) {
   const summary = view.summary.data;
   if (!summary)
     return (
-      <Section
-        title="In short"
-        icon="text.alignleft"
-        accent="bills"
-        testID="bill-summary"
-      >
+      <Section title="In short" accent="bills" testID="bill-summary">
         <EmptyState message="No summary yet." testID="bill-summary-none" />
         <Text variant="caption">{copy.noSummary}</Text>
       </Section>
@@ -495,12 +489,7 @@ function Summary({ view }: { view: BillView }) {
     .filter(Boolean)
     .join(' ');
   return (
-    <Section
-      title="In short"
-      icon="text.alignleft"
-      accent="bills"
-      testID="bill-summary"
-    >
+    <Section title="In short" accent="bills" testID="bill-summary">
       <MachineSummary
         attribution={summary.attribution}
         sentences={sentences}
@@ -542,7 +531,6 @@ function KeyDates({ view }: { view: BillView }) {
   return (
     <Section
       title="Key dates"
-      icon="calendar"
       accent="bills"
       testID="bill-key-dates"
       info={
@@ -613,7 +601,6 @@ function Divisions({
   return (
     <Section
       title={focused ? undefined : 'Divisions'}
-      icon="checkmark.square"
       accent="votes"
       testID="bill-divisions"
       info={
@@ -759,12 +746,7 @@ function Speeches({ view }: { view: BillView }) {
   const speeches = (view.speeches.data ?? []).filter((s) => s.slug);
   const briefs = speeches.some((s) => s.brief);
   return (
-    <Section
-      title="Speeches"
-      icon="text.bubble"
-      accent="bills"
-      testID="bill-speeches"
-    >
+    <Section title="Speeches" accent="bills" testID="bill-speeches">
       {speeches.length ? (
         <RowList>
           {speeches.map((speech, index) => {
@@ -830,12 +812,7 @@ function Acts({ view }: { view: BillView }) {
   const passed = /passed|assent/i.test(view.identity.data?.status ?? '');
   if (!acts.length && !passed) return null;
   return (
-    <Section
-      title="What became law"
-      icon="building.columns"
-      accent="bills"
-      testID="bill-acts"
-    >
+    <Section title="What became law" accent="bills" testID="bill-acts">
       {acts.length ? (
         <RowList>
           {acts.map((act, index) => (
