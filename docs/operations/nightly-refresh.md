@@ -349,7 +349,13 @@ Plain title pages and expanded metadata pages are read independently with
 `$orderby=id`, `$top=100` and fixed `$skip` increments of 100. FRL's expanded
 pages can omit a parent title. Navigation metadata is matched by explicit FRL id;
 any omitted parent, wrong membership or absent expansion field is retried up to
-three reads, then holds the run without replacing the last accepted snapshot.
+three reads. A valid page that still omits parents then recovers each missing id
+through its own single-title endpoint with the same expansion and transport guards.
+Each response must match that id and the plain title metadata. An individual failure
+holds publication; more than 50 recovery ids also holds as a systemic fault. This
+limit is retained across resumes of the same checkpoint. `individual-fetches.json`
+records requested ids, responses and completion/failure, and the final run receipt
+lists `individual_fetch_ids`. Other malformed or mismatched pages still hold the run.
 Explicit empty arrays returned for a title are legitimate source metadata. The unique plain
 title ids must still reconcile exactly with the count before and after the run.
 Full version history and complete current/latest supplementation remain phase 2.

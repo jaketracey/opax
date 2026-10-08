@@ -37,9 +37,10 @@ def snapshot(rows, downloaded=QUIET.isoformat()):
 
 
 class HTTP:
-    def __init__(self, rows, fail_offset=None, final_count=None, expansion=None, started=QUIET):
+    def __init__(self, rows, fail_offset=None, final_count=None, expansion=None, started=QUIET, individual=None):
         self.rows, self.calls, self.requests = rows, [], 0
         self.fail_offset, self.final_count, self.expansion = fail_offset, final_count, expansion
+        self.individual, self.individual_calls = individual, []
         self.counts, self.expansions, self.started = 0, 0, started
         self.sleep = lambda _: None
 
@@ -61,6 +62,12 @@ class HTTP:
             for row in rows:
                 row.pop("versions", None); row.pop("administeringDepartments", None)
         return {"@odata.count": len(self.rows), "value": rows}
+
+    def title_json(self, key, params):
+        self.calls.append({"entity": key, **params}); self.requests += 1
+        self.individual_calls.append((key, params.copy()))
+        if self.individual is None: raise Held("Stubbed individual HTTP failure")
+        return copy.deepcopy(self.individual(key))
 
 
 class FRLTests(unittest.TestCase):
@@ -144,6 +151,67 @@ class FRLTests(unittest.TestCase):
         with self.assertRaisesRegex(Held, 'incomplete after 3 attempts'): acquire(http, self.out, self.cp)
         self.assertEqual(http.expansions, 3); self.assertEqual(self.out.read_bytes(), before)
         self.assertFalse((self.cp / 'complete.json').exists())
+
+    def test_omitted_parent_resolves_from_its_own_individual_expansion(self):
+        rows = [title(i) for i in range(101)]; key = rows[99]['id']
+        http = HTTP(rows, expansion=lambda page, _: [r for r in page if r['id'] != key],
+                    individual=lambda requested: next(r for r in rows if r['id'] == requested))
+        result = acquire(http, self.out, self.cp)
+        self.assertEqual(result['count'], 101); self.assertEqual(result['titles'], rows)
+        self.assertEqual(http.expansions, 4); self.assertEqual(http.requests, 9)
+        self.assertEqual(http.individual_calls, [(key, {'$expand': loader.EXPAND})])
+        run = json.loads((self.base / 'run-receipt.json').read_text())
+        self.assertEqual(run['individual_fetch_ids'], [key])
+        evidence = json.loads((self.cp / 'individual-fetches.json').read_text())
+        self.assertEqual(evidence[key]['status'], 'complete')
+        self.assertEqual(evidence[key]['response'], rows[99])
+        self.assertEqual(json.loads((self.cp / 'page-000000.json').read_text())['_opax_individual_ids'], [key])
+        self.assertTrue(plan_export(result)[1]['complete'])
+
+    def test_failed_individual_expansion_holds_and_preserves_snapshot(self):
+        rows = [title(i) for i in range(101)]; key = rows[99]['id']
+        acquire(HTTP(rows), self.out, self.cp); before = self.out.read_bytes()
+        http = HTTP(rows, expansion=lambda page, _: [r for r in page if r['id'] != key])
+        with self.assertRaisesRegex(Held, 'individual .* failed'): acquire(http, self.out, self.cp)
+        self.assertEqual(http.individual_calls, [(key, {'$expand': loader.EXPAND})])
+        self.assertEqual(self.out.read_bytes(), before)
+        self.assertFalse((self.cp / 'complete.json').exists())
+        evidence = json.loads((self.cp / 'individual-fetches.json').read_text())
+        self.assertEqual(evidence[key]['status'], 'failed')
+
+    def test_individual_response_cannot_fill_another_id_or_missing_fields(self):
+        for response in (title(999), {k:v for k,v in title(1).items() if k != 'versions'}, None):
+            with self.subTest(response=response):
+                http = HTTP([title(1)], expansion=lambda page, _: [], individual=lambda _: response)
+                with self.assertRaises(Held): acquire(http, self.out, self.cp)
+                self.assertFalse(self.out.exists())
+                self.assertEqual(len(http.individual_calls), 1)
+
+    def test_individual_recovery_cap_is_fifty_across_pages(self):
+        rows = [title(i) for i in range(101)]
+        # Exactly fifty is allowed. The next page's one omission exceeds the cap.
+        http = HTTP(rows, expansion=lambda page, _: [r for r in page if int(r['id'][-5:]) >= 50 and int(r['id'][-5:]) < 100],
+                    individual=lambda key: next(r for r in rows if r['id'] == key))
+        with self.assertRaisesRegex(Held, 'More than 50'): acquire(http, self.out, self.cp)
+        self.assertEqual(len(http.individual_calls), 50)
+        self.assertFalse(self.out.exists())
+        self.assertEqual(len(json.loads((self.cp / 'individual-fetches.json').read_text())), 50)
+
+    def test_more_than_fifty_omitted_ids_holds_before_individual_reads(self):
+        rows = [title(i) for i in range(100)]
+        http = HTTP(rows, expansion=lambda page, _: page[51:], individual=lambda _: title(1))
+        with self.assertRaisesRegex(Held, 'More than 50'): acquire(http, self.out, self.cp)
+        self.assertEqual(http.individual_calls, []); self.assertFalse(self.out.exists())
+
+    def test_single_entity_uses_shared_polite_transport_and_same_expansion(self):
+        key = 'F2026L00001'; reply = copy.deepcopy(title(1))
+        session = PoliteSession(now=lambda: QUIET)
+        with patch.object(session, 'get', return_value=json.dumps(reply).encode()) as get:
+            self.assertEqual(session.title_json(key, {'$expand': loader.EXPAND}), reply)
+            from urllib.parse import parse_qs, urlsplit
+            url = get.call_args.args[0]
+            self.assertEqual(urlsplit(url).path, f"/v1/titles('{key}')")
+            self.assertEqual(parse_qs(urlsplit(url).query), {'$expand': [loader.EXPAND]})
 
     def test_empty_wrong_parent_and_missing_field_expansions_all_hold(self):
         def missing_field(rows, _): rows[0].pop('versions'); return rows

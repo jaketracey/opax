@@ -142,6 +142,12 @@ and exports only after full reconciliation. At the last count of 24,146: 242 pag
 four policy reads and two count reads = **490 requests without retries**, bounded at
 600 attempts. Expect roughly **50–70 minutes**, allowing for plain-page reads beyond
 the cached expanded-page median of 9.92 seconds. This is an estimate, not a run receipt.
-If the known 99-parent expansion at offset 5,200 persists on all three reads, publication
-will hold after **113 requests** (without transport retries), preserving the checkpoint
-and any last accepted snapshot. No acquisition is started or scheduled in this round.
+Round 2 adds individual recovery: if the known 99-parent expansion at offset 5,200
+persists on all three page reads, the missing id is fetched from its own single-title
+endpoint. With a successful individual response, the revised completion estimate is
+**493 requests**: 490 base requests, two extra page reads and one individual read.
+The duration estimate remains about 50–70 minutes. Any failed individual response or
+more than 50 recovery ids holds publication. Shared spacing, quiet hours and the
+600-attempt cap apply to these reads too. Requested/recovered ids and source responses
+are recorded under `individual-fetches.json`, including held-run evidence; the final
+run receipt lists the ids. No acquisition is started or scheduled in either fix round.

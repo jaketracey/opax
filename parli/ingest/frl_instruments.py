@@ -37,6 +37,7 @@ ID = re.compile(r"^[CF]\d{4}[A-Z]\d{5}$")
 PAGE_SIZE = 100
 FIELDS = "*"  # All public title fields; default publisher projection, no $select.
 EXPANSION_TRIES = 3
+MAX_INDIVIDUAL_IDS = 50
 MELBOURNE = ZoneInfo("Australia/Melbourne")
 FIXED_AEST = timezone(timedelta(hours=10))
 UA = "OPAX metadata research (https://opax.com.au)"
@@ -108,11 +109,24 @@ def prepare_checkpoint(checkpoint: Path, config: dict) -> None:
     atomic_json(checkpoint / "config.json", config)
 
 
-def validate_expansion(page: dict, values: list, expected: int) -> dict:
+def validate_expanded_title(row: dict, original: dict) -> None:
+    validate_title(row)
+    if row["id"] != original["id"]:
+        raise Held("Individual expansion returned a different FRL id")
+    if any(row.get(k) != v for k, v in original.items()):
+        raise Held("Title metadata moved between plain and expanded reads")
+    # Explicit [] on this id is source evidence; an absent field is not [].
+    if not all(isinstance(row.get(k), list) for k in ("versions", "administeringDepartments")):
+        raise Held("Expanded public fields missing")
+    if any(k.endswith("@odata.nextLink") for k in row):
+        raise Held("Unfollowed metadata continuation")
+
+
+def validate_expansion(page: dict, values: list, expected: int, allow_missing=False) -> dict:
     if not isinstance(page, dict) or page.get("@odata.count") != expected:
         raise Held("Expanded scope count changed")
     extras = page.get("value")
-    if not isinstance(extras, list) or len(extras) != len(values):
+    if not isinstance(extras, list) or len(extras) > len(values) or not allow_missing and len(extras) != len(values):
         raise Held("Expanded metadata omitted a parent title")
     base = {r["id"]: r for r in values}
     matched = {}
@@ -121,25 +135,17 @@ def validate_expansion(page: dict, values: list, expected: int) -> dict:
         key = row["id"]
         if key not in base or key in matched:
             raise Held("Expanded title ids do not match the plain page")
-        if any(row.get(k) != v for k, v in base[key].items()):
-            raise Held("Title metadata moved between plain and expanded reads")
-        # Explicit [] on a returned id is legitimate source evidence of an
-        # empty relationship. An absent parent/field is never treated as [].
-        if not all(isinstance(row.get(k), list) for k in ("versions", "administeringDepartments")):
-            raise Held("Expanded public fields missing")
-        if any(k.endswith("@odata.nextLink") for k in row):
-            raise Held("Unfollowed metadata continuation")
+        validate_expanded_title(row, base[key])
         matched[key] = row
     return matched
 
 
-def expanded_page(session, checkpoint: Path, offset: int, params: dict, values: list, expected: int) -> dict:
+def expanded_page(session, checkpoint: Path, offset: int, params: dict, values: list, expected: int, individuals: dict) -> dict:
     path = checkpoint / f"page-{offset:06d}.json"
     if path.exists():
         try: return validate_expansion(json.loads(path.read_text()), values, expected)
         except (Held, ValueError, TypeError):
             path.replace(checkpoint / f"rejected-cached-{offset:06d}.json")
-    reason = "Expanded metadata unavailable"
     for attempt in range(EXPANSION_TRIES):
         try:
             page = session.json({**params, "$expand": EXPAND})
@@ -149,12 +155,44 @@ def expanded_page(session, checkpoint: Path, offset: int, params: dict, values: 
             matched = validate_expansion(page, values, expected)
             atomic_json(path, page)
             return matched
-        except (Held, ValueError, TypeError) as error:
-            reason = str(error)
+        except (Held, ValueError, TypeError):
             atomic_json(checkpoint / f"rejected-{offset:06d}-{attempt + 1}.json", page)
             if attempt + 1 < EXPANSION_TRIES:
                 getattr(session, "sleep", lambda _: None)(5 * 2 ** attempt)
-    raise Held(f"Expanded page {offset} incomplete after {EXPANSION_TRIES} attempts: {reason}; snapshot kept")
+    # Recover only a valid subset of the requested page. Wrong ids, moved
+    # counts/fields or malformed responses still cannot supply title metadata.
+    try:
+        matched = validate_expansion(page, values, expected, allow_missing=True)
+    except (Held, ValueError, TypeError) as error:
+        raise Held(f"Expanded page {offset} incomplete after {EXPANSION_TRIES} attempts: {error}; snapshot kept") from error
+    missing = [row for row in values if row["id"] not in matched]
+    if len(set(individuals) | {r["id"] for r in missing}) > MAX_INDIVIDUAL_IDS:
+        raise Held(f"More than {MAX_INDIVIDUAL_IDS} individual expansion ids: systemic source fault; snapshot kept")
+    evidence = checkpoint / "individual-fetches.json"
+    entity_params = {"$expand": EXPAND}
+    if FIELDS != "*": entity_params["$select"] = FIELDS
+    for original in missing:
+        key = original["id"]
+        individuals[key] = {"page_offset": offset, "status": "requested"}
+        atomic_json(evidence, individuals)  # Evidence also survives held runs.
+        try:
+            row = session.title_json(key, entity_params)
+            individuals[key]["response"] = row
+            validate_expanded_title(row, original)
+        except (Held, OSError, ValueError, TypeError) as error:
+            individuals[key].update(status="failed", error=str(error))
+            atomic_json(evidence, individuals)
+            raise Held(f"Expanded page {offset} incomplete after {EXPANSION_TRIES} attempts; individual {key} failed: {error}; snapshot kept") from error
+        individuals[key]["status"] = "complete"
+        atomic_json(evidence, individuals)
+        matched[key] = row  # Only this id's own response can fill its gap.
+    # Keep rejected publisher pages and individual responses separately. This
+    # assembled cache is explicitly marked as OPAX's recovery, outside rows.
+    recovered = {**page, "value": [matched[r["id"]] for r in values],
+                 "_opax_individual_ids": [r["id"] for r in missing]}
+    validate_expansion(recovered, values, expected)
+    atomic_json(path, recovered)
+    return matched
 
 
 class Text(HTMLParser):
@@ -244,6 +282,12 @@ class PoliteSession:
         # No date filters/order and no $top over 100.
         return json.loads(self.get(API + "?" + urlencode(params)))
 
+    def title_json(self, key: str, params: dict) -> dict:
+        if not ID.fullmatch(key): raise Held("Invalid individual FRL id")
+        # OData string key on the cached OpenAPI /v1/titles({key}) endpoint.
+        # Same transport owns spacing, quiet hours, backoff and request budget.
+        return json.loads(self.get(API + f"('{key}')?" + urlencode(params)))
+
     def access_policy(self) -> dict:
         self.check_window()  # Before robots, terms or any other publisher probe.
         receipts = {}
@@ -297,6 +341,10 @@ def acquire(session, out: Path, checkpoint: Path, policy=None, now=None) -> dict
     previous = json.loads(out.read_text())["count"] if out.exists() else 0
     guard_count(expected, expected, previous)
     prepare_checkpoint(checkpoint, checkpoint_config(expected, window))
+    evidence = checkpoint / "individual-fetches.json"
+    individuals = json.loads(evidence.read_text()) if evidence.exists() else {}
+    if not isinstance(individuals, dict) or len(individuals) > MAX_INDIVIDUAL_IDS:
+        raise Held("Invalid or excessive individual expansion evidence; snapshot kept")
     rows, seen, expanded_seen = [], set(), set()
     for offset in range(0, expected, PAGE_SIZE):
         if quiet_window(now()) != window: raise Held("Acquisition quiet window expired")
@@ -320,7 +368,7 @@ def acquire(session, out: Path, checkpoint: Path, policy=None, now=None) -> dict
                 raise Held("Duplicate or non-increasing title ids; snapshot held")
             seen.add(key); rows.append(row)
         if not base_path.exists(): atomic_json(base_path, base)
-        matched = expanded_page(session, checkpoint, offset, params, values, expected)
+        matched = expanded_page(session, checkpoint, offset, params, values, expected, individuals)
         for row in values:
             row.update(matched[row["id"]])
             expanded_seen.add(row["id"])
@@ -344,6 +392,7 @@ def acquire(session, out: Path, checkpoint: Path, policy=None, now=None) -> dict
     run = {"rows": len(seen), "odata_count": final_count, "requests": session.requests,
            "runtime_seconds": round(time.monotonic() - started, 2), "completed_at": downloaded,
            "metadata_coverage": snapshot["metadata_coverage"],
+           "individual_fetch_ids": sorted(individuals),
            "policy": policy, "snapshot": str(out.relative_to(ROOT))}
     atomic_json(out.parent / "run-receipt.json", run)
     atomic_json(checkpoint / "complete.json", {"completed_at": downloaded, "count": len(seen)})
