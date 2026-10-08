@@ -95,9 +95,13 @@ export const accents: Record<Accent, { ink: Role; wash: Role }> = {
 // One CSS pixel is one point: rules are 1pt, not the device hairline.
 export const hairline = 1;
 export const radius = 4;
-export const minimumTarget = 44;
+export const minimumTarget = Platform.OS === 'android' ? 48 : 44;
 // Minimum heights; controls grow with their text rather than clipping.
-export const controlHeight = { compact: 44, default: 48, large: 56 } as const;
+export const controlHeight = {
+  compact: minimumTarget,
+  default: 48,
+  large: 56,
+} as const;
 export type ControlSize = keyof typeof controlHeight;
 
 // Static upstream instances, registered under these names in app/_layout.tsx.

@@ -226,7 +226,7 @@ export function ViewOriginal({
       }
       testID={testID}
       onPress={press}
-      hitSlop={{ top: 8, bottom: 8 }}
+      hitSlop={Platform.OS === 'android' ? 0 : { top: 8, bottom: 8 }}
       style={({ pressed }) => [
         styles.original,
         fixed ? styles.fixedWidth : null,
@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'flex-start',
     gap: rhythm.line + 2,
-    minHeight: 28,
+    minHeight: Platform.OS === 'android' ? minimumTarget : 28,
     paddingHorizontal: rhythm.line,
     marginHorizontal: -rhythm.line,
     borderRadius: radius,

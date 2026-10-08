@@ -16,6 +16,9 @@ const buildNumber = process.env.OPAX_BUILD_NUMBER ?? '1';
 if (!/^[1-9][0-9]*$/.test(buildNumber)) {
   throw new Error('OPAX_BUILD_NUMBER must be a positive integer');
 }
+if (androidBuild && Number(buildNumber) > 2100000000) {
+  throw new Error('Android versionCode must be at most 2100000000');
+}
 if (!['development', 'e2e', 'production'].includes(variant)) {
   throw new Error('OPAX_VARIANT must be development, e2e or production');
 }
@@ -145,6 +148,12 @@ const config: ExpoConfig = {
   },
   plugins: [
     './plugins/withAndroidPolicy.js',
+    ...(androidBuild
+      ? [
+          './plugins/withAndroidUploadSigning.js',
+          './plugins/withAndroidBack.js',
+        ]
+      : []),
     '@react-native-community/datetimepicker',
     ['expo-router', { sitemap: variant !== 'production' }],
     './plugins/withSceneLifecycle.js',

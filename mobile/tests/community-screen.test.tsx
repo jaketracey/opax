@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import native from '../modules/opax-voice';
 import { CommunityScreen } from '../src/features/community/CommunityScreen';
 import { clearCommunity } from '../src/features/community/session';
+import { Platform } from 'react-native';
 let mockParams: Record<string, string> = { view: 'home' };
 let mockFocused = false;
 jest.mock('expo-router', () => ({
@@ -50,6 +51,7 @@ jest.mock('../src/design/primitives', () => {
         'RowList',
         'KeyboardStableScreen',
         'Section',
+        'Screen',
         'SegmentedControl',
         'StepButtons',
         'Text',
@@ -91,6 +93,34 @@ const press = async (id: string) =>
       )[0]!
       .props.onPress();
   });
+it('Android Community exposes its web boundary without native reads or missing sign-in routes', async () => {
+  const original = Platform.OS;
+  Object.defineProperty(Platform, 'OS', {
+    value: 'android',
+    configurable: true,
+  });
+  try {
+    mockFocused = true;
+    mockParams = { view: 'messages' };
+    await act(async () => {
+      screen = create(<CommunityScreen />);
+    });
+    expect(request).not.toHaveBeenCalled();
+    expect(
+      screen.root.findAll((n) => n.props.testID === 'community-open-web')
+        .length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.root.findAll((n) => n.props.testID === 'community-sign-in'),
+    ).toHaveLength(0);
+    expect(router.push).not.toHaveBeenCalled();
+  } finally {
+    Object.defineProperty(Platform, 'OS', {
+      value: original,
+      configurable: true,
+    });
+  }
+});
 it('does not read on an unfocused mount or redraw, and reads one time when explicitly opened', async () => {
   request.mockResolvedValue(reply({ threads: [], more: false }));
   await act(async () => {
