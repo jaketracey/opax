@@ -84,6 +84,7 @@ export {
   ReadableColumn,
   readableInset,
   Grid,
+  PadGrid,
   gridColumns,
   Hoverable,
   SidebarSafe,
@@ -100,6 +101,9 @@ export {
   SplitLayout,
   SplitEmpty,
   useSplitPane,
+  useSplitCursor,
+  PaneHost,
+  PaneBar,
   type SplitPane,
   type SplitLayoutProps,
 } from './split';

@@ -19,6 +19,11 @@ jest.mock('../src/features/directories/data', () => ({
 jest.mock('../src/features/CachedPortrait', () => ({
   CachedPortrait: () => null,
 }));
+// The iPad detail pane draws the native record screens (and their data).
+jest.mock('../src/features/split/RecordDetail', () => ({
+  RecordDetail: () => null,
+  RecordShare: () => null,
+}));
 
 const empty: DirectoryRecord = {
   people: [],

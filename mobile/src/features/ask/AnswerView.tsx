@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { View } from 'react-native';
 import { router } from 'expo-router';
 import { webOrigin } from '../../design/environment';
 import {
@@ -19,6 +20,7 @@ import { fromWebPath, personRoute } from '../../navigation/routes';
 import { openSource, sourceUrl } from '../../navigation/external';
 import { shareRecord } from '../../navigation/share';
 import { CachedPortrait } from '../CachedPortrait';
+import { useAskPane } from './SourcesPane';
 import {
   dateRuler,
   defaultOptions,
@@ -79,9 +81,15 @@ export function citedText(data: Answer) {
 export function AnswerBody({
   text,
   sources = [],
+  onCite,
+  onLink = openAnswerLink,
 }: {
   text: string;
   sources?: Source[];
+  /** iPad sources pane: a citation marks its source there instead. */
+  onCite?: (n: number) => void;
+  /** Opens a link in the answer (in the sources pane on iPad). */
+  onLink?: (href: string, title: string) => void;
 }) {
   const inline = (line: string) =>
     line.split(/(\[\d+\])/).map((part, i) => {
@@ -92,7 +100,11 @@ export function AnswerBody({
           key={i}
           accessibilityRole="link"
           accessibilityLabel={`Citation ${match![1]}: ${source.title}`}
-          onPress={() => openAnswerLink(source.href)}
+          onPress={() =>
+            onCite
+              ? onCite(Number(match![1]))
+              : onLink(source.href, source.title)
+          }
           tone="bronzeInk"
         >
           {part}
@@ -160,7 +172,7 @@ export function AnswerBody({
         <LinkRow
           key={`${i}-${link.href}`}
           title={link.label}
-          onPress={() => openAnswerLink(link.href)}
+          onPress={() => onLink(link.href, link.label)}
         />
       ))}
     </Group>
@@ -197,11 +209,23 @@ export function AnswerView({
   turn,
   question,
   people,
+  index,
 }: {
   turn: Turn;
   question: Turn;
   people: Map<string, string>;
+  /** The answer's place in the thread, for the iPad sources pane. */
+  index?: number;
 }) {
+  // iPad regular width: sources open in the pane beside the conversation.
+  const pane = useAskPane();
+  const self = useRef<View>(null);
+  useEffect(() => {
+    if (!pane || index === undefined) return;
+    return pane.register(index, self);
+  }, [pane, index]);
+  const go = (href: string, title: string) =>
+    pane ? pane.open(href, title) : openAnswerLink(href);
   const [sourcesOpen, setSourcesOpen] = useState(false),
     [alsoOpen, setAlsoOpen] = useState(false);
   const data = turn.result || {
@@ -219,7 +243,7 @@ export function AnswerView({
       ),
     ),
   ];
-  return (
+  const section = (
     <Section
       testID="ask-answer"
       accent={calculated ? 'money' : 'people'}
@@ -271,7 +295,14 @@ export function AnswerView({
         }
         testID={calculated ? 'ask-money-panel' : 'ask-answer-body'}
       >
-        <AnswerBody text={citedText(data)} sources={groups.cited} />
+        <AnswerBody
+          text={citedText(data)}
+          sources={groups.cited}
+          onCite={
+            pane && index !== undefined ? (n) => pane.cite(index, n) : undefined
+          }
+          onLink={go}
+        />
       </Group>
       {data.evidence_excerpts?.map((e, i) => (
         <Group key={i}>
@@ -282,7 +313,7 @@ export function AnswerView({
             title="Read the source passage"
             onPress={() => {
               const s = data.sources.find((s) => s.resource === e.resource);
-              if (s) openAnswerLink(s.href);
+              if (s) go(s.href, s.title);
             }}
           />
         </Group>
@@ -298,7 +329,7 @@ export function AnswerView({
         <LinkRow
           key={s.href}
           title={s.label}
-          onPress={() => openAnswerLink(s.href)}
+          onPress={() => go(s.href, s.label)}
         />
       ))}
       {/* Every citation has a 44pt button, independent of the text's font size. */}
@@ -310,7 +341,7 @@ export function AnswerView({
             detail={[s.speaker, s.date ? formatDate(s.date, 'short') : '']
               .filter(Boolean)
               .join(' · ')}
-            onPress={() => openAnswerLink(s.href)}
+            onPress={() => go(s.href, s.title)}
             testID={`ask-citation-${i + 1}`}
           />
         ))}
@@ -332,7 +363,11 @@ export function AnswerView({
                   testID={`ask-person-portrait-${people.get(name)}`}
                 />
               }
-              onPress={() => router.push(personRoute(people.get(name)!))}
+              onPress={() =>
+                pane
+                  ? pane.open(`/subject/person/${people.get(name)!}`, name)
+                  : router.push(personRoute(people.get(name)!))
+              }
             />
           ))}
         </Section>
@@ -365,7 +400,7 @@ export function AnswerView({
                   detail={[s.speaker, s.date ? formatDate(s.date, 'short') : '']
                     .filter(Boolean)
                     .join(' · ')}
-                  onPress={() => openAnswerLink(s.href)}
+                  onPress={() => go(s.href, s.title)}
                 />
                 <ViewOriginal
                   sources={s.url ? [{ label: s.title, url: s.url }] : []}
@@ -374,31 +409,34 @@ export function AnswerView({
             ))}
         </Disclosure>
       ) : null}
-      <Disclosure
-        label="Retrieved records"
-        value={String(data.sources.length)}
-        open={sourcesOpen}
-        onToggle={setSourcesOpen}
-        testID="ask-sources-toggle"
-      >
-        <Group testID="ask-sources">
-          {groups.cited.map((s, i) => (
-            <SourceRow key={s.resource} s={s} n={i + 1} />
-          ))}
-          {groups.also.length ? (
-            <Disclosure
-              label="Also retrieved, not cited in the answer"
-              open={alsoOpen}
-              onToggle={setAlsoOpen}
-              testID="ask-also-toggle"
-            >
-              {groups.also.map((s) => (
-                <SourceRow key={s.resource} s={s} />
-              ))}
-            </Disclosure>
-          ) : null}
-        </Group>
-      </Disclosure>
+      {/* On iPad the sources pane lists the retrieved records. */}
+      {pane ? null : (
+        <Disclosure
+          label="Retrieved records"
+          value={String(data.sources.length)}
+          open={sourcesOpen}
+          onToggle={setSourcesOpen}
+          testID="ask-sources-toggle"
+        >
+          <Group testID="ask-sources">
+            {groups.cited.map((s, i) => (
+              <SourceRow key={s.resource} s={s} n={i + 1} />
+            ))}
+            {groups.also.length ? (
+              <Disclosure
+                label="Also retrieved, not cited in the answer"
+                open={alsoOpen}
+                onToggle={setAlsoOpen}
+                testID="ask-also-toggle"
+              >
+                {groups.also.map((s) => (
+                  <SourceRow key={s.resource} s={s} />
+                ))}
+              </Disclosure>
+            ) : null}
+          </Group>
+        </Disclosure>
+      )}
       {dates.length ? (
         <Disclosure
           label="Dates in the record"
@@ -412,7 +450,7 @@ export function AnswerView({
                 key={s.resource}
                 title={s.title}
                 detail={`${formatDate(s.date!, 'short')} · ${s.cited ? 'Cited' : 'Retrieved'}`}
-                onPress={() => openAnswerLink(s.href)}
+                onPress={() => go(s.href, s.title)}
               />
             ))}
           </RowList>
@@ -440,5 +478,13 @@ export function AnswerView({
         testID="ask-share"
       />
     </Section>
+  );
+  // The pane follows the answer being read: it measures this view.
+  return pane ? (
+    <View ref={self} collapsable={false}>
+      {section}
+    </View>
+  ) : (
+    section
   );
 }

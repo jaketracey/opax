@@ -117,6 +117,7 @@ export function KeyboardStableScreen({
   refreshControl,
   keyboardTarget,
   scrollRef,
+  onScroll,
   column = 'readable',
 }: {
   testID?: string;
@@ -124,6 +125,8 @@ export function KeyboardStableScreen({
   refreshControl?: ReactElement<RefreshControlProps>;
   keyboardTarget: RefObject<View | null>;
   scrollRef?: RefObject<ScrollView | null>;
+  /** The scroll offset, for a screen that scrolls a row into view itself. */
+  onScroll?: (y: number) => void;
   column?: keyof typeof columns;
 }) {
   const ownScroll = useRef<ScrollView>(null);
@@ -147,7 +150,10 @@ export function KeyboardStableScreen({
           onLayout(event);
           keyboard.onLayout(event);
         }}
-        onScroll={keyboard.onScroll}
+        onScroll={(event) => {
+          keyboard.onScroll(event);
+          onScroll?.(event.nativeEvent.contentOffset.y);
+        }}
         scrollEventThrottle={16}
       >
         <RegionProvider value={inner}>

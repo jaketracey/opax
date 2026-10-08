@@ -13,6 +13,7 @@ import { openOnWeb, openSource } from '../navigation/external';
 import { useAccessibilitySize } from './accessibility';
 import { Hoverable, useHover } from './adaptive';
 import { Icon, type SFSymbol } from './icon';
+import { SelectedMark, selectedWash, splitRowStyles } from './selection';
 import { Text } from './text';
 import {
   accents,
@@ -43,6 +44,8 @@ export function LinkRow({
   testID,
   titleTestID,
   detailTestID,
+  selected,
+  highlighted = false,
 }: {
   title: string;
   detail?: string;
@@ -60,9 +63,18 @@ export function LinkRow({
   testID?: string;
   titleTestID?: string;
   detailTestID?: string;
+  /**
+   * In an iPad split list: true for the row shown in the detail pane, false
+   * for the others (no chevron; the pane is the destination). Undefined is
+   * an ordinary navigation row.
+   */
+  selected?: boolean;
+  /** The keyboard's place in a split list: drawn as the hover tint. */
+  highlighted?: boolean;
 }) {
   const stacked = useAccessibilitySize();
   const [hovered, onHover] = useHover();
+  const inSplit = selected !== undefined;
   return (
     <Hoverable effect="none" onHover={disabled ? undefined : onHover}>
       <Pressable
@@ -72,17 +84,21 @@ export function LinkRow({
           [title, value, detail].filter(Boolean).join(', ')
         }
         accessibilityHint={accessibilityHint}
-        accessibilityState={{ disabled }}
+        accessibilityState={inSplit ? { disabled, selected } : { disabled }}
         disabled={disabled}
         testID={testID}
         onPress={onPress}
         style={({ pressed }) => [
           styles.row,
-          pressed || (hovered && !disabled)
-            ? { backgroundColor: colors.sunken }
-            : null,
+          inSplit ? splitRowStyles.bleed : null,
+          selected
+            ? selectedWash(accent)
+            : pressed || ((hovered || highlighted) && !disabled)
+              ? { backgroundColor: colors.sunken }
+              : null,
         ]}
       >
+        {selected ? <SelectedMark accent={accent} /> : null}
         {icon ? <IconTile name={icon} accent={accent} /> : null}
         <View style={[styles.text, stacked ? styles.stacked : styles.inline]}>
           <View style={[styles.titles, stacked ? null : styles.grow]}>
@@ -102,11 +118,13 @@ export function LinkRow({
             </Text>
           ) : null}
         </View>
-        <Icon
-          name={external ? 'safari' : 'chevron.right'}
-          size={external ? 16 : 13}
-          tone={external ? 'navy' : 'inkSoft'}
-        />
+        {inSplit && !external ? null : (
+          <Icon
+            name={external ? 'safari' : 'chevron.right'}
+            size={external ? 16 : 13}
+            tone={external ? 'navy' : 'inkSoft'}
+          />
+        )}
       </Pressable>
     </Hoverable>
   );

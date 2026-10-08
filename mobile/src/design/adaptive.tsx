@@ -272,6 +272,16 @@ export function Grid({
   );
 }
 
+/**
+ * A `Grid` on iPad only. On iPhone and Android the blocks stay exactly the
+ * siblings they were (no wrapping view, no new gap), so a phone screen that
+ * gains columns on iPad does not move by a pixel.
+ */
+export function PadGrid(props: Parameters<typeof Grid>[0]) {
+  if (!isPad) return <>{props.children}</>;
+  return <Grid {...props} />;
+}
+
 /** How many columns a grid `width` wide draws. */
 export function gridColumns(
   width: number,

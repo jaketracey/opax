@@ -23,6 +23,8 @@ import {
   partyWash,
   type PartyContext,
 } from './party';
+import { Hoverable, useHover } from './adaptive';
+import { SelectedMark, selectedWash, splitRowStyles } from './selection';
 import { Text } from './text';
 import { nameProbeProps } from './text-probe';
 import {
@@ -403,6 +405,13 @@ export type PersonRowProps = PersonRowParty & {
   testID?: string;
   /** Opt in only for journeys that inspect native drawn-line bounds. */
   testDrawnName?: boolean;
+  /**
+   * In an iPad split list: true for the person in the detail pane, false for
+   * the others (no chevron). Undefined is an ordinary row (every iPhone row).
+   */
+  selected?: boolean;
+  /** The keyboard's place in a split list. */
+  highlighted?: boolean;
 };
 /**
  * A row for a roster parliamentarian: portrait (blank circle without one)
@@ -423,8 +432,12 @@ export function PersonRow({
   onPress,
   testID,
   testDrawnName = false,
+  selected,
+  highlighted = false,
 }: PersonRowProps) {
   const stacked = useAccessibilitySize();
+  const inSplit = selected !== undefined;
+  const [hovered, onHover] = useHover();
   const partyContext =
     party === undefined
       ? null
@@ -470,7 +483,9 @@ export function PersonRow({
           ) : null}
         </View>
       </View>
-      {onPress ? <Icon name="chevron.right" size={14} tone="inkSoft" /> : null}
+      {onPress && !inSplit ? (
+        <Icon name="chevron.right" size={14} tone="inkSoft" />
+      ) : null}
     </>
   );
   if (!onPress)
@@ -484,10 +499,11 @@ export function PersonRow({
         {body}
       </View>
     );
-  return (
+  const row = (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={label}
+      accessibilityState={inSplit ? { selected } : undefined}
       accessibilityActions={
         partyContext
           ? [
@@ -529,12 +545,26 @@ export function PersonRow({
       onPress={onPress}
       style={({ pressed }) => [
         styles.person,
-        // Raised, not sunken: every party dot keeps 3:1 against the highlight.
-        pressed ? { backgroundColor: colors.raised } : null,
+        inSplit ? splitRowStyles.bleed : null,
+        selected
+          ? selectedWash('people')
+          : // Raised, not sunken: every party dot keeps 3:1 against the highlight.
+            pressed || (inSplit && (hovered || highlighted))
+            ? { backgroundColor: colors.raised }
+            : null,
       ]}
     >
+      {selected ? <SelectedMark accent="people" /> : null}
       {body}
     </Pressable>
+  );
+  // Pointer hover only in a split list; other rows keep their view tree.
+  return inSplit ? (
+    <Hoverable effect="none" onHover={onHover}>
+      {row}
+    </Hoverable>
+  ) : (
+    row
   );
 }
 

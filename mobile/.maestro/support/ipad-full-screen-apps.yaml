@@ -1,0 +1,21 @@
+appId: au.com.opax.app
+name: iPad Full-Screen Apps (taps land where they aim)
+---
+- launchApp:
+    appId: com.apple.Preferences
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      text: Multitasking & Gestures
+    timeout: 30000
+- tapOn:
+    text: Multitasking & Gestures
+    waitToSettleTimeoutMs: 3000
+- extendedWaitUntil:
+    visible:
+      text: Full-Screen Apps
+    timeout: 30000
+- tapOn:
+    text: Full-Screen Apps
+    waitToSettleTimeoutMs: 3000
+- waitForAnimationToEnd
