@@ -24,11 +24,7 @@ import {
   Text,
   errorMessage,
 } from '../../design/primitives';
-import {
-  formatCount,
-  formatDate,
-  formatPercent,
-} from '../../design/format';
+import { formatCount, formatDate, formatPercent } from '../../design/format';
 import { chamberName, jurisdictionName } from '../../design/parliament';
 import { partyText } from '../../design/party';
 import { fromWebPath } from '../../navigation/routes';
@@ -160,11 +156,7 @@ export function ReadDate({
     </Group>
   );
 }
-export function QuickFacts({
-  identity,
-}: {
-  identity: PersonProfile;
-}) {
+export function QuickFacts({ identity }: { identity: PersonProfile }) {
   const jurisdictions = [
     ...new Set([
       ...identity.seats.map((s) => s.jurisdiction),
