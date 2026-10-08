@@ -2,10 +2,10 @@ import { useCallback, useState } from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import {
   AsAtLine,
-  Button,
   InfoButton,
   Group,
   SourceLink,
+  StepButtons,
   Text,
 } from '../../design/primitives';
 import { formatDate, formatMoneyCompact } from '../../design/format';
@@ -36,13 +36,20 @@ export default function Largest() {
     .sort()
     .reverse();
   const monthIndex = months.indexOf(month);
-  const label = /^\d{4}-(?:0[1-9]|1[0-2])$/.test(month)
-    ? new Intl.DateTimeFormat('en-AU', {
-        month: 'long',
-        year: 'numeric',
-        timeZone: 'UTC',
-      }).format(new Date(`${month}-01`))
-    : '';
+  const label = monthName(month, true);
+  const previous = months[monthIndex + 1],
+    next = monthIndex > 0 ? months[monthIndex - 1] : undefined;
+  // "‹ June" and "August ›" on one row; an end of the range says the
+  // direction alone, drawn disabled.
+  const stepFor = (direction: string, target: string | undefined) => ({
+    label: target ? monthName(target, !sameYear(target, month)) : direction,
+    accessibilityLabel: target
+      ? `${direction}, ${monthName(target, true)}`
+      : direction,
+    disabled: !target,
+    onPress: () => setSelected(target),
+    testID: direction === 'Next month' ? 'largest-next' : 'largest-previous',
+  });
   return (
     <>
       <MoneyHeader
@@ -74,18 +81,11 @@ export default function Largest() {
                   {formatDate(data.largest.asOf)}.
                 </Text>
                 <AsAtLine asOf={data.largest.asOf} citation="GrantConnect" />
-                <Group>
-                  <Button
-                    label="Previous month"
-                    disabled={!months[monthIndex + 1]}
-                    onPress={() => setSelected(months[monthIndex + 1])}
-                  />
-                  <Button
-                    label="Next month"
-                    disabled={monthIndex <= 0}
-                    onPress={() => setSelected(months[monthIndex - 1])}
-                  />
-                </Group>
+                <StepButtons
+                  testID="largest-months"
+                  previous={stepFor('Previous month', previous)}
+                  next={stepFor('Next month', next)}
+                />
               </>
             ) : null}
           </>
@@ -139,3 +139,16 @@ export default function Largest() {
     </>
   );
 }
+
+const MONTH = /^\d{4}-(?:0[1-9]|1[0-2])$/;
+/** "July 2026", or "July" where the year goes without saying. */
+function monthName(month: string, withYear: boolean) {
+  return MONTH.test(month)
+    ? new Intl.DateTimeFormat('en-AU', {
+        month: 'long',
+        ...(withYear ? { year: 'numeric' as const } : {}),
+        timeZone: 'UTC',
+      }).format(new Date(`${month}-01`))
+    : '';
+}
+const sameYear = (a: string, b: string) => a.slice(0, 4) === b.slice(0, 4);
