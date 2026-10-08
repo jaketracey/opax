@@ -1,7 +1,11 @@
 // Unchanged, bundled web photographs; credits are in Sources and licences.
 import { Image } from 'react-native';
 export function Picture({ file, ratio }: { file: string; ratio: number }) {
-  const style = { width: '100%' as const, aspectRatio: ratio };
+  const style = {
+    width: '100%' as const,
+    height: undefined,
+    aspectRatio: ratio,
+  };
   switch (file) {
     case 'years/pictures/1998/swanson-dock-picket.webp':
       return (

@@ -95,7 +95,7 @@ writeFileSync(
 );
 writeFileSync(
   resolve(output, 'Picture.tsx'),
-  `// Unchanged, bundled web photographs; credits are in Sources and licences.\nimport { Image } from 'react-native';\nexport function Picture({file,ratio}:{file:string;ratio:number}) {\n  const style={width:'100%' as const,aspectRatio:ratio};\n  switch(file) {\n${assets.join('\n')}\n    default: return null;\n  }\n}\n`,
+  `// Unchanged, bundled web photographs; credits are in Sources and licences.\nimport { Image } from 'react-native';\nexport function Picture({file,ratio}:{file:string;ratio:number}) {\n  const style={width:'100%' as const,height:undefined,aspectRatio:ratio};\n  switch(file) {\n${assets.join('\n')}\n    default: return null;\n  }\n}\n`,
 );
 console.log(
   `Generated 48 eight-question rounds and ${assets.length} unchanged photographs from local exports.`,
