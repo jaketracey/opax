@@ -1,5 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, Platform, StyleSheet, View } from 'react-native';
 import { Group, Heading, Text, useReduceMotion } from '../../design/primitives';
 import { colors, layout, rhythm } from '../../design/tokens';
 export interface ReaderPart {
@@ -7,6 +7,9 @@ export interface ReaderPart {
   text: string;
   title?: string;
 }
+// Bound Android's selectable paragraph measurement and JS batches. The source
+// slices still join to the exact original text; iOS keeps its existing target.
+export const readerChunkTarget = Platform.OS === 'android' ? 600 : 1200;
 /** The sole scrolling surface: source paragraphs remain selectable and unabridged. */
 export function ReaderList({
   parts,
@@ -49,8 +52,8 @@ export function ReaderList({
       style={styles.screen}
       contentContainerStyle={styles.content}
       contentInsetAdjustmentBehavior="automatic"
-      initialNumToRender={4}
-      maxToRenderPerBatch={4}
+      initialNumToRender={Platform.OS === 'android' ? 1 : 4}
+      maxToRenderPerBatch={Platform.OS === 'android' ? 2 : 4}
       windowSize={7}
       removeClippedSubviews={false}
       ListHeaderComponent={<Group gap={rhythm.section}>{header}</Group>}

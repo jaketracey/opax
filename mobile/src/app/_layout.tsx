@@ -6,6 +6,7 @@ import {
   useStackChrome,
 } from '../navigation/chrome';
 import { AndroidMenuHost } from '../design/menu';
+import { AndroidReadingHeader } from '../navigation/AndroidReadingHeader';
 import { useCallback, useEffect, useState } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import { Stack, router, type Href } from 'expo-router';
@@ -86,7 +87,11 @@ export default function Layout() {
             name="money-node"
             options={{
               ...sheet,
-              presentation: 'formSheet',
+              // Android bottom sheets omit native headers and their Done item.
+              presentation: Platform.OS === 'android' ? 'modal' : 'formSheet',
+              ...(Platform.OS === 'android'
+                ? { header: AndroidReadingHeader }
+                : {}),
               title: 'Money record',
               sheetAllowedDetents: [1],
               sheetGrabberVisible: true,

@@ -104,13 +104,14 @@ and the existing iOS production bundle/static checks for shared-code changes.
 | Fonts                                               | Same bundled Merriweather and Public Sans. No font download. Android font scaling remains enabled.                                                                                                                                                                                                   |
 | Safe areas / edge-to-edge                           | Native stacks and Android tab insets handle system bars; Android-only safe-area wrappers cover custom Ask and information modals. Target API 36 is edge-to-edge.                                                                                                                                                       |
 | Keyboard                                            | Android DidShow/DidHide events and native resize; no dependence on iOS WillChangeFrame or double subtraction of keyboard height.                                                                                                                                                                     |
-| Hardware Back / edge Back                           | Native stacks pop detail/sheet routes; root tab Back returns to Today, then exits, and IME Back dismisses the keyboard first. Custom modals implement `onRequestClose`; focused Your MP chooser and welcome tour implement BackHandler. Detail, chooser and sheet probes cover these mechanisms. Predictive animation polish and physical devices remain lane 2.                                     |
+| Hardware Back / edge Back                           | Native stacks pop detail/sheet routes; root tab Back returns to Today, then exits, and IME Back dismisses the keyboard first. Custom modals implement `onRequestClose`; focused Your MP chooser and welcome tour implement BackHandler. Detail, chooser and sheet probes cover these mechanisms. Parity verifies system Back commit/cancel across the new sheets. Destination preview animation and physical devices remain future work.                                     |
 | Status bar / light theme                            | Dark status icons, paper surfaces and Android AppCompat light mode regardless of device night mode. iOS theme config is unchanged.                                                                                                                                                                   |
 | Permissions                                         | Foreground coarse/fine location only among dangerous permissions, requested only by “Use my location”. INTERNET, VIBRATE and the app's signature receiver permission are normal/private permissions. No mic, camera, background location, foreground service, overlay or shared storage permissions. |
 | HTTP and catalog access                             | Production network config denies all cleartext. E2e permits only exact `10.0.2.2`; debug permits only localhost/127.0.0.1 for reversed Metro. JS origin, route allow-list and redirect guards still apply.                                                                                           |
 
-Catalog requests currently inherit the `OPAX-iOS` User-Agent prefix on Android.
-Correct this telemetry label in lane 2; it does not change the transport boundary.
+Catalog requests use `OPAX-Android` on Android and retain `OPAX-iOS` on iOS.
+The telemetry label does not change the transport boundary. See
+[Android parity](ANDROID-PARITY.md) for lane 2 results and remaining release work.
 
 ## Issues found
 
@@ -124,12 +125,12 @@ Correct this telemetry label in lane 2; it does not change the transport boundar
 | Cold canonical directory work blocked Android input | Fixed with an Android-only candidate-name index. The pinned regression check preserves all 595 verified canonical routes; iOS and Node retain the original resolver. |
 | Cache writes published before Android native file moves completed | Fixed with Android-only awaited moves and a deferred-completion regression test; development/e2e timing logs trace local cache operations. |
 | Gradle build counting, Metro IPv6, fixture Host, startup intents and macOS Bash empty arrays | Fixed in Android tooling: visible wrapper class, IPv4 Metro, exact host alias, animation waits, startup readiness and explicit optional-argument branches. |
-| Android-labelled telemetry | Next lane: replace the inherited iOS User-Agent prefix. |
-| Money focus form sheet has no visible native Done header on API 36 | Android journey uses system Back to close it. Lane 2 should add an explicit accessible close affordance and review form-sheet presentation. |
-| Cold reader reflow and long-page gesture settling | Android flows wait for loaded content and layout; lane 2 should profile reader rendering and input responsiveness on emulators and physical devices. |
-| Cold tab transitions, glyph loading and font-2.0 page traversal | Captures defer startup tabs, wait for settled layout and allow longer navigation/scroll bounds. Cold-start and input latency remain lane 2 performance work. |
-| Large-text visual review | Account/source native titles ellipsize at 2.0; information actions sometimes move onto a separate line. Back/Done remain reachable. Lane 2 should refine these headers and spacing, and cold portrait placeholders. |
-| API 34/physical-device parity, predictive animations and large-text/header polish | Lane 2, including secondary screens, recipient apps and GPU/OEM differences. |
+| Android-labelled telemetry | Fixed in parity: platform-labelled catalog requests, with the existing origin, redirect, credentials and route guards. |
+| Money focus form sheet has no visible native Done header on API 36 | Fixed in parity: Android uses a native modal with a visible, labelled Done action; iOS retains its form sheet. |
+| Cold reader reflow and long-page gesture settling | Parity removes Android’s redundant text-height feedback and reduces reader chunk/batch sizes. API 36 before/after timings and scrolling frames are recorded in the private parity index; physical devices remain outside this lane. |
+| Cold tab transitions, glyph loading and font-2.0 page traversal | The parity run measures cold Today-to-Account interaction and reader readiness. Captures wait for fixture connectivity and use controlled drags; device/OEM timing remains future work. |
+| Large-text visual review | Parity adds wrapping Android Account/Sources headers, keeps information-only actions beside section titles, and reserves a blank profile portrait while cold data loads. |
+| API 34, physical devices, recipients and GPU/OEM differences | Outside this scoped parity lane. API 34 is required only if a fix is specific to that API; no such fix is included. |
 | Verified App Links, Android account sync and voice | Later scoped work; voice has the port plan below. |
 
 ## Android voice port plan
@@ -155,7 +156,9 @@ Correct this telemetry label in lane 2; it does not change the transport boundar
 
 ## Lane 2: Android parity and polish
 
-Cover API 34 and physical devices, minimum-SDK behavior, GPU variability,
+The scoped API 36, no-voice/no-store run is documented in [Android parity](ANDROID-PARITY.md). Its evidence index contains the copy, label, header, portrait, reader, hierarchy, Back and adaptive-icon results. The broader device and distribution backlog below remains separate.
+
+Future coverage should include API 34 and physical devices, minimum-SDK behavior, GPU variability,
 TalkBack, font scale 2.0 layouts, long header actions, tab labels, gesture and
 predictive Back, all secondary sheets, keyboard focus, orientation and OEM
 system-bar contrast. Test file-sharing recipients and cache lifetime, haptic

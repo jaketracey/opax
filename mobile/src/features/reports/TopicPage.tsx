@@ -1,3 +1,4 @@
+import { headerItems } from '../../navigation/chrome';
 import { useCallback, useState } from 'react';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { reports } from '../../api/runtime';
@@ -131,12 +132,12 @@ function TopicContent({
       <Stack.Screen
         options={{
           title,
-          unstable_headerRightItems: () => [
+          ...headerItems(() => [
             shareHeaderItem({
               path: `/subject/topic/${slug}${shareFilters.size ? '?' + shareFilters.toString() : ''}`,
               title,
             }),
-          ],
+          ]),
         }}
       />
       <Screen testID="topic-screen">

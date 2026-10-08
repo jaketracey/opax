@@ -1,3 +1,4 @@
+import { headerItems } from '../../navigation/chrome';
 import { Stack } from 'expo-router';
 import { reports } from '../../api/runtime';
 import { RecordRow } from '../RecordRow';
@@ -14,9 +15,9 @@ export default function ReportsIndex() {
       <Stack.Screen
         options={{
           title: 'Reports',
-          unstable_headerRightItems: () => [
+          ...headerItems(() => [
             shareHeaderItem({ path: '/reports', title: 'Reports' }),
-          ],
+          ]),
         }}
       />
       <Screen testID="reports-screen">

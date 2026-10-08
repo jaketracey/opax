@@ -1,4 +1,5 @@
 import { phoneCopy } from '../design/phone-copy';
+import { catalogUserAgent } from './user-agent';
 import { fetch as expoFetch } from 'expo/fetch';
 import { CatalogCache, isFresh, type CacheEntry } from './cache';
 import { ApiError, httpError } from './errors';
@@ -92,7 +93,7 @@ export class ApiClient {
     try {
       const response = await this.transport(url, {
         method: 'GET', credentials: 'omit', redirect: 'manual', signal: controller.signal,
-        headers: { Accept: 'application/json', 'User-Agent': `OPAX-iOS/${this.options.version} (${this.options.build})` },
+        headers: { Accept: 'application/json', 'User-Agent': catalogUserAgent(this.options.version, this.options.build) },
       });
       if (response.redirected || (response.status >= 300 && response.status < 400) || (response.url && response.url !== url))
         throw new ApiError('forbidden', 'Redirects are not allowed for catalog data.');
@@ -200,7 +201,7 @@ export class ApiClient {
           signal: controller.signal,
           headers: {
             Accept: 'application/json',
-            'User-Agent': `OPAX-iOS/${this.options.version} (${this.options.build})`,
+            'User-Agent': catalogUserAgent(this.options.version, this.options.build),
             ...(cached?.etag ? { 'If-None-Match': cached.etag } : {}),
             // A forced read (a pull to refresh) must reach the origin. The
             // transport's URLSession keeps its own HTTP cache, which answers
@@ -404,7 +405,7 @@ export class ApiClient {
         headers: {
           'Content-Type': 'application/json',
           Accept: on ? 'text/event-stream' : 'application/json',
-          'User-Agent': `OPAX-iOS/${this.options.version} (${this.options.build})`,
+          'User-Agent': catalogUserAgent(this.options.version, this.options.build),
         },
         body: JSON.stringify(body),
       });
@@ -527,7 +528,7 @@ export class ApiClient {
         signal: controller.signal,
         headers: {
           Accept: 'image/webp',
-          'User-Agent': `OPAX-iOS/${this.options.version} (${this.options.build})`,
+          'User-Agent': catalogUserAgent(this.options.version, this.options.build),
         },
       });
       if (
