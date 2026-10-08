@@ -338,3 +338,56 @@ test('a follow-up with nothing to search on asks for a full question, with the s
     askSession.start();
   });
 });
+
+test('a failed follow-up hides the previous answer suggestions and keeps Try again', async () => {
+  jest
+    .mocked(client.askPost)
+    .mockReset()
+    .mockResolvedValueOnce({
+      answer: 'Synthetic fixture answer.',
+      citations: {},
+      sources: [
+        {
+          resource: 'fixture',
+          title: 'Synthetic fixture',
+          slug: 'fixture',
+          snippet: 'Synthetic evidence passage.',
+        },
+      ],
+    })
+    .mockResolvedValueOnce({
+      questions: [{ question: 'A grounded fixture follow-up?' }],
+    })
+    .mockRejectedValueOnce(
+      new AskFailure('rate-limited', 'Try again shortly.'),
+    );
+  let view!: ReactTestRenderer;
+  await act(async () => {
+    view = create(<AskScreen />);
+  });
+  const byId = (id: string) => view.root.findAllByProps({ testID: id });
+  await act(async () => {
+    byId('ask-question')[0]!.props.onChangeText('A fixture question?');
+  });
+  await act(async () => {
+    await byId('ask-submit')[0]!.props.onPress();
+  });
+  expect(byId('ask-followup-0')).not.toEqual([]);
+  await act(async () => {
+    byId('ask-followup-field')[0]!.props.onChangeText(
+      'A failing fixture question?',
+    );
+  });
+  await act(async () => {
+    await byId('ask-followup-submit')[0]!.props.onPress();
+  });
+  expect(byId('ask-followups')).toEqual([]);
+  expect(byId('ask-followup-0')).toEqual([]);
+  expect(byId('ask-retry')).not.toEqual([]);
+  expect(askSession.snapshot().thread).toHaveLength(2);
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 50));
+    view.unmount();
+    askSession.start();
+  });
+});

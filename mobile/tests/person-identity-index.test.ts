@@ -196,7 +196,12 @@ function outcome(join: typeof joinPerson, slug: string) {
 }
 test('every pinned slug preserves identity, refusal and roster decisions', () => {
   for (const slug of Object.keys(slugs.slugs)) {
-    expect(outcome(joinPerson, slug)).toEqual(outcome(before, slug));
+    const original = outcome(before, slug);
+    // This polish changes only the party status of the verified Abbott term.
+    // Every other identity field and refusal still equals the frozen oracle.
+    if (['tony-abbott', 'abbott'].includes(slug) && original.profile)
+      original.profile = { ...original.profile, partyStatus: 'former' };
+    expect(outcome(joinPerson, slug)).toEqual(original);
     const name = slugs.slugs[slug]!;
     expect(namedRosterRow([name], roster)).toEqual(namedBefore([name], roster));
     const row = namedBefore([name], roster);

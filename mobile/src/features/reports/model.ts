@@ -365,11 +365,19 @@ export function allSources(report: Report): Source[] {
 // Paragraphs remain verbatim. Citation ranges use Unicode code points (Python
 // generator offsets), rather than JS UTF-16 offsets, and retain source numbers.
 export function citedParagraphs(prose: string, sources: Source[]) {
+  return citedBlocks(prose, sources, /\n\n/);
+}
+/** Short opening blocks, retaining each citation's original code-point range. */
+export function ledeParagraphs(prose: string, sources: Source[]) {
+  return citedBlocks(prose, sources, /(?<=[.!?])\s+(?=[\p{Lu}“"‘])|\n\n/u);
+}
+function citedBlocks(prose: string, sources: Source[], separator: RegExp) {
   let cursor = 0;
-  return prose.split(/\n\n/).map((value) => {
-    const start = cursor;
+  return prose.split(separator).map((value) => {
+    const offset = prose.indexOf(value, cursor);
+    const start = Array.from(prose.slice(0, offset)).length;
     const end = start + Array.from(value).length;
-    cursor = end + 2;
+    cursor = offset + value.length;
     const citations = sources.flatMap((source, i) => {
       const ranges = source.answer_ranges ?? [];
       return ranges.some(([a, b]) => a < end && b > start && b > a) ||

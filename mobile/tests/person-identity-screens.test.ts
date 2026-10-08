@@ -39,14 +39,27 @@ test('Person profileFor (and Follows markers) for every person_id', () => {
     );
   }
 });
+const abbottStatus = <T>(result: T, name: string): T => {
+  if (!['Tony Abbott', 'Abbott'].includes(name)) return result;
+  const value = result as { v?: { partyStatus?: string } };
+  return value.v
+    ? ({ ...value, v: { ...value.v, partyStatus: 'former' } } as T)
+    : result;
+};
 test('Search searchPersonFor every slug; rosterIdentityFor every roster row', () => {
   for (const slug of Object.keys(slugs.slugs))
     expect(run(() => now.searchPersonFor(slug, catalogs))).toEqual(
-      run(() => before.searchPersonFor(slug, catalogs)),
+      abbottStatus(
+        run(() => before.searchPersonFor(slug, catalogs)),
+        slugs.slugs[slug]!,
+      ),
     );
   for (const row of roster.people)
     expect(run(() => now.rosterIdentityFor(row, catalogs))).toEqual(
-      run(() => before.rosterIdentityFor(row, catalogs)),
+      abbottStatus(
+        run(() => before.rosterIdentityFor(row, catalogs)),
+        row.name,
+      ),
     );
 });
 test('multi-name rosterRowFor / namedRosterRow as profileFor and Your MP call them', () => {

@@ -493,6 +493,7 @@ function computePerson(
         [person?.name ?? name, name, ...(person?.aliases ?? [])],
         roster,
       ),
+      people,
     ),
     seats,
     rosterRow: row,

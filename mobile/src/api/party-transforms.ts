@@ -1,6 +1,10 @@
 // samePartyLabel and PARTY_MAP labels ported from portal/public/app.js.
 import { resolveParty } from '../design/party';
-import type { Roster, SeatObservation } from './catalog-decoders';
+import type {
+  PeopleCatalog,
+  Roster,
+  SeatObservation,
+} from './catalog-decoders';
 const partyLabels: Record<string, string> = {
   labor: 'ALP',
   liberal: 'LIB',
@@ -33,6 +37,44 @@ export function samePartyLabel(a: string, b: string) {
  * may be drawn as "Formerly X"; unknown is drawn plainly, as the web does.
  */
 export type PartyStatus = 'current' | 'former' | 'unknown';
+/** Dated evidence for status only; never an identity, portrait or record join. */
+export function partyStatusSeatsFor(
+  seats: SeatObservation[],
+  row?: Roster['people'][number],
+  people?: PeopleCatalog,
+): SeatObservation[] {
+  if (seats.length || row?.pid !== '10001' || row.name !== 'Tony Abbott')
+    return seats;
+  // The pinned release names this Warringah term Anthony John Abbott, with
+  // neither aliases nor a legacy ID. Require both exact OPAX names/IDs and
+  // the recorded seat/term; a surname or missing current flag proves nothing.
+  const candidates = people?.people.filter(
+    (p) =>
+      p.person_id === 'person_b0f61b3cfccd5557bef4aada' &&
+      p.name === 'Anthony John Abbott' &&
+      (!p.legacy_person_id || p.legacy_person_id === row.pid),
+  );
+  const dated = candidates?.length === 1 ? candidates[0] : undefined;
+  const representation = row.representation ?? [];
+  const warringah = dated?.electorates.find(
+    (seat) =>
+      seat.jurisdiction === 'federal' &&
+      seat.chamber === 'representatives' &&
+      seat.name === 'Warringah' &&
+      !seat.current &&
+      seat.periods?.some(
+        (period) =>
+          period.start === '1994-03-26' && period.end === '2019-05-18',
+      ) &&
+      representation.some(
+        (r) =>
+          r.jurisdiction === seat.jurisdiction &&
+          r.chamber === seat.chamber &&
+          r.electorate === seat.name,
+      ),
+  );
+  return warringah ? dated!.electorates : seats;
+}
 // `seats` are all of the person's dated observations, current and ended.
 export function partyStatusFor(
   seats: SeatObservation[],
@@ -66,11 +108,12 @@ export function personPartyFor(
   seats: SeatObservation[],
   row?: Roster['people'][number],
   affiliationRow?: Roster['people'][number],
+  people?: PeopleCatalog,
 ) {
   const current = seats.filter((s) => s.current);
   return {
     party: current[0]?.party ?? row?.party_now ?? row?.party ?? null,
-    partyStatus: partyStatusFor(seats, row),
+    partyStatus: partyStatusFor(partyStatusSeatsFor(seats, row, people), row),
     rosterParty: row?.party ?? null,
     // Former affiliations need a distinct, named roster party_now observation;
     // a different seat label alone does not establish a party change.

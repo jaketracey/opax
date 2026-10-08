@@ -37,6 +37,7 @@ import {
   AEC_NOTE,
   MODEL_NOTE,
   Prose,
+  ReportLede,
   ReadState,
   ShareBars,
   SourceRows,
@@ -246,7 +247,8 @@ function ReportContent({
       ) : null}
       {report.lede ? (
         <Group>
-          <Prose
+          <ReportLede
+            key={report.slug}
             value={report.lede.text}
             sources={report.lede.sources}
             testID="report-lede"

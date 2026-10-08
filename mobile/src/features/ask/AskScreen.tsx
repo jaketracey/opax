@@ -575,7 +575,7 @@ export default function AskScreen() {
               </Group>
             ) : null}
             {s.notice ? <Text wordSafe>{s.notice}</Text> : null}
-            {answer && !s.busy ? (
+            {answer && !s.busy && !s.error ? (
               <Section title="Ask next" accent="people" testID="ask-followups">
                 <RowList>
                   {answer.next?.map((next, i) => (

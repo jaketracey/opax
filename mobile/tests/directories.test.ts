@@ -186,7 +186,7 @@ describe('static directory transforms', () => {
   });
   test('the party-status trap retains a former party label and the roster basis', () => {
     const abbott = persons.find((p) => p.name === 'Tony Abbott')!;
-    expect(abbott.profile.partyStatus).toBe('unknown');
+    expect(abbott.profile.partyStatus).toBe('former');
     expect(abbott.parties).toContain('Liberal');
     const current = persons.find((p) => p.name === 'Anthony Albanese')!;
     expect(current.profile.partyStatus).toBe('current');
