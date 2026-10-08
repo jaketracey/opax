@@ -10,12 +10,16 @@ export {
   SegmentedControl,
   ChoiceChips,
   Field,
+  Composer,
   Divider,
+  StepButtons,
   type ButtonProps,
+  type Step,
   type ButtonVariant,
   type Segment,
 } from './controls';
 export { Icon, type SFSymbol } from './icon';
+export { MachineWritten, MACHINE_GUIDANCE } from './machine';
 export {
   Screen,
   KeyboardStableScreen,
