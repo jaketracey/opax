@@ -232,6 +232,45 @@ function billSeed(stage) {
     data: { texts: { body: field(text) } },
   };
 }
+// The 1990s federal speeches come from the Zenodo corpus with no official
+// link: the KB origin url is '', which apiResource passes through. Labels and
+// metadata mirror speech-18098; the body is the gambling report's pinned
+// citation passage, not the full speech.
+const zenodo = JSON.parse(
+  fs.readFileSync(path.join(portal, 'public/reports/gambling.json')),
+)
+  .over_time.eras.flatMap((era) => era.sources)
+  .find((s) => s.slug === 'speech-18098');
+seeds[zenodo.slug] = {
+  title: zenodo.title,
+  origin: { collaborators: [zenodo.speaker], url: '' },
+  usermetadata: {
+    classifications: [
+      { labelset: 'kind', label: 'speech' },
+      { labelset: 'source', label: 'zenodo' },
+      { labelset: 'state', label: zenodo.state },
+      { labelset: 'party', label: zenodo.party },
+      { labelset: 'chamber', label: 'representatives' },
+      { labelset: 'decade', label: '1990s' },
+    ],
+  },
+  extra: {
+    metadata: { speech_id: 18098, date: zenodo.date, fixture: true },
+  },
+  computedmetadata: {
+    field_classifications: [
+      { classifications: [{ labelset: 'topic', label: 'gambling' }] },
+    ],
+  },
+  data: {
+    texts: {
+      body: field(
+        'Pinned report citation excerpt. This fixture does not include the full source document.\n\n' +
+          zenodo.passage,
+      ),
+    },
+  },
+};
 const billSeeds = [billSeed('aspassed'), billSeed('first-reps')];
 billSeeds.forEach((seed) => (seeds[seed.slug] = seed));
 async function generate() {
@@ -334,7 +373,7 @@ async function generate() {
           billText: 'portal/src/bill-text.ts handleBillText',
           division: 'portal/public/bills/au-federal-r7534.json divisions[0]',
           notice:
-            'Speech and bill source bodies and press release are explicitly synthetic. No quoted statement or legal provision is invented for a real person.',
+            'Speech and bill source bodies and press release are explicitly synthetic, except speech-18098, which carries only the gambling report\'s pinned citation passage. No quoted statement or legal provision is invented for a real person.',
         },
         seeds,
         responses,
