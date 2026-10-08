@@ -1,4 +1,11 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import {
+  useEffect,
+  useEffectEvent,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   AccessibilityInfo,
   Alert,
@@ -39,6 +46,7 @@ import { ControlRow, RoundButton } from './CallControls';
 import { openableSources, SourcesSheet } from './SourcesSheet';
 import { Consent, VoiceDisclosure } from './Consent';
 import { accountCopy } from '../account/copy';
+import { useHeaderBottom } from '../../design/useHeaderBottom';
 
 type Action = 'start' | 'signIn' | 'search' | 'settings' | 'retry';
 
@@ -54,6 +62,7 @@ export default function TalkScreen({
   const call = useTalk();
   const { snapshot: s } = call;
   const insets = useSafeAreaInsets();
+  const headerBottom = useHeaderBottom();
   const reduceMotion = useReduceMotion();
   const [askingConsent, setAskingConsent] = useState(false);
   const [record, setRecord] = useState<VoiceSource | null>(null);
@@ -154,9 +163,13 @@ export default function TalkScreen({
       if (node) AccessibilityInfo.setAccessibilityFocus(node);
     }
   }, [terminal, screenReader]);
+  const resetScroll = useEffectEvent(() => {
+    // Read the latest header offset without resetting as the header collapses.
+    page.current?.scrollTo({ y: -headerBottom, animated: false });
+  });
   useEffect(() => {
     // Start and the end of a call bring the orb and controls back into view.
-    page.current?.scrollTo({ y: 0, animated: false });
+    resetScroll();
   }, [active]);
 
   const close = () => {

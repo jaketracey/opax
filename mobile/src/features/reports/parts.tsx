@@ -20,7 +20,12 @@ import { colors, rhythm } from '../../design/tokens';
 import { formatDate } from '../../design/format';
 import { isOffline } from '../CatalogState';
 import { RecordRow } from '../RecordRow';
-import { citedParagraphs, parliamentNames, type Source } from './model';
+import {
+  citedParagraphs,
+  ledeParagraphs,
+  parliamentNames,
+  type Source,
+} from './model';
 import { openRecord } from './open';
 import { titleSubject } from '../records/citations';
 
@@ -214,7 +219,63 @@ export function Prose({
 }) {
   return (
     <Group>
-      {citedParagraphs(value, sources).map((p, i) => (
+      <ProseBlocks
+        paragraphs={citedParagraphs(value, sources)}
+        sources={sources}
+        testID={testID}
+      />
+      <MachineWritten explanation={MODEL_NOTE} testID={`${testID}-machine`} />
+    </Group>
+  );
+}
+export function ReportLede({
+  value,
+  sources,
+  testID,
+}: {
+  value: string;
+  sources: Source[];
+  testID: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const paragraphs = ledeParagraphs(value, sources);
+  return (
+    <Group>
+      <ProseBlocks
+        paragraphs={paragraphs.slice(0, 2)}
+        sources={sources}
+        testID={testID}
+      />
+      {paragraphs.length > 2 ? (
+        <Disclosure
+          label={open ? 'Read less' : 'Read more'}
+          open={open}
+          onToggle={setOpen}
+          testID={`${testID}-toggle`}
+        >
+          <ProseBlocks
+            paragraphs={paragraphs.slice(2)}
+            sources={sources}
+            testID={`${testID}-more`}
+          />
+        </Disclosure>
+      ) : null}
+      <MachineWritten explanation={MODEL_NOTE} testID={`${testID}-machine`} />
+    </Group>
+  );
+}
+function ProseBlocks({
+  paragraphs,
+  sources,
+  testID,
+}: {
+  paragraphs: ReturnType<typeof citedParagraphs>;
+  sources: Source[];
+  testID: string;
+}) {
+  return (
+    <Group>
+      {paragraphs.map((p, i) => (
         <Group key={i} gap={6}>
           <Text wordSafe testID={`${testID}-paragraph-${i}`}>
             {p.text.split(/(\*\*[^*]+\*\*)/g).map((piece, j) =>
@@ -247,7 +308,6 @@ export function Prose({
           ) : null}
         </Group>
       ))}
-      <MachineWritten explanation={MODEL_NOTE} testID={`${testID}-machine`} />
     </Group>
   );
 }

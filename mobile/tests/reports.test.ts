@@ -331,3 +331,29 @@ test('report decade labels resolve only their published year windows', () => {
   expect(d.decadeWindow('unknown')).toBeNull();
   expect(d.decadeWindow('1980s')).toBeNull();
 });
+
+test.each(d.reportSlugs)(
+  '%s lede breaks into complete sentences without changing prose or citation ownership',
+  (slug) => {
+    const { lede } = d.decodeReport(pinned(`/reports/${slug}.json`));
+    expect(lede).toBeDefined();
+    const blocks = d.ledeParagraphs(lede!.text, lede!.sources);
+    expect(blocks).toHaveLength(4);
+    expect(blocks.map((p) => p.text).join(' ')).toBe(lede!.text);
+    expect(blocks.slice(0, 2)).toHaveLength(2);
+    let offset = 0;
+    for (const block of blocks) {
+      const start = Array.from(
+        lede!.text.slice(0, lede!.text.indexOf(block.text, offset)),
+      ).length;
+      const end = start + Array.from(block.text).length;
+      const expected = lede!.sources.flatMap((s, i) =>
+        (s.answer_ranges ?? []).some(([a, b]) => a < end && b > start && b > a)
+          ? [i + 1]
+          : [],
+      );
+      expect(block.citations).toEqual(expected);
+      offset = lede!.text.indexOf(block.text, offset) + block.text.length;
+    }
+  },
+);
