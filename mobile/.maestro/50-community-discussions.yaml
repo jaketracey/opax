@@ -61,6 +61,7 @@ name: 50 Community public reading, guidelines and discussion actions
 - tapOn:
     id: community-compose
 - inputText: A fixture-only reply about the original record.
+- takeScreenshot: ${EVIDENCE}/50-reply-composer
 - tapOn:
     id: community-send
 - assertVisible:

@@ -34,14 +34,19 @@ jest.mock('../src/design/primitives', () => {
     ...Object.fromEntries(
       [
         'Button',
+        'ChoiceChips',
+        'Disclosure',
         'EmptyState',
         'ErrorState',
         'Field',
         'Group',
         'Heading',
+        'Icon',
+        'IconButton',
         'KeyValueList',
         'LinkRow',
         'LoadingState',
+        'Portrait',
         'RowList',
         'KeyboardStableScreen',
         'Section',
@@ -110,6 +115,40 @@ it('does not read on an unfocused mount or redraw, and reads one time when expli
     screen.update(<CommunityScreen />);
   });
   expect(request).toHaveBeenCalledTimes(1);
+});
+it('searches only on explicit submit, and ignores an unchanged trimmed query', async () => {
+  mockFocused = true;
+  request.mockResolvedValue(reply({ threads: [], more: false }));
+  await act(async () => {
+    screen = create(<CommunityScreen />);
+  });
+  const input = () =>
+    screen.root.findAll(
+      (n) =>
+        n.props.testID === 'community-search' &&
+        typeof n.props.onChangeText === 'function',
+    )[0]!;
+  for (const q of ['b', 'bi', 'bill', ' bill ']) {
+    await act(async () => input().props.onChangeText(q));
+  }
+  expect(request).toHaveBeenCalledTimes(1);
+  expect(router.push).not.toHaveBeenCalled();
+  await act(async () => input().props.onSubmitEditing());
+  expect(router.push).toHaveBeenCalledTimes(1);
+  expect(router.push).toHaveBeenCalledWith(
+    expect.objectContaining({
+      params: { view: 'home', feed: 'all', q: 'bill' },
+    }),
+  );
+  mockParams = { view: 'home', feed: 'all', q: 'bill' };
+  await act(async () => screen.update(<CommunityScreen />));
+  expect(request).toHaveBeenCalledTimes(2);
+  expect(request.mock.calls[1]![0]).toContain('q=bill');
+  await act(async () => input().props.onChangeText(' bill '));
+  await act(async () => input().props.onSubmitEditing());
+  await press('community-search-submit');
+  expect(router.push).toHaveBeenCalledTimes(1);
+  expect(request).toHaveBeenCalledTimes(2);
 });
 it('gates the first reply on guidelines with no write, and clears drafts across account changes', async () => {
   mockFocused = true;

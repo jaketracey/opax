@@ -21,7 +21,7 @@ export default function CommunityStack() {
             onPress: () =>
               void openSource(`${webOrigin}/support`, 'OPAX support'),
           },
-          closeSheetItem(),
+          { ...closeSheetItem(), variant: 'plain' },
         ]),
       }}
     />

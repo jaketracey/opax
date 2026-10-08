@@ -1,5 +1,13 @@
 import { useCallback, useRef, useState } from 'react';
-import { AccessibilityInfo, Alert, Keyboard, type View } from 'react-native';
+import {
+  AccessibilityInfo,
+  Alert,
+  Keyboard,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  View,
+} from 'react-native';
 import {
   Stack,
   router,
@@ -9,15 +17,20 @@ import {
 } from 'expo-router';
 import {
   Button,
+  ChoiceChips,
   Composer,
+  Disclosure,
   EmptyState,
   ErrorState,
   Field,
   Group,
   Heading,
+  Icon,
+  IconButton,
   KeyValueList,
   LinkRow,
   LoadingState,
+  Portrait,
   RowList,
   KeyboardStableScreen,
   Section,
@@ -25,6 +38,8 @@ import {
   StepButtons,
   Text,
 } from '../../design/primitives';
+import { colors, fonts, minimumTarget, rhythm } from '../../design/tokens';
+import { formatCount } from '../../design/format';
 import { openSource, canonicalUrl } from '../../navigation/external';
 import { fromWebPath } from '../../navigation/routes';
 import { shareRecord } from '../../navigation/share';
@@ -179,15 +194,49 @@ function ThreadRows({ items }: { items: Row[] }) {
       {items
         .filter((t) => !isBlocked(text(t, 'member_id')))
         .map((t) => (
-          <LinkRow
+          <Pressable
             key={text(t, 'id')}
-            title={text(t, 'title')}
-            detail={`${text(t, 'display_name')} · ${count(t, 'replies')} replies · ${dateLine(t)}`}
+            accessibilityRole="link"
+            accessibilityLabel={`${text(t, 'title')}, ${text(t, 'display_name')}, ${dateLine(t)}, ${replyCount(t)}`}
             testID={`community-thread-${text(t, 'id')}`}
             onPress={() => go('thread', { id: text(t, 'id') })}
-          />
+            style={({ pressed }) => [
+              styles.feedRow,
+              pressed ? styles.pressed : null,
+            ]}
+          >
+            <Portrait />
+            <View style={styles.rowContent}>
+              <Text variant="subheading">{text(t, 'title')}</Text>
+              <Text variant="metadata">{text(t, 'display_name')}</Text>
+              <Text variant="fine">
+                {dateLine(t)} · {replyCount(t)}
+              </Text>
+            </View>
+          </Pressable>
         ))}
     </RowList>
+  );
+}
+function replyCount(row: Row) {
+  const n = count(row, 'replies');
+  return `${formatCount(n)} ${n === 1 ? 'reply' : 'replies'}`;
+}
+function MemberByline({ member, testID }: { member: Row; testID?: string }) {
+  return (
+    <Pressable
+      accessibilityRole="link"
+      accessibilityLabel={`${text(member, 'display_name')}, ${dateLine(member)}`}
+      onPress={() => go('member', { id: text(member, 'member_id') })}
+      testID={testID}
+      style={({ pressed }) => [styles.byline, pressed ? styles.pressed : null]}
+    >
+      <Portrait />
+      <View style={styles.rowContent}>
+        <Text variant="strong">{text(member, 'display_name')}</Text>
+        <Text variant="fine">{dateLine(member)}</Text>
+      </View>
+    </Pressable>
   );
 }
 function SearchBox({
@@ -200,29 +249,40 @@ function SearchBox({
   initial?: string;
 }) {
   const [q, setQ] = useState(initial);
+  const [submitted, setSubmitted] = useState(initial.trim());
+  const submit = () => {
+    Keyboard.dismiss();
+    const next = q.trim();
+    if (next === submitted) return;
+    setSubmitted(next);
+    onSearch(next);
+  };
   return (
-    <Group>
-      <Field
-        label={label}
+    <View style={styles.search}>
+      <Icon name="magnifyingglass" tone="inkSoft" />
+      <TextInput
+        accessibilityLabel={label}
+        placeholder={label}
+        placeholderTextColor={colors.inkSoft}
         value={q}
         onChangeText={setQ}
         maxLength={120}
+        autoCapitalize="none"
+        autoCorrect={false}
         returnKeyType="search"
-        onSubmitEditing={() => {
-          Keyboard.dismiss();
-          onSearch(q.trim());
-        }}
+        onSubmitEditing={submit}
+        allowFontScaling
+        style={styles.searchInput}
         testID="community-search"
       />
-      <Button
-        label="Search"
-        onPress={() => {
-          Keyboard.dismiss();
-          onSearch(q.trim());
-        }}
+      <IconButton
+        symbol="arrow.right"
+        accessibilityLabel={label}
+        onPress={submit}
+        disabled={q.trim() === submitted}
         testID="community-search-submit"
       />
-    </Group>
+    </View>
   );
 }
 export function CommunityScreen() {
@@ -545,7 +605,7 @@ function CommunityPage() {
   else if (view === 'new-thread')
     content = (
       <Section rule={false}>
-        <Text>
+        <Text variant="metadata">
           Give people enough context to explore it with you. Member discussions
           are separate from source records.
         </Text>
@@ -554,15 +614,8 @@ function CommunityPage() {
           value={title}
           onChangeText={setTitle}
           maxLength={140}
+          multiline
           testID="community-new-title"
-        />
-        <Field
-          label="OPAX link (optional)"
-          value={link}
-          onChangeText={setLink}
-          autoCapitalize="none"
-          maxLength={2048}
-          testID="community-new-link"
         />
         <Composer
           ref={composerSurface}
@@ -577,6 +630,16 @@ function CommunityPage() {
           testID="community-compose"
           submitTestID="community-send"
         />
+        <Disclosure label="Add an OPAX link" testID="community-add-link">
+          <Field
+            label="OPAX link (optional)"
+            value={link}
+            onChangeText={setLink}
+            autoCapitalize="none"
+            maxLength={2048}
+            testID="community-new-link"
+          />
+        </Disclosure>
         <LinkRow
           title="Community guidelines"
           onPress={() => go('guidelines')}
@@ -611,7 +674,7 @@ function CommunityPage() {
       <>
         <Section rule={false}>
           <Text>Questions, sources and conversations worth following.</Text>
-          <SegmentedControl
+          <ChoiceChips
             value={feed!}
             onChange={(value) => {
               if (value === 'all' || requireSignIn())
@@ -683,12 +746,7 @@ function CommunityPage() {
       <>
         <Section rule={false}>
           <Heading level={1}>{text(t, 'title')}</Heading>
-          <LinkRow
-            title={text(t, 'display_name')}
-            detail={dateLine(t)}
-            testID="community-author"
-            onPress={() => go('member', { id: owner })}
-          />
+          <MemberByline member={t} testID="community-author" />
           <Text>{text(t, 'body')}</Text>
           {text(t, 'source_path') ? (
             <LinkRow
@@ -697,11 +755,20 @@ function CommunityPage() {
               onPress={() => record(text(t, 'source_path'))}
             />
           ) : null}
-          <Group>
-            <Button
-              label={flag(t.liked) ? 'Unlike' : 'Like'}
+          <View style={styles.actions}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={flag(t.liked) ? 'Unlike' : 'Like'}
+              accessibilityValue={{
+                text: `${formatCount(count(t, 'likes'))} ${count(t, 'likes') === 1 ? 'like' : 'likes'}`,
+              }}
+              accessibilityState={{ disabled: working, busy: working }}
               testID="community-like"
-              loading={working}
+              disabled={working}
+              style={({ pressed }) => [
+                styles.like,
+                pressed ? styles.pressed : null,
+              ]}
               onPress={() =>
                 void mutate(
                   `threads/${id}/like`,
@@ -713,11 +780,20 @@ function CommunityPage() {
                   },
                 )
               }
-            />
-            <Button
-              label={flag(t.saved) ? 'Unsave' : 'Save'}
+            >
+              <Icon
+                name={flag(t.liked) ? 'heart.fill' : 'heart'}
+                tone={working ? 'inkSoft' : 'navy'}
+              />
+              <Text variant="control" tone={working ? 'inkSoft' : 'navy'}>
+                {formatCount(count(t, 'likes'))}
+              </Text>
+            </Pressable>
+            <IconButton
+              symbol={flag(t.saved) ? 'bookmark.fill' : 'bookmark'}
+              accessibilityLabel={flag(t.saved) ? 'Unsave' : 'Save'}
               testID="community-save"
-              loading={working}
+              disabled={working}
               onPress={() =>
                 void mutate(
                   `threads/${id}/save`,
@@ -729,16 +805,21 @@ function CommunityPage() {
                 )
               }
             />
-            <LinkRow
-              title="Report discussion"
-              testID="community-report-thread"
-              onPress={() => report(id)}
-            />
-            <LinkRow
-              title="Share discussion"
-              onPress={() => share('thread', text(t, 'title'), id)}
-            />
-          </Group>
+            <View style={styles.trailingActions}>
+              <IconButton
+                symbol="square.and.arrow.up"
+                accessibilityLabel="Share discussion"
+                testID="community-share-thread"
+                onPress={() => share('thread', text(t, 'title'), id)}
+              />
+              <IconButton
+                symbol="flag"
+                accessibilityLabel="Report discussion"
+                testID="community-report-thread"
+                onPress={() => report(id)}
+              />
+            </View>
+          </View>
         </Section>
         <Section title="Replies">
           <RowList>
@@ -746,11 +827,7 @@ function CommunityPage() {
               .filter((r) => !isBlocked(text(r, 'member_id')))
               .map((r) => (
                 <Group key={text(r, 'id')}>
-                  <LinkRow
-                    title={text(r, 'display_name')}
-                    detail={dateLine(r)}
-                    onPress={() => go('member', { id: text(r, 'member_id') })}
-                  />
+                  <MemberByline member={r} />
                   <Text>{text(r, 'body')}</Text>
                   <LinkRow
                     title="Report reply"
@@ -778,6 +855,10 @@ function CommunityPage() {
             maxLength={3000}
             testID="community-compose"
             submitTestID="community-send"
+          />
+          <LinkRow
+            title="Community guidelines"
+            onPress={() => go('guidelines')}
           />
         </Section>
       </>
@@ -1479,3 +1560,57 @@ function CommunityPage() {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  feedRow: {
+    minHeight: minimumTarget,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: rhythm.heading,
+  },
+  rowContent: { flex: 1, minWidth: 0, gap: rhythm.line },
+  byline: {
+    minHeight: minimumTarget,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.heading,
+  },
+  pressed: { backgroundColor: colors.sunken },
+  search: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.tight,
+    paddingLeft: rhythm.heading,
+    backgroundColor: colors.sunken,
+    borderRadius: 12,
+  },
+  searchInput: {
+    flex: 1,
+    minWidth: 0,
+    minHeight: minimumTarget,
+    paddingVertical: rhythm.tight,
+    fontFamily: fonts.sans,
+    fontSize: 17,
+    color: colors.ink,
+  },
+  actions: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: rhythm.tight,
+  },
+  like: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    minHeight: minimumTarget,
+    minWidth: minimumTarget,
+    gap: rhythm.tight,
+    paddingHorizontal: rhythm.tight,
+    borderRadius: minimumTarget / 2,
+  },
+  trailingActions: {
+    flexDirection: 'row',
+    gap: rhythm.tight,
+    marginLeft: 'auto',
+  },
+});

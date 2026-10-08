@@ -9,6 +9,10 @@ is no launch read, polling, notification refresh, list-row read or prefetch.
 Reads coalesce in session memory and back navigation retains the loaded screen.
 Refresh is explicit. Writes make one attempt and do not automatically read back;
 a new discussion, list or conversation offers an explicit Open action.
+Search uses the keyboard's Search action or the inline submit arrow only.
+Typing never navigates or requests data; submitting an unchanged trimmed query
+is ignored. Community avatars use the shared blank Portrait, with no lookup of
+parliamentary identities or images.
 
 The native `communityRequest` bridge uses the existing Keychain credential and
 exact method/path/query rules. JavaScript supplies no origin, headers or token.
