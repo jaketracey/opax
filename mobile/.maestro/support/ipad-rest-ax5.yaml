@@ -4,6 +4,15 @@ name: iPad rest public-money AX5 landscape
 - launchApp:
     appId: com.apple.Preferences
 - waitForAnimationToEnd
+- repeat:
+    while:
+      notVisible: Multitasking & Gestures
+    commands:
+      - swipe:
+          start: 16%, 80%
+          end: 16%, 30%
+          duration: 700
+      - waitForAnimationToEnd
 - tapOn:
     text: Multitasking & Gestures
     waitToSettleTimeoutMs: 3000
@@ -32,6 +41,15 @@ name: iPad rest public-money AX5 landscape
 - launchApp:
     appId: com.apple.Preferences
 - waitForAnimationToEnd
+- repeat:
+    while:
+      notVisible: Multitasking & Gestures
+    commands:
+      - swipe:
+          start: 16%, 80%
+          end: 16%, 30%
+          duration: 700
+      - waitForAnimationToEnd
 - tapOn:
     text: Multitasking & Gestures
     waitToSettleTimeoutMs: 3000
