@@ -274,7 +274,7 @@ export function Grid({
 }
 
 /** Card collections on iPad; preserves the compact view tree and spacing. */
-export function PadGrid({ children }: { children: ReactNode }) {
+export function PadGrid({ children, ...props }: Parameters<typeof Grid>[0]) {
   const { regular } = useLayout();
   if (!isPad || !regular) return <>{children}</>;
   const items = Children.toArray(children);
@@ -283,6 +283,7 @@ export function PadGrid({ children }: { children: ReactNode }) {
       columns={{ regular: 2, wide: Math.min(3, items.length) }}
       minItemWidth={320}
       rowGap={rhythm.section}
+      {...props}
     >
       {items}
     </Grid>

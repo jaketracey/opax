@@ -30,7 +30,7 @@ export type KeyCommandId =
   | 'list-down'
   | 'back'
   | 'refresh'
-  | 'list-return'
+  | 'list-open'
   | 'list-escape';
 
 export const keyCommandSpecs: readonly (KeyCommandSpec & {
@@ -51,7 +51,7 @@ export const keyCommandSpecs: readonly (KeyCommandSpec & {
   { id: 'back', input: '[', modifiers: ['command'], title: 'Back' },
   { id: 'refresh', input: 'r', modifiers: ['command'], title: 'Refresh' },
   {
-    id: 'list-return',
+    id: 'list-open',
     input: 'return',
     modifiers: [],
     title: 'Open focused row',

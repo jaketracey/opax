@@ -102,6 +102,9 @@ export {
   SplitLayout,
   SplitEmpty,
   useSplitPane,
+  useSplitCursor,
+  PaneHost,
+  PaneBar,
   type SplitPane,
   type SplitLayoutProps,
 } from './split';

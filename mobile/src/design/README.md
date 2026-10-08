@@ -144,6 +144,12 @@ landscape }`. `size` is `regular` from **700pt** (`breakpoints.regular`)
   `flexGrow: 1` (Today's bill cards use `fill`) to fill its cell.
 - Sections can be grid items: their top rules then read as a broadsheet's
   column rules (Today's "ways in" and reports rows).
+- `PadGrid` is a `Grid` on iPad only: on iPhone and Android its children
+  stay the siblings they were (no wrapping view, no new gap), so a phone
+  screen that gains columns on iPad does not move by a pixel. Person and
+  party pages (`column="wide"`) put consecutive blocks in pairs with it
+  (`features/split/grid.ts`); pair only neighbours, never reorder, and
+  never pair a block that can render nothing (an empty cell).
 
 ### Two panes: `SplitLayout`
 
@@ -174,7 +180,23 @@ landscape }`. `size` is `regular` from **700pt** (`breakpoints.regular`)
   and, at most, one sentence. No instructions.
 - Rows in the list take a `selected` state: the category wash with a 3pt ink
   mark, no chevron (the pane is the destination), `accessibilityState
-selected`.
+selected`. `LinkRow`, `PersonRow`, `RecordRow` and the party directory
+  row take `selected` (undefined everywhere outside a split, so the phone's
+  rows are unchanged) and `highlighted` (the keyboard cursor, drawn as the
+  hover tint); `design/selection.tsx` has the shared wash and mark, and
+  `contrast.ts` lists the pairs.
+- **Records in a pane** (`features/split`): `RecordEntry` (`person`,
+  `party`, `electorate`, `bill`, `text`, `doc`, and `person-name` /
+  `search-person`, which the pane resolves exactly as the phone does before
+  opening a profile), `encodeEntry`/`decodeEntry` for the route's `open`
+  parameter, `entryForRoute` and `entryForWebPath` (dated, sectioned and
+  versioned routes keep pushing), `RecordDetail` (the native screen,
+  `embedded`) and `RecordShare`. Search and the directories use them; a
+  pane never leaves the app on its own (an embedded party page shows its
+  web link rather than opening it).
+- A pane outside `SplitLayout` (Ask's sources pane) uses `PaneHost` (gives
+  screens inside `useSplitPane()`) and `PaneBar` (Back and actions, drawn
+  first by `Screen`).
 
 ### Navigation
 
@@ -213,9 +235,15 @@ sidebarAdaptable`): a sidebar, or the top tab bar the reader expands into
   for the screen to mount and the transition to settle. `Field` and
   `Composer` take `inputRef`.
 - **Split list keys:** a `SplitLayout` with `keys` and `entryForKey` takes Up
-  and Down (select the previous or next row, scrolled into view) and Escape
-  (back within the pane, then clear) while its screen is focused. A focused
-  text field keeps its own arrows and Return; Escape closes the active sheet.
+  and Down (select the previous or next row, scrolled into view), Return
+  (select the first row when nothing is selected) and Escape (back within
+  the pane, then clear) while its screen is focused. A focused text field
+  keeps its own arrows and Return; Escape closes the active sheet.
+- **Cursor mode** (`onOpenKey`, Search): for lists whose rows load or may
+  leave the app when opened, Up and Down move a highlight
+  (`useSplitCursor()`, `features/split/cursor.tsx` scrolls it into view)
+  without opening anything; Return opens the highlighted row, Escape clears
+  the pane, then the cursor.
 - **Pointer:** `Hoverable` gives a control the system pointer effect:
   `highlight` (buttons; `Button` and `IconButton` already have it), `lift`
   (cards: Today's bill, Leads and money map cards), `hover` (rows), or
@@ -224,7 +252,15 @@ sidebarAdaptable`): a sidebar, or the top tab bar the reader expands into
   child's own `alignSelf`. Hover is never the only way to see or reach
   anything.
 
-### Testing on iPad (journey 52)
+### Testing on iPad (journeys 52 and 53)
+
+- Journey 53 drives the Search, Ask and directory splits and rotation; it
+  reaches screens by `opax://` links, which also checks the route-kept
+  selection. `support/ipad-full-screen-apps.yaml` and
+  `support/ipad-windowed-apps.yaml` set and restore the multitasking mode.
+- Settings is not drivable at AX5 (its rows reflow out of reach): set
+  Full-Screen Apps in a standard-size run, run the AX5 flow, then restore
+  Windowed Apps in another standard-size run.
 
 - Use only the OPAX QA iPad 13 simulator. iPadOS 26 opens apps in movable
   windows (Windowed Apps); in that mode Maestro's taps land beside their
@@ -241,6 +277,24 @@ sidebarAdaptable`): a sidebar, or the top tab bar the reader expands into
 - Hardware-keyboard shortcuts and pointer effects cannot be driven by
   Maestro; `tests/ipad-layout.test.tsx` covers the command handlers, and
   they are checked by hand on a device with a keyboard and trackpad.
+
+### Search, Ask and the directories (lane 2)
+
+- **Search** is a split on regular width: results left, the chosen person,
+  bill, party, electorate or record in the pane, the selection and query in
+  the route (`/search?q=…&open=bill:…`; the route keeps Search mounted when
+  either changes on iPad, and applies a new `q`). Topics and reports keep
+  pushing.
+- **Ask**: the conversation with the composer docked under it (lifted by
+  its measured overlap with the keyboard; the column starts below the bar,
+  so `KeyboardAvoidingView` under-lifts it), and a sources pane on the
+  right (`features/ask/SourcesPane.tsx`): the answer being read (it follows
+  the scroll), its citations numbered as in the answer, then what was
+  retrieved but not cited. A citation in the answer marks its source in the
+  pane; a source, a citation row or a person opens in the pane with Back to
+  the sources. The answer's own "Retrieved records" list is not drawn there.
+- **Parliamentarians, Parties, Electorates**: splits as Bills (`open` in
+  the route, Up/Down/Return/Escape).
 
 ### Copy
 

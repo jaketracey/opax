@@ -2,7 +2,6 @@ import { router } from 'expo-router';
 import { ownsRowPadding } from './row-padding';
 import { partyRoute } from '../navigation/routes';
 import { isValidElement, useEffect, useState } from 'react';
-import { Hoverable } from './adaptive';
 import { localImageURI } from '../api/image-policy';
 import type { ReactNode } from 'react';
 import {
@@ -24,6 +23,8 @@ import {
   partyWash,
   type PartyContext,
 } from './party';
+import { Hoverable, useHover } from './adaptive';
+import { SelectedMark, selectedWash, splitRowStyles } from './selection';
 import { Text } from './text';
 import { nameProbeProps } from './text-probe';
 import {
@@ -406,6 +407,13 @@ export type PersonRowProps = PersonRowParty & {
   testDrawnName?: boolean;
   /** Canonical public profile path for iPad dragging. */
   dragPath?: string;
+  /**
+   * In an iPad split list: true for the person in the detail pane, false for
+   * the others (no chevron). Undefined is an ordinary row (every iPhone row).
+   */
+  selected?: boolean;
+  /** The keyboard's place in a split list. */
+  highlighted?: boolean;
 };
 /**
  * A row for a roster parliamentarian: portrait (blank circle without one)
@@ -427,12 +435,16 @@ export function PersonRow({
   testID,
   testDrawnName = false,
   dragPath,
+  selected,
+  highlighted = false,
 }: PersonRowProps) {
   const slug = isValidElement<{ slug?: string }>(portrait)
     ? portrait.props.slug
     : undefined;
   const path = dragPath ?? (slug ? `/subject/person/${slug}` : undefined);
   const stacked = useAccessibilitySize();
+  const inSplit = selected !== undefined;
+  const [hovered, onHover] = useHover();
   const partyContext =
     party === undefined
       ? null
@@ -478,7 +490,9 @@ export function PersonRow({
           ) : null}
         </View>
       </View>
-      {onPress ? <Icon name="chevron.right" size={14} tone="inkSoft" /> : null}
+      {onPress && !inSplit ? (
+        <Icon name="chevron.right" size={14} tone="inkSoft" />
+      ) : null}
     </>
   );
   if (!onPress)
@@ -492,62 +506,73 @@ export function PersonRow({
         {body}
       </View>
     );
+  const row = (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityState={inSplit ? { selected } : undefined}
+      accessibilityActions={
+        partyContext
+          ? [
+              ...(isPartyLabel(partyContext.party)
+                ? [
+                    {
+                      name: 'openParty',
+                      label: `Open ${partyIdentity(partyContext.party).name} party page`,
+                    },
+                  ]
+                : []),
+              ...(isPartyLabel(partyContext.formerly) &&
+              partyContext.formerly !== partyContext.party
+                ? [
+                    {
+                      name: 'openPreviousParty',
+                      label: `Open ${partyContext.formerly} party page`,
+                    },
+                  ]
+                : []),
+            ]
+          : undefined
+      }
+      onAccessibilityAction={(event) => {
+        if (
+          event.nativeEvent.actionName === 'openParty' &&
+          partyContext?.party &&
+          isPartyLabel(partyContext.party)
+        )
+          router.push(partyRoute(partyContext.party));
+        if (
+          event.nativeEvent.actionName === 'openPreviousParty' &&
+          partyContext?.formerly &&
+          isPartyLabel(partyContext.formerly)
+        )
+          router.push(partyRoute(partyContext.formerly));
+      }}
+      testID={testID}
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.person,
+        inSplit ? splitRowStyles.bleed : null,
+        selected
+          ? selectedWash('people')
+          : // Raised, not sunken: every party dot keeps 3:1 against the highlight.
+            pressed || (inSplit && (hovered || highlighted))
+            ? { backgroundColor: colors.raised }
+            : null,
+      ]}
+    >
+      {selected ? <SelectedMark accent="people" /> : null}
+      {body}
+    </Pressable>
+  );
   return (
     <Hoverable
-      effect="hover"
+      effect={inSplit ? 'none' : 'hover'}
+      onHover={inSplit ? onHover : undefined}
       onActivate={onPress}
       drag={path ? { path, title: name } : undefined}
     >
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={label}
-        accessibilityActions={
-          partyContext
-            ? [
-                ...(isPartyLabel(partyContext.party)
-                  ? [
-                      {
-                        name: 'openParty',
-                        label: `Open ${partyIdentity(partyContext.party).name} party page`,
-                      },
-                    ]
-                  : []),
-                ...(isPartyLabel(partyContext.formerly) &&
-                partyContext.formerly !== partyContext.party
-                  ? [
-                      {
-                        name: 'openPreviousParty',
-                        label: `Open ${partyContext.formerly} party page`,
-                      },
-                    ]
-                  : []),
-              ]
-            : undefined
-        }
-        onAccessibilityAction={(event) => {
-          if (
-            event.nativeEvent.actionName === 'openParty' &&
-            partyContext?.party &&
-            isPartyLabel(partyContext.party)
-          )
-            router.push(partyRoute(partyContext.party));
-          if (
-            event.nativeEvent.actionName === 'openPreviousParty' &&
-            partyContext?.formerly &&
-            isPartyLabel(partyContext.formerly)
-          )
-            router.push(partyRoute(partyContext.formerly));
-        }}
-        testID={testID}
-        onPress={onPress}
-        style={({ pressed }) => [
-          styles.person,
-          // Raised, not sunken: every party dot keeps 3:1 against the highlight.
-          pressed ? { backgroundColor: colors.raised } : null,
-        ]}
-      >
-        {body}
-      </Pressable>
+      {row}
     </Hoverable>
   );
 }

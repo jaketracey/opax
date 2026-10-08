@@ -1,6 +1,17 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
-import { Icon, PartyChip, Text } from '../../design/primitives';
+import {
+  Hoverable,
+  Icon,
+  PartyChip,
+  Text,
+  useHover,
+} from '../../design/primitives';
+import {
+  SelectedMark,
+  selectedWash,
+  splitRowStyles,
+} from '../../design/selection';
 import { colors, minimumTarget, rhythm } from '../../design/tokens';
 import { formatCount, formatDate, formatMoney } from '../../design/format';
 import { billFoldText } from '../../api/bill-transforms';
@@ -12,9 +23,20 @@ const commissions: Record<string, string> = {
   qld: 'Queensland',
   vic: 'Victoria',
 };
-export function PartyDirectoryRow({ item }: { item: PartyRow }) {
+export function PartyDirectoryRow({
+  item,
+  selected,
+  onPress,
+}: {
+  item: PartyRow;
+  /** iPad split: whether this party is in the detail pane (see LinkRow). */
+  selected?: boolean;
+  onPress?: () => void;
+}) {
+  const inSplit = selected !== undefined;
+  const [hovered, onHover] = useHover();
   const detail = `${formatCount(item.speeches)} speeches · ${formatCount(item.members)} roster members`;
-  return (
+  const row = (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={[
@@ -25,13 +47,20 @@ export function PartyDirectoryRow({ item }: { item: PartyRow }) {
             `${commissions[jur]}, ${formatMoney(m.total)}, updated ${formatDate(m.asAt)}`,
         ),
       ].join(', ')}
+      accessibilityState={inSplit ? { selected } : undefined}
       testID={`directory-party-${billFoldText(item.name).replace(/ /g, '-')}`}
-      onPress={() => router.push(partyRoute(item.name))}
+      onPress={onPress ?? (() => router.push(partyRoute(item.name)))}
       style={({ pressed }) => [
         styles.row,
-        pressed && { backgroundColor: colors.sunken },
+        inSplit ? splitRowStyles.bleed : null,
+        selected
+          ? selectedWash('people')
+          : (pressed || (inSplit && hovered)) && {
+              backgroundColor: colors.sunken,
+            },
       ]}
     >
+      {selected ? <SelectedMark accent="people" /> : null}
       <View style={styles.body}>
         <View style={styles.party}>
           <PartyChip party={item.name} status="unknown" short={false} nested />
@@ -47,8 +76,16 @@ export function PartyDirectoryRow({ item }: { item: PartyRow }) {
           </View>
         ))}
       </View>
-      <Icon name="chevron.right" size={13} tone="inkSoft" />
+      {inSplit ? null : <Icon name="chevron.right" size={13} tone="inkSoft" />}
     </Pressable>
+  );
+  // Pointer hover only in a split list; the phone keeps its view tree.
+  return inSplit ? (
+    <Hoverable effect="none" onHover={onHover}>
+      {row}
+    </Hoverable>
+  ) : (
+    row
   );
 }
 const styles = StyleSheet.create({
