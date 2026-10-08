@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { useRef, useState } from 'react';
+import { findNodeHandle, Pressable, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 import type { recentDeclarationsFor } from '../../api/selectors';
 import { formatDate } from '../../design/format';
@@ -61,16 +61,22 @@ export function DeclarationRow({
   ]
     .filter(Boolean)
     .join(', ');
+  const menuAnchor = useRef<View>(null);
   const menu = () =>
-    showRecordMenu(item.name, [
-      { title: 'View original', onPress: original },
-      {
-        title: 'All recent declarations',
-        onPress: () => router.push(declarationsRoute),
-      },
-    ]);
+    showRecordMenu(
+      item.name,
+      [
+        { title: 'View original', onPress: original },
+        {
+          title: 'All recent declarations',
+          onPress: () => router.push(declarationsRoute),
+        },
+      ],
+      findNodeHandle(menuAnchor.current) ?? undefined,
+    );
   return (
     <Pressable
+      ref={menuAnchor}
       accessibilityRole={long ? 'button' : 'text'}
       accessibilityLabel={label}
       accessibilityHint={long ? 'Shows the whole entry' : undefined}

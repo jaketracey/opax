@@ -4,6 +4,7 @@ import { Stack, useLocalSearchParams } from 'expo-router';
 import { reports } from '../../api/runtime';
 import {
   Button,
+  PadGrid,
   BigFigure,
   InfoButton,
   PartyChip,
@@ -71,6 +72,7 @@ function TopicMoney({ slug }: { slug: string }) {
                 .map((d) => ({ label: d.party, value: formatMoney(d.money) }))}
             />
             <RecordRow
+              path={'/money'}
               title="Explore on the money map"
               onPress={() => openRecord('/money', 'Money map')}
             />
@@ -139,7 +141,7 @@ function TopicContent({
           ]),
         }}
       />
-      <Screen testID="topic-screen">
+      <Screen column="wide" testID="topic-screen">
         {Object.keys(filters).length ? (
           <Section title="The debate's speeches">
             <Text variant="fine">
@@ -184,6 +186,7 @@ function TopicContent({
               }}
             </ReadState>
             <RecordRow
+              path={`/subject/topic/${slug}`}
               title="Read the full topic"
               onPress={() => openRecord(`/subject/topic/${slug}`, title)}
             />
@@ -210,6 +213,7 @@ function TopicContent({
               />
               {topicReport[slug] ? (
                 <RecordRow
+                  path={`/reports/${topicReport[slug]}`}
                   title={`Read the ${title} report`}
                   onPress={() =>
                     openRecord(`/reports/${topicReport[slug]}`, title)
@@ -217,59 +221,61 @@ function TopicContent({
                   testID="topic-report"
                 />
               ) : null}
-              <Section
-                title="Who speaks on it, by party"
-                accent="people"
-                info={{
-                  title: 'About party counts',
-                  notes: [
-                    'Labelled so far. A party name opens its speeches on this topic. Some speeches carry no party label, so the bars can sum below the total.',
-                  ],
-                }}
-              >
-                <RowList>
-                  {data.parties.slice(0, 8).map(([party, n]) => (
-                    <LinkRow
-                      key={party}
-                      title={`${n.toLocaleString()} speeches`}
-                      leading={<PartyChip status="unknown" party={party} />}
-                      accessibilityLabel={`${party}, ${n.toLocaleString()} speeches`}
-                      onPress={() => openTopicWindow(slug, { party }, title)}
-                    />
-                  ))}
-                </RowList>
-              </Section>
-              <Section
-                title="Which parliament argues it"
-                accent="people"
-                info={{
-                  title: 'About parliament counts',
-                  notes: [
-                    'Share of that parliament’s labelled record, then the count.',
-                    corpus.record
-                      ? `Years held: ${corpus.record.data.sources
-                          .filter((s) =>
-                            /Federal Hansard:|NSW Parliament|Victorian Parliament|SA Parliament|QLD Parliament|ACT Legislative Assembly/.test(
-                              s.name,
-                            ),
-                          )
-                          .map((s) => `${s.name} ${s.coverage}`)
-                          .join(' · ')}.`
-                      : null,
-                  ],
-                }}
-              >
-                {data.states
-                  .filter(([state]) => parliamentNames[state])
-                  .map(([state, n, share]) => (
-                    <RecordRow
-                      key={state}
-                      title={parliamentNames[state]!}
-                      detail={`${(share * 100).toFixed(2)}% · ${n.toLocaleString()}`}
-                      onPress={() => openTopicWindow(slug, { state }, title)}
-                    />
-                  ))}
-              </Section>
+              <PadGrid>
+                <Section
+                  title="Who speaks on it, by party"
+                  accent="people"
+                  info={{
+                    title: 'About party counts',
+                    notes: [
+                      'Labelled so far. A party name opens its speeches on this topic. Some speeches carry no party label, so the bars can sum below the total.',
+                    ],
+                  }}
+                >
+                  <RowList>
+                    {data.parties.slice(0, 8).map(([party, n]) => (
+                      <LinkRow
+                        key={party}
+                        title={`${n.toLocaleString()} speeches`}
+                        leading={<PartyChip status="unknown" party={party} />}
+                        accessibilityLabel={`${party}, ${n.toLocaleString()} speeches`}
+                        onPress={() => openTopicWindow(slug, { party }, title)}
+                      />
+                    ))}
+                  </RowList>
+                </Section>
+                <Section
+                  title="Which parliament argues it"
+                  accent="people"
+                  info={{
+                    title: 'About parliament counts',
+                    notes: [
+                      'Share of that parliament’s labelled record, then the count.',
+                      corpus.record
+                        ? `Years held: ${corpus.record.data.sources
+                            .filter((s) =>
+                              /Federal Hansard:|NSW Parliament|Victorian Parliament|SA Parliament|QLD Parliament|ACT Legislative Assembly/.test(
+                                s.name,
+                              ),
+                            )
+                            .map((s) => `${s.name} ${s.coverage}`)
+                            .join(' · ')}.`
+                        : null,
+                    ],
+                  }}
+                >
+                  {data.states
+                    .filter(([state]) => parliamentNames[state])
+                    .map(([state, n, share]) => (
+                      <RecordRow
+                        key={state}
+                        title={parliamentNames[state]!}
+                        detail={`${(share * 100).toFixed(2)}% · ${n.toLocaleString()}`}
+                        onPress={() => openTopicWindow(slug, { state }, title)}
+                      />
+                    ))}
+                </Section>
+              </PadGrid>
             </Group>
           )}
         </ReadState>
@@ -388,11 +394,13 @@ function TopicContent({
           </ReadState>
         </Section>
         <RecordRow
+          path={'/subject/topic'}
           title="Topics A–Z"
           onPress={() => openRecord('/subject/topic', 'Topics A–Z')}
           testID="topic-all"
         />
         <RecordRow
+          path={'/stats'}
           title="Sources & coverage"
           onPress={() => openRecord('/stats', 'Sources & coverage')}
           testID="topic-stats"

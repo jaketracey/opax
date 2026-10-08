@@ -11,6 +11,10 @@ export interface MenuAction {
  * offer the same choices. (expo-router's context-menu link hides the row
  * from VoiceOver, so it is not used for rows.)
  */
-export function showRecordMenu(title: string, actions: MenuAction[]) {
-  showMenu(title, actions);
+export function showRecordMenu(
+  title: string,
+  actions: MenuAction[],
+  anchor?: number,
+) {
+  showMenu(title, actions, anchor);
 }

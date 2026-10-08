@@ -18,6 +18,8 @@ import {
 import { useAccessibilitySize } from './accessibility';
 import {
   RegionProvider,
+  Grid,
+  isPad,
   SidebarSafe,
   columns,
   readableInset,
@@ -40,6 +42,7 @@ import {
 } from './tokens';
 import { usePaneBar } from './split';
 import { useStableKeyboard } from './useStableKeyboard';
+import { useRefreshCommand } from './keyboard';
 
 /**
  * The column a screen's content sits in. On compact width (every iPhone,
@@ -87,6 +90,10 @@ export function Screen({
   column?: keyof typeof columns;
 }) {
   const { onLayout, content, inner, bar } = useScreenColumn(column);
+  useRefreshCommand(
+    refreshControl?.props.onRefresh,
+    !!refreshControl?.props.refreshing,
+  );
   return (
     <SidebarSafe style={styles.screen}>
       <ScrollView
@@ -133,6 +140,10 @@ export function KeyboardStableScreen({
   const scroll = scrollRef ?? ownScroll;
   const keyboard = useStableKeyboard(scroll, keyboardTarget);
   const { onLayout, content, inner, bar } = useScreenColumn(column);
+  useRefreshCommand(
+    refreshControl?.props.onRefresh,
+    !!refreshControl?.props.refreshing,
+  );
   return (
     <SidebarSafe style={styles.screen}>
       <ScrollView
@@ -307,8 +318,16 @@ export function SubSection({
  * either side of a control row (LinkRow, Disclosure, PersonRow, a web link)
  * that carries its own 44pt height and padding, so a one-line row is 48pt.
  */
-export function RowList({ children }: { children: ReactNode }) {
+export function RowList({
+  children,
+  grid = false,
+}: {
+  children: ReactNode;
+  grid?: boolean;
+}) {
+  const { regular } = useLayout();
   const rows = Children.toArray(children);
+  if (grid && isPad && regular) return <Grid minItemWidth={320}>{rows}</Grid>;
   return (
     <View>
       {rows.map((row, index) => (

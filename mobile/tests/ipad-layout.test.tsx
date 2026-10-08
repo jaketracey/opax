@@ -2,6 +2,24 @@ import { act, useEffect } from 'react';
 import { Text as NativeText, View } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 
+import {
+  dragWebUrl,
+  breakpoints,
+  columns,
+  gridColumns,
+  readableInset,
+  sizeClassFor,
+} from '../src/design/adaptive';
+import {
+  dispatchKeyCommand,
+  keyCommandSpecs,
+  onKeyCommand,
+  requestFocus,
+  takeFocusRequest,
+} from '../src/design/keyboard';
+import { SplitLayout, SplitEmpty, useSplitPane } from '../src/design/split';
+import { phoneCopy } from '../src/design/phone-copy';
+
 // SplitLayout decides between one pane and two from `useLayout()`; the test
 // sets the region it reports. useFocusEffect runs as a mount effect here.
 const mockLayout = { regular: true, width: 1180 };
@@ -26,23 +44,6 @@ jest.mock('expo-router', () => ({
     jest.requireActual('react').useEffect(effect, []);
   },
 }));
-
-import {
-  breakpoints,
-  columns,
-  gridColumns,
-  readableInset,
-  sizeClassFor,
-} from '../src/design/adaptive';
-import {
-  dispatchKeyCommand,
-  keyCommandSpecs,
-  onKeyCommand,
-  requestFocus,
-  takeFocusRequest,
-} from '../src/design/keyboard';
-import { SplitLayout, SplitEmpty, useSplitPane } from '../src/design/split';
-import { phoneCopy } from '../src/design/phone-copy';
 
 describe('size classes', () => {
   test('regular from 700pt, on iPad only', () => {
@@ -95,6 +96,10 @@ describe('keyboard commands', () => {
       'command+3 Bills',
       'command+4 Search',
       'command+5 Ask',
+      'command+[ Back',
+      'command+r Refresh',
+      '+return Open focused row',
+      '+escape Close sheet',
     ]);
   });
   test('a focus request waits for the screen that takes it, once', () => {
@@ -225,4 +230,20 @@ describe('SplitLayout', () => {
     });
     expect(onSelect).toHaveBeenLastCalledWith({ kind: 'item', key: 'a' });
   });
+});
+
+test('drags use canonical public URLs and reject foreign destinations', () => {
+  expect(dragWebUrl('/bill/au-federal-r7534', 'https://opax.com.au')).toBe(
+    'https://opax.com.au/bill/au-federal-r7534',
+  );
+  expect(dragWebUrl('/doc/example', 'https://opax.com.au')).toBe(
+    'https://opax.com.au/doc/example',
+  );
+  for (const value of [
+    '//other.example/a',
+    'https://other.example/a',
+    'file:///a',
+    'https://opax.com.au@other.example/a',
+  ])
+    expect(dragWebUrl(value)).toBeNull();
 });

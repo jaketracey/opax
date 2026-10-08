@@ -11,6 +11,9 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
   Disclosure,
+  useScreenColumn,
+  SidebarSafe,
+  RegionProvider,
   Divider,
   EmptyState,
   ErrorState,
@@ -205,201 +208,212 @@ function MoneyCatalogScreen({
       ) : null}
     </Group>
   );
+  const column = useScreenColumn('wide');
   return (
-    <GestureHandlerRootView style={styles.screen}>
-      <FlatList
-        testID="money-screen"
-        data={mode === 'list' ? donors : []}
-        keyExtractor={(item) => item.id}
-        renderItem={renderDonor}
-        initialNumToRender={5}
-        maxToRenderPerBatch={5}
-        windowSize={5}
-        removeClippedSubviews={false}
-        contentInsetAdjustmentBehavior="automatic"
-        contentContainerStyle={styles.content}
-        onScroll={(event) => {
-          scroll.current = event.nativeEvent.contentOffset.y;
-          const shown =
-            scroll.current < plate.current.bottom &&
-            scroll.current + height > plate.current.top;
-          setPlateVisible((previous) =>
-            previous === shown ? previous : shown,
-          );
-        }}
-        scrollEventThrottle={100}
-        ItemSeparatorComponent={Divider}
-        ListHeaderComponent={
-          <Group style={styles.header}>
-            <View style={styles.intro}>
-              <Text wordSafe variant="metadata" style={styles.grow}>
-                Political donations &amp; public money map
-              </Text>
-              {record ? (
-                <InfoButton
-                  title="About the money map"
-                  notes={moneyNotes(record.data)}
-                  testID="money-info"
-                />
-              ) : null}
-            </View>
-            <SegmentedControl
-              value={mode}
-              segments={[
-                { value: '3d', label: '3D map', testID: 'money-mode-3d' },
-                {
-                  value: 'list',
-                  label: 'List view',
-                  testID: 'money-mode-list',
-                },
-              ]}
-              onChange={(next) => {
-                if (next === '3d') setGLFallback(false);
-                onMode(next);
-              }}
-              testID="money-view-toggle"
-            />
-            {glFallback ? (
-              <Text wordSafe testID="money-gl-fallback">
-                The 3D view is unavailable. You can explore the same records in
-                the list.
-              </Text>
-            ) : null}
-            {error ? (
-              <ErrorState
-                message={errorMessage(error)}
-                onRetry={retry}
-                testID="money-error"
-              />
-            ) : !record || !view || !filters ? (
-              <LoadingState label="Loading the money map" />
-            ) : (
-              <>
-                <MoneyRecordStatus record={record} />
-                <Text wordSafe variant="metadata" testID="money-view-summary">
-                  {formatCount(view.nodes.length)} nodes ·{' '}
-                  {formatCount(view.edges.length)} recorded flows ·{' '}
-                  {moneyYears(filters.from, filters.to)}
-                  {filters.industry ? ` · ${filters.industry}` : ''}
-                </Text>
-                {mode === '3d' ? (
-                  <View
-                    onLayout={(event) => {
-                      plate.current = {
-                        top: event.nativeEvent.layout.y,
-                        bottom:
-                          event.nativeEvent.layout.y +
-                          event.nativeEvent.layout.height,
-                      };
-                      setPlateVisible(
-                        scroll.current < plate.current.bottom &&
-                          scroll.current + height > plate.current.top,
-                      );
-                    }}
-                  >
-                    {view.nodes.length ? (
-                      <NativeMoneyMap
-                        ref={map}
-                        graph={record.data}
-                        view={view}
-                        active={plateVisible}
-                        onSelect={select}
-                        onUnavailable={() => {
-                          setGLFallback(true);
-                          onMode('list');
-                        }}
-                      />
-                    ) : (
-                      <EmptyState
-                        message="No recorded flows match these filters."
-                        testID="money-empty"
-                      />
-                    )}
-                  </View>
-                ) : null}
-                <Text wordSafe variant="fine">
-                  Totals are a floor.
-                </Text>
-                <RowList>
-                  <Disclosure
-                    label="Filters and years"
-                    icon="slider.horizontal.3"
-                    accent="money"
-                    open={controlsOpen}
-                    onToggle={setControlsOpen}
-                    testID="money-filters"
-                  >
-                    <MoneyControls
-                      graph={record.data}
-                      filters={filters}
-                      onChange={setFilters}
-                      jurisdiction={jurisdiction}
-                      onJurisdiction={onJurisdiction}
+    <SidebarSafe style={styles.screen}>
+      <GestureHandlerRootView style={styles.screen}>
+        <FlatList
+          testID="money-screen"
+          data={mode === 'list' ? donors : []}
+          keyExtractor={(item) => item.id}
+          renderItem={renderDonor}
+          initialNumToRender={5}
+          maxToRenderPerBatch={5}
+          windowSize={5}
+          removeClippedSubviews={false}
+          contentInsetAdjustmentBehavior="automatic"
+          contentContainerStyle={[styles.content, column.content]}
+          onLayout={column.onLayout}
+          onScroll={(event) => {
+            scroll.current = event.nativeEvent.contentOffset.y;
+            const shown =
+              scroll.current < plate.current.bottom &&
+              scroll.current + height > plate.current.top;
+            setPlateVisible((previous) =>
+              previous === shown ? previous : shown,
+            );
+          }}
+          scrollEventThrottle={100}
+          ItemSeparatorComponent={Divider}
+          ListHeaderComponent={
+            <RegionProvider value={column.inner}>
+              {column.bar}
+              <Group style={styles.header}>
+                <View style={styles.intro}>
+                  <Text wordSafe variant="metadata" style={styles.grow}>
+                    Political donations &amp; public money map
+                  </Text>
+                  {record ? (
+                    <InfoButton
+                      title="About the money map"
+                      notes={moneyNotes(record.data)}
+                      testID="money-info"
                     />
-                  </Disclosure>
-                </RowList>
-                <MoneyTestHooks
-                  graph={view}
-                  onYear={(year) =>
-                    setFilters({ ...filters, from: year, to: year })
-                  }
-                  onFocus={(id) => {
-                    if (mode === '3d' && map.current) map.current.focus(id);
-                    else select(id);
+                  ) : null}
+                </View>
+                <SegmentedControl
+                  value={mode}
+                  segments={[
+                    { value: '3d', label: '3D map', testID: 'money-mode-3d' },
+                    {
+                      value: 'list',
+                      label: 'List view',
+                      testID: 'money-mode-list',
+                    },
+                  ]}
+                  onChange={(next) => {
+                    if (next === '3d') setGLFallback(false);
+                    onMode(next);
                   }}
+                  testID="money-view-toggle"
                 />
-                {mode === 'list' ? (
+                {glFallback ? (
+                  <Text wordSafe testID="money-gl-fallback">
+                    The 3D view is unavailable. You can explore the same records
+                    in the list.
+                  </Text>
+                ) : null}
+                {error ? (
+                  <ErrorState
+                    message={errorMessage(error)}
+                    onRetry={retry}
+                    testID="money-error"
+                  />
+                ) : !record || !view || !filters ? (
+                  <LoadingState label="Loading the money map" />
+                ) : (
                   <>
+                    <MoneyRecordStatus record={record} />
+                    <Text
+                      wordSafe
+                      variant="metadata"
+                      testID="money-view-summary"
+                    >
+                      {formatCount(view.nodes.length)} nodes ·{' '}
+                      {formatCount(view.edges.length)} recorded flows ·{' '}
+                      {moneyYears(filters.from, filters.to)}
+                      {filters.industry ? ` · ${filters.industry}` : ''}
+                    </Text>
+                    {mode === '3d' ? (
+                      <View
+                        onLayout={(event) => {
+                          plate.current = {
+                            top: event.nativeEvent.layout.y,
+                            bottom:
+                              event.nativeEvent.layout.y +
+                              event.nativeEvent.layout.height,
+                          };
+                          setPlateVisible(
+                            scroll.current < plate.current.bottom &&
+                              scroll.current + height > plate.current.top,
+                          );
+                        }}
+                      >
+                        {view.nodes.length ? (
+                          <NativeMoneyMap
+                            ref={map}
+                            graph={record.data}
+                            view={view}
+                            active={plateVisible}
+                            onSelect={select}
+                            onUnavailable={() => {
+                              setGLFallback(true);
+                              onMode('list');
+                            }}
+                          />
+                        ) : (
+                          <EmptyState
+                            message="No recorded flows match these filters."
+                            testID="money-empty"
+                          />
+                        )}
+                      </View>
+                    ) : null}
+                    <Text wordSafe variant="fine">
+                      Totals are a floor.
+                    </Text>
                     <RowList>
                       <Disclosure
-                        label="Parties and public money"
-                        icon="building.columns"
+                        label="Filters and years"
+                        icon="slider.horizontal.3"
                         accent="money"
-                        open={recordsOpen}
-                        onToggle={setRecordsOpen}
-                        testID="money-list-records-toggle"
+                        open={controlsOpen}
+                        onToggle={setControlsOpen}
+                        testID="money-filters"
                       >
-                        <RowList>
-                          {otherRecords.map((node) => (
-                            <LinkRow
-                              key={node.id}
-                              title={node.label}
-                              value={formatMoney(node.total)}
-                              detail={`${node.kind === 'grantor' ? publicMoneyLabel(node) : 'Disclosed receipts'} · ${moneyWindowYears(node, filters, node.kind === 'grantor')}`}
-                              testID={`money-list-record-${node.id}`}
-                              onPress={() => select(node.id)}
-                            />
-                          ))}
-                        </RowList>
+                        <MoneyControls
+                          graph={record.data}
+                          filters={filters}
+                          onChange={setFilters}
+                          jurisdiction={jurisdiction}
+                          onJurisdiction={onJurisdiction}
+                        />
                       </Disclosure>
                     </RowList>
-                    <Section title="Ranked donors" accent="money">
-                      <Text wordSafe variant="metadata">
-                        Disclosed donations, largest first.
-                      </Text>
-                    </Section>
-                    {!donors.length ? (
-                      <EmptyState
-                        message="No donors have a recorded flow in this view."
-                        testID="money-list-empty"
-                      />
+                    <MoneyTestHooks
+                      graph={view}
+                      onYear={(year) =>
+                        setFilters({ ...filters, from: year, to: year })
+                      }
+                      onFocus={(id) => {
+                        if (mode === '3d' && map.current) map.current.focus(id);
+                        else select(id);
+                      }}
+                    />
+                    {mode === 'list' ? (
+                      <>
+                        <RowList>
+                          <Disclosure
+                            label="Parties and public money"
+                            icon="building.columns"
+                            accent="money"
+                            open={recordsOpen}
+                            onToggle={setRecordsOpen}
+                            testID="money-list-records-toggle"
+                          >
+                            <RowList>
+                              {otherRecords.map((node) => (
+                                <LinkRow
+                                  key={node.id}
+                                  title={node.label}
+                                  value={formatMoney(node.total)}
+                                  detail={`${node.kind === 'grantor' ? publicMoneyLabel(node) : 'Disclosed receipts'} · ${moneyWindowYears(node, filters, node.kind === 'grantor')}`}
+                                  testID={`money-list-record-${node.id}`}
+                                  onPress={() => select(node.id)}
+                                />
+                              ))}
+                            </RowList>
+                          </Disclosure>
+                        </RowList>
+                        <Section title="Ranked donors" accent="money">
+                          <Text wordSafe variant="metadata">
+                            Disclosed donations, largest first.
+                          </Text>
+                        </Section>
+                        {!donors.length ? (
+                          <EmptyState
+                            message="No donors have a recorded flow in this view."
+                            testID="money-list-empty"
+                          />
+                        ) : null}
+                      </>
                     ) : null}
                   </>
-                ) : null}
-              </>
-            )}
-          </Group>
-        }
-        ListFooterComponent={
-          record ? (
-            <Group style={styles.footer}>
-              <MoneyAttribution record={record} />
-              <View testID="money-end" />
-            </Group>
-          ) : null
-        }
-      />
-    </GestureHandlerRootView>
+                )}
+              </Group>
+            </RegionProvider>
+          }
+          ListFooterComponent={
+            record ? (
+              <Group style={styles.footer}>
+                <MoneyAttribution record={record} />
+                <View testID="money-end" />
+              </Group>
+            ) : null
+          }
+        />
+      </GestureHandlerRootView>
+    </SidebarSafe>
   );
 }
 const styles = StyleSheet.create({

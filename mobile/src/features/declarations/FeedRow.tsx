@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, View } from 'react-native';
+import { useRef } from 'react';
+import { findNodeHandle, Pressable, StyleSheet, View } from 'react-native';
 import type { recentDeclarationsFor } from '../../api/selectors';
 import { formatDate } from '../../design/format';
 import { chamberName } from '../../design/parliament';
@@ -75,16 +76,22 @@ export function FeedRow({
   ]
     .filter(Boolean)
     .join(', ');
+  const menuAnchor = useRef<View>(null);
   const menu = () =>
-    showRecordMenu(item.name, [
-      ...(onOpenPerson
-        ? [{ title: 'Open profile', onPress: onOpenPerson }]
-        : []),
-      { title: 'View original', onPress: original },
-    ]);
+    showRecordMenu(
+      item.name,
+      [
+        ...(onOpenPerson
+          ? [{ title: 'Open profile', onPress: onOpenPerson }]
+          : []),
+        { title: 'View original', onPress: original },
+      ],
+      findNodeHandle(menuAnchor.current) ?? undefined,
+    );
   return (
     <View style={styles.frame}>
       <Pressable
+        ref={menuAnchor}
         accessibilityRole={onOpenPerson ? 'button' : 'text'}
         accessibilityLabel={label}
         accessibilityHint={onOpenPerson ? 'Opens the profile' : undefined}

@@ -1,3 +1,4 @@
+import { onKeyCommand } from './keyboard';
 import { useSyncExternalStore } from 'react';
 import {
   ActionSheetIOS,
@@ -31,18 +32,30 @@ function present(next: Menu) {
 }
 
 /** A scrollable Android dialog; iOS keeps its existing native action sheet. */
-export function showMenu(title: string, actions: readonly MenuAction[]) {
+export function showMenu(
+  title: string,
+  actions: readonly MenuAction[],
+  anchor?: number,
+) {
   if (Platform.OS === 'android') {
     present({ title, actions });
     return;
   }
+  const remove = onKeyCommand('list-escape', () => {
+    remove();
+    ActionSheetIOS.dismissActionSheet();
+  });
   ActionSheetIOS.showActionSheetWithOptions(
     {
       title,
       options: [...actions.map((action) => action.title), 'Cancel'],
       cancelButtonIndex: actions.length,
+      ...(Platform.OS === 'ios' && Platform.isPad && anchor ? { anchor } : {}),
     },
-    (index) => actions[index]?.onPress(),
+    (index) => {
+      remove();
+      actions[index]?.onPress();
+    },
   );
 }
 

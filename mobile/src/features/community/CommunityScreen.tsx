@@ -1,22 +1,6 @@
-import { useCallback, useRef, useState } from 'react';
+import { useRefreshCommand } from '../../design/keyboard';
 import {
-  AccessibilityInfo,
-  Alert,
-  Keyboard,
-  Platform,
-  Pressable,
-  StyleSheet,
-  TextInput,
-  View,
-} from 'react-native';
-import {
-  Stack,
-  router,
-  useLocalSearchParams,
-  useFocusEffect,
-  type Href,
-} from 'expo-router';
-import {
+  PadGrid,
   Button,
   ChoiceChips,
   Composer,
@@ -39,6 +23,24 @@ import {
   StepButtons,
   Text,
 } from '../../design/primitives';
+import { useCallback, useRef, useState } from 'react';
+import {
+  AccessibilityInfo,
+  Alert,
+  Keyboard,
+  Platform,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  View,
+} from 'react-native';
+import {
+  Stack,
+  router,
+  useLocalSearchParams,
+  useFocusEffect,
+  type Href,
+} from 'expo-router';
 import { colors, fonts, minimumTarget, rhythm } from '../../design/tokens';
 import { formatCount } from '../../design/format';
 import { openSource, canonicalUrl } from '../../navigation/external';
@@ -389,6 +391,7 @@ function CommunityPage() {
     [view],
   );
   const { data, error, busy, reload } = usePage(path, onLoaded);
+  useRefreshCommand(path && data ? () => void reload(true) : undefined, busy);
   const [created, setCreated] = useState<{
     view: CommunityView;
     id: string;
@@ -706,41 +709,44 @@ function CommunityPage() {
             }}
           />
         </Section>
-        <Section title="Discussions">
-          {rows(data, 'threads').filter((r) => !isBlocked(text(r, 'member_id')))
-            .length ? (
-            <ThreadRows items={rows(data, 'threads')} />
-          ) : (
-            <EmptyState message="No discussions found. Try another word or clear your search." />
-          )}
-          {pagination(flag(data.more), 'home')}
-        </Section>
-        <Section title="Your community">
-          <RowList>
-            {(
-              [
-                'members',
-                'messages',
-                'activity',
-                'lists',
-                'profile',
-                'settings',
-              ] as CommunityView[]
-            ).map((v) => (
+        <PadGrid>
+          <Section title="Discussions">
+            {rows(data, 'threads').filter(
+              (r) => !isBlocked(text(r, 'member_id')),
+            ).length ? (
+              <ThreadRows items={rows(data, 'threads')} />
+            ) : (
+              <EmptyState message="No discussions found. Try another word or clear your search." />
+            )}
+            {pagination(flag(data.more), 'home')}
+          </Section>
+          <Section title="Your community">
+            <RowList>
+              {(
+                [
+                  'members',
+                  'messages',
+                  'activity',
+                  'lists',
+                  'profile',
+                  'settings',
+                ] as CommunityView[]
+              ).map((v) => (
+                <LinkRow
+                  key={v}
+                  title={titles[v]}
+                  testID={`community-open-${v}`}
+                  onPress={() => go(v)}
+                />
+              ))}
               <LinkRow
-                key={v}
-                title={titles[v]}
-                testID={`community-open-${v}`}
-                onPress={() => go(v)}
+                title="Community guidelines"
+                testID="community-open-guidelines"
+                onPress={() => go('guidelines')}
               />
-            ))}
-            <LinkRow
-              title="Community guidelines"
-              testID="community-open-guidelines"
-              onPress={() => go('guidelines')}
-            />
-          </RowList>
-        </Section>
+            </RowList>
+          </Section>
+        </PadGrid>
       </>
     );
   else if (view === 'thread' && data) {
@@ -1516,6 +1522,7 @@ function CommunityPage() {
     <>
       <Stack.Screen options={{ title: titles[view] }} />
       <KeyboardStableScreen
+        column="wide"
         testID={`community-${view}`}
         keyboardTarget={composerSurface}
       >

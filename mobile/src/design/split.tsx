@@ -220,6 +220,13 @@ export function SplitLayout<T>({
   useKeyCommand('list-up', () => move(-1), keyboard);
   useKeyCommand('list-open', open, keyboard);
   useKeyCommand(
+    'back',
+    () => {
+      pane.back();
+    },
+    keyboard && stack.length > 1,
+  );
+  useKeyCommand(
     'list-escape',
     () =>
       stack.length > 1

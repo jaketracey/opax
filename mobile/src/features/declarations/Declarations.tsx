@@ -1,3 +1,4 @@
+import { useRefreshCommand } from '../../design/keyboard';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   FlatList,
@@ -10,6 +11,9 @@ import { router } from 'expo-router';
 import { catalogs } from '../../api/runtime';
 import {
   AsAtLine,
+  useScreenColumn,
+  SidebarSafe,
+  RegionProvider,
   Button,
   Divider,
   EmptyState,
@@ -58,6 +62,8 @@ export default function Declarations() {
     );
     return () => clearTimeout(timer);
   }, [text]);
+  const column = useScreenColumn();
+  useRefreshCommand(refresh, refreshing);
   const all = useMemo(() => record?.data ?? [], [record]);
   const facets = useMemo(() => feedFacets(all), [all]);
   const rows = useMemo(() => filterFeed(all, filters), [all, filters]);
@@ -178,63 +184,71 @@ export default function Declarations() {
   ) : null;
 
   return (
-    <FlatList
-      testID="declarations-screen"
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={refresh}
-          tintColor={chrome.tint}
-        />
-      }
-      style={styles.screen}
-      contentContainerStyle={styles.content}
-      contentInsetAdjustmentBehavior="automatic"
-      keyboardShouldPersistTaps="handled"
-      keyboardDismissMode="on-drag"
-      automaticallyAdjustKeyboardInsets
-      data={rows}
-      keyExtractor={(row) => String(row.id)}
-      renderItem={({ item, index }) => (
-        <FeedRow
-          item={item}
-          index={index}
-          onOpenPerson={
-            item.profileSlug
-              ? () => router.push(personRoute(item.profileSlug!))
-              : undefined
-          }
-        />
-      )}
-      ItemSeparatorComponent={() => (
-        <View style={styles.separator}>
-          <Divider variant="subtle" />
-        </View>
-      )}
-      ListHeaderComponent={header}
-      ListEmptyComponent={
-        record ? (
-          <Group>
-            <EmptyState
-              message="No alterations match these filters."
-              testID="declarations-empty"
-            />
-            {filtered ? (
-              <Button
-                label="Clear filters"
-                onPress={() => {
-                  setText('');
-                  setFilters(noFilters);
-                }}
-                testID="declarations-clear"
+    <SidebarSafe style={styles.screen}>
+      <FlatList
+        testID="declarations-screen"
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={refresh}
+            tintColor={chrome.tint}
+          />
+        }
+        style={styles.screen}
+        contentContainerStyle={[styles.content, column.content]}
+        onLayout={column.onLayout}
+        contentInsetAdjustmentBehavior="automatic"
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
+        automaticallyAdjustKeyboardInsets
+        data={rows}
+        keyExtractor={(row) => String(row.id)}
+        renderItem={({ item, index }) => (
+          <FeedRow
+            item={item}
+            index={index}
+            onOpenPerson={
+              item.profileSlug
+                ? () => router.push(personRoute(item.profileSlug!))
+                : undefined
+            }
+          />
+        )}
+        ItemSeparatorComponent={() => (
+          <View style={styles.separator}>
+            <Divider variant="subtle" />
+          </View>
+        )}
+        ListHeaderComponent={
+          <RegionProvider value={column.inner}>
+            {column.bar}
+            {header}
+          </RegionProvider>
+        }
+        ListEmptyComponent={
+          record ? (
+            <Group>
+              <EmptyState
+                message="No alterations match these filters."
+                testID="declarations-empty"
               />
-            ) : null}
-          </Group>
-        ) : null
-      }
-      ListFooterComponent={footer}
-      initialNumToRender={8}
-    />
+              {filtered ? (
+                <Button
+                  label="Clear filters"
+                  onPress={() => {
+                    setText('');
+                    setFilters(noFilters);
+                  }}
+                  testID="declarations-clear"
+                />
+              ) : null}
+            </Group>
+          ) : null
+        }
+        ListFooterComponent={footer}
+        initialNumToRender={8}
+      />
+    </SidebarSafe>
   );
 }
 

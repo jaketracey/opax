@@ -141,9 +141,13 @@ describe('split list keys', () => {
     mounted.push(tree);
     return tree;
   }
-  test('Return is registered without a title (not in the shortcut list)', () => {
+  test('Return is registered with its discoverability title', () => {
     const spec = keyCommandSpecs.find((s) => s.id === 'list-open');
-    expect(spec).toMatchObject({ input: 'return', modifiers: [], title: '' });
+    expect(spec).toMatchObject({
+      input: 'return',
+      modifiers: [],
+      title: 'Open focused row',
+    });
   });
   test('Return selects the first row when nothing is selected', () => {
     const onSelect = jest.fn();

@@ -8,6 +8,7 @@ export function RecordRow({
   detail,
   onPress,
   testID,
+  path,
   accent,
   selected,
   highlighted,
@@ -16,6 +17,8 @@ export function RecordRow({
   detail?: string;
   onPress: () => void;
   testID?: string;
+  /** Canonical public web path, used only by an explicit iPad drag. */
+  path?: string;
   /** The selected wash's category in an iPad split list. */
   accent?: Accent;
   /** In an iPad split list (see LinkRow); undefined everywhere else. */
@@ -28,6 +31,7 @@ export function RecordRow({
       detail={detail}
       onPress={onPress}
       testID={testID}
+      dragPath={path}
       accent={accent}
       selected={selected}
       highlighted={highlighted}

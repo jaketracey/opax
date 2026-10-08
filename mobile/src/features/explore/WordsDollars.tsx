@@ -1,7 +1,5 @@
-import { reports } from '../../api/runtime';
-import { View } from 'react-native';
-import { colors } from '../../design/tokens';
 import {
+  PadGrid,
   Screen,
   Section,
   Group,
@@ -9,6 +7,9 @@ import {
   LinkRow,
   RowList,
 } from '../../design/primitives';
+import { reports } from '../../api/runtime';
+import { View } from 'react-native';
+import { colors } from '../../design/tokens';
 import { formatMoney } from '../../design/format';
 import { useRead, ReadState } from '../reports/parts';
 import { topicNames } from '../reports/model';
@@ -21,7 +22,7 @@ export default function WordsDollars() {
   return (
     <>
       <ExploreHeader title="Words per dollar" game="wd" />
-      <Screen testID="explore-wd-screen">
+      <Screen column="wide" testID="explore-wd-screen">
         <Section
           title="Words per dollar"
           info={{
@@ -49,90 +50,95 @@ export default function WordsDollars() {
             >
               {(labels) => (
                 <Group>
-                  {pairings.map((pair) => {
-                    const panel = wordsPanel(pair, labels, donations);
-                    const maxMoney = Math.max(
-                      1,
-                      ...panel.rows.map((row) => row.money),
-                    );
-                    const maxSpeech = Math.max(
-                      1,
-                      ...panel.rows.map((row) => row.speeches),
-                    );
-                    return (
-                      <Section key={pair.topic} title={topicNames[pair.topic]}>
-                        <RowList>
-                          {panel.rows.map((row) => (
-                            <Group key={row.party}>
-                              <Text variant="strong" wordSafe>
-                                {row.party}
-                              </Text>
-                              <LinkRow
-                                title={`Money: ${row.money ? formatMoney(row.money) : row.party === 'Independent' ? 'not separated' : 'none disclosed'}`}
-                                onPress={() =>
-                                  openTopicWindow(
-                                    pair.topic,
-                                    {},
-                                    topicNames[pair.topic]!,
-                                  )
-                                }
-                              />
-                              <View
-                                aria-hidden
-                                style={{
-                                  height: 4,
-                                  width: `${(row.money / maxMoney) * 100}%`,
-                                  backgroundColor: colors.bronzeInk,
-                                }}
-                              />
-                              {row.speechKnown ? (
-                                <Group>
-                                  <LinkRow
-                                    title={`Speech: ${panel.total ? Math.round((row.speeches / panel.total) * 100) : 0}% · ${row.speeches.toLocaleString('en-AU')} labelled speeches`}
-                                    onPress={() =>
-                                      openTopicWindow(
-                                        pair.topic,
-                                        { party: row.party },
-                                        topicNames[pair.topic]!,
-                                      )
-                                    }
-                                  />
-                                  <View
-                                    aria-hidden
-                                    style={{
-                                      height: 4,
-                                      width: `${(row.speeches / maxSpeech) * 100}%`,
-                                      backgroundColor: colors.ink,
-                                    }}
-                                  />
-                                </Group>
-                              ) : (
-                                <Text wordSafe variant="metadata">
-                                  Speech: not separated yet
+                  <PadGrid>
+                    {pairings.map((pair) => {
+                      const panel = wordsPanel(pair, labels, donations);
+                      const maxMoney = Math.max(
+                        1,
+                        ...panel.rows.map((row) => row.money),
+                      );
+                      const maxSpeech = Math.max(
+                        1,
+                        ...panel.rows.map((row) => row.speeches),
+                      );
+                      return (
+                        <Section
+                          key={pair.topic}
+                          title={topicNames[pair.topic]}
+                        >
+                          <RowList>
+                            {panel.rows.map((row) => (
+                              <Group key={row.party}>
+                                <Text variant="strong" wordSafe>
+                                  {row.party}
                                 </Text>
-                              )}
-                            </Group>
-                          ))}
-                        </RowList>
-                        {panel.total > 0 && panel.total < 200 ? (
-                          <Text wordSafe variant="fine">
-                            Only {panel.total.toLocaleString('en-AU')} speeches
-                            carry this label so far, so shares are early and
-                            will move as the pass runs.
-                          </Text>
-                        ) : null}
-                        {pair.industries.length > 1 ? (
-                          <Text wordSafe variant="fine">
-                            The donor side combines two AEC industry groups (
-                            {pair.industries
-                              .map((i) => i.replaceAll('_', ' '))
-                              .join(' and ')}
-                            ) that both belong to this debate.
-                          </Text>
-                        ) : null}
-                      </Section>
-                    );
-                  })}
+                                <LinkRow
+                                  title={`Money: ${row.money ? formatMoney(row.money) : row.party === 'Independent' ? 'not separated' : 'none disclosed'}`}
+                                  onPress={() =>
+                                    openTopicWindow(
+                                      pair.topic,
+                                      {},
+                                      topicNames[pair.topic]!,
+                                    )
+                                  }
+                                />
+                                <View
+                                  aria-hidden
+                                  style={{
+                                    height: 4,
+                                    width: `${(row.money / maxMoney) * 100}%`,
+                                    backgroundColor: colors.bronzeInk,
+                                  }}
+                                />
+                                {row.speechKnown ? (
+                                  <Group>
+                                    <LinkRow
+                                      title={`Speech: ${panel.total ? Math.round((row.speeches / panel.total) * 100) : 0}% · ${row.speeches.toLocaleString('en-AU')} labelled speeches`}
+                                      onPress={() =>
+                                        openTopicWindow(
+                                          pair.topic,
+                                          { party: row.party },
+                                          topicNames[pair.topic]!,
+                                        )
+                                      }
+                                    />
+                                    <View
+                                      aria-hidden
+                                      style={{
+                                        height: 4,
+                                        width: `${(row.speeches / maxSpeech) * 100}%`,
+                                        backgroundColor: colors.ink,
+                                      }}
+                                    />
+                                  </Group>
+                                ) : (
+                                  <Text wordSafe variant="metadata">
+                                    Speech: not separated yet
+                                  </Text>
+                                )}
+                              </Group>
+                            ))}
+                          </RowList>
+                          {panel.total > 0 && panel.total < 200 ? (
+                            <Text wordSafe variant="fine">
+                              Only {panel.total.toLocaleString('en-AU')}{' '}
+                              speeches carry this label so far, so shares are
+                              early and will move as the pass runs.
+                            </Text>
+                          ) : null}
+                          {pair.industries.length > 1 ? (
+                            <Text wordSafe variant="fine">
+                              The donor side combines two AEC industry groups (
+                              {pair.industries
+                                .map((i) => i.replaceAll('_', ' '))
+                                .join(' and ')}
+                              ) that both belong to this debate.
+                            </Text>
+                          ) : null}
+                        </Section>
+                      );
+                    })}
+                  </PadGrid>
                 </Group>
               )}
             </ReadState>

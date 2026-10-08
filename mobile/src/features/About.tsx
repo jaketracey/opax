@@ -60,6 +60,7 @@ export default function About() {
   };
   return (
     <Screen
+      column="wide"
       testID="about-screen"
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={refresh} />

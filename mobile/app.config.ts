@@ -128,7 +128,7 @@ const config: ExpoConfig = {
     infoPlist: {
       ITSAppUsesNonExemptEncryption: false,
       NSLocationWhenInUseUsageDescription:
-        'OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere.',
+        'OPAX uses your location once, on this device, to suggest your electorate. It is not sent anywhere.',
       ...(variant === 'e2e' ? { OPAXVoiceFixturePort: port } : {}),
       ...(variant === 'e2e' || localDevelopment
         ? {
@@ -162,7 +162,7 @@ const config: ExpoConfig = {
       'expo-location',
       {
         locationWhenInUsePermission:
-          'OPAX uses your location once, on your iPhone, to suggest your electorate. It is not sent anywhere.',
+          'OPAX uses your location once, on this device, to suggest your electorate. It is not sent anywhere.',
         locationAlwaysPermission: false,
         motionUsagePermission: false,
         locationAlwaysAndWhenInUsePermission: false,

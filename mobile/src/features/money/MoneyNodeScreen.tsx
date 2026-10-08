@@ -61,19 +61,19 @@ export default function MoneyNodeScreen() {
   const node = view?.nodes.find((n) => n.id === param(params.node));
   if (error)
     return (
-      <Screen>
+      <Screen column="wide">
         <ErrorState message={errorMessage(error)} onRetry={retry} />
       </Screen>
     );
   if (!record || !view || !filters)
     return (
-      <Screen>
+      <Screen column="wide">
         <LoadingState label="Loading the money record" />
       </Screen>
     );
   if (!node)
     return (
-      <Screen>
+      <Screen column="wide">
         <EmptyState message="This node has no recorded flow in the selected view." />
       </Screen>
     );
@@ -103,7 +103,7 @@ export default function MoneyNodeScreen() {
             ? 'Recorded contract commitments'
             : 'Recorded grant awards';
   return (
-    <Screen testID="money-focus-sheet">
+    <Screen column="wide" testID="money-focus-sheet">
       <Section
         rule={false}
         title={node.label}

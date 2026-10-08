@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { ownsRowPadding } from './row-padding';
 import { partyRoute } from '../navigation/routes';
-import { useEffect, useState } from 'react';
+import { isValidElement, useEffect, useState } from 'react';
 import { localImageURI } from '../api/image-policy';
 import type { ReactNode } from 'react';
 import {
@@ -405,6 +405,8 @@ export type PersonRowProps = PersonRowParty & {
   testID?: string;
   /** Opt in only for journeys that inspect native drawn-line bounds. */
   testDrawnName?: boolean;
+  /** Canonical public profile path for iPad dragging. */
+  dragPath?: string;
   /**
    * In an iPad split list: true for the person in the detail pane, false for
    * the others (no chevron). Undefined is an ordinary row (every iPhone row).
@@ -432,9 +434,14 @@ export function PersonRow({
   onPress,
   testID,
   testDrawnName = false,
+  dragPath,
   selected,
   highlighted = false,
 }: PersonRowProps) {
+  const slug = isValidElement<{ slug?: string }>(portrait)
+    ? portrait.props.slug
+    : undefined;
+  const path = dragPath ?? (slug ? `/subject/person/${slug}` : undefined);
   const stacked = useAccessibilitySize();
   const inSplit = selected !== undefined;
   const [hovered, onHover] = useHover();
@@ -558,13 +565,15 @@ export function PersonRow({
       {body}
     </Pressable>
   );
-  // Pointer hover only in a split list; other rows keep their view tree.
-  return inSplit ? (
-    <Hoverable effect="none" onHover={onHover}>
+  return (
+    <Hoverable
+      effect={inSplit ? 'none' : 'hover'}
+      onHover={inSplit ? onHover : undefined}
+      onActivate={onPress}
+      drag={path ? { path, title: name } : undefined}
+    >
       {row}
     </Hoverable>
-  ) : (
-    row
   );
 }
 

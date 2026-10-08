@@ -1,8 +1,5 @@
-import { headerItems } from '../../navigation/chrome';
-import { useState } from 'react';
-import { Stack } from 'expo-router';
-import { reports } from '../../api/runtime';
 import {
+  PadGrid,
   Button,
   InfoButton,
   Group,
@@ -11,6 +8,10 @@ import {
   SegmentedControl,
   Text,
 } from '../../design/primitives';
+import { headerItems } from '../../navigation/chrome';
+import { useState } from 'react';
+import { Stack } from 'expo-router';
+import { reports } from '../../api/runtime';
 import { RecordRow } from '../RecordRow';
 import { shareHeaderItem } from '../../navigation/share';
 import { topicDescriptions, topicNames } from './model';
@@ -30,7 +31,7 @@ export default function TopicsIndex() {
           ]),
         }}
       />
-      <Screen testID="topics-screen">
+      <Screen column="wide" testID="topics-screen">
         <Text>
           Every debate in the record, by subject. Each topic opens its own page:
           who speaks on it, the money beside the words, and the debate itself.
@@ -68,49 +69,52 @@ export default function TopicsIndex() {
                   'A speech can carry more than one topic label, so the shares do not sum to one hundred. The decade bars use federal speeches only, the longest comparable run; each is that topic’s share of the decade’s labelled speeches, scaled to the topic’s own peak. The labelling pass is still running.',
                 ]}
               />
-              {[...data.topics]
-                .filter((t) => topicNames[t.slug])
-                .sort((a, b) =>
-                  order === 'name'
-                    ? topicNames[a.slug]!.localeCompare(topicNames[b.slug]!)
-                    : b.count - a.count,
-                )
-                .map((t) => {
-                  const points = tide.record?.data.topics[t.slug] ?? [];
-                  const decades = tide.record?.data.decades ?? [];
-                  const pct =
-                    data.labelled > 0 ? (t.count / data.labelled) * 100 : 0;
-                  return (
-                    <Section key={t.slug}>
-                      <RecordRow
-                        title={topicNames[t.slug]!}
-                        detail={`${t.count.toLocaleString()} speeches labelled so far · ${pct >= 10 ? pct.toFixed(0) : pct.toFixed(1)}% of the labelled record`}
-                        onPress={() =>
-                          openRecord(
-                            `/subject/topic/${t.slug}`,
-                            topicNames[t.slug]!,
-                          )
-                        }
-                        testID={`topic-open-${t.slug}`}
-                      />
-                      <Text variant="metadata">
-                        {topicDescriptions[t.slug]}
-                      </Text>
-                      {points.length ? (
-                        <ShareBars
-                          compact
-                          label="Share of federal speeches by decade"
-                          points={points.map((p) => ({
-                            ...p,
-                            label:
-                              decades.find((d) => d.slug === p.decade)?.label ??
-                              p.decade,
-                          }))}
+              <PadGrid>
+                {[...data.topics]
+                  .filter((t) => topicNames[t.slug])
+                  .sort((a, b) =>
+                    order === 'name'
+                      ? topicNames[a.slug]!.localeCompare(topicNames[b.slug]!)
+                      : b.count - a.count,
+                  )
+                  .map((t) => {
+                    const points = tide.record?.data.topics[t.slug] ?? [];
+                    const decades = tide.record?.data.decades ?? [];
+                    const pct =
+                      data.labelled > 0 ? (t.count / data.labelled) * 100 : 0;
+                    return (
+                      <Section key={t.slug}>
+                        <RecordRow
+                          path={`/subject/topic/${t.slug}`}
+                          title={topicNames[t.slug]!}
+                          detail={`${t.count.toLocaleString()} speeches labelled so far · ${pct >= 10 ? pct.toFixed(0) : pct.toFixed(1)}% of the labelled record`}
+                          onPress={() =>
+                            openRecord(
+                              `/subject/topic/${t.slug}`,
+                              topicNames[t.slug]!,
+                            )
+                          }
+                          testID={`topic-open-${t.slug}`}
                         />
-                      ) : null}
-                    </Section>
-                  );
-                })}
+                        <Text variant="metadata">
+                          {topicDescriptions[t.slug]}
+                        </Text>
+                        {points.length ? (
+                          <ShareBars
+                            compact
+                            label="Share of federal speeches by decade"
+                            points={points.map((p) => ({
+                              ...p,
+                              label:
+                                decades.find((d) => d.slug === p.decade)
+                                  ?.label ?? p.decade,
+                            }))}
+                          />
+                        ) : null}
+                      </Section>
+                    );
+                  })}
+              </PadGrid>
             </Group>
           )}
         </ReadState>
@@ -118,11 +122,13 @@ export default function TopicsIndex() {
           <Button label="Try decade bars again" onPress={tide.retry} />
         ) : null}
         <RecordRow
+          path={'/stats'}
           title="Sources & coverage"
           onPress={() => openRecord('/stats', 'Sources & coverage')}
           testID="topics-stats"
         />
         <RecordRow
+          path={'/methods'}
           title="Methods"
           onPress={() => openRecord('/methods', 'Methods')}
           testID="topics-methods"
