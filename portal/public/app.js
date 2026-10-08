@@ -1713,6 +1713,9 @@ function route() {
   if (frag && !frag.startsWith("/") && !firstRoute) return; // native anchors still need their page rendered on first load
   const { segs, params } = parseHash();
   if (!segs.length) { location.replace('/' + location.search + location.hash); return; }
+  // The script can boot before attribution helpers finish importing. Reveal
+  // panels only when this requested route is ready to choose its own panel.
+  document.documentElement.classList.add("spa-routed");
   if (segs[0] === 'search') { replaceRoute(pathFor(hereRoute())); params.set('view', 'search'); }
   const view = segs[0] === 'search' || (segs[0] === 'ask' && params.get('view') === 'search') ? 'search' : segs[0];
   const manageFocus = !firstRoute;
@@ -3949,10 +3952,15 @@ function findMoneyNode(kind, name) {
   return byAlias || best;
 }
 
-function subjectSkeleton(kindLabel, name, tagHTML) {
+function subjectSkeleton(kindLabel, name, tagHTML, withPortrait = kindLabel === "Parliamentarian") {
+  const portraitUrl = withPortrait ? photoUrlFor(name) : null;
+  const portrait = portraitUrl
+    ? `<img class="subject-portrait" src="${esc(portraitUrl)}" alt="${/^\d+$/.test(photoIdFor(name) || "") ? "Official portrait" : "Portrait"} of ${esc(name)}" width="112" height="112">`
+    : withPortrait && !photoMap ? '<span class="subject-portrait subject-portrait-pending" aria-hidden="true"></span>' : "";
   return `
     <p class="kicker">${esc(kindLabel)}</p>
     <div class="subject-head">
+      ${portrait}
       <h2 id="subject-title" tabindex="-1">${esc(name)}</h2>
       <p class="subject-tag">${tagHTML}</p>
     </div>
@@ -5023,11 +5031,13 @@ async function renderPersonTopics(name, sections) {
   slot.id = "person-topics";
   slot.innerHTML = `<h3 class="subject-section-title">What they talk about</h3><p class="status">Counting their labelled speeches…</p>`;
   sections.appendChild(slot);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 6000);
   try {
     const nameQuery = new URLSearchParams({ name });
     const [data, allTopics] = await Promise.all([
-      api(`/api/person-topics?${nameQuery}`),
-      api("/api/topics"),
+      api(`/api/person-topics?${nameQuery}`, { signal: controller.signal }),
+      api("/api/topics", { signal: controller.signal }),
     ]);
     if (currentSubjectKey !== key || !slot.isConnected) return;
     const baseline = new Map((allTopics.topics || []).map((topic) => [
@@ -5088,6 +5098,8 @@ async function renderPersonTopics(name, sections) {
     if (currentSubjectKey === key && slot.isConnected) {
       slot.innerHTML = `<h3 class="subject-section-title">What they talk about</h3><p class="status">Their topic profile could not be loaded. Their speeches below are still available.</p>`;
     }
+  } finally {
+    clearTimeout(timeout);
   }
 }
 
@@ -5101,7 +5113,9 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       try { return decodeURIComponent(hereRoute().split(/[?#]/)[0].split("/")[3] || "") === segment; } catch { return false; }
     };
     // Never wait long on the map: a name opens without it.
-    await Promise.race([loadPersonSlugs(), new Promise((done) => setTimeout(done, 2500))]);
+    // Load the portrait lookup alongside the slug map so a known portrait
+    // has its 112px slot in the first skeleton, rather than arriving above it.
+    await Promise.race([Promise.all([loadPersonSlugs(), loadPhotoMap()]), new Promise((done) => setTimeout(done, 2500))]);
     if (!stillHere()) return;
     name = personSlugs.bySlug.get(segment) ?? segment;
     if (name === segment && /^[a-z0-9]+(?:-[a-z0-9]+)+$/.test(segment)) {
@@ -5148,7 +5162,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // A single bar where the tag line will be: the same height as the line it
   // becomes, so nothing under the title moves when the entry arrives.
   body.innerHTML = subjectSkeleton(SUBJECT_LABELS[kind] || "Donor", kind === "electorate" ? "" : name,
-    `<span class="answer-skeleton subject-skel tag-skel" aria-hidden="true"><i></i></span>`);
+    `<span class="answer-skeleton subject-skel tag-skel" aria-hidden="true"><i></i></span>`,
+    kind === "person" && params.get('attribution') !== 'unattributed');
   // An electorate's address is a reference slug ("vic-vic-la-vic-berwick"), not
   // its name, so the title is a bar until the index says what the place is.
   if (kind === "electorate") $("subject-title").innerHTML = '<span class="visually-hidden">Loading electorate</span><span class="answer-skeleton subject-skel title-skel" aria-hidden="true"><i></i></span>';
@@ -5312,8 +5327,10 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     if (currentSubjectKey !== key || unattributed) return;
     const url = photoUrlFor(name);
     const official = /^\d+$/.test(photoIdFor(name) || "");
-    if (url) $("subject-title")?.insertAdjacentHTML("beforebegin",
-      `<img class="subject-portrait" src="${esc(url)}" alt="${official ? "Official portrait" : "Portrait"} of ${esc(name)}" width="112" height="112">`);
+    const portrait = body.querySelector(".subject-portrait-pending");
+    if (url && portrait) portrait.outerHTML =
+      `<img class="subject-portrait" src="${esc(url)}" alt="${official ? "Official portrait" : "Portrait"} of ${esc(name)}" width="112" height="112">`;
+    else portrait?.remove();
   });
   let speeches = [];
   try {
@@ -5451,7 +5468,12 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     askSpeakerInConversation(name, `What did ${name} say about ${topic}?`);
   });
   // The structured record first; the speeches follow it.
-  renderPersonTopics(name, sections).then(() => refreshPersonJumps(sections));
+  // Resolve the first section before painting the sections below it: a late
+  // chart otherwise pushes an already-visible voting record out of view.
+  loadVotes(); // The static vote export can load while the topic request settles.
+  await renderPersonTopics(name, sections);
+  if (currentSubjectKey !== key) return;
+  refreshPersonJumps(sections);
   // Records by the roster's verified pid (none for a print that holds more than one person).
   renderPersonVotes(name, roster?.pid ?? null, sections).then(() => refreshPersonJumps(sections));
   renderPersonInterests(name, roster?.pid ?? null, sections).then(() => refreshPersonJumps(sections));
@@ -14182,6 +14204,7 @@ const BOOT_META = {
   // route(), so the page a reader landed on has exactly one URL.
   const frag = rawFragment();
   if (frag.startsWith("/")) history.replaceState(null, "", pathFor(frag));
+  document.documentElement.classList.remove("spa-failed");
   document.documentElement.classList.add("spa-ready");
 }
 

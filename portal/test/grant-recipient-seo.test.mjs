@@ -6,9 +6,9 @@ import ts from 'typescript';
 import {shortMoney} from '../public/format.js';
 const source=readFileSync(new URL('../src/index.ts',import.meta.url),'utf8');
 const parsed=ts.createSourceFile('index.ts',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);
-const names=new Set(['DIRECTORY_KINDS','isDirectoryKind','STATIC_PAGES','SUBJECT_NAME_MAX','CAMPAIGNER_NAME_MAX','SUPPLIER_NAME_MAX','BILL_KEY_MAX','BILL_KEY_RE','GRANT_RECIPIENT_ID_RE','matchSeoRoute','grantRecipientsMemo','loadGrantRecipients','grantRecipientMeta','buildMeta','escHtml','clip','withTail','num','money','indexLinks','prerenderBlock','canonicalFor']);
+const names=new Set(['DIRECTORY_KINDS','isDirectoryKind','STATIC_PAGES','SUBJECT_NAME_MAX','CAMPAIGNER_NAME_MAX','SUPPLIER_NAME_MAX','BILL_KEY_MAX','BILL_KEY_RE','GRANT_RECIPIENT_ID_RE','matchSeoRoute','grantRecipientsMemo','loadGrantRecipients','grantRecipientMeta','buildRouteMeta','escHtml','clip','withTail','num','money','indexLinks','prerenderBlock','canonicalFor']);
 const statements=parsed.statements.filter(n=>ts.isFunctionDeclaration(n)?names.has(n.name?.text):ts.isVariableStatement(n)&&n.declarationList.declarations.some(d=>names.has(d.name.getText(parsed))));
-const code=ts.transpileModule(statements.map(n=>n.getText(parsed)).join('\n'),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
+const code='function buildMeta(...args) { return buildRouteMeta(...args); }\n'+ts.transpileModule(statements.map(n=>n.getText(parsed)).join('\n'),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
 const recipient={id:'abn:64062160614',n:'Serendipity <WA> & Co',t:100,c:2,sh:14};
 function harness(loader=async()=>({recipients:[recipient]})){
  const context={URL,SITE_ORIGIN:'https://opax.com.au',SITE_TITLE:'OPAX',SITE_DESCRIPTION:'Record',assetJson:loader,money:shortMoney};runInNewContext(code,context);return context;

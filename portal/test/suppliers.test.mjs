@@ -10,13 +10,13 @@ const parsed = ts.createSourceFile('index.ts', source, ts.ScriptTarget.Latest, t
 // Execute the actual metadata/route functions, without booting unrelated RAG
 // and image-rendering dependencies. TypeScript's parser supplies the boundaries.
 const names = new Set(['DIRECTORY_KINDS', 'isDirectoryKind', 'STATIC_PAGES', 'SUBJECT_NAME_MAX', 'CAMPAIGNER_NAME_MAX', 'SUPPLIER_NAME_MAX', 'BILL_KEY_MAX', 'BILL_KEY_RE',
-  'matchSeoRoute', 'supplierNameKey', 'suppliersMemo', 'loadSuppliers', 'supplierMeta', 'buildMeta',
+  'matchSeoRoute', 'supplierNameKey', 'suppliersMemo', 'loadSuppliers', 'supplierMeta', 'buildRouteMeta',
   'escHtml', 'escXml', 'clip', 'withTail', 'num', 'money', 'years', 'indexLinks', 'prerenderBlock', 'canonicalFor', 'publisher', 'sitemapXml']);
 const statements = parsed.statements.filter((node) => {
   if (ts.isFunctionDeclaration(node)) return names.has(node.name?.text);
   return ts.isVariableStatement(node) && node.declarationList.declarations.some((d) => names.has(d.name.getText(parsed)));
 });
-const code = ts.transpileModule(statements.map((node) => node.getText(parsed)).join('\n'), { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText;
+const code = 'function buildMeta(...args) { return buildRouteMeta(...args); }\n' + ts.transpileModule(statements.map((node) => node.getText(parsed)).join('\n'), { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText;
 const id = 's-0123456789abcdef0123';
 const otherId = 's-abcdef0123456789abcd';
 const supplier = (overrides = {}) => ({ id, name: 'Acme Pty Ltd', abn: '12345678901', aliases: ['Acme Corporation'], lookup_names: ['Acme Funding Identity'], total: 12000000, count: 24, agency_count: 3, first_year: 2018, last_year: 2025, ...overrides });

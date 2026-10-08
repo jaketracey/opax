@@ -169,7 +169,7 @@ class ExportVotesTests(unittest.TestCase):
         self.assertFresh(meta["content_changed_at"], bounds)
         self.assertIsInstance(meta["schema"], int)
         self.assertNotIsInstance(meta["schema"], bool)
-        self.assertEqual(meta["schema"], 1)
+        self.assertEqual(meta["schema"], 2)
         self.assertRegex(meta["latest_division_date"], r"^\d{4}-\d\d-\d\d$")
         self.assertIsInstance(meta["latest_division_date_by_jurisdiction"], dict)
 
@@ -185,7 +185,7 @@ class ExportVotesTests(unittest.TestCase):
         meta = data["_meta"]
         self.assertIsNone(meta["latest_division_date"])
         self.assertEqual(meta["latest_division_date_by_jurisdiction"], {})
-        self.assertEqual(meta["schema"], 1)
+        self.assertEqual(meta["schema"], 2)
         self.assertFresh(meta["content_changed_at"], bounds)
         self.assertEqual(without_meta(raw, meta), '{"_names":{}}\n')  # what the export wrote before _meta
         self.assertIn("people 0 ", err)

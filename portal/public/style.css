@@ -105,7 +105,13 @@
 /* Crawler text the Worker injects into <main> for /subject/... and /reports/...
    paths (see docs/SEO.md). app.js flags the document as it boots and the app's
    own render takes over; without JavaScript the block stays readable. */
-.spa-ready #prerender { display: none; }
+.spa-ready #prerender, .spa-booting #prerender { display: none; }
+/* The synchronous entry script marks real SPA routes before their first
+   paint. Keep a page-sized main while the deferred shell and data load. */
+.spa-booting #main { min-height: calc(100svh - var(--header-h)); }
+.spa-booting:not(.spa-ready) #main .panel,
+.spa-booting:not(.spa-routed) #main .panel,
+.spa-failed #main .panel { display: none; }
 #prerender { padding-bottom: 1.5rem; }
 html {
   scroll-padding-top: calc(var(--header-h) + 0.5rem);
@@ -3133,6 +3139,17 @@ mark.privacy-confirm {
 }
 /* ==== page-person: Person entry pages (/subject/person/<name>) ==== */
 .subject-person #subject-sections { min-width: 0; }
+/* The portrait, wrapping affiliation and facts card arrive from separate
+   exports. Hold their first-paint footprint so the grid and the first section
+   stay in place while those records replace the loading bars. */
+.subject-person .subject-portrait-pending { background: var(--paper-sunken); }
+.subject-person .subject-tag { min-height: 3.5rem; }
+.subject-person .subject-grid { min-height: max(48rem, calc(100svh - var(--header-h))); }
+.subject-person .subject-main { min-height: 38rem; }
+.subject-person .infobox { min-height: 26rem; }
+@media (max-width: 900px) {
+  .subject-person .infobox { min-height: 32rem; }
+}
 .subject-person #subject-sections .subject-section-title { font: 600 1.35rem/1.35 var(--serif); margin: 2rem 0 .85rem; }
 .subject-person .person-topics, .subject-person .declared-ties { margin-top: 0; }
 .subject-person .person-topics { max-width: none; } /* the block spans the column like the ask form above it */

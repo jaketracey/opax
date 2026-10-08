@@ -54,6 +54,8 @@ import { renderOgPng, renderOgJpeg, type OgFont } from './og-render'
 // The story renderer is reached through the namespace: tests stub './og-render' with the two card renderers only.
 import * as storyRender from './og-render'
 import { personRole, personTitle, roleLine, billTitle } from './seo-titles'
+import { answerBlock, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, type Division, type ReadAsset } from './seo-content'
+import { buildSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
 import { photoFor, storyFrames, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
 
 interface FindParagraph {
@@ -2372,6 +2374,20 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
 async function apiResource(request: Request, url: URL, slug: string, env: Env, ctx: ExecutionContext): Promise<Response> {
   if (/^news-\d+$/.test(slug)) return json({ error: 'News articles are no longer part of the corpus' }, 410)
   if (!isPublicSlug(slug)) return json({ error: 'bad slug' }, 400)
+  // The app and crawler read the same full-member static record where exported.
+  if (DIVISION_SLUG_RE.test(slug) && env.ASSETS) {
+    const res=await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/divisions/${encodeURIComponent(slug)}.json`))
+    if(res.ok){
+      const d=await res.json() as Division
+      if(d.members?.length){
+        const names=(vote:string)=>d.members!.filter(m=>m.vote===vote).map(m=>m.name)
+        return json({slug,title:d.name || d.question,speaker:null,speaker_attribution:null,url:d.source_url,
+          labels:{kind:'division',state:d.jurisdiction,chamber:d.house,result:d.result},topics:[],summary:null,
+          metadata:{date:d.date,division_id:d.key,ayes_count:d.ayes,noes_count:d.noes,ayes:names('aye'),noes:names('no'),paired:names('paired')},
+          text:`${d.question || d.name || ''}\n${d.date}, ${d.house}. Ayes ${d.ayes}: ${names('aye').join(', ')}. Noes ${d.noes}: ${names('no').join(', ')}.`})
+      }
+    }
+  }
   const cacheKey = cacheRequest('resource-body-v3-witness', `${encodeURIComponent(env.CACHE_EPOCH)}/${slug}`)
   const bypass = cacheBypass(request, url)
   if (!bypass) {
@@ -3194,6 +3210,8 @@ interface PageMeta {
   jsonLd: Record<string, unknown> | null
   prerender: string | null
   card?: CardSpec | null
+  prev?: string
+  next?: string
 }
 
 // How long a /subject/<dir>/<name> segment may be. A person, a party or a donor
@@ -3405,7 +3423,8 @@ function loadPeople(env: Env): Promise<PeopleData> {
         const seats = p.electorates.filter((e) => e.current)
         if (!seats.length) continue
         raw.people.push({ name: p.name, pid: p.legacy_person_id || p.person_id, speeches: 0,
-          party: seats[0].party || null, states: [...new Set(seats.map((e) => e.jurisdiction))],
+          party: seats[0].party || null, party_now: seats[0].party || undefined, current: true,
+          representation: seats.map(e=>({electorate:e.name,jurisdiction:e.jurisdiction,chamber:e.chamber})), states: [...new Set(seats.map((e) => e.jurisdiction))],
           chambers: [...new Set(seats.map((e) => e.chamber))], first: null, last: null,
           rosterOnly: { asOf: seats[0].as_of, seats: seats.map((e) => e.name) } })
         names.add(foldName(p.name))
@@ -3697,7 +3716,7 @@ const publisher = { '@type': 'Organization', name: 'OPAX', url: SITE_ORIGIN, log
 
 // --- per-route metadata -------------------------------------------------------
 
-async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<PageMeta> {
+async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<PageMeta> {
   const base = (over: Partial<PageMeta>): PageMeta => ({
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
@@ -3859,6 +3878,48 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
     case 'bill':
       return billMeta(route.key, env)
   }
+}
+
+/** Shared exported-data rendering also supplies the head's factual identity. */
+async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<PageMeta> {
+  const meta = await buildRouteMeta(route,url,request,env,ctx)
+  const read: ReadAsset = <T>(path: string) => assetJson<T>(env,path)
+  const needsPeople=route.kind==='bill' || route.kind==='index' && route.dir==='person' || route.kind==='subject' && route.dir==='person'
+  const people = needsPeople ? await loadPeople(env).catch(()=>null) : null
+  let personIdentity: Parameters<typeof buildSchemaGraph>[0]['person']
+  let billIdentity: Parameters<typeof buildSchemaGraph>[0]['bill']
+  if (meta.status === 200) {
+    if (route.kind === 'subject' && route.dir === 'person' && url.searchParams.get('attribution') !== 'unattributed') {
+      const p = people && personAt(people,route.name)
+      if (p) {
+        const profiles=await read<{people:Record<string,PersonSchemaIdentity>;by_name:Record<string,PersonSchemaIdentity>}>('/profile-links.json').catch(()=>null)
+        const identity={...profiles?.by_name[foldName(p.name)],...profiles?.people[p.pid || '']}
+        const content = await renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined)
+        meta.prerender = content.html
+        if(content.description) meta.description=clip(content.description)
+        const photos=await loadPhotos(env).catch(()=>null)
+        personIdentity={...identity,portraitId:photoIdFor(photos,p.name)}
+        if(meta.jsonLd?.['@type']==='Person') {
+          const party=p.party_now || p.party
+          if(p.current===false || !party) delete meta.jsonLd.memberOf
+          else meta.jsonLd.memberOf={'@type':'Organization',name:party}
+        }
+      }
+    } else if (route.kind === 'bill') {
+      const bill=await read<Parameters<typeof renderBillAnswer>[0]>(`/bills/${route.key}.json`).catch(()=>null)
+      if(bill){meta.prerender=renderBillAnswer(bill,people?.people || [],people?.slugOf || new Map()).html;billIdentity={identifier:bill.key,status:bill.status}}
+    } else {
+      const directory=route.kind==='index' ? route.dir : route.kind==='topics' ? 'topic' : route.kind==='static' && route.page==='bills' ? 'bills' : route.kind==='static' && route.page==='money/grants' && !url.searchParams.has('program') && !url.searchParams.has('open') && !url.searchParams.has('largest') ? 'grants' : null
+      if(directory){
+        const content=await renderDirectory(directory,url,read,people?.people || [],people?.slugOf || new Map(),TOPIC_NAMES)
+        if(content){Object.assign(meta,{prerender:content.html,prev:content.prev,next:content.next});const canonical=new URL(meta.canonical);canonical.search='';if((content.page || 1)>1)canonical.searchParams.set('page',String(content.page));if(directory==='grants' && url.searchParams.has('jur'))canonical.searchParams.set('jur',url.searchParams.get('jur')!);meta.canonical=canonical.href}
+      }
+    }
+  }
+  // Every non-home path has a single answer, including unavailable/not-found pages.
+  meta.prerender ??= answerBlock(meta.title.replace(/ · OPAX$/, ''),meta.description,meta.status===404 ? 'Not found' : 'OPAX')
+  meta.jsonLd=buildSchemaGraph({canonical:meta.canonical,title:meta.title,description:meta.description,jsonLd:meta.jsonLd,person:personIdentity,bill:billIdentity})
+  return meta
 }
 
 /** Status as a reader meets it, from the registry's own vocabulary. */
@@ -4414,6 +4475,16 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
   }
   if (/^news-\d+$/.test(slug)) return { ...generic, title: 'Document removed · OPAX', status: 410 }
   if (!isPublicSlug(slug)) return { ...generic, title: 'Document not found · OPAX', status: 404 }
+  if (DIVISION_SLUG_RE.test(slug)) {
+    const division = await assetJson<Division>(env,`/divisions/${encodeURIComponent(slug)}.json`).catch(()=>null)
+    if (division) {
+      const people = await loadPeople(env).catch(()=>null)
+      const content = renderDivisionAnswer(division,people?.people || [],people?.slugOf || new Map())
+      return {...generic,title:`${clip(division.name || division.question || 'Division',90)} · OPAX`,description:clip(content.description || ''),prerender:content.html,
+        jsonLd:{'@context':'https://schema.org','@type':'Article',headline:division.name || division.question,url:canonical,...(division.date ? {datePublished:division.date} : {}),publisher},
+        card:{kicker:'Division',title:division.question || division.name || 'Division',lines:[content.description || '']}}
+    }
+  }
   let res: Response | null
   try {
     res = await Promise.race([
@@ -4605,11 +4676,10 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
     .on('head', {
       element(el) {
         if (noindex) el.append('<meta name="robots" content="noindex">', { html: true })
+        for(const [rel,href] of [['prev',meta.prev],['next',meta.next]]) if(href) el.append(`<link rel="${rel}" href="${escHtml(href)}">`,{html:true})
       },
     })
-  if (meta.prerender) {
-    rewriter.on('main', { element(el) { el.prepend(meta.prerender as string, { html: true }) } })
-  }
+  rewriter.on('main#main', { element(el) { el.setAttribute('data-server-rendered',''); el.setInnerContent(meta.prerender || '', { html: true }) } })
   const out = rewriter.transform(shell)
   const headers = new Headers(out.headers)
   headers.delete('etag') // the asset's tag describes the unrewritten file
@@ -5244,6 +5314,10 @@ export default {
     const entry = await pageEntry(request, env.ASSETS)
     if (entry) {
       if (/^\/search\/?$/.test(url.pathname)) entry.headers.set('x-robots-tag', url.search ? 'noindex' : 'all')
+      if(entry.status===200 && url.pathname==='/') {
+        const schema=JSON.stringify(buildSchemaGraph({canonical:`${SITE_ORIGIN}/`,title:SITE_TITLE,description:SITE_DESCRIPTION})).replace(/</g,'\\u003c')
+        return communityResponse(new HTMLRewriter().on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(entry))
+      }
       return communityResponse(entry)
     }
     if (url.pathname.startsWith('/api/community/')) return communityResponse(await communityRoute(request, env, ctx))

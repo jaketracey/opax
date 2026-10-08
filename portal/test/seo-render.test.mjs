@@ -1,0 +1,64 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync,existsSync} from 'node:fs';
+import {build} from 'esbuild';
+import {renderBillAnswer,partyLine,escapeHtml,safeHref} from '../src/seo-content.ts';
+const pub=new URL('../public/',import.meta.url);
+const read=async path=>JSON.parse(readFileSync(new URL(path.slice(1),pub),'utf8'));
+// Exercise the real Worker dispatch/render/meta code with disk-backed ASSETS.
+// A minimal HTMLRewriter adapter supplies only the platform transformations it uses.
+class Rewriter {
+  handlers=[];
+  on(selector,handler){this.handlers.push([selector,handler]);return this;}
+  transform(response){const handlers=this.handlers;return new Response(new ReadableStream({async start(controller){
+    let html=await response.text();
+    for(const [selector,handler] of handlers){
+      const mutate=(outer,open,inner,close)=>{let attr=open,body=inner,removed=false;const el={setAttribute(name,value){const re=new RegExp(` ${name}="[^"]*"`);const next=` ${name}="${escapeHtml(value)}"`;attr=re.test(attr)?attr.replace(re,next):attr.replace(/>$/,next+'>');},setInnerContent(value,opts){body=opts?.html?value:escapeHtml(value);},append(value){body+=value;},remove(){removed=true;}};handler.element(el);return removed?'':attr+body+close;};
+      if(selector==='main#main')html=html.replace(/(<main\b[^>]*>)([\s\S]*?)(<\/main>)/,mutate);
+      else if(selector==='title')html=html.replace(/(<title>)([\s\S]*?)(<\/title>)/,mutate);
+      else if(selector==='head')html=html.replace(/(<head>)([\s\S]*?)(<\/head>)/,mutate);
+      else if(selector==='script#ld-page')html=html.replace(/(<script\b[^>]*id="ld-page"[^>]*>)([\s\S]*?)(<\/script>)/,mutate);
+      else{const match=/^(meta|link)\[(name|property|rel)="([^"]+)"\]$/.exec(selector);if(match)html=html.replace(new RegExp(`<${match[1]}\\b[^>]*${match[2]}="${match[3]}"[^>]*>`,'g'),outer=>mutate(outer,outer,'',''));}
+    }
+    controller.enqueue(new TextEncoder().encode(html));controller.close();
+  }}),response);}
+}
+const compiled=await build({entryPoints:[new URL('../src/index.ts',import.meta.url).pathname],bundle:true,platform:'browser',format:'esm',write:false,external:['node:*'],plugins:[{name:'omit-images',setup(b){b.onResolve({filter:/^\.\/og-render$/},()=>({path:'images',namespace:'seo-test'}));b.onLoad({filter:/.*/,namespace:'seo-test'},()=>({contents:'export const renderOgPng=()=>{};export const renderOgJpeg=()=>{};',loader:'js'}));}}]});
+globalThis.HTMLRewriter=Rewriter;
+const {default:worker}=await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
+const origin='https://opax.com.au';
+const env={COMMUNITY_ORIGIN:origin,ASSETS:{async fetch(req){const path=new URL(req.url).pathname;const file=new URL(path==='/'?'index.html':path==='/home'?'home.html':path.slice(1),pub);return existsSync(file)?new Response(readFileSync(file),{headers:{'content-type':path.endsWith('.json')?'application/json':'text/html'}}):new Response('Missing',{status:404});}}};
+async function get(path){const r=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});assert.equal(r.status,200,path);return r.text();}
+function checkHtml(html){assert.equal((html.match(/<h1\b/g)||[]).length,1);assert.doesNotMatch(html,/id="panel-ask"|id="panel-privacy"|Ask &amp; search the record/);const graph=JSON.parse(html.match(/<script[^>]*id="ld-page"[^>]*>(.*?)<\/script>/s)[1]);assert.ok(graph['@graph'].some(n=>n['@type']==='BreadcrumbList'));return graph['@graph'];}
+test('raw MP answer includes identity, seat, ten actual votes, interests and organisational donors only',async()=>{
+  const html=await get('/subject/person/anthony-albanese');const graph=checkHtml(html);
+  for(const fact of ['Anthony Albanese','Labor','Grayndler','House of Representatives','Last 10 recorded votes','2026-09-17','28 recorded entries','Chair of the Australian Parliament Sports Club','individual donors','View original'])assert.ok(html.includes(fact),fact);
+  assert.match(html,/href="\/subject\/party\/Labor"/);assert.match(html,/href="\/subject\/electorate\//);
+  const votes=(await read('/votes.json'))['10007'].recent;assert.equal(votes.length,10);for(const vote of votes)assert.ok(html.includes(escapeHtml(vote.title)),vote.title);
+  for(const path of ['/graph/money.json','/graph/money.qld.json','/graph/money.vic.json'])for(const n of (await read(path)).nodes.filter(n=>n.kind==='donor'&&n.industry==='individual'))assert.ok(!html.includes(escapeHtml(n.label)),n.label);
+  const person=graph.find(n=>n['@type']==='Person');assert.ok(person.image);assert.ok(person.sameAs.includes('https://www.aph.gov.au/Senators_and_Members/Parliamentarian?MPID=R36'));
+});
+test('raw bill includes summary attribution, stages, sponsor/portfolio, divisions and source links',async()=>{
+  const html=await get('/bill/au-federal-r7534');const graph=checkHtml(html);
+  const bill=await read('/bills/au-federal-r7534.json');assert.ok(html.includes(escapeHtml(bill.portfolio)));assert.ok(html.includes(escapeHtml(bill.summary.attribution)));assert.ok(html.includes(escapeHtml(bill.summary.sentences[0])));assert.ok(html.includes('ayes 11, noes 24'));assert.match(html,/href="\/doc\/division-federal-senate-10701"/);assert.ok(graph.some(n=>n['@type']==='Legislation'&&n.legislationIdentifier===bill.key&&n.creativeWorkStatus));
+  const sponsored=await get('/bill/au-federal-s1517');assert.match(sponsored,/href="\/subject\/person\/david-pocock"/);
+});
+test('raw division names and links every recorded member, with question/date/tally/bills',async()=>{
+  const html=await get('/doc/division-federal-senate-10701');checkHtml(html);const d=await read('/divisions/division-federal-senate-10701.json');for(const m of d.members)assert.ok(html.includes(escapeHtml(m.name)),m.name);assert.ok(html.includes('ayes 11, noes 24'));assert.match(html,/href="\/bill\/au-federal-r7534"/);assert.match(html,/href="\/subject\/person\/david-pocock"/);assert.ok(html.includes(escapeHtml(d.question)));
+  const response=await worker.fetch(new Request(origin+'/api/resource/division-federal-senate-10701'),env,{});const app=await response.json();assert.equal(app.metadata.ayes.length,11);assert.equal(app.metadata.noes.length,24);
+});
+test('directories expose bounded links and canonical pagination with rel prev/next',async()=>{
+  for(const path of ['/subject/person','/subject/party','/subject/electorate','/subject/topic','/bills?page=2','/money/grants?page=2']){const html=await get(path);checkHtml(html);const main=html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)[1];assert.ok((main.match(/<li>/g)||[]).length<=50);assert.match(main,/href="\/(subject|bill|money\/grants)\//);if(path.includes('page=2')){assert.match(html,/<link rel="prev"/);assert.match(html,/<link rel="next"/);}}
+  const first=await get('/bills');const second=await get('/bills?page=2');const rows=(await read('/bills/index.json')).bills;assert.ok(first.includes(`/bill/${rows[0].key}`));assert.ok(!second.includes(`/bill/${rows[0].key}`));assert.ok(second.includes(`/bill/${rows[50].key}`));const last=await get('/bills?page=999999');assert.match(last,/rel="canonical" href="https:\/\/opax.com.au\/bills\?page=60"/);
+});
+test('homepage schema includes website, search, organisation and breadcrumb; stats is a dataset',async()=>{
+  const html=await get('/');const graph=JSON.parse(html.match(/<script[^>]*id="ld-page"[^>]*>(.*?)<\/script>/s)[1])['@graph'];for(const type of ['WebSite','Organization','BreadcrumbList'])assert.ok(graph.some(n=>n['@type']===type));assert.equal(graph.find(n=>n['@type']==='WebSite').potentialAction.target,origin+'/search?q={search_term_string}');assert.ok(checkHtml(await get('/stats')).some(n=>n['@type']==='Dataset'));
+});
+test('source markup, malicious URLs and tally fields stay escaped; tri-state affiliation is explicit',()=>{
+  assert.equal(partyLine({party:'Labor',current:false}),'Formerly Labor');assert.equal(partyLine({party:'Labor',current:undefined}),'Labor (recorded affiliation)');assert.equal(partyLine({party:'Labor',party_now:'Independent',current:true}),'Independent; formerly Labor');assert.equal(safeHref('javascript:alert(1)'),null);
+  const html=renderBillAnswer({title:'<img src=x onerror=bad>',key:'x',divisions:[{key:'x',ayes:'<script>bad</script>',noes:0,url:'javascript:alert(1)'}],summary:{sentences:['</script><script>bad</script>']}},[],new Map()).html;assert.doesNotMatch(html,/<script>|<img|javascript:/);assert.match(html,/&lt;script&gt;/);
+});
+test('sample HTML stays bounded and boot assets preserve the original app panel IDs',async()=>{
+  for(const path of ['/subject/person/anthony-albanese','/bill/au-federal-r7534','/doc/division-federal-senate-10701'])assert.ok(Buffer.byteLength(await get(path))<100000,path);
+  const generated=readFileSync(new URL('spa-shell.js',pub),'utf8');assert.ok(generated.includes('panel-subject'));assert.ok(generated.includes('main.prepend(answer)'));assert.ok(readFileSync(new URL('index.html',pub),'utf8').indexOf('/spa-shell.js')<readFileSync(new URL('index.html',pub),'utf8').indexOf('/app.js'));
+});
