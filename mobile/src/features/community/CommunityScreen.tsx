@@ -54,18 +54,18 @@ import {
 const titles: Record<CommunityView, string> = {
   home: 'Community',
   thread: 'Discussion',
-  'new-thread': 'Start a discussion',
+  'new-thread': 'New discussion',
   members: 'Members',
-  member: 'Member profile',
+  member: 'Member',
   messages: 'Messages',
   conversation: 'Conversation',
   activity: 'Activity',
-  settings: 'Privacy & messages',
-  profile: 'Your public profile',
+  settings: 'Privacy',
+  profile: 'Profile',
   lists: 'Reading lists',
   list: 'Reading list',
-  guidelines: 'Community guidelines',
-  report: 'Report a concern',
+  guidelines: 'Guidelines',
+  report: 'Report',
 };
 const api = '/api/community/';
 const go = (view: CommunityView, params: Record<string, string> = {}) =>
@@ -227,7 +227,13 @@ function SearchBox({
 }
 export function CommunityScreen() {
   useCommunityRevision();
-  return <CommunityPage key={communityGeneration()} />;
+  const params = useLocalSearchParams<Record<string, string>>();
+  // Linking can reuse this dynamic route. A different destination owns its
+  // own form and scroll view, while back navigation retains the old route.
+  const destination = JSON.stringify(
+    Object.entries(params).sort(([a], [b]) => a.localeCompare(b)),
+  );
+  return <CommunityPage key={`${communityGeneration()}:${destination}`} />;
 }
 function CommunityPage() {
   const composerSurface = useRef<View>(null);
@@ -1181,6 +1187,7 @@ function CommunityPage() {
           value={title}
           onChangeText={setTitle}
           maxLength={60}
+          multiline
           testID="community-profile-name"
         />
         <Field

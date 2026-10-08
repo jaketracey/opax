@@ -5,7 +5,8 @@ import type { VoiceFailure } from '../../voice';
 // production voice builds; voice-off builds resolve entry.production.ts.
 export const accountCopy = {
   checking: 'Checking your account…',
-  signedOut: 'Not signed in. An account is only needed to talk to OPAX.',
+  signedOut:
+    'Not signed in. Sign in to talk to OPAX or participate in Community. Public records and discussions stay open.',
   signInForVoice: 'Sign in for voice',
   signedInAs: (email: string) => `Signed in as ${email}`,
   signedInHere: 'Signed in on this iPhone',
@@ -24,7 +25,7 @@ export const accountCopy = {
   sharedAccount: 'Your OPAX community account is also used on opax.com.au.',
 
   signInIntro:
-    'An OPAX account lets you talk to OPAX. The rest of the app works without one.',
+    'An OPAX account lets you talk to OPAX and participate in Community. Public records and discussions can be read without one.',
   sameAccount:
     'It is the same account as the OPAX community on opax.com.au. Signing in creates an account if you do not have one.',
   ageLimit: 'Accounts and voice are for people aged 16 and over.',

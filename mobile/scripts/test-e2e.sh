@@ -192,6 +192,7 @@ echo "$MOCK_LANE maestro $phase lock=$lock gate=1" >> "$SCRATCH/trace"
 printf '%s\n' "$@" > "$SCRATCH/$MOCK_LANE.$phase.maestro-args"
 touch "$SCRATCH/$MOCK_LANE.maestro"
 case "${MOCK_DRIVER_ERROR:-}" in
+  bytes403) echo 'response_status=200, request_bytes=333, response_bytes=403' ;;
   403) echo 'HTTP response status 403 Forbidden from XCTest driver'; sleep 60 ;;
   connection) echo 'java.net.ConnectException: Failed to connect to /127.0.0.1:9073'; sleep 60 ;;
   debug)
@@ -434,6 +435,11 @@ run_lane driver-startup-probe 01
 check_rc driver-startup-probe 0
 unset MOCK_DRIVER_ERROR
 pass 'the expected pre-install driver probe is allowed during bounded startup'
+export MOCK_DRIVER_ERROR=bytes403
+run_lane driver-response-byte-count 01
+check_rc driver-response-byte-count 0
+unset MOCK_DRIVER_ERROR
+pass 'a successful HTTP 200 response containing 403 bytes is not a driver refusal'
 export MOCK_DRIVER_PORT_BUSY=1
 run_lane driver-port-busy 01
 wait_for "$MOBILE/private/qa/driver-port-busy/exit-status"

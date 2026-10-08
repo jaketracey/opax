@@ -27,8 +27,7 @@ appId: au.com.opax.app
 - tapOn:
     id: today-community
 - extendedWaitUntil:
-    visible:
-      id: community-home
+    visible: Questions, sources and conversations worth following.
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/community-ax5-feed
 - openLink: opax://community/thread?id=discussion-a
@@ -56,8 +55,7 @@ appId: au.com.opax.app
 - takeScreenshot: ${EVIDENCE}/community-ax5-new-thread
 - openLink: opax://community/members
 - extendedWaitUntil:
-    visible:
-      id: community-members
+    visible: Find people exploring the public record.
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/community-ax5-members
 - openLink: opax://community/member?id=reader-a
@@ -89,8 +87,7 @@ appId: au.com.opax.app
 - takeScreenshot: ${EVIDENCE}/community-ax5-message-composer
 - openLink: opax://community/activity
 - extendedWaitUntil:
-    visible:
-      id: community-activity
+    visible: Replies, likes and new followers.
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/community-ax5-activity
 - openLink: opax://community/lists
@@ -112,8 +109,7 @@ appId: au.com.opax.app
 - takeScreenshot: ${EVIDENCE}/community-ax5-profile-edit
 - openLink: opax://community/settings
 - extendedWaitUntil:
-    visible:
-      id: community-settings
+    visible: Who can send you messages?
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/community-ax5-settings
 - scrollUntilVisible:

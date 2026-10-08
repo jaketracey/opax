@@ -163,3 +163,47 @@ it('gates the first reply on guidelines with no write, and clears drafts across 
     )[0]!.props.value,
   ).toBe('');
 });
+
+it('clears a draft when a deep link reuses the dynamic route for another discussion', async () => {
+  mockFocused = true;
+  mockParams = { view: 'thread', id: 'discussion-a' };
+  request.mockResolvedValue(
+    reply({
+      thread: {
+        id: 'discussion-a',
+        member_id: 'reader-a',
+        title: 'Discussion title',
+        body: 'Discussion body',
+        display_name: 'Fixture Member',
+        replies: 0,
+        likes: 0,
+      },
+      replies: [],
+    }),
+  );
+  await act(async () => {
+    screen = create(<CommunityScreen />);
+  });
+  await act(async () => {
+    screen.root
+      .findAll(
+        (n) =>
+          n.props.testID === 'community-compose' &&
+          typeof n.props.onChangeText === 'function',
+      )[0]!
+      .props.onChangeText('Draft for discussion A');
+  });
+  mockParams = { view: 'thread', id: 'discussion-b' };
+  await act(async () => {
+    screen.update(<CommunityScreen />);
+  });
+  expect(
+    screen.root.findAll(
+      (n) =>
+        n.props.testID === 'community-compose' &&
+        typeof n.props.onChangeText === 'function',
+    )[0]!.props.value,
+  ).toBe('');
+  expect(request).toHaveBeenCalledTimes(2);
+  expect(request.mock.calls.every((call) => call[1] === 'GET')).toBe(true);
+});

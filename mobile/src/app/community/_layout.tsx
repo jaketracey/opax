@@ -17,6 +17,7 @@ export default function CommunityStack() {
             type: 'button',
             label: 'Support',
             accessibilityLabel: 'Contact OPAX support',
+            icon: { type: 'sfSymbol', name: 'questionmark.circle' },
             onPress: () =>
               void openSource(`${webOrigin}/support`, 'OPAX support'),
           },
