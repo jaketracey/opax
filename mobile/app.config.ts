@@ -133,6 +133,7 @@ const config: ExpoConfig = {
   },
   plugins: [
     './plugins/withAndroidPolicy.js',
+    '@react-native-community/datetimepicker',
     ['expo-router', { sitemap: variant !== 'production' }],
     './plugins/withSceneLifecycle.js',
     './plugins/withPrivacyPatches.js',

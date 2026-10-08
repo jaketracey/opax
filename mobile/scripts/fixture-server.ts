@@ -7,6 +7,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import snapshot from './fixture-snapshot.json';
+import directorySnapshot from './fixtures/directory-snapshot.json';
 import recordFixtures from './fixtures/records/contracts.json';
 import {
   assertAllowedPath,
@@ -77,6 +78,7 @@ for (const [path, body] of Object.entries(recordFixtures.responses)) {
   files.set(path, Buffer.from(JSON.stringify(body)));
 }
 const pinnedBytes = fixtureBytes(snapshot);
+const directoryBytes = fixtureBytes(directorySnapshot);
 const reportBytes = reportsFixture(pinnedBytes);
 for (const path of Object.keys(snapshot.files)) {
   if (snapshot.testOnlyFiles.includes(path)) continue;
@@ -225,6 +227,9 @@ export const server = createServer(async (request, response) => {
     let body = files.get(url.pathname) ?? searchResourceFixture(url.pathname) ?? reportBody ?? (peopleResponse
       ? Buffer.from(JSON.stringify(peopleFixtures.responses[path]))
       : undefined);
+    // Verify the many static bill-history blobs lazily at the fixture boundary.
+    if (!body && Object.hasOwn(directorySnapshot.files, url.pathname))
+      body = directoryBytes(url.pathname);
     let cacheControl = 'public, max-age=300';
     const isEdition = url.pathname === editionPath;
     if (

@@ -272,7 +272,10 @@ test('a malformed outline drops only itself: the Electorate screen still reads',
   mock.electorateFor.mockResolvedValue(result(c.electorateFor(official)));
   let r = await render(<Electorate />);
   expect(text(r)).toContain('2021 Census geography');
-  expect(text(r)).toContain('Display outline · ABS statistical geography');
+  expect(text(r)).toContain(
+    `Display outline · ${official.boundaries[0]!.vintage}`,
+  );
+  expect(text(r)).not.toContain('Source geometry');
   await act(async () => r.unmount());
   mock.electorateFor.mockResolvedValue(
     result(

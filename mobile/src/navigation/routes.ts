@@ -39,6 +39,8 @@ export function fromWebPath(
 ):
   | ReturnType<typeof personRoute>
   | ReturnType<typeof billRoute>
+  | ReturnType<typeof directoryRoute>
+  | typeof divisionHistoryRoute
   | ReturnType<typeof electorateRoute>
   | ReturnType<typeof partyRoute>
   | ReturnType<typeof askRoute>
@@ -55,6 +57,9 @@ export function fromWebPath(
   const money = moneyFromWebPath(path);
   if (money) return money;
   if (path === '/money' || path === '/money/') return moneyRoute();
+  const directory = /^\/subject\/(person|party|electorate)\/?$/.exec(path);
+  if (directory?.[1]) return directoryRoute(directory[1] as 'person' | 'party' | 'electorate');
+  if (path === '/bills?view=divisions') return divisionHistoryRoute;
   if (path === '/reports') return {pathname:'/reports'};
   if (path === '/subject/topic') return {pathname:'/topics'};
   if (path === '/stats' || path === '/methods') return {pathname:path};
@@ -85,8 +90,12 @@ export function fromWebPath(
       });
     return null;
   }
-  const electorate = /^\/subject\/electorate\/([a-z0-9-]+)\/?$/.exec(path);
-  if (electorate?.[1]) return electorateRoute(electorate[1]);
+  const electorate = /^\/subject\/electorate\/([a-z0-9-]+|el_[a-f0-9]{24})\/?(?:\?asof=(\d{4}-\d{2}-\d{2}))?$/.exec(path);
+  if (electorate?.[1]) {
+    const asof = electorate[2];
+    if (asof && (!Number.isFinite(Date.parse(asof)) || new Date(asof).toISOString().slice(0, 10) !== asof)) return null;
+    return electorateRoute(electorate[1], asof);
+  }
   const party = /^\/subject\/party\/([^/?#]+)\/?$/.exec(path);
   if (party?.[1]) {
     try {
@@ -141,9 +150,9 @@ export function searchRouteFromWebPath(
 // Talk is shipped when the production voice build switch is enabled.
 export const voiceSlot = { enabled: true, module: 'src/voice' } as const;
 
-export const electorateRoute = (id: string) => ({
+export const electorateRoute = (id: string, asof?: string) => ({
   pathname: '/electorate/[id]' as const,
-  params: { id },
+  params: { id, ...(asof ? { asof } : {}) },
 });
 
 export const partyRoute = (name: string) => {
@@ -197,3 +206,9 @@ export const moneyRoute = (party?: string | null, jurisdiction = 'federal') => {
     ...(Object.keys(params).length ? { params } : {}),
   };
 };
+
+export const directoryRoute = (kind: 'person' | 'party' | 'electorate') => ({
+  pathname: '/directory' as const,
+  params: { kind },
+});
+export const divisionHistoryRoute = { pathname: '/division-history' as const };

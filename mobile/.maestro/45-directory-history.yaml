@@ -1,0 +1,201 @@
+appId: au.com.opax.app
+name: 45 Electorates, dated representation, bill filters and division history
+---
+- launchApp
+- tapOn:
+    id: tab-search
+- scrollUntilVisible:
+    element:
+      id: search-browse-electorate
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- tapOn:
+    id: search-browse-electorate
+- extendedWaitUntil:
+    visible:
+      id: directory-count
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/45-electorates-directory
+- tapOn:
+    id: directory-search
+- inputText: Grayndler
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: directory-electorate-federal-representatives-nsw-grayndler
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/45-electorate-row
+- tapOn:
+    id: directory-electorate-federal-representatives-nsw-grayndler
+- extendedWaitUntil:
+    visible:
+      id: electorate-name
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/45-native-seat
+- scrollUntilVisible:
+    element:
+      id: electorate-date-picker
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- tapOn:
+    id: electorate-date-picker
+- extendedWaitUntil:
+    visible:
+      id: electorate-native-date-picker
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/45-native-date-picker
+- scrollUntilVisible:
+    element:
+      id: electorate-date-input
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- tapOn:
+    id: electorate-date-input
+- eraseText: 10
+- inputText: 2024-01-01
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: electorate-date-view
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- tapOn:
+    id: electorate-date-view
+- scrollUntilVisible:
+    element:
+      text: Representation on 1 January 2024
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/45-dated-representation
+- tapOn: Share Grayndler
+- scrollUntilVisible:
+    element:
+      text: https://opax.invalid/subject/electorate/federal-representatives-nsw-grayndler\?asof=2024-01-01
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/45-dated-share
+- tapOn: OK
+- scrollUntilVisible:
+    element:
+      text: Representation history
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/45-representation-history
+- tapOn:
+    id: tab-bills
+- extendedWaitUntil:
+    visible:
+      id: bills-filters
+    timeout: 30000
+- tapOn:
+    id: bills-filters
+- scrollUntilVisible:
+    element:
+      id: bill-filter-parliament-48
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/45-bill-parliaments
+- tapOn:
+    id: bill-filter-parliament-48
+- scrollUntilVisible:
+    element:
+      id: bill-filter-divided
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- tapOn:
+    id: bill-filter-divided
+- scrollUntilVisible:
+    element:
+      id: bill-filter-sort-divisions
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/45-bill-sorts
+- tapOn:
+    id: bill-filter-sort-divisions
+- tapOn: Done
+- extendedWaitUntil:
+    visible:
+      id: bills-chip-parliament
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/45-filtered-bills
+- scrollUntilVisible:
+    element:
+      id: bills-division-history
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- tapOn:
+    id: bills-division-history
+- extendedWaitUntil:
+    visible:
+      id: division-history-search
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/45-division-history-loading
+- scrollUntilVisible:
+    element:
+      id: division-history-coverage
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- extendedWaitUntil:
+    visible: All bill files loaded
+    timeout: 600000
+- takeScreenshot: ${EVIDENCE}/45-division-history-complete
+- scrollUntilVisible:
+    element:
+      id: division-history-search
+    direction: UP
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- tapOn:
+    id: division-history-search
+- inputText: Interactive Gambling
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: division-history-au-federal-r7534-.*
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/45-division-row
+- scrollUntilVisible:
+    element:
+      id: division-question-au-federal-r7534-.*
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: division-question-au-federal-r7534-.*
+    index: 0
+- takeScreenshot: ${EVIDENCE}/45-division-question
+- tapOn:
+    id: division-question-au-federal-r7534-.*-sheet-done
+- scrollUntilVisible:
+    element:
+      id: division-history-au-federal-r7534-.*
+    visibilityPercentage: 10
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: division-history-au-federal-r7534-.*
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: bill-divisions
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/45-native-bill-divisions

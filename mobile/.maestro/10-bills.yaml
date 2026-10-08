@@ -16,7 +16,7 @@ name: 10 Filter and search the bill list, then open a bill
       id: bills-count
     timeout: 20000
 # Every count comes from the pinned index (generated 29 September 2026).
-- assertVisible: 2,989 bills · latest activity first
+- assertVisible: 2,989 bills · newest first
 - takeScreenshot: ${EVIDENCE}/10-list
 - tapOn:
     id: bills-filters
@@ -45,7 +45,7 @@ name: 10 Filter and search the bill list, then open a bill
     direction: DOWN
     speed: 20
     timeout: 180000
-- assertVisible: 119 of 2,989 bills · latest activity first
+- assertVisible: 119 of 2,989 bills · newest first
 - takeScreenshot: ${EVIDENCE}/10-filtered
 - scrollUntilVisible:
     element:

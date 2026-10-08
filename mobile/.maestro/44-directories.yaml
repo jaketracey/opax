@@ -1,0 +1,142 @@
+appId: au.com.opax.app
+name: 44 Native people and parties directories
+---
+- launchApp
+- tapOn:
+    id: tab-search
+- scrollUntilVisible:
+    element:
+      id: search-browse-person
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/44-search-browse
+- tapOn:
+    id: search-browse-person
+- extendedWaitUntil:
+    visible:
+      id: directory-count
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/44-people-directory
+- tapOn:
+    id: directory-filters
+- scrollUntilVisible:
+    element:
+      id: directory-filter-party
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- tapOn:
+    id: directory-filter-party
+- scrollUntilVisible:
+    element:
+      id: directory-choice-Labor
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/44-party-choices
+- tapOn:
+    id: directory-choice-Labor
+- scrollUntilVisible:
+    element:
+      id: directory-filter-chamber
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- tapOn:
+    id: directory-filter-chamber
+- scrollUntilVisible:
+    element:
+      id: directory-choice-representatives
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- tapOn:
+    id: directory-choice-representatives
+- scrollUntilVisible:
+    element:
+      id: directory-filter-sort
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- tapOn:
+    id: directory-filter-sort
+- takeScreenshot: ${EVIDENCE}/44-sorts
+- tapOn:
+    id: directory-choice-name
+- takeScreenshot: ${EVIDENCE}/44-people-filters
+- tapOn: Done
+- scrollUntilVisible:
+    element:
+      id: directory-search
+    direction: UP
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- tapOn:
+    id: directory-search
+- inputText: Anthony Albanese
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: directory-person-anthony-albanese
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- waitForAnimationToEnd
+- assertNotVisible:
+    id: directory-person-anthony-albanese-name-drawn-clipped.*
+- takeScreenshot: ${EVIDENCE}/44-filtered-person-row
+- tapOn:
+    id: directory-person-anthony-albanese
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+    timeout: 30000
+- assertVisible: Anthony Albanese
+- takeScreenshot: ${EVIDENCE}/44-native-person
+- tapOn: Parliamentarians
+- tapOn:
+    text: Search
+    index: 0
+- scrollUntilVisible:
+    element:
+      id: search-browse-party
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- tapOn:
+    id: search-browse-party
+- extendedWaitUntil:
+    visible:
+      id: directory-count
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/44-parties-directory
+- scrollUntilVisible:
+    element:
+      id: directory-search
+    direction: UP
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- tapOn:
+    id: directory-search
+- inputText: Labor
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: directory-party-labor
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/44-party-row
+- tapOn:
+    id: directory-party-labor
+- extendedWaitUntil:
+    visible:
+      id: party-title
+    timeout: 30000
+- assertVisible: Labor
+- takeScreenshot: ${EVIDENCE}/44-native-party

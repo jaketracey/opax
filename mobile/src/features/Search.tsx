@@ -28,6 +28,7 @@ import {
   LoadingState,
   OfflineBanner,
   OpaxWebLink,
+  LinkRow,
   PersonRow,
   RowList,
   KeyboardStableScreen,
@@ -356,14 +357,9 @@ export default function Search({
               {!showSuggestions ? (
                 <>
                   <RowList>
-                    <OpaxWebLink
-                      label="Parliamentarians"
-                      path="/subject/person"
-                    />
-                    <OpaxWebLink
-                      label="Electorates"
-                      path="/subject/electorate"
-                    />
+                    <LinkRow title="Parliamentarians" icon="person.2" accent="people" testID="search-browse-person" onPress={() => router.push({ pathname: '/directory', params: { kind: 'person' } })} />
+                    <LinkRow title="Parties" icon="person.3" accent="people" testID="search-browse-party" onPress={() => router.push({ pathname: '/directory', params: { kind: 'party' } })} />
+                    <LinkRow title="Electorates" icon="map" accent="places" testID="search-browse-electorate" onPress={() => router.push({ pathname: '/directory', params: { kind: 'electorate' } })} />
                   </RowList>
                   <Text variant="caption">
                     Bill searches use the saved bill titles in Bills.

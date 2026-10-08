@@ -15,8 +15,25 @@ export interface BillFilters {
   /** The originating house's chamber ID. */
   chamber?: string;
   year?: number;
+  parliament?: number;
+  divided?: boolean;
+  sort?: 'newest' | 'oldest' | 'title' | 'divisions';
 }
 export type BillFilterKey = keyof BillFilters;
+export const parliamentLabel = (value: number) => {
+  const lastTwo = value % 100;
+  const suffix =
+    lastTwo >= 11 && lastTwo <= 13
+      ? 'th'
+      : value % 10 === 1
+        ? 'st'
+        : value % 10 === 2
+          ? 'nd'
+          : value % 10 === 3
+            ? 'rd'
+            : 'th';
+  return `${value}${suffix} parliament`;
+};
 
 // One store shared by the list and its filter sheet, so routes carry no
 // filter state. The list publishes the facets once its index loads.
@@ -62,6 +79,9 @@ function cleaned(filters: BillFilters): BillFilters {
   if (filters.status) out.status = filters.status;
   if (filters.chamber) out.chamber = filters.chamber;
   if (filters.year !== undefined) out.year = filters.year;
+  if (filters.parliament !== undefined) out.parliament = filters.parliament;
+  if (filters.divided) out.divided = true;
+  if (filters.sort) out.sort = filters.sort;
   return out;
 }
 
@@ -86,6 +106,14 @@ export function appliedFilters(filters: BillFilters) {
     });
   if (filters.year !== undefined)
     chips.push({ key: 'year', filter: 'year', value: String(filters.year) });
+  if (filters.parliament !== undefined)
+    chips.push({
+      key: 'parliament',
+      filter: 'parliament',
+      value: parliamentLabel(filters.parliament),
+    });
+  if (filters.divided)
+    chips.push({ key: 'divided', filter: 'divided on', value: 'Yes' });
   return chips;
 }
 export function withoutFilter(
@@ -151,3 +179,10 @@ export function billRowText(bill: BillListRow) {
       .join(', '),
   };
 }
+
+export const billSorts = [
+  { value: 'newest', label: 'Newest first' },
+  { value: 'oldest', label: 'Oldest first' },
+  { value: 'title', label: 'By name' },
+  { value: 'divisions', label: 'Most division records' },
+] as const;
