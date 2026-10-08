@@ -5,7 +5,12 @@ import type { EditionView } from '../../api/catalogs';
 import { catalogs } from '../../api/runtime';
 import { formatDate } from '../../design/format';
 import { partyText } from '../../design/party';
-import { Button, Text, useAccessibilitySize } from '../../design/primitives';
+import {
+  Button,
+  MachineWritten,
+  Text,
+  useAccessibilitySize,
+} from '../../design/primitives';
 import { colors, hairline, light, spacing } from '../../design/tokens';
 import { openOnWeb, webPageUrl } from '../../navigation/external';
 import { fromWebPath, personRoute } from '../../navigation/routes';
@@ -231,10 +236,8 @@ export function EditionHero({ edition }: { edition: EditionView }) {
       </View>
       <View style={styles.body}>
         {edition.machineWritten ? (
-          <View
-            accessible
-            accessibilityLabel={`Machine-written. ${edition.machineWritten.attribution}`}
-            style={styles.machine}
+          <MachineWritten
+            explanation={edition.machineWritten.attribution}
             testID="today-edition-machine"
           >
             <Chip
@@ -243,10 +246,7 @@ export function EditionHero({ edition }: { edition: EditionView }) {
               color={accent.ink}
               icon="sparkles"
             />
-            <Text wordSafe variant="fine" style={styles.grow}>
-              {edition.machineWritten.attribution}
-            </Text>
-          </View>
+          </MachineWritten>
         ) : null}
         {showText ? (
           <View
@@ -447,12 +447,6 @@ const styles = StyleSheet.create({
   },
   detail: { flexShrink: 1 },
   body: { padding: spacing.s4, gap: spacing.s4 },
-  machine: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    gap: spacing.s3,
-  },
   grow: { flexGrow: 1, flexShrink: 1, flexBasis: 160 },
   text: { gap: spacing.s3 },
   figures: { flexDirection: 'row', gap: spacing.s3 },

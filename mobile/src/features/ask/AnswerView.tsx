@@ -8,6 +8,7 @@ import {
   ViewOriginal,
   Group,
   Heading,
+  MachineWritten,
   PersonRow,
   Section,
   Text,
@@ -27,7 +28,7 @@ import {
   type Turn,
 } from './model';
 export const machineNote =
-  'Machine-written from the retrieved passages; not the record.';
+  'Written by a model from the retrieved passages; not the record.';
 export const moneyNote =
   'Opax calculated these totals from selected public disclosure records. Open a source to explore the supporting funding records. Receipts include more than gifts, and this selection does not cover every donor.';
 export const payNote =
@@ -254,16 +255,12 @@ export function AnswerView({
         <Group
           style={{ backgroundColor: colors.moneyWash, padding: rhythm.block }}
         >
-          <Text wordSafe variant="fine">
-            {machineNote}
-          </Text>
+          <MachineWritten explanation={machineNote} />
           <AnswerBody text={data.money_overview} />
         </Group>
       ) : null}
       {!calculated && data.answer_status !== 'evidence_only' ? (
-        <Text wordSafe variant="fine" testID="ask-machine-label">
-          {machineNote}
-        </Text>
+        <MachineWritten explanation={machineNote} testID="ask-machine-label" />
       ) : null}
       <Group
         style={

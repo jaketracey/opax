@@ -11,6 +11,7 @@ import {
   Heading,
   KeyValueList,
   InfoButton,
+  MachineWritten,
   PartyChip,
   Screen,
   Section,
@@ -33,6 +34,7 @@ import {
 } from './model';
 import {
   AEC_NOTE,
+  MODEL_NOTE,
   Prose,
   ReadState,
   ShareBars,
@@ -375,9 +377,7 @@ function ReportContent({
                   ) : null}
                 </Group>
               ))}
-              <Text variant="fine">
-                Machine-written from the retrieved passages; not the record.
-              </Text>
+              <MachineWritten explanation={MODEL_NOTE} />
             </Section>
           ) : null}
         </Group>

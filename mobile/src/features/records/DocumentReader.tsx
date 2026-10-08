@@ -12,6 +12,7 @@ import {
   Group,
   Heading,
   LoadingState,
+  MachineWritten,
   Section,
   Disclosure,
   LinkRow,
@@ -196,25 +197,18 @@ export default function DocumentReader({
                 </Group>
                 <DocumentAsk doc={doc} />
                 {doc.summary ? (
-                  <Section
-                    title="In brief"
-                    accent="bills"
-                    testID="doc-brief"
-                    info={{
-                      title: 'About this summary',
-                      notes: [
+                  <Section title="In brief" accent="bills" testID="doc-brief">
+                    <MachineWritten
+                      label="Machine summary"
+                      explanation={
                         doc.labels.kind === 'bill_text'
                           ? 'Written from this document by a model, not part of the original bill text.'
                           : doc.labels.kind === 'speech'
                             ? 'Written from this speech by a model, not by a person, and not part of the record.'
-                            : 'Machine summary · not part of the record',
-                      ],
-                      testID: 'doc-brief-info',
-                    }}
-                  >
-                    <Text variant="caption" testID="doc-brief-label">
-                      Machine summary · not part of the record
-                    </Text>
+                            : 'Written by a model; not part of the record.'
+                      }
+                      testID="doc-brief-label"
+                    />
                     <Text selectable>{doc.summary}</Text>
                     <AsAtLine
                       asOf={metaString(doc, 'date') || null}

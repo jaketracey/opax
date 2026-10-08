@@ -227,12 +227,12 @@ test('bill text switches chosen bytes and never presents the old version as the 
 test('bill text leads with the bill page summary, labelled as machine-written', async () => {
   const bill = decodeBill(pinned('/bills/au-federal-r7534.json'));
   const view = await mount(<BillTextReader />);
-  const text = (testID: string) =>
-    JSON.stringify(view.root.findByProps({ testID }).props.children);
-  expect(text('bill-text-summary-label')).toContain('Machine summary');
-  expect(text('bill-text-summary-attribution')).toContain(
-    bill.summary!.attribution,
-  );
+  // Only the pill shows; VoiceOver hears the stored attribution on it.
+  const label = view.root
+    .findAllByProps({ testID: 'bill-text-summary-label' })
+    .find((node) => node.props.accessibilityLabel)?.props.accessibilityLabel;
+  expect(label).toMatch(/^Machine summary\. /);
+  expect(label).toContain(bill.summary!.attribution.replace(/\.$/, ''));
   expect(
     view.root
       .findByProps({ testID: 'bill-text-summary-text' })
