@@ -4,14 +4,19 @@ import { Image } from 'react-native';
 import { PeoplePortraits } from '../src/api/people-portraits';
 import type { Catalogs } from '../src/api/catalogs';
 import type { PortraitCache } from '../src/api/portrait-cache';
-import { rosterPeople, type Source, type Turn } from '../src/features/ask/model';
+import {
+  rosterPeople,
+  type Source,
+  type Turn,
+} from '../src/features/ask/model';
 import { catalogs } from './pinned';
 // The real verified index over the pinned roster, slugs and photo map.
 jest.mock('../src/api/runtime', () => {
   const { PeoplePortraits } = jest.requireActual<
     typeof import('../src/api/people-portraits')
   >('../src/api/people-portraits');
-  const { catalogs } = jest.requireActual<typeof import('./pinned')>('./pinned');
+  const { catalogs } =
+    jest.requireActual<typeof import('./pinned')>('./pinned');
   const record = (data: unknown) => ({ data });
   return {
     portraits: new PeoplePortraits(
@@ -138,7 +143,9 @@ test('a namesake or surname twin never resolves to another Smith', async () => {
     } as unknown as PortraitCache,
   );
   expect((await reader.get({ slug: 'tony-smith' }))?.info.key).toBe('10592');
-  expect(await reader.get({ name: 'Matt Smith', slug: 'matt-smith' })).toBeNull();
+  expect(
+    await reader.get({ name: 'Matt Smith', slug: 'matt-smith' }),
+  ).toBeNull();
   expect(await reader.get({ name: 'Smith', slug: 'smith' })).toBeNull();
   expect(await reader.get({ name: 'Smith' })).toBeNull();
 });

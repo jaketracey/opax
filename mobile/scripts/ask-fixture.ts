@@ -113,6 +113,42 @@ export async function askFixture(
     json(res, 200, clarify);
     return true;
   }
+  // TestFlight 8 Oct: a cited answer whose speakers fill "People in this
+  // answer". Synthetic records named as fixtures; no claim about anyone.
+  if (input.question === 'fixture people') {
+    const speakers = [
+      ['Sarah Witty', 'sarah-witty'],
+      ['Matt Smith', 'matt-smith'],
+      ['Mike Freelander', 'mike-freelander'],
+      ['Mary Aldred', 'mary-aldred'],
+    ];
+    const answer =
+      'Fixture reading instruction: four parliamentarians are cited so the people card can be checked. This is not model output or a claim about a person.';
+    res.writeHead(200, {
+      'Content-Type': 'text/event-stream; charset=utf-8',
+      'Cache-Control': 'no-store',
+    });
+    res.write(
+      'event: done\ndata: ' +
+        JSON.stringify({
+          answer,
+          citations: {},
+          sources: speakers.map(([speaker, slug], i) => ({
+            resource: `fixture-people-${i + 1}`,
+            title: `Fixture record ${i + 1}`,
+            slug: `fixture-people-${i + 1}`,
+            href: `/subject/person/${slug}`,
+            snippet: '',
+            cited: true,
+            speaker,
+            answerRanges: [],
+          })),
+        }) +
+        '\n\n',
+    );
+    res.end();
+    return true;
+  }
   if (input.question === 'fixture empty') {
     json(res, 200, { answer: '', citations: {}, sources: [] });
     return true;
