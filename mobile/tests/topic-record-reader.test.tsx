@@ -58,6 +58,7 @@ jest.mock('../src/navigation/external', () => ({
 }));
 let mockSlug = 'speech-18098';
 jest.mock('expo-router', () => ({
+  useSegments: () => [],
   router: { push: jest.fn() },
   Stack: { Screen: () => null },
   useLocalSearchParams: () => ({ slug: mockSlug }),
