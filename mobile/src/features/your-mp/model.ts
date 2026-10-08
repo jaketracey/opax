@@ -8,6 +8,7 @@ import type {
 } from '../../api/catalogs';
 import { joinPerson, nameKey, rosterRowFor } from '../../api/catalogs';
 import { rosterChambersFor } from '../../api/person-identity';
+import { formatCount, formatDate } from '../../design/format';
 export type Directory = Awaited<ReturnType<Catalogs['directory']>>;
 export type YourMPView = Awaited<ReturnType<Catalogs['yourMP']>>;
 type SelectedProfile = Awaited<ReturnType<Catalogs['profileFor']>>;
@@ -90,6 +91,88 @@ export function replaceStateSeat(
 export function registerCategoryLabel(key: string): string {
   const plain = key.replaceAll('_', ' ');
   return plain.charAt(0).toUpperCase() + plain.slice(1);
+}
+// Who an entry belongs to, as the House register forms name them. The export
+// writes "unspecified" where a register (the Senate's, Queensland's) has no
+// holder column; that and any unknown value print nothing.
+const registerHolders: Record<string, string> = {
+  self: 'Member',
+  spouse: 'Spouse or partner',
+  children: 'Dependent children',
+};
+type RegisterRow = {
+  holder: string;
+  description: string;
+  kind: string;
+  date?: string | null;
+  page?: number | null;
+  ocr?: number;
+};
+/**
+ * One declared entry in plain words. The export joins a row's printed cells
+ * with " · ": the first cell (the item, place or account) is the title and
+ * the rest (counterparty, use, role) the detail. The meta line says whose it
+ * is and when it entered the register; an absent field adds nothing.
+ */
+export function registerEntry(
+  row: RegisterRow,
+  statementDate?: string | null,
+): { title: string | null; detail: string | null; meta: string | null } {
+  const [title = '', ...rest] = row.description
+    .split(' · ')
+    .map((part) => part.trim())
+    .filter(Boolean);
+  const when = row.date ? formatDate(row.date, 'short') : '';
+  const change =
+    row.kind === 'statement'
+      ? statementDate && formatDate(statementDate, 'short')
+        ? `In the statement of ${formatDate(statementDate, 'short')}`
+        : 'In the statement of interests'
+      : row.kind === 'addition'
+        ? when
+          ? `Added ${when}`
+          : 'Added after the statement'
+        : row.kind === 'deletion'
+          ? when
+            ? `Removed ${when}`
+            : 'Removed after the statement'
+          : when
+            ? `Recorded ${when}`
+            : '';
+  const meta = [
+    registerHolders[row.holder] ?? '',
+    change,
+    row.page ? `page ${formatCount(row.page)}` : '',
+    row.ocr ? 'OCR transcription' : '',
+  ].filter(Boolean);
+  return {
+    title: title || null,
+    detail: rest.length ? rest.join(' · ') : null,
+    meta: meta.length ? meta.join(' · ') : null,
+  };
+}
+/**
+ * Where a register's entries came from: rows in the opening statement, rows
+ * added by later alterations and rows recording a removal. Zero parts are
+ * left out.
+ */
+export function registerTotalsLine(r: {
+  total: number;
+  statement_date?: string | null;
+  alterations: { added: number; deleted: number };
+}): string {
+  const { added, deleted } = r.alterations;
+  const statement = Math.max(0, r.total - added - deleted);
+  const dated = r.statement_date ? formatDate(r.statement_date, 'short') : '';
+  return [
+    statement
+      ? `${formatCount(statement)} in the statement of ${dated || 'interests'}`
+      : '',
+    added ? `${formatCount(added)} added${statement ? ' since' : ''}` : '',
+    deleted ? `${formatCount(deleted)} removed` : '',
+  ]
+    .filter(Boolean)
+    .join(' · ');
 }
 export function registerChangeLabel(kind: string): string {
   return (

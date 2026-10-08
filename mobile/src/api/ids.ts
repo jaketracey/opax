@@ -28,8 +28,10 @@ export const billKey = branded<'bill-key'>(
   /^au-federal-(?:[rs]\d+|alrc-\d+|ed-[a-z0-9]+(?:-[a-z0-9]+)*)$/,
 );
 export const electorateId = branded<'electorate'>(/^el_[a-f0-9]{24}$/);
+// Register keys: an OpenAustralia person id, an APH roster id for members
+// that id does not cover yet ("aph_25813"), or a name slug ("n-jessica-pugh").
 export const interestKey = branded<'interest-key'>(
-  /^(?:\d+|n-[a-z0-9]+(?:-[a-z0-9]+)*)$/,
+  /^(?:\d+|aph_\d+|n-[a-z0-9]+(?:-[a-z0-9]+)*)$/,
 );
 export const payId = branded<'parliamentary-handbook'>(/^[A-Za-z0-9]+$/);
 export const voteKey = branded<'vote-key'>(
