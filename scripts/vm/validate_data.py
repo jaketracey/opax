@@ -13,7 +13,9 @@ so a bad export never reaches the site but a good one is not held up by it.
   bills     index.json parses, count matches its array, every listed bill has a file
             whose key matches its name, no bill file is unparseable, and the index has
             not lost more than 2% of HEAD's bills
-  votes     votes.json parses, is non-empty, and is not less than half HEAD's size
+  votes     schema-1 mobile contract, allowed person fields, non-empty, and at least half HEAD's size
+  divisions no missing pinned files, explicit refresh/member coverage, no member regression
+  seovotes  separate OPAX-only schema, bounded recent records, no coverage shrink
   corpus    corpus.json parses; its breakdown sums to expected_resources; the version is a date
   wrangler  portal/wrangler.jsonc carries exactly two CACHE_EPOCH values, both non-empty
 
@@ -42,6 +44,7 @@ way and every file that `git status` shows as changed or added must parse.
   taxcharity entities/tax-charity: index.json (meta.counts, sources, caveats; the ABN counts held), names.json
              (by_name), and the <dd>.json shards by the last two digits of the ABN
 """
+import importlib.util
 import json
 import re
 import subprocess
@@ -243,10 +246,98 @@ def check_votes() -> list[str]:
         return [f"votes.json unreadable: {e}"]
     if not data:
         return ["votes.json is empty"]
+    if type(data.get("_meta", {}).get("schema")) is not int or data['_meta']['schema'] != 1:
+        return ["votes.json must retain mobile schema 1"]
+    allowed = {"name", "party", "jurisdiction", "house", "ayes", "noes", "divisions_total", "years", "for", "against"}
+    for key, person in data.items():
+        if key.startswith("_"):
+            continue
+        if not isinstance(person, dict) or set(person) - allowed or not person.get("name") \
+                or not isinstance(person.get("for"), list) or not isinstance(person.get("against"), list):
+            return [f"votes.json record {key} violates the shipped person shape"]
     old = head_bytes("portal/public/votes.json")
     if old and len(raw) < len(old) * 0.5:
         return [f"votes.json is {len(raw):,} bytes, under half of HEAD's {len(old):,}"]
     return []
+
+
+def check_seovotes() -> list[str]:
+    rel = f"{PUBLIC}/seo/recent-votes.json"
+    data, error = _load_json(rel)
+    if error:
+        return [error]
+    meta, people = data.get("_meta", {}), data.get("people")
+    if meta.get("schema") != 1 or meta.get("source") != "opax-parli-db" or meta.get("limit") != 10 \
+            or not isinstance(people, dict) or meta.get("person_count") != len(people) \
+            or meta.get("coverage") != ("recorded" if people else "unavailable"):
+        return ["separate recent-vote export lacks its explicit OPAX schema/coverage"]
+    previous = head_bytes(rel)
+    old = json.loads(previous).get("people", {}) if previous else {}
+    for key in old:
+        if key not in people:
+            return [f"SEO recorded-vote identity {key} lost"]
+    for key, person in people.items():
+        rows = person.get("recent", [])
+        if not person.get("name") or not person.get("jurisdiction") or not 1 <= len(rows) <= 10 \
+                or len({r.get('division_id') for r in rows}) != len(rows):
+            return [f"SEO recorded-vote person {key} invalid"]
+        for row in rows:
+            if not re.fullmatch(r"[a-zA-Z0-9_-]{1,180}", row.get("division_id", "")) \
+                    or row.get("division_slug") != f"division-{row['division_id']}" \
+                    or not row.get("title") or not re.fullmatch(r"\d{4}-\d\d-\d\d", row.get("date", "")) \
+                    or row.get("vote") not in ("aye", "no", "paired", "abstain", "abstention") \
+                    or not re.match(r"https?://", row.get("source_url") or ""):
+                return [f"SEO recorded-vote row for {key} invalid"]
+        old_rows = old.get(key, {}).get("recent", [])
+        if len(rows) < len(old_rows) or old_rows and max(r['date'] for r in rows) < max(r['date'] for r in old_rows):
+            return [f"SEO recorded-vote coverage for {key} regressed"]
+    return []
+
+
+def check_divisions() -> list[str]:
+    directory = f"{PUBLIC}/divisions"
+    data, error = _load_json(f"{directory}/index.json")
+    if error:
+        return [error]
+    rows = data.get("divisions", [])
+    coverage = data.get("coverage", {})
+    if data.get("schema") != 2 or not rows or data.get("count") != len(rows) \
+            or "retained_count" not in coverage or "retained_by_reason" not in coverage:
+        return ["division index lacks explicit refresh coverage/counts"]
+    retained = sum(bool(row.get("refresh_retained")) for row in rows)
+    if retained != coverage["retained_count"]:
+        return ["division refresh coverage flag/count mismatch"]
+    filenames = {f"{row.get('slug')}.json" for row in rows}
+    previous = set(_head_names(directory, r"division-[a-zA-Z0-9_-]+\.json") or [])
+    if previous - filenames:
+        return ["division index lost pinned records"]
+    errs = []
+    spec = importlib.util.spec_from_file_location('seo_division_guard', ROOT / 'scripts/export_division_pages.py')
+    guard = importlib.util.module_from_spec(spec); spec.loader.exec_module(guard)
+    changed = set(_changed(directory, r"division-[a-zA-Z0-9_-]+\.json"))
+    for row in rows:
+        slug = row.get("slug", "")
+        if not re.fullmatch(r"division-[a-zA-Z0-9_-]{1,180}", slug):
+            return ["invalid division slug"]
+        rel = f"{directory}/{slug}.json"
+        record, error = _load_json(rel)
+        if error:
+            errs.append(error); continue
+        meta = record.get("_meta", {})
+        if record.get("slug") != slug or record.get("key") != row.get("key") \
+                or meta.get("member_coverage") not in ("recorded", "partial", "unavailable") \
+                or row.get("member_coverage") != meta.get("member_coverage") \
+                or row.get("member_count") != len(record.get("members", [])) \
+                or bool(row.get("refresh_retained")) != bool(meta.get("refresh_retained")):
+            errs.append(f"division {slug} identity/member coverage mismatch")
+        if slug + '.json' in changed:
+            raw = head_bytes(rel)
+            old = json.loads(raw) if raw else {}
+            if old and guard.degradation_reason(record, old):
+                errs.append(f"division {slug} regressed pinned evidence")
+        if len(errs) >= 10:
+            break
+    return errs
 
 
 def check_corpus() -> list[str]:
@@ -375,7 +466,8 @@ def check_taxcharity() -> list[str]:
     return errs + _check_dir(d, r"[0-9]{2}\.json", TAXCHARITY_MIN_RATIO)
 
 
-CHECKS = {"bills": check_bills, "votes": check_votes, "corpus": check_corpus, "wrangler": check_wrangler,
+CHECKS = {"bills": check_bills, "votes": check_votes, "divisions": check_divisions, "seovotes": check_seovotes,
+          "corpus": check_corpus, "wrangler": check_wrangler,
           "money": check_money, "grants": check_grants, "suppliers": check_suppliers, "access": check_access,
           "expenses": check_expenses, "interests": check_interests, "fits": check_fits, "speakers": check_speakers,
           "people": check_people, "pay": check_pay, "discovery": check_discovery, "taxcharity": check_taxcharity}

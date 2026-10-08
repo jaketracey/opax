@@ -18,7 +18,6 @@ def load(name):
 
 
 D = load("export_division_pages")
-V = load("export_votes")
 
 
 class DivisionExportTests(unittest.TestCase):
@@ -62,18 +61,6 @@ class DivisionExportTests(unittest.TestCase):
         self.assertEqual([m["vote"] for m in data["members"]], ["no", "aye"])
         self.assertEqual(data["members"][1]["person_slug"], "zoe-oname")
 
-    def test_recent_votes_are_actual_procedural_votes_bounded_to_ten(self):
-        out = {"123": {"name": "Alex Example", "jurisdiction": "federal", "for": [], "against": []}}
-        with self.fixture() as db:
-            V.export_recent(db, out)
-        recent = out["123"]["recent"]
-        self.assertEqual(len(recent), 10)
-        self.assertEqual([r["division_id"] for r in recent], [f"federal-senate-{i}" for i in range(12, 2, -1)])
-        self.assertTrue(all(r["vote"] == "no" for r in recent))
-        self.assertEqual(recent[0]["division_slug"], "division-federal-senate-12")
-        self.assertEqual(recent[0]["source_url"], "https://example.test/12")
-        self.assertEqual(out["123"]["for"], [])
-
     def test_verified_source_snapshot_dropped_when_tally_changes(self):
         original = {"key": "example", "date": "2026-09-01", "house": "senate", "ayes": 1,
                     "noes": 0, "source_url": "https://example.test/source", "members": [{"name": "Alex", "vote": "aye"}],
@@ -103,16 +90,6 @@ class DivisionExportTests(unittest.TestCase):
         self.assertEqual(sum(v == "aye" for v in members.values()), data["ayes"])
         self.assertEqual(sum(v == "no" for v in members.values()), data["noes"])
 
-    def test_partial_recent_sample_is_ten_actual_votes_and_declares_coverage(self):
-        data = json.loads((ROOT / "portal/public/votes.json").read_text())
-        recent = data["10007"]["recent"]
-        self.assertEqual(len(recent), 10)
-        self.assertEqual(len({r["source_url"] for r in recent}), 10)
-        self.assertEqual([r["date"] for r in recent], sorted((r["date"] for r in recent), reverse=True))
-        self.assertTrue(all(r["vote"] in ("aye", "no") for r in recent))
-        self.assertEqual(recent[0]["vote"], "aye")
-        self.assertEqual(recent[1]["vote"], "no")
-        self.assertEqual(data["_meta"]["partial_recent_coverage"]["person_ids"], ["10007"])
 
 
 if __name__ == "__main__":

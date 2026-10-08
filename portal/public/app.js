@@ -5029,7 +5029,8 @@ async function renderPersonTopics(name, sections) {
   const slot = document.createElement("section");
   slot.className = "person-topics";
   slot.id = "person-topics";
-  slot.innerHTML = `<h3 class="subject-section-title">What they talk about</h3><p class="status">Counting their labelled speeches…</p>`;
+  slot.setAttribute("aria-busy", "true");
+  slot.innerHTML = `<h3 class="subject-section-title">What they talk about</h3><p class="status">Counting their labelled speeches…</p>${skelHTML("person-topics-skel", [78, 64, 88, 58, 74, 52, 66, 46])}`;
   sections.appendChild(slot);
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 6000);
@@ -5044,7 +5045,10 @@ async function renderPersonTopics(name, sections) {
       topic.slug,
       allTopics.labelled ? Number(topic.count || 0) / Number(allTopics.labelled) : 0,
     ]));
-    if (!data.profiles?.all?.topics?.length) { slot.remove(); return; }
+    if (!data.profiles?.all?.topics?.length) {
+      slot.innerHTML = `<h3 class="subject-section-title">What they talk about</h3><p class="status">No topic-labelled speeches are held for this person yet. Their other records below remain available.</p>`;
+      return;
+    }
     let era = "all";
     const paint = () => {
       const profile = data.profiles?.[era];
@@ -5100,6 +5104,7 @@ async function renderPersonTopics(name, sections) {
     }
   } finally {
     clearTimeout(timeout);
+    slot.setAttribute("aria-busy", "false");
   }
 }
 
@@ -5468,12 +5473,9 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     askSpeakerInConversation(name, `What did ${name} say about ${topic}?`);
   });
   // The structured record first; the speeches follow it.
-  // Resolve the first section before painting the sections below it: a late
-  // chart otherwise pushes an already-visible voting record out of view.
-  loadVotes(); // The static vote export can load while the topic request settles.
-  await renderPersonTopics(name, sections);
-  if (currentSubjectKey !== key) return;
-  refreshPersonJumps(sections);
+  // Each source renders independently. The topic section reserves its chart
+  // space, so slower topic requests never hold back votes or other records.
+  renderPersonTopics(name, sections).then(() => refreshPersonJumps(sections));
   // Records by the roster's verified pid (none for a print that holds more than one person).
   renderPersonVotes(name, roster?.pid ?? null, sections).then(() => refreshPersonJumps(sections));
   renderPersonInterests(name, roster?.pid ?? null, sections).then(() => refreshPersonJumps(sections));

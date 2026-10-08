@@ -8,11 +8,13 @@
 # shellcheck shell=bash
 
 # order = the order they are validated in
-DATA_GROUPS=(bills votes corpus wrangler money grants suppliers access expenses interests fits speakers people pay discovery taxcharity)
+DATA_GROUPS=(bills votes divisions seovotes corpus wrangler money grants suppliers access expenses interests fits speakers people pay discovery taxcharity)
 
 declare -A GROUP_PATHS=(
   [bills]="portal/public/bills"
   [votes]="portal/public/votes.json"
+  [divisions]="portal/public/divisions"
+  [seovotes]="portal/public/seo/recent-votes.json"
   [corpus]="portal/public/corpus.json"
   [wrangler]="portal/wrangler.jsonc"
   [money]="portal/public/graph/money.json portal/public/graph/money.qld.json portal/public/graph/money.vic.json portal/public/graph/money.tas.json"

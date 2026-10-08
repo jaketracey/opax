@@ -24,7 +24,8 @@ export interface Division {
   bills?: { key: string; title: string; url?: string }[];
 }
 interface Vote { name?: string; title?: string; stage?: string; date?: string; vote?: string; division_slug?: string; source_url?: string }
-interface Votes { name: string; jurisdiction: string; recent?: Vote[]; for?: Vote[]; against?: Vote[] }
+interface Votes { name: string; jurisdiction: string; for?: Vote[]; against?: Vote[] }
+interface RecentVotes { _meta: { schema: number; source: string; coverage: string }; people: Record<string, { name: string; jurisdiction: string; recent: Vote[] }> }
 interface Interest {
   source_url?: string; total: number; as_at?: string; ocr_rows?: number; unread_pages?: number;
   buckets: Record<string, { count: number; items: { description: string; holder?: string; page?: number }[] }>;
@@ -73,12 +74,13 @@ function paginate(url: URL, rows: { href: string; label: string; detail?: string
 const optional = async <T>(read: ReadAsset, path: string): Promise<T | null> => read<T>(path).catch(() => null)
 
 export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<string,string>, profileUrl?: string): Promise<RenderedContent> {
-  const [voteData, interests, seats, bills, sponsored] = await Promise.all([
+  const [voteData, interests, seats, bills, sponsored, recentData] = await Promise.all([
     optional<Record<string, Votes | Record<string,string[]>>>(read,'/votes.json'),
     optional<{people: Record<string,unknown>; _by_name: Record<string,string>}>(read,'/interests/index.json'),
     optional<{index_url: string}>(read,'/electorates/manifest.json').then(m => m ? optional<{electorates: Seat[]}>(read,m.index_url) : null),
     optional<{bills: Bill[]}>(read,'/bills/index.json'),
     optional<{sponsored: Record<string,string[]>}>(read,'/seo-links.json'),
+    optional<RecentVotes>(read,'/seo/recent-votes.json'),
   ])
   const display = p.full && p.speech_scope ? p.full : p.name
   const description = `${display}. ${partyLine(p)}. ${(p.representation || []).map(r=>`${r.electorate}, ${chamber(r.chamber)}`).join('; ') || p.chambers.map(chamber).join(', ')}.`
@@ -94,13 +96,16 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     const names = voteData?._names as Record<string,string[]> | undefined
     const keys = [...new Set([p.pid,...(names?.[fold(p.name)] || [])].filter((k): k is string => !!k))]
     const records = keys.map(k=>voteData?.[k] as Votes | undefined).filter((r): r is Votes => !!r?.name)
-    const hasRecent = records.some(r=>Array.isArray(r.recent))
-    const votes = records.flatMap(r=>hasRecent ? (r.recent || []) : [...(r.for || []).map(v=>({...v,vote:'For the bill'})),...(r.against || []).map(v=>({...v,vote:'Against the bill'}))])
+    const recent = recentData?._meta?.schema===1 && recentData._meta.source==='opax-parli-db' && recentData._meta.coverage==='recorded'
+      ? keys.flatMap(k=> { const r=recentData.people?.[k]; return r && fold(r.name)===fold(p.name) && Array.isArray(r.recent) ? r.recent : [] }) : []
+    const hasRecent = recent.length>0
+    const votes = (hasRecent ? recent : records.flatMap(r=>[...(r.for || []).map(v=>({...v,vote:'For the bill'})),...(r.against || []).map(v=>({...v,vote:'Against the bill'}))]))
       .sort((a,b)=>String(b.date || '').localeCompare(String(a.date || ''))).slice(0,10)
-    body += `<h2>${hasRecent ? 'Last 10 recorded votes' : 'Latest exported bill votes'}</h2>`
-    body += votes.length ? `<ol>${votes.map(v=>`<li>${v.division_slug ? link(`/doc/${v.division_slug}`,v.title || v.name || 'Division') : link(v.source_url || `/search?q=${encodeURIComponent(v.name || v.title || '')}`,v.name || v.title || 'Division')} — ${escapeHtml(v.date)}, ${escapeHtml(v.stage || '')}: ${escapeHtml(v.vote)}${original(v.source_url)}</li>`).join('')}</ol>` : '<p>No per-member votes in this export.</p>'
-    if (!hasRecent) body += '<p>The current export samples up to six bill questions on each side; it is not a complete list of recent divisions. Procedural votes are excluded.</p>'
-    body += `<p>Sources: They Vote For You and state Hansard. ${link('/votes.json','Voting data export')}. Most questions decided on the voices have no per-member record.</p>`
+    if (votes.length) {
+      body += `<h2>${hasRecent ? (votes.length===10 ? 'Last 10 recorded votes' : 'Recorded votes') : 'Latest exported bill votes'}</h2>`
+      body += `<ol>${votes.map(v=>`<li>${v.division_slug ? link(`/doc/${v.division_slug}`,v.title || v.name || 'Division') : link(v.source_url || `/search?q=${encodeURIComponent(v.name || v.title || '')}`,v.name || v.title || 'Division')} — ${escapeHtml(v.date)}, ${escapeHtml(v.stage || '')}: ${escapeHtml(v.vote)}${original(v.source_url)}</li>`).join('')}</ol>`
+      body += `<p>Source: ${hasRecent ? link('/seo/recent-votes.json','OPAX recorded-vote export') : `${link('/votes.json','OPAX bill-vote export')} (They Vote For You and state Hansard)`}.</p>`
+    }
     const id = p.pid && interests?.people[p.pid] ? p.pid : interests?._by_name[fold(p.name)]
     const register = id && /^[\w-]+$/.test(id) ? await optional<Interest>(read,`/interests/${id}.json`) : null
     body += '<h2>Declared interests</h2>'

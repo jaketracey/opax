@@ -304,6 +304,24 @@ if ! run "$PY" scripts/verify_bill_briefs.py; then
   revert portal/public/bills
 fi
 
+# ---- 3b. Worker-only vote/division projections from the refreshed OPAX DB -------------------------
+# After bill verification so division backlinks use the retained, publishable bills.
+# Both exporters read one read-only DB snapshot; neither alters mobile votes.json.
+if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ]; then
+  log "refreshing static division pages and separate SEO recent votes"
+  if ! run "$PY" scripts/export_division_pages.py; then
+    revert_group divisions
+    fail "division export failed; pinned division pages reverted to HEAD"
+  else
+    retained=$("$PY" -c 'import json; print(json.load(open("portal/public/divisions/index.json"))["coverage"]["retained_count"])')
+    [ "$retained" = 0 ] || warn "division export retained $retained pinned records; explicit coverage flags identify degraded source coverage"
+  fi
+  if ! run "$PY" scripts/export_recent_votes.py; then
+    revert_group seovotes
+    fail "SEO recent-vote export failed; previous separate export kept"
+  fi
+fi
+
 # ---- 4. validate what will be committed ----------------------------------------------------------
 # bills and votes are checked every night; every periodic group only when `git status` shows its files changed.
 # A group that fails is put back to HEAD and the night goes on with the rest.

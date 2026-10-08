@@ -24,12 +24,7 @@ Two sources, one shape:
              "years": [2006, 2026],
              "for":     [{"name": "Migration Amendment (...) Bill 2012", "stage": "Second reading",
                           "date": "2012-08-15", "jur": "federal", "rebels": 3}, ...],
-             "against": [...],
-             "recent": [{"division_id": "federal-representatives-12345",
-                         "division_slug": "division-federal-representatives-12345",
-                         "title": "Bills — Example Bill 2026; Second Reading",
-                         "date": "2026-09-11", "vote": "aye", "jur": "federal",
-                         "source_url": "https://theyvoteforyou.org.au/divisions/..."}]},
+             "against": [...]},
    "nsw:penny-sharpe": {..., "jurisdiction": "nsw", "house": "nsw_lc", ...},
    "_names": {"anthony albanese": ["10007"], "penny sharpe": ["nsw:penny-sharpe"], ...},
    "_meta": {"content_changed_at": "2026-10-03T03:41:07Z", "latest_division_date": "2026-09-25",
@@ -87,13 +82,12 @@ from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
-DB = "file:" + (os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")) + "?mode=ro"
+DB = "file:" + os.path.expanduser("~/.cache/autoresearch/parli.db") + "?mode=ro"
 # The file this export replaces (daily_refresh.sh runs this script from the same checkout).
 PREVIOUS = Path(__file__).resolve().parent.parent / "portal" / "public" / "votes.json"
 PREVIOUS_MAX_BYTES = 20_000_000  # votes.json is about 1.3 MB
 PER_SIDE = 6
-SCHEMA = 2  # schema 2 adds actual recent recorded divisions; legacy sides stay unchanged
-RECENT_LIMIT = 10
+SCHEMA = 1  # _meta.schema: bump when the shape of the file changes
 ISO_DATE = re.compile(r"\d{4}-\d\d-\d\d")
 STAMP = re.compile(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ")
 STAMP_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
@@ -398,60 +392,11 @@ def export_state(db, out, names, newest):
     return len(divisions), sum(1 for d in divisions.values() if d["polarity"])
 
 
-def export_recent(db, out):
-    """Add the last ten actual votes from the unified division/vote export.
-
-    These are raw aye/no/paired/abstention records, including procedural
-    questions. Never reconstruct them from the bill-polarity `for`/`against`
-    lists. Old databases without the unified source columns remain readable;
-    an absent `recent` means the source has not been exported yet.
-    """
-    division_columns = {r[1] for r in db.execute("PRAGMA table_info(ext_divisions)")}
-    vote_columns = {r[1] for r in db.execute("PRAGMA table_info(ext_votes)")}
-    if not {"id", "name", "question", "date", "source_url", "jurisdiction"} <= division_columns \
-            or not {"person_id", "person_key", "person_name", "division_id", "vote", "jurisdiction"} <= vote_columns:
-        return 0
-    divisions = {r[0]: r for r in db.execute(
-        "SELECT id, name, question, date, source_url, jurisdiction FROM ext_divisions")}
-    by_name = {}
-    for key, person in out.items():
-        by_name.setdefault((person["jurisdiction"], person["name"].casefold()), []).append(key)
-    recent = {}
-    for jur, pid, pkey, name, did, vote in db.execute(
-            "SELECT jurisdiction, person_id, person_key, person_name, division_id, vote FROM ext_votes "
-            "WHERE vote IN ('aye','no','paired','abstain','abstention')"):
-        division = divisions.get(did)
-        if not division or not ISO_DATE.fullmatch((division[3] or "")[:10]):
-            continue
-        key = str(pid) if jur == "federal" and pid is not None else f"{jur}:{slugify(pkey)}"
-        if key not in out:
-            candidates = by_name.get((jur, (name or "").casefold()), [])
-            key = candidates[0] if len(candidates) == 1 else None
-        if key not in out:
-            continue
-        recent.setdefault(key, {})[did] = {
-            "division_id": did,
-            "division_slug": f"division-{did}",
-            "title": division[1] or division[2] or "Recorded division",
-            "date": division[3][:10], "vote": vote, "jur": jur,
-            "source_url": division[4],
-        }
-    for key, records in recent.items():
-        # Numeric ids order same-day divisions correctly (10701 after 9999).
-        order = lambda r: (r["date"], re.sub(r"\d+", lambda m: m[0].zfill(20), r["division_id"]))
-        out[key]["recent"] = sorted(records.values(), key=order, reverse=True)[:RECENT_LIMIT]
-    return len(recent)
-
-
 def main():
     db = sqlite3.connect(DB, uri=True)
-    db.execute("PRAGMA query_only=ON")
-    db.execute("BEGIN")
     out, names, newest = {}, {}, {}
     n_fed = export_federal(db, out, names, newest)
     n_state, n_state_bill = export_state(db, out, names, newest)
-    export_recent(db, out)
-    db.close()
     latest = {}
     for key, date in newest.items():  # one date per published key, so a replaced record leaves none
         note_latest(latest, out[key]["jurisdiction"], date)

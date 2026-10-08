@@ -38,13 +38,14 @@ new_sandbox() {
   local seed="$SB/seed"; mkdir -p "$seed"
   # the files the nightly reads, from the real tree
   for f in scripts/vm/nightly.sh scripts/vm/run-nightly.sh scripts/vm/poweroff-if-idle.sh scripts/vm/validate_data.py scripts/vm/data_groups.sh scripts/export_bills.py \
+           scripts/export_division_pages.py scripts/export_recent_votes.py scripts/export_votes.py \
            scripts/verify_bill_briefs.py scripts/update_corpus_manifest.py scripts/bump_cache_epoch.py \
            parli/__init__.py parli/arag.py portal/wrangler.jsonc portal/public/corpus.json; do
     mkdir -p "$seed/$(dirname "$f")"; cp "$SRC/$f" "$seed/$f"
   done
   mkdir -p "$seed/portal/public/bills"
   python3 - "$seed" <<'PYEOF'
-import json, sys
+import importlib.util, json, pathlib, sys
 seed = sys.argv[1]
 def bill(n, briefs):
     return {"key": f"au-federal-t{n}", "title": f"Test Bill {n}", "status": "introduced", "status_as_of": "2026-09-01",
@@ -57,14 +58,38 @@ for d in docs:
     open(f"{seed}/portal/public/bills/{d['key']}.json", "w").write(json.dumps(d, ensure_ascii=False, indent=1) + "\n")
 index = {"generated_at": "2026-09-21T12:00:00+00:00", "count": len(rows), "meta": {"mode": "registry"}, "bills": rows}
 open(f"{seed}/portal/public/bills/index.json", "w").write(json.dumps(index, ensure_ascii=False, indent=1) + "\n")
-open(f"{seed}/portal/public/votes.json", "w").write(json.dumps({"divisions": [{"id": i} for i in range(400)]}) + "\n")
+votes = {str(i): {"name": f"Member {i}", "jurisdiction": "federal", "for": [], "against": []} for i in range(400)}
+votes['_meta'] = {"schema": 1}
+open(f"{seed}/portal/public/votes.json", "w").write(json.dumps(votes) + "\n")
+seo = pathlib.Path(seed) / 'portal/public/seo'; seo.mkdir()
+(seo / 'recent-votes.json').write_text(json.dumps({'_meta': {'schema': 1, 'source': 'opax-parli-db', 'coverage': 'unavailable', 'person_count': 0, 'limit': 10}, 'people': {}}) + '\n')
+spec = importlib.util.spec_from_file_location('division_fixture', f'{seed}/scripts/export_division_pages.py')
+D = importlib.util.module_from_spec(spec); spec.loader.exec_module(D)
+division = {'key': 'federal-senate-1', 'slug': 'division-federal-senate-1', 'name': 'Fixture question',
+ 'question': 'Fixture question', 'date': '2026-09-01', 'house': 'senate', 'jurisdiction': 'federal',
+ 'ayes': 1, 'noes': 0, 'result': 'affirmative', 'source_url': 'https://example.test/division',
+ 'members': [{'name': 'Member 0', 'person_id': '0', 'person_slug': 'member-0', 'vote': 'aye'}], 'bills': [],
+ '_meta': {'schema': 1, 'source': 'parli.db-ext-divisions', 'member_coverage': 'recorded'}}
+D.write_projection({division['key']: division}, pathlib.Path(seed) / 'portal/public/divisions')
 open(f"{seed}/portal/public/speakers.json", "w").write(json.dumps([{"id": i, "name": f"Speaker {i}"} for i in range(100)]) + "\n")
 PYEOF
   (cd "$seed" && git init -q && git add -A && git commit -q -m seed && git remote add origin "$ORIGIN" && git push -q origin HEAD:main)
   REPO="$HOME/opax"; git clone -q "$ORIGIN" "$REPO"
   mkdir -p "$REPO/.venv/bin"; ln -s "$(command -v python3)" "$REPO/.venv/bin/python"
   # state the preflight looks for
-  : > "$HOME/.cache/autoresearch/parli.db"
+  python3 - "$HOME/.cache/autoresearch/parli.db" <<'PYEOF'
+import sqlite3, sys
+with sqlite3.connect(sys.argv[1]) as db:
+    db.executescript('''
+    CREATE TABLE ext_divisions (id TEXT, name TEXT, question TEXT, date TEXT, house TEXT,
+     jurisdiction TEXT, ayes_count INT, noes_count INT, result TEXT, source_url TEXT);
+    CREATE TABLE ext_votes (division_id TEXT, person_id TEXT, person_name TEXT, person_key TEXT,
+     vote TEXT, jurisdiction TEXT);
+    INSERT INTO ext_divisions VALUES ('federal-senate-1','Fixture question','Fixture question','2026-09-01',
+     'senate','federal',1,0,'affirmative','https://example.test/division');
+    INSERT INTO ext_votes VALUES ('federal-senate-1','0','Member 0','Member 0','aye','federal');
+    ''')
+PYEOF
   echo '{"tables":{"speeches":{"after":1323635,"pushed":600482,"failed":{}}}}' > "$HOME/.cache/autoresearch/arag_sync_state.json"
   printf 'ARAG_ZONE=aws-ap-southeast-2-1\nARAG_KB_ID=kb-test\nARAG_KB_TOKEN=tokentokentoken\nOPENAUSTRALIA_API_KEY=SECRETVALUE123456\n' > "$REPO/.env"
   printf 'OPAX_MIN_FREE_GB=0\nOPAX_SETTLE_SECONDS=0\n' > "$HOME/.config/opax/nightly.env"
@@ -120,8 +145,7 @@ for r in idx["bills"]:
     r["status_as_of"] = "2026-09-28"
 open("portal/public/bills/index.json", "w").write(json.dumps(idx, ensure_ascii=False, indent=1) + "\n")
 v = json.load(open("portal/public/votes.json"))
-if {"id": "new"} not in v["divisions"]:
-    v["divisions"].append({"id": "new"})
+v.setdefault('new', {'name': 'New Member', 'jurisdiction': 'federal', 'for': [], 'against': []})
 open("portal/public/votes.json", "w").write(json.dumps(v) + "\n")
 PYEOF
 if [ "${FAKE_MODE:-ok}" = race ]; then   # someone else pushes to origin while we run
@@ -200,7 +224,7 @@ check "corpus.json is in the pushed commit (that is what triggers deploy.yml)" b
 check "CACHE_EPOCH bumped in both places" bash -c "[ \$(git --git-dir='$ORIGIN' show main:portal/wrangler.jsonc | grep -c '\"CACHE_EPOCH\": \"$TODAY-nightly\"') -eq 2 ]"
 check "bills went through with briefs restored" bash -c "git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d[\"status_as_of\"]==\"2026-09-28\" and d[\"speeches\"][0][\"brief\"]==\"Brief 1-0\"'"
 check "votes.json published" bash -c "git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q '\"new\"'"
-check "only data files changed" bash -c "[ -z \"\$(git --git-dir='$ORIGIN' diff --name-only main~1 main | grep -vE '^portal/(public/(bills/|votes.json|corpus.json)|wrangler.jsonc)')\" ]"
+check "only data files changed" bash -c "[ -z \"\$(git --git-dir='$ORIGIN' diff --name-only main~1 main | grep -vE '^portal/(public/(bills/|divisions/|seo/recent-votes.json|votes.json|corpus.json)|wrangler.jsonc)')\" ]"
 check "status branch published, says ok" status_is ok
 check "status says the deploy is started by the push" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'started by the push'"
 check "status branch is a single parentless commit holding only status.json" bash -c "[ \$(git --git-dir='$ORIGIN' rev-list --count nightly-status) -eq 1 ] && [ \"\$(git --git-dir='$ORIGIN' ls-tree --name-only nightly-status)\" = status.json ]"

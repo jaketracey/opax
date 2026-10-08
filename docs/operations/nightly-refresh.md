@@ -28,6 +28,9 @@ The nightly only brings new records in and publishes them.
         state rosters, grant recipients, and the big exports (suppliers, grants, discovery, pay, expenses).
         Every export goes through keep_if_unchanged, so a night on which nothing moved commits nothing.
    3  bills: export_bills.py --fill-briefs, then verify_bill_briefs.py (no brief lost vs HEAD)
+  3b  export_division_pages.py and export_recent_votes.py: Worker SEO projections from the refreshed
+      OPAX DB, after bill verification. Division shards retain prior evidence on degraded coverage;
+      recent votes use a separate file and never change the mobile votes.json contract.
    4  validate_data.py: bills, votes.json, and every periodic group whose files changed (a failing group is
       reverted to HEAD, the rest goes on); then the portal test suite (search catalog rebuilt first, as the
       deploy job does) against the new files: if it is red, the group to blame is found by putting each changed
@@ -56,13 +59,29 @@ no new data therefore still makes a small commit and a deploy. Running the night
 changes nothing.
 
 **Only data files are ever committed:** the paths in `scripts/vm/data_groups.sh` and nothing else: `portal/public/bills/*`,
-`votes.json`, `corpus.json`, `portal/wrangler.jsonc` (the two `CACHE_EPOCH` values), and the periodic groups' exports
+`votes.json`, `divisions/`, `seo/recent-votes.json`, `corpus.json`, `portal/wrangler.jsonc` (the two `CACHE_EPOCH` values), and the periodic groups' exports
 (`graph/money*.json`, `graph/grants.federal.json` + `grants/federal/`, `suppliers*`, `agencies*`, `access.json`,
 `expenses.json`, `interests/`, `fits.json`, `speakers.json`, `parliamentarians.json`, `pay.json`, `discovery.json`,
 `entities/tax-charity/`). Adding an exported file means adding its path to one group there (the path must already be in
 `HEAD`) and, if it needs sanity checks, a `check_<group>` in `validate_data.py`.
 
 There is no cache-warm step (deliberately).
+
+The `divisions` and `seovotes` groups have independent validation, rollback and staging.
+Both exporters use a read-only database transaction. `divisions/index.json` has schema 2
+and explicit `coverage.retained_count`, `retained_by_reason`, member coverage and source counts.
+Each shard and index entry identify `refresh_retained` and its reason. A missing division,
+lost named vote (including absent or paired members), or changed pinned source facts keeps
+the previous complete record. Files are staged before replacement and the index is replaced last.
+`--strict-refresh` rejects any degradation before writing. A normal nightly warns when records
+were retained; an exporter failure reverts its group to HEAD and records a failed step.
+
+The installed apps' `votes.json` remains schema 1 with its existing fields. The separate
+`seo/recent-votes.json` contains only actual OPAX `ext_votes`/`ext_divisions` records, at most
+ten per person, with its own schema and explicit coverage. It starts empty until the nightly
+produces these records. Its exporter rejects lost identities, older snapshots and missing
+events within the retained rolling window. The MP answer uses existing bill for/against
+samples when no separate recent records exist, without a last-ten placeholder.
 
 ## The machine
 
