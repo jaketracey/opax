@@ -57,6 +57,7 @@ export type Answer = {
   money_question?: string;
   pay_answer?: boolean;
   pay_next?: { label: string; href: string }[];
+  suggested_question?: string;
 };
 export type Turn = {
   role: 'user' | 'answer';
@@ -138,6 +139,7 @@ export function decodeAnswer(raw: unknown): Answer {
     'money_context',
     'money_overview',
     'money_question',
+    'suggested_question',
   ] as const)
     if (typeof v[k] === 'string') out[k] = v[k];
   for (const k of ['money_ranking', 'pay_answer'] as const)
