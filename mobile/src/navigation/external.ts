@@ -218,6 +218,8 @@ export function canonicalUrl(path: string, anchor?: string): string {
   )
     throw new Error('Canonical paths have no dot segments');
   const base = new URL(webOrigin);
+  if (/^\/explore\?game=(quiz|ballot|tm|tide|matrix|wd)$/.test(path) && anchor === undefined)
+    return new URL(path, base).toString();
   // This Search view now has a native draft screen. Preserve its reviewed
   // filters in shares, while sourceUrl still refuses opening paid web Search.
   if (anchor === undefined && searchRouteFromWebPath(path))

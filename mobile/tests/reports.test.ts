@@ -191,7 +191,7 @@ test.each([
   '/api/topic/not-a-topic',
   '/api/topics?',
   '/api/stats?retry=1',
-  '/api/tide?scope=all',
+  '/api/tide?scope=all&prefetch=1',
   '/api/matrix?prefetch=1',
   d.arcPath('gambling') + '&topic=gambling',
   d.arcPath('gambling').replace('per=200', 'per=201'),
