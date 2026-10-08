@@ -77,6 +77,9 @@ export default function Today() {
         <LinkRow title="Public money" detail="Grants, contracts and agencies" accent="money" icon="banknote" testID="today-public-money" onPress={() => router.push('/public-money')} />
       </Section>
       <ReportsEntry />
+      <Section testID="today-explore">
+        <LinkRow title="Explore" detail="Play with the parliamentary record" testID="today-explore-open" onPress={() => router.push('/explore')} />
+      </Section>
       <Spotlight />
       <FromRecord />
       <TodayCoverage />

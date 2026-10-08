@@ -1,0 +1,181 @@
+appId: au.com.opax.app
+name: 49 Saved-seat practice ballot, export, year and native debate cell
+---
+- launchApp:
+    clearState: true
+    permissions: {}
+- tapOn:
+    id: tab-your-mp
+- tapOn:
+    id: seat-search
+- inputText: Albanese
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: seat-choice-federal-representatives-nsw-grayndler
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: seat-choice-federal-representatives-nsw-grayndler
+- extendedWaitUntil:
+    visible:
+      id: your-seat-name
+    timeout: 30000
+- tapOn:
+    id: tab-today
+- scrollUntilVisible:
+    element:
+      id: today-explore-open
+    direction: DOWN
+    centerElement: true
+    timeout: 90000
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/49-today-explore-entry
+- tapOn:
+    id: today-explore-open
+- assertVisible:
+    id: explore-screen
+- tapOn:
+    id: explore-ballot
+- assertVisible:
+    id: ballot-change-seat
+    text: '.*Grayndler, NSW.*'
+- takeScreenshot: ${EVIDENCE}/49-ballot-saved-seat
+- scrollUntilVisible:
+    element:
+      id: ballot-add-0
+    direction: DOWN
+    centerElement: true
+    timeout: 90000
+    speed: 20
+- tapOn:
+    id: ballot-add-0
+- scrollUntilVisible:
+    element:
+      id: ballot-add-1
+    direction: DOWN
+    centerElement: true
+    timeout: 90000
+    speed: 20
+- tapOn:
+    id: ballot-add-1
+- scrollUntilVisible:
+    element:
+      id: ballot-add-2
+    direction: DOWN
+    centerElement: true
+    timeout: 90000
+    speed: 20
+- tapOn:
+    id: ballot-add-2
+- scrollUntilVisible:
+    element:
+      id: ballot-add-3
+    direction: DOWN
+    centerElement: true
+    timeout: 90000
+    speed: 20
+- tapOn:
+    id: ballot-add-3
+- scrollUntilVisible:
+    element:
+      id: ballot-add-4
+    direction: DOWN
+    centerElement: true
+    timeout: 90000
+    speed: 20
+- tapOn:
+    id: ballot-add-4
+- scrollUntilVisible:
+    element:
+      id: ballot-add-5
+    direction: DOWN
+    centerElement: true
+    timeout: 90000
+    speed: 20
+- tapOn:
+    id: ballot-add-5
+- scrollUntilVisible:
+    element:
+      id: ballot-validate
+    direction: DOWN
+    centerElement: true
+    timeout: 90000
+    speed: 20
+- tapOn:
+    id: ballot-validate
+- assertVisible: Every candidate has a number. Your practice plan is ready.
+- takeScreenshot: ${EVIDENCE}/49-ballot-validated
+- scrollUntilVisible:
+    element:
+      id: ballot-export
+    direction: DOWN
+    centerElement: true
+    timeout: 90000
+    speed: 20
+- tapOn:
+    id: ballot-export
+- assertVisible: 'Share file: opax-2025-practice-grayndler.txt'
+- takeScreenshot: ${EVIDENCE}/49-ballot-export
+- tapOn: OK
+- openLink: opax://explore/tm
+- tapOn:
+    id: tm-open
+- scrollUntilVisible:
+    element:
+      id: tm-selected-year
+    direction: DOWN
+    centerElement: true
+    timeout: 90000
+    speed: 20
+- assertVisible:
+    id: tm-selected-year
+    text: '2025'
+- scrollUntilVisible:
+    element:
+      id: explore-machine-pill
+    direction: DOWN
+    centerElement: true
+    timeout: 90000
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/49-time-machine
+- tapOn:
+    id: explore-machine-pill
+- assertVisible:
+    id: explore-machine-note
+- takeScreenshot: ${EVIDENCE}/49-machine-note
+- tapOn: Done
+- openLink: opax://explore/matrix
+- scrollUntilVisible:
+    element:
+      id: matrix-cell-0-1
+    direction: DOWN
+    centerElement: true
+    timeout: 90000
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/49-matrix
+- tapOn:
+    id: matrix-cell-0-1
+- assertVisible:
+    id: topic-screen
+- takeScreenshot: ${EVIDENCE}/49-native-topic
+- openLink: opax://explore/tide
+- assertVisible:
+    id: explore-tide-screen
+- extendedWaitUntil:
+    notVisible:
+      id: tide-loading
+    timeout: 20000
+- takeScreenshot: ${EVIDENCE}/49-tide
+- openLink: opax://explore/wd
+- assertVisible:
+    id: explore-wd-screen
+- extendedWaitUntil:
+    notVisible:
+      id: wd-matrix-loading
+    timeout: 20000
+- extendedWaitUntil:
+    notVisible:
+      id: wd-money-loading
+    timeout: 20000
+- takeScreenshot: ${EVIDENCE}/49-words-per-dollar

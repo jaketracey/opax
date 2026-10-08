@@ -1,4 +1,5 @@
 import { isPeoplePaidPath } from '../features/people/policy';
+import { isExplorePaidPath, isExploreStaticPath } from '../features/explore/policy';
 import { isPortraitPath } from './portrait-policy';
 import { allowsReportsPath } from './reports-policy';
 import {
@@ -129,6 +130,7 @@ export function assertAllowedPath(path: string): void {
   const params = new URLSearchParams(query);
   if (path.split('?').length > 2) throw new Error('Invalid catalog query');
   if (allowsReportsPath(path)) return;
+  if (isExplorePaidPath(path) || isExploreStaticPath(path)) return;
   if (isPeoplePaidPath(path)) return;
   // Build 7 Ask. POST admission is separate from the catalog GET client.
   if (pathname === '/api/ask' && query === 'stream=1') return;

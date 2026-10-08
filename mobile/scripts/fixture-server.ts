@@ -1,6 +1,7 @@
 // Offline, data-only server. No Worker import, proxy, fetch, email or model path.
 import { createVoiceFixture } from './voice-fixture';
 import { reportsFixture } from './reports-fixture';
+import { exploreFixture } from './explore-fixture';
 import { askFixture } from './ask-fixture';
 import { createServer } from 'node:http';
 import { createHash } from 'node:crypto';
@@ -213,7 +214,7 @@ export const server = createServer(async (request, response) => {
     if (path.endsWith('.webp')) assertPortraitPath(path);
     else assertAllowedPath(path);
     const url = new URL(path, `http://127.0.0.1:${port}`);
-    const reportBody = reportBytes(path);
+    const reportBody = exploreFixture(path, reportBytes) ?? reportBytes(path);
     const peopleResponse = Object.hasOwn(peopleFixtures.responses, path);
     const search = peopleResponse || reportBody || files.has(url.pathname) ? null : searchFixture(url, roster);
     if (search) {
