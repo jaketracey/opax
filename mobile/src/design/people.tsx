@@ -1,11 +1,18 @@
 import { router } from 'expo-router';
 import { ownsRowPadding } from './row-padding';
 import { partyRoute } from '../navigation/routes';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { localImageURI } from '../api/image-policy';
 import type { ReactNode } from 'react';
-import { Image, Pressable, StyleSheet, View } from 'react-native';
-import { useAccessibilitySize } from './accessibility';
+import {
+  Animated,
+  Easing,
+  Image,
+  Pressable,
+  StyleSheet,
+  View,
+} from 'react-native';
+import { useAccessibilitySize, useReduceMotion } from './accessibility';
 import { Icon } from './icon';
 import type { PartyStatus } from '../api/party-transforms';
 import {
@@ -18,11 +25,62 @@ import {
 } from './party';
 import { Text } from './text';
 import { nameProbeProps } from './text-probe';
-import { colors, hairline, minimumTarget, rhythm, spacing } from './tokens';
+import {
+  colors,
+  hairline,
+  light,
+  minimumTarget,
+  rhythm,
+  spacing,
+} from './tokens';
 
 const portraitSizes = { row: 44, profile: 96 } as const;
 
-/** An unchanged local portrait, or the existing blank circle. Never initials. */
+// One beat for every waiting portrait, so a list of them breathes together.
+// Colour only: the veil steps between two opaque roles.
+const beat = new Animated.Value(0);
+let waiting = 0;
+let beating: Animated.CompositeAnimation | null = null;
+function useBeat(active: boolean) {
+  useEffect(() => {
+    if (!active) return;
+    if (waiting++ === 0) {
+      beat.setValue(0);
+      beating = Animated.loop(
+        Animated.sequence(
+          [1, 0].map((toValue) =>
+            Animated.timing(beat, {
+              toValue,
+              duration: 800,
+              easing: Easing.inOut(Easing.quad),
+              useNativeDriver: false,
+            }),
+          ),
+        ),
+      );
+      beating.start();
+    }
+    return () => {
+      if (--waiting === 0) {
+        beating?.stop();
+        beating = null;
+      }
+    };
+  }, [active]);
+}
+const veilBeat = beat.interpolate({
+  inputRange: [0, 1],
+  outputRange: [light.sunken, light.line],
+});
+
+/**
+ * An unchanged local portrait, or the existing blank circle. Never initials.
+ * While `loading` (the lookup is still running) or the image is still being
+ * decoded, a veil over the blank circle breathes softly between sunken and
+ * the hairline colour; once the photo is drawn the veil clears, so the photo
+ * fades in. Under Reduce Motion the veil is still and clears at once.
+ * Nothing changes size, so nothing around it moves.
+ */
 export function Portrait({
   size = 'row',
   testID,
@@ -32,6 +90,7 @@ export function Portrait({
   nameBeside = true,
   ring,
   onDisplay,
+  loading = false,
 }: {
   size?: keyof typeof portraitSizes;
   testID?: string;
@@ -42,8 +101,14 @@ export function Portrait({
   /** A party colour drawn as a ring around a profile portrait. */
   ring?: string | null;
   onDisplay?: (visible: boolean) => void;
+  /** The portrait lookup has not answered yet. */
+  loading?: boolean;
 }) {
   const [failedURI, setFailedURI] = useState<string | null>(null);
+  const [shownURI, setShownURI] = useState<string | null>(null);
+  const [clearedURI, setClearedURI] = useState<string | null>(null);
+  const [reveal] = useState(() => new Animated.Value(0));
+  const reduced = useReduceMotion();
   const dimension = portraitSizes[size];
   let uri: string | undefined;
   try {
@@ -52,6 +117,21 @@ export function Portrait({
     /* Blank fallback for anything outside the cache. */
   }
   const decorative = nameBeside || !name || !uri;
+  const shown = !!uri && shownURI === uri;
+  const pending = !shown && (loading || !!uri);
+  useBeat(pending && !reduced);
+  const veil = shown
+    ? clearedURI === uri
+      ? null
+      : reveal.interpolate({
+          inputRange: [0, 1],
+          outputRange: [light.sunken, `${light.sunken}00`],
+        })
+    : pending
+      ? reduced
+        ? light.sunken
+        : veilBeat
+      : null;
   return (
     <View
       testID={testID}
@@ -85,11 +165,31 @@ export function Portrait({
             decorative ? 'no-hide-descendants' : 'auto'
           }
           accessibilityIgnoresInvertColors
-          onLoad={() => onDisplay?.(true)}
+          onLoad={() => {
+            const drawn = uri!;
+            setShownURI(drawn);
+            if (reduced) setClearedURI(drawn);
+            else {
+              reveal.setValue(0);
+              Animated.timing(reveal, {
+                toValue: 1,
+                duration: 220,
+                easing: Easing.out(Easing.quad),
+                useNativeDriver: false,
+              }).start(() => setClearedURI(drawn));
+            }
+            onDisplay?.(true);
+          }}
           onError={() => {
             setFailedURI(uri!);
             onDisplay?.(false);
           }}
+        />
+      ) : null}
+      {veil ? (
+        <Animated.View
+          pointerEvents="none"
+          style={[StyleSheet.absoluteFill, { backgroundColor: veil }]}
         />
       ) : null}
     </View>
@@ -305,8 +405,10 @@ export type PersonRowProps = PersonRowParty & {
   testDrawnName?: boolean;
 };
 /**
- * A row for a roster parliamentarian: portrait (blank circle without one),
- * name, party, place, chevron. Not for donors, witnesses, suppliers or other
+ * A row for a roster parliamentarian: portrait (blank circle without one)
+ * aligned to the top of its text, then the name, the party chip on its own
+ * line, the place ("Member for Grayndler · NSW") and any detail below, and a
+ * chevron. Not for donors, witnesses, suppliers or other
  * private individuals: they get plain text and never a profile link
  * (decision 3).
  */
@@ -351,20 +453,15 @@ export function PersonRow({
           >
             {name}
           </Text>
-          {partyContext || place ? (
-            <View
-              style={[
-                styles.personMeta,
-                stacked ? styles.personMetaWrap : null,
-              ]}
-            >
-              {partyContext ? <PartyChip {...partyContext} /> : null}
-              {place ? (
-                <Text wordSafe variant="metadata" style={styles.shrink}>
-                  {place}
-                </Text>
-              ) : null}
+          {partyContext ? (
+            <View style={styles.personChip}>
+              <PartyChip {...partyContext} />
             </View>
+          ) : null}
+          {place ? (
+            <Text wordSafe variant="metadata">
+              {place}
+            </Text>
           ) : null}
           {detail ? (
             <Text wordSafe variant="caption">
@@ -478,10 +575,11 @@ const styles = StyleSheet.create({
     minHeight: minimumTarget,
     paddingVertical: 6,
   },
+  // The portrait sits at the top of the text block, level with the name.
   personMain: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     gap: rhythm.heading,
   },
   personStacked: {
@@ -494,15 +592,8 @@ const styles = StyleSheet.create({
   personText: { gap: rhythm.line, alignSelf: 'stretch' },
   personTextInline: { flex: 1 },
   personName: { flexShrink: 0 },
-  // The chip and the role share a line; the role wraps beside the chip.
-  personMeta: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    columnGap: rhythm.tight,
-    rowGap: rhythm.line,
-  },
-  personMetaWrap: { flexWrap: 'wrap' },
-  shrink: { flexShrink: 1 },
+  // The chip takes its own line, with a little air before the place.
+  personChip: { flexDirection: 'row', paddingVertical: 1 },
 });
 
 ownsRowPadding(PersonRow);
