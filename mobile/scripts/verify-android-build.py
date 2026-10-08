@@ -14,6 +14,7 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("variant", choices=["development", "e2e", "production"])
 parser.add_argument("apk", type=Path)
 parser.add_argument("output", type=Path)
+parser.add_argument("--certificate-sha256", help="Expected public upload certificate SHA-256; default is the local debug key")
 args = parser.parse_args()
 sdk = Path(os.environ["ANDROID_HOME"])
 analyzer = sdk / "cmdline-tools/latest/bin/apkanalyzer"
@@ -66,7 +67,15 @@ with zipfile.ZipFile(args.apk) as archive:
                            b"Cross-origin API requests are forbidden", b"Redirects are not allowed for catalog data"]:
                 assert marker in bundle, f"Missing API guard: {marker}"
 signing = run(build_tools / "apksigner", "verify", "--print-certs", args.apk)
-assert "CN=Android Debug" in signing, "Expected local debug signing only"
+if args.certificate_sha256:
+    expected = args.certificate_sha256.replace(":", "").lower()
+    assert re.fullmatch(r"[0-9a-f]{64}", expected), "Invalid certificate SHA-256"
+    digest = re.search(r"Signer #1 certificate SHA-256 digest: ([0-9a-f]+)", signing)
+    assert digest and digest[1] == expected, "Unexpected upload certificate"
+    signing_label = "upload key (not the Play app signing key)"
+else:
+    assert "CN=Android Debug" in signing, "Expected local debug signing only"
+    signing_label = "local Android debug key"
 args.output.parent.mkdir(parents=True, exist_ok=True)
 args.output.with_suffix(".manifest.xml").write_text(manifest)
 args.output.with_suffix(".network.xml").write_text(network)
@@ -74,6 +83,6 @@ evidence = {"variant": args.variant, "version": root.attrib[ns + "versionName"],
             "apk_bytes": args.apk.stat().st_size,
             "sha256": hashlib.sha256(args.apk.read_bytes()).hexdigest(),
             "permissions": permissions, "cleartext_domains": domains,
-            "signing": "local Android debug key", "checks": "passed"}
+            "signing": signing_label, "checks": "passed"}
 args.output.write_text(json.dumps(evidence, indent=2) + "\n")
 print(json.dumps(evidence))

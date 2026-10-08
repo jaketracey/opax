@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   type AccessibilityState,
   Pressable,
+  Platform,
   StyleSheet,
   TextInput,
   View,
@@ -788,9 +789,12 @@ export function Divider({
   );
 }
 
-// Segment geometry: 44 + 2 * (1 + 1) = 48 outside; the highlight is inset
-// 3pt so it sits 4pt inside the border, as the web's segments do.
-const segmentPadding = (controlHeight.default - minimumTarget) / 2 - hairline;
+// iOS retains 44 + 2 * (1 + 1) = 48 outside. Android keeps its 48dp
+// touch target plus the border; padding must never become negative.
+const segmentPadding = Math.max(
+  0,
+  (controlHeight.default - minimumTarget) / 2 - hairline,
+);
 const segmentInset = spacing.s1 - segmentPadding;
 
 const styles = StyleSheet.create({
@@ -883,7 +887,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.s3,
-    minHeight: minimumTarget - 4,
+    minHeight: Platform.OS === 'android' ? minimumTarget : minimumTarget - 4,
     maxWidth: '100%',
     paddingLeft: 14,
     paddingRight: 12,

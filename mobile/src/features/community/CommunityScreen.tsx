@@ -3,6 +3,7 @@ import {
   AccessibilityInfo,
   Alert,
   Keyboard,
+  Platform,
   Pressable,
   StyleSheet,
   TextInput,
@@ -45,6 +46,7 @@ import { fromWebPath } from '../../navigation/routes';
 import { shareRecord } from '../../navigation/share';
 import { webOrigin } from '../../design/environment';
 import { useAccount } from '../account/store';
+import { AndroidCommunityScreen } from './AndroidCommunityScreen';
 import {
   communityRoute,
   communitySharePath,
@@ -286,6 +288,10 @@ function SearchBox({
   );
 }
 export function CommunityScreen() {
+  if (Platform.OS === 'android') return <AndroidCommunityScreen />;
+  return <NativeCommunityScreen />;
+}
+function NativeCommunityScreen() {
   useCommunityRevision();
   const params = useLocalSearchParams<Record<string, string>>();
   // Linking can reuse this dynamic route. A different destination owns its
