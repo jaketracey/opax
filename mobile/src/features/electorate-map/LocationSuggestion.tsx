@@ -1,8 +1,9 @@
 import { phoneCopy } from '../../design/phone-copy';
 import { useEffect, useRef, useState } from 'react';
-import { AccessibilityInfo, Platform } from 'react-native';
+import { AccessibilityInfo, Platform, StyleSheet, View } from 'react-native';
 import type { Electorate } from '../../api/catalogs';
 import { Button, Group, Text } from '../../design/primitives';
+import { colors, rhythm } from '../../design/tokens';
 import { suggestFromLocation } from './location';
 import type { Suggestion } from './suggestion';
 const messages = {
@@ -24,7 +25,7 @@ export function LocationSuggestion({
   disabled: boolean;
 }) {
   const [busy, setBusy] = useState(false),
-    [progress, setProgress] = useState(''),
+    [progress, setProgress] = useState<Progress>({ done: 0, total: 0 }),
     [result, setResult] = useState<Suggestion | null>(null);
   const pending = useRef<AbortController | null>(null);
   useEffect(() => () => pending.current?.abort(), []);
@@ -34,16 +35,11 @@ export function LocationSuggestion({
     pending.current = controller;
     setBusy(true);
     setResult(null);
-    setProgress('Preparing a location suggestion');
+    setProgress({ done: 0, total: 0 });
     const outcome = await suggestFromLocation(
       seats,
       (done, total) => {
-        if (!controller.signal.aborted)
-          setProgress(
-            done === total
-              ? phoneCopy('Checking once on your iPhone')
-              : `Preparing federal outlines ${done} of ${total}`,
-          );
+        if (!controller.signal.aborted) setProgress({ done, total });
       },
       controller.signal,
     );
@@ -76,13 +72,7 @@ export function LocationSuggestion({
       </Text>
       {busy ? (
         <Group>
-          <Text
-            wordSafe
-            accessibilityLiveRegion="polite"
-            testID="location-progress"
-          >
-            {progress}
-          </Text>
+          <LocationProgress {...progress} />
           <Button
             label="Cancel location suggestion"
             testID="location-cancel"
@@ -90,7 +80,7 @@ export function LocationSuggestion({
               pending.current?.abort();
               pending.current = null;
               setBusy(false);
-              setProgress('');
+              setProgress({ done: 0, total: 0 });
             }}
           />
         </Group>
@@ -129,3 +119,95 @@ export function LocationSuggestion({
     </Group>
   );
 }
+
+interface Progress {
+  done: number;
+  total: number;
+}
+const phases = () => [
+  'Preparing a location suggestion',
+  'Preparing federal outlines',
+  phoneCopy('Checking once on your iPhone'),
+];
+/**
+ * The outline count as a stable block: a phase label, a determinate bar and
+ * "104 of 150" in tabular figures. Each line reserves the room its longest
+ * wording needs (every phase label, the full count), so the block keeps one
+ * height while it counts and the Cancel button below never moves, at any
+ * text size. VoiceOver hears one sentence, politely.
+ */
+export function LocationProgress({ done, total }: Progress) {
+  const labels = phases();
+  const label = !total ? labels[0]! : done === total ? labels[2]! : labels[1]!;
+  const count = total ? `${done} of ${total}` : '';
+  const spoken = total && done < total ? `${label} ${count}` : label;
+  return (
+    <View
+      accessible
+      accessibilityLabel={spoken}
+      accessibilityLiveRegion="polite"
+      testID="location-progress"
+      style={styles.progress}
+    >
+      <Reserved shown={label} all={labels} />
+      <View style={styles.track}>
+        <View
+          style={[
+            styles.fill,
+            { width: `${total ? Math.round((done / total) * 100) : 0}%` },
+          ]}
+        />
+      </View>
+      <Reserved
+        shown={count}
+        all={[total ? `${total} of ${total}` : '000 of 000']}
+        variant="caption"
+      />
+    </View>
+  );
+}
+/** One line of text drawn over invisible copies of every wording it may take. */
+function Reserved({
+  shown,
+  all,
+  variant = 'body',
+}: {
+  shown: string;
+  all: string[];
+  variant?: 'body' | 'caption';
+}) {
+  return (
+    <View style={styles.stack}>
+      {[shown, ...all].map((text, index) => (
+        <Text
+          key={index}
+          wordSafe
+          variant={variant}
+          style={[
+            styles.layer,
+            index ? styles.ghost : null,
+            variant === 'caption' ? styles.tabular : null,
+          ]}
+        >
+          {text || ' '}
+        </Text>
+      ))}
+    </View>
+  );
+}
+const styles = StyleSheet.create({
+  progress: { gap: rhythm.tight },
+  // Every layer takes the full width and sits over the first, so the stack
+  // is as tall as its tallest wording.
+  stack: { flexDirection: 'row' },
+  layer: { width: '100%', marginRight: '-100%' },
+  ghost: { opacity: 0 },
+  tabular: { fontVariant: ['tabular-nums'] },
+  track: {
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: colors.sunken,
+    overflow: 'hidden',
+  },
+  fill: { height: 4, borderRadius: 2, backgroundColor: colors.navy },
+});
