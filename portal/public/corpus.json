@@ -1,13 +1,13 @@
 {
-  "version": "2026-10-08",
-  "expected_resources": 730546,
+  "version": "2026-10-09",
+  "expected_resources": 730847,
   "expected_resources_breakdown": {
-    "live_index_before_refresh": 730036,
-    "new_grant_award_resources": 18,
-    "new_press_release_resources": 22,
-    "new_speech_resources": 470
+    "live_index_before_refresh": 730546,
+    "new_grant_award_resources": 2,
+    "new_press_release_resources": 27,
+    "new_speech_resources": 272
   },
-  "collected_speeches": 692646,
+  "collected_speeches": 692918,
   "sources": [
     {
       "name": "Federal Hansard: House of Representatives (zenodo)",
@@ -46,12 +46,12 @@
     },
     {
       "name": "Joint committee hearings",
-      "docs": 24317,
+      "docs": 24466,
       "coverage": "2025–2026"
     },
     {
       "name": "House committee hearings",
-      "docs": 14134,
+      "docs": 14257,
       "coverage": "2025–2026"
     },
     {
@@ -71,7 +71,7 @@
     },
     {
       "name": "NSW Government ministerial releases",
-      "docs": 5357,
+      "docs": 5367,
       "coverage": "2024–2026"
     },
     {
@@ -106,17 +106,17 @@
     },
     {
       "name": "Queensland Government ministerial statements",
-      "docs": 138,
+      "docs": 144,
       "coverage": "7–21 Sep 2026 refresh"
     },
     {
       "name": "Victorian Premier releases",
-      "docs": 135,
+      "docs": 145,
       "coverage": "7–21 Sep 2026 refresh"
     },
     {
       "name": "Australian Treasury ministerial releases",
-      "docs": 122,
+      "docs": 123,
       "coverage": "7–21 Sep 2026 refresh"
     },
     {
@@ -148,12 +148,12 @@
     "SA Hansard stops at November 2024: hansardsearch.parliament.sa.gov.au now sits behind a WAF that challenges every non-browser request, so the source cannot be fetched."
   ],
   "refresh": {
-    "checked_at": "2026-10-07T17:37:31+00:00",
+    "checked_at": "2026-10-08T17:32:24+00:00",
     "news_resources": 0,
     "bills_registry": 2988,
     "current_parliament_bills": 295,
     "latest_bill_introduced": "2026-09-17",
-    "latest_nsw_release": "2026-10-07",
+    "latest_nsw_release": "2026-10-08",
     "source_limitations": [
       "SA Hansard refresh blocked by source HTTP 403; stored coverage ends 2024-11-12.",
       "Federal Hansard is current to 2026-09-17 (no sittings since); NSW Parliament to 2026-09-24; Victoria to 2026-09-24; QLD to 2026-09-16; ACT to 2026-09-24. Federal committee hearings (Senate, House and Joint) are current to 2026-10-06.",
@@ -189,12 +189,12 @@
       "bill_text": 4747,
       "division": 14023,
       "election_baseline": 150,
-      "grant_award": 8331,
+      "grant_award": 8333,
       "grant_invitation": 227,
       "parliamentary_profile": 977,
-      "press_release": 6416,
+      "press_release": 6443,
       "research_report": 35,
-      "speech": 692646
+      "speech": 692918
     },
     "raw_source_updates": {
       "federal_speeches": 0,
@@ -203,7 +203,7 @@
       "qld_speeches": 0,
       "act_speeches": 0,
       "nsw_releases": 10,
-      "austender_contracts": 8,
+      "austender_contracts": 9,
       "new_federal_divisions": 0
     },
     "structured_sources": {
