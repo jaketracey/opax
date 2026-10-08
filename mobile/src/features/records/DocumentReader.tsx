@@ -242,10 +242,6 @@ export default function DocumentReader({
                       testID="doc-brief-label"
                     />
                     <Text selectable>{doc.summary}</Text>
-                    <AsAtLine
-                      asOf={metaString(doc, 'date') || null}
-                      citation="This source record"
-                    />
                   </Section>
                 ) : null}
                 <LinkedBill key={`bill-${doc.slug}`} doc={doc} />
@@ -388,7 +384,13 @@ function LinkedBill({ doc }: { doc: DocumentRecord }) {
       </Text>
       {bill.summary ? (
         <>
-          <Text variant="fine">{bill.attribution}.</Text>
+          <MachineWritten
+            label="Machine summary"
+            explanation={
+              bill.attribution ?? 'Written by a model; not the record.'
+            }
+            testID="doc-bill-label"
+          />
           <Text>{bill.summary}</Text>
         </>
       ) : (
