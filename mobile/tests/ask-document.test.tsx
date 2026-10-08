@@ -10,7 +10,10 @@ import { titleSubject } from '../src/features/records/citations';
 import { decodeDocument } from '../src/features/records/model';
 import fixtures from '../scripts/fixtures/records/contracts.json';
 
-jest.mock('expo-router', () => ({ router: { dismissTo: jest.fn() } }));
+jest.mock('expo-router', () => ({
+  router: { dismissTo: jest.fn(), navigate: jest.fn() },
+  useSegments: () => ['(tabs)', '(today)', 'doc', '[slug]'],
+}));
 const source = readFileSync(
   resolve(__dirname, '../../portal/public/app.js'),
   'utf8',
@@ -70,12 +73,15 @@ test('mount does nothing; tapping opens a draft without submitting or creating a
   await act(async () => {
     view = TestRenderer.create(<DocumentAsk doc={speech} />);
   });
-  expect(router.dismissTo).not.toHaveBeenCalled();
+  expect(router.navigate).not.toHaveBeenCalled();
   await act(async () => {
     view.root.findByProps({ testID: 'doc-ask' }).props.onPress();
   });
-  expect(router.dismissTo).toHaveBeenCalledTimes(1);
-  expect(router.dismissTo).toHaveBeenCalledWith({
+  // From a browsing tab the draft opens by navigating to the Ask tab
+  // (tests/ask-entry-navigation.test.tsx drives the real router).
+  expect(router.dismissTo).not.toHaveBeenCalled();
+  expect(router.navigate).toHaveBeenCalledTimes(1);
+  expect(router.navigate).toHaveBeenCalledWith({
     pathname: '/(tabs)/(ask)/ask',
     params: { question: documentQuestion(speech), entry: expect.any(String) },
   });

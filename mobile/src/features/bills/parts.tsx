@@ -493,6 +493,39 @@ export function MachineLabel({
   );
 }
 
+/**
+ * A bill's stored machine summary. The label and the record's own
+ * attribution come first, so no reader meets the summary as the record.
+ * `testID` prefixes the label, attribution and text.
+ */
+export function MachineSummary({
+  attribution,
+  sentences,
+  testID,
+}: {
+  attribution: string;
+  sentences: string[];
+  testID: string;
+}) {
+  return (
+    <>
+      <View style={styles.machineHead}>
+        <MachineLabel testID={`${testID}-label`}>Machine summary</MachineLabel>
+        <Text variant="caption" testID={`${testID}-attribution`}>
+          {attribution.replace(/\.?$/, '.')}
+        </Text>
+      </View>
+      <View style={styles.machineText} testID={`${testID}-text`}>
+        {sentences.filter(Boolean).map((sentence, index) => (
+          <Text key={index} variant="body">
+            {sentence}
+          </Text>
+        ))}
+      </View>
+    </>
+  );
+}
+
 /** A stored machine brief: its label always shows; a long brief folds. */
 export function MachineBrief({
   label,
@@ -654,6 +687,8 @@ const styles = StyleSheet.create({
   track: { height: 6, borderRadius: 3, backgroundColor: colors.sunken },
   bar: { height: 6, borderRadius: 3 },
   bullet: { flexDirection: 'row', gap: spacing.s3 },
+  machineHead: { gap: rhythm.line },
+  machineText: { gap: spacing.s3 },
   machine: {
     flexDirection: 'row',
     alignItems: 'center',

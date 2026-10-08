@@ -1,6 +1,5 @@
-import { router } from 'expo-router';
 import { LinkRow } from '../../design/primitives';
-import { askRoute } from '../../navigation/routes';
+import { useOpenAsk } from './open';
 export function scopedQuestion(
   kind: 'person' | 'bill' | 'party' | 'electorate',
   name: string,
@@ -27,10 +26,11 @@ export function AskAbout({
   kind: 'person' | 'bill' | 'party' | 'electorate';
   name: string;
 }) {
+  const openAsk = useOpenAsk();
   return (
     <LinkRow
       title={kind === 'person' ? 'Ask about their speeches' : 'Ask about this'}
-      onPress={() => router.dismissTo(askRoute(scopedQuestion(kind, name)))}
+      onPress={() => openAsk(scopedQuestion(kind, name))}
       testID={`${kind}-ask`}
       icon="text.bubble"
       accent="people"

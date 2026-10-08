@@ -14,6 +14,7 @@ const mockParams: { key: string; section?: string } = {
   section: 'divisions',
 };
 jest.mock('expo-router', () => ({
+  useSegments: () => [],
   useLocalSearchParams: () => mockParams,
   router: { push: jest.fn() },
   Stack: { Screen: () => null },

@@ -16,6 +16,7 @@ import { partyRoute } from '../src/navigation/routes';
 import { partyColors } from '../src/design/palette';
 import { pinned, slugs } from './pinned';
 jest.mock('expo-router', () => ({
+  useSegments: () => [],
   router: { push: jest.fn() },
   Stack: { Screen: () => null },
 }));

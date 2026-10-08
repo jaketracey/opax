@@ -51,6 +51,7 @@ jest.mock('../src/api/image-policy', () => ({
 }));
 const mockParams: { slug?: string; id?: string } = {};
 jest.mock('expo-router', () => ({
+  useSegments: () => [],
   useLocalSearchParams: () => mockParams,
   router: { push: jest.fn() },
   Stack: { Screen: () => null },
