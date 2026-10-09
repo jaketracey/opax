@@ -133,10 +133,6 @@
   ! Cache-Control
   Cache-Control: public, max-age=300, must-revalidate
 
-/home-prototype
-  Cache-Control: public, max-age=0, must-revalidate
-/home-prototype.html
-  Cache-Control: public, max-age=0, must-revalidate
 /home.css
   Cache-Control: public, max-age=31536000, immutable
 

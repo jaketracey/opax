@@ -4,6 +4,9 @@
 "use strict";
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
+// The labels, source lines and ⋯ (labels.js); the first render waits for them.
+let uiLabels;
+const uiLabelsReady = import('/labels.js?v=804befe8de').then(module => { uiLabels = module; });
 let attributionHelpers;
 const attributionReady = Promise.allSettled([divisionMarkdownReady,
   import('./speech-attribution.js?v=20261006-4').then(module => { attributionHelpers = module; })]);
@@ -158,17 +161,8 @@ function fmtDollars(value) {
   return `$${Math.round(Number(value) || 0).toLocaleString("en-AU")}`;
 }
 
-// Party identity: dot + short text label, always redundant with text (never color alone).
-const PARTY_MAP = {
-  "labor": ["alp", "ALP"], "liberal": ["lib", "LIB"], "nationals": ["nat", "NAT"],
-  "lnp": ["lnp", "LNP"], "country liberal party": ["nat", "CLP"],
-  "greens": ["grn", "GRN"], "one nation": ["onp", "ONP"], "independent": ["ind", "IND"],
-  "centre alliance": ["oth", "CA"], "katter's australian party": ["oth", "KAP"],
-  "united australia party": ["oth", "UAP"], "australian democrats": ["oth", "AD"],
-  "family first": ["oth", "FF"], "dlp": ["oth", "DLP"], "jln": ["oth", "JLN"],
-};
 function partyClass(party) {
-  const hit = PARTY_MAP[String(party || "").toLowerCase()];
+  const hit = uiLabels.PARTY_MAP[String(party || "").toLowerCase()];
   return hit ? hit[0] : null;
 }
 
@@ -176,7 +170,7 @@ function partyClass(party) {
 function partyDotHTML(party) {
   const cls = partyClass(party);
   if (!cls) return "";
-  const name = PARTY_NAMES[PARTY_MAP[String(party).toLowerCase()][1]]?.[1] || String(party);
+  const name = uiLabels.PARTY_NAMES[uiLabels.PARTY_MAP[String(party).toLowerCase()][1]]?.[1] || String(party);
   return `<span class="party party-${cls} party-dot-only" role="img" aria-label="${esc(name)}" title="${esc(name)}"><i aria-hidden="true"></i></span>`;
 }
 
@@ -265,108 +259,25 @@ function donorBalanceHTML(flows) {
 }
 
 function samePartyLabel(a, b) {
-  const la = PARTY_MAP[String(a).toLowerCase()]?.[1] || String(a);
-  const lb = PARTY_MAP[String(b).toLowerCase()]?.[1] || String(b);
+  const la = uiLabels.PARTY_MAP[String(a).toLowerCase()]?.[1] || String(a);
+  const lb = uiLabels.PARTY_MAP[String(b).toLowerCase()]?.[1] || String(b);
   return la === lb;
 }
-// --- labels and source lines (docs/design/DESIGN-REVIEW-2026-10.md §5.2) -------
+// --- labels, source lines and ⋯ (docs/design/DESIGN-REVIEW-2026-10.md §5.2) -----
 // Five kinds of small label, all sentence case: Tag, StatusLabel, PartyLabel,
 // Choice/Filter chip (markup in place, drawn by ui-controls.css) and
-// MachineLabel; and one SourceLine at the foot of a block. ui-controls.css and
-// ui-source.css draw them; ui-source.js gives the sheets Escape and light dismiss.
-// labels:begin
-
-/** PARTY_MAP's code -> [the name a label shows, the name it says]. The short form
- *  is the name itself where that is short; where it is a code, the full name is
- *  what a screen reader hears. */
-const PARTY_NAMES = {
-  ALP: ["Labor", "Australian Labor Party"], LIB: ["Liberal", "Liberal Party"],
-  NAT: ["Nationals", "The Nationals"], LNP: ["LNP", "Liberal National Party"],
-  CLP: ["CLP", "Country Liberal Party"], GRN: ["Greens", "Australian Greens"],
-  ONP: ["One Nation", "Pauline Hanson's One Nation"], IND: ["Independent", "Independent"],
-  CA: ["Centre Alliance", "Centre Alliance"], KAP: ["KAP", "Katter's Australian Party"],
-  UAP: ["UAP", "United Australia Party"], AD: ["Democrats", "Australian Democrats"],
-  FF: ["Family First", "Family First"], DLP: ["DLP", "Democratic Labour Party"],
-  JLN: ["JLN", "Jacqui Lambie Network"],
-};
-/* A party field that says there is no party is not a party: no dot, no label. */
-const PARTY_PLACEHOLDER = /^(?:not recorded|unknown|none|n\/?a|-|—)$/i;
-
-/** PartyLabel: a dot beside the party's name, no fill. `full` for a profile's
- *  own header; the short name elsewhere, with the full name spoken. */
-function partyChipHTML(party, { full = false } = {}) {
-  const name = String(party ?? "").trim();
-  if (!name || PARTY_PLACEHOLDER.test(name)) return "";
-  const hit = PARTY_MAP[name.toLowerCase()];
-  const [short, long] = (hit && PARTY_NAMES[hit[1]]) || [name, name];
-  const shown = full ? long : short;
-  const text = shown === long ? esc(shown)
-    : `<span aria-hidden="true">${esc(shown)}</span><span class="visually-hidden">${esc(long)}</span>`;
-  return `<span class="ui-party party party-${hit ? hit[0] : "oth"}"${shown === long ? "" : ` title="${esc(long)}"`}><i aria-hidden="true"></i>${text}</span>`;
-}
-
-/** StatusLabel: one word with a tone: done, active, ended or draft. */
-function statusLabelHTML(word, tone = "ended") {
-  return word ? `<span class="ui-status" data-tone="${esc(tone)}">${esc(word)}</span>` : "";
-}
-
-/** Tag: a topic, in bronze; a link when it has somewhere to go. */
-function tagHTML(label, href) {
-  const attr = href ? entityHrefAttr(href) : "";
-  return attr ? `<a class="ui-tag" ${attr}>${esc(label)}</a>` : `<span class="ui-tag">${esc(label)}</span>`;
-}
-
-const MACHINE_NOTE = "Written by a language model from the records it draws on. It is not part of the record: check it against the original.";
-const MACHINE_GLYPH = '<span class="ui-machine-glyph" aria-hidden="true">✦</span>';
-
-/** MachineLabel: one phrase, once at the top of a machine-written block; it
- *  opens what wrote the text, from what. `inline` is the quiet form for a row
- *  in a list of briefs: no sheet, because a details cannot sit inside a
- *  paragraph or a link. `className` keeps a block's layout hook. */
-function machineLabelHTML({ note = MACHINE_NOTE, inline = false, className = "" } = {}) {
-  const cls = className ? ` ${esc(className)}` : "";
-  if (inline) return `<span class="ui-machine-inline${cls}">${MACHINE_GLYPH}Machine-written</span>`;
-  return `<details class="ui-pop ui-machine${cls}"><summary>${MACHINE_GLYPH}Machine-written</summary>` +
-    `<div class="ui-sheet"><p>${esc(note)}</p></div></details>`;
-}
-
-const SOURCE_GLYPH = '<svg class="ui-source-glyph" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 1.75h5.25L12.5 5v9.25h-8.5z"/><path d="M9 1.75V5.25h3.5M6.25 8.5h4M6.25 11h4"/></svg>';
-
-/** SourceLine, one per block: "Updated 4 Oct 2026 · AEC annual returns" and a
- *  state where there is one ("partial", "saved copy"). It opens a sheet with
- *  the originals, as-at and coverage, notes and caveats, and the licence.
- *  `notes` and `licence` are HTML the caller has escaped (its fine print,
- *  licenceNoteHTML); the rest is text. Originals are http(s) or site paths. */
-function sourceLineHTML({ updated = "", source = "", state = "", originals = [], asAt = "", notes = [], licence = "" } = {}) {
-  const when = updated ? esc(`Updated ${fmtDate(updated)}`) : "";
-  const what = source ? `<span class="ui-source-name">${esc(source)}</span>` : "";
-  const line = [when, what].filter(Boolean).join(" · ") || '<span class="ui-source-name">Sources and notes</span>';
-  const links = originals.map((o) => {
-    const external = safeUrl(o?.href);
-    const href = external || (/^\/(?!\/)/.test(o?.href || "") ? o.href : null);
-    return href && `<li><a href="${esc(href)}"${external ? ' rel="noopener" target="_blank"' : ""}>${
-      esc(o.label || "View original")}${external ? " ↗︎" : ""}</a></li>`;
-  }).filter(Boolean);
-  const kept = notes.filter(Boolean);
-  const sheet = [
-    links.length ? `<ul class="ui-sheet-originals">${links.join("")}</ul>` : "",
-    asAt ? `<p class="ui-sheet-asat">${esc(asAt)}</p>` : "",
-    kept.length ? `<div class="ui-sheet-notes">${kept.map((n) => `<p>${n}</p>`).join("")}</div>` : "",
-    licence ? `<p class="ui-sheet-licence">${licence}</p>` : "",
-  ].join("");
-  return `<details class="ui-pop ui-source"${state ? ` data-state="${esc(state)}"` : ""}><summary>${SOURCE_GLYPH}` +
-    `<span class="ui-source-text">${line}</span>${state ? `<span class="ui-source-state">· ${esc(state)}</span>` : ""}</summary>` +
-    `<div class="ui-sheet">${sheet || "<p>No further notes for this source.</p>"}</div></details>`;
-}
-
-/** The adapter for fine print a block already writes: its paragraph becomes the
- *  notes of the block's source line, so a page moves over by wrapping what it
- *  has. `<p class="fineprint">${html}</p>` becomes
- *  `${fineprintSourceHTML(html, { source, updated, originals })}`. */
-function fineprintSourceHTML(html, opts = {}) {
-  return sourceLineHTML({ ...opts, notes: [html, ...(opts.notes || [])] });
-}
-// labels:end
+// MachineLabel; one SourceLine at the foot of a block; ⋯ for what a view keeps
+// but does not draw. They live in labels.js, one module for this page, the
+// homepage and the electorate pages, with the party map they read; the boot at
+// the foot of this file waits for it before the first render. These are the
+// names the renderers here call.
+function partyChipHTML(party, opts) { return uiLabels.partyLabelHTML(party, opts); }
+function statusLabelHTML(word, tone) { return uiLabels.statusLabelHTML(word, tone); }
+function tagHTML(label, href) { return uiLabels.tagHTML(label, href); }
+function machineLabelHTML(opts) { return uiLabels.machineLabelHTML(opts); }
+function sourceLineHTML(opts) { return uiLabels.sourceLineHTML(opts); }
+function fineprintSourceHTML(html, opts) { return uiLabels.fineprintSourceHTML(html, opts); }
+function moreMenuHTML(items, label, opts) { return uiLabels.moreMenuHTML(items, label, opts); }
 
 /* A party's name as a sentence says it: "the Labor Party", "the Greens", "One
    Nation". The money data's short labels ("Labor", "Liberal") take an article
@@ -4079,25 +3990,6 @@ function findMoneyNode(kind, name) {
   return byAlias || best;
 }
 
-const MORE_GLYPH = '<svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="4.5" cy="10" r="1.5"/><circle cx="10" cy="10" r="1.5"/><circle cx="15.5" cy="10" r="1.5"/></svg>';
-
-/** ⋯: what a page keeps but does not draw (principle 5: one primary action,
- *  the rest under ⋯). A details popover like the source sheets, so
- *  ui-source.js gives it Escape, light dismiss and one open at a time. Items
- *  are links ({ href, label }) or buttons ({ action, label }) a page wires. */
-function moreMenuHTML(items, label = "More actions") {
-  const rows = items.filter(Boolean).map((it) => {
-    if (it.action) return `<li><button type="button" class="page-more-item" data-more-action="${esc(it.action)}">${esc(it.label)}</button></li>`;
-    const external = /^https?:/i.test(it.href || "") ? safeUrl(it.href) : null;
-    const href = external || (/^\/(?!\/)/.test(it.href || "") ? it.href : null);
-    return href ? `<li><a class="page-more-item" href="${esc(href)}"${external ? ' rel="noopener" target="_blank"' : ""}>${
-      esc(it.label)}${external ? ' <span aria-hidden="true">↗︎</span><span class="visually-hidden">, opens a new tab</span>' : ""}</a></li>` : "";
-  }).filter(Boolean);
-  if (!rows.length) return "";
-  return `<details class="ui-pop page-more"><summary aria-label="${esc(label)}" title="${esc(label)}">${MORE_GLYPH}</summary>` +
-    `<div class="ui-sheet"><ul class="page-more-list" role="list">${rows.join("")}</ul></div></details>`;
-}
-
 /* `kicker: false` for a person: the breadcrumb already says where the reader
    is, so the page says who it is once (principle 3). Other entries keep theirs
    until their own pass. */
@@ -5621,20 +5513,21 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // what Quick facts held beyond the meta line, so every fact stays one tap away.
   head.insertAdjacentHTML("beforeend", sourceLineHTML({
     updated: verified || rosterData?.meta?.representation?.updated || rosterData?.meta?.generated || "",
+    dateLabel: "As at",
     source: "Parliamentary roster",
     originals: [
       roster?.states?.includes('federal') && { label: "Parliamentary profile", href: `https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=${q}` },
       ...profileAffiliations(roster).map((r) => r.source_url && { label: `${r.jurisdictionLabel} service record`, href: r.source_url }),
     ].filter(Boolean),
-    notes: [
-      esc(roster?.current ? "Sitting parliamentarian." : "Parliamentarian."),
-      ...electorateRows.map(([label, value]) => `<b>${esc(label)}:</b> ${value}`),
-      ...profileAffiliations(roster).map((r) =>
-        `<b>Parliamentary service:</b> ${esc(r.jurisdictionLabel)} · ${esc(r.chamberLabel)} · ${esc(r.electorate)} · ${esc(r.party || 'Party not recorded')}, ` +
-        `${esc(r.start)} – ${esc(r.end || 'ongoing at the review date')}`),
-      dates.length ? `<b>Indexed speeches span:</b> ${esc(fmtDate(dates[0]))} – ${esc(fmtDate(dates[dates.length - 1]))}` : "",
-      "These are dated public records. Representation may have changed since collection.",
+    facts: [
+      ["Status", esc(roster?.current ? "Sitting parliamentarian" : "Parliamentarian")],
+      ...electorateRows,
+      ...profileAffiliations(roster).map((r) => ["Parliamentary service",
+        `${esc(r.jurisdictionLabel)} · ${esc(r.chamberLabel)} · ${esc(r.electorate)} · ${esc(r.party || 'Party not recorded')}, ` +
+        `${esc(r.start)} – ${esc(r.end || 'ongoing at the review date')}`]),
+      dates.length && ["Indexed speeches", `${esc(fmtDate(dates[0]))} – ${esc(fmtDate(dates[dates.length - 1]))}`],
     ],
+    notes: ["These are dated public records. Representation may have changed since collection."],
   }));
   // Two drawn actions (principle 5): Ask about their speeches, and ⋯.
   head.insertAdjacentHTML("beforeend", `<div class="page-actions person-actions">
@@ -8298,7 +8191,7 @@ function billSummaryHTML(bill) {
     ${s.affected ? `<h4 class="bill-sub">Who is affected</h4><p class="bill-affected">${esc(s.affected)}</p>` : ""}
     ${sourceLineHTML({
       // The day the summary was written; the material's own date is in the sheet.
-      updated: String(s.generated_at || s.as_of || "").slice(0, 10), source: basis, originals,
+      updated: String(s.generated_at || s.as_of || "").slice(0, 10), dateLabel: s.generated_at ? "Written" : "As at", source: basis, originals,
       asAt: s.as_of ? `Written from material dated ${fmtDate(s.as_of)}.` : "",
       notes: [esc(note)],
       licence: billLicence(bill),
@@ -14584,8 +14477,10 @@ function syncPathMeta() {
   }
 }
 
-// Person links are written as slugs once this lands; nothing waits on it.
-attributionReady.catch(() => {}).finally(() => {
+// The first render waits for the labels every page draws and the attribution
+// helpers; person links are written as slugs once this lands, and nothing
+// waits on that.
+Promise.allSettled([attributionReady, uiLabelsReady]).finally(() => {
   loadPersonSlugs();
   initAskBuilder();
   route();

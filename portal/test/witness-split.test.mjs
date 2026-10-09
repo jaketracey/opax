@@ -176,10 +176,10 @@ test('pending counts cannot credit committee parliamentarians in catalog, descri
 
 test('a failed attribution import still starts routing and the Ask builder', async () => {
   const app = readFileSync(new URL('../public/app.js',import.meta.url),'utf8');
-  const boot = app.slice(app.lastIndexOf('attributionReady.'));
+  const boot = app.slice(app.lastIndexOf('Promise.allSettled([attributionReady, uiLabelsReady])'));
   const called = [];
   const ready = Promise.reject(new Error('simulated missing asset'));
-  await runInNewContext(boot,{attributionReady:ready,
+  await runInNewContext(boot,{attributionReady:ready,uiLabelsReady:Promise.resolve(),Promise,
     loadPersonSlugs:()=>called.push('slugs'),initAskBuilder:()=>called.push('ask'),route:()=>called.push('route')});
   assert.deepEqual(called,['slugs','ask','route']);
 });

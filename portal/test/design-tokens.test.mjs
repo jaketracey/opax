@@ -147,7 +147,6 @@ const HEX_BASELINE = {
   'public/wordsdollars.js': 21,
   'public/app.js': 17,
   'graph/words.ts': 17,
-  'public/home-prototype.html': 16,
   'public/newsrail.js': 16,
   'public/quiz.js': 16,
   'public/lg-test.html': 11,

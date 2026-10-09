@@ -1542,17 +1542,10 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 .search-summary-word { font: var(--type-strong); color: var(--ink); }
 .search-summary-row:hover .search-summary-word { text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
 .search-summary-row:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
-/* The label's look, in the row that opens the machine-written text. */
-.search-summary-machine {
-  display: inline-flex; align-items: center; gap: 0.3rem; min-height: 26px; padding: 0 0.625rem;
-  border: var(--border-hairline) solid transparent; border-radius: var(--radius-pill);
-  background: var(--bills-wash); color: var(--bills-ink); font: var(--type-label); white-space: nowrap;
-}
 .search-summary-open { padding: 0 0 var(--space-block); }
 .search-summary-status { margin: 0 0 var(--space-tight); font: var(--type-fine); color: var(--ink-soft); }
 .search-summary-status:empty { display: none; }
 .search-summary-note { margin: var(--space-tight) 0 0; font: var(--type-fine); color: var(--ink-soft); }
-@media (forced-colors: active) { .search-summary-machine { border-color: CanvasText; } }
 .answer-compact { font-size: 0.9375rem; line-height: 1.6; }
 .answer-compact > * { margin-bottom: 0.8rem; }
 .search-answer .source-list li { padding: 0.45rem 0; }
@@ -3227,32 +3220,10 @@ mark.privacy-confirm {
   #panel-doc .doc-toolbar-foot .doc-toolbar-btns .ui-button { flex-basis: calc(33.3% - 6px); }
 }
 /* ==== page actions: one secondary pill and ⋯ (person, bill, search) ====
-   Principle 5: one drawn action per view besides ⋯; ⋯ is a details popover
-   (ui-source.js gives it Escape and light dismiss), its sheet a list of rows. */
+   Principle 5: one drawn action per view besides ⋯ (ui-source.css draws ⋯). */
 .page-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight); }
-.page-more { flex: none; }
-.page-more > summary {
-  display: inline-grid; place-items: center; width: var(--size-target); height: var(--size-target);
-  border: var(--border-hairline) solid transparent; border-radius: var(--radius-pill);
-  background: var(--navy-wash); color: var(--navy); cursor: pointer;
-  transition: background-color var(--duration-quick) var(--ease-standard);
-}
-.page-more > summary:hover, .page-more[open] > summary { background: color-mix(in srgb, var(--navy) 10%, var(--navy-wash)); }
-.page-more > summary svg { width: var(--size-icon-md); height: var(--size-icon-md); fill: currentColor; }
-.page-more > .ui-sheet { padding: 6px 16px; }
-.page-more-list { list-style: none; margin: 0; padding: 0; }
-.page-more-list li + li { border-top: var(--border-hairline) solid var(--divider-subtle); }
-.page-more-item {
-  display: flex; align-items: center; gap: 0.35rem; width: 100%; min-height: var(--size-target);
-  margin: 0; padding: 0; border: 0; background: none; cursor: pointer;
-  font: var(--type-strong); color: var(--ink); text-align: left; text-decoration: none;
-}
-.page-more-item:hover { color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
-.page-more-item:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 2px; }
-/* On a phone the sheet opens in place under its row. */
-@media (max-width: 600px) { .page-actions > .page-more[open] { flex-basis: 100%; } .page-actions > .page-more[open] > summary { margin-left: auto; display: grid; } }
-@media (prefers-reduced-motion: reduce) { .page-more > summary { transition: none; } }
-@media (forced-colors: active) { .page-more > summary { border-color: ButtonText; } }
+/* On a phone ⋯'s sheet opens in place under its row. */
+@media (max-width: 600px) { .page-actions > .ui-more[open] { flex-basis: 100%; } .page-actions > .ui-more[open] > summary { margin-left: auto; display: grid; } }
 
 /* ==== page-person: Person entry pages (/subject/person/<name>) ==== */
 .subject-person #subject-sections { min-width: 0; }
@@ -3711,8 +3682,6 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
   #panel-search #search-more[open] { flex-basis: 100%; order: 2; }
 }
 /* ⋯ rows here carry a second line saying what each export is for. */
-#panel-search #search-more .page-more-item { flex-direction: column; align-items: flex-start; justify-content: center; gap: 0; padding-block: 6px; }
-#panel-search #search-more .page-more-item small { font: var(--type-fine); color: var(--ink-soft); }
 
 #panel-search .search-results-main { min-width: 0; }
 #panel-search #search-results > li { padding: 20px 0; border-top: 1px solid var(--line); }

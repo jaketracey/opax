@@ -1,5 +1,5 @@
-// The web's shared components (docs/design/DESIGN-REVIEW-2026-10.md §5.2, pass 2C):
-// the five labels and the source line as app.js writes them, the rules that draw
+// The web's shared components (docs/design/DESIGN-REVIEW-2026-10.md §5.2, passes 2C and 4G):
+// the five labels, the source line and ⋯ as labels.js writes them, the rules that draw
 // them (pills for what you press, 4px for what you read, sentence case, focus,
 // touch targets, forced colours, reduced motion), the end of the floating Ask
 // pill, and the SourceLine sheet's keyboard and dismiss behaviour.
@@ -31,16 +31,11 @@ function fn(name) {
   }
   throw new Error(`unbalanced ${name}`);
 }
-const constant = (name) => app.slice(app.indexOf(`const ${name} =`), app.indexOf('\n};', app.indexOf(`const ${name} =`)) + 3);
 
-const labels = app.slice(app.indexOf('// labels:begin'), app.indexOf('// labels:end'));
-const helpers = runInNewContext(`
-  const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  ${constant('PARTY_MAP')}
-  ${fn('esc')} ${fn('hasEntityId')} ${fn('entityHrefAttr')} ${fn('safeUrl')} ${fn('fmtDate')} ${fn('partyClass')} ${fn('partyDotHTML')}
-  ${labels}
-  ({ partyChipHTML, partyDotHTML, statusLabelHTML, tagHTML, machineLabelHTML, sourceLineHTML, fineprintSourceHTML });
-`, { URL });
+// The labels, the source line and ⋯ are labels.js; app.js's dot-only party mark reads its party map.
+const uiLabels = await import('../public/labels.js');
+const { partyDotHTML } = runInNewContext(`${fn('esc')} ${fn('partyClass')} ${fn('partyDotHTML')} ({ partyDotHTML });`, { uiLabels });
+const helpers = { ...uiLabels, partyChipHTML: uiLabels.partyLabelHTML, partyDotHTML };
 
 const text = (html) => html.replace(/<span class="visually-hidden">.*?<\/span>/g, '').replace(/<[^>]+>/g, '').trim();
 
@@ -105,7 +100,9 @@ test('SourceLine: the line, its state and its sheet in order; only safe links', 
     asAt: 'Financial years 1998-99 to 2025-26.', notes: ['Totals are a <b>floor</b>.', ''], licence: 'Licence: CC BY 4.0.',
   });
   assert.match(html, /^<details class="ui-pop ui-source" data-state="partial"><summary><svg class="ui-source-glyph"/);
-  assert.equal(text(html.slice(0, html.indexOf('</summary>'))), 'Updated 4 Oct 2026 · AEC annual returns· partial');
+  assert.equal(text(html.slice(0, html.indexOf('</summary>'))), 'Updated 4 Oct 2026 · AEC annual returns · partial');
+  // The state runs on in the line's text: a narrow line wraps as one sentence.
+  assert.match(html, /<span class="ui-source-text">Updated 4 Oct 2026 · <span class="ui-source-name">AEC annual returns<\/span> <span class="ui-source-state">· partial<\/span><\/span><\/summary>/);
   assert.match(html, /<span class="ui-source-name">AEC annual returns<\/span>/);
   const sheet = html.slice(html.indexOf('<div class="ui-sheet">'));
   assert.match(sheet, /<li><a href="https:\/\/transparency\.aec\.gov\.au\/" rel="noopener" target="_blank">View original ↗︎<\/a><\/li>/);
@@ -127,6 +124,60 @@ test('SourceLine: a bare line still names itself; the fine-print adapter keeps t
   const adapted = fineprintSourceHTML('Entries as declared, <a href="/x">not verified</a>.', { source: 'Register of interests', updated: '2026-09-02', notes: ['Second note.'] });
   assert.match(adapted, /Updated 2 Sep 2026 · <span class="ui-source-name">Register of interests<\/span>/);
   assert.match(adapted, /<div class="ui-sheet-notes"><p>Entries as declared, <a href="\/x">not verified<\/a>\.<\/p><p>Second note\.<\/p><\/div>/);
+});
+
+test('SourceLine: the date says what it is, and facts are one key/value list', () => {
+  const { sourceLineHTML } = helpers;
+  assert.equal(text(sourceLineHTML({ updated: '2026-10-03', dateLabel: 'Written', source: 'Explanatory memorandum' }).split('</summary>')[0]), 'Written 3 Oct 2026 · Explanatory memorandum');
+  assert.equal(text(sourceLineHTML({ updated: '2026-09-04', dateLabel: 'As at', source: 'Parliamentary roster' }).split('</summary>')[0]), 'As at 4 Sep 2026 · Parliamentary roster');
+  const html = sourceLineHTML({ source: 'Parliamentary roster', facts: [['Status', 'Sitting parliamentarian'], false, ['Electorate', '<a href="/subject/electorate/x">Grayndler</a>'], ['Empty', '']], notes: ['Dated public records.'] });
+  const sheet = html.slice(html.indexOf('<div class="ui-sheet">'));
+  assert.match(sheet, /<dl class="ui-sheet-facts"><div><dt>Status<\/dt><dd>Sitting parliamentarian<\/dd><\/div><div><dt>Electorate<\/dt><dd><a href="\/subject\/electorate\/x">Grayndler<\/a><\/dd><\/div><\/dl>/);
+  assert.doesNotMatch(sheet, /Empty/);
+  assert.ok(sheet.indexOf('ui-sheet-facts') < sheet.indexOf('ui-sheet-notes'), 'facts, then notes');
+});
+
+test('MachineLabel: the still pill draws the mark with no sheet, for a row whose summary opens the text', () => {
+  const { machineLabelHTML } = helpers;
+  assert.equal(machineLabelHTML({ pill: true }), '<span class="ui-machine-pill"><span class="ui-machine-glyph" aria-hidden="true">✦</span>Machine-written</span>');
+  const index = read('index.html');
+  const row = index.slice(index.indexOf('<summary class="search-summary-row">'), index.indexOf('</summary>', index.indexOf('<summary class="search-summary-row">')));
+  assert.match(row, /<span class="ui-machine-pill"><span class="ui-machine-glyph" aria-hidden="true">✦<\/span>Machine-written<\/span>/);
+  assert.doesNotMatch(style + index, /search-summary-machine/);
+  // The still pill is the pill: one rule draws both.
+  assert.match(sourceCss, /\.ui-machine > summary, \.ui-machine-pill \{[^}]*border-radius: var\(--radius-pill\)[^}]*background: var\(--bills-wash\)/);
+});
+
+test('⋯: a details popover of links and buttons; unsafe links are dropped; an empty menu draws nothing', () => {
+  const { moreMenuHTML } = helpers;
+  const html = moreMenuHTML([
+    { href: '/subject/party/Labor', label: 'Party page' },
+    { href: 'https://www.aph.gov.au/', label: 'Parliament' },
+    { action: 'copy', label: 'Copy link', detail: 'To this page' },
+    { href: 'javascript:alert(1)', label: 'x' }, null,
+  ], 'More about Labor', { id: 'party-more' });
+  assert.match(html, /^<details class="ui-pop ui-more" id="party-more"><summary aria-label="More about Labor" title="More about Labor"><svg/);
+  assert.match(html, /<li><a class="ui-more-item" href="\/subject\/party\/Labor">Party page<\/a><\/li>/);
+  assert.match(html, /<a class="ui-more-item" href="https:\/\/www\.aph\.gov\.au\/" rel="noopener" target="_blank">Parliament <span aria-hidden="true">↗︎<\/span><span class="visually-hidden">, opens a new tab<\/span><\/a>/);
+  assert.match(html, /<button type="button" class="ui-more-item" data-more-action="copy"><span>Copy link<\/span><small>To this page<\/small><\/button>/);
+  assert.doesNotMatch(html, /javascript:/);
+  assert.equal(moreMenuHTML([{ href: '//evil.example', label: 'x' }]), '');
+  // One component: ui-source.css draws it, style.css only places it.
+  assert.match(sourceCss, /\.ui-more > summary \{[^}]*width: var\(--size-target\); height: var\(--size-target\)/);
+  assert.doesNotMatch(style + read('index.html') + app, /page-more/);
+});
+
+test('labels.js is the one copy: app.js and the homepage import it, neither keeps its own', () => {
+  const homeData = read('home-data.js');
+  for (const [name, src] of [['app.js', app], ['home-data.js', homeData]]) {
+    assert.doesNotMatch(src, /SOURCE_GLYPH|MACHINE_GLYPH|MORE_GLYPH|const PARTY_NAMES|const PARTY_MAP|PARTY_PLACEHOLDER/, name);
+    assert.doesNotMatch(src, /<details class="ui-pop/, name);
+  }
+  assert.match(app, /import\('\/labels\.js(\?v=[0-9a-f]{10})?'\)/);
+  assert.match(homeData, /from '\.\/labels\.js(\?v=[0-9a-f]{10})?';/);
+  // The first render waits for it.
+  assert.match(app, /Promise\.allSettled\(\[attributionReady, uiLabelsReady\]\)\.finally\(\(\) => \{[^}]*route\(\);/);
+  assert.match(read('index.html'), /<link rel="modulepreload" href="\/labels\.js\?v=[0-9a-f]{10}">/);
 });
 
 // --- the rules that draw them ----------------------------------------------------
@@ -189,6 +240,14 @@ test('every retired label class draws as one of the five kinds', () => {
     const own = rulesFor(style, cls);
     assert.doesNotMatch(own, /border-radius:\s*999px|text-transform|letter-spacing|background:\s*var\(--paper-sunken\)/, cls);
   }
+});
+
+test('SourceLine: a line with a state wraps as one sentence beside its glyph, on every page', () => {
+  const summary = rulesFor(sourceCss, '.ui-source > summary');
+  assert.match(summary, /display: grid; grid-template-columns: auto minmax\(0, 1fr\)/);
+  assert.doesNotMatch(summary, /inline-flex/);
+  // The homepage's own workaround is gone with the bug it worked around.
+  assert.doesNotMatch(read('home.css'), /\.hp-source \.ui-source > summary|\.hp-source \.ui-source-(?:glyph|state)/);
 });
 
 test('D6: no uppercase labels and no letter-spaced labels in the shared styles', () => {
@@ -294,6 +353,13 @@ class Node {
   closest(sel) { for (let x = this; x; x = x.parent) if (x.matches(sel)) return x; return null; }
   focus() { this.doc.activeElement = this; }
   getBoundingClientRect() { return this.rect; }
+  /** Links and buttons beneath, in order: all ⋯ asks for. */
+  querySelectorAll() {
+    const out = [];
+    const walk = (n) => { for (const k of n.children) { if (['A', 'BUTTON'].includes(k.tagName)) out.push(k); walk(k); } };
+    walk(this);
+    return out;
+  }
 }
 
 function page({ width = 1280 } = {}) {
@@ -403,6 +469,43 @@ test('SourceLine: tabbing past a floating sheet closes it; a click on its text o
   pop.floating = false; // a phone: the sheet opens in place
   on('focusout').handler(event({ target: link, relatedTarget: outside }));
   assert.equal(pop.open, true);
+});
+
+test('⋯: the arrows move between its items and wrap; an arrow on the closed circle opens it at an end', () => {
+  const { make, on, event, doc } = page();
+  const { pop, summary, sheet, link } = make(['ui-pop', 'ui-more']);
+  const second = new Node(doc, 'button');
+  const third = new Node(doc, 'a');
+  sheet.append(second, third);
+  const keydown = on('keydown').handler;
+  const down = event({ key: 'ArrowDown', target: summary });
+  keydown(down);
+  assert.equal(pop.open, true);
+  assert.equal(doc.activeElement, link);
+  assert.ok(down.defaultPrevented);
+  keydown(event({ key: 'ArrowDown', target: link }));
+  assert.equal(doc.activeElement, second);
+  keydown(event({ key: 'End', target: second }));
+  assert.equal(doc.activeElement, third);
+  keydown(event({ key: 'ArrowDown', target: third }));
+  assert.equal(doc.activeElement, link, 'wraps at the end');
+  keydown(event({ key: 'ArrowUp', target: link }));
+  assert.equal(doc.activeElement, third, 'and at the start');
+  keydown(event({ key: 'Home', target: third }));
+  assert.equal(doc.activeElement, link);
+  pop.open = false;
+  keydown(event({ key: 'ArrowUp', target: summary }));
+  assert.equal(doc.activeElement, third, 'ArrowUp opens it at the last item');
+  // Home on a closed circle, and arrows in a source line, are left to the page.
+  pop.open = false;
+  const home = event({ key: 'Home', target: summary });
+  keydown(home);
+  assert.ok(!pop.open && !home.defaultPrevented);
+  const line = make();
+  line.pop.open = true;
+  const inLine = event({ key: 'ArrowDown', target: line.link });
+  keydown(inLine);
+  assert.ok(!inLine.defaultPrevented);
 });
 
 test('SourceLine: a floating sheet that would cross the right edge aligns to its line’s end', () => {

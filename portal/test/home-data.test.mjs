@@ -2,7 +2,6 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {newest,safeSource,partyLabelHTML,statusLabelHTML,sourceLineHTML,billRowHTML,declarationRowHTML,industryGroups,mapSpan,mapSourceHTML,coverageLineHTML} from '../public/home-data.js';
 import {readFileSync} from 'node:fs';
-import {runInNewContext} from 'node:vm';
 test('recent lists use recording dates, retain ties, and exclude undated entries',()=>{
  const rows=[{id:1,date:'2026-09-01'},{id:2,date:'2026-09-19'},{id:3,date:'2026-09-19'},{id:4},{id:5,date:'2026-08-01'}];
  assert.deepEqual(newest(rows,'date',3).map(r=>r.id),[2,3,1]);
@@ -13,25 +12,15 @@ test('source links cannot execute script or open unsupported URL schemes',()=>{
  assert.equal(safeSource('data:text/html,test'),null);
  assert.equal(safeSource('https://www.aph.gov.au/register'),'https://www.aph.gov.au/register');
 });
-test('the deployment excludes workbench assets and the review-only prototype',()=>{
+test('the deployment excludes the workbench',()=>{
  const ignore=readFileSync(new URL('../public/.assetsignore',import.meta.url),'utf8');
  assert.match(ignore,/^\/ui-workbench\.\*$/m);
- assert.match(ignore,/^\/home-prototype\.html$/m);
 });
-// The homepage's copy of the 2C labels and source line writes what app.js writes.
-const app=readFileSync(new URL('../public/app.js',import.meta.url),'utf8');
-const fnSource=name=>{
- const start=app.indexOf(`\nfunction ${name}(`); assert.ok(start>=0,name);
- let parens=0,body=start+app.slice(start).indexOf('(');
- for(;body<app.length;body++){ if(app[body]==='(') parens++; else if(app[body]===')'&&--parens===0) break; }
- let depth=0; for(let i=app.indexOf('{',body);i<app.length;i++){ if(app[i]==='{') depth++; else if(app[i]==='}'&&--depth===0) return app.slice(start,i+1); }
-};
-const constSource=name=>app.slice(app.indexOf(`const ${name} =`),app.indexOf('\n};',app.indexOf(`const ${name} =`))+3);
-const appLabels=runInNewContext(`const MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
- ${constSource('PARTY_MAP')} ${fnSource('esc')} ${fnSource('hasEntityId')} ${fnSource('entityHrefAttr')} ${fnSource('safeUrl')} ${fnSource('fmtDate')}
- ${app.slice(app.indexOf('// labels:begin'),app.indexOf('// labels:end'))}
- ({partyChipHTML,statusLabelHTML,sourceLineHTML});`,{URL});
-test('the homepage labels and source line match the shared helpers in app.js',()=>{
+// The homepage keeps no copy: home-data.js passes on labels.js, as app.js and the electorate pages use it.
+const shared=await import('../public/labels.js');
+test('the homepage labels and source line are the shared module\'s',()=>{
+ assert.doesNotMatch(readFileSync(new URL('../public/home-data.js',import.meta.url),'utf8'),/SOURCE_GLYPH|PARTY_NAMES|PARTY_MAP|<details class="ui-pop/);
+ const appLabels={partyChipHTML:shared.partyLabelHTML,statusLabelHTML:shared.statusLabelHTML,sourceLineHTML:shared.sourceLineHTML};
  for(const party of ['Labor','Liberal','Nationals','LNP','Greens','One Nation','Independent','JLN',"Australia's Voice",'Not recorded','',null]) assert.equal(partyLabelHTML(party),appLabels.partyChipHTML(party),String(party));
  for(const [word,tone] of [['Before parliament','active'],['Passed','done'],['Lapsed',undefined],['','done']]) assert.equal(statusLabelHTML(word,tone),appLabels.statusLabelHTML(word,tone));
  const opts=[{},{updated:'2026-10-03',source:'AEC annual returns',state:'totals are a floor',originals:[{label:'AEC Transparency Register',href:'https://transparency.aec.gov.au/'},{label:'Funding records',href:'/money/receipts'},{label:'x',href:'//evil.example'},{href:'javascript:alert(1)'}],asAt:'Financial years 1998–99 to 2025–26.',notes:['<b>a</b>',''],licence:'CC BY 4.0'},{updated:'2026-10-04T16:27:54+00:00',source:'Parliament <of> Australia'}];

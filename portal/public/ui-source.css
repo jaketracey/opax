@@ -1,11 +1,13 @@
-/* SourceLine and MachineLabel (docs/design/DESIGN-REVIEW-2026-10.md §5.2).
-   Both are a <details> whose summary is the one line a block shows and whose
-   content is a sheet: the originals, as-at and coverage, notes and caveats and
-   the licence for a source line; what wrote the text, from what, for the
-   machine-written label. Wider than a phone the sheet is a popover under its
-   line; on a phone it opens in place, full width. ui-source.js adds Escape,
-   light dismiss, one-open-at-a-time and edge alignment; without it the
-   details still open and close natively. */
+/* SourceLine, MachineLabel and ⋯ (docs/design/DESIGN-REVIEW-2026-10.md §5.2).
+   Each is a <details> whose summary is the one line (or pill, or ⋯) a block
+   shows and whose content is a sheet: the originals, as-at and coverage,
+   facts, notes and caveats and the licence for a source line; what wrote the
+   text, from what, for the machine-written label; the actions a view keeps
+   but does not draw, for ⋯. Wider than a phone the sheet is a popover under
+   its line; on a phone it opens in place, full width. ui-source.js adds
+   Escape, light dismiss, one-open-at-a-time, edge alignment and arrow keys in
+   ⋯; without it the details still open and close natively. labels.js writes
+   the markup. */
 
 .ui-pop { position: relative; display: block; width: fit-content; max-width: 100%; margin: 0; }
 .ui-pop > summary { list-style: none; cursor: pointer; }
@@ -13,11 +15,13 @@
 .ui-pop > summary:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
 
 /* ---- SourceLine: a doc glyph, "Updated 4 Oct 2026 · AEC annual returns" and an
-   optional state. 32 drawn; the hit area reaches 44. */
+   optional state. 32 drawn; the hit area reaches 44. The state runs on in the
+   line's text, so a narrow line wraps as one sentence beside its glyph rather
+   than standing the state up as a second column. */
 .ui-source { margin-top: var(--space-row); }
 .ui-source > summary {
-  position: relative; display: inline-flex; align-items: center; gap: .375rem;
-  min-height: 32px; max-width: 100%; box-sizing: border-box;
+  position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center;
+  column-gap: .375rem; min-height: 32px; max-width: 100%; box-sizing: border-box;
   font: var(--type-fine); color: var(--ink-soft);
 }
 .ui-source > summary::after { content: ""; position: absolute; inset: -6px 0; }
@@ -34,11 +38,13 @@
 .ui-source-state { color: var(--ink); font-weight: 600; }
 
 /* ---- MachineLabel: a pill in the bills wash, "✦ Machine-written", once at the
-   top of a machine-written block. 26 drawn; the hit area reaches 44. */
+   top of a machine-written block. 26 drawn; the hit area reaches 44. The still
+   pill (.ui-machine-pill) is the same mark without a sheet, for a row whose own
+   summary opens the machine-written text: a details cannot sit in a summary. */
 .ui-machine { display: inline-block; vertical-align: middle; }
-.ui-machine > summary {
+.ui-machine > summary, .ui-machine-pill {
   position: relative; display: inline-flex; align-items: center; gap: .3rem;
-  min-height: 26px; padding: 0 .625rem; box-sizing: border-box;
+  min-height: 26px; padding: 0 .625rem; box-sizing: border-box; vertical-align: middle;
   border: var(--border-hairline) solid transparent; border-radius: var(--radius-pill);
   background: var(--bills-wash); color: var(--bills-ink); font: var(--type-label); white-space: nowrap;
   transition: background-color var(--duration-quick) var(--ease-standard);
@@ -63,7 +69,36 @@
 .ui-sheet-originals { display: grid; gap: var(--space-line); margin: 0; padding: 0; list-style: none; }
 .ui-sheet-originals a { display: inline-flex; align-items: center; min-height: 32px; font: var(--type-label); color: var(--ink); }
 .ui-sheet-notes { display: grid; gap: var(--space-tight); }
+/* Facts: one key/value list, the keys in the label role. */
+.ui-sheet-facts { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: var(--space-line) var(--space-block); margin: 0; }
+.ui-sheet-facts > div { display: contents; }
+.ui-sheet-facts dt { font: var(--type-label); color: var(--ink); }
+.ui-sheet-facts dd { margin: 0; overflow-wrap: anywhere; }
 .ui-sheet-licence { padding-top: var(--space-heading); border-top: var(--border-hairline) solid var(--divider-subtle); }
+
+/* ---- ⋯: a 44px navy-wash circle; its sheet is a list of rows, one hairline
+   apart. A row may carry a short second line. */
+.ui-more { flex: none; }
+.ui-more > summary {
+  display: inline-grid; place-items: center; width: var(--size-target); height: var(--size-target);
+  border: var(--border-hairline) solid transparent; border-radius: var(--radius-pill);
+  background: var(--navy-wash); color: var(--navy);
+  transition: background-color var(--duration-quick) var(--ease-standard);
+}
+.ui-more > summary:hover, .ui-more[open] > summary { background: color-mix(in srgb, var(--navy) 10%, var(--navy-wash)); }
+.ui-more > summary svg { width: var(--size-icon-md); height: var(--size-icon-md); fill: currentColor; }
+.ui-more > .ui-sheet { padding: 6px 16px; }
+.ui-more-list { list-style: none; margin: 0; padding: 0; }
+.ui-more-list li + li { border-top: var(--border-hairline) solid var(--divider-subtle); }
+.ui-more-item {
+  display: flex; align-items: center; gap: .35rem; width: 100%; min-height: var(--size-target); box-sizing: border-box;
+  margin: 0; padding: 0; border: 0; background: none; cursor: pointer;
+  font: var(--type-strong); color: var(--ink); text-align: left; text-decoration: none;
+}
+.ui-more-item:has(> small) { flex-direction: column; align-items: flex-start; justify-content: center; gap: 0; padding-block: 6px; }
+.ui-more-item > small { font: var(--type-fine); color: var(--ink-soft); }
+.ui-more-item:hover { color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
+.ui-more-item:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 2px; }
 
 @media (min-width: 601px) {
   .ui-pop > .ui-sheet {
@@ -81,7 +116,7 @@
 }
 @keyframes ui-sheet-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) {
-  .ui-machine > summary { transition: none; }
+  .ui-machine > summary, .ui-more > summary { transition: none; }
 }
 @media (pointer: coarse) {
   .ui-sheet-originals a { min-height: var(--size-target); }
@@ -90,4 +125,6 @@
 @media (forced-colors: active) {
   .ui-sheet { border-color: CanvasText; }
   .ui-source-name { text-decoration-color: currentColor; }
+  .ui-machine-pill { border-color: CanvasText; }
+  .ui-more > summary { border-color: ButtonText; }
 }

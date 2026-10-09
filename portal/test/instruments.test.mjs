@@ -16,7 +16,7 @@ const json = p => JSON.parse(fixtureFiles[p.replace(/^\/?instruments\//,'')]);
 const manifest = json('instruments/manifest.json');
 const index = json('instruments/index.json');
 const read = async p => json(p);
-const block = (title, text, kicker, links='') => `<section id="prerender"><p>${kicker}</p><h1>${title.replaceAll('&','&amp;').replaceAll('<','&lt;')}</h1><p>${text}</p>${links}</section>`;
+const block = (title, text, links='') => `<section id="prerender"><h1>${title.replaceAll('&','&amp;').replaceAll('<','&lt;')}</h1><p>${text}</p>${links}</section>`;
 
 test('FRL loader stubbed HTTP paging, count reconciliation, resume, shrink and export guards', () => {
   const output = execFileSync('python3', [new URL('./frl_loader_test.py', import.meta.url).pathname], {encoding:'utf8', stdio:['ignore','pipe','pipe']});

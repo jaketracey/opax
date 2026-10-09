@@ -10,7 +10,7 @@
      own dataLayer events live in /gtm.js so no inline script is needed. -->
 <script src="/analytics.js?v=db385e4201" defer></script>
 <script src="/spa-entry.js?v=e49dbf19f7"></script>
-<script src="/events.js?v=487d8b52d3" defer></script>
+<script src="/events.js?v=95309febb6" defer></script>
 <script src="/gtm.js?v=0764911f84" defer></script>
 <!-- Home page values. On a real path (/subject/person/Name, /reports/gambling)
      the Worker rewrites these per route; app.js keeps canonical and og:url in
@@ -60,10 +60,12 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=4b98264098">
+<link rel="stylesheet" href="/style.css?v=37225fcfc8">
 <link rel="stylesheet" href="/ui-controls.css?v=f8011bf298">
-<link rel="stylesheet" href="/ui-source.css?v=afbc26b4dc">
+<link rel="stylesheet" href="/ui-source.css?v=4f396d8cfc">
 <link rel="stylesheet" href="/voice.css?v=a09a39c243">
+<!-- labels.js: app.js imports it before its first render. -->
+<link rel="modulepreload" href="/labels.js?v=804befe8de">
 </head>
 <body class="research-app">
 <!-- Google Tag Manager (noscript) -->
@@ -692,14 +694,14 @@
           </div>
           <!-- ⋯: copy the link and the three export formats. A details popover;
                ui-source.js gives it Escape and light dismiss. -->
-          <details class="ui-pop page-more" id="search-more">
+          <details class="ui-pop ui-more" id="search-more">
             <summary aria-label="Share and export these results" title="Share and export these results"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="4.5" cy="10" r="1.5"/><circle cx="10" cy="10" r="1.5"/><circle cx="15.5" cy="10" r="1.5"/></svg></summary>
             <div class="ui-sheet">
-              <ul class="page-more-list" role="list">
-                <li><button type="button" class="page-more-item" id="search-copylink"><span>Copy link</span></button></li>
-                <li><button type="button" class="page-more-item" data-format="csv"><span>Export CSV</span><small>A spreadsheet of every retrieved match</small></button></li>
-                <li><button type="button" class="page-more-item" data-format="bibtex"><span>Export BibTeX</span><small>For LaTeX and reference managers</small></button></li>
-                <li><button type="button" class="page-more-item" data-format="ris"><span>Export RIS</span><small>For Zotero, EndNote and Mendeley</small></button></li>
+              <ul class="ui-more-list" role="list">
+                <li><button type="button" class="ui-more-item" id="search-copylink"><span>Copy link</span></button></li>
+                <li><button type="button" class="ui-more-item" data-format="csv"><span>Export CSV</span><small>A spreadsheet of every retrieved match</small></button></li>
+                <li><button type="button" class="ui-more-item" data-format="bibtex"><span>Export BibTeX</span><small>For LaTeX and reference managers</small></button></li>
+                <li><button type="button" class="ui-more-item" data-format="ris"><span>Export RIS</span><small>For Zotero, EndNote and Mendeley</small></button></li>
               </ul>
             </div>
           </details>
@@ -709,7 +711,7 @@
            is written on request, when the row is opened, and sits above the
            results it reads. -->
       <details class="search-answer" id="search-answer" hidden>
-        <summary class="search-summary-row"><span class="search-summary-word" id="search-answer-head">Summarise these records</span><span class="search-summary-machine"><span aria-hidden="true">✦</span> Machine-written</span></summary>
+        <summary class="search-summary-row"><span class="search-summary-word" id="search-answer-head">Summarise these records</span><span class="ui-machine-pill"><span class="ui-machine-glyph" aria-hidden="true">✦</span>Machine-written</span></summary>
         <div class="search-summary-open">
           <p class="search-summary-status" id="search-answer-status" role="status" aria-live="polite"></p>
           <div class="answer answer-compact" id="search-answer-body"></div>
@@ -1995,10 +1997,10 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=fa55274a51" defer></script>
+<script src="/spa-shell.js?v=f1f3f5b4a4" defer></script>
 <script src="/navigation.js?v=02752160b8" defer></script>
 <script src="/quick-search.js?v=206914f32d" defer></script>
-<script src="/ui-source.js?v=2163f6a875" defer></script>
-<script src="/app.js?v=035ae60d31" defer></script>
+<script src="/ui-source.js?v=5e7b751ca0" defer></script>
+<script src="/app.js?v=076d26b6ad" defer></script>
 </body>
 </html>

@@ -36,7 +36,7 @@ const PUBLIC = join(ROOT, 'portal', 'public')
 const INDEX = join(PUBLIC, 'index.html')
 
 /** Assets referenced from index.html with a ?v= stamp. */
-const STAMPED = ['app.js', 'spa-shell.js', 'spa-entry.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'quick-search.js', 'voice.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js']
+const STAMPED = ['app.js', 'spa-shell.js', 'spa-entry.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'quick-search.js', 'voice.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'labels.js']
 
 const hashOf = (file) =>
   createHash('sha256').update(readFileSync(join(PUBLIC, file))).digest('hex').slice(0, 10)
@@ -120,8 +120,15 @@ async function refreshFonts() {
 
 // --- stamping ---------------------------------------------------------------
 
-/** [importer, module]: modules whose changes must invalidate their importer. */
-export const MODULE_STAMPS = [['app.js', 'division-markdown.js'], ['app.js', 'quiz.js'], ['app.js', 'timemachine.js'], ['home.js', 'home-data.js']]
+/** [importer, module]: modules whose changes must invalidate their importer.
+ *  An importer that is itself stamped into another comes first, so its own
+ *  new stamp is in the hash its importer takes (labels.js reaches home.js
+ *  through home-data.js). */
+export const MODULE_STAMPS = [
+  ['home-data.js', 'labels.js'],
+  ['app.js', 'labels.js'], ['app.js', 'division-markdown.js'], ['app.js', 'quiz.js'], ['app.js', 'timemachine.js'],
+  ['home.js', 'home-data.js'],
+]
 
 /** Write each MODULE_STAMPS module's content hash into its importer; returns the importers that were stale. */
 function stampModules({ check }) {
@@ -131,9 +138,10 @@ function stampModules({ check }) {
     const before = readFileSync(path, 'utf8')
     let after = before
     for (const [, mod] of MODULE_STAMPS.filter(([i]) => i === importer)) {
-      const pattern = new RegExp(`(["'])/${mod.replace('.', '\\.')}(?:\\?v=[A-Za-z0-9._-]*)?\\1`, 'g')
+      // A site path or a relative one ("./labels.js": Node's tests resolve it too).
+      const pattern = new RegExp(`(["'])(\\.?)/${mod.replace('.', '\\.')}(?:\\?v=[A-Za-z0-9._-]*)?\\1`, 'g')
       let hits = 0
-      after = after.replace(pattern, (_, q) => { hits += 1; return `${q}/${mod}?v=${hashOf(mod)}${q}` })
+      after = after.replace(pattern, (_, q, dot) => { hits += 1; return `${q}${dot}/${mod}?v=${hashOf(mod)}${q}` })
       if (!hits) {
         console.error(`stamp_assets: ${importer} no longer imports /${mod}; update MODULE_STAMPS.`)
         process.exit(1)
@@ -190,16 +198,12 @@ function stamp({ check }) {
   const workbenchBefore = readFileSync(workbenchPath, 'utf8')
   const workbenchAfter = workbenchBefore.replace(/\/(style\.css|ui-controls\.css|ui-source\.css|ui-source\.js|ui-workbench\.css|ui-workbench\.js)\?v=[A-Za-z0-9._-]*/g, (_, file) => `/${file}?v=${hashOf(file)}`)
   if (!check && workbenchAfter !== workbenchBefore) writeFileSync(workbenchPath, workbenchAfter)
-  const prototypePath = join(PUBLIC, 'home-prototype.html')
-  const prototypeBefore = readFileSync(prototypePath, 'utf8')
-  const prototypeAfter = syncHomeChrome(prototypeBefore, after).replace(/\/(style\.css|ui-controls\.css|home\.css|home\.js|navigation\.js|quick-search\.js|analytics\.js|events\.js|gtm\.js)\?v=[A-Za-z0-9._-]*/g, (_, file) => `/${file}?v=${hashOf(file)}`)
-  if (!check && prototypeAfter !== prototypeBefore) writeFileSync(prototypePath, prototypeAfter)
   const homePath = join(PUBLIC, 'home.html')
   const homeBefore = readFileSync(homePath, 'utf8')
   const homeAfter = syncHomeChrome(homeBefore, after).replace(/\/(style\.css|ui-controls\.css|ui-source\.css|ui-source\.js|home\.css|home\.js|navigation\.js|quick-search\.js|analytics\.js|events\.js|gtm\.js)\?v=[A-Za-z0-9._-]*/g, (_, file) => `/${file}?v=${hashOf(file)}`)
   if (!check && homeAfter !== homeBefore) writeFileSync(homePath, homeAfter)
   if (check) {
-    if (staleModules.length || homeAfter !== homeBefore || after !== before || communityAfter !== communityBefore || workbenchAfter !== workbenchBefore || prototypeAfter !== prototypeBefore) {
+    if (staleModules.length || homeAfter !== homeBefore || after !== before || communityAfter !== communityBefore || workbenchAfter !== workbenchBefore) {
       console.error('stamp_assets: entry-page stamps or shared chrome are stale — run `node scripts/stamp_assets.mjs`.')
       process.exit(1)
     }

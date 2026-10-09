@@ -119,7 +119,6 @@ try {
         for (const [name, pathname, target] of [
           ['ask', '/ask', '#ask-builder'],
           ['home', '/', '#hp-builder'],
-          ['home-prototype', '/home-prototype.html', '#hp-builder'],
           ['ui-workbench', '/ui-workbench.html', '#choices'],
         ]) {
           for (const width of [1024, 390]) {

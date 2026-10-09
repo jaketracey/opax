@@ -82,7 +82,7 @@ The reader-controlled Spotlight section uses the published Gambling, Housing and
 - `quick-search.js`: suggestion interaction and header disclosure.
 - `navigation.js`: shared navigation destinations.
 
-The workbench is committed as a contributor reference but **must not be deployed**. `portal/public/.assetsignore` excludes `ui-workbench.*` and the review-only `home-prototype.html`. Shared production styles and scripts remain included. To inspect the workbench locally without Wrangler's deployment exclusions:
+The workbench is committed as a contributor reference but **must not be deployed**. `portal/public/.assetsignore` excludes `ui-workbench.*`. Shared production styles and scripts remain included. To inspect the workbench locally without Wrangler's deployment exclusions:
 
 ```sh
 python3 -m http.server 8790 --directory portal/public

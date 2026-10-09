@@ -10,9 +10,8 @@ const [expenses, photos, roster, app] = await Promise.all([
 ]);
 const source = app.match(/async function renderPersonExpenses\(name, personId, sections\) \{[\s\S]*?\n\}/)?.[0];
 assert.ok(source, 'the test exercises the person-page renderer');
-// The block's source line is the shared SourceLine (the labels block in app.js).
-const labels = app.slice(app.indexOf('const SOURCE_GLYPH'), app.indexOf('// labels:end'));
-assert.ok(labels.includes('function sourceLineHTML'), 'the shared source line is in reach');
+// The block's source line is the shared SourceLine (labels.js), as app.js calls it.
+const uiLabels = await import('../public/labels.js');
 
 // The total is the block's figure on the "On this page" rail (it was a Quick facts row).
 async function render(name, personId, data = expenses, photoMap = photos, overrides = {}) {
@@ -22,10 +21,10 @@ async function render(name, personId, data = expenses, photoMap = photos, overri
     loadExpenses: async () => {}, loadPhotoMap: async () => {}, loadExpenseDefs: async () => {},
     getExpenseBenchmarks: () => null, safeUrl: url => url, esc: value => String(value), fmtDate: value => String(value),
     fmtMoney: value => '$' + value, columnChart: rows => JSON.stringify(rows), IPEA_NOTE: '',
-    $: () => null,
+    $: () => null, sourceLineHTML: uiLabels.sourceLineHTML,
     ...overrides,
   };
-  runInNewContext(labels + source, context);
+  runInNewContext(source, context);
   await context.renderPersonExpenses(name, personId, {insertAdjacentHTML: (_, html) => { result.section += html; }});
   result.figure = result.section.match(/data-rail-figure="([^"]*)"/)?.[1] || '';
   return result;

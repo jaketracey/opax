@@ -1,6 +1,7 @@
 /* Homepage adapters: source exports, never editorial selections. Each block's
    figures carry the date of the export they came from, in its source line. */
 import {shortDate} from './format.js';
+import {partyLabelHTML, statusLabelHTML, sourceLineHTML} from './labels.js?v=804befe8de';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const count = value => Number(value).toLocaleString('en-AU');
 const date = value => shortDate(String(value).slice(0,10));
@@ -18,66 +19,8 @@ export function safeSource(url) {
 function time(value) { return `<time datetime="${esc(String(value).slice(0,10))}">${esc(date(value))}</time>`; }
 
 // --- labels and source lines ---------------------------------------------------
-// The markup app.js writes between "labels:begin" and "labels:end" (pass 2C);
-// the homepage cannot load app.js, so it keeps this copy, and
-// test/home-data.test.mjs holds the two to the same output.
-const PARTY_MAP = {
-  'labor': ['alp','ALP'], 'liberal': ['lib','LIB'], 'nationals': ['nat','NAT'],
-  'lnp': ['lnp','LNP'], 'country liberal party': ['nat','CLP'],
-  'greens': ['grn','GRN'], 'one nation': ['onp','ONP'], 'independent': ['ind','IND'],
-  'centre alliance': ['oth','CA'], "katter's australian party": ['oth','KAP'],
-  'united australia party': ['oth','UAP'], 'australian democrats': ['oth','AD'],
-  'family first': ['oth','FF'], 'dlp': ['oth','DLP'], 'jln': ['oth','JLN'],
-};
-const PARTY_NAMES = {
-  ALP: ['Labor','Australian Labor Party'], LIB: ['Liberal','Liberal Party'],
-  NAT: ['Nationals','The Nationals'], LNP: ['LNP','Liberal National Party'],
-  CLP: ['CLP','Country Liberal Party'], GRN: ['Greens','Australian Greens'],
-  ONP: ['One Nation',"Pauline Hanson's One Nation"], IND: ['Independent','Independent'],
-  CA: ['Centre Alliance','Centre Alliance'], KAP: ['KAP',"Katter's Australian Party"],
-  UAP: ['UAP','United Australia Party'], AD: ['Democrats','Australian Democrats'],
-  FF: ['Family First','Family First'], DLP: ['DLP','Democratic Labour Party'],
-  JLN: ['JLN','Jacqui Lambie Network'],
-};
-const PARTY_PLACEHOLDER = /^(?:not recorded|unknown|none|n\/?a|-|—)$/i;
-/** PartyLabel: a dot beside the party's short name, the full name spoken. */
-export function partyLabelHTML(party) {
-  const name = String(party ?? '').trim();
-  if (!name || PARTY_PLACEHOLDER.test(name)) return '';
-  const hit = PARTY_MAP[name.toLowerCase()];
-  const [shown, long] = (hit && PARTY_NAMES[hit[1]]) || [name, name];
-  const text = shown === long ? esc(shown)
-    : `<span aria-hidden="true">${esc(shown)}</span><span class="visually-hidden">${esc(long)}</span>`;
-  return `<span class="ui-party party party-${hit ? hit[0] : 'oth'}"${shown === long ? '' : ` title="${esc(long)}"`}><i aria-hidden="true"></i>${text}</span>`;
-}
-/** StatusLabel: one word with a tone: done, active, ended or draft. */
-export function statusLabelHTML(word, tone = 'ended') {
-  return word ? `<span class="ui-status" data-tone="${esc(tone)}">${esc(word)}</span>` : '';
-}
-const SOURCE_GLYPH = '<svg class="ui-source-glyph" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 1.75h5.25L12.5 5v9.25h-8.5z"/><path d="M9 1.75V5.25h3.5M6.25 8.5h4M6.25 11h4"/></svg>';
-/** SourceLine, one per block: "Updated 4 Oct 2026 · AEC annual returns", opening
- *  the originals, as-at, notes and licence. `notes` and `licence` are HTML. */
-export function sourceLineHTML({ updated = '', source = '', state = '', originals = [], asAt = '', notes = [], licence = '' } = {}) {
-  const when = updated ? esc(`Updated ${date(updated)}`) : '';
-  const what = source ? `<span class="ui-source-name">${esc(source)}</span>` : '';
-  const line = [when, what].filter(Boolean).join(' · ') || '<span class="ui-source-name">Sources and notes</span>';
-  const links = originals.map((o) => {
-    const external = typeof o?.href === 'string' && /^https?:\/\//i.test(o.href) ? o.href : null;
-    const target = external || (/^\/(?!\/)/.test(o?.href || '') ? o.href : null);
-    return target && `<li><a href="${esc(target)}"${external ? ' rel="noopener" target="_blank"' : ''}>${
-      esc(o.label || 'View original')}${external ? ' ↗︎' : ''}</a></li>`;
-  }).filter(Boolean);
-  const kept = notes.filter(Boolean);
-  const sheet = [
-    links.length ? `<ul class="ui-sheet-originals">${links.join('')}</ul>` : '',
-    asAt ? `<p class="ui-sheet-asat">${esc(asAt)}</p>` : '',
-    kept.length ? `<div class="ui-sheet-notes">${kept.map((n) => `<p>${n}</p>`).join('')}</div>` : '',
-    licence ? `<p class="ui-sheet-licence">${licence}</p>` : '',
-  ].join('');
-  return `<details class="ui-pop ui-source"${state ? ` data-state="${esc(state)}"` : ''}><summary>${SOURCE_GLYPH}` +
-    `<span class="ui-source-text">${line}</span>${state ? `<span class="ui-source-state">· ${esc(state)}</span>` : ''}</summary>` +
-    `<div class="ui-sheet">${sheet || '<p>No further notes for this source.</p>'}</div></details>`;
-}
+// The site's one copy (labels.js), shared with app.js and the electorate pages.
+export { partyLabelHTML, statusLabelHTML, sourceLineHTML };
 
 // --- rows -------------------------------------------------------------------------
 const BILL_STATUS = {

@@ -1,4 +1,4 @@
-/* SourceLine and MachineLabel sheets (docs/design/DESIGN-REVIEW-2026-10.md §5.2).
+/* SourceLine, MachineLabel and ⋯ sheets (docs/design/DESIGN-REVIEW-2026-10.md §5.2).
    Each is a <details class="ui-pop">: the browser already opens and closes it
    from its summary with a click, Enter or Space, and opens it in place when
    this script has not loaded. This adds what a popover needs on top:
@@ -6,10 +6,14 @@
    - a click or tap outside closes it, and so does tabbing past a sheet that
      floats (a phone's sheet opens in place, so it stays until its line closes it);
    - one sheet is open at a time;
-   - a floating sheet that would run off the right edge aligns to its line's end.
+   - a floating sheet that would run off the right edge aligns to its line's end;
+   - in ⋯ (details.ui-more) the arrow keys move between its items, Home and
+     End go to the ends, and an arrow on its closed circle opens it at an end.
    Listeners sit on the document, so lines rendered later need no wiring. */
 (() => {
   const POP = "details.ui-pop";
+  const MENU = "details.ui-more";
+  const MOVES = ["ArrowDown", "ArrowUp", "Home", "End"];
 
   function install(doc, win) {
     const sheetOf = (pop) => [...pop.children].find((el) => el.classList?.contains("ui-sheet"));
@@ -46,12 +50,32 @@
     // Heard before the page's own Escape handlers (the docked assistant closes
     // on Escape too): the innermost thing open closes first.
     function onKeydown(e) {
+      if (MOVES.includes(e.key)) return move(e);
       if (e.key !== "Escape") return;
       const pop = e.target?.closest?.(`${POP}[open]`);
       if (!pop) return;
       e.preventDefault();
       e.stopPropagation();
       close(pop, { focus: true });
+    }
+
+    // ⋯ is a short menu of links and buttons. Tab still walks it; the arrows
+    // are the menu's own way through, wrapping at the ends.
+    function move(e) {
+      const menu = e.target?.closest?.(MENU);
+      if (!menu) return;
+      const items = [...(sheetOf(menu)?.querySelectorAll("a[href], button:not([disabled])") || [])];
+      if (!items.length) return;
+      const onLine = e.target === summaryOf(menu);
+      if (onLine && !menu.open && !["ArrowDown", "ArrowUp"].includes(e.key)) return;
+      e.preventDefault();
+      if (!menu.open) menu.open = true;
+      const at = items.indexOf(e.target);
+      const last = items.length - 1;
+      const next = e.key === "Home" ? 0 : e.key === "End" ? last
+        : at < 0 ? (e.key === "ArrowUp" ? last : 0)
+        : e.key === "ArrowDown" ? (at === last ? 0 : at + 1) : (at === 0 ? last : at - 1);
+      items[next].focus();
     }
 
     function onClick(e) {
@@ -73,7 +97,7 @@
     doc.addEventListener("keydown", onKeydown, true);
     doc.addEventListener("click", onClick, true);
     doc.addEventListener("focusout", onFocusout);
-    return { close, align, onToggle, onKeydown, onClick, onFocusout };
+    return { close, align, move, onToggle, onKeydown, onClick, onFocusout };
   }
 
   window.opaxSourceLines = install(document, window);

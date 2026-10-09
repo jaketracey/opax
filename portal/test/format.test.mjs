@@ -31,7 +31,7 @@ test('short money is one style: lowercase k, m and bn; two decimals of a billion
 // it was shown at. No figure may come out coarser than it did.
 const compactIntl = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', notation: 'compact', maximumFractionDigits: 1 });
 const BEFORE = {
-  // app.js fmtMoney and its copies in grants.js, wordsdollars.js, home-spotlight.js and the Worker
+  // app.js fmtMoney and its copies in grants.js, wordsdollars.js and the Worker
   fmtMoney: [(n) => n >= 1e9 ? `$${(n / 1e9).toFixed(2)}B` : n >= 1e6 ? `$${(n / 1e6).toFixed(1)}M` : n >= 1e3 ? `$${Math.round(n / 1e3)}K` : `$${n}`, Infinity],
   // tax-charity, suppliers, agencies, grants research, money journeys, map research
   intlCompact: [(n) => compactIntl.format(n), Infinity],

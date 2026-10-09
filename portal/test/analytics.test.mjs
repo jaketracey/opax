@@ -99,6 +99,26 @@ test('route views are deduplicated and outcomes reach both destinations through 
   assert.equal(measured.length, 4);
 });
 
+test('Ask sample questions count once: in place through app.js, a new-tab click here', async () => {
+  const { runInNewContext } = await import('node:vm');
+  const { context, measured, emit } = browserHarness();
+  // Just enough of an element for the click handler: closest() on one selector.
+  context.Element = class { constructor(matches) { this.matches = matches; } closest(sel) { return sel.split(',').some((s) => this.matches.includes(s.trim())) ? this : null; } };
+  runInNewContext(readFileSync(new URL('../public/events.js', import.meta.url), 'utf8'), context);
+  emit('DOMContentLoaded');
+  const views = measured.length;
+  const click = (matches, keys = {}) => context.dispatchEvent({ type: 'click', target: new context.Element(matches), ...keys });
+  // A plain click asks in place; app.js reports it (trackOutcome), so nothing here.
+  click(['.ask-sample', 'a']);
+  assert.equal(measured.length, views);
+  emit('opax:analytics', { event: 'opax_chip', properties: { chip_kind: 'ask' } });
+  // A modified click opens the question in a new tab, which app.js does not see.
+  click(['.ask-sample', 'a'], { metaKey: true });
+  click(['#search-chips .chip']);
+  assert.deepEqual(measured.slice(views).map((m) => [m.event, m.properties.chip_kind]),
+    [['opax_chip', 'ask'], ['opax_chip', 'ask'], ['opax_chip', 'search']]);
+});
+
 test('GA replays early events once, tracks future events once, and strips private context', async () => {
   const { runInNewContext } = await import('node:vm');
   const { context, emit, scripts } = browserHarness();

@@ -83,8 +83,12 @@ import { cleanEvent, safePath } from './privacy.mjs';
   addEventListener("click", (e) => {
     const t = e.target instanceof Element ? e.target : null;
     if (!t) return;
-    const chip = t.closest("#search-chips .chip, #chip-row .chip");
-    if (chip) return push("opax_chip", { chip_kind: chip.closest("#search-chips") ? "search" : "ask" });
+    if (t.closest("#search-chips .chip")) return push("opax_chip", { chip_kind: "search" });
+    // Ask's sample questions are links (.ask-sample). One that asks in place
+    // reports itself through app.js trackOutcome; only a modified click, which
+    // opens the question in a new tab and skips that, is counted here.
+    const sample = t.closest(".ask-sample");
+    if (sample) return (e.metaKey || e.ctrlKey || e.shiftKey) ? push("opax_chip", { chip_kind: "ask" }) : undefined;
     const game = t.closest("[id^='explore-'][id$='-btn']");
     if (game) return push("opax_game_open", { game: game.id.replace(/^explore-|-btn$/g, "") });
     const a = t.closest("a");

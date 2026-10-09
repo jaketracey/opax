@@ -18,7 +18,7 @@ interface Instrument {
   namePossibleFuture: unknown[]; hasCommencedUnincorporatedAmendments: boolean
 }
 type Read = <T>(path: string) => Promise<T>
-type Block = (heading: string, sentence: string, kicker: string, links?: string) => string
+type Block = (heading: string, sentence: string, links?: string) => string
 const esc = (v: unknown) => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!))
 const shown = (v: unknown) => v == null || v === '' ? 'Not supplied' : esc(v)
 const date = (v: string | null) => v ? esc(v.slice(0, 10)) : 'Not supplied'
@@ -55,10 +55,10 @@ function select(label: string, key: string, values: string[], url: URL, unknown 
 }
 
 export async function instrumentPage(id: string | null, url: URL, read: Read, block: Block) {
-  const missing = () => ({ title: 'Instrument not found · OPAX', description: 'No instrument metadata is available for this FRL id.', status: 404, prerender: block('Instrument not found', 'No instrument metadata is available for this FRL id.', 'Not found', directoryLink) })
+  const missing = () => ({ title: 'Instrument not found · OPAX', description: 'No instrument metadata is available for this FRL id.', status: 404, prerender: block('Instrument not found', 'No instrument metadata is available for this FRL id.', directoryLink) })
   if (id === null && url.pathname.replace(/\/+$/, '') !== '/instruments') return missing()
   if (id !== null && !FRL_ID.test(id)) return missing()
-  const unavailable = () => ({ title: 'Instrument catalogue not yet available · OPAX', description: 'Instrument metadata is not yet available.', status: 404, prerender: block('Instrument catalogue not yet available', 'Instrument metadata is not yet available.', 'Not yet available', '') })
+  const unavailable = () => ({ title: 'Instrument catalogue not yet available · OPAX', description: 'Instrument metadata is not yet available.', status: 404, prerender: block('Instrument catalogue not yet available', 'Instrument metadata is not yet available.', '') })
   try {
     const manifest = await read<Manifest>('/instruments/manifest.json')
     if (!catalogueComplete(manifest)) return unavailable()
@@ -70,7 +70,7 @@ export async function instrumentPage(id: string | null, url: URL, read: Read, bl
       const rows = matches.slice((Math.trunc(page) - 1) * 50, Math.trunc(page) * 50)
       const description = `${(manifest.exported ?? manifest.count).toLocaleString('en-AU')} in-force federal legislative-instrument titles. Metadata only; authoritative text is on the Federal Register of Legislation.`
       const gapNote = manifest.unresolved_gap ? `<p class="fineprint">FRL listed ${manifest.count.toLocaleString('en-AU')}; ${manifest.unresolved_gap} could not be retrieved from its API</p>` : ''
-      const facts = block('Federal legislative instruments', description, 'The government record', '')
+      const facts = block('Federal legislative instruments', description, '')
       const form = `<form class="instrument-filters" action="/instruments" method="get"><label>Title text<input name="q" type="search" value="${esc(url.searchParams.get('q') || '')}"></label>${select('Portfolio', 'portfolio', manifest.facets.portfolio, url, true)}${select('Type', 'type', manifest.facets.type, url)}${select('Commencement year', 'year', manifest.facets.commencement_year, url)}${select('Status', 'status', manifest.facets.status, url)}<button type="submit" class="ui-button">Filter</button><a href="/instruments">Reset</a></form>`
       const href = (n: number) => { const target = new URL(url); target.searchParams.set('page', String(n)); return target.pathname + target.search }
       const pagination = `<nav aria-label="Catalogue pages">${page > 1 ? `<a href="${esc(href(page - 1))}" rel="prev">Previous</a>` : ''}<span>Page ${Math.trunc(page)} of ${Math.ceil(matches.length / 50) || 1}</span>${page * 50 < matches.length ? `<a href="${esc(href(page + 1))}" rel="next">Next</a>` : ''}</nav>`
@@ -96,6 +96,6 @@ export async function instrumentPage(id: string | null, url: URL, read: Read, bl
     const versions = `<h2>Returned version metadata</h2><p>Acquisition is bounded to one API-returned version per title. It may be an earlier version. FRL's flags below identify whether it is current or latest; use the authoritative FRL link for the latest text. Full version history is outside this phase.</p>${sourceVersions.length ? sourceVersions.map(v => `<dl class="instrument-facts"><dt>Version registration id</dt><dd>${shown(v.registerId)}</dd><dt>Version start</dt><dd>${date(v.start)}</dd><dt>Version registered</dt><dd>${date(v.registeredAt)}</dd><dt>Compilation number</dt><dd>${shown(v.compilationNumber)}</dd><dt>Latest registered version</dt><dd>${v.isLatest ? 'Yes' : 'No'}</dd><dt>Current version</dt><dd>${v.isCurrent ? 'Yes' : 'No'}</dd></dl>`).join('') : `<p>Not supplied</p>`}`
     const relationships = [...(r.statusHistory || []), ...(r.statusPossibleFuture || [])]
     return { title: `${r.name} · OPAX`, description, status: 200,
-      prerender: block(r.name, description, 'Legislative instrument', directoryLink) + `<section class="wrap instrument-content">${dates}<p><a href="${esc(authoritative)}" rel="noopener">Authoritative text — Federal Register of Legislation (latest registered version)</a></p><p class="fineprint">OPAX shows metadata only. The authoritative legal text is on FRL. Registered means the as-made registration date. A version start is not necessarily whole-instrument commencement. InForce can include an instrument made but not yet commenced.</p>${versions}${r.hasCommencedUnincorporatedAmendments ? '<p>FRL records commenced amendments that have not been incorporated.</p>' : ''}${r.publishComments ? `<h2>Publisher comments</h2><p>${esc(r.publishComments)}</p>` : ''}<details><summary>Source status and relationship metadata</summary><p>Supplied by FRL; no repeal, supersession or disallowance relationships are inferred.</p><pre>${esc(JSON.stringify(relationships, null, 2))}</pre></details><details><summary>All exported source metadata</summary><pre>${esc(JSON.stringify(r, null, 2))}</pre></details><details><summary>OPAX-derived fields</summary><pre>${esc(JSON.stringify(record.opax, null, 2))}</pre></details>${attribution(manifest.attribution)}</section>` }
+      prerender: block(r.name, description, directoryLink) + `<section class="wrap instrument-content">${dates}<p><a href="${esc(authoritative)}" rel="noopener">Authoritative text — Federal Register of Legislation (latest registered version)</a></p><p class="fineprint">OPAX shows metadata only. The authoritative legal text is on FRL. Registered means the as-made registration date. A version start is not necessarily whole-instrument commencement. InForce can include an instrument made but not yet commenced.</p>${versions}${r.hasCommencedUnincorporatedAmendments ? '<p>FRL records commenced amendments that have not been incorporated.</p>' : ''}${r.publishComments ? `<h2>Publisher comments</h2><p>${esc(r.publishComments)}</p>` : ''}<details><summary>Source status and relationship metadata</summary><p>Supplied by FRL; no repeal, supersession or disallowance relationships are inferred.</p><pre>${esc(JSON.stringify(relationships, null, 2))}</pre></details><details><summary>All exported source metadata</summary><pre>${esc(JSON.stringify(r, null, 2))}</pre></details><details><summary>OPAX-derived fields</summary><pre>${esc(JSON.stringify(record.opax, null, 2))}</pre></details>${attribution(manifest.attribution)}</section>` }
   } catch { return unavailable() }
 }

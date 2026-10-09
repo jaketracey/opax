@@ -101,7 +101,7 @@ A cross-check against the production sitemap (25,125 URLs on 3 October 2026) fou
 | Daily edition | `/today` | 302 to the page behind the latest frozen daily edition. On 3 October 2026 it pointed at `/reports/indigenous` | Edition journal in D1 | None: a redirect | **Core v1** as the Today tab's edition card, once a read endpoint exists (section 2). |
 | Share images | `/og/<path>.png`, `/og/story/*` | Link previews and social cards | Drawn by the Worker | None | **Not a screen.** The app never requests them. |
 | Machine and plumbing routes | `/api/*`, `/bill-texts/*`, `/mcp`, `/ingest/*`, `/sitemap.xml`, `/robots.txt`, `/.well-known/atproto-did`, `/connections.html` (redirect) | Data, analytics proxy, crawlers, identity | | | **Not screens.** The app never calls `/ingest/*` or `/mcp`. |
-| Contributor references | `ui-workbench.html`, `home-prototype.html` | Design references | | | Excluded from deployment by `.assetsignore`. Not a surface. |
+| Contributor references | `ui-workbench.html` | Design reference | | | Excluded from deployment by `.assetsignore`. Not a surface. |
 | Test harnesses | `lg-test.html`, `nr-test.html`, `qz-test.html`, `st-test.html`, `tm-test.html`, `wb-test.html` | Component harnesses (ledger, news rail, quiz, stages, time machine, wombat loader) | | | Not excluded by `.assetsignore` and not linked. Not a surface. |
 
 ### Names in the brief that have no page of their own

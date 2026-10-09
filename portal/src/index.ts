@@ -3702,8 +3702,10 @@ const indexLinks = (): string =>
   `<a href="/subject/donor">Donors</a> · <a href="/subject/supplier">Government suppliers</a> · <a href="/subject/agency">Government agencies</a> · <a href="/subject/campaigner">Campaigners</a> · ` +
   `<a href="/subject/topic">Topics</a></p>`
 
-function prerenderBlock(heading: string, sentence: string, kicker: string, links = indexLinks()): string {
-  return `<section id="prerender" class="wrap"><p class="kicker">${escHtml(kicker)}</p>` +
+/** The no-JS page: its one title, one sentence and the directory links. No
+ *  kicker: the title says what the page is once (principle 3). */
+function prerenderBlock(heading: string, sentence: string, links = indexLinks()): string {
+  return `<section id="prerender" class="wrap">` +
     `<h1>${escHtml(heading)}</h1><p>${escHtml(sentence)}</p>${links}</section>`
 }
 
@@ -3796,7 +3798,7 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
           author: publisher,
           publisher,
         },
-        prerender: prerenderBlock(r.title, `${r.blurb} A standing OPAX investigation pairing disclosed donations with what was said in parliament, every claim cited to the record.`, 'Report'),
+        prerender: prerenderBlock(r.title, `${r.blurb} A standing OPAX investigation pairing disclosed donations with what was said in parliament, every claim cited to the record.`),
       })
     }
 
@@ -3861,7 +3863,7 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
         description,
         canonical,
         jsonLd: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: `${name} in the parliamentary record`, about: name, description, url: canonical, isPartOf: { '@type': 'WebSite', name: 'OPAX', url: SITE_ORIGIN } },
-        prerender: prerenderBlock(name, `Speeches on ${lower} in the Australian parliamentary record, by party and by year, with the newest labelled speeches and a link to the official source for each.`, 'Topic'),
+        prerender: prerenderBlock(name, `Speeches on ${lower} in the Australian parliamentary record, by party and by year, with the newest labelled speeches and a link to the official source for each.`),
         card: { kicker: 'Topic', title: name, lines: [`Parliament on ${lower}: every speech labelled ${lower} in the record, by party and by year.`] },
       })
     }
@@ -4004,7 +4006,7 @@ async function billMeta(key: string, env: Env): Promise<PageMeta> {
       ...(b.sponsor ? { creator: { '@type': 'Person', name: b.sponsor } } : {}),
       publisher,
     },
-    prerender: prerenderBlock(name, `${facts} ${tail}`, 'Bill'),
+    prerender: prerenderBlock(name, `${facts} ${tail}`),
     card: { kicker: summary ? 'Bill summary' : 'Bill · Federal parliament', title: summary || name, lines: summary ? [name, opening] : [opening, recordLine], wide: !!summary },
   }
 }
@@ -4047,7 +4049,7 @@ async function electorateMeta(name: string, url: URL, env: Env): Promise<PageMet
   return {
     title: `${e.name} · Electorate · OPAX`, description: clip(facts), canonical, ogType: 'website', status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': 'Place', name: e.name, identifier: e.electorate_id, url: canonical, description: facts },
-    prerender: prerenderBlock(e.name, facts, 'Electorate'),
+    prerender: prerenderBlock(e.name, facts),
     card: { kicker: 'Electorate', title: e.name, lines: [representation, `${e.election_count} indexed election contests · ${e.state_code.toUpperCase()}`] },
   }
 }
@@ -4098,7 +4100,7 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
     const description = `Unattributed testimony and other records printed as ${print}. Parliamentary identity, party and portrait are not assigned to this evidence.`
     return { title: `${print} — unattributed evidence · OPAX`, description,
       canonical: `${SITE_ORIGIN}${personPath(people, print)}?attribution=unattributed`, status: 200, ogType: 'website', jsonLd: null,
-      prerender: prerenderBlock(print, description, 'Unattributed evidence'),
+      prerender: prerenderBlock(print, description),
       card: { kicker: 'Unattributed evidence', title: print, lines: [description] } }
   }
   const display = p?.speech_scope ? p.full || p.name : p?.name ?? name
@@ -4112,7 +4114,7 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
     const description = clip(`${display} in the OPAX record of Australian parliamentary speeches and disclosed political donations.`)
     return {
       title, description, canonical, ogType: 'profile', status: 200, jsonLd: null,
-      prerender: prerenderBlock(display, description, 'Parliamentarian'),
+      prerender: prerenderBlock(display, description),
       card: { kicker: 'Parliamentarian', title: display, lines: ['In the OPAX record of Australian parliamentary speeches and disclosed political donations.'], portraitId, credit },
     }
   }
@@ -4125,7 +4127,7 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
     const description = clip(`${display}, representative for ${p.rosterOnly.seats.join(', ')}${p.party ? ` (${p.party})` : ''}. Verified ${p.rosterOnly.asOf || 'in the parliamentary roster'}. Speech totals are not yet in the directory.`)
     return { title, description, canonical, ogType: 'profile', status: 200,
       jsonLd: { '@context': 'https://schema.org', '@type': 'Person', name: display, url: canonical, jobTitle: 'Parliamentarian' },
-      prerender: prerenderBlock(display, description, 'Parliamentarian'),
+      prerender: prerenderBlock(display, description),
       card: { kicker: 'Parliamentarian', title: display, lines: [description], portraitId, credit } }
   }
   const federal = p.states.includes('federal')
@@ -4155,7 +4157,7 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
       // app.js links the same APH search for federal people (no stable profile URL in the data).
       ...(federal ? { sameAs: [`https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=${encodeURIComponent(display)}`] } : {}),
     },
-    prerender: prerenderBlock(display, `${facts} ${tail}`, 'Parliamentarian'),
+    prerender: prerenderBlock(display, `${facts} ${tail}`),
     card: {
       kicker: 'Parliamentarian',
       title: display,
@@ -4204,7 +4206,7 @@ async function grantRecipientMeta(jurisdiction: 'federal' | 'qld', id: string, u
     const original = award.guid ? `https://www.grants.gov.au/Ga/Show/${encodeURIComponent(award.guid)}` : `https://www.grants.gov.au/Ga/ListResult?Type=Ga&AgencyStatus=-1&GaId=${encodeURIComponent(award.id)}`
     return { title: `${award.id}: ${recipient.n} · OPAX`, description, canonical: selected, ogType: 'article', status: 200,
       jsonLd: { '@context': 'https://schema.org', '@type': 'Article', headline: `${award.id}: ${recipient.n}`, description, url: selected, citation: original },
-      prerender: prerenderBlock(`${award.id}: ${recipient.n}`, description, 'Grant award'),
+      prerender: prerenderBlock(`${award.id}: ${recipient.n}`, description),
       card: { kicker: `${award.id}${award.s ? ` · Starts ${award.s}` : ''}`, title: recipient.n, lines: [purpose, 'Award value, not payments received.'], stat: { value: money(award.v), label: 'published grant award' } } }
   }
   const qld = jurisdiction === 'qld'
@@ -4216,7 +4218,7 @@ async function grantRecipientMeta(jurisdiction: 'federal' | 'qld', id: string, u
   return { title: `${clip(recipient.n, 90)} · Grant recipient · OPAX`, description, canonical, ogType: 'profile', status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': 'ProfilePage', name: recipient.n, url: canonical, description,
       mainEntity: { '@type': 'Thing', name: recipient.n, ...(id.startsWith('abn:') ? { identifier: { '@type': 'PropertyValue', propertyID: 'ABN', value: id.slice(4) } } : {}) } },
-    prerender: prerenderBlock(recipient.n, `${facts} ${caveat}`, 'Grant recipient'),
+    prerender: prerenderBlock(recipient.n, `${facts} ${caveat}`),
     card: { kicker: 'Grant recipient', title: recipient.n, lines: [`${money(recipient.t)} in ${basis}`, `${num(recipient.c)} ${countBasis}`, caveat] } }
 }
 
@@ -4248,7 +4250,7 @@ async function grantProgramMeta(raw: string, url: URL, env: Env): Promise<PageMe
   const description = withTail(facts, 'Where the money went: recipients, selection process, electorates and the members who held them.')
   return { title: `${clip(program.n, 80)} · Grant program · OPAX`, description, canonical, ogType: 'article', status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': 'Dataset', name: program.n, description: facts, url: canonical, creator: publisher, license: 'https://creativecommons.org/licenses/by/3.0/au/' },
-    prerender: prerenderBlock(program.n, `${facts} Award values, not payments.`, 'Grant program'),
+    prerender: prerenderBlock(program.n, `${facts} Award values, not payments.`),
     card: { kicker: told ? 'Where did the money go?' : 'Grant program', title: program.n,
       lines: [years ? `${num(program.c)} grants, ${years}` : `${num(program.c)} grants`, split || (program.ag ?? 'Published award values, not payments.')],
       stat: { value: money(program.t), label: 'published grant awards' } } }
@@ -4265,7 +4267,7 @@ async function grantLargestMeta(month: string, url: URL, env: Env): Promise<Page
   const facts = `The largest grant agreements that started in ${label}, one per recipient, as published on GrantConnect: ${rows.slice(0, 3).map(r => `${r.recipient} ${money(r.amount)}`).join(', ')}.`
   return { title: `The largest grants of ${label} · OPAX`, description: clip(facts), canonical, ogType: 'article', status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': 'Dataset', name: `The largest grants of ${label}`, description: facts, url: canonical, creator: publisher, license: 'https://creativecommons.org/licenses/by/3.0/au/' },
-    prerender: prerenderBlock(`The largest grants of ${label}`, `${facts} Award values, not payments.`, 'Grants'),
+    prerender: prerenderBlock(`The largest grants of ${label}`, `${facts} Award values, not payments.`),
     card: { kicker: `Grants · ${label}`, title: `Where did the money go in ${MONTH_LONG[Number(month.slice(5)) - 1]}?`,
       lines: [`No. 1: ${clip(top.recipient, 70)}`, `The largest agreements that started in ${label}`],
       stat: { value: money(top.amount), label: 'the largest award' } } }
@@ -4295,7 +4297,7 @@ async function agencyMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   return { title: `${clip(agency.name, 90)} · Government agency · OPAX`, description, canonical, ogType: 'profile', status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': 'ProfilePage', name: agency.name, url: canonical, description,
       mainEntity: { '@type': 'GovernmentOrganization', name: agency.name } },
-    prerender: prerenderBlock(agency.name, `${facts} Award values are not expenditure. Agency names remain separate as recorded.`, 'Government agency'),
+    prerender: prerenderBlock(agency.name, `${facts} Award values are not expenditure. Agency names remain separate as recorded.`),
     card: { kicker: 'Government agency', title: agency.name, lines: [`${money(agency.total)} in recorded commitments`, `${num(agency.count)} contracts · ${num(agency.supplier_count)} suppliers`, 'Recorded awards, not expenditure.'] } }
 }
 
@@ -4328,7 +4330,7 @@ async function supplierMeta(name: string, url: URL, env: Env): Promise<PageMeta>
     ogType: 'profile', status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': 'ProfilePage', name: supplier.name, url: canonical, description,
       mainEntity: { '@type': 'Thing', name: supplier.name, ...(supplier.abn ? { identifier: { '@type': 'PropertyValue', propertyID: 'ABN', value: supplier.abn } } : {}) } },
-    prerender: prerenderBlock(supplier.name, `${facts} Award values are not expenditure. Coverage is limited to the available notices.`, 'Government supplier'),
+    prerender: prerenderBlock(supplier.name, `${facts} Award values are not expenditure. Coverage is limited to the available notices.`),
     card: { kicker: 'Government supplier', title: supplier.name,
       lines: [`${money(supplier.total)} in recorded award values`, `${num(supplier.count)} contracts · ${num(supplier.agency_count)} agencies`, 'Recorded awards, not expenditure.'] },
   }
@@ -4385,7 +4387,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     ogType: 'profile',
     status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': ldType, name: display, url: canonical, description },
-    prerender: prerenderBlock(display, sentence, dir === 'party' ? 'Political party' : 'Donor'),
+    prerender: prerenderBlock(display, sentence),
     card,
   }
 }
@@ -4412,7 +4414,7 @@ async function campaignerMeta(name: string, url: URL, env: Env): Promise<PageMet
       const description = clip(`${display} in the OPAX record of AEC registered campaigners, third parties and associated entities.`)
       return {
         title, description, canonical, ogType: 'profile', status: 200, jsonLd: null,
-        prerender: prerenderBlock(display, description, 'Campaigners & third parties'),
+        prerender: prerenderBlock(display, description),
         card: { kicker: 'Campaigners & third parties', title: display, lines: ['In the OPAX record of AEC registered campaigners, third parties and associated entities.'] },
       }
     }
@@ -4454,7 +4456,7 @@ async function campaignerMeta(name: string, url: URL, env: Env): Promise<PageMet
       // The ABN is the one identifier that survives a rename or a rebrand.
       ...(c.abn ? { identifier: { '@type': 'PropertyValue', propertyID: 'ABN', value: c.abn } } : {}),
     },
-    prerender: prerenderBlock(display, `${facts} ${tail}`, c.kindLabel),
+    prerender: prerenderBlock(display, `${facts} ${tail}`),
     card: {
       kicker: c.kindLabel,
       title: display,
