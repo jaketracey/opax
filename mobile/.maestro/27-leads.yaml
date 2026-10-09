@@ -45,92 +45,56 @@ name: 27 Leads and the declared-interests feed
     id: leads-count
     text: 60 leads
 - takeScreenshot: ${EVIDENCE}/27-leads
-# The first lead is the export's first signal, with its own figures.
+# The first lead is the export's first signal: its title, its two money
+# flows and its sentence, as one element that opens the comparison.
 # pointer: /signals/0/title
+# pointer: /signals/0/metrics/0
+# pointer: /signals/0/metrics/1
 - scrollUntilVisible:
     element:
-      id: lead-0-title
-      text: 'Lead, Companies in both\. Westpac Banking Corporation appears in party receipts and contracts'
+      id: lead-0-open
+      text: 'Lead, Companies in both\. Westpac Banking Corporation appears in party receipts and contracts\. Recorded party receipts, 76,984,493 dollars\. Recorded contract value, 9,102,500 dollars\. .*'
     direction: DOWN
     timeout: 180000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
 - takeScreenshot: ${EVIDENCE}/27-lead-title
-- scrollUntilVisible:
-    element:
-      id: lead-0-metric-0
-    direction: DOWN
-    timeout: 180000
-    centerElement: true
-    speed: 20
-# pointer: /signals/0/metrics/0
-- assertVisible:
-    id: lead-0-metric-0
-    text: Recorded party receipts, 76,984,493 dollars
-- scrollUntilVisible:
-    element:
-      id: lead-0-metric-1
-    direction: DOWN
-    timeout: 180000
-    centerElement: true
-    speed: 20
-# pointer: /signals/0/metrics/1
-- assertVisible:
-    id: lead-0-metric-1
-    text: Recorded contract value, 9,102,500 dollars
-- scrollUntilVisible:
-    element:
-      id: lead-0-metric-2
-    direction: DOWN
-    timeout: 180000
-    centerElement: true
-    speed: 20
-# pointer: /signals/0/metrics/2
-- assertVisible:
-    id: lead-0-metric-2
-    text: Party receipt records, 1,041
-- scrollUntilVisible:
-    element:
-      id: lead-0-metric-3
-    direction: DOWN
-    timeout: 180000
-    centerElement: true
-    speed: 20
-# pointer: /signals/0/metrics/3
-- assertVisible:
-    id: lead-0-metric-3
-    text: Contract records, 4
-- takeScreenshot: ${EVIDENCE}/27-lead-figures
-# Every caveat is on the card, in the export's words.
+# One caveat line on the card, the export's first, in its words.
 # pointer: /signals/0/caveats/0
 - scrollUntilVisible:
     element:
-      id: lead-0-caveat-0
+      id: lead-0-caveat
       text: Matching names are not verified legal identities; unrelated entities can share a name\.
     direction: DOWN
     timeout: 180000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
-- takeScreenshot: ${EVIDENCE}/27-lead-caveat
-# pointer: /signals/0/caveats/2
 - scrollUntilVisible:
     element:
-      id: lead-0-caveat-2
-      text: Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification\. State, election and referendum disclosures are excluded\.
+      id: lead-0-source
+      text: 2 example records, AEC annual returns and 1 more
     direction: DOWN
     timeout: 180000
-    visibilityPercentage: 10
     centerElement: true
     speed: 20
+- takeScreenshot: ${EVIDENCE}/27-lead-caveat
+# The card's source line: its example records, every caveat, the as-at date.
+- waitForAnimationToEnd
+- tapOn:
+    id: lead-0-source
+- extendedWaitUntil:
+    visible:
+      id: lead-0-source-sheet
+    timeout: 15000
 # The receipt names its register, not OPAX's local row number.
 - scrollUntilVisible:
     element:
-      id: lead-0-evidence-0
-      text: '1,803 dollars, Westpac Banking Corporation to Australian Labor Party \(ALP\), AEC annual receipt · FY 2024–25, AEC Transparency Register'
+      id: lead-0-source-sheet-original-0
+      text: 'View original, AEC Transparency Register, \$1,803 from Westpac Banking Corporation to Australian Labor Party \(ALP\) · AEC annual receipt · FY 2024–25'
     direction: DOWN
-    timeout: 180000
+    timeout: 60000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
@@ -140,44 +104,51 @@ name: 27 Leads and the declared-interests feed
 # pointer: /signals/0/evidence/1/record_id
 - scrollUntilVisible:
     element:
-      id: lead-0-evidence-1
-      text: '4,537,500 dollars, Australian Office of Financial Management to Westpac Banking Corporation, Contract value · starts 6 Feb 2017, AusTender register, record CN3407266'
+      id: lead-0-source-sheet-original-1
+      text: 'View original, AusTender register, \$4,537,500 from Australian Office of Financial Management to Westpac Banking Corporation · Contract value · starts 6 Feb 2017 · record CN3407266'
     direction: DOWN
-    timeout: 180000
+    timeout: 60000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
 - takeScreenshot: ${EVIDENCE}/27-lead-records
+# pointer: /generated_at
 - scrollUntilVisible:
     element:
-      id: lead-0-as-at
+      text: As at 21 September 2026
     direction: DOWN
-    timeout: 180000
+    timeout: 60000
     centerElement: true
     speed: 20
-# pointer: /generated_at
-- assertVisible:
-    id: lead-0-as-at
-    text: 'As at 21 September 2026 · Source: AEC annual returns; AusTender'
-- takeScreenshot: ${EVIDENCE}/27-lead-as-at
-# A source opens: e2e builds show the checked address locally.
+# pointer: /signals/0/caveats/2
 - scrollUntilVisible:
     element:
-      id: lead-0-evidence-0
+      text: Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification\. State, election and referendum disclosures are excluded\.
+    direction: DOWN
+    timeout: 60000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/27-lead-as-at
+# A source opens once the sheet has gone: e2e builds show the checked
+# address locally.
+- scrollUntilVisible:
+    element:
+      id: lead-0-source-sheet-original-0
     direction: UP
-    timeout: 180000
+    timeout: 60000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
 - waitForAnimationToEnd
-- assertVisible:
-    id: leads-screen
 - tapOn:
-    id: lead-0-evidence-0
+    id: lead-0-source-sheet-original-0
 # pointer: /signals/0/evidence/0/url
-- assertVisible:
-    id: source-destination-url
-    text: https://transparency\.aec\.gov\.au/
+- extendedWaitUntil:
+    visible:
+      id: source-destination-url
+      text: https://transparency\.aec\.gov\.au/
+    timeout: 15000
 - takeScreenshot: ${EVIDENCE}/27-lead-source
 - tapOn: OK
 - assertVisible:
@@ -244,6 +215,27 @@ name: 27 Leads and the declared-interests feed
     centerElement: true
     speed: 20
 - takeScreenshot: ${EVIDENCE}/27-table
+# The comparison keeps the whole lead: every figure, caveat and record.
+# pointer: /signals/1/metrics/2
+- scrollUntilVisible:
+    element:
+      id: lead-card-metric-2
+      text: Total recorded value, 158,976,424 dollars
+    direction: DOWN
+    timeout: 180000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+# pointer: /signals/1/metrics/3
+- scrollUntilVisible:
+    element:
+      id: lead-card-metric-3
+      text: Distinct donors, 28
+    direction: DOWN
+    timeout: 180000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
 # pointer: /signals/1/caveats/2
 - scrollUntilVisible:
     element:
@@ -312,33 +304,40 @@ name: 27 Leads and the declared-interests feed
     timeout: 30000
 - scrollUntilVisible:
     element:
-      id: declarations-chamber-house
-    direction: DOWN
-    timeout: 180000
-    centerElement: true
-    speed: 20
-- takeScreenshot: ${EVIDENCE}/27-declarations
-- scrollUntilVisible:
-    element:
       id: declarations-count
     direction: DOWN
     timeout: 180000
     centerElement: true
     speed: 20
+- takeScreenshot: ${EVIDENCE}/27-declarations
+# One summary line; the chamber chips are in the Filters sheet.
 # pointer: /interests/recent.json#/meta/rows as count
 - assertVisible:
     id: declarations-count
-    text: 300 declarations · newest first
+    text: 300 declarations · All chambers · Federal
 - scrollUntilVisible:
     element:
-      id: declarations-chamber-house
+      id: declarations-filters
     direction: UP
     timeout: 180000
     centerElement: true
     speed: 20
 - waitForAnimationToEnd
 - tapOn:
+    id: declarations-filters
+- extendedWaitUntil:
+    visible:
+      id: declarations-chamber-house
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/27-declarations-filters
+- tapOn:
     id: declarations-chamber-house
+- tapOn:
+    id: declarations-filters-sheet-done
+- extendedWaitUntil:
+    notVisible:
+      id: declarations-filters-sheet
+    timeout: 15000
 - scrollUntilVisible:
     element:
       id: declarations-count
@@ -348,7 +347,7 @@ name: 27 Leads and the declared-interests feed
     speed: 20
 - assertVisible:
     id: declarations-count
-    text: 176 of 300 declarations · newest first
+    text: 176 of 300 declarations · House of Representatives · Federal
 - takeScreenshot: ${EVIDENCE}/27-declarations-house
 # Every row in the filtered list is a House row. At AX5 a row can be taller
 # than the screen, so its text is matched where a tenth of it shows.
@@ -386,7 +385,7 @@ name: 27 Leads and the declared-interests feed
     speed: 20
 - assertVisible:
     id: declarations-count
-    text: 3 of 300 declarations · newest first
+    text: 3 of 300 declarations · House of Representatives · Federal
 - scrollUntilVisible:
     element:
       id: declaration-person-0

@@ -3,7 +3,8 @@ import TestRenderer from 'react-test-renderer';
 import { router } from 'expo-router';
 import { catalogs as runtime } from '../src/api/runtime';
 import * as c from '../src/api/catalogs';
-import { Text } from '../src/design/primitives';
+import { Alert } from 'react-native';
+import { Card, Text } from '../src/design/primitives';
 import {
   followState,
   quarterEnd,
@@ -22,6 +23,10 @@ import {
   type Fingerprint,
 } from '../src/features/follows/store';
 import { FollowingSection } from '../src/features/follows/FollowingSection';
+import ManageFollows, {
+  NOTHING_FOLLOWED,
+} from '../src/features/follows/ManageFollows';
+import { showRecordMenu } from '../src/features/today/RecordMenu';
 import { FollowToggle } from '../src/features/follows/FollowToggle';
 import { catalogs, index } from './pinned';
 
@@ -65,6 +70,9 @@ jest.mock('../src/api/runtime', () => ({
   catalogs: { followSources: jest.fn() },
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('../src/features/today/RecordMenu', () => ({
+  showRecordMenu: jest.fn(),
+}));
 
 const ALBANESE = 'person_2b850aa643795ce8902f754b';
 const BILL = 'au-federal-r7549';
@@ -469,14 +477,16 @@ describe('Following on Today and the follow switch', () => {
     });
     return r;
   }
-  test('with nothing followed, Today explains follows and reads no catalogs', async () => {
+  test('with nothing followed, Today draws no Following block and reads no catalogs', async () => {
     const r = await render(
       <FollowingSection refresh={0} refreshing={false} onRetry={jest.fn()} />,
     );
+    // Design pass 4C: an empty Following block does not render (no helper
+    // card); the profile's Follow and Manage follows explain following.
     expect(
-      r.root.findAll((n) => n.props.testID === 'today-following-empty').length,
-    ).toBeGreaterThan(0);
-    expect(textOf(r)).toContain('Follows are saved on this iPhone only');
+      r.root.findAll((n) => n.props.testID === 'today-following').length,
+    ).toBe(0);
+    expect(textOf(r)).toBe('');
     expect(mock.followSources).not.toHaveBeenCalled();
     await act(async () => r.unmount());
   });
@@ -502,6 +512,8 @@ describe('Following on Today and the follow switch', () => {
       /^Anthony Albanese, Parliamentarian, No changes since \d+ \w+ 2026$/,
     );
     expect(textOf(r)).toContain('No changes since you last looked.');
+    // Rows on the paper (design pass 4C): no card and no icon badge per follow.
+    expect(r.root.findAllByType(Card)).toHaveLength(0);
     // A pull to refresh revalidates and finds the fixture's two changes.
     mock.followSources.mockResolvedValue(changedSources());
     await act(async () =>
@@ -530,6 +542,31 @@ describe('Following on Today and the follow switch', () => {
     expect(textOf(r)).toContain('1 of 2 changed since you last looked.');
     expect(row(ALBANESE).props.accessibilityLabel).toContain(
       '1 new declared entry',
+    );
+    await act(async () => r.unmount());
+  });
+  test('a saved copy says so once, with one source line in the saved state', async () => {
+    mock.followSources.mockResolvedValue(
+      sources({
+        stale: true,
+        savedAt: Date.UTC(2026, 9, 3, 2),
+        staleReason: 'unavailable',
+      }),
+    );
+    await follow({ kind: 'bill', id: BILL, title: 'Ending Financial Abuse' });
+    const r = await render(
+      <FollowingSection refresh={0} refreshing={false} onRetry={jest.fn()} />,
+    );
+    expect(textOf(r)).toContain(
+      'The latest public export could not be loaded. Showing the saved copy.',
+    );
+    const line = r.root.find(
+      (n) =>
+        n.props.testID === 'today-following-stale' &&
+        typeof n.props.onPress === 'function',
+    );
+    expect(line.props.accessibilityLabel).toBe(
+      'Published records, Saved 3 Oct 2026',
     );
     await act(async () => r.unmount());
   });
@@ -566,6 +603,98 @@ describe('Following on Today and the follow switch', () => {
     await act(async () => toggle().props.onPress());
     expect(toggle().props.testID).toBe('electorate-follow-off');
     expect(await loadFollows()).toEqual([]);
+    await act(async () => r.unmount());
+  });
+});
+
+describe('Manage follows', () => {
+  beforeEach(() => {
+    mockDisk.clear();
+    resetFollowsForTests();
+    jest.clearAllMocks();
+  });
+  async function render() {
+    let r!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      r = TestRenderer.create(<ManageFollows />);
+    });
+    // Each row learns its width, which brings in its swipe action.
+    await act(async () => {
+      for (const node of r.root.findAll(
+        (n) =>
+          typeof n.type === 'string' && typeof n.props.onLayout === 'function',
+      ))
+        node.props.onLayout({ nativeEvent: { layout: { width: 390 } } });
+    });
+    return r;
+  }
+  const byID = (r: TestRenderer.ReactTestRenderer, testID: string) =>
+    r.root.find(
+      (n) => n.props.testID === testID && typeof n.props.onPress === 'function',
+    );
+  const count = (r: TestRenderer.ReactTestRenderer) =>
+    [
+      r.root.find(
+        (n) => n.type === Text && n.props.testID === 'follows-count',
+      ).props.children,
+    ]
+      .flat()
+      .join('');
+  test('with nothing followed, one sentence at the block size', async () => {
+    const r = await render();
+    const empty = r.root.find((n) => n.props.testID === 'follows-empty');
+    expect(empty.props.message).toBe(NOTHING_FOLLOWED);
+    expect(NOTHING_FOLLOWED.split('. ')).toHaveLength(1);
+    expect(empty.props.size ?? 'block').toBe('block');
+    await act(async () => r.unmount());
+  });
+  test('rows open their page; unfollow is a swipe action and a touch-and-hold choice', async () => {
+    await follow({ kind: 'person', id: ALBANESE, title: 'Anthony Albanese' });
+    await follow({ kind: 'bill', id: BILL, title: 'Ending Financial Abuse' });
+    await follow({ kind: 'electorate', id: GRAYNDLER, title: 'Grayndler' });
+    const r = await render();
+    expect(count(r)).toBe('Following 3 of at most 50');
+    // No drawn Unfollow under every row: the action sits behind the swipe,
+    // and stays a button for VoiceOver and journeys.
+    const action = byID(r, `follows-unfollow-electorate-${GRAYNDLER}`);
+    expect(action.props.accessibilityLabel).toBe('Unfollow Grayndler');
+    expect(action.props.accessibilityRole).toBe('button');
+    await act(async () => byID(r, `follows-open-bill-${BILL}`).props.onPress());
+    expect(router.push).toHaveBeenCalledWith({
+      pathname: '/bill/[key]',
+      params: { key: BILL },
+    });
+    await act(async () => action.props.onPress());
+    expect((await loadFollows()).map((f) => f.id)).toEqual([ALBANESE, BILL]);
+    expect(count(r)).toBe('Following 2 of at most 50');
+    // Touch and hold offers Open and Unfollow.
+    await act(async () =>
+      byID(r, `follows-open-person-${ALBANESE}`).props.onLongPress(),
+    );
+    const [title, actions] = jest.mocked(showRecordMenu).mock.calls[0]!;
+    expect(title).toBe('Anthony Albanese');
+    expect(actions.map((a) => a.title)).toEqual(['Open', 'Unfollow']);
+    await act(async () => actions[1]!.onPress());
+    expect((await loadFollows()).map((f) => f.id)).toEqual([BILL]);
+    await act(async () => r.unmount());
+  });
+  test('unfollow all asks first, then leaves the empty sentence', async () => {
+    const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
+    await follow({ kind: 'bill', id: BILL, title: 'Ending Financial Abuse' });
+    const r = await render();
+    await act(async () => byID(r, 'follows-clear').props.onPress());
+    expect(alert).toHaveBeenCalledWith(
+      'Unfollow all 1?',
+      expect.any(String),
+      expect.any(Array),
+    );
+    const buttons = alert.mock.calls[0]![2]!;
+    await act(async () => buttons[1]!.onPress!());
+    expect(await loadFollows()).toEqual([]);
+    expect(
+      r.root.find((n) => n.props.testID === 'follows-empty').props.message,
+    ).toBe(NOTHING_FOLLOWED);
+    alert.mockRestore();
     await act(async () => r.unmount());
   });
 });
