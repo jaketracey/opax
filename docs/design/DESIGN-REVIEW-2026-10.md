@@ -59,7 +59,7 @@ Ranked by how much visual weight each removes across how many screens, against e
 
 ### Decisions for Jake
 
-These change documented rules, so they need an OK before pass 2:
+These change documented rules. Under Jake's "full speed" direction (9 Oct: no sign-off gate), passes 2 to 4 implement them as the defaults below. Jake can overturn any of them from the before/after shots at the end of a pass:
 
 - **D1. Shape by role.** Things you press are pills on both platforms; things you read are 4-radius; things that hold content are 12-radius.
   - This keeps the app's build 12 capsule buttons.
@@ -732,7 +732,7 @@ Wireframes on the proposed tokens. Each board numbers the problems on the curren
 
 | Lane | Owns | Work | Depends on | Device time |
 |---|---|---|---|---|
-| **2A tokens** | `docs/design/design-tokens.json`, `scripts/build_tokens.mjs`, `portal/public/tokens.css`, the `:root` block of `style.css`, `mobile/src/design/palette.ts`, `tokens.ts`, `tokens.generated.ts`, contrast tests | Generator; old names aliased; no visual change except the renamed roles | D1–D2 answered | none (Jest + headless web diff) |
+| **2A tokens** | `docs/design/design-tokens.json`, `scripts/build_tokens.mjs`, `portal/public/tokens.css`, the `:root` block of `style.css`, `mobile/src/design/palette.ts`, `tokens.ts`, `tokens.generated.ts`, contrast tests | Generator; old names aliased; no visual change except the renamed roles | none (D1–D2 defaults) | none (Jest + headless web diff) |
 | **2B app components** | `mobile/src/design/*` plus a mechanical codemod across `features/*` imports | SourceLine and SourceSheet, StatusLabel, PartyLabel, Tag, MachineLabel (one phrase), Card, toggle Button, round IconButton, SwitchRow, EmptyState size, type-role collapse (aliases first), radius collapse, delete `today/tint.ts` reads in favour of tokens | 2A merged | one block, about 40 min: journeys at standard size on the 17 Pro; `review-pages` AX5 sweep of 12 screens; Increase Contrast on 3 |
 | **2C web components** | `ui-controls.css`, new `ui-source.css`/`.js`, the shared-helper part of `app.js` (`actionBtn`, `partyChipHTML`, `sourceItem`, `infoboxHTML`, machine labels), the kicker and fineprint rules in `style.css` | Pill buttons and chips, Tag, StatusLabel, PartyLabel, MachineLabel, SourceLine as `<details>` with a popover sheet, remove the floating Ask pill and uppercase kickers | 2A merged | none (headless 390/820/1280, forced colours, keyboard) |
 | **2D data (optional)** | `scripts/export_money_graph.py`, `export_state_money.py`, the bills exporter | Party colours from tokens; division stage titles; strip the run-in speaker names | D5 | none |
@@ -847,7 +847,7 @@ That is about **85 minutes**. Ask for one 90-minute block in the shared device s
 ## 9. Risks and open questions
 
 - **Busy is partly data.** Long bill titles, the presiding officer's words and register text in members' own words carry much of the weight. Concepts truncate only where a disclosure keeps the full text one tap away. Nothing is cut from the record.
-- **The source line must not hide what a number needs.** Pass 3 lanes list every caveat they move into a sheet, and Jake approves which stay inline.
+- **The source line must not hide what a number needs.** Pass 3 lanes list every caveat they move into a sheet in their before/after notes, so Jake can pull any back inline.
 - **Test anchors.** "End of …" captions and some as-at strings are Maestro anchors (`review-pages.yaml`; `AsAtLine` keeps its full sentence as the accessibility label). Removing visible text keeps the testID and label.
 - **App Store.** The independence line moves, but it stays in the tour and About, and the app still never looks like a government app (`IOS-UX.md` §8).
 - **Capsules on the web (D1)** change the broadsheet feel. The fallback is 4-radius everywhere, with the app reverting its capsules.
