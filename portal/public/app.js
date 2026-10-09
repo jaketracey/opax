@@ -12426,7 +12426,10 @@ function citePanelHTML(doc) {
    A division's page reads the published exports (/divisions/<slug>.json and
    its bill's file): titled by its recorded stage (D5), its bills as link rows,
    the outcome and counts, the party splits and who voted which way, the
-   question behind a disclosure, and one source line. */
+   question behind a disclosure, and one source line. Where the export has no
+   member list, the names come from the division's own record in the index,
+   read exactly as this page always read it: nothing on the record is hidden
+   to make the page simpler. */
 async function loadDivisionDoc(slug) {
   const res = await fetch(`/divisions/${encodeURIComponent(slug)}.json`);
   if (!res.ok) return null;
@@ -12438,6 +12441,72 @@ async function loadDivisionDoc(slug) {
     if (entry) break;
   }
   return { d, entry, bills };
+}
+
+/** The names on one division resource from the index: its per-side arrays
+ *  (extra.metadata ayes / noes / paired, docs/VOTES.md), else its body text
+ *  ("Ayes 4: A, B. Noes 34: C, D. Paired (recorded, not counted): E."). */
+function divisionNamesFromResource(doc) {
+  const m = doc?.metadata || {};
+  const list = (v) => Array.isArray(v) ? v.map((n) => String(n ?? "").trim()).filter(Boolean) : null;
+  const arrays = { aye: list(m.ayes), no: list(m.noes), paired: list(m.paired) };
+  if (arrays.aye || arrays.no) return { aye: arrays.aye || [], no: arrays.no || [], paired: arrays.paired || [] };
+  const text = String(doc?.text || "").replace(/\s+/g, " ");
+  const side = (label, next) => {
+    const hit = new RegExp(`\\b${label}(?: \\d+)?: (.*?)\\.(?= (?:${next})|\\s*$)`).exec(text);
+    const names = hit ? hit[1].trim() : "";
+    return !names || /^(none recorded|listed in another part of this record)$/i.test(names) ? [] : names.split(/,\s+/).filter(Boolean);
+  };
+  return {
+    aye: side("Ayes", "Noes \\d+:"),
+    no: side("Noes", "Paired|The question|Bill:|This part|\\d+ members? crossed"),
+    paired: side("Paired \\(recorded, not counted\\)", "The question|Bill:|This part|\\d+ members? crossed"),
+  };
+}
+
+/** Who voted which way, by name: the export's member list where it has one;
+ *  otherwise the division's record in the index, by the same /api/resource
+ *  read this page made before it drew from the exports (and so the same
+ *  caching), plus any further parts a large division was stored in. Resolves
+ *  { aye, no, paired, from } with names as { name, slug }, or { failed: true }. */
+async function loadDivisionNames(slug, d) {
+  const members = (Array.isArray(d?.members) ? d.members : []).filter((m) => m?.name);
+  if (members.length) {
+    const side = (vote) => members.filter((m) => m.vote === vote).map((m) => ({ name: m.name, slug: m.person_slug || "" }));
+    return { aye: side("aye"), no: side("no"), paired: side("paired"), absent: side("absent").length, from: "export" };
+  }
+  let first;
+  try { first = await api(`/api/resource/${encodeURIComponent(slug)}`); } catch { return { failed: true }; }
+  const others = (Array.isArray(first?.metadata?.part_slugs) ? first.metadata.part_slugs : [])
+    .filter((s) => s !== slug && /^division-[a-z0-9-]+$/.test(String(s)));
+  const rest = await Promise.allSettled(others.map((s) => api(`/api/resource/${encodeURIComponent(s)}`)));
+  const names = { aye: [], no: [], paired: [], from: "record", missingParts: rest.filter((r) => r.status === "rejected").length, text: "" };
+  for (const doc of [first, ...rest.filter((r) => r.status === "fulfilled").map((r) => r.value)]) {
+    const found = divisionNamesFromResource(doc);
+    for (const k of ["aye", "no", "paired"]) names[k].push(...found[k].map((name) => ({ name, slug: "" })));
+  }
+  // A record whose names could not be read keeps its own words on the page.
+  if (!names.aye.length && !names.no.length && !names.paired.length) names.text = String(first?.text || "");
+  return names;
+}
+
+/** The "Who voted which way" block for loadDivisionNames' answer. Index names
+ *  carry no person id, so they print as the record prints them, unlinked. */
+function divisionMembersHTML(names, { ayes = 0, noes = 0 } = {}) {
+  const open = `<section class="division-block division-members" id="division-members" aria-labelledby="division-members-head">
+      <h3 class="subject-section-title" id="division-members-head">Who voted which way</h3>`;
+  if (!names || names.failed) {
+    return `${open}<p class="division-none">The member list could not load just now; the counts and the party split are from the published export.</p></section>`;
+  }
+  if (names.text) return `${open}<div class="division-markdown">${billNoteHTML(names.text)}</div></section>`;
+  const who = (list) => list.map((m) => `<li>${m.slug
+    ? `<a href="/subject/person/${encodeURIComponent(m.slug)}">${esc(m.name)}</a>` : esc(m.name)}</li>`).join("");
+  const sides = [["Ayes", names.aye, ayes], ["Noes", names.no, noes], ...(names.paired?.length ? [["Paired, not counted", names.paired, names.paired.length]] : [])];
+  return `${open}<div class="division-sides">${sides.map(([label, list, count]) => `<div>
+        <h4 class="division-side">${label} <span>${Number(count || list.length).toLocaleString()}</span></h4>
+        ${list.length ? `<ul class="division-names" role="list">${who(list)}</ul>` : `<p class="division-none">None named.</p>`}</div>`).join("")}</div>
+      ${names.missingParts ? `<p class="division-none">Part of this list could not load just now.</p>` : ""}
+    </section>`;
 }
 
 function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
@@ -12468,11 +12537,8 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
     </div>`;
   $("doc-bill").hidden = false;
   $("doc-bill").querySelector('[data-more-action="copy-division"]')?.addEventListener("click", (e) => copyText(siteUrl(`/doc/${slug}`), e.currentTarget));
-  const members = Array.isArray(d.members) ? d.members : [];
-  const named = (vote) => members.filter((m) => m.vote === vote);
-  const who = (list) => list.map((m) => `<li>${m.person_slug
-    ? `<a href="/subject/person/${encodeURIComponent(m.person_slug)}">${esc(m.name)}</a>` : esc(m.name)}</li>`).join("");
-  const votes = [["Ayes", named("aye"), ayes], ["Noes", named("no"), noes]];
+  const members = (Array.isArray(d.members) ? d.members : []).filter((m) => m?.name);
+  const absent = members.filter((m) => m.vote === "absent").length;
   const split = entry ? billSplitParts(entry) : null;
   const meta = d._meta || {};
   const retrieved = meta.member_retrieved_at || "";
@@ -12481,23 +12547,26 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
       <h3 class="subject-section-title" id="division-split-head">How the parties voted</h3>
       ${split.drawn}${split.restCount ? `<details class="bill-division-more"><summary>${split.restCount} more ${split.restCount === 1 ? "party" : "parties"}</summary>${split.rest}</details>` : ""}${split.notes}
     </section>` : ""}
-    ${members.length ? `<section class="division-block division-members" aria-labelledby="division-members-head">
+    <section class="division-block division-members" id="division-members" aria-labelledby="division-members-head" aria-busy="true">
       <h3 class="subject-section-title" id="division-members-head">Who voted which way</h3>
-      <div class="division-sides">${votes.map(([label, list, count]) => `<div>
-        <h4 class="division-side">${label} <span>${count.toLocaleString()}</span></h4>
-        ${list.length ? `<ul class="division-names" role="list">${who(list)}</ul>` : `<p class="division-none">None named.</p>`}</div>`).join("")}</div>
-    </section>` : ""}
+      <p class="status">Reading the member list…</p>
+    </section>
     ${question ? `<details class="division-question bill-division-more"><summary>The question</summary><div class="division-markdown">${billNoteHTML(question)}</div></details>` : ""}
     ${sourceLineHTML({
       updated: retrieved, dateLabel: retrieved ? "Retrieved" : "Updated", source: "They Vote For You",
       originals: [safeUrl(d.source_url) && { label: "The count on They Vote For You", href: d.source_url }, ...bills.map((b) => ({ label: b.title, href: `/bill/${encodeURIComponent(b.key)}` }))].filter(Boolean),
       notes: [
-        members.length ? `${members.length} members named; ${named("absent").length} absent.` : "Member votes are not in this release; the counts and the party split are.",
+        members.length ? `${members.length} members named; ${absent} absent.` : "The names are read from the division's own record in the OPAX index; the export lists only the counts.",
         "Party is each member's recorded affiliation on the day where it was observed. A division on an amendment is not a vote on the bill itself.",
       ],
     })}
   </div>`;
   if (manageFocus) $("doc-title").focus();
+  loadDivisionNames(slug, d).then((names) => {
+    if (currentDocSlug !== slug) return; // the reader has moved on
+    const slot = $("division-members");
+    if (slot) slot.outerHTML = divisionMembersHTML(names, { ayes, noes });
+  });
 }
 
 async function openDocPage(slug, manageFocus) {
