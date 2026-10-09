@@ -6,7 +6,7 @@ let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels, source lines and ⋯ (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = import("/growth-modules.js?v=20261010-1").then(module => { growthModules = module; });
+const growthModulesReady = import("/growth-modules.js?v=20261010-2").then(module => { growthModules = module; });
 let uiLabels;
 const uiLabelsReady = import('/labels.js?v=804befe8de').then(module => { uiLabels = module; });
 let attributionHelpers;
@@ -5105,7 +5105,9 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
   const jurName = (j) => STATE_NAMES[j] || String(j || "").toUpperCase();
   const all = recs.flatMap(r => ["for", "against"].flatMap(field => (r[field] || []).map(d => ({...d, jur: d.jur || r.jurisdiction, vote: field === "for" ? "Voted for" : "Voted against"}))));
   const latestBills = growthModules.latestBillVotes(all);
-  onRecord({votes: latestBills});
+  const billIndex = await loadBillsIndex().catch(() => null);
+  if (currentSubjectKey !== key || !slot.isConnected) return;
+  onRecord({votes: latestBills, bills: billIndex?.bills || []});
   Object.assign(slot.dataset, {module: "latest_bills", pageType: "person", modulePosition: "2"});
   const billRow = d => `<li data-bill-name="${esc(d.name)}" data-bill-jur="${esc(d.jur)}"><a class="source-title" href="${esc(searchHash(`"${d.name}"`, {}))}">${esc(billQuestion(d.name))}</a>
     <span class="result-meta">${esc(d.vote)} · ${esc(fmtDate(d.date))}${d.stage ? ` · ${esc(d.stage)}` : ""}${jurs.length > 1 ? ` · ${esc(jurName(d.jur))}` : ""}</span></li>`;
@@ -5622,13 +5624,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   const updateQuestions = (record) => {
     if (currentSubjectKey !== key) return;
     Object.assign(askRecord, record);
-    const list = body.querySelector(".growth-questions");
-    if (!list) return;
-    // Append arriving suggestions without replacing a focused link.
-    for (const question of growthModules.personQuestions(askRecord)) {
-      if ([...list.querySelectorAll("a")].some(a => a.textContent === question)) continue;
-      list.insertAdjacentHTML("beforeend", growthModules.questionsHTML([question], "person"));
-    }
+    appendGrowthQuestions(body, growthModules.personQuestions(askRecord), "person");
   };
   wireGrowthAsk(body);
   const fitsRow = fitsInfoRow(fits, "people", name);
@@ -5638,10 +5634,13 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // The structured record first; the speeches follow it.
   // Each source renders independently. The topic section reserves its chart
   // space, so slower topic requests never hold back votes or other records.
-  renderPersonTopics(name, sections, updateQuestions).then(() => refreshEntryRail(sections));
+  const topicQuestions = renderPersonTopics(name, sections, updateQuestions).then(() => refreshEntryRail(sections));
   // Records by the roster's verified pid (none for a print that holds more than one person).
-  renderPersonVotes(name, roster?.pid ?? null, sections, updateQuestions).then(() => refreshEntryRail(sections));
-  renderPersonInterests(name, roster?.pid ?? null, sections, updateQuestions).then(() => refreshEntryRail(sections));
+  const voteQuestions = renderPersonVotes(name, roster?.pid ?? null, sections, updateQuestions).then(() => refreshEntryRail(sections));
+  const interestQuestions = renderPersonInterests(name, roster?.pid ?? null, sections, updateQuestions).then(() => refreshEntryRail(sections));
+  Promise.allSettled([topicQuestions, voteQuestions, interestQuestions]).then(() => {
+    if (currentSubjectKey === key) body.querySelector(".growth-ask")?.setAttribute("data-questions-ready", "true");
+  });
   renderPersonSpeeches(speechSpeaker, speeches, chambers, sections, { scope: speechScope }).then(() => refreshEntryRail(sections));
   renderPersonDiary(name, sections, chambers).then(() => { polishPersonSections(sections); refreshEntryRail(sections); });
   const news = document.createElement("section");
@@ -5676,6 +5675,21 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   if (!mentions.querySelector(".subject-list")) mentions.remove();
   polishPersonSections(sections);
   refreshEntryRail(sections);
+}
+
+function appendGrowthQuestions(root, questions, pageType) {
+  const list = root.querySelector(".growth-questions");
+  if (!list) return;
+  const field = root.querySelector('#growth-ask-input');
+  const key = value => String(value || "").replace(/\s+/g, " ").trim().toLowerCase();
+  const seen = new Set([...list.querySelectorAll("a")].map(a => key(new URL(a.href).searchParams.get("q"))));
+  seen.add(key(field?.value));
+  // Full questions identify links; shortened labels never replace a focused link.
+  for (const question of questions) {
+    if (seen.has(key(question.question))) continue;
+    seen.add(key(question.question));
+    list.insertAdjacentHTML("beforeend", growthModules.questionsHTML([question], pageType));
+  }
 }
 
 function wireGrowthAsk(root) {
@@ -8422,7 +8436,7 @@ async function openBill(key, manageFocus) {
       ${billRelatedHTML(bill)}
       ${actions}
     </div>
-    ${growthModules.askBlockHTML({bill, pageType: "bill", seed: `What changes does the ${billName(bill)} propose?`, questions: growthModules.billQuestions(bill)})}
+    ${growthModules.askBlockHTML({bill, pageType: "bill", questions: growthModules.billQuestions(bill)})}
     ${billSummaryHTML(bill)}
     <div id="bill-text-slot"><div class="answer-skeleton bill-text-skeleton" aria-hidden="true"><i style="width:65%"></i><i style="width:95%"></i><i style="width:78%"></i></div><p class="visually-hidden" role="status">Checking published bill text</p></div>
     ${billTimelineHTML(bill)}
@@ -8452,6 +8466,8 @@ async function openBill(key, manageFocus) {
 async function renderOtherSponsorBills(bill, body, view, generation) {
   const [index, roster] = await Promise.all([loadBillsIndex(), loadParliamentarians()]);
   if (billView !== view || generation !== billTextGeneration || !body.isConnected) return;
+  appendGrowthQuestions(body, growthModules.billQuestions(bill, roster?.people || []), "bill");
+  body.querySelector(".growth-ask")?.setAttribute("data-questions-ready", "true");
   const rows = growthModules.otherSponsorBills(bill, index?.bills || [], roster?.people || []);
   const slot = body.querySelector("#bill-sponsor-others");
   if (!slot) return;

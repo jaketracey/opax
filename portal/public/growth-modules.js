@@ -1,6 +1,6 @@
 /* Record-based landing modules. No generated answers or guessed identities. */
 import { sourceLineHTML } from './labels.js';
-import { sponsorPerson } from './sponsor-person.js';
+import { sponsorPerson, sponsorKey } from './sponsor-person.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const text = value => typeof value === 'string' ? value.trim() : '';
 export const ASSOCIATION_NOTE = 'An association does not prove influence.';
@@ -11,40 +11,67 @@ export function askEntry(question, pageType) {
   return `/ask?${new URLSearchParams({q:question,from:pageType})}`;
 }
 /** Counted topics only; a topic inferred from a title is not a most-frequent topic. */
-export function personQuestions({name, topics = [], votes = [], interests = null} = {}) {
+export function personQuestions({name, topics = [], votes = [], bills = [], interests = null} = {}) {
   if (!text(name)) return [];
   const questions = [];
   const topic = [...topics].filter(t => text(t.name) && Number(t.count)>0).sort((a,b)=>Number(b.count)-Number(a.count)||a.name.localeCompare(b.name))[0];
-  if (topic) questions.push(`What has ${name} said about ${topic.name}?`);
+  if (topic) questions.push(suggestion(`What has ${name} said about ${topic.name}?`));
   const latest = latestBillVotes(votes)[0];
-  if (latest) questions.push(`How did ${name} vote on ${latest.name}?`);
-  if (Number(interests?.total)>0 && interests?.buckets && Object.values(interests.buckets).some(b=>Number(b.count)>0)) questions.push(`What interests has ${name} declared?`);
+  if (latest) {
+    // Typography differs between Hansard and the bill export; identity still
+    // requires an exact title in the same jurisdiction, with one match.
+    const key = value => text(value).replace(/[’‘]/g,"'").replace(/\s+/g,' ').toLowerCase();
+    const matches = bills.filter(b=>b.jurisdiction===latest.jur && [b.title,...(b.aliases || [])].some(t=>key(t)===key(latest.name)));
+    const record = matches.length===1 ? matches[0] : latest;
+    const short = text(record.short_title) || text(record.title) || latest.name;
+    questions.push(suggestion(`How did ${name} vote on ${latest.name}?`,`How did ${name} vote on ${short}?`));
+  }
+  if (Number(interests?.total)>0 && interests?.buckets && Object.values(interests.buckets).some(b=>Number(b.count)>0)) questions.push(suggestion(`What interests has ${name} declared?`));
   return questions;
 }
-export function billQuestions(bill = {}) {
+export function billQuestions(bill = {}, people = []) {
   const name = text(bill.title) || text(bill.short_title);
   if (!name) return [];
+  const short = text(bill.short_title) || name;
   const questions = [];
-  if ((bill.sources || []).some(s=>['em','billhome','text'].includes(s.kind) && /^https?:\/\//.test(s.url || ''))) questions.push(`What changes does the ${name} propose?`);
-  if ((bill.divisions || []).length) questions.push(`How did each party vote on the ${name}?`);
-  else if ((bill.speeches || []).some(s=>s.slug)) questions.push(`What has parliament said about the ${name}?`);
+  if ((bill.divisions || []).length) questions.push(suggestion(`How did each party vote on the ${name}?`,`How did each party vote on the ${short}?`));
+  const sponsor = sponsorPerson(bill.sponsor,bill.sponsor_person_id,people);
+  if (sponsor && (bill.speeches || []).some(s=>text(s.slug) && [sponsor.name,sponsor.full].filter(Boolean).some(n=>sponsorKey(n)===sponsorKey(s.speaker)))) {
+    questions.push(suggestion(`What has ${sponsor.name} said about the ${name}?`,`What has ${sponsor.name} said about the ${short}?`));
+  }
   return questions.slice(0,2);
 }
-export function askBlockHTML({name = '', bill = null, questions = [], pageType, seed} = {}) {
+/** Only the drawn label is shortened; Ask receives the complete question. */
+export function questionLabel(value, limit = 100) {
+  const label = text(value).replace(/\s+/g,' ');
+  if (label.length<=limit) return label;
+  const words = label.slice(0,limit).replace(/\s+\S*$/,'').trimEnd();
+  return (words || label.split(' ')[0])+'…';
+}
+const suggestion = (question,label=question) => ({question,label:questionLabel(label)});
+const questionKey = value => text(value).replace(/\s+/g,' ').toLowerCase();
+export function askBlockHTML({name = '', bill = null, questions = [], pageType, seed = ''} = {}) {
   const heading = bill ? 'Ask what this bill changes' : `Ask about ${name}`;
   return `<section class="growth-ask" ${moduleAttrs('ask',pageType,1)} aria-labelledby="growth-ask-title">
     <h3 id="growth-ask-title">${esc(heading)}</h3>
     <form class="growth-ask-form" action="/ask" method="get">
       <label class="visually-hidden" for="growth-ask-input">Your question</label>
-      <textarea class="ui-input grow-field" id="growth-ask-input" name="q" rows="1" autocomplete="off" required>${esc(seed)}</textarea>
+      <textarea class="ui-input grow-field" id="growth-ask-input" name="q" rows="1" autocomplete="off" placeholder="${bill ? 'What does this bill change?' : 'Your question about '+esc(name)}" required>${esc(bill ? '' : seed)}</textarea>
       <input type="hidden" name="from" value="${esc(pageType)}">
       <button class="ui-button" data-variant="primary" type="submit">Ask</button>
     </form>
-    <ul class="growth-questions" role="list">${questionsHTML(questions,pageType)}</ul>
+    <ul class="growth-questions" role="list">${questionsHTML(questions,pageType,bill ? '' : seed)}</ul>
   </section>`;
 }
-export function questionsHTML(questions, pageType) {
-  return questions.map(q=>`<li><a class="ui-button" href="${esc(askEntry(q,pageType))}" rel="nofollow">${esc(q)}</a></li>`).join('');
+export function questionsHTML(questions, pageType, seed = '') {
+  const seen = new Set([questionKey(seed)]);
+  return questions.flatMap(q=>{
+    const {question,label} = typeof q==='string' ? suggestion(q) : q;
+    const key = questionKey(question);
+    if (seen.has(key)) return [];
+    seen.add(key);
+    return [`<li><a class="ui-button" href="${esc(askEntry(question,pageType))}" rel="nofollow">${esc(questionLabel(label || question))}</a></li>`];
+  }).join('');
 }
 /** Latest vote per bill, including both sides, without changing votes.json. */
 export function latestBillVotes(votes = []) {

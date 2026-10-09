@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
-import {personQuestions,billQuestions,askBlockHTML,latestBillVotes,recentSittingSpeeches,exactOrganisationDonors,donationRegisterHTML,otherSponsorBills,askPageType,ASSOCIATION_NOTE} from '../public/growth-modules.js';
+import {personQuestions,billQuestions,askBlockHTML,questionsHTML,latestBillVotes,recentSittingSpeeches,exactOrganisationDonors,donationRegisterHTML,otherSponsorBills,askPageType,ASSOCIATION_NOTE} from '../public/growth-modules.js';
 import {agencySuppliers,agencyGrants,agencyGrantsHTML} from '../public/supplier-growth.js';
 import {cleanEvent} from '../analytics/privacy.mjs';
 const read = f=>readFileSync(new URL(f,import.meta.url),'utf8');
@@ -12,17 +12,62 @@ const votes=[{name:'Old Bill',date:'2025-01-01'},{name:'New Bill',date:'2026-10-
 test('person questions require counted topics, dated bill votes and actual interests',()=>{
  assert.deepEqual(personQuestions({name}),[]);
  assert.deepEqual(personQuestions({name,topics:[{name:'Housing',count:0}],votes:[{name:'No date'}],interests:{total:0,buckets:{}}}),[]);
- assert.deepEqual(personQuestions({name,topics:[{name:'Health',count:2},{name:'Housing',count:10}],votes,interests:{total:1,buckets:{gifts:{count:1}}}}),[
+ assert.deepEqual(personQuestions({name,topics:[{name:'Health',count:2},{name:'Housing',count:10}],votes,interests:{total:1,buckets:{gifts:{count:1}}}}).map(q=>q.question),[
   `What has ${name} said about Housing?`,`How did ${name} vote on New Bill?`,`What interests has ${name} declared?`]);
  assert.deepEqual(personQuestions({}),[]);
  assert.equal(personQuestions({name,interests:{total:2,buckets:{}}}).length,0);
 });
-test('bill questions are supported by source material, speeches or divisions, including zero',()=>{
- assert.deepEqual(billQuestions({title:'A Bill'}),[]);
+test('bill questions need divisions or the resolved sponsor’s linked speeches, including zero',()=>{
+ const roster=[{name:'Andrew Gee',pid:'1',speeches:10}];
+ const bill={title:'A Bill',sponsor:'GEE, Andrew, MP'};
+ assert.deepEqual(billQuestions(bill,roster),[]);
  assert.deepEqual(billQuestions({}),[]);
- assert.deepEqual(billQuestions({title:'A Bill',sources:[{kind:'em',url:'javascript:bad'}]}),[]);
- assert.deepEqual(billQuestions({title:'A Bill',sources:[{kind:'em',url:'https://example.gov/'}],divisions:[{date:'2026-10-08'}]}),['What changes does the A Bill propose?','How did each party vote on the A Bill?']);
- assert.equal(billQuestions({title:'A Bill',speeches:[{slug:'speech-1'}]}).length,1);
+ // Source material alone supplies the placeholder, never a redundant chip.
+ assert.deepEqual(billQuestions({...bill,sources:[{kind:'em',url:'https://example.gov/'}]},roster),[]);
+ const complete={...bill,divisions:[{date:'2026-10-08'}],speeches:[{slug:'speech-1',speaker:'Andrew Gee'}]};
+ assert.deepEqual(billQuestions(complete,roster).map(q=>q.question),['How did each party vote on the A Bill?','What has Andrew Gee said about the A Bill?']);
+ for(const speeches of [[{slug:'speech-1',speaker:'Someone Else'}],[{speaker:'Andrew Gee'}],[{slug:'speech-1',speaker:'Gee'}]]) {
+  assert.deepEqual(billQuestions({...bill,speeches},roster),[]);
+ }
+ assert.deepEqual(billQuestions({...complete,sponsor:'Gee'},roster).map(q=>q.question),['How did each party vote on the A Bill?']);
+ assert.deepEqual(billQuestions({...complete,sponsor_person_id:'wrong'},roster).map(q=>q.question),['How did each party vote on the A Bill?']);
+});
+test('short vote labels use exact bill exports while Ask keeps the complete name',()=>{
+ const full='The Extremely Long Official Name of a Bill About Housing and Other Matters Including Funding Across the Nation Bill 2026';
+ const vote={name:full,date:'2026-10-08',jur:'federal'};
+ for (const fields of [{title:'Housing Bill'},{short_title:'Housing Bill'}]) {
+  const q=personQuestions({name,votes:[{...vote,...fields}]})[0];
+  assert.equal(q.label,`How did ${name} vote on Housing Bill?`);
+  assert.equal(q.question,`How did ${name} vote on ${full}?`);
+ }
+ const record={title:full,short_title:'Housing Bill',jurisdiction:'federal'};
+ const q=personQuestions({name,votes:[vote],bills:[record]})[0];
+ assert.equal(q.label,`How did ${name} vote on Housing Bill?`);
+ const fallback=personQuestions({name,votes:[vote],bills:[{...record,jurisdiction:'nsw'}]})[0];
+ assert.ok(fallback.label.endsWith('…'));
+ assert.ok(fallback.label.length<=101);
+ assert.ok(fallback.question.startsWith(fallback.label.slice(0,-1)+' '));
+ const html=questionsHTML([fallback],'person');
+ const href=html.match(/href="([^"]+)"/)[1].replaceAll('&amp;','&');
+ assert.equal(new URL(href,'https://local.test').searchParams.get('q'),fallback.question);
+ assert.match(html,/rel="nofollow"/);
+});
+test('Ask placeholders and suggestions never duplicate a seed or each other',()=>{
+ const person=askBlockHTML({name,pageType:'person',seed:'What has Alex Example said about housing?',questions:['What has Alex Example said about housing?','What interests has Alex Example declared?','What interests has Alex Example declared?']});
+ assert.equal((person.match(/<a /g)||[]).length,1);
+ const bill=askBlockHTML({bill:{title:'A Bill'},pageType:'bill',seed:'A stale seed'});
+ assert.match(bill,/placeholder="What does this bill change\?" required><\/textarea>/);
+ assert.doesNotMatch(bill,/A stale seed/);
+ assert.match(bill,/<ul class="growth-questions" role="list"><\/ul>/);
+ const runtime=app.slice(app.indexOf('function appendGrowthQuestions('),app.indexOf('function wireGrowthAsk('));
+ const links=[];
+ const list={querySelectorAll:()=>links,insertAdjacentHTML:(_,html)=>{const href=html.match(/href="([^"]+)"/)[1].replaceAll('&amp;','&');links.push({href:new URL(href,'https://local.test').href});}};
+ const root={querySelector:selector=>selector==='.growth-questions'?list:{value:'Seed question?'}};
+ const {appendGrowthQuestions}=runInNewContext(runtime+';({appendGrowthQuestions})',{URL,growthModules:{questionsHTML}});
+ const suggestions=['Seed question?','Other question?','Other question?'].map(question=>({question,label:question}));
+ appendGrowthQuestions(root,suggestions,'person');
+ appendGrowthQuestions(root,suggestions,'person');
+ assert.equal(links.length,1);
 });
 test('Ask module escapes record text, seeds the field and marks every question nofollow',()=>{
  const html=askBlockHTML({name:'Alex <Example>',pageType:'person',seed:'Alex "Example"',questions:['One & two?','Another?']});
