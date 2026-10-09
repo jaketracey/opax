@@ -273,6 +273,17 @@ export default function YourMP() {
               disabled={saving}
             />
           ) : null}
+          {/* The state district from the same tap, on the device against
+              bundled outlines (TestFlight build 32). The name search below
+              stays the fallback, including when permission is denied. */}
+          {stateChoosing && view ? (
+            <LocationSuggestion
+              scope="state"
+              seats={view.verifiedStateSeats}
+              onConfirm={(seat) => void choose(seat)}
+              disabled={saving}
+            />
+          ) : null}
           <Field
             label="Electorate or member’s name"
             hint="Your choice is saved on this device. Device backups may include it."

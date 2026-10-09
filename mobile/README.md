@@ -629,6 +629,8 @@ directory link without inventing a canonical release ID.
 
 The cached seat file now draws a tile-free Skia outline. Your MP can suggest a federal seat from one foreground location fix, entirely on the iPhone, with explicit confirmation. See [IOS-ELECTORATE-MAP.md](../docs/IOS-ELECTORATE-MAP.md) for display limitations, privacy, cache budget, download measurement and the compact-file proposal. Journey 24 sets a simulated fix per case through the harness; `OPAX_VERIFY_MAP_OFFLINE=1` adds a stopped-fixture map check.
 
+The state chooser makes the same suggestion for a state or territory district (TestFlight build 32), with no request at all: the outlines of all 415 current lower-house districts are bundled (`src/features/electorate-map/state-outlines.json`, 0.87 MB, 0.34 MB compressed; ABS SED 2025 statistical approximations, CC BY 4.0, credited in Sources and licences). The permission is asked only at the tap; denied, border and no-match results point to the name search. Regenerate after a new electorate release with `node scripts/generate-state-outlines.mjs` (checked-in `portal/public` only); `tests/state-location.test.tsx` fails until the bundle matches the pinned release. Journey `24-electorate-map-state` sets a Moonee Ponds fix (inside Essendon).
+
 ## Native party page
 
 Recorded party labels push `/party/<slug>` in the current tab's stack. Independent,
