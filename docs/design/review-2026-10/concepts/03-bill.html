@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en-AU"><head><meta charset="utf-8"><title>Concept 3: Bill page</title>
+<link rel="stylesheet" href="wire.css">
+<style>
+  .ruler { display: flex; align-items: center; gap: 0; margin: 14px 0 6px; }
+  .ruler i { width: 10px; height: 10px; border-radius: 50%; background: var(--bills-ink); flex: none; }
+  .ruler b { flex: 1; height: 2px; background: var(--bills-ink); }
+  .ruler-l { display: flex; justify-content: space-between; font: 400 13px/18px var(--sans); color: var(--ink-soft); }
+  .div { padding: 14px 0; }
+  .div + .div { border-top: 1px solid var(--divider-subtle); }
+  .div .t-sub { margin: 6px 0 2px; }
+  .div .split { grid-template-columns: 92px 1fr 52px; min-height: 24px; }
+  .disc { display: flex; justify-content: space-between; align-items: center; min-height: 44px; font: 600 15px/1 var(--sans); color: var(--navy); }
+  .disc::after { content: '›'; font: 400 22px/1 var(--sans); color: var(--ink-faint); }
+  ul.bul { list-style: none; margin-top: 6px; }
+  ul.bul li { position: relative; padding-left: 16px; font: 400 16px/23px var(--sans); margin-bottom: 4px; }
+  ul.bul li::before { content: ''; position: absolute; left: 2px; top: 9px; width: 5px; height: 5px; border-radius: 50%; background: var(--bills-ink); }
+  .row2 { display: grid; grid-template-columns: 560px 560px 1fr; gap: 28px; margin-top: 34px; align-items: start; }
+  .wdiv { width: 560px; height: 790px; overflow: hidden; border-radius: 8px; box-shadow: 0 0 0 1px #CFCBC0; background: var(--paper); }
+  .wdiv .inner { width: 780px; transform: scale(0.718); transform-origin: top left; padding: 24px 32px; }
+  .wdiv .split { grid-template-columns: 120px 1fr 60px; }
+</style></head>
+<body><div class="board">
+  <div class="board-head"><h1>Concept 3 · Bill page</h1><span class="platform">iPhone (Android identical) · web divisions block</span></div>
+  <p class="board-goal">Status, title and one meta line; then In short, How it moved and the divisions, each closing on one source line. A division is titled by its recorded stage and outcome, not by the first sentence the presiding officer said; the procedural words and amendment text move behind "The question".</p>
+  <div class="cols">
+    <div>
+      <p class="col-label"><b>Before</b> · iPhone, bill top (build 17/18, Jake's TestFlight capture) and divisions (build 11)</p>
+      <div class="before"><img src="../app/iphone-bill-top-b17.png" alt="">
+        <span class="mk" style="left:18%;top:14.6%">1</span>
+        <span class="mk" style="left:60%;top:41.6%">2</span>
+        <span class="mk" style="left:88%;top:52.2%">3</span>
+        <span class="mk" style="left:88%;top:60.5%">3</span>
+        <span class="mk" style="left:60%;top:76%">4</span>
+      </div>
+      <div class="before" style="margin-top:14px"><img src="../app/iphone-bill-divisions-b11.png" alt="">
+        <span class="mk" style="left:84%;top:17.5%">5</span>
+        <span class="mk" style="left:60%;top:35%">6</span>
+        <span class="mk" style="left:80%;top:55.5%">7</span>
+      </div>
+    </div>
+    <div>
+      <p class="col-label"><b>After</b> · iPhone wireframe (the bill from the web capture)</p>
+      <div class="phone"><div class="clip" style="max-height:1745px">
+        <div class="sbar"><span>9:41</span><span>●●●</span></div>
+        <div class="navbar"><span class="back">‹ Bills</span><div class="icons"><span class="circ">⇪</span><span class="circ">⋯</span></div></div>
+        <div class="screen">
+          <div style="margin-top:6px"><span class="status st-done">Passed</span> <span class="t-fine">26 Aug 2026</span></div>
+          <div class="t-title" style="margin:8px 0 6px">Interactive Gambling (Cost Recovery Levy) Bill 2026</div>
+          <div class="t-meta">Introduced 17 Aug 2026 · House of Representatives</div>
+          <div style="display:flex;gap:8px;margin-top:14px"><span class="btn secondary sm">+ Follow</span><span class="btn secondary sm">Ask about this</span></div>
+
+          <div class="section" data-accent="bills">
+            <div class="t-heading">In short</div>
+            <span class="machine">Machine-written</span>
+            <p class="t-body" style="margin-top:10px">This bill would charge licensed online wagering providers a levy to fund regulation of wagering advertising.</p>
+            <div class="t-label" style="margin-top:12px">What it changes</div>
+            <ul class="bul"><li>Makes providers that operated during all or part of a levy period liable for that period's levy.</li><li>Limits total collections to eligible register and advertising-regulation costs.</li></ul>
+            <div class="disc">2 more changes</div>
+            <div class="src" style="margin-top:4px">Explanatory memorandum · <b>Parliament of Australia</b></div>
+          </div>
+
+          <div class="section" data-accent="bills">
+            <div class="t-heading">How it moved</div>
+            <div class="ruler"><i></i><b></b><i></i><b></b><i></i><b></b><i></i></div>
+            <div class="ruler-l"><span>Introduced 17 Aug</span><span>Senate 19 Aug</span><span>Assent 26 Aug</span></div>
+            <div class="disc" style="margin-top:6px">All 9 stages</div>
+          </div>
+
+          <div class="section" data-accent="votes">
+            <div class="t-heading">Divisions</div>
+            <div class="div">
+              <span class="status st-ended">Negatived</span> <span class="t-strong tab" style="font-size:15px">11 ayes, 24 noes</span>
+              <div class="t-sub">Limitation of debate</div>
+              <div class="t-fine" style="margin-bottom:8px">Senate · 19 Aug 2026</div>
+              <div class="split"><span class="party labor">Labor</span><span class="bar"><i class="no" style="width:100%"></i></span><span class="n">0–21</span></div>
+              <div class="split"><span class="party greens">Greens</span><span class="bar"><i style="width:43%"></i></span><span class="n">9–0</span></div>
+              <div class="split"><span class="party liberal">Liberal</span><span class="bar"><i class="no" style="width:14%"></i></span><span class="n">0–3</span></div>
+              <div class="disc">The question · 2 more parties</div>
+            </div>
+            <div class="div">
+              <span class="status st-done">Agreed to</span> <span class="t-strong tab" style="font-size:15px">29 ayes, 13 noes</span>
+              <div class="t-sub">Limitation of debate</div>
+              <div class="t-fine">Senate · 19 Aug 2026</div>
+            </div>
+            <div class="src">Division lists · <b>Parliament of Australia</b></div>
+          </div>
+        </div>
+      </div>
+      <div class="fade"></div>
+      <div class="tabbar"><span>Today</span><span>Your MP</span><span class="on">Bills</span><span>Search</span><span>Ask</span></div>
+      </div>
+    </div>
+    <div class="notes">
+      <h2>Keep</h2>
+      <ul>
+        <li><span class="n" style="background:var(--money-ink)">✓</span>Status as a word with its date, the title, In short with its machine label, the stage history, every division with its party splits (dot, name, bar, counts), What was said and What became law.</li>
+        <li><span class="n" style="background:var(--money-ink)">✓</span>"Sponsor not recorded" stays a distinct state, said once in the source sheet, not as a fake party chip ("· NOT RECORDED" on the web).</li>
+      </ul>
+      <h2>Merge or demote</h2>
+      <ol>
+        <li><span class="n">2</span><span class="k">Meta.</span> Introduced, sponsor and portfolio lines (three on iPhone; a stray leading "·" on the web) become one meta line.</li>
+        <li><span class="n">3</span><span class="k">Actions.</span> Follow and Ask about this are the two pills; Read the bill text, Share and Open on the web sit behind ⋯. The web's four buttons at the top and three at the foot become one row: Ask about this bill, then ⋯ (Search the record, Official bill home ↗).</li>
+        <li><span class="n">6</span><span class="k">Stages.</span> Nine stage rows, each with its own ↗, become a ruler and "All 9 stages" (links kept inside).</li>
+        <li><span class="n">7</span><span class="k">Splits.</span> Show the three largest parties; the rest and the question text sit behind one disclosure.</li>
+      </ol>
+      <h2>Remove</h2>
+      <ol>
+        <li><span class="n">1</span>The "Bill" kicker (the nav and breadcrumb already say where you are).</li>
+        <li><span class="n">4</span>"Machine summary" badge plus a two-line attribution with three source links: the pill opens them.</li>
+        <li><span class="n">5</span>A lone ⓘ above the title; its note joins the divisions' source sheet.</li>
+        <li><span class="n">8</span>Raw Hansard as the division title ("Sue Lines Pursuant to the order agreed to on 18 August…"); the whole circulated amendment and a speech printed above the bars.</li>
+        <li><span class="n">·</span>A failed "Bill text could not be checked / Check again" block: a failed optional block collapses.</li>
+      </ol>
+      <div class="count">
+        <div><b>7 → 2</b><span>action buttons (web)</span></div>
+        <div><b>~12 → 4</b><span>"View original" links (app)</span></div>
+        <div><b>5 → 0</b><span>fine-print paragraphs on screen (web)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row2">
+    <div>
+      <p class="col-label"><b>Before</b> · web 1280px divisions block (main a3aa6532)</p>
+      <div class="before web" style="width:560px"><img src="../web/bill-1280-divisions.png" alt="">
+        <span class="mk" style="left:93%;top:6%">8</span>
+        <span class="mk" style="left:58%;top:12%">10</span>
+        <span class="mk" style="left:93%;top:23%">8</span>
+        <span class="mk" style="left:93%;top:63%">8</span>
+      </div>
+    </div>
+    <div>
+      <p class="col-label"><b>After</b> · web divisions wireframe (same scale)</p>
+      <div class="wdiv"><div class="inner">
+        <div class="t-heading" style="margin-bottom:6px">Divisions</div>
+                <div class="div">
+          <span class="status st-ended">Negatived</span> <span class="t-strong tab" style="font-size:15px">11 ayes, 24 noes</span>
+          <div class="t-sub">Limitation of debate</div>
+          <div class="t-fine" style="margin-bottom:8px">Senate · 19 Aug 2026 · <a class="u">The count ↗</a></div>
+          <div class="split"><span class="party labor">Labor</span><span class="bar"><i class="no" style="width:100%"></i></span><span class="n">0–21</span></div>
+          <div class="split"><span class="party greens">Greens</span><span class="bar"><i style="width:43%"></i></span><span class="n">9–0</span></div>
+          <div class="split"><span class="party liberal">Liberal</span><span class="bar"><i class="no" style="width:14%"></i></span><span class="n">0–3</span></div>
+          <div class="disc">The question · 2 more parties</div>
+        </div>
+        <div class="div">
+          <span class="status st-done">Agreed to</span> <span class="t-strong tab" style="font-size:15px">29 ayes, 13 noes</span>
+          <div class="t-sub">Limitation of debate</div>
+          <div class="t-fine" style="margin-bottom:8px">Senate · 19 Aug 2026 · <a class="u">The count ↗</a></div>
+          <div class="split"><span class="party labor">Labor</span><span class="bar"><i style="width:100%"></i></span><span class="n">21–0</span></div>
+          <div class="split"><span class="party greens">Greens</span><span class="bar"><i class="no" style="width:43%"></i></span><span class="n">0–9</span></div>
+          <div class="split"><span class="party onp">One Nation</span><span class="bar"><i style="width:19%"></i></span><span class="n">4–0</span></div>
+          <div class="disc">The question · 2 more parties</div>
+        </div>
+        <div class="div"><span class="status st-ended">Negatived</span> <span class="t-strong tab" style="font-size:15px">11 ayes, 29 noes</span><div class="t-sub">In committee</div><div class="t-fine">Senate · 19 Aug 2026</div></div>
+        <div class="src">Ayes and noes are each division's own totals · <b>How votes are counted</b></div>
+      </div></div>
+    </div>
+    <div class="notes">
+      <h2>Web divisions</h2>
+      <ol>
+        <li><span class="n">8</span>The title is the presiding officer's first sentence with the speaker's name run in ("Sue Lines Pursuant to…", "Mehreen Faruqi I'm not a betting woman…"); the full amendment and a whole speech print above the bars. Title the division by its recorded stage; put the question behind a disclosure. Dropping the stray speaker names from the text is a data fix for the bills export.</li>
+        <li><span class="n">10</span>"The count ↗" moves onto the date line; the outcome becomes a status label (word plus tone), so ayes and noes read at a glance.</li>
+        <li><span class="n">·</span>The four-sentence note under the list ("Ayes and noes are the division's own totals…") becomes the source line; its full text opens from "How votes are counted".</li>
+      </ol>
+    </div>
+  </div>
+</div></body></html>

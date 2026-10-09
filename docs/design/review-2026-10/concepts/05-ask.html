@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en-AU"><head><meta charset="utf-8"><title>Concept 5: Ask answer</title>
+<link rel="stylesheet" href="wire.css">
+<style>
+  .ans p { font: 400 17px/26px var(--sans); margin-top: 10px; }
+  .people { display: flex; gap: 14px; margin-top: 4px; }
+  .people div { display: flex; align-items: center; gap: 10px; }
+  .dock { position: absolute; left: 14px; right: 14px; bottom: 86px; }
+</style></head>
+<body><div class="board">
+  <div class="board-head"><h1>Concept 5 · Ask answer</h1><span class="platform">iPhone (Android identical) · iPad keeps sources in the side pane</span></div>
+  <p class="board-goal">The question is the heading and the answer follows it. Everything about the answer (its sources, dates, sharing) comes after the answer or behind ⋯, never in four rows above the question.</p>
+  <div class="cols">
+    <div>
+      <p class="col-label"><b>Before</b> · iPhone, build 21 (Jake's TestFlight capture, real data)</p>
+      <div class="before"><img src="../app/iphone-ask-answer-b21.png" alt="">
+        <span class="mk" style="left:60%;top:16%">1</span>
+        <span class="mk" style="left:60%;top:22.4%">1</span>
+        <span class="mk" style="left:40%;top:27.4%">2</span>
+        <span class="mk" style="left:60%;top:32.2%">1</span>
+        <span class="mk" style="left:30%;top:40.2%">3</span>
+        <span class="mk" style="left:42%;top:55.5%">4</span>
+        <span class="mk" style="left:94%;top:59.6%">5</span>
+      </div>
+    </div>
+    <div>
+      <p class="col-label"><b>After</b> · iPhone wireframe</p>
+      <div class="phone"><div class="clip" style="max-height:1000px">
+        <div class="sbar"><span>9:41</span><span>●●●</span></div>
+        <div class="navbar"><span style="font:600 17px/1 var(--sans)">Ask</span><div class="icons"><span class="circ">∿</span><span class="circ">⋯</span></div></div>
+        <div class="screen" style="padding-bottom:200px">
+          <div class="t-heading" style="margin-top:10px">What has David Pocock proposed about housing affordability?</div>
+          <div style="margin-top:12px"><span class="machine">Machine-written</span></div>
+          <div class="ans">
+            <p>David Pocock's housing-affordability proposals centre on using surplus Commonwealth land to require affordable housing in residential developments.</p>
+            <p>He proposes a standard obligation on the Commonwealth and its agencies to include affordable housing when surplus Commonwealth land is disposed of to private entities by sale or long lease <span class="cite">[1]</span>. Under the proposal, a proportion of such developments would normally be reserved for qualifying, income-eligible Australians at below-market rents <span class="cite">[1]</span>.</p>
+          </div>
+          <div class="rows" style="margin-top:16px;border-top:1px solid var(--divider-subtle)">
+            <div class="row chev"><div class="grow t-strong">Sources</div><span class="val">8 records</span></div>
+            <div class="row chev"><span class="portrait"></span><div class="grow"><div class="t-strong">David Pocock</div><span class="party">Independent</span></div></div>
+          </div>
+          <div class="section">
+            <div class="t-sub" style="margin-bottom:6px">Ask next</div>
+            <div class="rows">
+              <div class="row chev"><div class="grow t-body">How has he voted on housing bills?</div></div>
+              <div class="row chev"><div class="grow t-body">What has the government said in reply?</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dock"><div class="composer"><span class="ph">Ask a follow-up</span><span class="send">↑</span></div></div>
+      <div class="tabbar"><span>Today</span><span>Your MP</span><span>Bills</span><span>Search</span><span class="on">Ask</span></div>
+      </div>
+    </div>
+    <div class="notes">
+      <h2>Keep</h2>
+      <ul>
+        <li><span class="n" style="background:var(--money-ink)">✓</span>The question, the answer with numbered citations, the machine label, cited and retrieved sources, the people named (portrait, party dot and name), follow-ups, sharing, and the "Understood as" line when OPAX rewrote a follow-up (one fine line under the heading).</li>
+      </ul>
+      <h2>Merge or demote</h2>
+      <ol>
+        <li><span class="n">1</span><span class="k">Utility rows.</span> Retrieved records, Dates in the record and Share answer stack above the question. After the answer there is one "Sources" row (a sheet: cited first, then retrieved, then the dates in the record); Share and Copy go to ⋯.</li>
+        <li><span class="n">2</span><span class="k">"Viewed 8 Oct 2026"</span> joins the sources sheet as the answer's as-at.</li>
+        <li><span class="n">3</span><span class="k">Question shown twice</span> ("High", then "Understood as …"). The rewrite becomes the heading; "You asked: High" is a fine line under it.</li>
+        <li><span class="n">5</span><span class="k">Machine label.</span> "Machine-written from the retrieved passages; not the record." plus an ⓘ becomes the pill (its sheet carries that sentence and the guidance).</li>
+      </ol>
+      <h2>Remove</h2>
+      <ol>
+        <li><span class="n">4</span>The "Answer" heading with its icon tile and ⓘ: the question is the heading.</li>
+        <li><span class="n">·</span>"From the record" as a separate row beside Sources (same destination).</li>
+        <li><span class="n">·</span>The second Composer bound to the same draft (AskScreen renders two); one composer docks above the tab bar.</li>
+      </ol>
+      <h2>Type rule shown here</h2>
+      <p class="t-body" style="font-size:15px;line-height:22px">Serif speaks for the record; sans speaks for OPAX. The answer is machine text, so it is set in Public Sans; a quoted passage from the record (in Sources and in the reader) is Merriweather.</p>
+      <div class="count">
+        <div><b>4 → 0</b><span>rows above the question</span></div>
+        <div><b>2 → 1</b><span>machine-label marks (pill)</span></div>
+        <div><b>2 → 1</b><span>composers</span></div>
+      </div>
+    </div>
+  </div>
+</div></body></html>

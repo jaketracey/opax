@@ -1,0 +1,252 @@
+{
+  "$schema": "https://design-tokens.org/schema/2025",
+  "$description": "OPAX design tokens: one source for the web (portal/public CSS variables) and the app (mobile/src/design, React Native). PROPOSAL from design review pass 1 (docs/design/DESIGN-REVIEW-2026-10.md). Nothing reads this file yet. Pass 2 adds the generator that writes portal/public/tokens.css and mobile/src/design/tokens.generated.ts from it. Values are CSS px on the web and points on iOS / dp on Android: one CSS pixel is one point. A `platform` block overrides a value for one platform; `sizeClass` overrides it at iPad regular width or a web viewport of 701px and over.",
+  "$extensions": {
+    "opax.version": "2026-10-09-proposal",
+    "opax.rules": [
+      "Screens use role names, never hex values.",
+      "One accent per view. The accent belongs to the screen's subject, not to each section.",
+      "Party colour is a dot beside a readable party name, never colour alone, never a chart series.",
+      "inkFaint is for paper and raised surfaces only; use inkSoft on sunken surfaces and washes.",
+      "bronze (#A0761B) is never text. Text that touches the record uses bronzeInk.",
+      "States change roles, never opacity."
+    ]
+  },
+
+  "color": {
+    "$type": "color",
+    "surface": {
+      "paper":  { "$value": "#FAF9F6", "$description": "Page ground." },
+      "raised": { "$value": "#FFFFFF", "$description": "Cards, sheets, fields, popovers." },
+      "sunken": { "$value": "#F1EFE8", "$description": "Subdued surface, pressed rows, empty portrait circle, skeleton bars." }
+    },
+    "text": {
+      "ink":        { "$value": "#23271F", "$description": "Primary text. 14.4:1 on paper." },
+      "inkSoft":    { "$value": "#575C52", "$description": "Secondary text, metadata, fine print. 6.5:1 on paper, 6.0:1 on sunken." },
+      "inkFaint":   { "$value": "#6F7468", "$description": "Tertiary text on paper and raised only (4.56 / 4.80:1). Fails on sunken and on washes." },
+      "onNavy":     { "$value": "#FFFFFF" },
+      "onNavySoft": { "$value": "#B7C6D9", "$description": "Secondary text on navy. 8.4:1." }
+    },
+    "brand": {
+      "navy":         { "$value": "#142A43", "$description": "Structure and the one primary action per view." },
+      "navyRaised":   { "$value": "#1D3A5C", "$description": "Pressed / hover on navy." },
+      "navyWash":     { "$value": "#E4E6E7", "$description": "Secondary button fill; people accent wash." },
+      "bronze":       { "$value": "#A0761B", "$description": "Rules, chart marks and the masthead rule. Never text (3.9:1)." },
+      "bronzeInk":    { "$value": "#8A5A12", "$description": "Record links, tags, focus ring on paper. 5.6:1." },
+      "bronzeWash":   { "$value": "#ECE4D3", "$description": "Tag fill, search highlight. Web keeps rgba(160,118,27,0.16), which flattens to this over paper." },
+      "bronzeRule":   { "$value": "rgba(160,118,27,0.55)", "$description": "Link underline on the web. App: none (links are rows).", "platform": { "app": null } },
+      "bronzeBright": { "$value": "#D9A84A", "$description": "Bronze legible on navy: the mark, focus ring on navy." }
+    },
+    "line": {
+      "divider":       { "$value": "#B8B4A8", "$description": "Top rule of a section. Decorative (1.97:1)." },
+      "dividerSubtle": { "$value": "#DFDCD2", "$description": "Between rows, under subheadings, card outlines. Decorative (1.30:1). Replaces the web --line and app `line` names." },
+      "control":       { "$value": "#8D897B", "$description": "Field and segmented-control boundaries only (3.33:1). Never a content divider. Replaces --line-strong / lineStrong." }
+    },
+    "feedback": {
+      "danger":        { "$value": "#A4262C", "$description": "Errors and destructive actions. 6.9:1." },
+      "dangerPressed": { "$value": "#86191F", "$description": "Pressed destructive button (the End call button). New role: replaces the raw hex in talk/CallControls.tsx." }
+    },
+    "accent": {
+      "$description": "Category accents. `ink` is text-safe (AA) on paper, raised, sunken and its own wash; ink and inkSoft are AA on every wash. Use only for: the 2pt section mark, the display figure of a block, an icon tile, a Today tile. Never for links, rules, chip fills or body text.",
+      "money":     { "ink": { "$value": "#2B6447" }, "wash": { "$value": "#E5EAE5" } },
+      "votes":     { "ink": { "$value": "#3A4C96" }, "wash": { "$value": "#E7E8EC" } },
+      "interests": { "ink": { "$value": "#7B3A63" }, "wash": { "$value": "#EDE6E7" } },
+      "bills":     { "ink": { "$value": "#1F5F6B" }, "wash": { "$value": "#E4EAE8" } },
+      "people":    { "ink": { "$value": "{color.brand.navy}" }, "wash": { "$value": "{color.brand.navyWash}" }, "$description": "People and places share this pair; the app's separate `places` key is removed." },
+      "leads":     { "ink": { "$value": "{color.brand.bronzeInk}" }, "wash": { "$value": "{color.brand.bronzeWash}" } }
+    },
+    "status": {
+      "$description": "Status labels (bill stage, division outcome, vote side). Always a word; the tone only reinforces it.",
+      "done":    { "ink": { "$value": "{color.accent.money.ink}" },   "wash": { "$value": "{color.accent.money.wash}" },   "$description": "Passed, agreed to, became law, voted for." },
+      "active":  { "ink": { "$value": "{color.accent.bills.ink}" },   "wash": { "$value": "{color.accent.bills.wash}" },   "$description": "Before parliament, in committee." },
+      "ended":   { "ink": { "$value": "{color.text.inkSoft}" },       "wash": { "$value": "{color.surface.sunken}" },      "$description": "Lapsed, negatived, withdrawn, voted against." },
+      "draft":   { "ink": { "$value": "{color.brand.bronzeInk}" },    "wash": { "$value": "{color.brand.bronzeWash}" },    "$description": "Exposure draft." }
+    },
+    "party": {
+      "$description": "Dot colour (10pt dot, always beside the party name) and a 12% wash for a party's own page header only. The money-map exporter (scripts/export_money_graph.py, export_state_money.py) moves to these values in pass 2; it currently draws Labor #D93025, Nationals #1B5E20, Greens #3C9A46, One Nation #E8710A.",
+      "labor":       { "dot": { "$value": "#B02E33" }, "wash": { "$value": "#F1E1DF" } },
+      "liberal":     { "dot": { "$value": "#1D4F91" }, "wash": { "$value": "#DFE5EA" } },
+      "nationals":   { "dot": { "$value": "#8F6E00" }, "wash": { "$value": "#EDE8D8" } },
+      "lnp":         { "dot": { "$value": "#4A90D9" }, "wash": { "$value": "#E5ECF3" } },
+      "greens":      { "dot": { "$value": "#2E7D32" }, "wash": { "$value": "#E2EADE" } },
+      "oneNation":   { "dot": { "$value": "#BF5B15" }, "wash": { "$value": "#F3E6DB" } },
+      "independent": { "dot": { "$value": "#3E5B77" }, "wash": { "$value": "#E3E6E7" } },
+      "other":       { "dot": { "$value": "#7C6690" }, "wash": { "$value": "#EBE7EA" } }
+    },
+    "chart": {
+      "mark":     { "$value": "{color.brand.bronze}", "$description": "The subject series: bars, lines, the one highlighted value." },
+      "baseline": { "$value": "{color.line.dividerSubtle}", "$description": "Tracks, comparison series, gridlines." },
+      "contrast": { "$value": "{color.text.inkFaint}", "$description": "The second series where a chart compares two (noes against ayes)." },
+      "industry": {
+        "$description": "Categorical palette for the money map's 16 industry clusters, today copied in graph/palette.ts, app.js DONOR_GROUP_COLOURS, ledger.js, home.html and mobile features/money/ported/palette.ts. Values move here unchanged in pass 2; each hue keeps its darkened ink for labels.",
+        "$extensions": { "opax.source": "portal/graph/palette.ts (CLUSTER_COLOURS)" }
+      }
+    }
+  },
+
+  "colorHighContrast": {
+    "$description": "Increase Contrast (iOS) and prefers-contrast: more (web, new in pass 2). Each text role steps one stronger; subtle dividers take the default divider colour; accent inks and bronzeInk step to 7:1 on their wash and every surface.",
+    "text.inkFaint":       "{color.text.inkSoft}",
+    "text.inkSoft":        "{color.text.ink}",
+    "text.onNavySoft":     "{color.text.onNavy}",
+    "line.dividerSubtle":  "{color.line.divider}",
+    "brand.bronzeInk":     "#5C4318",
+    "accent.money.ink":    "#29553D",
+    "accent.votes.ink":    "#374684",
+    "accent.interests.ink":"#72385C",
+    "accent.bills.ink":    "#205158"
+  },
+
+  "font": {
+    "family": {
+      "serif": { "$value": "Merriweather", "$description": "Titles, headings, record text, display figures. Web stack: Merriweather, Georgia, \"Times New Roman\", serif. App: static Merriweather Regular and Bold (Bold stands in for the web's 600)." },
+      "sans":  { "$value": "Public Sans", "$description": "Interface, body, metadata, labels, controls. Web stack: Public Sans, -apple-system, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif." },
+      "system": { "$value": "system", "$description": "Native chrome only: tab bar, bar buttons, menus, alerts, keyboard (SF Pro / Roboto)." }
+    }
+  },
+
+  "type": {
+    "$description": "Eleven roles, six sizes (plus the page title's fluid web size and its iPad step). Sentence case everywhere: no uppercase or letter-spaced labels. App roles carry the Dynamic Type ramp they scale with, to AX5, uncapped. Numbers in figures and tables are tabular.",
+    "title":      { "family": "serif", "weight": 400, "size": 34, "lineHeight": 42, "ramp": "largeTitle", "color": "ink",
+                    "platform": { "web": { "size": "clamp(30px, 4.5vw, 44px)", "lineHeight": 1.25 } },
+                    "sizeClass": { "regular": { "size": 42, "lineHeight": 52 } },
+                    "$description": "The page's one title: a person's name, a bill title, a screen name. Root app screens use the native large title in this face." },
+    "display":    { "family": "serif", "weight": 700, "size": 34, "lineHeight": 42, "ramp": "largeTitle", "color": "ink", "tabular": true,
+                    "$description": "The one number a block is about ($622,102; 2,929 divisions). Serif because Public Sans tabular digits read as monospace when large. May take the view's accent ink." },
+    "heading":    { "family": "serif", "weight": 700, "size": 22, "lineHeight": 30, "ramp": "title2", "color": "ink",
+                    "platform": { "web": { "weight": 600 } }, "$description": "Section heading." },
+    "subheading": { "family": "serif", "weight": 700, "size": 18, "lineHeight": 24, "ramp": "title3", "color": "ink",
+                    "platform": { "web": { "weight": 600 } }, "$description": "A row title that leads a block: a bill title in a list, a division title, a report card." },
+    "record":     { "family": "serif", "weight": 400, "size": 17, "lineHeight": 29, "ramp": "body", "color": "ink",
+                    "platform": { "web": { "lineHeight": 1.75 } }, "$description": "The words of the record and long reading: speeches, report essays, In short." },
+    "body":       { "family": "sans", "weight": 400, "size": 17, "lineHeight": 25, "ramp": "body", "color": "ink",
+                    "platform": { "web": { "size": 16, "lineHeight": 1.55 } } },
+    "strong":     { "family": "sans", "weight": 600, "size": 17, "lineHeight": 25, "ramp": "body", "color": "ink",
+                    "platform": { "web": { "size": 16, "lineHeight": 1.55 } }, "$description": "Names in rows, values in key-value lists, inline figures (with tabular)." },
+    "metadata":   { "family": "sans", "weight": 400, "size": 15, "lineHeight": 21, "ramp": "subheadline", "color": "inkSoft",
+                    "$description": "The one meta line under a title: kind · date · place." },
+    "fine":       { "family": "sans", "weight": 400, "size": 13, "lineHeight": 18, "ramp": "footnote", "color": "inkSoft",
+                    "$description": "Source lines, saved-copy notices, one short caveat. Never below 13." },
+    "label":      { "family": "sans", "weight": 600, "size": 13, "lineHeight": 18, "ramp": "footnote", "color": "inkSoft",
+                    "$description": "Tags, status labels, party labels, field labels. Replaces kicker / tag / chip roles and the web's uppercase .kicker." },
+    "control":    { "family": "sans", "weight": 600, "size": 17, "lineHeight": 22, "ramp": "body", "color": "ink",
+                    "platform": { "web": { "size": 16, "lineHeight": 1.25 } }, "$description": "Button, chip and segment labels." }
+  },
+
+  "space": {
+    "$type": "dimension",
+    "$description": "One vertical rhythm (the app's `rhythm`, adopted by the web). Section and screen steps grow at regular width.",
+    "line":    { "$value": 4,  "$description": "A line bound to the line above: a date under a title." },
+    "tight":   { "$value": 8,  "$description": "Inside a row or group: a name to its party line." },
+    "row":     { "$value": 10, "$description": "Either side of a row hairline (content rows). Control rows own their 44pt and sit 2pt from the hairline." },
+    "heading": { "$value": 12, "$description": "A section heading to its first block." },
+    "block":   { "$value": 16, "$description": "Between blocks inside a section." },
+    "group":   { "$value": 24, "$description": "A second list or group inside a section." },
+    "section": { "$value": 36, "sizeClass": { "regular": 56 }, "$description": "Between sections; the rule sits at the top of each." },
+    "screen":  { "$value": 20, "sizeClass": { "regular": 32 }, "platform": { "web": { "sizeClass": { "regular": "clamp(20px, 4vw, 72px)" } } }, "$description": "Screen edge to content." }
+  },
+
+  "radius": {
+    "$type": "dimension",
+    "$description": "Shape tells the reader what it is: press = pill, read = sm, hold = md. Circles (portraits, dots) are 50%.",
+    "sm":   { "$value": 4,   "$description": "Things you read: tags, status labels, text fields, focus outlines, icon tiles." },
+    "md":   { "$value": 12,  "$description": "Things that hold content: cards (Today, leads, report cards), sheets, popovers, the Ask composer, the map frame, the error panel." },
+    "pill": { "$value": 999, "$description": "Things you press: buttons, choice chips, filter chips, the segmented track and its thumb, the machine-written label, Follow." }
+  },
+
+  "border": {
+    "$type": "dimension",
+    "hairline":   { "$value": 1, "$description": "Every rule, row line and card outline. 1px = 1pt, not the device hairline." },
+    "focus":      { "$value": 2, "$description": "Focus ring (bronzeInk on paper, bronzeBright on navy), field error, Composer focus." },
+    "accentMark": { "width": 28, "height": 2, "$description": "Short accent stroke over the start of a section's top rule. Only on screens whose sections differ in category (profiles, Today)." },
+    "masthead":   { "$value": 3, "$description": "The bronze rule under the web masthead and over the footer. The only 3px rule; remove the 2-3px bronze edges on cards, tiles and panels." }
+  },
+
+  "elevation": {
+    "$description": "Structure is hairlines. One shadow, for things that float over the page.",
+    "none":    { "$value": "none" },
+    "overlay": { "$value": "0 12px 32px rgba(20,42,67,0.16)", "$description": "Menus, popovers, the source sheet on the web, the map popup, the docked chat. App: native sheets and menus draw their own." }
+  },
+
+  "motion": {
+    "duration": {
+      "quick":    { "$value": "120ms", "$description": "Press feedback, colour changes." },
+      "standard": { "$value": "200ms", "$description": "Disclosure open, chevron turn, chip select." },
+      "gentle":   { "$value": "400ms", "$description": "Portrait fade-in, answer reveal, sheet content." },
+      "ambient":  { "$value": "16s",   "$description": "The one ambient loop (the wombat walk, the Talk orb breath)." }
+    },
+    "easing": {
+      "standard": { "$value": "cubic-bezier(0.22, 0.7, 0.3, 1)", "$description": "The web's house curve; the app's Animated/Reanimated default for UI." },
+      "linear":   { "$value": "linear", "$description": "Progress and ambient loops only." }
+    },
+    "reduced": { "$value": "instant", "$description": "Under Reduce Motion / prefers-reduced-motion: no movement, colour changes only, loaders draw a still frame." }
+  },
+
+  "size": {
+    "$type": "dimension",
+    "target":   { "$value": 44, "platform": { "android": 48 }, "$description": "Minimum hit area. Visuals may be smaller inside it." },
+    "control":  { "compact": 44, "default": 48, "large": 56, "platform": { "web": { "compact": 40, "$description": "Web compact grows to 44 on coarse pointers." } } },
+    "portrait": { "row": 44, "header": 72, "$description": "Blank sunken circle when there is no portrait; never initials." },
+    "partyDot": { "$value": 10 },
+    "icon":     { "sm": 16, "md": 20, "lg": 28, "$description": "Three icon sizes (the app draws 11 today). Icons scale with text to 2x." },
+    "measure":  { "$value": "68ch", "$description": "Readable line length on the web; app readable column 700." }
+  },
+
+  "layout": {
+    "breakpoint": { "regular": 700, "wide": 1100, "$description": "iPad size classes and the web's two layout steps (web: 701px and 1101px min-width)." },
+    "column":     { "readable": 700, "wide": 1180, "webMax": 1440 },
+    "splitPane":  { "$value": 360, "min": 300, "max": 440 }
+  },
+
+  "$deprecated": {
+    "$description": "Pass 2 removes these. Left: current name. Right: canonical replacement.",
+    "web": {
+      "--line": "--divider-subtle",
+      "--line-strong": "--line-control",
+      "--space-2 (6.4px)": "--space-tight (8) or --space-line (4)",
+      "--space-3 (10.4px)": "--space-row (10)",
+      "--space-5 (25.6px)": "--space-group (24)",
+      "--space-6 (41.6px)": "--space-section (36) / --space-group (24)",
+      "--space-7 (67.2px)": "--space-section at regular width (56)",
+      "--heading-tracking": "remove (0)",
+      ".kicker / .card-kicker / 34 other uppercase label rules": "type.label, sentence case",
+      "home.css heading scale (32/26/18px, 600)": "type.title / heading / subheading",
+      "9 capsule chip classes (.chip, .topic-chip, .doc-brief-tag, .tie-tag, .report-chip, .nr-source, .tvn-chip, .explain-step, .gr-count)": "ChoiceChip (pill), Tag (sm) or StatusLabel (sm)",
+      "30 bespoke button classes and the bronze topic-ask buttons": ".ui-button (pill)",
+      "8 *-fineprint module copies, .fineprint, 90 note/meta classes": "type.fine via .ui-source / .ui-fine",
+      "45 box-shadow values": "elevation.overlay or none",
+      "39 border-radius values": "radius.sm / md / pill / 50%",
+      "2-3px bronze card edges (.infobox, .search-answer, .doc-brief, .bill-summary, .tile, ...)": "none (border.masthead only)",
+      "9 machine-written renderings": "MachineLabel",
+      "14 empty-state and 12 skeleton implementations": "ui-empty / ui-skeleton",
+      "--accent, --paper-warm, --error-ink, --mm-award-colour (undefined)": "remove",
+      ".ui-inverse, .ui-full, .ui-actions, .ui-divider (no production use)": "remove or adopt"
+    },
+    "app": {
+      "light.line": "dividerSubtle",
+      "lineStrong": "lineControl",
+      "accents.places": "accents.people",
+      "spacing.s2 (6) / s5 (26) / s6 (32) / s7 (52)": "rhythm.tight / group / section",
+      "textStyles.lede": "body",
+      "textStyles.caption (12)": "fine (13)",
+      "textStyles.figure (sans 28)": "display (serif 34)",
+      "textStyles.figureInline": "strong + tabular",
+      "textStyles.tag / kicker / chip": "label",
+      "textStyles.countdown": "control + tabular",
+      "textStyles.padTitle / padLede": "title / body sizeClass.regular",
+      "radius + 4 / + 6 / + 10 / + 12, cardRadius 16, Composer 24": "radius.md (12) or radius.pill",
+      "today/tint.ts accentOf / Accent / washOf": "color.accent.* and color.party.*.wash",
+      "Today Chip, Today PartyChip": "Tag / PartyLabel",
+      "BillStatus, VoteSide, outcomeLabel": "StatusLabel",
+      "SourceLink, ViewOriginal, AsAtLine, UpdatedCaption, StaleNotice, Provenance, InfoButton, Section info": "SourceLine + SourceSheet",
+      "FollowToggle": "Button (toggle)",
+      "RoundButton": "IconButton (round, large)",
+      "ToggleRow, MoneyToggle": "SwitchRow",
+      "EmptyState + SplitEmpty": "EmptyState (with size)",
+      "OfflineBanner + SavedCopyNotice": "SavedCopyNotice",
+      "InlineLink, OpaxWebLink": "LinkRow (external)",
+      "Tag, Figure, MoneyFigure (0 uses)": "remove (Tag returns as the canonical tag)",
+      "67 light.<role> reads in features": "colors.<role> (so Increase Contrast applies)"
+    }
+  }
+}

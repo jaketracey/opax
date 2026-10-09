@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en-AU"><head><meta charset="utf-8"><title>Concept 6: Web home</title>
+<link rel="stylesheet" href="wire.css">
+<style>
+  .cols6 { display: grid; grid-template-columns: 560px 560px 1fr; gap: 28px; align-items: start; }
+  .scaled { width: 560px; overflow: hidden; border-radius: 8px; box-shadow: 0 0 0 1px #CFCBC0; background: var(--paper); }
+  .scaled .web-frame { transform: scale(0.4375); }
+  .hero { display: grid; grid-template-columns: 1fr 520px; gap: 64px; padding: 64px 56px 56px; }
+  .hero .t-title { font-size: 44px; line-height: 54px; }
+  .tabs { display: flex; gap: 28px; border-bottom: 1px solid var(--divider-subtle); margin-bottom: 16px; font: 600 16px/1 var(--sans); color: var(--ink-soft); }
+  .tabs span { padding: 0 0 12px; } .tabs .on { color: var(--navy); box-shadow: inset 0 -2px 0 var(--navy); }
+  .ask { display: flex; gap: 10px; }
+  .ask .field { flex: 1; min-height: 52px; }
+  .samples { margin-top: 14px; display: grid; gap: 8px; font: 400 16px/1.4 var(--sans); }
+  .wsec { border-top: 1px solid var(--divider); margin: 0 56px; padding: 32px 0 48px; position: relative; }
+  .wsec[data-accent]::before { content: ''; position: absolute; top: -1px; left: 0; width: 28px; height: 2px; }
+  .wsec[data-accent=money]::before { background: var(--money-ink); }
+  .wsec[data-accent=bills]::before { background: var(--bills-ink); }
+  .browse { display: grid; grid-template-columns: repeat(6, 1fr); gap: 24px; }
+  .browse .t-sub { color: var(--bronze-ink); text-decoration: underline; text-decoration-color: rgba(160,118,27,.55); text-underline-offset: 4px; }
+  .mapgrid { display: grid; grid-template-columns: 1fr 300px; gap: 40px; }
+  .map { height: 420px; border-radius: var(--r-md); background: var(--raised); box-shadow: 0 0 0 1px var(--divider-subtle); position: relative; overflow: hidden; }
+  .map i { position: absolute; border-radius: 50%; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; }
+  .reports { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .rcard { padding: 18px; }
+  .foot { background: var(--navy); color: var(--on-navy-soft); border-top: 3px solid var(--bronze); padding: 28px 56px 36px; font: 400 15px/1.6 var(--sans); }
+  .foot b { color: #fff; font-weight: 600; }
+</style></head>
+<body><div class="board">
+  <div class="board-head"><h1>Concept 6 · Web home</h1><span class="platform">web 1280px · 820 and 390px stack the same blocks in this order</span></div>
+  <p class="board-goal">Ten peer blocks and 112 links (outside the masthead and footer) become five blocks: ask or search, browse, the money map, what's new, reports. Every in-site link loses its arrow; one primary button on the page.</p>
+  <div class="cols6">
+    <div>
+      <p class="col-label"><b>Before</b> · local render of main a3aa6532 (portraits hidden; live counters off locally)</p>
+      <div class="before web" style="width:560px"><img src="../web/home-1280-full.png" alt="">
+        <span class="mk" style="left:63%;top:11.4%">1</span>
+        <span class="mk" style="left:86%;top:16%">2</span>
+        <span class="mk" style="left:37%;top:23.4%">3</span>
+        <span class="mk" style="left:29%;top:32.6%">4</span>
+        <span class="mk" style="left:50%;top:48.4%">5</span>
+        <span class="mk" style="left:25%;top:70.4%">6</span>
+        <span class="mk" style="left:12%;top:73.6%">7</span>
+        <span class="mk" style="left:50%;top:82%">8</span>
+        <span class="mk" style="left:30%;top:92%">9</span>
+      </div>
+    </div>
+    <div>
+      <p class="col-label"><b>After</b> · 1280px wireframe at the same scale</p>
+      <div class="scaled" style="height:850px"><div class="web-frame">
+        <div class="masthead"><span class="wm">OPAX</span><nav><span>Ask &amp; search</span><span>People</span><span>Money</span><span>Bills</span><span>Reports</span><span>About</span><span>⌕</span></nav></div>
+        <div class="hero">
+          <div>
+            <div class="t-title">See what Australian politicians say, do and disclose</div>
+            <p class="t-body" style="color:var(--ink-soft);margin-top:18px;font-size:18px;line-height:28px">The Open Parliamentary Accountability Exchange brings together Australian parliamentary speeches, votes, political funding and public disclosures, each linked to its original source.</p>
+          </div>
+          <div>
+            <div class="tabs"><span class="on">Ask a question</span><span>Search records</span></div>
+            <div class="ask"><div class="field">Ask a question about the public record</div><span class="btn primary" style="min-height:52px">Ask</span></div>
+            <div class="samples"><a class="u">What has parliament said about housing affordability?</a><a class="u">Who funds the Labor Party?</a><a class="u">Who takes the most money from the gambling lobby?</a></div>
+            <p class="t-meta" style="margin-top:14px">▸ Build a question</p>
+          </div>
+        </div>
+        <div class="wsec">
+          <div class="t-heading" style="margin-bottom:16px">Browse the record</div>
+          <div class="browse">
+            <div><div class="t-sub">Parliamentarians</div><div class="t-fine">Speeches, votes, pay, expenses and interests</div></div>
+            <div><div class="t-sub">Electorates</div><div class="t-fine">Representatives and elections</div></div>
+            <div><div class="t-sub">Parties</div><div class="t-fine">Members, debate and funding</div></div>
+            <div><div class="t-sub">Bills</div><div class="t-fine">2,989 federal bills and their divisions</div></div>
+            <div><div class="t-sub">Money</div><div class="t-fine">Donations, grants and contracts</div></div>
+            <div><div class="t-sub">Topics</div><div class="t-fine">21 subjects across the debate</div></div>
+          </div>
+        </div>
+        <div class="wsec" data-accent="money">
+          <div class="mapgrid">
+            <div>
+              <div class="t-heading">Money map</div>
+              <div class="t-meta" style="margin:4px 0 16px">Disclosed funding between donors and parties, 1998–99 to 2025–26</div>
+              <div class="map">
+                <i style="left:44%;top:46%;width:22px;height:22px;background:var(--party-labor)"></i><i style="left:49%;top:50%;width:18px;height:18px;background:var(--party-liberal)"></i><i style="left:46%;top:54%;width:14px;height:14px;background:var(--party-greens)"></i>
+                <i style="left:20%;top:30%;width:26px;height:26px;background:#4E79A7"></i><i style="left:70%;top:24%;width:30px;height:30px;background:#E15759"></i><i style="left:76%;top:62%;width:22px;height:22px;background:#F28E2B"></i><i style="left:24%;top:70%;width:20px;height:20px;background:#59A14F"></i><i style="left:56%;top:78%;width:18px;height:18px;background:#B07AA1"></i>
+              </div>
+            </div>
+            <div style="padding-top:62px">
+              <div class="t-label" style="margin-bottom:10px">Industries</div>
+              <div class="chips"><span class="chip">Individuals 64</span><span class="chip">Other 62</span><span class="chip">Finance 53</span><span class="chip">Media &amp; tech 33</span><span class="chip">Property 31</span><span class="chip">Unions 31</span><span class="chip">All 16 industries</span></div>
+              <p style="margin-top:18px"><a class="u" style="font:600 16px/1 var(--sans)">Open the full map</a></p>
+              <div class="src">AEC annual returns · <b>totals are a floor</b></div>
+            </div>
+          </div>
+        </div>
+        <div class="wsec" data-accent="bills">
+          <div class="two">
+            <div><div class="sec-head"><span class="t-heading">New bills</span><a>All bills</a></div>
+              <div class="rows">
+                <div class="row"><div><span class="status st-active">Before parliament</span> <span class="t-fine">17 Sep 2026</span><div class="t-sub" style="margin-top:4px">Child Support and Family Assistance Legislation Amendment (Ending Financial Abuse in the Child Support Scheme No. 1) Bill 2026</div><div class="t-fine">Social Services</div></div></div>
+                <div class="row"><div><span class="status st-active">Before parliament</span> <span class="t-fine">17 Sep 2026</span><div class="t-sub" style="margin-top:4px">Sport Legislation Amendment (World Anti-Doping Code Implementation) Bill 2026</div></div></div>
+              </div></div>
+            <div><div class="sec-head"><span class="t-heading">Just declared</span><a>All declarations</a></div>
+              <div class="rows">
+                <div class="row" style="align-items:flex-start"><span class="portrait"></span><div><div class="t-strong">Chris Bowen</div><span class="party labor">Labor</span><p class="t-body" style="font-size:15px">On 26 and 27 September 2026 I was a guest of the government of the Kingdom of Saudi Arabia …</p><div class="t-fine">Recorded 7 Oct 2026 · <a class="u">Register ↗</a></div></div></div>
+                <div class="row" style="align-items:flex-start"><span class="portrait"></span><div><div class="t-strong">Andrew Wilkie</div><span class="party">Independent</span><p class="t-body" style="font-size:15px">Two tickets to Theatre Royal production valued at $99 each.</p></div></div>
+              </div></div>
+          </div>
+        </div>
+        <div class="wsec">
+          <div class="sec-head"><span class="t-heading">Reports</span><a>All reports</a></div>
+          <div class="reports">
+            <div class="card rcard"><div class="t-sub">Climate &amp; Energy</div><div class="t-fine">Targets, coal, renewables and carbon pricing</div></div>
+            <div class="card rcard"><div class="t-sub">First Nations</div><div class="t-fine">Reconciliation, the Voice, Closing the Gap</div></div>
+            <div class="card rcard"><div class="t-sub">Gambling</div><div class="t-fine">Poker machines, online wagering and reform</div></div>
+            <div class="card rcard"><div class="t-sub">Housing</div><div class="t-fine">Affordability promises and supply debates</div></div>
+          </div>
+        </div>
+        <div class="foot"><b>692,918 speeches · 199,233 donations classified</b> · <span style="text-decoration:underline">Coverage and sources</span><br>OPAX is independent and open source (AGPL-3.0). It is not affiliated with any parliament, government agency or political party.</div>
+      </div></div>
+    </div>
+    <div class="notes">
+      <h2>Keep</h2>
+      <ul>
+        <li><span class="n" style="background:var(--money-ink)">✓</span>Purpose and the Ask / Search entry above the fold, sample questions and the closed "Build a question"; Browse visible at every width with a heading; the money map before recent records; new bills and declarations; reports.</li>
+      </ul>
+      <h2>Merge or demote</h2>
+      <ol>
+        <li><span class="n">2</span><span class="k">Browse.</span> Three serif links with descriptions, eleven small links in three groups, "Other ways to explore" and the 21-topic A–Z list become one six-destination row.</li>
+        <li><span class="n">3</span><span class="k">Map filters.</span> Sixteen industry chips with dots, counts and a helper line become the six largest plus "All 16 industries"; the colour dots stay on the map itself.</li>
+        <li><span class="n">6</span><span class="k">Latest.</span> Kicker lines and two fine-print notes under the lists become the same row anatomy as the app (status label, title, one meta line).</li>
+        <li><span class="n">9</span><span class="k">Coverage.</span> Four large figures with bronze rules become one footer line; the full table stays on Coverage.</li>
+      </ol>
+      <h2>Remove</h2>
+      <ol>
+        <li><span class="n">1</span>Navy "Open research map →": a second primary on the page. It becomes a text link.</li>
+        <li><span class="n">4</span>The topic filter box and A–Z topic grid (now one Browse destination).</li>
+        <li><span class="n">5</span>Spotlight's four boxed charts with capitalised captions: they move to the topic's report, where the reader chose the topic.</li>
+        <li><span class="n">7</span>"Newly indexed records" (it renders empty when the live counter is down): Search's "Newest" sort does the job.</li>
+        <li><span class="n">8</span>The From the record carousel: the app's Today keeps the rotating record.</li>
+        <li><span class="n">·</span>About 30 "→" suffixes on in-site links. Underlines already say "link"; "↗" stays for links that leave OPAX.</li>
+      </ol>
+      <p class="t-fine" style="margin-top:12px;font-size:13.5px;line-height:19px"><b>Needs Jake's OK:</b> this supersedes three homepage rules in UI_DESIGN_LANGUAGE.md (Collection &amp; coverage shows all four figures; the Spotlight section; From the record on the home page).</p>
+      <div class="count">
+        <div><b>10 → 5</b><span>blocks on the page</span></div>
+        <div><b>112 → ~35</b><span>links in the page body</span></div>
+        <div><b>2 → 1</b><span>navy buttons</span></div>
+      </div>
+    </div>
+  </div>
+</div></body></html>

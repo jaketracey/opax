@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en-AU"><head><meta charset="utf-8"><title>Concept 4: Search results</title>
+<link rel="stylesheet" href="wire.css">
+<style>
+  .cols4 { display: grid; grid-template-columns: 410px 410px 410px 1fr; gap: 24px; align-items: start; }
+  .res { padding: 14px 0; }
+  .res + .res { border-top: 1px solid var(--divider-subtle); }
+  .res .t-sub { margin: 4px 0 2px; }
+  .res p { font: 400 16px/23px var(--sans); margin-top: 6px; }
+  .countline { display: flex; justify-content: space-between; align-items: center; margin: 16px 0 10px; }
+  .menu { font: 600 15px/1 var(--sans); color: var(--navy); }
+  .sumrow { display: flex; align-items: center; justify-content: space-between; min-height: 48px; border-top: 1px solid var(--divider-subtle); border-bottom: 1px solid var(--divider-subtle); margin: 12px 0 4px; }
+</style></head>
+<body><div class="board" style="width:1900px">
+  <div class="board-head"><h1>Concept 4 · Search results</h1><span class="platform">iPhone (Android identical) · web mobile shares the anatomy</span></div>
+  <p class="board-goal">The first result should be on the first screen. The query, the kind, the count and the controls fit in four lines; each result is one tappable row whose kind, date and speaker line is its provenance.</p>
+  <div class="cols4">
+    <div>
+      <p class="col-label"><b>Before</b> · iPhone, build 12 (fixture data), scrolled to results</p>
+      <div class="before"><img src="../app/iphone-search-results-b12.png" alt="">
+        <span class="mk" style="left:60%;top:11%">1</span>
+        <span class="mk" style="left:50%;top:19.6%">2</span>
+        <span class="mk" style="left:42%;top:29%">3</span>
+        <span class="mk" style="left:60%;top:40%">4</span>
+        <span class="mk" style="left:84%;top:54.5%">5</span>
+        <span class="mk" style="left:12%;top:68%">6</span>
+        <span class="mk" style="left:84%;top:87%">7</span>
+      </div>
+    </div>
+    <div>
+      <p class="col-label"><b>Before</b> · web 390px, local render (document search off locally)</p>
+      <div class="before"><img src="../web/search-passages-390.png" alt="">
+        <span class="mk" style="left:86%;top:46%">8</span>
+        <span class="mk" style="left:86%;top:66%">9</span>
+        <span class="mk" style="left:86%;top:96%">8</span>
+      </div>
+    </div>
+    <div>
+      <p class="col-label"><b>After</b> · iPhone wireframe</p>
+      <div class="phone"><div class="clip" style="max-height:1000px">
+        <div class="sbar"><span>9:41</span><span>●●●</span></div>
+        <div class="navbar"><span style="font:600 17px/1 var(--sans)">Search</span><div class="icons"><span class="circ">⋯</span></div></div>
+        <div class="screen">
+          <div class="field">⌕&nbsp; housing <span style="margin-left:auto;color:var(--ink-faint)">✕</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+            <div class="seg"><span class="on">Records</span><span>People</span></div>
+            <span class="btn quiet" style="font-size:15px">Filters</span>
+          </div>
+          <div class="countline"><span class="t-strong tab">22 records</span><span class="menu">Newest ⌄</span></div>
+          <div class="chips"><span class="chip on" style="min-height:32px;font-size:14px">Passages</span><span class="chip" style="min-height:32px;font-size:14px">Briefs</span></div>
+          <div class="sumrow"><span class="t-strong" style="font-size:16px">Summarise these records</span><span class="machine">Machine-written</span></div>
+          <div class="res">
+            <div class="t-fine">Speech · 17 Aug 2026 · House of Representatives</div>
+            <div class="t-sub">Questions without notice</div>
+            <span class="party labor">Joanne Ryan · Labor</span>
+            <p>We are increasingly seeing this prevail in our debate about <mark>housing</mark>. The Liberals have said they want Australians to raid their super to buy a home.</p>
+          </div>
+          <div class="res">
+            <div class="t-fine">Bill · introduced 9 Feb 2023</div>
+            <div class="t-sub">National <mark>Housing</mark> Supply and Affordability Council Bill 2023</div>
+            <div><span class="status st-done">Passed</span> <span class="t-fine">Treasury</span></div>
+          </div>
+          <div class="res">
+            <div class="t-fine">Bill · introduced 7 Sep 2017</div>
+            <div class="t-sub">Treasury Laws Amendment (Reducing Pressure on <mark>Housing</mark> Affordability Measures No. 1) Bill 2017</div>
+            <div><span class="status st-done">Passed</span> <span class="t-fine">Treasury</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="fade"></div>
+      <div class="tabbar"><span>Today</span><span>Your MP</span><span>Bills</span><span class="on">Search</span><span>Ask</span></div>
+      </div>
+    </div>
+    <div class="notes">
+      <h2>Keep</h2>
+      <ul>
+        <li><span class="n" style="background:var(--money-ink)">✓</span>Query, kind, Passages and Briefs, sort, filters, the cited summary on request with its machine label, highlighted matches, kind · date · source on every result.</li>
+      </ul>
+      <h2>Merge or demote</h2>
+      <ol>
+        <li><span class="n">1</span><span class="k">Share search</span> as a full row above the results moves to ⋯.</li>
+        <li><span class="n">3</span><span class="k">Count.</span> "Results" heading, a 34pt "22", "matches" and "For housing" become one line, "22 records", with the sort beside it.</li>
+        <li><span class="n">4</span><span class="k">Sort</span> as a full-width row becomes a menu on the count line.</li>
+        <li><span class="n">5</span><span class="k">Summarise</span> as a large button becomes one row with the machine pill.</li>
+        <li><span class="n">9</span><span class="k">Web cited summary.</span> A bordered card with a bronze top edge takes the whole first screen on mobile (here in its unavailable state). It becomes the same collapsed row; open, it shows the summary above the results.</li>
+        <li><span class="n">8</span><span class="k">Web controls.</span> Search, Filters, Relevance, Copy link and Export (five controls) become Filters and the sort menu; Copy link and Export go under ⋯.</li>
+      </ol>
+      <h2>Remove</h2>
+      <ol>
+        <li><span class="n">2</span>Icon tile and ⓘ on the results heading; search notes join the source sheet behind ⋯.</li>
+        <li><span class="n">6</span>Titles built as "Name — Kind — 2026-08-17": the title is the record's own title, the date is formatted, the speaker gets a party dot.</li>
+        <li><span class="n">7</span>"Read matching record" under every result: the row is the link.</li>
+        <li><span class="n">·</span>Web desktop: the "Matches by year" chart above the list moves into Filters as the year facet.</li>
+      </ol>
+      <div class="count">
+        <div><b>9 → 4</b><span>controls before the first result</span></div>
+        <div><b>3 → 1</b><span>tap targets per result</span></div>
+        <div><b>off → on</b><span>first result in the first screen</span></div>
+      </div>
+    </div>
+  </div>
+</div></body></html>

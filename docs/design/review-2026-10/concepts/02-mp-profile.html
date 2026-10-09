@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en-AU"><head><meta charset="utf-8"><title>Concept 2: MP profile</title>
+<link rel="stylesheet" href="wire.css">
+<style>
+  .head { display: flex; justify-content: space-between; align-items: flex-start; margin-top: 8px; }
+  .strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 18px; padding: 12px 0; border-top: 1px solid var(--divider-subtle); border-bottom: 1px solid var(--divider-subtle); }
+  .strip .t-display { font-size: 22px; line-height: 28px; }
+  .strip .t-fine { margin-top: 2px; }
+  .meter { height: 8px; border-radius: 4px; background: var(--ink-faint); overflow: hidden; margin: 12px 0 8px; }
+  .meter i { display: block; height: 100%; background: var(--bronze); }
+  .row2 { display: grid; grid-template-columns: 760px 760px; gap: 40px; margin-top: 34px; align-items: start; }
+  .row2 > .notes { grid-column: 1 / -1; }
+  .row2 > .notes ol { columns: 2; column-gap: 40px; }
+  .row2 > .notes li { break-inside: avoid; }
+  .webshot { width: 760px; height: 475px; overflow: hidden; border-radius: 8px; box-shadow: 0 0 0 1px #CFCBC0; background: var(--paper); position: relative; }
+  .webshot .web-frame { transform: scale(0.59375); }
+  .w-crumb { padding: 14px 56px; font: 400 14px/1 var(--sans); color: var(--ink-soft); border-bottom: 1px solid var(--divider-subtle); }
+  .w-head { display: flex; gap: 22px; align-items: center; padding: 34px 56px 26px; }
+  .w-head .t-title { font-size: 44px; line-height: 54px; }
+  .w-body { display: grid; grid-template-columns: 1fr 300px; gap: 56px; padding: 0 56px; }
+  .w-rail { border-top: 1px solid var(--divider); padding-top: 16px; }
+  .w-rail .row { min-height: 40px; padding: 8px 0; }
+  .w-votes { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+</style></head>
+<body><div class="board">
+  <div class="board-head"><h1>Concept 2 · MP profile</h1><span class="platform">iPhone (Android identical) · web desktop · web mobile follows the iPhone column</span></div>
+  <p class="board-goal">Say who they are once, then let each record block carry one figure, one short list and one source line. The quick-facts box, the per-block "Updated · View original" pairs, the ⓘ buttons and the caveat paragraphs collapse into the header and a single source line per block.</p>
+  <div class="cols">
+    <div>
+      <p class="col-label"><b>Before</b> · iPhone, build 11 (real data; portrait drawn as the blank circle)</p>
+      <div class="before"><img src="../app/iphone-person-b11.png" alt="">
+        <span class="mk" style="left:26%;top:32.5%">1</span>
+        <span class="mk" style="left:8%;top:39%">2</span>
+        <span class="mk" style="left:92%;top:45.5%">3</span>
+        <span class="mk" style="left:92%;top:50.6%">4</span>
+        <span class="mk" style="left:8%;top:59.6%">5</span>
+        <span class="mk" style="left:92%;top:86%">4</span>
+      </div>
+    </div>
+    <div>
+      <p class="col-label"><b>After</b> · iPhone wireframe</p>
+      <div class="phone"><div class="clip" style="max-height:1000px">
+        <div class="sbar"><span>9:41</span><span>●●●</span></div>
+        <div class="navbar"><span class="back">‹ Bills</span><div class="icons"><span class="circ">⇪</span><span class="circ">⋯</span></div></div>
+        <div class="screen">
+          <div class="head"><span class="portrait lg"></span><span class="btn secondary sm">+ Follow</span></div>
+          <div class="t-large" style="margin-top:12px">Jo Briskey</div>
+          <span class="party labor">Labor</span>
+          <div class="t-meta" style="margin-top:4px">Member for <span style="color:var(--navy);font-weight:600">Maribyrnong</span> · House of Representatives</div>
+          <div class="strip">
+            <div><div class="t-display tab">224</div><div class="t-fine">divisions</div></div>
+            <div><div class="t-display tab">29</div><div class="t-fine">declared interests</div></div>
+            <div><div class="t-display tab">$239,270</div><div class="t-fine">a year in pay</div></div>
+          </div>
+
+          <div class="section" data-accent="votes">
+            <div class="t-heading">Voting record</div>
+            <div class="t-strong tab">93 ayes · 131 noes</div>
+            <div class="meter"><i style="width:42%"></i></div>
+            <div class="t-meta">42% ayes in the recorded divisions, 2025 to 2026</div>
+            <div class="rows" style="margin-top:8px"><div class="row chev"><div class="grow t-strong">Bill votes</div><span class="val">9</span></div></div>
+            <div class="src">Divisions to 17 Sep 2026 · <b>They Vote For You</b></div>
+          </div>
+
+          <div class="section" data-accent="interests">
+            <div class="t-heading">Declared interests</div>
+            <div class="rows">
+              <div class="row chev"><div class="grow t-strong">Memberships</div><span class="val">15</span></div>
+              <div class="row chev"><div class="grow t-strong">Liabilities</div><span class="val">4</span></div>
+              <div class="row chev"><div class="grow t-strong">Other</div><span class="val">10</span></div>
+            </div>
+            <div class="src">28 Sep 2026 · <b>Register of Members' Interests</b> · partial</div>
+          </div>
+
+          <div class="section" data-accent="money">
+            <div class="t-heading">Pay for the posts held</div>
+            <div class="t-display tab" style="color:var(--money-ink)">$239,270</div>
+            <div class="t-meta">a year · Member of Parliament since 3 May 2025</div>
+            <div class="t-fine" style="margin-top:6px">Entitlements set by instrument, not payslips.</div>
+          </div>
+        </div>
+      </div>
+      <div class="fade"></div>
+      <div class="tabbar"><span>Today</span><span>Your MP</span><span class="on">Bills</span><span>Search</span><span>Ask</span></div>
+      </div>
+    </div>
+    <div class="notes">
+      <h2>Keep</h2>
+      <ul>
+        <li><span class="n" style="background:var(--money-ink)">✓</span>Portrait (blank circle when missing), name, party as a dot beside its name, electorate as the one link in the meta line, Follow.</li>
+        <li><span class="n" style="background:var(--money-ink)">✓</span>The record blocks in their order (votes, interests, pay, expenses, speeches) and the standing caveats where a number would mislead: "Party disclosures, not this person's finances", "Entitlements set by instrument, not payslips".</li>
+      </ul>
+      <h2>Merge or demote</h2>
+      <ol>
+        <li><span class="n">1</span><span class="k">Identity.</span> Party chip with its own chevron, electorate row and (on the web) the Quick facts box all restate the header. One meta line carries them; a three-figure strip under it doubles as the in-page index.</li>
+        <li><span class="n">4</span><span class="k">Provenance.</span> Each block's "Updated · View original" pair, its ⓘ sheet and its caveat paragraph become one source line: date, source name, and a state ("partial", "saved copy") when there is one. Tap it for the source sheet: originals, notes, licence. Every figure stays dated and one tap from its source.</li>
+        <li><span class="n">·</span><span class="k">Actions.</span> "Ask about their speeches", Share and Open on the web go behind ⋯; Follow is the only button drawn.</li>
+      </ol>
+      <h2>Remove</h2>
+      <ol>
+        <li><span class="n">2</span>Icon tiles on rows and section headings (headings lost theirs in build 22; rows keep icons only in navigation lists).</li>
+        <li><span class="n">3</span>"These are dated public records. Representation may have changed since collection." It moves into the source sheet.</li>
+        <li><span class="n">5</span>Per-section ⓘ buttons: their notes join the source sheet.</li>
+        <li><span class="n">·</span>"End of profile", and the empty space a failed optional block leaves (web "What they talk about").</li>
+      </ol>
+      <div class="count">
+        <div><b>~25 → 5</b><span>as-at, View original and ⓘ marks (app)</span></div>
+        <div><b>12 → 7</b><span>sections (app)</span></div>
+        <div><b>16 → 7</b><span>font sizes (web, 390px)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row2">
+    <div>
+      <p class="col-label"><b>Before</b> · web 1280px, main at a3aa6532, local render (portrait hidden)</p>
+      <div class="before web" style="width:760px"><img src="../web/person-1280.png" alt="">
+        <span class="mk" style="left:8%;top:22%">6</span>
+        <span class="mk" style="left:46%;top:35%">7</span>
+        <span class="mk" style="left:84%;top:44%">7</span>
+        <span class="mk" style="left:13%;top:47.5%">8</span>
+        <span class="mk" style="left:60%;top:50.5%">9</span>
+        <span class="mk" style="left:28%;top:76%">10</span>
+        <span class="mk" style="left:90%;top:88%">11</span>
+      </div>
+    </div>
+    <div>
+      <p class="col-label"><b>After</b> · web 1280px wireframe (shown at 59%)</p>
+      <div class="webshot"><div class="web-frame">
+        <div class="masthead"><span class="wm">OPAX</span><nav><span>Ask &amp; search</span><span>People</span><span>Money</span><span>Bills</span><span>Reports</span><span>About</span></nav></div>
+        <div class="w-crumb">Home › Parliamentarians › Anthony Albanese</div>
+        <div class="w-head"><span class="portrait lg" style="width:96px;height:96px"></span>
+          <div style="flex:1"><div class="t-title">Anthony Albanese</div><span class="party labor" style="font-size:15px">Labor</span> <span class="t-meta">· Member for <a class="u">Grayndler</a> · House of Representatives · Federal</span></div>
+          <span class="btn secondary">Ask about their speeches</span><span class="circ" style="width:44px;height:44px">⋯</span></div>
+        <div class="w-body">
+          <div>
+            <div class="section first" data-accent="votes" style="margin-top:0">
+              <div class="t-heading">Voting record</div>
+              <div class="figs" style="max-width:520px"><div class="fig"><div class="t-display">2,929</div><div class="t-meta">divisions</div></div><div class="fig"><div class="t-display">1,251</div><div class="t-meta">ayes</div></div><div class="fig"><div class="t-display">1,678</div><div class="t-meta">noes</div></div></div>
+              <div class="t-meta" style="margin:10px 0 14px">43% ayes in the federal parliament, 2006 to 2026</div>
+              <div class="w-votes">
+                <div><div class="t-label">Voted for</div><div class="rows"><div class="row"><div><div class="t-sub" style="font-size:16px;line-height:22px">Income Tax Rates Amendment (Tax Reform No. 1) Bill 2026</div><div class="t-fine">Third reading · 2026</div></div></div><div class="row"><div><div class="t-sub" style="font-size:16px;line-height:22px">Treasury Laws Amendment (Tax Reform No. 1) Bill 2026</div><div class="t-fine">Third reading · 2026</div></div></div></div></div>
+                <div><div class="t-label">Voted against</div><div class="rows"><div class="row"><div><div class="t-sub" style="font-size:16px;line-height:22px">Online Safety Amendment (Strengthening Enforcement for the Social Media Minimum Age) Bill 2026</div><div class="t-fine">Second reading · 2026</div></div></div></div></div>
+              </div>
+              <div class="src">Formal divisions only · <b>They Vote For You</b></div>
+            </div>
+          </div>
+          <div class="w-rail">
+            <div class="t-label" style="margin-bottom:6px">On this page</div>
+            <div class="rows">
+              <div class="row"><div class="grow t-strong" style="font-size:16px">Voting record</div><span class="val" style="font-size:15px">2,929</span></div>
+              <div class="row"><div class="grow t-strong" style="font-size:16px">Declared interests</div><span class="val" style="font-size:15px">28</span></div>
+              <div class="row"><div class="grow t-strong" style="font-size:16px">Pay</div><span class="val" style="font-size:15px">$622,102</span></div>
+              <div class="row"><div class="grow t-strong" style="font-size:16px">Expenses</div><span class="val" style="font-size:15px">$24.4m</span></div>
+              <div class="row"><div class="grow t-strong" style="font-size:16px">Speeches</div></div>
+            </div>
+            <p class="t-fine" style="margin-top:12px"><a class="u">Parliamentary profile ↗</a> · <a class="u">Wikipedia ↗</a></p>
+          </div>
+        </div>
+      </div></div>
+    </div>
+    <div class="notes">
+      <h2>Web specifics</h2>
+      <ol>
+        <li><span class="n">6</span>Uppercase "PARLIAMENTARIAN" kicker repeats the breadcrumb. Remove (35 uppercase label rules site-wide).</li>
+        <li><span class="n">7</span>The header meta line and Quick facts say party, jurisdiction, chamber and electorate twice. Keep the line; Quick facts becomes the "On this page" rail with each block's figure.</li>
+        <li><span class="n">8</span>Jump links "Topics Votes Interests Pay" merge into the rail.</li>
+        <li><span class="n">9</span>"Explore Labor party receipts" button and its caption: a row in the money block, caption kept beside it.</li>
+        <li><span class="n">10</span>A failed optional block ("Their topic profile could not be loaded") leaves ~300px of empty space; failed optional blocks collapse.</li>
+        <li><span class="n">11</span>The floating "Ask OPAX" pill overlaps the rail on every desktop page; the masthead keeps Ask.</li>
+      </ol>
+    </div>
+  </div>
+</div></body></html>
