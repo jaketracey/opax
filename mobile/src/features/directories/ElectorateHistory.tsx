@@ -3,11 +3,11 @@ import { AccessibilityInfo } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { router } from 'expo-router';
 import {
-  AsAtLine,
   Button,
   EmptyState,
   Field,
   Group,
+  Heading,
   InfoSheet,
   LinkRow,
   PersonRow,
@@ -16,16 +16,23 @@ import {
   Text,
 } from '../../design/primitives';
 import { formatCount, formatDate } from '../../design/format';
+import { rhythm } from '../../design/tokens';
 import { personRoute } from '../../navigation/routes';
 import {
   representativeProfile,
   type Directory,
   type ElectorateView,
 } from '../your-mp/model';
+import { BlockSource } from '../your-mp/Evidence';
 import { CachedPortrait } from '../CachedPortrait';
 import { representationAt, validDate } from './model';
 
-export function ElectorateDate({
+/**
+ * Representation over time: an "On a date" row that shows who represented
+ * the seat on any date, then the dated service periods, newest first, and
+ * one source line for both.
+ */
+export function ElectorateHistory({
   view,
   directory,
   asof,
@@ -33,17 +40,18 @@ export function ElectorateDate({
 }: {
   view: ElectorateView;
   directory: Directory;
+  /** The chosen date (YYYY-MM-DD), or '' for the latest check. */
   asof: string;
   onDate: (date: string) => void;
 }) {
-  const [input, setInput] = useState(asof),
-    [invalid, setInvalid] = useState(false),
-    [open, setOpen] = useState(false);
+  // Each opening is a fresh sheet that starts from the chosen date.
+  const [open, setOpen] = useState(false),
+    [opening, setOpening] = useState(0);
+  const terms = [...view.terms].sort((a, b) =>
+    (b.start ?? '').localeCompare(a.start ?? ''),
+  );
   const selected = asof ? representationAt(view, asof) : null;
-  const dates = [...new Set(view.rosters.map((r) => r.as_of))].sort().reverse();
   const choose = (date: string) => {
-    setInput(date);
-    setInvalid(false);
     setOpen(false);
     onDate(date);
     AccessibilityInfo.announceForAccessibility(
@@ -52,23 +60,21 @@ export function ElectorateDate({
         : 'Latest verified representation',
     );
   };
+  const observed =
+    terms
+      .map((t) => t.observed_through)
+      .sort()
+      .at(-1) ?? null;
   return (
-    <>
-      <Section
-        title="View on a date"
-        accent="people"
-        testID="electorate-date-section"
-        info={{
-          title: 'About dated representation',
-          notes: [
-            'Representation is shown only as recorded in the dated release.',
-            'Open-ended records are not proof of current membership.',
-            'This outline is not a reconstruction of the selected date.',
-          ],
-        }}
-      >
+    <Section
+      title="Representation history"
+      accent="people"
+      testID="electorate-history"
+    >
+      <RowList>
         <LinkRow
-          title={asof ? formatDate(asof) : 'Latest check'}
+          title="On a date"
+          value={asof ? formatDate(asof, 'short') : 'Latest'}
           testID="electorate-date-picker"
           accessibilityLabel={
             asof
@@ -76,98 +82,14 @@ export function ElectorateDate({
               : 'View representation on a date'
           }
           onPress={() => {
-            setInput(asof || view.representatives.asAt || dates[0] || '');
-            setInvalid(false);
+            setOpening((n) => n + 1);
             setOpen(true);
           }}
         />
-        {asof ? (
-          <Button
-            label="Latest check"
-            variant="quiet"
-            testID="electorate-date-latest"
-            onPress={() => choose('')}
-          />
-        ) : null}
-      </Section>
-      <InfoSheet
-        visible={open}
-        onClose={() => setOpen(false)}
-        title="View on a date"
-        notes={[]}
-        testID="electorate-date-sheet"
-        extra={
-          <Group>
-            <DateTimePicker
-              testID="electorate-native-date-picker"
-              accessibilityLabel="View representation on a date"
-              value={
-                new Date(
-                  `${validDate(input) ? input : dates[0] || '2000-01-01'}T12:00:00`,
-                )
-              }
-              mode="date"
-              display="spinner"
-              themeVariant="light"
-              onValueChange={(_, date) => {
-                if (date) {
-                  setInput(
-                    `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`,
-                  );
-                  setInvalid(false);
-                }
-              }}
-            />
-            <Field
-              label="Date (YYYY-MM-DD)"
-              testID="electorate-date-input"
-              value={input}
-              onChangeText={(date) => {
-                setInput(date);
-                setInvalid(false);
-              }}
-              autoCorrect={false}
-              autoCapitalize="none"
-              placeholder="YYYY-MM-DD"
-              multiline
-              scrollEnabled={false}
-              submitBehavior="blurAndSubmit"
-              keyboardType="numbers-and-punctuation"
-              returnKeyType="done"
-              error={invalid ? 'Enter a valid date as YYYY-MM-DD.' : undefined}
-            />
-            <Button
-              label="View"
-              variant="primary"
-              testID="electorate-date-view"
-              onPress={() => {
-                if (validDate(input)) choose(input);
-                else setInvalid(true);
-              }}
-            />
-            {dates.length ? (
-              <Section title="Roster observation dates" accent="people">
-                <RowList>
-                  {dates.map((date) => (
-                    <LinkRow
-                      key={date}
-                      title={formatDate(date)}
-                      testID={`electorate-date-${date}`}
-                      onPress={() => choose(date)}
-                    />
-                  ))}
-                </RowList>
-              </Section>
-            ) : null}
-          </Group>
-        }
-      />
+      </RowList>
       {selected ? (
-        <Section
-          title={`Representation on ${formatDate(asof)}`}
-          accent="people"
-          testID="electorate-dated-representation"
-        >
+        <Group gap={rhythm.tight} testID="electorate-dated-representation">
+          <Heading level={3}>{`Representation on ${formatDate(asof)}`}</Heading>
           {selected.status === 'conflicting' ? (
             <Text>Conflicting service records require review.</Text>
           ) : selected.members.length ? (
@@ -208,6 +130,7 @@ export function ElectorateDate({
               }
             />
           )}
+          {/* The one caveat a dated answer needs, beside it. */}
           <Text wordSafe variant="fine">
             {selected.status === 'historical'
               ? 'From dated service records; coverage may be incomplete.'
@@ -215,42 +138,15 @@ export function ElectorateDate({
                 ? 'Partial roster; other members may be missing.'
                 : 'Election winners and present-day representation can differ.'}
           </Text>
-          <AsAtLine
-            asOf={view.identity.asAt}
-            citation={view.representatives.sources.map((s) => s.label)}
-            savedAt={
-              view.representatives.stale ? view.representatives.savedAt : null
-            }
+          <Button
+            label="Latest check"
+            variant="quiet"
+            size="compact"
+            testID="electorate-date-latest"
+            onPress={() => choose('')}
           />
-        </Section>
+        </Group>
       ) : null}
-    </>
-  );
-}
-export function ElectorateHistory({
-  view,
-  directory,
-}: {
-  view: ElectorateView;
-  directory: Directory;
-}) {
-  const terms = [...view.terms].sort((a, b) =>
-    (b.start ?? '').localeCompare(a.start ?? ''),
-  );
-  return (
-    <Section
-      title="Representation history"
-      accent="people"
-      testID="electorate-history"
-      info={{
-        title: 'About representation history',
-        notes: [
-          'Dated service records, newest first. Party changes may create a new period. Open-ended records are not proof of current membership.',
-          'End dates are exclusive. Gaps indicate missing coverage.',
-          'Explore each parliamentarian’s page for their speeches, divisions and other indexed records.',
-        ],
-      }}
-    >
       {terms.length ? (
         <Text variant="fine">
           {formatCount(terms.length)} service periods · newest first
@@ -294,18 +190,132 @@ export function ElectorateHistory({
           );
         })}
       </RowList>
-      {terms.length ? (
-        <AsAtLine
-          asOf={
-            terms
-              .map((t) => t.observed_through)
-              .sort()
-              .at(-1) ?? null
-          }
-          citation={view.identity.sources.map((s) => s.label)}
-          savedAt={view.identity.stale ? view.identity.savedAt : null}
+      {terms.length || selected ? (
+        <BlockSource
+          block={{
+            ...view.identity,
+            asAt: observed ?? view.identity.asAt,
+            sources: [
+              ...view.identity.sources,
+              ...(selected ? view.representatives.sources : []),
+            ],
+            stale:
+              view.identity.stale || (!!selected && view.representatives.stale),
+          }}
+          title="About representation history"
+          notes={[
+            'Dated service records, newest first. Party changes may create a new period. Open-ended records are not proof of current membership.',
+            'End dates are exclusive. Gaps indicate missing coverage.',
+            'On a date: representation is shown only as recorded in the dated release, and the outline is not a reconstruction of that date.',
+            'Explore each parliamentarian’s page for their speeches, divisions and other indexed records.',
+          ]}
+          testID="electorate-history-source"
         />
       ) : null}
+      <DateSheet
+        key={opening}
+        view={view}
+        asof={asof}
+        open={open}
+        onClose={() => setOpen(false)}
+        onChoose={choose}
+      />
     </Section>
+  );
+}
+
+/** The date picker: a native wheel, a typed date, and the roster's dates. */
+function DateSheet({
+  view,
+  asof,
+  open,
+  onClose,
+  onChoose,
+}: {
+  view: ElectorateView;
+  asof: string;
+  open: boolean;
+  onClose: () => void;
+  onChoose: (date: string) => void;
+}) {
+  const dates = [...new Set(view.rosters.map((r) => r.as_of))].sort().reverse();
+  const [input, setInput] = useState(
+      asof || view.representatives.asAt || dates[0] || '',
+    ),
+    [invalid, setInvalid] = useState(false);
+  return (
+    <InfoSheet
+      visible={open}
+      onClose={onClose}
+      title="View on a date"
+      notes={[]}
+      testID="electorate-date-sheet"
+      extra={
+        <Group>
+          <DateTimePicker
+            testID="electorate-native-date-picker"
+            accessibilityLabel="View representation on a date"
+            value={
+              new Date(
+                `${validDate(input) ? input : dates[0] || '2000-01-01'}T12:00:00`,
+              )
+            }
+            mode="date"
+            display="spinner"
+            themeVariant="light"
+            onValueChange={(_, date) => {
+              if (date) {
+                setInput(
+                  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`,
+                );
+                setInvalid(false);
+              }
+            }}
+          />
+          <Field
+            label="Date (YYYY-MM-DD)"
+            testID="electorate-date-input"
+            value={input}
+            onChangeText={(date) => {
+              setInput(date);
+              setInvalid(false);
+            }}
+            autoCorrect={false}
+            autoCapitalize="none"
+            placeholder="YYYY-MM-DD"
+            multiline
+            scrollEnabled={false}
+            submitBehavior="blurAndSubmit"
+            keyboardType="numbers-and-punctuation"
+            returnKeyType="done"
+            error={invalid ? 'Enter a valid date as YYYY-MM-DD.' : undefined}
+          />
+          <Button
+            label="View"
+            variant="primary"
+            testID="electorate-date-view"
+            onPress={() => {
+              if (validDate(input)) onChoose(input);
+              else setInvalid(true);
+            }}
+          />
+          {dates.length ? (
+            <Group gap={rhythm.tight}>
+              <Heading level={3}>Roster observation dates</Heading>
+              <RowList>
+                {dates.map((date) => (
+                  <LinkRow
+                    key={date}
+                    title={formatDate(date)}
+                    testID={`electorate-date-${date}`}
+                    onPress={() => onChoose(date)}
+                  />
+                ))}
+              </RowList>
+            </Group>
+          ) : null}
+        </Group>
+      }
+    />
   );
 }

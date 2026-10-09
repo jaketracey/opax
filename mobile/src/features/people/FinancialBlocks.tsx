@@ -26,10 +26,16 @@ export function PayBlock({
   block,
   retry,
   id,
+  figure = true,
 }: {
   block: ProfileView['blocks']['pay'];
   retry: () => void;
   id: string;
+  /**
+   * False where the page's figure strip already shows the rate (a profile):
+   * the rate joins the post's line instead of a second display figure.
+   */
+  figure?: boolean;
 }) {
   return (
     <RecordBlock
@@ -41,7 +47,7 @@ export function PayBlock({
       partialMissing="No readable record was found for this person. Some rows in the latest public export were unreadable."
       unlinked="This release does not link this person's salary entitlements. See the record on opax.com.au."
       missing="No covered federal salary entitlement is held for this person. State pay and service before 7 December 1999 are outside this series."
-      info={(p) =>
+      about={(p) =>
         p
           ? {
               title: 'About these entitlements',
@@ -54,29 +60,31 @@ export function PayBlock({
         <Group>
           {p.person.now ? (
             <>
-              <BigFigure
-                value={formatMoney(p.person.now.salary)}
-                spoken={moneyAccessibilityLabel(p.person.now.salary)}
-                label="a year"
-                accent="money"
-                testID={`${id}-salary`}
-              />
-              <Text wordSafe variant="strong">
-                {p.person.now.post}
-                {p.person.now.assumed
-                  ? ' (if named in the Opposition Leader’s notice)'
-                  : ''}
-              </Text>
-              <Text wordSafe variant="metadata">
-                Base salary {formatMoney(p.base.amount)}
-                {p.person.now.pct
-                  ? ` plus a ${formatPercent(p.person.now.pct, Number.isInteger(p.person.now.pct) ? 0 : 1)} loading`
-                  : ''}
-                .
-              </Text>
-              <Text wordSafe variant="fine">
-                Post held since {formatDate(p.person.now.since)}
-              </Text>
+              {figure ? (
+                <BigFigure
+                  value={formatMoney(p.person.now.salary)}
+                  spoken={moneyAccessibilityLabel(p.person.now.salary)}
+                  label="a year"
+                  testID={`${id}-salary`}
+                />
+              ) : null}
+              <Group gap={rhythm.line}>
+                <Text wordSafe variant="strong">
+                  {p.person.now.post}
+                  {p.person.now.assumed
+                    ? ' (if named in the Opposition Leader’s notice)'
+                    : ''}
+                </Text>
+                <Text wordSafe variant="metadata">
+                  {figure ? '' : `${formatMoney(p.person.now.salary)} a year: `}
+                  {figure ? 'Base salary' : 'base salary'}{' '}
+                  {formatMoney(p.base.amount)}
+                  {p.person.now.pct
+                    ? ` plus a ${formatPercent(p.person.now.pct, Number.isInteger(p.person.now.pct) ? 0 : 1)} loading`
+                    : ''}
+                  . Post held since {formatDate(p.person.now.since)}.
+                </Text>
+              </Group>
             </>
           ) : (
             <Text wordSafe>
@@ -120,7 +128,7 @@ export function PayBlock({
                           {formatDate(from)} to{' '}
                           {to ? formatDate(to) : 'present'}
                         </Text>
-                        <Text wordSafe variant="strong" tabular tone="moneyInk">
+                        <Text wordSafe variant="strong" tabular>
                           {formatMoney(salary)} a year
                         </Text>
                         <Text wordSafe variant="metadata">
@@ -171,24 +179,19 @@ export function PartyReceiptsBlock({
           <RowList>
             {p.party ? (
               <LinkRow
-                title="Party receipts"
-                detail={p.party}
-                icon="banknote"
-                accent="money"
+                title={`${p.party} party receipts`}
                 testID={linkID}
                 onPress={() => router.push(partyRoute(p.party!))}
               />
             ) : (
               <OpaxWebLink
-                label="Party receipts"
+                label="Party receipts on opax.com.au"
                 path={p.url}
                 testID={linkID}
               />
             )}
             <LinkRow
               title="Money map"
-              icon="point.3.connected.trianglepath.dotted"
-              accent="money"
               onPress={() => router.push(moneyRoute(p.party, jurisdiction))}
               testID={
                 id === 'person-receipts'

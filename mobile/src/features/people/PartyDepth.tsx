@@ -11,7 +11,6 @@ import {
   LoadingState,
   RowList,
   Section,
-  SourceLink,
   Text,
   errorMessage,
 } from '../../design/primitives';
@@ -60,12 +59,6 @@ export function PartyAccess({ name }: { name: string }) {
       title="Meetings and lobbyists"
       accent="people"
       testID="party-access"
-      info={{
-        title: 'About these disclosures',
-        notes: [
-          'From NSW and QLD ministerial diary disclosures and the six lobbyist registers; name matching is exact after normalisation, so a company using several trading names may be under-counted.',
-        ],
-      }}
     >
       {error ? (
         <ErrorState message={error} onRetry={retry} />
@@ -130,6 +123,13 @@ export function PartyAccess({ name }: { name: string }) {
           <ReadDate
             record={record}
             citation="NSW and QLD ministerial diary disclosures; six lobbyist registers"
+            about={{
+              title: 'About these disclosures',
+              notes: [
+                'From NSW and QLD ministerial diary disclosures and the six lobbyist registers; name matching is exact after normalisation, so a company using several trading names may be under-counted.',
+              ],
+            }}
+            testID="party-access-source"
           />
         </Group>
       )}
@@ -183,15 +183,6 @@ export function PartyFunding({ name }: { name: string }) {
         title="Receipts on the return"
         accent="money"
         testID="party-annual-returns"
-        info={{
-          title: 'About receipts on the return',
-          notes: [
-            '“Not itemised” is receipts minus the sums itemised as donations and as other receipts on the same return; the AEC does not require receipts under the disclosure threshold to be itemised. Public election funding is left where the return puts it.',
-            rows.some((r) => r.clamped)
-              ? `${rows.filter((r) => r.clamped).length} historic rows report itemised components above the headline receipts total; their components are clamped to that total.`
-              : null,
-          ],
-        }}
       >
         {error ? (
           <ErrorState message={error} onRetry={retry} />
@@ -204,7 +195,6 @@ export function PartyFunding({ name }: { name: string }) {
                 value={formatMoney(latest.receipts)}
                 spoken={moneyAccessibilityLabel(latest.receipts)}
                 label={`receipts on the ${formatFinancialYear(Number(latest.year.slice(0, 4)))} return${latest.branches > 1 ? ', ' + formatCount(latest.branches) + ' branches summed' : ''}`}
-                accent="money"
               />
             ) : (
               <EmptyState message="No annual return receipts are held for this party." />
@@ -213,18 +203,32 @@ export function PartyFunding({ name }: { name: string }) {
             {rows.length > 10 ? (
               <RowList>
                 <Disclosure
-                  label={'Show all ' + rows.length + ' years'}
+                  label={'All ' + rows.length + ' years'}
                   testID="party-all-years"
                 >
                   {() => <ReturnRows rows={rows.slice(10)} />}
                 </Disclosure>
               </RowList>
             ) : null}
-            <ReadDate record={record} citation={record.data.meta.source} />
-            <SourceLink
-              citation="AEC annual returns"
-              url={record.data.meta.register_url}
-              kind="register"
+            <ReadDate
+              record={record}
+              citation={record.data.meta.source}
+              originals={[
+                {
+                  label: 'AEC annual returns',
+                  url: record.data.meta.register_url,
+                },
+              ]}
+              about={{
+                title: 'About receipts on the return',
+                notes: [
+                  '“Not itemised” is receipts minus the sums itemised as donations and as other receipts on the same return; the AEC does not require receipts under the disclosure threshold to be itemised. Public election funding is left where the return puts it.',
+                  rows.some((r) => r.clamped)
+                    ? `${rows.filter((r) => r.clamped).length} historic rows report itemised components above the headline receipts total; their components are clamped to that total.`
+                    : null,
+                ],
+              }}
+              testID="party-annual-returns-source"
             />
           </Group>
         )}
@@ -233,13 +237,6 @@ export function PartyFunding({ name }: { name: string }) {
         title="Debts and other funding"
         accent="money"
         testID="party-debts"
-        info={{
-          title: 'About debts and other funding',
-          notes: [
-            'Debts are the balances the party’s branches listed as owed at 30 June on their own AEC annual returns, all branches summed: bank loans sit beside trade creditors and tax owed, and a balance is not new borrowing. Creditors under the disclosure threshold are not itemised.',
-            'Year-end balances, not new borrowing; a year with no debt itemised shows nothing.',
-          ],
-        }}
       >
         {record ? (
           <Group>
@@ -249,7 +246,6 @@ export function PartyFunding({ name }: { name: string }) {
                   value={formatMoney(d.total)}
                   spoken={moneyAccessibilityLabel(d.total)}
                   label={'owed at 30 June ' + (Number(d.year.slice(0, 4)) + 1)}
-                  accent="money"
                 />
                 <KeyValueList
                   items={[
@@ -298,7 +294,7 @@ export function PartyFunding({ name }: { name: string }) {
             )}
             {b ? (
               <Group gap={rhythm.tight}>
-                <Text wordSafe variant="strong" tabular tone="moneyInk">
+                <Text wordSafe variant="strong" tabular>
                   {formatMoney(b.total)}
                 </Text>
                 <Text wordSafe>
@@ -316,11 +312,23 @@ export function PartyFunding({ name }: { name: string }) {
                 </Text>
               </Group>
             ) : null}
-            <ReadDate record={record} citation="AEC Transparency Register" />
-            <SourceLink
+            <ReadDate
+              record={record}
               citation="AEC Transparency Register"
-              url={record.data.meta.register_url}
-              kind="register"
+              originals={[
+                {
+                  label: 'AEC Transparency Register',
+                  url: record.data.meta.register_url,
+                },
+              ]}
+              about={{
+                title: 'About debts and other funding',
+                notes: [
+                  'Debts are the balances the party’s branches listed as owed at 30 June on their own AEC annual returns, all branches summed: bank loans sit beside trade creditors and tax owed, and a balance is not new borrowing. Creditors under the disclosure threshold are not itemised.',
+                  'Year-end balances, not new borrowing; a year with no debt itemised shows nothing.',
+                ],
+              }}
+              testID="party-debts-source"
             />
           </Group>
         ) : error ? (

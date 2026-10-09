@@ -6,13 +6,12 @@ import type { PersonProfile } from '../../api/person-identity';
 import type { RecordResult } from '../../api/client';
 import { serverPassage } from '../../api/passage-text';
 import {
-  AsAtLine,
   ChoiceChips,
   Disclosure,
-  InfoButton,
   LinkRow,
   RowList,
   type InfoNotes,
+  type SourceDetails,
   EmptyState,
   ErrorState,
   Group,
@@ -20,19 +19,17 @@ import {
   KeyValueList,
   LoadingState,
   Section,
-  SourceLink,
-  StaleNotice,
   Text,
   errorMessage,
   MACHINE_BRIEF_EXPLANATION,
   MachineLabel,
 } from '../../design/primitives';
 import { formatCount, formatDate, formatPercent } from '../../design/format';
-import { chamberName, jurisdictionName } from '../../design/parliament';
-import { partyText } from '../../design/party';
+import { jurisdictionName } from '../../design/parliament';
 import { fromWebPath } from '../../navigation/routes';
 import { openOnWeb, openSource } from '../../navigation/external';
 import { rhythm, type Accent } from '../../design/tokens';
+import { BlockSource, recordBlock } from '../your-mp/Evidence';
 import {
   diaryFor,
   matchingNews,
@@ -64,6 +61,10 @@ const topicNames: Record<string, string> = {
   'justice-law': 'Justice & law',
   'foreign-affairs': 'Foreign affairs',
 };
+/**
+ * A block read on demand ("Show topics"): its methodology joins the source
+ * line the loaded block ends with, so the heading carries no ⓘ.
+ */
 export function ActionSection<T>({
   title,
   label,
@@ -71,10 +72,8 @@ export function ActionSection<T>({
   load,
   children,
   accent = 'people',
-  info,
 }: {
   accent?: Accent;
-  info?: InfoNotes;
   title: string;
   label: string;
   id: string;
@@ -117,7 +116,7 @@ export function ActionSection<T>({
     }
   };
   return (
-    <Section title={title} testID={id} accent={accent} info={info}>
+    <Section title={title} testID={id} accent={accent}>
       <RowList>
         <Disclosure
           label={(open ? 'Hide ' : 'Show ') + label}
@@ -145,74 +144,33 @@ export function ActionSection<T>({
     </Section>
   );
 }
+/**
+ * A fetched record's one source line: its date and source, "Saved [date]"
+ * for a saved copy, and the notes and originals in the source sheet.
+ */
 export function ReadDate({
   record,
   citation,
+  about,
+  originals,
+  testID,
 }: {
   record: RecordResult<unknown>;
   citation: string;
+  /** The source sheet's title and notes. */
+  about?: InfoNotes;
+  originals?: SourceDetails['originals'];
+  testID?: string;
 }) {
   return (
-    <Group gap={rhythm.line}>
-      <AsAtLine asOf={record.asOf} citation={citation} />
-      {record.stale ? <StaleNotice savedAt={record.savedAt} /> : null}
-    </Group>
-  );
-}
-export function QuickFacts({ identity }: { identity: PersonProfile }) {
-  const jurisdictions = [
-    ...new Set([
-      ...identity.seats.map((s) => s.jurisdiction),
-      ...(identity.rosterRow?.states ?? []),
-    ]),
-  ];
-  const chambers = [
-    ...new Set(
-      identity.seats.map(
-        (s) => chamberName(s.chamber, s.jurisdiction) ?? 'Chamber not recorded',
-      ),
-    ),
-  ];
-  return (
-    <Section title="Quick facts" accent="people" testID="person-quick-facts">
-      <KeyValueList
-        items={[
-          {
-            label: 'Type',
-            value:
-              identity.partyStatus === 'current'
-                ? 'Sitting parliamentarian'
-                : 'Parliamentarian',
-          },
-          {
-            label: 'Party',
-            value: partyText({
-              party: identity.party,
-              status: identity.partyStatus,
-              formerly: identity.formerly,
-            }).spoken,
-          },
-          {
-            label: 'Jurisdiction',
-            value:
-              jurisdictions
-                .map((j) => jurisdictionName(j) ?? 'Jurisdiction not recorded')
-                .join(', ') || 'Not recorded',
-          },
-          { label: 'Chamber', value: chambers.join(', ') || 'Not recorded' },
-          {
-            label: 'Recorded representation',
-            value:
-              identity.seats.map((s) => s.name).join(', ') ||
-              'No current electorate observation held',
-          },
-        ]}
-      />
-      <AsAtLine
-        asOf={identity.asOf}
-        citation="OPAX parliamentary roster and dated seats"
-      />
-    </Section>
+    <BlockSource
+      block={recordBlock(record)}
+      citation={citation}
+      title={about?.title}
+      notes={about?.notes}
+      originals={originals}
+      testID={testID}
+    />
   );
 }
 export function PersonTopics({ name }: { name: string }) {
@@ -250,13 +208,6 @@ function Topics({
         {profile.label} · {formatCount(profile.labelled)} labelled speeches so
         far
       </Text>
-      {data.person.data.coverage ? (
-        <InfoButton
-          title="About the topic profile"
-          notes={[data.person.data.coverage]}
-          testID="person-topic-info"
-        />
-      ) : null}
       {profile.topics.length ? (
         profile.topics.slice(0, 8).map((t) => {
           const baseline = data.baseline.data.topics.find(
@@ -288,6 +239,11 @@ function Topics({
       <ReadDate
         record={data.person}
         citation="OPAX topic labels on indexed speeches"
+        about={{
+          title: 'About the topic profile',
+          notes: [data.person.data.coverage],
+        }}
+        testID="person-topics-source"
       />
     </Group>
   );
@@ -317,80 +273,85 @@ export function RecordSection({
       title={title}
       label={kind === 'party' ? 'mentions' : kind}
       id={id}
-      info={{
-        title: 'About this parliamentary record',
-        notes: [
-          kind === 'speeches'
-            ? 'Newest results within the indexed retrieval window. Machine briefs are automated summaries; passages are extracts from the record.'
-            : kind === 'party'
-              ? 'Machine briefs are automated summaries; passages are extracts from the record.'
-              : null,
-        ],
-      }}
       load={() =>
         kind === 'speeches'
           ? peopleDepth.speeches(name)
           : peopleDepth.mentions(name, kind === 'party')
       }
     >
-      {(data) => (
-        <Group>
-          {(kind === 'speeches'
+      {(data) => {
+        const rows =
+          kind === 'speeches'
             ? data.records.data.results
-            : data.records.data.results.slice(0, 5)
-          ).map((r, i) => (
-            <Group
-              key={r.slug + i}
-              gap={rhythm.tight}
-              testID={id + '-row-' + i}
-            >
-              <LinkRow
-                title={displayedRecordTitle(r)}
-                onPress={() => openRecord(r)}
-                testID={id + '-open-' + i}
-              />
-              <Text wordSafe variant="metadata">
-                {r.speaker ? r.speaker + ' · ' : ''}
-                {r.date ? formatDate(r.date) : 'Undated'}
-                {r.state
-                  ? ' · ' +
-                    (jurisdictionName(r.state) ?? 'Jurisdiction not recorded')
-                  : ''}
-              </Text>
-              {data.briefs[r.resource ?? ''] ? (
-                <MachineLabel explanation={MACHINE_BRIEF_EXPLANATION} />
-              ) : (
+            : data.records.data.results.slice(0, 5);
+        const brief = (r: RecordRow) => data.briefs[r.resource ?? ''];
+        // One machine-written label for the list. Where briefs and passages
+        // mix, a passage says it is the record's own words.
+        const briefs = rows.filter((r) => brief(r)).length;
+        return (
+          <Group>
+            {briefs ? (
+              <MachineLabel explanation={MACHINE_BRIEF_EXPLANATION} />
+            ) : null}
+            {rows.map((r, i) => (
+              <Group
+                key={r.slug + i}
+                gap={rhythm.tight}
+                testID={id + '-row-' + i}
+              >
+                <LinkRow
+                  title={displayedRecordTitle(r)}
+                  onPress={() => openRecord(r)}
+                  testID={id + '-open-' + i}
+                />
                 <Text wordSafe variant="metadata">
-                  {kind === 'speeches' ? 'From the speech' : 'From the record'}
+                  {r.speaker ? r.speaker + ' · ' : ''}
+                  {r.date ? formatDate(r.date) : 'Undated'}
+                  {r.state
+                    ? ' · ' +
+                      (jurisdictionName(r.state) ?? 'Jurisdiction not recorded')
+                    : ''}
+                  {briefs && !brief(r)
+                    ? kind === 'speeches'
+                      ? ' · from the speech'
+                      : ' · from the record'
+                    : ''}
                 </Text>
-              )}
-              <Text wordSafe>
-                {data.briefs[r.resource ?? ''] ||
-                  (kind === 'speeches'
-                    ? cleanPassage(r.snippet)
-                    : kind === 'party'
-                      ? serverPassage(r.snippet, { max: 240 })
-                      : serverPassage(r.snippet, { max: 220 })) ||
-                  'Open the speech to read the record.'}
-              </Text>
-            </Group>
-          ))}
-          {data.records.data.coverage ? (
-            <InfoButton
-              title="About this retrieval window"
-              notes={[data.records.data.coverage]}
-              testID={id + '-coverage'}
+                {brief(r) ? (
+                  <Text wordSafe>{brief(r)}</Text>
+                ) : (
+                  <Text wordSafe variant="record">
+                    {(kind === 'speeches'
+                      ? cleanPassage(r.snippet)
+                      : kind === 'party'
+                        ? serverPassage(r.snippet, { max: 240 })
+                        : serverPassage(r.snippet, { max: 220 })) ||
+                      'Open the speech to read the record.'}
+                  </Text>
+                )}
+              </Group>
+            ))}
+            {!data.records.data.results.length ? (
+              <EmptyState message="No mentions found in the indexed record." />
+            ) : null}
+            <ReadDate
+              record={data.records}
+              citation="OPAX indexed parliamentary record; each row opens its source record"
+              about={{
+                title: 'About this parliamentary record',
+                notes: [
+                  kind === 'speeches'
+                    ? 'Newest results within the indexed retrieval window.'
+                    : null,
+                  'Machine briefs are automated summaries; passages are extracts from the record.',
+                  data.records.data.coverage,
+                ],
+              }}
+              testID={id + '-source'}
             />
-          ) : null}
-          {!data.records.data.results.length ? (
-            <EmptyState message="No mentions found in the indexed record." />
-          ) : null}
-          <ReadDate
-            record={data.records}
-            citation="OPAX indexed parliamentary record; each row opens its source record"
-          />
-        </Group>
-      )}
+          </Group>
+        );
+      }}
     </ActionSection>
   );
 }
@@ -406,7 +367,6 @@ export function NewsSection({ name }: { name: string }) {
         const items = matchingNews(name, data.data.items);
         return items.length ? (
           <Group>
-            <Heading level={2}>In the news</Heading>
             {items.map((item, i) => (
               <Group key={item.url} gap={rhythm.line}>
                 <LinkRow
@@ -422,12 +382,20 @@ export function NewsSection({ name }: { name: string }) {
                 ) : null}
               </Group>
             ))}
-            <ReadDate record={data} citation="ABC News; The Guardian" />
+            <ReadDate
+              record={data}
+              citation="ABC News; The Guardian"
+              testID="people-news-source"
+            />
           </Group>
         ) : (
           <Group>
             <EmptyState message="Nothing in today's politics headlines mentions them." />
-            <ReadDate record={data} citation="ABC News; The Guardian" />
+            <ReadDate
+              record={data}
+              citation="ABC News; The Guardian"
+              testID="people-news-source"
+            />
           </Group>
         );
       }}
@@ -468,26 +436,7 @@ function Diary({ identity }: { identity: PersonProfile }) {
   const m = record ? diaryFor(identity, record.data) : null;
   if (record && !m) return null;
   return (
-    <Section
-      title="Ministerial diary"
-      accent="people"
-      testID="person-diary"
-      info={
-        m
-          ? {
-              title: 'About the ministerial diary',
-              notes: [
-                m.jurisdiction === 'qld'
-                  ? "From the Queensland Government's monthly ministerial diary disclosures, published for " +
-                    m.name +
-                    '.'
-                  : "From the NSW Cabinet Office's quarterly ministers' diary disclosures. NSW diaries are published by office, so meetings are attributed to the minister holding that office on the date.",
-                'Staff, cabinet, departmental and other government meetings are counted but left out of the lists.',
-              ],
-            }
-          : undefined
-      }
-    >
+    <Section title="Ministerial diary" accent="people" testID="person-diary">
       {error ? (
         <ErrorState message={error} onRetry={() => setRetry((v) => v + 1)} />
       ) : !m || !record ? (
@@ -525,16 +474,26 @@ function Diary({ identity }: { identity: PersonProfile }) {
               {r.purpose ? <Text wordSafe>{r.purpose}</Text> : null}
             </Group>
           ))}
-          {m.latest_pdf ? (
-            <SourceLink
-              citation="Latest diary (PDF)"
-              url={m.latest_pdf}
-              kind="record"
-            />
-          ) : null}
           <ReadDate
             record={record}
             citation="NSW Cabinet Office; Queensland Government ministerial diary disclosures"
+            originals={
+              m.latest_pdf
+                ? [{ label: 'Latest diary (PDF)', url: m.latest_pdf }]
+                : []
+            }
+            about={{
+              title: 'About the ministerial diary',
+              notes: [
+                m.jurisdiction === 'qld'
+                  ? "From the Queensland Government's monthly ministerial diary disclosures, published for " +
+                    m.name +
+                    '.'
+                  : "From the NSW Cabinet Office's quarterly ministers' diary disclosures. NSW diaries are published by office, so meetings are attributed to the minister holding that office on the date.",
+                'Staff, cabinet, departmental and other government meetings are counted but left out of the lists.',
+              ],
+            }}
+            testID="person-diary-source"
           />
         </Group>
       )}

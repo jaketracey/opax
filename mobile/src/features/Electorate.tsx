@@ -15,13 +15,10 @@ import {
   errorMessage,
   PartyLabel,
 } from '../design/primitives';
-import {
-  ElectorateDate,
-  ElectorateHistory,
-} from './directories/ElectorateHistory';
+import { ElectorateHistory } from './directories/ElectorateHistory';
 import { validDate } from './directories/model';
 import { SeatGrants } from './money-public/Grants';
-import { AskAbout } from './ask/AskAbout';
+import { PageActions } from './people/PageActions';
 import { headerItems } from '../navigation/chrome';
 import { OutlineMap } from './electorate-map/OutlineMap';
 import {
@@ -31,11 +28,11 @@ import {
   formatPercent,
 } from '../design/format';
 import { useEffect, useState } from 'react';
-import { RefreshControl, View } from 'react-native';
+import { RefreshControl, StyleSheet, View } from 'react-native';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../api/runtime';
 import { ApiError } from '../api/errors';
-import { rhythm } from '../design/tokens';
+import { layout, rhythm } from '../design/tokens';
 import {
   CHAMBER_NOT_RECORDED,
   chamberName,
@@ -43,8 +40,12 @@ import {
 } from '../design/parliament';
 import { electorateRoute } from '../navigation/routes';
 import { shareHeaderItem } from '../navigation/share';
-import { EvidenceFooter, RecordBlock } from './your-mp/Evidence';
-import { FollowToggle } from './follows/FollowToggle';
+import {
+  BlockSource,
+  EvidenceFooter,
+  RecordBlock,
+  combinedBlock,
+} from './your-mp/Evidence';
 import { RepresentativeRows } from './your-mp/RepresentativeRows';
 import type { Directory, ElectorateView } from './your-mp/model';
 const indicators: Record<string, [string, 'count' | 'money' | 'percent']> = {
@@ -170,35 +171,47 @@ export function ElectorateScreen({
         ) : null}
         {view && identity && directory ? (
           <>
-            <Group gap={rhythm.tight}>
-              <Text variant="label" tone="navy">
-                Electorate
-              </Text>
-              <Heading level={1} testID="electorate-name">
-                {identity.name}
-              </Heading>
+            {/* Identity once: the name, where it sits, Follow and ⋯, and
+                the one line for where this record comes from. */}
+            <Group gap={rhythm.heading}>
+              <Group gap={rhythm.line}>
+                <Heading level={1} testID="electorate-name">
+                  {identity.name}
+                </Heading>
+                <Text wordSafe variant="metadata">
+                  {chamberName(identity.chamber, identity.jurisdiction) ??
+                    CHAMBER_NOT_RECORDED}{' '}
+                  ·{' '}
+                  {jurisdictionName(identity.state) ??
+                    jurisdictionName(identity.jurisdiction) ??
+                    'Jurisdiction not recorded'}
+                </Text>
+              </Group>
               {identity.status === 'historical' ? (
                 <Text wordSafe testID="electorate-abolished">
                   Abolished; not a current seat. This record describes a
                   historical electorate.
                 </Text>
               ) : null}
-              <Text wordSafe variant="metadata">
-                {chamberName(identity.chamber, identity.jurisdiction) ??
-                  CHAMBER_NOT_RECORDED}{' '}
-                ·{' '}
-                {jurisdictionName(identity.state) ??
-                  jurisdictionName(identity.jurisdiction) ??
-                  'Jurisdiction not recorded'}
-              </Text>
-              <FollowToggle
+              <PageActions
                 kind="electorate"
                 id={identity.id}
-                title={identity.name}
-                testID="electorate-follow"
+                name={identity.name}
+                webPath={seat?.url ?? `/subject/electorate/${id}`}
+                testID="electorate"
+              />
+              <EvidenceFooter
+                block={view.identity}
+                id="electorate"
+                about={{
+                  title: 'About this electorate record',
+                  notes: [
+                    view.coverageNote,
+                    'Representation is shown only as recorded in the dated release.',
+                  ],
+                }}
               />
             </Group>
-            <AskAbout kind="electorate" name={identity.name} />
             <PadGrid>
               <SeatGrants
                 name={identity.name}
@@ -216,7 +229,35 @@ export function ElectorateScreen({
                 />
               </View>
             </PadGrid>
-            <ElectorateDate
+            <RecordBlock
+              title="Latest verified representation"
+              accent="people"
+              about={() => ({
+                title: 'About representation',
+                notes: [
+                  'Election winners and present-day representation can differ.',
+                  'Representation is shown only as recorded in the dated release.',
+                ],
+              })}
+              id="electorate-representatives"
+              block={view.representatives}
+              retry={refresh}
+              missing={
+                identity.status === 'historical'
+                  ? 'Abolished; not a current seat. Past winners are listed under Elections.'
+                  : 'No verified representative is recorded for this date. This does not establish a vacancy.'
+              }
+            >
+              {(rows) => (
+                <RepresentativeRows
+                  rows={rows}
+                  directory={directory}
+                  asAt={view.representatives.asAt}
+                  id="electorate-member"
+                />
+              )}
+            </RecordBlock>
+            <ElectorateHistory
               view={view}
               directory={directory}
               asof={asof}
@@ -225,37 +266,6 @@ export function ElectorateScreen({
                 else router.setParams({ asof: date || undefined });
               }}
             />
-            {asof ? null : (
-              <RecordBlock
-                title="Latest verified representation"
-                accent="people"
-                info={() => ({
-                  title: 'About representation',
-                  notes: [
-                    'Election winners and present-day representation can differ.',
-                    'Representation is shown only as recorded in the dated release.',
-                  ],
-                })}
-                id="electorate-representatives"
-                block={view.representatives}
-                retry={refresh}
-                missing={
-                  identity.status === 'historical'
-                    ? 'Abolished; not a current seat. Past winners are listed under Elections.'
-                    : 'No verified representative is recorded for this date. This does not establish a vacancy.'
-                }
-              >
-                {(rows) => (
-                  <RepresentativeRows
-                    rows={rows}
-                    directory={directory}
-                    asAt={view.representatives.asAt}
-                    id="electorate-member"
-                  />
-                )}
-              </RecordBlock>
-            )}
-            <ElectorateHistory view={view} directory={directory} />
             <PadGrid>
               <Section
                 title="Elections"
@@ -272,6 +282,7 @@ export function ElectorateScreen({
                       block={b}
                       missing="No election record is held."
                       retry={refresh}
+                      footer={false}
                     >
                       {(e) => (
                         <Group gap={rhythm.tight}>
@@ -338,6 +349,13 @@ export function ElectorateScreen({
                 ) : (
                   <EmptyState message="No election records are held for this electorate." />
                 )}
+                {view.elections.length ? (
+                  <BlockSource
+                    block={combinedBlock(view.elections)}
+                    title="About these elections"
+                    testID="electorate-elections-source"
+                  />
+                ) : null}
               </Section>
               <Section
                 title="Local context"
@@ -354,6 +372,7 @@ export function ElectorateScreen({
                       block={b}
                       missing="No Census indicators are held."
                       retry={refresh}
+                      footer={false}
                     >
                       {(d) => (
                         <Group gap={rhythm.tight}>
@@ -391,6 +410,13 @@ export function ElectorateScreen({
                 ) : (
                   <EmptyState message="No Census context is held for this electorate." />
                 )}
+                {view.census.length ? (
+                  <BlockSource
+                    block={combinedBlock(view.census)}
+                    title="About the Census context"
+                    testID="electorate-census-source"
+                  />
+                ) : null}
               </Section>
             </PadGrid>
             <Section title="Related constituencies" accent="people">
@@ -421,19 +447,19 @@ export function ElectorateScreen({
                 <EmptyState message="No related constituencies are recorded." />
               )}
             </Section>
-            <Group gap={rhythm.line} testID="electorate-coverage">
-              <Text wordSafe variant="fine">
-                {view.coverageNote} Representation is shown only as recorded in
-                the dated release.
-              </Text>
-              <EvidenceFooter block={view.identity} id="electorate-coverage" />
-            </Group>
-            <Text wordSafe variant="fine" testID="electorate-end">
-              End of electorate record
-            </Text>
+            {/* The page's end, for journeys that scroll to it; nothing drawn. */}
+            <View
+              testID="electorate-end"
+              collapsable={false}
+              style={styles.end}
+            />
           </>
         ) : null}
       </Screen>
     </>
   );
 }
+const styles = StyleSheet.create({
+  // One point, at the foot of the last section rather than a section below.
+  end: { height: 1, marginTop: -layout.sectionGap },
+});

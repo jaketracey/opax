@@ -43,7 +43,7 @@ The fixture manifest pins `/access.json` to its existing source commit, and pins
 briefs are copied from the public bill files listed in that fixture's provenance.
 Resource IDs there are explicitly fixture-only identities, not production IDs.
 News headlines were read from the web's two public RSS feeds without calling
-OPAX's paid news route. The person-topic fixture is an empty local catalogue; its notes are behind ⓘ. Its zeros are not a production count. Synthetic unit fixtures
+OPAX's paid news route. The person-topic fixture is an empty local catalogue; its notes are in its source sheet. Its zeros are not a production count. Synthetic unit fixtures
 exercise nonempty All, Then and Now comparisons without fabricating facts about
 real parliamentarians. Labor has no access match in the pinned web export, so
 journey 37 checks honest empty meetings/lobbying states. The NSW diary journey
@@ -57,14 +57,34 @@ the exact hierarchy only on failure; a completed, anchored under-2-second
 native-ID assertion proves the upper bound on a passing run. Metro replaces the probe
 with a no-op in production and excludes the e2e module.
 
-The resumed lane uses the October design system: category sections, native
-disclosures, money figures and compact navigation rows. Full pay, diary,
-receipt and retrieval notes live behind info buttons. Expense definitions
-retain the export wording; category notes live behind info buttons. Licences,
-credits and source names are held on Sources and licences, including the new
-diary, lobbyist and headline sources and the expense glossary’s definition
-links. Source terms with no verified version stay qualified. No web branch,
-Worker change, deployment or production paid read is required.
+Design pass 3B (Oct 2026) says identity once and gives each block one
+source line:
+
+- **Header** (person, party, electorate): one title, the party as a dot and
+  its name (`PartyLabel`), one seat line ("Member for Grayndler · House of
+  Representatives", the electorate as its link), then `PageActions`: Follow
+  and ⋯ (Ask about this, the page on opax.com.au; Share stays in the bar). No
+  kicker, Quick facts box or party-wash card.
+- **Figure strip** (person): up to three figures (divisions, declared
+  interests, pay), each opening its block, where it is dated and sourced.
+  Those blocks then draw no second display figure (`figure={false}`).
+- **One source line per block** (`BlockSource` and `RecordBlock` in
+  `your-mp/Evidence.tsx`): date, source, then "partial" or "Saved [date]".
+  Its sheet holds the originals, the notes that sat behind ⓘ (`about`), the
+  partial and saved-copy notices and the licence. Sections that hold several
+  blocks (elections, Census, senators) draw one combined line
+  (`combinedBlock`).
+- **One accent per view**: section marks only; figures and amounts in ink, no
+  icon tiles on rows. One Machine-written label per list of briefs.
+- Page ends are an undrawn 1pt view with the old test ID (`person-end`,
+  `party-end`, `electorate-end`), which journeys scroll to.
+
+Expense definitions retain the export wording, with category notes drawn
+under each definition. Licences, credits and source names are also held on
+Sources and licences, including the diary, lobbyist and headline sources and
+the expense glossary's definition links. Source terms with no verified
+version stay qualified. No web branch, Worker change, deployment or
+production paid read is required.
 
 The people fixture now includes local resource contract responses for its two
 public speech samples. Their full text is explicitly a local absence notice,
