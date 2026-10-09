@@ -5,7 +5,7 @@ import { execFileSync } from 'node:child_process';
 import { runInNewContext } from 'node:vm';
 import { build } from 'esbuild';
 import { instrumentCrawlEntries, addInstrumentDiscovery, llmsText, sitemapFiles } from '../../scripts/build_crawl_catalog.mjs';
-import { catalogueComplete, filterInstruments, unpack } from '../public/instruments.js';
+import { catalogueComplete, reconciledCounts, filterInstruments, unpack } from '../public/instruments.js';
 import { instrumentPage, instrumentReader } from '../src/instruments.ts';
 
 const root = new URL('../public/', import.meta.url);
@@ -26,8 +26,8 @@ test('FRL loader stubbed HTTP paging, count reconciliation, resume, shrink and e
 test('instrument export stays within file/byte budget and reconciles every unique source id', () => {
   const files = Object.keys(fixtureFiles);
   const ready=json('instruments/ready.json');
-  assert.deepEqual(ready,{complete:true,count:manifest.count,export_date:manifest.generated_at.slice(0,10)});
-  assert.ok(Buffer.byteLength(fixtureFiles['ready.json'])<128);
+  assert.deepEqual(ready,{complete:true,count:manifest.count,exported:manifest.exported,unresolved_gap:0,gap_pages:[],export_date:manifest.generated_at.slice(0,10)});
+  assert.ok(Buffer.byteLength(fixtureFiles['ready.json'])<1024);
   assert.ok(files.length <= 400);
   assert.ok(files.reduce((n,f) => n + Buffer.byteLength(fixtureFiles[f]),0) <= 25_000_000);
   assert.equal(manifest.count, manifest.odata_count);
@@ -60,6 +60,23 @@ test('directory filters title, portfolio, type, commencement year and status wit
   for(const label of ['Title text','Portfolio','Type','Commencement year','Status']) assert.ok(result.prerender.includes(label));
   assert.match(result.prerender,/Federal Register of Legislation/);assert.match(result.prerender,/CC BY 4.0/);
   assert.doesNotMatch(result.prerender,/\/subject\/person\//);
+});
+
+test('an evidenced bounded plain gap is public only as a small directory note', async () => {
+  const records=Array.from({length:2000},(_,i)=>({...fixture.titles[0],id:`F2026L${String(i).padStart(5,'0')}`}));
+  const staged={...fixture,titles:records,count:2001,odata_count:2001,exported:2000,unresolved_gap:1,
+    gap_pages:[{offset:0,unresolved_gap:1}],metadata_coverage:{expanded_titles:2000,missing_expansion_ids:[]}};
+  const files=JSON.parse(execFileSync('python3',['-c',"import json,sys; from scripts.export_instruments import plan_export; p,m=plan_export(json.load(sys.stdin)); print(json.dumps({k:v.decode() for k,v in p.items()}))"],{cwd:new URL('../../',import.meta.url).pathname,input:JSON.stringify(staged),encoding:'utf8',maxBuffer:8*1024*1024}));
+  const read=async path=>JSON.parse(files[path.replace('/instruments/','')]);
+  const m=await read('/instruments/manifest.json');
+  assert.equal(catalogueComplete(m),true); assert.equal(reconciledCounts(m),true);
+  const directory=await instrumentPage(null,new URL('https://opax.com.au/instruments'),read,block);
+  assert.equal(directory.status,200);assert.match(directory.prerender,/FRL listed 2,001; 1 could not be retrieved from its API/);
+  const detail=await instrumentPage(records[0].id,new URL('https://opax.com.au/instrument/'+records[0].id),read,block);
+  assert.equal(detail.status,200); assert.doesNotMatch(detail.prerender,/could not be retrieved|unresolved_gap|gap_pages/);
+  const sitemap=instrumentCrawlEntries(m); assert.equal(sitemap.length,2000);
+  assert.doesNotMatch(sitemapFiles({instruments:sitemap}).files.map(f=>f.body).join(''),/Citizen|could not be retrieved/);
+  for(const bad of [{...m,unresolved_gap:11},{...m,gap_pages:[]},{...m,exported:1999},{...m,metadata_coverage:{expanded_titles:1999,missing_expansion_ids:[]}}]) assert.equal(catalogueComplete(bad),false);
 });
 
 test('detail has SSR facts, exact date labels, licence and authoritative version, without inferred commencement', async () => {
@@ -152,7 +169,7 @@ test('missing and incomplete catalogues omit sitemap type and llms discovery', (
 test('navigation reads only the tiny readiness flag and preserves menus', async () => {
   const source=readFileSync(new URL('navigation.js',root),'utf8');
   const ready=json('instruments/ready.json');
-  for(const m of [null,{...ready,complete:false},{...ready,complete:'true'},ready]) {
+  for(const m of [null,{...ready,complete:false},{...ready,complete:'true'},{...ready,unresolved_gap:11},ready]) {
     const inserted=[];
     const bills={closest(){return this},insertAdjacentHTML(where,html){inserted.push(html)}};
     const desktop={innerHTML:'',querySelector(){return bills}},mobile={innerHTML:'',querySelector(){return bills}};

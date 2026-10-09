@@ -83,7 +83,7 @@ ${catalogueComplete(instruments) ? '- [Federal legislative instruments](' + ORIG
 export function instrumentCrawlEntries(manifest) {
   if (!catalogueComplete(manifest)) return [];
   const ids = Object.keys(manifest.lookup);
-  if (!manifest.metadata_only || !ids.length || ids.length !== manifest.count || manifest.count !== manifest.odata_count) throw new Error('Unreconciled instruments export');
+  if (!manifest.metadata_only || !ids.length || ids.length !== (manifest.exported ?? manifest.count) || manifest.count !== manifest.odata_count) throw new Error('Unreconciled instruments export');
   const lastmod = exportDate(manifest.generated_at);
   if (!lastmod) throw new Error('Invalid instruments export date');
   return ids.map(id => {

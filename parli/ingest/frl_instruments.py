@@ -1,8 +1,8 @@
 """FRL in-force legislative instruments: public metadata only, no DB or KB writes.
 
 Run as ``python3 -m parli.ingest.frl_instruments``. All output is confined to
-the checkout. Stable id ordering, checkpoint pages and two count receipts make
-an incomplete acquisition ineligible for export. No document/content endpoints
+the checkout. Stable id ordering, checkpoint pages and two count receipts reconcile
+exported ids plus tightly bounded, evidenced plain-page gaps. No document/content endpoints
 are requested, and no identities or inferred legal relationships are created.
 """
 from __future__ import annotations
@@ -38,6 +38,8 @@ PAGE_SIZE = 100
 FIELDS = "*"  # All public title fields; default publisher projection, no $select.
 EXPANSION_TRIES = 3
 MAX_INDIVIDUAL_IDS = 50
+MAX_GAP_PROBES = 40
+MAX_UNRESOLVED_GAP = 10
 MELBOURNE = ZoneInfo("Australia/Melbourne")
 FIXED_AEST = timezone(timedelta(hours=10))
 UA = "OPAX metadata research (https://opax.com.au)"
@@ -69,6 +71,25 @@ def guard_count(count: int, expected: int, previous: int = 0) -> None:
         raise Held(f"Snapshot would shrink more than 2%: {previous} -> {count}")
 
 
+def guard_reconciliation(exported, count, gap=0, pages=None, previous=0):
+    """Only evidenced plain-page gaps may explain a difference from FRL's count."""
+    pages = [] if pages is None else pages
+    if any(type(n) is not int for n in (exported, count, gap)) or exported < 1 or gap < 0:
+        raise Held("Invalid or empty title reconciliation")
+    guard_count(exported + gap, count)
+    if gap > MAX_UNRESOLVED_GAP or gap * 2000 > count:
+        raise Held("Unresolved plain-title gap exceeds 10 rows or 0.05% of the source count")
+    if not isinstance(pages, list) or any(not isinstance(p, dict)
+            or type(p.get("offset")) is not int or p["offset"] < 0 or p["offset"] % PAGE_SIZE
+            or p["offset"] >= count or type(p.get("unresolved_gap")) is not int
+            or not 0 < p["unresolved_gap"] <= min(PAGE_SIZE, count - p["offset"]) for p in pages):
+        raise Held("Invalid plain-title gap offsets")
+    if len({p["offset"] for p in pages}) != len(pages) or sum(p["unresolved_gap"] for p in pages) != gap:
+        raise Held("Plain-title gap evidence does not reconcile")
+    if previous and exported < previous * .98:
+        raise Held(f"Snapshot would shrink more than 2%: {previous} -> {exported}")
+
+
 def utc_now():
     return datetime.now(timezone.utc)
 
@@ -90,9 +111,12 @@ def quiet_window(now: datetime) -> dict:
 
 def checkpoint_config(count: int, window: dict) -> dict:
     query = {"filter": SCOPE, "fields": FIELDS, "expand": EXPAND,
-             "count": count, "orderby": "id", "page_size": PAGE_SIZE}
+             "count": count, "orderby": "id", "page_size": PAGE_SIZE,
+             "plain_gap_strategy": "overlap-10/single/boundaries/reverse-id-projection-v1",
+             "max_gap_probes": MAX_GAP_PROBES, "max_unresolved_gap": MAX_UNRESOLVED_GAP,
+             "max_gap_fraction": "0.0005"}
     fingerprint = hashlib.sha256(json.dumps(query, sort_keys=True).encode()).hexdigest()
-    return {"schema": 2, **query, "fingerprint": fingerprint, "quiet_window": window}
+    return {"schema": 3, **query, "fingerprint": fingerprint, "quiet_window": window}
 
 
 def prepare_checkpoint(checkpoint: Path, config: dict) -> None:
@@ -151,7 +175,20 @@ def expanded_page(session, checkpoint: Path, offset: int, params: dict, values: 
             page = session.json({**params, "$expand": EXPAND})
         except json.JSONDecodeError:
             page = {"error": "Invalid JSON response from expansion read"}
+        # Plain-gap candidates already have their own complete entity response.
+        # Fill only those ids, after checking the bulk response is a valid subset.
         try:
+            recovered_ids = []
+            if any(v.get("reason") == "plain_gap" and v.get("page_offset") == offset for v in individuals.values()):
+                partial = validate_expansion(page, values, expected, allow_missing=True)
+                for original in values:
+                    key = original["id"]; saved = individuals.get(key, {})
+                    if key not in partial and saved.get("reason") == "plain_gap" and saved.get("status") == "complete":
+                        row = saved["response"]
+                        validate_expanded_title(row, original)
+                        partial[key] = row; recovered_ids.append(key)
+                page = {**page, "value": [partial[r["id"]] for r in values if r["id"] in partial],
+                        "_opax_individual_ids": recovered_ids}
             matched = validate_expansion(page, values, expected)
             atomic_json(path, page)
             return matched
@@ -331,6 +368,154 @@ def validate_title(row) -> None:
         raise Held("Title missing its authorised name")
 
 
+class GapProbes:
+    """Bound all recovery reads, including transport retries, across a checkpoint."""
+    def __init__(self, session, checkpoint):
+        self.session, self.path = session, checkpoint / "plain-gap-probes.json"
+        self.data = json.loads(self.path.read_text()) if self.path.exists() else {"requests": 0, "pages": {}, "reads": []}
+        if type(self.data.get("requests")) is not int or not 0 <= self.data["requests"] <= MAX_GAP_PROBES:
+            raise Held("Invalid plain-gap probe evidence")
+
+    @property
+    def remaining(self): return MAX_GAP_PROBES - self.data["requests"]
+
+    def read(self, purpose, params, key=None):
+        if not self.remaining: return None
+        before = self.session.requests
+        limit = getattr(self.session, "max_requests", None)
+        if limit is not None:
+            self.session.max_requests = min(limit, before + self.remaining)
+        entry = {"purpose": purpose, "query": params, "id": key}
+        self.data["reads"].append(entry)
+        atomic_json(self.path, self.data)
+        try:
+            response = self.session.title_json(key, params) if key else self.session.json(params)
+            entry["response"] = response
+            return response
+        except Held as error:
+            entry["error"] = str(error)
+            if (str(error) == "Request budget reached; resume from the checkpoint"
+                    and limit is not None and self.session.max_requests < limit
+                    and self.session.requests >= self.session.max_requests):
+                entry["probe_budget_exhausted"] = True
+                return None
+            # Unsupported alternatives / unavailable candidates are evidence.
+            # Busy hours, throttling, caps and transport failures always stop.
+            if re.fullmatch(r"Metadata request refused \(HTTP (400|404)\); checkpoint kept", str(error)):
+                return None
+            raise
+        finally:
+            self.data["requests"] += self.session.requests - before
+            if limit is not None: self.session.max_requests = limit
+            atomic_json(self.path, self.data)
+
+
+def recover_plain_page(session, checkpoint, offset, params, base, expected, probes, individuals):
+    size = min(PAGE_SIZE, expected - offset)
+    values = base.get("value")
+    if not isinstance(values, list) or len(values) > size:
+        raise Held("Malformed plain title page; snapshot held")
+    for row in values: validate_title(row)
+    keys = [r["id"] for r in values]
+    if keys != sorted(set(keys)): raise Held("Duplicate or unordered plain title page")
+    if "_opax_plain_gap" in base: return base  # same fingerprint/window only
+    if len(values) == size: return base
+    if offset + size == expected:
+        raise Held("Final plain title page incomplete; snapshot held")
+    atomic_json(checkpoint / f"rejected-plain-{offset:06d}.json", base)
+    page = probes.data["pages"].setdefault(str(offset), {"expected": size, "received": len(values),
+        "missing_positions": [], "candidate_ids": [], "resolved_ids": []})
+    known = {r["id"]: r for r in values}
+    discovered = {}
+    def listing(query, purpose, projected=False):
+        result = probes.read(purpose, query)
+        if result is None: return []
+        if not isinstance(result, dict) or result.get("@odata.count") != expected:
+            raise Held("Scope count changed during gap probing")
+        rows = result.get("value")
+        if not isinstance(rows, list) or len(rows) > query["$top"]:
+            raise Held("Malformed plain-gap listing")
+        for row in rows:
+            if not isinstance(row, dict) or not isinstance(row.get("id"), str) or not ID.fullmatch(row["id"]):
+                raise Held("Invalid gap candidate id")
+            if not projected: validate_title(row)
+        ids = [r["id"] for r in rows]
+        if ids != sorted(set(ids), reverse=query["$orderby"] == "id desc"):
+            raise Held("Unordered plain-gap listing")
+        return rows
+    def remember(rows):
+        for row in rows:
+            key = row["id"]
+            if key in known and any(known[key].get(k) != v for k, v in row.items()):
+                raise Held("Title metadata moved during gap probing")
+            if key not in known: discovered.setdefault(key, row)
+    positions = set()
+    # Ten-row windows overlap by one position. Only short windows need single reads.
+    for start in range(offset, offset + size, 9):
+        if not probes.remaining: break
+        width = min(10, offset + size - start)
+        rows = listing({**params, "$skip": start, "$top": width}, "overlapping window")
+        remember(rows)
+        if len(rows) < width: positions.update(range(start, start + width))
+    for position in sorted(positions):
+        if not probes.remaining: break
+        rows = listing({**params, "$skip": position, "$top": 1}, "localise position")
+        remember(rows)
+        if not rows or any(r["id"] not in known for r in rows): page["missing_positions"].append(position)
+    # Explicit neighbours bound the page. No arithmetic is performed on FRL ids.
+    lower, upper = None, None
+    for position, side in ((offset - 1, "lower"), (offset + size, "upper")):
+        if position < 0 or position >= expected or not probes.remaining: continue
+        neighbours = listing({**params, "$skip": position, "$top": 1}, "neighbour boundary")
+        if neighbours:
+            if side == "lower": lower = neighbours[0]["id"]
+            else: upper = neighbours[0]["id"]
+    if probes.remaining:
+        # OData id projection avoids full-row serialisation. Reverse id order is
+        # stable and mirrors the same positions; both directions retain the scope.
+        alternative = {**params, "$orderby": "id desc", "$skip": expected - offset - size,
+                       "$top": size, "$select": "id"}
+        remember(listing(alternative, "alternative id listing", projected=True))
+    original_first, original_last = keys[0] if keys else None, keys[-1] if keys else None
+    for key, candidate in sorted(discovered.items()):
+        # Without an explicit neighbour, admit only candidates between known
+        # page rows. Boundary rows themselves cannot masquerade as missing ids.
+        if lower is not None and key <= lower or upper is not None and key >= upper: continue
+        if offset > 0 and lower is None and original_first is not None and key < original_first: continue
+        if upper is None and original_last is not None and key > original_last: continue
+        page["candidate_ids"].append(key)
+        if not probes.remaining: break
+        if len(set(individuals) | {key}) > MAX_INDIVIDUAL_IDS:
+            raise Held("More than 50 individual expansion ids: systemic source fault")
+        evidence = checkpoint / "individual-fetches.json"
+        individuals[key] = {"page_offset": offset, "reason": "plain_gap", "status": "requested"}
+        atomic_json(evidence, individuals)
+        row = probes.read("individual gap candidate", {"$expand": EXPAND}, key)
+        individuals[key]["response"] = row
+        if row is None:
+            individuals[key]["status"] = "unavailable"
+            atomic_json(evidence, individuals)
+            continue
+        if not isinstance(row, dict) or row.get("id") != key:
+            individuals[key]["status"] = "wrong_id"
+            atomic_json(evidence, individuals)
+            raise Held("Individual gap candidate returned a different FRL id")
+        if row.get("collection") != "LegislativeInstrument" or row.get("isInForce") is not True:
+            individuals[key]["status"] = "out_of_scope"
+            atomic_json(evidence, individuals)
+            continue
+        validate_expanded_title(row, candidate)
+        individuals[key] = {"page_offset": offset, "reason": "plain_gap", "status": "complete", "response": row}
+        atomic_json(evidence, individuals)
+        known[key] = row
+        page["resolved_ids"].append(key)
+    if len(known) > size: raise Held("Gap recovery returned too many page ids")
+    page["unresolved_gap"] = size - len(known)
+    page["probe_budget_exhausted"] = not probes.remaining
+    atomic_json(probes.path, probes.data)
+    return {**base, "value": [known[k] for k in sorted(known)], "_opax_plain_gap": page}
+
+
 def acquire(session, out: Path, checkpoint: Path, policy=None, now=None) -> dict:
     """Injectable HTTP session for offline paging/reconciliation tests."""
     out, checkpoint = local_path(out), local_path(checkpoint)
@@ -338,14 +523,16 @@ def acquire(session, out: Path, checkpoint: Path, policy=None, now=None) -> dict
     now = now or getattr(session, "now", utc_now)
     window = quiet_window(now())
     expected = count_page(session)
-    previous = json.loads(out.read_text())["count"] if out.exists() else 0
+    old = json.loads(out.read_text()) if out.exists() else {}
+    previous = old.get("exported", old.get("count", 0))
     guard_count(expected, expected, previous)
     prepare_checkpoint(checkpoint, checkpoint_config(expected, window))
+    probes = GapProbes(session, checkpoint)
     evidence = checkpoint / "individual-fetches.json"
     individuals = json.loads(evidence.read_text()) if evidence.exists() else {}
     if not isinstance(individuals, dict) or len(individuals) > MAX_INDIVIDUAL_IDS:
         raise Held("Invalid or excessive individual expansion evidence; snapshot kept")
-    rows, seen, expanded_seen = [], set(), set()
+    rows, seen, expanded_seen, gap_pages = [], set(), set(), []
     for offset in range(0, expected, PAGE_SIZE):
         if quiet_window(now()) != window: raise Held("Acquisition quiet window expired")
         # Expanded FRL results can omit a parent title. Enumerate the plain
@@ -359,8 +546,14 @@ def acquire(session, out: Path, checkpoint: Path, policy=None, now=None) -> dict
         values = base.get("value")
         if base.get("@odata.count") != expected:
             raise Held("Scope count changed during title paging; snapshot held")
-        if not isinstance(values, list) or len(values) != min(PAGE_SIZE, expected - offset):
-            raise Held("Plain title page incomplete; snapshot held")
+        base = recover_plain_page(session, checkpoint, offset, params, base, expected, probes, individuals)
+        values = base["value"]
+        gap = base.get("_opax_plain_gap", {}).get("unresolved_gap", 0)
+        if gap:
+            gap_pages.append({"offset": offset, "unresolved_gap": gap})
+            total_gap = sum(p["unresolved_gap"] for p in gap_pages)
+            if total_gap > MAX_UNRESOLVED_GAP or total_gap * 2000 > expected:
+                raise Held("Unresolved plain-title gap exceeds 10 rows or 0.05% of the source count")
         for row in values:
             validate_title(row)
             key = row["id"]
@@ -375,16 +568,18 @@ def acquire(session, out: Path, checkpoint: Path, policy=None, now=None) -> dict
         print(f"[frl-instruments] reconciled {len(seen):,}/{expected:,} titles; "
               f"{len(expanded_seen):,} expanded metadata rows", flush=True)
     final_count = count_page(session)
-    guard_count(len(seen), final_count, previous)
+    unresolved_gap = sum(p["unresolved_gap"] for p in gap_pages)
+    guard_reconciliation(len(seen), final_count, unresolved_gap, gap_pages, previous)
     if final_count != expected: raise Held("Count moved during acquisition")
     if quiet_window(now()) != window: raise Held("Acquisition quiet window expired")
     downloaded = now().isoformat()
-    snapshot = {"schema": 1, "generated_at": downloaded, "downloaded_at": downloaded, "scope": SCOPE, "count": len(seen),
+    snapshot = {"schema": 1, "generated_at": downloaded, "downloaded_at": downloaded, "scope": SCOPE, "count": final_count,
+                "exported": len(seen), "unresolved_gap": unresolved_gap, "gap_pages": gap_pages,
                 "odata_count": final_count, "metadata_only": True,
                 "version_scope": "First API-returned version per title; current/latest flags retained verbatim. Full history not acquired.",
                 "metadata_coverage": {"expanded_titles": len(expanded_seen),
                                       "missing_expansion_ids": []},
-                "titles": rows}
+                "plain_gap_evidence": probes.data, "titles": rows}
     if out.exists() and json.loads(out.read_text()).get("titles") == rows:
         snapshot["generated_at"] = json.loads(out.read_text())["generated_at"]
     # Content can be identical, but the latest download receipt must advance.
@@ -393,9 +588,12 @@ def acquire(session, out: Path, checkpoint: Path, policy=None, now=None) -> dict
            "runtime_seconds": round(time.monotonic() - started, 2), "completed_at": downloaded,
            "metadata_coverage": snapshot["metadata_coverage"],
            "individual_fetch_ids": sorted(individuals),
+           "unresolved_gap": unresolved_gap, "gap_pages": gap_pages,
+           "gap_probe_requests": probes.data["requests"],
            "policy": policy, "snapshot": str(out.relative_to(ROOT))}
     atomic_json(out.parent / "run-receipt.json", run)
-    atomic_json(checkpoint / "complete.json", {"completed_at": downloaded, "count": len(seen)})
+    atomic_json(checkpoint / "complete.json", {"completed_at": downloaded, "count": final_count,
+                "exported": len(seen), "unresolved_gap": unresolved_gap})
     print(json.dumps(run, ensure_ascii=False), flush=True)
     return snapshot
 

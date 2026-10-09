@@ -71,6 +71,33 @@ class HTTP:
         return copy.deepcopy(self.individual(key))
 
 
+class PlainGapHTTP(HTTP):
+    def __init__(self, rows, omitted, recover=None, candidate=None):
+        super().__init__(rows, individual=lambda key: next(r for r in rows if r['id'] == key))
+        self.omitted = {rows[i]['id'] for i in omitted}
+        self.recover, self.candidate = recover, candidate
+
+    def json(self, params):
+        if '$skip' not in params: return super().json(params)
+        self.calls.append(params.copy()); self.requests += 1
+        if '$expand' in params: self.expansions += 1
+        source = sorted(self.rows,key=lambda r:r['id'],reverse=params['$orderby']=='id desc')
+        window = source[params['$skip']:params['$skip']+params['$top']]
+        discovers = (self.recover == 'single' and params['$top'] == 1
+                     or self.recover == 'alternative' and params.get('$select') == 'id')
+        window = [r for r in window if discovers or r['id'] not in self.omitted]
+        result = copy.deepcopy(window)
+        if params.get('$select') == 'id': result = [{'id':r['id']} for r in result]
+        elif '$expand' not in params:
+            for row in result:
+                row.pop('versions'); row.pop('administeringDepartments')
+        return {'@odata.count':len(self.rows),'value':result}
+
+    def title_json(self, key, params):
+        result = super().title_json(key, params)
+        return self.candidate(result) if self.candidate else result
+
+
 class FRLTests(unittest.TestCase):
     def setUp(self):
         (ROOT / "scripts/state/frl").mkdir(parents=True, exist_ok=True)
@@ -78,6 +105,100 @@ class FRLTests(unittest.TestCase):
         self.base = Path(self.tmp.name); self.out = self.base / "snapshot.json"; self.cp = self.base / "checkpoint"
 
     def tearDown(self): self.tmp.cleanup()
+
+    def test_plain_gap_resolves_with_overlapping_windows_and_own_entity(self):
+        rows=[title(i) for i in range(201)]
+        http=PlainGapHTTP(rows,[53],recover='single')
+        result=acquire(http,self.out,self.cp)
+        self.assertEqual(result['titles'],rows); self.assertEqual(result['unresolved_gap'],0)
+        self.assertEqual(http.individual_calls,[(rows[53]['id'],{'$expand':loader.EXPAND})])
+        self.assertTrue(any(p.get('$top')==10 for p in http.calls))
+        self.assertTrue(any(p.get('$top')==1 and p.get('$skip')==53 for p in http.calls))
+        self.assertTrue(all(p.get('$filter',loader.SCOPE)==loader.SCOPE for p in http.calls))
+        self.assertLessEqual(result['plain_gap_evidence']['requests'],40)
+        self.assertEqual(result['plain_gap_evidence']['pages']['0']['resolved_ids'],[rows[53]['id']])
+
+    def test_plain_gap_alternative_projection_discovers_id_without_guessing(self):
+        rows=[title(i) for i in range(201)]
+        http=PlainGapHTTP(rows,[53],recover='alternative')
+        result=acquire(http,self.out,self.cp)
+        self.assertEqual(result['titles'],rows)
+        self.assertEqual(http.individual_calls,[(rows[53]['id'],{'$expand':loader.EXPAND})])
+        self.assertTrue(any(p.get('$orderby')=='id desc' and p.get('$select')=='id' for p in http.calls))
+
+    def test_unresolvable_one_row_plain_gap_publishes_explicit_evidence(self):
+        rows=[title(i) for i in range(2001)]
+        http=PlainGapHTTP(rows,[53]); result=acquire(http,self.out,self.cp)
+        self.assertEqual(result['count'],2001); self.assertEqual(result['exported'],2000)
+        self.assertEqual(result['unresolved_gap'],1)
+        self.assertEqual(result['gap_pages'],[{'offset':0,'unresolved_gap':1}])
+        self.assertEqual(len({r['id'] for r in result['titles']}),2000)
+        files,manifest=plan_export(result)
+        ready=json.loads(files['ready.json'])
+        self.assertEqual((ready['count'],ready['exported'],ready['unresolved_gap']),(2001,2000,1))
+        self.assertEqual(ready['gap_pages'],result['gap_pages'])
+        dest=self.base/'export'; export(self.out,dest)
+        self.assertEqual(check_instruments(dest,compare_head=False),[])
+        released=subprocess.run([sys.executable,str(ROOT/'scripts/check_instruments_release.py'),'--directory',str(dest)],capture_output=True)
+        self.assertEqual(released.returncode,0,released.stderr.decode())
+        self.assertEqual(manifest['metadata_coverage']['expanded_titles'],2000)
+
+    def test_unresolvable_eleven_row_plain_gap_holds(self):
+        http=PlainGapHTTP([title(i) for i in range(24001)],range(20,31))
+        with self.assertRaisesRegex(Held,'exceeds 10 rows'): acquire(http,self.out,self.cp)
+        self.assertFalse(self.out.exists()); self.assertFalse((self.cp/'complete.json').exists())
+
+    def test_gap_percentage_limit_also_holds_for_a_small_scope(self):
+        with self.assertRaisesRegex(Held,'0.05%'):
+            acquire(PlainGapHTTP([title(i) for i in range(201)],[53]),self.out,self.cp)
+
+    def test_plain_gap_probe_budget_is_shared_across_pages(self):
+        http=PlainGapHTTP([title(i) for i in range(6001)],[53,153,253])
+        result=acquire(http,self.out,self.cp)
+        self.assertEqual(result['unresolved_gap'],3)
+        self.assertEqual(result['plain_gap_evidence']['requests'],40)
+        self.assertEqual([p['offset'] for p in result['gap_pages']],[0,100,200])
+
+    def test_plain_gap_candidate_outside_scope_is_never_exported(self):
+        http=PlainGapHTTP([title(i) for i in range(2001)],[53],recover='alternative',candidate=lambda r:{**r,'isInForce':False})
+        result=acquire(http,self.out,self.cp)
+        self.assertEqual(result['unresolved_gap'],1)
+        self.assertTrue(all(r['isInForce'] is True for r in result['titles']))
+
+    def test_gap_probe_limit_counts_transport_retries(self):
+        session=PoliteSession(now=lambda:QUIET,clock=lambda:0,sleep=lambda _:None)
+        probes=loader.GapProbes(session,self.cp)
+        probes.data['requests']=39
+        reply=subprocess.CompletedProcess([],0,b'HTTP/1.1 500 Error\r\n\r\n{}\n500',b'')
+        with patch.object(loader.subprocess,'run',return_value=reply) as transport:
+            self.assertIsNone(probes.read('stubbed retry cap',{'$filter':SCOPE,'$orderby':'id','$top':10,'$skip':0}))
+            self.assertEqual(transport.call_count,1)
+        self.assertEqual(probes.data['requests'],40)
+        self.assertEqual(session.max_requests,600)
+        self.assertIsNone(probes.read('exhausted',{}))
+
+    def test_global_cap_during_probing_still_holds(self):
+        session=PoliteSession(initial_requests=599,now=lambda:QUIET,clock=lambda:0,sleep=lambda _:None)
+        probes=loader.GapProbes(session,self.cp)
+        reply=subprocess.CompletedProcess([],0,b'HTTP/1.1 500 Error\r\n\r\n{}\n500',b'')
+        with patch.object(loader.subprocess,'run',return_value=reply) as transport:
+            with self.assertRaisesRegex(Held,'Request budget'):
+                probes.read('global cap',{'$filter':SCOPE,'$orderby':'id','$top':10,'$skip':0})
+            self.assertEqual(transport.call_count,1)
+        self.assertEqual(session.requests,600)
+        self.assertEqual(probes.data['requests'],1)
+
+    def test_throttling_during_gap_probes_holds_even_with_small_gap(self):
+        http=PlainGapHTTP([title(i) for i in range(2001)],[53])
+        original=http.json
+        def throttle(params):
+            if params.get('$top')==10:
+                http.requests+=1
+                raise Held('Repeated publisher throttling; checkpoint kept')
+            return original(params)
+        http.json=throttle
+        with self.assertRaisesRegex(Held,'throttling'): acquire(http,self.out,self.cp)
+        self.assertFalse(self.out.exists())
 
     def test_ordered_paging_reconciles_every_id_and_keeps_public_fields(self):
         rows = [title(i) for i in range(101)]; rows[0]["statusHistory"] = [{"reasons": [{"affect": "Disallow", "affectedByTitle": {"titleId": "F2026L99999"}}]}]
@@ -371,7 +492,7 @@ class FRLTests(unittest.TestCase):
         atomic_json(self.out, staged); dest = self.base / 'export'; export(self.out, dest)
         self.assertEqual(check_instruments(dest, compare_head=False), [])
         ready=json.loads((dest / 'ready.json').read_text())
-        self.assertEqual(ready,{'complete':True,'count':1,'export_date':staged['downloaded_at'][:10]})
+        self.assertEqual(ready,{'complete':True,'count':1,'exported':1,'unresolved_gap':0,'gap_pages':[],'export_date':staged['downloaded_at'][:10]})
         for wrong in ({**ready,'complete':False},{**ready,'count':2},{**ready,'export_date':'2026-10-08'}):
             atomic_json(dest / 'ready.json',wrong)
             self.assertEqual(check_instruments(dest,compare_head=False),['instruments readiness flag mismatch'])

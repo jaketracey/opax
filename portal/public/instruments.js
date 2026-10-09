@@ -24,11 +24,21 @@ export function filterInstruments(records, params) {
 }
 
 /** One availability rule for navigation, SSR and crawl discovery. */
+export function reconciledCounts(m) {
+  const count=m?.count, exported=m?.exported ?? count, gap=m?.unresolved_gap ?? 0, pages=m?.gap_pages ?? [];
+  return Number.isInteger(count) && count > 0 && Number.isInteger(exported) && exported > 0
+    && Number.isInteger(gap) && gap >= 0 && gap <= 10 && gap * 2000 <= count && exported + gap === count
+    && Array.isArray(pages) && pages.every(p=>p && Number.isInteger(p.offset) && p.offset >= 0
+      && p.offset % 100 === 0 && p.offset < count && Number.isInteger(p.unresolved_gap)
+      && p.unresolved_gap > 0 && p.unresolved_gap <= Math.min(100,count-p.offset))
+    && new Set(pages.map(p=>p.offset)).size === pages.length
+    && pages.reduce((n,p)=>n+p.unresolved_gap,0) === gap;
+}
 export function catalogueComplete(m) {
   if (!m || m.complete !== true || m.metadata_only !== true
     || m.scope !== "collection eq 'LegislativeInstrument' and isInForce eq true"
-    || !Number.isInteger(m.count) || m.count < 1 || m.count !== m.odata_count
-    || m.metadata_coverage?.expanded_titles !== m.count
+    || !reconciledCounts(m) || m.count !== m.odata_count
+    || m.metadata_coverage?.expanded_titles !== (m.exported ?? m.count)
     || !Array.isArray(m.metadata_coverage?.missing_expansion_ids)
     || m.metadata_coverage.missing_expansion_ids.length
     || !m.lookup || !Array.isArray(m.chunks) || !m.chunks.length
@@ -39,9 +49,9 @@ export function catalogueComplete(m) {
     || !m.attribution || m.attribution.licence_url !== 'https://creativecommons.org/licenses/by/4.0/'
     || !m.facets || !['portfolio','type','status','commencement_year'].every(k => Array.isArray(m.facets[k]))) return false;
   const ids = Object.keys(m.lookup);
-  return ids.length === m.count && ids.every(id => FRL_ID.test(id)
+  return ids.length === (m.exported ?? m.count) && ids.every(id => FRL_ID.test(id)
     && Number.isInteger(m.lookup[id]) && m.lookup[id] >= 0 && m.lookup[id] < m.chunks.length)
     && m.chunks.every(c => c && /^\/instruments\/catalogue-[a-z0-9-]+\.json$/.test(c.path)
       && Number.isInteger(c.count) && c.count > 0 && c.count <= 512)
-    && m.chunks.reduce((n,c) => n + c.count, 0) === m.count;
+    && m.chunks.reduce((n,c) => n + c.count, 0) === (m.exported ?? m.count);
 }

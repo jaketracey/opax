@@ -12,7 +12,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from parli.ingest.frl_instruments import Held, ID, LICENCE, SCOPE, guard_count, local_path, validate_title
+from parli.ingest.frl_instruments import Held, ID, LICENCE, SCOPE, guard_reconciliation, local_path, validate_title
 
 MAX_FILES, MAX_BYTES, CHUNK_ROWS = 400, 25_000_000, 512
 SOURCE = "Source: Federal Register of Legislation (legislation.gov.au), CC BY 4.0"
@@ -61,10 +61,13 @@ def packer(rows):
 
 def plan_export(snapshot):
     rows = snapshot["titles"]
-    guard_count(len({r["id"] for r in rows}), snapshot["odata_count"])
+    exported = snapshot.get("exported", snapshot["count"])
+    gap, pages = snapshot.get("unresolved_gap", 0), snapshot.get("gap_pages", [])
+    guard_reconciliation(exported, snapshot["odata_count"], gap, pages)
     if snapshot.get("scope") != SCOPE or not snapshot.get("metadata_only"):
         raise Held("Only reconciled in-force metadata snapshots may be exported")
-    if len(rows) != snapshot["count"]: raise Held("Duplicate or mismatched staged rows")
+    if snapshot["count"] != snapshot["odata_count"] or len(rows) != exported or len({r["id"] for r in rows}) != exported:
+        raise Held("Duplicate or mismatched staged rows")
     coverage = snapshot.get("metadata_coverage", {})
     if coverage.get("expanded_titles") != len(rows) or coverage.get("missing_expansion_ids") != []:
         raise Held("Incomplete expanded metadata: every title must have source-returned relationships")
@@ -117,7 +120,8 @@ def plan_export(snapshot):
             chunks.append({"path": "/instruments/" + filename, "year": year, "count": len(batch), "bytes": len(body)})
     catalogue.sort(key=lambda r: (r[1].casefold(), r[0]))
     payloads["index.json"] = encoded({"fields": ["id", "title", "portfolios", "type", "commenced", "status", "chunk"], "records": catalogue})
-    manifest = {"schema": 1, "complete": True, "generated_at": generated, "downloaded_at": generated, "count": len(rows),
+    manifest = {"schema": 1, "complete": True, "generated_at": generated, "downloaded_at": generated, "count": snapshot["odata_count"],
+                "exported": exported, "unresolved_gap": gap, "gap_pages": pages,
                 "odata_count": snapshot["odata_count"], "scope": SCOPE, "metadata_only": True,
                 "index_url": "/instruments/index.json", "attribution": attribution,
                 "schemas": schemas, "strings": strings, "lookup": lookup, "chunks": chunks,
@@ -130,11 +134,12 @@ def plan_export(snapshot):
                 "limitations": ["InForce includes legislation made but not yet commenced.",
                                  "The titles/version API does not supply a whole-instrument commencement date; missing dates stay unknown.",
                                  "Unbounded/bulk filtered version expansions timed out; combined latest/current filtering and combined relationship expansion failed source probes. No relationships inferred.",
-                                 "Plain and expanded pages are independently matched by id. Any omitted title or expansion field holds publication; explicit source-returned empty arrays are retained.",
+                                 "Plain gaps are probed with a 40-request budget. At most 10 unresolved titles and 0.05% of FRL's count are permitted, with explicit offsets. Every exported title requires complete source-returned expansion fields.",
                                  "No document bodies, model summaries, person entities or identity joins.",
                                  "One API-returned version per title is acquired. It is not necessarily current/latest; use the authoritative FRL latest link where a latest version was not returned. Full history is phase 2."]}
     payloads["manifest.json"] = encoded(manifest)
     payloads["ready.json"] = encoded({"complete": True, "count": manifest["count"],
+                                      "exported": exported, "unresolved_gap": gap, "gap_pages": pages,
                                       "export_date": generated[:10]})
     check_budget(payloads)
     return payloads, manifest
@@ -150,8 +155,9 @@ def check_budget(payloads):
 def export(snapshot_path, out):
     snapshot_path, out = local_path(snapshot_path), local_path(out)
     snapshot = json.loads(snapshot_path.read_text())
-    previous = json.loads((out / "manifest.json").read_text())["count"] if (out / "manifest.json").exists() else 0
-    guard_count(snapshot["count"], snapshot["odata_count"], previous)
+    old = json.loads((out / "manifest.json").read_text()) if (out / "manifest.json").exists() else {}
+    guard_reconciliation(snapshot.get("exported", snapshot["count"]), snapshot["odata_count"],
+                         snapshot.get("unresolved_gap", 0), snapshot.get("gap_pages", []), old.get("exported", old.get("count", 0)))
     payloads, manifest = plan_export(snapshot)
     # Validate the complete plan and budget before touching the last good export.
     out.mkdir(parents=True, exist_ok=True)
@@ -162,8 +168,9 @@ def export(snapshot_path, out):
     for p in out.glob("*.json"):
         if p.name not in payloads: p.unlink()
     files, size = check_budget(payloads)
-    print(json.dumps({"rows": manifest["count"], "files": files, "bytes": size}))
+    print(json.dumps({"rows": manifest["exported"], "listed": manifest["count"], "unresolved_gap": manifest["unresolved_gap"], "files": files, "bytes": size}))
     return manifest
+
 
 
 def main():

@@ -213,6 +213,14 @@
   // Insert only the new anchors, preserving the existing menu event handlers.
   const instrumentsReady = fetch('/instruments/ready.json').then(r => r.ok ? r.json() : null).then(ready => {
     if (ready?.complete !== true || !Number.isInteger(ready.count) || ready.count < 1
+      || !Number.isInteger(ready.exported) || ready.exported < 1
+      || !Number.isInteger(ready.unresolved_gap) || ready.unresolved_gap < 0 || ready.unresolved_gap > 10
+      || ready.unresolved_gap * 2000 > ready.count || ready.exported + ready.unresolved_gap !== ready.count
+      || !Array.isArray(ready.gap_pages) || !ready.gap_pages.every(p=>p && Number.isInteger(p.offset)
+        && p.offset >= 0 && p.offset % 100 === 0 && p.offset < ready.count
+        && Number.isInteger(p.unresolved_gap) && p.unresolved_gap > 0 && p.unresolved_gap <= 100)
+      || new Set(ready.gap_pages.map(p=>p.offset)).size !== ready.gap_pages.length
+      || ready.gap_pages.reduce((n,p)=>n+p.unresolved_gap,0) !== ready.unresolved_gap
       || !/^\d{4}-\d{2}-\d{2}$/.test(ready.export_date || '')
       || !Number.isFinite(Date.parse(ready.export_date))) return;
     sections.splice(sections.findIndex(s => s.id === 'bills') + 1, 0,

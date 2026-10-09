@@ -52,6 +52,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 BILLS = ROOT / "portal" / "public" / "bills"
 PUBLIC = "portal/public"  # repo-relative, for git and for the helpers below
 
@@ -473,22 +474,28 @@ def check_instruments(directory=None, compare_head=True) -> list[str]:
         manifest = json.loads((directory / "manifest.json").read_text())
         rows = json.loads((directory / "index.json").read_text())["records"]
         count = manifest["count"]
-        if not count or count != manifest["odata_count"] or count != len(rows):
+        from parli.ingest.frl_instruments import guard_reconciliation
+        exported = manifest.get("exported", count)
+        gap, pages = manifest.get("unresolved_gap", 0), manifest.get("gap_pages", [])
+        guard_reconciliation(exported, count, gap, pages)
+        if count != manifest["odata_count"] or exported != len(rows):
             return ["instruments counts do not reconcile"]
-        if not manifest["metadata_only"] or len(manifest["lookup"]) != count:
+        if not manifest["metadata_only"] or len(manifest["lookup"]) != exported:
             return ["instruments metadata scope or lookup mismatch"]
         coverage = manifest.get("metadata_coverage", {})
-        if manifest.get("complete") is not True or coverage.get("expanded_titles") != count or coverage.get("missing_expansion_ids") != []:
+        if manifest.get("complete") is not True or coverage.get("expanded_titles") != exported or coverage.get("missing_expansion_ids") != []:
             return ["instruments expanded metadata incomplete"]
         if manifest.get("scope") != "collection eq 'LegislativeInstrument' and isInForce eq true":
             return ["instruments source scope mismatch"]
         if not manifest.get("generated_at") or manifest.get("downloaded_at") != manifest["generated_at"]:
             return ["instruments latest download date missing"]
         ready = json.loads((directory / "ready.json").read_text())
-        if ready.get("complete") is not True or ready.get("count") != count or ready.get("export_date") != manifest["generated_at"][:10]:
+        if (ready.get("complete") is not True or ready.get("count") != count
+                or ready.get("exported") != exported or ready.get("unresolved_gap") != gap
+                or ready.get("gap_pages") != pages or ready.get("export_date") != manifest["generated_at"][:10]):
             return ["instruments readiness flag mismatch"]
         old = head_bytes("portal/public/instruments/manifest.json") if compare_head else None
-        if old and count < json.loads(old)["count"] * .98:
+        if old and exported < json.loads(old).get("exported", json.loads(old)["count"]) * .98:
             return ["instruments snapshot shrank more than 2%"]
         files = list(directory.glob("*.json"))
         if len(files) > 400 or sum(p.stat().st_size for p in files) > 25_000_000:
@@ -520,7 +527,7 @@ def check_instruments(directory=None, compare_head=True) -> list[str]:
                 if not isinstance(row.get("name"), str) or not row["name"]:
                     return ["instrument title missing"]
                 ids.add(key)
-        if len(ids) != count or {r[0] for r in rows} != ids: return ["instrument ids do not reconcile"]
+        if len(ids) != exported or {r[0] for r in rows} != ids: return ["instrument ids do not reconcile"]
         if manifest["attribution"]["licence_url"] != "https://creativecommons.org/licenses/by/4.0/":
             return ["FRL licence missing"]
         return []

@@ -177,3 +177,28 @@ tests pass**, and **120 VM Python tests run (119 pass, one existing clean-tree s
 48 keep-if-unchanged, 67 data-validation and 5 refresh fixture tests. TypeScript and
 shell syntax checks pass. The separate release gate exits 1 with "complete catalogue
 absent", as expected. `votes.json` remains byte-identical to `origin/main`, schema 1.
+
+## Plain-page gap recovery
+
+The authorised one-off morning run stopped after 110 requests / 31m 52s, with
+5,200 unique titles and complete expanded metadata against FRL's count of 24,148.
+The non-final plain page at offset 5,200 was short; no snapshot/export was published.
+There were no HTTP 429/503 responses or Retry-After waits. Its checkpoint evidence
+is retained locally; the temporary override was removed and the default guard stayed
+unchanged.
+
+The loader now probes short non-final pages using overlapping ten-row windows,
+single positions, neighbour boundaries and a reverse-id listing projected to id.
+It never guesses an FRL id. Each candidate needs its own scoped, fully expanded
+entity response. Forty probe attempts, including transport retries, is the maximum;
+the strategy/limits are fingerprinted, so the morning checkpoint starts fresh.
+Unresolved plain-title gaps may be published only up to ten rows **and** 0.05% of
+the source count. Count, exported rows, the gap and its page offsets are explicit in
+snapshot evidence, manifest and readiness flag. A small directory note identifies
+the shortfall. Each exported title still requires complete expansions, and detail
+pages contain no gap note. Sitemap counts use exported ids only.
+
+Step 1 is committed only after offline validation: 947/947 Node tests, 42/42
+loader/export tests and 120 VM Python tests (119 pass, one existing clean-tree
+skip). TypeScript passes, and schema-1 `votes.json` remains byte-identical.
+No publisher requests occur during this code/test step.

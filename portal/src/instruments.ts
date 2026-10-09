@@ -2,7 +2,7 @@ import { FRL_ID, catalogueComplete, filterInstruments, unpack, type CatalogueRow
 
 interface Attribution { source: string; source_url: string; licence_url: string; dated: string; changes: string; exceptions: string; endorsement: string }
 interface Manifest {
-  count: number; generated_at: string; index_url: string; schemas: string[][]; strings?: string[]
+  count: number; exported?: number; unresolved_gap?: number; generated_at: string; index_url: string; schemas: string[][]; strings?: string[]
   attribution: Attribution; lookup: Record<string, number>
   chunks: { path: string; count: number }[]
   facets: { portfolio: string[]; type: string[]; status: string[]; commencement_year: string[] }
@@ -64,18 +64,19 @@ export async function instrumentPage(id: string | null, url: URL, read: Read, bl
     if (!catalogueComplete(manifest)) return unavailable()
     if (id === null) {
       const index = await read<{ records: CatalogueRow[] }>(manifest.index_url)
-      if (!Array.isArray(index.records) || index.records.length !== manifest.count) return unavailable()
+      if (!Array.isArray(index.records) || index.records.length !== (manifest.exported ?? manifest.count)) return unavailable()
       const matches = filterInstruments(index.records, url.searchParams)
       const page = Math.max(1, Math.min(Math.ceil(matches.length / 50) || 1, Math.trunc(Number(url.searchParams.get('page')) || 1)))
       const rows = matches.slice((Math.trunc(page) - 1) * 50, Math.trunc(page) * 50)
-      const description = `${manifest.count.toLocaleString('en-AU')} in-force federal legislative-instrument titles. Metadata only; authoritative text is on the Federal Register of Legislation.`
+      const description = `${(manifest.exported ?? manifest.count).toLocaleString('en-AU')} in-force federal legislative-instrument titles. Metadata only; authoritative text is on the Federal Register of Legislation.`
+      const gapNote = manifest.unresolved_gap ? `<p class="fineprint">FRL listed ${manifest.count.toLocaleString('en-AU')}; ${manifest.unresolved_gap} could not be retrieved from its API</p>` : ''
       const facts = block('Federal legislative instruments', description, 'The government record', '')
       const form = `<form class="instrument-filters" action="/instruments" method="get"><label>Title text<input name="q" type="search" value="${esc(url.searchParams.get('q') || '')}"></label>${select('Portfolio', 'portfolio', manifest.facets.portfolio, url, true)}${select('Type', 'type', manifest.facets.type, url)}${select('Commencement year', 'year', manifest.facets.commencement_year, url)}${select('Status', 'status', manifest.facets.status, url)}<button type="submit" class="ui-button">Filter</button><a href="/instruments">Reset</a></form>`
       const href = (n: number) => { const target = new URL(url); target.searchParams.set('page', String(n)); return target.pathname + target.search }
       const pagination = `<nav aria-label="Catalogue pages">${page > 1 ? `<a href="${esc(href(page - 1))}" rel="prev">Previous</a>` : ''}<span>Page ${Math.trunc(page)} of ${Math.ceil(matches.length / 50) || 1}</span>${page * 50 < matches.length ? `<a href="${esc(href(page + 1))}" rel="next">Next</a>` : ''}</nav>`
       const list = `<p>${matches.length.toLocaleString('en-AU')} matching titles · snapshot ${esc(manifest.generated_at.slice(0, 10))}</p><ul class="instrument-list">${rows.map(r => `<li><h2><a href="/instrument/${r[0]}">${esc(r[1])}</a></h2><p>${esc(r[0])} · ${esc(r[3])} · ${esc(r[5])}</p><p>Portfolio: ${r[2].length ? esc(r[2].join('; ')) : 'Not supplied'} · Commenced: ${date(r[4])}</p></li>`).join('')}</ul>`
       return { title: 'Federal legislative instruments · OPAX', description, status: 200,
-        prerender: facts + `<section class="wrap instrument-content">${form}<p class="fineprint">FRL's in-force listing includes instruments made but not yet commenced. Version start dates are separate from commencement; dates not supplied by the API stay unknown.</p>${list}${pagination}${attribution(manifest.attribution)}</section>` }
+        prerender: facts + `<section class="wrap instrument-content">${gapNote}${form}<p class="fineprint">FRL's in-force listing includes instruments made but not yet commenced. Version start dates are separate from commencement; dates not supplied by the API stay unknown.</p>${list}${pagination}${attribution(manifest.attribution)}</section>` }
     }
     const chunk = manifest.lookup[id]
     if (!Number.isInteger(chunk) || !manifest.chunks[chunk]) return missing()

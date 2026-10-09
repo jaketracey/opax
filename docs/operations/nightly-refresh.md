@@ -361,7 +361,21 @@ limit is retained across resumes of the same checkpoint. `individual-fetches.jso
 records requested ids, responses and completion/failure, and the final run receipt
 lists `individual_fetch_ids`. Other malformed or mismatched pages still hold the run.
 Explicit empty arrays returned for a title are legitimate source metadata. The unique plain
-title ids must still reconcile exactly with the count before and after the run.
+title ids plus any explicitly evidenced, permitted plain-page gap must reconcile
+with the count before and after the run. Short non-final plain pages use overlapping
+ten-row windows, single-position reads and explicit neighbour boundaries, followed
+by an alternative reverse-id listing projected to id. Candidate ids come only from
+publisher responses and are read individually with the same expansion and scope
+checks. Gap probing, including retries and candidate reads, is capped at 40 attempts
+across a checkpoint. The gap strategy and limits are included in its fingerprint.
+Publication permits at most ten unresolved plain titles and at most 0.05% of the
+source count. Above either limit the run holds. Every exported title still needs
+complete expansion fields; the allowance never covers missing version/department
+metadata on an exported title. The snapshot records full probe evidence, and the
+manifest/readiness flag carry `count` (FRL listed), `exported`, `unresolved_gap` and
+`gap_pages` (offset and shortfall). Only `/instruments` shows the small note
+"FRL listed N; M could not be retrieved from its API" when a gap remains. Detail
+pages stay unchanged, and the sitemap contains only exported FRL ids.
 Full version history and complete current/latest supplementation remain phase 2.
 
 The `instruments` data group owns `portal/public/instruments`. Its year chunks and
