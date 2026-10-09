@@ -3574,6 +3574,29 @@ function personSlug(name) {
   return String(name ?? "").normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
     .replace(/['’‘ʼ`.]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 }
+
+/** Point each sponsor link at the roster row the bill names (sponsor-person.js: the bill's person ID
+ *  decides, never a surname print); a print the roster cannot place keeps its name link. */
+async function linkBillSponsors(root, bill) {
+  const anchors = [...root.querySelectorAll("a[data-sponsor]")];
+  if (!anchors.length) return;
+  const [roster, resolver] = await Promise.all([
+    loadParliamentarians().catch(() => null),
+    import("/sponsor-person.js?v=74d9a1f8cf").catch(() => null),
+  ]);
+  if (!roster?.people?.length || !resolver) return;
+  const { sponsorPerson } = resolver;
+  for (const a of anchors) {
+    if (!a.isConnected) continue;
+    const printed = a.dataset.sponsor;
+    const person = sponsorPerson(printed, anchors.length === 1 ? bill.sponsor_person_id : null, roster.people);
+    const href = person && subjectHash("person", person.name);
+    if (!href) continue;
+    a.setAttribute("href", href);
+    // A register print the parser could not read ("KATTER, Bob, Jnr, MP") reads as the person.
+    if (printed.includes(",")) a.textContent = person.name;
+  }
+}
 function loadPersonSlugs() {
   personSlugs.ready ??= fetch("/api/person-slugs").then((r) => (r.ok ? r.json() : null)).then((data) => {
     for (const [slug, name] of Object.entries(data?.slugs || {})) {
@@ -8315,8 +8338,8 @@ async function openBill(key, manageFocus) {
   const members = billSponsorFromPortfolio(bill.portfolio);
   // Each co-sponsor is a person with an entry of their own, so each is a link.
   const sponsorLinks = bill.sponsor
-    ? [`<a ${entityHrefAttr(subjectHash("person", billSponsorName(bill.sponsor)))}>${esc(billSponsorName(bill.sponsor))}</a>`]
-    : (members || []).map((m) => `<a ${entityHrefAttr(subjectHash("person", m.name))}>${esc(m.name)}</a>${
+    ? [`<a data-sponsor="${esc(billSponsorName(bill.sponsor))}" ${entityHrefAttr(subjectHash("person", billSponsorName(bill.sponsor)))}>${esc(billSponsorName(bill.sponsor))}</a>`]
+    : (members || []).map((m) => `<a data-sponsor="${esc(m.name)}" ${entityHrefAttr(subjectHash("person", m.name))}>${esc(m.name)}</a>${
       m.suffix ? ` ${esc(m.suffix)}` : ""}`);
   const draft = bill.status === "exposure_draft";
   const house = billHouse(bill.originating_house);
@@ -8362,6 +8385,7 @@ async function openBill(key, manageFocus) {
     ${billDivisionsHTML(bill)}
     ${billSpeechesHTML(bill)}
     ${billActsHTML(bill)}`;
+  linkBillSponsors(body, bill);
   openBillText(bill);
   if (manageFocus) $("bill-title")?.focus();
   const more = $("bill-divisions-more");

@@ -1,4 +1,5 @@
 import { personUrl, partyUrl } from '../public/canonical-urls.js'
+import {sponsorPerson} from '../public/sponsor-person.js'
 import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, billStripStage} from '../public/division-markdown.js'
 /** Crawlable answers from the same static projections the application reads.
  * All lists are bounded; source strings and URLs cross one escaping boundary. */
@@ -136,12 +137,9 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
   return {html:answerBlock(display,description,'Parliamentarian',body),description}
 }
 
+/** The roster row a bill's printed sponsor opens: public/sponsor-person.js, never a surname print. */
 export function sponsorFor(b: Bill, people: Person[]): Person | null {
-  const sponsorName=(b.sponsor || '').replace(/\b(?:Senator|Sen|MP|Hon|Dr|Mrs|Mr|Ms)\b\.?\s*/gi,'').trim()
-  const parts=sponsorName.split(',').map(s=>s.trim()).filter(Boolean)
-  const normal=parts.length===2 ? `${parts[1]} ${parts[0]}` : sponsorName
-  const matches=people.filter(p=>fold(p.name)===fold(normal))
-  return people.find(p=>p.pid===b.sponsor_person_id && !!b.sponsor_person_id) || (matches.length===1 ? matches[0] : null)
+  return b.sponsor ? sponsorPerson(b.sponsor, b.sponsor_person_id, people) : null
 }
 export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,string>, related: Bill[] = []): RenderedContent {
   const title = b.short_title || b.title

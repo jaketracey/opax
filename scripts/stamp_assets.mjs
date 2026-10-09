@@ -132,7 +132,7 @@ export const MODULE_STAMPS = [
   ['map-page.js', 'money-map.js'], ['agencies.js', 'money-map.js'], ['suppliers.js', 'money-map.js'],
   ['thenvsnow.js', 'wombat.js'], ['grant-recipient.js', 'grants.js'],
   ['electorates.js', 'labels.js'], ['home-data.js', 'labels.js'],
-  ['app.js', 'labels.js'], ['app.js', 'electorates.js'], ['app.js', 'division-markdown.js'], ['app.js', 'quiz.js'], ['app.js', 'timemachine.js'],
+  ['app.js', 'labels.js'], ['app.js', 'electorates.js'], ['app.js', 'division-markdown.js'], ['app.js', 'sponsor-person.js'], ['app.js', 'quiz.js'], ['app.js', 'timemachine.js'],
   ['app.js', 'money-map.js'], ['app.js', 'explain.js'], ['app.js', 'grant-recipient.js'],
   // The Explore tools and the loaders, restyled on tokens in pass 4G.
   ['app.js', 'ballot.js'], ['app.js', 'grants.js'], ['app.js', 'ledger.js'], ['app.js', 'matrix.js'], ['app.js', 'wordsdollars.js'],
