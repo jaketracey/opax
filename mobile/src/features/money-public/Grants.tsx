@@ -1,13 +1,11 @@
 import { useCallback, useMemo, useState } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
-  AsAtLine,
   LinkRow,
   BigFigure,
-  InfoButton,
   Field,
   Group,
-  KeyValueList,
+  RowList,
   Section,
   Text,
 } from '../../design/primitives';
@@ -22,11 +20,12 @@ import { RecordRow } from '../RecordRow';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { money } from './runtime';
 import type { Jurisdiction } from './data';
+import { rhythm } from '../../design/tokens';
 import {
+  MetaSource,
   MoneyHeader,
   MoneyChoices,
   MoneyList,
-  Provenance,
   ResultCount,
   Title,
 } from './parts';
@@ -98,19 +97,41 @@ function GrantList({
             <Title id="grants-title">
               {jur === 'federal' ? 'Commonwealth' : 'Queensland'} grants
             </Title>
-            <LinkRow
-              title={
-                jur === 'federal'
-                  ? 'Switch to Queensland'
-                  : 'Switch to Commonwealth'
-              }
-              onPress={() =>
-                router.push({
-                  pathname: '/grants',
-                  params: { jur: jur === 'federal' ? 'qld' : 'federal' },
-                })
-              }
+            <RecordStatus
+              {...status}
+              label="Loading grants"
+              testID="grants-status"
             />
+            {data ? (
+              // The figure the screen is about, the donor overlap in one
+              // sentence, and one source line.
+              <Group gap={rhythm.tight}>
+                <BigFigure
+                  value={formatMoneyCompact(data.counts.dollars)}
+                  spoken={moneyAccessibilityLabel(data.counts.dollars, true)}
+                  label={
+                    jur === 'qld'
+                      ? `Recorded annual expenditure in ${formatCount(data.counts.grants)} lines`
+                      : `Awarded in ${formatCount(data.counts.grants)} grants`
+                  }
+                  accent="money"
+                  testID="grants-total"
+                />
+                <Text wordSafe testID="grants-donor-headline">
+                  Of {formatCount(data.counts.recipients)} recipients resolved
+                  to entities, {formatCount(data.counts.donorRecipients)} appear
+                  in the donor registers;{' '}
+                  {formatPercent(data.counts.donorShare * 100)} of the money,{' '}
+                  {formatMoneyCompact(data.counts.donorDollars)}, went to them.
+                </Text>
+                <MetaSource
+                  meta={data.meta}
+                  record={status.record}
+                  title="About these grants"
+                  testID="grants-source"
+                />
+              </Group>
+            ) : null}
             <MoneyChoices
               value={view}
               onChange={(v) => {
@@ -121,13 +142,6 @@ function GrantList({
                 ['programs', 'Programs', 'grants-programs'],
                 ['electorates', 'Electorates', 'grants-electorates'],
               ]}
-            />
-            <LinkRow
-              title="The month’s largest grants"
-              accent="money"
-              icon="chart.bar"
-              testID="grants-largest"
-              onPress={() => router.push('/largest-grants')}
             />
             {seat && view === 'programs' ? (
               <Text wordSafe>
@@ -144,115 +158,68 @@ function GrantList({
               testID="grants-search"
               returnKeyType="done"
             />
-            <RecordStatus
-              {...status}
-              label="Loading grants"
-              testID="grants-status"
+            <ResultCount
+              count={data ? rows.length : null}
+              noun={view}
+              detail={
+                data && view === 'programs'
+                  ? `${formatCount(data.counts.programsTotal)} in the source totals`
+                  : null
+              }
             />
-            {data ? (
-              <Group>
-                <Text wordSafe testID="grants-donor-headline">
-                  {formatCount(data.counts.donorRecipients)} recipients appear
-                  in the donor registers ·{' '}
-                  {formatPercent(data.counts.donorShare * 100)} of the money,{' '}
-                  {formatMoneyCompact(data.counts.donorDollars)}, went to those
-                  donors
-                </Text>
-                <InfoButton
-                  title="About donor overlap"
-                  testID="grants-notes"
-                  notes={[
-                    data.meta.coverage,
-                    data.meta.threshold,
-                    ...data.meta.caveats,
-                  ]}
-                />
-              </Group>
-            ) : null}
-            <ResultCount count={data ? rows.length : null} noun={view} />
-            {data && view === 'programs' ? (
-              <Text wordSafe variant="fine">
-                {formatCount(data.programs.length)} programs in the available
-                detail export; {formatCount(data.counts.programsTotal)} programs
-                in the source totals.
-              </Text>
-            ) : null}
-            {data ? (
-              <AsAtLine asOf={data.meta.asOf} citation={data.meta.source} />
-            ) : null}
           </>
         }
         render={(r, i) => (
-          <>
-            <RecordRow
-              title={r.name}
-              testID={`grants-row-${i}`}
-              detail={`${formatMoneyCompact(r.total)} · ${formatCount(r.count)} grants`}
-              onPress={() =>
-                'key' in r
-                  ? router.push({
-                      pathname: '/grant-program',
-                      params: {
-                        jur,
-                        id: r.id,
-                        key: r.key,
-                        ...(seat ? { seat, state } : {}),
-                      },
-                    })
-                  : router.push({
-                      pathname: '/grants',
-                      params: {
-                        jur,
-                        seat: r.name,
-                        state: r.state,
-                        view: 'programs',
-                      },
-                    })
-              }
-            />
-            <Text wordSafe variant="fine">
-              {formatMoneyCompact(r.donorTotal)} to recipients in the donor
-              registers
-            </Text>
-          </>
+          <RecordRow
+            title={r.name}
+            testID={`grants-row-${i}`}
+            detail={`${formatMoneyCompact(r.total)} · ${formatCount(r.count)} grants · ${formatMoneyCompact(r.donorTotal)} to recipients in the donor registers`}
+            onPress={() =>
+              'key' in r
+                ? router.push({
+                    pathname: '/grant-program',
+                    params: {
+                      jur,
+                      id: r.id,
+                      key: r.key,
+                      ...(seat ? { seat, state } : {}),
+                    },
+                  })
+                : router.push({
+                    pathname: '/grants',
+                    params: {
+                      jur,
+                      seat: r.name,
+                      state: r.state,
+                      view: 'programs',
+                    },
+                  })
+            }
+          />
         )}
         footer={
           data ? (
-            <>
-              <Section
-                title="Donor overlap"
-                accent="money"
-                info={{
-                  title: 'About donor overlap',
-                  notes: data.meta.caveats,
-                }}
-              >
-                <KeyValueList
-                  items={[
-                    {
-                      label:
-                        jur === 'qld'
-                          ? `recorded annual expenditure in ${formatCount(data.counts.grants)} lines`
-                          : `awarded in ${formatCount(data.counts.grants)} grants`,
-                      value: formatMoneyCompact(data.counts.dollars),
-                    },
-                    {
-                      label: 'recipients resolved to entities',
-                      value: formatCount(data.counts.recipients),
-                    },
-                    {
-                      label: 'of them appear in the donor registers',
-                      value: formatCount(data.counts.donorRecipients),
-                    },
-                    {
-                      label: `of the money, ${formatMoneyCompact(data.counts.donorDollars)}, went to those donors`,
-                      value: formatPercent(data.counts.donorShare * 100),
-                    },
-                  ]}
-                />
-                <Provenance meta={data.meta} />
-              </Section>
-            </>
+            <RowList>
+              <LinkRow
+                title={
+                  jur === 'federal'
+                    ? 'Queensland grants'
+                    : 'Commonwealth grants'
+                }
+                testID="grants-switch"
+                onPress={() =>
+                  router.push({
+                    pathname: '/grants',
+                    params: { jur: jur === 'federal' ? 'qld' : 'federal' },
+                  })
+                }
+              />
+              <LinkRow
+                title="The month’s largest grants"
+                testID="grants-largest"
+                onPress={() => router.push('/largest-grants')}
+              />
+            </RowList>
           ) : null
         }
       />
@@ -282,29 +249,14 @@ export function SeatGrants({
       )
     : undefined;
   return (
-    <Section
-      title="Grants in this seat"
-      accent="money"
-      testID="seat-grants"
-      info={
-        data
-          ? {
-              title: 'About grants in this seat',
-              notes: [
-                'Electorate mappings are approximate and use the award’s delivery or recipient postcode.',
-                ...data.meta.caveats,
-              ],
-            }
-          : undefined
-      }
-    >
+    <Section title="Grants in this seat" accent="money" testID="seat-grants">
       <RecordStatus
         {...status}
         label="Loading grants in this seat"
         testID="seat-grants-status"
       />
       {data ? (
-        <Group>
+        <Group gap={rhythm.tight}>
           {seat ? (
             <BigFigure
               value={formatMoneyCompact(seat.total)}
@@ -319,7 +271,19 @@ export function SeatGrants({
               is not a zero total.
             </Text>
           )}
-          <AsAtLine asOf={data.meta.asOf} citation={data.meta.source} />
+          <MetaSource
+            meta={data.meta}
+            record={status.record}
+            title="About grants in this seat"
+            notes={[
+              'Electorate mappings are approximate and use the award’s delivery or recipient postcode.',
+            ]}
+            testID="seat-grants-source"
+          />
+        </Group>
+      ) : null}
+      <RowList>
+        {data ? (
           <LinkRow
             title="See all"
             testID="seat-grants-all"
@@ -335,13 +299,13 @@ export function SeatGrants({
               })
             }
           />
-        </Group>
-      ) : null}
-      <LinkRow
-        title="Public money"
-        testID="seat-public-money"
-        onPress={() => router.push('/public-money')}
-      />
+        ) : null}
+        <LinkRow
+          title="Public money"
+          testID="seat-public-money"
+          onPress={() => router.push('/public-money')}
+        />
+      </RowList>
     </Section>
   );
 }

@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from '../../design/primitives';
+import { colors } from '../../design/tokens';
 import type { MoneyGraph } from './data';
 import type { ProjectedLabel } from './NativeMoneyScene';
 import { clusterColour } from './ported/palette';
@@ -14,16 +15,30 @@ export function moneyLabelGroups(graph: MoneyGraph): string[] {
     ),
   ].filter((group) => group !== 'parties');
 }
+/** Every party on the map, each with a fixed label slot. */
+export function moneyLabelParties(
+  graph: MoneyGraph,
+): { id: string; label: string }[] {
+  return graph.nodes
+    .filter((node) => node.kind === 'party')
+    .map(({ id, label }) => ({ id, label }));
+}
 
 const LabelText = memo(function LabelText({
   label,
   ink,
 }: {
   label: string;
-  ink: string;
+  /** A cluster's ink; a party or the selection takes the ink role. */
+  ink?: string;
 }) {
   return (
-    <Text variant="fine" wordSafe accessible={false} style={{ color: ink }}>
+    <Text
+      variant="fine"
+      wordSafe
+      accessible={false}
+      style={{ color: ink ?? colors.ink }}
+    >
       {label}
     </Text>
   );
@@ -32,30 +47,47 @@ const LabelText = memo(function LabelText({
 /** Keep native text mounted; camera movement changes only wrapper transforms. */
 export function MoneyMapLabels({
   groups,
+  parties = [],
   labels,
   width,
   labelWidth = 110,
   clamp = true,
 }: {
   groups: readonly string[];
+  /** The map's parties: named beside their nodes, in the ink role. */
+  parties?: readonly { id: string; label: string }[];
   labels: readonly ProjectedLabel[];
   width: number;
   labelWidth?: number;
   clamp?: boolean;
 }) {
-  const projected = new Map(labels.map((label) => [label.id, label]));
-  const groupIds = new Set(groups);
-  const focus = labels.find((label) => !groupIds.has(label.id));
-  const slots = groups.map((group) => ({
-    key: group,
-    label: group,
-    ink: clusterColour(group).ink,
-    point: projected.get(group),
-  }));
+  const projected = new Map(
+    labels
+      .filter((label) => label.kind !== 'focus')
+      .map((label) => [label.id, label]),
+  );
+  const focus = labels.find((label) => label.kind === 'focus');
+  const slots: {
+    key: string;
+    label: string;
+    ink?: string;
+    point: ProjectedLabel | undefined;
+  }[] = [
+    ...groups.map((group) => ({
+      key: group,
+      label: group,
+      ink: clusterColour(group).ink,
+      point: projected.get(group),
+    })),
+    ...parties.map((party) => ({
+      key: `party-${party.id}`,
+      label: party.label,
+      point: projected.get(party.id),
+    })),
+  ];
   slots.push({
     key: 'money-focus-label',
     label: focus?.label ?? '\u00a0',
-    ink: focus?.ink ?? '#23271F',
     point: focus,
   });
   return (

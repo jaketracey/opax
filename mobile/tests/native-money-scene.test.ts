@@ -1,5 +1,9 @@
 import * as THREE from 'three';
-import { NativeMoneyScene } from '../src/features/money/NativeMoneyScene';
+import {
+  NativeMoneyScene,
+  PARTY_LABELS,
+} from '../src/features/money/NativeMoneyScene';
+import { clusterColour } from '../src/features/money/ported/palette';
 import { decodeMoneyGraph } from '../src/features/money/data';
 import { defaultMoneyFilters, moneyView } from '../src/features/money/view';
 import { pinned } from './pinned';
@@ -212,5 +216,44 @@ test('Reduce Motion skips identical settled frames but redraws after orbit, zoom
     expect(scene.render(30000)).toBe(true);
     expect(scene.render(30034)).toBe(false);
   }
+  scene.dispose();
+});
+test('parties are drawn in one neutral grey and the largest in view are named', () => {
+  const { scene } = create();
+  const render = jest.mocked(THREE.WebGLRenderer).mock.results.at(-1)!.value
+    .render;
+  for (let i = 0; i < 400; i++) scene.render(i * 34);
+  const root = render.mock.calls.at(-1)![0] as THREE.Scene;
+  const nodes = root.children.find(
+    (x) => x instanceof THREE.InstancedMesh,
+  ) as THREE.InstancedMesh;
+  const graph = decodeMoneyGraph(pinned('/graph/money.json'));
+  const grey = new THREE.Color(clusterColour('parties').colour);
+  const colour = new THREE.Color();
+  graph.nodes.forEach((node, i) => {
+    if (node.kind !== 'party') return;
+    nodes.getColorAt(i, colour);
+    expect(colour.getHex()).toBe(grey.getHex());
+  });
+  const labels = scene.labels();
+  const parties = labels.filter((label) => label.kind === 'party');
+  expect(parties.length).toBeGreaterThan(0);
+  expect(parties.length).toBeLessThanOrEqual(PARTY_LABELS);
+  // Every named party is one of the largest in view, in the ink role.
+  const largest = graph.nodes
+    .filter((n) => n.kind === 'party')
+    .sort((a, b) => b.total - a.total)
+    .slice(0, PARTY_LABELS)
+    .map((n) => n.id);
+  for (const label of parties) {
+    expect(largest).toContain(label.id);
+    expect(label.ink).toBeUndefined();
+  }
+  // The selection is named once, as the focus, never twice.
+  scene.focus('party:Labor');
+  const focused = scene.labels();
+  expect(focused.filter((l) => l.id === 'party:Labor')).toEqual([
+    expect.objectContaining({ kind: 'focus' }),
+  ]);
   scene.dispose();
 });

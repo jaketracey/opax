@@ -25,7 +25,11 @@ import type { MoneyGraph } from './data';
 import { NativeMoneyScene, type ProjectedLabel } from './NativeMoneyScene';
 import { isE2E } from '../../design/environment';
 import { moneyProbeId } from './money-probe';
-import { MoneyMapLabels, moneyLabelGroups } from './MoneyMapLabels';
+import {
+  MoneyMapLabels,
+  moneyLabelGroups,
+  moneyLabelParties,
+} from './MoneyMapLabels';
 
 export interface NativeMoneyMapHandle {
   focus: (id: string) => void;
@@ -46,6 +50,7 @@ export function NativeMoneyMap({
   ref?: Ref<NativeMoneyMapHandle>;
 }) {
   const labelGroups = useMemo(() => moneyLabelGroups(graph), [graph]);
+  const labelParties = useMemo(() => moneyLabelParties(graph), [graph]);
   const adaptive = useLayout();
   const canvasHeight = adaptive.regular
     ? Math.max(350, adaptive.window.height - 300)
@@ -324,6 +329,7 @@ export function NativeMoneyMap({
             {!accessibilitySize ? (
               <MoneyMapLabels
                 groups={labelGroups}
+                parties={labelParties}
                 labels={labels}
                 width={size.width}
               />

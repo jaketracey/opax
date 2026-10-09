@@ -12,19 +12,18 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
   Disclosure,
   useScreenColumn,
+  useLayout,
   SidebarSafe,
   RegionProvider,
   Divider,
   EmptyState,
   ErrorState,
   Group,
-  InfoButton,
   LinkRow,
   RowList,
   Section,
   LoadingState,
   SegmentedControl,
-  ViewOriginal,
   Text,
   errorMessage,
 } from '../../design/primitives';
@@ -34,14 +33,18 @@ import { colors, rhythm } from '../../design/tokens';
 import type { MoneyJurisdiction, MoneyNode } from './data';
 import { useMoneyRecord, useMoneyScreenReader } from './hooks';
 import { MoneyControls } from './MoneyControls';
-import { MoneyAttribution, MoneyRecordStatus, moneyNotes } from './MoneyRecord';
+import {
+  MoneyRecordStatus,
+  MoneySourceLine,
+  moneyNotes,
+  moneyOriginals,
+} from './MoneyRecord';
 import { NativeMoneyMap, type NativeMoneyMapHandle } from './NativeMoneyMap';
 import { MoneyTestHooks } from './money-probe';
 import {
   filtersFromParams,
   moneyFocusRoute,
   moneyJurisdiction,
-  moneySource,
   moneyYears,
   moneyWindowYears,
   publicMoneyLabel,
@@ -155,7 +158,6 @@ function MoneyCatalogScreen({
       select(requested);
     }
   }, [params.focus, record, view, select, consumedFocusRef]);
-  const source = record ? moneySource(record.data) : null;
   const parties = useMemo(() => {
     const result = new Map<string, string[]>();
     if (record && filters) {
@@ -177,38 +179,36 @@ function MoneyCatalogScreen({
     }
     return result;
   }, [record, filters]);
-  const renderDonor = ({ item, index }: { item: MoneyNode; index: number }) => (
-    <Group gap={rhythm.line} style={styles.donor}>
-      <LinkRow
-        title={
-          ranks.has(item.id)
-            ? `${formatCount(ranks.get(item.id)!)}. ${item.label}`
-            : item.label
-        }
-        testID={`money-donor-${index}`}
-        value={formatMoney(item.total)}
-        detail={`Disclosed donations · ${moneyWindowYears(item, filters!)}`}
-        accessibilityLabel={`${ranks.has(item.id) ? `${formatCount(ranks.get(item.id)!)}. ` : ''}${item.label}, ${formatMoney(item.total)} disclosed donations · ${moneyWindowYears(item, filters!)}`}
-        onPress={() => select(item.id)}
-      />
-      {item.via === 'public_money' ? (
-        <Text wordSafe variant="fine">
-          Public-money record
-        </Text>
-      ) : null}
-      <Text wordSafe variant="metadata" testID={`money-donor-parties-${index}`}>
-        {parties.get(item.id)?.join(', ') ??
-          'No disclosed party flow in these years'}
-      </Text>
-      {source ? (
-        <ViewOriginal
-          sources={[{ label: source.label, url: source.url }]}
-          testID={`money-donor-source-${index}`}
+  // One row a donor: rank and name, the figure, then what it is, the years
+  // and the parties it went to. The source is on the donor's record.
+  const renderDonor = ({ item, index }: { item: MoneyNode; index: number }) => {
+    const rank = ranks.has(item.id)
+      ? `${formatCount(ranks.get(item.id)!)}. `
+      : '';
+    const detail = [
+      item.via === 'public_money'
+        ? 'Public-money record, disclosed donations'
+        : 'Disclosed donations',
+      moneyWindowYears(item, filters!),
+      parties.get(item.id)?.join(', ') ??
+        'no disclosed party flow in these years',
+    ].join(' · ');
+    return (
+      <View style={styles.donor}>
+        <LinkRow
+          title={`${rank}${item.label}`}
+          testID={`money-donor-${index}`}
+          detailTestID={`money-donor-parties-${index}`}
+          value={formatMoney(item.total)}
+          detail={detail}
+          accessibilityLabel={`${rank}${item.label}, ${formatMoney(item.total)} ${detail.charAt(0).toLowerCase()}${detail.slice(1)}`}
+          onPress={() => select(item.id)}
         />
-      ) : null}
-    </Group>
-  );
+      </View>
+    );
+  };
   const column = useScreenColumn('wide');
+  const { regular } = useLayout();
   return (
     <SidebarSafe style={styles.screen}>
       <GestureHandlerRootView style={styles.screen}>
@@ -239,34 +239,24 @@ function MoneyCatalogScreen({
             <RegionProvider value={column.inner}>
               {column.bar}
               <Group style={styles.header}>
-                <View style={styles.intro}>
-                  <Text wordSafe variant="metadata" style={styles.grow}>
-                    Political donations &amp; public money map
-                  </Text>
-                  {record ? (
-                    <InfoButton
-                      title="About the money map"
-                      notes={moneyNotes(record.data)}
-                      testID="money-info"
-                    />
-                  ) : null}
+                <View style={regular ? styles.toggleCapped : null}>
+                  <SegmentedControl
+                    value={mode}
+                    segments={[
+                      { value: '3d', label: '3D map', testID: 'money-mode-3d' },
+                      {
+                        value: 'list',
+                        label: 'List view',
+                        testID: 'money-mode-list',
+                      },
+                    ]}
+                    onChange={(next) => {
+                      if (next === '3d') setGLFallback(false);
+                      onMode(next);
+                    }}
+                    testID="money-view-toggle"
+                  />
                 </View>
-                <SegmentedControl
-                  value={mode}
-                  segments={[
-                    { value: '3d', label: '3D map', testID: 'money-mode-3d' },
-                    {
-                      value: 'list',
-                      label: 'List view',
-                      testID: 'money-mode-list',
-                    },
-                  ]}
-                  onChange={(next) => {
-                    if (next === '3d') setGLFallback(false);
-                    onMode(next);
-                  }}
-                  testID="money-view-toggle"
-                />
                 {glFallback ? (
                   <Text wordSafe testID="money-gl-fallback">
                     The 3D view is unavailable. You can explore the same records
@@ -284,59 +274,70 @@ function MoneyCatalogScreen({
                 ) : (
                   <>
                     <MoneyRecordStatus record={record} />
-                    <Text
-                      wordSafe
-                      variant="metadata"
-                      testID="money-view-summary"
-                    >
-                      {formatCount(view.nodes.length)} nodes ·{' '}
-                      {formatCount(view.edges.length)} recorded flows ·{' '}
-                      {moneyYears(filters.from, filters.to)}
-                      {filters.industry ? ` · ${filters.industry}` : ''}
-                    </Text>
-                    {mode === '3d' ? (
-                      <View
-                        onLayout={(event) => {
-                          plate.current = {
-                            top: event.nativeEvent.layout.y,
-                            bottom:
-                              event.nativeEvent.layout.y +
-                              event.nativeEvent.layout.height,
-                          };
-                          setPlateVisible(
-                            scroll.current < plate.current.bottom &&
-                              scroll.current + height > plate.current.top,
-                          );
-                        }}
+                    {/* The map block: one meta line, the scene, the one
+                        caveat a total needs, and one source line. */}
+                    <Group gap={rhythm.tight}>
+                      <Text
+                        wordSafe
+                        variant="metadata"
+                        testID="money-view-summary"
                       >
-                        {view.nodes.length ? (
-                          <NativeMoneyMap
-                            ref={map}
-                            graph={record.data}
-                            view={view}
-                            active={plateVisible}
-                            onSelect={select}
-                            onUnavailable={() => {
-                              setGLFallback(true);
-                              onMode('list');
-                            }}
-                          />
-                        ) : (
-                          <EmptyState
-                            message="No recorded flows match these filters."
-                            testID="money-empty"
-                          />
-                        )}
-                      </View>
-                    ) : null}
-                    <Text wordSafe variant="fine">
-                      Totals are a floor.
-                    </Text>
+                        Donations and public money ·{' '}
+                        {moneyYears(filters.from, filters.to)} ·{' '}
+                        {formatCount(view.nodes.length)} nodes ·{' '}
+                        {formatCount(view.edges.length)} recorded flows
+                        {filters.industry ? ` · ${filters.industry}` : ''}
+                      </Text>
+                      {mode === '3d' ? (
+                        <View
+                          onLayout={(event) => {
+                            plate.current = {
+                              top: event.nativeEvent.layout.y,
+                              bottom:
+                                event.nativeEvent.layout.y +
+                                event.nativeEvent.layout.height,
+                            };
+                            setPlateVisible(
+                              scroll.current < plate.current.bottom &&
+                                scroll.current + height > plate.current.top,
+                            );
+                          }}
+                        >
+                          {view.nodes.length ? (
+                            <NativeMoneyMap
+                              ref={map}
+                              graph={record.data}
+                              view={view}
+                              active={plateVisible}
+                              onSelect={select}
+                              onUnavailable={() => {
+                                setGLFallback(true);
+                                onMode('list');
+                              }}
+                            />
+                          ) : (
+                            <EmptyState
+                              message="No recorded flows match these filters."
+                              testID="money-empty"
+                            />
+                          )}
+                        </View>
+                      ) : null}
+                      <Text wordSafe variant="fine">
+                        Totals are a floor.
+                      </Text>
+                      <MoneySourceLine
+                        record={record}
+                        title="About the money map"
+                        originals={moneyOriginals(record.data)}
+                        notes={moneyNotes(record.data)}
+                        testID="money-as-at"
+                      />
+                    </Group>
                     <RowList>
                       <Disclosure
                         label="Filters and years"
                         icon="slider.horizontal.3"
-                        accent="money"
                         open={controlsOpen}
                         onToggle={setControlsOpen}
                         testID="money-filters"
@@ -366,7 +367,6 @@ function MoneyCatalogScreen({
                           <Disclosure
                             label="Parties and public money"
                             icon="building.columns"
-                            accent="money"
                             open={recordsOpen}
                             onToggle={setRecordsOpen}
                             testID="money-list-records-toggle"
@@ -385,10 +385,12 @@ function MoneyCatalogScreen({
                             </RowList>
                           </Disclosure>
                         </RowList>
-                        <Section title="Ranked donors" accent="money">
-                          <Text wordSafe variant="metadata">
-                            Disclosed donations, largest first.
-                          </Text>
+                        <Section
+                          title="Donors, largest first"
+                          accent="money"
+                          testID="money-donors"
+                        >
+                          {null}
                         </Section>
                         {!donors.length ? (
                           <EmptyState
@@ -404,12 +406,7 @@ function MoneyCatalogScreen({
             </RegionProvider>
           }
           ListFooterComponent={
-            record ? (
-              <Group style={styles.footer}>
-                <MoneyAttribution record={record} />
-                <View testID="money-end" />
-              </Group>
-            ) : null
+            record ? <View testID="money-end" style={styles.footer} /> : null
           }
         />
       </GestureHandlerRootView>
@@ -425,7 +422,7 @@ const styles = StyleSheet.create({
   },
   header: { marginBottom: rhythm.block },
   footer: { marginTop: rhythm.group },
-  donor: { paddingVertical: rhythm.tight },
-  intro: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
-  grow: { flex: 1 },
+  donor: { paddingVertical: rhythm.line },
+  // On a wide window the two views stay a control, not a banner.
+  toggleCapped: { maxWidth: 420, width: '100%' },
 });

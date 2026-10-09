@@ -2,15 +2,13 @@ import { useCallback, useMemo, useState } from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../../api/runtime';
 import {
-  AsAtLine,
-  Button,
-  InfoButton,
-  ViewOriginal,
   Field,
   Group,
   KeyValueList,
+  SourceLine,
   Text,
 } from '../../design/primitives';
+import { rhythm } from '../../design/tokens';
 import {
   formatCount,
   formatMoneyCompact,
@@ -30,7 +28,6 @@ import {
   MoneyHeader,
   MoneyChoices,
   MoneyList,
-  OrganisationWebLink,
   ResultCount,
   Title,
 } from './parts';
@@ -83,6 +80,16 @@ export default function Discover() {
               label="Loading Discover"
               testID="discover-status"
             />
+            {data ? (
+              <SourceLine
+                title="About Discover"
+                asOf={data.generated_at}
+                citation={['AEC annual returns', 'AusTender']}
+                savedAt={status.record?.stale ? status.record.savedAt : null}
+                notes={data.methodology}
+                testID="discover-sources"
+              />
+            ) : null}
             <MoneyChoices
               value={category}
               onChange={setCategory}
@@ -97,88 +104,87 @@ export default function Discover() {
               testID="discover-search"
               returnKeyType="done"
             />
-            <Button
-              label={
-                sort === 'value'
-                  ? 'Sort by biggest share'
-                  : 'Sort by largest totals'
-              }
-              onPress={() =>
-                setSort((s) => (s === 'value' ? 'share' : 'value'))
-              }
+            <MoneyChoices
+              value={sort}
+              onChange={setSort}
+              options={[
+                ['value', 'Largest totals', 'discover-sort-value'],
+                ['share', 'Biggest share', 'discover-sort-share'],
+              ]}
             />
             <ResultCount
               count={data ? rows.length : null}
               noun={categoryOption(category).toLowerCase()}
             />
-            {data ? (
-              <AsAtLine
-                asOf={data.generated_at}
-                citation="AEC annual returns; AusTender"
-              />
-            ) : null}
           </>
         }
-        render={(s, i) => (
-          <Group>
-            <Text wordSafe variant="strong" testID={`discover-card-${i}`}>
-              {s.title}
-            </Text>
-            <Text wordSafe>{s.summary}</Text>
-            <KeyValueList
-              items={s.metrics.map((m) => ({
-                label: m.label,
-                value:
-                  m.format === 'currency'
-                    ? formatMoneyCompact(m.value)
-                    : m.format === 'percent'
-                      ? formatPercent(m.value)
-                      : formatCount(m.value),
-              }))}
-            />
-            {s.comparison.type === 'concentration' ? (
-              <Group>
-                {s.comparison.rows.map((r, j) => (
-                  <Text key={j} wordSafe>
-                    {r.name} · {formatMoneyCompact(r.value)} ·{' '}
-                    {formatPercent(r.share)}
-                  </Text>
-                ))}
-              </Group>
-            ) : null}
-            <InfoButton
-              title="About this lead"
-              testID={`discover-notes-${i}`}
-              notes={s.caveats}
-            />
-            <AsAtLine asOf={data!.generated_at} citation={s.citation} />
-            {s.category !== 'recipient_concentration' &&
-            isOrganisation(s.entity) ? (
-              <OrganisationWebLink
-                name={s.entity}
-                path={`/subject/supplier/${encodeURIComponent(s.entity)}`}
+        render={(s, i) => {
+          const evidence = s.evidence.flatMap((e) =>
+            e.url
+              ? [
+                  {
+                    label: e.register,
+                    url: e.url,
+                    record: e.record ?? undefined,
+                  },
+                ]
+              : [],
+          );
+          const organisation =
+            s.category !== 'recipient_concentration' &&
+            isOrganisation(s.entity);
+          return (
+            // A lead: its title, one sentence, its figures, and its
+            // evidence behind one source line (caveats and the comparison
+            // in full in the sheet).
+            <Group gap={rhythm.tight}>
+              <Text wordSafe variant="strong" testID={`discover-card-${i}`}>
+                {s.title}
+              </Text>
+              <Text wordSafe>{s.summary}</Text>
+              <KeyValueList
+                items={s.metrics.map((m) => ({
+                  label: m.label,
+                  value:
+                    m.format === 'currency'
+                      ? formatMoneyCompact(m.value)
+                      : m.format === 'percent'
+                        ? formatPercent(m.value)
+                        : formatCount(m.value),
+                }))}
               />
-            ) : null}
-            <ViewOriginal
-              testID={`discover-source-${i}-0`}
-              sources={s.evidence.flatMap((e) =>
-                e.url
-                  ? [
-                      {
-                        label: `${e.register}${e.record ? ` · ${e.record}` : ''}`,
-                        url: e.url,
-                      },
-                    ]
-                  : [],
-              )}
-            />
-          </Group>
-        )}
-        footer={
-          data ? (
-            <InfoButton title="About Discover" notes={data.methodology} />
-          ) : null
-        }
+              <SourceLine
+                title="Evidence"
+                dateLabel={null}
+                asOf={data!.generated_at}
+                citation={s.citation}
+                coverage={`Evidence (${formatCount(evidence.length)})`}
+                originals={[
+                  ...evidence,
+                  ...(organisation
+                    ? [
+                        {
+                          label: 'opax.com.au',
+                          url: `/subject/supplier/${encodeURIComponent(s.entity)}`,
+                          record: s.entity,
+                        },
+                      ]
+                    : []),
+                ]}
+                notes={[
+                  ...s.caveats,
+                  ...(s.comparison.type === 'concentration'
+                    ? s.comparison.rows.map(
+                        (r) =>
+                          `${r.name}: ${formatMoneyCompact(r.value)}, ${formatPercent(r.share)}.`,
+                      )
+                    : []),
+                ]}
+                testID={`discover-source-${i}-0`}
+              />
+            </Group>
+          );
+        }}
       />
     </>
   );

@@ -1,34 +1,34 @@
 import { useCallback, useMemo, useState } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
-  AsAtLine,
   LinkRow,
   BigFigure,
-  InfoButton,
-  ViewOriginal,
   Field,
   Group,
-  SourceLink,
+  RowList,
   Text,
 } from '../../design/primitives';
 import {
   formatCount,
+  formatDate,
   formatMoneyCompact,
   moneyAccessibilityLabel,
 } from '../../design/format';
+import { rhythm } from '../../design/tokens';
 import { ApiError } from '../../api/errors';
+import { openOnWeb } from '../../navigation/external';
 import { RecordStatus } from '../RecordStatus';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { combine } from './catalog';
 import { programRecipients } from './data';
 import { money } from './runtime';
 import {
+  MetaSource,
   MoneyHeader,
   MoneyChoices,
   MoneyList,
-  OrganisationWebLink,
-  Provenance,
   ResultCount,
+  RowSource,
   Title,
 } from './parts';
 export default function Program() {
@@ -117,14 +117,13 @@ export default function Program() {
               label="Loading the program"
               testID="program-status"
             />
-            <LinkRow
-              title="The month’s largest grants"
-              testID="program-largest"
-              onPress={() => router.push('/largest-grants')}
-            />
-            {program ? (
-              <>
-                <Text wordSafe>{program.agency}</Text>
+            {program && data ? (
+              // One meta line, the figure, the one caveat it needs, and one
+              // source line whose sheet holds the program notes and audits.
+              <Group gap={rhythm.tight}>
+                <Text wordSafe variant="metadata">
+                  {program.agency}
+                </Text>
                 <BigFigure
                   value={formatMoneyCompact(program.total)}
                   spoken={moneyAccessibilityLabel(program.total, true)}
@@ -135,55 +134,50 @@ export default function Program() {
                   }
                   detail={`${formatCount(program.count)} grant records`}
                   accent="money"
+                  testID="program-total"
                 />
-                <AsAtLine
-                  asOf={program.asOf}
-                  citation={data?.index.meta.source}
-                />
-                <Text wordSafe>
-                  {formatCount(program.listed)} of{' '}
-                  {formatCount(program.available)} program grants listed in the
-                  export.
+                <Text wordSafe variant="fine" testID="program-caveat">
+                  {seat
+                    ? `Listed awards mapped to ${seat}; not a complete total for this seat.`
+                    : `${formatCount(program.listed)} of ${formatCount(program.available)} program grants listed in the export.`}
                 </Text>
-                {seat ? (
-                  <Text wordSafe>
-                    Listed awards mapped to {seat}; not a complete total for
-                    this seat.
-                  </Text>
-                ) : null}
-              </>
-            ) : null}
-            {note ? (
-              <InfoButton
-                title="Program notes"
-                testID="program-notes"
-                notes={[note.summary]}
-                extra={
-                  <Group>
-                    {note.audits.map((a, i) => (
-                      <Group key={i}>
-                        <Text wordSafe variant="strong">
-                          {a.title}
-                        </Text>
-                        <Text wordSafe>{a.finding}</Text>
-                        <ViewOriginal
-                          sources={[{ label: a.title, url: a.url }]}
-                        />
-                      </Group>
-                    ))}
-                    <ViewOriginal
-                      sources={note.sources.map((s) => ({
-                        label: s.title,
-                        url: s.url,
-                      }))}
-                    />
-                    <AsAtLine
-                      asOf={data!.notes.asOf}
-                      citation="OPAX program notes"
-                    />
-                  </Group>
-                }
-              />
+                <MetaSource
+                  meta={{ ...data.index.meta, asOf: program.asOf }}
+                  record={status.record}
+                  title="Program notes"
+                  originals={[
+                    ...(data.index.meta.sourceUrl
+                      ? [
+                          {
+                            label: data.index.meta.source,
+                            url: data.index.meta.sourceUrl,
+                          },
+                        ]
+                      : []),
+                    ...(note?.audits ?? []).map((a) => ({
+                      label: a.title,
+                      url: a.url,
+                    })),
+                    ...(note?.sources ?? []).map((s) => ({
+                      label: s.title,
+                      url: s.url,
+                    })),
+                  ]}
+                  notes={[
+                    note?.summary,
+                    ...(note?.audits ?? []).map(
+                      (a) => `${a.title}: ${a.finding}`,
+                    ),
+                    note
+                      ? `Program notes by OPAX, as at ${formatDate(data.notes.asOf)}.`
+                      : null,
+                    seat
+                      ? `${formatCount(program.listed)} of ${formatCount(program.available)} program grants listed in the export.`
+                      : null,
+                  ]}
+                  testID="program-notes"
+                />
+              </Group>
             ) : null}
             <Field
               label="Find a listed grant or organisation"
@@ -210,53 +204,77 @@ export default function Program() {
             />
           </>
         }
-        render={(g) => (
-          <Group>
-            <Text
-              wordSafe
-              variant="strong"
-              testID={`program-recipient-${g.id}`}
-            >
-              {g.name}
-            </Text>
-            <Text wordSafe variant="strong" tabular>
-              {formatMoneyCompact(g.value)}
-            </Text>
-            {g.kind === 'grant' ? (
-              <>
-                {g.title ? <Text wordSafe>{g.title}</Text> : null}
-                <Text wordSafe variant="metadata">
-                  {[g.id, g.year, g.seat, g.selection]
-                    .filter(Boolean)
-                    .join(' · ')}
-                </Text>
-                {data!.notes.selection[g.selection] ? (
-                  <Text wordSafe variant="fine">
-                    {data!.notes.selection[g.selection]!.short}
+        render={(g, i) =>
+          g.kind === 'recipient' && g.organisation && g.recipientId ? (
+            // A recipient is a way onward: its page on opax.com.au.
+            <LinkRow
+              title={g.name}
+              titleTestID={`program-recipient-${g.id}`}
+              value={formatMoneyCompact(g.value)}
+              detail={`${formatCount(g.count)} listed grant records`}
+              external
+              accessibilityHint="Opens on opax.com.au"
+              onPress={() =>
+                void openOnWeb(
+                  `/money/grants/${jur}/recipient/${encodeURIComponent(g.recipientId!)}`,
+                  g.name,
+                )
+              }
+            />
+          ) : (
+            <Group gap={rhythm.line}>
+              <Text
+                wordSafe
+                variant="strong"
+                testID={`program-recipient-${g.id}`}
+              >
+                {g.name}
+              </Text>
+              <Text wordSafe variant="strong" tabular>
+                {formatMoneyCompact(g.value)}
+              </Text>
+              {g.kind === 'grant' ? (
+                <>
+                  {g.title ? <Text wordSafe>{g.title}</Text> : null}
+                  <Text wordSafe variant="metadata">
+                    {[g.year, g.seat, g.selection].filter(Boolean).join(' · ')}
                   </Text>
-                ) : null}
-              </>
-            ) : (
-              <Text wordSafe>{formatCount(g.count)} listed grant records</Text>
-            )}
-            <AsAtLine asOf={program!.asOf} citation={data!.index.meta.source} />
-            {g.organisation && g.recipientId ? (
-              <OrganisationWebLink
-                name={g.name}
-                path={`/money/grants/${jur}/recipient/${encodeURIComponent(g.recipientId)}`}
+                  <RowSource
+                    register={data!.index.meta.source}
+                    record={g.id}
+                    url={g.sourceUrl}
+                    asOf={program!.asOf}
+                    notes={[data!.notes.selection[g.selection]?.short]}
+                    organisation={
+                      g.organisation && g.recipientId
+                        ? {
+                            name: g.name,
+                            path: `/money/grants/${jur}/recipient/${encodeURIComponent(g.recipientId)}`,
+                          }
+                        : null
+                    }
+                    testID={`program-source-${i}`}
+                  />
+                </>
+              ) : (
+                <Text wordSafe variant="metadata">
+                  {formatCount(g.count)} listed grant records
+                </Text>
+              )}
+            </Group>
+          )
+        }
+        footer={
+          data ? (
+            <RowList>
+              <LinkRow
+                title="The month’s largest grants"
+                testID="program-largest"
+                onPress={() => router.push('/largest-grants')}
               />
-            ) : null}
-            {g.kind === 'grant' && g.sourceUrl ? (
-              <SourceLink
-                citation="GrantConnect"
-                record={g.id}
-                url={g.sourceUrl}
-                kind="record"
-              />
-            ) : null}
-          </Group>
-        )}
-        footer={data ? <Provenance meta={data.index.meta} /> : null}
+            </RowList>
+          ) : null
+        }
       />
     </>
   );

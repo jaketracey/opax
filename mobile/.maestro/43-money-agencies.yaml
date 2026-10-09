@@ -113,13 +113,30 @@ name: 43 Agencies, contracts and Discover companies in both (standard and AX5)
     timeout: 300000
 - tapOn:
     id: agency-source-0
+- extendedWaitUntil:
+    visible:
+      id: agency-source-0-sheet-original-0
+    timeout: 15000
+- tapOn:
+    id: agency-source-0-sheet-original-0
 - assertVisible: https://www.tenders.gov.au/
 - takeScreenshot: ${EVIDENCE}/43-austender
 - tapOn: OK
+# Companies in both is a row at the foot of the short years view.
+- scrollUntilVisible:
+    element:
+      id: agency-years
+    direction: UP
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: agency-years
 - scrollUntilVisible:
     element:
       id: agency-discover-both
-    direction: UP
+    direction: DOWN
     visibilityPercentage: 10
     centerElement: true
     speed: 20
@@ -173,6 +190,12 @@ name: 43 Agencies, contracts and Discover companies in both (standard and AX5)
     timeout: 300000
 - tapOn:
     id: discover-source-0-0
+- extendedWaitUntil:
+    visible:
+      id: discover-source-0-0-sheet-original-0
+    timeout: 15000
+- tapOn:
+    id: discover-source-0-0-sheet-original-0
 - assertVisible: https://www.tenders.gov.au/
 - takeScreenshot: ${EVIDENCE}/43-share-austender
 - tapOn: OK

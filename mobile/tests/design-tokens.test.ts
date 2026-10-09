@@ -290,12 +290,10 @@ describe('promised colour pairs pass in every theme', () => {
 // file may go down, never up; a new file starts at zero. When a pass removes
 // some, lower its number here.
 const COLOUR_BASELINE: Record<string, number> = {
-  'src/features/money/ported/palette.ts': 38,
+  'src/features/money/ported/palette.ts': 1,
   'src/features/talk/VoiceOrb.tsx': 11,
   'src/test-screens/VoiceBridgeTestScreen.tsx': 5,
   'src/design/menu.tsx': 1,
-  'src/features/money/MoneyMapLabels.tsx': 1,
-  'src/features/money/NativeMoneyScene.ts': 1,
   'src/workbench/Workbench.tsx': 1,
 };
 const COLOUR =

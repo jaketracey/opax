@@ -8,11 +8,9 @@ import {
   KeyValueList,
   LoadingState,
   LinkRow,
-  OpaxWebLink,
   RowList,
   Screen,
   Section,
-  ViewOriginal,
   Text,
   errorMessage,
 } from '../../design/primitives';
@@ -21,13 +19,15 @@ import {
   formatMoney,
   moneyAccessibilityLabel,
 } from '../../design/format';
+import { openOnWeb } from '../../navigation/external';
 import { useMoneyRecord } from './hooks';
-import { MoneyAttribution, MoneyRecordStatus, moneyNotes } from './MoneyRecord';
+import { MoneyRecordStatus, MoneySourceLine, moneyNotes } from './MoneyRecord';
 import {
   filtersFromParams,
   moneyFocusRoute,
   moneyJurisdiction,
   moneyProfile,
+  moneySource,
   moneyYears,
   moneyWindowYears,
   publicMoneyLabel,
@@ -36,9 +36,24 @@ import {
   type MoneyParams,
 } from './records';
 import { moneyView, moneyWindowNodes } from './view';
-import { moneySource } from './records';
 import { rhythm } from '../../design/tokens';
 
+/**
+ * "2024 · 3,929 receipts", or "Nothing disclosed in 2024"; years alone where
+ * the label already counts (a public-money hub).
+ */
+function period(years: string, count: number, noun: string | null) {
+  return count && noun
+    ? `${years} · ${formatCount(count)} ${noun}`
+    : `${years.charAt(0).toUpperCase()}${years.slice(1)}`;
+}
+
+/**
+ * One node of the money map: its name, one meta line, the figure it is
+ * about with its years and count, the one caveat that figure needs, and one
+ * source line; then where the money went and, for a donor, the public money
+ * going the other way.
+ */
 export default function MoneyNodeScreen() {
   const params = useLocalSearchParams<MoneyParams>();
   const jurisdiction = moneyJurisdiction(params.jurisdiction);
@@ -90,6 +105,10 @@ export default function MoneyNodeScreen() {
     .slice(0, 15);
   const grantsSource = publicMoneySource(record.data, 'grants');
   const contractsSource = publicMoneySource(record.data, 'contracts');
+  const contracts =
+    node.flow === 'contracts' ||
+    node.kind === 'agency' ||
+    node.kind === 'supplier';
   const label =
     node.kind === 'party'
       ? 'Disclosed receipts'
@@ -97,44 +116,30 @@ export default function MoneyNodeScreen() {
         ? 'Disclosed donations'
         : node.kind === 'grantor'
           ? publicMoneyLabel(node)
-          : node.flow === 'contracts' ||
-              node.kind === 'agency' ||
-              node.kind === 'supplier'
+          : contracts
             ? 'Recorded contract commitments'
             : 'Recorded grant awards';
+  const noun =
+    node.kind === 'party'
+      ? 'receipts'
+      : node.kind === 'donor'
+        ? 'donations'
+        : contracts
+          ? 'contracts'
+          : 'grants';
+  const years = moneyWindowYears(node, filters, node.kind === 'grantor');
+  const headSource =
+    node.kind === 'grantor'
+      ? contracts
+        ? contractsSource
+        : grantsSource
+      : moneySource(record.data);
+  const showGrants = filters.grants && !!node.grants;
+  const showContracts = filters.contracts && !!node.contracts;
   return (
     <Screen column="wide" testID="money-focus-sheet">
-      <Section
-        rule={false}
-        title={node.label}
-        headingTestID="money-focus-name"
-        accent="money"
-        info={{
-          title: 'About these figures',
-          notes: [
-            ...moneyNotes(record.data),
-            node.undated?.[1]
-              ? 'Undated disclosures stay in every year window.'
-              : null,
-            node.kind === 'party' && filters.industry
-              ? 'The party total covers all industries in these return years. The relationships below follow the industry filter.'
-              : null,
-            filters.inflation
-              ? 'Adjusted to 2025–26 dollars with the ABS Consumer Price Index (all groups, Australia, financial-year average). Nominal figures are on the returns.'
-              : null,
-            node.kind === 'grantor' &&
-            node.flow === 'contracts' &&
-            typeof record.data.meta.contracts_coverage === 'string'
-              ? `${record.data.meta.contracts_coverage}.`
-              : null,
-            node.kind === 'grantor'
-              ? `Public money is drawn the other way from donations and never summed with them; a donor ${node.flow === 'contracts' ? 'holding a contract' : 'receiving a grant'} is a fact, not a finding.`
-              : null,
-          ],
-          testID: 'money-focus-info',
-        }}
-      >
-        <MoneyRecordStatus record={record} />
+      <MoneyRecordStatus record={record} />
+      <Section rule={false} title={node.label} headingTestID="money-focus-name">
         <Text wordSafe variant="metadata">
           {node.kind === 'party'
             ? 'Political party'
@@ -142,53 +147,52 @@ export default function MoneyNodeScreen() {
               ? 'Public money'
               : `${node.via === 'public_money' ? 'Public-money record · ' : ''}${node.industry.replace(/_/g, ' ')}`}
         </Text>
-        <BigFigure
-          value={formatMoney(node.total)}
-          spoken={moneyAccessibilityLabel(node.total)}
-          label={label}
-          accent="money"
-          testID="money-focus-amount"
-        />
-        <KeyValueList
-          items={[
-            {
-              label: 'Return years',
-              value: moneyWindowYears(node, filters, node.kind === 'grantor'),
-              testID: 'money-focus-years',
-            },
-            {
-              label:
-                node.kind === 'party'
-                  ? 'Receipts'
-                  : node.kind === 'donor'
-                    ? 'Donations'
-                    : node.flow === 'contracts' ||
-                        node.kind === 'agency' ||
-                        node.kind === 'supplier'
-                      ? 'Contracts'
-                      : 'Grants',
-              value: formatCount(node.count),
-            },
-          ]}
-        />
-        <Text wordSafe variant="fine">
-          {node.kind === 'grantor'
-            ? node.flow === 'contracts'
-              ? 'Commitments, not verified payments.'
-              : 'Never summed with donations.'
-            : 'Totals are a floor.'}
-        </Text>
-        <MoneyAttribution record={record} />
-        <ViewOriginal
-          sources={[
-            node.kind === 'grantor'
-              ? node.flow === 'contracts'
-                ? contractsSource
-                : grantsSource
-              : moneySource(record.data),
-          ]}
-          testID="money-source"
-        />
+        <Group gap={rhythm.tight}>
+          <BigFigure
+            value={formatMoney(node.total)}
+            spoken={moneyAccessibilityLabel(node.total)}
+            label={label}
+            detail={period(
+              years,
+              node.count,
+              node.kind === 'grantor' ? null : noun,
+            )}
+            accent="money"
+            testID="money-focus-amount"
+          />
+          <Text wordSafe variant="fine" testID="money-focus-caveat">
+            {node.kind === 'grantor'
+              ? contracts
+                ? 'Commitments, not verified payments.'
+                : 'Never summed with donations.'
+              : 'Totals are a floor.'}
+          </Text>
+          <MoneySourceLine
+            record={record}
+            title="About these figures"
+            citation={node.kind === 'grantor' ? headSource.label : undefined}
+            returns={node.kind !== 'grantor'}
+            originals={[{ label: headSource.label, url: headSource.url }]}
+            notes={[
+              ...moneyNotes(record.data),
+              node.undated?.[1]
+                ? 'Undated disclosures stay in every year window.'
+                : null,
+              node.kind === 'party' && filters.industry
+                ? 'The party total covers all industries in these return years. The relationships below follow the industry filter.'
+                : null,
+              node.kind === 'grantor' &&
+              node.flow === 'contracts' &&
+              typeof record.data.meta.contracts_coverage === 'string'
+                ? `${record.data.meta.contracts_coverage}.`
+                : null,
+              node.kind === 'grantor'
+                ? `Public money is drawn the other way from donations and never summed with them; a donor ${node.flow === 'contracts' ? 'holding a contract' : 'receiving a grant'} is a fact, not a finding.`
+                : null,
+            ]}
+            testID="money-source"
+          />
+        </Group>
       </Section>
       <Section
         title={
@@ -201,6 +205,7 @@ export default function MoneyNodeScreen() {
                 : 'Largest recipients among the donors on this map'
         }
         accent="money"
+        testID="money-focus-flows"
       >
         <RowList>
           {flows.map((edge) => {
@@ -224,66 +229,96 @@ export default function MoneyNodeScreen() {
           })}
         </RowList>
       </Section>
-      {node.kind === 'donor' &&
-      ((filters.grants && node.grants) ||
-        (filters.contracts && node.contracts)) ? (
+      {node.kind === 'donor' && (showGrants || showContracts) ? (
         <Section
           title="Public money received"
           accent="money"
-          info={{
-            title: 'About public money',
-            notes: [
-              'Public money going the other way: shown beside the donations, never summed with them.',
-              'Recorded contract commitments, not verified payments.',
-            ],
-            testID: 'money-public-info',
-          }}
+          testID="money-focus-public"
         >
-          {filters.grants && node.grants ? (
-            <Group gap={rhythm.tight}>
-              <BigFigure
-                value={formatMoney(node.grants.total)}
-                spoken={moneyAccessibilityLabel(node.grants.total)}
-                label={`Recorded grant awards · ${formatCount(node.grants.count)} grants`}
-                detail={moneyWindowYears(node.grants, filters, true)}
-                accent="money"
-              />
-              <ViewOriginal sources={[grantsSource]} />
-            </Group>
-          ) : null}
-          {filters.contracts && node.contracts ? (
-            <Group gap={rhythm.tight}>
-              <BigFigure
-                value={formatMoney(node.contracts.total)}
-                spoken={moneyAccessibilityLabel(node.contracts.total)}
-                label={`Recorded contract commitments · ${formatCount(node.contracts.count)} contracts`}
-                detail={moneyWindowYears(node.contracts, filters, true)}
-                accent="money"
-              />
-              <Text wordSafe variant="fine">
-                Commitments, not verified payments.
-              </Text>
-              <ViewOriginal sources={[contractsSource]} />
-            </Group>
-          ) : null}
+          <Group gap={rhythm.tight}>
+            <KeyValueList
+              items={[
+                ...(showGrants
+                  ? [
+                      {
+                        label: `Recorded grant awards · ${formatCount(node.grants!.count)} grants · ${moneyWindowYears(node.grants!, filters, true)}`,
+                        value: formatMoney(node.grants!.total),
+                        accessibilityLabel: `Recorded grant awards, ${moneyAccessibilityLabel(node.grants!.total)}, ${formatCount(node.grants!.count)} grants, ${moneyWindowYears(node.grants!, filters, true)}`,
+                        testID: 'money-focus-grants',
+                      },
+                    ]
+                  : []),
+                ...(showContracts
+                  ? [
+                      {
+                        label: `Recorded contract commitments · ${formatCount(node.contracts!.count)} contracts · ${moneyWindowYears(node.contracts!, filters, true)}`,
+                        value: formatMoney(node.contracts!.total),
+                        accessibilityLabel: `Recorded contract commitments, ${moneyAccessibilityLabel(node.contracts!.total)}, ${formatCount(node.contracts!.count)} contracts, ${moneyWindowYears(node.contracts!, filters, true)}`,
+                        testID: 'money-focus-contracts',
+                      },
+                    ]
+                  : []),
+              ]}
+            />
+            <Text wordSafe variant="fine">
+              Never summed with donations
+              {showContracts ? '; contracts are commitments, not payments' : ''}
+              .
+            </Text>
+            <MoneySourceLine
+              record={record}
+              title="About public money"
+              returns={false}
+              citation={
+                showGrants && showContracts
+                  ? undefined
+                  : (showGrants ? grantsSource : contractsSource).label
+              }
+              originals={[
+                ...(showGrants
+                  ? [{ label: grantsSource.label, url: grantsSource.url }]
+                  : []),
+                ...(showContracts
+                  ? [
+                      {
+                        label: contractsSource.label,
+                        url: contractsSource.url,
+                      },
+                    ]
+                  : []),
+              ]}
+              notes={[
+                'Public money going the other way: shown beside the donations, never summed with them.',
+                showGrants ? grantsSource.citation : null,
+                showContracts ? contractsSource.citation : null,
+                showContracts
+                  ? 'Recorded contract commitments, not verified payments.'
+                  : null,
+              ]}
+              testID="money-public-source"
+            />
+          </Group>
         </Section>
       ) : null}
-      <RowList>
-        {profile.native ? (
-          <LinkRow
-            title="View person profile"
-            icon="person.crop.circle"
-            onPress={() => router.push(profile.native!)}
-            testID="money-native-profile"
-          />
-        ) : (
-          <OpaxWebLink
-            label="View profile"
-            path={profile.path}
-            testID="money-web-profile"
-          />
-        )}
-      </RowList>
+      {node.kind === 'grantor' ? null : (
+        <RowList>
+          {profile.native ? (
+            <LinkRow
+              title={node.kind === 'party' ? 'Party page' : 'Person profile'}
+              onPress={() => router.push(profile.native!)}
+              testID="money-native-profile"
+            />
+          ) : (
+            <LinkRow
+              title="Open on opax.com.au"
+              external
+              accessibilityHint="Opens on opax.com.au"
+              onPress={() => void openOnWeb(profile.path, node.label)}
+              testID="money-web-profile"
+            />
+          )}
+        </RowList>
+      )}
     </Screen>
   );
 }

@@ -104,16 +104,10 @@ name: 23 Native money map, held figures, original source and ranked list
     centerElement: true
     visibilityPercentage: 10
     timeout: 90000
-- assertVisible: '69,010,542 dollars, Disclosed receipts'
+# One figure says the amount, what it is, its years and its count.
+- assertVisible: '69,010,542 dollars, Disclosed receipts, 2024 · 3,929 receipts'
 - takeScreenshot: ${EVIDENCE}/23-focus-amount
-- scrollUntilVisible:
-    element:
-      id: money-focus-years
-    centerElement: true
-    timeout: 90000
-- assertVisible: 'Return years, 2024'
-- assertVisible: 'Receipts, 3,929'
-- takeScreenshot: ${EVIDENCE}/23-focus-years
+# One source line opens the sheet; the original opens from it.
 - scrollUntilVisible:
     element:
       id: money-source
@@ -121,6 +115,13 @@ name: 23 Native money map, held figures, original source and ranked list
     timeout: 120000
 - tapOn:
     id: money-source
+- extendedWaitUntil:
+    visible:
+      id: money-source-sheet-original-0
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/23-source-sheet
+- tapOn:
+    id: money-source-sheet-original-0
 - scrollUntilVisible:
     element:
       id: source-destination-url
@@ -144,15 +145,10 @@ name: 23 Native money map, held figures, original source and ranked list
       id: money-donor-parties-0
     centerElement: true
     timeout: 30000
+# The row's own detail names the parties; its source is on the record.
 - assertVisible:
     id: money-donor-parties-0
-    text: Labor
-- scrollUntilVisible:
-    element:
-      id: money-donor-source-0
-    centerElement: true
-    timeout: 30000
-- takeScreenshot: ${EVIDENCE}/23-list-source
+    text: '.*Labor.*'
 
 # Every party and public-money hub is reachable from the accessible list.
 - runFlow:

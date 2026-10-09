@@ -8,7 +8,7 @@ import {
   IconButton,
   LinkRow,
   RowList,
-  Section,
+  SubSection,
   ChoiceChips,
   SwitchRow,
   Text,
@@ -198,7 +198,6 @@ export function MoneyControls({
           label="Industry"
           detail={filters.industry ?? 'All industries'}
           icon="building.2"
-          accent="money"
           open={industriesOpen}
           onToggle={setIndustriesOpen}
           testID="money-industry"
@@ -226,19 +225,8 @@ export function MoneyControls({
           </RowList>
         </Disclosure>
       </RowList>
-      <Section
-        title="Layers"
-        accent="money"
-        info={{
-          title: 'About these layers',
-          notes: [
-            'State and federal returns are not summed.',
-            'Public money going the other way: shown beside the donations, never summed with them.',
-            'Adjusted to 2025–26 dollars with the ABS Consumer Price Index (all groups, Australia, financial-year average). Nominal figures are on the returns.',
-          ],
-          testID: 'money-layers-info',
-        }}
-      >
+      {/* What each layer means is in the map's source sheet. */}
+      <SubSection title="Layers" testID="money-layers">
         {(['donations', 'grants', 'contracts'] as const)
           .filter(
             (kind) => kind === 'donations' || graph.meta[`${kind}_source`],
@@ -269,7 +257,7 @@ export function MoneyControls({
             In 2025–26 dollars.
           </Text>
         ) : null}
-      </Section>
+      </SubSection>
     </Group>
   );
 }

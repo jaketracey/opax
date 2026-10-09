@@ -1,15 +1,13 @@
 import { useCallback, useMemo, useState } from 'react';
 import {
-  AsAtLine,
   Disclosure,
-  InfoButton,
   Field,
   Group,
   KeyValueList,
-  Section,
-  SourceLink,
+  SourceLine,
   Text,
 } from '../../design/primitives';
+import { rhythm } from '../../design/tokens';
 import {
   formatDate,
   formatMoneyCompact,
@@ -26,6 +24,11 @@ import {
   ResultCount,
   Title,
 } from './parts';
+
+const MERIT =
+  'A difference in funding does not establish that a project lacked merit. The government describes this program as delivering election commitments. Assessment scores and unsuccessful applications would be needed to test merit.';
+const EARLIER =
+  'The earlier-grants view is a selection of sourced project examples from other programs, not a complete national or state total. Its year field uses each notice’s original publication year, with the latest known award value. It does not reconstruct the record as it stood that year.';
 export default function Allocation() {
   const load = useCallback(async (refresh: boolean) => {
     const [report, allocation, history, locations] = await Promise.all([
@@ -106,9 +109,9 @@ export default function Allocation() {
         header={
           <>
             <Title id="allocation-title">Where community funding goes</Title>
-            <Text wordSafe>
-              See what a grant was for, who it was awarded to and where the
-              project is.
+            <Text wordSafe variant="metadata">
+              What a grant was for, who it was awarded to and where the project
+              is.
             </Text>
             <RecordStatus
               {...status}
@@ -125,13 +128,30 @@ export default function Allocation() {
               ]}
             />
             {data ? (
-              <>
-                <Text wordSafe>
-                  They are separate snapshots: invitations and awards must not
-                  be added together.
+              <Group gap={rhythm.tight}>
+                <Text wordSafe variant="fine" testID="allocation-caveat">
+                  {stage === 'history'
+                    ? 'Selected examples at their latest award values; not payments made that year.'
+                    : 'Invitations and awards are separate snapshots: never add them together.'}
                 </Text>
-                <AsAtLine asOf={date ?? null} citation={source} />
-              </>
+                <SourceLine
+                  title="About community funding"
+                  asOf={date ?? null}
+                  citation={source}
+                  savedAt={status.record?.stale ? status.record.savedAt : null}
+                  notes={[
+                    MERIT,
+                    EARLIER,
+                    ...data.locations.methodology,
+                    ...(stage === 'history'
+                      ? data.history.methodology.filter(
+                          (m) => !m.includes('© OpenStreetMap'),
+                        )
+                      : []),
+                  ]}
+                  testID="allocation-source"
+                />
+              </Group>
             ) : null}
             <Field
               label="Find a project"
@@ -147,44 +167,27 @@ export default function Allocation() {
               returnKeyType="done"
             />
             {stage === 'history' ? (
-              <>
-                <Field
-                  label="Show grants published by the end of year (blank for all years)"
-                  value={through}
-                  onChangeText={setThrough}
-                  keyboardType="number-pad"
-                />
-                <Text wordSafe>
-                  These are selected examples. Amounts are the latest recorded
-                  award values, including any later updates; they do not show
-                  payments made that year.
-                </Text>
-              </>
+              <Field
+                label="Show grants published by the end of year (blank for all years)"
+                value={through}
+                onChangeText={setThrough}
+                keyboardType="number-pad"
+              />
             ) : null}
             <Disclosure
-              label="Compare the wider picture"
+              label="How invitations were shared"
               testID="allocation-comparison"
               open={comparison}
               onToggle={setComparison}
             >
               {data ? (
-                <Section
-                  title="How invitations were shared"
-                  accent="money"
-                  info={{
-                    title: 'About the seat comparison',
-                    notes: [
-                      data.allocation.provenance,
-                      'The seat comparison reproduces the Centre for Public Integrity’s published Table 3, including its by-election adjustments and Brisbane exception. Opax has not independently reproduced it from every project’s location. The electorate picker uses the AEC’s unadjusted 2025 baseline.',
-                    ],
-                  }}
-                >
+                <Group gap={rhythm.tight}>
                   <Text wordSafe>
                     These comparisons use the department’s November 2025
                     invitation list.
                   </Text>
                   {data.allocation.comparison.map((r) => (
-                    <Group key={r.name}>
+                    <Group key={r.name} gap={rhythm.line}>
                       <Text wordSafe variant="strong">
                         {r.name}
                       </Text>
@@ -202,16 +205,27 @@ export default function Allocation() {
                       />
                     </Group>
                   ))}
-                  <AsAtLine
+                  <SourceLine
+                    title="About the seat comparison"
                     asOf={data.allocation.asOf}
                     citation="Centre for Public Integrity, Table 3"
+                    originals={
+                      data.allocation.sources.cpi
+                        ? [
+                            {
+                              label: 'Centre for Public Integrity report',
+                              url: data.allocation.sources.cpi,
+                            },
+                          ]
+                        : []
+                    }
+                    notes={[
+                      data.allocation.provenance,
+                      'The seat comparison reproduces the Centre for Public Integrity’s published Table 3, including its by-election adjustments and Brisbane exception. Opax has not independently reproduced it from every project’s location. The electorate picker uses the AEC’s unadjusted 2025 baseline.',
+                    ]}
+                    testID="allocation-comparison-source"
                   />
-                  <SourceLink
-                    citation="Centre for Public Integrity report"
-                    url={data.allocation.sources.cpi!}
-                    kind="record"
-                  />
-                </Section>
+                </Group>
               ) : null}
             </Disclosure>
             <Disclosure
@@ -220,16 +234,7 @@ export default function Allocation() {
               open={marginOpen}
               onToggle={setMarginOpen}
             >
-              <Section
-                title="Election margin"
-                accent="money"
-                info={{
-                  title: 'About election margins',
-                  notes: [
-                    'These margins describe seats before the 2025 federal election.',
-                  ],
-                }}
-              >
+              <Group gap={rhythm.tight}>
                 <Field
                   label="Electorate"
                   value={seat}
@@ -238,17 +243,13 @@ export default function Allocation() {
                   returnKeyType="done"
                 />
                 {seats.map((s) => (
-                  <Group key={`${s.name}-${s.state}`}>
+                  <Group key={`${s.name}-${s.state}`} gap={rhythm.line}>
                     <Text wordSafe variant="strong">
                       {s.name} · {s.state}
                     </Text>
-                    <Text wordSafe>
+                    <Text wordSafe variant="metadata">
                       {s.party} · {formatPercent(s.margin)} · {s.baseline}
                     </Text>
-                    <AsAtLine
-                      asOf={data!.allocation.asOf}
-                      citation="AEC seat status, 2025 election"
-                    />
                   </Group>
                 ))}
                 {seat && !seats.length ? (
@@ -257,13 +258,27 @@ export default function Allocation() {
                   </Text>
                 ) : null}
                 {data ? (
-                  <SourceLink
+                  <SourceLine
+                    title="About election margins"
+                    asOf={data.allocation.asOf}
                     citation="AEC seat status, 2025 election"
-                    url={data.allocation.sources.aec!}
-                    kind="record"
+                    originals={
+                      data.allocation.sources.aec
+                        ? [
+                            {
+                              label: 'AEC seat status, 2025 election',
+                              url: data.allocation.sources.aec,
+                            },
+                          ]
+                        : []
+                    }
+                    notes={[
+                      'These margins describe seats before the 2025 federal election.',
+                    ]}
+                    testID="allocation-margin-source"
                   />
                 ) : null}
-              </Section>
+              </Group>
             </Disclosure>
             <ResultCount
               count={data ? rows.length : null}
@@ -282,7 +297,7 @@ export default function Allocation() {
                       (stage === 'invitations' ? 'invitation' : 'award'),
                 );
           return (
-            <Group>
+            <Group gap={rhythm.line}>
               <Text
                 wordSafe
                 variant="strong"
@@ -299,48 +314,40 @@ export default function Allocation() {
                 {r.date ? ` · Published ${formatDate(r.date)}` : ''}
               </Text>
               {location?.sites.map((site, j) => (
-                <Group key={j}>
-                  <Text wordSafe>
-                    {site.name} · {site.address}
-                  </Text>
-                  <AsAtLine
-                    asOf={data!.locations.asOf}
-                    citation="Verified project venue sources"
-                  />
-                  <SourceLink
-                    citation="Project location evidence"
-                    url={site.sourceUrl}
-                    kind="record"
-                  />
-                </Group>
+                <Text key={j} wordSafe>
+                  {site.name} · {site.address}
+                </Text>
               ))}
-              <AsAtLine asOf={date ?? null} citation={source} />
-              <SourceLink
+              {/* One source for the row: the award notice, then each
+                  venue's location evidence. */}
+              <SourceLine
+                title="This record"
+                dateLabel={null}
+                asOf={date ?? null}
                 citation={source}
-                record={r.id}
-                url={r.sourceUrl}
-                kind="record"
+                coverage={r.id}
+                originals={[
+                  ...(r.sourceUrl
+                    ? [{ label: source, url: r.sourceUrl, record: r.id }]
+                    : []),
+                  ...(location?.sites ?? []).map((site) => ({
+                    label: 'Project location evidence',
+                    url: site.sourceUrl,
+                    record: site.name,
+                  })),
+                ]}
+                notes={
+                  location?.sites.length
+                    ? [
+                        `Project locations from verified venue sources, as at ${formatDate(data!.locations.asOf)}.`,
+                      ]
+                    : undefined
+                }
+                testID={`allocation-source-${i}`}
               />
             </Group>
           );
         }}
-        footer={
-          data ? (
-            <InfoButton
-              title="About community funding"
-              notes={[
-                'A difference in funding does not establish that a project lacked merit. The government describes this program as delivering election commitments. Assessment scores and unsuccessful applications would be needed to test merit.',
-                'The earlier-grants view is a selection of sourced project examples from other programs, not a complete national or state total. Its year slider uses each notice’s original publication year, with the latest known award value. It does not reconstruct the record as it stood that year.',
-                ...data.locations.methodology,
-                ...(stage === 'history'
-                  ? data.history.methodology.filter(
-                      (m) => !m.includes('© OpenStreetMap'),
-                    )
-                  : []),
-              ]}
-            />
-          ) : null
-        }
       />
     </>
   );

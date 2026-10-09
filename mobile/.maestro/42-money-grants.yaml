@@ -148,10 +148,11 @@ name: 42 Electorate grants, programs and monthly largest; static public-money sc
 - takeScreenshot: ${EVIDENCE}/42-program-notes
 - tapOn:
     id: program-notes-sheet-done
+# The month's largest grants is a row at the foot of the program's list.
 - scrollUntilVisible:
     element:
       id: program-largest
-    direction: UP
+    direction: DOWN
     visibilityPercentage: 10
     centerElement: true
     speed: 20

@@ -1,20 +1,14 @@
 import { useCallback, useState } from 'react';
 import { useLocalSearchParams } from 'expo-router';
-import {
-  AsAtLine,
-  InfoButton,
-  Group,
-  SourceLink,
-  StepButtons,
-  Text,
-} from '../../design/primitives';
+import { Group, SourceLine, StepButtons, Text } from '../../design/primitives';
 import { formatDate, formatMoneyCompact } from '../../design/format';
+import { rhythm } from '../../design/tokens';
 import { RecordStatus } from '../RecordStatus';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { combine } from './catalog';
 import { largestFor } from './data';
 import { money } from './runtime';
-import { MoneyHeader, MoneyList, OrganisationWebLink, Title } from './parts';
+import { MoneyHeader, MoneyList, RowSource, Title } from './parts';
 export default function Largest() {
   const { month: initial } = useLocalSearchParams<{ month?: string }>();
   const [selected, setSelected] = useState(initial);
@@ -75,12 +69,28 @@ export default function Largest() {
             />
             {data ? (
               <>
-                <Text wordSafe>
-                  The largest grant agreements that started in {label}, one per
-                  recipient, as published on GrantConnect by{' '}
-                  {formatDate(data.largest.asOf)}.
-                </Text>
-                <AsAtLine asOf={data.largest.asOf} citation="GrantConnect" />
+                <Group gap={rhythm.tight}>
+                  <Text wordSafe>
+                    The largest grant agreements that started in {label}, one
+                    per recipient.
+                  </Text>
+                  <SourceLine
+                    title="About the month’s largest grants"
+                    asOf={data.largest.asOf}
+                    citation="GrantConnect"
+                    savedAt={
+                      status.record?.stale ? status.record.savedAt : null
+                    }
+                    originals={[
+                      {
+                        label: 'GrantConnect',
+                        url: 'https://www.grants.gov.au/',
+                      },
+                    ]}
+                    notes={data.largest.basis}
+                    testID="largest-source"
+                  />
+                </Group>
                 <StepButtons
                   testID="largest-months"
                   previous={stepFor('Previous month', previous)}
@@ -91,7 +101,7 @@ export default function Largest() {
           </>
         }
         render={(r, i) => (
-          <Group>
+          <Group gap={rhythm.line}>
             <Text wordSafe variant="strong" tabular>
               {formatMoneyCompact(r.value)}
             </Text>
@@ -99,42 +109,37 @@ export default function Largest() {
               {r.recipient}
             </Text>
             {r.purpose ? <Text wordSafe>{r.purpose}</Text> : null}
-            <Text wordSafe>{r.program}</Text>
             <Text wordSafe variant="metadata">
-              {r.agency} · {r.id} · {r.selection} · Agreement from{' '}
-              {formatDate(r.start)}
+              {[
+                r.program,
+                r.agency,
+                r.selection,
+                `Agreement from ${formatDate(r.start)}`,
+                r.more
+                  ? `${r.more} more award${r.more === 1 ? '' : 's'} to the same recipient that month`
+                  : null,
+              ]
+                .filter(Boolean)
+                .join(' · ')}
             </Text>
-            {r.more ? (
-              <Text wordSafe>
-                And {r.more} more award{r.more === 1 ? '' : 's'} to the same
-                recipient that month.
-              </Text>
-            ) : null}
-            <AsAtLine asOf={data!.largest.asOf} citation="GrantConnect" />
-            {r.organisation ? (
-              <OrganisationWebLink
-                name={r.recipient}
-                path={`/money/grants/federal/recipient/${encodeURIComponent(r.recipientId)}?award=${r.id}`}
-              />
-            ) : null}
-            {r.organisation ? (
-              <SourceLink
-                citation="GrantConnect record"
-                record={r.id}
-                url={r.sourceUrl}
-                kind="record"
-              />
-            ) : null}
+            <RowSource
+              register="GrantConnect"
+              record={r.id}
+              // An individual's award record would name them: no link.
+              url={r.organisation ? r.sourceUrl : null}
+              asOf={data!.largest.asOf}
+              organisation={
+                r.organisation
+                  ? {
+                      name: r.recipient,
+                      path: `/money/grants/federal/recipient/${encodeURIComponent(r.recipientId)}?award=${r.id}`,
+                    }
+                  : null
+              }
+              testID={`largest-source-${i}`}
+            />
           </Group>
         )}
-        footer={
-          data ? (
-            <InfoButton
-              title="About the month’s largest grants"
-              notes={data.largest.basis}
-            />
-          ) : null
-        }
       />
     </>
   );
