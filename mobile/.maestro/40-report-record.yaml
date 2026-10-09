@@ -32,13 +32,14 @@ name: 40 Today report, Over time records, 1999 speech opens in the reader
     centerElement: true
 - tapOn:
     id: report-section-sources-9
+# The source line opens the section's records sheet (design pass 4B).
 - scrollUntilVisible:
     element:
       id: report-section-sources-9-cited-0
     direction: DOWN
     timeout: 90000
     centerElement: true
-- assertVisible: "Peter Costello.*"
+- assertVisible: '.*Peter Costello.*'
 - takeScreenshot: ${EVIDENCE}/40-report-records
 - tapOn:
     id: report-section-sources-9-cited-0
