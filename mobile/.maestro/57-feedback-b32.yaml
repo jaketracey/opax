@@ -1,0 +1,127 @@
+appId: au.com.opax.app
+name: 57 TestFlight build 32 feedback - Search focus, Browse, directory labels and filter, a former member's records
+---
+# AD-10Dcy and ANiiV6Bw: idle Search answers a short tap at once (no freeze
+# while the suggestion roster builds) and draws no placeholder rows in Browse.
+- launchApp
+- tapOn:
+    id: tab-search
+- scrollUntilVisible:
+    element:
+      id: search-input
+    direction: UP
+    centerElement: true
+    speed: 20
+    timeout: 60000
+- assertNotVisible:
+    id: search-suggestions-loading
+- takeScreenshot: ${EVIDENCE}/57-search-idle
+# A short tap, not the long-press workaround: twenty focus, type and clear
+# rounds, each asserting the field holds exactly what was typed.
+- repeat:
+    times: 20
+    commands:
+      - tapOn:
+          id: search-input
+      - inputText: Albanese
+      - assertVisible:
+          id: search-input
+          text: ^Albanese$
+      - eraseText: 12
+      - hideKeyboard
+- takeScreenshot: ${EVIDENCE}/57-search-after-typing
+# Browse opens the directory; its order is named; a former member's label is
+# the party they sat for, with no "Formerly" (AILRB_Cd, ACzcQOFB).
+- scrollUntilVisible:
+    element:
+      id: search-browse-person
+    centerElement: true
+    speed: 20
+    timeout: 60000
+- tapOn:
+    id: search-browse-person
+- extendedWaitUntil:
+    visible:
+      id: directory-count
+    timeout: 30000
+- assertVisible: .*Sitting first, then most speeches.*
+- takeScreenshot: ${EVIDENCE}/57-directory
+- tapOn:
+    id: directory-search
+- inputText: Joe Hockey
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: directory-person-joe-hockey
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 60000
+- assertNotVisible: .*Formerly LIB.*
+- assertNotVisible: .*Formerly Liberal.*
+- takeScreenshot: ${EVIDENCE}/57-directory-hockey
+- tapOn:
+    id: directory-search
+- eraseText: 20
+- hideKeyboard
+# ALUtpHq6: Sitting members only, beside Voting record and Portrait.
+- tapOn:
+    id: directory-filters
+- scrollUntilVisible:
+    element:
+      id: directory-filter-sitting
+    centerElement: true
+    speed: 20
+    timeout: 60000
+- tapOn:
+    id: directory-filter-sitting
+- takeScreenshot: ${EVIDENCE}/57-filters-sitting
+- tapOn: Done
+- extendedWaitUntil:
+    visible:
+      id: directory-count
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/57-directory-sitting-only
+# ANGYQm3w: Bill Shorten's page links his votes and Labor's receipts.
+- launchApp
+- tapOn:
+    id: tab-search
+- scrollUntilVisible:
+    element:
+      id: search-input
+    direction: UP
+    centerElement: true
+    speed: 20
+    timeout: 60000
+- tapOn:
+    id: search-input
+- inputText: Bill Shorten
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: search-result-bill-shorten
+    centerElement: true
+    speed: 20
+    timeout: 120000
+- tapOn:
+    id: search-result-bill-shorten
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+    timeout: 30000
+- assertVisible:
+    id: person-former
+- scrollUntilVisible:
+    element: Labor party receipts
+    centerElement: true
+    speed: 20
+    timeout: 120000
+- takeScreenshot: ${EVIDENCE}/57-shorten-receipts
+- scrollUntilVisible:
+    element: .*recorded divisions.*
+    centerElement: true
+    speed: 20
+    timeout: 120000
+- assertNotVisible:
+    id: person-votes-unlinked
+- takeScreenshot: ${EVIDENCE}/57-shorten-votes
