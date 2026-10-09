@@ -1,0 +1,69 @@
+{
+  "cases": [
+    {
+      "input": "Opposition senatorsinterjecting—",
+      "expected": "Opposition senators interjecting—"
+    },
+    {
+      "input": "Senator Allisonuntil",
+      "expected": "Senator Allison until"
+    },
+    {
+      "input": "whistleblowersAndrew Wilkie",
+      "expected": "whistleblowers Andrew Wilkie"
+    },
+    {
+      "input": "whenMalcolm Turnbullwas prime minister. WhenJoe Hockeywas asked.",
+      "expected": "when Malcolm Turnbull was prime minister. When Joe Hockey was asked."
+    },
+    {
+      "input": "Opposition senators<i>interjecting</i>—",
+      "expected": "Opposition senators interjecting—"
+    },
+    {
+      "input": "when<span class=\"highlight\">Malcolm Turnbull</span>was prime minister. When<mark>Joe Hockey</mark>was asked.",
+      "expected": "when Malcolm Turnbull was prime minister. When Joe Hockey was asked."
+    },
+    {
+      "input": "<p>Meat &#38; Livestock Australia Limited</p><p> So  Cattle Australia is on that?</p>",
+      "expected": "Meat & Livestock Australia Limited\n\nSo Cattle Australia is on that?"
+    },
+    {
+      "input": "&#38; &amp; &nbsp; &#x1F600; &mdash; &amp;#38; &lt;b&gt;literal&lt;/b&gt;",
+      "expected": "& & 😀 — &#38; <b>literal</b>"
+    },
+    {
+      "input": "McDonald eBay YouTube iPhone AC/DC AT&T",
+      "expected": "McDonald eBay YouTube iPhone AC/DC AT&T"
+    },
+    {
+      "input": "Before<span>one</span><em>two</em>after<div> next\t line </div> last",
+      "expected": "Before one two after\nnext line\nlast"
+    },
+    {
+      "input": "Read <https://example.gov.au/report> for details.",
+      "expected": "Read <https://example.gov.au/report> for details."
+    },
+    {
+      "input": "alpha<span title=\"x > y\">beta</span>gamma",
+      "expected": "alpha beta gamma"
+    }
+  ],
+  "speeches": [
+    {
+      "speech_id": 796901,
+      "source": "openaustralia",
+      "text_clean": "My question is to Senator Arbib, the Minister Assisting the Prime Minister on Government Service Delivery and Minister for Employment Participation. Can the minister inform the Senate how the government’s nation-building economic stimulus is building productive capacity in the economy? In particular, how is the stimulus helping apprentices and providing opportunities for training in key growth areas of our economy? How will this increased capacity assist the development of large-scale natural resources projects inNorthern Australia? What would be the effect of stopping the stimulus or delaying it over 15 years, as proposed by the opposition through Senator Eggleston?\n\nI thank Senator Feeney for that question. As has been outlined by Treasury, the stimulus is supporting 210,000 jobs. Without it unemployment would be far worse. We know that winding back the stimulus would lead to another 100,000 Australians—\n\nOpposition Senators:\n\nOpposition senatorsinterjecting—\n\nOrder! When there is silence, we will proceed.\n\nWithdrawing the stimulus would see something like 100,000 Australians lose their jobs.The Liberaland National parties do not want to talk about the stimulus and they do not want to talk about employment because, as Mr Hockeysaid, jobs are not their priority.\n\nSenator Ian Macdonaldinterjecting—\n\nOrder! Constant interjection is disorderly, Senator Macdonald.\n\nSenator Sherryinterjecting—\n\nOrder! Senator Sherry. On both sides, I am waiting for silence before I ask Senator Arbib to continue.\n\nSomething else that is not their priority is infrastructure. We know that infrastructure funding actually dropped during their 12 years in government. The government are preparing for recovery and we are working on our transport—\n\nOpposition Senators:\n\nOpposition senatorsinterjecting—\n\nOrder! When we have silence, we will proceed. It is very easy.\n\nIt is pretty clear that the Liberal Party do not want to hear about jobs, they do not want to hear about employment and they certainly do not want to hear about infrastructure. But the federal government does. The stimulus package is investing in rail lines. Seventeen majorARTCrail lines—\n\nOpposition Senators:\n\nOpposition senatorsinterjecting—\n\nOrder! If people wish to debate the question, there is an opportunity after question time to debate the issue.\n\nThree of those rail lines have already been completed. The federal government are spending more in 12 months than the coalition government spent in 12 years. The stimulus package is investing in 14 major road projects, and five are underway. It is a doubling of the roads budget. This is how the government are fighting the global recession. This is how the government are supporting jobs. This is how the government are preparing for the future. Those Liberal and National party senators on the other side can scream and shout, but we know they could not care less about infrastructure.\n\nMr President, I ask a supplementary question. Has the minister had the opportunity to personally inspect any schools that have benefited from the education stimulus? Is the minister aware of any completed projects under thePrimary Schoolsfor the 21st Century program? How is the education stimulus helping to support the productive capacity of the economy during this recovery? Can the minister further inform the Senate of details regarding other inquiries concerning the stimulus?\n\nThe opposition did not want to listen when I was talking about infrastructure or jobs; maybe they will listen when it comes to education. Recently, I visitedYandina State Schoolup on theSunshine Coast, the first primary school project opened under the 21st century schools program. It was a resource centre worked on by 40 local contractors—90 per cent of those contractors came from the local community. It was a project that supported jobs on the Sunshine Coast, not just jobs but much needed school infrastructure. At the opening, Katie O’Sullivan, the captain of Yandina State School, said—\n\nOpposition Senators:\n\nOpposition senatorsinterjecting—\n\nOrder! When the interjections cease, we will continue.\n\nThe school captain said:\n\nWe know personally how much of an improvement was made to the school by the building for education program. We have seen improvements right across the school, with our classrooms receiving new carpets, new furniture and new paint. I am sure all students agree theBuilding the Education Revolutionprojects have made a great difference to our school.\n\n(Time expired)\n\nI thank the minister for his answer, and I have a second supplementary question. What is the government doing to support productive capacity in the economy to assist with the number of large-scale natural resource projects? In particular, can the minister inform the Senate of the status of the National Resource Sector Employment Taskforce? How will that task force assist Australia in developing productive capacity for the significant investment in these projects in northern Australia over the next five to 10 years?\n\nI have already spoken about infrastructure and jobs, but also the government is preparing for some of the majorLNGand mining projects that will be getting underway over the coming years. In all, the government believes that there is something like 80 major projects in the pipeline over the next decade, which could create up to 70,000 construction jobs for Australians. We want to ensure that we maximise the local employment opportunities for Australians. That is why the government has established the natural resource sector task force. I was very happy to meet yesterday with the task force for the first time, and also withMartin Ferguson, the Minister forResources and Energy; Senator Sterle, the deputy chair; and the chair,Gary Gray. In short, we will be developing a skills and employment plan for that sector to ensure that we are putting downward pressure on capacity constraints.(Time expired)"
+    },
+    {
+      "speech_id": 1198151,
+      "source": "openaustralia",
+      "text_clean": "My question is to the Minister for Housing, Minister for Homelessness and Minister for Cities. How is the Albanese Labor government supporting first home buyers into their own homes sooner, and what other approaches to housing is the government being asked to consider?\n\nI thank the member for Petrie for her question. Since our government was elected in 2022, almost a thousand of her constituents have bought their first home with the support and backing of our government, and there will be many more to come.\n\nAustralia is in the grip of a housing crisis that's been building for 40 years. We know that the long-term fix here is that we've got to build more homes. The majority of our historic $43 billion housing agenda is devoted to doing just that. The more housing we build, the more affordable housing becomes for Australians. We got some good news just yesterday: we learned that building approvals around Australia are up 15.3 per cent on last year. These are meaningful numbers, and this number has been growing fairly consistently now for 20 months. We have got a long way to go on housing, but we're seeing some really important progress. Our government knows that people need help on housing right now, and that is why we are so proud to see a massive expansion in homeownership opportunities. Our government has now helped 197,000 Australians around the country get into their first home with our five per cent deposit scheme.\n\nThe member asked me about alternative approaches, and we do see from those opposite a completely different attitude to housing. They are completely out of touch, not just with energy policy but also with the housing experience of Australians. In fairness to those opposite, this is not a new feature of the 48th Parliament. You will remember that, whenMalcolm Turnbullwas prime minister, he said the answer for young people trying to get into their own home was that parents should shell out to help their kids, which doesn't help much if your parents aren't millionaires. WhenJoe Hockeywas asked what advice he'd give to a young person struggling to get into housing—get this—he said, 'Get a good job that pays good money,' as if the housing challenges facing our country are some kind of personal failing of the young people around the nation.\n\nWe know that, for most of the time the coalition were in office, they were so uninterested they didn't even bother having a housing minister, and yesterday the member for Wright said the quiet part out loud. According to him, the coalition didn't have a housing minister because there was no problem with housing under the former government. Let me be really clear. The reason they didn't have a housing minister wasn't that there was no crisis; it was that they didn't care. Under those opposite, house prices in Sydney more than doubled, rents skyrocketed and an entire generation in our country gave up on the idea of homeownership. They spent nine years doing absolutely nothing about this problem. They then went into opposition, and they've spent the last three years trying to block and delay things that will help. They're now doing everything in their power to show all of you in the public gallery that they are not even remotely concerned with your problems; they are just concerned with their own. I wouldn't trust them on housing or anything else that matters to you and your family.(Time expired)"
+    },
+    {
+      "speech_id": 1249416,
+      "source": "committee_senate",
+      "text_clean": "[Rural and Regional Affairs and Transport Legislation Committee - Rural and Regional Affairs and Transport Legislation Committee 28/05/2026 Estimates AGRICULTURE, FISHERIES AND FORESTRY PORTFOLIO Meat &#38; Livestock Australia Limited] Senator CANAVAN:\n\n So Cattle Australia is on that?"
+    }
+  ]
+}

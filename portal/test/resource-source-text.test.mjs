@@ -1,3 +1,4 @@
+import * as passageText from '../src/passage-text.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -12,7 +13,7 @@ const handler=source.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.tex
 async function readSource(texts,slug='research-cpi-mlci-2026',overrides={}) {
   const record={title:'Source record',data:{texts},usermetadata:{classifications:[{labelset:'kind',label:'research_report'}]},...overrides};
   const api=runInNewContext(ts.transpile(handler)+'; apiResource',{
-    Response, isPublicSlug, isWitness, belongsToScope, DIVISION_SLUG_RE:/^division-/,
+    ...passageText, Response, isPublicSlug, isWitness, belongsToScope, DIVISION_SLUG_RE:/^division-/,
     speakerAttribution: async (_env, speaker) => speaker === 'Stewart' ? {state:'qld',chamber:'qld_la'} : null,
     cacheRequest:()=>new Request('https://opax.test/cache'), cacheBypass:()=>true,
     kbFetch:async()=>Response.json(record), json:data=>Response.json(data),
@@ -28,6 +29,11 @@ test('new corpus source pages show t-body text and keep machine summaries separa
   assert.equal(result.text,'Invitations are not awarded grants.');
   assert.equal(result.summary,'Machine summary');
   assert.equal(result.labels.kind,'research_report');
+});
+
+test('source pages share display cleanup without decoding literal entities twice',async()=>{
+  const result=await readSource({body:field('whenMalcolm Turnbullwas prime minister.\n\n So Meat &#38; Livestock &amp;#38;')},'speech-1198151');
+  assert.equal(result.text,'when Malcolm Turnbull was prime minister.\n\nSo Meat & Livestock &#38;');
 });
 
 test('source documents clear witness and other-house MP fields while preserving own parliamentary rows',async()=>{

@@ -85,12 +85,12 @@ export function positionEvidence(text: string, query: string): string {
   if (proposal) {
     const start = Math.max(0, proposal.index - 400)
     const candidate = turn.slice(start ? turn.indexOf(' ', start) + 1 : 0)
-    const window = evidenceExcerpt(candidate, '', 5600).text
+    const window = evidenceExcerpt(candidate, '', 5600, true).text
     const relevant = guardPositionAnswer({answer:'candidate',retrieval_results:{resources:{source:{fields:{body:{paragraphs:{'source/t/body':{text:window}}}}}}}},
       {query,prompt:{system:'You explain Australian politicians’ documented positions from primary records.'}})
     if (relevant.answer !== EVIDENCE_GAP_ANSWER) return (start ? '… ' : '') + window
   }
-  const excerpt = evidenceExcerpt(turn, query+' proposed propose require obligation definition', 5600)
+  const excerpt = evidenceExcerpt(turn, query+' proposed propose require obligation definition', 5600, true)
   return excerpt.text.length >= 45 ? excerpt.text : ''
 }
 
