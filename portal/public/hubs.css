@@ -1,0 +1,54 @@
+/* Hubs retain their server-rendered body. Native disclosures work without JS. */
+.hub-page { max-width: 960px; padding-top: 2rem; padding-bottom: 3rem; }
+.hub-page h1 { font: 700 clamp(1.6rem, 3.5vw, 2.4rem)/1.3 var(--serif); margin: .75rem 0 1rem; text-wrap: balance; }
+.hub-page h2 { font: 700 1.35rem/1.4 var(--serif); margin: 0 0 .5rem; }
+.hub-page h3 { font: 600 1.125rem/1.5 var(--serif); margin: 0; }
+.hub-page h4 { font: 600 1rem/1.5 var(--sans); margin: 0; }
+.hub-page h5 { font: 600 .9375rem/1.5 var(--sans); margin: 1rem 0 .5rem; }
+.hub-page p { line-height: 1.65; }
+.hub-page a { color: var(--bills-ink); overflow-wrap: anywhere; }
+.hub-trail, .hub-meta, .hub-date { color: var(--ink-soft); font-size: .875rem; }
+.hub-lead { max-width: 46rem; font-size: 1.0625rem; margin-bottom: 1.25rem; }
+.hub-page .ui-source { margin: .75rem 0; }
+.hub-pills { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1rem 0; }
+.hub-pills .ui-tag { background: var(--bills-wash); color: var(--bills-ink); text-decoration: none; }
+.hub-cutoff, .hub-arrival { border-left: 3px solid var(--bills-ink); padding: .75rem 1rem; background: var(--paper-sunken); }
+.hub-arrival { margin: 2rem 0 3rem; }
+.hub-weeks, .hub-records { list-style: none; padding: 0; margin: 1.5rem 0; }
+.hub-weeks > li { display: flex; gap: 1rem; align-items: flex-start; justify-content: space-between; padding: 1.5rem 0; border-top: 1px solid var(--divider-subtle); }
+.hub-weeks h2 { font-size: 1.2rem; }
+.hub-weeks p { margin: .35rem 0; }
+.hub-weeks .ui-status { flex-shrink: 0; margin-top: .25rem; }
+.hub-section { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--divider-default); scroll-margin-top: 7rem; }
+.hub-count { color: var(--ink-soft); font: 400 1rem var(--sans); margin-left: .4rem; }
+.hub-records > li { padding: 1.25rem 0; border-top: 1px solid var(--divider-subtle); }
+.hub-records > li:first-child { border-top: 0; padding-top: .25rem; }
+.hub-records .hub-meta { margin: .5rem 0; }
+.hub-summary { margin: 1rem 0; }
+.hub-summary .hub-date { margin-left: .5rem; }
+.hub-summary > p { margin: .7rem 0; }
+.hub-coverage { border-top: 1px solid var(--divider-subtle); margin-top: 1.5rem; padding-top: .75rem; }
+.hub-coverage p { font-size: .9375rem; margin: .6rem 0; }
+.hub-committee { border-top: 1px solid var(--divider-subtle); }
+.hub-committee > summary { cursor: pointer; padding: 1.2rem 0; }
+.hub-committee > summary h3 { display: inline; }
+.hub-committee > summary .hub-meta { display: block; margin: .35rem 0 0 1rem; }
+.hub-committee-body { padding-left: 1rem; }
+.hub-fallback { color: var(--ink-soft); font-size: .875rem; }
+.hub-agency { padding: 1.2rem 0; border-top: 1px solid var(--divider-subtle); }
+.hub-totals { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem 2rem; margin: .75rem 0; }
+.hub-totals dt { color: var(--ink-soft); font-size: .8125rem; }
+.hub-totals dd { margin: .2rem 0 0; font-variant-numeric: tabular-nums; }
+.hub-largest > summary { cursor: pointer; color: var(--bills-ink); font-size: .875rem; padding: .35rem 0; }
+.hub-largest ul { list-style: none; margin: 0; padding: 0; }
+.hub-largest li { padding: .5rem 0; border-top: 1px solid var(--divider-subtle); }
+.hub-largest p { margin: .3rem 0; }
+.hub-corrections { border-top: 1px solid var(--divider-default); margin-top: 2rem; padding-top: 1rem; color: var(--ink-soft); font-size: .875rem; }
+@media (max-width: 600px) {
+  .hub-page { padding-top: 1.25rem; }
+  .hub-weeks > li { gap: .6rem; }
+  .hub-weeks h2 { font-size: 1.05rem; }
+  .hub-weeks .ui-status { font-size: .75rem; }
+  .hub-totals { gap: .75rem; font-size: .875rem; }
+  .hub-committee-body { padding-left: 0; }
+}

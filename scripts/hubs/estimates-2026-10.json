@@ -1,0 +1,314 @@
+{
+  "id": "2026-10",
+  "name": "Supplementary Budget Estimates",
+  "start": "2026-10-26",
+  "end": "2026-10-29",
+  "updated": "2026-10-10",
+  "source_url": "https://www.aph.gov.au/Parliamentary_Business/Senate_estimates/Next_hearings",
+  "fetch": {
+    "url": "https://www.aph.gov.au/Parliamentary_Business/Senate_estimates/Next_hearings",
+    "checked": "2026-10-10",
+    "status": 200,
+    "sha256": "5b2e60f4ace1dd38c80da6e9ddfe5deaec1a62c46ca88f6055cf0e1f8692d497",
+    "bytes": 64529
+  },
+  "published_status": "Program to be finalised",
+  "portfolio_source_url": "https://www.directory.gov.au/reports/australian-government-organisations-register",
+  "portfolio_checked": "2026-10-10",
+  "portfolio_note": "Primary bodies matched by recorded agency name to the Australian Government Organisations Register. Historical agency names remain separate; this is not a complete portfolio list. The infrastructure department covers functions allocated to two committees; its totals cover the whole agency, not either committee allocation.",
+  "grant_agency_aliases": {
+    "National Health and Medical Research Council": [
+      "National Health and Medical Research Council (NHMRC)"
+    ]
+  },
+  "groups": [
+    {
+      "id": "A",
+      "start": "2026-10-26",
+      "end": "2026-10-27"
+    },
+    {
+      "id": "B",
+      "start": "2026-10-28",
+      "end": "2026-10-29"
+    }
+  ],
+  "committees": [
+    {
+      "id": "environment-and-communications",
+      "name": "Environment and Communications",
+      "group": "A",
+      "program": null,
+      "portfolios": [
+        {
+          "name": "Climate Change, Energy, the Environment and Water",
+          "agencies": [
+            "Department of Climate Change, Energy, the Environment and Water",
+            "Australian Energy Regulator",
+            "Australian Institute of Marine Science",
+            "Bureau of Meteorology",
+            "Clean Energy Regulator",
+            "Climate Change Authority",
+            "Director of National Parks",
+            "Great Barrier Reef Marine Park Authority",
+            "Murray-Darling Basin Authority",
+            "National Environmental Protection Agency",
+            "Sydney Harbour Federation Trust"
+          ]
+        },
+        {
+          "name": "Communications, Sport and the Arts",
+          "agencies": [
+            "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+            "Australian Communications and Media Authority",
+            "Australian National Maritime Museum",
+            "National Archives of Australia",
+            "National Gallery of Australia",
+            "National Museum of Australia",
+            "National Portrait Gallery of Australia",
+            "Old Parliament House",
+            "Sport Integrity Australia"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "finance-and-public-administration",
+      "name": "Finance and Public Administration",
+      "group": "A",
+      "program": null,
+      "portfolios": [
+        {
+          "name": "Finance",
+          "agencies": [
+            "Department of Finance",
+            "Australian Electoral Commission",
+            "Commonwealth Superannuation Corporation",
+            "Digital Transformation Agency",
+            "Future Fund Management Agency",
+            "Independent Parliamentary Expenses Authority",
+            "Parliamentary Workplace Support Service",
+            "Services Australia"
+          ]
+        },
+        {
+          "name": "Parliament",
+          "agencies": [
+            "Department of Parliamentary Services",
+            "Department of the House of Representatives",
+            "Department of the Senate",
+            "Parliamentary Budget Office"
+          ]
+        },
+        {
+          "name": "Prime Minister and Cabinet",
+          "agencies": [
+            "Department of the Prime Minister and Cabinet",
+            "Australian National Audit Office",
+            "Australian Public Service Commission",
+            "National Indigenous Australians Agency",
+            "Office of National Intelligence",
+            "Office of the Official Secretary to the Governor-General",
+            "Workplace Gender Equality Agency"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "legal-and-constitutional-affairs",
+      "name": "Legal and Constitutional Affairs",
+      "group": "A",
+      "program": null,
+      "portfolios": [
+        {
+          "name": "Attorney-General's",
+          "agencies": [
+            "Attorney-General's Department",
+            "Administrative Review Tribunal",
+            "Australian Human Rights Commission",
+            "Australian Law Reform Commission",
+            "Federal Court of Australia",
+            "National Anti-Corruption Commission",
+            "Office of Parliamentary Counsel",
+            "Office of the Australian Information Commissioner",
+            "Office of the Commonwealth Ombudsman",
+            "Office of the Director of Public Prosecutions",
+            "Office of the Inspector-General of Intelligence and Security",
+            "Office of the Special Investigator"
+          ]
+        },
+        {
+          "name": "Home Affairs",
+          "agencies": [
+            "Department of Home Affairs",
+            "Australian Criminal Intelligence Commission",
+            "Australian Federal Police",
+            "Australian Institute of Criminology",
+            "Australian Transaction Reports and Analysis Centre",
+            "National Emergency Management Agency"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rural-and-regional-affairs-and-transport",
+      "name": "Rural and Regional Affairs and Transport",
+      "group": "A",
+      "program": null,
+      "portfolios": [
+        {
+          "name": "Agriculture, Fisheries and Forestry",
+          "agencies": [
+            "Department of Agriculture, Fisheries and Forestry",
+            "Australian Fisheries Management Authority",
+            "Australian Pesticides and Veterinary Medicines Authority",
+            "Grains Research and Development Corporation",
+            "Regional Investment Corporation"
+          ]
+        },
+        {
+          "name": "Infrastructure, Transport and Regional Development",
+          "agencies": [
+            "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+            "Australian Maritime Safety Authority",
+            "Australian Transport Safety Bureau",
+            "High Speed Rail Authority",
+            "National Capital Authority"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "community-affairs",
+      "name": "Community Affairs",
+      "group": "B",
+      "program": null,
+      "portfolios": [
+        {
+          "name": "Health, Disability and Ageing",
+          "agencies": [
+            "Department of Health, Disability and Ageing",
+            "Aged Care Quality and Safety Commission",
+            "Australian Centre for Disease Control",
+            "Australian Digital Health Agency",
+            "Australian Institute of Health and Welfare",
+            "Australian Radiation Protection and Nuclear Safety Agency",
+            "Cancer Australia",
+            "Independent Health and Aged Care Pricing Authority",
+            "National Blood Authority",
+            "National Health and Medical Research Council",
+            "National Health Funding Body",
+            "NDIS Quality and Safeguards Commission",
+            "Office of the Inspector-General of Aged Care",
+            "Organ and Tissue Authority",
+            "Professional Services Review"
+          ]
+        },
+        {
+          "name": "Social Services",
+          "agencies": [
+            "Department of Social Services",
+            "Australian Institute of Family Studies",
+            "Domestic, Family and Sexual Violence Commission",
+            "National Commission for Aboriginal and Torres Strait Islander Children and Young People"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "economics",
+      "name": "Economics",
+      "group": "B",
+      "program": null,
+      "portfolios": [
+        {
+          "name": "Industry, Science and Resources",
+          "agencies": [
+            "Department of Industry, Science and Resources",
+            "Australian Nuclear Science and Technology Organisation",
+            "Geoscience Australia",
+            "IP Australia",
+            "National Offshore Petroleum Safety and Environmental Management Authority",
+            "Net Zero Economy Authority"
+          ]
+        },
+        {
+          "name": "Treasury",
+          "agencies": [
+            "Department of the Treasury",
+            "Australian Bureau of Statistics",
+            "Australian Competition and Consumer Commission",
+            "Australian Financial Security Authority",
+            "Australian Office of Financial Management",
+            "Australian Prudential Regulation Authority",
+            "Australian Securities and Investments Commission",
+            "Australian Taxation Office",
+            "Commonwealth Grants Commission",
+            "Inspector-General of Taxation",
+            "National Competition Council",
+            "Office of the Australian Accounting Standards Board",
+            "Productivity Commission",
+            "Reserve Bank of Australia",
+            "Royal Australian Mint"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "education-and-employment",
+      "name": "Education and Employment",
+      "group": "B",
+      "program": null,
+      "portfolios": [
+        {
+          "name": "Education",
+          "agencies": [
+            "Department of Education",
+            "Australian Research Council",
+            "Tertiary Education Quality and Standards Agency"
+          ]
+        },
+        {
+          "name": "Employment and Workplace Relations",
+          "agencies": [
+            "Department of Employment and Workplace Relations",
+            "Asbestos and Silica Safety and Eradication Agency",
+            "Australian Skills Quality Authority",
+            "Comcare",
+            "Fair Work Commission",
+            "Office of the Fair Work Ombudsman",
+            "Safe Work Australia"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "foreign-affairs-defence-and-trade",
+      "name": "Foreign Affairs, Defence and Trade",
+      "group": "B",
+      "program": null,
+      "portfolios": [
+        {
+          "name": "Defence, including Veterans' Affairs",
+          "agencies": [
+            "Department of Defence",
+            "Australian Naval Nuclear Power Safety Regulator",
+            "Australian Signals Directorate",
+            "Australian Submarine Agency",
+            "Department of Veterans' Affairs",
+            "Australian War Memorial"
+          ]
+        },
+        {
+          "name": "Foreign Affairs and Trade",
+          "agencies": [
+            "Department of Foreign Affairs and Trade",
+            "Australian Centre for International Agricultural Research",
+            "Export Finance Australia",
+            "Tourism Australia"
+          ]
+        }
+      ]
+    }
+  ]
+}

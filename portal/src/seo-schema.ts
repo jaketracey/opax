@@ -101,7 +101,7 @@ const DIRECTORIES: Record<string, string> = {
 }
 
 const SECTION_LABELS: Record<string, string> = {
-  reports: 'Reports', money: 'Money', grants: 'Grants', bills: 'Bills', data: 'Data', exports: 'Data exports',
+  reports: 'Reports', money: 'Money', grants: 'Grants', bills: 'Bills', data: 'Data', exports: 'Data exports', sitting: 'Sitting weeks',
 }
 
 function pageName(title: string): string {

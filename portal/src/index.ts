@@ -9,6 +9,7 @@ import { missingEntitySlug } from './crawl-hygiene'
 import { normalizePassage, passageWindow } from './passage-text'
 import { instrumentPage, instrumentReader } from './instruments'
 import { auditPage, auditReader } from './audit'
+import { hubPage } from './hubs'
 import { AUDIT_ID } from '../public/audit.js'
 import { runIndexNow, INDEXNOW_CRON } from './indexnow'
 import { type MoneyFacts, moneyOverviewPrompt, verifiedOverview } from './ask-money-overview'
@@ -3181,6 +3182,7 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
 }
 
 type SeoRoute =
+  | { kind: 'hub'; hub: 'sitting' | 'estimates'; id: string | null }
   | { kind: 'instruments'; id: string | null }
   | { kind: 'audit'; id: string | null }
   | { kind: 'static'; page: keyof typeof STATIC_PAGES }
@@ -3231,6 +3233,8 @@ const GRANT_RECIPIENT_ID_RE = /^(?:abn:\d{11}|name:[a-z0-9 .&'()-]{2,120}|person
 /** Route table for real paths. Trailing slashes tolerated, never canonical. */
 function matchSeoRoute(url: URL): SeoRoute | null {
   const path = url.pathname.replace(/\/+$/, '') || '/'
+  if (path === '/sitting' || path.startsWith('/sitting/')) return {kind:'hub',hub:'sitting',id:path === '/sitting' ? null : path.slice('/sitting/'.length)}
+  if (path === '/estimates' || path.startsWith('/estimates/')) return {kind:'hub',hub:'estimates',id:path === '/estimates' ? null : path.slice('/estimates/'.length)}
   if (path === '/audit') return { kind: 'audit', id: null }
   if (path.startsWith('/audit/') && !/^\/audit\/(?:manifest|index|ready|reports-\d+)\.json$/.test(path)) {
     try { return { kind: 'audit', id: decodeURIComponent(path.slice('/audit/'.length)) } }
@@ -3732,6 +3736,11 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
   })
 
   switch (route.kind) {
+    case 'hub': {
+      const people = route.hub === 'sitting' && route.id ? await loadPeople(env) : null
+      const page = await hubPage(route.hub,route.id,<T>(path: string) => assetJson<T>(env,path),people?.people || [],people?.slugOf || new Map())
+      return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status})
+    }
     case 'audit': return base({ ...await auditPage(route.id, url, auditReader(env.ASSETS), prerenderBlock),
       ...(route.id && AUDIT_ID.test(route.id) ? { canonical: `${SITE_ORIGIN}/audit/${route.id}` } : {}) })
     case 'instruments': return base(await instrumentPage(route.id, url, instrumentReader(env.ASSETS), prerenderBlock))
@@ -4795,6 +4804,10 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
         for(const [rel,href] of [['prev',meta.prev],['next',meta.next]]) if(href) el.append(`<link rel="${rel}" href="${escHtml(href)}">`,{html:true})
       },
     })
+  if (route.kind === 'hub') rewriter.on('script[src]', { element(el) {
+    if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
+  } }).on('head', { element(el) { el.append('<link rel="stylesheet" href="/hubs.css">',{html:true}) } })
+    .on('p#stats', { element(el) { el.remove() } })
   if (route.kind === 'instruments' || route.kind === 'audit') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } }).on('a[href^="/subject/person"]', { element(el) { el.remove() } })

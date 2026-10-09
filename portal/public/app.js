@@ -7830,6 +7830,19 @@ async function openBillsIndex(params, manageFocus) {
     row: billRowHTML,
     fineprint: BILLS_FINEPRINT,
   });
+  const [hubs, helper] = await Promise.all([
+    fetch('/hubs/index.json').then(r => r.ok ? r.json() : null).catch(() => null),
+    import('/hubs-data.js?v=20261010'),
+  ]);
+  if (billView === 'index' && hubs && !body.querySelector('[data-sitting-week]')) {
+    const entry = document.createElement('p');
+    const link = document.createElement('a');
+    link.dataset.sittingWeek = '';
+    link.href = helper.currentSittingPath(hubs.weeks,helper.sydneyDay());
+    link.textContent = 'This sitting week';
+    entry.append(link);
+    body.querySelector('.subject-head')?.append(entry);
+  }
 }
 
 /* The timeline. A bill's dates sit inside months, not decades, so the ruler is
