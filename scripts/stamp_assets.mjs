@@ -124,9 +124,12 @@ async function refreshFonts() {
  *  An importer that is itself stamped into another comes first, so its own
  *  new stamp is in the hash its importer takes (labels.js reaches app.js
  *  directly and through electorates.js, and home.js through home-data.js).
- *  agencies.js and suppliers.js import each other, so app.js keeps a hand
- *  version for them: bump it when their money-map.js stamp moves. */
+ *  agencies.js and suppliers.js import each other: stamp the agencies → suppliers
+ *  edge only, then app.js. Keep the reverse edge hand-versioned to avoid a hash cycle. */
 export const MODULE_STAMPS = [
+  ['growth-modules.js', 'donor-privacy.js'], ['growth-modules.js', 'labels.js'], ['growth-modules.js', 'sponsor-person.js'],
+  ['supplier-growth.js', 'growth-modules.js'], ['supplier-growth.js', 'labels.js'],
+
   ['canonical-urls.js', 'person-paths.js'],
   ['ballot.js', 'canonical-urls.js'],
   ['electorates.js', 'canonical-urls.js'],
@@ -138,15 +141,15 @@ export const MODULE_STAMPS = [
   ['ledger.js', 'canonical-urls.js'],
   ['money-journeys.js', 'canonical-urls.js'],
   ['quiz.js', 'canonical-urls.js'],
-  ['suppliers.js', 'canonical-urls.js'],
+  ['suppliers.js', 'canonical-urls.js'], ['suppliers.js', 'growth-modules.js'], ['suppliers.js', 'supplier-growth.js'], ['agencies.js', 'suppliers.js'],
   ['timemachine.js', 'canonical-urls.js'],
   // The money map's bundle names its chunks by content, so an importer holding
   // an old money-map.js would ask for chunks the build has removed.
   ['map-page.js', 'money-map.js'], ['agencies.js', 'money-map.js'], ['suppliers.js', 'money-map.js'],
   ['thenvsnow.js', 'wombat.js'], ['thenvsnow.js', 'labels.js'], ['grant-recipient.js', 'grants.js'],
   ['electorates.js', 'labels.js'], ['home-data.js', 'labels.js'],
-  ['app.js', 'canonical-urls.js'],
-  ['app.js', 'labels.js'], ['app.js', 'electorates.js'], ['app.js', 'division-markdown.js'], ['app.js', 'sponsor-person.js'], ['app.js', 'quiz.js'], ['app.js', 'timemachine.js'],
+  ['app.js', 'canonical-urls.js'], ['app.js', 'growth-modules.js'], ['app.js', 'suppliers.js'],
+  ['app.js', 'labels.js'], ['app.js', 'electorates.js'], ['app.js', 'division-markdown.js'], ['app.js', 'quiz.js'], ['app.js', 'timemachine.js'],
   ['app.js', 'money-map.js'], ['app.js', 'explain.js'], ['app.js', 'grant-recipient.js'],
   // The Explore tools and the loaders, restyled on tokens in pass 4G.
   ['app.js', 'ballot.js'], ['app.js', 'grants.js'], ['app.js', 'ledger.js'], ['app.js', 'matrix.js'], ['app.js', 'wordsdollars.js'],

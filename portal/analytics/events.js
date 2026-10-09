@@ -82,12 +82,19 @@ import { askPageType } from '../public/growth-modules.js';
     }
   }, true);
 
+  // Primary/keyboard and middle-button openings have disjoint event paths.
+  const moduleOpening = (e) => {
+    if (e.type === "auxclick" ? e.button !== 1 : e.button > 0) return;
+    const t = e.target instanceof Element ? e.target : null;
+    const module = t?.closest("a[href]")?.closest("[data-module]");
+    if (module) push("opax_module_click", {module: module.dataset.module, page_type: module.dataset.pageType, position: Number(module.dataset.modulePosition)});
+  };
+  addEventListener("auxclick", moduleOpening, true);
   // The things a reader clicks that say what the site is for.
   addEventListener("click", (e) => {
+    moduleOpening(e);
     const t = e.target instanceof Element ? e.target : null;
     if (!t) return;
-    const module = t.closest("a[href]")?.closest("[data-module]");
-    if (module) push("opax_module_click", {module: module.dataset.module, page_type: module.dataset.pageType, position: Number(module.dataset.modulePosition)});
     if (t.closest("#search-chips .chip")) return push("opax_chip", { chip_kind: "search" });
     // Ask's sample questions are links (.ask-sample). One that asks in place
     // reports itself through app.js trackOutcome; only a modified click, which

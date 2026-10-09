@@ -1,6 +1,6 @@
 /* Client-side agency records, from the same published exports as their pages. */
-import {sourceLineHTML} from './labels.js';
-import {moduleAttrs, donationRegisterHTML, exactOrganisationDonors} from './growth-modules.js';
+import {sourceLineHTML} from './labels.js?v=804befe8de';
+import {moduleAttrs, donationRegisterHTML, exactOrganisationDonors, growthSummaryPath, normalisedName} from './growth-modules.js?v=2e332c3951';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money = n => Number(n).toLocaleString('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0});
 async function json(url,signal) {const r=await fetch(url,{signal});if(!r.ok)throw new Error('Records unavailable');return r.json();}
@@ -30,36 +30,26 @@ export function agencyGrantsHTML(agency,rows,meta) {
 export async function mountSupplierGrowth(root,profile,meta,life) {
   const top=[...(profile.agencies || [])].sort((a,b)=>Number(b.total)-Number(a.total))[0];
   if (!top) return;
-  try {
-    const directory=await json('/agencies.json',life.signal);
-    const entry=(directory.agencies || []).find(a=>a.name===top.name);
-    if (!entry || !/^\/agencies\/[a-z0-9-]+\.json$/.test(entry.profile_path)) return;
-    const agency=await json(entry.profile_path,life.signal);
-    if (!life.alive()) return;
-    root.innerHTML=supplierRecordsHTML(agency,profile.id,meta?.generated_at);
-    const slot=document.createElement('div');root.appendChild(slot);
-    // Load the larger grant export only as this module approaches the viewport.
-    const load=async()=>{
-      try {
-        const graph=await json('/graph/grants.federal.json',life.signal);
-        const index=(graph.agencies || []).indexOf(top.name);
-        if(index<0) {if(life.alive()) slot.innerHTML=agencyGrantsHTML(top.name,[],graph.meta);return;}
-        const numbers=[...new Set((graph.recipients || []).filter(r=>(r.ag || []).includes(index)).map(r=>r.sh))].filter(n=>Number.isInteger(n)&&n>=0&&n<Number(graph.meta?.shards));
-        const shards=[];
-        // Limit concurrent requests and retain failure as a failed module, never a partial ranking.
-        for(let i=0;i<numbers.length;i+=4) shards.push(...await Promise.all(numbers.slice(i,i+4).map(n=>json(`/grants/federal/shard-${String(n).padStart(2,'0')}.json`,life.signal))));
-        if(life.alive()) slot.innerHTML=agencyGrantsHTML(top.name,agencyGrants(shards,top.name),graph.meta);
-      } catch {if(life.alive()) slot.innerHTML='<p role="status">This agency’s grant records could not be opened.</p>';}
-    };
-    if(typeof IntersectionObserver==='undefined') await load();
-    else {const observer=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){observer.disconnect();load();}},{rootMargin:'400px'});observer.observe(slot);life.cleanup(()=>observer.disconnect());}
-  } catch { /* Optional records collapse when their export is unavailable. */ }
+  const load=async()=>{
+    try {
+      const summary=await json(await growthSummaryPath('agencies',normalisedName(top.name)),life.signal);
+      if (!life.alive() || summary.agency?.name!==top.name) return;
+      root.innerHTML=supplierRecordsHTML(summary.agency,profile.id,summary.contracts_updated || meta?.generated_at)
+        +agencyGrantsHTML(top.name,summary.grants || [],summary.meta);
+      root.dataset.recordsReady='true';
+    } catch {if(life.alive()) root.innerHTML='<p role="status">This agency’s related records could not be opened.</p>';}
+  };
+  if(typeof IntersectionObserver==='undefined') await load();
+  else {
+    const observer=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){observer.disconnect();load();}},{rootMargin:'200px'});
+    observer.observe(root);life.cleanup(()=>observer.disconnect());
+  }
 }
 /** Existing supplier-to-donor hints cannot bypass exact organisation matching. */
 export async function supplierDonations(profile,life) {
-  const graph=await json('/graph/money.json?v=suppliers-1',life.signal);
-  const html=donationRegisterHTML(profile,graph.nodes || []);
+  const index=await json('/growth/organisation-donors.json',life.signal);
+  const html=donationRegisterHTML(profile,index.donors || []);
   if(!html) return {html:'',links:[]};
-  const donor=exactOrganisationDonors(profile,graph.nodes || [])[0];
+  const donor=exactOrganisationDonors(profile,index.donors || [])[0];
   return {html,links:[{id:donor.id,name:donor.label,url:`/subject/donor/${encodeURIComponent(donor.label)}`,method:'exact_normalized_name'}]};
 }

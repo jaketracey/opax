@@ -1,14 +1,36 @@
 /* Record-based landing modules. No generated answers or guessed identities. */
-import { sourceLineHTML } from './labels.js';
-import { sponsorPerson, sponsorKey } from './sponsor-person.js';
+import { shortDate } from './format.js';
+import { isOrganisationDonor } from './donor-privacy.js?v=fe35a6ecb9';
+import { sourceLineHTML } from './labels.js?v=804befe8de';
+import { sponsorPerson, sponsorKey } from './sponsor-person.js?v=74d9a1f8cf';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const text = value => typeof value === 'string' ? value.trim() : '';
 export const ASSOCIATION_NOTE = 'An association does not prove influence.';
 export const correctionHTML = () => '<p class="growth-correction"><a href="/support#support-report">Report a data correction</a> · response target: 48 hours.</p>';
 export const associationHTML = () => `<p class="growth-association">${ASSOCIATION_NOTE}</p>`;
 export const moduleAttrs = (module, pageType, position) => `data-module="${esc(module)}" data-page-type="${esc(pageType)}" data-module-position="${position}"`;
-export function askEntry(question, pageType) {
-  return `/ask?${new URLSearchParams({q:question,from:pageType})}`;
+export function askEntry(question, pageType, record = {}) {
+  const scoped = pageType==='bill' && text(record.title) && text(record.key)
+    ? `${question}\nBill: ${record.title} (${record.key}).` : question;
+  return `/ask?${new URLSearchParams({q:scoped,from:pageType})}`;
+}
+export async function growthSummaryPath(kind, identity) {
+  const digest = await crypto.subtle.digest('SHA-256',new TextEncoder().encode(identity));
+  const key = [...new Uint8Array(digest)].map(n=>n.toString(16).padStart(2,'0')).join('').slice(0,24);
+  return `/growth/${kind}/${key}.json`;
+}
+export function sponsorSummaryPath(bill) {
+  return text(bill?.sponsor) ? growthSummaryPath('sponsors',`${bill.jurisdiction || ''}:${sponsorKey(bill.sponsor)}:${bill.sponsor_person_id || ''}`) : Promise.resolve(null);
+}
+export function noDivisionsHeading(bill) {
+  const advanced = (bill.acts || []).length || (bill.key_dates || []).some(d=>['third_reading','passed','royal_assent'].includes(d.stage));
+  return !advanced && ['before_parliament','not_yet_debated','introduced'].includes(bill.status) ? 'Not yet voted' : 'No formal divisions recorded';
+}
+export function summaryWrittenHTML(summary = {}) {
+  const day = String(summary.generated_at || '').slice(0,10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || !Number.isFinite(Date.parse(day))) return '<p class="fineprint">Summary written date not recorded.</p>';
+  const date = shortDate(day);
+  return `<p class="fineprint">Summary written <time datetime="${esc(day)}">${esc(date)}</time>.</p>`;
 }
 /** Counted topics only; a topic inferred from a title is not a most-frequent topic. */
 export function personQuestions({name, topics = [], votes = [], bills = [], interests = null} = {}) {
@@ -54,7 +76,7 @@ export function askBlockHTML({name = '', bill = null, questions = [], pageType, 
   const heading = bill ? 'Ask what this bill changes' : `Ask about ${name}`;
   return `<section class="growth-ask" ${moduleAttrs('ask',pageType,1)} aria-labelledby="growth-ask-title">
     <h3 id="growth-ask-title">${esc(heading)}</h3>
-    <form class="growth-ask-form" action="/ask" method="get">
+    <form class="growth-ask-form" action="/ask" method="get"${bill ? ` data-record-title="${esc(bill.title || bill.short_title)}" data-record-key="${esc(bill.key)}"` : ''}>
       <label class="visually-hidden" for="growth-ask-input">Your question</label>
       <textarea class="ui-input grow-field" id="growth-ask-input" name="q" rows="1" autocomplete="off" placeholder="${bill ? 'What does this bill change?' : 'Your question about '+esc(name)}" required>${esc(bill ? '' : seed)}</textarea>
       <input type="hidden" name="from" value="${esc(pageType)}">
@@ -87,7 +109,15 @@ export function recentSittingSpeeches(speeches = []) {
 }
 /** Organisation classification follows the existing public donor directory. Unknown stays unlinked. */
 export function organisationDonor(donor) {
-  return donor?.kind === 'donor' && !!text(donor.industry) && !['individual','individuals','person','other','unknown'].includes(text(donor.industry).toLowerCase());
+  return donor?.kind === 'donor' && isOrganisationDonor(donor);
+}
+/** Privacy filtering happens before grouping, names, declarations or party flows. */
+export function publicOrganisationTies(ties = []) {
+  return ties.filter(tie=>{
+    const kinds = tie.kinds || [tie.kind];
+    if (!kinds.includes('donor') && !tie.donor_id) return true;
+    return isOrganisationDonor({...tie,label:tie.organisation});
+  });
 }
 export const normalisedName = name => String(name || '').normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim();
 const abnKey = value => String(value || '').replace(/\s/g,'');

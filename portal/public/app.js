@@ -6,7 +6,7 @@ let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels, source lines and ⋯ (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = import("/growth-modules.js?v=20261010-2").then(module => { growthModules = module; });
+const growthModulesReady = import("/growth-modules.js?v=2e332c3951").then(module => { growthModules = module; });
 let uiLabels;
 const uiLabelsReady = import('/labels.js?v=804befe8de').then(module => { uiLabels = module; });
 let attributionHelpers;
@@ -1131,7 +1131,7 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=5e54b1085d");
+    const { mountMoneyMap } = await import("/money-map.js?v=ee2ffcc234");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json?v=suppliers-1", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -1449,7 +1449,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=5e54b1085d"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=remove-copy-link-1"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=ee2ffcc234"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=remove-copy-link-1"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1584,7 +1584,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=p4g-20261010");
+    const module = await import("/suppliers.js?v=a327fb4d28");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -1598,7 +1598,7 @@ async function openSupplierPage(name, params, manageFocus) {
         replaceRoute(`/subject/supplier/${encodeURIComponent(id)}${params.get("contract") ? "?"+new URLSearchParams({contract:params.get("contract")}) : ""}`);
         setCrumbs([{ label: "Suppliers", href: "/subject/supplier" }, { label }]);
       },
-      onMentions: (label, container) => subjectMentions(label, container, "In parliament"),
+      onMentions: (label, container) => subjectMentions(label, container, "In parliament", true),
     };
     supplierPage = name
       ? module.mountSupplierProfile(body, name, helpers)
@@ -1665,7 +1665,7 @@ async function openAgencyPage(name, params, manageFocus) {
         replaceRoute(`/subject/agency/${encodeURIComponent(id)}`);
         setCrumbs([{ label: "Agencies", href: "/subject/agency" }, { label }]);
       },
-      onMentions: (label, container) => subjectMentions(label, container, "In parliament"),
+      onMentions: (label, container) => subjectMentions(label, container, "In parliament", true),
     };
     supplierPage = name
       ? module.mountAgencyProfile(body, name, helpers)
@@ -3583,25 +3583,30 @@ function personSlug(name) {
 
 /** Point each sponsor link at the roster row the bill names (sponsor-person.js: the bill's person ID
  *  decides, never a surname print); a print the roster cannot place keeps its name link. */
+const sponsorSummaries = new Map();
+async function loadSponsorSummary(bill) {
+  const path = await growthModules.sponsorSummaryPath(bill);
+  if (!path) return null;
+  if (!sponsorSummaries.has(path)) sponsorSummaries.set(path, fetch(path).then(r=>r.ok?r.json():null).catch(()=>null));
+  return sponsorSummaries.get(path);
+}
 async function linkBillSponsors(root, bill) {
-  const anchors = [...root.querySelectorAll("a[data-sponsor]")];
-  if (!anchors.length) return;
-  const [roster, resolver] = await Promise.all([
-    loadParliamentarians().catch(() => null),
-    import("/sponsor-person.js?v=74d9a1f8cf").catch(() => null),
-  ]);
-  if (!roster?.people?.length || !resolver) return;
-  const { sponsorPerson } = resolver;
-  for (const a of anchors) {
-    if (!a.isConnected) continue;
-    const printed = a.dataset.sponsor;
-    const person = sponsorPerson(printed, anchors.length === 1 ? bill.sponsor_person_id : null, roster.people);
-    const href = person && subjectHash("person", person.name);
-    if (!href) continue;
-    a.setAttribute("href", href);
-    // A register print the parser could not read ("KATTER, Bob, Jnr, MP") reads as the person.
-    if (printed.includes(",")) a.textContent = person.name;
+  if (!bill.sponsor) {
+    root.querySelector(".growth-ask")?.setAttribute("data-questions-ready", "true");
+    return;
   }
+  const summary = await loadSponsorSummary(bill);
+  if (!root.isConnected || root.querySelector(".growth-ask-form")?.dataset.recordKey !== bill.key) return;
+  const person = summary?.person;
+  for (const printed of root.querySelectorAll("[data-sponsor]")) {
+    if (!person) continue;
+    const a = document.createElement("a");
+    a.href = subjectHash("person", person.name);
+    a.textContent = person.name;
+    printed.replaceWith(a);
+  }
+  appendGrowthQuestions(root, growthModules.billQuestions(bill, person ? [person] : []), "bill");
+  root.querySelector(".growth-ask")?.setAttribute("data-questions-ready", "true");
 }
 function loadPersonSlugs() {
   personSlugs.ready ??= fetch("/api/person-slugs").then((r) => (r.ok ? r.json() : null)).then((data) => {
@@ -3839,7 +3844,7 @@ async function renderPersonInterests(name, personId, sections, onRecord = () => 
   const hasHolders = buckets.some((b) => (data.buckets[b].items || []).some((it) => HOLDER[it.holder]));
   const register = `${REGISTER[data.chamber] || "Register of interests"}${data.parliament ? `, ${ordinal(Number(data.parliament))} Parliament` : ""}${data.as_at ? `, as at ${esc(fmtDate(data.as_at))}` : ""}`;
 
-  const ties = Array.isArray(data.ties) ? data.ties : [];
+  const ties = growthModules.publicOrganisationTies(Array.isArray(data.ties) ? data.ties : []);
   const tiesByOrg = new Map();
   for (const tie of ties) {
     const org = String(tie.organisation || "").trim();
@@ -3871,14 +3876,14 @@ async function renderPersonInterests(name, personId, sections, onRecord = () => 
   };
   const tiesHTML = tiesByOrg.size ? `
     <section id="person-ties" class="declared-ties" data-accent="interests" data-rail-figure="${tiesByOrg.size}" aria-labelledby="declared-ties-heading">
-      <h3 class="subject-section-title" id="declared-ties-heading">Organisations in the registers</h3>
+      <h3 class="subject-section-title" id="declared-ties-heading">Disclosed money records</h3>
       ${growthModules.associationHTML()}
       <p class="interests-summary">${base ? `<a href="${esc(base)}" rel="noopener" target="_blank"><b>${tiesByOrg.size}</b></a>` : `<b>${tiesByOrg.size}</b>`}
         ${tiesByOrg.size === 1 ? "organisation named" : "organisations named"} in this register also ${tiesByOrg.size === 1 ? "appears" : "appear"} in an AEC donor return, on a lobbyist register or on the Foreign Influence Transparency Scheme register.</p>
       <ul class="subject-list ties-list" role="list">${[...tiesByOrg].map(([org, orgTies]) => {
         const sourceTie = orgTies.find((t) => t.kind === "donor") || orgTies[0];
         const lead = { ...sourceTie, kinds: [...new Set(orgTies.flatMap((t) => t.kinds || [t.kind]))] };
-        const orgLabel = lead.donor_id && growthModules.organisationDonor({kind: "donor", industry: lead.industry})
+        const orgLabel = lead.donor_id && growthModules.organisationDonor({...lead, kind: "donor", label: org})
           ? `<a class="source-title" ${entityHrefAttr(subjectHash("donor", org))}>${esc(org)}</a>`
           : `<span class="source-title">${esc(org)}</span>`;
         const declarations = orgTies.map((tie) => {
@@ -4111,7 +4116,7 @@ async function mountSubjectMap(nodeId, label = "") {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=5e54b1085d");
+    const { mountMoneyMap } = await import("/money-map.js?v=ee2ffcc234");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
@@ -4170,7 +4175,7 @@ async function subjectNews(name, container) {
       <a href="https://www.theguardian.com/australia-news?query=${q}#search" rel="noopener" target="_blank">The Guardian ↗︎</a></p>`);
 }
 
-async function subjectMentions(name, container, heading) {
+async function subjectMentions(name, container, heading, moneyContext = false) {
   try {
     const [data, roster] = await Promise.all([
       api(`/api/search?${new URLSearchParams({ q: `"${name}"`, top_k: "6" })}`), loadParliamentarians()]);
@@ -4183,6 +4188,7 @@ async function subjectMentions(name, container, heading) {
     container.insertAdjacentHTML("beforeend",
       `<div class="entry-section-head"><h3 class="subject-section-title">${esc(heading)}</h3>
         <a href="${esc(searchHash(`"${name}"`, {}))}">All mentions</a></div>
+       ${moneyContext ? growthModules.associationHTML() : ""}
        <ul class="subject-list" role="list">${items}</ul>`);
   } catch { /* mentions are a bonus, not a dependency */ }
 }
@@ -5723,7 +5729,7 @@ function wireGrowthAsk(root) {
     const question = form.querySelector('[name="q"]').value.trim();
     if (question) {
       trackOutcome("opax_module_click", {module: "ask", page_type: form.closest("[data-page-type]").dataset.pageType, position: 1});
-      goRoute(growthModules.askEntry(question, form.closest("[data-page-type]").dataset.pageType));
+      goRoute(growthModules.askEntry(question, form.closest("[data-page-type]").dataset.pageType, {title: form.dataset.recordTitle, key: form.dataset.recordKey}));
     }
   });
 }
@@ -5753,7 +5759,7 @@ function wireSubjectAsk(name) {
    data-rail-figure once it knows the figure; refreshEntryRail rebuilds the
    rows from the blocks on the page. */
 const PERSON_RAIL = [
-  ["person-topics", "Topics"], ["subject-votes", "Voting record"], ["person-ties", "Ties to disclosed money"],
+  ["person-topics", "Topics"], ["subject-votes", "Voting record"], ["person-ties", "Disclosed money records"],
   ["person-register", "Declared interests"], ["person-speeches", "Speeches"], ["subject-diary", "Ministerial diary"],
   ["person-pay", "Pay"], ["person-expenses", "Expenses"],
 ];
@@ -7723,7 +7729,7 @@ function billOutcomeLabelHTML(outcome) {
 /** "Passed, as at 12 Feb 2022" — the status is never shown undated. */
 function billStatusLine(b) {
   const status = sentenceCase(b?.status) || "Status not recorded";
-  const as = b?.status_as_of ? `, as at ${fmtDate(b.status_as_of)}` : "";
+  const as = b?.status_as_of ? `, status as at ${fmtDate(b.status_as_of)}` : "";
   return `${status}${as}`;
 }
 
@@ -8216,7 +8222,7 @@ function billDivisionHTML(d, bill) {
 function billDivisionsHTML(bill) {
   const { divisions: divs, collapsed } = billDedupeDivisions(bill.divisions, bill);
   if (!divs.length) {
-    return `<section class="bill-section" data-accent="votes" ${growthModules.moduleAttrs("party_votes", "bill", 2)}><h3 class="subject-section-title">Not yet voted</h3>
+    return `<section class="bill-section" data-accent="votes" ${growthModules.moduleAttrs("party_votes", "bill", 2)}><h3 class="subject-section-title">${esc(growthModules.noDivisionsHeading(bill))}</h3>
       <p class="status">No formal divisions recorded. Most questions are decided on the voices, so a bill with no
         division here was not necessarily unopposed. This register does not establish whether a vote on the voices has occurred.</p>${sourceLineHTML({source: "Parliamentary division records", notes: ["No per-member or per-party vote is available without a formal division."]})}</section>`;
   }
@@ -8335,8 +8341,8 @@ function billSummaryHTML(bill) {
     ${s.affected ? `<h4 class="bill-sub">Who is affected</h4><p class="bill-affected">${esc(s.affected)}</p>` : ""}
     ${sourceLineHTML({
       // The day the summary was written; the material's own date is in the sheet.
-      updated: String(s.generated_at || s.as_of || "").slice(0, 10), dateLabel: s.generated_at ? "Written" : "As at", source: basis, originals,
-      asAt: s.as_of ? `Written from material dated ${fmtDate(s.as_of)}.` : "",
+      updated: String(s.generated_at || "").slice(0, 10), dateLabel: "Summary written", source: basis, originals,
+      asAt: s.as_of ? `Source material dated ${fmtDate(s.as_of)}.` : "",
       notes: [esc(note)],
       licence: billLicence(bill),
     })}
@@ -8406,7 +8412,7 @@ async function openBill(key, manageFocus) {
   const members = billSponsorFromPortfolio(bill.portfolio);
   // Each co-sponsor is a person with an entry of their own, so each is a link.
   const sponsorLinks = bill.sponsor
-    ? [`<a data-sponsor="${esc(billSponsorName(bill.sponsor))}" ${entityHrefAttr(subjectHash("person", billSponsorName(bill.sponsor)))}>${esc(billSponsorName(bill.sponsor))}</a>`]
+    ? [`<span data-sponsor="${esc(billSponsorName(bill.sponsor))}">${esc(billSponsorName(bill.sponsor))}</span>`]
     : (members || []).map((m) => `<a data-sponsor="${esc(m.name)}" ${entityHrefAttr(subjectHash("person", m.name))}>${esc(m.name)}</a>${
       m.suffix ? ` ${esc(m.suffix)}` : ""}`);
   const draft = bill.status === "exposure_draft";
@@ -8438,7 +8444,7 @@ async function openBill(key, manageFocus) {
   body.innerHTML = `
     <div class="subject-head bill-head">
       <p class="bill-status">${statusLabelHTML(statusWord, billStatusTone(bill.status))}${
-        bill.status_as_of ? `<span class="bill-status-as">as at ${esc(fmtDate(bill.status_as_of))}</span>` : ""}</p>
+        bill.status_as_of ? `<span class="bill-status-as">Status as at ${esc(fmtDate(bill.status_as_of))}</span>` : ""}</p>
       <h2 id="bill-title" class="bill-title" tabindex="-1">${esc(title)}</h2>
       ${bill.short_title && bill.short_title !== title
         ? `<p class="bill-short">Known as the ${esc(bill.short_title)}</p>` : ""}
@@ -8473,20 +8479,30 @@ async function openBill(key, manageFocus) {
   }
 }
 
-async function renderOtherSponsorBills(bill, body, view, generation) {
-  const [index, roster] = await Promise.all([loadBillsIndex(), loadParliamentarians()]);
-  if (billView !== view || generation !== billTextGeneration || !body.isConnected) return;
-  appendGrowthQuestions(body, growthModules.billQuestions(bill, roster?.people || []), "bill");
-  body.querySelector(".growth-ask")?.setAttribute("data-questions-ready", "true");
-  const rows = growthModules.otherSponsorBills(bill, index?.bills || [], roster?.people || []);
+function renderOtherSponsorBills(bill, body, view, generation) {
   const slot = body.querySelector("#bill-sponsor-others");
   if (!slot) return;
-  if (!rows.length) { slot.remove(); return; }
+  if (!bill.sponsor) { slot.remove(); return; }
   slot.innerHTML = `<section class="bill-section growth-records" ${growthModules.moduleAttrs("sponsor_bills", "bill", 3)}>
-    <h3 class="subject-section-title">Other bills from this sponsor</h3>
-    <ul class="subject-list" role="list">${rows.map(b => `<li><a href="${esc(billHash(b.key))}">${esc(billName(b))}</a><span class="result-meta">${esc(fmtDate(b.introduced))} · ${esc(sentenceCase(b.status))}</span></li>`).join("")}</ul>
-    ${sourceLineHTML({source: "Parliamentary bill register", updated: index?.meta?.generated || "", notes: ["Bills in the same jurisdiction, matched to the same roster person using the sponsor identity rules."]})}
-  </section>`;
+    <h3 class="subject-section-title">Other bills from this sponsor</h3><p role="status">Opening the sponsor’s records…</p></section>`;
+  const load = async () => {
+    const summary = await loadSponsorSummary(bill);
+    if (billView !== view || generation !== billTextGeneration || !slot.isConnected) return;
+    const rows = (summary?.bills || []).filter(b=>b.key!==bill.key && b.jurisdiction===bill.jurisdiction).slice(0,5);
+    if (!summary?.person || !rows.length) { slot.remove(); return; }
+    slot.innerHTML = `<section class="bill-section growth-records" data-records-ready="true" ${growthModules.moduleAttrs("sponsor_bills", "bill", 3)}>
+      <h3 class="subject-section-title">Other bills from this sponsor</h3>
+      <ul class="subject-list" role="list">${rows.map(b => `<li><a href="${esc(billHash(b.key))}">${esc(billName(b))}</a><span class="result-meta">${esc(fmtDate(b.introduced))} · ${esc(sentenceCase(b.status))}</span></li>`).join("")}</ul>
+      ${sourceLineHTML({source: "Parliamentary bill register", updated: summary.generated || "", notes: ["Bills in the same jurisdiction, matched to the same roster person using the sponsor identity rules."]})}
+    </section>`;
+  };
+  if (typeof IntersectionObserver === "undefined") { load(); return; }
+  const observer = new IntersectionObserver(entries=>{
+    if (entries.some(e=>e.isIntersecting)) { observer.disconnect(); load(); }
+  }, {rootMargin: "200px"});
+  observer.observe(slot);
+  const cleanup = () => { if (!slot.isConnected) { observer.disconnect(); removeEventListener("opax:route",cleanup); } };
+  addEventListener("opax:route",cleanup);
 }
 
 /* --- bills on the person page ----------------------------------------------
@@ -8545,6 +8561,7 @@ async function fillBillPeek(details, entry) {
   box.innerHTML = `
     <div class="bill-peek-head">${machineLabelHTML({ note: `${bill.summary.attribution
       || "Written by a model from the explanatory memorandum; not the record"}.` })}</div>
+    ${growthModules.summaryWrittenHTML(bill.summary)}
     <div class="bill-sentences">${sentences.map((t) => `<p>${esc(t)}</p>`).join("")}</div>
     <p class="fineprint">${esc(bill.summary.attribution
       || "Written by a model from the explanatory memorandum; not the record")}. ${esc(billStatusLine(entry))}.</p>
@@ -8696,6 +8713,7 @@ async function renderDocBillPanel(doc, slug) {
   if (!el) return;
   el.outerHTML = first
     ? `<p class="doc-bill-sentence">${esc(first)}</p>
+       ${growthModules.summaryWrittenHTML(bill.summary)}
        <p class="fineprint doc-bill-attrib">${esc(bill.summary.attribution
          || "Written by a model from the explanatory memorandum; not the record")}.</p>`
     : `<p class="fineprint doc-bill-none">No summary written for this bill yet.</p>`;
@@ -9411,7 +9429,7 @@ async function mountFrontMap() {
   if (!root || frontMapHandle || frontMapLoading) return;
   frontMapLoading = true;
   try {
-    const [mod, data] = await Promise.all([import("/money-map.js?v=5e54b1085d"), loadMoneyData()]);
+    const [mod, data] = await Promise.all([import("/money-map.js?v=ee2ffcc234"), loadMoneyData()]);
     if (!data) throw new Error("money data unavailable");
     root.textContent = "";
     const handle = await mod.mountMoneyMap(root, "/graph/money.json?v=suppliers-1", {
@@ -14143,7 +14161,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=5e54b1085d");
+    const { mountMoneyMap } = await import("/money-map.js?v=ee2ffcc234");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
       chrome: "mini",

@@ -156,7 +156,9 @@ are 1/2/3/4; bill Ask/votes/sponsor bills are 1/2/3; supplier other
 suppliers/grants/donations register are 1/2/3. Missing records leave gaps.
 
 The shared click listener emits once for every link within a module, including
-seeded questions, originals in its SourceLine, and modified clicks. Submitting
+seeded questions, originals in its SourceLine, and modified clicks. Middle-button openings use `auxclick` with button 1;
+primary and keyboard openings use `click` with button 0. The paths are disjoint,
+so a middle opening produces one module event. Submitting
 the module’s editable question emits one module event from the form handler.
 Navigation does not emit another module event. Answer requests alone emit
 `opax_ask_started`, once per lifecycle (stream/fallback/retry rules are

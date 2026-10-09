@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
-import {personQuestions,billQuestions,askBlockHTML,questionsHTML,latestBillVotes,recentSittingSpeeches,exactOrganisationDonors,donationRegisterHTML,otherSponsorBills,askPageType,ASSOCIATION_NOTE} from '../public/growth-modules.js';
+import {personQuestions,billQuestions,askBlockHTML,questionsHTML,latestBillVotes,recentSittingSpeeches,exactOrganisationDonors,donationRegisterHTML,otherSponsorBills,askPageType,noDivisionsHeading,ASSOCIATION_NOTE} from '../public/growth-modules.js';
 import {agencySuppliers,agencyGrants,agencyGrantsHTML} from '../public/supplier-growth.js';
 import {cleanEvent} from '../analytics/privacy.mjs';
 const read = f=>readFileSync(new URL(f,import.meta.url),'utf8');
@@ -89,10 +89,10 @@ const supplier={name:'ACME Pty Ltd',abn:'12 345 678 901'};
 const donor={kind:'donor',label:'Acme Pty. Ltd.',industry:'manufacturing',abn:'12345678901'};
 test('donation matches require an organisation and exact normalised name, with ABN when both hold one',()=>{
  assert.equal(exactOrganisationDonors(supplier,[donor]).length,1);
- for(const d of [{...donor,industry:'individual'},{...donor,industry:' INDIVIDUAL '},{...donor,industry:'individuals'},{...donor,industry:'other'},{...donor,industry:'unknown'},{...donor,industry:''},{...donor,industry:undefined},{...donor,abn:'99999999999'},{...donor,label:'Acme Group Pty Ltd'}]) assert.equal(exactOrganisationDonors(supplier,[d]).length,0);
+ for(const d of [{...donor,donor_type:'individual'},{...donor,entity_type:'sole trader'},{kind:'donor',label:'Roslyn Packer',industry:'media'},{...donor,abn:'99999999999'},{...donor,label:'Acme Group Pty Ltd'}]) assert.equal(exactOrganisationDonors(supplier,[d]).length,0);
  assert.equal(exactOrganisationDonors({...supplier,abn:null},[donor]).length,1);
  assert.equal(exactOrganisationDonors(supplier,[{...donor,abn:null}]).length,1);
- assert.equal(donationRegisterHTML(supplier,[{...donor,industry:'individual'}]),'');
+ assert.equal(donationRegisterHTML(supplier,[{...donor,donor_type:'individual'}]),'');
  assert.equal(donationRegisterHTML(supplier,[donor,{...donor,id:'second'}]),'');
  assert.match(donationRegisterHTML(supplier,[donor]),/Also in the donations register/);
  assert.ok(donationRegisterHTML(supplier,[donor]).includes(ASSOCIATION_NOTE));
@@ -100,7 +100,7 @@ test('donation matches require an organisation and exact normalised name, with A
 test('live individual-donor fixture cannot enter the supplier donations or funding path',async()=>{
  const {supplierDonations}=await import('../public/supplier-growth.js');
  const prior=globalThis.fetch;
- globalThis.fetch=async()=>({ok:true,json:async()=>({nodes:[{...donor,industry:'individual',id:'donor:acme'}]})});
+ globalThis.fetch=async()=>({ok:true,json:async()=>({donors:[{...donor,donor_type:'individual',id:'donor:acme'}]})});
  try {assert.deepEqual(await supplierDonations({...supplier,donor_links:[{id:'donor:acme',url:'/subject/donor/Acme',method:'abn'}]},{signal:new AbortController().signal}),{html:'',links:[]});}finally{globalThis.fetch=prior;}
  const source=read('../public/suppliers.js');
  assert.match(source,/supplierDonations\(profile, life\).then\(donations =>/);
@@ -135,8 +135,8 @@ test('events keep origin type and module categories without question text',()=>{
 });
 test('the actual bill division renderer reuses one section and one SourceLine for voted or unvoted bills',()=>{
  const code=app.slice(app.indexOf('function billDivisionsHTML('),app.indexOf('const BILL_SPEECH_BRIEF_NOTE'));
- const {billDivisionsHTML}=runInNewContext(code+';({billDivisionsHTML})',{growthModules:{moduleAttrs:()=>'',associationHTML:()=>ASSOCIATION_NOTE},billDedupeDivisions:d=>({divisions:d||[],collapsed:0}),billDivisionHTML:()=>'<li>Division</li>',sourceLineHTML:()=>'<details class="ui-source"></details>',esc:String});
- for(const divisions of [[],[{date:'2026-10-08'}]]) {const html=billDivisionsHTML({divisions});assert.equal((html.match(/<section /g)||[]).length,1);assert.equal((html.match(/class="ui-source"/g)||[]).length,1);assert.match(html,divisions.length?/How each party voted/:/Not yet voted/);}
+ const {billDivisionsHTML}=runInNewContext(code+';({billDivisionsHTML})',{growthModules:{moduleAttrs:()=>'',associationHTML:()=>ASSOCIATION_NOTE,noDivisionsHeading},billDedupeDivisions:d=>({divisions:d||[],collapsed:0}),billDivisionHTML:()=>'<li>Division</li>',sourceLineHTML:()=>'<details class="ui-source"></details>',esc:String});
+ for(const divisions of [[],[{date:'2026-10-08'}]]) {const html=billDivisionsHTML({divisions});assert.equal((html.match(/<section /g)||[]).length,1);assert.equal((html.match(/class="ui-source"/g)||[]).length,1);assert.match(html,divisions.length?/How each party voted/:/No formal divisions recorded/);}
 });
 test('person sections are reused once, and money/vote pairings carry the association line',()=>{
  const region=app.slice(app.indexOf('// person\n'),app.indexOf('/** The ask field under'));
@@ -146,7 +146,7 @@ test('person sections are reused once, and money/vote pairings carry the associa
  const votesCode=app.slice(app.indexOf('async function renderPersonVotes'),app.indexOf('async function renderPersonTopics'));
  assert.match(votesCode,/Latest bills they voted on<\/h3>\n    \$\{growthModules.associationHTML\(\)\}/);
  const interestCode=app.slice(app.indexOf('async function renderPersonInterests'),app.indexOf('let interestsTiesPromise'));
- assert.match(interestCode,/Organisations in the registers<\/h3>\n      \$\{growthModules.associationHTML\(\)\}/);
+ assert.match(interestCode,/Disclosed money records<\/h3>\n      \$\{growthModules.associationHTML\(\)\}/);
  assert.match(interestCode,/\$\{growthModules.associationHTML\(\)\}\n    \$\{sourceLineHTML/);
  assert.match(region,/Party disclosures, not this person’s finances[\s\S]*growthModules.associationHTML/);
  assert.match(region,/#person-pay, #person-expenses/);
