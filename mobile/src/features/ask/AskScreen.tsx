@@ -54,6 +54,7 @@ import { AskProgress } from './AskProgress';
 import { AskSheet } from './AskSheet';
 import { accountSnapshot, useAccount } from '../account/store';
 import { AnswerView } from './AnswerView';
+import type { MenuAction } from '../../design/menu';
 import { Builder } from './QuestionBuilder';
 import { Options, topics } from './Options';
 import {
@@ -102,7 +103,6 @@ export default function AskScreen() {
     to?: string;
   }>();
   const [draft, setDraft] = useState(''),
-    [editingFollowup, setEditingFollowup] = useState(false),
     [builderOpen, setBuilderOpen] = useState(false),
     [optionsOpen, setOptionsOpen] = useState(false),
     [historyOpen, setHistoryOpen] = useState(false),
@@ -128,7 +128,6 @@ export default function AskScreen() {
   const lift = useKeyboardLift(column, docked);
   const scroll = useRef<ScrollView>(null),
     submitTarget = useRef<View>(null),
-    followupTarget = useRef<View>(null),
     entry = useRef<string | undefined>(undefined),
     lastStage = useRef<string | null>(null),
     lastAnswer = useRef<object | null>(null),
@@ -193,7 +192,6 @@ export default function AskScreen() {
     setDraft(params.question || '');
     setInputError('');
     setBuilderOpen(false);
-    setEditingFollowup(false);
     requestAnimationFrame(scrollToTop);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
@@ -380,6 +378,28 @@ export default function AskScreen() {
       failed || s.clarify || lastQuestion < 0 ? s.thread.length : lastQuestion,
     earlier = s.thread.slice(0, split),
     current = s.thread.slice(split);
+  // Nothing asked yet: the composer leads the page with Options, Your
+  // conversations and the sample questions. Once there is a conversation the
+  // question and its answer lead, and the one composer follows the answer.
+  const idle = !s.thread.length && !s.busy && !s.error && !s.clarify;
+  const followup = s.thread.some((m) => m.role === 'answer');
+  function newConversation() {
+    askSession.start();
+    setDraft('');
+    scrollToTop();
+  }
+  function openOptions() {
+    void loadNames();
+    setOptionsOpen(true);
+  }
+  // Under each answer's ⋯, after Share answer; none while a question runs.
+  const conversationActions: MenuAction[] = s.busy
+    ? []
+    : [
+        { title: 'Start a new conversation', onPress: newConversation },
+        { title: 'Your conversations', onPress: () => void history() },
+        { title: 'Options', onPress: openOptions },
+      ];
   function renderTurn(turn: (typeof s.thread)[number], i: number) {
     return turn.role === 'user' ? (
       <Group key={i}>
@@ -399,89 +419,85 @@ export default function AskScreen() {
         question={s.thread[i - 1]!}
         people={people}
         index={i}
+        actions={conversationActions}
       />
     );
   }
   const communityAccount = account.status
     ? !!(account.status.signedIn || account.status.accountHeld)
     : accountSynced;
+  // One composer: the question at idle, the follow-up under an answer, and
+  // docked under the conversation on iPad.
   const composer = (
     <Composer
       ref={submitTarget}
       inputRef={questionInput}
-      label="Your question"
-      submitLabel="Ask the record"
-      placeholder="Ask a question about the public record…"
+      label={followup ? 'Ask a follow-up' : 'Your question'}
+      submitLabel={followup ? 'Ask' : 'Ask the record'}
+      placeholder={
+        followup
+          ? 'Ask a follow-up…'
+          : 'Ask a question about the public record…'
+      }
       value={draft}
       onChangeText={setDraft}
-      onFocus={() => setEditingFollowup(false)}
       onSubmit={() => void submit()}
       busy={s.busy}
       maxLength={2000}
-      testID="ask-question"
-      submitTestID="ask-submit"
+      testID={followup ? 'ask-followup-field' : 'ask-question'}
+      submitTestID={followup ? 'ask-followup-submit' : 'ask-submit'}
     />
+  );
+  // The options in force, beside the composer they apply to.
+  const filters = (
+    <>
+      {chips(s.options).map((c) => (
+        <FilterChip
+          key={c.id}
+          filter={c.key.toLowerCase()}
+          value={c.id === 'topic' ? topics[c.value] || c.value : c.value}
+          onRemove={() => askSession.options(clearChip(s.options, c.id))}
+          testID={`ask-chip-${c.id}`}
+        />
+      ))}
+      {chips(s.options).length > 1 ? (
+        <Button
+          label="Clear all"
+          onPress={() => askSession.options({ ...defaultOptions })}
+        />
+      ) : null}
+    </>
   );
   const conversation = (
     <KeyboardStableScreen
       testID="ask-screen"
       scrollRef={scroll}
-      keyboardTarget={
-        docked ? noTarget : editingFollowup ? followupTarget : submitTarget
-      }
+      keyboardTarget={docked ? noTarget : submitTarget}
       onScroll={docked ? sources.onScroll : undefined}
     >
-      <Group gap={rhythm.heading}>
-        {docked ? null : composer}
-        {inputError ? <ErrorState message={inputError} /> : null}
-        <RowList>
-          <LinkRow
-            title="Options"
-            disabled={s.busy}
-            onPress={() => {
-              void loadNames();
-              setOptionsOpen(true);
-            }}
-            testID="ask-options"
-          />
-          <LinkRow
-            title="Your conversations"
-            value={String(saved.chats.length)}
-            disabled={s.busy}
-            onPress={() => void history()}
-            testID="ask-saved"
-          />
-        </RowList>
-        {chips(s.options).map((c) => (
-          <FilterChip
-            key={c.id}
-            filter={c.key.toLowerCase()}
-            value={c.id === 'topic' ? topics[c.value] || c.value : c.value}
-            onRemove={() => askSession.options(clearChip(s.options, c.id))}
-            testID={`ask-chip-${c.id}`}
-          />
-        ))}
-        {chips(s.options).length > 1 ? (
-          <Button
-            label="Clear all"
-            onPress={() => askSession.options({ ...defaultOptions })}
-          />
-        ) : null}
-        {s.thread.length ? (
-          <Button
-            label="Start a new conversation"
-            variant="quiet"
-            disabled={s.busy}
-            onPress={() => {
-              askSession.start();
-              setDraft('');
-              scrollToTop();
-            }}
-            testID="ask-new"
-          />
-        ) : null}
-      </Group>
-      {!s.thread.length && !s.busy && !s.error ? (
+      {idle ? (
+        <Group gap={rhythm.heading}>
+          {docked ? null : composer}
+          {inputError ? <ErrorState message={inputError} /> : null}
+          <RowList>
+            <LinkRow
+              title="Options"
+              disabled={s.busy}
+              onPress={openOptions}
+              testID="ask-options"
+            />
+            <LinkRow
+              title="Your conversations"
+              value={String(saved.chats.length)}
+              disabled={s.busy}
+              onPress={() => void history()}
+              testID="ask-saved"
+            />
+          </RowList>
+          {filters}
+        </Group>
+      ) : null}
+      {idle ? (
         <Group gap={rhythm.heading}>
           <RowList>
             {sampleQuestions.map((q, i) => (
@@ -606,10 +622,10 @@ export default function AskScreen() {
             </Group>
           ) : null}
           {s.notice ? <Text wordSafe>{s.notice}</Text> : null}
-          {answer && !s.busy && !s.error ? (
+          {answer && !s.busy && !s.error && answer.next?.length ? (
             <Section title="Ask next" accent="people" testID="ask-followups">
               <RowList>
-                {answer.next?.map((next, i) => (
+                {answer.next.map((next, i) => (
                   <LinkRow
                     key={next.question}
                     title={next.question}
@@ -618,24 +634,16 @@ export default function AskScreen() {
                   />
                 ))}
               </RowList>
-              {/* On iPad the docked composer asks the follow-up. */}
-              {docked ? null : (
-                <Composer
-                  ref={followupTarget}
-                  label="Ask a follow-up"
-                  submitLabel="Ask"
-                  placeholder="Ask a follow-up…"
-                  value={draft}
-                  onChangeText={setDraft}
-                  onFocus={() => setEditingFollowup(true)}
-                  onSubmit={() => void submit()}
-                  maxLength={2000}
-                  testID="ask-followup-field"
-                  submitTestID="ask-followup-submit"
-                />
-              )}
             </Section>
           ) : null}
+          {idle ? null : (
+            <Group gap={rhythm.heading}>
+              {filters}
+              {inputError ? <ErrorState message={inputError} /> : null}
+              {/* On iPad the docked composer asks the next question. */}
+              {docked ? null : composer}
+            </Group>
+          )}
         </View>
       ) : null}
     </KeyboardStableScreen>

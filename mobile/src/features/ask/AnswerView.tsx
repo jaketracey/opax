@@ -1,19 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View, findNodeHandle } from 'react-native';
 import { router } from 'expo-router';
 import { webOrigin } from '../../design/environment';
 import {
   LinkRow,
   RowList,
-  Disclosure,
-  ViewOriginal,
   Group,
   Heading,
+  IconButton,
   MachineLabel,
   PersonRow,
   Section,
   Text,
+  useAccessibilitySize,
 } from '../../design/primitives';
+import { SourceAffordance } from '../../design/source';
+import { showMenu, type MenuAction } from '../../design/menu';
 import { colors, rhythm } from '../../design/tokens';
 import { formatDate } from '../../design/format';
 import { fromWebPath, personRoute } from '../../navigation/routes';
@@ -21,12 +23,10 @@ import { openSource, sourceUrl } from '../../navigation/external';
 import { shareRecord } from '../../navigation/share';
 import { CachedPortrait } from '../CachedPortrait';
 import { useAskPane } from './SourcesPane';
+import { AnswerSources } from './AnswerSources';
 import {
-  dateRuler,
   defaultOptions,
-  parliaments,
   sourceGroups,
-  sourcePassage,
   type Answer,
   type Source,
   type Turn,
@@ -180,63 +180,39 @@ export function AnswerBody({
     </Group>
   );
 }
-function SourceRow({ s, n }: { s: Source; n?: number }) {
-  return (
-    <Group gap={4}>
-      <LinkRow
-        title={`${n ? `${n}. ` : ''}${s.title}`}
-        onPress={() => openAnswerLink(s.href)}
-        testID={n ? `ask-source-${n}` : undefined}
-      />
-      <Text wordSafe variant="metadata">
-        {[
-          s.speaker,
-          s.party,
-          s.state ? parliaments[s.state] || '' : '',
-          s.date ? formatDate(s.date) : '',
-        ]
-          .filter(Boolean)
-          .join(' · ')}
-      </Text>
-      {s.snippet ? (
-        <Text wordSafe selectable variant="record">
-          {sourcePassage(s.snippet)}
-        </Text>
-      ) : null}
-      <ViewOriginal sources={s.url ? [{ label: s.title, url: s.url }] : []} />
-    </Group>
-  );
-}
 export function AnswerView({
   turn,
   question,
   people,
   index,
+  actions = [],
 }: {
   turn: Turn;
   question: Turn;
   people: Map<string, string>;
   /** The answer's place in the thread, for the iPad sources pane. */
   index?: number;
+  /** The conversation's own actions, offered under the answer's ⋯. */
+  actions?: readonly MenuAction[];
 }) {
   // iPad regular width: sources open in the pane beside the conversation.
   const pane = useAskPane();
   const self = useRef<View>(null);
+  const more = useRef<View>(null);
+  const stacked = useAccessibilitySize();
   useEffect(() => {
     if (!pane || index === undefined) return;
     return pane.register(index, self);
   }, [pane, index]);
   const go = (href: string, title: string) =>
     pane ? pane.open(href, title) : openAnswerLink(href);
-  const [sourcesOpen, setSourcesOpen] = useState(false),
-    [alsoOpen, setAlsoOpen] = useState(false);
+  const [sourcesOpen, setSourcesOpen] = useState(false);
   const data = turn.result || {
       answer: turn.text,
       sources: turn.sources || [],
       citations: {},
     },
-    groups = sourceGroups(data.sources),
-    dates = dateRuler(data.sources);
+    groups = sourceGroups(data.sources);
   const calculated = !!(data.money_ranking || data.pay_answer);
   const roster = [
     ...new Set(
@@ -245,39 +221,35 @@ export function AnswerView({
       ),
     ),
   ];
-  const section = (
-    <Section
-      testID="ask-answer"
-      accent={calculated ? 'money' : 'people'}
-      info={{
-        title: 'About this answer',
-        testID: 'ask-answer-info',
-        notes: [
-          calculated
-            ? data.pay_answer
-              ? payNote
-              : moneyNote
-            : 'Answers may be cached. Cite the sources, not this text.',
-          data.money_context,
-          turn.carried
-            ? turn.carried.source
-              ? `This suggested follow-up drew on a passage from “${turn.carried.source}”, retrieved for the previous answer.`
-              : 'This suggested follow-up drew on a passage retrieved for the previous answer.'
-            : null,
-        ],
-      }}
-      title={
-        data.answer_status === 'calculated'
-          ? data.pay_answer
-            ? 'From the pay determinations'
-            : 'From disclosed receipts'
-          : data.answer_status === 'evidence_only'
-            ? 'From the record'
-            : data.answer_status === 'uncited'
-              ? 'Answer, without citations'
-              : 'Answer'
-      }
-    >
+  // Only an answer of another kind says so; an ordinary answer needs no
+  // heading under its question.
+  const kind =
+    data.answer_status === 'calculated'
+      ? data.pay_answer
+        ? 'From the pay determinations'
+        : 'From disclosed receipts'
+      : data.answer_status === 'evidence_only'
+        ? 'From the record'
+        : data.answer_status === 'uncited'
+          ? 'Answer, without citations'
+          : null;
+  const viewed = `Viewed ${formatDate(new Date().toISOString().slice(0, 10), 'short')}`;
+  const share = () =>
+    void shareRecord({
+      path: '/ask',
+      title: question.text,
+      question: {
+        text: question.fundingQuestion || question.askedAs || question.text,
+        options: question.options || turn.options || { ...defaultOptions },
+      },
+    });
+  const body = (
+    <Group testID="ask-answer">
+      {kind ? (
+        <Heading level={3} testID="ask-answer-kind">
+          {kind}
+        </Heading>
+      ) : null}
       {data.money_overview ? (
         <Group
           style={{ backgroundColor: colors.moneyWash, padding: rhythm.block }}
@@ -374,119 +346,79 @@ export function AnswerView({
           ))}
         </Section>
       ) : null}
-      {groups.cited.some((s) => s.snippet) ? (
-        <Disclosure
-          label="From the record"
-          icon="quote.bubble"
-          accent="people"
-          testID="ask-quote-rail"
-        >
-          {groups.cited
-            .filter((s) => s.snippet)
-            .slice(0, 5)
-            .map((s) => (
-              <Group
-                key={s.resource}
-                gap={rhythm.tight}
-                style={{
-                  borderLeftWidth: 3,
-                  borderLeftColor: colors.navy,
-                  paddingLeft: rhythm.heading,
-                }}
-              >
-                <Text wordSafe selectable variant="record">
-                  “{sourcePassage(s.snippet, false)}”
-                </Text>
-                <LinkRow
-                  title={s.title}
-                  detail={[s.speaker, s.date ? formatDate(s.date, 'short') : '']
-                    .filter(Boolean)
-                    .join(' · ')}
-                  onPress={() => go(s.href, s.title)}
-                />
-                <ViewOriginal
-                  sources={s.url ? [{ label: s.title, url: s.url }] : []}
-                />
-              </Group>
-            ))}
-        </Disclosure>
+      {/* One source line and ⋯: the sources, passages, dates and notes are
+          behind the line; Share and the conversation's actions under ⋯. */}
+      <View style={[styles.foot, stacked ? styles.footStacked : null]}>
+        <SourceAffordance
+          glyph="doc.text"
+          date={viewed}
+          name={
+            data.sources.length
+              ? `${data.sources.length} ${data.sources.length === 1 ? 'record' : 'records'}`
+              : 'No records retrieved'
+          }
+          accessibilityLabel={`Sources: ${viewed}, ${data.sources.length} ${data.sources.length === 1 ? 'record' : 'records'}`}
+          accessibilityHint="Opens the sources, passages and notes"
+          onPress={() => setSourcesOpen(true)}
+          testID="ask-answer-sources"
+        />
+        <View ref={more} collapsable={false}>
+          <IconButton
+            symbol="ellipsis"
+            variant="default"
+            accessibilityLabel="More for this answer"
+            testID="ask-answer-more"
+            onPress={() =>
+              showMenu(
+                'This answer',
+                [{ title: 'Share answer', onPress: share }, ...actions],
+                findNodeHandle(more.current) ?? undefined,
+              )
+            }
+          />
+        </View>
+      </View>
+      {sourcesOpen ? (
+        <AnswerSources
+          question={question.askedAs || question.text}
+          sources={data.sources}
+          viewed={viewed}
+          notes={[
+            calculated
+              ? data.pay_answer
+                ? payNote
+                : moneyNote
+              : 'Answers may be cached. Cite the sources, not this text.',
+            data.money_context,
+            turn.carried
+              ? turn.carried.source
+                ? `This suggested follow-up drew on a passage from “${turn.carried.source}”, retrieved for the previous answer.`
+                : 'This suggested follow-up drew on a passage retrieved for the previous answer.'
+              : null,
+          ]}
+          onOpen={go}
+          onClose={() => setSourcesOpen(false)}
+        />
       ) : null}
-      {/* On iPad the sources pane lists the retrieved records. */}
-      {pane ? null : (
-        <Disclosure
-          label="Retrieved records"
-          value={String(data.sources.length)}
-          open={sourcesOpen}
-          onToggle={setSourcesOpen}
-          testID="ask-sources-toggle"
-        >
-          <Group testID="ask-sources">
-            {groups.cited.map((s, i) => (
-              <SourceRow key={s.resource} s={s} n={i + 1} />
-            ))}
-            {groups.also.length ? (
-              <Disclosure
-                label="Also retrieved, not cited in the answer"
-                open={alsoOpen}
-                onToggle={setAlsoOpen}
-                testID="ask-also-toggle"
-              >
-                {groups.also.map((s) => (
-                  <SourceRow key={s.resource} s={s} />
-                ))}
-              </Disclosure>
-            ) : null}
-          </Group>
-        </Disclosure>
-      )}
-      {dates.length ? (
-        <Disclosure
-          label="Dates in the record"
-          icon="calendar"
-          accent="people"
-          testID="ask-date-ruler"
-        >
-          <RowList>
-            {dates.map((s) => (
-              <LinkRow
-                key={s.resource}
-                title={s.title}
-                detail={`${formatDate(s.date!, 'short')} · ${s.cited ? 'Cited' : 'Retrieved'}`}
-                onPress={() => go(s.href, s.title)}
-              />
-            ))}
-          </RowList>
-        </Disclosure>
-      ) : null}
-      <Text wordSafe variant="fine">
-        Viewed {formatDate(new Date().toISOString().slice(0, 10), 'short')}
-      </Text>
-      <LinkRow
-        title="Share answer"
-        icon="square.and.arrow.up"
-        accent="people"
-        onPress={() =>
-          void shareRecord({
-            path: '/ask',
-            title: question.text,
-            question: {
-              text:
-                question.fundingQuestion || question.askedAs || question.text,
-              options: question.options ||
-                turn.options || { ...defaultOptions },
-            },
-          })
-        }
-        testID="ask-share"
-      />
-    </Section>
+    </Group>
   );
   // The pane follows the answer being read: it measures this view.
   return pane ? (
     <View ref={self} collapsable={false}>
-      {section}
+      {body}
     </View>
   ) : (
-    section
+    body
   );
 }
+
+const styles = StyleSheet.create({
+  foot: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: rhythm.tight,
+  },
+  footStacked: { flexDirection: 'column', alignItems: 'flex-start' },
+});

@@ -1,10 +1,15 @@
-import { ActionSheetIOS, Platform } from 'react-native';
-import { showMenu } from '../../design/menu';
+import { useState } from 'react';
+import { Keyboard } from 'react-native';
 import { LinkRow } from '../../design/primitives';
-import { chrome } from '../../design/tokens';
+import { ChoiceSheet } from './ChoiceSheet';
 import { kindLabel, scopeKinds, type SearchKind } from './model';
 
-/** A native menu keeps complete kind names readable on narrow phones. */
+/**
+ * What to search: a row naming the kind, opening a plain list of the ten
+ * kinds with a check mark beside the current one (not an action sheet of
+ * stacked buttons). Full kind names wrap, so they stay readable at every
+ * text size.
+ */
 export function KindPicker({
   value,
   onChange,
@@ -12,36 +17,31 @@ export function KindPicker({
   value: SearchKind;
   onChange: (kind: SearchKind) => void;
 }) {
+  const [open, setOpen] = useState(false);
   return (
-    <LinkRow
-      title="Kind"
-      detail={kindLabel(value)}
-      testID="search-kind-menu"
-      onPress={() => {
-        if (Platform.OS === 'android') {
-          showMenu(
-            'Search kind',
-            scopeKinds.map((kind) => ({
-              title: kind.label,
-              onPress: () => onChange(kind.value),
-            })),
-          );
-          return;
-        }
-        ActionSheetIOS.showActionSheetWithOptions(
-          {
-            title: 'Search kind',
-            options: [...scopeKinds.map((kind) => kind.label), 'Cancel'],
-            cancelButtonIndex: scopeKinds.length,
-            tintColor: chrome.tint,
-            userInterfaceStyle: 'light',
-          },
-          (index) => {
-            const kind = scopeKinds[index];
-            if (kind) onChange(kind.value);
-          },
-        );
-      }}
-    />
+    <>
+      <LinkRow
+        title="Kind"
+        detail={kindLabel(value)}
+        testID="search-kind-menu"
+        onPress={() => {
+          Keyboard.dismiss();
+          setOpen(true);
+        }}
+      />
+      {open ? (
+        <ChoiceSheet
+          title="Search kind"
+          choices={scopeKinds}
+          value={value}
+          onChange={(kind) => {
+            const chosen = scopeKinds.find((k) => k.value === kind);
+            if (chosen && chosen.value !== value) onChange(chosen.value);
+          }}
+          onClose={() => setOpen(false)}
+          testID="search-kind"
+        />
+      ) : null}
+    </>
   );
 }

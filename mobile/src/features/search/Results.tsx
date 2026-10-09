@@ -1,44 +1,51 @@
-import { Modal, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useEffect, useRef, useState, type ReactElement } from 'react';
 import { useListKeys } from '../../design/list-keys';
 import type { useCursorReveal } from '../split/cursor';
 import type { RecordResult } from '../../api/client';
 import type { RecordsPage, SearchSummary } from './decoders';
 import {
-  AsAtLine,
-  BigFigure,
-  ChoiceChips,
-  LinkRow,
-  ViewOriginal,
   Button,
+  ChoiceChips,
   EmptyState,
   ErrorState,
   FilterChip,
   Group,
+  IconButton,
+  LinkRow,
   LoadingState,
-  RowList,
-  Screen,
-  Section,
-  Text,
-  errorMessage,
   MACHINE_BRIEF_EXPLANATION,
   MachineLabel,
+  RowList,
+  Section,
+  SegmentedControl,
+  SourceLine,
+  SubSection,
+  Text,
+  errorMessage,
+  useAccessibilitySize,
 } from '../../design/primitives';
-import { RecordRow } from '../RecordRow';
+import { rhythm } from '../../design/tokens';
 import { Excerpt } from './Excerpt';
-import { SavedCopyNotice } from '../CatalogNotice';
+import { ResultRow } from './ResultRow';
+import { CountLine } from './CountLine';
+import { ChoiceSheet } from './ChoiceSheet';
+import {
+  countLabel,
+  resultKindLabel,
+  resultMeta,
+  resultTitle,
+  savedCopy,
+} from './present';
 import {
   examples,
   filterChips,
   sorts,
-  typeLabel,
   isDocumentKind,
   type SearchFilters,
   type SearchSort,
 } from './contracts';
-import { Choices } from './FiltersSheet';
-import { useReduceMotion } from '../../design/accessibility';
-import { formatCount, formatDate } from '../../design/format';
+import { formatDate } from '../../design/format';
 
 export function ResultFilters({
   filters,
@@ -101,6 +108,37 @@ function ResultCursorRow({
     children
   );
 }
+
+/** "Summarise these records", with the label its summary will carry. */
+function SummariseRow({
+  onPress,
+  busy,
+  disabled,
+}: {
+  onPress: () => void;
+  busy: boolean;
+  disabled: boolean;
+}) {
+  const stacked = useAccessibilitySize();
+  return (
+    <View style={[styles.summarise, stacked ? styles.stacked : null]}>
+      <Button
+        label="Summarise these records"
+        variant="quiet"
+        icon="text.quote"
+        onPress={onPress}
+        loading={busy}
+        disabled={disabled}
+        testID="records-summary"
+      />
+      <MachineLabel
+        explanation="A summary written by a model from the matching records, each point cited; not the record."
+        testID="records-summary-machine"
+      />
+    </View>
+  );
+}
+
 export function Results({
   result,
   busy,
@@ -109,6 +147,7 @@ export function Results({
   onSort,
   onPage,
   onOpen,
+  onShare,
   readMode,
   onRead,
   briefs,
@@ -132,6 +171,8 @@ export function Results({
   onSort: (s: SearchSort) => void;
   onPage: (n: number) => void;
   onOpen: (path: string, title: string) => void;
+  /** Shares this search's web address (query, filters, page and sort). */
+  onShare: () => void;
   readMode: 'passages' | 'briefs';
   onRead: (mode: 'passages' | 'briefs') => void;
   briefs: Record<string, string>;
@@ -150,8 +191,8 @@ export function Results({
   cursorReveal?: ReturnType<typeof useCursorReveal>;
 }) {
   const [sortOpen, setSortOpen] = useState(false);
-  const reduced = useReduceMotion();
   const p = result.data;
+  const money = p.kind === 'grant' || p.kind === 'agency';
   const cursor = useListKeys(
     p.results.map((record) => record.slug),
     (key) => {
@@ -161,68 +202,64 @@ export function Results({
     (key) => cursorReveal?.reveal(key),
     !!cursorReveal,
   );
+  const sortLabel = sorts.find((s) => s.value === sort)!.label;
+  const briefing = readMode === 'briefs';
+  const anyBrief = p.results.some((r) => briefs[r.resource]);
+  const originals = p.results.flatMap((r) =>
+    r.url
+      ? [
+          {
+            label: r.source || resultKindLabel(r.kind),
+            url: r.url,
+            record: [resultTitle(r), r.date ? formatDate(r.date, 'short') : '']
+              .filter(Boolean)
+              .join(', '),
+          },
+        ]
+      : [],
+  );
   return (
-    <Section
-      title="Results"
-      accent={p.kind === 'grant' || p.kind === 'agency' ? 'money' : 'bills'}
-      testID="records-results"
-      info={{
-        title: 'About these results',
-        testID: 'records-info',
-        notes: [
+    <Section accent={money ? 'money' : 'bills'} testID="records-results">
+      <CountLine
+        label={
           filtered
-            ? 'Results are limited to public records and roster parliamentarians. This page excludes recipient profiles and records without a reliable organisation classification.'
-            : null,
-          p.truncated
-            ? 'The record holds more. Narrow your search to go further.'
-            : null,
-          !summaryAllowed
-            ? 'A program-only summary is not available. The summary service also reviews recipient records.'
-            : null,
-          ...p.warnings,
-          p.coverage,
-        ],
-      }}
-    >
-      {result.stale ? <SavedCopyNotice reason={result.staleReason} /> : null}
-      <BigFigure
-        value={`${formatCount(filtered ? p.results.length : p.total)}${!filtered && p.truncated ? '+' : ''}`}
-        label={filtered ? 'eligible records on this page' : 'matches'}
-        detail={`For “${p.query}”`}
-        accent={p.kind === 'grant' || p.kind === 'agency' ? 'money' : 'bills'}
+            ? countLabel(p.results.length, [
+                'eligible record on this page',
+                'eligible records on this page',
+              ])
+            : countLabel(p.total, ['record', 'records'], p.truncated)
+        }
         testID="records-count"
-      />
-      <LinkRow
-        title="Sort matches"
-        detail={sorts.find((s) => s.value === sort)!.label}
-        onPress={() => setSortOpen(true)}
-        testID="records-sort"
-        disabled={busy}
-      />
+      >
+        <Button
+          label={sortLabel}
+          accessibilityLabel={`Sort: ${sortLabel}`}
+          variant="quiet"
+          size="compact"
+          trailingIcon="chevron.down"
+          onPress={() => setSortOpen(true)}
+          disabled={busy}
+          testID="records-sort"
+        />
+        <IconButton
+          symbol="square.and.arrow.up"
+          accessibilityLabel="Share this search"
+          onPress={onShare}
+          testID="records-share"
+        />
+      </CountLine>
       {sortOpen ? (
-        <Modal
-          visible
-          presentationStyle="pageSheet"
-          animationType={reduced ? 'none' : 'slide'}
-          onRequestClose={() => setSortOpen(false)}
-        >
-          <Screen>
-            <Group accessibilityViewIsModal>
-              <Choices
-                label="Sort matches"
-                closeLabel="Done"
-                choices={sorts}
-                value={sort}
-                onChange={(v) => onSort(v as SearchSort)}
-                onClose={() => setSortOpen(false)}
-                testID="records-sort"
-              />
-            </Group>
-          </Screen>
-        </Modal>
+        <ChoiceSheet
+          title="Sort matches"
+          choices={sorts}
+          value={sort}
+          onChange={(v) => onSort(v as SearchSort)}
+          onClose={() => setSortOpen(false)}
+          testID="records-sort"
+        />
       ) : null}
       {p.results.some((r) => r.resource) ? (
-        <ChoiceChips
+        <SegmentedControl
           segments={[
             {
               value: 'passages',
@@ -233,6 +270,13 @@ export function Results({
           ]}
           value={readMode}
           onChange={onRead}
+          testID="records-read-mode"
+        />
+      ) : null}
+      {briefing && anyBrief ? (
+        <MachineLabel
+          explanation={MACHINE_BRIEF_EXPLANATION}
+          testID="records-brief-label"
         />
       ) : null}
       {briefBusy ? (
@@ -244,14 +288,13 @@ export function Results({
           onRetry={onBriefRetry}
         />
       ) : null}
-      <Button
-        label="Summarise these results"
-        icon="text.quote"
-        onPress={onSummary}
-        loading={summaryBusy}
-        disabled={!p.results.length || !summaryAllowed}
-        testID="records-summary"
-      />
+      {summary ? null : (
+        <SummariseRow
+          onPress={onSummary}
+          busy={summaryBusy}
+          disabled={!p.results.length || !summaryAllowed}
+        />
+      )}
       {summaryError ? (
         <ErrorState
           message={errorMessage(summaryError)}
@@ -260,60 +303,67 @@ export function Results({
         />
       ) : null}
       {summary ? (
-        <Section
-          title="Cited summary"
-          accent="bills"
-          testID="records-summary-panel"
-          info={{
-            title: 'Cited records',
-            testID: 'records-summary-info',
-            notes: summary.data.sources.flatMap((s) => [
-              s.title,
-              ...s.evidence,
-            ]),
-          }}
-        >
-          {summary.stale ? (
-            <SavedCopyNotice reason={summary.staleReason} />
-          ) : null}
+        <SubSection title="Summary" testID="records-summary-panel">
           {summary.data.status === 'empty' ? (
             <EmptyState message="No matching records are available for a cited summary." />
           ) : (
-            <>
-              <Text wordSafe variant="fine" testID="records-summary-label">
-                AI summary of {summary.data.reviewed_count} matching records.
-                {summary.data.partial
-                  ? ' Some sources are temporarily unavailable.'
-                  : ''}
-              </Text>
+            <Group>
+              <MachineLabel
+                explanation="A summary written by a model from the matching records, each point cited; not the record."
+                testID="records-summary-label"
+              />
               {summary.data.points.map((point, i) => (
-                <Group key={i}>
-                  <Text>{point.text}</Text>
-                  {point.source_ids.map((id) => {
-                    const index = summary.data.sources.findIndex(
-                      (s) => s.id === id,
-                    );
-                    const s = summary.data.sources[index]!;
-                    const n = index + 1;
-                    return (
-                      <LinkRow
-                        key={id}
-                        title={`${n}. ${s.title}`}
-                        onPress={() => onOpen(s.href, s.title)}
-                        testID={`records-citation-${n}`}
-                      />
-                    );
-                  })}
+                <Group key={i} gap={rhythm.tight}>
+                  <Text wordSafe>{point.text}</Text>
+                  <RowList>
+                    {point.source_ids.map((id) => {
+                      const index = summary.data.sources.findIndex(
+                        (s) => s.id === id,
+                      );
+                      const s = summary.data.sources[index]!;
+                      const n = index + 1;
+                      return (
+                        <LinkRow
+                          key={id}
+                          title={`${n}. ${resultTitle(s)}`}
+                          detail={resultMeta(s)}
+                          onPress={() => onOpen(s.href, s.title)}
+                          testID={`records-citation-${n}`}
+                        />
+                      );
+                    })}
+                  </RowList>
                 </Group>
               ))}
-            </>
+            </Group>
           )}
-          <AsAtLine
+          <SourceLine
+            title="About this summary"
             asOf={summary.asOf}
             citation="OPAX cited search summary"
+            coverage={
+              summary.data.status === 'empty'
+                ? null
+                : `${countLabel(summary.data.reviewed_count, ['record', 'records'])} reviewed`
+            }
+            state={
+              summary.data.partial
+                ? 'partial'
+                : savedCopy(summary.stale, summary.staleReason).state
+            }
             savedAt={summary.stale ? summary.savedAt : null}
+            notes={[
+              summary.data.partial
+                ? 'Some sources were temporarily unavailable when this summary was written.'
+                : null,
+              savedCopy(summary.stale, summary.staleReason).note,
+              ...summary.data.sources.map((s, i) =>
+                [`${i + 1}. ${s.title}`, ...s.evidence].join(' '),
+              ),
+            ]}
+            testID="records-summary-sources"
           />
-        </Section>
+        </SubSection>
       ) : null}
       {!p.results.length ? (
         <Group>
@@ -351,69 +401,76 @@ export function Results({
         </Group>
       ) : (
         <RowList>
-          {p.results.map((r) => (
-            <Group key={r.slug}>
-              <ResultCursorRow rowKey={r.slug} reveal={cursorReveal}>
-                <RecordRow
-                  title={r.title}
-                  detail={[
-                    typeLabel(r.kind),
-                    r.dateLabel ||
-                      (r.date ? formatDate(r.date, 'short') : null),
-                    r.speaker,
-                    r.party,
-                  ]
-                    .filter(Boolean)
-                    .join(' · ')}
+          {p.results.map((r) => {
+            const brief = briefing ? briefs[r.resource] : undefined;
+            const path = r.href || `/doc/${r.slug}`;
+            return (
+              <ResultCursorRow key={r.slug} rowKey={r.slug} reveal={cursorReveal}>
+                <ResultRow
+                  title={resultTitle(r)}
+                  meta={resultMeta(r)}
+                  speaker={r.speaker}
+                  party={r.party}
+                  accent={money ? 'money' : 'bills'}
                   testID={`records-result-${r.slug}`}
-                  selected={selectedPath?.(r.href || `/doc/${r.slug}`)}
+                  selected={selectedPath?.(path)}
                   highlighted={cursorReveal ? cursor === r.slug : undefined}
-                  onPress={() => onOpen(r.href || `/doc/${r.slug}`, r.title)}
-                />
-              </ResultCursorRow>
-              {readMode === 'briefs' && briefs[r.resource] ? (
-                <Group>
-                  <MachineLabel
-                    explanation={MACHINE_BRIEF_EXPLANATION}
-                    testID={`records-brief-label-${r.slug}`}
-                  />
-                  <Text>{briefs[r.resource]}</Text>
-                </Group>
-              ) : (
-                <Group>
-                  {readMode === 'briefs' && r.resource ? (
-                    <Text variant="fine">
-                      Passage ·{' '}
-                      {briefBusy
-                        ? 'checking for a brief…'
-                        : 'no brief available'}
-                    </Text>
+                  onPress={() => onOpen(path, r.title)}
+                >
+                  {/automated summary/.test(r.source ?? '') ? (
+                    <MachineLabel explanation={MACHINE_BRIEF_EXPLANATION} />
                   ) : null}
-                  <Excerpt snippet={r.snippet} resource={r.resource} />
-                </Group>
-              )}
-              {/automated summary/.test(r.source ?? '') ? (
-                <Text variant="fine">automated summary</Text>
-              ) : null}
-              {r.url ? (
-                <ViewOriginal
-                  sources={[
-                    { label: r.source || typeLabel(r.kind), url: r.url },
-                  ]}
-                />
-              ) : null}
-            </Group>
-          ))}
+                  {brief ? (
+                    // OPAX's words in the sans; the passage is the record's.
+                    <Text
+                      wordSafe
+                      accessibilityLabel={`Machine-written brief: ${brief}`}
+                      testID={`records-brief-${r.slug}`}
+                    >
+                      {brief}
+                    </Text>
+                  ) : (
+                    <Excerpt
+                      snippet={r.snippet}
+                      resource={r.resource}
+                      query={p.query}
+                      prefix={briefing ? 'From the record' : undefined}
+                    />
+                  )}
+                </ResultRow>
+              </ResultCursorRow>
+            );
+          })}
         </RowList>
       )}
-      <AsAtLine
+      <SourceLine
+        title="About these results"
         asOf={result.asOf}
         citation="OPAX public record search"
         savedAt={result.stale ? result.savedAt : null}
+        state={savedCopy(result.stale, result.staleReason).state}
+        originals={originals}
+        notes={[
+          savedCopy(result.stale, result.staleReason).note,
+          filtered
+            ? 'Results are limited to public records and roster parliamentarians. This page excludes recipient profiles and records without a reliable organisation classification.'
+            : null,
+          p.truncated
+            ? 'The record holds more. Narrow your search to go further.'
+            : null,
+          !summaryAllowed
+            ? 'A program-only summary is not available. The summary service also reviews recipient records.'
+            : null,
+          ...p.warnings,
+          p.coverage,
+        ]}
+        testID="records-sources"
       />
-      <Text testID="records-page">
-        Page {p.page} of {p.page_count}
-      </Text>
+      {p.page_count > 1 ? (
+        <Text variant="metadata" testID="records-page">
+          Page {p.page} of {p.page_count}
+        </Text>
+      ) : null}
       {p.page > 1 ? (
         <Button
           label="Previous results"
@@ -433,3 +490,13 @@ export function Results({
     </Section>
   );
 }
+
+const styles = StyleSheet.create({
+  summarise: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    columnGap: rhythm.heading,
+  },
+  stacked: { flexDirection: 'column', alignItems: 'stretch' },
+});

@@ -41,6 +41,7 @@ export function Choices({
   onClose,
   testID,
   closeLabel = 'Back to filters',
+  bare = false,
 }: {
   label: string;
   choices: readonly Choice[];
@@ -49,18 +50,24 @@ export function Choices({
   onClose: () => void;
   testID: string;
   closeLabel?: string;
+  /** In a sheet whose bar already names it and closes it (ChoiceSheet). */
+  bare?: boolean;
 }) {
   const [query, setQuery] = useState('');
   return (
     <Group>
-      <Button
-        label={closeLabel}
-        variant="quiet"
-        icon="chevron.left"
-        onPress={onClose}
-        testID={`${testID}-back`}
-      />
-      <Heading level={2}>{label}</Heading>
+      {bare ? null : (
+        <>
+          <Button
+            label={closeLabel}
+            variant="quiet"
+            icon="chevron.left"
+            onPress={onClose}
+            testID={`${testID}-back`}
+          />
+          <Heading level={2}>{label}</Heading>
+        </>
+      )}
       {choices.length > 12 ? (
         <Field
           label={`Find ${label.toLowerCase()}`}

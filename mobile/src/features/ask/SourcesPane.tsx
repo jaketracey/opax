@@ -25,14 +25,13 @@ import {
   RowList,
   Screen,
   SubSection,
+  SourceLine,
   Text,
-  ViewOriginal,
   useAccessibilitySize,
   useHover,
   type SplitPane,
   EmptyState,
 } from '../../design/primitives';
-import { formatDate } from '../../design/format';
 import {
   SelectedMark,
   selectedWash,
@@ -45,8 +44,9 @@ import { useCursorReveal } from '../split/cursor';
 import { entryForWebPath, entryLabel, type RecordEntry } from '../split/entry';
 import { RecordDetail, RecordShare } from '../split/RecordDetail';
 import { openAnswerLink } from './AnswerView';
+import { sourceMeta } from './AnswerSources';
+import { openOnWeb, openSource } from '../../navigation/external';
 import {
-  parliaments,
   sourceGroups,
   sourcePassage,
   type Source,
@@ -368,14 +368,7 @@ function SourceItem({
       rows.delete(source.resource);
     };
   }, [rows, source.resource]);
-  const meta = [
-    source.speaker,
-    source.party,
-    source.state ? parliaments[source.state] || '' : '',
-    source.date ? formatDate(source.date, 'short') : '',
-  ]
-    .filter(Boolean)
-    .join(' · ');
+  const meta = sourceMeta(source);
   const title = `${n ? `[${n}] ` : ''}${source.title}`;
   return (
     <View ref={row} collapsable={false} style={styles.item}>
@@ -414,9 +407,18 @@ function SourceItem({
           </Pressable>
         </Hoverable>
       </View>
-      <ViewOriginal
-        sources={source.url ? [{ label: source.title, url: source.url }] : []}
-      />
+      {source.url &&
+      (source.url.startsWith('https://') || source.url.startsWith('/')) ? (
+        <SourceLine
+          label="View original"
+          accessibilityLabel={`View original: ${source.title}`}
+          onPress={() =>
+            source.url!.startsWith('/')
+              ? void openOnWeb(source.url!, source.title)
+              : void openSource(source.url!, source.title)
+          }
+        />
+      ) : null}
     </View>
   );
 }
