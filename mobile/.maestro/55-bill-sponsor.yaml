@@ -1,0 +1,51 @@
+appId: au.com.opax.app
+name: 55 A bill's sponsor is the standard people row
+---
+# iPhone. Run by path at default size and at AX5. The pinned Wilkie bill has
+# a roster sponsor (portrait, seat line, party chip, chevron); the Faruqi bill
+# has a sponsor the roster cannot place (blank circle, no link).
+- launchApp:
+    permissions: {}
+- extendedWaitUntil:
+    visible:
+      id: today-screen-message
+    timeout: 90000
+- openLink: opax://bill/au-federal-r6850
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: bill-title
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: bill-sponsor-andrew-wilkie
+    direction: DOWN
+    visibilityPercentage: 100
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- waitForAnimationToEnd
+# One spoken label for the row: name, seat, party, then "profile".
+- assertVisible: 'Andrew Wilkie, Member for Clark · Tasmania, Independent, profile'
+- takeScreenshot: ${EVIDENCE}/55-sponsor-linked
+- openLink: opax://bill/au-federal-s1479
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: bill-title
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: bill-sponsor-unlinked-0
+    direction: DOWN
+    visibilityPercentage: 100
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- waitForAnimationToEnd
+- assertVisible: 'Mehreen Faruqi, Greens'
+- takeScreenshot: ${EVIDENCE}/55-sponsor-unlinked
