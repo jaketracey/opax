@@ -66,3 +66,6 @@ mobile/maestro-output/
 mobile/coverage/
 mobile/*.log
 mobile/.qa.local.env
+
+# Design review baseline: the full device capture set stays local; a curated subset is committed in baseline/.
+docs/design/review-2026-10/baseline-full/

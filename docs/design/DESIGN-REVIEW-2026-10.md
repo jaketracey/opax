@@ -1,12 +1,13 @@
 # OPAX design review, pass 1: audit, simplification and one design system
 
-9 October 2026. Design lead's report for pass 1 of a multi-pass programme. This pass is analysis and specification only: no app or web code changed. Passes 2 to 5 implement, critique and refine it (section 7).
+9 October 2026; updated 10 October with the build 32 device baseline. Design lead's report for pass 1 of a multi-pass programme. This pass is analysis and specification only: no app or web code changed. Passes 2 to 5 implement, critique and refine it (section 7).
 
 - **App:** `ios/app` at `b7e436b1` (TestFlight build 32), one React Native app for iPhone, iPad and Android.
 - **Web:** `main` at `a3aa6532`, rendered locally with `wrangler dev` against the committed data.
 - **Assets:** [`review-2026-10/`](review-2026-10/):
   - `web/`: fresh captures at 390 and 1280 px;
-  - `app/`: the newest surviving device captures, with status bars painted out and MP portraits drawn as OPAX's blank circle (official portraits are CC BY-NC-ND);
+  - `baseline/`: 26 screens from the build 32 device baseline, the "before" set for passes 3 and 4, at 900 px with MP portraits drawn as OPAX's blank circle (official portraits are CC BY-NC-ND). The full 98-screen set stays local in the git-ignored `baseline-full/`;
+  - `app/`: older device captures (builds 11 to 21) that concept boards 1 to 4 use, with status bars painted out and portraits blank;
   - `concepts/`: six before/after boards and their HTML sources;
   - [`design-tokens.json`](review-2026-10/design-tokens.json): the proposed single token source.
 
@@ -28,7 +29,7 @@ The bones are good. The palette, the two typefaces and the hairline structure ar
 4. **Too many visible actions.**
    - The web bill page draws seven buttons, four at the top and three at the foot.
    - At desktop widths a floating "Ask OPAX" pill sits over every page except the home page, including the Ask page itself.
-   - App search results carry "Read matching record" under every row; Ask stacks four utility rows above the question.
+   - App search results carry "Read matching record" under every row; Ask follows a two-sentence answer with five utility rows.
 5. **Two systems on the web.**
    - `style.css` is token-based.
    - Every feature module (home, community, money map, grants, ledger, time machine, quiz and the rest) ships its own dialect, which adds up to:
@@ -48,12 +49,12 @@ Ranked by how much visual weight each removes across how many screens, against e
 |---|---|---|---|---|
 | 1 | **One source line per block.** "Updated 4 Oct 2026 · AEC annual returns", tappable, opens a source sheet with the originals, notes and licence. It replaces as-at lines, "View original", ⓘ, `Section info`, saved/partial notices and caveat paragraphs. Every figure stays dated and one tap from its source. | All | App: ~237 provenance marks down to one per block. Web: the fine-print paragraphs under each section (5 on a bill page, 4 on a profile). | 2 (component), 3–4 (screens) |
 | 2 | **Five label kinds, sentence case:** StatusLabel, Tag, PartyLabel (dot + name, no fill), Choice/Filter chip, MachineLabel. | All | App: 20 recipes become 5. Web: 34 classes become 5. No more uppercase eyebrows (35 rules); the party chip fill in rows goes. | 2 |
-| 3 | **Say identity once.** One title and one meta line; no kicker, Quick facts box or second title. | All | "PARLIAMENTARIAN / BILL / POLITICAL PARTY" kickers, web Quick facts on person and party pages, duplicate nav + H1 titles, Your MP's three titles. | 3 |
+| 3 | **Say identity once.** One title and one meta line; no kicker, Quick facts box or second title. | All | "PARLIAMENTARIAN / BILL / POLITICAL PARTY" kickers, Quick facts on the app and web profiles (and the web party page), duplicate nav + H1 titles, Your MP's three titles. | 3 |
 | 4 | **Front pages lose half their blocks.** Today goes from 14 blocks to 6: one colour moment (the edition, in its subject's accent) and one "Explore the record" tile grid. The web home goes from 10 blocks to 5. | iPhone, iPad, Android, web | On Today: five one-row sections, the Leads navy card, the money-map card and the coverage block. On the web home: Spotlight, From the record, Newly indexed records, the Topics A–Z list, the Collection & coverage figure grid and about 30 "→" arrows. | 3 |
-| 5 | **One primary action per view; the rest under ⋯.** | All | Web: the floating Ask pill, and the bill page's seven buttons down to two. App: "Read matching record" per result, Share rows, Ask's utility rows above the question, the second Ask composer. | 2 (web pill), 3 |
+| 5 | **One primary action per view; the rest under ⋯.** | All | Web: the floating Ask pill, and the bill page's seven buttons down to two. App: "Read matching record" per result, Share rows, Ask's five utility rows after the answer, the second Ask composer. | 2 (web pill), 3 |
 | 6 | **One card, one level.** Radius 12, hairline, no shadow, never nested, never around a list, chart or In short. | All | App: five card radii and four card recipes. Web: 32 card-like classes, 40 bronze card edges and 45 shadows (down to one overlay shadow). | 2 |
 | 7 | **Eleven type roles, six sizes, one meaning:** serif speaks for the record, sans speaks for OPAX. | All | App: 20 roles and 11 sizes. Web: 115 sizes, 33 line heights and 21 letter-spacings. | 2 |
-| 8 | **Titles from fields, not raw text.** A division is titled by its recorded stage, with the question behind a disclosure; a search result uses its own title with the date formatted. | All | Division titles that start with the presiding officer's name and full sentence; amendments and whole speeches printed above the party bars; "Name — Kind — 2026-08-17" result titles. | 3 (+ bills export fix) |
+| 8 | **Titles from fields, not raw text.** A division is titled by its recorded stage, with the question behind a disclosure; a search result uses its own title with the date formatted. | All | Web division titles that start with the presiding officer's name and full sentence, with amendments and whole speeches printed above the party bars; app division titles like "s - Offshore Petroleum … Bill 2023..." repeated as their own description; "Name — Kind — 2026-08-17" result titles. | 3 (+ bills export fix) |
 | 9 | **One accent per view.** The accent belongs to the subject; accent marks appear only where sections differ by category (profiles, Today). | All | App: 111 accented sections become about 40, including About's 7 marks on prose and 15 inert accents that draw nothing. Web: adds accents only for subject figures, so the money map's 16 industry colours stay the only multi-colour element. | 2–4 |
 | 10 | **Links say where they go once.** No "→" on in-site links; "↗" only for leaving OPAX, once per block; app chevrons only on rows that navigate. | Web, app | About 30 arrows on the web home; 9 "↗" on bill stages; duplicate "View original" pairs (two to one URL on the app party page). | 3 |
 
@@ -86,11 +87,18 @@ These change documented rules. Under Jake's "full speed" direction (9 Oct: no si
     - community, which rendered "Failed to fetch";
     - the person page's topics.
   - Those error states are themselves findings (section 4); the healthy versions are gaps (section 3).
-- **App.** No simulator or emulator ran tonight: the Mac's shared device slot is promised to another program until tomorrow. Sources:
-  - captures that survive in lane worktrees and local scratch folders;
-  - Jake's TestFlight screenshots;
-  - a code census of `mobile/src` by an audit agent (counts exact for literals, estimated for render sites, about 25 citations spot-checked).
-  - Lane worktrees from build 17 on were deleted after merge with their captures, so the newest full iPhone set is builds 11 to 16. Each capture below names its build; later builds changed several screens (noted per screen).
+- **App.**
+  - **Build 32 baseline (9–10 Oct).** 98 captures of `b7e436b1` from e2e builds against the fixture server:
+    - iPhone 17 Pro at default text (35) and AX5 (14);
+    - the OPAX QA iPad 13 in landscape (35) and portrait (6);
+    - the `OPAX_API34` Android emulator (8).
+
+    Section 3 maps each screen to its file, and every app finding in section 4 was checked against these.
+  - **Pass 1 night (9 Oct).** No device ran: the shared slot was promised to another program. The first draft used:
+    - captures surviving in lane worktrees (builds 11 to 21);
+    - Jake's TestFlight screenshots;
+    - a code census of `mobile/src` by an audit agent (counts exact for literals, estimated for render sites, about 25 citations spot-checked).
+  - **Concept boards.** Boards 1 to 4 still use those older captures; build 32 shows the same problems on those screens, and section 4 notes the differences. Board 5 uses the build 32 capture.
 - **Data in mockups.** Wireframes reuse text from the captures: public parliamentary records, or fixture text where the capture was a fixture run. Nothing was invented about a real person.
 - **Scale.** Effort and device-time estimates assume the current lane tooling (Opus workers, `e2e.sh`, `review-pages.yaml`) and the one-device-block-a-day rule for the shared Mac.
 
@@ -120,56 +128,53 @@ Two state rules apply everywhere:
 
 ## 3. Screen inventory
 
-`bN` = the TestFlight build whose code the capture shows. "Fixture" = simulator run against pinned fixture data. The full inventory, with source paths and private-data checks, came from the inventory pass. Committed copies are in `review-2026-10/app/` and `web/`.
+In the table below:
 
-| Screen | iPhone (standard) | iPhone AX5 | iPad | Android | Web desktop / mobile |
+- `name` is a file in the build 32 baseline, under `iphone/`, `iphone-ax5/`, `ipad/` or `android/`.
+- **Bold** files are committed in [`review-2026-10/baseline/`](review-2026-10/baseline/) at 900 px, with portraits masked (its `MANIFEST.md` lists them). The rest are in the local, git-ignored `baseline-full/` at 1,200 px.
+- iPad captures are landscape unless marked portrait.
+- Web captures are the local renders in `web/`.
+
+| Screen | iPhone | iPhone AX5 | iPad | Android | Web |
 |---|---|---|---|---|---|
-| Welcome tour | b11 (store shot) | b11 | **gap** (b31 redesign lost) | **gap** | n/a |
-| Today / Home | b15 fixture (top, declarations); predates b17 Public money, b23 Explore, b25 Community | b12 (declarations only) | b27 Today grid, sidebar (675×900) | play-prep (~b17) | Home 390 / 820 / 1280 (tonight) |
-| Your MP | b11 real | b12 | **gap** | play-prep | n/a |
-| MP profile | b11 real; Jake b20 header crop | b14 | b28 directory split; Jake b29 | parity (~b17) | 390 / 1280 (tonight) |
-| Party | b14 fixture | **gap** | b28 directory (not copied) | bringup | 390 / 1280 |
-| Electorate | b11 real (predates b19 date picker) | **gap** | b28 (not copied) | bringup | 390 / 1280 |
-| Bills list | b12 fixture (predates b19 filters) | b12 | b27 split | **gap** | 390 / 1280 |
-| Bill | Jake b17/18 top; b11 divisions | **gap** | b27 split; Jake b29 sponsor crop | play-prep | 390 / 1280 |
-| Division | b12 fixture | **gap** | **gap** | bringup (bill divisions) | error state only locally; Jake's 9 Oct markdown bug shot |
-| Search | b12 idle + Passages; b32 AX5 idle | b32 | b28 split | bringup idle | 390 / 1280 (catalog results only) |
-| Record reader | b14 fixture | **gap** | **gap** | parity (not copied) | **gap** (needs ARAG) |
-| Ask | b16 idle, stages, answer (pre-b22 composer); Jake b21, b22 | b16 | b28 + Jake b29 sources pane | play-prep idle | Ask idle 390 / 1280 |
-| Talk | b11 | b12 | **gap** | n/a (voice off on Android) | n/a |
-| Money map / public money | b12 map; public money **gap** | **gap** | **gap** | bringup | Money 390 / 1280 |
-| Reports / report | b15 fixture | b15 | **gap** | parity (not copied) | 390 / 1280 |
-| Leads | b12 fixture | **gap** | **gap** | **gap** | **gap** (`/discover`) |
-| Declarations | b12 fixture | b12 | **gap** | **gap** | home rows only; `/declared` **gap** |
-| Follows | b14 fixture | **gap** | **gap** | **gap** | n/a |
-| Account / About / Sources | b15 account; Sources only b9 AX5 sheet | b9 | **gap** | bringup (not copied) | About 390 / 1280 |
-| Explore | **gap** | **gap** | **gap** | play-prep hub | **gap** |
-| Community | **gap** | **gap** | **gap** | play-prep (web hand-off) | error state only locally |
-| Directories | b30 (414×900) | b30 (414×900) | b28 | **gap** | directory pages not captured |
+| Welcome tour | 35-tour-page-1 | b11 only (older) | 35-tour-page-1 | gap | n/a |
+| Today / Home | **01-today** | **01-today** | **01-today**; 36-today-portrait | **01-today** | home 390 / 820 / 1280 |
+| Your MP | 02-your-mp-chooser; **03-your-mp-chosen** | gap | **02-your-mp-chooser**; 03-your-mp-chosen | gap | n/a |
+| MP profile | **04-profile-top**, **05-profile-votes**, 06-profile-pay, 07-profile-expenses, **08-profile-interests** | 04, 05, 06, **07-profile-expenses**, 08 | **04-profile-top**, 05 to 08; 37-profile-top-portrait | 04-profile-top | person 390 / 1280 |
+| Party | **09-party** | gap | 09-party | gap | party 390 / 1280 |
+| Electorate | **10-electorate** | gap | 10-electorate | gap | electorate 390 / 1280 |
+| Bills list | **11-bills-list** | gap | 11-bills-list (split, empty pane) | gap | bills 1280 |
+| Bill | **12-bill-top**, **13-bill-divisions**, 14-bill-sponsor | 12, 13, 14 | 12 to 14 (split); 38-bill-top-portrait | 12-bill-top | bill 390 / 1280; divisions crop |
+| Division history | **15-division-history** | gap | **15-division-history** (clipped under the sidebar) | gap | division page: error state only locally |
+| Search | 16-search-empty, 17-search-suggestions, **18-search-passages**, 19-search-briefs, **20-search-kind-sheet** | 18, 19 | 16, 17, **18-search-passages**, 19, 20 | 18-search-passages | search 390 / 1280 (catalog results only) |
+| Records reader | 24-records-reader (labelled synthetic fixture) | gap | 24-records-reader | gap | gap (needs ARAG) |
+| Ask | 21-ask-idle, **22-ask-answer**, 23-ask-sources | 21, 22, 23 | 21 to 23; 39 to 41 portrait | 21, **22-ask-answer**, 23 | Ask idle 390 / 1280 |
+| Talk | 34-talk-idle | gap | 34-talk-idle | n/a (voice off on Android) | n/a |
+| Money map | 29-money-map | gap | **29-money-map** | gap | money 390 / 1280 |
+| Reports and a report | **27-reports-list**, **28-report** | gap | 27, 28 | gap | reports, report 1280 |
+| Explore | 25-explore | gap | 25-explore | gap | gap |
+| Community | 26-community (fixture discussions) | gap | 26-community | gap (web hand-off) | error state only locally |
+| Directories | 30-directory | gap | 30-directory | 30-directory | gap |
+| Account, About, Sources | 31-account, 32-about, 33-sources-licences | gap | 31, 32, 33 | gap | about 390 / 1280 |
+| Leads, declarations feed, follows, public money hub, money list, topics | gap (older captures, such as `app/iphone-leads-b12.png`) | gap | gap | gap | `/discover` and `/declared` gaps |
+| Settings | none: build 32 has no Settings screen; Account covers it | | | | |
 
-**Committed copies** (best current capture per screen; status bars painted out, portraits blank):
+**Older captures.** The files in `app/` (builds 11 to 21, status bars painted out, portraits blank) stay because concept boards 1 to 4 and the first draft cite them. `web/` holds:
+- the first screen at 1280 px for 14 pages;
+- 7 pages at 390 px;
+- four full-page strips;
+- the bill's divisions block.
 
-- `app/`:
-  - `iphone-today-top-b15.png`, `iphone-today-declarations-b15.png`;
-  - `iphone-your-mp-b11.png`;
-  - `iphone-person-b11.png`, `iphone-person-interests-b11.png`;
-  - `iphone-party-b14.png`, `iphone-electorate-b11.png`;
-  - `iphone-bill-top-b17.png`, `iphone-bill-divisions-b11.png`;
-  - `iphone-search-results-b12.png`, `iphone-ask-answer-b21.png`;
-  - `iphone-leads-b12.png`, `iphone-report-b15.png`;
-  - `ipad-today-b27.png`, `android-today.png`.
-- `web/` (first screen at 1280 px unless named):
-  - `home`, `person`, `party`, `bill`, `bills`, `search-passages`, `ask-idle`, `electorate`, `money`, `reports`, `report`, `about`;
-  - two error states: `division`, `community`;
-  - at 390 px: `home`, `person`, `party`, `bill`, `search-passages`, `ask-idle`, `electorate`;
-  - full-page strips: `home`, `person`, `party`, `bill`;
-  - the bill's divisions block.
+**Gaps for the next device block:**
+- leads and a lead, the declarations feed, follows (with one follow), the public money hub, money list mode, topics, tour pages 2 to 5;
+- AX5 for Your MP, party, electorate, bills list, division history, the kind sheet, reports, Talk, Account and Sources;
+- Android beyond its eight states.
 
-Gaps are filled in tomorrow's device block (section 8). Web gaps that need ARAG or D1 (document search with Passages and Briefs, the record reader, a division page, `/discover`, `/declared`, community) need either a dev ARAG token on `wrangler dev` or Jake's OK for read-only GETs of the public pages on opax.com.au.
+**Web gaps that need ARAG or D1:** document search with Passages and Briefs, the record reader, a division page, `/discover`, `/declared`, community. They need either a dev ARAG token on `wrangler dev` or Jake's OK for read-only GETs of the public pages on opax.com.au.
 
 ## 4. "Too busy" audit, per screen
 
-App counts are estimates from the code census of build 32 code. Web counts are tonight's DOM census at 390 and 1280 px (appendix A). Each screen lists **Keep** (it carries meaning), **Merge or demote**, and **Remove**. Non-negotiables hold throughout:
+App counts are estimates from the code census of build 32 code; every app finding was then checked against the build 32 baseline, and the **Build 32** notes record what the captures confirm, correct or add. Web counts are tonight's DOM census at 390 and 1280 px (appendix A). Each screen lists **Keep** (it carries meaning), **Merge or demote**, and **Remove**. Non-negotiables hold throughout:
 
 - every figure dated and sourced, one tap away;
 - machine text labelled;
@@ -185,6 +190,14 @@ App counts are estimates from the code census of build 32 code. Web counts are t
 - 22 to 28 chip sites (each declaration row carries a filled party chip and a filled category chip);
 - 5 accent keys, and two navy blocks on one screen (edition and Leads);
 - a parallel colour system (`today/tint.ts`: `accentOf`, `washOf`, a second `Accent` type) and 29 static palette reads that skip Increase Contrast.
+
+**Build 32** (`iphone/01-today`, `iphone-ax5/01-today`, `ipad/01-today`, `android/01-today`):
+
+- It confirms the uppercase date, the uppercase edition label and the five-stop timeline inside the hero.
+- The attribution paragraph beside the Machine-written pill is gone (fixed in build 22).
+- At AX5, the uppercase date and the independence statement fill the whole first screen before the edition starts. This is the strongest case for D4.
+- The iPad rail opens with a Following card that explains how following works ("Follow a parliamentarian, party, bill or electorate from its page. Today then shows …"). That is a helper paragraph where an empty Following block should simply not render.
+- Android draws the same page under a Material top bar.
 
 - **Keep:**
   - the edition as the single colour moment, in its subject's accent rather than always navy (Jake, 7 Oct: "more colour and something more special");
@@ -243,6 +256,15 @@ Web counts:
 - a failed topics block leaving about 300 px of blank space;
 - the floating Ask pill over the rail.
 
+**Build 32** (`iphone/04-profile-top` to `08-profile-interests`, `ipad/04` to `08`, `iphone-ax5/07-profile-expenses`):
+
+- **Quick facts in the app too.** Quick facts restates type, party, jurisdiction, chamber and representation right under the header. On iPad it becomes a right-hand column.
+- **No failed-block hole in the app.** Topics, news and mentions are now on-demand rows ("Show topics", "Show news", "Show mentions"); the web still leaves the hole.
+- **Interests say 28 twice:** "28 / Declared entries / 28 in the statement of interests", above two OCR caveat lines.
+- **Self-titled block:** "Party receipts" opens with a row also called "Party receipts".
+- **Provenance pairs.** Every block still ends in an "Updated … · View original" pair; at AX5 that pair takes three lines.
+- **iPad foot:** a visible "End of profile" caption and a "Public record on opax.com.au" link close the page.
+
 - **Keep:**
   - portrait (blank circle when missing), name, party dot and name, electorate link, Follow;
   - the record blocks in their order;
@@ -256,12 +278,18 @@ Web counts:
   - the uppercase "PARLIAMENTARIAN" kicker;
   - icon tiles on rows;
   - per-section ⓘ;
+  - the doubled count in Declared interests, and the "Party receipts" row under the "Party receipts" heading;
   - the visible "End of profile" text. Keep its testID as a hidden view: `review-pages.yaml` scrolls until it appears.
 - See [concept 2](review-2026-10/concepts/02-mp-profile.png).
 
 **Your MP (app).**
 
 - Counts: 8 to 9 sections over 6 accent keys; 7 to 8 as-at lines each paired with a "View original" (6); 3 ⓘ; three stacked titles (large title "Your MP", kicker "Your electorate", H1 seat).
+- **Build 32** (`iphone/02-your-mp-chooser`, `iphone/03-your-mp-chosen`, `ipad/02`, `ipad/03`):
+  - the three stacked titles are confirmed;
+  - a new "Grants in this seat" block ($1bn display figure, ⓘ, "Updated 21 Sep 2026", "See all", "Public money") sits between the electorate and your member;
+  - the chooser carries two explanatory paragraphs. The location one is a privacy disclosure and stays; the "Your choice is saved on this device" paragraph moves to the field's footer or Account;
+  - on iPad both states run the full landscape width (lines of about 1,000 pt) instead of the readable column.
 - **Keep:** the seat, your member, your senators, recent votes, the seat's money.
 - **Merge or demote:**
   - the large title stays and the seat becomes the H1;
@@ -289,6 +317,12 @@ Web counts:
 - Quick facts with four buttons;
 - "Where it came from" and "Largest creditors" boxed inside sections;
 - 27 rows of three-part receipt bars, each with "% not itemised".
+
+**Build 32** (`iphone/09-party`, `ipad/09-party`):
+
+- It confirms the Follow capsule inside the party-wash hero card, and the "Ask about this" row under it.
+- Members shows a display figure with two dates: "Roster as at 4 Sep 2026", then "Updated 9 Sep 2026".
+- On iPad, Party receipts sets the total ($1,120,198,704) and every "Where it came from" amount in money-green figures. Only the total should take the accent.
 
 - **Keep:**
   - received total and rank, where it came from, receipts by year, debts, members, divisions;
@@ -320,6 +354,15 @@ Web counts:
 - 77 rules, 15 font sizes, 181 small-text elements;
 - 12 census figures in display serif.
 
+**Build 32** (`iphone/10-electorate`, `ipad/10-electorate`). The app adds:
+
+- an "Electorate" kicker, Follow and an "Ask about this" row;
+- the "Grants in this seat" block;
+- "View on a date / Latest check" as its own section with an ⓘ;
+- the outline in a sunken frame, with its captions and "View original".
+
+Treat the grants block as on Your MP. "View on a date" joins representation history, as proposed for the web.
+
 - **Keep:** current representation with its verified-as-at date, the election timeline, history, census context, the outline.
 - **Merge or demote:**
   - "View representation on a date" moves into Representation history as an "On a date" control;
@@ -334,6 +377,10 @@ Web counts:
 - **Keep:** status, title, chamber, introduced date, portfolio; filters.
 - **Merge or demote:** "as at" appears once, in the list's source line, not per row; web party abbreviations ("● LIB") become dot plus name in sentence case.
 - **Remove:** the ⓘ beside the count (its note joins the source sheet).
+- **Build 32** (`iphone/11-bills-list`, `ipad/11-bills-list`):
+  - confirms "as at 17 Sep 2026" on every row and the ⓘ beside the count;
+  - adds a "Division history" row with an icon tile above the list;
+  - on iPad the detail pane says "No bill selected · 2,989 bills" until a row is picked. Select the first bill instead.
 
 **Bill (app; web `/bill/<key>`).**
 
@@ -355,6 +402,14 @@ Web counts:
 - 5 fine-print paragraphs;
 - division titles taken from raw Hansard, with amendments and whole speeches printed above the bars.
 
+**Build 32** (`iphone/12-bill-top`, `13-bill-divisions`, `14-bill-sponsor`, `ipad/12` to `14`, `android/12-bill-top`):
+
+- **Header.** The app shows a teal "Bill" kicker, "Lapsed, as at 5 September 2023", Follow and an "Introduced …" line. A "Sponsor" label sits over a PersonRow with a filled "IND" chip, then "Ask about this" and "Read the bill text" as rows with icon tiles.
+- **Empty In short.** With no summary, In short draws an icon, "No summary yet." and a three-line paragraph explaining why. One sentence is enough.
+- **App divisions are raw too.** The title reads "s - Offshore Petroleum and Greenhouse Gas Storage Amendment (Stop Pep11 and Protect Our Coast) Bill 2023...", with a stray "s -" prefix and a truncation ellipsis. The same text repeats as the description ("… Bill 2023 - Consider bill now"). D5 applies to the app as well as the web.
+- **Foot.** The page closes with an "Original records" section (Explanatory memorandum, Bill home) and "This bill on opax.com.au".
+- **Android Follow.** Android's bill Follow is a plain "Follow" pill, while the profile's reads "+ Follow". One toggle Button fixes it.
+
 - **Keep:** status word with date, title, In short with its machine label, stage history, every division with party splits, What was said, What became law; "Sponsor not recorded" as a distinct state, said once.
 - **Merge or demote:**
   - meta lines become one;
@@ -374,6 +429,11 @@ Web counts:
 - **Keep:** outcome, counts, date, chamber, party splits, member lists, the count's original.
 - **Merge or demote:** titled by stage, as on the bill; the bill appears as a link row under the title.
 - **Remove:** the lone ⓘ; raw error strings (use the error state's sentence).
+- **Build 32, division history** (`iphone/15-division-history`, `ipad/15-division-history`):
+  - The list header holds four provenance marks before the first row: a field, "3,871 division records · newest first" with an ⓘ, "All bill files loaded" and "Updated 30 Sep 2026".
+  - Then every row carries an icon tile **and its own ⓘ**.
+  - **Remove:** the per-row ⓘ (one source line for the list), the row icon tiles, and "All bill files loaded" (a loading state, not a caption).
+  - **Layout bug:** on iPad landscape the list runs underneath the persistent sidebar, so titles start mid-word ("…ence Organisation Amendment Bill (No. 2) 2025"). That is a fix for the iPad lane (pass 4E), not a design change.
 
 ### Research
 
@@ -405,6 +465,13 @@ Web:
   - Copy link and Export go to ⋯;
   - "Matches by year" becomes the year facet inside Filters.
 - **Remove:** "Read matching record"; the icon tile and ⓘ on the heading; built titles like "Name — Kind — ISO date".
+- **Build 32** (`iphone/16` to `20`, `ipad/16` to `20`, `android/18-search-passages`):
+  - **Plural bug.** The count reads **"1 matches"**. It goes away when the count becomes "1 record".
+  - **Titles and passages.** The result title is still "Don Farrell — Bills — 2023-03-06". The fixture passage runs words together ("part of theSafer and More Affordable Housingmeasure"). Builds 30 and 32 fixed run-together words in Ask sources; check search passages against production before blaming the fixture.
+  - **Kind picker.** It is an action sheet of ten stacked pill buttons (People, Declared interests, Pay, Expenses, Records, Political parties, Government agencies, Grants, Bills, Research reports) plus Cancel. Make it a plain list sheet with a check mark, or a Records / People segmented control with the other kinds in Filters.
+  - **Idle screen.** It ends with a helper line ("Bill searches use the saved bill titles in Bills.") and "Refresh suggestions". Drop the helper line.
+  - **Share search** still sits above the results (visible on iPad).
+  - **iPad results.** They fill a narrow list column while the detail pane says "Nothing open" across two thirds of the screen. Open the first result, or let the results use the wide pane until one is picked.
 - See [concept 4](review-2026-10/concepts/04-search.png).
 
 **Record reader (app `doc/<slug>`; web `/doc/<slug>`).**
@@ -413,19 +480,21 @@ Web:
 - **Keep:** the record text in Merriweather, the speaker as a PersonRow, date and chamber, the original, Cite.
 - **Merge or demote:**
   - Cite, Copy link and Share go to one ⋯;
-  - In brief keeps only the pill;
+  - In brief keeps only the pill (done in build 32: `iphone/24-records-reader` shows the Machine summary pill alone);
   - "View original" becomes the source line.
 - **Remove:** the kicker; the duplicate action implementation. Web reader not captured (gap).
 
 **Ask (app; web `/ask`).**
 
-App answer counts:
+App answer, build 32 (`iphone/22-ask-answer`, `ipad/22` and `23`, `android/22-ask-answer`):
 
-- Retrieved records, Dates in the record, "Viewed 8 Oct 2026" and Share answer above the question;
-- the question shown twice when rewritten;
-- an "Answer" heading with icon tile and ⓘ;
-- the machine sentence, with no pill;
-- two Composers bound to one draft.
+- **Fixed since the build 21 capture:** the question is now the heading, and the Machine-written pill replaces the sentence.
+- **Still there:**
+  - "Start a new conversation" as a link under the bar;
+  - an "Answer" heading with its own ⓘ;
+  - five utility rows after a two-sentence answer: From the record, Retrieved records, Dates in the record, "Viewed 9 Oct 2026", Share answer.
+- **In code:** two Composers bound to one draft.
+- **iPad:** the sources pane works well (cited, then "Also retrieved, not cited"). At idle, though, it shows "Sources appear here" across half the screen, and portrait idle has no title.
 
 Web idle counts:
 
@@ -436,7 +505,8 @@ Web idle counts:
 
 - **Keep:** question, answer, citations, machine label, sources, people named, follow-ups, Understood-as (one line, only when rewritten).
 - **Merge or demote:**
-  - utility rows come after the answer, as one Sources row plus ⋯;
+  - the five utility rows become one Sources row plus ⋯, and "Start a new conversation" moves to ⋯;
+  - the iPad idle pane shows conversations or sample questions instead of a placeholder;
   - the web builder is closed by default, as on the home page;
   - samples become plain links.
 - **Remove:** the Answer heading; the second composer; the "Try a question" label; the floating pill.
@@ -445,6 +515,7 @@ Web idle counts:
 **Talk (app).** Already light, and Jake's direction ("minimal, animated") is met.
 
 - **Keep:** the orb, captions, three call controls.
+- **Build 32** (`iphone/34-talk-idle`): idle is the orb, "Voice needs a free OPAX account.", Sign in and the age line. Nothing to cut.
 - **Merge or demote:** none.
 - **Remove:**
   - `CallControls`' own hex colours (pressed red `#86191F` becomes `dangerPressed`; `VoiceOrb`'s rgba re-spellings become tokens);
@@ -473,6 +544,12 @@ Web counts:
   - the subtitle and stats become one meta line;
   - the per-row source moves to the node page.
 - **Remove:** the repeated per-row "View original" and caption; the duplicated palettes (one `chart.industry` token set).
+- **Build 32 on iPad** (`ipad/29-money-map`):
+  - the map opens full screen without the sidebar;
+  - the 3D map / List view control stretches across the whole width;
+  - the network sits small in the middle of an empty canvas, with "Fit map" in a corner.
+
+  Cap the control's width and fit the map to the canvas on open.
 
 **Public money hub (app).** 4 sections holding 8 rows whose `accent="money"` draws nothing, and a "Programs & places" section whose only row is "Programs & places".
 
@@ -512,6 +589,7 @@ Web counts:
 - Web: clean cards with icons.
 - **Merge or demote:** one "Updated" line for the set.
 - **Remove:** the self-titled section.
+- **Build 32** (`iphone/27-reports-list`): confirms the self-titled "Reports" section and "Updated 9 September 2026" in every row. On iPad the list ends with a stray "Date not published" caption.
 
 **Report page (app; web `/reports/<slug>`).**
 
@@ -536,10 +614,11 @@ Web counts:
   - section share goes to ⋯;
   - the three views become a sticky segmented control.
 - **Remove:** the duplicate title; per-section pills; capsule topic chips (they become Tags).
+- **Build 32** (`iphone/28-report`): confirms the duplicate title (bar and H1) and "Citation 1", "Citation 2" capsules between paragraphs. Then come "Read more", a Machine-written pill and, on iPad, "Records for this opening: 4 cited, 0 more retrieved".
 
 **Explore (app hub and tools; web modules).**
 
-- The hub is light (6 rows). The tools are games and keep their own layouts, but their chrome adopts the shared buttons: Matrix draws about 85 to 105 small default buttons.
+- The hub is light: 6 rows under one line (build 32, `iphone/25-explore`). The tools are games and keep their own layouts, but their chrome adopts the shared buttons: Matrix draws about 85 to 105 small default buttons.
 - The web modules carry the heaviest dialects (timemachine 127 and grants 124 token fallbacks; quiz fallbacks that disagree with the tokens). Pass 4 moves their CSS to tokens without fallbacks.
 
 ### Account, about and the rest
@@ -553,6 +632,11 @@ Web counts:
   - the self-titled sections;
   - About's accent marks;
   - "End of sources and licences" (keep it as a hidden testID).
+- **Build 32** (`iphone/31-account` to `33-sources-licences`, `ipad/31` to `33`):
+  - **Account sheet.** It now holds Account, Community, and an About OPAX section (subtitle, paragraph, independence paragraph) followed by an "About OPAX" row, so the repeat remains.
+  - **Independence statement.** It appears on Today, in the Account sheet, on About and in the tour. Keep it in the tour and About only (D4).
+  - **Coverage figures.** About now carries them (691,104 collected speeches; 728,769 expected resources), the same job as Today's coverage block, which supports removing that block.
+  - **Development row.** The e2e build's Account sheet lists "Development › Design workbench". Confirm release builds hide it.
 
 **Web About.** 15,199 px at 390 in one column of prose. Keep the prose; add an "On this page" index at regular width; 78 rules at 1280 become section rules only.
 
@@ -574,6 +658,9 @@ Web counts:
   - signed out shows one sign-in prompt instead of six walls;
   - the web uses the OPAX masthead with a Community sub-navigation.
 - **Remove:** the raw error banner; "Opax" (use "OPAX", per `IOS-UX.md` §6).
+- **Build 32** (`iphone/26-community`):
+  - signed out, the home shows fixture discussions with blank circles, Latest / Following / Saved chips, a search bar, Previous / Next pills and "Your community" rows;
+  - on iPad a lone "Refresh" pill closes the page. Pull-to-refresh replaces it.
 
 **Follows (app).** 36 pt icon badges per follow, plus a quiet "Unfollow" per row.
 
@@ -583,22 +670,43 @@ Web counts:
 **Welcome tour.**
 
 - **Keep:** "Example" labels (non-negotiable), one idea per page, Skip.
-- Check the b31 iPad redesign and the b32 "Back unseen on page 1" fix tomorrow (no surviving capture).
+- **Build 32** (`iphone/35-tour-page-1`, `ipad/35-tour-page-1`):
+  - page 1 is clean;
+  - the iPad tour's mock front page carries its "Example" label and example records, so the non-negotiable holds;
+  - pages 2 to 5 are not in the baseline.
 
 ### iPad and Android notes
 
-- **iPad.** Today's broadsheet stacks the busiest version of Today:
-  - navy edition, navy Leads card, green Money map card, a Following card and a Public money row;
-  - bill cards with a navy top rule.
+**iPad** (35 landscape and 6 portrait captures in the baseline):
 
-  Apply the Today concept with a rail. Elsewhere:
-  - `SplitEmpty` and `EmptyState` become one component with a size;
-  - split rows keep `SelectedMark`.
-- **Android.**
-  - Same screens and the same simplifications.
-  - It has no Increase Contrast, because the palette falls back to plain hex; pass 4 checks the Android "high contrast text" setting against the HC roles.
-  - 48 dp targets are already in tokens.
-  - Community and Talk are web hand-offs or unavailable, so their screens stay minimal.
+- **Today.** The broadsheet shows the busiest version of Today:
+  - a navy edition with its five-stop timeline and an "Open the bill" primary;
+  - a rail of a helper-text Following card, a Public money row, the navy Leads card and the green Money map card;
+  - bills as cards with a navy top rule.
+
+  Apply concept 1 with a rail holding Following (only when it has content) and the tile grid.
+- **Splits.** Bills, search, directories and Ask sources work as splits, but their empty panes waste the screen:
+  - "No bill selected";
+  - "Nothing open" next to a full results list;
+  - "No parliamentarian selected";
+  - "Sources appear here" at Ask idle.
+
+  Select the first item, or give the list the space until something is picked. `SplitEmpty` and `EmptyState` become one component with a size.
+- **Readable width** is missing on Your MP (chooser and chosen) and on the money map: lines and controls run about 1,000 pt wide.
+- **Bug.** Division history in landscape runs underneath the sidebar (`ipad/15-division-history`).
+- **Portrait** switches to the floating top tab bar; Ask's portrait idle has no title.
+- **Two columns.** Profile, party and electorate use them well. Quick facts becomes the right-hand column on the profile, which is exactly the duplication to remove.
+
+**Android** (8 captures on `OPAX_API34`):
+
+- **Same content.** The screens sit under a Material top bar with text actions ("Account", "Share") and a bottom navigation bar. Content and its problems match iPhone:
+  - the uppercase date and edition label;
+  - raw search titles and "1 matches";
+  - Ask's five utility rows.
+- **Follow.** The bill Follow lacks the "+" that the profile Follow has; one toggle Button fixes it.
+- **Increase Contrast.** Android has none, because the palette falls back to plain hex. Pass 4 checks the Android "high contrast text" setting against the HC roles.
+- **Targets.** 48 dp targets are already in tokens.
+- **Hand-offs.** Community and Talk are web hand-offs or unavailable, so their screens stay minimal.
 
 ### Web chrome
 
@@ -695,11 +803,20 @@ The full map is in `design-tokens.json` under `$deprecated`. Headlines:
 
 Wireframes on the proposed tokens. Each board numbers the problems on the current screen and maps them to Keep, Merge or demote, and Remove. The HTML sources in `concepts/` render with the repo's own fonts and `wire.css`, so later passes can edit them.
 
+**Which captures the boards use:**
+
+- **Board 5** uses the build 32 baseline.
+- **Boards 1 to 4** use older captures (builds 11 to 17). The build 32 baseline shows the same problems on those screens, with the additions listed in section 4. The build 32 pairs to compare against are:
+  - Today: `baseline/iphone/01-today`;
+  - MP profile: `iphone/04-profile-top`;
+  - bill: `iphone/12-bill-top` and `13-bill-divisions`;
+  - search: `iphone/18-search-passages`.
+
 1. [Today, iPhone](review-2026-10/concepts/01-today.png): 14 blocks become 6; one colour moment; the tile grid.
 2. [MP profile, iPhone and web](review-2026-10/concepts/02-mp-profile.png): identity once; a three-figure strip or "On this page" rail; one source line per block.
 3. [Bill, iPhone and web divisions](review-2026-10/concepts/03-bill.png): two actions; the stage ruler; divisions titled by stage, with the question behind a disclosure.
 4. [Search results, iPhone and web mobile](review-2026-10/concepts/04-search.png): the first result on the first screen.
-5. [Ask answer, iPhone](review-2026-10/concepts/05-ask.png): the question is the heading; the utility rows follow the answer.
+5. [Ask answer, iPhone, before = build 32](review-2026-10/concepts/05-ask.png): the "Answer" heading, its ⓘ and five utility rows become one Sources row.
 6. [Web home, 1280 px](review-2026-10/concepts/06-web-home.png): 10 blocks become 5, with one primary button.
 
 ![Concept 1: Today](review-2026-10/concepts/01-today.png)
@@ -727,6 +844,9 @@ Wireframes on the proposed tokens. Each board numbers the problems on the curren
   - one AX5 screenshot per screen;
   - before/after captures.
 - Device work queues into the day's single block, announced to the other program sharing the Mac at least an hour ahead.
+- **The before set is the build 32 baseline.**
+  - Each pass 3 and pass 4 lane re-captures its screens with the same file names and states (the full list is `baseline-full/MANIFEST.md`), so before and after pair one to one.
+  - The after shots for the curated screens replace nothing: they land beside `baseline/` as `after-<pass>/` with the same names, at 900 px with portraits masked.
 
 ### Pass 2: tokens and shared components
 
@@ -762,7 +882,7 @@ These run in parallel, one lane per feature folder:
 | **4B Reports and Explore** | `reports/*`, `ReportPage`, topics, `explore/*` |
 | **4C Feeds** | `leads/*`, `declarations/*`, `follows/*` |
 | **4D Edges** | `talk/*`, `account/*`, `About.tsx`, `sources/*`, `community/*`, the welcome tour |
-| **4E iPad** | regular-width variants and `split.tsx` consumers, after 4A–4D |
+| **4E iPad** | regular-width variants and `split.tsx` consumers, after 4A–4D, including the division-history sidebar bug, the empty split panes, and the readable width on Your MP and the money map |
 | **4F Android parity** | Android branches; high-contrast text check |
 | **4G Web remaining** | party, electorate, money chrome (the CSS-in-JS in `graph/*.ts`), reports, community (`community.css`), about, division, bills list, explore modules (14 CSS-in-JS blocks to tokens without fallbacks) |
 
@@ -778,9 +898,26 @@ These run in parallel, one lane per feature folder:
 - **Jake's feedback:** TestFlight feedback (`tf-feedback.py`) feeds the same queue.
 - **Exit:** every screen meets the seven principles, with no new token bypasses (the web hex-literal test and the app `light.*` lint).
 
-## 8. Tomorrow's device capture list
+## 8. Device capture list
 
-**Purpose:** fill the section 3 gaps on current code, and become the "before" set for passes 2 and 3.
+**Status, 10 Oct.** The build 32 baseline (98 captures) covered most of this list on iPhone and iPad. Android ran on `OPAX_API34`, not `Pixel_API36`.
+
+| Screens | Coverage |
+|---|---|
+| 1 (page 1 only), 2, 4, 5, 6, 7, 8 (list only), 9, 10 (history; the focused section via `13-bill-divisions`), 11 (no people results), 12 (reader only), 13 (no stages), 14, 15 (3D only), 17, 21, 22 (hub only), 23, 24 (people) | iPhone and iPad |
+| 2, 5, 9, 11 and 13 | iPhone AX5 |
+| 2, 5, 9, 11, 13 and 24 | Android |
+
+**Still to capture in the next block:**
+
+- iPhone:
+  - rows 3, 16, 18, 19, 20 and 25;
+  - the Filters sheet (8), people results (11), Cite (12), Ask stages (13), money list mode (15), the quiz (22);
+  - tour pages 2 to 5.
+- iPhone AX5: rows 4, 6, 7, 8, 10, 14, 17 and 21, and the kind sheet.
+- Android: rows 4, 6, 7, 8, 10, 15, 17, 19 and 21.
+
+**Purpose:** fill the section 3 gaps on current code; these captures complete the "before" set for passes 3 and 4.
 
 **Build and data:**
 
@@ -799,7 +936,7 @@ These run in parallel, one lane per feature folder:
 |---|---|
 | iPhone 17 Pro, iOS 26.5 (`26CF02F0`) | reference: standard text (Large) and AX5 |
 | OPAX QA iPad 13 (`C6B3765F`), iOS 26.5 | full screen, not windowed; portrait and landscape |
-| Android emulator `Pixel_API36` | font scale 1.0 and 2.0 |
+| Android emulator `OPAX_API34` (used for the baseline) | font scale 1.0 and 2.0 |
 
 ### Screens
 
@@ -852,6 +989,7 @@ That is about **85 minutes**. Ask for one 90-minute block in the shared device s
 - **App Store.** The independence line moves, but it stays in the tour and About, and the app still never looks like a government app (`IOS-UX.md` §8).
 - **Capsules on the web (D1)** change the broadsheet feel. The fallback is 4-radius everywhere, with the app reverting its capsules.
 - **The iPad** ships only in TestFlight builds. Any Today change must keep the iPhone layout identical where the iPad lanes promised it.
+- **Baseline portraits.** The baseline is not portrait-free: official portraits appear in the profile, Your MP, search suggestion, directory and electorate captures. The three committed files that show one are masked. Anything else copied from `baseline-full/` into the repo needs the same treatment.
 
 ## Appendix A: web census (local render, main `a3aa6532`)
 
