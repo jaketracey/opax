@@ -56,6 +56,7 @@ from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import roster_identity  # noqa: E402
+from bills_registry.bills_stages import BILL_STAGE_ORDER  # noqa: E402,F401 -- shared export vocabulary
 
 DB_PATH = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")
 DB_URI = f"file:{DB_PATH}?mode=ro"

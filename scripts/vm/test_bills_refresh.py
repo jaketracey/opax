@@ -3,11 +3,13 @@
 No production DB, network, APH or KB is used. Stub call records contain operation
 names only; failures never print process command lines or arguments.
 """
-from datetime import date, timedelta
+import copy
+from datetime import datetime
 import json
 import os
 from pathlib import Path
 import shutil
+import sqlite3
 import subprocess
 import sys
 import tempfile
@@ -16,6 +18,19 @@ import unittest
 from scripts.vm import bills_guard
 
 ROOT = Path(__file__).resolve().parents[2]
+DEGRADED_PAGE = ROOT / "tests/fixtures/bills-nightly/degraded-page.json"
+CADENCE_TABLE = (
+    ("2026-10-12", "skip"), ("2026-10-13", "after-sitting"), ("2026-10-14", "after-sitting"),
+    ("2026-10-15", "after-sitting"), ("2026-10-16", "after-sitting"), ("2026-10-17", "skip"),
+    ("2026-10-26", "skip"), ("2026-10-27", "after-sitting"), ("2026-10-28", "after-sitting"),
+    ("2026-10-29", "after-sitting"), ("2026-10-30", "after-sitting"), ("2026-10-31", "skip"),
+    ("2026-11-16", "skip"), ("2026-11-17", "after-sitting"), ("2026-11-18", "after-sitting"),
+    ("2026-11-19", "after-sitting"), ("2026-11-20", "after-sitting"), ("2026-11-21", "skip"),
+    ("2026-11-23", "skip"), ("2026-11-24", "after-sitting"), ("2026-11-25", "after-sitting"),
+    ("2026-11-26", "after-sitting"), ("2026-11-27", "after-sitting"), ("2026-11-28", "skip"),
+    ("2026-10-11", "weekly"), ("2026-10-18", "weekly"), ("2026-11-01", "weekly"),
+    ("2026-11-22", "weekly"), ("2026-11-29", "weekly"),
+)
 
 STUB = r'''
 import json, os
@@ -57,6 +72,13 @@ if mode == "index_vanish":
     index["bills"].pop()
     index["bills"].append({"key": "au-federal-t3"})
     (out / "au-federal-t3.json").write_text(json.dumps({"key": "au-federal-t3"}))
+if mode == "degraded":
+    doc = json.loads(Path(os.environ["BILL_TEST_DEGRADED_PAGE"]).read_text())["degraded_export"]
+    (out / "au-federal-t1.json").write_text(json.dumps(doc, indent=1) + "\n")
+    index["bills"][0].update(status=doc["status"], status_as_of=doc["status_as_of"])
+    other = json.loads((out / "au-federal-t2.json").read_text())
+    other["sponsor_person_id"] = "456"
+    (out / "au-federal-t2.json").write_text(json.dumps(other, indent=1) + "\n")
 if mode in ("ok", "brief_fail", "export_fail", "fill_fail"):
     doc = json.loads((out / "au-federal-t1.json").read_text())
     doc["sponsor_person_id"] = "123"
@@ -82,6 +104,7 @@ RESULT_SUMMARY=""
 log() { printf '%s\n' "$*"; }
 run() { "$@"; }
 fail() { FAILURES+=("$*"); log "FAIL: $*"; }
+warn() { log "WARN: $*"; }
 revert() {
   BILLS_REFRESH_OK=0
   git checkout -q HEAD -- "$@"
@@ -101,20 +124,86 @@ bills_refresh_complete
 
 
 class CadenceTests(unittest.TestCase):
-    def test_every_supplied_sitting_date_and_its_boundaries(self):
-        for start, end in bills_guard.SITTING_RANGES:
-            day, last = date.fromisoformat(start), date.fromisoformat(end)
-            while day <= last:
-                self.assertEqual(bills_guard.cadence(day.isoformat()), "sitting")
-                day += timedelta(days=1)
-            self.assertEqual(bills_guard.cadence(day.isoformat()), "skip")
-            self.assertEqual(bills_guard.cadence((date.fromisoformat(start) - timedelta(days=1)).isoformat()), "weekly")
+    def test_every_refresh_date_and_boundary_at_0315_sydney(self):
+        for day, expected in CADENCE_TABLE:
+            with self.subTest(day=day):
+                self.assertEqual(bills_guard.cadence(day), expected)
+                local = datetime.fromisoformat(day + "T03:15:00+11:00")
+                self.assertEqual(bills_guard.cadence(local.astimezone(bills_guard.ZoneInfo("UTC"))), expected)
+
+    def test_sydney_dates_across_both_daylight_saving_transitions(self):
+        cases = (
+            ("2026-04-03T16:15:00+00:00", "2026-04-04T03:15:00+11:00", "skip"),
+            ("2026-04-04T17:15:00+00:00", "2026-04-05T03:15:00+10:00", "weekly"),
+            ("2026-10-02T17:15:00+00:00", "2026-10-03T03:15:00+10:00", "skip"),
+            ("2026-10-03T16:15:00+00:00", "2026-10-04T03:15:00+11:00", "weekly"),
+            ("2026-10-04T16:15:00+00:00", "2026-10-05T03:15:00+11:00", "skip"),
+        )
+        for utc, local, expected in cases:
+            with self.subTest(utc=utc):
+                instant = datetime.fromisoformat(utc)
+                self.assertEqual(instant.astimezone(bills_guard.SYDNEY).isoformat(), local)
+                self.assertEqual(bills_guard.cadence(instant), expected)
 
     def test_sunday_otherwise_and_unknown_year(self):
         for day in ("2026-10-11", "2026-12-27", "2027-01-03"):
             self.assertEqual(bills_guard.cadence(day), "weekly")
         self.assertEqual(bills_guard.cadence("2026-10-10"), "skip")
         self.assertEqual(bills_guard.cadence("2026-10-10", True), "catch-up")
+
+
+class RegressionTests(unittest.TestCase):
+    def test_degraded_page_reproduction_keeps_events_but_regresses_status(self):
+        # Execute the real parser/upsert/export row read on an in-memory fixture DB.
+        sys.path.insert(0, str(ROOT / "scripts/bills_registry"))
+        import bills_fetch
+        import bills_schema
+        from scripts import export_bills
+        fixture = json.loads(DEGRADED_PAGE.read_text())
+        with sqlite3.connect(":memory:") as db:
+            db.row_factory = sqlite3.Row
+            for ddl in bills_schema.DDL:
+                db.execute(ddl)
+            def load(html):
+                bills_fetch.upsert(db, bills_fetch.parse_billhome(html, "t1"), fixture["listing"], "fixture")
+                return export_bills.load_v2_bills(db)[0]
+            previous = load(fixture["last_good_html"])
+            degraded = load(fixture["degraded_html"])
+        self.assertEqual(export_bills.BILL_STAGE_ORDER, bills_guard.BILL_STAGE_ORDER)
+        self.assertEqual(previous["status"], "passed")
+        self.assertEqual(previous["status_as_of"], "2026-10-09")
+        self.assertEqual(degraded["status"], "before_parliament")
+        self.assertEqual(degraded["status_as_of"], "2026-10-01")
+        self.assertEqual(previous["key_dates"], degraded["key_dates"])
+        reasons = bills_guard.regressions(previous, degraded)
+        self.assertTrue(any("status_as_of went backwards" in reason for reason in reasons))
+        self.assertTrue(any("status went backwards" in reason for reason in reasons))
+
+    def test_every_lifecycle_step_refuses_a_backwards_status(self):
+        statuses = ("before_parliament", "introduced", "passed_one_house", "passed_both", "royal_assent")
+        for old, new in zip(statuses[1:], statuses):
+            with self.subTest(old=old, new=new):
+                self.assertIn("bill lifecycle went backwards", bills_guard.regressions({"status": old}, {"status": new}))
+        for status in ("assented", "lapsed", "rejected", "withdrawn"):
+            with self.subTest(terminal=status):
+                self.assertTrue(bills_guard.regressions({"status": status}, {"status": "before_parliament"}))
+
+    def test_stage_dates_and_removed_history_hold_but_second_house_progress_passes(self):
+        old = {"status": "introduced", "key_dates": [{"stage": "introduced", "date": "2026-10-01", "house": "representatives"},
+            {"stage": "third_reading", "date": "2026-10-09", "house": "representatives"}], "divisions": [{"key": "division-1"}]}
+        earlier = copy.deepcopy(old)
+        earlier["key_dates"][-1]["date"] = "2026-10-08"
+        self.assertTrue(any("latest stage date went backwards" in r for r in bills_guard.regressions(old, earlier)))
+        removed = copy.deepcopy(old)
+        removed["key_dates"].pop(); removed["divisions"] = []
+        self.assertIn("1 recorded stages removed", bills_guard.regressions(old, removed))
+        self.assertIn("1 divisions removed", bills_guard.regressions(old, removed))
+        forward = copy.deepcopy(old)
+        forward["key_dates"].append({"stage": "second_reading", "date": "2026-10-10", "house": "senate"})
+        self.assertEqual(bills_guard.regressions(old, forward), [])
+        duplicate = copy.deepcopy(old)
+        duplicate["key_dates"].append(copy.deepcopy(old["key_dates"][-1]))
+        self.assertEqual(bills_guard.regressions(duplicate, old), ["1 recorded stages removed"])
 
 
 class BillStepTests(unittest.TestCase):
@@ -126,12 +215,15 @@ class BillStepTests(unittest.TestCase):
         self.env = {k: v for k, v in os.environ.items() if not k.startswith(("OPAX_", "GIT_", "BILL_TEST_"))}
         self.env.update(HOME=str(Path(temp.name) / "home"), OPAX_TODAY="2026-10-10",
                         OPAX_SYNC_KB="1", OPAX_DB="must-not-use-inherited-db",
+                        PYTHONDONTWRITEBYTECODE="1",
                         BILL_TEST_PYTHON=sys.executable, BILL_TEST_CALLS=str(Path(temp.name) / "calls"),
+                        BILL_TEST_DEGRADED_PAGE=str(DEGRADED_PAGE),
                         GIT_AUTHOR_NAME="test", GIT_COMMITTER_NAME="test",
                         GIT_AUTHOR_EMAIL="test@example.test", GIT_COMMITTER_EMAIL="test@example.test")
         Path(self.env["HOME"]).mkdir()
         for name in ("scripts/vm/bills_refresh.sh", "scripts/vm/bills_guard.py",
-                     "scripts/vm/keep_if_unchanged.py", "scripts/refresh_bills.sh", "scripts/verify_bill_briefs.py"):
+                     "scripts/vm/keep_if_unchanged.py", "scripts/refresh_bills.sh", "scripts/verify_bill_briefs.py",
+                     "scripts/bills_registry/bills_stages.py"):
             dest = self.repo / name
             dest.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / name, dest)
@@ -198,14 +290,14 @@ class BillStepTests(unittest.TestCase):
 
     def test_calendar_runs_sitting_days_and_sundays_but_skips_other_days(self):
         self.initialized()
-        for day, reason in (("2026-10-12", "sitting"), ("2026-10-18", "weekly")):
+        for day, reason in (("2026-10-13", "after-sitting"), ("2026-10-18", "weekly")):
             with self.subTest(day=day):
                 rc, output = self.run_step("quiet", OPAX_TODAY=day, OPAX_BILL_PARLIAMENT="49")
                 self.assertEqual(rc, 0)
                 self.assertIn(f"({reason}, parliament 49)", output)
-        rc, output = self.run_step("quiet", OPAX_TODAY="2026-10-16")
+        rc, output = self.run_step("quiet", OPAX_TODAY="2026-10-12")
         self.assertEqual(rc, 0)
-        self.assertIn("non-sitting", output)
+        self.assertIn("yesterday was not a sitting day", output)
         self.assertEqual(self.calls(), ["fetch", "export", "fill", "fetch", "export", "fill", "fill"])
 
     def test_keep_if_unchanged_preserves_head_bytes(self):
@@ -263,6 +355,64 @@ class BillStepTests(unittest.TestCase):
         self.assertEqual(rc, 0)
         self.assertIn("fill-briefs exited non-zero", output)
         self.assertFalse(self.pending.exists())
+
+    def seed_regression_fixture(self, count=50, regressed=1):
+        fixture = json.loads(DEGRADED_PAGE.read_text())
+        index = {"count": count, "bills": []}
+        for n in range(1, count + 1):
+            key = f"au-federal-t{n}"
+            doc = {**fixture["head"], "key": key}
+            (self.bills / f"{key}.json").write_text(json.dumps(doc, indent=1) + "\n")
+            index["bills"].append({"key": key, "status": doc["status"], "status_as_of": doc["status_as_of"]})
+        (self.bills / "index.json").write_text(json.dumps(index, indent=1) + "\n")
+        self.git("add", bills_guard.BILLS)
+        if self.git("diff", "--cached", "--name-only").strip():
+            self.git("commit", "-qm", "review fixture baseline")
+        for n in range(1, regressed + 1):
+            key = f"au-federal-t{n}"
+            doc = {**fixture["degraded_export"], "key": key}
+            (self.bills / f"{key}.json").write_text(json.dumps(doc, indent=1) + "\n")
+            index["bills"][n - 1].update(status=doc["status"], status_as_of=doc["status_as_of"])
+        (self.bills / "index.json").write_text(json.dumps(index, indent=1) + "\n")
+
+    def test_isolated_degraded_bill_and_index_row_are_held_while_good_bills_publish(self):
+        self.seed_regression_fixture(regressed=0)
+        old_doc = (self.bills / "au-federal-t1.json").read_bytes()
+        old_row = json.loads((self.bills / "index.json").read_text())["bills"][0]
+        rc, output = self.run_step("degraded")
+        self.assertEqual(rc, 0)
+        self.assertIn("HELD bill au-federal-t1", output)
+        self.assertIn("status_as_of went backwards (2026-10-09 -> 2026-10-01)", output)
+        self.assertEqual((self.bills / "au-federal-t1.json").read_bytes(), old_doc)
+        rows = {r["key"]: r for r in json.loads((self.bills / "index.json").read_text())["bills"]}
+        self.assertEqual(rows["au-federal-t1"], old_row)
+        self.assertEqual(json.loads((self.bills / "au-federal-t2.json").read_text())["sponsor_person_id"], "456")
+        self.assertIn("0 new, 1 changed, 0 titles filled, 1 sponsor IDs filled", output)
+        self.assertFalse(self.pending.exists())
+
+    def test_thresholds_allow_exact_limits_and_refuse_above_either(self):
+        for count, held, accepted in ((50, 1, True), (50, 2, False), (300, 5, True), (300, 6, False)):
+            with self.subTest(count=count, held=held):
+                self.seed_regression_fixture(count, held)
+                result = subprocess.run([sys.executable, "scripts/vm/bills_guard.py", "--apply-holds"],
+                    cwd=self.repo, env=self.env, capture_output=True, text=True)
+                self.assertEqual(result.returncode, 0 if accepted else 1)
+                for n in range(1, held + 1):
+                    self.assertIn(f"HELD bill au-federal-t{n}:", result.stderr)
+                if accepted:
+                    self.assertEqual(self.git("diff", "--name-only", "--", bills_guard.BILLS).strip(), "portal/public/bills/index.json")
+                else:
+                    self.assertIn("WARNING: HOLD ALL BILLS", result.stderr)
+                self.git("checkout", "--", bills_guard.BILLS)
+
+    def test_degraded_source_threshold_reverts_every_bill_and_retains_catch_up(self):
+        # One regression among two exceeds 2%, even though it is below five.
+        self.seed_regression_fixture(count=2, regressed=0)
+        rc, output = self.run_step("degraded")
+        self.assertEqual(rc, 1)
+        self.assertIn("WARNING: HOLD ALL BILLS", output)
+        self.assertEqual(self.git("status", "--porcelain", "--", bills_guard.BILLS), "")
+        self.assertTrue(self.pending.exists())
 
 
 if __name__ == "__main__":

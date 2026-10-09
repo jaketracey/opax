@@ -39,6 +39,7 @@ new_sandbox() {
   # the files the nightly reads, from the real tree
   for f in scripts/vm/nightly.sh scripts/vm/run-nightly.sh scripts/vm/poweroff-if-idle.sh scripts/vm/validate_data.py scripts/vm/data_groups.sh scripts/export_bills.py scripts/roster_identity.py \
            scripts/vm/bills_refresh.sh scripts/vm/bills_guard.py scripts/vm/keep_if_unchanged.py \
+           scripts/bills_registry/bills_stages.py \
            scripts/export_division_pages.py scripts/export_recent_votes.py scripts/export_votes.py \
            scripts/verify_bill_briefs.py scripts/update_corpus_manifest.py scripts/bump_cache_epoch.py \
            parli/__init__.py parli/arag.py parli/ingest/__init__.py parli/ingest/speaker_names.py \
@@ -202,6 +203,11 @@ FWEOF
 echo "node $*" >> "$HOME/node.calls"
 # FAKE_NODE_RED_WHILE_CHANGED=<repo path>: red for as long as that file differs from HEAD (a test the new data breaks)
 if [ -n "${FAKE_NODE_RED_WHILE_CHANGED:-}" ] && [ -n "$(git status --porcelain -- ":(top)$FAKE_NODE_RED_WHILE_CHANGED" 2>/dev/null)" ]; then exit 1; fi
+# The review reproduction: two unrelated bad groups force every single-group
+# trial (including bills) to stay red, then cumulative rollback becomes green.
+for p in ${FAKE_NODE_RED_WHILE_ANY_CHANGED:-}; do
+  [ -z "$(git status --porcelain -- ":(top)$p" 2>/dev/null)" ] || exit 1
+done
 exit ${FAKE_NODE_RC:-0}
 NDEOF
   chmod +x "$SB/bin/node"
@@ -729,12 +735,20 @@ check "the innocent groups tried on the way (speakers) are restored, not lost, a
 # Division/SEO projections may also change and be tried before speakers/votes.
 check "multiple runs: all changed (red), innocent groups put back (still red), votes put back (green)" test "$(grep -c 'node --test' "$HOME/node.calls")" -ge 3
 check "status names votes as the culprit" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'new votes files (green with only that group put back to HEAD)'"
+new_sandbox s25two
+mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
+OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok FAKE_NODE_RED_WHILE_ANY_CHANGED="portal/public/speakers.json portal/public/votes.json" nightly
+check "two failing groups: unrelated speakers/votes are rolled back and the night reports failure" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==100' && ! git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q '\"new\"'"
+check "temporary bills rollback is restored and accepted bills reach the commit" bash -c "git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | grep -q 2026-09-28 && git --git-dir='$ORIGIN' log -1 --format=%s main | grep -q 'bills: 0 new, 3 changed'"
+check "catch-up is consumed despite two unrelated failures" test ! -f "$HOME/.cache/autoresearch/pipeline/bills-refresh-v1.pending"
+check "the cumulative rollback scenario reached a green suite" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'no single group was to blame, green again'"
 new_sandbox s25d2
 mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
 OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok FAKE_NODE_RC=1 nightly
 check "a suite that is red whatever the data: everything changed goes back to HEAD, exit 1" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==100' && ! git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q '\"new\"'"
 check "status says the suite is red on main itself" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'red on main itself'"
 check "the manifest still went out (the deploy job will report the red suite)" bash -c "git --git-dir='$ORIGIN' show main:portal/public/corpus.json | grep -q '$TODAY'"
+check "permanently rolled-back bills retain catch-up" test -f "$HOME/.cache/autoresearch/pipeline/bills-refresh-v1.pending"
 new_sandbox s25e
 mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
 OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok FAKE_NODE_RC=0 nightly

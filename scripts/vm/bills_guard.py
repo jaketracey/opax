@@ -3,16 +3,24 @@
 from __future__ import annotations
 
 import argparse
-from datetime import date
+from collections import Counter
+from datetime import date, datetime, timedelta
 import io
 import json
 from pathlib import Path
 import subprocess
 import sys
 import tarfile
+from zoneinfo import ZoneInfo
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from bills_registry.bills_stages import BILL_STAGE_ORDER, lifecycle  # noqa: E402
 
 BILLS = "portal/public/bills"
-# Reviewed remaining 2026 sittings supplied for the ops lane. Extend before 2027;
+SYDNEY = ZoneInfo("Australia/Sydney")
+MAX_HELD = 5
+MAX_HELD_PERCENT = 2
+# Store actual sitting days, not refresh dates. Extend before the 2027 sittings;
 # unknown dates retain the Sunday cadence without requesting APH's calendar.
 SITTING_RANGES = (
     ("2026-10-12", "2026-10-15"),
@@ -22,13 +30,19 @@ SITTING_RANGES = (
 )
 
 
-def cadence(day: str, catch_up: bool = False) -> str:
-    today = date.fromisoformat(day)
+def cadence(day: str | datetime, catch_up: bool = False) -> str:
+    if isinstance(day, datetime):
+        if day.tzinfo is None:
+            raise ValueError("cadence timestamp must include a timezone")
+        today = day.astimezone(SYDNEY).date()
+    else:
+        today = date.fromisoformat(day)
     if catch_up:
         return "catch-up"
-    if any(date.fromisoformat(start) <= today <= date.fromisoformat(end)
+    yesterday = today - timedelta(days=1)
+    if any(date.fromisoformat(start) <= yesterday <= date.fromisoformat(end)
            for start, end in SITTING_RANGES):
-        return "sitting"
+        return "after-sitting"
     return "weekly" if today.isoweekday() == 7 else "skip"
 
 
@@ -68,7 +82,39 @@ def projection(files: dict[str, bytes]) -> tuple[dict, dict[str, dict]]:
     return index, docs
 
 
-def check() -> str:
+def stage_records(doc: dict) -> Counter:
+    # URLs and labels can be enriched without changing the recorded event.
+    # Multiple recorded events can share a normalised stage/house/date.
+    return Counter((s.get("stage"), s.get("house"), s.get("date")) for s in doc.get("key_dates", []))
+
+
+def latest_stage_date(doc: dict) -> date | None:
+    dates = [date.fromisoformat(s[2]) for s in stage_records(doc) if s[2]]
+    return max(dates, default=None)
+
+
+def regressions(old: dict, new: dict) -> list[str]:
+    reasons = []
+    for name, was, now in (
+        ("latest stage date", latest_stage_date(old), latest_stage_date(new)),
+        ("status_as_of", old.get("status_as_of"), new.get("status_as_of")),
+    ):
+        if was and (not now or now < was):
+            reasons.append(f"{name} went backwards ({was} -> {now or 'missing'})")
+    if BILL_STAGE_ORDER.get(new.get("status"), -2) < BILL_STAGE_ORDER.get(old.get("status"), -2):
+        reasons.append(f"status went backwards ({old.get('status')} -> {new.get('status')})")
+    if lifecycle(new) < lifecycle(old):
+        reasons.append("bill lifecycle went backwards")
+    removed_stages = stage_records(old) - stage_records(new)
+    if removed_stages:
+        reasons.append(f"{sum(removed_stages.values())} recorded stages removed")
+    removed_divisions = {d["key"] for d in old.get("divisions", [])} - {d["key"] for d in new.get("divisions", [])}
+    if removed_divisions:
+        reasons.append(f"{len(removed_divisions)} divisions removed")
+    return reasons
+
+
+def check(apply_holds: bool = False, held_report: Path | None = None) -> str:
     head = read_head()
     current = {p.as_posix(): p.read_bytes() for p in Path(BILLS).glob("*.json")}
     old_index, old = projection(head)
@@ -79,6 +125,29 @@ def check() -> str:
     missing_files = set(head) - set(current)
     if missing or missing_files:
         raise ValueError(f"existing bills disappeared: {len(missing)} keys, {len(missing_files)} files")
+    held = {key: reasons for key in sorted(old) if (reasons := regressions(old[key], new[key]))}
+    if held_report is not None:
+        held_report.write_text(json.dumps(held, indent=1) + "\n")
+    for key, reasons in held.items():
+        print(f"HELD bill {key}: {'; '.join(reasons)}", file=sys.stderr)
+    if len(held) > MAX_HELD or len(held) * 100 > len(old) * MAX_HELD_PERCENT:
+        print(f"WARNING: HOLD ALL BILLS: {len(held)}/{len(old)} bills regress; "
+              f"limit is {MAX_HELD} bills and {MAX_HELD_PERCENT}% of HEAD", file=sys.stderr)
+        raise ValueError("degraded source: whole bills update held")
+    if held and not apply_holds:
+        raise ValueError("regressed copies remain in the bills update")
+    if held:
+        old_rows = {row["key"]: row for row in old_index["bills"]}
+        for key in held:
+            path = f"{BILLS}/{key}.json"
+            Path(path).write_bytes(head[path])
+            current[path], new[key] = head[path], old[key]
+        # Holding a document must also retain its HEAD status/counts in the index.
+        new_index["bills"] = sorted(
+            [old_rows.get(row["key"], row) if row["key"] in held else row for row in new_index["bills"]],
+            key=lambda row: (row.get("introduced") or "", row["key"]), reverse=True)
+        Path(f"{BILLS}/index.json").write_text(json.dumps(new_index, ensure_ascii=False, indent=1) + "\n")
+        print(f"WARNING bills: retained {len(held)} regressed bills from HEAD", file=sys.stderr)
     added = len(set(new) - set(old))
     changed = sum(current[f"{BILLS}/{key}.json"] != head[f"{BILLS}/{key}.json"] for key in old)
     titles = sponsors = 0
@@ -96,9 +165,11 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--date", help="choose cadence for this Sydney date instead of checking bills")
     ap.add_argument("--catch-up", action="store_true")
+    ap.add_argument("--apply-holds", action="store_true", help="retain HEAD documents/index rows for isolated regressions")
+    ap.add_argument("--held-report", type=Path, help="write held bill keys and reasons for the nightly warning")
     args = ap.parse_args()
     try:
-        print(cadence(args.date, args.catch_up) if args.date else check())
+        print(cadence(args.date, args.catch_up) if args.date else check(args.apply_holds, args.held_report))
         return 0
     except (ValueError, KeyError, TypeError, OSError, tarfile.TarError) as exc:
         print(f"REFUSED bills: {exc}", file=sys.stderr)

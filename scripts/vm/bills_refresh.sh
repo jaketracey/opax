@@ -7,6 +7,14 @@ BILLS_REFRESH_OK=0
 BILLS_SUMMARY=""
 BILLS_PENDING="$PIPE/bills-refresh-v1.pending"
 BILLS_INITIALIZED="$PIPE/bills-refresh-v1.initialized"
+BILLS_HELD_REPORT="$PIPE/bills-held.json"
+
+bills_apply_guard() {
+  run "$PY" scripts/vm/bills_guard.py --apply-holds --held-report "$BILLS_HELD_REPORT" || return 1
+  local held
+  held=$("$PY" -c 'import json,sys; print(len(json.load(open(sys.argv[1]))))' "$BILLS_HELD_REPORT") || return 1
+  [ "$held" = 0 ] || warn "bills: $held regressed bill(s) kept at HEAD; see held bill reasons in the nightly log"
+}
 
 bills_refresh() {
   if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" = 1 ]; then
@@ -25,7 +33,7 @@ bills_refresh() {
     fail "cannot select bills refresh cadence"; return 1;
   }
   if [ "$reason" = skip ]; then
-    log "bills acquisition skipped: non-sitting date $day; weekly on Sunday"
+    log "bills acquisition skipped on $day: yesterday was not a sitting day; weekly on Sunday"
     return 0
   fi
   log "bills full refresh ($reason, parliament ${OPAX_BILL_PARLIAMENT:-48}); KB sync off; budget ${OPAX_BILLS_TIMEOUT:-20m}"
@@ -37,8 +45,8 @@ bills_refresh() {
     revert portal/public/bills
     return 1
   fi
-  if ! run "$PY" scripts/vm/bills_guard.py; then
-    fail "bills full export lost bills; bills reverted to HEAD"
+  if ! bills_apply_guard; then
+    fail "bill publication guard refused full export; bills reverted to HEAD"
     revert portal/public/bills
     return 1
   fi
@@ -55,7 +63,7 @@ bills_fill_and_verify() {
     revert portal/public/bills
     return 1
   fi
-  if ! run "$PY" scripts/vm/bills_guard.py; then
+  if ! bills_apply_guard; then
     fail "bill guard failed after fill-briefs; bills reverted to HEAD"
     revert portal/public/bills
     return 1

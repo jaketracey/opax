@@ -28,8 +28,8 @@ The nightly only brings new records in and publishes them.
         state rosters, grant recipients, and the big exports (suppliers, grants, discovery, pay, expenses).
         Every export goes through keep_if_unchanged, so a night on which nothing moved commits nothing.
   2c  bills: bills_fetch.py --parliaments 48 --refresh, then export_bills.py --out portal/public/bills
-        Daily on reviewed sitting dates, Sunday otherwise, plus first-run catch-up; KB publication off.
-        Reject a shrinking count or any missing existing bill; fetch + export capped at 20 min.
+        Daily on the morning after reviewed sitting dates, Sunday otherwise, plus first-run catch-up; KB publication off.
+        Retain regressed bills at HEAD; hold all on degraded coverage; fetch + export capped at 20 min.
    3  bills: export_bills.py --fill-briefs, then verify_bill_briefs.py (no brief lost vs HEAD),
         recheck bill retention and keep_if_unchanged; any failure puts the bills group back to HEAD
   3b  export_division_pages.py and export_recent_votes.py: Worker SEO projections from the refreshed
@@ -542,11 +542,21 @@ kill grace) for fetch and full export. A failure can leave additive DB/cache pro
 are restored and nothing from that failed export is published. The next scheduled acquisition resumes via
 the same upserts; pending catch-up retries on the very next acquisition-enabled night.
 
-`scripts/vm/bills_guard.py` selects the cadence from the **Sydney date**, overridable by `OPAX_TODAY` for
-rehearsals. The reviewed dated list is **12–15 and 26–29 October, 16–19 and 23–26 November 2026**; each of
-those dates runs acquisition and full export. All other dates run it on **Sunday**. There is no APH calendar
-request. Extend `SITTING_RANGES` before the 2027 sittings; unlisted dates retain the weekly cadence. The
-03:15 run sees the source as it stands that morning; later introductions enter on the next scheduled run.
+`scripts/vm/bills_guard.py` selects the cadence from **yesterday's Sydney date**, overridable by `OPAX_TODAY`
+for rehearsals (the override is the morning's date). `SITTING_RANGES` records the actual sitting days:
+**12–15 and 26–29 October, 16–19 and 23–26 November 2026**. The 03:15 refresh therefore includes the final
+Thursday's introductions on Friday morning. Sundays also run the weekly refresh.
+
+| Actual sitting dates | 03:15 Sydney acquisition/export dates | Monday morning for that sitting |
+| --- | --- | --- |
+| 12–15 Oct 2026 | 13, 14, 15, 16 Oct | 12 Oct skipped |
+| 26–29 Oct 2026 | 27, 28, 29, 30 Oct | 26 Oct skipped |
+| 16–19 Nov 2026 | 17, 18, 19, 20 Nov | 16 Nov skipped |
+| 23–26 Nov 2026 | 24, 25, 26, 27 Nov | 23 Nov skipped |
+
+There is no APH calendar request. Before the 2027 sittings, extend `SITTING_RANGES` with the **actual sitting
+dates**, not the following mornings: the scheduler subtracts one Sydney calendar day itself, including
+across daylight saving changes. Unlisted dates retain the Sunday cadence. Catch-up overrides these skips.
 `OPAX_NIGHTLY_SKIP_REFRESH=1` skips acquisition while the existing fill/verify publication half still runs.
 
 The guard compares the working export with HEAD's index and bill files. It refuses a smaller count,
@@ -557,13 +567,33 @@ full export, again after fill/brief verification, and before staging. Any failur
 can also hold the whole bills group. `keep_if_unchanged --sweep` restores byte-identical committed JSON for
 stamp-only changes after briefs are filled. Acquisition/export/guards never write or revert `votes.json`.
 
+The freshness guard holds an existing bill at its **byte-identical HEAD document and HEAD index row** if
+its latest recorded stage date or `status_as_of` goes backwards or disappears, its status/lifecycle rank
+goes backwards, or any recorded stage or division disappears. Stages are identified by stage, house and
+date; division identity is its key. URL/title enrichment does not remove an event. The shared export
+vocabulary in `scripts/bills_registry/bills_stages.py` orders unknown, exposure draft, before parliament,
+introduced/first reading, second reading, committee, third reading, passed one house, passed both houses,
+and royal assent. Lapsed, rejected and withdrawn are terminal. Repeated stages in the second chamber do not reset progress:
+the guard takes the furthest recorded stage, with third readings in one/two chambers counting as passage
+through one/both houses. Status is checked separately from stage history, so retained old DB events
+cannot hide the review's `passed` (9 Oct) → `before_parliament` (1 Oct) degraded page.
+
+Each held bill and all its reasons are logged; isolated holds add a nightly warning while other bills
+continue. If **more than five bills OR more than 2% of HEAD bills** regress, the guard logs
+`WARNING: HOLD ALL BILLS` and the entire bills group reverts, including new files. Exactly five bills and
+exactly 2% are allowed only when neither limit is exceeded. Threshold refusal retains catch-up. Correcting
+previously published history requires a separate review rather than silently removing events here.
+
 **First-run catch-up.** On the first acquisition-enabled run after this lane merges, step 2c creates
 `~/.cache/autoresearch/pipeline/bills-refresh-v1.pending` and `bills-refresh-v1.initialized`. The pending
 marker forces fetch and full export even on a non-sitting weekday or Saturday, landing the title/sponsor
 fields that night. It is deleted only after the export survives bill/brief verification and the later data
 gates, and the data commit succeeds (or no commit is needed). The initialized marker stays outside git,
 so checkout sync cannot re-arm it. A fetch/export/brief failure, bills rollback, interrupted run or commit
-failure keeps catch-up pending for the next night. A push failure leaves the accepted commit locally for
+failure keeps catch-up pending for the next night. During portal test attribution, a temporary bills
+rollback restores its acceptance state with its backup; two unrelated failing groups cannot leave
+catch-up pending after the restored bills successfully commit. A permanent bills rollback still retains
+the marker. A push failure leaves the accepted commit locally for
 the nightly's existing retry path. To request another catch-up, create the pending marker on the box:
 `touch ~/.cache/autoresearch/pipeline/bills-refresh-v1.pending`.
 
@@ -609,7 +639,7 @@ power-off after them is the reboot, so a new kernel takes effect at the next sta
 | Night | Steps | Time |
 | --- | --- | --- |
 | Every night | daily refresh (Hansards, votes, links, KB push when new rows) | Previous ~17 min quiet-night measurement included a ~9 min bill step (2026-09-29); that bill work now follows the separate cadence below. A large push adds up to `OPAX_PUSH_TIMEOUT` (2 h) |
-| Sitting dates, Sundays, first-run catch-up | current-parliament bill fetch + full static export, then existing brief fill/verify | **Estimated 9–12 min** healthy-source addition; acquisition + export capped at **20 min + 60 s kill grace**. Estimate uses 296 current-parliament bills (~300 requests, >=7.1 min at 0.7/s), the earlier ~9 min bill-step measurement and 1–3 min export headroom; no live timing in this lane |
+| Mornings after sitting dates, Sundays, first-run catch-up | current-parliament bill fetch + full static export, then existing brief fill/verify | **Estimated 9–12 min** healthy-source addition; acquisition + export capped at **20 min + 60 s kill grace**. Estimate uses 296 current-parliament bills (~300 requests, >=7.1 min at 0.7/s), the earlier ~9 min bill-step measurement and 1–3 min export headroom; no live timing in this lane |
 | Every night, additional federal interests | fresh indexes, changed HTML/PDFs, cached PDF parsing/OCR, then export | ~5–10 min warm; `STEP_TIMEOUT=45m` for `interests_federal`, plus GNU timeout's 60-second kill grace |
 | Sunday: weekly | loaders 30 min (lobbyists 22 min, `frl_acts` 3 min, ABN-linked `contract_suppliers` 7 min, ACNC/ATO 1 min once loaded) + exports 8 min (`x_speakers` and `x_people` a speeches scan each, ~3 min) | ~40 min |
 | First Sunday: monthly, on top | `qld_contracts` 7 min, `diaries_qld` 10-13 min, IPEA 2 min, `speaker_hygiene` 11 min (a full `speeches` read), `grant_recipients` 4 min, exports 5 min | ~40 min |
@@ -753,16 +783,21 @@ partial push): 191 checks, including the isolated 45-minute interests limit and 
 `PATH`). The unit itself was also run under real systemd in a container (ok, failing, held, skipped and hung
 runs, with a shortened time limit).
 
-`test_bills_refresh.py` covers every supplied sitting date, Sunday/other-day selection, a Saturday catch-up
+`test_bills_refresh.py` covers every following-morning refresh date and boundary, Sydney UTC conversions
+across both daylight saving transitions, Sunday/other-day selection, a Saturday catch-up
 and consumption/retry of its marker, count shrinkage, same-count vanished keys, missing files, inconsistent
-counts, lost briefs, fetch/export failure, timeout, stamp-only retention, final rollback/commit failure,
-KB-sync suppression, DB path pinning, untouched votes and retained delta logs/commit messages. No source
+counts, stale status and stage dates, lifecycle regression, removed stage/division history, the review's
+degraded-page parser/upsert/export reproduction, per-bill document/index retention, both whole-update
+threshold boundaries, lost briefs, fetch/export failure, timeout, stamp-only retention, final rollback/commit
+failure, KB-sync suppression, DB path pinning, untouched votes and retained delta logs/commit messages.
+`test_nightly.sh` also covers two unrelated failing groups with temporary bills rollback and successful
+bill commit/catch-up consumption. No source
 fetch or production database/KB access is needed.
 
 ## Not covered by the nightly
 
 The daily refresh covers Hansards (federal, NSW, VIC, QLD, ACT, committees), releases, AusTender, GrantConnect awards,
-IPEA and votes; nightly step 2c adds federal bills on sitting dates and Sundays. The Sunday and first-Sunday groups cover state donations, lobbyist registers, FITS, interests, diaries,
+IPEA and votes; nightly step 2c adds federal bills on mornings after sitting dates and Sundays. The Sunday and first-Sunday groups cover state donations, lobbyist registers, FITS, interests, diaries,
 ABN-linked suppliers and grants, ACNC/ATO, contracts and the exports built from them. Still manual: the federal AEC donation
 reload (`donations.py` deletes every source's rows unless `--no-clear`; see `docs/operations/periodic-refresh.md`), the MLCI
 grant research, bill texts and other one-off research builds, and any source that needs a browser or a licence gate. The

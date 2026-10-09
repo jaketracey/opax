@@ -378,8 +378,23 @@ if [ "${OPAX_TEST_GATE:-1}" != 0 ]; then
         # reverted; the others are restored from the backup). If no single group does it, two or more together break
         # a test: put them back cumulatively, in order, until green (the same as blaming all of them).
         BK="$PIPE/gate-backup"; rm -rf "$BK"; mkdir -p "$BK"
-        backup_group() { local g=$1 paths; read -ra paths <<<"${GROUP_PATHS[$g]}"; tar cf "$BK/$g.tar" -- "${paths[@]}" 2>/dev/null || true; }
-        restore_group() { local g=$1 paths; read -ra paths <<<"${GROUP_PATHS[$g]}"; rm -rf -- "${paths[@]}"; tar xf "$BK/$g.tar" 2>/dev/null || true; }
+        backup_group() {
+          local g=$1 paths
+          read -ra paths <<<"${GROUP_PATHS[$g]}"
+          [ "$g" != bills ] || BILLS_GATE_BACKUP_OK=$BILLS_REFRESH_OK
+          tar cf "$BK/$g.tar" -- "${paths[@]}" 2>/dev/null || true
+        }
+        restore_group() {
+          local g=$1 paths
+          read -ra paths <<<"${GROUP_PATHS[$g]}"
+          rm -rf -- "${paths[@]}"
+          if tar xf "$BK/$g.tar" 2>/dev/null; then
+            # A trial rollback was innocent: restore acceptance with the files.
+            [ "$g" != bills ] || BILLS_REFRESH_OK=$BILLS_GATE_BACKUP_OK
+          else
+            fail "cannot restore test backup for $g"
+          fi
+        }
         for group in "${gate_groups[@]}"; do backup_group "$group"; done
         culprit=""
         for group in "${gate_groups[@]}"; do
