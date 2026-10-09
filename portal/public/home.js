@@ -1,3 +1,5 @@
+import { hydrateCollections, hydrateLatest, industryGroups, mapSourceHTML, mapSpan } from '/home-data.js?v=5e59c38dd3';
+
 // The homepage and research workspace have separate document lifecycles.
 const legacyRoute = location.href.split('#')[1] || '';
 if (legacyRoute.startsWith('/')) {
@@ -104,7 +106,23 @@ const INDUSTRY_ALIASES = {
   lobbying: ["lobby"],
 };
 
+// The topic directory's subjects: the builder's suggestions and quick search.
+const TOPICS = [
+  ["agriculture", "Agriculture"], ["climate-environment", "Climate & environment"],
+  ["defence-security", "Defence & security"], ["education", "Education"],
+  ["financial-services", "Financial services"], ["foreign-affairs", "Foreign affairs"],
+  ["gambling", "Gambling"], ["health", "Health"], ["hospitality-alcohol", "Hospitality & alcohol"],
+  ["housing", "Housing"], ["immigration", "Immigration"], ["indigenous-affairs", "Indigenous affairs"],
+  ["infrastructure-transport", "Infrastructure & transport"], ["integrity-democracy", "Integrity & democracy"],
+  ["justice-law", "Justice & law"], ["media-communications", "Media & communications"],
+  ["mining-energy", "Mining & energy"], ["property-construction", "Property & construction"],
+  ["tax-budget", "Tax & budget"], ["unions-workplace", "Unions & workplace"],
+  ["welfare-social", "Welfare & social services"],
+];
+
 const $ = (id) => document.getElementById(id);
+for (const [, name] of TOPICS)
+  $("hp-topics-list").append(Object.assign(document.createElement("option"), { value: name }));
 
 // The homepage uses the existing report pictograms and megamenu components.
 const REPORT_GLYPHS = {
@@ -155,14 +173,6 @@ if (headerBand) {
   measureHeader();
   if ('ResizeObserver' in window) new ResizeObserver(measureHeader).observe(headerBand);
 }
-// Fill the shared footer independently of the homepage's collection widgets.
-fetch('/api/stats').then(response => {
-  if (!response.ok) throw new Error('Live index figures could not load');
-  return response.json();
-}).then(stats => {
-  $('stats').textContent = `${(stats.resources ?? 0).toLocaleString()} documents · ${(stats.paragraphs ?? 0).toLocaleString()} passages indexed · growing daily`;
-}).catch(() => { $('stats').textContent = 'Live index figures are unavailable right now.'; });
-
 // Both research panels stay mounted, preserving their drafts when modes change.
 for (const button of document.querySelectorAll("[data-mode]")) {
   button.addEventListener("click", () => {
@@ -364,30 +374,12 @@ $("hp-builder-form").addEventListener("submit", (event) => {
 });
 renderBuilder();
 
-const topicRows = [...document.querySelectorAll("[data-topic]")];
-function filterTopics() {
-  const query = $("hp-topic-filter").value.trim().toLocaleLowerCase();
-  let count = 0;
-  for (const row of topicRows) {
-    row.hidden = !row.textContent.toLocaleLowerCase().includes(query);
-    if (!row.hidden) count++;
-  }
-  $("hp-topic-status").textContent = query
-    ? `${count} of ${topicRows.length} topics`
-    : "";
-  $("hp-topic-empty").hidden = count > 0;
-}
-$("hp-topic-filter").addEventListener("input", filterTopics);
-$("hp-topic-clear").addEventListener("click", () => {
-  $("hp-topic-filter").value = "";
-  filterTopics();
-  $("hp-topic-filter").focus();
-});
-
 // The map owns the displayed filter state. Its callback also catches selections
-// made inside the scene, so the external controls and outgoing link cannot drift.
+// made inside the scene, so the chips and outgoing links cannot drift.
 const root = $("hp-money-map");
-const mapButtons = [...document.querySelectorAll("[data-industry]")];
+const chipGroup = $("hp-industries");
+const chips = () => [...chipGroup.querySelectorAll("[data-industry]")];
+const MAP_DATA = "/graph/money.json?v=suppliers-1";
 let handle;
 let visible = false;
 let started = false;
@@ -396,20 +388,35 @@ let industry = "";
 let focus = "";
 let years;
 const pause = () => handle?.setPaused?.(!visible || document.hidden);
+// The six largest industries by donors in the map, and all of them.
+function renderIndustries(groups) {
+  if (!groups.length) return;
+  const chip = (key, ...content) => {
+    const button = Object.assign(document.createElement("button"), { type: "button", className: "ui-chip", disabled: true });
+    button.dataset.industry = key;
+    button.setAttribute("aria-pressed", "false");
+    button.append(...content);
+    return button;
+  };
+  const tally = (n) => {
+    const span = Object.assign(document.createElement("span"), { className: "hp-chip-count", textContent: String(n) });
+    span.append(Object.assign(document.createElement("span"), { className: "visually-hidden", textContent: " donors" }));
+    return span;
+  };
+  chipGroup.replaceChildren(
+    ...groups.slice(0, 6).map((g) => chip(g.key, `${g.label} `, tally(g.count))),
+    chip("", `All ${groups.length} industries`),
+  );
+}
 function syncMapControls(filters = {}, windowYears) {
   industry = filters.industry || "";
   if (windowYears) years = windowYears;
-  for (const button of mapButtons)
-    button.setAttribute(
-      "aria-pressed",
-      String(button.dataset.industry === industry),
-    );
-  const selected = mapButtons.find(
-    (button) => button.dataset.industry === industry,
-  );
-  $("hp-map-status").textContent = selected
-    ? `${industry[0].toUpperCase() + industry.slice(1)} · ${selected.querySelector(".ui-map-filter__count").textContent} donors in this map`
-    : "All industries";
+  for (const button of chips())
+    button.setAttribute("aria-pressed", String(button.dataset.industry === industry));
+  const selected = chips().find((button) => industry && button.dataset.industry === industry);
+  const name = industry && industry[0].toUpperCase() + industry.slice(1);
+  $("hp-map-status").textContent = !industry ? "All industries"
+    : selected ? `${name} · ${selected.querySelector(".hp-chip-count").firstChild.textContent} donors in this map` : name;
   const params = new URLSearchParams();
   if (industry) params.set("industry", industry);
   if (focus) params.set("focus", focus);
@@ -421,86 +428,83 @@ function syncMapControls(filters = {}, windowYears) {
   $("hp-full-map").href = "/money" + (params.size ? `?${params}` : "");
   const records = new URLSearchParams(params);
   records.delete("focus");
-  $("hp-map-records").href =
-    "/money/receipts" + (records.size ? `?${records}` : "");
+  const recordsLink = $("hp-map-source").querySelector('a[href^="/money/receipts"]');
+  if (recordsLink) recordsLink.href = "/money/receipts" + (records.size ? `?${records}` : "");
 }
-for (const button of mapButtons) {
-  button.addEventListener("click", () => {
-    focus = "";
-    handle.select(null);
-    handle.setFilters({
-      industry:
-        industry === button.dataset.industry ? "" : button.dataset.industry,
-    });
-  });
-}
-$("hp-map-reset").addEventListener("click", () => {
+chipGroup.addEventListener("click", (event) => {
+  const chip = event.target.closest("[data-industry]");
+  if (!chip || chip.disabled || !handle) return;
   focus = "";
   handle.select(null);
+  const next = chip.dataset.industry;
+  if (next && next !== industry) return handle.setFilters({ industry: next });
+  // "All", or the chosen chip again: back to the whole overview.
+  handle.setFilters({ industry: "" });
   handle.clearScene();
   handle.fit();
+  syncMapControls({});
 });
 async function mount() {
   if (started) return;
   started = true;
   try {
+    const graph = await fetch(MAP_DATA).then((response) => {
+      if (!response.ok) throw new Error("Map data unavailable");
+      return response.json();
+    });
+    renderIndustries(industryGroups(graph));
+    $("hp-map-source").innerHTML = mapSourceHTML(graph.meta);
+    const span = mapSpan(graph.meta);
+    if (span) $("hp-map-span").textContent = span;
     const { mountMoneyMap } = await import(
       "/money-map.js?v=profile-button-20260921"
     );
     if (disposed) return;
     root.replaceChildren();
-    const mounted = await mountMoneyMap(
-      root,
-      "/graph/money.json?v=suppliers-1",
-      {
-        chrome: "mini",
-        overview: true,
-        pageScroll: true,
-        askUrl: (industry) =>
-          "/ask?" +
-          new URLSearchParams({
-            q: `What has parliament said about ${industry}?`,
-          }),
-        onViewChange: (_view, filters, windowYears) =>
-          syncMapControls(filters, windowYears),
-        onSelect: (node) => {
-          focus = node?.id || "";
-          syncMapControls({ industry });
-        },
+    const mounted = await mountMoneyMap(root, graph, {
+      chrome: "mini",
+      overview: true,
+      pageScroll: true,
+      askUrl: (industry) =>
+        "/ask?" +
+        new URLSearchParams({
+          q: `What has parliament said about ${industry}?`,
+        }),
+      onViewChange: (_view, filters, windowYears) =>
+        syncMapControls(filters, windowYears),
+      onSelect: (node) => {
+        focus = node?.id || "";
+        syncMapControls({ industry });
       },
-    );
+    });
     if (disposed) {
       mounted.destroy();
       return;
     }
     handle = mounted;
-    mapButtons.forEach((button) => {
-      button.disabled = false;
-    });
-    $("hp-map-reset").disabled = false;
+    $("hp-map-filters").hidden = false;
+    for (const button of chips()) button.disabled = false;
+    syncMapControls({ industry });
     pause();
   } catch {
     if (disposed) return;
-    const message = document.createElement("p");
-    message.textContent = "The embedded map could not load. ";
-    message.append(
-      Object.assign(document.createElement("a"), {
-        href: "/money",
-        textContent: "Open the full map",
-      }),
-    );
+    // One plain sentence and a retry; the chips have nothing to filter.
+    $("hp-map-filters").hidden = true;
+    const message = Object.assign(document.createElement("p"), {
+      textContent: "The map could not load.",
+    });
     const retry = Object.assign(document.createElement("button"), {
       type: "button",
       className: "ui-button",
-      textContent: "Retry map",
+      textContent: "Try again",
     });
     retry.addEventListener("click", () => {
       started = false;
+      root.replaceChildren(Object.assign(document.createElement("p"), { role: "status", textContent: "Loading the money map…" }));
       mount();
     });
     root.replaceChildren(message, retry);
-    $("hp-map-status").textContent =
-      "Map unavailable. You can still browse funding records.";
+    $("hp-map-status").textContent = "The map could not load.";
   }
 }
 const observer = new IntersectionObserver(
@@ -523,32 +527,6 @@ window.addEventListener("pagehide", (event) => {
 });
 window.addEventListener("pageshow", pause);
 
-// Native horizontal scrolling keeps all encyclopedia entries reachable without scripts.
-const encyclopediaTrack = $('hp-ency-track');
-const encyclopediaCards = () => [...encyclopediaTrack.querySelectorAll('.hp-ency-card')];
-function syncEncyclopedia() {
-  const cards = encyclopediaCards();
-  if (cards.length < 2) {
-    $('hp-ency-prev').disabled = $('hp-ency-next').disabled = true;
-    $('hp-ency-position').textContent = cards.length ? '1 of 1' : '';
-    return;
-  }
-  const left = encyclopediaTrack.scrollLeft;
-  const width = encyclopediaTrack.clientWidth;
-  const step = encyclopediaCards()[1].offsetLeft - encyclopediaCards()[0].offsetLeft;
-  const first = Math.round(left / step) + 1;
-  const visible = Math.max(1, Math.round(width / step));
-  $('hp-ency-position').textContent = `${first}${visible > 1 ? '–' + Math.min(encyclopediaCards().length, first + visible - 1) : ''} of ${encyclopediaCards().length}`;
-  $('hp-ency-prev').disabled = left <= 2;
-  $('hp-ency-next').disabled = left + width >= encyclopediaTrack.scrollWidth - 2;
-}
-for (const [id, direction] of [['hp-ency-prev', -1], ['hp-ency-next', 1]]) {
-  $(id).addEventListener('click', () => encyclopediaTrack.scrollBy({left: direction * (encyclopediaCards()[1].offsetLeft - encyclopediaCards()[0].offsetLeft)}));
-}
-encyclopediaTrack.addEventListener('scroll', syncEncyclopedia, {passive:true});
-new ResizeObserver(syncEncyclopedia).observe(encyclopediaTrack);
-syncEncyclopedia();
-
 // The compact header keeps the same cross-collection quick search as the app.
 const headerSearch = OpaxQuickSearch.disclosure($('header-search-open'), $('header-search-panel'), $('mast-q'));
 const searchHref = q => '/ask?' + new URLSearchParams({view:'search', q});
@@ -565,7 +543,7 @@ async function headerSuggestions(q) {
   for (const e of (electorates?.electorates || []).filter(e => contains(e.name)).slice(0,3)) out.push({label:e.name, type:`${electorates.jurisdictions[e.jurisdiction]} electorate`, href:e.url});
   const names = (Array.isArray(speakers) ? speakers : speakers?.speakers || speakers?.names || []).map(row => Array.isArray(row) ? row[0] : row);
   for (const name of names.filter(contains).slice(0,4)) out.push({label:name, type:'Speaker', href:'/subject/person/' + encodeURIComponent(name)});
-  for (const link of [...document.querySelectorAll('.hp-topic-list a')].filter(link => contains(link.textContent)).slice(0,3)) out.push({label:link.textContent, type:'Topic', href:link.getAttribute('href')});
+  for (const [slug, name] of TOPICS.filter(([, name]) => contains(name)).slice(0,3)) out.push({label:name, type:'Topic', href:'/subject/topic/' + slug});
   for (const node of (money?.nodes || []).filter(n => contains(n.label)).slice(0,3)) out.push({label:node.label, type:node.kind === 'party' ? 'Party' : 'Donor', href:'/subject/' + (node.kind === 'party' ? 'party' : 'donor') + '/' + encodeURIComponent(node.label)});
   for (const report of (reports?.reports || []).filter(r => contains(r.title)).slice(0,2)) out.push({label:report.title + ' report', type:'Report', href:'/reports/' + report.slug});
   return out;
@@ -574,18 +552,13 @@ OpaxQuickSearch.attach($('mast-q'), $('mast-sugg'), {idPrefix:'ms', source:heade
 
 OpaxQuickSearch.attach($('drawer-q'), $('drawer-sugg'), {idPrefix:'ds', source:headerSuggestions, navigate:href => location.assign(href), searchHref, beforeGo:() => navDrawer.close()});
 
-// Keep the approved layout while replacing prototype snapshots with source data.
-import { hydrateCollections, hydrateRecordCards } from '/home-data.js?v=e08eec41ee';
+// Reports and the footer's coverage line now; new bills and declarations when
+// their block nears the screen. The page ships with dated rows to fall back on.
 hydrateCollections();
-const recordObserver = new IntersectionObserver(entries => {
-  if (entries.some(entry => entry.isIntersecting)) {
-    recordObserver.disconnect();
-    hydrateRecordCards(syncEncyclopedia);
-  }
-}, {rootMargin:'400px'});
-recordObserver.observe(encyclopediaTrack);
-
-// Topic spotlight on the homepage; the older review copy has no mount.
-if (document.getElementById('hp-gambling-content')) {
-  import('./home-spotlight.js').then(({mountSpotlight}) => mountSpotlight());
-}
+const latest = document.querySelector(".hp-latest");
+const latestObserver = new IntersectionObserver((entries) => {
+  if (!entries.some((entry) => entry.isIntersecting)) return;
+  latestObserver.disconnect();
+  hydrateLatest();
+}, { rootMargin: "600px" });
+latestObserver.observe(latest);

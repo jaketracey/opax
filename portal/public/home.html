@@ -19,10 +19,12 @@
     <script src="/gtm.js?v=0764911f84" defer></script>
     <link rel="stylesheet" href="/style.css?v=4b98264098" />
     <link rel="stylesheet" href="/ui-controls.css?v=f8011bf298" />
-    <link rel="stylesheet" href="/home.css?v=ded3fb05c5" />
+    <link rel="stylesheet" href="/ui-source.css?v=afbc26b4dc" />
+    <link rel="stylesheet" href="/home.css?v=89dba63c18" />
     <script src="/quick-search.js?v=206914f32d" defer></script>
+    <script src="/ui-source.js?v=2163f6a875" defer></script>
     <script type="module" id="hp-navigation" src="/navigation.js?v=02752160b8"></script>
-    <script type="module" src="/home.js?v=a2d904935f"></script>
+    <script type="module" src="/home.js?v=f5d5c09789"></script>
   </head>
   <body class="hp-page">
     <a class="hp-skip" href="#hp-main">Skip to content</a>
@@ -209,75 +211,40 @@
       <section class="hp-research" aria-labelledby="hp-title">
         <div class="hp-purpose">
           <h1 id="hp-title">See what Australian politicians say, do and disclose</h1>
-          <p>The Open Parliamentary Accountability Exchange brings together Australian parliamentary speeches, votes, political funding and public disclosures. Search across the records, trace connections and follow claims back to their original sources.</p>
-          <a href="/about">About OPAX →</a>
+          <p>The Open Parliamentary Accountability Exchange brings together Australian parliamentary speeches, votes, political funding and public disclosures. Search the records, trace connections and follow claims back to their original sources.</p>
         </div>
         <div class="hp-research-main">
-          <div
-            class="hp-research-modes"
-            role="group"
-            aria-label="Research mode"
-            data-ui-size="default"
-          >
-            <button
-              type="button"
-              class="hp-mode"
-              data-mode="ask"
-              aria-pressed="true"
-              aria-controls="hp-ask"
-            >
-              Ask a question</button
-            ><button
-              type="button"
-              class="hp-mode"
-              data-mode="search"
-              aria-pressed="false"
-              aria-controls="hp-search-panel"
-            >
-              Search records
-            </button>
+          <div class="hp-research-modes" role="group" aria-label="Research mode">
+            <button type="button" class="hp-mode" data-mode="ask" aria-pressed="true" aria-controls="hp-ask">Ask a question</button
+            ><button type="button" class="hp-mode" data-mode="search" aria-pressed="false" aria-controls="hp-search-panel">Search records</button>
           </div>
           <div id="hp-ask">
             <form class="hp-query" action="/ask" method="get">
-<label class="visually-hidden" for="hp-question">Your question</label>
-              <div class="hp-query-row">
-                <input
-                  id="hp-question"
-                  class="ui-input"
-                  name="q"
-                  required
-                  placeholder="Ask a question about the public record…"
-                /><button class="ui-button" data-variant="primary">
-                  Ask the record
-                </button>
+              <label class="visually-hidden" for="hp-question">Your question</label>
+              <div class="hp-query-row" data-ui-size="large">
+                <input id="hp-question" class="ui-input" name="q" required placeholder="Ask a question about the public record…"
+                /><button class="ui-button" data-variant="primary">Ask</button>
               </div>
             </form>
-            <div class="hp-examples" aria-label="Sample questions">
-              <a href="/ask?q=What+has+parliament+said+about+housing+affordability%3F">What has parliament said about housing affordability?</a>
-              <a href="/ask?q=Who+funds+the+Labor+Party%3F">Who funds the Labor Party?</a>
-              <a href="/ask?q=Who+takes+the+most+money+from+the+gambling+lobby%3F">Who takes the most money from the gambling lobby?</a>
-              <a href="/ask?q=What+has+David+Pocock+proposed+about+housing+affordability%3F">What has David Pocock proposed about housing affordability?</a>
-            </div>
+            <ul class="hp-examples" aria-label="Sample questions">
+              <li><a href="/ask?q=What+has+parliament+said+about+housing+affordability%3F">What has parliament said about housing affordability?</a></li>
+              <li><a href="/ask?q=Who+funds+the+Labor+Party%3F">Who funds the Labor Party?</a></li>
+              <li><a href="/ask?q=Who+takes+the+most+money+from+the+gambling+lobby%3F">Who takes the most money from the gambling lobby?</a></li>
+            </ul>
             <details class="hp-guided">
               <summary>Build a question</summary>
               <div class="hp-guided-content">
-            <div class="ask-builder" id="hp-builder">
-              <div class="ask-builder-modes">
-                <label for="hp-shape">Ask about</label>
-                <div
-                  id="hp-shapes"
-                  class="ask-builder-shapes ui-segmented"
-                  role="group"
-                  aria-label="Question subject"
-                ></div>
-                <select class="ui-input" id="hp-shape"></select>
-              </div>
-              <form id="hp-builder-form" class="ask-builder-form" action="/ask">
-                <p class="ask-builder-sentence" id="hp-sentence"></p>
-                <button type="submit" class="primary">Ask this</button>
-              </form>
-            </div>
-
+                <div class="ask-builder" id="hp-builder">
+                  <div class="ask-builder-modes">
+                    <label for="hp-shape">Ask about</label>
+                    <div id="hp-shapes" class="ask-builder-shapes ui-segmented" role="group" aria-label="Question subject"></div>
+                    <select class="ui-input" id="hp-shape"></select>
+                  </div>
+                  <form id="hp-builder-form" class="ask-builder-form" action="/ask">
+                    <p class="ask-builder-sentence" id="hp-sentence"></p>
+                    <button type="submit" class="ui-button">Ask this</button>
+                  </form>
+                </div>
               </div>
             </details>
           </div>
@@ -285,787 +252,88 @@
             <form class="hp-query" action="/ask" method="get" role="search">
               <input type="hidden" name="view" value="search" />
               <label class="visually-hidden" for="hp-record-query">Search the record</label>
-              <div class="hp-query-row">
-                <input
-                  class="ui-input"
-                  type="search"
-                  name="q"
-                  id="hp-record-query"
-                  required
-                  placeholder="A person, organisation, topic or phrase"
-                /><button class="ui-button" data-variant="primary">
-                  Search
-                </button>
+              <div class="hp-query-row" data-ui-size="large">
+                <input class="ui-input" type="search" name="q" id="hp-record-query" required placeholder="A person, organisation, topic or phrase"
+                /><button class="ui-button" data-variant="primary">Search</button>
               </div>
             </form>
-<p class="hp-answer-help">Find original records. Refine by parliament, date and record type in the results.</p>
           </div>
-          <noscript
-            ><p>
-              The interactive builder needs JavaScript. Use the question field
-              above or <a href="/search">search records</a>.
-            </p></noscript
-          >
-          <datalist id="hp-people-list"></datalist
-          ><datalist id="hp-topics-list">
-            <option value="Agriculture"></option>
-            <option value="Climate &amp; environment"></option>
-            <option value="Defence &amp; security"></option>
-            <option value="Education"></option>
-            <option value="Financial services"></option>
-            <option value="Foreign affairs"></option>
-            <option value="Gambling"></option>
-            <option value="Health"></option>
-            <option value="Hospitality &amp; alcohol"></option>
-            <option value="Housing"></option>
-            <option value="Immigration"></option>
-            <option value="Indigenous affairs"></option>
-            <option value="Infrastructure &amp; transport"></option>
-            <option value="Integrity &amp; democracy"></option>
-            <option value="Justice &amp; law"></option>
-            <option value="Media &amp; communications"></option>
-            <option value="Mining &amp; energy"></option>
-            <option value="Property &amp; construction"></option>
-            <option value="Tax &amp; budget"></option>
-            <option value="Unions &amp; workplace"></option>
-            <option value="Welfare &amp; social services"></option></datalist
-          ><datalist id="hp-bills-list"></datalist>
+          <noscript><p>The question builder needs JavaScript. Use the question field above or <a href="/search">search records</a>.</p></noscript>
+          <datalist id="hp-people-list"></datalist><datalist id="hp-topics-list"></datalist><datalist id="hp-bills-list"></datalist>
         </div>
       </section>
-      <div class="hp-investigate">
-      <section class="hp-section hp-map-section" aria-labelledby="hp-map-title">
-        <div class="hp-section-head">
-          <div>
-            <h2 id="hp-map-title">Money map</h2>
-            <p>
-              Follow disclosed funding between donors and political parties. Select a connection to investigate it.
-            </p>
-          </div>
-          <a
-            class="ui-button"
-            data-variant="primary"
-            id="hp-full-map"
-            href="/money"
-            >Open research map →</a
-          >
-        </div>
-        <div class="hp-map-frame">
-          <div
-            id="hp-money-map"
-            class="hp-money-map"
-            aria-label="Interactive political funding map"
-          >
+
+      <nav class="hp-section hp-browse" aria-labelledby="hp-browse-title">
+        <h2 id="hp-browse-title">Browse the record</h2>
+        <ul class="hp-browse-list">
+          <li><a href="/subject/person"><span class="hp-browse-name">Parliamentarians</span><span class="hp-browse-detail">Speeches, votes, pay, expenses and interests</span></a></li>
+          <li><a href="/subject/electorate"><span class="hp-browse-name">Electorates</span><span class="hp-browse-detail">Representatives and elections</span></a></li>
+          <li><a href="/subject/party"><span class="hp-browse-name">Parties</span><span class="hp-browse-detail">Members, debate and funding</span></a></li>
+          <li><a href="/bills"><span class="hp-browse-name">Bills</span><span class="hp-browse-detail">Federal bills and their divisions</span></a></li>
+          <li><a href="/money"><span class="hp-browse-name">Money</span><span class="hp-browse-detail">Donations, grants and contracts</span></a></li>
+          <li><a href="/subject/topic"><span class="hp-browse-name">Topics</span><span class="hp-browse-detail">The debate, subject by subject</span></a></li>
+        </ul>
+      </nav>
+
+      <section class="hp-section hp-map" data-accent="money" aria-labelledby="hp-map-title">
+        <div class="hp-map-main">
+          <h2 id="hp-map-title">Money map</h2>
+          <p class="hp-lede">Disclosed funding between donors and parties, <span id="hp-map-span">1998–99 to 2025–26</span></p>
+          <div id="hp-money-map" class="hp-money-map" aria-label="Interactive political funding map">
             <p role="status">Loading the money map…</p>
           </div>
         </div>
-        <p class="hp-map-note">
-            Lines connect donors and recipients. This map covers a subset of AEC
-            disclosures from 1998–99 to 2025–26.
-            <a href="/methods">Sources &amp; coverage</a> ·
-            <a id="hp-map-records" href="/money/receipts"
-              >Browse funding records →</a
-            >
-        </p>
-        <div class="hp-filter-heading">
-          <h3>Filter by industry</h3>
-          <span>Numbers show donors in this map</span
-          ><button
-            class="ui-button"
-            type="button"
-            data-variant="quiet"
-            data-ui-size="compact"
-            id="hp-map-reset"
-            disabled
-          >
-            Reset map
-          </button>
+        <div class="hp-map-side">
+          <div id="hp-map-filters">
+            <p class="hp-label" id="hp-industries-label">Industries</p>
+            <div class="hp-chips" id="hp-industries" role="group" aria-labelledby="hp-industries-label">
+              <button type="button" class="ui-chip" data-industry="individuals" aria-pressed="false" disabled>Individuals <span class="hp-chip-count">64<span class="visually-hidden"> donors</span></span></button>
+              <button type="button" class="ui-chip" data-industry="other" aria-pressed="false" disabled>Other <span class="hp-chip-count">62<span class="visually-hidden"> donors</span></span></button>
+              <button type="button" class="ui-chip" data-industry="finance" aria-pressed="false" disabled>Finance <span class="hp-chip-count">53<span class="visually-hidden"> donors</span></span></button>
+              <button type="button" class="ui-chip" data-industry="media &amp; tech" aria-pressed="false" disabled>Media &amp; tech <span class="hp-chip-count">33<span class="visually-hidden"> donors</span></span></button>
+              <button type="button" class="ui-chip" data-industry="property" aria-pressed="false" disabled>Property <span class="hp-chip-count">31<span class="visually-hidden"> donors</span></span></button>
+              <button type="button" class="ui-chip" data-industry="unions" aria-pressed="false" disabled>Unions <span class="hp-chip-count">31<span class="visually-hidden"> donors</span></span></button>
+              <button type="button" class="ui-chip" data-industry="" aria-pressed="true" disabled>All 15 industries</button>
+            </div>
+          </div>
+          <p class="visually-hidden" id="hp-map-status" aria-live="polite">All industries</p>
+          <p class="hp-map-open"><a id="hp-full-map" href="/money">Open the full map</a></p>
         </div>
-        <div
-          class="ui-map-filters"
-          role="group"
-          aria-label="Industry filters"
-          data-ui-size="compact"
-        >
-          <button
-            type="button"
-            class="ui-filter-chip ui-map-filter"
-            data-industry="agriculture"
-            aria-pressed="false"
-            disabled
-          >
-            <span
-              class="ui-map-filter__dot"
-              style="background: #6b8e23"
-              aria-hidden="true"
-            ></span
-            ><span>Agriculture</span
-            ><span class="ui-map-filter__count">7</span></button
-          ><button
-            type="button"
-            class="ui-filter-chip ui-map-filter"
-            data-industry="defence &amp; security"
-            aria-pressed="false"
-            disabled
-          >
-            <span
-              class="ui-map-filter__dot"
-              style="background: #37474f"
-              aria-hidden="true"
-            ></span
-            ><span>Defence &amp; security</span
-            ><span class="ui-map-filter__count">19</span></button
-          ><button
-            type="button"
-            class="ui-filter-chip ui-map-filter"
-            data-industry="finance"
-            aria-pressed="false"
-            disabled
-          >
-            <span
-              class="ui-map-filter__dot"
-              style="background: #4e79a7"
-              aria-hidden="true"
-            ></span
-            ><span>Finance</span
-            ><span class="ui-map-filter__count">53</span></button
-          ><button
-            type="button"
-            class="ui-filter-chip ui-map-filter"
-            data-industry="gambling"
-            aria-pressed="false"
-            disabled
-          >
-            <span
-              class="ui-map-filter__dot"
-              style="background: #b07aa1"
-              aria-hidden="true"
-            ></span
-            ><span>Gambling</span
-            ><span class="ui-map-filter__count">9</span></button
-          ><button
-            type="button"
-            class="ui-filter-chip ui-map-filter"
-            data-industry="health &amp; pharma"
-            aria-pressed="false"
-            disabled
-          >
-            <span
-              class="ui-map-filter__dot"
-              style="background: #59a14f"
-              aria-hidden="true"
-            ></span
-            ><span>Health &amp; pharma</span
-            ><span class="ui-map-filter__count">28</span></button
-          ><button
-            type="button"
-            class="ui-filter-chip ui-map-filter"
-            data-industry="hospitality"
-            aria-pressed="false"
-            disabled
-          >
-            <span
-              class="ui-map-filter__dot"
-              style="background: #edc948"
-              aria-hidden="true"
-            ></span
-            ><span>Hospitality</span
-            ><span class="ui-map-filter__count">9</span></button
-          ><button
-            type="button"
-            class="ui-filter-chip ui-map-filter"
-            data-industry="individuals"
-            aria-pressed="false"
-            disabled
-          >
-            <span
-              class="ui-map-filter__dot"
-              style="background: #79706e"
-              aria-hidden="true"
-            ></span
-            ><span>Individuals</span
-            ><span class="ui-map-filter__count">64</span></button
-          ><button
-            type="button"
-            class="ui-filter-chip ui-map-filter"
-            data-industry="legal &amp; lobbying"
-            aria-pressed="false"
-            disabled
-          >
-            <span
-              class="ui-map-filter__dot"
-              style="background: #6a51a3"
-              aria-hidden="true"
-            ></span
-            ><span>Legal &amp; lobbying</span
-            ><span class="ui-map-filter__count">20</span></button
-          ><button
-            type="button"
-            class="ui-filter-chip ui-map-filter"
-            data-industry="media &amp; tech"
-            aria-pressed="false"
-            disabled
-          >
-            <span
-              class="ui-map-filter__dot"
-              style="background: #76b7b2"
-              aria-hidden="true"
-            ></span
-            ><span>Media &amp; tech</span
-            ><span class="ui-map-filter__count">33</span></button
-          ><button
-            type="button"
-            class="ui-filter-chip ui-map-filter"
-            data-industry="mining &amp; energy"
-            aria-pressed="false"
-            disabled
-          >
-            <span
-              class="ui-map-filter__dot"
-              style="background: #9c755f"
-              aria-hidden="true"
-            ></span
-            ><span>Mining &amp; energy</span
-            ><span class="ui-map-filter__count">24</span></button
-          ><button
-            type="button"
-            class="ui-filter-chip ui-map-filter"
-            data-industry="other"
-            aria-pressed="false"
-            disabled
-          >
-            <span
-              class="ui-map-filter__dot"
-              style="background: #999966"
-              aria-hidden="true"
-            ></span
-            ><span>Other</span
-            ><span class="ui-map-filter__count">62</span></button
-          ><button
-            type="button"
-            class="ui-filter-chip ui-map-filter"
-            data-industry="property"
-            aria-pressed="false"
-            disabled
-          >
-            <span
-              class="ui-map-filter__dot"
-              style="background: #f28e2b"
-              aria-hidden="true"
-            ></span
-            ><span>Property</span
-            ><span class="ui-map-filter__count">31</span></button
-          ><button
-            type="button"
-            class="ui-filter-chip ui-map-filter"
-            data-industry="retail"
-            aria-pressed="false"
-            disabled
-          >
-            <span
-              class="ui-map-filter__dot"
-              style="background: #ff9da7"
-              aria-hidden="true"
-            ></span
-            ><span>Retail</span
-            ><span class="ui-map-filter__count">7</span></button
-          ><button
-            type="button"
-            class="ui-filter-chip ui-map-filter"
-            data-industry="tobacco &amp; alcohol"
-            aria-pressed="false"
-            disabled
-          >
-            <span
-              class="ui-map-filter__dot"
-              style="background: #a65628"
-              aria-hidden="true"
-            ></span
-            ><span>Tobacco &amp; alcohol</span
-            ><span class="ui-map-filter__count">3</span></button
-          ><button
-            type="button"
-            class="ui-filter-chip ui-map-filter"
-            data-industry="unions"
-            aria-pressed="false"
-            disabled
-          >
-            <span
-              class="ui-map-filter__dot"
-              style="background: #e15759"
-              aria-hidden="true"
-            ></span
-            ><span>Unions</span><span class="ui-map-filter__count">31</span>
-          </button>
-        </div>
-        <p class="visually-hidden" id="hp-map-status" aria-live="polite">
-          All industries
-        </p>
-        <div class="hp-map-context">
-          <details>
-            <summary>Start with a guided exploration</summary>
-            <nav aria-label="Guided map explorations">
-              <a href="/money?journey=multiple-parties"
-                >Donors funding multiple parties →</a
-              ><a href="/money?journey=industry">Funding by industry →</a
-              ><a href="/money?journey=over-time">Funding over time →</a
-              ><a href="/money?journey=public-money"
-                >Contracts &amp; grants →</a
-              >
-            </nav>
-          </details>
-        </div>
+        <div class="hp-source" id="hp-map-source"><details class="ui-pop ui-source" data-state="totals are a floor"><summary><svg class="ui-source-glyph" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 1.75h5.25L12.5 5v9.25h-8.5z"/><path d="M9 1.75V5.25h3.5M6.25 8.5h4M6.25 11h4"/></svg><span class="ui-source-text">Updated 3 Oct 2026 · <span class="ui-source-name">AEC annual returns</span></span><span class="ui-source-state">· totals are a floor</span></summary><div class="ui-sheet"><ul class="ui-sheet-originals"><li><a href="https://transparency.aec.gov.au/" rel="noopener" target="_blank">AEC Transparency Register ↗︎</a></li><li><a href="/money/receipts">Funding records</a></li><li><a href="/methods">Methods and coverage</a></li></ul><p class="ui-sheet-asat">Financial years 1998–99 to 2025–26.</p><div class="ui-sheet-notes"><p>Lines connect donors and the parties they gave to. The map shows the largest disclosed donors, not every donor.</p><p>Totals are a floor: donations under the disclosure threshold are not reported.</p></div><p class="ui-sheet-licence">AEC Transparency Register returns, <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener" target="_blank">CC BY 4.0 ↗︎</a>.</p></div></details></div>
       </section>
 
-      <aside class="hp-browse" aria-labelledby="hp-browse-title">
-          <h2 id="hp-browse-title">Browse the record</h2>
-          <div class="hp-browse-body">
-            <nav class="hp-profile-links" aria-label="People and representation">
-              <a href="/subject/person"><strong>Parliamentarians →</strong><span>Speeches, votes, expenses and declared interests.</span></a>
-              <a href="/subject/electorate"><strong>Electorates →</strong><span>Current and past representatives, election results and local context.</span></a>
-              <a href="/subject/party"><strong>Parties →</strong><span>Members, parliamentary debate and disclosed funding.</span></a>
-            </nav>
-            <div class="hp-browse-group"><h3>Parliamentary records</h3>
-              <nav aria-label="Parliamentary records"><a href="/search?kind=speech">Speeches &amp; debates →</a><a href="/bills">Bills &amp; votes →</a><a href="/declared">Declared interests →</a></nav>
-            </div>
-            <div class="hp-browse-group"><h3>Money &amp; organisations</h3>
-              <nav aria-label="Money and organisations"><a href="/subject/donor">Donors →</a><a href="/money/receipts">Political receipts →</a><a href="/discover">Government contracts →</a><a href="/money/grants">Grants →</a></nav>
-            </div>
-            <div class="hp-browse-group"><h3>Browse by parliament</h3>
-              <nav aria-label="Browse parliamentary records by jurisdiction"><a href="/search?state=federal">Federal</a><a href="/search?state=nsw">New South Wales</a><a href="/search?state=qld">Queensland</a><a href="/search?state=sa">South Australia</a><a href="/search?state=vic">Victoria</a></nav>
-            </div>
-          </div>
-      </aside>
-      </div>
-      <section class="hp-section hp-collection-section" aria-labelledby="hp-collections-title">
-        <div class="hp-section-head">
-          <div>
-            <h2 id="hp-collections-title">Explore by subject</h2>
-            <p>Find the debate, its history and related funding through topic pages and reports.</p>
-          </div>
-        </div>
-        <div class="hp-collections">
-          <section aria-labelledby="hp-topics-title">
-            <div class="hp-subhead">
-              <h3 id="hp-topics-title">Topics</h3>
-              <a href="/subject/topic">Topic directory →</a>
-            </div>
-            <p class="hp-collection-help">
-              Speeches and related records, organised by subject.
-            </p>
-            <label class="visually-hidden" for="hp-topic-filter"
-              >Filter topics by name</label
-            ><input
-              class="ui-input"
-              id="hp-topic-filter"
-              type="search"
-              placeholder="Filter topics by name"
-              data-ui-size="compact"
-            />
-            <ul class="hp-topic-list">
-              <li data-topic>
-                <a href="/subject/topic/agriculture">Agriculture</a>
-              </li>
-              <li data-topic>
-                <a href="/subject/topic/climate-environment"
-                  >Climate &amp; environment</a
-                >
-              </li>
-              <li data-topic>
-                <a href="/subject/topic/defence-security"
-                  >Defence &amp; security</a
-                >
-              </li>
-              <li data-topic>
-                <a href="/subject/topic/education">Education</a>
-              </li>
-              <li data-topic>
-                <a href="/subject/topic/financial-services"
-                  >Financial services</a
-                >
-              </li>
-              <li data-topic>
-                <a href="/subject/topic/foreign-affairs">Foreign affairs</a>
-              </li>
-              <li data-topic><a href="/subject/topic/gambling">Gambling</a></li>
-              <li data-topic><a href="/subject/topic/health">Health</a></li>
-              <li data-topic>
-                <a href="/subject/topic/hospitality-alcohol"
-                  >Hospitality &amp; alcohol</a
-                >
-              </li>
-              <li data-topic><a href="/subject/topic/housing">Housing</a></li>
-              <li data-topic>
-                <a href="/subject/topic/immigration">Immigration</a>
-              </li>
-              <li data-topic>
-                <a href="/subject/topic/indigenous-affairs"
-                  >Indigenous affairs</a
-                >
-              </li>
-              <li data-topic>
-                <a href="/subject/topic/infrastructure-transport"
-                  >Infrastructure &amp; transport</a
-                >
-              </li>
-              <li data-topic>
-                <a href="/subject/topic/integrity-democracy"
-                  >Integrity &amp; democracy</a
-                >
-              </li>
-              <li data-topic>
-                <a href="/subject/topic/justice-law">Justice &amp; law</a>
-              </li>
-              <li data-topic>
-                <a href="/subject/topic/media-communications"
-                  >Media &amp; communications</a
-                >
-              </li>
-              <li data-topic>
-                <a href="/subject/topic/mining-energy">Mining &amp; energy</a>
-              </li>
-              <li data-topic>
-                <a href="/subject/topic/property-construction"
-                  >Property &amp; construction</a
-                >
-              </li>
-              <li data-topic>
-                <a href="/subject/topic/tax-budget">Tax &amp; budget</a>
-              </li>
-              <li data-topic>
-                <a href="/subject/topic/unions-workplace"
-                  >Unions &amp; workplace</a
-                >
-              </li>
-              <li data-topic>
-                <a href="/subject/topic/welfare-social"
-                  >Welfare &amp; social services</a
-                >
-              </li>
-            </ul>
-            <p id="hp-topic-status" class="hp-meta" aria-live="polite"></p>
-            <p class="hp-meta" id="hp-topic-empty" hidden>
-              No topics match.
-              <button
-                class="ui-button"
-                data-variant="quiet"
-                data-ui-size="compact"
-                type="button"
-                id="hp-topic-clear"
-              >
-                Clear filter
-              </button>
-            </p>
-          </section>          <section aria-labelledby="hp-reports-title">
-            <div class="hp-subhead">
-              <h3 id="hp-reports-title">Reports</h3>
-              <a href="/reports">All reports →</a>
-            </div>
-            <p class="hp-collection-help">
-              Longer reading paths through speeches, policy and funding.
-            </p>
-            <div class="hp-report-list">
-              <article class="hp-report" data-report>
-                <h3><a href="/reports/climate">Climate &amp; Energy</a></h3>
-                <p>
-                  Targets, coal, renewables and carbon pricing across the public
-                  record.
-                </p>
-              </article>
-              <article class="hp-report" data-report>
-                <h3><a href="/reports/indigenous">First Nations</a></h3>
-                <p>
-                  Reconciliation, the Voice, Closing the Gap and native title
-                  across the public record.
-                </p>
-              </article>
-              <article class="hp-report" data-report>
-                <h3><a href="/reports/gambling">Gambling</a></h3>
-                <p>
-                  Poker machines, online wagering and reform across the public
-                  record.
-                </p>
-              </article>
-              <article class="hp-report" data-report>
-                <h3><a href="/reports/housing">Housing</a></h3>
-                <p>
-                  Decades of affordability promises, negative gearing fights and
-                  supply debates.
-                </p>
-              </article>
-              <article class="hp-report" data-report>
-                <h3><a href="/reports/immigration">Immigration</a></h3>
-                <p>
-                  Border policy, offshore detention and migration levels across
-                  the decades.
-                </p>
-              </article>
-              <article class="hp-report" data-report>
-                <h3><a href="/reports/media">Media Ownership</a></h3>
-                <p>
-                  Media ownership, regulation and digital platforms across the
-                  public record.
-                </p>
-              </article>
-              <article class="hp-report" data-report>
-                <h3>
-                  <a href="/reports/grants-allocation"
-                    >Where community funding goes</a
-                  >
-                </h3>
-                <p>
-                  Explore community infrastructure invitations, published grants
-                  and the Centre for Public Integrity’s seat comparison.
-                </p>
-              </article>
-            </div>
-          </section>
-
-        </div>
-      </section>
-      <section class="hp-section hp-spotlight" aria-labelledby="hp-gambling-title">
-        <div class="hp-section-head">
-          <h2 id="hp-gambling-title" class="hp-spotlight-title"><span>Spotlight on:</span>
-            <select id="hp-spotlight-topic" aria-label="Spotlight topic" aria-controls="hp-gambling-content">
-              <option value="gambling">Gambling</option>
-              <option value="housing">Housing</option>
-              <option value="climate">Climate</option>
-            </select>
-          </h2>
-          <a id="hp-spotlight-more" href="/subject/topic/gambling">Learn more about gambling →</a>
-        </div>
-        <p id="hp-spotlight-status" class="visually-hidden" role="status"></p>
-        <div id="hp-gambling-content">
-          <p class="status">Loading the gambling record…</p>
-        </div>
-      </section>
-      <section class="hp-section" aria-labelledby="hp-activity-title">
-        <div class="hp-section-head">
-          <div>
-            <h2 id="hp-activity-title">Latest in the record</h2>
-          </div>
-          <a href="/search">Search all records →</a>
-        </div>
-        <div class="hp-activity-grid">
-          <section aria-labelledby="hp-bills-title">
-            <div class="hp-subhead">
-              <h3 id="hp-bills-title">Recently introduced bills</h3>
-              <a href="/bills">All bills →</a>
-            </div>
-            <ol class="hp-record-list">
-              <li>
-                <p class="hp-meta">
-                  Introduced <time datetime="2026-09-10">10 Sep 2026</time> ·
-                  Federal
-                </p>
-                <h3>
-                  <a href="/bill/au-federal-r7542"
-                    >Tertiary Education Quality and Standards Agency Amendment
-                    (National Student Ombudsman Levy) Bill 2026</a
-                  >
-                </h3>
-                <p>Before parliament · Education</p>
-              </li>
-              <li>
-                <p class="hp-meta">
-                  Introduced <time datetime="2026-09-10">10 Sep 2026</time> ·
-                  Federal
-                </p>
-                <h3>
-                  <a href="/bill/au-federal-r7541"
-                    >National Student Ombudsman Levy Bill 2026</a
-                  >
-                </h3>
-                <p>Before parliament · Education</p>
-              </li>
-              <li>
-                <p class="hp-meta">
-                  Introduced <time datetime="2026-09-10">10 Sep 2026</time> ·
-                  Federal
-                </p>
-                <h3>
-                  <a href="/bill/au-federal-r7540"
-                    >Customs and Other Legislation Amendment (Illicit Tobacco
-                    Enforcement Modernisation and Other Measures) Bill 2026</a
-                  >
-                </h3>
-                <p>Before parliament · Home Affairs</p>
-              </li>
-            </ol>
-            <p class="hp-note">
-              Introduction dates from the bill index. Open a bill for its
-              status, text and related records.
-            </p>
-          </section>
-          <section aria-labelledby="hp-declared-title">
-            <div class="hp-subhead">
-              <h3 id="hp-declared-title">Recent declarations</h3>
-              <a href="/declared">All declarations →</a>
-            </div>
-            <ol class="hp-record-list">
-              <li>
-                <p class="hp-meta">
-                  Recorded <time datetime="2026-09-02">2 Sep 2026</time> ·
-                  Federal
-                </p>
-                <h3><a href="/subject/person/susan-mcdonald">Susan McDonald</a></h3>
-                <p>
-                  25th July, 2026 - tickets and hospitality to 2026 NRL Telstra
-                  Premiership - North Qld Cowboys v Brisbane Broncos game -
-                  courtesy of Bravus Australia.
-                </p>
-                <a
-                  class="hp-source"
-                  href="https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Senators_Interests/Senators_Interests_Register/123072"
-                  >Parliamentary register ↗</a
-                >
-              </li>
-              <li>
-                <p class="hp-meta">
-                  Recorded <time datetime="2026-08-31">31 Aug 2026</time> ·
-                  Federal
-                </p>
-                <h3><a href="/subject/person/andrew-wilkie">Andrew Wilkie</a></h3>
-                <p>
-                  Two tickets to Theatre Royal production valued at $99 each.
-                </p>
-                <a
-                  class="hp-source"
-                  href="https://static.aph.gov.au/-/media/03_Senators_and_Members/32_Members/Register/48p/SZ/WilkieA.pdf?rev=8b502aa2e0494bfab462844ddf6121d3&amp;hash=2A7DD2632A962C6D21BAE7EFF562F70E#page=13"
-                  >Parliamentary register ↗</a
-                >
-              </li>
-              <li>
-                <p class="hp-meta">
-                  Recorded <time datetime="2026-08-30">30 Aug 2026</time> ·
-                  Federal
-                </p>
-                <h3><a href="/subject/person/richard-colbeck">Richard Colbeck</a></h3>
-                <p>
-                  Corporate Box Tickets to Seattle Mariners Major League
-                  Baseball Game - 16 June 2026. Courtesy of Football Australia
-                </p>
-                <a
-                  class="hp-source"
-                  href="https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Senators_Interests/Senators_Interests_Register/00AOL"
-                  >Parliamentary register ↗</a
-                >
-              </li>
-            </ol>
-            <p class="hp-note">
-              Register recording dates can differ from the date of the gift or
-              event.
-            </p>
-          </section>
-        </div>
-        <section class="hp-indexed" aria-labelledby="hp-indexed-title">
-          <h3 id="hp-indexed-title">Newly indexed records</h3>
-          <p class="hp-collection-help">
-            Latest additions to search. An indexing date does not indicate when
-            the event occurred.
-          </p>
-          <ol class="hp-indexed-list">
-            <li>
-              <p class="hp-meta">
-                Indexed <time datetime="2026-09-13">13 Sep 2026</time>
-              </p>
-              <a href="/doc/speech-1318965"
-                >Maria Kovacic · Documents · 2026-09-10</a
-              >
-            </li>
-            <li>
-              <p class="hp-meta">
-                Indexed <time datetime="2026-09-13">13 Sep 2026</time>
-              </p>
-              <a href="/doc/speech-1318962"
-                >Tony Sheldon · Committees · 2026-09-10</a
-              >
-            </li>
-            <li>
-              <p class="hp-meta">
-                Indexed <time datetime="2026-09-13">13 Sep 2026</time>
-              </p>
-              <a href="/doc/speech-1318969"
-                >Michaelia Cash · Business · 2026-09-10</a
-              >
-            </li>
-            <li>
-              <p class="hp-meta">
-                Indexed <time datetime="2026-09-13">13 Sep 2026</time>
-              </p>
-              <a href="/doc/bill-text-au-federal-s1484-third-senate"
-                >High Seas Biodiversity Bill 2026 · Third reading · Senate</a
-              >
-            </li>
+      <div class="hp-section hp-latest">
+        <section class="hp-feed" aria-labelledby="hp-bills-title">
+          <div class="hp-head"><h2 id="hp-bills-title">New bills</h2><a href="/bills">All bills</a></div>
+          <ol class="hp-rows" id="hp-bills">
+            <li class="hp-row"><p class="hp-row-meta"><span class="ui-status" data-tone="active">Before parliament</span> <span>Introduced <time datetime="2026-09-17">17 Sep 2026</time></span></p><h3 class="hp-row-title"><a href="/bill/au-federal-r7549">Child Support and Family Assistance Legislation Amendment (Ending Financial Abuse in the Child Support Scheme No. 1) Bill 2026</a></h3><p class="hp-row-detail">Social Services</p></li>
+            <li class="hp-row"><p class="hp-row-meta"><span class="ui-status" data-tone="active">Before parliament</span> <span>Introduced <time datetime="2026-09-17">17 Sep 2026</time></span></p><h3 class="hp-row-title"><a href="/bill/au-federal-r7548">Sport Legislation Amendment (World Anti-Doping Code Implementation) Bill 2026</a></h3><p class="hp-row-detail">Infrastructure, Transport, Regional Development, Communications, Sport and the Arts</p></li>
+            <li class="hp-row"><p class="hp-row-meta"><span class="ui-status" data-tone="active">Before parliament</span> <span>Introduced <time datetime="2026-09-17">17 Sep 2026</time></span></p><h3 class="hp-row-title"><a href="/bill/au-federal-r7544">Private Health Insurance (National Joint Replacement Register Levy) Amendment Bill 2026</a></h3><p class="hp-row-detail">Health, Disability and Ageing</p></li>
           </ol>
+          <div class="hp-source" id="hp-bills-source"><details class="ui-pop ui-source"><summary><svg class="ui-source-glyph" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 1.75h5.25L12.5 5v9.25h-8.5z"/><path d="M9 1.75V5.25h3.5M6.25 8.5h4M6.25 11h4"/></svg><span class="ui-source-text">Updated 4 Oct 2026 · <span class="ui-source-name">Parliament of Australia</span></span></summary><div class="ui-sheet"><div class="ui-sheet-notes"><p>Bills and their dates come from the parliamentary record; each bill page links the official source it was read from.</p><p>A bill missing from this list is not evidence it does not exist: the register is still being built.</p></div></div></details></div>
         </section>
-      </section>
-<section class="hp-section hp-ency" aria-labelledby="hp-ency-title"><div class="hp-section-head"><h2 id="hp-ency-title">From the record</h2></div><div class="hp-ency-track" id="hp-ency-track" tabindex="0" role="region" aria-label="Record previews"><article class="hp-ency-card" data-record-type="parliamentarian">
-<div class="hp-ency-head"><img src="/photos/10727.webp" alt="" width="64" height="64" loading="lazy"><div><span class="hp-meta">Parliamentarian</span><h3><a href="/subject/person/Andrew%20Wilkie">Andrew Wilkie</a></h3><span class="party party-ind"><i aria-hidden="true"></i>IND</span></div></div>
-<div class="hp-ency-votes"><div><h3>Voted for</h3><ul><li><span>Online Safety Amendment (Strengthening Enforcement for the Social Media Minimum Age) Bill 2026</span><time>2026</time></li><li><span>Workplace Relations Legislation Amendment (Building Cooperative Workplaces No. 1) Bill 2026</span><time>2026</time></li></ul></div><div><h3>Voted against</h3><ul><li><span>Interactive Gambling Amendment (Gambling Reform) Bill 2026</span><time>2026</time></li><li><span>Migration Amendment (2026 Measures No. 1) Bill 2026</span><time>2026</time></li></ul></div></div><p class="hp-meta">2,520 recorded votes, 2010 to 2026</p>
-<a class="hp-ency-open" href="/subject/person/Andrew%20Wilkie">Open the entry →</a></article>
-<article class="hp-ency-card" data-record-type="grant"><span class="hp-meta">Grant · Federal</span><h3><a href="https://www.grants.gov.au/Ga/Show/6d499db1-73c4-4de4-9e34-1088a880122b">National Aboriginal Community Controlled Health Organisation</a></h3><p class="hp-record-amount">$141,729,612<span>Published award value</span></p><dl class="hp-record-facts"><div><dt>Program</dt><dd><a href="/money/grants?jur=federal&amp;program=GO5367">Culture Care Connect Program</a></dd></div><div><dt>Financial year</dt><dd>2021-22</dd></div></dl><a class="hp-ency-open" href="https://www.grants.gov.au/Ga/Show/6d499db1-73c4-4de4-9e34-1088a880122b">View grant record ↗</a></article>
-<article class="hp-ency-card" data-record-type="program"><span class="hp-meta">Program · Federal</span><h3><a href="/money/grants?jur=federal&amp;program=GO5367">Culture Care Connect Program</a></h3><p class="hp-record-amount">$169,225,174<span>Recorded award value · 2019-20 to 2025-26</span></p><dl class="hp-record-facts"><div><dt>Awards</dt><dd>6</dd></div><div><dt>Recipients</dt><dd>4</dd></div></dl><p class="hp-meta">GrantConnect</p><a class="hp-ency-open" href="/money/grants?jur=federal&amp;program=GO5367">Explore program →</a></article>
-<article class="hp-ency-card" data-record-type="donor"><span class="hp-meta">Donor</span><h3><a href="/subject/donor/Tabcorp%20Holdings%20Limited">Tabcorp Holdings Limited</a></h3><p>$4,722,632 disclosed to parties.</p><a class="hp-ency-open" href="/subject/donor/Tabcorp%20Holdings%20Limited">Open the entry →</a></article>
-<article class="hp-ency-card" data-record-type="parliamentarian">
-<div class="hp-ency-head"><img src="/photos/10007.webp" alt="" width="64" height="64" loading="lazy"><div><span class="hp-meta">Parliamentarian</span><h3><a href="/subject/person/Anthony%20Albanese">Anthony Albanese</a></h3><span class="party party-alp"><i aria-hidden="true"></i>ALP</span></div></div>
-<div class="hp-ency-votes"><div><h3>Voted for</h3><ul><li><span>Income Tax Rates Amendment (Tax Reform No. 1) Bill 2026</span><time>2026</time></li><li><span>Treasury Laws Amendment (Tax Reform No. 1) Bill 2026</span><time>2026</time></li></ul></div><div><h3>Voted against</h3><ul><li><span>Online Safety Amendment (Strengthening Enforcement for the Social Media Minimum Age) Bill 2026</span><time>2026</time></li><li><span>Corporations Amendment (Improving Outcomes for Litigation Funding Participants) Bill 2021</span><time>2021</time></li></ul></div></div><p class="hp-meta">2,920 recorded votes, 2006 to 2026</p>
-<a class="hp-ency-open" href="/subject/person/Anthony%20Albanese">Open the entry →</a></article>
-<article class="hp-ency-card" data-record-type="parliamentarian">
-<div class="hp-ency-head"><img src="/photos/11009.webp" alt="" width="64" height="64" loading="lazy"><div><span class="hp-meta">Parliamentarian</span><h3><a href="/subject/person/David%20Pocock">David Pocock</a></h3><span class="party party-ind"><i aria-hidden="true"></i>IND</span></div></div>
-<div class="hp-ency-votes"><div><h3>Voted for</h3><ul><li><span>National Disability Insurance Scheme Amendment (Securing the Ndis for Future Generations) Bill 2026</span><time>2026</time></li><li><span>Aged Care Amendment (Restoring Human Override for Aged Care Needs Assessments) Bill 2026</span><time>2026</time></li></ul></div><div><h3>Voted against</h3><ul><li><span>Competition and Consumer Amendment (Responding to Exceptional Circumstances) Bill 2026</span><time>2026</time></li><li><span>Criminal Code Amendment (Keeping Australia Safe) Bill 2026</span><time>2026</time></li></ul></div></div><p class="hp-meta">1,926 recorded votes, 2022 to 2026</p>
-<a class="hp-ency-open" href="/subject/person/David%20Pocock">Open the entry →</a></article>
-<article class="hp-ency-card" data-record-type="parliamentarian">
-<div class="hp-ency-head"><img src="/photos/10723.webp" alt="" width="64" height="64" loading="lazy"><div><span class="hp-meta">Parliamentarian</span><h3><a href="/subject/person/Paul%20Fletcher">Paul Fletcher</a></h3><span class="party party-lib"><i aria-hidden="true"></i>LIB</span></div></div>
-<div class="hp-ency-votes"><div><h3>Voted for</h3><ul><li><span>Environment Protection and Biodiversity Conservation Amendment (Reconsiderations) Bill 2025</span><time>2025</time></li><li><span>Online Safety Amendment (Social Media Minimum Age) Bill 2024</span><time>2024</time></li></ul></div><div><h3>Voted against</h3><ul><li><span>Treasury Laws Amendment (More Cost of Living Relief) Bill 2025</span><time>2025</time></li><li><span>Early Childhood Education and Care (Three Day Guarantee) Bill 2025</span><time>2025</time></li></ul></div></div><p class="hp-meta">2,601 recorded votes, 2010 to 2025</p>
-<a class="hp-ency-open" href="/subject/person/Paul%20Fletcher">Open the entry →</a></article>
-<article class="hp-ency-card" data-record-type="parliamentarian">
-<div class="hp-ency-head"><img src="/photos/10790.webp" alt="" width="64" height="64" loading="lazy"><div><span class="hp-meta">Parliamentarian</span><h3><a href="/subject/person/Sarah%20Henderson">Sarah Henderson</a></h3><span class="party party-lib"><i aria-hidden="true"></i>LIB</span></div></div>
-<div class="hp-ency-votes"><div><h3>Voted for</h3><ul><li><span>Aged Care Amendment (Restoring Human Override for Aged Care Needs Assessments) Bill 2026</span><time>2026</time></li><li><span>Health Legislation Amendment (Prescribing of Pharmaceutical Benefits) Bill 2025</span><time>2026</time></li></ul></div><div><h3>Voted against</h3><ul><li><span>Competition and Consumer Amendment (Responding to Exceptional Circumstances) Bill 2026</span><time>2026</time></li><li><span>Migration Amendment (Combatting Migrant Exploitation) Bill 2025</span><time>2026</time></li></ul></div></div><p class="hp-meta">3,152 recorded votes, 2013 to 2026</p>
-<a class="hp-ency-open" href="/subject/person/Sarah%20Henderson">Open the entry →</a></article>
-<article class="hp-ency-card" data-record-type="parliamentarian">
-<div class="hp-ency-head"><img src="/photos/10643.webp" alt="" width="64" height="64" loading="lazy"><div><span class="hp-meta">Parliamentarian</span><h3><a href="/subject/person/Malcolm%20Turnbull">Malcolm Turnbull</a></h3><span class="party party-lib"><i aria-hidden="true"></i>LIB</span></div></div>
-<div class="hp-ency-votes"><div><h3>Voted for</h3><ul><li><span>Coastal Trading (Revitalising Australian Shipping) Amendment Bill 2017</span><time>2018</time></li><li><span>Social Services Legislation Amendment (Drug Testing Trial) Bill 2018</span><time>2018</time></li></ul></div><div><h3>Voted against</h3><ul><li><span>Medicare Guarantee Bill 2017, Medicare Guarantee (Consequential Amendments) Bill 2017</span><time>2017</time></li><li><span>Major Bank Levy Bill 2017, Treasury Laws Amendment (Major Bank Levy) Bill 2017</span><time>2017</time></li></ul></div></div><p class="hp-meta">1,650 recorded votes, 2006 to 2018</p>
-<a class="hp-ency-open" href="/subject/person/Malcolm%20Turnbull">Open the entry →</a></article>
-<article class="hp-ency-card" data-record-type="parliamentarian">
-<div class="hp-ency-head"><img src="/photos/10436.webp" alt="" width="64" height="64" loading="lazy"><div><span class="hp-meta">Parliamentarian</span><h3><a href="/subject/person/Peter%20McGauran">Peter McGauran</a></h3><span class="party party-nat"><i aria-hidden="true"></i>NAT</span></div></div>
-<div class="hp-ency-votes"><div><h3>Voted for</h3><ul><li><span>Health Insurance Amendment (Medicare Dental Services) Bill 2007</span><time>2007</time></li><li><span>Aboriginal Land Rights (Northern Territory) Amendment (Township Leasing) Bill 2007</span><time>2007</time></li></ul></div><div><h3>Voted against</h3><ul><li><span>Telecommunications Legislation Amendment (Communications Fund) Bill 2008</span><time>2008</time></li><li><span>Interstate Road Transport Charge Amendment Bill 2008; Road Transport Charges (Australian Capital Territory) Repeal Bill 2008</span><time>2008</time></li></ul></div></div><p class="hp-meta">300 recorded votes, 2006 to 2008</p>
-<a class="hp-ency-open" href="/subject/person/Peter%20McGauran">Open the entry →</a></article>
-<article class="hp-ency-card" data-record-type="parliamentarian">
-<div class="hp-ency-head"><img src="/photos/10257.webp" alt="" width="64" height="64" loading="lazy"><div><span class="hp-meta">Parliamentarian</span><h3><a href="/subject/person/Julia%20Gillard">Julia Gillard</a></h3><span class="party party-alp"><i aria-hidden="true"></i>ALP</span></div></div>
-<div class="hp-ency-votes"><div><h3>Voted for</h3><ul><li><span>Public Governance, Performance and Accountability Bill 2013</span><time>2013</time></li><li><span>Low Aromatic Fuel Bill 2012</span><time>2013</time></li></ul></div><div><h3>Voted against</h3><ul><li><span>Export Market Development Grants Amendment Bill 2013</span><time>2013</time></li><li><span>Marriage Amendment Bill 2012</span><time>2012</time></li></ul></div></div><p class="hp-meta">761 recorded votes, 2006 to 2013</p>
-<a class="hp-ency-open" href="/subject/person/Julia%20Gillard">Open the entry →</a></article></div><div class="hp-ency-nav"><button class="ui-button" type="button" id="hp-ency-prev" aria-label="Previous entries" aria-controls="hp-ency-track" disabled>←</button><span class="hp-meta" id="hp-ency-position" aria-live="polite"></span><button class="ui-button" type="button" id="hp-ency-next" aria-label="Next entries" aria-controls="hp-ency-track">→</button></div></section>
-      <section
-        class="hp-section hp-coverage"
-        aria-labelledby="hp-coverage-title"
-      >
-        <div>
-          <h2 id="hp-coverage-title">Collection &amp; coverage</h2>
-          <p>
-            Sources cover different periods and record types. Check coverage
-            when comparing parliaments or years.
-          </p>
-          <nav class="hp-jurisdictions" aria-label="Parliaments">
-            <a href="/search?state=federal">Federal →</a
-            ><a href="/search?state=nsw">New South Wales →</a
-            ><a href="/search?state=qld">Queensland →</a
-            ><a href="/search?state=sa">South Australia →</a
-            ><a href="/search?state=vic">Victoria →</a>
-          </nav>
-          <dl class="hp-counts"><div><dt>documents in the live index</dt><dd>620,767</dd></div><div><dt>passages searchable</dt><dd>2,344,659</dd></div><div><dt>speeches collected</dt><dd>596,409</dd></div><div><dt>donations classified</dt><dd>199,233</dd></div></dl>
-          <p class="hp-note">
-            <span data-home-count-note>Loading current collection counts… </span>
-            <a href="/stats">Coverage &amp; datasets →</a> ·
-            <a href="/methods">Sources &amp; methods →</a>
-          </p>
-        </div>
-        <aside>
-          <h3>Other ways to explore</h3>
-          <nav class="hp-profile-links" aria-label="Other ways to explore">
-            <a href="/explore?game=tm"><strong>Time machine →</strong><span>Choose a year and explore what parliament was debating.</span></a>
-            <a href="/explore?game=tide"><strong>The tide →</strong><span>See how subjects rise and fall across the speech record.</span></a>
-            <a href="/explore?game=quiz"><strong>The record quiz →</strong><span>Test your knowledge, then check the records.</span></a>
-          </nav>
-        </aside>
+        <section class="hp-feed" aria-labelledby="hp-declared-title">
+          <div class="hp-head"><h2 id="hp-declared-title">Just declared</h2><a href="/declared">All declarations</a></div>
+          <ol class="hp-rows" id="hp-declared">
+            <li class="hp-row hp-person-row"><img class="hp-portrait" src="/photos/10827.webp" alt="" width="44" height="44" loading="lazy" decoding="async"><div class="hp-row-body"><div class="hp-row-who"><h3 class="hp-row-name"><a href="/subject/person/Matthew%20Canavan">Matthew Canavan</a></h3><span class="ui-party party party-nat" title="The Nationals"><i aria-hidden="true"></i><span aria-hidden="true">Nationals</span><span class="visually-hidden">The Nationals</span></span></div><p class="hp-row-text">“Four (4) tickets to Australia v Brazil at Suncorp Stadium in Brisbane on 29 September 2026 were provided by Football Australia”</p><p class="hp-row-detail">Sponsored travel or hospitality · <span>recorded <time datetime="2026-10-07">7 Oct 2026</time></span> · <a href="https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Senators_Interests/Senators_Interests_Register/245212" rel="noopener" target="_blank" aria-label="Register entry for Matthew Canavan">Register <span aria-hidden="true">↗︎</span></a></p></div></li>
+            <li class="hp-row hp-person-row"><img class="hp-portrait" src="/photos/10060.webp" alt="" width="44" height="44" loading="lazy" decoding="async"><div class="hp-row-body"><div class="hp-row-who"><h3 class="hp-row-name"><a href="/subject/person/Chris%20Bowen">Chris Bowen</a></h3><span class="ui-party party party-alp" title="Australian Labor Party"><i aria-hidden="true"></i><span aria-hidden="true">Labor</span><span class="visually-hidden">Australian Labor Party</span></span></div><p class="hp-row-text">“On 26 and 27 September 2026 I was a guest of the government of the Kingdom of Saudi Arabia and my accommodation in Jeddah was provided by the Government of KSA.”</p><p class="hp-row-detail">Sponsored travel or hospitality · <span>recorded <time datetime="2026-10-07">7 Oct 2026</time></span> · <a href="https://interests-register-api-public.aph.gov.au/api/members/DZS/statement/48#page=22" rel="noopener" target="_blank" aria-label="Register entry for Chris Bowen">Register <span aria-hidden="true">↗︎</span></a></p></div></li>
+            <li class="hp-row hp-person-row"><img class="hp-portrait" src="/photos/10060.webp" alt="" width="44" height="44" loading="lazy" decoding="async"><div class="hp-row-body"><div class="hp-row-who"><h3 class="hp-row-name"><a href="/subject/person/Chris%20Bowen">Chris Bowen</a></h3><span class="ui-party party party-alp" title="Australian Labor Party"><i aria-hidden="true"></i><span aria-hidden="true">Labor</span><span class="visually-hidden">Australian Labor Party</span></span></div><p class="hp-row-text">“I received office ornaments and mementos from Hon. Bhupinder Yadav, Minister for Environment and Climate Change of India, Hon. Pralhad Joshi, Minister for New and Renewable Energy of India, from Reliance Petroleum and from His Royal Highness Prince Abdulaziz, Minister of Energy of Saudi Arabia”</p><p class="hp-row-detail">Gift · <span>recorded <time datetime="2026-10-07">7 Oct 2026</time></span> · <a href="https://interests-register-api-public.aph.gov.au/api/members/DZS/statement/48#page=22" rel="noopener" target="_blank" aria-label="Register entry for Chris Bowen">Register <span aria-hidden="true">↗︎</span></a></p></div></li>
+          </ol>
+          <div class="hp-source" id="hp-declared-source"><details class="ui-pop ui-source"><summary><svg class="ui-source-glyph" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 1.75h5.25L12.5 5v9.25h-8.5z"/><path d="M9 1.75V5.25h3.5M6.25 8.5h4M6.25 11h4"/></svg><span class="ui-source-text">Updated 9 Oct 2026 · <span class="ui-source-name">Registers of interests</span></span></summary><div class="ui-sheet"><p class="ui-sheet-asat">Registers of Members&#39; and Senators&#39; Interests, 48th Parliament, and Queensland Register of Members&#39; Interests, 58th Parliament.</p><div class="ui-sheet-notes"><p>Entries as declared, not verified by OPAX.</p><p>The date is when the register recorded the entry, which can differ from the date of the gift or event. Each entry links to its page in the register.</p></div></div></details></div>
+        </section>
+      </div>
+
+      <section class="hp-section hp-reports" aria-labelledby="hp-reports-title">
+        <div class="hp-head"><h2 id="hp-reports-title">Reports</h2><a href="/reports">All reports</a></div>
+        <ul class="hp-report-grid" id="hp-reports">
+          <li class="hp-report"><h3><a href="/reports/climate">Climate &amp; Energy</a></h3><p>Targets, coal, renewables and carbon pricing across the public record.</p></li>
+          <li class="hp-report"><h3><a href="/reports/indigenous">First Nations</a></h3><p>Reconciliation, the Voice, Closing the Gap and native title across the public record.</p></li>
+          <li class="hp-report"><h3><a href="/reports/gambling">Gambling</a></h3><p>Poker machines, online wagering and reform across the public record.</p></li>
+          <li class="hp-report"><h3><a href="/reports/housing">Housing</a></h3><p>Decades of affordability promises, negative gearing fights and supply debates.</p></li>
+          <li class="hp-report"><h3><a href="/reports/immigration">Immigration</a></h3><p>Border policy, offshore detention and migration levels across the decades.</p></li>
+          <li class="hp-report"><h3><a href="/reports/media">Media Ownership</a></h3><p>Media ownership, regulation and digital platforms across the public record.</p></li>
+          <li class="hp-report"><h3><a href="/reports/grants-allocation">Where community funding goes</a></h3><p>Explore community infrastructure invitations, published grants and the Centre for Public Integrity’s seat comparison.</p></li>
+        </ul>
       </section>
     </main>
     <!-- site-footer:start -->
