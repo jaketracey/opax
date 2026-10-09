@@ -338,13 +338,20 @@ and skips both steps when it is unpublished, even if an untracked export exists.
 The first acquisition/export is performed in the separate lane and committed there;
 the weekly job cannot leave a first untracked export that obstructs a fast-forward.
 The loader uses a persistent, gitignored checkpoint and snapshot under
-`scripts/state/frl/` in the checkout. It never opens `parli.db`. A failed, empty,
-moving-count or more-than-2%-shrunk acquisition exits 3 and keeps the last good export.
-A checkpoint is reusable only within its original quiet window and query fingerprint
-(filter, fields, expand, count, ordering and page size). Expired, mismatched, legacy or
-completed checkpoints automatically rotate to `<checkpoint>.previous`; only the most
-recent prior checkpoint is kept for evidence. Acquisition restarts at offset zero,
-so an unchanged title count cannot hide later metadata changes. The current API's
+`scripts/state/frl/` in the checkout. It never opens `parli.db`. A failed or empty acquisition, excessive count drift, or shrinkage above 2%
+exits 3 and keeps the last good export.
+The checkpoint fingerprints the filter, field/expand set, ordering, page size and
+recovery strategy. The initial count is a separate anchor: observations may drift
+by at most 50 in either direction. Counts are recorded at start, after each page
+(from its returned `@odata.count`), throughout recovery and at the end. Repeated
+boundary rows are deduplicated by id. A completed, mismatched or legacy checkpoint
+rotates to `<checkpoint>.previous`; valid interrupted checkpoints survive later
+quiet windows. On a later window the loader re-reads every plain membership page,
+reusing complete expansion metadata only when that same id's source fields match.
+This prevents a same-count membership change from reviving stale ids. The previous
+schema-3 fully specified query can migrate its expanded metadata with the same
+fresh membership pass; its offsets and gap allowances are not trusted.
+The current API's
 unbounded/bulk filtered version expansions time out. The phase 1 query bounds
 `versions` to one returned row per title, retaining every field and the source's
 current/latest flags without asserting the returned version is either. Detail pages
@@ -360,9 +367,18 @@ holds publication; more than 50 recovery ids also holds as a systemic fault. Thi
 limit is retained across resumes of the same checkpoint. `individual-fetches.json`
 records requested ids, responses and completion/failure, and the final run receipt
 lists `individual_fetch_ids`. Other malformed or mismatched pages still hold the run.
-Explicit empty arrays returned for a title are legitimate source metadata. The unique plain
-title ids plus any explicitly evidenced, permitted plain-page gap must reconcile
-with the count before and after the run. Short non-final plain pages use overlapping
+Explicit empty arrays returned for a title are legitimate source metadata. The final unique row count must cover the final listed count minus the permitted,
+explicit plain-page gaps. After primary paging, a tail sweep rereads at least two
+whole pages plus the drift margin, projected to ids. Any newly discovered id is
+fetched through its own expanded entity response. A short final plain page is deferred to this
+sweep and must be retrieved; it does not create a gap allowance. If totals remain short, the
+sweep scans earlier id pages to find insertions before the current offset. It is
+initially allotted 100 requests including retries and individual reads. If a
+far-back insertion requires more prefix pages, that work is re-costed and logged,
+with at most 300 tail attempts and 900 attempts overall. Explicit lower caller
+caps remain binding. A count change at
+the last receipt requires another sweep (at most three rounds); unresolved totals
+or excessive drift hold publication. Short non-final plain pages use overlapping
 ten-row windows, single-position reads and explicit neighbour boundaries, followed
 by an alternative reverse-id listing projected to id. Candidate ids come only from
 publisher responses and are read individually with the same expansion and scope
@@ -372,8 +388,10 @@ Publication permits at most ten unresolved plain titles and at most 0.05% of the
 source count. Above either limit the run holds. Every exported title still needs
 complete expansion fields; the allowance never covers missing version/department
 metadata on an exported title. The snapshot records full probe evidence, and the
-manifest/readiness flag carry `count` (FRL listed), `exported`, `unresolved_gap` and
-`gap_pages` (offset and shortfall). Only `/instruments` shows the small note
+manifest/readiness flag carry `count` (FRL listed), `count_start`, `count_end`,
+`drift`, `exported`, `unresolved_gap`, `gap_pages` (offset and shortfall) and a compact
+`tail_sweep` completion/request summary. Full response/id evidence remains in the
+checkpoint and snapshot. Only `/instruments` shows the small note
 "FRL listed N; M could not be retrieved from its API" when a gap remains. Detail
 pages stay unchanged, and the sitemap contains only exported FRL ids.
 Full version history and complete current/latest supplementation remain phase 2.
@@ -387,7 +405,7 @@ latest full download date, so a new download day updates the manifest even when 
 are unchanged. Source metadata and OPAX-derived canonical links are separate. The portal gate rebuilds crawl assets from the new
 manifest; sitemap URLs contain FRL ids only. It creates no instrument person entities,
 joins or person search rows. The schema-1 `votes.json` contract is unaffected.
-Navigation reads only `ready.json` (`complete`, `count`, `export_date`) and adds its
+Navigation reads only the tiny `ready.json` counts/drift/sweep flag and adds its
 desktop/drawer entry only for a complete flag. Shipped HTML contains no static link.
 Nightly staging re-reads the tracked group roots before committing, so new chunks,
 the readiness flag and deleted chunks within a published directory are all included.
@@ -396,10 +414,20 @@ with offline Git fixtures: absent/untracked catalogue skips both steps; tracked
 catalogue runs acquisition then export; held acquisition skips export; new/deleted
 chunks are staged without unrelated edits; no tracked roots stages nothing.
 
-FRL requests share a ceiling of 600 attempts, a minimum interval of two seconds,
-and backoff on 429, 5xx and transport failures. The current website robots delay is
-ten seconds; the API host returns 404 for robots.txt. Policy reads are repeated each
-run. Before every publisher request, including robots and terms, acquisition blocks
+The instruments cap is `ceil(count/100) × 2 + 40 gap probes + 100 tail requests
++ 8 policy/count receipts + ceil(10% of that subtotal)`, with a hard ceiling of
+900. At 24,149 listed titles it is initially **696 attempts**, logged before paging.
+A longer prefix backfill can recompute the same formula, capped at 900. Every
+publisher request, including robots, terms, API pages and individual/retry reads,
+is spaced by at least **10 seconds**. Larger robots delays are honoured. Backoff
+honours Retry-After; a second 429/503 or a third Retry-After demand stops cleanly.
+Policy reads are repeated each run. The loader compares an 18-second-per-attempt
+bootstrap estimate with the remaining quiet interval and logs a warning if it is
+shorter. Its per-request deadline is authoritative: the 45-second curl timeout
+and 60-second end margin ensure acquisition stops before 08:00 Melbourne, keeping
+its checkpoint for the next quiet window. A resume uses the same scope fingerprint
+when the anchored count drift stays within 50; current membership is checked again.
+Before every publisher request, including robots and terms, acquisition blocks
 08:00–20:00 in **both fixed UTC+10 and Australia/Melbourne**. It stops if either busy
 period begins mid-run. Their quiet-window intersection is 21:00–08:00 Melbourne
 during AEDT and 20:00–08:00 during AEST. The pre-existing weekly `frl_acts` loader

@@ -215,7 +215,13 @@
     if (ready?.complete !== true || !Number.isInteger(ready.count) || ready.count < 1
       || !Number.isInteger(ready.exported) || ready.exported < 1
       || !Number.isInteger(ready.unresolved_gap) || ready.unresolved_gap < 0 || ready.unresolved_gap > 10
-      || ready.unresolved_gap * 2000 > ready.count || ready.exported + ready.unresolved_gap !== ready.count
+      || ready.unresolved_gap * 2000 > ready.count || ready.exported + ready.unresolved_gap < ready.count
+      || !Number.isInteger(ready.count_start) || ready.count_start < 1 || ready.count_end !== ready.count
+      || !Number.isInteger(ready.drift) || ready.drift !== ready.count_end-ready.count_start || Math.abs(ready.drift)>50
+      || ready.tail_sweep?.complete !== true
+      || !['requests','pages','prefix_pages','fetched','rounds'].every(k=>Number.isInteger(ready.tail_sweep[k]) && ready.tail_sweep[k]>=0)
+      || ready.tail_sweep.requests>300 || ready.tail_sweep.pages>ready.tail_sweep.requests
+      || ready.tail_sweep.prefix_pages>ready.tail_sweep.pages || ready.tail_sweep.fetched>ready.tail_sweep.requests || ready.tail_sweep.rounds>3
       || !Array.isArray(ready.gap_pages) || !ready.gap_pages.every(p=>p && Number.isInteger(p.offset)
         && p.offset >= 0 && p.offset % 100 === 0 && p.offset < ready.count
         && Number.isInteger(p.unresolved_gap) && p.unresolved_gap > 0 && p.unresolved_gap <= 100)

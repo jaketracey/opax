@@ -98,6 +98,24 @@ class PlainGapHTTP(HTTP):
         return self.candidate(result) if self.candidate else result
 
 
+class DriftingHTTP(HTTP):
+    def __init__(self, rows, additions, after_expansion=2, started=QUIET, stop_after=None):
+        super().__init__(copy.deepcopy(rows), started=started,
+                         individual=lambda key: next(r for r in self.rows if r['id'] == key))
+        self.additions, self.after_expansion, self.stop_after = additions, after_expansion, stop_after
+        self.mutated = False
+
+    def json(self, params):
+        result = super().json(params)
+        if '$expand' in params:
+            if self.expansions == self.after_expansion and not self.mutated:
+                self.rows = sorted(self.rows + copy.deepcopy(self.additions), key=lambda r:r['id'])
+                self.mutated = True
+            if self.expansions == self.stop_after:
+                self.started = datetime.fromisoformat(quiet_window(self.started)['end'])-timedelta(seconds=30)
+        return result
+
+
 class FRLTests(unittest.TestCase):
     def setUp(self):
         (ROOT / "scripts/state/frl").mkdir(parents=True, exist_ok=True)
@@ -105,6 +123,185 @@ class FRLTests(unittest.TestCase):
         self.base = Path(self.tmp.name); self.out = self.base / "snapshot.json"; self.cp = self.base / "checkpoint"
 
     def tearDown(self): self.tmp.cleanup()
+
+    def test_insertion_before_current_offset_is_deduped_and_tail_backfills_its_own_id(self):
+        rows=[title(i*2+1) for i in range(601)]; added=title(2)
+        http=DriftingHTTP(rows,[added]); result=acquire(http,self.out,self.cp)
+        self.assertEqual((result['count_start'],result['count_end'],result['drift']),(601,602,1))
+        self.assertEqual(len(result['titles']),602)
+        self.assertEqual({r['id'] for r in result['titles']},{r['id'] for r in rows+[added]})
+        sweep=result['tail_sweep']; self.assertTrue(sweep['complete'])
+        self.assertGreater(sweep['prefix_pages'],0)
+        self.assertEqual(sweep['individuals'][added['id']]['response'],added)
+        self.assertEqual(http.individual_calls,[(added['id'],{'$expand':loader.EXPAND})])
+        completed=[p for p in result['count_observations'] if p['kind']=='page_complete']
+        self.assertEqual(len(completed),7); self.assertTrue(any(p['count']==602 for p in completed))
+        ready=json.loads(plan_export(result)[0]['ready.json'])
+        self.assertEqual((ready['count_start'],ready['count_end'],ready['drift']),(601,602,1))
+        self.assertTrue(ready['tail_sweep']['complete']); self.assertLess(len(json.dumps(ready)),1024)
+
+    def test_insertion_after_current_offset_is_collected_without_duplicate_rows(self):
+        rows=[title(i*2+1) for i in range(601)]; added=title(900)
+        result=acquire(DriftingHTTP(rows,[added]),self.out,self.cp)
+        self.assertEqual(result['exported'],602); self.assertEqual(result['drift'],1)
+        self.assertEqual({r['id'] for r in result['titles']},{r['id'] for r in rows+[added]})
+        self.assertTrue(result['tail_sweep']['complete'])
+
+    def test_short_final_plain_page_from_registration_is_completed_by_tail(self):
+        rows=[title(i) for i in range(201)]; added=title(500)
+        class LatePlain(DriftingHTTP):
+            def json(inner,params):
+                result=super().json(params)
+                if params.get('$skip')==200 and '$expand' not in params and '$select' not in params and not inner.mutated:
+                    inner.rows=sorted(inner.rows+[added],key=lambda r:r['id']); inner.mutated=True
+                    result['@odata.count']=202
+                return result
+        result=acquire(LatePlain(rows,[],after_expansion=99),self.out,self.cp)
+        self.assertEqual(result['exported'],202); self.assertEqual(result['unresolved_gap'],0)
+        self.assertEqual(result['tail_sweep']['individuals'][added['id']]['response'],added)
+
+    def test_drift_of_fifty_one_holds_without_overwriting_snapshot(self):
+        atomic_json(self.out,snapshot([title(i*2+1) for i in range(601)])); before=self.out.read_bytes()
+        http=DriftingHTTP([title(i*2+1) for i in range(601)],[title(9000+i) for i in range(51)])
+        with self.assertRaisesRegex(Held,'drift exceeds 50'): acquire(http,self.out,self.cp)
+        self.assertEqual(self.out.read_bytes(),before); self.assertFalse((self.cp/'complete.json').exists())
+        self.assertEqual(json.loads((self.cp/'count-observations.json').read_text())[-1]['count'],652)
+
+    def test_computed_cap_counts_pairs_probes_tail_and_ten_percent_retries(self):
+        budget=loader.request_budget(24149)
+        self.assertEqual(budget['pages'],242); self.assertEqual(budget['page_reads'],484)
+        self.assertEqual(budget['gap_probes'],40); self.assertEqual(budget['tail_sweep'],100)
+        self.assertEqual(budget['retry_allowance'],64); self.assertEqual(budget['cap'],696)
+        self.assertEqual(loader.request_budget(100000)['cap'],900)
+        self.assertEqual(PoliteSession(max_requests=1000).max_requests,900)
+        self.assertEqual(PoliteSession().delay,10)
+
+    def test_window_end_clean_stop_then_bounded_drift_same_scope_resume(self):
+        rows=[title(i) for i in range(201)]
+        with self.assertRaisesRegex(Held,'Quiet window ending'):
+            acquire(DriftingHTTP(rows,[],stop_after=1),self.out,self.cp)
+        self.assertFalse(self.out.exists()); self.assertTrue((self.cp/'page-000000.json').exists())
+        fingerprint=json.loads((self.cp/'config.json').read_text())['fingerprint']
+        resumed=HTTP(rows+[title(500)],started=QUIET+timedelta(days=1))
+        result=acquire(resumed,self.out,self.cp)
+        self.assertEqual(result['count_start'],201); self.assertEqual(result['count_end'],202)
+        self.assertEqual(json.loads((self.cp/'config.json').read_text())['fingerprint'],fingerprint)
+        self.assertFalse(self.cp.with_name(self.cp.name+'.previous').exists())
+        self.assertTrue(all('$skip' in p for p in resumed.calls if '$expand' in p))
+        self.assertNotIn(0,[p['$skip'] for p in resumed.calls if '$expand' in p])
+
+    def test_insertion_between_plain_and_expanded_reads_recovers_only_missing_own_ids(self):
+        rows=[title(i*2+1) for i in range(601)]; added=title(2)
+        class Between(DriftingHTTP):
+            def json(inner,params):
+                if '$expand' in params and params.get('$skip')==100 and not inner.mutated:
+                    inner.rows=sorted(inner.rows+[added],key=lambda r:r['id']); inner.mutated=True
+                return super().json(params)
+        http=Between(rows,[],after_expansion=99)
+        result=acquire(http,self.out,self.cp)
+        self.assertEqual(len(result['titles']),602)
+        self.assertIn(added['id'],result['tail_sweep']['individuals'])
+        self.assertTrue(any(k==rows[199]['id'] for k,p in http.individual_calls))
+
+    def test_checkpoint_count_change_over_fifty_rotates_for_fresh_enumeration(self):
+        with self.assertRaises(Held): acquire(HTTP([title(i) for i in range(101)],fail_offset=100),self.out,self.cp)
+        result=acquire(HTTP([title(i) for i in range(152)]),self.out,self.cp)
+        self.assertEqual(result['count_start'],152)
+        self.assertTrue((self.cp.with_name(self.cp.name+'.previous')/'config.json').exists())
+
+    def test_previous_schema_query_migrates_only_metadata_with_fresh_membership(self):
+        rows=[title(i) for i in range(201)]
+        config=loader.checkpoint_config(201,quiet_window(QUIET))
+        config.update(schema=3,count=201); config.pop('count_start')
+        atomic_json(self.cp/'config.json',config)
+        atomic_json(self.cp/'page-000000.json',{'@odata.count':201,'value':rows[:100]})
+        changed=[r for r in rows if r['id']!='F2026L00005']+[title(500)]
+        result=acquire(HTTP(changed,started=QUIET+timedelta(days=1)),self.out,self.cp)
+        self.assertEqual({r['id'] for r in result['titles']},{r['id'] for r in changed})
+        self.assertEqual(json.loads((self.cp/'config.json').read_text())['schema'],4)
+        self.assertTrue((self.cp/'previous-config.json').exists())
+        self.assertFalse(self.cp.with_name(self.cp.name+'.previous').exists())
+
+    def test_interrupted_later_window_refresh_does_not_reuse_unchecked_old_membership(self):
+        rows=[title(i) for i in range(201)]
+        with self.assertRaises(Held): acquire(HTTP(rows,fail_offset=200),self.out,self.cp)
+        changed=[r for r in rows if r['id']!='F2026L00005']+[title(500)]
+        class StopFresh(HTTP):
+            def json(inner,params):
+                result=super().json(params)
+                if params.get('$skip')==0 and '$expand' not in params and '$select' not in params:
+                    inner.started=datetime.fromisoformat(quiet_window(inner.started)['end'])-timedelta(seconds=30)
+                return result
+        with self.assertRaisesRegex(Held,'Quiet window ending'):
+            acquire(StopFresh(changed,started=QUIET+timedelta(days=1)),self.out,self.cp)
+        http=HTTP(changed,started=QUIET+timedelta(days=1)); result=acquire(http,self.out,self.cp)
+        self.assertEqual({r['id'] for r in result['titles']},{r['id'] for r in changed})
+        self.assertTrue(any(p.get('$skip')==100 and '$expand' not in p and '$select' not in p for p in http.calls))
+
+    def test_tail_budget_exhaustion_holds_with_checkpoint_intact(self):
+        with patch.object(loader,'TAIL_REQUESTS',1), patch.object(loader,'MAX_TAIL_REQUESTS',1):
+            with self.assertRaisesRegex(Held,'Tail sweep request budget'):
+                acquire(HTTP([title(i) for i in range(601)]),self.out,self.cp)
+        self.assertFalse(self.out.exists()); self.assertTrue((self.cp/'page-000500.json').exists())
+        self.assertEqual(json.loads((self.cp/'tail-sweep.json').read_text())['requests'],1)
+
+    def test_far_back_insertion_recosts_tail_work_below_the_hard_ceiling(self):
+        rows=[title(i*2+1) for i in range(12001)]; added=title(20200)
+        http=DriftingHTTP(rows,[added],after_expansion=111)
+        http.max_requests=900; http.requested_cap=None
+        result=acquire(http,self.out,self.cp)
+        self.assertEqual(result['exported'],12002)
+        self.assertEqual(result['tail_sweep']['individuals'][added['id']]['response'],added)
+        self.assertGreater(result['tail_sweep']['requests'],100)
+        self.assertLessEqual(result['tail_sweep']['requests'],300)
+        receipt=json.loads((self.base/'run-receipt.json').read_text())
+        self.assertGreater(receipt['request_budget']['cap'],receipt['request_budget_initial']['cap'])
+        self.assertLessEqual(receipt['request_budget']['cap'],900)
+        self.assertLessEqual(http.requests,http.max_requests)
+
+    def test_registration_at_end_receipt_requires_another_tail_round(self):
+        rows=[title(i*2+1) for i in range(601)]; added=title(1500)
+        class AtEnd(DriftingHTTP):
+            def json(inner,params):
+                if '$skip' not in params and inner.counts==2 and not inner.mutated:
+                    inner.rows=sorted(inner.rows+[added],key=lambda r:r['id']); inner.mutated=True
+                return super().json(params)
+        http=AtEnd(rows,[],after_expansion=99)
+        result=acquire(http,self.out,self.cp)
+        self.assertEqual(result['count_end'],602)
+        self.assertEqual(result['tail_sweep']['rounds'],2)
+        self.assertEqual(result['tail_sweep']['individuals'][added['id']]['response'],added)
+
+    def test_tail_individual_failure_keeps_the_last_snapshot(self):
+        rows=[title(i*2+1) for i in range(601)]; added=title(2)
+        atomic_json(self.out,snapshot(rows)); before=self.out.read_bytes()
+        http=DriftingHTTP(rows,[added]); http.individual=lambda key: title(9000)
+        with self.assertRaisesRegex(Held,'Tail individual .* failed'): acquire(http,self.out,self.cp)
+        self.assertEqual(self.out.read_bytes(),before)
+        self.assertEqual(json.loads((self.cp/'tail-sweep.json').read_text())['individuals'][added['id']]['status'],'failed')
+
+    def test_near_dawn_request_is_blocked_before_transport(self):
+        now=datetime.fromisoformat('2026-10-09T20:59:30+00:00')
+        with patch.object(loader.subprocess,'run') as transport:
+            with self.assertRaisesRegex(Held,'Quiet window ending'):
+                PoliteSession(now=lambda:now).get(loader.API)
+            transport.assert_not_called()
+
+    def test_every_request_keeps_ten_seconds_even_if_caller_reduces_delay(self):
+        clock=[0.0]; starts=[]
+        def sleep(seconds): clock[0]+=seconds
+        reply=subprocess.CompletedProcess([],0,b'HTTP/2 200\r\n\r\n{}\n200',b'')
+        def transport(*args,**kwargs): starts.append(clock[0]); return reply
+        session=PoliteSession(now=lambda:QUIET,clock=lambda:clock[0],sleep=sleep); session.delay=2
+        with patch.object(loader.subprocess,'run',side_effect=transport):
+            for url in [loader.SITE+'/robots.txt',loader.API,loader.API]: session.get(url)
+        self.assertTrue(all(b-a>=10 for a,b in zip(starts,starts[1:])))
+
+    def test_export_rejects_false_drift_and_incomplete_tail_evidence(self):
+        staged=acquire(HTTP([title(1)]),self.out,self.cp)
+        for wrong in ({**staged,'drift':51},{**staged,'count_end':2},
+                      {**staged,'tail_sweep':{**staged['tail_sweep'],'complete':False}}):
+            with self.assertRaises(Held): plan_export(wrong)
 
     def test_plain_gap_resolves_with_overlapping_windows_and_own_entity(self):
         rows=[title(i) for i in range(201)]
@@ -174,11 +371,11 @@ class FRLTests(unittest.TestCase):
             self.assertIsNone(probes.read('stubbed retry cap',{'$filter':SCOPE,'$orderby':'id','$top':10,'$skip':0}))
             self.assertEqual(transport.call_count,1)
         self.assertEqual(probes.data['requests'],40)
-        self.assertEqual(session.max_requests,600)
+        self.assertEqual(session.max_requests,900)
         self.assertIsNone(probes.read('exhausted',{}))
 
     def test_global_cap_during_probing_still_holds(self):
-        session=PoliteSession(initial_requests=599,now=lambda:QUIET,clock=lambda:0,sleep=lambda _:None)
+        session=PoliteSession(max_requests=600,initial_requests=599,now=lambda:QUIET,clock=lambda:0,sleep=lambda _:None)
         probes=loader.GapProbes(session,self.cp)
         reply=subprocess.CompletedProcess([],0,b'HTTP/1.1 500 Error\r\n\r\n{}\n500',b'')
         with patch.object(loader.subprocess,'run',return_value=reply) as transport:
@@ -207,16 +404,16 @@ class FRLTests(unittest.TestCase):
         self.assertEqual([p["$skip"] for p in http.calls if "$expand" in p], [0, 100])
         self.assertTrue(all(p["$orderby"] == "id" and p["$top"] <= 100 for p in http.calls))
         self.assertTrue(all(p["$filter"].startswith(SCOPE) for p in http.calls))
-        self.assertEqual(http.requests, 6)
+        self.assertEqual(http.requests, 9)
 
-    def test_resume_only_within_same_window_and_query(self):
+    def test_resume_with_stable_query_and_idempotent_title_content(self):
         rows = [title(i) for i in range(101)]
         with self.assertRaises(Held): acquire(HTTP(rows, fail_offset=100), self.out, self.cp)
         self.assertFalse(self.out.exists())
         http = HTTP(rows); acquire(http, self.out, self.cp)
         self.assertEqual([p["$skip"] for p in http.calls if "$expand" in p], [100])
         before = self.out.read_bytes(); acquire(HTTP(rows), self.out, self.cp)
-        self.assertEqual(self.out.read_bytes(), before)
+        self.assertEqual(json.loads(self.out.read_text())["titles"],json.loads(before)["titles"])
 
     def test_201_count_does_not_hide_stale_membership_after_window_expiry(self):
         rows = [title(i) for i in range(201)]
@@ -229,7 +426,7 @@ class FRLTests(unittest.TestCase):
         self.assertEqual(ids, {r['id'] for r in changed})
         self.assertNotIn('F2026L00005', ids); self.assertIn('F2026L00101', ids)
         self.assertEqual([p['$skip'] for p in http.calls if '$expand' in p], [0, 100, 200])
-        self.assertTrue((self.base / 'checkpoint.previous/titles-000000.json').exists())
+        self.assertTrue((self.cp / 'metadata-cache.json').exists())
 
     def test_week_two_and_three_auto_rotate_instead_of_permanent_block(self):
         with self.assertRaises(Held): acquire(HTTP([title(i) for i in range(101)], fail_offset=100), self.out, self.cp)
@@ -239,11 +436,11 @@ class FRLTests(unittest.TestCase):
         http = HTTP([title(i) for i in range(202)], started=QUIET + timedelta(days=14))
         result = acquire(http, self.out, self.cp)
         self.assertEqual(result['count'], 202)
-        self.assertEqual([p['$skip'] for p in http.calls if '$expand' in p], [0, 100, 200])
-        previous = json.loads((self.base / 'checkpoint.previous/config.json').read_text())
-        self.assertEqual(previous['count'], 201)  # most recent evidence only
+        self.assertEqual([p['$skip'] for p in http.calls if '$expand' in p], [200])
+        current = json.loads((self.cp / 'config.json').read_text())
+        self.assertEqual(current['count_start'], 201)  # reuse the week-2 scope, not a permanent block
 
-    def test_scope_fingerprint_covers_filter_fields_expand_and_count(self):
+    def test_scope_fingerprint_covers_query_and_tolerates_bounded_count_drift(self):
         for key in ('SCOPE', 'FIELDS', 'EXPAND'):
             with self.subTest(key=key):
                 cp = self.base / key
@@ -256,14 +453,16 @@ class FRLTests(unittest.TestCase):
                 self.assertTrue(cp.with_name(cp.name + '.previous').exists())
         cp = self.base / 'count'
         with self.assertRaises(Held): acquire(HTTP([title(i) for i in range(101)], fail_offset=100), self.out, cp)
+        fingerprint=json.loads((cp/'config.json').read_text())['fingerprint']
         acquire(HTTP([title(i) for i in range(102)]), self.out, cp)
-        self.assertTrue(cp.with_name(cp.name + '.previous').exists())
+        self.assertFalse(cp.with_name(cp.name + '.previous').exists())
+        self.assertEqual(json.loads((cp/'config.json').read_text())['fingerprint'],fingerprint)
 
     def test_legacy_checkpoint_is_archived_without_reusing_any_rows(self):
         self.cp.mkdir(); atomic_json(self.cp / 'config.json', {'count': 1, 'scope': SCOPE, 'expand': loader.EXPAND, 'page_size': 100})
         atomic_json(self.cp / 'page-000000.json', {'@odata.count': 1, 'value': [title(999)]})
         http = HTTP([title(1)]); result = acquire(http, self.out, self.cp)
-        self.assertEqual(result['titles'], [title(1)]); self.assertEqual(http.requests, 4)
+        self.assertEqual(result['titles'], [title(1)]); self.assertEqual(http.requests, 6)
         self.assertTrue((self.base / 'checkpoint.previous/page-000000.json').exists())
 
     def test_expansion_omission_retries_then_preserves_last_snapshot(self):
@@ -280,7 +479,7 @@ class FRLTests(unittest.TestCase):
                     individual=lambda requested: next(r for r in rows if r['id'] == requested))
         result = acquire(http, self.out, self.cp)
         self.assertEqual(result['count'], 101); self.assertEqual(result['titles'], rows)
-        self.assertEqual(http.expansions, 4); self.assertEqual(http.requests, 9)
+        self.assertEqual(http.expansions, 4); self.assertEqual(http.requests, 12)
         self.assertEqual(http.individual_calls, [(key, {'$expand': loader.EXPAND})])
         run = json.loads((self.base / 'run-receipt.json').read_text())
         self.assertEqual(run['individual_fetch_ids'], [key])
@@ -436,17 +635,27 @@ class FRLTests(unittest.TestCase):
             self.assertEqual(transport.call_count, 1)
 
     def test_backoff_and_budget_count_each_http_attempt(self):
-        replies = iter([subprocess.CompletedProcess([], 0, b'HTTP/2 429\r\nRetry-After: 7\r\n\r\nbusy\n429', b''),
-                        subprocess.CompletedProcess([], 0, b'HTTP/2 503\r\n\r\nbusy\n503', b''),
+        replies = iter([subprocess.CompletedProcess([], 0, b'HTTP/2 429\r\nRetry-After: 17\r\n\r\nbusy\n429', b''),
                         subprocess.CompletedProcess([], 0, b'HTTP/2 200\r\n\r\n{}\n200', b'')])
         sleeps = []
         with patch.object(loader.subprocess, 'run', side_effect=lambda *a, **k: next(replies)):
             session = PoliteSession(sleep=sleeps.append, clock=lambda: 0, now=lambda: QUIET)
             self.assertEqual(session.get(loader.API), b'{}')
-            self.assertEqual(session.requests, 3); self.assertIn(7, sleeps); self.assertIn(10, sleeps)
+            self.assertEqual(session.requests, 2); self.assertIn(17, sleeps); self.assertTrue(all(s>=10 for s in sleeps))
         with patch.object(loader.subprocess, 'run') as http:
-            with self.assertRaises(Held): PoliteSession(initial_requests=600, now=lambda: QUIET).get(loader.API)
+            with self.assertRaises(Held): PoliteSession(initial_requests=900, now=lambda: QUIET).get(loader.API)
             http.assert_not_called()
+
+    def test_repeated_throttling_or_third_retry_after_stops_cleanly(self):
+        for codes, marker in [([429,503], 'throttling'),([500,502,504], 'Third Retry-After')]:
+            with self.subTest(codes=codes):
+                replies=iter([subprocess.CompletedProcess([],0,f'HTTP/2 {c}\r\nRetry-After: 20\r\n\r\nbusy\n{c}'.encode(),b'') for c in codes])
+                sleeps=[]
+                with patch.object(loader.subprocess,'run',side_effect=lambda *a,**k:next(replies)) as transport:
+                    session=PoliteSession(sleep=sleeps.append,clock=lambda:0,now=lambda:QUIET)
+                    with self.assertRaisesRegex(Held,marker): session.get(loader.API)
+                    self.assertEqual(transport.call_count,len(codes))
+                    self.assertLessEqual(session.retry_after_waits,2)
 
     def test_acts_busy_guard_runs_before_publisher_or_database_access(self):
         from parli.ingest import words_parlinfo as acts
@@ -478,7 +687,7 @@ class FRLTests(unittest.TestCase):
             db.return_value.execute.return_value.fetchone.return_value = (1,0,0)
             acts.run_frl_acts(args)
             self.assertEqual(session.requests, 1)
-            self.assertGreaterEqual(session.delay,2)
+            self.assertGreaterEqual(session.delay,10)
             self.assertEqual(store.call_args.args[2][0]['act_id'],row['id'])
 
     def test_export_budget_projection_and_release_gate(self):
@@ -492,7 +701,7 @@ class FRLTests(unittest.TestCase):
         atomic_json(self.out, staged); dest = self.base / 'export'; export(self.out, dest)
         self.assertEqual(check_instruments(dest, compare_head=False), [])
         ready=json.loads((dest / 'ready.json').read_text())
-        self.assertEqual(ready,{'complete':True,'count':1,'exported':1,'unresolved_gap':0,'gap_pages':[],'export_date':staged['downloaded_at'][:10]})
+        self.assertEqual(ready,{'complete':True,'count':1,'count_start':1,'count_end':1,'drift':0,'tail_sweep':{'complete':True,'requests':0,'pages':0,'prefix_pages':0,'fetched':0,'rounds':0},'exported':1,'unresolved_gap':0,'gap_pages':[],'export_date':staged['downloaded_at'][:10]})
         for wrong in ({**ready,'complete':False},{**ready,'count':2},{**ready,'export_date':'2026-10-08'}):
             atomic_json(dest / 'ready.json',wrong)
             self.assertEqual(check_instruments(dest,compare_head=False),['instruments readiness flag mismatch'])

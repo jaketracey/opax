@@ -1,7 +1,7 @@
 """FRL in-force legislative instruments: public metadata only, no DB or KB writes.
 
 Run as ``python3 -m parli.ingest.frl_instruments``. All output is confined to
-the checkout. Stable id ordering, checkpoint pages and two count receipts reconcile
+the checkout. Stable id ordering, checkpoint pages and per-page count receipts reconcile
 exported ids plus tightly bounded, evidenced plain-page gaps. No document/content endpoints
 are requested, and no identities or inferred legal relationships are created.
 """
@@ -15,6 +15,7 @@ import shutil
 from email.utils import parsedate_to_datetime
 from html.parser import HTMLParser
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -40,6 +41,13 @@ EXPANSION_TRIES = 3
 MAX_INDIVIDUAL_IDS = 50
 MAX_GAP_PROBES = 40
 MAX_UNRESOLVED_GAP = 10
+MAX_DRIFT = 50
+MAX_REQUESTS = 900
+TAIL_REQUESTS = 100
+MAX_TAIL_REQUESTS = 300
+MIN_SPACING = 10.0
+REQUEST_TIMEOUT = 45
+WINDOW_MARGIN = 60
 MELBOURNE = ZoneInfo("Australia/Melbourne")
 FIXED_AEST = timezone(timedelta(hours=10))
 UA = "OPAX metadata research (https://opax.com.au)"
@@ -71,12 +79,17 @@ def guard_count(count: int, expected: int, previous: int = 0) -> None:
         raise Held(f"Snapshot would shrink more than 2%: {previous} -> {count}")
 
 
-def guard_reconciliation(exported, count, gap=0, pages=None, previous=0):
-    """Only evidenced plain-page gaps may explain a difference from FRL's count."""
+def guard_reconciliation(exported, count, gap=0, pages=None, previous=0, count_start=None):
+    """Complete unique rows cover the live count minus evidenced plain gaps."""
     pages = [] if pages is None else pages
     if any(type(n) is not int for n in (exported, count, gap)) or exported < 1 or gap < 0:
         raise Held("Invalid or empty title reconciliation")
-    guard_count(exported + gap, count)
+    if count_start is None:
+        guard_count(exported + gap, count)
+    elif type(count_start) is not int or count_start < 1 or abs(count - count_start) > MAX_DRIFT:
+        raise Held("Scope count drift exceeds 50")
+    elif exported + gap < count:
+        raise Held(f"Unique ids {exported} plus evidenced gaps {gap} do not cover final count {count}")
     if gap > MAX_UNRESOLVED_GAP or gap * 2000 > count:
         raise Held("Unresolved plain-title gap exceeds 10 rows or 0.05% of the source count")
     if not isinstance(pages, list) or any(not isinstance(p, dict)
@@ -111,26 +124,96 @@ def quiet_window(now: datetime) -> dict:
 
 def checkpoint_config(count: int, window: dict) -> dict:
     query = {"filter": SCOPE, "fields": FIELDS, "expand": EXPAND,
-             "count": count, "orderby": "id", "page_size": PAGE_SIZE,
+             "orderby": "id", "page_size": PAGE_SIZE,
              "plain_gap_strategy": "overlap-10/single/boundaries/reverse-id-projection-v1",
              "max_gap_probes": MAX_GAP_PROBES, "max_unresolved_gap": MAX_UNRESOLVED_GAP,
-             "max_gap_fraction": "0.0005"}
+             "max_gap_fraction": "0.0005", "max_drift": MAX_DRIFT,
+             "tail_strategy": "final-pages/prefix-id-backfill-v1"}
     fingerprint = hashlib.sha256(json.dumps(query, sort_keys=True).encode()).hexdigest()
-    return {"schema": 3, **query, "fingerprint": fingerprint, "quiet_window": window}
+    return {"schema": 4, **query, "count_start": count, "fingerprint": fingerprint, "quiet_window": window}
 
 
-def prepare_checkpoint(checkpoint: Path, config: dict) -> None:
+def prepare_checkpoint(checkpoint: Path, config: dict) -> tuple[dict, bool]:
     """Keep the most recent rejected/completed checkpoint beside its replacement."""
     if checkpoint.exists():
         try: old = json.loads((checkpoint / "config.json").read_text())
         except (OSError, ValueError): old = None
-        if old != config or (checkpoint / "complete.json").exists():
+        # Migrate only the previous, fully specified title query. Its offsets
+        # and gap allowances are never trusted: current membership is reread,
+        # and complete expansion bodies are reused only by matching source id.
+        migrate = (isinstance(old, dict) and old.get('schema') == 3
+                   and type(old.get('count')) is int and old['count'] > 0
+                   and abs(old['count'] - config['count_start']) <= MAX_DRIFT
+                   and all(old.get(k) == config[k] for k in ('filter', 'fields', 'expand', 'orderby', 'page_size'))
+                   and not (checkpoint / 'complete.json').exists())
+        if migrate:
+            config['count_start'] = old['count']
+            config['previous_window'] = old.get('quiet_window')
+            atomic_json(checkpoint / 'previous-config.json', old)
+            atomic_json(checkpoint / 'config.json', config)
+            print('[frl-instruments] prior query migrated; rechecking membership before using metadata by id', flush=True)
+            return config, True
+        reusable = (isinstance(old, dict) and old.get("schema") == config["schema"]
+                    and old.get("fingerprint") == config["fingerprint"]
+                    and type(old.get("count_start")) is int
+                    and abs(old["count_start"] - config["count_start"]) <= MAX_DRIFT
+                    and not (checkpoint / "complete.json").exists())
+        if not reusable:
             previous = local_path(checkpoint.with_name(checkpoint.name + ".previous"))
             if previous.exists(): shutil.rmtree(previous)
             checkpoint.replace(previous)
             print("[frl-instruments] checkpoint rotated; previous evidence retained", flush=True)
+        else:
+            # Counts are observations, not query identity. Across quiet windows
+            # re-enumerate membership; reuse expansion bodies only by their id.
+            fresh = old.get("quiet_window") != config["quiet_window"]
+            config["count_start"] = old["count_start"]
+            config["previous_window"] = old.get("quiet_window")
+            atomic_json(checkpoint / "config.json", config)
+            return config, fresh
     checkpoint.mkdir(parents=True, exist_ok=True)
     atomic_json(checkpoint / "config.json", config)
+    return config, False
+
+
+def request_budget(count: int, tail_requests=None) -> dict:
+    if type(count) is not int or count < 1: raise Held("Invalid bootstrap count")
+    pages = math.ceil(count / PAGE_SIZE)
+    tail_requests = TAIL_REQUESTS if tail_requests is None else tail_requests
+    planned = pages * 2 + MAX_GAP_PROBES + tail_requests + 8  # policy/count receipts
+    retries = math.ceil(planned * .10)
+    return {"pages": pages, "page_reads": pages * 2, "gap_probes": MAX_GAP_PROBES,
+            "tail_sweep": tail_requests, "policy_and_counts": 8,
+            "retry_allowance": retries, "cap": min(MAX_REQUESTS, planned + retries),
+            "hard_ceiling": MAX_REQUESTS, "minimum_spacing_seconds": MIN_SPACING}
+
+
+def guard_drift_evidence(count, start, end, drift, sweep):
+    if (type(start) is not int or start < 1 or type(end) is not int or end != count
+            or type(drift) is not int or drift != end - start or abs(drift) > MAX_DRIFT):
+        raise Held('Invalid drift evidence')
+    if (not isinstance(sweep, dict) or sweep.get('complete') is not True
+            or any(type(sweep.get(k)) is not int or sweep[k] < 0
+                   for k in ('requests', 'pages', 'prefix_pages', 'fetched', 'rounds'))
+            or sweep['requests'] > MAX_TAIL_REQUESTS or sweep['pages'] > sweep['requests']
+            or sweep['prefix_pages'] > sweep['pages'] or sweep['fetched'] > sweep['requests']
+            or sweep['rounds'] > 3):
+        raise Held('Incomplete tail sweep evidence')
+
+
+class Counts:
+    def __init__(self, checkpoint, start, now):
+        self.path, self.start, self.now = checkpoint / "count-observations.json", start, now
+        self.records = json.loads(self.path.read_text()) if self.path.exists() else []
+        self.latest = start
+
+    def observe(self, count, kind, offset=None, cached=False):
+        if type(count) is not int or count < 1: raise Held("Missing or empty @odata.count")
+        self.records.append({"count": count, "kind": kind, "offset": offset, "at": self.now().isoformat()})
+        atomic_json(self.path, self.records)
+        if abs(count - self.start) > MAX_DRIFT: raise Held("Scope count drift exceeds 50; checkpoint kept")
+        if not cached: self.latest = count
+        return count
 
 
 def validate_expanded_title(row: dict, original: dict) -> None:
@@ -146,28 +229,49 @@ def validate_expanded_title(row: dict, original: dict) -> None:
         raise Held("Unfollowed metadata continuation")
 
 
-def validate_expansion(page: dict, values: list, expected: int, allow_missing=False) -> dict:
-    if not isinstance(page, dict) or page.get("@odata.count") != expected:
+def validate_expansion(page: dict, values: list, expected: int, allow_missing=False, drift=False) -> dict:
+    if not isinstance(page, dict) or type(page.get("@odata.count")) is not int or not drift and page.get("@odata.count") != expected:
         raise Held("Expanded scope count changed")
     extras = page.get("value")
-    if not isinstance(extras, list) or len(extras) > len(values) or not allow_missing and len(extras) != len(values):
+    if not isinstance(extras, list) or len(extras) > PAGE_SIZE or not drift and (len(extras) > len(values) or not allow_missing and len(extras) != len(values)):
         raise Held("Expanded metadata omitted a parent title")
     base = {r["id"]: r for r in values}
     matched = {}
     for row in extras:
         validate_title(row)
         key = row["id"]
+        if key not in base and drift:
+            continue  # A shifted neighbour cannot supply another id's metadata.
         if key not in base or key in matched:
             raise Held("Expanded title ids do not match the plain page")
         validate_expanded_title(row, base[key])
         matched[key] = row
+    if not allow_missing and len(matched) != len(base): raise Held("Expanded metadata omitted a parent title")
     return matched
 
 
-def expanded_page(session, checkpoint: Path, offset: int, params: dict, values: list, expected: int, individuals: dict) -> dict:
+def expanded_page(session, checkpoint: Path, offset: int, params: dict, values: list, expected: int, individuals: dict, counts=None, cached=None) -> dict:
     path = checkpoint / f"page-{offset:06d}.json"
+    drift = counts is not None and counts.latest != counts.start
+    if cached is not None:
+        matched = {}
+        for original in values:
+            row = cached.get(original['id'])
+            if row is None: break
+            try: validate_expanded_title(row, original)
+            except Held: break
+            matched[original['id']] = row
+        if len(matched) == len(values):
+            atomic_json(path, {"@odata.count": expected, "value": list(matched.values()),
+                               "_opax_cached_ids": sorted(matched)})
+            return matched
     if path.exists():
-        try: return validate_expansion(json.loads(path.read_text()), values, expected)
+        try:
+            saved = json.loads(path.read_text())
+            if counts is not None and (type(saved.get('@odata.count')) is not int
+                    or abs(saved['@odata.count'] - counts.start) > MAX_DRIFT):
+                raise Held('Invalid cached expansion count')
+            return validate_expansion(saved, values, expected, drift=drift)
         except (Held, ValueError, TypeError):
             path.replace(checkpoint / f"rejected-cached-{offset:06d}.json")
     for attempt in range(EXPANSION_TRIES):
@@ -175,12 +279,15 @@ def expanded_page(session, checkpoint: Path, offset: int, params: dict, values: 
             page = session.json({**params, "$expand": EXPAND})
         except json.JSONDecodeError:
             page = {"error": "Invalid JSON response from expansion read"}
+        if counts is not None and isinstance(page, dict) and "@odata.count" in page:
+            counts.observe(page["@odata.count"], "expanded", offset)
+            drift = counts.latest != counts.start or page['@odata.count'] != expected
         # Plain-gap candidates already have their own complete entity response.
         # Fill only those ids, after checking the bulk response is a valid subset.
         try:
             recovered_ids = []
             if any(v.get("reason") == "plain_gap" and v.get("page_offset") == offset for v in individuals.values()):
-                partial = validate_expansion(page, values, expected, allow_missing=True)
+                partial = validate_expansion(page, values, expected, allow_missing=True, drift=drift)
                 for original in values:
                     key = original["id"]; saved = individuals.get(key, {})
                     if key not in partial and saved.get("reason") == "plain_gap" and saved.get("status") == "complete":
@@ -189,7 +296,7 @@ def expanded_page(session, checkpoint: Path, offset: int, params: dict, values: 
                         partial[key] = row; recovered_ids.append(key)
                 page = {**page, "value": [partial[r["id"]] for r in values if r["id"] in partial],
                         "_opax_individual_ids": recovered_ids}
-            matched = validate_expansion(page, values, expected)
+            matched = validate_expansion(page, values, expected, drift=drift)
             atomic_json(path, page)
             return matched
         except (Held, ValueError, TypeError):
@@ -199,7 +306,7 @@ def expanded_page(session, checkpoint: Path, offset: int, params: dict, values: 
     # Recover only a valid subset of the requested page. Wrong ids, moved
     # counts/fields or malformed responses still cannot supply title metadata.
     try:
-        matched = validate_expansion(page, values, expected, allow_missing=True)
+        matched = validate_expansion(page, values, expected, allow_missing=True, drift=drift)
     except (Held, ValueError, TypeError) as error:
         raise Held(f"Expanded page {offset} incomplete after {EXPANSION_TRIES} attempts: {error}; snapshot kept") from error
     missing = [row for row in values if row["id"] not in matched]
@@ -227,7 +334,7 @@ def expanded_page(session, checkpoint: Path, offset: int, params: dict, values: 
     # assembled cache is explicitly marked as OPAX's recovery, outside rows.
     recovered = {**page, "value": [matched[r["id"]] for r in values],
                  "_opax_individual_ids": [r["id"] for r in missing]}
-    validate_expansion(recovered, values, expected)
+    validate_expansion(recovered, values, expected, drift=drift)
     atomic_json(path, recovered)
     return matched
 
@@ -252,21 +359,25 @@ class PoliteSession:
     Capture subprocess output; never log command lines or arguments. curl's
     implicit retry/redirect behaviour is disabled so every request is counted.
     """
-    def __init__(self, max_requests=600, initial_requests=0, sleep=time.sleep, clock=time.monotonic, now=utc_now):
-        self.max_requests = min(600, max_requests)
+    def __init__(self, max_requests=None, initial_requests=0, sleep=time.sleep, clock=time.monotonic, now=utc_now):
+        self.requested_cap = max_requests
+        self.max_requests = min(MAX_REQUESTS, max_requests) if max_requests is not None else MAX_REQUESTS
         self.requests = initial_requests
         self.sleep, self.clock = sleep, clock
         self.last = self.clock()
-        self.delay = 2.0
+        self.delay = MIN_SPACING
         self.policies: dict[str, RobotFileParser] = {}
         self.now = now
         self.window = None
+        self.http_429 = self.http_503 = self.retry_after_waits = 0
 
     def check_window(self):
         current = quiet_window(self.now())
         if self.window is not None and current != self.window:
             raise Held("Acquisition quiet window expired")
         self.window = current
+        if self.now() + timedelta(seconds=WINDOW_MARGIN) >= datetime.fromisoformat(current['end']):
+            raise Held("Quiet window ending; checkpoint kept for the next quiet window")
 
     def get(self, url: str, allow_missing=False) -> bytes:
         host = urlsplit(url).netloc
@@ -275,8 +386,8 @@ class PoliteSession:
         policy = self.policies.get(host)
         if policy and not policy.can_fetch(UA, url):
             raise Held("Publisher robots policy disallows this metadata path")
-        delay = max(self.delay, 10 if host == "www.legislation.gov.au" else 2,
-                    (policy.crawl_delay(UA) or policy.crawl_delay("*") or 2) if policy else 2)
+        delay = max(MIN_SPACING, self.delay,
+                    (policy.crawl_delay(UA) or policy.crawl_delay("*") or MIN_SPACING) if policy else MIN_SPACING)
         for attempt in range(5):
             if publisher: self.check_window()
             if self.requests >= self.max_requests:
@@ -286,12 +397,16 @@ class PoliteSession:
             self.requests += 1
             print(f"[frl-instruments] HTTP request {self.requests} (attempt {attempt + 1})", flush=True)
             result = subprocess.run([
-                "curl", "--globoff", "--http1.1", "--compressed", "--max-time", "45", "--silent", "--show-error",
+                "curl", "--globoff", "--http1.1", "--compressed", "--max-time", str(REQUEST_TIMEOUT), "--silent", "--show-error",
                 "--user-agent", UA, "--dump-header", "-", "--write-out", "\n%{http_code}", url,
             ], capture_output=True)
             self.last = self.clock()
             raw, _, status = result.stdout.rpartition(b"\n")
             code = int(status) if status.isdigit() else 0
+            self.http_429 += code == 429
+            self.http_503 += code == 503
+            if self.http_429 + self.http_503 >= 2:
+                raise Held("Repeated publisher throttling (HTTP 429/503); checkpoint kept")
             # curl may include proxy/100 response headers before the final ones.
             while raw.startswith(b"HTTP/"):
                 header, separator, body = raw.partition(b"\r\n\r\n")
@@ -307,11 +422,16 @@ class PoliteSession:
             retry = re.search(rb"(?im)^retry-after:\s*([^\r\n]+)", result.stdout)
             pause = max(delay, 5 * 2 ** attempt)
             if retry:
+                if self.retry_after_waits >= 2:
+                    raise Held("Third Retry-After demand; checkpoint kept")
                 value = retry[1].decode()
                 try:
                     pause = max(pause, float(value) if value.isdigit() else
-                                (parsedate_to_datetime(value) - datetime.now(timezone.utc)).total_seconds())
+                                (parsedate_to_datetime(value) - self.now()).total_seconds())
                 except (ValueError, TypeError): pass
+                self.retry_after_waits += 1
+            if publisher and self.now() + timedelta(seconds=pause + WINDOW_MARGIN) >= datetime.fromisoformat(self.window['end']):
+                raise Held("Quiet window ending during backoff; checkpoint kept")
             self.sleep(pause)
         raise Held("Unreachable transport state")
 
@@ -334,8 +454,8 @@ class PoliteSession:
             self.policies[urlsplit(base).netloc] = policy
             self.delay = max(self.delay, policy.crawl_delay(UA) or policy.crawl_delay("*") or 2)
             receipts[base + "/robots.txt"] = robots or "HTTP 404: no robots policy supplied"
-        # Website delay applies to website reads, API delay to API reads.
-        self.delay = max(2, self.policies[urlsplit(API).netloc].crawl_delay("*") or 2)
+        # Website Crawl-delay is also the minimum for every API read.
+        self.delay = max(MIN_SPACING, self.delay, self.policies[urlsplit(API).netloc].crawl_delay("*") or MIN_SPACING)
         terms = self.get(SITE + "/terms-of-use").decode()
         reuse = self.get(SITE + "/help-and-resources/using-the-legislation-register/data-share-and-reuse").decode()
         parsed = Text(); parsed.feed(terms); text = " ".join(parsed.parts)
@@ -370,8 +490,9 @@ def validate_title(row) -> None:
 
 class GapProbes:
     """Bound all recovery reads, including transport retries, across a checkpoint."""
-    def __init__(self, session, checkpoint):
+    def __init__(self, session, checkpoint, counts=None):
         self.session, self.path = session, checkpoint / "plain-gap-probes.json"
+        self.counts = counts
         self.data = json.loads(self.path.read_text()) if self.path.exists() else {"requests": 0, "pages": {}, "reads": []}
         if type(self.data.get("requests")) is not int or not 0 <= self.data["requests"] <= MAX_GAP_PROBES:
             raise Held("Invalid plain-gap probe evidence")
@@ -390,6 +511,8 @@ class GapProbes:
         atomic_json(self.path, self.data)
         try:
             response = self.session.title_json(key, params) if key else self.session.json(params)
+            if self.counts is not None and not key:
+                self.counts.observe(response.get('@odata.count'), 'gap_probe', params.get('$skip'))
             entry["response"] = response
             return response
         except Held as error:
@@ -421,7 +544,11 @@ def recover_plain_page(session, checkpoint, offset, params, base, expected, prob
     if "_opax_plain_gap" in base: return base  # same fingerprint/window only
     if len(values) == size: return base
     if offset + size == expected:
-        raise Held("Final plain title page incomplete; snapshot held")
+        if probes.counts is None:
+            raise Held("Final plain title page incomplete; snapshot held")
+        # The count can advance after the final page's rows were selected.
+        # Defer to the tail; this is not an allowed, inferred source gap.
+        return {**base, '_opax_tail_shortfall': size - len(values)}
     atomic_json(checkpoint / f"rejected-plain-{offset:06d}.json", base)
     page = probes.data["pages"].setdefault(str(offset), {"expected": size, "received": len(values),
         "missing_positions": [], "candidate_ids": [], "resolved_ids": []})
@@ -430,7 +557,7 @@ def recover_plain_page(session, checkpoint, offset, params, base, expected, prob
     def listing(query, purpose, projected=False):
         result = probes.read(purpose, query)
         if result is None: return []
-        if not isinstance(result, dict) or result.get("@odata.count") != expected:
+        if not isinstance(result, dict) or probes.counts is None and result.get("@odata.count") != expected:
             raise Held("Scope count changed during gap probing")
         rows = result.get("value")
         if not isinstance(rows, list) or len(rows) > query["$top"]:
@@ -516,84 +643,214 @@ def recover_plain_page(session, checkpoint, offset, params, base, expected, prob
     return {**base, "value": [known[k] for k in sorted(known)], "_opax_plain_gap": page}
 
 
+def tail_sweep(session, checkpoint, rows, counts, gap_pages, now):
+    """Re-read the tail, then backfill earlier ids if the total is still short.
+
+    A tail-only read cannot discover an insertion before the current offset.
+    Prefix ID pages are therefore a bounded fallback, never an inferred id.
+    All newly discovered ids require their own expanded entity response.
+    """
+    evidence = {"complete": False, "requests": 0, "budget": TAIL_REQUESTS, "pages": 0, "prefix_pages": 0,
+                "fetched": 0, "rounds": 0, "reads": [], "individuals": {}}
+    path = checkpoint / "tail-sweep.json"
+    def read(params, key=None):
+        before = session.requests
+        if evidence['requests'] >= evidence['budget'] and evidence['budget'] < MAX_TAIL_REQUESTS:
+            # An insertion before a far-back offset can require an inventory
+            # prefix pass. Re-cost that bounded work, retaining the hard ceiling
+            # and any explicitly lower caller cap rather than stopping at 100.
+            evidence['budget'] = min(MAX_TAIL_REQUESTS, math.ceil(counts.latest / PAGE_SIZE) + MAX_DRIFT + 6)
+            budget = request_budget(counts.latest, evidence['budget'])
+            requested = getattr(session, 'requested_cap', None)
+            if hasattr(session, 'max_requests'):
+                session.max_requests = min(budget['cap'], requested) if requested is not None else budget['cap']
+            evidence['request_budget'] = budget
+            print('[frl-instruments] prefix backfill request plan ' + json.dumps(budget), flush=True)
+        limit = getattr(session, 'max_requests', None)
+        remaining = evidence['budget'] - evidence['requests']
+        if remaining <= 0: raise Held("Tail sweep request budget exhausted; snapshot held")
+        if limit is not None: session.max_requests = min(limit, before + remaining)
+        try:
+            result = session.title_json(key, params) if key else session.json(params)
+            if not key: counts.observe(result.get('@odata.count'), 'tail', params.get('$skip'))
+            return result
+        finally:
+            evidence['requests'] += session.requests - before
+            if limit is not None: session.max_requests = limit
+            atomic_json(path, evidence)
+    def page(offset, prefix=False):
+        query = {'$filter': SCOPE, '$orderby': 'id', '$top': PAGE_SIZE,
+                 '$skip': offset, '$count': 'true', '$select': 'id'}
+        result = read(query)
+        values = result.get('value')
+        if not isinstance(values, list) or len(values) > PAGE_SIZE: raise Held('Malformed tail ID page')
+        ids = [r.get('id') for r in values if isinstance(r, dict)]
+        if len(ids) != len(values) or any(not isinstance(k, str) or not ID.fullmatch(k) for k in ids):
+            raise Held('Invalid tail ID')
+        if ids != sorted(set(ids)): raise Held('Duplicate or unordered tail ID page')
+        evidence['pages'] += 1
+        evidence['prefix_pages'] += bool(prefix)
+        evidence['reads'].append({'offset': offset, 'count': result['@odata.count'], 'ids': ids, 'prefix': prefix})
+        atomic_json(path, evidence)
+        for key in ids:
+            if key in rows: continue
+            item = {'status': 'requested'}; evidence['individuals'][key] = item
+            atomic_json(path, evidence)
+            try:
+                row = read({'$expand': EXPAND}, key)
+                item['response'] = row
+                validate_expanded_title(row, {'id': key})
+            except (Held, OSError, ValueError, TypeError) as error:
+                item.update(status='failed', error=str(error)); atomic_json(path, evidence)
+                raise Held(f'Tail individual {key} failed; snapshot held: {error}') from error
+            item['status'] = 'complete'; rows[key] = row; evidence['fetched'] += 1
+            atomic_json(path, evidence)
+    gap = sum(p['unresolved_gap'] for p in gap_pages)
+    for round_number in range(1, 4):
+        evidence['rounds'] = round_number
+        target = counts.latest
+        # At least two whole pages plus the observed drift, rounded outward.
+        first = max(0, ((target - (2 * PAGE_SIZE + abs(target - counts.start))) // PAGE_SIZE) * PAGE_SIZE)
+        offsets = list(range(first, target, PAGE_SIZE))
+        for offset in offsets: page(offset)
+        # Scan only when needed. No date or id-range filters (FRL rejects them).
+        if len(rows) + gap < counts.latest:
+            for offset in range(0, first, PAGE_SIZE):
+                page(offset, prefix=True)
+                if len(rows) + gap >= counts.latest: break
+        listed_after_sweep = counts.latest
+        # If all listed rows were recovered, stale gap allowances must not
+        # conceal a registration appearing after the last sweep response.
+        if len(rows) >= listed_after_sweep: gap = 0
+        final = counts.observe(count_page(session), 'end')
+        if final != listed_after_sweep: continue
+        if len(rows) + gap >= final:
+            evidence['complete'] = True
+            evidence['count_end'] = final
+            atomic_json(path, evidence)
+            return evidence
+        if final == target:
+            raise Held(f'Tail sweep incomplete: {len(rows)} unique ids plus {gap} gaps below {final}; snapshot held')
+    raise Held('Tail sweep did not reconcile after three rounds; snapshot held')
+
+
+def tail_summary(evidence):
+    return {k: evidence[k] for k in ('complete', 'requests', 'pages', 'prefix_pages', 'fetched', 'rounds')}
+
+
 def acquire(session, out: Path, checkpoint: Path, policy=None, now=None) -> dict:
     """Injectable HTTP session for offline paging/reconciliation tests."""
     out, checkpoint = local_path(out), local_path(checkpoint)
     started = time.monotonic()
-    now = now or getattr(session, "now", utc_now)
+    now = now or getattr(session, 'now', utc_now)
     window = quiet_window(now())
-    expected = count_page(session)
+    initial = count_page(session)
     old = json.loads(out.read_text()) if out.exists() else {}
-    previous = old.get("exported", old.get("count", 0))
-    guard_count(expected, expected, previous)
-    prepare_checkpoint(checkpoint, checkpoint_config(expected, window))
-    probes = GapProbes(session, checkpoint)
-    evidence = checkpoint / "individual-fetches.json"
+    previous = old.get('exported', old.get('count', 0))
+    guard_count(initial, initial, previous)
+    config, fresh_membership = prepare_checkpoint(checkpoint, checkpoint_config(initial, window))
+    counts = Counts(checkpoint, config['count_start'], now)
+    counts.observe(initial, 'start')
+    budget = request_budget(initial)
+    requested = getattr(session, 'requested_cap', None)
+    if hasattr(session, 'max_requests'):
+        session.max_requests = min(budget['cap'], requested) if requested is not None else budget['cap']
+    remaining_seconds = (datetime.fromisoformat(window['end']) - now()).total_seconds()
+    print('[frl-instruments] request plan ' + json.dumps({**budget,
+          'estimated_seconds': budget['cap'] * 18, 'quiet_seconds_remaining': int(remaining_seconds)}), flush=True)
+    if remaining_seconds <= WINDOW_MARGIN:
+        raise Held('Quiet window ending; checkpoint kept for the next quiet window')
+    # Near dawn still retain progress; the per-request deadline is authoritative.
+    if budget['cap'] * 18 > remaining_seconds:
+        print('[frl-instruments] remaining quiet time is shorter than the full bootstrap estimate; checkpointed stop before dawn', flush=True)
+    cached = None
+    if fresh_membership:
+        cached = {}
+        for path in checkpoint.glob('page-*.json'):
+            page = json.loads(path.read_text())
+            for row in page.get('value', []):
+                try: validate_expanded_title(row, {'id': row['id']})
+                except (Held, KeyError, TypeError): continue
+                cached[row['id']] = row
+        atomic_json(checkpoint / 'metadata-cache.json', cached)
+        # Positions and gaps can move. Keep their previous receipts as evidence.
+        probe_path = checkpoint / 'plain-gap-probes.json'
+        if probe_path.exists(): probe_path.replace(checkpoint / 'previous-gap-probes.json')
+        print('[frl-instruments] later quiet window: rechecking membership; expanded metadata cached by id', flush=True)
+    elif (checkpoint / 'metadata-cache.json').exists():
+        cached = json.loads((checkpoint / 'metadata-cache.json').read_text())
+    probes = GapProbes(session, checkpoint, counts)
+    evidence = checkpoint / 'individual-fetches.json'
     individuals = json.loads(evidence.read_text()) if evidence.exists() else {}
     if not isinstance(individuals, dict) or len(individuals) > MAX_INDIVIDUAL_IDS:
-        raise Held("Invalid or excessive individual expansion evidence; snapshot kept")
-    rows, seen, expanded_seen, gap_pages = [], set(), set(), []
-    for offset in range(0, expected, PAGE_SIZE):
-        if quiet_window(now()) != window: raise Held("Acquisition quiet window expired")
-        # Expanded FRL results can omit a parent title. Enumerate the plain
-        # title collection independently; never derive $skip from row counts
-        # in a navigation expansion, and join metadata only by explicit id.
-        base_path = checkpoint / f"titles-{offset:06d}.json"
-        params = {"$filter": SCOPE, "$orderby": "id", "$top": PAGE_SIZE,
-                  "$skip": offset, "$count": "true"}
-        if FIELDS != "*": params["$select"] = FIELDS
-        base = json.loads(base_path.read_text()) if base_path.exists() else session.json(params)
-        values = base.get("value")
-        if base.get("@odata.count") != expected:
-            raise Held("Scope count changed during title paging; snapshot held")
-        base = recover_plain_page(session, checkpoint, offset, params, base, expected, probes, individuals)
-        values = base["value"]
-        gap = base.get("_opax_plain_gap", {}).get("unresolved_gap", 0)
+        raise Held('Invalid or excessive individual expansion evidence; snapshot kept')
+    rows, gap_pages = {}, []
+    offset = 0
+    while offset < counts.latest:
+        if quiet_window(now()) != window or now() + timedelta(seconds=WINDOW_MARGIN) >= datetime.fromisoformat(window['end']):
+            raise Held('Quiet window ending; checkpoint kept for the next quiet window')
+        base_path = checkpoint / f'titles-{offset:06d}.json'
+        params = {'$filter': SCOPE, '$orderby': 'id', '$top': PAGE_SIZE,
+                  '$skip': offset, '$count': 'true'}
+        if FIELDS != '*': params['$select'] = FIELDS
+        base = json.loads(base_path.read_text()) if base_path.exists() else None
+        reuse_plain = base is not None and base.get('_opax_read_window') == window
+        if not reuse_plain:
+            base = session.json(params)
+        page_count = counts.observe(base.get('@odata.count'), 'cached_plain' if reuse_plain else 'plain', offset, cached=reuse_plain)
+        base = recover_plain_page(session, checkpoint, offset, params, base, page_count, probes, individuals)
+        values = base['value']
+        gap = base.get('_opax_plain_gap', {}).get('unresolved_gap', 0)
         if gap:
-            gap_pages.append({"offset": offset, "unresolved_gap": gap})
-            total_gap = sum(p["unresolved_gap"] for p in gap_pages)
-            if total_gap > MAX_UNRESOLVED_GAP or total_gap * 2000 > expected:
-                raise Held("Unresolved plain-title gap exceeds 10 rows or 0.05% of the source count")
-        for row in values:
-            validate_title(row)
-            key = row["id"]
-            if key in seen or rows and key <= rows[-1]["id"]:
-                raise Held("Duplicate or non-increasing title ids; snapshot held")
-            seen.add(key); rows.append(row)
-        if not base_path.exists(): atomic_json(base_path, base)
-        matched = expanded_page(session, checkpoint, offset, params, values, expected, individuals)
-        for row in values:
-            row.update(matched[row["id"]])
-            expanded_seen.add(row["id"])
-        print(f"[frl-instruments] reconciled {len(seen):,}/{expected:,} titles; "
-              f"{len(expanded_seen):,} expanded metadata rows", flush=True)
-    final_count = count_page(session)
-    unresolved_gap = sum(p["unresolved_gap"] for p in gap_pages)
-    guard_reconciliation(len(seen), final_count, unresolved_gap, gap_pages, previous)
-    if final_count != expected: raise Held("Count moved during acquisition")
-    if quiet_window(now()) != window: raise Held("Acquisition quiet window expired")
+            gap_pages.append({'offset': offset, 'unresolved_gap': gap})
+            total_gap = sum(p['unresolved_gap'] for p in gap_pages)
+            if total_gap > MAX_UNRESOLVED_GAP or total_gap * 2000 > counts.latest:
+                raise Held('Unresolved plain-title gap exceeds 10 rows or 0.05% of the source count')
+        matched = expanded_page(session, checkpoint, offset, params, values, page_count, individuals, counts, cached)
+        # Only complete pairs are resumable. Repeated boundary ids update their
+        # own source metadata and cannot inflate the unique-row count.
+        atomic_json(base_path, {**base, '_opax_read_window': window})
+        for key, row in matched.items(): rows[key] = row
+        counts.observe(counts.latest, 'page_complete', offset)
+        print(f'[frl-instruments] {len(rows):,} unique expanded titles / {counts.latest:,} listed', flush=True)
+        offset += PAGE_SIZE
+    counts.observe(count_page(session), 'before_tail')
+    sweep = tail_sweep(session, checkpoint, rows, counts, gap_pages, now)
+    final_count = counts.latest
+    if len(rows) >= final_count:
+        sweep['resolved_gap_count'] = sum(p['unresolved_gap'] for p in gap_pages)
+        gap_pages = []
+        atomic_json(checkpoint / 'tail-sweep.json', sweep)
+    unresolved_gap = sum(p['unresolved_gap'] for p in gap_pages)
+    guard_reconciliation(len(rows), final_count, unresolved_gap, gap_pages, previous, counts.start)
+    if quiet_window(now()) != window: raise Held('Acquisition quiet window expired')
     downloaded = now().isoformat()
-    snapshot = {"schema": 1, "generated_at": downloaded, "downloaded_at": downloaded, "scope": SCOPE, "count": final_count,
-                "exported": len(seen), "unresolved_gap": unresolved_gap, "gap_pages": gap_pages,
-                "odata_count": final_count, "metadata_only": True,
-                "version_scope": "First API-returned version per title; current/latest flags retained verbatim. Full history not acquired.",
-                "metadata_coverage": {"expanded_titles": len(expanded_seen),
-                                      "missing_expansion_ids": []},
-                "plain_gap_evidence": probes.data, "titles": rows}
-    if out.exists() and json.loads(out.read_text()).get("titles") == rows:
-        snapshot["generated_at"] = json.loads(out.read_text())["generated_at"]
-    # Content can be identical, but the latest download receipt must advance.
+    titles = [rows[k] for k in sorted(rows)]
+    snapshot = {'schema': 1, 'generated_at': downloaded, 'downloaded_at': downloaded, 'scope': SCOPE, 'count': final_count,
+                'count_start': counts.start, 'count_end': final_count, 'drift': final_count - counts.start,
+                'count_observations': counts.records, 'tail_sweep': sweep,
+                'exported': len(rows), 'unresolved_gap': unresolved_gap, 'gap_pages': gap_pages,
+                'odata_count': final_count, 'metadata_only': True,
+                'version_scope': 'First API-returned version per title; current/latest flags retained verbatim. Full history not acquired.',
+                'metadata_coverage': {'expanded_titles': len(rows), 'missing_expansion_ids': []},
+                'plain_gap_evidence': probes.data, 'titles': titles}
+    if out.exists() and json.loads(out.read_text()).get('titles') == titles:
+        snapshot['generated_at'] = json.loads(out.read_text())['generated_at']
     atomic_json(out, snapshot)
-    run = {"rows": len(seen), "odata_count": final_count, "requests": session.requests,
-           "runtime_seconds": round(time.monotonic() - started, 2), "completed_at": downloaded,
-           "metadata_coverage": snapshot["metadata_coverage"],
-           "individual_fetch_ids": sorted(individuals),
-           "unresolved_gap": unresolved_gap, "gap_pages": gap_pages,
-           "gap_probe_requests": probes.data["requests"],
-           "policy": policy, "snapshot": str(out.relative_to(ROOT))}
-    atomic_json(out.parent / "run-receipt.json", run)
-    atomic_json(checkpoint / "complete.json", {"completed_at": downloaded, "count": final_count,
-                "exported": len(seen), "unresolved_gap": unresolved_gap})
+    run = {'rows': len(rows), 'odata_count': final_count, 'count_start': counts.start,
+           'count_end': final_count, 'drift': final_count - counts.start, 'tail_sweep': tail_summary(sweep),
+           'requests': session.requests, 'request_budget': sweep.get('request_budget', budget),
+           'request_budget_initial': budget,
+           'http_429': getattr(session, 'http_429', 0), 'http_503': getattr(session, 'http_503', 0),
+           'retry_after_waits': getattr(session, 'retry_after_waits', 0),
+           'runtime_seconds': round(time.monotonic() - started, 2), 'completed_at': downloaded,
+           'metadata_coverage': snapshot['metadata_coverage'],
+           'individual_fetch_ids': sorted(set(individuals) | set(sweep['individuals'])),
+           'unresolved_gap': unresolved_gap, 'gap_pages': gap_pages,
+           'gap_probe_requests': probes.data['requests'], 'policy': policy, 'snapshot': str(out.relative_to(ROOT))}
+    atomic_json(out.parent / 'run-receipt.json', run)
+    atomic_json(checkpoint / 'complete.json', {'completed_at': downloaded, 'count': final_count,
+                'exported': len(rows), 'unresolved_gap': unresolved_gap})
     print(json.dumps(run, ensure_ascii=False), flush=True)
     return snapshot
 
@@ -602,7 +859,7 @@ def main() -> int:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--out", default=str(ROOT / "scripts/state/frl/snapshot.json"))
     p.add_argument("--checkpoint", default=str(ROOT / "scripts/state/frl/checkpoint"))
-    p.add_argument("--max-requests", type=int, default=600)
+    p.add_argument("--max-requests", type=int, default=None, help="Optional lower cap; computed from the scope count, hard ceiling 900")
     args = p.parse_args()
     session = None
     started = time.monotonic()
@@ -621,6 +878,8 @@ def main() -> int:
             atomic_json(out.parent / "held-receipt.json", {
                 "held_at": datetime.now(timezone.utc).isoformat(), "reason": str(e),
                 "requests": session.requests if session else 0,
+                "http_429": getattr(session, 'http_429', 0), "http_503": getattr(session, 'http_503', 0),
+                "retry_after_waits": getattr(session, 'retry_after_waits', 0),
                 "runtime_seconds": round(time.monotonic() - started, 2),
                 "snapshot_written": False})
         print(f"FRL HELD: {e}", file=sys.stderr)

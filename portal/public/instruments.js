@@ -26,8 +26,14 @@ export function filterInstruments(records, params) {
 /** One availability rule for navigation, SSR and crawl discovery. */
 export function reconciledCounts(m) {
   const count=m?.count, exported=m?.exported ?? count, gap=m?.unresolved_gap ?? 0, pages=m?.gap_pages ?? [];
+  const start=m?.count_start, end=m?.count_end, drift=m?.drift, tail=m?.tail_sweep;
   return Number.isInteger(count) && count > 0 && Number.isInteger(exported) && exported > 0
-    && Number.isInteger(gap) && gap >= 0 && gap <= 10 && gap * 2000 <= count && exported + gap === count
+    && Number.isInteger(start) && start > 0 && end === count && Number.isInteger(drift)
+    && drift === end-start && Math.abs(drift) <= 50 && tail?.complete === true
+    && ['requests','pages','prefix_pages','fetched','rounds'].every(k=>Number.isInteger(tail[k]) && tail[k]>=0)
+    && tail.requests <= 300 && tail.pages <= tail.requests && tail.prefix_pages <= tail.pages
+    && tail.fetched <= tail.requests && tail.rounds <= 3
+    && Number.isInteger(gap) && gap >= 0 && gap <= 10 && gap * 2000 <= count && exported + gap >= count
     && Array.isArray(pages) && pages.every(p=>p && Number.isInteger(p.offset) && p.offset >= 0
       && p.offset % 100 === 0 && p.offset < count && Number.isInteger(p.unresolved_gap)
       && p.unresolved_gap > 0 && p.unresolved_gap <= Math.min(100,count-p.offset))

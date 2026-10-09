@@ -61,7 +61,7 @@ import sys
 from html import unescape
 from typing import Optional
 
-from parli.ingest.frl_instruments import Held, PoliteSession as FRLSession
+from parli.ingest.frl_instruments import Held, MIN_SPACING, PoliteSession as FRLSession
 from parli.ingest.speaker_names import normalize_speaker
 from parli.ingest.words_common import (
     BROWSER_UA, DB_PATH, PoliteSession, connect_db, decade_of, ensure_table,
@@ -504,8 +504,8 @@ def run_frl_acts(args) -> None:
     """Every Act title on the Federal Register of Legislation (OData, honest
     UA). 100 per page via $skip ordered by id; ~138 requests for the full
     register. Date filters and $orderby on dates 500 on this API (probed)."""
-    session = FRLSession()
-    session.delay = max(2.0, 1.0 / args.rps)
+    session = FRLSession(max_requests=600)
+    session.delay = max(MIN_SPACING, 1.0 / args.rps)
     session.check_window()  # Same quiet-window function, before requests or DB access.
     db = connect_db(args.db)
     ensure_table(db, ACTS_TABLE, ACTS_DDL, ACTS_INDEXES)

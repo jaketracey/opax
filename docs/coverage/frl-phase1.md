@@ -12,15 +12,16 @@ in this lane.
 ## Acquisition evidence
 
 - Scope: `collection eq 'LegislativeInstrument' and isInForce eq true`.
-- Live scope count: **24,146**; the 8 October coverage audit counted 24,142.
-- Cached expanded title records: **5,299 unique ids**, in 53 checkpoint pages,
-  **7,984,390 bytes**. These are incomplete acquisition evidence, not a snapshot.
+- Latest observed scope count: **24,149**; the second authorised run began at
+  24,148. The 8 October coverage audit counted 24,142.
+- Retained checkpoint: **8,597 unique plain titles / 8,499 fully expanded ids**,
+  **178 files / 20,062,089 bytes**. This is evidence, not an accepted snapshot.
 - Accepted comprehensive snapshot/export: **0 rows; 0 catalogue files/bytes**.
-- Source HTTP attempts: **105**, including policy/schema probes, timeouts,
-  source failures and backoff retries. Acquisition/inspection lasted about
-  **38 minutes 6 seconds**, from the first robots receipt at 21:19:27 UTC to the
-  held run at 21:57:33 UTC on 8 October (9 October in Melbourne). This is elapsed
-  evidence time across diagnostic/resume attempts, not a completed-run receipt.
+- Second authorised run: **224 attempts / 69m 25s**, no HTTP 429/503 or Retry-After
+  demands. It held when all three expanded reads at offset 8,500 reported 24,149,
+  differing from the initial 24,148. Forty gap probes recorded one missing row on
+  page 5,200 (position 5,238) and two on page 8,500. The temporary wrapper and its
+  bytecode were removed; no busy-hours override remains in the default path.
 - Evidence and checkpoints are gitignored under `scripts/state/frl/` in this
   worktree. No production, desktop DB, D1, KB or refresh-box writes occurred.
 
@@ -30,9 +31,9 @@ crawls outside **08:00–20:00 UTC+10**. This lane conservatively observes that
 window for API acquisition too. The review identified that the final hour was inside
 Melbourne's AEDT busy period; round 1 now blocks both timezone readings before every
 request, including policy probes. The next quiet period begins at
-**21:00 Melbourne / 10:00 UTC on 9 October**. Jake was asked whether this initial,
-metadata-only API run may continue during the busy period; no answer has been
-assumed. The weekly implementation keeps the quiet-hours guard.
+**21:00 Melbourne / 10:00 UTC on 9 October**. Jake explicitly authorised two one-off busy-hours attempts on 9 October. Neither
+produced a snapshot. Tonight's 21:07 Melbourne run uses the default quiet guard,
+with no override. The weekly implementation keeps the same quiet-hours checks.
 
 ## API defects and implemented safeguards
 
@@ -48,14 +49,27 @@ writing a partial snapshot. The corrected loader independently enumerates plain
 title pages with `$orderby=id`, `$top=100` and fixed `$skip` increments of 100.
 Expanded navigation metadata is matched by explicit id. Round 1 retries any omitted
 parent or field up to three times and holds publication if it remains missing. Only
-explicit source-returned empty arrays count as empty relationships. Plain unique ids must match the source count before and after
-acquisition. Empty snapshots and shrinkage exceeding 2% are refused.
+explicit source-returned empty arrays count as empty relationships. Final unique ids must cover the final count minus the permitted, evidenced gaps;
+net count drift is bounded to 50. Empty snapshots and shrinkage exceeding 2% are refused.
 
-Interrupted pages resume only within their original quiet window and full query/count
-fingerprint. Legacy, expired, completed or mismatched checkpoints automatically rotate
-to `<checkpoint>.previous`, preserving the most recent evidence and restarting fresh.
-Each run is capped at 600 HTTP attempts, with at least two seconds between API
-requests and backoff for 429, 5xx and transport failures.
+Interrupted acquisitions keep the same query fingerprint across quiet windows
+when the initial count anchor drifts by at most 50. Later windows re-enumerate
+membership and reuse matching complete expansion bodies by id, so unchanged counts
+cannot hide different members. Fully specified schema-3 checkpoints migrate only
+through this fresh membership pass; other legacy/mismatched/completed checkpoints
+rotate automatically. Start, per-page and end counts are recorded. After paging,
+a bounded tail sweep fetches newly returned ids individually and scans earlier id
+pages if necessary to find insertions before the current offset. Final count
+changes require another sweep; missing metadata or unreconciled totals still hold.
+
+The default minimum spacing is ten seconds for every request. The computed cap is
+initially 696 attempts at 24,149 titles (hard maximum 900), including 40 gap probes, 100 planned tail
+requests and 10% retry headroom. Far-back prefix recovery can re-cost its work up
+to 300 tail attempts while respecting 900 overall and any lower caller cap. Retry-After is honoured; repeated 429/503 or a third
+Retry-After demand stops cleanly. A 60-second deadline margin and 45-second request
+timeout stop collection before 08:00 Melbourne. The run logs its forecast against
+the remaining quiet window. Today’s checkpoint can retain validated expanded
+metadata for tonight, but every plain membership page is read again.
 
 ## Export and web contracts
 
@@ -202,3 +216,25 @@ Step 1 is committed only after offline validation: 947/947 Node tests, 42/42
 loader/export tests and 120 VM Python tests (119 pass, one existing clean-tree
 skip). TypeScript passes, and schema-1 `votes.json` remains byte-identical.
 No publisher requests occur during this code/test step.
+
+## Quiet-window completion round
+
+This code-only round records count drift and tail-sweep evidence in the snapshot,
+manifest and tiny readiness flag. Publication requires complete expanded metadata
+for every exported id, unique rows at least final count minus evidenced gaps,
+absolute drift at most 50, and at most 10 gaps / 0.05% of the final count. Insertion
+stubs cover both sides of the current offset, individual recovery of shifted
+parents, an end-receipt registration, drift 51, the computed cap, and clean dawn
+stop followed by same-scope resume. All verification is offline; no publisher
+requests, push or deploy are authorised in this round.
+
+Validation: **948/948 default Node tests without a catalogue**, **60/60 loader/export
+tests**, and **120 VM Python tests (119 passed, one existing clean-tree skip)**.
+TypeScript and asset stamps pass; `votes.json` remains byte-identical, schema 1.
+The separate release gate remains held because the catalogue is absent. No
+publisher requests were made. The retained 85 expanded pages / 8,499 ids qualify
+for metadata migration with a fresh membership pass. Tonight is expected to use
+about 450–500 attempts / 2¼–2¾ hours if those source fields still match and response
+times resemble today. A full fresh bootstrap is roughly 540–600 attempts / about
+three hours; the initial cap is 696 and any re-costed prefix backfill is capped at
+900. Both fit the 21:07–08:00 Melbourne quiet interval under those assumptions.

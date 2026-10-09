@@ -20,13 +20,13 @@ const block = (title, text, kicker, links='') => `<section id="prerender"><p>${k
 
 test('FRL loader stubbed HTTP paging, count reconciliation, resume, shrink and export guards', () => {
   const output = execFileSync('python3', [new URL('./frl_loader_test.py', import.meta.url).pathname], {encoding:'utf8', stdio:['ignore','pipe','pipe']});
-  assert.match(output,/reconciled/);
+  assert.match(output,/unique expanded titles/);
 });
 
 test('instrument export stays within file/byte budget and reconciles every unique source id', () => {
   const files = Object.keys(fixtureFiles);
   const ready=json('instruments/ready.json');
-  assert.deepEqual(ready,{complete:true,count:manifest.count,exported:manifest.exported,unresolved_gap:0,gap_pages:[],export_date:manifest.generated_at.slice(0,10)});
+  assert.deepEqual(ready,{complete:true,count:manifest.count,exported:manifest.exported,unresolved_gap:0,gap_pages:[],count_start:manifest.count_start,count_end:manifest.count_end,drift:manifest.drift,tail_sweep:manifest.tail_sweep,export_date:manifest.generated_at.slice(0,10)});
   assert.ok(Buffer.byteLength(fixtureFiles['ready.json'])<1024);
   assert.ok(files.length <= 400);
   assert.ok(files.reduce((n,f) => n + Buffer.byteLength(fixtureFiles[f]),0) <= 25_000_000);
@@ -49,6 +49,18 @@ test('instrument export stays within file/byte budget and reconciles every uniqu
   assert.equal(ids.size,manifest.count);
   assert.equal(manifest.attribution.licence_url,'https://creativecommons.org/licenses/by/4.0/');
   assert.match(manifest.attribution.dated,/Based on content from the Federal Register of Legislation at \d+ \w+ \d{4}/);
+});
+
+test('drift and tail evidence must be complete before catalogue discovery', () => {
+  assert.equal(reconciledCounts(manifest),true);
+  for(const bad of [{...manifest,drift:51},{...manifest,count_end:2},
+    {...manifest,tail_sweep:{...manifest.tail_sweep,complete:false}},
+    {...manifest,tail_sweep:{...manifest.tail_sweep,requests:301}},
+    {...manifest,tail_sweep:{complete:true}}]) assert.equal(catalogueComplete(bad),false);
+  // The source can remove an id during acquisition; the requested lower bound
+  // permits complete source-returned rows above the final live count.
+  assert.equal(reconciledCounts({...manifest,count_start:2,drift:-1,exported:2}),true);
+  assert.equal(reconciledCounts({...manifest,exported:0}),false);
 });
 
 test('directory filters title, portfolio, type, commencement year and status without person rows', async () => {
@@ -169,7 +181,8 @@ test('missing and incomplete catalogues omit sitemap type and llms discovery', (
 test('navigation reads only the tiny readiness flag and preserves menus', async () => {
   const source=readFileSync(new URL('navigation.js',root),'utf8');
   const ready=json('instruments/ready.json');
-  for(const m of [null,{...ready,complete:false},{...ready,complete:'true'},{...ready,unresolved_gap:11},ready]) {
+  for(const m of [null,{...ready,complete:false},{...ready,complete:'true'},{...ready,unresolved_gap:11},
+    {...ready,drift:51},{...ready,tail_sweep:{...ready.tail_sweep,complete:false}},ready]) {
     const inserted=[];
     const bills={closest(){return this},insertAdjacentHTML(where,html){inserted.push(html)}};
     const desktop={innerHTML:'',querySelector(){return bills}},mobile={innerHTML:'',querySelector(){return bills}};

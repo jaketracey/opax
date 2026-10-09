@@ -474,10 +474,12 @@ def check_instruments(directory=None, compare_head=True) -> list[str]:
         manifest = json.loads((directory / "manifest.json").read_text())
         rows = json.loads((directory / "index.json").read_text())["records"]
         count = manifest["count"]
-        from parli.ingest.frl_instruments import guard_reconciliation
+        from parli.ingest.frl_instruments import guard_drift_evidence, guard_reconciliation
         exported = manifest.get("exported", count)
         gap, pages = manifest.get("unresolved_gap", 0), manifest.get("gap_pages", [])
-        guard_reconciliation(exported, count, gap, pages)
+        guard_reconciliation(exported, count, gap, pages, count_start=manifest.get('count_start'))
+        guard_drift_evidence(count, manifest.get('count_start'), manifest.get('count_end'),
+                             manifest.get('drift'), manifest.get('tail_sweep'))
         if count != manifest["odata_count"] or exported != len(rows):
             return ["instruments counts do not reconcile"]
         if not manifest["metadata_only"] or len(manifest["lookup"]) != exported:
@@ -492,7 +494,8 @@ def check_instruments(directory=None, compare_head=True) -> list[str]:
         ready = json.loads((directory / "ready.json").read_text())
         if (ready.get("complete") is not True or ready.get("count") != count
                 or ready.get("exported") != exported or ready.get("unresolved_gap") != gap
-                or ready.get("gap_pages") != pages or ready.get("export_date") != manifest["generated_at"][:10]):
+                or ready.get("gap_pages") != pages or ready.get("export_date") != manifest["generated_at"][:10]
+                or any(ready.get(k) != manifest.get(k) for k in ('count_start', 'count_end', 'drift', 'tail_sweep'))):
             return ["instruments readiness flag mismatch"]
         old = head_bytes("portal/public/instruments/manifest.json") if compare_head else None
         if old and exported < json.loads(old).get("exported", json.loads(old)["count"]) * .98:

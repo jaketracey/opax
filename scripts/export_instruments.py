@@ -12,7 +12,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from parli.ingest.frl_instruments import Held, ID, LICENCE, SCOPE, guard_reconciliation, local_path, validate_title
+from parli.ingest.frl_instruments import Held, ID, LICENCE, SCOPE, guard_drift_evidence, guard_reconciliation, local_path, validate_title, tail_summary
 
 MAX_FILES, MAX_BYTES, CHUNK_ROWS = 400, 25_000_000, 512
 SOURCE = "Source: Federal Register of Legislation (legislation.gov.au), CC BY 4.0"
@@ -63,7 +63,12 @@ def plan_export(snapshot):
     rows = snapshot["titles"]
     exported = snapshot.get("exported", snapshot["count"])
     gap, pages = snapshot.get("unresolved_gap", 0), snapshot.get("gap_pages", [])
-    guard_reconciliation(exported, snapshot["odata_count"], gap, pages)
+    guard_reconciliation(exported, snapshot["odata_count"], gap, pages, count_start=snapshot.get('count_start'))
+    count_start = snapshot.get('count_start', snapshot['count'])
+    count_end = snapshot.get('count_end', snapshot['count'])
+    drift = snapshot.get('drift', 0)
+    sweep = snapshot.get('tail_sweep', {'complete': True, 'requests': 0, 'pages': 0, 'prefix_pages': 0, 'fetched': 0, 'rounds': 0})
+    guard_drift_evidence(snapshot['count'], count_start, count_end, drift, sweep)
     if snapshot.get("scope") != SCOPE or not snapshot.get("metadata_only"):
         raise Held("Only reconciled in-force metadata snapshots may be exported")
     if snapshot["count"] != snapshot["odata_count"] or len(rows) != exported or len({r["id"] for r in rows}) != exported:
@@ -121,6 +126,7 @@ def plan_export(snapshot):
     catalogue.sort(key=lambda r: (r[1].casefold(), r[0]))
     payloads["index.json"] = encoded({"fields": ["id", "title", "portfolios", "type", "commenced", "status", "chunk"], "records": catalogue})
     manifest = {"schema": 1, "complete": True, "generated_at": generated, "downloaded_at": generated, "count": snapshot["odata_count"],
+                "count_start": count_start, "count_end": count_end, "drift": drift, "tail_sweep": tail_summary(sweep),
                 "exported": exported, "unresolved_gap": gap, "gap_pages": pages,
                 "odata_count": snapshot["odata_count"], "scope": SCOPE, "metadata_only": True,
                 "index_url": "/instruments/index.json", "attribution": attribution,
@@ -139,6 +145,7 @@ def plan_export(snapshot):
                                  "One API-returned version per title is acquired. It is not necessarily current/latest; use the authoritative FRL latest link where a latest version was not returned. Full history is phase 2."]}
     payloads["manifest.json"] = encoded(manifest)
     payloads["ready.json"] = encoded({"complete": True, "count": manifest["count"],
+                                      "count_start": count_start, "count_end": count_end, "drift": drift, "tail_sweep": tail_summary(sweep),
                                       "exported": exported, "unresolved_gap": gap, "gap_pages": pages,
                                       "export_date": generated[:10]})
     check_budget(payloads)
@@ -157,7 +164,7 @@ def export(snapshot_path, out):
     snapshot = json.loads(snapshot_path.read_text())
     old = json.loads((out / "manifest.json").read_text()) if (out / "manifest.json").exists() else {}
     guard_reconciliation(snapshot.get("exported", snapshot["count"]), snapshot["odata_count"],
-                         snapshot.get("unresolved_gap", 0), snapshot.get("gap_pages", []), old.get("exported", old.get("count", 0)))
+                         snapshot.get("unresolved_gap", 0), snapshot.get("gap_pages", []), old.get("exported", old.get("count", 0)), snapshot.get('count_start'))
     payloads, manifest = plan_export(snapshot)
     # Validate the complete plan and budget before touching the last good export.
     out.mkdir(parents=True, exist_ok=True)
