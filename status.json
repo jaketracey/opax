@@ -1,0 +1,15 @@
+{
+ "date": "2026-10-10",
+ "status": "failed",
+ "started": "2026-10-09T16:15:39Z",
+ "finished": "2026-10-09T18:21:00Z",
+ "commit": "f4052df4",
+ "deploy": "started by the push (deploy.yml, corpus.json changed)",
+ "summary": "731,388 resources (+541: speech +490, press_release +30, grant_award +21)",
+ "failures": [
+  "portal tests failed against the new data; no single group was to blame, green again with divisions seovotes interests bills put back to HEAD: not published tonight"
+ ],
+ "warnings": [
+  "division export retained 1 pinned records; explicit coverage flags identify degraded source coverage"
+ ]
+}
