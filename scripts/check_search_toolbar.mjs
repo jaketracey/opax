@@ -77,7 +77,7 @@ try {
           const controls = await boxes(page);
           const styles = await page.locator('#search-read-passages').evaluate(button => {
             const css = getComputedStyle(button);
-            return { whiteSpace: css.whiteSpace, overflowWrap: css.overflowWrap, wordBreak: css.wordBreak, height: button.getBoundingClientRect().height };
+            return { whiteSpace: css.whiteSpace, overflowWrap: css.overflowWrap, wordBreak: css.wordBreak, paddingLeft: css.paddingLeft, paddingRight: css.paddingRight, height: button.getBoundingClientRect().height };
           });
           if (phase === 'after') {
             assert.deepEqual(controls, initial, `${engine} ${label}: controls moved in ${mode}`);
@@ -88,15 +88,24 @@ try {
             assert.equal(styles.height, controls[1].height, 'Segment button and sort heights');
             assert.equal(controls[1].height, controls[2].height, 'Sort and Copy link heights');
             assert.equal(controls[2].height, controls[3].height, 'Copy link and Export heights');
-            for (const button of await page.locator('#search-readbar .ui-button').all()) {
-              const label = await button.evaluate(b => ({ whiteSpace: getComputedStyle(b).whiteSpace, height: b.getBoundingClientRect().height, fits: b.scrollWidth <= b.clientWidth }));
+            for (const button of await page.locator('.results-actions .ui-button').all()) {
+              const label = await button.evaluate(b => {
+                const css = getComputedStyle(b);
+                return { whiteSpace: css.whiteSpace, paddingLeft: css.paddingLeft, paddingRight: css.paddingRight, height: b.getBoundingClientRect().height, fits: b.scrollWidth <= b.clientWidth };
+              });
               assert.equal(label.whiteSpace, 'nowrap');
+              assert.equal(label.paddingLeft, '16px', 'Toolbar buttons share generous horizontal padding');
+              assert.equal(label.paddingRight, '16px', 'Toolbar buttons share generous horizontal padding');
               assert.equal(label.height, controls[1].height);
-              assert.equal(label.fits, true, 'Segment label fits without clipping');
+              assert.equal(label.fits, true, 'Toolbar label fits without clipping');
             }
             if (width > 700) assert.ok(controls.every(box => box.y === controls[0].y), 'Controls stay together on one row');
             const toolbar = await page.locator('#results-bar').boundingBox();
             assert.ok(controls.every(box => box.x >= toolbar.x && box.x + box.width <= toolbar.x + toolbar.width + 1), 'Controls fit inside the toolbar');
+            if (width === 1024 || width === 820) {
+              const summary = await page.locator('.results-lead').boundingBox();
+              assert.ok(summary.y + summary.height <= controls[0].y, 'Summary takes its own row above the intact controls');
+            }
             assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, 'No page overflow');
           }
           const path = `${output}/${engine}-search-${label}-${mode}.png`;

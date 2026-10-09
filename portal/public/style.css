@@ -3481,10 +3481,13 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 #panel-search .results-lead { flex: 1 1 20rem; min-width: 0; }
 #panel-search .results-actions {
   flex: 0 0 auto; flex-wrap: nowrap; gap: .5rem;
-  --ui-font: .875rem; --ui-pad: .375rem;
+  --ui-font: .875rem; --ui-pad: 16px;
 }
 #panel-search .results-actions > * { flex: 0 0 auto; }
-#panel-search .results-actions .ui-button { white-space: nowrap; overflow-wrap: normal; word-break: normal; }
+/* Keep the generous padding and icon spacing stable as text grows, so the
+   controls still fit together at 1024px with 200% text. */
+#panel-search .results-actions .ui-button { gap: min(.5rem, 8px); white-space: nowrap; overflow-wrap: normal; word-break: normal; }
+#panel-search .results-actions .search-sort-trigger { gap: min(.6rem, 9.6px); }
 /* Flush segments share the action buttons' height, padding and baseline. */
 #panel-search #search-readbar .ui-segmented { padding: 0; border: 0; gap: 0; border-radius: var(--ui-radius); }
 #panel-search #search-readbar .ui-button {
