@@ -7,6 +7,7 @@ import { recordPathIndex } from '../portal/public/record-paths.js';
 import { slugIndex } from '../portal/src/person-slug.ts';
 import { moneyFlowType } from '../portal/public/money-records.js';
 import { recordsWithLocations } from '../portal/public/grants-research.js';
+import { auditComplete } from '../portal/public/audit.js';
 import { payPersonRecord, payPersonOrder, payGeneralRecords } from '../portal/src/pay-records.mjs';
 const root = fileURLToPath(new URL('../portal/public/', import.meta.url));
 const read = async p => JSON.parse(await readFile(join(root,p),'utf8'));
@@ -163,6 +164,16 @@ async function main() {
  add('mlci-program-coverage','report','MLCI program: invitations and awards','/reports/grants-allocation',`${mlci.projects.filter(p=>p.status!=='Withdrawn').length} active invitations total $559,241,712 at 14 November 2025; separately, ${mlci.awards.length} published awards total ${cash(mlci.awards.reduce((s,p)=>s+p.value,0))} in Opax at ${mlci.as_of}. Invitations are not awards or payments; do not add totals. `+Object.entries({NSW:'New South Wales',VIC:'Victoria',QLD:'Queensland',WA:'Western Australia',SA:'South Australia',TAS:'Tasmania',NT:'Northern Territory',ACT:'Australian Capital Territory'}).map(([state,name])=>`${name}: ${cash(mlci.projects.filter(p=>p.status!=='Withdrawn'&&p.state===state).reduce((sum,p)=>sum+p.value,0))} in active invitations.`).join(' '),{date:mlci.as_of,state:'federal',source:'Departmental invitation list and GrantConnect snapshot',url:mlci.sources.department});
  for(const s of mlci.seats) add('aec-seat:'+s.name,'report',`${s.name} — 2025 seat baseline`,'/reports/grants-allocation?'+new URLSearchParams({seat:s.name}),`${s.state}. ${s.party}. ${s.margin.toFixed(2)} percentage-point margin. ${{M:'Marginal',FS:'Fairly safe',S:'Safe'}[s.status]}. AEC notional baseline before the 2025 election, not the election result or current incumbent.`,{date:'2025-05-03',state:'federal',source:'AEC pre-election seat status',url:mlci.sources.aec+'#page='+s.page});
  for(const a of agencies.agencies) add('agency:'+a.id,'agency',a.name,'/subject/agency/'+encodeURIComponent(a.id),`${cash(a.total)} in recorded awards across ${a.count} contracts and ${a.supplier_count} suppliers.`,{from:a.first_year,to:a.last_year,state:'federal',source:'AusTender agency profile',dateLabel:period(a.first_year,a.last_year)});
+ // A few hundred title/metadata rows add under 1% to the existing catalogue.
+ // Recommendation bodies are not name-indexed; no person entities are created.
+ const audit = await read('audit/manifest.json').catch(e => { if(e.code==='ENOENT') return null; throw e; });
+ if(auditComplete(audit)) {
+  const index = await read('audit/index.json');
+  if(index.records.length !== audit.count) throw new Error('Unreconciled audit search index');
+  for(const r of index.records) add('audit:'+r.id,'audit report',r.title,'/audit/'+r.id,
+   `${r.report_label}. Tabled date: ${r.tabled_date}. ${[...r.sectors,...r.entities].join('; ')}.`,
+   {date:r.tabled_date,state:'qld',source:'Queensland Audit Office',url:r.canonical_url,record_id:r.id});
+ }
  const meta=docs.map(d=>d.meta), postings=Array.from({length:64},()=>Object.create(null));
  for(const [id,d] of docs.entries()) {
   const weights=new Map(d.bodyTokens.map(t=>[t,1])); for(const t of d.titleTokens)weights.set(t,8);

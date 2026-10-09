@@ -8,11 +8,12 @@
 # shellcheck shell=bash
 
 # order = the order they are validated in
-DATA_GROUPS=(bills instruments votes divisions seovotes corpus wrangler money grants suppliers access expenses interests fits speakers people pay discovery taxcharity)
+DATA_GROUPS=(bills instruments audit votes divisions seovotes corpus wrangler money grants suppliers access expenses interests fits speakers people pay discovery taxcharity)
 
 declare -A GROUP_PATHS=(
   [bills]="portal/public/bills"
   [instruments]="portal/public/instruments" # weekly FRL metadata only; no DB/KB writes
+  [audit]="portal/public/audit" # weekly QAO index + HTML recommendations; no DB/KB writes
   [votes]="portal/public/votes.json"
   [divisions]="portal/public/divisions"
   [seovotes]="portal/public/seo/recent-votes.json"

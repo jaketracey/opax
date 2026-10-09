@@ -328,6 +328,30 @@ just that group when the check fails; it also puts every periodic file back to H
 its end line (killed, lock held). A loader that exits 3 ("the source refused to change the register") is logged STALE, keeps
 the last good rows, and shows up as a `warnings` entry in `status.json`, not as a failure. Time: see "How long it takes".
 
+**QAO audit reports, phase 1 (`web/qao-audit-reports`).** Weekly Sundays only;
+this wiring is inert until merged with the first accepted `portal/public/audit`
+catalogue. `weekly_refresh.sh` checks HEAD before either step, so an untracked
+bootstrap does not enable refresh. `qao_reports` runs
+`python -m parli.ingest.qao_reports --quiet-hours` (20:00–08:00 Brisbane), then
+`x_audit` runs `scripts/export_audit.py` through `export_step.sh dir` and its
+keep-if-unchanged sweep. The `audit` data group owns only `portal/public/audit`;
+`validate_data.py audit` verifies identity/count receipts, per-report licences,
+recommendations, the attribution and the 40-file / 10 MB budget against HEAD.
+All checkpoints, raw HTML receipts and the accepted snapshot are gitignored under
+`scripts/state/qao/` inside the checkout. There are no database, KB or PDF-body
+requests. Robots and the copyright grant are reread each run; minimum spacing is
+two seconds or the publisher's longer crawl delay, with bounded 429/5xx backoff
+and an 800-request ceiling. Any challenge stops acquisition without bypass.
+An empty/incomplete acquisition, changed first index page, loss above 2%, licence
+grant change or failed acquisition/export exits 3 and preserves the last good
+published catalogue. Interrupted checkpoints resume within the same UTC day;
+later days or completed runs reread membership and every report's licence.
+Unchanged report projections keep their original accepted timestamp; latest-run
+counts and timing are separate operational receipts. PDF bodies, entity responses
+and the app reader are phase 2, with document-level rights/redaction review.
+Agency links require exact names and verified Queensland jurisdiction; a
+same-named Commonwealth agency is not joined.
+
 **FRL instruments, phase 1 (`web/frl-instruments`).** Jake approved the source on
 9 October; the orchestrator owns the merge and catalogue promotion. The weekly group runs
 `frl_instruments` (`python -m parli.ingest.frl_instruments`), then `x_instruments`

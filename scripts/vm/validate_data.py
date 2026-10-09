@@ -538,7 +538,44 @@ def check_instruments(directory=None, compare_head=True) -> list[str]:
         return [f"instrument export unreadable: {e}"]
 
 
-CHECKS = {"bills": check_bills, "instruments": check_instruments, "votes": check_votes, "divisions": check_divisions, "seovotes": check_seovotes,
+def check_audit(directory=None, compare_head=True) -> list[str]:
+    """Bounded, licensed QAO export; no database or source requests."""
+    directory = Path(directory) if directory is not None else ROOT / PUBLIC / "audit"
+    try:
+        from scripts.export_audit import check_budget, validate_record
+        from parli.ingest.qao_reports import guard_count
+        manifest = json.loads((directory / "manifest.json").read_text())
+        index = json.loads((directory / "index.json").read_text())["records"]
+        ready = json.loads((directory / "ready.json").read_text())
+        old = head_bytes("portal/public/audit/manifest.json") if compare_head else None
+        guard_count(manifest["count"], manifest["listed"], json.loads(old)["count"] if old else 0)
+        if manifest.get("complete") is not True or manifest.get("phase") != 1: return ["audit catalogue incomplete"]
+        if ready != {"complete": True, "count": manifest["count"], "listed": manifest["listed"], "export_date": manifest["generated_at"][:10]}:
+            return ["audit readiness receipt mismatch"]
+        check_budget({p.name: p.read_bytes() for p in directory.iterdir() if p.is_file()})
+        seen, recommendations, exceptions = set(), 0, []
+        for i, chunk in enumerate(manifest["chunks"]):
+            name = Path(chunk["path"]).name
+            if not re.fullmatch(r"reports-\d+\.json", name) or chunk["path"] != "/audit/" + name: return ["unsafe audit chunk path"]
+            rows = json.loads((directory / name).read_text())["records"]
+            if len(rows) != chunk["count"] or (directory / name).stat().st_size != chunk["bytes"]: return ["audit chunk receipt mismatch"]
+            for row in rows:
+                validate_record(row)
+                if row["id"] in seen or manifest["lookup"].get(row["id"]) != i: return ["audit identity mismatch"]
+                if any(not re.fullmatch(r"/subject/agency/[^/?#]+", href) for href in row.get("entity_links", {}).values()): return ["audit has non-agency links"]
+                seen.add(row["id"]); recommendations += len(row["recommendations"])
+                if row["licence"]["body_skipped"]: exceptions.append(row["id"])
+                projected = {k: row[k] for k in ("id", "number", "year", "report_label", "title", "tabled_date", "sectors", "entities", "canonical_url")}
+                if projected not in index: return ["audit index does not match detail"]
+        if len(index) != manifest["count"] or len(seen) != manifest["count"] or set(manifest["lookup"]) != seen: return ["audit counts do not reconcile"]
+        if recommendations != manifest["recommendations"] or exceptions != manifest["licence_exceptions"]: return ["audit licence/recommendation counts mismatch"]
+        if manifest["attribution"]["licence_url"] != "https://creativecommons.org/licenses/by/4.0/" or "State of Queensland" not in manifest["attribution"]["copyright_notice"]: return ["QAO attribution missing"]
+        return []
+    except (OSError, ValueError, KeyError, TypeError, IndexError) as error:
+        return [f"audit export unreadable: {error}"]
+
+
+CHECKS = {"bills": check_bills, "instruments": check_instruments, "audit": check_audit, "votes": check_votes, "divisions": check_divisions, "seovotes": check_seovotes,
           "corpus": check_corpus, "wrangler": check_wrangler,
           "money": check_money, "grants": check_grants, "suppliers": check_suppliers, "access": check_access,
           "expenses": check_expenses, "interests": check_interests, "fits": check_fits, "speakers": check_speakers,
@@ -552,10 +589,10 @@ def main() -> int:
         if g not in CHECKS:
             print(f"unknown group {g!r}; choose from {', '.join(CHECKS)}", file=sys.stderr)
             return 64
-        if (not sys.argv[1:] and g == "instruments"
-                and not (ROOT / PUBLIC / "instruments/manifest.json").is_file()
-                and _head_names(PUBLIC + "/instruments", r".*") is None):
-            print("SKIP instruments (no catalogue)")
+        if (not sys.argv[1:] and g in ("instruments", "audit")
+                and not (ROOT / PUBLIC / g / "manifest.json").is_file()
+                and _head_names(PUBLIC + "/" + g, r".*") is None):
+            print(f"SKIP {g} (no catalogue)")
             continue
         errs = CHECKS[g]()
         if errs:

@@ -1,4 +1,5 @@
 import { FRL_ID, catalogueComplete, filterInstruments, unpack, type CatalogueRow } from '../public/instruments.js'
+import { catalogueReader } from './catalogue-reader.mjs'
 
 interface Attribution { source: string; source_url: string; licence_url: string; dated: string; changes: string; exceptions: string; endorsement: string }
 interface Manifest {
@@ -22,29 +23,7 @@ type Block = (heading: string, sentence: string, links?: string) => string
 const esc = (v: unknown) => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!))
 const shown = (v: unknown) => v == null || v === '' ? 'Not supplied' : esc(v)
 const date = (v: string | null) => v ? esc(v.slice(0, 10)) : 'Not supplied'
-// ASSETS identity is stable within an isolate. Cache parsed manifest/index, with
-// a bounded freshness period; never cache failed reads or unbounded detail chunks.
-const catalogueReaders = new WeakMap<object, Read>()
-export function instrumentReader(assets: { fetch(request: Request): Promise<Response> }): Read {
-  let reader = catalogueReaders.get(assets)
-  if (reader) return reader
-  const cache = new Map<string, { expires: number; value: Promise<unknown> }>()
-  reader = <T>(path: string): Promise<T> => {
-    const cached = cache.get(path)
-    if (cached && cached.expires > Date.now()) return cached.value as Promise<T>
-    const value = assets.fetch(new Request('https://opax.com.au' + path)).then(async response => {
-      if (!response.ok) throw new Error('Instrument catalogue unavailable')
-      return response.json()
-    })
-    if (path === '/instruments/manifest.json' || path === '/instruments/index.json') {
-      cache.set(path, { expires: Date.now() + 300_000, value })
-      void value.catch(() => { if (cache.get(path)?.value === value) cache.delete(path) })
-    }
-    return value as Promise<T>
-  }
-  catalogueReaders.set(assets, reader)
-  return reader
-}
+export const instrumentReader = catalogueReader
 const directoryLink = '<p><a href="/instruments">All instruments</a></p>'
 
 function attribution(a: Attribution) {

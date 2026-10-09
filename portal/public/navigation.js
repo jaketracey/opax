@@ -16,6 +16,7 @@
     { id: 'money', label: 'Money', href: '/money' },
     { id: 'bills', label: 'Bills', href: '/bills' },
     { id: 'reports', label: 'Reports', children: [
+      ['/audit', 'Queensland audit reports', 'Reports tabled in Parliament and QAO recommendations.'],
       ['/reports', 'All reports', 'Sourced reading paths through the record.'],
       ['/reports/grants-allocation', 'Where community funding goes', 'Grant invitations, awards and seat competitiveness.'],
       ['/reports/climate', 'Climate & energy', 'Targets, coal and renewables.'],
@@ -42,6 +43,7 @@
     if (/^\/(subject|declared)(\/|$)/.test(path)) return 'people';
     if (/^\/bills?(\/|$)/.test(path)) return 'bills';
     if (/^\/instruments?(\/|$)/.test(path)) return 'instruments';
+    if (/^\/audit(\/|$)/.test(path)) return 'reports';
     if (path.startsWith('/reports')) return 'reports';
     if (path === '/explore') return ['ledger','grants','wd'].includes(params.get('game')) ? 'money' : 'topics';
     if (/^\/(about|methods|stats|expenses|privacy|support)/.test(path)) return 'about';
@@ -203,7 +205,7 @@
   }
   globalThis.OpaxNavigation = { sections, money, active, moneyNav, mountDesktop, mountDrawer };
   if (typeof document === 'undefined') return;
-  const instrumentPage = /^\/instruments?(\/|$)/.test(location.pathname);
+  const instrumentPage = /^\/(?:instruments?|audit)(\/|$)/.test(location.pathname);
   const pageSections = instrumentPage ? sections.map(s => s.children ? { ...s, children: s.children.filter(([href]) => !href.startsWith('/subject/person')) } : s) : sections;
   const desktop = document.querySelector('#primary-nav .nav-list');
   const mobile = document.querySelector('#nav-drawer nav');

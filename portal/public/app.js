@@ -2223,7 +2223,7 @@ function reportGlyph(slug, cls) {
 }
 
 function reportsMenuHTML(list) {
-  return list.map((r) => `
+  return '<a class="mm-link" href="/audit"><span class="mm-title">Queensland audit reports</span><span class="mm-blurb">Reports tabled in Parliament and QAO recommendations.</span></a>' + list.map((r) => `
     <a class="mm-link" href="/reports/${esc(r.slug)}">${reportGlyph(r.slug, "mm-glyph")}
       <span class="mm-title">${esc(r.title)}</span>
       <span class="mm-blurb">${esc(r.blurb)}</span>
@@ -11490,13 +11490,13 @@ const FILTER_KIND_LABELS = {
   person: "Person", party: "Political party", donor: "Donor", receipt: "Political receipts",
   agency: "Government agency", supplier: "Supplier", contract: "Government contract", grant: "Grant", bill: "Bill", bill_text: "Bill text",
   interest: "Declared interest", expense: "Parliamentary expenses", pay: "Parliamentary pay", access: "Meeting or lobbying register",
-  campaigner: "Campaigner or associated entity", report: "Research report",
+  campaigner: "Campaigner or associated entity", report: "Research report", 'audit report': "Audit report",
 };
 // A document kind narrows the search in hand: the query and filters travel
 // with it, so "Speeches" on a row is the same search, speeches only, rather
 // than an empty form. Dataset kinds go to their own hubs.
 function recordTypeHref(kind, q = "", f = {}) {
-  const roots = { person:'/subject/person', party:'/subject/party', donor:'/subject/donor', agency:'/subject/agency', supplier:'/subject/supplier', receipt:'/money/receipts', contract:'/discover', grant:'/money/grants', bill:'/bills', bill_text:'/bills', interest:'/declared', campaigner:'/subject/campaigner', report:'/reports' };
+  const roots = { person:'/subject/person', party:'/subject/party', donor:'/subject/donor', agency:'/subject/agency', supplier:'/subject/supplier', receipt:'/money/receipts', contract:'/discover', grant:'/money/grants', bill:'/bills', bill_text:'/bills', interest:'/declared', campaigner:'/subject/campaigner', report:'/reports', 'audit report':'/audit' };
   if (roots[kind]) return roots[kind];
   const p = new URLSearchParams();
   if (q) p.set("q", q);
