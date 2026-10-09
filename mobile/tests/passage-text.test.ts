@@ -1,8 +1,17 @@
-import { decodeEntities, passageText } from '../src/api/passage-text';
+import {
+  decodeEntities,
+  passageText,
+  serverPassage,
+} from '../src/api/passage-text';
+import {
+  isVerbatimText,
+  type DocumentRecord,
+} from '../src/features/records/model';
 import { cleanPassage } from '../src/features/people/model';
 import { sourcePassage } from '../src/features/ask/model';
 import searchRecords from '../scripts/fixtures/search/records.json';
 import recordFixtures from '../scripts/fixtures/records/contracts.json';
+import serverExcerpts from '../scripts/fixtures/search/server-excerpts.json';
 
 // Real strings: the web's pinned evidence excerpts (portal/public/evidence,
 // field `text`, from speeches.text_clean) and the pinned search fixture.
@@ -14,6 +23,10 @@ const estimates =
   'ransport Legislation Committee 28/05/2026 Estimates AGRICULTURE, FISHERIES AND FORESTRY PORTFOLIO Meat &#38; Livestock Australia Limited] Senator CANAVAN:\n\n So Cattle Australia is on that?';
 const snippet = (slug: string) =>
   searchRecords.find((r) => r.slug === slug)!.snippet;
+// Server-format excerpts: real record text through the web's own
+// normalizePassage and passageWindow (see the fixture's note).
+const server = (id: string) =>
+  serverExcerpts.rows.find((r) => r.id === id)!.excerpt;
 
 describe('passage text', () => {
   test('a tag between two words leaves a space, never a join', () => {
@@ -97,8 +110,9 @@ describe('passage text', () => {
   });
 
   test('cuts land on a word boundary with an ellipsis', () => {
-    // The Ask Worker sends `.trim().slice(0, 600)` of the passage. Sliced
-    // the same way from a pinned record text, it can end mid-word.
+    // Ask answers saved before 9 Oct hold `.trim().slice(0, 600)` of the raw
+    // passage. Sliced the same way from a pinned record text, it can end
+    // mid-word.
     const full = (
       recordFixtures.responses as Record<string, { text?: string }>
     )['/api/resource/speech-1205524']!.text!;
@@ -134,11 +148,79 @@ describe('passage text', () => {
 
   test('people rows share the pipeline (what they talk about)', () => {
     expect(cleanPassage(estimates)).toBe('So Cattle Australia is on that?');
+    // Person rows come from /api/search, already decoded once by the Worker:
+    // a literal "&#38;" left by that decode is the record's own text.
     expect(cleanPassage('Meat &#38; Livestock Australia said so.')).toBe(
-      'Meat & Livestock Australia said so.',
+      'Meat &#38; Livestock Australia said so.',
     );
+    expect(
+      cleanPassage(server('search-opens-mid-paragraph-ends-on-colon')),
+    ).toBe('Senator CANAVAN:');
     expect(cleanPassage('Heading\n\n A complete source sentence.')).toBe(
       'A complete source sentence.',
     );
+  });
+
+  test('Worker-normalized text is never decoded twice', () => {
+    // "&amp;#38;" in the source: the Worker decodes once to a literal "&#38;";
+    // encoded tags reach the app as literal text, not markup.
+    const literal = server('literal-entity-text');
+    expect(literal).toBe('& & 😀 — &#38; <b>literal</b>');
+    expect(serverPassage(literal)).toBe(literal);
+    expect(sourcePassage(literal)).toBe(literal);
+    expect(sourcePassage(literal, false)).toBe(literal);
+    // The raw pipeline still decodes static shards and catalog text once.
+    expect(passageText(estimates)).toContain('Meat & Livestock');
+    expect(passageText('Meat &amp;#38; Livestock')).toBe(
+      'Meat &#38; Livestock',
+    );
+  });
+
+  test("search excerpts keep their last word: the server's … marks real cuts", () => {
+    for (const id of [
+      'search-opens-mid-paragraph-ends-on-dash',
+      'search-opens-mid-paragraph-ends-on-colon',
+    ]) {
+      const excerpt = server(id);
+      expect(excerpt.startsWith('… ')).toBe(true);
+      expect(excerpt).not.toMatch(/[.!?…]$/);
+      expect(serverPassage(excerpt)).toBe(excerpt);
+    }
+    expect(
+      serverPassage(server('search-opens-mid-paragraph-ends-on-dash')),
+    ).toMatch(/ another 100,000 Australians—$/);
+    expect(
+      serverPassage(server('search-opens-mid-paragraph-ends-on-colon')),
+    ).toMatch(/ Senator CANAVAN:$/);
+    // The old trim rule, kept for raw text, is what dropped those words.
+    expect(
+      passageText(server('search-opens-mid-paragraph-ends-on-colon')),
+    ).toBe('… Meat & Livestock Australia Limited] Senator…');
+  });
+
+  test('Ask source snippets are drawn as the Worker cut them', () => {
+    for (const id of ['ask-cut-at-600', 'ask-opens-and-cuts']) {
+      const excerpt = server(id);
+      expect(excerpt.length).toBeLessThanOrEqual(600);
+      expect(excerpt.endsWith(' …')).toBe(true);
+      expect(sourcePassage(excerpt)).toBe(excerpt);
+    }
+    // Words on either side of each marker are whole.
+    expect(server('ask-cut-at-600')).toMatch(/ stopping the stimulus or …$/);
+    expect(server('ask-opens-and-cuts')).toMatch(/^… Withdrawing the stimulus/);
+    // The app's own length cap still closes on a word.
+    expect(serverPassage(server('ask-cut-at-600'), { max: 40 })).toBe(
+      'My question is to Senator Arbib, the…',
+    );
+  });
+
+  test('record text: Worker-normalized, except verbatim bill text', () => {
+    const doc = (slug: string, kind: string) =>
+      ({ slug, labels: { kind } }) as unknown as DocumentRecord;
+    expect(isVerbatimText(doc('speech-1205524', 'speech'))).toBe(false);
+    expect(isVerbatimText(doc('bill-text-au-federal-r7534-aspassed', ''))).toBe(
+      true,
+    );
+    expect(isVerbatimText(doc('press-1', 'bill_text'))).toBe(true);
   });
 });

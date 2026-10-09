@@ -31,7 +31,7 @@ import {
   type Source,
   type Turn,
 } from './model';
-import { passageText } from '../../api/passage-text';
+import { serverPassage } from '../../api/passage-text';
 export const machineNote =
   'Written by a model from the retrieved passages; not the record.';
 export const moneyNote =
@@ -309,7 +309,7 @@ export function AnswerView({
       {data.evidence_excerpts?.map((e, i) => (
         <Group key={i}>
           <Text wordSafe selectable variant="record">
-            “{passageText(e.text)}”
+            “{serverPassage(e.text)}”
           </Text>
           <LinkRow
             title="Read the source passage"

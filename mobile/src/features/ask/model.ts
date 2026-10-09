@@ -1,5 +1,5 @@
 import type { Roster, Slugs } from '../../api/catalog-decoders';
-import { passageText } from '../../api/passage-text';
+import { passageText, serverPassage } from '../../api/passage-text';
 // Contracts: portal/src/index.ts AskInput, askPayload, withAskedAs;
 // portal/public/app.js sendChat, trimTurn, filterChipSpecs and home.js.
 export type AskOptions = {
@@ -31,13 +31,16 @@ export function decodeOptions(raw: unknown): AskOptions {
 }
 export type Range = [number, number];
 /**
- * A source's passage as drawn. The Ask Worker cuts each passage at 600
- * characters, often mid-word ("and Allan Kes"), so a passage of exactly that
- * length ends on its last whole word. Applied where it is drawn, never to
- * the stored answer, so a saved chat is never decoded twice.
+ * A source's passage as drawn. The Worker normalizes Ask snippets and marks
+ * its own cuts, so they are drawn as sent. An answer saved before 9 Oct has
+ * the old raw snippet, cut at 600 characters mid-word with no marker: that
+ * one is still decoded and closed on a whole word. Applied where it is
+ * drawn, never to the stored answer.
  */
 export const sourcePassage = (snippet: string, paragraphs = true) =>
-  passageText(snippet, { paragraphs, slicedAt: 600 });
+  snippet.length === 600 && !snippet.trimEnd().endsWith('…')
+    ? passageText(snippet, { paragraphs, slicedAt: 600 })
+    : serverPassage(snippet, { paragraphs });
 export type Source = {
   resource: string;
   title: string;

@@ -384,7 +384,7 @@ export function Results({
                         : 'no brief available'}
                     </Text>
                   ) : null}
-                  <Excerpt snippet={r.snippet} />
+                  <Excerpt snippet={r.snippet} resource={r.resource} />
                 </Group>
               )}
               {/automated summary/.test(r.source ?? '') ? (

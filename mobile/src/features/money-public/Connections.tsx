@@ -11,6 +11,7 @@ import {
 import { RecordStatus } from '../RecordStatus';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { money } from './runtime';
+import { passageText } from '../../api/passage-text';
 import type { decodeEvidence } from './data';
 import type { RecordResult } from '../../api/client';
 import {
@@ -155,7 +156,9 @@ export default function Connections() {
                       {selected.excerpts
                         ? selected.excerpts.map((e, i) => (
                             <Group key={i}>
-                              <Text wordSafe>{e.text}</Text>
+                              {/* Static evidence shards keep the raw source
+                                  window: entities and tags still in it. */}
+                              <Text wordSafe>{passageText(e.text)}</Text>
                               <AsAtLine
                                 asOf={e.date || data!.asOf}
                                 citation={e.source}

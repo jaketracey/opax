@@ -13,7 +13,7 @@ import {
   text,
   url,
 } from '../../api/validation';
-import { passageText } from '../../api/passage-text';
+import { serverPassage } from '../../api/passage-text';
 import type { PersonProfile } from '../../api/person-identity';
 
 const topic = shape({
@@ -260,7 +260,7 @@ export function displayedRecordTitle(row: RecordRow) {
 }
 
 export function cleanPassage(text: string | undefined) {
-  let raw = passageText(text, { paragraphs: true }).replace(
+  let raw = serverPassage(text, { paragraphs: true }).replace(
     /\b(?:the\s+)?full\s+listing\s+can\s+be\s+found\s+at\s*:?\s*(?:\[[^\]\n]*\]\(https?:\/\/[^\s)]+\)|<https?:\/\/[^>\s]+>|https?:\/\/[^\s<>]+)\.?/gi,
     '',
   );

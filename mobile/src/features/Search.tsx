@@ -878,7 +878,7 @@ function SearchScreen({
                           {row.title}
                         </Text>
                       )}
-                      <Excerpt snippet={row.snippet} />
+                      <Excerpt snippet={row.snippet} resource={row.resource} />
                       <RecordActions slug={row.slug} />
                       {row.url ? (
                         <SourceLink
