@@ -11,32 +11,104 @@ import {
   type SeatObservation,
   type Slugs,
 } from '../../api/catalogs';
+import { nameKey } from '../../api/ids';
 import type { PartyStatus } from '../../api/party-transforms';
 import { jurisdictionName } from '../../design/parliament';
 import { samePartyLabel } from '../../design/party';
 
-const folded = (name: string) =>
-  name
-    .normalize('NFKD')
-    .replace(/[̀-ͯ]/g, '')
-    .toLocaleLowerCase('en-AU')
-    .replace(/[’‘ʼ`']/g, '')
-    .replace(/\s+/g, ' ')
-    .trim();
+// Honorifics before a name, post-nominals and generations after it: the
+// register prints "Sen Mehreen", "KATTER, Bob, Jnr, MP", "the Hon. Tony".
+const LEADING = new Set(
+  'the hon senator sen dr mr mrs ms miss prof professor sir dame'.split(' '),
+);
+const TRAILING = new Set(
+  'mp mhr mlc mla am ao ac oam qc sc kc jnr jr snr sr'.split(' '),
+);
+const GENERATION = new Set(['jnr', 'snr']);
+
+/**
+ * A name as a matching key: "SURNAME, Given, Jnr, MP" read as "Given
+ * Surname", titles and post-nominals dropped, then `nameKey` folding
+ * (diacritics, case, curly and straight apostrophes, full stops, hyphens and
+ * runs of space). The key only finds candidates; it never names anyone.
+ */
+export function sponsorKey(name: string) {
+  const parts = name.split(',').map((part) => part.trim());
+  const titled = (part: string) =>
+    nameKey(part)
+      .split(' ')
+      .every((w) => LEADING.has(w) || TRAILING.has(w));
+  const ordered =
+    parts.length > 1 && parts[0] && parts[1]
+      ? [...parts.slice(1).filter((part) => !titled(part)), parts[0]].join(' ')
+      : name;
+  const words = nameKey(ordered).split(' ').filter(Boolean);
+  while (words.length > 1 && LEADING.has(words[0]!)) words.shift();
+  while (words.length > 1 && TRAILING.has(words[words.length - 1]!))
+    words.pop();
+  return words.filter((w, i) => i === 0 || !GENERATION.has(w)).join(' ');
+}
+
+/**
+ * The same person's name on two records: one surname, and a first name that
+ * is the other's or a prefix of it either way (Chris, Christopher), or
+ * initials that agree. scripts/roster_identity.py agrees() is the original.
+ * Only ever used on a row the bill's person ID already names.
+ */
+export function namesAgree(a: string, b: string) {
+  const n = sponsorKey(a).split(' ').filter(Boolean);
+  const o = sponsorKey(b).split(' ').filter(Boolean);
+  if (!n.length || !o.length || n[n.length - 1] !== o[o.length - 1])
+    return false;
+  let tail = 1;
+  while (
+    tail < n.length &&
+    tail < o.length &&
+    n[n.length - 1 - tail] === o[o.length - 1 - tail]
+  )
+    tail++;
+  const given = n.slice(0, -tail);
+  const owner = o.slice(0, -tail);
+  // The same words: agreed. A printed name with no first name left: not.
+  if (!given.length) return !owner.length;
+  if (!owner.length) return false;
+  if (given.every((t) => t.length === 1)) {
+    const x = given.join('');
+    const y = owner.map((t) => t[0]).join('');
+    return x.startsWith(y) || y.startsWith(x);
+  }
+  const first = given[0]!;
+  return owner.some(
+    (t) =>
+      t === first ||
+      (Math.min(t.length, first.length) >= 3 &&
+        (t.startsWith(first) || first.startsWith(t))),
+  );
+}
 
 /** The names a roster row answers to: its name and its recorded full name. */
 const namesOf = (row: RosterRow) =>
   [row.name, row.full].filter((n): n is string => !!n?.trim());
 type RosterRow = Roster['people'][number];
+const fullName = (row: RosterRow) => row.name.trim().includes(' ');
 
 /**
  * The profile a bill's sponsor opens, or null. Native pages are for roster
  * parliamentarians only (decision 3), and a link must never point at someone
- * other than the person named on screen. So the displayed name has to name
- * exactly one full-name roster person; when the bill also carries a roster ID,
- * that ID has to identify the same person (by name or recorded full name) and
- * no other roster person may share the name. That person must then resolve to
- * exactly one directory slug. Any contradiction or ambiguity: plain text.
+ * other than the person named on screen.
+ *
+ * With the bill's roster ID, the ID decides who it is: a full-name roster row
+ * holding that ID whose name agrees with the printed one (same surname, first
+ * name or its short form). Where only a surname row holds the ID, its recorded
+ * full name must be the printed name, and the link goes to the full-name row
+ * of that name, never to the surname row. A full-name row of the printed name
+ * holding another ID contradicts the bill: plain text.
+ *
+ * Without an ID the printed name has to name exactly one full-name roster
+ * person. Surname-only rows never link on a name.
+ *
+ * The person must then resolve to exactly one directory slug. Any
+ * contradiction or ambiguity: plain text.
  */
 export function sponsorSlug(
   name: string,
@@ -44,29 +116,54 @@ export function sponsorSlug(
   slugs: Slugs,
   id?: RosterId | null,
 ): PersonSlug | null {
-  const wanted = folded(name);
-  if (!name.trim().includes(' ')) return null;
-  const full = (row: RosterRow) => row.name.trim().includes(' ');
+  const wanted = sponsorKey(name);
+  if (!wanted.includes(' ')) return null;
   const named = roster.people.filter(
-    (row) => full(row) && namesOf(row).some((n) => folded(n) === wanted),
+    (row) =>
+      fullName(row) && namesOf(row).some((n) => sponsorKey(n) === wanted),
   );
-  // Rows without an ID cannot be told apart, so each counts as its own person.
-  const people = new Set(named.map((row, i) => row.pid ?? `row-${i}`));
-  let person: RosterRow | undefined;
+  let people: RosterRow[];
   if (id) {
-    if (named.some((row) => row.pid !== id)) return null;
-    person = roster.people.find(
+    if (named.some((row) => row.pid && row.pid !== id)) return null;
+    const holders = roster.people.filter(
       (row) =>
         row.pid === id &&
-        full(row) &&
-        namesOf(row).some((n) => folded(n) === wanted),
+        fullName(row) &&
+        namesOf(row).some((n) => namesAgree(name, n)),
     );
-  } else if (people.size === 1) person = named[0];
-  if (!person) return null;
-  const matches = Object.entries(slugs.slugs).filter(
-    ([, n]) => folded(n) === folded(person.name),
-  );
-  return matches.length === 1 ? personSlug(matches[0]![0]) : null;
+    const exact = holders.filter((row) => named.includes(row));
+    // A surname row (a committee print, "Faruqi") that holds the ID vouches
+    // for the full-name row of its recorded full name; it is never linked.
+    const vouched = roster.people.some(
+      (row) =>
+        row.pid === id && !!row.full && sponsorKey(row.full) === wanted,
+    );
+    people = exact.length
+      ? exact
+      : holders.length
+        ? holders
+        : vouched
+          ? named
+          : [];
+  } else {
+    // Rows without an ID cannot be told apart, so each counts as its own person.
+    const ids = new Set(named.map((row, i) => row.pid ?? `row-${i}`));
+    people = ids.size === 1 ? named : [];
+  }
+  const pages = (row: RosterRow) =>
+    Object.keys(slugs.slugs).filter(
+      (slug) => nameKey(slugs.slugs[slug]!) === nameKey(row.name),
+    );
+  const found = new Set(people.flatMap(pages));
+  if (found.size === 1) return personSlug([...found][0]!);
+  // Spellings of the ID's own person with pages of their own: the
+  // most-recorded spelling's page.
+  if (!id || found.size < 2) return null;
+  const top = [...people].sort(
+    (a, b) => (b.speeches ?? 0) - (a.speeches ?? 0),
+  )[0]!;
+  const page = pages(top);
+  return page.length === 1 ? personSlug(page[0]!) : null;
 }
 
 export interface SponsorDirectory {
@@ -172,11 +269,12 @@ export function sponsorRows(
       } catch {
         profile = null;
       }
-      // The joined profile must still be the person the bill names.
+      // The joined profile must still be the person the bill names: with the
+      // bill's ID, the profile has to carry it.
       const ids = [profile?.rosterPersonId, profile?.legacyPersonId].filter(
         Boolean,
       ) as string[];
-      if (profile && id && ids.length && !ids.includes(id)) profile = null;
+      if (profile && id && !ids.includes(id)) profile = null;
     }
     if (!profile)
       return {
@@ -190,8 +288,11 @@ export function sponsorRows(
       !!recorded && !(profile.party && samePartyLabel(recorded, profile.party));
     const former = profile.partyStatus === 'former';
     const place = sponsorPlace(profile, directory!);
+    // A register print the parser could not read ("KATTER, Bob, Jnr, MP")
+    // reads as the profile's name once the row is that person's.
+    const printed = member.name.includes(',') ? profile.name : member.name;
     return {
-      name: place ? member.name : label,
+      name: place ? printed : label,
       slug: profile.slug,
       party: differs
         ? {

@@ -17,7 +17,11 @@ import {
   billDisplay,
 } from '../src/api/bill-transforms';
 import { voteTotals } from '../src/api/transforms';
-import { sponsorSlug } from '../src/features/bills/sponsors';
+import {
+  namesAgree,
+  sponsorKey,
+  sponsorSlug,
+} from '../src/features/bills/sponsors';
 import { bills, catalogs, pinned, files, roster, slugs } from './pinned';
 const web = readFileSync(
   resolve(__dirname, '../../portal/public/app.js'),
@@ -194,7 +198,9 @@ for (const bill of detailInputs)
   }
 // A sponsor link never names anyone but the person on screen: whenever a
 // sponsor resolves, the directory's name for that slug is the displayed name
-// or the roster's recorded full name for the same person.
+// (as a matching key: titles, generations and "SURNAME, Given" order read
+// away) or the roster's recorded full name for the same person; or, under the
+// bill's person ID, a name that agrees with it (Chris for Christopher).
 const fold = (n: string) =>
   n
     .normalize('NFKD')
@@ -206,18 +212,18 @@ const fold = (n: string) =>
 for (const bill of detailInputs) {
   const members = billDisplay(bill).sponsorMembers;
   for (const member of members) {
-    const slug = sponsorSlug(
-      member.name,
-      roster,
-      slugs,
-      members.length === 1 ? bill.sponsor_person_id : null,
-    );
+    const id = members.length === 1 ? bill.sponsor_person_id : null;
+    const slug = sponsorSlug(member.name, roster, slugs, id);
     if (!slug) continue;
     const linked = slugs.slugs[slug]!;
     const rows = roster.people.filter((r) => fold(r.name) === fold(linked));
     const names = [linked, ...rows.flatMap((r) => (r.full ? [r.full] : []))];
     equal(
-      names.some((n) => fold(n) === fold(member.name)),
+      names.some(
+        (n) =>
+          sponsorKey(n) === sponsorKey(member.name) ||
+          (!!id && namesAgree(member.name, n)),
+      ),
       true,
       `sponsor link: ${bill.key} ${member.name} -> ${slug}`,
     );
