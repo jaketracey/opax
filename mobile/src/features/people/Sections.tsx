@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { peopleDepth } from '../../api/runtime';
 import type { PersonProfile } from '../../api/person-identity';
 import type { RecordResult } from '../../api/client';
+import { passageText } from '../../api/passage-text';
 import {
   AsAtLine,
   ChoiceChips,
@@ -295,12 +296,6 @@ export function openRecord(row: RecordRow) {
   if (native) router.push(native);
   else void openOnWeb(path, displayedRecordTitle(row));
 }
-function partyPassage(value: string | undefined) {
-  const passage = String(value || '').trim();
-  return passage.length > 240
-    ? passage.slice(0, 240).replace(/\s+\S*$/, '') + '…'
-    : passage;
-}
 export function RecordSection({
   name,
   kind,
@@ -372,8 +367,8 @@ export function RecordSection({
                   (kind === 'speeches'
                     ? cleanPassage(r.snippet)
                     : kind === 'party'
-                      ? partyPassage(r.snippet)
-                      : r.snippet?.slice(0, 220)) ||
+                      ? passageText(r.snippet, { max: 240 })
+                      : passageText(r.snippet, { max: 220 })) ||
                   'Open the speech to read the record.'}
               </Text>
             </Group>

@@ -17,6 +17,7 @@ import {
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { AccessibilityInfo, View } from 'react-native';
 import type { RecordResult } from '../../api/client';
+import { passageText } from '../../api/passage-text';
 import { colors, rhythm } from '../../design/tokens';
 import { formatDate } from '../../design/format';
 import { isOffline } from '../CatalogState';
@@ -159,7 +160,7 @@ export function SourceRows({
               />
               {s.passage ? (
                 <Text wordSafe variant="metadata">
-                  {s.passage}
+                  {passageText(s.passage)}
                 </Text>
               ) : null}
             </Group>

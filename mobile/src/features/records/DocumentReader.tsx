@@ -2,6 +2,7 @@ import { headerItems } from '../../navigation/chrome';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../../api/runtime';
+import { passageText } from '../../api/passage-text';
 import type { PersonSlug } from '../../api/catalogs';
 import { chamberName, jurisdictionName } from '../../design/parliament';
 import {
@@ -118,7 +119,10 @@ export default function DocumentReader({
   const [copied, setCopied] = useState(false);
   const parts = useMemo(
     () =>
-      textChunks(doc?.text ?? '', readerChunkTarget).map((text, index) => ({
+      textChunks(
+        passageText(doc?.text, { paragraphs: true }),
+        readerChunkTarget,
+      ).map((text, index) => ({
         id: String(index),
         text,
       })),
@@ -456,7 +460,7 @@ function Similar({ doc }: { doc: DocumentRecord }) {
                   />
                   <Text variant="metadata">{row.speaker}</Text>
                   <Text selectable>
-                    {row.snippet || 'No passage available.'}
+                    {passageText(row.snippet) || 'No passage available.'}
                   </Text>
                   <Text variant="fine">Passage from the record</Text>
                   <AsAtLine asOf={row.date} citation="Related source record" />
