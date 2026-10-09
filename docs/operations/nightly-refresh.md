@@ -335,6 +335,10 @@ the last good rows, and shows up as a `warnings` entry in `status.json`, not as 
 is inert until the orchestrator merges the branch and the first accepted catalogue
 is tracked on main. `weekly_refresh.sh` checks HEAD for `portal/public/instruments`
 and skips both steps when it is unpublished, even if an untracked export exists.
+The first catalogue was accepted locally on 9 October: 24,143 fully expanded titles
+against 24,150 listed, with seven evidenced API gaps and a complete tail sweep.
+The normal quiet guard, 468 attempts and ten-second minimum spacing applied;
+there were no 429/503 or Retry-After waits. See [the acquisition receipt and gates](../coverage/frl-phase1.md).
 The first acquisition/export is performed in the separate lane and committed there;
 the weekly job cannot leave a first untracked export that obstructs a fast-forward.
 The loader uses a persistent, gitignored checkpoint and snapshot under

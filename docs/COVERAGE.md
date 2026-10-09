@@ -305,7 +305,7 @@ Nine jurisdictions are enumerated for each generally applicable record family. C
 
 | Area | Source (publisher + URL) | Status | What OPAX holds (rows and years) | Licence | Update cadence | Surface | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Federal | Office of Parliamentary Counsel / FRL [source][S58] | partial | Metadata-only lane on `web/frl-instruments`: 8,597 unique plain / 8,499 expanded title rows cached; start count 24,148, latest observed `@odata.count` 24,149 (9 Oct); **0 accepted comprehensive snapshot rows**, years pending reconciliation. Existing 23 dated salary steps remain in [pay registry](../scripts/pay_registry/base_salary.json). | CC BY 4.0; dated FRL attribution; Coat of Arms and marked third-party exceptions | Source: registrations/amendments/compilations; OPAX: source approved by Jake 9 Oct; weekly metadata wiring held until orchestrator merge and first catalogue tracked on main | Web: directory/detail implementation held; app: instruments list/detail in a later lane | [Phase 1 evidence and remaining gate](coverage/frl-phase1.md). Ordered plain paging dedupes ids, records bounded count drift and reconciles a tail sweep; expanded pages can omit parents. No bodies, summaries, person entities or joins. Commencement is unknown where the API supplies no date. One returned version can be historical; complete history/current-version supplementation is phase 2. FRL Acts linked to bills remain separate. |
+| Federal | Office of Parliamentary Counsel / FRL [source][S58] | partial | **24,143 unique in-force title metadata rows / 24,150 listed**, 9 Oct 2026; seven evidenced API gaps; catalogue year buckets 1920–2026. [Catalogue manifest](../portal/public/instruments/manifest.json). Existing 23 dated salary steps remain separate in [pay registry](../scripts/pay_registry/base_salary.json). | CC BY 4.0; dated FRL attribution; Coat of Arms and marked third-party exceptions | Source: registrations/amendments/compilations; OPAX: approved by Jake 9 Oct; first catalogue validated locally, awaiting orchestrator promotion; weekly metadata guard activates only when tracked on main | Web: metadata directory/detail and id-only sitemap, locally verified; app: instruments list/detail in a later lane | [Phase 1 evidence](coverage/frl-phase1.md). 468 attempts, normal quiet guard, ten-second spacing; no 429/503. Count anchor 24,148 → final 24,150; tail sweep complete. No bodies, summaries, person entities or joins. Commencement stays unknown where absent. One returned version can be historical; full history/current-version supplementation is phase 2. FRL Acts linked to bills remain separate. |
 
 ## Electoral
 
@@ -402,16 +402,20 @@ Every recommendation shares these guards: **public records only; original source
 | Estimated rows | 94,894 title rows across current/historical legislative instruments; 24,142 currently in force, from @odata.count on 8 Oct 2026. Initial delivery estimate: about 24,000 titles; full metadata phase: about 95,000. Version/document/text rows will exceed titles and are not estimated by multiplying an invented average. |
 | Years | Import all years returned by the scoped API, including null-year records; verify min/max in the staged reconciliation. This sample does not establish the earliest instrument year. |
 | Ingest plan | Add an isolated instrument-series loader beside words_parlinfo.py; enumerate using stable IDs/order, resume safely, reconcile unique IDs with the scope counts, retain every effective/registration/compilation date and supersession/disallowance relationship actually supplied. Licence-review before acquiring document bodies. Reject empty/shrunk snapshots; never overwrite existing reviewed bill/pay records. |
-| Web surface (proposed) | Instrument directory/filter and document/version reader; Search kind instrument; links from bill/pay pages only when the source establishes the relationship. Explicit making, registration, commencement and version dates. |
+| Web surface | Phase 1: metadata directory/filter and detail, explicit making/registration/commencement/version dates, authoritative FRL link and id-only sitemap. Global instrument search omitted for catalogue size. Phase 2: document/version reader; bill/pay links only when source relationships are established. |
 | App surface (proposed) | Instruments list and read-only versioned detail, backed by bounded static exports/catalogue. New screen/allowlist contract work required; it is outside currently documented v1 and not shipped by this task. |
 | Specific guardrails | Private individuals may appear in schedules, licence conditions or exemptions. Keep them within authorised record text; no private-person profiles, identity joins or name-search entities. Flag restricted/third-party material; preserve authorised wording/redactions. Distinguish as-made from compiled/in-force text and scheduled future commencement; link the authoritative version and avoid representing a model summary as law. |
 
-Phase 1 implementation is held on `web/frl-instruments` at the source/production gate.
-The 9 October API scope count is **24,146**, with **5,299 expanded rows cached**
-and **no accepted comprehensive snapshot** yet. An expanded page omitted a parent;
-the loader now enumerates plain title pages independently and joins navigation metadata
-by FRL id. Acquisition is held during the publisher's busy hours. See the
-[phase 1 report](coverage/frl-phase1.md) for counts, limits and remaining gates.
+Phase 1 on `web/frl-instruments` now has an accepted metadata-only catalogue:
+**24,143 unique titles / 24,150 listed**, with **seven evidenced API gaps**, source
+year buckets **1920–2026**, and a complete tail sweep. Jake approved the source.
+The normal quiet-hours run on 9 October used 468 attempts with ten-second spacing,
+no 429/503 and no override. Export plus the id-only sitemap adds 108 asset files /
+22,028,520 bytes. Directory/detail, attribution, noindex 404s and ready-gated nav
+passed local runtime checks. Global instrument search is omitted because the
+existing catalogue is already 211,122,963 bytes. Bodies, complete version history
+and the iOS surface remain phase 2. The orchestrator owns promotion; this lane makes
+no push or deploy. See the [phase 1 report](coverage/frl-phase1.md).
 
 ## Source access limits
 
@@ -421,7 +425,7 @@ For those publishers the source cell links to the existing repo source registry/
 
 Do not carry older repo statements about donation law, universal government licences or scraping permission forward as current findings. Federal/state register copyright, parliamentary material, third-party submissions, agency attachments and boundary maps require their own checks. Existing restricted publication is a review issue, not a precedent authorising new ingestion.
 
-The 8 October source audit changed documentation only. The 9 October FRL metadata lane stages inside its isolated worktree and is held at the production gate; no production database/KB write, deploy, push or merge is authorised.
+The 8 October source audit changed documentation only. The 9 October FRL metadata lane stages inside its isolated worktree. Jake approved the source; the orchestrator owns the main merge and production promotion. This lane updates its branch from origin/main and commits the accepted catalogue locally; no production database/KB write, deploy or push occurs.
 
 ## URL receipt ledger
 

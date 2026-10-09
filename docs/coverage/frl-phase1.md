@@ -1,143 +1,113 @@
-# FRL instruments phase 1 — held implementation, 9 October 2026
+# FRL instruments phase 1 — accepted metadata catalogue, 9 October 2026
 
-This branch implements metadata ingestion, a bounded export, server-rendered
-instrument directory/detail pages and held weekly refresh wiring. **Phase 1 is
-not complete:** there is no accepted comprehensive snapshot or public catalogue.
-Jake approved the source on 9 October. The code is safe to merge before data exists;
-the catalogue stays hidden and weekly bootstrap is held until its first accepted
-export is tracked on main. The separate release gate must pass before catalogue
-promotion. The orchestrator owns merging and promotion; no push or deploy occurs
-in this lane.
+Jake approved the source on 9 October. The first catalogue is acquired, reconciled,
+exported and validated locally on `web/frl-instruments`. The orchestrator owns the
+merge and promotion; this lane performs no push, deploy or production writes.
+Coverage remains **partial: metadata only**. No document bodies or summaries were
+acquired, and the API exposes only one bounded returned version per title here.
 
-## Acquisition evidence
+## Accepted acquisition
 
 - Scope: `collection eq 'LegislativeInstrument' and isInForce eq true`.
-- Latest observed scope count: **24,149**; the second authorised run began at
-  24,148. The 8 October coverage audit counted 24,142.
-- Retained checkpoint: **8,597 unique plain titles / 8,499 fully expanded ids**,
-  **178 files / 20,062,089 bytes**. This is evidence, not an accepted snapshot.
-- Accepted comprehensive snapshot/export: **0 rows; 0 catalogue files/bytes**.
-- Second authorised run: **224 attempts / 69m 25s**, no HTTP 429/503 or Retry-After
-  demands. It held when all three expanded reads at offset 8,500 reported 24,149,
-  differing from the initial 24,148. Forty gap probes recorded one missing row on
-  page 5,200 (position 5,238) and two on page 8,500. The temporary wrapper and its
-  bytecode were removed; no busy-hours override remains in the default path.
-- Evidence and checkpoints are gitignored under `scripts/state/frl/` in this
-  worktree. No production, desktop DB, D1, KB or refresh-box writes occurred.
+- **24,143 unique, fully expanded titles / 24,150 listed by FRL**. Seven rows could
+  not be retrieved from its API. Unique ids plus the evidenced gap reconcile exactly.
+- Checkpoint count anchor: **24,148**; final count: **24,150**; recorded drift: **+2**.
+  Tonight's opening and ending counts were both 24,150. Every page has a count
+  receipt. Three final pages were swept again; no new ids or prefix backfill were
+  needed, and the end count remained stable.
+- Unresolved offsets: **5,200 (1), 8,500 (2), 10,000 (1), 18,000 (1), 20,800 (1),
+  21,300 (1)**. Forty gap-probe attempts were used. The seven-row allowance is
+  below both ten rows and 0.05%; it never permits missing expansion fields on an
+  exported title. No individual recovery was required in this run.
+- Run: **21:11:42–23:37:10 Melbourne, 9 October**; **468 attempts / 2h 25m 29s**.
+  Nineteen transport timeouts recovered through bounded backoff. HTTP 429: **0**;
+  HTTP 503: **0**; Retry-After waits: **0**. Initial computed cap: **696**, ceiling 900.
+- The normal quiet-window guard was used with **no override**. Website Crawl-delay
+  and every publisher request use at least ten-second spacing; the window is the
+  intersection of fixed UTC+10 and Melbourne quiet hours, with a deadline margin
+  before 08:00 local. No temporary override wrapper remains.
+- The fully specified earlier checkpoint was migrated through fresh membership
+  reads. Matching complete metadata was reused by id, with no old offset or gap
+  allowance trusted across windows. The default guard and weekly path are unchanged.
+- Snapshot: **36,092,996 bytes**, gitignored inside `scripts/state/frl/` with
+  checkpoints, policy/count/probe/tail receipts and test/curl evidence. No desktop
+  DB, D1, KB, Cloudflare production or refresh-box writes occurred.
 
-The website robots policy requires a ten-second delay. The API host's robots
-path returned 404. The reuse guidance prefers subsequent incremental website
-crawls outside **08:00–20:00 UTC+10**. This lane conservatively observes that
-window for API acquisition too. The review identified that the final hour was inside
-Melbourne's AEDT busy period; round 1 now blocks both timezone readings before every
-request, including policy probes. The next quiet period begins at
-**21:00 Melbourne / 10:00 UTC on 9 October**. Jake explicitly authorised two one-off busy-hours attempts on 9 October. Neither
-produced a snapshot. Tonight's 21:07 Melbourne run uses the default quiet guard,
-with no override. The weekly implementation keeps the same quiet-hours checks.
+## Export and web contract
 
-## API defects and implemented safeguards
+The catalogue has **107 files / 19,758,968 bytes** under
+`portal/public/instruments/`, including a **465-byte `ready.json`**. Catalogue year
+buckets cover **1920–2026**. The complete flag carries source count, actual exported
+count, count anchor/end, drift, seven gaps with offsets, export date and tail sweep.
+The instruments sitemap adds one file: **2,269,552 bytes / 24,143 id-only URLs**.
+Together the new asset files total **108 / 22,028,520 bytes**, within 400 files and
+25,000,000 bytes. The exporter validates its full plan before writing.
 
-Unbounded version expansion and several smaller/filtered expansion variants
-returned transport timeouts. Combined latest/current filtering and combined
-relationship expansion returned HTTP 400. An id range filter also returned 400.
-Plain title pages and administering-department expansion work. A bounded
-`versions($top=1)` expansion returns one version, which can be historical.
+Every row retains the supplied public title metadata, department/portfolio arrays
+and one API-returned version, plus a separate OPAX canonical FRL link. Dates are
+labelled Made, Registered and Commenced; no version start is inferred as commencement.
+Returned current/latest flags are preserved without asserting that an earlier
+returned version is current or latest. The authoritative FRL latest link supplies
+legal text. OPAX shows metadata only, with no summaries or legal-text bodies.
+Private names remain within verbatim authorised titles; no person entities, joins,
+search rows or links from titles are created. Sitemap fields contain ids only.
 
-An expanded page at offset 5,200 returned only 99 parents against the same scope
-count. The previous reconciliation rejected the resulting duplicate instead of
-writing a partial snapshot. The corrected loader independently enumerates plain
-title pages with `$orderby=id`, `$top=100` and fixed `$skip` increments of 100.
-Expanded navigation metadata is matched by explicit id. Round 1 retries any omitted
-parent or field up to three times and holds publication if it remains missing. Only
-explicit source-returned empty arrays count as empty relationships. Final unique ids must cover the final count minus the permitted, evidenced gaps;
-net count drift is bounded to 50. Empty snapshots and shrinkage exceeding 2% are refused.
+The directory filters title, portfolio, type, commencement year and status. Its
+small note states “FRL listed 24,150; 7 could not be retrieved from its API”. Detail
+pages carry source facts, one authoritative link and CC BY 4.0 attribution dated to
+the latest download, **9 October 2026**, with source/licence links, modifications,
+no endorsement and Coat of Arms/marked-third-party exceptions. Parsed catalogue
+metadata is cached per isolate. Navigation fetches the tiny complete ready flag.
+Unknown ids or missing/incomplete catalogues return noindex 404s.
 
-Interrupted acquisitions keep the same query fingerprint across quiet windows
-when the initial count anchor drifts by at most 50. Later windows re-enumerate
-membership and reuse matching complete expansion bodies by id, so unchanged counts
-cannot hide different members. Fully specified schema-3 checkpoints migrate only
-through this fresh membership pass; other legacy/mismatched/completed checkpoints
-rotate automatically. Start, per-page and end counts are recorded. After paging,
-a bounded tail sweep fetches newly returned ids individually and scans earlier id
-pages if necessary to find insertions before the current offset. Final count
-changes require another sweep; missing metadata or unreconciled totals still hold.
+Global instrument search remains omitted: the existing general search catalogue is
+**211,122,963 bytes** before and after this lane. The directory provides its own
+filters. The unrelated pre-existing one-row interests manifest difference exposed
+by rebuilding search is excluded from these commits.
 
-The default minimum spacing is ten seconds for every request. The computed cap is
-initially 696 attempts at 24,149 titles (hard maximum 900), including 40 gap probes, 100 planned tail
-requests and 10% retry headroom. Far-back prefix recovery can re-cost its work up
-to 300 tail attempts while respecting 900 overall and any lower caller cap. Retry-After is honoured; repeated 429/503 or a third
-Retry-After demand stops cleanly. A 60-second deadline margin and 45-second request
-timeout stop collection before 08:00 Melbourne. The run logs its forecast against
-the remaining quiet window. Today’s checkpoint can retain validated expanded
-metadata for tonight, but every plain membership page is read again.
+Weekly wiring stays inert until this accepted directory is tracked on main. The
+existing guard skips acquisition/export before that point. Nightly group staging
+handles new/deleted chunks. Acts and instruments share the normal quiet guard;
+bodies/version history remain outside the weekly metadata group.
 
-## Export and web contracts
+## Validation
 
-The exporter plans all assets before writing, refuses empty/shrunk snapshots,
-and enforces **400 files / 25,000,000 bytes**. Year chunks contain up to 512
-records, with shared field/string dictionaries preserving source values. The
-incomplete sample is used only for size assessment: its packed size is
-4,003,015 bytes, projecting roughly 18.2 MB for the full count. That estimate is
-not an attested final asset budget.
+`origin/main` **a3aa6532** is merged locally as **bd04b284**. Both the new passage,
+search-toolbar and division Markdown work and the FRL changes are retained; the
+people group includes `portal/src/passage-names.json`.
 
-Every record carries the publisher's `/{frl-id}/latest` canonical URL. Pages
-label Made, Registered (as-made registration) and Commenced separately; version
-start/status dates never stand in for commencement. The API supplies no
-whole-instrument commencement date in this scope, so it stays unknown. Returned
-version flags are shown verbatim without calling a historical row current.
-The authoritative FRL latest link supplies the legal text. OPAX displays metadata
-only, with no summaries, bodies, inferred legal relationships, person entities,
-person joins or person search rows. Private names remain within verbatim titles.
-Sitemap URLs and entries use FRL ids only, with the export date as lastmod.
-
-FRL attribution includes the required full download date, source and CC BY 4.0
-links, modifications, no endorsement, and the Coat of Arms/marked third-party
-exceptions. Sources/licence pages and `docs/COVERAGE.md` describe the partial,
-held metadata lane. The weekly `instruments` group uses the existing export and
-keep-if-unchanged guards; it never opens a DB or talks to the KB.
-
-Global search was skipped: the freshly rebuilt catalogue is already
-**211,122,963 bytes** (version assets plus manifest), before and after these
-changes. Adding 24,000 instrument title rows would enlarge that general-purpose
-catalogue. The directory supports its own title/portfolio/type/year/status
-filters. The build exposed an existing one-row interests difference from the
-checked-in search manifest; that unrelated manifest change is excluded.
-
-## Validation and remaining gate
-
-Round 1 passes **944/944 default Node tests with no catalogue**. The separate
-`check:instruments-release` gate exits 1 with "complete catalogue absent", as expected.
-Offline Python gates pass: **23/23** loader/export tests, **48/48** keep-if-unchanged
-checks, and **64** validation tests (**63 pass, one existing skip**). TypeScript passes.
-The stale registry-order test now compares the validator with `data_groups.sh`.
-No publisher requests or data acquisition occur in round 1. Initial implementation
-build and UI validation evidence below used local fixtures; no deployment occurred.
-
-The full asset-tree watcher produces `spawn EBADF` on this Mac. The actual portal
-Worker runs in local Wrangler with a smaller copied asset set. Curl verifies
-`/instruments`, a detail page, the instrument sitemap and a noindex 404 with an
-explicit **offline fixture**, not a live source catalogue. Chrome verifies the
-mobile drawer, desktop/mobile layouts and absence of person links/overflow.
-The fixture exists only under gitignored local test state.
-
-`votes.json` remains byte-identical, `_meta.schema` 1, SHA-256
-`a77128dc0e1e1b3fdaa4bf84501e2c94af3125dea3cf0b2dffbc688a49d68546`.
-
-Resume in a later acquisition round after 21:00 Melbourne, reconcile the complete title set, export, update coverage counts and
-years, rebuild crawl/search, and rerun all gates against actual source records.
-Then commit the catalogue locally for source review; the orchestrator alone
-merges after Jake approves it.
+- Search rebuilt and **1,039/1,039 default Node tests passed without a catalogue
+  before any publisher request**. After export, **1,039/1,039** pass again.
+- The explicit instruments release gate passes against the actual catalogue.
+- Offline Python: **60/60** loader/export; **120 VM checks (119 pass, one existing
+  clean-tree skip)**; **8/8** passage-text checks. All use stubs/fixtures.
+- TypeScript passes. `votes.json` is byte-identical to origin/main, schema 1,
+  SHA-256 `a77128dc0e1e1b3fdaa4bf84501e2c94af3125dea3cf0b2dffbc688a49d68546`.
+- Local Wrangler runs the actual portal Worker and full accepted catalogue using a
+  smaller copied static asset set to avoid the Mac's full-tree watcher limitation.
+  Curl: `/instruments` **200**; `/instrument/F1997B02175` **200**, with SSR facts,
+  attribution and authoritative FRL link; `/sitemaps/instruments-1.xml` **200**;
+  `/instrument/F9999L99999` **404 + noindex**; ready flag **200 + complete**.
+  No person links appear in the instrument HTML. The actual locally served
+  navigation script reads the actual flag and inserts both desktop and drawer
+  anchors. This is local verification; no production deployment is claimed.
 
 ## Phase 2
 
-Consult the publisher before a full crawl and review document-level licences and
-third-party restrictions before downloading PDF, Word, EPUB or HTML bodies.
-Acquire complete version history and current/latest metadata with a permitted,
-reconciled access method; retain registration/version ids and supplied
-repeal/disallowance/supersession relationships without inference. Build a sourced
-version reader that clearly distinguishes as-made, compilation and authoritative
-text. A separate app lane adds an iOS instruments list/detail and its export
-contract, with device validation; no native work belongs to this lane.
+Consult the publisher before a full crawl. Review document-level licences,
+Coat of Arms and third-party restrictions before PDF, Word, EPUB or HTML bodies.
+Acquire complete version history and current/latest supplementation through a
+permitted, reconciled method, preserving source registration/version ids and
+supplied repeal, supersession and disallowance relationships without inference.
+A sourced reader will distinguish as-made, compilation and authoritative text.
+A later app lane adds an iOS instruments list/detail and its export contract,
+with device validation. This lane performs no native or simulator work.
+
+## Historical review notes
+
+The earlier-round notes below preserve review decisions and estimates. Their
+interrupted-run counts and acquisition estimates are superseded by the accepted
+receipt above.
 
 ## Round 1: offline review fixes
 
