@@ -14,6 +14,7 @@
     "qa-static": "tsx scripts/qa-static.ts",
     "fixture": "tsx scripts/fixture-server.ts",
     "qa": "bash scripts/qa.sh",
+    "tokens": "node ../scripts/build_tokens.mjs --only app",
     "postinstall": "python3 scripts/apply-privacy-patches.py"
   },
   "dependencies": {
