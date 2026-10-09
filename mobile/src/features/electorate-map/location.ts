@@ -3,6 +3,13 @@ import type { Electorate } from '../../api/catalogs';
 import { catalogs } from '../../api/runtime';
 import { loadOutlines, suggest, type Suggestion } from './suggestion';
 import { suggestState, type StateSuggestion } from './state-suggestion';
+// The only two location calls in the app (tests/motion-purpose): the
+// when-in-use prompt, asked at a chooser's "Use my location" tap, and one
+// foreground fix.
+const permitted = async () =>
+  (await Location.requestForegroundPermissionsAsync()).status === 'granted';
+const currentFix = () =>
+  Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
 // Called only from the chooser's button. The fix never crosses this function's
 // boundary: no state, storage, transport or logging receives coordinates.
 export async function suggestFromLocation(
@@ -11,8 +18,7 @@ export async function suggestFromLocation(
   signal: AbortSignal,
 ): Promise<Suggestion> {
   try {
-    const permission = await Location.requestForegroundPermissionsAsync();
-    if (permission.status !== 'granted') return { kind: 'denied' };
+    if (!(await permitted())) return { kind: 'denied' };
     if (signal.aborted) return { kind: 'unavailable' };
     const outlines = await loadOutlines(
       seats,
@@ -21,9 +27,7 @@ export async function suggestFromLocation(
       signal,
     );
     if (signal.aborted) return { kind: 'unavailable' };
-    const fix = await Location.getCurrentPositionAsync({
-      accuracy: Location.Accuracy.Balanced,
-    });
+    const fix = await currentFix();
     if (signal.aborted) return { kind: 'unavailable' };
     return suggest(
       outlines,
@@ -45,12 +49,9 @@ export async function suggestStateFromLocation(
   signal: AbortSignal,
 ): Promise<StateSuggestion> {
   try {
-    const permission = await Location.requestForegroundPermissionsAsync();
-    if (permission.status !== 'granted') return { kind: 'denied' };
+    if (!(await permitted())) return { kind: 'denied' };
     if (signal.aborted) return { kind: 'unavailable' };
-    const fix = await Location.getCurrentPositionAsync({
-      accuracy: Location.Accuracy.Balanced,
-    });
+    const fix = await currentFix();
     if (signal.aborted) return { kind: 'unavailable' };
     return suggestState(
       seats,

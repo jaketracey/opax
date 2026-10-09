@@ -304,16 +304,6 @@ function slugNameIndex(slugs: Slugs) {
 export function profileFor(id: PersonId, catalogs: ProfileCatalogs) {
   const { people, roster, slugs, manifest } = catalogs;
   const errors: Record<string, ApiError> = {};
-  const fail = (key: string, message: string) => {
-    errors[key] = new ApiError('invalid-data', message);
-  };
-  const optionalIdentity = <T>(rows: T[], key: string) => {
-    if (rows.length > 1) {
-      fail(key, `The ${key} identity needs review.`);
-      return undefined;
-    }
-    return rows[0];
-  };
   if (people.meta.release_id !== manifest.release_id)
     throw new ApiError(
       'invalid-data',

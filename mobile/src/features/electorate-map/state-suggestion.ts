@@ -27,7 +27,6 @@ export type StateSuggestion =
 let bundled: StateOutlineFile | undefined;
 /** Read on the first "Use my location" tap, never at launch (0.9 MB). */
 export function stateOutlineFile(): StateOutlineFile {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
   bundled ??= require('./state-outlines.json') as StateOutlineFile;
   return bundled;
 }
