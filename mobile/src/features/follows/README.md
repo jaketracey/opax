@@ -21,12 +21,17 @@ Nothing is synced: no server, account or device token, and no notification.
   opens, when the app returns to the foreground, when a new kind is followed and
   on a pull to refresh (which revalidates every file). A follow's first reading
   becomes what was seen.
-- `FollowToggle.tsx`: the switch on profiles, bills and electorates
-  ("Follow Grayndler, switch button, on"). Following, or opening the page of
-  something followed, marks it seen with the record as published now.
-- `FollowingSection.tsx`: Today's block. Opening a row marks it seen.
+- `FollowToggle.tsx`: the toggle Button on profiles, parties, bills and
+  electorates ("Follow Grayndler, switch button, on"). Following, or opening
+  the page of something followed, marks it seen with the record as published
+  now.
+- `FollowingSection.tsx`: Today's block, drawn only when something is
+  followed: rows on the paper (no card or icon badge per follow), a bronze
+  change dot before each change. Opening a row marks it seen.
 - `ManageFollows.tsx` (`/follows`, pushed in the current tab from Today or Your
-  MP's `FollowingEntry`): list, unfollow, unfollow all.
+  MP's `FollowingEntry`): rows grouped by kind; Unfollow is a leftward swipe
+  (`SwipeRow.tsx`) and a touch-and-hold choice, and stays a button for
+  VoiceOver; Unfollow all asks first.
 
 ## Markers
 

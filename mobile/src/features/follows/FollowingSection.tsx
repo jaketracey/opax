@@ -1,30 +1,22 @@
-import { phoneCopy } from '../../design/phone-copy';
 import { SavedCopyNotice } from '../CatalogNotice';
 import { Pressable, StyleSheet, View } from 'react-native';
-import type { SFSymbol } from 'expo-symbols';
 import { router } from 'expo-router';
 import {
   Button,
-  EmptyState,
   ErrorState,
   Group,
   Icon,
   LoadingState,
+  RowList,
   Section,
-  StaleNotice,
+  SourceLine,
   Text,
   errorMessage,
   useAccessibilitySize,
-  Card,
 } from '../../design/primitives';
 import { formatCount, formatDate } from '../../design/format';
-import {
-  colors,
-  light,
-  minimumTarget,
-  radii,
-  spacing,
-} from '../../design/tokens';
+import { ownsRowPadding } from '../../design/row-padding';
+import { colors, minimumTarget, rhythm } from '../../design/tokens';
 import { Entrance } from '../today/parts';
 import {
   billRoute,
@@ -71,22 +63,25 @@ export function followSummary(
 }
 
 /**
- * Today's Following block: each followed record as a compact card with what
- * changed in the published record since the reader last looked. Opening one
- * marks it seen. A changed card is tinted, and its changes are listed in
- * the publisher's words with their dates; VoiceOver also hears the source.
+ * Today's Following block, only when the reader follows something: each
+ * followed record as a row on the paper, saying what changed in the
+ * published record since the reader last looked. Opening one marks it seen.
+ * A changed row says so in bronze and lists its changes after a dot, in the
+ * publisher's words with their dates; VoiceOver also hears the source. A
+ * saved copy carries one source line in the saved state.
  */
 export function FollowingSection({
   refresh,
-  refreshing,
   onRetry,
 }: {
   /** Changes on a pull to refresh, which revalidates the catalogs. */
   refresh: number;
-  refreshing: boolean;
+  /** Today's pull to refresh; the saved copy's source line says the rest. */
+  refreshing?: boolean;
   onRetry: () => void;
 }) {
   const { follows, states, sources } = useFollowStates(refresh);
+  if (follows !== null && !follows.length) return null;
   const unavailable = (follows ?? []).some(
     (f) => states.get(followKey(f))?.status === 'unavailable',
   );
@@ -94,6 +89,17 @@ export function FollowingSection({
     const state = states.get(followKey(f));
     return state?.status === 'ready' && state.changes.length > 0;
   }).length;
+  // Who published the changes shown, for the saved copy's source line.
+  const citations = [
+    ...new Set(
+      (follows ?? []).flatMap((f) => {
+        const state = states.get(followKey(f));
+        return state?.status === 'ready'
+          ? state.changes.map((c) => c.citation)
+          : [];
+      }),
+    ),
+  ];
   return (
     <Section
       title="Following"
@@ -116,32 +122,10 @@ export function FollowingSection({
           label="Loading your follows"
           testID="today-following-loading"
         />
-      ) : !follows.length ? (
-        <Card padded={false} style={styles.empty}>
-          <View style={styles.emptyIcon}>
-            <Icon name="star" size={18} tone="bronzeInk" />
-          </View>
-          <View style={styles.text}>
-            <EmptyState
-              icon={null}
-              message={phoneCopy(
-                'Follow a parliamentarian, party, bill or electorate from its page. Today then shows what changed in the published record since you last looked. Follows are saved on this iPhone only.',
-              )}
-              testID="today-following-empty"
-            />
-          </View>
-        </Card>
       ) : (
-        <Group gap={spacing.s3}>
-          {sources?.stale && sources.savedAt !== null ? (
-            <View style={styles.notices}>
-              <SavedCopyNotice reason={sources.staleReason} />
-              <StaleNotice
-                savedAt={sources.savedAt}
-                refreshing={refreshing}
-                testID="today-following-stale"
-              />
-            </View>
+        <Group gap={rhythm.tight}>
+          {sources?.stale ? (
+            <SavedCopyNotice reason={sources.staleReason} />
           ) : null}
           {unavailable && sources?.error ? (
             <ErrorState
@@ -157,34 +141,43 @@ export function FollowingSection({
                 : 'No changes since you last looked.'}
             </Text>
           ) : null}
-          {follows.map((f, i) => {
-            const state = states.get(followKey(f));
-            return (
-              <Entrance key={followKey(f)} order={i}>
-                <FollowRow follow={f} state={state} />
-              </Entrance>
-            );
-          })}
+          <RowList>
+            {follows.map((f, i) => (
+              <FollowRow
+                key={followKey(f)}
+                follow={f}
+                state={states.get(followKey(f))}
+                order={i}
+              />
+            ))}
+          </RowList>
+          {sources?.stale && sources.savedAt !== null ? (
+            <SourceLine
+              dateLabel={null}
+              citation={citations.length ? citations : 'Published records'}
+              savedAt={sources.savedAt}
+              testID="today-following-stale"
+            />
+          ) : null}
         </Group>
       )}
     </Section>
   );
 }
 
-const kindIcons: Record<Follow['kind'], SFSymbol> = {
-  party: 'building.columns',
-  person: 'person.fill',
-  bill: 'doc.text.fill',
-  electorate: 'mappin.and.ellipse',
-};
-const changedGround = colors.bronzeWash;
-
+/**
+ * One follow as a row: its name; its kind and what changed since it was
+ * last seen ("Bill · 1 change since 3 Oct"), in bronze when something did;
+ * then each change after a dot, with the date the record gives.
+ */
 function FollowRow({
   follow: f,
   state,
+  order,
 }: {
   follow: Follow;
   state: FollowState | undefined;
+  order: number;
 }) {
   const title = state?.status === 'ready' ? state.title : f.title;
   const visible = followSummary(f, state, 'short');
@@ -196,133 +189,76 @@ function FollowRow({
     ...spoken.changes.map((c) => `${c.text}, ${sourceLine(c, 'long')}`),
   ].join(', ');
   const hasChanges = visible.changes.length > 0;
-  // The badge sits above the text at accessibility sizes.
   const stacked = useAccessibilitySize();
-  const badge = (
-    <View
-      style={[
-        styles.badge,
-        hasChanges ? styles.badgeChanged : styles.badgeQuiet,
-      ]}
-    >
-      <Icon
-        name={kindIcons[f.kind]}
-        size={16}
-        tone={hasChanges ? 'onNavy' : 'navy'}
-      />
-    </View>
-  );
-  const chevron = <Icon name="chevron.right" size={14} tone="inkSoft" />;
   return (
-    <Pressable
-      testID={`today-following-${f.kind}-${f.id}`}
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      onPress={() => {
-        // Opening the record marks what the row showed as seen.
-        if (state?.status === 'ready')
-          void markSeen(followKey(f), state.current).catch(() => undefined);
-        router.push(routeFor(f));
-      }}
-    >
-      {({ pressed }) => (
-        <Card
-          padded={false}
-          ground={
-            pressed ? light.sunken : hasChanges ? changedGround : undefined
-          }
-          style={[styles.card, stacked ? styles.cardStacked : null]}
-        >
-          {stacked ? (
-            <View style={styles.stackTop}>
-              {badge}
-              {chevron}
-            </View>
-          ) : (
-            badge
-          )}
-          <View style={styles.text}>
-            <Text wordSafe variant="strong">
-              {title}
-            </Text>
-            <Text
-              wordSafe
-              variant="metadata"
-              tone={hasChanges ? 'bronzeInk' : undefined}
-            >
-              {kindLabels[f.kind]} · {visible.headline}
-            </Text>
-            {visible.changes.map((c) => (
-              <View key={c.marker} style={styles.change}>
-                <View style={styles.changeDot} />
-                <Text wordSafe variant="body" tone="ink" style={styles.grow}>
-                  {c.text}
-                  <Text variant="fine">
-                    {c.asAt ? `  ·  as at ${formatDate(c.asAt, 'short')}` : ''}
-                  </Text>
+    <Entrance order={order}>
+      <Pressable
+        testID={`today-following-${f.kind}-${f.id}`}
+        accessibilityRole="button"
+        accessibilityLabel={label}
+        onPress={() => {
+          // Opening the record marks what the row showed as seen.
+          if (state?.status === 'ready')
+            void markSeen(followKey(f), state.current).catch(() => undefined);
+          router.push(routeFor(f));
+        }}
+        style={({ pressed }) => [styles.row, pressed ? styles.pressed : null]}
+      >
+        <View style={styles.text}>
+          <Text wordSafe variant="strong">
+            {title}
+          </Text>
+          <Text
+            wordSafe
+            variant="metadata"
+            tone={hasChanges ? 'bronzeInk' : undefined}
+          >
+            {kindLabels[f.kind]} · {visible.headline}
+          </Text>
+          {visible.changes.map((c) => (
+            <View key={c.marker} style={styles.change}>
+              <View style={styles.changeDot} />
+              <Text wordSafe variant="body" tone="ink" style={styles.grow}>
+                {c.text}
+                <Text variant="fine">
+                  {c.asAt ? `  ·  as at ${formatDate(c.asAt, 'short')}` : ''}
                 </Text>
-              </View>
-            ))}
-          </View>
-          {stacked ? null : chevron}
-        </Card>
-      )}
-    </Pressable>
+              </Text>
+            </View>
+          ))}
+        </View>
+        {stacked ? null : (
+          <Icon name="chevron.right" size={13} tone="inkSoft" />
+        )}
+      </Pressable>
+    </Entrance>
   );
 }
+ownsRowPadding(FollowRow);
+
 const styles = StyleSheet.create({
-  card: {
+  row: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.s3 + spacing.s1,
+    gap: rhythm.heading,
     minHeight: minimumTarget,
-    paddingVertical: spacing.s3 + spacing.s1,
-    paddingHorizontal: spacing.s4,
+    paddingVertical: rhythm.row,
   },
-  cardStacked: { flexDirection: 'column', alignItems: 'stretch' },
-  stackTop: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  badge: {
-    width: 36,
-    height: 36,
-    borderRadius: radii.pill,
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'flex-start',
-  },
-  badgeQuiet: { backgroundColor: colors.navyWash },
-  badgeChanged: { backgroundColor: light.bronzeInk },
+  pressed: { backgroundColor: colors.sunken },
   text: { flexGrow: 1, flexShrink: 1, alignSelf: 'stretch', gap: 2 },
   change: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: spacing.s3,
-    paddingTop: spacing.s2,
+    gap: rhythm.tight,
+    paddingTop: rhythm.line,
   },
+  // The change dot: bronze, centred on the first line of its change.
   changeDot: {
     width: 6,
     height: 6,
     borderRadius: 3,
     marginTop: 10,
-    backgroundColor: light.bronzeInk,
+    backgroundColor: colors.bronzeInk,
   },
   grow: { flex: 1 },
-  notices: { gap: spacing.s1 },
-  empty: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: spacing.s3 + spacing.s1,
-    padding: spacing.s4,
-  },
-  emptyIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: radii.pill,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: light.bronzeWash,
-  },
 });

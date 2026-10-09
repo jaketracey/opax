@@ -16,7 +16,13 @@ import {
   formatPercent,
   moneyAccessibilityLabel,
 } from '../../design/format';
-import { colors, minimumTarget, radii, spacing } from '../../design/tokens';
+import {
+  chartRoles,
+  colors,
+  minimumTarget,
+  radii,
+  rhythm,
+} from '../../design/tokens';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { openOnWeb, webPageUrl } from '../../navigation/external';
 import { chartRowLabel, type ChartRow, type LeadComparison } from './model';
@@ -148,7 +154,9 @@ function ChartBar({ row, testID }: { row: ChartRow; testID: string }) {
               styles.fill,
               {
                 width: `${Math.max(0, Math.min(100, row.share))}%`,
-                backgroundColor: row.other ? colors.inkSoft : colors.navy,
+                backgroundColor: row.other
+                  ? colors[chartRoles.contrast]
+                  : colors[chartRoles.mark],
               },
             ]}
           />
@@ -220,25 +228,25 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     alignItems: 'baseline',
     justifyContent: 'space-between',
-    gap: spacing.s3,
+    gap: rhythm.tight,
   },
   headStacked: { flexDirection: 'column', alignItems: 'flex-start' },
   grow: { flexGrow: 1, flexShrink: 1 },
   bar: {
     minHeight: minimumTarget,
-    paddingVertical: spacing.s3,
+    paddingVertical: rhythm.tight,
   },
-  barText: { gap: spacing.s1 },
-  barLabel: { flexDirection: 'row', alignItems: 'center', gap: spacing.s2 },
+  barText: { gap: rhythm.line },
+  barLabel: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
   track: {
     height: 8,
     borderRadius: radii.sm,
-    backgroundColor: colors.sunken,
+    backgroundColor: colors[chartRoles.baseline],
     overflow: 'hidden',
-    marginTop: spacing.s1,
+    marginTop: rhythm.line,
   },
   fill: { height: 8 },
   // Sunken, as source links press: every drawn pair is in the contrast table.
   pressed: { backgroundColor: colors.sunken },
-  cell: { gap: spacing.s1 },
+  cell: { gap: rhythm.line },
 });

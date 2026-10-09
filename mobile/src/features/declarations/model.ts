@@ -79,6 +79,31 @@ export function filterFeed(rows: readonly FeedRow[], filters: FeedFilters) {
   );
 }
 
+/**
+ * The Filters row's one summary line: the chamber, then the jurisdiction
+ * ("All chambers · Federal"). A single jurisdiction is named, not offered.
+ */
+export function filterSummary(
+  filters: FeedFilters,
+  facets: { chambers: Facet[]; jurisdictions: Facet[] },
+) {
+  const chamber =
+    filters.chamber === 'all'
+      ? 'All chambers'
+      : (facets.chambers.find((f) => f.id === filters.chamber)?.label ??
+        CHAMBER_NOT_RECORDED);
+  const only =
+    facets.jurisdictions.length === 1 ? facets.jurisdictions[0]! : null;
+  const jurisdiction =
+    filters.jurisdiction !== 'all'
+      ? (facets.jurisdictions.find((f) => f.id === filters.jurisdiction)
+          ?.label ?? 'Jurisdiction not recorded')
+      : only
+        ? only.label
+        : 'All jurisdictions';
+  return `${chamber} · ${jurisdiction}`;
+}
+
 const declarations = (n: number) =>
   `${formatCount(n)} ${n === 1 ? 'declaration' : 'declarations'}`;
 /** "300 declarations", or "176 of 300 declarations" once filtered. */

@@ -7,24 +7,27 @@ import {
   Group,
   Heading,
   LeadCard,
-  OpaxWebLink,
+  LinkRow,
+  RowList,
   Screen,
   Section,
+  SourceLine,
   Text,
 } from '../../design/primitives';
-import { chrome } from '../../design/tokens';
-import { webPageUrl } from '../../navigation/external';
+import { chrome, rhythm } from '../../design/tokens';
+import { openOnWeb, webPageUrl } from '../../navigation/external';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { RecordStatus } from '../RecordStatus';
-import { AboutLeads } from './About';
+import { leadsSource } from './About';
 import { ConcentrationChart, OverlapFlows } from './Chart';
-import { discoveryAsOf, leadFor } from './model';
+import { leadFor } from './model';
 
 /**
  * One lead's comparison, as the web's /discover detail draws it: the
- * takeaway, the chart (or the two separate money flows), its note, then the
- * whole lead card with every caveat and example record, the web's links, and
- * "About these numbers" with the export's methodology.
+ * heading with "Lead · <category>" as its meta line, the takeaway, the chart
+ * (or the two separate money flows) and its note, then the whole lead with
+ * every caveat and example record, the web's links, and one source line
+ * whose sheet holds "About these numbers" and the export's methodology.
  */
 export default function LeadDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -73,11 +76,13 @@ export default function LeadDetail() {
         ) : null}
         {discovery && lead && comparison ? (
           <>
-            <Group>
-              <Text variant="label">Lead · {lead.categoryLabel}</Text>
+            <Group gap={rhythm.tight}>
               <Heading level={1} testID="lead-heading">
                 {comparison.heading}
               </Heading>
+              <Text wordSafe variant="metadata" testID="lead-meta">
+                Lead · {lead.categoryLabel}
+              </Text>
               <Text wordSafe variant="body" testID="lead-takeaway">
                 {comparison.takeaway}
               </Text>
@@ -94,32 +99,33 @@ export default function LeadDetail() {
               <LeadCard
                 lead={lead}
                 category={lead.categoryLabel}
-                asAt={{
-                  asOf: discoveryAsOf(discovery),
-                  citation: lead.citation,
-                  savedAt: record?.stale ? record.savedAt : null,
-                }}
                 testID="lead-card"
               />
             </Section>
             {links.length ? (
               <Section title="On opax.com.au">
-                {links.map((link) => (
-                  <OpaxWebLink
-                    key={link.testID}
-                    label={link.label}
-                    accessibilityLabel={link.accessibilityLabel}
-                    path={link.path}
-                    testID={`lead-link-${link.testID}`}
-                  />
-                ))}
+                <RowList>
+                  {links.map((link) => (
+                    <LinkRow
+                      key={link.testID}
+                      title={link.label}
+                      external
+                      accessibilityLabel={link.accessibilityLabel}
+                      accessibilityHint="Opens on opax.com.au"
+                      testID={`lead-link-${link.testID}`}
+                      onPress={() => void openOnWeb(link.path, link.label)}
+                    />
+                  ))}
+                </RowList>
               </Section>
             ) : null}
-            <AboutLeads
-              discovery={discovery}
-              savedAt={record?.stale ? record.savedAt : null}
-              lede
-              testID="lead-about"
+            <SourceLine
+              {...leadsSource(
+                discovery,
+                record?.stale ? record.savedAt : null,
+              )}
+              citation={lead.citation}
+              testID="lead-source"
             />
           </>
         ) : null}

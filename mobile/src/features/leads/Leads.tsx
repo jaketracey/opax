@@ -1,24 +1,22 @@
 import { useCallback, useMemo, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
-import { router } from 'expo-router';
 import { catalogs } from '../../api/runtime';
 import {
   Button,
   EmptyState,
   Group,
-  LeadCard,
   Screen,
   ChoiceChips,
   SegmentedControl,
+  SourceLine,
   Text,
   type Segment,
 } from '../../design/primitives';
-import { chrome, colors, hairline, radii, spacing } from '../../design/tokens';
-import { leadRoute } from '../../navigation/routes';
+import { chrome, rhythm } from '../../design/tokens';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
-import { RecordRow } from '../RecordRow';
 import { RecordStatus } from '../RecordStatus';
-import { AboutLeads } from './About';
+import { leadsSource } from './About';
+import { LeadFeedCard } from './LeadFeedCard';
 import {
   aboutLede,
   categoryOption,
@@ -46,9 +44,11 @@ const sorts: readonly Segment<LeadSort>[] = [
 ];
 
 /**
- * Leads (P1): every signal in /discovery.json as a card that keeps its
- * figures, every caveat, its example records and its as-at line, with a row
- * to the comparison behind it. "All leads" keeps the export's order.
+ * Leads (P1): every signal in /discovery.json as a card that opens its
+ * comparison. The lede says what a lead is, and one source line under it
+ * dates the export and holds its methodology. Each card keeps its title,
+ * figure, sentence, first caveat and a source line to its example records
+ * and every caveat. "All leads" keeps the export's order.
  */
 export default function Leads() {
   const load = useCallback(
@@ -64,7 +64,6 @@ export default function Leads() {
     () => (discovery ? leadsFor(discovery, filter, sort) : []),
     [discovery, filter, sort],
   );
-  const asOf = discovery ? discoveryAsOf(discovery) : null;
   const savedAt = record?.stale ? record.savedAt : null;
   // Signals the app cannot show faithfully are left out, and said to be.
   const hidden = discovery
@@ -98,9 +97,15 @@ export default function Leads() {
       />
       {discovery ? (
         <>
-          <Text wordSafe variant="body" testID="leads-lede">
-            {aboutLede(discovery)}
-          </Text>
+          <Group gap={rhythm.tight}>
+            <Text wordSafe variant="body" testID="leads-lede">
+              {aboutLede(discovery)}
+            </Text>
+            <SourceLine
+              {...leadsSource(discovery, savedAt)}
+              testID="leads-source"
+            />
+          </Group>
           <Group>
             <ChoiceChips
               segments={filters}
@@ -130,22 +135,14 @@ export default function Leads() {
             ) : null}
           </Group>
           {leads.length ? (
-            <View>
+            <View style={styles.cards}>
               {leads.slice(0, visible).map((lead, index) => (
-                <View key={lead.id} style={styles.lead}>
-                  <LeadCard
-                    lead={lead}
-                    category={lead.categoryLabel}
-                    asAt={{ asOf, citation: lead.citation, savedAt }}
-                    testID={`lead-${index}`}
-                  />
-                  <RecordRow
-                    title="See the comparison"
-                    detail={lead.comparison.heading}
-                    onPress={() => router.push(leadRoute(lead.id))}
-                    testID={`lead-${index}-open`}
-                  />
-                </View>
+                <LeadFeedCard
+                  key={lead.id}
+                  lead={lead}
+                  asOf={discoveryAsOf(discovery)}
+                  testID={`lead-${index}`}
+                />
               ))}
             </View>
           ) : (
@@ -161,11 +158,6 @@ export default function Leads() {
               testID="leads-more"
             />
           ) : null}
-          <AboutLeads
-            discovery={discovery}
-            savedAt={savedAt}
-            testID="leads-about"
-          />
         </>
       ) : null}
     </Screen>
@@ -173,16 +165,6 @@ export default function Leads() {
 }
 
 const styles = StyleSheet.create({
-  // A raised card per lead: the feed scans as separate leads.
-  lead: {
-    gap: spacing.s3,
-    backgroundColor: colors.raised,
-    borderRadius: radii.md,
-    borderWidth: hairline,
-    borderColor: colors.line,
-    paddingHorizontal: spacing.s4,
-    paddingTop: spacing.s4,
-    paddingBottom: spacing.s2,
-    marginBottom: spacing.s4,
-  },
+  // Cards stand apart by a block's gap; nothing nests them.
+  cards: { gap: rhythm.block },
 });
