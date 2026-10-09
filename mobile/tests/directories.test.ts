@@ -24,6 +24,8 @@ import {
   peopleRows,
   sittingGroup,
   sittingGroupStarts,
+  sortSummary,
+  peopleFacets,
   representationAt,
   validDate,
 } from '../src/features/directories/model';
@@ -219,6 +221,61 @@ describe('static directory transforms', () => {
     expect(grouped.indexOf('former')).toBeGreaterThan(
       grouped.lastIndexOf('sitting'),
     );
+  });
+  // TestFlight build 32 (10 Oct): ACzcQOFB asked for sitting members first,
+  // ALUtpHq6 for a sitting-only filter, AILRB_Cd for one party rule.
+  test('the default order is named: sitting first, then most speeches', () => {
+    expect(sortSummary('person', undefined)).toBe(
+      'Sitting first, then most speeches',
+    );
+    expect(sortSummary('person', 'name')).toBe('Sitting first, then name A–Z');
+    expect(sortSummary('party', undefined)).toBe('Most speeches');
+    const sorted = matchingPeople(persons, {}, '');
+    const sitting = sorted.filter((p) => sittingGroup(p) === 'sitting');
+    expect(sorted.slice(0, sitting.length)).toEqual(sitting);
+    for (let i = 1; i < sitting.length; i++)
+      expect(sitting[i - 1]!.row?.speeches ?? 0).toBeGreaterThanOrEqual(
+        sitting[i]!.row?.speeches ?? 0,
+      );
+  });
+  test('Sitting members only keeps dated sitting members, never an undated party', () => {
+    expect(peopleFacets(persons).map((f) => f.label)).toEqual(
+      expect.arrayContaining([
+        'Sitting members only',
+        'Voting record',
+        'Portrait',
+      ]),
+    );
+    const only = matchingPeople(persons, { sitting: '1' }, '');
+    expect(only.length).toBeGreaterThan(200);
+    expect(only.every((p) => p.profile.partyStatus === 'current')).toBe(true);
+    expect(only.length).toBe(
+      persons.filter((p) => p.profile.partyStatus === 'current').length,
+    );
+    // It composes with the other filters and sorts.
+    const labor = matchingPeople(
+      persons,
+      { sitting: '1', party: 'Labor', sort: 'name' },
+      '',
+    );
+    expect(labor.map((p) => p.name)).toContain('Anthony Albanese');
+    expect(labor.map((p) => p.name)).not.toContain('Julia Gillard');
+  });
+  test('former members carry the same status, so their labels read alike', () => {
+    // Abbott, Howard, Turnbull and Costello read "Formerly LIB" while Hockey
+    // read "LIB": the rule is now one party label for all of them.
+    for (const name of [
+      'Tony Abbott',
+      'John Howard',
+      'Malcolm Turnbull',
+      'Peter Costello',
+      'Joe Hockey',
+      'Bill Shorten',
+    ]) {
+      const p = persons.find((row) => row.name === name)!;
+      expect(p.profile.partyStatus).toBe('former');
+      expect(p.row?.first).toBeDefined(); // the years line says it
+    }
   });
   test('no one the APH Handbook lists as sitting is drawn as former', () => {
     const fold = (n: string) =>
