@@ -47,6 +47,142 @@
     {
       "input": "alpha<span title=\"x > y\">beta</span>gamma",
       "expected": "alpha beta gamma"
+    },
+    {
+      "input": "membersinterjecting— senatorsinterjections. Cameroninterjection.",
+      "expected": "members interjecting— senators interjections. Cameron interjection."
+    },
+    {
+      "input": "debatesAnthony Albanesesaid the policy. whenPenny Wongwas asked.",
+      "expected": "debates Anthony Albanese said the policy. when Penny Wong was asked."
+    },
+    {
+      "input": "Mr Howardis here. Mrs Bishophas spoken. Ms Gillardhad said. Dr Brownwould agree.",
+      "expected": "Mr Howardis here. Mrs Bishophas spoken. Ms Gillardhad said. Dr Brownwould agree."
+    },
+    {
+      "input": "McDonald eBay iPhone BHP MacKellar",
+      "expected": "McDonald eBay iPhone BHP MacKellar"
+    },
+    {
+      "input": "Andrew Wilkieson Malcolm Turnbullwasps Senator Allisontheory",
+      "expected": "Andrew Wilkieson Malcolm Turnbullwasps Senator Allisontheory"
+    },
+    {
+      "input": "XAndrew Wilkiewas 2Andrew Wilkiewas _Andrew Wilkiewas notSenator Allisonuntil",
+      "expected": "XAndrew Wilkiewas 2Andrew Wilkiewas _Andrew Wilkiewas notSenator Allisonuntil"
+    },
+    {
+      "input": "interjecting interjection interjections interjectionable 123membersinterjecting members_interjecting",
+      "expected": "interjecting interjection interjections interjectionable 123membersinterjecting members_interjecting"
+    },
+    {
+      "input": "Unknown Personwas T Smithwas John Howardleft",
+      "expected": "Unknown Personwas T Smithwas John Howardleft"
+    },
+    {
+      "input": "Brendan O'Connorwas there.",
+      "expected": "Brendan O'Connor was there."
+    },
+    {
+      "input": "John Howardwas.",
+      "expected": "John Howard was."
+    },
+    {
+      "input": "John Howardis.",
+      "expected": "John Howard is."
+    },
+    {
+      "input": "John Howardhas.",
+      "expected": "John Howard has."
+    },
+    {
+      "input": "John Howardhad.",
+      "expected": "John Howard had."
+    },
+    {
+      "input": "John Howardand.",
+      "expected": "John Howard and."
+    },
+    {
+      "input": "John Howardthe.",
+      "expected": "John Howard the."
+    },
+    {
+      "input": "John Howarduntil.",
+      "expected": "John Howard until."
+    },
+    {
+      "input": "John Howardwho.",
+      "expected": "John Howard who."
+    },
+    {
+      "input": "John Howardsaid.",
+      "expected": "John Howard said."
+    },
+    {
+      "input": "John Howardto.",
+      "expected": "John Howard to."
+    },
+    {
+      "input": "John Howardof.",
+      "expected": "John Howard of."
+    },
+    {
+      "input": "John Howardin.",
+      "expected": "John Howard in."
+    },
+    {
+      "input": "John Howardon.",
+      "expected": "John Howard on."
+    },
+    {
+      "input": "John Howardfor.",
+      "expected": "John Howard for."
+    },
+    {
+      "input": "John Howardthat.",
+      "expected": "John Howard that."
+    },
+    {
+      "input": "John Howardwill.",
+      "expected": "John Howard will."
+    },
+    {
+      "input": "John Howardwould.",
+      "expected": "John Howard would."
+    },
+    {
+      "input": "John Howardas.",
+      "expected": "John Howard as."
+    },
+    {
+      "input": "John Howardat.",
+      "expected": "John Howard at."
+    },
+    {
+      "input": "John Howardby.",
+      "expected": "John Howard by."
+    },
+    {
+      "input": "John Howardfrom.",
+      "expected": "John Howard from."
+    },
+    {
+      "input": "John Howardwith.",
+      "expected": "John Howard with."
+    },
+    {
+      "input": "John Howardwhen.",
+      "expected": "John Howard when."
+    },
+    {
+      "input": "John Howardwhich.",
+      "expected": "John Howard which."
+    },
+    {
+      "input": "Mr Finnin became chief executive. Mr Jenkinson: Yes. Ms Erin Murray. Mr Leon Davis. Dr Erin Rayment.",
+      "expected": "Mr Finnin became chief executive. Mr Jenkinson: Yes. Ms Erin Murray. Mr Leon Davis. Dr Erin Rayment."
     }
   ],
   "speeches": [

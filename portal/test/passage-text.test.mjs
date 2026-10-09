@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 import ts from 'typescript';
+import {spawnSync} from 'node:child_process';
 import * as passageText from '../src/passage-text.ts';
 import {compareSearchResults} from '../src/search-sort.ts';
 import {isWitness} from '../public/speech-attribution.js';
@@ -20,8 +21,23 @@ const pid = rid + '/t/body/0-3425';
 const record = text => ({slug:'speech-1198151', title:'Housing debate', fields:{body:{paragraphs:{[pid]:{text,score:.9,score_type:'VECTOR'}}}}});
 const people = {byFold:new Map()};
 
-for (const [i, row] of fixture.cases.entries()) test(`passage fixture ${i + 1}: tags, audited joins and one entity pass`, () => {
+for (const [i, row] of fixture.cases.entries()) test(`passage fixture ${i + 1}: tags, roster joins and one entity pass`, () => {
   assert.equal(normalizePassage(row.input), row.expected);
+});
+
+test('Python and TS agree on shared fixtures and rule counts, including names embedded in longer words', () => {
+  const code = 'import json,sys; from scripts.passage_text import repair_passage_joins,normalize_passage; print(json.dumps([{ "text":normalize_passage(s), "joins":dict(zip(("text","counts"),repair_passage_joins(s)))} for s in json.load(sys.stdin)],ensure_ascii=False))';
+  const input = fixture.cases.map(row=>row.input);
+  const python = spawnSync('python3',['-c',code],{cwd:new URL('../../',import.meta.url),input:JSON.stringify(input),encoding:'utf8'});
+  assert.equal(python.status,0,python.stderr);
+  const expected = input.map(value=>({text:normalizePassage(value),joins:passageText.repairPassageJoins(value)}));
+  assert.deepEqual(JSON.parse(python.stdout),expected);
+});
+
+test('standalone Python roster matches the compact Worker projection', () => {
+  const python = spawnSync('python3',['-c','import json; from scripts.passage_text import _ROSTER; print(json.dumps(_ROSTER))'],{cwd:new URL('../../',import.meta.url),encoding:'utf8'});
+  assert.equal(python.status,0,python.stderr);
+  assert.deepEqual(JSON.parse(python.stdout),JSON.parse(readFileSync(new URL('../src/passage-names.json',import.meta.url),'utf8')));
 });
 
 test('600 includes ellipses, exact fits stay whole, and very long tokens never become fragments', () => {

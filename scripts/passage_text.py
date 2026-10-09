@@ -1,16 +1,75 @@
 """Display-only passage cleanup; source text and evidence offsets stay immutable."""
 import html
+import json
+from pathlib import Path
 import re
+import unicodedata
 
 _BLOCKS = set('p div br li ul ol h1 h2 h3 h4 h5 h6 tr table blockquote section article header footer dd dt dl pre hr'.split())
 _TAG = re.compile(r'''</?([a-z][\w:-]*)(?:\s+(?:[^<>"']|"[^"]*"|'[^']*')*)?/?>''', re.I)
 _INLINE = '\x00'
-_JOINS = (
-    (r'\b(Opposition senators)(?=interjecting\b)', r'\1 '),
-    (r'\b(Senator Allison)(?=until\b)', r'\1 '),
-    (r'\b(whistleblowers)(?=Andrew Wilkie\b)', r'\1 '),
-    (r'\b([Ww]hen)(Malcolm Turnbull|Joe Hockey)was\b', r'\1 \2 was'),
+def _roster_names():
+    # Read the source roster directly: standalone Python exporters must not
+    # depend on a portal build having generated the compact Worker projection.
+    people = json.loads((Path(__file__).resolve().parents[1] / 'portal/public/parliamentarians.json').read_text())['people']
+    full_names, surnames = set(), set()
+    for person in people:
+        name = re.sub(r'\s+', ' ', person.get('full') or person.get('name') or '')
+        name = re.sub(r'^(?:(?:Senator|Mr\.?|Mrs\.?|Ms\.?|Dr\.?|Hon\.?|Reverend|the)\s+)+', '', name, flags=re.I).strip()
+        parts = name.split(' ')
+        if sum(char.isalpha() for char in parts[-1]) >= 2:
+            surnames.add(parts[-1])
+        if len(parts) >= 2 and sum(char.isalpha() for char in parts[0]) >= 2 and any(char.islower() for char in parts[0]):
+            full_names.add(name)
+    longest = lambda values: sorted(values, key=lambda value: (-len(value), value))
+    return dict(full_names=longest(full_names), surnames=longest(surnames),
+                honorifics=['Senator', 'Mrs', 'Mr', 'Ms', 'Dr'],
+                function_words=longest('was is has had and the until who said to of in on for that will would as at by from with when which'.split()))
+
+
+_ROSTER = _roster_names()
+_INTERJECTION = re.compile(r'(?<!\w)([^\W\d_]+?)(interjecting|interjections|interjection)(?!\w)', re.I)
+_alternatives = lambda values: '|'.join(re.escape(v) for v in values)
+_FIRST = ''.join(sorted({name[0] for name in _ROSTER['full_names'] + _ROSTER['honorifics']}))
+_NAMES = re.compile(
+    '(?=[' + re.escape(_FIRST) + '])' + r'(?P<name>(?P<full>' + _alternatives(_ROSTER['full_names']) + r')|(?:'
+    + _alternatives(_ROSTER['honorifics']) + r') (?:' + _alternatives(_ROSTER['surnames'])
+    + r'))(?P<function>' + _alternatives(_ROSTER['function_words']) + r')?'
 )
+
+
+def _word(char: str) -> bool:
+    return bool(char) and (char.isalnum() or char == '_' or unicodedata.category(char).startswith('M'))
+
+
+def repair_passage_joins(text: str) -> tuple[str, dict[str, int]]:
+    """Only markers and complete roster names; never split general camel case."""
+    counts = dict(interjection=0, before_name=0, after_name=0)
+
+    def marker(match):
+        before = text[match.start()-1] if match.start() else ''
+        after = text[match.end():match.end()+1]
+        if not match[1].isalpha() or _word(before) or _word(after):
+            return match[0]
+        counts['interjection'] += 1
+        return match[1] + ' ' + match[2]
+
+    text = _INTERJECTION.sub(marker, text)
+
+    def name(match):
+        before = text[match.start()-1] if match.start() else ''
+        after = text[match.end():match.end()+1]
+        if _word(after):
+            return match[0]  # A name embedded in a longer word is not a match.
+        prefix = bool(match['full']) and 'a' <= before <= 'z'
+        # Other honorifics often introduce non-roster names (Mr Jenkinson,
+        # Ms Erin). Only the requested Senator surname form is safe here.
+        suffix = bool(match['function']) and bool(match['full'] or match['name'].startswith('Senator ')) and (prefix or not _word(before))
+        counts['before_name'] += int(prefix)
+        counts['after_name'] += int(suffix)
+        return (' ' if prefix else '') + match['name'] + (' ' if suffix else '') + (match['function'] or '')
+
+    return _NAMES.sub(name, text), counts
 
 
 def normalize_passage(value: str) -> str:
@@ -19,10 +78,7 @@ def normalize_passage(value: str) -> str:
     text = _TAG.sub(lambda m: '\n' if m[1].lower() in _BLOCKS else _INLINE, text)
     text = html.unescape(text)  # One pass: &amp;#38; remains &#38;.
     text = re.sub(r'(?<=\w)\x00+(?=\w)', ' ', text).replace(_INLINE, '')
-    # Audited losses from get_text(strip=True) in historical OpenAustralia rows.
-    # Avoid general camel-case splitting: McDonald, eBay and acronyms are words.
-    for pattern, replacement in _JOINS:
-        text = re.sub(pattern, replacement, text)
+    text, _ = repair_passage_joins(text)
     text = re.sub(r'[^\S\n]+', ' ', text)
     text = re.sub(r' *\n *', '\n', text)
     return re.sub(r'\n{3,}', '\n\n', text).strip()

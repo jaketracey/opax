@@ -6,7 +6,7 @@ the stored corpus or knowledge box.
 
 | Symptom | Cause | Fix |
 | --- | --- | --- |
-| `Opposition senatorsinterjecting—`, `Senator Allisonuntil`, `whistleblowersAndrew Wilkie` | OpenAustralia scrapers (`download_hansard.py` and `download_hansard_fast.py`) use `get_text(strip=True)` with an empty separator; the speech loader also strips tags with an empty replacement. Inline boundaries are lost before both `text` and `text_clean` are stored. | Shared Python/TypeScript display helpers preserve spaces between words across inline tags and newlines across block tags. Conservative, audited replacements recover the reported joins in already-stored text, without splitting legitimate names such as McDonald or eBay. |
+| `Opposition senatorsinterjecting—`, `Senator Allisonuntil`, `whistleblowersAndrew Wilkie` | OpenAustralia scrapers (`download_hansard.py` and `download_hansard_fast.py`) use `get_text(strip=True)` with an empty separator; the speech loader also strips tags with an empty replacement. Inline boundaries are lost before both `text` and `text_clean` are stored. | Shared Python/TypeScript display helpers preserve spaces between words across inline tags and newlines across block tags. General marker and roster rules recover historical joins; there are no example-specific replacements or general camel-case splitting. |
 | Search resource `855d6df1c8c1429df4e4123c7557373b` / speech 1198151 has `whenMalcolm Turnbullwas` and `WhenJoe Hockeywas` | The same joins are already in the local speech's `text` and `text_clean`; search forwarded retrieved paragraph text unchanged. | Normalize before search term matching and before windowing. Full source reads and Ask source snippets use the same helper. |
 | Speech 1249416 contains `&#38;` and `\n\n So` | Speech hygiene decodes numeric entities before adding the committee topic prefix, which contains the entity. Existing export and serving paths do no final entity decode or paragraph-edge whitespace cleanup. | Decode once after stripping actual markup, then collapse whitespace and trim paragraph edges. Nested `&amp;#38;` becomes literal `&#38;`, and encoded literal tags stay text. |
 | Evidence begins `ransport Legislation Committee` / ends `We know perso`; Ask cuts at 600 | Primary/additional evidence builders slice 160 characters on either side of a mention. Export copies those old windows verbatim. Worker search, Ask and evidence helpers also use character limits, with incomplete boundary handling. | Rebuild exported windows from read-only source rows using original mention coordinates. Share word-boundary clipping in each language; add an ellipsis only for omitted content, counting markers inside the limit. Ordinary search and Ask source snippets remain at most 600 characters. |
@@ -20,39 +20,117 @@ unchanged; `votes.json` remains byte-identical with schema 1.
 Search page/window, source-body and Ask cache versions retire old display payloads.
 The Worker serving fix takes effect when the orchestrator deploys this commit.
 
-## Regenerating existing static evidence
+## General historical-join rules
 
-Existing `portal/public/evidence` shards need re-exporting. No corpus repair,
-knowledge-box patch or sidecar rescan is necessary: the exporter reconstructs
-windows even from old sidecars. Use the normal complete-export inputs and a fresh,
-empty output directory, then run the source audit before publishing the result.
-For the documented desktop inputs, from the repository root:
+`interjecting`, `interjection` and `interjections` are split from a preceding
+letter run, with word boundaries around the entire match. The local exported
+vocabulary has no legitimate ordinary word ending in these markers: prefixed
+forms are lost boundaries such as `membersinterjecting` and `ceaseinterjecting`.
 
-```sh
-OPAX_PASSAGE_DATA="$HOME/.cache/autoresearch"
-OPAX_PASSAGE_OUTPUT="$(mktemp -d /tmp/opax-passage-evidence.XXXXXX)"
-python3 scripts/export_evidence_layers.py \
-  --source "$OPAX_PASSAGE_DATA/parli.db" \
-  --evidence "$OPAX_PASSAGE_DATA/evidence-layers-full.sqlite" \
-  --places "$OPAX_PASSAGE_DATA/evidence-places.sqlite" \
-  --decisions "$OPAX_PASSAGE_DATA/evidence-identity-decisions.sqlite" \
-  --additional "$OPAX_PASSAGE_DATA/evidence-additional-mentions.sqlite" \
-  --output "$OPAX_PASSAGE_OUTPUT"
-python3 scripts/audit_evidence_export.py \
-  --source "$OPAX_PASSAGE_DATA/parli.db" --export "$OPAX_PASSAGE_OUTPUT"
-```
+Names come from `portal/public/parliamentarians.json`: 1,234 full names and 1,064
+surnames. Python reads that roster directly, so standalone exports need no Node
+build. `scripts/build_passage_names.mjs`, included in `npm run build:search`,
+generates a 41,717-byte ignored projection bundled into the Worker. A parity test
+compares the complete Python roster projection with the generated Worker input.
+Each helper builds one escaped, longest-first name regex.
 
-The source and sidecars are opened read-only. This command only creates local
-export files; installation/publication belongs to the orchestrator. Do not use
-the preview/incomplete flag for a published export.
+A lowercase letter before a complete roster full name acquires a space. After
+a full name or `Senator <Surname>`, only the 24 requested lowercase function
+words acquire a space, and only at a word boundary. A name embedded in a longer
+word is left alone. Other honorific surname forms are recognized but do not get
+suffix repairs: corpus review caught `Mr Finnin`, `Mr Jenkinson`, `Ms Erin`,
+`Mr Leon` and `Dr Erin` being mistaken for surname/function-word joins. These
+observed cases are now negative fixtures. This deliberately leaves uncertain
+non-Senator surname joins unchanged.
 
-Every subsequent evidence re-export applies the fix automatically once it uses
-this code. At this revision, the checked-in `scripts/vm/nightly.sh`,
-`scripts/daily_refresh.sh` and `scripts/weekly_refresh.sh` contain no invocation
-of the evidence exporter. The VM's documented boot schedule is 03:15 Sydney, but
-that alone does not refresh these shards. If an external nightly step invokes
-the exporter, its next run after merge corrects the files; otherwise a one-off
-re-export is required.
+## Offline corpus audit (2026-10-09)
+
+`scripts/audit_passage_joins.py` reads every JSON export under `portal/public`
+(including the freshly built search catalog) and the saved bill-enrichment
+export under `docs/operations/data`. It reads no database and makes no network
+calls. The scan contains 505,444 passage fields in 11,435 JSON files: 504,526
+public fields and 918 saved source quotes. No saved bill-enrichment quote changed.
+
+| Rule | Changed exported fields | Changed canonical evidence rows | Inserted spaces |
+| --- | ---: | ---: | ---: |
+| Interjection markers | 22 | 11 | 26 |
+| Before a full name | 74 | 35 | 81 |
+| After a full name / Senator surname | 49 | 21 | 52 |
+
+Counts overlap between rules. There are 124 changed fields overall, including
+58 canonical evidence `text` rows, their 58 `details.excerpt` mirrors, and eight
+report passages. Canonical evidence counts avoid counting those mirrors twice.
+Join repairs alone touch 48 evidence shards. The larger normalization benchmark
+below also measures whitespace/entity cleanup and therefore changes more rows.
+
+Twenty seeded random before/after field samples per rule (seed 20261009), their
+JSON pointers, complete field text, rule counts and input fingerprint are saved
+under the gitignored `portal/private/passage-text-round1/` in `samples.md`,
+`samples.json`, `changed-fields.jsonl` and `summary.json`. All 60 final samples
+were reviewed without a false split. Python and TS also agree on all 124 changed
+fields. Ten shortened samples from those selections:
+
+| Before | After |
+| --- | --- |
+| `will ceaseinterjecting` | `will cease interjecting` |
+| `Mr Windsorinterjecting—` | `Mr Windsor interjecting—` |
+| `Honourable membersinterjecting—` | `Honourable members interjecting—` |
+| `MrDarren Zanow` | `Mr Darren Zanow` |
+| `ministerMichael Lee` | `minister Michael Lee` |
+| `colleagueRachel Siewertand her team` | `colleague Rachel Siewert and her team` |
+| `misspeltJohn Robertson` | `misspelt John Robertson` |
+| `Senator Wattfor the commitment` | `Senator Watt for the commitment` |
+| `Kim Carrin 2013` | `Kim Carr in 2013` |
+| `Senator Robertsto my answers` | `Senator Roberts to my answers` |
+
+## Evidence publication and recommendation
+
+Existing static evidence needs re-exporting to correct the raw fields consumed
+by clients. The producer is `scripts/export_evidence_layers.py`. The documented
+last full run was on **desktop**, against
+`~/.cache/autoresearch/parli.db`, using four completed sidecars in that cache:
+`evidence-layers-full.sqlite`, `evidence-places.sqlite`,
+`evidence-identity-decisions.sqlite`, and `evidence-additional-mentions.sqlite`.
+Its output `~/.cache/autoresearch/evidence-final-20260908` was copied into
+`portal/public/evidence`. The committed metadata still says
+`2026-09-08T09:21:53.082961+00:00`; it covers 1,310,477 speeches, 21,234 releases
+and 230,007 grants. This provenance is documented in
+[evidence-enrichment-layers.md](evidence-enrichment-layers.md#final-export).
+
+There is **no checked-in scheduled evidence export**. Neither the daily/weekly
+scripts nor `scripts/vm/nightly.sh` invokes it. The documented refresh-box EC2
+schedule starts at 03:15 Australia/Sydney; the checked-in transfer inventory
+does not include these four sidecars, and the nightly's allowed data groups
+exclude evidence. No external schedule or refresh-box filesystem was inspected.
+Merging this fix therefore does not establish an automatic next-night evidence
+refresh. Worker responses change when the orchestrator deploys it.
+
+Recommend **a one-off re-export through the reviewed refresh-box nightly path**.
+Do not run a desktop export or bypass the completeness gate. Before that run,
+the orchestrator must provide sidecars matching the source snapshot: either a
+frozen, matching complete set, or sidecars advanced to the current refresh-box
+DB. Old sidecars against a growing DB fail the exporter’s exact progress/count,
+grant-program and identity coverage checks. Repairing old excerpt windows needs
+no corpus rewrite or mention rescan when source and sidecars already match.
+
+The one-off needs an evidence data group with validation/rollback, export to a
+fresh empty staging directory, `scripts/audit_evidence_export.py` against the
+matching source, then installation and the existing timestamp-only suppression
+in `scripts/vm/keep_if_unchanged.py`. Publication remains with the orchestrator's
+nightly/deploy flow; this branch makes no production writes and runs no real DB
+exports.
+
+Adding this to every nightly is **not yet a safe, small change**. The current
+tree is 163,453,646 bytes (155.88 MiB), 515 files: 256 evidence shards, 256 lookup
+shards, index, stats and identity links. One staged output plus the old tree is
+about 312 MiB before SQLite temporary sorting space. A local text-only benchmark
+normalized all 109,533 exported excerpts in 29.985 seconds, changing 22,561 rows
+across all 256 content shards. This excludes full-source reads, the exporter's
+million-row SQL grouping/sorting, rebuilding windows, and source audit; **full
+export runtime is unmeasured**, so a timed one-off is needed before budgeting a
+daily job. Expect a broad first content diff. For identical inputs thereafter,
+`generated_at` churn is confined to index/stats and can be suppressed by the
+existing sweep; the text fix itself does not change lookup/identity data.
 
 ## Local validation
 

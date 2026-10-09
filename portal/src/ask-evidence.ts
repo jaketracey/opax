@@ -6,7 +6,7 @@ export type AugmentedContext = {
   fields?: Record<string, { id?: string; text?: string; parent?: string }>
 }
 
-export const ASK_PIPELINE_VERSION = '2026-09-17-talk-to-it-v19-passage-v1'
+export const ASK_PIPELINE_VERSION = '2026-09-17-talk-to-it-v19-passage-v2'
 
 /** A deliberately scoped evidence gap is a valid answer, not a missing citation. */
 export const EVIDENCE_GAP_ANSWER = 'This selection does not establish their position on that topic.'
