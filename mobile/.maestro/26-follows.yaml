@@ -14,17 +14,9 @@ name: 26 Follow a member, a bill and an electorate; Today shows what changed
     clearState: true
 - assertVisible:
     id: today-screen-message
-# Before any follow, Today explains them.
-- scrollUntilVisible:
-    element:
-      id: today-following-empty
-    timeout: 90000
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
-- takeScreenshot: ${EVIDENCE}/26-today-empty
 
 # A bill: the first recently introduced bill is the Ending Financial Abuse bill.
+# Before any follow, Today has no Following block: the bills come next.
 - scrollUntilVisible:
     element:
       id: today-bill-0
@@ -32,6 +24,9 @@ name: 26 Follow a member, a bill and an electorate; Today shows what changed
     visibilityPercentage: 10
     centerElement: true
     speed: 20
+- assertNotVisible:
+    id: today-following
+- takeScreenshot: ${EVIDENCE}/26-today-empty
 - waitForAnimationToEnd
 - tapOn:
     id: today-bill-0
@@ -398,11 +393,6 @@ name: 26 Follow a member, a bill and an electorate; Today shows what changed
       id: today-screen-message
     direction: UP
     timeout: 90000
-- scrollUntilVisible:
-    element:
-      id: today-following-empty
-    timeout: 90000
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
+- assertNotVisible:
+    id: today-following
 - takeScreenshot: ${EVIDENCE}/26-cleared

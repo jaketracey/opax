@@ -53,5 +53,5 @@ name: 13c A withdrawn daily edition stays gone after a relaunch
 - assertNotVisible:
     id: today-edition
 - assertNotVisible: Daily edition
-- assertVisible: Recently introduced bills
+- assertVisible: New in parliament
 - takeScreenshot: ${EVIDENCE}/13c-after-relaunch

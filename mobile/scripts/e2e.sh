@@ -172,8 +172,8 @@ if [ -f "$OUT/fixture-stopped" ]; then wait "$FIXTURE_PID" 2>/dev/null || true; 
 [ "$rc" = 0 ] || exit "$rc"
 if [ "${#FLOWS[@]}" -gt 0 ]; then
   ./node_modules/.bin/tsx scripts/collect-screenshots.ts "$OUT/screenshots" "$OUT/maestro"
-  # Journey 15 must draw "OPAX is" below the large title. The accessibility tree
-  # kept the sentence while build 2 drew it behind the title, so read the pixels.
+  # Journey 15 must draw Today's date below the large title. The accessibility
+  # tree kept the line while build 2 drew it behind the title, so read the pixels.
   for flow in "${FLOWS[@]}"; do
     case "$flow" in
       *15-cold-first-line.yaml)

@@ -29,5 +29,5 @@ name: 13b Today with no daily edition published
 - assertNotVisible:
     id: today-edition-error
 - assertNotVisible: Daily edition
-- assertVisible: Recently introduced bills
+- assertVisible: New in parliament
 - takeScreenshot: ${EVIDENCE}/13b-no-edition

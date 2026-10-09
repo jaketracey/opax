@@ -27,12 +27,13 @@ name: 52 iPad foundation, Today grid, sidebar, Bills split view, rotation and a 
     clearState: true
     permissions: {}
 # Today on regular width: the broadsheet masthead, the edition beside its
-# rail (Following, Public money, Leads), then the bills in a grid.
+# rail (Following when something is followed, then the tile grid), then the
+# two feeds side by side.
 - extendedWaitUntil:
     visible:
       id: today-edition-head
     timeout: 90000
-- assertVisible:
+- assertNotVisible:
     id: today-following
 - assertVisible:
     id: today-leads-open
@@ -44,9 +45,11 @@ name: 52 iPad foundation, Today grid, sidebar, Bills split view, rotation and a 
     direction: DOWN
     timeout: 60000
     centerElement: true
-# Grid, not a carousel: the first two bill cards sit side by side.
+# Columns, not one long column: the bills sit beside the declarations.
 - assertVisible:
     id: today-bill-0
+- assertVisible:
+    id: today-declaration-0
 - takeScreenshot: ${EVIDENCE}/52-today-portrait-grid
 # The sidebar: the top tab bar's leading button expands it, and it lists
 # the five sections; Bills opens from it.

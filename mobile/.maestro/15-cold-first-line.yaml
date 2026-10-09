@@ -5,12 +5,13 @@ name: 15 Cold launch draws Today's first line under the title
 #   OPAX_CONTENT_SIZE=accessibility-extra-extra-extra-large \
 #     scripts/e2e.sh <udid> .maestro/15-cold-first-line.yaml
 # e2e.sh refuses a bare "15" (scripts/qa-flows.sh), and after the run reads
-# the screenshot's drawn text (scripts/first-line-check.ts): a line starting
-# "OPAX is" must sit wholly below the title and above the tab bar.
-# Build 2 started Today's native refresh control on mount, which left a cold
-# launch's content 60pt high under the large title, so "OPAX is" sat behind
-# it. A cold launch, with no scroll before the checks, must start the
-# independence line with those words, below the title.
+# the screenshot's drawn text (scripts/first-line-check.ts): Today's date, the
+# first line under the title, must sit wholly below the title and above the
+# tab bar. Build 2 started Today's native refresh control on mount, which left
+# a cold launch's content 60pt high under the large title, so the first line
+# sat behind it. A cold launch, with no scroll before the checks, must draw
+# the date below the title. (Before design pass 3A the first line was the
+# independence line, now at the foot of the page.)
 - launchApp:
     clearState: true
     stopApp: true
@@ -21,7 +22,7 @@ name: 15 Cold launch draws Today's first line under the title
 - waitForAnimationToEnd
 - assertVisible:
     id: today-screen-message
-    text: OPAX is independent and non-partisan\..*
+    text: (Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday) \d{1,2} \w+
 # Maestro's "below" compares top edges only; the screenshot check after the
 # run proves the drawn line clears the title.
 - assertVisible:

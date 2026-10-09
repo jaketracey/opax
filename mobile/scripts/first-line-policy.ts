@@ -24,7 +24,13 @@ export interface FirstLineVerdict {
 }
 
 export const TITLE = 'Today';
-export const PREFIX = 'OPAX is';
+/**
+ * Today's first line: the masthead's date ("Friday 9 October"), drawn under
+ * the large title since design pass 3A moved the independence line to the
+ * foot of the page (design review D4).
+ */
+const WEEKDAY =
+  /^(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/i;
 const bottom = (line: OcrLine) => line.top + line.height;
 // Vision sometimes returns a drawn Latin capital as its Cyrillic or Greek
 // look-alike ("OPАХ is" beside an all-caps date at AX5). The glyphs drawn are
@@ -62,10 +68,10 @@ const latin = (text: string) =>
 const letters = (text: string) => text.replace(/[^\p{L}]/gu, '');
 
 /**
- * Today's independence line must be drawn starting "OPAX is", wholly below
- * the large title and above the tab bar. Build 2 kept the sentence in the
- * accessibility tree while a cold launch drew its first line behind the
- * title, so the check reads the pixels, not the hierarchy.
+ * Today's first line, the masthead's date, must be drawn wholly below the
+ * large title and above the tab bar. Build 2 kept the line in the
+ * accessibility tree while a cold launch drew it behind the title, so the
+ * check reads the pixels, not the hierarchy.
  */
 export function firstLineVerdict(ocr: Ocr): FirstLineVerdict {
   const titles = ocr.lines.filter((line) => letters(line.text) === TITLE);
@@ -83,19 +89,20 @@ export function firstLineVerdict(ocr: Ocr): FirstLineVerdict {
     .filter((line) => line !== title && line.top > bottom(title))
     .sort((a, b) => b.top - a.top)[0];
   const prefix = ocr.lines
-    .filter((line) => latin(line.text.trim()).startsWith(PREFIX))
+    .filter((line) => WEEKDAY.test(latin(line.text.trim())))
     .sort((a, b) => a.top - b.top)[0];
   const found = { title, tabLabel, prefix };
   if (!prefix)
     return {
       pass: false,
-      reason: `No drawn line starts "${PREFIX}": the first line is hidden or missing`,
+      reason:
+        'No drawn line starts with the date: the first line is hidden or missing',
       ...found,
     };
   if (prefix.top <= bottom(title))
     return {
       pass: false,
-      reason: `"${PREFIX}" starts at ${Math.round(prefix.top)}px, inside the title, which ends at ${Math.round(bottom(title))}px`,
+      reason: `The date starts at ${Math.round(prefix.top)}px, inside the title, which ends at ${Math.round(bottom(title))}px`,
       ...found,
     };
   if (
@@ -104,12 +111,12 @@ export function firstLineVerdict(ocr: Ocr): FirstLineVerdict {
   )
     return {
       pass: false,
-      reason: `"${PREFIX}" runs past the visible content area`,
+      reason: 'The date runs past the visible content area',
       ...found,
     };
   return {
     pass: true,
-    reason: `"${PREFIX}" is drawn ${Math.round(prefix.top - bottom(title))}px below the title`,
+    reason: `The date is drawn ${Math.round(prefix.top - bottom(title))}px below the title`,
     ...found,
   };
 }

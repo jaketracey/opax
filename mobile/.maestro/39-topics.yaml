@@ -3,14 +3,23 @@ name: 39 Topics A–Z, topic, stats and Methods
 ---
 - launchApp:
     clearState: true
+# Topics A–Z is a row on Reports, which Today's tile opens.
 - scrollUntilVisible:
     element:
-      id: today-topics
+      id: today-reports
     direction: DOWN
     timeout: 300000
     centerElement: true
 - tapOn:
-    id: today-topics
+    id: today-reports
+- scrollUntilVisible:
+    element:
+      id: reports-topics
+    direction: DOWN
+    timeout: 300000
+    centerElement: true
+- tapOn:
+    id: reports-topics
 - assertVisible:
     id: topics-screen
 - takeScreenshot: ${EVIDENCE}/39-topics

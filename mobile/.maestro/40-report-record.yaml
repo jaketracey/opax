@@ -8,12 +8,20 @@ name: 40 Today report, Over time records, 1999 speech opens in the reader
     clearState: true
 - scrollUntilVisible:
     element:
-      id: today-spotlight-open
+      id: today-reports
     direction: DOWN
     timeout: 300000
     centerElement: true
 - tapOn:
-    id: today-spotlight-open
+    id: today-reports
+- scrollUntilVisible:
+    element:
+      id: report-open-gambling
+    direction: DOWN
+    timeout: 300000
+    centerElement: true
+- tapOn:
+    id: report-open-gambling
 - assertVisible:
     id: report-title
 - scrollUntilVisible:

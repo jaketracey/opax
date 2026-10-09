@@ -68,17 +68,6 @@ name: 13 Today front page, its native records and dated original sources
 - takeScreenshot: ${EVIDENCE}/13-bills
 - scrollUntilVisible:
     element:
-      id: today-bills-as-at
-    direction: DOWN
-    timeout: 300000
-# One quiet caption per block: the record's date, no source names.
-- assertVisible:
-    id: today-bills-as-at
-    text: Updated \d{1,2} \w{3}.*
-- assertNotVisible: .*Source:.*
-- takeScreenshot: ${EVIDENCE}/13-bills-as-at
-- scrollUntilVisible:
-    element:
       id: today-bill-0
     timeout: 300000
     visibilityPercentage: 1
@@ -145,33 +134,44 @@ name: 13 Today front page, its native records and dated original sources
 - tapOn: OK
 - assertVisible:
     id: today-screen
-# At AX5 this as-at line is about 520pt tall. Centring lands it differently
-# on each screen (the 17 Pro shows all of it; a centre stopped by the page end
-# clips its date), so a fixed drag after centring can push it off either edge.
-# Start from the page end, where every device places it the same way, then
-# drag its date back below the navigation bar before requiring full visibility.
+# One source line for the page, at its foot: the date the page is current
+# to and its sources by name; it opens the sheet of original records, each
+# block's own date and the notes.
 - scrollUntilVisible:
     element:
       id: today-screen-footer
     direction: DOWN
     timeout: 300000
     visibilityPercentage: 1
-- swipe:
-    start: 90%, 70%
-    end: 90%, 20%
-    duration: 300
-- waitForAnimationToEnd
-- swipe:
-    start: 90%, 30%
-    end: 90%, 60%
-    duration: 1000
-- waitForAnimationToEnd
 - scrollUntilVisible:
     element:
-      id: today-declarations-as-at
+      id: today-sources
     direction: DOWN
     timeout: 300000
+    centerElement: true
+    speed: 40
+- waitForAnimationToEnd
 - assertVisible:
-    id: today-declarations-as-at
-    text: Updated \d{1,2} \w{3}.*
-- takeScreenshot: ${EVIDENCE}/13-declarations-as-at
+    id: today-sources
+    text: Updated \d{1,2} \w{3} \d{4}.*
+- takeScreenshot: ${EVIDENCE}/13-sources
+- tapOn:
+    id: today-sources
+- extendedWaitUntil:
+    visible: Original records
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/13-sources-sheet
+- tapOn:
+    id: today-sources-sheet-done
+- assertVisible:
+    id: today-screen
+# The independence line closes the page (design review D4).
+- scrollUntilVisible:
+    element:
+      id: today-independence
+      text: OPAX is independent and non-partisan\..*
+    direction: DOWN
+    timeout: 300000
+    visibilityPercentage: 10
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/13-foot
