@@ -35,8 +35,11 @@ function entities(r: Report) {
   }).join('')}</ul>` : '<p>Not identified in the published HTML audit scope.</p>'
 }
 function recommendationText(rec: Report['recommendations'][number]) {
-  // Even a malformed static asset cannot introduce links, scripts or attributes.
-  const remainder = (rec.html || '').replace(/<\/?(?:p|ul|li|em|strong|br)>|<\/ol>|<ol(?: type="[1aAiI]")?(?: start="-?\d+")?>|<li value="-?\d+">/g, '')
+  // Only text structure and a bounded set of source list markers are allowed.
+  const marker = '(?: style="list-style-type:(?:disc|circle|square|none|decimal|decimal-leading-zero|lower-alpha|lower-latin|upper-alpha|upper-latin|lower-roman|upper-roman)")?'
+  const safe = new RegExp('<\\/?(?:p|em|strong|br)>|<\\/(?:ol|ul|li)>|<ul' + marker + '>|'
+    + '<ol(?: type="[1aAiI]")?(?: start="-?\\d+")?' + marker + '>|<li(?: value="-?\\d+")?' + marker + '>', 'g')
+  const remainder = (rec.html || '').replace(safe, '')
   return /[<>]/.test(remainder) ? esc(rec.text) : rec.html || esc(rec.text)
 }
 

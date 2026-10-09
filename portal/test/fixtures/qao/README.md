@@ -13,4 +13,6 @@ The six split-field regressions are `qao-2020-21-14`, `qao-2020-21-5`,
 `qao-2021-22-1`, `qao-2021-22-2`, `qao-2021-22-8` and `qao-2022-23-6`: 35
 recommendations in total. Other excerpts cover legacy headings, `REC` cells,
 direct table-cell numbering, new/prior-year count scopes and unpublished
-numbers. The two source-marker cases are `qao-2022-23-14` and `qao-2021-22-17`.
+numbers. Alphabetic source-marker cases are `qao-2022-23-14` and
+`qao-2021-22-17`; recommendations 1 and 2 of `qao-2021-22-2` retain the
+source's ordered tags with an explicit bullet style.

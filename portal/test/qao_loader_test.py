@@ -156,6 +156,39 @@ class Tests(unittest.TestCase):
         markup=clean_markup(BeautifulSoup('<ol type="a" start="3" onclick="bad"><li value="5">Words</li></ol>','html.parser').ol)
         self.assertEqual(markup,'<ol type="a" start="3"><li value="5">Words</li></ol>')
 
+    def test_source_bullet_styles_survive_parse_and_export(self):
+        root=ROOT/'portal/test/fixtures/qao';rows=json.loads((root/'index.json').read_text())
+        row=next(r for r in rows if r['id']=='qao-2021-22-2')
+        record=parse_report((root/(row['id']+'.html')).read_text(),row)
+        self.assertEqual([r['number'] for r in record['recommendations']],[1,2,3,4,5])
+        payloads,_=plan_export({'complete':True,'listed':1,'count':1,'reports':[record],
+            'generated_at':'2026-10-10T00:00:00Z','policy':{'copyright_notice':'© State of Queensland'}})
+        exported=json.loads(payloads['reports-1.json'])['records'][0]
+        for original,exported_rec in zip(record['recommendations'][:2],exported['recommendations'][:2]):
+            self.assertIn('<ul style="list-style-type:disc">',original['html'])
+            self.assertNotIn('<ol',original['html'])
+            self.assertEqual(original['html'],exported_rec['html'])
+
+    def test_plain_ordered_and_literal_markers_are_unchanged(self):
+        from bs4 import BeautifulSoup
+        from parli.ingest.qao_reports import clean_markup, SAFE_MARKUP, numeric_list
+        cases={
+            '<ol><li>First.</li><li>Second.</li></ol>':'<ol><li>First.</li><li>Second.</li></ol>',
+            '<ol type="A" start="3"><li value="5">Words</li></ol>':'<ol type="A" start="3"><li value="5">Words</li></ol>',
+            '<ul><li>A bullet.</li></ul>':'<ul><li>A bullet.</li></ul>',
+            '<ol style="list-style-type:disc;color:red"><li>A bullet.</li></ol>':'<ul style="list-style-type:disc"><li>A bullet.</li></ul>',
+            '<ol style="list-style-type:lower-alpha" start="3"><li>Words</li></ol>':'<ol type="a" start="3"><li>Words</li></ol>',
+            '<ol style="list-style:none"><li>i. Literal.</li><li>ii. Literal.</li></ol>':'<ul style="list-style-type:none"><li>i. Literal.</li><li>ii. Literal.</li></ul>',
+            '<ul><li style="list-style:none">• Printed bullet.</li></ul>':'<ul><li style="list-style-type:none">• Printed bullet.</li></ul>',
+        }
+        for source,expected in cases.items():
+            with self.subTest(source=source):
+                node=BeautifulSoup(source,'html.parser').find(['ol','ul'])
+                markup=clean_markup(node);self.assertEqual(markup,expected)
+                self.assertEqual(SAFE_MARKUP.sub('',markup),''.join(BeautifulSoup(markup,'html.parser').stripped_strings))
+        self.assertFalse(numeric_list(BeautifulSoup('<ol style="list-style-type:disc"></ol>','html.parser').ol))
+        self.assertTrue(numeric_list(BeautifulSoup('<ol></ol>','html.parser').ol))
+
     def test_unknown_notices_and_standalone_captions_fail_closed(self):
         row=parse_index(listing(),INDEX)[0][0]
         for notice in ('<figcaption>Image © Third Party.</figcaption>',

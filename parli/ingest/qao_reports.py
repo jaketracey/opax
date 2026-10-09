@@ -33,7 +33,7 @@ UA = "OPAX metadata research (https://opax.com.au)"
 MAX_REQUESTS = 800
 ID = re.compile(r"^qao-\d{4}(?:-\d{2})?-\d+$")
 VERSION = re.compile(r"Report\s*:?\s+(\d+)\s*[:–−-]\s*(\d{4})(?:\s*[–−-]\s*(\d{2,4}))?", re.I)
-PARSER_SCHEMA = 2
+PARSER_SCHEMA = 3
 
 
 class Held(ValueError):
@@ -213,6 +213,34 @@ def licence_review(main):
             "exceptions": exceptions, "body_skipped": bool(exceptions)}
 
 
+LIST_STYLES = ('disc', 'circle', 'square', 'none', 'decimal', 'decimal-leading-zero',
+               'lower-alpha', 'lower-latin', 'upper-alpha', 'upper-latin', 'lower-roman', 'upper-roman')
+ORDERED_TYPES = {'decimal': '1', 'decimal-leading-zero': '1', 'lower-alpha': 'a', 'lower-latin': 'a',
+                 'upper-alpha': 'A', 'upper-latin': 'A', 'lower-roman': 'i', 'upper-roman': 'I'}
+
+
+def list_style(node):
+    """Only interpret marker declarations; never copy arbitrary source CSS."""
+    marker = None
+    for declaration in node.get('style', '').split(';'):
+        key, separator, value = declaration.partition(':')
+        if not separator or key.strip().lower() not in ('list-style', 'list-style-type'): continue
+        value = re.sub(r'\s*!important\s*$', '', value.strip(), flags=re.I).lower()
+        candidates = [part for part in value.split() if part in LIST_STYLES]
+        if not candidates: raise Held(f'Unrecognised source list marker: {value}')
+        # In shorthand, none can denote the image; a marker keyword wins.
+        marker = next((part for part in candidates if part != 'none'), 'none')
+    if marker is None and node.name == 'ul' and node.get('type') in ('disc', 'circle', 'square'):
+        marker = node['type']
+    return marker
+
+
+def numeric_list(node):
+    marker = list_style(node)
+    return node.name == 'ol' and (marker in ('decimal', 'decimal-leading-zero')
+        or marker is None and node.get('type', '1') == '1')
+
+
 def clean_markup(node):
     # Keep only source text and list/paragraph structure; strip all source links,
     # embeds, images and scripts. No response column enters this projection.
@@ -223,17 +251,26 @@ def clean_markup(node):
     if not isinstance(node, Tag) or node.name in ("script", "style", "img", "iframe"): return ""
     content = "".join(clean_markup(n) for n in node.children)
     if node.name in ("p", "ul", "ol", "li", "em", "strong", "br"):
-        attrs = ''
-        if node.name == 'ol':
-            if node.get('type') in ('1', 'a', 'A', 'i', 'I'): attrs += f' type="{node["type"]}"'
+        name, attrs = node.name, ''
+        marker = list_style(node) if name in ('ol', 'ul', 'li') else None
+        if name in ('ol', 'ul'):
+            if marker in ('disc', 'circle', 'square', 'none'): name = 'ul'
+            elif marker in ORDERED_TYPES: name = 'ol'
+        if name == 'ol':
+            kind = ORDERED_TYPES.get(marker, node.get('type'))
+            if kind in ('1', 'a', 'A', 'i', 'I'): attrs += f' type="{kind}"'
             if re.fullmatch(r'-?\d+', str(node.get('start', ''))): attrs += f' start="{int(node["start"])}"'
-        if node.name == 'li' and re.fullmatch(r'-?\d+', str(node.get('value', ''))): attrs += f' value="{int(node["value"])}"'
-        return f"<{node.name}{attrs}>" + content + f"</{node.name}>"
+        if name == 'li' and re.fullmatch(r'-?\d+', str(node.get('value', ''))): attrs += f' value="{int(node["value"])}"'
+        if marker and (name != 'ol' or marker == 'decimal-leading-zero'):
+            attrs += f' style="list-style-type:{marker}"'
+        return f"<{name}{attrs}>" + content + f"</{name}>"
     return content
 
 
 # Shared by the exporter: only list marker attributes, never arbitrary HTML.
-SAFE_MARKUP = re.compile(r'</?(?:p|ul|li|em|strong|br)>|</ol>|<ol(?: type="[1aAiI]")?(?: start="-?\d+")?>|<li value="-?\d+">')
+MARKER_ATTR = r'(?: style="list-style-type:(?:' + '|'.join(LIST_STYLES) + r')")?'
+SAFE_MARKUP = re.compile(r'</?(?:p|em|strong|br)>|</(?:ol|ul|li)>|<ul' + MARKER_ATTR + r'>|'
+    r'<ol(?: type="[1aAiI]")?(?: start="-?\d+")?' + MARKER_ATTR + r'>|<li(?: value="-?\d+")?' + MARKER_ATTR + r'>')
 
 
 def recommendation_blocks(main):
@@ -312,7 +349,7 @@ def recommendation_evidence(block):
             if marker and len(cells) > 1: numbers.append(int(marker[1])); return
             walk(cells[0]); return
         if node.name == 'ol':
-            if node.get('type', '1') != '1': return
+            if not numeric_list(node): return
             number = int(node.get('start', 1))
             for item in node.find_all('li', recursive=False):
                 number = int(item.get('value', number)); numbers.append(number); number += 1
@@ -426,7 +463,7 @@ def recommendations(main):
                 elif active and not node.find('cite') and not re.match(r'(?:Note\s*\d*[:.]|In accordance with|Reference to comments)', value, re.I):
                     active['html'] += clean_markup(node)
             elif node.name == 'ol':
-                if node.get('type', '1') != '1':
+                if not numeric_list(node):
                     if active: active['html'] += clean_markup(node)
                     return
                 number = int(node.get('start', 1))

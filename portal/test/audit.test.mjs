@@ -81,6 +81,38 @@ test('audit detail preserves alphabetic source markers and marks unpublished num
  const unsafe=await render(record);assert.doesNotMatch(unsafe.prerender,/onclick|Changed\./);assert.ok(unsafe.prerender.includes('Keep Jane Citizen’s redaction.'));
 });
 
+test('saved QAO bullets and alphabetic lists survive the accepted export and detail rendering',async()=> {
+ const actualRead=async path=>JSON.parse(readFileSync(new URL(path.slice(1),publicRoot)));
+ const actualManifest=await actualRead('/audit/manifest.json');
+ for(const id of ['qao-2021-22-2','qao-2022-23-14','qao-2021-22-17']) {
+  const data=await actualRead(actualManifest.chunks[actualManifest.lookup[id]].path);
+  const record=data.records.find(row=>row.id===id);
+  const page=await auditPage(id,new URL('https://opax.com.au/audit/'+id),actualRead,block);
+  assert.equal(page.status,200);
+  if(id==='qao-2021-22-2') for(const rec of record.recommendations.slice(0,2)) {
+   assert.match(rec.html,/<ul style="list-style-type:disc">/);assert.doesNotMatch(rec.html,/<ol/);
+   assert.ok(page.prerender.includes(rec.html));
+  }
+  else {
+   const alphabetic=record.recommendations.filter(rec=>rec.html.includes('<ol type="a">'));
+   assert.ok(alphabetic.length>0);for(const rec of alphabetic)assert.ok(page.prerender.includes(rec.html));
+  }
+ }
+});
+
+test('plain numbered lists and printed literal markers render without changing their type',async()=> {
+ for(const html of ['<ol><li>First.</li><li>Second.</li></ol>',
+     '<ol type="A" start="3"><li value="5">Words</li></ol>',
+     '<ul style="list-style-type:none"><li>i. Literal.</li><li>ii. Literal.</li></ul>']) {
+  const record=structuredClone(fixture.reports[0]);record.recommendations[0].html=html;
+  const page=await auditPage(record.id,new URL('https://opax.com.au/audit/'+record.id),async path=>path.includes('reports-')?{records:[record]}:read(path),block);
+  assert.ok(page.prerender.includes(html),html);
+ }
+ const record=structuredClone(fixture.reports[0]);record.recommendations[0].html='<ul style="list-style-type:disc;background:red"><li>Unsafe CSS.</li></ul>';
+ const page=await auditPage(record.id,new URL('https://opax.com.au/audit/'+record.id),async path=>path.includes('reports-')?{records:[record]}:read(path),block);
+ assert.doesNotMatch(page.prerender,/background|Unsafe CSS/);
+});
+
 test('audit discovery uses report ids; sitemap type counts reconcile and incomplete catalogues stay absent',()=> {
  assert.equal(auditComplete(manifest),true);
  const groups={static:[]};addAuditDiscovery(groups,manifest);
