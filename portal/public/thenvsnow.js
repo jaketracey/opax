@@ -187,8 +187,8 @@ const CSS = `
 .tvn-row { display: flex; flex-wrap: wrap; gap: 0.7rem 1.2rem; align-items: flex-end; }
 .tvn-field { display: grid; gap: 0.3rem; min-width: 0; }
 .tvn-label {
-  font-size: 0.625rem; font-weight: 700; letter-spacing: 0.08em;
-  text-transform: uppercase; color: var(--ink-faint, #6F7468);
+  font-size: 0.625rem; font-weight: 700;
+  color: var(--ink-faint, #6F7468);
 }
 .tvn-input, .tvn-select {
   font: inherit; font-size: 0.875rem; color: inherit;
@@ -234,7 +234,7 @@ const CSS = `
 }
 .tvn-kicker {
   margin: 0 0 0.1rem; font-size: 0.625rem; font-weight: 700;
-  letter-spacing: 0.08em; text-transform: uppercase; color: var(--bronze-ink, #8A5A12);
+  color: var(--bronze-ink, #8A5A12);
 }
 .tvn-era-h {
   margin: 0 0 0.5rem; font-size: 1.05rem; line-height: 1.3;

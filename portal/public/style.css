@@ -314,14 +314,15 @@ a.visually-hidden:focus-visible {
 
 /* ---- type roles --------------------------------------------------------- */
 
-.kicker, .card-kicker, .chart figcaption, .cite-panel h3 {
-  font: 700 0.6875rem/1.3 var(--sans); color: var(--bronze-ink);
-  text-transform: uppercase; letter-spacing: 0.08em;
-}
+/* A label above a block, in the label role: sentence case, never letter-spaced
+   (D6). The identity kickers over page titles go in pass 3; breadcrumbs say it. */
+.kicker, .card-kicker, .chart figcaption, .cite-panel h3 { font: var(--type-label); color: var(--ink-soft); }
 .kicker { margin: var(--space-5) 0 var(--space-2); }
 /* A trailing note belongs to the section above it, never to the one below:
    it sits a row's breath under the last row and takes no bottom margin. */
-.fineprint { color: var(--ink-faint); font-size: 0.8125rem; line-height: 1.5; max-width: 68ch; margin: var(--space-3) 0 0; }
+/* Fine print is the fine role. A block's notes are moving into its source line
+   (fineprintSourceHTML in app.js, ui-source.css); pass 3 retires these. */
+.fineprint { font: var(--type-fine); color: var(--ink-soft); max-width: var(--size-readable); margin: var(--space-3) 0 0; }
 /* The money map's source note sits under a full-width map, so it runs the
    same width and puts its two ways out on a row of their own. */
 #money-fineprint { max-width: none; }
@@ -389,10 +390,7 @@ header :focus-visible { outline-color: var(--bronze-bright); }
   font: 400 0.9375rem/1.35 var(--sans); color: var(--ink); text-align: left; border-radius: 4px;
 }
 .ms-row:hover, .ms-row.ms-active { background: var(--paper-sunken); }
-.ms-type {
-  flex: 0 0 auto; font: 700 0.625rem/1.3 var(--sans); color: var(--bronze-ink);
-  text-transform: uppercase; letter-spacing: 0.08em;
-}
+.ms-type { flex: 0 0 auto; font: var(--type-label); color: var(--ink-soft); }
 
 /* ---- primary nav (in the band) ------------------------------------------ */
 
@@ -669,7 +667,7 @@ select { padding-right: 1.6rem; }
 
 button.primary {
   background: var(--navy); color: var(--on-navy); border: none; cursor: pointer;
-  font: 600 1rem/1 var(--sans); border-radius: 4px; padding: 0 1.5rem; min-height: 56px;
+  font: 600 1rem/1 var(--sans); border-radius: var(--radius-pill); padding: 0 1.5rem; min-height: 56px;
 }
 button.primary:hover { background: var(--navy-raised); }
 button.primary:disabled { opacity: 0.55; cursor: wait; }
@@ -756,7 +754,7 @@ button.primary.btn-loading:disabled { opacity: 0.9; }
   margin-left: 0.45rem; letter-spacing: 0.01em; vertical-align: -0.08em;
 }
 .range-row { display: grid; grid-template-columns: 2.6rem minmax(0, 1fr); align-items: center; gap: 0.5rem; margin-top: 0.15rem; }
-.range-cap { font-size: 0.75rem; color: var(--ink-faint); letter-spacing: 0.04em; text-transform: uppercase; }
+.range-cap { font: var(--type-fine); color: var(--ink-soft); }
 .filter-item input[type="range"], .ask-pop-rail input[type="range"] {
   -webkit-appearance: none; appearance: none; width: 100%; height: 44px; margin: 0; padding: 0;
   background: transparent; accent-color: var(--bronze-ink); cursor: pointer; min-height: 0;
@@ -798,24 +796,21 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px var(
 /* Snap-aligned like the chips: without it the initial snap pass settles on
    the first chip and the label sits scrolled out of view under the fade. */
 .chip-label { color: var(--ink-faint); font-size: 0.8125rem; flex: 0 0 auto; scroll-snap-align: start; }
-.chip:not(.ui-button) {
-  flex: 0 0 auto; scroll-snap-align: start; cursor: pointer;
-  background: var(--paper-sunken); border: 1px solid var(--line); border-radius: 999px;
-  font: 600 0.875rem/1.2 var(--sans); color: var(--ink-soft);
-  padding: 0.55rem 1rem; min-height: 40px;
-}
-.chip:not(.ui-button):hover { background: var(--bronze-wash); color: var(--ink); }
+/* .chip draws as a choice chip (ui-controls.css); the row owns its layout. */
+.chip:not(.ui-button) { flex: 0 0 auto; scroll-snap-align: start; }
 /* Example searches on an empty search page: they rise in one after another. */
 .search-chips { margin-top: 1.1rem; }
 .search-chips:empty { display: none; }
 @media (max-width: 700px) {
   /* Phones see every suggestion: stacked, wrapping, full width. */
   .chip-row { flex-direction: column; align-items: stretch; overflow: visible; }
+  /* A pill that may wrap to two lines holds its words in the 12px shape. */
   .chip-row .chip:not(.ui-button) {
     white-space: normal; text-align: left; line-height: 1.4;
-    width: 100%; height: auto; border-radius: 10px; padding: 0.65rem 1rem;
+    width: 100%; height: auto; border-radius: var(--radius-md); padding: 0.65rem 1rem;
   }
   .chip-label { display: none; }
+  .chip-row .chip.ui-button { border-radius: var(--radius-md); }
 }
 
 /* Edge fades on the horizontal chip row: content melts into the margin on
@@ -852,7 +847,7 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px var(
 #chip-row .chip:not(.ui-button) {
   width: 100%; min-width: 0; min-height: 48px; height: auto;
   white-space: normal; text-align: left; line-height: 1.4;
-  border-radius: 4px; padding: 0.75rem 1rem;
+  border-radius: var(--radius-md); padding: 0.75rem 1rem;
 }
 @media (max-width: 700px) {
   #chip-row { grid-template-columns: minmax(0, 1fr); }
@@ -1085,8 +1080,7 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
 .chat-sources > summary {
   cursor: pointer; list-style: none; display: inline-flex; align-items: center;
   gap: 0.5rem; min-height: 44px;
-  font: 700 0.6875rem/1.3 var(--sans); color: var(--bronze-ink);
-  text-transform: uppercase; letter-spacing: 0.08em;
+  font: var(--type-label); color: var(--bronze-ink);
 }
 .chat-sources > summary::-webkit-details-marker { display: none; }
 .chat-sources > summary::before {
@@ -1278,22 +1272,7 @@ html[data-chat="page"] .chat-head {
 .people-sub { display: block; margin-top: 1px; font-size: 0.75rem; color: var(--ink-faint); }
 .people-more { margin: var(--space-3) 0 0; font-size: 0.75rem; color: var(--ink-faint); }
 
-/* ---- party chip --------------------------------------------------------- */
-
-.party {
-  display: inline-flex; align-items: center; gap: 5px;
-  font: 600 0.6875rem/1 var(--sans); letter-spacing: 0.06em;
-  color: var(--ink-soft); text-transform: uppercase;
-}
-.party i { width: 8px; height: 8px; border-radius: 50%; background: var(--pc, var(--party-oth)); }
-.party-alp { --pc: var(--party-alp); }
-.party-lib { --pc: var(--party-lib); }
-.party-nat { --pc: var(--party-nat); }
-.party-lnp { --pc: var(--party-lnp); }
-.party-grn { --pc: var(--party-grn); }
-.party-onp { --pc: var(--party-onp); }
-.party-ind { --pc: var(--party-ind); }
-.party-oth { --pc: var(--party-oth); }
+/* The party label (.party, .ui-party) is drawn by ui-controls.css. */
 
 /* ---- search / workbench ------------------------------------------------- */
 
@@ -1417,10 +1396,7 @@ button.link.result-title:hover { color: var(--bronze-ink); }
   max-width: 88ch; margin: var(--space-2) 0 0; padding: 0.75rem 0.9rem;
   background: var(--paper-sunken); color: var(--ink-soft); font: 400 0.9375rem/1.55 var(--sans);
 }
-.search-passage-tag {
-  display: block; margin-bottom: var(--space-1); color: var(--bronze-ink);
-  font: 600 0.75rem/1.3 var(--sans);
-}
+.search-passage-tag { display: block; margin-bottom: var(--space-1); font: var(--type-label); color: var(--bronze-ink); }
 /* Pager. The band keeps its height on a one-page result (the controls go
    invisible, not away) so the footer does not jump between pages.
    Equal outer tracks put the numbers in the middle of the band rather than
@@ -1486,10 +1462,6 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 /* Jurisdiction switch above the map: one hairline segmented control, the
    loaded file in navy. One file per jurisdiction, never summed. */
 .money-chrome { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin: 0 0 var(--space-3); }
-.money-chrome-label {
-  color: var(--ink-faint); font: 600 0.6875rem/1 var(--sans);
-  letter-spacing: 0.08em; text-transform: uppercase;
-}
 .money-jur { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 2px; overflow: hidden; }
 .money-jur button {
   font: 600 0.8125rem/1.2 var(--sans); color: var(--ink-soft); cursor: pointer;
@@ -1595,7 +1567,7 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 }
 @media (max-width: 700px) {
   .chat-next-btns { flex-direction: column; align-items: stretch; }
-  .chat-next-btns .chip:not(.ui-button) { width: 100%; border-radius: 10px; }
+  .chat-next-btns .chip:not(.ui-button) { width: 100%; border-radius: var(--radius-md); }
 }
 
 /* ---- reports ------------------------------------------------------------ */
@@ -1694,7 +1666,7 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 @media (max-width: 700px) {
   .mw-cols { grid-template-columns: 1fr; }
   .mw-chips .chip:not(.ui-button) {
-    width: 100%; border-radius: 10px; padding: 0.65rem 1rem;
+    width: 100%; border-radius: var(--radius-md); padding: 0.65rem 1rem;
     text-align: left; line-height: 1.4;
   }
 }
@@ -1776,17 +1748,9 @@ button.ui-button[data-explain] { width: 100%; justify-content: flex-start; text-
 .doc-topic { font: italic 400 1.0625rem/1.45 var(--serif); color: var(--ink-soft); margin: 0 0 0.4rem; max-width: 68ch; }
 .doc-meta { color: var(--ink-soft); font-size: 0.875rem; margin: 0; }
 .doc-meta .party { vertical-align: 1px; }
-/* Machine topic labels under the byline: quiet party-chip-scale pills that
-   link to their topic pages. Absent entirely on unlabelled docs. */
+/* Machine topic labels under the byline, as tags (.topic-chip draws as .ui-tag
+   in ui-controls.css) linking to their topic pages. Absent on unlabelled docs. */
 .doc-topics { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.6rem 0 0; }
-.topic-chip {
-  display: inline-flex; align-items: center;
-  font: 600 0.6875rem/1 var(--sans); letter-spacing: 0.06em; text-transform: uppercase;
-  color: var(--ink-soft); text-decoration: none;
-  background: var(--paper-sunken); border: 1px solid var(--line); border-radius: 999px;
-  padding: 0.32rem 0.6rem;
-}
-.topic-chip:hover { color: var(--bronze-ink); border-color: var(--bronze); background: var(--bronze-wash); }
 /* One toolbar row: doc actions left, quiet speaker-research links right;
    both wrap to their own line on narrow screens. */
 .doc-toolbar {
@@ -1807,11 +1771,6 @@ button.ui-button[data-explain] { width: 100%; justify-content: flex-start; text-
   display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 0.5rem;
 }
 .doc-brief-head .kicker { margin: 0; }
-.doc-brief-tag {
-  font: 600 0.6875rem/1 var(--sans); letter-spacing: 0.06em; text-transform: uppercase;
-  color: var(--ink-faint); border: 1px solid var(--line); border-radius: 999px;
-  padding: 0.2rem 0.5rem; background: var(--paper);
-}
 .doc-brief #doc-brief-text {
   font: 400 0.9375rem/1.6 var(--sans); color: var(--ink); margin: 0;
 }
@@ -2011,11 +1970,7 @@ button.ui-button[data-explain] { width: 100%; justify-content: flex-start; text-
   .front-map-foot { flex-direction: column; align-items: stretch; gap: 0.9rem; }
 }
 .party-dot-only { margin-right: 0.45rem; }
-.subject-active {
-  display: inline-flex; align-items: center; gap: 5px;
-  font: 600 0.6875rem/1 var(--sans); letter-spacing: 0.06em;
-  color: var(--ink-soft); text-transform: uppercase;
-}
+.subject-active { display: inline-flex; align-items: center; gap: 5px; font: var(--type-label); color: var(--ink-soft); }
 .subject-active svg { width: 12px; height: 12px; color: var(--ink-faint); }
 .search-everything { display: inline-flex; }
 
@@ -2071,7 +2026,7 @@ button.ui-button[data-explain] { width: 100%; justify-content: flex-start; text-
 .news-headline { font: 600 1.0625rem/1.4 var(--serif); text-decoration: none; }
 .news-headline:hover { color: var(--bronze-ink); }
 .news-meta { display: block; margin-top: var(--space-1); color: var(--ink-faint); font-size: 0.8125rem; }
-.news-source { font: 700 0.6875rem/1 var(--sans); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); }
+.news-source { font: var(--type-label); color: var(--ink-soft); }
 .news-pivots {
   display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem;
   margin-top: 0.35rem; font-size: 0.8125rem;
@@ -2132,7 +2087,6 @@ a.ency-name:hover, a.ency-name:focus-visible {
 }
 .speech-passage:hover { color: var(--bronze-ink); }
 .speech-debate:hover { color: var(--bronze-ink); }
-.speech-where { font: 600 0.6875rem/1 var(--sans); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); margin-left: 0.4rem; }
 .speech-snip {
   margin: var(--space-2) 0 0; font-size: 0.9rem; line-height: 1.5; color: var(--ink-soft);
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
@@ -2149,10 +2103,7 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .votes-method { margin-top: var(--space-3); }
 .votes-method .fineprint { margin: var(--space-1) 0 var(--space-2); }
 .ency-votes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem 0.9rem; border-top: 1px solid var(--line); padding-top: 0.65rem; } /* the two vote lists side by side at every width, so a voting card stays close to its neighbours' height */
-.ency-votes-label {
-  display: block; margin-bottom: 0.25rem; color: var(--ink-faint);
-  font: 600 0.6875rem/1 var(--sans); letter-spacing: 0.06em; text-transform: uppercase;
-}
+.ency-votes-label { display: block; margin-bottom: 0.25rem; font: var(--type-label); color: var(--ink-soft); }
 .ency-votes-list { list-style: none; margin: 0; padding: 0; }
 .ency-votes-list li {
   display: flex; justify-content: space-between; align-items: baseline; gap: 0.7rem;
@@ -2323,10 +2274,6 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .dir-figs { display: flex; flex-wrap: wrap; gap: 0.2rem 1.1rem; justify-content: flex-end; text-align: right; }
 .dir-fig { font: 400 0.75rem/1.35 var(--sans); color: var(--ink-faint); white-space: nowrap; }
 .dir-fig b { display: block; font: 700 1.0625rem/1.2 var(--serif); color: var(--ink); font-variant-numeric: tabular-nums; }
-.dir-mark {
-  display: inline-block; font: 700 0.625rem/1 var(--sans); letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--bronze-ink); border: 1px solid var(--bronze); border-radius: 3px; padding: 0.2rem 0.35rem;
-}
 .dir-more-row { margin: 1rem 0 0; }
 .dir-empty { margin: 1.2rem 0 0; color: var(--ink-soft); font-size: 0.9375rem; display: flex; flex-wrap: wrap; gap: 0.7rem 1rem; align-items: center; }
 @media (max-width: 640px) {
@@ -2476,7 +2423,7 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .balance-year { color: var(--ink-faint); line-height: 18px; } /* the year's line box matches the bar row, so the bar sits on the year and the election word hangs beneath */
 .balance-year em {
   display: block; margin-top: 2px; line-height: 1; color: var(--bronze-ink);
-  font: 500 0.55rem/1 var(--sans); font-style: normal; letter-spacing: 0.08em; text-transform: uppercase;
+  font: 500 0.625rem/1 var(--sans); font-style: normal;
 }
 .balance-left {
   display: flex; justify-content: flex-end; align-items: center; gap: 0.35rem;
@@ -2602,19 +2549,16 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .topic-arc-name { font: 600 0.9375rem/1.3 var(--sans); color: var(--ink); display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
 .topic-arc-name a { color: inherit; text-decoration: none; }
 .topic-arc-name a:hover { color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 2px; }
-.topic-arc-witness { font: 600 0.6875rem/1 var(--sans); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-faint); }
+.topic-arc-witness { font: var(--type-label); color: var(--ink-soft); }
 .topic-arc-when { font: 400 0.8125rem/1.4 var(--sans); color: var(--ink-faint); }
 .topic-arc-when time { color: inherit; }
 .topic-arc-source {
   display: block; margin-top: var(--space-2); font: 600 1.0625rem/1.35 var(--serif); color: var(--ink); text-decoration: none;
 }
 .topic-arc-source:hover { color: var(--bronze-ink); }
-.topic-arc-tag {
-  display: block; margin-bottom: 0.2rem; color: var(--bronze-ink);
-  font: 600 0.6875rem/1.3 var(--sans); letter-spacing: 0.06em; text-transform: uppercase;
-}
 .topic-arc-brief, .topic-arc-passage { margin: var(--space-2) 0 0; }
-.topic-arc-brief .topic-arc-tag { margin-bottom: 0.3rem; }
+/* The machine-written label (ui-controls.css) on a line of its own above the brief. */
+.topic-arc-brief .topic-arc-tag { display: flex; margin-bottom: 0.3rem; }
 .topic-arc-open {
   display: inline-block; margin-top: var(--space-1); font: 500 0.8125rem/1.4 var(--sans);
   color: var(--bronze-ink); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--bronze-ink) 40%, transparent); text-underline-offset: 0.2em;
@@ -3040,7 +2984,7 @@ mark.privacy-confirm {
 #panel-subject .topic-index-cols, #panel-subject .topic-index-list { max-width: 1120px; }
 #panel-subject .topic-index-cols {
   padding: var(--space-3) 0; border-bottom: 1px solid var(--line);
-  font: 700 .6875rem/1.3 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint);
+  font: var(--type-label); color: var(--ink-soft);
 }
 #panel-subject .topic-index-cols > span:nth-child(2) { text-align: right; }
 #panel-subject .topic-index-cols > span:last-child { text-align: right; }
@@ -3236,7 +3180,6 @@ mark.privacy-confirm {
 #panel-doc .doc-text .doc-source-byline,
 #panel-doc .doc-text .doc-source-context { font: 400 0.875rem/1.6 var(--sans); color: var(--ink-soft); margin-bottom: 1.2rem; font-variant-numeric: tabular-nums; }
 #panel-doc .doc-text .doc-interjection { padding-left: 1rem; border-left: 1px solid var(--line); font-style: italic; color: var(--ink-soft); }
-#panel-doc .topic-chip { min-height: 44px; font: 600 0.8125rem/1.3 var(--sans); text-transform: none; letter-spacing: normal; padding: 8px 13px; }
 #panel-doc #doc-similar-panel { border-top: 1px solid var(--line); padding-top: 1.25rem; margin-top: 1rem; max-width: 68ch; }
 #panel-doc .doc-similar-list { list-style: none; padding: 0; margin: 0; }
 #panel-doc .doc-similar-list li { padding: 0.5rem 0 1rem; border-bottom: 1px solid var(--line); }
@@ -3250,7 +3193,6 @@ mark.privacy-confirm {
 #panel-doc .doc-head:has(.doc-topic-long) > .doc-topics { grid-row: 4; }
 
 #panel-doc .doc-brief-head .subject-section-title { margin: 0; font: 600 1.125rem/1.4 var(--serif); }
-#panel-doc .doc-brief-tag { border: 0; background: none; padding: 0; font: 400 0.8125rem/1.4 var(--sans); text-transform: none; letter-spacing: normal; color: var(--ink-soft); }
 #panel-doc .doc-brief-note { font-size: 0.875rem; color: var(--ink-soft); }
 #panel-doc .doc-record-head { margin: 1.5rem 0 0.75rem; font: 600 1.125rem/1.4 var(--serif); }
 #panel-doc .doc-related-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem 1rem; margin-top: 0.5rem; }
@@ -3333,7 +3275,8 @@ mark.privacy-confirm {
 .subject-person .speech-rows li { display: block; padding: 0; }
 .subject-person .person-speech-link { display: grid; grid-template-columns: 6.75rem minmax(0, 1fr); gap: .35rem 1rem; padding: 1rem 0; text-decoration: none; color: var(--ink); }
 .subject-person .person-speech-body { display: block; min-width: 0; }
-.subject-person .person-speech-kind { display: block; margin: .55rem 0 .25rem; color: var(--ink-soft); font: 500 .8125rem/1.5 var(--sans); }
+.subject-person .person-speech-kind { display: flex; margin: .55rem 0 .25rem; }
+.subject-person .person-speech-kind:not(.ui-machine-inline) { font: var(--type-label); color: var(--ink-soft); }
 .subject-person .person-speech-text { display: block; font: 400 1rem/1.65 var(--serif); color: var(--ink-soft); overflow-wrap: anywhere; }
 .subject-person .person-speech-link:hover .speech-debate { text-decoration: underline; text-decoration-color: var(--bronze-ink); text-underline-offset: 3px; }
 .subject-person .ties-list .source-title { display: inline-block; min-height: 44px; font: 600 1rem/1.5 var(--serif); }
@@ -3443,7 +3386,7 @@ mark.privacy-confirm {
 #panel-subject .party-mentions .snippet { display: block; -webkit-line-clamp: unset; overflow: visible; }
 #panel-subject .party-mentions .source-title { font: 700 1rem/1.4 var(--serif); display: block; margin: 0; padding: 0; min-height: 24px; }
 #panel-subject .party-mentions .result-meta { font: 400 0.8125rem/1.7 var(--sans); }
-#panel-subject .party-brief-label { display: block; font: 400 0.8125rem/1.5 var(--sans); color: var(--ink-soft); margin-bottom: 0.3rem; }
+#panel-subject .party-brief-label { display: flex; margin-bottom: 0.3rem; }
 #panel-subject .party-member-counts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.25rem 1rem; }
 #panel-subject .party-member-counts b { display: block; }
 #panel-subject .party-member-counts a { grid-column: 1 / -1; justify-self: start; }
@@ -3661,12 +3604,11 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 #panel-search .result-title:hover { color: var(--bronze-ink); text-decoration: underline; }
 #panel-search .result-meta { display: block; margin: 0; font: 400 .8125rem/1.8 var(--sans); color: var(--ink-soft); }
 #panel-search .result-meta a { display: inline-flex; align-items: center; min-height: 44px; }
-#panel-search .result-meta .party-chip { white-space: nowrap; }
 #panel-search .snippet, #panel-search .search-result-brief {
   display: block; max-width: 68ch; padding: 0; margin: 8px 0 0; background: none;
   font: 400 1rem/1.7 var(--serif); color: var(--ink); overflow-wrap: anywhere;
 }
-#panel-search .search-passage-tag { font: 400 .75rem/1.5 var(--sans); color: var(--ink-soft); }
+#panel-search .search-passage-tag { font: var(--type-label); color: var(--ink-soft); }
 #panel-search .search-result-topics { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
 #panel-search .search-count-wide { display: none; }
 #panel-search #results-count { font-variant-numeric: tabular-nums; }
@@ -3767,11 +3709,6 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 .met-list .result-meta { display: flex; margin-top: 0.15rem; } /* its own line under the name, as the mention rows */
 .met-list .snippet { margin-top: 0.25rem; }
 .tie-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.35rem; }
-.tie-tag {
-  display: inline-flex; align-items: center; min-height: 26px; padding: 0.1rem 0.55rem; border-radius: 999px;
-  background: var(--bronze-wash); color: var(--bronze-ink); font: 600 0.75rem/1.2 var(--sans);
-}
-.tie-tag-holder { background: var(--paper-sunken); color: var(--ink-soft); }
 .donor-ties-list .declared-description { font-family: var(--serif); font-size: 1rem; line-height: 1.55; color: var(--ink); }
 
 /* ==== ask sources tidy ==== */
@@ -3988,14 +3925,16 @@ html[data-panel="chat"] footer { display: none; }
    wrapping name used to push "· 212 speeches" onto the next line, where an
    interpunct led the line and read as a bullet. The name wraps inside the
    space left over, and the tally never starts a line. */
+/* A choice chip (pill, navy wash) holding a name and a tally. */
 .report-chip {
   display: flex; flex-wrap: nowrap; align-items: center; gap: 0 var(--space-4);
-  min-height: 44px; padding: 0.3rem 0.95rem; max-width: 100%;
-  background: var(--paper-sunken); border: 1px solid var(--line); border-radius: 999px;
-  text-decoration: none; color: var(--ink);
+  min-height: 44px; padding: 0.3rem 0.95rem; max-width: 100%; box-sizing: border-box;
+  background: var(--ui-wash); border: var(--border-hairline) solid transparent; border-radius: var(--radius-pill);
+  text-decoration: none; color: var(--navy);
+  transition: background-color var(--duration-quick) var(--ease-standard);
 }
-.report-chip:hover { background: var(--bronze-wash); border-color: var(--line-strong); }
-.report-chip:focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 2px; }
+.report-chip:hover { background: var(--ui-wash-pressed); }
+.report-chip:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
 .report-chip-name { min-width: 0; font: 600 0.875rem/1.3 var(--sans); overflow-wrap: anywhere; }
 .report-chip-count {
   flex: 0 0 auto; margin-inline-start: auto; white-space: nowrap;
@@ -4200,7 +4139,7 @@ html[data-panel="chat"] footer { display: none; }
   }
   .report-part[hidden] { display: none; }
   #report-now, #report-overtime, #report-stats { scroll-margin-top: calc(var(--header-h) + 45px); }
-  .report-chip { width: 100%; border-radius: 10px; padding: 0.35rem 0.9rem; }
+  .report-chip { width: 100%; border-radius: var(--radius-md); padding: 0.35rem 0.9rem; }
   .report-source-row { grid-template-columns: 40px minmax(0, 1fr); gap: var(--space-3); }
   .report-essay-tools { gap: 0 var(--space-4); }
 }
@@ -4376,7 +4315,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .front-bill-sum { margin: 0.35rem 0 0; font: 400 0.9375rem/1.55 var(--sans); color: var(--ink); max-width: 66ch; }
 .front-bill-sum.front-bill-none { color: var(--ink-faint); }
 .front-bill-who { margin: 0.3rem 0 0; font: 400 0.8125rem/1.5 var(--sans); color: var(--ink-soft); max-width: 66ch; }
-.front-bill-who b { font-weight: 600; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.6875rem; margin-right: 0.35rem; }
+.front-bill-who b { font: var(--type-label); color: var(--ink-soft); margin-right: 0.35rem; }
 
 /* ---- the disclosure on a person's voting record ------------------------- */
 /* The row was a link to the record and stays one when nothing matches. Where
@@ -4580,11 +4519,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 
 
 /* ==== stats page: live figures ==== */
-.stat-live {
-  display: inline-block; margin-left: 0.4rem; vertical-align: 0.15em;
-  font: 700 0.625rem/1 var(--sans); letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--bronze-ink); font-style: normal;
-}
+.stat-live { margin-left: 0.4rem; }
 .stats-live-table thead + tbody + thead th { padding-top: 1.25rem; }
 .stats-live-table .stat-cell, .stats-live-table th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
 
@@ -5491,7 +5426,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .el-election th:first-child { text-align:left; min-width:160px; }
 .el-election td { font-variant-numeric:tabular-nums; }
 .el-election small { display:block; font-weight:normal; font-size:.75rem; opacity:.8; }
-.el-elected { font-size:.65rem; text-transform:uppercase; letter-spacing:.04em; padding:.15rem .3rem; border:1px solid currentColor; white-space:nowrap; }
 .el-service li { padding:0 0 1.2rem 1rem; margin-left:.25rem; border-left:2px solid color-mix(in srgb, currentColor 20%, transparent); }
 .el-service li > div { font-size:.75rem; margin-bottom:.35rem; }
 .el-service li > span { margin-left:.6rem; font-size:.85rem; }
@@ -5673,39 +5607,12 @@ h3, #panel-methods h3, #panel-expenses h3 {
    page view: every rule is scoped to the docked state or to the chrome the
    page does not draw. */
 
-/* The launcher: the navy pill the voice assistant used to be, now the way into
-   the whole conversation. */
-.chat-launcher {
-  position: fixed; z-index: 69;
-  right: max(20px, env(safe-area-inset-right, 0px));
-  bottom: max(18px, env(safe-area-inset-bottom, 0px));
-  display: flex; align-items: center; gap: 10px;
-  min-height: 48px; padding: 11px 19px 11px 16px;
-  border: 1px solid var(--navy); border-radius: 28px;
-  background: var(--navy); color: #fff; cursor: pointer;
-  box-shadow: 0 4px 18px #142a4329;
-  font: 600 0.875rem/1 var(--sans);
-  -webkit-tap-highlight-color: transparent;
-}
-.chat-launcher[hidden] { display: none; }
-.chat-launcher svg { width: 20px; height: 20px; flex: none; color: var(--bronze-bright); }
-.chat-launcher:hover { background: var(--navy-raised); }
-.chat-launcher:focus-visible { outline: 3px solid var(--bronze-ink); outline-offset: 3px; }
-/* The launcher floats over the last lines of the page; the page leaves it room. */
-body.assistant-ready { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
-/* Every other page's columns stop short of the corner; the grants register and
-   the receipts ledger run the full width, so their right-hand column and fine
-   print passed under the launcher wherever the reader stopped scrolling. Where
-   it floats on desktop they keep out of its column: its footprint (20px inset,
-   the 134px pill, a 12px gap) less the margin the centred page already leaves. */
-@media (min-width: 801px) {
-  body.assistant-ready #money-records-body {
-    padding-right: max(0px, calc(166px - (100vw - min(100vw, 1440px)) / 2 - clamp(1.25rem, 4vw, 4.5rem)));
-  }
-}
-/* While a guided journey plays the map the launcher steps aside; an open
-   conversation stays where the reader put it. */
-body.journey-playing .chat-launcher { display: none; }
+/* The launcher is a header icon, never a pill floating over the page (design
+   review §4, web chrome). app.js puts it beside search; it shows where the band
+   carries the menu button (360 to 800px), below. Wider, the masthead's Ask link
+   leads to the question page and page actions open the dock; narrower than
+   360px the band has no room and the menu holds Ask. */
+.chat-launcher { display: none; }
 
 /* The dock's own chrome, drawn only when the conversation is in the corner. */
 .dock-bar { display: none; }
@@ -5719,8 +5626,7 @@ html[data-chat="docked"] .dock-bar {
 }
 .dock-title {
   flex: 1 1 auto; min-width: 0;
-  font: 700 0.6875rem/1.3 var(--sans); letter-spacing: 0.09em; text-transform: uppercase;
-  color: var(--bronze-ink);
+  font: var(--type-label); color: var(--bronze-ink);
 }
 .dock-icon { flex: none; }
 
@@ -5731,7 +5637,7 @@ html[data-chat="docked"] .dock-bar {
 html[data-chat="docked"] #panel-chat {
   position: fixed; z-index: 70;
   right: max(20px, env(safe-area-inset-right, 0px));
-  bottom: calc(max(18px, env(safe-area-inset-bottom, 0px)) + 60px);
+  bottom: max(18px, env(safe-area-inset-bottom, 0px));
   display: flex; flex-direction: column;
   /* clip, not hidden: scrollIntoView on an answer can still scroll an
      overflow:hidden box, which would slide the dock's own bar out of view. */
@@ -5849,8 +5755,7 @@ html[data-chat="docked"] #panel-chat .chat-composer {
 
 
 
-/* On a phone the assistant is a sheet, not a card in the corner: the launcher
-   gives up its label, and steps out of the way while the sheet is open. */
+/* On a phone the assistant is a sheet, not a card in the corner. */
 @media (max-width: 600px) {
   html[data-chat="docked"] #panel-chat {
     right: max(8px, env(safe-area-inset-right, 0px));
@@ -5863,39 +5768,23 @@ html[data-chat="docked"] #panel-chat .chat-composer {
   /* The sheet's stable height is the sheet, not the desktop panel's 660. */
   html[data-chat="docked"] #panel-chat:has(.chat-turn),
   html[data-chat="docked"] #panel-chat:has(#chat-mic[aria-expanded="true"]) { height: min(86dvh, calc(100dvh - 16px)); }
-  html[data-chat="docked"] .chat-launcher { display: none; }
   html[data-chat="docked"] .chat-scroll { padding: 12px 16px 2px; }
   html[data-chat="docked"] #panel-chat .chat-composer { padding: 10px 16px max(12px, env(safe-area-inset-bottom)); }
 }
-@media (max-width: 480px) {
-  .chat-launcher { width: 52px; height: 52px; min-height: 52px; padding: 0; justify-content: center; border-radius: 50%;
-    right: max(14px, env(safe-area-inset-right, 0px)); bottom: max(14px, env(safe-area-inset-bottom, 0px)); }
-  .chat-launcher > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-  .chat-launcher svg { width: 23px; height: 23px; }
-  body.assistant-ready { padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px)); }
-}
-/* Where the band carries the menu button (360 to 800px), app.js moves the
-   launcher into it, beside search, so it comes where it shows in the tab
-   order. Floating in the corner of a single text column, it sat over whatever
-   line came to rest under it. At 360px the row is full: the wordmark gives up
-   8px of its gap to make room. Below 360px it floats, as on desktop. */
-.site-header .chat-launcher {
-  position: static; flex: 0 0 44px; margin-left: auto;
-  width: 44px; height: 44px; min-height: 44px; padding: 10px; justify-content: center;
-  border: 0; border-radius: 4px; background: transparent; box-shadow: none;
-}
-.site-header .chat-launcher:hover, .site-header .chat-launcher[aria-expanded="true"] { background: rgb(255 255 255 / 10%); }
-.site-header .chat-launcher:focus-visible { outline-color: var(--bronze-bright); }
-.site-header .chat-launcher > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.site-header .chat-launcher svg { width: 22px; height: 22px; }
-.site-header .masthead:has(> .chat-launcher) > .masthead-id { margin-right: -8px; }
-.site-header .masthead:has(> .chat-launcher) > .header-search-toggle { margin-left: 0; }
+/* At 360px the band's row is full: the wordmark gives up 8px of its gap. */
 @media (min-width: 360px) and (max-width: 800px) {
-  body.assistant-ready { padding-bottom: 0; }
-}
-/* The corner panel no longer leaves room for a launcher under it. */
-@media (min-width: 601px) and (max-width: 800px) {
-  html[data-chat="docked"] #panel-chat { bottom: max(18px, env(safe-area-inset-bottom, 0px)); }
+  .site-header .chat-launcher:not([hidden]) {
+    display: flex; align-items: center; justify-content: center; flex: 0 0 var(--size-target);
+    width: var(--size-target); height: var(--size-target); margin: 0 0 0 auto; padding: 10px;
+    border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--on-navy); cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .site-header .chat-launcher:hover, .site-header .chat-launcher[aria-expanded="true"] { background: color-mix(in srgb, var(--on-navy) 10%, transparent); }
+  .site-header .chat-launcher:focus-visible { outline: var(--border-focus) solid var(--bronze-bright); outline-offset: 3px; }
+  .site-header .chat-launcher > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .site-header .chat-launcher svg { width: 22px; height: 22px; flex: none; color: var(--bronze-bright); }
+  .site-header .masthead:has(> .chat-launcher:not([hidden])) > .masthead-id { margin-right: -8px; }
+  .site-header .masthead:has(> .chat-launcher:not([hidden])) > .header-search-toggle { margin-left: 0; }
 }
 /* A short window (a landscape phone) gives the sheet everything it can. */
 @media (max-height: 620px) and (min-width: 601px) {
@@ -5914,11 +5803,7 @@ html[data-chat="docked"] #panel-chat .chat-composer {
   border-radius: 0 4px 4px 0; padding: var(--space-4);
 }
 .answer-overview[hidden] { display: none; }
-.answer-overview .answer-overview-label {
-  margin: 0 0 0.45rem;
-  font: 700 0.6875rem/1.3 var(--sans); letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--bronze-ink);
-}
+.answer-overview .answer-overview-label { margin: 0 0 0.45rem; font: var(--type-label); color: var(--bronze-ink); }
 .answer-overview p { margin: 0; font: 400 1.0625rem/1.7 var(--serif); color: var(--ink); }
 @media (prefers-reduced-motion: no-preference) {
   .answer-overview { animation: answerIn 420ms cubic-bezier(0.22, 0.7, 0.3, 1) backwards; }

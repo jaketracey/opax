@@ -507,7 +507,7 @@ const CSS = `
 
 .gr-toolbar { display: flex; flex-wrap: wrap; gap: 0.5rem 0.6rem; align-items: center; margin-bottom: 0.6rem; }
 .gr-field { display: flex; flex-direction: column; gap: 0.25rem; min-width: 0; }
-.gr-label { font-size: 0.625rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-faint, #6F7468); }
+.gr-label { font-size: 0.625rem; font-weight: 600; color: var(--ink-faint, #6F7468); }
 .gr-input, .gr-select {
   font: inherit; font-size: 0.8125rem; color: var(--ink, #23271F); background: var(--paper-raised, #FFFFFF);
   border: 1px solid var(--line-strong, #8D897B); border-radius: 2px; padding: 0.3rem 0.45rem; min-height: 1.95rem;
@@ -620,7 +620,7 @@ th[aria-sort] .gr-sort { color: var(--ink, #23271F); }
 .gr-detail-meta { font-size: 0.8125rem; color: var(--ink-soft, #575C52); line-height: 1.5; margin: 0 0 0.6rem; }
 .gr-detail-meta b { color: var(--ink, #23271F); }
 .gr-cols { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 1rem 2rem; }
-.gr-kicker { font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-faint, #6F7468); margin: 0.6rem 0 0.35rem; }
+.gr-kicker { font-size: 0.6875rem; font-weight: 700; color: var(--ink-faint, #6F7468); margin: 0.6rem 0 0.35rem; }
 .gr-grants { border-collapse: collapse; width: 100%; font-size: 0.8125rem; }
 .gr-grants td { padding: 0.3rem 0.5rem 0.3rem 0; border-bottom: 1px solid var(--line, #DFDCD2); vertical-align: top; }
 .gr-grants td:last-child { padding-right: 0; }
@@ -669,7 +669,7 @@ th[aria-sort] .gr-sort { color: var(--ink, #23271F); }
 .gr-toplist { list-style: none; margin: 0.2rem 0 0.6rem; padding: 0; font-size: 0.8125rem; }
 .gr-toplist li { display: flex; justify-content: space-between; gap: 0.6rem; align-items: baseline; padding: 0.18rem 0; border-bottom: 1px dotted var(--line, #DFDCD2); }
 .gr-toplist .gr-num { white-space: nowrap; }
-.gr-tag { font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--bronze-ink, #8A5A12); }
+.gr-tag { font-size: 0.6875rem; font-weight: 700; color: var(--bronze-ink, #8A5A12); }
 .gr-jump { display: inline-flex; align-items: center; min-height: 44px; margin: 0.6rem 0 0.2rem; padding: 0.45rem 0.9rem;
   border: 1px solid var(--bronze-ink, #8A5A12); border-radius: 2px; background: var(--paper-raised, #FFFFFF);
   color: var(--navy, #142A43); font: inherit; font-size: 0.9375rem; font-weight: 600; cursor: pointer; }
@@ -690,7 +690,7 @@ th[aria-sort] .gr-sort { color: var(--ink, #23271F); }
 .gr-audits b { color: var(--ink, #23271F); }
 .gr-grantswrap { overflow: auto; max-height: min(60vh, 720px); border: 1px solid var(--line, #DFDCD2); background: var(--paper-raised, #FFFFFF); margin: 0.2rem 0 0.4rem; }
 .gr-pgrants { border-collapse: collapse; width: 100%; min-width: 860px; font-size: 0.8rem; line-height: 1.35; }
-.gr-pgrants th { position: sticky; top: 0; background: var(--paper-sunken, #F1EFE8); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-faint, #6F7468); text-align: left; padding: 0.35rem 0.5rem; border-bottom: 1px solid var(--line-strong, #8D897B); white-space: nowrap; }
+.gr-pgrants th { position: sticky; top: 0; background: var(--paper-sunken, #F1EFE8); font-size: 0.6875rem; font-weight: 700; color: var(--ink-faint, #6F7468); text-align: left; padding: 0.35rem 0.5rem; border-bottom: 1px solid var(--line-strong, #8D897B); white-space: nowrap; }
 .gr-pgrants th.gr-num { text-align: right; }
 .gr-pgrants td { padding: 0.3rem 0.5rem; border-bottom: 1px solid var(--line, #DFDCD2); vertical-align: top; }
 .gr-pgrants small { display: block; color: var(--ink-faint, #6F7468); }

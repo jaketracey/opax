@@ -1,0 +1,93 @@
+/* SourceLine and MachineLabel (docs/design/DESIGN-REVIEW-2026-10.md §5.2).
+   Both are a <details> whose summary is the one line a block shows and whose
+   content is a sheet: the originals, as-at and coverage, notes and caveats and
+   the licence for a source line; what wrote the text, from what, for the
+   machine-written label. Wider than a phone the sheet is a popover under its
+   line; on a phone it opens in place, full width. ui-source.js adds Escape,
+   light dismiss, one-open-at-a-time and edge alignment; without it the
+   details still open and close natively. */
+
+.ui-pop { position: relative; display: block; width: fit-content; max-width: 100%; margin: 0; }
+.ui-pop > summary { list-style: none; cursor: pointer; }
+.ui-pop > summary::-webkit-details-marker { display: none; }
+.ui-pop > summary:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
+
+/* ---- SourceLine: a doc glyph, "Updated 4 Oct 2026 · AEC annual returns" and an
+   optional state. 32 drawn; the hit area reaches 44. */
+.ui-source { margin-top: var(--space-row); }
+.ui-source > summary {
+  position: relative; display: inline-flex; align-items: center; gap: .375rem;
+  min-height: 32px; max-width: 100%; box-sizing: border-box;
+  font: var(--type-fine); color: var(--ink-soft);
+}
+.ui-source > summary::after { content: ""; position: absolute; inset: -6px 0; }
+.ui-source-glyph {
+  width: var(--size-icon-sm); height: var(--size-icon-sm); flex: 0 0 var(--size-icon-sm);
+  fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+}
+.ui-source-text { min-width: 0; overflow-wrap: anywhere; }
+.ui-source-name {
+  color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-rule);
+  text-underline-offset: 3px; text-decoration-thickness: 1px;
+}
+.ui-source > summary:hover .ui-source-name, .ui-source[open] .ui-source-name { text-decoration-color: var(--bronze-ink); }
+.ui-source-state { color: var(--ink); font-weight: 600; }
+
+/* ---- MachineLabel: a pill in the bills wash, "✦ Machine-written", once at the
+   top of a machine-written block. 26 drawn; the hit area reaches 44. */
+.ui-machine { display: inline-block; vertical-align: middle; }
+.ui-machine > summary {
+  position: relative; display: inline-flex; align-items: center; gap: .3rem;
+  min-height: 26px; padding: 0 .625rem; box-sizing: border-box;
+  border: var(--border-hairline) solid transparent; border-radius: var(--radius-pill);
+  background: var(--bills-wash); color: var(--bills-ink); font: var(--type-label); white-space: nowrap;
+  transition: background-color var(--duration-quick) var(--ease-standard);
+}
+/* Placed against the padding box: 24px inside the hairline, plus 20, is 44. */
+.ui-machine > summary::after { content: ""; position: absolute; inset: -10px 0; }
+.ui-machine > summary:hover, .ui-machine[open] > summary { background: color-mix(in srgb, var(--bills-ink) 14%, var(--bills-wash)); }
+.ui-machine-glyph { font-size: .875em; line-height: 1; }
+
+/* ---- The sheet: radius 12, raised, a hairline; the one overlay shadow when it
+   floats. Text is fine print; its links are the record's bronze. */
+.ui-sheet {
+  box-sizing: border-box; display: grid; gap: var(--space-heading);
+  margin-top: var(--space-tight); padding: 14px 16px;
+  border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md);
+  background: var(--paper-raised); color: var(--ink-soft);
+  font: var(--type-fine); text-align: left; white-space: normal;
+}
+.ui-sheet > * { margin: 0; }
+.ui-sheet p { margin: 0; }
+.ui-sheet-label { font: var(--type-label); color: var(--ink); }
+.ui-sheet-originals { display: grid; gap: var(--space-line); margin: 0; padding: 0; list-style: none; }
+.ui-sheet-originals a { display: inline-flex; align-items: center; min-height: 32px; font: var(--type-label); color: var(--ink); }
+.ui-sheet-notes { display: grid; gap: var(--space-tight); }
+.ui-sheet-licence { padding-top: var(--space-heading); border-top: var(--border-hairline) solid var(--divider-subtle); }
+
+@media (min-width: 601px) {
+  .ui-pop > .ui-sheet {
+    position: absolute; z-index: 40; top: 100%; left: 0;
+    width: max-content; max-width: min(28rem, calc(100vw - 2rem)); min-width: 16rem;
+    box-shadow: var(--shadow-overlay);
+  }
+  .ui-pop[data-align="end"] > .ui-sheet { left: auto; right: 0; }
+}
+@media (max-width: 600px) {
+  .ui-pop[open] { width: auto; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ui-pop[open] > .ui-sheet { animation: ui-sheet-in var(--duration-standard) var(--ease-standard); }
+}
+@keyframes ui-sheet-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .ui-machine > summary { transition: none; }
+}
+@media (pointer: coarse) {
+  .ui-sheet-originals a { min-height: var(--size-target); }
+}
+/* Forced colours keep the sheet's edge and give the pill one of its own. */
+@media (forced-colors: active) {
+  .ui-sheet { border-color: CanvasText; }
+  .ui-source-name { text-decoration-color: currentColor; }
+}

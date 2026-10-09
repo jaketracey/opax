@@ -369,8 +369,8 @@ const CSS = `
 }
 .lg-field { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
 .lg-label {
-  font-size: 0.6875rem; font-weight: 600; text-transform: uppercase;
-  letter-spacing: 0.08em; color: var(--ink-faint, #6F7468);
+  font-size: 0.6875rem; font-weight: 600;
+  color: var(--ink-faint, #6F7468);
 }
 .lg-input, .lg-select {
   font: inherit; font-size: 0.875rem; color: var(--ink, #23271F);

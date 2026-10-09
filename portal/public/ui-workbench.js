@@ -53,3 +53,11 @@ document.querySelector('#demo-map-filters').addEventListener('click', event => {
   document.querySelector('#map-filter-status').textContent =
     `${selected.length ? selected.join(', ') + ' selected.' : 'No categories selected.'} Example counts only.`;
 });
+
+document.querySelectorAll('[data-chips]').forEach(group => {
+  group.addEventListener('click', event => {
+    const chip = event.target.closest('button');
+    if (!chip || chip.disabled) return;
+    for (const button of group.querySelectorAll('button')) button.setAttribute('aria-pressed', String(button === chip));
+  });
+});

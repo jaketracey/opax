@@ -14,16 +14,16 @@
 .wb-section h2 { font: var(--heading-section); margin: .4rem 0 .75rem; }
 .wb-section > p { color: var(--ink-soft); max-width: 72ch; }
 .wb-panel { padding: clamp(1rem, 3vw, 2rem); background: var(--paper-raised); border: 1px solid var(--line); border-radius: 6px; margin-top: 1.25rem; min-width: 0; }
-.wb-panel.ui-inverse { background: #142A43; }
 .wb-caption { display: block; color: var(--ink-soft); font: 600 .75rem/1.5 var(--sans); margin: 0 0 .9rem; letter-spacing: .025em; }
 .wb-stack { display: grid; gap: 1.75rem; }
+.wb-row { display: flex; align-items: center; flex-wrap: wrap; gap: .75rem; }
 .wb-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.75rem 2rem; }
 .wb-grid > fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
 .wb-grid legend { font: 600 .875rem/1.5 var(--sans); margin-bottom: .5rem; }
 .wb-status { min-height: 1.5em; color: var(--ink-soft); font-size: .875rem; }
 .wb-sizes { display: grid; gap: 1.5rem; }
 .wb-sizes .ui-field { width: min(100%, 300px); }
-.wb-sizes .ui-actions { align-items: end; }
+.wb-sizes .wb-row { align-items: end; }
 .wb-foot { background: transparent; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--line); color: var(--ink-soft); font-size: .875rem; }
 @media (max-width: 640px) {
   .wb-grid { grid-template-columns: minmax(0, 1fr); }

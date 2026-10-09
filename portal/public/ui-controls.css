@@ -1,58 +1,72 @@
-/* Shared native controls. Opt in with ui-* classes; feature CSS owns layout,
-   never the control's padding, typography, border or interaction states.
-   A size may be applied to one control or an entire group. */
+/* Shared native controls and labels (docs/design/DESIGN-REVIEW-2026-10.md §5.2).
+   Opt in with ui-* classes; feature CSS owns layout, never the control's
+   padding, typography, border or interaction states. A size may be applied to
+   one control or an entire group.
+   Shape says what a thing is (D1): things you press are pills (buttons, choice
+   and filter chips, the segmented track, the machine-written label); things you
+   read are 4px (tags, status labels, fields); things that hold content are 12px
+   (the source sheet). Colours come from tokens.css only. */
 :root {
-  --ui-height: 48px;
+  --ui-height: var(--size-control);
   --ui-font: .9375rem;
-  --ui-radius: 4px;
+  --ui-radius: var(--radius-sm);
+  --ui-radius-press: var(--radius-pill);
   --ui-pad: 1rem;
+  /* The secondary fill and its pressed step: navy wash, a shade deeper. */
+  --ui-wash: var(--navy-wash);
+  --ui-wash-pressed: color-mix(in srgb, var(--navy) 10%, var(--navy-wash));
+  --ui-motion: var(--duration-quick) var(--ease-standard);
 }
-[data-ui-size="compact"] { --ui-height: 40px; --ui-font: .875rem; --ui-pad: .75rem; }
-[data-ui-size="default"] { --ui-height: 48px; --ui-font: .9375rem; --ui-pad: 1rem; }
-[data-ui-size="large"] { --ui-height: 56px; --ui-font: 1rem; --ui-pad: 1.25rem; }
+[data-ui-size="compact"] { --ui-height: var(--size-control-compact); --ui-font: .875rem; --ui-pad: .875rem; }
+[data-ui-size="default"] { --ui-height: var(--size-control); --ui-font: .9375rem; --ui-pad: 1rem; }
+[data-ui-size="large"] { --ui-height: var(--size-control-large); --ui-font: 1rem; --ui-pad: 1.25rem; }
 
-/* Also usable on a navy surface, without separate button/field recipes. */
-.ui-inverse {
-  --ink: #FFFFFF; --ink-soft: #D7E1EC; --ink-faint: #B7C6D9;
-  --paper-raised: #142A43; --paper-sunken: #1D3A5C;
-  --line-strong: #B7C6D9; --navy: #FFFFFF; --on-navy: #142A43;
-  --navy-raised: #E8EEF5; --bronze-ink: #D9A84A; --danger: #FFB4B8;
-}
-
+/* ---- Button: primary (navy), secondary (navy wash, no outline), quiet, danger.
+   The transparent border is what forced colours draws as the button's edge. */
 :is(button, a).ui-button {
   position: relative; display: inline-flex; align-items: center; justify-content: center;
   gap: .5rem; min-height: var(--ui-height); min-width: var(--ui-height);
-  padding: .55rem var(--ui-pad); margin: 0; border: 1px solid var(--line-strong);
-  border-radius: var(--ui-radius); background: var(--paper-raised); color: var(--ink);
+  padding: .55rem var(--ui-pad); margin: 0; border: var(--border-hairline) solid transparent;
+  border-radius: var(--ui-radius-press); background: var(--ui-wash); color: var(--navy);
   font: 600 var(--ui-font)/1.4 var(--sans); text-align: center; text-decoration: none;
   overflow-wrap: anywhere; cursor: pointer; vertical-align: middle;
-  --ui-spinner: var(--ink);
+  transition: background-color var(--ui-motion), color var(--ui-motion), border-color var(--ui-motion);
+  --ui-spinner: var(--navy);
 }
-:is(button, a).ui-button:hover { background: var(--paper-sunken); border-color: var(--ink); }
+:is(button, a).ui-button:hover { background: var(--ui-wash-pressed); }
+:is(button, a).ui-button:active { background: var(--ui-wash-pressed); }
 :is(button, a).ui-button[data-variant="primary"] {
-  background: var(--navy); border-color: var(--navy); color: var(--on-navy); --ui-spinner: var(--on-navy);
+  background: var(--navy); color: var(--on-navy); --ui-spinner: var(--on-navy);
 }
-:is(button, a).ui-button[data-variant="primary"]:hover { background: var(--navy-raised); border-color: var(--navy-raised); }
-:is(button, a).ui-button[data-variant="quiet"] { background: transparent; border-color: transparent; }
-:is(button, a).ui-button[data-variant="quiet"]:hover { background: var(--paper-sunken); }
-:is(button, a).ui-button[data-variant="danger"] { color: var(--danger); border-color: var(--danger); --ui-spinner: var(--danger); }
-.ui-button svg, .ui-control-icon { width: 20px; height: 20px; flex: 0 0 20px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+:is(button, a).ui-button[data-variant="primary"]:is(:hover, :active) { background: var(--navy-raised); }
+:is(button, a).ui-button[data-variant="quiet"] { background: transparent; }
+:is(button, a).ui-button[data-variant="quiet"]:is(:hover, :active) { background: var(--ui-wash); }
+:is(button, a).ui-button[data-variant="danger"] {
+  background: transparent; border-color: var(--danger); color: var(--danger); --ui-spinner: var(--danger);
+}
+:is(button, a).ui-button[data-variant="danger"]:is(:hover, :active) { background: var(--danger); color: var(--on-navy); }
+/* A toggle that is on (Follow, a pressed view) and the chosen choice chip. */
+:is(button, a).ui-button[aria-pressed="true"] { background: var(--navy); color: var(--on-navy); --ui-spinner: var(--on-navy); }
+.ui-button svg, .ui-control-icon { width: var(--size-icon-md); height: var(--size-icon-md); flex: 0 0 var(--size-icon-md); fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+/* IconButton: a circle with a required label. */
 :is(button, a).ui-button.ui-icon-button { padding: .5rem; }
-:is(button, a).ui-button.ui-full { width: 100%; }
-button.ui-button:disabled { opacity: .5; cursor: not-allowed; }
+button.ui-button:disabled, .ui-button[aria-disabled="true"] { opacity: .5; cursor: not-allowed; }
+.ui-button[aria-disabled="true"] { pointer-events: none; }
+/* Busy keeps its width and its label, so a screen reader still hears the action. */
 button.ui-button[aria-busy="true"] { color: transparent; cursor: wait; opacity: 1; }
 button.ui-button[aria-busy="true"]::after {
   content: ""; position: absolute; width: 18px; height: 18px;
-  border: 2px solid var(--ui-spinner); border-right-color: transparent; border-radius: 50%;
+  border: 2px solid var(--ui-spinner); border-right-color: transparent; border-radius: var(--radius-round);
   animation: ui-spin .8s linear infinite;
 }
 @keyframes ui-spin { to { transform: rotate(360deg); } }
 
+/* ---- Fields: things you read, so 4px. */
 .ui-field { display: grid; align-content: start; gap: .5rem; min-width: 0; margin: 0; font: 600 .875rem/1.5 var(--sans); color: var(--ink); }
 .ui-field > label { font: inherit; color: inherit; }
 :is(input, select, textarea).ui-input {
   box-sizing: border-box; width: 100%; min-width: 0; min-height: var(--ui-height); margin: 0;
-  padding: .5rem var(--ui-pad); border: 1px solid var(--line-strong); border-radius: var(--ui-radius);
+  padding: .5rem var(--ui-pad); border: var(--border-hairline) solid var(--line-control); border-radius: var(--ui-radius);
   background: var(--paper-raised); color: var(--ink); font: 400 var(--ui-font)/1.5 var(--sans);
 }
 /* Native select behaviour, with an inset chevron that follows the size's padding. */
@@ -64,9 +78,6 @@ select.ui-input:not([multiple]) {
   background-position: right var(--ui-pad) center;
   background-size: 20px 20px;
 }
-.ui-inverse select.ui-input:not([multiple]), select.ui-input.ui-inverse:not([multiple]) {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23FFFFFF' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 7.5 5 5 5-5'/%3E%3C/svg%3E");
-}
 textarea.ui-input { min-height: 128px; resize: vertical; }
 /* Auto-growing composers share the same single-line height as their actions. */
 textarea.ui-input.grow-field { display: block; min-height: var(--ui-height); height: auto; resize: none; overflow: hidden; padding-block: calc((var(--ui-height) - 2px - 1.5em) / 2); }
@@ -74,7 +85,7 @@ textarea.ui-input.grow-field { display: block; min-height: var(--ui-height); hei
 .ui-input[readonly] { background: var(--paper-sunken); }
 .ui-input:disabled { opacity: .6; cursor: not-allowed; }
 .ui-input[aria-invalid="true"] { border-color: var(--danger); }
-.ui-hint, .ui-error { margin: 0; font: 400 .8125rem/1.5 var(--sans); color: var(--ink-soft); }
+.ui-hint, .ui-error { margin: 0; font: var(--type-fine); color: var(--ink-soft); }
 .ui-error { color: var(--danger); }
 .ui-input-wrap { position: relative; display: flex; align-items: center; min-width: 0; }
 .ui-input-wrap > .ui-control-icon { position: absolute; left: var(--ui-pad); color: var(--ink-soft); pointer-events: none; }
@@ -82,78 +93,174 @@ textarea.ui-input.grow-field { display: block; min-height: var(--ui-height); hei
 .ui-input-wrap > .ui-input:has(+ .ui-button) { padding-right: calc(var(--ui-height) + .25rem); }
 .ui-input-wrap > .ui-button { position: absolute; right: 3px; min-height: calc(var(--ui-height) - 6px); min-width: calc(var(--ui-height) - 6px); }
 
-.ui-choice { display: flex; align-items: center; gap: .65rem; min-height: 44px; width: fit-content; max-width: 100%; color: var(--ink); font: 400 .9375rem/1.5 var(--sans); cursor: pointer; }
+.ui-choice { display: flex; align-items: center; gap: .65rem; min-height: var(--size-target); width: fit-content; max-width: 100%; color: var(--ink); font: 400 .9375rem/1.5 var(--sans); cursor: pointer; }
 .ui-choice > input { width: 20px; height: 20px; margin: 0; flex: 0 0 20px; accent-color: var(--navy); }
 .ui-choice:has(input:disabled) { opacity: .55; cursor: not-allowed; }
-.ui-choice > input[role="switch"] { appearance: none; width: 40px; height: 24px; flex-basis: 40px; border: 1px solid var(--line-strong); border-radius: 20px; background: var(--paper-sunken); position: relative; cursor: inherit; }
-.ui-choice > input[role="switch"]::before { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--ink-soft); }
+.ui-choice > input[role="switch"] { appearance: none; width: 40px; height: 24px; flex-basis: 40px; border: var(--border-hairline) solid var(--line-control); border-radius: var(--radius-pill); background: var(--paper-sunken); position: relative; cursor: inherit; }
+.ui-choice > input[role="switch"]::before { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: var(--radius-round); background: var(--ink-soft); }
 .ui-choice > input[role="switch"]:checked { background: var(--navy); border-color: var(--navy); }
 .ui-choice > input[role="switch"]:checked::before { left: 19px; background: var(--on-navy); }
-/* Size the whole group, including its 8px padding and 2px border. */
-.ui-segmented { box-sizing: border-box; display: inline-flex; flex-wrap: nowrap; min-height: var(--ui-height); gap: 4px; padding: 4px; border: 1px solid var(--line-strong); border-radius: calc(var(--ui-radius) + 4px); background: var(--paper-raised); }
+
+/* ---- Segmented control: a sunken pill track with a raised pill thumb. The
+   thumb's control-line edge (3.33:1) is what says which view is chosen.
+   Size the whole group, including its 8px padding and 2px border. */
+.ui-segmented { box-sizing: border-box; display: inline-flex; flex-wrap: nowrap; min-height: var(--ui-height); gap: 4px; padding: 4px; border: var(--border-hairline) solid transparent; border-radius: var(--ui-radius-press); background: var(--paper-sunken); }
 .ui-segmented > .ui-button {
   flex: 0 0 auto; min-width: max-content;
   white-space: nowrap; overflow-wrap: normal; word-break: normal;
-  min-height: calc(var(--ui-height) - 10px); padding-block: .25rem; border-color: transparent; background: transparent;
+  min-height: calc(var(--ui-height) - 10px); padding-block: .25rem; border-color: transparent; background: transparent; color: var(--ink-soft);
 }
-.ui-segmented > .ui-button[aria-pressed="true"] { background: var(--navy); color: var(--on-navy); }
-:is(button, a).ui-button[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: var(--on-navy); }
-/* Applied filters are removable state. The whole chip is the hit target. */
-:is(button, a).ui-filter-chip {
-  display: inline-flex; align-items: center; gap: .5rem; max-width: 100%; min-height: 40px;
-  margin: 0; padding: .4rem .65rem; border: 1px solid var(--line); border-radius: var(--ui-radius);
-  background: var(--paper-sunken); color: var(--ink); font: 400 .8125rem/1.4 var(--sans);
+.ui-segmented > .ui-button:hover { background: transparent; color: var(--ink); }
+.ui-segmented > .ui-button[aria-pressed="true"] { background: var(--paper-raised); border-color: var(--line-control); color: var(--ink); }
+
+/* ---- Choice chip: pick among peers. Pill, navy wash; navy when chosen.
+   36 drawn, 44 on touch. .chip is the retired name for the same thing. */
+:is(button, a, label).ui-chip, :is(button, a).chip:not(.ui-button) {
+  position: relative; display: inline-flex; align-items: center; gap: .4rem; max-width: 100%;
+  min-height: 36px; margin: 0; padding: .375rem .875rem; box-sizing: border-box;
+  border: var(--border-hairline) solid transparent; border-radius: var(--ui-radius-press);
+  background: var(--ui-wash); color: var(--navy); font: 600 .9375rem/1.3 var(--sans);
   text-align: left; text-decoration: none; cursor: pointer;
+  transition: background-color var(--ui-motion), color var(--ui-motion);
+}
+:is(button, a, label).ui-chip:hover, :is(button, a).chip:not(.ui-button):hover { background: var(--ui-wash-pressed); color: var(--navy); }
+:is(button, a).ui-chip:is([aria-pressed="true"], [aria-checked="true"], [aria-current="true"]),
+label.ui-chip:has(input:checked) { background: var(--navy); color: var(--on-navy); }
+label.ui-chip > input { position: absolute; opacity: 0; pointer-events: none; }
+button.ui-chip:disabled { opacity: .5; cursor: not-allowed; }
+
+/* ---- Filter chip: an applied filter, "Key Value ✕". The whole chip removes it.
+   40 drawn, 44 on touch. Map categories share the shell as choice chips. */
+:is(button, a).ui-filter-chip {
+  position: relative; display: inline-flex; align-items: center; gap: .5rem; max-width: 100%; min-height: 40px;
+  margin: 0; padding: .4rem .75rem .4rem .875rem; border: var(--border-hairline) solid transparent; border-radius: var(--ui-radius-press);
+  background: var(--ui-wash); color: var(--navy); font: 400 .8125rem/1.4 var(--sans);
+  text-align: left; text-decoration: none; cursor: pointer;
+  transition: background-color var(--ui-motion), color var(--ui-motion);
 }
 .ui-filter-chip__text { min-width: 0; overflow-wrap: anywhere; }
 .ui-filter-chip__key { color: var(--ink-soft); margin-right: .35em; }
 .ui-filter-chip__value { font-weight: 600; }
-.ui-filter-chip svg { width: 16px; height: 16px; flex: 0 0 16px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; }
-:is(button, a).ui-filter-chip:hover { background: var(--paper-raised); border-color: var(--ink-soft); }
+.ui-filter-chip svg { width: var(--size-icon-sm); height: var(--size-icon-sm); flex: 0 0 var(--size-icon-sm); fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; }
+:is(button, a).ui-filter-chip:hover { background: var(--ui-wash-pressed); }
 button.ui-filter-chip:disabled { opacity: .5; cursor: not-allowed; }
-/* Tags label topics, with a lighter fill and a tag marker rather than an action outline. */
-.ui-tag {
-  display: inline-flex; align-items: center; gap: .35rem; max-width: 100%; min-height: 28px;
-  padding: .25rem .55rem; border: 0; border-radius: var(--ui-radius);
-  background: var(--bronze-wash); color: var(--bronze-ink);
-  font: 400 .8125rem/1.4 var(--sans); text-decoration: none; overflow-wrap: anywhere;
-}
-.ui-tag::before { content: "#"; flex: 0 0 auto; font-weight: 600; }
-a.ui-tag:hover { text-decoration: underline; text-underline-offset: .2em; }
-:is(.ui-filter-chip, a.ui-tag):focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 3px; }
-@media (max-width: 1000px), (pointer: coarse) {
-  :is(button, a).ui-filter-chip, a.ui-tag { min-height: 44px; }
-}
-/* Map categories use the same shell as applied-filter chips. */
 .ui-map-filters { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
 :is(button, a).ui-map-filter { justify-content: flex-start; font-weight: 600; }
-button.ui-map-filter[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: var(--on-navy); }
-.ui-map-filter__dot { width: 9px; height: 9px; flex: 0 0 9px; border-radius: 50%; box-shadow: 0 0 0 1px rgb(0 0 0 / 12%); }
+button.ui-map-filter[aria-pressed="true"] { background: var(--navy); color: var(--on-navy); }
+.ui-map-filter__dot { width: 9px; height: 9px; flex: 0 0 9px; border-radius: var(--radius-round); box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 12%, transparent); }
 .ui-map-filter__count { color: var(--ink-soft); font-weight: 400; font-variant-numeric: tabular-nums; }
 .ui-map-filter[aria-pressed="true"] .ui-map-filter__count { color: inherit; }
-.ui-actions { display: flex; align-items: center; flex-wrap: wrap; gap: .75rem; }
-.ui-toolbar { display: flex; flex-wrap: wrap; align-items: end; gap: 1rem; padding: 1rem; margin: var(--space-5) 0 var(--space-4); border: 1px solid var(--line); border-radius: var(--ui-radius); background: var(--paper-raised); }
+
+/* ==== The five labels, sentence case, never letter-spaced ====================
+   Tag (a topic, in bronze), StatusLabel (a word with a tone), PartyLabel (a dot
+   beside the party name), Choice/Filter chip (above) and MachineLabel (one
+   phrase, "Machine-written"; ui-source.css draws its sheet).
+
+   Retired label classes. The CSS aliases below keep each one drawing as its
+   kind until pass 3/4 renames the markup; module classes are a mapping only,
+   for the lane that owns the module (4G unless noted).
+     .chip                 → Choice chip (alias)        .tie-tag              → Tag (alias)
+     .topic-chip           → Tag (alias)                .tie-tag-holder       → StatusLabel ended (alias)
+     .doc-brief-tag        → StatusLabel ended (alias; machine uses → MachineLabel)
+     .report-chip (+-name, -count) → Choice chip (alias; 4B decides if they are links)
+     .dir-mark             → StatusLabel ended (alias)  .el-elected           → StatusLabel done (alias)
+     .stat-live            → StatusLabel active (alias) .party, .party-dot-only, .party-chip → PartyLabel (alias)
+     .topic-arc-tag, .party-brief-label, .person-speech-kind → MachineLabel inline (markup moved)
+     .subject-active, .news-source, .ms-type, .ency-votes-label, .search-passage-tag → label text (style.css)
+     .speech-where, .money-chrome-label → removed (unreferenced)
+     .bill-tag             → the meta line, not a label (3F)    mark.hit → search highlight, unchanged
+     .ui-map-filter        → Choice chip with a dot (canonical) .ui-filter-chip, .ui-tag → canonical
+     Module mappings: .nr-source, .gr-tag → Tag · .tvn-chip, .mm-chip (4A), .explain-step → Choice chip ·
+       .lg-scope-chip → Filter chip · .gr-count, .community-badge → StatusLabel active (count) ·
+       .mm-card-tag (4A) → StatusLabel ended · .tm-brief-tag → MachineLabel inline ·
+       .community-status → remove (unreferenced) */
+
+/* Tag: radius 4, bronze wash, bronze-ink label; a link or plain. 28 drawn, 44 on
+   touch when it is a link. */
+.ui-tag, .topic-chip, .tie-tag {
+  display: inline-flex; align-items: center; gap: .35rem; max-width: 100%; min-height: 28px; box-sizing: border-box;
+  padding: .25rem .5rem; border: var(--border-hairline) solid transparent; border-radius: var(--ui-radius);
+  background: var(--bronze-wash); color: var(--bronze-ink);
+  font: var(--type-label); text-decoration: none; overflow-wrap: anywhere;
+}
+a:is(.ui-tag, .topic-chip):hover { text-decoration: underline; text-underline-offset: .2em; }
+
+/* StatusLabel: radius 4, a tone's wash and ink, always a word. One per row. */
+.ui-status, .doc-brief-tag, .tie-tag-holder, .dir-mark, .el-elected, .stat-live {
+  display: inline-flex; align-items: center; max-width: 100%; min-height: 22px; box-sizing: border-box;
+  padding: .0625rem .4rem; border: var(--border-hairline) solid transparent; border-radius: var(--ui-radius);
+  background: var(--status-ended-wash); color: var(--status-ended-ink);
+  font: var(--type-label); font-style: normal; white-space: nowrap; vertical-align: baseline;
+}
+.ui-status[data-tone="done"], .el-elected { background: var(--status-done-wash); color: var(--status-done-ink); }
+.ui-status[data-tone="active"], .stat-live { background: var(--status-active-wash); color: var(--status-active-ink); }
+.ui-status[data-tone="draft"] { background: var(--status-draft-wash); color: var(--status-draft-ink); }
+
+/* PartyLabel: a 10px dot beside the party's name, no fill. Party colour is never
+   alone: the dot-only form carries the name in its title and label. */
+.ui-party, .party {
+  display: inline-flex; align-items: center; gap: .375rem; max-width: 100%;
+  font: var(--type-label); color: var(--ink-soft); vertical-align: baseline;
+}
+:is(.ui-party, .party) > i {
+  width: var(--size-party-dot); height: var(--size-party-dot); flex: 0 0 var(--size-party-dot);
+  border-radius: var(--radius-round); background: var(--pc, var(--party-oth));
+}
+.party-alp { --pc: var(--party-alp); }
+.party-lib { --pc: var(--party-lib); }
+.party-nat { --pc: var(--party-nat); }
+.party-lnp { --pc: var(--party-lnp); }
+.party-grn { --pc: var(--party-grn); }
+.party-onp { --pc: var(--party-onp); }
+.party-ind { --pc: var(--party-ind); }
+.party-oth { --pc: var(--party-oth); }
+
+/* MachineLabel, inline form: a row inside a list of machine-written briefs,
+   where a pill per row would be one press too many. Pass 3/4 hoists these to
+   one label at the top of the list. The pill form is in ui-source.css. */
+.ui-machine-inline {
+  display: inline-flex; align-items: baseline; gap: .3rem;
+  font: var(--type-label); color: var(--bills-ink); font-style: normal;
+}
+
+/* ---- Layout helpers. */
+.ui-toolbar { display: flex; flex-wrap: wrap; align-items: end; gap: 1rem; padding: 1rem; margin: var(--space-5) 0 var(--space-4); border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--ui-radius); background: var(--paper-raised); }
 .ui-toolbar > .ui-field { flex: 1 1 180px; }
 .ui-toolbar > .ui-field:first-child { flex-grow: 2; }
-:is(.ui-button, .ui-input, .ui-choice > input):focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 3px; }
+/* Content dividers: colour encodes hierarchy; the composition owns spacing. */
+.ui-divider { display: block; width: 100%; height: 0; margin: 0; border: 0; border-top: var(--border-hairline) solid var(--divider-default); }
+.ui-divider[data-variant="subtle"] { border-top-color: var(--divider-subtle); }
 
-@media (pointer: coarse) { [data-ui-size="compact"] { --ui-height: 44px; } }
-/* Keep mobile fields at 16px to avoid focus zoom in Safari. */
+/* ---- Focus: one ring, bronze ink on paper, outside the shape. */
+:is(.ui-button, .ui-input, .ui-choice > input, .ui-chip, .chip, .ui-filter-chip, a.ui-tag, a.topic-chip):focus-visible,
+label.ui-chip:has(input:focus-visible) {
+  outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px;
+}
+
+/* ---- Touch: every pressable thing is at least 44px. Mobile fields stay 16px so
+   Safari does not zoom on focus. */
+@media (pointer: coarse) { [data-ui-size="compact"] { --ui-height: var(--size-target); } }
 @media (max-width: 1000px), (pointer: coarse) {
   :root, [data-ui-size] { --ui-font: 1rem; }
-  [data-ui-size="compact"] { --ui-height: 44px; }
+  [data-ui-size="compact"] { --ui-height: var(--size-target); }
+  :is(button, a).ui-filter-chip, :is(button, a, label).ui-chip, :is(button, a).chip:not(.ui-button),
+  a:is(.ui-tag, .topic-chip) { min-height: var(--size-target); }
 }
-@media (prefers-reduced-motion: reduce) { button.ui-button[aria-busy="true"]::after { animation: none; border-style: dotted; } }
+@media (prefers-reduced-motion: reduce) {
+  :is(.ui-button, .ui-chip, .chip, .ui-filter-chip) { transition: none; }
+  button.ui-button[aria-busy="true"]::after { animation: none; border-style: dotted; }
+}
+/* Forced colours: fills drop away, so every chosen state and every label keeps
+   an edge or a system colour of its own. */
 @media (forced-colors: active) {
-  .ui-map-filter[aria-pressed="true"] { outline: 2px solid Highlight; outline-offset: -4px; }
+  :is(.ui-button, .ui-chip, .chip, .ui-filter-chip)[aria-pressed="true"],
+  .ui-segmented > .ui-button[aria-pressed="true"],
+  label.ui-chip:has(input:checked) { outline: 2px solid Highlight; outline-offset: -4px; }
   select.ui-input:not([multiple]) { appearance: auto; background-image: none !important; }
-  .ui-segmented > .ui-button[aria-pressed="true"] { outline: 2px solid Highlight; outline-offset: -4px; }
   .ui-input[aria-invalid="true"] { border: 2px dashed CanvasText; }
   .ui-choice > input[role="switch"] { appearance: auto; }
   .ui-choice > input[role="switch"]::before { display: none; }
   button.ui-button[aria-busy="true"]::after { border-color: ButtonText; border-right-color: transparent; }
+  :is(.ui-party, .party) > i { background: CanvasText; }
+  .ui-map-filter__dot { forced-color-adjust: none; }
 }
-
-/* Content dividers: colour encodes hierarchy; the composition owns spacing. */
-.ui-divider { display: block; width: 100%; height: 0; margin: 0; border: 0; border-top: 1px solid var(--divider-default); }
-.ui-divider[data-variant="subtle"] { border-top-color: var(--divider-subtle); }

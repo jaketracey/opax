@@ -44,7 +44,7 @@ const CSS = `
   margin-bottom: 0.4rem;
 }
 .nr-source {
-  font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase;
+  font-weight: 600;
   font-size: 0.68rem; color: var(--bronze-ink, #8A5A12);
   background: var(--bronze-wash, rgba(160, 118, 27, 0.16));
   padding: 0.1rem 0.45rem; border-radius: 999px;

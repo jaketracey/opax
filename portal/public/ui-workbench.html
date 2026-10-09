@@ -5,14 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <title>Controls workbench — OPAX</title>
-  <link rel="stylesheet" href="/style.css?v=0cde58f488">
-  <link rel="stylesheet" href="/ui-controls.css?v=bb631e06f6">
-  <link rel="stylesheet" href="/ui-workbench.css?v=676cae1896">
-  <script type="module" src="/ui-workbench.js?v=34131fdd46"></script>
+  <link rel="stylesheet" href="/style.css?v=db9b35b0c0">
+  <link rel="stylesheet" href="/ui-controls.css?v=f8011bf298">
+  <link rel="stylesheet" href="/ui-source.css?v=afbc26b4dc">
+  <link rel="stylesheet" href="/ui-workbench.css?v=684af61414">
+  <script src="/ui-source.js?v=2163f6a875" defer></script>
+  <script type="module" src="/ui-workbench.js?v=dd0545fff5"></script>
 </head>
 <body>
   <a class="visually-hidden" href="#workbench">Skip to controls</a>
-  <header class="wb-header"><a href="/">OPAX</a><span>Design workbench · First pass</span></header>
+  <header class="wb-header"><a href="/">OPAX</a><span>Design workbench · Pass 2</span></header>
   <main class="workbench" id="workbench">
     <div class="wb-intro">
       <p class="kicker">Shared components / 01</p>
@@ -20,35 +22,30 @@
       <p>Buttons, fields, choices and dividers that belong together. Try the states below, then see the same controls on the home page, in search and across the directories.</p>
     </div>
     <p><a href="/home-prototype">Review the home-page prototype →</a></p>
-    <nav class="wb-nav" aria-label="Workbench sections"><a href="#buttons">Buttons</a><a href="#sizes">Sizes</a><a href="#fields">Inputs &amp; fields</a><a href="#choices">Choices</a><a href="#filters-tags">Filter chips &amp; tags</a><a href="#map-filters">Map filters</a><a href="#together">In context</a><a href="#dividers">Dividers</a></nav>
+    <nav class="wb-nav" aria-label="Workbench sections"><a href="#buttons">Buttons</a><a href="#sizes">Sizes</a><a href="#fields">Inputs &amp; fields</a><a href="#choices">Choices</a><a href="#filters-tags">Filter chips &amp; tags</a><a href="#labels">Labels</a><a href="#source-line">Source line</a><a href="#map-filters">Map filters</a><a href="#together">In context</a><a href="#dividers">Dividers</a></nav>
 
     <section class="wb-section" id="buttons" aria-labelledby="buttons-title">
       <p class="kicker">01 / Actions</p><h2 id="buttons-title">One hierarchy, wherever you are</h2>
-      <p>Navy for the main action, an outline for supporting actions, and quiet buttons for lower emphasis.</p>
+      <p>Things you press are pills. Navy for the one main action in a view, a navy wash for supporting actions, and quiet buttons for lower emphasis.</p>
       <div class="wb-panel wb-stack">
-        <div><span class="wb-caption">Emphasis</span><div class="ui-actions">
+        <div><span class="wb-caption">Emphasis</span><div class="wb-row">
           <button class="ui-button" data-variant="primary" type="button" data-demo="Primary action selected.">Ask a question</button>
           <button class="ui-button" type="button" data-demo="Secondary action selected.">View records</button>
           <button class="ui-button" data-variant="quiet" type="button" data-demo="Quiet action selected.">Clear filters</button>
           <button class="ui-button" data-variant="danger" type="button" data-demo="Destructive style preview. Nothing was deleted.">Delete draft</button>
         </div></div>
-        <div><span class="wb-caption">Icons &amp; navigation</span><div class="ui-actions">
+        <div><span class="wb-caption">Icons &amp; navigation</span><div class="wb-row">
           <button class="ui-button" type="button" data-demo="Download style preview. No file is generated."><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m-4-4 4 4 4-4M4 16h12"/></svg>Download records</button>
           <a class="ui-button" href="/subject/supplier">Browse suppliers<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
           <button class="ui-button ui-icon-button" aria-label="Close preview" type="button" data-demo="Close style preview selected."><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg></button>
         </div></div>
-        <div><span class="wb-caption">Disabled &amp; loading · Try “Save changes”</span><div class="ui-actions">
+        <div><span class="wb-caption">Disabled &amp; loading · Try “Save changes”</span><div class="wb-row">
           <button class="ui-button" data-variant="primary" type="button" disabled>Ask a question</button>
           <button class="ui-button" type="button" disabled>View records</button>
           <button class="ui-button" data-variant="primary" type="button" aria-busy="true" disabled>Loading records</button>
           <button class="ui-button" data-variant="primary" type="button" id="demo-save">Save changes</button>
         </div></div>
       </div>
-      <div class="wb-panel ui-inverse"><span class="wb-caption">On navy</span><div class="ui-actions">
-        <button class="ui-button" data-variant="primary" type="button" data-demo="Primary action on navy selected.">Ask a question</button>
-        <button class="ui-button" type="button" data-demo="Secondary action on navy selected.">View records</button>
-        <button class="ui-button" data-variant="quiet" type="button" data-demo="Quiet action on navy selected.">Clear filters</button>
-      </div></div>
       <p class="wb-status" id="action-status" role="status">Preview actions stay on this page. Navigation links open real pages.</p>
     </section>
 
@@ -56,9 +53,9 @@
       <p class="kicker">02 / Scale</p><h2 id="sizes-title">Buttons and fields on the same line</h2>
       <p>Compact for dense tools, default for everyday tasks, large for prominent search and question fields. Compact controls expand on touch devices.</p>
       <div class="wb-panel wb-sizes">
-        <div class="ui-actions" data-ui-size="compact"><label class="ui-field">Compact · 40px<input class="ui-input" type="search" placeholder="Find a parliamentarian"></label><button class="ui-button" type="button" data-demo="Compact search preview selected.">Search</button></div>
-        <div class="ui-actions" data-ui-size="default"><label class="ui-field">Default · 48px<input class="ui-input" type="search" placeholder="Find a parliamentarian"></label><button class="ui-button" type="button" data-demo="Default search preview selected.">Search</button></div>
-        <div class="ui-actions" data-ui-size="large"><label class="ui-field">Large · 56px<input class="ui-input" type="search" placeholder="Find a parliamentarian"></label><button class="ui-button" data-variant="primary" type="button" data-demo="Large search preview selected.">Search</button></div>
+        <div class="wb-row" data-ui-size="compact"><label class="ui-field">Compact · 40px<input class="ui-input" type="search" placeholder="Find a parliamentarian"></label><button class="ui-button" type="button" data-demo="Compact search preview selected.">Search</button></div>
+        <div class="wb-row" data-ui-size="default"><label class="ui-field">Default · 48px<input class="ui-input" type="search" placeholder="Find a parliamentarian"></label><button class="ui-button" type="button" data-demo="Default search preview selected.">Search</button></div>
+        <div class="wb-row" data-ui-size="large"><label class="ui-field">Large · 56px<input class="ui-input" type="search" placeholder="Find a parliamentarian"></label><button class="ui-button" data-variant="primary" type="button" data-demo="Large search preview selected.">Search</button></div>
       </div>
     </section>
 
@@ -98,7 +95,7 @@
       <p>Filter chips show what is narrowing the results. Select one to remove it. Tags describe a record and link to its topic.</p>
       <div class="wb-panel wb-stack">
         <div><span class="wb-caption">Applied filters · Removable</span>
-          <div class="ui-actions" id="demo-filter-chips">
+          <div class="wb-row" id="demo-filter-chips">
             <button class="ui-filter-chip" type="button" aria-label="Remove the record type filter, Speeches"><span class="ui-filter-chip__text"><span class="ui-filter-chip__key">Record type</span><span class="ui-filter-chip__value">Speeches</span></span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8"/></svg></button>
             <button class="ui-filter-chip" type="button" aria-label="Remove the parliament filter, New South Wales"><span class="ui-filter-chip__text"><span class="ui-filter-chip__key">Parliament</span><span class="ui-filter-chip__value">New South Wales</span></span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8"/></svg></button>
             <button class="ui-filter-chip" type="button" aria-label="Remove the topic filter, Climate &amp; environment"><span class="ui-filter-chip__text"><span class="ui-filter-chip__key">Topic</span><span class="ui-filter-chip__value">Climate &amp; environment</span></span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8"/></svg></button>
@@ -106,7 +103,7 @@
           <p class="wb-status" id="filter-demo-status" role="status">Three filters applied.</p>
           <button class="ui-button" data-variant="quiet" data-ui-size="compact" type="button" id="reset-demo-filters">Reset example</button>
         </div>
-        <div><span class="wb-caption">Topic tags · Links</span><nav class="ui-actions" aria-label="Example topic tags">
+        <div><span class="wb-caption">Topic tags · Links</span><nav class="wb-row" aria-label="Example topic tags">
           <a class="ui-tag" href="/subject/topic/climate-environment">Climate &amp; environment</a>
           <a class="ui-tag" href="/subject/topic/housing">Housing</a>
           <a class="ui-tag" href="/subject/topic/health">Health</a>
@@ -115,49 +112,93 @@
       </div>
     </section>
 
+    <section class="wb-section" id="labels" aria-labelledby="labels-title">
+      <p class="kicker">06 / Labels</p><h2 id="labels-title">Five kinds of small label</h2>
+      <p>Sentence case, never letter-spaced. Tags and status labels are read, so they keep 4px corners; chips and the machine-written label are pressed, so they are pills.</p>
+      <div class="wb-panel wb-stack">
+        <div><span class="wb-caption">Choice chips · Pick among peers</span><div class="wb-row" role="group" aria-label="Example record kinds" data-chips>
+          <button class="ui-chip" type="button" aria-pressed="true">Speeches</button>
+          <button class="ui-chip" type="button" aria-pressed="false">Divisions</button>
+          <button class="ui-chip" type="button" aria-pressed="false">Bills</button>
+          <button class="ui-chip" type="button" aria-pressed="false" disabled>Committee evidence</button>
+        </div></div>
+        <div><span class="wb-caption">Status labels · A word with a tone</span><div class="wb-row">
+          <span class="ui-status" data-tone="done">Passed</span>
+          <span class="ui-status" data-tone="active">Before the Senate</span>
+          <span class="ui-status" data-tone="ended">Lapsed</span>
+          <span class="ui-status" data-tone="draft">Exposure draft</span>
+        </div></div>
+        <div><span class="wb-caption">Party labels · A dot beside the name, never a fill</span><div class="wb-row">
+          <span class="ui-party party party-alp"><i aria-hidden="true"></i>Labor</span>
+          <span class="ui-party party party-lib"><i aria-hidden="true"></i>Liberal</span>
+          <span class="ui-party party party-grn"><i aria-hidden="true"></i>Greens</span>
+          <span class="ui-party party party-nat"><i aria-hidden="true"></i>Nationals</span>
+          <span class="ui-party party party-ind"><i aria-hidden="true"></i>Independent</span>
+          <span class="ui-party party party-lnp" title="Liberal National Party"><i aria-hidden="true"></i><span aria-hidden="true">LNP</span><span class="visually-hidden">Liberal National Party</span></span>
+        </div></div>
+        <div><span class="wb-caption">Machine-written · Once at the top of a block; it opens what wrote it</span><div class="wb-row">
+          <details class="ui-pop ui-machine"><summary><span class="ui-machine-glyph" aria-hidden="true">✦</span>Machine-written</summary><div class="ui-sheet"><p>Written by a model from the explanatory memorandum; not the record. Written from material dated 17 Aug 2026.</p></div></details>
+          <span class="ui-machine-inline"><span class="ui-machine-glyph" aria-hidden="true">✦</span>Machine-written</span>
+        </div><p class="ui-hint">The second form sits inside a row of a list of briefs, where a pill per row would be one press too many.</p></div>
+      </div>
+    </section>
+
+    <section class="wb-section" id="source-line" aria-labelledby="source-line-title">
+      <p class="kicker">07 / Provenance</p><h2 id="source-line-title">One source line per block</h2>
+      <p>Every figure stays dated and one press from its source. The line opens the originals, the as-at date and coverage, the notes and caveats, and the licence. Escape closes it; so does a press anywhere else.</p>
+      <div class="wb-panel wb-stack">
+        <div><span class="wb-caption">Source line</span>
+          <details class="ui-pop ui-source"><summary><svg class="ui-source-glyph" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 1.75h5.25L12.5 5v9.25h-8.5z"/><path d="M9 1.75V5.25h3.5M6.25 8.5h4M6.25 11h4"/></svg><span class="ui-source-text">Updated 4 Oct 2026 · <span class="ui-source-name">AEC annual returns</span></span></summary><div class="ui-sheet"><ul class="ui-sheet-originals"><li><a href="https://transparency.aec.gov.au/" rel="noopener" target="_blank">View original ↗︎</a></li></ul><p class="ui-sheet-asat">Financial years 1998-99 to 2025-26.</p><div class="ui-sheet-notes"><p>Totals are a floor, not a ceiling: amounts under the disclosure threshold are not itemised.</p></div><p class="ui-sheet-licence">Licence: CC BY 4.0.</p></div></details>
+        </div>
+        <div><span class="wb-caption">With a state</span>
+          <details class="ui-pop ui-source" data-state="partial"><summary><svg class="ui-source-glyph" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 1.75h5.25L12.5 5v9.25h-8.5z"/><path d="M9 1.75V5.25h3.5M6.25 8.5h4M6.25 11h4"/></svg><span class="ui-source-text">Updated 2 Sep 2026 · <span class="ui-source-name">Register of members' interests</span></span><span class="ui-source-state">· partial</span></summary><div class="ui-sheet"><div class="ui-sheet-notes"><p>Some rows in this export could not be read.</p></div></div></details>
+        </div>
+      </div>
+    </section>
+
     <section class="wb-section" id="map-filters" aria-labelledby="map-filters-title">
-      <p class="kicker">06 / Map categories</p><h2 id="map-filters-title">A legend you can explore</h2>
+      <p class="kicker">08 / Map categories</p><h2 id="map-filters-title">A legend you can explore</h2>
       <p>Category colour, name and count stay together. Filters wrap onto another line on small screens.</p>
       <div class="wb-panel wb-stack">
         <div><span class="wb-caption">Open a filtered map · Home page links</span><nav class="ui-map-filters" data-ui-size="compact" aria-label="Example map categories">
-          <a class="ui-filter-chip ui-map-filter" href="/money?industry=unions"><span class="ui-map-filter__dot" style="background:#E15759" aria-hidden="true"></span><span>Unions</span><span class="ui-map-filter__count">31</span></a>
-          <a class="ui-filter-chip ui-map-filter" href="/money?industry=finance"><span class="ui-map-filter__dot" style="background:#4E79A7" aria-hidden="true"></span><span>Finance</span><span class="ui-map-filter__count">53</span></a>
-          <a class="ui-filter-chip ui-map-filter" href="/money?industry=individuals"><span class="ui-map-filter__dot" style="background:#79706E" aria-hidden="true"></span><span>Individuals</span><span class="ui-map-filter__count">64</span></a>
+          <a class="ui-filter-chip ui-map-filter" href="/money?industry=unions"><span class="ui-map-filter__dot" style="background:var(--chart-industry-unions)" aria-hidden="true"></span><span>Unions</span><span class="ui-map-filter__count">31</span></a>
+          <a class="ui-filter-chip ui-map-filter" href="/money?industry=finance"><span class="ui-map-filter__dot" style="background:var(--chart-industry-finance)" aria-hidden="true"></span><span>Finance</span><span class="ui-map-filter__count">53</span></a>
+          <a class="ui-filter-chip ui-map-filter" href="/money?industry=individuals"><span class="ui-map-filter__dot" style="background:var(--chart-industry-individuals)" aria-hidden="true"></span><span>Individuals</span><span class="ui-map-filter__count">64</span></a>
         </nav></div>
         <div><span class="wb-caption">Toggle filters · Selected, unselected and unavailable</span><div class="ui-map-filters" data-ui-size="compact" role="group" aria-label="Demo map filters" id="demo-map-filters">
-          <button class="ui-filter-chip ui-map-filter" type="button" aria-pressed="true"><span class="ui-map-filter__dot" style="background:#E15759" aria-hidden="true"></span><span data-map-label>Unions</span><span class="ui-map-filter__count">31</span></button>
-          <button class="ui-filter-chip ui-map-filter" type="button" aria-pressed="false"><span class="ui-map-filter__dot" style="background:#4E79A7" aria-hidden="true"></span><span data-map-label>Finance</span><span class="ui-map-filter__count">53</span></button>
-          <button class="ui-filter-chip ui-map-filter" type="button" aria-pressed="false" disabled><span class="ui-map-filter__dot" style="background:#37474F" aria-hidden="true"></span><span data-map-label>Defence &amp; security</span><span class="ui-map-filter__count">0</span></button>
+          <button class="ui-filter-chip ui-map-filter" type="button" aria-pressed="true"><span class="ui-map-filter__dot" style="background:var(--chart-industry-unions)" aria-hidden="true"></span><span data-map-label>Unions</span><span class="ui-map-filter__count">31</span></button>
+          <button class="ui-filter-chip ui-map-filter" type="button" aria-pressed="false"><span class="ui-map-filter__dot" style="background:var(--chart-industry-finance)" aria-hidden="true"></span><span data-map-label>Finance</span><span class="ui-map-filter__count">53</span></button>
+          <button class="ui-filter-chip ui-map-filter" type="button" aria-pressed="false" disabled><span class="ui-map-filter__dot" style="background:var(--chart-industry-defence-security)" aria-hidden="true"></span><span data-map-label>Defence &amp; security</span><span class="ui-map-filter__count">0</span></button>
         </div><p class="wb-status" role="status" id="map-filter-status">Unions selected. Example counts only.</p></div>
       </div>
     </section>
 
     <section class="wb-section" id="together" aria-labelledby="together-title">
-      <p class="kicker">07 / In context</p><h2 id="together-title">A filter bar built from the same parts</h2>
+      <p class="kicker">09 / In context</p><h2 id="together-title">A filter bar built from the same parts</h2>
       <p>Try a search below. This opens the existing supplier directory with your query.</p>
       <form class="ui-toolbar" action="/subject/supplier" method="get">
         <label class="ui-field">Find a supplier<input class="ui-input" type="search" name="q" placeholder="Name or ABN" autocomplete="off"></label>
         <button class="ui-button" data-variant="primary" type="submit">Find suppliers</button>
         <button class="ui-button" data-variant="quiet" type="reset">Clear</button>
       </form>
-      <div class="ui-actions"><a class="ui-button" href="/subject/supplier">Supplier directory</a><a class="ui-button" href="/subject/agency">Agency directory</a></div>
+      <div class="wb-row"><a class="ui-button" href="/subject/supplier">Supplier directory</a><a class="ui-button" href="/subject/agency">Agency directory</a></div>
     </section>
     <section class="wb-section" id="dividers" aria-labelledby="dividers-title">
-      <p class="kicker">08 / Structure</p><h2 id="dividers-title">Dividers follow the content hierarchy</h2>
+      <p class="kicker">10 / Structure</p><h2 id="dividers-title">Dividers follow the content hierarchy</h2>
       <p>Major sections use a medium rule. Rows and headings within a section use a subtle rule. Control outlines retain their darker boundary colour.</p>
       <div class="wb-divider-demo">
         <h3>Explore by subject</h3>
-        <p class="wb-caption">Subtle divider · <code>--divider-subtle</code> · #DFDCD2</p>
+        <p class="wb-caption">Subtle divider · <code>--divider-subtle</code></p>
         <hr class="ui-divider" data-variant="subtle">
         <p>Topics and reports within this section</p>
         <div class="wb-section-divider-demo">
-          <span class="wb-caption">Default divider · <code>--divider-default</code> · #B8B4A8</span>
+          <span class="wb-caption">Default divider · <code>--divider-default</code></span>
           <hr class="ui-divider">
         </div>
         <h3>Spotlight on: Gambling</h3>
         <p>On desktop, homepage sections have 48px of space on each side of their dividing rule.</p>
       </div>
-      <div class="wb-panel"><label class="ui-field"><span>Control boundary · <code>--line-strong</code> · #8D897B</span><input class="ui-input" type="search" placeholder="Search records"></label></div>
+      <div class="wb-panel"><label class="ui-field"><span>Control boundary · <code>--line-control</code></span><input class="ui-input" type="search" placeholder="Search records"></label></div>
     </section>
     <footer class="wb-foot">Shared controls and dividers. Use Tab to inspect focus, and resize the window to compare layouts.</footer>
   </main>

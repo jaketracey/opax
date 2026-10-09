@@ -172,10 +172,12 @@ function partyClass(party) {
   return hit ? hit[0] : null;
 }
 
+/** The dot alone, for rows that print the party nearby: it still says whose. */
 function partyDotHTML(party) {
   const cls = partyClass(party);
   if (!cls) return "";
-  return `<span class="party party-${cls} party-dot-only"><i aria-hidden="true"></i></span>`;
+  const name = PARTY_NAMES[PARTY_MAP[String(party).toLowerCase()][1]]?.[1] || String(party);
+  return `<span class="party party-${cls} party-dot-only" role="img" aria-label="${esc(name)}" title="${esc(name)}"><i aria-hidden="true"></i></span>`;
 }
 
 const BALANCE_COALITION = new Set(["Liberal", "Nationals", "LNP", "Country Liberal Party"]);
@@ -229,7 +231,7 @@ function donorBalanceHTML(flows) {
     const others = [...row.otherNames].sort().join(", ");
     const detail = `${row.year}: Coalition ${fmtMoney(row.coalition)}, Labor ${fmtMoney(row.labor)}, other parties ${fmtMoney(row.other)}${others ? ` (${others})` : ""}${election ? " · federal election year" : ""}`;
     return `<div class="balance-row${election ? " balance-election" : ""}" title="${esc(detail)}">
-      <span class="balance-year">${row.year}${election ? "<em>election</em>" : ""}</span>
+      <span class="balance-year">${row.year}${election ? "<em>Election</em>" : ""}</span>
       <span class="balance-left">${peakLabel(row, "coalition")}<i class="balance-coalition" style="width:${width(row.coalition)}%" aria-hidden="true"></i></span>
       <span class="balance-right">
         <span><i class="balance-labor" style="width:${width(row.labor)}%" aria-hidden="true"></i>${peakLabel(row, "labor")}</span>
@@ -267,13 +269,104 @@ function samePartyLabel(a, b) {
   const lb = PARTY_MAP[String(b).toLowerCase()]?.[1] || String(b);
   return la === lb;
 }
-function partyChipHTML(party) {
-  if (!party) return "";
-  const hit = PARTY_MAP[String(party).toLowerCase()];
-  const cls = hit ? hit[0] : "oth";
-  const label = hit ? hit[1] : String(party).slice(0, 12);
-  return `<span class="party party-${cls}"><i aria-hidden="true"></i>${esc(label)}</span>`;
+// --- labels and source lines (docs/design/DESIGN-REVIEW-2026-10.md §5.2) -------
+// Five kinds of small label, all sentence case: Tag, StatusLabel, PartyLabel,
+// Choice/Filter chip (markup in place, drawn by ui-controls.css) and
+// MachineLabel; and one SourceLine at the foot of a block. ui-controls.css and
+// ui-source.css draw them; ui-source.js gives the sheets Escape and light dismiss.
+// labels:begin
+
+/** PARTY_MAP's code -> [the name a label shows, the name it says]. The short form
+ *  is the name itself where that is short; where it is a code, the full name is
+ *  what a screen reader hears. */
+const PARTY_NAMES = {
+  ALP: ["Labor", "Australian Labor Party"], LIB: ["Liberal", "Liberal Party"],
+  NAT: ["Nationals", "The Nationals"], LNP: ["LNP", "Liberal National Party"],
+  CLP: ["CLP", "Country Liberal Party"], GRN: ["Greens", "Australian Greens"],
+  ONP: ["One Nation", "Pauline Hanson's One Nation"], IND: ["Independent", "Independent"],
+  CA: ["Centre Alliance", "Centre Alliance"], KAP: ["KAP", "Katter's Australian Party"],
+  UAP: ["UAP", "United Australia Party"], AD: ["Democrats", "Australian Democrats"],
+  FF: ["Family First", "Family First"], DLP: ["DLP", "Democratic Labour Party"],
+  JLN: ["JLN", "Jacqui Lambie Network"],
+};
+/* A party field that says there is no party is not a party: no dot, no label. */
+const PARTY_PLACEHOLDER = /^(?:not recorded|unknown|none|n\/?a|-|—)$/i;
+
+/** PartyLabel: a dot beside the party's name, no fill. `full` for a profile's
+ *  own header; the short name elsewhere, with the full name spoken. */
+function partyChipHTML(party, { full = false } = {}) {
+  const name = String(party ?? "").trim();
+  if (!name || PARTY_PLACEHOLDER.test(name)) return "";
+  const hit = PARTY_MAP[name.toLowerCase()];
+  const [short, long] = (hit && PARTY_NAMES[hit[1]]) || [name, name];
+  const shown = full ? long : short;
+  const text = shown === long ? esc(shown)
+    : `<span aria-hidden="true">${esc(shown)}</span><span class="visually-hidden">${esc(long)}</span>`;
+  return `<span class="ui-party party party-${hit ? hit[0] : "oth"}"${shown === long ? "" : ` title="${esc(long)}"`}><i aria-hidden="true"></i>${text}</span>`;
 }
+
+/** StatusLabel: one word with a tone: done, active, ended or draft. */
+function statusLabelHTML(word, tone = "ended") {
+  return word ? `<span class="ui-status" data-tone="${esc(tone)}">${esc(word)}</span>` : "";
+}
+
+/** Tag: a topic, in bronze; a link when it has somewhere to go. */
+function tagHTML(label, href) {
+  const attr = href ? entityHrefAttr(href) : "";
+  return attr ? `<a class="ui-tag" ${attr}>${esc(label)}</a>` : `<span class="ui-tag">${esc(label)}</span>`;
+}
+
+const MACHINE_NOTE = "Written by a language model from the records it draws on. It is not part of the record: check it against the original.";
+const MACHINE_GLYPH = '<span class="ui-machine-glyph" aria-hidden="true">✦</span>';
+
+/** MachineLabel: one phrase, once at the top of a machine-written block; it
+ *  opens what wrote the text, from what. `inline` is the quiet form for a row
+ *  in a list of briefs: no sheet, because a details cannot sit inside a
+ *  paragraph or a link. `className` keeps a block's layout hook. */
+function machineLabelHTML({ note = MACHINE_NOTE, inline = false, className = "" } = {}) {
+  const cls = className ? ` ${esc(className)}` : "";
+  if (inline) return `<span class="ui-machine-inline${cls}">${MACHINE_GLYPH}Machine-written</span>`;
+  return `<details class="ui-pop ui-machine${cls}"><summary>${MACHINE_GLYPH}Machine-written</summary>` +
+    `<div class="ui-sheet"><p>${esc(note)}</p></div></details>`;
+}
+
+const SOURCE_GLYPH = '<svg class="ui-source-glyph" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 1.75h5.25L12.5 5v9.25h-8.5z"/><path d="M9 1.75V5.25h3.5M6.25 8.5h4M6.25 11h4"/></svg>';
+
+/** SourceLine, one per block: "Updated 4 Oct 2026 · AEC annual returns" and a
+ *  state where there is one ("partial", "saved copy"). It opens a sheet with
+ *  the originals, as-at and coverage, notes and caveats, and the licence.
+ *  `notes` and `licence` are HTML the caller has escaped (its fine print,
+ *  licenceNoteHTML); the rest is text. Originals are http(s) or site paths. */
+function sourceLineHTML({ updated = "", source = "", state = "", originals = [], asAt = "", notes = [], licence = "" } = {}) {
+  const when = updated ? esc(`Updated ${fmtDate(updated)}`) : "";
+  const what = source ? `<span class="ui-source-name">${esc(source)}</span>` : "";
+  const line = [when, what].filter(Boolean).join(" · ") || '<span class="ui-source-name">Sources and notes</span>';
+  const links = originals.map((o) => {
+    const external = safeUrl(o?.href);
+    const href = external || (/^\/(?!\/)/.test(o?.href || "") ? o.href : null);
+    return href && `<li><a href="${esc(href)}"${external ? ' rel="noopener" target="_blank"' : ""}>${
+      esc(o.label || "View original")}${external ? " ↗︎" : ""}</a></li>`;
+  }).filter(Boolean);
+  const kept = notes.filter(Boolean);
+  const sheet = [
+    links.length ? `<ul class="ui-sheet-originals">${links.join("")}</ul>` : "",
+    asAt ? `<p class="ui-sheet-asat">${esc(asAt)}</p>` : "",
+    kept.length ? `<div class="ui-sheet-notes">${kept.map((n) => `<p>${n}</p>`).join("")}</div>` : "",
+    licence ? `<p class="ui-sheet-licence">${licence}</p>` : "",
+  ].join("");
+  return `<details class="ui-pop ui-source"${state ? ` data-state="${esc(state)}"` : ""}><summary>${SOURCE_GLYPH}` +
+    `<span class="ui-source-text">${line}</span>${state ? `<span class="ui-source-state">· ${esc(state)}</span>` : ""}</summary>` +
+    `<div class="ui-sheet">${sheet || "<p>No further notes for this source.</p>"}</div></details>`;
+}
+
+/** The adapter for fine print a block already writes: its paragraph becomes the
+ *  notes of the block's source line, so a page moves over by wrapping what it
+ *  has. `<p class="fineprint">${html}</p>` becomes
+ *  `${fineprintSourceHTML(html, { source, updated, originals })}`. */
+function fineprintSourceHTML(html, opts = {}) {
+  return sourceLineHTML({ ...opts, notes: [html, ...(opts.notes || [])] });
+}
+// labels:end
 
 /* A party's name as a sentence says it: "the Labor Party", "the Greens", "One
    Nation". The money data's short labels ("Labor", "Liberal") take an article
@@ -2780,12 +2873,12 @@ function sourceItem(s, num, passage = false) {
     li.tabIndex = -1;
   }
   if (nameOnly) {
-    // Byline-led row: portrait (or initials), the speaker and party as links,
+    // Byline-led row: portrait (or the blank circle), the speaker and party as links,
     // the parliament and date beneath.
     const by = document.createElement("span");
     by.className = "source-byline";
     const where = [STATE_NAMES[s.state] || (s.state ? String(s.state) : "Federal"), s.date ? fmtDate(s.date) : ""].filter(Boolean).join(" · ");
-    by.innerHTML = `<span class="source-face" aria-hidden="true">${esc(String(s.speaker).split(/\s+/).map((w) => w[0] || "").slice(0, 2).join(""))}</span>
+    by.innerHTML = `<span class="source-face" aria-hidden="true"></span>
       <span class="source-byline-text">
         <span class="source-byline-name"><a class="meta-speaker" ${entityHrefAttr(speakerHref(s, subjectHash("person", s.speaker)))}>${esc(s.speaker)}</a>${s.party && !isUnattributed(s) ? ` <a class="meta-party" ${entityHrefAttr(subjectHash("party", s.party))}>${partyChipHTML(s.party)}</a>` : ""}</span>
         <span class="source-byline-sub">${esc(where)}</span>
@@ -3448,7 +3541,8 @@ function iconSvg(name) {
 
 /** An action link on the shared button: icon + label; primary = navy fill. */
 function actionBtn(icon, href, label, { external = false, primary = false } = {}) {
-  if (!entityHrefAttr(href)) return `<span class="ui-button">${iconSvg(icon)}<span>${esc(label)}</span></span>`;
+  // Nowhere to go: drawn as the action, but plainly not one you can press.
+  if (!entityHrefAttr(href)) return `<span class="ui-button" aria-disabled="true">${iconSvg(icon)}<span>${esc(label)}</span></span>`;
   const ext = external ? ` rel="noopener" target="_blank"` : "";
   return `<a class="ui-button"${primary ? ' data-variant="primary"' : ""} href="${esc(href)}"${ext}>` +
     `${iconSvg(icon)}<span>${esc(label)}${external ? " ↗︎" : ""}</span></a>`;
@@ -4942,7 +5036,7 @@ async function renderPartyMentions(label, sections, key) {
           const excerpt = passage.length > 240 ? `${passage.slice(0, 240).replace(/\s+\S*$/, "")}…` : passage;
           return `<li><a ${entityHrefAttr(`/doc/${encodeURIComponent(result.slug)}`)} class="source-title doc-title">${esc(displayTitle(result))}</a>
             <span class="result-meta">${metaHTML(result, { linkSpeaker: true, linkParty: true })}</span>
-            <p class="${brief ? "party-mention-brief" : "snippet"}">${brief ? `<span class="party-brief-label">Machine brief</span>` : ""}${esc(brief || excerpt || "Open the speech to read the passage.")}</p></li>`;
+            <p class="${brief ? "party-mention-brief" : "snippet"}">${brief ? machineLabelHTML({ inline: true, className: "party-brief-label" }) : ""}${esc(brief || excerpt || "Open the speech to read the passage.")}</p></li>`;
         }).join("")}</ul>` : `<p class="status">No mentions found in the indexed record.</p>`}${allLink}`;
     };
     paint({});
@@ -5591,7 +5685,7 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
         return `<li><a class="person-speech-link" href="/doc/${esc(r.slug)}">
           <time datetime="${esc(String(r.date || "").slice(0, 10))}">${esc(r.date ? fmtDate(r.date) : "Undated")}${esc(where)}</time>
           <span class="person-speech-body"><span class="speech-debate">${esc(titleSubject(r) || (opts.evidence ? "Evidence" : "Speech"))}</span>
-            <span class="person-speech-kind">${brief ? "Machine brief" : "From the speech"}</span>
+            ${brief ? machineLabelHTML({ inline: true, className: "person-speech-kind" }) : '<span class="person-speech-kind">From the speech</span>'}
             <span class="person-speech-text">${esc(text || "Open the speech to read the record.")}</span>
           </span></a></li>`;
       }).join("")}</ul>
@@ -5606,7 +5700,7 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
   slot.querySelectorAll(".person-speech-link").forEach((link, index) => {
     const brief = briefs[newest[index].resource];
     if (typeof brief !== "string" || !brief.trim()) return;
-    link.querySelector(".person-speech-kind").textContent = "Machine brief";
+    link.querySelector(".person-speech-kind").outerHTML = machineLabelHTML({ inline: true, className: "person-speech-kind" });
     link.querySelector(".person-speech-text").textContent = brief.trim();
   });
 }
@@ -5850,7 +5944,7 @@ function topicArcItemHTML(item, brief, showYear) {
       </div>
       ${heading ? `<a class="topic-arc-source" ${entityHrefAttr(`/doc/${encodeURIComponent(item.slug)}`)}>${esc(heading)}</a>` : ""}
       ${brief
-        ? `<p class="topic-arc-brief"><span class="topic-arc-tag">Machine brief</span>${esc(brief)}</p><a class="topic-arc-open ui-button" data-ui-size="compact" ${entityHrefAttr(`/doc/${encodeURIComponent(item.slug)}`)}>Read the speech</a>`
+        ? `<p class="topic-arc-brief">${machineLabelHTML({ inline: true, className: "topic-arc-tag" })}${esc(brief)}</p><a class="topic-arc-open ui-button" data-ui-size="compact" ${entityHrefAttr(`/doc/${encodeURIComponent(item.slug)}`)}>Read the speech</a>`
         : `<a class="topic-arc-passage" ${entityHrefAttr(`/doc/${encodeURIComponent(item.slug)}`)}>${esc(passage || "Open the speech to read the passage.")}</a>`}
     </div>
   </li>`;
@@ -5921,7 +6015,7 @@ async function renderTopicArc(slug, phrase, key, mount) {
             if (brief && passage) {
               const p = document.createElement("p");
               p.className = "topic-arc-brief";
-              p.innerHTML = `<span class="topic-arc-tag">Machine brief</span>`;
+              p.innerHTML = machineLabelHTML({ inline: true, className: "topic-arc-tag" });
               p.appendChild(document.createTextNode(brief));
               const open = document.createElement("a");
               open.className = "topic-arc-open ui-button";
@@ -6859,8 +6953,8 @@ async function buildDonorsDirectory() {
       ? `<span class="dir-parties"><span>to</span>${shownParties.map((p) => `<a class="dir-party-link" ${entityHrefAttr(subjectHash("party", p))}>${anyPartyDotHTML(p, colours)}${esc(p)}</a>`).join("")}${more > 0 ? `<span>and ${more} more</span>` : ""}</span>`
       : "";
     const marks = [
-      d._lobbyists ? `<span class="dir-mark" title="${esc(`${d._lobbyists} registered lobbying firm${d._lobbyists === 1 ? "" : "s"}`)}">lobbyists</span>` : "",
-      d._meetings ? `<span class="dir-mark" title="${esc(`${d._meetings} disclosed ministerial meeting${d._meetings === 1 ? "" : "s"}`)}">meetings</span>` : "",
+      d._lobbyists ? `<span class="dir-mark" title="${esc(`${d._lobbyists} registered lobbying firm${d._lobbyists === 1 ? "" : "s"}`)}">Lobbyists</span>` : "",
+      d._meetings ? `<span class="dir-mark" title="${esc(`${d._meetings} disclosed ministerial meeting${d._meetings === 1 ? "" : "s"}`)}">Meetings</span>` : "",
       d._fits ? `<span class="dir-mark" title="${esc(`On the Foreign Influence Transparency Scheme register for ${[...new Set(d._fits.map((r) => r.principal).filter(Boolean))].slice(0, 3).join(", ") || "a foreign principal"}`)}">FITS</span>` : "",
     ].filter(Boolean).join(" ");
     const meta = [
@@ -7948,10 +8042,13 @@ function billSummaryHTML(bill) {
   }
   const sentences = (s.sentences || []).filter(Boolean);
   const changes = (s.changes || []).filter(Boolean);
+  const note = `${s.attribution || "Written by a model from the explanatory memorandum; not the record"}.${
+    s.describes_version ? ` Describes the bill ${s.describes_version}.` : ""}${
+    s.as_of ? ` Written from material dated ${fmtDate(s.as_of)}.` : ""}`;
   return `<section class="bill-summary" aria-labelledby="bill-summary-head">
     <div class="doc-brief-head">
       <h3 class="subject-section-title" id="bill-summary-head">In short</h3>
-      <span class="doc-brief-tag">Machine summary</span>
+      ${machineLabelHTML({ note })}
     </div>
     <div class="bill-sentences">${sentences.map((t) => `<p>${esc(t)}</p>`).join("")}</div>
     ${changes.length ? `<h4 class="bill-sub">What it changes</h4>
@@ -8142,7 +8239,8 @@ async function fillBillPeek(details, entry) {
     return;
   }
   box.innerHTML = `
-    <div class="bill-peek-head"><span class="doc-brief-tag">Machine summary</span></div>
+    <div class="bill-peek-head">${machineLabelHTML({ note: `${bill.summary.attribution
+      || "Written by a model from the explanatory memorandum; not the record"}.` })}</div>
     <div class="bill-sentences">${sentences.map((t) => `<p>${esc(t)}</p>`).join("")}</div>
     <p class="fineprint">${esc(bill.summary.attribution
       || "Written by a model from the explanatory memorandum; not the record")}. ${esc(billStatusLine(entry))}.</p>
@@ -10830,6 +10928,8 @@ $("chat-form").addEventListener("submit", (e) => {
 // already there, not a second chat with its own state to drift.
 
 let dockOpen = false;
+// What opened the dock, for focus to return to where the header has no launcher.
+let dockOpener = null;
 let voiceAssistant = null;
 let voiceLoading = false;
 
@@ -10844,8 +10944,6 @@ function syncAssistant(name) {
   const launcher = $("chat-launcher");
   launcher.hidden = onChatPage;
   launcher.setAttribute("aria-expanded", String(dockOpen));
-  // The launcher floats over the page's last lines; the body leaves it room.
-  document.body.classList.toggle("assistant-ready", !onChatPage);
   // A question still in flight keeps writing into a panel nobody can see:
   // it may finish there, but nothing should be scrolled on its behalf.
   if ($("panel-chat").hidden) { chatFollower.stop(); voiceAssistant?.close(); }
@@ -10871,6 +10969,7 @@ new ResizeObserver(syncChatEdges).observe($("chat-thread"));
 function openDock() {
   if (chatIsPage()) return;
   dockOpen = true;
+  dockOpener = document.activeElement;
   document.documentElement.dataset.chat = "docked";
   $("panel-chat").hidden = false;
   $("chat-launcher").setAttribute("aria-expanded", "true");
@@ -10888,27 +10987,20 @@ function closeDock({ restoreFocus = true } = {}) {
   $("chat-launcher").setAttribute("aria-expanded", "false");
   chatFollower.stop();
   voiceAssistant?.close();
-  if (restoreFocus) $("chat-launcher").focus({ preventScroll: true });
+  if (!restoreFocus) return;
+  const launcher = $("chat-launcher");
+  const back = launcher.checkVisibility?.() !== false && launcher.getClientRects().length ? launcher
+    : dockOpener?.isConnected && dockOpener !== document.body ? dockOpener : null;
+  back?.focus({ preventScroll: true });
 }
 
 $("chat-launcher").addEventListener("click", () => (dockOpen ? closeDock() : openDock()));
-// Where the band carries the menu button (360 to 800px) the launcher sits in
-// it, beside search, so the tab order meets it where the eye does; elsewhere it
-// floats in the corner from its place at the end of the page.
-{
-  const launcher = $("chat-launcher");
-  const home = document.createComment(" chat-launcher ");
-  launcher.before(home);
-  const inBand = matchMedia("(min-width: 360px) and (max-width: 800px)");
-  const place = () => {
-    const focused = document.activeElement === launcher;
-    if (inBand.matches) $("header-search-open").before(launcher);
-    else home.after(launcher);
-    if (focused) launcher.focus({ preventScroll: true });
-  };
-  inBand.addEventListener("change", place);
-  place();
-}
+// The launcher is a header icon beside search, so the tab order meets it where
+// the eye does. Nothing floats over the page (design review §4, web chrome): the
+// stylesheet shows it where the band carries the menu button (360 to 800px);
+// wider, the masthead's own Ask link leads the way, and page actions such as
+// "Ask about their speeches" still open the dock.
+$("header-search-open").before($("chat-launcher"));
 $("dock-close").addEventListener("click", () => closeDock());
 // The corner is for a question and its answer; a long answer, its sources and
 // the conversation behind it want the page. Same thread, more room.
@@ -12388,7 +12480,7 @@ async function renderDocSimilar(doc) {
         return `<li><a ${entityHrefAttr(`/doc/${encodeURIComponent(row.slug)}`)} title="${esc(title)}">${esc(label)}</a>
           <p class="doc-related-meta">${esc([label === row.speaker ? "" : row.speaker, fmtDate(row.date)].filter(Boolean).join(" · "))}</p>
           <p>${esc(excerpt(brief || row.snippet || "No passage available."))}</p>
-          <p class="doc-related-meta">${brief ? "Machine summary · not part of the record" : "Passage from the record"}</p></li>`;
+          <p class="doc-related-meta">${brief ? machineLabelHTML({ inline: true }) : "Passage from the record"}</p></li>`;
       }).join("")}</ul>` : '<p>No related speeches found for this subject.</p>') +
       `<div class="doc-related-actions"><a class="doc-search-all" href="${esc(searchHash(query, {}))}">Search this subject →</a>
         <button type="button" class="ui-button" data-doc-close="doc-similar">Close similar</button></div>`;
@@ -14067,7 +14159,7 @@ function renderStatsHero() {
     const figure = tile.querySelector(".stat-figure");
     const label = tile.querySelector(".stat-label");
     label.textContent = t.label;
-    if (t.live) label.insertAdjacentHTML("beforeend", '<i class="stat-live" title="Read from the live index, refreshed every five minutes">live</i>');
+    if (t.live) label.insertAdjacentHTML("beforeend", '<i class="stat-live" title="Read from the live index, refreshed every five minutes">Live</i>');
     if (t.text) figure.textContent = t.text;
     else if (t.value == null) figure.textContent = "…"; // live figure still on its way
     else countUpWhenVisible(figure, t.value);

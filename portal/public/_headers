@@ -93,6 +93,10 @@
   Cache-Control: public, max-age=31536000, immutable
 /ui-controls.css
   Cache-Control: public, max-age=31536000, immutable
+/ui-source.css
+  Cache-Control: public, max-age=31536000, immutable
+/ui-source.js
+  Cache-Control: public, max-age=31536000, immutable
 /ui-workbench
   Cache-Control: public, max-age=0, must-revalidate
 /ui-workbench.html

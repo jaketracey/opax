@@ -180,8 +180,8 @@ const CSS = `
 /* Margin, not padding: the track paints its background into padding. */
 .wd-gap { margin-top: 0.55rem; }
 .wd-term {
-  font-size: 0.625rem; font-weight: 700; letter-spacing: 0.08em;
-  text-transform: uppercase; color: var(--ink-faint, #6F7468);
+  font-size: 0.625rem; font-weight: 700;
+  color: var(--ink-faint, #6F7468);
 }
 .wd-track { position: relative; height: 3px; background: var(--paper-sunken, #F1EFE8); }
 .wd-track i { position: absolute; inset: 0 auto 0 0; }
