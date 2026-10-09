@@ -7,6 +7,7 @@ import hashlib
 import json
 from pathlib import Path
 import sqlite3
+from passage_text import evidence_excerpt
 
 
 def audit(source_path,export_path,require_complete=True):
@@ -56,7 +57,7 @@ def audit(source_path,export_path,require_complete=True):
                     body=row.get(field) or ''
                     start,end=excerpt['start'],excerpt['end']
                     if body[start:end]!=excerpt['matched_text']:errors.append(f'{entity}: source span differs {key}')
-                    if excerpt['text'] not in body:errors.append(f'{entity}: excerpt absent from source {key}')
+                    if excerpt['text'] != evidence_excerpt(body,start,end):errors.append(f'{entity}: display excerpt differs from source {key}')
                     digest=excerpt.get('text_sha256')
                     if digest and hashlib.sha256(body.encode()).hexdigest()!=digest:errors.append(f'{entity}: source fingerprint differs {key}')
                     if table=='ext_press_releases' and row.get('url')!=excerpt.get('source_url'):errors.append(f'{entity}: changed release URL')

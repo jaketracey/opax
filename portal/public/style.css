@@ -1289,7 +1289,7 @@ button.link.result-title:hover { color: var(--bronze-ink); }
   display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-3) var(--space-4);
   margin: 0; /* one item among the results actions, on their line */
 }
-.search-brief-status { color: var(--ink-faint); font-size: 0.75rem; }
+.search-brief-status { color: var(--ink-soft); }
 .search-result-brief {
   max-width: 88ch; margin: var(--space-2) 0 0; padding: 0.75rem 0.9rem;
   background: var(--paper-sunken); color: var(--ink-soft); font: 400 0.9375rem/1.55 var(--sans);
@@ -2717,7 +2717,6 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
   .date-ruler { margin-top: var(--space-4); }
   .date-ruler-year { font-size: 10px; }
   .search-readbar .ui-segmented { width: 100%; }
-  .search-readbar .ui-segmented button { flex: 1 1 0; min-width: 0; }
   .barrow { grid-template-columns: minmax(90px, 30%) 1fr auto; }
   .topic-arc-head { align-items: stretch; }
   .topic-arc-head .quiet-toggle { width: 100%; }
@@ -3476,8 +3475,27 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 #panel-search #search-options-pop input:not([type="range"]), #panel-search #search-options-pop select {width: 100%;}
 #panel-search #search-options-pop input[type="range"] { height: 44px; }
 #panel-search #search-options-pop .range-cap { font-size: .875rem; }
-#panel-search .results-actions { flex-wrap: wrap; }
-#panel-search #search-readbar button { flex: 1 1 0; min-width: 0; }
+/* The actions are one flex item: give the summary its own row before any
+   control can be squeezed. Brief availability is part of the summary in
+   both reading modes, so it cannot move the controls when toggled. */
+#panel-search .results-lead { flex: 1 1 20rem; min-width: 0; }
+#panel-search .results-actions {
+  flex: 0 0 auto; flex-wrap: nowrap; gap: .5rem;
+  --ui-font: .875rem; --ui-pad: 16px;
+}
+#panel-search .results-actions > * { flex: 0 0 auto; }
+/* Keep the generous padding and icon spacing stable as text grows, so the
+   controls still fit together at 1024px with 200% text. */
+#panel-search .results-actions .ui-button { gap: min(.5rem, 8px); white-space: nowrap; overflow-wrap: normal; word-break: normal; }
+#panel-search .results-actions .search-sort-trigger { gap: min(.6rem, 9.6px); }
+/* Flush segments share the action buttons' height, padding and baseline. */
+#panel-search #search-readbar .ui-segmented { padding: 0; border: 0; gap: 0; border-radius: var(--ui-radius); }
+#panel-search #search-readbar .ui-button {
+  min-height: var(--ui-height); padding-block: .55rem;
+  border-color: var(--line-strong); border-radius: 0;
+}
+#panel-search #search-readbar .ui-button:first-child { border-radius: var(--ui-radius) 0 0 var(--ui-radius); }
+#panel-search #search-readbar .ui-button:last-child { border-left: 0; border-radius: 0 var(--ui-radius) var(--ui-radius) 0; }
 /* Stacked pager: the numbers on their own row, Previous and Next as a pair of
    equal tap targets beneath them. Wide, it returns to one row (below). */
 #panel-search #search-pager { grid-template-columns: 1fr 1fr; row-gap: 14px; column-gap: 10px; }
@@ -3503,11 +3521,13 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 #panel-search .range-cap { text-transform: none; letter-spacing: normal; }
 @media (max-width: 700px) {
   #panel-search .results-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  #panel-search .results-lead { flex-basis: auto; }
   #panel-search #search-sort-picker { grid-column: 1 / -1; }
-  #panel-search .results-actions > *, #panel-search .results-actions .ui-button { min-width: 0; }
+  #panel-search .results-actions > * { min-width: 0; }
   #panel-search .results-actions .ui-button { width: 100%; }
   #panel-search #search-readbar { grid-column: 1 / -1; }
   #panel-search #search-readbar .ui-segmented { display: flex; width: 100%; }
+  #panel-search #search-readbar .ui-button { flex: 1 0 auto; width: auto; }
   #panel-search .results-actions select { width: 100%; padding-inline: 8px 24px; }
 }
 
@@ -5828,3 +5848,19 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
   .site-header .nav-toggle { margin-left: 0; }
   .site-header .header-search-toggle { margin-left: auto; }
 }
+
+/* TVFY division prose uses the same quiet type and quote rule in SPA and SSR. */
+.division-markdown { overflow-wrap: anywhere; }
+.division-markdown > p { margin: 0.65em 0; font: inherit; }
+.division-markdown > :first-child { margin-top: 0; }
+.division-markdown > :last-child { margin-bottom: 0; }
+.division-markdown .division-markdown-heading { margin-top: 1em; font: inherit; color: var(--ink); }
+.division-markdown blockquote {
+  margin: 0.75em 0; padding-left: 14px; font-style: italic; color: var(--ink-soft);
+  background: linear-gradient(to right, var(--bronze) 0 2px, transparent 2px) no-repeat left / 2px 100%;
+}
+.division-markdown ul, .division-markdown ol { margin: 0.65em 0; padding-left: 1.35em; }
+.division-markdown ul { list-style: disc; }
+.division-markdown li { margin: 0.3em 0; }
+.division-markdown a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line-strong); }
+.division-markdown a:hover { color: var(--bronze-ink); border-color: var(--bronze-rule); }

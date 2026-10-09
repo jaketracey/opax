@@ -2,8 +2,11 @@
    The hash is the single source of truth for navigation; route() renders it. */
 
 "use strict";
+let divisionMarkdown;
+const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 let attributionHelpers;
-const attributionReady = import('./speech-attribution.js?v=20261006-4').then(module => { attributionHelpers = module; });
+const attributionReady = Promise.allSettled([divisionMarkdownReady,
+  import('./speech-attribution.js?v=20261006-4').then(module => { attributionHelpers = module; })]);
 const isWitness = row => attributionHelpers ? attributionHelpers.isWitness(row) : true;
 const isUnattributed = row => attributionHelpers ? attributionHelpers.isUnattributed(row) : true;
 const belongsToScope = (row, scope) => attributionHelpers ? attributionHelpers.belongsToScope(row, scope) : false;
@@ -135,7 +138,9 @@ function titleSubject(rec) {
  * quote the record's own title verbatim.
  */
 function displayTitle(rec) {
-  return titleSubject(rec) || String(rec?.title || rec?.slug || "");
+  const title = titleSubject(rec) || String(rec?.title || rec?.slug || "");
+  return (rec?.labels?.kind || rec?.kind) === "division"
+    ? billQuestion(title).split(/(?<=[.!?])\s/)[0] : title;
 }
 
 function fmtMoney(value) {
@@ -4981,7 +4986,8 @@ async function renderPersonVotes(name, personId, sections) {
   // data-bill-name is what decoratePersonVoteBills matches on; until (and
   // unless) the register names this bill, the row is exactly what it was.
   const billRow = (d) => `
-        <li data-bill-name="${esc(d.name)}"><a class="source-title" href="${esc(searchHash(`"${d.name}"`, {}))}">${esc(d.name)}</a>
+        <li data-bill-name="${esc(d.name)}"><a class="source-title" href="${esc(searchHash(`"${d.name}"`, {}))}">${esc(billQuestion(d.name))}</a>
+          ${d.question ? `<div class="division-markdown">${billNoteHTML(d.question)}</div>` : ""}
           <span class="result-meta">${[d.stage ? esc(d.stage) : "", esc(String(d.date || "").slice(0, 4)), jurChip(d.jur)].filter(Boolean).join(" · ")}</span></li>`;
   const col = (label, rows) => rows.length ? `
     <div>
@@ -7347,11 +7353,9 @@ function billStage(stage) {
    what the note says; the URL and the emphasis marks are formatting for a
    page this is not. Nothing is dropped but punctuation. */
 function billQuestion(text) {
-  return String(text || "")
-    .replace(/\[([^\]]+)\]\((?:[^)\s]+)(?:\s+"[^"]*")?\)/g, "$1")
-    .replace(/[*_]{1,3}(?=\S)([^*_]+?)(?<=\S)[*_]{1,3}/g, "$1")
-    .replace(/\s+/g, " ").trim();
+  return divisionMarkdown.divisionPlain(text);
 }
+
 /** 41st, 42nd, 43rd, 44th — a parliament is a number a reader says out loud. */
 function ordinal(n) {
   const v = Number(n);
@@ -7728,50 +7732,19 @@ const BILL_DESCRIPTION = /^(this (is|division|motion|amendment)\b|the (majority|
 /** The source's own placeholder where the motion text should be. */
 const BILL_PLACEHOLDER = /^(long debate text truncated|text truncated|no text recorded)\.?$/i;
 
-/* The record's prose arrives as Markdown — "[motion](https://…)", "_[For
-   privatising government assets](/policies/21)_" — and flattening it to text
-   leaves "(Read more about these types of motions here. )": a pointer with
-   nothing behind it, several times in one note. Those links are the record
-   citing itself, so they are kept as links, relative ones resolved against the
-   site the field came from. Only the formatting marks are dropped. */
-const BILL_NOTE_BASE = "https://theyvoteforyou.org.au";
-const BILL_MD_LINK = /\[([^\]]+)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
-/** Emphasis marks off; the words they wrapped stay. */
-const billPlain = (t) => String(t).replace(/[*_]{1,3}(?=\S)([^*_]+?)(?<=\S)[*_]{1,3}/g, "$1");
-/** The same field, as plain words: what the length and sentence tests judge. */
-const billFlat = (t) => billPlain(String(t || "").replace(BILL_MD_LINK, "$1")).trim();
+/** Plain words for sentence/length checks and short previews. */
+const billFlat = (t) => divisionMarkdown.divisionPlain(t);
 
 /* The source writes a quote straight onto its next bracket — '"the
    guillotine"(Read more' — and leaves a space inside the closing one. Repaired
    before anything is split, and never at "](", which would break a link. */
 function billNoteRepair(text) {
-  return String(text || "")
-    // Emphasis wrapped around a whole link leaves one mark on each side of it,
-    // and neither has a partner once the link becomes a link: "_For
-    // privatising government assets_" arrived as "the Policy _For … assets _.".
-    .replace(/([*_]{1,3})(\[[^\]]+\]\([^)\s]+\))\1/g, "$2")
-    .replace(/([^\s(\]])\(/g, "$1 (")
-    .replace(/\s+([.,;:])/g, "$1")
-    .replace(/\s+\)/g, ")")
-    .replace(/\s+/g, " ").trim();
+  return divisionMarkdown.billNoteRepair(text);
 }
 
-/** A note as HTML: the record's own links live, everything else escaped. */
+/** A note as safe blocks, shared with the server-rendered record. */
 function billNoteHTML(text) {
-  const raw = billNoteRepair(text);
-  let out = "", i = 0;
-  BILL_MD_LINK.lastIndex = 0;
-  for (let m = BILL_MD_LINK.exec(raw); m; m = BILL_MD_LINK.exec(raw)) {
-    out += esc(billPlain(raw.slice(i, m.index)));
-    const href = safeUrl(m[2].startsWith("/") ? BILL_NOTE_BASE + m[2] : m[2]);
-    const label = billPlain(m[1]);
-    // Inside running prose the mark must not be able to start a line of its own.
-    out += href
-      ? `<a href="${esc(href)}" rel="noopener" target="_blank">${esc(label)}&nbsp;↗︎</a>`
-      : esc(label);
-    i = m.index + m[0].length;
-  }
-  return out + esc(billPlain(raw.slice(i)));
+  return divisionMarkdown.renderDivisionMarkdown(text);
 }
 
 /* The record writes "<Bill> - <Stage> - <Question>", and 164 of the fixture's
@@ -7780,12 +7753,7 @@ function billNoteHTML(text) {
    second time" directly above a meta line reading "Second reading · Senate ·
    4 Dec 2006". The stage is the meta's job; the heading keeps the question. */
 function billStripStage(text, stage) {
-  const s = String(stage || "").trim();
-  const out = String(text || "").trim();
-  if (!s || !out.toLowerCase().startsWith(s.toLowerCase())) return out;
-  const rest = out.slice(s.length).replace(/^\s*[-–—:]\s*/, "").trim();
-  // Only when something is left: a division named by its stage alone keeps it.
-  return rest || out;
+  return divisionMarkdown.billStripStage(text, stage);
 }
 
 function billQuestionParts(division, bill) {
@@ -7796,7 +7764,8 @@ function billQuestionParts(division, bill) {
   // motion: a row carrying only that placeholder is named by its stage and date.
   if (!plain || BILL_PLACEHOLDER.test(plain)) return { head: "", note: "" };
   if (BILL_DESCRIPTION.test(plain)) return { head: "", note: raw };
-  if (plain.length <= 110) return { head: plain, note: "" };
+  if (plain.length <= 110) return /(^|\n)\s*(?:#{1,3}\s|>\s?|[-*]\s|\d+[.)]\s)/.test(raw)
+    ? { head: "", note: raw } : { head: plain, note: "" };
   // The first sentence stands as the heading, measured in words a reader sees
   // rather than in a URL's characters; the rest is the note it is.
   for (const m of raw.matchAll(/[.?!](\s|$)/g)) {
@@ -7839,14 +7808,7 @@ function billDedupeDivisions(divisions, bill) {
    the width saying it twice. It comes off in both places; on the bill page it
    was costing a three-line heading whose first line and a half were the H1. */
 function billStripTitle(text, bill) {
-  let out = String(text || "").trim();
-  for (const t of [bill?.title, bill?.short_title]) {
-    const title = String(t || "").trim();
-    if (title && out.toLowerCase().startsWith(title.toLowerCase())) {
-      out = out.slice(title.length).replace(/^\s*[-–—:]\s*/, "").trim();
-    }
-  }
-  return out;
+  return divisionMarkdown.billStripTitle(text, bill);
 }
 
 function billQuestionShort(division, bill, max = 104) {
@@ -7892,7 +7854,7 @@ function billDivisionHTML(d, bill) {
     <p class="bill-division-out"><b>${esc(billOutcome(d.outcome) || "Outcome not recorded")}</b>
       <span>${ayes.toLocaleString()} ayes, ${noes.toLocaleString()} noes</span>${
       official ? `<a class="bill-division-src" href="${esc(official)}" rel="noopener" target="_blank">The count ↗︎</a>` : ""}</p>
-    ${note ? `<p class="bill-division-note">${billNoteHTML(note)}</p>` : ""}
+    ${note ? `<div class="bill-division-note division-markdown">${billNoteHTML(note)}</div>` : ""}
     ${billSplitHTML(d)}
   </li>`;
 }
@@ -8810,7 +8772,7 @@ async function renderFrontEncy(dayIdx, todayReport, don) {
     <div class="ency-votes-col">
       <span class="ency-votes-label">${label}</span>
       <ul class="ency-votes-list" role="list">${rows.slice(0, 2).map((d) => `
-        <li><span class="ency-bill">${esc(d.name)}</span><span class="ency-year">${esc(String(d.date || "").slice(0, 4))}</span></li>`).join("")}
+        <li><span class="ency-bill">${esc(billQuestion(d.name))}</span><span class="ency-year">${esc(String(d.date || "").slice(0, 4))}</span></li>`).join("")}
       </ul>
     </div>` : "";
   const cards = picks.map((p) => {
@@ -11488,11 +11450,13 @@ function syncSearchReadBar() {
   $("search-read-passages").setAttribute("aria-pressed", String(searchReadMode === "passages"));
   $("search-read-briefs").setAttribute("aria-pressed", String(searchReadMode === "briefs"));
   const status = $("search-brief-status");
-  if (searchReadMode !== "briefs") status.textContent = "";
-  else if (lastSearch.briefsLoading) status.textContent = "Reading the available briefs…";
+  // Availability belongs to the summary and stays the same in either mode,
+  // so switching the result text never changes the toolbar's geometry.
+  if (bar.hidden) status.textContent = "";
+  else if (lastSearch.briefsLoading) status.textContent = "Checking available briefs…";
   else {
     const count = lastSearch.results.filter((result) => lastSearch.briefs[result.resource]).length;
-    status.textContent = `${count} documents have briefs. Other results show record details.`;
+    status.textContent = `${count} have briefs; others show record details.`;
   }
 }
 
@@ -11532,7 +11496,9 @@ function renderResults(results) {
         return li;
       }
       const brief = lastSearch.briefs[r.resource];
-      const text = searchReadMode === "briefs" && brief
+      const text = r.kind === "division"
+        ? `<div id="search-passage-${index}" class="search-result-text snippet division-markdown">${billNoteHTML(r.snippet)}</div>`
+        : searchReadMode === "briefs" && brief
         ? `<p id="search-passage-${index}" class="search-result-text search-result-brief"><span class="search-passage-tag">Brief</span>${esc(brief)}</p>`
         : `<p id="search-passage-${index}" class="search-result-text snippet">${searchReadMode === "briefs" ? `<span class="search-passage-tag">Passage · ${lastSearch.briefsLoading ? "checking for a brief…" : "no brief available"}</span>` : ""}${highlightHTML(cleanPassage(r.snippet), lastSearch.query)}</p>`;
       const title = r.speaker && r.title === `${r.speaker} — ${r.date}` ? `Speech by ${r.speaker}` : displayTitle(r);
@@ -11579,7 +11545,9 @@ function refreshSearchPassageFolds() {
         const full = String(doc?.text || "").trim();
         if (full.length > text.textContent.length && btn.getAttribute("aria-expanded") === "true") {
           const tag = text.querySelector(".search-passage-tag")?.outerHTML || "";
-          text.innerHTML = `${tag}${esc(full).replace(/\n{2,}/g, "</p><p class=\"search-result-text\">").replace(/\n/g, "<br>")}`;
+          text.innerHTML = (doc.labels?.kind || doc.kind) === "division"
+            ? `${tag}${billNoteHTML(full)}`
+            : `${tag}${esc(full).replace(/\n{2,}/g, "</p><p class=\"search-result-text\">").replace(/\n/g, "<br>")}`;
           text.dataset.full = "yes";
         } else {
           text.dataset.full = "same";
@@ -12010,7 +11978,7 @@ async function runSearch(page = 1) {
       setStatus($("search-status"), data.warnings?.join(" ") || "");
       const first = (lastSearch.page - 1) * lastSearch.perPage + 1;
       const last = Math.min(lastSearch.page * lastSearch.perPage, lastSearch.total);
-      $("results-count").innerHTML = `<span class="search-count-wide">${esc(resultsCountLine(lastSearch))}</span><span class="search-count-phone">${first}–${last} of ${lastSearch.total.toLocaleString()}${lastSearch.truncated ? " strongest matches" : " matches"}</span>`;
+      $("results-count").innerHTML = `<span class="search-count-wide">${esc(resultsCountLine(lastSearch))}</span><span class="search-count-phone">${first}–${last} of ${lastSearch.total.toLocaleString()}${lastSearch.truncated ? " strongest matches" : " matches"}.</span>`;
       $("results-bar").hidden = false;
       syncSummaryToggle();
       renderSearchDateRuler(lastSearch.years, q, f);
@@ -12185,7 +12153,9 @@ async function openDocPage(slug, manageFocus) {
     setStatus($("doc-status"), "");
     // The headline is the speaker; the title repeats what the byline says, so
     // it only stands in when no speaker is attached, and then as its subject.
-    $("doc-title").textContent = doc.speaker || displayTitle(doc);
+    $("doc-title").textContent = (doc.labels?.kind || doc.kind) === "division"
+      ? billQuestion(doc.title || doc.name).split(/(?<=[.!?])\s/)[0]
+      : doc.speaker || displayTitle(doc);
     // The trail names the page the same way, shortened for the strip.
     setCrumbs([{ label: "Search", href: "/search" }, {
       label: (doc.kind || slug.split("-")[0]) === "division"
@@ -12331,6 +12301,12 @@ function renderDocText(doc) {
   let text = String(doc.text || "(no text)");
   if ((doc.labels?.kind || doc.kind) === 'bill_text') {
     const body = document.createElement('div'); body.className = 'bill-text-source'; body.textContent = text;
+    $('doc-text').replaceChildren(body); return;
+  }
+  if ((doc.labels?.kind || doc.kind) === 'division') {
+    const body = document.createElement('div');
+    body.className = 'division-markdown';
+    body.innerHTML = billNoteHTML(text);
     $('doc-text').replaceChildren(body); return;
   }
   const nodes = [];

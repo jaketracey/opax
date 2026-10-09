@@ -13,6 +13,7 @@ from pathlib import Path
 import re
 import sqlite3
 import time
+from passage_text import evidence_excerpt
 
 VERSION = '2'
 WORD = re.compile(r"[^\W_]+", re.UNICODE)
@@ -216,11 +217,11 @@ def scan(source,out,matcher,limit=0):
             for entity,start,end in places.matches(text):
                 add_evidence(out,subject,'mentions_electorate',entity,table,sid,text[start:end],
                     'explicit_electorate_phrase',0.98,url=r.get('url'),start=start,end=end,
-                    details={'excerpt':text[max(0,start-160):min(len(text),end+160)],'date':r.get('date')})
+                    details={'excerpt':evidence_excerpt(text,start,end),'date':r.get('date')})
             for entity,start,end in matcher.matches(text):
                 add_evidence(out,subject,'mentions',entity,table,sid,text[start:end],
                     'unique_exact_alias',0.98,url=r.get('url'),start=start,end=end,
-                    details={'excerpt':text[max(0,start-160):min(len(text),end+160)],
+                    details={'excerpt':evidence_excerpt(text,start,end),
                              'date':r.get('date'),'text_field':textcol if r.get(textcol) else 'text',
                              'text_sha256':hashlib.sha256(text.encode()).hexdigest()})
             if table == 'speeches' and r.get('electorate'):

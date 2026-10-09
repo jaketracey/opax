@@ -8,6 +8,7 @@ from pathlib import Path
 import sqlite3
 from build_evidence_layers import setup, Matcher, add_evidence, tokens
 from evidence_quality import publishable_alias
+from passage_text import evidence_excerpt
 
 
 def connect(path):
@@ -48,7 +49,7 @@ def build(source_path,base_path,decisions_path,places_path,output):
                 digest=digest or hashlib.sha256(text.encode()).hexdigest()
                 add_evidence(out,table+':'+sid,'mentions',target,table,sid,text[start:end],
                     'resolved_exact_alias',.98,url=r.get('url'),start=start,end=end,
-                    details={'excerpt':text[max(0,start-160):min(len(text),end+160)],'date':r.get('date'),
+                    details={'excerpt':evidence_excerpt(text,start,end),'date':r.get('date'),
                              'text_field':textcol if r.get(textcol) else 'text','text_sha256':digest})
             last=r['_rowid'];count+=1
             if count%1000==0:

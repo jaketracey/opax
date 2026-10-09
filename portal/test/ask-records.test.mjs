@@ -1,3 +1,4 @@
+import * as passageText from '../src/passage-text.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
@@ -18,7 +19,7 @@ const scopeBundle=await build({entryPoints:[new URL('../src/ask-scope.ts',import
 const scopeHelpers=await import('data:text/javascript;base64,'+Buffer.from(scopeBundle.outputFiles[0].text).toString('base64'));
 const payBundle=await build({entryPoints:[new URL('../src/ask-pay.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
 const payHelpers=await import('data:text/javascript;base64,'+Buffer.from(payBundle.outputFiles[0].text).toString('base64'));
-const worker={isWitness,...records,...evidenceHelpers,...scopeHelpers,mentionsPay:payHelpers.mentionsPay};
+const worker={...passageText,isWitness,...records,...evidenceHelpers,...scopeHelpers,mentionsPay:payHelpers.mentionsPay};
 runInNewContext(ts.transpile(code),worker);
 const plain=value=>JSON.parse(JSON.stringify(value));
 

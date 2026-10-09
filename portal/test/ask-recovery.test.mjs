@@ -1,3 +1,4 @@
+import * as passageText from '../src/passage-text.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -7,7 +8,7 @@ import ts from 'typescript';
 
 const transpile = s => ts.transpileModule(s, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText;
 const helpers = {};
-runInNewContext(transpile(readFileSync(new URL('../src/ask-evidence.ts', import.meta.url), 'utf8')), { exports: helpers });
+runInNewContext(transpile(readFileSync(new URL('../src/ask-evidence.ts', import.meta.url), 'utf8')), { exports: helpers, require: () => passageText });
 const parsed = ts.createSourceFile('index.ts', readFileSync(new URL('../src/index.ts', import.meta.url), 'utf8'), ts.ScriptTarget.Latest, true);
 const names = new Set(['apiAsk', 'apiAskStream', 'askPayload', 'hasUnsupportedQuotes', 'unsupportedQuotesIn', 'unquoteUnsupported', 'looseAnswer', 'evidenceOnlyAnswer', 'isRefusal', 'withAskedAs']);
 const code = parsed.statements.filter(n => ts.isFunctionDeclaration(n) ? names.has(n.name?.text) : ts.isVariableStatement(n) && n.declarationList.declarations.some(d => names.has(d.name.getText(parsed)))).map(n => n.getText(parsed)).join('\n');
@@ -33,7 +34,7 @@ function harness(responses, env = {}) {
   const ctx = { waitUntil(p) { pending.push(p); } };
   const api = runInNewContext(transpile(code) + ';({apiAsk,apiAskStream})', {
     isWitness, loadPeople: async () => ({byFold:new Map()}), scopeSpeakerBody: async () => {}, // External scoped retrieval is exercised in witness-split.test.mjs.
-    ...helpers, Response, Request, URL, Date, AbortController, AbortSignal, TransformStream, TextEncoder,
+    ...passageText, ...helpers, Response, Request, URL, Date, AbortController, AbortSignal, TransformStream, TextEncoder,
     REFUSAL_PREFIXES: ['not enough data'], ASK_SYNC_TIMEOUT_MS: 1000, ASK_STALL_MS: 1000, ASK_RETRY_BUDGET_MS: 1000,
     SSE_HEADERS: { 'content-type': 'text/event-stream' },
     rankedMoneyAnswer: async () => null, paidAnswer: async () => null, standaloneQuestion: async () => null, needsAskPeople: () => false, resolveAskScope: input => ({ input, scope: {} }),

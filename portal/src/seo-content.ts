@@ -1,3 +1,4 @@
+import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, billStripStage} from '../public/division-markdown.js'
 /** Crawlable answers from the same static projections the application reads.
  * All lists are bounded; source strings and URLs cross one escaping boundary. */
 export type ReadAsset = <T>(path: string) => Promise<T>
@@ -23,7 +24,7 @@ export interface Division {
   members?: { name: string; person_id?: string; person_slug?: string; vote: string }[];
   bills?: { key: string; title: string; url?: string }[];
 }
-interface Vote { name?: string; title?: string; stage?: string; date?: string; vote?: string; division_slug?: string; source_url?: string }
+interface Vote { question?: string; name?: string; title?: string; stage?: string; date?: string; vote?: string; division_slug?: string; source_url?: string }
 interface Votes { name: string; jurisdiction: string; for?: Vote[]; against?: Vote[] }
 interface RecentVotes { _meta: { schema: number; source: string; coverage: string }; people: Record<string, { name: string; jurisdiction: string; recent: Vote[] }> }
 interface Interest {
@@ -103,7 +104,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
       .sort((a,b)=>String(b.date || '').localeCompare(String(a.date || ''))).slice(0,10)
     if (votes.length) {
       body += `<h2>${hasRecent ? (votes.length===10 ? 'Last 10 recorded votes' : 'Recorded votes') : 'Latest exported bill votes'}</h2>`
-      body += `<ol>${votes.map(v=>`<li>${v.division_slug ? link(`/doc/${v.division_slug}`,v.title || v.name || 'Division') : link(v.source_url || `/search?q=${encodeURIComponent(v.name || v.title || '')}`,v.name || v.title || 'Division')} — ${escapeHtml(v.date)}, ${escapeHtml(v.stage || '')}: ${escapeHtml(v.vote)}${original(v.source_url)}</li>`).join('')}</ol>`
+      body += `<ol>${votes.map(v=>`<li>${v.division_slug ? link(`/doc/${v.division_slug}`,divisionPlain(v.title || v.name || 'Division')) : link(v.source_url || `/search?q=${encodeURIComponent(v.name || v.title || '')}`,divisionPlain(v.name || v.title || 'Division'))} — ${escapeHtml(v.date)}, ${escapeHtml(v.stage || '')}: ${escapeHtml(v.vote)}${v.question ? `<div class="division-markdown">${renderDivisionMarkdown(v.question)}</div>` : ''}${original(v.source_url)}</li>`).join('')}</ol>`
       body += `<p>Source: ${hasRecent ? link('/seo/recent-votes.json','OPAX recorded-vote export') : `${link('/votes.json','OPAX bill-vote export')} (They Vote For You and state Hansard)`}.</p>`
     }
     const id = p.pid && interests?.people[p.pid] ? p.pid : interests?._by_name[fold(p.name)]
@@ -149,7 +150,7 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
   if (b.key_dates?.length) body += `<h2>Recorded stages</h2><ul>${b.key_dates.slice(-20).map(d=>`<li>${escapeHtml(human(d.stage))} — ${escapeHtml(d.date)}${original(d.url)}</li>`).join('')}</ul>`
   body += '<h2>Divisions</h2>'
   const divisions = b.divisions || []
-  body += divisions.length ? `<ul>${divisions.slice(-50).map(d=>`<li>${link(`/doc/division-${d.key}`,d.question || d.stage || 'Division')} — ${escapeHtml(d.date)}, ${escapeHtml(chamber(d.house))}: ${escapeHtml(d.outcome || 'Result not recorded')}, ayes ${escapeHtml(d.ayes ?? 'not recorded')}, noes ${escapeHtml(d.noes ?? 'not recorded')}${original(d.url)}</li>`).join('')}</ul>` : '<p>No divisions recorded. Most questions are decided on the voices; this does not establish that a bill was unopposed.</p>'
+  body += divisions.length ? `<ul>${divisions.slice(-50).map(d=>`<li>${link(`/doc/division-${d.key}`,d.stage || 'Division')}<div class="division-markdown">${renderDivisionMarkdown(billStripStage(billStripTitle(billNoteRepair(d.question),b),d.stage))}</div> — ${escapeHtml(d.date)}, ${escapeHtml(chamber(d.house))}: ${escapeHtml(d.outcome || 'Result not recorded')}, ayes ${escapeHtml(d.ayes ?? 'not recorded')}, noes ${escapeHtml(d.noes ?? 'not recorded')}${original(d.url)}</li>`).join('')}</ul>` : '<p>No divisions recorded. Most questions are decided on the voices; this does not establish that a bill was unopposed.</p>'
   if (divisions.length>50) body += `<p>Showing the latest 50 of ${divisions.length} divisions. ${link(`/bills/${b.key}.json`,'All exported divisions')}.</p>`
   if (b.summary) body += `<h2>Plain-language summary</h2><p>${escapeHtml(b.summary.attribution || 'Machine-written summary; not the record')}${b.summary.as_of ? `, as at ${escapeHtml(b.summary.as_of)}` : ''}.</p>${(b.summary.sentences || []).slice(0,10).map(s=>`<p>${escapeHtml(s)}</p>`).join('')}<ul>${(b.summary.changes || []).slice(0,10).map(s=>`<li>${escapeHtml(s)}</li>`).join('')}</ul>${b.summary.affected ? `<p>${escapeHtml(b.summary.affected)}</p>` : ''}`
   else body += '<h2>Plain-language summary</h2><p>No machine-written summary in this export.</p>'
@@ -157,9 +158,9 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
   return {html:answerBlock(title,description,'Bill',body)}
 }
 export function renderDivisionAnswer(d: Division, people: Person[], slugs: Map<string,string>): RenderedContent {
-  const title = d.name || d.question || 'Parliamentary division'
+  const title = divisionPlain(d.name || d.question || 'Parliamentary division').split(/(?<=[.!?])\s/)[0]
   const description = `${chamber(d.house)}, ${d.date || 'Date not recorded'}. ${d.result || d.outcome || 'Result not recorded'}: ayes ${d.ayes ?? 'not recorded'}, noes ${d.noes ?? 'not recorded'}.`
-  let body = `<h2>Question</h2><p>${escapeHtml(d.question || d.name || 'Question not recorded')}</p>${original(d.source_url || d.url)}<h2>How each member voted</h2>`
+  let body = `<h2>Question</h2><div class="division-markdown">${renderDivisionMarkdown(d.question || d.name || 'Question not recorded')}</div>${original(d.source_url || d.url)}<h2>How each member voted</h2>`
   for (const side of [...new Set(['aye','no','paired','absent','abstain','abstention',...(d.members || []).map(m=>m.vote)])]) {
     const members = (d.members || []).slice(0,1000).filter(m=>m.vote===side)
     if (!members.length) continue

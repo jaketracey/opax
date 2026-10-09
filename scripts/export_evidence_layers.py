@@ -3,11 +3,13 @@
 import argparse
 from collections import defaultdict
 from datetime import datetime, timezone
+from functools import lru_cache
 import hashlib
 import json
 from pathlib import Path
 import sqlite3
 from evidence_quality import publishable_alias,publishable_programme,words
+from passage_text import evidence_excerpt, normalize_passage
 
 
 def key(entity):
@@ -17,6 +19,18 @@ def key(entity):
 def export(source_path,evidence_path,output,allow_incomplete=False,decisions_path=None,places_path=None,additional_path=None):
     source=sqlite3.connect(Path(source_path).resolve().as_uri()+'?mode=ro',uri=True)
     source.row_factory=sqlite3.Row
+    source_columns={t:{r[1] for r in source.execute('PRAGMA table_info('+t+')')}
+                    for t in ('speeches','ext_press_releases')}
+    @lru_cache(maxsize=256)
+    def source_body(table,sid,field):
+        if table=='speeches' and 'speech_id' in source_columns[table]:
+            row=source.execute('SELECT * FROM speeches WHERE speech_id=?',(sid,)).fetchone()
+        elif table=='ext_press_releases' and {'source','source_id'} <= source_columns[table]:
+            origin,source_id=sid.split(':',1)
+            row=source.execute('SELECT * FROM ext_press_releases WHERE source=? AND source_id=?',(origin,source_id)).fetchone()
+        else:return ''
+        record=dict(row) if row else {}
+        return record.get(field) or record.get('text_clean') or record.get('text') or ''
     db=sqlite3.connect(Path(evidence_path).resolve().as_uri()+'?mode=ro',uri=True)
     db.row_factory=sqlite3.Row
     progress={r['source_table']:r['processed'] for r in db.execute('SELECT * FROM progress')}
@@ -131,9 +145,17 @@ def export(source_path,evidence_path,output,allow_incomplete=False,decisions_pat
         year=date[:4] if date[:4].isdigit() else 'Undated'
         entry['years'][year]=entry['years'].get(year,0)+1
         if len(entry['excerpts'])>=12: continue
+        # Old sidecars contain fixed-character windows and unclean text. Rebuild
+        # the display from the read-only corpus; preserve its quote/offset/hash.
+        body=source_body(r['source_table'],r['source_id'],details.get('text_field') or
+                         ('body_text' if r['source_table']=='ext_press_releases' else 'text_clean'))
+        digest=details.get('text_sha256')
+        unchanged=bool(body and digest and hashlib.sha256(body.encode()).hexdigest()==digest)
+        text=evidence_excerpt(body,r['start'],r['end']) if unchanged and r['start'] is not None and r['end'] is not None else normalize_passage(details.get('excerpt') or r['quote'])
+        if 'excerpt' in details:details['excerpt']=text
         entry['excerpts'].append({'id':r['id'],'predicate':r['predicate'],'details':details,'date':date,'source_kind':kind,
             'source_table':r['source_table'],'source_id':r['source_id'],
-            'source_url':r['source_url'],'text':details.get('excerpt') or r['quote'],
+            'source_url':r['source_url'],'text':text,
             'matched_text':r['quote'],'method':r['method'],'confidence':r['confidence'],
             'start':r['start'],'end':r['end'],'text_sha256':details.get('text_sha256')})
     entries={entity:entry for entity,entry in entries.items() if entry['matched_records']}

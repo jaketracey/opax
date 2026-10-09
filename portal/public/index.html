@@ -60,8 +60,8 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=585bb90fbe">
-<link rel="stylesheet" href="/ui-controls.css?v=db6b9cac33">
+<link rel="stylesheet" href="/style.css?v=c18715f9d9">
+<link rel="stylesheet" href="/ui-controls.css?v=bb631e06f6">
 <link rel="stylesheet" href="/voice.css?v=a09a39c243">
 </head>
 <body class="research-app">
@@ -671,20 +671,20 @@
       <div id="search-empty" class="empty-state" hidden></div>
       <div class="results-bar" id="results-bar" hidden>
         <span class="results-lead">
-          <span id="results-count" role="status" aria-live="polite" aria-atomic="true"></span>
+          <span class="results-summary">
+            <span id="results-count" role="status" aria-live="polite" aria-atomic="true"></span>
+            <span id="search-brief-status" class="search-brief-status" aria-live="polite"></span>
+          </span>
           <!-- Shown while the reader has dismissed the summary; pressing it
                brings the summary back and forgets the dismissal. -->
           <button type="button" class="ui-button" id="search-summary-show" hidden data-variant="quiet">Show cited summary</button>
         </span>
-        <span class="results-actions">
-          <!-- Passages/Briefs rides on the same line as the sort and the actions;
-               app.js still shows and hides it by #search-readbar. -->
+        <div class="results-actions">
           <div id="search-readbar" class="search-readbar" hidden>
             <div class="ui-segmented" role="group" aria-label="Search result text">
               <button type="button" id="search-read-passages" aria-pressed="true" class="ui-button">Passages</button>
               <button type="button" id="search-read-briefs" aria-pressed="false" class="ui-button">Briefs</button>
             </div>
-            <span id="search-brief-status" class="search-brief-status" aria-live="polite"></span>
           </div>
           <div id="search-sort-picker" class="search-sort-picker">
             <input id="search-sort" type="hidden" value="relevance">
@@ -710,7 +710,7 @@
               <button type="button" role="menuitem" data-format="ris" tabindex="-1"><span><strong>RIS</strong><small>For Zotero, EndNote and Mendeley</small></span></button>
             </div>
           </div>
-        </span>
+        </div>
       </div>
       <div id="search-date-ruler" class="date-ruler" hidden></div>
       <ul id="search-results" class="results" role="list"></ul>
@@ -1987,9 +1987,9 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=97e05fed76" defer></script>
+<script src="/spa-shell.js?v=be1619f005" defer></script>
 <script src="/navigation.js?v=02752160b8" defer></script>
 <script src="/quick-search.js?v=206914f32d" defer></script>
-<script src="/app.js?v=2268e387d0" defer></script>
+<script src="/app.js?v=7c219f7912" defer></script>
 </body>
 </html>

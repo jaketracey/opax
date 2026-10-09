@@ -1,3 +1,4 @@
+import * as passageText from '../src/passage-text.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -65,8 +66,8 @@ test('real search code sends own-house filters and drops witness or other-house 
   add('5','qld','qld_la','unknown',null);
   const calls = [];
   const api = runInNewContext(ts.transpile(select(['searchWindow', 'filterExpression', 'canonicalSpeaker', 'TOPIC_SLUGS', 'speakerAttribution', 'foldName'])) + ';searchWindow', {
-    URL, isWitness, belongsToScope, scopeFilter, personScope, scopedCollaborators, SLUG_RE: /^speech-(\d+)$/, DIVISION_SLUG_RE: /^division-/,
-    stripListingBoilerplate: s => s, calibrate: s => s, lower_bound: () => 0,
+    ...passageText, URL, isWitness, belongsToScope, scopeFilter, personScope, scopedCollaborators, SLUG_RE: /^speech-(\d+)$/, DIVISION_SLUG_RE: /^division-/,
+    stripListingBoilerplate: s => s, calibrate: s => s,
     label: (r, key) => r.usermetadata.classifications.find(c => c.labelset === key)?.label,
     loadPeople: async () => ({ byFold: new Map([['stewart', { speech_scope: scope }]]) }),
     kbFetch: async (_env, _path, {body}) => { calls.push(body); return Response.json({ resources }); },
@@ -87,7 +88,7 @@ test('real search code sends own-house filters and drops witness or other-house 
 
 test('real answer source cards preserve own-house attribution and clear testimony or other-house MP fields',()=>{
  const api=runInNewContext(ts.transpile(select(['askPayload','foldName']))+';askPayload',{
-  isWitness,belongsToScope,recordSources:()=>[],
+  ...passageText,isWitness,belongsToScope,recordSources:()=>[],
   label:(r,key)=>r.usermetadata.classifications.find(c=>c.labelset===key)?.label,
  });
  const resource=(chamber,speaker_type,metadata={})=>({slug:'speech-1',origin:{collaborators:['Stewart']},
@@ -234,7 +235,7 @@ test('own-speaker search expands aliases without admitting another speaker; test
     usermetadata: { classifications: Object.entries({ kind: 'speech', state: 'qld', chamber: 'qld_la' }).map(([labelset,label]) => ({labelset,label})) },
     extra: { metadata: { date: '2024-06-01', person_id: 'qld_stewart' } }, fields: {} };
   const api = runInNewContext(ts.transpile(select(['searchWindow', 'filterExpression', 'canonicalSpeaker', 'TOPIC_SLUGS', 'speakerAttribution', 'foldName'])) + ';searchWindow', {
-    URL, isWitness, belongsToScope, scopeFilter, personScope, scopedCollaborators,
+    ...passageText, URL, isWitness, belongsToScope, scopeFilter, personScope, scopedCollaborators,
     SLUG_RE: /^speech-(\d+)$/, DIVISION_SLUG_RE: /^division-/, stripListingBoilerplate: s=>s, calibrate:s=>s,
     label:(r,key)=>r.usermetadata.classifications.find(c=>c.labelset===key)?.label,
     loadPeople:async()=>({byFold:new Map(splitSpeakers(person).map(n=>[n.toLowerCase(),person]))}),

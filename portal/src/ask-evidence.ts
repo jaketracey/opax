@@ -1,10 +1,12 @@
+import { normalizePassage, passageWindow } from './passage-text'
+
 /** Progress citation formats stay at the API boundary; readers use source ranges. */
 export type AugmentedContext = {
   paragraphs?: Record<string, { id?: string; text?: string; parent?: string }>
   fields?: Record<string, { id?: string; text?: string; parent?: string }>
 }
 
-export const ASK_PIPELINE_VERSION = '2026-09-17-talk-to-it-v19'
+export const ASK_PIPELINE_VERSION = '2026-09-17-talk-to-it-v19-passage-v3'
 
 /** A deliberately scoped evidence gap is a valid answer, not a missing citation. */
 export const EVIDENCE_GAP_ANSWER = 'This selection does not establish their position on that topic.'
@@ -42,8 +44,9 @@ export function quoteRecoveryAsk(body: Record<string, unknown>): Record<string, 
 const EXCERPT_STOP = new Set(('a an and are as at be been being by can could did do does for from had has have how i in into is it its may might more most of on or our over said say says should show some tell than that the their them there these they this those through to us was were what when where which who why will with would you your about actually australian australia parliament parliamentary mp mps senator senators described describe discussion discussed discuss years year time record records').split(' '))
 
 /** A contiguous, word-bounded original-text window near the question's terms. */
-export function evidenceExcerpt(value: string, question: string, limit = 440): { text: string; relevance: number } {
-  const text = stripListingBoilerplate(value.replace(/\n+DOCUMENT CLASSIFICATION LABELS:[\s\S]*$/, '')).replace(/\s+/g, ' ').trim()
+export function evidenceExcerpt(value: string, question: string, limit = 440, normalized = false): { text: string; relevance: number } {
+  const original = value.replace(/\n+DOCUMENT CLASSIFICATION LABELS:[\s\S]*$/, '')
+  const text = stripListingBoilerplate(normalized ? original : normalizePassage(original)).replace(/\s+/g, ' ').trim()
   const terms = new Set((question.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? []).filter(t => t.length > 2 && !EXCERPT_STOP.has(t)))
   const matches = [...text.matchAll(/[\p{L}\p{N}]+/gu)].filter(m => terms.has(m[0].toLowerCase()))
   let start = 0
@@ -73,12 +76,7 @@ export function evidenceExcerpt(value: string, question: string, limit = 440): {
     const hits = counts.size
     if (hits > relevance) { relevance = hits; start = candidate }
   }
-  let end = Math.min(text.length, start + limit)
-  if (end < text.length) {
-    const boundary = text.lastIndexOf(' ', end)
-    if (boundary > start) end = boundary
-  }
-  return { text: (start ? '… ' : '') + text.slice(start, end) + (end < text.length ? ' …' : ''), relevance }
+  return { text: passageWindow(text, limit, start), relevance }
 }
 
 /** Only original corpus fields may support a claim, never generated enrichment. */

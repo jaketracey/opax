@@ -1,3 +1,4 @@
+import { divisionPlain } from '../public/division-markdown.js'
 import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
 import { rankedMoneyAnswer } from './ask-money'
@@ -5,6 +6,7 @@ import { paidAnswer, mentionsPay } from './ask-pay'
 import { rewriteFollowUp, clarifyPayload, REWRITE_SYSTEM, type FollowUpRewrite } from './ask-rewrite'
 import { slugIndex } from './person-slug'
 import { missingEntitySlug } from './crawl-hygiene'
+import { normalizePassage, passageWindow } from './passage-text'
 import { instrumentPage, instrumentReader } from './instruments'
 import { runIndexNow, INDEXNOW_CRON } from './indexnow'
 import { type MoneyFacts, moneyOverviewPrompt, verifiedOverview } from './ask-money-overview'
@@ -207,12 +209,6 @@ const lighterAsk = (body: Record<string, unknown>): Record<string, unknown> => (
   ...body, reranker: 'noop', top_k: 12,
   ...(Array.isArray(body.rag_strategies) ? { rag_strategies: (body.rag_strategies as { name?: string }[]).filter((s) => s?.name !== 'prequeries') } : {}),
 })
-
-/** Snap a snippet window start back to the nearest preceding space. */
-function lower_bound(text: string, at: number): number {
-  const sp = text.lastIndexOf(' ', at)
-  return sp > 0 ? sp + 1 : at
-}
 
 /** Squash mixed-scale /find scores into 0..1 so result ranking is comparable. */
 function calibrate(score: number, scoreType: string): number {
@@ -424,12 +420,11 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
         .filter(([k]) => !drop.includes(k))
         .sort(([a], [b]) => a.localeCompare(b)),
     ).toString()
-  // Version only search caches for the added topics payload. Old windows lack
-  // classifications; rebuilding one is retrieval only. Answer caches stay intact.
-  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\nyears-topics-v3-split-speakers\n${keyParams(['nocache'])}`))
+  // Retire windows/pages containing the old unnormalized, character-cut snippets.
+  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\nyears-topics-v3-split-speakers-passage-v3\n${keyParams(['nocache'])}`))
   const windowKey = cacheRequest(
     'search-window',
-    await sha256Hex(`${env.CACHE_EPOCH}\ntopics-v2-split-speakers\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
+    await sha256Hex(`${env.CACHE_EPOCH}\ntopics-v2-split-speakers-passage-v3\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
   )
   const bypass = cacheBypass(request, url)
   if (!bypass) {
@@ -616,7 +611,7 @@ async function searchWindow(
     for (const field of Object.values(resource.fields ?? {})) {
       for (const para of Object.values(field.paragraphs ?? {})) {
         const cal = calibrate(para.score, para.score_type)
-        const passage = stripListingBoilerplate(para.text)
+        const passage = stripListingBoilerplate(normalizePassage(para.text))
         if (!passage) continue
         const lower = passage.toLowerCase()
         let hits = 0
@@ -634,8 +629,7 @@ async function searchWindow(
       }
     }
     // Window the snippet around the first hit so the relevant sentence shows.
-    const start = hitAt > 220 ? Math.max(0, lower_bound(bestText, hitAt - 200)) : 0
-    const windowed = (start > 0 ? '…' : '') + bestText.slice(start, start + 600)
+    const windowed = passageWindow(bestText, 600, hitAt > 220 ? hitAt - 200 : 0)
     const division = DIVISION_SLUG_RE.test(slug)
     const billText = label(resource, 'kind') === 'bill_text'
     const billHref = billText && typeof meta.bill_key === 'string' && /^au-federal-[a-z0-9-]+$/.test(meta.bill_key)
@@ -959,7 +953,7 @@ function askPayload(answer: AskAnswer, records: AskRecords = { records: [], cove
         date: (meta.date as string) ?? null,
         url: r.origin?.url || null, // official record, for exports/citations
         // Metadata extension is model context, not part of the quoted record.
-        snippet: (citedText || bestText).replace(/\n+DOCUMENT CLASSIFICATION LABELS:[\s\S]*$/, '').trim().slice(0, 600),
+        snippet: passageWindow(normalizePassage((citedText || bestText).replace(/\n+DOCUMENT CLASSIFICATION LABELS:[\s\S]*$/, ''))),
         cited: citedIds.has(rid),
       }
     })
@@ -1525,7 +1519,7 @@ function positionExcerptsAnswer(payload: AskPayload, query: string): AskPayload 
   const rows = payload.sources.filter((s): s is Source => !!s && typeof s === 'object')
   const excerpts = rows.flatMap(row => {
     const id = row.resource || row.slug || ''
-    const excerpt = typeof row.snippet === 'string' && id ? evidenceExcerpt(row.snippet, query) : { text: '', relevance: 0 }
+    const excerpt = typeof row.snippet === 'string' && id ? evidenceExcerpt(row.snippet, query, 440, true) : { text: '', relevance: 0 }
     return excerpt.text && excerpt.relevance ? [{ id, text: excerpt.text, relevance: excerpt.relevance }] : []
   }).sort((a, b) => b.relevance - a.relevance).slice(0, 3)
   if (!excerpts.length) return null
@@ -2389,7 +2383,7 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
       }
     }
   }
-  const cacheKey = cacheRequest('resource-body-v3-witness', `${encodeURIComponent(env.CACHE_EPOCH)}/${slug}`)
+  const cacheKey = cacheRequest('resource-body-v3-witness-passage-v3', `${encodeURIComponent(env.CACHE_EPOCH)}/${slug}`)
   const bypass = cacheBypass(request, url)
   if (!bypass) {
     const hit = await caches.default.match(cacheKey)
@@ -2457,7 +2451,7 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
     topics, // machine topic labels (multi-label; empty until the pass reaches this doc)
     metadata,
     summary: brief,
-    text: bodyText,
+    text: labels.kind === 'bill_text' || slug.startsWith('bill-text-') ? bodyText : normalizePassage(bodyText),
   })
   cacheStore(ctx, cacheKey, out, RESOURCE_CACHE_TTL)
   return withCacheStatus(out, bypass ? 'BYPASS' : 'MISS')
@@ -4488,9 +4482,9 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
     if (division) {
       const people = await loadPeople(env).catch(()=>null)
       const content = renderDivisionAnswer(division,people?.people || [],people?.slugOf || new Map())
-      return {...generic,title:`${clip(division.name || division.question || 'Division',90)} · OPAX`,description:clip(content.description || ''),prerender:content.html,
-        jsonLd:{'@context':'https://schema.org','@type':'Article',headline:division.name || division.question,url:canonical,...(division.date ? {datePublished:division.date} : {}),publisher},
-        card:{kicker:'Division',title:division.question || division.name || 'Division',lines:[content.description || '']}}
+      return {...generic,title:`${clip(divisionPlain(division.name || division.question || 'Division'),90)} · OPAX`,description:clip(content.description || ''),prerender:content.html,
+        jsonLd:{'@context':'https://schema.org','@type':'Article',headline:divisionPlain(division.name || division.question),url:canonical,...(division.date ? {datePublished:division.date} : {}),publisher},
+        card:{kicker:'Division',title:divisionPlain(division.question || division.name || 'Division'),lines:[content.description || '']}}
     }
   }
   let res: Response | null
