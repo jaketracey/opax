@@ -22,7 +22,8 @@ import { phoneCopy } from '../design/phone-copy';
 import { PartialNotice, SavedCopyNotice } from './CatalogNotice';
 import { LocationSuggestion } from './electorate-map/LocationSuggestion';
 import { formatDate } from '../design/format';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useHeaderBottom } from '../design/useHeaderBottom';
 import { router, Stack } from 'expo-router';
 import { openSource } from '../navigation/external';
 import { AndroidFocusBack } from '../navigation/AndroidFocusBack';
@@ -32,6 +33,7 @@ import {
   RefreshControl,
   StyleSheet,
   View,
+  type ScrollView,
 } from 'react-native';
 import { catalogs } from '../api/runtime';
 import type { Electorate } from '../api/catalogs';
@@ -195,6 +197,21 @@ export default function YourMP() {
     }
   }
   const chooser = ready && (!choice || choosing || stateChoosing);
+  // The chooser replaces a long page in place. "Choose state electorate" and
+  // "Change seat" sit near its end, so the short chooser would draw above a
+  // retained offset: a blank screen under the title (TestFlight build 32).
+  // Open (and leave) it at the top, under the native header.
+  const scroll = useRef<ScrollView>(null);
+  const headerBottom = useHeaderBottom();
+  const shown = useRef(chooser);
+  useEffect(() => {
+    if (shown.current === chooser) return;
+    shown.current = chooser;
+    scroll.current?.scrollTo({
+      y: Platform.OS === 'ios' ? -headerBottom : 0,
+      animated: false,
+    });
+  }, [chooser, headerBottom]);
   const seats = stateChoosing
     ? (view?.verifiedStateSeats ?? [])
     : (directory?.electorates.data.electorates ?? []);
@@ -208,6 +225,7 @@ export default function YourMP() {
     <Screen
       column="wide"
       testID="your-mp-screen"
+      scrollRef={scroll}
       refreshControl={<RefreshControl refreshing={busy} onRefresh={retry} />}
     >
       {/* One title: the chosen seat replaces "Your MP" (the tab still says
