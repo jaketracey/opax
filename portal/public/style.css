@@ -705,8 +705,22 @@ button.primary.btn-loading:disabled { opacity: 0.9; }
 .ask-builder select.ask-slot { padding-right: 1.3em; cursor: pointer; width: auto; }
 .ask-builder .ask-tail { white-space: nowrap; }
 .ask-builder-form .primary { min-height: 48px; }
-.ask-builder-or { display: flex; align-items: center; gap: 0.8rem; margin: 1rem 0 0; color: var(--ink-faint); font-size: 0.8125rem; }
-.ask-builder-or::before, .ask-builder-or::after { content: ""; flex: 1 1 auto; border-top: 1px solid var(--line); }
+/* "Build a question": the builder behind one disclosure, closed by default as
+   on the home page, under the free box and its sample questions. */
+.ask-guided { margin-top: var(--space-tight); }
+.ask-guided[hidden] { display: none; }
+.ask-guided > summary {
+  display: inline-flex; align-items: center; gap: 0.5rem; min-height: var(--size-target); width: fit-content;
+  cursor: pointer; list-style: none; font: var(--type-strong); color: var(--navy);
+}
+.ask-guided > summary::-webkit-details-marker { display: none; }
+.ask-guided > summary::after {
+  content: ""; width: 7px; height: 7px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+}
+.ask-guided[open] > summary::after { transform: translateY(2px) rotate(-135deg); }
+.ask-guided > summary:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
+.ask-guided[open] > .ask-builder { margin-top: var(--space-tight); }
 @media (max-width: 600px) {
   .ask-builder-sentence { font-size: 1.1875rem; line-height: 1.9; }
   .ask-builder input.ask-slot, .ask-builder select.ask-slot, .ask-builder .ask-slot[data-size="wide"] { width: 100%; margin: 0.15em 0; }
@@ -836,21 +850,20 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px var(
   }
 }
 
-/* Suggested questions as cards — the report-card idiom, home-page sized. */
-#ask-chips { margin-top: 1.6rem; }
-/* Keep the reviewed starting questions in view, including on tablets. */
-#chip-row {
-  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
-  overflow: visible; scroll-snap-type: none; mask-image: none; animation: none;
+/* Sample questions: plain links (concept 5), no label and no boxes. They
+   wrap on a wide screen and take a row each, with a 44px target, on a phone. */
+#ask-chips { margin-top: var(--space-heading); }
+.ask-samples { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-line) var(--space-group); }
+.ask-sample {
+  display: inline-flex; align-items: center; min-height: 32px;
+  font: var(--type-metadata); color: var(--ink); text-decoration: underline;
+  text-decoration-color: var(--bronze-rule); text-underline-offset: 3px;
 }
-#chip-row .chip-label { display: block; grid-column: 1 / -1; }
-#chip-row .chip:not(.ui-button) {
-  width: 100%; min-width: 0; min-height: 48px; height: auto;
-  white-space: normal; text-align: left; line-height: 1.4;
-  border-radius: var(--radius-md); padding: 0.75rem 1rem;
-}
-@media (max-width: 700px) {
-  #chip-row { grid-template-columns: minmax(0, 1fr); }
+.ask-sample:hover { color: var(--bronze-ink); text-decoration-color: var(--bronze-ink); }
+.ask-sample:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 2px; }
+@media (max-width: 700px), (pointer: coarse) {
+  .ask-samples { flex-direction: column; align-items: flex-start; gap: var(--space-tight); }
+  .ask-sample { min-height: var(--size-target); line-height: 1.45; }
 }
 .suggest-grid {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -1100,8 +1113,7 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
 .chat-next-note { margin: -0.4rem 0 0.7rem; color: var(--ink-faint); font: 400 0.8125rem/1.5 var(--sans); }
 /* "Ask something else" under an answer: the example questions, wrapping in
    place rather than scrolling sideways under the answer. */
-.ask-again .chip-row { margin-top: 0; flex-wrap: wrap; overflow: visible; mask-image: none; animation: none; }
-.ask-again .chip:not(.ui-button) { min-height: 44px; }
+.ask-again .ask-samples { margin-top: 0; }
 /* A conversation's header: the kicker and the way out of it. */
 .chat-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem 1rem; margin-bottom: 0.4rem; }
 .chat-head .kicker { margin: 0; }
@@ -1302,7 +1314,6 @@ html[data-chat="page"] .chat-head {
 .results-bar select:hover { border-color: var(--ink); }
 .results-actions { display: inline-flex; align-items: center; gap: 0.5rem 0.7rem; flex-wrap: wrap; }
 .results-lead { display: inline-flex; align-items: baseline; flex-wrap: wrap; gap: 0.2rem 0.9rem; }
-#search-summary-show { font-size: 0.875rem; }
 /* The export menus (ask's "Download sources", search's "Export") borrow the
    sort menu's dress but not its fixed width: they are one button among the
    actions, and on a phone grid they fill their cell. */
@@ -1474,11 +1485,6 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 
 .search-results-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem 2.5rem; align-items: start; margin-top: 1.25rem; }
 /* A compact overview leads the matching records on every screen size. */
-.search-summary-heading { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
-#search-answer-head { margin: 0; font: 600 1rem/1.4 var(--sans); color: var(--navy); }
-#search-answer-status { color: var(--ink-soft); font-size: .8125rem; }
-#search-answer-dismiss { margin-left: auto; width: 44px; min-height: 44px; padding: 10px; border: 0; background: transparent; color: var(--ink-soft); cursor: pointer; }
-#search-answer-dismiss svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; }
 #search-answer.is-loading #search-answer-status::before { content: ""; display: inline-block; width: .8em; height: .8em; margin-right: .5em; border: 1.5px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: btnspin 800ms linear infinite; }
 #search-answer-body { max-width: 80ch; }
 /* An inline box, not a flex box: a raised 24px flex item stretched every line
@@ -1494,10 +1500,6 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 .search-summary-citation:focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 2px; border-radius: 2px; }
 #search-answer-sources blockquote { margin: 4px 0 12px; border-left: 2px solid var(--line); padding-left: 12px; color: var(--ink-soft); font-size: .875rem; }
 #search-answer-retry { margin-top: 12px; }
-@media (max-width: 480px) {
-  .search-summary-heading { column-gap: 8px; row-gap: 0; }
-  #search-answer-status { order: 3; flex-basis: 100%; }
-}
 .answer-skeleton { display: grid; gap: 0.7em; padding-top: 0.35em; }
 .answer-skeleton i {
   display: block; height: 0.8em; border-radius: 2px;
@@ -1528,14 +1530,29 @@ button.link.result-title:hover { color: var(--bronze-ink); }
   font: inherit; font-size: 0.875rem; color: var(--bronze-ink); text-decoration: underline; text-underline-offset: 0.2em; cursor: pointer;
 }
 .answer-readmore:focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 2px; }
-.search-answer {
-  background: var(--paper-raised); border: 1px solid var(--line); border-radius: 4px;
-  border-top: 3px solid var(--bronze); padding: 1rem 1.25rem;
+/* Summarise these records: one row between hairlines with the machine label;
+   open, the summary sits above the results it reads (concept 4). No card. */
+.search-answer { margin: var(--space-row) 0 0; border-block: var(--border-hairline) solid var(--divider-subtle); }
+.search-answer[hidden] { display: none; }
+.search-summary-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+  min-height: 48px; cursor: pointer; list-style: none;
 }
-.search-answer .kicker {
-  margin: 0 0 var(--space-3); padding-bottom: 0.65rem;
-  border-bottom: 1px solid var(--line);
+.search-summary-row::-webkit-details-marker { display: none; }
+.search-summary-word { font: var(--type-strong); color: var(--ink); }
+.search-summary-row:hover .search-summary-word { text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
+.search-summary-row:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
+/* The label's look, in the row that opens the machine-written text. */
+.search-summary-machine {
+  display: inline-flex; align-items: center; gap: 0.3rem; min-height: 26px; padding: 0 0.625rem;
+  border: var(--border-hairline) solid transparent; border-radius: var(--radius-pill);
+  background: var(--bills-wash); color: var(--bills-ink); font: var(--type-label); white-space: nowrap;
 }
+.search-summary-open { padding: 0 0 var(--space-block); }
+.search-summary-status { margin: 0 0 var(--space-tight); font: var(--type-fine); color: var(--ink-soft); }
+.search-summary-status:empty { display: none; }
+.search-summary-note { margin: var(--space-tight) 0 0; font: var(--type-fine); color: var(--ink-soft); }
+@media (forced-colors: active) { .search-summary-machine { border-color: CanvasText; } }
 .answer-compact { font-size: 0.9375rem; line-height: 1.6; }
 .answer-compact > * { margin-bottom: 0.8rem; }
 .search-answer .source-list li { padding: 0.45rem 0; }
@@ -2232,7 +2249,7 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .dir-head { margin-bottom: 0.6rem; }/* The controls sit in one quiet card: raised paper, a hairline, modest padding. */
 .dir-controls { margin: var(--space-5) 0 var(--space-1); }
 /* The name box carries its own suggestion panel beneath it. */
-#chip-row .ui-button, .chat-next-btns .ui-button { width: 100%; justify-content: flex-start; text-align: left; }
+.chat-next-btns .ui-button { width: 100%; justify-content: flex-start; text-align: left; }
 .dir-q-wrap { position: relative; flex: 1 1 240px; min-width: 0; }
 .dir-q-wrap input[type="search"] { width: 100%; }
 .dir-sugg {
@@ -2639,14 +2656,6 @@ a.ency-name:hover, a.ency-name:focus-visible {
   .infobox dd { font-size: 1.0625rem; line-height: 1.5; padding: 0.2rem 0 0.8rem; border-bottom: 1px solid var(--line); }
   .infobox dd:last-of-type { border-bottom: 0; padding-bottom: 0.4rem; }
   .infobox .actions { margin-top: 1rem; }
-}
-/* The person page's way to the party's money: the home page's money-map button
-   pared back to an outlined action with the bronze dollar glyph. */
-.person-money-link { margin: var(--section-gap) 0 0; }
-.person-money-link .btn-glyph {
-  display: inline-grid; place-items: center; width: 1.35rem; height: 1.35rem; border-radius: 50%;
-  color: var(--bronze-ink); box-shadow: inset 0 0 0 1.5px var(--bronze-ink);
-  font: 700 0.8125rem/1 var(--serif);
 }
 
 /* ---- about / methods ---------------------------------------------------- */
@@ -3217,21 +3226,136 @@ mark.privacy-confirm {
   #panel-doc .doc-toolbar-btns #doc-ask, #panel-doc .doc-toolbar-btns #doc-ask-foot { flex-basis: 100%; }
   #panel-doc .doc-toolbar-foot .doc-toolbar-btns .ui-button { flex-basis: calc(33.3% - 6px); }
 }
+/* ==== page actions: one secondary pill and ⋯ (person, bill, search) ====
+   Principle 5: one drawn action per view besides ⋯; ⋯ is a details popover
+   (ui-source.js gives it Escape and light dismiss), its sheet a list of rows. */
+.page-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight); }
+.page-more { flex: none; }
+.page-more > summary {
+  display: inline-grid; place-items: center; width: var(--size-target); height: var(--size-target);
+  border: var(--border-hairline) solid transparent; border-radius: var(--radius-pill);
+  background: var(--navy-wash); color: var(--navy); cursor: pointer;
+  transition: background-color var(--duration-quick) var(--ease-standard);
+}
+.page-more > summary:hover, .page-more[open] > summary { background: color-mix(in srgb, var(--navy) 10%, var(--navy-wash)); }
+.page-more > summary svg { width: var(--size-icon-md); height: var(--size-icon-md); fill: currentColor; }
+.page-more > .ui-sheet { padding: 6px 16px; }
+.page-more-list { list-style: none; margin: 0; padding: 0; }
+.page-more-list li + li { border-top: var(--border-hairline) solid var(--divider-subtle); }
+.page-more-item {
+  display: flex; align-items: center; gap: 0.35rem; width: 100%; min-height: var(--size-target);
+  margin: 0; padding: 0; border: 0; background: none; cursor: pointer;
+  font: var(--type-strong); color: var(--ink); text-align: left; text-decoration: none;
+}
+.page-more-item:hover { color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
+.page-more-item:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 2px; }
+/* On a phone the sheet opens in place under its row. */
+@media (max-width: 600px) { .page-actions > .page-more[open] { flex-basis: 100%; } .page-actions > .page-more[open] > summary { margin-left: auto; display: grid; } }
+@media (prefers-reduced-motion: reduce) { .page-more > summary { transition: none; } }
+@media (forced-colors: active) { .page-more > summary { border-color: ButtonText; } }
+
 /* ==== page-person: Person entry pages (/subject/person/<name>) ==== */
 .subject-person #subject-sections { min-width: 0; }
 /* The portrait, wrapping affiliation and facts card arrive from separate
    exports. Hold their first-paint footprint so the grid and the first section
    stay in place while those records replace the loading bars. */
 .subject-person .subject-portrait-pending { background: var(--paper-sunken); }
-.subject-person .subject-tag { min-height: 3.5rem; }
+.subject-person .subject-tag { min-height: 1.75rem; }
 .subject-person .subject-grid { min-height: max(48rem, calc(100svh - var(--header-h))); }
 .subject-person .subject-main { min-height: 38rem; }
-.subject-person .infobox { min-height: 26rem; }
-@media (max-width: 900px) {
-  .subject-person .infobox { min-height: 32rem; }
+.subject-person #subject-sections .subject-section-title { font: var(--type-heading); margin: 0 0 var(--space-heading); }
+
+/* ---- the head: portrait, the name, one meta line, its source line, and two
+   drawn actions (Ask about their speeches, ⋯). No kicker, no Quick facts. */
+.subject-person .subject-portrait-blank { background: var(--paper-sunken); border: var(--border-hairline) solid var(--divider-subtle); }
+.subject-person .subject-head > .ui-source { margin-top: var(--space-tight); }
+.subject-person .person-actions { margin-top: var(--space-block); }
+@media (min-width: 701px) {
+  .subject-person .subject-head:has(.subject-portrait) {
+    grid-template-columns: max-content minmax(0, 1fr) auto;
+    grid-template-areas: "portrait title actions" "portrait meta meta" "portrait source source" "portrait caveat caveat";
+    align-items: start; row-gap: 0;
+  }
+  .subject-person .subject-head:has(.subject-portrait) .subject-portrait { grid-area: portrait; grid-row: 1 / -1; align-self: start; }
+  .subject-person .subject-head:has(.subject-portrait) h2 { grid-area: title; align-self: center; }
+  .subject-person .subject-head:has(.subject-portrait) .subject-tag { grid-area: meta; }
+  .subject-person .subject-head:has(.subject-portrait) > .ui-source { grid-area: source; }
+  .subject-person .subject-head:has(.subject-portrait) > .person-caveat { grid-area: caveat; }
+  .subject-person .subject-head:has(.subject-portrait) > .person-actions { grid-area: actions; margin: 0; align-self: center; justify-content: flex-end; }
 }
-.subject-person #subject-sections .subject-section-title { font: 600 1.35rem/1.35 var(--serif); margin: 2rem 0 .85rem; }
-.subject-person .person-topics, .subject-person .declared-ties { margin-top: 0; }
+.person-caveat { margin: var(--space-tight) 0 0; max-width: 68ch; font: var(--type-fine); color: var(--ink-soft); }
+.person-fits { margin: var(--space-block) 0 0; max-width: 68ch; font: var(--type-body); color: var(--ink); }
+.subject-person #subject-ask-form[hidden] { display: none; }
+.subject-person #subject-ask-form { margin: var(--space-block) 0 0; max-width: 40rem; }
+
+/* ---- "On this page": the rail that replaced Quick facts and the jump links.
+   One row per record block with its figure; no card around it. */
+.subject-person .infobox.person-rail {
+  position: sticky; top: calc(var(--header-h) + 1rem); min-height: 0;
+  background: none; border: 0; border-top: var(--border-hairline) solid var(--divider-default); border-radius: 0;
+  padding: var(--space-block) 0 0;
+}
+.person-rail-nav[hidden] { display: none; }
+.person-rail-head { margin: 0 0 var(--space-line, .25rem); font: var(--type-label); color: var(--ink-soft); }
+.person-rail-list { list-style: none; margin: 0; padding: 0; }
+.person-rail-list li + li { border-top: var(--border-hairline) solid var(--divider-subtle); }
+.person-rail-list a {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  min-height: var(--size-target); padding: 0.25rem 0; color: var(--ink); text-decoration: none;
+}
+.person-rail-label { font: var(--type-strong); }
+.person-rail-figure { font: var(--type-metadata); color: var(--ink-soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.person-rail-list a:hover .person-rail-label { text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
+.person-rail-list a:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 2px; }
+.person-rail-credit { margin: var(--space-block) 0 0; font: var(--type-fine); color: var(--ink-soft); overflow-wrap: anywhere; }
+.person-rail-credit[hidden] { display: none; }
+.person-rail-actions { display: grid; gap: var(--space-tight); margin-top: var(--space-block); }
+.person-rail-actions .ui-button { justify-content: flex-start; }
+.person-facts { margin: var(--space-block) 0 0; display: grid; grid-template-columns: auto 1fr; gap: 0.35rem 1rem; }
+.person-facts dt { font: var(--type-fine); color: var(--ink-soft); }
+.person-facts dd { margin: 0; font: var(--type-body); font-variant-numeric: tabular-nums; }
+/* Narrower than the two columns, the rail sits under the head as a strip of
+   figures, each a way into its block. */
+@media (max-width: 900px) {
+  .subject-person .subject-grid { margin-top: var(--space-group); }
+  .subject-person .infobox.person-rail { position: static; border-top: 0; padding-top: 0; min-height: 3.5rem; }
+  .person-rail-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr)); column-gap: 1rem; }
+  .person-rail-list li, .person-rail-list li + li { border-top: var(--border-hairline) solid var(--divider-subtle); }
+  .person-rail-list a { flex-direction: column-reverse; align-items: flex-start; justify-content: center; gap: 0; min-height: 3.5rem; }
+  .person-rail-figure { font: 600 1.125rem/1.3 var(--serif); color: var(--ink); }
+  .person-rail-label { font: var(--type-fine); color: var(--ink-soft); }
+}
+
+/* ---- blocks: a top rule each (principle 2), and a 28px accent mark where the
+   profile's blocks differ by category: votes, interests, money. */
+.subject-person #subject-sections > :where(section, #subject-votes, #subject-interests, #subject-diary) {
+  position: relative; margin-top: var(--space-section); padding-top: var(--space-block);
+  border-top: var(--border-hairline) solid var(--divider-default);
+}
+.subject-person #subject-sections > :first-child { margin-top: 0; }
+/* The block's figures (§5.2 Figure): a number and its label, no edge. */
+.subject-person .votes-tiles .tile { border: 0; padding: 0; background: none; }
+.subject-person #subject-sections > [data-accent]::before {
+  content: ""; position: absolute; top: -1px; left: 0;
+  width: var(--border-accent-mark-width); height: var(--border-accent-mark-height); background: var(--accent-ink);
+}
+.subject-person #subject-sections > [data-accent="votes"] { --accent-ink: var(--votes-ink); }
+.subject-person #subject-sections > [data-accent="interests"] { --accent-ink: var(--interests-ink); }
+.subject-person #subject-sections > [data-accent="money"] { --accent-ink: var(--money-ink); }
+/* Ties and the register share the interests block: the register's heading takes the break. */
+.subject-person #subject-interests > .declared-ties + #person-register { margin-top: var(--space-group); padding-top: var(--space-block); border-top: var(--border-hairline) solid var(--divider-subtle); }
+.subject-person #subject-sections .ui-source { margin-top: var(--space-block); }
+.person-section-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight) var(--space-heading); margin-bottom: var(--space-heading); }
+.subject-person #subject-sections .person-section-head .subject-section-title { margin: 0; }
+.subject-person .votes-lede { margin: var(--space-tight) 0 0; font: var(--type-metadata); color: var(--ink-soft); }
+/* The party's money, a row in the money block with its caveat beside it. */
+.person-party-money {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.75rem;
+  margin: var(--space-block) 0 0; padding-top: var(--space-row); border-top: var(--border-hairline) solid var(--divider-subtle);
+}
+.person-party-money a { display: inline-flex; align-items: center; min-height: var(--size-target); font: var(--type-strong); color: var(--navy); }
+.person-party-money span { font: var(--type-fine); color: var(--ink-soft); }
+.subject-person .person-topics { margin-top: 0; }
 /* Eight topic rows have a stable place from their loading bars through the
    chart, empty result or timeout. Lower records can paint immediately. */
 .subject-person .person-topics { max-width: none; display: flow-root; min-height: 37rem; }
@@ -3240,11 +3364,7 @@ mark.privacy-confirm {
   .subject-person .person-topics { min-height: 64rem; }
   .subject-person .person-topics-skel { gap: 4.25rem; }
 }
-.subject-person .person-jumps { display: flex; flex-wrap: wrap; gap: 0 .75rem; border-block: 1px solid var(--line); margin: 0 0 1rem; }
-.subject-person .person-jumps[hidden] { display: none; }
-.subject-person .person-jumps a { display: inline-flex; align-items: center; min-height: 44px; font: 500 .875rem var(--sans); color: var(--bronze-ink); }
-.subject-person .person-money-link { margin: 0 0 1rem; }
-.subject-person #subject-ask-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .5rem; }
+.subject-person #subject-ask-form:not([hidden]) { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .5rem; }
 .subject-person #subject-ask-form label { grid-column: 1 / -1; font: 600 1rem/1.5 var(--serif); }
 .subject-person #subject-ask-form input { min-width: 0; }
 .subject-person #subject-sections [id] { scroll-margin-top: 90px; }
@@ -3275,9 +3395,10 @@ mark.privacy-confirm {
 .subject-person .speech-rows li { display: block; padding: 0; }
 .subject-person .person-speech-link { display: grid; grid-template-columns: 6.75rem minmax(0, 1fr); gap: .35rem 1rem; padding: 1rem 0; text-decoration: none; color: var(--ink); }
 .subject-person .person-speech-body { display: block; min-width: 0; }
-.subject-person .person-speech-kind { display: flex; margin: .55rem 0 .25rem; }
-.subject-person .person-speech-kind:not(.ui-machine-inline) { font: var(--type-label); color: var(--ink-soft); }
-.subject-person .person-speech-text { display: block; font: 400 1rem/1.65 var(--serif); color: var(--ink-soft); overflow-wrap: anywhere; }
+/* Serif speaks for the record, sans for OPAX (principle 7): a passage is set in
+   the serif, a machine-written brief in the sans, under the list's one label. */
+.subject-person .person-speech-text { display: block; margin-top: .35rem; font: 400 1rem/1.65 var(--serif); color: var(--ink-soft); overflow-wrap: anywhere; }
+.subject-person .person-speech-text.is-brief { font: var(--type-body); line-height: 1.6; color: var(--ink); }
 .subject-person .person-speech-link:hover .speech-debate { text-decoration: underline; text-decoration-color: var(--bronze-ink); text-underline-offset: 3px; }
 .subject-person .ties-list .source-title { display: inline-block; min-height: 44px; font: 600 1rem/1.5 var(--serif); }
 .subject-person .tie-declaration, .subject-person .interests-desc { font-family: var(--serif); line-height: 1.65; }
@@ -3287,15 +3408,11 @@ mark.privacy-confirm {
 }
 .subject-person .person-speech-text { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden; }
 .subject-person .person-speech-link .speech-debate { display: block; }
-.subject-person .person-jumps { gap: 0 1.1rem; }
-/* Even visual spacing: the words sit 1.1rem apart, and each link's 44px target
-   reaches into the gaps through padding rather than by centring inside a box. */
-.subject-person .person-jumps a { min-width: 0; justify-content: flex-start; padding: 0 .5rem; margin: 0 -.5rem; }
 .subject-person .person-topic-legend[hidden] { display: none; }
 
 .subject-person #subject-sections :is(a, button, summary, input):focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 3px; }
 .subject-person #subject-sections :is(section, h3, #subject-votes):focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 4px; }
-.subject-person #subject-sections .fineprint, .subject-person .person-topic-legend { font-size: .875rem; line-height: 1.6; }
+.subject-person .person-topic-legend { font-size: .875rem; line-height: 1.6; }
 .subject-person .votes-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .65rem; }
 .subject-person .votes-tiles .tile:last-child { grid-column: auto; }
 .subject-person .votes-tiles .tile b { font-size: 1.45rem; font-variant-numeric: tabular-nums; }
@@ -3554,14 +3671,10 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
    controls still fit together at 1024px with 200% text. */
 #panel-search .results-actions .ui-button { gap: min(.5rem, 8px); white-space: nowrap; overflow-wrap: normal; word-break: normal; }
 #panel-search .results-actions .search-sort-trigger { gap: min(.6rem, 9.6px); }
-/* Flush segments share the action buttons' height, padding and baseline. */
-#panel-search #search-readbar .ui-segmented { padding: 0; border: 0; gap: 0; border-radius: var(--ui-radius); }
-#panel-search #search-readbar .ui-button {
-  min-height: var(--ui-height); padding-block: .55rem;
-  border-color: var(--line-strong); border-radius: 0;
-}
-#panel-search #search-readbar .ui-button:first-child { border-radius: var(--ui-radius) 0 0 var(--ui-radius); }
-#panel-search #search-readbar .ui-button:last-child { border-left: 0; border-radius: 0 var(--ui-radius) var(--ui-radius) 0; }
+/* Passages and Briefs: the shared pill segmented control (ui-controls.css),
+   drawn as it is everywhere; with Briefs on, the list's machine label beside it. */
+#panel-search #search-readbar { gap: var(--space-tight); }
+#panel-search #search-briefs-label[hidden] { display: none; }
 /* Stacked pager: the numbers on their own row, Previous and Next as a pair of
    equal tap targets beneath them. Wide, it returns to one row (below). */
 #panel-search #search-pager { grid-template-columns: 1fr 1fr; row-gap: 14px; column-gap: 10px; }
@@ -3585,21 +3698,25 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 }
 
 #panel-search .range-cap { text-transform: none; letter-spacing: normal; }
+/* Phones: the count, then the sort and ⋯ on one row, Passages and Briefs under them. */
 @media (max-width: 700px) {
-  #panel-search .results-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  #panel-search .results-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; width: 100%; }
   #panel-search .results-lead { flex-basis: auto; }
-  #panel-search #search-sort-picker { grid-column: 1 / -1; }
-  #panel-search .results-actions > * { min-width: 0; }
-  #panel-search .results-actions .ui-button { width: 100%; }
-  #panel-search #search-readbar { grid-column: 1 / -1; }
-  #panel-search #search-readbar .ui-segmented { display: flex; width: 100%; }
-  #panel-search #search-readbar .ui-button { flex: 1 0 auto; width: auto; }
+  #panel-search #search-sort-picker { flex: 1 1 0%; min-width: 0; }
+  #panel-search #search-sort-picker .ui-button { width: 100%; min-width: 0; }
+  #panel-search #search-readbar { order: 3; flex: 1 1 100%; flex-wrap: nowrap; }
+  #panel-search #search-readbar .ui-segmented { display: flex; flex: 1 1 auto; }
+  #panel-search #search-readbar .ui-segmented > .ui-button { flex: 1 1 0; }
   #panel-search .results-actions select { width: 100%; padding-inline: 8px 24px; }
+  #panel-search #search-more[open] { flex-basis: 100%; order: 2; }
 }
+/* ⋯ rows here carry a second line saying what each export is for. */
+#panel-search #search-more .page-more-item { flex-direction: column; align-items: flex-start; justify-content: center; gap: 0; padding-block: 6px; }
+#panel-search #search-more .page-more-item small { font: var(--type-fine); color: var(--ink-soft); }
 
 #panel-search .search-results-main { min-width: 0; }
 #panel-search #search-results > li { padding: 20px 0; border-top: 1px solid var(--line); }
-#panel-search .search-result-heading { margin: 0; font: 600 1.125rem/1.45 var(--serif); }
+#panel-search .search-result-heading { margin: 2px 0 0; font: var(--type-subheading); }
 #panel-search .result-title { display: inline-block; min-height: 44px; color: var(--ink); text-decoration: none; overflow-wrap: anywhere; }
 #panel-search .result-title:hover { color: var(--bronze-ink); text-decoration: underline; }
 #panel-search .result-meta { display: block; margin: 0; font: 400 .8125rem/1.8 var(--sans); color: var(--ink-soft); }
@@ -3608,11 +3725,21 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
   display: block; max-width: 68ch; padding: 0; margin: 8px 0 0; background: none;
   font: 400 1rem/1.7 var(--serif); color: var(--ink); overflow-wrap: anywhere;
 }
+/* A brief is OPAX's words: the sans, under the list's one machine label. */
+#panel-search .search-result-brief { font: var(--type-body); line-height: 1.65; }
+/* Who spoke, under the title: the name and their party label. */
+#panel-search .result-byline { display: flex; flex-wrap: wrap; align-items: center; gap: 0 .5rem; font: var(--type-metadata); color: var(--ink-soft); }
+#panel-search .result-byline a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); }
 #panel-search .search-passage-tag { font: var(--type-label); color: var(--ink-soft); }
 #panel-search .search-result-topics { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-#panel-search .search-count-wide { display: none; }
-#panel-search #results-count { font-variant-numeric: tabular-nums; }
-#panel-search #search-date-ruler { margin: 20px 0; }
+/* The count on one line; under it, in fine type, what the count leaves out. */
+#panel-search .results-summary { display: block; font: var(--type-fine); color: var(--ink-soft); }
+#panel-search .results-count-main { display: block; font: var(--type-strong); color: var(--ink); font-variant-numeric: tabular-nums; }
+#panel-search .search-answer:not([hidden]) + #search-results > li:first-child { border-top: 0; }
+/* The year facet, inside Filters: the chart above the year fields. */
+#panel-search #search-date-ruler { display: block; margin: 0 0 16px; }
+#panel-search #search-date-ruler[hidden] { display: none; }
+#panel-search #search-date-ruler .date-ruler-heading { display: block; }
 #panel-search .search-year-scale { display: flex; justify-content: space-between; font: 400 .75rem/1.5 var(--sans); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 #panel-search .search-year-chart { overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: thin; padding-bottom: var(--space-2); display: grid; grid-template-columns: repeat(7, minmax(44px, 1fr)); gap: 1px; border-top: 1px dotted var(--line); }
 #panel-search .search-year-band { display: block; padding: 0 3px; color: var(--ink-soft); text-decoration: none; }
@@ -3624,11 +3751,6 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 #panel-search #search-empty .empty-title { font: 600 1.4rem/1.45 var(--serif); overflow-wrap: anywhere; margin: 0 0 12px; }
 #panel-search #search-empty .empty-lede { font: 400 1rem/1.7 var(--serif); max-width: 60ch; margin: 0; }
 #panel-search #search-empty .empty-actions { justify-content: flex-start; gap: 8px; margin-top: 20px; }
-@media (min-width: 641px) {
-  #panel-search .search-count-wide { display: inline; }
-  #panel-search .search-count-phone { display: none; }
-}
-
 #panel-search .search-result-heading .result-title { display: flex; align-items: center; }
 #panel-search .result-meta { margin-top: 4px; }
 #panel-search .search-result-text.is-collapsed { display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
@@ -3672,10 +3794,7 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 #panel-search #search-input { grid-column: 1 / -1; width: 100%; }
 
 
-  #panel-search .search-answer { padding: 14px 16px; }
-  #panel-search #search-answer .kicker { margin-bottom: 8px; padding-bottom: 8px; }
   #panel-search .search-results-grid { margin-top: 16px; }
-  #panel-search #search-date-ruler { margin: 16px 0 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
   #panel-search *, #panel-search *::before, #panel-search *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
@@ -3775,13 +3894,10 @@ textarea.grow-field:not(.ui-input).is-empty { white-space: nowrap; }
 .subject-ask-form { margin: 0 0 0.4rem; }
 @media (max-width: 700px) {
   .subject-person .subject-grid { row-gap: 1.5rem; }
-  .subject-person #subject-ask-form { gap: .75rem; margin: 0 0 2rem; }
+  .subject-person #subject-ask-form { gap: .75rem; }
   .subject-person #subject-ask-form label { margin: 0; font-size: 1.125rem; }
   .subject-person #subject-ask-form :is(input, button) { min-height: 52px; }
-  .subject-person .person-topics { margin-top: 0; }
-  .subject-person #subject-ask-form + .person-topics .subject-section-title { margin-top: 0; }
   .subject-person .person-topics-head { margin-bottom: 0.9rem; }
-  .subject-person .subject-section-title { margin-top: 2rem; }
 }
 @media (max-width: 480px) {
   .subject-person #subject-ask-form { grid-template-columns: minmax(0, 1fr); }
@@ -3808,28 +3924,6 @@ html[data-panel="chat"] footer { display: none; }
 /* ==== subject pages on wide screens ==== */
 /* Air between the header and the two-column body. */
 @media (min-width: 901px) { .subject-grid { margin-top: 1.25rem; } }
-/* Keep the profile links together on phones so their spacing does not collapse
-   into the Ask form. Wide screens use a single ruled row. */
-.person-jumps-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; border-block: 1px solid var(--line); padding: 0.35rem 0; margin: 0 0 1rem; }
-.person-jumps-row .person-jumps { flex: 1 1 auto; border: 0; margin: 0; }
-.person-jumps-row .person-money-link { flex: 0 1 auto; min-width: 0; margin: 0; }
-.person-money-link .person-money-note { margin: .35rem 0 0; font-size: .8125rem; }
-@media (max-width: 700px) {
-  .person-jumps-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; border: 0; padding: 0; margin-bottom: 1.75rem; }
-  .subject-person .person-jumps-row .person-jumps {
-    gap: .25rem; margin: 0; padding: .25rem;
-    background: var(--paper-sunken); border: 1px solid var(--line); border-radius: 4px;
-  }
-  .subject-person .person-jumps-row .person-jumps a {
-    flex: 1 1 auto; justify-content: center; margin: 0; padding: .5rem .375rem;
-    color: var(--navy); font-weight: 600; text-decoration: none; border-radius: 2px;
-  }
-  .subject-person .person-jumps-row .person-jumps a:hover { background: var(--paper-raised); }
-  .person-jumps-row .person-money-link .ui-button { width: 100%; }
-}
-@media (max-width: 360px) {
-  .subject-person .person-jumps-row .person-jumps:not([hidden]) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
 
 /* ==== the tide: air between the switchers and the chart ==== */
 .tide-view { margin-top: var(--space-4); }
@@ -4174,28 +4268,24 @@ html[data-panel="chat"] footer { display: none; }
 .bill-tag { margin-top: var(--space-2); }
 .bill-tag a { text-decoration: none; border-bottom: 1px solid var(--bronze-rule); }
 .bill-tag a:hover { color: var(--bronze-ink); }
-/* The status is a fact with a date on it; the date is never allowed to leave. */
+/* The status is a fact with a date on it; the date is never allowed to leave.
+   It leads the head as a status label (a word with a tone), above the title. */
 .bill-status {
-  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.35rem 0.75rem;
-  margin: var(--space-3) 0 0; padding-top: var(--space-3);
-  border-top: 1px solid var(--line);
-  font: 400 0.9375rem/1.5 var(--sans); color: var(--ink-soft); max-width: 68ch;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem 0.6rem;
+  margin: 0 0 var(--space-tight, 0.5rem); max-width: 68ch;
 }
-.bill-status b { font: 700 1.0625rem/1.4 var(--sans); color: var(--ink); }
-.bill-status-as { color: var(--ink-faint); font-size: 0.875rem; }
+.bill-status-as { font: var(--type-fine); color: var(--ink-soft); }
+/* Two drawn actions: Ask as a secondary pill, the rest under ⋯. */
+.bill-head .page-actions { margin-top: var(--space-block); }
 
-/* ---- the summary card --------------------------------------------------- */
-/* Same treatment as a speech's machine brief (.doc-brief): a reader who has
-   learned that sunken panel with the bronze edge means "written by a model,
-   not the record" reads it the same way here. */
+/* ---- In short ----------------------------------------------------------- */
+/* No card (principle 2): a section like the others, its machine label once at
+   the top beside the heading. The pill says "written by a model, not the
+   record"; the panel and bronze edge used to say it a second time. */
 
-.bill-summary {
-  margin: var(--space-5) 0 0; max-width: 68ch;
-  background: var(--paper-sunken); border-left: 3px solid var(--bronze);
-  border-radius: 0 4px 4px 0; padding: var(--space-4);
-}
-.bill-summary .subject-section-title { margin: 0; font-size: 1.2rem; }
-.bill-summary .doc-brief-head { margin-bottom: var(--space-3); }
+.bill-summary { max-width: 68ch; }
+.bill-section-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight, 0.5rem) var(--space-heading); margin-bottom: var(--space-heading); }
+#bill-body .bill-section-head .subject-section-title { margin: 0; }
 .bill-sentences p {
   font: 400 1.0625rem/1.62 var(--serif); color: var(--ink); margin: 0 0 0.65rem;
 }
@@ -4210,15 +4300,38 @@ html[data-panel="chat"] footer { display: none; }
 }
 .bill-changes li::marker { color: var(--bronze); }
 .bill-affected { margin: 0; font: 400 0.9375rem/1.6 var(--sans); color: var(--ink); }
-.bill-attrib { margin-top: var(--space-4); }
-.bill-attrib a { color: var(--ink-faint); }
-.bill-attrib a:hover { color: var(--bronze-ink); }
-.bill-summary-empty { background: none; border-left-color: var(--line-strong); padding-left: 1.1rem; }
 .bill-summary-empty .status { margin-top: 0; }
 
 /* ---- the timeline: a hairline ruler ------------------------------------- */
 
-.bill-section { margin: 0; }
+/* A section is a top rule and a heading (§5.2); where the page's blocks differ
+   by category the rule carries a 28px accent mark in the category's ink. */
+#bill-body .bill-section {
+  position: relative; max-width: 68ch; margin: var(--space-section) 0 0; padding-top: var(--space-block);
+  border-top: var(--border-hairline, 1px) solid var(--divider-default, var(--line));
+}
+#bill-body .bill-section[data-accent]::before {
+  content: ""; position: absolute; top: -1px; left: 0;
+  width: var(--border-accent-mark-width); height: var(--border-accent-mark-height); background: var(--accent-ink);
+}
+#bill-body .bill-section[data-accent="bills"] { --accent-ink: var(--bills-ink); }
+#bill-body .bill-section[data-accent="votes"] { --accent-ink: var(--votes-ink); }
+#bill-body .bill-section > .subject-section-title { margin: 0 0 var(--space-heading); }
+#bill-body .bill-section > .ui-source:last-child { margin-top: var(--space-block); }
+/* "All 9 stages": the ruler shows the shape, the stages open in place. */
+.bill-stages > summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+  min-height: var(--size-target, 44px); cursor: pointer; list-style: none;
+  font: var(--type-strong); color: var(--navy);
+}
+.bill-stages > summary::-webkit-details-marker { display: none; }
+.bill-stages > summary::after {
+  content: ""; width: 8px; height: 8px; margin-right: 0.35rem; flex: none;
+  border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+}
+.bill-stages[open] > summary::after { transform: translateY(2px) rotate(-135deg); }
+.bill-stages > summary:focus-visible { outline: var(--border-focus, 2px) solid var(--bronze-ink); outline-offset: 3px; }
 .bill-ruler { display: block; width: 100%; height: auto; max-width: 680px; margin: var(--space-3) 0 var(--space-4); }
 .bill-ruler-axis { stroke: var(--line-strong); stroke-width: 1; vector-effect: non-scaling-stroke; }
 .bill-ruler-tick { stroke: var(--bronze-ink); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
@@ -4248,19 +4361,43 @@ html[data-panel="chat"] footer { display: none; }
 a.bill-division-q { text-decoration: none; }
 a.bill-division-q:hover { color: var(--bronze-ink); }
 .bill-division .result-meta { display: flex; margin-top: 0.2rem; color: var(--ink-faint); font-size: 0.8125rem; }
+/* The outcome leads as a status label with the counts beside it, so ayes and
+   noes read at a glance; the title (the recorded stage) follows. */
 .bill-division-out {
   display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.6rem;
-  margin: var(--space-2) 0 var(--space-3); font: 400 0.9375rem/1.4 var(--sans); color: var(--ink-soft);
+  margin: 0 0 0.35rem; color: var(--ink);
 }
-.bill-division-out b { color: var(--ink); }
+.bill-division-count { font: var(--type-strong); font-variant-numeric: tabular-nums; }
 /* The count on TheyVoteForYou or the state Hansard: the number's own source,
-   one step from the number, without competing with the question above it. */
+   on the division's date line, one step from the number. Its 44px target
+   reaches above and below the line without making the line taller. */
 .bill-division-src {
-  display: inline-flex; align-items: center; min-height: 44px; align-self: center;
-  font: 400 0.8125rem/1.4 var(--sans); color: var(--ink-faint);
-  text-decoration: none; border-bottom: 1px solid var(--line);
+  position: relative; color: var(--ink-soft);
+  text-decoration: underline; text-decoration-color: var(--line-strong); text-underline-offset: 3px;
 }
-.bill-division-src:hover { color: var(--bronze-ink); border-color: var(--bronze-rule); }
+.bill-division-src::after { content: ""; position: absolute; inset: -15px -4px; }
+/* Links set in a row's text keep their line height; their 44px target reaches
+   into the row's own padding instead. */
+:is(.bill-date-what, .bill-speeches li, #bill-body .subject-list li) > a { position: relative; }
+:is(.bill-date-what, .bill-speeches li, #bill-body .subject-list li) > a::after { content: ""; position: absolute; inset: -12px -4px; }
+.bill-division-src:hover { color: var(--bronze-ink); text-decoration-color: var(--bronze-rule); }
+/* "The question · 2 more parties": the rest of the division behind one disclosure. */
+.bill-division-more { margin-top: 0.35rem; }
+.bill-division-more > summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+  min-height: var(--size-target, 44px); cursor: pointer; list-style: none;
+  font: 600 0.9375rem/1.4 var(--sans); color: var(--navy);
+}
+.bill-division-more > summary::-webkit-details-marker { display: none; }
+.bill-division-more > summary::after {
+  content: ""; width: 8px; height: 8px; margin-right: 0.35rem; flex: none;
+  border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+}
+.bill-division-more[open] > summary::after { transform: translateY(2px) rotate(-135deg); }
+.bill-division-more > summary:focus-visible { outline: var(--border-focus, 2px) solid var(--bronze-ink); outline-offset: 3px; }
+.bill-division-more[open] > .bill-division-note { margin-bottom: var(--space-heading); }
+.bill-splits-rest { margin-top: 0.25rem; }
 
 .bill-splits { list-style: none; margin: 0; padding: 0; }
 /* Phone: the party names the split, the bars sit under it full width, and the
@@ -4288,7 +4425,8 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .bill-split-bars i.bill-bar-aye { background: var(--bronze); }
 .bill-split-bars i.bill-bar-no { background: var(--ink-faint); }
 .bill-split-bars i[style*="width:0.0%"] { background: none; box-shadow: inset 0 0 0 1px var(--line); }
-.bill-split-none, .bill-split-partial { margin-top: var(--space-3); }
+.bill-split-none { margin: var(--space-3) 0 0; }
+.bill-split-partial { margin: var(--space-3) 0 0; font: var(--type-fine); color: var(--ink-soft); }
 
 /* ---- what was said, and what became law --------------------------------- */
 
@@ -4296,15 +4434,10 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
   margin: 0.35rem 0 0; font: 400 0.9375rem/1.6 var(--serif); color: var(--ink-soft); max-width: 62ch;
 }
 .bill-speeches .source-title { font-family: var(--serif); font-weight: 600; }
-.bill-actions { margin-top: var(--section-gap); display: flex; flex-wrap: wrap; gap: 0.6rem; }
-/* Under "In short" the row is the page's next step; at the foot it is a quiet repeat. */
-.bill-summary + .bill-actions { margin-top: var(--space-4); }
-.bill-actions-foot { margin-top: var(--space-4); padding-top: var(--space-3); border-top: 1px solid var(--line); }
 
 /* ---- the /bills index --------------------------------------------------- */
 
 .bill-row-title { font: 600 1.0625rem/1.4 var(--serif); }
-.bill-row-status { color: var(--ink); font-weight: 600; }
 .bill-row-long {
   margin: 0.2rem 0 0; font: 400 0.8125rem/1.5 var(--sans); color: var(--ink-faint); max-width: 62ch;
 }
@@ -4414,9 +4547,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
   margin: 0.3rem 0 0; font: 400 0.875rem/1.55 var(--sans); color: var(--ink-soft);
   max-width: 62ch; overflow-wrap: anywhere;
 }
-/* The one- and two-member parties, named on one line under the bars. */
-.bill-split-rest { margin-top: var(--space-2); }
-.bill-split-partial { margin-top: var(--space-2); }
 /* The question a party's division was on, under its bill's name. */
 .party-bill-q {
   grid-column: 1 / -1; margin-top: 0.15rem;

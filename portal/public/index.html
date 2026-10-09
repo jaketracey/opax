@@ -60,7 +60,7 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=db9b35b0c0">
+<link rel="stylesheet" href="/style.css?v=4b98264098">
 <link rel="stylesheet" href="/ui-controls.css?v=f8011bf298">
 <link rel="stylesheet" href="/ui-source.css?v=afbc26b4dc">
 <link rel="stylesheet" href="/voice.css?v=a09a39c243">
@@ -264,24 +264,6 @@
     <!-- ============================== ASK ============================== -->
     <section id="panel-ask" class="panel" aria-label="Ask the record">
       <nav class="entry-modes" aria-label="Research mode"><a href="/ask" aria-current="page">Ask a question</a><a href="/ask?view=search" data-entry-mode="search">Find records</a></nav>
-      <!-- A question, assembled: a shape to choose, slots to fill from the
-           record's own names. It writes the question the free box would take,
-           so everything after it (the address, the cache, the answer) is the
-           same. app.js renders the sentence per shape (ASK_SHAPES). -->
-      <section id="ask-builder" class="ask-builder" aria-labelledby="ask-builder-head">
-        <div class="ask-builder-modes" data-ui-size="default">
-          <label id="ask-builder-head" for="ask-builder-mode">Ask about</label>
-          <div class="ask-builder-shapes ui-segmented" role="group" aria-labelledby="ask-builder-head"></div>
-          <select id="ask-builder-mode" class="ui-input"></select>
-        </div>
-        <form id="ask-builder-form" class="ask-builder-form">
-          <p class="ask-builder-sentence" id="ask-builder-sentence"></p>
-          <button type="submit" class="primary" id="ask-builder-submit">Ask this</button>
-        </form>
-        <p class="ask-builder-or"><span>or type your own question</span></p>
-        <datalist id="ask-topics-list"></datalist>
-        <datalist id="ask-bills-list"></datalist>
-      </section>
       <form id="ask-form" class="ask-row" data-ui-size="large">
         <label for="ask-input" class="visually-hidden">Ask a question of the parliamentary record</label>
         <!-- The box and its clear cross share one wrapper so the cross can sit
@@ -342,12 +324,31 @@
            holds its line whether or not anything is set, so a chip arriving
            never shoves the answer below it down. -->
       <div id="ask-filter-chips" class="filter-chips" role="group" aria-label="Active filters"></div>
+      <!-- Sample questions as plain links, without a label (the home page's rule). -->
       <div id="ask-chips" hidden>
-        <div class="chip-row" id="chip-row">
-          <span class="chip-label">Try a question</span>
-          <!-- chips injected -->
-        </div>
+        <div class="ask-samples" id="chip-row" role="group" aria-label="Sample questions"></div>
       </div>
+      <!-- A question, assembled: a shape to choose, slots to fill from the
+           record's own names. It writes the question the free box would take,
+           so everything after it (the address, the cache, the answer) is the
+           same. app.js renders the sentence per shape (ASK_SHAPES). Closed by
+           default, as on the home page: the free box comes first. -->
+      <details class="ask-guided" id="ask-guided">
+      <summary>Build a question</summary>
+      <section id="ask-builder" class="ask-builder" aria-labelledby="ask-builder-head">
+        <div class="ask-builder-modes" data-ui-size="default">
+          <label id="ask-builder-head" for="ask-builder-mode">Ask about</label>
+          <div class="ask-builder-shapes ui-segmented" role="group" aria-labelledby="ask-builder-head"></div>
+          <select id="ask-builder-mode" class="ui-input"></select>
+        </div>
+        <form id="ask-builder-form" class="ask-builder-form">
+          <p class="ask-builder-sentence" id="ask-builder-sentence"></p>
+          <button type="submit" class="primary" id="ask-builder-submit">Ask this</button>
+        </form>
+        <datalist id="ask-topics-list"></datalist>
+        <datalist id="ask-bills-list"></datalist>
+      </section>
+      </details>
       <div id="ask-status" class="status" role="status"></div>
       <div id="ask-wombat" hidden></div>
       <!-- The passage behind the part of the answer being read, fading up on
@@ -411,7 +412,7 @@
              has one answer has somewhere to go besides the follow-ups. -->
         <section id="ask-again" class="chat-next ask-again" aria-label="Ask something else" hidden>
           <h3 class="subject-section-title">Ask something else</h3>
-          <div class="chip-row" id="ask-again-row"></div>
+          <div class="ask-samples" id="ask-again-row"></div>
         </section>
       </div>
       <!-- The figures follow the answer: the reader asked a question, so the
@@ -566,6 +567,8 @@
             <div class="search-sheet-head"><h2 id="search-options-title" class="subject-section-title">Search filters</h2><button type="button" class="ui-button ui-icon-button" id="search-options-close" aria-label="Close search filters">Close</button></div>
             <div class="filter-rail ask-pop-rail">
               <span class="filter-item filter-item-wide ui-field">
+                <!-- The matches by year, as the year facet: a band sets the years. -->
+                <span id="search-date-ruler" class="date-ruler" hidden></span>
                 <span class="search-years-heading">Years <b id="f-years-label">1993–2026</b></span>
                 <span class="search-year-fields"><label>From year<select id="f-from" aria-label="From year" class="ui-input"></select></label><label>To year<select id="f-to" aria-label="To year" class="ui-input"></select></label></span>
               </span>
@@ -654,20 +657,6 @@
       <div id="search-status" class="status" role="status"></div>
       <div id="search-wombat" hidden></div>
       <div class="search-results-grid">
-      <aside class="search-answer" id="search-answer" hidden aria-labelledby="search-answer-head">
-        <div class="search-summary-heading">
-          <h2 id="search-answer-head">Cited summary</h2>
-          <span id="search-answer-status" role="status" aria-live="polite"></span>
-          <button type="button" id="search-answer-dismiss" aria-label="Dismiss summary" class="ui-button ui-icon-button" data-variant="quiet"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg></button>
-        </div>
-        <div class="answer answer-compact" id="search-answer-body"></div>
-        <details id="search-answer-fold" class="chat-sources" hidden>
-          <summary id="search-answer-sum">Sources</summary>
-          <ol class="source-list" id="search-answer-sources"></ol>
-        </details>
-        <p class="fineprint" id="search-answer-more"></p>
-        <button type="button" class="ui-button" id="search-answer-retry" hidden>Try summary again</button>
-      </aside>
       <div class="search-results-main">
       <div id="search-empty" class="empty-state" hidden></div>
       <div class="results-bar" id="results-bar" hidden>
@@ -676,9 +665,6 @@
             <span id="results-count" role="status" aria-live="polite" aria-atomic="true"></span>
             <span id="search-brief-status" class="search-brief-status" aria-live="polite"></span>
           </span>
-          <!-- Shown while the reader has dismissed the summary; pressing it
-               brings the summary back and forgets the dismissal. -->
-          <button type="button" class="ui-button" id="search-summary-show" hidden data-variant="quiet">Show cited summary</button>
         </span>
         <div class="results-actions">
           <div id="search-readbar" class="search-readbar" hidden>
@@ -686,6 +672,8 @@
               <button type="button" id="search-read-passages" aria-pressed="true" class="ui-button">Passages</button>
               <button type="button" id="search-read-briefs" aria-pressed="false" class="ui-button">Briefs</button>
             </div>
+            <!-- With Briefs on, the list's one machine label. -->
+            <details class="ui-pop ui-machine search-briefs-label" id="search-briefs-label" hidden><summary><span class="ui-machine-glyph" aria-hidden="true">✦</span>Machine-written</summary><div class="ui-sheet"><p>Briefs are written by a model from each record. A brief is not part of the record: open the record to read it. A row with no brief shows the record’s own text.</p></div></details>
           </div>
           <div id="search-sort-picker" class="search-sort-picker">
             <input id="search-sort" type="hidden" value="relevance">
@@ -702,18 +690,37 @@
               <p id="search-sort-note">Applies across all pages of retrieved matches.</p>
             </div>
           </div>
-          <button type="button" class="ui-button" id="search-copylink"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.3 11.7l3.4-3.4"/><path d="M9.2 13.6l-1.7 1.7a2.85 2.85 0 0 1-4-4l2.5-2.5a2.85 2.85 0 0 1 4 0"/><path d="M10.8 6.4l1.7-1.7a2.85 2.85 0 0 1 4 4L14 11.2a2.85 2.85 0 0 1-4 0"/></svg><span>Copy link</span></button>
-          <div class="search-sort-picker export-picker" id="search-export-picker">
-            <button type="button" class="search-sort-trigger ui-button" id="search-export" aria-haspopup="menu" aria-expanded="false" aria-controls="search-export-menu"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v9"/><path d="M6.5 8.5L10 12l3.5-3.5"/><path d="M3.5 15.5h13"/></svg><span>Export</span><svg class="search-sort-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m5 7 5 5 5-5"/></svg></button>
-            <div id="search-export-menu" class="search-sort-menu" role="menu" aria-label="Export format" hidden>
-              <button type="button" role="menuitem" data-format="csv" tabindex="-1"><span><strong>CSV</strong><small>A spreadsheet of every retrieved match</small></span></button>
-              <button type="button" role="menuitem" data-format="bibtex" tabindex="-1"><span><strong>BibTeX</strong><small>For LaTeX and reference managers</small></span></button>
-              <button type="button" role="menuitem" data-format="ris" tabindex="-1"><span><strong>RIS</strong><small>For Zotero, EndNote and Mendeley</small></span></button>
+          <!-- ⋯: copy the link and the three export formats. A details popover;
+               ui-source.js gives it Escape and light dismiss. -->
+          <details class="ui-pop page-more" id="search-more">
+            <summary aria-label="Share and export these results" title="Share and export these results"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="4.5" cy="10" r="1.5"/><circle cx="10" cy="10" r="1.5"/><circle cx="15.5" cy="10" r="1.5"/></svg></summary>
+            <div class="ui-sheet">
+              <ul class="page-more-list" role="list">
+                <li><button type="button" class="page-more-item" id="search-copylink"><span>Copy link</span></button></li>
+                <li><button type="button" class="page-more-item" data-format="csv"><span>Export CSV</span><small>A spreadsheet of every retrieved match</small></button></li>
+                <li><button type="button" class="page-more-item" data-format="bibtex"><span>Export BibTeX</span><small>For LaTeX and reference managers</small></button></li>
+                <li><button type="button" class="page-more-item" data-format="ris"><span>Export RIS</span><small>For Zotero, EndNote and Mendeley</small></button></li>
+              </ul>
             </div>
-          </div>
+          </details>
         </div>
       </div>
-      <div id="search-date-ruler" class="date-ruler" hidden></div>
+      <!-- Summarise these records: a collapsed row with the machine label. It
+           is written on request, when the row is opened, and sits above the
+           results it reads. -->
+      <details class="search-answer" id="search-answer" hidden>
+        <summary class="search-summary-row"><span class="search-summary-word" id="search-answer-head">Summarise these records</span><span class="search-summary-machine"><span aria-hidden="true">✦</span> Machine-written</span></summary>
+        <div class="search-summary-open">
+          <p class="search-summary-status" id="search-answer-status" role="status" aria-live="polite"></p>
+          <div class="answer answer-compact" id="search-answer-body"></div>
+          <details id="search-answer-fold" class="chat-sources" hidden>
+            <summary id="search-answer-sum">Sources</summary>
+            <ol class="source-list" id="search-answer-sources"></ol>
+          </details>
+          <p class="search-summary-note" id="search-answer-more"></p>
+          <button type="button" class="ui-button" id="search-answer-retry" hidden>Try summary again</button>
+        </div>
+      </details>
       <ul id="search-results" class="results" role="list"></ul>
       <!-- The band keeps its height whether or not there is a second page, so
            arriving at a short last page does not lift the footer. -->
@@ -1988,10 +1995,10 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=be1619f005" defer></script>
+<script src="/spa-shell.js?v=fa55274a51" defer></script>
 <script src="/navigation.js?v=02752160b8" defer></script>
 <script src="/quick-search.js?v=206914f32d" defer></script>
 <script src="/ui-source.js?v=2163f6a875" defer></script>
-<script src="/app.js?v=664c8ad0e6" defer></script>
+<script src="/app.js?v=035ae60d31" defer></script>
 </body>
 </html>

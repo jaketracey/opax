@@ -10,19 +10,24 @@ const [expenses, photos, roster, app] = await Promise.all([
 ]);
 const source = app.match(/async function renderPersonExpenses\(name, personId, sections\) \{[\s\S]*?\n\}/)?.[0];
 assert.ok(source, 'the test exercises the person-page renderer');
+// The block's source line is the shared SourceLine (the labels block in app.js).
+const labels = app.slice(app.indexOf('const SOURCE_GLYPH'), app.indexOf('// labels:end'));
+assert.ok(labels.includes('function sourceLineHTML'), 'the shared source line is in reach');
 
+// The total is the block's figure on the "On this page" rail (it was a Quick facts row).
 async function render(name, personId, data = expenses, photoMap = photos, overrides = {}) {
-  const result = {section: '', infobox: ''};
+  const result = {section: '', figure: ''};
   const context = {
     currentSubjectKey: 'person:' + name, expensesData: data, photoMap,
     loadExpenses: async () => {}, loadPhotoMap: async () => {}, loadExpenseDefs: async () => {},
-    getExpenseBenchmarks: () => null, safeUrl: url => url, esc: value => String(value),
+    getExpenseBenchmarks: () => null, safeUrl: url => url, esc: value => String(value), fmtDate: value => String(value),
     fmtMoney: value => '$' + value, columnChart: rows => JSON.stringify(rows), IPEA_NOTE: '',
-    $: () => ({querySelector: () => ({insertAdjacentHTML: (_, html) => { result.infobox += html; }})}),
+    $: () => null,
     ...overrides,
   };
-  runInNewContext(source, context);
+  runInNewContext(labels + source, context);
   await context.renderPersonExpenses(name, personId, {insertAdjacentHTML: (_, html) => { result.section += html; }});
+  result.figure = result.section.match(/data-rail-figure="([^"]*)"/)?.[1] || '';
   return result;
 }
 
@@ -31,7 +36,7 @@ test('an id with no expense record falls back to the IPEA name index', async () 
   for (const portrait of ['wd-Q1', 'missing-portrait', '999', null]) {
     const result = await render('Test Member', portrait, data, {'test member': portrait});
     assert.match(result.section, /Parliamentary expenses/);
-    assert.match(result.infobox, /\$456/);
+    assert.equal(result.figure, '$456');
   }
 });
 
@@ -43,8 +48,8 @@ test('every roster person gets the record of their verified pid, else their name
     const result = await render(key, pids.get(key) ?? null);
     if (expected) {
       assert.match(result.section, /Parliamentary expenses/, key);
-      assert.ok(result.infobox.includes('$' + expected.total), key);
-    } else assert.deepEqual(result, {section: '', infobox: ''}, key);
+      assert.equal(result.figure, '$' + expected.total, key);
+    } else assert.deepEqual(result, {section: '', figure: ''}, key);
   }
 });
 
@@ -53,20 +58,20 @@ test('a print once on another member\'s portrait shows its own expenses (Patrick
   assert.ok(pat, 'Pat Conaghan has an IPEA record');
   for (const portrait of [{'patrick conaghan': '10903'}, photos]) {
     const result = await render('Patrick Conaghan', '10922', expenses, portrait);
-    assert.ok(result.infobox.includes('$' + pat.total), 'his own total');
-    assert.ok(!result.infobox.includes('$' + expenses.people['10903'].total), 'not Rex Patrick\'s');
+    assert.equal(result.figure, '$' + pat.total, 'his own total');
+    assert.notEqual(result.figure, '$' + expenses.people['10903'].total, 'not Rex Patrick\'s');
   }
   // A print the roster gives no pid (it holds more than one person) gets no single person's record.
-  assert.deepEqual(await render('Cox', null), {section: '', infobox: ''});
+  assert.deepEqual(await render('Cox', null), {section: '', figure: ''});
 });
 
 test('a valid explicit ID retains priority; otherwise the name index decides and a portrait key never does', async () => {
   const data = {people: {'1': {total: 100, lines: 1, from: 2025, to: 2025}, '2': {total: 200, lines: 1, from: 2025, to: 2025}}, names: {'test member': '2'}};
-  assert.match((await render('Test Member', '1', data, {'test member': '2'})).infobox, /\$100/);
-  assert.match((await render('Test Member', 'stale', data, {'test member': '1'})).infobox, /\$200/);
-  assert.match((await render('  Test Member  ', 'stale', data, {'test member': 'wd-Q1'})).infobox, /\$200/);
-  assert.match((await render('Test Member', null, data, {})).infobox, /\$200/);
-  assert.deepEqual(await render('Unlisted Member', null, data, {}), {section: '', infobox: ''});
+  assert.match((await render('Test Member', '1', data, {'test member': '2'})).figure, /^\$100$/);
+  assert.match((await render('Test Member', 'stale', data, {'test member': '1'})).figure, /^\$200$/);
+  assert.match((await render('  Test Member  ', 'stale', data, {'test member': 'wd-Q1'})).figure, /^\$200$/);
+  assert.match((await render('Test Member', null, data, {})).figure, /^\$200$/);
+  assert.deepEqual(await render('Unlisted Member', null, data, {}), {section: '', figure: ''});
 });
 
 test('the source line states the licence expenses.json publishes, linked to its deed', async () => {

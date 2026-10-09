@@ -3059,10 +3059,20 @@ function renderSearchDateRuler(years, q, f) {
       <span class="search-year-bars" aria-hidden="true">${annual.map(([year, n]) => `<i style="--year-height:${n / max * 100}%" title="${year}: ${n}"></i>`).join("")}</span>
       <span class="search-year-label" aria-hidden="true">${from}<br>–${String(to).slice(-2)}</span></a>`);
   }
-  box.innerHTML = `<h3 class="date-ruler-heading">Matches by year</h3>
-    <div class="search-year-scale"><span>${max.toLocaleString()} matches</span></div>
+  box.innerHTML = `<span class="date-ruler-heading">Matches by year</span>
+    <span class="search-year-scale"><span>${max.toLocaleString()} matches</span></span>
     <nav class="search-year-chart" aria-label="Filter search by year range">${bands.join("")}</nav>`;
   box.hidden = false;
+  // The chart is the year facet inside Filters: a band sets the years and applies.
+  box.onclick = (e) => {
+    const band = e.target.closest(".search-year-band");
+    if (!band || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+    e.preventDefault();
+    const target = new URL(band.href, location.origin).searchParams;
+    $("f-from").value = target.get("from"); $("f-to").value = target.get("to");
+    updateSearchYearsLabel();
+    $("search-options-apply")?.click();
+  };
 }
 
 // --- scroll quote rail ------------------------------------------------------
@@ -3584,7 +3594,7 @@ function photoUrlFor(name) {
 
 // Portraits keyed "wd-<QID>" come from Wikimedia Commons under a per-file licence
 // (photos/credits.json, written by scripts/fetch_commons_portraits.py). The credit is
-// the licence condition, so it sits in the infobox beside the facts. Numeric keys are
+// the licence condition, so it stays visible: at the foot of a person page's rail. Numeric keys are
 // the official APH portraits (via OpenAustralia) under the site-wide CC BY-NC-ND and
 // need no per-image line.
 let portraitCreditsPromise = null;
@@ -3598,8 +3608,11 @@ async function renderPortraitCredit(name, key) {
   const lic = c.licence ? (c.licence_url
     ? `, <a href="${esc(c.licence_url)}" rel="noopener" target="_blank">${esc(c.licence)}</a>` : `, ${esc(c.licence)}`) : "";
   const page = safeUrl(c.page);
-  $("subject-infobox")?.querySelector("dl")?.insertAdjacentHTML("beforeend",
-    `<dt>Photo</dt><dd>${esc(who)}${lic}, via ${page ? `<a href="${esc(page)}" rel="noopener" target="_blank">Wikimedia Commons ↗︎</a>` : "Wikimedia Commons"}</dd>`);
+  const credit = `${esc(who)}${lic}, via ${page ? `<a href="${esc(page)}" rel="noopener" target="_blank">Wikimedia Commons ↗︎</a>` : "Wikimedia Commons"}`;
+  // On a person page the credit stays visible, at the foot of the rail.
+  const line = $("person-photo-credit");
+  if (line) { line.innerHTML = `Photo: ${credit}`; line.hidden = false; return; }
+  $("subject-infobox")?.querySelector("dl")?.insertAdjacentHTML("beforeend", `<dt>Photo</dt><dd>${credit}</dd>`);
 }
 
 // Voting records for the same 200 people, exported from the division tables
@@ -3839,6 +3852,7 @@ async function renderPersonInterests(name, personId, sections) {
   const key = currentSubjectKey;
   const slot = document.createElement("div");
   slot.id = "subject-interests";
+  slot.dataset.accent = "interests";
   sections.appendChild(slot);
   const getJSON = (url, init) => fetch(url, init).then((r) => (r.ok ? r.json() : null)).catch(() => null);
   renderPersonInterests.index ??= getJSON("/interests/index.json", { cache: "no-cache" });
@@ -3905,7 +3919,7 @@ async function renderPersonInterests(name, personId, sections) {
       `${years.length ? ` <span class="result-meta">${Math.min(...years)}–${Math.max(...years)}</span>` : ""}</p>`;
   };
   const tiesHTML = tiesByOrg.size ? `
-    <section id="person-ties" class="declared-ties" aria-labelledby="declared-ties-heading">
+    <section id="person-ties" class="declared-ties" data-accent="interests" data-rail-figure="${tiesByOrg.size}" aria-labelledby="declared-ties-heading">
       <h3 class="subject-section-title" id="declared-ties-heading">Declared ties to disclosed money</h3>
       <p class="interests-summary">${base ? `<a href="${esc(base)}" rel="noopener" target="_blank"><b>${tiesByOrg.size}</b></a>` : `<b>${tiesByOrg.size}</b>`}
         ${tiesByOrg.size === 1 ? "organisation named" : "organisations named"} in this register also ${tiesByOrg.size === 1 ? "appears" : "appear"} in an AEC donor return, on a lobbyist register or on the Foreign Influence Transparency Scheme register.</p>
@@ -3929,7 +3943,16 @@ async function renderPersonInterests(name, personId, sections) {
           ? ` <a href="${esc(lead.fits_url)}" rel="noopener" target="_blank">register ↗︎</a>` : "";
         return `<li><div>${orgLabel}</div><div class="result-meta">${esc(tieKindLine(lead))}${fits}</div>${declarations}${tieFlowLine(lead)}</li>`;
       }).join("")}</ul>
-      <p class="fineprint">A name matches when the register spells it as the AEC or the lobbyist register does; subsidiaries, trading names and funds that hold the shares are not matched, so this list is a floor. Flows are that organisation's disclosed gifts to each party, 1998-99 to 2025-26, and say nothing about the member. Source: ${base ? `<a href="${esc(base)}" rel="noopener" target="_blank">${esc(register)} ↗︎</a>` : esc(register)}; <a href="${aecRegister}" rel="noopener" target="_blank">AEC disclosure returns, CC BY 4.0 ↗︎</a>.${ties.some((t) => (t.kinds || []).includes("fits")) ? " FITS registration is a disclosure required by law, not a finding of wrongdoing." : ""}</p>
+      ${sourceLineHTML({
+        updated: data.as_at || "", source: `${REGISTER[data.chamber] || "Register of interests"} and AEC returns`,
+        originals: [base && { label: REGISTER[data.chamber] || "Register of interests", href: base }, { label: "AEC disclosure returns", href: aecRegister }].filter(Boolean),
+        notes: [
+          "A name matches when the register spells it as the AEC or the lobbyist register does; subsidiaries, trading names and funds that hold the shares are not matched, so this list is a floor.",
+          "Flows are that organisation's disclosed gifts to each party, 1998-99 to 2025-26, and say nothing about the member.",
+          ties.some((t) => (t.kinds || []).includes("fits")) ? "FITS registration is a disclosure required by law, not a finding of wrongdoing." : "",
+        ],
+        licence: "AEC disclosure returns, CC BY 4.0.",
+      })}
     </section>` : "";
 
   const itemHTML = (it) => {
@@ -3962,16 +3985,21 @@ async function renderPersonInterests(name, personId, sections) {
     : `no alterations notified ${since}`;
   slot.innerHTML = `
     ${tiesHTML}
-    <h3 id="person-register" class="subject-section-title">Declared interests</h3>
-    <p class="person-register-updates"><a href="${esc(`/declared?person=${encodeURIComponent(data.name || name)}`)}">Just declared →</a></p>
+    <h3 id="person-register" class="subject-section-title" data-rail-figure="${num(data.total)}">Declared interests</h3>
+    <p class="person-register-updates"><a href="${esc(`/declared?person=${encodeURIComponent(data.name || name)}`)}">Just declared</a></p>
     <p class="interests-summary"><b>${num(data.total)}</b> ${data.total === 1 ? "entry" : "entries"} across ${num(buckets.length)} ${buckets.length === 1 ? "category" : "categories"} · ${alterations}</p>
     <ul class="subject-list interests-list" role="list">${rows}</ul>
-    <p class="fineprint">${esc(register)}; entries as declared, not verified by OPAX. One entry is one cell of the form, so a list typed in one cell counts once.${base ? ` <a href="${esc(base)}" rel="noopener" target="_blank">Open the register entry ↗︎</a>` : ""}</p>
-    ${data.ocr_rows > 0 ? `<p class="fineprint">${num(data.ocr_rows)} ${data.ocr_rows === 1 ? "entry comes" : "entries come"} from scanned pages and may contain recognition errors.</p>` : ""}
-    ${data.unread_pages > 0 ? `<p class="fineprint">${num(data.unread_pages)} ${data.unread_pages === 1 ? "page" : "pages"} of the source could not be read by machine; the register itself is complete.</p>` : ""}`;
-  $("subject-infobox")?.querySelector("dl")?.insertAdjacentHTML("beforeend",
-    `<dt>Declared interests</dt><dd>${num(data.total)} ${data.total === 1 ? "entry" : "entries"}</dd>` +
-    (tiesByOrg.size ? `<dt>Ties to disclosed money</dt><dd><b>${num(tiesByOrg.size)}</b> ${tiesByOrg.size === 1 ? "organisation" : "organisations"}</dd>` : ""));
+    ${sourceLineHTML({
+      updated: data.as_at || "", source: REGISTER[data.chamber] || "Register of interests",
+      // Scanned pages read by machine: the register is complete, OPAX's reading of it may not be.
+      state: data.ocr_rows > 0 || data.unread_pages > 0 ? "partial" : "",
+      originals: base ? [{ label: "Open the register entry", href: base }] : [],
+      notes: [
+        `${esc(register)}; entries as declared, not verified by OPAX. One entry is one cell of the form, so a list typed in one cell counts once.`,
+        data.ocr_rows > 0 ? `${num(data.ocr_rows)} ${data.ocr_rows === 1 ? "entry comes" : "entries come"} from scanned pages and may contain recognition errors.` : "",
+        data.unread_pages > 0 ? `${num(data.unread_pages)} ${data.unread_pages === 1 ? "page" : "pages"} of the source could not be read by machine; the register itself is complete.` : "",
+      ],
+    })}`;
 }
 
 let interestsTiesPromise = null;
@@ -4051,13 +4079,37 @@ function findMoneyNode(kind, name) {
   return byAlias || best;
 }
 
-function subjectSkeleton(kindLabel, name, tagHTML, withPortrait = kindLabel === "Parliamentarian") {
+const MORE_GLYPH = '<svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="4.5" cy="10" r="1.5"/><circle cx="10" cy="10" r="1.5"/><circle cx="15.5" cy="10" r="1.5"/></svg>';
+
+/** ⋯: what a page keeps but does not draw (principle 5: one primary action,
+ *  the rest under ⋯). A details popover like the source sheets, so
+ *  ui-source.js gives it Escape, light dismiss and one open at a time. Items
+ *  are links ({ href, label }) or buttons ({ action, label }) a page wires. */
+function moreMenuHTML(items, label = "More actions") {
+  const rows = items.filter(Boolean).map((it) => {
+    if (it.action) return `<li><button type="button" class="page-more-item" data-more-action="${esc(it.action)}">${esc(it.label)}</button></li>`;
+    const external = /^https?:/i.test(it.href || "") ? safeUrl(it.href) : null;
+    const href = external || (/^\/(?!\/)/.test(it.href || "") ? it.href : null);
+    return href ? `<li><a class="page-more-item" href="${esc(href)}"${external ? ' rel="noopener" target="_blank"' : ""}>${
+      esc(it.label)}${external ? ' <span aria-hidden="true">↗︎</span><span class="visually-hidden">, opens a new tab</span>' : ""}</a></li>` : "";
+  }).filter(Boolean);
+  if (!rows.length) return "";
+  return `<details class="ui-pop page-more"><summary aria-label="${esc(label)}" title="${esc(label)}">${MORE_GLYPH}</summary>` +
+    `<div class="ui-sheet"><ul class="page-more-list" role="list">${rows.join("")}</ul></div></details>`;
+}
+
+/* `kicker: false` for a person: the breadcrumb already says where the reader
+   is, so the page says who it is once (principle 3). Other entries keep theirs
+   until their own pass. */
+function subjectSkeleton(kindLabel, name, tagHTML, withPortrait = kindLabel === "Parliamentarian", { kicker = true } = {}) {
   const portraitUrl = withPortrait ? photoUrlFor(name) : null;
   const portrait = portraitUrl
     ? `<img class="subject-portrait" src="${esc(portraitUrl)}" alt="${/^\d+$/.test(photoIdFor(name) || "") ? "Official portrait" : "Portrait"} of ${esc(name)}" width="112" height="112">`
-    : withPortrait && !photoMap ? '<span class="subject-portrait subject-portrait-pending" aria-hidden="true"></span>' : "";
+    : withPortrait && !photoMap ? '<span class="subject-portrait subject-portrait-pending" aria-hidden="true"></span>'
+    // No portrait: OPAX's blank circle, never initials.
+    : withPortrait && kindLabel === "Parliamentarian" ? '<span class="subject-portrait subject-portrait-blank" aria-hidden="true"></span>' : "";
   return `
-    <p class="kicker">${esc(kindLabel)}</p>
+    ${kicker ? `<p class="kicker">${esc(kindLabel)}</p>` : ""}
     <div class="subject-head">
       ${portrait}
       <h2 id="subject-title" tabindex="-1">${esc(name)}</h2>
@@ -4349,7 +4401,7 @@ function expenseComparisonHTML(person, benchmark, source) {
   </section>`;
 }
 
-/** "Parliamentary expenses" on a person page plus the infobox quick fact.
+/** "Parliamentary expenses" on a person page; its total is the block's rail figure.
  *  Silent when the person has no IPEA entry (state MPs, pre-2017 members). */
 async function renderPersonExpenses(name, personId, sections) {
   const key = currentSubjectKey;
@@ -4374,18 +4426,25 @@ async function renderPersonExpenses(name, personId, sections) {
   const sourceAmount = (value, label) => src
     ? `<a href="${esc(src)}" rel="noopener" target="_blank" aria-label="${esc(label)}"><b>${esc(fmtMoney(value))}</b></a>`
     : `<b>${esc(fmtMoney(value))}</b>`;
-  sections.insertAdjacentHTML("beforeend", `
-    <p class="kicker">Parliamentary expenses</p>
+  sections.insertAdjacentHTML("beforeend", `<section id="person-expenses" data-accent="money" data-rail-figure="${esc(fmtMoney(e.total))}">
+    <h3 class="subject-section-title">Parliamentary expenses</h3>
     <p style="margin:0.2rem 0 0.6rem">${sourceAmount(e.total, `${fmtMoney(e.total)} claimed expenses, IPEA source`)} claimed, ${esc(span)},
       across ${lines.toLocaleString()} published line${lines === 1 ? "" : "s"}${benchmark ? `: about ${sourceAmount(annual, `${fmtMoney(annual)} a year, IPEA source`)} a year against a median of ${sourceAmount(benchmark.totalMedian, `${fmtMoney(benchmark.totalMedian)} chamber median a year, IPEA source`)}` : ""}.</p>
     ${benchmark ? expenseComparisonHTML(e, benchmark, src) : ""}
     ${e.by_year?.length > 1 ? columnChart(e.by_year, {
       fmt: fmtMoney, heading: "Claimed per year",
-      note: "Summed by reporting quarter. IPEA data starts in April 2017 and runs to the latest published quarter, so the first and last years can be partial.",
     }) : ""}
-    ${benchmark ? `<p class="fineprint">Bronze is this member's average year; the ink tick is the median year of ${benchmark.count.toLocaleString()} parliamentarians claiming in ${benchmark.latestYear} who have claimed since ${benchmark.fromCutoff} or earlier. Office costs follow electorate size and travel follows portfolio, so a bar past its tick is a fact, not a finding. Per-year figures divide each total by the ${years} calendar ${years === 1 ? "year" : "years"} claimed; the first and last are partial. Source: ${src ? `<a href="${esc(src)}" rel="noopener" target="_blank">IPEA quarterly expenditure reports to ${esc(benchmark.latestQuarter)} ↗︎</a>` : "IPEA quarterly expenditure reports"}${licence}. IPEA corrects prior quarters, so treat totals as indicative. <a href="/expenses">What the categories mean</a>.</p>` : `<p class="fineprint">Independent Parliamentary Expenses Authority quarterly reports${licence}. ${esc(IPEA_NOTE)} <a href="/expenses">What the categories mean</a>${src ? ` · <a href="${esc(src)}" rel="noopener" target="_blank">Latest quarter on data.gov.au ↗︎</a>` : ""}</p>`}`);
-  $("subject-infobox")?.querySelector("dl")?.insertAdjacentHTML("beforeend",
-    `<dt>Claimed expenses</dt><dd><b>${esc(fmtMoney(e.total))}</b></dd>`);
+    ${sourceLineHTML({
+      source: benchmark ? `IPEA quarterly reports to ${benchmark.latestQuarter}` : "IPEA quarterly reports",
+      originals: [src && { label: benchmark ? "IPEA quarterly expenditure reports" : "Latest quarter on data.gov.au", href: src },
+        { label: "What the categories mean", href: "/expenses" }].filter(Boolean),
+      notes: [
+        "Summed by reporting quarter. IPEA data starts in April 2017 and runs to the latest published quarter, so the first and last years can be partial.",
+        benchmark ? `Bronze is this member's average year; the ink tick is the median year of ${benchmark.count.toLocaleString()} parliamentarians claiming in ${esc(benchmark.latestYear)} who have claimed since ${esc(benchmark.fromCutoff)} or earlier. Office costs follow electorate size and travel follows portfolio, so a bar past its tick is a fact, not a finding. Per-year figures divide each total by the ${years} calendar ${years === 1 ? "year" : "years"} claimed; the first and last are partial. IPEA corrects prior quarters, so treat totals as indicative.` : esc(IPEA_NOTE),
+      ],
+      licence: licence ? `Independent Parliamentary Expenses Authority${licence}.` : "",
+    })}
+  </section>`);
 }
 
 // --- pay for the posts held ----------------------------------------------------
@@ -4430,8 +4489,7 @@ async function renderPersonPay(name, sections) {
   const years = person.by_year;
   const fromStart = person.from <= data.meta.from;
   const sources = Object.fromEntries((data.meta.sources || []).map((src) => [src.id, src]));
-  const link = (id, label) => sources[id] && safeUrl(sources[id].url)
-    ? `<a href="${esc(safeUrl(sources[id].url))}" rel="noopener" target="_blank">${esc(label)} ↗︎</a>` : esc(label);
+  const original = (id, label) => sources[id] && safeUrl(sources[id].url) ? { label, href: sources[id].url } : null;
   const rows = [...person.spells].reverse().map(([from, to, post, pct, salary, assumed]) => `
     <li class="pay-row">
       <span class="pay-when">${esc(fmtDate(from))} to ${to ? esc(fmtDate(to)) : "now"}</span>
@@ -4441,16 +4499,29 @@ async function renderPersonPay(name, sections) {
   const notes = (data.meta.not_covered || []).filter((note) => note.id !== "shadow-notice" || person.spells.some((spell) => spell[5]))
     .map((note) => esc(note.text)).join(" ");
   const allowance = data.meta.electorate_allowance;
+  slot.dataset.railFigure = payMoney(person.now?.salary || last[4]);
+  slot.dataset.accent = "money";
   slot.innerHTML = `
     <h3 class="subject-section-title">Pay for the posts held</h3>
     <p class="pay-lead">${lead}${peak}</p>
     <p class="pay-lead">About <b>${esc(total)}</b> in salary entitlements, ${esc(payYear(years[0][0]))} to ${esc(payYear(years[years.length - 1][0]))}${fromStart ? `, counted from ${esc(fmtDate(data.meta.from))}, where this record starts` : ""}.</p>
     ${years.length > 1 ? columnChart(years.map(([year, amount]) => [payYear(year), amount]), {
       fmt: fmtMoney, heading: "Salary entitlement by financial year",
-      note: "Each day at the base salary then in force plus the loading of the post then held. The first and last years are part years; nothing is adjusted for inflation.",
     }) : ""}
     <ol class="pay-rows" aria-label="Posts held and their salary">${rows}</ol>
-    <p class="fineprint">The rate on each row is the one in force when the spell ended; a new row starts whenever the post or its loading changed. These are entitlements set by instrument, not payslips: they leave out the electorate allowance${allowance ? ` (${esc(payMoney(allowance.min))} to ${esc(payMoney(allowance.max))} a year)` : ""}, expenses, superannuation and outside income. ${notes} Sources: ${link("mp-determination", "Remuneration Tribunal determinations")} and ${link("ministerial-report", "its report on ministerial salaries")} for what each post pays; the ${link("handbook", "Parliamentary Handbook")} for who held it and when. As at ${esc(fmtDate(data.meta.as_of))}.</p>`;
+    <p class="person-caveat">Entitlements set by instrument, not payslips.</p>
+    ${sourceLineHTML({
+      updated: data.meta.as_of || "", source: "Remuneration Tribunal",
+      originals: [original("mp-determination", "Remuneration Tribunal determinations"),
+        original("ministerial-report", "Its report on ministerial salaries"), original("handbook", "Parliamentary Handbook")].filter(Boolean),
+      notes: [
+        "Remuneration Tribunal determinations and its report on ministerial salaries for what each post pays; the Parliamentary Handbook for who held it and when.",
+        "Each day at the base salary then in force plus the loading of the post then held. The first and last years are part years; nothing is adjusted for inflation.",
+        "The rate on each row is the one in force when the spell ended; a new row starts whenever the post or its loading changed.",
+        `These entitlements leave out the electorate allowance${allowance ? ` (${esc(payMoney(allowance.min))} to ${esc(payMoney(allowance.max))} a year)` : ""}, expenses, superannuation and outside income.`,
+        notes,
+      ],
+    })}`;
   if (location.hash === "#person-pay" || pendingAnchor === "person-pay") {
     pendingAnchor = "";
     settleOn(slot);
@@ -4836,9 +4907,13 @@ async function renderPersonDiary(name, container, chambers) {
     </div>
     ${m.by_org?.length ? barList(m.by_org, { heading: "Most-met organisations", linkTo }) : ""}
     ${recent ? `<p class="kicker kicker-sub">Recent meetings</p><ul class="subject-list" role="list">${recent}</ul>` : ""}
-    <p class="fineprint">${scheme} Staff, cabinet, departmental and other government meetings are counted
-      but left out of the lists. Organisation names link to a donor's entry where the name matches an AEC donor
-      exactly, otherwise to the record.${m.latest_pdf ? ` <a href="${esc(safeUrl(m.latest_pdf) || "#")}" rel="noopener" target="_blank">Latest diary (PDF) ↗︎</a>` : ""}</p>`;
+    ${sourceLineHTML({
+      source: m.jurisdiction === "qld" ? "Queensland ministerial diaries" : "NSW ministers' diaries",
+      originals: safeUrl(m.latest_pdf) ? [{ label: "Latest diary (PDF)", href: m.latest_pdf }] : [],
+      notes: [scheme, `Staff, cabinet, departmental and other government meetings are counted but left out of the
+        lists. Organisation names link to a donor's entry where the name matches an AEC donor exactly, otherwise to the record.`],
+    })}`;
+  slot.dataset.railFigure = (m.meetings_total || 0).toLocaleString();
 }
 
 // --- debts and other funding on party pages -----------------------------------
@@ -5097,9 +5172,8 @@ async function renderPersonVotes(name, personId, sections) {
   const span = years.length ? `${esc(String(Math.min(...years)))} to ${esc(String(Math.max(...years)))}` : "";
   const where = jurs.length ? `${esc(jurs.map(jurName).join(" and "))} parliament${jurs.length > 1 ? "s" : ""}` : "";
   const federal = recs.some((r) => r.jurisdiction === "federal");
-  const tvfy = federal
-    ? actionBtn("external", `https://theyvoteforyou.org.au/search?query=${encodeURIComponent(name)}`, "Full record on They Vote For You", { external: true })
-    : "";
+  slot.dataset.railFigure = total.toLocaleString();
+  slot.dataset.accent = "votes";
   slot.innerHTML = `
     <h3 class="subject-section-title">Voting record</h3>
     <div class="tiles tiles-compact votes-tiles">
@@ -5108,19 +5182,21 @@ async function renderPersonVotes(name, personId, sections) {
       <div class="tile"><b>${esc(noes.toLocaleString())}</b><span>noes</span></div>
     </div>
     ${ayes + noes ? `<div class="votes-split" role="img" aria-label="${esc(ayePct)} percent ayes, ${esc(100 - ayePct)} percent noes"><i style="width:${ayePct}%"></i></div>
-    <p class="fineprint votes-lede">${esc(ayePct)}% ayes${where ? ` in the ${where}` : ""}${span ? `, ${span}` : ""}. Only formal divisions are counted; most questions are decided on the voices and leave no per-member record.</p>` : ""}
+    <p class="votes-lede">${esc(ayePct)}% ayes${where ? ` in the ${where}` : ""}${span ? `, ${span}` : ""}.</p>` : ""}
     ${forRows.length || againstRows.length
       ? `<div class="votes-cols">${col("Voted for", forRows)}${col("Voted against", againstRows)}</div>`
       : `<p class="status" style="margin-top:0.6rem">None of their recorded divisions was a vote on a bill itself.</p>`}
-    <details class="chat-sources votes-method">
-      <summary>How votes are counted</summary>
-      <p class="fineprint">"Voted for" and "Voted against" list divisions on the bill itself: a second or third reading, or agreeing
-        to the bill. Amendments, gag motions and other procedural votes are left out because an aye there says nothing about
-        the bill. A bill missing here was not necessarily unvoted on. Sources: They Vote For You (federal divisions,
-        OpenAustralia Foundation, ODbL) and the NSW, Victorian and Queensland Hansard for state divisions. Each bill name
-        searches the record for what was said about it.</p>
-    </details>
-    ${tvfy ? `<p class="action-row">${tvfy}</p>` : ""}`;
+    ${sourceLineHTML({
+      source: federal ? "They Vote For You" : "State Hansard",
+      originals: federal ? [{ label: "Full record on They Vote For You", href: `https://theyvoteforyou.org.au/search?query=${encodeURIComponent(name)}` }] : [],
+      notes: [
+        "Only formal divisions are counted; most questions are decided on the voices and leave no per-member record.",
+        `“Voted for” and “Voted against” list divisions on the bill itself: a second or third reading, or agreeing
+          to the bill. Amendments, gag motions and other procedural votes are left out because an aye there says nothing about
+          the bill. A bill missing here was not necessarily unvoted on. Each bill name searches the record for what was said about it.`,
+      ],
+      licence: "They Vote For You (federal divisions, OpenAustralia Foundation, ODbL) and the NSW, Victorian and Queensland Hansard for state divisions.",
+    })}`;
   decoratePersonVoteBills(slot);
 }
 
@@ -5199,9 +5275,8 @@ async function renderPersonTopics(name, sections) {
     };
     paint();
   } catch {
-    if (currentSubjectKey === key && slot.isConnected) {
-      slot.innerHTML = `<h3 class="subject-section-title">What they talk about</h3><p class="status">Their topic profile could not be loaded. Their speeches below are still available.</p>`;
-    }
+    // A failed optional block collapses rather than leaving a hole (§2).
+    if (currentSubjectKey === key && slot.isConnected) slot.remove();
   } finally {
     clearTimeout(timeout);
     slot.setAttribute("aria-busy", "false");
@@ -5268,7 +5343,9 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // becomes, so nothing under the title moves when the entry arrives.
   body.innerHTML = subjectSkeleton(SUBJECT_LABELS[kind] || "Donor", kind === "electorate" ? "" : name,
     `<span class="answer-skeleton subject-skel tag-skel" aria-hidden="true"><i></i></span>`,
-    kind === "person" && params.get('attribution') !== 'unattributed');
+    kind === "person" && params.get('attribution') !== 'unattributed', { kicker: kind !== "person" });
+  // A person's aside is the "On this page" rail, not a Quick facts card.
+  if (kind === "person") $("subject-infobox")?.classList.add("person-rail");
   // An electorate's address is a reference slug ("vic-vic-la-vic-berwick"), not
   // its name, so the title is a bar until the index says what the place is.
   if (kind === "electorate") $("subject-title").innerHTML = '<span class="visually-hidden">Loading electorate</span><span class="answer-skeleton subject-skel title-skel" aria-hidden="true"><i></i></span>';
@@ -5435,7 +5512,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     const portrait = body.querySelector(".subject-portrait-pending");
     if (url && portrait) portrait.outerHTML =
       `<img class="subject-portrait" src="${esc(url)}" alt="${official ? "Official portrait" : "Portrait"} of ${esc(name)}" width="112" height="112">`;
-    else portrait?.remove();
+    else portrait?.classList.replace("subject-portrait-pending", "subject-portrait-blank");
   });
   let speeches = [];
   try {
@@ -5459,19 +5536,20 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   const formerly = partyNow && spokeAs && !samePartyLabel(partyNow, spokeAs) ? spokeAs : null;
   const dates = speeches.map((r) => r.date).filter(Boolean).sort();
   const chambers = [...new Set(speeches.map((r) => STATE_NAMES[r.state] || r.state).filter(Boolean))];
+  const head = body.querySelector(".subject-head");
   if (unattributed) {
     document.title = `${name} — unattributed evidence · OPAX`;
-    body.querySelector('.kicker').textContent = 'Unattributed evidence';
     subjectTag(body).innerHTML = '<span>Unattributed evidence</span>';
-    box.innerHTML = infoboxHTML([['Type', 'Unattributed transcript records']], '', []);
-    sections.insertAdjacentHTML('beforeend', `<p class="fineprint">Evidence printed as ${esc(name)} is kept separate from parliamentary speeches. No MP identity, party or portrait is assigned to these records.</p>`);
-    renderPersonSpeeches(name, speeches, chambers, sections, { unattributed: true });
+    box.innerHTML = personRailHTML();
+    // The one caveat drawn inline: without it a reader would take these for an MP's speeches.
+    head.insertAdjacentHTML('beforeend', `<p class="person-caveat">Evidence printed as ${esc(name)} is kept separate from parliamentary speeches. No MP identity, party or portrait is assigned to these records.</p>`);
+    renderPersonSpeeches(name, speeches, chambers, sections, { unattributed: true }).then(() => refreshPersonJumps(sections));
     return;
   }
   if (roster?.speech_scope) {
     $('subject-title').textContent = roster.full || name;
     document.title = `${roster.full || name} · OPAX`;
-    sections.insertAdjacentHTML('beforeend', `<p class="fineprint">Only own-house speeches within the reviewed service dates in the ${esc(roster.speech_scope.state.toUpperCase())} parliamentary chamber are attributed here. <a ${entityHrefAttr(hasEntityId(roster.name) ? subjectHash('person', roster.name) + "?attribution=unattributed" : null)}>Witness testimony and other unattributed records printed as ${esc(roster.name)}</a>.</p>`);
+    head.insertAdjacentHTML('beforeend', `<p class="person-caveat">Only own-house speeches within the reviewed service dates in the ${esc(roster.speech_scope.state.toUpperCase())} parliamentary chamber are attributed here. <a ${entityHrefAttr(hasEntityId(roster.name) ? subjectHash('person', roster.name) + "?attribution=unattributed" : null)}>Witness testimony and other unattributed records printed as ${esc(roster.name)}</a>.</p>`);
   }
   const witness = !roster && speeches.length > 0 &&
     speeches.every((r) => r.speaker_type === "witness" || (isCommitteeChamber(r.chamber) && r.person_id == null));
@@ -5488,34 +5566,30 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     const holders = String(name).trim().includes(" ") ? [] :
       ((await loadSpeakersDir())?.bySurname.get(speakerKey(name)) || []).filter(([n]) => speakerKey(n) !== speakerKey(name));
     if (currentSubjectKey !== key) return;
-    const kicker = body.querySelector(".kicker");
-    if (kicker) kicker.textContent = "Not in the record";
     document.title = `${name} · OPAX`;
-    subjectTag(body).innerHTML = `<span>No indexed speeches under this name</span>`;
-    box.innerHTML = infoboxHTML([
-      ["Type", "Name not found"],
-    ], "", [
-      actionBtn("search", searchHash(`"${name}"`, {}), "Search the record for this name", { primary: true }),
-      actionBtn("entry", "/subject/person", "Browse parliamentarians"),
-    ]);
-    if (holders.length) {
-      box.insertAdjacentHTML("beforeend", `<p class="fineprint">People in the record with this surname:</p>
-        <ul class="subject-list">${holders.map(([n, c]) => `<li><a ${entityHrefAttr(subjectHash("person", n))}>${esc(n)}</a> <span class="meta">${c.toLocaleString()} speeches</span></li>`).join("")}</ul>`);
-    }
-    box.insertAdjacentHTML("beforeend", `<p class="fineprint">The record names its speakers as the transcripts do,
-      so a person may be indexed under a fuller or shorter form of this name. The search looks across every spelling.</p>`);
+    subjectTag(body).innerHTML = `<span>Not in the record: no indexed speeches under this name</span>`;
+    box.innerHTML = personRailHTML({
+      actions: [
+        actionBtn("search", searchHash(`"${name}"`, {}), "Search the record for this name", { primary: true }),
+        actionBtn("entry", "/subject/person", "Browse parliamentarians"),
+      ],
+      extra: `${holders.length ? `<p class="person-rail-head">People in the record with this surname</p>
+        <ul class="subject-list" role="list">${holders.map(([n, c]) => `<li><a ${entityHrefAttr(subjectHash("person", n))}>${esc(n)}</a> <span class="meta">${c.toLocaleString()} speeches</span></li>`).join("")}</ul>` : ""}
+        ${sourceLineHTML({ source: "Parliamentary Hansard", notes: ["The record names its speakers as the transcripts do, so a person may be indexed under a fuller or shorter form of this name. The search looks across every spelling."] })}`,
+    });
     return;
   }
   const q = encodeURIComponent(name);
-  const [fits, electorateReference] = await Promise.all([
+  const [fits, electorateReference, rosterData] = await Promise.all([
     loadFits(),
     loadElectorateModule().then(async (module) => {
       const [data, people] = await Promise.all([module.loadIndex(), module.loadPeople().catch(() => ({ people: [] }))]);
       return { module, data, person: module.findPerson(people.people, name) };
     }).catch(() => null),
-    // The party pill below only points at the party's map entry when the
-    // money data has one; an independent's would land on "Not among the top
-    // 250 disclosed donors", so they get the map itself instead.
+    loadParliamentarians(),
+    // The party receipts row below only points at the party's map entry when
+    // the money data has one; an independent's would land on "Not among the
+    // top 250 disclosed donors", so they get the map itself instead.
     party ? loadMoneyData().catch(() => null) : null,
   ]);
   if (currentSubjectKey !== key) return;
@@ -5523,55 +5597,66 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   const electorateLinks = electorateReference
     ? electorateReference.module.personElectorateLinksHTML(electorateReference.person, representation.representations, electorateReference.data.electorates)
     : representation.representations.map((r) => esc(r.electorate)).join(', ');
+  // "Member for Grayndler", "Senator for South Australia": said only of a
+  // sitting member in one house, where the roster says so; otherwise the seat.
+  const house = representation.chambers.length === 1 ? representation.chambers[0] : "";
+  const seatWord = roster?.current && electorateLinks
+    ? (/senate|council/i.test(house) ? "Senator for " : /representatives|assembly/i.test(house) ? "Member for " : "") : "";
+  // One meta line (principle 3): party, seat, house, parliament. The Quick
+  // facts box said each of these again; its other facts are in the source
+  // sheet under this line.
   subjectTag(body).innerHTML = [
-    party ? partyChipHTML(party) : "",
+    party ? partyChipHTML(party, { full: true }) : "",
     formerly ? `<span>formerly ${esc(formerly)}</span>` : "",
-    representation.jurisdictions.length ? `<span>${esc(representation.jurisdictions.map(j=>j.label).join(" · "))}</span>` : "",
+    electorateLinks ? `<span>${seatWord}${electorateLinks}</span>` : "",
     representation.chambers.length ? `<span>${esc(representation.chambers.join(" · "))}</span>` : "",
-    electorateLinks ? `<span>${electorateLinks}</span>` : "",
+    representation.jurisdictions.length ? `<span>${esc(representation.jurisdictions.map(j=>j.label).join(" · "))}</span>` : "",
   ].filter(Boolean).join(" · ") || "<span>From the parliamentary record</span>";
   const electorateRows = electorateReference
     ? electorateReference.module.personRepresentationRows(electorateReference.person, representation.representations, electorateReference.data.electorates)
     : representation.representations.length ? [["Recorded representation", representation.representations.map((r) =>
       `${esc(r.electorate)}${r.state && r.chamber !== 'senate' ? `, ${esc(r.state)}` : ''}`).join('<br>') + '<small class="representation-note">Roster affiliation; may include past seats.</small>']] : [];
-  box.innerHTML = infoboxHTML([
-    ["Type", roster?.current ? "Sitting parliamentarian" : "Parliamentarian"],
-    party && ["Party", partyChipHTML(party) + (formerly ? ` <span class="fineprint" style="display:inline">formerly ${esc(formerly)}</span>` : "")],
-    representation.jurisdictions.length && ["Jurisdiction", representation.jurisdictions.map(j=>`<a href="${esc(searchHash('',{state:j.id,kind:'speech'}))}">${esc(j.label)}</a>`).join(', ')],
-    representation.chambers.length && ["Chamber", esc(representation.chambers.join(', '))],
-    ...electorateRows,
-    profileAffiliations(roster).length && ["Parliamentary service", profileAffiliations(roster).map(r =>
-      `${esc(r.jurisdictionLabel)} · ${esc(r.chamberLabel)} · ${esc(r.electorate)} · ${esc(r.party || 'Party not recorded')}<br>` +
-      `${esc(r.start)} – ${esc(r.end || 'ongoing at the review date')}` +
-      (r.source_url ? ` <a href="${esc(r.source_url)}" target="_blank" rel="noopener noreferrer">Source ↗︎</a>` : '')
-    ).join('<br><br>')],
-    dates.length && ["Indexed speeches span", `${esc(fmtDate(dates[0]))} – ${esc(fmtDate(dates[dates.length - 1]))}`],
-    fitsInfoRow(fits, "people", name),
-  ], "", [
-    actionBtn("speeches", roster?.speech_scope ? splitSpeechSearch(speechSpeaker) : searchHash("", { speaker: speechSpeaker, kind: "speech" }), "View all their speeches", { primary: true }),
-    ...(roster?.states?.includes('federal') ? [actionBtn("external", `https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=${q}`, "Parliamentary profile", { external: true })] : []),
-    actionBtn("external", `https://en.wikipedia.org/w/index.php?search=${q}%20Australian%20politician`, "Wikipedia", { external: true }),
-  ]);
-  renderPortraitCredit(name, key);
-  // One row on wide screens: the jump links at the left, the money map button at the right.
-  sections.insertAdjacentHTML("beforeend", `<div class="person-jumps-row"><nav class="person-jumps" aria-label="On this page"></nav><div class="person-money-link">
-    <a class="ui-button" href="${partyOnMap ? esc(subjectHash("party", party)) : '/money'}" aria-describedby="person-money-note"><span class="btn-glyph" aria-hidden="true">$</span><span>${partyOnMap ? `Explore ${esc(party)} party receipts` : 'Explore party receipts'}</span></a>
-    <p class="fineprint person-money-note" id="person-money-note">Party disclosures, not this person’s finances.</p>
-  </div></div>`);
-  sections.insertAdjacentHTML("beforeend", `
-    <form class="query-line subject-ask-form" id="subject-ask-form">
-      <label for="subject-ask-topic">Ask about their speeches</label>
+  const verified = (electorateReference?.person?.electorates || []).find((e) => e.current)?.as_of;
+  // Who they are, dated: the identity block's one source line. Its sheet holds
+  // what Quick facts held beyond the meta line, so every fact stays one tap away.
+  head.insertAdjacentHTML("beforeend", sourceLineHTML({
+    updated: verified || rosterData?.meta?.representation?.updated || rosterData?.meta?.generated || "",
+    source: "Parliamentary roster",
+    originals: [
+      roster?.states?.includes('federal') && { label: "Parliamentary profile", href: `https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=${q}` },
+      ...profileAffiliations(roster).map((r) => r.source_url && { label: `${r.jurisdictionLabel} service record`, href: r.source_url }),
+    ].filter(Boolean),
+    notes: [
+      esc(roster?.current ? "Sitting parliamentarian." : "Parliamentarian."),
+      ...electorateRows.map(([label, value]) => `<b>${esc(label)}:</b> ${value}`),
+      ...profileAffiliations(roster).map((r) =>
+        `<b>Parliamentary service:</b> ${esc(r.jurisdictionLabel)} · ${esc(r.chamberLabel)} · ${esc(r.electorate)} · ${esc(r.party || 'Party not recorded')}, ` +
+        `${esc(r.start)} – ${esc(r.end || 'ongoing at the review date')}`),
+      dates.length ? `<b>Indexed speeches span:</b> ${esc(fmtDate(dates[0]))} – ${esc(fmtDate(dates[dates.length - 1]))}` : "",
+      "These are dated public records. Representation may have changed since collection.",
+    ],
+  }));
+  // Two drawn actions (principle 5): Ask about their speeches, and ⋯.
+  head.insertAdjacentHTML("beforeend", `<div class="page-actions person-actions">
+      <button type="button" class="ui-button" id="subject-ask-toggle" aria-expanded="false" aria-controls="subject-ask-form">${iconSvg("ask")}<span>Ask about their speeches</span></button>
+      ${moreMenuHTML([
+        // The parliamentary profile is the head's original, in its source sheet.
+        { href: roster?.speech_scope ? splitSpeechSearch(speechSpeaker) : searchHash("", { speaker: speechSpeaker, kind: "speech" }), label: "View all their speeches" },
+        { href: `https://en.wikipedia.org/w/index.php?search=${q}%20Australian%20politician`, label: "Wikipedia" },
+      ], "More about this person")}
+    </div>`);
+  head.insertAdjacentHTML("afterend", `
+    <form class="query-line subject-ask-form" id="subject-ask-form" hidden>
+      <label for="subject-ask-topic">What did ${esc(name)} say about…</label>
       <input id="subject-ask-topic" class="ui-input" type="text" autocomplete="off"
              placeholder="Enter a topic…">
       <button type="submit" class="ui-button" data-variant="primary">Ask</button>
     </form>`);
-  $("subject-ask-form").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const topic = $("subject-ask-topic").value.trim();
-    if (!topic) return;
-    $("subject-ask-topic").value = "";
-    askSpeakerInConversation(name, `What did ${name} say about ${topic}?`);
-  });
+  wireSubjectAsk(name);
+  const fitsRow = fitsInfoRow(fits, "people", name);
+  if (fitsRow) head.insertAdjacentHTML("afterend", `<p class="person-fits">${fitsRow[1]}</p>`);
+  box.innerHTML = personRailHTML();
+  renderPortraitCredit(name, key);
   // The structured record first; the speeches follow it.
   // Each source renders independently. The topic section reserves its chart
   // space, so slower topic requests never hold back votes or other records.
@@ -5580,7 +5665,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   renderPersonVotes(name, roster?.pid ?? null, sections).then(() => refreshPersonJumps(sections));
   renderPersonInterests(name, roster?.pid ?? null, sections).then(() => refreshPersonJumps(sections));
   renderPersonSpeeches(speechSpeaker, speeches, chambers, sections, { scope: speechScope }).then(() => refreshPersonJumps(sections));
-  renderPersonDiary(name, sections, chambers).then(() => polishPersonSections(sections));
+  renderPersonDiary(name, sections, chambers).then(() => { polishPersonSections(sections); refreshPersonJumps(sections); });
   const news = document.createElement("section");
   sections.appendChild(news);
   await subjectNews(name, news);
@@ -5595,6 +5680,16 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   refreshPersonJumps(sections);
   await renderPersonExpenses(name, roster?.pid ?? null, sections);
   if (currentSubjectKey !== key) return;
+  // The party's money is a row in the money block, its caveat beside it: the
+  // receipts are the party's disclosures, not this person's finances.
+  if (party) {
+    const money = sections.querySelector("#person-expenses") || sections.querySelector("#person-pay");
+    const row = `<p class="person-party-money"><a href="${partyOnMap ? esc(subjectHash("party", party)) : '/money'}">${
+      partyOnMap ? `${esc(party)} party receipts` : 'Party receipts on the money map'}</a>
+      <span>Party disclosures, not this person’s finances.</span></p>`;
+    if (money) money.querySelector(":scope > .ui-source")?.insertAdjacentHTML("beforebegin", row);
+  }
+  refreshPersonJumps(sections);
   const mentions = document.createElement("section");
   mentions.id = "person-mentions";
   sections.appendChild(mentions);
@@ -5607,6 +5702,45 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   refreshPersonJumps(sections);
 }
 
+/** The ask field under a person's header: "Ask about their speeches" opens it. */
+function wireSubjectAsk(name) {
+  const toggle = $("subject-ask-toggle"), form = $("subject-ask-form");
+  if (!form) return;
+  toggle?.addEventListener("click", () => {
+    const open = form.hidden;
+    form.hidden = !open;
+    toggle.setAttribute("aria-expanded", String(open));
+    if (open) $("subject-ask-topic").focus();
+  });
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const topic = $("subject-ask-topic").value.trim();
+    if (!topic) return;
+    $("subject-ask-topic").value = "";
+    askSpeakerInConversation(name, `What did ${name} say about ${topic}?`);
+  });
+}
+
+/* "On this page": the person page's index, one row per record block with the
+   block's own figure (concept 2). It replaces Quick facts and the jump links.
+   Each renderer marks its block with data-rail-figure once it knows the
+   figure; refreshPersonJumps rebuilds the rows from the blocks on the page. */
+const PERSON_RAIL = [
+  ["person-topics", "Topics"], ["subject-votes", "Voting record"], ["person-ties", "Ties to disclosed money"],
+  ["person-register", "Declared interests"], ["person-speeches", "Speeches"], ["subject-diary", "Ministerial diary"],
+  ["person-pay", "Pay"], ["person-expenses", "Expenses"],
+];
+function personRailHTML({ facts = [], actions = [], extra = "" } = {}) {
+  return `<nav class="person-rail-nav" aria-labelledby="person-rail-head" hidden>
+      <p class="person-rail-head" id="person-rail-head">On this page</p>
+      <ul class="person-rail-list" role="list"></ul>
+    </nav>
+    ${facts.length ? `<dl class="person-facts">${facts.filter(Boolean).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${v}</dd>`).join("")}</dl>` : ""}
+    ${actions.length ? `<div class="person-rail-actions" data-ui-size="compact">${actions.join("")}</div>` : ""}
+    ${extra}
+    <p class="person-rail-credit" id="person-photo-credit" hidden></p>`;
+}
+
 /* The entry for a committee witness: what the transcript calls them, the
    committees they answered, the hearing dates, and their evidence. No party,
    no seat, no profile searches on a surname: those would assert a person the
@@ -5615,45 +5749,42 @@ function renderCommitteeWitness(name, key, body, box, sections, speeches, dates)
   const houses = [...new Set(speeches.map((r) => committeeHouse(r.chamber)))];
   const committees = [...new Set(speeches.map(committeeOf).filter(Boolean))];
   const hearings = [...new Set(dates.map((d) => String(d).slice(0, 10)))];
-  // The skeleton labelled them a parliamentarian before the record said otherwise.
-  const kicker = body.querySelector(".kicker");
-  if (kicker) kicker.textContent = "Committee witness";
   setCrumbs([{ label: "Committee witnesses" }, { label: name }]);
   document.title = `${name}, committee witness · OPAX`;
   // The newest transcript's attendance list is the best account of who they are.
   const known = speeches.slice().sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).find((r) => r.role || r.organisation);
+  // The meta line says what they are, once; there is no kicker above the name.
   subjectTag(body).innerHTML = [
     `<span>Committee witness</span>`,
     known?.organisation ? `<span>${esc(known.organisation)}</span>` : `<span>${esc(houses.join(" and "))} ${houses.length > 1 ? "committees" : "committee"}</span>`,
   ].join(" · ");
-  box.innerHTML = infoboxHTML([
-    ["Type", "Committee witness"],
-    known?.role && ["Position", esc(known.role)],
-    known?.organisation && ["Organisation", esc(known.organisation)],
-    committees.length && ["Appeared before", committees.slice(0, 4).map(esc).join("<br>") + (committees.length > 4 ? `<br><span class="fineprint" style="display:inline">and ${committees.length - 4} more</span>` : "")],
-    hearings.length && ["Hearings indexed", hearings.length === 1
-      ? esc(fmtDate(hearings[0]))
-      : `${hearings.length}, ${esc(fmtDate(hearings[0]))} – ${esc(fmtDate(hearings[hearings.length - 1]))}`],
-  ], "", [
-    actionBtn("speeches", searchHash("", { speaker: name, kind: "speech" }), "View their evidence", { primary: true }),
-  ]);
-  box.insertAdjacentHTML("beforeend", `<p class="fineprint">${known
-    ? "Position and organisation as the hearing's attendance list recorded them on the day. A witness answering a parliamentary committee, not a member of parliament."
-    : "Named as the transcript names them, usually a surname behind an honorific. A witness answering a parliamentary committee, not a member of parliament; the record here does not carry their full name or position."}</p>`);
-  sections.insertAdjacentHTML("beforeend", `<div class="person-jumps-row"><nav class="person-jumps" aria-label="On this page"></nav></div>`);
-  sections.insertAdjacentHTML("beforeend", `
-    <form class="query-line subject-ask-form" id="subject-ask-form">
-      <label for="subject-ask-topic">Ask about their evidence</label>
+  const head = body.querySelector(".subject-head");
+  head.insertAdjacentHTML("beforeend", sourceLineHTML({
+    source: "Committee transcripts",
+    notes: [known
+      ? "Position and organisation as the hearing's attendance list recorded them on the day. A witness answering a parliamentary committee, not a member of parliament."
+      : "Named as the transcript names them, usually a surname behind an honorific. A witness answering a parliamentary committee, not a member of parliament; the record here does not carry their full name or position."],
+  }));
+  head.insertAdjacentHTML("beforeend", `<div class="page-actions person-actions">
+      <button type="button" class="ui-button" id="subject-ask-toggle" aria-expanded="false" aria-controls="subject-ask-form">${iconSvg("ask")}<span>Ask about their evidence</span></button>
+      ${moreMenuHTML([{ href: searchHash("", { speaker: name, kind: "speech" }), label: "View their evidence" }], "More about this witness")}
+    </div>`);
+  head.insertAdjacentHTML("afterend", `
+    <form class="query-line subject-ask-form" id="subject-ask-form" hidden>
+      <label for="subject-ask-topic">What did ${esc(name)} say about…</label>
       <input id="subject-ask-topic" class="ui-input" type="text" autocomplete="off" placeholder="Enter a topic…">
       <button type="submit" class="ui-button" data-variant="primary">Ask</button>
     </form>`);
-  $("subject-ask-form").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const topic = $("subject-ask-topic").value.trim();
-    if (!topic) return;
-    $("subject-ask-topic").value = "";
-    askSpeakerInConversation(name, `What did ${name} say about ${topic}?`);
-  });
+  wireSubjectAsk(name);
+  // Their appearances are the entry's facts: no box, no kicker, beside the record.
+  box.innerHTML = personRailHTML({ facts: [
+    known?.role && ["Position", esc(known.role)],
+    known?.organisation && ["Organisation", esc(known.organisation)],
+    committees.length && ["Appeared before", committees.slice(0, 4).map(esc).join("<br>") + (committees.length > 4 ? `<br>and ${committees.length - 4} more` : "")],
+    hearings.length && ["Hearings indexed", hearings.length === 1
+      ? esc(fmtDate(hearings[0]))
+      : `${hearings.length}, ${esc(fmtDate(hearings[0]))} – ${esc(fmtDate(hearings[hearings.length - 1]))}`],
+  ] });
   renderPersonTopics(name, sections).then(() => refreshPersonJumps(sections));
   renderPersonSpeeches(name, speeches, [], sections, { evidence: true }).then(() => { refreshPersonJumps(sections); polishPersonSections(sections); });
 }
@@ -5675,34 +5806,50 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
   }
   if (currentSubjectKey !== key || !slot.isConnected) return;
   if (!newest.length) { slot.remove(); return; }
+  const noun = opts.evidence || opts.unattributed ? "evidence" : "speeches";
+  // A row is a brief (OPAX's words, in sans) or a passage (the record's, in
+  // the serif); the list carries one machine label at its head while any row
+  // is a brief, and each row says which it is to a screen reader.
+  const rowText = (brief, r) => brief
+    ? `<span class="visually-hidden">Machine-written brief: </span><span class="person-speech-text is-brief">${esc(brief)}</span>`
+    : `<span class="visually-hidden">From the record: </span><span class="person-speech-text">${esc(cleanPassage(r.snippet) || "Open the speech to read the record.")}</span>`;
+  const machine = () => machineLabelHTML({ className: "person-speeches-machine",
+    note: "Rows set in this type are briefs written by a model from each speech; rows in the record's serif are passages from the speech itself. A brief is not part of the record: open the speech to read what was said." });
   const paint = (briefs) => {
-    const noun = opts.evidence || opts.unattributed ? "evidence" : "speeches";
-    slot.innerHTML = `<h3 class="subject-section-title">${latest ? `Latest indexed ${noun}` : `Indexed ${noun}`}</h3>
+    const any = newest.some((r) => typeof briefs[r.resource] === "string" && briefs[r.resource].trim());
+    slot.innerHTML = `<div class="person-section-head"><h3 class="subject-section-title">${latest ? `Latest indexed ${noun}` : `Indexed ${noun}`}</h3>${any ? machine() : ""}</div>
       <ul class="speech-rows" role="list">${newest.map((r) => {
         const brief = typeof briefs[r.resource] === "string" ? briefs[r.resource].trim() : "";
-        const text = brief || cleanPassage(r.snippet);
         const where = chambers.length > 1 && r.state ? ` · ${STATE_NAMES[r.state] || r.state}` : "";
         return `<li><a class="person-speech-link" href="/doc/${esc(r.slug)}">
           <time datetime="${esc(String(r.date || "").slice(0, 10))}">${esc(r.date ? fmtDate(r.date) : "Undated")}${esc(where)}</time>
           <span class="person-speech-body"><span class="speech-debate">${esc(titleSubject(r) || (opts.evidence ? "Evidence" : "Speech"))}</span>
-            ${brief ? machineLabelHTML({ inline: true, className: "person-speech-kind" }) : '<span class="person-speech-kind">From the speech</span>'}
-            <span class="person-speech-text">${esc(text || "Open the speech to read the record.")}</span>
+            ${rowText(brief, r)}
           </span></a></li>`;
       }).join("")}</ul>
-      <p class="fineprint">${latest ? "Newest results within the indexed retrieval window." : "Newest retrieval is unavailable; showing a sample of indexed matches."} Machine briefs are automated summaries; passages are extracts from the record.</p>
-      ${opts.unattributed ? '' : `<p class="person-more"><a href="${esc(opts.scope ? splitSpeechSearch(name) : searchHash("", { speaker: name }, 1, "newest"))}">View all their ${noun} →</a></p>`}`;
+      ${opts.unattributed ? '' : `<p class="person-more"><a href="${esc(opts.scope ? splitSpeechSearch(name) : searchHash("", { speaker: name }, 1, "newest"))}">View all their ${noun}</a></p>`}
+      ${sourceLineHTML({
+        source: "Parliamentary Hansard",
+        state: latest ? "" : "sample",
+        notes: [latest ? "Newest results within the indexed retrieval window." : "Newest retrieval is unavailable; this is a sample of indexed matches."],
+      })}`;
   };
   paint({});
   refreshPersonJumps(sections);
   const briefs = await fetchBriefMap(newest);
   if (currentSubjectKey !== key || !slot.isConnected) return;
+  if (!Object.values(briefs).some((b) => typeof b === "string" && b.trim())) return;
   // Preserve existing links and keyboard focus while optional briefs arrive.
   slot.querySelectorAll(".person-speech-link").forEach((link, index) => {
     const brief = briefs[newest[index].resource];
     if (typeof brief !== "string" || !brief.trim()) return;
-    link.querySelector(".person-speech-kind").outerHTML = machineLabelHTML({ inline: true, className: "person-speech-kind" });
-    link.querySelector(".person-speech-text").textContent = brief.trim();
+    const body = link.querySelector(".person-speech-body");
+    body.querySelector(".visually-hidden")?.remove();
+    body.querySelector(".person-speech-text").remove();
+    body.insertAdjacentHTML("beforeend", rowText(brief.trim(), newest[index]));
   });
+  const headRow = slot.querySelector(".person-section-head");
+  if (headRow && !headRow.querySelector(".ui-machine")) headRow.insertAdjacentHTML("beforeend", machine());
 }
 
 function splitSpeechSearch(speaker) {
@@ -5754,18 +5901,20 @@ function settleOn(target, { smooth = false, ms = 10000 } = {}) {
 
 function refreshPersonJumps(sections) {
   if (!sections.isConnected) return;
-  const nav = sections.querySelector(".person-jumps");
-  if (!nav) return;
-  const entries = [["person-topics", "Topics"], ["subject-votes", "Votes"], ["person-ties", "Ties"], ["person-register", "Interests"], ["person-speeches", "Speeches"], ["person-pay", "Pay"]];
-  const markup = entries.filter(([id]) => sections.querySelector(`#${id}`)?.textContent.trim())
-    .map(([id, label]) => `<a href="#${id}" data-person-jump="${id}">${label}</a>`).join("");
-  if (nav.dataset.markup === markup) return;
-  const focused = nav.contains(document.activeElement) ? document.activeElement.dataset.personJump : null;
-  nav.dataset.markup = markup;
-  nav.innerHTML = markup;
-  nav.hidden = !nav.children.length;
-  if (focused) nav.querySelector(`[data-person-jump="${focused}"]`)?.focus({ preventScroll: true });
-  nav.querySelectorAll("a").forEach((link) => link.addEventListener("click", (event) => {
+  const list = $("subject-infobox")?.querySelector(".person-rail-list");
+  if (!list) return;
+  const nav = list.closest("nav");
+  const markup = PERSON_RAIL.map(([id, label]) => [id, label, sections.querySelector(`#${id}`)])
+    .filter(([, , el]) => el?.textContent.trim())
+    .map(([id, label, el]) => `<li><a href="#${id}" data-person-jump="${id}"><span class="person-rail-label">${esc(label)}</span>${
+      el.dataset.railFigure ? `<span class="person-rail-figure">${esc(el.dataset.railFigure)}</span>` : ""}</a></li>`).join("");
+  if (list.dataset.markup === markup) return;
+  const focused = list.contains(document.activeElement) ? document.activeElement.dataset.personJump : null;
+  list.dataset.markup = markup;
+  list.innerHTML = markup;
+  nav.hidden = !list.children.length;
+  if (focused) list.querySelector(`[data-person-jump="${focused}"]`)?.focus({ preventScroll: true });
+  list.querySelectorAll("a").forEach((link) => link.addEventListener("click", (event) => {
     event.preventDefault();
     const target = sections.querySelector(`#${link.dataset.personJump}`);
     if (target) { target.tabIndex = -1; target.focus({ preventScroll: true }); settleOn(target, { smooth: true, ms: 4000 }); }
@@ -7373,9 +7522,9 @@ async function openBillText(bill) {
   const generation = billTextGeneration;
   const slot = $('bill-text-slot');
   try {
-    const module = await import('/bill-text.js?v=codex-enrichment-20260913');
+    const module = await import('/bill-text.js?v=p3f-20261010');
     if (generation !== billTextGeneration || billView !== `bill:${bill.key}` || !slot?.isConnected) return;
-    billTextHandle = module.mountBillText(slot, { bill,
+    const handle = billTextHandle = module.mountBillText(slot, { bill,
       requestedVersion: new URLSearchParams(location.search).get('text-version'),
       open: location.hash === '#bill-full-text',
       onVersion(id) {
@@ -7384,8 +7533,14 @@ async function openBillText(bill) {
         history.replaceState(null, '', url.pathname + url.search + url.hash); syncPathMeta();
       },
     });
+    // No published text, or the check failed: the block collapses rather than
+    // standing as an error (a failed optional block). A reader who came for the
+    // text by its anchor still gets the reader's own sentence and links.
+    await handle.ready;
+    if (generation !== billTextGeneration || !slot.isConnected) return;
+    slot.hidden = Boolean(slot.querySelector('#bill-full-text[data-state]')) && location.hash !== '#bill-full-text';
   } catch {
-    if (generation === billTextGeneration && slot?.isConnected) slot.innerHTML = '<p class="fineprint">The bill text reader could not load. Use the official sources above to read the original document.</p>';
+    if (generation === billTextGeneration && slot?.isConnected) slot.hidden = true;
   }
 }
 
@@ -7502,6 +7657,21 @@ function billMembersLabel(members, max = 1) {
   return more > 0 ? `${head} and ${more} other${more === 1 ? "" : "s"}` : head;
 }
 
+/** A bill's status as a StatusLabel tone: passed is done, before parliament is
+ *  active, an exposure draft is a draft, and lapsed and the rest have ended. */
+function billStatusTone(status) {
+  const s = String(status || "").toLowerCase();
+  if (/exposure/.test(s)) return "draft";
+  if (/passed|assent/.test(s)) return "done";
+  if (/before|introduced|current/.test(s)) return "active";
+  return "ended";
+}
+/** A division's outcome as a StatusLabel: agreed to is done, negatived has ended. */
+function billOutcomeLabelHTML(outcome) {
+  const word = billOutcome(outcome) || "Outcome not recorded";
+  return statusLabelHTML(word, String(outcome || "").toLowerCase() === "affirmative" ? "done" : "ended");
+}
+
 /** "Passed, as at 12 Feb 2022" — the status is never shown undated. */
 function billStatusLine(b) {
   const status = sentenceCase(b?.status) || "Status not recorded";
@@ -7525,6 +7695,14 @@ function billSourcesHTML(sources) {
   }).filter(Boolean);
   return links.length ? links.join(" · ") : "";
 }
+/** The licence the register's documents carry, as the source sheet's last line. */
+function billLicence(bill) {
+  const licence = (bill?.sources || []).find((s) => s.kind === "billhome")?.licence;
+  return licence ? `Parliament of Australia documents, ${esc(licence)}.` : "";
+}
+/** The bill's official sources as a source sheet's originals. */
+const billOriginals = (sources) => (sources || []).filter((s) => safeUrl(s?.url))
+  .map((s) => ({ label: BILL_SOURCE_NAMES[s.kind] || s.kind || "Source", href: s.url }));
 
 /** The head of every bill list row: the name, then what it is and where it got to. */
 function billRowHTML(b) {
@@ -7543,7 +7721,7 @@ function billRowHTML(b) {
   return `<li>
     <a class="source-title bill-row-title" ${entityHrefAttr(billHash(b.key))}>${esc(billName(b))}</a>
     <span class="result-meta bill-row-meta">${[
-      b.status ? `<b class="bill-row-status">${esc(sentenceCase(b.status))}</b>` : "",
+      b.status ? statusLabelHTML(sentenceCase(b.status), billStatusTone(b.status)) : "",
       year ? esc(year) : "",
       b.sponsor_party ? partyChipHTML(billParty(b.sponsor_party)) : "",
       members ? esc(billMembersLabel(members)) : esc(billPortfolio(b)),
@@ -7719,12 +7897,33 @@ function billDateSpanHTML(dates) {
   return `${esc(fmtDate(first))}<span class="bill-date-to">to ${esc(fmtDate(last))}</span>`;
 }
 
+/* The register's notes that hold for every bill page: where the bills, dates
+   and divisions come from, and what a missing bill does not mean. They were the
+   page's closing paragraph; they are now the notes behind How it moved's source
+   line, the block that is the register's own record. */
+const BILL_REGISTER_NOTE =
+  `Bills, their dates and their divisions come from the parliamentary record. A bill missing from the
+   list is not evidence it does not exist: the register is still being built.`;
+
 function billTimelineHTML(bill) {
   const dates = (bill.key_dates || []).filter((d) => d?.date)
     .slice().sort((a, b) => String(a.date).localeCompare(String(b.date)));
+  const sponsorMissing = !bill.sponsor && !billSponsorFromPortfolio(bill.portfolio) && bill.status !== "exposure_draft";
+  const source = (folded) => sourceLineHTML({
+    source: "Parliament of Australia",
+    originals: billOriginals((bill.sources || []).filter((s) => s.kind === "billhome")),
+    notes: [
+      folded ? `The register records a stage on each day it was before the house. These ${
+        folded.runs} entries carry ${folded.dates} such dates: a stage that ran across sitting days is one
+        entry with its span. Every date is a tick on the ruler.` : "",
+      sponsorMissing ? "The register records no sponsor for this bill." : "",
+      BILL_REGISTER_NOTE,
+    ],
+    licence: billLicence(bill),
+  });
   if (!dates.length) {
-    return `<section class="bill-section"><h3 class="subject-section-title">How it moved</h3>
-      <p class="status">No dates recorded.</p></section>`;
+    return `<section class="bill-section" data-accent="bills"><h3 class="subject-section-title">How it moved</h3>
+      <p class="status">No dates recorded.</p>${source(null)}</section>`;
   }
   const runs = billStageRuns(dates);
   const folded = dates.length - runs.length;
@@ -7743,13 +7942,16 @@ function billTimelineHTML(bill) {
         days > 1 ? `<span class="bill-date-days">on ${days} recorded days</span>` : ""}</span>
     </li>`;
   }).join("");
-  return `<section class="bill-section">
+  const list = `<ol class="bill-dates" role="list">${rows}</ol>`;
+  // The ruler carries the shape; the stages sit behind one disclosure, links kept inside.
+  const stages = runs.length > 3
+    ? `<details class="bill-stages"><summary>All ${runs.length} stages</summary>${list}</details>`
+    : list;
+  return `<section class="bill-section" data-accent="bills">
     <h3 class="subject-section-title">How it moved</h3>
     ${billRulerHTML(dates)}
-    <ol class="bill-dates" role="list">${rows}</ol>
-    ${folded ? `<p class="fineprint">The register records a stage on each day it was before the house.
-      These ${runs.length} entries carry ${dates.length} such dates: a stage that ran across sitting days
-      is one entry with its span, not one entry a day. Every date is a tick on the ruler.</p>` : ""}
+    ${stages}
+    ${source(folded ? { runs: runs.length, dates: dates.length } : null)}
   </section>`;
 }
 
@@ -7757,28 +7959,29 @@ function billTimelineHTML(bill) {
    noes below, both measured against the largest party in that division so the
    party sizes read as well as the split inside each one. Party colour is a dot
    and a name, never a bar — the bar says aye or no, nothing else. */
-/* One party carrying two votes should not take the same three rows as one
-   carrying twenty-two. The parties that decide the division are drawn; the
-   one- and two-member remainder is named on a single line, in full, so
-   nothing disappears — only the bars a reader cannot see anyway. */
-const BILL_SPLIT_DRAWN = 5;
-const BILL_SPLIT_SMALL = 2;
+/* The three largest parties are drawn (concept 3): they decide almost every
+   division, and three pairs of bars read at a glance. The rest of the parties
+   wait behind the division's one disclosure with the question, named in full,
+   so nothing disappears; only the bars a reader cannot take in anyway. */
+const BILL_SPLIT_DRAWN = 3;
 
-function billSplitHTML(division) {
+/** The split's pieces: the drawn rows, the rest as one line, and the clauses
+ *  that say what the attribution rests on. */
+function billSplitParts(division) {
   const splits = Object.entries(division.party_splits || {})
     .map(([party, v]) => ({ party, ayes: Number(v?.ayes) || 0, noes: Number(v?.noes) || 0 }))
     .filter((s) => s.ayes || s.noes)
     .sort((a, b) => (b.ayes + b.noes) - (a.ayes + a.noes) || a.party.localeCompare(b.party));
-  if (!splits.length) return `<p class="fineprint bill-split-none">Party split not recorded for this division.</p>`;
-  let drawn = splits.filter((s, i) => i < BILL_SPLIT_DRAWN || s.ayes + s.noes > BILL_SPLIT_SMALL);
+  if (!splits.length) return { drawn: `<p class="status bill-split-none">Party split not recorded for this division.</p>`, rest: "", restCount: 0, notes: "" };
+  let drawn = splits.slice(0, BILL_SPLIT_DRAWN);
   let folded = splits.slice(drawn.length);
   if (folded.length === 1) { drawn = splits; folded = []; } // one line saved is no saving
-  const max = Math.max(...drawn.map((s) => Math.max(s.ayes, s.noes)), 1);
+  const max = Math.max(...splits.map((s) => Math.max(s.ayes, s.noes)), 1);
   /* Name and figures on one line, the bars beneath them. The grid always said
      so; the source order did not, and the grid places what it is given in the
      order it is given, so "0–22" landed a row below its own bars and directly
      above the next party's name — nearer the party it does not describe. */
-  const rows = drawn.map((s) => `
+  const row = (s) => `
     <li class="bill-split">
       <span class="bill-split-party">${partyDotHTML(s.party)}${esc(billParty(s.party))}</span>
       <span class="bill-split-n">${s.ayes}<span aria-hidden="true">–</span>${s.noes}<span class="visually-hidden"> ayes to noes</span></span>
@@ -7786,11 +7989,7 @@ function billSplitHTML(division) {
         <span class="bill-split-bar-track"><i class="bill-bar-aye" style="width:${((s.ayes / max) * 100).toFixed(1)}%"></i></span>
         <span class="bill-split-bar-track"><i class="bill-bar-no" style="width:${((s.noes / max) * 100).toFixed(1)}%"></i></span>
       </span>
-    </li>`).join("");
-  const rest = folded.length
-    ? `<p class="fineprint bill-split-rest">Also ${esc(folded
-      .map((s) => `${billParty(s.party)} ${s.ayes}–${s.noes}`).join(", "))}.</p>`
-    : "";
+    </li>`;
   // What the attribution rests on, as a clause rather than a paragraph:
   // party_coverage counts the votes carried by a party observed on or before
   // the day against those falling back to a member's earliest or current one.
@@ -7804,8 +8003,12 @@ function billSplitHTML(division) {
     weak > 0 && dated + weak > 0 ? `${weak} of ${dated + weak} inferred, not observed on the day` : "",
     Number(division.paired) > 0 ? `${division.paired} paired` : "",
   ].filter(Boolean);
-  return `<ul class="bill-splits" role="list">${rows}</ul>${rest}${
-    notes.length ? `<p class="fineprint bill-split-partial">${esc(notes.join(" · "))}</p>` : ""}`;
+  return {
+    drawn: `<ul class="bill-splits" role="list">${drawn.map(row).join("")}</ul>`,
+    rest: folded.length ? `<ul class="bill-splits bill-splits-rest" role="list">${folded.map(row).join("")}</ul>` : "",
+    restCount: folded.length,
+    notes: notes.length ? `<p class="bill-split-partial">${esc(notes.join(" · "))}</p>` : "",
+  };
 }
 
 /** A division's own page in the record: the registry's key is the resource slug without its kind. */
@@ -7921,59 +8124,87 @@ function billQuestionShort(division, bill, max = 104) {
 const BILL_PARTY_LABELS = { PRES: "Presiding officer", SPK: "Speaker", "": "Not recorded" };
 const billParty = (p) => BILL_PARTY_LABELS[String(p || "").trim()] || billPartyName(p);
 
+/* A division is titled by its recorded stage (D5): the export's `title`, read
+   from the stage alone, never from what the presiding officer said. Until the
+   nightly has written it, the title falls back to what the page drew before:
+   the question's first sentence, or the stage and date. The outcome leads as a
+   status label, so ayes and noes read at a glance; the question and the
+   smaller parties sit behind one disclosure. */
 function billDivisionHTML(d, bill) {
   const ayes = Number(d.ayes) || 0, noes = Number(d.noes) || 0;
   const target = billDivisionHref(d);
+  const recorded = String(d.title || "").trim();
   const { head, note } = billQuestionParts(d, bill);
   const official = safeUrl(d.url);
   const stage = billStage(d.stage);
   // With no motion in the field there is no heading to write. The division's
   // own facts lead — its stage is the closest thing the record gives to a
   // name for it — and the record's prose follows as the note it is.
-  // Without a motion the link is named by the division's own facts, its stage
-  // and its date, so no row is ever labelled by a placeholder sentence.
-  const title = head || [stage || "Division", d.date ? fmtDate(d.date) : ""].filter(Boolean).join(", ");
+  const title = recorded || head || [stage || "Division", d.date ? fmtDate(d.date) : ""].filter(Boolean).join(", ");
+  const named = Boolean(recorded || head);
   const meta = [
-    // The stage always names itself here now: the heading is the question with
-    // the stage taken off it, so the two no longer say the same words twice.
-    head && stage ? esc(stage) : "",
+    // The fallback heading is the question, so the stage still names itself here.
+    !recorded && head && stage ? esc(stage) : "",
     billHouse(d.house) ? esc(billHouse(d.house)) : "",
-    head && d.date ? esc(fmtDate(d.date)) : "",
+    named && d.date ? esc(fmtDate(d.date)) : "",
+    official ? `<a class="bill-division-src" href="${esc(official)}" rel="noopener" target="_blank">The count ↗︎</a>` : "",
   ].filter(Boolean).join(" · ");
-  return `<li class="bill-division${head ? "" : " bill-division-unnamed"}">
+  // Under a recorded title the whole question is the record's text; under the
+  // fallback, the heading already carries its first sentence.
+  const question = recorded
+    ? (head ? [head, note].filter(Boolean).join(" ") : note)
+    : note;
+  const split = billSplitParts(d);
+  const more = [
+    question ? "The question" : "",
+    split.restCount ? `${split.restCount} more ${split.restCount === 1 ? "party" : "parties"}` : "",
+  ].filter(Boolean).join(" · ");
+  const inside = [
+    question ? `<div class="bill-division-note division-markdown">${billNoteHTML(question)}</div>` : "",
+    split.rest, split.notes,
+  ].join("");
+  return `<li class="bill-division${named ? "" : " bill-division-unnamed"}">
+    <p class="bill-division-out">${billOutcomeLabelHTML(d.outcome)}
+      <span class="bill-division-count">${ayes.toLocaleString()} ayes, ${noes.toLocaleString()} noes</span></p>
     ${target
       ? `<a class="source-title bill-division-q" href="${esc(target)}">${esc(title)}</a>`
       : `<span class="source-title bill-division-q">${esc(title)}</span>`}
-    <span class="result-meta">${meta}</span>
-    <p class="bill-division-out"><b>${esc(billOutcome(d.outcome) || "Outcome not recorded")}</b>
-      <span>${ayes.toLocaleString()} ayes, ${noes.toLocaleString()} noes</span>${
-      official ? `<a class="bill-division-src" href="${esc(official)}" rel="noopener" target="_blank">The count ↗︎</a>` : ""}</p>
-    ${note ? `<div class="bill-division-note division-markdown">${billNoteHTML(note)}</div>` : ""}
-    ${billSplitHTML(d)}
+    ${meta ? `<span class="result-meta">${meta}</span>` : ""}
+    ${split.drawn}
+    ${more ? `<details class="bill-division-more"><summary>${esc(more)}</summary>${inside}</details>`
+      : split.notes}
   </li>`;
 }
 
 function billDivisionsHTML(bill) {
   const { divisions: divs, collapsed } = billDedupeDivisions(bill.divisions, bill);
   if (!divs.length) {
-    return `<section class="bill-section"><h3 class="subject-section-title">Divisions</h3>
-      <p class="status">No divisions recorded.</p>
-      <p class="fineprint">Most questions are decided on the voices and leave no per-member record, so a bill
-        with no division here was not necessarily unopposed.</p></section>`;
+    return `<section class="bill-section" data-accent="votes"><h3 class="subject-section-title">Divisions</h3>
+      <p class="status">No divisions recorded. Most questions are decided on the voices, so a bill with no
+        division here was not necessarily unopposed.</p></section>`;
   }
   const head = divs.slice(0, 6), rest = divs.slice(6);
-  return `<section class="bill-section">
+  return `<section class="bill-section" data-accent="votes">
     <h3 class="subject-section-title">Divisions</h3>
     <ol class="bill-division-list" role="list" id="bill-divisions">${head.map((d) => billDivisionHTML(d, bill)).join("")}</ol>
     ${rest.length ? `<p class="dir-more-row"><button type="button" class="ui-button" id="bill-divisions-more"
       data-rest="${esc(String(rest.length))}">Show more (${rest.length} more)</button></p>` : ""}
-    <p class="fineprint">Ayes and noes are the division's own totals. Party is each member's recorded
-      affiliation, not a reconstruction of who they sat with on the day, and a member the record does not
-      name is counted but not attributed. Only formal divisions leave a per-member record.${collapsed
-        ? ` The source records some divisions more than once; ${collapsed} row${collapsed === 1 ? "" : "s"}
-            identical in day, stage and counts ${collapsed === 1 ? "is" : "are"} shown here once.` : ""}</p>
+    ${sourceLineHTML({
+      source: "They Vote For You",
+      notes: [
+        `Ayes and noes are each division's own totals. Party is each member's recorded affiliation, not a
+          reconstruction of who they sat with on the day, and a member the record does not name is counted but
+          not attributed. Only formal divisions leave a per-member record.`,
+        collapsed ? `The source records some divisions more than once; ${collapsed} row${collapsed === 1 ? "" : "s"}
+          identical in day, stage and counts ${collapsed === 1 ? "is" : "are"} shown here once.` : "",
+        "Each division's own count opens from “The count” beside its date.",
+      ],
+      licence: "Division records: They Vote For You, OpenAustralia Foundation, ODbL.",
+    })}
   </section>`;
 }
+
+const BILL_SPEECH_BRIEF_NOTE = "Each brief under a name was written by a model from that speech. It is not part of the record: open the speech to read what was said.";
 
 function billSpeechesHTML(bill) {
   const speeches = (bill.speeches || []).filter((s) => s?.slug);
@@ -7992,16 +8223,19 @@ function billSpeechesHTML(bill) {
       s.stage_hint ? esc(billStage(s.stage_hint)) : "",
       s.speaker && s.date ? esc(fmtDate(s.date)) : "",
     ].filter(Boolean).join(" · ")}</span>
-    ${s.brief ? `<p class="bill-speech-brief">${esc(s.brief)}</p>` : ""}
+    ${s.brief ? `<p class="bill-speech-brief"><span class="visually-hidden">Machine-written brief: </span>${esc(s.brief)}</p>` : ""}
   </li>`).join("");
   const briefs = speeches.filter((s) => s.brief).length;
+  // One machine label for the list, at its head (pass 3: one label per list).
   return `<section class="bill-section">
-    <h3 class="subject-section-title">What was said</h3>
+    <div class="bill-section-head"><h3 class="subject-section-title">What was said</h3>${
+      briefs ? machineLabelHTML({ note: BILL_SPEECH_BRIEF_NOTE }) : ""}</div>
     <ul class="subject-list bill-speeches" role="list">${rows}</ul>
-    <p class="fineprint">Speeches the record attaches to this bill${
-      speeches.length > 24 ? `, the first 24 of ${speeches.length}` : ""}. ${briefs
-        ? "A brief under a name was written from that speech by a model, not by a person."
-        : "Open a speech to read it in full."}</p>
+    ${sourceLineHTML({
+      source: "Parliamentary Hansard",
+      notes: [`Speeches the record attaches to this bill${speeches.length > 24 ? `, the first 24 of ${speeches.length}` : ""}.
+        Open a speech to read it in full.`],
+    })}
   </section>`;
 }
 
@@ -8025,28 +8259,36 @@ function billActsHTML(bill) {
   return `<section class="bill-section">
     <h3 class="subject-section-title">What became law</h3>
     <ul class="subject-list" role="list">${rows}</ul>
-    <p class="fineprint">Act text on the Federal Register of Legislation, CC BY 4.0.</p>
+    ${sourceLineHTML({
+      source: "Federal Register of Legislation",
+      notes: ["The Act as made, linked to its page on the Federal Register of Legislation."],
+      licence: "Act text: Federal Register of Legislation, CC BY 4.0.",
+    })}
   </section>`;
 }
 
+/* In short: the model's summary, its machine label once at the top (the pill
+   opens what wrote it, from what), and one source line with the official
+   documents it was written from. No card around it (principle 2). */
 function billSummaryHTML(bill) {
   const s = bill.summary;
-  const sources = billSourcesHTML(bill.sources);
+  const originals = billOriginals(bill.sources);
   if (!s) {
-    return `<section class="bill-summary bill-summary-empty" aria-labelledby="bill-summary-head">
-      <div class="doc-brief-head"><h3 class="subject-section-title" id="bill-summary-head">In short</h3></div>
-      <p class="status">No summary yet.</p>
-      <p class="fineprint">Nothing has been written about this bill from its explanatory material. The dates,
-        divisions and speeches below are the record's own.${sources ? ` Official sources: ${sources}` : ""}</p>
+    return `<section class="bill-section bill-summary bill-summary-empty" data-accent="bills" aria-labelledby="bill-summary-head">
+      <h3 class="subject-section-title" id="bill-summary-head">In short</h3>
+      <p class="status">No summary yet. The dates, divisions and speeches below are the record's own.</p>
+      ${originals.length ? sourceLineHTML({ source: "Parliament of Australia", originals,
+        notes: ["Nothing has been written about this bill from its explanatory material yet."],
+        licence: billLicence(bill) }) : ""}
     </section>`;
   }
   const sentences = (s.sentences || []).filter(Boolean);
   const changes = (s.changes || []).filter(Boolean);
-  const note = `${s.attribution || "Written by a model from the explanatory memorandum; not the record"}.${
-    s.describes_version ? ` Describes the bill ${s.describes_version}.` : ""}${
-    s.as_of ? ` Written from material dated ${fmtDate(s.as_of)}.` : ""}`;
-  return `<section class="bill-summary" aria-labelledby="bill-summary-head">
-    <div class="doc-brief-head">
+  const attribution = `${s.attribution || "Written by a model from the explanatory memorandum; not the record"}.`;
+  const note = `${attribution}${s.describes_version ? ` Describes the bill ${s.describes_version}.` : ""}`;
+  const basis = BILL_SOURCE_NAMES[s.basis] || "Explanatory memorandum";
+  return `<section class="bill-section bill-summary" data-accent="bills" aria-labelledby="bill-summary-head">
+    <div class="bill-section-head">
       <h3 class="subject-section-title" id="bill-summary-head">In short</h3>
       ${machineLabelHTML({ note })}
     </div>
@@ -8054,11 +8296,13 @@ function billSummaryHTML(bill) {
     ${changes.length ? `<h4 class="bill-sub">What it changes</h4>
       <ul class="bill-changes">${changes.map((c) => `<li>${esc(c)}</li>`).join("")}</ul>` : ""}
     ${s.affected ? `<h4 class="bill-sub">Who is affected</h4><p class="bill-affected">${esc(s.affected)}</p>` : ""}
-    <p class="fineprint bill-attrib">${esc(s.attribution
-      || "Written by a model from the explanatory memorandum; not the record")}.${
-      s.describes_version ? ` Describes the bill ${esc(s.describes_version)}.` : ""}${
-      s.as_of ? ` Written from material dated ${esc(fmtDate(s.as_of))}.` : ""}${
-      sources ? ` Official sources: ${sources}` : ""}</p>
+    ${sourceLineHTML({
+      // The day the summary was written; the material's own date is in the sheet.
+      updated: String(s.generated_at || s.as_of || "").slice(0, 10), source: basis, originals,
+      asAt: s.as_of ? `Written from material dated ${fmtDate(s.as_of)}.` : "",
+      notes: [esc(note)],
+      licence: billLicence(bill),
+    })}
   </section>`;
 }
 
@@ -8093,7 +8337,6 @@ async function openBill(key, manageFocus) {
   activeDirectory = null;
   const body = $("bill-body");
   body.innerHTML = `
-    <p class="kicker">Bill</p>
     <div class="subject-head">
       <h2 id="bill-title" tabindex="-1"><span class="visually-hidden">Opening the bill</span><span class="answer-skeleton subject-skel title-skel" aria-hidden="true"><i></i></span></h2>
       <p class="subject-tag"><span id="bill-loader" class="subject-loader"></span></p>
@@ -8105,7 +8348,6 @@ async function openBill(key, manageFocus) {
   clearPageLoader("bill-loader");
   if (!bill) {
     body.innerHTML = `
-      <p class="kicker">Bill</p>
       <div class="subject-head">
         <h2 id="bill-title" tabindex="-1">No bill with this identifier</h2>
         <p class="subject-tag"><span>The register does not name <code>${esc(key)}</code>. It may not be
@@ -8130,46 +8372,50 @@ async function openBill(key, manageFocus) {
     ? [`<a ${entityHrefAttr(subjectHash("person", billSponsorName(bill.sponsor)))}>${esc(billSponsorName(bill.sponsor))}</a>`]
     : (members || []).map((m) => `<a ${entityHrefAttr(subjectHash("person", m.name))}>${esc(m.name)}</a>${
       m.suffix ? ` ${esc(m.suffix)}` : ""}`);
-  const sponsorBits = [
-    sponsorLinks.length
-      ? `Introduced by ${sponsorLinks.slice(0, 3).join(", ")}${
-        sponsorLinks.length > 3 ? ` and ${sponsorLinks.length - 3} others` : ""}`
-      : bill.status === "exposure_draft" ? "Government exposure draft, not yet introduced" : "Sponsor not recorded",
-    billParty(bill.sponsor_party) ? partyChipHTML(billParty(bill.sponsor_party)) : "",
+  const draft = bill.status === "exposure_draft";
+  const house = billHouse(bill.originating_house);
+  // One meta line: when and where it began and who brought it. "Sponsor not
+  // recorded" is not drawn as a party; it is said once, in How it moved's sheet.
+  const began = [
+    bill.introduced ? `${draft ? "Released" : "Introduced"} ${esc(fmtDate(bill.introduced))}` : draft ? "Government exposure draft" : "",
+    sponsorLinks.length ? `by ${sponsorLinks.slice(0, 3).join(", ")}${sponsorLinks.length > 3 ? ` and ${sponsorLinks.length - 3} others` : ""}` : "",
+    house && !draft ? `in the ${esc(house)}` : "",
+  ].filter(Boolean).join(" ");
+  const metaBits = [
+    draft && bill.introduced ? "Government exposure draft, not yet introduced" : "",
+    began,
+    billParty(bill.sponsor_party) && billParty(bill.sponsor_party) !== "Not recorded" ? partyChipHTML(billParty(bill.sponsor_party)) : "",
     billPortfolio(bill) ? esc(billPortfolio(bill)) : "",
   ].filter(Boolean);
   const billhome = safeUrl((bill.sources || []).find((s) => s.kind === "billhome")?.url);
+  const statusWord = sentenceCase(bill.status) || "Status not recorded";
+  // Two drawn actions (principle 5): Ask, and ⋯ for the rest. The foot's
+  // repeat of the same three buttons is gone.
+  const actions = `<div class="page-actions bill-actions">
+      ${actionBtn("ask", askHash(`What did parliament say about the ${billName(bill)}?`), "Ask about this bill")}
+      ${moreMenuHTML([
+        { href: searchHash(`"${title}"`, {}), label: "Search the record for this bill" },
+        billhome && { href: billhome, label: "Official bill home" },
+        { href: "/bills", label: "All bills" },
+      ], "More for this bill")}
+    </div>`;
   body.innerHTML = `
-    <p class="kicker">Bill</p>
     <div class="subject-head bill-head">
+      <p class="bill-status">${statusLabelHTML(statusWord, billStatusTone(bill.status))}${
+        bill.status_as_of ? `<span class="bill-status-as">as at ${esc(fmtDate(bill.status_as_of))}</span>` : ""}</p>
       <h2 id="bill-title" class="bill-title" tabindex="-1">${esc(title)}</h2>
       ${bill.short_title && bill.short_title !== title
         ? `<p class="bill-short">Known as the ${esc(bill.short_title)}</p>` : ""}
-      <p class="subject-tag bill-tag">${sponsorBits.join(" · ")}</p>
-      <p class="bill-status"><b>${esc(sentenceCase(bill.status) || "Status not recorded")}</b>${
-        bill.status_as_of ? `<span class="bill-status-as">as at ${esc(fmtDate(bill.status_as_of))}</span>` : ""}${
-        bill.introduced ? `<span class="bill-status-as">${bill.status === "exposure_draft" ? "released" : "introduced"} ${esc(fmtDate(bill.introduced))}${
-          billHouse(bill.originating_house) ? ` in the ${esc(billHouse(bill.originating_house))}` : ""}</span>` : ""}</p>
+      ${metaBits.length ? `<p class="subject-tag bill-tag">${metaBits.join(" · ")}</p>` : ""}
       ${billRelatedHTML(bill)}
+      ${actions}
     </div>
     ${billSummaryHTML(bill)}
-    <p class="action-row bill-actions">
-      ${actionBtn("search", searchHash(`"${title}"`, {}), "Search the record for this bill", { primary: true })}
-      ${actionBtn("ask", askHash(`What did parliament say about the ${billName(bill)}?`), "Ask what parliament said about this bill")}
-      ${billhome ? actionBtn("external", billhome, "Official bill home", { external: true }) : ""}
-      ${actionBtn("entry", "/bills", "All bills")}
-    </p>
     <div id="bill-text-slot"><div class="answer-skeleton bill-text-skeleton" aria-hidden="true"><i style="width:65%"></i><i style="width:95%"></i><i style="width:78%"></i></div><p class="visually-hidden" role="status">Checking published bill text</p></div>
     ${billTimelineHTML(bill)}
     ${billDivisionsHTML(bill)}
     ${billSpeechesHTML(bill)}
-    ${billActsHTML(bill)}
-    <p class="action-row bill-actions bill-actions-foot">
-      ${actionBtn("search", searchHash(`"${title}"`, {}), "Search the record for this bill")}
-      ${actionBtn("ask", askHash(`What did parliament say about the ${billName(bill)}?`), "Ask what parliament said about this bill")}
-      ${actionBtn("entry", "/bills", "All bills")}
-    </p>
-    <p class="fineprint">${BILLS_FINEPRINT}</p>`;
+    ${billActsHTML(bill)}`;
   openBillText(bill);
   if (manageFocus) $("bill-title")?.focus();
   const more = $("bill-divisions-more");
@@ -9629,8 +9875,10 @@ function ensureBillsDatalist() {
   }).catch(() => { /* the slot still takes a typed title */ });
 }
 
+/** The builder sits closed behind "Build a question" and leaves with the
+ *  samples once a question is asked. */
 function setAskBuilderHidden(hidden) {
-  const box = $("ask-builder");
+  const box = $("ask-guided") || $("ask-builder");
   if (box) box.hidden = hidden;
 }
 
@@ -9690,13 +9938,19 @@ function askSuggestion(q) {
   runAsk(q);
 }
 
+/** A sample question: a plain link (concept 5), which asks it in place. */
 function suggestionChip(q) {
-  const b = document.createElement("button");
-  b.type = "button";
-  b.className = "chip ui-button";
-  b.textContent = q;
-  b.addEventListener("click", () => askSuggestion(q));
-  return b;
+  const a = document.createElement("a");
+  a.className = "ask-sample";
+  a.href = askHash(q);
+  a.textContent = q;
+  a.addEventListener("click", (e) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+    e.preventDefault();
+    trackOutcome("opax_chip", { chip_kind: "ask" });
+    askSuggestion(q);
+  });
+  return a;
 }
 
 /** Keep reviewed starting questions available after an answer, without repeats. */
@@ -9722,7 +9976,7 @@ function renderChips() {
   if (askInPlay()) return;
   if (!suggestions.length) return;
   const row = $("chip-row");
-  for (const el of row.querySelectorAll(".chip")) el.remove();
+  for (const el of row.querySelectorAll(".ask-sample")) el.remove();
   const picks = suggestedQuestions();
   for (const q of picks) row.appendChild(suggestionChip(q));
   $("ask-chips").hidden = false;
@@ -11539,6 +11793,9 @@ function syncSearchReadBar() {
   const bar = $("search-readbar");
   if (!bar) return;
   bar.hidden = !lastSearch.results.some(r => !r.href);
+  // Briefs on: the list's one machine label, beside the switch that put it there.
+  const label = $("search-briefs-label");
+  if (label) label.hidden = bar.hidden || searchReadMode !== "briefs";
   $("search-read-passages").setAttribute("aria-pressed", String(searchReadMode === "passages"));
   $("search-read-briefs").setAttribute("aria-pressed", String(searchReadMode === "briefs"));
   const status = $("search-brief-status");
@@ -11548,7 +11805,7 @@ function syncSearchReadBar() {
   else if (lastSearch.briefsLoading) status.textContent = "Checking available briefs…";
   else {
     const count = lastSearch.results.filter((result) => lastSearch.briefs[result.resource]).length;
-    status.textContent = `${count} have briefs; others show record details.`;
+    status.textContent = `${count} ${count === 1 ? "has a brief" : "have briefs"}; the rest show the record's own text.`;
   }
 }
 
@@ -11581,31 +11838,42 @@ function renderResults(results) {
     ...results.map((r, index) => {
       const li = document.createElement("li");
       if (r.href) {
-        li.innerHTML = `<h3 class="search-result-heading"><a class="result-title" href="${esc(searchResultHref(r))}">${esc(r.title)}</a></h3>
-          <div class="result-meta">${recordTypeLink(r.kind, lastSearch.query, lastSearch.filters)}${r.source ? ` · ${esc(r.source)}` : ""}${r.dateLabel ? ` · ${esc(r.dateLabel)}` : r.date ? ` · ${esc(fmtDate(r.date))}` : ""}</div>
+        li.innerHTML = `<div class="result-meta">${recordTypeLink(r.kind, lastSearch.query, lastSearch.filters)}${r.dateLabel ? ` · ${esc(r.dateLabel)}` : r.date ? ` · ${esc(fmtDate(r.date))}` : ""}${r.source ? ` · ${esc(r.source)}` : ""}</div>
+          <h3 class="search-result-heading"><a class="result-title" href="${esc(searchResultHref(r))}">${esc(r.title)}</a></h3>
           <p id="search-passage-${index}" class="search-result-text snippet" data-full="catalog">${highlightHTML(cleanPassage(r.snippet), lastSearch.query)}</p>
           <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false">Read more</button>`;
         return li;
       }
       const brief = lastSearch.briefs[r.resource];
+      // Briefs mode: a brief is OPAX's words, in the sans, under the list's one
+      // machine label; a row with no brief keeps the record's own passage in
+      // the serif. Each says which it is to a screen reader.
       const text = r.kind === "division"
         ? `<div id="search-passage-${index}" class="search-result-text snippet division-markdown">${billNoteHTML(r.snippet)}</div>`
         : searchReadMode === "briefs" && brief
-        ? `<p id="search-passage-${index}" class="search-result-text search-result-brief"><span class="search-passage-tag">Brief</span>${esc(brief)}</p>`
-        : `<p id="search-passage-${index}" class="search-result-text snippet">${searchReadMode === "briefs" ? `<span class="search-passage-tag">Passage · ${lastSearch.briefsLoading ? "checking for a brief…" : "no brief available"}</span>` : ""}${highlightHTML(cleanPassage(r.snippet), lastSearch.query)}</p>`;
+        ? `<p id="search-passage-${index}" class="search-result-text search-result-brief"><span class="visually-hidden">Machine-written brief: </span>${esc(brief)}</p>`
+        : `<p id="search-passage-${index}" class="search-result-text snippet">${searchReadMode === "briefs" ? `<span class="visually-hidden">From the record: </span>` : ""}${highlightHTML(cleanPassage(r.snippet), lastSearch.query)}</p>`;
       const title = r.speaker && r.title === `${r.speaker} — ${r.date}` ? `Speech by ${r.speaker}` : displayTitle(r);
-      const meta = [
-        r.speaker ? `<a ${entityHrefAttr(speakerHref(r, subjectHash("person", r.speaker)))}>${esc(r.speaker)}</a>` : "",
-        r.party ? partyChipHTML(r.party) : "",
+      // RecordRow (§5.2): kind · date · place above the title, then who spoke.
+      const where = [
         isCommitteeChamber(r.chamber) ? `${esc(committeeHouse(r.chamber))} committee evidence` : "",
         r.state ? esc(STATE_NAMES[r.state] || r.state) : "",
+      ].filter(Boolean).join(" · ");
+      const meta = [
+        recordTypeLink(r.kind, lastSearch.query, lastSearch.filters),
         r.date ? `<time datetime="${esc(r.date)}">${esc(fmtDate(r.date))}</time>` : "",
+        where,
       ].filter(Boolean).join('<span class="search-meta-separator" aria-hidden="true"> · </span>');
+      const byline = [
+        r.speaker ? `<a ${entityHrefAttr(speakerHref(r, subjectHash("person", r.speaker)))}>${esc(r.speaker)}</a>` : "",
+        r.party ? partyChipHTML(r.party) : "",
+      ].filter(Boolean).join(" ");
       const topics = [...new Set((Array.isArray(r.topics) ? r.topics : []).filter((t) => typeof t === "string" && t.trim()))];
       // Opening a speech row loads the whole speech in place, so its button says so.
       const more = r.kind === "speech" ? "Read the full speech here" : "Read more";
-      li.innerHTML = `<h3 class="search-result-heading"><a class="result-title" ${entityHrefAttr(`/doc/${encodeURIComponent(r.slug)}`)}>${esc(title)}</a></h3>
-        <div class="result-meta">${recordTypeLink(r.kind, lastSearch.query, lastSearch.filters)}${meta ? ` · ${meta}` : ""}</div>${text}
+      li.innerHTML = `<div class="result-meta">${meta}</div>
+        <h3 class="search-result-heading"><a class="result-title" ${entityHrefAttr(`/doc/${encodeURIComponent(r.slug)}`)}>${esc(title)}</a></h3>
+        ${byline ? `<div class="result-byline">${byline}</div>` : ""}${text}
         <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false" data-more="${esc(more)}">${esc(more)}</button>
         ${topics.length ? `<nav class="search-result-topics" aria-label="Topics for ${esc(title)}">${topics.map((topic) => `<a class="ui-tag" ${entityHrefAttr(subjectHash("topic", topic))}>${esc(TOPICS[topic] || topic)}</a>`).join("")}</nav>` : ""}`;
       return li;
@@ -11652,23 +11920,18 @@ function refreshSearchPassageFolds() {
 }
 
 /**
- * The count line. It says how many are shown and how many were retrieved, and
- * when retrieval hit its ceiling it says the record holds more rather than
- * implying the ceiling is the answer. The filters are not repeated here: the
- * chips under the search box carry them.
+ * The count line: one line, beside the sort (concept 4). It says how many are
+ * shown and how many were retrieved, and when retrieval hit its ceiling it
+ * says the record holds more rather than implying the ceiling is the answer.
+ * The filters are not repeated here: the chips under the search box carry them.
  */
 function resultsCountLine(s) {
   const n = s.total.toLocaleString();
-  if (s.pageCount <= 1) {
-    return s.truncated
-      ? `The ${n} strongest matches. The record holds more.`
-      : `${n} ${s.total === 1 ? "match" : "matches"} in searched records.`;
-  }
+  const of = s.truncated ? `the ${n} strongest matches` : `${n} ${s.total === 1 ? "record" : "records"}`;
+  if (s.pageCount <= 1) return `${of[0].toUpperCase()}${of.slice(1)}`;
   const from = ((s.page - 1) * s.perPage + 1).toLocaleString();
   const to = Math.min(s.page * s.perPage, s.total).toLocaleString();
-  return s.truncated
-    ? `Showing ${from} to ${to} of the ${n} strongest matches. The record holds more.`
-    : `Showing ${from} to ${to} of ${n} matches in searched records.`;
+  return `${from}–${to} of ${of}`;
 }
 
 // How many numbered slots the pager offers. Odd, so the page you are on sits in
@@ -11810,32 +12073,32 @@ function renderSearchEmpty(q, f) {
 
 // A new query owns its summary; paging and sorting keep the same overview.
 let searchAnswerAbort = null;
-let searchAnswerWanted = false;
 let searchAnswerKey = "";
+// The key the summary on the page was written for ("" until it is asked for).
+let searchAnswerRan = "";
 
-// The summary runs with every fresh search, but a reader who dismisses it has
-// said something: the dismissal is remembered across searches (and visits),
-// and "Show cited summary" in the results bar brings it back and forgets it.
-const SUMMARY_DISMISSED_KEY = "opax-search-summary-dismissed";
-function summaryDismissed() {
-  try { return localStorage.getItem(SUMMARY_DISMISSED_KEY) === "1"; } catch { return false; }
+/* Summarise these records (concept 4): a collapsed row with the machine label,
+   written on request. Opening the row writes it for the search in hand; a new
+   search closes the row and forgets the old summary. */
+function resetSearchAnswer(show) {
+  const box = $("search-answer");
+  searchAnswerAbort?.abort();
+  searchAnswerRan = "";
+  box.open = false;
+  box.classList.remove("is-loading");
+  $("search-answer-body").replaceChildren();
+  $("search-answer-sources").replaceChildren();
+  $("search-answer-fold").hidden = true;
+  $("search-answer-more").textContent = "";
+  $("search-answer-retry").hidden = true;
+  setStatus($("search-answer-status"), "");
+  box.hidden = !show;
 }
-function setSummaryDismissed(on) {
-  try {
-    if (on) localStorage.setItem(SUMMARY_DISMISSED_KEY, "1");
-    else localStorage.removeItem(SUMMARY_DISMISSED_KEY);
-  } catch { /* no storage: the dismissal lasts the page */ }
-}
-function syncSummaryToggle() {
-  const btn = $("search-summary-show");
-  if (!btn) return;
-  btn.hidden = !(summaryDismissed() && lastSearch.key && !$("results-bar").hidden);
-}
-$("search-summary-show")?.addEventListener("click", () => {
-  setSummaryDismissed(false);
-  searchAnswerWanted = true;
-  syncSummaryToggle();
-  if (lastSearch.key) void runSearchAnswer(lastSearch.query, lastSearch.filters, lastSearch.key);
+$("search-answer")?.addEventListener("toggle", () => {
+  const box = $("search-answer");
+  if (!box.open || !lastSearch.key || searchAnswerRan === lastSearch.key) return;
+  searchAnswerRan = lastSearch.key;
+  void runSearchAnswer(lastSearch.query, lastSearch.filters, lastSearch.key);
 });
 
 function giveUpSearchAnswer() {
@@ -11916,12 +12179,6 @@ async function runSearchAnswer(q, f, key) {
   $("search-answer-retry").hidden = true;
   $("search-answer-status").classList.remove("visually-hidden");
   setStatus($("search-answer-status"), "Reading matching records…");
-  $("search-answer-dismiss").onclick = () => {
-    searchAnswerWanted = false;
-    setSummaryDismissed(true);
-    giveUpSearchAnswer();
-    syncSummaryToggle();
-  };
   $("search-answer-retry").onclick = () => runSearchAnswer(q, f, key);
   // Points arrive one at a time over the stream and fade in as they land;
   // `done` then attaches the numbered citations and the source list.
@@ -11975,14 +12232,13 @@ async function runSearchAnswer(q, f, key) {
     }));
     $("search-answer-sum").textContent = `Sources (${sources.size})`;
     $("search-answer-fold").hidden = false;
-    $("search-answer-more").textContent = `AI summary of ${data.reviewed_count} matching records.${data.partial ? " Some sources are temporarily unavailable." : ""}`;
+    $("search-answer-more").textContent = `Written by a model from ${data.reviewed_count} matching records; not part of the record.${data.partial ? " Some sources are temporarily unavailable." : ""}`;
     setStatus($("search-answer-status"), "Summary ready");
     $("search-answer-status").classList.add("visually-hidden");
   } catch (err) {
     if (!mine()) return;
     body.replaceChildren();
-    setStatus($("search-answer-status"), "Summary unavailable");
-    $("search-answer-more").textContent = "Your matching records are below. You can try the summary again.";
+    setStatus($("search-answer-status"), "The summary could not be written. Your matching records are below.");
     $("search-answer-retry").hidden = false;
   } finally {
     if (mine()) { box.classList.remove("is-loading"); body.setAttribute("aria-busy", "false"); }
@@ -12013,11 +12269,9 @@ async function runSearch(page = 1) {
   const analyticsStarted = performance.now();
   trackOutcome("opax_search_started", { page, filter_count: Object.values(f).filter(Boolean).length });
   if (fresh) {
-    searchAnswerWanted = !!(q || f.speaker) && !summaryDismissed();
     searchAnswerKey = key;
     searchAnswerAbort?.abort();
     $("search-answer").hidden = true;
-
   }
   const btn = $("search-form").querySelector('button[type="submit"]');
   btn.disabled = true;
@@ -12068,11 +12322,11 @@ async function runSearch(page = 1) {
       hideLoader("search-wombat");
       $("search-status").classList.remove("visually-hidden");
       setStatus($("search-status"), data.warnings?.join(" ") || "");
-      const first = (lastSearch.page - 1) * lastSearch.perPage + 1;
-      const last = Math.min(lastSearch.page * lastSearch.perPage, lastSearch.total);
-      $("results-count").innerHTML = `<span class="search-count-wide">${esc(resultsCountLine(lastSearch))}</span><span class="search-count-phone">${first}–${last} of ${lastSearch.total.toLocaleString()}${lastSearch.truncated ? " strongest matches" : " matches"}.</span>`;
+      $("results-count").innerHTML = `<span class="results-count-main">${esc(resultsCountLine(lastSearch))}</span>${
+        lastSearch.truncated ? '<span class="results-count-note">The record holds more. </span>' : ""}`;
       $("results-bar").hidden = false;
-      syncSummaryToggle();
+      // The summary waits, collapsed, until the reader opens it.
+      if (fresh) resetSearchAnswer(q || f.speaker);
       renderSearchDateRuler(lastSearch.years, q, f);
       syncSearchReadBar();
       renderResults(results);
@@ -12084,9 +12338,6 @@ async function runSearch(page = 1) {
         const fixed = searchHash(q, f, lastSearch.page, sort);
         searchApplied = fixed.replace(/^#\/search\?/, "");
         history.replaceState(null, "", fixed);
-      }
-      if (searchAnswerWanted && fresh) {
-        void runSearchAnswer(q, f, key);
       }
       if (searchScrollPending) scrollToResults();
     }
@@ -12139,7 +12390,7 @@ $("search-sort").addEventListener("change", () => {
 });
 
 $("search-copylink").addEventListener("click", (e) => {
-  // Swap only the label span so the "Copied" feedback keeps the icon.
+  // Swap only the label span so the "Copied" feedback stays in the row.
   // The page goes with the link: what you share is what you were reading.
   copyText(siteUrl(searchHash(lastSearch.query, lastSearch.filters, lastSearch.page, lastSearch.sort)),
     e.currentTarget.querySelector("span"));
@@ -12147,10 +12398,14 @@ $("search-copylink").addEventListener("click", (e) => {
 
 // Export means the whole result set, not the page in hand. The Worker keeps
 // the retrieved window assembled, so `per` takes all of it in one request.
-mountExportMenu($("search-export-picker"), async (format) => {
+// The three formats are rows under ⋯, beside Copy link.
+$("search-more")?.addEventListener("click", (e) => {
+  const btn = e.target.closest("button[data-format]");
+  if (btn) void exportSearch(btn.dataset.format, btn);
+});
+async function exportSearch(format, btn) {
   const s = lastSearch;
   if (!s.results.length) return;
-  const btn = $("search-export");
   const label = btn.querySelector("span");
   const wording = label.textContent;
   let rows = s.results;
@@ -12179,7 +12434,8 @@ mountExportMenu($("search-export-picker"), async (format) => {
       ? `# retrieval reaches the ${s.total} strongest matches; the record holds more`
       : `# all matches in the searched public-record snapshot and document retrieval window`,
   ], "opax-search");
-});
+  $("search-more").open = false;
+}
 
 // --- document page ----------------------------------------------------------
 

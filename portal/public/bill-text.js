@@ -175,12 +175,16 @@ export function mountBillText(container, { bill, requestedVersion = null, open =
       if (!response.ok) throw new Error(response.status === 404 ? 'not-found' : 'unavailable');
       manifest = await response.json();
       if (!alive()) return;
+      delete root.dataset.state;
       if (manifest.bill_key !== bill.key || !Array.isArray(manifest.versions) || !manifest.versions.length) throw new Error('not-found');
       selected = billTextDefault(manifest, requestedVersion);
       controls.removeAttribute('aria-busy'); versionControls(open || Boolean(requestedVersion));
       if (location.hash === '#bill-full-text') root.scrollIntoView({ block: 'start' });
     } catch (error) {
       if (!alive() || error.name === 'AbortError') return;
+      // The page collapses a reader with nothing to read (a failed optional block);
+      // the official documents stay in the bill's source sheets.
+      root.dataset.state = error.message === 'not-found' ? 'none' : 'failed';
       controls.replaceChildren(originalSources()); controls.removeAttribute('aria-busy');
       notice.textContent = error.message === 'not-found' ? 'Full text has not been published on Opax for this bill. The original source may have the document.' : 'Published text versions could not be checked. You can still open the original source.';
       if (error.message !== 'not-found') { const retry = element('button', 'Check again', 'secondary'); retry.type = 'button'; retry.addEventListener('click', loadManifest); controls.append(retry); }
