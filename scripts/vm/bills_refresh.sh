@@ -29,7 +29,7 @@ bills_refresh() {
   local reason day catch_up=()
   day=${OPAX_TODAY:-$(TZ=Australia/Sydney date +%F)}
   [ ! -f "$BILLS_PENDING" ] || catch_up=(--catch-up)
-  reason=$("$PY" scripts/vm/bills_guard.py --date "$day" "${catch_up[@]}") || {
+  reason=$("$PY" scripts/vm/bills_guard.py --date "$day" ${catch_up[@]+"${catch_up[@]}"}) || {
     fail "cannot select bills refresh cadence"; return 1;
   }
   if [ "$reason" = skip ]; then
