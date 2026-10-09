@@ -36,7 +36,9 @@ new_sandbox() {
   git config --global init.defaultBranch main; git config --global --add safe.directory '*'
   ORIGIN="$SB/origin.git"; git init -q --bare "$ORIGIN"
   local seed="$SB/seed"; mkdir -p "$seed"
+  local fixture_exporters=()
   # the files the nightly reads, from the real tree
+  # Bills imports roster_identity, which in turn imports parli.ingest.speaker_names.
   for f in scripts/vm/nightly.sh scripts/vm/run-nightly.sh scripts/vm/poweroff-if-idle.sh scripts/vm/validate_data.py scripts/vm/data_groups.sh scripts/export_bills.py scripts/roster_identity.py \
            scripts/vm/bills_refresh.sh scripts/vm/bills_guard.py scripts/vm/keep_if_unchanged.py \
            scripts/bills_registry/bills_stages.py \
@@ -44,8 +46,16 @@ new_sandbox() {
            scripts/verify_bill_briefs.py scripts/update_corpus_manifest.py scripts/bump_cache_epoch.py \
            parli/__init__.py parli/arag.py parli/ingest/__init__.py parli/ingest/speaker_names.py \
            portal/wrangler.jsonc portal/public/corpus.json; do
-    mkdir -p "$seed/$(dirname "$f")"; cp "$SRC/$f" "$seed/$f"
+    mkdir -p "$seed/$(dirname "$f")"
+    cp "$SRC/$f" "$seed/$f" || { bad "cannot copy fixture dependency: $f"; exit 1; }
+    case "$f" in scripts/export_*.py) fixture_exporters+=("$f");; esac
   done
+  # Check the copied exporters in isolation: the real checkout must not fill
+  # gaps in this allowlist, and import failures must not become nightly failures.
+  if ! python3 -I "$SRC/scripts/vm/check_fixture_imports.py" "$seed" "${fixture_exporters[@]}"; then
+    bad "fixture exporter imports are incomplete ($1)"
+    exit 1
+  fi
   # Acquisition is stubbed: fake_refresh below already writes the bill fixtures.
   # The focused bills suite exercises the real fetch/export wrapper with stubs.
   printf '#!/usr/bin/env bash\n[ "$OPAX_SYNC_KB" = 0 ]\n' > "$seed/scripts/refresh_bills.sh"
@@ -90,10 +100,10 @@ with sqlite3.connect(sys.argv[1]) as db:
     CREATE TABLE ext_divisions (id TEXT, name TEXT, question TEXT, date TEXT, house TEXT,
      jurisdiction TEXT, ayes_count INT, noes_count INT, result TEXT, source_url TEXT);
     CREATE TABLE ext_votes (division_id TEXT, person_id TEXT, person_name TEXT, person_key TEXT,
-     vote TEXT, jurisdiction TEXT);
+     vote TEXT, jurisdiction TEXT, party TEXT);
     INSERT INTO ext_divisions VALUES ('federal-senate-1','Fixture question','Fixture question','2026-09-01',
      'senate','federal',1,0,'affirmative','https://example.test/division');
-    INSERT INTO ext_votes VALUES ('federal-senate-1','0','Member 0','Member 0','aye','federal');
+    INSERT INTO ext_votes VALUES ('federal-senate-1','0','Member 0','Member 0','aye','federal',NULL);
     ''')
 PYEOF
   echo '{"tables":{"speeches":{"after":1323635,"pushed":600482,"failed":{}}}}' > "$HOME/.cache/autoresearch/arag_sync_state.json"
