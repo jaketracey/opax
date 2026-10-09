@@ -67,6 +67,7 @@ import sqlite3
 import sys
 from collections import defaultdict
 from datetime import date, datetime, timezone
+from pathlib import Path
 
 DB_PATH = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")
 TOP_DONORS = 250
@@ -126,20 +127,22 @@ CLUSTER_OF = {
 }
 FALLBACK_CLUSTER = "other"
 
-# Conventional-but-neutral, accessibility-minded party colours.
-PARTY_COLOURS = {
-    "Labor": "#D93025",
-    "Liberal": "#1565C0",
-    "Greens": "#3C9A46",
-    "Nationals": "#1B5E20",
-    "LNP": "#4A90D9",
-    "One Nation": "#E8710A",
-    "United Australia Party": "#F0B429",
-    "Katter's Australian Party": "#7B5142",
-    "Family First": "#7B1FA2",
-    "Centre Alliance": "#00838F",
-    "Country Liberal Party": "#5C7A8A",
-}
+# Kept in step with export_state_money.py: both scripts can be streamed over
+# stdin, so neither imports a sibling. For stdin, run from the repo root on
+# the export host so it reads that checkout's token source.
+def load_party_colours() -> dict[str, str]:
+    root = Path.cwd() if __file__ == "<stdin>" else Path(__file__).resolve().parents[1]
+    parties = json.loads((root / "docs/design/design-tokens.json").read_text(encoding="utf-8"))["party"]
+    return {
+        label: parties[token]["dot"] for label, token in {
+            "Labor": "labor", "Liberal": "liberal", "Nationals": "nationals",
+            "LNP": "lnp", "Greens": "greens", "One Nation": "oneNation",
+            "Independent": "independent", "Other": "other",
+        }.items()
+    }
+
+
+PARTY_COLOURS = load_party_colours()
 
 
 def norm_key(name: str) -> str:
@@ -598,7 +601,7 @@ def main() -> None:
             "kind": "party",
             "industry": "parties",
             "group": "parties",
-            "colour": PARTY_COLOURS.get(party, "#8A8F98"),
+            "colour": PARTY_COLOURS.get(party, PARTY_COLOURS["Other"]),
             "total": round(pt["total"]),
             "count": pt["count"],
             **year_fields(pt),

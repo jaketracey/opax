@@ -1,0 +1,2081 @@
+{
+  "source": "Committed bills JSON at ceb82e9e; only the leading speaker name is removed.",
+  "examples": [
+    {
+      "bill_file": "portal/public/bills/au-federal-alrc-4144.json",
+      "speaker": "Doug Cameron",
+      "before": {
+        "key": "federal-senate-2414",
+        "date": "2013-06-27",
+        "house": "senate",
+        "question": "Doug Cameron The question now is that this bill be read a second time.",
+        "stage": "Second reading",
+        "ayes": 39,
+        "noes": 27,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Greens": {
+            "ayes": 9,
+            "noes": 0
+          },
+          "Labor": {
+            "ayes": 0,
+            "noes": 27
+          },
+          "Liberal": {
+            "ayes": 24,
+            "noes": 0
+          },
+          "Nationals": {
+            "ayes": 5,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "member": 3,
+          "dated": 61,
+          "earliest": 2
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-27/3"
+      },
+      "after": {
+        "key": "federal-senate-2414",
+        "date": "2013-06-27",
+        "house": "senate",
+        "question": "The question now is that this bill be read a second time.",
+        "stage": "Second reading",
+        "ayes": 39,
+        "noes": 27,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Greens": {
+            "ayes": 9,
+            "noes": 0
+          },
+          "Labor": {
+            "ayes": 0,
+            "noes": 27
+          },
+          "Liberal": {
+            "ayes": 24,
+            "noes": 0
+          },
+          "Nationals": {
+            "ayes": 5,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "member": 3,
+          "dated": 61,
+          "earliest": 2
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-27/3",
+        "title": "Second reading"
+      }
+    },
+    {
+      "bill_file": "portal/public/bills/au-federal-alrc-2374.json",
+      "speaker": "Mark Dreyfus",
+      "before": {
+        "key": "federal-representatives-1083",
+        "date": "2013-05-14",
+        "house": "representatives",
+        "question": "Mark Dreyfus by leave—I move: That this bill be now read a third time. Anna Burke The question is that the bill be now read a third time. Sitting suspended from 18:25 to 19:30",
+        "stage": "Third reading",
+        "ayes": 71,
+        "noes": 67,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Greens": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Independent": {
+            "ayes": 5,
+            "noes": 0
+          },
+          "Labor": {
+            "ayes": 65,
+            "noes": 0
+          },
+          "Liberal": {
+            "ayes": 0,
+            "noes": 55
+          },
+          "Nationals": {
+            "ayes": 0,
+            "noes": 11
+          }
+        },
+        "party_coverage": {
+          "dated": 138
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-05-14/4"
+      },
+      "after": {
+        "key": "federal-representatives-1083",
+        "date": "2013-05-14",
+        "house": "representatives",
+        "question": "by leave—I move: That this bill be now read a third time. Anna Burke The question is that the bill be now read a third time. Sitting suspended from 18:25 to 19:30",
+        "stage": "Third reading",
+        "ayes": 71,
+        "noes": 67,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Greens": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Independent": {
+            "ayes": 5,
+            "noes": 0
+          },
+          "Labor": {
+            "ayes": 65,
+            "noes": 0
+          },
+          "Liberal": {
+            "ayes": 0,
+            "noes": 55
+          },
+          "Nationals": {
+            "ayes": 0,
+            "noes": 11
+          }
+        },
+        "party_coverage": {
+          "dated": 138
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-05-14/4",
+        "title": "Third reading"
+      }
+    },
+    {
+      "bill_file": "portal/public/bills/au-federal-alrc-2374.json",
+      "speaker": "Jacinta Collins",
+      "before": {
+        "key": "federal-senate-2394",
+        "date": "2013-05-15",
+        "house": "senate",
+        "question": "Jacinta Collins I move: That this bill may proceed without formalities and be now read a first time. Stephen Parry Senator Ryan, you can ask to have a question split or divided because there is no provision for you to speak in the first reading. If you want to speak on the motion that the bill proceed without formality, there are two parts to that question and you can ask for that question to be divided. The question will be divided. The first question will be that the bill proceed without formality. John Hogg The question now is that the bill be now read a first time. Senator Macdonald, I am going to give you the call.",
+        "stage": "Bill",
+        "ayes": 34,
+        "noes": 29,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "DLP": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Greens": {
+            "ayes": 9,
+            "noes": 0
+          },
+          "Labor": {
+            "ayes": 24,
+            "noes": 0
+          },
+          "Liberal": {
+            "ayes": 0,
+            "noes": 24
+          },
+          "Nationals": {
+            "ayes": 0,
+            "noes": 3
+          },
+          "PRES": {
+            "ayes": 1,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "dated": 60,
+          "member": 2,
+          "earliest": 1
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/senate/2013-05-15/1"
+      },
+      "after": {
+        "key": "federal-senate-2394",
+        "date": "2013-05-15",
+        "house": "senate",
+        "question": "I move: That this bill may proceed without formalities and be now read a first time. Stephen Parry Senator Ryan, you can ask to have a question split or divided because there is no provision for you to speak in the first reading. If you want to speak on the motion that the bill proceed without formality, there are two parts to that question and you can ask for that question to be divided. The question will be divided. The first question will be that the bill proceed without formality. John Hogg The question now is that the bill be now read a first time. Senator Macdonald, I am going to give you the call.",
+        "stage": "Bill",
+        "ayes": 34,
+        "noes": 29,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "DLP": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Greens": {
+            "ayes": 9,
+            "noes": 0
+          },
+          "Labor": {
+            "ayes": 24,
+            "noes": 0
+          },
+          "Liberal": {
+            "ayes": 0,
+            "noes": 24
+          },
+          "Nationals": {
+            "ayes": 0,
+            "noes": 3
+          },
+          "PRES": {
+            "ayes": 1,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "dated": 60,
+          "member": 2,
+          "earliest": 1
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/senate/2013-05-15/1",
+        "title": "Bill"
+      }
+    },
+    {
+      "bill_file": "portal/public/bills/au-federal-alrc-2374.json",
+      "speaker": "Jacinta Collins",
+      "before": {
+        "key": "federal-senate-2397",
+        "date": "2013-05-15",
+        "house": "senate",
+        "question": "Jacinta Collins I commend the Referendum (Machinery Provisions) Amendment Bill 2013 to the Senate. Trish Crossin The question is then that the second reading of the Referendum (Machinery Provisions) Amendment Bill 2013 be agreed to.",
+        "stage": "Second reading",
+        "ayes": 35,
+        "noes": 29,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "DLP": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Greens": {
+            "ayes": 9,
+            "noes": 0
+          },
+          "Independent": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Labor": {
+            "ayes": 25,
+            "noes": 0
+          },
+          "Liberal": {
+            "ayes": 0,
+            "noes": 23
+          },
+          "Nationals": {
+            "ayes": 0,
+            "noes": 4
+          }
+        },
+        "party_coverage": {
+          "member": 2,
+          "dated": 60,
+          "earliest": 2
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/senate/2013-05-15/4"
+      },
+      "after": {
+        "key": "federal-senate-2397",
+        "date": "2013-05-15",
+        "house": "senate",
+        "question": "I commend the Referendum (Machinery Provisions) Amendment Bill 2013 to the Senate. Trish Crossin The question is then that the second reading of the Referendum (Machinery Provisions) Amendment Bill 2013 be agreed to.",
+        "stage": "Second reading",
+        "ayes": 35,
+        "noes": 29,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "DLP": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Greens": {
+            "ayes": 9,
+            "noes": 0
+          },
+          "Independent": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Labor": {
+            "ayes": 25,
+            "noes": 0
+          },
+          "Liberal": {
+            "ayes": 0,
+            "noes": 23
+          },
+          "Nationals": {
+            "ayes": 0,
+            "noes": 4
+          }
+        },
+        "party_coverage": {
+          "member": 2,
+          "dated": 60,
+          "earliest": 2
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/senate/2013-05-15/4",
+        "title": "Second reading"
+      }
+    },
+    {
+      "bill_file": "portal/public/bills/au-federal-alrc-2374.json",
+      "speaker": "Jacinta Collins",
+      "before": {
+        "key": "federal-senate-2400",
+        "date": "2013-05-15",
+        "house": "senate",
+        "question": "Jacinta Collins I move: That this bill be now read a third time. John Hogg The question is that this bill be now read a third time.",
+        "stage": "Third reading",
+        "ayes": 35,
+        "noes": 30,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "DLP": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Greens": {
+            "ayes": 9,
+            "noes": 0
+          },
+          "Labor": {
+            "ayes": 25,
+            "noes": 0
+          },
+          "Liberal": {
+            "ayes": 0,
+            "noes": 24
+          },
+          "Nationals": {
+            "ayes": 0,
+            "noes": 4
+          },
+          "PRES": {
+            "ayes": 1,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "member": 3,
+          "dated": 60,
+          "earliest": 2
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/senate/2013-05-15/7"
+      },
+      "after": {
+        "key": "federal-senate-2400",
+        "date": "2013-05-15",
+        "house": "senate",
+        "question": "I move: That this bill be now read a third time. John Hogg The question is that this bill be now read a third time.",
+        "stage": "Third reading",
+        "ayes": 35,
+        "noes": 30,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "DLP": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Greens": {
+            "ayes": 9,
+            "noes": 0
+          },
+          "Labor": {
+            "ayes": 25,
+            "noes": 0
+          },
+          "Liberal": {
+            "ayes": 0,
+            "noes": 24
+          },
+          "Nationals": {
+            "ayes": 0,
+            "noes": 4
+          },
+          "PRES": {
+            "ayes": 1,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "member": 3,
+          "dated": 60,
+          "earliest": 2
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/senate/2013-05-15/7",
+        "title": "Third reading"
+      }
+    },
+    {
+      "bill_file": "portal/public/bills/au-federal-alrc-2411.json",
+      "speaker": "Anthony Albanese",
+      "before": {
+        "key": "federal-representatives-1118",
+        "date": "2013-06-18",
+        "house": "representatives",
+        "question": "Anthony Albanese I move: _That the debate be adjourned, and the resumption of the debate be made an order of the day for the next sitting._ Anna Burke The question is that the debate be adjourned.",
+        "stage": "Second reading",
+        "ayes": 68,
+        "noes": 70,
+        "outcome": "negative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Greens": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Independent": {
+            "ayes": 2,
+            "noes": 2
+          },
+          "Labor": {
+            "ayes": 65,
+            "noes": 0
+          },
+          "Liberal": {
+            "ayes": 0,
+            "noes": 56
+          },
+          "Nationals": {
+            "ayes": 0,
+            "noes": 11
+          }
+        },
+        "party_coverage": {
+          "dated": 138
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-06-18/2"
+      },
+      "after": {
+        "key": "federal-representatives-1118",
+        "date": "2013-06-18",
+        "house": "representatives",
+        "question": "I move: _That the debate be adjourned, and the resumption of the debate be made an order of the day for the next sitting._ Anna Burke The question is that the debate be adjourned.",
+        "stage": "Second reading",
+        "ayes": 68,
+        "noes": 70,
+        "outcome": "negative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Greens": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Independent": {
+            "ayes": 2,
+            "noes": 2
+          },
+          "Labor": {
+            "ayes": 65,
+            "noes": 0
+          },
+          "Liberal": {
+            "ayes": 0,
+            "noes": 56
+          },
+          "Nationals": {
+            "ayes": 0,
+            "noes": 11
+          }
+        },
+        "party_coverage": {
+          "dated": 138
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-06-18/2",
+        "title": "Second reading"
+      }
+    },
+    {
+      "bill_file": "portal/public/bills/au-federal-r5121.json",
+      "speaker": "Mathias Cormann",
+      "before": {
+        "key": "federal-senate-3680",
+        "date": "2015-02-10",
+        "house": "senate",
+        "question": "Mathias Cormann I move: That this bill be now read a third time. The Senate divided. [18:14] (The President—Senator Parry) Question agreed to. Bill read a third time.",
+        "stage": "Third reading",
+        "ayes": 34,
+        "noes": 31,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Australian Motoring Enthusiast Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Country Liberal Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "DLP": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Greens": {
+            "ayes": 0,
+            "noes": 10
+          },
+          "Independent": {
+            "ayes": 2,
+            "noes": 0
+          },
+          "JLN": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "LNP": {
+            "ayes": 2,
+            "noes": 0
+          },
+          "Labor": {
+            "ayes": 0,
+            "noes": 20
+          },
+          "Liberal": {
+            "ayes": 22,
+            "noes": 0
+          },
+          "Nationals": {
+            "ayes": 4,
+            "noes": 0
+          },
+          "United Australia Party": {
+            "ayes": 1,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "dated": 51,
+          "member": 8,
+          "earliest": 6
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/senate/2015-02-10/6"
+      },
+      "after": {
+        "key": "federal-senate-3680",
+        "date": "2015-02-10",
+        "house": "senate",
+        "question": "I move: That this bill be now read a third time. The Senate divided. [18:14] (The President—Senator Parry) Question agreed to. Bill read a third time.",
+        "stage": "Third reading",
+        "ayes": 34,
+        "noes": 31,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Australian Motoring Enthusiast Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Country Liberal Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "DLP": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Greens": {
+            "ayes": 0,
+            "noes": 10
+          },
+          "Independent": {
+            "ayes": 2,
+            "noes": 0
+          },
+          "JLN": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "LNP": {
+            "ayes": 2,
+            "noes": 0
+          },
+          "Labor": {
+            "ayes": 0,
+            "noes": 20
+          },
+          "Liberal": {
+            "ayes": 22,
+            "noes": 0
+          },
+          "Nationals": {
+            "ayes": 4,
+            "noes": 0
+          },
+          "United Australia Party": {
+            "ayes": 1,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "dated": 51,
+          "member": 8,
+          "earliest": 6
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/senate/2015-02-10/6",
+        "title": "Third reading"
+      }
+    },
+    {
+      "bill_file": "portal/public/bills/au-federal-r5152.json",
+      "speaker": "Bronwyn Bishop",
+      "before": {
+        "key": "federal-representatives-3051",
+        "date": "2013-12-10",
+        "house": "representatives",
+        "question": "Bronwyn Bishop The question now is that the motion for the suspension of standing and sessional orders be agreed to.",
+        "stage": "Third reading",
+        "ayes": 49,
+        "noes": 84,
+        "outcome": "negative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Labor": {
+            "ayes": 49,
+            "noes": 0
+          },
+          "Liberal": {
+            "ayes": 0,
+            "noes": 68
+          },
+          "Nationals": {
+            "ayes": 0,
+            "noes": 15
+          }
+        },
+        "party_coverage": {
+          "dated": 131,
+          "earliest": 2
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-12-10/9"
+      },
+      "after": {
+        "key": "federal-representatives-3051",
+        "date": "2013-12-10",
+        "house": "representatives",
+        "question": "The question now is that the motion for the suspension of standing and sessional orders be agreed to.",
+        "stage": "Third reading",
+        "ayes": 49,
+        "noes": 84,
+        "outcome": "negative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Labor": {
+            "ayes": 49,
+            "noes": 0
+          },
+          "Liberal": {
+            "ayes": 0,
+            "noes": 68
+          },
+          "Nationals": {
+            "ayes": 0,
+            "noes": 15
+          }
+        },
+        "party_coverage": {
+          "dated": 131,
+          "earliest": 2
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-12-10/9",
+        "title": "Third reading"
+      }
+    },
+    {
+      "bill_file": "portal/public/bills/au-federal-r5152.json",
+      "speaker": "Christopher Pyne",
+      "before": {
+        "key": "federal-representatives-3053",
+        "date": "2013-12-10",
+        "house": "representatives",
+        "question": "Christopher Pyne I move: That the question be now put. Bronwyn Bishop The question is that the motion be put.",
+        "stage": "Third reading",
+        "ayes": 84,
+        "noes": 50,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Greens": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Labor": {
+            "ayes": 0,
+            "noes": 49
+          },
+          "Liberal": {
+            "ayes": 68,
+            "noes": 0
+          },
+          "Nationals": {
+            "ayes": 15,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "dated": 132,
+          "earliest": 2
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-12-10/11"
+      },
+      "after": {
+        "key": "federal-representatives-3053",
+        "date": "2013-12-10",
+        "house": "representatives",
+        "question": "I move: That the question be now put. Bronwyn Bishop The question is that the motion be put.",
+        "stage": "Third reading",
+        "ayes": 84,
+        "noes": 50,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Greens": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Labor": {
+            "ayes": 0,
+            "noes": 49
+          },
+          "Liberal": {
+            "ayes": 68,
+            "noes": 0
+          },
+          "Nationals": {
+            "ayes": 15,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "dated": 132,
+          "earliest": 2
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-12-10/11",
+        "title": "Third reading"
+      }
+    },
+    {
+      "bill_file": "portal/public/bills/au-federal-r5174.json",
+      "speaker": "Rob Mitchell",
+      "before": {
+        "key": "federal-representatives-3382",
+        "date": "2014-08-27",
+        "house": "representatives",
+        "question": "Rob Mitchell The question is that the bill be now read a second time. The House divided. [10:16] (The Deputy Speaker—Mr Mitchell) Question agreed to. Bill read a second time.",
+        "stage": "Second reading",
+        "ayes": 86,
+        "noes": 54,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Greens": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Independent": {
+            "ayes": 1,
+            "noes": 2
+          },
+          "Labor": {
+            "ayes": 0,
+            "noes": 51
+          },
+          "Liberal": {
+            "ayes": 70,
+            "noes": 0
+          },
+          "Nationals": {
+            "ayes": 14,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "dated": 140
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-08-27/2"
+      },
+      "after": {
+        "key": "federal-representatives-3382",
+        "date": "2014-08-27",
+        "house": "representatives",
+        "question": "The question is that the bill be now read a second time. The House divided. [10:16] (The Deputy Speaker—Mr Mitchell) Question agreed to. Bill read a second time.",
+        "stage": "Second reading",
+        "ayes": 86,
+        "noes": 54,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Greens": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Independent": {
+            "ayes": 1,
+            "noes": 2
+          },
+          "Labor": {
+            "ayes": 0,
+            "noes": 51
+          },
+          "Liberal": {
+            "ayes": 70,
+            "noes": 0
+          },
+          "Nationals": {
+            "ayes": 14,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "dated": 140
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-08-27/2",
+        "title": "Second reading"
+      }
+    },
+    {
+      "bill_file": "portal/public/bills/au-federal-r5174.json",
+      "speaker": "Michaelia Cash",
+      "before": {
+        "key": "federal-senate-3945",
+        "date": "2015-10-13",
+        "house": "senate",
+        "question": "Michaelia Cash I move: That the bill be read a third time. Stephen Parry The question is that the bill be now read a third time.",
+        "stage": "Third reading",
+        "ayes": 33,
+        "noes": 30,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Australian Motoring Enthusiast Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Country Liberal Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "DLP": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Family First": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Greens": {
+            "ayes": 0,
+            "noes": 10
+          },
+          "Independent": {
+            "ayes": 2,
+            "noes": 0
+          },
+          "JLN": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "LNP": {
+            "ayes": 2,
+            "noes": 0
+          },
+          "Labor": {
+            "ayes": 0,
+            "noes": 19
+          },
+          "Liberal": {
+            "ayes": 20,
+            "noes": 0
+          },
+          "Liberal Democratic Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Nationals": {
+            "ayes": 3,
+            "noes": 0
+          },
+          "United Australia Party": {
+            "ayes": 1,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "member": 10,
+          "dated": 44,
+          "earliest": 9
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/senate/2015-10-13/4"
+      },
+      "after": {
+        "key": "federal-senate-3945",
+        "date": "2015-10-13",
+        "house": "senate",
+        "question": "I move: That the bill be read a third time. Stephen Parry The question is that the bill be now read a third time.",
+        "stage": "Third reading",
+        "ayes": 33,
+        "noes": 30,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Australian Motoring Enthusiast Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Country Liberal Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "DLP": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Family First": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Greens": {
+            "ayes": 0,
+            "noes": 10
+          },
+          "Independent": {
+            "ayes": 2,
+            "noes": 0
+          },
+          "JLN": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "LNP": {
+            "ayes": 2,
+            "noes": 0
+          },
+          "Labor": {
+            "ayes": 0,
+            "noes": 19
+          },
+          "Liberal": {
+            "ayes": 20,
+            "noes": 0
+          },
+          "Liberal Democratic Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Nationals": {
+            "ayes": 3,
+            "noes": 0
+          },
+          "United Australia Party": {
+            "ayes": 1,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "member": 10,
+          "dated": 44,
+          "earliest": 9
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/senate/2015-10-13/4",
+        "title": "Third reading"
+      }
+    },
+    {
+      "bill_file": "portal/public/bills/au-federal-r5187.json",
+      "speaker": "Gavin Marshall",
+      "before": {
+        "key": "federal-senate-3535",
+        "date": "2014-07-17",
+        "house": "senate",
+        "question": "Gavin Marshall The question now is that this bill, as amended, be agreed to.",
+        "stage": "In committee",
+        "ayes": 40,
+        "noes": 15,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Australian Motoring Enthusiast Party": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "DLP": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Family First": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Greens": {
+            "ayes": 0,
+            "noes": 10
+          },
+          "Independent": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "JLN": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "LNP": {
+            "ayes": 2,
+            "noes": 0
+          },
+          "Labor": {
+            "ayes": 14,
+            "noes": 0
+          },
+          "Liberal": {
+            "ayes": 18,
+            "noes": 0
+          },
+          "Liberal Democratic Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Nationals": {
+            "ayes": 4,
+            "noes": 0
+          },
+          "United Australia Party": {
+            "ayes": 0,
+            "noes": 1
+          }
+        },
+        "party_coverage": {
+          "dated": 41,
+          "earliest": 6,
+          "member": 8
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/28"
+      },
+      "after": {
+        "key": "federal-senate-3535",
+        "date": "2014-07-17",
+        "house": "senate",
+        "question": "The question now is that this bill, as amended, be agreed to.",
+        "stage": "In committee",
+        "ayes": 40,
+        "noes": 15,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Australian Motoring Enthusiast Party": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "DLP": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Family First": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Greens": {
+            "ayes": 0,
+            "noes": 10
+          },
+          "Independent": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "JLN": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "LNP": {
+            "ayes": 2,
+            "noes": 0
+          },
+          "Labor": {
+            "ayes": 14,
+            "noes": 0
+          },
+          "Liberal": {
+            "ayes": 18,
+            "noes": 0
+          },
+          "Liberal Democratic Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Nationals": {
+            "ayes": 4,
+            "noes": 0
+          },
+          "United Australia Party": {
+            "ayes": 0,
+            "noes": 1
+          }
+        },
+        "party_coverage": {
+          "dated": 41,
+          "earliest": 6,
+          "member": 8
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/28",
+        "title": "In committee"
+      }
+    },
+    {
+      "bill_file": "portal/public/bills/au-federal-r5253.json",
+      "speaker": "Stephen Parry",
+      "before": {
+        "key": "federal-senate-3264",
+        "date": "2014-06-24",
+        "house": "senate",
+        "question": "Stephen Parry The question now is that the motion, as amended, be agreed to.",
+        "stage": "Second reading",
+        "ayes": 59,
+        "noes": 11,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Greens": {
+            "ayes": 0,
+            "noes": 9
+          },
+          "Independent": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Labor": {
+            "ayes": 28,
+            "noes": 0
+          },
+          "Liberal": {
+            "ayes": 25,
+            "noes": 0
+          },
+          "Nationals": {
+            "ayes": 4,
+            "noes": 0
+          },
+          "PRES": {
+            "ayes": 1,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "member": 5,
+          "dated": 62,
+          "earliest": 2
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/senate/2014-06-24/3"
+      },
+      "after": {
+        "key": "federal-senate-3264",
+        "date": "2014-06-24",
+        "house": "senate",
+        "question": "The question now is that the motion, as amended, be agreed to.",
+        "stage": "Second reading",
+        "ayes": 59,
+        "noes": 11,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Greens": {
+            "ayes": 0,
+            "noes": 9
+          },
+          "Independent": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Labor": {
+            "ayes": 28,
+            "noes": 0
+          },
+          "Liberal": {
+            "ayes": 25,
+            "noes": 0
+          },
+          "Nationals": {
+            "ayes": 4,
+            "noes": 0
+          },
+          "PRES": {
+            "ayes": 1,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "member": 5,
+          "dated": 62,
+          "earliest": 2
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/senate/2014-06-24/3",
+        "title": "Second reading"
+      }
+    },
+    {
+      "bill_file": "portal/public/bills/au-federal-r5256.json",
+      "speaker": "Bronwyn Bishop",
+      "before": {
+        "key": "federal-representatives-3523",
+        "date": "2014-07-17",
+        "house": "representatives",
+        "question": "Bronwyn Bishop I understand it is the wish of the House to consider the amendments together. Steven Ciobo I move: That the amendments be disagreed to. Anthony Albanese We support the Senate amendments and oppose the motion of the government. The fact is that the government has a choice, which is to understand that in the Australian system we have two houses of parliament. These Senate amendments have been carried, because they are sensible amendments and they should be supported. Bronwyn Bishop The question is that the amendments be disagreed to.",
+        "stage": "Consideration of Senate message",
+        "ayes": 80,
+        "noes": 45,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Greens": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Independent": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Labor": {
+            "ayes": 0,
+            "noes": 43
+          },
+          "Liberal": {
+            "ayes": 64,
+            "noes": 0
+          },
+          "Nationals": {
+            "ayes": 15,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "dated": 125
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-07-17/5"
+      },
+      "after": {
+        "key": "federal-representatives-3523",
+        "date": "2014-07-17",
+        "house": "representatives",
+        "question": "I understand it is the wish of the House to consider the amendments together. Steven Ciobo I move: That the amendments be disagreed to. Anthony Albanese We support the Senate amendments and oppose the motion of the government. The fact is that the government has a choice, which is to understand that in the Australian system we have two houses of parliament. These Senate amendments have been carried, because they are sensible amendments and they should be supported. Bronwyn Bishop The question is that the amendments be disagreed to.",
+        "stage": "Consideration of Senate message",
+        "ayes": 80,
+        "noes": 45,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Greens": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Independent": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Labor": {
+            "ayes": 0,
+            "noes": 43
+          },
+          "Liberal": {
+            "ayes": 64,
+            "noes": 0
+          },
+          "Nationals": {
+            "ayes": 15,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "dated": 125
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-07-17/5",
+        "title": "Consideration of Senate message"
+      }
+    },
+    {
+      "bill_file": "portal/public/bills/au-federal-r5269.json",
+      "speaker": "Gavin Marshall",
+      "before": {
+        "key": "federal-senate-3798",
+        "date": "2015-06-15",
+        "house": "senate",
+        "question": "Gavin Marshall The question now is that clause 39 stand as printed.",
+        "stage": "In committee",
+        "ayes": 38,
+        "noes": 34,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Australian Motoring Enthusiast Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Country Liberal Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "DLP": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Family First": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Greens": {
+            "ayes": 0,
+            "noes": 10
+          },
+          "Independent": {
+            "ayes": 2,
+            "noes": 0
+          },
+          "JLN": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "LNP": {
+            "ayes": 2,
+            "noes": 0
+          },
+          "Labor": {
+            "ayes": 0,
+            "noes": 23
+          },
+          "Liberal": {
+            "ayes": 24,
+            "noes": 0
+          },
+          "Liberal Democratic Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Nationals": {
+            "ayes": 4,
+            "noes": 0
+          },
+          "United Australia Party": {
+            "ayes": 1,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "dated": 53,
+          "member": 11,
+          "earliest": 8
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/senate/2015-06-15/2"
+      },
+      "after": {
+        "key": "federal-senate-3798",
+        "date": "2015-06-15",
+        "house": "senate",
+        "question": "The question now is that clause 39 stand as printed.",
+        "stage": "In committee",
+        "ayes": 38,
+        "noes": 34,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Australian Motoring Enthusiast Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Country Liberal Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "DLP": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Family First": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Greens": {
+            "ayes": 0,
+            "noes": 10
+          },
+          "Independent": {
+            "ayes": 2,
+            "noes": 0
+          },
+          "JLN": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "LNP": {
+            "ayes": 2,
+            "noes": 0
+          },
+          "Labor": {
+            "ayes": 0,
+            "noes": 23
+          },
+          "Liberal": {
+            "ayes": 24,
+            "noes": 0
+          },
+          "Liberal Democratic Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Nationals": {
+            "ayes": 4,
+            "noes": 0
+          },
+          "United Australia Party": {
+            "ayes": 1,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "dated": 53,
+          "member": 11,
+          "earliest": 8
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/senate/2015-06-15/2",
+        "title": "In committee"
+      }
+    },
+    {
+      "bill_file": "portal/public/bills/au-federal-r5415.json",
+      "speaker": "Craig Kelly",
+      "before": {
+        "key": "federal-representatives-3772",
+        "date": "2015-05-13",
+        "house": "representatives",
+        "question": "Craig Kelly The question now is that the bill be agreed to.",
+        "stage": "Consideration in detail",
+        "ayes": 79,
+        "noes": 51,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Greens": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Independent": {
+            "ayes": 0,
+            "noes": 2
+          },
+          "Labor": {
+            "ayes": 0,
+            "noes": 48
+          },
+          "Liberal": {
+            "ayes": 64,
+            "noes": 0
+          },
+          "Nationals": {
+            "ayes": 14,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "dated": 130
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-05-13/3"
+      },
+      "after": {
+        "key": "federal-representatives-3772",
+        "date": "2015-05-13",
+        "house": "representatives",
+        "question": "The question now is that the bill be agreed to.",
+        "stage": "Consideration in detail",
+        "ayes": 79,
+        "noes": 51,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Greens": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Independent": {
+            "ayes": 0,
+            "noes": 2
+          },
+          "Labor": {
+            "ayes": 0,
+            "noes": 48
+          },
+          "Liberal": {
+            "ayes": 64,
+            "noes": 0
+          },
+          "Nationals": {
+            "ayes": 14,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "dated": 130
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-05-13/3",
+        "title": "Consideration in detail"
+      }
+    },
+    {
+      "bill_file": "portal/public/bills/au-federal-r5519.json",
+      "speaker": "Penny Wong",
+      "before": {
+        "key": "federal-senate-5054",
+        "date": "2015-11-23",
+        "house": "senate",
+        "question": "Penny Wong I move opposition amendment (11) on sheet 7778: (11) Schedule 1, item 4, page 38 (lines 16 to 19), section 42 to be opposed. The TEMPORARY CHAIRMAN: The question is that section 42 in item 4 of schedule 1 stand as printed.",
+        "stage": "In committee",
+        "ayes": 38,
+        "noes": 22,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Australian Motoring Enthusiast Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Country Liberal Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Family First": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Greens": {
+            "ayes": 10,
+            "noes": 0
+          },
+          "Independent": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "LNP": {
+            "ayes": 2,
+            "noes": 0
+          },
+          "Labor": {
+            "ayes": 0,
+            "noes": 19
+          },
+          "Liberal": {
+            "ayes": 20,
+            "noes": 0
+          },
+          "Liberal Democratic Party": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Nationals": {
+            "ayes": 3,
+            "noes": 0
+          },
+          "United Australia Party": {
+            "ayes": 0,
+            "noes": 1
+          }
+        },
+        "party_coverage": {
+          "dated": 41,
+          "member": 10,
+          "earliest": 9
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-23/10"
+      },
+      "after": {
+        "key": "federal-senate-5054",
+        "date": "2015-11-23",
+        "house": "senate",
+        "question": "I move opposition amendment (11) on sheet 7778: (11) Schedule 1, item 4, page 38 (lines 16 to 19), section 42 to be opposed. The TEMPORARY CHAIRMAN: The question is that section 42 in item 4 of schedule 1 stand as printed.",
+        "stage": "In committee",
+        "ayes": 38,
+        "noes": 22,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Australian Motoring Enthusiast Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Country Liberal Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Family First": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Greens": {
+            "ayes": 10,
+            "noes": 0
+          },
+          "Independent": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "LNP": {
+            "ayes": 2,
+            "noes": 0
+          },
+          "Labor": {
+            "ayes": 0,
+            "noes": 19
+          },
+          "Liberal": {
+            "ayes": 20,
+            "noes": 0
+          },
+          "Liberal Democratic Party": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Nationals": {
+            "ayes": 3,
+            "noes": 0
+          },
+          "United Australia Party": {
+            "ayes": 0,
+            "noes": 1
+          }
+        },
+        "party_coverage": {
+          "dated": 41,
+          "member": 10,
+          "earliest": 9
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-23/10",
+        "title": "In committee"
+      }
+    },
+    {
+      "bill_file": "portal/public/bills/au-federal-r5523.json",
+      "speaker": "Ian Goodenough",
+      "before": {
+        "key": "federal-representatives-3951",
+        "date": "2015-10-14",
+        "house": "representatives",
+        "question": "Ian Goodenough The question now is that this bill be agreed to.",
+        "stage": "Consideration in detail",
+        "ayes": 80,
+        "noes": 49,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Greens": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Independent": {
+            "ayes": 0,
+            "noes": 2
+          },
+          "Labor": {
+            "ayes": 0,
+            "noes": 46
+          },
+          "Liberal": {
+            "ayes": 66,
+            "noes": 0
+          },
+          "Nationals": {
+            "ayes": 13,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "dated": 129
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-10-14/2"
+      },
+      "after": {
+        "key": "federal-representatives-3951",
+        "date": "2015-10-14",
+        "house": "representatives",
+        "question": "The question now is that this bill be agreed to.",
+        "stage": "Consideration in detail",
+        "ayes": 80,
+        "noes": 49,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Greens": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Independent": {
+            "ayes": 0,
+            "noes": 2
+          },
+          "Labor": {
+            "ayes": 0,
+            "noes": 46
+          },
+          "Liberal": {
+            "ayes": 66,
+            "noes": 0
+          },
+          "Nationals": {
+            "ayes": 13,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "dated": 129
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-10-14/2",
+        "title": "Consideration in detail"
+      }
+    },
+    {
+      "bill_file": "portal/public/bills/au-federal-r5532.json",
+      "speaker": "Chris Ketter",
+      "before": {
+        "key": "federal-senate-5047",
+        "date": "2015-11-23",
+        "house": "senate",
+        "question": "Chris Ketter The question is that amendment (4) on sheet 7791, as amended, be agreed to.",
+        "stage": "In committee",
+        "ayes": 32,
+        "noes": 27,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Australian Motoring Enthusiast Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Country Liberal Party": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "DLP": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Family First": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Greens": {
+            "ayes": 10,
+            "noes": 0
+          },
+          "Independent": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "LNP": {
+            "ayes": 0,
+            "noes": 2
+          },
+          "Labor": {
+            "ayes": 17,
+            "noes": 0
+          },
+          "Liberal": {
+            "ayes": 0,
+            "noes": 20
+          },
+          "Liberal Democratic Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Nationals": {
+            "ayes": 0,
+            "noes": 3
+          },
+          "United Australia Party": {
+            "ayes": 1,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "dated": 42,
+          "member": 9,
+          "earliest": 8
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-23/3"
+      },
+      "after": {
+        "key": "federal-senate-5047",
+        "date": "2015-11-23",
+        "house": "senate",
+        "question": "The question is that amendment (4) on sheet 7791, as amended, be agreed to.",
+        "stage": "In committee",
+        "ayes": 32,
+        "noes": 27,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Australian Motoring Enthusiast Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Country Liberal Party": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "DLP": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Family First": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Greens": {
+            "ayes": 10,
+            "noes": 0
+          },
+          "Independent": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "LNP": {
+            "ayes": 0,
+            "noes": 2
+          },
+          "Labor": {
+            "ayes": 17,
+            "noes": 0
+          },
+          "Liberal": {
+            "ayes": 0,
+            "noes": 20
+          },
+          "Liberal Democratic Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Nationals": {
+            "ayes": 0,
+            "noes": 3
+          },
+          "United Australia Party": {
+            "ayes": 1,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "dated": 42,
+          "member": 9,
+          "earliest": 8
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-23/3",
+        "title": "In committee"
+      }
+    },
+    {
+      "bill_file": "portal/public/bills/au-federal-r5568.json",
+      "speaker": "Ian Goodenough",
+      "before": {
+        "key": "federal-representatives-4131",
+        "date": "2016-03-16",
+        "house": "representatives",
+        "question": "Ian Goodenough The question is that the bill be read a second time. _An incident having occurred in the chamber—_",
+        "stage": "Second reading",
+        "ayes": 79,
+        "noes": 55,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Greens": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Independent": {
+            "ayes": 1,
+            "noes": 2
+          },
+          "Labor": {
+            "ayes": 0,
+            "noes": 52
+          },
+          "Liberal": {
+            "ayes": 62,
+            "noes": 0
+          },
+          "Nationals": {
+            "ayes": 15,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "dated": 134
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-03-16/2"
+      },
+      "after": {
+        "key": "federal-representatives-4131",
+        "date": "2016-03-16",
+        "house": "representatives",
+        "question": "The question is that the bill be read a second time. _An incident having occurred in the chamber—_",
+        "stage": "Second reading",
+        "ayes": 79,
+        "noes": 55,
+        "outcome": "affirmative",
+        "party_splits": {
+          "Country Liberal Party": {
+            "ayes": 1,
+            "noes": 0
+          },
+          "Greens": {
+            "ayes": 0,
+            "noes": 1
+          },
+          "Independent": {
+            "ayes": 1,
+            "noes": 2
+          },
+          "Labor": {
+            "ayes": 0,
+            "noes": 52
+          },
+          "Liberal": {
+            "ayes": 62,
+            "noes": 0
+          },
+          "Nationals": {
+            "ayes": 15,
+            "noes": 0
+          }
+        },
+        "party_coverage": {
+          "dated": 134
+        },
+        "paired": 0,
+        "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-03-16/2",
+        "title": "Second reading"
+      }
+    }
+  ]
+}

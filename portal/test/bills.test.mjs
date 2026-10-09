@@ -68,7 +68,9 @@ for (const file of files) {
   assert.ok(doc.introduced === null || ISO.test(doc.introduced), `${where} introduced is ISO or null`);
 
   for (const d of doc.divisions) {
-    assert.deepEqual(Object.keys(d).sort(), [...DIVISION_KEYS].sort(), `${where} division ${d.key} keys`);
+    const optionalKeys = Object.hasOwn(d, "title") ? ["title"] : [];
+    assert.deepEqual(Object.keys(d).sort(), [...DIVISION_KEYS, ...optionalKeys].sort(), `${where} division ${d.key} keys`);
+    if (optionalKeys.length) assert.ok(typeof d.title === "string" && d.title.trim(), `${where} division ${d.key} title is nonempty text`);
     assert.ok(ISO.test(d.date), `${where} division ${d.key} date is ISO`);
     for (const [party, split] of Object.entries(d.party_splits)) {
       assert.ok(party.length > 0, `${where} division ${d.key} party label is not empty`);
