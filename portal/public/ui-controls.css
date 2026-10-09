@@ -91,7 +91,11 @@ textarea.ui-input.grow-field { display: block; min-height: var(--ui-height); hei
 .ui-choice > input[role="switch"]:checked::before { left: 19px; background: var(--on-navy); }
 /* Size the whole group, including its 8px padding and 2px border. */
 .ui-segmented { box-sizing: border-box; display: inline-flex; flex-wrap: nowrap; min-height: var(--ui-height); gap: 4px; padding: 4px; border: 1px solid var(--line-strong); border-radius: calc(var(--ui-radius) + 4px); background: var(--paper-raised); }
-.ui-segmented > .ui-button { min-height: calc(var(--ui-height) - 10px); padding-block: .25rem; border-color: transparent; background: transparent; }
+.ui-segmented > .ui-button {
+  flex: 0 0 auto; min-width: max-content;
+  white-space: nowrap; overflow-wrap: normal; word-break: normal;
+  min-height: calc(var(--ui-height) - 10px); padding-block: .25rem; border-color: transparent; background: transparent;
+}
 .ui-segmented > .ui-button[aria-pressed="true"] { background: var(--navy); color: var(--on-navy); }
 :is(button, a).ui-button[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: var(--on-navy); }
 /* Applied filters are removable state. The whole chip is the hit target. */

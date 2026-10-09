@@ -11488,11 +11488,13 @@ function syncSearchReadBar() {
   $("search-read-passages").setAttribute("aria-pressed", String(searchReadMode === "passages"));
   $("search-read-briefs").setAttribute("aria-pressed", String(searchReadMode === "briefs"));
   const status = $("search-brief-status");
-  if (searchReadMode !== "briefs") status.textContent = "";
-  else if (lastSearch.briefsLoading) status.textContent = "Reading the available briefs…";
+  // Availability belongs to the summary and stays the same in either mode,
+  // so switching the result text never changes the toolbar's geometry.
+  if (bar.hidden) status.textContent = "";
+  else if (lastSearch.briefsLoading) status.textContent = "Checking available briefs…";
   else {
     const count = lastSearch.results.filter((result) => lastSearch.briefs[result.resource]).length;
-    status.textContent = `${count} documents have briefs. Other results show record details.`;
+    status.textContent = `${count} have briefs; others show record details.`;
   }
 }
 
@@ -12010,7 +12012,7 @@ async function runSearch(page = 1) {
       setStatus($("search-status"), data.warnings?.join(" ") || "");
       const first = (lastSearch.page - 1) * lastSearch.perPage + 1;
       const last = Math.min(lastSearch.page * lastSearch.perPage, lastSearch.total);
-      $("results-count").innerHTML = `<span class="search-count-wide">${esc(resultsCountLine(lastSearch))}</span><span class="search-count-phone">${first}–${last} of ${lastSearch.total.toLocaleString()}${lastSearch.truncated ? " strongest matches" : " matches"}</span>`;
+      $("results-count").innerHTML = `<span class="search-count-wide">${esc(resultsCountLine(lastSearch))}</span><span class="search-count-phone">${first}–${last} of ${lastSearch.total.toLocaleString()}${lastSearch.truncated ? " strongest matches" : " matches"}.</span>`;
       $("results-bar").hidden = false;
       syncSummaryToggle();
       renderSearchDateRuler(lastSearch.years, q, f);
