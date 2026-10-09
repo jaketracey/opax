@@ -205,17 +205,17 @@ test('full-name and reviewed KB aliases resolve to one scoped print, including P
 
 test('full-name routing merges roster-only Pugh, keeps clean pages, and redirects to the print canonical', async () => {
   const reference = { people: [{ name: 'Jess Pugh', aliases: [], electorates: [{ current: true, name: 'Mount Ommaney' }] }] };
-  const data = runInNewContext(ts.transpile(select(['loadPeople', 'personAt', 'personSlugRedirect', 'foldName'])) + ';({loadPeople,personAt,personSlugRedirect})', {
-    peopleMemo: null, splitSpeakers, Response,
+  const data = runInNewContext(ts.transpile(select(['loadPeople', 'personAt', 'canonicalRoutePath', 'personPath', 'matchSeoRoute', 'foldName'])) + ';({loadPeople,personAt,canonicalRoutePath})', {
+    peopleMemo: null, splitSpeakers, Response, URL, missingEntitySlug:()=>false,
     assetJson: async () => structuredClone(roster), loadElectorates: async () => reference,
     slugIndex: people => ({ slugOf: new Map(people.map(p => [p.name, p.name.toLowerCase()])), bySlug: new Map(people.map(p => [p.name.toLowerCase(), p])) }),
   });
   const people = await data.loadPeople({});
   assert.equal(people.people.length, roster.people.length);
   assert.equal(data.personAt(people, 'Jess Pugh').name, 'Pugh');
-  const redirect = await data.personSlugRedirect('Jess Pugh', new URL('https://local.test/subject/person/Jess%20Pugh'), {});
-  assert.equal(redirect.status, 301);
-  assert.equal(redirect.headers.get('location'), '/subject/person/pugh');
+  const redirect = await data.canonicalRoutePath(new URL('https://local.test/subject/person/Jess%20Pugh'), {});
+  assert.equal(typeof redirect, 'string');
+  assert.equal(redirect, '/subject/person/pugh');
   for (const p of roster.people.filter(p => !p.speech_scope)) assert.deepEqual(plain(people.byName.get(p.name)), p);
   const app = ts.createSourceFile('app.js',readFileSync(new URL('../public/app.js',import.meta.url),'utf8'),ts.ScriptTarget.Latest,true);
   const loader = app.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text==='loadParliamentarians').getText(app);

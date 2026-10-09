@@ -4,7 +4,7 @@ import { resolve, join } from 'node:path';
 import { createHash } from 'node:crypto';
 import { normalize, tokens, bucket } from '../portal/src/catalog-query.mjs';
 import { recordPathIndex } from '../portal/public/record-paths.js';
-import { slugIndex } from '../portal/src/person-slug.ts';
+import { personSlug, slugIndex } from '../portal/src/person-slug.ts';
 import { moneyFlowType } from '../portal/public/money-records.js';
 import { recordsWithLocations } from '../portal/public/grants-research.js';
 import { payPersonRecord, payPersonOrder, payGeneralRecords } from '../portal/src/pay-records.mjs';
@@ -13,7 +13,8 @@ const read = async p => JSON.parse(await readFile(join(root,p),'utf8'));
 const files = async p => (await readdir(join(root,p))).filter(n=>n.endsWith('.json')).sort();
 const docs = [], ids = new Set(), counts = {};
 const cash = n => Number(n).toLocaleString('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:2});
-const personHref = n => '/subject/person/'+encodeURIComponent(n);
+let canonicalPeople=new Map();
+const personHref = n => '/subject/person/'+(canonicalPeople.get(n) || personSlug(n));
 const donorHref = n => '/subject/donor/'+encodeURIComponent(n);
 const supplierHref = n => '/subject/supplier/'+encodeURIComponent(n);
 const year = d => Number(String(d || '').slice(0,4)) || 0;
@@ -67,23 +68,18 @@ export function interestHref(register, person, speakerNames) {
    : speakerNames.has(register.name) ? personHref(register.name) : register.source_url;
 }
 
-// A person's page has a second address: the slug the router settles on, which is
-// what a report from the page carries to /support. slugIndex() is the Worker's own,
-// one slug per person, so a twin spelling's slug names the fuller entry. The Worker
-// also gives slugs to seat holders outside the roster, who never outrank a roster entry.
-export const personSlugPaths = people => [...slugIndex(people).slugOf].map(([name,slug])=>['/subject/person/'+slug,personHref(name)]);
-
 export function personSpeechCount(p) {
  return p.speech_count_basis ? 'Count pending exact export; own-house, in-service speeches.' : `${p.speeches.toLocaleString()} indexed speeches.`;
 }
 
 async function main() {
  const roster = await read('parliamentarians.json');
+ canonicalPeople=slugIndex(roster.people).slugOf;
  for(const p of roster.people) add('person:'+p.name,'person',p.full||p.name,personHref(p.name),`${p.party_now||p.party||''}. ${(p.states||[]).join(', ')}. ${personSpeechCount(p)}${p.representation?.length?' Recorded representation: '+p.representation.map(r=>`${r.electorate}${r.state?', '+r.state:''}, ${r.jurisdiction}, ${r.chamber}`).join('; ')+'. Roster affiliations may include past seats and do not establish current tenure.':''}`,{aliases:p.name,from:p.first,to:p.last,state:p.states,parties:[p.party_now||p.party||''],speakers:[p.name],source:'Parliamentarian directory',dateLabel:p.speech_scope?'':(p.speech_count_basis?'Transcript years: ':'')+period(p.first,p.last)});
  for(const [jur,file] of [['federal','money.json'],['qld','money.qld.json'],['vic','money.vic.json'],['tas','money.tas.json']]) {
   const graph=await read('graph/'+file), byId=new Map(graph.nodes.map(n=>[n.id,n]));
   for(const n of graph.nodes.filter(n=>n.kind==='donor'||n.kind==='party')) {
-   add(jur+':'+n.id,n.kind==='donor'?'donor':'party',n.label,n.kind==='party'?'/subject/party/'+encodeURIComponent(n.label):jur==='federal'?donorHref(n.label):'/money?'+new URLSearchParams({jur,q:n.label}),`${(n.industry||'').replaceAll('_',' ')}. ${cash(n.total||0)} in disclosed political receipts across ${(n.count||0).toLocaleString()} records.`,{aliases:[...(n.aliases||[]),n.abn||''].join(' '),from:n.firstYear,to:n.lastYear,state:jur,parties:n.kind==='party'?[n.label]:[],source:jur==='federal'?'AEC disclosure records':`${jur.toUpperCase()} disclosure records`,dateLabel:period(n.firstYear,n.lastYear)});
+   add(jur+':'+n.id,n.kind==='donor'?'donor':'party',n.label,n.kind==='party'?'/subject/party/'+personSlug(n.label):jur==='federal'?donorHref(n.label):'/money?'+new URLSearchParams({jur,q:n.label}),`${(n.industry||'').replaceAll('_',' ')}. ${cash(n.total||0)} in disclosed political receipts across ${(n.count||0).toLocaleString()} records.`,{aliases:[...(n.aliases||[]),n.abn||''].join(' '),from:n.firstYear,to:n.lastYear,state:jur,parties:n.kind==='party'?[n.label]:[],source:jur==='federal'?'AEC disclosure records':`${jur.toUpperCase()} disclosure records`,dateLabel:period(n.firstYear,n.lastYear)});
   }
   for(const [i,e] of graph.edges.entries()) {
    const a=byId.get(e.source),b=byId.get(e.target), flow=moneyFlowType(e,byId); if(!a||!b||!flow)continue;
@@ -179,8 +175,8 @@ async function main() {
  for(let i=0;i<docs.length;i+=256)await put('records-'+Math.floor(i/256)+'.json',docs.slice(i,i+256).map(d=>d.record));
  // /support names a reported record only when its path is exactly one of these (portal/public/record-paths.js).
  // A grant recipient's own record owns its page; the award records only link to it.
- // A person's slug names the same page as their name.
- for(const [i,shard] of recordPathIndex(docs.map(d=>d.key.includes(':grant-recipient:')?{...d.record,owner:true}:d.record),personSlugPaths(roster.people)).entries())await put('paths-'+i+'.json',shard);
+ // Support reports use the same canonical addresses as search links.
+ for(const [i,shard] of recordPathIndex(docs.map(d=>d.key.includes(':grant-recipient:')?{...d.record,owner:true}:d.record)).entries())await put('paths-'+i+'.json',shard);
  const manifest={version,count:docs.length,counts,recordShardSize:256,coverage:'Searches the records and profiles published on OPAX. Map connections, expense totals and recipient profiles are aggregates and may overlap individual records. Published grant and interest detail exports are samples of their source registers; document search returns a ranked retrieval window.'};
  await writeFile(join(output,'manifest.json'),JSON.stringify(manifest));
  console.log(JSON.stringify(manifest,null,2));

@@ -66,7 +66,7 @@ test('homepage JSON-LD has WebSite, a usable SearchAction, Organization and brea
   const website = find(graph, 'WebSite');
   assert.equal(website.url, `${origin}/`);
   assert.equal(website.potentialAction['@type'], 'SearchAction');
-  assert.equal(website.potentialAction.target, `${origin}/search?q={search_term_string}`);
+  assert.equal(website.potentialAction.target, `${origin}/ask?view=search&q={search_term_string}`);
   assert.equal(website.potentialAction['query-input'], 'required name=search_term_string');
   assert.equal(find(graph, 'Organization')['@id'], website.publisher['@id']);
   assert.equal(find(graph, 'BreadcrumbList').itemListElement.length, 1);

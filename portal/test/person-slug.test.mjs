@@ -17,11 +17,11 @@ test('app.js writes the same slug the Worker reads, for every name in the roster
  for(const p of roster)assert.equal(clientSlug(p.name),personSlug(p.name),p.name);
 });
 
-test('one slug, one person: the fuller entry keeps it and the twin keeps its name',()=>{
+test('one slug, one person: the fuller entry keeps it and the twin gets a distinct slug',()=>{
  const people=[{name:'Aj Stoker',speeches:27},{name:'A.J. Stoker',speeches:3},{name:'Tony Abbott',speeches:5878},{name:'…',speeches:1}];
  const {bySlug,slugOf}=slugIndex(people);
  assert.equal(bySlug.get('aj-stoker').name,'Aj Stoker');assert.equal(slugOf.get('Aj Stoker'),'aj-stoker');
- assert.equal(slugOf.has('A.J. Stoker'),false);assert.equal(slugOf.has('…'),false);
+ assert.match(slugOf.get('A.J. Stoker'),/^aj-stoker-[a-f0-9]+$/);assert.equal(slugOf.has('…'),false);
  const live=slugIndex(roster);
  assert.equal(live.bySlug.get('tony-abbott')?.name,'Tony Abbott');
  // Nearly everyone has a slug of their own; the few twins are spellings of one person.

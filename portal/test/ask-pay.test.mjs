@@ -27,7 +27,7 @@ test('every citation marks a character inside the answer, and every source is ci
   const chars=Array.from(r.answer);
   assert.deepEqual(Object.keys(r.citations).sort(),r.sources.map(s=>s.resource).sort(),q);
   for(const ranges of Object.values(r.citations))for(const [from,to] of ranges){assert.ok(from>=0&&to<=chars.length&&to===from+1,q);assert.match(chars[from],/\S/,q)}
-  for(const s of r.sources){assert.match(s.resource,/^pay-\d+$/);assert.ok(s.href.startsWith('/subject/person/')||s.href.startsWith('https://'),s.href);assert.equal(s.cited,true)}
+  for(const s of r.sources){assert.match(s.resource,/^pay-\d+$/);assert.ok(s.href.startsWith('/subject/person/')||s.href.startsWith('https://'),s.href);assert.equal(s.cited,true);assert.doesNotMatch(s.href,/\/subject\/person\/[^#?]*[%A-Z ]/)}
   // One instrument behind two sentences is still one source.
   assert.equal(new Set(r.sources.map(s=>s.href)).size,r.sources.length,q);
  }

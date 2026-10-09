@@ -47,9 +47,10 @@ test('the actual Worker redirects before rendering and still serves canonical co
   for(const path of ['/','/community?view=signin','/community.html?view=account','/money','/subject/person/David%20Pocock']){
     const response=await worker.fetch(new Request('https://www.opax.com.au'+path),env,{});
     assert.equal(response.status,308);
-    assert.equal(response.headers.get('location'),origin+path);
+    assert.equal(response.headers.get('location'),origin+path.replace('/community.html','/community'));
   }
-  assert.deepEqual(calls,[]);
+  assert.ok(calls.every(url=>url.endsWith('.json')));
+  calls.length=0;
   const response=await worker.fetch(new Request(origin+'/community?view=signin'),env,{});
   assert.equal(response.status,200);
   assert.equal(response.headers.get('referrer-policy'),'no-referrer');

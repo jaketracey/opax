@@ -1,3 +1,4 @@
+import {subjectUrl} from './canonical-urls.js';
 /**
  * OPAX Who gets the grants — every published grant award, resolved to the
  * organisations that receive them and checked against the donor registers.
@@ -801,8 +802,8 @@ function actionRow () {
 
 export function mountGrants (container, opts = {}) {
   injectStyles()
-  const subjectHash = opts.subjectHash || ((kind, label) => typeof label === 'string' && label.trim() && !/^(null|undefined)$/i.test(label.trim()) ? `/subject/${kind}/${encodeURIComponent(label)}` : null)
-  const searchHash = opts.searchHash || ((q) => `/search?q=${encodeURIComponent(q)}`)
+  const subjectHash = opts.subjectHash || ((kind, label) => typeof label === 'string' && label.trim() && !/^(null|undefined)$/i.test(label.trim()) ? subjectUrl(kind,label) : null)
+  const searchHash = opts.searchHash || ((q) => `/ask?view=search&q=${encodeURIComponent(q)}`)
 
   const state = {
     jur: JURISDICTIONS[opts.jurisdiction] ? opts.jurisdiction : 'federal',

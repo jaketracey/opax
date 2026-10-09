@@ -1,3 +1,4 @@
+import { personUrl, partyUrl } from './canonical-urls.js';
 /* A self-directed, historical House ballot. Preferences never leave this module. */
 export const PRACTICE_DATE = '2025-05-03';
 export const HOUSE_GUIDE = 'https://www.aec.gov.au/Voting/How_to_Vote/Voting_HOR.htm';
@@ -98,8 +99,8 @@ export function mountBallot(root, opts = {}) {
   };
   const recordHTML = (c) => {
     const person = c.person_id && detail.people?.[c.person_id];
-    const profile = person?.name ? `/subject/person/${encodeURIComponent(person.name)}` : null;
-    const search = `/search?q=${encodeURIComponent('"' + c.name + '"')}`;
+    const profile = person?.name ? personUrl(person.name) : null;
+    const search = `/ask?view=search&q=${encodeURIComponent('"' + c.name + '"')}`;
     return `<details class="ballot-record"><summary>Read the record</summary><div>${profile ? `<a href="${esc(profile)}" data-ballot-route>Open parliamentary profile</a><p>May include records from before or after this election.</p>` : '<p>No linked parliamentary profile in Opax. Some candidates have never served in parliament.</p>'}<a href="${esc(search)}" data-ballot-route>Search records for ${esc(c.name)}</a><p>A name search may include other people. Check each source.</p></div></details>`;
   };
   function renderWorkspace(focus) {

@@ -1,3 +1,4 @@
+import { personUrl, partyUrl } from './canonical-urls.js';
 /**
  * OPAX Time Machine — an Encarta-style year explorer for the Australian
  * parliamentary record (1998–2026).
@@ -1540,13 +1541,13 @@ export function mountTimeMachine(container, opts = {}) {
     const text = el('div', 'tm-who-text')
     const line1 = el('div', 'tm-who-line')
     if (r.speaker) {
-      const name = el('a', 'tm-name', { href: `#/subject/person/${encodeURIComponent(r.speaker)}` })
+      const name = el('a', 'tm-name', { href: personUrl(r.speaker) })
       name.textContent = r.speaker
       line1.appendChild(name)
     }
     if (r.party) {
       if (r.speaker) line1.appendChild(document.createTextNode(' · '))
-      const party = el('a', 'tm-meta-link', { href: `#/subject/party/${encodeURIComponent(r.party)}` })
+      const party = el('a', 'tm-meta-link', { href: partyUrl(r.party) })
       party.textContent = r.party
       line1.appendChild(party)
     }
@@ -1705,7 +1706,7 @@ export function mountTimeMachine(container, opts = {}) {
       const slot = el('span', 'tm-portrait tm-portrait-sm')
       slot.dataset.speaker = s.name
       row.appendChild(slot)
-      const name = el('a', 'tm-voice-name', { href: `#/subject/person/${encodeURIComponent(s.name)}` })
+      const name = el('a', 'tm-voice-name', { href: personUrl(s.name) })
       name.textContent = s.name
       row.appendChild(name)
       if (s.party) {

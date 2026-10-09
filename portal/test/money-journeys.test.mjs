@@ -1,3 +1,4 @@
+import {partyUrl} from '../public/canonical-urls.js';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -7,6 +8,7 @@ import { shortMoney } from '../public/format.js';
 const source = readFileSync(new URL('../public/money-journeys.js', import.meta.url), 'utf8')
   .replace(/^import .*buildMoneyJourneys.*;\s*/m, '')
   .replace(/^import .*format\.js.*;\s*/m, '')
+  .replace(/^import .*canonical-urls\.js.*;\s*/m, '')
   .replace('export function mountMoneyJourneys', 'function mountMoneyJourneys');
 
 function emitter(extra = {}) {
@@ -57,7 +59,7 @@ function setup({ reduced = false, journeys = defaultJourneys(), build, options =
   let timerId = 0; const timers = new Map(); const timerHistory = new Map(); const observers = [];
   const events = []; const scenes = []; const routes = []; let clears = 0; let pauses = 0;
   const map = { presentScene(scene) { scenes.push(scene); return available; }, clearScene() { clears++; }, pauseScene() { pauses++; } };
-  const context = { shortMoney, CustomEvent: class { constructor(type, {detail}) { this.type=type; this.detail=detail; } }, dispatchEvent: e => events.push(e.detail), AbortController, buildMoneyJourneys: build || (() => journeys), matchMedia: () => media, document,
+  const context = { partyUrl, shortMoney, CustomEvent: class { constructor(type, {detail}) { this.type=type; this.detail=detail; } }, dispatchEvent: e => events.push(e.detail), AbortController, buildMoneyJourneys: build || (() => journeys), matchMedia: () => media, document,
     setTimeout(fn, ms) { const id = ++timerId; timers.set(id, { fn, ms }); timerHistory.set(id, fn); return id; },
     clearTimeout(id) { timers.delete(id); },
     IntersectionObserver: class { constructor(callback) { this.callback = callback; this.disconnected = false; observers.push(this); } observe() {} disconnect() { this.disconnected = true; } },

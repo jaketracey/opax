@@ -1,3 +1,4 @@
+import {partyUrl} from '../public/canonical-urls.js'
 // ---------------------------------------------------------------------------
 // OPAX Money Map - public entry.
 //
@@ -723,7 +724,7 @@ export type CardActionContext = {
 export function planCardActions(node: MoneyNode, ctx: CardActionContext): CardActions {
   const own = node.id === ctx.subject
   const profile = (kind: 'donor' | 'party') =>
-    own ? null : { label: 'View profile', href: `/subject/${kind}/${encodeURIComponent(node.label)}` }
+    own ? null : { label: 'View profile', href: kind==='party' ? partyUrl(node.label) : `/subject/donor/${encodeURIComponent(node.label)}` }
   if (node.kind === 'agency' || node.kind === 'supplier') {
     const hasProfile = !!node.profileUrl && /^\/subject\/(agency|supplier)\//.test(node.profileUrl)
     return { primary: hasProfile && !own ? { label: 'View profile', href: node.profileUrl! } : null, actions: [] }

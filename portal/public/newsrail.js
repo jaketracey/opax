@@ -134,7 +134,7 @@ function renderItems(root, items) {
     ask.href = `#/ask?q=${encodeURIComponent(`What has parliament said about ${topic}?`)}`
     ask.setAttribute('aria-label', `What does the parliamentary record say about: ${item.title}`)
     const search = el('a', 'nr-pivot', 'Search speeches')
-    search.href = `#/search?q=${encodeURIComponent(topic)}`
+    search.href = `/ask?view=search&q=${encodeURIComponent(topic)}`
     search.setAttribute('aria-label', `Search speeches about: ${item.title}`)
     actions.appendChild(ask)
     actions.appendChild(search)

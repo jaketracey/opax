@@ -94,13 +94,14 @@ def database_projection(db, published):
         }
     seen = {}
     for row in db.execute(
-            "SELECT division_id, person_id, person_name, vote FROM ext_votes "
+            "SELECT division_id, person_id, person_name, vote, party FROM ext_votes "
             "ORDER BY division_id, person_name, person_id"):
         division = divisions.get(row["division_id"])
         if not division or not row["person_name"]:
             continue
         member = {"name": row["person_name"], "person_id": row["person_id"],
-                  "person_slug": person_slug(row["person_name"]), "vote": row["vote"]}
+                  "person_slug": person_slug(row["person_name"]), "vote": row["vote"],
+                  **({"party": row["party"]} if row["party"] else {})}
         identity = (member["name"], member["person_id"])
         if identity not in seen.setdefault(row["division_id"], set()):
             division["members"].append(member)
@@ -273,7 +274,8 @@ def projection_index(records):
         **{field: sum(d["_meta"][field] for d in records.values())
            for field in ("member_count", "named_member_count", "recorded_vote_count")},
     }
-    return {"schema": 2, "count": len(records), "coverage": coverage, "divisions": [
+    return {"schema": 2, "count": len(records), "coverage": coverage,
+            "parties": sorted({m["party"] for d in records.values() for m in d.get("members", []) if m.get("party")}), "divisions": [
         {"key": d["key"], "slug": d["slug"], "date": d.get("date"), "bills": d.get("bills", []),
          **{field: d["_meta"][field] for field in (
              "member_coverage", "member_count", "named_member_count", "recorded_vote_count", "refresh_retained", "refresh_retained_reason")},
@@ -290,6 +292,22 @@ def write_projection(records, output, carry=False, strict=False):
     """
     output = Path(output)
     guarded = guard_projection(records, read_previous_projection(output), strict=strict)
+    # Enrich a retained snapshot only from matching dated source facts and votes.
+    # Never substitute current-roster affiliations or discard its extra members.
+    for key, record in guarded.items():
+        candidate = records.get(key)
+        if not candidate or not record["_meta"]["refresh_retained"]:
+            continue
+        if any(record.get(field) != candidate.get(field)
+               for field in ("date", "house", "ayes", "noes", "source_url")):
+            continue
+        parties = {(person_slug(m.get("name")), m.get("vote")): m["party"]
+                   for m in candidate.get("members", []) if m.get("party")}
+        for member in record.get("members", []):
+            party = parties.get((person_slug(member.get("name")), member.get("vote")))
+            if party and not member.get("party"):
+                member["party"] = party
+                record["_meta"]["party_source"] = "parli.db-ext-votes"
     index = projection_index(guarded)
     encode = lambda obj: (json.dumps(obj, ensure_ascii=False, separators=(",", ":"), sort_keys=True, allow_nan=False) + "\n").encode("utf-8")
     # Validate serialization of the complete set before creating staging files.

@@ -43,15 +43,15 @@ class DivisionExportTests(unittest.TestCase):
         CREATE TABLE ext_divisions (id TEXT, name TEXT, question TEXT, date TEXT, house TEXT,
          jurisdiction TEXT, ayes_count INT, noes_count INT, result TEXT, source_url TEXT);
         CREATE TABLE ext_votes (division_id TEXT, person_id TEXT, person_name TEXT, person_key TEXT,
-         vote TEXT, jurisdiction TEXT);
+         vote TEXT, jurisdiction TEXT, party TEXT);
         """)
         for i in range(1, 13):
             db.execute("INSERT INTO ext_divisions VALUES (?,?,?,?,?,?,?,?,?,?)", (
                 f"federal-senate-{i}", f"Procedural division {i}", "That the amendment be agreed to",
                 "2026-09-01", "senate", "federal", 1, 1, "negative", f"https://example.test/{i}"))
             for name, pid, vote in [("Alex Example", "123", "no"), ("Zoë O’Name", "124", "aye")]:
-                db.execute("INSERT INTO ext_votes VALUES (?,?,?,?,?,?)", (
-                    f"federal-senate-{i}", pid, name, name, vote, "federal"))
+                db.execute("INSERT INTO ext_votes VALUES (?,?,?,?,?,?,?)", (
+                    f"federal-senate-{i}", pid, name, name, vote, "federal", "Example Party"))
         return db
 
     def test_db_projection_has_named_raw_votes_with_matching_tally(self):
@@ -60,6 +60,7 @@ class DivisionExportTests(unittest.TestCase):
         self.assertEqual(data["_meta"]["member_coverage"], "recorded")
         self.assertEqual([m["vote"] for m in data["members"]], ["no", "aye"])
         self.assertEqual(data["members"][1]["person_slug"], "zoe-oname")
+        self.assertEqual(data["members"][1]["party"], "Example Party")
 
     def test_verified_source_snapshot_dropped_when_tally_changes(self):
         original = {"key": "example", "date": "2026-09-01", "house": "senate", "ayes": 1,

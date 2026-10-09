@@ -1,3 +1,4 @@
+import {personSlug,slugIndex} from '../src/person-slug.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile, readdir} from 'node:fs/promises';
@@ -7,10 +8,10 @@ import {searchCatalog} from '../src/catalog-search.ts';
 test('an exact speaker name keeps its profile when the directory has no match', () => {
   const register = {name: 'Ann Leahy', jurisdiction: 'qld', source_url: 'https://register.example/qld.pdf'};
   const speakers = new Set(['Ann Leahy']);
-  assert.equal(interestHref(register, null, speakers), '/subject/person/Ann%20Leahy');
+  assert.equal(interestHref(register, null, speakers), '/subject/person/ann-leahy');
   assert.equal(interestHref({...register, name: 'ann leahy'}, null, speakers), register.source_url);
   assert.equal(interestHref({...register, name: 'Unknown Member'}, null, speakers), register.source_url);
-  assert.equal(interestHref(register, {name: 'Resolved Member'}, speakers), '/subject/person/Resolved%20Member');
+  assert.equal(interestHref(register, {name: 'Resolved Member'}, speakers), '/subject/person/resolved-member');
 });
 
 test('Queensland Robert Katter cannot borrow Bob Katter’s federal alias or speaker name', () => {
@@ -42,7 +43,7 @@ test('rebuilt Queensland interest records retain exact speaker profiles and othe
     if (register.jurisdiction !== 'qld' || !Object.values(register.buckets || {}).some(b => b.items?.length)) continue;
     const person = interestPerson(register, file.slice(0, -5), roster.people, index._by_name);
     const profileName = person?.name || (speakerNames.has(register.name) ? register.name : null);
-    const expected = profileName ? '/subject/person/' + encodeURIComponent(profileName) : register.source_url;
+    const expected = profileName ? '/subject/person/' + (slugIndex(roster.people).slugOf.get(profileName) || personSlug(profileName)) : register.source_url;
     const data = await searchCatalog(new URL('https://opax.test/api/search-all?' + new URLSearchParams({
       q: register.name, kind: 'interest', state: 'qld', per: '100',
     })), assets);

@@ -31,6 +31,7 @@ import { ASK_PIPELINE_VERSION, EVIDENCE_GAP_ANSWER, isEvidenceGap, isPositionBod
 import { resolveAskScope, needsAskPeople, askRetrievalQuery, isNamedPositionQuestion, POSITION_GROUNDING, type AskScope } from './ask-scope'
 import { communityRoute } from './community'
 import { deliverReplyEmails, REPLY_EMAIL_CRON } from './community-notifications'
+import { partyUrl, personUrl } from '../public/canonical-urls.js'
 import { canonicalPageRedirect } from './canonical-origin'
 import { pageEntry } from './page-entry'
 import { communityMcp } from './community-mcp'
@@ -57,7 +58,7 @@ import { renderOgPng, renderOgJpeg, type OgFont } from './og-render'
 // The story renderer is reached through the namespace: tests stub './og-render' with the two card renderers only.
 import * as storyRender from './og-render'
 import { personRole, personTitle, roleLine, billTitle } from './seo-titles'
-import { answerBlock, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, type Division, type ReadAsset } from './seo-content'
+import { answerBlock, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, type Division, type ReadAsset } from './seo-content'
 import { buildSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
 import { photoFor, storyFrames, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
 
@@ -3029,7 +3030,7 @@ async function apiMatrix(env: Env): Promise<Response> {
 // ---------------------------------------------------------------------------
 // SEO: real paths for the hash-routed app
 //
-// The frontend routes on the hash (#/subject/person/Name), which crawlers and
+// The frontend routes on the hash (#/subject/person/slug), which crawlers and
 // link previews treat as one page. For GET requests on a known route PATH the
 // Worker serves index.html with the head rewritten per route (title,
 // description, canonical, Open Graph, Twitter card, JSON-LD) and, for entry
@@ -3712,7 +3713,11 @@ function prerenderBlock(heading: string, sentence: string, links = indexLinks())
 /** Canonical for a route: the clean path, plus the query only where it names the page. */
 function canonicalFor(url: URL, keepQuery: boolean): string {
   const path = url.pathname.replace(/\/+$/, '') || '/'
-  return `${SITE_ORIGIN}${path}${keepQuery && path !== '/money' && url.search ? url.search : ''}`
+  const grantRecord=path==='/money/grants' && (url.searchParams.has('program') || url.searchParams.has('largest'))
+  const recipient=path.startsWith('/money/grants/') && path.includes('/recipient/')
+  const keys=grantRecord ? ['jur','program','largest'] : recipient ? ['award'] : path==='/bills' || /^\/subject\/[a-z]+$/.test(path) || path==='/money/grants' ? ['page'] : []
+  const query=keepQuery ? keys.filter(k=>url.searchParams.has(k)).map(k=>`${k}=${encodeURIComponent(url.searchParams.get(k)!)}`).join('&') : ''
+  return `${SITE_ORIGIN}${path}${query ? `?${query}` : ''}`
 }
 
 const publisher = { '@type': 'Organization', name: 'OPAX', url: SITE_ORIGIN, logo: `${SITE_ORIGIN}/favicon.svg` }
@@ -3911,12 +3916,19 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       }
     } else if (route.kind === 'bill') {
       const bill=await read<Parameters<typeof renderBillAnswer>[0]>(`/bills/${route.key}.json`).catch(()=>null)
-      if(bill){meta.prerender=renderBillAnswer(bill,people?.people || [],people?.slugOf || new Map()).html;billIdentity={identifier:bill.key,status:bill.status}}
+      if(bill){const divisions=await Promise.all((bill.divisions || []).map(async d=>({...d,...await read<Division>(`/divisions/${d.key.startsWith('division-') ? d.key : `division-${d.key}`}.json`).catch(()=>null)})))
+        const related=await read<{bills:Parameters<typeof renderBillAnswer>[0][]}>('/bills/index.json')
+        meta.prerender=renderBillAnswer({...bill,divisions},people?.people || [],people?.slugOf || new Map(),related.bills).html;billIdentity={identifier:bill.key,status:bill.status}}
+    } else if(route.kind==='subject' && route.dir==='supplier') {
+      const content=await renderSupplierAnswer(meta.canonical.split('/').at(-1)!,read)
+      if(content) meta.prerender=content.html
+    } else if(route.kind==='static' && ['money','connections','explore'].includes(route.page)) {
+      meta.prerender=(await renderMoneyAnswer(meta.title.replace(/ · OPAX$/,''),read).catch(()=>null))?.html || answerBlock(meta.title.replace(/ · OPAX$/,''),meta.description,'Public money')
     } else {
       const directory=route.kind==='index' ? route.dir : route.kind==='topics' ? 'topic' : route.kind==='static' && route.page==='bills' ? 'bills' : route.kind==='static' && route.page==='money/grants' && !url.searchParams.has('program') && !url.searchParams.has('open') && !url.searchParams.has('largest') ? 'grants' : null
       if(directory){
         const content=await renderDirectory(directory,url,read,people?.people || [],people?.slugOf || new Map(),TOPIC_NAMES)
-        if(content){Object.assign(meta,{prerender:content.html,prev:content.prev,next:content.next});const canonical=new URL(meta.canonical);canonical.search='';if((content.page || 1)>1)canonical.searchParams.set('page',String(content.page));if(directory==='grants' && url.searchParams.has('jur'))canonical.searchParams.set('jur',url.searchParams.get('jur')!);meta.canonical=canonical.href}
+        if(content){Object.assign(meta,{prerender:content.html,prev:content.prev,next:content.next});const canonical=new URL(meta.canonical);canonical.search='';if((content.page || 1)>1)canonical.searchParams.set('page',String(content.page));meta.canonical=canonical.href}
       }
     }
   }
@@ -4056,19 +4068,102 @@ async function electorateMeta(name: string, url: URL, env: Env): Promise<PageMet
 
 /** The person a /subject/person/<segment> names: by slug, by name, by folded name. */
 function personAt(people: PeopleData, segment: string): Person | null {
-  return people.byName.get(segment) ?? people.bySlug.get(segment) ?? people.byFold.get(foldName(segment)) ?? null
+  return people.byName.get(segment) ?? people.bySlug.get(segment.toLowerCase()) ?? people.byFold.get(foldName(segment)) ?? null
 }
 /** A person's path: their slug where the roster gives one, else their name (see person-slug.ts). */
 function personPath(people: PeopleData | null, name: string): string {
-  return `/subject/person/${people?.slugOf.get(name) ?? encodeURIComponent(name)}`
+  return `/subject/person/${people?.slugOf.get(name) ?? personUrl(name).split('/').at(-1)}`
 }
 /** An address written with the name forwards to the slug, so one page has one URL. */
-async function personSlugRedirect(segment: string, url: URL, env: Env): Promise<Response | null> {
-  const people = await loadPeople(env).catch(() => null)
-  const p = people && personAt(people, segment)
-  const slug = p && people.slugOf.get(p.name)
-  if (!slug || slug === segment) return null
-  return new Response(null, { status: 301, headers: { location: `/subject/person/${slug}${url.search}`, 'cache-control': 'public, max-age=86400' } })
+/** Resolve host, historical shapes and path aliases before issuing one redirect.
+ * Entity redirects require a locally exported target; unknown identities stay 404. */
+let partyLabelsMemo: Promise<string[]> | null = null
+async function loadPartyLabels(env: Env): Promise<string[]> {
+  partyLabelsMemo ??= Promise.all([loadMoney(env),loadPeople(env),loadBills(env),assetJson<{parties?:string[]}>(env,'/divisions/index.json').catch(()=>null)]).then(([money,people,bills,divisions])=>[...new Set([
+    ...[...money.parties.values()].map(p=>p.label),...people.people.map(p=>p.party || ''),...people.people.map(p=>p.party_now || ''),...[...bills.byKey.values()].map(b=>b.sponsor_party || ''),...(divisions?.parties || [])
+  ].filter(Boolean))]).catch(error=>{partyLabelsMemo=null;throw error})
+  return partyLabelsMemo
+}
+async function canonicalRoutePath(url: URL, env: Env): Promise<string> {
+  let path=url.pathname.replace(/\/+$/,'') || '/'
+  if(missingEntitySlug(path)) return path
+  if(path==='/map.html') return '/map'
+  if(path==='/community.html') return '/community'
+  if(path==='/connections.html') return '/connections'
+  if(path==='/index.html' || path==='/home' || path==='/home.html') return '/'
+  let parts: string[]
+  try { parts=path.split('/').map(decodeURIComponent) } catch { return path }
+  if(parts.length===3 && ['person','party','electorate'].includes(parts[1])) parts=['','subject',parts[1],parts[2]]
+  if(parts[1]==='subject' && ['mp','people'].includes(parts[2])) parts[2]='person'
+  if(parts[1]==='subject' && parts.length===4) {
+    const name=parts[3], kind=parts[2]
+    if(kind==='person') {
+      const people=await loadPeople(env).catch(()=>null)
+      const p=people && personAt(people,name)
+      if(p) return personPath(people,p.name)
+    } else if(kind==='party') {
+      const labels=await loadPartyLabels(env).catch(()=>[])
+      const label=labels.find(p=>foldName(p)===foldName(name) || partyUrl(p).split('/').at(-1)===name.toLowerCase())
+      if(label) return partyUrl(label)
+    } else if(kind==='electorate') {
+      const data=await loadElectorates(env).catch(()=>null)
+      const candidates=(data?.electorates || []).filter(e=>e.slug.toLowerCase()===name.toLowerCase() || e.electorate_id===name || foldName(e.name)===foldName(name))
+      if(candidates.length===1) return candidates[0].url
+    } else if(kind==='supplier') {
+      const data=await loadSuppliers(env).catch(()=>null)
+      const supplier=data?.byId.get(name.toLowerCase()) || data?.byName.get(supplierNameKey(name))
+      if(supplier) return `/subject/supplier/${supplier.id}`
+    } else if(kind==='agency') {
+      const data=await loadAgencies(env).catch(()=>null)
+      const agency=data?.agencies.find(a=>a.id===name.toLowerCase() || foldName(a.name)===foldName(name))
+      if(agency) return `/subject/agency/${agency.id}`
+    }
+  }
+  if(parts[1]==='bill' && parts.length===3) {
+    const bills=await loadBills(env).catch(()=>null)
+    if(bills?.byKey.has(parts[2].toLowerCase())) return `/bill/${parts[2].toLowerCase()}`
+  }
+  if(['division','doc'].includes(parts[1]) && parts.length===3) {
+    const slug=parts[2].toLowerCase().replace(/^division-/,'')
+    if(/^(federal|nsw|vic|qld)-[a-z0-9-]+$/.test(slug)) {
+      const target=`division-${slug}`
+      const record=await assetJson<Division>(env,`/divisions/${target}.json`).catch(()=>null)
+      if(record) return `/doc/${target}`
+    }
+  }
+  const candidate=new URL(url); candidate.pathname=path
+  const route=matchSeoRoute(candidate)
+  if(route?.kind==='static' || route?.kind==='index' || route?.kind==='topics') return path
+  if(route?.kind==='topic' && TOPIC_NAMES[route.slug]) return path
+  if(route?.kind==='report' && (await loadReports(env).catch(()=>null))?.bySlug.has(route.slug)) return path
+  if(route?.kind==='instruments') {
+    const id=route.id?.toUpperCase()
+    const manifest=await assetJson<{lookup:Record<string,unknown>}>(env,'/instruments/manifest.json').catch(()=>null)
+    if(id && manifest?.lookup[id]!==undefined) return `/instrument/${id}`
+    if(!route.id && path==='/instruments') return path
+  }
+  if(route?.kind==='grant-recipient') {
+    const meta=await grantRecipientMeta(route.jurisdiction,route.id,candidate,env)
+    if(meta.status===200) return new URL(meta.canonical).pathname
+  }
+  return url.pathname
+}
+async function pageAliasRedirect(request: Request, url: URL, env: Env): Promise<Response | null> {
+  if(missingEntitySlug(url.pathname)) return null
+  if(!['GET','HEAD'].includes(request.method) || url.pathname.startsWith('/api/') || url.pathname.startsWith('/ingest/') || url.pathname==='/mcp' || url.pathname.startsWith('/og/')) return null
+  // Only page paths participate; assets retain their existing cache/serving path.
+  if(/\.[a-z0-9]+$/i.test(url.pathname) && !url.pathname.endsWith('.html')) return canonicalPageRedirect(request,env.COMMUNITY_ORIGIN)
+  const path=await canonicalRoutePath(url,env)
+  const host=canonicalPageRedirect(request,env.COMMUNITY_ORIGIN)
+  if(!host && path===url.pathname) return null
+  const destination=new URL(`${SITE_ORIGIN}${path}${url.search}`)
+  if(path==='/search') { destination.pathname='/ask';destination.searchParams.set('view','search'); }
+  if(path==='/' && (destination.searchParams.has('q') || destination.searchParams.has('ask'))) {
+    destination.pathname='/ask';
+    if(destination.searchParams.has('ask')) {destination.searchParams.set('q',destination.searchParams.get('ask') || '');destination.searchParams.delete('ask');}
+  }
+  const location=destination.href
+  return new Response(null,{status:host ? 308 : 301,headers:{location,'cache-control':'public, max-age=86400','referrer-policy':'no-referrer',...(['/ask','/search'].includes(path) && url.search ? {'x-robots-tag':'noindex'} : {})}})
 }
 /** slug -> name for every person with a slug: how app.js writes and reads the addresses. */
 async function apiPersonSlugs(env: Env): Promise<Response> {
@@ -4338,9 +4433,9 @@ async function supplierMeta(name: string, url: URL, env: Env): Promise<PageMeta>
 
 async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, env: Env): Promise<PageMeta> {
   const [moneyData, people] = await Promise.all([loadMoney(env).catch(() => null), loadPeople(env).catch(() => null)])
-  const node = (dir === 'party' ? moneyData?.parties : moneyData?.donors)?.get(foldName(name)) ?? null
-  const display = node?.label ?? name
-  const canonical = `${SITE_ORIGIN}/subject/${dir}/${encodeURIComponent(display)}`
+  const node = (dir === 'party' ? moneyData?.parties : moneyData?.donors)?.get(foldName(name)) ?? (dir==='party' ? [...(moneyData?.parties.values() || [])].find(p=>partyUrl(p.label).split('/').at(-1)===name.toLowerCase()) : null) ?? null
+  const display = node?.label ?? (dir==='party' ? (await loadPartyLabels(env).catch(()=>[])).find(p=>partyUrl(p).split('/').at(-1)===name.toLowerCase()) : null) ?? name
+  const canonical = dir==='party' ? `${SITE_ORIGIN}${partyUrl(display)}` : `${SITE_ORIGIN}/subject/${dir}/${encodeURIComponent(display)}`
   const title = `${display} · OPAX`
   let facts: string
   let tail = ''
@@ -4614,7 +4709,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
       description,
       url: canonical,
       ...(date ? { datePublished: date } : {}),
-      ...(r.speaker ? { author: { '@type': 'Person', name: r.speaker, url: speakerHref({ speaker_type: r.labels.speaker_type, chamber: r.labels.chamber, speaker_attribution: r.speaker_attribution, person_id: witness ? null : 'member' }, `${SITE_ORIGIN}/subject/person/${encodeURIComponent(r.speaker)}`) } } : {}),
+      ...(r.speaker ? { author: { '@type': 'Person', name: r.speaker, url: speakerHref({ speaker_type: r.labels.speaker_type, chamber: r.labels.chamber, speaker_attribution: r.speaker_attribution, person_id: witness ? null : 'member' }, `${SITE_ORIGIN}${personPath(await loadPeople(env).catch(() => null), r.speaker)}`) } } : {}),
       publisher,
     },
     card: {
@@ -5283,10 +5378,6 @@ async function route(
         // (linked from evidence panels and corpus.json) forwards to the route.
         if (url.pathname === '/connections.html') return legacyConnectionsRedirect(url)
         const seoRoute = matchSeoRoute(url)
-        if (seoRoute?.kind === 'subject' && seoRoute.dir === 'person') {
-          const forward = await personSlugRedirect(seoRoute.name, url, env)
-          if (forward) return forward
-        }
         if (seoRoute) return await serveSeoPage(seoRoute, url, request, env, ctx)
       }
       return await env.ASSETS.fetch(request)
@@ -5300,7 +5391,7 @@ function personTopicsFor(name: string, env: Env): Promise<Response> {
 export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url)
-    const canonical = canonicalPageRedirect(request, env.COMMUNITY_ORIGIN)
+    const canonical = await pageAliasRedirect(request, url, env)
     if (canonical) return canonical
     // Scraper fleets (see network-block.ts) are refused before any paid route runs.
     const blocked = networkBlock(request, env, url.pathname)
@@ -5318,12 +5409,20 @@ export default {
     if (url.pathname.startsWith('/api/app/v1/edition/')) return communityResponse(await appEdition(request, env))
     if (url.pathname === '/api/app/v1/manifest') return communityResponse(await appManifest(request, env))
     if (url.pathname.startsWith('/api/app/')) return communityResponse(appJson(request, {error:'not_found'}, 404))
+    if(url.pathname==='/map' && ['GET','HEAD'].includes(request.method)) {
+      const shell=await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/map.html`))
+      const facts=await renderMoneyAnswer('Money map',<T>(path:string)=>assetJson<T>(env,path))
+      const schema=JSON.stringify(buildSchemaGraph({canonical:`${SITE_ORIGIN}/map`,title:'Money map · OPAX'})).replace(/</g,'\\u003c')
+      const out=new HTMLRewriter().on('div#crawl-facts',{element(el){el.setInnerContent(facts.html,{html:true})}}).on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(shell)
+      return communityResponse(new Response(request.method==='HEAD' ? null : out.body,out))
+    }
     const entry = await pageEntry(request, env.ASSETS)
     if (entry) {
       if (/^\/search\/?$/.test(url.pathname)) entry.headers.set('x-robots-tag', url.search ? 'noindex' : 'all')
       if(entry.status===200 && url.pathname==='/') {
         const schema=JSON.stringify(buildSchemaGraph({canonical:`${SITE_ORIGIN}/`,title:SITE_TITLE,description:SITE_DESCRIPTION})).replace(/</g,'\\u003c')
-        return communityResponse(new HTMLRewriter().on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(entry))
+        const money=await renderMoneyAnswer('Public money',<T>(path:string)=>assetJson<T>(env,path)).catch(()=>null)
+        return communityResponse(new HTMLRewriter().on('div#hp-money-map',{element(el){if(money)el.setInnerContent(money.html.replace('id="prerender"','id="prerender-money"').replace('<h1>','<h2>').replace('</h1>','</h2>'),{html:true})}}).on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(entry))
       }
       return communityResponse(entry)
     }
