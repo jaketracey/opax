@@ -1,0 +1,33 @@
+appId: au.com.opax.app
+name: iPad welcome tour in a 1/3-width window falls back to the phone tour (by path, restores Windowed Apps)
+---
+# scripts/e2e.sh <ipad> .maestro/ipad-tour-compact.yaml
+# Windowed Apps, the simulator's default, which this restores. Taps are
+# unreliable in that mode, so this only opens the tour, drags the window's
+# corner to a third of the screen, checks and records.
+- runFlow: support/ipad-windowed-apps.yaml
+- launchApp:
+    clearState: true
+    arguments:
+      OPAXWelcomeTour: 'on'
+- extendedWaitUntil:
+    visible: Page 1 of 5
+    timeout: 60000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/compact-before
+- swipe:
+    start: 98%,98%
+    end: 34%,98%
+    duration: 2500
+- waitForAnimationToEnd
+# Compact width: the paged phone tour, still on the first page.
+- extendedWaitUntil:
+    visible:
+      id: tour-scroll-about
+    timeout: 15000
+- assertNotVisible:
+    id: tour-pad-stacked
+- assertVisible: Page 1 of 5
+- assertVisible:
+    id: tour-next
+- takeScreenshot: ${EVIDENCE}/compact-third

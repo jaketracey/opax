@@ -1,0 +1,134 @@
+appId: au.com.opax.app
+name: 56 iPad welcome tour, picture beside the words in landscape and above them in portrait, every page, Next, swipe, Back, rotation keeps the page, finish into the seat chooser
+---
+# iPad only (OPAX QA iPad 13). Full-Screen Apps first: in iPadOS 26's
+# windowed mode Maestro's taps land beside their targets. The journey leaves
+# Full-Screen Apps on for .maestro/ipad-tour-ax5.yaml (run next, by path, at
+# AX5); .maestro/ipad-tour-compact.yaml then restores Windowed Apps.
+- runFlow: support/ipad-full-screen-apps.yaml
+- setOrientation: LANDSCAPE_LEFT
+- launchApp:
+    clearState: true
+    arguments:
+      OPAXWelcomeTour: 'on'
+- extendedWaitUntil:
+    visible: Page 1 of 5
+    timeout: 60000
+# Landscape: the picture beside a column of words, the actions under them.
+- assertVisible:
+    id: tour-pad-columns
+- assertVisible:
+    id: tour-scene
+- assertVisible:
+    id: tour-page-about
+- assertVisible:
+    id: tour-skip
+- assertVisible:
+    id: tour-back
+    enabled: false
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/56-landscape-1
+- tapOn:
+    id: tour-next
+- extendedWaitUntil:
+    visible: Page 2 of 5
+    timeout: 10000
+- assertVisible:
+    id: tour-page-your-mp
+# The picture is one image: its sample words never reach VoiceOver.
+- assertNotVisible: Example electorate
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/56-landscape-2
+# A swipe over the picture turns the page as well.
+- swipe:
+    start: 40%,50%
+    end: 8%,50%
+- extendedWaitUntil:
+    visible: Page 3 of 5
+    timeout: 10000
+- assertVisible:
+    id: tour-page-profiles
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/56-landscape-3
+- tapOn:
+    id: tour-next
+- extendedWaitUntil:
+    visible: Page 4 of 5
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/56-landscape-4
+- tapOn:
+    id: tour-next
+- extendedWaitUntil:
+    visible: Page 5 of 5
+    timeout: 10000
+- assertVisible:
+    id: tour-finish
+- assertNotVisible:
+    id: tour-next
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/56-landscape-5
+# Portrait: the picture above, the words in a centred column. The page stays.
+- setOrientation: PORTRAIT
+- extendedWaitUntil:
+    visible:
+      id: tour-pad-stacked
+    timeout: 10000
+- assertVisible: Page 5 of 5
+- assertVisible:
+    id: tour-page-search
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/56-portrait-5
+- tapOn:
+    id: tour-back
+- extendedWaitUntil:
+    visible: Page 4 of 5
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/56-portrait-4
+- tapOn:
+    id: tour-back
+- extendedWaitUntil:
+    visible: Page 3 of 5
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/56-portrait-3
+- tapOn:
+    id: tour-back
+- extendedWaitUntil:
+    visible: Page 2 of 5
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/56-portrait-2
+- tapOn:
+    id: tour-back
+- extendedWaitUntil:
+    visible: Page 1 of 5
+    timeout: 10000
+- assertVisible:
+    id: tour-back
+    enabled: false
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/56-portrait-1
+# Finish: Choose your electorate opens Your MP's seat chooser.
+- repeat:
+    times: 4
+    commands:
+      - tapOn:
+          id: tour-next
+      - waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: Page 5 of 5
+    timeout: 10000
+- tapOn:
+    id: tour-finish
+- extendedWaitUntil:
+    notVisible:
+      id: welcome-tour
+    timeout: 10000
+- scrollUntilVisible:
+    element:
+      id: seat-search
+    timeout: 60000
+    visibilityPercentage: 10
+- takeScreenshot: ${EVIDENCE}/56-seat-chooser

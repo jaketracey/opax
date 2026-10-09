@@ -1,0 +1,37 @@
+appId: au.com.opax.app
+name: iPad welcome tour at AX5 in landscape, first and last pages (by path, at AX5, after journey 56)
+---
+# OPAX_CONTENT_SIZE=accessibility-extra-extra-extra-large scripts/e2e.sh <ipad> .maestro/ipad-tour-ax5.yaml
+# Needs Full-Screen Apps, which journey 56 leaves on: iPadOS Settings cannot
+# be driven at AX5. At accessibility sizes the page stacks in landscape too,
+# the buttons take full lines (Next first), and nothing breaks inside a word.
+- setOrientation: LANDSCAPE_LEFT
+- launchApp:
+    clearState: true
+    arguments:
+      OPAXWelcomeTour: 'on'
+- extendedWaitUntil:
+    visible: Page 1 of 5
+    timeout: 60000
+- assertVisible:
+    id: tour-pad-stacked
+- assertVisible:
+    id: tour-next
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/ax5-landscape-1
+- repeat:
+    times: 4
+    commands:
+      - tapOn:
+          id: tour-next
+      - waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: Page 5 of 5
+    timeout: 10000
+- assertVisible:
+    id: tour-finish
+- assertVisible:
+    id: tour-skip
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/ax5-landscape-5
+- setOrientation: PORTRAIT

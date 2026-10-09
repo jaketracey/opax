@@ -31,7 +31,7 @@ import type { WelcomePage } from './pages';
 export const SCENE_WIDTH = 300;
 
 /** `reduced` is null until iOS has said whether Reduce Motion is on. */
-const SceneContext = createContext<{
+export const SceneContext = createContext<{
   active: boolean;
   reduced: boolean | null;
 }>({ active: false, reduced: null });
@@ -41,7 +41,13 @@ const SceneContext = createContext<{
  * waits for the Reduce Motion setting before anything moves; with Reduce
  * Motion on (or turned on mid-reveal) it shows its finished state at once.
  */
-function Reveal({ order, children }: { order: number; children: ReactNode }) {
+export function Reveal({
+  order,
+  children,
+}: {
+  order: number;
+  children: ReactNode;
+}) {
   const { active, reduced } = useContext(SceneContext);
   const shown = useState(() => new Animated.Value(reduced ? 1 : 0))[0];
   const done = useRef(false);
@@ -88,7 +94,7 @@ function Reveal({ order, children }: { order: number; children: ReactNode }) {
   );
 }
 
-const noop = () => undefined;
+export const noop = () => undefined;
 
 function AboutScene() {
   const rows = [

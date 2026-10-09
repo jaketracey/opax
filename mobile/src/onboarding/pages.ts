@@ -52,6 +52,24 @@ export const welcomePages: readonly WelcomePage[] = [
 
 export const finishLabel = 'Choose your electorate';
 
+/**
+ * iPad: what each page's picture shows. The picture is one VoiceOver image,
+ * read before the page's words; every iPad picture shows sample records, so
+ * each summary starts "Example".
+ */
+export const padSceneSummaries: Record<WelcomePage['id'], string> = {
+  about:
+    'Example: Today on iPad, beside the sidebar, with recently introduced bills, recent declarations and the money map.',
+  'your-mp':
+    'Example: Your MP on iPad, with electorates beside your member and your senators.',
+  profiles:
+    'Example: a profile on iPad, beside the list of parliamentarians, with the voting record, pay, claimed expenses and declared interests, each showing when it was updated.',
+  'bills-today':
+    'Example: a bill on iPad, beside the list of bills, with its labelled machine summary and key dates.',
+  search:
+    'Example: Search on iPad, with suggestions for people, electorates and bills.',
+};
+
 /** VoiceOver's reading of a page: its position, title and words. */
 export function pageAnnouncement(index: number, count = welcomePages.length) {
   const page = welcomePages[index]!;
