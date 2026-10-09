@@ -1,3 +1,4 @@
+import { divisionPlain } from '../public/division-markdown.js'
 import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
 import { rankedMoneyAnswer } from './ask-money'
@@ -4481,9 +4482,9 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
     if (division) {
       const people = await loadPeople(env).catch(()=>null)
       const content = renderDivisionAnswer(division,people?.people || [],people?.slugOf || new Map())
-      return {...generic,title:`${clip(division.name || division.question || 'Division',90)} · OPAX`,description:clip(content.description || ''),prerender:content.html,
-        jsonLd:{'@context':'https://schema.org','@type':'Article',headline:division.name || division.question,url:canonical,...(division.date ? {datePublished:division.date} : {}),publisher},
-        card:{kicker:'Division',title:division.question || division.name || 'Division',lines:[content.description || '']}}
+      return {...generic,title:`${clip(divisionPlain(division.name || division.question || 'Division'),90)} · OPAX`,description:clip(content.description || ''),prerender:content.html,
+        jsonLd:{'@context':'https://schema.org','@type':'Article',headline:divisionPlain(division.name || division.question),url:canonical,...(division.date ? {datePublished:division.date} : {}),publisher},
+        card:{kicker:'Division',title:divisionPlain(division.question || division.name || 'Division'),lines:[content.description || '']}}
     }
   }
   let res: Response | null

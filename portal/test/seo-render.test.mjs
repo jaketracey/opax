@@ -80,3 +80,16 @@ test('sample HTML stays bounded and boot assets preserve the original app panel 
   for(const path of ['/subject/person/david-pocock','/bill/au-federal-r7534','/doc/division-federal-senate-10701'])assert.ok(Buffer.byteLength(await get(path))<100000,path);
   const generated=readFileSync(new URL('spa-shell.js',pub),'utf8');assert.ok(generated.includes('panel-subject'));assert.ok(generated.includes('main.prepend(answer)'));assert.ok(readFileSync(new URL('index.html',pub),'utf8').indexOf('/spa-shell.js')<readFileSync(new URL('index.html',pub),'utf8').indexOf('/app.js'));
 });
+
+// The nightly exports division JSON; the Worker must format its question as
+// well as the same record embedded in a bill's crawlable answer.
+test('reported TVFY bill and division routes render Markdown blocks from local exports',async()=>{
+  for(const path of ['/bill/au-federal-s1488','/doc/division-federal-senate-10178']) {
+    const html=await get(path);checkHtml(html);
+    const answer=html.match(/<section id="prerender"[\s\S]*?<\/section>/)[0];
+    assert.doesNotMatch(answer,/###|&gt; /);
+    assert.match(answer,/<strong>What is the bill&#39;s main idea\?<\/strong>/);
+    assert.match(answer,/<blockquote><p><em>Amends the Criminal Code Act 1995/);
+    assert.match(answer,/href="https:\/\/www.openaustralia.org.au\/senate/);
+  }
+});

@@ -5848,3 +5848,19 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
   .site-header .nav-toggle { margin-left: 0; }
   .site-header .header-search-toggle { margin-left: auto; }
 }
+
+/* TVFY division prose uses the same quiet type and quote rule in SPA and SSR. */
+.division-markdown { overflow-wrap: anywhere; }
+.division-markdown > p { margin: 0.65em 0; font: inherit; }
+.division-markdown > :first-child { margin-top: 0; }
+.division-markdown > :last-child { margin-bottom: 0; }
+.division-markdown .division-markdown-heading { margin-top: 1em; font: inherit; color: var(--ink); }
+.division-markdown blockquote {
+  margin: 0.75em 0; padding-left: 14px; font-style: italic; color: var(--ink-soft);
+  background: linear-gradient(to right, var(--bronze) 0 2px, transparent 2px) no-repeat left / 2px 100%;
+}
+.division-markdown ul, .division-markdown ol { margin: 0.65em 0; padding-left: 1.35em; }
+.division-markdown ul { list-style: disc; }
+.division-markdown li { margin: 0.3em 0; }
+.division-markdown a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line-strong); }
+.division-markdown a:hover { color: var(--bronze-ink); border-color: var(--bronze-rule); }
