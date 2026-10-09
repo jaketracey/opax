@@ -5,6 +5,7 @@ import {
   partyStatusFor,
   partyStatusSeatsFor,
   personPartyFor,
+  sittingSurnamesFor,
 } from '../src/api/party-transforms';
 import type {
   RosterPerson,
@@ -198,6 +199,7 @@ describe('party status from the real adapter', () => {
     expect(profile('linda-burney', 'Linda Burney').partyStatus).toBe('unknown');
   });
   test('every pinned profile follows the three-state rule', () => {
+    const sitting = sittingSurnamesFor(people, manifest.coverage);
     for (const row of roster.people) {
       if (!row.party && !row.party_now) continue;
       let p;
@@ -220,9 +222,22 @@ describe('party status from the real adapter', () => {
           p.seats.length > 0 || (row.current === true && !!row.party_now),
         ).toBe(true);
       else if (p.partyStatus === 'former') {
-        // Only dated ended seats (the pinned roster never says current: false).
-        expect(seats.length).toBeGreaterThan(0);
+        // Dated ended seats, or no sitting member of a parliament whose
+        // complete current membership the release holds shares the surname
+        // (the pinned roster never says current: false).
         expect(seats.some((s) => s.current)).toBe(false);
+        const surname = (n: string) => n.toLowerCase().split(/\s+/).at(-1)!;
+        const recorded = [
+          ...(p.rosterRow?.states ?? []),
+          ...(p.rosterRow?.representation ?? []).map((r) => r.jurisdiction),
+        ];
+        if (!seats.length) {
+          expect(recorded.length).toBeGreaterThan(0);
+          for (const j of recorded) {
+            expect(sitting.has(j)).toBe(true);
+            expect(sitting.get(j)!.has(surname(row.name))).toBe(false);
+          }
+        }
         expect(visible).toMatch(/^Formerly |^Party not recorded$/);
       } else expect(visible).not.toMatch(/formerly/i);
     }

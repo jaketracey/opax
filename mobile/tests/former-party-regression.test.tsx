@@ -105,12 +105,16 @@ test('Abbott status evidence never changes identity joins or infers former from 
   expect(profile.canonicalPersonId).toBeUndefined();
   expect(profile.rosterPersonId).toBe('10001');
   expect(profile.seats).toEqual([]);
-  for (const change of [
-    { name: 'Another Abbott' },
-    { pid: 'different' },
-    { representation: [] },
-    { current: true, party_now: undefined },
-  ]) {
+  // Without the Warringah term, Abbott is still former: the release holds
+  // the complete current federal membership and no sitting member is an
+  // Abbott. With no roster row there is no evidence at all, and a current
+  // flag without party_now never becomes former.
+  for (const [change, status] of [
+    [{ name: 'Another Abbott' }, 'unknown'],
+    [{ pid: 'different' }, 'former'],
+    [{ representation: [] }, 'former'],
+    [{ current: true, party_now: undefined }, 'unknown'],
+  ] as const) {
     const changedRoster = {
       ...roster,
       people: roster.people.map((r) =>
@@ -120,7 +124,7 @@ test('Abbott status evidence never changes identity joins or infers former from 
     expect(
       joinPerson('tony-abbott', slugs, changedRoster, people, manifest)
         .partyStatus,
-    ).toBe('unknown');
+    ).toBe(status);
   }
   const noTerm = {
     ...people,
@@ -128,5 +132,24 @@ test('Abbott status evidence never changes identity joins or infers former from 
   };
   expect(
     joinPerson('tony-abbott', slugs, roster, noTerm, manifest).partyStatus,
+  ).toBe('former');
+  // A sitting member who shares the surname proves nothing either way.
+  const sittingAbbott = {
+    ...noTerm,
+    people: noTerm.people.map((p) =>
+      p.name === 'Anthony Albanese' ? { ...p, name: 'Anthony Abbott' } : p,
+    ),
+  };
+  expect(
+    joinPerson('tony-abbott', slugs, roster, sittingAbbott, manifest)
+      .partyStatus,
+  ).toBe('unknown');
+  // Nor does a release whose current seats fall short of its roster count.
+  const partial = {
+    ...noTerm,
+    people: noTerm.people.filter((p) => p.name !== 'Anthony Albanese'),
+  };
+  expect(
+    joinPerson('tony-abbott', slugs, roster, partial, manifest).partyStatus,
   ).toBe('unknown');
 });

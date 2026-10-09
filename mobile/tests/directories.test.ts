@@ -22,6 +22,8 @@ import {
   matchingPeople,
   partyRows,
   peopleRows,
+  sittingGroup,
+  sittingGroupStarts,
   representationAt,
   validDate,
 } from '../src/features/directories/model';
@@ -184,6 +186,59 @@ describe('static directory transforms', () => {
     );
     expect(unrelated.every((p) => p.divisions === 0)).toBe(true);
   });
+  test('sitting members lead every sort; the group is the chip status', () => {
+    const sorted = matchingPeople(persons, { sort: 'speeches' }, '');
+    const starts = [...sittingGroupStarts(sorted).values()];
+    expect(starts.map((s) => s.group)).toEqual([
+      'sitting',
+      'unrecorded',
+      'former',
+    ]);
+    expect(starts.reduce((n, s) => n + s.count, 0)).toBe(persons.length);
+    expect(sorted[0]!.profile.partyStatus).toBe('current');
+    expect(sorted.at(-1)!.profile.partyStatus).toBe('former');
+    // Most speeches: sitting by speeches, then former by speeches.
+    const sitting = sorted.filter((p) => sittingGroup(p) === 'sitting');
+    expect(sitting[0]!.name).toBe('Anthony Albanese');
+    const former = sorted.filter((p) => sittingGroup(p) === 'former');
+    expect(former.slice(0, 2).map((p) => p.name)).toEqual([
+      'Tony Abbott',
+      'John Howard',
+    ]);
+    // Joe Hockey (North Sydney to 2015) read "LIB" before 9 Oct: the
+    // release names him Joseph Benedict Hockey, so no dated seat linked.
+    const hockey = persons.find((p) => p.name === 'Joe Hockey')!;
+    expect(hockey.profile.partyStatus).toBe('former');
+    expect(sittingGroup(hockey)).toBe('former');
+    // A filter keeps the grouping.
+    const grouped = matchingPeople(
+      persons,
+      { sort: 'name', party: 'Liberal' },
+      '',
+    ).map(sittingGroup);
+    expect(grouped.indexOf('former')).toBeGreaterThan(
+      grouped.lastIndexOf('sitting'),
+    );
+  });
+  test('no one the APH Handbook lists as sitting is drawn as former', () => {
+    const fold = (n: string) =>
+      n
+        .normalize('NFKD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/[’‘']/g, '');
+    const sittingNames = new Set(
+      catalogs.pay!.current.map((p) => fold(p.name)),
+    );
+    expect(sittingNames.size).toBe(226);
+    const named = persons.filter((p) => sittingNames.has(fold(p.name)));
+    expect(named.length).toBeGreaterThan(200);
+    expect(
+      named
+        .filter((p) => p.profile.partyStatus !== 'current')
+        .map((p) => p.name),
+    ).toEqual([]);
+  });
   test('the party-status trap retains a former party label and the roster basis', () => {
     const abbott = persons.find((p) => p.name === 'Tony Abbott')!;
     expect(abbott.profile.partyStatus).toBe('former');
@@ -202,9 +257,16 @@ describe('static directory transforms', () => {
       expect(new Set(sorted.map((p) => p.key))).toEqual(
         new Set(persons.map((p) => p.key)),
       );
+      const rank = { sitting: 0, unrecorded: 1, former: 2 };
       for (let i = 1; i < sorted.length; i++) {
         const a = sorted[i - 1]!,
           b = sorted[i]!;
+        // Sitting first, then not recorded, then former; the sort applies
+        // within each group.
+        expect(rank[sittingGroup(a)]).toBeLessThanOrEqual(
+          rank[sittingGroup(b)],
+        );
+        if (sittingGroup(a) !== sittingGroup(b)) continue;
         if (sort === 'name')
           expect(a.sortName.localeCompare(b.sortName)).toBeLessThanOrEqual(0);
         else if (sort === 'recent')

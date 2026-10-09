@@ -7,6 +7,7 @@ import * as piBefore from './reference/person-identity-before';
 import * as mp from '../src/features/your-mp/model';
 import { decodeRecentInterests } from '../src/api/catalog-decoders';
 import { catalogs, people, pinned, roster, slugs, manifest } from './pinned';
+import { withSittingRule } from './sitting-rule';
 
 let before!: typeof now;
 let mpBefore!: typeof mp;
@@ -47,20 +48,34 @@ const abbottStatus = <T>(result: T, name: string): T => {
     : result;
 };
 test('Search searchPersonFor every slug; rosterIdentityFor every roster row', () => {
-  for (const slug of Object.keys(slugs.slugs))
-    expect(run(() => now.searchPersonFor(slug, catalogs))).toEqual(
-      abbottStatus(
-        run(() => before.searchPersonFor(slug, catalogs)),
+  for (const slug of Object.keys(slugs.slugs)) {
+    const result = run(() => now.searchPersonFor(slug, catalogs));
+    expect(result).toEqual(
+      withSittingRule(
+        abbottStatus(
+          run(() => before.searchPersonFor(slug, catalogs)),
+          slugs.slugs[slug]!,
+        ),
+        result,
         slugs.slugs[slug]!,
+        'v',
       ),
     );
-  for (const row of roster.people)
-    expect(run(() => now.rosterIdentityFor(row, catalogs))).toEqual(
-      abbottStatus(
-        run(() => before.rosterIdentityFor(row, catalogs)),
+  }
+  for (const row of roster.people) {
+    const result = run(() => now.rosterIdentityFor(row, catalogs));
+    expect(result).toEqual(
+      withSittingRule(
+        abbottStatus(
+          run(() => before.rosterIdentityFor(row, catalogs)),
+          row.name,
+        ),
+        result,
         row.name,
+        'v',
       ),
     );
+  }
 });
 test('multi-name rosterRowFor / namedRosterRow as profileFor and Your MP call them', () => {
   for (const p of people.people) {

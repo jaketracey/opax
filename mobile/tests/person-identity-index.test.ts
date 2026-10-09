@@ -32,6 +32,7 @@ import {
   roster,
   slugs,
 } from './pinned';
+import { withSittingRule } from './sitting-rule';
 import type { PersonId } from '../src/api/ids';
 
 // The oracle follows the unfiltered profile path; it never uses search guards.
@@ -201,7 +202,10 @@ test('every pinned slug preserves identity, refusal and roster decisions', () =>
     // Every other identity field and refusal still equals the frozen oracle.
     if (['tony-abbott', 'abbott'].includes(slug) && original.profile)
       original.profile = { ...original.profile, partyStatus: 'former' };
-    expect(outcome(joinPerson, slug)).toEqual(original);
+    const result = outcome(joinPerson, slug);
+    expect(result).toEqual(
+      withSittingRule(original, result, slugs.slugs[slug]!, 'profile'),
+    );
     const name = slugs.slugs[slug]!;
     expect(namedRosterRow([name], roster)).toEqual(namedBefore([name], roster));
     const row = namedBefore([name], roster);

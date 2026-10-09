@@ -494,6 +494,7 @@ function computePerson(
         roster,
       ),
       people,
+      manifest.coverage,
     ),
     seats,
     rosterRow: row,
