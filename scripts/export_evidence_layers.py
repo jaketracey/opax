@@ -149,7 +149,9 @@ def export(source_path,evidence_path,output,allow_incomplete=False,decisions_pat
         # the display from the read-only corpus; preserve its quote/offset/hash.
         body=source_body(r['source_table'],r['source_id'],details.get('text_field') or
                          ('body_text' if r['source_table']=='ext_press_releases' else 'text_clean'))
-        text=evidence_excerpt(body,r['start'],r['end']) if body and r['start'] is not None and r['end'] is not None else normalize_passage(details.get('excerpt') or r['quote'])
+        digest=details.get('text_sha256')
+        unchanged=bool(body and digest and hashlib.sha256(body.encode()).hexdigest()==digest)
+        text=evidence_excerpt(body,r['start'],r['end']) if unchanged and r['start'] is not None and r['end'] is not None else normalize_passage(details.get('excerpt') or r['quote'])
         if 'excerpt' in details:details['excerpt']=text
         entry['excerpts'].append({'id':r['id'],'predicate':r['predicate'],'details':details,'date':date,'source_kind':kind,
             'source_table':r['source_table'],'source_id':r['source_id'],

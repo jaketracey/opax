@@ -420,10 +420,10 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
         .sort(([a], [b]) => a.localeCompare(b)),
     ).toString()
   // Retire windows/pages containing the old unnormalized, character-cut snippets.
-  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\nyears-topics-v3-split-speakers-passage-v2\n${keyParams(['nocache'])}`))
+  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\nyears-topics-v3-split-speakers-passage-v3\n${keyParams(['nocache'])}`))
   const windowKey = cacheRequest(
     'search-window',
-    await sha256Hex(`${env.CACHE_EPOCH}\ntopics-v2-split-speakers-passage-v2\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
+    await sha256Hex(`${env.CACHE_EPOCH}\ntopics-v2-split-speakers-passage-v3\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
   )
   const bypass = cacheBypass(request, url)
   if (!bypass) {
@@ -2382,7 +2382,7 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
       }
     }
   }
-  const cacheKey = cacheRequest('resource-body-v3-witness-passage-v2', `${encodeURIComponent(env.CACHE_EPOCH)}/${slug}`)
+  const cacheKey = cacheRequest('resource-body-v3-witness-passage-v3', `${encodeURIComponent(env.CACHE_EPOCH)}/${slug}`)
   const bypass = cacheBypass(request, url)
   if (!bypass) {
     const hit = await caches.default.match(cacheKey)
@@ -2450,7 +2450,7 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
     topics, // machine topic labels (multi-label; empty until the pass reaches this doc)
     metadata,
     summary: brief,
-    text: normalizePassage(bodyText),
+    text: labels.kind === 'bill_text' || slug.startsWith('bill-text-') ? bodyText : normalizePassage(bodyText),
   })
   cacheStore(ctx, cacheKey, out, RESOURCE_CACHE_TTL)
   return withCacheStatus(out, bypass ? 'BYPASS' : 'MISS')

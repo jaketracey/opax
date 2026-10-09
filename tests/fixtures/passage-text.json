@@ -90,7 +90,7 @@
     },
     {
       "input": "John Howardis.",
-      "expected": "John Howard is."
+      "expected": "John Howardis."
     },
     {
       "input": "John Howardhas.",
@@ -106,7 +106,7 @@
     },
     {
       "input": "John Howardthe.",
-      "expected": "John Howard the."
+      "expected": "John Howardthe."
     },
     {
       "input": "John Howarduntil.",
@@ -122,7 +122,7 @@
     },
     {
       "input": "John Howardto.",
-      "expected": "John Howard to."
+      "expected": "John Howardto."
     },
     {
       "input": "John Howardof.",
@@ -130,11 +130,11 @@
     },
     {
       "input": "John Howardin.",
-      "expected": "John Howard in."
+      "expected": "John Howardin."
     },
     {
       "input": "John Howardon.",
-      "expected": "John Howard on."
+      "expected": "John Howardon."
     },
     {
       "input": "John Howardfor.",
@@ -154,15 +154,15 @@
     },
     {
       "input": "John Howardas.",
-      "expected": "John Howard as."
+      "expected": "John Howardas."
     },
     {
       "input": "John Howardat.",
-      "expected": "John Howard at."
+      "expected": "John Howardat."
     },
     {
       "input": "John Howardby.",
-      "expected": "John Howard by."
+      "expected": "John Howardby."
     },
     {
       "input": "John Howardfrom.",
@@ -183,6 +183,82 @@
     {
       "input": "Mr Finnin became chief executive. Mr Jenkinson: Yes. Ms Erin Murray. Mr Leon Davis. Dr Erin Rayment.",
       "expected": "Mr Finnin became chief executive. Mr Jenkinson: Yes. Ms Erin Murray. Mr Leon Davis. Dr Erin Rayment."
+    },
+    {
+      "input": "John Williamson said",
+      "expected": "John Williamson said"
+    },
+    {
+      "input": "Peter Morrison said",
+      "expected": "Peter Morrison said"
+    },
+    {
+      "input": "David Harrison is",
+      "expected": "David Harrison is"
+    },
+    {
+      "input": "Kate Ellison, the",
+      "expected": "Kate Ellison, the"
+    },
+    {
+      "input": "Malcolm Robertson.",
+      "expected": "Malcolm Robertson."
+    },
+    {
+      "input": "Steve Hutchinson and",
+      "expected": "Steve Hutchinson and"
+    },
+    {
+      "input": "Ryan Parkin",
+      "expected": "Ryan Parkin"
+    },
+    {
+      "input": "Dai Leon",
+      "expected": "Dai Leon"
+    },
+    {
+      "input": "Angie Bellis",
+      "expected": "Angie Bellis"
+    },
+    {
+      "input": "Senator Parkin said",
+      "expected": "Senator Parkin said"
+    },
+    {
+      "input": "Senator Leon said",
+      "expected": "Senator Leon said"
+    },
+    {
+      "input": "whenJohn Williamson said",
+      "expected": "whenJohn Williamson said"
+    },
+    {
+      "input": "&parameters &copy2025 3&section &parameters; &unknown; &copy;",
+      "expected": "&parameters &copy2025 3&section &parameters; &unknown; ©"
+    },
+    {
+      "input": "if x <y and z> 3 <custom>literal</custom>",
+      "expected": "if x <y and z> 3 <custom>literal</custom>"
+    },
+    {
+      "input": "<b>bo</b>ld x<sup>2</sup>",
+      "expected": "bo ld x 2"
+    },
+    {
+      "input": "<a title=\"1 > 0\">Link</a><!--closed-->next",
+      "expected": "Link next"
+    },
+    {
+      "input": "<a\n incomplete",
+      "expected": "<a\nincomplete"
+    },
+    {
+      "input": "a\u001cb\u001dc\u001ed\u001fef﻿g",
+      "expected": "a\u001cb\u001dc\u001ed\u001fef g"
+    },
+    {
+      "input": "&#x1c;&#x85;&#xfeff;a&#x1f;b&#0;&#xD800;&#xFFFF;",
+      "expected": "\u001c… a\u001fb��￿"
     }
   ],
   "speeches": [
@@ -200,6 +276,51 @@
       "speech_id": 1249416,
       "source": "committee_senate",
       "text_clean": "[Rural and Regional Affairs and Transport Legislation Committee - Rural and Regional Affairs and Transport Legislation Committee 28/05/2026 Estimates AGRICULTURE, FISHERIES AND FORESTRY PORTFOLIO Meat &#38; Livestock Australia Limited] Senator CANAVAN:\n\n So Cattle Australia is on that?"
+    }
+  ],
+  "windows": [
+    {
+      "text": "hello world",
+      "limit": 600,
+      "start": 0,
+      "end": -1,
+      "expected": "…"
+    },
+    {
+      "text": "😀 😀 next",
+      "limit": 6,
+      "start": 0,
+      "expected": "😀 …"
+    },
+    {
+      "text": "😀 😀 next",
+      "limit": 10,
+      "start": 0,
+      "expected": "😀 😀 next"
+    },
+    {
+      "text": "before 😀 after words",
+      "limit": 11,
+      "start": 8,
+      "expected": "… 😀 …"
+    },
+    {
+      "text": "😀 next",
+      "limit": 1,
+      "start": 1,
+      "expected": "…"
+    },
+    {
+      "text": "first﻿secondthird last",
+      "limit": 18,
+      "start": 0,
+      "expected": "first …"
+    },
+    {
+      "text": "\u001c hello ﻿",
+      "limit": 600,
+      "start": 0,
+      "expected": "\u001c hello"
     }
   ]
 }

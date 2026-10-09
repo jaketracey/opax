@@ -85,3 +85,11 @@ test('full bill text resources are readable without including generated summarie
  assert.equal(result.text,'Section 1.\n\nSchedule 1.\nFinal provision.');
  for(const bad of ['bill-text-../secret','bill-text-au-federal-r7451/aspassed','bill-text-au-federal-'])assert.equal(isPublicSlug(bad),false);
 });
+
+test('/doc bill sources preserve indentation, tabs, entities and tag-like legislative text',async()=>{
+ const body='\tSection 1\n    (a) if x <y and z> 3; &parameters\n\n\n';
+ const result=await readSource({body:field(body)},'bill-text-au-federal-r7451-aspassed');
+ assert.equal(result.text,body);
+ const classified=await readSource({body:field(body)},'legal-123',{usermetadata:{classifications:[{labelset:'kind',label:'bill_text'}]}});
+ assert.equal(classified.text,body);
+});

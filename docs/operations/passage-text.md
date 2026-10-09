@@ -30,20 +30,23 @@ forms are lost boundaries such as `membersinterjecting` and `ceaseinterjecting`.
 Names come from `portal/public/parliamentarians.json`: 1,234 full names and 1,064
 surnames. Python reads that roster directly, so standalone exports need no Node
 build. `scripts/build_passage_names.mjs`, included in `npm run build:search`,
-generates a 41,717-byte ignored projection bundled into the Worker. A parity test
+generates a 64,495-byte committed projection bundled into the Worker. A parity test
 compares the complete Python roster projection with the generated Worker input.
 Each helper builds one escaped, longest-first name regex.
 
 A lowercase letter before a complete roster full name acquires a space. After
-a full name or `Senator <Surname>`, only the 24 requested lowercase function
-words acquire a space, and only at a word boundary. A name embedded in a longer
+a full name or `Senator <Surname>`, only 16 lowercase function
+words acquire a space, and only at a word boundary. The ambiguous suffixes
+`on`, `in`, `is`, `as`, `at`, `by`, `to` and `the` are excluded completely. A
+surname plus suffix that is itself a roster surname or name token is also
+protected, including when the first name differs from the roster full name. A name embedded in a longer
 word is left alone. Other honorific surname forms are recognized but do not get
 suffix repairs: corpus review caught `Mr Finnin`, `Mr Jenkinson`, `Ms Erin`,
 `Mr Leon` and `Dr Erin` being mistaken for surname/function-word joins. These
 observed cases are now negative fixtures. This deliberately leaves uncertain
 non-Senator surname joins unchanged.
 
-## Offline corpus audit (2026-10-09)
+## Offline corpus audit, round 1 (2026-10-09)
 
 `scripts/audit_passage_joins.py` reads every JSON export under `portal/public`
 (including the freshly built search catalog) and the saved bill-enrichment
@@ -82,6 +85,70 @@ fields. Ten shortened samples from those selections:
 | `Senator Wattfor the commitment` | `Senator Watt for the commitment` |
 | `Kim Carrin 2013` | `Kim Carr in 2013` |
 | `Senator Robertsto my answers` | `Senator Roberts to my answers` |
+
+## Round 2 review fixes and measurement (2026-10-09)
+
+Negative fixtures protect Williamson, Morrison, Ellison, Harrison, Robertson,
+Hutchinson, Parkin, Leon and Bellis. The shared fixture contains 65 normalization
+cases plus seven windows. A generated test checks all 22 full-name/suffix pairs
+whose joined last token is present in this roster; the removed short words also
+cover the review's remaining dictionary-word collisions.
+
+Markup removal now uses a single-pass scanner with a known HTML tag-name set.
+Unknown tag-like text such as `if x <y and z> 3` and unterminated markup remain
+literal. Closed comments are stripped. The existing inline-boundary trade-off
+remains: `<b>bo</b>ld` becomes `bo ld`, and `x<sup>2</sup>` becomes `x 2`.
+Entities require a semicolon and decode once; unknown named entities stay
+literal. Python's numeric entity handling follows the same HTML code-point rules
+as `decodeHTMLStrict`, including C1 replacements and retained noncharacters.
+
+`/api/resource` excludes bill text from normalization, preserving the verbatim
+indentation, tabs and entities used by `/doc`. Both window helpers clamp `end`
+to the text bounds, use ECMAScript whitespace and measure offsets/caps in UTF-16
+units. Python converts normalized evidence coordinates to that unit; stored
+source offsets and hashes remain unchanged. Astral-character fixtures verify
+that windows stay whole and never exceed the same cap in either language.
+
+The exporter rebuilds a window only after the raw source SHA-256 matches the
+sidecar fingerprint. A missing or changed fingerprint uses the normalized old
+excerpt, preserving its provenance; the subsequent source audit still rejects
+drift. Fixture DB tests cover both fallback cases and read-only inputs.
+
+The 64,495-byte roster projection is committed, so `tsc` and focused tests work
+before `build:search`. An artifact-free temporary checkout of tracked source,
+declarations and fixture dependencies passed Wrangler type generation, `tsc`
+and 83 focused Node tests without a search build. `build:search` regenerates the
+projection deterministically. Roster data publications should carry its matching
+projection so fresh-checkout parity remains valid after roster changes.
+
+The same offline scan covers 505,444 fields in 11,435 files. No DB export or
+network access was used for measurement.
+
+| Rule | Changed exported fields | Changed canonical evidence rows | Inserted spaces |
+| --- | ---: | ---: | ---: |
+| Interjection markers | 22 | 11 | 26 |
+| Before a full name | 70 | 33 | 73 |
+| After a full name / Senator surname | 27 | 11 | 30 |
+
+There are 108 changed fields overall: 51 canonical evidence texts, 51 excerpt
+mirrors and six report passages. Rule counts overlap. Twenty random field
+samples per rule are in the ignored `portal/private/passage-text-round2/samples.md`;
+all 60 were reviewed without a false split. `summary.json` records the input
+fingerprint and counts, and `ts-parity.json` confirms agreement on all 108
+changed fields. This tightening intentionally leaves short-word joins unchanged.
+
+Five warmed runs on each 102,400-byte adversarial input measured:
+
+| Input | TS median / maximum | Python median / maximum |
+| --- | ---: | ---: |
+| `<a` followed by spaces | 1.401 / 2.156 ms | 17.221 / 20.592 ms |
+| Repeated unclosed `<!--` | 1.223 / 1.298 ms | 11.596 / 15.212 ms |
+
+Both languages have regression tests with a 50 ms bound for these inputs. Full
+validation passed 1,022 Node tests and 23 Python tests, TypeScript checking and
+the deploy workflow's local build steps. `votes.json` remains byte-identical to
+37509561 with SHA-256
+`a77128dc0e1e1b3fdaa4bf84501e2c94af3125dea3cf0b2dffbc688a49d68546`.
 
 ## Evidence publication and recommendation
 
@@ -123,7 +190,7 @@ exports.
 Adding this to every nightly is **not yet a safe, small change**. The current
 tree is 163,453,646 bytes (155.88 MiB), 515 files: 256 evidence shards, 256 lookup
 shards, index, stats and identity links. One staged output plus the old tree is
-about 312 MiB before SQLite temporary sorting space. A local text-only benchmark
+about 312 MiB before SQLite temporary sorting space. The round-1 local text-only benchmark
 normalized all 109,533 exported excerpts in 29.985 seconds, changing 22,561 rows
 across all 256 content shards. This excludes full-source reads, the exporter's
 million-row SQL grouping/sorting, rebuilding windows, and source audit; **full

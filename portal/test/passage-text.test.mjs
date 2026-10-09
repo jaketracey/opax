@@ -40,6 +40,35 @@ test('standalone Python roster matches the compact Worker projection', () => {
   assert.deepEqual(JSON.parse(python.stdout),JSON.parse(readFileSync(new URL('../src/passage-names.json',import.meta.url),'utf8')));
 });
 
+test('all roster name-token suffix collisions stay whole', () => {
+  const roster=JSON.parse(readFileSync(new URL('../src/passage-names.json',import.meta.url),'utf8'));
+  const tokens=new Set([...roster.name_tokens,...roster.surnames.map(n=>n.toLowerCase())]);
+  let protectedPairs=0;
+  for(const name of roster.full_names) for(const word of 'was is has had and the until who said to of in on for that will would as at by from with when which'.split(' ')) {
+    if(tokens.has((name.split(' ').at(-1)+word).toLowerCase())) {
+      const value=name+word+' said';protectedPairs++;
+      assert.equal(normalizePassage(value),value);
+    }
+  }
+  assert.ok(protectedPairs>0);
+});
+
+test('100 KB incomplete markup remains under 50 ms', () => {
+  for(const input of ['<a'+' '.repeat(102400),'<!--'.repeat(25600)]) {
+    normalizePassage(input);
+    const times=Array.from({length:3},()=>{const start=performance.now();normalizePassage(input);return performance.now()-start});
+    assert.ok(Math.min(...times)<50,JSON.stringify(times));
+  }
+});
+
+test('shared windows use UTF-16 caps and JS whitespace in both languages', () => {
+  for(const row of fixture.windows) assert.equal(passageWindow(row.text,row.limit,row.start,row.end),row.expected);
+  const code='import json,sys; from scripts.passage_text import passage_window; print(json.dumps([passage_window(r["text"],r["limit"],r["start"],r.get("end")) for r in json.load(sys.stdin)]))';
+  const python=spawnSync('python3',['-c',code],{cwd:new URL('../../',import.meta.url),input:JSON.stringify(fixture.windows),encoding:'utf8'});
+  assert.equal(python.status,0,python.stderr);
+  assert.deepEqual(JSON.parse(python.stdout),fixture.windows.map(row=>row.expected));
+});
+
 test('600 includes ellipses, exact fits stay whole, and very long tokens never become fragments', () => {
   const text = 'A '.repeat(291) + 'Once We know personally how the proposal works.';
   assert.ok(text.slice(0,600).endsWith('We know perso'));
