@@ -51,6 +51,7 @@ import time
 import unicodedata
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
+from functools import lru_cache
 from pathlib import Path
 
 DB_PATH = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")
@@ -231,6 +232,69 @@ def division_stage(raw: str | None) -> str | None:
     else:
         stage = parts[1]
     return STAGE_CASE.get(stage.lower(), stage[:1].upper() + stage[1:]) or None
+
+
+DIVISION_TITLE_CASE = {
+    **STAGE_CASE,
+    "first reading": "First reading",
+    "committee of the whole": "Committee of the whole",
+    "report from federation chamber": "Report from Federation Chamber",
+    "reference to committee": "Reference to committee",
+    "refer to committee": "Refer to committee",
+    "adoption of report": "Adoption of report",
+    "declaration of urgency": "Declaration of urgency",
+    "motion to dissent from ruling": "Motion to dissent from ruling",
+    "agreed to amendment": "Agreed to amendment",
+    "motion to suspend standing orders": "Motion to suspend standing orders",
+}
+
+
+def division_title(stage: str | None) -> str | None:
+    """A display title from the recorded stage alone, never the question or
+    outcome. An unrecorded stage has no title; unfamiliar labels are retained."""
+    stage = WS.sub(" ", stage or "").strip()
+    if not stage:
+        return None
+    # Some recorded stages include a run-in detail after an en/em dash.
+    head = re.split(r"\s+[–—-]\s+", stage, maxsplit=1)[0]
+    return DIVISION_TITLE_CASE.get(head.casefold(), stage[:1].upper() + stage[1:])
+
+
+_OFFICER_PREFIX = re.compile(
+    r"^(?:The\s+)?(?:(?:Acting|Temporary|Deputy)\s+)*"
+    r"(?:President|Speaker|Chair(?:man|person)?)"
+    r"(?:\s*\([^)]*\)|\s*[—–-]\s*(?:Senator|Mr|Mrs|Ms|Dr)\.?\s+"
+    r"(?-i:[A-Z][\w'’.-]+(?:\s+[A-Z][\w'’.-]+){0,3}))?"
+    r"(?:\s*:\s*|\s+)(?=(?:put|puts|The question|the question|I\b))", re.I,
+)
+_NAMED_QUESTION_PREFIX = re.compile(
+    r"^(?:(?:Senator|Mr|Mrs|Ms|Dr)\.?\s+)?"
+    r"[A-Z][\w'’.-]+(?:\s+[A-Z][\w'’.-]+){1,3}"
+    r"\s*(?::\s*|\s+)(?=(?:The question|the question)\b)",
+)
+
+
+@lru_cache(maxsize=1)
+def _speaker_prefix(speaker_names: tuple[str, ...]) -> re.Pattern:
+    names = "|".join(re.escape(name) for name in sorted(set(speaker_names), key=lambda n: (-len(n), n)))
+    return re.compile(r"^(?:(?:Senator|Mr|Mrs|Ms|Dr)\.?\s+)?(?:" + (names or r"(?!)")
+                      + r")(?:\s*:\s*|\s+)(?=\S)")
+
+
+def clean_division_question(question: str | None, speaker_names: tuple[str, ...] = ()) -> str | None:
+    """Remove only a leading speaker label; retain the speaker's words, later
+    names, quotations and markdown. Bare names use recorded member identities
+    (longest first), rather than guessing where a capitalised name ends."""
+    if question is None:
+        return None
+    text = question.strip()
+    cleaned = _OFFICER_PREFIX.sub("", text, count=1)
+    if cleaned != text:
+        return cleaned
+    match = _speaker_prefix(speaker_names).match(text)
+    if match:
+        return text[match.end():]
+    return _NAMED_QUESTION_PREFIX.sub("", text, count=1)
 
 
 _SPEECH_STAGE = re.compile(
@@ -505,17 +569,26 @@ def load_divisions(db: sqlite3.Connection, timeline: PartyTimeline) -> dict[str,
         coverage[did][how] += 1
         splits[did][party]["ayes" if r["vote"] == "aye" else "noes"] += 1
 
+    speaker_names = tuple(sorted({
+        WS.sub(" ", r["full_name"]).strip()
+        for r in db.execute("SELECT full_name FROM members WHERE full_name IS NOT NULL")
+        if r["full_name"].strip()
+    }, key=lambda name: (-len(name), name)))
     out: dict[str, dict] = {}
     for r in db.execute(
         "SELECT id, house, date, name, question, ayes_count, noes_count, result, source_url "
         "FROM ext_divisions WHERE jurisdiction='federal'"
     ):
+        stage = division_stage(r["name"])
+        title = division_title(stage)
         out[r["id"]] = {
             "key": r["id"],
             "date": r["date"],
             "house": r["house"],
-            "question": (r["question"] or r["name"] or "").strip() or None,
-            "stage": division_stage(r["name"]),
+            "question": clean_division_question(
+                (r["question"] or r["name"] or "").strip() or None, speaker_names),
+            "stage": stage,
+            **({"title": title} if title else {}),
             "ayes": r["ayes_count"],
             "noes": r["noes_count"],
             "outcome": r["result"],
