@@ -83,7 +83,8 @@ def projection(files: dict[str, bytes]) -> tuple[dict, dict[str, dict]]:
 
 
 def stage_records(doc: dict) -> Counter:
-    # URLs and labels can be enriched without changing the recorded event.
+    # Event signatures identify corrections for logging, not removals.
+    # URL/title enrichment and event reordering do not change a signature.
     # Multiple recorded events can share a normalised stage/house/date.
     return Counter((s.get("stage"), s.get("house"), s.get("date")) for s in doc.get("key_dates", []))
 
@@ -101,14 +102,19 @@ def regressions(old: dict, new: dict) -> list[str]:
     ):
         if was and (not now or now < was):
             reasons.append(f"{name} went backwards ({was} -> {now or 'missing'})")
+    # Check the status's lifecycle rank too: retained stage history must not
+    # conceal a degraded status such as passed -> before_parliament.
     if BILL_STAGE_ORDER.get(new.get("status"), -2) < BILL_STAGE_ORDER.get(old.get("status"), -2):
         reasons.append(f"status went backwards ({old.get('status')} -> {new.get('status')})")
     if lifecycle(new) < lifecycle(old):
         reasons.append("bill lifecycle went backwards")
-    removed_stages = stage_records(old) - stage_records(new)
-    if removed_stages:
-        reasons.append(f"{sum(removed_stages.values())} recorded stages removed")
-    removed_divisions = {d["key"] for d in old.get("divisions", [])} - {d["key"] for d in new.get("divisions", [])}
+    removed_stages = len(old.get("key_dates", [])) - len(new.get("key_dates", []))
+    if removed_stages > 0:
+        reasons.append(f"{removed_stages} recorded stages removed")
+    old_divisions, new_divisions = old.get("divisions", []), new.get("divisions", [])
+    if len(new_divisions) < len(old_divisions):
+        reasons.append(f"division count decreased ({len(old_divisions)} -> {len(new_divisions)})")
+    removed_divisions = {d["key"] for d in old_divisions} - {d["key"] for d in new_divisions}
     if removed_divisions:
         reasons.append(f"{len(removed_divisions)} divisions removed")
     return reasons
@@ -148,6 +154,15 @@ def check(apply_holds: bool = False, held_report: Path | None = None) -> str:
             key=lambda row: (row.get("introduced") or "", row["key"]), reverse=True)
         Path(f"{BILLS}/index.json").write_text(json.dumps(new_index, ensure_ascii=False, indent=1) + "\n")
         print(f"WARNING bills: retained {len(held)} regressed bills from HEAD", file=sys.stderr)
+    for key in sorted(set(old) - set(held)):
+        before, after = stage_records(old[key]), stage_records(new[key])
+        replaced, corrected = before - after, after - before
+        if replaced and corrected:
+            # Events have no stable IDs. Log the unmatched old/new signatures
+            # together rather than guessing how multiple corrections pair up.
+            print(f"bill {key}: stage event corrected: "
+                  f"{json.dumps(list(replaced.elements()))} -> {json.dumps(list(corrected.elements()))}",
+                  file=sys.stderr)
     added = len(set(new) - set(old))
     changed = sum(current[f"{BILLS}/{key}.json"] != head[f"{BILLS}/{key}.json"] for key in old)
     titles = sponsors = 0

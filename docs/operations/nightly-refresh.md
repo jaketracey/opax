@@ -569,8 +569,10 @@ stamp-only changes after briefs are filled. Acquisition/export/guards never writ
 
 The freshness guard holds an existing bill at its **byte-identical HEAD document and HEAD index row** if
 its latest recorded stage date or `status_as_of` goes backwards or disappears, its status/lifecycle rank
-goes backwards, or any recorded stage or division disappears. Stages are identified by stage, house and
-date; division identity is its key. URL/title enrichment does not remove an event. The shared export
+goes backwards, the number of stage events or divisions decreases, or any division key disappears.
+Changing a stage event's label or date is accepted when none of those regressions occurs. Each accepted
+correction logs `bill X: stage event corrected: …` with the changed stage/house/date signatures; event
+reordering, new events and URL/title enrichment alone do not count as corrections. The shared export
 vocabulary in `scripts/bills_registry/bills_stages.py` orders unknown, exposure draft, before parliament,
 introduced/first reading, second reading, committee, third reading, passed one house, passed both houses,
 and royal assent. Lapsed, rejected and withdrawn are terminal. Repeated stages in the second chamber do not reset progress:
@@ -581,8 +583,8 @@ cannot hide the review's `passed` (9 Oct) → `before_parliament` (1 Oct) degrad
 Each held bill and all its reasons are logged; isolated holds add a nightly warning while other bills
 continue. If **more than five bills OR more than 2% of HEAD bills** regress, the guard logs
 `WARNING: HOLD ALL BILLS` and the entire bills group reverts, including new files. Exactly five bills and
-exactly 2% are allowed only when neither limit is exceeded. Threshold refusal retains catch-up. Correcting
-previously published history requires a separate review rather than silently removing events here.
+exactly 2% are allowed only when neither limit is exceeded. Threshold refusal retains catch-up. Accepted
+stage corrections do not count toward either threshold.
 
 **First-run catch-up.** On the first acquisition-enabled run after this lane merges, step 2c creates
 `~/.cache/autoresearch/pipeline/bills-refresh-v1.pending` and `bills-refresh-v1.initialized`. The pending
@@ -786,7 +788,8 @@ runs, with a shortened time limit).
 `test_bills_refresh.py` covers every following-morning refresh date and boundary, Sydney UTC conversions
 across both daylight saving transitions, Sunday/other-day selection, a Saturday catch-up
 and consumption/retry of its marker, count shrinkage, same-count vanished keys, missing files, inconsistent
-counts, stale status and stage dates, lifecycle regression, removed stage/division history, the review's
+counts, stale status and stage dates, lifecycle regression, removed stage/division history, accepted and
+logged stage-label/date corrections (including a repeat run after committing them), the review's
 degraded-page parser/upsert/export reproduction, per-bill document/index retention, both whole-update
 threshold boundaries, lost briefs, fetch/export failure, timeout, stamp-only retention, final rollback/commit
 failure, KB-sync suppression, DB path pinning, untouched votes and retained delta logs/commit messages.

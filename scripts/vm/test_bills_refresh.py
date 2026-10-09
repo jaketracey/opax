@@ -19,6 +19,7 @@ from scripts.vm import bills_guard
 
 ROOT = Path(__file__).resolve().parents[2]
 DEGRADED_PAGE = ROOT / "tests/fixtures/bills-nightly/degraded-page.json"
+STAGE_CORRECTIONS = ROOT / "tests/fixtures/bills-nightly/stage-corrections.json"
 CADENCE_TABLE = (
     ("2026-10-12", "skip"), ("2026-10-13", "after-sitting"), ("2026-10-14", "after-sitting"),
     ("2026-10-15", "after-sitting"), ("2026-10-16", "after-sitting"), ("2026-10-17", "skip"),
@@ -153,6 +154,33 @@ class CadenceTests(unittest.TestCase):
 
 
 class RegressionTests(unittest.TestCase):
+    def test_reviewer_stage_label_and_date_corrections_are_accepted(self):
+        for case in json.loads(STAGE_CORRECTIONS.read_text()):
+            with self.subTest(correction=case["name"]):
+                self.assertEqual(bills_guard.regressions(case["before"], case["after"]), [])
+
+    def test_earlier_event_correction_preserving_latest_date_and_lifecycle_is_accepted(self):
+        old = json.loads(DEGRADED_PAGE.read_text())["head"]
+        corrected = copy.deepcopy(old)
+        corrected["key_dates"][0]["date"] = "2026-09-30"
+        self.assertEqual(bills_guard.regressions(old, corrected), [])
+
+    def test_event_count_drop_is_held_even_when_latest_date_and_lifecycle_are_preserved(self):
+        old = json.loads(DEGRADED_PAGE.read_text())["head"]
+        dropped = copy.deepcopy(old)
+        dropped["key_dates"].pop(0)
+        self.assertEqual(bills_guard.regressions(old, dropped), ["1 recorded stages removed"])
+
+    def test_division_key_loss_or_count_drop_is_held(self):
+        old = {"divisions": [{"key": "division-1"}, {"key": "division-2"}]}
+        replaced = {"divisions": [{"key": "division-1"}, {"key": "division-3"}]}
+        self.assertEqual(bills_guard.regressions(old, replaced), ["1 divisions removed"])
+        dropped = {"divisions": [{"key": "division-1"}]}
+        self.assertIn("division count decreased (2 -> 1)", bills_guard.regressions(old, dropped))
+        self.assertIn("1 divisions removed", bills_guard.regressions(old, dropped))
+        duplicated = {"divisions": [{"key": "division-1"}, {"key": "division-1"}]}
+        self.assertEqual(bills_guard.regressions(duplicated, dropped), ["division count decreased (2 -> 1)"])
+
     def test_degraded_page_reproduction_keeps_events_but_regresses_status(self):
         # Execute the real parser/upsert/export row read on an in-memory fixture DB.
         sys.path.insert(0, str(ROOT / "scripts/bills_registry"))
@@ -355,6 +383,62 @@ class BillStepTests(unittest.TestCase):
         self.assertEqual(rc, 0)
         self.assertIn("fill-briefs exited non-zero", output)
         self.assertFalse(self.pending.exists())
+
+    def test_corrections_publish_and_log_without_holds_or_repeat_after_commit(self):
+        cases = json.loads(STAGE_CORRECTIONS.read_text())
+        index = json.loads((self.bills / "index.json").read_text())
+        for case, row in zip(cases, index["bills"]):
+            path = self.bills / f"{case['before']['key']}.json"
+            doc = {**json.loads(path.read_text()), **case["before"]}
+            path.write_text(json.dumps(doc, indent=1) + "\n")
+            row.update(status=doc["status"], status_as_of=doc["status_as_of"])
+        (self.bills / "index.json").write_text(json.dumps(index, indent=1) + "\n")
+        self.git("add", bills_guard.BILLS)
+        self.git("commit", "-qm", "review correction baseline")
+        for case, row in zip(cases, index["bills"]):
+            path = self.bills / f"{case['after']['key']}.json"
+            doc = {**json.loads(path.read_text()), **case["after"]}
+            path.write_text(json.dumps(doc, indent=1) + "\n")
+            row.update(status_as_of=doc["status_as_of"])
+        (self.bills / "index.json").write_text(json.dumps(index, indent=1) + "\n")
+        # Both bills change: neither correction may count toward the 2% limit.
+        rc, output = self.run_step("quiet")
+        self.assertEqual(rc, 0)
+        self.assertNotIn("HELD bill", output)
+        self.assertNotIn("HOLD ALL BILLS", output)
+        self.assertEqual(json.loads((self.pipe / "bills-held.json").read_text()), {})
+        for case in cases:
+            key = case["after"]["key"]
+            self.assertIn(f"bill {key}: stage event corrected:", output)
+            doc = json.loads((self.bills / f"{key}.json").read_text())
+            for field, expected in case["after"].items():
+                self.assertEqual(doc[field], expected)
+        self.assertIn("second_reading", output)
+        self.assertIn("committee", output)
+        self.assertIn("2026-10-01", output)
+        self.assertIn("2026-10-02", output)
+        self.assertIn("0 new, 2 changed", output)
+        self.assertFalse(self.pending.exists())
+        self.assertEqual(self.git("status", "--porcelain"), "")
+        rows = {row["key"]: row for row in json.loads((self.bills / "index.json").read_text())["bills"]}
+        self.assertEqual(rows["au-federal-t2"]["status_as_of"], "2026-10-02")
+        rc, output = self.run_step("quiet")
+        self.assertEqual(rc, 0)
+        self.assertNotIn("stage event corrected:", output)
+        self.assertIn("0 new, 0 changed", output)
+
+    def test_event_addition_reordering_and_enrichment_do_not_log_corrections(self):
+        self.seed_regression_fixture(count=2, regressed=0)
+        path = self.bills / "au-federal-t1.json"
+        doc = json.loads(path.read_text())
+        doc["key_dates"].reverse()
+        doc["key_dates"][0]["url"] = "https://fixture.invalid/enriched"
+        doc["key_dates"].append({"stage": "royal_assent", "date": "2026-10-10", "house": None})
+        path.write_text(json.dumps(doc, indent=1) + "\n")
+        rc, output = self.run_step("quiet")
+        self.assertEqual(rc, 0)
+        self.assertNotIn("stage event corrected:", output)
+        self.assertNotIn("HELD bill", output)
 
     def seed_regression_fixture(self, count=50, regressed=1):
         fixture = json.loads(DEGRADED_PAGE.read_text())
