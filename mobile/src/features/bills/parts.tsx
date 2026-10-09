@@ -1,23 +1,17 @@
 import { router } from 'expo-router';
 import { partyRoute } from '../../navigation/routes';
-import { type ReactNode } from 'react';
+import { Fragment, useMemo, type ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import type {
-  BillNoteLink,
-  BillSplit,
-  billSplits,
-} from '../../api/bill-transforms';
-import { sourceUrl } from '../../navigation/external';
+import type { BillSplit, billSplits } from '../../api/bill-transforms';
+import { openSource, sourceUrl } from '../../navigation/external';
 import { formatCount, formatDate } from '../../design/format';
 import { isPartyLabel, partyDot, partyIdentity } from '../../design/party';
 import {
   Disclosure as DisclosureRow,
   Hoverable,
   Icon,
-  LinkRow,
   MACHINE_BRIEF_EXPLANATION,
   MachineLabel,
-  SourceLink,
   StatusLabel,
   Text,
   useAccessibilitySize,
@@ -29,14 +23,19 @@ import {
   minimumTarget,
   radii,
   rhythm,
-  spacing,
 } from '../../design/tokens';
+import {
+  questionBlocks,
+  type QuestionBlock,
+  type QuestionRun,
+} from './divisions';
 import { billRowText, type BillListRow } from './filters';
 
 /**
- * @deprecated Use `StatusLabel`. A bill's status as its word on its tone
- * (passed, before parliament, ended), with the as-at date beside it; at
- * accessibility sizes the date takes its own line under the label.
+ * @deprecated Use `StatusLabel`. Kept only for the iPad welcome tour's
+ * picture of the bill list (src/onboarding, pass 4D): a status word on its
+ * tone with a date beside it, the date on its own line at accessibility
+ * sizes.
  */
 export function BillStatus({
   status,
@@ -58,7 +57,10 @@ export function BillStatus({
   );
 }
 
-/** One bill in the list: a single VoiceOver element that opens the bill. */
+/**
+ * One bill in the list: a single VoiceOver element that opens the bill. Its
+ * status is a StatusLabel; the list's one source line dates it.
+ */
 export function BillRow({
   bill,
   onPress,
@@ -100,7 +102,7 @@ export function BillRow({
       >
         {selected ? <View style={styles.selectedMark} /> : null}
         <View style={styles.rowText}>
-          <BillStatus status={text.status} asAt={text.asAt} />
+          <StatusLabel label={text.status} hidden />
           <Text variant="strong">{text.name}</Text>
           {/* Chamber names are long single words at AX5 ("Representatives"):
               word-safe steps the line down rather than splitting the word. */}
@@ -177,8 +179,6 @@ const ayeWords = (n: number) =>
   n === 0 ? 'no ayes' : n === 1 ? '1 aye' : `${formatCount(n)} ayes`;
 const noWords = (n: number) =>
   n === 0 ? 'no noes' : n === 1 ? '1 no' : `${formatCount(n)} noes`;
-const countText = (s: { ayes: number; noes: number }) =>
-  `${formatCount(s.ayes)} ${s.ayes === 1 ? 'aye' : 'ayes'} · ${formatCount(s.noes)} ${s.noes === 1 ? 'no' : 'noes'}`;
 /** What VoiceOver reads for one party's split: "Greens, 9 ayes, no noes". */
 export const splitLabel = (s: BillSplit) =>
   `${s.label}, ${ayeWords(s.ayes)}, ${noWords(s.noes)}`;
@@ -187,13 +187,33 @@ export const splitLabel = (s: BillSplit) =>
 const notParty = (split: BillSplit) =>
   !isPartyLabel(split.party) || !isPartyLabel(split.label);
 
+/** Parties drawn as bars under a division; the rest wait behind its disclosure. */
+export const SPLITS_SHOWN = 3;
 /**
- * One party's ayes and noes: the party as a dot and its name, the counts in
- * words and figures, and two bars (ayes above, noes below) measured against
- * the largest party in the division. The bars are decorative: the counts are
- * the text alternative, read as one element.
+ * A division's parties, largest first: the three that decide it drawn, the
+ * rest (and the notes on what the attribution rests on) for the disclosure.
+ * Every bar measures against the largest party's total.
  */
-function SplitRow({
+export function divisionParties(splits: ReturnType<typeof billSplits>) {
+  const all = [...splits.drawn, ...splits.folded];
+  return {
+    shown: all.slice(0, SPLITS_SHOWN),
+    rest: all.slice(SPLITS_SHOWN),
+    max: Math.max(...all.map((s) => s.ayes + s.noes), 1),
+    notes: splits.notes,
+    recorded: splits.recorded,
+  };
+}
+
+/**
+ * One party's ayes and noes on one line: a dot and the party's name, one
+ * bar (ayes in bronze, then noes) measured against the largest party, and
+ * the counts as "ayes–noes". The bar is decorative: the counts are the text
+ * alternative, read as one element ("Labor, no ayes, 21 noes"), which opens
+ * the party where the record names one. At accessibility sizes the bar takes
+ * its own full-width line under the name and counts.
+ */
+export function SplitRow({
   split,
   max,
   testID,
@@ -203,139 +223,107 @@ function SplitRow({
   testID?: string;
 }) {
   const stacked = useAccessibilitySize();
-  const Container = notParty(split) ? View : Pressable;
+  const linked = !notParty(split);
+  const Container = linked ? Pressable : View;
   const dot = partyDot(split.party) && partyDot(split.label);
+  const frame = [styles.split, stacked ? styles.splitStacked : null];
+  const bar = (
+    <View
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants"
+      style={[styles.track, stacked ? null : styles.trackInline]}
+    >
+      <View
+        style={[
+          styles.bar,
+          {
+            width: `${(split.ayes / max) * 100}%`,
+            backgroundColor: colors.bronze,
+          },
+        ]}
+      />
+      <View
+        style={[
+          styles.bar,
+          {
+            width: `${(split.noes / max) * 100}%`,
+            backgroundColor: colors.inkFaint,
+          },
+        ]}
+      />
+    </View>
+  );
   return (
     <Container
-      {...(notParty(split)
-        ? {}
-        : {
+      {...(linked
+        ? {
             accessibilityRole: 'link' as const,
             accessibilityHint: 'Opens the party record',
             onPress: () => router.push(partyRoute(split.label)),
-          })}
+          }
+        : {})}
       accessible
       accessibilityLabel={splitLabel(split)}
       testID={testID}
-      style={styles.split}
+      style={
+        linked
+          ? ({ pressed }: { pressed: boolean }) => [
+              ...frame,
+              pressed ? styles.pressed : null,
+            ]
+          : frame
+      }
     >
-      <View style={[styles.splitHead, stacked ? styles.stacked : null]}>
-        <View style={[styles.party, styles.grow]}>
-          {dot ? (
-            <View
-              accessibilityElementsHidden
-              importantForAccessibility="no-hide-descendants"
-              style={[styles.dot, { backgroundColor: dot }]}
-            />
-          ) : null}
-          <Text variant="body" style={styles.grow}>
-            {split.label}
-          </Text>
-        </View>
-        <Text variant="strong" tabular style={stacked ? null : styles.counts}>
-          {countText(split)}
+      <View style={[styles.party, stacked ? styles.grow : styles.partyColumn]}>
+        {dot ? (
+          <View
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
+            style={[styles.dot, { backgroundColor: dot }]}
+          />
+        ) : null}
+        <Text variant="body" wordSafe style={styles.grow}>
+          {split.label}
         </Text>
       </View>
-      <View
-        accessibilityElementsHidden
-        importantForAccessibility="no-hide-descendants"
-        style={styles.bars}
-      >
-        <View style={styles.track}>
-          <View
-            style={[
-              styles.bar,
-              {
-                width: `${(split.ayes / max) * 100}%`,
-                backgroundColor: colors.bronze,
-              },
-            ]}
-          />
-        </View>
-        <View style={styles.track}>
-          <View
-            style={[
-              styles.bar,
-              {
-                width: `${(split.noes / max) * 100}%`,
-                backgroundColor: colors.inkFaint,
-              },
-            ]}
-          />
-        </View>
-      </View>
+      {stacked ? null : bar}
+      <Text variant="strong" tabular style={styles.counts}>
+        {`${formatCount(split.ayes)}–${formatCount(split.noes)}`}
+      </Text>
+      {stacked ? <View style={styles.full}>{bar}</View> : null}
     </Container>
   );
 }
 
-/**
- * A division's party splits behind a disclosure. Every party the record
- * places is listed with its counts; small parties share one line, in full.
- * The party basis note says what the attribution rests on.
- */
-export function PartySplits({
+/** Party rows under a division, in the order given. */
+export function DivisionSplits({
   splits,
-  basisNote,
+  max,
   testID,
 }: {
-  splits: ReturnType<typeof billSplits>;
-  basisNote: string;
+  splits: readonly BillSplit[];
+  max: number;
+  /** Each row is `<testID>-<party>`: "bill-division-0-splits-labor". */
   testID: string;
 }) {
-  if (!splits.recorded)
-    return (
-      <Text variant="fine" testID={`${testID}-none`}>
-        Party split not recorded for this division.
-      </Text>
-    );
-  const parties = splits.drawn.length + splits.folded.length;
   return (
-    <Disclosure
-      label="Party splits"
-      accessibilityLabel={`Party splits, ${parties} ${parties === 1 ? 'party' : 'parties'}`}
-      testID={testID}
-      bodyTestID={`${testID}-list`}
-    >
-      {splits.drawn.map((split) => (
+    <View style={styles.splitList} testID={testID}>
+      {splits.map((split) => (
         <SplitRow
           key={split.party}
           split={split}
-          max={splits.max}
+          max={max}
           testID={`${testID}-${split.label.replace(/[^A-Za-z]+/g, '-').toLowerCase()}`}
         />
       ))}
-      {splits.folded.length ? (
-        <Text
-          variant="fine"
-          accessibilityLabel={`Also ${splits.folded.map(splitLabel).join('; ')}.`}
-        >
-          Also{' '}
-          {splits.folded
-            .map((s) => `${s.label} ${s.ayes}–${s.noes}`)
-            .join(', ')}
-          .
-        </Text>
-      ) : null}
-      {splits.folded
-        .filter((split) => !notParty(split))
-        .map((split) => (
-          <LinkRow
-            key={split.party}
-            title={splitLabel(split)}
-            onPress={() => router.push(partyRoute(split.label))}
-          />
-        ))}
-      {splits.notes.length ? (
-        <Text variant="fine">{splits.notes.join(' · ')}</Text>
-      ) : null}
-      <Text variant="fine">{basisNote}</Text>
-    </Disclosure>
+    </View>
   );
 }
 
 /**
  * A control that shows and hides a block: the design system's disclosure
- * row (label, chevron, expanded state). Collapsed by default.
+ * row (label, chevron, expanded state). Collapsed by default; the body is
+ * built only while open.
  */
 export function Disclosure({
   label,
@@ -349,7 +337,7 @@ export function Disclosure({
   accessibilityLabel?: string;
   testID: string;
   bodyTestID?: string;
-  children: ReactNode;
+  children: ReactNode | (() => ReactNode);
 }) {
   return (
     <DisclosureRow
@@ -358,98 +346,136 @@ export function Disclosure({
       testID={testID}
       bodyTestID={bodyTestID ?? `${testID}-body`}
     >
-      <View style={styles.splitList}>{children}</View>
+      {() => (
+        <View style={styles.disclosed}>
+          {typeof children === 'function' ? children() : children}
+        </View>
+      )}
     </DisclosureRow>
   );
 }
 
 const words = (text: string) => text.split(/\s+/).filter(Boolean).length;
-/** A division note up to this many characters reads inline; longer ones fold. */
-export const NOTE_INLINE_LIMIT = 200;
 /** A machine brief up to this many characters reads inline; longer ones fold. */
 export const BRIEF_INLINE_LIMIT = 500;
 
-/**
- * A note's citations the app can open: each destination once, and only those
- * the source-link policy accepts (HTTPS, no user information, no OPAX route
- * the app never opens). The rest stay words in the note.
- */
-export function noteCitations(links: readonly BillNoteLink[]) {
-  const seen = new Set<string>();
-  const out: { label: string; url: string; host: string }[] = [];
-  for (const link of links) {
-    let url: string;
-    try {
-      url = sourceUrl(link.url);
-    } catch {
-      continue;
-    }
-    if (seen.has(url)) continue;
-    seen.add(url);
-    out.push({
-      label: link.label,
-      url,
-      host: new URL(url).hostname.replace(/^www\./, ''),
-    });
+/** A link the source policy opens (HTTPS, no user information, no OPAX route the app never opens). */
+export function openableUrl(url: string | undefined): string | null {
+  if (!url) return null;
+  try {
+    return sourceUrl(url);
+  } catch {
+    return null;
   }
-  return out;
+}
+
+function Runs({
+  lines,
+  heading = false,
+}: {
+  lines: readonly (readonly QuestionRun[])[];
+  heading?: boolean;
+}) {
+  return lines.map((line, l) => (
+    <Fragment key={l}>
+      {l ? '\n' : null}
+      {line.map((run, r) => {
+        const url = openableUrl(run.url);
+        const style = [
+          run.strong || heading ? styles.recordStrong : null,
+          run.emphasis ? styles.emphasis : null,
+          url ? styles.link : null,
+        ];
+        return url ? (
+          <Text
+            key={r}
+            variant="record"
+            tone="bronzeInk"
+            style={style}
+            accessibilityRole="link"
+            accessibilityHint="Opens the source"
+            onPress={() => void openSource(url, run.text)}
+          >
+            {run.text}
+          </Text>
+        ) : run.strong || run.emphasis || heading ? (
+          <Text key={r} variant="record" style={style}>
+            {run.text}
+          </Text>
+        ) : (
+          run.text
+        );
+      })}
+    </Fragment>
+  ));
+}
+
+function Blocks({
+  blocks,
+  quoted = false,
+}: {
+  blocks: readonly QuestionBlock[];
+  quoted?: boolean;
+}) {
+  const tone = quoted ? 'inkSoft' : undefined;
+  return blocks.map((block, index) => {
+    if (block.kind === 'quote')
+      return (
+        <View key={index} style={styles.quote}>
+          <Blocks blocks={block.blocks} quoted />
+        </View>
+      );
+    if (block.kind === 'list')
+      return (
+        <View key={index} style={styles.list}>
+          {block.items.map((item, i) => (
+            <View key={i} style={styles.bullet}>
+              <Text
+                variant="record"
+                tone={tone}
+                accessibilityElementsHidden
+                importantForAccessibility="no-hide-descendants"
+              >
+                {block.ordered ? `${block.start + i}.` : '•'}
+              </Text>
+              <Text variant="record" tone={tone} style={styles.grow}>
+                <Runs lines={item} />
+              </Text>
+            </View>
+          ))}
+        </View>
+      );
+    return (
+      <Text
+        key={index}
+        variant="record"
+        tone={tone}
+        accessibilityRole={block.kind === 'heading' ? 'header' : undefined}
+      >
+        <Runs lines={block.lines} heading={block.kind === 'heading'} />
+      </Text>
+    );
+  });
 }
 
 /**
- * The record's prose about a division. Short notes read inline; a long note
- * folds behind "Division note" so the motion, counts, splits and source come
- * first. Its own citations follow it as source links.
+ * The question a division put, in the record's words, from its Markdown:
+ * headings, paragraphs, quotes (a bronze rule, the text softer) and lists,
+ * never raw `###` or `>`. A citation the source policy opens is a link in
+ * place; any other stays its words. Serif: this is the record speaking.
  */
-export function DivisionNote({
-  note,
-  links,
+export function DivisionQuestion({
+  text,
   testID,
 }: {
-  note: string;
-  links: readonly BillNoteLink[];
-  testID: string;
+  text: string;
+  testID?: string;
 }) {
-  const citations = noteCitations(links);
-  if (!note && !citations.length) return null;
-  const body = (
-    <>
-      {note ? (
-        <Text variant="metadata" testID={`${testID}-text`}>
-          {note}
-        </Text>
-      ) : null}
-      {citations.length ? (
-        <View style={styles.citations}>
-          <Text variant="label">Linked in the note</Text>
-          {citations.map((c, i) => (
-            <SourceLink
-              key={c.url}
-              label={c.label}
-              citation={c.host}
-              record={c.label}
-              url={c.url}
-              kind="record"
-              testID={`${testID}-link-${i}`}
-            />
-          ))}
-        </View>
-      ) : null}
-    </>
-  );
-  if (note.length <= NOTE_INLINE_LIMIT)
-    return (
-      <View style={styles.citations} testID={testID}>
-        {body}
-      </View>
-    );
+  const blocks = useMemo(() => questionBlocks(text), [text]);
   return (
-    <Disclosure
-      label="Division note"
-      accessibilityLabel={`Division note, ${words(note)} words`}
-      testID={testID}
-    >
-      {body}
-    </Disclosure>
+    <View style={styles.question} testID={testID}>
+      <Blocks blocks={blocks} />
+    </View>
   );
 }
 
@@ -495,7 +521,7 @@ export function MachineBrief({
   testID: string;
 }) {
   return (
-    <View style={styles.citations}>
+    <View style={styles.brief}>
       <MachineLabel
         explanation={BRIEF_EXPLANATION}
         testID={`${testID}-label`}
@@ -584,7 +610,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.s4,
+    gap: rhythm.block,
     minHeight: minimumTarget,
     paddingVertical: rhythm.heading,
   },
@@ -612,46 +638,68 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: rhythm.tight,
   },
-  semibold: { fontFamily: fonts.sansSemiBold },
   option: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.s3,
+    gap: rhythm.tight,
     minHeight: minimumTarget,
-    paddingVertical: spacing.s2,
+    paddingVertical: rhythm.line,
   },
   optionText: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'baseline',
-    gap: spacing.s3,
+    gap: rhythm.tight,
   },
   stacked: { flexDirection: 'column', alignItems: 'flex-start' },
   check: { width: 36, alignItems: 'center' },
   grow: { flexShrink: 1, flexGrow: 1 },
-  splits: { gap: spacing.s3 },
-  citations: { gap: spacing.s1 },
-  disclosure: {
+  full: { width: '100%' },
+  pressed: { backgroundColor: colors.sunken },
+  splitList: { gap: rhythm.line },
+  // One line per party: name, bar, counts; 44pt so a linked row is a target.
+  split: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.s3,
+    gap: rhythm.heading,
     minHeight: minimumTarget,
-    paddingVertical: spacing.s2,
+    marginHorizontal: -rhythm.line,
+    paddingHorizontal: rhythm.line,
+    borderRadius: radii.sm,
   },
-  splitList: { gap: spacing.s4 },
-  split: { gap: spacing.s2 },
-  splitHead: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    gap: spacing.s3,
+  splitStacked: {
+    flexWrap: 'wrap',
+    rowGap: rhythm.line,
+    paddingVertical: rhythm.line,
   },
-  // Side by side, the counts keep their line and the party name wraps.
-  counts: { flexShrink: 0 },
-  party: { flexDirection: 'row', alignItems: 'center', gap: spacing.s3 },
+  // A shared name column, so the bars start together.
+  partyColumn: { width: '34%' },
+  party: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
   dot: { width: 10, height: 10, borderRadius: 5 },
-  bars: { gap: 2 },
-  track: { height: 6, borderRadius: 3, backgroundColor: colors.sunken },
-  bar: { height: 6, borderRadius: 3 },
-  bullet: { flexDirection: 'row', gap: spacing.s3 },
-  machineText: { gap: spacing.s3 },
+  track: {
+    flexDirection: 'row',
+    height: 6,
+    borderRadius: 3,
+    overflow: 'hidden',
+    backgroundColor: colors.sunken,
+  },
+  trackInline: { flex: 1 },
+  bar: { height: 6 },
+  // The counts keep their line; the party name wraps.
+  counts: { flexShrink: 0, minWidth: 44, textAlign: 'right' },
+  disclosed: { gap: rhythm.block },
+  question: { gap: rhythm.heading },
+  recordStrong: { fontFamily: fonts.serifBold },
+  emphasis: { fontStyle: 'italic' },
+  link: { textDecorationLine: 'underline' },
+  quote: {
+    gap: rhythm.tight,
+    paddingLeft: rhythm.heading + 2,
+    borderLeftWidth: 2,
+    borderLeftColor: colors.bronze,
+  },
+  list: { gap: rhythm.line },
+  bullet: { flexDirection: 'row', gap: rhythm.tight },
+  brief: { gap: rhythm.line },
+  machineText: { gap: rhythm.tight },
 });

@@ -1,4 +1,4 @@
-import { PartialNotice, SavedCopyNotice } from '../CatalogNotice';
+import { SavedCopyNotice } from '../CatalogNotice';
 import { useRefreshCommand } from '../../design/keyboard';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
@@ -14,7 +14,6 @@ import { ApiError } from '../../api/errors';
 import { billFacetsFor, billsFor } from '../../api/catalogs';
 import { catalogs } from '../../api/runtime';
 import {
-  AsAtLine,
   Button,
   Divider,
   EmptyState,
@@ -23,14 +22,13 @@ import {
   FilterChip,
   Group,
   IconButton,
-  InfoButton,
   LayoutRegion,
   SidebarSafe,
   LinkRow,
   LoadingState,
   OfflineBanner,
+  SourceLine,
   SplitLayout,
-  StaleNotice,
   Text,
   errorMessage,
   isPad,
@@ -40,7 +38,7 @@ import { shareRecord } from '../../navigation/share';
 import BillTextReader from '../records/BillTextReader';
 import BillDetail from './BillDetail';
 import type { BillEntry } from './navigation';
-import { chrome, colors, layout, spacing } from '../../design/tokens';
+import { chrome, colors, layout, rhythm } from '../../design/tokens';
 import { billRoute } from '../../navigation/routes';
 import {
   appliedFilters,
@@ -197,11 +195,6 @@ function BillsScreen() {
             reason={record.staleReason}
             testID={record.staleReason ? 'bills-saved-copy' : 'bills-offline'}
           />
-          <StaleNotice
-            savedAt={record.savedAt}
-            refreshing={refreshing}
-            testID="bills-stale"
-          />
           <Button
             label="Try again"
             onPress={refresh}
@@ -210,26 +203,34 @@ function BillsScreen() {
           />
         </>
       ) : null}
-      {record?.partial ? <PartialNotice testID="bills-partial" /> : null}
       {list && index ? (
         <View style={styles.count}>
-          <Text variant="metadata" testID="bills-count" style={styles.grow}>
+          <Text variant="metadata" testID="bills-count">
             {countLine(rows.length, index.bills.length)} ·{' '}
             {billSorts
               .find((s) => s.value === (filters.sort ?? 'newest'))
               ?.label.toLowerCase()}
           </Text>
-          <InfoButton
+          {/* The list's one source line: its date, the register and, in
+              its sheet, the fine print. Rows carry no date of their own. */}
+          <SourceLine
             title="About the bill list"
-            notes={[FINEPRINT]}
-            testID="bills-info"
+            asOf={list.asAt}
+            citation={list.sources.map((source) => source.label)}
+            savedAt={record?.stale ? record.savedAt : null}
+            state={record?.partial ? 'partial' : null}
+            notes={[
+              record?.partial
+                ? 'Some rows in this export could not be read.'
+                : null,
+              FINEPRINT,
+            ]}
+            testID="bills-as-at"
           />
         </View>
       ) : null}
       <LinkRow
         title="Division history"
-        icon="checkmark.seal"
-        accent="votes"
         testID="bills-division-history"
         onPress={() => router.push('/division-history')}
       />
@@ -258,17 +259,6 @@ function BillsScreen() {
       ) : null}
     </Group>
   );
-
-  const footer = list ? (
-    <Group style={styles.footer}>
-      <AsAtLine
-        asOf={list.asAt}
-        citation={list.sources.map((source) => source.label)}
-        savedAt={record?.stale ? record.savedAt : null}
-        testID="bills-as-at"
-      />
-    </Group>
-  ) : null;
 
   const listView = (
     <FlatList
@@ -333,7 +323,6 @@ function BillsScreen() {
           </Group>
         ) : null
       }
-      ListFooterComponent={footer}
       initialNumToRender={12}
     />
   );
@@ -396,17 +385,15 @@ const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
   content: {
     paddingHorizontal: layout.screenMargin,
-    paddingTop: spacing.s4,
-    paddingBottom: spacing.s7,
+    paddingTop: rhythm.block,
+    paddingBottom: rhythm.section + rhythm.block,
   },
-  header: { paddingBottom: spacing.s4 },
+  header: { paddingBottom: rhythm.block },
   filters: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
-    gap: spacing.s3,
+    gap: rhythm.tight,
   },
-  footer: { paddingTop: spacing.s4 },
-  count: { flexDirection: 'row', alignItems: 'center', gap: spacing.s3 },
-  grow: { flex: 1 },
+  count: { gap: rhythm.line },
 });

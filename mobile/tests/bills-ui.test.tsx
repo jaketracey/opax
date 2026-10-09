@@ -2,15 +2,15 @@ import { act, type ReactElement } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import * as d from '../src/api/catalogs';
-import { billNoteLinks, billSplits } from '../src/api/bill-transforms';
+import { billSplits } from '../src/api/bill-transforms';
 import {
   BillRow,
-  DivisionNote,
+  DivisionQuestion,
+  DivisionSplits,
   MachineBrief,
-  NOTE_INLINE_LIMIT,
   OptionRow,
-  PartySplits,
-  noteCitations,
+  divisionParties,
+  openableUrl,
   splitLabel,
 } from '../src/features/bills/parts';
 import { useCatalogRecord } from '../src/features/bills/useCatalogRecord';
@@ -34,6 +34,11 @@ const press = (root: ReactTestInstance, testID: string) =>
       )
       .props.onPress(),
   );
+/** Every string a subtree draws, in order. */
+const texts = (root: ReactTestInstance): string[] =>
+  root.children.flatMap((child) =>
+    typeof child === 'string' ? [child] : texts(child),
+  );
 const labels = (root: ReactTestInstance) =>
   root
     .findAll(
@@ -46,71 +51,80 @@ const labels = (root: ReactTestInstance) =>
 const bill = d.decodeBill(pinned('/bills/au-federal-r7534.json'));
 const division = d.billFor(bill, bills).divisions.data!.rows[0]!;
 
-test('party splits are a disclosure whose rows read their counts in words', () => {
+test('the three largest parties are drawn as rows that read their counts in words', () => {
+  const parties = divisionParties(division.splits);
+  expect(parties.shown.map((s) => s.label)).toEqual([
+    'Labor',
+    'Greens',
+    'Liberal',
+  ]);
   const root = render(
-    <PartySplits
-      splits={division.splits}
-      basisNote={bills.meta.party_basis_note}
-      testID="splits"
-    />,
+    <DivisionSplits splits={parties.shown} max={parties.max} testID="splits" />,
   );
-  const toggle = root.find(
-    (node) => typeof node.type === 'string' && node.props.testID === 'splits',
-  );
-  expect(toggle.props.accessibilityState).toEqual({ expanded: false });
-  expect(toggle.props.accessibilityLabel).toBe(
-    `Party splits, ${division.splits.drawn.length + division.splits.folded.length} parties`,
-  );
-  expect(labels(root)).not.toContain('Labor, no ayes, 21 noes');
-  press(root, 'splits');
-  const open = labels(root);
-  expect(open).toContain('Labor, no ayes, 21 noes');
-  expect(open).toContain('Greens, 9 ayes, no noes');
-  expect(open).toContain('Independent, 1 aye, no noes');
+  const spoken = labels(root);
+  expect(spoken).toContain('Labor, no ayes, 21 noes');
+  expect(spoken).toContain('Greens, 9 ayes, no noes');
   // Every drawn party has its own element, counted from the data.
-  for (const split of division.splits.drawn)
-    expect(open).toContain(splitLabel(split));
-});
-
-test('folded small parties keep a spoken list of every count', () => {
-  const synthetic = billSplits({
-    ...bill.divisions[0]!,
-    party_splits: {
-      Labor: { ayes: 0, noes: 21 },
-      Greens: { ayes: 9, noes: 0 },
-      Liberal: { ayes: 0, noes: 3 },
-      Nationals: { ayes: 0, noes: 3 },
-      'One Nation': { ayes: 0, noes: 3 },
-      JLN: { ayes: 1, noes: 0 },
-      Independent: { ayes: 0, noes: 1 },
-    },
-  });
-  const root = render(
-    <PartySplits splits={synthetic} basisNote="note" testID="splits" />,
-  );
-  press(root, 'splits');
-  expect(labels(root)).toContain(
-    'Also Independent, no ayes, 1 no; JLN, 1 aye, no noes.',
+  for (const split of parties.shown)
+    expect(spoken).toContain(splitLabel(split));
+  // On screen each reads ayes–noes beside its bar.
+  expect(texts(byID(root, 'splits-labor')[0]!)).toContain('0–21');
+  // The rest wait for the disclosure; nothing is lost.
+  expect(
+    [...parties.shown, ...parties.rest].map((s) => s.party).sort(),
+  ).toEqual(
+    [...division.splits.drawn, ...division.splits.folded]
+      .map((s) => s.party)
+      .sort(),
   );
 });
 
-test('a division without a recorded split says so', () => {
+test('a party row opens its party; a row for no party is not a link', () => {
+  const synthetic = divisionParties(
+    billSplits({
+      ...bill.divisions[0]!,
+      party_splits: {
+        Labor: { ayes: 0, noes: 21 },
+        PRES: { ayes: 0, noes: 1 },
+        '': { ayes: 2, noes: 0 },
+      },
+    }),
+  );
   const root = render(
-    <PartySplits
-      splits={billSplits({ ...bill.divisions[0]!, party_splits: {} })}
-      basisNote="note"
+    <DivisionSplits
+      splits={synthetic.shown}
+      max={synthetic.max}
       testID="splits"
     />,
   );
   expect(
-    root.findAll((node) => typeof node.props.onPress === 'function'),
-  ).toHaveLength(0);
-  expect(
-    root.find(
+    root.findAll(
       (node) =>
-        typeof node.type === 'string' && node.props.testID === 'splits-none',
-    ).props.children,
-  ).toBe('Party split not recorded for this division.');
+        typeof node.props.onPress === 'function' &&
+        node.props.accessibilityRole === 'link',
+    ),
+  ).toHaveLength(1);
+  expect(labels(root)).toEqual(
+    expect.arrayContaining([
+      'Presiding officer, no ayes, 1 no',
+      'Not recorded, 2 ayes, no noes',
+    ]),
+  );
+});
+
+test('every bar measures against the largest party in the division', () => {
+  const parties = divisionParties(division.splits);
+  const largest = Math.max(
+    ...[...division.splits.drawn, ...division.splits.folded].map(
+      (s) => s.ayes + s.noes,
+    ),
+  );
+  expect(parties.max).toBe(largest);
+  const none = divisionParties(
+    billSplits({ ...bill.divisions[0]!, party_splits: {} }),
+  );
+  expect(none.recorded).toBe(false);
+  expect(none.shown).toEqual([]);
 });
 
 test('a bill row is one element naming the bill, its dated status and where it began', () => {
@@ -127,6 +141,11 @@ test('a bill row is one element naming the bill, its dated status and where it b
   expect(element.props.accessibilityLabel).toBe(
     'Commonwealth Electoral Amendment (Cleaning up Political Donations) Bill 2022, Lapsed, as at 11 April 2022, House of Representatives, Introduced 14 February 2022, Andrew Wilkie, Independent',
   );
+  // On screen the status is its label alone: the list's source line dates
+  // the list, so no row repeats "as at".
+  const drawn = texts(root);
+  expect(drawn).toContain('Lapsed');
+  expect(drawn.join(' ')).not.toMatch(/as at/);
 });
 
 test('a filter option reads its count and says when it is chosen', () => {
@@ -151,82 +170,57 @@ const byID = (root: ReactTestInstance, testID: string) =>
     (node) => typeof node.type === 'string' && node.props.testID === testID,
   );
 
-describe('long division notes and briefs', () => {
-  const long = bill.divisions.find((d) => d.question.length > 1000)!;
-  const row = d
-    .billFor(bill, bills)
-    .divisions.data!.rows.find((r) => r.note.length > NOTE_INLINE_LIMIT)!;
-
-  test('a long note folds behind a labelled disclosure, collapsed by default', () => {
-    expect(long).toBeDefined();
+describe('division questions and briefs', () => {
+  test("a question's Markdown is drawn as blocks, never as raw marks", () => {
     const root = render(
-      <DivisionNote note={row.note} links={row.noteLinks} testID="note" />,
+      <DivisionQuestion
+        text="### Motion text > *That the question be now put.*"
+        testID="q"
+      />,
     );
-    const toggle = byID(root, 'note')[0]!;
-    expect(toggle.props.accessibilityRole).toBe('button');
-    expect(toggle.props.accessibilityState).toEqual({ expanded: false });
-    expect(toggle.props.accessibilityLabel).toMatch(
-      /^Division note, \d+ words$/,
-    );
-    expect(byID(root, 'note-text')).toHaveLength(0);
-    press(root, 'note');
-    expect(byID(root, 'note')[0]!.props.accessibilityState).toEqual({
-      expanded: true,
-    });
-    // Every word of the note is kept once it is open.
-    expect(byID(root, 'note-text')[0]!.props.children).toBe(row.note);
-  });
-
-  test('a short note reads inline with no disclosure', () => {
-    const root = render(
-      <DivisionNote note="The majority voted against." links={[]} testID="n" />,
-    );
-    expect(byID(root, 'n-text')[0]!.props.children).toBe(
-      'The majority voted against.',
-    );
+    const drawn = texts(root).join(' ');
+    expect(drawn).not.toMatch(/###|(^|\s)>\s|\*/);
+    expect(drawn).toContain('Motion text');
+    expect(drawn).toContain('That the question be now put.');
     expect(
-      root.findAll((node) => typeof node.props.onPress === 'function'),
-    ).toHaveLength(0);
+      root.findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.accessibilityRole === 'header',
+      ),
+    ).toHaveLength(1);
   });
 
-  test("a note's citations open through the source-link policy", () => {
-    // A synthetic note in They Vote For You's Markdown: an HTTPS citation, the
-    // same one again, a relative link, plain HTTP and an OPAX Ask route.
-    const note =
-      'Read the [bills digest](https://www.aph.gov.au/digest/1). ' +
-      'The [same digest](https://www.aph.gov.au/digest/1) again. ' +
-      'See the _[policy](/policies/21)_ and [old page](http://example.org/a). ' +
-      'Not [this](https://opax.com.au/ask?q=x).';
-    const links = billNoteLinks(note);
-    expect(links).toEqual([
-      { label: 'bills digest', url: 'https://www.aph.gov.au/digest/1' },
-      { label: 'same digest', url: 'https://www.aph.gov.au/digest/1' },
-      { label: 'policy', url: 'https://theyvoteforyou.org.au/policies/21' },
-      { label: 'old page', url: 'http://example.org/a' },
-      { label: 'this', url: 'https://opax.com.au/ask?q=x' },
-    ]);
-    expect(noteCitations(links)).toEqual([
-      {
-        label: 'bills digest',
-        url: 'https://www.aph.gov.au/digest/1',
-        host: 'aph.gov.au',
-      },
-      {
-        label: 'policy',
-        url: 'https://theyvoteforyou.org.au/policies/21',
-        host: 'theyvoteforyou.org.au',
-      },
-    ]);
+  test("a question's citations open through the source-link policy", () => {
+    // A synthetic question in They Vote For You's Markdown: an HTTPS
+    // citation, a relative link, plain HTTP and an OPAX Ask route.
     const root = render(
-      <DivisionNote note="Short." links={links} testID="cited" />,
+      <DivisionQuestion
+        text={
+          'Read the [bills digest](https://www.aph.gov.au/digest/1). ' +
+          'See the _[policy](/policies/21)_ and [old page](http://example.org/a). ' +
+          'Not [this](https://opax.com.au/ask?q=x).'
+        }
+      />,
     );
-    expect(labels(root)).toEqual(
-      expect.arrayContaining([
-        'bills digest, aph.gov.au',
-        'policy, theyvoteforyou.org.au',
-      ]),
+    const links = root.findAll(
+      (node) =>
+        typeof node.type === 'string' &&
+        node.props.accessibilityRole === 'link',
     );
-    expect(byID(root, 'cited-link-2')).toHaveLength(0);
+    expect(links.map((node) => texts(node).join(''))).toEqual([
+      'bills digest',
+      'policy',
+    ]);
+    // The rest stay their words.
+    const drawn = texts(root).join('');
+    expect(drawn).toContain('old page');
+    expect(drawn).toContain('this');
+    expect(drawn).not.toContain('](');
+    expect(openableUrl('http://example.org/a')).toBeNull();
+    expect(openableUrl('https://theyvoteforyou.org.au/policies/21')).toBe(
+      'https://theyvoteforyou.org.au/policies/21',
+    );
   });
 
   test('a long machine brief keeps its label and folds its text', () => {

@@ -384,12 +384,18 @@ const summary = shape({
   model: nonempty,
   generated_at: date,
 });
+// A division's display title (docs/BILLS-CONTRACT.md), derived by the export
+// from the recorded stage alone. Optional and display-only: a blank or
+// malformed title is dropped, never a reason to reject the bill.
+const divisionTitle = (v: unknown) =>
+  typeof v === 'string' && v.trim() ? v.trim() : undefined;
 const division = shape({
   key: nonempty,
   date,
   house: nonempty,
   question: text,
   stage: nullable(text),
+  title: divisionTitle,
   ayes: count,
   noes: count,
   outcome: nonempty,

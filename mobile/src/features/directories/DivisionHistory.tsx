@@ -6,12 +6,10 @@ import {
   Keyboard,
   RefreshControl,
   StyleSheet,
-  View,
   type ListRenderItemInfo,
 } from 'react-native';
 import { router, Stack } from 'expo-router';
 import {
-  AsAtLine,
   Button,
   Divider,
   EmptyState,
@@ -20,53 +18,58 @@ import {
   Group,
   LoadingState,
   LinkRow,
-  InfoButton,
-  StaleNotice,
+  SidebarSafe,
+  SourceLine,
   Text,
   errorMessage,
-  useAccessibilitySize,
 } from '../../design/primitives';
 import { colors, layout, rhythm } from '../../design/tokens';
 import { formatCount, formatDate } from '../../design/format';
 import { CHAMBER_NOT_RECORDED, chamberName } from '../../design/parliament';
 import { billFoldText } from '../../api/bill-transforms';
+import { catalogSources } from '../../api/catalogs';
 import { billRoute } from '../../navigation/routes';
 import { shareHeaderItem } from '../../navigation/share';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
-import { SavedCopyNotice, PartialNotice } from '../CatalogNotice';
+import { SavedCopyNotice } from '../CatalogNotice';
 import { loadDivisionHistory } from './division-data';
 import type { DivisionRow } from './model';
+
+const outcomeWords = (outcome: string) =>
+  outcome === 'affirmative'
+    ? 'Agreed to'
+    : outcome === 'negative'
+      ? 'Negatived'
+      : outcome
+        ? outcome[0]!.toUpperCase() + outcome.slice(1)
+        : 'Outcome not recorded';
+
+/**
+ * One division: the bill, then its title (the recorded stage), chamber and
+ * date, and the outcome with its counts. It opens the bill's divisions,
+ * where the question and the party splits are. No icon tile and no ⓘ: the
+ * list's one source line holds the notes.
+ */
 const Division = memo(function Division({ item }: { item: DivisionRow }) {
-  const stacked = useAccessibilitySize();
   const key = `${item.billKey}-${item.key.split(':').slice(1).join('-')}`;
   return (
-    <View>
-      <LinkRow
-        icon={stacked ? undefined : 'checkmark.seal'}
-        accent="votes"
-        title={item.title}
-        testID={`division-history-${key}`}
-        titleTestID={`division-title-${key}`}
-        detailTestID={`division-details-${key}`}
-        detail={[
-          formatDate(item.date),
+    <LinkRow
+      title={item.title}
+      testID={`division-history-${key}`}
+      titleTestID={`division-title-${key}`}
+      detailTestID={`division-details-${key}`}
+      detail={[
+        [
+          item.stage,
           chamberName(item.house, 'federal') ?? CHAMBER_NOT_RECORDED,
-          `${formatCount(item.ayes)} ayes · ${formatCount(item.noes)} noes`,
+          formatDate(item.date, 'short'),
         ]
           .filter(Boolean)
-          .join('\n')}
-        onPress={() => router.push(billRoute(item.billKey, 'divisions'))}
-      />
-      {item.question ? (
-        <View style={styles.question}>
-          <InfoButton
-            title="Division question"
-            notes={[item.question, `${item.title} · ${formatDate(item.date)}`]}
-            testID={`division-question-${key}`}
-          />
-        </View>
-      ) : null}
-    </View>
+          .join(' · '),
+        `${outcomeWords(item.outcome)}, ${formatCount(item.ayes)} ayes, ${formatCount(item.noes)} noes`,
+      ].join('\n')}
+      onPress={() => router.push(billRoute(item.billKey, 'divisions'))}
+    />
   );
 });
 const renderRow = ({ item }: ListRenderItemInfo<DivisionRow>) => (
@@ -92,7 +95,9 @@ export default function DivisionHistory() {
           .split(' ')
           .filter(Boolean)
           .every((t) =>
-            billFoldText(`${r.title} ${r.question} ${r.date}`).includes(t),
+            billFoldText(
+              `${r.title} ${r.stage ?? ''} ${r.question} ${r.date}`,
+            ).includes(t),
           ),
       ) ?? [],
     [record, query],
@@ -118,96 +123,91 @@ export default function DivisionHistory() {
           ],
         }}
       />
-      <FlatList
-        testID="division-history-screen"
-        style={styles.screen}
-        contentContainerStyle={styles.content}
-        contentInsetAdjustmentBehavior="automatic"
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={refresh} />
-        }
-        data={rows}
-        renderItem={renderRow}
-        keyExtractor={(r) => r.key}
-        initialNumToRender={8}
-        maxToRenderPerBatch={8}
-        windowSize={7}
-        removeClippedSubviews={false}
-        ItemSeparatorComponent={() => <Divider variant="subtle" />}
-        ListHeaderComponent={
-          <Group>
-            <Field
-              label="Search division history"
-              testID="division-history-search"
-              value={text}
-              onChangeText={setText}
-              returnKeyType="search"
-              onSubmitEditing={() => {
-                setQuery(text.trim());
-                Keyboard.dismiss();
-              }}
-              autoCorrect={false}
-              autoCapitalize="none"
-            />
-            {record ? (
-              <>
-                <View style={styles.summary}>
-                  <Text
-                    variant="metadata"
-                    testID="division-history-count"
-                    style={styles.grow}
-                  >
+      {/* The iPad sidebar floats over a bare list; this keeps rows clear of it. */}
+      <SidebarSafe style={styles.screen}>
+        <FlatList
+          testID="division-history-screen"
+          style={styles.screen}
+          contentContainerStyle={styles.content}
+          contentInsetAdjustmentBehavior="automatic"
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+          }
+          data={rows}
+          renderItem={renderRow}
+          keyExtractor={(r) => r.key}
+          initialNumToRender={8}
+          maxToRenderPerBatch={8}
+          windowSize={7}
+          removeClippedSubviews={false}
+          ItemSeparatorComponent={() => <Divider variant="subtle" />}
+          ListHeaderComponent={
+            <Group>
+              <Field
+                label="Search division history"
+                testID="division-history-search"
+                value={text}
+                onChangeText={setText}
+                returnKeyType="search"
+                onSubmitEditing={() => {
+                  setQuery(text.trim());
+                  Keyboard.dismiss();
+                }}
+                autoCorrect={false}
+                autoCapitalize="none"
+              />
+              {record ? (
+                <Group gap={rhythm.line}>
+                  <Text variant="metadata" testID="division-history-count">
                     {formatCount(rows.length)} division records · newest first
                   </Text>
-                  <InfoButton
+                  {/* Loading is a state, not a caption: it goes once every
+                      bill file is in, unless some could not be read. */}
+                  {!complete || record.failed ? (
+                    <Text variant="fine" testID="division-history-coverage">
+                      {`${formatCount(record.loaded)} of ${formatCount(record.total)} bill files loaded${record.failed ? `; ${formatCount(record.failed)} unavailable` : ''}`}
+                    </Text>
+                  ) : null}
+                  <SourceLine
                     title="About division history"
-                    notes={divisionNotes}
-                    testID="division-history-info"
+                    asOf={record.asAt}
+                    citation={[catalogSources.bills.label, 'They Vote For You']}
+                    licence="They Vote For You: ODbL"
+                    savedAt={record.stale ? record.savedAt : null}
+                    state={record.partial ? 'partial' : null}
+                    notes={[
+                      ...divisionNotes,
+                      record.partial
+                        ? 'Some rows in this export could not be read.'
+                        : null,
+                    ]}
+                    testID="division-history-source"
                   />
-                </View>
-                <Text variant="fine" testID="division-history-coverage">
-                  {complete && !record.failed
-                    ? 'All bill files loaded'
-                    : `${formatCount(record.loaded)} of ${formatCount(record.total)} bill files loaded${record.failed ? `; ${formatCount(record.failed)} unavailable` : ''}`}
-                </Text>
-                {record.failed ? (
-                  <Button
-                    label="Try again"
-                    testID="division-history-retry"
-                    onPress={refresh}
-                  />
-                ) : null}
-                {record.stale ? (
-                  <>
-                    <SavedCopyNotice />
-                    <StaleNotice
-                      savedAt={record.savedAt}
-                      refreshing={refreshing}
-                    />
-                  </>
-                ) : null}
-                {record.partial ? <PartialNotice /> : null}
-                <AsAtLine
-                  asOf={record.asAt}
-                  citation="ParlInfo bill records; They Vote For You, ODbL"
-                  savedAt={record.stale ? record.savedAt : null}
+                </Group>
+              ) : !error ? (
+                <LoadingState label="Loading division history" />
+              ) : null}
+              {record?.failed ? (
+                <Button
+                  label="Try again"
+                  testID="division-history-retry"
+                  onPress={refresh}
                 />
-              </>
-            ) : !error ? (
-              <LoadingState label="Loading division history" />
-            ) : null}
-            {error ? (
-              <ErrorState message={errorMessage(error)} onRetry={retry} />
-            ) : null}
-          </Group>
-        }
-        ListHeaderComponentStyle={styles.header}
-        ListEmptyComponent={
-          complete ? (
-            <EmptyState message="No division records match that search." />
-          ) : null
-        }
-      />
+              ) : null}
+              {record?.stale ? <SavedCopyNotice /> : null}
+              {error ? (
+                <ErrorState message={errorMessage(error)} onRetry={retry} />
+              ) : null}
+            </Group>
+          }
+          ListHeaderComponentStyle={styles.header}
+          ListEmptyComponent={
+            complete ? (
+              <EmptyState message="No division records match that search." />
+            ) : null
+          }
+        />
+      </SidebarSafe>
     </>
   );
 }
@@ -218,8 +218,5 @@ const styles = StyleSheet.create({
     paddingTop: rhythm.block,
     paddingBottom: rhythm.section,
   },
-  summary: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
-  grow: { flex: 1 },
   header: { paddingBottom: rhythm.block },
-  question: { alignItems: 'flex-end', paddingBottom: rhythm.tight },
 });

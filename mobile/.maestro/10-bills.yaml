@@ -89,9 +89,10 @@ name: 10 Filter and search the bill list, then open a bill
     speed: 20
     timeout: 180000
 - assertVisible: Before parliament, as at 17 September 2026
+# One meta line: introduced date, chamber and portfolio.
 - scrollUntilVisible:
     element:
-      text: Introduced 17 September 2026 in the House of Representatives
+      text: Introduced 17 Sep 2026 · House of Representatives · Social Services portfolio
     direction: DOWN
     speed: 20
     timeout: 180000

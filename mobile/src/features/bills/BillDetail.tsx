@@ -1,58 +1,66 @@
-import { AskAbout } from '../ask/AskAbout';
+import { scopedQuestion } from '../ask/AskAbout';
+import { useOpenAsk } from '../ask/open';
 import { headerItems } from '../../navigation/chrome';
 import { SavedCopyNotice } from '../CatalogNotice';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { RefreshControl, StyleSheet, View } from 'react-native';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { RefreshControl, StyleSheet, View, findNodeHandle } from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import {
   billName,
   billSentenceCase,
+  billSourceLabel,
   billStage,
   billTimeline,
+  type BillTimelineEntry,
   type BillTimelineStage,
 } from '../../api/bill-transforms';
 import { billKey, catalogSources } from '../../api/catalogs';
 import { ApiError } from '../../api/errors';
 import { catalogs } from '../../api/runtime';
 import { formatCount, formatDate } from '../../design/format';
+import { showMenu } from '../../design/menu';
 import { jurisdictionName } from '../../design/parliament';
 import { partyText } from '../../design/party';
 import {
-  AsAtLine,
   Button,
   EmptyState,
   ErrorState,
   Group,
   Heading,
+  IconButton,
   LoadingState,
   LinkRow,
   OfflineBanner,
-  OpaxWebLink,
   PersonRow,
   Portrait,
   RowList,
   Screen,
   Section,
-  SourceLink,
-  StaleNotice,
+  SourceLine,
   StatusLabel,
   SubSection,
   Text,
   errorMessage,
+  useAccessibilitySize,
+  type SourceOriginal,
 } from '../../design/primitives';
-import { chrome, colors, spacing } from '../../design/tokens';
+import { chrome, colors, rhythm } from '../../design/tokens';
+import { openOnWeb, openSource } from '../../navigation/external';
 import { billRoute, personRoute } from '../../navigation/routes';
 import { CachedPortrait } from '../CachedPortrait';
 import { shareHeaderItem } from '../../navigation/share';
+import { divisionQuestion, divisionTitle } from './divisions';
 import { chamberLabel } from './filters';
 import {
   Bullet,
-  DivisionNote,
+  Disclosure,
+  DivisionQuestion,
+  DivisionSplits,
   MachineBrief,
   MachineSummary,
-  PartySplits,
   RecordedParty,
   dateSpan,
+  divisionParties,
 } from './parts';
 import { sponsorRows, type SponsorDirectory } from './sponsors';
 import { FollowToggle } from '../follows/FollowToggle';
@@ -61,17 +69,22 @@ import { useBillNavigation } from './navigation';
 
 type BillRecord = Awaited<ReturnType<typeof catalogs.billFor>>;
 type BillView = BillRecord['data'];
+type Identity = NonNullable<BillView['identity']['data']>;
 type Division = NonNullable<BillView['divisions']['data']>['rows'][number];
 
-// The web's bill-page fine print and empty states, in its words
-// (portal/public/app.js billDivisionsHTML, billSpeechesHTML, billSummaryHTML).
+// The web's bill-page fine print, in its words (portal/public/app.js
+// billDivisionsHTML, billSpeechesHTML, billSummaryHTML). Each now sits in
+// its block's source sheet; only the one-sentence empty states draw inline.
 const copy = {
   noSummary:
-    "Nothing has been written about this bill from its explanatory material. The dates, divisions and speeches below are the record's own.",
+    "No summary yet: the dates, divisions and speeches below are the record's own.",
   noDivisions:
-    'Most questions are decided on the voices and leave no per-member record, so a bill with no division here was not necessarily unopposed.',
+    'No divisions recorded. Most questions are decided on the voices, so this does not mean the bill was unopposed.',
   divisions:
     "Ayes and noes are the division's own totals. Party is each member's recorded affiliation, not a reconstruction of who they sat with on the day, and a member the record does not name is counted but not attributed. Only formal divisions leave a per-member record.",
+  splits:
+    'Each party reads ayes–noes. Its bar shows the ayes in bronze, then the noes, against the largest party in that division; the three largest parties are drawn, and the rest are listed with the question.',
+  speeches: 'Speeches the record attaches to this bill.',
   briefs:
     'A brief under a name was written from that speech by a model, not by a person.',
   fineprint:
@@ -95,6 +108,7 @@ const stageText = (s: BillTimelineStage) =>
   ]
     .filter(Boolean)
     .join(' · ');
+const unique = <T,>(items: readonly T[]) => [...new Set(items)];
 
 /** One bill: what it would change, how it moved, and how each house divided. */
 export default function BillDetail({
@@ -109,7 +123,6 @@ export default function BillDetail({
     [key],
   );
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
-  const bills = useBillNavigation();
   // undefined while the directory loads; null when it could not be read.
   const [directory, setDirectory] = useState<SponsorDirectory | null>();
   const view = record?.data;
@@ -149,6 +162,8 @@ export default function BillDetail({
     !record &&
     (!isBillKey(String(key)) ||
       (error instanceof ApiError && error.code === 'not-found'));
+  // A saved copy says so in every block's source line ("Saved 3 Oct 2026").
+  const savedAt = record?.stale ? record.savedAt : null;
   return (
     <>
       {embedded ? null : (
@@ -216,99 +231,39 @@ export default function BillDetail({
         ) : null}
         {view && identity && record ? (
           <>
+            {record.stale ? (
+              <Group gap={rhythm.tight}>
+                <SavedCopyNotice
+                  reason={record.staleReason}
+                  testID={
+                    record.staleReason ? 'bill-saved-copy' : 'bill-offline'
+                  }
+                />
+                <Button
+                  label="Try again"
+                  onPress={refresh}
+                  loading={refreshing}
+                  testID="bill-refresh"
+                />
+              </Group>
+            ) : null}
             {focusedDivisions ? (
-              <>
-                {record.stale ? (
-                  <Group>
-                    <SavedCopyNotice
-                      reason={record.staleReason}
-                      testID={
-                        record.staleReason ? 'bill-saved-copy' : 'bill-offline'
-                      }
-                    />
-                    <StaleNotice
-                      savedAt={record.savedAt}
-                      refreshing={refreshing}
-                      testID="bill-stale"
-                    />
-                    <Button label="Try again" onPress={retry} />
-                  </Group>
-                ) : null}
-                <AskAbout kind="bill" name={name} />
-                <Divisions view={view} focused />
-              </>
+              <Divisions view={view} savedAt={savedAt} focused />
             ) : (
               <>
                 <BillHead
                   view={view}
+                  name={name}
                   directory={directory}
-                  stale={record.stale}
-                  staleReason={record.staleReason}
-                  savedAt={record.savedAt}
-                  refreshing={refreshing}
-                  onRefresh={refresh}
+                  savedAt={savedAt}
                 />
-                <AskAbout kind="bill" name={name} />
-                <LinkRow
-                  title="Read the bill text"
-                  icon="doc.text"
-                  accent="bills"
-                  onPress={() => bills.openText(identity.key, name)}
-                  testID="bill-read-text"
-                />
-                <Summary view={view} />
-                <KeyDates view={view} />
-                <Divisions view={view} />
-                <Speeches view={view} />
-                <Acts view={view} />
+                <Summary view={view} savedAt={savedAt} />
+                <KeyDates view={view} savedAt={savedAt} />
+                <Divisions view={view} savedAt={savedAt} />
+                <Speeches view={view} savedAt={savedAt} />
+                <Acts view={view} savedAt={savedAt} />
               </>
             )}
-            <Section
-              title="Original records"
-              accent="bills"
-              testID="bill-sources"
-              info={{
-                title: 'About this record',
-                notes: [copy.fineprint],
-                testID: 'bill-sources-info',
-              }}
-            >
-              {view.identity.sources.length ? (
-                <View style={styles.originals}>
-                  {view.identity.sources.map((source, index) => (
-                    <SourceLink
-                      key={`${source.label}-${index}`}
-                      label={source.label}
-                      citation={source.label}
-                      url={source.url}
-                      kind="record"
-                      testID={`bill-source-${index}`}
-                    />
-                  ))}
-                </View>
-              ) : (
-                <Text variant="fine">
-                  No original source link is held for this bill.
-                </Text>
-              )}
-              <AsAtLine
-                asOf={view.identity.asAt}
-                citation={
-                  view.identity.sources.length
-                    ? [...new Set(view.identity.sources.map((s) => s.label))]
-                    : undefined
-                }
-                savedAt={record.stale ? record.savedAt : null}
-                testID="bill-as-at"
-              />
-              <RowList>
-                <OpaxWebLink
-                  label="This bill on opax.com.au"
-                  path={`/bill/${identity.key}`}
-                  testID="bill-web"
-                />
-              </RowList>
-            </Section>
           </>
         ) : null}
       </Screen>
@@ -316,22 +271,23 @@ export default function BillDetail({
   );
 }
 
+/**
+ * The bill's identity, said once: its status as a label with the date, the
+ * title, one meta line, then the one primary action (Read the bill text),
+ * Follow and ⋯ for everything else. The sponsor is the standard people row.
+ * The block's source line holds the originals, the register's note and
+ * "Sponsor not recorded".
+ */
 function BillHead({
   view,
+  name,
   directory,
-  stale,
-  staleReason,
   savedAt,
-  refreshing,
-  onRefresh,
 }: {
   view: BillView;
+  name: string;
   directory: SponsorDirectory | null | undefined;
-  stale: boolean;
-  staleReason?: 'unreadable' | 'unavailable';
-  savedAt: number;
-  refreshing: boolean;
-  onRefresh: () => void;
+  savedAt: number | null;
 }) {
   const identity = view.identity.data!;
   const bills = useBillNavigation();
@@ -347,136 +303,120 @@ function BillHead({
       ),
     [identity, directory],
   );
+  // One meta line: "Introduced 17 Aug 2026 · House of Representatives ·
+  // Home Affairs portfolio".
+  const meta = [
+    identity.introduced
+      ? `${identity.introducedLabel} ${formatDate(identity.introduced, 'short')}`
+      : null,
+    identity.house ? chamberLabel(identity.house) : null,
+    identity.portfolio ? `${identity.portfolio} portfolio` : null,
+  ]
+    .filter(Boolean)
+    .join(' · ');
+  const sources = view.identity.sources;
+  // The register's own name for an introduced bill; a draft's release and
+  // consultation pages otherwise.
+  const citation = draft
+    ? unique(sources.map((s) => s.label))
+    : catalogSources.bills.label;
+  const unsponsored = !identity.sponsorMembers.length && !draft;
   return (
-    <Group gap={spacing.s3}>
-      {stale ? (
-        <>
-          <SavedCopyNotice
-            reason={staleReason}
-            testID={staleReason ? 'bill-saved-copy' : 'bill-offline'}
-          />
-          <StaleNotice
-            savedAt={savedAt}
-            refreshing={refreshing}
-            testID="bill-stale"
-          />
-          <Button
-            label="Try again"
-            onPress={onRefresh}
-            loading={refreshing}
-            testID="bill-refresh"
-          />
-        </>
-      ) : null}
-      <Text variant="label" tone="billsInk">
-        {draft ? 'Exposure draft' : 'Bill'}
-      </Text>
+    <Group gap={rhythm.heading}>
+      <StatusLine identity={identity} />
       <Heading level={1} testID="bill-title">
         {identity.title}
       </Heading>
       {identity.shortTitle && identity.shortTitle !== identity.title ? (
-        <Text variant="metadata">Known as the {identity.shortTitle}</Text>
+        <Text variant="metadata" wordSafe>
+          Known as the {identity.shortTitle}
+        </Text>
       ) : null}
-      <Text variant="body" testID="bill-status">
-        <Text variant="strong">{identity.statusLabel}</Text>
-        {identity.statusAsOf
-          ? `, as at ${formatDate(identity.statusAsOf)}`
-          : ''}
-      </Text>
-      <FollowToggle
-        kind="bill"
-        id={identity.key}
-        title={billName({
-          title: identity.title,
-          short_title: identity.shortTitle,
-        })}
-        testID="bill-follow"
-      />
-      {identity.introduced ? (
+      {meta ? (
         <Text variant="metadata" wordSafe testID="bill-introduced">
-          {identity.introducedLabel} {formatDate(identity.introduced)}
-          {identity.house ? ` in the ${chamberLabel(identity.house)}` : ''}
+          {meta}
         </Text>
       ) : null}
-      <View testID="bill-sponsor" style={styles.sponsor}>
-        {identity.sponsorMembers.length ? (
-          <>
-            <Text variant="metadata">
-              {identity.sponsorMembers.length === 1 ? 'Sponsor' : 'Sponsors'}
-            </Text>
-            <RowList>
-              {sponsors.map((sponsor, index) => {
-                const spoken = [
-                  sponsor.name,
-                  sponsor.place,
-                  sponsor.party ? partyText(sponsor.party).spoken : null,
-                  sponsor.slug ? 'profile' : null,
-                ]
-                  .filter(Boolean)
-                  .join(', ');
-                const slug = sponsor.slug;
-                return (
-                  <PersonRow
-                    key={`${index}-${sponsor.name}`}
-                    name={sponsor.name}
-                    portrait={
-                      slug ? (
-                        <CachedPortrait name={sponsor.name} slug={slug} />
-                      ) : (
-                        <Portrait loading={directory === undefined} />
-                      )
-                    }
-                    {...(sponsor.party
-                      ? {
-                          party: sponsor.party.party,
-                          partyStatus: sponsor.party.status,
-                          formerly: sponsor.party.formerly,
-                        }
-                      : { party: undefined })}
-                    place={sponsor.place}
-                    accessibilityLabel={spoken}
-                    onPress={
-                      slug ? () => router.push(personRoute(slug)) : undefined
-                    }
-                    testID={
-                      slug
-                        ? `bill-sponsor-${slug}`
-                        : `bill-sponsor-unlinked-${index}`
-                    }
-                  />
-                );
-              })}
-            </RowList>
-          </>
-        ) : (
-          <Text variant="metadata">
-            {draft
-              ? 'Government exposure draft, not yet introduced'
-              : 'Sponsor not recorded'}
-          </Text>
-        )}
-        {!identity.sponsorMembers.length && identity.sponsorParty ? (
-          <RecordedParty party={identity.sponsorParty} />
-        ) : null}
-      </View>
-      {identity.portfolio ? (
-        <Text variant="metadata" testID="bill-portfolio">
-          Portfolio: {identity.portfolio}
+      {draft && !identity.sponsorMembers.length ? (
+        <Text variant="metadata" wordSafe>
+          Government exposure draft, not yet introduced
         </Text>
+      ) : null}
+      <BillActions
+        identity={identity}
+        name={name}
+        home={sources.find((s) => s.label === billSourceLabel('billhome'))}
+      />
+      {identity.sponsorMembers.length ? (
+        <View testID="bill-sponsor" style={styles.sponsor}>
+          <Text variant="label">
+            {identity.sponsorMembers.length === 1 ? 'Sponsor' : 'Sponsors'}
+          </Text>
+          <RowList>
+            {sponsors.map((sponsor, index) => {
+              const spoken = [
+                sponsor.name,
+                sponsor.place,
+                sponsor.party ? partyText(sponsor.party).spoken : null,
+                sponsor.slug ? 'profile' : null,
+              ]
+                .filter(Boolean)
+                .join(', ');
+              const slug = sponsor.slug;
+              return (
+                <PersonRow
+                  key={`${index}-${sponsor.name}`}
+                  name={sponsor.name}
+                  portrait={
+                    slug ? (
+                      <CachedPortrait name={sponsor.name} slug={slug} />
+                    ) : (
+                      <Portrait loading={directory === undefined} />
+                    )
+                  }
+                  {...(sponsor.party
+                    ? {
+                        party: sponsor.party.party,
+                        partyStatus: sponsor.party.status,
+                        formerly: sponsor.party.formerly,
+                      }
+                    : { party: undefined })}
+                  place={sponsor.place}
+                  accessibilityLabel={spoken}
+                  onPress={
+                    slug ? () => router.push(personRoute(slug)) : undefined
+                  }
+                  testID={
+                    slug
+                      ? `bill-sponsor-${slug}`
+                      : `bill-sponsor-unlinked-${index}`
+                  }
+                />
+              );
+            })}
+          </RowList>
+        </View>
+      ) : identity.sponsorParty ? (
+        // No member named, but the register records a party.
+        <View testID="bill-sponsor">
+          <RecordedParty party={identity.sponsorParty} />
+        </View>
       ) : null}
       {view.related.map((related) => (
-        <View key={related.key} testID={`bill-related-${related.key}`}>
-          <Text variant="metadata">
-            {related.relation === 'predecessor'
+        <LinkRow
+          key={related.key}
+          title={related.title}
+          detail={[
+            related.relation === 'predecessor'
               ? 'Builds on'
-              : billSentenceCase(related.relation)}
-          </Text>
-          <LinkRow
-            title={related.title}
-            onPress={() => bills.openBill(related.key, related.title)}
-          />
-          {related.note ? <Text variant="fine">{related.note}</Text> : null}
-        </View>
+              : billSentenceCase(related.relation),
+            related.note || null,
+          ]
+            .filter(Boolean)
+            .join(' · ')}
+          onPress={() => bills.openBill(related.key, related.title)}
+          testID={`bill-related-${related.key}`}
+        />
       ))}
       {view.became ? (
         <LinkRow
@@ -486,7 +426,7 @@ function BillHead({
         />
       ) : null}
       {draft && consultation ? (
-        <Group gap={spacing.s2} testID="bill-consultation">
+        <Group gap={rhythm.tight} testID="bill-consultation">
           <Text variant="body">
             {consultation.closes
               ? `Consultation opened ${formatDate(consultation.opens)} and closes ${formatDate(consultation.closes)}`
@@ -495,40 +435,150 @@ function BillHead({
           {consultation.note ? (
             <Text variant="fine">{consultation.note}</Text>
           ) : null}
-          <SourceLink
+          <SourceLine
             label="Consultation page"
-            citation="Consultation page"
-            url={consultation.url}
-            kind="record"
+            accessibilityLabel="View original, Consultation page"
+            onPress={() =>
+              void openSource(consultation.url, 'Consultation page')
+            }
             testID="bill-consultation-source"
           />
         </Group>
       ) : null}
+      <SourceLine
+        title="About this bill"
+        asOf={view.identity.asAt}
+        citation={citation}
+        savedAt={savedAt}
+        originals={sources.map((s) => ({ label: s.label, url: s.url }))}
+        licence={
+          unique(sources.map((s) => s.licence).filter(Boolean)).join(', ') ||
+          null
+        }
+        notes={[
+          unsponsored
+            ? identity.sponsorParty
+              ? 'The register names no sponsoring member, only the party.'
+              : 'Sponsor not recorded.'
+            : null,
+          copy.fineprint,
+        ]}
+        testID="bill-source"
+      />
     </Group>
   );
 }
 
-function Summary({ view }: { view: BillView }) {
+/** "[Passed] 26 Aug 2026": the status word on its tone, then its date. */
+function StatusLine({ identity }: { identity: Identity }) {
+  return (
+    <View
+      accessible
+      // Journeys and VoiceOver read the full sentence.
+      accessibilityLabel={`${identity.statusLabel}${identity.statusAsOf ? `, as at ${formatDate(identity.statusAsOf)}` : ''}`}
+      testID="bill-status"
+      style={styles.status}
+    >
+      <StatusLabel label={identity.statusLabel} hidden />
+      {identity.statusAsOf ? (
+        <Text variant="metadata" tabular>
+          {formatDate(identity.statusAsOf, 'short')}
+        </Text>
+      ) : null}
+    </View>
+  );
+}
+
+/**
+ * One primary action, Read the bill text; Follow beside it; everything else
+ * (Ask about this, the bill home, the page on opax.com.au) under ⋯. Share
+ * stays in the navigation bar, or the pane's bar on iPad.
+ */
+function BillActions({
+  identity,
+  name,
+  home,
+}: {
+  identity: Identity;
+  name: string;
+  /** The bill's home page in the register, when the record links one. */
+  home?: { label: string; url: string };
+}) {
+  const bills = useBillNavigation();
+  const openAsk = useOpenAsk();
+  const stacked = useAccessibilitySize();
+  const anchor = useRef<View>(null);
+  return (
+    <View style={[styles.actions, stacked ? styles.actionsStacked : null]}>
+      <Button
+        label="Read the bill text"
+        variant="primary"
+        icon="doc.text"
+        size="compact"
+        onPress={() => bills.openText(identity.key, name)}
+        testID="bill-read-text"
+      />
+      <FollowToggle
+        kind="bill"
+        id={identity.key}
+        title={name}
+        testID="bill-follow"
+      />
+      <View ref={anchor} collapsable={false}>
+        <IconButton
+          symbol="ellipsis"
+          variant="default"
+          accessibilityLabel="More for this bill"
+          testID="bill-more"
+          onPress={() =>
+            showMenu(
+              name,
+              [
+                {
+                  title: 'Ask about this',
+                  onPress: () => openAsk(scopedQuestion('bill', name)),
+                },
+                ...(home
+                  ? [
+                      {
+                        title: 'Open the bill home',
+                        onPress: () => void openSource(home.url, home.label),
+                      },
+                    ]
+                  : []),
+                {
+                  title: 'Open on opax.com.au',
+                  onPress: () => void openOnWeb(`/bill/${identity.key}`, name),
+                },
+              ],
+              findNodeHandle(anchor.current) ?? undefined,
+            )
+          }
+        />
+      </View>
+    </View>
+  );
+}
+
+function Summary({
+  view,
+  savedAt,
+}: {
+  view: BillView;
+  savedAt: number | null;
+}) {
   const summary = view.summary.data;
   if (!summary)
     return (
       <Section title="In short" accent="bills" testID="bill-summary">
-        <EmptyState message="No summary yet." testID="bill-summary-none" />
-        <Text variant="fine">{copy.noSummary}</Text>
+        <EmptyState message={copy.noSummary} testID="bill-summary-none" />
       </Section>
     );
   const sentences = summary.sentences.filter(Boolean);
   const changes = summary.changes.filter(Boolean);
-  const about = [
-    summary.describes_version
-      ? `Describes the bill ${summary.describes_version}.`
-      : null,
-    summary.as_of
-      ? `Written from material dated ${formatDate(summary.as_of)}.`
-      : null,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  const shown = changes.length > 3 ? changes.slice(0, 2) : changes;
+  const more = changes.slice(shown.length);
+  const sources = view.summary.sources;
   return (
     <Section title="In short" accent="bills" testID="bill-summary">
       <MachineSummary
@@ -538,9 +588,19 @@ function Summary({ view }: { view: BillView }) {
       />
       {changes.length ? (
         <SubSection title="What it changes">
-          {changes.map((change, index) => (
+          {shown.map((change, index) => (
             <Bullet key={index}>{change}</Bullet>
           ))}
+          {more.length ? (
+            <Disclosure
+              label={`${more.length} more ${more.length === 1 ? 'change' : 'changes'}`}
+              testID="bill-summary-changes-more"
+            >
+              {more.map((change, index) => (
+                <Bullet key={index}>{change}</Bullet>
+              ))}
+            </Disclosure>
+          ) : null}
         </SubSection>
       ) : null}
       {summary.affected ? (
@@ -548,80 +608,211 @@ function Summary({ view }: { view: BillView }) {
           <Text variant="body">{summary.affected}</Text>
         </SubSection>
       ) : null}
-      {about ? <Text variant="fine">{about}</Text> : null}
-      {view.summary.sources.length ? (
-        <View style={styles.originals}>
-          {view.summary.sources.map((source, index) => (
-            <SourceLink
-              key={`${source.label}-${index}`}
-              label={source.label}
-              citation={source.label}
-              url={source.url}
-              kind="record"
-              testID={`bill-summary-source-${index}`}
-            />
-          ))}
-        </View>
-      ) : null}
+      <SourceLine
+        title="About this summary"
+        asOf={summary.as_of}
+        citation={unique(sources.map((s) => s.label))}
+        savedAt={savedAt}
+        originals={sources.map((s) => ({ label: s.label, url: s.url }))}
+        notes={[
+          summary.describes_version
+            ? `Describes the bill ${summary.describes_version}.`
+            : null,
+          summary.as_of
+            ? `Written by a model from material dated ${formatDate(summary.as_of)}; not the record.`
+            : 'Written by a model; not the record.',
+        ]}
+        licence={
+          unique(sources.map((s) => s.licence).filter(Boolean)).join(', ') ||
+          null
+        }
+        testID="bill-summary-source"
+      />
     </Section>
   );
 }
 
-function KeyDates({ view }: { view: BillView }) {
-  const timeline = billTimeline(view.keyDates.data ?? []);
+/** The ruler's marks: where the bill began, where it crossed, where it ended. */
+function rulerPoints(entries: readonly BillTimelineEntry[]) {
+  const first = entries[0]!;
+  const last = entries[entries.length - 1]!;
+  const home = first.stages.find((s) => s.house)?.house ?? null;
+  const crossed = home
+    ? entries.findIndex(
+        (entry, i) =>
+          i > 0 &&
+          i < entries.length - 1 &&
+          entry.stages.some((s) => s.house && s.house !== home),
+      )
+    : -1;
+  const house = (h: string) =>
+    h === 'senate'
+      ? 'Senate'
+      : h === 'representatives'
+        ? 'House'
+        : chamberLabel(h);
+  const points = [{ at: 0, label: first.stages[0]!.stage, date: first.from }];
+  if (crossed > 0) {
+    const entry = entries[crossed]!;
+    const stage = entry.stages.find((s) => s.house && s.house !== home)!;
+    points.push({ at: crossed, label: house(stage.house!), date: entry.from });
+  }
+  points.push({
+    at: entries.length - 1,
+    label: last.stages[last.stages.length - 1]!.stage,
+    date: last.to ?? last.from,
+  });
+  return points;
+}
+
+/**
+ * How the bill moved, at a glance: a dot for each dated entry on one rule,
+ * named where it began, where it reached the other house and where it
+ * ended. At accessibility sizes the marks are a short list instead.
+ */
+function StageRuler({ entries }: { entries: readonly BillTimelineEntry[] }) {
+  const stacked = useAccessibilitySize();
+  const points = rulerPoints(entries);
+  const spoken = points
+    .map((p) => `${p.label}, ${formatDate(p.date)}`)
+    .join('; ');
+  if (stacked)
+    return (
+      <View
+        accessible
+        accessibilityLabel={spoken}
+        testID="bill-dates-ruler"
+        style={styles.rulerList}
+      >
+        {points.map((p) => (
+          <View key={p.at} style={styles.date}>
+            <View style={styles.dot} />
+            <Text variant="metadata" wordSafe style={styles.grow}>
+              {`${p.label} · ${formatDate(p.date, 'short')}`}
+            </Text>
+          </View>
+        ))}
+      </View>
+    );
   return (
-    <Section
-      title="Key dates"
-      accent="bills"
-      testID="bill-key-dates"
-      info={
-        timeline.folded
-          ? {
-              title: 'About these dates',
-              notes: [
-                `The register records a stage on each day it was before the house. These ${timeline.runs} stages carry ${timeline.dates} such dates: a stage that ran across sitting days is one stage with its span, not one a day.`,
-              ],
-              testID: 'bill-key-dates-info',
-            }
-          : undefined
-      }
+    <View
+      accessible
+      accessibilityLabel={spoken}
+      testID="bill-dates-ruler"
+      style={styles.ruler}
     >
-      {timeline.entries.length ? (
-        <RowList>
-          {timeline.entries.map((entry, index) => (
-            <View
-              key={`${entry.from}-${entry.to}-${index}`}
-              accessible
-              accessibilityLabel={`${dateSpan(entry.from, entry.to, 'long')}: ${entry.stages.map(stageText).join('; ')}`}
-              testID={`bill-date-${index}`}
-              style={styles.date}
-            >
-              <View style={styles.dot} />
-              <View style={styles.dateText}>
-                <Text variant="strong">{dateSpan(entry.from, entry.to)}</Text>
-                {entry.stages.map((stage, i) => (
-                  <Text key={i} variant="metadata" wordSafe>
-                    {stageText(stage)}
-                  </Text>
-                ))}
-              </View>
-            </View>
-          ))}
-        </RowList>
+      <View style={styles.track}>
+        <View style={styles.rule} />
+        {entries.map((entry, i) => (
+          <View key={`${entry.from}-${i}`} style={styles.rulerDot} />
+        ))}
+      </View>
+      <View style={styles.rulerLabels}>
+        {points.map((p, i) => (
+          <View
+            key={p.at}
+            style={[
+              styles.rulerLabel,
+              i === 0
+                ? styles.labelStart
+                : i === points.length - 1
+                  ? styles.labelEnd
+                  : styles.labelMiddle,
+            ]}
+          >
+            <Text variant="label" tone="ink" wordSafe>
+              {p.label}
+            </Text>
+            <Text variant="fine" tabular>
+              {formatDate(p.date, 'short')}
+            </Text>
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+}
+
+function DateRows({ entries }: { entries: readonly BillTimelineEntry[] }) {
+  return (
+    <RowList>
+      {entries.map((entry, index) => (
+        <View
+          key={`${entry.from}-${entry.to}-${index}`}
+          accessible
+          accessibilityLabel={`${dateSpan(entry.from, entry.to, 'long')}: ${entry.stages.map(stageText).join('; ')}`}
+          testID={`bill-date-${index}`}
+          style={styles.date}
+        >
+          <View style={styles.dot} />
+          <View style={styles.dateText}>
+            <Text variant="strong">{dateSpan(entry.from, entry.to)}</Text>
+            {entry.stages.map((stage, i) => (
+              <Text key={i} variant="metadata" wordSafe>
+                {stageText(stage)}
+              </Text>
+            ))}
+          </View>
+        </View>
+      ))}
+    </RowList>
+  );
+}
+
+function KeyDates({
+  view,
+  savedAt,
+}: {
+  view: BillView;
+  savedAt: number | null;
+}) {
+  const timeline = billTimeline(view.keyDates.data ?? []);
+  const entries = timeline.entries;
+  const parlinfo = (view.keyDates.data ?? []).some((d) =>
+    d.url?.startsWith('https://parlinfo.aph.gov.au/'),
+  );
+  const known = new Map(view.identity.sources.map((s) => [s.url, s.label]));
+  const originals: SourceOriginal[] = unique(
+    view.keyDates.sources.map((s) => s.url),
+  ).map((url) => ({
+    label: known.get(url) ?? catalogSources.bills.label,
+    url,
+  }));
+  return (
+    <Section title="How it moved" accent="bills" testID="bill-key-dates">
+      {entries.length > 1 ? (
+        <>
+          <StageRuler entries={entries} />
+          <Disclosure
+            label={`All ${formatCount(timeline.runs)} stages`}
+            testID="bill-dates-all"
+          >
+            <DateRows entries={entries} />
+          </Disclosure>
+        </>
+      ) : entries.length ? (
+        <DateRows entries={entries} />
       ) : (
         <EmptyState message="No dates recorded." testID="bill-dates-none" />
       )}
-      <AsAtLine
+      <SourceLine
+        title="About these dates"
         asOf={view.keyDates.asAt}
+        // Parliament's register for introduced bills; a draft's own release
+        // and consultation pages otherwise.
         citation={
-          // Parliament's register for introduced bills; a draft's own release
-          // and consultation pages otherwise.
-          (view.keyDates.data ?? []).some((d) =>
-            d.url?.startsWith('https://parlinfo.aph.gov.au/'),
-          )
+          parlinfo
             ? catalogSources.bills.label
-            : [...new Set(view.identity.sources.map((s) => s.label))]
+            : unique(view.identity.sources.map((s) => s.label))
         }
+        savedAt={savedAt}
+        originals={originals}
+        notes={[
+          timeline.folded
+            ? `The register records a stage on each day it was before the house. These ${timeline.runs} stages carry ${timeline.dates} such dates: a stage that ran across sitting days is one stage with its span, not one a day.`
+            : null,
+        ]}
+        testID="bill-dates-source"
       />
     </Section>
   );
@@ -629,51 +820,40 @@ function KeyDates({ view }: { view: BillView }) {
 
 function Divisions({
   view,
+  savedAt,
   focused = false,
 }: {
   view: BillView;
+  savedAt: number | null;
   focused?: boolean;
 }) {
   const [all, setAll] = useState(false);
   const data = view.divisions.data!;
+  const identity = view.identity.data!;
   const rows = data.rows;
   const shown = all ? rows : rows.slice(0, DIVISIONS_SHOWN);
   const rest = rows.length - shown.length;
+  const name = billName({
+    title: identity.title,
+    short_title: identity.shortTitle,
+  });
   return (
     <Section
       title={focused ? undefined : 'Divisions'}
       accent="votes"
       testID="bill-divisions"
-      info={
-        rows.length
-          ? {
-              title: 'About divisions',
-              notes: [
-                copy.divisions,
-                data.collapsed
-                  ? `The source records some divisions more than once; ${data.collapsed} ${data.collapsed === 1 ? 'row' : 'rows'} identical in day, stage and counts ${data.collapsed === 1 ? 'is' : 'are'} shown here once.`
-                  : null,
-              ],
-              testID: 'bill-divisions-info',
-            }
-          : undefined
-      }
     >
       {focused ? (
-        <Group>
+        <Group gap={rhythm.tight}>
           <Heading level={1} testID="bill-divisions-title">
             Bill divisions
           </Heading>
-          <Text variant="metadata" testID="bill-divisions-bill-name">
-            {billName({
-              title: view.identity.data!.title,
-              short_title: view.identity.data!.shortTitle,
-            })}
-          </Text>
           <LinkRow
-            title="Full bill details"
-            onPress={() => router.push(billRoute(view.identity.data!.key))}
+            title={name}
+            accessibilityLabel={`${name}, the bill`}
+            onPress={() => router.push(billRoute(identity.key))}
             testID="bill-divisions-details"
+            titleTestID="bill-divisions-bill-name"
           />
         </Group>
       ) : null}
@@ -684,18 +864,12 @@ function Divisions({
               key={division.key}
               division={division}
               index={index}
-              basisNote={data.partyBasisNote}
+              bill={{ title: identity.title, short_title: identity.shortTitle }}
             />
           ))}
         </RowList>
       ) : (
-        <>
-          <EmptyState
-            message="No divisions recorded."
-            testID="bill-divisions-none"
-          />
-          <Text variant="fine">{copy.noDivisions}</Text>
-        </>
+        <EmptyState message={copy.noDivisions} testID="bill-divisions-none" />
       )}
       {rest > 0 ? (
         <Button
@@ -707,50 +881,62 @@ function Divisions({
         />
       ) : null}
       {rows.length ? (
-        <AsAtLine
+        <SourceLine
+          title="About these divisions"
           asOf={view.divisions.asAt}
           citation="They Vote For You"
           licence="ODbL"
+          savedAt={savedAt}
+          originals={rows.map((d) => ({
+            label: 'They Vote For You',
+            url: d.url,
+            record: `${divisionTitle(d)}, ${chamberLabel(d.house)}, ${formatDate(d.date, 'short')}`,
+          }))}
+          notes={[
+            copy.divisions,
+            copy.splits,
+            data.partyBasisNote,
+            data.collapsed
+              ? `The source records some divisions more than once; ${data.collapsed} ${data.collapsed === 1 ? 'row' : 'rows'} identical in day, stage and counts ${data.collapsed === 1 ? 'is' : 'are'} shown here once.`
+              : null,
+          ]}
+          testID="bill-divisions-source"
         />
       ) : null}
     </Section>
   );
 }
 
+/**
+ * One division: the outcome and counts, its title (the recorded stage, D5),
+ * chamber and date, then the three largest parties as bars. The question in
+ * the record's words and the other parties wait behind one disclosure.
+ */
 function DivisionItem({
   division,
   index,
-  basisNote,
+  bill,
 }: {
   division: Division;
   index: number;
-  basisNote: string;
+  bill: { title: string; short_title: string | null };
 }) {
-  const date = formatDate(division.date, 'short');
-  const title =
-    division.head ||
-    [division.stageLabel || 'Division', date].filter(Boolean).join(', ');
-  const meta = [
-    division.head && division.stageLabel ? division.stageLabel : null,
-    chamberLabel(division.house),
-    division.head ? date : null,
-  ]
-    .filter(Boolean)
-    .join(' · ');
+  const id = `bill-division-${index}`;
   const outcome = division.outcomeLabel || 'Outcome not recorded';
   const counts = `${formatCount(division.ayes)} ayes, ${formatCount(division.noes)} noes`;
+  const parties = divisionParties(division.splits);
+  const question = divisionQuestion(division.question, division.stage, bill);
+  const words = question ? question.split(/\s+/).filter(Boolean).length : 0;
+  const more = parties.rest.length;
+  const moreParties = more
+    ? `${formatCount(more)} more ${more === 1 ? 'party' : 'parties'}`
+    : null;
   return (
-    <View style={styles.division} testID={`bill-division-${index}`}>
-      <Text variant="strong">{title}</Text>
-      {meta ? (
-        <Text variant="metadata" wordSafe>
-          {meta}
-        </Text>
-      ) : null}
+    <View style={styles.division} testID={id}>
       <View
         accessible
         accessibilityLabel={`${outcome}, ${counts}`}
-        testID={`bill-division-${index}-outcome`}
+        testID={`${id}-outcome`}
         style={styles.outcome}
       >
         <StatusLabel label={outcome} hidden />
@@ -758,30 +944,66 @@ function DivisionItem({
           {counts}
         </Text>
       </View>
-      <PartySplits
-        splits={division.splits}
-        basisNote={basisNote}
-        testID={`bill-division-${index}-splits`}
-      />
-      <SourceLink
-        citation="They Vote For You"
-        record={`division, ${date}`}
-        url={division.url}
-        kind="record"
-        testID={`bill-division-${index}-source`}
-      />
-      {/* The record's prose comes after the counts and source; a long note
-          folds so the next division is never buried under it. */}
-      <DivisionNote
-        note={division.note}
-        links={division.noteLinks}
-        testID={`bill-division-${index}-note`}
-      />
+      <View style={styles.divisionHead}>
+        <Heading level={3} testID={`${id}-title`}>
+          {divisionTitle(division)}
+        </Heading>
+        <Text variant="metadata" wordSafe>
+          {[chamberLabel(division.house), formatDate(division.date, 'short')]
+            .filter(Boolean)
+            .join(' · ')}
+        </Text>
+      </View>
+      {parties.recorded ? (
+        <DivisionSplits
+          splits={parties.shown}
+          max={parties.max}
+          testID={`${id}-splits`}
+        />
+      ) : (
+        <Text variant="fine" testID={`${id}-splits-none`}>
+          Party split not recorded for this division.
+        </Text>
+      )}
+      {parties.notes.length ? (
+        <Text variant="fine">{parties.notes.join(' · ')}</Text>
+      ) : null}
+      {question || more ? (
+        <Disclosure
+          label={[question ? 'The question' : null, moreParties]
+            .filter(Boolean)
+            .join(' · ')}
+          accessibilityLabel={[
+            question ? `The question, ${words} words` : null,
+            moreParties,
+          ]
+            .filter(Boolean)
+            .join(', ')}
+          testID={`${id}-more`}
+        >
+          {question ? (
+            <DivisionQuestion text={question} testID={`${id}-question`} />
+          ) : null}
+          {more ? (
+            <DivisionSplits
+              splits={parties.rest}
+              max={parties.max}
+              testID={`${id}-splits`}
+            />
+          ) : null}
+        </Disclosure>
+      ) : null}
     </View>
   );
 }
 
-function Speeches({ view }: { view: BillView }) {
+function Speeches({
+  view,
+  savedAt,
+}: {
+  view: BillView;
+  savedAt: number | null;
+}) {
   const speeches = (view.speeches.data ?? []).filter((s) => s.slug);
   const briefs = speeches.some((s) => s.brief);
   return (
@@ -821,9 +1043,10 @@ function Speeches({ view }: { view: BillView }) {
                     testID={`bill-speech-${index}-brief`}
                   />
                 ) : null}
-                <OpaxWebLink
-                  label="Read the speech"
-                  path={speech.url}
+                <LinkRow
+                  title="Read the speech"
+                  accessibilityHint="Opens the reader"
+                  onPress={() => void openOnWeb(speech.url, 'Read the speech')}
                   testID={`bill-speech-${index}-web`}
                 />
               </View>
@@ -837,16 +1060,20 @@ function Speeches({ view }: { view: BillView }) {
         />
       )}
       {speeches.length ? (
-        <Text variant="fine">
-          Speeches the record attaches to this bill.{' '}
-          {briefs ? copy.briefs : 'Open a speech to read it in full.'}
-        </Text>
+        <SourceLine
+          title="About these speeches"
+          asOf={view.speeches.asAt}
+          citation="OPAX indexed parliamentary record"
+          savedAt={savedAt}
+          notes={[copy.speeches, briefs ? copy.briefs : null]}
+          testID="bill-speeches-source"
+        />
       ) : null}
     </Section>
   );
 }
 
-function Acts({ view }: { view: BillView }) {
+function Acts({ view, savedAt }: { view: BillView; savedAt: number | null }) {
   const acts = (view.acts.data ?? []).filter((a) => a.title);
   const passed = /passed|assent/i.test(view.identity.data?.status ?? '');
   if (!acts.length && !passed) return null;
@@ -854,8 +1081,8 @@ function Acts({ view }: { view: BillView }) {
     <Section title="What became law" accent="bills" testID="bill-acts">
       {acts.length ? (
         <RowList>
-          {acts.map((act, index) => (
-            <Group key={act.frl_uri} gap={spacing.s1}>
+          {acts.map((act) => (
+            <Group key={act.frl_uri} gap={rhythm.line}>
               <Text wordSafe variant="strong">
                 {act.title}
               </Text>
@@ -864,32 +1091,76 @@ function Acts({ view }: { view: BillView }) {
                   ? `Assented ${formatDate(act.assent_date, 'short')}`
                   : 'Assent date not recorded'}
               </Text>
-              <SourceLink
-                label="Act text"
-                citation={act.title}
-                record={
-                  act.assent_date
-                    ? `assented ${formatDate(act.assent_date, 'short')}`
-                    : 'assent date not recorded'
-                }
-                url={act.frl_uri}
-                kind="record"
-                testID={`bill-act-${index}`}
-              />
             </Group>
           ))}
         </RowList>
       ) : (
         <EmptyState message="No Act matched to this bill yet." />
       )}
+      {acts.length ? (
+        <SourceLine
+          title="About these Acts"
+          asOf={view.acts.asAt}
+          citation="Federal Register of Legislation"
+          savedAt={savedAt}
+          originals={acts.map((act) => ({
+            label: 'Act text',
+            url: act.frl_uri,
+            record: act.title,
+          }))}
+          testID="bill-acts-source"
+        />
+      ) : null}
     </Section>
   );
 }
 
 const styles = StyleSheet.create({
-  sponsor: { gap: spacing.s1 },
-  date: { flexDirection: 'row', gap: spacing.s3, alignItems: 'flex-start' },
+  status: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: rhythm.tight,
+  },
+  actions: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: rhythm.tight,
+  },
+  actionsStacked: { flexDirection: 'column', alignItems: 'stretch' },
+  sponsor: { gap: rhythm.line },
+  ruler: { gap: rhythm.tight, paddingTop: rhythm.line },
+  rulerList: { gap: rhythm.tight },
+  // Dots spread along one hairline, first and last at its ends.
+  track: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: 10,
+  },
+  rule: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 4,
+    height: 2,
+    backgroundColor: colors.billsInk,
+  },
+  rulerDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: colors.billsInk,
+  },
+  rulerLabels: { flexDirection: 'row', gap: rhythm.tight },
+  rulerLabel: { flex: 1, gap: 2 },
+  labelStart: { alignItems: 'flex-start' },
+  labelMiddle: { alignItems: 'center' },
+  labelEnd: { alignItems: 'flex-end' },
+  date: { flexDirection: 'row', gap: rhythm.tight, alignItems: 'flex-start' },
   dateText: { flex: 1, gap: 2 },
+  grow: { flex: 1 },
   dot: {
     width: 8,
     height: 8,
@@ -897,24 +1168,19 @@ const styles = StyleSheet.create({
     marginTop: 8,
     backgroundColor: colors.billsInk,
   },
-  originals: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    columnGap: spacing.s4,
-    rowGap: spacing.s1,
-  },
   outcome: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
-    gap: spacing.s3,
+    gap: rhythm.tight,
   },
-  division: { gap: spacing.s3 },
-  speech: { gap: spacing.s2 },
+  division: { gap: rhythm.tight },
+  divisionHead: { gap: 2 },
+  speech: { gap: rhythm.tight },
   speechMeta: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
-    gap: spacing.s3,
+    gap: rhythm.tight,
   },
 });
