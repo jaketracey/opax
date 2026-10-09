@@ -1,5 +1,6 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
+import { Text as NativeText } from 'react-native';
 import DirectoryScreen from '../src/features/directories/DirectoryScreen';
 import { Field } from '../src/design/primitives';
 import {
@@ -80,4 +81,22 @@ test('a directory-kind deep link starts a blank query and waits for that kind’
     ).length,
   ).toBeGreaterThan(0);
   await act(async () => renderer.unmount());
+});
+
+test('the count line never breaks "parliamentarians" mid-word at AX5', async () => {
+  mockParams.kind = 'person';
+  jest.mocked(loadDirectory).mockResolvedValue(empty);
+  let renderer!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    renderer = TestRenderer.create(<DirectoryScreen />);
+  });
+  const line = renderer.root.find(
+    (node) =>
+      node.props.testID === 'directory-count' &&
+      node.props.variant === 'metadata',
+  );
+  expect(line.props.wordSafe).toBe(true);
+  expect(line.findByType(NativeText).props.children.join('')).toContain(
+    '0 parliamentarians',
+  );
 });
