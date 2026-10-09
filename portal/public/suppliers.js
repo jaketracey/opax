@@ -1,6 +1,8 @@
 /* Supplier entries: recorded procurement, source notices and funding cross-links.
    No dependencies but the shared formats; the host router owns mounting and calls destroy on departure. */
 import { shortDate, shortMoney } from "./format.js";
+import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js";
+import { associationHTML } from "./growth-modules.js";
 const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
 const number = (value) => (Number(value) || 0).toLocaleString("en-AU");
 const currency = (value) => (Number(value) || 0).toLocaleString("en-AU", { style: "currency", currency: "AUD", maximumFractionDigits: 0 });
@@ -155,7 +157,6 @@ async function renderProfile(root, profile, meta, helpers, life) {
   if (!life.alive()) return;
   const agencies = [...(profile.agencies || [])].sort((a, b) => Number(b.total) - Number(a.total));
   const years = profile.years || [];
-  const donorLinks = (profile.donor_links || []).filter((link) => donorUrl(link.url));
   const top = agencies[0];
   const share = top && profile.total > 0 ? Number(top.total) / Number(profile.total) * 100 : 0;
 
@@ -163,12 +164,13 @@ async function renderProfile(root, profile, meta, helpers, life) {
   root.innerHTML = `<div class="supplier-page"><div class="subject-head"><h2 id="subject-title" tabindex="-1">${esc(profile.name)}</h2><p class="subject-tag">Commonwealth supplier${profile.abn ? ` · ABN ${esc(profile.abn)}` : ""}</p></div>
     <p class="supplier-lede">${top ? `${esc(top.name)} accounts for ${percent(share)} of the recorded contract value.` : "No agency breakdown is available in this export."}</p>
     <dl class="supplier-totals"><div><dt>Recorded contract value</dt><dd title="${currency(profile.total)}">${shortMoney(profile.total)}</dd></div><div><dt>Contracts</dt><dd>${number(profile.count)}</dd></div><div><dt>Agencies</dt><dd>${number(agencies.length)}</dd></div></dl>
-    <div class="supplier-profile-grid"><div class="supplier-profile-main">${agencyChart(agencies, Number(profile.total), ids)}<section class="supplier-section"><h3 class="subject-section-title">Agency connections</h3><p>Explore the agencies awarding contracts to this supplier.</p><div class="supplier-money-map supplier-agency-map"></div></section>${yearChart(years, profile.undated)}<section class="supplier-section supplier-funding" hidden></section><section class="supplier-section supplier-evidence" hidden></section><section class="supplier-section supplier-mentions"></section>
+    <div class="supplier-profile-grid"><div class="supplier-profile-main">${agencyChart(agencies, Number(profile.total), ids)}<section class="supplier-section"><h3 class="subject-section-title">Agency connections</h3><p>Explore the agencies awarding contracts to this supplier.</p><div class="supplier-money-map supplier-agency-map"></div></section>${yearChart(years, profile.undated)}<div class="supplier-growth"></div><section class="supplier-section supplier-funding" hidden></section><section class="supplier-section supplier-evidence" hidden></section><section class="supplier-section supplier-mentions"></section>
       <section class="supplier-section"><h3 class="subject-section-title">The contract record</h3><div class="ui-toolbar"><label class="ui-field">Filter contracts<input class="ui-input" type="search" name="contract-query" placeholder="Title, agency or reference" autocomplete="off"></label></div><p class="supplier-contract-count" role="status"></p><div class="supplier-contract-list"></div><div class="supplier-contract-more"></div></section>
-    </div><aside class="supplier-context"><section><h3>Follow the connections</h3>${donorLinks.length ? `<p>Also in the recorded party funding data:</p><ul>${donorLinks.map((link) => `<li><a href="${esc(donorUrl(link.url))}">${esc(link.name)}</a>${link.method ? `<small>${esc(identityMethod(link.method))}</small>` : ""}</li>`).join("")}</ul><p class="fineprint">An identity link connects records. It does not establish that funding influenced a contract award.</p>` : '<p>No link to an available donor profile is recorded for this supplier.</p>'}<a href="/search?kind=speech&q=${encodeURIComponent(`"${profile.name}"`)}">Find mentions in parliament</a><p class="fineprint">Search results may refer to other organisations with similar names.</p><a class="supplier-directory-link" href="/subject/supplier">Browse all suppliers</a></section>
+    </div><aside class="supplier-context"><section><div class="supplier-donations"></div><a href="/search?kind=speech&q=${encodeURIComponent(`"${profile.name}"`)}">Find mentions in parliament</a><p class="fineprint">Search results may refer to other organisations with similar names.</p><a class="supplier-directory-link" href="/subject/supplier">Browse all suppliers</a></section>
       <section class="supplier-taxcharity" hidden></section>
       <section><details><summary>Identity and coverage</summary><dl class="supplier-identity">${sourceUrl(profile.identity?.abn_url) ? `<dt>Business register</dt><dd><a href="${esc(sourceUrl(profile.identity.abn_url))}" target="_blank" rel="noopener noreferrer">Check the ABN record</a></dd>` : ""}${profile.identity?.legal_name ? `<dt>Legal name</dt><dd>${esc(profile.identity.legal_name)}</dd>` : ""}${profile.identity?.method ? `<dt>Records grouped by</dt><dd>${esc(identityMethod(profile.identity.method))}</dd>` : ""}${profile.identity?.status ? `<dt>ABN status</dt><dd>${esc(profile.identity.status === "ACT" ? "Active" : profile.identity.status === "CAN" ? "Cancelled" : profile.identity.status)}</dd>` : ""}</dl>${(profile.aliases || []).length > 1 ? `<details><summary>Names in the source records</summary><ul>${profile.aliases.map((name) => `<li>${esc(name)}</li>`).join("")}</ul></details>` : ""}<ul class="supplier-caveats">${(profile.caveats || []).map((caveat) => `<li>${esc(caveat)}</li>`).join("")}</ul>${coverageHTML(meta)}</details></section>
     </aside></div></div>`;
+  mountSupplierGrowth(root.querySelector(".supplier-growth"), profile, meta, life);
   import('/agencies.js?v=p4g-20261010').then(({ mountProcurementPreview }) => {
     if (life.alive()) return mountProcurementPreview(root.querySelector('.supplier-agency-map'), profile, 'supplier', life);
   }).catch(() => {
@@ -187,7 +189,12 @@ async function renderProfile(root, profile, meta, helpers, life) {
   helpers.onCanonical?.(profile.id, profile.name);
   helpers.onTitle?.(`${profile.name} · Government supplier`);
   helpers.onMentions?.(profile.name, root.querySelector(".supplier-mentions"));
-  if (donorLinks.length) mountFunding(root.querySelector(".supplier-funding"), donorLinks, life);
+  supplierDonations(profile, life).then(donations => {
+    if (!life.alive()) return;
+    root.querySelector(".supplier-donations").innerHTML = donations.html;
+    const donorLinks = donations.links;
+    if (donorLinks.length) mountFunding(root.querySelector(".supplier-funding"), donorLinks, life);
+  }).catch(() => {});
   // The register's undated $0 placeholders are left out; the count says so below.
   const contracts = (profile.contracts || []).filter((contract) => !placeholderContract(contract)).sort((a, b) => String(b.start_date || "").localeCompare(String(a.start_date || "")) || Number(b.amount) - Number(a.amount));
   const placeholders = (profile.contracts || []).length - contracts.length;
@@ -246,7 +253,7 @@ export function mountSupplierProfile(root, idOrName, helpers = {}) {
 
 async function mountFunding(root, links, life) {
   root.hidden = false;
-  root.innerHTML = '<h3 class="subject-section-title">Also in the funding record</h3><p role="status">Opening the linked funding records…</p>';
+  root.innerHTML = '<h3 class="subject-section-title">Also in the funding record</h3><p role="status">Opening the funding records…</p>';
   try {
     const data = await json("/graph/money.json?v=suppliers-1", life.signal);
     if (!life.alive()) return;
@@ -269,7 +276,7 @@ async function mountFunding(root, links, life) {
     }
     const rows = [...grouped.values()].sort((a, b) => b.total - a.total);
     const max = Math.max(1, ...rows.map((row) => row.total));
-    root.innerHTML = `<h3 class="subject-section-title">Also in the funding record</h3><p class="supplier-section-note">Party receipts linked to this supplier’s recorded identity, from the money map’s selected donor data${yearSpan ? ` (${yearSpan})` : ""}. These totals cover a different set of records and dates from the contracts above.</p>${rows.length ? `<ol class="supplier-bars">${rows.map((row) => `<li><div><a href="/subject/party/${encodeURIComponent(row.name)}">${esc(row.name)}</a><strong>${currency(row.total)}</strong></div><svg viewBox="0 0 100 5" preserveAspectRatio="none" aria-hidden="true"><rect width="100" height="5" class="supplier-bar-track"/><rect width="${(row.total / max * 100).toFixed(2)}" height="5" class="supplier-bar-fill"/></svg><small>${number(row.count)} recorded receipts</small></li>`).join("")}</ol>` : matchedNodes.length ? `<p><strong>${currency(nodeTotal)}</strong> across ${number(nodeCount)} recorded receipts${yearSpan ? ` (${yearSpan})` : ""}. The party breakdown is not available in this map export.</p>` : "<p>This linked donor is not present in the current map export.</p>"}${matchedNodes.length ? '<button type="button" class="ui-button supplier-map-toggle">Explore the money map</button><div class="supplier-money-map" hidden></div>' : ""}<p class="fineprint">A connection between records does not establish influence over a contract award. ${links.map((link) => `${esc(link.name)}: ${esc(identityMethod(link.method))}.`).join(" ")}</p>`;
+    root.innerHTML = `<h3 class="subject-section-title">Also in the funding record</h3><p class="supplier-section-note">Party receipts for this organisation, from the money map’s selected donor data${yearSpan ? ` (${yearSpan})` : ""}. These totals cover a different set of records and dates from the contracts above.</p>${rows.length ? `<ol class="supplier-bars">${rows.map((row) => `<li><div><a href="/subject/party/${encodeURIComponent(row.name)}">${esc(row.name)}</a><strong>${currency(row.total)}</strong></div><svg viewBox="0 0 100 5" preserveAspectRatio="none" aria-hidden="true"><rect width="100" height="5" class="supplier-bar-track"/><rect width="${(row.total / max * 100).toFixed(2)}" height="5" class="supplier-bar-fill"/></svg><small>${number(row.count)} recorded receipts</small></li>`).join("")}</ol>` : matchedNodes.length ? `<p><strong>${currency(nodeTotal)}</strong> across ${number(nodeCount)} recorded receipts${yearSpan ? ` (${yearSpan})` : ""}. The party breakdown is not available in this map export.</p>` : "<p>This donor is not present in the current map export.</p>"}${matchedNodes.length ? '<button type="button" class="ui-button supplier-map-toggle">Explore the money map</button><div class="supplier-money-map" hidden></div>' : ""}${associationHTML()}<p class="fineprint">A connection between records does not establish influence over a contract award. ${links.map((link) => `${esc(link.name)}: ${esc(identityMethod(link.method))}.`).join(" ")}</p>`;
     root.querySelector(".supplier-map-toggle")?.addEventListener("click", async (event) => {
       const button = event.currentTarget;
       const slot = root.querySelector(".supplier-money-map");
@@ -296,6 +303,6 @@ async function mountFunding(root, links, life) {
       }
     });
   } catch {
-    if (life.alive()) root.innerHTML = '<h3 class="subject-section-title">Also in the funding record</h3><p>The funding chart could not be loaded. The linked donor profiles remain available alongside.</p>';
+    if (life.alive()) root.innerHTML = '<h3 class="subject-section-title">Also in the funding record</h3><p>The funding chart could not be loaded. The donor profile remains available alongside.</p>';
   }
 }

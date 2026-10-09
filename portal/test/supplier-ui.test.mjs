@@ -3,12 +3,13 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 import { shortDate, shortMoney } from '../public/format.js';
+import { associationHTML } from '../public/growth-modules.js';
 
 // Execute the actual module; only replace its dynamic WebGL import with a
 // controlled loader. The small DOM below models the nodes this module touches.
 const source = readFileSync(new URL('../public/suppliers.js', import.meta.url), 'utf8')
   .replaceAll('export function ', 'function ').replaceAll('export async function ', 'async function ')
-  .replace(/^import .*format\.js.*;\s*/m, '')
+  .replace(/^import .*;\s*/gm, '')
   .replace(/import\("\/money-map\.js\?v=[^"]*"\)/, 'loadMapModule()');
 const tick = () => new Promise((resolve) => setImmediate(resolve));
 const deferred = () => { let resolve; const promise = new Promise((r) => { resolve = r; }); return { promise, resolve }; };
@@ -26,6 +27,7 @@ function node() {
 }
 function setup(fetch, mount = async () => ({ destroy() {}, setPaused() {} })) {
   const context = { fetch, AbortController, URLSearchParams, history: { replaceState() {} }, shortDate, shortMoney,
+    mountSupplierGrowth: () => {}, supplierDonations: async () => ({html: "", links: []}), associationHTML,
     loadMapModule: async () => ({ mountMoneyMap: mount }) };
   runInNewContext(source, context);
   return context;

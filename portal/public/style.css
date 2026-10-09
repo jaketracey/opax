@@ -5934,3 +5934,53 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
 .division-markdown li { margin: 0.3em 0; }
 .division-markdown a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line-strong); }
 .division-markdown a:hover { color: var(--bronze-ink); border-color: var(--bronze-rule); }
+
+/* Landing modules use the view's bronze accent and the shared controls. */
+.growth-ask { margin: 0 0 var(--space-6); padding: var(--space-4) 0; border-block: var(--border-hairline) solid var(--divider-default); }
+.growth-ask h3 { margin: 0 0 var(--space-3); font: var(--heading-subsection); }
+.growth-ask-form { display: flex; align-items: start; gap: var(--space-2); }
+.growth-ask-form .ui-input { flex: 1; min-width: 0; font-size: 1rem; line-height: 1.5; resize: vertical; white-space: pre-wrap; overflow-wrap: normal; word-break: normal; }
+.growth-ask-form .ui-button { flex-shrink: 0; }
+.growth-questions { display: flex; flex-wrap: wrap; gap: var(--space-2); list-style: none; margin: var(--space-3) 0 0; padding: 0; }
+.growth-questions:empty { display: none; }
+.growth-questions li { max-width: 100%; min-width: 0; }
+.growth-questions .ui-button { text-align: left; justify-content: start; height: auto; white-space: normal; font-size: 1rem; line-height: 1.5; padding-block: .6rem; overflow-wrap: normal; word-break: normal; }
+.growth-ask :is(input, textarea, button, a), .growth-records :is(a, summary), .growth-donor a { min-height: 44px; min-width: 44px; }
+.growth-records .subject-list > li > a, .growth-donor a { display: inline-flex; align-items: center; }
+.growth-records .result-meta { display: block; }
+.growth-records, .growth-donor, .growth-association { font-size: 1rem; line-height: 1.6; overflow-wrap: normal; word-break: normal; }
+.growth-association { margin-block: var(--space-3); color: var(--ink-soft); }
+:is(.growth-ask, .growth-records, .growth-donor) :is(a, button, input, textarea, summary):focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 3px; }
+.growth-donor { margin-bottom: var(--space-5); }
+.subject-person .person-actions { position: absolute; right: 0; bottom: 0; margin: 0; }
+.subject-person .subject-head { position: relative; padding-bottom: var(--space-2); }
+.subject-person .subject-head > .ui-source { padding-right: 52px; }
+@media (max-width: 700px) {
+  .growth-ask { margin-bottom: var(--space-4); }
+  .growth-ask-form { flex-wrap: wrap; }
+  .growth-ask-form textarea { flex-basis: calc(100% - 6rem); }
+}
+@media (forced-colors: active) {
+  .growth-ask { border-color: CanvasText; }
+  .growth-questions .ui-button { border: 1px solid ButtonText; color: LinkText; }
+  .growth-association { color: CanvasText; }
+  :is(.growth-ask, .growth-records, .growth-donor) :focus-visible { outline-color: Highlight; }
+}
+@media (prefers-reduced-motion: reduce) {
+  :is(.growth-ask, .growth-records, .growth-donor) *, :is(.growth-ask, .growth-records, .growth-donor) { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+/* Reused record sections retain the same touch and keyboard targets. */
+[data-module] a { min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; }
+[data-module] :is(a, h3, summary, textarea) { overflow-wrap: normal; word-break: normal; }
+[data-module] :is(a, button, input, textarea, summary):focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 3px; }
+.subject-person #subject-votes > .subject-list > li > .source-title { font: 400 1rem/1.55 var(--serif); }
+@media (forced-colors: active) { [data-module] :focus-visible { outline-color: Highlight; } }
+@media (prefers-reduced-motion: reduce) { [data-module] * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+
+[data-module] .ui-source .ui-sheet .ui-sheet-originals a { min-height: 44px; min-width: 44px; }
+.growth-correction { font-size: 1rem; line-height: 1.6; color: var(--ink-soft); margin-block: var(--space-4); }
+.growth-correction a { min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; }
+@media (max-width: 700px) {
+  .bill-date { grid-template-columns: minmax(0, 1fr); row-gap: .1rem; }
+}

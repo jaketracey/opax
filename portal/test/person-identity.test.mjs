@@ -56,7 +56,7 @@ test('no record join reads the portrait map', () => {
   const inPhotoIdFor = app.match(/function photoIdFor\(name\) \{[\s\S]*?\n\}/);
   const start = app.slice(0, inPhotoIdFor.index).split('\n').length;
   assert.deepEqual(uses.filter(line => line < start || line > start + 3), [], 'photoMap indexed outside photoIdFor');
-  assert.match(app, /renderPersonVotes\(name, roster\?\.pid \?\? null, sections\)/);
-  assert.match(app, /renderPersonInterests\(name, roster\?\.pid \?\? null, sections\)/);
+  assert.match(app, /renderPersonVotes\(name, roster\?\.pid \?\? null, sections, updateQuestions\)/);
+  assert.match(app, /renderPersonInterests\(name, roster\?\.pid \?\? null, sections, updateQuestions\)/);
   assert.match(app, /renderPersonExpenses\(name, roster\?\.pid \?\? null, sections\)/);
 });
