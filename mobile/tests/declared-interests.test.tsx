@@ -141,7 +141,7 @@ test('Jake’s screenshot: Bridget McKenzie’s liability and totals', async () 
   );
   const shown = lines(await renderOpen(register));
   expect(shown).toContain(
-    'Showing the latest 6 of 84. View original has the full register.',
+    'Showing the latest 6 of 84. The original register has them all.',
   );
 });
 

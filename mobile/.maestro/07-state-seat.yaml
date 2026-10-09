@@ -22,7 +22,7 @@ name: 07 Choose a state district explicitly where a verified roster exists
       REGISTER_PREFIX: 07-state
 - extendedWaitUntil:
     visible:
-      id: your-register-heading
+      id: your-register-source
     timeout: 15000
 - takeScreenshot: ${EVIDENCE}/07-state-register-open
 - scrollUntilVisible:

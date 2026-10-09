@@ -44,7 +44,7 @@ name: 07 Choose an electorate by member name and restore it after relaunch
       REGISTER_PREFIX: '07'
 - extendedWaitUntil:
     visible:
-      id: your-register-heading
+      id: your-register-source
     timeout: 15000
 - takeScreenshot: ${EVIDENCE}/07-register-open
 - scrollUntilVisible:

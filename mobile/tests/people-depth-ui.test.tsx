@@ -198,36 +198,49 @@ test('meetings, attendees, lobbying firms and creditors remain plain text; all 2
   ).toHaveLength(0);
   await act(async () => r.unmount());
 });
-test('glossary preserves definitions on screen and full notes in info sheets from the web export', async () => {
+test('glossary draws definitions, notes and group descriptions, with the originals in one source sheet', async () => {
   const data = decodeExpenseCategories(pinned('/expense-categories.json'));
   jest.mocked(catalogs.expenseCategories).mockResolvedValue(result(data));
   const r = await render(<ExpenseGlossary />);
   const output = words(r);
-  for (const c of data.categories) expect(output).toContain(c.text);
-  const note = async (label: string, body: string) => {
-    await act(async () =>
-      r.root
-        .find(
-          (n) =>
-            n.props?.accessibilityLabel === label &&
-            typeof n.props.onPress === 'function',
-        )
-        .props.onPress(),
-    );
-    expect(words(r)).toContain(body);
-    await act(async () =>
-      r.root
-        .find(
-          (n) =>
-            n.props?.accessibilityLabel === 'Done' &&
-            typeof n.props.onPress === 'function',
-        )
-        .props.onPress(),
-    );
-  };
-  for (const c of data.categories)
-    if (c.note) await note('About ' + c.name.toLowerCase(), c.note);
-  for (const g of data.groups) await note(g.title, g.blurb);
+  for (const c of data.categories) {
+    expect(output).toContain(c.text);
+    if (c.note) expect(output).toContain(c.note);
+  }
+  for (const g of data.groups) if (g.blurb) expect(output).toContain(g.blurb);
+  // No ⓘ per group or category: one source line opens the definitions' links.
+  expect(
+    r.root.findAll(
+      (n) =>
+        typeof n.props?.accessibilityLabel === 'string' &&
+        n.props.accessibilityLabel.startsWith('About ') &&
+        typeof n.props.onPress === 'function',
+    ),
+  ).toHaveLength(0);
+  await act(async () =>
+    r.root
+      .find(
+        (n) =>
+          n.props?.testID === 'expense-glossary-source' &&
+          typeof n.props.onPress === 'function',
+      )
+      .props.onPress(),
+  );
+  // Each definition link once (several categories share a page).
+  const urls = new Set(
+    data.categories.flatMap((c) =>
+      c.url?.startsWith('https://') ? [c.url] : [],
+    ),
+  );
+  expect(urls.size).toBeGreaterThan(0);
+  expect(
+    r.root.findAll(
+      (n) =>
+        typeof n.type === 'string' &&
+        typeof n.props?.accessibilityLabel === 'string' &&
+        n.props.accessibilityLabel.startsWith('View original, '),
+    ),
+  ).toHaveLength(urls.size);
   await act(async () => r.unmount());
 });
 

@@ -84,9 +84,9 @@ test('Electorate: partial Higgins keeps the abolished-seat message', async () =>
     );
     expect(text).toContain(missing);
     expect(text).not.toContain('No readable record was found for this person');
-    expect(text.includes('Some rows in this export could not be read.')).toBe(
-      partial,
-    );
+    // A partial export is the block's source line state; the sentence is in
+    // its source sheet.
+    expect(/· partial\b/.test(text)).toBe(partial);
   }
 });
 
@@ -123,8 +123,8 @@ test('Your MP: an unrelated dropped seat row keeps the vacancy caveat', async ()
     );
     expect(text).toContain(missing);
     expect(text).not.toContain('No readable record was found for this person');
-    expect(text.includes('Some rows in this export could not be read.')).toBe(
-      partial,
-    );
+    // A partial export is the block's source line state; the sentence is in
+    // its source sheet.
+    expect(/· partial\b/.test(text)).toBe(partial);
   }
 });
