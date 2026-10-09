@@ -35,12 +35,12 @@ const STATE_TEXT = { pending: "", active: "in progress", done: "done" };
 function css() {
   return `
 .st-wrap {
-  display: block; max-width: 30rem; margin: 0.2rem 0 0;
-  font: 400 0.9375rem/1.4 var(--sans, "Public Sans", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif);
-  color: var(--ink-soft, #575C52);
+  display: block; max-width: 30rem; margin: var(--space-line) 0 0;
+  font: var(--type-metadata);
+  color: var(--ink-soft);
 }
 .st-run { list-style: none; margin: 0; padding: 0; }
-.st-row { display: grid; grid-template-columns: 22px minmax(0, 1fr); column-gap: 0.75rem; align-items: start; }
+.st-row { display: grid; grid-template-columns: 22px minmax(0, 1fr); column-gap: var(--space-heading); align-items: start; }
 .st-col { display: flex; flex-direction: column; align-items: center; align-self: stretch; }
 .st-mark { display: block; width: 22px; height: 22px; margin-top: 1px; flex: 0 0 auto; }
 .st-mark svg { display: block; width: 100%; height: 100%; overflow: visible; }
@@ -48,40 +48,40 @@ function css() {
 /* The ring: a faint dial while a step waits or runs, washed and full once
    done. The running step is told by its hand, not by a darker dial. */
 .st-ring {
-  fill: transparent; stroke: var(--bronze-ink, #8A5A12); stroke-width: 1.1; opacity: 0.38;
-  transition: opacity 260ms ease, fill 260ms ease;
+  fill: transparent; stroke: var(--bronze-ink); stroke-width: 1.1; opacity: 0.38;
+  transition: opacity var(--duration-standard) var(--ease-standard), fill var(--duration-standard) var(--ease-standard);
 }
 .st-row[data-state="active"] .st-ring { opacity: 0.45; }
-.st-row[data-state="done"] .st-ring { opacity: 1; fill: var(--bronze-wash, rgba(160, 118, 27, 0.16)); }
+.st-row[data-state="done"] .st-ring { opacity: 1; fill: var(--bronze-wash); }
 
 /* The hand: one short dark arc of the dial, turning at pocket-watch pace. */
 .st-arc {
-  fill: none; stroke: var(--bronze-ink, #8A5A12); stroke-width: 1.7; stroke-linecap: round;
+  fill: none; stroke: var(--bronze-ink); stroke-width: 1.7; stroke-linecap: round;
   opacity: 0; transform-box: fill-box; transform-origin: 50% 50%;
 }
 .st-row[data-state="active"] .st-arc { opacity: 1; animation: st-turn 1.8s linear infinite; }
 
 /* The tick draws itself on as a step completes. */
 .st-tick {
-  fill: none; stroke: var(--bronze-ink, #8A5A12); stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round;
+  fill: none; stroke: var(--bronze-ink); stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round;
   stroke-dasharray: 15; stroke-dashoffset: 15; opacity: 0;
 }
-.st-row[data-state="done"] .st-tick { opacity: 1; animation: st-draw 320ms cubic-bezier(0.22, 0.7, 0.3, 1) 80ms forwards; }
+.st-row[data-state="done"] .st-tick { opacity: 1; animation: st-draw var(--duration-gentle) var(--ease-standard) 80ms forwards; }
 
 .st-rule {
-  flex: 1; width: 1px; min-height: 10px; margin: 3px 0;
-  background: var(--line, #E4E0D5); transition: background-color 260ms ease;
+  flex: 1; width: var(--border-hairline); min-height: 10px; margin: 3px 0;
+  background: var(--divider-subtle); transition: background-color var(--duration-standard) var(--ease-standard);
 }
-.st-row[data-state="done"] .st-rule { background: var(--bronze-rule, rgba(160, 118, 27, 0.55)); }
+.st-row[data-state="done"] .st-rule { background: var(--bronze-rule); }
 .st-row:last-child .st-rule { display: none; }
 
-.st-label { padding: 2px 0 10px; color: var(--ink-faint, #6F7468); transition: color 260ms ease; }
-.st-row[data-state="active"] .st-label { color: var(--ink, #23271F); font-weight: 500; }
-.st-row[data-state="done"] .st-label { color: var(--ink-soft, #575C52); }
+.st-label { padding: 2px 0 var(--space-row); color: var(--ink-faint); transition: color var(--duration-standard) var(--ease-standard); }
+.st-row[data-state="active"] .st-label { color: var(--ink); font-weight: 600; }
+.st-row[data-state="done"] .st-label { color: var(--ink-soft); }
 
 /* Under the run: the passages being read, and a word on a long wait. */
-.st-reading, .st-note { margin: 0 0 0.4rem; font-size: 0.8125rem; line-height: 1.5; color: var(--ink-faint, #6F7468); }
-.st-reading b { font-weight: 500; color: var(--ink-soft, #575C52); }
+.st-reading, .st-note { margin: 0 0 var(--space-tight); font: var(--type-fine); color: var(--ink-faint); }
+.st-reading b { font-weight: 600; color: var(--ink-soft); }
 .st-reading i { font-style: italic; }
 .st-reading .st-sep { margin: 0 0.35em; }
 .st-vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -92,12 +92,12 @@ function css() {
 @media (prefers-reduced-motion: no-preference) {
   /* Entrance: each row a beat after the one above; the last has settled inside 0.4s. */
   .st-row, .st-reading, .st-note {
-    animation: st-in 260ms cubic-bezier(0.22, 0.7, 0.3, 1) both;
+    animation: st-in var(--duration-standard) var(--ease-standard) both;
     animation-delay: calc(var(--st-i, 0) * 40ms);
   }
   /* Handoff: the rows lift away in the same order and the answer takes the space. */
   .st-wrap.is-exiting .st-row, .st-wrap.is-exiting .st-reading, .st-wrap.is-exiting .st-note {
-    animation: st-out 260ms cubic-bezier(0.22, 0.7, 0.3, 1) both;
+    animation: st-out var(--duration-standard) var(--ease-standard) both;
     animation-delay: calc(var(--st-i, 0) * 45ms);
   }
   @keyframes st-in { from { opacity: 0; transform: translateY(4px); } }

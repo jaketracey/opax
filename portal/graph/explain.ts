@@ -11,7 +11,7 @@
 // ---------------------------------------------------------------------------
 
 import * as THREE from 'three'
-import { clusterColour } from './palette.ts'
+import { BRONZE_INK, clusterColour, partyDot, SURFACE } from './palette.ts'
 
 const plural = (n: number, one: string, many = `${one}s`) => `${n.toLocaleString()} ${n === 1 ? one : many}`
 
@@ -126,10 +126,15 @@ type SceneRow = {
   colour: string
 }
 
+/** One column of rings, kept so a narrow stage can stop drawing the rows it does not name. */
+type RingColumn = { mesh: THREE.InstancedMesh; positions: THREE.Vector3[]; radii: number[] }
+
 const STYLE_ID = 'opax-explain-style'
 const FIRST_YEAR = 1998
 const LAST_YEAR = 2025
 const NARROW_FRAME_INTERVAL = 1000 / 30
+/** A narrow stage names this many rings in a column and sums the rest as "+N smaller". */
+const NARROW_ROWS = 5
 const STEP_NAMES = [
   'Who gives',
   'How much, and when',
@@ -138,6 +143,9 @@ const STEP_NAMES = [
 ] as const
 // The former fifth step, the caveats, was retired on 2026-09-05: the limits
 // stay on the About page and in the fineprint under every figure.
+
+/** A flow the data does not hold: its message is already a plain sentence. */
+class FlowNotFound extends Error {}
 
 const normFallback = (value: string) => String(value || '')
   .normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
@@ -153,133 +161,122 @@ function injectStyles() {
   style.id = STYLE_ID
   style.textContent = `
 .explain-dialog { width:min(1180px,calc(100vw - 1rem)); max-height:calc(100dvh - 1rem); }
-.explain-dialog .game-dialog-head { border-bottom:1px solid var(--line); }
+.explain-dialog .game-dialog-head { border-bottom:var(--border-hairline) solid var(--divider-subtle); }
 .explain-dialog-body { padding:0!important; }
 .explain-shell { height:min(760px,calc(100dvh - 4.5rem)); min-height:580px;
   display:grid; grid-template-columns:minmax(0,55fr) minmax(360px,45fr); overflow:hidden; }
 .explain-stage { position:relative; min-width:0; overflow:hidden; background:
-  radial-gradient(ellipse at 48% 42%,rgba(160,118,27,.09),transparent 58%),var(--paper-sunken);
-  border-right:1px solid var(--line); }
+  radial-gradient(ellipse at 48% 42%,color-mix(in srgb,var(--bronze) 9%,transparent),transparent 58%),var(--paper-sunken);
+  border-right:var(--border-hairline) solid var(--divider-subtle); }
 .explain-canvas { display:block; width:100%; height:100%; }
 .explain-stage::after { content:""; position:absolute; inset:14px; pointer-events:none;
-  border:1px solid rgba(160,118,27,.24); box-shadow:inset 0 0 0 5px rgba(250,249,246,.16); }
+  border:var(--border-hairline) solid color-mix(in srgb,var(--bronze) 24%,transparent); }
 .explain-stage-label { position:absolute; z-index:2; top:1.7rem; max-width:42%; margin:0;
-  color:var(--ink-soft); font:700 clamp(.78rem,1.4vw,.95rem)/1.35 var(--serif); }
+  color:var(--ink-soft); font:var(--type-strong); }
 .explain-stage-label.from { left:2rem; text-align:left; }
 .explain-stage-label.to { right:2rem; text-align:right; }
 .explain-stage-year { position:absolute; z-index:4; left:50%; top:3.35rem; bottom:auto; transform:translateX(-50%);
-  margin:0; color:var(--bronze-ink); font:700 clamp(2.2rem,7vw,4.8rem)/1 var(--serif);
-  font-variant-numeric:tabular-nums; text-shadow:0 1px var(--paper); }
-.explain-stage-year small { display:block; margin-top:.35rem; color:var(--ink-soft);
-  font:600 .75rem/1.3 var(--sans); text-align:center; }
+  margin:0; color:var(--bronze-ink); font:var(--type-display); font-variant-numeric:tabular-nums; }
+.explain-stage-year small { display:block; margin-top:var(--space-line); color:var(--ink-soft);
+  font:var(--type-label); text-align:center; }
 .explain-stage-overlay { position:absolute; inset:0; z-index:3; overflow:hidden; pointer-events:none; }
-.explain-scene-label { position:absolute; max-width:10.5rem; padding:.08rem .22rem;
+/* Names in the scene: the label role on a paper wash, so a ring's colour
+   always has its name beside it. */
+.explain-scene-label { position:absolute; max-width:10.5rem; padding:0 var(--space-line);
   color:var(--ink-soft); background:color-mix(in srgb,var(--paper) 86%,transparent);
-  font:700 clamp(.58rem,1vw,.72rem)/1.2 var(--serif); letter-spacing:-.005em;
-  text-wrap:balance; text-shadow:0 1px var(--paper); white-space:nowrap; }
-.explain-scene-label.destination { max-width:8.5rem; white-space:nowrap; }
-.explain-scene-label.clock { color:var(--bronze-ink); font-size:.62rem; }
-.explain-scene-label.election { padding:0; color:var(--bronze-ink); background:transparent;
-  font-size:clamp(.5rem,.78vw,.61rem); font-weight:600; }
-.explain-scene-label.peak { color:var(--bronze-ink); border-bottom:1px solid var(--bronze-rule);
-  font-size:clamp(.6rem,.9vw,.7rem); }
-.explain-scene-label.citation { color:var(--ink-soft); font-size:clamp(.51rem,.78vw,.6rem); }
-.explain-scene-label.gauge { max-width:8.5rem; padding:.18rem .32rem; color:var(--bronze-ink);
-  border-bottom:1px solid var(--bronze-rule); white-space:normal; text-align:center; }
-.explain-scene-label.limit { max-width:15rem; padding:.25rem .45rem; color:var(--bronze-ink);
-  border:1px solid var(--bronze-rule); background:color-mix(in srgb,var(--paper) 92%,transparent);
+  font:var(--type-label); line-height:1.2; text-wrap:balance; white-space:nowrap; }
+.explain-scene-label.destination { max-width:9.5rem; white-space:nowrap; }
+.explain-scene-label.clock { color:var(--bronze-ink); }
+.explain-scene-label.election { padding:0; color:var(--bronze-ink); background:transparent; }
+.explain-scene-label.peak { color:var(--bronze-ink); border-bottom:var(--border-hairline) solid var(--bronze-rule); }
+.explain-scene-label.citation { color:var(--ink-soft); }
+.explain-scene-label.gauge { max-width:9.5rem; padding:var(--space-line); color:var(--bronze-ink);
+  border-bottom:var(--border-hairline) solid var(--bronze-rule); white-space:normal; text-align:center; }
+.explain-scene-label.limit { max-width:15rem; padding:var(--space-line) var(--space-tight); color:var(--bronze-ink);
+  border:var(--border-hairline) solid var(--bronze-rule); background:color-mix(in srgb,var(--paper) 92%,transparent);
   white-space:normal; text-align:center; }
 .explain-scene-label.limit-note { max-width:8rem; color:var(--ink-soft); white-space:normal; }
+.explain-scene-label.destination-summary { color:var(--bronze-ink); }
 .explain-stage[data-explain-step="4"] .explain-canvas { opacity:.72; }
-.explain-sources [data-scene-citation] { transition:background-color .16s ease; }
+.explain-sources [data-scene-citation] { transition:background-color var(--duration-quick) var(--ease-standard); }
 .explain-sources [data-scene-citation]:hover,.explain-sources [data-scene-citation]:focus-within {
   background:var(--bronze-wash); }
 .explain-narrative { --explain-pad:clamp(1.1rem,3vw,2.2rem); min-width:0; overflow:auto; overflow-x:hidden; padding:var(--explain-pad); }
-.explain-title { margin:0 0 .85rem; font:700 clamp(1.7rem,3.2vw,2.45rem)/1.12 var(--serif); letter-spacing:-.018em; } /* air before the step heading */
-.explain-deck { margin:.55rem 0 1.25rem; color:var(--ink-soft); font:400 .93rem/1.55 var(--serif); }
-.explain-steps { display:flex; gap:.25rem; overflow:auto; margin:0 0 1.35rem; padding:0 0 .45rem;
-  list-style:none; border-bottom:1px solid var(--bronze-rule); scrollbar-width:thin; }
-.explain-step { min-width:44px; min-height:44px; display:grid; place-items:center; border:1px solid transparent;
-  border-radius:999px; background:transparent; color:var(--ink-soft); cursor:pointer; font:600 .8rem/1 var(--sans); }
-.explain-step:hover { border-color:var(--bronze-rule); }
-.explain-step[aria-current="step"] { color:var(--paper-raised); background:var(--navy); border-color:var(--navy); }
-.explain-step-copy { animation:explain-in .3s ease-out both; }
-.explain-step-copy h2 { margin:0 0 .7rem; font:700 clamp(1.25rem,2vw,1.55rem)/1.2 var(--serif); }
-.explain-step-copy p { margin:.65rem 0; font:400 .97rem/1.65 var(--serif); }
-.explain-facts { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1px;
-  margin:1rem 0; border:1px solid var(--line); background:var(--line); }
-.explain-fact { min-width:0; padding:.75rem; background:var(--paper); }
-.explain-fact b { display:block; color:var(--bronze-ink); font:700 1.12rem/1.2 var(--serif); }
-.explain-fact span { display:block; margin-top:.2rem; color:var(--ink-soft); font:500 .76rem/1.35 var(--sans); }
-.explain-access { margin:.9rem 0; padding:.8rem .9rem; border-left:2px solid var(--bronze);
-  background:var(--bronze-wash); color:var(--ink-soft); font:500 .82rem/1.55 var(--sans); }
-.explain-parties,.explain-sources { margin:.7rem 0 0; padding:0; list-style:none; }
-.explain-parties li,.explain-sources li { padding:.55rem 0; border-top:1px solid var(--line);
-  display:flex; justify-content:space-between; gap:.8rem; align-items:baseline; }
+.explain-title { margin:0 0 var(--space-heading); font:var(--type-title); } /* air before the step heading */
+.explain-deck { margin:var(--space-tight) 0 var(--space-group); color:var(--ink-soft); font:var(--type-metadata); }
+.explain-steps { display:flex; gap:var(--space-line); overflow:auto; margin:0 0 var(--space-group); padding:0 0 var(--space-tight);
+  list-style:none; border-bottom:var(--border-hairline) solid var(--divider-subtle); scrollbar-width:thin; }
+/* The steps are choice chips (.ui-chip) holding a number; the current one is navy. */
+.explain-step { min-width:var(--size-target); min-height:var(--size-target); justify-content:center; font-variant-numeric:tabular-nums; }
+.explain-step[aria-current="step"] { background:var(--navy); color:var(--on-navy); }
+.explain-step-copy { animation:explain-in var(--duration-gentle) var(--ease-standard) both; }
+.explain-step-copy h2 { margin:0 0 var(--space-heading); font:var(--type-heading); }
+.explain-step-copy p { margin:var(--space-row) 0; font:var(--type-body); }
+/* The step's figures: a strip, not a box. */
+.explain-facts { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--space-block) var(--space-group);
+  margin:var(--space-block) 0; }
+.explain-fact { min-width:0; }
+.explain-fact b { display:block; color:var(--ink); font:var(--type-subheading); font-variant-numeric:tabular-nums; }
+.explain-fact span { display:block; margin-top:var(--space-line); color:var(--ink-soft); font:var(--type-fine); }
+.explain-access { margin:var(--space-block) 0; color:var(--ink-soft); font:var(--type-fine); }
+.explain-parties,.explain-sources { margin:var(--space-row) 0 0; padding:0; list-style:none; }
+.explain-parties li,.explain-sources li { padding:var(--space-row) 0; border-top:var(--border-hairline) solid var(--divider-subtle);
+  display:flex; justify-content:space-between; gap:var(--space-heading); align-items:baseline; }
 .explain-parties a,.explain-sources a { color:var(--ink); text-decoration-color:var(--bronze-rule); }
-.explain-parties b { white-space:nowrap; font-size:.85rem; }
-.explain-sources li { display:flex; gap:.65rem; align-items:flex-start; }
-.explain-source-face { flex:none; width:40px; height:40px; border-radius:50%; background:var(--paper-sunken); box-shadow:inset 0 0 0 1px var(--line); overflow:hidden; }
-.explain-source-face img { display:block; width:40px; height:40px; object-fit:cover; }
+.explain-parties b { white-space:nowrap; font-weight:600; font-variant-numeric:tabular-nums; }
+.explain-sources li { display:flex; gap:var(--space-row); align-items:flex-start; }
+.explain-source-face { flex:none; box-sizing:border-box; width:var(--size-portrait-row); height:var(--size-portrait-row); border-radius:var(--radius-round);
+  background:var(--paper-sunken); border:var(--border-hairline) solid var(--divider-subtle); overflow:hidden; }
+.explain-source-face img { display:block; width:100%; height:100%; object-fit:cover; }
 .explain-source-copy { min-width:0; flex:1 1 auto; }
-.explain-source-copy a { display:block; font:700 .9rem/1.35 var(--serif); text-decoration:none; }
+.explain-source-copy a { display:block; font:var(--type-subheading); text-decoration:none; }
 .explain-source-copy a:hover { color:var(--bronze-ink); }
 .explain-source-copy small a.explain-source-party { display:inline; font:inherit; text-decoration:none; }
-.explain-source-copy small { display:block; margin-top:.2rem; color:var(--ink-soft); font:.76rem/1.4 var(--sans); }
+.explain-source-copy small { display:block; margin-top:var(--space-line); color:var(--ink-soft); font:var(--type-fine); }
 .explain-answer { min-height:6rem; }
-.explain-answer p,.explain-answer li { font-size:.93rem; }
-.explain-record-link { display:inline-flex; align-items:center; min-height:44px; margin-top:.75rem;
-  padding:.45rem .75rem; border:1px solid var(--line-strong); border-radius:4px; color:var(--ink);
-  font:600 .82rem/1.3 var(--sans); text-decoration:none; }
-.explain-record-link:hover { border-color:var(--ink); }
-.explain-caveats { margin:.4rem 0 0; padding:0; list-style:none; }
-.explain-caveats li { padding:.75rem 0 .75rem 1.1rem; border-top:1px solid var(--line);
-  position:relative; font:400 .92rem/1.55 var(--serif); }
+.explain-answer p,.explain-answer li { font:var(--type-body); }
+.explain-record-link { margin-top:var(--space-heading); }
+.explain-caveats { margin:var(--space-tight) 0 0; padding:0; list-style:none; }
+.explain-caveats li { padding:var(--space-heading) 0 var(--space-heading) var(--space-block); border-top:var(--border-hairline) solid var(--divider-subtle);
+  position:relative; font:var(--type-body); }
 .explain-caveats li::before { content:""; position:absolute; left:0; top:1.35rem; width:6px;
-  border-top:1px solid var(--bronze); }
-.explain-controls { position:sticky; bottom:calc(-1 * var(--explain-pad)); z-index:3; display:flex; justify-content:space-between; gap:.6rem;
-  margin:1.25rem calc(-1 * var(--explain-pad)) calc(-1 * var(--explain-pad)); padding:.7rem var(--explain-pad);
-  background:var(--paper); border-top:1px solid var(--line); }
-.explain-controls button { min-height:44px; border:1px solid var(--line-strong); border-radius:4px;
-  padding:.55rem .9rem; background:transparent; color:var(--ink); cursor:pointer; font:600 .84rem/1.2 var(--sans); }
-.explain-controls button:last-child { margin-left:auto; background:var(--navy); border-color:var(--navy); color:var(--on-navy); }
-.explain-controls button:disabled { opacity:.38; cursor:default; }
-.explain-status { color:var(--ink-soft); font:.85rem/1.5 var(--sans); }
-.explain-error { max-width:60ch; margin:2rem auto; padding:1rem; }
+  border-top:var(--border-hairline) solid var(--bronze); }
+.explain-controls { position:sticky; bottom:calc(-1 * var(--explain-pad)); z-index:3; display:flex; justify-content:space-between; gap:var(--space-tight);
+  margin:var(--space-group) calc(-1 * var(--explain-pad)) calc(-1 * var(--explain-pad)); padding:var(--space-row) var(--explain-pad);
+  background:var(--paper); border-top:var(--border-hairline) solid var(--divider-subtle); }
+.explain-controls > .ui-button:last-child { margin-left:auto; }
+.explain-status { color:var(--ink-soft); font:var(--type-metadata); }
+.explain-error { max-width:60ch; margin:var(--space-section) auto; padding:var(--space-block); }
+.explain-error h2 { margin:0 0 var(--space-tight); font:var(--type-heading); }
 @keyframes explain-in { from { opacity:0; transform:translateY(5px); } }
 @media (max-width:700px) {
   .explain-dialog { width:calc(100vw - .5rem); max-height:calc(100dvh - .5rem); }
   .explain-shell { display:block; height:auto; min-height:0; overflow:visible; }
   .explain-stage { position:sticky; top:44px; z-index:1; height:clamp(276px,38dvh,350px); min-height:0; max-height:350px;
-    border-right:0; border-bottom:1px solid var(--line); }
+    border-right:0; border-bottom:var(--border-hairline) solid var(--divider-subtle); }
   .explain-narrative { --explain-pad:1.1rem; overflow:visible; padding:var(--explain-pad); }
   .explain-controls { bottom:0; } /* the dialog body scrolls here and carries no padding */
-  .explain-stage-label { max-width:39%; font-size:.76rem; }
+  .explain-stage-label { max-width:39%; font:var(--type-label); }
   .explain-stage-label { top:1.5rem; }
   .explain-stage-label.from { left:1.4rem; }.explain-stage-label.to { right:1.4rem; }
-  .explain-stage-year { top:3.15rem; bottom:auto; font-size:1.85rem; }
+  .explain-stage-year { top:3.15rem; bottom:auto; }
   .explain-stage-year[data-zero] { opacity:.68; }
-  .explain-stage-year[data-peak-summary] { font-size:1.6rem; }
-  .explain-stage-year[data-peak-summary] small { margin-top:.25rem; }
-  .explain-scene-label { max-width:6.7rem; font-size:.58rem; }
-  .explain-scene-label.destination { max-width:6.35rem; background:color-mix(in srgb,var(--paper) 97%,transparent);
-    font-size:.6875rem; line-height:1.25; }
-  .explain-scene-label.gauge { font-size:.6875rem; }
-  .explain-scene-label.clock,.explain-scene-label.election,.explain-scene-label.peak,
-  .explain-scene-label.citation { font-size:.6875rem; line-height:1.25; }
-  .explain-scene-label.citation { padding:.08rem .2rem; background:color-mix(in srgb,var(--paper) 98%,transparent); }
-  .explain-scene-label.limit,.explain-scene-label.limit-note { font-size:.6875rem; line-height:1.25; }
+  .explain-stage-year[data-peak-summary] small { margin-top:var(--space-line); }
+  .explain-scene-label { max-width:7.5rem; }
+  .explain-scene-label.destination { max-width:7.5rem; background:color-mix(in srgb,var(--paper) 97%,transparent); }
+  .explain-scene-label.citation { background:color-mix(in srgb,var(--paper) 98%,transparent); }
   .explain-scene-label.limit-note { max-width:7.5rem; background:color-mix(in srgb,var(--paper) 97%,transparent); }
-  .explain-scene-label.destination-summary { color:var(--bronze-ink); font-family:var(--sans); font-weight:650; }
-  .explain-scene-label.stage-caption { max-width:11rem; padding:.2rem .38rem; }
-  .explain-title { font-size:1.65rem; }
+  .explain-scene-label.stage-caption { max-width:11rem; padding:var(--space-line) var(--space-tight); }
   .explain-facts { grid-template-columns:1fr 1fr; }
   .explain-parties a,.explain-source-copy a { min-width:44px; min-height:44px; display:flex; align-items:center; }
 }
 @media (max-width:370px) {
   .explain-stage-label.from { max-width:37%; }
 }
-@media (prefers-reduced-motion:reduce) { .explain-step-copy { animation:none; } }
+@media (prefers-reduced-motion:reduce) {
+  .explain-step-copy { animation:none; }
+  .explain-sources [data-scene-citation] { transition:none; }
+}
 `
   document.head.appendChild(style)
 }
@@ -322,11 +319,11 @@ async function resolveFlow(detail: ExplainDetail, helpers: ExplainHelpers): Prom
   let donors: MoneyNode[] = []
   let contextEdges: MoneyEdge[] = []
   if (detail.kind === 'donor') {
-    if (!donor) throw new Error(`No disclosed donor named ${detail.from || 'that name'} was found`)
+    if (!donor) throw new FlowNotFound(`No disclosed donor named ${detail.from || 'that name'} was found`)
     donors = [donor]
     contextEdges = graph.edges.filter((edge) => edge.source === donor!.id)
   } else if (detail.kind === 'party') {
-    if (!party) throw new Error(`No disclosed party named ${detail.to || detail.from || 'that name'} was found`)
+    if (!party) throw new FlowNotFound(`No disclosed party named ${detail.to || detail.from || 'that name'} was found`)
     contextEdges = graph.edges.filter((edge) => edge.target === party!.id)
     const ids = new Set(contextEdges.map((edge) => edge.source))
     donors = graph.nodes.filter((node) => node.kind === 'donor' && ids.has(node.id))
@@ -334,14 +331,14 @@ async function resolveFlow(detail: ExplainDetail, helpers: ExplainHelpers): Prom
     const industryKey = norm(industry || '')
     donors = graph.nodes.filter((node) => node.kind === 'donor' &&
       [node.group, node.industry].some((value) => norm(String(value || '').replace(/_/g, ' ')) === industryKey))
-    if (!donors.length) throw new Error(`No disclosed ${detail.from || 'industry'} donors were found`)
+    if (!donors.length) throw new FlowNotFound(`No disclosed ${detail.from || 'industry'} donors were found`)
     const ids = new Set(donors.map((node) => node.id))
     contextEdges = graph.edges.filter((edge) => ids.has(edge.source))
   }
 
   let edges = contextEdges
   if (party) edges = edges.filter((edge) => edge.target === party!.id)
-  if (!edges.length) throw new Error('No disclosed flow matches these two sides')
+  if (!edges.length) throw new FlowNotFound('No disclosed flow matches these two sides')
   if (!party) {
     const byTarget = new Map<string, number>()
     for (const edge of edges) byTarget.set(edge.target, (byTarget.get(edge.target) || 0) + (Number(edge.total) || 0))
@@ -500,7 +497,7 @@ function sourceList(data: { citations?: Record<string, unknown>; sources?: AskSo
       helpers.portraitFor(String(source.speaker)).then((url) => {
         if (!url || !face.isConnected) return
         const img = el('img') as HTMLImageElement
-        img.src = url; img.alt = ''; img.width = 40; img.height = 40; img.loading = 'lazy'
+        img.src = url; img.alt = ''; img.width = 44; img.height = 44; img.loading = 'lazy'
         face.append(img)
       }).catch(() => undefined)
     }
@@ -578,6 +575,8 @@ class FlowScene {
   private destinationSide: 'left' | 'right' = 'right'
   private destinationGaugeIndex = -1
   private destinationGaugeShare = 0
+  private whoRings: RingColumn | null = null
+  private destinationRings: RingColumn | null = null
   private citationCards: Array<{ x: number; y: number; source: AskSource; sourceIndex: number }> = []
   private citationFill: THREE.InstancedMesh | null = null
   private citationEdge: THREE.InstancedMesh | null = null
@@ -804,7 +803,8 @@ class FlowScene {
         }
       })
       if (rows.length) {
-        this.whoGroup.add(this.makeInstancedRings(rows, ringPositions, radii))
+        this.whoRings = { mesh: this.makeInstancedRings(rows, ringPositions, radii), positions: ringPositions, radii }
+        this.whoGroup.add(this.whoRings.mesh)
         this.whoGroup.add(new THREE.LineSegments(
           new THREE.BufferGeometry()
             .setAttribute('position', new THREE.Float32BufferAttribute(hatchVertices, 3))
@@ -814,7 +814,7 @@ class FlowScene {
       }
       if (vertices.length) this.whoGroup.add(new THREE.LineSegments(
         new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3)),
-        new THREE.LineBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .18 }),
+        new THREE.LineBasicMaterial({ color: BRONZE_INK, transparent: true, opacity: .18 }),
       ))
       return
     }
@@ -877,7 +877,7 @@ class FlowScene {
     }
     this.whoGroup.add(new THREE.LineSegments(
       new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(clockVertices, 3)),
-      new THREE.LineBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .26 }),
+      new THREE.LineBasicMaterial({ color: BRONZE_INK, transparent: true, opacity: .26 }),
     ))
 
     const rows = this.partyRows().slice(0, 7)
@@ -897,7 +897,10 @@ class FlowScene {
         if (point > 0 && point < 17) branchVertices.push(curve.x, curve.y, -.06)
       }
     })
-    if (rows.length) this.whoGroup.add(this.makeInstancedRings(rows, ringPositions, radii))
+    if (rows.length) {
+      this.whoRings = { mesh: this.makeInstancedRings(rows, ringPositions, radii), positions: ringPositions, radii }
+      this.whoGroup.add(this.whoRings.mesh)
+    }
     if (branchVertices.length) this.whoGroup.add(new THREE.LineSegments(
       new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(branchVertices, 3)),
       new THREE.LineBasicMaterial({ color: this.giverColour, transparent: true, opacity: .14 }),
@@ -932,8 +935,8 @@ class FlowScene {
       guidePositions[offset++] = .02
     }
     const geometry = new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(positions, 3))
-    const material = new THREE.MeshBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .58, side: THREE.DoubleSide })
-    const guideMaterial = new THREE.LineBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .5 })
+    const material = new THREE.MeshBasicMaterial({ color: BRONZE_INK, transparent: true, opacity: .58, side: THREE.DoubleSide })
+    const guideMaterial = new THREE.LineBasicMaterial({ color: BRONZE_INK, transparent: true, opacity: .5 })
     this.historyGroup.add(
       new THREE.LineSegments(
         new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(guidePositions, 3)),
@@ -1014,6 +1017,40 @@ class FlowScene {
     return rings
   }
 
+  /**
+   * The rows a ring column names at this width: all of them, or on a narrow
+   * stage the first few, with `keep` (the gauge's party) always among them.
+   */
+  private shownRows(count: number, keep = -1): number[] {
+    const all = Array.from({ length: count }, (_, index) => index)
+    if (!this.narrow || count <= NARROW_ROWS) return all
+    const shown = all.slice(0, NARROW_ROWS)
+    if (keep >= NARROW_ROWS) shown[NARROW_ROWS - 1] = keep
+    return shown
+  }
+
+  /** The gauge's row, which a narrow stage keeps named; none when the party is the receiver. */
+  private gaugeRow() {
+    return this.detail.kind !== 'party' ? this.destinationGaugeIndex : -1
+  }
+
+  /**
+   * A ring the stage does not name is not drawn: on a narrow stage the rows
+   * past the named few fold into "+N smaller", and their colours go with them,
+   * since a party's colour is never drawn without its name.
+   */
+  private fitRings(rings: RingColumn | null, shown: number[]) {
+    if (!rings) return
+    const matrix = new THREE.Matrix4()
+    const quaternion = new THREE.Quaternion()
+    rings.positions.forEach((position, index) => {
+      const radius = shown.includes(index) ? rings.radii[index] ?? 0 : 0
+      matrix.compose(position, quaternion, new THREE.Vector3(radius, radius, 1))
+      rings.mesh.setMatrixAt(index, matrix)
+    })
+    rings.mesh.instanceMatrix.needsUpdate = true
+  }
+
   private mainPartyShare() {
     const party = this.flow.party
     if (!party) return 0
@@ -1026,7 +1063,7 @@ class FlowScene {
   private addGauge(group: THREE.Group, position: THREE.Vector3, radius: number, colour: string, share: number) {
     const background = new THREE.Mesh(
       new THREE.RingGeometry(radius * 1.1, radius * 1.24, 48),
-      new THREE.MeshBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .16, side: THREE.DoubleSide }),
+      new THREE.MeshBasicMaterial({ color: BRONZE_INK, transparent: true, opacity: .16, side: THREE.DoubleSide }),
     )
     const fill = new THREE.Mesh(
       new THREE.RingGeometry(radius * 1.1, radius * 1.24, 48, 1, Math.PI / 2, Math.PI * 2 * share),
@@ -1066,7 +1103,8 @@ class FlowScene {
         radii.push(.25 + .2 * Math.sqrt(row.total / max))
       })
       this.destinationGroup.add(this.makeRibbonField(ribbons))
-      this.destinationGroup.add(this.makeInstancedRings(rows, this.destinationPositions, radii))
+      this.destinationRings = { mesh: this.makeInstancedRings(rows, this.destinationPositions, radii), positions: this.destinationPositions, radii }
+      this.destinationGroup.add(this.destinationRings.mesh)
       const receiver = this.makeHatchedMedallion(this.partyColour, .51, false)
       receiver.position.copy(this.receiverPoint)
       this.destinationGroup.add(receiver)
@@ -1087,7 +1125,8 @@ class FlowScene {
         radii.push(.25 + .2 * Math.sqrt(row.total / max))
       })
       this.destinationGroup.add(this.makeRibbonField(ribbons))
-      this.destinationGroup.add(this.makeInstancedRings(rows, this.destinationPositions, radii))
+      this.destinationRings = { mesh: this.makeInstancedRings(rows, this.destinationPositions, radii), positions: this.destinationPositions, radii }
+      this.destinationGroup.add(this.destinationRings.mesh)
       const giver = this.makeHatchedMedallion(this.giverColour, .51)
       giver.position.copy(this.giverPoint)
       this.destinationGroup.add(giver)
@@ -1129,16 +1168,8 @@ class FlowScene {
     }
     this.citationGroup.add(new THREE.LineSegments(
       new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3)),
-      new THREE.LineBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .45 }),
+      new THREE.LineBasicMaterial({ color: BRONZE_INK, transparent: true, opacity: .45 }),
     ))
-  }
-
-  private citationColour(party: string | undefined) {
-    const key = normFallback(party || '')
-    const node = this.flow.graph.nodes.find((candidate) => candidate.kind === 'party' && (
-      normFallback(candidate.label) === key || key.includes(normFallback(candidate.label)) || normFallback(candidate.label).includes(key)
-    ))
-    return node?.colour || (key.includes('labor') ? '#D93025' : key.includes('green') ? '#3C9A46' : key.includes('liberal') ? '#1565C0' : '#8A5A12')
   }
 
   setCitations(sources: AskSource[]) {
@@ -1171,20 +1202,20 @@ class FlowScene {
     }
     const cardWidth = this.narrow ? 1.72 : .72
     const cardHeight = this.narrow ? .46 : .32
+    // A card carries only its date, so it is edged in bronze rather than its
+    // speaker's party colour: a party colour is never drawn without the name.
     this.citationEdge = new THREE.InstancedMesh(
       new THREE.PlaneGeometry(cardWidth, cardHeight),
-      new THREE.MeshBasicMaterial({ transparent: true, opacity: .82, side: THREE.DoubleSide }),
+      new THREE.MeshBasicMaterial({ color: BRONZE_INK, transparent: true, opacity: .82, side: THREE.DoubleSide }),
       this.citationCards.length,
     )
     this.citationFill = new THREE.InstancedMesh(
       new THREE.PlaneGeometry(cardWidth - .07, cardHeight - .07),
-      new THREE.MeshBasicMaterial({ color: 0xfaf9f6, transparent: true, opacity: .96, side: THREE.DoubleSide }),
+      new THREE.MeshBasicMaterial({ color: SURFACE, transparent: true, opacity: .96, side: THREE.DoubleSide }),
       this.citationCards.length,
     )
     this.citationEdge.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
     this.citationFill.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
-    this.citationCards.forEach((card, index) => this.citationEdge?.setColorAt(index, new THREE.Color(this.citationColour(card.source.party))))
-    if (this.citationEdge.instanceColor) this.citationEdge.instanceColor.needsUpdate = true
     this.citationGroup.add(this.citationEdge, this.citationFill)
     if (this.step === 3) this.setLabels(this.labelsForStep(3))
     this.updateCitationCards(performance.now())
@@ -1222,7 +1253,7 @@ class FlowScene {
     const bottom = -2.2
     this.limitsGroup.add(new THREE.Mesh(
       new THREE.PlaneGeometry(7.08, top - bottom),
-      new THREE.MeshBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .045, side: THREE.DoubleSide }),
+      new THREE.MeshBasicMaterial({ color: BRONZE_INK, transparent: true, opacity: .045, side: THREE.DoubleSide }),
     ))
     this.limitsGroup.children[0]!.position.set(0, (top + bottom) / 2, -.09)
     const hatch: number[] = []
@@ -1235,12 +1266,12 @@ class FlowScene {
     hatch.push(-3.54, bottom, 0, 3.54, bottom, 0, -3.54, top, 0, 3.54, top, 0)
     this.limitsGroup.add(new THREE.LineSegments(
       new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(hatch, 3)),
-      new THREE.LineBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .2 }),
+      new THREE.LineBasicMaterial({ color: BRONZE_INK, transparent: true, opacity: .2 }),
     ))
     const secondArc = Array.from({ length: 61 }, (_, index) => this.pointAt(index / 60, this.giverPoint, this.receiverPoint, 2.08))
     this.limitsGroup.add(new THREE.Line(
       new THREE.BufferGeometry().setFromPoints(secondArc),
-      new THREE.LineBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .2 }),
+      new THREE.LineBasicMaterial({ color: BRONZE_INK, transparent: true, opacity: .2 }),
     ))
     const crossed = this.pointAt(.62, this.giverPoint, this.receiverPoint, 2.08)
     const cross = .2
@@ -1249,7 +1280,7 @@ class FlowScene {
         crossed.x - cross, crossed.y - cross, .04, crossed.x + cross, crossed.y + cross, .04,
         crossed.x - cross, crossed.y + cross, .04, crossed.x + cross, crossed.y - cross, .04,
       ], 3)),
-      new THREE.LineBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .72 }),
+      new THREE.LineBasicMaterial({ color: BRONZE_INK, transparent: true, opacity: .72 }),
     ))
   }
 
@@ -1284,7 +1315,7 @@ class FlowScene {
     if (step === 0) {
       if (this.detail.kind === 'party') {
         const rows = this.industryRows().slice(0, 7)
-        const visible = this.narrow && rows.length > 5 ? rows.slice(0, 5) : rows
+        const visible = this.narrow && rows.length > NARROW_ROWS ? rows.slice(0, NARROW_ROWS) : rows
         const labels: SceneLabel[] = visible.map((row, index) => ({
           text: stageShortLabel(row.label),
           position: new THREE.Vector3(-3.0 + (index % 2) * .2, rows.length === 1 ? -.55 : 1.45 - index * (2.95 / Math.max(1, rows.length - 1)), .08),
@@ -1298,7 +1329,7 @@ class FlowScene {
         return labels
       }
       const rows = this.partyRows().slice(0, 7)
-      const visible = this.narrow && rows.length > 5 ? rows.slice(0, 5) : rows
+      const visible = this.narrow && rows.length > NARROW_ROWS ? rows.slice(0, NARROW_ROWS) : rows
       const labels: SceneLabel[] = [
         { text: '1998', position: new THREE.Vector3(this.whoGiverPoint.x, this.whoGiverPoint.y + 1.43, .08), className: 'clock', align: 'middle' },
         ...visible.map((row, index) => ({
@@ -1333,26 +1364,25 @@ class FlowScene {
       ]
     }
     if (step === 2) {
-      const visible = this.narrow && this.destinationRows.length > 5
-        ? this.destinationRows.slice(0, 5)
-        : this.destinationRows
-      const labels: SceneLabel[] = visible.map((row, index) => {
-        return {
-          text: stageShortLabel(row.label),
-          position: this.destinationPositions[index]!.clone().add(new THREE.Vector3(this.destinationSide === 'left' ? .42 : -.42, 0, .08)),
-          className: 'destination',
-          align: (this.destinationSide === 'left' ? 'start' : 'end') as 'start' | 'end',
-          offsetX: this.destinationSide === 'left' ? 5 : -5,
-        }
-      })
-      if (visible.length < this.destinationRows.length) {
-        const index = this.destinationRows.length - 1
-        const position = this.destinationPositions[index]!.clone().add(new THREE.Vector3(this.destinationSide === 'left' ? .42 : -.42, 0, .08))
+      const keep = this.gaugeRow()
+      const shown = this.shownRows(this.destinationRows.length, keep)
+      const at = (index: number) =>
+        this.destinationPositions[index]!.clone().add(new THREE.Vector3(this.destinationSide === 'left' ? .42 : -.42, 0, .08))
+      const align = (this.destinationSide === 'left' ? 'start' : 'end') as 'start' | 'end'
+      const offsetX = this.destinationSide === 'left' ? 5 : -5
+      const labels: SceneLabel[] = shown
+        // Beside the ring the gauge's caption names its party; on a narrow
+        // stage the caption moves under the plate, so the ring keeps its name.
+        .filter((index) => this.narrow || index !== keep)
+        .map((index) => ({
+          text: stageShortLabel(this.destinationRows[index]!.label),
+          position: at(index), className: 'destination', align, offsetX,
+        }))
+      const hidden = this.destinationRows.map((_, index) => index).filter((index) => !shown.includes(index))
+      if (hidden.length) {
         labels.push({
-          text: `+${this.destinationRows.length - visible.length} smaller`, position,
-          className: 'destination destination-summary',
-          align: (this.destinationSide === 'left' ? 'start' : 'end') as 'start' | 'end',
-          offsetX: this.destinationSide === 'left' ? 5 : -5,
+          text: `+${hidden.length} smaller`, position: at(hidden[hidden.length - 1]!),
+          className: 'destination destination-summary', align, offsetX,
         })
       }
       const partyName = stageShortLabel(this.flow.party?.label || 'party')
@@ -1361,7 +1391,6 @@ class FlowScene {
         : this.detail.kind === 'party'
           ? this.receiverPoint.clone().add(new THREE.Vector3(-1.12, .5, .08))
           : (this.destinationPositions[this.destinationGaugeIndex] || this.receiverPoint).clone().add(new THREE.Vector3(-1.28, -.02, .08))
-      if (this.detail.kind !== 'party' && this.destinationGaugeIndex >= 0) labels.splice(this.destinationGaugeIndex, 1)
       labels.push({
         text: `${(this.destinationGaugeShare * 100).toFixed(1)}% of ${partyName} receipts`,
         position: gaugeAnchor, className: `gauge${this.narrow ? ' stage-caption' : ''}`, align: 'middle',
@@ -1432,6 +1461,8 @@ class FlowScene {
     this.camera.updateProjectionMatrix()
     this.targetZ = this.baseTargetZ * Math.max(1, (this.narrow ? 1.22 : 1.26) / this.aspect)
     this.updateHistory(this.year)
+    this.fitRings(this.whoRings, this.shownRows(this.whoRings?.positions.length ?? 0))
+    this.fitRings(this.destinationRings, this.shownRows(this.destinationRings?.positions.length ?? 0, this.gaugeRow()))
     if (this.labels.length) this.setLabels(this.labelsForStep(this.step))
     this.draw(performance.now())
   }
@@ -1617,9 +1648,12 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
   const loading = el('div', 'explain-error')
   container.append(loading)
   let waitHandle: { destroy?: () => void } | null = null
+  // Settled once the flow has resolved or failed: a loader that arrives after
+  // that has nothing left to wait for.
+  let settled = false
   importWombat().then((mod) => {
-    if (!destroyed && loading.isConnected) waitHandle = mod.mountWombat(loading, { label: 'Reading the money map.' })
-  }).catch(() => { if (!destroyed) loading.append(el('p', 'explain-status', 'Reading the money map.')) })
+    if (!destroyed && !settled && loading.isConnected) waitHandle = mod.mountWombat(loading, { label: 'Reading the money map.' })
+  }).catch(() => { if (!destroyed && !settled) loading.append(el('p', 'explain-status', 'Reading the money map.')) })
 
   const renderStep = () => {
     if (!flow || !copy || !scene) return
@@ -1722,7 +1756,7 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
           if (list.childElementCount) sources.replaceChildren(el('h3', '', 'Sources from the record'), list)
         } else if (askFailure) {
           const p = el('p', 'explain-status', askFailure)
-          const link = el('a', 'explain-record-link', 'Ask the record about this flow')
+          const link = el('a', 'ui-button explain-record-link', 'Ask the record about this flow')
           link.href = helpers.askHash(question)
           answer.replaceChildren(p, link)
         } else if (askText) {
@@ -1778,7 +1812,7 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
           if (destroyed || !answer.isConnected) return
           waitHandle?.destroy?.()
           const p = el('p', 'explain-status', askFailure)
-          const link = el('a', 'explain-record-link', 'Ask the record about this flow')
+          const link = el('a', 'ui-button explain-record-link', 'Ask the record about this flow')
           link.href = helpers.askHash(question)
           answer.replaceChildren(p, link)
         })
@@ -1799,13 +1833,14 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
       const list = el('ul', 'explain-caveats')
       for (const sentence of [threshold, excluded, noCausation, stateRule].filter(Boolean)) list.append(el('li', '', String(sentence)))
       copy.append(list)
-      const search = el('a', 'explain-record-link', 'Search the underlying record')
+      const search = el('a', 'ui-button explain-record-link', 'Search the underlying record')
       search.href = helpers.searchHash(flow.donor?.label || flow.party?.label || labelForIndustry(flow.industry, helpers), {})
       copy.append(search)
     }
   }
 
-  resolveFlow(detail, helpers).then((resolved) => {
+  const start = () => resolveFlow(detail, helpers).then((resolved) => {
+    settled = true
     if (destroyed) return
     flow = resolved
     waitHandle?.destroy?.()
@@ -1822,7 +1857,7 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
     yearLabel.append(document.createTextNode(String(LAST_YEAR)), el('small', '', 'financial-year key'))
     stage.append(yearLabel)
     const giverColour = clusterColour(resolved.donor?.group || resolved.industry || 'other').colour
-    const partyColour = resolved.party?.colour || '#8A5A12'
+    const partyColour = resolved.party?.colour || partyDot(resolved.party?.label)
     // No WebGL (a locked-down browser, a failed context): the stage stays a
     // paper panel and the figures and the record below still tell the story.
     try {
@@ -1858,7 +1893,7 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
     }
     stepButtons = STEP_NAMES.map((name, index) => {
       const li = el('li')
-      const button = el('button', 'explain-step', String(index + 1))
+      const button = el('button', 'ui-chip explain-step', String(index + 1))
       button.type = 'button'
       button.title = name
       button.setAttribute('aria-label', `${index + 1}. ${name}`)
@@ -1891,8 +1926,9 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
     })
     narrative.append(copy)
     const controls = el('div', 'explain-controls')
-    prev = el('button', '', 'Previous')
-    next = el('button', '', 'Next')
+    prev = el('button', 'ui-button', 'Previous')
+    next = el('button', 'ui-button', 'Next')
+    next.dataset.variant = 'primary'
     prev.type = next.type = 'button'
     prev.addEventListener('click', () => { if (step > 0) { step--; renderStep(); copy?.focus({ preventScroll: true }); reframeStage() } })
     next.addEventListener('click', () => {
@@ -1917,13 +1953,31 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
     })
     renderStep()
   }).catch((error) => {
+    settled = true
     waitHandle?.destroy?.()
     if (destroyed) return
+    // A flow the data does not hold says so in its own sentence; anything
+    // else is a read that failed, which a second try may get past.
+    if (error instanceof FlowNotFound) {
+      loading.replaceChildren(
+        el('h2', '', 'This flow could not be explained'),
+        el('p', 'explain-status', `${error.message}. The money map remains available underneath.`),
+      )
+      return
+    }
+    const retry = el('button', 'ui-button', 'Try again')
+    retry.type = 'button'
+    retry.addEventListener('click', () => {
+      loading.replaceChildren(el('p', 'explain-status', 'Reading the money map.'))
+      start()
+    })
     loading.replaceChildren(
       el('h2', '', 'This flow could not be explained'),
-      el('p', 'explain-status', `${String(error?.message || error)}. The money map remains available underneath.`),
+      el('p', 'explain-status', 'The disclosed-money data could not be read. The money map remains available underneath.'),
+      retry,
     )
   })
+  start()
 
   return {
     destroy() {

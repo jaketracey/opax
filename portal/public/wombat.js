@@ -19,12 +19,12 @@
 
 const STYLE_ID = "wombat-styles";
 
-/* One cycle is 16s for every animal: move on (0–44%), pause for a single
-   unhurried beat — the wombat sniffs the ground, the echidna probes it, the
-   platypus dabbles, the emu bows for a look (44–56%) — then move off
-   (56–100%). The rock and leg keyframes are generated over the same 16s so
-   the gait stills exactly while the walk pauses; the seam at 100%→0% is
-   offscreen, so phase there is moot. */
+/* One cycle is the 16s ambient loop (--ambient-loop) for every animal: move
+   on (0–44%), pause for a single unhurried beat — the wombat sniffs the
+   ground, the echidna probes it, the platypus dabbles, the emu bows for a
+   look (44–56%) — then move off (56–100%). The rock and leg keyframes are
+   generated over the same 16s so the gait stills exactly while the walk
+   pauses; the seam at 100%→0% is offscreen, so phase there is moot. */
 const SPANS = [[0, 44], [56, 100]];
 
 function gait(step, extreme, mid, rest) {
@@ -173,7 +173,7 @@ const ANIMALS = {
   56%, 100% { transform: rotate(0deg); }`,
     },
     extraCss: (name) => `
-.wb-a-${name} .wb-aux { transform-origin: 96% 45%; animation: wb-aux-${name} 16s ease-in-out infinite; animation-delay: var(--wb-phase, 0s); }
+.wb-a-${name} .wb-aux { transform-origin: 96% 45%; animation: wb-aux-${name} var(--ambient-loop) ease-in-out infinite; animation-delay: var(--wb-phase, 0s); }
 @keyframes wb-aux-${name} {
     ${gait(11, (even) => `transform: rotate(${even ? -2.5 : 2.5}deg)`, null, `transform: rotate(0deg)`)}
 }`,
@@ -263,10 +263,10 @@ function animalCss(name, a) {
   const legB = gait(a.step, swing(-a.legs), null, `transform: rotate(0deg)`);
 
   return `
-.wb-a-${name} .wb-beat { transform-origin: ${a.beat.origin}; animation: wb-beat-${name} 16s ease-in-out infinite; animation-delay: var(--wb-phase, 0s); }
-.wb-a-${name} .wb-rock { animation: wb-rock-${name} 16s ease-in-out infinite; animation-delay: var(--wb-phase, 0s); }
-.wb-a-${name} .wb-ph-a { animation: wb-lega-${name} 16s ease-in-out infinite; animation-delay: var(--wb-phase, 0s); }
-.wb-a-${name} .wb-ph-b { animation: wb-legb-${name} 16s ease-in-out infinite; animation-delay: var(--wb-phase, 0s); }
+.wb-a-${name} .wb-beat { transform-origin: ${a.beat.origin}; animation: wb-beat-${name} var(--ambient-loop) ease-in-out infinite; animation-delay: var(--wb-phase, 0s); }
+.wb-a-${name} .wb-rock { animation: wb-rock-${name} var(--ambient-loop) ease-in-out infinite; animation-delay: var(--wb-phase, 0s); }
+.wb-a-${name} .wb-ph-a { animation: wb-lega-${name} var(--ambient-loop) ease-in-out infinite; animation-delay: var(--wb-phase, 0s); }
+.wb-a-${name} .wb-ph-b { animation: wb-legb-${name} var(--ambient-loop) ease-in-out infinite; animation-delay: var(--wb-phase, 0s); }
 ${a.extraCss ? a.extraCss(name) : ""}
 @keyframes wb-beat-${name} {${a.beat.frames}
 }
@@ -283,34 +283,35 @@ ${a.extraCss ? a.extraCss(name) : ""}
 
 function css() {
   return `
-.wb-wrap { display: block; width: fit-content; margin: 1.5rem auto; }
+.wb-wrap { display: block; width: fit-content; margin: var(--space-group) auto; }
 .wb-stage {
   position: relative;
   width: 320px;      /* explicit so the fit-content wrap doesn't shrink-wrap a short label */
   max-width: 100%;
   height: 48px;
   overflow: hidden;
-  /* the animal fades in entering and out leaving, rather than hard-clipping */
+  /* the animal fades in entering and out leaving, rather than hard-clipping;
+     a mask reads only alpha, so the stops are plain black */
   mask-image: linear-gradient(to right,
-    transparent, #000 30px, #000 calc(100% - 30px), transparent);
+    transparent, black 30px, black calc(100% - 30px), transparent);
 }
 .wb-stage::after {
   content: "";
   position: absolute; left: 4px; right: 4px; bottom: 4px;
-  height: 1px;
-  background: var(--line-strong, #CFCABB);
+  height: var(--border-hairline);
+  background: var(--line-control);
   opacity: 0.4;
 }
 .wb-trundle {
   position: absolute; bottom: 0; left: 0;
   width: 65px; height: 42px;
-  animation: wb-trundle 16s linear infinite; animation-delay: var(--wb-phase, 0s);
+  animation: wb-trundle var(--ambient-loop) linear infinite; animation-delay: var(--wb-phase, 0s);
 }
 .wb-svg { display: block; width: 100%; height: 100%; overflow: visible; }
 
-.wb-line  { fill: none; stroke: var(--bronze-ink, #8A5A12); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-.wb-shape { fill: var(--bronze-wash, rgba(160, 118, 27, 0.16)); stroke: var(--bronze-ink, #8A5A12); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-.wb-solid { fill: var(--bronze-ink, #8A5A12); }
+.wb-line  { fill: none; stroke: var(--bronze-ink); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.wb-shape { fill: var(--bronze-wash); stroke: var(--bronze-ink); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.wb-solid { fill: var(--bronze-ink); }
 .wb-soft  { stroke-width: 1.7; opacity: 0.55; }
 .wb-fine  { stroke-width: 1.5; }
 .wb-far   { opacity: 0.5; }
@@ -334,10 +335,10 @@ function css() {
 @keyframes wb-dot3 { 0% { opacity: 0 } 75%, 100% { opacity: 1 } }
 
 .wb-label {
-  margin: 2px 0 0;
+  margin: var(--space-line) 0 0;
   max-width: 320px;
-  font: 400 0.9375rem/1.3 var(--sans, "Public Sans", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif);
-  color: var(--ink-soft, #575C52);
+  font: var(--type-metadata);
+  color: var(--ink-soft);
   text-align: center;
   text-wrap: balance;
 }

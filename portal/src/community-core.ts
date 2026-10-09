@@ -12,7 +12,7 @@ export async function body(req:Request,max=16000):Promise<Record<string,unknown>
  try{const parsed=JSON.parse(new TextDecoder().decode(bytes));if(!parsed||typeof parsed!=='object'||Array.isArray(parsed))throw new Error();return parsed}catch{throw new CommunityError(400,'Invalid JSON request.')}
 }
 export function text(value:unknown,min:number,max:number,name:string){if(typeof value!=='string'||value.trim().length<min||value.trim().length>max)throw new CommunityError(400,`${name} must be ${min}–${max} characters.`);return value.trim()}
-export function sameOrigin(req:Request,env:Env){if(req.headers.get('origin')!==env.COMMUNITY_ORIGIN)throw new CommunityError(403,'Open this action from your Opax account.')}
+export function sameOrigin(req:Request,env:Env){if(req.headers.get('origin')!==env.COMMUNITY_ORIGIN)throw new CommunityError(403,'Open this action from your OPAX account.')}
 export async function limit(env:Env,key:string,count:number,seconds:number){
  const bucket=Math.floor(now()/seconds),hashed=await digest(key+':'+bucket)
  const row=await env.COMMUNITY_DB.prepare('INSERT INTO community_limits(key,hits,expires_at) VALUES (?,1,?) ON CONFLICT(key) DO UPDATE SET hits=hits+1 RETURNING hits').bind(hashed,(bucket+1)*seconds).first<{hits:number}>()
@@ -26,4 +26,4 @@ export async function member(req:Request,env:Env):Promise<Member|null>{
 }
 export async function requireMember(req:Request,env:Env){const m=await member(req,env);if(!m)throw new CommunityError(401,'Sign in to continue.');return m}
 export function publicMember(m:Member){return {id:m.id,name:m.display_name||'Community member',bio:m.bio,joined_at:m.created_at}}
-export function sourcePath(value:unknown){if(value==null||value==='')return null;const path=text(value,1,600,'Record link');if(!/^\/(?:doc|subject|search|money|bills?|reports|connections|explore|discover|declared)(?:[/?#]|$)/.test(path)||/[\\\u0000-\u0020]/.test(path))throw new CommunityError(400,'Use a link to a record or page on Opax.');return path}
+export function sourcePath(value:unknown){if(value==null||value==='')return null;const path=text(value,1,600,'Record link');if(!/^\/(?:doc|subject|search|money|bills?|reports|connections|explore|discover|declared)(?:[/?#]|$)/.test(path)||/[\\\u0000-\u0020]/.test(path))throw new CommunityError(400,'Use a link to a record or page on OPAX.');return path}

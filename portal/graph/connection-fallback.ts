@@ -70,7 +70,8 @@ export function mountConnectionFallback(container: HTMLElement, data: MoneyGraph
         const control = add(profile ? 'a' : 'button', labels) as HTMLAnchorElement | HTMLButtonElement
         const dot = add('i', control)
         dot.setAttribute('aria-hidden', 'true')
-        dot.style.background = /^#[0-9a-f]{6}$/i.test(node.colour ?? '') ? node.colour! : '#53788c'
+        // A node without a colour of its own takes the stylesheet's neutral dot.
+        if (/^#[0-9a-f]{6}$/i.test(node.colour ?? '')) dot.style.background = node.colour!
         add('span', control, node.label)
         if (profile) {
           (control as HTMLAnchorElement).href = profile

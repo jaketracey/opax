@@ -133,37 +133,12 @@ test('promised colour pairs pass in light, dark and both Increase Contrast theme
 // vendored. A file may go down, never up; a new file starts at zero. When a
 // pass removes some, lower its number here.
 const HEX_BASELINE = {
-  'public/grants.js': 123,
-  'public/timemachine.js': 120,
-  'graph/index.ts': 84,
-  'public/ledger.js': 71,
-  'public/ballot.css': 57,
-  'public/style.css': 51,
-  'public/voice.css': 39,
-  'graph/palette.ts': 38,
-  'public/thenvsnow.js': 34,
-  'public/statemap.js': 31,
-  'public/matrix.js': 21,
-  'public/wordsdollars.js': 21,
-  'public/app.js': 17,
-  'graph/words.ts': 17,
-  'public/newsrail.js': 16,
-  'public/quiz.js': 16,
-  'public/lg-test.html': 11,
-  'public/tm-test.html': 11,
-  'public/map.html': 10,
-  'public/stages.js': 10,
-  'public/wombat.js': 7,
-  'graph/explain.ts': 5,
-  'public/community.css': 4,
-  'public/evidence.js': 2,
-  'public/procurement-data.js': 2,
+  // Pass 4G took every module, page and stylesheet to zero. What is left must
+  // be a literal: a theme-color meta (browsers read no custom properties
+  // there) and the procurement map's two node colours, handed to three.js.
   'public/index.html': 1,
   'public/home.html': 1,
-  'public/money-journeys-data.js': 1,
-  'public/money-journeys.js': 1,
-  'graph/connection-fallback.ts': 1,
-  'graph/map3d-engine.ts': 1,
+  'public/procurement-data.js': 2,
 };
 const HEX = /(?<![\w&#-])#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3,4})(?![\w-])/g;
 const SCANNED = ['public', 'graph', 'grants-map', 'voice', 'analytics'];

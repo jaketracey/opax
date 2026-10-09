@@ -20,6 +20,7 @@
 import type { MoneyEdge, MoneyGraph, MoneyNode } from './index.ts'
 import type { KnowledgeMapEngine } from './map3d-engine.ts'
 import { formatMoney } from './map-types.ts'
+import { partyDot } from './palette.ts'
 
 /** /api/matrix - party share of each debate's labelled speeches. */
 export type Matrix = {
@@ -156,41 +157,37 @@ function pctText(share: number): string {
 const STYLE_ID = 'money-map-words-styles'
 
 const CSS = `
-.mm-words { margin-top: 12px; }
-.mm-words-lead { margin: 0 0 4px; font-size: 12.5px; line-height: 1.4; color: #4a4942; }
-.mm-words-lead a { color: #26251f; font-weight: 600; text-decoration: none; }
-.mm-words-lead a:hover { text-decoration: underline; text-decoration-color: var(--bronze, #A0761B); }
-.mm-words-lead b { color: #26251f; font-weight: 600; font-variant-numeric: tabular-nums; }
-.mm-words-few { color: #8a8578; }
+.mm-words { margin-top: var(--space-heading); }
+.mm-words-lead { margin: 0 0 var(--space-line); font: var(--type-fine); color: var(--ink-soft); }
+.mm-words-lead a { color: var(--ink); font-weight: 600; text-decoration: none; }
+.mm-words-lead a:hover { text-decoration: underline; text-decoration-color: var(--bronze); }
+.mm-words-lead b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
 .mm-words-rows { list-style: none; margin: 0; padding: 0; }
-.mm-words-row { display: grid; align-items: center; gap: 8px; padding: 4px 6px; margin: 0 -6px;
-  border-radius: 7px; font-size: 12.5px; color: #33322e; text-decoration: none; }
-.mm-words-row-party { grid-template-columns: 10px minmax(0, 1fr) 64px 38px; }
-.mm-words-row-topic { grid-template-columns: minmax(0, 1fr) 48px 38px auto; }
-.mm-words-row:hover { background: rgba(0, 0, 0, 0.05); }
-.mm-words-row:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: -2px; }
+.mm-words-row { display: grid; align-items: center; gap: var(--space-tight); padding: var(--space-line) var(--space-tight);
+  margin: 0 calc(-1 * var(--space-tight)); border-radius: var(--radius-sm); font: var(--type-metadata); color: var(--ink);
+  text-decoration: none; }
+/* A party row is a dot beside the party's name, as everywhere on the map. */
+.mm-words-row-party { grid-template-columns: var(--size-party-dot) minmax(0, 1fr) 64px 3rem; }
+.mm-words-row-topic { grid-template-columns: minmax(0, 1fr) 48px 3rem auto; }
+.mm-words-row:hover { background: var(--paper-sunken); }
+.mm-words-row:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: -2px; }
 .mm-words-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.mm-words-track { height: 3px; background: rgba(0, 0, 0, 0.06); border-radius: 2px; overflow: hidden; }
-.mm-words-track i { display: block; height: 100%; background: var(--bronze, #A0761B); }
+.mm-words-track { height: 3px; background: var(--chart-baseline); overflow: hidden; }
+.mm-words-track i { display: block; height: 100%; background: var(--chart-mark); }
 .mm-words-pct { font-weight: 600; font-variant-numeric: tabular-nums; text-align: right;
   white-space: nowrap; }
-.mm-words-money { font-size: 11px; color: #8a8578; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.mm-words-fine { margin: 6px 0 0; font-size: 11px; line-height: 1.45; color: #8a8578; }
-.mm-words-fine a { color: #57503c; text-decoration-color: var(--bronze, #A0761B); }
-/* The halo toggle: last chip in the legend, ruled off from the industries. */
-.mm-words-toggle { order: 1; margin-top: 4px; padding-top: 7px; border-top: 1px solid #e4e1d8;
-  border-radius: 0 0 7px 7px; }
-.mm-chip.mm-words-toggle[aria-pressed='true'] { background: var(--bronze-wash, rgba(160, 118, 27, 0.16));
-  color: #26251f; }
-.mm-words-glyph { width: 10px; height: 10px; border-radius: 50%; flex: none; box-sizing: border-box;
-  border: 1.5px solid var(--bronze, #A0761B); }
-.mm-words-toggle[aria-pressed='true'] .mm-words-glyph {
-  box-shadow: 0 0 0 2px var(--bronze-wash, rgba(160, 118, 27, 0.16)); }
-@media (max-width: 720px) {
+.mm-words-money { font: var(--type-fine); color: var(--ink-soft); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.mm-words-fine { margin: var(--space-tight) 0 0; font: var(--type-fine); color: var(--ink-soft); }
+.mm-words-fine a { color: var(--ink-soft); text-decoration-color: var(--bronze-rule); }
+/* The halo toggle: last chip in the legend, set apart from the industries. */
+.mm-words-toggle { order: 1; margin-top: var(--space-tight); }
+.mm-words-glyph { width: var(--size-party-dot); height: var(--size-party-dot); border-radius: var(--radius-round); flex: none; box-sizing: border-box;
+  border: var(--border-hairline) solid var(--bronze); }
+.mm-words-toggle[aria-pressed='true'] .mm-words-glyph { background: var(--bronze-bright); border-color: var(--bronze-bright); }
+@media (max-width: 1024px) {
   /* The legend is a horizontal scroller here: the toggle leads the row so it
      is never hidden past the end of the industries. */
-  .mm-words-toggle { order: -1; margin: 0 4px 0 0; padding: 3px 11px 3px 8px; border-top: 0;
-    border-right: 1px solid #e4e1d8; border-radius: 7px 0 0 7px; }
+  .mm-words-toggle { order: -1; margin: 0 var(--space-tight) 0 0; }
 }
 `
 
@@ -265,7 +262,7 @@ export function mountWordsLayer(ctx: WordsLayerContext): WordsLayer {
     if (party) p.set('party', party)
     return `/search?${p.toString()}`
   }
-  const partyColour = (party: string) => byId.get(`party:${party}`)?.colour ?? '#79706E'
+  const partyColour = (party: string) => byId.get(`party:${party}`)?.colour ?? partyDot(party)
 
   /** The debate an isolated cluster stands for: its industries' topic with the most money behind it. */
   const groupTopic = (group: string): string | null => {

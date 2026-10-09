@@ -26,6 +26,7 @@
  * safety: model text and all live data reach the DOM through textContent,
  * never innerHTML.
  */
+import { machineLabelHTML } from './labels.js'
 
 const ASK_URL = '/api/ask'
 const SPEAKERS_URL = '/speakers.json'
@@ -66,15 +67,20 @@ function topicPhrase (slug) {
   return (TOPICS[slug] || slug).toLowerCase().replace(/ & /g, ' and ')
 }
 
-// Mirror of app.js PARTY_MAP: party label → [dot class, short text label].
-// Dots are always redundant with text, never colour alone.
+// Mirror of labels.js PARTY_MAP + PARTY_NAMES: party label → [dot class,
+// the short name a label shows, the full name it says]. Dots are always
+// redundant with the name, never colour alone.
 const PARTY_MAP = {
-  'labor': ['alp', 'ALP'], 'liberal': ['lib', 'LIB'], 'nationals': ['nat', 'NAT'],
-  'lnp': ['lnp', 'LNP'], 'country liberal party': ['nat', 'CLP'],
-  'greens': ['grn', 'GRN'], 'one nation': ['onp', 'ONP'], 'independent': ['ind', 'IND'],
-  'centre alliance': ['oth', 'CA'], "katter's australian party": ['oth', 'KAP'],
-  'united australia party': ['oth', 'UAP'], 'australian democrats': ['oth', 'AD'],
-  'family first': ['oth', 'FF'], 'dlp': ['oth', 'DLP'], 'jln': ['oth', 'JLN'],
+  'labor': ['alp', 'Labor', 'Australian Labor Party'], 'liberal': ['lib', 'Liberal', 'Liberal Party'],
+  'nationals': ['nat', 'Nationals', 'The Nationals'], 'lnp': ['lnp', 'LNP', 'Liberal National Party'],
+  'country liberal party': ['nat', 'CLP', 'Country Liberal Party'], 'greens': ['grn', 'Greens', 'Australian Greens'],
+  'one nation': ['onp', 'One Nation', "Pauline Hanson's One Nation"], 'independent': ['ind', 'Independent', 'Independent'],
+  'centre alliance': ['oth', 'Centre Alliance', 'Centre Alliance'],
+  "katter's australian party": ['oth', 'KAP', "Katter's Australian Party"],
+  'united australia party': ['oth', 'UAP', 'United Australia Party'],
+  'australian democrats': ['oth', 'Democrats', 'Australian Democrats'],
+  'family first': ['oth', 'Family First', 'Family First'], 'dlp': ['oth', 'DLP', 'Democratic Labour Party'],
+  'jln': ['oth', 'JLN', 'Jacqui Lambie Network'],
 }
 
 // Mirror of app.js STATE_NAMES for the source meta line.
@@ -159,7 +165,7 @@ async function resolveSpeaker (input) {
 }
 
 // ---------------------------------------------------------------------------
-// Styles — .tvn- prefix, site tokens with fallbacks, light-only
+// Styles — .tvn- prefix, site tokens (tokens.css), light-only
 // ---------------------------------------------------------------------------
 
 const CSS = `
@@ -168,116 +174,101 @@ const CSS = `
      static positions can never widen the host dialog's scroll area — the
      matrix's 390px lesson. */
   position: relative;
-  font-family: var(--sans, 'Public Sans', -apple-system, 'Segoe UI', Roboto, sans-serif);
-  color: var(--ink, #23271F);
+  font: var(--type-body);
+  color: var(--ink);
 }
-.tvn-root :focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
+.tvn-root :focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 2px; }
+/* The shared controls draw their own ring outside the shape. */
+.tvn-root :is(.ui-button, .ui-chip, .ui-input):focus-visible { outline-offset: 3px; }
 
 .tvn-intro {
-  margin: 0 0 0.9rem; font-size: 0.875rem; line-height: 1.55;
-  color: var(--ink-soft, #575C52); max-width: 62ch;
+  margin: 0 0 var(--space-block); font: var(--type-body);
+  color: var(--ink-soft); max-width: 62ch;
 }
 .tvn-root a {
   color: inherit; text-decoration: underline;
-  text-decoration-color: var(--bronze, #A0761B); text-underline-offset: 2px;
+  text-decoration-color: var(--bronze-rule); text-underline-offset: 2px;
 }
-.tvn-root a:hover { color: var(--bronze-ink, #8A5A12); }
+.tvn-root a:hover { color: var(--bronze-ink); text-decoration-color: var(--bronze-ink); }
 
-.tvn-form { display: grid; gap: 0.75rem; margin: 0 0 0.6rem; }
-.tvn-row { display: flex; flex-wrap: wrap; gap: 0.7rem 1.2rem; align-items: flex-end; }
-.tvn-field { display: grid; gap: 0.3rem; min-width: 0; }
-.tvn-label {
-  font-size: 0.625rem; font-weight: 700;
-  color: var(--ink-faint, #6F7468);
-}
-.tvn-input, .tvn-select {
-  font: inherit; font-size: 0.875rem; color: inherit;
-  padding: 0.45rem 0.6rem; border: 1px solid var(--line-strong, #8D897B);
-  border-radius: 3px; background: var(--paper-raised, #FFFFFF);
-}
-.tvn-speaker { width: min(15rem, calc(100vw - 5rem)); }
-.tvn-year { width: 5.4rem; }
-.tvn-era { display: flex; align-items: center; gap: 0.35rem; }
-.tvn-era-dash { color: var(--ink-faint, #6F7468); }
-.tvn-compare {
-  font: 600 0.9375rem/1 var(--sans, inherit); cursor: pointer;
-  background: var(--navy, #142A43); color: var(--on-navy, #F5F1E6);
-  border: none; border-radius: 4px; padding: 0.65rem 1.8rem;
-}
-.tvn-compare:hover { background: var(--navy-raised, #1E3A5C); }
-.tvn-compare[disabled] { opacity: 0.6; cursor: default; }
+/* The form is the shared fields and buttons (ui-controls.css), compact. */
+.tvn-form { display: grid; gap: var(--space-heading); margin: 0 0 var(--space-tight); }
+.tvn-row { display: flex; flex-wrap: wrap; gap: var(--space-heading) var(--space-group); align-items: flex-end; }
+.tvn-field { display: grid; gap: var(--space-tight); min-width: 0; }
+.tvn-label { font: var(--type-label); color: var(--ink); }
+/* Widths beat .ui-input's full width: a name, a topic and a year each have their own. */
+.tvn-root .tvn-speaker { width: min(15rem, calc(100vw - 5rem)); }
+.tvn-root .tvn-select { width: auto; max-width: 100%; }
+.tvn-root .tvn-year { width: 6.5rem; }
+.tvn-era { display: flex; align-items: center; gap: var(--space-tight); }
+.tvn-era-dash { color: var(--ink-soft); }
 
-.tvn-chips { display: flex; flex-wrap: wrap; gap: 0.45rem; }
-.tvn-chip {
-  font: inherit; font-size: 0.8125rem; cursor: pointer;
-  border: 1px solid var(--line, #DFDCD2); border-radius: 999px;
-  background: var(--paper-raised, #FFFFFF); color: var(--ink-soft, #575C52);
-  padding: 0.35rem 0.85rem;
-}
-.tvn-chip:hover { border-color: var(--line-strong, #8D897B); color: var(--ink, #23271F); }
+.tvn-chips { display: flex; flex-wrap: wrap; gap: var(--space-tight); }
 
-.tvn-note, .tvn-error { margin: 0; font-size: 0.75rem; line-height: 1.5; }
-.tvn-note { color: var(--ink-faint, #6F7468); }
-.tvn-error { color: var(--error-ink, #8F2F1F); }
+.tvn-note, .tvn-error { margin: 0; font: var(--type-fine); }
+.tvn-machine { margin: 0 0 var(--space-heading); }
+.tvn-note { color: var(--ink-soft); }
+.tvn-error { color: var(--danger); }
 
 .tvn-question {
-  margin: 0.4rem 0 0.8rem; font-size: 0.875rem;
-  color: var(--ink-soft, #575C52);
+  margin: var(--space-tight) 0 var(--space-block); font: var(--type-body);
+  color: var(--ink-soft);
 }
-.tvn-question b { color: var(--ink, #23271F); }
+.tvn-question b { color: var(--ink); font-weight: 600; }
 
-.tvn-columns { display: grid; gap: 1rem; align-items: start; }
+/* The two eras side by side, each opened by a rule: sections, not boxes. */
+.tvn-columns { display: grid; gap: var(--space-group); align-items: start; }
 @media (min-width: 760px) { .tvn-columns { grid-template-columns: 1fr 1fr; } }
 .tvn-panel {
-  border: 1px solid var(--line, #DFDCD2); background: var(--paper-raised, #FFFFFF);
-  padding: 0.85rem 1rem 0.95rem; min-width: 0;
+  padding-top: var(--space-heading); min-width: 0;
+  border-top: var(--border-hairline) solid var(--divider-default);
 }
 .tvn-kicker {
-  margin: 0 0 0.1rem; font-size: 0.625rem; font-weight: 700;
-  color: var(--bronze-ink, #8A5A12);
+  margin: 0 0 var(--space-line); font: var(--type-label);
+  color: var(--ink-soft);
 }
 .tvn-era-h {
-  margin: 0 0 0.5rem; font-size: 1.05rem; line-height: 1.3;
+  margin: 0 0 var(--space-tight); font: var(--type-subheading);
   font-variant-numeric: tabular-nums;
 }
-.tvn-body { font-size: 0.875rem; line-height: 1.6; overflow-wrap: break-word; }
-.tvn-body p, .tvn-body ul, .tvn-body ol { margin: 0 0 0.6rem; }
-.tvn-body h3, .tvn-body h4 { margin: 0.8rem 0 0.35rem; font-size: 0.9375rem; line-height: 1.35; }
+/* The answer is machine-written, so it speaks in OPAX's sans. */
+.tvn-body { font: var(--type-body); overflow-wrap: break-word; }
+.tvn-body p, .tvn-body ul, .tvn-body ol { margin: 0 0 var(--space-tight); }
+.tvn-body h3, .tvn-body h4 { margin: var(--space-heading) 0 var(--space-line); font: var(--type-strong); }
 .tvn-body ul, .tvn-body ol { padding-left: 1.2rem; }
-.tvn-body li { margin: 0 0 0.25rem; }
+.tvn-body li { margin: 0 0 var(--space-line); }
 .tvn-body blockquote {
-  margin: 0.6rem 0; padding-left: 0.75rem;
-  border-left: 2px solid var(--bronze, #A0761B); color: var(--ink-soft, #575C52);
+  margin: var(--space-tight) 0; padding-left: var(--space-heading);
+  border-left: 2px solid var(--bronze); color: var(--ink-soft);
 }
-.tvn-thin { color: var(--ink-soft, #575C52); }
-.tvn-wait { padding: 0.4rem 0; }
+.tvn-thin { color: var(--ink-soft); }
+.tvn-wait { padding: var(--space-tight) 0; }
 
-.tvn-srcs-kicker { margin: 0.9rem 0 0.35rem; }
+.tvn-srcs-kicker { margin: var(--space-block) 0 var(--space-tight); }
 .tvn-srcs {
   margin: 0; padding: 0; list-style: none;
-  display: grid; gap: 0.5rem; font-size: 0.8125rem; line-height: 1.5;
+  display: grid; gap: var(--space-tight); font: var(--type-fine);
 }
 .tvn-src-date {
   font-variant-numeric: tabular-nums; font-weight: 600;
-  white-space: nowrap; margin-right: 0.45rem;
+  white-space: nowrap; margin-right: var(--space-tight);
 }
-.tvn-src-meta { color: var(--ink-faint, #6F7468); white-space: nowrap; }
-.tvn-src-quote {
-  margin: 0.2rem 0 0; padding-left: 0.75rem;
-  border-left: 2px solid var(--line, #DFDCD2); color: var(--ink-soft, #575C52);
+.tvn-src-meta { color: var(--ink-soft); white-space: nowrap; }
+.tvn-src-meta .ui-party { vertical-align: baseline; }
+/* Two classes deep, so the answer's own blockquote rule above does not win. */
+.tvn-srcs .tvn-src-quote {
+  margin: var(--space-line) 0 0; padding-left: var(--space-heading);
+  border-left: var(--border-hairline) solid var(--divider-default); color: var(--ink-soft);
 }
-
-.tvn-retry {
-  font: inherit; font-size: 0.8125rem; font-weight: 600; cursor: pointer;
-  padding: 0.4rem 0.8rem; border-radius: 2px;
-  background: none; border: 1px solid var(--line-strong, #8D897B);
-  color: var(--ink-soft, #575C52);
-}
-.tvn-retry:hover { background: var(--paper-sunken, #F1EFE8); }
 
 .tvn-fineprint {
-  margin: 0.9rem 0 0; font-size: 0.75rem; line-height: 1.55;
-  color: var(--ink-faint, #6F7468); max-width: 72ch;
+  margin: var(--space-block) 0 0; font: var(--type-fine);
+  color: var(--ink-soft); max-width: 72ch;
+}
+
+.tvn-visually-hidden {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
 }
 `
 
@@ -300,14 +291,23 @@ function el (tag, className, text) {
   return node
 }
 
-/** The site's party chip: dot + short text label (classes from style.css). */
+/** The shared PartyLabel (ui-controls.css): a dot beside the party's short
+ *  name, the full name in the title and the accessible name (mirror of labels.js). */
 function partyChip (party) {
   const hit = PARTY_MAP[String(party).toLowerCase()]
-  const chip = el('span', `party party-${hit ? hit[0] : 'oth'}`)
+  const chip = el('span', `ui-party party party-${hit ? hit[0] : 'oth'}`)
   const dot = el('i')
   dot.setAttribute('aria-hidden', 'true')
-  chip.append(dot, document.createTextNode(hit ? hit[1] : String(party).slice(0, 12)))
-  if (hit) chip.title = party
+  chip.appendChild(dot)
+  const [short, long] = hit ? [hit[1], hit[2]] : [String(party), String(party)]
+  if (short === long) {
+    chip.appendChild(document.createTextNode(short))
+  } else {
+    const shown = el('span', null, short)
+    shown.setAttribute('aria-hidden', 'true')
+    chip.title = long
+    chip.append(shown, el('span', 'tvn-visually-hidden', long))
+  }
   return chip
 }
 
@@ -411,7 +411,7 @@ export function mountThenVsNow (container, opts = {}) {
   let compareAbort = null
   let waitTimer = 0
   let wombatModPromise = null
-  const loadWombat = () => (wombatModPromise ??= import('/wombat.js').catch(() => null))
+  const loadWombat = () => (wombatModPromise ??= import('/wombat.js?v=b2936fedf5').catch(() => null))
 
   // ---- static chrome (no live data passes through this template) ----------
   const root = el('section', 'tvn-root')
@@ -421,16 +421,16 @@ export function mountThenVsNow (container, opts = {}) {
       the same question is put to each era's record separately. Retrieval is
       filtered to the speaker, the topic label and the years, so each answer
       can only draw on speeches from its own era.</p>
-    <form class="tvn-form">
+    <form class="tvn-form" data-ui-size="compact">
       <div class="tvn-row">
         <label class="tvn-field">
           <span class="tvn-label">Speaker</span>
-          <input class="tvn-input tvn-speaker" name="speaker" type="text"
+          <input class="ui-input tvn-speaker" name="speaker" type="text"
                  placeholder="e.g. John Howard" autocomplete="off" list="speakers-list">
         </label>
         <label class="tvn-field">
           <span class="tvn-label">Topic</span>
-          <select class="tvn-select" name="topic">
+          <select class="ui-input tvn-select" name="topic">
             <option value="">Choose a topic</option>
           </select>
         </label>
@@ -439,24 +439,24 @@ export function mountThenVsNow (container, opts = {}) {
         <div class="tvn-field">
           <span class="tvn-label" id="tvn-then-label">Then</span>
           <span class="tvn-era" role="group" aria-labelledby="tvn-then-label">
-            <input class="tvn-input tvn-year" name="thenFrom" type="number" inputmode="numeric"
+            <input class="ui-input tvn-year" name="thenFrom" type="number" inputmode="numeric"
                    min="${YEAR_MIN}" max="${YEAR_MAX}" value="1993" aria-label="Then, from year">
             <span class="tvn-era-dash" aria-hidden="true">to</span>
-            <input class="tvn-input tvn-year" name="thenTo" type="number" inputmode="numeric"
+            <input class="ui-input tvn-year" name="thenTo" type="number" inputmode="numeric"
                    min="${YEAR_MIN}" max="${YEAR_MAX}" value="2009" aria-label="Then, to year">
           </span>
         </div>
         <div class="tvn-field">
           <span class="tvn-label" id="tvn-now-label">Now</span>
           <span class="tvn-era" role="group" aria-labelledby="tvn-now-label">
-            <input class="tvn-input tvn-year" name="nowFrom" type="number" inputmode="numeric"
+            <input class="ui-input tvn-year" name="nowFrom" type="number" inputmode="numeric"
                    min="${YEAR_MIN}" max="${YEAR_MAX}" value="2010" aria-label="Now, from year">
             <span class="tvn-era-dash" aria-hidden="true">to</span>
-            <input class="tvn-input tvn-year" name="nowTo" type="number" inputmode="numeric"
+            <input class="ui-input tvn-year" name="nowTo" type="number" inputmode="numeric"
                    min="${YEAR_MIN}" max="${YEAR_MAX}" value="2026" aria-label="Now, to year">
           </span>
         </div>
-        <button class="tvn-compare" type="submit">Compare</button>
+        <button class="ui-button tvn-compare" data-variant="primary" type="submit">Compare</button>
       </div>
       <p class="tvn-note">The record is still loading toward the present, so the
         most recent years are thin for now. Try these:</p>
@@ -465,6 +465,7 @@ export function mountThenVsNow (container, opts = {}) {
       <p class="tvn-note tvn-resolve-note" hidden></p>
     </form>
     <p class="tvn-question" hidden></p>
+    <div class="tvn-machine" hidden>${machineLabelHTML({ note: 'Each era\'s answer is written by a language model from the speeches retrieved for that era, and the two never see each other. They are not the record: check them against the quoted speeches.' })}</div>
     <div class="tvn-columns" hidden></div>
     <p class="tvn-fineprint" hidden>OPAX shows what was said in each era; it
       does not judge consistency. The two answers are generated separately and
@@ -485,6 +486,7 @@ export function mountThenVsNow (container, opts = {}) {
   const questionEl = root.querySelector('.tvn-question')
   const columnsEl = root.querySelector('.tvn-columns')
   const fineEl = root.querySelector('.tvn-fineprint')
+  const machineEl = root.querySelector('.tvn-machine')
 
   for (const [slug, name] of Object.entries(TOPICS)) {
     const opt = document.createElement('option')
@@ -494,7 +496,7 @@ export function mountThenVsNow (container, opts = {}) {
   }
 
   for (const ex of EXAMPLES) {
-    const chip = el('button', 'tvn-chip', ex.label)
+    const chip = el('button', 'ui-chip', ex.label)
     chip.type = 'button'
     chip.addEventListener('click', () => {
       speakerInput.value = ex.speaker
@@ -756,6 +758,7 @@ export function mountThenVsNow (container, opts = {}) {
       questionEl.appendChild(q)
       questionEl.hidden = false
       columnsEl.hidden = false
+      machineEl.hidden = false
       fineEl.hidden = false
 
       panels.forEach((panel, i) => {
@@ -828,9 +831,10 @@ export function mountThenVsNow (container, opts = {}) {
             return
           }
           panel.bodyEl.replaceChildren(el('p', 'tvn-thin',
-            `This era could not be asked (${err.message || err}). The record is still there.`))
-          const retry = el('button', 'tvn-retry', 'Try again')
+            'This era could not be asked just now. The record is still there.'))
+          const retry = el('button', 'ui-button', 'Try again')
           retry.type = 'button'
+          retry.dataset.uiSize = 'compact'
           retry.addEventListener('click', runCompare)
           panel.bodyEl.appendChild(retry)
           return // an upstream failure would likely repeat; do not queue era two

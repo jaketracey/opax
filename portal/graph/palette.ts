@@ -1,50 +1,84 @@
 // ---------------------------------------------------------------------------
-// The money map's palette. The corpuskit engine resolved its colours from
-// tenant CSS tokens (--rp-cat-*); the portal has no such tokens, so this
-// module is the single self-contained source of truth: one hue per industry
-// cluster, plus an ink (darkened for 4.5:1 text on the paper surface), the
-// paper surface itself, and the selection accent.
+// The money map's palette, read from the design token source
+// (docs/design/design-tokens.json) at build time. esbuild inlines the three
+// groups used here, so a scene is coloured without a stylesheet and
+// buildGraph stays pure for the Node smoke test; the page's chrome reads the
+// same values as tokens.css custom properties (--chart-industry-*, --party-*,
+// --paper). This module holds no colour of its own.
 //
-// Party nodes override their cluster hue with their party's conventional
-// colour (carried per-node in money.json), so the central 'parties'
-// territory is a neutral grey holding individually coloured spheres.
+// One hue per industry cluster, plus an ink darkened for 4.5:1 text on the
+// paper surface. Party nodes override their cluster hue with their party's
+// dot (carried per node in money.json, which the exporter takes from the same
+// source), so the central 'parties' territory is a neutral grey holding
+// individually coloured spheres.
 // ---------------------------------------------------------------------------
+
+import { chart, color, party } from '../../docs/design/design-tokens.json'
 
 export type ClusterColour = { colour: string; ink: string }
 
-export const SURFACE = '#FAF9F6'
-export const ACCENT = '#C28E0E'
-/** The grantor node and its flows: public money, a teal no industry uses. */
-export const GRANTOR_COLOUR = '#2A7F76'
-/** The Commonwealth contracts hub: the second public-money source. */
-export const CONTRACTOR_COLOUR = '#1F6E8C'
+/** Light-theme colour roles by their source name: 'paper', 'bronze', 'moneyInk'. */
+const ROLES = new Map<string, string>()
+for (const group of Object.values(color) as Record<string, unknown>[]) {
+  for (const [name, token] of Object.entries(group)) {
+    if (token && typeof token === 'object' && '$value' in token) ROLES.set(name, String(token.$value))
+  }
+}
+function role(name: string): string {
+  const value = ROLES.get(name)
+  if (!value) throw new Error(`design-tokens.json has no colour role ${name}`)
+  return value
+}
+
+/** The paper the scene is drawn on: the clear colour and the fog. */
+export const SURFACE = role('paper')
+/** The selection accent: the chart mark (bronze), for rings, paths and the scrub. */
+export const ACCENT = role(chart.mark.role)
+/** Bronze ink: the explain scene's guides, rules and gauge tracks. */
+export const BRONZE_INK = role('bronzeInk')
+/** The grants hub and its flows: public money, in the money accent's ink. */
+export const GRANTOR_COLOUR = role('moneyInk')
+/** The Commonwealth contracts hub: the second public-money source, in the teal bills ink. */
+export const CONTRACTOR_COLOUR = role('billsInk')
+/** The public-money territory: both inks are text-safe on paper, so the hue is its own ink. */
+export const PUBLIC_MONEY: ClusterColour = { colour: GRANTOR_COLOUR, ink: GRANTOR_COLOUR }
 
 /**
- * Cluster order fixes palette slots AND the legend order. Largest clusters
- * first (mirroring the source engine's largest-set-first hue assignment);
- * 'parties' leads because it is the map's centre.
+ * Cluster order fixes palette slots AND the legend order: the token source
+ * keeps chart.industry in legend order, largest clusters first, with
+ * 'parties' leading because it is the map's centre.
  */
-export const CLUSTER_COLOURS: ReadonlyMap<string, ClusterColour> = new Map([
-  ['parties', { colour: '#9AA0A8', ink: '#5A616B' }],
-  ['unions', { colour: '#E15759', ink: '#A93843' }],
-  ['finance', { colour: '#4E79A7', ink: '#365F86' }],
-  ['individuals', { colour: '#79706E', ink: '#57504E' }],
-  ['property', { colour: '#F28E2B', ink: '#A85A0F' }],
-  ['mining & energy', { colour: '#9C755F', ink: '#6E4F3D' }],
-  ['hospitality', { colour: '#EDC948', ink: '#7A6414' }],
-  ['media & tech', { colour: '#76B7B2', ink: '#3E7A75' }],
-  ['health & pharma', { colour: '#59A14F', ink: '#3B7134' }],
-  ['gambling', { colour: '#B07AA1', ink: '#7D5273' }],
-  ['legal & lobbying', { colour: '#6A51A3', ink: '#4A3775' }],
-  ['defence & security', { colour: '#37474F', ink: '#263238' }],
-  ['agriculture', { colour: '#6B8E23', ink: '#4A6318' }],
-  ['retail', { colour: '#FF9DA7', ink: '#B04A56' }],
-  ['tobacco & alcohol', { colour: '#A65628', ink: '#7A3C1B' }],
-  ['other', { colour: '#999966', ink: '#6B6B3D' }],
-])
+export const CLUSTER_COLOURS: ReadonlyMap<string, ClusterColour> = new Map(
+  Object.entries(chart.industry)
+    .filter((entry): entry is [string, ClusterColour] => typeof entry[1] === 'object')
+    .map(([cluster, { colour, ink }]) => [cluster, { colour, ink }]),
+)
 
-const FALLBACK: ClusterColour = { colour: '#999966', ink: '#6B6B3D' }
+const FALLBACK: ClusterColour = CLUSTER_COLOURS.get('other')!
 
 export function clusterColour(group: string): ClusterColour {
   return CLUSTER_COLOURS.get(group) ?? FALLBACK
+}
+
+/** The shared dot for every party without one of its own. */
+export const PARTY_OTHER = party.other.dot
+
+/**
+ * A party's dot by its money.json label, for a node exported without a
+ * colour. The same mapping the exporters use (scripts/export_money_graph.py);
+ * every other party shares the muted 'other' dot, which is why a party's
+ * colour is never drawn without its name.
+ */
+const PARTY_DOTS: Readonly<Record<string, string>> = {
+  'Labor': party.labor.dot,
+  'Liberal': party.liberal.dot,
+  'Nationals': party.nationals.dot,
+  'LNP': party.lnp.dot,
+  'Greens': party.greens.dot,
+  'One Nation': party.oneNation.dot,
+  'Independent': party.independent.dot,
+}
+
+export function partyDot(label: string | undefined): string {
+  return (label && PARTY_DOTS[label]) || PARTY_OTHER
 }

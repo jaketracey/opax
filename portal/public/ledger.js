@@ -55,30 +55,36 @@ export function industryLabel (industry) {
 }
 
 /**
- * The money map's cluster hues (mirror of graph/palette.ts — donor nodes in
- * money.json carry a `group` but no colour; party nodes carry their own).
+ * The money map's cluster hues are the --chart-industry-* tokens (tokens.css):
+ * donor nodes in money.json carry a `group` but no colour. The value is a CSS
+ * colour for an inline style (`var(--chart-industry-finance)`), so the palette
+ * lives in one place and no literal is needed.
  */
-const GROUP_COLOURS = new Map([
-  ['parties', '#9AA0A8'],
-  ['unions', '#E15759'],
-  ['finance', '#4E79A7'],
-  ['individuals', '#79706E'],
-  ['property', '#F28E2B'],
-  ['mining & energy', '#9C755F'],
-  ['hospitality', '#EDC948'],
-  ['media & tech', '#76B7B2'],
-  ['health & pharma', '#59A14F'],
-  ['gambling', '#B07AA1'],
-  ['legal & lobbying', '#6A51A3'],
-  ['defence & security', '#37474F'],
-  ['agriculture', '#6B8E23'],
-  ['retail', '#FF9DA7'],
-  ['tobacco & alcohol', '#A65628'],
-  ['other', '#999966'],
+const INDUSTRY_GROUPS = new Set([
+  'parties', 'unions', 'finance', 'individuals', 'property', 'mining & energy',
+  'hospitality', 'media & tech', 'health & pharma', 'gambling', 'legal & lobbying',
+  'defence & security', 'agriculture', 'retail', 'tobacco & alcohol', 'other',
 ])
 
 export function groupColour (group) {
-  return GROUP_COLOURS.get(group) || '#999966'
+  const key = INDUSTRY_GROUPS.has(group) ? group : 'other'
+  return `var(--chart-industry-${key.replace(/ & /g, '-')})`
+}
+
+/**
+ * A party's dot is the site's party colour (--party-*), whatever hue the
+ * export carries, so the ledger matches every other party label. Party
+ * colour is only ever a dot beside the party's name.
+ */
+const PARTY_KEYS = {
+  labor: 'alp', 'australian labor party': 'alp', liberal: 'lib', 'liberal party': 'lib',
+  nationals: 'nat', 'the nationals': 'nat', 'country liberal party': 'nat', lnp: 'lnp',
+  greens: 'grn', 'australian greens': 'grn', 'one nation': 'onp', "pauline hanson's one nation": 'onp',
+  independent: 'ind',
+}
+
+export function partyColour (party) {
+  return `var(--party-${PARTY_KEYS[String(party || '').toLowerCase()] || 'oth'})`
 }
 
 // ---------------------------------------------------------------------------
@@ -91,13 +97,14 @@ export function buildFlows (data) {
   return filterMoneyEdges(data, { type: "receipts" }).map((e) => {
     const donor = byId.get(e.source) || {}
     const party = byId.get(e.target) || {}
+    const partyName = party.label || e.target.replace(/^party:/, '')
     return {
       donorId: e.source,
       donor: donor.label || e.source.replace(/^donor:/, ''),
       industry: donor.industry || 'other',
       colour: donor.colour || groupColour(donor.group),
-      party: party.label || e.target.replace(/^party:/, ''),
-      partyColour: party.colour || '#8D897B',
+      party: partyName,
+      partyColour: partyColour(partyName),
       total: e.total,
       count: e.count,
       firstYear: e.firstYear,
@@ -145,7 +152,7 @@ export function aggregateDonors (flows) {
     }
     d.parties = d.byParty.size
     d.topParty = topName
-    d.topPartyColour = top ? top.colour : '#8D897B'
+    d.topPartyColour = top ? top.colour : partyColour('')
     d.topShare = d.total > 0 && top ? top.total / d.total : 0
     delete d.byParty
     out.push(d)
@@ -343,142 +350,74 @@ const COLUMNS = {
 }
 
 // ---------------------------------------------------------------------------
-// Styles — .lg- prefix, site tokens with fallbacks, light-only
+// Styles — .lg- prefix, site tokens (no fallbacks: every host page loads
+// tokens.css or style.css), light-only. Buttons, chips, fields and the
+// segmented view switch are the shared ui-* classes (ui-controls.css).
 // ---------------------------------------------------------------------------
 
 const CSS = `
-.lg-root {
-  font-family: var(--sans, 'Public Sans', -apple-system, 'Segoe UI', Roboto, sans-serif);
-  color: var(--ink, #23271F);
-}
-.lg-root :focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
+.lg-root { font-family: var(--sans); color: var(--ink); }
+.lg-root [hidden] { display: none !important; }
+.lg-root :focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
 
-.lg-selection { margin: 0 0 .4rem; font-size: .875rem; font-weight: 600; color: var(--navy, #142A43); overflow-wrap: anywhere; }
-.lg-filters { margin: .75rem 0; border: 1px solid var(--line, #DFDCD2); border-radius: 4px; background: var(--paper-raised, #FFFFFF); }
-.lg-filters > summary { padding: .65rem .85rem; min-height: 44px; cursor: pointer; font-size: .875rem; font-weight: 600; color: var(--navy, #142A43); }
-.lg-filters[open] > summary { border-bottom: 1px solid var(--line, #DFDCD2); }
-.lg-filters .lg-toolbar { padding: 1rem; margin: 0; }
-.lg-filters .lg-year-help { padding: 0 1rem 1rem; margin: 0; }
-.lg-results-tools { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: .5rem 1rem; margin: .75rem 0; }
+.lg-selection { margin: 0 0 var(--space-line); font: var(--type-strong); color: var(--navy); overflow-wrap: anywhere; }
+/* The filters are one sheet behind a disclosure: it holds a form, so radius 12. */
+.lg-filters { margin: var(--space-heading) 0; border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md); background: var(--paper-raised); }
+.lg-filters > summary { min-height: var(--size-target); padding: var(--space-heading) var(--space-block); box-sizing: border-box; cursor: pointer; font: var(--type-control); color: var(--navy); }
+.lg-filters[open] > summary { border-bottom: var(--border-hairline) solid var(--divider-subtle); }
+.lg-filters .lg-toolbar { padding: var(--space-block); margin: 0; }
+.lg-filters .lg-year-help { padding: 0 var(--space-block) var(--space-block); margin: 0; }
+.lg-results-tools { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--space-tight) var(--space-block); margin: var(--space-heading) 0; }
 .lg-results-tools .lg-actions { flex-wrap: wrap; margin-left: 0; }
-.lg-copy-status { margin: .5rem 0; font-size: .8125rem; color: var(--ink-soft, #575C52); }
-.lg-copy-fallback { width: 100%; margin: .5rem 0; }
-.lg-toolbar {
-  display: flex; flex-wrap: wrap; gap: 0.75rem 1rem; align-items: flex-end;
-  margin-bottom: 0.75rem;
-}
-.lg-field { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
-.lg-label {
-  font-size: 0.6875rem; font-weight: 600;
-  color: var(--ink-faint, #6F7468);
-}
-.lg-input, .lg-select {
-  font: inherit; font-size: 0.875rem; color: var(--ink, #23271F);
-  background: var(--paper-raised, #FFFFFF);
-  border: 1px solid var(--line-strong, #8D897B); border-radius: 2px;
-  padding: 0.375rem 0.5rem; min-height: 2.125rem;
-}
-.lg-select {
-  appearance: none; -webkit-appearance: none; padding-right: 2rem;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%23142A43' stroke-width='1.5'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right .6rem center;
-}
-.lg-search { width: 15rem; max-width: 100%; }
-.lg-year { width: 6rem; font-variant-numeric: tabular-nums; }
-.lg-yearrow { display: flex; align-items: center; gap: 0.35rem; }
-.lg-yearrow span { color: var(--ink-faint, #6F7468); }
+.lg-copy-status { margin: var(--space-tight) 0; font: var(--type-fine); color: var(--ink-soft); }
+.lg-root .lg-copy-fallback { width: 100%; margin: var(--space-tight) 0; }
+.lg-toolbar { display: flex; flex-wrap: wrap; gap: var(--space-heading) var(--space-block); align-items: flex-end; margin-bottom: var(--space-heading); }
+.lg-field { display: flex; flex-direction: column; gap: var(--space-line); min-width: 0; }
+.lg-label { font: var(--type-label); color: var(--ink-soft); }
+.lg-root .lg-search { width: 15rem; max-width: 100%; }
+.lg-root .lg-year { width: 6rem; font-variant-numeric: tabular-nums; }
+.lg-yearrow { display: flex; align-items: center; gap: var(--space-line); }
+.lg-yearrow span { color: var(--ink-faint); }
+.lg-choice { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-line); min-height: var(--ui-height); }
 
-.lg-views { display: flex; }
-.lg-view, .lg-jur {
-  font: inherit; font-size: 0.8125rem; font-weight: 600; cursor: pointer;
-  padding: 0.4rem 0.85rem; min-height: 2.125rem;
-  background: var(--paper-raised, #FFFFFF); color: var(--ink-soft, #575C52);
-  border: 1px solid var(--line-strong, #8D897B);
-}
-.lg-view + .lg-view, .lg-jur + .lg-jur { border-left: 0; }
-.lg-view:first-child, .lg-jur:first-child { border-radius: 2px 0 0 2px; }
-.lg-view:last-child, .lg-jur:last-child { border-radius: 0 2px 2px 0; }
-.lg-view[aria-pressed="true"], .lg-jur[aria-pressed="true"] {
-  background: var(--navy, #142A43); border-color: var(--navy, #142A43); color: #FFFFFF;
-}
+.lg-actions { display: flex; gap: var(--space-tight); margin-left: auto; align-items: flex-end; }
 
-.lg-actions { display: flex; gap: 0.5rem; margin-left: auto; align-items: flex-end; }
-.lg-btn {
-  font: inherit; font-size: 0.8125rem; font-weight: 600; cursor: pointer;
-  padding: 0.4rem 0.8rem; min-height: 2.125rem; border-radius: 2px;
-  background: none; border: 1px solid var(--line-strong, #8D897B);
-  color: var(--ink-soft, #575C52);
-}
-.lg-btn:hover { background: var(--paper-sunken, #F1EFE8); }
-.lg-export { border-color: var(--bronze-ink, #8A5A12); color: var(--bronze-ink, #8A5A12); }
-.lg-export:hover { background: var(--bronze-wash, rgba(160, 118, 27, 0.16)); }
+.lg-summary { margin: 0 0 var(--space-tight); font: var(--type-metadata); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.lg-summary b { font-weight: 600; color: var(--ink); }
+.lg-scope { display: flex; flex-wrap: wrap; gap: var(--space-tight); margin: 0 0 var(--space-row); }
 
-.lg-summary {
-  margin: 0 0 0.5rem; font-size: 0.8125rem; color: var(--ink-soft, #575C52);
-  font-variant-numeric: tabular-nums;
-}
-.lg-summary b { font-weight: 700; color: var(--ink, #23271F); }
-.lg-scope-chip { display: inline-flex; align-items: center; max-width: 100%; gap: .5rem; margin: 0 0 .6rem; padding: .3rem .55rem; border: 1px solid var(--bronze-ink, #8A5A12); background: var(--bronze-wash, rgba(160,118,27,.12)); font-size: .8125rem; }
-.lg-scope-chip > span { min-width: 0; overflow-wrap: anywhere; }
-.lg-chip-remove { font: inherit; flex: none; min-height: 44px; border: 0; background: transparent; color: var(--bronze-ink, #8A5A12); text-decoration: underline; cursor: pointer; padding: .1rem .3rem; }
-
-.lg-tablewrap {
-  overflow: auto; max-height: min(65vh, 850px);
-  border: 1px solid var(--line-strong, #8D897B);
-  background: var(--paper-raised, #FFFFFF);
-}
-.lg-table {
-  border-collapse: collapse; width: 100%; min-width: 760px;
-  font-size: 0.875rem; line-height: 1.4;
-}
-.lg-table thead th {
-  position: sticky; top: 0; z-index: 2; padding: 0;
-  background: var(--paper-sunken, #F1EFE8);
-  border-bottom: 1px solid var(--line-strong, #8D897B);
-  text-align: left; white-space: nowrap;
-}
-.lg-sort {
-  font: inherit; font-size: 0.8125rem; font-weight: 700; cursor: pointer;
-  color: var(--ink-soft, #575C52); background: none; border: 0;
-  width: 100%; text-align: inherit; padding: 0.5rem 0.625rem;
-  display: flex; gap: 0.3rem; align-items: baseline;
-}
-.lg-sort:hover { color: var(--ink, #23271F); }
-th[aria-sort] .lg-sort { color: var(--ink, #23271F); }
-.lg-arrow { font-size: 0.625rem; color: var(--bronze-ink, #8A5A12); }
+/* The table: no box, a rule above and below. */
+.lg-tablewrap { overflow: auto; max-height: min(65vh, 850px); border-block: var(--border-hairline) solid var(--divider-default); }
+.lg-table { border-collapse: collapse; width: 100%; min-width: 760px; font: var(--type-metadata); }
+.lg-table thead th { position: sticky; top: 0; z-index: 2; padding: 0; background: var(--paper); border-bottom: var(--border-hairline) solid var(--divider-default); text-align: left; white-space: nowrap; }
+.lg-sort { display: flex; gap: var(--space-line); align-items: baseline; width: 100%; padding: var(--space-tight) var(--space-row); border: 0; background: none; color: var(--ink-soft); font: var(--type-label); text-align: inherit; cursor: pointer; }
+.lg-sort:hover, th[aria-sort] .lg-sort { color: var(--ink); }
+.lg-arrow { color: var(--bronze-ink); }
 .lg-th-num { text-align: right; }
 .lg-th-num .lg-sort { justify-content: flex-end; }
-
-.lg-table td {
-  padding: 0.45rem 0.625rem; border-bottom: 1px solid var(--line, #DFDCD2);
-  vertical-align: baseline;
-}
-.lg-table tbody tr:hover td { background: var(--paper-sunken, #F1EFE8); }
-.lg-num {
-  text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap;
-}
-.lg-cell-label { display: inline-flex; align-items: baseline; gap: 0.4rem; }
+.lg-table td { padding: var(--space-tight) var(--space-row); border-bottom: var(--border-hairline) solid var(--divider-subtle); vertical-align: baseline; }
+.lg-table tbody tr:hover td { background: var(--paper-sunken); }
+.lg-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.lg-cell-label { display: inline-flex; align-items: baseline; gap: var(--space-tight); }
+/* A dot beside its name: the industry's chart hue, or the party's own colour. */
 .lg-dot {
-  flex: none; width: 0.55rem; height: 0.55rem; border-radius: 50%;
-  align-self: center; border: 1px solid rgba(0, 0, 0, 0.25);
+  flex: none; align-self: center; width: var(--size-party-dot); height: var(--size-party-dot); border-radius: var(--radius-round);
+  border: var(--border-hairline) solid color-mix(in srgb, var(--ink) 25%, transparent);
 }
-.lg-table a {
-  color: inherit; text-decoration: underline;
-  text-decoration-color: var(--bronze, #A0761B); text-underline-offset: 2px;
-}
-.lg-table a:hover { color: var(--bronze-ink, #8A5A12); }
-.lg-share { color: var(--ink-faint, #6F7468); }
-.lg-empty { padding: 1.5rem 0.75rem; text-align: center; color: var(--ink-faint, #6F7468); }
-.lg-status { padding: 1.5rem 0.75rem; font-size: 0.875rem; color: var(--ink-soft, #575C52); }
-.lg-status .lg-btn { margin-left: 0.5rem; }
+.lg-table a { color: inherit; text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 2px; }
+.lg-table a:hover { color: var(--bronze-ink); }
+.lg-share { color: var(--ink-faint); }
+.lg-empty { padding: var(--space-group) var(--space-row); text-align: center; color: var(--ink-soft); }
+.lg-status { padding: var(--space-group) var(--space-row); font: var(--type-body); color: var(--ink-soft); }
+.lg-root .lg-status .ui-button { margin-left: var(--space-tight); }
 
-.lg-fineprint, .lg-year-help {
-  margin: 0.6rem 0 0; font-size: 0.75rem; line-height: 1.55;
-  color: var(--ink-faint, #6F7468);
-}
-.lg-year-help { margin: 0 0 0.75rem; }
-.lg-period { display: block; margin-top: 0.25rem; }
-.lg-fineprint a { color: var(--bronze-ink, #8A5A12); }
+.lg-fineprint, .lg-year-help { margin: var(--space-row) 0 0; max-width: var(--size-readable); font: var(--type-fine); color: var(--ink-soft); }
+.lg-year-help { margin: 0 0 var(--space-heading); }
+.lg-period { display: block; margin-top: var(--space-line); }
+.lg-fineprint p { margin: 0; }
+.lg-fineprint a, .lg-fine-notes summary { color: var(--bronze-ink); }
+.lg-fine-notes summary { cursor: pointer; padding: var(--space-line) 0; }
+.lg-fine-notes p { margin-top: var(--space-line); }
 
 .lg-visually-hidden {
   position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
@@ -489,38 +428,30 @@ th[aria-sort] .lg-sort { color: var(--ink, #23271F); }
 @media (max-width: 960px) {
   .lg-table { display: none; }
   .lg-tablewrap { overflow-x: hidden; }
-  .lg-compact-sort {
-    display: flex; align-items: flex-end; gap: 0.5rem; margin: 0; flex: 1 1 100%;
-  }
+  .lg-compact-sort { display: flex; align-items: flex-end; gap: var(--space-tight); margin: 0; flex: 1 1 100%; }
   .lg-compact-sort .lg-field { flex: 1; }
-  .lg-compact-sort .lg-select, .lg-compact-sort .lg-btn { min-height: 2.75rem; font-size: 1rem; }
-  .lg-compact-sort .lg-btn { min-width: 7.5rem; }
+  .lg-root .lg-compact-sort .ui-button { min-width: 7.5rem; }
   .lg-cards:not([hidden]) { display: block; list-style: none; margin: 0; padding: 0; }
-  .lg-card { padding: 1rem; border-bottom: 1px solid var(--line, #DFDCD2); }
+  .lg-card { padding: var(--space-block) 0; border-bottom: var(--border-hairline) solid var(--divider-subtle); }
   .lg-card:last-child { border-bottom: 0; }
-  .lg-card-top { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.5rem 1rem; align-items: start; }
-  .lg-card-label { display: block; color: var(--ink-soft, #575C52); font-size: 0.75rem; line-height: 1.5; }
-  .lg-card a { color: var(--navy, #142A43); text-decoration-color: var(--bronze, #A0761B); text-underline-offset: 3px; }
-  .lg-card-donor { display: inline-flex; align-items: center; min-height: 2.75rem; font-weight: 700; line-height: 1.45; overflow-wrap: anywhere; }
+  .lg-card-top { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-tight) var(--space-block); align-items: start; }
+  .lg-card-label { display: block; font: var(--type-fine); color: var(--ink-soft); }
+  .lg-card a { color: var(--navy); text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
+  .lg-card-donor { display: inline-flex; align-items: center; min-height: var(--size-target); font: var(--type-strong); overflow-wrap: anywhere; }
   .lg-card-value { text-align: right; }
-  .lg-card-value strong { display: block; padding-top: 0.375rem; font-size: 1.25rem; line-height: 1.4; font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .lg-card-recipient { margin-top: 0.75rem; }
+  .lg-card-value strong { display: block; padding-top: var(--space-line); font: var(--type-heading); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .lg-card-recipient { margin-top: var(--space-heading); }
   .lg-card-recipient .lg-cell-label { display: flex; align-items: center; min-width: 0; }
-  .lg-card-recipient a { display: inline-flex; align-items: center; min-height: 2.75rem; font-weight: 600; overflow-wrap: anywhere; }
-  .lg-card-share { display: block; font-size: 0.8125rem; color: var(--ink-soft, #575C52); }
-  .lg-card-meta { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; margin-top: 0.5rem; font-size: 0.8125rem; line-height: 1.55; color: var(--ink-soft, #575C52); }
+  .lg-card-recipient a { display: inline-flex; align-items: center; min-height: var(--size-target); font-weight: 600; overflow-wrap: anywhere; }
+  .lg-card-share { display: block; font: var(--type-fine); color: var(--ink-soft); }
+  .lg-card-meta { display: flex; flex-wrap: wrap; gap: var(--space-line) var(--space-block); margin-top: var(--space-tight); font: var(--type-fine); color: var(--ink-soft); }
 }
 
 @media (max-width: 640px) {
-  .lg-input, .lg-select { font-size: 1rem; min-height: 2.75rem; }
-  .lg-btn, .lg-view, .lg-jur { min-height: 2.75rem; }
-  .lg-year { width: 5.5rem; }
+  .lg-root .lg-year { width: 5.5rem; }
   .lg-field[aria-label="Jurisdiction"] { flex: 1 1 100%; }
-  .lg-field[aria-label="Jurisdiction"] .lg-views { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.375rem; }
-  .lg-field[aria-label="Jurisdiction"] .lg-jur { border: 1px solid var(--line-strong, #8D897B); border-radius: 2px; }
-  .lg-field:has(> #lg-industry), .lg-field:has(> #lg-party) { flex: 1 1 calc(50% - 0.5rem); }
-  .lg-select { max-width: 100%; }
-  .lg-search { width: 100%; }
+  .lg-field:has(> #lg-industry), .lg-field:has(> #lg-party) { flex: 1 1 calc(50% - var(--space-tight)); }
+  .lg-root .lg-search { width: 100%; }
   .lg-field-search { flex: 1 1 100%; }
   .lg-actions { margin-left: 0; }
 }
@@ -611,50 +542,50 @@ export function mountLedger (container, opts = {}) {
   root.innerHTML = `
     <p class="lg-selection"></p>
     <p class="lg-summary" aria-live="polite" aria-atomic="true"></p>
-    <div class="lg-scope-chip" id="lg-scope-chip" hidden></div>
+    <div class="lg-scope" id="lg-scope-chip" hidden></div>
     <details class="lg-filters">
     <summary>Change filters<span id="lg-filter-count"></span></summary>
-    <div class="lg-toolbar" role="group" aria-label="Ledger filters">
+    <div class="lg-toolbar" role="group" aria-label="Ledger filters" data-ui-size="compact">
       <div class="lg-field" role="group" aria-label="Jurisdiction">
         <span class="lg-label" aria-hidden="true">Jurisdiction</span>
-        <div class="lg-views">
+        <div class="lg-choice">
           ${Object.entries(JURISDICTIONS).map(([k, j]) =>
-            `<button type="button" class="lg-jur" data-jur="${k}" aria-pressed="${k === state.jur ? 'true' : 'false'}">${j.label}</button>`).join('')}
+            `<button type="button" class="ui-chip lg-jur" data-jur="${k}" aria-pressed="${k === state.jur ? 'true' : 'false'}">${j.label}</button>`).join('')}
         </div>
       </div>
       <div class="lg-field" role="group" aria-label="View">
         <span class="lg-label" aria-hidden="true">View</span>
-        <div class="lg-views">
-          <button type="button" class="lg-view" data-view="flows" aria-pressed="true">Flows</button>
-          <button type="button" class="lg-view" data-view="donors" aria-pressed="false">By donor</button>
+        <div class="lg-views ui-segmented">
+          <button type="button" class="ui-button lg-view" data-view="flows" aria-pressed="true">Flows</button>
+          <button type="button" class="ui-button lg-view" data-view="donors" aria-pressed="false">By donor</button>
         </div>
       </div>
       <div class="lg-field lg-field-search">
         <label class="lg-label" for="lg-q">Filter donor or party</label>
-        <input class="lg-input lg-search" id="lg-q" type="search" autocomplete="off"
+        <input class="ui-input lg-search" id="lg-q" type="search" autocomplete="off"
                placeholder="e.g. Mineralogy, Labor" />
       </div>
       <div class="lg-field">
         <label class="lg-label" for="lg-industry">Industry</label>
-        <select class="lg-select" id="lg-industry"><option value="">All industries</option></select>
+        <select class="ui-input" id="lg-industry"><option value="">All industries</option></select>
       </div>
       <div class="lg-field">
         <label class="lg-label" for="lg-party">Party</label>
-        <select class="lg-select" id="lg-party"><option value="">All parties</option></select>
+        <select class="ui-input" id="lg-party"><option value="">All parties</option></select>
       </div>
       <div class="lg-field">
         <span class="lg-label" id="lg-years-label">Return years</span>
         <div class="lg-yearrow" role="group" aria-labelledby="lg-years-label">
-          <input class="lg-input lg-year" id="lg-year-from" type="number" inputmode="numeric"
+          <input class="ui-input lg-year" id="lg-year-from" type="number" inputmode="numeric"
                  min="${YEAR_MIN}" max="${YEAR_MAX}" placeholder="${YEAR_MIN}" aria-label="From return year" aria-describedby="lg-year-help" />
           <span aria-hidden="true">–</span>
-          <input class="lg-input lg-year" id="lg-year-to" type="number" inputmode="numeric"
+          <input class="ui-input lg-year" id="lg-year-to" type="number" inputmode="numeric"
                  min="${YEAR_MIN}" max="${YEAR_MAX}" placeholder="${YEAR_MAX}" aria-label="To return year" aria-describedby="lg-year-help" />
         </div>
       </div>
       <div class="lg-field">
         <label class="lg-label" for="lg-min">Min total</label>
-        <select class="lg-select" id="lg-min">
+        <select class="ui-input" id="lg-min">
           <option value="0">Any amount</option>
           <option value="100000">$100K+</option>
           <option value="1000000">$1M+</option>
@@ -665,22 +596,22 @@ export function mountLedger (container, opts = {}) {
 
     <p class="lg-year-help" id="lg-year-help">Use the first year of a financial year (2020 for 2020–21), or the polling year for election returns.</p>
     </details>
-    <div class="lg-results-tools">
+    <div class="lg-results-tools" data-ui-size="compact">
     <div class="lg-actions">
-      <button type="button" class="lg-btn" id="lg-clear" hidden>Clear filters</button>
-      <button type="button" class="lg-btn" id="lg-copy" disabled>Copy link</button>
-      <button type="button" class="lg-btn lg-export" id="lg-export" disabled>Export CSV</button>
+      <button type="button" class="ui-button" data-variant="quiet" id="lg-clear" hidden>Clear filters</button>
+      <button type="button" class="ui-button" id="lg-copy" disabled>Copy link</button>
+      <button type="button" class="ui-button lg-export" id="lg-export" disabled>Export CSV</button>
     </div>
     <div class="lg-compact-sort">
       <div class="lg-field">
         <label class="lg-label" for="lg-compact-sort">Sort by</label>
-        <select class="lg-select" id="lg-compact-sort" disabled></select>
+        <select class="ui-input" id="lg-compact-sort" disabled></select>
       </div>
-      <button type="button" class="lg-btn" id="lg-sort-direction" disabled>High to low</button>
+      <button type="button" class="ui-button" id="lg-sort-direction" disabled>High to low</button>
     </div>
     </div>
     <p class="lg-copy-status" role="status" hidden></p>
-    <input class="lg-input lg-copy-fallback" aria-label="Link to these receipts" readonly hidden />
+    <input class="ui-input lg-copy-fallback" aria-label="Link to these receipts" readonly hidden />
     <div class="lg-tablewrap" role="region" tabindex="0" aria-label="Political receipts (scrollable)">
       <div class="lg-status" role="status">Loading the ledger…</div>
       <ul class="lg-cards" hidden></ul>
@@ -691,7 +622,7 @@ export function mountLedger (container, opts = {}) {
       </table>
     </div>
 
-    <p class="lg-fineprint"></p>
+    <div class="lg-fineprint"></div>
   `
 
   const $ = (sel) => root.querySelector(sel)
@@ -926,9 +857,19 @@ export function mountLedger (container, opts = {}) {
     scopeEl.hidden = !state.focusDonorId
     scopeEl.replaceChildren()
     if (state.focusDonorId) {
-      scopeEl.append(el('span', null, `Exact donor: ${state.focusDonor}`))
-      const remove = el('button', 'lg-chip-remove', 'Remove')
+      // A filter chip (ui-controls.css): "Exact donor Name ✕", the whole chip removes it.
+      const remove = el('button', 'ui-filter-chip')
       remove.type = 'button'; remove.setAttribute('aria-label', `Remove donor filter: ${state.focusDonor}`)
+      const text = el('span', 'ui-filter-chip__text')
+      text.append(el('span', 'ui-filter-chip__key', 'Exact donor'), el('span', 'ui-filter-chip__value', state.focusDonor))
+      const svgNS = 'http://www.w3.org/2000/svg'
+      const cross = document.createElementNS(svgNS, 'svg')
+      cross.setAttribute('viewBox', '0 0 16 16')
+      cross.setAttribute('aria-hidden', 'true')
+      const path = document.createElementNS(svgNS, 'path')
+      path.setAttribute('d', 'm4 4 8 8M12 4l-8 8')
+      cross.appendChild(path)
+      remove.append(text, cross)
       remove.addEventListener('click', () => { state.focusDonorId = ''; state.focusDonor = ''; paramError = ''; changed(); filtersEl.open = true; searchEl.focus() })
       scopeEl.appendChild(remove)
     }
@@ -1120,23 +1061,28 @@ export function mountLedger (container, opts = {}) {
   }
 
   /** Fineprint from the file itself: state exports name their commission,
-   *  threshold and licence in meta; the federal file predates those fields. */
+   *  threshold and licence in meta; the federal file predates those fields.
+   *  One short line (source, coverage, the floor caveat, the ways in); the
+   *  threshold, exclusions and licence keep every word one tap below it. */
   function renderFineprint (data) {
     const m = data.meta || {}
     const donors = data.nodes.filter((n) => n.kind === 'donor').length
-    fineEl.textContent = m.jurisdiction
-      ? `${m.commission} (${m.sourceShort}), ${m.coverage}, top ${NUM.format(donors)} disclosed donors. ` +
-        `${m.threshold} Totals are a floor, not a ceiling. Only records assigned to a party are included; ` +
-        `public funding and internal party transfers excluded. ${m.not_summed || NOT_SUMMED} ` +
-        `Licence: ${m.licence}. `
-      : `AEC disclosures ${YEAR_MIN}–${YEAR_MAX}, top ${NUM.format(donors)} disclosed donors. Donations under ` +
-        'the disclosure threshold are not reported: totals are a floor, not a ceiling. ' +
-        `Public electoral funding and internal party transfers excluded. ${NOT_SUMMED} `
+    const line = el('p', 'lg-fine-line', m.jurisdiction
+      ? `${m.commission} (${m.sourceShort}), ${m.coverage}, top ${NUM.format(donors)} disclosed donors. Totals are a floor, not a ceiling. `
+      : `AEC disclosures ${YEAR_MIN}–${YEAR_MAX}, top ${NUM.format(donors)} disclosed donors. Totals are a floor, not a ceiling. `)
     const methods = el('a', null, 'Methodology')
     methods.href = '#/methods'
     const rawLink = el('a', null, 'Raw data')
     rawLink.href = JURISDICTIONS[state.jur].file
-    fineEl.append(methods, ' · ', rawLink)
+    line.append(methods, ' · ', rawLink)
+    const notes = el('details', 'lg-fine-notes')
+    notes.append(el('summary', null, m.jurisdiction ? 'Notes, caveats and licence' : 'Notes and caveats'), el('p', null, m.jurisdiction
+      ? `${m.threshold} Only records assigned to a party are included; ` +
+        `public funding and internal party transfers excluded. ${m.not_summed || NOT_SUMMED} ` +
+        `Licence: ${m.licence}.`
+      : 'Donations under the disclosure threshold are not reported. ' +
+        `Public electoral funding and internal party transfers excluded. ${NOT_SUMMED}`))
+    fineEl.replaceChildren(line, notes)
   }
 
   async function fetchData (jur) {
@@ -1222,8 +1168,9 @@ export function mountLedger (container, opts = {}) {
       loadError = true
       statusEl.hidden = false
       statusEl.textContent = 'The ledger could not be loaded.'
-      const retry = el('button', 'lg-btn', 'Try again')
+      const retry = el('button', 'ui-button', 'Try again')
       retry.type = 'button'
+      retry.dataset.uiSize = 'compact'
       retry.addEventListener('click', () => load(state.jur))
       statusEl.appendChild(retry)
     }

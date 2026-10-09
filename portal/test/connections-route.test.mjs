@@ -9,7 +9,8 @@ test('the connections directory is a route of the app shell, not a page of its o
   assert.match(shell,/<section id="panel-connections" class="panel" hidden/);
   for(const id of ['connections-body','connection-search','connection-kind','connection-status','connection-list','connection-detail'])assert.ok(shell.includes(`id="${id}"`),id);
   assert.ok(!shell.includes('connections.html'),'the shell links the route, never the old file');
-  assert.ok(shell.includes('href="/connections"'));
+  // The money sub-navigation links it (its tab is "Programs & places").
+  assert.match(read('navigation.js'),/\['\/connections', 'Programs & places'\]/);
   assert.match(read('app.js'),/const PANELS = \[[^\]]*"connections"/);
   assert.match(read('app.js'),/view === "connections"/);
   assert.ok(!read('evidence.js').includes('connections.html'),'evidence panels deep-link into the route');

@@ -23,7 +23,7 @@ import {
   type MapNode,
 } from './map-types.ts'
 import { type EngineData, KnowledgeMapEngine, webglAvailable } from './map3d-engine.ts'
-import { ACCENT, CLUSTER_COLOURS, clusterColour, CONTRACTOR_COLOUR, GRANTOR_COLOUR, SURFACE } from './palette.ts'
+import { CLUSTER_COLOURS, clusterColour, CONTRACTOR_COLOUR, GRANTOR_COLOUR, partyDot, PUBLIC_MONEY } from './palette.ts'
 import { type Reveal, runReveal } from './reveal.ts'
 import { mountWordsLayer } from './words.ts'
 import { cpiMultiplier } from './cpi.ts'
@@ -205,6 +205,19 @@ function yearSpan(first: number | null, last: number | null): string {
   return first === last ? `${first}` : `${first}–${last}`
 }
 
+/**
+ * The two public-money hubs are drawn in the token inks (grants in the money
+ * ink, contracts in the bills teal) whatever colour the export carries.
+ */
+const hubColour = (n: { flow?: string }) => (n.flow === 'contracts' ? CONTRACTOR_COLOUR : GRANTOR_COLOUR)
+
+/** A node's mark colour: its own (a party's dot, a hub's ink), else its cluster's hue. */
+const markColour = (n: MoneyNode): string =>
+  n.kind === 'grantor' ? hubColour(n) : n.colour ?? (n.kind === 'party' ? partyDot(n.label) : clusterColour(n.group).colour)
+
+/** Sentence case for a lower-case data key shown as a label ("mining & energy"). */
+const sentence = (text: string) => text.charAt(0).toUpperCase() + text.slice(1)
+
 const toMapNode = (n: MoneyNode): MapNode => ({
   id: n.id,
   label: n.label,
@@ -216,7 +229,7 @@ const toMapNode = (n: MoneyNode): MapNode => ({
   count: n.count,
   firstYear: n.firstYear,
   lastYear: n.lastYear,
-  ...(n.colour ? { colour: n.colour } : {}),
+  ...(n.colour || n.kind === 'party' || n.kind === 'grantor' ? { colour: markColour(n) } : {}),
 })
 
 const toMapEdge = (e: MoneyEdge): MapEdge => ({
@@ -290,7 +303,7 @@ export function buildGraph(raw: MoneyGraph): {
 
   const groupStyles = new Map<string, GroupStyle>()
   for (const [group, count] of counts) {
-    const style = group === 'public money' ? { colour: GRANTOR_COLOUR, ink: '#245E58' } : clusterColour(group)
+    const style = group === 'public money' ? PUBLIC_MONEY : clusterColour(group)
     groupStyles.set(group, {
       slot: slots.get(group) ?? (slots.get('other') ?? 0),
       colour: style.colour,
@@ -314,264 +327,265 @@ const STYLE_ID = 'money-map-styles'
 const CSS = `
 .mm-root ::-webkit-scrollbar { width: 8px; height: 8px; }
 .mm-root ::-webkit-scrollbar-track { background: transparent; }
-.mm-root ::-webkit-scrollbar-thumb { background: #cfc9ba; border-radius: 4px; }
-.mm-root ::-webkit-scrollbar-thumb:hover { background: #a0761b; }
-.mm-root * { scrollbar-width: thin; scrollbar-color: #cfc9ba transparent; }
-.mm-root { position: relative; overflow: hidden; background: ${SURFACE};
-  font: 14px/1.45 system-ui, -apple-system, 'Segoe UI', sans-serif; color: #33322e;
-  transition: height 360ms cubic-bezier(0.22, 0.7, 0.3, 1); }
+.mm-root ::-webkit-scrollbar-thumb { background: var(--divider-default); border-radius: var(--radius-pill); }
+.mm-root ::-webkit-scrollbar-thumb:hover { background: var(--bronze); }
+.mm-root * { scrollbar-width: thin; scrollbar-color: var(--divider-default) transparent; }
+.mm-root { position: relative; overflow: hidden; background: var(--paper);
+  font: var(--type-fine); color: var(--ink);
+  transition: height var(--duration-gentle) var(--ease-standard); }
 @media (prefers-reduced-motion: reduce) { .mm-root { transition: none; } }
 /* A host grown to hold its card (see fitHostToCard): the card may use the
    room, short of whatever gap fitHostToCard reserved above it for chrome
    (a phone's scrub bar, relocated to the top) and a floor of visible map. */
 .mm-root.mm-grown .mm-card { max-height: calc(100% - var(--mm-grown-gap, 64px)); }
-.mm-connections { position: absolute; inset: 0; overflow: auto; padding: 18px; overscroll-behavior: contain; }
-.mm-connections-title { font-weight: 600; margin: 0 0 4px; }
-.mm-connections-note { color: #66665d; font-size: 12px; margin: 0 0 16px; }
+.mm-connections { position: absolute; inset: 0; overflow: auto; padding: var(--space-block); overscroll-behavior: contain; }
+.mm-connections-title { margin: 0 0 var(--space-line); font: var(--type-strong); }
+.mm-connections-note { margin: 0 0 var(--space-block); font: var(--type-fine); color: var(--ink-soft); }
 .mm-connections ul { list-style: none; padding: 0; margin: 0; }
-.mm-connections li { margin: 0 0 22px; }
-.mm-connection-names { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-.mm-connection-names button, .mm-connection-names a { flex: 1; min-width: 0; display: flex; gap: 6px; align-items: baseline; background: none; border: none; padding: 4px 0; font: inherit; color: inherit; text-align: left; cursor: pointer; overflow-wrap: anywhere; text-decoration: none; }
-.mm-connection-names a span { text-decoration: underline; text-underline-offset: 3px; }
-.mm-connection-names button:focus-visible, .mm-connection-names a:focus-visible { outline: 2px solid ${ACCENT}; outline-offset: 2px; }
-.mm-connection-names i { width: 8px; height: 8px; border-radius: 50%; flex: none; }
-.mm-connection-bar { height: 6px; background: #e4e7e6; border-radius: 4px; overflow: hidden; margin-top: 6px; }
-.mm-connection-bar span { display: block; height: 100%; background: #53788c; }
-.mm-recovery { position: absolute; inset: 0; z-index: 20; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 12px; padding: 24px; background: ${SURFACE}; }
-.mm-recovery button { font: inherit; padding: 10px 14px; cursor: pointer; }
+.mm-connections li { margin: 0 0 var(--space-group); }
+.mm-connections li > strong { font: var(--type-strong); font-variant-numeric: tabular-nums; }
+.mm-connection-names { display: flex; align-items: center; gap: var(--space-tight); margin-bottom: var(--space-line); }
+.mm-connection-names button, .mm-connection-names a { flex: 1; min-width: 0; min-height: var(--size-target); display: flex; gap: var(--space-tight); align-items: center; background: none; border: none; padding: var(--space-line) 0; font: var(--type-metadata); color: var(--ink); text-align: left; cursor: pointer; overflow-wrap: anywhere; text-decoration: none; }
+.mm-connection-names a span { text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
+.mm-connection-names button:focus-visible, .mm-connection-names a:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 2px; }
+.mm-connection-names i { width: var(--size-party-dot); height: var(--size-party-dot); border-radius: var(--radius-round); flex: none; background: var(--ink-faint); }
+.mm-connection-bar { height: 6px; background: var(--chart-baseline); border-radius: var(--radius-sm); overflow: hidden; margin-top: var(--space-line); }
+.mm-connection-bar span { display: block; height: 100%; background: var(--chart-mark); }
+.mm-recovery { position: absolute; inset: 0; z-index: 20; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: var(--space-heading); padding: var(--space-group); background: var(--paper); font: var(--type-body); }
 .mm-canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; cursor: grab;
   touch-action: none; user-select: none; -webkit-user-select: none; outline-offset: -3px; }
-.mm-canvas:focus-visible { outline: 2px solid ${ACCENT}; }
+.mm-canvas:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); }
 .mm-labels { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+/* Names in the scene sit on its own marks and flows, so they keep a paper
+   halo: legibility, not elevation. */
 .rp-map3d-label { position: absolute; top: 0; left: 0; white-space: nowrap;
-  font-size: 11px; color: #4a4942; will-change: transform;
-  text-shadow: 0 0 4px ${SURFACE}, 0 0 8px ${SURFACE}; }
-.rp-map3d-label[data-emphasised] { font-size: 12px; font-weight: 600; color: #26251f; }
-.rp-map3d-label[data-selected] { font-size: 13px; }
+  font: var(--type-fine); color: var(--ink-soft); will-change: transform;
+  text-shadow: 0 0 4px var(--paper), 0 0 8px var(--paper); }
+/* A party is always named, its dot beside the name (.ui-party): with a
+   shared dot for the minor parties, the colour alone says nothing. */
+.rp-map3d-label.ui-party { font: var(--type-label); color: var(--ink-soft); }
+.rp-map3d-label[data-emphasised] { font: var(--type-label); color: var(--ink); }
+.rp-map3d-label[data-selected] { font-size: 0.9375rem; }
+/* The hairline from a called-out party name back to its sphere. */
+.rp-map3d-leader { position: absolute; top: 0; left: 0; height: 0; transform-origin: 0 0;
+  border-top: var(--border-hairline) solid var(--line-control); will-change: transform; }
 .rp-map3d-territory { position: absolute; top: 0; left: 0; white-space: nowrap;
-  font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
-  text-shadow: 0 0 4px ${SURFACE}; transition: opacity 160ms; }
-/* A folded cluster's caption is its only name on the map: a step larger. */
-.rp-map3d-territory[data-hub] { font-size: 11px; letter-spacing: 0.1em; }
+  font: var(--type-label); text-shadow: 0 0 4px var(--paper);
+  transition: opacity var(--duration-standard) var(--ease-standard); }
 .rp-map3d-edge-label { position: absolute; top: 0; left: 0; white-space: nowrap;
-  font-size: 10.5px; font-weight: 600; color: #57503c;
-  background: rgba(250, 249, 246, 0.85); padding: 1px 5px; border-radius: 4px; }
+  font: var(--type-label); color: var(--ink-soft); font-variant-numeric: tabular-nums;
+  background: color-mix(in srgb, var(--paper) 85%, transparent); padding: 0 var(--space-line); border-radius: var(--radius-sm); }
 /* The hover card - scouting information beside the node under the pointer.
-   Same translucent idiom as the panels, inert to the pointer, gone cleanly. */
+   It floats, so it takes the one overlay shadow; inert to the pointer, gone
+   cleanly. The node's dot sits beside its name. */
 .rp-map3d-popup { position: absolute; left: 0; top: 0; width: max-content;
-  max-width: 15rem; padding: 10px 12px; border: 1px solid #e4e1d8;
-  border-radius: 10px; background: rgba(250, 249, 246, 0.88);
+  max-width: 15rem; padding: var(--space-tight) var(--space-heading); border: var(--border-hairline) solid var(--divider-subtle);
+  border-radius: var(--radius-md); background: color-mix(in srgb, var(--paper) 88%, transparent);
+  box-shadow: var(--shadow-overlay);
   backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
   will-change: transform; }
-.rp-map3d-popup-name { font-size: 13px; font-weight: 600; line-height: 1.3;
-  color: #26251f; }
-.rp-map3d-popup-meta { display: flex; align-items: center; gap: 6px;
-  margin-top: 4px; font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
-  text-transform: uppercase; }
-.rp-map3d-popup-dot { width: 8px; height: 8px; border-radius: 9999px;
+.rp-map3d-popup-name { display: flex; align-items: center; gap: var(--space-tight); font: var(--type-label); color: var(--ink); }
+.rp-map3d-popup-meta { margin-top: var(--space-line); font: var(--type-fine); color: var(--ink-soft); }
+.rp-map3d-popup-dot { width: var(--size-party-dot); height: var(--size-party-dot); border-radius: var(--radius-round);
   flex-shrink: 0; }
-.rp-map3d-popup-counts { margin-top: 4px; font-size: 12px; color: #57544a; }
-.rp-map3d-popup-hint { margin-top: 6px; font-size: 11px; color: #8a8578; }
-/* Floating panels sit light over the scene: translucent surface with a
-   blurred backdrop so the map glows through, borders kept, no shadow. */
+.rp-map3d-popup-counts { margin-top: var(--space-line); font: var(--type-fine); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.rp-map3d-popup-hint { margin-top: var(--space-tight); font: var(--type-fine); color: var(--ink-faint); }
+/* Floating panels sit light over the scene: translucent paper with a
+   blurred backdrop so the map glows through, hairlines kept, no shadow. */
 .mm-legend, .mm-card {
-  background: rgba(250, 249, 246, 0.78);
+  background: color-mix(in srgb, var(--paper) 78%, transparent);
   backdrop-filter: blur(14px) saturate(160%);
   -webkit-backdrop-filter: blur(14px) saturate(160%); }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .mm-legend, .mm-card, .rp-map3d-popup { background: rgba(250, 249, 246, 0.96); }
+  .mm-legend, .mm-card, .rp-map3d-popup { background: color-mix(in srgb, var(--paper) 96%, transparent); }
 }
-.mm-legend { position: absolute; top: 12px; left: 12px; display: flex;
-  flex-direction: column; gap: 2px; max-height: calc(100% - 70px); overflow: auto;
-  border: 1px solid #e4e1d8; border-radius: 10px; padding: 8px; }
+.mm-legend { position: absolute; top: var(--space-heading); left: var(--space-heading); display: flex;
+  flex-direction: column; gap: var(--space-line); max-height: calc(100% - 70px); overflow: auto;
+  border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md); padding: var(--space-tight); }
 /* The full map docks the year scrub under the legend, in the same column: the
    legend stops above it (its height is measured into --mm-scrub-h) and scrolls
    inside itself rather than running on beneath the scrub. */
 .mm-root[data-mm-chrome='full'] .mm-legend { max-height: calc(100% - 36px - var(--mm-scrub-h, 0px)); }
-.mm-legend-title { font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
-  color: #8a8578; text-transform: uppercase; padding: 0 6px 4px; }
-/* A section of the card ("Where it went", "In parliament"): a kicker under a
+.mm-legend-title { font: var(--type-label); color: var(--ink-soft); padding: 0 var(--space-tight) var(--space-line); }
+/* A section of the card ("Where it went", "In parliament"): a label under a
    hairline, flush with the card's text edge. Not the legend title, whose side
    padding exists to line it up with the chips. */
-.mm-card-section { margin: 14px 0 6px; padding: 9px 0 0; border-top: 1px solid #e4e1d8;
-  font-size: 10.5px; font-weight: 700; letter-spacing: 0.1em; line-height: 1.3;
-  color: #8a5a12; text-transform: uppercase; }
-.mm-chip { display: flex; align-items: center; gap: 7px; border: 0;
-  background: none; font: inherit; font-size: 12px; color: #4a4942;
-  padding: 3px 8px; border-radius: 7px; cursor: pointer; text-align: left; }
-.mm-chip:hover { background: rgba(0, 0, 0, 0.05); }
-.mm-chip[aria-pressed='true'] { background: #142a43; color: #ffffff; }
+.mm-card-section { margin: var(--space-block) 0 var(--space-tight); padding: var(--space-tight) 0 0;
+  border-top: var(--border-hairline) solid var(--divider-subtle); font: var(--type-label); color: var(--ink-soft); }
+/* Legend entries are choice chips at the legend's density: a pill you press,
+   the cluster's dot, navy when chosen. */
+.mm-chip { display: flex; align-items: center; gap: var(--space-tight); border: 0;
+  background: none; font: var(--type-fine); color: var(--ink);
+  padding: var(--space-line) var(--space-tight); border-radius: var(--radius-pill); cursor: pointer; text-align: left;
+  transition: background-color var(--duration-quick) var(--ease-standard), color var(--duration-quick) var(--ease-standard); }
+.mm-chip:hover { background: var(--navy-wash); }
+.mm-chip:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 2px; }
+.mm-chip[aria-pressed='true'] { background: var(--navy); color: var(--on-navy); }
 .mm-chip[data-dimmed] { opacity: 0.4; }
-.mm-chip.mm-grants-toggle { margin-top: 6px; padding-top: 8px; border-top: 1px solid #e4e1d8; border-radius: 0; }
-.mm-chip.mm-grants-toggle[aria-pressed='true'] { background: none; color: #4a4942; } /* the pressed-chip rule paints white text; this one keeps the legend's ink */
+.mm-chip-count { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.mm-chip[aria-pressed='true'] .mm-chip-count { color: inherit; }
+.mm-chip.mm-grants-toggle { margin-top: var(--space-tight); }
+.mm-chip.mm-grants-toggle[aria-pressed='true'] { background: none; color: var(--ink); } /* the pressed-chip rule paints navy; this one keeps the legend's ink */
+.mm-chip.mm-grants-toggle[aria-pressed='true']:hover { background: var(--navy-wash); }
+.mm-chip.mm-grants-toggle[aria-pressed='true'] .mm-chip-count { color: var(--ink-soft); }
 .mm-chip.mm-grants-toggle[aria-pressed='false'] { opacity: 0.5; }
-.mm-chip.mm-grants-toggle[aria-pressed='false'] .mm-dot { background: #b7b3a8 !important; }
-.mm-row-note { padding: 4px 0 6px; font-size: 12px; color: #8a8578; }
-.mm-dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
-.mm-card { position: absolute; top: 12px; right: 12px; width: 330px;
+.mm-chip.mm-grants-toggle[aria-pressed='false'] .mm-dot { background: var(--divider-default) !important; }
+.mm-row-note { padding: var(--space-line) 0 var(--space-tight); font: var(--type-fine); color: var(--ink-soft); }
+.mm-dot { width: var(--size-party-dot); height: var(--size-party-dot); border-radius: var(--radius-round); flex: none; }
+.mm-card { position: absolute; top: var(--space-heading); right: var(--space-heading); width: 330px;
   max-width: calc(100% - 24px); max-height: calc(100% - 24px); overflow: auto;
-  border: 1px solid #e4e1d8; border-radius: 12px; padding: 14px 16px;
+  border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md); padding: var(--space-block);
   outline: none; }
-.mm-card:focus-visible { outline: 2px solid ${ACCENT}; }
-.mm-card h2 { margin: 0 44px 2px 0; font-size: 16px; line-height: 1.25; }
-.mm-card-tag { display: inline-block; font-size: 11px; font-weight: 600;
-  letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 8px; }
-.mm-card-total { font-size: 22px; font-weight: 700; color: #26251f; }
-.mm-card-sub { font-size: 12px; color: #8a8578; margin-bottom: 10px; }
-.mm-card-fine { margin: -4px 0 10px; font-size: 10.5px; line-height: 1.42; color: #8a8578; }
-.mm-card-close { position: absolute; top: 6px; right: 6px; width: 44px; height: 44px;
-  border: 0; border-radius: 50%; background: rgba(160, 118, 27, 0.14); font-size: 20px; line-height: 1;
-  color: #8a5a12; cursor: pointer; display: grid; place-items: center; }
-.mm-card-close:hover { background: rgba(160, 118, 27, 0.26); color: #33322e; }
+.mm-card:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); }
+/* The card's title is the node's name with its colour as a dot beside it, so
+   a party's colour always arrives with its name. */
+.mm-card h2 { margin: 0 var(--size-target) var(--space-line) 0; font: var(--type-subheading); color: var(--ink); }
+.mm-title-dot { display: inline-block; position: relative; top: -0.1em; margin-right: var(--space-tight); vertical-align: middle; }
+.mm-card-tag { margin-bottom: var(--space-tight); }
+.mm-card-total { font: var(--type-heading); font-variant-numeric: tabular-nums; color: var(--ink); }
+.mm-card-sub { margin: 0 0 var(--space-row); font: var(--type-fine); color: var(--ink-soft); }
+.mm-card-fine { margin: 0 0 var(--space-row); font: var(--type-fine); color: var(--ink-soft); }
+.mm-card > .mm-card-close { position: absolute; top: var(--space-line); right: var(--space-line); }
 .mm-rows { margin: 0; padding: 0; list-style: none; }
-.mm-row { display: flex; align-items: baseline; gap: 8px; width: 100%;
-  padding: 5px 6px; margin: 0 -6px; border: 0; background: none; font: inherit;
-  font-size: 13px; color: #33322e; border-radius: 7px; cursor: pointer; text-align: left; }
-.mm-row:hover { background: rgba(0, 0, 0, 0.05); }
+.mm-row { display: flex; align-items: baseline; gap: var(--space-tight); width: 100%;
+  padding: var(--space-line) var(--space-tight); margin: 0 calc(-1 * var(--space-tight)); border: 0; background: none;
+  font: var(--type-metadata); color: var(--ink); border-radius: var(--radius-sm); cursor: pointer; text-align: left; }
+.mm-row:hover { background: var(--paper-sunken); }
+.mm-row:disabled { cursor: default; }
+.mm-row:disabled:hover { background: none; }
+.mm-row:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: -2px; }
 .mm-row .mm-dot { align-self: center; }
 .mm-row-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis;
   white-space: nowrap; }
-.mm-row-amt { font-weight: 600; white-space: nowrap; }
-.mm-row-years { font-size: 11px; color: #8a8578; white-space: nowrap; }
-.mm-award-group { margin: 12px 0 0; padding: 0 0 0 12px; border-left: 3px solid var(--mm-award-colour, #29877e); }
-.mm-award-group + .mm-award-group { margin-top: 18px; }
-.mm-award-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.mm-card .mm-award-title { margin: 0; font-family: inherit; font-size: 14px; font-weight: 600; line-height: 1.4; min-width: 0; }
-.mm-award-category { display: inline-flex; align-items: center; gap: 6px; min-height: 0; padding: 6px 0; margin: -6px 0;
-  border: 0; background: none; text-align: left; font: inherit; color: #142a43; cursor: pointer; }
-.mm-award-category:hover .mm-award-label { text-decoration: underline; text-underline-offset: 3px; }
-.mm-award-category:focus-visible { outline: 2px solid #8a5a12; outline-offset: 3px; }
-.mm-award-arrow { color: #8a5a12; font-size: 18px; }
-.mm-award-total { flex: none; font-size: 16px; color: #26251f; font-variant-numeric: tabular-nums; }
-.mm-award-meta { margin: 0 0 10px; font-size: 11px; line-height: 1.4; color: #605e54; }
+.mm-row-amt { font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.mm-row-years { font: var(--type-fine); color: var(--ink-soft); white-space: nowrap; font-variant-numeric: tabular-nums; }
+/* Public money, by record category: the hub's dot beside its name, the
+   largest projects listed under it. */
+.mm-award-group { margin: var(--space-heading) 0 0; }
+.mm-award-group + .mm-award-group { margin-top: var(--space-block); }
+.mm-award-heading { display: flex; align-items: center; justify-content: space-between; gap: var(--space-heading); }
+.mm-card .mm-award-title { display: flex; align-items: center; gap: var(--space-tight); margin: 0; font: var(--type-strong); min-width: 0; }
+.mm-award-category { display: inline-flex; align-items: center; gap: var(--space-line); min-height: 0; padding: var(--space-tight) 0; margin: calc(-1 * var(--space-tight)) 0;
+  border: 0; background: none; text-align: left; font: inherit; color: var(--navy); cursor: pointer; }
+.mm-award-category:hover .mm-award-label { text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
+.mm-award-category:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
+.mm-award-arrow { color: var(--bronze-ink); font-size: 1.125rem; }
+.mm-award-total { flex: none; font: var(--type-strong); color: var(--ink); font-variant-numeric: tabular-nums; }
+.mm-award-meta { margin: 0 0 var(--space-row); font: var(--type-fine); color: var(--ink-soft); }
 .mm-award-projects { list-style: none; margin: 0; padding: 0; }
-.mm-award-project { display: flex; align-items: baseline; gap: 12px; padding: 9px 0; border-top: 1px solid #e4e1d8;
-  font-size: 12px; line-height: 1.5; color: #4a4942; }
+.mm-award-project { display: flex; align-items: baseline; gap: var(--space-heading); padding: var(--space-tight) 0;
+  border-top: var(--border-hairline) solid var(--divider-subtle); font: var(--type-fine); color: var(--ink); }
 .mm-award-project-name { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 .mm-award-project-amount { flex: none; font-weight: 600; font-variant-numeric: tabular-nums; }
-/* The card's one filled action: the subject's profile. Nothing else on a
-   card is filled; every other way onward sits in the quiet row beneath. */
-.mm-root .mm-card a.mm-ask { display: flex; align-items: center; justify-content: center; box-sizing: border-box; width: 100%; min-height: 44px;
-  margin-top: 12px; padding: 8px 12px; border: 0; border-radius: 9px;
-  background: #142a43; color: #ffffff; font-size: 13px; font-weight: 600;
-  font-family: inherit; line-height: 1.35; text-decoration: none; text-align: center;
-  cursor: pointer; }
-.mm-root .mm-card a.mm-ask:hover { background: #254b70; color: #ffffff; text-decoration: underline; text-underline-offset: 3px; }
-.mm-root .mm-card a.mm-ask:active { background: #0c1e31; }
-.mm-root .mm-card a.mm-ask:focus-visible { color: #ffffff; outline: 3px solid #8a5a12; outline-offset: 3px; }
+/* The card's one primary action, the subject's profile, is the shared navy
+   button. Every other way onward sits in the quiet row beneath. */
+.mm-root .mm-card .mm-ask { display: flex; box-sizing: border-box; width: 100%; margin-top: var(--space-heading); }
 /* The quiet row: short verb-first text actions in the bronze register, each
-   a 44px target through its padding, wrapping at narrow widths. A hairline
-   dot trails every item but the last, so a wrapped line ends on a dot rather
+   a 44px target through its padding, wrapping at narrow widths. A dot
+   trails every item but the last, so a wrapped line ends on a dot rather
    than starting with one. */
-.mm-actions { display: flex; flex-wrap: wrap; align-items: center; margin: 4px -6px 0; }
-.mm-action { display: inline-flex; align-items: center; box-sizing: border-box; min-height: 44px; margin: 0;
-  padding: 0 6px; border: 0; border-radius: 6px; background: none; font: inherit; font-size: 12.5px;
-  font-weight: 600; line-height: 1.2; color: #8a5a12; text-decoration: none; white-space: nowrap; cursor: pointer; }
-.mm-action:hover { color: #26251f; }
-.mm-action:hover .mm-action-label { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #a0761b; }
-.mm-action:focus-visible { outline: 2px solid #8a5a12; outline-offset: -2px; }
-.mm-action:disabled { color: #8a8578; cursor: progress; }
+.mm-actions { display: flex; flex-wrap: wrap; align-items: center; margin: var(--space-line) calc(-1 * var(--space-line)) 0; }
+.mm-action { display: inline-flex; align-items: center; box-sizing: border-box; min-height: var(--size-target); margin: 0;
+  padding: 0 var(--space-line); border: 0; border-radius: var(--radius-sm); background: none; font: var(--type-label);
+  color: var(--bronze-ink); text-decoration: none; white-space: nowrap; cursor: pointer; }
+.mm-action:hover { color: var(--ink); }
+.mm-action:hover .mm-action-label { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--bronze); }
+.mm-action:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: -2px; }
+.mm-action:disabled { color: var(--ink-soft); cursor: progress; }
 .mm-action:disabled .mm-action-label { text-decoration: none; }
-.mm-action:not(:last-child)::after { content: '·'; margin-left: 9px; color: #b7b3a8; font-weight: 400; }
-.mm-action-chevron { display: inline-flex; flex: none; width: 14px; height: 14px; margin-left: 7px;
-  color: currentColor; transition: transform 160ms ease; }
+.mm-action:not(:last-child)::after { content: '·'; margin-left: var(--space-tight); color: var(--divider-default); font-weight: 400; }
+.mm-action-chevron { display: inline-flex; flex: none; width: var(--size-icon-sm); height: var(--size-icon-sm); margin-left: var(--space-line);
+  color: currentColor; transition: transform var(--duration-standard) var(--ease-standard); }
 .mm-action[aria-expanded='true'] .mm-action-chevron { transform: rotate(180deg); }
-@media (prefers-reduced-motion: reduce) { .mm-action-chevron { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .mm-action-chevron, .mm-chip { transition: none; } }
 /* The source-record excerpts the Sources disclosure opens under the row. */
-.mm-evidence { margin: 2px 0 0; padding-top: 8px; border-top: 1px solid #e4e1d8; font-size: 12px; }
-.mm-evidence-note { margin: 0; font-size: 12px; line-height: 1.45; color: #8a8578; }
-.mm-zoom { position: absolute; right: 12px; bottom: 12px; display: flex;
-  flex-direction: column; gap: 4px; }
-.mm-zoom button { width: 34px; height: 34px; border: 1px solid #e4e1d8;
-  border-radius: 9px; background: rgba(250, 249, 246, 0.92); font-size: 16px;
-  color: #4a4942; cursor: pointer; }
-.mm-zoom button:hover { background: #fff; }
-.mm-hint { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
-  margin: 0; font-size: 11.5px; color: #8a8578; pointer-events: none;
+.mm-evidence { margin: var(--space-line) 0 0; padding-top: var(--space-tight); border-top: var(--border-hairline) solid var(--divider-subtle); font: var(--type-fine); }
+.mm-evidence-note { margin: 0; font: var(--type-fine); color: var(--ink-soft); }
+/* Zoom: the shared icon buttons (.ui-button.ui-icon-button), compact. */
+.mm-zoom { position: absolute; right: var(--space-heading); bottom: var(--space-heading); display: flex;
+  flex-direction: column; gap: var(--space-line); }
+.mm-hint { position: absolute; bottom: var(--space-row); left: 50%; transform: translateX(-50%);
+  margin: 0; font: var(--type-fine); color: var(--ink-soft); pointer-events: none;
   white-space: nowrap; }
-.mm-find { position: absolute; top: 12px; right: 12px; width: 240px; }
-.mm-find input { width: 100%; border: 1px solid #e4e1d8; border-radius: 9px;
-  background: rgba(250, 249, 246, 0.92); backdrop-filter: blur(6px);
-  font: inherit; font-size: 13px; color: #33322e; padding: 7px 10px; }
-.mm-find input:focus-visible { outline: 2px solid ${ACCENT}; }
-.mm-find-list { list-style: none; margin: 4px 0 0; padding: 4px;
-  background: rgba(250, 249, 246, 0.96); border: 1px solid #e4e1d8;
-  border-radius: 9px; max-height: 260px; overflow: auto; }
+/* Find: the shared field (.ui-input), compact, over a floating result menu. */
+.mm-find { position: absolute; top: var(--space-heading); right: var(--space-heading); width: 240px; }
+.mm-find-list { list-style: none; margin: var(--space-line) 0 0; padding: var(--space-line);
+  background: var(--paper-raised); border: var(--border-hairline) solid var(--divider-subtle);
+  border-radius: var(--radius-md); box-shadow: var(--shadow-overlay); max-height: 260px; overflow: auto; }
 .mm-find-list:empty { display: none; }
-.mm-find-list button { display: flex; align-items: center; gap: 7px; width: 100%;
-  border: 0; background: none; font: inherit; font-size: 12.5px; color: #33322e;
-  padding: 5px 8px; border-radius: 6px; cursor: pointer; text-align: left; }
-.mm-find-list button:hover, .mm-find-list button:focus-visible { background: rgba(0,0,0,0.06); }
+.mm-find-list button { display: flex; align-items: center; gap: var(--space-tight); width: 100%;
+  border: 0; background: none; font: var(--type-metadata); color: var(--ink);
+  padding: var(--space-tight); border-radius: var(--radius-sm); cursor: pointer; text-align: left; }
+.mm-find-list button:hover, .mm-find-list button:focus-visible { background: var(--paper-sunken); }
 .mm-root[data-mm-chrome='full'] .mm-card { top: 58px; max-height: calc(100% - 70px); }
-.mm-scrub { position: absolute; left: 12px; bottom: 12px; width: 270px;
-  background: rgba(250, 249, 246, 0.88); backdrop-filter: blur(6px);
-  border: 1px solid #e4e1d8; border-radius: 10px; padding: 8px 12px; }
-.mm-scrub-label { display: flex; justify-content: space-between; font-size: 11px;
-  font-weight: 700; letter-spacing: 0.06em; color: #8a8578; margin-bottom: 2px; }
-.mm-scrub-years { font-variant-numeric: tabular-nums; color: #33322e; }
+.mm-scrub { position: absolute; left: var(--space-heading); bottom: var(--space-heading); width: 270px;
+  background: color-mix(in srgb, var(--paper) 88%, transparent); backdrop-filter: blur(6px);
+  border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md); padding: var(--space-tight) var(--space-heading); }
+.mm-scrub-label { display: flex; justify-content: space-between; font: var(--type-label); color: var(--ink-soft); }
+.mm-scrub-years { font-variant-numeric: tabular-nums; color: var(--ink); }
 .mm-scrub-rail { position: relative; width: 100%; height: 28px; }
 .mm-scrub-track { position: absolute; left: 8px; right: 8px; top: 50%; height: 2px;
-  margin-top: -1px; background: #d9d4c6; border-radius: 1px; }
-.mm-scrub-fill { position: absolute; top: 0; bottom: 0; background: ${ACCENT}; border-radius: 1px; }
+  margin-top: -1px; background: var(--chart-baseline); }
+.mm-scrub-fill { position: absolute; top: 0; bottom: 0; background: var(--chart-mark); }
 /* Only the thumbs take the pointer, so the two stacked inputs do not mask
    each other and a drag that starts off a thumb still reaches the canvas. */
 .mm-scrub input[type='range'] { position: absolute; inset: 0; width: 100%; height: 28px;
   margin: 0; background: none; pointer-events: none; -webkit-appearance: none; appearance: none; }
-.mm-scrub input[type='range']:focus-visible { outline: 2px solid ${ACCENT};
-  outline-offset: 1px; border-radius: 8px; }
+.mm-scrub input[type='range']:focus-visible { outline: var(--border-focus) solid var(--bronze-ink);
+  outline-offset: 1px; border-radius: var(--radius-sm); }
 .mm-scrub input[type='range']::-webkit-slider-runnable-track { height: 28px; background: none; }
 .mm-scrub input[type='range']::-moz-range-track { height: 28px; background: none; }
 .mm-scrub input[type='range']::-webkit-slider-thumb { -webkit-appearance: none;
-  pointer-events: auto; width: 16px; height: 16px; margin-top: 6px; border-radius: 50%;
-  border: 1px solid #8a6a10; background: ${SURFACE}; box-sizing: border-box; cursor: ew-resize; }
+  pointer-events: auto; width: 16px; height: 16px; margin-top: 6px; border-radius: var(--radius-round);
+  border: var(--border-hairline) solid var(--bronze-ink); background: var(--paper-raised); box-sizing: border-box; cursor: ew-resize; }
 .mm-scrub input[type='range']::-moz-range-thumb { pointer-events: auto;
-  width: 16px; height: 16px; border-radius: 50%; border: 1px solid #8a6a10;
-  background: ${SURFACE}; box-sizing: border-box; cursor: ew-resize; }
+  width: 16px; height: 16px; border-radius: var(--radius-round); border: var(--border-hairline) solid var(--bronze-ink);
+  background: var(--paper-raised); box-sizing: border-box; cursor: ew-resize; }
 .mm-cpi { display: grid; grid-template-columns: 18px minmax(0, 1fr); align-items: center;
-  column-gap: 8px; min-height: 44px; margin-top: 3px; padding-top: 4px;
-  border-top: 1px solid #e4e1d8; cursor: pointer; }
-.mm-cpi input { width: 18px; height: 18px; margin: 0; accent-color: ${ACCENT}; cursor: pointer; }
+  column-gap: var(--space-tight); min-height: var(--size-target); margin-top: var(--space-line); padding-top: var(--space-line);
+  border-top: var(--border-hairline) solid var(--divider-subtle); cursor: pointer; }
+.mm-cpi input { width: 18px; height: 18px; margin: 0; accent-color: var(--navy); cursor: pointer; }
 .mm-cpi-copy { display: block; min-width: 0; }
-.mm-cpi-name { display: block; font-size: 12px; font-weight: 600; color: #33322e; }
+.mm-cpi-name { display: block; font: var(--type-label); color: var(--ink); }
 .mm-cpi-short { display: none; }
-.mm-cpi-note { display: block; font-size: 10px; line-height: 1.25; color: #8a8578; }
+.mm-cpi-note { display: block; font: var(--type-fine); color: var(--ink-soft); }
 /* On the compact strip the note lives behind a small i: a 44px target drawing
    a 22px ring, and a paper popover beneath the strip. Hidden on the full plate,
    where the note sits under the label. */
-.mm-cpi-info { display: none; flex: none; width: 44px; height: 44px; margin: 0 -8px 0 -6px; padding: 0;
-  border: 0; background: none; cursor: pointer; color: #8a6a10; align-items: center; justify-content: center; }
-.mm-cpi-info span { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%;
-  box-shadow: inset 0 0 0 1.5px currentColor; font: italic 700 13px/1 Georgia, 'Times New Roman', serif; }
-.mm-cpi-info[aria-expanded='true'] span { background: #8a6a10; color: ${SURFACE}; }
+.mm-cpi-info { display: none; flex: none; width: var(--size-target); height: var(--size-target); margin: 0 -8px 0 -6px; padding: 0;
+  border: 0; background: none; cursor: pointer; color: var(--bronze-ink); align-items: center; justify-content: center; }
+.mm-cpi-info:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: -4px; }
+.mm-cpi-info span { display: grid; place-items: center; box-sizing: border-box; width: 22px; height: 22px; border-radius: var(--radius-round);
+  border: var(--border-hairline) solid currentColor; font: italic 700 0.8125rem/1 var(--serif); }
+.mm-cpi-info[aria-expanded='true'] span { background: var(--bronze-ink); color: var(--paper); }
 .mm-cpi-pop { position: absolute; top: calc(100% + 6px); left: 0; z-index: 6; width: min(300px, 100%);
-  padding: 9px 11px; background: ${SURFACE}; border: 1px solid #d5d1c4; border-radius: 6px;
-  box-shadow: 0 10px 24px rgba(30, 26, 18, 0.16); font-size: 12px; line-height: 1.45; color: #33322e; }
+  padding: var(--space-tight) var(--space-row); background: var(--paper-raised); border: var(--border-hairline) solid var(--divider-subtle);
+  border-radius: var(--radius-md); box-shadow: var(--shadow-overlay); font: var(--type-fine); color: var(--ink); }
 .mm-cpi-pop[hidden] { display: none; }
 /* Inside a page's map plate the host clips overflow, so the note opens upward from the icon, anchored to its right. */
 .mm-scrub-mini .mm-cpi-pop { top: auto; bottom: calc(100% + 6px); left: auto; right: 0; z-index: 9; }
 /* The same control on a small plate: one row, the window years as its label,
    the two thumbs and inflation switch sharing one compact strip. */
-.mm-scrub-mini { width: auto; max-width: calc(100% - 24px); padding: 5px 10px;
-  display: flex; align-items: center; gap: 9px; }
+.mm-scrub-mini { width: auto; max-width: calc(100% - 24px); padding: var(--space-line) var(--space-row);
+  display: flex; align-items: center; gap: var(--space-tight); }
 .mm-scrub-mini .mm-scrub-label { display: block; margin: 0; flex: none; }
 .mm-scrub-mini .mm-scrub-caption { display: none; }
-.mm-scrub-mini .mm-scrub-years { font-size: 11px; font-weight: 700; letter-spacing: 0.02em; }
 .mm-scrub-mini .mm-scrub-rail { flex: none; width: 104px; height: 44px; }
 .mm-scrub-mini input[type='range'] { height: 44px; }
 .mm-scrub-mini input[type='range']::-webkit-slider-runnable-track { height: 44px; }
 .mm-scrub-mini input[type='range']::-moz-range-track { height: 44px; }
 .mm-scrub-mini input[type='range']::-webkit-slider-thumb { width: 14px; height: 14px; margin-top: 15px; }
 .mm-scrub-mini input[type='range']::-moz-range-thumb { width: 14px; height: 14px; }
-.mm-scrub-mini .mm-cpi { flex: none; width: auto; margin: 0; padding: 0 0 0 9px;
-  border-top: 0; border-left: 1px solid #e4e1d8; }
-.mm-scrub-mini .mm-cpi-name { font-size: 11px; white-space: nowrap; }
+.mm-scrub-mini .mm-cpi { flex: none; width: auto; margin: 0; padding: 0 0 0 var(--space-tight);
+  border-top: 0; border-left: var(--border-hairline) solid var(--divider-subtle); }
+.mm-scrub-mini .mm-cpi-name { white-space: nowrap; }
 .mm-scrub-mini .mm-cpi-long { display: none; }
 .mm-scrub-mini .mm-cpi-short { display: inline; }
 .mm-scrub-mini .mm-cpi-info { margin: 0 -6px 0 -4px; }
 .mm-scrub-mini .mm-cpi-note { display: none; }
 .mm-scrub-mini .mm-cpi-info { display: flex; }
 .mm-fallback { display: flex; align-items: center; justify-content: center;
-  height: 100%; padding: 24px; text-align: center; color: #57544a; }
+  height: 100%; padding: var(--space-group); text-align: center; font: var(--type-body); color: var(--ink-soft); }
 @media (prefers-reduced-motion: reduce) {
   .rp-map3d-territory { transition: none; }
 }
@@ -580,48 +594,47 @@ const CSS = `
    leaving one wide, coherent camera viewport. */
 @media (min-width: 721px) and (max-width: 1024px) {
   .mm-legend { flex-direction: row; flex-wrap: nowrap; overflow-x: auto;
-    right: 12px; max-width: none; max-height: none; align-items: center; }
+    right: var(--space-heading); max-width: none; max-height: none; align-items: center;
+    padding: var(--space-line) var(--space-tight); }
   .mm-root[data-mm-chrome='full'] .mm-legend { max-height: none; }
   .mm-legend-title { display: none; }
   .mm-chip { white-space: nowrap; flex: none; }
+  .mm-chip.mm-grants-toggle { margin-top: 0; }
   .mm-find, .mm-hint { display: none; }
   .mm-root[data-mm-chrome='full'] .mm-scrub {
     top: 60px; bottom: auto; width: 270px;
   }
   .mm-card, .mm-root[data-mm-chrome='full'] .mm-card {
-    top: auto; right: 12px; left: 12px;
-    bottom: max(12px, env(safe-area-inset-bottom));
+    top: auto; right: var(--space-heading); left: var(--space-heading);
+    bottom: max(var(--space-heading), env(safe-area-inset-bottom));
     width: auto; max-height: 48%;
   }
 }
 @media (pointer: coarse) {
-  .rp-map3d-label { font-size: 12px; }
   .rp-map3d-label[data-emphasised] {
-    padding: 2px 5px; border-radius: 4px;
-    background: rgba(250, 249, 246, 0.82);
-    font-size: 14px; text-shadow: none;
+    padding: 0 var(--space-line); border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--paper) 82%, transparent);
+    font-size: 0.9375rem; text-shadow: none;
   }
-  .rp-map3d-label[data-selected] { font-size: 15px; }
-  .rp-map3d-edge-label {
-    padding: 2px 6px; font-size: 12px;
-    background: rgba(250, 249, 246, 0.92);
-  }
+  .rp-map3d-label[data-selected] { font-size: 1rem; }
+  .rp-map3d-edge-label { background: color-mix(in srgb, var(--paper) 92%, transparent); }
 }
 @media (max-width: 720px) {
   .mm-legend { flex-direction: row; flex-wrap: nowrap; overflow-x: auto;
-    max-width: calc(100% - 24px); max-height: none; align-items: center; }
+    max-width: calc(100% - 24px); max-height: none; align-items: center;
+    padding: var(--space-line) var(--space-tight); }
   .mm-legend-title { display: none; }
   .mm-chip { white-space: nowrap; flex: none; }
-  .mm-card { top: auto; right: 8px; left: 8px;
-    bottom: max(8px, env(safe-area-inset-bottom)); width: auto;
+  .mm-chip.mm-grants-toggle { margin-top: 0; }
+  .mm-card { top: auto; right: var(--space-tight); left: var(--space-tight);
+    bottom: max(var(--space-tight), env(safe-area-inset-bottom)); width: auto;
     max-height: 55%; }
   .mm-root[data-mm-chrome='full'] .mm-card { top: auto; max-height: 55%; }
   .mm-hint, .mm-find { display: none; }
-  .mm-root[data-mm-chrome='full'] .mm-scrub { display: flex; align-items: center; gap: 8px;
-    top: 60px; right: 8px; bottom: auto; left: 8px; width: auto; padding: 4px 8px; overflow: visible; }
+  .mm-root[data-mm-chrome='full'] .mm-scrub { display: flex; align-items: center; gap: var(--space-tight);
+    top: 60px; right: var(--space-tight); bottom: auto; left: var(--space-tight); width: auto; padding: var(--space-line) var(--space-tight); overflow: visible; }
   .mm-root[data-mm-chrome='full'] .mm-scrub-label { display: block; flex: none; margin: 0; }
   .mm-root[data-mm-chrome='full'] .mm-scrub-caption { display: none; }
-  .mm-root[data-mm-chrome='full'] .mm-scrub-years { font-size: 11px; letter-spacing: 0.02em; }
   .mm-root[data-mm-chrome='full'] .mm-scrub-rail { flex: 1 1 88px; min-width: 60px; height: 44px; }
   .mm-root[data-mm-chrome='full'] .mm-scrub input[type='range'] { height: 44px; }
   .mm-root[data-mm-chrome='full'] .mm-scrub input[type='range']::-webkit-slider-runnable-track { height: 44px; }
@@ -631,8 +644,8 @@ const CSS = `
   .mm-root[data-mm-chrome='full'] .mm-scrub input[type='range']::-moz-range-thumb {
     width: 14px; height: 14px; }
   .mm-root[data-mm-chrome='full'] .mm-cpi { flex: none; width: auto; margin: 0;
-    padding: 0 0 0 8px; border-top: 0; border-left: 1px solid #e4e1d8; }
-  .mm-root[data-mm-chrome='full'] .mm-cpi-name { font-size: 11px; white-space: nowrap; }
+    padding: 0 0 0 var(--space-tight); border-top: 0; border-left: var(--border-hairline) solid var(--divider-subtle); }
+  .mm-root[data-mm-chrome='full'] .mm-cpi-name { white-space: nowrap; }
   .mm-root[data-mm-chrome='full'] .mm-cpi-long { display: none; }
   .mm-root[data-mm-chrome='full'] .mm-cpi-short { display: inline; }
   .mm-root[data-mm-chrome='full'] .mm-cpi-info { margin: 0 -6px 0 -4px; }
@@ -640,7 +653,7 @@ const CSS = `
   .mm-root[data-mm-chrome='full'] .mm-cpi-info { display: flex; }
   /* The compact scrub is small enough to keep on a phone; it moves to the
      top left, which mini chrome leaves empty, clear of the card's sheet. */
-  .mm-scrub-mini { display: flex; top: max(8px, env(safe-area-inset-top)); left: 8px; bottom: auto; }
+  .mm-scrub-mini { display: flex; top: max(var(--space-tight), env(safe-area-inset-top)); left: var(--space-tight); bottom: auto; }
 }
 `
 
@@ -934,7 +947,7 @@ export async function mountMoneyMap(
   let hostBase: { style: string; px: number } | null = null
   // The seeded focus reads the card's geometry synchronously, one line below
   // this one (startReveal's setInsets), with no frame to spare for the
-  // host's own 360ms height transition to settle. Every later open is a
+  // host's own height transition to settle. Every later open is a
   // reader-visible change worth smoothing, and its insets are re-measured
   // a frame later anyway (the rAF in setSelection) - only this first one
   // needs to land instantly.
@@ -999,17 +1012,18 @@ export async function mountMoneyMap(
 
   const zoom = full || opts.pageScroll ? el('div', 'mm-zoom', container) : null
   if (zoom) {
-    const zoomButton = (label: string, title: string, onClick: () => void) => {
-      const button = el('button', '', zoom)
+    zoom.dataset.uiSize = 'compact'
+    const zoomButton = (path: string, title: string, onClick: () => void) => {
+      const button = el('button', 'ui-button ui-icon-button', zoom)
       button.type = 'button'
-      button.textContent = label
+      button.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="${path}"/></svg>`
       button.setAttribute('aria-label', title)
       button.title = title
       button.addEventListener('click', onClick)
     }
-    zoomButton('+', 'Zoom in', () => engine.zoomBy(1.3))
-    zoomButton('−', 'Zoom out', () => engine.zoomBy(1 / 1.3))
-    zoomButton('⤢', 'Fit the whole map to view', () => engine.fit(true))
+    zoomButton('M12 5v14M5 12h14', 'Zoom in', () => engine.zoomBy(1.3))
+    zoomButton('M5 12h14', 'Zoom out', () => engine.zoomBy(1 / 1.3))
+    zoomButton('M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5', 'Fit the whole map to view', () => engine.fit(true))
   }
 
   const hint = full ? el('p', 'mm-hint', container) : null
@@ -1038,7 +1052,7 @@ export async function mountMoneyMap(
         recoveryNotice = el('div', 'mm-recovery', container)
         recoveryNotice.setAttribute('role', 'status')
         recoveryNotice.append('Reconnecting the map… ')
-        const retry = el('button', '', recoveryNotice)
+        const retry = el('button', 'ui-button', recoveryNotice)
         retry.type = 'button'
         retry.textContent = 'Reload map'
         retry.addEventListener('click', () => location.reload())
@@ -1286,10 +1300,11 @@ export async function mountMoneyMap(
       chip.setAttribute('aria-pressed', 'false')
       const dot = el('span', 'mm-dot', chip)
       dot.style.background = clusterColour(group).colour
-      const name = el('span', '', chip)
       // The keys are lower case because they are data; the legend is a list of
       // names a reader reads, so it takes sentence case like every other label.
-      name.textContent = `${group.charAt(0).toUpperCase()}${group.slice(1)} · ${graph.groupStyles.get(group)?.count ?? 0}`
+      el('span', '', chip).textContent = sentence(group)
+      chip.append(' ') // so the name and count read as two words, not "Unions31"
+      el('span', 'mm-chip-count', chip).textContent = String(graph.groupStyles.get(group)?.count ?? 0)
       chip.addEventListener('click', () => applyIsolate(activeGroup === group ? null : group))
       chips.set(group, chip)
     }
@@ -1300,11 +1315,12 @@ export async function mountMoneyMap(
       toggle.setAttribute('aria-pressed', String(grantsOn))
       toggle.title = 'Public money the donors on this map received, grants and contracts, drawn as flows out from the hubs'
       const dot = el('span', 'mm-dot', toggle)
-      dot.style.background = grantor?.colour ?? GRANTOR_COLOUR
-      const name = el('span', '', toggle)
+      dot.style.background = grantor ? hubColour(grantor) : GRANTOR_COLOUR
+      el('span', '', toggle).textContent = 'Public money'
+      toggle.append(' ')
       // Donors with either kind of public money, counted once.
       const n = raw.nodes.filter((d) => d.kind === 'donor' && (d.grants || d.contracts)).length
-      name.textContent = `Public money · ${n}`
+      el('span', 'mm-chip-count', toggle).textContent = String(n)
       toggle.addEventListener('click', () => {
         grantsOn = !grantsOn
         toggle.setAttribute('aria-pressed', String(grantsOn))
@@ -1318,7 +1334,8 @@ export async function mountMoneyMap(
   // --- Find-in-map ------------------------------------------------------
   const find = full ? el('div', 'mm-find', container) : null
   if (find) {
-    const input = el('input', '', find)
+    find.dataset.uiSize = 'compact'
+    const input = el('input', 'ui-input', find)
     input.type = 'search'
     input.placeholder = 'Find a donor or party…'
     input.setAttribute('aria-label', 'Find a donor or party by name')
@@ -1383,7 +1400,7 @@ export async function mountMoneyMap(
     const label = el('div', 'mm-scrub-label', scrub)
     if (!compactScrub) {
       const caption = el('span', 'mm-scrub-caption', label)
-      caption.textContent = 'FINANCIAL YEARS'
+      caption.textContent = 'Financial years'
     }
     const years = el('span', 'mm-scrub-years', label)
     const rail = el('div', 'mm-scrub-rail', scrub)
@@ -1509,9 +1526,11 @@ export async function mountMoneyMap(
   const awardGroup = (parent: HTMLElement, label: string, colour: string, block: GrantsBlock,
     noun: string, onClick: (() => void) | null) => {
     const group = el('section', 'mm-award-group', parent)
-    group.style.setProperty('--mm-award-colour', colour)
     const heading = el('div', 'mm-award-heading', group)
     const title = el('h3', 'mm-award-title', heading)
+    const dot = el('span', 'mm-dot', title)
+    dot.style.background = colour
+    dot.setAttribute('aria-hidden', 'true')
     if (onClick) {
       const button = el('button', 'mm-award-category', title)
       button.type = 'button'
@@ -1521,7 +1540,7 @@ export async function mountMoneyMap(
       const arrow = el('span', 'mm-award-arrow', button)
       arrow.textContent = '›'
       arrow.setAttribute('aria-hidden', 'true')
-    } else title.textContent = label
+    } else title.append(label)
     el('strong', 'mm-award-total', heading).textContent = formatMoney(block.total)
     el('p', 'mm-award-meta', group).textContent = `${block.count.toLocaleString()} ${noun}${block.count === 1 ? '' : 's'} · ${yearSpan(block.firstYear, block.lastYear)}`
     const entries = (block.top ?? []).slice(0, 3)
@@ -1538,9 +1557,10 @@ export async function mountMoneyMap(
     }
   }
 
-  /** The card's one filled action. */
+  /** The card's one primary action: the shared navy button. */
   const primary = (parent: HTMLElement, href: string, label: string) => {
-    const a = el('a', 'mm-ask', parent)
+    const a = el('a', 'mm-ask ui-button', parent)
+    a.dataset.variant = 'primary'
     a.href = href
     a.textContent = label
   }
@@ -1600,7 +1620,7 @@ export async function mountMoneyMap(
   const sourcesAction = (row: HTMLElement, card: HTMLElement, node: MoneyNode) => {
     const button = action(row, 'Sources', { name: 'Sources: mentions in the source records' }) as HTMLButtonElement
     const chevron = el('span', 'mm-action-chevron', button)
-    chevron.innerHTML = '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" focusable="false"><path d="m4 6 4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    chevron.innerHTML = '<svg viewBox="0 0 16 16" width="16" height="16" fill="none" focusable="false"><path d="m4 6 4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     chevron.setAttribute('aria-hidden', 'true')
     const slot = el('section', 'mm-evidence', card)
     slot.id = `mm-evidence-${++evidenceSeq}`
@@ -1675,13 +1695,34 @@ export async function mountMoneyMap(
     return best
   }
 
+  /** The card's close control: the shared quiet icon button. */
+  const closeButton = (onClose: () => void) => {
+    const close = el('button', 'mm-card-close ui-button ui-icon-button', card)
+    close.type = 'button'
+    close.dataset.variant = 'quiet'
+    close.dataset.uiSize = 'compact'
+    close.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg>'
+    close.setAttribute('aria-label', 'Close details')
+    close.addEventListener('click', onClose)
+  }
+  /** The card's title: the name, with the node's colour as a dot beside it. */
+  const cardTitle = (text: string, colour?: string) => {
+    const title = el('h2', '', card)
+    if (colour) {
+      const dot = el('span', 'mm-dot mm-title-dot', title)
+      dot.style.background = colour
+      dot.setAttribute('aria-hidden', 'true')
+    }
+    title.append(text)
+  }
+  /** What the card is about, as a status label in sentence case. */
+  const cardTag = (text: string) => {
+    el('span', 'mm-card-tag ui-status', card).textContent = text
+  }
+
   const renderCard = (node: MoneyNode) => {
     card.innerHTML = ''
-    const close = el('button', 'mm-card-close', card)
-    close.type = 'button'
-    close.textContent = '✕'
-    close.setAttribute('aria-label', 'Close details')
-    close.addEventListener('click', () => setSelection(null, { user: true }))
+    closeButton(() => setSelection(null, { user: true }))
     const plan = planCardActions(node, {
       subject: opts.subject,
       jurisdiction: typeof raw.meta.jurisdiction === 'string' && raw.meta.jurisdiction ? raw.meta.jurisdiction : undefined,
@@ -1692,8 +1733,8 @@ export async function mountMoneyMap(
     })
 
     if (node.kind === 'agency' || node.kind === 'supplier') {
-      el('h2', '', card).textContent = node.label
-      el('span', 'mm-card-tag', card).textContent = node.kind === 'agency' ? 'Government agency' : 'Government supplier'
+      cardTitle(node.label, markColour(node))
+      cardTag(node.kind === 'agency' ? 'Government agency' : 'Government supplier')
       el('div', 'mm-card-total', card).textContent = formatMoney(node.total)
       el('p', 'mm-card-sub', card).textContent = `${node.count.toLocaleString()} recorded contracts${node.id === opts.subject ? '' : ' in this relationship'}`
       el('div', 'mm-card-section', card).textContent = node.kind === 'agency' ? 'Contracts awarded to' : 'Contracts awarded by'
@@ -1706,14 +1747,10 @@ export async function mountMoneyMap(
       el('p', 'mm-card-fine', card).textContent = 'Recorded contract commitments, not verified payments. The map shows the largest relationships; the profile lists all available records.'
       return
     }
-    const title = el('h2', '', card)
-    title.textContent = node.label
-    const tag = el('span', 'mm-card-tag', card)
-    const style = clusterColour(node.group)
-    tag.style.color = node.kind === 'party' || node.kind === 'grantor' ? (node.colour ?? style.ink) : style.ink
-    tag.textContent = node.kind === 'party'
-      ? 'political party'
-      : node.kind === 'grantor' ? 'public money' : node.industry.replace(/_/g, ' ')
+    cardTitle(node.label, markColour(node))
+    cardTag(node.kind === 'party'
+      ? 'Political party'
+      : node.kind === 'grantor' ? 'Public money' : sentence(node.industry.replace(/_/g, ' ')))
 
     const total = el('div', 'mm-card-total', card)
     total.textContent = formatMoney(node.total)
@@ -1723,14 +1760,14 @@ export async function mountMoneyMap(
     // the years within it that carry anything; a subject with nothing there
     // says so rather than showing an empty zero.
     sub.textContent = node.count === 0 && view.span
-      ? (node.kind === 'grantor' ? `nothing awarded in ${view.span}` : `nothing disclosed in ${view.span}`)
+      ? (node.kind === 'grantor' ? `Nothing awarded in ${view.span}` : `Nothing disclosed in ${view.span}`)
       : node.kind === 'party'
-        ? `received across ${node.count.toLocaleString()} receipts · ${span}`
+        ? `Received across ${node.count.toLocaleString()} receipts · ${span}`
         : node.kind === 'grantor'
           ? (node.flow === 'contracts'
-            ? `held by donors on this map across ${node.count.toLocaleString()} contracts · ${span}`
-            : `awarded to donors on this map across ${node.count.toLocaleString()} grants · ${span}`)
-          : `given across ${node.count.toLocaleString()} donations · ${span}`
+            ? `Held by donors on this map across ${node.count.toLocaleString()} contracts · ${span}`
+            : `Awarded to donors on this map across ${node.count.toLocaleString()} grants · ${span}`)
+          : `Given across ${node.count.toLocaleString()} donations · ${span}`
     inflationFineprint(card)
 
     const listTitle = el('div', 'mm-card-section', card)
@@ -1745,7 +1782,7 @@ export async function mountMoneyMap(
         if (!party) continue
         row(
           list,
-          party.colour ?? '#9AA0A8',
+          markColour(party),
           party.label,
           edge.total,
           yearSpan(edge.firstYear, edge.lastYear),
@@ -1763,21 +1800,21 @@ export async function mountMoneyMap(
         if (node.grants) {
           const g = view.grants.get(node.id) ?? node.grants
           if (g.count > 0) {
-            awardGroup(glist, grantor?.label ?? 'Grants', grantor?.colour ?? GRANTOR_COLOUR, g, 'grant',
+            awardGroup(glist, grantor?.label ?? 'Grants', GRANTOR_COLOUR, g, 'grant',
               grantor ? () => setSelection(grantor.id, { user: true }) : null)
           } else {
             const none = el('p', 'mm-row-note', glist)
-            none.textContent = view.span ? `no grants started in ${view.span}` : 'no grants'
+            none.textContent = view.span ? `No grants started in ${view.span}` : 'No grants'
           }
         }
         if (node.contracts) {
           const c = view.contracts.get(node.id) ?? node.contracts
           if (c.count > 0) {
-            awardGroup(glist, contractor?.label ?? 'Contracts', contractor?.colour ?? CONTRACTOR_COLOUR, c, 'contract',
+            awardGroup(glist, contractor?.label ?? 'Contracts', CONTRACTOR_COLOUR, c, 'contract',
               contractor ? () => setSelection(contractor.id, { user: true }) : null)
           } else {
             const none = el('p', 'mm-row-note', glist)
-            none.textContent = view.span ? `no contracts started in ${view.span}` : 'no contracts'
+            none.textContent = view.span ? `No contracts started in ${view.span}` : 'No contracts'
           }
         }
         if (node.via === 'public_money') {
@@ -1846,26 +1883,19 @@ export async function mountMoneyMap(
     const party = view.nodes.get(edge.target)
     if (!party) return
     card.innerHTML = ''
-    const close = el('button', 'mm-card-close', card)
-    close.type = 'button'
-    close.textContent = '✕'
-    close.setAttribute('aria-label', 'Close details')
-    close.addEventListener('click', () => setEdgeSelection(null))
+    closeButton(() => setEdgeSelection(null))
 
     const style = clusterColour(group)
-    const groupName = group.charAt(0).toUpperCase() + group.slice(1)
-    const title = el('h2', '', card)
-    title.textContent = `${groupName} → ${party.label}`
-    const tag = el('span', 'mm-card-tag', card)
-    tag.style.color = style.ink
-    tag.textContent = 'industry flow'
+    const groupName = sentence(group)
+    cardTitle(`${groupName} → ${party.label}`)
+    cardTag('Industry flow')
 
     const total = el('div', 'mm-card-total', card)
     total.textContent = formatMoney(edge.total ?? 0)
     const sub = el('div', 'mm-card-sub', card)
     const span = yearSpan(edge.firstYear ?? null, edge.lastYear ?? null)
     const donors = edge.count ?? 0
-    sub.textContent = `from ${donors === 1 ? '1 donor' : `${donors.toLocaleString()} donors`} shown` +
+    sub.textContent = `From ${donors === 1 ? '1 donor' : `${donors.toLocaleString()} donors`} shown` +
       `${span ? ` · ${span}` : ''}`
     inflationFineprint(card)
 
@@ -1901,26 +1931,19 @@ export async function mountMoneyMap(
     const donor = view.nodes.get(edge.target)
     if (!donor) return
     card.innerHTML = ''
-    const close = el('button', 'mm-card-close', card)
-    close.type = 'button'
-    close.textContent = '✕'
-    close.setAttribute('aria-label', 'Close details')
-    close.addEventListener('click', () => setEdgeSelection(null))
-    const title = el('h2', '', card)
-    title.textContent = `${grantor.label} → ${donor.label}`
-    const tag = el('span', 'mm-card-tag', card)
-    tag.style.color = '#1f5f58'
-    tag.textContent = 'public money'
+    closeButton(() => setEdgeSelection(null))
+    cardTitle(`${grantor.label} → ${donor.label}`)
+    cardTag('Public money')
     const total = el('div', 'mm-card-total', card)
     total.textContent = formatMoney(edge.total ?? 0)
     const sub = el('div', 'mm-card-sub', card)
     const span = yearSpan(edge.firstYear ?? null, edge.lastYear ?? null)
-    sub.textContent = `across ${(edge.count ?? 0).toLocaleString()} grants${span ? ` · ${span}` : ''}`
+    sub.textContent = `Across ${(edge.count ?? 0).toLocaleString()} grants${span ? ` · ${span}` : ''}`
     inflationFineprint(card)
     const list = el('ul', 'mm-rows', card)
-    row(list, grantor.colour ?? GRANTOR_COLOUR, grantor.label, grantor.total, '',
+    row(list, hubColour(grantor), grantor.label, grantor.total, '',
       () => setSelection(grantor.id, { user: true }))
-    row(list, donor.colour ?? clusterColour(donor.group).colour, donor.label, donor.total, 'given to parties',
+    row(list, markColour(donor), donor.label, donor.total, 'given to parties',
       () => setSelection(donor.id, { user: true }))
     for (const [program, dollars] of (donor.grants?.top ?? []).slice(0, 3)) {
       row(list, null, program, dollars, '', null)
@@ -1945,11 +1968,9 @@ export async function mountMoneyMap(
       const to = view.nodes.get(edge.target)
       if (!to) return
       card.replaceChildren()
-      const close = el('button', 'mm-card-close', card)
-      close.type = 'button'; close.textContent = '✕'; close.setAttribute('aria-label', 'Close details')
-      close.addEventListener('click', () => setEdgeSelection(null))
-      el('h2', '', card).textContent = `${from.label} → ${to.label}`
-      el('span', 'mm-card-tag', card).textContent = 'Contracts awarded'
+      closeButton(() => setEdgeSelection(null))
+      cardTitle(`${from.label} → ${to.label}`)
+      cardTag('Contracts awarded')
       el('div', 'mm-card-total', card).textContent = formatMoney(edge.total ?? 0)
       el('p', 'mm-card-sub', card).textContent = `${(edge.count ?? 0).toLocaleString()} recorded contracts`
       const list = el('ul', 'mm-rows', card)
@@ -1965,30 +1986,23 @@ export async function mountMoneyMap(
     const party = view.nodes.get(edge.target)
     if (!donor || !party) return
     card.innerHTML = ''
-    const close = el('button', 'mm-card-close', card)
-    close.type = 'button'
-    close.textContent = '✕'
-    close.setAttribute('aria-label', 'Close details')
-    close.addEventListener('click', () => setEdgeSelection(null))
+    closeButton(() => setEdgeSelection(null))
 
-    const title = el('h2', '', card)
-    title.textContent = `${donor.label} → ${party.label}`
-    const tag = el('span', 'mm-card-tag', card)
-    tag.style.color = clusterColour(donor.group).ink
-    tag.textContent = `${donor.industry.replace(/_/g, ' ')} money`
+    cardTitle(`${donor.label} → ${party.label}`)
+    cardTag(`${sentence(donor.industry.replace(/_/g, ' '))} money`)
 
     const total = el('div', 'mm-card-total', card)
     total.textContent = formatMoney(edge.total ?? 0)
     const sub = el('div', 'mm-card-sub', card)
     const span = yearSpan(edge.firstYear ?? null, edge.lastYear ?? null)
     sub.textContent =
-      `across ${(edge.count ?? 0).toLocaleString()} donations${span ? ` · ${span}` : ''}`
+      `Across ${(edge.count ?? 0).toLocaleString()} donations${span ? ` · ${span}` : ''}`
     inflationFineprint(card)
 
     const list = el('ul', 'mm-rows', card)
-    row(list, donor.colour ?? clusterColour(donor.group).colour, donor.label,
+    row(list, markColour(donor), donor.label,
       donor.total, '', () => setSelection(donor.id, { user: true }))
-    row(list, party.colour ?? '#9AA0A8', party.label,
+    row(list, markColour(party), party.label,
       party.total, '', () => setSelection(party.id, { user: true }))
 
     const actions = actionRow(card)

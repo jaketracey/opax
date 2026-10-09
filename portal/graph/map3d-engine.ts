@@ -31,10 +31,11 @@ import { ACCENT, CLUSTER_COLOURS, SURFACE } from './palette.ts'
 //   depth      distance fades into the paper via fog, so the third axis
 //              reads as atmosphere rather than clutter
 //
-// Port changes, kept deliberately small: colours come from the static
-// palette module instead of tenant CSS tokens (so the palette observer and
-// probe element are gone), nodes may override their cluster hue (parties),
-// and cluster centres accept a central group (the parties ring's origin).
+// Port changes, kept deliberately small: colours come from the palette
+// module (the token source, read at build time) instead of tenant CSS tokens
+// (so the palette observer and probe element are gone), nodes may override
+// their cluster hue (parties), cluster centres accept a central group (the
+// parties ring's origin), and every party is always named (placeParties).
 // Everything else - gestures, momentum, labels, reduced motion - is the
 // source engine's behaviour, unchanged.
 // ---------------------------------------------------------------------------
@@ -95,8 +96,12 @@ const DIVE_MS = 560
 /** A cluster this small has nothing to fold: one dot stays a dot. */
 const HUB_MIN_MEMBERS = 2
 
-/** Cluster caption box height in CSS px (the folded variant is the taller). */
-const CAPTION_H = 17
+/** Cluster caption box height in CSS px: the label role's 13px line. */
+const CAPTION_H = 18
+/** A node label's box height in CSS px: the same 13px line. */
+const LABEL_H = 18
+/** A party label's dot and its gap, ahead of the name (.ui-party). */
+const PARTY_DOT_W = 16
 /** Captions keep this far inside the plate edge. */
 const PLATE_INSET = 6
 
@@ -113,10 +118,11 @@ export function easeInOut(t: number): number {
 /** Screen-space label box, pooled per frame so placement allocates nothing. */
 type LabelBox = { x1: number; y1: number; x2: number; y2: number }
 
+/** The plate: the canvas less the panels' insets, a hard edge for every name. */
+type Plate = { l: number; r: number; t: number; b: number }
+
 type Palette3D = {
   cats: THREE.Color[]
-  /** Text-safe ink per slot, for territory captions. */
-  inks: string[]
   surface: THREE.Color
   accent: THREE.Color
 }
@@ -203,8 +209,31 @@ type NodeVisual = EdgeAnchor & {
   label: HTMLDivElement
   /** Measured label width in CSS px, for collision placement. */
   labelW: number
+  /** A party name called out beside its cluster: the hairline back to the sphere. */
+  leader: HTMLDivElement | null
   /** The cluster the node belongs to, for its fold state; null for the centre. */
   territory: TerritoryVisual | null
+}
+
+/**
+ * Where a party's name goes this frame: its sphere on screen, its name's box,
+ * and the anchor its transform hangs from - side 0 above the sphere, 1 below,
+ * 2 to the right (a right-hand column too), 3 to the left.
+ */
+type PartyPlacement = {
+  visual: NodeVisual
+  sx: number
+  sy: number
+  r: number
+  w: number
+  opacity: number
+  side: number
+  x: number
+  y: number
+  x1: number
+  y1: number
+  x2: number
+  y2: number
 }
 
 type EdgeVisual = {
@@ -451,18 +480,14 @@ export function webglAvailable(): boolean {
 /**
  * The static palette, in the module's cluster order - slot i is the i-th
  * cluster. The source engine resolved these from tenant CSS tokens at
- * runtime; the money map's palette is fixed, so this is built once.
+ * runtime; the money map's come from the token source at build time
+ * (palette.ts), so this is built once.
  */
 function buildPalette(): Palette3D {
   const cats: THREE.Color[] = []
-  const inks: string[] = []
-  for (const style of CLUSTER_COLOURS.values()) {
-    cats.push(new THREE.Color(style.colour))
-    inks.push(style.ink)
-  }
+  for (const style of CLUSTER_COLOURS.values()) cats.push(new THREE.Color(style.colour))
   return {
     cats,
-    inks,
     surface: new THREE.Color(SURFACE),
     accent: new THREE.Color(ACCENT),
   }
@@ -962,6 +987,15 @@ export class KnowledgeMapEngine {
       label.className = 'rp-map3d-label'
       label.textContent = shortLabel(node.label)
       label.style.display = 'none'
+      const colour = node.colour ? new THREE.Color(node.colour) : this.catColour(slot).clone()
+      if (node.kind === 'party') {
+        // A party's colour never stands alone: its name always carries its
+        // dot, the shared PartyLabel (.ui-party).
+        label.classList.add('ui-party')
+        const dot = document.createElement('i')
+        dot.style.setProperty('--pc', `#${colour.getHexString()}`)
+        label.prepend(dot)
+      }
       this.labelLayer.appendChild(label)
 
       const visual: NodeVisual = {
@@ -970,7 +1004,7 @@ export class KnowledgeMapEngine {
         pos: new THREE.Vector3(sim.x, sim.y, sim.z),
         r: unlinked ? Math.max(3.5, r - 1.5) : r,
         slot,
-        colour: node.colour ? new THREE.Color(node.colour) : this.catColour(slot).clone(),
+        colour,
         hollow,
         unlinked,
         mesh,
@@ -988,6 +1022,7 @@ export class KnowledgeMapEngine {
         bornAt: firstBuild && !this.reduced ? performance.now() + Math.min(index * 9, 900) : 0,
         label,
         labelW: 0,
+        leader: null,
         territory: null,
       }
       this.applyNodeColour(visual)
@@ -1054,7 +1089,7 @@ export class KnowledgeMapEngine {
         const caption = document.createElement('div')
         caption.className = 'rp-map3d-territory'
         caption.style.color = style.ink
-        const groupLabel = this.overviewMode ? group.charAt(0).toUpperCase() + group.slice(1) : group.toUpperCase()
+        const groupLabel = group.charAt(0).toUpperCase() + group.slice(1)
         const captionFull = `${groupLabel} · ${count}`
         caption.textContent = captionFull
         caption.style.display = 'none'
@@ -1309,12 +1344,13 @@ export class KnowledgeMapEngine {
         spacing: Number.isFinite(spacing) ? spacing : 0,
       }
     }
-    const first = this.paintRank[0]
+    const first = this.paintRank.find((visual) => visual.node.kind !== 'party')
     const label = fontOf(first?.label)
+    const partyLabel = fontOf(this.paintRank.find((visual) => visual.node.kind === 'party')?.label)
     const probe = this.territories[0]?.caption
     const caption = fontOf(probe)
-    // The folded variant is a step larger: resolve it through the attribute
-    // that styles it, so the two widths are both exact.
+    // A host may style the folded variant apart: resolve it through the
+    // attribute that styles it, so the two widths are both exact.
     probe?.setAttribute('data-hub', '')
     const hubCaption = fontOf(probe)
     probe?.removeAttribute('data-hub')
@@ -1327,7 +1363,9 @@ export class KnowledgeMapEngine {
       return ctx.measureText(text).width + spacing * text.length
     }
     for (const visual of this.paintRank) {
-      visual.labelW = measure(visual.label.textContent ?? '', this.labelFont, 0, 6.2)
+      visual.labelW = visual.node.kind === 'party'
+        ? measure(visual.label.textContent ?? '', partyLabel.font, 0, 6.8) + PARTY_DOT_W
+        : measure(visual.label.textContent ?? '', this.labelFont, 0, 6.2)
     }
     for (const territory of this.territories) {
       territory.captionW = measure(territory.captionFull, this.captionFont, this.captionSpacing, 7.4)
@@ -1343,6 +1381,7 @@ export class KnowledgeMapEngine {
       visual.material.dispose()
       visual.shellMaterial.dispose()
       visual.label.remove()
+      visual.leader?.remove()
     }
     for (const visual of this.edgeVisuals) visual.label?.remove()
     for (const visual of this.flowVisuals) visual.label?.remove()
@@ -1539,15 +1578,14 @@ export class KnowledgeMapEngine {
       this.popup.style.display = 'none'
       return
     }
-    this.popupMeta.replaceChildren()
     const dot = document.createElement('span')
     dot.className = 'rp-map3d-popup-dot'
-    const category = document.createElement('span')
+    dot.setAttribute('aria-hidden', 'true')
+    let name: string
     if (hub) {
-      this.popupName.textContent = hub.group.charAt(0).toUpperCase() + hub.group.slice(1)
+      name = hub.group.charAt(0).toUpperCase() + hub.group.slice(1)
       dot.style.background = `#${hub.anchor.colour.getHexString()}`
-      category.textContent = 'industry cluster'
-      category.style.color = hub.ink
+      this.popupMeta.textContent = 'Industry cluster'
       const parties = hub.flows.length
       this.popupCounts.textContent = `${formatMoney(hub.total)} · ${hub.count} donors · ${
         parties === 1 ? '1 party' : `${parties} parties`
@@ -1555,12 +1593,10 @@ export class KnowledgeMapEngine {
       this.popupHint.textContent = 'Click to open the cluster'
     } else if (visual) {
       const node = visual.node
-      this.popupName.textContent = node.label
+      name = node.label
       dot.style.background = `#${visual.colour.getHexString()}`
-      category.textContent = node.kind === 'party'
-        ? 'political party'
-        : (node.industry ?? node.group).replace(/_/g, ' ')
-      category.style.color = this.palette.inks[visual.slot] ?? '#5A616B'
+      const kind = node.kind === 'party' ? 'political party' : (node.industry ?? node.group).replace(/_/g, ' ')
+      this.popupMeta.textContent = kind.charAt(0).toUpperCase() + kind.slice(1)
       const links = visual.degree === 1 ? '1' : `${visual.degree}`
       const who = node.kind === 'agency' || node.kind === 'supplier'
         ? `${links} contract relationship${visual.degree === 1 ? '' : 's'}`
@@ -1571,8 +1607,9 @@ export class KnowledgeMapEngine {
         ? `${formatMoney(node.total)} · ${who}`
         : who
       this.popupHint.textContent = 'Click for details'
-    }
-    this.popupMeta.append(dot, category)
+    } else return
+    // The mark's colour sits beside its name, never alone.
+    this.popupName.replaceChildren(dot, name)
     // Kept as the layer's last child so it rides above every label.
     this.labelLayer.appendChild(this.popup)
     this.popup.style.display = 'block'
@@ -3429,14 +3466,16 @@ export class KnowledgeMapEngine {
   }
 
   /**
-   * Labels, in three tiers so no two ever sit on top of each other:
+   * Labels, in four tiers so no two ever sit on top of each other:
    *
    *   1. the emphasised few (selection, hover, a selected flow's ends) -
    *      always shown, and everything after them keeps clear of them;
-   *   2. cluster captions, largest cluster first - above the mark, else
+   *   2. every party, at any zoom and under any focus - its colour never
+   *      stands alone (placeParties);
+   *   3. cluster captions, largest cluster first - above the mark, else
    *      below it, then each shifted to stay inside the plate, else the name
    *      without its count, else nothing;
-   *   3. the rest by size - a focused view names only the neighbourhood, a
+   *   4. the rest by size - a focused view names only the neighbourhood, a
    *      free view names the biggest within a budget that grows as the
    *      camera comes closer, each new name fading in rather than popping.
    *
@@ -3485,7 +3524,9 @@ export class KnowledgeMapEngine {
         this.labelFades.delete(el)
         continue
       }
-      if (prev === 0 || el.style.display === 'none') el.style.display = 'block' // a rebuild may have hidden it directly
+      // A rebuild may have hidden it directly; '' hands display back to the
+      // stylesheet (a party label is the inline-flex .ui-party).
+      if (prev === 0 || el.style.display === 'none') el.style.display = ''
       el.style.opacity = (fade.alpha * fade.opacity).toFixed(2)
       if (fade.alpha !== target) moving = true
     }
@@ -3550,7 +3591,10 @@ export class KnowledgeMapEngine {
       else label.removeAttribute('data-selected')
     }
 
-    // 2. Captions.
+    // 2. Parties, named whatever the zoom or the focus.
+    this.placeParties(discCount, isEmphasised)
+
+    // 3. Captions.
     for (const territory of this.captionRank) {
       const caption = territory.caption
       const hub = territory.hub
@@ -3596,7 +3640,7 @@ export class KnowledgeMapEngine {
       else caption.removeAttribute('data-hub')
     }
 
-    // 3. The rest. The budget grows as the camera comes closer, like the 2D
+    // 4. The rest. The budget grows as the camera comes closer, like the 2D
     // zoom; it is continuous so the last name in fades rather than pops.
     const budget = Math.max(8, Math.min(48, 14 * (this.fitDist / Math.max(1, this.view.dist))))
     let kept = 0
@@ -3605,7 +3649,7 @@ export class KnowledgeMapEngine {
       const disc = discs[rank]
       if (!visual || !disc) continue
       const id = visual.node.id
-      if (isEmphasised(id)) continue
+      if (isEmphasised(id) || visual.node.kind === 'party') continue
       const label = visual.label
       label.removeAttribute('data-emphasised')
       label.removeAttribute('data-selected')
@@ -3671,6 +3715,222 @@ export class KnowledgeMapEngine {
     this.positionPopup()
     this.projectEdgeLabels()
     if (this.settleLabels(now)) this.renderDirty = true
+  }
+
+  /** A party name placed this frame: beside its sphere, or in a call-out column. Pooled per frame. */
+  private partyDirect: PartyPlacement[] = []
+  private callouts: PartyPlacement[] = []
+
+  /**
+   * Name every visible party. A party's colour is identity, and the minor
+   * parties share one muted dot, so a sphere in a party's colour is never
+   * left without its name: not at the fitted overview, where the party
+   * cluster is a knot a few dozen pixels across, nor under a focus that dims
+   * it. Each name first tries a free side of its own sphere - above, below,
+   * right, left - clear of the plate edge, the names already placed and every
+   * other sphere (a name across Liberal must not read as Liberal's). A name
+   * with no free side is called out instead: stacked in a column beside the
+   * cluster, in the order of the spheres, joined back to its own sphere by a
+   * hairline; a name beside its sphere that a column would cross joins the
+   * column. Every party name is drawn; everything after keeps clear of them.
+   */
+  private placeParties(discCount: number, isEmphasised: (id: string) => boolean) {
+    const plate: Plate = {
+      l: this.insets.left + PLATE_INSET,
+      r: this.width - this.insets.right - PLATE_INSET,
+      t: this.insets.top + PLATE_INSET,
+      b: this.height - this.insets.bottom - PLATE_INSET,
+    }
+    const direct = this.partyDirect
+    const callouts = this.callouts
+    direct.length = 0
+    callouts.length = 0
+    let minX = Infinity
+    let maxX = -Infinity
+    for (let rank = 0; rank < this.paintRank.length; rank++) {
+      const visual = this.paintRank[rank]
+      const disc = this.discs[rank]
+      if (!visual || !disc || visual.node.kind !== 'party' || isEmphasised(visual.node.id)) continue
+      visual.label.removeAttribute('data-emphasised')
+      visual.label.removeAttribute('data-selected')
+      if (!disc.ok || disc.opacity < 0.05 || visual.scale.current < 0.2) continue
+      const { sx, sy, screenR } = disc
+      // A sphere off the plate, or under a panel, shows no colour to name.
+      if (sx < plate.l || sx > plate.r || sy < plate.t || sy > plate.b) continue
+      minX = Math.min(minX, sx - screenR)
+      maxX = Math.max(maxX, sx + screenR)
+      const placement: PartyPlacement = {
+        visual, sx, sy, r: screenR, w: visual.labelW + 4,
+        // Dimmed parties keep their names, quieter, as their spheres are.
+        opacity: Math.max(0.55, Math.min(1, visual.opacity.current + 0.25)),
+        side: 0, x: 0, y: 0, x1: 0, y1: 0, x2: 0, y2: 0,
+      }
+      if (this.freeSide(placement, rank, discCount, plate)) direct.push(placement)
+      else callouts.push(placement)
+    }
+    if (callouts.length) {
+      for (let round = 0; round < 3; round++) {
+        this.layoutCallouts(minX, maxX, plate)
+        let moved = false
+        for (let i = direct.length - 1; i >= 0; i--) {
+          const d = direct[i]!
+          if (!callouts.some((c) => d.x1 < c.x2 && d.x2 > c.x1 && d.y1 < c.y2 && d.y2 > c.y1)) continue
+          callouts.push(d)
+          direct.splice(i, 1)
+          moved = true
+        }
+        if (!moved) break
+      }
+    }
+    for (const d of direct) {
+      this.placeBox(d.x1, d.y1, d.x2, d.y2, true)
+      const transform = d.side === 0
+        ? `translate(-50%, -100%) translate(${d.x.toFixed(1)}px, ${d.y.toFixed(1)}px)`
+        : d.side === 1
+        ? `translate(-50%, 0) translate(${d.x.toFixed(1)}px, ${d.y.toFixed(1)}px)`
+        : d.side === 2
+        ? `translate(0, -50%) translate(${d.x.toFixed(1)}px, ${d.y.toFixed(1)}px)`
+        : `translate(-100%, -50%) translate(${d.x.toFixed(1)}px, ${d.y.toFixed(1)}px)`
+      this.wantLabel(d.visual.label, transform, d.opacity)
+    }
+    for (const c of callouts) this.drawCallout(c)
+  }
+
+  /**
+   * Find a free side of the party's own sphere for its name - above, below,
+   * right, left - and write its box and anchor into the placement. Nothing is
+   * committed: placeParties may still hand the name to a column.
+   */
+  private freeSide(p: PartyPlacement, rank: number, discCount: number, plate: Plate): boolean {
+    const { sx, sy, w } = p
+    const h = LABEL_H
+    const off = p.r + 3
+    for (let side = 0; side < 4; side++) {
+      const x1 = side <= 1 ? sx - w / 2 : side === 2 ? sx + off : sx - off - w
+      const y1 = side === 0 ? sy - off - h : side === 1 ? sy + off : sy - h / 2
+      const x2 = x1 + w
+      const y2 = y1 + h
+      if (x1 < plate.l || x2 > plate.r || y1 < plate.t || y2 > plate.b) continue
+      if (!this.boxFree(x1, y1, x2, y2)) continue
+      let blocked = false
+      for (const d of this.partyDirect) {
+        if (x1 < d.x2 && x2 > d.x1 && y1 < d.y2 && y2 > d.y1) {
+          blocked = true
+          break
+        }
+      }
+      for (let j = 0; j < discCount && !blocked; j++) {
+        if (j === rank) continue
+        const q = this.discs[j]
+        if (!q || !q.ok || q.opacity <= 0.2 || q.screenR < 2) continue
+        const nx = Math.max(x1, Math.min(q.sx, x2))
+        const ny = Math.max(y1, Math.min(q.sy, y2))
+        if (Math.hypot(q.sx - nx, q.sy - ny) < q.screenR) blocked = true
+      }
+      if (blocked) continue
+      p.side = side
+      p.x = side <= 1 ? sx : side === 2 ? sx + off : sx - off
+      p.y = side === 0 ? sy - off : side === 1 ? sy + off : sy
+      p.x1 = x1
+      p.y1 = y1
+      p.x2 = x2
+      p.y2 = y2
+      return true
+    }
+    return false
+  }
+
+  /** Whether a box is clear of every label placed so far this frame, without placing it. */
+  private boxFree(x1: number, y1: number, x2: number, y2: number): boolean {
+    for (const p of this.placedLabelBoxes) {
+      if (x1 < p.x2 && x2 > p.x1 && y1 < p.y2 && y2 > p.y1) return false
+    }
+    return true
+  }
+
+  /**
+   * The call-out columns, either side of the party cluster and split by where
+   * the spheres sit (a column that would leave the plate folds into the
+   * other). In each, every name sits as near its sphere's height as the names
+   * above and below allow, kept on the plate, in the spheres' top-to-bottom
+   * order so the hairlines do not cross. Writes each placement's box.
+   */
+  private layoutCallouts(minX: number, maxX: number, plate: Plate) {
+    const callouts = this.callouts
+    callouts.sort((a, b) => a.sx - b.sx)
+    const widest = (from: number, to: number) => {
+      let w = 0
+      for (let i = from; i < to; i++) w = Math.max(w, callouts[i]!.w)
+      return w
+    }
+    const gap = 14
+    const leftX = minX - gap
+    const rightX = maxX + gap
+    let split = Math.floor(callouts.length / 2)
+    const leftFits = leftX - widest(0, callouts.length) >= plate.l
+    const rightFits = rightX + widest(0, callouts.length) <= plate.r
+    if (leftX - widest(0, split) < plate.l && rightFits) split = 0
+    else if (rightX + widest(split, callouts.length) > plate.r && leftFits) split = callouts.length
+    const step = LABEL_H + 2
+    const stack = (from: number, to: number, side: 2 | 3, edgeX: number) => {
+      const column = callouts.slice(from, to).sort((a, b) => a.sy - b.sy)
+      let previous = -Infinity
+      for (const c of column) {
+        c.y = Math.max(c.sy, plate.t + step / 2, previous + step)
+        previous = c.y
+      }
+      let next = Infinity
+      for (let i = column.length - 1; i >= 0; i--) {
+        const c = column[i]!
+        c.y = Math.min(c.y, plate.b - step / 2, next - step)
+        next = c.y
+      }
+      for (const c of column) {
+        // Clamped to the plate: a name may then cross the cluster, never the edge.
+        c.side = side
+        c.x = side === 2 ? Math.min(edgeX, plate.r - c.w) : Math.max(edgeX, plate.l + c.w)
+        c.x1 = side === 2 ? c.x : c.x - c.w
+        c.x2 = c.x1 + c.w
+        c.y1 = c.y - LABEL_H / 2
+        c.y2 = c.y + LABEL_H / 2
+      }
+    }
+    stack(0, split, 3, leftX)
+    stack(split, callouts.length, 2, rightX)
+  }
+
+  /** A called-out name in its column, and the hairline from its sphere's rim to just short of it. */
+  private drawCallout(c: PartyPlacement) {
+    const { visual, sx, sy, r, x, y, opacity } = c
+    this.placeBox(c.x1, c.y1, c.x2, c.y2, true)
+    this.wantLabel(
+      visual.label,
+      c.side === 2
+        ? `translate(0, -50%) translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`
+        : `translate(-100%, -50%) translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`,
+      opacity,
+    )
+    const dx = x - sx
+    const dy = y - sy
+    const length = Math.hypot(dx, dy)
+    if (length <= r + 6) return
+    const ux = dx / length
+    const uy = dy / length
+    let leader = visual.leader
+    if (!leader) {
+      leader = document.createElement('div')
+      leader.className = 'rp-map3d-leader'
+      leader.style.display = 'none'
+      leader.style.opacity = '0'
+      this.labelLayer.appendChild(leader)
+      visual.leader = leader
+    }
+    leader.style.width = `${(length - r - 4).toFixed(1)}px`
+    this.wantLabel(
+      leader,
+      `translate(${(sx + ux * (r + 1)).toFixed(1)}px, ${(sy + uy * (r + 1)).toFixed(1)}px) rotate(${Math.atan2(uy, ux).toFixed(4)}rad)`,
+      opacity,
+    )
   }
 
   /** Relation labels ride emphasised edges only, like the 2D map's textPath. */

@@ -49,7 +49,7 @@
  * reaches the DOM through textContent.
  */
 
-import { shortMoney as fmtMoney } from './format.js'
+import { shortDate, shortMoney as fmtMoney } from './format.js'
 
 const JURISDICTIONS = {
   federal: { label: 'Commonwealth', file: '/graph/grants.federal.json', dir: '/grants/federal/' },
@@ -67,15 +67,19 @@ const KIND_LABELS = {
   other: 'Other',
 }
 const STATE_REGISTERS = { qld: 'ECQ (Queensland)', vic: 'VEC (Victoria)', tas: 'TEC (Tasmania)' }
+/** A party's name (or the code a register writes), lowercased, to [its dot's
+ *  colour class, the short name a dense cell shows]. Sentence case: a code
+ *  stays only where it is the name people use (LNP, CLP, KAP, UAP). */
 const PARTY_MAP = {
-  labor: ['alp', 'ALP'], 'australian labor party': ['alp', 'ALP'], liberal: ['lib', 'LIB'], 'liberal party': ['lib', 'LIB'],
-  nationals: ['nat', 'NAT'], 'national party': ['nat', 'NAT'], 'the nationals': ['nat', 'NAT'],
-  lnp: ['lnp', 'LNP'], 'liberal national party': ['lnp', 'LNP'], 'country liberal party': ['nat', 'CLP'],
-  greens: ['grn', 'GRN'], 'australian greens': ['grn', 'GRN'], 'the greens': ['grn', 'GRN'], 'queensland greens': ['grn', 'GRN'],
-  'one nation': ['onp', 'ONP'], "pauline hanson's one nation": ['onp', 'ONP'],
-  independent: ['ind', 'IND'], 'centre alliance': ['oth', 'CA'], "katter's australian party": ['oth', 'KAP'],
-  'united australia party': ['oth', 'UAP'], 'family first': ['oth', 'FF'], 'animal justice party': ['oth', 'AJP'],
-  'legalise cannabis': ['oth', 'LC'], coalition: ['lib', 'COALITION'],
+  labor: ['alp', 'Labor'], 'australian labor party': ['alp', 'Labor'], alp: ['alp', 'Labor'], 'a.l.p.': ['alp', 'Labor'],
+  liberal: ['lib', 'Liberal'], 'liberal party': ['lib', 'Liberal'], lp: ['lib', 'Liberal'], lib: ['lib', 'Liberal'],
+  nationals: ['nat', 'Nationals'], 'national party': ['nat', 'Nationals'], 'the nationals': ['nat', 'Nationals'], nat: ['nat', 'Nationals'], nats: ['nat', 'Nationals'],
+  lnp: ['lnp', 'LNP'], 'liberal national party': ['lnp', 'LNP'], 'country liberal party': ['nat', 'CLP'], clp: ['nat', 'CLP'],
+  greens: ['grn', 'Greens'], 'australian greens': ['grn', 'Greens'], 'the greens': ['grn', 'Greens'], 'queensland greens': ['grn', 'Greens'],
+  'one nation': ['onp', 'One Nation'], "pauline hanson's one nation": ['onp', 'One Nation'],
+  independent: ['ind', 'Independent'], 'centre alliance': ['oth', 'Centre Alliance'], "katter's australian party": ['oth', 'KAP'], kap: ['oth', 'KAP'],
+  'united australia party': ['oth', 'UAP'], uap: ['oth', 'UAP'], 'family first': ['oth', 'Family First'], 'animal justice party': ['oth', 'Animal Justice'],
+  'legalise cannabis': ['oth', 'Legalise Cannabis'], coalition: ['lib', 'Coalition'],
 }
 
 /** The shared short form (format.js), under the name the grants modules use. */
@@ -496,234 +500,215 @@ export function viewColumns (view, jur) {
 }
 
 // ---------------------------------------------------------------------------
-// Styles — .gr- prefix, site tokens with fallbacks, light-only
+// Styles — .gr- prefix, site tokens (no fallbacks: every host page loads
+// tokens.css or style.css), light-only. Buttons, chips, fields, the segmented
+// controls and the labels are the shared ui-* classes (ui-controls.css); this
+// block only lays them out.
 // ---------------------------------------------------------------------------
 
 const CSS = `
-.gr-root { font-family: var(--sans, 'Public Sans', -apple-system, 'Segoe UI', Roboto, sans-serif); color: var(--ink, #23271F); }
-.gr-root :focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
-.gr-title { font: 700 clamp(1.4rem, 2.6vw, 1.9rem)/1.15 var(--serif, Merriweather, Georgia, serif); margin: 0 0 0.25rem; }
-.gr-deck { margin: 0 0 0.8rem; max-width: 66ch; color: var(--ink-soft, #575C52); font-size: 0.875rem; line-height: 1.5; }
+.gr-root { font-family: var(--sans); color: var(--ink); }
+.gr-root [hidden] { display: none !important; }
+.gr-root :focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
+/* Table text never steps below the six sizes. */
+.gr-root small { font-size: inherit; }
+.gr-title { font: var(--type-heading); margin: 0 0 var(--space-line); }
+.gr-deck { margin: 0 0 var(--space-heading); max-width: var(--size-readable); font: var(--type-metadata); color: var(--ink-soft); }
 
-.gr-toolbar { display: flex; flex-wrap: wrap; gap: 0.5rem 0.6rem; align-items: center; margin-bottom: 0.6rem; }
-.gr-field { display: flex; flex-direction: column; gap: 0.25rem; min-width: 0; }
-.gr-label { font-size: 0.625rem; font-weight: 600; color: var(--ink-faint, #6F7468); }
-.gr-input, .gr-select {
-  font: inherit; font-size: 0.8125rem; color: var(--ink, #23271F); background: var(--paper-raised, #FFFFFF);
-  border: 1px solid var(--line-strong, #8D897B); border-radius: 2px; padding: 0.3rem 0.45rem; min-height: 1.95rem;
-}
-.gr-search { width: 11.5rem; max-width: 100%; }
-.gr-year { width: 5.25rem; font-variant-numeric: tabular-nums; }
-.gr-yearrow { display: flex; align-items: center; gap: 0.3rem; }
-.gr-yearrow span { color: var(--ink-faint, #6F7468); }
-.gr-views { display: flex; }
-.gr-seg {
-  font: inherit; font-size: 0.8125rem; font-weight: 600; cursor: pointer; padding: 0.3rem 0.7rem; min-height: 1.95rem;
-  background: var(--paper-raised, #FFFFFF); color: var(--ink-soft, #575C52); border: 1px solid var(--line-strong, #8D897B);
-  white-space: nowrap;
-}
-.gr-seg + .gr-seg { border-left: 0; }
-.gr-seg:first-child { border-radius: 2px 0 0 2px; }
-.gr-seg:last-child { border-radius: 0 2px 2px 0; }
-.gr-seg[aria-pressed="true"] { background: var(--navy, #142A43); border-color: var(--navy, #142A43); color: #FFFFFF; }
-.gr-btn {
-  font: inherit; font-size: 0.8125rem; font-weight: 600; cursor: pointer; padding: 0.3rem 0.7rem; min-height: 1.95rem;
-  border-radius: 2px; background: var(--paper-raised, #FFFFFF); border: 1px solid var(--line-strong, #8D897B); color: var(--ink-soft, #575C52);
-  white-space: nowrap;
-}
-.gr-btn:hover { background: var(--paper-sunken, #F1EFE8); }
-.gr-export { display: inline-flex; align-items: center; gap: 0.35rem; border-color: var(--bronze-ink, #8A5A12); color: var(--bronze-ink, #8A5A12); margin-left: auto; }
-.gr-export:hover { background: var(--bronze-wash, rgba(160, 118, 27, 0.16)); }
-.gr-export-icon { width: 14px; height: 14px; flex: none; }
+/* The bar: shared controls at the compact size (44px on touch). */
+.gr-toolbar { display: flex; flex-wrap: wrap; gap: var(--space-tight); align-items: center; margin-bottom: var(--space-row); }
+.gr-field { display: flex; flex-direction: column; gap: var(--space-line); min-width: 0; }
+.gr-label { font: var(--type-label); color: var(--ink-soft); }
+.gr-root .gr-search { width: 12rem; max-width: 100%; }
+.gr-root .gr-year { width: 6rem; font-variant-numeric: tabular-nums; }
+.gr-yearrow { display: flex; align-items: center; gap: var(--space-line); }
+.gr-yearrow span { color: var(--ink-faint); }
+.gr-choice { display: inline-flex; flex-wrap: wrap; gap: var(--space-line); }
+.gr-root .gr-export { margin-left: auto; }
 
-/* The secondary filters live behind one disclosure so the bar stays one line. */
+/* The secondary filters live behind one disclosure so the bar stays one line.
+   A summary cannot take .ui-button, so it draws the secondary pill itself. */
 .gr-more { position: relative; }
-.gr-more-btn { display: inline-flex; align-items: center; gap: 0.4rem; list-style: none; }
+.gr-more-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-tight);
+  min-height: var(--ui-height); padding: 0 var(--ui-pad); border-radius: var(--radius-pill);
+  background: var(--ui-wash); color: var(--navy); font: 600 var(--ui-font)/1.4 var(--sans);
+  white-space: nowrap; list-style: none; cursor: pointer; transition: background-color var(--ui-motion);
+}
 .gr-more-btn::-webkit-details-marker { display: none; }
 .gr-more-btn::after { content: ''; width: 0.4rem; height: 0.4rem; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: translateY(-2px) rotate(45deg); }
-.gr-more[open] .gr-more-btn { background: var(--paper-sunken, #F1EFE8); color: var(--ink, #23271F); }
+.gr-more-btn:hover, .gr-more[open] .gr-more-btn { background: var(--ui-wash-pressed); }
 .gr-more[open] .gr-more-btn::after { transform: translateY(1px) rotate(-135deg); }
-.gr-count { display: inline-grid; place-items: center; min-width: 1.15rem; height: 1.15rem; padding: 0 0.3rem; border-radius: 1rem; background: var(--bronze-ink, #8A5A12); color: #FFFFFF; font-size: 0.6875rem; line-height: 1; }
+.gr-count { font-variant-numeric: tabular-nums; }
 .gr-pop {
-  position: absolute; z-index: 6; top: calc(100% + 0.35rem); left: 0; width: min(34rem, calc(100vw - 3rem));
-  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem 0.9rem;
-  padding: 0.8rem 0.9rem 0.7rem; background: var(--paper-raised, #FFFFFF); border: 1px solid var(--line-strong, #8D897B);
-  border-radius: 3px; box-shadow: 0 12px 28px rgba(30, 26, 18, 0.16);
+  position: absolute; z-index: 6; top: calc(100% + var(--space-tight)); left: 0; width: min(34rem, calc(100vw - 3rem));
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-row) var(--space-block);
+  padding: var(--space-block); background: var(--paper-raised); border: var(--border-hairline) solid var(--divider-subtle);
+  border-radius: var(--radius-md); box-shadow: var(--shadow-overlay);
 }
 .gr-pop.gr-pop-right { left: auto; right: 0; }
-.gr-pop .gr-select, .gr-pop .gr-input { width: 100%; }
-.gr-pop .gr-year { width: 100%; }
-.gr-pop-foot { grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 0.5rem; padding-top: 0.15rem; }
-.gr-done { background: var(--navy, #142A43); border-color: var(--navy, #142A43); color: #FFFFFF; }
-.gr-done:hover { background: var(--navy-raised, #1D3A5C); }
+.gr-pop-foot { grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: var(--space-tight); }
 
-.gr-tiles { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; margin: 0.2rem 0 0.6rem; }
-.gr-tile { padding: 0.4rem 0 0.1rem; min-width: 110px; flex: 1 1 120px; max-width: 220px; border-top: 2px solid var(--bronze, #A0761B); }
+/* Figures: the one number each tile is about, a hairline above. */
+.gr-tiles { display: flex; flex-wrap: wrap; gap: var(--space-tight) var(--space-group); margin: 0 0 var(--space-row); }
+.gr-tile { flex: 1 1 120px; min-width: 110px; max-width: 220px; padding-top: var(--space-tight); border-top: var(--border-hairline) solid var(--divider-default); }
 /* In the hub the tiles open the tab, right under its strip: no rule of their own. */
-.gr-embedded .gr-tile { border-top: 0; padding-top: 0.1rem; }
-.gr-tile b { display: block; font: 700 1.3rem/1.1 var(--serif, Merriweather, Georgia, serif); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
-.gr-tile span { display: block; margin-top: 0.25rem; color: var(--ink-soft, #575C52); font-size: 0.75rem; line-height: 1.35; }
+.gr-embedded .gr-tile { border-top: 0; padding-top: 0; }
+.gr-tile b { display: block; font: var(--type-heading); font-variant-numeric: tabular-nums; }
+.gr-tile span { display: block; margin-top: var(--space-line); font: var(--type-fine); color: var(--ink-soft); }
 
-.gr-chart { margin: 0 0 0.7rem; }
+.gr-chart { margin: 0 0 var(--space-row); }
 .gr-chart svg { width: 100%; height: auto; max-height: 150px; display: block; }
-.gr-bar { fill: var(--bronze-wash, rgba(160, 118, 27, 0.16)); stroke: var(--bronze, #A0761B); stroke-width: 1; }
-.gr-bar-donor { fill: var(--bronze, #A0761B); }
-.gr-axis { font: 600 10px/1 var(--sans, sans-serif); fill: var(--ink-faint, #6F7468); }
-.gr-val { font: 600 10px/1 var(--sans, sans-serif); fill: var(--ink-soft, #575C52); }
+.gr-bar { fill: color-mix(in srgb, var(--chart-mark) 16%, transparent); stroke: var(--chart-mark); stroke-width: 1; }
+.gr-bar-donor { fill: var(--chart-mark); }
+.gr-axis { font: var(--type-label); fill: var(--ink-faint); }
+.gr-val { font: var(--type-fine); fill: var(--ink-soft); }
 .gr-year-col { cursor: pointer; outline: none; }
 .gr-hit { fill: transparent; }
 .gr-year-col:hover .gr-bar, .gr-year-col:focus-visible .gr-bar { stroke-width: 2; }
-.gr-year-col:focus-visible .gr-hit { fill: var(--bronze-wash, rgba(160,118,27,.16)); }
-.gr-windowed .gr-dim .gr-bar { fill: transparent; stroke: var(--line-strong, #8D897B); stroke-dasharray: 2 2; }
-.gr-windowed .gr-dim .gr-bar-donor { fill: var(--line, #DFDCD2); }
-.gr-windowed .gr-dim .gr-val, .gr-windowed .gr-dim .gr-axis { fill: var(--line-strong, #8D897B); }
-.gr-windowed .gr-sel .gr-axis { fill: var(--bronze-ink, #8A5A12); }
+.gr-year-col:focus-visible .gr-hit { fill: color-mix(in srgb, var(--chart-mark) 16%, transparent); }
+.gr-windowed .gr-dim .gr-bar { fill: transparent; stroke: var(--line-control); stroke-dasharray: 2 2; }
+.gr-windowed .gr-dim .gr-bar-donor { fill: var(--chart-baseline); }
+.gr-windowed .gr-dim .gr-val, .gr-windowed .gr-dim .gr-axis { fill: var(--line-control); }
+.gr-windowed .gr-sel .gr-axis { fill: var(--bronze-ink); }
 .gr-hint { font-style: italic; }
-.gr-gov { display: flex; flex-wrap: wrap; gap: 0.2rem 1rem; margin: 0.25rem 0 0; font-size: 0.72rem; color: var(--ink-faint, #6F7468); }
-.gr-gov .party { text-transform: none; letter-spacing: 0; font-weight: 600; }
-.gr-legend { display: inline-flex; align-items: center; gap: 0.35rem; }
-.gr-legend i { display: inline-block; width: 12px; height: 9px; border: 1px solid var(--bronze, #A0761B); background: var(--bronze-wash, rgba(160,118,27,.16)); }
-.gr-legend i.gr-solid { background: var(--bronze, #A0761B); }
+.gr-gov { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-line) var(--space-block); margin: var(--space-line) 0 0; font: var(--type-fine); color: var(--ink-soft); }
+.gr-legend { display: inline-flex; align-items: center; gap: var(--space-tight); }
+.gr-legend i { display: inline-block; width: 12px; height: 9px; border: var(--border-hairline) solid var(--chart-mark); background: color-mix(in srgb, var(--chart-mark) 16%, transparent); }
+.gr-legend i.gr-solid { background: var(--chart-mark); }
 
-.gr-summary { margin: 0 0 0.4rem; font-size: 0.78rem; color: var(--ink-soft, #575C52); font-variant-numeric: tabular-nums; }
-.gr-summary b { font-weight: 700; color: var(--ink, #23271F); }
-.gr-tablewrap { overflow: auto; max-height: min(72vh, 900px); border: 1px solid var(--line-strong, #8D897B); background: var(--paper-raised, #FFFFFF); }
-.gr-table { border-collapse: collapse; width: 100%; min-width: 800px; font-size: 0.84rem; line-height: 1.35; }
-.gr-table thead th { position: sticky; top: 0; z-index: 2; padding: 0; background: var(--paper-sunken, #F1EFE8); border-bottom: 1px solid var(--line-strong, #8D897B); text-align: left; white-space: nowrap; }
-.gr-sort { font: inherit; font-size: 0.8125rem; font-weight: 700; cursor: pointer; color: var(--ink-soft, #575C52); background: none; border: 0; width: 100%; text-align: inherit; padding: 0.5rem 0.625rem; display: flex; gap: 0.3rem; align-items: baseline; }
-.gr-sort:hover { color: var(--ink, #23271F); }
-th[aria-sort] .gr-sort { color: var(--ink, #23271F); }
-.gr-arrow { font-size: 0.625rem; color: var(--bronze-ink, #8A5A12); }
+/* The table: no box, a rule above and below; the open file lifts to raised. */
+.gr-summary { margin: 0 0 var(--space-tight); font: var(--type-metadata); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.gr-summary b { font-weight: 600; color: var(--ink); }
+.gr-tablewrap { overflow: auto; max-height: min(72vh, 900px); border-block: var(--border-hairline) solid var(--divider-default); }
+.gr-table { border-collapse: collapse; width: 100%; min-width: 800px; font: var(--type-metadata); }
+.gr-table thead th { position: sticky; top: 0; z-index: 2; padding: 0; background: var(--paper); border-bottom: var(--border-hairline) solid var(--divider-default); text-align: left; white-space: nowrap; }
+.gr-sort { display: flex; gap: var(--space-line); align-items: baseline; width: 100%; padding: var(--space-tight) var(--space-row); border: 0; background: none; color: var(--ink-soft); font: var(--type-label); text-align: inherit; cursor: pointer; }
+.gr-sort:hover, th[aria-sort] .gr-sort { color: var(--ink); }
+.gr-arrow { color: var(--bronze-ink); }
 .gr-th-num { text-align: right; }
 .gr-th-num .gr-sort { justify-content: flex-end; }
-.gr-table td { padding: 0.38rem 0.55rem; border-bottom: 1px solid var(--line, #DFDCD2); vertical-align: baseline; }
-.gr-table tbody tr.gr-row:hover td { background: var(--paper-sunken, #F1EFE8); }
+.gr-table td { padding: var(--space-tight) var(--space-row); border-bottom: var(--border-hairline) solid var(--divider-subtle); vertical-align: baseline; }
+.gr-table tbody tr.gr-row:hover td { background: var(--paper-sunken); }
 .gr-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.gr-muted { color: var(--ink-faint, #6F7468); }
-.gr-table a { color: inherit; text-decoration: underline; text-decoration-color: var(--bronze, #A0761B); text-underline-offset: 2px; }
-.gr-table a:hover { color: var(--bronze-ink, #8A5A12); }
-.gr-open { font: inherit; text-align: left; background: none; border: 0; padding: 0; cursor: pointer; color: inherit; text-decoration: underline; text-decoration-color: var(--bronze, #A0761B); text-underline-offset: 2px; }
-.gr-open:hover { color: var(--bronze-ink, #8A5A12); }
-.gr-open[aria-expanded="true"] { font-weight: 700; text-decoration: none; }
-.gr-share { color: var(--ink-faint, #6F7468); }
-.gr-bar-cell { display: inline-block; height: 8px; background: var(--bronze, #A0761B); vertical-align: middle; margin-right: 0.4rem; border-radius: 1px; }
-.gr-empty { padding: 1.5rem 0.75rem; text-align: center; color: var(--ink-faint, #6F7468); }
-.gr-status { padding: 1.5rem 0.75rem; font-size: 0.875rem; color: var(--ink-soft, #575C52); }
-.gr-status .gr-btn { margin-left: 0.5rem; }
-.gr-mps { display: flex; flex-wrap: wrap; gap: 0.15rem 0.7rem; }
-.gr-mps .party { text-transform: none; letter-spacing: 0; font-weight: 500; font-size: 0.8125rem; }
-.gr-donor-cell { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 0.2rem 0.45rem; justify-content: flex-end; }
+.gr-muted { color: var(--ink-faint); }
+/* Record links in the table and in the phone panel; :where keeps them at one class. */
+:where(.gr-table, .gr-panel) a:not(.ui-button), .gr-open { color: inherit; text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 2px; }
+:where(.gr-table, .gr-panel) a:not(.ui-button):hover, .gr-open:hover { color: var(--bronze-ink); }
+.gr-open { font: inherit; text-align: left; background: none; border: 0; padding: 0; cursor: pointer; }
+.gr-open[aria-expanded="true"] { font-weight: 600; text-decoration: none; }
+.gr-share { color: var(--ink-faint); }
+.gr-bar-cell { display: inline-block; height: 8px; background: var(--chart-mark); vertical-align: middle; margin-right: var(--space-tight); }
+.gr-empty { padding: var(--space-group) var(--space-row); text-align: center; color: var(--ink-soft); }
+.gr-status { padding: var(--space-group) var(--space-row); font: var(--type-body); color: var(--ink-soft); }
+.gr-root .gr-status .ui-button { margin-left: var(--space-tight); }
+.gr-mps { display: flex; flex-wrap: wrap; gap: var(--space-line) var(--space-row); }
+.gr-donor-cell { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-line) var(--space-tight); justify-content: flex-end; }
 
-.gr-detail td { background: var(--paper, #FAF9F6); padding: 0.85rem 1rem 1rem; border-bottom: 2px solid var(--line-strong, #8D897B); }
-.gr-detail-head { display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; align-items: baseline; margin-bottom: 0.4rem; }
-.gr-detail-head h3 { font: 700 1.2rem/1.2 var(--serif, Merriweather, Georgia, serif); margin: 0; }
-.gr-detail-meta { font-size: 0.8125rem; color: var(--ink-soft, #575C52); line-height: 1.5; margin: 0 0 0.6rem; }
-.gr-detail-meta b { color: var(--ink, #23271F); }
-.gr-cols { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 1rem 2rem; }
-.gr-kicker { font-size: 0.6875rem; font-weight: 700; color: var(--ink-faint, #6F7468); margin: 0.6rem 0 0.35rem; }
-.gr-grants { border-collapse: collapse; width: 100%; font-size: 0.8125rem; }
-.gr-grants td { padding: 0.3rem 0.5rem 0.3rem 0; border-bottom: 1px solid var(--line, #DFDCD2); vertical-align: top; }
+.gr-detail td { background: var(--paper-raised); padding: var(--space-block); border-bottom: var(--border-hairline) solid var(--divider-default); }
+.gr-detail-head { display: flex; flex-wrap: wrap; gap: var(--space-line) var(--space-block); align-items: baseline; margin-bottom: var(--space-tight); }
+.gr-detail-head h3 { font: var(--type-subheading); margin: 0; }
+.gr-detail-meta { font: var(--type-metadata); color: var(--ink-soft); margin: 0 0 var(--space-row); }
+.gr-detail-meta b { color: var(--ink); }
+.gr-cols { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--space-block) var(--space-group); }
+.gr-kicker { font: var(--type-label); color: var(--ink); margin: var(--space-row) 0 var(--space-tight); }
+.gr-grants { border-collapse: collapse; width: 100%; font: var(--type-fine); }
+.gr-grants td { padding: var(--space-line) var(--space-tight) var(--space-line) 0; border-bottom: var(--border-hairline) solid var(--divider-subtle); vertical-align: top; }
 .gr-grants td:last-child { padding-right: 0; }
-.gr-grants .gr-num { white-space: nowrap; }
-.gr-grants small { display: block; color: var(--ink-faint, #6F7468); }
-.gr-donor { border-left: 3px solid var(--bronze, #A0761B); padding: 0.1rem 0 0.1rem 0.8rem; }
-.gr-donor p { margin: 0.3rem 0; font-size: 0.875rem; line-height: 1.5; }
-.gr-partylist { list-style: none; margin: 0.2rem 0 0.5rem; padding: 0; font-size: 0.875rem; }
-.gr-partylist li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.15rem 0; border-bottom: 1px dotted var(--line, #DFDCD2); }
-.gr-partylist .party { text-transform: none; letter-spacing: 0; font-weight: 500; font-size: 0.875rem; }
-.gr-note { font-size: 0.8125rem; color: var(--ink-soft, #575C52); line-height: 1.5; margin: 0.4rem 0 0; }
-.gr-links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem; }
-.gr-links a, .gr-links button { font: 600 0.8125rem/1 var(--sans, sans-serif); padding: 0.45rem 0.8rem; border-radius: 2px; border: 1px solid var(--line-strong, #8D897B); color: var(--ink-soft, #575C52); text-decoration: none; background: none; cursor: pointer; }
-.gr-links a:hover, .gr-links button:hover { background: var(--paper-sunken, #F1EFE8); color: var(--ink, #23271F); }
-.gr-links .gr-primary { background: var(--navy, #142A43); border-color: var(--navy, #142A43); color: #FFFFFF; }
-.gr-links .gr-primary:hover { background: var(--navy-raised, #1D3A5C); color: #FFFFFF; }
+.gr-grants small { display: block; color: var(--ink-faint); }
+.gr-donor p { margin: var(--space-line) 0; font: var(--type-metadata); }
+.gr-partylist { list-style: none; margin: var(--space-line) 0 var(--space-tight); padding: 0; font: var(--type-metadata); }
+.gr-partylist li { display: flex; justify-content: space-between; gap: var(--space-block); padding: var(--space-line) 0; border-bottom: var(--border-hairline) solid var(--divider-subtle); }
+.gr-note { font: var(--type-fine); color: var(--ink-soft); margin: var(--space-tight) 0 0; }
+.gr-links { display: flex; flex-wrap: wrap; gap: var(--space-tight); margin-top: var(--space-heading); }
 
-.gr-panel { position: relative; margin: 0 0 0.6rem; padding: 0.8rem 0.9rem 0.9rem; background: var(--paper-raised, #FFFFFF); border: 1px solid var(--line-strong, #8D897B); border-left: 3px solid var(--bronze, #A0761B); }
-.gr-panel-close { position: absolute; top: 0.6rem; right: 0.6rem; }
-.gr-panel .gr-detail-head { padding-right: 4.5rem; }
-.gr-fineprint { margin: 0.6rem 0 0; font-size: 0.75rem; line-height: 1.55; color: var(--ink-faint, #6F7468); }
-.gr-fineprint a { color: var(--bronze-ink, #8A5A12); }
+/* Phones: the open file is a card above the table. */
+.gr-panel { position: relative; margin: 0 0 var(--space-row); padding: var(--space-block); background: var(--paper-raised); border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md); }
+.gr-root .gr-panel-close { position: absolute; top: var(--space-row); right: var(--space-row); }
+.gr-panel .gr-detail-head { padding-right: 5rem; }
+.gr-fineprint { margin: var(--space-row) 0 0; max-width: var(--size-readable); font: var(--type-fine); color: var(--ink-soft); }
+.gr-fineprint p { margin: 0; }
+.gr-fineprint a, .gr-fine-notes summary { color: var(--bronze-ink); }
+.gr-fine-notes summary { cursor: pointer; padding: var(--space-line) 0; }
+.gr-fine-notes p { margin-top: var(--space-line); }
 .gr-visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 
 /* Program file: stacked hairline bars (bronze weights, never party colours), bucket lists, notes. */
 .gr-table-programs { min-width: 1040px; }
-.gr-detail-head .gr-id { font-size: 0.75rem; letter-spacing: 0.04em; color: var(--ink-faint, #6F7468); }
-.gr-split { display: flex; height: 12px; margin: 0.3rem 0 0.35rem; border: 1px solid var(--bronze, #A0761B); border-radius: 1px; overflow: hidden; background: var(--paper-raised, #FFFFFF); }
+.gr-detail-head .gr-id { font: var(--type-fine); color: var(--ink-faint); }
+.gr-split { display: flex; height: 12px; margin: var(--space-line) 0 var(--space-tight); border: var(--border-hairline) solid var(--chart-mark); overflow: hidden; background: var(--paper-raised); }
 .gr-split i { display: block; height: 100%; min-width: 0; }
-.gr-split i + i { border-left: 1px solid var(--paper-raised, #FFFFFF); }
-.gr-seg-0 { background: var(--bronze, #A0761B); }
-.gr-seg-1 { background: var(--bronze-wash, rgba(160, 118, 27, 0.16)); }
-.gr-seg-2 { background: repeating-linear-gradient(135deg, var(--bronze, #A0761B) 0 1px, transparent 1px 4px); }
-.gr-seg-3 { background: var(--line, #DFDCD2); }
-.gr-seg-4 { background: repeating-linear-gradient(45deg, var(--ink-faint, #6F7468) 0 1px, transparent 1px 5px); }
-.gr-seg-5 { background: var(--paper-sunken, #F1EFE8); }
-.gr-splitkey { list-style: none; margin: 0 0 0.6rem; padding: 0; display: flex; flex-wrap: wrap; gap: 0.15rem 0.9rem; font-size: 0.78rem; color: var(--ink-soft, #575C52); }
-.gr-splitkey li { display: inline-flex; align-items: center; gap: 0.35rem; }
-.gr-splitkey i { display: inline-block; width: 12px; height: 9px; border: 1px solid var(--bronze, #A0761B); }
-.gr-splitkey b { color: var(--ink, #23271F); font-variant-numeric: tabular-nums; }
-.gr-buckets { list-style: none; margin: 0.2rem 0 0.6rem; padding: 0; font-size: 0.8125rem; }
-.gr-buckets li { display: grid; grid-template-columns: minmax(0, 1fr) 6rem 5.5rem; gap: 0 0.6rem; align-items: center; padding: 0.15rem 0; border-bottom: 1px dotted var(--line, #DFDCD2); }
+.gr-split i + i { border-left: var(--border-hairline) solid var(--paper-raised); }
+.gr-seg-0 { background: var(--chart-mark); }
+.gr-seg-1 { background: color-mix(in srgb, var(--chart-mark) 16%, transparent); }
+.gr-seg-2 { background: repeating-linear-gradient(135deg, var(--chart-mark) 0 1px, transparent 1px 4px); }
+.gr-seg-3 { background: var(--chart-baseline); }
+.gr-seg-4 { background: repeating-linear-gradient(45deg, var(--chart-contrast) 0 1px, transparent 1px 5px); }
+.gr-seg-5 { background: var(--paper-sunken); }
+.gr-splitkey { list-style: none; margin: 0 0 var(--space-row); padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-line) var(--space-block); font: var(--type-fine); color: var(--ink-soft); }
+.gr-splitkey li { display: inline-flex; align-items: center; gap: var(--space-line); }
+.gr-splitkey i { display: inline-block; width: 12px; height: 9px; border: var(--border-hairline) solid var(--chart-mark); }
+.gr-splitkey b { font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+.gr-buckets { list-style: none; margin: var(--space-line) 0 var(--space-row); padding: 0; font: var(--type-fine); }
+.gr-buckets li { display: grid; grid-template-columns: minmax(0, 1fr) 6rem 5.5rem; gap: 0 var(--space-row); align-items: center; padding: var(--space-line) 0; border-bottom: var(--border-hairline) solid var(--divider-subtle); }
 .gr-buckets .gr-bar-cell { margin: 0; }
-.gr-buckets .gr-num { color: var(--ink-soft, #575C52); }
-.gr-caption { font-size: 0.75rem; color: var(--ink-faint, #6F7468); margin: 0.1rem 0 0.5rem; }
-.gr-toplist { list-style: none; margin: 0.2rem 0 0.6rem; padding: 0; font-size: 0.8125rem; }
-.gr-toplist li { display: flex; justify-content: space-between; gap: 0.6rem; align-items: baseline; padding: 0.18rem 0; border-bottom: 1px dotted var(--line, #DFDCD2); }
+.gr-buckets .gr-num { color: var(--ink-soft); }
+.gr-caption { font: var(--type-fine); color: var(--ink-soft); margin: var(--space-line) 0 var(--space-tight); }
+.gr-toplist { list-style: none; margin: var(--space-line) 0 var(--space-row); padding: 0; font: var(--type-fine); }
+.gr-toplist li { display: flex; justify-content: space-between; gap: var(--space-row); align-items: baseline; padding: var(--space-line) 0; border-bottom: var(--border-hairline) solid var(--divider-subtle); }
 .gr-toplist .gr-num { white-space: nowrap; }
-.gr-tag { font-size: 0.6875rem; font-weight: 700; color: var(--bronze-ink, #8A5A12); }
-.gr-jump { display: inline-flex; align-items: center; min-height: 44px; margin: 0.6rem 0 0.2rem; padding: 0.45rem 0.9rem;
-  border: 1px solid var(--bronze-ink, #8A5A12); border-radius: 2px; background: var(--paper-raised, #FFFFFF);
-  color: var(--navy, #142A43); font: inherit; font-size: 0.9375rem; font-weight: 600; cursor: pointer; }
-.gr-jump::after { content: ''; width: 0.45em; height: 0.45em; margin-left: 0.55em; border: solid currentColor; border-width: 0 1.5px 1.5px 0; transform: translateY(-0.15em) rotate(45deg); }
-.gr-jump:hover { background: var(--bronze-wash, rgba(160,118,27,.16)); }
+.gr-root .gr-jump { margin: var(--space-row) 0 var(--space-line); }
+.gr-jump::after { content: ''; width: 0.45em; height: 0.45em; border: solid currentColor; border-width: 0 1.5px 1.5px 0; transform: translateY(-0.15em) rotate(45deg); }
 .gr-electorates-kicker { scroll-margin-top: 5rem; }
 .gr-electorates-kicker:focus { outline: none; }
-.gr-notes { margin: 0.5rem 0 0.4rem; font-size: 0.8125rem; line-height: 1.5; color: var(--ink-soft, #575C52); }
-.gr-notes summary { cursor: pointer; font-weight: 600; color: var(--ink, #23271F); }
-.gr-notes dl { margin: 0.4rem 0 0; }
-.gr-notes dt { font-weight: 700; color: var(--ink, #23271F); margin-top: 0.35rem; }
-.gr-notes dd { margin: 0.1rem 0 0; }
-.gr-notes a, .gr-audits a { color: var(--bronze-ink, #8A5A12); }
-.gr-summary-note { border-left: 3px solid var(--bronze, #A0761B); padding: 0.1rem 0 0.1rem 0.8rem; margin: 0.4rem 0 0.6rem; font-size: 0.875rem; line-height: 1.5; }
-.gr-summary-note p { margin: 0.3rem 0; }
-.gr-audits { list-style: none; margin: 0.2rem 0 0.4rem; padding: 0; font-size: 0.8125rem; line-height: 1.45; }
-.gr-audits li { padding: 0.25rem 0; border-bottom: 1px dotted var(--line, #DFDCD2); }
-.gr-audits b { color: var(--ink, #23271F); }
-.gr-grantswrap { overflow: auto; max-height: min(60vh, 720px); border: 1px solid var(--line, #DFDCD2); background: var(--paper-raised, #FFFFFF); margin: 0.2rem 0 0.4rem; }
-.gr-pgrants { border-collapse: collapse; width: 100%; min-width: 860px; font-size: 0.8rem; line-height: 1.35; }
-.gr-pgrants th { position: sticky; top: 0; background: var(--paper-sunken, #F1EFE8); font-size: 0.6875rem; font-weight: 700; color: var(--ink-faint, #6F7468); text-align: left; padding: 0.35rem 0.5rem; border-bottom: 1px solid var(--line-strong, #8D897B); white-space: nowrap; }
+.gr-notes { margin: var(--space-tight) 0; font: var(--type-fine); color: var(--ink-soft); }
+.gr-notes summary { cursor: pointer; padding: var(--space-line) 0; font: var(--type-label); color: var(--ink); }
+.gr-notes dl { margin: var(--space-line) 0 0; }
+.gr-notes dt { font-weight: 600; color: var(--ink); margin-top: var(--space-tight); }
+.gr-notes dd { margin: var(--space-line) 0 0; }
+.gr-notes a, .gr-audits a { color: var(--bronze-ink); }
+.gr-summary-note { margin: var(--space-line) 0 var(--space-row); font: var(--type-metadata); }
+.gr-summary-note p { margin: var(--space-line) 0; }
+.gr-audits { list-style: none; margin: var(--space-line) 0 var(--space-tight); padding: 0; font: var(--type-fine); }
+.gr-audits li { padding: var(--space-line) 0; border-bottom: var(--border-hairline) solid var(--divider-subtle); }
+.gr-audits b { font-weight: 600; color: var(--ink); }
+.gr-grantswrap { overflow: auto; max-height: min(60vh, 720px); margin: var(--space-line) 0 var(--space-tight); border-block: var(--border-hairline) solid var(--divider-subtle); }
+.gr-pgrants { border-collapse: collapse; width: 100%; min-width: 860px; font: var(--type-fine); }
+.gr-pgrants th { position: sticky; top: 0; background: var(--paper-raised); font: var(--type-label); color: var(--ink-soft); text-align: left; padding: var(--space-tight); border-bottom: var(--border-hairline) solid var(--divider-default); white-space: nowrap; }
 .gr-pgrants th.gr-num { text-align: right; }
-.gr-pgrants td { padding: 0.3rem 0.5rem; border-bottom: 1px solid var(--line, #DFDCD2); vertical-align: top; }
-.gr-pgrants small { display: block; color: var(--ink-faint, #6F7468); }
-.gr-pgrants .party { text-transform: none; letter-spacing: 0; font-weight: 500; font-size: 0.8rem; }
+.gr-pgrants td { padding: var(--space-line) var(--space-tight); border-bottom: var(--border-hairline) solid var(--divider-subtle); vertical-align: top; }
+.gr-pgrants small { display: block; color: var(--ink-faint); }
 .gr-scroll { overflow: auto; }
-.gr-electorates { border-collapse: collapse; width: 100%; font-size: 0.8125rem; }
-.gr-electorates td { padding: 0.3rem 0.5rem 0.3rem 0; border-bottom: 1px solid var(--line, #DFDCD2); vertical-align: top; }
+.gr-electorates { border-collapse: collapse; width: 100%; font: var(--type-fine); }
+.gr-electorates td { padding: var(--space-line) var(--space-tight) var(--space-line) 0; border-bottom: var(--border-hairline) solid var(--divider-subtle); vertical-align: top; }
 .gr-electorates td:last-child { padding-right: 0; }
-.gr-more-rows { margin: 0.4rem 0 0; }
+.gr-root .gr-more-rows { margin: var(--space-tight) 0 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .gr-more-btn { transition: none; }
+}
 
 /* Tablet: the bar wraps to two lines, the popover hugs the button's edge. */
 @media (max-width: 1000px) {
-  .gr-search { width: 11rem; }
+  .gr-root .gr-search { width: 11rem; }
   .gr-table { min-width: 760px; }
   .gr-table-programs { min-width: 980px; }
 }
 /* Phone: each segmented control fills a line, the search and the popover go full width. */
 @media (max-width: 640px) {
-  .gr-deck { font-size: 0.8125rem; margin-bottom: 0.6rem; }
-  .gr-toolbar { gap: 0.4rem 0.5rem; }
+  .gr-deck { margin-bottom: var(--space-row); }
   .gr-views { flex: 1 1 100%; }
-  .gr-views .gr-seg { flex: 1 1 0; padding: 0.3rem 0.4rem; text-align: center; }
-  .gr-search { flex: 1 1 100%; width: auto; }
+  .gr-root .gr-views > .ui-button { flex: 1 1 0; padding-inline: var(--space-tight); }
+  .gr-root .gr-search { flex: 1 1 100%; width: auto; }
   .gr-more { flex: 1 1 auto; position: static; }
-  .gr-more-btn { width: 100%; justify-content: center; }
-  .gr-export { flex: 0 0 auto; margin-left: 0; }
-  .gr-pop { position: static; width: 100%; grid-template-columns: 1fr; margin-top: 0.4rem; box-shadow: none; }
-  .gr-tiles { gap: 0.4rem 0.8rem; }
+  .gr-more-btn { width: 100%; }
+  .gr-root .gr-export { flex: 0 0 auto; margin-left: 0; }
+  .gr-pop { position: static; width: 100%; grid-template-columns: 1fr; margin-top: var(--space-tight); box-shadow: none; }
+  .gr-tiles { gap: var(--space-tight) var(--space-heading); }
   .gr-tile { flex: 1 1 40%; max-width: none; min-width: 0; }
-  .gr-tile b { font-size: 1.15rem; }
   .gr-chart svg { max-height: 120px; }
   .gr-val, .gr-axis-odd { display: none; }
-  .gr-table { min-width: 720px; font-size: 0.8rem; }
+  .gr-table { min-width: 720px; }
   .gr-table-programs { min-width: 920px; }
   .gr-cols { grid-template-columns: 1fr; }
   .gr-buckets li { grid-template-columns: minmax(0, 1fr) 4.5rem 4.5rem; }
@@ -756,12 +741,16 @@ function cssEscape (s) {
   return g && typeof g.escape === 'function' ? g.escape(String(s)) : String(s).replace(/["\\]/g, '\\$&')
 }
 
+/** PartyLabel (ui-controls.css): the party's dot beside its name, never colour alone. */
 function partyChip (party, { full = true } = {}) {
-  const hit = PARTY_MAP[String(party || '').toLowerCase()]
-  const span = el('span', `party party-${hit ? hit[0] : 'oth'}`)
+  const name = String(party || '')
+  const hit = PARTY_MAP[name.toLowerCase()]
+  const span = el('span', `ui-party party party-${hit ? hit[0] : 'oth'}`)
   const dot = el('i')
   dot.setAttribute('aria-hidden', 'true')
-  span.append(dot, document.createTextNode(full ? String(party || '') : (hit ? hit[1] : String(party || '').slice(0, 12))))
+  const shown = full ? name : (hit ? hit[1] : name.slice(0, 12))
+  if (shown !== name) span.title = name
+  span.append(dot, document.createTextNode(shown))
   return span
 }
 
@@ -782,6 +771,28 @@ function link (href, text, className) {
   const a = el('a', className, text)
   a.href = href
   return a
+}
+
+/** Smooth scrolling, unless the reader asked for less motion. */
+function scrollBehavior () {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
+}
+
+/** A file's way onward as a shared button: primary (navy, one per file) or
+ *  quiet (a link out). A link with nowhere to go stays plain text. */
+function action (node, variant) {
+  if (node.tagName === 'A') {
+    node.classList.add('ui-button')
+    node.dataset.variant = variant
+  }
+  return node
+}
+
+/** The row of a file's actions, at the compact size. */
+function actionRow () {
+  const row = el('div', 'gr-links')
+  row.dataset.uiSize = 'compact'
+  return row
 }
 
 // ---------------------------------------------------------------------------
@@ -844,44 +855,44 @@ export function mountGrants (container, opts = {}) {
     <div class="gr-tiles" aria-label="Headline figures"></div>
     <div class="gr-chart" aria-label="Awarded by financial year"></div>
 
-    <div class="gr-toolbar" role="group" aria-label="Grant filters">
-      <div class="gr-views" role="group" aria-label="Jurisdiction">
+    <div class="gr-toolbar" role="group" aria-label="Grant filters" data-ui-size="compact">
+      <div class="gr-views ui-segmented" role="group" aria-label="Jurisdiction">
         ${Object.entries(JURISDICTIONS).map(([k, j]) =>
-          `<button type="button" class="gr-seg gr-jur" data-jur="${k}" aria-pressed="${k === state.jur ? 'true' : 'false'}">${j.label}</button>`).join('')}
+          `<button type="button" class="ui-button gr-jur" data-jur="${k}" aria-pressed="${k === state.jur ? 'true' : 'false'}">${j.label}</button>`).join('')}
       </div>
-      <div class="gr-views" role="group" aria-label="View">
-        <button type="button" class="gr-seg gr-view" data-view="recipients" aria-pressed="${state.view === 'recipients' ? 'true' : 'false'}">Recipients</button>
-        <button type="button" class="gr-seg gr-view" data-view="programs" aria-pressed="${state.view === 'programs' ? 'true' : 'false'}">Programs</button>
-        <button type="button" class="gr-seg gr-view" data-view="electorates" aria-pressed="false">Electorates</button>
+      <div class="gr-views ui-segmented" role="group" aria-label="View">
+        <button type="button" class="ui-button gr-view" data-view="recipients" aria-pressed="${state.view === 'recipients' ? 'true' : 'false'}">Recipients</button>
+        <button type="button" class="ui-button gr-view" data-view="programs" aria-pressed="${state.view === 'programs' ? 'true' : 'false'}">Programs</button>
+        <button type="button" class="ui-button gr-view" data-view="electorates" aria-pressed="false">Electorates</button>
       </div>
-      <div class="gr-views" role="group" aria-label="Donor filter">
-        <button type="button" class="gr-seg gr-donors" data-donors="0" aria-pressed="true">Everyone</button>
-        <button type="button" class="gr-seg gr-donors" data-donors="1" aria-pressed="false">Donors only</button>
+      <div class="gr-choice" role="group" aria-label="Donor filter">
+        <button type="button" class="ui-chip gr-donors" data-donors="0" aria-pressed="true">Everyone</button>
+        <button type="button" class="ui-chip gr-donors" data-donors="1" aria-pressed="false">Donors only</button>
       </div>
       <label class="gr-visually-hidden" for="gr-q">Filter by name</label>
-      <input class="gr-input gr-search" id="gr-q" type="search" autocomplete="off" placeholder="Filter by name…" />
+      <input class="ui-input gr-search" id="gr-q" type="search" autocomplete="off" placeholder="Filter by name…" />
       <details class="gr-more">
-        <summary class="gr-btn gr-more-btn" aria-label="More filters"><span>Filters</span><b class="gr-count" hidden></b></summary>
+        <summary class="gr-more-btn" aria-label="More filters"><span>Filters</span><b class="ui-status gr-count" data-tone="active" hidden></b></summary>
         <div class="gr-pop">
           <div class="gr-field gr-field-kind">
             <label class="gr-label" for="gr-kind">Kind</label>
-            <select class="gr-select" id="gr-kind"><option value="">All kinds</option></select>
+            <select class="ui-input" id="gr-kind"><option value="">All kinds</option></select>
           </div>
           <div class="gr-field gr-field-agency">
             <label class="gr-label" for="gr-agency">Agency</label>
-            <select class="gr-select" id="gr-agency"><option value="">All agencies</option></select>
+            <select class="ui-input" id="gr-agency"><option value="">All agencies</option></select>
           </div>
           <div class="gr-field">
             <span class="gr-label" id="gr-years-label">Financial years starting</span>
             <div class="gr-yearrow" role="group" aria-labelledby="gr-years-label">
-              <input class="gr-input gr-year" id="gr-year-from" type="number" inputmode="numeric" placeholder="2017" aria-label="From financial year starting" />
+              <input class="ui-input gr-year" id="gr-year-from" type="number" inputmode="numeric" placeholder="2017" aria-label="From financial year starting" />
               <span aria-hidden="true">–</span>
-              <input class="gr-input gr-year" id="gr-year-to" type="number" inputmode="numeric" placeholder="2026" aria-label="To financial year starting" />
+              <input class="ui-input gr-year" id="gr-year-to" type="number" inputmode="numeric" placeholder="2026" aria-label="To financial year starting" />
             </div>
           </div>
           <div class="gr-field">
             <label class="gr-label" for="gr-min">Minimum awarded</label>
-            <select class="gr-select" id="gr-min">
+            <select class="ui-input" id="gr-min">
               <option value="0">Any amount</option>
               <option value="100000">$100K+</option>
               <option value="1000000">$1M+</option>
@@ -890,12 +901,12 @@ export function mountGrants (container, opts = {}) {
             </select>
           </div>
           <div class="gr-pop-foot">
-            <button type="button" class="gr-btn" id="gr-clear" hidden>Clear all filters</button>
-            <button type="button" class="gr-btn gr-done">Done</button>
+            <button type="button" class="ui-button" data-variant="quiet" id="gr-clear" hidden>Clear all filters</button>
+            <button type="button" class="ui-button gr-done" data-variant="primary">Done</button>
           </div>
         </div>
       </details>
-      <button type="button" class="gr-btn gr-export" id="gr-export"><svg class="gr-export-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 2.5v8"/><path d="M4.75 7.25 8 10.5l3.25-3.25"/><path d="M2.5 11v1.5a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V11"/></svg>Export CSV</button>
+      <button type="button" class="ui-button gr-export" id="gr-export"><svg class="gr-export-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 2.5v8"/><path d="M4.75 7.25 8 10.5l3.25-3.25"/><path d="M2.5 11v1.5a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V11"/></svg>Export CSV</button>
     </div>
 
     <p class="gr-summary" aria-live="polite" aria-atomic="true"></p>
@@ -909,7 +920,7 @@ export function mountGrants (container, opts = {}) {
       </table>
     </div>
 
-    <p class="gr-fineprint"></p>
+    <div class="gr-fineprint"></div>
   `
 
   const $ = (sel) => root.querySelector(sel)
@@ -1034,7 +1045,8 @@ export function mountGrants (container, opts = {}) {
    * the program file's chart is a plain picture.
    */
   function yearChartSvg (years, cell, { width, interactive, label, noun }) {
-    const W = Math.max(340, Math.min(720, width || 720))
+    // Up to 1000 units wide, so 13px value labels clear their neighbours on a desktop.
+    const W = Math.max(340, Math.min(1000, width || 720))
     const H = W < 480 ? 118 : 136
     const padL = 4
     const padB = 20
@@ -1308,8 +1320,9 @@ export function mountGrants (container, opts = {}) {
     panelEl.hidden = false
     panelEl.setAttribute('aria-label', kind === 'program' ? 'Program file' : 'Recipient file')
     panelEl.textContent = ''
-    const close = el('button', 'gr-btn gr-panel-close', 'Close')
+    const close = el('button', 'ui-button gr-panel-close', 'Close')
     close.type = 'button'
+    close.dataset.uiSize = 'compact'
     close.addEventListener('click', () => {
       if (kind === 'program') state.program = null
       else state.open = null
@@ -1318,20 +1331,33 @@ export function mountGrants (container, opts = {}) {
     })
     panelEl.appendChild(close)
     const body = el('div')
-    body.appendChild(el('div', 'gr-status', 'Opening the file…'))
     panelEl.appendChild(body)
-    const loading = kind === 'program' ? loadProgram(r) : loadDetail(r)
-    loading.then((d) => {
-      if (panelFor !== id) return
-      body.textContent = ''
-      if (kind === 'program') renderProgramDetail(body, r, d)
-      else renderDetail(body, r, d)
-      panelEl.scrollIntoView({ block: 'start', behavior: 'smooth' })
-    }).catch(() => {
-      if (panelFor !== id) return
-      body.textContent = ''
-      body.appendChild(el('div', 'gr-status', 'The file could not be opened.'))
-    })
+    const fill = () => {
+      body.replaceChildren(el('div', 'gr-status', 'Opening the file…'))
+      const loading = kind === 'program' ? loadProgram(r) : loadDetail(r)
+      loading.then((d) => {
+        if (panelFor !== id) return
+        body.textContent = ''
+        if (kind === 'program') renderProgramDetail(body, r, d)
+        else renderDetail(body, r, d)
+        panelEl.scrollIntoView({ block: 'start', behavior: scrollBehavior() })
+      }).catch(() => {
+        if (panelFor !== id) return
+        body.replaceChildren(failedStatus('The file could not be opened.', fill))
+      })
+    }
+    fill()
+  }
+
+  /** A plain sentence and a way to try again: a failed file never shows a raw error. */
+  function failedStatus (sentence, retry) {
+    const box = el('div', 'gr-status', sentence)
+    const again = el('button', 'ui-button', 'Try again')
+    again.type = 'button'
+    again.dataset.uiSize = 'compact'
+    again.addEventListener('click', retry)
+    box.appendChild(again)
+    return box
   }
 
   // ---- recipient file (detail row) -----------------------------------------
@@ -1340,17 +1366,19 @@ export function mountGrants (container, opts = {}) {
     const tr = el('tr', 'gr-detail')
     const td = el('td')
     td.colSpan = COLUMNS.recipients.length
-    td.appendChild(el('div', 'gr-status', 'Opening the file…'))
     tr.appendChild(td)
-    loadDetail(r).then((d) => {
-      if (state.open !== r.id || !tr.isConnected) return
-      td.textContent = ''
-      renderDetail(td, r, d)
-    }).catch(() => {
-      if (!tr.isConnected) return
-      td.textContent = ''
-      td.appendChild(el('div', 'gr-status', 'The file could not be opened.'))
-    })
+    const fill = () => {
+      td.replaceChildren(el('div', 'gr-status', 'Opening the file…'))
+      loadDetail(r).then((d) => {
+        if (state.open !== r.id || !tr.isConnected) return
+        td.textContent = ''
+        renderDetail(td, r, d)
+      }).catch(() => {
+        if (!tr.isConnected) return
+        td.replaceChildren(failedStatus('The file could not be opened.', fill))
+      })
+    }
+    fill()
     return tr
   }
 
@@ -1514,10 +1542,10 @@ export function mountGrants (container, opts = {}) {
       o.appendChild(b)
       right.appendChild(o)
     }
-    const links = el('div', 'gr-links')
-    links.appendChild(link(searchHash(`"${d.n}"`, {}), 'Search the record for them', 'gr-primary'))
-    if (d.d) links.appendChild(link(subjectHash('donor', d.d.n), 'Donor entry'))
-    const src = link(data.meta.source_url, state.jur === 'qld' ? 'Source: data.qld.gov.au' : 'Source: GrantConnect')
+    const links = actionRow()
+    links.appendChild(action(link(searchHash(`"${d.n}"`, {}), 'Search the record for them'), 'primary'))
+    if (d.d) links.appendChild(action(link(subjectHash('donor', d.d.n), 'Donor entry'), 'quiet'))
+    const src = action(link(data.meta.source_url, state.jur === 'qld' ? 'Source: data.qld.gov.au' : 'Source: GrantConnect'), 'quiet')
     src.target = '_blank'
     src.rel = 'noopener'
     links.appendChild(src)
@@ -1532,17 +1560,19 @@ export function mountGrants (container, opts = {}) {
     const tr = el('tr', 'gr-detail')
     const td = el('td')
     td.colSpan = cols().length
-    td.appendChild(el('div', 'gr-status', 'Opening the program…'))
     tr.appendChild(td)
-    loadProgram(r).then((p) => {
-      if (state.program !== r.id || !tr.isConnected) return
-      td.textContent = ''
-      renderProgramDetail(td, r, p)
-    }).catch(() => {
-      if (!tr.isConnected) return
-      td.textContent = ''
-      td.appendChild(el('div', 'gr-status', 'The program file could not be opened.'))
-    })
+    const fill = () => {
+      td.replaceChildren(el('div', 'gr-status', 'Opening the program…'))
+      loadProgram(r).then((p) => {
+        if (state.program !== r.id || !tr.isConnected) return
+        td.textContent = ''
+        renderProgramDetail(td, r, p)
+      }).catch(() => {
+        if (!tr.isConnected) return
+        td.replaceChildren(failedStatus('The program file could not be opened.', fill))
+      })
+    }
+    fill()
     return tr
   }
 
@@ -1696,12 +1726,13 @@ export function mountGrants (container, opts = {}) {
     // A reader arriving from a local story wants their seat, which sits below
     // the charts; one button takes them there (the router drops #hash links).
     if ((p.electorates || []).length) {
-      const jump = el('button', 'gr-jump', `Jump to the ${NUM.format(p.electorates.length)} electorates`)
+      const jump = el('button', 'ui-button gr-jump', `Jump to the ${NUM.format(p.electorates.length)} electorates`)
       jump.type = 'button'
+      jump.dataset.uiSize = 'compact'
       jump.addEventListener('click', () => {
         const target = td.querySelector('.gr-electorates-kicker')
         if (!target) return
-        target.scrollIntoView({ block: 'start', behavior: 'smooth' })
+        target.scrollIntoView({ block: 'start', behavior: scrollBehavior() })
         target.focus({ preventScroll: true })
       })
       td.appendChild(jump)
@@ -1795,7 +1826,7 @@ export function mountGrants (container, opts = {}) {
         const li = el('li')
         const who = el('span')
         who.append(recipientRef(rid, name), el('small', 'gr-muted', ` ${kindLabel(kind)}`))
-        if (donor) who.append(document.createTextNode(' '), el('span', 'gr-tag', 'in the donor registers'))
+        if (donor) who.append(document.createTextNode(' '), el('span', 'ui-tag', 'in the donor registers'))
         const num = el('span', 'gr-num')
         num.append(document.createTextNode(`${fmtMoney(dollars)} `), el('span', 'gr-share', `${NUM.format(count)}`))
         li.append(who, num)
@@ -1873,8 +1904,9 @@ export function mountGrants (container, opts = {}) {
       scroll.appendChild(table)
       td.appendChild(scroll)
       if (p.electorates.length > show) {
-        const more = el('button', 'gr-btn gr-more-rows', `Show all ${NUM.format(p.electorates.length)} electorates`)
+        const more = el('button', 'ui-button gr-more-rows', `Show all ${NUM.format(p.electorates.length)} electorates`)
         more.type = 'button'
+        more.dataset.uiSize = 'compact'
         more.addEventListener('click', () => { addElectorateRows(show, p.electorates.length); more.remove() })
         td.appendChild(more)
       }
@@ -1954,25 +1986,26 @@ export function mountGrants (container, opts = {}) {
       wrap.appendChild(table)
       td.appendChild(wrap)
       if (grants.length > page) {
-        const more = el('button', 'gr-btn gr-more-rows', `Show all ${NUM.format(grants.length)} ${noun}`)
+        const more = el('button', 'ui-button gr-more-rows', `Show all ${NUM.format(grants.length)} ${noun}`)
         more.type = 'button'
+        more.dataset.uiSize = 'compact'
         more.addEventListener('click', () => { addGrantRows(page, grants.length); more.remove() })
         td.appendChild(more)
       }
     }
 
-    // links
-    const links = el('div', 'gr-links')
-    links.appendChild(link(searchHash(progNotes && progNotes.hansard ? progNotes.hansard : p.n, {}), 'Search Hansard', 'gr-primary'))
-    const csv = el('button', null, 'Download these grants (CSV)')
+    // links: one primary, one secondary, the rest are quiet links out
+    const links = actionRow()
+    links.appendChild(action(link(searchHash(progNotes && progNotes.hansard ? progNotes.hansard : p.n, {}), 'Search Hansard'), 'primary'))
+    const csv = el('button', 'ui-button', 'Download these grants (CSV)')
     csv.type = 'button'
     csv.addEventListener('click', () => exportProgramCSV(p))
     links.appendChild(csv)
-    const src = link(data.meta.source_url, qld ? 'Source: data.qld.gov.au' : 'Source: GrantConnect')
+    const src = action(link(data.meta.source_url, qld ? 'Source: data.qld.gov.au' : 'Source: GrantConnect'), 'quiet')
     src.target = '_blank'
     src.rel = 'noopener'
     links.appendChild(src)
-    links.appendChild(link(`${JURISDICTIONS[state.jur].dir}programs/${encodeURIComponent(r.key || programKey(r.id))}.json`, 'Raw file'))
+    links.appendChild(action(link(`${JURISDICTIONS[state.jur].dir}programs/${encodeURIComponent(r.key || programKey(r.id))}.json`, 'Raw file'), 'quiet'))
     td.appendChild(links)
     if (p.generated) td.appendChild(el('p', 'gr-caption', `Program file generated ${String(p.generated).slice(0, 10)}.`))
   }
@@ -2202,12 +2235,18 @@ export function mountGrants (container, opts = {}) {
     }
   }
 
+  /** One short source line (date, source, coverage, the ways in); the
+   *  threshold, caveats and licence keep every word one tap below it. */
   function renderFineprint () {
     const m = data.meta
-    fineEl.textContent = `${m.source}, ${m.coverage}. ${m.threshold} ${m.caveats.join(' ')} Licence: ${m.licence}. `
-    const methods = link('/methods', 'Methodology')
-    const raw = link(JURISDICTIONS[state.jur].file, 'Raw data')
-    fineEl.append(methods, ' · ', raw)
+    const line = el('p', 'gr-fine-line', [
+      m.generated ? `Updated ${shortDate(m.generated)}` : '', `${m.sourceShort || m.source}, ${m.coverage}`,
+    ].filter(Boolean).join(' · ') + ' · ')
+    line.append(link('/methods', 'Methodology'), ' · ', link(JURISDICTIONS[state.jur].file, 'Raw data'))
+    const notes = el('details', 'gr-fine-notes')
+    notes.append(el('summary', null, 'Notes, caveats and licence'),
+      el('p', null, `${m.source}. ${m.threshold} ${m.caveats.join(' ')} Licence: ${m.licence}.`))
+    fineEl.replaceChildren(line, notes)
   }
 
   /** The index, cached as a promise so a deep link that mounts and opens a file at once fetches it only once. */
@@ -2249,8 +2288,9 @@ export function mountGrants (container, opts = {}) {
       if (aborter.signal.aborted || token !== loadSeq) return
       statusEl.hidden = false
       statusEl.textContent = 'The grants could not be loaded.'
-      const retry = el('button', 'gr-btn', 'Try again')
+      const retry = el('button', 'ui-button', 'Try again')
       retry.type = 'button'
+      retry.dataset.uiSize = 'compact'
       retry.addEventListener('click', () => load(state.jur))
       statusEl.appendChild(retry)
     }

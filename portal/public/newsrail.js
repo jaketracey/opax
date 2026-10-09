@@ -20,70 +20,59 @@ const STYLE_ID = 'nr-styles'
 
 const CSS = `
 .nr-root {
-  font-family: 'Public Sans', system-ui, sans-serif;
-  color: var(--ink, #23271F);
+  font: var(--type-body);
+  color: var(--ink);
 }
 .nr-title {
-  font-family: Merriweather, Georgia, serif;
-  font-size: 1.05rem; font-weight: 700; line-height: 1.3;
-  margin: 0 0 0.9rem; color: var(--ink, #23271F);
+  font: var(--type-heading);
+  margin: 0 0 var(--space-heading); color: var(--ink);
 }
+/* One list, rows split by hairlines: no card per headline. */
 .nr-list {
   list-style: none; margin: 0; padding: 0;
-  display: grid; gap: 0.7rem;
+  border-top: var(--border-hairline) solid var(--divider-default);
 }
 .nr-card {
-  background: var(--paper-raised, #FFFFFF);
-  border: 1px solid var(--line, #DFDCD2);
-  border-radius: 8px;
-  padding: 0.75rem 0.9rem;
+  padding: var(--space-row) 0;
+  border-bottom: var(--border-hairline) solid var(--divider-subtle);
 }
 .nr-meta {
-  display: flex; align-items: baseline; gap: 0.55rem;
-  font-size: 0.72rem; color: var(--ink-faint, #6F7468);
-  margin-bottom: 0.4rem;
-}
-.nr-source {
-  font-weight: 600;
-  font-size: 0.68rem; color: var(--bronze-ink, #8A5A12);
-  background: var(--bronze-wash, rgba(160, 118, 27, 0.16));
-  padding: 0.1rem 0.45rem; border-radius: 999px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight);
+  font: var(--type-fine); color: var(--ink-soft);
+  margin-bottom: var(--space-line);
 }
 .nr-headline {
-  font-family: Merriweather, Georgia, serif;
-  font-size: 0.92rem; font-weight: 700; line-height: 1.45;
-  margin: 0 0 0.55rem;
+  font: var(--type-subheading);
+  margin: 0 0 var(--space-tight);
 }
 .nr-headline a {
-  color: var(--ink, #23271F); text-decoration: none;
+  color: var(--ink); text-decoration: none;
 }
 .nr-headline a:hover, .nr-headline a:focus-visible {
-  color: var(--bronze-ink, #8A5A12); text-decoration: underline;
+  color: var(--bronze-ink); text-decoration: underline;
+  text-decoration-color: var(--bronze-rule); text-underline-offset: 3px;
 }
-.nr-actions { display: flex; flex-wrap: wrap; gap: 0.4rem 0.9rem; }
+.nr-actions { display: flex; flex-wrap: wrap; gap: var(--space-line) var(--space-block); }
 .nr-pivot {
-  font-size: 0.78rem; font-weight: 600;
-  color: var(--navy, #142A43); text-decoration: none;
-  border-bottom: 1px solid var(--line, #DFDCD2);
-  padding-bottom: 1px;
+  display: inline-flex; align-items: center; min-height: var(--size-target);
+  font: var(--type-label);
+  color: var(--bronze-ink); text-decoration: underline;
+  text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; text-decoration-thickness: 1px;
 }
-.nr-pivot:hover, .nr-pivot:focus-visible {
-  color: var(--bronze-ink, #8A5A12);
-  border-bottom-color: var(--bronze, #A0761B);
-}
+.nr-pivot:hover, .nr-pivot:focus-visible { text-decoration-color: var(--bronze-ink); }
 .nr-fineprint {
-  margin: 0.9rem 0 0; font-size: 0.72rem; line-height: 1.55;
-  color: var(--ink-faint, #6F7468);
+  margin: var(--space-row) 0 0; font: var(--type-fine);
+  color: var(--ink-soft);
 }
+/* Loading: layout-stable bars, no motion. */
 .nr-skeleton {
-  background: var(--paper-raised, #FFFFFF);
-  border: 1px solid var(--line, #DFDCD2);
-  border-radius: 8px; padding: 0.75rem 0.9rem;
+  padding: var(--space-row) 0;
+  border-bottom: var(--border-hairline) solid var(--divider-subtle);
 }
 .nr-skeleton .nr-bone {
-  height: 0.7rem; border-radius: 4px;
-  background: var(--paper-sunken, #F1EFE8);
-  margin-bottom: 0.5rem;
+  height: 0.75rem; border-radius: var(--radius-sm);
+  background: var(--paper-sunken);
+  margin-bottom: var(--space-tight);
 }
 .nr-skeleton .nr-bone:first-child { width: 30%; }
 .nr-skeleton .nr-bone:last-child { width: 85%; margin-bottom: 0; }
@@ -124,7 +113,7 @@ function renderItems(root, items) {
     const card = el('li', 'nr-card')
 
     const meta = el('div', 'nr-meta')
-    meta.appendChild(el('span', 'nr-source', item.source))
+    meta.appendChild(el('span', 'ui-tag nr-source', item.source))
     const when = relativeTime(item.published)
     if (when) meta.appendChild(el('span', '', when))
     card.appendChild(meta)
@@ -178,7 +167,6 @@ export function mountNewsRail(container, { limit = 6 } = {}) {
     sk.appendChild(el('div', 'nr-bone'))
     sk.appendChild(el('div', 'nr-bone'))
     sk.appendChild(el('div', 'nr-bone'))
-    sk.style.marginBottom = '0.7rem'
     skeletons.appendChild(sk)
   }
   root.appendChild(skeletons)

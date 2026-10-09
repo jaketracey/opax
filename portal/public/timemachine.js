@@ -373,173 +373,120 @@ function el(tag, className, attrs) {
 }
 
 // ---------------------------------------------------------------------------
-// Styles (injected once, .tm- prefixed, light theme, host tokens)
+// Styles (injected once, .tm- prefixed, light theme, host tokens with no
+// fallbacks; buttons are the shared ui-button from ui-controls.css)
 // ---------------------------------------------------------------------------
 
 const STYLE_ID = 'tm-styles'
 const CSS = `
 .tm-root {
-  font-family: var(--sans, 'Public Sans', system-ui, sans-serif);
-  color: var(--ink, #23271F);
+  font-family: var(--sans);
+  color: var(--ink);
   margin: 0 auto;
-  padding: 0.25rem 0 1.5rem;
+  padding: var(--space-line) 0 var(--space-group);
 }
 .tm-root * { box-sizing: border-box; }
 .tm-root [hidden] { display: none !important; }
-@media (min-width: 761px) { .tm-root { padding: 0.75rem 1rem 2rem; } }
+.tm-root :focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
+@media (min-width: 761px) { .tm-root { padding: var(--space-heading) var(--space-block) var(--space-section); } }
 /* The host's close button already has a 44px hit area; on a phone its glyph
    reads small, so the module asks for a larger one while it is mounted. */
-#dialog-tm .game-close { font-size: 1.45rem; }
+#dialog-tm .game-close { font-size: 1.375rem; }
 
 /* Year hero --------------------------------------------------------------- */
 .tm-hero { text-align: center; margin: 0; }
-.tm-hero-kicker {
-  font-family: var(--serif, Merriweather, Georgia, serif); font-style: italic;
-  font-size: 0.95rem; color: var(--ink-faint, #6F7468); margin-bottom: -0.1rem;
-}
-.tm-hero-row { display: flex; align-items: center; justify-content: center; gap: 0.6rem; }
+.tm-hero-kicker { font: var(--type-metadata); font-family: var(--serif); font-style: italic; color: var(--ink-faint); }
+.tm-hero-row { display: flex; align-items: center; justify-content: center; gap: var(--space-row); }
 .tm-year-lockup { position: relative; display: flex; flex-direction: column; align-items: center; }
+/* The dial's readout is the one figure outside the six sizes: the tool is
+   built around it, the way a page is built around its title. */
 .tm-year {
-  font-family: var(--serif, Merriweather, Georgia, serif); font-weight: 900;
+  font-family: var(--serif); font-weight: 700;
   font-size: clamp(3.4rem, 14vw, 6rem); line-height: 1.05;
-  color: var(--navy, #142A43); font-variant-numeric: tabular-nums;
+  color: var(--navy); font-variant-numeric: tabular-nums;
   min-width: 4ch; text-align: center;
 }
-.tm-pictures-open {
-  min-height: 44px; padding: 0 0.7rem; border: 1px solid var(--bronze-rule, rgba(160,118,27,0.55));
-  border-radius: 4px; background: transparent; color: var(--bronze-ink, #8A5A12); cursor: pointer;
-  font: 600 0.82rem/1.25 var(--serif, Merriweather, Georgia, serif);
-  text-decoration: none; white-space: nowrap;
-}
-.tm-pictures-open:hover { border-color: var(--bronze-ink, #8A5A12); }
-.tm-pictures-open:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
 /* The filmstrip under the brief is the way in; the button under the year is retired. */
 .tm-pictures-open, .tm-pictures-open[hidden] { display: none !important; }
-@media (min-width: 761px) {
-  .tm-pictures-open {
-    position: absolute; left: calc(100% + 3.8rem); top: 50%; transform: translateY(-50%);
-    min-height: 44px; padding: 0 0.2rem; border: 0; border-radius: 0;
-    font-weight: 400; text-decoration: underline;
-    text-decoration-color: var(--bronze-rule, rgba(160,118,27,0.55)); text-underline-offset: 0.24em;
-  }
-  .tm-pictures-open:hover { text-decoration-color: currentColor; }
-}
-.tm-step {
-  font: inherit; font-size: 1.35rem; line-height: 1;
-  width: 44px; height: 44px; border-radius: 50%; padding: 0;
-  border: 1px solid var(--line-strong, #8D897B);
-  background: var(--paper-raised, #fff); color: var(--ink, #23271F);
-  cursor: pointer; flex: none;
-}
-.tm-step:hover:not(:disabled) { border-color: var(--bronze-ink, #8A5A12); color: var(--bronze-ink, #8A5A12); }
-.tm-step:disabled { opacity: 0.35; cursor: default; }
-.tm-step:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
+/* Previous and next year: icon buttons (ui-controls.css), the glyph at 22px. */
+.tm-root .tm-step { flex: none; font-size: 1.375rem; line-height: 1; }
 @media (prefers-reduced-motion: no-preference) {
-  .tm-year { transition: opacity 120ms ease; }
+  .tm-year { transition: opacity var(--duration-quick) var(--ease-standard); }
   .tm-year.tm-tick { opacity: 0.25; }
 }
 
 /* Scrubber ---------------------------------------------------------------- */
-/* Same idiom as the site's range sliders: a 3px rule, a 28px ringed thumb,
-   the navy double ring on focus. The scrubber pads itself by a thumb radius
-   so the thumb never leaves the box at either end. */
-.tm-scrubber { margin: 0.35rem 0 0; padding: 0 16px; }
-.tm-track {
-  position: relative; height: 62px; cursor: pointer;
-  touch-action: none; border-radius: 6px;
-}
+/* Same idiom as the site's range sliders: a 3px rule and a 28px ringed thumb.
+   The scrubber pads itself by a thumb radius so the thumb never leaves the
+   box at either end. */
+.tm-scrubber { margin: var(--space-line) 0 0; padding: 0 16px; }
+.tm-track { position: relative; height: 62px; cursor: pointer; touch-action: none; }
 .tm-track:focus { outline: none; }
-.tm-rail {
-  position: absolute; left: 0; right: 0; top: 22px; height: 3px;
-  background: var(--line-strong, #8D897B); border-radius: 2px;
-}
-.tm-fill {
-  position: absolute; left: 0; top: 22px; height: 3px;
-  background: var(--bronze, #A0761B); border-radius: 2px 0 0 2px;
-}
+.tm-rail { position: absolute; left: 0; right: 0; top: 22px; height: 3px; background: var(--line-control); }
+.tm-fill { position: absolute; left: 0; top: 22px; height: 3px; background: var(--bronze); }
 .tm-ticks { position: absolute; inset: 0; pointer-events: none; }
-.tm-ticknode { position: absolute; top: 29px; width: 1px; height: 6px; background: var(--line, #DFDCD2); }
-.tm-ticknode.tm-major { height: 10px; background: var(--line-strong, #8D897B); }
+.tm-ticknode { position: absolute; top: 29px; width: 1px; height: 6px; background: var(--divider-subtle); }
+.tm-ticknode.tm-major { height: 10px; background: var(--line-control); }
 .tm-ticklabel {
   position: absolute; top: 43px; transform: translateX(-50%);
-  font-size: 0.72rem; line-height: 1.2; color: var(--ink-faint, #6F7468);
+  font: var(--type-fine); color: var(--ink-faint);
   font-variant-numeric: tabular-nums; white-space: nowrap;
 }
-.tm-ticklabel.tm-current { color: var(--ink, #23271F); font-weight: 600; }
+.tm-ticklabel.tm-current { color: var(--ink); font-weight: 600; }
 .tm-thumb {
   position: absolute; top: 9.5px; width: 28px; height: 28px;
-  transform: translateX(-50%); border-radius: 50%;
-  background: var(--paper-raised, #fff);
-  border: 2px solid var(--bronze-ink, #8A5A12);
-  box-shadow: 0 1px 2px rgba(20, 42, 67, 0.18),
-              inset 0 0 0 3px var(--paper-raised, #fff),
-              inset 0 0 0 5px var(--bronze-wash, rgba(160,118,27,0.16));
+  transform: translateX(-50%); border-radius: var(--radius-round);
+  background: var(--paper-raised); border: var(--border-focus) solid var(--bronze-ink);
   pointer-events: none;
 }
 .tm-track:active .tm-thumb { transform: translateX(-50%) scale(1.08); }
-.tm-track:focus-visible .tm-thumb {
-  box-shadow: 0 0 0 3px var(--paper-raised, #fff), 0 0 0 6px var(--navy, #142A43), 0 1px 2px rgba(20, 42, 67, 0.18);
-}
+.tm-track:focus-visible .tm-thumb { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
 @media (prefers-reduced-motion: no-preference) {
-  .tm-thumb, .tm-fill { transition: left 80ms linear, width 80ms linear; }
+  .tm-thumb, .tm-fill { transition: left var(--duration-quick) var(--ease-standard), width var(--duration-quick) var(--ease-standard); }
 }
-.tm-scrub-foot { display: flex; justify-content: center; margin: -0.2rem 0 0.9rem; }
-.tm-random {
-  display: inline-flex; align-items: center; gap: 0.4rem;
-  min-height: 44px; padding: 0 0.6rem;
-  font: 600 0.82rem/1 var(--sans, system-ui, sans-serif);
-  color: var(--bronze-ink, #8A5A12); background: none; border: none; cursor: pointer;
-  text-decoration: underline; text-decoration-color: var(--bronze-rule, rgba(160,118,27,0.55));
-  text-underline-offset: 0.22em;
-}
-.tm-random:hover { text-decoration-color: currentColor; }
-.tm-random:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; border-radius: 4px; }
+.tm-scrub-foot { display: flex; justify-content: center; margin: 0 0 var(--space-block); }
+/* "Take me somewhere": a quiet button with its sparkle drawn filled. */
+.tm-root .tm-random svg { width: var(--size-icon-sm); height: var(--size-icon-sm); flex-basis: var(--size-icon-sm); fill: currentColor; stroke: none; }
 
 /* Panels ------------------------------------------------------------------ */
 /* Phone: one column, brief → voices → debates → numbers. Wide: the record
    on the left (brief, debates), the tallies on the right (voices, numbers). */
-.tm-panels { display: flex; flex-direction: column; gap: 1.6rem; }
+.tm-panels { display: flex; flex-direction: column; gap: var(--space-group); }
 .tm-col { display: contents; }
 .tm-sec-brief { order: 1; }
 .tm-sec-voices { order: 2; }
 .tm-sec-debates { order: 3; }
 .tm-sec-numbers { order: 4; }
 @media (min-width: 761px) {
-  .tm-panels { display: grid; grid-template-columns: 3fr 2fr; gap: 2rem; align-items: start; }
-  .tm-col { display: flex; flex-direction: column; gap: 1.6rem; min-width: 0; }
+  .tm-panels { display: grid; grid-template-columns: 3fr 2fr; gap: var(--space-group); align-items: start; }
+  .tm-col { display: flex; flex-direction: column; gap: var(--space-group); min-width: 0; }
 }
 .tm-sec { min-width: 0; }
 .tm-h2 {
-  font-family: var(--serif, Merriweather, Georgia, serif); font-size: 1.05rem; font-weight: 700;
-  color: var(--ink, #23271F); margin: 0 0 0.7rem;
-  padding-bottom: 0.35rem; border-bottom: 1px solid var(--line, #DFDCD2);
+  font: var(--type-subheading); color: var(--ink); margin: 0 0 var(--space-heading);
+  padding-bottom: var(--space-tight); border-bottom: var(--border-hairline) solid var(--divider-subtle);
 }
-.tm-h2 span { color: var(--bronze-ink, #8A5A12); }
 .tm-sec-head {
   display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap;
-  gap: 0.2rem 1rem; padding-bottom: 0.3rem; margin-bottom: 0.2rem;
-  border-bottom: 1px solid var(--line, #DFDCD2);
+  gap: var(--space-line) var(--space-block); padding-bottom: var(--space-line); margin-bottom: var(--space-line);
+  border-bottom: var(--border-hairline) solid var(--divider-subtle);
 }
 .tm-sec-head .tm-h2 { border: none; padding-bottom: 0; margin: 0; }
 
 /* Topic lens: a quiet underlined control, not a form field. */
-.tm-topic-row {
-  display: inline-flex; align-items: center; gap: 0.45rem;
-  font-size: 0.78rem; color: var(--ink-faint, #6F7468);
-}
+.tm-topic-row { display: inline-flex; align-items: center; gap: var(--space-tight); font: var(--type-label); color: var(--ink-soft); }
 .tm-topic-wrap { position: relative; display: inline-block; min-width: 0; }
 .tm-topic-wrap::after {
   content: ''; position: absolute; right: 0.45rem; top: 50%; width: 7px; height: 7px;
-  border-right: 1.5px solid var(--ink-soft, #575C52); border-bottom: 1.5px solid var(--ink-soft, #575C52);
+  border-right: 1.5px solid var(--ink-soft); border-bottom: 1.5px solid var(--ink-soft);
   transform: translateY(-70%) rotate(45deg); pointer-events: none;
 }
 .tm-topic {
-  font: inherit; font-size: 0.85rem; color: var(--ink, #23271F);
+  font: var(--type-body); color: var(--ink);
   background: transparent; -webkit-appearance: none; appearance: none;
-  border: none; border-bottom: 1px solid var(--line-strong, #8D897B); border-radius: 0;
-  min-height: 44px; padding: 0 1.5rem 0 0.2rem; max-width: 100%; min-width: 0; cursor: pointer;
+  border: none; border-bottom: var(--border-hairline) solid var(--line-control); border-radius: 0;
+  min-height: var(--size-target); padding: 0 1.5rem 0 var(--space-line); max-width: 100%; min-width: 0; cursor: pointer;
 }
-.tm-topic:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
 @media (max-width: 480px) {
   .tm-topic-row { flex: 1 1 100%; }
   .tm-topic-wrap { flex: 1; }
@@ -548,74 +495,54 @@ const CSS = `
 
 /* Speech entries: a ruled list, one clean unit each --------------------- */
 .tm-cards { display: block; }
-.tm-card { display: block; padding: 0.85rem 0 0.35rem; }
-.tm-card + .tm-card { border-top: 1px solid var(--line, #DFDCD2); }
-.tm-card-who { display: flex; align-items: center; gap: 0.6rem; min-width: 0; }
+.tm-card { display: block; padding: var(--space-block) 0 var(--space-tight); }
+.tm-card + .tm-card { border-top: var(--border-hairline) solid var(--divider-subtle); }
+.tm-card-who { display: flex; align-items: center; gap: var(--space-row); min-width: 0; }
 .tm-portrait { flex: none; display: inline-block; width: 32px; height: 32px; }
 .tm-portrait img {
-  width: 32px; height: 32px; border-radius: 50%; object-fit: cover; display: block;
-  border: 1.5px solid var(--paper-raised, #fff); box-shadow: 0 0 0 1px var(--line, #DFDCD2);
+  width: 32px; height: 32px; border-radius: var(--radius-round); object-fit: cover; display: block;
+  border: var(--border-hairline) solid var(--divider-subtle);
 }
-.tm-portrait.tm-portrait-none {
-  border-radius: 50%; background: var(--paper-sunken, #F1EFE8);
-  box-shadow: inset 0 0 0 1px var(--line, #DFDCD2);
-}
+.tm-portrait.tm-portrait-none { border-radius: var(--radius-round); background: var(--paper-sunken); border: var(--border-hairline) solid var(--divider-subtle); }
 .tm-portrait.tm-portrait-sm, .tm-portrait.tm-portrait-sm img { width: 24px; height: 24px; }
-.tm-who-text { min-width: 0; line-height: 1.35; }
-.tm-who-line { font-size: 0.9rem; color: var(--ink-soft, #575C52); }
-.tm-name { font-weight: 600; color: var(--ink, #23271F); text-decoration: none; }
-.tm-name:hover, .tm-meta-link:hover { color: var(--bronze-ink, #8A5A12); }
+.tm-who-text { min-width: 0; }
+.tm-who-line { font: var(--type-metadata); color: var(--ink-soft); }
+.tm-name { font-weight: 600; color: var(--ink); text-decoration: none; }
+.tm-name:hover, .tm-meta-link:hover { color: var(--bronze-ink); }
 .tm-meta-link { color: inherit; text-decoration: none; }
-.tm-when { font-size: 0.76rem; color: var(--ink-faint, #6F7468); margin-top: 0.1rem; }
-.tm-debate {
-  font-family: var(--serif, Merriweather, Georgia, serif); font-style: italic;
-  font-size: 0.92rem; color: var(--ink-soft, #575C52); margin: 0.55rem 0 0.3rem;
-}
-.tm-card-snippet {
-  font-family: var(--serif, Merriweather, Georgia, serif); font-size: 0.9rem;
-  color: var(--ink-soft, #575C52); line-height: 1.55; margin: 0;
-}
-.tm-card-brief { font-size: 0.87rem; color: var(--ink-soft, #575C52); line-height: 1.55; margin: 0; }
-.tm-brief-tag { font-style: italic; color: var(--ink-faint, #6F7468); }
-.tm-brief-tag::after { content: ' · '; }
+.tm-when { font: var(--type-fine); color: var(--ink-faint); }
+.tm-debate { font: var(--type-metadata); font-family: var(--serif); font-style: italic; color: var(--ink-soft); margin: var(--space-row) 0 var(--space-line); }
+.tm-card-snippet { font: 400 0.9375rem/1.6 var(--serif); color: var(--ink-soft); margin: 0; }
+.tm-card-brief { font: var(--type-metadata); color: var(--ink-soft); margin: 0; }
+.tm-brief-tag { margin-right: var(--space-tight); }
 .tm-read {
-  display: inline-flex; align-items: center; min-height: 40px;
-  font: 600 0.8rem/1 var(--sans, system-ui, sans-serif);
-  color: var(--bronze-ink, #8A5A12); text-decoration: underline;
-  text-decoration-color: var(--bronze-rule, rgba(160,118,27,0.55)); text-underline-offset: 0.22em;
+  display: inline-flex; align-items: center; min-height: var(--size-control-compact);
+  font: var(--type-label); color: var(--bronze-ink); text-decoration: underline;
+  text-decoration-color: var(--bronze-rule); text-underline-offset: 0.22em;
 }
 .tm-read:hover { text-decoration-color: currentColor; }
-.tm-card a:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
 
-/* Loading / empty states */
+/* Loading / empty states: layout-stable bars, then one plain sentence. */
 .tm-skeleton {
-  border-radius: 6px; border: 1px solid var(--line, #DFDCD2);
-  background: linear-gradient(100deg, var(--paper-sunken, #F1EFE8) 40%, var(--paper-raised, #fff) 50%, var(--paper-sunken, #F1EFE8) 60%);
-  background-size: 200% 100%; height: 5.5rem; margin-top: 0.7rem;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(100deg, var(--paper-sunken) 40%, var(--paper-raised) 50%, var(--paper-sunken) 60%);
+  background-size: 200% 100%; height: 5.5rem; margin-top: var(--space-heading);
 }
 @media (prefers-reduced-motion: no-preference) {
   .tm-skeleton { animation: tm-shimmer 1.4s linear infinite; }
 }
 @keyframes tm-shimmer { to { background-position: -200% 0; } }
-.tm-empty {
-  background: var(--paper-sunken, #F1EFE8); border: 1px solid var(--line, #DFDCD2);
-  border-radius: 6px; padding: 1rem 1.1rem; margin-top: 0.7rem;
-  font-size: 0.88rem; line-height: 1.6; color: var(--ink-soft, #575C52);
-}
-.tm-empty strong { color: var(--ink, #23271F); font-family: var(--serif, Merriweather, Georgia, serif); }
-.tm-empty-actions { margin-top: 0.4rem; }
-.tm-linkbtn {
-  font: inherit; font-size: 0.82rem; font-weight: 600; min-height: 40px;
-  color: var(--bronze-ink, #8A5A12); background: none; border: none;
-  padding: 0; cursor: pointer; text-decoration: underline;
-  text-decoration-color: var(--bronze-rule, rgba(160,118,27,0.55)); text-underline-offset: 0.22em;
-}
-.tm-linkbtn:hover { text-decoration-color: currentColor; }
-.tm-linkbtn:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
+.tm-empty { margin-top: var(--space-heading); padding: var(--space-block) 0 0; font: var(--type-metadata); color: var(--ink-soft); }
+.tm-cards > .tm-empty:first-child { padding-top: 0; }
+.tm-empty strong { font-weight: 600; color: var(--ink); }
+.tm-empty p { margin: var(--space-line) 0 0; }
+.tm-empty-actions { margin-top: var(--space-tight); }
+/* Text actions are quiet buttons; the label lines up with the text above. */
+.tm-root .tm-linkbtn { margin-inline-start: calc(-1 * var(--ui-pad)); }
 
 /* The year in brief (machine-written, sources one tap away) ------------- */
 .tm-filmstrip {
-  display: flex; gap: 0.45rem; margin: 0 0 0.8rem; padding: 1px 1px 0.2rem;
+  display: flex; gap: var(--space-tight); margin: 0 0 var(--space-heading); padding: 1px 1px var(--space-line);
   overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: none;
 }
 .tm-filmstrip::-webkit-scrollbar { display: none; }
@@ -623,143 +550,105 @@ const CSS = `
    frame, slightly quietened until the pointer or finger lands on them. */
 .tm-filmstrip-button {
   flex: 0 0 clamp(96px, 30vw, 132px); aspect-ratio: 4 / 3; height: auto; padding: 0; overflow: hidden;
-  border: 1px solid var(--line, #DFDCD2); border-radius: 2px;
-  background: var(--paper-sunken, #F1EFE8); cursor: pointer;
+  border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-sm);
+  background: var(--paper-sunken); cursor: pointer;
 }
 .tm-filmstrip-button img {
   display: block; width: 100%; height: 100%; object-fit: cover; filter: saturate(0.82) contrast(0.98);
-  transition: filter 200ms ease, transform 300ms cubic-bezier(0.22, 0.7, 0.3, 1);
+  transition: filter var(--duration-standard) var(--ease-standard), transform var(--duration-standard) var(--ease-standard);
 }
-.tm-filmstrip-button:hover { border-color: var(--bronze-ink, #8A5A12); }
+.tm-filmstrip-button:hover { border-color: var(--bronze-ink); }
 .tm-filmstrip-button:hover img, .tm-filmstrip-button:focus-visible img { filter: none; transform: scale(1.03); }
 @media (prefers-reduced-motion: reduce) { .tm-filmstrip-button img { transition: none; transform: none; } }
-.tm-filmstrip-button:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
 @media (min-width: 761px) {
-  .tm-filmstrip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: visible; gap: 0.5rem; }
+  .tm-filmstrip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: visible; gap: var(--space-tight); }
   .tm-filmstrip-button { width: 100%; }
 }
-.tm-brief-body p { font-size: 0.92rem; line-height: 1.6; color: var(--ink, #23271F); margin: 0 0 0.7rem; }
-.tm-brief-toggle { margin: -0.3rem 0 0.4rem; }
+.tm-brief-body p { font: var(--type-body); color: var(--ink); margin: 0 0 var(--space-heading); }
+.tm-root .tm-brief-toggle { margin-block: 0 var(--space-tight); }
 @media (min-width: 761px) {
   .tm-brief-more[hidden] { display: block !important; }
   .tm-brief-more-inline[hidden] { display: inline !important; }
-  .tm-brief-toggle { display: none; }
+  .tm-root .tm-brief-toggle { display: none; }
 }
-.tm-fineprint { font-size: 0.74rem; line-height: 1.5; color: var(--ink-faint, #6F7468); margin: 0.3rem 0 0; }
-.tm-sources { margin-top: 0.3rem; font-size: 0.8rem; }
+.tm-fineprint { font: var(--type-fine); color: var(--ink-soft); margin: var(--space-line) 0 0; }
+.tm-sources { margin-top: var(--space-line); font: var(--type-fine); }
 .tm-sources summary {
-  cursor: pointer; color: var(--bronze-ink, #8A5A12); font-weight: 600;
-  padding: 0.7rem 0; list-style-position: inside;
+  cursor: pointer; font: var(--type-label); color: var(--bronze-ink);
+  padding: var(--space-heading) 0; list-style-position: inside;
 }
-.tm-sources-list { margin: 0 0 0.3rem; padding-left: 1.25rem; display: grid; gap: 0.4rem; line-height: 1.45; }
-.tm-src-link { color: var(--ink, #23271F); text-decoration: underline; text-decoration-color: var(--bronze-rule, rgba(160,118,27,0.55)); text-underline-offset: 0.18em; }
-.tm-src-tail { color: var(--ink-faint, #6F7468); }
-.tm-src-cited { margin-left: 0.4rem; font-size: 0.7rem; font-style: italic; color: var(--bronze-ink, #8A5A12); }
+.tm-sources-list { margin: 0 0 var(--space-line); padding-left: 1.25rem; display: grid; gap: var(--space-tight); }
+.tm-src-link { color: var(--ink); text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 0.18em; }
+.tm-src-tail { color: var(--ink-faint); }
+.tm-src-cited { margin-left: var(--space-tight); font-style: italic; color: var(--bronze-ink); }
 
 /* Voices of the year: a short bar list --------------------------------- */
-.tm-voice-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
-.tm-voice-row { display: flex; align-items: center; gap: 0.5rem; min-width: 0; font-size: 0.86rem; }
+.tm-voice-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-row); }
+.tm-voice-row { display: flex; align-items: center; gap: var(--space-tight); min-width: 0; font: var(--type-metadata); }
 .tm-voice-name {
-  font-weight: 600; color: var(--ink, #23271F); text-decoration: none;
+  font-weight: 600; color: var(--ink); text-decoration: none;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
 }
-.tm-voice-name:hover { color: var(--bronze-ink, #8A5A12); }
-.tm-voice-party { color: var(--ink-faint, #6F7468); font-size: 0.78rem; white-space: nowrap; }
-.tm-voice-n { margin-left: auto; font-variant-numeric: tabular-nums; color: var(--ink-soft, #575C52); font-size: 0.8rem; }
-.tm-voice-bar { height: 5px; background: var(--paper-sunken, #F1EFE8); border-radius: 3px; margin-top: 0.3rem; overflow: hidden; }
-.tm-voice-fill { height: 100%; background: var(--bronze, #A0761B); border-radius: 3px; }
-.tm-voice-parties { font-size: 0.8rem; color: var(--ink-soft, #575C52); margin: 0.8rem 0 0; line-height: 1.5; }
+.tm-voice-name:hover { color: var(--bronze-ink); }
+.tm-voice-party { font: var(--type-fine); color: var(--ink-faint); white-space: nowrap; }
+.tm-voice-n { margin-left: auto; font: var(--type-fine); font-variant-numeric: tabular-nums; color: var(--ink-soft); }
+.tm-voice-bar { height: 5px; background: var(--chart-baseline); margin-top: var(--space-line); overflow: hidden; }
+.tm-voice-fill { height: 100%; background: var(--chart-mark); }
+.tm-voice-parties { font: var(--type-fine); color: var(--ink-soft); margin: var(--space-heading) 0 0; }
 
-/* Numbers panel */
-.tm-stats { display: grid; gap: 0.9rem; }
-.tm-stat {
-  background: var(--paper-raised, #fff); border: 1px solid var(--line, #DFDCD2);
-  border-left: 3px solid var(--bronze, #A0761B); border-radius: 0 6px 6px 0;
-  padding: 0.7rem 0.9rem;
-}
-.tm-stat-num {
-  font-family: var(--serif, Merriweather, Georgia, serif); font-weight: 900;
-  font-size: 1.6rem; color: var(--bronze-ink, #8A5A12); line-height: 1.1;
-  font-variant-numeric: tabular-nums;
-}
-.tm-stat-text { font-size: 0.83rem; color: var(--ink-soft, #575C52); line-height: 1.5; margin-top: 0.15rem; }
-.tm-spark { margin-top: 0.4rem; }
+/* Numbers panel: figures on rules, no boxes. */
+.tm-stats { display: grid; gap: var(--space-block); }
+.tm-stat + .tm-stat { padding-top: var(--space-block); border-top: var(--border-hairline) solid var(--divider-subtle); }
+.tm-stat-num { font: var(--type-heading); color: var(--ink); font-variant-numeric: tabular-nums; }
+.tm-stat-text { font: var(--type-metadata); color: var(--ink-soft); margin-top: var(--space-line); }
+.tm-spark { margin-top: var(--space-tight); }
 .tm-spark svg { display: block; width: 100%; height: 2.2rem; }
-.tm-spark-caption { font-size: 0.7rem; color: var(--ink-faint, #6F7468); margin-top: 0.15rem; }
+.tm-spark-line { fill: none; stroke: var(--chart-mark); }
+.tm-spark-dot { fill: var(--navy); }
+.tm-spark-caption { font: var(--type-fine); color: var(--ink-soft); margin-top: var(--space-line); }
 
 /* Year in pictures: a focus-managed panel inside the Time Machine dialog. */
-.tm-gallery { min-height: 32rem; padding: 0.15rem 0 1rem; touch-action: pan-y; }
+.tm-gallery { min-height: 32rem; padding: 0 0 var(--space-block); touch-action: pan-y; }
 /* The heading block is for assistive tech only: the sticky head carries the
    year and the way back. */
 .tm-gallery-head { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.tm-gallery-close.tm-in-head {
-  align-self: center; margin: 0.35rem 0.4rem 0 0; min-height: 40px; padding: 0 0.85rem 0 0.6rem; border-radius: 999px;
-  border: 1px solid var(--line-strong, #8D897B); background: var(--paper, #FAF9F6); color: var(--ink, #23271F);
-  font: 600 0.8125rem/1 var(--sans, system-ui, sans-serif); text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;
-}
-.tm-gallery-close.tm-in-head::before { content: '‹'; font: 400 1.2rem/1 var(--serif, Georgia, serif); color: var(--bronze-ink, #8A5A12); }
-.tm-gallery-close.tm-in-head:hover { border-color: var(--bronze-ink, #8A5A12); }
-.tm-gallery-close.tm-in-head[hidden] { display: none; }
-.tm-gallery-head-legacy {
-  display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 1rem;
-  padding-bottom: 0.65rem; border-bottom: 1px solid var(--line, #DFDCD2);
-}
-.tm-gallery-title {
-  margin: 0; color: var(--ink, #23271F);
-  font: 700 clamp(1.2rem, 3vw, 1.65rem)/1.25 var(--serif, Merriweather, Georgia, serif);
-}
-.tm-gallery-count { display: block; margin-top: 0.2rem; color: var(--ink-faint, #6F7468); font-size: 0.76rem; }
-.tm-gallery-close {
-  min-width: 44px; min-height: 44px; padding: 0 0.35rem; border: 0; background: transparent;
-  color: var(--bronze-ink, #8A5A12); cursor: pointer; font: 600 0.8rem/1 var(--sans, system-ui, sans-serif);
-  text-decoration: underline; text-decoration-color: var(--bronze-rule, rgba(160,118,27,0.55)); text-underline-offset: 0.22em;
-}
-.tm-gallery-close:hover { text-decoration-color: currentColor; }
-.tm-gallery-close:focus-visible, .tm-gallery-nav:focus-visible, .tm-gallery-thumb:focus-visible, .tm-gallery-dot:focus-visible {
-  outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px;
-}
+/* The way back sits in the dialog's head: a secondary pill with a back glyph. */
+.tm-gallery-close.tm-in-head { align-self: center; margin: var(--space-line) var(--space-tight) 0 0; }
+.tm-gallery-close.tm-in-head::before { content: '‹'; font-size: 1.125rem; line-height: 1; }
+.tm-gallery-close[hidden] { display: none !important; }
+.tm-gallery-title { margin: 0; color: var(--ink); font: var(--type-heading); }
+.tm-gallery-count { display: block; margin-top: var(--space-line); font: var(--type-fine); color: var(--ink-faint); }
 .tm-gallery-stage {
-  display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; gap: 0.75rem;
-  align-items: center; margin-top: 0.8rem;
+  display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; gap: var(--space-heading);
+  align-items: center; margin-top: var(--space-heading);
 }
-.tm-gallery-nav {
-  display: grid; place-items: center; width: 44px; height: 44px; padding: 0;
-  border: 1px solid var(--line-strong, #8D897B); border-radius: 50%;
-  background: var(--paper, #FAF9F6); color: var(--ink, #23271F); cursor: pointer;
-  font: 400 1.45rem/1 var(--serif, Merriweather, Georgia, serif);
-}
-.tm-gallery-nav:hover { border-color: var(--bronze-ink, #8A5A12); color: var(--bronze-ink, #8A5A12); }
+/* Previous and next photograph: icon buttons, the glyph at 22px. */
+.tm-root .tm-gallery-nav { font-size: 1.375rem; line-height: 1; }
 .tm-gallery-figure { min-width: 0; margin: 0; touch-action: pan-y; }
 .tm-picture-mat {
   display: flex; align-items: center; justify-content: center; width: 100%; height: min(56vh, 530px); min-height: 250px;
-  padding: clamp(0.55rem, 2vw, 1.1rem); overflow: hidden;
-  border: 1px solid var(--line, #DFDCD2); background: var(--paper-raised, #fff);
+  padding: clamp(0.5rem, 2vw, 1rem); overflow: hidden;
+  border: var(--border-hairline) solid var(--divider-subtle); background: var(--paper-raised);
 }
 .tm-gallery-image {
   display: block; width: auto; height: auto; max-width: 100%; max-height: 100%; min-width: 0; min-height: 0;
   object-fit: contain; user-select: none; -webkit-user-drag: none;
 }
-.tm-gallery-caption {
-  margin: 0.72rem 0 0; color: var(--ink, #23271F);
-  font: 400 0.93rem/1.55 var(--serif, Merriweather, Georgia, serif);
-}
-.tm-gallery-credit { margin: 0.28rem 0 0; color: var(--ink-faint, #6F7468); font-size: 0.7rem; line-height: 1.5; }
-.tm-gallery-credit a {
-  color: inherit; text-decoration: underline;
-  text-decoration-color: var(--bronze-rule, rgba(160,118,27,0.55)); text-underline-offset: 0.18em;
-}
-.tm-gallery-credit a:hover { color: var(--bronze-ink, #8A5A12); }
-.tm-gallery-thumbs { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 0.45rem; margin: 0.85rem 3.5rem 0; }
+.tm-gallery-caption { margin: var(--space-heading) 0 0; color: var(--ink); font: 400 0.9375rem/1.55 var(--serif); }
+.tm-gallery-credit { margin: var(--space-line) 0 0; font: var(--type-fine); color: var(--ink-soft); }
+.tm-gallery-credit a { color: inherit; text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 0.18em; }
+.tm-gallery-credit a:hover { color: var(--bronze-ink); }
+.tm-gallery-thumbs { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: var(--space-tight); margin: var(--space-block) 3.5rem 0; }
 .tm-gallery-thumb {
-  height: 58px; min-width: 0; padding: 3px; border: 1px solid var(--line, #DFDCD2);
-  border-radius: 0; background: var(--paper-raised, #fff); cursor: pointer;
+  height: 58px; min-width: 0; padding: 3px; border: var(--border-hairline) solid var(--divider-subtle);
+  border-radius: var(--radius-sm); background: var(--paper-raised); cursor: pointer;
 }
-.tm-gallery-thumb[aria-current="true"] { border-color: var(--bronze-ink, #8A5A12); box-shadow: inset 0 0 0 1px var(--bronze-ink, #8A5A12); }
+.tm-gallery-thumb[aria-current="true"] { padding: 2px; border: var(--border-focus) solid var(--bronze-ink); }
 .tm-gallery-thumb img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .tm-gallery-dots { display: none; }
 @media (prefers-reduced-motion: no-preference) {
-  .tm-gallery-figure.tm-picture-next { animation: tm-picture-next 180ms ease-out; }
-  .tm-gallery-figure.tm-picture-prev { animation: tm-picture-prev 180ms ease-out; }
+  .tm-gallery-figure.tm-picture-next { animation: tm-picture-next var(--duration-standard) var(--ease-standard); }
+  .tm-gallery-figure.tm-picture-prev { animation: tm-picture-prev var(--duration-standard) var(--ease-standard); }
 }
 @keyframes tm-picture-next { from { opacity: 0.2; transform: translateX(12px); } to { opacity: 1; transform: none; } }
 @keyframes tm-picture-prev { from { opacity: 0.2; transform: translateX(-12px); } to { opacity: 1; transform: none; } }
@@ -769,30 +658,30 @@ const CSS = `
      previous · dots · next beneath the caption and credit. */
   .tm-gallery-stage {
     grid-template-columns: 44px minmax(0, 1fr) 44px; grid-template-areas: "figure figure figure" "prev dots next";
-    gap: 0.7rem 0.5rem; align-items: center;
+    gap: var(--space-row) var(--space-tight); align-items: center;
   }
   .tm-gallery-figure { grid-area: figure; }
-  .tm-gallery-prev { grid-area: prev; margin: 0; }
-  .tm-gallery-next { grid-area: next; margin: 0; }
-  .tm-picture-mat { height: auto; min-height: 0; max-height: 56vh; padding: 0.5rem; }
+  .tm-root .tm-gallery-prev { grid-area: prev; margin: 0; }
+  .tm-root .tm-gallery-next { grid-area: next; margin: 0; }
+  .tm-picture-mat { height: auto; min-height: 0; max-height: 56vh; padding: var(--space-tight); }
   .tm-gallery-image { max-height: calc(56vh - 1rem); }
   .tm-gallery-thumbs { display: none; }
-  .tm-gallery-dots { grid-area: dots; display: flex; justify-content: center; gap: 0; margin: 0; min-height: 44px; align-items: center; }
+  .tm-gallery-dots { grid-area: dots; display: flex; justify-content: center; gap: 0; margin: 0; min-height: var(--size-target); align-items: center; }
   .tm-gallery-dot {
     display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; cursor: pointer;
   }
-  .tm-gallery-dot::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--line-strong, #8D897B); }
-  .tm-gallery-dot[aria-current="true"]::before { width: 7px; height: 7px; background: var(--bronze-ink, #8A5A12); }
+  .tm-gallery-dot::before { content: ''; width: 5px; height: 5px; border-radius: var(--radius-round); background: var(--line-control); }
+  .tm-gallery-dot[aria-current="true"]::before { width: 7px; height: 7px; background: var(--bronze-ink); }
 }
 
 /* Footer honesty strip ---------------------------------------------------- */
 .tm-footer {
-  margin-top: 1.75rem; padding: 0.8rem 0 0;
-  border-top: 1px solid var(--line, #DFDCD2);
-  font-size: 0.78rem; line-height: 1.55; color: var(--ink-faint, #6F7468);
+  margin-top: var(--space-group); padding: var(--space-heading) 0 0;
+  border-top: var(--border-hairline) solid var(--divider-subtle);
+  font: var(--type-fine); color: var(--ink-soft);
 }
 .tm-footer p { margin: 0; }
-.tm-footer b { color: var(--ink-soft, #575C52); font-weight: 600; }
+.tm-footer b { color: var(--ink); font-weight: 600; }
 
 /* Bills of the year ------------------------------------------------------- */
 /* The static bill register (/bills/index.json), read once and filtered by the
@@ -802,19 +691,17 @@ const CSS = `
 .tm-sec-bills { order: 5; }
 .tm-bill-list { list-style: none; margin: 0; padding: 0; }
 .tm-bill {
-  border-top: 1px solid var(--line, #DFDCD2); padding: 0.5rem 0;
-  display: flex; flex-direction: column; gap: 0.1rem;
+  border-top: var(--border-hairline) solid var(--divider-subtle); padding: var(--space-tight) 0;
+  display: flex; flex-direction: column; gap: var(--space-line);
 }
 .tm-bill:first-child { border-top: 0; }
 .tm-bill-name {
-  font-family: var(--serif, Merriweather, Georgia, serif); font-size: 0.9rem; font-weight: 600;
-  line-height: 1.4; color: var(--ink, #23271F); text-decoration: none;
-  display: flex; align-items: center; min-height: 44px;
+  font: 600 0.9375rem/1.4 var(--serif); color: var(--ink); text-decoration: none;
+  display: flex; align-items: center; min-height: var(--size-target);
 }
-.tm-bill-name:hover { color: var(--bronze-ink, #8A5A12); }
-.tm-bill-name:focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
-.tm-bill-meta { font-size: 0.75rem; line-height: 1.5; color: var(--ink-faint, #6F7468); }
-.tm-bill-meta b { color: var(--ink-soft, #575C52); font-weight: 600; }
+.tm-bill-name:hover { color: var(--bronze-ink); }
+.tm-bill-meta { font: var(--type-fine); color: var(--ink-faint); }
+.tm-bill-meta b { color: var(--ink-soft); font-weight: 600; }
 `
 
 function injectStyles() {
@@ -978,8 +865,8 @@ function sparklineSVG(report, year) {
     `Speeches about ${report.title} per year, ${y0} to ${points[points.length - 1][0]}`)
   const line = document.createElementNS('http://www.w3.org/2000/svg', 'path')
   line.setAttribute('d', path)
-  line.setAttribute('fill', 'none')
-  line.setAttribute('stroke', 'var(--bronze, #A0761B)')
+  // Colours come from the module's CSS (.tm-spark-line, .tm-spark-dot): tokens, no literals.
+  line.setAttribute('class', 'tm-spark-line')
   line.setAttribute('stroke-width', '1.5')
   svg.appendChild(line)
   if (here) {
@@ -987,7 +874,7 @@ function sparklineSVG(report, year) {
     dot.setAttribute('cx', here[0].toFixed(1))
     dot.setAttribute('cy', here[1].toFixed(1))
     dot.setAttribute('r', '3')
-    dot.setAttribute('fill', 'var(--navy, #142A43)')
+    dot.setAttribute('class', 'tm-spark-dot')
     svg.appendChild(dot)
   }
   return svg
@@ -1013,12 +900,12 @@ export function mountTimeMachine(container, opts = {}) {
     <div class="tm-hero">
       <div class="tm-hero-kicker" aria-hidden="true">Parliament in</div>
       <div class="tm-hero-row">
-        <button type="button" class="tm-step tm-step-back" aria-label="Previous year">‹</button>
+        <button type="button" class="ui-button ui-icon-button tm-step tm-step-back" aria-label="Previous year">‹</button>
         <div class="tm-year-lockup">
           <div class="tm-year" aria-hidden="true"></div>
           <button type="button" class="tm-pictures-open" hidden></button>
         </div>
-        <button type="button" class="tm-step tm-step-fwd" aria-label="Next year">›</button>
+        <button type="button" class="ui-button ui-icon-button tm-step tm-step-fwd" aria-label="Next year">›</button>
       </div>
     </div>
 
@@ -1033,7 +920,7 @@ export function mountTimeMachine(container, opts = {}) {
         <div class="tm-thumb"></div>
       </div>
       <div class="tm-scrub-foot">
-        <button type="button" class="tm-random" aria-label="Take me to a random year">
+        <button type="button" class="ui-button tm-random" data-variant="quiet" data-ui-size="compact" aria-label="Take me to a random year">
           <svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true">
             <path d="M8 0l1.8 6.2L16 8l-6.2 1.8L8 16 6.2 9.8 0 8l6.2-1.8z" fill="currentColor"/>
           </svg>
@@ -1045,13 +932,13 @@ export function mountTimeMachine(container, opts = {}) {
     <div class="tm-panels">
       <div class="tm-col tm-col-main">
         <section class="tm-sec tm-sec-brief" aria-label="The year in brief" hidden>
-          <h2 class="tm-h2">The year <span>in brief</span></h2>
+          <h2 class="tm-h2">The year in brief</h2>
           <div class="tm-filmstrip" aria-label="Pictures from this year" hidden></div>
           <div class="tm-yearbrief"></div>
         </section>
         <section class="tm-sec tm-sec-debates" aria-label="What they were arguing about">
           <div class="tm-sec-head">
-            <h2 class="tm-h2">What they were <span>arguing about</span></h2>
+            <h2 class="tm-h2">What they were arguing about</h2>
             <label class="tm-topic-row">
               <span>Topic</span>
               <span class="tm-topic-wrap"><select class="tm-topic"></select></span>
@@ -1062,15 +949,15 @@ export function mountTimeMachine(container, opts = {}) {
       </div>
       <div class="tm-col tm-col-side">
         <section class="tm-sec tm-sec-voices" aria-label="Voices of the year" hidden>
-          <h2 class="tm-h2">Voices of <span>the year</span></h2>
+          <h2 class="tm-h2">Voices of the year</h2>
           <div class="tm-voices"></div>
         </section>
         <section class="tm-sec tm-sec-numbers" aria-label="The year in numbers">
-          <h2 class="tm-h2">The year in <span>numbers</span></h2>
+          <h2 class="tm-h2">The year in numbers</h2>
           <div class="tm-stats"></div>
         </section>
         <section class="tm-sec tm-sec-bills" aria-label="Bills of the year" hidden>
-          <h2 class="tm-h2">Bills of <span>the year</span></h2>
+          <h2 class="tm-h2">Bills of the year</h2>
           <div class="tm-bills"></div>
         </section>
       </div>
@@ -1085,10 +972,10 @@ export function mountTimeMachine(container, opts = {}) {
           <h2 class="tm-gallery-title" id="tm-gallery-title"></h2>
           <span class="tm-gallery-count" aria-live="polite"></span>
         </div>
-        <button type="button" class="tm-gallery-close">Back to the year</button>
+        <button type="button" class="ui-button tm-gallery-close" data-ui-size="compact">Back to the year</button>
       </div>
-      <div class="tm-gallery-stage">
-        <button type="button" class="tm-gallery-nav tm-gallery-prev" aria-label="Previous photograph">‹</button>
+      <div class="tm-gallery-stage" data-ui-size="compact">
+        <button type="button" class="ui-button ui-icon-button tm-gallery-nav tm-gallery-prev" aria-label="Previous photograph">‹</button>
         <figure class="tm-gallery-figure">
           <div class="tm-picture-mat">
             <img class="tm-gallery-image" alt="" loading="eager" decoding="async" fetchpriority="high">
@@ -1098,7 +985,7 @@ export function mountTimeMachine(container, opts = {}) {
             <p class="tm-gallery-credit"></p>
           </figcaption>
         </figure>
-        <button type="button" class="tm-gallery-nav tm-gallery-next" aria-label="Next photograph">›</button>
+        <button type="button" class="ui-button ui-icon-button tm-gallery-nav tm-gallery-next" aria-label="Next photograph">›</button>
         <nav class="tm-gallery-dots" aria-label="Photographs in this year"></nav>
       </div>
       <nav class="tm-gallery-thumbs" aria-label="Photographs in this year"></nav>
@@ -1386,7 +1273,7 @@ export function mountTimeMachine(container, opts = {}) {
       outerDialog.style.transition = 'none'
       outerDialog.style.maxHeight = `${before}px`
       void outerDialog.offsetHeight
-      outerDialog.style.transition = 'max-height 320ms cubic-bezier(0.22, 0.7, 0.3, 1)'
+      outerDialog.style.transition = 'max-height var(--duration-gentle) var(--ease-standard)'
       outerDialog.style.maxHeight = `${after}px`
       let done = false
       const finish = () => {
@@ -1396,7 +1283,7 @@ export function mountTimeMachine(container, opts = {}) {
         outerDialog.style.maxHeight = ''
       }
       outerDialog.addEventListener('transitionend', finish, { once: true })
-      setTimeout(finish, 420)
+      setTimeout(finish, 520) // the gentle duration (400ms) and a margin
     })
   }
 
@@ -1705,8 +1592,11 @@ export function mountTimeMachine(container, opts = {}) {
       const text = briefs[card.dataset.rid]
       if (!text) continue
       const brief = el('p', 'tm-card-brief')
-      const tag = el('span', 'tm-brief-tag')
-      tag.textContent = 'Machine summary'
+      // MachineLabel, inline form (ui-controls.css): one per brief in this list.
+      const tag = el('span', 'ui-machine-inline tm-brief-tag')
+      const glyph = el('span', 'ui-machine-glyph', { 'aria-hidden': 'true' })
+      glyph.textContent = '✦'
+      tag.append(glyph, document.createTextNode('Machine-written'))
       brief.append(tag, document.createTextNode(text))
       const quote = card.querySelector('.tm-card-snippet')
       if (quote) quote.replaceWith(brief)
@@ -1748,7 +1638,7 @@ export function mountTimeMachine(container, opts = {}) {
     briefEl.appendChild(body)
     if (hasMore) {
       // On a phone the first paragraph opens the year; the rest is one tap.
-      const more = el('button', 'tm-linkbtn tm-brief-toggle', { type: 'button', 'aria-expanded': 'false' })
+      const more = el('button', 'ui-button tm-linkbtn tm-brief-toggle', { type: 'button', 'aria-expanded': 'false', 'data-variant': 'quiet', 'data-ui-size': 'compact' })
       more.textContent = 'Read the rest'
       more.addEventListener('click', () => {
         const open = more.getAttribute('aria-expanded') !== 'true'
@@ -1892,7 +1782,6 @@ export function mountTimeMachine(container, opts = {}) {
     box.appendChild(head)
 
     const body = el('p')
-    body.style.margin = '0.4rem 0 0'
     body.textContent =
       'The topic lens only sees speeches a still-running machine labelling pass has reached, ' +
       'on top of an archive that is itself still loading. A quiet result here means the ' +
@@ -1900,7 +1789,7 @@ export function mountTimeMachine(container, opts = {}) {
     box.appendChild(body)
 
     const actions = el('div', 'tm-empty-actions')
-    const clear = el('button', 'tm-linkbtn', { type: 'button' })
+    const clear = el('button', 'ui-button tm-linkbtn', { type: 'button', 'data-variant': 'quiet', 'data-ui-size': 'compact' })
     clear.textContent = `Show all topics for ${year}`
     clear.addEventListener('click', () => setTopic(''))
     actions.appendChild(clear)
@@ -1922,7 +1811,6 @@ export function mountTimeMachine(container, opts = {}) {
 
     const tracked = staticData.reports.reduce((s, r) => s + (r.timeline.get(year) ?? 0), 0)
     const body = el('p')
-    body.style.margin = '0.4rem 0 0'
     const pctNote = staticData.progress ? ` It’s about ${staticData.progress.pct}% of the way through.` : ''
     body.textContent = tracked > 0
       ? `Parliament definitely wasn’t quiet: it gave ${fmtInt(tracked)} speeches in ${year} on our six tracked topics alone (see the numbers). The record is being shelved oldest-first, and the live quotes for this year are still on the trolley.${pctNote}`
@@ -1930,7 +1818,7 @@ export function mountTimeMachine(container, opts = {}) {
     box.appendChild(body)
 
     const actions = el('div', 'tm-empty-actions')
-    const jump = el('button', 'tm-linkbtn', { type: 'button' })
+    const jump = el('button', 'ui-button tm-linkbtn', { type: 'button', 'data-variant': 'quiet', 'data-ui-size': 'compact' })
     jump.textContent = 'Take me to an earlier year that’s ready'
     jump.addEventListener('click', () => {
       const span = Math.max(1, lastGoodYear - YEAR_MIN + 1)
@@ -1944,13 +1832,16 @@ export function mountTimeMachine(container, opts = {}) {
   function renderErrorState() {
     cardsEl.replaceChildren()
     const box = el('div', 'tm-empty', { role: 'status' })
+    // One plain sentence and a way to try again, never the raw failure.
     const head = el('strong')
-    head.textContent = 'The time circuits hiccuped.'
+    head.textContent = `The speeches for ${year} could not be loaded.`
     box.appendChild(head)
-    const body = el('p')
-    body.style.margin = '0.4rem 0 0'
-    body.textContent = 'We couldn’t reach the archive just now. Nudge the dial to try again.'
-    box.appendChild(body)
+    const actions = el('div', 'tm-empty-actions')
+    const retry = el('button', 'ui-button tm-linkbtn', { type: 'button', 'data-variant': 'quiet', 'data-ui-size': 'compact' })
+    retry.textContent = 'Try again'
+    retry.addEventListener('click', () => loadHeadlines())
+    actions.appendChild(retry)
+    box.appendChild(actions)
     cardsEl.appendChild(box)
   }
 

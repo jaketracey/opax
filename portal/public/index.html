@@ -60,10 +60,10 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=37225fcfc8">
+<link rel="stylesheet" href="/style.css?v=639c276060">
 <link rel="stylesheet" href="/ui-controls.css?v=f8011bf298">
 <link rel="stylesheet" href="/ui-source.css?v=4f396d8cfc">
-<link rel="stylesheet" href="/voice.css?v=a09a39c243">
+<link rel="stylesheet" href="/voice.css?v=a10938b91d">
 <!-- labels.js: app.js imports it before its first render. -->
 <link rel="modulepreload" href="/labels.js?v=804befe8de">
 </head>
@@ -398,7 +398,7 @@
         </section>
 <details id="ask-sources" class="chat-sources" hidden>
           <summary id="ask-sources-sum">Sources</summary>
-          <p id="ask-calculation-note" class="fineprint" hidden>Opax calculated these totals from selected public disclosure records. Open a source to explore the supporting funding records. Receipts include more than gifts, and this selection does not cover every donor.</p>
+          <p id="ask-calculation-note" class="fineprint" hidden>OPAX calculated these totals from selected public disclosure records. Open a source to explore the supporting funding records. Receipts include more than gifts, and this selection does not cover every donor.</p>
           <div id="ask-date-ruler" class="date-ruler" hidden></div>
           <ol id="ask-cited-list" class="source-list"></ol>
           <details id="ask-retrieved" hidden>
@@ -751,20 +751,20 @@
         <div id="money-jur"></div>
         <details id="money-journey-picker" class="journey-menu" name="money-tools"><summary>Guided journeys</summary><div id="money-journey-controls"></div></details>
         <div id="money-research"></div>
-        <div class="money-related-links"><a class="money-agency-link" href="/subject/agency">Agency contract maps</a><a class="money-evidence-link" href="/connections">Programs & places</a></div>
+        <!-- ⋯: the full-screen map and the agency maps. Programs & places is a tab already. -->
+        <details class="ui-pop ui-more" id="money-more"><summary aria-label="More money tools" title="More money tools"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="4.5" cy="10" r="1.5"/><circle cx="10" cy="10" r="1.5"/><circle cx="15.5" cy="10" r="1.5"/></svg></summary>
+          <div class="ui-sheet"><ul class="ui-more-list" role="list">
+            <li><a class="ui-more-item" href="/map" data-full-map>Full-screen map</a></li>
+            <li><a class="ui-more-item" href="/subject/agency">Agency contract maps</a></li>
+          </ul></div></details>
       </div>
       <div id="money-stage" class="money-stage">
         <aside id="money-journey-story" class="journey-story" aria-label="Guided journey" hidden></aside>
         <div id="money-map-root" class="money-map-root"></div>
       </div>
       <div id="money-research-results"></div>
-      <details class="money-source-details"><summary>Sources & coverage</summary><p class="fineprint" id="money-fineprint">AEC disclosure data: donations under the disclosure threshold are not
-      reported and cannot appear here, so totals are a floor, not a ceiling. Party totals leave
-      out public funding identified by the reported donor name. Donor totals and flows also
-      exclude public funding under variant spellings, government entities and internal party
-      transfers; party totals include transfers. State and federal returns are not summed:
-      AEC returns already include state branch receipts.
-      <span class="money-note-actions"><a class="ui-button" href="/graph/money.json"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v9"/><path d="M6.5 8.5L10 12l3.5-3.5"/><path d="M3.5 15.5h13"/></svg><span>Download the data</span></a><a class="ui-button" href="/map"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.5 3.5h4v4M7.5 16.5h-4v-4M16.5 3.5l-5.5 5.5M3.5 16.5l5.5-5.5"/></svg><span>Full-screen map</span></a></span></p></details>
+      <!-- The map's one source line (moneyFineprintHTML in app.js). -->
+      <div id="money-fineprint" class="money-source"></div>
     </section>
 
     <section id="panel-money-records" class="panel" hidden aria-label="Money records"><div data-money-navigation></div><h1 class="visually-hidden" id="money-records-title">Political receipts</h1><div id="money-records-body"></div></section>
@@ -791,7 +791,15 @@
     </section>
     <!-- ============================= REPORTS =========================== -->
     <section id="panel-reports" class="panel" hidden aria-label="Reports">
-      <div id="reports-list" class="report-cards"></div>
+      <!-- The index: one title, the cards, one dated source line for the set. -->
+      <div id="reports-index">
+        <div class="subject-head reports-head">
+          <h2 id="reports-title" tabindex="-1">Reports</h2>
+          <p class="subject-tag"><span>Standing investigations that pair the money with the words, every claim cited to the record.</span></p>
+        </div>
+        <div id="reports-list" class="report-cards"></div>
+        <div id="reports-source"></div>
+      </div>
       <div id="reports-status" class="status" role="status"></div>
       <article id="report-view" hidden>
         <h2 id="report-title" tabindex="-1"></h2>
@@ -819,14 +827,13 @@
         <div id="report-allsources" hidden></div>
         <!-- v2 keeps its provenance at the foot, beside the data it describes. -->
         <p id="report-meta2" class="report-meta report-foot-meta" hidden></p>
-        <p class="fineprint" id="report-download"></p>
+        <div id="report-download"></div>
       </article>
     </section>
 
     <!-- ============================== DOC ============================== -->
     <section id="panel-doc" class="panel" hidden aria-label="Document from the record">
       <div class="doc-head">
-        <p class="kicker">From the record</p>
         <h2 id="doc-title" tabindex="-1"></h2>
         <p id="doc-topic" class="doc-topic" hidden></p>
         <p id="doc-meta" class="doc-meta"></p>
@@ -906,6 +913,10 @@
 
     <!-- ============================ EXPLORE ============================ -->
     <section id="panel-explore" class="panel" hidden aria-label="Explore">
+      <div class="subject-head">
+        <h2 id="explore-title" tabindex="-1">Explore</h2>
+        <p class="subject-tag"><span>Tools and games built on the public record: speeches, votes, money and grants.</span></p>
+      </div>
       <div class="game-grid">
         <button type="button" class="game-card" id="explore-ballot-btn">
           <span class="game-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><rect x="10" y="5" width="28" height="38" rx="2"/><path d="M17 14h3v4h-3zM17 25h3v4h-3zM26 16h6M26 27h6M17 36h15"/></svg></span>
@@ -1162,6 +1173,25 @@
     </section>
 
     <section id="panel-about" class="panel" hidden aria-label="About OPAX">
+      <!-- At regular width the page's sections are listed beside it (design
+           review: About keeps its prose and gains an index). -->
+      <nav class="about-index" aria-labelledby="about-index-head">
+        <p class="about-index-head" id="about-index-head">On this page</p>
+        <ul role="list">
+          <li><a href="#about-use">What you can do here</a></li>
+          <li><a href="#about-record">The record</a></li>
+          <li><a href="#about-money">The money</a></li>
+          <li><a href="#about-votes">Votes and bills</a></li>
+          <li><a href="#about-instruments">Federal legislative instruments</a></li>
+          <li><a href="#about-people">People</a></li>
+          <li><a href="#about-machines">Enrichments written by machines</a></li>
+          <li><a href="#about-limits">What this cannot prove</a></li>
+          <li><a href="#about-who">Who makes it</a></li>
+          <li><a href="#about-licences">Licences and reuse</a></li>
+          <li><a href="#about-contact">How to reach us</a></li>
+        </ul>
+      </nav>
+      <div class="about-body">
       <h2>What OPAX is</h2>
       <p>OPAX, the Open Parliamentary Accountability Exchange, has one intent: to put as much of
       the open data about Australian politics as possible in one place, cross-referenced and
@@ -1178,7 +1208,7 @@
       blind spot is only worth finding if someone else can check it.</p>
       <p class="fineprint">OPAX contains the names and images of people who have died.</p>
 
-      <h2>What you can do here</h2>
+      <h2 id="about-use">What you can do here</h2>
       <ul class="about-list">
         <li><strong>Ask</strong>: put a question to the speech corpus (widen it to the recorded
         divisions with one checkbox) and get an answer written only from the passages retrieved
@@ -1205,7 +1235,7 @@
         narrowed to that entity.</li>
       </ul>
 
-      <h2>The record</h2>
+      <h2 id="about-record">The record</h2>
       <div class="table-scroll"><table class="about-table">
         <thead><tr><th>Source</th><th>Documents</th><th>Coverage</th></tr></thead>
         <tbody id="about-sources"><!-- filled from corpus.json --></tbody>
@@ -1223,7 +1253,7 @@
       <a href="/methods">methods &amp; how to cite OPAX</a> · machine-readable manifest:
       <a href="/corpus.json">corpus.json</a>.</p>
 
-      <h2>The money</h2>
+      <h2 id="about-money">The money</h2>
       <p>Every federal donation disclosed to the AEC since 1998 is loaded — 199,233 rows —
       and the <a href="/money">money map</a> plots the 250 largest donors against 11 parties as
       662 flows, built from 127,658 of those rows after excluding public funding, internal party
@@ -1268,7 +1298,7 @@
       terms that do not permit republishing them here; that data is held for internal research
       only and nothing from those three jurisdictions appears on the site.</p>
 
-      <h2>Votes and bills</h2>
+      <h2 id="about-votes">Votes and bills</h2>
       <p>Every recorded division OPAX could get in a structured form — 13,867 of them, federal
       divisions from TheyVoteForYou and state divisions parsed from New South Wales, Victorian and
       Queensland Hansard, 1998 to today — is a citable document in the search index in its own
@@ -1293,7 +1323,7 @@
       reach a linked speech only 24% of the time, against 74–84% in every other parliament since
       2013. Neither gap is a fault in the bill registry; both close only as more Hansard is loaded.</p>
 
-      <h2>Federal legislative instruments</h2>
+      <h2 id="about-instruments">Federal legislative instruments</h2>
       <p>The instruments catalogue carries in-force title metadata
       from the Office of Parliamentary Counsel's <a href="https://www.legislation.gov.au/">Federal
       Register of Legislation</a>. OPAX shows titles, dates, departments, portfolios, status and
@@ -1304,7 +1334,7 @@
       not yet commenced. Every detail page links the authoritative text on FRL. Names in instrument
       titles remain authorised record text and create no person profiles or identity joins.</p>
 
-      <h2>People</h2>
+      <h2 id="about-people">People</h2>
       <p>1,557 names appear as speakers in the corpus since 1993; 313 of them currently sit in a
       state or federal parliament. 829 portrait photographs cover just over a thousand of those
       names: 551 official portraits from Parliament House, fetched through OpenAustralia because
@@ -1321,7 +1351,7 @@
       interest would be a derivative work in a way a fact with a link back to the original PDF is
       not.</p>
 
-      <h2>Enrichments written by machines</h2>
+      <h2 id="about-machines">Enrichments written by machines</h2>
       <ul class="about-list">
         <li><strong>Topic labels</strong>: every speech is, eventually, tagged against a fixed
         taxonomy of 21 subjects — gambling, financial services, mining &amp; energy, climate &amp;
@@ -1353,7 +1383,7 @@
         never an invented claim.</li>
       </ul>
 
-      <h2>What this cannot prove</h2>
+      <h2 id="about-limits">What this cannot prove</h2>
       <p>OPAX puts the record and the money side by side. It does not draw a conclusion from
       them, and neither should a reader without checking the primary source first.</p>
       <ul class="about-list">
@@ -1373,7 +1403,7 @@
       coverage is thin, which members' records are unreliable — are on the
       <a href="/methods">methods page</a>, not repeated here.</p>
 
-      <h2>Who makes it</h2>
+      <h2 id="about-who">Who makes it</h2>
       <p>OPAX is a side project of Jake Tracey, of <a href="https://noice.net.au"
       rel="noopener">Noice</a>. It is independent and non-partisan, built outside working hours,
       and the data it carries belongs to the public bodies that published it. Three things make
@@ -1402,7 +1432,7 @@
       a missing source, a wrong number, a jurisdiction not yet covered, the fastest fix is an
       issue on GitHub, below.</p>
 
-      <h2>Licences and reuse</h2>
+      <h2 id="about-licences">Licences and reuse</h2>
       <p>Source: <a href="https://www.legislation.gov.au/">Federal Register of Legislation
       (legislation.gov.au)</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
       Instrument metadata is arranged into a catalogue with titles verbatim and
@@ -1431,12 +1461,13 @@
       applies, its licence; when the two disagree, trust the page, since licences and coverage
       windows both move and this paragraph will not always be the first place they are updated.</p>
 
-      <h2>How to reach us</h2>
+      <h2 id="about-contact">How to reach us</h2>
       <p>OPAX has no dedicated inbox. Data errors are the corrections we most want to hear about,
       and the fastest way to report one, ask about the methodology, or point out a source we have
       missed is to open an issue on
       <a href="https://github.com/jaketracey/opax" rel="noopener">the GitHub repository</a>, where
       the code, the ingestion scripts and the issue tracker all live in one place.</p>
+      </div>
     </section>
 
     <!-- ============================ METHODS ============================ -->
@@ -1997,10 +2028,10 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=f1f3f5b4a4" defer></script>
-<script src="/navigation.js?v=02752160b8" defer></script>
+<script src="/spa-shell.js?v=04f6425942" defer></script>
+<script src="/navigation.js?v=fecf78a28b" defer></script>
 <script src="/quick-search.js?v=206914f32d" defer></script>
 <script src="/ui-source.js?v=5e7b751ca0" defer></script>
-<script src="/app.js?v=076d26b6ad" defer></script>
+<script src="/app.js?v=e34d729d78" defer></script>
 </body>
 </html>

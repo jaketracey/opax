@@ -14,7 +14,7 @@ shell replaced by a vanilla adapter.
 | `map3d-engine.ts` | The ported engine: three.js scene, camera, orbit/pan/pinch gestures, DOM label overlay, selection dimming, fog, reduced motion |
 | `force3d.ts` | Dependency-free 3D force simulation (d3-force semantics, one more axis); extended with a `centralGroup` so the parties sit at the origin |
 | `map-types.ts` | The types/helpers the engine needs (extracted from corpuskit's `KnowledgeMap.tsx`; the 2D map was not ported) |
-| `palette.ts` | Self-contained industry palette (replaces the tenant `--rp-cat-*` CSS tokens the source engine resolved at runtime) |
+| `palette.ts` | The map's colours, read from the design token source (`docs/design/design-tokens.json`: `chart.industry`, `party`, `color`) at build time; no colour of its own |
 | `words.ts` | The words layer: `/api/matrix` (lazy, cached, silent on failure) joined to donor industries; "In parliament" / "What they talk about" card blocks and the bronze halo toggle |
 | `smoke-test.mjs` | Node test: imports the built bundle, builds the graph from `money.json`, runs the force sim headlessly |
 
@@ -90,7 +90,7 @@ out to tell its donors apart, and unfolds again on the way in
   smaller window folds more.
 - A hub is one sphere in the cluster's hue, radius from the donor count
   (`hubRadius`), a hairline ring in the cluster's ink, and the cluster's
-  caption ("UNIONS · 49") moved onto it. Its flows to each party are summed
+  caption ("Unions · 49") moved onto it. Its flows to each party are summed
   into one tube per party (`MapEdge.hub` marks them; `source` is
   `hub:<group>`, `count` is the donor count). Party nodes never fold.
 - The fold is a 420ms cubic in-out tween (`LOD_MS`): dots drift to the
@@ -105,14 +105,28 @@ out to tell its donors apart, and unfolds again on the way in
 - A cluster holding the selection, or a selected flow's endpoints, never
   folds.
 
-Labels never overlap: captions claim space first (largest cluster first,
-above the mark, else below, then each again shifted sideways to stay inside
-the plate, else the name without its count, else hidden - the plate edge is
-hard, a caption is never drawn cut off), then the emphasised few, then the
-rest by size within a zoom-dependent budget, each new name fading in. Widths
-are measured (`measureLabels`) with the labels' computed fonts, so a host
-that restyles them stays collision-free. With a focus, only the
-neighbourhood is named.
+Labels never overlap: the emphasised few claim space first, then every party
+(`placeParties`), then the captions (largest cluster first, above the mark,
+else below, then each again shifted sideways to stay inside the plate, else
+the name without its count, else hidden - the plate edge is hard, a caption
+is never drawn cut off), then the rest by size within a zoom-dependent
+budget, each new name fading in. Widths are measured (`measureLabels`) with
+the labels' computed fonts, so a host that restyles them stays
+collision-free. With a focus, only the neighbourhood is named - except the
+parties.
+
+A party's colour is never drawn without its name: the minor parties share
+one muted dot (`party.other` in the token source), so the colour alone says
+nothing. Every visible party sphere is named at any zoom and under any focus
+(dimmed with its sphere), as the shared PartyLabel (`.ui-party`: a dot beside
+the name). Each name takes a free side of its own sphere - above, below,
+right, left - clear of the plate edge, other names and every other sphere;
+at the fitted view the party cluster is a knot a few dozen pixels across, so
+the names that find no free side are called out in columns either side of
+the cluster, in the spheres' top-to-bottom order, each joined back to its
+sphere by a hairline (`.rp-map3d-leader`). The hover card and the info card
+put the node's dot beside its name too, and every card row, find result and
+words-block row is a dot beside a name.
 
 The fit (`fitDistance`) accounts for the captions in pixels (closed form, so
 a caption at the ring's edge has room inside the plate) and frames the
@@ -162,8 +176,8 @@ Public money going the other way. `scripts/export_money_graph.py` (and the
 state export for Queensland) adds one **grantor** node per file
 (`grantor:federal` "Commonwealth grants", `grantor:qld` "Queensland grants";
 `kind: 'grantor'`; legacy exports use `group: 'parties'`, which the adapter maps
-to a separate `public money` territory away from the party centre; teal
-`GRANTOR_COLOUR`) and one **grant flow** per donor on the map that the grant
+to a separate `public money` territory away from the party centre;
+`GRANTOR_COLOUR`, the money ink, whatever colour the export carries) and one **grant flow** per donor on the map that the grant
 register resolves to the same entity (`parli.ingest.grant_recipients`: ABN,
 then unique name), `grantor -> donor`, marked `grant: true`, with `byYear`
 cells like every other flow. Each such donor also carries a `grants` block
@@ -188,8 +202,8 @@ of money are never summed.
 ### The contracts hub, and the second way onto the map
 
 The federal file carries a second public-money hub, `grantor:contracts`
-("Commonwealth contracts", `kind: 'grantor'`, `flow: 'contracts'`, slate
-`CONTRACTOR_COLOUR`), built from AusTender by `parli.ingest.austender_full`
+("Commonwealth contracts", `kind: 'grantor'`, `flow: 'contracts'`, the bills
+teal `CONTRACTOR_COLOUR`), built from AusTender by `parli.ingest.austender_full`
 and `parli.ingest.contract_suppliers` (docs/DATA-CONTRACTS.md). Its flows are
 `grant: true, flow: 'contracts'`; a donor holding contracts carries a
 `contracts` block shaped exactly like `grants` (the three largest agencies in

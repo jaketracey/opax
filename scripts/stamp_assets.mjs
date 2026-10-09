@@ -122,12 +122,22 @@ async function refreshFonts() {
 
 /** [importer, module]: modules whose changes must invalidate their importer.
  *  An importer that is itself stamped into another comes first, so its own
- *  new stamp is in the hash its importer takes (labels.js reaches home.js
- *  through home-data.js). */
+ *  new stamp is in the hash its importer takes (labels.js reaches app.js
+ *  directly and through electorates.js, and home.js through home-data.js).
+ *  agencies.js and suppliers.js import each other, so app.js keeps a hand
+ *  version for them: bump it when their money-map.js stamp moves. */
 export const MODULE_STAMPS = [
-  ['home-data.js', 'labels.js'],
-  ['app.js', 'labels.js'], ['app.js', 'division-markdown.js'], ['app.js', 'quiz.js'], ['app.js', 'timemachine.js'],
-  ['home.js', 'home-data.js'],
+  // The money map's bundle names its chunks by content, so an importer holding
+  // an old money-map.js would ask for chunks the build has removed.
+  ['map-page.js', 'money-map.js'], ['agencies.js', 'money-map.js'], ['suppliers.js', 'money-map.js'],
+  ['thenvsnow.js', 'wombat.js'], ['grant-recipient.js', 'grants.js'],
+  ['electorates.js', 'labels.js'], ['home-data.js', 'labels.js'],
+  ['app.js', 'labels.js'], ['app.js', 'electorates.js'], ['app.js', 'division-markdown.js'], ['app.js', 'quiz.js'], ['app.js', 'timemachine.js'],
+  ['app.js', 'money-map.js'], ['app.js', 'explain.js'], ['app.js', 'grant-recipient.js'],
+  // The Explore tools and the loaders, restyled on tokens in pass 4G.
+  ['app.js', 'ballot.js'], ['app.js', 'grants.js'], ['app.js', 'ledger.js'], ['app.js', 'matrix.js'], ['app.js', 'wordsdollars.js'],
+  ['app.js', 'thenvsnow.js'], ['app.js', 'statemap.js'], ['app.js', 'stages.js'], ['app.js', 'wombat.js'],
+  ['home.js', 'home-data.js'], ['home.js', 'electorates.js'], ['home.js', 'money-map.js'],
 ]
 
 /** Write each MODULE_STAMPS module's content hash into its importer; returns the importers that were stale. */
@@ -192,7 +202,8 @@ function stamp({ check }) {
   }
   const communityPath = join(PUBLIC, 'community.html')
   const communityBefore = readFileSync(communityPath, 'utf8')
-  const communityAfter = communityBefore.replace(/\/(style\.css|community\.css|community\.js|ui-controls\.css)(?:\?v=[A-Za-z0-9._-]*)?(?=")/g, (_, file) => `/${file}?v=${hashOf(file)}`)
+  // The community page wears the site masthead, drawer and footer, synced from index.html as home.html's are.
+  const communityAfter = syncHomeChrome(communityBefore, after).replace(/\/(style\.css|ui-controls\.css|community\.css|community\.js|navigation\.js|quick-search\.js)(?:\?v=[A-Za-z0-9._-]*)?(?=")/g, (_, file) => `/${file}?v=${hashOf(file)}`)
   if (!check && communityAfter !== communityBefore) writeFileSync(communityPath, communityAfter)
   const workbenchPath = join(PUBLIC, 'ui-workbench.html')
   const workbenchBefore = readFileSync(workbenchPath, 'utf8')

@@ -45,6 +45,9 @@ Desktop homepage sections use 48px vertical padding on either side of the shared
 | Topic metadata, including a navigable topic | `.ui-tag`; bronze wash and hash marker, no button outline |
 | Ordinary navigation or sample question | Text link with a real destination |
 | Change between Ask and Search views | Underlined research mode navigation, not a row of pills |
+| A block's dates, originals, notes and licence | One SourceLine at its foot: `sourceLineHTML()` in `labels.js` (`dateLabel` "Updated", "Written" or "As at"; `facts` for key/value rows) |
+| Machine-written text | One MachineLabel at the top of the block: `machineLabelHTML()`; `{ pill: true }` where a summary already opens the text |
+| Actions a view keeps but does not draw | ⋯: `moreMenuHTML()` (`.ui-more`), arrow keys from `ui-source.js` |
 
 Buttons, fields and complete segmented controls share compact/default/large sizes: 40/48/56px. Compact grows to at least 44px on touch layouts. The default segmented control's **entire outside height** is 48px, including padding and borders. Use minimum heights so text can wrap at zoom. Standard control radius is 4px. Do not reintroduce capsule-shaped chips or oversized close icons. There is no gold or bronze button variant: the former gold call to action and the bronze document **Ask the record** button were retired for the navy primary on 19 September 2026. Bronze belongs to tags and record links.
 
@@ -52,7 +55,7 @@ The sentence-style question builder is a deliberate exception: serif sentence te
 
 ## Navigation and search
 
-The gold Australia mark and pale stars sit beside the white **OPAX** wordmark. `navigation.js` owns destinations for both homepage and app headers. Desktop dropdowns retain the descriptive two-column layout and report pictograms. Main app pages use the compact homepage treatment; Community retains its separate account/discussion navigation.
+The gold Australia mark and pale stars sit beside the white **OPAX** wordmark. `navigation.js` owns destinations for both homepage and app headers. Desktop dropdowns retain the descriptive two-column layout and report pictograms. Main app pages use the compact homepage treatment. Community wears the same masthead (synced from `index.html` by `stamp_assets.mjs`) with a Community sub-navigation under it.
 
 A search icon opens a small **light** search panel. `.ui-input-wrap` vertically centres its icon. The shared `quick-search.js` owns suggestion keyboard behaviour and disclosure dismissal; data providers stay with the page. Retain direct search, speaker, electorate, topic, party, donor and report suggestions. Focus, Escape, outside click, long names and narrow screens must remain usable.
 
@@ -76,6 +79,8 @@ The reader-controlled Spotlight section uses the published Gambling, Housing and
 
 - `style.css`: foundations, site layout and shared header styling.
 - `ui-controls.css`: control appearance, sizes and states. Feature CSS owns placement.
+- `labels.js`: the one copy of the party map, the five labels, the SourceLine and ⋯. `app.js` imports it before its first render; `home-data.js`, `electorates.js` and modules import it directly. `stamp_assets.mjs` stamps it into each importer.
+- `ui-source.css` and `ui-source.js`: the SourceLine, MachineLabel and ⋯ popovers (Escape, light dismiss, one open at a time, arrow keys in ⋯).
 - `home.css`: homepage compositions and responsive layout.
 - `home.js`: homepage interactions, forms, map and carousel.
 - `home-data.js`: current collection feeds and automatic record selection.

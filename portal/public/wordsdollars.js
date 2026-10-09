@@ -98,15 +98,20 @@ const PARTY_CANON = {
 }
 const canonParty = (name) => PARTY_CANON[name] ?? name
 
-// Mirror of app.js PARTY_MAP: party label → [dot class, short text label].
-// Dots are always redundant with text, never colour alone.
+// Mirror of labels.js PARTY_MAP + PARTY_NAMES: party label → [dot class,
+// the short name a label shows, the full name it says]. Dots are always
+// redundant with the name, never colour alone.
 const PARTY_MAP = {
-  'labor': ['alp', 'ALP'], 'liberal': ['lib', 'LIB'], 'nationals': ['nat', 'NAT'],
-  'lnp': ['lnp', 'LNP'], 'country liberal party': ['nat', 'CLP'],
-  'greens': ['grn', 'GRN'], 'one nation': ['onp', 'ONP'], 'independent': ['ind', 'IND'],
-  'centre alliance': ['oth', 'CA'], "katter's australian party": ['oth', 'KAP'],
-  'united australia party': ['oth', 'UAP'], 'australian democrats': ['oth', 'AD'],
-  'family first': ['oth', 'FF'], 'dlp': ['oth', 'DLP'], 'jln': ['oth', 'JLN'],
+  'labor': ['alp', 'Labor', 'Australian Labor Party'], 'liberal': ['lib', 'Liberal', 'Liberal Party'],
+  'nationals': ['nat', 'Nationals', 'The Nationals'], 'lnp': ['lnp', 'LNP', 'Liberal National Party'],
+  'country liberal party': ['nat', 'CLP', 'Country Liberal Party'], 'greens': ['grn', 'Greens', 'Australian Greens'],
+  'one nation': ['onp', 'One Nation', "Pauline Hanson's One Nation"], 'independent': ['ind', 'Independent', 'Independent'],
+  'centre alliance': ['oth', 'Centre Alliance', 'Centre Alliance'],
+  "katter's australian party": ['oth', 'KAP', "Katter's Australian Party"],
+  'united australia party': ['oth', 'UAP', 'United Australia Party'],
+  'australian democrats': ['oth', 'Democrats', 'Australian Democrats'],
+  'family first': ['oth', 'Family First', 'Family First'], 'dlp': ['oth', 'DLP', 'Democratic Labour Party'],
+  'jln': ['oth', 'JLN', 'Jacqui Lambie Network'],
 }
 
 /** Mirror of app.js searchHash — a deep link into the filtered search. */
@@ -133,7 +138,7 @@ function pctText (share) {
 const FEW_LABELS = 200
 
 // ---------------------------------------------------------------------------
-// Styles — .wd- prefix, site tokens with fallbacks, light-only
+// Styles — .wd- prefix, site tokens (tokens.css), light-only
 // ---------------------------------------------------------------------------
 
 const CSS = `
@@ -142,72 +147,69 @@ const CSS = `
      spans (dash cells) so their static positions can never widen the host
      dialog's scroll area — the matrix's 390px lesson. */
   position: relative;
-  font-family: var(--sans, 'Public Sans', -apple-system, 'Segoe UI', Roboto, sans-serif);
-  color: var(--ink, #23271F);
+  font: var(--type-body);
+  color: var(--ink);
 }
-.wd-root :focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
+.wd-root :focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 2px; }
 
 .wd-intro {
-  margin: 0 0 1rem; font-size: 0.875rem; line-height: 1.55;
-  color: var(--ink-soft, #575C52); max-width: 62ch;
+  margin: 0 0 var(--space-block); font: var(--type-body);
+  color: var(--ink-soft); max-width: 62ch;
 }
-.wd-intro b { color: var(--ink, #23271F); font-variant-numeric: tabular-nums; }
+.wd-intro b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
 .wd-root a {
   color: inherit; text-decoration: underline;
-  text-decoration-color: var(--bronze, #A0761B); text-underline-offset: 2px;
+  text-decoration-color: var(--bronze-rule); text-underline-offset: 2px;
 }
-.wd-root a:hover { color: var(--bronze-ink, #8A5A12); }
+.wd-root a:hover { color: var(--bronze-ink); text-decoration-color: var(--bronze-ink); }
 
-.wd-panels { display: grid; gap: 1rem; }
+/* One panel per industry, each opened by a rule: sections, not boxes. */
+.wd-panels { display: grid; gap: var(--space-group); }
 .wd-panel {
-  border: 1px solid var(--line, #DFDCD2); background: var(--paper-raised, #FFFFFF);
-  padding: 0.85rem 1rem 0.95rem;
+  padding-top: var(--space-block);
+  border-top: var(--border-hairline) solid var(--divider-default);
 }
-.wd-topic { margin: 0 0 0.35rem; font-size: 1rem; line-height: 1.3; }
+.wd-topic { margin: 0 0 var(--space-tight); font: var(--type-subheading); }
 .wd-topic a { text-decoration-thickness: 1px; }
 .wd-lead {
-  margin: 0 0 0.7rem; font-size: 0.875rem; line-height: 1.6;
-  color: var(--ink-soft, #575C52); max-width: 68ch;
+  margin: 0 0 var(--space-heading); font: var(--type-body);
+  color: var(--ink-soft); max-width: 68ch;
 }
-.wd-lead b { color: var(--ink, #23271F); font-variant-numeric: tabular-nums; }
+.wd-lead b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
 
 .wd-rows {
-  display: grid; grid-template-columns: auto 3.1rem minmax(2.5rem, 1fr) auto;
-  column-gap: 0.55rem; row-gap: 0.3rem; align-items: center;
-  font-size: 0.8125rem;
+  display: grid; grid-template-columns: auto auto minmax(2.5rem, 1fr) auto;
+  column-gap: var(--space-tight); row-gap: var(--space-line); align-items: center;
+  font: var(--type-fine);
 }
 .wd-chip { grid-row: span 2; justify-self: start; }
 /* Margin, not padding: the track paints its background into padding. */
-.wd-gap { margin-top: 0.55rem; }
+.wd-gap { margin-top: var(--space-tight); }
 .wd-term {
-  font-size: 0.625rem; font-weight: 700;
-  color: var(--ink-faint, #6F7468);
+  font: var(--type-label);
+  color: var(--ink-soft);
 }
-.wd-track { position: relative; height: 3px; background: var(--paper-sunken, #F1EFE8); }
+/* Money is the chart mark; speech is the contrast series beside it. */
+.wd-track { position: relative; height: 3px; background: var(--chart-baseline); }
 .wd-track i { position: absolute; inset: 0 auto 0 0; }
-.wd-track-money i { background: var(--bronze, #A0761B); }
-.wd-track-speech i { background: var(--ink-soft, #575C52); }
+.wd-track-money i { background: var(--chart-mark); }
+.wd-track-speech i { background: var(--chart-contrast); }
 .wd-val {
   justify-self: end; font-variant-numeric: tabular-nums; white-space: nowrap;
-  line-height: 1.35;
 }
-.wd-dash { color: var(--ink-faint, #6F7468); }
+.wd-dash { color: var(--ink-faint); }
 
 .wd-panelnote, .wd-fineprint {
-  margin: 0.7rem 0 0; font-size: 0.75rem; line-height: 1.55;
-  color: var(--ink-faint, #6F7468);
+  margin: var(--space-heading) 0 0; font: var(--type-fine);
+  color: var(--ink-soft);
 }
 .wd-panelnote { margin-bottom: 0; max-width: 68ch; }
-.wd-fineprint a { color: var(--bronze-ink, #8A5A12); }
+.wd-fineprint a { color: var(--bronze-ink); }
 
-.wd-status { padding: 1.5rem 0.25rem; font-size: 0.875rem; color: var(--ink-soft, #575C52); }
-.wd-btn {
-  font: inherit; font-size: 0.8125rem; font-weight: 600; cursor: pointer;
-  padding: 0.4rem 0.8rem; margin-left: 0.5rem; border-radius: 2px;
-  background: none; border: 1px solid var(--line-strong, #8D897B);
-  color: var(--ink-soft, #575C52);
+.wd-status {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight) var(--space-heading);
+  padding: var(--space-group) 0; font: var(--type-body); color: var(--ink-soft);
 }
-.wd-btn:hover { background: var(--paper-sunken, #F1EFE8); }
 
 .wd-visually-hidden {
   position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
@@ -234,14 +236,23 @@ function el (tag, className, text) {
   return node
 }
 
-/** The site's party chip: dot + short text label (classes from style.css). */
+/** The shared PartyLabel (ui-controls.css): a dot beside the party's short
+ *  name, the full name spoken and in the title (mirror of labels.js). */
 function partyChip (party) {
   const hit = PARTY_MAP[String(party).toLowerCase()]
-  const chip = el('span', `party party-${hit ? hit[0] : 'oth'}`)
+  const chip = el('span', `ui-party party party-${hit ? hit[0] : 'oth'}`)
   const dot = el('i')
   dot.setAttribute('aria-hidden', 'true')
-  chip.append(dot, document.createTextNode(hit ? hit[1] : String(party).slice(0, 12)))
-  if (hit) chip.title = party
+  chip.appendChild(dot)
+  const [short, long] = hit ? [hit[1], hit[2]] : [String(party), String(party)]
+  if (short === long) {
+    chip.appendChild(document.createTextNode(short))
+  } else {
+    const shown = el('span', null, short)
+    shown.setAttribute('aria-hidden', 'true')
+    chip.title = long
+    chip.append(shown, el('span', 'wd-visually-hidden', long))
+  }
   return chip
 }
 
@@ -495,8 +506,9 @@ export function mountWordsDollars (container, opts = {}) {
       if (aborter.signal.aborted) return
       statusEl.hidden = false
       statusEl.textContent = 'The view could not be loaded.'
-      const retry = el('button', 'wd-btn', 'Try again')
+      const retry = el('button', 'ui-button', 'Try again')
       retry.type = 'button'
+      retry.dataset.uiSize = 'compact'
       retry.addEventListener('click', load)
       statusEl.appendChild(retry)
     }

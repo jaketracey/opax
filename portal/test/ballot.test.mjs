@@ -39,7 +39,7 @@ test('unknown and duplicated preferences cannot be called complete or exported',
 
 test('download puts the user numbers beside the original candidate order and dates practice clearly', () => {
   const output = ballotPlan(detail, practiceContest(detail), ['c', 'a', 'b']);
-  assert.match(output, /2025 PRACTICE BALLOT/);
+  assert.match(output, /^OPAX — 2025 practice ballot$/m);
   assert.match(output, /Historical election: 3 May 2025/);
   assert.match(output, /not a current ballot/);
   assert.ok(output.indexOf('2. Candidate a') < output.indexOf('3. Candidate b'));

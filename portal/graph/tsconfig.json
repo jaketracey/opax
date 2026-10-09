@@ -3,6 +3,7 @@
     "target": "es2022",
     "module": "es2022",
     "moduleResolution": "bundler",
+    "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
     "lib": ["es2022", "dom", "dom.iterable"],
     "types": ["three"],

@@ -62,15 +62,20 @@ function topicPhrase (slug) {
   return (TOPICS[slug] || slug).toLowerCase().replace(/ & /g, ' and ')
 }
 
-// Mirror of app.js PARTY_MAP: party label → [dot class, short text label].
-// Dots are always redundant with text, never colour alone.
+// Mirror of labels.js PARTY_MAP + PARTY_NAMES: party label → [dot class,
+// the short name a label shows, the full name it says]. Dots are always
+// redundant with the name, never colour alone.
 const PARTY_MAP = {
-  'labor': ['alp', 'ALP'], 'liberal': ['lib', 'LIB'], 'nationals': ['nat', 'NAT'],
-  'lnp': ['lnp', 'LNP'], 'country liberal party': ['nat', 'CLP'],
-  'greens': ['grn', 'GRN'], 'one nation': ['onp', 'ONP'], 'independent': ['ind', 'IND'],
-  'centre alliance': ['oth', 'CA'], "katter's australian party": ['oth', 'KAP'],
-  'united australia party': ['oth', 'UAP'], 'australian democrats': ['oth', 'AD'],
-  'family first': ['oth', 'FF'], 'dlp': ['oth', 'DLP'], 'jln': ['oth', 'JLN'],
+  'labor': ['alp', 'Labor', 'Australian Labor Party'], 'liberal': ['lib', 'Liberal', 'Liberal Party'],
+  'nationals': ['nat', 'Nationals', 'The Nationals'], 'lnp': ['lnp', 'LNP', 'Liberal National Party'],
+  'country liberal party': ['nat', 'CLP', 'Country Liberal Party'], 'greens': ['grn', 'Greens', 'Australian Greens'],
+  'one nation': ['onp', 'One Nation', "Pauline Hanson's One Nation"], 'independent': ['ind', 'Independent', 'Independent'],
+  'centre alliance': ['oth', 'Centre Alliance', 'Centre Alliance'],
+  "katter's australian party": ['oth', 'KAP', "Katter's Australian Party"],
+  'united australia party': ['oth', 'UAP', 'United Australia Party'],
+  'australian democrats': ['oth', 'Democrats', 'Australian Democrats'],
+  'family first': ['oth', 'Family First', 'Family First'], 'dlp': ['oth', 'DLP', 'Democratic Labour Party'],
+  'jln': ['oth', 'JLN', 'Jacqui Lambie Network'],
 }
 
 /** Mirror of app.js searchHash — a deep link into the filtered search. */
@@ -83,11 +88,11 @@ function searchHash (q, f) {
   return `#/search?${p.toString()}`
 }
 
-// Bronze at full strength is rgb(160, 118, 27) (site --bronze); cells scale
-// its alpha with share. Capped so ink text stays readable on the deepest wash.
+// The chart mark (bronze) at a strength that scales with share. Capped so
+// ink text stays readable on the deepest wash.
 function shadeFor (share) {
   const a = Math.min(0.72, share * 0.9)
-  return a < 0.01 ? 'transparent' : `rgba(160, 118, 27, ${a.toFixed(3)})`
+  return a < 0.01 ? 'transparent' : `color-mix(in srgb, var(--chart-mark) ${(a * 100).toFixed(1)}%, transparent)`
 }
 
 function pctText (share) {
@@ -96,80 +101,77 @@ function pctText (share) {
 }
 
 // ---------------------------------------------------------------------------
-// Styles — .mx- prefix, site tokens with fallbacks, light-only
+// Styles — .mx- prefix, site tokens (tokens.css), light-only
 // ---------------------------------------------------------------------------
 
 const CSS = `
 .mx-root {
-  font-family: var(--sans, 'Public Sans', -apple-system, 'Segoe UI', Roboto, sans-serif);
-  color: var(--ink, #23271F);
+  font: var(--type-body);
+  color: var(--ink);
 }
-.mx-root :focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
+.mx-root :focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 2px; }
 
 .mx-intro {
-  margin: 0 0 0.75rem; font-size: 0.875rem; line-height: 1.55;
-  color: var(--ink-soft, #575C52);
+  margin: 0 0 var(--space-heading); font: var(--type-body);
+  color: var(--ink-soft);
 }
-.mx-intro b { color: var(--ink, #23271F); font-variant-numeric: tabular-nums; }
+.mx-intro b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
 
+/* No box round the table: the header's rule and the row hairlines carry it. */
 .mx-tablewrap {
   /* position: relative keeps the absolutely positioned visually-hidden
      spans in zero cells inside this clip; without it their static
      positions widen the host dialog's scroll area. */
   position: relative; overflow: auto; max-height: min(65vh, 850px);
-  border: 1px solid var(--line-strong, #8D897B);
-  background: var(--paper-raised, #FFFFFF);
 }
 .mx-table {
   border-collapse: collapse; width: 100%; min-width: 640px;
-  font-size: 0.8125rem; line-height: 1.4;
+  font: var(--type-fine);
 }
 .mx-table thead th {
   position: sticky; top: 0; z-index: 2;
-  background: var(--paper-sunken, #F1EFE8);
-  border-bottom: 1px solid var(--line-strong, #8D897B);
-  padding: 0.5rem 0.5rem; text-align: right; white-space: nowrap;
-  font-size: 0.75rem; font-weight: 700; color: var(--ink-soft, #575C52);
+  background: var(--paper);
+  border-bottom: var(--border-hairline) solid var(--divider-default);
+  padding: var(--space-tight); text-align: right; white-space: nowrap;
+  font: var(--type-label); color: var(--ink-soft);
 }
 .mx-table thead th.mx-th-topic { text-align: left; }
 .mx-table td, .mx-table tbody th {
-  padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--line, #DFDCD2);
+  padding: var(--space-tight); border-bottom: var(--border-hairline) solid var(--divider-subtle);
   text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap;
 }
 .mx-table tbody th.mx-td-topic {
-  text-align: left; white-space: normal; font-weight: 600;
+  text-align: left; white-space: normal; font: var(--type-label);
 }
+/* The row under the pointer: a faint navy layer over each cell's own shading. */
 .mx-table tbody tr:hover td, .mx-table tbody tr:hover th {
-  box-shadow: inset 0 0 0 99em rgba(20, 42, 67, 0.04);
+  background-image: linear-gradient(color-mix(in srgb, var(--navy) 4%, transparent), color-mix(in srgb, var(--navy) 4%, transparent));
 }
 
 .mx-table a {
   color: inherit; text-decoration: underline;
-  text-decoration-color: var(--bronze, #A0761B); text-underline-offset: 2px;
+  text-decoration-color: var(--bronze-rule); text-underline-offset: 2px;
 }
-.mx-table a:hover { color: var(--bronze-ink, #8A5A12); }
+.mx-table a:hover { color: var(--bronze-ink); text-decoration-color: var(--bronze-ink); }
 .mx-cell a { display: block; text-decoration: none; }
 .mx-cell a:hover { text-decoration: underline; }
+.mx-table thead .ui-party { justify-content: flex-end; }
 
-.mx-count { color: var(--ink-faint, #6F7468); }
-.mx-zero { color: var(--ink-faint, #6F7468); }
-.mx-dim td { color: var(--ink-faint, #6F7468); }
+.mx-count { color: var(--ink-soft); }
+.mx-zero { color: var(--ink-faint); }
+.mx-dim td { color: var(--ink-faint); }
 .mx-dim .mx-notyet { text-align: left; font-style: italic; white-space: normal; }
 
-.mx-status { padding: 1.5rem 0.75rem; font-size: 0.875rem; color: var(--ink-soft, #575C52); }
-.mx-btn {
-  font: inherit; font-size: 0.8125rem; font-weight: 600; cursor: pointer;
-  padding: 0.4rem 0.8rem; margin-left: 0.5rem; border-radius: 2px;
-  background: none; border: 1px solid var(--line-strong, #8D897B);
-  color: var(--ink-soft, #575C52);
+.mx-status {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight) var(--space-heading);
+  padding: var(--space-group) 0; font: var(--type-body); color: var(--ink-soft);
 }
-.mx-btn:hover { background: var(--paper-sunken, #F1EFE8); }
 
 .mx-fineprint {
-  margin: 0.6rem 0 0; font-size: 0.75rem; line-height: 1.55;
-  color: var(--ink-faint, #6F7468);
+  margin: var(--space-row) 0 0; font: var(--type-fine);
+  color: var(--ink-soft);
 }
-.mx-fineprint a { color: var(--bronze-ink, #8A5A12); }
+.mx-fineprint a { color: var(--bronze-ink); text-decoration-color: var(--bronze-rule); }
 
 .mx-visually-hidden {
   position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
@@ -196,14 +198,23 @@ function el (tag, className, text) {
   return node
 }
 
-/** The site's party chip: dot + short text label (classes from style.css). */
+/** The shared PartyLabel (ui-controls.css): a dot beside the party's short
+ *  name, the full name spoken and in the title (mirror of labels.js). */
 function partyChip (party) {
   const hit = PARTY_MAP[String(party).toLowerCase()]
-  const chip = el('span', `party party-${hit ? hit[0] : 'oth'}`)
+  const chip = el('span', `ui-party party party-${hit ? hit[0] : 'oth'}`)
   const dot = el('i')
   dot.setAttribute('aria-hidden', 'true')
-  chip.append(dot, document.createTextNode(hit ? hit[1] : String(party).slice(0, 12)))
-  if (hit) chip.title = party
+  chip.appendChild(dot)
+  const [short, long] = hit ? [hit[1], hit[2]] : [String(party), String(party)]
+  if (short === long) {
+    chip.appendChild(document.createTextNode(short))
+  } else {
+    const shown = el('span', null, short)
+    shown.setAttribute('aria-hidden', 'true')
+    chip.title = long
+    chip.append(shown, el('span', 'mx-visually-hidden', long))
+  }
   return chip
 }
 
@@ -307,7 +318,8 @@ export function mountMatrix (container) {
           td.appendChild(sr)
         } else {
           const share = n / total
-          td.style.background = shadeFor(share)
+          // The colour, not the shorthand: the row's hover layer is a background image.
+          td.style.backgroundColor = shadeFor(share)
           const detail = `${NUM.format(n)} of ${NUM.format(total)} labelled ${name} speeches (${pctText(share)})`
           if (party === 'Other') {
             const span = el('span', null, pctText(share))
@@ -350,8 +362,9 @@ export function mountMatrix (container) {
       if (aborter.signal.aborted) return
       statusEl.hidden = false
       statusEl.textContent = 'The matrix could not be loaded.'
-      const retry = el('button', 'mx-btn', 'Try again')
+      const retry = el('button', 'ui-button', 'Try again')
       retry.type = 'button'
+      retry.dataset.uiSize = 'compact'
       retry.addEventListener('click', load)
       statusEl.appendChild(retry)
     }

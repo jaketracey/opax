@@ -169,7 +169,7 @@ async function renderProfile(root, profile, meta, helpers, life) {
       <section class="supplier-taxcharity" hidden></section>
       <section><details><summary>Identity and coverage</summary><dl class="supplier-identity">${sourceUrl(profile.identity?.abn_url) ? `<dt>Business register</dt><dd><a href="${esc(sourceUrl(profile.identity.abn_url))}" target="_blank" rel="noopener noreferrer">Check the ABN record</a></dd>` : ""}${profile.identity?.legal_name ? `<dt>Legal name</dt><dd>${esc(profile.identity.legal_name)}</dd>` : ""}${profile.identity?.method ? `<dt>Records grouped by</dt><dd>${esc(identityMethod(profile.identity.method))}</dd>` : ""}${profile.identity?.status ? `<dt>ABN status</dt><dd>${esc(profile.identity.status === "ACT" ? "Active" : profile.identity.status === "CAN" ? "Cancelled" : profile.identity.status)}</dd>` : ""}</dl>${(profile.aliases || []).length > 1 ? `<details><summary>Names in the source records</summary><ul>${profile.aliases.map((name) => `<li>${esc(name)}</li>`).join("")}</ul></details>` : ""}<ul class="supplier-caveats">${(profile.caveats || []).map((caveat) => `<li>${esc(caveat)}</li>`).join("")}</ul>${coverageHTML(meta)}</details></section>
     </aside></div></div>`;
-  import('/agencies.js?v=directory-type-1').then(({ mountProcurementPreview }) => {
+  import('/agencies.js?v=p4g-20261010').then(({ mountProcurementPreview }) => {
     if (life.alive()) return mountProcurementPreview(root.querySelector('.supplier-agency-map'), profile, 'supplier', life);
   }).catch(() => {
     if (life.alive()) root.querySelector('.supplier-agency-map').innerHTML = '<p>The map could not open. Agency relationships are listed above.</p>';
@@ -277,7 +277,7 @@ async function mountFunding(root, links, life) {
       slot.hidden = false;
       slot.innerHTML = '<p role="status">Opening the money map…</p>';
       try {
-        const { mountMoneyMap } = await import("/money-map.js?v=suppliers-1");
+        const { mountMoneyMap } = await import("/money-map.js?v=7d4f197b4f");
         if (!life.alive()) return;
         slot.textContent = "";
         const handle = await mountMoneyMap(slot, "/graph/money.json?v=suppliers-1", { focus: links[0].id, chrome: "mini", reveal: true, openCard: false });

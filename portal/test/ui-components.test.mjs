@@ -262,10 +262,9 @@ test('D6: no uppercase labels and no letter-spaced labels in the shared styles',
   assert.match(rulesFor(style, '.fineprint'), /font:\s*var\(--type-fine\)/);
 });
 
-// The money map's chrome keeps four: graph/ is the source of a committed bundle
-// that deploy does not rebuild, so they go with pass 4G's restyle of graph/*.ts.
-// A file may go down, never up; everything else stays at zero.
-const UPPERCASE_LEFT = { 'graph/index.ts': 4 };
+// Pass 4G took the money map's last four (graph/index.ts) to zero: no
+// uppercase label anywhere (D6). A file may go down, never up.
+const UPPERCASE_LEFT = {};
 test('uppercase labels only go down', async () => {
   const { readdirSync, statSync } = await import('node:fs');
   const root = new URL('../', import.meta.url);
