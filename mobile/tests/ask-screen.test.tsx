@@ -391,3 +391,60 @@ test('a failed follow-up hides the previous answer suggestions and keeps Try aga
     askSession.start();
   });
 });
+
+// Design pass 3D (concept board 5): one composer. At idle it leads the page
+// with Options and Your conversations; once there is an answer the question
+// and answer lead, and the same composer follows them as the follow-up.
+test('one composer: the question at idle, the follow-up under an answer', async () => {
+  jest
+    .mocked(client.askPost)
+    .mockReset()
+    .mockResolvedValueOnce({
+      answer: 'Synthetic fixture answer.',
+      citations: {},
+      sources: [
+        {
+          resource: 'fixture',
+          title: 'Synthetic fixture',
+          slug: 'fixture',
+          snippet: 'Synthetic evidence passage.',
+        },
+      ],
+    })
+    .mockResolvedValueOnce({
+      questions: [{ question: 'A grounded fixture follow-up?' }],
+    });
+  let view!: ReactTestRenderer;
+  await act(async () => {
+    view = create(<AskScreen />);
+  });
+  const composers = () =>
+    view.root
+      .findAll(
+        (n) =>
+          typeof n.type === 'function' &&
+          (n.type as { name?: string }).name === 'Composer',
+      )
+      .map((n) => n.props.testID);
+  const byId = (id: string) => view.root.findAllByProps({ testID: id });
+  expect(composers()).toEqual(['ask-question']);
+  expect(byId('ask-options')).not.toEqual([]);
+  expect(byId('ask-saved')).not.toEqual([]);
+  await act(async () => {
+    byId('ask-question')[0]!.props.onChangeText('A fixture question?');
+  });
+  await act(async () => {
+    await byId('ask-submit')[0]!.props.onPress();
+  });
+  expect(composers()).toEqual(['ask-followup-field']);
+  // The conversation's rows and "Start a new conversation" are under ⋯ now.
+  expect(byId('ask-options')).toEqual([]);
+  expect(byId('ask-saved')).toEqual([]);
+  expect(byId('ask-new')).toEqual([]);
+  expect(byId('ask-followup-0')).not.toEqual([]);
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 50));
+    view.unmount();
+    askSession.start();
+  });
+});

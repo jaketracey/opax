@@ -6,7 +6,7 @@ import { dispatchKeyCommand } from '../src/design/keyboard';
 import { defaultFilters } from '../src/features/search/contracts';
 import { router } from 'expo-router';
 import { Results } from '../src/features/search/Results';
-import { RecordRow } from '../src/features/RecordRow';
+import { ResultRow } from '../src/features/search/ResultRow';
 
 const mockFocus = { active: true, listeners: new Set<() => void>() };
 const mockNavigation = {
@@ -154,7 +154,7 @@ test('record results retain arrow and Return order when Search regains focus', a
     refocus(true);
     down();
     down();
-    expect(tree.root.findAllByType(RecordRow).at(-1)?.props.highlighted).toBe(
+    expect(tree.root.findAllByType(ResultRow).at(-1)?.props.highlighted).toBe(
       true,
     );
     expect(router.setParams).not.toHaveBeenCalled();

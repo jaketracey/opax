@@ -90,14 +90,12 @@ name: 31 Ask options, chips, saved conversation after relaunch and delete (stand
       all: unset
 - tapOn:
     id: tab-ask
-- scrollUntilVisible:
-    element:
-      id: ask-saved
-    direction: DOWN
-    centerElement: true
-    timeout: 180000
-- tapOn:
-    id: ask-saved
+# The relaunch restores the conversation; its ⋯ opens Your conversations.
+- extendedWaitUntil:
+    visible:
+      id: ask-screen
+    timeout: 30000
+- runFlow: support/ask-open-conversations.yaml
 - scrollUntilVisible:
     element:
       id: ask-restore-0
@@ -120,14 +118,7 @@ name: 31 Ask options, chips, saved conversation after relaunch and delete (stand
     visibilityPercentage: 10
     timeout: 180000
 - takeScreenshot: ${EVIDENCE}/31-restored
-- scrollUntilVisible:
-    element:
-      id: ask-saved
-    direction: UP
-    centerElement: true
-    timeout: 180000
-- tapOn:
-    id: ask-saved
+- runFlow: support/ask-open-conversations.yaml
 - scrollUntilVisible:
     element:
       id: ask-delete-0
