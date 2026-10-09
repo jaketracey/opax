@@ -180,6 +180,25 @@ def _year(value):
     return int(str(value)[:4]) if value and str(value)[:4].isdigit() else None
 
 
+def federal_members(db):
+    """pid -> member() for every federal member in the members table: what export_parliamentarians.py
+    verifies a roster row's pid against, and export_bills.py a bill sponsor's."""
+    return {str(r[0]): member(r[0], [r[1], f"{r[2] or ''} {r[3] or ''}".strip()], r[4], _year(r[5]), _year(r[6]))
+            for r in db.execute(
+                "SELECT person_id, full_name, first_name, last_name, chamber, entered_house, left_house "
+                "FROM members WHERE chamber IN ('representatives', 'senate') AND person_id GLOB '[0-9]*'")}
+
+
+def sole_member(name, members, chamber, year):
+    """The one federal member of `chamber` whose name agrees with a full-name print and who sat in
+    `year` (rule 3 of verify()), or None: no such member, two of them, or a surname/initials print."""
+    if not name or weak(name):
+        return None
+    found = [p for p, m in members.items() if m.get("chamber") == chamber and _agrees_member(name, m)
+             and (m.get("start") is None or m["start"] <= year) and (m.get("end") is None or m["end"] >= year)]
+    return found[0] if len(found) == 1 else None
+
+
 def _agrees_member(name, m):
     return any(agrees(name, n) for n in m["names"])
 
