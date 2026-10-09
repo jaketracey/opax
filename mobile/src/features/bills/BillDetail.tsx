@@ -1,7 +1,7 @@
 import { AskAbout } from '../ask/AskAbout';
 import { headerItems } from '../../navigation/chrome';
 import { SavedCopyNotice } from '../CatalogNotice';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import {
@@ -11,11 +11,12 @@ import {
   billTimeline,
   type BillTimelineStage,
 } from '../../api/bill-transforms';
-import { billKey, catalogSources, type PersonSlug } from '../../api/catalogs';
+import { billKey, catalogSources } from '../../api/catalogs';
 import { ApiError } from '../../api/errors';
 import { catalogs } from '../../api/runtime';
 import { formatCount, formatDate } from '../../design/format';
 import { jurisdictionName } from '../../design/parliament';
+import { partyText } from '../../design/party';
 import {
   AsAtLine,
   Button,
@@ -27,6 +28,8 @@ import {
   LinkRow,
   OfflineBanner,
   OpaxWebLink,
+  PersonRow,
+  Portrait,
   RowList,
   Screen,
   Section,
@@ -38,6 +41,7 @@ import {
 } from '../../design/primitives';
 import { chrome, colors, radius, spacing } from '../../design/tokens';
 import { billRoute, personRoute } from '../../navigation/routes';
+import { CachedPortrait } from '../CachedPortrait';
 import { shareHeaderItem } from '../../navigation/share';
 import { chamberLabel } from './filters';
 import {
@@ -50,7 +54,7 @@ import {
   RecordedParty,
   dateSpan,
 } from './parts';
-import { sponsorSlug } from './sponsors';
+import { sponsorRows, type SponsorDirectory } from './sponsors';
 import { FollowToggle } from '../follows/FollowToggle';
 import { useCatalogRecord } from './useCatalogRecord';
 import { useBillNavigation } from './navigation';
@@ -106,35 +110,35 @@ export default function BillDetail({
   );
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
   const bills = useBillNavigation();
-  const [sponsors, setSponsors] = useState<Record<string, PersonSlug>>({});
+  // undefined while the directory loads; null when it could not be read.
+  const [directory, setDirectory] = useState<SponsorDirectory | null>();
   const view = record?.data;
   const identity = view?.identity.data ?? null;
+  const hasSponsors = !!identity?.sponsorMembers.length;
   // Sponsors link to their profile only where the roster and the directory
-  // agree on who they are; otherwise the name stays plain text.
+  // agree on who they are; otherwise the row stays plain.
   useEffect(() => {
-    const members = identity?.sponsorMembers ?? [];
-    if (!members.length) return;
+    if (!hasSponsors) return;
     let active = true;
-    Promise.all([catalogs.roster(), catalogs.slugs()])
-      .then(([roster, slugs]) => {
-        if (!active) return;
-        const found: Record<string, PersonSlug> = {};
-        for (const member of members) {
-          const slug = sponsorSlug(
-            member.name,
-            roster.data,
-            slugs.data,
-            members.length === 1 ? identity?.sponsorPersonId : null,
-          );
-          if (slug) found[member.name] = slug;
-        }
-        setSponsors(found);
+    catalogs
+      .directory()
+      .then((found) => {
+        if (active)
+          setDirectory({
+            roster: found.roster.data,
+            slugs: found.slugs.data,
+            people: found.people.data,
+            manifest: found.manifest.data,
+            electorates: found.electorates.data,
+          });
       })
-      .catch(() => undefined);
+      .catch(() => {
+        if (active) setDirectory(null);
+      });
     return () => {
       active = false;
     };
-  }, [identity]);
+  }, [hasSponsors]);
 
   const name = identity
     ? billName({ title: identity.title, short_title: identity.shortTitle })
@@ -237,7 +241,7 @@ export default function BillDetail({
               <>
                 <BillHead
                   view={view}
-                  sponsors={sponsors}
+                  directory={directory}
                   stale={record.stale}
                   staleReason={record.staleReason}
                   savedAt={record.savedAt}
@@ -314,7 +318,7 @@ export default function BillDetail({
 
 function BillHead({
   view,
-  sponsors,
+  directory,
   stale,
   staleReason,
   savedAt,
@@ -322,7 +326,7 @@ function BillHead({
   onRefresh,
 }: {
   view: BillView;
-  sponsors: Record<string, PersonSlug>;
+  directory: SponsorDirectory | null | undefined;
   stale: boolean;
   staleReason?: 'unreadable' | 'unavailable';
   savedAt: number;
@@ -333,6 +337,16 @@ function BillHead({
   const bills = useBillNavigation();
   const draft = identity.status === 'exposure_draft';
   const consultation = view.consultation.data;
+  const sponsors = useMemo(
+    () =>
+      sponsorRows(
+        identity.sponsorMembers,
+        identity.sponsorParty,
+        identity.sponsorPersonId,
+        directory ?? null,
+      ),
+    [identity, directory],
+  );
   return (
     <Group gap={spacing.s3}>
       {stale ? (
@@ -390,25 +404,49 @@ function BillHead({
             <Text variant="metadata">
               {identity.sponsorMembers.length === 1 ? 'Sponsor' : 'Sponsors'}
             </Text>
-            {identity.sponsorMembers.map((member) => {
-              const label = member.suffix
-                ? `${member.name} ${member.suffix}`
-                : member.name;
-              const slug = sponsors[member.name];
-              return slug ? (
-                <InlineLink
-                  key={member.name}
-                  label={label}
-                  accessibilityLabel={`${label}, profile`}
-                  onPress={() => router.push(personRoute(slug))}
-                  testID={`bill-sponsor-${slug}`}
-                />
-              ) : (
-                <Text wordSafe key={member.name} variant="strong">
-                  {label}
-                </Text>
-              );
-            })}
+            <RowList>
+              {sponsors.map((sponsor, index) => {
+                const spoken = [
+                  sponsor.name,
+                  sponsor.place,
+                  sponsor.party ? partyText(sponsor.party).spoken : null,
+                  sponsor.slug ? 'profile' : null,
+                ]
+                  .filter(Boolean)
+                  .join(', ');
+                const slug = sponsor.slug;
+                return (
+                  <PersonRow
+                    key={`${index}-${sponsor.name}`}
+                    name={sponsor.name}
+                    portrait={
+                      slug ? (
+                        <CachedPortrait name={sponsor.name} slug={slug} />
+                      ) : (
+                        <Portrait loading={directory === undefined} />
+                      )
+                    }
+                    {...(sponsor.party
+                      ? {
+                          party: sponsor.party.party,
+                          partyStatus: sponsor.party.status,
+                          formerly: sponsor.party.formerly,
+                        }
+                      : { party: undefined })}
+                    place={sponsor.place}
+                    accessibilityLabel={spoken}
+                    onPress={
+                      slug ? () => router.push(personRoute(slug)) : undefined
+                    }
+                    testID={
+                      slug
+                        ? `bill-sponsor-${slug}`
+                        : `bill-sponsor-unlinked-${index}`
+                    }
+                  />
+                );
+              })}
+            </RowList>
           </>
         ) : (
           <Text variant="metadata">
@@ -417,7 +455,7 @@ function BillHead({
               : 'Sponsor not recorded'}
           </Text>
         )}
-        {identity.sponsorParty ? (
+        {!identity.sponsorMembers.length && identity.sponsorParty ? (
           <RecordedParty party={identity.sponsorParty} />
         ) : null}
       </View>

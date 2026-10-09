@@ -1,0 +1,68 @@
+appId: au.com.opax.app
+name: 55b iPad, a bill's sponsor in the Bills split pane
+---
+# iPad, portrait, Full-Screen Apps (taps miss under Windowed Apps). The bill
+# opens in the Bills split view's detail pane. Run by path at default size
+# and at AX5. The pinned Wilkie bill has a roster sponsor (portrait, seat
+# line, party chip, chevron); the Faruqi bill has a sponsor the roster cannot
+# place (blank circle, no link).
+# At AX5 the Settings row sits below the fold, so the taps are optional: run
+# at default size first, which leaves the device in Full-Screen Apps.
+- launchApp:
+    appId: com.apple.Preferences
+- waitForAnimationToEnd
+- tapOn:
+    text: Multitasking & Gestures
+    waitToSettleTimeoutMs: 3000
+    optional: true
+- tapOn:
+    text: Full-Screen Apps
+    waitToSettleTimeoutMs: 3000
+    optional: true
+- waitForAnimationToEnd
+- launchApp:
+    permissions: {}
+- extendedWaitUntil:
+    visible:
+      id: today-screen-message
+    timeout: 90000
+- setOrientation: PORTRAIT
+- openLink: opax://bills?bill=au-federal-r6850
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: bill-title
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: bill-sponsor-andrew-wilkie
+    direction: DOWN
+    visibilityPercentage: 100
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- waitForAnimationToEnd
+# One spoken label for the row: name, seat, party, then "profile".
+- assertVisible: 'Andrew Wilkie, Member for Clark · Tasmania, Independent, profile'
+- takeScreenshot: ${EVIDENCE}/55b-ipad-sponsor-linked
+- openLink: opax://bills?bill=au-federal-s1479
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: bill-title
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: bill-sponsor-unlinked-0
+    direction: DOWN
+    visibilityPercentage: 100
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- waitForAnimationToEnd
+- assertVisible: 'Mehreen Faruqi, Greens'
+- takeScreenshot: ${EVIDENCE}/55b-ipad-sponsor-unlinked

@@ -402,6 +402,8 @@ export type PersonRowProps = PersonRowParty & {
   detail?: string;
   /** Present only for roster parliamentarians with a native page. */
   onPress?: () => void;
+  /** Replaces the spoken "name, party, place, detail" where a screen needs another order. */
+  accessibilityLabel?: string;
   testID?: string;
   /** Opt in only for journeys that inspect native drawn-line bounds. */
   testDrawnName?: boolean;
@@ -432,6 +434,7 @@ export function PersonRow({
   place,
   detail,
   onPress,
+  accessibilityLabel,
   testID,
   testDrawnName = false,
   dragPath,
@@ -449,14 +452,11 @@ export function PersonRow({
     party === undefined
       ? null
       : { party, status: partyStatus ?? 'unknown', formerly };
-  const label = [
-    name,
-    partyContext ? partyText(partyContext).spoken : null,
-    place,
-    detail,
-  ]
-    .filter(Boolean)
-    .join(', ');
+  const label =
+    accessibilityLabel ??
+    [name, partyContext ? partyText(partyContext).spoken : null, place, detail]
+      .filter(Boolean)
+      .join(', ');
   const body = (
     <>
       <View style={[styles.personMain, stacked ? styles.personStacked : null]}>
