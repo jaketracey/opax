@@ -22,9 +22,10 @@ from datetime import datetime, timezone
 from html import unescape
 from html.parser import HTMLParser
 from pathlib import Path
-from typing import Iterable, Optional
+from typing import Iterable, Optional, TYPE_CHECKING
 
-import requests
+if TYPE_CHECKING:
+    import requests
 
 DB_PATH = Path(os.environ.get("OPAX_DB") or "~/.cache/autoresearch/parli.db").expanduser()
 
@@ -43,7 +44,9 @@ class PoliteSession:
 
     def __init__(self, min_interval: float = 1.0, ua: str = USER_AGENT,
                  timeout: int = 45, retries: int = 4):
+        import requests
         self.session = requests.Session()
+        self._request_exception = requests.RequestException
         self.session.headers.update({"User-Agent": ua, "Accept-Language": "en-AU,en;q=0.8"})
         self.min_interval = min_interval
         self.timeout = timeout
@@ -61,7 +64,7 @@ class PoliteSession:
             self._next_at = now + self.min_interval
             self.requests_made += 1
 
-    def get(self, url: str, **kwargs) -> requests.Response:
+    def get(self, url: str, **kwargs) -> "requests.Response":
         kwargs.setdefault("timeout", self.timeout)
         delay = 2.0
         last_exc: Optional[BaseException] = None
@@ -69,7 +72,7 @@ class PoliteSession:
             self._wait_turn()
             try:
                 resp = self.session.get(url, **kwargs)
-            except requests.RequestException as e:
+            except self._request_exception as e:
                 last_exc = e
                 time.sleep(delay)
                 delay = min(delay * 2, 60)

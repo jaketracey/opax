@@ -1,0 +1,208 @@
+[
+  {
+    "id": "qao-2020-21-14",
+    "number": 14,
+    "year": "2020-21",
+    "report_label": "Report 14: 2020–21",
+    "title": "Responding to complaints from people with impaired capacity—Part 2: The Office of the Public Guardian",
+    "tabled_date": "2021-02-16",
+    "sectors": [
+      "Community welfare"
+    ],
+    "canonical_url": "https://www.qao.qld.gov.au/reports-resources/reports-parliament/responding-complaints-people-impaired-capacity-part-2-office",
+    "fixture_source_sha256": "88f9f7fdeb6b70c7cd974ae5fbc490d1d48bcf22481b1bab19ad30f1adfe8c0b"
+  },
+  {
+    "id": "qao-2020-21-5",
+    "number": 5,
+    "year": "2020-21",
+    "report_label": "Report 5: 2020–21",
+    "title": "Responding to complaints from people with impaired capacity—Part 1: The Public Trustee of Queensland",
+    "tabled_date": "2020-09-24",
+    "sectors": [
+      "Community welfare"
+    ],
+    "canonical_url": "https://www.qao.qld.gov.au/reports-resources/reports-parliament/responding-complaints-people-impaired-capacity-part-1-public",
+    "fixture_source_sha256": "3619e55bd0fca41b75d49c295e1adaeb2c13f29a5b856376d86168da2aa29baf"
+  },
+  {
+    "id": "qao-2021-22-1",
+    "number": 1,
+    "year": "2021-22",
+    "report_label": "Report 1: 2021–22",
+    "title": "Enabling digital learning",
+    "tabled_date": "2021-07-20",
+    "sectors": [
+      "Education",
+      "Information technology"
+    ],
+    "canonical_url": "https://www.qao.qld.gov.au/reports-resources/reports-parliament/enabling-digital-learning",
+    "fixture_source_sha256": "0a811a3b2c62e8b1f00739f3763d8ffdcd58d707c05937f257cdd2cd5b0f4787"
+  },
+  {
+    "id": "qao-2021-22-2",
+    "number": 2,
+    "year": "2021-22",
+    "report_label": "Report 2: 2021–22",
+    "title": "Measuring emergency department patient wait time",
+    "tabled_date": "2021-09-14",
+    "sectors": [
+      "Community welfare",
+      "Health"
+    ],
+    "canonical_url": "https://www.qao.qld.gov.au/reports-resources/reports-parliament/measuring-emergency-department-patient-wait-time",
+    "fixture_source_sha256": "30b3d6f3ebab2f28e151fc14de7aa1a1d7ff8d850077e906e610ea17b7097ab0"
+  },
+  {
+    "id": "qao-2021-22-8",
+    "number": 8,
+    "year": "2021-22",
+    "report_label": "Report 8: 2021–22",
+    "title": "Improving access to specialist outpatient services",
+    "tabled_date": "2021-12-06",
+    "sectors": [
+      "Health"
+    ],
+    "canonical_url": "https://www.qao.qld.gov.au/reports-resources/reports-parliament/improving-access-specialist-outpatient-services",
+    "fixture_source_sha256": "31394900eb244a3d3b2b9cf7a27697956cf79389facc35eba2b438e2b3851093"
+  },
+  {
+    "id": "qao-2022-23-6",
+    "number": 6,
+    "year": "2022-23",
+    "report_label": "Report 6: 2022–23",
+    "title": "Managing workforce agility in the Queensland public sector",
+    "tabled_date": "2022-11-15",
+    "sectors": [
+      "Whole of government"
+    ],
+    "canonical_url": "https://www.qao.qld.gov.au/reports-resources/reports-parliament/managing-workforce-agility-queensland-public-sector",
+    "fixture_source_sha256": "546c341679bf13596f3e222d56a120317780222f9f139d86cfc972cd535ea367"
+  },
+  {
+    "id": "qao-2022-23-14",
+    "number": 14,
+    "year": "2022-23",
+    "report_label": "Report 14: 2022–23",
+    "title": "Health outcomes for First Nations people",
+    "tabled_date": "2023-06-07",
+    "sectors": [
+      "Aboriginal and Torres Strait Islander peoples",
+      "Health"
+    ],
+    "canonical_url": "https://www.qao.qld.gov.au/reports-resources/reports-parliament/health-outcomes-first-nations-people",
+    "fixture_source_sha256": "7cc1b5484f2562b361e8a25a88b8a52cc0d3be10aac9b8eaf61ed1f2c73194da"
+  },
+  {
+    "id": "qao-2021-22-17",
+    "number": 17,
+    "year": "2021-22",
+    "report_label": "Report 17: 2021–22",
+    "title": "Appointing and renewing government boards",
+    "tabled_date": "2022-05-19",
+    "sectors": [
+      "State finances",
+      "Whole of government"
+    ],
+    "canonical_url": "https://www.qao.qld.gov.au/reports-resources/reports-parliament/appointing-renewing-government-boards",
+    "fixture_source_sha256": "93965519fa538a9d94b048e3df29c1ec6438b94bd21e44b4452dc09cc6a10257"
+  },
+  {
+    "id": "qao-2020-21-15",
+    "number": 15,
+    "year": "2020-21",
+    "report_label": "Report 15: 2020–21",
+    "title": "State finances 2020",
+    "tabled_date": "2021-03-18",
+    "sectors": [
+      "State finances",
+      "Whole of government"
+    ],
+    "canonical_url": "https://www.qao.qld.gov.au/reports-resources/reports-parliament/state-finances-2020",
+    "fixture_source_sha256": "de65151f1937ed9009bc653385381a2628dabc10e86fb84ad964281ee8b7f8f4"
+  },
+  {
+    "id": "qao-2021-22-18",
+    "number": 18,
+    "year": "2021-22",
+    "report_label": "Report 18: 2021–22",
+    "title": "Enhancing government procurement",
+    "tabled_date": "2022-06-14",
+    "sectors": [
+      "State finances",
+      "Whole of government"
+    ],
+    "canonical_url": "https://www.qao.qld.gov.au/reports-resources/reports-parliament/enhancing-government-procurement",
+    "fixture_source_sha256": "fd2081594535845cbde60ac013d46f197eba19838ccee8828888f1d875c76898"
+  },
+  {
+    "id": "qao-2022-23-17",
+    "number": 17,
+    "year": "2022-23",
+    "report_label": "Report 17: 2022–23",
+    "title": "Implementing machinery of government changes",
+    "tabled_date": "2023-06-28",
+    "sectors": [
+      "Whole of government"
+    ],
+    "canonical_url": "https://www.qao.qld.gov.au/reports-resources/reports-parliament/implementing-machinery-government-changes",
+    "fixture_source_sha256": "534c2040a22d641b128509f7ae41b909dd1022ab3f7812834a3bbe78a994c81a"
+  },
+  {
+    "id": "qao-2022-23-2",
+    "number": 2,
+    "year": "2022-23",
+    "report_label": "Report 2: 2022–23",
+    "title": "Improving grants management",
+    "tabled_date": "2022-07-19",
+    "sectors": [
+      "Community amenities",
+      "Community welfare",
+      "Economic development",
+      "Infrastructure",
+      "Regions",
+      "Whole of government"
+    ],
+    "canonical_url": "https://www.qao.qld.gov.au/reports-resources/reports-parliament/improving-grants-management",
+    "fixture_source_sha256": "787b79ce2f7a6c520b0a131dd54c3f0a99f2505a4346b0b29e0382d77000c276"
+  },
+  {
+    "id": "qao-2024-25-13",
+    "number": 13,
+    "year": "2024-25",
+    "report_label": "Report 13: 2024–25",
+    "title": "Local government 2024",
+    "tabled_date": "2025-04-17",
+    "sectors": [
+      "Local government"
+    ],
+    "canonical_url": "https://www.qao.qld.gov.au/reports-resources/reports-parliament/local-government-2024",
+    "fixture_source_sha256": "2759d7d8d985b4a660b1e979b08e677d9bb985ac642ba05153f74a78c00caf5e"
+  },
+  {
+    "id": "qao-2025-26-12",
+    "number": 12,
+    "year": "2025-26",
+    "report_label": "Report 12: 2025–26",
+    "title": "Local government 2025",
+    "tabled_date": "2026-03-19",
+    "sectors": [
+      "Local government"
+    ],
+    "canonical_url": "https://www.qao.qld.gov.au/reports-resources/reports-parliament/local-government-2025",
+    "fixture_source_sha256": "2d66d5d3ab829edade4b9b22168cb998ae9f52e1c53b618f8e115b81fd397b7b"
+  },
+  {
+    "id": "qao-2016-17-1",
+    "number": 1,
+    "year": "2016-17",
+    "report_label": "Report 1: 2016–17",
+    "title": "Strategic procurement",
+    "tabled_date": "2016-09-27",
+    "sectors": [
+      "Economic development"
+    ],
+    "canonical_url": "https://www.qao.qld.gov.au/reports-resources/strategic-procurement",
+    "fixture_source_sha256": "a2ebe8cf43def4eca7ec500480075b854e5e7cb53c0545e4337b59a0affe1ee5"
+  }
+]

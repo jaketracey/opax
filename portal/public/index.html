@@ -60,7 +60,7 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=639c276060">
+<link rel="stylesheet" href="/style.css?v=f0a6d9ad66">
 <link rel="stylesheet" href="/ui-controls.css?v=f8011bf298">
 <link rel="stylesheet" href="/ui-source.css?v=4f396d8cfc">
 <link rel="stylesheet" href="/voice.css?v=a10938b91d">
@@ -628,6 +628,7 @@
                   <option value="division">Divisions (recorded votes)</option>
                   <option value="press_release">Government transcripts and releases</option>
                   <option value="report">Research reports</option>
+                  <option value="audit report">Audit reports</option>
                   <option value="grant_invitation">Grant invitations</option>
                   <option value="grant_award">Grant award source records</option>
                   <option value="election_baseline">Election baselines</option>
@@ -1168,6 +1169,11 @@
         <tbody id="stats-sources"><!-- filled from corpus.json --></tbody>
       </table></div>
       <p class="fineprint" id="stats-version"></p>
+      <p><a href="/audit">Queensland Audit Office reports to Parliament</a> is a separate
+      catalogue of report metadata and HTML recommendations. Source: Queensland Audit Office,
+      <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, with State of Queensland
+      attribution and <a href="https://www.qao.qld.gov.au/copyright">per-report exceptions</a>.
+      Its report count is shown in the directory and is separate from corpus document totals.</p>
       <p class="fineprint">How the corpus is collected and what is known to be missing:
         <a href="/methods">Methods</a> · <a href="/about">About OPAX</a> · <a href="https://x.com/OpaxAustralia" target="_blank" rel="noopener noreferrer">OPAX on X</a> · <a href="https://www.facebook.com/OpaxAustralia/" target="_blank" rel="noopener noreferrer">OPAX on Facebook</a> · <a href="https://www.instagram.com/opaxaustralia/" target="_blank" rel="noopener noreferrer">OPAX on Instagram</a></p>
     </section>
@@ -1183,6 +1189,7 @@
           <li><a href="#about-money">The money</a></li>
           <li><a href="#about-votes">Votes and bills</a></li>
           <li><a href="#about-instruments">Federal legislative instruments</a></li>
+          <li><a href="#about-audit">Queensland audit reports</a></li>
           <li><a href="#about-people">People</a></li>
           <li><a href="#about-machines">Enrichments written by machines</a></li>
           <li><a href="#about-limits">What this cannot prove</a></li>
@@ -1334,6 +1341,19 @@
       not yet commenced. Every detail page links the authoritative text on FRL. Names in instrument
       titles remain authorised record text and create no person profiles or identity joins.</p>
 
+      <h2 id="about-audit">Queensland audit reports</h2>
+      <p><a href="/audit">Queensland audit reports</a> lists the Queensland Audit Office's
+      reports tabled in Parliament, with report numbers, years, tabled dates, sectors, public
+      bodies identified in the HTML audit scope, PDF links and HTML recommendations
+      with source numbers where published.
+      Recommendations are QAO's text. Missing HTML fields stay unknown. PDF bodies, entity
+      responses and the app surface are phase 2. No person profiles or joins are created.</p>
+      <p>Source: Queensland Audit Office, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
+      © The State of Queensland (Queensland Audit Office) 2026. Each report page is checked for
+      <a href="https://www.qao.qld.gov.au/copyright">copyright exceptions</a>; excepted bodies
+      are withheld. Metadata is arranged into a catalogue and HTML formatting is simplified.
+      No endorsement by the State of Queensland or QAO is implied.</p>
+
       <h2 id="about-people">People</h2>
       <p>1,557 names appear as speakers in the corpus since 1993; 313 of them currently sit in a
       state or federal parliament. 829 portrait photographs cover just over a thousand of those
@@ -1478,6 +1498,12 @@
       Cite the FRL id and the authoritative version linked on its detail page. Source: Federal
       Register of Legislation (legislation.gov.au), <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
       OPAX shows metadata only; version start, registration and commencement are distinct dates.</p>
+      <p><a href="/audit">Queensland audit reports</a> carries the report index and QAO's
+      numbered recommendations published as HTML. Cite the report number and year, the
+      labelled tabled date, and its authoritative QAO link. Source: Queensland Audit Office,
+      <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, unless otherwise noted.
+      © The State of Queensland (Queensland Audit Office) 2026. Copyright exceptions are recorded
+      per report and their bodies withheld. PDF bodies, entity responses and the app are phase 2.</p>
 
       <h3>What OPAX is, and is not</h3>
       <p>OPAX is a retrieval and analysis layer over public records. It is not the official
@@ -2028,10 +2054,10 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=2b39f5909b" defer></script>
-<script src="/navigation.js?v=fecf78a28b" defer></script>
+<script src="/spa-shell.js?v=a2361b652c" defer></script>
+<script src="/navigation.js?v=119a269309" defer></script>
 <script src="/quick-search.js?v=206914f32d" defer></script>
 <script src="/ui-source.js?v=5e7b751ca0" defer></script>
-<script src="/app.js?v=f9800b3c7f" defer></script>
+<script src="/app.js?v=6d182ab039" defer></script>
 </body>
 </html>
