@@ -5,10 +5,10 @@ export { Text, Heading, type OpaxTextProps, type TextTone } from './text';
 export {
   Button,
   IconButton,
-  Tag,
   FilterChip,
   SegmentedControl,
   ChoiceChips,
+  SwitchRow,
   Field,
   Composer,
   Divider,
@@ -16,10 +16,30 @@ export {
   type ButtonProps,
   type Step,
   type ButtonVariant,
+  type IconButtonVariant,
   type Segment,
 } from './controls';
+export {
+  StatusLabel,
+  statusTone,
+  Tag,
+  ChoiceChip,
+  MachineLabel,
+  MACHINE_BRIEF_EXPLANATION,
+  MACHINE_GUIDANCE,
+  MACHINE_LABEL,
+} from './labels';
+export {
+  SourceLine,
+  SourceSheet,
+  sourceLineParts,
+  type SourceDetails,
+  type SourceOriginal,
+  type SourceState,
+} from './source';
+export { Card, useInCard } from './card';
 export { Icon, type SFSymbol } from './icon';
-export { MachineWritten, MACHINE_GUIDANCE } from './machine';
+export { MachineWritten } from './machine';
 export {
   Screen,
   KeyboardStableScreen,

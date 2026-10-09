@@ -9,11 +9,83 @@ else; hairline rules instead of boxes; 44pt targets; 4pt corners. Sources:
 Import everything from one place:
 
 ```tsx
-import { Screen, Section, PersonRow, AsAtLine } from '../design/primitives';
+import { Screen, Section, PersonRow, SourceLine } from '../design/primitives';
 ```
 
 Open the workbench (development and e2e builds: Account and about, then
 Design workbench) to see every component and state at the current text size.
+
+## Design programme pass 2B (Oct 2026): one set of shared components
+
+The plan of record is `docs/design/DESIGN-REVIEW-2026-10.md` (section 5.2,
+the component spec; 5.3, what is deprecated). Shape says what a thing is
+(D1): things you press are pills (`radii.pill`), things you read are
+4-radius (`radii.sm`), things that hold content are 12-radius (`radii.md`).
+Nothing is uppercase or letter-spaced (D6).
+
+- **`SourceLine` and `SourceSheet`** (`source.tsx`): one line at the foot of
+  a block, "Updated 4 Oct 2026 · AEC annual returns" (a document glyph, the
+  date, the source's name in bronze ink, then coverage and a state: "Saved 3
+  Oct 2026", "partial", "offline"). Several sources read "AEC annual returns
+  and 2 more"; an undated block says "Date not published". Tapping it opens
+  the source sheet: the original records (each opens once the sheet has
+  gone), the as-at date and coverage, every source, the notes and caveats in
+  full, the licence, and a row to Sources and licences. 32pt drawn, 44pt to
+  touch; the column's full width at accessibility sizes. Pass `originals`,
+  `notes` and `licence` so the block needs no separate "View original", ⓘ or
+  caveat paragraph. Every figure stays dated and one tap from its source.
+  - **Adapters for this pass** (screens adopt `SourceLine` in pass 3):
+    `AsAtLine` draws a SourceLine and keeps its full as-at sentence for
+    VoiceOver (journeys read it); `SourceLink` and `ViewOriginal` draw the
+    line's anatomy and open their originals as before; `InfoButton` (and
+    `Section info`) open the same sheet with the notes; `InfoSheet` is the
+    sheet with notes alone; Today's `UpdatedCaption` is a SourceLine.
+- **The five labels** (`labels.tsx`, `people.tsx`, `controls.tsx`), sentence
+  case: `StatusLabel` (a word on its tone's wash, `statusTone()` infers
+  done, active, ended or draft from the recorded word; `hidden` inside a
+  row that says it), `Tag` (a topic: bronze ink on its wash, no hash; a
+  linked tag is a 44pt link), `PartyLabel` (a 10pt dot and the party's name
+  in the `label` role, never a fill; `dense` for tables, `nested` inside a
+  row, `onDeep` on a navy header), `ChoiceChip` / `ChoiceChips` and
+  `FilterChip`, and `MachineLabel` (one phrase, "Machine-written", drawn and
+  spoken; `MACHINE_BRIEF_EXPLANATION` for stored briefs).
+- **`Card`** (`card.tsx`): radius 12, raised, a 1pt subtle line, no shadow,
+  padding 16 (`padded={false}` to run content to the edge, `ground` for a
+  wash). With `onPress` the whole card is one button, sunken while pressed.
+  Cards never nest (a nested Card logs an error in development).
+- **Buttons:** `Button` takes `on` for a toggle (Follow: the default pill
+  while off, navy while on, said as a switch); `IconButton` is a round 44pt
+  button with a 20pt symbol (`size="large"`: 56pt with 28pt, for Talk),
+  variants `quiet`, `default`, `primary`, `danger`, plus `selected` and a
+  fixed-size `badge`; the symbol keeps its size at every text size.
+- **`SwitchRow`**: a wrapping label (and optional detail) beside the
+  platform switch; the whole row is one switch. The track is navy.
+- **`EmptyState`** has two sizes: `block` (a symbol and one sentence) and
+  `pane` (an empty iPad detail pane: the symbol on its category wash, one
+  serif line, one sentence).
+- **Type roles:** eleven roles in six sizes (34, 22, 18, 17, 15, 13) plus
+  the title's regular-width step (42). The deprecated roles draw as their
+  replacements (`deprecatedTextVariants`): `lede` and `padLede` as `body`,
+  `caption` as `fine`, `figure` as `display`, `figureInline` as `strong`
+  with `tabular`, `tag` as `label` in bronze ink, `kicker` and `chip` as
+  `label`, `countdown` as `control` with `tabular`. `Text` takes `tabular`.
+- **Accents from tokens:** `accentTint(accent)` and `statusTint(tone)` give
+  a subject's colours as roles (`base`, `deep`, `onDeep`, `softOnDeep`,
+  `wash`, `ink`), which resolve Increase Contrast natively. Today's derived
+  tints (`features/today/tint.ts`) are gone; `places` is gone (use
+  `people`).
+- **Android high-contrast text:** while Android's High contrast text is on
+  (`useHighTextContrast()`), `Text` draws each role's Increase Contrast
+  value, the same stronger roles iOS uses.
+- **Retired, with guards.** `opax/deprecated-design` (lint) rejects the
+  deprecated type roles, the `places` accent, uppercase and letter-spaced
+  labels, `PartyChip`, `MachineWritten`, `SplitEmpty`, `TodayCard`,
+  `ToggleRow`, `MoneyToggle`, `InlineLink` and Today's `Chip` outside this
+  folder. `tests/deprecated-recipes.test.ts` counts the adapters still in use
+  (`AsAtLine`, `SourceLink`, `ViewOriginal`, `InfoButton`, `Section info`,
+  `StaleNotice`, `UpdatedCaption`, `OpaxWebLink`, `BillStatus`, `VoteSide`,
+  `RoundButton`, `Figure`, static `light.*` reads, the `radius` token, old
+  spacing steps) per file; a count may fall, never rise.
 
 ## UI sweep (Oct 2026): rhythm, colour, licences
 
@@ -33,7 +105,7 @@ Design workbench) to see every component and state at the current text size.
   Inks are AA text on paper, raised, sunken and their wash; ink and inkSoft
   are AA on every wash. One accent per block, never rainbow.
 - **Party washes** (`partyWashes`, `partyWash(party)`): each party colour at
-  12% over paper, for `PartyChip` and party headers; ink and inkSoft stay AA
+  12% over paper, for a party's own header only; ink and inkSoft stay AA
   (`partyWashPairs` in `contrast.ts`).
 - **Type roles added:** `display` (Merriweather Bold 34, the number a block
   is about, via `BigFigure`), `caption` (12pt, the one "Updated 4 Oct 2026"
@@ -62,14 +134,13 @@ Design workbench) to see every component and state at the current text size.
 - **Section headings carry no icon tile** (too busy). A section's `accent`
   draws a short 2pt mark in its ink over the start of the top rule. Icons
   stay on rows and links (`LinkRow`, cards), where they help scanning.
-- **`MachineWritten`**: the machine-written label is only the pill (a
-  sparkle and "Machine-written", "Machine summary" or "Machine brief"),
+- **`MachineLabel`** (was `MachineWritten`): the machine-written label is
+  only the pill, a sparkle and "Machine-written" (one phrase everywhere),
   never a pill plus an attribution paragraph. Tapping it opens a sheet with
   the text's own attribution and `MACHINE_GUIDANCE`; VoiceOver hears the
   whole disclosure on the pill ("Machine-written. Written by a model from
   the explanatory memorandum; not the record."). Bills, the record reader,
-  Today's edition card (its own tinted face via `children`), reports and
-  Ask all use it.
+  Today's edition card, reports, search briefs and Ask all use it.
 - **`Composer`**: one rounded raised surface with the send circle inline
   (navy with text, drawn disabled until then, a spinner while working). The
   screen title names the task, so the input's label is spoken, not drawn.
@@ -321,8 +392,8 @@ sidebarAdaptable`): a sidebar, or the top tab bar the reader expands into
   hex value in a screen. Roles resolve Increase Contrast natively (faint steps
   to soft, soft to ink, onNavySoft to onNavy, subtle rules to default, and the
   category inks and bronzeInk to 7:1 on their wash and every surface).
-  Derived hexes (Today's tints in `features/today/tint.ts`) read
-  `useIncreaseContrast()` and strengthen through `strongOn`/`strongAccent`. A dark palette is added in
+  Subject colours come as roles too (`accentTint`, `statusTint`), so
+  nothing is computed or strengthened by hand. A dark palette is added in
   `palette.ts` and wired in `tokens.ts`; components do not change.
 - **Text tones.** `inkFaint` is for paper and raised surfaces only. On sunken
   surfaces, tags and chips use `inkSoft`. `bronze` is never text.
@@ -367,10 +438,12 @@ sidebarAdaptable`): a sidebar, or the top tab bar the reader expands into
 ## Text
 
 - `Text`: all content text. `variant`: `title` (in-content page title, such
-  as a profile's name), `heading`, `subheading`, `record` (Merriweather reading
-  text), `body`, `strong` (names in rows), `lede`, `metadata` (ink-soft),
-  `fine` (source and as-at lines), `figure` and `figureInline` (tabular),
-  `tag`, `kicker`, `control`, `countdown`. `tone` overrides the role colour.
+  as a profile's name), `display` (the number a block is about), `heading`,
+  `subheading`, `record` (Merriweather reading text), `body`, `strong` (names
+  in rows; with `tabular`, inline figures), `metadata` (ink-soft), `fine`
+  (source lines, one short caveat), `label` (the five labels, field labels)
+  and `control`. `tone` overrides the role colour; `tabular` gives tabular
+  figures.
   Bold Text steps the bundled fonts up a weight. Tagged `en-AU` for VoiceOver.
   `wordSafe` stops a word splitting across lines: when a laid-out line ends
   inside a word, the text lowers its own Dynamic Type cap in 10% steps until
@@ -425,12 +498,12 @@ sidebarAdaptable`): a sidebar, or the top tab bar the reader expands into
   the fill (`buttonStates` in `controls.tsx`). `icon` adds a leading SF
   Symbol. There is no bronze or gold button. Use a link or row for
   navigation, not a button.
-- `IconButton`: icon only; `accessibilityLabel` is required by its type.
-  44 by 44 minimum.
-- `Tag`: topic metadata: bronze wash, decorative `#`, read as "Topic: Housing".
-  With `onPress` it is a link with a 44pt hit area around its 28pt visual;
-  pressed keeps its 4.67:1 label and adds an outline and underline. Never a
-  filter or a submit button.
+- `IconButton`: a round button, icon only; `accessibilityLabel` is required
+  by its type. 44pt (56pt `large`).
+- `Tag`: a topic: bronze wash, bronze ink, read as "Topic: Housing". With
+  `onPress` it is a link with a 44pt hit area around its 28pt visual; pressed
+  keeps its 4.67:1 label and adds an outline and underline. Never a filter or
+  a submit button.
 - `FilterChip`: an applied filter; the whole chip removes it and reads
   "Remove the kind filter, Declared interests". A navy-wash capsule with a
   close symbol (40pt drawn, 44pt to touch); full width at accessibility sizes.

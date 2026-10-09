@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from 'react';
-import { AccessibilityInfo, useWindowDimensions } from 'react-native';
+import { AccessibilityInfo, Platform, useWindowDimensions } from 'react-native';
 import { isAccessibilityCategory } from './tokens';
 
 // One subscription per setting for the whole app, not one per Text.
@@ -8,7 +8,8 @@ function setting(
   event:
     | 'boldTextChanged'
     | 'reduceMotionChanged'
-    | 'darkerSystemColorsChanged',
+    | 'darkerSystemColorsChanged'
+    | 'highTextContrastChanged',
 ) {
   let value = false;
   // False until the first read or change event: the value is a guess before.
@@ -48,6 +49,16 @@ const increaseContrast = setting(
     AccessibilityInfo.isDarkerSystemColorsEnabled?.() ?? Promise.resolve(false),
   'darkerSystemColorsChanged',
 );
+// Android's "High contrast text". iOS never reports it (Increase Contrast
+// resolves there natively through DynamicColorIOS).
+const highTextContrast = setting(
+  () =>
+    Platform.OS === 'android'
+      ? (AccessibilityInfo.isHighTextContrastEnabled?.() ??
+        Promise.resolve(false))
+      : Promise.resolve(false),
+  'highTextContrastChanged',
+);
 
 /** iOS Bold Text: the bundled fonts step up one weight (they are not system fonts). */
 export function useBoldText(): boolean {
@@ -62,6 +73,18 @@ export function useIncreaseContrast(): boolean {
     increaseContrast.subscribe,
     increaseContrast.get,
     increaseContrast.get,
+  );
+}
+/**
+ * Android's High contrast text. Android colours are plain hex values (no
+ * DynamicColorIOS), so `Text` swaps each role for its Increase Contrast value
+ * while this is on: the same stronger roles iOS draws. Always false on iOS.
+ */
+export function useHighTextContrast(): boolean {
+  return useSyncExternalStore(
+    highTextContrast.subscribe,
+    highTextContrast.get,
+    highTextContrast.get,
   );
 }
 export function useReduceMotion(): boolean {

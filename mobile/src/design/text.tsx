@@ -12,12 +12,14 @@ import {
   type TextLayoutEvent,
   type TextProps,
 } from 'react-native';
-import { useBoldText } from './accessibility';
+import { useBoldText, useHighTextContrast } from './accessibility';
 import { useTextProbe } from './text-probe';
 import type { ProbeLine } from './text-probe.types';
+import { lightHighContrast } from './palette';
 import {
   boldStep,
   colors,
+  light,
   textStyles,
   type Role,
   type TextVariant,
@@ -53,10 +55,24 @@ export interface OpaxTextProps extends TextProps {
    */
   wordSafe?: boolean;
   /**
+   * Tabular figures, so digits line up in columns and counts do not jitter:
+   * `strong` with `tabular` is an inline figure, `control` with `tabular` a
+   * countdown. `display` is always tabular.
+   */
+  tabular?: boolean;
+  /**
    * Native drawing check enabled in e2e. Production resolves a no-op module
    * and excludes the diagnostic implementation and its prop factory.
    */
   testDrawnText?: boolean;
+}
+
+/**
+ * A role's colour. iOS resolves Increase Contrast natively; Android's High
+ * contrast text takes the same stronger roles (`lightHighContrast`).
+ */
+export function roleColour(role: Role, strong: boolean) {
+  return strong ? (lightHighContrast[role] ?? light[role]) : colors[role];
 }
 
 /**
@@ -262,13 +278,15 @@ export function Text({
   tone,
   style,
   wordSafe = false,
+  tabular: tabularProp = false,
   onTextLayout,
   onLayout,
   ...props
 }: OpaxTextProps) {
   const bold = useBoldText();
+  const highContrast = useHighTextContrast();
   const role = textStyles[variant];
-  const tabular = 'tabular' in role && role.tabular;
+  const tabular = tabularProp || ('tabular' in role && role.tabular);
   const { fontScale, width, scale } = useWindowDimensions();
   // A cap belongs to one text size, window width, role, weight and text
   // (nested text included, such as a field's "(required)"): any change starts
@@ -449,7 +467,7 @@ export function Text({
       dynamicTypeRamp={role.dynamicTypeRamp}
       style={[
         {
-          color: colors[tone ?? role.color],
+          color: roleColour(tone ?? role.color, highContrast),
           fontFamily: bold ? boldStep[role.fontFamily] : role.fontFamily,
           fontSize: role.fontSize * capScale,
           lineHeight: (role.lineHeight + LINE_HEIGHT_NUDGE) * capScale,

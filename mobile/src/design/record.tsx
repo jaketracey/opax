@@ -1,10 +1,9 @@
-import { Platform, Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { ownsRowPadding } from './row-padding';
 import { openOnWeb, openSource } from '../navigation/external';
 import { fromWebPath } from '../navigation/routes';
 import {
   asAtText,
-  captionText,
   formatCount,
   formatMoney,
   formatMoneyCompact,
@@ -15,18 +14,10 @@ import {
   type AsAt,
   type VotesMeta,
 } from './format';
-import { useAccessibilitySize } from './accessibility';
-import { Icon } from './icon';
+import { LinkRow } from './rows';
+import { SourceAffordance, SourceLine } from './source';
 import { Text, type TextTone } from './text';
-import {
-  accents,
-  colors,
-  minimumTarget,
-  radius,
-  rhythm,
-  spacing,
-  type Accent,
-} from './tokens';
+import { accents, rhythm, type Accent } from './tokens';
 
 export type AsAtLineProps =
   | (AsAt & { testID?: string; votes?: never })
@@ -40,47 +31,73 @@ export type AsAtLineProps =
       testID?: string;
     };
 /**
- * One quiet caption under a data block: "Updated 4 Oct 2026". The votes
- * variant reads "Updated 3 Oct 2026 · Divisions to 25 Sep 2026". A saved copy
- * adds "Saved [date]". Source names and licences are not printed here (they
- * live on Sources and licences, in About); VoiceOver still hears the full
- * as-at sentence with its sources, so nothing is lost to it.
+ * @deprecated Use `SourceLine`, which also takes the block's originals and
+ * notes. This adapter draws a SourceLine: "Updated 4 Oct 2026 · AEC annual
+ * returns", opening the source sheet (the as-at date, the sources, the
+ * licence and Sources and licences). The votes variant reads "Updated 3 Oct
+ * 2026 · They Vote For You · Divisions to 25 Sep 2026". A saved copy adds
+ * "Saved [date]". VoiceOver hears the full as-at sentence as before ("As at
+ * 4 October 2026 · Source: …"), which the journeys read.
  */
 export function AsAtLine(props: AsAtLineProps) {
-  let text: string;
-  let spoken: string;
   if ('votes' in props && props.votes !== undefined) {
-    text = votesCaptionText(props.votes, props.jurisdiction, props.savedAt);
     const named = [props.citation, props.licence].filter(Boolean).join(', ');
-    spoken = [
+    const spoken = [
       votesAsAtText(props.votes, props.jurisdiction),
       named ? `Source: ${named}` : null,
     ]
       .filter(Boolean)
       .join('. ');
-  } else {
-    const at = props as AsAt;
-    text = captionText(at);
-    // A year-only date ("2021", Census vintages) is said as a year.
-    const year =
-      typeof at.asOf === 'string' && /^\d{4}$/.test(at.asOf) ? at.asOf : null;
-    spoken = year
-      ? asAtText({ ...at, asOf: null }).replace(
-          'Date not published',
-          `As at ${year}`,
-        )
-      : asAtText(at);
+    const { date, coverage } = votesCaptionParts(
+      props.votes,
+      props.jurisdiction,
+    );
+    return (
+      <SourceLine
+        asOf={props.votes?.content_changed_at ?? null}
+        dateLabel={date}
+        coverage={coverage}
+        citation={props.citation}
+        licence={props.licence}
+        savedAt={props.savedAt}
+        accessibilityLabel={spoken}
+        testID={props.testID}
+      />
+    );
   }
+  const at = props as AsAt & { testID?: string };
+  // A year-only date ("2021", Census vintages) is said as a year.
+  const year =
+    typeof at.asOf === 'string' && /^\d{4}$/.test(at.asOf) ? at.asOf : null;
+  const spoken = year
+    ? asAtText({ ...at, asOf: null }).replace(
+        'Date not published',
+        `As at ${year}`,
+      )
+    : asAtText(at);
   return (
-    <Text
-      wordSafe
-      variant="caption"
+    <SourceLine
+      asOf={at.asOf}
+      citation={at.citation}
+      licence={at.licence}
+      coverage={at.detail}
+      savedAt={at.savedAt}
       accessibilityLabel={spoken}
-      testID={props.testID}
-    >
-      {text}
-    </Text>
+      testID={at.testID}
+    />
   );
+}
+
+/** The votes line's date and coverage parts, as votesCaptionText says them. */
+function votesCaptionParts(
+  meta: VotesMeta | null,
+  jurisdiction?: string,
+): { date: string | null; coverage: string | null } {
+  const caption = votesCaptionText(meta, jurisdiction);
+  const [first, ...rest] = caption.split(' · ');
+  if (first!.startsWith('Updated ') || first === 'Record date not published')
+    return { date: first!, coverage: rest.join(' · ') || null };
+  return { date: null, coverage: caption };
 }
 
 export interface SourceLinkProps {
@@ -103,9 +120,11 @@ export interface SourceLinkProps {
   testID?: string;
 }
 /**
- * A small link to the original record, opened in the in-app browser: an
- * arrow symbol and "View original" (or a short label), never a full-width
- * row. VoiceOver hears where it goes: "View original: They Vote For You,
+ * @deprecated A block's originals belong in its SourceLine (`originals`),
+ * listed in the source sheet. This adapter draws the source line's anatomy
+ * (a glyph and a bronze label, 32pt drawn, 44pt to touch, full width at
+ * accessibility sizes) and opens the original directly, as before.
+ * VoiceOver hears where it goes: "View original, They Vote For You,
  * division, 19 Aug 2026".
  */
 export function SourceLink({
@@ -117,13 +136,10 @@ export function SourceLink({
   testID,
 }: SourceLinkProps) {
   const destination = record ? `${citation} · ${record}` : citation;
-  // A hugging link's width follows its text, so word-safe sizing could chase
-  // its own frame (in a wrapping row above all). At accessibility sizes the
-  // link takes its column's full width, a fixed frame for word-safe text; at
-  // other sizes the short label never breaks inside a word.
-  const fixed = useAccessibilitySize();
   return (
-    <Pressable
+    <SourceAffordance
+      glyph="arrow.up.right.square"
+      name={label}
       accessibilityRole="link"
       // The visible label first (Voice Control says what it sees), then
       // where it goes: "View original, They Vote For You, division, 19 Aug".
@@ -136,31 +152,16 @@ export function SourceLink({
         kind === 'register' ? 'Opens the register' : 'Opens the source'
       }
       testID={testID}
-      hitSlop={Platform.OS === 'android' ? 0 : { top: 8, bottom: 8 }}
-      onPress={() => openSource(url, destination)}
-      style={({ pressed }) => [
-        styles.small,
-        fixed ? styles.fixedWidth : null,
-        pressed ? styles.pressed : null,
-      ]}
-    >
-      <Icon name="arrow.up.right.square" size={14} tone="bronzeInk" />
-      <Text
-        wordSafe={fixed}
-        variant="kicker"
-        tone="bronzeInk"
-        style={styles.shrink}
-      >
-        {label}
-      </Text>
-    </Pressable>
+      onPress={() => void openSource(url, destination)}
+    />
   );
 }
 
 /**
- * A web-only OPAX page (community, the money map, Methods), opened in
- * Safari: a compact row with the Safari symbol, which says it leaves the app
- * (VoiceOver: "Opens on opax.com.au").
+ * @deprecated Use `LinkRow` with `external`. A web-only OPAX page
+ * (community, the money map, Methods), opened in Safari: a LinkRow with the
+ * Safari symbol, which says it leaves the app (VoiceOver: "Opens on
+ * opax.com.au"). A path the app reads natively keeps a chevron.
  */
 export function OpaxWebLink({
   label,
@@ -179,30 +180,24 @@ export function OpaxWebLink({
   const nativeReader =
     route?.pathname === '/doc/[slug]' || route?.pathname === '/bill-text/[key]';
   return (
-    <Pressable
-      accessibilityRole="link"
+    <LinkRow
+      title={label}
+      external={!nativeReader}
       accessibilityLabel={accessibilityLabel ?? label}
       accessibilityHint={
         nativeReader ? 'Opens the reader' : 'Opens on opax.com.au'
       }
       testID={testID}
-      onPress={() => openOnWeb(path, label)}
-      style={({ pressed }) => [styles.link, pressed ? styles.pressed : null]}
-    >
-      <Text wordSafe variant="body" tone="navy" style={styles.shrink}>
-        {label}
-      </Text>
-      <Icon
-        name={nativeReader ? 'chevron.right' : 'safari'}
-        size={16}
-        tone="navy"
-      />
-    </Pressable>
+      onPress={() => void openOnWeb(path, label)}
+    />
   );
 }
 
 type FigureSize = 'tile' | 'inline';
-/** A count or share with tabular figures. Numbers get thousands separators. */
+/**
+ * @deprecated Use `BigFigure` for the number a block is about. A count or
+ * share with tabular figures; numbers get thousands separators.
+ */
 export function Figure({
   value,
   format = 'count',
@@ -233,7 +228,8 @@ export function Figure({
 }
 
 /**
- * Money with tabular figures. To the dollar for records and rates of pay;
+ * @deprecated Use `BigFigure` with `formatMoney`. Money with tabular
+ * figures. To the dollar for records and rates of pay;
  * `compact` ("$4.2m", "$1.1bn") only in charts and tight figures.
  */
 export function MoneyFigure({
@@ -280,7 +276,9 @@ function FigureLayout({
       testID={testID}
       style={styles.figure}
     >
-      <Text variant={size === 'tile' ? 'figure' : 'figureInline'}>{text}</Text>
+      <Text variant={size === 'tile' ? 'display' : 'strong'} tabular>
+        {text}
+      </Text>
       {label ? (
         <Text wordSafe variant="metadata">
           {label}
@@ -344,29 +342,7 @@ export function BigFigure({
 }
 
 const styles = StyleSheet.create({
-  small: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    gap: spacing.s2,
-    minHeight: Platform.OS === 'android' ? minimumTarget : 28,
-    maxWidth: '100%',
-    paddingHorizontal: rhythm.line,
-    marginHorizontal: -rhythm.line,
-    borderRadius: radius,
-  },
-  link: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.tight,
-    minHeight: minimumTarget,
-    paddingVertical: 6,
-  },
-  shrink: { flexShrink: 1 },
-  // The column's full width, whatever row the link sits in.
-  fixedWidth: { alignSelf: 'stretch', width: '100%' },
-  pressed: { backgroundColor: colors.sunken },
-  figure: { gap: spacing.s1 },
+  figure: { gap: rhythm.line },
   big: { gap: 2 },
 });
 

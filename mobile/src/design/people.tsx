@@ -20,21 +20,13 @@ import {
   partyDot,
   partyIdentity,
   partyText,
-  partyWash,
   type PartyContext,
 } from './party';
 import { Hoverable, useHover } from './adaptive';
 import { SelectedMark, selectedWash, splitRowStyles } from './selection';
 import { Text } from './text';
 import { nameProbeProps } from './text-probe';
-import {
-  colors,
-  hairline,
-  light,
-  minimumTarget,
-  rhythm,
-  spacing,
-} from './tokens';
+import { colors, hairline, light, minimumTarget, rhythm } from './tokens';
 
 const portraitSizes = { row: 44, profile: 96 } as const;
 
@@ -72,7 +64,7 @@ function useBeat(active: boolean) {
 }
 const veilBeat = beat.interpolate({
   inputRange: [0, 1],
-  outputRange: [light.sunken, light.line],
+  outputRange: [light.sunken, light.dividerSubtle],
 });
 
 /**
@@ -199,12 +191,14 @@ export function Portrait({
 }
 
 /**
- * Party identity: a 10pt dot plus the readable label, never colour alone, and
- * never without its context: a known former member reads "Formerly Labor", a
- * member who changed party reads "One Nation · formerly Nationals". A party
- * the data does not date reads plainly ("Labor"), as on the web.
- * Dense rows can show the web's short label (ALP, LIB); VoiceOver still reads
- * the full name. An unrecorded party is said in words, with no dot.
+ * Party identity: a 10pt dot beside the party's name, never colour alone and
+ * never a fill, and never without its context: a known former member reads
+ * "Formerly Labor", a member who changed party reads "One Nation · formerly
+ * Nationals". A party the data does not date reads plainly ("Labor"), as on
+ * the web. The `label` role in ink-soft, one size. `dense` (tables only)
+ * shows the web's short label (ALP, LIB); VoiceOver still reads the full
+ * name. An unrecorded party is said in words, with no dot. A link to the
+ * party page unless `linked={false}` or the label is not a party.
  */
 export function PartyLabel({
   party,
@@ -213,33 +207,39 @@ export function PartyLabel({
   dense = false,
   testID,
   linked = true,
-  chip = false,
+  nested = false,
+  onDeep = false,
 }: PartyContext & {
   dense?: boolean;
   testID?: string;
   linked?: boolean;
-  /** Draw as a tinted capsule (profile headers); still a 44pt link. */
+  /** @deprecated Ignored: a party is never a filled capsule. */
   chip?: boolean;
+  /**
+   * Inside a row or control that already says the party: drawn only, not a
+   * separate VoiceOver element and never a link of its own.
+   */
+  nested?: boolean;
+  /**
+   * On a navy header (Today's edition): the name in onNavySoft and the dot
+   * on a raised ring, which keeps every party colour at 3:1 against navy.
+   */
+  onDeep?: boolean;
 }) {
   const identity = partyIdentity(party);
   const dot = partyDot(party);
   const text = partyText({ party, status, formerly }, dense);
-  const tone = dense ? 'inkSoft' : 'ink';
-  const partyLinked = linked && isPartyLabel(party);
-  const previousLinked = linked && !!text.previous && isPartyLabel(formerly);
+  const partyLinked = linked && !nested && isPartyLabel(party);
+  const previousLinked =
+    linked && !nested && !!text.previous && isPartyLabel(formerly);
+  const fixed = useAccessibilitySize();
   const Container = partyLinked ? Pressable : View;
   return (
     <Container
       style={[
         styles.party,
-        partyLinked
-          ? {
-              minHeight: minimumTarget,
-              minWidth: minimumTarget,
-              alignSelf: 'flex-start',
-              maxWidth: '100%',
-            }
-          : null,
+        fixed ? styles.partyFixed : styles.partyHug,
+        partyLinked ? styles.partyLinked : null,
       ]}
       {...(partyLinked
         ? {
@@ -270,66 +270,55 @@ export function PartyLabel({
             },
           }
         : {})}
-      accessible
-      accessibilityLabel={text.spoken}
+      accessible={!nested}
+      accessibilityLabel={nested ? undefined : text.spoken}
+      accessibilityElementsHidden={nested}
+      importantForAccessibility={nested ? 'no-hide-descendants' : 'auto'}
       testID={testID}
     >
-      {chip ? (
-        <>
-          <PartyChip
-            party={party}
-            status={status}
-            formerly={formerly}
-            short={false}
-            nested
-          />
-          {partyLinked ? (
-            <Icon name="chevron.right" size={11} tone="inkSoft" />
-          ) : null}
-        </>
-      ) : null}
-      {!chip && dot ? (
+      {dot ? (
         <View
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
-          style={[styles.dot, { backgroundColor: dot }]}
+          style={[
+            styles.dot,
+            onDeep ? styles.dotRinged : null,
+            { backgroundColor: dot },
+          ]}
         />
       ) : null}
-      {chip ? null : (
-        <Text
-          wordSafe
-          variant={dense ? 'metadata' : 'body'}
-          tone={tone}
-          style={{ flexShrink: 1 }}
-        >
-          {text.visible}
-          {text.previous ? (
-            <Text
-              variant={dense ? 'metadata' : 'body'}
-              tone="inkSoft"
-              onPress={
-                previousLinked && formerly
-                  ? (event) => {
-                      event.stopPropagation();
-                      router.push(partyRoute(formerly));
-                    }
-                  : undefined
-              }
-            >
-              {` · ${text.previous}`}
-            </Text>
-          ) : null}
-        </Text>
-      )}
+      <Text
+        wordSafe={fixed}
+        variant="label"
+        tone={onDeep ? 'onNavySoft' : undefined}
+        style={styles.partyText}
+      >
+        {text.visible}
+        {text.previous ? (
+          <Text
+            variant="label"
+            tone={onDeep ? 'onNavySoft' : undefined}
+            onPress={
+              previousLinked && formerly
+                ? (event) => {
+                    event.stopPropagation();
+                    router.push(partyRoute(formerly));
+                  }
+                : undefined
+            }
+          >
+            {` · ${text.previous}`}
+          </Text>
+        ) : null}
+      </Text>
     </Container>
   );
 }
 
 /**
- * A party as a small tinted capsule: the dot on a raised ring and the short
- * label (ALP, LIB, GRN), "Formerly ALP" for a known former member. Reads as
- * the full name. Not a link on its own: the row around it carries the
- * "Open party page" action. An unrecorded party is said in plain words.
+ * @deprecated Use `PartyLabel` (`dense` for the short label, `linked={false}`
+ * inside a row that carries the party action). A party is a dot beside its
+ * name, never a tinted capsule: this draws a PartyLabel.
  */
 export function PartyChip({
   party,
@@ -340,46 +329,19 @@ export function PartyChip({
   testID,
 }: PartyContext & {
   short?: boolean;
-  /** Inside a control that carries the accessible name. */
   nested?: boolean;
   testID?: string;
 }) {
-  const dot = partyDot(party);
-  const text = partyText({ party, status, formerly }, short);
-  const wash = partyWash(party);
-  if (!partyIdentity(party).recorded)
-    return (
-      <Text variant="metadata" testID={testID} accessible={!nested}>
-        {text.visible}
-      </Text>
-    );
   return (
-    <View
-      accessible={!nested}
-      accessibilityLabel={nested ? undefined : text.spoken}
+    <PartyLabel
+      party={party}
+      status={status}
+      formerly={formerly}
+      dense={short}
+      linked={false}
+      nested={nested}
       testID={testID}
-      style={[
-        styles.chip,
-        nested ? styles.chipNested : null,
-        { backgroundColor: wash },
-      ]}
-    >
-      {dot ? (
-        <View
-          accessibilityElementsHidden
-          importantForAccessibility="no-hide-descendants"
-          style={[styles.chipDot, { backgroundColor: dot }]}
-        />
-      ) : null}
-      <Text variant="chip" style={styles.chipText}>
-        {text.visible}
-        {text.previous ? (
-          <Text variant="chip" tone="inkSoft">
-            {` · ${text.previous}`}
-          </Text>
-        ) : null}
-      </Text>
-    </View>
+    />
   );
 }
 
@@ -474,8 +436,8 @@ export function PersonRow({
             {name}
           </Text>
           {partyContext ? (
-            <View style={styles.personChip}>
-              <PartyChip {...partyContext} />
+            <View style={styles.personParty}>
+              <PartyLabel {...partyContext} linked={false} nested />
             </View>
           ) : null}
           {place ? (
@@ -484,7 +446,7 @@ export function PersonRow({
             </Text>
           ) : null}
           {detail ? (
-            <Text wordSafe variant="caption">
+            <Text wordSafe variant="fine">
               {detail}
             </Text>
           ) : null}
@@ -581,32 +543,24 @@ const styles = StyleSheet.create({
   portrait: {
     backgroundColor: colors.sunken,
     borderWidth: hairline,
-    borderColor: colors.line,
+    borderColor: colors.dividerSubtle,
   },
-  party: { flexDirection: 'row', alignItems: 'center', gap: spacing.s3 },
-  dot: { width: 10, height: 10, borderRadius: 5 },
-  chip: {
+  party: {
     flexDirection: 'row',
     alignItems: 'center',
-    alignSelf: 'flex-start',
-    gap: 5,
+    gap: rhythm.tight,
     maxWidth: '100%',
-    paddingLeft: 6,
-    paddingRight: rhythm.tight,
-    paddingVertical: 2,
-    borderRadius: 999,
   },
-  // The raised ring keeps every party colour at 3:1 against what touches it.
-  chipDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+  partyHug: { alignSelf: 'flex-start' },
+  partyFixed: { alignSelf: 'stretch', width: '100%' },
+  partyLinked: { minHeight: minimumTarget, minWidth: minimumTarget },
+  partyText: { flexShrink: 1 },
+  dot: { width: 10, height: 10, borderRadius: 5 },
+  dotRinged: {
     borderWidth: 1.5,
     borderColor: colors.raised,
     boxSizing: 'content-box',
   },
-  chipText: { flexShrink: 1 },
-  chipNested: { alignSelf: 'center' },
   person: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -631,8 +585,8 @@ const styles = StyleSheet.create({
   personText: { gap: rhythm.line, alignSelf: 'stretch' },
   personTextInline: { flex: 1 },
   personName: { flexShrink: 0 },
-  // The chip takes its own line, with a little air before the place.
-  personChip: { flexDirection: 'row', paddingVertical: 1 },
+  // The party takes its own line, with a little air before the place.
+  personParty: { flexDirection: 'row', paddingVertical: 1 },
 });
 
 ownsRowPadding(PersonRow);

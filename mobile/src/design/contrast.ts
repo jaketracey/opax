@@ -272,6 +272,84 @@ export const componentPairs: ColourPair[] = [
   ),
   pair('ErrorState symbol', 'rest', 'danger', 'sunken', 'non-text'),
 
+  // Pass 2B components (design review 5.2).
+  // StatusLabel: each tone's ink on its wash (statusTones).
+  pair('StatusLabel done', 'rest', 'moneyInk', 'moneyWash'),
+  pair('StatusLabel active', 'rest', 'billsInk', 'billsWash'),
+  pair('StatusLabel ended', 'rest', 'inkSoft', 'sunken'),
+  pair('StatusLabel draft', 'rest', 'bronzeInk', 'bronzeWash'),
+  // MachineLabel: the bills accent; pressed takes sunken.
+  pair('MachineLabel label and sparkle', 'rest', 'billsInk', 'billsWash'),
+  pair('MachineLabel label and sparkle', 'pressed', 'billsInk', 'sunken'),
+  // SourceLine: the date in inkSoft, the source's name and glyph in
+  // bronzeInk; pressed takes sunken.
+  pair('SourceLine date and state', 'rest', 'inkSoft', 'paper'),
+  pair('SourceLine source name and glyph', 'rest', 'bronzeInk', 'paper'),
+  pair('SourceLine date and state', 'pressed', 'inkSoft', 'sunken'),
+  pair('SourceLine source name and glyph', 'pressed', 'bronzeInk', 'sunken'),
+  pair('SourceLine on a card', 'rest', 'inkSoft', 'raised'),
+  pair('SourceLine source name on a card', 'rest', 'bronzeInk', 'raised'),
+  // SourceSheet rows: originals in bronzeInk, Sources and licences in ink.
+  pair('SourceSheet original', 'rest', 'bronzeInk', 'paper'),
+  pair('SourceSheet original', 'pressed', 'bronzeInk', 'sunken'),
+  pair('SourceSheet row detail and chevron', 'pressed', 'inkSoft', 'sunken'),
+  pair('SourceSheet Done', 'rest', 'navy', 'paper'),
+  // Toggle Button (Follow): off is the default capsule; on is navy.
+  pair('Toggle Button on', 'rest', 'onNavy', 'navy'),
+  pair('Toggle Button on', 'pressed', 'onNavy', 'navyRaised'),
+  // IconButton, round: primary and selected on navy, danger on its fill.
+  pair('IconButton primary or selected icon', 'rest', 'onNavy', 'navy'),
+  pair(
+    'IconButton primary or selected icon',
+    'pressed',
+    'onNavy',
+    'navyRaised',
+  ),
+  pair('IconButton danger icon', 'rest', 'onNavy', 'danger'),
+  pair('IconButton danger icon', 'pressed', 'onNavy', 'dangerPressed'),
+  pair(
+    'IconButton default icon on its wash',
+    'rest',
+    'navy',
+    'navyWash',
+    'non-text',
+  ),
+  pair(
+    'IconButton danger fill against the page',
+    'rest',
+    'danger',
+    'paper',
+    'non-text',
+  ),
+  pair('IconButton badge count', 'rest', 'onNavy', 'bronzeInk'),
+  // ChoiceChip disabled.
+  pair('ChoiceChip label', 'disabled', 'inkSoft', 'sunken'),
+  // SwitchRow: the label, its pressed row, the switch's navy track.
+  pair('SwitchRow label', 'rest', 'ink', 'paper'),
+  pair('SwitchRow label', 'pressed', 'ink', 'sunken'),
+  pair('SwitchRow label', 'disabled', 'inkSoft', 'paper'),
+  pair('SwitchRow track, on', 'rest', 'navy', 'paper', 'non-text'),
+  pair('SwitchRow track, off', 'rest', 'lineControl', 'paper', 'non-text'),
+  // Card: raised, pressed sunken.
+  pair('Card text', 'rest', 'ink', 'raised'),
+  pair('Card metadata', 'rest', 'inkSoft', 'raised'),
+  pair('Card text', 'pressed', 'ink', 'sunken'),
+  // PartyLabel text, and on a navy header (onDeep).
+  pair('PartyLabel name', 'rest', 'inkSoft', 'paper'),
+  pair('PartyLabel name', 'pressed', 'inkSoft', 'raised'),
+  pair('PartyLabel name on navy', 'rest', 'onNavySoft', 'navy'),
+  pair('PartyLabel dot ring on navy', 'rest', 'raised', 'navy', 'non-text'),
+  // accentTint: a subject's deep ground under white text.
+  ...(
+    ['moneyInk', 'billsInk', 'votesInk', 'interestsInk', 'bronzeInk'] as const
+  ).map((deep) =>
+    pair(`Accent deep ground (${deep}) under onNavy`, 'rest', 'onNavy', deep),
+  ),
+  pair('Accent deep ground (navy) under onNavy', 'rest', 'onNavy', 'navy'),
+  // EmptyState pane: the title on paper.
+  pair('EmptyState pane title', 'rest', 'ink', 'paper'),
+  pair('EmptyState pane line', 'rest', 'inkSoft', 'paper'),
+
   // PartyLabel dots, on the row's resting and pressed surfaces.
   ...Object.entries(partyColors).flatMap(([party, hex]) =>
     (['paper', 'raised'] as const).map((background) => ({

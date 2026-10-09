@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import { accents, colors, rhythm, type Accent } from './tokens';
+import { accents, colors, radii, rhythm, type Accent } from './tokens';
 
 /**
  * Rows in an iPad split list (Oct 2026): the row bleeds 12pt into the
@@ -11,7 +11,7 @@ export const splitRowStyles = StyleSheet.create({
   bleed: {
     marginHorizontal: -rhythm.heading,
     paddingHorizontal: rhythm.heading,
-    borderRadius: 10,
+    borderRadius: radii.md,
     borderCurve: 'continuous',
   },
   mark: {

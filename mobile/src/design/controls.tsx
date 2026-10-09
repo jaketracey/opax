@@ -6,6 +6,8 @@ import {
   Platform,
   Keyboard,
   StyleSheet,
+  Switch,
+  Text as NativeText,
   TextInput,
   View,
   useWindowDimensions,
@@ -14,6 +16,7 @@ import {
 import { useAccessibilitySize, useReduceMotion } from './accessibility';
 import { Hoverable } from './adaptive';
 import { Icon, type SFSymbol } from './icon';
+import { ChoiceChip } from './labels';
 import { Text, type TextTone } from './text';
 import {
   colors,
@@ -21,11 +24,15 @@ import {
   fonts,
   hairline,
   minimumTarget,
-  radius,
+  radii,
+  rhythm,
+  size as sizes,
   spacing,
   type ControlSize,
   type Role,
 } from './tokens';
+
+export { Tag, ChoiceChip } from './labels';
 
 export type ButtonVariant = 'primary' | 'default' | 'quiet' | 'danger';
 type Fill = Role | null;
@@ -43,7 +50,7 @@ export const buttonStates: Record<
   primary: {
     rest: { fill: 'navy', border: 'navy', label: 'onNavy' },
     pressed: { fill: 'navyRaised', border: 'navyRaised', label: 'onNavy' },
-    disabled: { fill: 'sunken', border: 'lineStrong', label: 'inkSoft' },
+    disabled: { fill: 'sunken', border: 'lineControl', label: 'inkSoft' },
   },
   // A tinted capsule (UI polish, Oct 2026), as Follow and the choice chips
   // draw: navy on its wash, no outline. The border takes the fill's colour so
@@ -61,7 +68,21 @@ export const buttonStates: Record<
   danger: {
     rest: { fill: 'raised', border: 'danger', label: 'danger' },
     pressed: { fill: 'sunken', border: 'danger', label: 'danger' },
-    disabled: { fill: 'sunken', border: 'lineStrong', label: 'inkSoft' },
+    disabled: { fill: 'sunken', border: 'lineControl', label: 'inkSoft' },
+  },
+};
+// A toggle Button (Follow): off is the default capsule, on is navy. The
+// state is also said ("switch, on") and drawn by the symbol, never by
+// colour alone.
+export const toggleStates: Record<
+  'off' | 'on',
+  Record<'rest' | 'pressed' | 'disabled', ControlColours>
+> = {
+  off: buttonStates.default,
+  on: {
+    rest: { fill: 'navy', border: 'navy', label: 'onNavy' },
+    pressed: { fill: 'navyRaised', border: 'navyRaised', label: 'onNavy' },
+    disabled: { fill: 'sunken', border: 'sunken', label: 'inkSoft' },
   },
 };
 const fill = (role: Fill) => (role ? colors[role] : 'transparent');
@@ -86,6 +107,15 @@ export interface ButtonProps {
   accessibilityHint?: string;
   /** Disclosure state; disabled and busy remain controlled by the button. */
   expanded?: AccessibilityState['expanded'];
+  /**
+   * A toggle (Follow): the default capsule while off, navy while on, said as
+   * a switch with its state. `variant` does not apply to a toggle; give the
+   * state's own `label` and `icon` ("Follow" with a plus, "Following" with
+   * a check).
+   */
+  on?: boolean;
+  /** Extra touch area around a compact capsule, as the platform allows. */
+  hitSlop?: number;
   testID?: string;
 }
 
@@ -104,9 +134,14 @@ export function Button({
   accessibilityLabel,
   accessibilityHint,
   expanded,
+  on,
+  hitSlop,
   testID,
 }: ButtonProps) {
-  const states = buttonStates[variant];
+  const toggle = on !== undefined;
+  const states = toggle
+    ? toggleStates[on ? 'on' : 'off']
+    : buttonStates[variant];
   const reduceMotion = useReduceMotion();
   // At accessibility sizes a hugging button takes the column's width: a
   // fixed frame for word-safe text, which could otherwise chase a width that
@@ -118,21 +153,23 @@ export function Button({
   return (
     <Hoverable
       effect={inert ? 'none' : 'highlight'}
-      cornerRadius={stacked ? radius + 10 : 999}
+      cornerRadius={stacked ? radii.md : radii.pill}
       style={fullWidth || stacked ? styles.full : styles.hug}
     >
       <Pressable
         ref={ref}
-        accessibilityRole="button"
+        accessibilityRole={toggle ? 'switch' : 'button'}
         accessibilityLabel={accessibilityLabel ?? label}
         accessibilityHint={accessibilityHint}
         accessibilityState={{
           disabled: inert,
           busy: loading,
+          ...(toggle ? { checked: on } : {}),
           ...(expanded === undefined ? {} : { expanded }),
         }}
         testID={testID}
         disabled={inert}
+        hitSlop={hitSlop}
         onPress={onPress}
         style={({ pressed }) => {
           const state = pressed && !inert ? states.pressed : resting;
@@ -144,7 +181,7 @@ export function Button({
             // A frameless button's label lines up with the text column; its
             // pressed wash bleeds into the margin. A stretched button reads
             // from the leading edge, its symbol beside its label.
-            variant === 'quiet' ? styles.quiet : null,
+            variant === 'quiet' && !toggle ? styles.quiet : null,
             stacked ? styles.leading : null,
             {
               backgroundColor: fill(state.fill),
@@ -245,29 +282,75 @@ export function StepButtons({
   );
 }
 
-/** An icon-only button. The accessible name is required, not optional. */
+export type IconButtonVariant = 'quiet' | 'default' | 'primary' | 'danger';
+// Opaque role colours in every state. `selected` (Captions on, Mute on) takes
+// the navy fill whatever the variant, and is said as selected.
+export const iconButtonStates: Record<
+  IconButtonVariant | 'selected',
+  Record<'rest' | 'pressed' | 'disabled', ControlColours>
+> = {
+  quiet: buttonStates.quiet,
+  default: buttonStates.default,
+  primary: buttonStates.primary,
+  danger: {
+    rest: { fill: 'danger', border: 'danger', label: 'onNavy' },
+    pressed: {
+      fill: 'dangerPressed',
+      border: 'dangerPressed',
+      label: 'onNavy',
+    },
+    disabled: { fill: 'sunken', border: 'sunken', label: 'inkSoft' },
+  },
+  selected: toggleStates.on,
+};
+const iconButtonSizes = {
+  default: { box: minimumTarget, symbol: sizes.iconMd },
+  large: { box: sizes.controlLarge, symbol: sizes.iconLg },
+} as const;
+
+/**
+ * An icon-only round button: ⋯, share, voice, close, the call controls. The
+ * accessible name is required, not optional, and the Large Content Viewer
+ * shows it. 44pt circle with a 20pt symbol; `large` is 56pt (Talk). The
+ * symbol keeps its size at every text size (the circle is already a full
+ * target). Use a Button when a word fits.
+ */
 export function IconButton({
   symbol,
   accessibilityLabel,
   onPress,
   variant = 'quiet',
+  size = 'default',
+  selected,
   disabled = false,
+  badge,
   testID,
 }: {
   symbol: SFSymbol;
   accessibilityLabel: string;
   onPress: () => void;
-  variant?: Extract<ButtonVariant, 'quiet' | 'default'>;
+  variant?: IconButtonVariant;
+  size?: keyof typeof iconButtonSizes;
+  /** A toggled control (Captions, Mute): navy while on, said as selected. */
+  selected?: boolean;
   disabled?: boolean;
+  /** A count beside the symbol (Sources, 3); the label must say it too. */
+  badge?: number;
   testID?: string;
 }) {
-  const states = buttonStates[variant];
+  const states = iconButtonStates[selected ? 'selected' : variant];
+  const { box, symbol: symbolSize } = iconButtonSizes[size];
+  const stateOf = (pressed: boolean) =>
+    disabled ? states.disabled : pressed ? states.pressed : states.rest;
   return (
-    <Hoverable effect={disabled ? 'none' : 'highlight'} cornerRadius={radius}>
+    <Hoverable effect={disabled ? 'none' : 'highlight'} cornerRadius={box / 2}>
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={accessibilityLabel}
-        accessibilityState={{ disabled }}
+        accessibilityState={{
+          disabled,
+          ...(selected === undefined ? {} : { selected }),
+        }}
         // Voice Control and the Large Content Viewer use the same name.
         accessibilityShowsLargeContentViewer
         accessibilityLargeContentTitle={accessibilityLabel}
@@ -275,13 +358,10 @@ export function IconButton({
         disabled={disabled}
         onPress={onPress}
         style={({ pressed }) => {
-          const state = disabled
-            ? states.disabled
-            : pressed
-              ? states.pressed
-              : states.rest;
+          const state = stateOf(pressed);
           return [
             styles.iconButton,
+            { width: box, height: box, borderRadius: box / 2 },
             {
               backgroundColor: fill(state.fill),
               borderColor: fill(state.border),
@@ -290,78 +370,30 @@ export function IconButton({
         }}
       >
         {({ pressed }) => (
-          <Icon
-            name={symbol}
-            size={22}
-            tone={
-              (disabled
-                ? states.disabled
-                : pressed
-                  ? states.pressed
-                  : states.rest
-              ).label
-            }
-          />
+          <>
+            <Icon
+              name={symbol}
+              size={symbolSize}
+              maxScale={1}
+              tone={stateOf(pressed).label}
+            />
+            {badge ? (
+              <View
+                style={styles.badge}
+                pointerEvents="none"
+                accessibilityElementsHidden
+                importantForAccessibility="no-hide-descendants"
+              >
+                {/* The count is in the label; the badge keeps its size. */}
+                <NativeText allowFontScaling={false} style={styles.badgeText}>
+                  {String(badge)}
+                </NativeText>
+              </View>
+            ) : null}
+          </>
         )}
       </Pressable>
     </Hoverable>
-  );
-}
-
-/**
- * Topic metadata: bronze wash, a decorative hash marker, bronze-ink label.
- * Never a filter control or a submit button. With `onPress` it is a link to
- * the topic, with a 44pt hit area around its 28pt visual.
- */
-export function Tag({
-  label,
-  onPress,
-  kind = 'Topic',
-  testID,
-}: {
-  label: string;
-  onPress?: () => void;
-  /** What VoiceOver says before the label: "Topic: Housing". */
-  kind?: string;
-  testID?: string;
-}) {
-  // Pressed keeps the 4.67:1 label and adds an outline and an underline, so
-  // feedback never lowers contrast or relies on colour.
-  const visual = (pressed: boolean) => (
-    <View style={[styles.tag, pressed ? styles.tagPressed : null]}>
-      <Text variant="tag" accessible={false}>
-        #
-      </Text>
-      <Text
-        variant="tag"
-        accessible={false}
-        style={pressed ? styles.underline : null}
-      >
-        {label}
-      </Text>
-    </View>
-  );
-  if (!onPress)
-    return (
-      <View
-        accessible
-        accessibilityLabel={`${kind}: ${label}`}
-        testID={testID}
-        style={styles.tagWrap}
-      >
-        {visual(false)}
-      </View>
-    );
-  return (
-    <Pressable
-      accessibilityRole="link"
-      accessibilityLabel={`${kind}: ${label}`}
-      testID={testID}
-      onPress={onPress}
-      style={styles.tagWrap}
-    >
-      {({ pressed }) => visual(pressed)}
-    </Pressable>
   );
 }
 
@@ -502,51 +534,84 @@ export function ChoiceChips<T extends string>({
   onChange: (value: T) => void;
   testID?: string;
 }) {
-  // A hugging chip's width follows its text, so word-safe sizing (which
-  // re-measures when its column changes) could chase its own frame. At
-  // accessibility sizes the chips take the full width, a fixed column for
-  // word-safe text; at other sizes the short labels wrap normally.
-  const stacked = useAccessibilitySize();
+  // At accessibility sizes each chip takes the full width, a fixed column
+  // for word-safe text (ChoiceChip); otherwise the short labels wrap.
   return (
     <View testID={testID} style={styles.chips}>
-      {segments.map((segment, index) => {
-        const selected = segment.value === value;
-        return (
-          <Pressable
-            key={segment.value}
-            accessibilityRole="button"
-            accessibilityLabel={segment.label}
-            accessibilityState={{ selected }}
-            accessibilityValue={{ text: `${index + 1} of ${segments.length}` }}
-            testID={segment.testID}
-            hitSlop={{ top: 4, bottom: 4 }}
-            onPress={() => onChange(segment.value)}
-            style={({ pressed }) => [
-              styles.choice,
-              stacked ? styles.choiceStacked : null,
-              {
-                backgroundColor: selected
-                  ? pressed
-                    ? colors.navyRaised
-                    : colors.navy
-                  : pressed
-                    ? colors.sunken
-                    : colors.navyWash,
-              },
-            ]}
-          >
-            <Text
-              variant="control"
-              tone={selected ? 'onNavy' : 'navy'}
-              wordSafe={stacked}
-              style={styles.center}
-            >
-              {segment.label}
-            </Text>
-          </Pressable>
-        );
-      })}
+      {segments.map((segment, index) => (
+        <ChoiceChip
+          key={segment.value}
+          label={segment.label}
+          selected={segment.value === value}
+          position={`${index + 1} of ${segments.length}`}
+          testID={segment.testID}
+          onPress={() => onChange(segment.value)}
+        />
+      ))}
     </View>
+  );
+}
+
+/**
+ * A setting that is on or off: a wrapping label (and an optional detail
+ * line) beside the platform switch, the whole row one 44pt target that
+ * VoiceOver reads as a switch ("Show former members, switch button, off").
+ * At accessibility sizes the switch drops below the label. The track is
+ * navy whatever the screen's accent: a switch is not an accent place.
+ */
+export function SwitchRow({
+  label,
+  detail,
+  value,
+  onValueChange,
+  disabled = false,
+  testID,
+}: {
+  label: string;
+  detail?: string;
+  value: boolean;
+  onValueChange: (value: boolean) => void;
+  disabled?: boolean;
+  testID?: string;
+}) {
+  const stacked = useAccessibilitySize();
+  return (
+    <Pressable
+      accessibilityRole="switch"
+      accessibilityLabel={detail ? `${label}, ${detail}` : label}
+      accessibilityState={{ checked: value, disabled }}
+      testID={testID}
+      disabled={disabled}
+      onPress={() => onValueChange(!value)}
+      style={({ pressed }) => [
+        styles.switchRow,
+        stacked ? styles.switchRowStacked : null,
+        pressed && !disabled ? { backgroundColor: colors.sunken } : null,
+      ]}
+    >
+      <View style={styles.switchText}>
+        <Text variant="strong" wordSafe tone={disabled ? 'inkSoft' : 'ink'}>
+          {label}
+        </Text>
+        {detail ? (
+          <Text variant="metadata" wordSafe>
+            {detail}
+          </Text>
+        ) : null}
+      </View>
+      {/* The row is the control; the switch only draws its state. */}
+      <View
+        pointerEvents="none"
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+      >
+        <Switch
+          value={value}
+          disabled={disabled}
+          trackColor={{ false: colors.lineControl, true: colors.navy }}
+        />
+      </View>
+    </Pressable>
   );
 }
 
@@ -848,11 +913,12 @@ const segmentPadding = Math.max(
 const segmentInset = spacing.s1 - segmentPadding;
 
 const styles = StyleSheet.create({
-  // Capsules, as iOS draws text buttons; a 14pt corner once the label can
-  // wrap (accessibility sizes), so a two-line label is not a lozenge.
+  // Pills, as iOS draws text buttons (D1: things you press); a 12pt corner
+  // once the label can wrap (accessibility sizes), so a two-line label is
+  // not a lozenge.
   button: {
     minWidth: minimumTarget,
-    borderRadius: 999,
+    borderRadius: radii.pill,
     borderCurve: 'continuous',
     borderWidth: hairline,
     paddingHorizontal: spacing.s4,
@@ -860,7 +926,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  buttonStacked: { borderRadius: radius + 10 },
+  buttonStacked: { borderRadius: radii.md },
   leading: { alignItems: 'flex-start' },
   quiet: { marginHorizontal: -spacing.s4 },
   shrink: { flexShrink: 1 },
@@ -899,37 +965,39 @@ const styles = StyleSheet.create({
     borderStyle: 'dotted',
   },
   iconButton: {
-    minWidth: minimumTarget,
-    minHeight: minimumTarget,
-    borderRadius: radius,
     borderWidth: hairline,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  // Linked and plain tags share the 44pt box so a row of them aligns.
-  tagWrap: {
-    alignSelf: 'flex-start',
+  // A count on the call controls' Sources: fixed size, the label says it.
+  badge: {
+    position: 'absolute',
+    top: -4,
+    right: -4,
+    minWidth: 22,
+    height: 22,
+    paddingHorizontal: 6,
+    borderRadius: radii.pill,
+    alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: colors.bronzeInk,
+  },
+  badgeText: {
+    fontFamily: fonts.sansSemiBold,
+    fontSize: 13,
+    lineHeight: 16,
+    color: colors.onNavy,
+    fontVariant: ['tabular-nums'],
+  },
+  switchRow: {
     minHeight: minimumTarget,
-  },
-  // The outline replaces the 1pt of padding it occupies, so nothing moves.
-  tagPressed: {
-    borderWidth: hairline,
-    borderColor: colors.bronzeInk,
-    paddingHorizontal: spacing.s3 - hairline,
-    paddingVertical: spacing.s1 - hairline,
-  },
-  underline: { textDecorationLine: 'underline' },
-  tag: {
+    paddingVertical: rhythm.tight,
     flexDirection: 'row',
-    gap: spacing.s1,
-    minHeight: 28,
     alignItems: 'center',
-    borderRadius: radius,
-    backgroundColor: colors.bronzeWash,
-    paddingHorizontal: spacing.s3,
-    paddingVertical: spacing.s1,
+    gap: rhythm.heading,
   },
+  switchRowStacked: { flexDirection: 'column', alignItems: 'flex-start' },
+  switchText: { flexShrink: 1, flexGrow: 1, gap: 2 },
   // A tinted capsule (UI polish, Oct 2026): the close symbol and the wash
   // mark it as a control; no outline.
   chip: {
@@ -942,10 +1010,10 @@ const styles = StyleSheet.create({
     paddingLeft: 14,
     paddingRight: 12,
     paddingVertical: spacing.s2,
-    borderRadius: 999,
+    borderRadius: radii.pill,
     borderCurve: 'continuous',
   },
-  chipStacked: { alignSelf: 'stretch', borderRadius: radius + 10 },
+  chipStacked: { alignSelf: 'stretch', borderRadius: radii.md },
   chipText: { flexShrink: 1 },
   segmented: {
     flexDirection: 'row',
@@ -955,11 +1023,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.s1,
     minHeight: controlHeight.default,
     borderWidth: hairline,
-    borderColor: colors.lineStrong,
-    borderRadius: radius + 4,
+    borderColor: colors.lineControl,
+    borderRadius: radii.pill,
+    borderCurve: 'continuous',
     backgroundColor: colors.raised,
   },
-  segmentedStacked: { flexDirection: 'column' },
+  segmentedStacked: { flexDirection: 'column', borderRadius: radii.md },
   segment: {
     minHeight: minimumTarget,
     minWidth: minimumTarget,
@@ -974,25 +1043,17 @@ const styles = StyleSheet.create({
     bottom: segmentInset,
     left: 0,
     right: 0,
-    borderRadius: radius,
+    borderRadius: radii.pill,
+    borderCurve: 'continuous',
   },
   segmentInline: { flex: 1, flexBasis: 0 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.s3 },
-  choiceStacked: { alignSelf: 'stretch', borderRadius: radius + 12 },
-  choice: {
-    minHeight: 36,
-    maxWidth: '100%',
-    justifyContent: 'center',
-    paddingHorizontal: 14,
-    paddingVertical: spacing.s1,
-    borderRadius: 999,
-  },
   field: { gap: spacing.s3, alignSelf: 'stretch' },
   input: {
     minHeight: controlHeight.default,
     borderWidth: hairline,
-    borderColor: colors.lineStrong,
-    borderRadius: radius,
+    borderColor: colors.lineControl,
+    borderRadius: radii.sm,
     paddingHorizontal: spacing.s4,
     paddingVertical: spacing.s3,
     fontFamily: fonts.sans,
@@ -1008,8 +1069,8 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     gap: spacing.s2,
     borderWidth: hairline,
-    borderColor: colors.lineStrong,
-    borderRadius: 24,
+    borderColor: colors.lineControl,
+    borderRadius: radii.md,
     borderCurve: 'continuous',
     backgroundColor: colors.raised,
     paddingLeft: spacing.s4,

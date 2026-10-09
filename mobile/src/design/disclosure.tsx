@@ -109,7 +109,7 @@ export function Disclosure({
             ) : null}
           </View>
           {value ? (
-            <Text variant="figureInline" tone="inkSoft" style={styles.value}>
+            <Text variant="strong" tabular tone="inkSoft" style={styles.value}>
               {value}
             </Text>
           ) : null}

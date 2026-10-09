@@ -14,7 +14,9 @@ import {
   radii,
   rhythm,
   size,
+  statusTones,
   typeRoles,
+  typeRolesRegular,
 } from './tokens.generated';
 
 export { light, partyColors, partyWashes };
@@ -86,10 +88,58 @@ export type Accent =
   | 'interests'
   | 'bills'
   | 'people'
-  | 'places'
   | 'leads';
-export const accents: Record<Accent, { ink: Role; wash: Role }> =
-  accentCategories;
+export const accents: Record<Accent, { ink: Role; wash: Role }> = {
+  money: accentCategories.money,
+  votes: accentCategories.votes,
+  interests: accentCategories.interests,
+  bills: accentCategories.bills,
+  people: accentCategories.people,
+  leads: accentCategories.leads,
+};
+
+/**
+ * A subject's colours as role values, for a surface that carries its accent
+ * (Today's edition, a lead): `base` marks (dots, rules, the stage line),
+ * `deep` a header ground under `onDeep` text with `softOnDeep` for its
+ * secondary lines, `wash` a light ground, `ink` accent text on that wash.
+ * Roles resolve Increase Contrast natively, so nothing here is computed.
+ * Party colour is never a ground: a party is a dot beside its name.
+ */
+export interface AccentTint {
+  base: ColorValue;
+  deep: ColorValue;
+  onDeep: ColorValue;
+  softOnDeep: ColorValue;
+  wash: ColorValue;
+  ink: ColorValue;
+}
+export function accentTint(accent: Accent): AccentTint {
+  const { ink, wash } = accents[accent];
+  return {
+    base: colors[ink],
+    deep: colors[ink],
+    onDeep: colors.onNavy,
+    // onNavySoft is AA on navy only; the other inks take full white.
+    softOnDeep: accent === 'people' ? colors.onNavySoft : colors.onNavy,
+    wash: colors[wash],
+    ink: colors[ink],
+  };
+}
+/** A status tone's colours (statusTones): the word always beside them. */
+export function statusTint(tone: StatusTone): AccentTint {
+  const { ink, wash } = statusTones[tone];
+  return {
+    base: colors[ink],
+    deep: colors[ink],
+    onDeep: colors.onNavy,
+    softOnDeep: colors.onNavy,
+    wash: colors[wash],
+    ink: colors[ink],
+  };
+}
+export type StatusTone = keyof typeof statusTones;
+
 // One CSS pixel is one point: rules are 1pt, not the device hairline.
 export const hairline = border.hairline;
 /** @deprecated Use `radii.sm` (read), `radii.md` (hold) or `radii.pill` (press). */
@@ -140,10 +190,65 @@ const textRole = (role: GeneratedRole): TextRole => ({
   color: role.color,
   ...('tabular' in role ? { tabular: role.tabular } : {}),
 });
-export const textStyles = Object.fromEntries(
-  Object.entries(typeRoles).map(([name, role]) => [name, textRole(role)]),
-) as { readonly [Variant in keyof typeof typeRoles]: TextRole };
+/** The eleven roles: six sizes (34, 22, 18, 17, 15, 13). */
+export type CurrentTextVariant =
+  | 'title'
+  | 'display'
+  | 'heading'
+  | 'subheading'
+  | 'record'
+  | 'body'
+  | 'strong'
+  | 'metadata'
+  | 'fine'
+  | 'label'
+  | 'control';
+/**
+ * The deprecated roles draw as their replacements (pass 2B, aliases first),
+ * so only the six sizes are drawn. The lint rule `opax/deprecated-design`
+ * blocks new uses; the generated file keeps their old look for the record.
+ * `padTitle` is the title's regular-width step (42/52), not a seventh size.
+ */
+const deprecatedRoles = {
+  lede: { use: 'body' },
+  caption: { use: 'fine' },
+  figure: { use: 'display' },
+  figureInline: { use: 'strong', tabular: true },
+  tag: { use: 'label', color: 'bronzeInk' },
+  kicker: { use: 'label' },
+  chip: { use: 'label' },
+  countdown: { use: 'control', tabular: true },
+  padTitle: { use: 'title', ...typeRolesRegular.title },
+  padLede: { use: 'body' },
+} as const satisfies Record<
+  Exclude<keyof typeof typeRoles, CurrentTextVariant>,
+  {
+    use: CurrentTextVariant;
+    tabular?: true;
+    color?: Role;
+    fontSize?: number;
+    lineHeight?: number;
+  }
+>;
+const current = Object.fromEntries(
+  Object.entries(typeRoles)
+    .filter(([name]) => !(name in deprecatedRoles))
+    .map(([name, role]) => [name, textRole(role)]),
+) as Record<CurrentTextVariant, TextRole>;
+export const textStyles = {
+  ...current,
+  ...(Object.fromEntries(
+    Object.entries(deprecatedRoles).map(([name, { use, ...change }]) => [
+      name,
+      { ...current[use], ...change },
+    ]),
+  ) as Record<keyof typeof deprecatedRoles, TextRole>),
+} as const satisfies Record<keyof typeof typeRoles, TextRole>;
 export type TextVariant = keyof typeof textStyles;
+/** What each deprecated role now draws as (docs: src/design/README.md). */
+export const deprecatedTextVariants = Object.fromEntries(
+  Object.entries(deprecatedRoles).map(([name, { use }]) => [name, use]),
+) as Record<keyof typeof deprecatedRoles, CurrentTextVariant>;
 
 // Bold Text (iOS accessibility setting) steps each family one weight up.
 export const boldStep: Record<FontFamily, FontFamily> = {

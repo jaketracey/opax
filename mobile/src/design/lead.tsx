@@ -98,7 +98,7 @@ export function LeadEvidenceLink({
     <>
       <View style={styles.evidenceText}>
         {item.amount ? (
-          <Text wordSafe variant="figureInline">
+          <Text wordSafe variant="strong" tabular>
             {item.amount}
           </Text>
         ) : null}
@@ -112,11 +112,7 @@ export function LeadEvidenceLink({
             {item.detail}
           </Text>
         ) : null}
-        <Text
-          wordSafe
-          variant="caption"
-          tone={item.url ? 'bronzeInk' : 'inkSoft'}
-        >
+        <Text wordSafe variant="fine" tone={item.url ? 'bronzeInk' : 'inkSoft'}>
           {citation}
         </Text>
       </View>
@@ -187,7 +183,7 @@ export function LeadCard({
         testID={part('title')}
         style={styles.head}
       >
-        <Text variant="kicker" tone="bronzeInk">
+        <Text variant="label" tone="bronzeInk">
           Lead · {category}
         </Text>
         <Text wordSafe variant="subheading">
@@ -213,7 +209,8 @@ export function LeadCard({
               >
                 <Text
                   wordSafe
-                  variant="figureInline"
+                  variant="strong"
+                  tabular
                   tone="bronzeInk"
                   style={stacked ? null : styles.metricValue}
                 >
@@ -245,7 +242,7 @@ export function LeadCard({
       </View>
       {lead.evidence.length ? (
         <View>
-          <Text variant="kicker" tone="bronzeInk">
+          <Text variant="label" tone="bronzeInk">
             Example records ({formatCount(lead.evidence.length)})
           </Text>
           {lead.evidence.map((item, index) => (

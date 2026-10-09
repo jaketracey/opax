@@ -2,7 +2,6 @@ import { useRef, type ReactNode } from 'react';
 import { ownsRowPadding } from './row-padding';
 import { showMenu } from './menu';
 import {
-  Platform,
   Pressable,
   StyleSheet,
   View,
@@ -14,12 +13,13 @@ import { useAccessibilitySize } from './accessibility';
 import { Hoverable, useHover } from './adaptive';
 import { Icon, type SFSymbol } from './icon';
 import { SelectedMark, selectedWash, splitRowStyles } from './selection';
+import { SourceAffordance } from './source';
 import { Text } from './text';
 import {
   accents,
   colors,
   minimumTarget,
-  radius,
+  radii,
   rhythm,
   type Accent,
 } from './tokens';
@@ -120,7 +120,7 @@ export function LinkRow({
             ) : null}
           </View>
           {value ? (
-            <Text variant="figureInline" tone="inkSoft">
+            <Text variant="strong" tabular tone="inkSoft">
               {value}
             </Text>
           ) : null}
@@ -183,10 +183,11 @@ export interface Original {
   url: string;
 }
 /**
- * One small "View original" action for a record's original documents. With
- * one source it opens it; with several, a native menu names each one. The
- * source names stay out of the reading flow (Sources and licences, in About,
- * lists every dataset in full).
+ * @deprecated A block's originals belong in its SourceLine (`originals`),
+ * listed in the source sheet. This adapter draws the source line's anatomy
+ * ("View original", 32pt drawn, 44pt to touch, full width at accessibility
+ * sizes). With one source it opens it; with several, a native menu names
+ * each one.
  */
 export function ViewOriginal({
   sources,
@@ -199,9 +200,6 @@ export function ViewOriginal({
   testID?: string;
   children?: ReactNode;
 }) {
-  // Fixed width at accessibility sizes, as SourceLink: the label's frame never
-  // follows its own text size.
-  const fixed = useAccessibilitySize();
   const anchor = useRef<View>(null);
   const usable = sources.filter(
     (s, i) =>
@@ -227,45 +225,25 @@ export function ViewOriginal({
       findNodeHandle(anchor.current) ?? undefined,
     );
   };
-  const spoken =
-    usable.length === 1
-      ? `${label}: ${usable[0]!.label}`
-      : `${label}, ${usable.length} records`;
   return (
-    <Pressable
+    <SourceAffordance
       ref={anchor}
+      glyph={
+        usable.length === 1 ? 'arrow.up.right.square' : 'list.bullet.rectangle'
+      }
+      name={label}
       accessibilityRole="link"
-      accessibilityLabel={spoken}
+      accessibilityLabel={
+        usable.length === 1
+          ? `${label}: ${usable[0]!.label}`
+          : `${label}, ${usable.length} records`
+      }
       accessibilityHint={
         usable.length === 1 ? 'Opens the source' : 'Lists the original records'
       }
       testID={testID}
       onPress={press}
-      hitSlop={Platform.OS === 'android' ? 0 : { top: 8, bottom: 8 }}
-      style={({ pressed }) => [
-        styles.original,
-        fixed ? styles.fixedWidth : null,
-        pressed ? { backgroundColor: colors.sunken } : null,
-      ]}
-    >
-      <Icon
-        name={
-          usable.length === 1
-            ? 'arrow.up.right.square'
-            : 'list.bullet.rectangle'
-        }
-        size={14}
-        tone="bronzeInk"
-      />
-      <Text
-        wordSafe={fixed}
-        variant="fine"
-        tone="bronzeInk"
-        style={styles.originalText}
-      >
-        {label}
-      </Text>
-    </Pressable>
+    />
   );
 }
 
@@ -284,22 +262,10 @@ const styles = StyleSheet.create({
   titles: { gap: 2, alignSelf: 'stretch', flexShrink: 1 },
   grow: { flex: 1 },
   tile: {
-    borderRadius: radius + 4,
+    borderRadius: radii.sm,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  original: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    gap: rhythm.line + 2,
-    minHeight: Platform.OS === 'android' ? minimumTarget : 28,
-    paddingHorizontal: rhythm.line,
-    marginHorizontal: -rhythm.line,
-    borderRadius: radius,
-  },
-  originalText: { flexShrink: 1 },
-  fixedWidth: { alignSelf: 'stretch', width: '100%' },
 });
 
 ownsRowPadding(LinkRow);

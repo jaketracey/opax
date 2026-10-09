@@ -382,7 +382,11 @@ export function KeyValueList({ items }: { items: readonly KeyValue[] }) {
           <Text variant="metadata" style={stacked ? null : styles.kvLabel}>
             {item.label}
           </Text>
-          <Text variant="figureInline" style={stacked ? null : styles.kvValue}>
+          <Text
+            variant="strong"
+            tabular
+            style={stacked ? null : styles.kvValue}
+          >
             {item.value}
           </Text>
         </View>
@@ -422,7 +426,7 @@ export function StatRow({
           testID={stat.testID}
           style={stacked ? null : styles.stat}
         >
-          <Text variant="figure" tone={tone}>
+          <Text variant="display" tone={tone}>
             {stat.value}
           </Text>
           <Text wordSafe variant="metadata">

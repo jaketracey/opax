@@ -1,18 +1,8 @@
-import { useState, type ReactNode } from 'react';
-import {
-  Modal,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Heading, Text } from './text';
+import { useState } from 'react';
+import { Pressable, StyleSheet } from 'react-native';
 import { Icon } from './icon';
-import { colors, hairline, minimumTarget, rhythm } from './tokens';
-import { useReduceMotion } from './accessibility';
-import { useKeyCommand } from './keyboard';
+import { SourceSheet, type SourceDetails } from './source';
+import { colors, minimumTarget, radii, rhythm } from './tokens';
 
 export interface InfoNotes {
   /** The sheet's title: "About these figures". */
@@ -20,13 +10,15 @@ export interface InfoNotes {
   /** Methodology and caveats, one paragraph each, shown in full. */
   notes: readonly (string | null | undefined | false)[];
   /** Anything else the sheet carries below the notes. */
-  extra?: ReactNode;
+  extra?: SourceDetails['extra'];
 }
 
 /**
- * An ⓘ button that opens a sheet with a block's methodology and caveats.
- * Long notes live here so a screen keeps its figures first; nothing is cut.
- * VoiceOver: "About these figures, button".
+ * @deprecated A block's notes belong in its SourceLine (`notes`), which
+ * opens the same sheet with the as-at date, the originals and the licence.
+ * Screens move in pass 3; until then the ⓘ is a 44pt round button that
+ * opens the source sheet with the notes. VoiceOver: "About these figures,
+ * button".
  */
 export function InfoButton({
   title,
@@ -67,7 +59,10 @@ export function InfoButton({
   );
 }
 
-/** The notes sheet: a native page sheet with a Done button. */
+/**
+ * The notes sheet: the source sheet with notes alone (methodology, caveats,
+ * a machine-written attribution). A native page sheet with a Done button.
+ */
 export function InfoSheet({
   visible,
   onClose,
@@ -80,69 +75,15 @@ export function InfoSheet({
   onClose: () => void;
   testID?: string;
 }) {
-  const reduced = useReduceMotion();
-  useKeyCommand('list-escape', onClose, visible);
   return (
-    <Modal
+    <SourceSheet
       visible={visible}
-      animationType={reduced ? 'none' : 'slide'}
-      presentationStyle="pageSheet"
-      onRequestClose={onClose}
-    >
-      {/* A page sheet sits below the status bar; only the home indicator
-          needs room, so no inset provider (a modal would need its own). */}
-      <SheetBody
-        title={title}
-        notes={notes}
-        extra={extra}
-        onClose={onClose}
-        testID={testID}
-      />
-    </Modal>
-  );
-}
-
-function SheetBody({
-  title,
-  notes,
-  extra,
-  onClose,
-  testID,
-}: InfoNotes & { onClose: () => void; testID?: string }) {
-  const Container = Platform.OS === 'android' ? SafeAreaView : View;
-  return (
-    <Container style={styles.sheet} testID={testID} accessibilityViewIsModal>
-      <View style={styles.bar}>
-        <View style={styles.grab} />
-        <View style={styles.head}>
-          <Heading level={2} style={styles.title}>
-            {title}
-          </Heading>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Done"
-            testID={testID ? `${testID}-done` : undefined}
-            onPress={onClose}
-            hitSlop={8}
-            style={styles.done}
-          >
-            <Text variant="control" tone="navy">
-              Done
-            </Text>
-          </Pressable>
-        </View>
-      </View>
-      <ScrollView contentContainerStyle={styles.content}>
-        {notes
-          .filter((note): note is string => !!note)
-          .map((note, index) => (
-            <Text key={index} wordSafe variant="body">
-              {note}
-            </Text>
-          ))}
-        {extra}
-      </ScrollView>
-    </Container>
+      onClose={onClose}
+      title={title}
+      notes={notes}
+      extra={extra}
+      testID={testID}
+    />
   );
 }
 
@@ -152,39 +93,8 @@ const styles = StyleSheet.create({
     height: minimumTarget,
     marginVertical: -rhythm.tight,
     marginRight: -rhythm.tight,
-    borderRadius: minimumTarget / 2,
+    borderRadius: radii.pill,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  sheet: { flex: 1, backgroundColor: colors.paper },
-  bar: {
-    paddingHorizontal: rhythm.screen,
-    paddingTop: rhythm.tight,
-    paddingBottom: rhythm.heading,
-    borderBottomWidth: hairline,
-    borderBottomColor: colors.dividerSubtle,
-  },
-  grab: {
-    alignSelf: 'center',
-    width: 36,
-    height: 5,
-    borderRadius: 3,
-    backgroundColor: colors.dividerDefault,
-    marginBottom: rhythm.heading,
-  },
-  head: { flexDirection: 'row', alignItems: 'center', gap: rhythm.block },
-  title: { flex: 1 },
-  done: {
-    minHeight: minimumTarget,
-    minWidth: minimumTarget,
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-  },
-  content: {
-    paddingHorizontal: rhythm.screen,
-    paddingTop: rhythm.block,
-    // The home indicator plus a section's breath.
-    paddingBottom: 34 + rhythm.section,
-    gap: rhythm.block,
   },
 });

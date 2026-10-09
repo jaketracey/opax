@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Heading, Text } from './text';
-import { colors, minimumTarget, rhythm } from './tokens';
+import { colors, minimumTarget, radii, rhythm } from './tokens';
 
 export interface MenuAction {
   title: string;
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     padding: rhythm.block,
     gap: rhythm.heading,
     maxHeight: '85%',
-    borderRadius: 12,
+    borderRadius: radii.md,
   },
   row: { minHeight: minimumTarget, paddingVertical: rhythm.heading },
 });

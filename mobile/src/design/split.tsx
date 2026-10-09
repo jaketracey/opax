@@ -25,12 +25,13 @@ import {
 import { useAccessibilitySize } from './accessibility';
 import { Icon, type SFSymbol } from './icon';
 import { useKeyCommand } from './keyboard';
-import { Heading, Text } from './text';
+import { EmptyState } from './states';
+import { Text } from './text';
 import {
-  accents,
   colors,
   hairline,
   minimumTarget,
+  radii,
   rhythm,
   type Accent,
 } from './tokens';
@@ -437,8 +438,8 @@ function Divider({
 }
 
 /**
- * The detail pane with nothing selected: a quiet symbol on its category's
- * wash, a serif line and one sentence. No instructions beyond that.
+ * @deprecated Use `EmptyState` with `size="pane"`. The calm placeholder of
+ * an empty detail pane.
  */
 export function SplitEmpty({
   icon,
@@ -453,21 +454,15 @@ export function SplitEmpty({
   accent?: Accent;
   testID?: string;
 }) {
-  const tone = accents[accent];
   return (
-    <View style={styles.empty} testID={testID}>
-      <View style={[styles.emptyMark, { backgroundColor: colors[tone.wash] }]}>
-        <Icon name={icon} size={28} tone={tone.ink} />
-      </View>
-      <Heading level={2} style={styles.center}>
-        {title}
-      </Heading>
-      {message ? (
-        <Text variant="metadata" style={styles.center}>
-          {message}
-        </Text>
-      ) : null}
-    </View>
+    <EmptyState
+      size="pane"
+      icon={icon}
+      title={title}
+      message={message}
+      accent={accent}
+      testID={testID}
+    />
   );
 }
 
@@ -508,22 +503,6 @@ const styles = StyleSheet.create({
     minHeight: minimumTarget,
     paddingHorizontal: rhythm.tight,
     marginHorizontal: -rhythm.tight,
-    borderRadius: 8,
-  },
-  empty: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: rhythm.heading,
-    paddingHorizontal: rhythm.section,
-    paddingBottom: rhythm.section * 2,
-  },
-  emptyMark: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: rhythm.tight,
+    borderRadius: radii.pill,
   },
 });
