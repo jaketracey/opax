@@ -33,10 +33,10 @@ class NightlySEOTests(unittest.TestCase):
                 CREATE TABLE ext_divisions (id TEXT, name TEXT, question TEXT, date TEXT, house TEXT,
                  jurisdiction TEXT, ayes_count INT, noes_count INT, result TEXT, source_url TEXT);
                 CREATE TABLE ext_votes (division_id TEXT, person_id TEXT, person_name TEXT, person_key TEXT,
-                 vote TEXT, jurisdiction TEXT);
+                 vote TEXT, jurisdiction TEXT, party TEXT);
                 INSERT INTO ext_divisions VALUES ('federal-senate-1','Example question','Question','2026-09-01',
                  'senate','federal',1,0,'affirmative','https://example.test/source');
-                INSERT INTO ext_votes VALUES ('federal-senate-1','123','Alex Example','Alex Example','aye','federal');
+                INSERT INTO ext_votes VALUES ('federal-senate-1','123','Alex Example','Alex Example','aye','federal','Example Party');
                 ''')
         nightly = (ROOT / 'scripts/vm/nightly.sh').read_text()
         block = nightly.split('# ---- 3b.')[1].split('# ---- 4.')[0]

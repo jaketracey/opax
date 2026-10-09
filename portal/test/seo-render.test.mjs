@@ -1,10 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync,existsSync} from 'node:fs';
+import {readFileSync,existsSync,readdirSync} from 'node:fs';
 import {build} from 'esbuild';
-import {renderBillAnswer,renderPersonAnswer,partyLine,escapeHtml,safeHref} from '../src/seo-content.ts';
+import {renderBillAnswer,renderPersonAnswer,partyLine,escapeHtml,safeHref,internalLinkCount,associationCaveat} from '../src/seo-content.ts';
 const pub=new URL('../public/',import.meta.url);
-const read=async path=>JSON.parse(readFileSync(new URL(path.slice(1),pub),'utf8'));
+const parsedAssets=new Map();
+const read=async path=>{if(!parsedAssets.has(path)) parsedAssets.set(path,JSON.parse(readFileSync(new URL(path.slice(1),pub),'utf8')));return parsedAssets.get(path);};
 // Exercise the real Worker dispatch/render/meta code with disk-backed ASSETS.
 // A minimal HTMLRewriter adapter supplies only the platform transformations it uses.
 class Rewriter {
@@ -28,7 +29,7 @@ const compiled=await build({entryPoints:[new URL('../src/index.ts',import.meta.u
 globalThis.HTMLRewriter=Rewriter;
 const {default:worker}=await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
 const origin='https://opax.com.au';
-const env={COMMUNITY_ORIGIN:origin,ASSETS:{async fetch(req){const path=new URL(req.url).pathname;const file=new URL(path==='/'?'index.html':path==='/home'?'home.html':path==='/community'?'community.html':path.slice(1),pub);return existsSync(file)?new Response(readFileSync(file),{headers:{'content-type':path.endsWith('.json')?'application/json':'text/html'}}):new Response('Missing',{status:404});}}};
+const env={COMMUNITY_ORIGIN:origin,ASSETS:{async fetch(req){const path=new URL(req.url).pathname;const file=new URL(path==='/'?'index.html':path==='/home'?'home.html':path==='/community'?'community.html':path.slice(1),pub);if(!existsSync(file)) return new Response('Missing',{status:404}); const response=new Response(readFileSync(file),{headers:{'content-type':path.endsWith('.json')?'application/json':'text/html'}}); if(path.endsWith('.json')) response.json=()=>read(path); return response;}}};
 async function get(path){const r=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});assert.equal(r.status,200,path);return r.text();}
 function checkHtml(html){assert.equal((html.match(/<h1\b/g)||[]).length,1);assert.doesNotMatch(html,/id="panel-ask"|id="panel-privacy"|Ask &amp; search the record/);const graph=JSON.parse(html.match(/<script[^>]*id="ld-page"[^>]*>(.*?)<\/script>/s)[1]);assert.ok(graph['@graph'].some(n=>n['@type']==='BreadcrumbList'));return graph['@graph'];}
 test('raw MP answer includes exported bill votes without unsupported recent-vote claims',async()=>{
@@ -111,6 +112,7 @@ test('built SSR pages for every route type expose one canonical, factual content
     assert.doesNotMatch(html,/href="(?:https:\/\/opax\.com\.au)?\/(?:search|home)(?:[?"#])/i,path);
     const text=html.replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/g,'').replace(/<[^>]+>/g,' ').trim();
     assert.ok(text.length>100,path);
+    assert.doesNotMatch(text,/linked to/i,path);
     for(const match of html.matchAll(/(?:href|content)="((?:https?:\/\/(?:www\.)?opax\.com\.au)?\/subject\/(person|party)\/[^"?#]+)[^"]*"/g)) {
       const slug=match[1].split('/').at(-1);
       assert.match(slug,/^[a-z0-9]+(?:-[a-z0-9]+)*$/,path+' '+match[1]);
@@ -127,6 +129,8 @@ test('page aliases, including combined www/path aliases, redirect once to an exp
   const seat=seats.find(e=>seats.filter(s=>s.name===e.name).length===1);
   const cases=[
     ['/subject/person/Bruce%20Baird','/subject/person/bruce-baird'],
+    ['/subject/person/Jess%20Pugh','/subject/person/pugh'],['/subject/person/Scott%20Stewart','/subject/person/stewart'],['/subject/person/Zo%C3%AB%20Daniel','/subject/person/zoe-daniel'],
+    ['/subject/person/jess-pugh','/subject/person/pugh'],['/subject/person/scott-stewart','/subject/person/stewart'],
     ['/subject/person/BRUCE-BAIRD/','/subject/person/bruce-baird'],
     ['/person/Bruce%20Baird','/subject/person/bruce-baird'],
     ['/subject/mp/Bruce%20Baird','/subject/person/bruce-baird'],
@@ -139,7 +143,7 @@ test('page aliases, including combined www/path aliases, redirect once to an exp
     ['/division/federal-representatives-10266','/doc/division-federal-representatives-10266'],
     ['/division/division-federal-representatives-10266/','/doc/division-federal-representatives-10266'],
     ['/doc/federal-representatives-10266','/doc/division-federal-representatives-10266'],
-    ['/money/','/money'],['/map.html','/map'],['/connections.html','/connections'],['/community.html','/community'],
+    ['/money/','/money'],['/map/','/map'],['/community/','/community'],['/map.html','/map'],['/connections.html','/connections'],['/community.html','/community'],
   ];
   for(const [path,target] of cases) for(const host of ['opax.com.au','www.opax.com.au']) for(const method of ['GET','HEAD']) {
     const response=await worker.fetch(new Request(`https://${host}${path}`,{method}),env,{waitUntil(){}});
@@ -173,4 +177,78 @@ test('supplier SSR carries agency facts, contract references and related supplie
   assert.match(html,/tenders\.gov\.au\/Search\/KeywordSearch\?keyword=CN4248039/);
   const answer=html.match(/<section id="prerender"[\s\S]*?<\/section>/)[0];
   assert.doesNotMatch(answer,/linked to|href="\/subject\/donor\//i);
+});
+
+test('all exported bill bodies render safely within the member, byte and link budgets',async t=>{
+  const {personIndex}=await import('../src/person-slug.ts');
+  const roster=await read('/parliamentarians.json');const people=roster.people;
+  const identity=personIndex(people);
+  const index=await read('/bills/index.json');
+  const summaries=new Map((await read('/divisions/index.json')).divisions.map(d=>[d.key,d]));
+  let worstBytes={bytes:0},worstLinks={links:0};
+  const emitted=new Set();let checked=0;
+  for(const file of readdirSync(new URL('bills/',pub)).filter(f=>f.endsWith('.json')&&f!=='index.json')) {
+    const b=await read('/bills/'+file);
+    const recent=new Set([...(b.divisions || [])].sort((a,b)=>String(b.date || '').localeCompare(String(a.date || ''))).slice(0,3).map(d=>d.key));
+    const divisions=await Promise.all((b.divisions || []).map(async d=>({...d,...summaries.get(d.key),...(recent.has(d.key)?await read(`/divisions/division-${d.key.replace(/^division-/, '')}.json`).catch(()=>null):{})})));
+    let html;assert.doesNotThrow(()=>{html=renderBillAnswer({...b,divisions},people,identity.slugOf,index.bills).html;},b.key);
+    assert.doesNotMatch(html,/record exceeds the page display limit/,b.key);
+    const bytes=Buffer.byteLength(html),links=internalLinkCount(html),words=html.replace(/<[^>]*>/g,' ').trim().split(/\s+/).length;
+    assert.ok(bytes<=80000,`${b.key}: ${bytes} bytes`);assert.ok(links<=300,`${b.key}: ${links} links`);
+    assert.ok((html.match(/data-full-members=/g)||[]).length<=3,b.key);
+    for(const m of html.matchAll(/href="(\/subject\/person[^"?#]*)/g)) emitted.add(m[1]);
+    if(bytes>worstBytes.bytes)worstBytes={key:b.key,bytes,links,words};
+    if(links>worstLinks.links)worstLinks={key:b.key,bytes,links,words};
+    checked++;
+  }
+  assert.equal(checked,index.bills.length);
+  // URLs from SSR vote lists join those from every browser name/alias below.
+  globalThis.billPersonUrls=emitted;
+  t.diagnostic(JSON.stringify({checked,worstBytes,worstLinks}));
+  for(const key of new Set([worstBytes.key,worstLinks.key,'au-federal-r5626'])) {
+    const html=await get('/bill/'+key);assert.ok(Buffer.byteLength(html)<=120000,`${key}: whole page ${Buffer.byteLength(html)} bytes`);assert.ok(internalLinkCount(html)<=300,key);
+  }
+});
+
+test('every emitted person URL resolves directly with its matching canonical, including reviewed aliases and accents',async t=>{
+  const {personUrl}=await import('../public/canonical-urls.js');
+  const {PERSON_PATHS}=await import('../public/person-paths.js');
+  assert.equal(personUrl('Jess Pugh'),'/subject/person/pugh');
+  assert.equal(personUrl('Scott Stewart'),'/subject/person/stewart');
+  assert.equal(personUrl('Zoë Daniel'),'/subject/person/zoe-daniel');
+  assert.equal(personUrl('Unverified Display Name'),'/subject/person');
+  const manifest=await read('/search-catalog/manifest.json');
+  const catalogNames=readdirSync(new URL(`search-catalog/${manifest.version}/`,pub)).filter(f=>f.startsWith('records-'));
+  const catalogPaths=(await Promise.all(catalogNames.map(f=>read(`/search-catalog/${manifest.version}/${f}`)))).flat().filter(r=>r.href?.startsWith('/subject/person')).map(r=>new URL(r.href,origin).pathname);
+  const paths=new Set([...catalogPaths,...Object.values(PERSON_PATHS.exact),...Object.values(PERSON_PATHS.folded),...(globalThis.billPersonUrls || []),'/subject/person']);
+  for(const path of paths){const html=await get(path);assert.equal(html.match(/<link\b[^>]*rel="canonical"[^>]*href="([^"]+)"/)[1],origin+path,path);}
+  t.diagnostic(`${paths.size} emitted person paths resolve without a redirect`);
+});
+
+test('exposure draft and sponsor full-name bodies return 200 with direct aliases',async()=>{
+  const key='au-federal-ed-online-safety-digital-duty-of-care-2026';
+  assert.match(await get('/bill/'+key),/Chamber not recorded/);
+  const redirect=await worker.fetch(new Request(origin+'/bill/'+key.toUpperCase()),env,{});
+  assert.equal(redirect.status,301);assert.equal(redirect.headers.get('location'),origin+'/bill/'+key);
+  assert.match(await get('/bill/au-federal-s1479'),/href="\/subject\/person\/mehreen-faruqi">Mehreen Faruqi<\/a>/);
+});
+
+test('discovery endpoints redirect www once with 301 and serve apex directly',async()=>{
+  for(const path of ['/sitemap.xml','/sitemaps/bills-1.xml','/robots.txt','/llms.txt']) for(const method of ['GET','HEAD']) {
+    const redirect=await worker.fetch(new Request('https://www.opax.com.au'+path,{method}),env,{});
+    assert.equal(redirect.status,301,path);assert.equal(redirect.headers.get('location'),origin+path);
+    const apex=await worker.fetch(new Request(origin+path,{method}),env,{});assert.equal(apex.status,200,path);assert.equal(apex.headers.get('location'),null,path);
+  }
+});
+
+test('noindex 404 bodies emit no canonical or page identity, including unknown reports/topics',async()=>{
+  const paths=['/reports/not-a-published-report','/subject/topic/not-a-published-topic','/subject/supplier/not-a-supplier','/subject/agency/not-an-agency','/subject/campaigner/not-a-campaigner','/bill/au-federal-nonexistent','/doc/division-federal-senate-99999999','/instrument/C9999L99999'];
+  for(const path of paths){const response=await worker.fetch(new Request(origin+path),env,{});assert.equal(response.status,404,path);assert.equal(response.headers.get('x-robots-tag'),'noindex',path);const html=await response.text();assert.doesNotMatch(html,/<link\b[^>]*rel="canonical"|<script[^>]*id="ld-page"/,path);}
+});
+
+test('all SSR body types use factual relationship wording and pair political money with the caveat',async()=>{
+  const samples=['/subject/party/labor','/subject/person/anthony-albanese','/subject/donor/Clubs%20NSW','/subject/supplier/s-f93824d9abc756c8f32f','/money','/connections','/explore'];
+  const campaigners=(await read('/graph/campaigners.json')).entities;
+  for(const c of campaigners){const html=await get('/subject/campaigner/'+encodeURIComponent(c.name));const body=html.match(/<section id="prerender"[\s\S]*?<\/section>/)[0];assert.doesNotMatch(body,/linked to/i,c.name);assert.equal(associationCaveat(body,body),body,c.name);}
+  for(const path of samples){const body=(await get(path)).match(/<section id="prerender"[\s\S]*?<\/section>/)[0];assert.doesNotMatch(body,/linked to/i,path);assert.match(body,/An association does not prove influence\./,path);}
 });

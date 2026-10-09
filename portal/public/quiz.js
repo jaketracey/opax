@@ -1,4 +1,4 @@
-import {subjectUrl} from './canonical-urls.js';
+import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
 /*
  * The record quiz — a MindMaze-spirited quiz over OPAX's real data.
  *

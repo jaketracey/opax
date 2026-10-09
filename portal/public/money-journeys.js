@@ -1,4 +1,4 @@
-import {partyUrl} from './canonical-urls.js';
+import {partyUrl} from './canonical-urls.js?v=225d5915ea';
 import { buildMoneyJourneys } from './money-journeys-data.js?v=story-1';
 import { shortMoney } from './format.js';
 

@@ -1,4 +1,4 @@
-import { personUrl, partyUrl } from './canonical-urls.js';
+import { personUrl, partyUrl } from './canonical-urls.js?v=225d5915ea';
 /* Electorate reference pages. Independently loadable; no funding-data dependency. */
 import { shortDate } from './format.js';
 import { partyLabelHTML, statusLabelHTML, sourceLineHTML, moreMenuHTML } from './labels.js?v=804befe8de';

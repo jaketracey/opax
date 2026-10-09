@@ -3,7 +3,8 @@ import { readFile, mkdir, writeFile, rm } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
-import { personSlug, slugIndex } from '../portal/src/person-slug.ts';
+import { personSlug, slugIndex, personIndex } from '../portal/src/person-slug.ts';
+import { personNameKey } from '../portal/public/canonical-urls.js';
 import { splitSpeakers } from '../portal/public/speech-attribution.js';
 import { TOPIC_NAMES } from '../portal/src/topic-names.mjs';
 import { fileKey } from '../portal/public/grants.js';
@@ -110,14 +111,17 @@ export async function buildCrawl(root) {
   ]);
   const [seats, seatPeople] = await Promise.all([read(seatManifest.index_url), read(seatManifest.people_url)]);
   const people = [...roster.people];
-  const known = new Set(people.flatMap(p => [p.name,...splitSpeakers(p)].map(fold)));
+  const known = new Set(people.flatMap(p => [p.name,...splitSpeakers(p)].map(personNameKey)));
   for (const p of seatPeople.people) {
-    if ([p.name,...p.aliases].some(n => known.has(fold(n)))) continue;
+    if ([p.name,...p.aliases].some(n => known.has(personNameKey(n)))) continue;
     const current = p.electorates.filter(e => e.current);
     if (!current.length) continue;
     people.push({name:p.name,pid:p.legacy_person_id || p.person_id,speeches:0,party:current[0].party || null,states:[...new Set(current.map(e=>e.jurisdiction))],chambers:[...new Set(current.map(e=>e.chamber))],first:null,last:null,rosterOnly:{asOf:current[0].as_of,seats:current.map(e=>e.name)}});
-    known.add(fold(p.name));
+    known.add(personNameKey(p.name));
   }
+  const identity = personIndex(people);
+  const personPaths = { exact: Object.fromEntries([...identity.byName].map(([name,p])=>[name,`/subject/person/${identity.slugOf.get(p.name)}`])), folded: Object.fromEntries([...identity.byFold].map(([name,p])=>[name,`/subject/person/${identity.slugOf.get(p.name)}`])) };
+  await writeFile(join(root,'person-paths.js'), '// Generated from the roster and reviewed aliases by build:crawl.\nexport const PERSON_PATHS = '+JSON.stringify(personPaths)+';\n');
   const groups = Object.fromEntries(['people','parties','electorates','bills','divisions','grant-programs','grant-recipients','topics-reports','static','suppliers','donors','campaigners','agencies'].map(t=>[t,[]]));
   const fallbacks=Object.fromEntries(Object.keys(groups).map(type=>[type,0]));
   const fallbackPaths=new Set();

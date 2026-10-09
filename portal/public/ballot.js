@@ -1,4 +1,4 @@
-import { personUrl, partyUrl } from './canonical-urls.js';
+import { personUrl, partyUrl } from './canonical-urls.js?v=225d5915ea';
 /* A self-directed, historical House ballot. Preferences never leave this module. */
 export const PRACTICE_DATE = '2025-05-03';
 export const HOUSE_GUIDE = 'https://www.aec.gov.au/Voting/How_to_Vote/Voting_HOR.htm';

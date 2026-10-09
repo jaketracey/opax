@@ -4,7 +4,7 @@
  * social-publication.ts freezes the edition and records each channel delivery.
  * See docs/DAILY-POST.md for connection and preview instructions.
  */
-import { personSlug, slugIndex } from './person-slug'
+import { slugIndex } from './person-slug'
 import { TOPIC_NAMES } from './topic-names.mjs'
 import { shortMoney as compactMoney } from '../public/format.js'
 import { photosFor, photoFor, validStory, type PhotoCatalogue, type StorySlide, type StoryPhoto } from './story'
@@ -382,7 +382,7 @@ async function politicianPost(date: string, sources: DailyPostSources, exclude: 
     .filter(t => Number.isFinite(t.share) && t.share > 0 && t.share <= 1)
     .sort((a, b) => b.share - a.share).slice(0, 3)
   const topicText = topics.map(t => `${TOPIC_NAMES[t.slug] ?? t.slug} ${Math.round(t.share * 100)}%`)
-  const url = `${ORIGIN}/subject/person/${slugIndex((roster?.people || []).map(p => ({ ...p, speeches: p.speeches ?? null }))).slugOf.get(person.name) || personSlug(person.name)}`
+  const url = `${ORIGIN}/subject/person/${slugIndex((roster?.people || []).map(p => ({ ...p, speeches: p.speeches ?? null }))).slugOf.get(person.name)}`
   const head = [
     `${person.name}: ${formatNumber(person.speeches ?? 0)} speeches in the Opax record.`,
     topics.length ? `Top topic labels: ${topicText.slice(0, 2).join('; ')}.` : [who, person.first ? `Records from ${person.first}${person.last ? ` to ${person.last}` : ''}.` : ''].filter(Boolean).join('\n'),

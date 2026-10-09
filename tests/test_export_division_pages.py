@@ -62,6 +62,14 @@ class DivisionExportTests(unittest.TestCase):
         self.assertEqual(data["members"][1]["person_slug"], "zoe-oname")
         self.assertEqual(data["members"][1]["party"], "Example Party")
 
+    def test_index_carries_dated_party_splits_without_member_names(self):
+        with self.fixture() as db:
+            records = D.database_projection(db, {})
+        row = D.projection_index(D.guard_projection(records, {}))["divisions"][0]
+        self.assertEqual(row["party_tallies"], [{"party": "Example Party", "votes": {"no": 1, "aye": 1}}])
+        self.assertEqual((row["recorded_ayes"], row["recorded_noes"], row["unknown_party_count"]), (1, 1, 0))
+        self.assertNotIn("members", row)
+
     def test_verified_source_snapshot_dropped_when_tally_changes(self):
         original = {"key": "example", "date": "2026-09-01", "house": "senate", "ayes": 1,
                     "noes": 0, "source_url": "https://example.test/source", "members": [{"name": "Alex", "vote": "aye"}],

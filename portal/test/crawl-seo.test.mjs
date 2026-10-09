@@ -7,6 +7,7 @@ import {build} from 'esbuild';
 import {sitemapFiles, exportDate, latestDate, billLastmod} from '../../scripts/build_crawl_catalog.mjs';
 import {grantRecipientUrl} from '../public/grants.js';
 import {awardHref} from '../public/grants-largest.js';
+import {personUrl} from '../public/canonical-urls.js';
 import {INDEXNOW_KEY} from '../src/indexnow.ts';
 
 const root = new URL('../public/',import.meta.url);
@@ -116,7 +117,7 @@ test('app link builders and grants builders never create null or undefined hrefs
   const app=read('app.js'),parsed=ts.createSourceFile('app.js',app,ts.ScriptTarget.Latest,true,ts.ScriptKind.JS);
   const names=new Set(['esc','hasEntityId','entityHrefAttr','subjectHash','personSlug','billDivisionHref']);
   const code=parsed.statements.filter(n=>ts.isFunctionDeclaration(n)&&names.has(n.name?.text)).map(n=>n.getText(parsed)).join('\n');
-  const context={URL,personSlugs:{byName:new Map()}};runInNewContext(code,context);
+  const context={URL,personUrl,personSlugs:{byName:new Map()}};runInNewContext(code,context);
   for (const value of [null,undefined,'null','undefined','', ' NULL ']) {
     assert.equal(context.subjectHash('person',value),null);
     assert.equal(context.entityHrefAttr(context.subjectHash('person',value)),'');
@@ -125,7 +126,7 @@ test('app link builders and grants builders never create null or undefined hrefs
     assert.equal(grantRecipientUrl('federal',value),null);
     assert.equal(awardHref({recipientId:value,id:'GA123'}),null);
   }
-  assert.equal(context.entityHrefAttr(context.subjectHash('person','Jane Smith')),'href="/subject/person/jane-smith"');
+  assert.equal(context.entityHrefAttr(context.subjectHash('person','Jane Smith')),'href="/subject/person"');
   assert.match(app,/hasEntityId\(id\)\) replaceRoute/);
   assert.match(app,/entityHrefAttr\(subjectHash\(/);
   assert.match(read('grants.js'),/if \(!href\) return el\('span'/);

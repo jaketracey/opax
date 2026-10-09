@@ -8,9 +8,27 @@
  * public/app.js carries a copy of personSlug(); test/person-slug.test.mjs
  * holds the two to the same answers.
  */
+import { splitSpeakers, type SpeechScope } from '../public/speech-attribution.js'
+import { personNameKey } from '../public/canonical-urls.js'
+
 export function personSlug(name: string): string {
   return String(name ?? '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase()
     .replace(/['’‘ʼ`.]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
+}
+
+/** The roster lookup shared by redirects and the generated browser URL table. */
+export function personIndex<T extends { name: string; speeches: number | null; full?: string; speech_scope?: SpeechScope }>(people: readonly T[]) {
+  const byName = new Map(people.map(p => [p.name, p]))
+  const byFold = new Map<string, T>()
+  for (const p of people) {
+    const key = personNameKey(p.name), previous = byFold.get(key)
+    if (!previous || (p.speeches ?? 0) > (previous.speeches ?? 0)) byFold.set(key, p)
+  }
+  for (const p of people) for (const alias of splitSpeakers(p)) {
+    const key = personNameKey(alias)
+    if (!byFold.has(key)) byFold.set(key, p)
+  }
+  return { byName, byFold, ...slugIndex(people) }
 }
 
 export interface SlugIndex<T> { bySlug: Map<string, T>; slugOf: Map<string, string> }

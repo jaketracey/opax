@@ -3,8 +3,9 @@ import { fileURLToPath } from 'node:url';
 import { resolve, join } from 'node:path';
 import { createHash } from 'node:crypto';
 import { normalize, tokens, bucket } from '../portal/src/catalog-query.mjs';
+import { personNameKey, personUrl } from '../portal/public/canonical-urls.js';
 import { recordPathIndex } from '../portal/public/record-paths.js';
-import { personSlug, slugIndex } from '../portal/src/person-slug.ts';
+import { personSlug, personIndex } from '../portal/src/person-slug.ts';
 import { moneyFlowType } from '../portal/public/money-records.js';
 import { recordsWithLocations } from '../portal/public/grants-research.js';
 import { payPersonRecord, payPersonOrder, payGeneralRecords } from '../portal/src/pay-records.mjs';
@@ -13,8 +14,8 @@ const read = async p => JSON.parse(await readFile(join(root,p),'utf8'));
 const files = async p => (await readdir(join(root,p))).filter(n=>n.endsWith('.json')).sort();
 const docs = [], ids = new Set(), counts = {};
 const cash = n => Number(n).toLocaleString('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:2});
-let canonicalPeople=new Map();
-const personHref = n => '/subject/person/'+(canonicalPeople.get(n) || personSlug(n));
+let canonicalPeople=new Map(), canonicalAliases=new Map();
+const personHref = n => { const slug=canonicalPeople.get(n) || canonicalAliases.get(personNameKey(n)); return slug ? '/subject/person/'+slug : personUrl(n); };
 const donorHref = n => '/subject/donor/'+encodeURIComponent(n);
 const supplierHref = n => '/subject/supplier/'+encodeURIComponent(n);
 const year = d => Number(String(d || '').slice(0,4)) || 0;
@@ -64,8 +65,9 @@ export function interestPerson(register, id, people, names) {
 }
 
 export function interestHref(register, person, speakerNames) {
- return person ? personHref(person.name)
-   : speakerNames.has(register.name) ? personHref(register.name) : register.source_url;
+ const href = person ? personHref(person.name)
+   : speakerNames.has(register.name) ? personHref(register.name) : null;
+ return href && href !== '/subject/person' ? href : register.source_url;
 }
 
 export function personSpeechCount(p) {
@@ -74,7 +76,7 @@ export function personSpeechCount(p) {
 
 async function main() {
  const roster = await read('parliamentarians.json');
- canonicalPeople=slugIndex(roster.people).slugOf;
+ const identity=personIndex(roster.people); canonicalPeople=identity.slugOf; canonicalAliases=new Map([...identity.byFold].map(([name,p])=>[name,identity.slugOf.get(p.name)]));
  for(const p of roster.people) add('person:'+p.name,'person',p.full||p.name,personHref(p.name),`${p.party_now||p.party||''}. ${(p.states||[]).join(', ')}. ${personSpeechCount(p)}${p.representation?.length?' Recorded representation: '+p.representation.map(r=>`${r.electorate}${r.state?', '+r.state:''}, ${r.jurisdiction}, ${r.chamber}`).join('; ')+'. Roster affiliations may include past seats and do not establish current tenure.':''}`,{aliases:p.name,from:p.first,to:p.last,state:p.states,parties:[p.party_now||p.party||''],speakers:[p.name],source:'Parliamentarian directory',dateLabel:p.speech_scope?'':(p.speech_count_basis?'Transcript years: ':'')+period(p.first,p.last)});
  for(const [jur,file] of [['federal','money.json'],['qld','money.qld.json'],['vic','money.vic.json'],['tas','money.tas.json']]) {
   const graph=await read('graph/'+file), byId=new Map(graph.nodes.map(n=>[n.id,n]));

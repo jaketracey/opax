@@ -15,14 +15,16 @@ interface Seat { slug: string; name: string; url: string; jurisdiction: string; 
 interface Bill {
   key: string; title: string; short_title?: string; status?: string; status_as_of?: string;
   sponsor?: string; sponsor_person_id?: string; sponsor_party?: string; portfolio?: string; introduced?: string;
-  sources?: { kind: string; url: string }[]; key_dates?: { stage: string; date: string; house: string; url: string }[];
+  sources?: { kind: string; url: string }[]; key_dates?: { stage: string; date: string; house: string | null; url: string }[];
   divisions?: Division[];
   summary?: { attribution?: string; sentences?: string[]; changes?: string[]; affected?: string; as_of?: string };
 }
 export interface Division {
-  key: string; slug?: string; name?: string; question?: string; date?: string; house?: string;
+  key: string; slug?: string; name?: string; question?: string; date?: string; house?: string | null;
   jurisdiction?: string; ayes?: number; noes?: number; result?: string; outcome?: string;
   source_url?: string; url?: string; stage?: string;
+  party_tallies?: { party: string; votes: Record<string,number> }[];
+  recorded_ayes?: number; recorded_noes?: number; unknown_party_count?: number;
   members?: { name: string; person_id?: string; person_slug?: string; party?: string; vote: string }[];
   bills?: { key: string; title: string; url?: string }[];
 }
@@ -38,10 +40,10 @@ interface MoneyGraph { meta: { sourceShort?: string; source?: string; coverage?:
 const PAGE_SIZE = 50
 export const escapeHtml = (value: unknown): string => String(value ?? '').slice(0,5000).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!))
 const fold = (s: string) => s.normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g,' ').trim().toLowerCase()
-const human = (s: string) => s.replace(/_/g,' ')
+const human = (s: string | null | undefined) => String(s ?? '').replace(/_/g,' ')
 const count = (n: number) => n.toLocaleString('en-AU')
 const currency = (n: number) => new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0}).format(n)
-const chamber = (s = '') => ({senate:'Senate',representatives:'House of Representatives',nsw_la:'NSW Legislative Assembly',nsw_lc:'NSW Legislative Council',vic_la:'Victorian Legislative Assembly',vic_lc:'Victorian Legislative Council',qld_la:'Queensland Legislative Assembly'}[s] || human(s))
+const chamber = (s: string | null | undefined = '') => !s ? 'Chamber not recorded' : ({senate:'Senate',representatives:'House of Representatives',nsw_la:'NSW Legislative Assembly',nsw_lc:'NSW Legislative Council',vic_la:'Victorian Legislative Assembly',vic_lc:'Victorian Legislative Council',qld_la:'Queensland Legislative Assembly'}[s] || human(s))
 export function safeHref(value: string): string | null {
   if(value.length>2048) return null
   if (/^\/(?!\/)/.test(value)) return value
@@ -53,7 +55,16 @@ const link = (href: string, label: string, rel = '') => {
 }
 const original = (url?: string) => url && safeHref(url) ? `<p>${link(url,'View original','noopener noreferrer')}</p>` : ''
 export function answerBlock(title: string, description: string, kicker: string, body = ''): string {
+  body = associationCaveat(body, `${description} ${body}`)
   return `<section id="prerender" class="wrap"><p class="kicker">${escapeHtml(kicker)}</p><h1>${escapeHtml(title)}</h1><p>${escapeHtml(description)}</p>${body}</section>`
+}
+export const ASSOCIATION_CAVEAT = 'An association does not prove influence.'
+export function associationCaveat(body: string, facts: string): string {
+  const money = /\$|\bmoney\b|receipts|donations|funding|contracts|grants|expenditure/i.test(facts)
+  const politics = /politic|parliamentarian|member|party|parties|vote|electoral|Labor|Liberal/i.test(facts)
+  if(!money || !politics || body.includes(ASSOCIATION_CAVEAT)) return body
+  const line=`<p>${ASSOCIATION_CAVEAT}</p>`
+  return /<\/section>\s*$/.test(body) ? body.replace(/<\/section>\s*$/,line+'</section>') : body+line
 }
 export function partyLine(p: Person): string {
   // Preserve the roster's tri-state: false is former; missing is not evidence of retirement.
@@ -63,7 +74,7 @@ export function partyLine(p: Person): string {
   const former = p.party_now && p.party && fold(p.party_now) !== fold(p.party) ? `; formerly ${p.party}` : ''
   return `${party}${former}${p.current === undefined ? ' (recorded affiliation)' : ''}`
 }
-const personHref = (p: Person, slugs: Map<string,string>) => `/subject/person/${slugs.get(p.name) || personUrl(p.name).split('/').at(-1)}`
+const personHref = (p: Person, slugs: Map<string,string>) => slugs.has(p.name) ? `/subject/person/${slugs.get(p.name)}` : personUrl(p.name)
 function paginate(url: URL, rows: { href: string; label: string; detail?: string }[], title: string, description: string): RenderedContent {
   const pageCount = Math.max(1, Math.ceil(rows.length / PAGE_SIZE))
   const requested = Number(url.searchParams.get('page') || 1)
@@ -150,8 +161,10 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
   let body = `<dl><dt>Sponsor</dt><dd>${sponsor ? link(personHref(sponsor,slugs),sponsor.name) : escapeHtml(b.sponsor || 'Not recorded')}</dd>${party ? `<dt>Sponsor's recorded party</dt><dd>${link(partyUrl(party),party)}</dd>` : ''}<dt>Portfolio</dt><dd>${escapeHtml(b.portfolio || 'Not recorded')}</dd></dl>`
   if (b.key_dates?.length) body += `<h2>Recorded stages</h2><ul>${b.key_dates.map(d=>`<li>${escapeHtml(stageLabel(d.stage))} — ${escapeHtml(d.date)} (${escapeHtml(chamber(d.house))})${original(d.url)}</li>`).join('')}</ul>`
   body += '<h2>Divisions</h2>'
-  const divisions = b.divisions || []
-  body += divisions.length ? `<ul>${divisions.map(d=>`<li>${link(`/doc/${d.key.startsWith('division-') ? d.key : `division-${d.key}`}`,d.stage || 'Division')}<div class="division-markdown">${renderDivisionMarkdown(billStripStage(billStripTitle(billNoteRepair(d.question),b),d.stage))}</div> — ${escapeHtml(d.date)}, ${escapeHtml(chamber(d.house))}: ${escapeHtml(d.outcome || 'Result not recorded')}, ayes ${escapeHtml(d.ayes ?? 'not recorded')}, noes ${escapeHtml(d.noes ?? 'not recorded')}${original(d.source_url || d.url)}${divisionVotes(d,people,slugs)}</li>`).join('')}</ul>` : '<p>No divisions recorded. Most questions are decided on the voices; this does not establish that a bill was unopposed.</p>'
+  const divisions = (b.divisions || []).map(d=>({...d,question:billStripStage(billStripTitle(billNoteRepair(d.question),b),d.stage)}))
+  const divisionSlot = '<!--bill-divisions-->'
+  body += divisionSlot
+
   if (b.summary) body += `<h2>Plain-language summary</h2><p>${escapeHtml(b.summary.attribution || 'Written by a model; not the record')}${b.summary.as_of ? `, as at ${escapeHtml(b.summary.as_of)}` : ', date not recorded'}.</p>${(b.summary.sentences || []).slice(0,10).map(s=>`<p>${escapeHtml(s)}</p>`).join('')}<ul>${(b.summary.changes || []).slice(0,10).map(s=>`<li>${escapeHtml(s)}</li>`).join('')}</ul>${b.summary.affected ? `<p>${escapeHtml(b.summary.affected)}</p>` : ''}`
   else body += '<h2>Plain-language summary</h2><p>No machine-written summary in this export.</p>'
   const sameSponsor = related.filter(r=>r.key!==b.key && !!b.sponsor && fold(r.sponsor || '')===fold(b.sponsor)).slice(0,20)
@@ -161,18 +174,41 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
   }
   body += `<p>Stage dates describe the parliamentary progress recorded by the source. They do not establish when provisions commence. A bill before parliament is a proposal; its text can change before passage. Division totals describe the recorded question on that date. A procedural division does not necessarily establish support for every provision of a bill. Check the official bill text and explanatory memorandum for the wording.</p><p>${link(`/bills/${b.key}.json`,'Bill data export')} · ${link('/bills','Browse bills')} · ${link('/ask','Ask about the parliamentary record')} · ${link('/methods','Sources and methods')}</p>`
   body += `<h2>Sources</h2>${(b.sources || []).map(s=>`<p>${escapeHtml(human(s.kind))}</p>${original(s.url)}`).join('')}`
-  return {html:answerBlock(title,description,'Bill',body)}
+  const rows = divisions.map(d => billDivision(d,people,slugs,false))
+  const block = () => rows.length ? `<ul>${rows.join('')}</ul>` : '<p>No divisions recorded. Most questions are decided on the voices; this does not establish that a bill was unopposed.</p>'
+  const output = () => answerBlock(title,description,'Bill',body.replace(divisionSlot,block()))
+  // Whole member lists are expanded only when the complete page stays in budget.
+  const recent = divisions.map((d,i)=>({d,i})).sort((a,b)=>String(b.d.date || '').localeCompare(String(a.d.date || ''))).slice(0,3)
+  for (const {d,i} of recent) {
+    const compact=rows[i]; rows[i]=billDivision(d,people,slugs,true)
+    if (!billBodyFits(output())) rows[i]=compact
+  }
+  let html=output()
+  if (!billBodyFits(html)) html=answerBlock(title,description,'Bill',`<p>This record exceeds the page display limit. Stages, division tallies and model attribution are available in the ${link(`/bills/${b.key}.json`,'complete bill export')}.</p>`)
+  return {html}
 }
-function divisionVotes(d: Division, people: Person[], slugs: Map<string,string>): string {
-  const members = d.members || []
-  if (!members.length) return '<p>Per-member votes and party tallies are not present in this export. Consult the original division record.</p>'
-  const parties = [...new Set(members.filter(m=>m.party).map(m=>m.party!))]
-  const ayes=members.filter(m=>m.vote==='aye').length, noes=members.filter(m=>m.vote==='no').length
-  let html = `<h3>How each party voted</h3><p>Party labels are those recorded for this division, rather than current affiliations.${ayes!==d.ayes || noes!==d.noes ? ` The member list is partial: ${ayes} recorded ayes and ${noes} recorded noes; the official tally above remains the source total.` : ''}</p>`
-  html += parties.length ? `<ul>${parties.map(party=>{const rows=members.filter(m=>m.party===party);const sides=[...new Set(rows.map(m=>m.vote))];return `<li>${link(partyUrl(party),party)}: ${sides.map(side=>`${human(side)} ${rows.filter(m=>m.vote===side).length}`).join(', ')}</li>`}).join('')}</ul>` : '<p>Party affiliation on the division date is not recorded in the member export.</p>'
-  if(members.some(m=>!m.party)) html+=`<p>Party affiliation is not recorded for ${members.filter(m=>!m.party).length} members in this export.</p>`
-  for(const side of [...new Set(members.map(m=>m.vote))]) {
-    html += `<h3>${side==='aye' ? 'Ayes' : side==='no' ? 'Noes' : human(side)}</h3><ul>${members.filter(m=>m.vote===side).map(m=>{const p=people.find(p=>m.person_id && p.pid===m.person_id?.replace(/^tvfy_/, '')) || people.find(p=>fold(p.name)===fold(m.name));return `<li>${link(p ? personHref(p,slugs) : personUrl(m.name),m.name)}${m.party ? ` (${escapeHtml(m.party)})` : ''} — ${escapeHtml(side)}</li>`}).join('')}</ul>`
+export const BILL_MAX_INTERNAL_LINKS = 300
+export const BILL_MAX_BODY_BYTES = 80_000
+export const internalLinkCount = (html: string) => (html.match(/<a\b[^>]*href="(?:\/(?!\/)|https:\/\/opax\.com\.au\/)/g) || []).length
+// Leave room for the shell's navigation/footer links in the 300-link page ceiling.
+const billBodyFits = (html: string) => internalLinkCount(html)<=BILL_MAX_INTERNAL_LINKS-70 && new TextEncoder().encode(html).length<=BILL_MAX_BODY_BYTES
+function billDivision(d: Division, people: Person[], slugs: Map<string,string>, full: boolean): string {
+  const href=`/doc/${d.key.startsWith('division-') ? d.key : `division-${d.key}`}`
+  const question=full ? renderDivisionMarkdown(String(d.question || '').slice(0,1500)) : escapeHtml(divisionPlain(d.question || '').slice(0,300))
+  return `<li${full ? ' data-full-members=""' : ''}>${link(href,d.stage || 'Division')}<div class="division-markdown">${question}</div> — ${escapeHtml(d.date)}, ${escapeHtml(chamber(d.house))}: ${escapeHtml(d.outcome || d.result || 'Result not recorded')}, ayes ${escapeHtml(d.ayes ?? 'not recorded')}, noes ${escapeHtml(d.noes ?? 'not recorded')}${original(d.source_url || d.url)}${divisionVotes(d,people,slugs,full,false)}${full ? '' : `<p>${link(href,'All recorded members on the division page')}</p>`}</li>`
+}
+
+function divisionVotes(d: Division, people: Person[], slugs: Map<string,string>, full=true, partyLinks=true): string {
+  const members=d.members || []
+  const parties=d.party_tallies || [...new Set(members.filter(m=>m.party).map(m=>m.party!))].map(party=>({party,votes:Object.fromEntries([...new Set(members.filter(m=>m.party===party).map(m=>m.vote))].map(vote=>[vote,members.filter(m=>m.party===party && m.vote===vote).length]))}))
+  const ayes=d.recorded_ayes ?? members.filter(m=>m.vote==='aye').length, noes=d.recorded_noes ?? members.filter(m=>m.vote==='no').length
+  if(!members.length && !parties.length) return '<p>Per-member votes and party tallies are not present in this export. Consult the original division record.</p>'
+  let html=`<h3>How each party voted</h3><p>Party labels are those recorded for this division, rather than current affiliations.${ayes!==d.ayes || noes!==d.noes ? ` The member list is partial: ${ayes} recorded ayes and ${noes} recorded noes; the official tally above remains the source total.` : ''}</p>`
+  html+=parties.length ? `<ul>${parties.map(({party,votes})=>`<li>${partyLinks ? link(partyUrl(party),party) : escapeHtml(party)}: ${Object.entries(votes).map(([vote,n])=>`${human(vote)} ${n}`).join(', ')}</li>`).join('')}</ul>` : '<p>Party affiliation on the division date is not recorded in the member export.</p>'
+  const missing=d.unknown_party_count ?? members.filter(m=>!m.party).length
+  if(missing) html+=`<p>Party affiliation is not recorded for ${missing} members in this export.</p>`
+  if(full) for(const side of [...new Set(members.map(m=>m.vote))]) {
+    html+=`<h3>${side==='aye' ? 'Ayes' : side==='no' ? 'Noes' : human(side)}</h3><ul>${members.filter(m=>m.vote===side).map(m=>`<li>${link(personUrl(m.name),m.name)}${m.party ? ` (${escapeHtml(m.party)})` : ''} — ${escapeHtml(side)}</li>`).join('')}</ul>`
   }
   return html
 }

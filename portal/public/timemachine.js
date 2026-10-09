@@ -1,4 +1,4 @@
-import { personUrl, partyUrl } from './canonical-urls.js';
+import { personUrl, partyUrl } from './canonical-urls.js?v=225d5915ea';
 /**
  * OPAX Time Machine — an Encarta-style year explorer for the Australian
  * parliamentary record (1998–2026).

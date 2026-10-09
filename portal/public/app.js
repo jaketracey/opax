@@ -1129,7 +1129,7 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=c04f8dfe7c");
+    const { mountMoneyMap } = await import("/money-map.js?v=5e54b1085d");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json?v=suppliers-1", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -1325,7 +1325,7 @@ async function openMoneyRecords(kind, params) {
   $('money-records-title').textContent = grants ? 'Government grants' : 'Political receipts';
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
-    const mod = await import(grants ? '/grants.js?v=32dd30ba4f' : '/ledger.js?v=118b29c6c8');
+    const mod = await import(grants ? '/grants.js?v=9e66f26ed2' : '/ledger.js?v=65ee0aa12f');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1353,7 +1353,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=34594f946f');
+    const mod = await import('/grant-recipient.js?v=4dd6535cba');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1447,7 +1447,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=c04f8dfe7c"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=remove-copy-link-1"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=5e54b1085d"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=remove-copy-link-1"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -3556,18 +3556,22 @@ function votesFor(name, pid) {
   return keys.map((k) => votesData?.[k]).find((r) => r && typeof r === "object") || null;
 }
 
+let personUrls = null;
+const personUrl = name => personUrls?.personUrl(name) || '/subject/person';
+const personUrlsReady = import('/canonical-urls.js?v=225d5915ea').then(module => { personUrls = module; });
+
 function subjectHash(kind, label) {
-  // A person in the roster is addressed by slug (/subject/person/tony-abbott);
-  // all other person links use the deterministic name slug immediately.
+  // Person links use the roster's verified slugs and reviewed name aliases.
   if (!hasEntityId(label) || !hasEntityId(kind)) return null;
-  const slug = kind === "person" ? (personSlugs.byName.get(label) || personSlug(label)) : kind === "party" ? personSlug(label) : null;
+  if (kind === "person") return personUrl(label);
+  const slug = kind === "party" ? personSlug(label) : null;
   return `/subject/${kind}/${slug || encodeURIComponent(label)}`;
 }
 
 /* --- person slugs -------------------------------------------------------------
    /api/person-slugs is the Worker's slug -> name map (src/person-slug.ts): the
-   roster's people, one slug each. It is fetched once at boot; until it lands,
-   links use deterministic slugs; the map supplies collision suffixes. personSlug() must match the Worker's:
+   roster's people, one slug each. It is fetched once at boot to resolve profile routes;
+   links use the built canonical URL lookup. personSlug() must match the Worker's:
    test/person-slug.test.mjs holds the two together. */
 const personSlugs = { byName: new Map(), bySlug: new Map(), ready: null };
 function personSlug(name) {
@@ -4101,7 +4105,7 @@ async function mountSubjectMap(nodeId, label = "") {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=c04f8dfe7c");
+    const { mountMoneyMap } = await import("/money-map.js?v=5e54b1085d");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
@@ -6503,7 +6507,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=f76ff49fa1").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=60788ca4ae").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -6655,11 +6659,14 @@ let activeDirectory = null;
  * ("All parliaments" needs no "Parliament" above it).
  */
 function renderDirectory(spec) {
+  const directoryPath=new URL(directoryHash(spec.kind,{}),SITE_ORIGIN).pathname;
+  directoryPageCounts.set(directoryPath,Math.max(1,Math.ceil(spec.items.length/50)));
   const body = $(spec.mount || "subject-body");
   const state = { q: "", sort: spec.sorts[0][0] };
   for (const f of spec.filters) state[f.key] = "";
   const readParams = (params) => {
     state.q = params.get("q") || "";
+    state.page = params.get("page") || "";
     const sort = params.get("sort");
     state.sort = spec.sorts.some(([v]) => v === sort) ? sort : spec.sorts[0][0];
     for (const f of spec.filters) {
@@ -6752,7 +6759,12 @@ function renderDirectory(spec) {
       : `${spec.items.length.toLocaleString()} ${noun}`;
     empty.hidden = matched.length > 0;
     const hashState = { ...state, sort: state.sort === spec.sorts[0][0] ? "" : state.sort };
+    const requested=Number(state.page || 1);
+    const page=Number.isSafeInteger(requested) && requested>0 ? Math.min(requested,directoryPageCounts.get(directoryPath)) : 1;
+    hashState.page=page>1 ? page : '';
+    state.page=hashState.page;
     replaceRoute(directoryHash(spec.kind, hashState));
+    syncPathMeta();
   };
   const syncControls = () => {
     input.value = state.q;
@@ -8705,15 +8717,15 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
-  ballot: { name: "Build your ballot", dialog: "dialog-ballot", body: "explore-ballot", module: "/ballot.js?v=b944263601", mount: "mountBallot" },
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=af9d999824", mount: "mountTimeMachine" },
+  ballot: { name: "Build your ballot", dialog: "dialog-ballot", body: "explore-ballot", module: "/ballot.js?v=49e7bc6382", mount: "mountBallot" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=b331b0dcd1", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
-  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=82afaa2999", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=118b29c6c8", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=32dd30ba4f", mount: "mountGrants" },
+  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=deeaffee40", mount: "mountQuiz" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=65ee0aa12f", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=9e66f26ed2", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=25f5793db5", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=58a0a413a1", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=473540488e", mount: "mountThenVsNow" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=f57768f881", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {
@@ -9323,7 +9335,7 @@ async function mountFrontMap() {
   if (!root || frontMapHandle || frontMapLoading) return;
   frontMapLoading = true;
   try {
-    const [mod, data] = await Promise.all([import("/money-map.js?v=c04f8dfe7c"), loadMoneyData()]);
+    const [mod, data] = await Promise.all([import("/money-map.js?v=5e54b1085d"), loadMoneyData()]);
     if (!data) throw new Error("money data unavailable");
     root.textContent = "";
     const handle = await mod.mountMoneyMap(root, "/graph/money.json?v=suppliers-1", {
@@ -12522,7 +12534,7 @@ function divisionMembersHTML(names, { ayes = 0, noes = 0 } = {}) {
   }
   if (names.text) return `${open}<div class="division-markdown">${billNoteHTML(names.text)}</div></section>`;
   const who = (list) => list.map((m) => `<li>${m.slug
-    ? `<a href="/subject/person/${encodeURIComponent(m.slug)}">${esc(m.name)}</a>` : esc(m.name)}</li>`).join("");
+    ? `<a href="${personUrl(m.name)}">${esc(m.name)}</a>` : esc(m.name)}</li>`).join("");
   const sides = [["Ayes", names.aye, ayes], ["Noes", names.no, noes], ...(names.paired?.length ? [["Paired, not counted", names.paired, names.paired.length]] : [])];
   return `${open}<div class="division-sides">${sides.map(([label, list, count]) => `<div>
         <h4 class="division-side">${label} <span>${Number(count || list.length).toLocaleString()}</span></h4>
@@ -14055,7 +14067,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=c04f8dfe7c");
+    const { mountMoneyMap } = await import("/money-map.js?v=5e54b1085d");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
       chrome: "mini",
@@ -14673,6 +14685,7 @@ loadLiveStats();
 // long as that page is the one showing (a renderer such as Googlebot sees the
 // named version, not "OPAX encyclopedia").
 const BOOT_META = {
+  route: hereRoute(),
   url: document.querySelector('link[rel="canonical"]')?.getAttribute("href") || "",
   title: document.title,
   description: document.querySelector('meta[name="description"]')?.getAttribute("content") || "",
@@ -14711,13 +14724,20 @@ const VIEW_DESCRIPTIONS = {
   privacy: "What the OPAX website and app collect, which companies receive it, how long it is kept and how to delete your account.",
   support: "How to report a wrong record or answer, and help with signing in and deleting an OPAX account.",
 };
+const directoryPageCounts = new Map();
 function syncPathMeta() {
   const path = hereRoute();
   const identity = new URL(path, SITE_ORIGIN);
   const keep = identity.pathname.startsWith('/money/grants') ? identity.searchParams.has('program') || identity.searchParams.has('largest') ? ['jur','program','largest'] : identity.pathname.includes('/recipient/') ? ['award'] : ['page'] : ['/bills','/subject/person','/subject/party','/subject/electorate','/subject/supplier','/subject/agency','/subject/donor','/subject/campaigner'].includes(identity.pathname) ? ['page'] : [];
   for (const key of [...identity.searchParams.keys()]) if (!keep.includes(key)) identity.searchParams.delete(key);
   identity.hash = '';
-  const url = identity.href;
+  const maxPage = directoryPageCounts.get(identity.pathname);
+  if (identity.searchParams.has('page') && maxPage) {
+    const requested=Number(identity.searchParams.get('page'));
+    const page=Number.isSafeInteger(requested) && requested>0 ? Math.min(requested,maxPage) : 1;
+    if(page>1) identity.searchParams.set('page',String(page)); else identity.searchParams.delete('page');
+  }
+  const url = path===BOOT_META.route && BOOT_META.url ? BOOT_META.url : identity.href;
   // Still on the page the Worker described: its title and description name
   // this subject, so they beat anything the view would set.
   const landed = url === BOOT_META.url;
@@ -14741,10 +14761,9 @@ function syncPathMeta() {
   }
 }
 
-// The first render waits for the labels every page draws and the attribution
-// helpers; person links are written as slugs once this lands, and nothing
-// waits on that.
-Promise.allSettled([attributionReady, uiLabelsReady]).finally(() => {
+// The first render waits for labels, attribution helpers and the canonical
+// person URL lookup, so links use the roster's aliases from the first render.
+Promise.allSettled([attributionReady, uiLabelsReady, personUrlsReady]).finally(() => {
   loadPersonSlugs();
   initAskBuilder();
   route();

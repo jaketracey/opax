@@ -259,8 +259,21 @@ def guard_projection(records, previous, strict=False):
     return guarded
 
 
+def party_tallies(record):
+    parties = {}
+    members = record.get("members", [])
+    for member in members:
+        if member.get("party"):
+            votes = parties.setdefault(member["party"], Counter())
+            votes[member["vote"]] += 1
+    return {"party_tallies": [{"party": party, "votes": dict(votes)} for party, votes in sorted(parties.items())],
+            "recorded_ayes": sum(m["vote"] == "aye" for m in members),
+            "recorded_noes": sum(m["vote"] == "no" for m in members),
+            "unknown_party_count": sum(not m.get("party") for m in members)}
+
+
 def projection_index(records):
-    """Only links/coverage/counts are indexed; member names remain in shards."""
+    """Links, coverage and dated party tallies are indexed; member names remain in shards."""
     retained = [d for d in records.values() if d["_meta"]["refresh_retained"]]
     source_counts = Counter(d["_meta"].get("source", "unknown") for d in records.values())
     member_sources = Counter(d["_meta"].get("member_source") or d["_meta"].get("source", "unknown")
@@ -279,7 +292,7 @@ def projection_index(records):
         {"key": d["key"], "slug": d["slug"], "date": d.get("date"), "bills": d.get("bills", []),
          **{field: d["_meta"][field] for field in (
              "member_coverage", "member_count", "named_member_count", "recorded_vote_count", "refresh_retained", "refresh_retained_reason")},
-         "source": d["_meta"].get("source", "unknown")}
+         "source": d["_meta"].get("source", "unknown"), **party_tallies(d)}
         for d in sorted(records.values(), key=lambda d: (d.get("date") or "", d["key"]), reverse=True)
     ]}
 

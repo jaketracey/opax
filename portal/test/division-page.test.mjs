@@ -7,6 +7,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
+import { personUrl } from '../public/canonical-urls.js';
 
 const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
 
@@ -31,6 +32,7 @@ function fn(name) {
 function page(answers) {
   const calls = [];
   const context = {
+    personUrl,
     calls,
     api: async (path) => {
       calls.push(path);

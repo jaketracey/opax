@@ -1,4 +1,4 @@
-import {subjectUrl} from './canonical-urls.js';
+import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
 import { filterMoneyEdges } from "./money-records.js?v=ia-ux-20260908-2";
 /**
  * OPAX Ledger — an analyst-grade table over the donor→party money flows.

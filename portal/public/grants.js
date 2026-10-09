@@ -1,4 +1,4 @@
-import {subjectUrl} from './canonical-urls.js';
+import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
 /**
  * OPAX Who gets the grants — every published grant award, resolved to the
  * organisations that receive them and checked against the donor registers.
