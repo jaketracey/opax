@@ -231,7 +231,7 @@ test('bill text leads with the bill page summary, labelled as machine-written', 
   const label = view.root
     .findAllByProps({ testID: 'bill-text-summary-label' })
     .find((node) => node.props.accessibilityLabel)?.props.accessibilityLabel;
-  expect(label).toMatch(/^Machine summary\. /);
+  expect(label).toMatch(/^Machine-written\. /);
   expect(label).toContain(bill.summary!.attribution.replace(/\.$/, ''));
   expect(
     view.root

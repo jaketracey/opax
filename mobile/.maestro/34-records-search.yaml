@@ -268,7 +268,7 @@ name: 34 Records, filters, sort, cited summary and explicitly chosen briefs
     id: records-briefs
 - scrollUntilVisible:
     element:
-      text: Machine brief
+      text: 'Machine-written\..*'
     centerElement: true
     timeout: 90000
 - takeScreenshot: ${EVIDENCE}/34-brief-content

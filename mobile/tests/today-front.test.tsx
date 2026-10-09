@@ -79,8 +79,9 @@ describe('the masthead', () => {
     expect(strings(host(root, 'today-screen-message')[0]!)).toBe(
       'OPAX is independent and non-partisan. It is not a government app.',
     );
+    // Sentence case (D6): no uppercase labels.
     expect(strings(host(root, 'today-date')[0]!)).toBe(
-      mastheadDate(new Date()).toLocaleUpperCase('en-AU'),
+      mastheadDate(new Date()),
     );
   });
 });

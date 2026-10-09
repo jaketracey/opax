@@ -531,8 +531,12 @@ describe('the Leads screen', () => {
     );
     for (const caveat of signals[0]!.caveats)
       expect(texts(root)).toContain(caveat);
-    // One quiet caption on screen; VoiceOver hears the sources too.
-    expect(texts(root)).toContain('Updated 21 Sep 2026');
+    // One source line on screen (the date, then the source's name in the
+    // link colour); VoiceOver hears the full as-at sentence.
+    expect(texts(root).some((t) => t.startsWith('Updated 21 Sep 2026 · '))).toBe(
+      true,
+    );
+    expect(texts(root)).toContain('AEC annual returns and 1 more');
     expect(labels(root)).toContain(
       'As at 21 September 2026 · Source: AEC annual returns; AusTender',
     );

@@ -99,4 +99,7 @@ test('the count line never breaks "parliamentarians" mid-word at AX5', async () 
   expect(line.findByType(NativeText).props.children.join('')).toContain(
     '0 parliamentarians',
   );
+  // A tree left mounted re-renders after the environment is torn down and
+  // fails whichever test the worker runs next.
+  await act(async () => renderer.unmount());
 });

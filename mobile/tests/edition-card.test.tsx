@@ -21,7 +21,7 @@ import {
   StaleNotice,
 } from '../src/design/primitives';
 import { router } from 'expo-router';
-import { light, partyColors } from '../src/design/tokens';
+import { accentTint } from '../src/design/tokens';
 import { CachedPortrait } from '../src/features/CachedPortrait';
 import { EditionCard, EditionSection } from '../src/features/EditionCard';
 import {
@@ -122,7 +122,7 @@ describe('the edition card', () => {
   test('a bill edition: kicker, title, the model label before its text, the timeline and one native action; no sources', () => {
     const { root } = render(<EditionCard edition={edition} />);
     expect(textOf(root, 'today-edition-kicker')).toMatch(
-      /^DAILY EDITION · BILL · 4 OCT( 2026)?$/,
+      /^Daily edition · Bill · 4 Oct( 2026)?$/,
     );
     expect(textOf(root, 'today-edition-title')).toBe(pinned.edition.title);
     expect(textOf(root, 'today-edition-detail')).toBe('Education portfolio');
@@ -173,7 +173,7 @@ describe('the edition card', () => {
   test('a parliamentarian: party colour, portrait, the figures and topic labels in place of the text', () => {
     const { root } = render(<EditionCard edition={politician} />);
     expect(textOf(root, 'today-edition-kicker')).toMatch(
-      /^DAILY EDITION · PARLIAMENTARIAN · 6 OCT( 2026)?$/,
+      /^Daily edition · Parliamentarian · 6 Oct( 2026)?$/,
     );
     expect(textOf(root, 'today-edition-title')).toBe('Alex Hawke');
     expect(textOf(root, 'today-edition-party')).toBe('Liberal');
@@ -185,12 +185,14 @@ describe('the edition card', () => {
       name: 'Alex Hawke',
       size: 'profile',
     });
-    // The Liberal blue, deepened only as far as white text needs.
+    // The people accent from the tokens (navy): a party is a dot beside its
+    // name, never the ground.
     const head = host(root, 'today-edition-head')[0]!;
     expect([head.props.style].flat()).toContainEqual({
       backgroundColor: editionAccent(politician).deep,
     });
-    expect(editionAccent(politician).base).toBe(partyColors.liberal);
+    expect(editionAccent(politician)).toEqual(accentTint('people'));
+    expect(labelOf(root, 'today-edition-head')).toContain('Liberal');
     expect(labelOf(root, 'today-edition-figure-0')).toBe(
       '768, speeches in the Opax record',
     );
@@ -217,7 +219,7 @@ describe('the edition card', () => {
       },
     };
     expect(personFacts(bare).party).toBeNull();
-    expect(editionAccent(bare).base).toBe(light.navy);
+    expect(editionAccent(bare)).toEqual(accentTint('people'));
     const none = {
       ...politician,
       facts: {

@@ -18,8 +18,16 @@ module.exports = defineConfig([
       'modules/**/*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}',
     ],
     plugins: {
-      opax: { rules: { transport: require('./scripts/transport-rule') } },
+      opax: {
+        rules: {
+          transport: require('./scripts/transport-rule'),
+          'deprecated-design': require('./scripts/deprecated-design-rule'),
+        },
+      },
     },
-    rules: { 'opax/transport': 'error' },
+    rules: {
+      'opax/transport': 'error',
+      'opax/deprecated-design': 'error',
+    },
   },
 ]);

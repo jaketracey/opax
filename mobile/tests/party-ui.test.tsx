@@ -253,8 +253,14 @@ test('bill links exclude presiding roles and unrecorded affiliations, including 
     );
   });
   press(r, 'splits');
+  // Party labels are links; a folded party is a LinkRow (a button that opens
+  // the party page). Neither is drawn for a presiding role or affiliation.
   const links = r.root.findAll(
-    (n) => typeof n.type === 'string' && n.props.accessibilityRole === 'link',
+    (n) =>
+      typeof n.type === 'string' &&
+      (n.props.accessibilityRole === 'link' ||
+        (n.props.accessibilityRole === 'button' &&
+          /ayes?|noes?/.test(n.props.accessibilityLabel ?? ''))),
   );
   expect(links).toHaveLength(6);
   for (const link of links)

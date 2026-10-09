@@ -18,6 +18,7 @@ import {
   accents,
   chrome,
   controlHeight,
+  deprecatedTextVariants,
   fonts,
   hairline,
   layout,
@@ -85,6 +86,9 @@ const BEFORE_HIGH_CONTRAST = {
   billsInk: '#205158',
 };
 // [font, size, line height, Dynamic Type ramp, colour, tabular]
+// The eleven current roles keep their values. Pass 2B made the deprecated
+// roles aliases of their replacements (only six sizes are drawn), so those
+// are checked against their replacement below.
 const BEFORE_TEXT = {
   title: ['Merriweather', 34, 42, 'largeTitle', 'ink'],
   padTitle: ['Merriweather', 42, 52, 'largeTitle', 'ink'],
@@ -153,7 +157,8 @@ describe('every name from before the token source keeps its value', () => {
     for (const [
       name,
       [font, size, lineHeight, ramp, color, tabular],
-    ] of Object.entries(BEFORE_TEXT))
+    ] of Object.entries(BEFORE_TEXT)) {
+      if (name in deprecatedTextVariants) continue;
       expect(textStyles[name as keyof typeof textStyles]).toEqual({
         fontFamily: font,
         fontSize: size,
@@ -162,6 +167,32 @@ describe('every name from before the token source keeps its value', () => {
         color,
         ...(tabular ? { tabular } : {}),
       });
+    }
+    // Deprecated roles draw as their replacement, keeping only what the
+    // replacement's use needs (tabular figures, the tag's bronze ink, the
+    // title's regular-width step).
+    const as = (use: keyof typeof textStyles, change = {}) => ({
+      ...textStyles[use],
+      ...change,
+    });
+    expect(textStyles.lede).toEqual(as('body'));
+    expect(textStyles.padLede).toEqual(as('body'));
+    expect(textStyles.caption).toEqual(as('fine'));
+    expect(textStyles.figure).toEqual(as('display'));
+    expect(textStyles.figureInline).toEqual(as('strong', { tabular: true }));
+    expect(textStyles.tag).toEqual(as('label', { color: 'bronzeInk' }));
+    expect(textStyles.kicker).toEqual(as('label'));
+    expect(textStyles.chip).toEqual(as('label'));
+    expect(textStyles.countdown).toEqual(as('control', { tabular: true }));
+    expect(textStyles.padTitle).toEqual(
+      as('title', { fontSize: 42, lineHeight: 52 }),
+    );
+    // Six sizes, plus the title's regular-width step.
+    expect(
+      [...new Set(Object.values(textStyles).map((r) => r.fontSize))].sort(
+        (a, b) => a - b,
+      ),
+    ).toEqual([13, 15, 17, 18, 22, 34, 42]);
     expect(fonts).toEqual({
       serif: 'Merriweather',
       serifBold: 'Merriweather-Bold',
@@ -201,7 +232,6 @@ describe('every name from before the token source keeps its value', () => {
       interests: { ink: 'interestsInk', wash: 'interestsWash' },
       bills: { ink: 'billsInk', wash: 'billsWash' },
       people: { ink: 'navy', wash: 'navyWash' },
-      places: { ink: 'navy', wash: 'navyWash' },
       leads: { ink: 'bronzeInk', wash: 'bronzeWash' },
     });
     expect([hairline, radius, minimumTarget]).toEqual([1, 4, 44]);
@@ -262,12 +292,10 @@ describe('promised colour pairs pass in every theme', () => {
 const COLOUR_BASELINE: Record<string, number> = {
   'src/features/money/ported/palette.ts': 38,
   'src/features/talk/VoiceOrb.tsx': 11,
-  'src/features/today/tint.ts': 9,
   'src/test-screens/VoiceBridgeTestScreen.tsx': 5,
   'src/design/menu.tsx': 1,
   'src/features/money/MoneyMapLabels.tsx': 1,
   'src/features/money/NativeMoneyScene.ts': 1,
-  'src/features/talk/CallControls.tsx': 1,
   'src/workbench/Workbench.tsx': 1,
 };
 const COLOUR =

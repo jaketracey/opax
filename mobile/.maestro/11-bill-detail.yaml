@@ -72,7 +72,7 @@ name: 11 Read a bill, its machine summary, divisions and speeches
 # Only the pill shows; VoiceOver (and Maestro) read the attribution on it.
 - assertVisible:
     id: bill-summary-label
-    text: 'Machine summary\. Written by a model from the explanatory memorandum; not the record\.'
+    text: 'Machine-written\. Written by a model from the explanatory memorandum; not the record\.'
 - takeScreenshot: ${EVIDENCE}/11-summary
 # At AX5 the whole Divisions section is too tall to appear in the iOS
 # hierarchy; the first division's container does.
@@ -185,7 +185,7 @@ name: 11 Read a bill, its machine summary, divisions and speeches
     direction: DOWN
     speed: 20
     timeout: 60000
-- assertVisible: 'Machine brief\. An automated summary written by a model; not the record\.'
+- assertVisible: 'Machine-written\. An automated summary written by a model; not the record\.'
 - scrollUntilVisible:
     element:
       text: Tony Burke
@@ -272,5 +272,5 @@ name: 11 Read a bill, its machine summary, divisions and speeches
     timeout: 60000
 - assertVisible:
     id: bill-summary-label
-    text: 'Machine summary\. Written by a model from the exposure draft text; not the record\.'
+    text: 'Machine-written\. Written by a model from the exposure draft text; not the record\.'
 - takeScreenshot: ${EVIDENCE}/11-exposure-summary

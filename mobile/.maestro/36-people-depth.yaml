@@ -53,7 +53,7 @@ name: 36 Person topics, speeches, mentions, news, ministerial diary and glossary
     timeout: 180000
 - tapOn: { id: person-speeches-toggle }
 - scrollUntilVisible:
-    element: { text: Machine brief }
+    element: { text: 'Machine-written\..*' }
     direction: DOWN
     speed: 20
     centerElement: true

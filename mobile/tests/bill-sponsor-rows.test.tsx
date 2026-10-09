@@ -4,7 +4,7 @@ import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { Catalogs } from '../src/api/catalogs';
 import * as d from '../src/api/catalogs';
 import { catalogs as runtime } from '../src/api/runtime';
-import { PartyChip, PersonRow, Portrait } from '../src/design/people';
+import { PartyLabel, PersonRow, Portrait } from '../src/design/people';
 import BillDetail from '../src/features/bills/BillDetail';
 import { RecordedParty } from '../src/features/bills/parts';
 import { sponsorRows } from '../src/features/bills/sponsors';
@@ -310,8 +310,9 @@ test('a former sponsor reads "Formerly" on the chip and the seat line', async ()
     partyStatus: 'former',
     place: 'Formerly member for Farrer · New South Wales',
   });
-  expect(row!.findByType(PartyChip).findByType(Text).props.children).toContain(
-    'Formerly LIB',
+  // A person row names the party in full (short labels are for tables).
+  expect(row!.findByType(PartyLabel).findByType(Text).props.children).toContain(
+    'Formerly Liberal',
   );
   expect(
     native(r.root, 'bill-sponsor-sussan-ley').props.accessibilityLabel,
