@@ -30,6 +30,9 @@ The nightly only brings new records in and publishes them.
   2c  bills: bills_fetch.py --parliaments 48 --refresh, then export_bills.py --out portal/public/bills
         Daily on the morning after reviewed sitting dates, Sunday otherwise, plus first-run catch-up; KB publication off.
         Retain regressed bills at HEAD; hold all on degraded coverage; fetch + export capped at 20 min.
+  2d  evidence: export_evidence_layers.py to fresh staging, then audit_evidence_export.py
+        Sunday plus first-run catch-up; matching source DB + four complete sidecars, all read-only; no KB access.
+        Retention/count/asset guards, timestamp suppression, then install; capped at 20 min + 60 s kill grace.
    3  bills: export_bills.py --fill-briefs, then verify_bill_briefs.py (no brief lost vs HEAD),
         recheck bill retention and keep_if_unchanged; any failure puts the bills group back to HEAD
   3b  export_division_pages.py and export_recent_votes.py: Worker SEO projections from the refreshed
@@ -63,7 +66,7 @@ no new data therefore still makes a small commit and a deploy. Running the night
 changes nothing.
 
 **Only data files are ever committed:** the paths in `scripts/vm/data_groups.sh` and nothing else: `portal/public/bills/*`,
-`votes.json`, `divisions/`, `seo/recent-votes.json`, `corpus.json`, `portal/wrangler.jsonc` (the two `CACHE_EPOCH` values), and the periodic groups' exports
+`votes.json`, `divisions/`, `seo/recent-votes.json`, `evidence/`, `corpus.json`, `portal/wrangler.jsonc` (the two `CACHE_EPOCH` values), and the periodic groups' exports
 (`graph/money*.json`, `graph/grants.federal.json` + `grants/federal/`, `suppliers*`, `agencies*`, `access.json`,
 `expenses.json`, `interests/`, `fits.json`, `speakers.json`, `parliamentarians.json`, `pay.json`, `discovery.json`,
 `entities/tax-charity/`). Adding an exported file means adding its path to one group there (the path must already be in
@@ -133,6 +136,8 @@ scripts/vm/ec2.sh stop                  # or just stop it
 | **KB push checkpoint** | `~/.cache/autoresearch/arag_sync_state.json` |
 | Fetcher caches | `~/.cache/autoresearch/{hansard/modern,bills_v2,ipea,qld_parliament,nsw_hansard,sa_hansard,tvfy}` |
 | Brief cache | `~/.cache/autoresearch/bill_speech_briefs.json` (+ `.checked.json`) |
+| Evidence inputs (must be provisioned as a matching complete set) | `~/.cache/autoresearch/evidence-{layers-full,places,identity-decisions,additional-mentions}.sqlite`; source defaults to `parli.db` |
+| Evidence catch-up state | `~/.cache/autoresearch/pipeline/evidence-refresh-v1.{pending,initialized}` (outside git) |
 | Secrets | `~/opax/.env` (mode 600), `~/.ssh/opax_deploy` (deploy key). Nothing in git |
 | Published run status | branch `nightly-status`, file `status.json` (public; a single force-pushed commit) |
 
@@ -666,12 +671,88 @@ hand from the Actions tab to test.
 limit) because the machine is off when the usual background timers would fire; those timers are switched off. The
 power-off after them is the reboot, so a new kernel takes effect at the next start.
 
+## Evidence refresh (weekly and first-run catch-up)
+
+`scripts/vm/evidence_refresh.sh` follows the bills marker/acceptance pattern and owns only
+the `evidence` data group. On acquisition-enabled runs it exports on Sunday in
+Australia/Sydney, or any day while `evidence-refresh-v1.pending` exists. The first such run
+creates both pending and initialized markers. Pending is removed only after the export,
+source audit, publication guard, data validation and portal gate succeed for evidence and
+the data commit succeeds (or no commit is needed). Initialized remains outside git, so a
+checkout sync cannot re-arm catch-up. A permanent evidence rollback, failed commit or
+interrupted run retains pending. An innocent trial rollback restores the evidence acceptance
+state with its backup, so unrelated test failures do not prevent completed catch-up.
+A failed push leaves the accepted local commit for the existing nightly retry path.
+`OPAX_NIGHTLY_SKIP_REFRESH=1` and `OPAX_NIGHTLY_SKIP_PERIODIC=1` skip the step and preserve
+pending; forced weekly/monthly groups do not alter its Sunday/catch-up cadence.
+
+**Inputs and readiness.** This is an export of already completed sidecars, with no mention
+rescan or sidecar update. The exporter reads `speeches` and `ext_press_releases`, and counts
+`government_grants`, from the corpus DB. The source audit additionally reads grants and
+`postcode_electorates`. The main sidecar supplies `entities`, `evidence`, `progress`,
+`identities` and `aliases`; places supplies `entities`, `evidence`, `progress`, `meta` and
+optional `representatives`; identity decisions supplies `decisions`; additional mentions
+supplies `entities`, `evidence` and `progress`. `passage_text.py` reads the committed
+`portal/public/parliamentarians.json` roster. Each SQLite input is opened with `mode=ro`;
+joins use temporary SQLite tables/views and may need temporary sorting disk space. No KB
+read or write is needed, and the step does not load credentials.
+
+The default source is `~/.cache/autoresearch/parli.db`. Override it with
+`OPAX_EVIDENCE_SOURCE` to use a frozen matching corpus snapshot. Sidecar defaults are
+`evidence-layers-full.sqlite`, `evidence-places.sqlite`, `evidence-identity-decisions.sqlite`
+and `evidence-additional-mentions.sqlite` in the same cache; their overrides are
+`OPAX_EVIDENCE_LAYERS`, `OPAX_EVIDENCE_PLACES`, `OPAX_EVIDENCE_DECISIONS` and
+`OPAX_EVIDENCE_ADDITIONAL`. All five files must exist. The exporter must satisfy exact
+source/progress counts, grant programme rowid, identity review and additional coverage;
+there is no incomplete override. A growing live DB with old sidecars is refused.
+The checked-in transfer inventory does not provision the sidecars: the orchestrator must
+supply a reviewed matching set before catch-up can succeed. This lane has not inspected or
+changed the refresh box, any real DB or KB. Python's standard library and the existing
+GNU timeout/git tools suffice, so the export can run on the box once these inputs exist.
+
+**Publication guard.** The fresh export and full source audit run in
+`pipeline/evidence-stage.<random>/export`, never over the shipped tree. The guard rejects
+incomplete/malformed output, inconsistent index/shard/stat totals, missing related IDs,
+invalid lookup entries, more than **2% loss** of either content or lookup shard counts or published entity/record
+connections, and **any lost public entity or excerpt ID** (including removal from its prior
+entity). Counts compare to HEAD, with exactly 98% allowed. The entire tree must stay at
+or below the smaller of HEAD's byte size and **163,453,646 bytes**; no automatic asset
+growth. The existing keep-if-unchanged semantics suppress timestamp-only changes in staging
+before the budget check, and sweep the installed tree. Metadata must reconcile as well.
+Ambiguous lookup aliases keep unpublished candidate IDs alongside a published target,
+matching the exporter's existing protection against attaching the wrong entity.
+All inputs remain read-only. On export/audit/guard/install/validation/test/commit failure,
+the evidence group returns to HEAD and newly written shards are cleaned. The staging
+directory is removed; an uncatchable kill is cleaned by the next checkout sync. Other data
+groups continue, with a failed step recorded in the nightly status.
+
+**Logs and budget.** The step logs elapsed seconds and its exit status for the combined
+export/audit/guard/install operation. `OPAX_EVIDENCE_TIMEOUT` defaults to **20 minutes**, plus
+GNU timeout's 60-second kill grace. After the final data gates, the log, status summary and
+commit message describe retained changes as `evidence: N changed shards, M records with
+text changed, F cleaned fields`. Shards include content and lookup JSON, excluding metadata.
+Records are distinct retained excerpt IDs whose `text` changed; fields count changed `text`
+and `details.excerpt` display fields, including whole-word window rebuilding, entity decoding,
+whitespace and join repairs. New excerpt IDs do not count as cleaned old fields.
+
+Full export/audit runtime is **unmeasured**. The earlier desktop text-only benchmark was
+29.985 seconds for 109,533 excerpts; it excluded source reads, million-row SQLite
+grouping/sorting, window reconstruction and auditing. Budgeting 20 minutes is a protective
+cap, not a timing claim. The old tree plus staging needs about 312 MiB, plus sidecars,
+SQLite temporary space and guard memory. The first retained content diff may be broad.
+Sidecars absent or stale will retain catch-up and report failure on each attempted night.
+The fixed byte ceiling can hold a correct export whose text expands. The exporter caps
+previews at 12 per entity: new records displacing any old excerpt also hold the whole export
+until retention policy or input changes receive review. Provisioning and the first timed run
+remain with the orchestrator; no production export was run to validate this lane.
+
 ## How long it takes (measured on the VM)
 
 | Night | Steps | Time |
 | --- | --- | --- |
 | Every night | daily refresh (Hansards, votes, links, KB push when new rows) | Previous ~17 min quiet-night measurement included a ~9 min bill step (2026-09-29); that bill work now follows the separate cadence below. A large push adds up to `OPAX_PUSH_TIMEOUT` (2 h) |
 | Mornings after sitting dates, Sundays, first-run catch-up | current-parliament bill fetch + full static export, then existing brief fill/verify | **Estimated 9–12 min** healthy-source addition; acquisition + export capped at **20 min + 60 s kill grace**. Estimate uses 296 current-parliament bills (~300 requests, >=7.1 min at 0.7/s), the earlier ~9 min bill-step measurement and 1–3 min export headroom; no live timing in this lane |
+| Sunday and evidence catch-up | complete evidence export + full source audit + retention/budget guard + installation | **Full runtime unmeasured**; capped at **20 min + 60 s kill grace**, with elapsed seconds logged; text-only desktop normalization took 29.985 s |
 | Every night, additional federal interests | fresh indexes, changed HTML/PDFs, cached PDF parsing/OCR, then export | ~5–10 min warm; `STEP_TIMEOUT=45m` for `interests_federal`, plus GNU timeout's 60-second kill grace |
 | Sunday: weekly | loaders 30 min (lobbyists 22 min, `frl_acts` 3 min, ABN-linked `contract_suppliers` 7 min, ACNC/ATO 1 min once loaded) + exports 8 min (`x_speakers` and `x_people` a speeches scan each, ~3 min) | ~40 min |
 | First Sunday: monthly, on top | `qld_contracts` 7 min, `diaries_qld` 10-13 min, IPEA 2 min, `speaker_hygiene` 11 min (a full `speeches` read), `grant_recipients` 4 min, exports 5 min | ~40 min |
@@ -689,6 +770,10 @@ still fits the 6-hour unit window. The previous estimate included bill work in t
 deliberate extra headroom rather than a new measured nightly duration. A source outage holds bills and is
 reported as a failed night while the other groups continue; a slow/export query or a growing parliament
 could need a reviewed budget adjustment. Brief filling retains its existing bounds and gate policy.
+Evidence adds at most another 21 minutes per attempted run: the two new timeout allowances
+bring the conservative ~5-hour budget to ~5 h 42 min. This leaves limited headroom under
+the 6-hour unit limit; source/audit disk contention and repeated portal attribution runs
+remain risks. An evidence timeout holds only evidence and lets the nightly continue.
 
 ## Why the refresh is written for a small, slow disk
 
@@ -790,7 +875,11 @@ python3 -m unittest scripts/test_update_corpus_manifest.py scripts/test_export_b
 # bills step: fixture git checkout, stubbed acquisition/export/fill, real guards/verifier/sweep
 python3 -m unittest scripts.vm.test_bills_refresh scripts.test_export_bills_sponsors tests.test_export_bill_divisions tests.test_bill_refresh_briefs
 PYTHONPATH=scripts/bills_registry python3 -m unittest scripts/bills_registry/test_refresh.py
-bash -n scripts/vm/nightly.sh scripts/vm/bills_refresh.sh scripts/daily_refresh.sh scripts/vm/test_nightly.sh
+bash -n scripts/vm/nightly.sh scripts/vm/bills_refresh.sh scripts/vm/evidence_refresh.sh scripts/vm/data_groups.sh scripts/daily_refresh.sh scripts/vm/test_nightly.sh
+
+# evidence: fixture SQLite source + four sidecars, complete export/audit and read-only proof
+python3 -m pytest -q scripts/vm tests/test_passage_text.py parli/tests/test_evidence_layers.py
+bash scripts/vm/test_nightly.sh
 
 # end-to-end scripts in a throwaway Ubuntu 24.04 (no network, no GitHub, no real KB)
 docker run --rm -v "$PWD":/src:ro ubuntu:24.04 bash -c \
@@ -826,6 +915,21 @@ failure, KB-sync suppression, DB path pinning, untouched votes and retained delt
 `test_nightly.sh` also covers two unrelated failing groups with temporary bills rollback and successful
 bill commit/catch-up consumption. No source
 fetch or production database/KB access is needed.
+
+The evidence additions cover Saturday catch-up and consumption, initialized weekdays,
+Sunday export, timestamp-only retention, missing inputs, export/audit failure, timeout,
+incomplete/malformed output, lost entity/excerpt IDs, shard/record shrink, asset overflow,
+partial installation cleanup, publish-only/skip-periodic preservation, permanent and
+innocent portal trial rollback, and failed-commit restoration/status counts.
+`test_evidence_refresh.py` checks the exact 98% boundaries and both byte ceilings with
+fixture data, and preserves ambiguous lookup candidates. `test_passage_text.py` runs the
+real exporter and source audit against a complete fixture source/four-sidecar set, proves
+the two known clipped rows are cleaned, and compares all five SQLite files byte for byte.
+There is no real source export or production access in these checks.
+The local evidence lane gate (10 October 2026) passed 251 nightly harness checks with
+0 failures, 190 Python tests (including 282 subtests), the search build and all 1,105
+Node tests, plus shell syntax checks. Node integration tests ran in a network namespace
+with only loopback enabled. No public evidence data changed during this validation.
 
 ## Not covered by the nightly
 

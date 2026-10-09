@@ -150,7 +150,7 @@ the deploy workflow's local build steps. `votes.json` remains byte-identical to
 37509561 with SHA-256
 `a77128dc0e1e1b3fdaa4bf84501e2c94af3125dea3cf0b2dffbc688a49d68546`.
 
-## Evidence publication and recommendation
+## Evidence publication through the reviewed nightly path
 
 Existing static evidence needs re-exporting to correct the raw fields consumed
 by clients. The producer is `scripts/export_evidence_layers.py`. The documented
@@ -164,40 +164,65 @@ Its output `~/.cache/autoresearch/evidence-final-20260908` was copied into
 and 230,007 grants. This provenance is documented in
 [evidence-enrichment-layers.md](evidence-enrichment-layers.md#final-export).
 
-There is **no checked-in scheduled evidence export**. Neither the daily/weekly
-scripts nor `scripts/vm/nightly.sh` invokes it. The documented refresh-box EC2
-schedule starts at 03:15 Australia/Sydney; the checked-in transfer inventory
-does not include these four sidecars, and the nightly's allowed data groups
-exclude evidence. No external schedule or refresh-box filesystem was inspected.
-Merging this fix therefore does not establish an automatic next-night evidence
-refresh. Worker responses change when the orchestrator deploys it.
+`scripts/vm/nightly.sh` now sources `evidence_refresh.sh` at step 2d. It exports
+**weekly on Sunday (Australia/Sydney)**, plus a one-time catch-up on the first
+acquisition-enabled run, including a weekday or Saturday. The `evidence` group
+owns `portal/public/evidence` for validation, rollback and staging. Pending and
+initialized markers live in `~/.cache/autoresearch/pipeline/`, outside git;
+catch-up is consumed only after evidence survives its gates and the commit
+succeeds (or no commit is needed). Failures and permanent rollbacks retain it.
+Publish-only and skip-periodic runs preserve it. Full marker, input and logging
+details are in [nightly-refresh.md](nightly-refresh.md#evidence-refresh-weekly-and-first-run-catch-up).
 
-Recommend **a one-off re-export through the reviewed refresh-box nightly path**.
-Do not run a desktop export or bypass the completeness gate. Before that run,
-the orchestrator must provide sidecars matching the source snapshot: either a
-frozen, matching complete set, or sidecars advanced to the current refresh-box
-DB. Old sidecars against a growing DB fail the exporter’s exact progress/count,
-grant-program and identity coverage checks. Repairing old excerpt windows needs
-no corpus rewrite or mention rescan when source and sidecars already match.
+The exporter needs **no KB access**. It reads the source DB's speeches/releases,
+counts grants, and reads the four completed sidecars above; the audit additionally
+reads grant fields and postcode/electorate mappings. All SQLite inputs use
+`mode=ro`; temporary joins/sorts do not rewrite source or sidecars. Python also
+reads the committed parliamentarian roster for name repairs. No source scan to
+rebuild mentions or sidecar writes is part of this step.
 
-The one-off needs an evidence data group with validation/rollback, export to a
-fresh empty staging directory, `scripts/audit_evidence_export.py` against the
-matching source, then installation and the existing timestamp-only suppression
-in `scripts/vm/keep_if_unchanged.py`. Publication remains with the orchestrator's
-nightly/deploy flow; this branch makes no production writes and runs no real DB
-exports.
+The orchestrator must provide a reviewed **matching complete input set** before
+the catch-up can succeed. The checked-in transfer inventory does not provision
+the four sidecars. The source defaults to the refresh-box `parli.db`, but
+`OPAX_EVIDENCE_SOURCE` can point to a frozen matching snapshot; the four sidecar
+paths also have explicit overrides. Old sidecars against a growing DB fail the
+exporter's exact progress/count, grant-program, identity and additional coverage
+checks. Missing inputs fail before export. No refresh-box filesystem, real DB,
+KB or external schedule was inspected or changed in this lane.
 
-Adding this to every nightly is **not yet a safe, small change**. The current
-tree is 163,453,646 bytes (155.88 MiB), 515 files: 256 evidence shards, 256 lookup
-shards, index, stats and identity links. One staged output plus the old tree is
-about 312 MiB before SQLite temporary sorting space. The round-1 local text-only benchmark
-normalized all 109,533 exported excerpts in 29.985 seconds, changing 22,561 rows
-across all 256 content shards. This excludes full-source reads, the exporter's
-million-row SQL grouping/sorting, rebuilding windows, and source audit; **full
-export runtime is unmeasured**, so a timed one-off is needed before budgeting a
-daily job. Expect a broad first content diff. For identical inputs thereafter,
-`generated_at` churn is confined to index/stats and can be suppressed by the
-existing sweep; the text fix itself does not change lookup/identity data.
+The step exports to a fresh empty staging directory and runs the full source
+audit before installation. The publication guard requires complete, reconciled
+metadata, retains every public entity and excerpt ID, and refuses more than 2%
+shrink in content/lookup shard counts or total published record connections.
+Its byte ceiling is the smaller of HEAD's size and **163,453,646 bytes**, the
+existing 155.88 MiB allocation (515 files: 256 content shards, 256 lookup shards,
+index, stats and identity links). Timestamp-only changes use the existing
+keep-if-unchanged semantics. Any evidence failure restores HEAD, cleans new
+shards and records a failed step while the rest of the nightly continues.
+
+The combined export/audit/guard/install budget is **20 minutes plus 60 seconds
+kill grace**, configurable with `OPAX_EVIDENCE_TIMEOUT`; the log records elapsed
+seconds. **Full runtime remains unmeasured**: fixture runs do not establish box
+timing. The round-1 desktop text-only benchmark normalized 109,533 excerpts in
+29.985 seconds, changing 22,561 rows across 256 content shards; it excluded
+source reads, million-row SQL grouping/sorting, window rebuilding and audit.
+One staged tree plus the old tree is about 312 MiB before sidecars, SQLite
+temporary space and guard memory. A first timed production run belongs to the
+orchestrator after review. Expect a broad first content diff; text expansion can
+hit the fixed byte ceiling, and new capped previews displacing old excerpt IDs
+will be held by retention. These refusals keep catch-up pending.
+
+Fixture DB tests reproduce the old `ransport Legislation Committee` prefix and
+`We know perso` suffix, then assert the real exporter produces
+`Transport Legislation Committee` and `We know …`, with identical cleaned `text`
+and `details.excerpt`, unchanged spans/hashes and byte-identical source/sidecar
+files. Nightly stub tests cover cadence, catch-up, source-audit failure, malformed
+or incomplete output, retention/count/budget refusals, timeout, partial-install
+cleanup, portal test attribution and commit failure. Logs/status/commit summaries
+count changed shards, distinct retained records whose text changed and changed
+display fields (text plus excerpt mirrors). These counts cover all display
+cleanup, not just historical-join rules. Production shards in this branch remain
+unchanged; their refresh and deployment stay in the reviewed nightly flow.
 
 ## Local validation
 
