@@ -110,10 +110,17 @@ const elements = (root: ReactTestInstance) =>
     )
     .filter(
       (n) =>
-        // Inside another accessible element, a node is not its own element.
-        !hasAccessibleAncestor(n),
+        // Inside another accessible element, a node is not its own element;
+        // under a hidden subtree, it is no element at all.
+        !hasAccessibleAncestor(n) && !hasHiddenAncestor(n),
     )
     .map((n) => n.props.testID as string);
+function hasHiddenAncestor(node: ReactTestInstance) {
+  for (let p = node.parent; p; p = p.parent)
+    if (typeof p.type === 'string' && p.props.accessibilityElementsHidden)
+      return true;
+  return false;
+}
 function hasAccessibleAncestor(node: ReactTestInstance) {
   for (let p = node.parent; p; p = p.parent)
     if (typeof p.type === 'string' && p.props.accessible === true) return true;
@@ -282,15 +289,28 @@ describe('the page survives rotation and resizing', () => {
 });
 
 describe('navigation on iPad', () => {
-  test('Back, Next, Skip and the finish; Back is drawn disabled on page 1', () => {
+  test('Back, Next, Skip and the finish; Back keeps its place unseen on page 1', () => {
     const onLeave = jest.fn();
     const { renderer } = render({ onLeave });
     const root = renderer.root;
     const back = () =>
       root.find((n) => n.props.testID === 'tour-back' && n.props.label);
+    const slot = () => one(root, 'tour-back-slot');
     expect(back().props.disabled).toBe(true);
+    expect(slot().props).toMatchObject({
+      style: { opacity: 0 },
+      pointerEvents: 'none',
+      accessibilityElementsHidden: true,
+      importantForAccessibility: 'no-hide-descendants',
+    });
     press(root, 'tour-next');
     expect(back().props.disabled).toBe(false);
+    expect(slot().props).toMatchObject({
+      style: null,
+      pointerEvents: 'auto',
+      accessibilityElementsHidden: false,
+      importantForAccessibility: 'auto',
+    });
     expect(back().props.accessibilityHint).toBe('Page 1 of 5');
     press(root, 'tour-back');
     expect(position(root)).toBe('Page 1 of 5');
@@ -393,6 +413,12 @@ describe('VoiceOver on iPad', () => {
       'tour-page-about',
       'tour-progress',
       'tour-skip',
+      'tour-next',
+    ]);
+    // From page 2, Back sits between Skip and Next.
+    press(root, 'tour-next');
+    expect(elements(root).slice(-3)).toEqual([
+      'tour-skip',
       'tour-back',
       'tour-next',
     ]);
@@ -452,6 +478,21 @@ describe('VoiceOver on iPad', () => {
       .map((n) => n.props.children as string)
       .join(' ');
     expect(words).not.toMatch(/\$\s?\d/);
+    // Search opens an Example profile beside its suggestions, never an
+    // empty pane.
+    const search = one(root, 'tour-pad-scene-search');
+    const shown = search
+      .findAll((n) => typeof n.props.children === 'string')
+      .map((n) => n.props.children as string);
+    expect(shown).not.toContain('Nothing open');
+    expect(shown).toEqual(
+      expect.arrayContaining([
+        'Example member',
+        'Member for Example',
+        'Voting record',
+        'Declared interests',
+      ]),
+    );
     act(() => renderer.unmount());
   });
 

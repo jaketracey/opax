@@ -67,7 +67,7 @@ export const padSceneSummaries: Record<WelcomePage['id'], string> = {
   'bills-today':
     'Example: a bill on iPad, beside the list of bills, with its labelled machine summary and key dates.',
   search:
-    'Example: Search on iPad, with suggestions for people, electorates and bills.',
+    'Example: Search on iPad, with suggestions for people, electorates and bills, and a member’s profile opened beside them.',
 };
 
 /** VoiceOver's reading of a page: its position, title and words. */
