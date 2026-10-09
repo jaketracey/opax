@@ -1,7 +1,12 @@
-// One text pipeline for every passage or snippet the app draws: Ask sources,
-// record readers, search snippets and "What they talk about". It never splits
-// words the source already joined ("senatorsinterjecting"): with no tag left
-// between them, any split is a guess. Those are fixed in the web exporter.
+// Two text pipelines for the passages and snippets the app draws.
+// - passageText: text still raw from the source (the static evidence shards,
+//   report passages, catalog rows, bill text): tags out, entities decoded once.
+// - serverPassage: text the Worker has already normalized (/ask sources and
+//   evidence excerpts, /api/search snippets, /api/resource text). Its entities
+//   are decoded and its cuts are word-bounded and marked "…", so the app only
+//   lays it out: decoding again would show a literal "&#38;" as "&".
+// Neither splits words the source already joined ("senatorsinterjecting"):
+// with no tag left between them, any split is a guess. The web fixes those.
 
 const named: Record<string, string> = {
   amp: '&',
@@ -130,39 +135,60 @@ export interface PassageOptions {
   /** Longest passage drawn, in characters, cut on a word with an ellipsis. */
   max?: number;
   /**
-   * The length the source slices passages to before they reach the app (the
-   * Ask Worker cuts each source's passage at 600 characters, mid-word). A
-   * passage of exactly that length ends on its last whole word, with an
-   * ellipsis, unless it already ends a sentence.
+   * The length the source sliced passages to before they reached the app
+   * (Ask answers saved before 9 Oct cut each source's raw passage at 600
+   * characters, mid-word). A passage of exactly that length ends on its last
+   * whole word, with an ellipsis, unless it already ends a sentence.
    */
   slicedAt?: number;
 }
 
+/** Collapses whitespace: one blank line between paragraphs, or one line. */
+function layout(text: string, paragraphs: boolean) {
+  const s = text
+    .replace(/\r\n?|\u2028|\u2029/g, '\n')
+    .replace(/\u00ad/g, '')
+    .replace(/[^\S\n]+/g, ' ')
+    .replace(/ ?\n ?/g, '\n');
+  return paragraphs
+    ? s.replace(/\n{3,}/g, '\n\n').trim()
+    : s.replace(/\s+/g, ' ').trim();
+}
+
+/** The app's own length cap, cut on a word with an ellipsis. */
+function cap(s: string, max: number | undefined) {
+  if (max === undefined || s.length <= max) return s;
+  // A space just past the limit means the last word fits whole.
+  const head = s.slice(0, max);
+  return endOnWord(/\s/.test(s[max]!) ? `${head} ` : head);
+}
+
+/** Raw source text: tags out, entities decoded once, cuts closed on a word. */
 export function passageText(
   raw: string | null | undefined,
   { paragraphs = false, max, slicedAt }: PassageOptions = {},
 ) {
   const source = String(raw ?? '');
-  let s = decodeEntities(stripTags(source))
-    .replace(/\r\n?|\u2028|\u2029/g, '\n')
-    .replace(/\u00ad/g, '')
-    .replace(/[^\S\n]+/g, ' ')
-    .replace(/ ?\n ?/g, '\n');
-  s = paragraphs
-    ? s.replace(/\n{3,}/g, '\n\n').trim()
-    : s.replace(/\s+/g, ' ').trim();
+  let s = layout(decodeEntities(stripTags(source)), paragraphs);
   const ended = /[.!?…]["'”’)]*$/.test(s);
-  // A search window opens with an ellipsis and can open and close mid-word
-  // ("…nd is standing", "secret auctions at ope"): whole words only.
+  // An old search window opens with an ellipsis and can open and close
+  // mid-word ("…nd is standing", "secret auctions at ope"): whole words only.
   const window = s.startsWith('…');
   if (window) s = s.replace(/^…\p{Ll}\S*\s+(?=\S)/u, '…');
   const sliced =
     !ended &&
     (window || (slicedAt !== undefined && source.length === slicedAt));
-  if (max !== undefined && s.length > max) {
-    // A space just past the limit means the last word fits whole.
-    const head = s.slice(0, max);
-    s = endOnWord(/\s/.test(s[max]!) ? `${head} ` : head);
-  } else if (sliced) s = endOnWord(s);
-  return s;
+  if (max !== undefined && s.length > max) return cap(s, max);
+  return sliced ? endOnWord(s) : s;
+}
+
+/**
+ * Worker-normalized text, drawn as sent: no tag stripping, no entity decode
+ * and no trimming at its "…" markers, which only stand for omitted text.
+ */
+export function serverPassage(
+  text: string | null | undefined,
+  { paragraphs = false, max }: Omit<PassageOptions, 'slicedAt'> = {},
+) {
+  return cap(layout(String(text ?? ''), paragraphs), max);
 }

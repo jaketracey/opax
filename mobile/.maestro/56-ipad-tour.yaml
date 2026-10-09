@@ -23,9 +23,9 @@ name: 56 iPad welcome tour, picture beside the words in landscape and above them
     id: tour-page-about
 - assertVisible:
     id: tour-skip
-- assertVisible:
+# Page 1: Back keeps its place unseen, hidden from accessibility.
+- assertNotVisible:
     id: tour-back
-    enabled: false
 - waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/56-landscape-1
 - tapOn:
@@ -105,9 +105,9 @@ name: 56 iPad welcome tour, picture beside the words in landscape and above them
 - extendedWaitUntil:
     visible: Page 1 of 5
     timeout: 10000
-- assertVisible:
+# Page 1: Back keeps its place unseen, hidden from accessibility.
+- assertNotVisible:
     id: tour-back
-    enabled: false
 - waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/56-portrait-1
 # Finish: Choose your electorate opens Your MP's seat chooser.

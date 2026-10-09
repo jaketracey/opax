@@ -4,7 +4,7 @@ import { router } from 'expo-router';
 import { peopleDepth } from '../../api/runtime';
 import type { PersonProfile } from '../../api/person-identity';
 import type { RecordResult } from '../../api/client';
-import { passageText } from '../../api/passage-text';
+import { serverPassage } from '../../api/passage-text';
 import {
   AsAtLine,
   ChoiceChips,
@@ -367,8 +367,8 @@ export function RecordSection({
                   (kind === 'speeches'
                     ? cleanPassage(r.snippet)
                     : kind === 'party'
-                      ? passageText(r.snippet, { max: 240 })
-                      : passageText(r.snippet, { max: 220 })) ||
+                      ? serverPassage(r.snippet, { max: 240 })
+                      : serverPassage(r.snippet, { max: 220 })) ||
                   'Open the speech to read the record.'}
               </Text>
             </Group>

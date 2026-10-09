@@ -1,0 +1,40 @@
+{
+  "note": "Server-format excerpts: real record text (speech 796901 text_clean from the web passage fixture; speech 1249416 evidence excerpt) put through the web Worker's normalizePassage and passageWindow at origin/main b1085cdf. Offline; no network.",
+  "rows": [
+    {
+      "id": "search-opens-mid-paragraph-ends-on-dash",
+      "speech_id": 796901,
+      "route": "/api/search snippet",
+      "input": "paragraph 2 of text_clean, window from \"Without\"",
+      "excerpt": "… Without it unemployment would be far worse. We know that winding back the stimulus would lead to another 100,000 Australians—"
+    },
+    {
+      "id": "search-opens-mid-paragraph-ends-on-colon",
+      "speech_id": 1249416,
+      "route": "/api/search snippet",
+      "input": "paragraph 1 of the evidence excerpt, window from \"Meat\"",
+      "excerpt": "… Meat & Livestock Australia Limited] Senator CANAVAN:"
+    },
+    {
+      "id": "ask-cut-at-600",
+      "speech_id": 796901,
+      "route": "/api/ask source snippet",
+      "input": "whole text_clean from the start",
+      "excerpt": "My question is to Senator Arbib, the Minister Assisting the Prime Minister on Government Service Delivery and Minister for Employment Participation. Can the minister inform the Senate how the government’s nation-building economic stimulus is building productive capacity in the economy? In particular, how is the stimulus helping apprentices and providing opportunities for training in key growth areas of our economy? How will this increased capacity assist the development of large-scale natural resources projects inNorthern Australia? What would be the effect of stopping the stimulus or …"
+    },
+    {
+      "id": "ask-opens-and-cuts",
+      "speech_id": 796901,
+      "route": "/api/ask source snippet",
+      "input": "whole text_clean from \"Withdrawing\"",
+      "excerpt": "… Withdrawing the stimulus would see something like 100,000 Australians lose their jobs.The Liberaland National parties do not want to talk about the stimulus and they do not want to talk about employment because, as Mr Hockeysaid, jobs are not their priority.\n\nSenator Ian Macdonald interjecting—\n\nOrder! Constant interjection is disorderly, Senator Macdonald.\n\nSenator Sherry interjecting—\n\nOrder! Senator Sherry. On both sides, I am waiting for silence before I ask Senator Arbib to continue.\n\nSomething else that is not their priority is infrastructure. We know that infrastructure funding …"
+    },
+    {
+      "id": "literal-entity-text",
+      "speech_id": null,
+      "route": "normalizePassage",
+      "input": "web fixture case: &#38; &amp; &nbsp; &#x1F600; &mdash; &amp;#38; &lt;b&gt;literal&lt;/b&gt;",
+      "excerpt": "& & 😀 — &#38; <b>literal</b>"
+    }
+  ]
+}

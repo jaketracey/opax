@@ -2,7 +2,7 @@ import { headerItems } from '../../navigation/chrome';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../../api/runtime';
-import { passageText } from '../../api/passage-text';
+import { passageText, serverPassage } from '../../api/passage-text';
 import type { PersonSlug } from '../../api/catalogs';
 import { chamberName, jurisdictionName } from '../../design/parliament';
 import {
@@ -36,7 +36,12 @@ import { sponsorSlug } from '../bills/sponsors';
 import { DocumentAsk } from '../ask/DocumentAsk';
 import { Records } from './data';
 import { records } from './runtime';
-import { metaString, textChunks, type DocumentRecord } from './model';
+import {
+  isVerbatimText,
+  metaString,
+  textChunks,
+  type DocumentRecord,
+} from './model';
 import { titleSubject } from './citations';
 import { copyText } from './actions';
 import { ReaderList, readerChunkTarget } from './ReaderList';
@@ -120,7 +125,9 @@ export default function DocumentReader({
   const parts = useMemo(
     () =>
       textChunks(
-        passageText(doc?.text, { paragraphs: true }),
+        (doc && isVerbatimText(doc) ? passageText : serverPassage)(doc?.text, {
+          paragraphs: true,
+        }),
         readerChunkTarget,
       ).map((text, index) => ({
         id: String(index),
@@ -460,7 +467,7 @@ function Similar({ doc }: { doc: DocumentRecord }) {
                   />
                   <Text variant="metadata">{row.speaker}</Text>
                   <Text selectable>
-                    {passageText(row.snippet) || 'No passage available.'}
+                    {serverPassage(row.snippet) || 'No passage available.'}
                   </Text>
                   <Text variant="fine">Passage from the record</Text>
                   <AsAtLine asOf={row.date} citation="Related source record" />

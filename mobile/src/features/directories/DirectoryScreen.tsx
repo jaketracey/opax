@@ -401,6 +401,7 @@ function DirectoryView({ kind }: { kind: keyof typeof titles }) {
             <>
               <View style={styles.summary}>
                 <Text
+                  wordSafe
                   variant="metadata"
                   testID="directory-count"
                   style={styles.grow}

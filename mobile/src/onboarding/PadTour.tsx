@@ -535,15 +535,27 @@ function Controls({
       onPress={() => onLeave('skip')}
     />
   );
+  // Page 1 has nothing to go back to. A disabled capsule there still read as
+  // a live button, so Back keeps its place unseen, out of reach of touch,
+  // the keyboard and VoiceOver, and Next never moves.
+  const first = page === 0;
   const back = (
-    <Button
-      label="Back"
-      icon="chevron.left"
-      disabled={page === 0}
-      accessibilityHint={page > 0 ? `Page ${page} of ${count}` : undefined}
-      testID="tour-back"
-      onPress={() => onTurn(page - 1)}
-    />
+    <View
+      style={first ? styles.unseen : null}
+      pointerEvents={first ? 'none' : 'auto'}
+      accessibilityElementsHidden={first}
+      importantForAccessibility={first ? 'no-hide-descendants' : 'auto'}
+      testID="tour-back-slot"
+    >
+      <Button
+        label="Back"
+        icon="chevron.left"
+        disabled={first}
+        accessibilityHint={first ? undefined : `Page ${page} of ${count}`}
+        testID="tour-back"
+        onPress={() => onTurn(page - 1)}
+      />
+    </View>
   );
   const next = (
     <Button
@@ -633,6 +645,7 @@ function Indicator({
 const styles = StyleSheet.create({
   pad: { flex: 1 },
   grow: { flex: 1 },
+  unseen: { opacity: 0 },
   fill: { ...StyleSheet.absoluteFill },
   masthead: {
     flexDirection: 'row',

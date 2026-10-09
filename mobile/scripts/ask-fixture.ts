@@ -5,8 +5,7 @@ import { resolve } from 'node:path';
 import pin from './fixtures/ask-recorded.json';
 import followups from './fixtures/ask-followups.json';
 import clarify from './fixtures/ask-clarify.json';
-import passages from './fixtures/ask-passages.json';
-import recordFixtures from './fixtures/records/contracts.json';
+import serverExcerpts from './fixtures/search/server-excerpts.json';
 const recorded = readFileSync(resolve(__dirname, 'fixtures/ask-recorded.sse'));
 if (
   recorded.length !== pin.size ||
@@ -151,31 +150,32 @@ export async function askFixture(
     res.end();
     return true;
   }
-  // TestFlight 9 Oct: source passages as the web exports them (an entity, a
-  // stray space after a paragraph break, joined words, a 600-character cut)
-  // so the sources pane's text can be checked. Fixture reading only.
+  // Source passages as the Worker sends them since 9 Oct: real record text
+  // through the web's normalizePassage and passageWindow (decoded once, so a
+  // literal "&#38;" is the record's own text; cuts marked "…"). The sources
+  // pane must draw them as sent. Fixture reading only.
   if (input.question === 'fixture passages') {
-    const reader = (
-      recordFixtures.responses as Record<string, { text?: string }>
-    )['/api/resource/speech-1205524']!.text!;
-    const sources = [
-      ...passages.sources.map((p, i) => ({
+    const rows = [
+      [
+        'search-opens-mid-paragraph-ends-on-colon',
+        'speech-1249416',
+        '2026-05-28',
+      ],
+      ['literal-entity-text', null, null],
+      ['ask-opens-and-cuts', 'speech-796901', '2009-11-17'],
+    ] as const;
+    const sources = rows
+      .map(([id, slug, date], i) => ({
         resource: `fixture-passage-${i + 1}`,
-        title: `Fixture passage: speech ${p.source_id}`,
-        slug: `speech-${p.source_id}`,
-        href: `/doc/speech-${p.source_id}`,
-        snippet: p.text,
-        date: p.date,
-      })),
-      {
-        resource: 'fixture-passage-3',
-        title: 'Fixture passage: synthetic reader text, cut at 600',
-        slug: 'speech-1205524',
-        href: '/doc/speech-1205524',
-        snippet: reader.trim().slice(0, 600),
-        date: null,
-      },
-    ].map((s) => ({ ...s, cited: true, state: 'federal' }));
+        title: slug
+          ? `Fixture passage: ${slug.replace('-', ' ')}`
+          : 'Fixture passage: literal entity text',
+        slug: slug ?? 'speech-1205524',
+        href: `/doc/${slug ?? 'speech-1205524'}`,
+        snippet: serverExcerpts.rows.find((r) => r.id === id)!.excerpt,
+        date,
+      }))
+      .map((s) => ({ ...s, cited: true, state: 'federal' }));
     res.writeHead(200, {
       'Content-Type': 'text/event-stream; charset=utf-8',
       'Cache-Control': 'no-store',

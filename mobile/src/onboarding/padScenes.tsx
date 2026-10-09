@@ -12,7 +12,6 @@ import {
   PersonRow,
   Portrait,
   Section,
-  SplitEmpty,
   Text,
   type SFSymbol,
 } from '../design/primitives';
@@ -423,6 +422,17 @@ function ProfileBlock({
   );
 }
 
+/** An opened profile's head: portrait, name and seat. */
+function ProfileHead() {
+  return (
+    <Group gap={rhythm.tight}>
+      <Portrait size="profile" />
+      <Heading level={1}>Example member</Heading>
+      <Text variant="metadata">Member for Example</Text>
+    </Group>
+  );
+}
+
 function ProfileScene({ width }: { width: number }) {
   const sidebar = width >= SIDEBAR_FRAME;
   return (
@@ -457,11 +467,7 @@ function ProfileScene({ width }: { width: number }) {
         detail={
           <>
             <Reveal order={2}>
-              <Group gap={rhythm.tight}>
-                <Portrait size="profile" />
-                <Heading level={1}>Example member</Heading>
-                <Text variant="metadata">Member for Example</Text>
-              </Group>
+              <ProfileHead />
             </Reveal>
             <Reveal order={3}>
               <View style={styles.blocks}>
@@ -624,7 +630,7 @@ function SearchScene({ width }: { width: number }) {
                 <PersonRow
                   name="Example member"
                   place="Member for Example"
-                  selected={false}
+                  selected
                   onPress={noop}
                 />
               </Section>
@@ -653,9 +659,27 @@ function SearchScene({ width }: { width: number }) {
           </>
         }
         detail={
-          <Reveal order={4} style={styles.grow}>
-            <SplitEmpty icon="magnifyingglass" title="Nothing open" />
-          </Reveal>
+          // The member the search opened, beside the suggestions: the head
+          // of the profile and two of its sections.
+          <>
+            <Reveal order={4}>
+              <ProfileHead />
+            </Reveal>
+            <Reveal order={5}>
+              <View style={styles.blocks}>
+                <ProfileBlock
+                  title="Voting record"
+                  accent="votes"
+                  citation="They Vote For You"
+                />
+                <ProfileBlock
+                  title="Declared interests"
+                  accent="interests"
+                  citation="Register of Members’ Interests"
+                />
+              </View>
+            </Reveal>
+          </>
         }
       />
     </Frame>

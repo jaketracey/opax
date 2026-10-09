@@ -59,6 +59,10 @@ export function decodeDocument(value: unknown): DocumentRecord {
     text: text(raw.text),
   };
 }
+/** /api/resource normalizes every text but bill text, which it sends
+ * verbatim (entities and all) for the web's /doc reader. */
+export const isVerbatimText = (doc: DocumentRecord) =>
+  doc.labels.kind === 'bill_text' || doc.slug.startsWith('bill-text-');
 export const metaString = (doc: DocumentRecord, key: string) =>
   typeof doc.metadata[key] === 'string' ? (doc.metadata[key] as string) : '';
 export function decodeRecent(value: unknown) {
