@@ -1,0 +1,17 @@
+{
+  "provenance": "TestFlight 9 Oct passage text check. Snippets 1 and 2 are the web's pinned evidence excerpts as exported (portal/public/evidence/b8.json and 25.json, field text, from speeches.text_clean), quoted verbatim with their entity, stray paragraph space and joined words. Source 3 is the synthetic reader fixture text (records/contracts.json, speech-1205524) sliced as the Ask Worker slices a passage: trim, then the first 600 characters.",
+  "sources": [
+    {
+      "source_id": "1249416",
+      "date": "2026-05-28",
+      "evidence": "portal/public/evidence/b8.json",
+      "text": "ransport Legislation Committee 28/05/2026 Estimates AGRICULTURE, FISHERIES AND FORESTRY PORTFOLIO Meat &#38; Livestock Australia Limited] Senator CANAVAN:\n\n So Cattle Australia is on that?"
+    },
+    {
+      "source_id": "796901",
+      "date": "2009-11-17",
+      "evidence": "portal/public/evidence/25.json",
+      "text": " was a project that supported jobs on the Sunshine Coast, not just jobs but much needed school infrastructure. At the opening, Katie O’Sullivan, the captain of Yandina State School, said—\n\nOpposition Senators:\n\nOpposition senatorsinterjecting—\n\nOrder! When the interjections cease, we will continue.\n\nThe school captain said:\n\nWe know perso"
+    }
+  ]
+}
