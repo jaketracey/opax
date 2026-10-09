@@ -1,0 +1,314 @@
+{
+  "$description": "OPAX design tokens: the one source for the web (portal/public/tokens.css and the generated :root region of style.css) and the app (mobile/src/design/tokens.generated.ts, re-exported by palette.ts and tokens.ts). Edit this file, then run `node scripts/build_tokens.mjs`; tests fail while a generated file is stale. Values are CSS px on the web and points on iOS (dp on Android): one CSS pixel is one point. Names: a colour role's key is its app name; its web name is `--` plus the key in kebab case unless `web.name` says otherwise. References like {inkSoft} name another colour role and resolve in the same theme. Rules for using these: docs/design/DESIGN-REVIEW-2026-10.md section 2. Names, aliases and deprecations: docs/design/TOKENS.md.",
+  "$extensions": {
+    "opax.version": "2026-10-10",
+    "opax.rules": [
+      "Screens use role names, never hex values.",
+      "One accent per view. The accent belongs to the screen's subject, not to each section.",
+      "Party colour is a dot beside a readable party name, never colour alone, never a chart series.",
+      "inkFaint is for paper and raised surfaces only; use inkSoft on sunken surfaces and washes.",
+      "bronze is never text. Text that touches the record uses bronzeInk.",
+      "States change roles, never opacity."
+    ]
+  },
+
+  "themes": {
+    "$description": "Both platforms are light-only (app decision 2; the web sets color-scheme: light). Every colour role still carries a dark value, held to the same contrast rules, so a dark theme is a wiring change rather than a design pass. Increase Contrast (iOS) applies today; the web's prefers-contrast: more block is written only when `web.prefersContrast` is true.",
+    "light": { "rendered": true },
+    "dark": { "rendered": false },
+    "web": { "colorScheme": "light", "prefersContrast": false }
+  },
+
+  "color": {
+    "surface": {
+      "paper": { "$value": "#FAF9F6", "dark": "#161915", "$description": "Page ground." },
+      "raised": { "$value": "#FFFFFF", "dark": "#20241E", "web": { "name": "--paper-raised" }, "$description": "Cards, sheets, fields, popovers." },
+      "sunken": { "$value": "#F1EFE8", "dark": "#0E100D", "web": { "name": "--paper-sunken" }, "$description": "Subdued surface: pressed rows, the empty portrait circle, skeleton bars." }
+    },
+    "text": {
+      "ink": { "$value": "#23271F", "dark": "#ECEAE2", "$description": "Primary text. 14.4:1 on paper." },
+      "inkSoft": { "$value": "#575C52", "dark": "#A9AEA2", "highContrast": "{ink}", "$description": "Secondary text, metadata, fine print. 6.5:1 on paper, 6.0:1 on sunken." },
+      "inkFaint": { "$value": "#6F7468", "dark": "#8A8F84", "highContrast": "{inkSoft}", "$description": "Tertiary text on paper and raised only (4.56 and 4.80:1). Fails on sunken and on washes." },
+      "onNavy": { "$value": "#FFFFFF", "dark": "#0E1A28", "$description": "Text and icons on a navy (or danger) fill." },
+      "onNavySoft": { "$value": "#B7C6D9", "dark": "#2A3D53", "highContrast": "{onNavy}", "$description": "Secondary text on navy. 8.4:1." }
+    },
+    "brand": {
+      "navy": { "$value": "#142A43", "dark": "#9CB9DB", "$description": "Structure and the one primary action per view." },
+      "navyRaised": { "$value": "#1D3A5C", "dark": "#B9CDE6", "$description": "Pressed and hover on navy." },
+      "navyWash": { "$value": "#E4E6E7", "dark": "#25303D", "$description": "Secondary button fill; the people accent's wash." },
+      "bronze": { "$value": "#A0761B", "dark": "#A87D2A", "$description": "Rules, chart marks and the masthead rule. Never text (3.9:1)." },
+      "bronzeInk": { "$value": "#8A5A12", "dark": "#D9A84A", "highContrast": "#5C4318", "darkHighContrast": "#EBC57F", "$description": "Record links, tags, the focus ring on paper. 5.6:1." },
+      "bronzeWash": { "$value": "#ECE4D3", "dark": "#332A1B", "web": { "value": "rgba(160, 118, 27, 0.16)" }, "$description": "Tag fill, search highlight. The web keeps the translucent bronze, which flattens to this over paper." },
+      "bronzeRule": { "$value": "rgba(160, 118, 27, 0.55)", "dark": "rgba(217, 168, 74, 0.55)", "app": { "omit": true }, "$description": "Link underlines on the web: present, not heavy. The app has none (links are rows)." },
+      "bronzeBright": { "$value": "#D9A84A", "dark": "#5E400B", "$description": "Bronze legible on navy: the mark, the focus ring on navy." }
+    },
+    "line": {
+      "dividerDefault": { "$value": "#B8B4A8", "dark": "#4C5047", "$description": "The top rule of a section; major content boundaries. Decorative (1.97:1)." },
+      "dividerSubtle": { "$value": "#DFDCD2", "dark": "#30342D", "highContrast": "{dividerDefault}", "$description": "Between rows, under subheadings, card outlines. Decorative (1.30:1)." },
+      "lineControl": { "$value": "#8D897B", "dark": "#7E8378", "$description": "Field and segmented-control boundaries only (3.33:1). Never a content divider." }
+    },
+    "feedback": {
+      "danger": { "$value": "#A4262C", "dark": "#F08C8E", "$description": "Errors and destructive actions. 6.9:1." },
+      "dangerPressed": { "$value": "#86191F", "dark": "#F6AEB0", "$description": "A pressed destructive fill (the End call button)." }
+    },
+    "accent": {
+      "$description": "Category inks and washes. An ink is AA text on paper, raised, sunken and its own wash; ink and inkSoft are AA on every wash. Use only for the 2pt section mark, the display figure of a block, an icon tile and a Today tile: never links, rules, chip fills or body text.",
+      "moneyInk": { "$description": "Money: donations, grants, contracts, pay.", "$value": "#2B6447", "dark": "#86C6A0", "highContrast": "#29553D", "darkHighContrast": "#A9DDBD" },
+      "moneyWash": { "$description": "The money tile and header wash.", "$value": "#E5EAE5", "dark": "#1D2C24" },
+      "votesInk": { "$description": "Votes: divisions and voting records.", "$value": "#3A4C96", "dark": "#A9B5F0", "highContrast": "#374684", "darkHighContrast": "#C6CEF8" },
+      "votesWash": { "$description": "The votes tile and header wash.", "$value": "#E7E8EC", "dark": "#232839" },
+      "interestsInk": { "$description": "Interests: declared interests and registers.", "$value": "#7B3A63", "dark": "#E2A3CA", "highContrast": "#72385C", "darkHighContrast": "#EFC3DF" },
+      "interestsWash": { "$description": "The interests tile and header wash.", "$value": "#EDE6E7", "dark": "#33232D" },
+      "billsInk": { "$description": "Bills: bills, stages, exposure drafts; also the machine-written label.", "$value": "#1F5F6B", "dark": "#7FC4D0", "highContrast": "#205158", "darkHighContrast": "#A6DAE3" },
+      "billsWash": { "$description": "The bills tile and header wash.", "$value": "#E4EAE8", "dark": "#1B2D30" }
+    }
+  },
+
+  "category": {
+    "$description": "A screen's subject and its accent pair (role names). People and places share navy.",
+    "money": { "ink": "moneyInk", "wash": "moneyWash" },
+    "votes": { "ink": "votesInk", "wash": "votesWash" },
+    "interests": { "ink": "interestsInk", "wash": "interestsWash" },
+    "bills": { "ink": "billsInk", "wash": "billsWash" },
+    "people": { "ink": "navy", "wash": "navyWash" },
+    "leads": { "ink": "bronzeInk", "wash": "bronzeWash" }
+  },
+
+  "status": {
+    "$description": "Status labels: bill stage, division outcome, vote side. Always a word; the tone only reinforces it.",
+    "done": { "ink": "moneyInk", "wash": "moneyWash", "$description": "Passed, agreed to, became law, voted for." },
+    "active": { "ink": "billsInk", "wash": "billsWash", "$description": "Before parliament, in committee." },
+    "ended": { "ink": "inkSoft", "wash": "sunken", "$description": "Lapsed, negatived, withdrawn, voted against." },
+    "draft": { "ink": "bronzeInk", "wash": "bronzeWash", "$description": "Exposure draft." }
+  },
+
+  "chart": {
+    "mark": { "role": "bronze", "$description": "The subject series: bars, lines, the one highlighted value." },
+    "baseline": { "role": "dividerSubtle", "$description": "Tracks, comparison series, gridlines." },
+    "contrast": { "role": "inkFaint", "$description": "The second series where a chart compares two (noes against ayes)." },
+    "industry": {
+      "$description": "The money map's 16 industry clusters, in legend order: a hue and an ink darkened for 4.5:1 text on paper. Light only. Copied today in portal/graph/palette.ts, app.js, ledger.js, home.html and the app's features/money/ported/palette.ts; those move to these values in a later pass.",
+      "parties": { "colour": "#9AA0A8", "ink": "#5A616B" },
+      "unions": { "colour": "#E15759", "ink": "#A93843" },
+      "finance": { "colour": "#4E79A7", "ink": "#365F86" },
+      "individuals": { "colour": "#79706E", "ink": "#57504E" },
+      "property": { "colour": "#F28E2B", "ink": "#A85A0F" },
+      "mining & energy": { "colour": "#9C755F", "ink": "#6E4F3D" },
+      "hospitality": { "colour": "#EDC948", "ink": "#7A6414" },
+      "media & tech": { "colour": "#76B7B2", "ink": "#3E7A75" },
+      "health & pharma": { "colour": "#59A14F", "ink": "#3B7134" },
+      "gambling": { "colour": "#B07AA1", "ink": "#7D5273" },
+      "legal & lobbying": { "colour": "#6A51A3", "ink": "#4A3775" },
+      "defence & security": { "colour": "#37474F", "ink": "#263238" },
+      "agriculture": { "colour": "#6B8E23", "ink": "#4A6318" },
+      "retail": { "colour": "#FF9DA7", "ink": "#B04A56" },
+      "tobacco & alcohol": { "colour": "#A65628", "ink": "#7A3C1B" },
+      "other": { "colour": "#999966", "ink": "#6B6B3D" }
+    }
+  },
+
+  "party": {
+    "$description": "One set for both platforms: a dot (10pt, always beside the party name, 3:1 on paper and raised) and a 12% wash for a party's own header (ink and inkSoft stay AA on it). `web` is the web's short key (--party-alp, --party-alp-wash). The money-map exporters still draw their own party colours until pass 2D moves them here.",
+    "labor": { "dot": "#B02E33", "wash": "#F1E1DF", "dark": { "dot": "#E8696D", "wash": "#3A2324" }, "web": "alp" },
+    "liberal": { "dot": "#1D4F91", "wash": "#DFE5EA", "dark": { "dot": "#7EA6E6", "wash": "#1F2A3B" }, "web": "lib" },
+    "nationals": { "dot": "#8F6E00", "wash": "#EDE8D8", "dark": { "dot": "#CFA738", "wash": "#332D1A" }, "web": "nat" },
+    "lnp": { "dot": "#4A90D9", "wash": "#E5ECF3", "dark": { "dot": "#7DB4EB", "wash": "#1E2B38" }, "web": "lnp" },
+    "greens": { "dot": "#2E7D32", "wash": "#E2EADE", "dark": { "dot": "#6CC071", "wash": "#1F2D20" }, "web": "grn" },
+    "oneNation": { "dot": "#BF5B15", "wash": "#F3E6DB", "dark": { "dot": "#EE8F4E", "wash": "#3A2A1E" }, "web": "onp" },
+    "independent": { "dot": "#3E5B77", "wash": "#E3E6E7", "dark": { "dot": "#93AECA", "wash": "#232B33" }, "web": "ind" },
+    "other": { "dot": "#7C6690", "wash": "#EBE7EA", "dark": { "dot": "#B9A0CF", "wash": "#2D2734" }, "web": "oth" }
+  },
+
+  "font": {
+    "serif": {
+      "web": "\"Merriweather\", Georgia, \"Times New Roman\", serif",
+      "app": { "400": "serif", "700": "serifBold" },
+      "$description": "Titles, headings, record text, display figures. The app registers static Merriweather Regular and Bold; Bold stands in for the web's 600."
+    },
+    "sans": {
+      "web": "\"Public Sans\", -apple-system, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+      "app": { "400": "sans", "600": "sansSemiBold", "700": "sansBold" },
+      "$description": "Interface, body, metadata, labels, controls."
+    },
+    "appFaces": {
+      "$description": "The app's registered font names (app/_layout.tsx).",
+      "serif": "Merriweather",
+      "serifBold": "Merriweather-Bold",
+      "sans": "PublicSans",
+      "sansSemiBold": "PublicSans-SemiBold",
+      "sansBold": "PublicSans-Bold"
+    }
+  },
+
+  "type": {
+    "$description": "Eleven roles over six sizes (34, 22, 18, 17 (16 on the web), 15, 13), plus the page title's fluid web size and its iPad step. Sentence case everywhere: no uppercase or letter-spaced labels. `ramp` is the iOS Dynamic Type ramp a role scales with, to AX5, uncapped. Figures and tables use tabular numbers. Web sizes are written in rem (px / 16) and line heights as ratios.",
+    "title": { "family": "serif", "weight": 400, "size": 34, "lineHeight": 42, "ramp": "largeTitle", "color": "ink", "web": { "size": "clamp(1.9rem, 4.5vw, 2.75rem)", "lineHeight": 1.25 }, "regular": { "size": 42, "lineHeight": 52 }, "$description": "The page's one title: a person's name, a bill title, a screen name." },
+    "display": { "family": "serif", "weight": 700, "size": 34, "lineHeight": 42, "ramp": "largeTitle", "color": "ink", "tabular": true, "$description": "The one number a block is about. Serif, because large Public Sans tabular digits read as monospace. May take the view's accent ink." },
+    "heading": { "family": "serif", "weight": 700, "size": 22, "lineHeight": 30, "ramp": "title2", "color": "ink", "web": { "weight": 600 }, "$description": "Section heading." },
+    "subheading": { "family": "serif", "weight": 700, "size": 18, "lineHeight": 24, "ramp": "title3", "color": "ink", "web": { "weight": 600 }, "$description": "A row title that leads a block: a bill in a list, a division, a report card." },
+    "record": { "family": "serif", "weight": 400, "size": 17, "lineHeight": 29, "ramp": "body", "color": "ink", "web": { "lineHeight": 1.75 }, "$description": "The words of the record and long reading: speeches, report essays, In short." },
+    "body": { "family": "sans", "weight": 400, "size": 17, "lineHeight": 25, "ramp": "body", "color": "ink", "web": { "size": 16, "lineHeight": 1.55 }, "$description": "Interface and OPAX's own sentences." },
+    "strong": { "family": "sans", "weight": 600, "size": 17, "lineHeight": 25, "ramp": "body", "color": "ink", "web": { "size": 16, "lineHeight": 1.55 }, "$description": "Names in rows, values in key-value lists, inline figures (with tabular)." },
+    "metadata": { "family": "sans", "weight": 400, "size": 15, "lineHeight": 21, "ramp": "subheadline", "color": "inkSoft", "$description": "The one meta line under a title: kind · date · place." },
+    "fine": { "family": "sans", "weight": 400, "size": 13, "lineHeight": 18, "ramp": "footnote", "color": "inkSoft", "$description": "Source lines, saved-copy notices, one short caveat. Never below 13." },
+    "label": { "family": "sans", "weight": 600, "size": 13, "lineHeight": 18, "ramp": "footnote", "color": "inkSoft", "$description": "Tags, status labels, party labels, field labels. Replaces kicker, tag and chip." },
+    "control": { "family": "sans", "weight": 600, "size": 17, "lineHeight": 22, "ramp": "body", "color": "ink", "web": { "size": 16, "lineHeight": 1.25 }, "$description": "Button, chip and segment labels." }
+  },
+
+  "space": {
+    "$description": "One vertical rhythm for both platforms (the app's rhythm, adopted by the web). Section and screen steps grow at regular width (iPad regular, web 701px and over).",
+    "line": { "$value": 4, "$description": "A line bound to the line above: a date under a title." },
+    "tight": { "$value": 8, "$description": "Inside a row or group: a name to its party line." },
+    "row": { "$value": 10, "$description": "Either side of a row hairline (content rows). Control rows own their 44pt and sit 2pt from the hairline." },
+    "heading": { "$value": 12, "$description": "A section heading to its first block." },
+    "block": { "$value": 16, "$description": "Between blocks inside a section." },
+    "group": { "$value": 24, "$description": "A second list or group inside a section." },
+    "section": { "$value": 36, "regular": 56, "$description": "Between sections; the rule sits at the top of each." },
+    "screen": { "$value": 20, "regular": 32, "web": { "value": "clamp(1.25rem, 4vw, 4.5rem)" }, "$description": "Screen edge to content. The web column's padding is fluid at every width." }
+  },
+
+  "radius": {
+    "$description": "Shape says what a thing is (D1): press = pill, read = sm, hold = md. Portraits and dots are round.",
+    "sm": { "$value": 4, "$description": "Things you read: tags, status labels, text fields, focus outlines, icon tiles." },
+    "md": { "$value": 12, "$description": "Things that hold content: cards, sheets, popovers, the Ask composer, the map frame, the error panel." },
+    "pill": { "$value": 999, "$description": "Things you press: buttons, choice and filter chips, the segmented track and thumb, the machine-written label, Follow." },
+    "round": { "$value": "50%", "app": { "omit": true }, "$description": "Portraits and party dots (the app sets half the side)." }
+  },
+
+  "border": {
+    "hairline": { "$value": 1, "$description": "Every rule, row line and card outline. 1px = 1pt, not the device hairline." },
+    "focus": { "$value": 2, "$description": "The focus ring (bronzeInk on paper, bronzeBright on navy), a field error, Composer focus." },
+    "accentMarkWidth": { "$value": 28, "$description": "The short accent stroke over the start of a section's top rule. Only where sections differ in category (profiles, Today)." },
+    "accentMarkHeight": { "$value": 2 },
+    "masthead": { "$value": 3, "$description": "The bronze rule under the web masthead and over the footer. The only 3px rule." }
+  },
+
+  "elevation": {
+    "$description": "Structure is hairlines. One shadow, for things that float over the page. App: native sheets and menus draw their own.",
+    "overlay": { "color": "#142A43", "alpha": 0.16, "x": 0, "y": 12, "blur": 32, "$description": "Menus, popovers, the web source sheet, the map popup, the docked chat." }
+  },
+
+  "motion": {
+    "$description": "Three durations and one curve. Under Reduce Motion (prefers-reduced-motion) nothing moves: colour changes only, loaders draw a still frame.",
+    "duration": {
+      "quick": { "$value": 120, "$description": "Press feedback, colour changes." },
+      "standard": { "$value": 200, "$description": "Disclosure open, chevron turn, chip select." },
+      "gentle": { "$value": 400, "$description": "Portrait fade-in, answer reveal, sheet content." }
+    },
+    "easing": {
+      "standard": { "$value": [0.22, 0.7, 0.3, 1], "$description": "The house curve for every UI transition. Progress bars and ambient loops run linear." }
+    },
+    "ambientLoop": { "$value": 16000, "$description": "The period of the one ambient loop (the wombat walk, the Talk orb breath). Not a transition duration." }
+  },
+
+  "size": {
+    "target": { "$value": 44, "android": 48, "$description": "Minimum hit area. Visuals may be smaller inside it." },
+    "controlCompact": { "$value": 44, "web": 40, "$description": "The web's compact control grows to 44 on coarse pointers." },
+    "control": { "$value": 48 },
+    "controlLarge": { "$value": 56 },
+    "portraitRow": { "$value": 44, "$description": "A blank sunken circle when there is no portrait; never initials." },
+    "portraitHeader": { "$value": 72 },
+    "partyDot": { "$value": 10 },
+    "iconSm": { "$value": 16, "$description": "Three icon sizes (the app draws 11 today). Icons scale with text to 2x." },
+    "iconMd": { "$value": 20 },
+    "iconLg": { "$value": 28 },
+    "readable": { "$value": 700, "web": "68ch", "$description": "Readable column: 700pt in the app, a 68ch measure on the web." }
+  },
+
+  "layout": {
+    "regular": { "$value": 700, "$description": "iPad regular width; the web's first layout step (min-width 701px)." },
+    "wide": { "$value": 1100, "$description": "The web's wide step (min-width 1101px)." },
+    "columnWide": { "$value": 1180 },
+    "columnWebMax": { "$value": 1440 },
+    "splitPane": { "$value": 360, "min": 300, "max": 440, "$description": "iPad list pane." }
+  },
+
+  "contrast": {
+    "$description": "The pairs the tokens promise, checked in light, dark and both Increase Contrast themes by the web and app token tests. `text` pairs need 4.5:1, `nonText` 3:1, `strong` 7:1 under Increase Contrast only. `forbidden` pairs must fail AA in light: components never draw them. Party dots and washes are checked separately (dot 3:1 on paper and raised; ink and inkSoft AA on every wash). Component-level pairs (every state of every control) stay in the app's contrast.ts.",
+    "text": [
+      { "fg": "ink", "on": ["paper", "raised", "sunken", "bronzeWash", "navyWash", "moneyWash", "votesWash", "interestsWash", "billsWash"] },
+      { "fg": "inkSoft", "on": ["paper", "raised", "sunken", "bronzeWash", "navyWash", "moneyWash", "votesWash", "interestsWash", "billsWash"] },
+      { "fg": "inkFaint", "on": ["paper", "raised"] },
+      { "fg": "onNavy", "on": ["navy", "navyRaised", "danger", "dangerPressed"] },
+      { "fg": "onNavySoft", "on": ["navy"] },
+      { "fg": "navy", "on": ["paper", "raised", "sunken", "navyWash"] },
+      { "fg": "bronzeInk", "on": ["paper", "raised", "sunken", "bronzeWash"] },
+      { "fg": "danger", "on": ["paper", "raised", "sunken"] },
+      { "fg": "moneyInk", "on": ["paper", "raised", "sunken", "moneyWash", "navyWash"] },
+      { "fg": "votesInk", "on": ["paper", "raised", "sunken", "votesWash"] },
+      { "fg": "interestsInk", "on": ["paper", "raised", "sunken", "interestsWash"] },
+      { "fg": "billsInk", "on": ["paper", "raised", "sunken", "billsWash"] }
+    ],
+    "nonText": [
+      { "fg": "bronze", "on": ["paper", "raised"] },
+      { "fg": "lineControl", "on": ["paper", "raised", "sunken"] },
+      { "fg": "navy", "on": ["paper", "raised", "sunken"] },
+      { "fg": "danger", "on": ["paper", "sunken"] },
+      { "fg": "bronzeBright", "on": ["navy"] }
+    ],
+    "strong": [
+      { "fg": "bronzeInk", "on": ["bronzeWash", "paper", "raised", "sunken"] },
+      { "fg": "moneyInk", "on": ["moneyWash", "paper", "raised", "sunken"] },
+      { "fg": "votesInk", "on": ["votesWash", "paper", "raised", "sunken"] },
+      { "fg": "interestsInk", "on": ["interestsWash", "paper", "raised", "sunken"] },
+      { "fg": "billsInk", "on": ["billsWash", "paper", "raised", "sunken"] }
+    ],
+    "forbidden": [
+      { "fg": "inkFaint", "on": ["sunken", "bronzeWash"], "$description": "Use inkSoft on sunken surfaces and washes." },
+      { "fg": "bronze", "on": ["paper"], "$description": "Bronze is for rules and chart marks." }
+    ]
+  },
+
+  "deprecated": {
+    "$description": "Old names kept for one release so no screen breaks. An `alias` has the same value as its replacement and points at it; a `value` is the old look, kept until a later pass moves its uses to the replacement (`change` says what moving will change). The generator writes these into tokens.css, style.css and tokens.generated.ts with a deprecation comment, and lists them in docs/design/TOKENS.md.",
+    "web": {
+      "--line": { "alias": "--divider-subtle" },
+      "--line-strong": { "alias": "--line-control" },
+      "--heading-page": { "alias": "--type-title" },
+      "--heading-section": { "value": "600 1.4rem/1.35 var(--serif)", "use": "--type-heading", "change": "22.4px/1.35 to 22px/1.364" },
+      "--heading-subsection": { "value": "600 1.125rem/1.35 var(--serif)", "use": "--type-subheading", "change": "line height 1.35 to 1.333" },
+      "--heading-tracking": { "value": "0.005em", "use": "no letter-spacing", "change": "0.005em to 0" },
+      "--space-1": { "alias": "--space-line" },
+      "--space-2": { "value": "0.4rem", "use": "--space-tight or --space-line", "change": "6.4px to 8px or 4px" },
+      "--space-3": { "value": "0.65rem", "compact": "0.5rem", "use": "--space-row", "change": "10.4px (8px under 701px) to 10px" },
+      "--space-4": { "alias": "--space-block" },
+      "--space-5": { "value": "1.6rem", "use": "--space-group", "change": "25.6px to 24px" },
+      "--space-6": { "value": "2.6rem", "compact": "2rem", "use": "--space-group or --space-section", "change": "41.6px (32px under 701px) to 24px or 36px" },
+      "--space-7": { "value": "4.2rem", "compact": "3.25rem", "use": "--space-section", "change": "67.2px (52px under 701px) to 56px (36px under 701px)" },
+      "--row-gap": { "value": "var(--space-3)", "use": "--space-row", "change": "10.4px (8px under 701px) to 10px" },
+      "--sub-gap": { "value": "var(--space-6)", "use": "--space-group", "change": "41.6px (32px under 701px) to 24px" },
+      "--section-gap": { "value": "var(--space-7)", "use": "--space-section", "change": "67.2px (52px under 701px) to 56px (36px under 701px)" }
+    },
+    "app": {
+      "roles": {
+        "line": { "alias": "dividerSubtle" },
+        "lineStrong": { "alias": "lineControl" }
+      },
+      "accents": {
+        "places": { "alias": "people" }
+      },
+      "radius": { "alias": "radii.sm" },
+      "spacing": {
+        "s1": { "alias": "rhythm.line" },
+        "s2": { "value": 6, "use": "rhythm.tight or rhythm.line", "change": "6 to 8 or 4" },
+        "s3": { "alias": "rhythm.tight" },
+        "s4": { "alias": "rhythm.block" },
+        "s5": { "value": 26, "use": "rhythm.group", "change": "26 to 24" },
+        "s6": { "value": 32, "use": "rhythm.section, or rhythm.screen at regular width", "change": "32 to 36" },
+        "s7": { "value": 52, "use": "rhythm.section at regular width", "change": "52 to 56" }
+      },
+      "textStyles": {
+        "lede": { "family": "sans", "weight": 400, "size": 16, "lineHeight": 24, "ramp": "callout", "color": "ink", "use": "body", "change": "16/24 to 17/25" },
+        "caption": { "family": "sans", "weight": 400, "size": 12, "lineHeight": 16, "ramp": "caption1", "color": "inkSoft", "use": "fine", "change": "12/16 to 13/18" },
+        "figure": { "family": "sans", "weight": 700, "size": 28, "lineHeight": 34, "ramp": "title1", "color": "ink", "tabular": true, "use": "display", "change": "Public Sans Bold 28 to Merriweather Bold 34" },
+        "figureInline": { "family": "sans", "weight": 600, "size": 17, "lineHeight": 25, "ramp": "body", "color": "ink", "tabular": true, "use": "strong with tabular figures", "change": "none" },
+        "tag": { "family": "sans", "weight": 600, "size": 13, "lineHeight": 18, "ramp": "footnote", "color": "bronzeInk", "use": "label in bronzeInk", "change": "none" },
+        "kicker": { "alias": "label" },
+        "chip": { "family": "sans", "weight": 600, "size": 13, "lineHeight": 17, "ramp": "footnote", "color": "ink", "use": "label", "change": "line height 17 to 18, ink to inkSoft" },
+        "countdown": { "family": "sans", "weight": 600, "size": 17, "lineHeight": 22, "ramp": "body", "color": "ink", "tabular": true, "use": "control with tabular figures", "change": "none" },
+        "padTitle": { "family": "serif", "weight": 400, "size": 42, "lineHeight": 52, "ramp": "largeTitle", "color": "ink", "use": "title at regular width (typeRolesRegular.title)", "change": "none" },
+        "padLede": { "family": "sans", "weight": 400, "size": 19, "lineHeight": 30, "ramp": "body", "color": "ink", "use": "body", "change": "19/30 to 17/25" }
+      }
+    }
+  }
+}
