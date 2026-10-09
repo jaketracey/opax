@@ -6,7 +6,7 @@ import {
   Text,
   SegmentedControl,
   LinkRow,
-  Disclosure,
+  KeyValueList,
 } from '../../design/primitives';
 import { useCallback, useState } from 'react';
 import { topicNames } from '../reports/model';
@@ -24,20 +24,8 @@ export default function Tide() {
     <>
       <ExploreHeader title="The tide" game="tide" />
       <Screen column="wide" testID="explore-tide-screen">
-        <Section
-          title="The tide"
-          info={{
-            title: 'How to read the tide',
-            notes: [
-              TIDE_NOTE.replace(
-                'Federal parliament',
-                scope === 'federal'
-                  ? 'Federal parliament'
-                  : 'all five parliaments',
-              ),
-            ],
-          }}
-        >
+        {/* The title is the screen's; its notes are in the source line. */}
+        <Section rule={false}>
           <Text wordSafe variant="body">
             How parliament’s labelled debates move across four decades
           </Text>
@@ -64,6 +52,26 @@ export default function Tide() {
         <ReadState
           read={read}
           citation="OPAX labelled speeches by decade"
+          sheet={(data) => ({
+            title: 'How to read the tide',
+            coverage: scope === 'federal' ? 'Federal' : 'All five parliaments',
+            notes: [
+              TIDE_NOTE.replace(
+                'Federal parliament',
+                scope === 'federal'
+                  ? 'Federal parliament'
+                  : 'all five parliaments',
+              ),
+            ],
+            extra: (
+              <KeyValueList
+                items={data.decades.map((d) => ({
+                  label: d.label,
+                  value: `${d.labelled.toLocaleString('en-AU')} of ${d.total.toLocaleString('en-AU')} labelled (${(d.coverage * 100).toFixed(1)}%)`,
+                }))}
+              />
+            ),
+          })}
           testID="tide"
         >
           {(data) => {
@@ -131,19 +139,6 @@ export default function Tide() {
                     </Section>
                   ))}
                 </PadGrid>
-                <Section title="Coverage">
-                  <Disclosure label="Labelled record by decade">
-                    <Group>
-                      {data.decades.map((d) => (
-                        <Text key={d.slug} wordSafe>
-                          {d.label}: {d.labelled.toLocaleString('en-AU')} of{' '}
-                          {d.total.toLocaleString('en-AU')} speeches labelled (
-                          {(d.coverage * 100).toFixed(1)}%)
-                        </Text>
-                      ))}
-                    </Group>
-                  </Disclosure>
-                </Section>
               </Group>
             );
           }}

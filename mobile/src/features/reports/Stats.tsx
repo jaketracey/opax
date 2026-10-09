@@ -73,7 +73,7 @@ export default function Stats() {
                   },
                 ]}
               />
-              <Section title="Speeches by parliament" accent="people">
+              <Section title="Speeches by parliament">
                 {data.speeches_by_state ? (
                   <KeyValueList
                     items={Object.entries(data.speeches_by_state).map(
@@ -87,7 +87,7 @@ export default function Stats() {
                   <Text>Live figures are unavailable right now.</Text>
                 )}
               </Section>
-              <Section title="Documents by kind" accent="bills">
+              <Section title="Documents by kind">
                 {data.kinds ? (
                   <KeyValueList
                     items={Object.entries(data.kinds).map(([kind, n]) => ({
@@ -102,23 +102,23 @@ export default function Stats() {
             </Group>
           )}
         </ReadState>
-        <ReadState
-          read={corpus}
-          citation="OPAX corpus manifest"
-          testID="stats-corpus"
-        >
-          {(data) => (
-            <Section title="Collection coverage" accent="votes">
+        <Section title="Collection coverage">
+          <ReadState
+            read={corpus}
+            citation="OPAX corpus manifest"
+            sheet={(data) => ({ coverage: `Corpus version ${data.version}` })}
+            testID="stats-corpus"
+          >
+            {(data) => (
               <KeyValueList
                 items={data.sources.map((s) => ({
                   label: s.name,
                   value: `${s.docs.toLocaleString()} · ${s.coverage}`,
                 }))}
               />
-              <Text variant="fine">Corpus version {data.version}.</Text>
-            </Section>
-          )}
-        </ReadState>
+            )}
+          </ReadState>
+        </Section>
         <RecordRow
           path={'/methods'}
           title="Methods"

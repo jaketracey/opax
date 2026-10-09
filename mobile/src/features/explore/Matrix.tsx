@@ -9,7 +9,7 @@ import {
   LinkRow,
   useAccessibilitySize,
 } from '../../design/primitives';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
 import { topicNames } from '../reports/model';
 import { useRead, ReadState } from '../reports/parts';
 import { openTopicWindow, openRecord } from '../reports/open';
@@ -22,10 +22,7 @@ export default function Matrix() {
     <>
       <ExploreHeader title="Debates" game="matrix" />
       <Screen column="wide" testID="explore-matrix-screen">
-        <Section
-          title="Who owns which debate"
-          info={{ title: 'How to read this grid', notes: [MATRIX_NOTE] }}
-        >
+        <Section rule={false}>
           <Text wordSafe variant="body">
             Each party’s share of a debate’s labelled speeches
           </Text>
@@ -33,6 +30,11 @@ export default function Matrix() {
         <ReadState
           read={read}
           citation="OPAX topic and party labels"
+          sheet={{
+            title: 'How to read this grid',
+            coverage: 'Shares of each topic’s labelled speeches',
+            notes: [MATRIX_NOTE],
+          }}
           testID="matrix"
         >
           {(data) => {
@@ -112,13 +114,6 @@ export default function Matrix() {
                   title="Parties"
                   onPress={() => openRecord('/subject/party', 'Parties')}
                 />
-                <Text
-                  variant="fine"
-                  tone="inkSoft"
-                  style={{ backgroundColor: colors.paper }}
-                >
-                  Shares of each topic’s labelled speeches
-                </Text>
               </Group>
             );
           }}

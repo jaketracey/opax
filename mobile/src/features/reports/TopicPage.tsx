@@ -6,7 +6,6 @@ import {
   Button,
   PadGrid,
   BigFigure,
-  InfoButton,
   LinkRow,
   RowList,
   EmptyState,
@@ -15,6 +14,7 @@ import {
   Screen,
   Section,
   SegmentedControl,
+  SourceLine,
   Text,
   PartyLabel,
 } from '../../design/primitives';
@@ -32,6 +32,7 @@ import {
 } from './parts';
 import { openRecord, openTopicWindow } from './open';
 
+const LABELLED = 'OPAX labelled speeches';
 const industries: Readonly<Record<string, string[]>> = {
   gambling: ['gambling'],
   'financial-services': ['finance'],
@@ -47,10 +48,11 @@ function TopicMoney({ slug }: { slug: string }) {
   return (
     <ReadState
       read={read}
-      citation="AEC returns · OPAX money graph"
+      citation="AEC annual returns"
+      foot={false}
       testID="topic-money"
     >
-      {(money) => {
+      {(money, meta) => {
         const data = moneyRows(money, industries[slug] ?? []);
         if (!data.donors.length) return null;
         const label = industries[slug]!.map((i) => i.replace(/_/g, ' ')).join(
@@ -59,11 +61,7 @@ function TopicMoney({ slug }: { slug: string }) {
         return (
           <Section
             title="The money beside the words"
-            accent="money"
-            info={{
-              title: 'About the disclosed money',
-              notes: [AEC_NOTE, money.meta.coverage],
-            }}
+            testID="topic-money-section"
           >
             <Text>{`While parliament debated this, ${label} interests disclosed ${formatMoney(data.donors.reduce((n, d) => n + d.total, 0))} in donations to political parties.`}</Text>
             <KeyValueList
@@ -75,6 +73,14 @@ function TopicMoney({ slug }: { slug: string }) {
               path={'/money'}
               title="Explore on the money map"
               onPress={() => openRecord('/money', 'Money map')}
+            />
+            <SourceLine
+              {...meta}
+              citation="AEC annual returns"
+              coverage="OPAX money graph"
+              title="About the disclosed money"
+              notes={[AEC_NOTE, money.meta.coverage]}
+              testID="topic-money-as-at"
             />
           </Section>
         );
@@ -192,45 +198,41 @@ function TopicContent({
             />
           </Section>
         ) : null}
-        <ReadState
-          read={read}
-          citation="OPAX labelled speech catalog"
-          testID="topic"
-        >
-          {(data) => (
+        <ReadState read={read} citation={LABELLED} foot={false} testID="topic">
+          {(data, meta) => (
             <Group>
-              <BigFigure
-                value={data.count.toLocaleString()}
-                label="speeches carry this label so far"
-                accent="votes"
-                testID="topic-count"
-              />
-              <InfoButton
-                title="About the topic count"
-                notes={[
-                  `${data.count.toLocaleString()} speeches carry this label so far, of ${data.labelled.toLocaleString()} labelled to date. The labelling pass is still running.`,
-                ]}
-              />
-              {topicReport[slug] ? (
-                <RecordRow
-                  path={`/reports/${topicReport[slug]}`}
-                  title={`Read the ${title} report`}
-                  onPress={() =>
-                    openRecord(`/reports/${topicReport[slug]}`, title)
-                  }
-                  testID="topic-report"
+              <Group>
+                <BigFigure
+                  value={data.count.toLocaleString()}
+                  label="speeches carry this label so far"
+                  detail={`of ${data.labelled.toLocaleString()} labelled to date`}
+                  accent="votes"
+                  testID="topic-count"
                 />
-              ) : null}
+                {topicReport[slug] ? (
+                  <RecordRow
+                    path={`/reports/${topicReport[slug]}`}
+                    title={`Read the ${title} report`}
+                    onPress={() =>
+                      openRecord(`/reports/${topicReport[slug]}`, title)
+                    }
+                    testID="topic-report"
+                  />
+                ) : null}
+                <SourceLine
+                  {...meta}
+                  citation={LABELLED}
+                  title="About the topic count"
+                  notes={[
+                    `${data.count.toLocaleString()} speeches carry this label so far, of ${data.labelled.toLocaleString()} labelled to date. The labelling pass is still running.`,
+                  ]}
+                  testID="topic-as-at"
+                />
+              </Group>
               <PadGrid>
                 <Section
                   title="Who speaks on it, by party"
-                  accent="people"
-                  info={{
-                    title: 'About party counts',
-                    notes: [
-                      'Labelled so far. A party name opens its speeches on this topic. Some speeches carry no party label, so the bars can sum below the total.',
-                    ],
-                  }}
+                  testID="topic-parties"
                 >
                   <RowList>
                     {data.parties.slice(0, 8).map(([party, n]) => (
@@ -250,13 +252,39 @@ function TopicContent({
                       />
                     ))}
                   </RowList>
+                  <SourceLine
+                    {...meta}
+                    citation={LABELLED}
+                    title="About party counts"
+                    notes={[
+                      'Labelled so far. A party name opens its speeches on this topic. Some speeches carry no party label, so the bars can sum below the total.',
+                    ]}
+                    testID="topic-parties-as-at"
+                  />
                 </Section>
                 <Section
                   title="Which parliament argues it"
-                  accent="people"
-                  info={{
-                    title: 'About parliament counts',
-                    notes: [
+                  testID="topic-parliaments"
+                >
+                  <RowList>
+                    {data.states
+                      .filter(([state]) => parliamentNames[state])
+                      .map(([state, n, share]) => (
+                        <RecordRow
+                          key={state}
+                          title={parliamentNames[state]!}
+                          detail={`${(share * 100).toFixed(2)}% · ${n.toLocaleString()}`}
+                          onPress={() =>
+                            openTopicWindow(slug, { state }, title)
+                          }
+                        />
+                      ))}
+                  </RowList>
+                  <SourceLine
+                    {...meta}
+                    citation={LABELLED}
+                    title="About parliament counts"
+                    notes={[
                       'Share of that parliament’s labelled record, then the count.',
                       corpus.record
                         ? `Years held: ${corpus.record.data.sources
@@ -268,19 +296,9 @@ function TopicContent({
                             .map((s) => `${s.name} ${s.coverage}`)
                             .join(' · ')}.`
                         : null,
-                    ],
-                  }}
-                >
-                  {data.states
-                    .filter(([state]) => parliamentNames[state])
-                    .map(([state, n, share]) => (
-                      <RecordRow
-                        key={state}
-                        title={parliamentNames[state]!}
-                        detail={`${(share * 100).toFixed(2)}% · ${n.toLocaleString()}`}
-                        onPress={() => openTopicWindow(slug, { state }, title)}
-                      />
-                    ))}
+                    ]}
+                    testID="topic-parliaments-as-at"
+                  />
                 </Section>
               </PadGrid>
             </Group>
@@ -289,30 +307,14 @@ function TopicContent({
         {industries[slug] ? <TopicMoney slug={slug} /> : null}
         <ReadState
           read={tide}
-          citation="OPAX federal labelled speech tide"
+          citation={LABELLED}
+          foot={false}
           testID="topic-tide"
         >
-          {(data) => {
+          {(data, meta) => {
             const points = data.topics[slug] ?? [];
             return points.length ? (
-              <Section
-                title="The share over time"
-                accent="votes"
-                info={{
-                  title: 'About the decade bars',
-                  notes: [
-                    'Each bar is this topic’s share of federal speeches carrying any topic label in that decade; the small figure is the count. Federal is the longest comparable run. Labels are applied so far, and each decade opens the speeches behind it.',
-                  ],
-                  extra: (
-                    <KeyValueList
-                      items={data.decades.map((d) => ({
-                        label: d.label,
-                        value: `${(d.coverage * 100).toFixed(1)}% · ${d.labelled.toLocaleString()} of ${d.total.toLocaleString()}`,
-                      }))}
-                    />
-                  ),
-                }}
-              >
+              <Section title="The share over time" testID="topic-decades">
                 <ShareBars
                   label="Share of federal speeches by decade"
                   onSelect={(i) => {
@@ -337,24 +339,39 @@ function TopicContent({
                       p.decade,
                   }))}
                 />
+                <SourceLine
+                  {...meta}
+                  citation={LABELLED}
+                  coverage="Federal speeches"
+                  title="About the decade bars"
+                  notes={[
+                    'Each bar is this topic’s share of federal speeches carrying any topic label in that decade; the small figure is the count. Federal is the longest comparable run. Labels are applied so far, and each decade opens the speeches behind it.',
+                  ]}
+                  extra={
+                    <KeyValueList
+                      items={data.decades.map((d) => ({
+                        label: d.label,
+                        value: `${(d.coverage * 100).toFixed(1)}% · ${d.labelled.toLocaleString()} of ${d.total.toLocaleString()}`,
+                      }))}
+                    />
+                  }
+                  testID="topic-tide-as-at"
+                />
               </Section>
             ) : null;
           }}
         </ReadState>
-        <Section
-          title="The arc of this debate"
-          accent="bills"
-          testID="topic-arc"
-          info={{
-            title: 'About this speech window',
-            notes: [
-              'The chronological view covers the retrieved window of up to 200 speeches. Passages are from the record.',
-            ],
-          }}
-        >
+        <Section title="The arc of this debate" testID="topic-arc">
           <ReadState
             read={arc}
             citation="OPAX labelled speech search"
+            sheet={{
+              title: 'About this speech window',
+              coverage: 'Up to 200 speeches',
+              notes: [
+                'The chronological view covers the retrieved window of up to 200 speeches. Passages are from the record.',
+              ],
+            }}
             testID="topic-arc-data"
           >
             {(data) => {
@@ -400,18 +417,22 @@ function TopicContent({
             }}
           </ReadState>
         </Section>
-        <RecordRow
-          path={'/subject/topic'}
-          title="Topics A–Z"
-          onPress={() => openRecord('/subject/topic', 'Topics A–Z')}
-          testID="topic-all"
-        />
-        <RecordRow
-          path={'/stats'}
-          title="Sources & coverage"
-          onPress={() => openRecord('/stats', 'Sources & coverage')}
-          testID="topic-stats"
-        />
+        <Section testID="topic-more">
+          <RowList>
+            <RecordRow
+              path={'/subject/topic'}
+              title="Topics A–Z"
+              onPress={() => openRecord('/subject/topic', 'Topics A–Z')}
+              testID="topic-all"
+            />
+            <RecordRow
+              path={'/stats'}
+              title="Sources & coverage"
+              onPress={() => openRecord('/stats', 'Sources & coverage')}
+              testID="topic-stats"
+            />
+          </RowList>
+        </Section>
       </Screen>
     </>
   );

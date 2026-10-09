@@ -2,9 +2,11 @@ import { headerItems } from '../../navigation/chrome';
 import { Stack, router } from 'expo-router';
 import { reports } from '../../api/runtime';
 import {
+  Disclosure,
   Group,
   Heading,
   LinkRow,
+  RowList,
   Screen,
   Section,
   Text,
@@ -48,14 +50,19 @@ export default function Methods() {
         {sections.map(({ title, index, body }) => {
           if (title === 'Licence, code and corrections')
             return (
-              <LinkRow
+              <Section
                 key={title}
-                title="Sources and licences"
-                icon="checkmark.seal"
-                accent="leads"
-                onPress={() => router.push('/account/sources')}
-                testID="methods-sources"
-              />
+                title={title}
+                headingTestID={`methods-${index}`}
+              >
+                <RowList>
+                  <LinkRow
+                    title="Sources and licences"
+                    onPress={() => router.push('/account/sources')}
+                    testID="methods-sources"
+                  />
+                </RowList>
+              </Section>
             );
           const texts = body.map((block) =>
             block.text.startsWith('State coverage windows differ by parliament')
@@ -81,15 +88,35 @@ export default function Methods() {
               : texts;
           const folded =
             title === 'Known limitations' || title === 'Corrections';
+          // Long lists of caveats fold behind one disclosure, in full.
           return (
             <Section
               key={title}
               title={title}
               headingTestID={`methods-${index}`}
-              accent="bills"
-              info={folded ? { title, notes } : undefined}
             >
-              {folded ? null : (
+              {folded ? (
+                <Disclosure
+                  label={
+                    title === 'Corrections'
+                      ? notes.length === 1
+                        ? 'Read the correction'
+                        : `Read the ${notes.length} corrections`
+                      : `Read the ${notes.length} limitations`
+                  }
+                  testID={`methods-${index}-fold`}
+                >
+                  {() => (
+                    <Group>
+                      {notes.map((note, i) => (
+                        <Text key={i} wordSafe>
+                          {note}
+                        </Text>
+                      ))}
+                    </Group>
+                  )}
+                </Disclosure>
+              ) : (
                 <Group>
                   {texts.map((text, i) => (
                     <Text key={i} wordSafe testID={`methods-${index + i + 1}`}>
