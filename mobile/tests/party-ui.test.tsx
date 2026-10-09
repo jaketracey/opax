@@ -8,7 +8,7 @@ import TestRenderer from 'react-test-renderer';
 import { router } from 'expo-router';
 import { catalogs as runtime } from '../src/api/runtime';
 import { Catalogs } from '../src/api/catalogs';
-import { PartySplits, RecordedParty } from '../src/features/bills/parts';
+import { DivisionSplits, RecordedParty } from '../src/features/bills/parts';
 import { PartyPage } from '../src/features/Party';
 import { PartyLabel, PersonRow } from '../src/design/people';
 import { openOnWeb } from '../src/navigation/external';
@@ -20,7 +20,19 @@ jest.mock('expo-router', () => ({
   router: { push: jest.fn() },
   Stack: { Screen: () => null },
 }));
-jest.mock('../src/api/runtime', () => ({ catalogs: { partyPage: jest.fn(), followSources: jest.fn() }, peopleDepth: { access: jest.fn(async () => { throw new Error('offline'); }), funding: jest.fn(async () => { throw new Error('offline'); }), mentions: jest.fn(), news: jest.fn() } }));
+jest.mock('../src/api/runtime', () => ({
+  catalogs: { partyPage: jest.fn(), followSources: jest.fn() },
+  peopleDepth: {
+    access: jest.fn(async () => {
+      throw new Error('offline');
+    }),
+    funding: jest.fn(async () => {
+      throw new Error('offline');
+    }),
+    mentions: jest.fn(),
+    news: jest.fn(),
+  },
+}));
 jest.mock('../src/navigation/external', () => ({
   openOnWeb: jest.fn(),
   openSource: jest.fn(),
@@ -249,12 +261,16 @@ test('bill links exclude presiding roles and unrecorded affiliations, including 
   let r!: TestRenderer.ReactTestRenderer;
   act(() => {
     r = TestRenderer.create(
-      <PartySplits splits={splits} basisNote="" testID="splits" />,
+      <DivisionSplits
+        splits={[...splits.drawn, ...splits.folded]}
+        max={splits.max}
+        testID="splits"
+      />,
     );
   });
-  press(r, 'splits');
-  // Party labels are links; a folded party is a LinkRow (a button that opens
-  // the party page). Neither is drawn for a presiding role or affiliation.
+  // Every party row is a link to the party page, the rows a division keeps
+  // behind its disclosure included. None is drawn for a presiding role or
+  // an affiliation.
   const links = r.root.findAll(
     (n) =>
       typeof n.type === 'string' &&
@@ -325,25 +341,18 @@ test('the Independent grey dot is drawn as a label, never a link; other affiliat
   });
   act(() =>
     r.update(
-      <PartySplits
-        splits={{
-          drawn: [
-            split('Independent', 'Independent'),
-            split('PRES', 'Presiding officer'),
-            split('SPK', 'Speaker'),
-            split('Unaligned', 'Unaligned'),
-          ],
-          folded: [],
-          max: 2,
-          notes: [],
-          recorded: true,
-        }}
-        basisNote=""
+      <DivisionSplits
+        splits={[
+          split('Independent', 'Independent'),
+          split('PRES', 'Presiding officer'),
+          split('SPK', 'Speaker'),
+          split('Unaligned', 'Unaligned'),
+        ]}
+        max={2}
         testID="splits"
       />,
     ),
   );
-  press(r, 'splits');
   expect(dots(r)).toEqual([partyColors.independent]);
   expect(
     r.root.findAll(

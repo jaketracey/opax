@@ -85,7 +85,7 @@ name: 13 Today front page, its native records and dated original sources
     id: bill-screen
 - scrollUntilVisible:
     element:
-      id: bill-source-0
+      id: bill-source
     direction: DOWN
     timeout: 90000
     centerElement: true
@@ -94,7 +94,14 @@ name: 13 Today front page, its native records and dated original sources
 - assertVisible:
     id: bill-screen
 - tapOn:
-    id: bill-source-0
+    id: bill-source
+# The bill's one source line opens its originals; each opens the record.
+- extendedWaitUntil:
+    visible:
+      id: bill-source-sheet-original-0
+    timeout: 15000
+- tapOn:
+    id: bill-source-sheet-original-0
 - assertVisible: https://parlinfo.aph.gov.au/.*
 - takeScreenshot: ${EVIDENCE}/13-bill-source-alert
 - tapOn: OK

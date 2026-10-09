@@ -5,6 +5,7 @@ import { Catalogs } from '../src/api/catalogs';
 import * as d from '../src/api/catalogs';
 import { catalogs as runtime } from '../src/api/runtime';
 import { PartyLabel, PersonRow, Portrait } from '../src/design/people';
+import { SourceLine } from '../src/design/source';
 import BillDetail from '../src/features/bills/BillDetail';
 import { RecordedParty } from '../src/features/bills/parts';
 import { sponsorRows } from '../src/features/bills/sponsors';
@@ -263,14 +264,20 @@ test('an unreadable directory leaves every sponsor plain, never a guessed link',
   act(() => r.unmount());
 });
 
-test('bills without a sponsor keep their words and never load the directory', async () => {
+test('a bill without a sponsor says so once, in its source sheet, and never loads the directory', async () => {
   const r = await render('au-federal-r7501');
-  expect(block(r.root).findAllByType(PersonRow)).toHaveLength(0);
+  expect(r.root.findAllByType(PersonRow)).toHaveLength(0);
+  // No sponsor row and no fake party chip: the head's source line says it.
   expect(
-    block(r.root).findAll(
-      (node) => node.props.children === 'Sponsor not recorded',
-    ).length,
-  ).toBeGreaterThan(0);
+    r.root.findAll(
+      (node) =>
+        typeof node.type === 'string' && node.props.testID === 'bill-sponsor',
+    ),
+  ).toHaveLength(0);
+  const line = r.root.find(
+    (node) => node.type === SourceLine && node.props.testID === 'bill-source',
+  );
+  expect(line.props.notes).toContain('Sponsor not recorded.');
   expect(mock.directory).not.toHaveBeenCalled();
   act(() => r.unmount());
 });

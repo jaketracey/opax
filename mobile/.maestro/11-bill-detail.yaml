@@ -94,19 +94,17 @@ name: 11 Read a bill, its machine summary, divisions and speeches
 - assertVisible: Negatived, 11 ayes, 24 noes
 - assertVisible:
     id: bill-screen
+# The division is titled by its recorded stage (D5), not the presiding
+# officer's first sentence.
 - scrollUntilVisible:
     element:
-      id: bill-division-0-splits
+      id: bill-division-0-title
     direction: DOWN
-    centerElement: true
     speed: 20
     timeout: 60000
-# A tap during scroll momentum only stops the scroll on iOS: settle first.
-- waitForAnimationToEnd
-- tapOn:
-    id: bill-division-0-splits
-# Party splits by label and count in words, never colour alone.
-# In list order: the largest party (Labor) first, then Greens.
+- assertVisible: Limitation of debate
+# The three largest parties are drawn under every division, by label and
+# count in words, never colour alone: the largest (Labor) first, then Greens.
 - assertVisible:
     id: bill-screen
 - scrollUntilVisible:
@@ -124,20 +122,61 @@ name: 11 Read a bill, its machine summary, divisions and speeches
     timeout: 60000
 - assertVisible: Greens, 9 ayes, no noes
 - takeScreenshot: ${EVIDENCE}/11-party-splits
-# The link is just below the splits, at the bottom edge of the screen.
+# The question, in the record's words, and the other parties wait behind one
+# disclosure under the bars.
 - assertVisible:
     id: bill-screen
 - scrollUntilVisible:
     element:
-      id: bill-division-0-source
+      id: bill-division-0-more
+    direction: DOWN
+    centerElement: true
+    speed: 20
+    timeout: 60000
+- assertVisible: 'The question, \d+ words, \d+ more parties'
+# A tap during scroll momentum only stops the scroll on iOS: settle first.
+- waitForAnimationToEnd
+- tapOn:
+    id: bill-division-0-more
+- assertVisible:
+    id: bill-screen
+- scrollUntilVisible:
+    element:
+      id: bill-division-0-question
+    direction: DOWN
+    visibilityPercentage: 10
+    speed: 20
+    timeout: 60000
+- takeScreenshot: ${EVIDENCE}/11-division-question
+# Every division's count is one tap from its source: the block's one source
+# line opens a sheet listing each count. Sources open in the in-app browser;
+# e2e shows the destination locally.
+- assertVisible:
+    id: bill-screen
+- scrollUntilVisible:
+    element:
+      id: bill-divisions-source
+    direction: DOWN
+    visibilityPercentage: 1
+    speed: 70
+    timeout: 180000
+- scrollUntilVisible:
+    element:
+      id: bill-divisions-source
     direction: DOWN
     centerElement: true
     speed: 20
     timeout: 60000
 - waitForAnimationToEnd
-# Sources open in the in-app browser; e2e shows the destination locally.
 - tapOn:
-    id: bill-division-0-source
+    id: bill-divisions-source
+- extendedWaitUntil:
+    visible:
+      id: bill-divisions-source-sheet-original-0
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/11-division-sources
+- tapOn:
+    id: bill-divisions-source-sheet-original-0
 - scrollUntilVisible:
     element:
       text: https://theyvoteforyou.org.au/divisions/senate/2026-08-19/.*
@@ -145,30 +184,6 @@ name: 11 Read a bill, its machine summary, divisions and speeches
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/11-division-source
 - tapOn: OK
-# The record's long note folds below the counts and source; it opens whole.
-- assertVisible:
-    id: bill-screen
-- scrollUntilVisible:
-    element:
-      id: bill-division-0-note
-    direction: DOWN
-    centerElement: true
-    speed: 20
-    timeout: 60000
-- assertVisible: Division note, 45 words
-- waitForAnimationToEnd
-- tapOn:
-    id: bill-division-0-note
-- assertVisible:
-    id: bill-screen
-- scrollUntilVisible:
-    element:
-      id: bill-division-0-note-text
-    direction: DOWN
-    visibilityPercentage: 10
-    speed: 20
-    timeout: 60000
-- takeScreenshot: ${EVIDENCE}/11-division-note
 # Near the end of the page an element cannot be centred: scroll to it only.
 - assertVisible:
     id: bill-screen
@@ -222,7 +237,7 @@ name: 11 Read a bill, its machine summary, divisions and speeches
     visible:
       id: bill-screen
     timeout: 15000
-- assertVisible: Exposure draft
+- assertVisible: 'Exposure draft, as at 8 September 2026'
 - takeScreenshot: ${EVIDENCE}/11-exposure-draft
 - scrollUntilVisible:
     element:
@@ -230,7 +245,7 @@ name: 11 Read a bill, its machine summary, divisions and speeches
     direction: DOWN
     speed: 20
     timeout: 180000
-- assertVisible: Released 8 September 2026
+- assertVisible: Released 8 Sep 2026 · Communications portfolio
 - scrollUntilVisible:
     element:
       text: Government exposure draft, not yet introduced

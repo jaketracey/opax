@@ -31,9 +31,10 @@ name: 46 From a bill in the Bills tab, Ask about this opens a draft; the bill te
     visible:
       id: bill-screen
     timeout: 15000
+# One primary action (Read the bill text); Ask about this is under ⋯.
 - scrollUntilVisible:
     element:
-      id: bill-ask
+      id: bill-more
     direction: DOWN
     centerElement: true
     speed: 20
@@ -41,7 +42,8 @@ name: 46 From a bill in the Bills tab, Ask about this opens a draft; the bill te
 - waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/46-bill-entry
 - tapOn:
-    id: bill-ask
+    id: bill-more
+- tapOn: Ask about this
 - extendedWaitUntil:
     visible:
       id: ask-question

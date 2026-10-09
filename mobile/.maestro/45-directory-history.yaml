@@ -144,15 +144,18 @@ name: 45 Electorates, dated representation, bill filters and division history
       id: division-history-search
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/45-division-history-loading
+# Loading is a state, not a caption: the progress line goes once every bill
+# file is in, leaving the list's one source line.
 - scrollUntilVisible:
     element:
-      id: division-history-coverage
+      id: division-history-source
     visibilityPercentage: 10
     centerElement: true
     speed: 20
     timeout: 180000
 - extendedWaitUntil:
-    visible: All bill files loaded
+    notVisible:
+      id: division-history-coverage
     timeout: 600000
 - takeScreenshot: ${EVIDENCE}/45-division-history-complete
 - scrollUntilVisible:
@@ -174,17 +177,12 @@ name: 45 Electorates, dated representation, bill filters and division history
     speed: 20
     timeout: 300000
 - takeScreenshot: ${EVIDENCE}/45-division-row
-- scrollUntilVisible:
-    element:
-      id: division-question-au-federal-r7534-.*
-    centerElement: true
-    timeout: 60000
-- tapOn:
-    id: division-question-au-federal-r7534-.*
+# A row names its bill, then its recorded stage, chamber and date; the
+# question is on the bill's divisions, not behind an ⓘ on every row.
+- assertVisible:
+    id: division-history-au-federal-r7534-.*
+    text: 'Interactive Gambling \(Cost Recovery Levy\) Bill 2026, Limitation of debate · Senate · 19 Aug 2026[\s\S]*'
     index: 0
-- takeScreenshot: ${EVIDENCE}/45-division-question
-- tapOn:
-    id: division-question-au-federal-r7534-.*-sheet-done
 - scrollUntilVisible:
     element:
       id: division-history-au-federal-r7534-.*

@@ -22,6 +22,7 @@ import {
 } from '../../api/portrait-index';
 import { chamberName, jurisdictionName } from '../../design/parliament';
 import type { PartyFile } from './party-file';
+import { stageTitle } from '../bills/divisions';
 
 export type DirectoryKind = 'person' | 'party' | 'electorate';
 export type Filters = Record<string, string>;
@@ -516,6 +517,8 @@ export interface DivisionRow {
   key: string;
   billKey: string;
   title: string;
+  /** The division's own title: its recorded stage (D5), or null. */
+  stage: string | null;
   date: string;
   house: string;
   question: string;
@@ -529,6 +532,7 @@ export function divisionRows(bills: BillDetail[]): DivisionRow[] {
       key: `${b.key}:${d.key}`,
       billKey: b.key,
       title: billName(b),
+      stage: d.title?.trim() || stageTitle(d.stage),
       date: d.date,
       house: d.house,
       question: billQuestionParts(d, b).head || billStage(d.stage),

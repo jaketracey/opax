@@ -21,7 +21,6 @@
     "src/features/YourMP.tsx": 2,
     "src/features/ask/AnswerView.tsx": 1,
     "src/features/ask/Options.tsx": 1,
-    "src/features/bills/BillDetail.tsx": 3,
     "src/features/directories/ElectorateHistory.tsx": 2,
     "src/features/explore/Ballot.tsx": 2,
     "src/features/explore/Matrix.tsx": 1,
@@ -55,7 +54,6 @@
     "src/features/Search.tsx": 1,
     "src/features/account/DeleteAccountFlow.tsx": 1,
     "src/features/account/SignInFlow.tsx": 1,
-    "src/features/bills/BillDetail.tsx": 2,
     "src/features/leads/LeadDetail.tsx": 1,
     "src/features/money/MoneyNodeScreen.tsx": 1,
     "src/features/people/FinancialBlocks.tsx": 1,
@@ -69,11 +67,8 @@
     "src/features/Person.tsx": 3,
     "src/features/Search.tsx": 4,
     "src/features/YourMP.tsx": 1,
-    "src/features/bills/BillDetail.tsx": 3,
-    "src/features/bills/BillsList.tsx": 1,
     "src/features/declarations/Declarations.tsx": 1,
     "src/features/directories/DirectoryScreen.tsx": 1,
-    "src/features/directories/DivisionHistory.tsx": 1,
     "src/features/directories/ElectorateHistory.tsx": 2,
     "src/features/explore/Ballot.tsx": 1,
     "src/features/explore/Quiz.tsx": 1,
@@ -103,10 +98,7 @@
     "src/features/CatalogState.tsx": 1,
     "src/features/RecordStatus.tsx": 1,
     "src/features/Search.tsx": 2,
-    "src/features/bills/BillDetail.tsx": 2,
-    "src/features/bills/BillsList.tsx": 1,
     "src/features/directories/DirectoryScreen.tsx": 1,
-    "src/features/directories/DivisionHistory.tsx": 1,
     "src/features/explore/Ballot.tsx": 1,
     "src/features/follows/FollowingSection.tsx": 1,
     "src/features/money/MoneyRecord.tsx": 1,
@@ -120,8 +112,6 @@
     "src/features/Party.tsx": 1,
     "src/features/Search.tsx": 1,
     "src/features/YourMP.tsx": 1,
-    "src/features/bills/BillDetail.tsx": 5,
-    "src/features/bills/parts.tsx": 1,
     "src/features/electorate-map/OutlineMap.tsx": 1,
     "src/features/explore/PhotoCredits.tsx": 2,
     "src/features/money-public/Agencies.tsx": 1,
@@ -156,9 +146,6 @@
   "old spacing step": {
     "src/features/ask/AskProgress.tsx": 1,
     "src/features/ask/AskScreen.tsx": 1,
-    "src/features/bills/BillDetail.tsx": 2,
-    "src/features/bills/BillsList.tsx": 1,
-    "src/features/bills/parts.tsx": 3,
     "src/features/declarations/Declarations.tsx": 1,
     "src/features/follows/FollowingSection.tsx": 1,
     "src/features/leads/Chart.tsx": 1,
@@ -173,10 +160,8 @@
     "src/onboarding/scenes.tsx": 1
   },
   "InfoButton": {
-    "src/features/bills/BillsList.tsx": 1,
     "src/features/declarations/Declarations.tsx": 1,
     "src/features/directories/DirectoryScreen.tsx": 1,
-    "src/features/directories/DivisionHistory.tsx": 2,
     "src/features/electorate-map/OutlineMap.tsx": 1,
     "src/features/money/MoneyScreen.tsx": 1,
     "src/features/money-public/Agencies.tsx": 1,
@@ -193,10 +178,6 @@
     "src/features/reports/TopicPage.tsx": 1,
     "src/features/reports/TopicsIndex.tsx": 1
   },
-  "BillStatus": {
-    "src/features/bills/parts.tsx": 1,
-    "src/onboarding/padScenes.tsx": 1
-  },
   "radius token": {
     "src/features/money/ported/force3d.ts": 7,
     "src/features/money/ported/map-types.ts": 2,
@@ -205,6 +186,9 @@
   },
   "RoundButton": {
     "src/features/talk/TalkScreen.tsx": 5
+  },
+  "BillStatus": {
+    "src/onboarding/padScenes.tsx": 1
   },
   "Figure": {
     "src/workbench/Workbench.tsx": 4

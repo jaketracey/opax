@@ -197,7 +197,7 @@ export function billDedupeDivisions(divisions: Division[], bill: BillDetail) {
   kept.sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
   return { divisions: kept, collapsed };
 }
-function billStripTitle(
+export function billStripTitle(
   text: string,
   bill: Pick<BillDetail, 'title' | 'short_title'>,
 ) {
