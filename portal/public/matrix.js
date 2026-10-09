@@ -85,7 +85,7 @@ function searchHash (q, f) {
   for (const k of ['speaker', 'party', 'state', 'topic', 'from', 'to']) {
     if (f[k]) p.set(k, f[k])
   }
-  return `#/search?${p.toString()}`
+  return `/ask?view=search&${p.toString()}`
 }
 
 // The chart mark (bronze) at a strength that scales with share. Capped so

@@ -1,3 +1,4 @@
+import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
 import { filterMoneyEdges } from "./money-records.js?v=ia-ux-20260908-2";
 /**
  * OPAX Ledger — an analyst-grade table over the donor→party money flows.
@@ -486,7 +487,7 @@ function dotLabel (colour, node) {
 
 function subjectLink (kind, label) {
   const a = el('a', null, label)
-  a.href = `#/subject/${kind}/${encodeURIComponent(label)}`
+  a.href = subjectUrl(kind,label)
   return a
 }
 

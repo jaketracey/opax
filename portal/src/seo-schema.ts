@@ -190,7 +190,7 @@ export function buildSchemaGraph(options: SchemaGraphOptions): SchemaNode {
       '@type': 'WebSite', '@id': `${origin}/#website`, name: 'OPAX', url: `${origin}/`,
       publisher: { '@id': `${origin}/#organization` },
       potentialAction: {
-        '@type': 'SearchAction', target: `${origin}/search?q={search_term_string}`,
+        '@type': 'SearchAction', target: `${origin}/ask?view=search&q={search_term_string}`,
         'query-input': 'required name=search_term_string',
       },
     })

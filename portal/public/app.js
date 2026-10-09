@@ -1083,7 +1083,7 @@ function discoveryChartHTML(chart) {
   if (chart.other_total > 0) rows.push({ name: `Other ${chart.other_count.toLocaleString("en-AU")} ${chart.participant_label === "supplier" ? "suppliers" : "contributors"}`, value: chart.other_total, share: chart.other_share, other: true });
   return `<div class="discovery-chart" role="group" aria-label="Share of recorded value">
     ${rows.map((row, index) => `<div class="discovery-chart-row${index === 0 ? " is-leader" : ""}${row.other ? " is-other" : ""}">
-      <div class="discovery-chart-label"><span>${chart.participant_label === "supplier" && !row.other ? `<a href="/subject/supplier/${encodeURIComponent(row.name)}">${esc(row.name)}</a>` : esc(row.name)}</span><span><strong>${esc(discoveryMoney(row.value))}</strong> <span class="discovery-chart-share">${esc(discoveryPercent(row.share))}</span></span></div>
+      <div class="discovery-chart-label"><span>${chart.participant_label === "supplier" && !row.other ? `<a href="/subject/supplier?q=${encodeURIComponent(row.name)}">${esc(row.name)}</a>` : esc(row.name)}</span><span><strong>${esc(discoveryMoney(row.value))}</strong> <span class="discovery-chart-share">${esc(discoveryPercent(row.share))}</span></span></div>
       <div class="discovery-track" aria-hidden="true"><span style="width:${discoveryBarWidth(row.share)}%"></span></div>
     </div>`).join("")}</div>`;
 }
@@ -1111,7 +1111,7 @@ function discoveryDetailHTML(signal) {
       </div><p class="discovery-chart-note">Different money flows and reporting periods. A shared name doesn’t show that one led to the other.</p>`;
   }
   return `<article class="discovery-detail-card">${main}
-    <div class="discovery-actions">${signal.category !== "recipient_concentration" ? `<a href="/subject/supplier/${encodeURIComponent(signal.entity)}">Explore supplier profile</a>` : ""}<a href="/search?kind=speech&q=${encodeURIComponent(signal.entity)}">Find mentions in parliament</a>${!contracts ? '<button type="button" id="discover-map-toggle" aria-expanded="false" aria-controls="discover-map-area">Explore connections on the money map</button>' : ""}</div>
+    <div class="discovery-actions">${signal.category !== "recipient_concentration" ? `<a href="/subject/supplier?q=${encodeURIComponent(signal.entity)}">Explore supplier profile</a>` : ""}<a href="/ask?view=search&kind=speech&q=${encodeURIComponent(signal.entity)}">Find mentions in parliament</a>${!contracts ? '<button type="button" id="discover-map-toggle" aria-expanded="false" aria-controls="discover-map-area">Explore connections on the money map</button>' : ""}</div>
     ${!contracts ? '<div id="discover-map-area" hidden><p class="discovery-chart-note">Political funding connections from the money map. Its coverage differs from this comparison.</p><div id="discover-map-root" class="discovery-map"></div><a href="/money">Open the full money map</a></div>' : ""}
     ${discoveryEvidenceHTML(signal)}</article>`;
 }
@@ -1131,7 +1131,7 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=7d4f197b4f");
+    const { mountMoneyMap } = await import("/money-map.js?v=5e54b1085d");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json?v=suppliers-1", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -1327,7 +1327,7 @@ async function openMoneyRecords(kind, params) {
   $('money-records-title').textContent = grants ? 'Government grants' : 'Political receipts';
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
-    const mod = await import(grants ? '/grants.js?v=557f678c0f' : '/ledger.js?v=b2c87b6d9e');
+    const mod = await import(grants ? '/grants.js?v=9e66f26ed2' : '/ledger.js?v=65ee0aa12f');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1355,7 +1355,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=7beb5d1733');
+    const mod = await import('/grant-recipient.js?v=4dd6535cba');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1449,7 +1449,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=7d4f197b4f"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=remove-copy-link-1"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=5e54b1085d"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=remove-copy-link-1"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1683,7 +1683,7 @@ function rawFragment() {
 }
 
 /* --- routes are real paths --------------------------------------------------
-   /subject/person/Anthony%20Albanese, /reports/gambling, /search?q=…: the
+   /subject/person/anthony-albanese, /reports/gambling, /ask?view=search&q=…: the
    Worker serves each one with its own head (docs/SEO.md) and the address bar
    shows what a reader can copy. The older "#/…" form is still understood
    everywhere it survives — bookmarks, shared links, the bundled explore
@@ -3558,20 +3558,22 @@ function votesFor(name, pid) {
   return keys.map((k) => votesData?.[k]).find((r) => r && typeof r === "object") || null;
 }
 
+let personUrls = null;
+const personUrl = name => personUrls?.personUrl(name) || '/subject/person';
+const personUrlsReady = import('/canonical-urls.js?v=225d5915ea').then(module => { personUrls = module; });
+
 function subjectHash(kind, label) {
-  // A person in the roster is addressed by slug (/subject/person/tony-abbott);
-  // anyone else, and every link written before the slugs arrive, by name. The
-  // name form still opens the page and is rewritten to the slug on arrival.
+  // Person links use the roster's verified slugs and reviewed name aliases.
   if (!hasEntityId(label) || !hasEntityId(kind)) return null;
-  const slug = kind === "person" ? personSlugs.byName.get(label) : null;
+  if (kind === "person") return personUrl(label);
+  const slug = kind === "party" ? personSlug(label) : null;
   return `/subject/${kind}/${slug || encodeURIComponent(label)}`;
 }
 
 /* --- person slugs -------------------------------------------------------------
    /api/person-slugs is the Worker's slug -> name map (src/person-slug.ts): the
-   roster's people, one slug each. It is fetched once at boot; until it lands,
-   links are written with names, which the Worker and openSubject() both forward
-   to the slug, so nothing waits on it. personSlug() must match the Worker's:
+   roster's people, one slug each. It is fetched once at boot to resolve profile routes;
+   links use the built canonical URL lookup. personSlug() must match the Worker's:
    test/person-slug.test.mjs holds the two together. */
 const personSlugs = { byName: new Map(), bySlug: new Map(), ready: null };
 function personSlug(name) {
@@ -4109,7 +4111,7 @@ async function mountSubjectMap(nodeId, label = "") {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=7d4f197b4f");
+    const { mountMoneyMap } = await import("/money-map.js?v=5e54b1085d");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
@@ -5317,7 +5319,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     reserveSubjectMap(true);
     const [, fits] = await Promise.all([loadMoneyData(), loadFits()]);
     if (currentSubjectKey !== key) return;
-    const node = findMoneyNode(kind, name);
+    const node = findMoneyNode(kind, name) || (kind === "party" ? moneyData?.nodes.find(n => n.kind === "party" && personSlug(n.label) === name) : null);
     // An old spelling reaches the canonical entry: retitle to the canonical
     // name so the totals below are never attributed to one of its aliases.
     if (node && normName(node.label) !== normName(name)) {
@@ -5890,7 +5892,7 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
 }
 
 function splitSpeechSearch(speaker) {
-  return `/search?${new URLSearchParams({ q: '*', speaker, kind: 'speech', mode: 'keyword', sort: 'newest' })}`;
+  return `/ask?view=search&${new URLSearchParams({ q: '*', speaker, kind: 'speech', mode: 'keyword', sort: 'newest' })}`;
 }
 
 function polishPersonSections(sections) {
@@ -6561,7 +6563,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=2cdbed45d3").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=60788ca4ae").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -6713,11 +6715,14 @@ let activeDirectory = null;
  * ("All parliaments" needs no "Parliament" above it).
  */
 function renderDirectory(spec) {
+  const directoryPath=new URL(directoryHash(spec.kind,{}),SITE_ORIGIN).pathname;
+  directoryPageCounts.set(directoryPath,Math.max(1,Math.ceil(spec.items.length/50)));
   const body = $(spec.mount || "subject-body");
   const state = { q: "", sort: spec.sorts[0][0] };
   for (const f of spec.filters) state[f.key] = "";
   const readParams = (params) => {
     state.q = params.get("q") || "";
+    state.page = params.get("page") || "";
     const sort = params.get("sort");
     state.sort = spec.sorts.some(([v]) => v === sort) ? sort : spec.sorts[0][0];
     for (const f of spec.filters) {
@@ -6810,7 +6815,12 @@ function renderDirectory(spec) {
       : `${spec.items.length.toLocaleString()} ${noun}`;
     empty.hidden = matched.length > 0;
     const hashState = { ...state, sort: state.sort === spec.sorts[0][0] ? "" : state.sort };
+    const requested=Number(state.page || 1);
+    const page=Number.isSafeInteger(requested) && requested>0 ? Math.min(requested,directoryPageCounts.get(directoryPath)) : 1;
+    hashState.page=page>1 ? page : '';
+    state.page=hashState.page;
     replaceRoute(directoryHash(spec.kind, hashState));
+    syncPathMeta();
   };
   const syncControls = () => {
     input.value = state.q;
@@ -8783,15 +8793,15 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
-  ballot: { name: "Build your ballot", dialog: "dialog-ballot", body: "explore-ballot", module: "/ballot.js?v=84e6e606af", mount: "mountBallot" },
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=22cdf8c645", mount: "mountTimeMachine" },
+  ballot: { name: "Build your ballot", dialog: "dialog-ballot", body: "explore-ballot", module: "/ballot.js?v=49e7bc6382", mount: "mountBallot" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=b331b0dcd1", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
-  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=0ba27e6c49", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=b2c87b6d9e", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=557f678c0f", mount: "mountGrants" },
-  matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=f78974fd8a", mount: "mountMatrix" },
-  wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=47288c1967", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=473540488e", mount: "mountThenVsNow" },
+  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=deeaffee40", mount: "mountQuiz" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=65ee0aa12f", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=9e66f26ed2", mount: "mountGrants" },
+  matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=25f5793db5", mount: "mountMatrix" },
+  wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=58a0a413a1", mount: "mountWordsDollars" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=f57768f881", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {
@@ -9382,7 +9392,7 @@ async function mountStateMap() {
   if (!root || stateMapHandle) return;
   try {
     const [mod, manifest] = await Promise.all([
-      import("/statemap.js?v=60d12f379b"),
+      import("/statemap.js?v=624f6e8974"),
       corpusManifest ? Promise.resolve(corpusManifest) : fetch("/corpus.json").then((r) => r.json()),
     ]);
     root.textContent = "";
@@ -9392,7 +9402,7 @@ async function mountStateMap() {
       moneyHref: (jur) => moneyHash(jur),
     });
   } catch {
-    root.innerHTML = `<p class="status">The map could not load here. <a href="/search">Search the record</a>.</p>`;
+    root.innerHTML = `<p class="status">The map could not load here. <a href="/ask?view=search">Search the record</a>.</p>`;
   }
 }
 
@@ -9401,7 +9411,7 @@ async function mountFrontMap() {
   if (!root || frontMapHandle || frontMapLoading) return;
   frontMapLoading = true;
   try {
-    const [mod, data] = await Promise.all([import("/money-map.js?v=7d4f197b4f"), loadMoneyData()]);
+    const [mod, data] = await Promise.all([import("/money-map.js?v=5e54b1085d"), loadMoneyData()]);
     if (!data) throw new Error("money data unavailable");
     root.textContent = "";
     const handle = await mod.mountMoneyMap(root, "/graph/money.json?v=suppliers-1", {
@@ -11603,7 +11613,7 @@ function recordTypeHref(kind, q = "", f = {}) {
   for (const k of ["speaker", "party", "state", "topic", "from", "to"]) if (f[k]) p.set(k, f[k]);
   if (f.mode && f.mode !== "hybrid") p.set("mode", f.mode);
   p.set("kind", kind);
-  return '/search?' + p;
+  return '/ask?view=search&' + p;
 }
 function recordTypeLink(kind, q, f) {
   return `<a class="search-record-kind" href="${esc(recordTypeHref(kind, q, f))}">${esc(FILTER_KIND_LABELS[kind] || kind)}</a>`;
@@ -12600,7 +12610,7 @@ function divisionMembersHTML(names, { ayes = 0, noes = 0 } = {}) {
   }
   if (names.text) return `${open}<div class="division-markdown">${billNoteHTML(names.text)}</div></section>`;
   const who = (list) => list.map((m) => `<li>${m.slug
-    ? `<a href="/subject/person/${encodeURIComponent(m.slug)}">${esc(m.name)}</a>` : esc(m.name)}</li>`).join("");
+    ? `<a href="${personUrl(m.name)}">${esc(m.name)}</a>` : esc(m.name)}</li>`).join("");
   const sides = [["Ayes", names.aye, ayes], ["Noes", names.no, noes], ...(names.paired?.length ? [["Paired, not counted", names.paired, names.paired.length]] : [])];
   return `${open}<div class="division-sides">${sides.map(([label, list, count]) => `<div>
         <h4 class="division-side">${label} <span>${Number(count || list.length).toLocaleString()}</span></h4>
@@ -14123,7 +14133,7 @@ document.addEventListener("close", (e) => {
 /** Words per dollar for the report's own industry: money beside the debate share, party by party. */
 async function mountReportWords(el, cfg, slug) {
   try {
-    const { mountWordsDollars } = await import("/wordsdollars.js?v=47288c1967");
+    const { mountWordsDollars } = await import("/wordsdollars.js?v=58a0a413a1");
     if (currentReportSlug !== slug || !el.isConnected) return;
     reportWordsHandle = mountWordsDollars(el, { only: [cfg.topic] });
   } catch {
@@ -14133,7 +14143,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=7d4f197b4f");
+    const { mountMoneyMap } = await import("/money-map.js?v=5e54b1085d");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
       chrome: "mini",
@@ -14743,7 +14753,7 @@ loadLiveStats();
 }
 
 // Path entry contract (docs/SEO.md): the Worker serves real paths such as
-// /subject/person/Name, /reports/gambling and /search?q=... for crawlers and
+// /subject/person/slug, /reports/gambling and /ask?view=search&q=... for crawlers and
 // shared links, and the app routes on those paths directly; the Worker's
 // crawler block (#prerender) then yields to the app's own render. What the
 // Worker wrote into the head names this one page ("Anthony Albanese · OPAX");
@@ -14751,6 +14761,7 @@ loadLiveStats();
 // long as that page is the one showing (a renderer such as Googlebot sees the
 // named version, not "OPAX encyclopedia").
 const BOOT_META = {
+  route: hereRoute(),
   url: document.querySelector('link[rel="canonical"]')?.getAttribute("href") || "",
   title: document.title,
   description: document.querySelector('meta[name="description"]')?.getAttribute("content") || "",
@@ -14789,9 +14800,20 @@ const VIEW_DESCRIPTIONS = {
   privacy: "What the OPAX website and app collect, which companies receive it, how long it is kept and how to delete your account.",
   support: "How to report a wrong record or answer, and help with signing in and deleting an OPAX account.",
 };
+const directoryPageCounts = new Map();
 function syncPathMeta() {
   const path = hereRoute();
-  const url = `${SITE_ORIGIN}${path}`;
+  const identity = new URL(path, SITE_ORIGIN);
+  const keep = identity.pathname.startsWith('/money/grants') ? identity.searchParams.has('program') || identity.searchParams.has('largest') ? ['jur','program','largest'] : identity.pathname.includes('/recipient/') ? ['award'] : ['page'] : ['/bills','/subject/person','/subject/party','/subject/electorate','/subject/supplier','/subject/agency','/subject/donor','/subject/campaigner'].includes(identity.pathname) ? ['page'] : [];
+  for (const key of [...identity.searchParams.keys()]) if (!keep.includes(key)) identity.searchParams.delete(key);
+  identity.hash = '';
+  const maxPage = directoryPageCounts.get(identity.pathname);
+  if (identity.searchParams.has('page') && maxPage) {
+    const requested=Number(identity.searchParams.get('page'));
+    const page=Number.isSafeInteger(requested) && requested>0 ? Math.min(requested,maxPage) : 1;
+    if(page>1) identity.searchParams.set('page',String(page)); else identity.searchParams.delete('page');
+  }
+  const url = path===BOOT_META.route && BOOT_META.url ? BOOT_META.url : identity.href;
   // Still on the page the Worker described: its title and description name
   // this subject, so they beat anything the view would set.
   const landed = url === BOOT_META.url;
@@ -14815,10 +14837,9 @@ function syncPathMeta() {
   }
 }
 
-// The first render waits for the labels every page draws and the attribution
-// helpers; person links are written as slugs once this lands, and nothing
-// waits on that.
-Promise.allSettled([attributionReady, uiLabelsReady, growthModulesReady]).finally(() => {
+// The first render waits for labels, attribution helpers and the canonical
+// person URL lookup, so links use the roster's aliases from the first render.
+Promise.allSettled([attributionReady, uiLabelsReady, growthModulesReady, personUrlsReady]).finally(() => {
   loadPersonSlugs();
   initAskBuilder();
   route();

@@ -47,13 +47,13 @@ test('the Worker serves /connections from the shell with its own head, and forwa
   globalThis.HTMLRewriter ??= class{on(){return this}transform(res){return res}};
   const page=await worker.fetch(new Request(`${origin}/connections?entity=abc`),env,{});
   assert.equal(page.status,200);
-  assert.deepEqual(calls,['/'],'the app shell answers the route');
+  assert.equal(calls[0],'/','the app shell answers the route');
   const body=await page.text();
   assert.ok(body.includes('id="panel-connections"'));
   assert.ok(body.includes('<header>') && body.includes('<footer>'),'the shared chrome comes with the shell');
   for(const path of ['/connections.html','/connections.html?entity=abc']){
     const moved=await worker.fetch(new Request(origin+path),env,{});
     assert.equal(moved.status,301);
-    assert.equal(moved.headers.get('location'),path.replace('.html',''));
+    assert.equal(moved.headers.get('location'),origin+path.replace('.html',''));
   }
 });

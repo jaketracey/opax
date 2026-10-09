@@ -167,7 +167,7 @@ const describe = (info) => [`${fmt(info.docs)} speeches`, info.coverage].filter(
 
 export function mountStateMap(container, opts = {}) {
   injectStyles()
-  const searchHref = opts.searchHref ?? ((code) => `#/search?state=${encodeURIComponent(code)}`)
+  const searchHref = opts.searchHref ?? ((code) => `/ask?view=search&state=${encodeURIComponent(code)}`)
   const moneyHref = opts.moneyHref ?? ((jur) => `#/money?jur=${encodeURIComponent(jur)}`)
   const data = readManifest(opts.manifest)
 

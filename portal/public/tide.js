@@ -15,7 +15,7 @@ const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (char) =>
 export function mountTide (container, options = {}) {
   const topics = options.topics || {}
   const topicPhrase = options.topicPhrase || ((slug) => String(topics[slug] || slug).toLowerCase())
-  const searchHash = options.searchHash || ((query) => `/search?q=${encodeURIComponent(query)}`)
+  const searchHash = options.searchHash || ((query) => `/ask?view=search&q=${encodeURIComponent(query)}`)
   const subjectHash = options.subjectHash || ((_kind, slug) => `/subject/topic/${encodeURIComponent(slug)}`)
   const coverageRuleHTML = options.coverageRuleHTML || (() => '')
   const cache = new Map()

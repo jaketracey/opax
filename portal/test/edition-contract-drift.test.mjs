@@ -1,3 +1,4 @@
+import {personSlug,slugIndex} from '../src/person-slug.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -48,7 +49,7 @@ test('frozen reader kinds, slide types and accepted links track the publisher co
   const {appEdition}=await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
   const fixtures={person:{name:'A Person / #'},bill:{key:'au-federal-r123'},grant:{recipientId:'ABN12345678901',id:'GA 123/#'},p:{key:'health / #'},month:'2026-09',slug:'climate / #'};
   for(const [kind,expression] of builders){
-    const url=runInNewContext(helperCode+'\n'+expression,{...fixtures},{timeout:1000});assert.equal(typeof url,'string');
+    const url=runInNewContext(helperCode+'\n'+expression,{...fixtures,roster:{people:[fixtures.person]},personSlug,slugIndex},{timeout:1000});assert.equal(typeof url,'string');
     for(const type of types){
       const basic=type=>({type,kicker:'Stored',title:'Stored title',alt:'Stored alternative'});
       const post={date:'2026-10-03',subject:kind+':fixture',kind,title:'Frozen title',text:'Frozen copy.',url,slides:[basic('cover'),basic(type),basic('source')]};

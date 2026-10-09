@@ -4,7 +4,8 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {readFile,readdir} from 'node:fs/promises';import {build} from 'esbuild';
 const bundle=async(entry)=>{const b=await build({entryPoints:[new URL(entry,import.meta.url).pathname],bundle:true,write:false,platform:'node',format:'esm'});return import('data:text/javascript;base64,'+Buffer.from(b.outputFiles[0].text).toString('base64'))};
 import {sponsorPerson,sponsorKey,sponsorNamesAgree} from '../public/sponsor-person.js';
-const {sponsorFor}=await bundle('../src/seo-content.ts');
+const {sponsorFor,renderBillAnswer}=await bundle('../src/seo-content.ts');
+const {slugIndex}=await bundle('../src/person-slug.ts');
 const app=await readFile(new URL('../public/app.js',import.meta.url),'utf8');
 const roster=JSON.parse(await readFile(new URL('../public/parliamentarians.json',import.meta.url),'utf8')).people;
 // The app's pinned roster (8f1305e3): Mehreen Faruqi's full-name row had no pid and only the surname
@@ -86,4 +87,9 @@ test("the SEO bill page names Faruqi's full-name row, not the committee print",a
  assert.equal(sponsorFor(b,roster)?.name,'Mehreen Faruqi');
  assert.equal(sponsorFor(b,pinned)?.name,'Mehreen Faruqi');
  assert.equal(sponsorFor({...b,sponsor:null},roster),null);
+ for(const people of [roster,pinned]) {
+  const html=renderBillAnswer(b,people,slugIndex(people).slugOf).html;
+  assert.match(html,/<dt>Sponsor<\/dt><dd><a href="\/subject\/person\/mehreen-faruqi">Mehreen Faruqi<\/a><\/dd>/);
+  assert.doesNotMatch(html,/<dt>Sponsor<\/dt><dd><a href="\/subject\/person\/faruqi">/);
+ }
 });

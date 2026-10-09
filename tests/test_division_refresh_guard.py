@@ -75,6 +75,27 @@ class DivisionRefreshGuardTests(unittest.TestCase):
         incoming["members"] = incoming["members"][:2]
         self.assertRetained(self.publish(incoming), "named-member-count-regression")
 
+    def test_retained_snapshot_can_add_dated_party_facts_without_losing_members(self):
+        incoming = deepcopy(self.previous)
+        incoming["members"] = incoming["members"][:2]
+        incoming["members"][0]["party"] = "Example Party"
+        original = deepcopy(incoming)
+        result = self.publish(incoming)
+        self.assertEqual(len(result["members"]), 3)
+        self.assertEqual(result["members"][0]["party"], "Example Party")
+        self.assertNotIn("party", result["members"][1])
+        self.assertTrue(result["_meta"]["refresh_retained"])
+        self.assertEqual(result["_meta"]["party_source"], "parli.db-ext-votes")
+        self.assertEqual(incoming, original)
+
+    def test_retained_snapshot_rejects_party_facts_from_changed_date(self):
+        incoming = deepcopy(self.previous)
+        incoming["date"] = "2026-09-02"
+        incoming["members"] = incoming["members"][:2]
+        incoming["members"][0]["party"] = "Example Party"
+        result = self.publish(incoming)
+        self.assertEqual(result["members"], self.previous["members"])
+
     def test_same_named_count_cannot_replace_a_previous_absent_member(self):
         incoming = deepcopy(self.previous)
         incoming["members"][2].update(name="Dana Example", person_slug="dana-example")

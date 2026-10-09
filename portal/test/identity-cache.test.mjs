@@ -74,9 +74,9 @@ test('every module that loads identity files itself is content-stamped where it 
     for (const file of files.filter((f) => f !== mod)) {  // its own usage example is not an import
       const src = await readFile(new URL(file, pub), 'utf8');
       // an import: import("/m.js"), from '/m.js', or the explore registry's module: "/m.js" (not a doc comment)
-      for (const [, url] of src.matchAll(new RegExp(`(?:import\\(\\s*|from\\s+|module:\\s*)["'\`](/${mod.replace('.', '\\.')}[^"'\`]*)["'\`]`, 'g'))) {
+      for (const [, url] of src.matchAll(new RegExp(`(?:import\\(\\s*|from\\s+|module:\\s*)["'\`](\\.?/${mod.replace('.', '\\.')}[^"'\`]*)["'\`]`, 'g'))) {
         refs++;
-        assert.equal(url, `/${mod}?v=${hash}`, `${file} imports ${mod} without its current stamp: run node scripts/stamp_assets.mjs`);
+        assert.equal(url.replace(/^\.\//,'/'), `/${mod}?v=${hash}`, `${file} imports ${mod} without its current stamp: run node scripts/stamp_assets.mjs`);
       }
     }
     assert.ok(refs >= 1, `${importer} imports /${mod}`);

@@ -1,6 +1,7 @@
 import type { RecordQuestion } from './ask-records'
 import type { CatalogRecord } from './catalog-search'
 import { payPersonRecord, payGeneralRecords } from './pay-records.mjs'
+import { personUrl } from '../public/canonical-urls.js'
 
 /**
  * "Who is the highest paid politician?" has an answer, and it is not in any
@@ -86,7 +87,7 @@ const loading = (pct: number) => pct ? `${pct}%` : 'none'
 const financialYear = (start: number) => `${start}–${String(start + 1).slice(2)}`
 /** Must fold exactly as scripts/build_pay.py does: pay.json's names are keyed by it. */
 const fold = (s: string) => s.normalize('NFKD').replace(/[^\x00-\x7f]/g, '').toLowerCase().replace(/[^a-z' -]/g, ' ').replace(/\s+/g, ' ').trim()
-const personHref = (name: string) => `/subject/person/${encodeURIComponent(name)}#person-pay`
+const personHref = (name: string) => `${personUrl(name)}#person-pay`
 
 /** Pay is in the question, and it is a parliamentarian's: what the record search
  *  should carry pay evidence for, whether or not a calculated answer follows. */

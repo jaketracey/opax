@@ -1,16 +1,19 @@
+import {personUrl} from '../public/canonical-urls.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile, readdir} from 'node:fs/promises';
 import {interestHref, interestPerson} from '../../scripts/build_search_catalog.mjs';
 import {searchCatalog} from '../src/catalog-search.ts';
 
-test('an exact speaker name keeps its profile when the directory has no match', () => {
+test('speaker-only names keep the official source unless a canonical profile exists', () => {
   const register = {name: 'Ann Leahy', jurisdiction: 'qld', source_url: 'https://register.example/qld.pdf'};
   const speakers = new Set(['Ann Leahy']);
-  assert.equal(interestHref(register, null, speakers), '/subject/person/Ann%20Leahy');
+  assert.equal(interestHref(register, null, speakers), register.source_url);
   assert.equal(interestHref({...register, name: 'ann leahy'}, null, speakers), register.source_url);
   assert.equal(interestHref({...register, name: 'Unknown Member'}, null, speakers), register.source_url);
-  assert.equal(interestHref(register, {name: 'Resolved Member'}, speakers), '/subject/person/Resolved%20Member');
+  assert.equal(interestHref(register, {name: 'Resolved Member'}, speakers), register.source_url);
+  const known = {...register, name: 'Jess Pugh'};
+  assert.equal(interestHref(known, null, new Set(['Jess Pugh'])), '/subject/person/pugh');
 });
 
 test('Queensland Robert Katter cannot borrow Bob Katter’s federal alias or speaker name', () => {
@@ -42,7 +45,8 @@ test('rebuilt Queensland interest records retain exact speaker profiles and othe
     if (register.jurisdiction !== 'qld' || !Object.values(register.buckets || {}).some(b => b.items?.length)) continue;
     const person = interestPerson(register, file.slice(0, -5), roster.people, index._by_name);
     const profileName = person?.name || (speakerNames.has(register.name) ? register.name : null);
-    const expected = profileName ? '/subject/person/' + encodeURIComponent(profileName) : register.source_url;
+    const canonical = profileName ? personUrl(profileName) : '/subject/person';
+    const expected = canonical === '/subject/person' ? register.source_url : canonical;
     const data = await searchCatalog(new URL('https://opax.test/api/search-all?' + new URLSearchParams({
       q: register.name, kind: 'interest', state: 'qld', per: '100',
     })), assets);

@@ -201,6 +201,19 @@ test('politician post names the member, seat, count and top topics', async () =>
   assert.notEqual(other.subject, post.subject, 'a recently featured member is skipped');
 });
 
+test('politician publisher keeps a colliding roster row at its distinct canonical slug', async () => {
+  const base = sources(['person:Alex Example']);
+  const people = [
+    { ...roster.people[0], name:'Alex Example', speeches:9000 },
+    { ...roster.people[0], name:'Alex-Example', speeches:500 },
+  ];
+  const src = { ...base, asset:async path=>path==='/parliamentarians.json'?{people}:base.asset(path) };
+  const post = await composeDailyPost('2026-09-10',src,'politician');
+  assert.equal(post.title,'Alex-Example');
+  assert.match(post.url,/^https:\/\/opax\.com\.au\/subject\/person\/alex-example-[a-f0-9]+$/);
+  assert.equal(post.slides.find(s=>s.type==='source').path,new URL(post.url).pathname);
+});
+
 test('bill post uses the summary sentences and a readable sponsor', async () => {
   const post = await composeDailyPost('2026-09-10', sources(['bill:au-federal-r7400', 'bill:au-federal-ed-draft-2026']), 'bill');
   assert.equal(post.kind, 'bill');
@@ -420,7 +433,9 @@ test('a member gets the electorate slide and the portrait inset; a senator gets 
   assert.deepEqual(member.slides[2].items, [{ label: 'Health', pct: 20 }, { label: 'Tax & budget', pct: 16 }, { label: 'Unions & workplace', pct: 15 }]);
   assert.equal(member.slides[3].title, 'Grayndler');
   assert.equal(member.slides[3].kicker, "The electorate's grants");
-  assert.equal(member.slides[4].path, 'Anthony Albanese');
+  assert.equal(member.slides[4].path, '/subject/person/anthony-albanese');
+  assert.equal(member.url,'https://opax.com.au/subject/person/anthony-albanese');
+  assert.equal(member.slides[4].url,'opax.com.au/subject/person/anthony-albanese');
   const senator = await composeDailyPost('2026-09-10', sources(['person:Anthony Albanese']), 'politician');
   assert.equal(senator.title, 'Penny Wong');
   assert.deepEqual(types(senator), ['cover', 'number', 'bars', 'source']);

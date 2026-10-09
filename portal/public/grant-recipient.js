@@ -1,4 +1,5 @@
-import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=557f678c0f';
+import {partyUrl} from './canonical-urls.js?v=225d5915ea';
+import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=9e66f26ed2';
 
 const MONEY = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 2 });
 const NUMBER = new Intl.NumberFormat('en-AU');
@@ -98,7 +99,7 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
       ? 'Published annual expenditure, including grants, service agreements and other assistance.'
       : 'Published Commonwealth grant awards. Award values do not establish payments received.', 'grant-recipient-intro'));
     const actions = node('nav', null, 'grant-recipient-actions'); actions.setAttribute('aria-label', 'Recipient actions');
-    actions.append(link(`/search?q=${encodeURIComponent('"' + data.n + '"')}`, 'Search parliamentary records'));
+    actions.append(link(`/ask?view=search&q=${encodeURIComponent('"' + data.n + '"')}`, 'Search parliamentary records'));
     if (data.d) actions.append(link(`/subject/donor/${encodeURIComponent(data.d.n)}`, 'View donor profile'));
     downloadUrl = URL.createObjectURL(new Blob([JSON.stringify({ ...data, source_url: SOURCES[jurisdiction], source_meta: index.meta }, null, 2)], { type: 'application/json' }));
     const download = link(downloadUrl, 'Download recipient data'); download.download = `${jurisdiction}-${fileKey(id)}.json`; actions.append(download);
@@ -186,12 +187,12 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
       donations.append(definitionList([['Matched by', donor.m === 'abn' ? 'ABN' : donor.m === 'abr_name' ? 'Registered business name' : 'Organisation name'], ['Matched name / identifier', donor.on]]));
       if (donor.aec > 0) {
         donations.append(node('h3', 'AEC returns'), node('p', `${money(donor.aec)} disclosed${donor.y0 ? `, ${donor.y0}–${donor.y1 || donor.y0}` : ''}.`));
-        donations.append(valueTable('Disclosed by party', Object.entries(donor.p || {}).sort((a,b) => b[1] - a[1]), name => link(`/subject/party/${encodeURIComponent(name)}`, name)));
+        donations.append(valueTable('Disclosed by party', Object.entries(donor.p || {}).sort((a,b) => b[1] - a[1]), name => link(partyUrl(name), name)));
         const years = donorYears(donor.py); if (years.length) donations.append(valueTable('AEC party returns by year', years));
       }
       for (const [jur, register] of Object.entries(donor.st || {})) {
         donations.append(node('h3', REGISTERS[jur] || jur), node('p', `${money(register.t)} in ${NUMBER.format(register.c || 0)} gifts.`));
-        donations.append(valueTable('Disclosed by party', Object.entries(register.p || {}).sort((a,b) => b[1] - a[1]), name => link(`/subject/party/${encodeURIComponent(name)}`, name)));
+        donations.append(valueTable('Disclosed by party', Object.entries(register.p || {}).sort((a,b) => b[1] - a[1]), name => link(partyUrl(name), name)));
         const years = donorYears(register.py); if (years.length) donations.append(valueTable('State party returns by year', years));
       }
       if (!(donor.aec > 0) && !Object.keys(donor.st || {}).length) donations.append(node('p', 'Listed in the register, with no gifts to a party in the exposed returns.'));

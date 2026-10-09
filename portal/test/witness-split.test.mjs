@@ -1,3 +1,5 @@
+import {personNameKey} from '../public/canonical-urls.js';
+import {personIndex} from '../src/person-slug.ts';
 import * as passageText from '../src/passage-text.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -8,6 +10,7 @@ import { personSpeechCount } from '../../scripts/build_search_catalog.mjs';
 import { isWitness, isUnattributed, belongsToScope, scopeFilter, speakerHref, splitSpeakers, splitPerson, personScope, scopedCollaborators } from '../public/speech-attribution.js';
 
 const source = ts.createSourceFile('index.ts', readFileSync(new URL('../src/index.ts', import.meta.url), 'utf8'), ts.ScriptTarget.Latest, true);
+const scopedContext = (code,context,opts) => runInNewContext(code,{personNameKey,personIndex,...context},opts);
 const select = names => source.statements.filter(n => ts.isFunctionDeclaration(n) ? names.includes(n.name?.text) :
   ts.isVariableStatement(n) && n.declarationList.declarations.some(d => names.includes(d.name.getText(source)))).map(n => n.getText(source)).join('\n');
 const scope = { state: 'qld', chamber: 'qld_la' };
@@ -65,7 +68,7 @@ test('real search code sends own-house filters and drops witness or other-house 
   add('4','nsw','nsw_la','member','nsw_stewart');
   add('5','qld','qld_la','unknown',null);
   const calls = [];
-  const api = runInNewContext(ts.transpile(select(['searchWindow', 'filterExpression', 'canonicalSpeaker', 'TOPIC_SLUGS', 'speakerAttribution', 'foldName'])) + ';searchWindow', {
+  const api = scopedContext(ts.transpile(select(['searchWindow', 'filterExpression', 'canonicalSpeaker', 'TOPIC_SLUGS', 'speakerAttribution', 'foldName'])) + ';searchWindow', {
     ...passageText, URL, isWitness, belongsToScope, scopeFilter, personScope, scopedCollaborators, SLUG_RE: /^speech-(\d+)$/, DIVISION_SLUG_RE: /^division-/,
     stripListingBoilerplate: s => s, calibrate: s => s,
     label: (r, key) => r.usermetadata.classifications.find(c => c.labelset === key)?.label,
@@ -87,7 +90,7 @@ test('real search code sends own-house filters and drops witness or other-house 
 });
 
 test('real answer source cards preserve own-house attribution and clear testimony or other-house MP fields',()=>{
- const api=runInNewContext(ts.transpile(select(['askPayload','foldName']))+';askPayload',{
+ const api=scopedContext(ts.transpile(select(['askPayload','foldName']))+';askPayload',{
   ...passageText,isWitness,belongsToScope,recordSources:()=>[],
   label:(r,key)=>r.usermetadata.classifications.find(c=>c.labelset===key)?.label,
  });
@@ -107,7 +110,7 @@ test('real answer source cards preserve own-house attribution and clear testimon
 
 test('Ask scope and topic catalog use the same partition; prior citations cannot reintroduce witnesses', async () => {
   const calls = [];
-  const api = runInNewContext(ts.transpile(select(['scopeSpeakerBody', 'reasonedPositionAnswer', 'apiPersonTopics', 'speakerAttribution', 'foldName', 'canonicalSpeaker', 'TOPIC_SLUGS'])) + ';({scopeSpeakerBody,reasonedPositionAnswer,apiPersonTopics})', {
+  const api = scopedContext(ts.transpile(select(['scopeSpeakerBody', 'reasonedPositionAnswer', 'apiPersonTopics', 'speakerAttribution', 'foldName', 'canonicalSpeaker', 'TOPIC_SLUGS'])) + ';({scopeSpeakerBody,reasonedPositionAnswer,apiPersonTopics})', {
     URL, AbortSignal, scopeFilter, personScope, scopedCollaborators, MAX_SPEAKER_CHARS: 160, NAME_RE: /^[\w ]+$/, TOPIC_FILTER_PREFIX: '/classification.labels/topic', ASK_SYNC_TIMEOUT_MS:1000,
     buildAskBody:()=>({rag_strategies:[{name:'prequeries'}]}),isRefusal:()=>false,hasUnsupportedQuotes:()=>false,
     askPayload:()=>({answer:'Grounded answer.',citations:{p:[[0,1]]},sources:[]}),
@@ -153,7 +156,7 @@ test('pending counts cannot credit committee parliamentarians in catalog, descri
     assert.match(personSpeechCount(p),/Count pending exact export/);
     assert.doesNotMatch(personSpeechCount(p),/178|120|Up to|≤/);
   }
-  const api = runInNewContext(ts.transpile(select(['personMeta']))+';personMeta', {
+  const api = scopedContext(ts.transpile(select(['personMeta']))+';personMeta', {
     SITE_ORIGIN:'https://local.test', CHAMBER_NAMES:{qld_la:'Legislative Assembly'}, STATE_NAMES:{qld:'Queensland parliament'},
     personAt:(people,name)=>people.byFold.get(name.toLowerCase()),personPath:(_people,name)=>'/subject/person/'+name,
     photoIdFor:()=>null,creditLine:async()=>null,
@@ -176,10 +179,10 @@ test('pending counts cannot credit committee parliamentarians in catalog, descri
 
 test('a failed attribution import still starts routing and the Ask builder', async () => {
   const app = readFileSync(new URL('../public/app.js',import.meta.url),'utf8');
-  const boot = app.slice(app.lastIndexOf('Promise.allSettled([attributionReady, uiLabelsReady, growthModulesReady])'));
+  const boot = app.slice(app.lastIndexOf('Promise.allSettled([attributionReady, uiLabelsReady, growthModulesReady, personUrlsReady])'));
   const called = [];
   const ready = Promise.reject(new Error('simulated missing asset'));
-  await runInNewContext(boot,{attributionReady:ready,uiLabelsReady:Promise.resolve(),growthModulesReady:Promise.resolve(),Promise,
+  await scopedContext(boot,{attributionReady:ready,uiLabelsReady:Promise.resolve(),personUrlsReady:Promise.resolve(),growthModulesReady:Promise.resolve(),Promise,
     loadPersonSlugs:()=>called.push('slugs'),initAskBuilder:()=>called.push('ask'),route:()=>called.push('route')});
   assert.deepEqual(called,['slugs','ask','route']);
 });
@@ -205,21 +208,21 @@ test('full-name and reviewed KB aliases resolve to one scoped print, including P
 
 test('full-name routing merges roster-only Pugh, keeps clean pages, and redirects to the print canonical', async () => {
   const reference = { people: [{ name: 'Jess Pugh', aliases: [], electorates: [{ current: true, name: 'Mount Ommaney' }] }] };
-  const data = runInNewContext(ts.transpile(select(['loadPeople', 'personAt', 'personSlugRedirect', 'foldName'])) + ';({loadPeople,personAt,personSlugRedirect})', {
-    peopleMemo: null, splitSpeakers, Response,
+  const data = scopedContext(ts.transpile(select(['loadPeople', 'personAt', 'canonicalRoutePath', 'personPath', 'matchSeoRoute', 'foldName'])) + ';({loadPeople,personAt,canonicalRoutePath})', {
+    peopleMemo: null, splitSpeakers, Response, URL, missingEntitySlug:()=>false,
     assetJson: async () => structuredClone(roster), loadElectorates: async () => reference,
     slugIndex: people => ({ slugOf: new Map(people.map(p => [p.name, p.name.toLowerCase()])), bySlug: new Map(people.map(p => [p.name.toLowerCase(), p])) }),
   });
   const people = await data.loadPeople({});
   assert.equal(people.people.length, roster.people.length);
   assert.equal(data.personAt(people, 'Jess Pugh').name, 'Pugh');
-  const redirect = await data.personSlugRedirect('Jess Pugh', new URL('https://local.test/subject/person/Jess%20Pugh'), {});
-  assert.equal(redirect.status, 301);
-  assert.equal(redirect.headers.get('location'), '/subject/person/pugh');
+  const redirect = await data.canonicalRoutePath(new URL('https://local.test/subject/person/Jess%20Pugh'), {});
+  assert.equal(typeof redirect, 'string');
+  assert.equal(redirect, '/subject/person/pugh');
   for (const p of roster.people.filter(p => !p.speech_scope)) assert.deepEqual(plain(people.byName.get(p.name)), p);
   const app = ts.createSourceFile('app.js',readFileSync(new URL('../public/app.js',import.meta.url),'utf8'),ts.ScriptTarget.Latest,true);
   const loader = app.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text==='loadParliamentarians').getText(app);
-  const load = runInNewContext(loader+';loadParliamentarians', {
+  const load = scopedContext(loader+';loadParliamentarians', {
     parliamentariansPromise:null, splitSpeakers, fetch:async()=>Response.json(structuredClone(roster)),
     loadElectorateModule:async()=>({loadPeople:async()=>reference}),
   });
@@ -234,7 +237,7 @@ test('own-speaker search expands aliases without admitting another speaker; test
   const own = { slug: 'speech-1', title: 'Resources', origin: { collaborators: ['Scott Stewart'] },
     usermetadata: { classifications: Object.entries({ kind: 'speech', state: 'qld', chamber: 'qld_la' }).map(([labelset,label]) => ({labelset,label})) },
     extra: { metadata: { date: '2024-06-01', person_id: 'qld_stewart' } }, fields: {} };
-  const api = runInNewContext(ts.transpile(select(['searchWindow', 'filterExpression', 'canonicalSpeaker', 'TOPIC_SLUGS', 'speakerAttribution', 'foldName'])) + ';searchWindow', {
+  const api = scopedContext(ts.transpile(select(['searchWindow', 'filterExpression', 'canonicalSpeaker', 'TOPIC_SLUGS', 'speakerAttribution', 'foldName'])) + ';searchWindow', {
     ...passageText, URL, isWitness, belongsToScope, scopeFilter, personScope, scopedCollaborators,
     SLUG_RE: /^speech-(\d+)$/, DIVISION_SLUG_RE: /^division-/, stripListingBoilerplate: s=>s, calibrate:s=>s,
     label:(r,key)=>r.usermetadata.classifications.find(c=>c.labelset===key)?.label,
@@ -254,7 +257,7 @@ test('own-speaker search expands aliases without admitting another speaker; test
 test('every clean profile keeps current main’s curated roster party precedence', () => {
   const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
   const partyLine = app.match(/  const party = partyNow \|\|.*;/)[0];
-  const party = (roster, spokeAs) => runInNewContext(partyLine + ';party', {roster, spokeAs, partyNow:roster?.party_now || null});
+  const party = (roster, spokeAs) => scopedContext(partyLine + ';party', {roster, spokeAs, partyNow:roster?.party_now || null});
   for (const p of roster.people.filter(p=>!p.speech_scope)) for (const spokeAs of ['Labor','Independent',null]) {
     assert.equal(party(p,spokeAs),p.party_now || p.party || spokeAs,p.name);
   }

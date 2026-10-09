@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 import { shortDate, shortMoney } from '../public/format.js';
 import { associationHTML } from '../public/growth-modules.js';
+import { partyUrl } from '../public/canonical-urls.js';
 
 // Execute the actual module; only replace its dynamic WebGL import with a
 // controlled loader. The small DOM below models the nodes this module touches.
@@ -26,7 +27,7 @@ function node() {
   };
 }
 function setup(fetch, mount = async () => ({ destroy() {}, setPaused() {} })) {
-  const context = { fetch, AbortController, URLSearchParams, history: { replaceState() {} }, shortDate, shortMoney,
+  const context = { fetch, AbortController, URLSearchParams, history: { replaceState() {} }, shortDate, shortMoney, partyUrl,
     mountSupplierGrowth: () => {}, supplierDonations: async () => ({html: "", links: []}), associationHTML,
     loadMapModule: async () => ({ mountMoneyMap: mount }) };
   runInNewContext(source, context);

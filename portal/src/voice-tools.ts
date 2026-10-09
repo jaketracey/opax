@@ -93,7 +93,7 @@ export async function runVoiceTool(name: string, args: Data, env: Env, readPubli
     const params = new URLSearchParams({q: query, kind, per: '6', page: '1'})
     data = await boundedJson(await readPublic('/api/search-all?' + params))
     data.results = rows(data, 'results').slice(0, 6).map(row => ({...row, ...(/^catalog-\d+$/.test(String(row.slug)) && /^[a-f0-9]{16}$/.test(String(data.index_version)) ? {slug:String(row.slug).replace('catalog-', 'catalog-' + data.index_version + '-')} : {}), opax_url: safeLink(origin, row)}))
-    url = origin + '/search?' + params
+    url = origin + '/ask?view=search&' + params
   } else if (name === 'read_record') {
     const slug = text(args.slug, 1, 180, 'Record identifier')
     const catalog = /^catalog-(?:([a-f0-9]{16})-)?(\d{1,8})$/.exec(slug)

@@ -127,11 +127,25 @@ async function refreshFonts() {
  *  agencies.js and suppliers.js import each other, so app.js keeps a hand
  *  version for them: bump it when their money-map.js stamp moves. */
 export const MODULE_STAMPS = [
+  ['canonical-urls.js', 'person-paths.js'],
+  ['ballot.js', 'canonical-urls.js'],
+  ['electorates.js', 'canonical-urls.js'],
+  ['evidence.js', 'canonical-urls.js'],
+  ['grants.js', 'canonical-urls.js'],
+  ['grant-recipient.js', 'canonical-urls.js'],
+  ['home-data.js', 'canonical-urls.js'],
+  ['home.js', 'canonical-urls.js'],
+  ['ledger.js', 'canonical-urls.js'],
+  ['money-journeys.js', 'canonical-urls.js'],
+  ['quiz.js', 'canonical-urls.js'],
+  ['suppliers.js', 'canonical-urls.js'],
+  ['timemachine.js', 'canonical-urls.js'],
   // The money map's bundle names its chunks by content, so an importer holding
   // an old money-map.js would ask for chunks the build has removed.
   ['map-page.js', 'money-map.js'], ['agencies.js', 'money-map.js'], ['suppliers.js', 'money-map.js'],
-  ['thenvsnow.js', 'wombat.js'], ['grant-recipient.js', 'grants.js'],
+  ['thenvsnow.js', 'wombat.js'], ['thenvsnow.js', 'labels.js'], ['grant-recipient.js', 'grants.js'],
   ['electorates.js', 'labels.js'], ['home-data.js', 'labels.js'],
+  ['app.js', 'canonical-urls.js'],
   ['app.js', 'labels.js'], ['app.js', 'electorates.js'], ['app.js', 'division-markdown.js'], ['app.js', 'sponsor-person.js'], ['app.js', 'quiz.js'], ['app.js', 'timemachine.js'],
   ['app.js', 'money-map.js'], ['app.js', 'explain.js'], ['app.js', 'grant-recipient.js'],
   // The Explore tools and the loaders, restyled on tokens in pass 4G.

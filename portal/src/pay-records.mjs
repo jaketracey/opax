@@ -5,6 +5,8 @@
 // the model when a pay question is too loose for the calculated answer (a
 // misspelt name, a vague or compound question). One text, one place.
 
+import { personUrl } from '../public/canonical-urls.js';
+
 const whole = n => Number(n).toLocaleString('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 });
 const fy = y => `${y}-${String(Number(y) + 1).slice(2)}`;
 const year = d => Number(String(d || '').slice(0, 4)) || 0;
@@ -14,7 +16,7 @@ const LIMITS = 'A salary entitlement set by instrument, not a payslip: electorat
 // The model is handed 1,800 characters of a record (ask-records.ts).
 const ROOM = 1720;
 
-const personHref = name => '/subject/person/' + encodeURIComponent(name) + '#person-pay';
+const personHref = name => personUrl(name) + '#person-pay';
 const sourceUrl = (pay, id) => pay.meta.sources.find(src => src.id === id)?.url || '';
 
 /** The pay record for one person, or null when the file has no spells for them. */

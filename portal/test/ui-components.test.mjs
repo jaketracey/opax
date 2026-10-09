@@ -176,7 +176,7 @@ test('labels.js is the one copy: app.js and the homepage import it, neither keep
   assert.match(app, /import\('\/labels\.js(\?v=[0-9a-f]{10})?'\)/);
   assert.match(homeData, /from '\.\/labels\.js(\?v=[0-9a-f]{10})?';/);
   // The first render waits for it.
-  assert.match(app, /Promise\.allSettled\(\[attributionReady, uiLabelsReady, growthModulesReady\]\)\.finally\(\(\) => \{[^}]*route\(\);/);
+  assert.match(app, /Promise\.allSettled\(\[attributionReady, uiLabelsReady, growthModulesReady, personUrlsReady\]\)\.finally\(\(\) => \{[^}]*route\(\);/);
   assert.match(read('index.html'), /<link rel="modulepreload" href="\/labels\.js\?v=[0-9a-f]{10}">/);
 });
 

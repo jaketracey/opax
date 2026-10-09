@@ -121,7 +121,7 @@ function searchHash (q, f) {
   for (const k of ['speaker', 'party', 'state', 'topic', 'from', 'to']) {
     if (f[k]) p.set(k, f[k])
   }
-  return `#/search?${p.toString()}`
+  return `/ask?view=search&${p.toString()}`
 }
 
 /** Mirror of app.js AEC_NOTE (the disclosure-floor register). */

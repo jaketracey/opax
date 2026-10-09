@@ -1,3 +1,4 @@
+import { personUrl, partyUrl } from './canonical-urls.js?v=225d5915ea';
 /* Electorate reference pages. Independently loadable; no funding-data dependency. */
 import { shortDate } from './format.js';
 import { partyLabelHTML, statusLabelHTML, sourceLineHTML, moreMenuHTML } from './labels.js?v=804befe8de';
@@ -7,7 +8,7 @@ export const escapeHTML = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '
 const esc = escapeHTML;
 const number = (n) => Number(n).toLocaleString('en-AU', { maximumFractionDigits: 1 });
 const date = (s) => s ? shortDate(s) : 'Unknown';
-const personURL = (p) => `/subject/person/${encodeURIComponent(p.name)}`;
+const personURL = (p) => personUrl(p.name);
 const sourceURL = (s) => /^https?:\/\//.test(s || '') ? s : null;
 let manifestPromise, indexPromise, peoplePromise;
 const json = async (url) => { const r = await fetch(url); if (!r.ok) throw new Error(`Reference data unavailable (${r.status})`); return r.json(); };
@@ -94,7 +95,7 @@ export async function directorySpec({ photoUrlFor = () => null, partyChipHTML = 
       const holders = e.representatives || [];
       const src = holders[0]?.person?.name ? photoUrlFor(holders[0].person.name) : null;
       const face = src ? `<span class="el-face"><img src="${esc(src)}" alt="" loading="lazy" width="36" height="36"></span>` : '<span class="el-face el-face-blank" aria-hidden="true"></span>';
-      return `<li class="el-directory-row">${face}<div class="el-seat"><a class="el-name" href="${esc(e.url)}">${esc(e.name)}</a><span class="el-meta">${esc(JURISDICTIONS[e.jurisdiction])} · ${esc(CHAMBERS[e.chamber] || e.chamber)}${e.jurisdiction === 'federal' ? ` · ${esc(e.state_code.toUpperCase())}` : ''}${e.status === 'historical' ? ' · Historical' : ''}</span></div><div class="el-holders">${holders.length ? holders.map((m) => `<a href="${esc(personURL(m.person))}">${esc(m.person.name)}</a>${m.party ? ` · <a class="el-party" href="/subject/party/${encodeURIComponent(m.party)}">${partyChipHTML(m.party)}</a>` : ''}`).join('<br>') : 'Representation not yet verified'}${e.representation_as_of ? `<small>Verified ${esc(date(e.representation_as_of))}</small>` : ''}</div><span class="el-meta">${e.election_count ? `${e.election_count} election${e.election_count === 1 ? '' : 's'} indexed` : 'Results not yet indexed'}</span></li>`;
+      return `<li class="el-directory-row">${face}<div class="el-seat"><a class="el-name" href="${esc(e.url)}">${esc(e.name)}</a><span class="el-meta">${esc(JURISDICTIONS[e.jurisdiction])} · ${esc(CHAMBERS[e.chamber] || e.chamber)}${e.jurisdiction === 'federal' ? ` · ${esc(e.state_code.toUpperCase())}` : ''}${e.status === 'historical' ? ' · Historical' : ''}</span></div><div class="el-holders">${holders.length ? holders.map((m) => `<a href="${esc(personURL(m.person))}">${esc(m.person.name)}</a>${m.party ? ` · <a class="el-party" href="${partyUrl(m.party)}">${partyChipHTML(m.party)}</a>` : ''}`).join('<br>') : 'Representation not yet verified'}${e.representation_as_of ? `<small>Verified ${esc(date(e.representation_as_of))}</small>` : ''}</div><span class="el-meta">${e.election_count ? `${e.election_count} election${e.election_count === 1 ? '' : 's'} indexed` : 'Results not yet indexed'}</span></li>`;
     },
     fineprint: `Coverage varies by parliament. A missing representative or result means it has not been verified in this release. ABS state outlines use 2025 statistical geography. <a href="/electorates/manifest.json">Sources and reference downloads</a>.`,
   };

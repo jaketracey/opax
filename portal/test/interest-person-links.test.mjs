@@ -1,8 +1,10 @@
+import {personSlug,slugIndex} from '../src/person-slug.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile, readdir} from 'node:fs/promises';
 import {interestHref, interestPerson} from '../../scripts/build_search_catalog.mjs';
 import {searchCatalog} from '../src/catalog-search.ts';
+import {personUrl} from '../public/canonical-urls.js';
 
 const root = new URL('../public/', import.meta.url);
 const read = async file => JSON.parse(await readFile(new URL(file, root), 'utf8'));
@@ -62,7 +64,7 @@ test('rebuilt search returns correct person links for both register and canonica
       const rows = data.results.filter(r => r.source === 'Register of interests'
         && r.title.startsWith(register.name + ' — ') && r.url === register.source_url);
       assert.ok(rows.length, query);
-      assert.ok(rows.every(r => r.href === '/subject/person/' + encodeURIComponent(person.name)), query);
+      assert.ok(rows.every(r => r.href === '/subject/person/' + (slugIndex(roster.people).slugOf.get(person.name) || personSlug(person.name))), query);
     }
   }
 });
@@ -79,9 +81,11 @@ test('every refreshed register links to a resolved profile, exact speaker name o
     const href = interestHref(register, person, speakerNames);
     if (person) {
       assert.ok(person.states.includes(register.jurisdiction), file);
-      assert.equal(href, '/subject/person/' + encodeURIComponent(person.name), file);
+      const canonical = personUrl(person.name);
+      assert.equal(href, canonical === '/subject/person' ? register.source_url : canonical, file);
     } else if (speakerNames.has(register.name)) {
-      assert.equal(href, '/subject/person/' + encodeURIComponent(register.name), file);
+      const canonical = personUrl(register.name);
+      assert.equal(href, canonical === '/subject/person' ? register.source_url : canonical, file);
     } else {
       assert.match(href, /^https:\/\//, file);
       assert.equal(href, register.source_url, file);

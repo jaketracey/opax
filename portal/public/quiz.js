@@ -1,3 +1,4 @@
+import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
 /*
  * The record quiz — a MindMaze-spirited quiz over OPAX's real data.
  *
@@ -141,7 +142,7 @@ function moneyLink(industry) {
     : MONEY_LINK;
 }
 function subjectLink(kind, label) {
-  return { href: "/subject/" + kind + "/" + encodeURIComponent(label), label: "Open " + label + " in the record" };
+  return { href: subjectUrl(kind,label), label: "Open " + label + " in the record" };
 }
 function reportLink(r) {
   return { href: "/reports/" + r.slug, label: "Read the " + r.title + " report" };
@@ -152,7 +153,7 @@ function searchLink(query, filters, label) {
   for (const [key, value] of Object.entries(filters || {})) {
     if (value != null && value !== "") params.set(key, String(value));
   }
-  return { href: "/search?" + params.toString(), label };
+  return { href: "/ask?view=search&" + params.toString(), label };
 }
 function portraitFor(ctx, name) {
   const id = ctx.photos[String(name || "").trim().toLowerCase()];

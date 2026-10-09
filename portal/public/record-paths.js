@@ -2,7 +2,7 @@
 // only when it is exactly the page of a record OPAX publishes: the search
 // catalog's records, indexed by path at build time (scripts/build_search_catalog.mjs
 // writes search-catalog/<version>/paths-<n>.json), and a person's slug
-// address beside the name address the catalog links. Anything else, and any
+// address used by the catalog. Anything else, and any
 // failure to look it up, leaves the report general, with no path in it.
 // Shared by the build, /support (app.js imports it lazily) and the tests.
 
@@ -11,7 +11,7 @@ export const RECORD_PATH_SHARDS = 256;
 /**
  * The first filter, before any lookup: the path alone (no query, no
  * fragment), each segment decoded exactly once and encoded again, so
- * "/subject/person/Tony Abbott" and "/subject/person/Tony%20Abbott" meet.
+ * legacy name addresses meet their canonical slug address.
  * Refused, as "": a segment that is empty, "." or "..", or that still holds
  * an escape, a slash, a backslash or a control character once decoded.
  */
@@ -50,9 +50,8 @@ function ownsPath(record, path) {
  * bill, report). A path with no single owner title is a section or listing,
  * and is left out.
  *
- * `aliases` are [alias, target] pairs for a page with a second address: a
- * person's slug (/subject/person/tony-abbott) beside the name the catalog
- * links. An alias takes the title its target ends up with. A path that a
+ * `aliases` are optional [alias, target] pairs. The deployed catalog
+ * supplies only canonical addresses. An alias takes the title its target ends up with. A path that a
  * record links to itself keeps its own entry, or stays out of the index if
  * it has none, and an alias claimed by two titles is left out too.
  */
