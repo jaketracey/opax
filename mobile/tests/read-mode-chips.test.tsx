@@ -10,8 +10,10 @@ jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
 }));
 
 // Search results' Passages / Briefs chips (search/Results.tsx). On the web
-// these broke mid-word; here each label is word-safe at accessibility sizes,
-// on a full-width chip, and both chips draw the same fixed geometry.
+// these broke mid-word; here each label is word-safe at accessibility sizes
+// and both chips draw the same geometry, selected or not. (choiceStacked's
+// alignSelf stretch acts on height in the wrapping row: AX5 chips hug their
+// words on their own lines, as the 9 Oct device capture shows.)
 const draw = (width: number, fontScale: number, value: string) => {
   jest
     .mocked(useWindowDimensions)
@@ -44,7 +46,7 @@ test.each([
   ['iPhone AX5', 390, 3.571],
   ['iPad AX5', 1024, 3.571],
   ['iPad AX1', 744, 1.786],
-])('%s: full-width, word-safe chips', (_, width, fontScale) => {
+])('%s: word-safe chips, one geometry', (_, width, fontScale) => {
   for (const value of ['passages', 'briefs']) {
     const [passages, briefs] = draw(width, fontScale, value);
     for (const chip of [passages!, briefs!]) {
