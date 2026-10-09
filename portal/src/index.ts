@@ -34,6 +34,7 @@ import { resolveAskScope, needsAskPeople, askRetrievalQuery, isNamedPositionQues
 import { communityRoute } from './community'
 import { deliverReplyEmails, REPLY_EMAIL_CRON } from './community-notifications'
 import { partyUrl, personUrl, personNameKey } from '../public/canonical-urls.js'
+import { isOrganisationDonor } from '../public/donor-entity.js'
 import { canonicalPageRedirect } from './canonical-origin'
 import { pageEntry } from './page-entry'
 import { communityMcp } from './community-mcp'
@@ -3212,6 +3213,8 @@ interface PageMeta {
   card?: CardSpec | null
   prev?: string
   next?: string
+  /** Served with a noindex robots tag (an individual donor's page). */
+  noindex?: boolean
 }
 
 // How long a /subject/<dir>/<name> segment may be. A person, a party or a donor
@@ -3331,6 +3334,7 @@ interface MoneyNode {
   label: string
   kind: 'donor' | 'party'
   industry: string
+  aliases?: string[]
   group: string
   total: number
   count: number
@@ -4451,10 +4455,18 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
   const node = (dir === 'party' ? moneyData?.parties : moneyData?.donors)?.get(foldName(name)) ?? (dir==='party' ? [...(moneyData?.parties.values() || [])].find(p=>partyUrl(p.label).split('/').at(-1)===name.toLowerCase()) : null) ?? null
   const display = node?.label ?? (dir==='party' ? (await loadPartyLabels(env).catch(()=>[])).find(p=>partyUrl(p).split('/').at(-1)===name.toLowerCase()) : null) ?? name
   const canonical = dir==='party' ? `${SITE_ORIGIN}${partyUrl(display)}` : `${SITE_ORIGIN}/subject/${dir}/${encodeURIComponent(display)}`
+  // An individual donor is not named in server-rendered HTML, structured data
+  // or a share card, and the page is noindex. Without positive organisation
+  // evidence a donor counts as an individual (public/donor-entity.js).
+  if (dir === 'donor' && !isOrganisationDonor(node ?? { label: display })) {
+    const sentence = 'A disclosed political donor in the OPAX money data. Which parties it funded, year by year.'
+    return { title: 'Donor · OPAX', description: sentence, canonical, ogType: 'profile', status: 200, jsonLd: null,
+      prerender: prerenderBlock('Donor', sentence), card: null, noindex: true }
+  }
   const title = `${display} · OPAX`
   let facts: string
   let tail = ''
-  let ldType = 'Organization'
+  const ldType = 'Organization'
   let card: CardSpec
   if (dir === 'party') {
     const members = people?.people.filter((p) => p.party && foldName(p.party) === foldName(display)) ?? []
@@ -4475,8 +4487,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
       dot: node?.colour ?? null,
     }
   } else if (node) {
-    ldType = node.industry === 'individual' ? 'Person' : 'Organization'
-    const what = node.industry === 'individual' ? 'individual donor' : `${industryLabel(node.industry)} donor`
+    const what = node.industry === 'individual' ? 'donor' : `${industryLabel(node.industry)} donor`
     facts = `${display}: disclosed political ${what}, ${money(node.total)} across ${num(node.count)} receipts, ${years(node.firstYear, node.lastYear)} (${node.sourceShort}).`
     tail = 'Which parties it funded.'
     card = {
@@ -4762,7 +4773,7 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
     buildMeta(route, url, request, env, ctx),
   ])
   if (!shell.ok) return shell
-  const noindex = meta.status === 404 || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
+  const noindex = meta.noindex || meta.status === 404 || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
   // JSON-LD sits in a <script>: keep "</script>" from ever appearing in it.
   meta.prerender=associationCaveat(meta.prerender || '',`${meta.description} ${meta.prerender || ''}`)
   const ld = meta.jsonLd ? JSON.stringify(meta.jsonLd).replace(/</g, '\\u003c') : null

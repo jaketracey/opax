@@ -8,6 +8,7 @@ import { personNameKey } from '../portal/public/canonical-urls.js';
 import { splitSpeakers } from '../portal/public/speech-attribution.js';
 import { TOPIC_NAMES } from '../portal/src/topic-names.mjs';
 import { fileKey } from '../portal/public/grants.js';
+import { isOrganisationDonor } from '../portal/public/donor-entity.js';
 
 import { catalogueComplete, unpack } from '../portal/public/instruments.js';
 import { auditComplete } from '../portal/public/audit.js';
@@ -186,7 +187,8 @@ export async function buildCrawl(root) {
     for (const n of money.nodes) {
       if (!validId(n.label)) continue;
       // Individual donors stay out of the sitemap, as individual grant recipients do.
-      if (n.kind === 'donor' && n.industry === 'individual') continue;
+      // The industry tag does not say who is a person: public/donor-entity.js.
+      if (n.kind === 'donor' && !isOrganisationDonor(n)) continue;
       const map = n.kind === 'party' ? partyLabels : n.kind === 'donor' ? donors : null;
       if (map && !map.has(fold(n.label))) map.set(fold(n.label),{label:n.label,date:money.meta.generated});
     }
