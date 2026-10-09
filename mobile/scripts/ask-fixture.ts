@@ -5,6 +5,8 @@ import { resolve } from 'node:path';
 import pin from './fixtures/ask-recorded.json';
 import followups from './fixtures/ask-followups.json';
 import clarify from './fixtures/ask-clarify.json';
+import passages from './fixtures/ask-passages.json';
+import recordFixtures from './fixtures/records/contracts.json';
 const recorded = readFileSync(resolve(__dirname, 'fixtures/ask-recorded.sse'));
 if (
   recorded.length !== pin.size ||
@@ -143,6 +145,48 @@ export async function askFixture(
             speaker,
             answerRanges: [],
           })),
+        }) +
+        '\n\n',
+    );
+    res.end();
+    return true;
+  }
+  // TestFlight 9 Oct: source passages as the web exports them (an entity, a
+  // stray space after a paragraph break, joined words, a 600-character cut)
+  // so the sources pane's text can be checked. Fixture reading only.
+  if (input.question === 'fixture passages') {
+    const reader = (
+      recordFixtures.responses as Record<string, { text?: string }>
+    )['/api/resource/speech-1205524']!.text!;
+    const sources = [
+      ...passages.sources.map((p, i) => ({
+        resource: `fixture-passage-${i + 1}`,
+        title: `Fixture passage: speech ${p.source_id}`,
+        slug: `speech-${p.source_id}`,
+        href: `/doc/speech-${p.source_id}`,
+        snippet: p.text,
+        date: p.date,
+      })),
+      {
+        resource: 'fixture-passage-3',
+        title: 'Fixture passage: synthetic reader text, cut at 600',
+        slug: 'speech-1205524',
+        href: '/doc/speech-1205524',
+        snippet: reader.trim().slice(0, 600),
+        date: null,
+      },
+    ].map((s) => ({ ...s, cited: true, state: 'federal' }));
+    res.writeHead(200, {
+      'Content-Type': 'text/event-stream; charset=utf-8',
+      'Cache-Control': 'no-store',
+    });
+    res.write(
+      'event: done\ndata: ' +
+        JSON.stringify({
+          answer:
+            'Fixture reading instruction: three source passages are cited so their text can be checked. This is not model output or a claim about a person.',
+          citations: {},
+          sources,
         }) +
         '\n\n',
     );

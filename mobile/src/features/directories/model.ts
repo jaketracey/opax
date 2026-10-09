@@ -158,6 +158,44 @@ export function peopleRows(
   }
   return out;
 }
+/**
+ * Sitting members first, then those the data cannot date, then former
+ * members; the chosen sort applies within each group. The group is the
+ * party chip's status, so a "Formerly" chip is always under Former.
+ */
+export type SittingGroup = 'sitting' | 'unrecorded' | 'former';
+export const sittingGroupTitles: Record<SittingGroup, string> = {
+  sitting: 'Sitting',
+  unrecorded: 'Sitting status not recorded',
+  former: 'Former',
+};
+const groupRank: Record<SittingGroup, number> = {
+  sitting: 0,
+  unrecorded: 1,
+  former: 2,
+};
+export function sittingGroup(p: PeopleRow): SittingGroup {
+  const status = p.profile.partyStatus;
+  return status === 'current'
+    ? 'sitting'
+    : status === 'former'
+      ? 'former'
+      : 'unrecorded';
+}
+/** The first row of each group, with the group's size, for its heading. */
+export function sittingGroupStarts(rows: PeopleRow[]) {
+  const starts = new Map<string, { group: SittingGroup; count: number }>();
+  let first: string | undefined;
+  rows.forEach((row, index) => {
+    const group = sittingGroup(row);
+    if (index === 0 || group !== sittingGroup(rows[index - 1]!)) {
+      first = row.key;
+      starts.set(first, { group, count: 0 });
+    }
+    starts.get(first!)!.count += 1;
+  });
+  return starts;
+}
 export function matchingPeople(rows: PeopleRow[], f: Filters, query: string) {
   return rows
     .filter(
@@ -173,6 +211,8 @@ export function matchingPeople(rows: PeopleRow[], f: Filters, query: string) {
         (!f.photo || p.portrait),
     )
     .sort((a, b) => {
+      const group = groupRank[sittingGroup(a)] - groupRank[sittingGroup(b)];
+      if (group) return group;
       if (f.sort === 'name') return a.sortName.localeCompare(b.sortName);
       if (f.sort === 'recent')
         return (

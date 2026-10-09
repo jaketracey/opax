@@ -204,7 +204,8 @@ test('recorded affiliations require full names and exclude every current person 
     people,
     manifest,
   );
-  expect(recordedShorten.partyStatus).toBe('unknown');
+  // Former since 9 Oct: no sitting federal member is a Shorten.
+  expect(recordedShorten.partyStatus).toBe('former');
   expect(recordedShorten.rosterRow?.representation?.some(held)).toBe(true);
   expect(members.recorded.some((m) => m.slug === 'bill-shorten')).toBe(false);
 });

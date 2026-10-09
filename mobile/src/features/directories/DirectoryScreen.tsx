@@ -21,6 +21,7 @@ import {
   Field,
   FilterChip,
   Group,
+  Heading,
   LoadingState,
   LinkRow,
   InfoButton,
@@ -63,8 +64,11 @@ import {
   matchingPeople,
   matchingParties,
   matchingElectorates,
+  sittingGroupStarts,
+  sittingGroupTitles,
   type PeopleRow,
   type PartyRow,
+  type SittingGroup,
 } from './model';
 import { directoryKind, directoryStore, useDirectoryState } from './store';
 
@@ -82,49 +86,66 @@ function entryFor(item: Row): RecordEntry {
     return { kind: 'party', key: item.name, title: item.name };
   return { kind: 'electorate', key: item.electorate_id, title: item.name };
 }
+type GroupStart = { group: SittingGroup; count: number };
+/** Heads the first row of Sitting, status not recorded, and Former. */
+function GroupHeading({ group, count }: GroupStart) {
+  return (
+    <View style={styles.groupHeading}>
+      <Heading level={3} testID={`directory-group-${group}`}>
+        {`${sittingGroupTitles[group]} · ${formatCount(count)}`}
+      </Heading>
+    </View>
+  );
+}
 const DirectoryRow = memo(function DirectoryRow({
   item,
   selected,
   onSelect,
+  group,
 }: {
   item: Row;
   /** iPad split: whether this row is in the detail pane (see LinkRow). */
   selected?: boolean;
   onSelect?: (entry: RecordEntry) => void;
+  /** The person directory's group this row starts, if any. */
+  group?: GroupStart;
 }) {
   if ('profile' in item)
     return (
-      <PersonRow
-        name={item.name}
-        testID={`directory-person-${item.key}`}
-        testDrawnName
-        portrait={<CachedPortrait name={item.name} slug={item.key} />}
-        party={item.profile.party}
-        partyStatus={item.profile.partyStatus}
-        formerly={item.profile.formerly}
-        place={
-          item.row?.full && item.row.full !== item.name
-            ? item.row.full
-            : undefined
-        }
-        detail={[
-          item.row?.roster_only || item.row?.speeches === undefined
-            ? 'From the member roster. Speech total not yet indexed'
-            : `${formatCount(item.row.speeches)} speeches`,
-          item.divisions ? `${formatCount(item.divisions)} divisions` : null,
-          item.row?.first
-            ? formatYearRange(item.row.first, item.row.last ?? item.row.first)
-            : null,
-        ]
-          .filter(Boolean)
-          .join(' · ')}
-        selected={selected}
-        onPress={() =>
-          onSelect
-            ? onSelect(entryFor(item))
-            : router.push(personRoute(item.key))
-        }
-      />
+      <>
+        {group ? <GroupHeading {...group} /> : null}
+        <PersonRow
+          name={item.name}
+          testID={`directory-person-${item.key}`}
+          testDrawnName
+          portrait={<CachedPortrait name={item.name} slug={item.key} />}
+          party={item.profile.party}
+          partyStatus={item.profile.partyStatus}
+          formerly={item.profile.formerly}
+          place={
+            item.row?.full && item.row.full !== item.name
+              ? item.row.full
+              : undefined
+          }
+          detail={[
+            item.row?.roster_only || item.row?.speeches === undefined
+              ? 'From the member roster. Speech total not yet indexed'
+              : `${formatCount(item.row.speeches)} speeches`,
+            item.divisions ? `${formatCount(item.divisions)} divisions` : null,
+            item.row?.first
+              ? formatYearRange(item.row.first, item.row.last ?? item.row.first)
+              : null,
+          ]
+            .filter(Boolean)
+            .join(' · ')}
+          selected={selected}
+          onPress={() =>
+            onSelect
+              ? onSelect(entryFor(item))
+              : router.push(personRoute(item.key))
+          }
+        />
+      </>
     );
   if ('money' in item)
     return (
@@ -168,9 +189,6 @@ const DirectoryRow = memo(function DirectoryRow({
   );
 });
 const separator = () => <Divider variant="subtle" />;
-const renderRow = ({ item }: ListRenderItemInfo<Row>) => (
-  <DirectoryRow item={item} />
-);
 const rowKey = (item: Row) => ('key' in item ? item.key : item.electorate_id);
 export default function DirectoryScreen() {
   const params = useLocalSearchParams<{ kind: string }>();
@@ -239,6 +257,19 @@ function DirectoryView({ kind }: { kind: keyof typeof titles }) {
   const params = useLocalSearchParams<{ open?: string }>();
   const selected = split ? decodeEntry(params.open) : null;
   const selectedKey = selected ? encodeEntry(selected) : null;
+  const groups = useMemo(
+    () =>
+      kind === 'person'
+        ? sittingGroupStarts(rows as PeopleRow[])
+        : new Map<string, GroupStart>(),
+    [kind, rows],
+  );
+  const renderRow = useCallback(
+    ({ item }: ListRenderItemInfo<Row>) => (
+      <DirectoryRow item={item} group={groups.get(rowKey(item))} />
+    ),
+    [groups],
+  );
   const listRef = useRef<FlatList<Row>>(null);
   const visible = useRef(new Set<string>());
   // FlatList needs one stable callback for its whole life.
@@ -275,9 +306,10 @@ function DirectoryView({ kind }: { kind: keyof typeof titles }) {
         item={item}
         selected={encodeEntry(entryFor(item)) === selectedKey}
         onSelect={select}
+        group={groups.get(rowKey(item))}
       />
     ),
-    [selectedKey, select],
+    [selectedKey, select, groups],
   );
   const entries = useMemo(
     () =>
@@ -493,4 +525,5 @@ const styles = StyleSheet.create({
   summary: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
   grow: { flex: 1 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: rhythm.tight },
+  groupHeading: { paddingTop: rhythm.block, paddingBottom: rhythm.tight },
 });

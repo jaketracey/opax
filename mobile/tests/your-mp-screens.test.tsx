@@ -450,8 +450,10 @@ test('Windsor has a profile even without a representation row', async () => {
   mock.person.mockResolvedValue(result(identity));
   const r = await render(<Person />);
   expect(text(r)).toContain('Antony Windsor');
-  expect(r.root.findByType(PartyLabel).props.status).toBe('unknown');
-  expect(text(r)).not.toContain('Formerly');
+  // No dated seat links him (the release names Antony Harold Curties
+  // Windsor), but no sitting federal member is a Windsor: former, 9 Oct.
+  expect(r.root.findByType(PartyLabel).props.status).toBe('former');
+  expect(text(r)).toContain('Formerly');
   expect(text(r)).toContain('does not link');
   expect(
     r.root.findAllByType(Button).some((n) => n.props.label === 'Try again'),

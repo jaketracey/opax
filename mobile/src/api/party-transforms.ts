@@ -1,6 +1,7 @@
 // samePartyLabel and PARTY_MAP labels ported from portal/public/app.js.
 import { resolveParty } from '../design/party';
 import type {
+  Manifest,
   PeopleCatalog,
   Roster,
   SeatObservation,
@@ -75,10 +76,62 @@ export function partyStatusSeatsFor(
   );
   return warringah ? dated!.electorates : seats;
 }
+/**
+ * Surnames that sit today, per parliament whose complete current membership
+ * the dated release holds: its current seats number exactly the members its
+ * roster coverage records (federal 226 and Victoria 128 in the pinned
+ * release). The release says nothing about who sits anywhere else.
+ */
+export type SittingSurnames = ReadonlyMap<string, ReadonlySet<string>>;
+const sittingCache = new WeakMap<
+  PeopleCatalog,
+  WeakMap<Manifest['coverage'], SittingSurnames>
+>();
+function surnameKeys(name: string) {
+  const last =
+    name
+      .normalize('NFKD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[’‘ʼ`]/g, "'")
+      .trim()
+      .split(/\s+/)
+      .at(-1) ?? '';
+  // "Allman-Payne" shares a surname with any Payne and any Allman.
+  return [last, ...last.split('-')].filter(Boolean);
+}
+export function sittingSurnamesFor(
+  people: PeopleCatalog,
+  coverage: Manifest['coverage'],
+): SittingSurnames {
+  let byCoverage = sittingCache.get(people);
+  if (!byCoverage) sittingCache.set(people, (byCoverage = new WeakMap()));
+  const cached = byCoverage.get(coverage);
+  if (cached) return cached;
+  const seats = new Map<string, number>();
+  const names = new Map<string, Set<string>>();
+  for (const person of people.people)
+    for (const seat of person.electorates.filter((s) => s.current)) {
+      seats.set(seat.jurisdiction, (seats.get(seat.jurisdiction) ?? 0) + 1);
+      const set = names.get(seat.jurisdiction) ?? new Set<string>();
+      for (const name of [person.name, ...person.aliases])
+        for (const key of surnameKeys(name)) set.add(key);
+      names.set(seat.jurisdiction, set);
+    }
+  const sitting = new Map<string, ReadonlySet<string>>();
+  for (const [jurisdiction, count] of seats) {
+    const members = coverage.jurisdictions[jurisdiction]?.roster_members ?? 0;
+    if (members > 0 && count === members)
+      sitting.set(jurisdiction, names.get(jurisdiction)!);
+  }
+  byCoverage.set(coverage, sitting);
+  return sitting;
+}
 // `seats` are all of the person's dated observations, current and ended.
 export function partyStatusFor(
   seats: SeatObservation[],
   row?: Roster['people'][number],
+  sitting?: SittingSurnames,
 ): PartyStatus {
   if (
     seats.some((s) => s.current) ||
@@ -98,7 +151,20 @@ export function partyStatusFor(
     ...(row?.states ?? []),
     ...(row?.representation ?? []).map((r) => r.jurisdiction),
   ];
-  return seats.length && recorded.every((j) => dated.has(j))
+  if (seats.length && recorded.every((j) => dated.has(j))) return 'former';
+  // No dated seat links this roster row: the release names Joe Hockey
+  // "Joseph Benedict Hockey", with no alias or legacy ID. Where the release
+  // holds the complete current membership of every parliament the roster
+  // records, someone whose surname no sitting member there shares does not
+  // sit. A shared surname proves nothing (Marise Payne, Alicia Payne).
+  const surnames = [row?.name ?? '', row?.full ?? ''].flatMap(surnameKeys);
+  return sitting &&
+    surnames.length &&
+    recorded.length &&
+    recorded.every((j) => {
+      const sits = sitting.get(j);
+      return !!sits && !surnames.some((s) => sits.has(s));
+    })
     ? 'former'
     : 'unknown';
 }
@@ -109,11 +175,16 @@ export function personPartyFor(
   row?: Roster['people'][number],
   affiliationRow?: Roster['people'][number],
   people?: PeopleCatalog,
+  coverage?: Manifest['coverage'],
 ) {
   const current = seats.filter((s) => s.current);
   return {
     party: current[0]?.party ?? row?.party_now ?? row?.party ?? null,
-    partyStatus: partyStatusFor(partyStatusSeatsFor(seats, row, people), row),
+    partyStatus: partyStatusFor(
+      partyStatusSeatsFor(seats, row, people),
+      row,
+      people && coverage ? sittingSurnamesFor(people, coverage) : undefined,
+    ),
     rosterParty: row?.party ?? null,
     // Former affiliations need a distinct, named roster party_now observation;
     // a different seat label alone does not establish a party change.

@@ -45,7 +45,13 @@ import { useCursorReveal } from '../split/cursor';
 import { entryForWebPath, entryLabel, type RecordEntry } from '../split/entry';
 import { RecordDetail, RecordShare } from '../split/RecordDetail';
 import { openAnswerLink } from './AnswerView';
-import { parliaments, sourceGroups, type Source, type Turn } from './model';
+import {
+  parliaments,
+  sourceGroups,
+  sourcePassage,
+  type Source,
+  type Turn,
+} from './model';
 
 /**
  * Ask on iPad regular width: the conversation in the main column and, on
@@ -401,7 +407,7 @@ function SourceItem({
             ) : null}
             {source.snippet ? (
               <Text wordSafe variant="record">
-                {source.snippet}
+                {sourcePassage(source.snippet)}
               </Text>
             ) : null}
           </Pressable>

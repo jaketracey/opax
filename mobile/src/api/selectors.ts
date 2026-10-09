@@ -353,7 +353,7 @@ export function profileFor(id: PersonId, catalogs: ProfileCatalogs) {
     rosterPersonId: p.legacy_person_id ?? row?.pid,
     legacyPersonId: numericPersonId(p.legacy_person_id, row),
     rosterRow: row,
-    ...personPartyFor(p.electorates, row, namedRow),
+    ...personPartyFor(p.electorates, row, namedRow, people, manifest.coverage),
     seats,
     sources: manifest.sources.filter((s) => p.sources.includes(s.source_id)),
     asOf: seats[0]?.as_of ?? roster.meta.generated,
@@ -979,7 +979,8 @@ export function billsFor(
       filter.sort === 'title'
         ? billFoldText(billName(a)).localeCompare(billFoldText(billName(b)))
         : filter.sort === 'divisions'
-          ? b.divisions - a.divisions || billFoldText(billName(a)).localeCompare(billFoldText(billName(b)))
+          ? b.divisions - a.divisions ||
+            billFoldText(billName(a)).localeCompare(billFoldText(billName(b)))
           : filter.sort === 'oldest'
             ? (a.introduced ?? '').localeCompare(b.introduced ?? '')
             : (b.introduced ?? '').localeCompare(a.introduced ?? ''),

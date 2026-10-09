@@ -4,6 +4,7 @@ import {
   decodeFollowups,
   defaultOptions,
   requestBody,
+  sourcePassage,
   titleFor,
   type Answer,
   type AskOptions,
@@ -259,7 +260,10 @@ export class AskController {
     )
       return;
     const passages = data.sources
-      .map((s) => ({ title: s.title || s.slug, text: s.snippet.trim() }))
+      .map((s) => ({
+        title: s.title || s.slug,
+        text: sourcePassage(s.snippet, false),
+      }))
       .filter((p) => p.text)
       .slice(0, 8);
     if (!passages.length) return;

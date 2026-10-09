@@ -26,10 +26,12 @@ import {
   defaultOptions,
   parliaments,
   sourceGroups,
+  sourcePassage,
   type Answer,
   type Source,
   type Turn,
 } from './model';
+import { passageText } from '../../api/passage-text';
 export const machineNote =
   'Written by a model from the retrieved passages; not the record.';
 export const moneyNote =
@@ -198,7 +200,7 @@ function SourceRow({ s, n }: { s: Source; n?: number }) {
       </Text>
       {s.snippet ? (
         <Text wordSafe selectable variant="record">
-          {s.snippet}
+          {sourcePassage(s.snippet)}
         </Text>
       ) : null}
       <ViewOriginal sources={s.url ? [{ label: s.title, url: s.url }] : []} />
@@ -307,7 +309,7 @@ export function AnswerView({
       {data.evidence_excerpts?.map((e, i) => (
         <Group key={i}>
           <Text wordSafe selectable variant="record">
-            “{e.text}”
+            “{passageText(e.text)}”
           </Text>
           <LinkRow
             title="Read the source passage"
@@ -393,7 +395,7 @@ export function AnswerView({
                 }}
               >
                 <Text wordSafe selectable variant="record">
-                  “{s.snippet}”
+                  “{sourcePassage(s.snippet, false)}”
                 </Text>
                 <LinkRow
                   title={s.title}
