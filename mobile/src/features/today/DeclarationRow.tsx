@@ -8,11 +8,11 @@ import { partyText } from '../../design/party';
 import {
   Icon,
   PartyLabel,
-  Tag,
   Text,
   useAccessibilitySize,
 } from '../../design/primitives';
-import { colors, minimumTarget, spacing } from '../../design/tokens';
+import { ownsRowPadding } from '../../design/row-padding';
+import { colors, minimumTarget, rhythm } from '../../design/tokens';
 import { openSource } from '../../navigation/external';
 import { declarationsRoute } from '../../navigation/routes';
 import { CachedPortrait } from '../CachedPortrait';
@@ -29,11 +29,12 @@ export const originalLabel = (item: Declaration) =>
   `${item.sourceLabel} · ${item.name}${item.page !== null ? `, page ${item.page}` : ''}`;
 
 /**
- * One register alteration in a compact row: portrait, name, party and
- * category on one line; the entry in the member's own words in two lines,
- * the whole of it on a tap; what changed and when. "View original" (the
- * register page) is a touch-and-hold action and a VoiceOver action.
- * Credits and licences are on the Sources and licences screen.
+ * One register alteration as a row on the paper: portrait, the member's
+ * name, their party as a dot and name; the entry in the member's own words
+ * in two lines, the whole of it on a tap; then the category, what changed
+ * and when, on one line ("Gift · added 31 Aug"). "View original" (the
+ * register page) is a touch-and-hold action and a VoiceOver action, and the
+ * register is listed in Today's source line.
  */
 export function DeclarationRow({
   item,
@@ -47,8 +48,7 @@ export function DeclarationRow({
   const [expanded, setExpanded] = useState(false);
   const [lines, setLines] = useState(0);
   const long = lines > 2;
-  const changed = registerChangeLabel(item.kind);
-  const change = `${changed[0]!.toUpperCase()}${changed.slice(1)} ${shortDay(item.date)}`;
+  const change = `${item.category} · ${registerChangeLabel(item.kind)} ${shortDay(item.date)}`;
   const party = item.party
     ? partyText({
         party: item.party,
@@ -121,7 +121,7 @@ export function DeclarationRow({
               style={styles.head}
               testID={`today-declaration-person-${index}`}
             >
-              <Text wordSafe variant="strong" style={styles.name}>
+              <Text wordSafe variant="strong">
                 {item.name}
               </Text>
               {item.party ? (
@@ -129,12 +129,10 @@ export function DeclarationRow({
                   party={item.party}
                   status={item.partyStatus}
                   formerly={item.formerly}
-                  dense
                   linked={false}
                   nested
                 />
               ) : null}
-              <Tag label={item.category} kind="Category" />
             </View>
             {item.description ? (
               <View>
@@ -165,7 +163,12 @@ export function DeclarationRow({
               </View>
             ) : null}
             <View style={styles.foot}>
-              <Text wordSafe variant="fine" style={styles.grow}>
+              <Text
+                wordSafe
+                variant="fine"
+                style={styles.grow}
+                testID={`today-declaration-change-${index}`}
+              >
                 {change}
               </Text>
               {long ? (
@@ -183,33 +186,28 @@ export function DeclarationRow({
   );
 }
 
+ownsRowPadding(DeclarationRow);
+
 const styles = StyleSheet.create({
   frame: { minHeight: minimumTarget },
   row: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: spacing.s3 + spacing.s1,
+    gap: rhythm.heading,
     minHeight: minimumTarget,
-    paddingVertical: spacing.s3,
+    paddingVertical: rhythm.tight,
   },
   stacked: { flexDirection: 'column' },
-  pressed: { backgroundColor: colors.raised },
+  pressed: { backgroundColor: colors.sunken },
   // flex: 1 would become a zero height basis when the row stacks.
   main: {
     flexGrow: 1,
     flexShrink: 1,
     alignSelf: 'stretch',
-    gap: spacing.s1 + 2,
+    gap: rhythm.line + 2,
   },
-  head: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    columnGap: spacing.s3,
-    rowGap: spacing.s1,
-  },
-  name: { flexShrink: 1 },
+  head: { gap: 2 },
   measure: { position: 'absolute', left: 0, right: 0, top: 0, opacity: 0 },
-  foot: { flexDirection: 'row', alignItems: 'center', gap: spacing.s3 },
+  foot: { flexDirection: 'row', alignItems: 'center', gap: rhythm.heading },
   grow: { flex: 1 },
 });

@@ -5,44 +5,39 @@ import {
   ErrorState,
   LoadingState,
   OfflineBanner,
-  StaleNotice,
+  SourceLine,
   errorMessage,
-  Card,
 } from '../design/primitives';
-import { spacing } from '../design/tokens';
+import { rhythm } from '../design/tokens';
 import { isOffline } from './CatalogState';
 import { EditionHero } from './today/EditionHero';
-import { Entrance, UpdatedCaption } from './today/parts';
+import { Entrance } from './today/parts';
 
 /**
  * The newest published daily edition, frozen as it was posted, as Today's
  * hero. The text is the post's own, rendered as plain text, never markup; a
- * model's text carries its attribution before it. With no edition published
- * (404) the section is absent.
+ * model's text carries its label before it. With no edition published (404)
+ * the section is absent. Loading and failure sit on the paper, not in a box.
  */
 export function EditionSection({
   block,
   onRetry,
-  refreshing = false,
 }: {
   block: Block<EditionView> | null;
   onRetry: () => void;
-  refreshing?: boolean;
 }) {
   if (block?.status === 'missing') return null;
   return (
     <View testID="today-edition" style={styles.section}>
       {!block ? (
-        <Card padded={false} style={styles.placeholder}>
-          <LoadingState
-            shape="text"
-            count={4}
-            label="Loading the daily edition"
-            testID="today-edition-loading"
-          />
-        </Card>
+        <LoadingState
+          shape="text"
+          count={4}
+          label="Loading the daily edition"
+          testID="today-edition-loading"
+        />
       ) : block.status === 'error' || !block.data ? (
-        <Card padded={false} style={styles.placeholder}>
+        <>
           {isOffline(block.error) ? (
             <OfflineBanner cached={false} testID="today-edition-offline" />
           ) : null}
@@ -51,7 +46,7 @@ export function EditionSection({
             onRetry={onRetry}
             testID="today-edition-error"
           />
-        </Card>
+        </>
       ) : (
         <Entrance>
           <EditionCard
@@ -59,7 +54,6 @@ export function EditionSection({
             stale={block.stale}
             staleReason={block.staleReason}
             savedAt={block.savedAt}
-            refreshing={refreshing}
           />
         </Entrance>
       )}
@@ -67,43 +61,47 @@ export function EditionSection({
   );
 }
 
+/**
+ * The edition, and when it is a saved copy, what was saved and when: the
+ * notice above the card and the edition's own source line below it, in its
+ * saved state. Otherwise the edition's sources are in Today's source line.
+ */
 export function EditionCard({
   edition,
   stale = false,
   savedAt = null,
   staleReason,
-  refreshing = false,
 }: {
   edition: EditionView;
   stale?: boolean;
   staleReason?: 'unreadable' | 'unavailable';
   savedAt?: number | null;
-  refreshing?: boolean;
 }) {
   return (
     <View style={styles.card}>
       {stale ? (
-        <View style={styles.group}>
-          <SavedCopyNotice
-            reason={staleReason}
-            testID={
-              staleReason ? 'today-edition-saved-copy' : 'today-edition-offline'
-            }
-          />
-          {savedAt !== null ? (
-            <StaleNotice
-              savedAt={savedAt}
-              refreshing={refreshing}
-              testID="today-edition-stale"
-            />
-          ) : null}
-        </View>
+        <SavedCopyNotice
+          reason={staleReason}
+          testID={
+            staleReason ? 'today-edition-saved-copy' : 'today-edition-offline'
+          }
+        />
       ) : null}
       <EditionHero edition={edition} />
       {stale && savedAt !== null ? (
-        <UpdatedCaption
-          asAt={edition.date}
+        <SourceLine
+          title="About the daily edition"
+          asOf={edition.date}
+          citation="OPAX daily edition"
           savedAt={savedAt}
+          originals={[
+            {
+              label: 'OPAX daily edition',
+              url: edition.path,
+              record: edition.title,
+            },
+          ]}
+          notes={edition.sourceRows}
           testID="today-edition-as-at"
         />
       ) : null}
@@ -112,8 +110,6 @@ export function EditionCard({
 }
 
 const styles = StyleSheet.create({
-  section: { gap: spacing.s3 },
-  card: { gap: spacing.s3 },
-  group: { gap: spacing.s1 },
-  placeholder: { padding: spacing.s4, gap: spacing.s4 },
+  section: { gap: rhythm.heading },
+  card: { gap: rhythm.heading },
 });

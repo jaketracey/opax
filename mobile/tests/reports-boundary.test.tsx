@@ -48,27 +48,20 @@ jest.mock('../src/api/runtime', () => {
   };
 });
 
-test('Today mount and application foreground send only static coverage/report reads; paid counts are chosen later', async () => {
+test('Today mount and application foreground send no report reads; paid counts are chosen later', async () => {
   const client = (reports as unknown as { client: { get: jest.Mock } }).client;
   let screen!: TestRenderer.ReactTestRenderer;
   await act(async () => {
     screen = TestRenderer.create(<Today />);
   });
-  expect(
-    client.get.mock.calls.map((c) => c[0]).some((p) => p.startsWith('/api/')),
-  ).toBe(false);
-  expect(client.get.mock.calls.map((c) => c[0])).toContain('/corpus.json');
-  expect(client.get.mock.calls.map((c) => c[0])).toContain(
-    '/reports/gambling.json',
-  );
+  // Reports are a tile on Today (pass 3A): nothing loads until it opens.
+  expect(client.get).not.toHaveBeenCalled();
   await act(async () => {
     (
       AppState as unknown as { emit?: (event: string, state: string) => void }
     ).emit?.('change', 'active');
   });
-  expect(
-    client.get.mock.calls.map((c) => c[0]).some((p) => p.startsWith('/api/')),
-  ).toBe(false);
+  expect(client.get).not.toHaveBeenCalled();
   await act(async () => screen.unmount());
   await act(async () => {
     screen = TestRenderer.create(<TopicsIndex />);

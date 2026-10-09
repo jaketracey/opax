@@ -1,17 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import {
-  Animated,
-  Easing,
-  Platform,
-  useWindowDimensions,
-  type ColorValue,
-  type StyleProp,
-  type ViewStyle,
-} from 'react-native';
-import { SymbolView, type SFSymbol } from 'expo-symbols';
-import { androidSymbol } from '../../design/android-symbols';
+import { Animated, Easing, type StyleProp, type ViewStyle } from 'react-native';
 import { calendarDate, formatDate } from '../../design/format';
-import { SourceLine, useReduceMotionSetting } from '../../design/primitives';
+import { useReduceMotionSetting } from '../../design/primitives';
 
 /**
  * Rises and fades in once, when it first mounts. Nothing moves before iOS
@@ -76,30 +66,6 @@ export function Entrance({
   );
 }
 
-/** An SF Symbol in any Today colour, scaled with text as the design system's Icon is. */
-export function TintIcon({
-  name,
-  size = 16,
-  color,
-}: {
-  name: SFSymbol;
-  size?: number;
-  color: ColorValue;
-}) {
-  const { fontScale } = useWindowDimensions();
-  const scaled = Math.round(size * Math.min(Math.max(fontScale, 1), 2));
-  return (
-    <SymbolView
-      name={Platform.OS === 'android' ? { android: androidSymbol(name) } : name}
-      size={Platform.OS === 'android' ? scaled / fontScale : scaled}
-      tintColor={color}
-      style={{ width: scaled, height: scaled }}
-      accessibilityElementsHidden
-      importantForAccessibility="no-hide-descendants"
-    />
-  );
-}
-
 /** "4 Oct" this year, "4 Oct 2025" before it. */
 export function shortDay(value: string | number | Date): string {
   const day = calendarDate(value);
@@ -110,25 +76,9 @@ export function shortDay(value: string | number | Date): string {
 }
 
 /**
- * @deprecated Use `SourceLine`. The one source line under a Today block:
- * when its record was last updated ("Updated 4 Oct"), and the saved date
- * when it is a saved copy, opening the source sheet.
+ * A date the publisher wrote out ("12 Aug 2026"), without this year's year:
+ * "12 Aug". Any other year, or a date in another shape, stays as written.
  */
-export function UpdatedCaption({
-  asAt,
-  savedAt,
-  testID,
-}: {
-  asAt: string | null;
-  savedAt?: number | null;
-  testID?: string;
-}) {
-  return (
-    <SourceLine
-      asOf={asAt}
-      dateLabel={asAt ? `Updated ${shortDay(asAt)}` : 'Date not published'}
-      savedAt={savedAt}
-      testID={testID}
-    />
-  );
+export function shortWrittenDay(value: string, now = new Date()): string {
+  return value.replace(new RegExp(` ${now.getFullYear()}$`), '');
 }

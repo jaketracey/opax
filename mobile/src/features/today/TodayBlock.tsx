@@ -6,20 +6,19 @@ import {
   ErrorState,
   LoadingState,
   OfflineBanner,
-  StaleNotice,
+  SourceLine,
   errorMessage,
-  Card,
 } from '../../design/primitives';
-import { spacing } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
 import { PartialNotice, SavedCopyNotice } from '../CatalogNotice';
 import { isOffline } from '../CatalogState';
-import { UpdatedCaption } from './parts';
 
 /**
- * A Today block in every state, as CatalogState draws it elsewhere, but
- * quiet: failures and empty blocks sit in a card, a saved copy says so above
- * its rows, and one caption says when the record was updated. Source names
- * and links live on the Sources and licences screen.
+ * A Today feed in every state, as CatalogState draws it elsewhere, but
+ * quiet and on the paper: no box around a failure or an empty feed. Its
+ * date and source are in Today's one source line at the foot. A saved copy
+ * says so above its rows and carries its own source line in the saved state
+ * ("Updated 4 Oct · ParlInfo bill records · Saved 3 Oct").
  */
 export function TodayBlock<T>({
   block,
@@ -27,7 +26,6 @@ export function TodayBlock<T>({
   onRetry,
   testID,
   children,
-  refreshing = false,
   placeholder = 'rows',
 }: {
   block: Block<T> | null;
@@ -35,7 +33,6 @@ export function TodayBlock<T>({
   onRetry: () => void;
   testID: string;
   children: (data: T) => ReactNode;
-  refreshing?: boolean;
   placeholder?: 'rows' | 'people';
 }) {
   if (!block || block.status === 'loading')
@@ -48,51 +45,40 @@ export function TodayBlock<T>({
     );
   if (block.status === 'error')
     return (
-      <Card padded={false} style={styles.inset}>
+      <View style={styles.block}>
         {isOffline(block.error) ? <OfflineBanner cached={false} /> : null}
         <ErrorState
           message={errorMessage(block.error)}
           onRetry={onRetry}
           testID={`${testID}-error`}
         />
-      </Card>
+      </View>
     );
   const none =
     block.data === null ||
     (Array.isArray(block.data) && block.data.length === 0);
   return (
     <View style={styles.block}>
-      {block.stale ? (
-        <View style={styles.notices}>
-          <SavedCopyNotice reason={block.staleReason} />
-          {block.savedAt !== null ? (
-            <StaleNotice
-              savedAt={block.savedAt}
-              refreshing={refreshing}
-              testID={`${testID}-stale`}
-            />
-          ) : null}
-        </View>
-      ) : null}
+      {block.stale ? <SavedCopyNotice reason={block.staleReason} /> : null}
       {block.partial ? <PartialNotice testID={`${testID}-partial`} /> : null}
       {none ? (
-        <Card padded={false} style={styles.inset}>
-          <EmptyState message={empty} testID={`${testID}-empty`} />
-        </Card>
+        <EmptyState message={empty} testID={`${testID}-empty`} />
       ) : (
         children(block.data as T)
       )}
-      <UpdatedCaption
-        asAt={block.asAt}
-        savedAt={block.stale ? block.savedAt : null}
-        testID={`${testID}-as-at`}
-      />
+      {block.stale && block.savedAt !== null ? (
+        <SourceLine
+          asOf={block.asAt}
+          citation={[...new Set(block.sources.map((source) => source.label))]}
+          savedAt={block.savedAt}
+          originals={block.sources}
+          testID={`${testID}-as-at`}
+        />
+      ) : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  block: { gap: spacing.s3 },
-  notices: { gap: spacing.s1 },
-  inset: { padding: spacing.s4, gap: spacing.s4 },
+  block: { gap: rhythm.heading },
 });

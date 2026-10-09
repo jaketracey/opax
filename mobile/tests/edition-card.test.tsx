@@ -15,13 +15,16 @@ import { editionPath } from '../src/api/policy';
 import { catalogs } from '../src/api/runtime';
 import { webOrigin } from '../src/design/environment';
 import {
+  Button,
+  Card,
   ErrorState,
   LoadingState,
   OfflineBanner,
+  SourceLine,
   StaleNotice,
 } from '../src/design/primitives';
 import { router } from 'expo-router';
-import { accentTint } from '../src/design/tokens';
+import { accentTint, colors } from '../src/design/tokens';
 import { CachedPortrait } from '../src/features/CachedPortrait';
 import { EditionCard, EditionSection } from '../src/features/EditionCard';
 import {
@@ -35,12 +38,6 @@ import Today from '../src/features/Today';
 import { responseBytes } from './fixture-bytes';
 import { replaceAt, roster, slugs } from './pinned';
 
-jest.mock('../src/features/reports/TodayReports', () => ({
-  Spotlight: () => null,
-  ReportsEntry: () => null,
-  FromRecord: () => null,
-  TodayCoverage: () => null,
-}));
 jest.mock('../src/api/runtime', () => ({
   catalogs: { today: jest.fn(), todayEdition: jest.fn(), directory: jest.fn() },
 }));
@@ -131,9 +128,18 @@ describe('the edition card', () => {
     expect(textOf(root, 'today-edition-text')).toBe(
       'This bill would keep funding grants that support pay for early childhood education and care workers.Passed 18 Sep 2026.',
     );
+    // One stage line in place of the five-stop timeline: the first date
+    // and the latest stage, with every stop counted for VoiceOver.
     expect(labelOf(root, 'today-edition-events')).toBe(
-      '12 Aug 2026, Introduced in the House of Representatives. 10 Sep 2026, Third reading, House of Representatives. 14 Sep 2026, Introduced in the Senate. 15 Sep 2026, Passed the Senate. 18 Sep 2026, Royal Assent',
+      '5 stages: Introduced in the House of Representatives, 12 Aug 2026, to Royal Assent, 18 Sep 2026',
     );
+    expect(textOf(root, 'today-edition-events-first')).toMatch(
+      /^12 Aug( 2026)?$/,
+    );
+    expect(textOf(root, 'today-edition-events-latest')).toMatch(
+      /^Royal Assent 18 Sep( 2026)?$/,
+    );
+    expect(textOf(root, 'today-edition-events')).not.toContain('Third reading');
     // Sources and licences live on their own screen.
     expect(host(root, 'today-edition-sources')).toHaveLength(0);
     expect(JSON.stringify(renderToJSON(root))).not.toMatch(/CC BY|ParlInfo/);
@@ -150,6 +156,18 @@ describe('the edition card', () => {
     ]);
     expect(host(root, 'today-edition-stale')).toHaveLength(0);
     expect(host(root, 'today-edition-as-at')).toHaveLength(0);
+  });
+  test('the colour is the header band; the body stays raised, so the machine pill keeps its edge', () => {
+    const { root } = render(<EditionCard edition={edition} />);
+    const head = host(root, 'today-edition-head')[0]!;
+    expect([head.props.style].flat()).toContainEqual({
+      backgroundColor: accentTint('bills').deep,
+    });
+    // No accent wash under the body: the pill is drawn on the bills wash.
+    expect(root.findByType(Card).props.ground).toBeUndefined();
+    expect(colors.raised).not.toBe(colors.billsWash);
+    // The action is a secondary pill; Today has no navy primary.
+    expect(root.findByType(Button).props.variant).toBeUndefined();
   });
   test('VoiceOver labels are set by props, with the title as a header', () => {
     const { root } = render(<EditionCard edition={edition} />);
@@ -380,22 +398,23 @@ describe('the edition card', () => {
     expect(host(root, 'today-edition-open')).toHaveLength(0);
     expect(textOf(root, 'today-edition-title')).toBe(pinned.edition.title);
   });
-  test('a stale copy says it is saved, beside the edition date', () => {
+  test('a stale copy says it is saved, in the edition’s own source line', () => {
     const savedAt = Date.parse('2026-10-04T01:00:00Z');
     const { root } = render(
       <EditionSection
         block={{ ...ready, stale: true, savedAt }}
         onRetry={() => {}}
-        refreshing
       />,
     );
     expect(root.findAllByType(OfflineBanner)).toHaveLength(1);
-    expect(root.findByType(StaleNotice).props).toMatchObject({
+    expect(root.findAllByType(StaleNotice)).toHaveLength(0);
+    expect(root.findByType(SourceLine).props).toMatchObject({
+      asOf: edition.date,
       savedAt,
-      refreshing: true,
+      originals: [expect.objectContaining({ url: edition.path })],
     });
-    expect(textOf(root, 'today-edition-as-at')).toMatch(
-      /^Updated 4 Oct( 2026)? · Saved 4 Oct( 2026)?$/,
+    expect(labelOf(root, 'today-edition-as-at')).toBe(
+      'Updated 4 Oct 2026, OPAX daily edition, Saved 4 Oct 2026',
     );
     expect(textOf(root, 'today-edition-title')).toBe(pinned.edition.title);
   });
