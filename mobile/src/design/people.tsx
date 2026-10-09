@@ -20,6 +20,7 @@ import {
   partyDot,
   partyIdentity,
   partyText,
+  formerMember,
   type PartyContext,
 } from './party';
 import { Hoverable, useHover } from './adaptive';
@@ -192,10 +193,9 @@ export function Portrait({
 
 /**
  * Party identity: a 10pt dot beside the party's name, never colour alone and
- * never a fill, and never without its context: a known former member reads
- * "Formerly Labor", a member who changed party reads "One Nation · formerly
- * Nationals". A party the data does not date reads plainly ("Labor"), as on
- * the web. The `label` role in ink-soft, one size. `dense` (tables only)
+ * never a fill: the party they sit (or last sat) for, "Labor", and "One
+ * Nation · formerly Nationals" only for a change of party. Whether they
+ * still sit is the row's to say ("Former member"), never the label's. The `label` role in ink-soft, one size. `dense` (tables only)
  * shows the web's short label (ALP, LIB); VoiceOver still reads the full
  * name. An unrecorded party is said in words, with no dot. A link to the
  * party page unless `linked={false}` or the label is not a party.
@@ -378,6 +378,12 @@ export type PersonRowProps = PersonRowParty & {
   selected?: boolean;
   /** The keyboard's place in a split list. */
   highlighted?: boolean;
+  /**
+   * The row's own lines already say whether they sit (a directory row's years
+   * under a Sitting or Former heading, a sponsor's "Formerly Member for …"):
+   * no "Former member" line.
+   */
+  statusShown?: boolean;
 };
 /**
  * A row for a roster parliamentarian: portrait (blank circle without one)
@@ -402,6 +408,7 @@ export function PersonRow({
   dragPath,
   selected,
   highlighted = false,
+  statusShown = false,
 }: PersonRowProps) {
   const slug = isValidElement<{ slug?: string }>(portrait)
     ? portrait.props.slug
@@ -414,9 +421,18 @@ export function PersonRow({
     party === undefined
       ? null
       : { party, status: partyStatus ?? 'unknown', formerly };
+  // The party label never says whether they sit; a known former member
+  // gets one quiet line instead (TestFlight build 32).
+  const former = statusShown ? null : formerMember(partyContext?.status);
   const label =
     accessibilityLabel ??
-    [name, partyContext ? partyText(partyContext).spoken : null, place, detail]
+    [
+      name,
+      partyContext ? partyText(partyContext).spoken : null,
+      former,
+      place,
+      detail,
+    ]
       .filter(Boolean)
       .join(', ');
   const body = (
@@ -439,6 +455,11 @@ export function PersonRow({
             <View style={styles.personParty}>
               <PartyLabel {...partyContext} linked={false} nested />
             </View>
+          ) : null}
+          {former ? (
+            <Text wordSafe variant="metadata" testID={testID && `${testID}-former`}>
+              {former}
+            </Text>
           ) : null}
           {place ? (
             <Text wordSafe variant="metadata">

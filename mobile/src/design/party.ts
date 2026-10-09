@@ -105,7 +105,8 @@ export interface PartyContext {
   /**
    * "former" only when the data says the person no longer sits (an ended
    * dated seat, or a roster that says so). "unknown" means the data does not
-   * date the party: it is drawn plainly, never as former and never as sitting.
+   * date the party: never said as former, never as sitting. The label itself
+   * draws every status the same; rows say "Former member" (`formerMember`).
    */
   status: PartyStatus;
   /** The previous party, when it differs from this one. */
@@ -113,25 +114,22 @@ export interface PartyContext {
 }
 
 /**
- * What a party label says, in words, with its status: "Labor" (current, or
- * not dated), "Formerly Labor" (known former), "One Nation, formerly
- * Nationals". Shared by the visible label and the VoiceOver label so they
- * never disagree.
+ * What a party label says, in words: the party they sit (or last sat) for,
+ * "Labor", and "One Nation, formerly Nationals" only for a recorded change of
+ * party. Whether they still sit is never the label's to say (TestFlight build
+ * 32: "Formerly should be reserved for people who left one party to join
+ * another"); rows say it with their years or a quiet "Former member" line
+ * (`formerMember`). Shared by the visible and VoiceOver labels so they never
+ * disagree.
  */
 export function partyText(
-  { party, status, formerly }: PartyContext,
+  { party, formerly }: PartyContext,
   dense = false,
 ): { visible: string; previous: string | null; spoken: string } {
   const identity = partyIdentity(party);
   if (!identity.recorded)
     return { visible: identity.name, previous: null, spoken: identity.name };
   const label = dense ? identity.short : identity.name;
-  if (status === 'former')
-    return {
-      visible: `Formerly ${label}`,
-      previous: null,
-      spoken: `Formerly ${identity.name}`,
-    };
   const before =
     formerly && !samePartyLabel(formerly, identity.name)
       ? partyIdentity(formerly)
@@ -176,3 +174,11 @@ export function resolveParty(input: string, labels: string[]): string | null {
   );
   return identities.size === 1 ? matches[0]! : null;
 }
+
+/**
+ * The quiet status line for someone the data dates as no longer sitting.
+ * Only a known former member gets it: "unknown" (an undated party, often a
+ * sitting state MP the roster does not date) says nothing either way.
+ */
+export const formerMember = (status: PartyStatus | undefined) =>
+  status === 'former' ? 'Former member' : null;

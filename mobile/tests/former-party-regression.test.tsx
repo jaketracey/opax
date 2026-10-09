@@ -33,23 +33,13 @@ const directory = peopleRows(
   portraits,
 );
 
+// TestFlight build 32 (AILRB_Cd): the label says the party they sat for;
+// whether they still sit is the row's "Former member" line, never the label.
 test.each([
-  ['tony-abbott', 'Tony Abbott', 'former', 'Formerly LIB', 'Formerly Liberal'],
-  ['john-howard', 'John Howard', 'former', 'Formerly LIB', 'Formerly Liberal'],
-  [
-    'julia-gillard',
-    'Julia Gillard',
-    'former',
-    'Formerly ALP',
-    'Formerly Labor',
-  ],
-  [
-    'scott-morrison',
-    'Scott Morrison',
-    'former',
-    'Formerly LIB',
-    'Formerly Liberal',
-  ],
+  ['tony-abbott', 'Tony Abbott', 'former', 'LIB', 'Liberal'],
+  ['john-howard', 'John Howard', 'former', 'LIB', 'Liberal'],
+  ['julia-gillard', 'Julia Gillard', 'former', 'ALP', 'Labor'],
+  ['scott-morrison', 'Scott Morrison', 'former', 'LIB', 'Liberal'],
   ['anthony-albanese', 'Anthony Albanese', 'current', 'ALP', 'Labor'],
   ['penny-wong', 'Penny Wong', 'current', 'ALP', 'Labor'],
 ] as const)(
@@ -94,8 +84,15 @@ test.each([
       rendered.root.find(
         (n) => typeof n.type === 'string' && n.props.testID === id,
       );
-    expect(host('header-party').props.accessibilityLabel).toContain(spoken);
-    expect(host('row').props.accessibilityLabel).toContain(spoken);
+    expect(host('header-party').props.accessibilityLabel).toBe(spoken);
+    expect(host('row').props.accessibilityLabel).toBe(
+      [name, spoken, status === 'former' ? 'Former member' : null]
+        .filter(Boolean)
+        .join(', '),
+    );
+    expect(
+      rendered.root.findAll((n) => n.props?.testID === 'row-former').length > 0,
+    ).toBe(status === 'former');
     act(() => rendered.unmount());
   },
 );

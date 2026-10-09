@@ -295,7 +295,7 @@ test('a bill without a sponsor says so once, in its source sheet, and never load
   act(() => r.unmount());
 });
 
-test('a former sponsor reads "Formerly" on the chip and the seat line', async () => {
+test('a former sponsor reads "Formerly" on the seat line, never the party label', async () => {
   // The pinned Wilkie bill, its sponsor fields pointed at a member the dated
   // release records as former.
   let raw = pinned('/bills/au-federal-r6850.json');
@@ -330,14 +330,22 @@ test('a former sponsor reads "Formerly" on the chip and the seat line', async ()
     partyStatus: 'former',
     place: 'Formerly member for Farrer · New South Wales',
   });
-  // A person row names the party in full (short labels are for tables).
+  // A person row names the party in full (short labels are for tables). The
+  // party she sat for, plainly (TestFlight build 32); the seat line already
+  // says she left, so there is no second "Former member" line.
   expect(row!.findByType(PartyLabel).findByType(Text).props.children).toContain(
-    'Formerly Liberal',
+    'Liberal',
   );
+  expect(
+    row!.findByType(PartyLabel).findByType(Text).props.children,
+  ).not.toContain('Formerly Liberal');
+  expect(
+    row!.findAll((n) => n.props.testID === 'bill-sponsor-sussan-ley-former'),
+  ).toHaveLength(0);
   expect(
     native(r.root, 'bill-sponsor-sussan-ley').props.accessibilityLabel,
   ).toBe(
-    'Sussan Ley, Formerly member for Farrer · New South Wales, Formerly Liberal, profile',
+    'Sussan Ley, Formerly member for Farrer · New South Wales, Liberal, profile',
   );
   act(() => r.unmount());
 });

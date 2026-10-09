@@ -546,17 +546,21 @@ sidebarAdaptable`): a sidebar, or the top tab bar the reader expands into
 
 ## People
 
-- `PartyLabel`: 10pt dot plus the party exactly as the data names it, never
-  without its status. `status` (`PartyStatus` from
-  `src/api/party-transforms.ts`) is required and has three values:
-  - `"current"` (a current dated seat, or a current APH roster row with
-    `party_now`) reads "Labor";
-  - `"former"` (the dated release says the last seat ended, or the roster
-    says the person is not current) reads "Formerly Labor";
-  - `"unknown"` (no dated seat and no roster status: most state members)
-    reads "Labor", plainly, as the web does. It never says "Formerly", and
-    never "sitting"; where a status word is needed, the neutral one is
-    "Parliamentarian".
+- `PartyLabel`: 10pt dot plus the party exactly as the data names it: the
+  party they sit for, or last sat for. `status` (`PartyStatus` from
+  `src/api/party-transforms.ts`) is required and has three values, but the
+  label draws them all alike, "Labor" (TestFlight build 32: "Formerly should
+  be reserved for people who left one party to join another"):
+  - `"current"`: a current dated seat, or a current APH roster row with
+    `party_now`;
+  - `"former"`: the dated release says the last seat ended, or the roster
+    says the person is not current. The row says so, never the label: a
+    directory's years line under its Former heading, a sponsor's "Formerly
+    member for Farrer", or else a quiet "Former member" line (`formerMember`,
+    drawn by `PersonRow` and the profile header);
+  - `"unknown"`: no dated seat and no roster status (most state members).
+    Never "Former member", and never "sitting"; where a status word is
+    needed, the neutral one is "Parliamentarian".
 
   `formerly="Nationals"` on a current or undated party reads "One Nation ·
   formerly Nationals" (the web's wording). VoiceOver hears the same words in

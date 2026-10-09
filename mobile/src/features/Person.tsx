@@ -50,7 +50,7 @@ import {
   useAccessibilitySize,
   useReduceMotion,
 } from '../design/primitives';
-import { partyDot } from '../design/party';
+import { formerMember, partyDot } from '../design/party';
 import { colors, layout, radii, rhythm } from '../design/tokens';
 import { useHeaderBottom } from '../design/useHeaderBottom';
 import {
@@ -239,6 +239,12 @@ export function ProfileScreen({
                   formerly={identity.formerly}
                   testID="person-party"
                 />
+                {formerMember(identity.partyStatus) ? (
+                  // Whether they sit is said here, never by the party label.
+                  <Text wordSafe variant="metadata" testID="person-former">
+                    {formerMember(identity.partyStatus)}
+                  </Text>
+                ) : null}
                 <SeatLines identity={identity} />
               </Group>
               {profile.personId === null ? (

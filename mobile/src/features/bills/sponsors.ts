@@ -237,8 +237,8 @@ function sponsorPlace(profile: PersonProfile, directory: SponsorDirectory) {
  * The bill's sponsors as people rows. Identity is the seats-first profile join
  * behind a full-name `sponsorSlug` match, never a surname. The party is the
  * one the bill records for its sponsor, as at the bill: where the profile now
- * records another party, the bill's party is shown undated, still marked
- * "Formerly" for a member the data dates as former. A one-party bill record
+ * records another party, the bill's party is shown undated, still dated
+ * former (a "Former member" line) for a member the data dates as former. A one-party bill record
  * speaks for its sole sponsor only.
  */
 export function sponsorRows(

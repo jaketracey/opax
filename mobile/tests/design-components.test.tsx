@@ -270,12 +270,14 @@ describe('PartyLabel', () => {
     expect(hex(flat(text.props.style).color)).toBe(light.inkSoft);
     expect(strings(root)).toEqual(['Labor']);
   });
-  test('dense shows the short label and says the full name; former is said', () => {
+  test('dense shows the short label and says the full name; status is not the label’s', () => {
+    // TestFlight build 32: "Formerly" only for a change of party. A former
+    // member's label is the party they sat for; their row says they left.
     const root = render(
       <PartyLabel party="Liberal" status="former" dense testID="p" />,
     ).root;
-    expect(strings(root)).toEqual(['Formerly LIB']);
-    expect(host(root, 'p').props.accessibilityLabel).toBe('Formerly Liberal');
+    expect(strings(root)).toEqual(['LIB']);
+    expect(host(root, 'p').props.accessibilityLabel).toBe('Liberal');
   });
   test('party colour is never drawn without its name; an unrecorded party has no dot', () => {
     for (const party of [

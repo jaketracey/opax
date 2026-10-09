@@ -149,7 +149,9 @@ test('former roster identity never masquerades as a current affiliation', async 
   );
   const r = await render(<Person />);
   expect(r.root.findByType(PartyLabel).props.status).toBe('former');
-  expect(text(r)).toContain('Formerly Labor');
+  // The label is the party she sat for; the header says she left.
+  expect(text(r)).not.toContain('Formerly Labor');
+  expect(text(r)).toContain('Former member');
   expect(text(r)).toContain('Historical entitlements are listed below');
   await act(async () => r.unmount());
 });
@@ -316,7 +318,8 @@ test('roster-only member says how its records are linked, without fabricating fi
   expect(mock.rosterProfileFor).toHaveBeenCalledWith(identity);
   // The dated Warringah term establishes status without expanding identity coverage.
   expect(r.root.findByType(PartyLabel).props.status).toBe('former');
-  expect(text(r)).toContain('Formerly Liberal');
+  expect(text(r)).toContain('Former member');
+  expect(text(r)).not.toContain('Formerly Liberal');
   await act(async () => r.unmount());
 });
 test('unverified private identity is refused before any name or profile blocks render', async () => {
@@ -466,7 +469,7 @@ test('Windsor has a profile even without a representation row', async () => {
   // No dated seat links him (the release names Antony Harold Curties
   // Windsor), but no sitting federal member is a Windsor: former, 9 Oct.
   expect(r.root.findByType(PartyLabel).props.status).toBe('former');
-  expect(text(r)).toContain('Formerly');
+  expect(text(r)).toContain('Former member');
   expect(text(r)).toContain('does not link');
   expect(
     r.root.findAllByType(Button).some((n) => n.props.label === 'Try again'),
