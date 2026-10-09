@@ -1,0 +1,34 @@
+appId: au.com.opax.app
+name: iPad welcome tour in a 1/3-width window falls back to the phone tour (by path, restores Windowed Apps; screenshot evidence)
+---
+# scripts/e2e.sh <ipad> .maestro/ipad-tour-compact.yaml
+# Windowed Apps, the simulator's default, which this restores. Taps are
+# unreliable in that mode, and when iPadOS reopens the app in the narrow
+# window it last had, XCUITest reads no hierarchy from it at all (9 Oct
+# 2026: only the status bar). So this opens the tour, drags the window's
+# corner to a third of the screen (a no-op if it opened that narrow) and
+# records; review compact-third.png by eye. tests/welcome-tour-ipad.test.tsx
+# checks the size-class choice and the page kept across the resize.
+- runFlow: support/ipad-windowed-apps.yaml
+# Settings must not stay open beside the app.
+- stopApp: com.apple.Preferences
+- launchApp:
+    clearState: true
+    arguments:
+      OPAXWelcomeTour: 'on'
+- extendedWaitUntil:
+    visible: Page 1 of 5
+    timeout: 15000
+    optional: true
+- waitForAnimationToEnd
+- swipe:
+    start: 98%,98%
+    end: 34%,98%
+    duration: 2500
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: tour-scroll-about
+    timeout: 15000
+    optional: true
+- takeScreenshot: ${EVIDENCE}/compact-third

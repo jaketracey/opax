@@ -4,11 +4,16 @@ import { requireNativeView, requireOptionalNativeModule } from 'expo';
 
 export interface KeyCommandSpec {
   id: string;
-  /** One character, or "up", "down", "escape", "return". */
+  /** One character, or "up", "down", "left", "right", "escape", "return". */
   input: string;
   modifiers: ('command' | 'shift' | 'option' | 'control')[];
   /** Shown in the Cmd-hold shortcut list. */
   title: string;
+  /**
+   * Runs before the system's own use of the key (a focused scroll view's
+   * arrows). Escape always has priority; only for surfaces without text input.
+   */
+  priority?: boolean;
 }
 
 interface OpaxIPadModule {

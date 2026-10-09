@@ -146,6 +146,22 @@ export const textStyles = {
     dynamicTypeRamp: 'largeTitle',
     color: 'ink',
   },
+  // iPad regular width: a page title set larger than the phone's (the
+  // welcome tour), over `padLede`, a body at a comfortable reading size.
+  padTitle: {
+    fontFamily: fonts.serif,
+    fontSize: 42,
+    lineHeight: 52,
+    dynamicTypeRamp: 'largeTitle',
+    color: 'ink',
+  },
+  padLede: {
+    fontFamily: fonts.sans,
+    fontSize: 19,
+    lineHeight: 30,
+    dynamicTypeRamp: 'body',
+    color: 'ink',
+  },
   heading: {
     fontFamily: fonts.serifBold,
     fontSize: 22,

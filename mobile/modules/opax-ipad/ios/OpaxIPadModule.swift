@@ -64,12 +64,14 @@ final class SidebarLabels: NSObject, UITabBarController.Sidebar.Delegate {
 
 struct KeyCommandSpec: Record {
   @Field var id: String = ""
-  /** One character, or "up", "down", "escape", "return". */
+  /** One character, or "up", "down", "left", "right", "escape", "return". */
   @Field var input: String = ""
   /** "command", "shift", "option", "control". */
   @Field var modifiers: [String] = []
   /** The name the Cmd-hold shortcut list and the menu bar show. */
   @Field var title: String = ""
+  /** Runs before the system's own use of the key; surfaces without text input only. */
+  @Field var priority: Bool = false
 }
 
 /// Holds the current commands and hands each press to JavaScript.
@@ -90,7 +92,8 @@ final class KeyCommandCenter {
       )
       command.discoverabilityTitle = spec.title.isEmpty ? nil : spec.title
       // Text input keeps arrows and Return. Escape closes the active sheet.
-      command.wantsPriorityOverSystemBehavior = spec.input == "escape"
+      // A surface with no text input (the welcome tour) may take its arrows.
+      command.wantsPriorityOverSystemBehavior = spec.input == "escape" || spec.priority
       return command
     }
     Self.adoptAppDelegate()
@@ -100,6 +103,8 @@ final class KeyCommandCenter {
     switch value {
     case "up": return UIKeyCommand.inputUpArrow
     case "down": return UIKeyCommand.inputDownArrow
+    case "left": return UIKeyCommand.inputLeftArrow
+    case "right": return UIKeyCommand.inputRightArrow
     case "escape": return UIKeyCommand.inputEscape
     case "return": return "\r"
     default: return value.count == 1 ? value.lowercased() : nil

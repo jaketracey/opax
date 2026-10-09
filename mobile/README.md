@@ -320,6 +320,36 @@ The tour shows once per device after the first launch: Skip or finishing
 saves `opax-welcome-v1.json` in the app's documents. Account and about, About
 OPAX, Replay welcome tour closes the sheet and shows it again.
 
+**On iPad** (Oct 2026) the tour is composed for the larger screen
+(`PadTour.tsx`, `padScenes.tsx`, `layout.ts`); the iPhone tour is unchanged.
+
+- **Layout by the window's size class:** regular width in landscape (900pt
+  and wider) puts the picture beside the words (`columns`: about 55–60% for
+  the picture, a 360–620pt column of words and actions); regular portrait,
+  a squarer window or any accessibility text size puts the picture above
+  and the words below in a centred 660pt column (`stacked`); compact width
+  (Split View, Slide Over, a narrow window) falls back to the phone tour.
+  Rotation and resizing keep the page.
+- **Pictures at real size:** each page shows the app's iPad screen in a
+  window (the sidebar or iPadOS's top tab bar, split panes, Today's cards),
+  built from the same components, cropped at the foot and labelled
+  "Example". Below 560pt, and at accessibility sizes, a picture is laid out
+  larger and scaled down rather than reflowed. To VoiceOver it is one image
+  whose summary (`padSceneSummaries` in `pages.ts`) is read before the
+  page's words.
+- **Type:** `padTitle` (Merriweather 42) and `padLede` (Public Sans 19/30).
+- **Navigation:** Skip, Back (drawn disabled on the first page) and Next
+  (Choose your electorate on the last); a page indicator whose marks open
+  their page (one adjustable element to VoiceOver, "Page 2 of 5"); a
+  horizontal swipe over the picture or the words. A hardware keyboard: ←
+  and → turn the page, Return is the primary button, Escape skips. The
+  tour's `useKeyScope` lists only these in the Cmd-hold overlay and keeps
+  every app shortcut from acting behind it. Buttons and marks take the
+  pointer's highlight.
+- **Motion:** the picture crossfades, the incoming one drifting 32pt in from
+  the side it comes from, and the words fade in. None of it with Reduce
+  Motion, or before iOS has answered.
+
 **E2E flag.** Journeys start with cleared state, so e2e builds treat the tour
 as seen. The launch argument `-OPAXWelcomeTour on` restores the production
 behaviour. Its reader (`src/onboarding/launch-flag.e2e.ts`, NSUserDefaults)
@@ -347,6 +377,17 @@ runs a journey with the simulator in dark appearance (default light):
 scripts/e2e.sh <udid> 28 .maestro/28b-cold-launch.yaml
 OPAX_CONTENT_SIZE=accessibility-extra-extra-extra-large scripts/e2e.sh <udid> 28
 OPAX_APPEARANCE=dark scripts/e2e.sh <udid> .maestro/28b-cold-launch.yaml
+```
+
+Journey 56 (iPad only) covers the tour in landscape and portrait, every
+page, Next, swipe and Back, rotation keeping the page, and the finish. It
+leaves Full-Screen Apps on for the AX5 pass; the compact pass restores
+Windowed Apps. Run the three in this order:
+
+```sh
+scripts/e2e.sh <ipad> 56
+OPAX_CONTENT_SIZE=accessibility-extra-extra-extra-large scripts/e2e.sh <ipad> .maestro/ipad-tour-ax5.yaml
+scripts/e2e.sh <ipad> .maestro/ipad-tour-compact.yaml
 ```
 
 ## Never-call rule

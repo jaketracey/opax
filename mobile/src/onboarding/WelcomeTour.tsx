@@ -19,8 +19,10 @@ import {
   Divider,
   Heading,
   Text,
+  useLayout,
   useReduceMotionSetting,
 } from '../design/primitives';
+import { useKeyScope } from '../design/keyboard';
 import {
   colors,
   fonts,
@@ -37,22 +39,24 @@ import {
   type WelcomePage,
 } from './pages';
 import { Scene } from './scenes';
+import { tourArrangement } from './layout';
+import { PadTour } from './PadTour';
 
 /**
  * The welcome tour: five pages over the app, once per device after the first
  * launch and again from Account (src/onboarding/state.ts). Each page is a
  * live scene built from the app's components above a few plain sentences.
  *
- * - A native paging scroll view: the reader swipes or taps Next. Nothing
- *   advances on its own. Skip is always visible and closes the tour.
- * - Parallax: the scene lags the page a little and the words fade with it.
- *   Reduce Motion: no parallax, no reveal and no animated page turns; Next
- *   moves straight to the next page.
- * - VoiceOver: the masthead, Skip, the page ("Page 2 of 5. Your MP. …"), the
- *   position and the button, in that order. Pages off screen are hidden, and
- *   Next moves focus to the new page. Scenes are pictures and take no focus.
- * - Dynamic Type to AX5: each page scrolls; at accessibility sizes the words
- *   come before the picture.
+ * - The layout follows the window (layout.ts): the phone tour on compact
+ *   width (every iPhone, an iPad in Split View or Slide Over), and on an
+ *   iPad's regular width the picture beside or above the words (PadTour).
+ *   Rotating or resizing keeps the page.
+ * - Nothing advances on its own. Skip is always visible and closes the tour.
+ * - Reduce Motion: no parallax, crossfade, drift or reveal, and no animated
+ *   page turns. Until iOS has answered, nothing moves either.
+ * - A hardware keyboard (iPad): ← and → turn the page, Return is the primary
+ *   button, Escape skips. While the tour is open only these keys act, and
+ *   only these are listed in the Cmd-hold overlay.
  * - The last page's button, Choose your electorate, closes the tour and
  *   opens Your MP's seat chooser.
  */
@@ -68,25 +72,31 @@ export function WelcomeTour({
   /** The tour has faded out. */
   onClosed: () => void;
 }) {
-  const { width, height, fontScale } = useWindowDimensions();
-  const insets = useSafeAreaInsets();
+  const frame = useLayout();
+  const { fontScale } = useWindowDimensions();
   // Null until iOS answers: scenes wait, and nothing parallaxes or animates
   // a page turn until the setting is known to be off.
   const motion = useReduceMotionSetting();
   const reduced = motion !== false;
-  const accessibilitySize = isAccessibilityCategory(fontScale);
+  const arrangement = tourArrangement({
+    regular: frame.regular,
+    width: frame.width,
+    height: frame.height,
+    fontScale,
+  });
   const count = welcomePages.length;
   const [page, setPage] = useState(0);
-  // The page nearest the centre while swiping: its scene starts revealing.
-  const [near, setNear] = useState(0);
   const [seen, setSeen] = useState<ReadonlySet<number>>(() => new Set([0]));
-  const scrollX = useState(() => new Animated.Value(0))[0];
-  const pager = useRef<ScrollView>(null);
   const words = useRef<(View | null)[]>([]);
   const veil = useState(() => new Animated.Value(entrance ? 0 : 1))[0];
   const closing = useRef(false);
+  // Focus moves after a turn; pending moves are cancelled if the tour closes.
+  const focusTimers = useRef(new Set<ReturnType<typeof setTimeout>>());
   const last = page === count - 1;
 
+  const registerWords = (index: number, node: View | null) => {
+    words.current[index] = node;
+  };
   const focusPage = (index: number) => {
     const node = findNodeHandle(words.current[index] ?? null);
     if (node) AccessibilityInfo.setAccessibilityFocus(node);
@@ -101,30 +111,32 @@ export function WelcomeTour({
         useNativeDriver: true,
       }).start();
     const timer = setTimeout(() => focusPage(0), 500);
-    return () => clearTimeout(timer);
+    const pending = focusTimers.current;
+    return () => {
+      clearTimeout(timer);
+      pending.forEach(clearTimeout);
+    };
     // Once, on mount.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Same values bail out, so the scroll listener can call this freely.
-  const reveal = (index: number) => {
-    setNear(index);
+  const see = (index: number) =>
     setSeen((previous) =>
       previous.has(index) ? previous : new Set([...previous, index]),
     );
-  };
 
-  const settle = (index: number) => {
+  /** Opens a page (clamped) and moves VoiceOver to its words. */
+  const turn = (index: number) => {
     const target = Math.max(0, Math.min(count - 1, index));
-    reveal(target);
+    see(target);
     if (target === page) return;
     setPage(target);
-    setTimeout(() => focusPage(target), 80);
-  };
-
-  const go = (index: number) => {
-    pager.current?.scrollTo({ x: index * width, animated: !reduced });
-    settle(index);
+    const timer = setTimeout(() => {
+      focusTimers.current.delete(timer);
+      focusPage(target);
+    }, 80);
+    focusTimers.current.add(timer);
   };
 
   const leave = (reason: 'skip' | 'finish') => {
@@ -137,6 +149,148 @@ export function WelcomeTour({
       easing: Easing.out(Easing.quad),
       useNativeDriver: true,
     }).start(() => onClosed());
+  };
+
+  useEffect(() => {
+    if (Platform.OS !== 'android') return;
+    const back = BackHandler.addEventListener('hardwareBackPress', () => {
+      leave('skip');
+      return true;
+    });
+    return () => back.remove();
+  });
+
+  useKeyScope([
+    {
+      id: 'tour-previous',
+      input: 'left',
+      modifiers: [],
+      title: 'Previous page',
+      priority: true,
+      run: () => turn(page - 1),
+    },
+    {
+      id: 'tour-next',
+      input: 'right',
+      modifiers: [],
+      title: 'Next page',
+      priority: true,
+      run: () => turn(page + 1),
+    },
+    {
+      id: 'tour-primary',
+      input: 'return',
+      modifiers: [],
+      title: last ? finishLabel : 'Next',
+      run: () => (last ? leave('finish') : turn(page + 1)),
+    },
+    {
+      id: 'tour-skip',
+      input: 'escape',
+      modifiers: [],
+      title: 'Skip tour',
+      run: () => leave('skip'),
+    },
+  ]);
+
+  return (
+    <Animated.View
+      testID="welcome-tour"
+      accessibilityViewIsModal
+      style={[styles.tour, { opacity: veil }]}
+    >
+      {arrangement === 'phone' ? (
+        <PhoneTour
+          page={page}
+          seen={seen}
+          reduced={reduced}
+          motion={motion}
+          onWords={registerWords}
+          onSee={see}
+          onTurn={turn}
+          onLeave={leave}
+        />
+      ) : (
+        <PadTour
+          arrangement={arrangement}
+          page={page}
+          seen={seen}
+          reduced={reduced}
+          motion={motion}
+          onWords={registerWords}
+          onTurn={turn}
+          onLeave={leave}
+        />
+      )}
+    </Animated.View>
+  );
+}
+
+/**
+ * The tour on compact width (every iPhone, and an iPad window that narrow):
+ *
+ * - A native paging scroll view: the reader swipes or taps Next.
+ * - Parallax: the scene lags the page a little and the words fade with it.
+ *   Reduce Motion: no parallax, no reveal and no animated page turns; Next
+ *   moves straight to the next page.
+ * - VoiceOver: the masthead, Skip, the page ("Page 2 of 5. Your MP. …"), the
+ *   position and the button, in that order. Pages off screen are hidden, and
+ *   Next moves focus to the new page. Scenes are pictures and take no focus.
+ * - Dynamic Type to AX5: each page scrolls; at accessibility sizes the words
+ *   come before the picture.
+ */
+function PhoneTour({
+  page,
+  seen,
+  reduced,
+  motion,
+  onWords,
+  onSee,
+  onTurn,
+  onLeave,
+}: {
+  page: number;
+  seen: ReadonlySet<number>;
+  reduced: boolean;
+  /** The Reduce Motion setting, or null until it is known. */
+  motion: boolean | null;
+  onWords: (index: number, node: View | null) => void;
+  onSee: (index: number) => void;
+  onTurn: (index: number) => void;
+  onLeave: (reason: 'skip' | 'finish') => void;
+}) {
+  const { width, height, fontScale } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
+  const accessibilitySize = isAccessibilityCategory(fontScale);
+  const count = welcomePages.length;
+  // The page nearest the centre while swiping: its scene starts revealing.
+  const [near, setNear] = useState(page);
+  // A rotation or a resize from the iPad layout mounts the pager mid-tour.
+  // The offset is the mount's only: iOS applies a changed contentOffset
+  // over a running page turn (one Next then moved two pages).
+  const scrollX = useState(() => new Animated.Value(page * width))[0];
+  const [initialOffset] = useState(() => ({ x: page * width, y: 0 }));
+  const pager = useRef<ScrollView>(null);
+  // The page the pager was last moved to or came to rest on.
+  const placed = useRef(page);
+  const last = page === count - 1;
+
+  // Same values bail out, so the scroll listener can call this freely.
+  const reveal = (index: number) => {
+    setNear(index);
+    onSee(index);
+  };
+
+  const settle = (index: number) => {
+    const target = Math.max(0, Math.min(count - 1, index));
+    reveal(target);
+    placed.current = target;
+    onTurn(target);
+  };
+
+  const go = (index: number) => {
+    pager.current?.scrollTo({ x: index * width, animated: !reduced });
+    settle(index);
   };
 
   // Created once: the listener only uses state setters.
@@ -165,26 +319,20 @@ export function WelcomeTour({
 
   // A rotation changes the page width: stay on the same page.
   useEffect(() => {
-    if (Platform.OS !== 'android') return;
-    const back = BackHandler.addEventListener('hardwareBackPress', () => {
-      leave('skip');
-      return true;
-    });
-    return () => back.remove();
-  });
-
-  useEffect(() => {
     pager.current?.scrollTo({ x: page * width, animated: false });
     // Only when the width changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [width]);
 
+  // A page opened from elsewhere (the iPad's keyboard): move the pager.
+  useEffect(() => {
+    if (placed.current === page) return;
+    placed.current = page;
+    pager.current?.scrollTo({ x: page * width, animated: !reduced });
+  }, [page, width, reduced]);
+
   return (
-    <Animated.View
-      testID="welcome-tour"
-      accessibilityViewIsModal
-      style={[styles.tour, { opacity: veil }]}
-    >
+    <>
       <View
         style={[
           styles.masthead,
@@ -217,7 +365,7 @@ export function WelcomeTour({
           size="compact"
           accessibilityHint="Closes the welcome tour"
           testID="tour-skip"
-          onPress={() => leave('skip')}
+          onPress={() => onLeave('skip')}
         />
       </View>
       <View style={styles.rule}>
@@ -232,6 +380,7 @@ export function WelcomeTour({
         showsHorizontalScrollIndicator={false}
         scrollEventThrottle={16}
         contentInsetAdjustmentBehavior="never"
+        contentOffset={initialOffset}
         onScroll={onScroll}
         onMomentumScrollEnd={(event) =>
           settle(Math.round(event.nativeEvent.contentOffset.x / width))
@@ -254,9 +403,7 @@ export function WelcomeTour({
             fontScale={fontScale}
             wordsFirst={accessibilitySize}
             insets={{ left: insets.left, right: insets.right }}
-            wordsRef={(node) => {
-              words.current[index] = node;
-            }}
+            wordsRef={(node) => onWords(index, node)}
           />
         ))}
       </Animated.ScrollView>
@@ -283,10 +430,10 @@ export function WelcomeTour({
               : `Page ${page + 2} of ${count}`
           }
           testID={last ? 'tour-finish' : 'tour-next'}
-          onPress={() => (last ? leave('finish') : go(page + 1))}
+          onPress={() => (last ? onLeave('finish') : go(page + 1))}
         />
       </View>
-    </Animated.View>
+    </>
   );
 }
 
