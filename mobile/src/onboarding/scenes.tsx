@@ -6,7 +6,14 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { Animated, Easing, StyleSheet, View } from 'react-native';
+import {
+  Animated,
+  Easing,
+  StyleSheet,
+  View,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native';
 import {
   AsAtLine,
   Button,
@@ -44,9 +51,12 @@ export const SceneContext = createContext<{
 export function Reveal({
   order,
   children,
+  style,
 }: {
   order: number;
   children: ReactNode;
+  /** Layout for the wrapper (an iPad pane's empty state fills it). */
+  style?: StyleProp<ViewStyle>;
 }) {
   const { active, reduced } = useContext(SceneContext);
   const shown = useState(() => new Animated.Value(reduced ? 1 : 0))[0];
@@ -77,17 +87,20 @@ export function Reveal({
   }, [active, reduced, order, shown]);
   return (
     <Animated.View
-      style={{
-        opacity: shown,
-        transform: [
-          {
-            translateY: shown.interpolate({
-              inputRange: [0, 1],
-              outputRange: [10, 0],
-            }),
-          },
-        ],
-      }}
+      style={[
+        style,
+        {
+          opacity: shown,
+          transform: [
+            {
+              translateY: shown.interpolate({
+                inputRange: [0, 1],
+                outputRange: [10, 0],
+              }),
+            },
+          ],
+        },
+      ]}
     >
       {children}
     </Animated.View>

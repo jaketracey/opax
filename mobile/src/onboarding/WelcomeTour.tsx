@@ -266,7 +266,10 @@ function PhoneTour({
   // The page nearest the centre while swiping: its scene starts revealing.
   const [near, setNear] = useState(page);
   // A rotation or a resize from the iPad layout mounts the pager mid-tour.
+  // The offset is the mount's only: iOS applies a changed contentOffset
+  // over a running page turn (one Next then moved two pages).
   const scrollX = useState(() => new Animated.Value(page * width))[0];
+  const [initialOffset] = useState(() => ({ x: page * width, y: 0 }));
   const pager = useRef<ScrollView>(null);
   // The page the pager was last moved to or came to rest on.
   const placed = useRef(page);
@@ -377,7 +380,7 @@ function PhoneTour({
         showsHorizontalScrollIndicator={false}
         scrollEventThrottle={16}
         contentInsetAdjustmentBehavior="never"
-        contentOffset={{ x: page * width, y: 0 }}
+        contentOffset={initialOffset}
         onScroll={onScroll}
         onMomentumScrollEnd={(event) =>
           settle(Math.round(event.nativeEvent.contentOffset.x / width))

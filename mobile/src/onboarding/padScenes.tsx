@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { createContext, useContext, useState, type ReactNode } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import {
   AsAtLine,
@@ -35,14 +35,21 @@ import { Reveal, SceneContext, noop } from './scenes';
  * them "Example". No figure appears, and placeholders name roles.
  *
  * A scene fills the box it is given and is cropped at the bottom, as a
- * window onto the screen would be. Below `MIN_SCENE_WIDTH`, and at
- * accessibility text sizes, it is laid out larger and scaled down, so it
- * pictures the screen at that text size rather than reflowing one word to a
+ * window onto the screen would be. Below `MIN_SCENE_WIDTH`, and at larger
+ * text sizes, it is laid out larger (by the text scale) and scaled down, so
+ * it keeps the screen's composition rather than reflowing one word to a
  * line.
  */
 export const MIN_SCENE_WIDTH = 560;
 /** From this width a split scene keeps the sidebar beside it. */
 const SIDEBAR_FRAME = 860;
+/**
+ * The text scale a scene is laid out at (1 at the default size). Scenes
+ * decide by their width at the default size; fixed widths (the sidebar, the
+ * list pane, card bases) grow by this, so they keep their proportions to
+ * the text.
+ */
+const SceneScale = createContext(1);
 
 type SectionKey = 'today' | 'your-mp' | 'bills' | 'search' | 'ask';
 const sections: readonly {
@@ -146,10 +153,11 @@ function Frame({
   sidebar: boolean;
   children: ReactNode;
 }) {
+  const scale = useContext(SceneScale);
   if (sidebar)
     return (
       <View style={styles.frameRow}>
-        <Sidebar current={current} width={sidebarWidth(width)} />
+        <Sidebar current={current} width={sidebarWidth(width) * scale} />
         <View style={styles.grow}>{children}</View>
       </View>
     );
@@ -175,8 +183,11 @@ function Split({
   list: ReactNode;
   detail: ReactNode;
 }) {
+  const scale = useContext(SceneScale);
   const room = width - (sidebar ? sidebarWidth(width) : 0);
-  const listWidth = Math.round(Math.max(240, Math.min(320, room * 0.4)));
+  const listWidth = Math.round(
+    Math.max(240, Math.min(320, room * 0.4)) * scale,
+  );
   return (
     <View style={styles.split}>
       <View style={[styles.listPane, { width: listWidth }]}>{list}</View>
@@ -227,7 +238,9 @@ function BillCard({
 }) {
   const tone = useTodayAccent(billAccent(status));
   return (
-    <TodayCard style={styles.card}>
+    <TodayCard
+      style={[styles.card, { flexBasis: 200 * useContext(SceneScale) }]}
+    >
       <View style={[styles.band, { backgroundColor: tone.base }]} />
       <View style={styles.cardInner}>
         <Chip
@@ -236,7 +249,7 @@ function BillCard({
           color={tone.ink}
           dot={tone.base}
         />
-        <Text variant="strong" style={styles.grow}>
+        <Text variant="strong" style={styles.cardTitle}>
           {title}
         </Text>
         <Text variant="fine">{introduced}</Text>
@@ -246,6 +259,7 @@ function BillCard({
 }
 
 function TodayScene({ width }: { width: number }) {
+  const slot = { flexBasis: 220 * useContext(SceneScale) };
   return (
     <Frame current="today" width={width} sidebar>
       <View style={styles.content}>
@@ -273,7 +287,7 @@ function TodayScene({ width }: { width: number }) {
         </Reveal>
         <Reveal order={2}>
           <View style={styles.cards}>
-            <View style={styles.cardSlot}>
+            <View style={[styles.cardSlot, slot]}>
               <Section title="Recent declarations" accent="interests">
                 <TodayCard style={styles.padded}>
                   <PersonRow
@@ -284,7 +298,7 @@ function TodayScene({ width }: { width: number }) {
                 </TodayCard>
               </Section>
             </View>
-            <View style={styles.cardSlot}>
+            <View style={[styles.cardSlot, slot]}>
               <Section title="Public money" accent="money">
                 <TodayCard style={[styles.padded, styles.moneyCard]}>
                   <IconTile
@@ -398,7 +412,9 @@ function ProfileBlock({
   citation: string;
 }) {
   return (
-    <View style={styles.blockSlot}>
+    <View
+      style={[styles.blockSlot, { flexBasis: 200 * useContext(SceneScale) }]}
+    >
       <Section title={title} accent={accent}>
         <AsAtLine asOf="2026-07-01" citation={citation} />
         <ViewOriginal />
@@ -426,11 +442,13 @@ function ProfileScene({ width }: { width: number }) {
                   name="Example member"
                   place="Member for Example"
                   selected
+                  onPress={noop}
                 />
                 <PersonRow
                   name="Example senator"
                   place="Senator for Example"
                   selected={false}
+                  onPress={noop}
                 />
               </View>
             </Reveal>
@@ -607,6 +625,7 @@ function SearchScene({ width }: { width: number }) {
                   name="Example member"
                   place="Member for Example"
                   selected={false}
+                  onPress={noop}
                 />
               </Section>
             </Reveal>
@@ -634,10 +653,8 @@ function SearchScene({ width }: { width: number }) {
           </>
         }
         detail={
-          <Reveal order={4}>
-            <View style={styles.empty}>
-              <SplitEmpty icon="magnifyingglass" title="Nothing open" />
-            </View>
+          <Reveal order={4} style={styles.grow}>
+            <SplitEmpty icon="magnifyingglass" title="Nothing open" />
           </Reveal>
         }
       />
@@ -658,7 +675,9 @@ const SCENES: Record<
 
 /** The layout box and scale for a scene drawn `width` by `height`. */
 export function padSceneBox(width: number, height: number, fontScale: number) {
-  const factor = Math.min(Math.max(fontScale, 1), 2.4);
+  // The full text scale: panes and the sidebar keep their proportions, so
+  // no label in the picture breaks inside a word at any text size.
+  const factor = Math.max(fontScale, 1);
   const layoutWidth = Math.max(width, MIN_SCENE_WIDTH) * factor;
   const scale = width / layoutWidth;
   return { layoutWidth, layoutHeight: height / scale, scale };
@@ -666,8 +685,8 @@ export function padSceneBox(width: number, height: number, fontScale: number) {
 
 /**
  * A page's picture, `width` by `height`: at real size where it fits,
- * otherwise laid out at `MIN_SCENE_WIDTH` (times the text scale, as the
- * phone's scenes are) and scaled to the box. Hidden from VoiceOver; the
+ * otherwise laid out at `MIN_SCENE_WIDTH` (times the text scale) and scaled
+ * to the box. Hidden from VoiceOver; the
  * stage around it carries the picture's summary.
  */
 export function PadScene({
@@ -711,7 +730,9 @@ export function PadScene({
         }}
       >
         <SceneContext value={{ active, reduced }}>
-          <Render width={layoutWidth} />
+          <SceneScale value={layoutWidth / Math.max(width, MIN_SCENE_WIDTH)}>
+            <Render width={Math.max(width, MIN_SCENE_WIDTH)} />
+          </SceneScale>
         </SceneContext>
       </View>
     </View>
@@ -812,9 +833,10 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: rhythm.block,
   },
-  cardSlot: { flexGrow: 1, flexBasis: 220 },
-  card: { flexGrow: 1, flexBasis: 200 },
+  cardSlot: { flexGrow: 1 },
+  card: { flexGrow: 1 },
   band: { height: 4 },
+  cardTitle: { flexGrow: 1 },
   cardInner: {
     flexGrow: 1,
     padding: spacing.s4,
@@ -849,7 +871,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     columnGap: rhythm.group,
   },
-  blockSlot: { flexGrow: 1, flexBasis: 200 },
+  blockSlot: { flexGrow: 1 },
   billRow: { paddingVertical: 10, gap: rhythm.line },
   paneBar: { alignItems: 'flex-end', minHeight: 28 },
   dateRow: { flexDirection: 'row', gap: spacing.s3 },
@@ -860,5 +882,4 @@ const styles = StyleSheet.create({
     marginTop: 9,
     backgroundColor: colors.billsInk,
   },
-  empty: { paddingTop: 96 },
 });

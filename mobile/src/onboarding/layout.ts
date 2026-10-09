@@ -78,7 +78,7 @@ export function padGeometry({
     };
   }
   const large = isAccessibilityCategory(fontScale);
-  const share = large ? 0.42 : 0.56;
+  const share = large ? 0.42 : 0.62;
   const stageHeight = Math.round(
     Math.max(220, Math.min(large ? 420 : 760, height * share)),
   );

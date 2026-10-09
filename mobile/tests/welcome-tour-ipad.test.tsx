@@ -207,8 +207,10 @@ describe('the layout follows the size class', () => {
     const narrow = padSceneBox(420, 300, 1);
     expect(narrow.layoutWidth).toBe(560);
     expect(narrow.scale).toBeCloseTo(0.75);
-    // AX5: the scene is laid out wider and scaled, never reflowed.
-    expect(padSceneBox(700, 800, 3.571).scale).toBeCloseTo(1 / 2.4);
+    // AX5: the scene is laid out wider by the text scale and scaled down,
+    // so it keeps its composition and never reflows a word.
+    expect(padSceneBox(700, 800, 3.571).scale).toBeCloseTo(1 / 3.571);
+    expect(padSceneBox(700, 800, 1.353).layoutWidth).toBeCloseTo(947.1);
   });
 
   test('a swipe turns the page; a short or slow drag and the ends do not', () => {
@@ -257,6 +259,17 @@ describe('the page survives rotation and resizing', () => {
       (n) => n.props.pagingEnabled === true && n.props.contentOffset,
     );
     expect(pager.props.contentOffset).toEqual({ x: 2 * 375, y: 0 });
+    // The offset is the mount's only: a later page leaves the prop alone,
+    // or iOS would apply it over the running page turn.
+    const offset = pager.props.contentOffset;
+    press(root, 'tour-next');
+    expect(position(root)).toBe('Page 4 of 5');
+    expect(
+      root.find((n) => n.props.pagingEnabled === true && n.props.contentOffset)
+        .props.contentOffset,
+    ).toBe(offset);
+    act(() => void dispatchKeyCommand('tour-previous'));
+    expect(position(root)).toBe('Page 3 of 5');
     let node: ReactTestInstance | null = one(root, 'tour-page-profiles');
     while (node && node.props.accessibilityElementsHidden === undefined)
       node = node.parent;

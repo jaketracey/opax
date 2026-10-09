@@ -373,9 +373,13 @@ function Stage({
     ]).start();
   }, [page, reduced, fades, shifts]);
 
-  // The "Example" line is always reserved, so the window never moves.
-  const label = 24;
-  const window = { width, height: Math.max(0, height - label) };
+  // The "Example" line is on every page, so the window never moves; the
+  // window takes what the line (which grows with the text) leaves.
+  const [measured, setMeasured] = useState<{
+    width: number;
+    height: number;
+  } | null>(null);
+  const window = measured ?? { width, height: Math.max(0, height - 24) };
   return (
     <View
       accessible
@@ -390,7 +394,22 @@ function Stage({
           Example
         </Text>
       </View>
-      <View style={[styles.window, window]}>
+      <View
+        style={styles.window}
+        onLayout={(event) => {
+          const next = {
+            width: Math.round(event.nativeEvent.layout.width),
+            height: Math.round(event.nativeEvent.layout.height),
+          };
+          setMeasured((previous) =>
+            previous &&
+            previous.width === next.width &&
+            previous.height === next.height
+              ? previous
+              : next,
+          );
+        }}
+      >
         <Animated.View
           style={[styles.fill, { transform: [{ translateX: drag }] }]}
         >
@@ -636,8 +655,9 @@ const styles = StyleSheet.create({
   centred: { alignItems: 'center' },
   stackedWords: { paddingTop: rhythm.section, paddingBottom: rhythm.group },
   stackedControls: { alignSelf: 'center' },
-  exampleLine: { height: 24, justifyContent: 'flex-start' },
+  exampleLine: { paddingBottom: spacing.s1 },
   window: {
+    flex: 1,
     overflow: 'hidden',
     backgroundColor: colors.paper,
     borderColor: colors.line,
