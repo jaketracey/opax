@@ -480,7 +480,11 @@ function SearchScreen({
                   />
                 </Group>
               ) : null}
-              {!sources && !sourceError ? (
+              {/* Suggestions show only once a query is typed. Idle, Browse
+                  needs none of them, so no placeholder stands in for them
+                  (TestFlight build 32: rows that "disappear without loading
+                  anything"). */}
+              {showSuggestions && !sources && !sourceError ? (
                 <LoadingState
                   label="Loading suggestions"
                   testID="search-suggestions-loading"
