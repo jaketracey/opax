@@ -4,7 +4,6 @@ import {
   hasParliamentaryMembership,
   matchingSeats,
   representativeProfile,
-  uncoveredProfile,
   replaceStateSeat,
   seatContext,
   registerCategoryLabel,
@@ -20,7 +19,11 @@ import {
   servedFiles,
   slugs,
 } from './pinned';
-import { joinPerson, profileFor } from '../src/api/catalogs';
+import {
+  joinPerson,
+  profileFor,
+  rosterProfileFor,
+} from '../src/api/catalogs';
 const result = <T>(data: T) => ({ data, stale: false, savedAt: 1, asOf: null });
 export const directory: Directory = {
   manifest: result(manifest),
@@ -65,15 +68,18 @@ test('only release/roster identities receive a native profile', () => {
   );
   expect(representativeProfile('private-person', directory)).toBeNull();
 });
-test('dated party status leaves roster-only profile coverage explicitly unlinked', () => {
-  // Status uses the verified dated Warringah term; other identity joins stay unlinked.
+test('a former member outside the release keeps the records held by roster ID and name', () => {
+  // TestFlight build 32: Bill Shorten read "This release does not link" for
+  // both his voting record and Labor's receipts. Status still comes from the
+  // dated Warringah term; the other joins follow the roster identity.
   const p = joinPerson('tony-abbott', slugs, roster, people, manifest);
   expect(p.seats).toHaveLength(0);
   expect(p.partyStatus).toBe('former');
-  const view = uncoveredProfile(p);
+  const view = rosterProfileFor(p, catalogs);
+  expect(view.personId).toBeNull();
   expect(view.blocks.identity.data).toBe(p);
-  expect(view.blocks.pay.status).toBe('unlinked');
-  expect(view.blocks.votes.asAt).toBeNull();
+  expect(view.blocks.votes.status).toBe('ready');
+  expect(view.blocks.partyReceipts.data?.party).toBe('Liberal');
 });
 test('abolished seats never appear in the normal picker, including ambiguous Fraser', () => {
   expect(matchingSeats(index.electorates, 'Higgins')).toEqual([]);
