@@ -151,8 +151,8 @@ run_step act "SELECT COUNT(*) FROM speeches WHERE source='act_hansard'" \
 run_step fts_sync "" \
   "$PY" scripts/fts_sync.py
 
-run_step bills "SELECT COUNT(*) FROM bills_v2" \
-  bash scripts/refresh_bills.sh
+# Federal bill acquisition/full export belongs to nightly.sh step 2c: sitting-day
+# / Sunday cadence, publication guards, KB sync off. Do not duplicate it here.
 
 # --- official statements already included in the public corpus ---------------
 run_step releases_nsw "SELECT COUNT(*) FROM ext_press_releases WHERE source='nsw'" \

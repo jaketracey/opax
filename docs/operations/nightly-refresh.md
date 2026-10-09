@@ -16,10 +16,10 @@ The nightly only brings new records in and publishes them.
       └─ scripts/vm/nightly.sh   (flock; log ~/.cache/autoresearch/pipeline/nightly-<date>.log)
    1  sync ~/opax with origin/main (drops any half-written data from a dead run)
    2  scripts/daily_refresh.sh with OPAX_SYNC_KB=1     ~1-2 h
-        Hansards (federal, NSW, VIC, QLD, ACT, committees), federal interests (bounded Firecrawl), AusTender (legacy + the full OCDS feed), IPEA, bills,
+        Hansards (federal, NSW, VIC, QLD, ACT, committees), federal interests (bounded Firecrawl), AusTender (legacy + the full OCDS feed), IPEA,
         NSW/QLD/VIC/Treasury/PM releases, GrantConnect awards (staged, reconciled by ext_apply), NSW/VIC state
         divisions → parli.db; new speeches, releases, divisions and awards → the knowledge box (KB);
-        votes.json; bill files. `sa` always fails (source WAF) and is allowed to; so is `act_members` (the Assembly's
+        votes.json. `sa` always fails (source WAF) and is allowed to; so is `act_members` (the Assembly's
         members page may be redesigned without failing the night). ACT proofs are swapped for Finals by the same
         step, and `act_kb_patch` PATCHes the changed text into the KB after the push.
   2b  scripts/weekly_refresh.sh weekly [monthly]      only on Sundays (Sydney); the first Sunday adds monthly
@@ -27,7 +27,11 @@ The nightly only brings new records in and publishes them.
         ACNC/ATO, ABN-linked suppliers), then their static exports; monthly: QLD contracts and diaries, IPEA,
         state rosters, grant recipients, and the big exports (suppliers, grants, discovery, pay, expenses).
         Every export goes through keep_if_unchanged, so a night on which nothing moved commits nothing.
-   3  bills: export_bills.py --fill-briefs, then verify_bill_briefs.py (no brief lost vs HEAD)
+  2c  bills: bills_fetch.py --parliaments 48 --refresh, then export_bills.py --out portal/public/bills
+        Daily on reviewed sitting dates, Sunday otherwise, plus first-run catch-up; KB publication off.
+        Reject a shrinking count or any missing existing bill; fetch + export capped at 20 min.
+   3  bills: export_bills.py --fill-briefs, then verify_bill_briefs.py (no brief lost vs HEAD),
+        recheck bill retention and keep_if_unchanged; any failure puts the bills group back to HEAD
   3b  export_division_pages.py and export_recent_votes.py: Worker SEO projections from the refreshed
       OPAX DB, after bill verification. Division shards retain prior evidence on degraded coverage;
       recent votes use a separate file and never change the mobile votes.json contract.
@@ -289,7 +293,7 @@ A source that is blocked for good will make the watchdog red every day; add its 
 ~/opax/scripts/vm/nightly.sh                              # the real thing (takes the lock)
 sudo systemctl start opax-nightly.service                 # same, through systemd, including the power-off afterwards
 OPAX_NIGHTLY_NO_PUSH=1 ~/opax/scripts/vm/nightly.sh       # everything but push and the status
-OPAX_NIGHTLY_SKIP_REFRESH=1 ~/opax/scripts/vm/nightly.sh  # only the publish half (after a fix; skips the periodic groups too)
+OPAX_NIGHTLY_SKIP_REFRESH=1 ~/opax/scripts/vm/nightly.sh  # only the publish half (skips periodic groups and bill acquisition; retains catch-up)
 OPAX_FORCE_GROUPS="weekly monthly" ~/opax/scripts/vm/nightly.sh   # run the periodic groups tonight whatever the day
 OPAX_TODAY=2026-10-04 ~/opax/scripts/vm/nightly.sh        # pretend it is that (Sydney) date: Sunday 4th = weekly + monthly
 ~/opax/scripts/weekly_refresh.sh weekly                   # just the periodic loaders/exports, no publishing
@@ -486,7 +490,8 @@ end (in `status.json`, so the watchdog can email) and keeps publishing whatever 
   is logged PARTIAL, resumes from its checkpoint next run and reaches `status.json` as a warning, not a failure.
 - `link_speakers` or `classify` failing **blocks the KB push** (`OPAX_SYNC_GATE`): the push is permanent
   and moves the checkpoint, so it must not run on half-processed rows. It resumes next night.
-- Bills that lost a brief, or fail validation, are reverted to HEAD; `votes.json` and the manifest still go.
+- Bills whose fetch/export fails or times out, whose count shrinks, that lose any existing bill or brief,
+  or that fail validation, are reverted to HEAD; the other groups and manifest still go.
 - The manifest updater refusing (KB reports >1% fewer resources than the manifest, or a kind that
   will not answer) leaves `corpus.json` and `CACHE_EPOCH` alone. Then the push has no `corpus.json` change, so **the deploy does
   not start**; the status says so and the deploy has to be run by hand.
@@ -509,7 +514,73 @@ kind or source (GrantConnect notices, MLCI awards, AEC donations) and every hand
 commit (`9e668760`) from the 21 September manifest against the live KB: identical except `checked_at`.
 `corpus-stats.test.mjs` asserts structure (breakdown sums, ISO date, the PM and NSW rows), not numbers.
 
-**Bill speech briefs.** The exporter writes `brief: null` on every speech; `--fill-briefs` restores them from the
+**Federal bill acquisition and full export.** Step 2c sources `scripts/vm/bills_refresh.sh` and runs
+`scripts/refresh_bills.sh` with `OPAX_SYNC_KB=0`. This replaces the former unconditional `bills` step in
+`daily_refresh.sh`, so it cannot run twice or inherit that script's KB publication switch. The wrapper runs
+`scripts/bills_registry/bills_fetch.py --parliaments 48 --refresh`, then the full
+`scripts/export_bills.py --out portal/public/bills`. `OPAX_BILL_PARLIAMENT` overrides 48 at a future turnover.
+Only the current parliament is fetched; the full export reads every parliament already in the registry and
+the reviewed exposure drafts, which also lands the optional division `title` and `sponsor_person_id` fills.
+No bill schema or mobile `votes.json` changes are part of this step.
+
+The fetcher uses Python's standard library and writable `~/.cache/autoresearch/parli.db` (its path is fixed in
+`bills_common.py`, independent of `OPAX_DB`). Step 2c pins the export's `OPAX_DB` to the same file. The box needs
+the existing `bills_v2`, `bill_events`, `bill_sources` and `bill_links` tables, plus the usual exporter evidence
+tables (`speeches`, `members`, `ext_divisions`, `ext_votes`; `members` also enables sponsor matching). The lane does not create
+or migrate the database. Listings come from `parlinfo.aph.gov.au` in pages of 100, followed by each billhome;
+the fetcher upserts bills, progress events and billhome source rows, records EM references, and commits after
+each bill so it releases the writer before the next request. It does not acquire EM/bill text or generate
+summaries/links. HTML is cached under `~/.cache/autoresearch/bills_v2/{listing,billhome}`; `--refresh` bypasses
+old cache contents. No APH credentials are needed. Egress HTTPS to ParlInfo, DNS and writeable cache space are
+required. The measured VM source probe below already answered from AWS; this lane has only been tested with
+fixtures, so a full-volume fetch has not been re-probed.
+
+Requests are spaced at **0.7/second**, with 45-second request timeouts, three attempts and exponential
+backoff; 20 consecutive 403 responses stop the fetcher. A failed/unrecognised listing or any failed homepage
+exits nonzero. The wrapper has one combined **20-minute** GNU timeout (`OPAX_BILLS_TIMEOUT`, plus a 60-second
+kill grace) for fetch and full export. A failure can leave additive DB/cache progress, but the static bills
+are restored and nothing from that failed export is published. The next scheduled acquisition resumes via
+the same upserts; pending catch-up retries on the very next acquisition-enabled night.
+
+`scripts/vm/bills_guard.py` selects the cadence from the **Sydney date**, overridable by `OPAX_TODAY` for
+rehearsals. The reviewed dated list is **12–15 and 26–29 October, 16–19 and 23–26 November 2026**; each of
+those dates runs acquisition and full export. All other dates run it on **Sunday**. There is no APH calendar
+request. Extend `SITTING_RANGES` before the 2027 sittings; unlisted dates retain the weekly cadence. The
+03:15 run sees the source as it stands that morning; later introductions enter on the next scheduled run.
+`OPAX_NIGHTLY_SKIP_REFRESH=1` skips acquisition while the existing fill/verify publication half still runs.
+
+The guard compares the working export with HEAD's index and bill files. It refuses a smaller count,
+duplicate/inconsistent index keys, missing indexed files, a changed file identity, any absent old index key
+(even if replaced by a new key at the same count), or any deleted committed bill JSON. It runs after the
+full export, again after fill/brief verification, and before staging. Any failure restores **only**
+`portal/public/bills` to HEAD and cleans new bill files. The existing data validation and portal test gate
+can also hold the whole bills group. `keep_if_unchanged --sweep` restores byte-identical committed JSON for
+stamp-only changes after briefs are filled. Acquisition/export/guards never write or revert `votes.json`.
+
+**First-run catch-up.** On the first acquisition-enabled run after this lane merges, step 2c creates
+`~/.cache/autoresearch/pipeline/bills-refresh-v1.pending` and `bills-refresh-v1.initialized`. The pending
+marker forces fetch and full export even on a non-sitting weekday or Saturday, landing the title/sponsor
+fields that night. It is deleted only after the export survives bill/brief verification and the later data
+gates, and the data commit succeeds (or no commit is needed). The initialized marker stays outside git,
+so checkout sync cannot re-arm it. A fetch/export/brief failure, bills rollback, interrupted run or commit
+failure keeps catch-up pending for the next night. A push failure leaves the accepted commit locally for
+the nightly's existing retry path. To request another catch-up, create the pending marker on the box:
+`touch ~/.cache/autoresearch/pipeline/bills-refresh-v1.pending`.
+
+After the final data gates, the nightly log, status summary and summary commit message include
+`bills: N new, M changed, T titles filled, S sponsor IDs filled`. New counts compare index keys; changed
+counts are existing bill documents that differ from HEAD, excluding `index.json` and newly added bills.
+Titles count bill/division pairs gaining an optional title; sponsor IDs count bills gaining an ID,
+including new bills. Counts describe retained data, so a reverted group reports zero gains.
+
+**Bill KB sync stays off.** It should remain off for this lane: `publish_bills.py` would write before the
+static bill retention and brief/data gates, and reverting JSON cannot undo those KB writes. The sitting-week
+hubs consume the static files. Enabling bill KB publication belongs in a separate reviewed change after
+the final gates, with its own budget/retry policy. The existing speech-brief phase still reads the KB and
+cache, and the unrelated daily/periodic KB sync keeps its current settings.
+
+**Bill speech briefs.** The exporter retains briefs for unchanged speech identities and leaves new ones
+empty; `--fill-briefs` restores missing briefs from the
 brief cache, asks the KB about speeches it has not seen, and **re-asks about empty ones** (the enrichment Worker
 writes briefs onto recent speeches after the first export): every empty speech dated in the last 60 days, and the
 1,500 least-recently-checked older ones, each at most once per 20 hours (`--recheck-hours/-limit/--recent-days`).
@@ -537,18 +608,25 @@ power-off after them is the reboot, so a new kernel takes effect at the next sta
 
 | Night | Steps | Time |
 | --- | --- | --- |
-| Every night | daily refresh (Hansards, bills 9 min, votes, links, KB push when new rows) | ~17 min on a quiet night (2026-09-29 real run); a large push adds up to `OPAX_PUSH_TIMEOUT` (2 h) |
+| Every night | daily refresh (Hansards, votes, links, KB push when new rows) | Previous ~17 min quiet-night measurement included a ~9 min bill step (2026-09-29); that bill work now follows the separate cadence below. A large push adds up to `OPAX_PUSH_TIMEOUT` (2 h) |
+| Sitting dates, Sundays, first-run catch-up | current-parliament bill fetch + full static export, then existing brief fill/verify | **Estimated 9–12 min** healthy-source addition; acquisition + export capped at **20 min + 60 s kill grace**. Estimate uses 296 current-parliament bills (~300 requests, >=7.1 min at 0.7/s), the earlier ~9 min bill-step measurement and 1–3 min export headroom; no live timing in this lane |
 | Every night, additional federal interests | fresh indexes, changed HTML/PDFs, cached PDF parsing/OCR, then export | ~5–10 min warm; `STEP_TIMEOUT=45m` for `interests_federal`, plus GNU timeout's 60-second kill grace |
 | Sunday: weekly | loaders 30 min (lobbyists 22 min, `frl_acts` 3 min, ABN-linked `contract_suppliers` 7 min, ACNC/ATO 1 min once loaded) + exports 8 min (`x_speakers` and `x_people` a speeches scan each, ~3 min) | ~40 min |
 | First Sunday: monthly, on top | `qld_contracts` 7 min, `diaries_qld` 10-13 min, IPEA 2 min, `speaker_hygiene` 11 min (a full `speeches` read), `grant_recipients` 4 min, exports 5 min | ~40 min |
 | Pre-commit test gate | search catalog build + 679 tests | ~4 min (each extra attribution run adds ~1.5 min) |
 
-A first-Sunday night is therefore about 20 + 40 + 40 + 5 min plus a push of up to 2 h,
+A first-Sunday night conservatively budgets about 20 + 40 + 40 + 5 min plus a push of up to 2 h,
 and up to 45 min (plus 60-second kill grace) for interests: budget roughly 5 h, which is why the
 unit limit is 6 h (`TimeoutStartSec=6h`) and the EventBridge stop backstop is at 10:30 (moved from 08:00 on 2026-09-29; a run that
 starts at 03:15 and uses the whole limit ends at 09:15). The freshness watchdog (11:00) reads `corpus.json`'s `checked_at`, which
 the nightly stamps near the end of the run: a Sunday run that ends after 11:00 would look stale to it. Runs measured with the
 loaders competing for the disk and CPU with a backfill were up to twice as slow.
+
+Conservatively adding the new bill phase's full 21-minute timeout allowance to that existing ~5-hour budget
+still fits the 6-hour unit window. The previous estimate included bill work in the daily step, so this is
+deliberate extra headroom rather than a new measured nightly duration. A source outage holds bills and is
+reported as a failed night while the other groups continue; a slow/export query or a growing parliament
+could need a reviewed budget adjustment. Brief filling retains its existing bounds and gate policy.
 
 ## Why the refresh is written for a small, slow disk
 
@@ -634,7 +712,7 @@ source answered.**
 | KB push / read | *.progress.cloud | not a WAF | OK (630,777 resources) |
 | `sa` | hansardsearch.parliament.sa.gov.au | Azure Front Door | 403, as from everywhere; allowed to fail |
 
-That is one request per source. A WAF can still turn on a burst: `bills_fetch` sends about 300 ParlInfo requests a night
+That is one request per source. A WAF can still turn on a burst: `bills_fetch` sends about 300 ParlInfo requests per scheduled bill refresh
 (it stops itself after a run of 403s), QLD downloads a PDF per sitting day, and Cloudflare and Azure rules can react to
 volume or to a datacenter's reputation changing later. If a source starts refusing, the options are an egress through a
 residential/AU proxy for that step only, running that one fetcher on the desktop and rsyncing its cache to the machine, or
@@ -646,6 +724,11 @@ accepting the gap and listing it in `source_limitations`. Re-run `scripts/vm/pro
 ```
 # unit tests (Python 3.10+, run in the pipeline venv or with `requests` installed)
 python3 -m unittest scripts/test_update_corpus_manifest.py scripts/test_export_briefs.py scripts/test_export_drafts.py scripts/vm/test_validate_data.py scripts/vm/test_keep_if_unchanged.py
+
+# bills step: fixture git checkout, stubbed acquisition/export/fill, real guards/verifier/sweep
+python3 -m unittest scripts.vm.test_bills_refresh scripts.test_export_bills_sponsors tests.test_export_bill_divisions tests.test_bill_refresh_briefs
+PYTHONPATH=scripts/bills_registry python3 -m unittest scripts/bills_registry/test_refresh.py
+bash -n scripts/vm/nightly.sh scripts/vm/bills_refresh.sh scripts/daily_refresh.sh scripts/vm/test_nightly.sh
 
 # end-to-end scripts in a throwaway Ubuntu 24.04 (no network, no GitHub, no real KB)
 docker run --rm -v "$PWD":/src:ro ubuntu:24.04 bash -c \
@@ -670,10 +753,16 @@ partial push): 191 checks, including the isolated 45-minute interests limit and 
 `PATH`). The unit itself was also run under real systemd in a container (ok, failing, held, skipped and hung
 runs, with a shortened time limit).
 
+`test_bills_refresh.py` covers every supplied sitting date, Sunday/other-day selection, a Saturday catch-up
+and consumption/retry of its marker, count shrinkage, same-count vanished keys, missing files, inconsistent
+counts, lost briefs, fetch/export failure, timeout, stamp-only retention, final rollback/commit failure,
+KB-sync suppression, DB path pinning, untouched votes and retained delta logs/commit messages. No source
+fetch or production database/KB access is needed.
+
 ## Not covered by the nightly
 
-The daily refresh covers Hansards (federal, NSW, VIC, QLD, ACT, committees), bills, releases, AusTender, GrantConnect awards,
-IPEA and votes; the Sunday and first-Sunday groups cover state donations, lobbyist registers, FITS, interests, diaries,
+The daily refresh covers Hansards (federal, NSW, VIC, QLD, ACT, committees), releases, AusTender, GrantConnect awards,
+IPEA and votes; nightly step 2c adds federal bills on sitting dates and Sundays. The Sunday and first-Sunday groups cover state donations, lobbyist registers, FITS, interests, diaries,
 ABN-linked suppliers and grants, ACNC/ATO, contracts and the exports built from them. Still manual: the federal AEC donation
 reload (`donations.py` deletes every source's rows unless `--no-clear`; see `docs/operations/periodic-refresh.md`), the MLCI
 grant research, bill texts and other one-off research builds, and any source that needs a browser or a licence gate. The

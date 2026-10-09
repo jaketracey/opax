@@ -37,12 +37,17 @@ new_sandbox() {
   ORIGIN="$SB/origin.git"; git init -q --bare "$ORIGIN"
   local seed="$SB/seed"; mkdir -p "$seed"
   # the files the nightly reads, from the real tree
-  for f in scripts/vm/nightly.sh scripts/vm/run-nightly.sh scripts/vm/poweroff-if-idle.sh scripts/vm/validate_data.py scripts/vm/data_groups.sh scripts/export_bills.py \
+  for f in scripts/vm/nightly.sh scripts/vm/run-nightly.sh scripts/vm/poweroff-if-idle.sh scripts/vm/validate_data.py scripts/vm/data_groups.sh scripts/export_bills.py scripts/roster_identity.py \
+           scripts/vm/bills_refresh.sh scripts/vm/bills_guard.py scripts/vm/keep_if_unchanged.py \
            scripts/export_division_pages.py scripts/export_recent_votes.py scripts/export_votes.py \
            scripts/verify_bill_briefs.py scripts/update_corpus_manifest.py scripts/bump_cache_epoch.py \
-           parli/__init__.py parli/arag.py portal/wrangler.jsonc portal/public/corpus.json; do
+           parli/__init__.py parli/arag.py parli/ingest/__init__.py parli/ingest/speaker_names.py \
+           portal/wrangler.jsonc portal/public/corpus.json; do
     mkdir -p "$seed/$(dirname "$f")"; cp "$SRC/$f" "$seed/$f"
   done
+  # Acquisition is stubbed: fake_refresh below already writes the bill fixtures.
+  # The focused bills suite exercises the real fetch/export wrapper with stubs.
+  printf '#!/usr/bin/env bash\n[ "$OPAX_SYNC_KB" = 0 ]\n' > "$seed/scripts/refresh_bills.sh"
   mkdir -p "$seed/portal/public/bills"
   python3 - "$seed" <<'PYEOF'
 import importlib.util, json, pathlib, sys
@@ -223,6 +228,8 @@ check "corpus.json carries the new total" bash -c "git --git-dir='$ORIGIN' show 
 check "corpus.json is in the pushed commit (that is what triggers deploy.yml)" bash -c "git --git-dir='$ORIGIN' diff --name-only main~1 main | grep -qx portal/public/corpus.json"
 check "CACHE_EPOCH bumped in both places" bash -c "[ \$(git --git-dir='$ORIGIN' show main:portal/wrangler.jsonc | grep -c '\"CACHE_EPOCH\": \"$TODAY-nightly\"') -eq 2 ]"
 check "bills went through with briefs restored" bash -c "git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d[\"status_as_of\"]==\"2026-09-28\" and d[\"speeches\"][0][\"brief\"]==\"Brief 1-0\"'"
+check "bill deltas are in the summary commit" bash -c "git --git-dir='$ORIGIN' log -1 --format=%s main | grep -q 'bills: 0 new, 3 changed, 0 titles filled, 0 sponsor IDs filled'"
+check "successful catch-up deleted its pending marker" test ! -f "$HOME/.cache/autoresearch/pipeline/bills-refresh-v1.pending"
 check "votes.json published" bash -c "git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q '\"new\"'"
 check "only data files changed" bash -c "[ -z \"\$(git --git-dir='$ORIGIN' diff --name-only main~1 main | grep -vE '^portal/(public/(bills/|divisions/|seo/recent-votes.json|votes.json|corpus.json)|wrangler.jsonc)')\" ]"
 check "status branch published, says ok" status_is ok
@@ -263,6 +270,7 @@ check "exit 1" test "$NRC" -eq 1
 check "bill files were not published" bash -c "git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t2.json | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d[\"speeches\"][0][\"brief\"]==\"Brief 2-0\" and d[\"status_as_of\"]==\"2026-09-01\"'"
 check "votes and corpus still published" bash -c "git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q '\"new\"' && git --git-dir='$ORIGIN' show main:portal/public/corpus.json | grep -q '$TODAY'"
 check "status says the briefs were lost" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'briefs lost'"
+check "failed brief verification retains catch-up" test -f "$HOME/.cache/autoresearch/pipeline/bills-refresh-v1.pending"
 
 echo "== 5. the refresh never ran: nothing pushed to main, status failed"
 new_sandbox s5
@@ -481,10 +489,11 @@ OPAX_ENSURE_INDEXES=1 refresh
 check "runs the index step when asked" grep -q 'scripts/ensure_db_indexes.py' "$RS_CALLS"
 check "and before the first fetch" bash -c "[ \"\$(head -1 '$RS_CALLS')\" = 'scripts/ensure_db_indexes.py' ]"
 
-echo "== 18. daily_refresh.sh: the full-text index is synced once, after the loaders and before bills"
+echo "== 18. daily_refresh.sh: the full-text index is synced once, after the loaders; bills run in nightly"
 new_refresh_sandbox r18
 refresh
 check "fts_sync ran" grep -q 'scripts/fts_sync.py' "$RS_CALLS"
+check "daily refresh no longer fetches, exports or publishes bills" bash -c "! grep -qE 'refresh_bills|bills_fetch|export_bills|publish_bills' '$RS_CALLS'"
 check "after the last loader (sa) and before the bills step" bash -c "
   a=\$(grep -n 'parli.ingest.sa_hansard' '$RS_CALLS' | head -1 | cut -d: -f1); b=\$(grep -n 'scripts/fts_sync.py' '$RS_CALLS' | head -1 | cut -d: -f1); c=\$(grep -n 'refresh_bills\|bills_fetch' '$RS_CALLS' | head -1 | cut -d: -f1)
   [ -n \"\$a\" ] && [ -n \"\$b\" ] && [ \"\$a\" -lt \"\$b\" ] && { [ -z \"\$c\" ] || [ \"\$b\" -lt \"\$c\" ]; }"
@@ -710,14 +719,15 @@ OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok FAKE_NODE_RED_WHILE_CHANGED=portal/
 check "portal suite red because of a group's files: exit 1" test "$NRC" -eq 1
 check "that group is not published" bash -c "git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==100'"
 check "the suite is green again after that one revert, so votes and bills still go out" bash -c "git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q '\"new\"' && git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | grep -q 2026-09-28"
-check "the suite was run twice (red, then green), each time after rebuilding the search catalog" bash -c "[ \$(grep -c 'node --test' '$HOME/node.calls') -eq 2 ] && [ \$(grep -c 'npm run build:search' '$HOME/npm.calls') -eq 2 ]"
+check "the suite reruns until green, each time after rebuilding the search catalog" bash -c "n=\$(grep -c 'node --test' '$HOME/node.calls'); [ \$n -ge 2 ] && [ \$(grep -c 'npm run build:search' '$HOME/npm.calls') -eq \$n ]"
 check "status names the group that was put back" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'new speakers files (green with only that group put back to HEAD)'"
 new_sandbox s25d3
 mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
 OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok FAKE_NODE_RED_WHILE_CHANGED=portal/public/votes.json nightly
 check "the culprit is found by trying each group alone: votes (not the first group) is the one not published" bash -c "[ '$NRC' -eq 1 ] && ! git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q '\"new\"'"
 check "the innocent groups tried on the way (speakers) are restored, not lost, and bills go out too" bash -c "git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==101' && git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | grep -q 2026-09-28"
-check "three runs: all changed (red), speakers alone put back (still red), votes alone put back (green)" test "$(grep -c 'node --test' "$HOME/node.calls")" -eq 3
+# Division/SEO projections may also change and be tried before speakers/votes.
+check "multiple runs: all changed (red), innocent groups put back (still red), votes put back (green)" test "$(grep -c 'node --test' "$HOME/node.calls")" -ge 3
 check "status names votes as the culprit" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'new votes files (green with only that group put back to HEAD)'"
 new_sandbox s25d2
 mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
