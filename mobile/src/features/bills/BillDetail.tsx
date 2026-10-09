@@ -398,7 +398,8 @@ function BillHead({
         </View>
       ) : identity.sponsorParty ? (
         // No member named, but the register records a party.
-        <View testID="bill-sponsor">
+        <View testID="bill-sponsor" style={styles.sponsor}>
+          <Text variant="label">Sponsor</Text>
           <RecordedParty party={identity.sponsorParty} />
         </View>
       ) : null}
@@ -611,6 +612,12 @@ function Summary({
       <SourceLine
         title="About this summary"
         asOf={summary.as_of}
+        // Undated material: the summary is dated by when it was written.
+        dateLabel={
+          summary.as_of
+            ? undefined
+            : `Written ${formatDate(summary.generated_at, 'short')}`
+        }
         citation={unique(sources.map((s) => s.label))}
         savedAt={savedAt}
         originals={sources.map((s) => ({ label: s.label, url: s.url }))}
@@ -988,7 +995,8 @@ function DivisionItem({
             <DivisionSplits
               splits={parties.rest}
               max={parties.max}
-              testID={`${id}-splits`}
+              testID={`${id}-splits-more`}
+              rowTestID={`${id}-splits`}
             />
           ) : null}
         </Disclosure>

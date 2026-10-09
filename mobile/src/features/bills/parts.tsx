@@ -300,11 +300,13 @@ export function DivisionSplits({
   splits,
   max,
   testID,
+  rowTestID = testID,
 }: {
   splits: readonly BillSplit[];
   max: number;
-  /** Each row is `<testID>-<party>`: "bill-division-0-splits-labor". */
   testID: string;
+  /** Each row is `<rowTestID>-<party>`: "bill-division-0-splits-labor". */
+  rowTestID?: string;
 }) {
   return (
     <View style={styles.splitList} testID={testID}>
@@ -313,7 +315,7 @@ export function DivisionSplits({
           key={split.party}
           split={split}
           max={max}
-          testID={`${testID}-${split.label.replace(/[^A-Za-z]+/g, '-').toLowerCase()}`}
+          testID={`${rowTestID}-${split.label.replace(/[^A-Za-z]+/g, '-').toLowerCase()}`}
         />
       ))}
     </View>
