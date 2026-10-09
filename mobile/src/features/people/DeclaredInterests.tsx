@@ -34,13 +34,13 @@ export function DeclaredInterests({
         accent="interests"
       />
       {r.ocr_rows > 0 ? (
-        <Text wordSafe variant="caption" testID="person-ocr">
+        <Text wordSafe variant="fine" testID="person-ocr">
           {formatCount(r.ocr_rows)} entries were read by OCR from scanned pages.
           Transcription may contain errors; check the original register.
         </Text>
       ) : null}
       {r.unread_pages ? (
-        <Text wordSafe variant="caption">
+        <Text wordSafe variant="fine">
           {formatCount(r.unread_pages)} pages could not be read. The register
           may be incomplete.
         </Text>
@@ -73,7 +73,7 @@ export function DeclaredInterests({
                           <Text wordSafe>{entry.detail}</Text>
                         ) : null}
                         {entry.meta ? (
-                          <Text wordSafe variant="caption">
+                          <Text wordSafe variant="fine">
                             {entry.meta}
                           </Text>
                         ) : null}
@@ -84,7 +84,7 @@ export function DeclaredInterests({
                 {bucket.items.length < bucket.count ? (
                   <Text
                     wordSafe
-                    variant="caption"
+                    variant="fine"
                     testID={`interest-bucket-${name}-more`}
                   >
                     Showing the latest {formatCount(bucket.items.length)} of{' '}

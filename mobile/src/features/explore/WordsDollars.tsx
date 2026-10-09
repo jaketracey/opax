@@ -30,7 +30,7 @@ export default function WordsDollars() {
             notes: [WORDS_NOTE, money.record?.data.meta.methodology],
           }}
         >
-          <Text wordSafe variant="lede">
+          <Text wordSafe variant="body">
             Disclosed donations beside the labelled debate
           </Text>
           <Text wordSafe variant="fine">

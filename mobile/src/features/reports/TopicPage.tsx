@@ -7,7 +7,6 @@ import {
   PadGrid,
   BigFigure,
   InfoButton,
-  PartyChip,
   LinkRow,
   RowList,
   EmptyState,
@@ -17,6 +16,7 @@ import {
   Section,
   SegmentedControl,
   Text,
+  PartyLabel,
 } from '../../design/primitives';
 import { formatMoney } from '../../design/format';
 import { shareHeaderItem } from '../../navigation/share';
@@ -237,7 +237,14 @@ function TopicContent({
                       <LinkRow
                         key={party}
                         title={`${n.toLocaleString()} speeches`}
-                        leading={<PartyChip status="unknown" party={party} />}
+                        leading={
+                          <PartyLabel
+                            status="unknown"
+                            party={party}
+                            dense
+                            linked={false}
+                          />
+                        }
                         accessibilityLabel={`${party}, ${n.toLocaleString()} speeches`}
                         onPress={() => openTopicWindow(slug, { party }, title)}
                       />

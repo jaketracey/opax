@@ -390,7 +390,7 @@ function Stage({
     >
       {/* Every iPad picture shows sample records, the first page's too. */}
       <View style={styles.exampleLine}>
-        <Text variant="kicker" testID={`tour-example-${current.id}`}>
+        <Text variant="label" testID={`tour-example-${current.id}`}>
           Example
         </Text>
       </View>
@@ -501,7 +501,7 @@ function Words({
       <Text variant="padTitle" wordSafe accessibilityRole="header">
         {page.title}
       </Text>
-      <Text variant="padLede">{page.body}</Text>
+      <Text variant="body">{page.body}</Text>
       {page.notice ? (
         <Text variant="metadata" testID="tour-deceased-notice">
           {page.notice}

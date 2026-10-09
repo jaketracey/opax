@@ -112,7 +112,7 @@ export function SignInFlow({
   if (sentTo === null)
     return (
       <Group testID="account-email-step">
-        <Text variant="lede">{accountCopy.signInIntro}</Text>
+        <Text variant="body">{accountCopy.signInIntro}</Text>
         <Text>{accountCopy.sameAccount}</Text>
         <Text testID="account-age-limit">{accountCopy.ageLimit}</Text>
         <Field

@@ -315,7 +315,7 @@ export default function YourMP() {
       {view && directory && !chooser ? (
         <>
           <Group gap={rhythm.tight}>
-            <Text variant="kicker" tone="navy">
+            <Text variant="label" tone="navy">
               Your electorate
             </Text>
             <Heading level={1} testID="your-seat-name">
@@ -341,7 +341,7 @@ export default function YourMP() {
                 title="Electorate record"
                 detail="Outline, elections and local context"
                 icon="map"
-                accent="places"
+                accent="people"
                 testID="your-electorate"
                 onPress={() =>
                   router.push(electorateRoute(view.seat.data!.electorate_id))
@@ -544,14 +544,14 @@ export default function YourMP() {
                         .slice(0, 3)
                         .map((row, i) => (
                           <Group key={i} gap={rhythm.line}>
-                            <Text wordSafe variant="kicker" tone="interestsInk">
+                            <Text wordSafe variant="label" tone="interestsInk">
                               {registerCategoryLabel(row.category)} ·{' '}
                               {registerChangeLabel(row.kind)}{' '}
                               {formatDate(row.date!, 'short')}
                             </Text>
                             <Text wordSafe>{row.description}</Text>
                             {row.ocr ? (
-                              <Text wordSafe variant="caption">
+                              <Text wordSafe variant="fine">
                                 OCR transcription; check the original register.
                               </Text>
                             ) : null}
@@ -589,7 +589,7 @@ export default function YourMP() {
               ) : (
                 <EmptyState message="No verified Senate roster is held for this jurisdiction." />
               )}
-              <Text wordSafe testID="your-senators-end" variant="caption">
+              <Text wordSafe testID="your-senators-end" variant="fine">
                 Senators are shown as recorded in the dated release.
               </Text>
             </Section>
@@ -666,7 +666,7 @@ export default function YourMP() {
               setQuery('');
             }}
           />
-          <Text wordSafe variant="caption" testID="your-mp-end">
+          <Text wordSafe variant="fine" testID="your-mp-end">
             Your choice is saved on this device. Device backups may include it.
           </Text>
         </>

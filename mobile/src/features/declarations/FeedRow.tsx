@@ -4,13 +4,19 @@ import type { recentDeclarationsFor } from '../../api/selectors';
 import { formatDate } from '../../design/format';
 import { chamberName } from '../../design/parliament';
 import { partyText } from '../../design/party';
-import { Icon, Text, useAccessibilitySize } from '../../design/primitives';
-import { colors, light, minimumTarget, rhythm } from '../../design/tokens';
+import {
+  Icon,
+  PartyLabel,
+  Tag,
+  Text,
+  useAccessibilitySize,
+} from '../../design/primitives';
+import { colors, minimumTarget, rhythm } from '../../design/tokens';
 import { openSource } from '../../navigation/external';
 import { CachedPortrait } from '../CachedPortrait';
 import { registerChangeLabel } from '../your-mp/model';
 import { originalLabel } from '../today/DeclarationRow';
-import { Chip, PartyChip, shortDay } from '../today/parts';
+import { shortDay } from '../today/parts';
 import { showRecordMenu } from '../today/RecordMenu';
 
 type Declaration = NonNullable<
@@ -120,10 +126,13 @@ export function FeedRow({
               {item.name}
             </Text>
             {item.party ? (
-              <PartyChip
+              <PartyLabel
                 party={item.party}
                 status={item.partyStatus}
                 formerly={item.formerly}
+                dense
+                linked={false}
+                nested
               />
             ) : null}
           </View>
@@ -132,11 +141,7 @@ export function FeedRow({
               {chamber}
             </Text>
           ) : null}
-          <Chip
-            label={item.category}
-            ground={light.bronzeWash}
-            color={light.bronzeInk}
-          />
+          <Tag label={item.category} kind="Category" />
           {item.description ? <Text>{item.description}</Text> : null}
           <Text wordSafe variant="fine">
             {change}

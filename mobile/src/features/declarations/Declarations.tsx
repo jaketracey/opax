@@ -74,7 +74,7 @@ export default function Declarations() {
 
   const header = (
     <Group style={styles.header}>
-      <Text wordSafe variant="lede">
+      <Text wordSafe variant="body">
         The newest additions and deletions recorded in parliamentarians’
         registers of interests, in their own words.
       </Text>
@@ -177,7 +177,7 @@ export default function Declarations() {
         savedAt={record.stale ? record.savedAt : null}
         testID="declarations-as-at"
       />
-      <Text wordSafe variant="caption" testID="declarations-coverage">
+      <Text wordSafe variant="fine" testID="declarations-coverage">
         Entries are as declared, not verified by OPAX.
       </Text>
     </Group>

@@ -3,9 +3,9 @@ import { router } from 'expo-router';
 import {
   Hoverable,
   Icon,
-  PartyChip,
   Text,
   useHover,
+  PartyLabel,
 } from '../../design/primitives';
 import {
   SelectedMark,
@@ -63,7 +63,12 @@ export function PartyDirectoryRow({
       {selected ? <SelectedMark accent="people" /> : null}
       <View style={styles.body}>
         <View style={styles.party}>
-          <PartyChip party={item.name} status="unknown" short={false} nested />
+          <PartyLabel
+            party={item.name}
+            status="unknown"
+            nested
+            linked={false}
+          />
         </View>
         <Text variant="metadata" wordSafe>
           {detail}

@@ -4,6 +4,7 @@ import {
   RowList,
   Screen,
   Section,
+  SwitchRow,
 } from '../../design/primitives';
 import {
   billFilterStore,
@@ -14,7 +15,6 @@ import {
   type BillFilters as Filters,
 } from './filters';
 import { OptionRow } from './parts';
-import { ToggleRow } from '../directories/ToggleRow';
 
 /**
  * The bill list's filters, as a sheet: status, the chamber a bill was
@@ -61,11 +61,11 @@ export default function BillFilters() {
         </RowList>
       </Section>
       <Section title="Division records" accent="votes">
-        <ToggleRow
+        <SwitchRow
           label="Divided on"
-          checked={!!filters.divided}
+          value={!!filters.divided}
           testID="bill-filter-divided"
-          onChange={() => set({ ...filters, divided: !filters.divided })}
+          onValueChange={() => set({ ...filters, divided: !filters.divided })}
         />
       </Section>
       <Section title="Sort" accent="bills">

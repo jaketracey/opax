@@ -81,7 +81,7 @@ export function PartyAccess({ name }: { name: string }) {
                   <Text wordSafe variant="strong">
                     {m.minister}
                   </Text>
-                  <Text wordSafe variant="caption">
+                  <Text wordSafe variant="fine">
                     {jurisdictionName(m.jurisdiction.toLowerCase()) ??
                       'Jurisdiction not recorded'}
                     {m.date ? ' · ' + formatDate(m.date) : ''}
@@ -89,7 +89,7 @@ export function PartyAccess({ name }: { name: string }) {
                   {m.purpose ? <Text wordSafe>{m.purpose}</Text> : null}
                 </Group>
               ))}
-              <Text wordSafe variant="caption">
+              <Text wordSafe variant="fine">
                 {formatCount(d.meetings_total ?? d.meetings.length)} disclosed
                 meetings
                 {(d.meetings_total ?? 0) > d.meetings.length
@@ -109,7 +109,7 @@ export function PartyAccess({ name }: { name: string }) {
                   <Text wordSafe variant="strong">
                     {l.firm}
                   </Text>
-                  <Text wordSafe variant="caption">
+                  <Text wordSafe variant="fine">
                     {jurisdictionName(l.jurisdiction.toLowerCase()) ??
                       'Jurisdiction not recorded'}
                     {l.registered ? ' · from ' + formatDate(l.registered) : ''}
@@ -122,7 +122,7 @@ export function PartyAccess({ name }: { name: string }) {
             <EmptyState message="No registered lobbying client match is held for this party in this export." />
           )}
           {(d?.lobbyists_total ?? 0) > (d?.lobbyists?.length ?? 0) ? (
-            <Text wordSafe variant="caption">
+            <Text wordSafe variant="fine">
               {formatCount(d!.lobbyists_total!)} registered firms,{' '}
               {formatCount(d!.lobbyists!.length)} shown.
             </Text>
@@ -298,7 +298,7 @@ export function PartyFunding({ name }: { name: string }) {
             )}
             {b ? (
               <Group gap={rhythm.tight}>
-                <Text wordSafe variant="figureInline" tone="moneyInk">
+                <Text wordSafe variant="strong" tabular tone="moneyInk">
                   {formatMoney(b.total)}
                 </Text>
                 <Text wordSafe>

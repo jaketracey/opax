@@ -7,13 +7,21 @@ import { partyDot } from '../../design/party';
 import {
   Grid,
   Hoverable,
+  StatusLabel,
   Text,
+  statusTone,
   useAccessibilitySize,
+  Card,
 } from '../../design/primitives';
-import { layout, light, spacing } from '../../design/tokens';
+import {
+  colors,
+  layout,
+  spacing,
+  statusTint,
+  radii,
+} from '../../design/tokens';
 import { billRoute } from '../../navigation/routes';
-import { Chip, TodayCard, cardRadius, shortDay, useTodayAccent } from './parts';
-import { billAccent } from './tint';
+import { shortDay } from './parts';
 
 type Bill = NonNullable<ReturnType<typeof recentBillsFor>['data']>[number];
 
@@ -57,14 +65,14 @@ function BillCard({
   fill: boolean;
 }) {
   const text = billCardText(bill);
-  const tone = useTodayAccent(billAccent(bill.status));
+  const tone = statusTint(statusTone(bill.status));
   const dot = !bill.portfolio ? partyDot(bill.sponsor_party) : null;
   return (
     <Hoverable
       effect="lift"
       onActivate={() => router.push(billRoute(bill.key))}
       drag={{ path: `/bill/${bill.key}`, title: bill.title }}
-      cornerRadius={cardRadius}
+      cornerRadius={radii.md}
       style={fill ? styles.fill : null}
     >
       <Pressable
@@ -76,18 +84,14 @@ function BillCard({
         style={fill ? styles.fill : styles.slot}
       >
         {({ pressed }) => (
-          <TodayCard
-            ground={pressed ? light.sunken : undefined}
+          <Card
+            padded={false}
+            ground={pressed ? colors.sunken : undefined}
             style={styles.card}
           >
             <View style={[styles.band, { backgroundColor: tone.base }]} />
             <View style={styles.inner}>
-              <Chip
-                label={text.status}
-                ground={tone.wash}
-                color={tone.ink}
-                dot={tone.base}
-              />
+              <StatusLabel label={text.status} hidden />
               <Text variant="strong" style={styles.title}>
                 {bill.title}
               </Text>
@@ -109,7 +113,7 @@ function BillCard({
                 ) : null}
               </View>
             </View>
-          </TodayCard>
+          </Card>
         )}
       </Pressable>
     </Hoverable>

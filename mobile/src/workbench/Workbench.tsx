@@ -37,7 +37,7 @@ import {
   useAccessibilitySize,
   type Lead,
   Composer,
-  MachineWritten,
+  MachineLabel,
   StepButtons,
 } from '../design/primitives';
 import {
@@ -47,6 +47,7 @@ import {
 } from '../design/format';
 import {
   light,
+  deprecatedTextVariants,
   textStyles,
   type Role,
   type TextVariant,
@@ -106,7 +107,10 @@ const westpac: Lead = {
 };
 
 const roles = Object.keys(light) as Role[];
-const variants = Object.keys(textStyles) as TextVariant[];
+// The eleven current roles; the deprecated names draw as these.
+const variants = Object.keys(textStyles).filter(
+  (name) => !(name in deprecatedTextVariants),
+) as TextVariant[];
 const notice = () =>
   Alert.alert(
     'Workbench',
@@ -133,7 +137,7 @@ function Block({
 }
 function Anchor({ id, children }: { id: string; children: string }) {
   return (
-    <Text variant="kicker" testID={`wb-${id}`}>
+    <Text variant="label" testID={`wb-${id}`}>
       {children}
     </Text>
   );
@@ -151,7 +155,7 @@ export default function Workbench() {
   return (
     <Screen testID="workbench-screen">
       <Group gap={8}>
-        <Text variant="lede" testID="wb-top">
+        <Text variant="body" testID="wb-top">
           Every design-system component and state, for review and screenshots.
           Development and e2e builds only.
         </Text>
@@ -231,11 +235,9 @@ export default function Workbench() {
           <View key={variant} style={styles.typeRow}>
             <Text variant="fine">{variant}</Text>
             <Text variant={variant}>
-              {variant === 'figure' || variant === 'figureInline'
+              {variant === 'display'
                 ? formatMoney(622102)
-                : variant === 'countdown'
-                  ? '7:42'
-                  : 'Anthony Albanese, Member for Grayndler'}
+                : 'Anthony Albanese, Member for Grayndler'}
             </Text>
           </View>
         ))}
@@ -594,12 +596,11 @@ export default function Workbench() {
       </Block>
 
       <Block id="machine" title="Machine-written label">
-        <MachineWritten
+        <MachineLabel
           explanation="Written by a model from the explanatory memorandum; not the record."
           testID="wb-machine"
         />
-        <MachineWritten
-          label="Machine brief"
+        <MachineLabel
           explanation="An automated summary written by a model; not the record."
         />
       </Block>

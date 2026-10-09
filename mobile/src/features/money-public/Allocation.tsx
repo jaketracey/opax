@@ -290,7 +290,7 @@ export default function Allocation() {
               >
                 {location?.title ?? r.title}
               </Text>
-              <Text wordSafe variant="figureInline">
+              <Text wordSafe variant="strong" tabular>
                 {formatMoneyCompact(r.value)}
               </Text>
               <Text wordSafe variant="metadata">

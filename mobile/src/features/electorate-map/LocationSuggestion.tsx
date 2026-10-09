@@ -64,7 +64,7 @@ export function LocationSuggestion({
         disabled={busy || disabled}
         accessibilityHint="Optional. Suggests a federal electorate using a display outline; you confirm the choice."
       />
-      <Text wordSafe variant="caption">
+      <Text wordSafe variant="fine">
         Your location is used once on your{' '}
         {Platform.OS === 'android' ? 'phone' : phoneCopy('iPhone')} to suggest a
         federal seat. It is not sent, saved or logged. Display outlines are not
@@ -161,7 +161,7 @@ export function LocationProgress({ done, total }: Progress) {
       <Reserved
         shown={count}
         all={[total ? `${total} of ${total}` : '000 of 000']}
-        variant="caption"
+        variant="fine"
       />
     </View>
   );
@@ -174,7 +174,7 @@ function Reserved({
 }: {
   shown: string;
   all: string[];
-  variant?: 'body' | 'caption';
+  variant?: 'body' | 'fine';
 }) {
   return (
     <View style={styles.stack}>
@@ -186,7 +186,7 @@ function Reserved({
           style={[
             styles.layer,
             index ? styles.ghost : null,
-            variant === 'caption' ? styles.tabular : null,
+            variant === 'fine' ? styles.tabular : null,
           ]}
         >
           {text || ' '}

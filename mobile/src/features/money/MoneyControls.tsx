@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { StyleSheet, Switch, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import {
   Button,
@@ -10,8 +10,8 @@ import {
   RowList,
   Section,
   ChoiceChips,
+  SwitchRow,
   Text,
-  useAccessibilitySize,
 } from '../../design/primitives';
 import { formatDisclosureYear } from '../../design/format';
 import { colors, minimumTarget, rhythm } from '../../design/tokens';
@@ -122,37 +122,6 @@ export function MoneyYearSlider({
         </View>
       </GestureDetector>
     </Group>
-  );
-}
-export function MoneyToggle({
-  label,
-  value,
-  onChange,
-  testID,
-}: {
-  label: string;
-  value: boolean;
-  onChange: (value: boolean) => void;
-  testID: string;
-}) {
-  const stacked = useAccessibilitySize();
-  return (
-    <View style={[styles.toggle, stacked ? styles.stacked : null]}>
-      <Text
-        wordSafe
-        variant="control"
-        style={stacked ? undefined : styles.grow}
-      >
-        {label}
-      </Text>
-      <Switch
-        value={value}
-        trackColor={{ false: colors.lineStrong, true: colors.moneyInk }}
-        onValueChange={onChange}
-        accessibilityLabel={label}
-        testID={testID}
-      />
-    </View>
   );
 }
 export function MoneyControls({
@@ -275,7 +244,7 @@ export function MoneyControls({
             (kind) => kind === 'donations' || graph.meta[`${kind}_source`],
           )
           .map((kind) => (
-            <MoneyToggle
+            <SwitchRow
               key={kind}
               label={
                 kind === 'donations'
@@ -285,14 +254,14 @@ export function MoneyControls({
                     : 'Public contracts'
               }
               value={filters[kind]}
-              onChange={(value) => onChange({ ...filters, [kind]: value })}
+              onValueChange={(value) => onChange({ ...filters, [kind]: value })}
               testID={`money-layer-${kind}`}
             />
           ))}
-        <MoneyToggle
+        <SwitchRow
           label="Adjust for inflation"
           value={filters.inflation}
-          onChange={(inflation) => onChange({ ...filters, inflation })}
+          onValueChange={(inflation) => onChange({ ...filters, inflation })}
           testID="money-inflation"
         />
         {filters.inflation ? (
@@ -307,13 +276,6 @@ export function MoneyControls({
 const styles = StyleSheet.create({
   yearHead: { flexDirection: 'row', alignItems: 'center', gap: rhythm.line },
   grow: { flex: 1 },
-  toggle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.block,
-    minHeight: minimumTarget,
-  },
-  stacked: { flexDirection: 'column', alignItems: 'flex-start' },
   railTarget: {
     minHeight: minimumTarget,
     justifyContent: 'center',

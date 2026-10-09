@@ -193,7 +193,7 @@ export function DeleteAccountFlow({
     );
   return page(
     <Group testID="account-delete-confirm-step">
-      <Text variant="lede">{accountCopy.deleteIntro}</Text>
+      <Text variant="body">{accountCopy.deleteIntro}</Text>
       <Heading level={2}>{accountCopy.deletedHeading}</Heading>
       <Text>{accountCopy.deletedNote}</Text>
       {accountCopy.deleted.map((item) => (

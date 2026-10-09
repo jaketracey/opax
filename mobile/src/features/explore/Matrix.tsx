@@ -26,7 +26,7 @@ export default function Matrix() {
           title="Who owns which debate"
           info={{ title: 'How to read this grid', notes: [MATRIX_NOTE] }}
         >
-          <Text wordSafe variant="lede">
+          <Text wordSafe variant="body">
             Each party’s share of a debate’s labelled speeches
           </Text>
         </Section>

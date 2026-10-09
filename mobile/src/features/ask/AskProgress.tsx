@@ -4,7 +4,7 @@ import {
   Button,
   Group,
   Icon,
-  MachineWritten,
+  MachineLabel,
   Text,
 } from '../../design/primitives';
 import { useReduceMotion } from '../../design/accessibility';
@@ -64,7 +64,7 @@ export function AskProgress({
       </View>
       {streaming ? (
         <Group gap={rhythm.tight}>
-          <MachineWritten explanation={machineNote} />
+          <MachineLabel explanation={machineNote} />
           <Text
             selectable
             testID="ask-streaming"

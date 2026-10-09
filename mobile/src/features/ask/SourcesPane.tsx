@@ -24,13 +24,13 @@ import {
   PaneHost,
   RowList,
   Screen,
-  SplitEmpty,
   SubSection,
   Text,
   ViewOriginal,
   useAccessibilitySize,
   useHover,
   type SplitPane,
+  EmptyState,
 } from '../../design/primitives';
 import { formatDate } from '../../design/format';
 import {
@@ -235,7 +235,8 @@ function SourcesPane({
             open={open}
           />
         ) : (
-          <SplitEmpty
+          <EmptyState
+            size="pane"
             icon="quote.bubble"
             title="Sources appear here"
             testID="ask-sources-empty"

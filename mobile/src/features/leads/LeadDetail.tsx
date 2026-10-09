@@ -74,11 +74,11 @@ export default function LeadDetail() {
         {discovery && lead && comparison ? (
           <>
             <Group>
-              <Text variant="kicker">Lead · {lead.categoryLabel}</Text>
+              <Text variant="label">Lead · {lead.categoryLabel}</Text>
               <Heading level={1} testID="lead-heading">
                 {comparison.heading}
               </Heading>
-              <Text wordSafe variant="lede" testID="lead-takeaway">
+              <Text wordSafe variant="body" testID="lead-takeaway">
                 {comparison.takeaway}
               </Text>
             </Group>

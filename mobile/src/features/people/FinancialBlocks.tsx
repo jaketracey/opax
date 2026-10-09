@@ -74,7 +74,7 @@ export function PayBlock({
                   : ''}
                 .
               </Text>
-              <Text wordSafe variant="caption">
+              <Text wordSafe variant="fine">
                 Post held since {formatDate(p.person.now.since)}
               </Text>
             </>
@@ -84,7 +84,7 @@ export function PayBlock({
               below.
             </Text>
           )}
-          <Text wordSafe variant="caption">
+          <Text wordSafe variant="fine">
             These are entitlements set by instrument, not payslips.
           </Text>
           <RowList>
@@ -116,11 +116,11 @@ export function PayBlock({
                         <Text wordSafe variant="strong">
                           {post}
                         </Text>
-                        <Text wordSafe variant="caption">
+                        <Text wordSafe variant="fine">
                           {formatDate(from)} to{' '}
                           {to ? formatDate(to) : 'present'}
                         </Text>
-                        <Text wordSafe variant="figureInline" tone="moneyInk">
+                        <Text wordSafe variant="strong" tabular tone="moneyInk">
                           {formatMoney(salary)} a year
                         </Text>
                         <Text wordSafe variant="metadata">

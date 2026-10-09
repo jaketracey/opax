@@ -64,8 +64,8 @@ export function Masthead({ broadsheet = false }: { broadsheet?: boolean }) {
           style={styles.mark}
           accessibilityIgnoresInvertColors
         />
-        <Text wordSafe variant="kicker" tone="navy" testID="today-date">
-          {date.toLocaleUpperCase('en-AU')}
+        <Text wordSafe variant="label" tone="navy" testID="today-date">
+          {date}
         </Text>
       </View>
       <Text
@@ -101,8 +101,8 @@ function BroadsheetMasthead({ date }: { date: string }) {
             style={styles.markLarge}
             accessibilityIgnoresInvertColors
           />
-          <Text wordSafe variant="kicker" tone="navy" testID="today-date">
-            {date.toLocaleUpperCase('en-AU')}
+          <Text wordSafe variant="label" tone="navy" testID="today-date">
+            {date}
           </Text>
         </View>
         <Text

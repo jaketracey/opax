@@ -108,7 +108,7 @@ export default function ExpenseGlossary() {
               licence={record.data.meta.licence}
             />
             {record.stale ? <StaleNotice savedAt={record.savedAt} /> : null}
-            <Text testID="expense-glossary-end" variant="caption">
+            <Text testID="expense-glossary-end" variant="fine">
               End of glossary
             </Text>
           </Group>

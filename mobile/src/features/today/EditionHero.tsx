@@ -7,23 +7,26 @@ import { formatDate } from '../../design/format';
 import { partyText } from '../../design/party';
 import {
   Button,
-  MachineWritten,
+  MachineLabel,
+  PartyLabel,
+  Tag,
   Text,
   useAccessibilitySize,
+  Card,
 } from '../../design/primitives';
-import { colors, hairline, light, spacing } from '../../design/tokens';
+import {
+  accentTint,
+  colors,
+  hairline,
+  radii,
+  spacing,
+  type AccentTint,
+} from '../../design/tokens';
 import { openOnWeb, webPageUrl } from '../../navigation/external';
 import { fromWebPath, personRoute } from '../../navigation/routes';
 import { sponsorSlug } from '../bills/sponsors';
 import { CachedPortrait } from '../CachedPortrait';
-import { Chip, TodayCard, shortDay, useTodayAccent } from './parts';
-import {
-  brandAccent,
-  moneyAccent,
-  partyAccent,
-  topicAccent,
-  type Accent,
-} from './tint';
+import { shortDay } from './parts';
 
 // Where each kind's web page goes (portal/src/daily-post.ts URL builders),
 // in the words of docs/IOS-UX.md 4.1 ("Read the report on opax.com.au").
@@ -68,12 +71,16 @@ const kickerDetail = (edition: EditionView) => {
   return kind && rest.length ? rest.join(' · ') : null;
 };
 
-export function editionAccent(edition: EditionView): Accent {
-  if (edition.kind === 'politician')
-    return partyAccent(personFacts(edition).party);
+/**
+ * The edition's colour moment: its subject's accent from the tokens. A
+ * parliamentarian is the people accent (navy); the party is a dot beside
+ * its name, never the ground.
+ */
+export function editionAccent(edition: EditionView): AccentTint {
   if (['grant', 'program', 'largest'].includes(edition.kind))
-    return moneyAccent;
-  return brandAccent;
+    return accentTint('money');
+  if (edition.kind === 'bill') return accentTint('bills');
+  return accentTint('people');
 }
 
 interface Figure {
@@ -125,7 +132,7 @@ async function openRecord(edition: EditionView) {
  */
 export function EditionHero({ edition }: { edition: EditionView }) {
   const stacked = useAccessibilitySize();
-  const accent = useTodayAccent(editionAccent(edition));
+  const accent = editionAccent(edition);
   const person = edition.kind === 'politician' ? personFacts(edition) : null;
   const detail = person ? person.place : kickerDetail(edition);
   const figures = editionFigures(edition);
@@ -160,7 +167,7 @@ export function EditionHero({ edition }: { edition: EditionView }) {
         ? `Open ${edition.title}'s record`
         : webLabels[edition.kind];
   return (
-    <TodayCard testID="today-edition-card" ground={accent.wash}>
+    <Card padded={false} testID="today-edition-card" ground={accent.wash}>
       <View
         accessible
         accessibilityRole="header"
@@ -176,13 +183,11 @@ export function EditionHero({ edition }: { edition: EditionView }) {
       >
         <Text
           wordSafe
-          variant="kicker"
-          style={[styles.kicker, { color: accent.soft }]}
+          variant="label"
+          style={{ color: accent.softOnDeep }}
           testID="today-edition-kicker"
         >
-          {`Daily edition · ${edition.kindLabel} · ${shortDay(edition.date)}`.toLocaleUpperCase(
-            'en-AU',
-          )}
+          {`Daily edition · ${edition.kindLabel} · ${shortDay(edition.date)}`}
         </Text>
         <View
           style={[
@@ -211,11 +216,12 @@ export function EditionHero({ edition }: { edition: EditionView }) {
             {person?.party || detail ? (
               <View style={styles.subline}>
                 {person?.party ? (
-                  <Chip
-                    label={person.party}
-                    ground={light.raised}
-                    color={light.ink}
-                    dot={accent.base}
+                  <PartyLabel
+                    party={person.party}
+                    status="unknown"
+                    linked={false}
+                    nested
+                    onDeep
                     testID="today-edition-party"
                   />
                 ) : null}
@@ -223,7 +229,7 @@ export function EditionHero({ edition }: { edition: EditionView }) {
                   <Text
                     wordSafe
                     variant="metadata"
-                    style={[styles.detail, { color: accent.soft }]}
+                    style={[styles.detail, { color: accent.softOnDeep }]}
                     testID="today-edition-detail"
                   >
                     {detail}
@@ -236,17 +242,10 @@ export function EditionHero({ edition }: { edition: EditionView }) {
       </View>
       <View style={styles.body}>
         {edition.machineWritten ? (
-          <MachineWritten
+          <MachineLabel
             explanation={edition.machineWritten.attribution}
             testID="today-edition-machine"
-          >
-            <Chip
-              label="Machine-written"
-              ground={light.raised}
-              color={accent.ink}
-              icon="sparkles"
-            />
-          </MachineWritten>
+          />
         ) : null}
         {showText ? (
           <View
@@ -256,7 +255,7 @@ export function EditionHero({ edition }: { edition: EditionView }) {
             testID="today-edition-text"
           >
             {edition.paragraphs.map((paragraph, index) => (
-              <Text key={index} variant={index === 0 ? 'lede' : 'metadata'}>
+              <Text key={index} variant={index === 0 ? 'body' : 'metadata'}>
                 {paragraph}
               </Text>
             ))}
@@ -273,7 +272,7 @@ export function EditionHero({ edition }: { edition: EditionView }) {
                   style={[styles.figure, styles.figureTile]}
                   testID={`today-edition-figure-${index}`}
                 >
-                  <Text variant="figure" style={{ color: accent.ink }}>
+                  <Text variant="display" style={{ color: accent.ink }}>
                     {figure.value}
                   </Text>
                   <Text wordSafe variant="metadata">
@@ -302,7 +301,7 @@ export function EditionHero({ edition }: { edition: EditionView }) {
                   testID={`today-edition-figure-${index}`}
                 >
                   <Text
-                    variant="figure"
+                    variant="display"
                     style={[styles.figureValue, { color: accent.ink }]}
                   >
                     {figure.value}
@@ -324,22 +323,13 @@ export function EditionHero({ edition }: { edition: EditionView }) {
             style={styles.topics}
             testID="today-edition-topics"
           >
-            <Text wordSafe variant="kicker">
+            <Text wordSafe variant="label">
               {topics.title}
             </Text>
             <View style={styles.chips}>
-              {topics.items.map((item, index) => {
-                const tint = topicAccent(index);
-                return (
-                  <Chip
-                    key={item.label}
-                    label={`${item.label} ${item.pct}%`}
-                    ground={light.raised}
-                    color={tint.ink}
-                    dot={tint.base}
-                  />
-                );
-              })}
+              {topics.items.map((item) => (
+                <Tag key={item.label} label={`${item.label} ${item.pct}%`} />
+              ))}
             </View>
             {topics.note ? (
               <Text wordSafe variant="fine">
@@ -367,7 +357,7 @@ export function EditionHero({ edition }: { edition: EditionView }) {
                         backgroundColor:
                           index === edition.facts.events.length - 1
                             ? accent.base
-                            : light.raised,
+                            : colors.raised,
                         borderColor: accent.base,
                       },
                     ]}
@@ -379,7 +369,7 @@ export function EditionHero({ edition }: { edition: EditionView }) {
                   ) : null}
                 </View>
                 <View style={styles.eventText}>
-                  <Text variant="kicker" style={{ color: accent.ink }}>
+                  <Text variant="label" style={{ color: accent.ink }}>
                     {event.date}
                   </Text>
                   <Text wordSafe variant="metadata" tone="ink">
@@ -418,7 +408,7 @@ export function EditionHero({ edition }: { edition: EditionView }) {
           />
         ) : null}
       </View>
-    </TodayCard>
+    </Card>
   );
 }
 
@@ -429,13 +419,12 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.s4 + spacing.s1,
     gap: spacing.s3 + spacing.s1,
   },
-  kicker: { letterSpacing: 0.6 },
   identity: { gap: spacing.s4 },
   identityRow: { flexDirection: 'row', alignItems: 'center' },
   portraitRing: {
     alignSelf: 'flex-start',
     padding: 3,
-    borderRadius: 999,
+    borderRadius: radii.pill,
     backgroundColor: colors.raised,
   },
   titles: { flex: 1, gap: spacing.s3, alignSelf: 'stretch' },
@@ -453,7 +442,7 @@ const styles = StyleSheet.create({
   figure: {
     gap: 2,
     padding: spacing.s3 + spacing.s1,
-    borderRadius: 12,
+    borderRadius: radii.md,
     borderCurve: 'continuous',
     backgroundColor: colors.raised,
   },

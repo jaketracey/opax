@@ -12,6 +12,7 @@ import {
   Text,
   useAccessibilitySize,
   useLayout,
+  Card,
 } from '../design/primitives';
 import { colors, hairline, rhythm, spacing } from '../design/tokens';
 import { EditionSection } from './EditionCard';
@@ -28,7 +29,7 @@ import { DeclarationRow } from './today/DeclarationRow';
 import { LeadsCard } from './today/LeadsCard';
 import { MoneyMapCard } from './today/MoneyMapCard';
 import { Masthead } from './today/Masthead';
-import { Entrance, TodayCard } from './today/parts';
+import { Entrance } from './today/parts';
 import { TodayBlock } from './today/TodayBlock';
 
 /**
@@ -163,13 +164,13 @@ function TodayCompact({
         >
           {(declarations) => (
             <Entrance>
-              <TodayCard style={styles.list}>
+              <Card padded={false} style={styles.list}>
                 {declarations.map((item, i) => (
                   <View key={item.id} style={i > 0 ? styles.divided : null}>
                     <DeclarationRow item={item} index={i} />
                   </View>
                 ))}
-              </TodayCard>
+              </Card>
             </Entrance>
           )}
         </TodayBlock>
@@ -264,9 +265,9 @@ function TodayRegular({
             <Entrance>
               <Grid columns={{ regular: 2, wide: 3 }} minItemWidth={300}>
                 {declarations.map((item, i) => (
-                  <TodayCard key={item.id} style={styles.tile}>
+                  <Card padded={false} key={item.id} style={styles.tile}>
                     <DeclarationRow item={item} index={i} />
-                  </TodayCard>
+                  </Card>
                 ))}
               </Grid>
             </Entrance>

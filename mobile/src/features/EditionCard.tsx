@@ -7,11 +7,12 @@ import {
   OfflineBanner,
   StaleNotice,
   errorMessage,
+  Card,
 } from '../design/primitives';
 import { spacing } from '../design/tokens';
 import { isOffline } from './CatalogState';
 import { EditionHero } from './today/EditionHero';
-import { Entrance, TodayCard, UpdatedCaption } from './today/parts';
+import { Entrance, UpdatedCaption } from './today/parts';
 
 /**
  * The newest published daily edition, frozen as it was posted, as Today's
@@ -32,16 +33,16 @@ export function EditionSection({
   return (
     <View testID="today-edition" style={styles.section}>
       {!block ? (
-        <TodayCard style={styles.placeholder}>
+        <Card padded={false} style={styles.placeholder}>
           <LoadingState
             shape="text"
             count={4}
             label="Loading the daily edition"
             testID="today-edition-loading"
           />
-        </TodayCard>
+        </Card>
       ) : block.status === 'error' || !block.data ? (
-        <TodayCard style={styles.placeholder}>
+        <Card padded={false} style={styles.placeholder}>
           {isOffline(block.error) ? (
             <OfflineBanner cached={false} testID="today-edition-offline" />
           ) : null}
@@ -50,7 +51,7 @@ export function EditionSection({
             onRetry={onRetry}
             testID="today-edition-error"
           />
-        </TodayCard>
+        </Card>
       ) : (
         <Entrance>
           <EditionCard

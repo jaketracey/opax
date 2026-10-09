@@ -38,7 +38,7 @@ export default function Tide() {
             ],
           }}
         >
-          <Text wordSafe variant="lede">
+          <Text wordSafe variant="body">
             How parliament’s labelled debates move across four decades
           </Text>
           <Text variant="strong">Parliaments</Text>

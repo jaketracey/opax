@@ -13,7 +13,7 @@ import {
   Group,
   Heading,
   LoadingState,
-  MachineWritten,
+  MachineLabel,
   Section,
   Disclosure,
   LinkRow,
@@ -173,7 +173,7 @@ export default function DocumentReader({
               <>
                 <Group gap={rhythm.tight}>
                   <Text
-                    variant="kicker"
+                    variant="label"
                     tone={
                       doc.labels.kind === 'bill_text'
                         ? 'billsInk'
@@ -198,7 +198,7 @@ export default function DocumentReader({
                   </Text>
                   {recordDate(doc) && titleSubject(doc) ? (
                     <Text
-                      variant="caption"
+                      variant="fine"
                       wordSafe
                       accessibilityLabel={recordDate(doc, 'long') ?? undefined}
                       testID="doc-date"
@@ -241,8 +241,7 @@ export default function DocumentReader({
                 <DocumentAsk doc={doc} />
                 {doc.summary ? (
                   <Section title="In brief" accent="bills" testID="doc-brief">
-                    <MachineWritten
-                      label="Machine summary"
+                    <MachineLabel
                       explanation={
                         doc.labels.kind === 'bill_text'
                           ? 'Written from this document by a model, not part of the original bill text.'
@@ -277,9 +276,7 @@ export default function DocumentReader({
                 >
                   {doc.labels.kind === 'bill_text' &&
                   doc.metadata.complete === false ? (
-                    <Text variant="caption">
-                      Incomplete extracted bill text
-                    </Text>
+                    <Text variant="fine">Incomplete extracted bill text</Text>
                   ) : null}
                 </Section>
                 {!doc.text ? (
@@ -397,8 +394,7 @@ function LinkedBill({ doc }: { doc: DocumentRecord }) {
       </Text>
       {bill.summary ? (
         <>
-          <MachineWritten
-            label="Machine summary"
+          <MachineLabel
             explanation={
               bill.attribution ?? 'Written by a model; not the record.'
             }

@@ -219,7 +219,7 @@ export default function Program() {
             >
               {g.name}
             </Text>
-            <Text wordSafe variant="figureInline">
+            <Text wordSafe variant="strong" tabular>
               {formatMoneyCompact(g.value)}
             </Text>
             {g.kind === 'grant' ? (

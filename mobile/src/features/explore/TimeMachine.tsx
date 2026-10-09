@@ -8,7 +8,7 @@ import {
   Field,
   Button,
   StepButtons,
-  MachineWritten,
+  MachineLabel,
   LinkRow,
   RowList,
   Disclosure,
@@ -82,7 +82,7 @@ function YearView({
   );
   return (
     <Group>
-      <Text variant="figure" testID="tm-selected-year">
+      <Text variant="display" testID="tm-selected-year">
         {year}
       </Text>
       <StepButtons
@@ -109,7 +109,7 @@ function YearView({
         {(data) => (
           <Group>
             <Section title="The year in brief">
-              <MachineWritten
+              <MachineLabel
                 explanation={yearMachineNote(data)}
                 testID="explore-machine-pill"
               />

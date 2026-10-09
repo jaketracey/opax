@@ -70,7 +70,7 @@ export default function About() {
         <Heading level={1} testID="about-name">
           Open Parliamentary Accountability Exchange
         </Heading>
-        <Text variant="lede">
+        <Text variant="body">
           The Open Parliamentary Accountability Exchange brings together
           Australian parliamentary speeches, votes, political funding and public
           disclosures, with links to the records behind them.
@@ -252,7 +252,7 @@ export default function About() {
       </Section>
       <Section title="Machine-written text" accent="bills">
         <Text>
-          Stored machine briefs are labelled “Machine brief”. Bill summaries
+          Stored machine briefs are labelled “Machine-written”. Bill summaries
           carry their attribution: “Written by a model from the explanatory
           memorandum; not the record”. Check the linked original record.
           Patterns are leads, not findings.

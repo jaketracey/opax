@@ -35,12 +35,23 @@ export const datasets: Dataset[] = [
       'Names and recorded affiliations come from Hansard and the parliamentary member registers. The records retain their publishers’ copyright and licence; the directory does not grant a new licence over them.',
       'Portrait attribution and licences are listed under Portrait credits on this screen. Division records retain the terms listed under Divisions and voting records.',
     ],
-    links: [{ label: 'OPAX parliamentarians', url: canonicalUrl('/subject/person') }],
+    links: [
+      { label: 'OPAX parliamentarians', url: canonicalUrl('/subject/person') },
+    ],
   },
   {
-    id: 'reports-preview', name: 'Reports, topic labels and homepage previews', publisher: 'OPAX',
-    terms: ['Reports and their machine-written sections cite the retrieved parliamentary record. Topic counts and decade shares describe the labelled record, with the labelling pass still running. Original records retain their own copyright and licence.', 'Homepage previews are copied from OPAX’s static homepage. The export supplies no snapshot date.', 'AGPL-3.0. Source and issue tracker: github.com/jaketracey/opax. Data errors are corrections we want, so please report them.'],
-    links: [{ label: 'Reports', url: canonicalUrl('/reports') }, { label: 'Methods and how to cite', url: canonicalUrl('/methods') }],
+    id: 'reports-preview',
+    name: 'Reports, topic labels and homepage previews',
+    publisher: 'OPAX',
+    terms: [
+      'Reports and their machine-written sections cite the retrieved parliamentary record. Topic counts and decade shares describe the labelled record, with the labelling pass still running. Original records retain their own copyright and licence.',
+      'Homepage previews are copied from OPAX’s static homepage. The export supplies no snapshot date.',
+      'AGPL-3.0. Source and issue tracker: github.com/jaketracey/opax. Data errors are corrections we want, so please report them.',
+    ],
+    links: [
+      { label: 'Reports', url: canonicalUrl('/reports') },
+      { label: 'Methods and how to cite', url: canonicalUrl('/methods') },
+    ],
   },
   {
     id: 'money-qld',
@@ -314,7 +325,8 @@ export const datasets: Dataset[] = [
 datasets.push(
   ...publicMoneyDatasets,
   {
-    id: 'ministerial-diaries', name: 'Ministerial diary disclosures',
+    id: 'ministerial-diaries',
+    name: 'Ministerial diary disclosures',
     publisher: 'NSW Cabinet Office; Queensland Cabinet',
     licence: 'NSW: CC BY 4.0; Queensland: CC BY',
     terms: [
@@ -322,34 +334,59 @@ datasets.push(
       'OPAX’s access export joins the published diary disclosures to the guarded parliamentary roster. The original documents retain their publishers’ copyright and licence.',
     ],
     links: [
-      { label: 'NSW ministers’ diary disclosures', url: 'https://www.nsw.gov.au/departments-and-agencies/cabinet-office/access-to-information/ministers-diary-disclosures' },
-      { label: 'Queensland Cabinet and Ministerial Directory', url: 'https://cabinet.qld.gov.au/ministers-portfolios.aspx' },
+      {
+        label: 'NSW ministers’ diary disclosures',
+        url: 'https://www.nsw.gov.au/departments-and-agencies/cabinet-office/access-to-information/ministers-diary-disclosures',
+      },
+      {
+        label: 'Queensland Cabinet and Ministerial Directory',
+        url: 'https://cabinet.qld.gov.au/ministers-portfolios.aspx',
+      },
     ],
   },
   {
-    id: 'lobbyist-registers', name: 'Lobbyist registers',
-    publisher: 'Attorney-General’s Department; NSW Electoral Commission; Queensland Integrity Commissioner; Victorian Public Sector Commission; South Australian Department of the Premier and Cabinet; Western Australian Public Sector Commission',
+    id: 'lobbyist-registers',
+    name: 'Lobbyist registers',
+    publisher:
+      'Attorney-General’s Department; NSW Electoral Commission; Queensland Integrity Commissioner; Victorian Public Sector Commission; South Australian Department of the Premier and Cabinet; Western Australian Public Sector Commission',
     terms: [
       'Attribution: the six register publishers listed above. Federal, Queensland and Victorian registers carry CC BY 4.0 terms. The NSW source review records CC BY-SA 3.0 AU as unverified. The South Australian register does not state a licence. Western Australian material retains Crown copyright; its website terms discourage automated access.',
       'OPAX’s access export does not publish one combined reuse licence. Check the original register’s terms before reuse.',
     ],
     links: [
-      { label: 'Federal register', url: 'https://lobbyists.ag.gov.au/register' },
+      {
+        label: 'Federal register',
+        url: 'https://lobbyists.ag.gov.au/register',
+      },
       { label: 'NSW register', url: 'https://lobbyists.elections.nsw.gov.au/' },
-      { label: 'Queensland register', url: 'https://lobbyists.integrity.qld.gov.au/Lobbying-Register/' },
+      {
+        label: 'Queensland register',
+        url: 'https://lobbyists.integrity.qld.gov.au/Lobbying-Register/',
+      },
       { label: 'Victorian register', url: 'https://www.lobbyists.vic.gov.au/' },
-      { label: 'South Australian register', url: 'https://www.lobbyists.sa.gov.au/' },
-      { label: 'Western Australian register', url: 'https://www.lobbyists.wa.gov.au/' },
+      {
+        label: 'South Australian register',
+        url: 'https://www.lobbyists.sa.gov.au/',
+      },
+      {
+        label: 'Western Australian register',
+        url: 'https://www.lobbyists.wa.gov.au/',
+      },
     ],
   },
   {
-    id: 'news', name: 'Politics headlines', publisher: 'ABC News; The Guardian',
+    id: 'news',
+    name: 'Politics headlines',
+    publisher: 'ABC News; The Guardian',
     terms: [
       'Headlines are read from the publishers’ public RSS feeds. Copyright remains with ABC News and The Guardian. The news export does not publish a reuse licence. Each headline opens its original article.',
     ],
     links: [
       { label: 'ABC News', url: 'https://www.abc.net.au/news/' },
-      { label: 'The Guardian', url: 'https://www.theguardian.com/australia-news' },
+      {
+        label: 'The Guardian',
+        url: 'https://www.theguardian.com/australia-news',
+      },
     ],
   },
 );

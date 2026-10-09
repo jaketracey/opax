@@ -165,7 +165,7 @@ export default function DivisionHistory() {
                     testID="division-history-info"
                   />
                 </View>
-                <Text variant="caption" testID="division-history-coverage">
+                <Text variant="fine" testID="division-history-coverage">
                   {complete && !record.failed
                     ? 'All bill files loaded'
                     : `${formatCount(record.loaded)} of ${formatCount(record.total)} bill files loaded${record.failed ? `; ${formatCount(record.failed)} unavailable` : ''}`}

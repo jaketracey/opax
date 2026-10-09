@@ -11,12 +11,12 @@ import {
   ChoiceChips,
   Text,
   ViewOriginal,
+  Card,
 } from '../../design/primitives';
 import { RecordRow } from '../RecordRow';
 import previews from './record-previews.json';
 import { ReadState, announce, useRead } from './parts';
 import { openRecord } from './open';
-import { TodayCard } from '../today/parts';
 import { rhythm } from '../../design/tokens';
 
 export function Spotlight() {
@@ -57,7 +57,10 @@ function SpotlightContent({
       testID="today-spotlight-data"
     >
       {(report) => (
-        <TodayCard style={{ padding: rhythm.block, gap: rhythm.heading }}>
+        <Card
+          padded={false}
+          style={{ padding: rhythm.block, gap: rhythm.heading }}
+        >
           <Heading level={3}>{report.title}</Heading>
           <Text testID="spotlight-lede">{report.blurb}</Text>
           <RecordRow
@@ -66,7 +69,7 @@ function SpotlightContent({
             onPress={() => openRecord(`/reports/${report.slug}`, report.title)}
             testID="today-spotlight-open"
           />
-        </TodayCard>
+        </Card>
       )}
     </ReadState>
   );

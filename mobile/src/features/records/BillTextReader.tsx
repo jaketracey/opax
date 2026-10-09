@@ -18,7 +18,7 @@ import {
   Text,
   errorMessage,
 } from '../../design/primitives';
-import { colors, radius, rhythm } from '../../design/tokens';
+import { colors, radii, rhythm } from '../../design/tokens';
 import { formatCount, formatDate } from '../../design/format';
 import { catalogs } from '../../api/runtime';
 import { Bullet, MachineSummary } from '../bills/parts';
@@ -142,7 +142,7 @@ export default function BillTextReader({
             ) : (
               <>
                 <Group gap={rhythm.tight} testID="bill-text-head">
-                  <Text variant="kicker" tone="billsInk">
+                  <Text variant="label" tone="billsInk">
                     Bill text
                   </Text>
                   <Heading level={1} testID="bill-text-title">
@@ -190,7 +190,7 @@ export default function BillTextReader({
                   }}
                 >
                   <View style={styles.version}>
-                    <Text variant="kicker" tone="billsInk">
+                    <Text variant="label" tone="billsInk">
                       Version
                     </Text>
                     <Text
@@ -293,10 +293,7 @@ export default function BillTextReader({
                           testID: 'bill-text-overview-info',
                         }}
                       >
-                        <Text
-                          variant="caption"
-                          testID="bill-text-overview-label"
-                        >
+                        <Text variant="fine" testID="bill-text-overview-label">
                           AI overview of selected provisions in this version.
                         </Text>
                         <Text selectable>{current.enrichment.brief}</Text>
@@ -384,7 +381,7 @@ const styles = StyleSheet.create({
   version: {
     gap: rhythm.line,
     backgroundColor: colors.billsWash,
-    borderRadius: radius,
+    borderRadius: radii.md,
     paddingHorizontal: rhythm.block,
     paddingVertical: rhythm.heading,
   },

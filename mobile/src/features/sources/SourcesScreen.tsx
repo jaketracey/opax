@@ -133,7 +133,7 @@ export function SourcesScreen() {
     >
       <Group gap={rhythm.tight}>
         {statement.map((line) => (
-          <Text key={line} wordSafe variant="lede">
+          <Text key={line} wordSafe variant="body">
             {line}
           </Text>
         ))}

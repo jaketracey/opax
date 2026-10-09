@@ -41,7 +41,13 @@ import {
   useFocusEffect,
   type Href,
 } from 'expo-router';
-import { colors, fonts, minimumTarget, rhythm } from '../../design/tokens';
+import {
+  colors,
+  fonts,
+  minimumTarget,
+  radii,
+  rhythm,
+} from '../../design/tokens';
 import { formatCount } from '../../design/format';
 import { openSource, canonicalUrl } from '../../navigation/external';
 import { fromWebPath } from '../../navigation/routes';
@@ -928,7 +934,7 @@ function CommunityPage() {
         <Section rule={false}>
           <Heading level={1}>{text(m, 'name')}</Heading>
           <Text>{text(m, 'bio')}</Text>
-          <Text variant="caption">Joined {dateLine(m)}</Text>
+          <Text variant="fine">Joined {dateLine(m)}</Text>
           <KeyValueList
             items={Object.entries(object(data.stats)).map(([label, value]) => ({
               label,
@@ -1595,7 +1601,7 @@ const styles = StyleSheet.create({
     gap: rhythm.tight,
     paddingLeft: rhythm.heading,
     backgroundColor: colors.sunken,
-    borderRadius: 12,
+    borderRadius: radii.md,
   },
   searchInput: {
     flex: 1,

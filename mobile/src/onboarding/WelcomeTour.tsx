@@ -511,7 +511,7 @@ function Page({
   const stage = (
     <View style={styles.plate}>
       {page.example ? (
-        <Text variant="kicker" testID={`tour-example-${page.id}`}>
+        <Text variant="label" testID={`tour-example-${page.id}`}>
           Example
         </Text>
       ) : null}
@@ -536,7 +536,7 @@ function Page({
       style={[styles.words, wordsShift]}
     >
       <Heading level={1}>{page.title}</Heading>
-      <Text variant="lede">{page.body}</Text>
+      <Text variant="body">{page.body}</Text>
       {page.notice ? (
         <Text variant="metadata" testID="tour-deceased-notice">
           {page.notice}

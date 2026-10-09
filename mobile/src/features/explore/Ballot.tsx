@@ -141,7 +141,7 @@ export default function Ballot() {
           title="Build your ballot"
           info={{ title: 'How the practice ballot works', notes: BALLOT_NOTES }}
         >
-          <Text variant="lede" wordSafe>
+          <Text variant="body" wordSafe>
             2025 practice ballot
           </Text>
           <Text wordSafe variant="metadata">

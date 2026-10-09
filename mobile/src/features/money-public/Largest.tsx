@@ -92,7 +92,7 @@ export default function Largest() {
         }
         render={(r, i) => (
           <Group>
-            <Text wordSafe variant="figureInline">
+            <Text wordSafe variant="strong" tabular>
               {formatMoneyCompact(r.value)}
             </Text>
             <Text wordSafe variant="strong" testID={`largest-recipient-${i}`}>

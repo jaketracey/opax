@@ -120,7 +120,7 @@ function AboutScene() {
     <Group gap={spacing.s3}>
       <Reveal order={0}>
         <Group gap={spacing.s3}>
-          <Text variant="kicker">The public record</Text>
+          <Text variant="label">The public record</Text>
           <Divider variant="accent" />
         </Group>
       </Reveal>

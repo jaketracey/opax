@@ -29,7 +29,6 @@ import {
   LinkRow,
   LoadingState,
   OfflineBanner,
-  SplitEmpty,
   SplitLayout,
   StaleNotice,
   Text,
@@ -375,7 +374,8 @@ function BillsScreen() {
         keys={rows.map((bill) => bill.key)}
         entryForKey={(key) => ({ kind: 'bill', key, title: titleFor(key) })}
         empty={
-          <SplitEmpty
+          <EmptyState
+            size="pane"
             icon="doc.text"
             accent="bills"
             title="No bill selected"

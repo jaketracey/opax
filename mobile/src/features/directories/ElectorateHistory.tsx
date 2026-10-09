@@ -56,7 +56,7 @@ export function ElectorateDate({
     <>
       <Section
         title="View on a date"
-        accent="places"
+        accent="people"
         testID="electorate-date-section"
         info={{
           title: 'About dated representation',
@@ -146,7 +146,7 @@ export function ElectorateDate({
               }}
             />
             {dates.length ? (
-              <Section title="Roster observation dates" accent="places">
+              <Section title="Roster observation dates" accent="people">
                 <RowList>
                   {dates.map((date) => (
                     <LinkRow
@@ -208,7 +208,7 @@ export function ElectorateDate({
               }
             />
           )}
-          <Text wordSafe variant="caption">
+          <Text wordSafe variant="fine">
             {selected.status === 'historical'
               ? 'From dated service records; coverage may be incomplete.'
               : selected.status === 'partial'
@@ -252,7 +252,7 @@ export function ElectorateHistory({
       }}
     >
       {terms.length ? (
-        <Text variant="caption">
+        <Text variant="fine">
           {formatCount(terms.length)} service periods · newest first
         </Text>
       ) : (

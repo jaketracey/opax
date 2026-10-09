@@ -18,7 +18,7 @@ export function TalkComingSoon() {
   return (
     <Screen testID="talk-sheet">
       <Group>
-        <Text variant="lede" testID="talk-sheet-message">
+        <Text variant="body" testID="talk-sheet-message">
           Talk to OPAX is not in this version of the app yet.
         </Text>
         <Text>

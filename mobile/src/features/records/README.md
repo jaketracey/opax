@@ -14,13 +14,13 @@ All paid data stays in memory for the session, including in-flight requests.
 Failed reads are removed so a user can retry. There are no automatic retries,
 focus refreshes or background reads.
 
-| GET | Explicit action | Requests on a cache miss |
-| --- | --- | --- |
-| `/api/resource/<slug>` | Open the reader, or open Cite directly from a search result | 1 |
-| `/api/search?q=…&kind=speech&per=6[&topic=…]` | Tap Similar speeches | 1 |
-| `/bill-texts/<key>/index.json` | Open Bill text | 1 |
-| `/bill-texts/<key>/<version>.json` | Tap Read full bill text or choose a version | 1 |
-| `/api/recent` | Open Just added to the record | 1 |
+| GET                                           | Explicit action                                             | Requests on a cache miss |
+| --------------------------------------------- | ----------------------------------------------------------- | ------------------------ |
+| `/api/resource/<slug>`                        | Open the reader, or open Cite directly from a search result | 1                        |
+| `/api/search?q=…&kind=speech&per=6[&topic=…]` | Tap Similar speeches                                        | 1                        |
+| `/bill-texts/<key>/index.json`                | Open Bill text                                              | 1                        |
+| `/bill-texts/<key>/<version>.json`            | Tap Read full bill text or choose a version                 | 1                        |
+| `/api/recent`                                 | Open Just added to the record                               | 1                        |
 
 Repeating an action for a successfully loaded path makes zero additional
 requests. Opening Cite from an already loaded document costs zero resource

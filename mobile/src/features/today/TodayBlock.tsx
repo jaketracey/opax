@@ -8,11 +8,12 @@ import {
   OfflineBanner,
   StaleNotice,
   errorMessage,
+  Card,
 } from '../../design/primitives';
 import { spacing } from '../../design/tokens';
 import { PartialNotice, SavedCopyNotice } from '../CatalogNotice';
 import { isOffline } from '../CatalogState';
-import { TodayCard, UpdatedCaption } from './parts';
+import { UpdatedCaption } from './parts';
 
 /**
  * A Today block in every state, as CatalogState draws it elsewhere, but
@@ -47,14 +48,14 @@ export function TodayBlock<T>({
     );
   if (block.status === 'error')
     return (
-      <TodayCard style={styles.inset}>
+      <Card padded={false} style={styles.inset}>
         {isOffline(block.error) ? <OfflineBanner cached={false} /> : null}
         <ErrorState
           message={errorMessage(block.error)}
           onRetry={onRetry}
           testID={`${testID}-error`}
         />
-      </TodayCard>
+      </Card>
     );
   const none =
     block.data === null ||
@@ -75,9 +76,9 @@ export function TodayBlock<T>({
       ) : null}
       {block.partial ? <PartialNotice testID={`${testID}-partial`} /> : null}
       {none ? (
-        <TodayCard style={styles.inset}>
+        <Card padded={false} style={styles.inset}>
           <EmptyState message={empty} testID={`${testID}-empty`} />
-        </TodayCard>
+        </Card>
       ) : (
         children(block.data as T)
       )}

@@ -1,31 +1,16 @@
-import { StyleSheet, View } from 'react-native';
-import { Text } from '../../design/primitives';
-import { colors, radius } from '../../design/tokens';
+import { StatusLabel } from '../../design/primitives';
 
 /**
- * "For" or "Against" in a small tinted label above a bill vote. Meaning is in
- * the word; the votes accent only marks the category.
+ * @deprecated Use `StatusLabel`. "Voted for" or "Voted against" above a
+ * bill vote: the word carries the meaning (done or ended tone). The row
+ * around it says the vote.
  */
 export function VoteSide({ side }: { side: 'for' | 'against' }) {
   return (
-    <View
-      accessibilityElementsHidden
-      importantForAccessibility="no-hide-descendants"
-      style={styles.label}
-    >
-      <Text variant="chip" tone="votesInk">
-        {side === 'for' ? 'Voted for' : 'Voted against'}
-      </Text>
-    </View>
+    <StatusLabel
+      label={side === 'for' ? 'Voted for' : 'Voted against'}
+      tone={side === 'for' ? 'done' : 'ended'}
+      hidden
+    />
   );
 }
-const styles = StyleSheet.create({
-  label: {
-    alignSelf: 'flex-start',
-    backgroundColor: colors.votesWash,
-    borderRadius: radius,
-    paddingHorizontal: 6,
-    paddingVertical: 1,
-    marginBottom: 2,
-  },
-});

@@ -1,20 +1,17 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
-import { Hoverable, Icon, Text } from '../../design/primitives';
-import { light, spacing } from '../../design/tokens';
+import { Hoverable, Icon, Text, Card } from '../../design/primitives';
+import { colors, radii, spacing } from '../../design/tokens';
 import { leadsRoute } from '../../navigation/routes';
-import { TintIcon, TodayCard, cardRadius, useTodayInk } from './parts';
-import { mix } from './tint';
+import { TintIcon } from './parts';
 
 /**
  * The way into Leads, on navy with the bronze mark colour. Static: the
  * Leads screen loads its export when it opens.
  */
 export function LeadsCard() {
-  // The mark colour as text: 7:1 on navy under Increase Contrast.
-  const mark = useTodayInk(light.bronzeBright, light.navyRaised);
   return (
-    <Hoverable effect="lift" cornerRadius={cardRadius}>
+    <Hoverable effect="lift" cornerRadius={radii.md}>
       <Pressable
         accessibilityRole="button"
         accessibilityLabel="Leads. Where recorded contract value or party receipts concentrate, and companies that appear in both. Each lead keeps its caveats; a lead is not a finding."
@@ -23,8 +20,9 @@ export function LeadsCard() {
         onPress={() => router.push(leadsRoute)}
       >
         {({ pressed }) => (
-          <TodayCard
-            ground={pressed ? light.navyRaised : light.navy}
+          <Card
+            padded={false}
+            ground={pressed ? colors.navyRaised : colors.navy}
             style={styles.card}
           >
             <View style={styles.top}>
@@ -32,15 +30,11 @@ export function LeadsCard() {
                 <TintIcon
                   name="point.3.connected.trianglepath.dotted"
                   size={18}
-                  color={mark}
+                  color={colors.bronzeBright}
                 />
               </View>
-              <Text
-                wordSafe
-                variant="kicker"
-                style={[styles.kicker, { color: mark }]}
-              >
-                LEADS
+              <Text wordSafe variant="label" tone="onNavySoft">
+                Leads
               </Text>
             </View>
             <Text wordSafe variant="subheading" tone="onNavy">
@@ -62,7 +56,7 @@ export function LeadsCard() {
               </Text>
               <Icon name="arrow.right" size={16} tone="onNavy" />
             </View>
-          </TodayCard>
+          </Card>
         )}
       </Pressable>
     </Hoverable>
@@ -73,18 +67,17 @@ const styles = StyleSheet.create({
   card: {
     padding: spacing.s4,
     gap: spacing.s3,
-    borderColor: light.navy,
+    borderColor: colors.navy,
   },
   top: { flexDirection: 'row', alignItems: 'center', gap: spacing.s3 },
   badge: {
     width: 32,
     height: 32,
-    borderRadius: 16,
+    borderRadius: radii.pill,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: mix(light.navy, light.bronzeBright, 0.18),
+    backgroundColor: colors.navyRaised,
   },
-  kicker: { letterSpacing: 1 },
   action: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -92,7 +85,7 @@ const styles = StyleSheet.create({
     marginTop: spacing.s2,
     paddingTop: spacing.s3,
     borderTopWidth: 1,
-    borderTopColor: mix(light.navy, light.onNavySoft, 0.3),
+    borderTopColor: colors.navyRaised,
   },
   grow: { flex: 1 },
 });

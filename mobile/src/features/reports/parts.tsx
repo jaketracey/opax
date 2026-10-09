@@ -8,7 +8,7 @@ import {
   Group,
   Heading,
   LoadingState,
-  MachineWritten,
+  MachineLabel,
   OfflineBanner,
   StaleNotice,
   Text,
@@ -228,7 +228,7 @@ export function Prose({
           sources={sources}
           testID={testID}
         />
-        <MachineWritten explanation={MODEL_NOTE} testID={`${testID}-machine`} />
+        <MachineLabel explanation={MODEL_NOTE} testID={`${testID}-machine`} />
       </Group>
     </PadReading>
   );
@@ -266,7 +266,7 @@ export function ReportLede({
             />
           </Disclosure>
         ) : null}
-        <MachineWritten explanation={MODEL_NOTE} testID={`${testID}-machine`} />
+        <MachineLabel explanation={MODEL_NOTE} testID={`${testID}-machine`} />
       </Group>
     </PadReading>
   );

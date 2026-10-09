@@ -9,7 +9,7 @@ import {
   ViewOriginal,
   Group,
   Heading,
-  MachineWritten,
+  MachineLabel,
   PersonRow,
   Section,
   Text,
@@ -282,12 +282,12 @@ export function AnswerView({
         <Group
           style={{ backgroundColor: colors.moneyWash, padding: rhythm.block }}
         >
-          <MachineWritten explanation={machineNote} />
+          <MachineLabel explanation={machineNote} />
           <AnswerBody text={data.money_overview} />
         </Group>
       ) : null}
       {!calculated && data.answer_status !== 'evidence_only' ? (
-        <MachineWritten explanation={machineNote} testID="ask-machine-label" />
+        <MachineLabel explanation={machineNote} testID="ask-machine-label" />
       ) : null}
       <Group
         style={
@@ -321,7 +321,7 @@ export function AnswerView({
         </Group>
       ))}
       {calculated ? (
-        <Text wordSafe variant="caption">
+        <Text wordSafe variant="fine">
           {data.pay_answer
             ? 'Entitlements, not payslips.'
             : 'Selected disclosed receipts; not every donor.'}
@@ -458,7 +458,7 @@ export function AnswerView({
           </RowList>
         </Disclosure>
       ) : null}
-      <Text wordSafe variant="caption">
+      <Text wordSafe variant="fine">
         Viewed {formatDate(new Date().toISOString().slice(0, 10), 'short')}
       </Text>
       <LinkRow

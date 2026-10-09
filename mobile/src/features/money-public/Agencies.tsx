@@ -277,7 +277,7 @@ export function Agency() {
                 </Text>
                 <Text wordSafe>{r.supplier}</Text>
                 {r.title ? <Text wordSafe>{r.title}</Text> : null}
-                <Text wordSafe variant="figureInline">
+                <Text wordSafe variant="strong" tabular>
                   {formatMoneyCompact(r.value)}
                 </Text>
                 <Text wordSafe variant="metadata">

@@ -5,7 +5,6 @@ import {
   ErrorState,
   Group,
   Heading,
-  PartyChip,
   KeyValueList,
   LinkRow,
   LoadingState,
@@ -14,6 +13,7 @@ import {
   Section,
   Text,
   errorMessage,
+  PartyLabel,
 } from '../design/primitives';
 import {
   ElectorateDate,
@@ -171,7 +171,7 @@ export function ElectorateScreen({
         {view && identity && directory ? (
           <>
             <Group gap={rhythm.tight}>
-              <Text variant="kicker" tone="navy">
+              <Text variant="label" tone="navy">
                 Electorate
               </Text>
               <Heading level={1} testID="electorate-name">
@@ -308,9 +308,11 @@ export function ElectorateScreen({
                                           </Text>
                                         ) : null}
                                       </Text>
-                                      <PartyChip
+                                      <PartyLabel
                                         party={c.party}
                                         status="unknown"
+                                        dense
+                                        linked={false}
                                       />
                                       <KeyValueList
                                         items={c.votes.map((v) => ({
@@ -339,7 +341,7 @@ export function ElectorateScreen({
               </Section>
               <Section
                 title="Local context"
-                accent="places"
+                accent="people"
                 testID="electorate-census"
               >
                 {view.census.length ? (
@@ -391,7 +393,7 @@ export function ElectorateScreen({
                 )}
               </Section>
             </PadGrid>
-            <Section title="Related constituencies" accent="places">
+            <Section title="Related constituencies" accent="people">
               {view.related.length ? (
                 <RowList>
                   {view.related.map((r, i) => (
@@ -420,13 +422,13 @@ export function ElectorateScreen({
               )}
             </Section>
             <Group gap={rhythm.line} testID="electorate-coverage">
-              <Text wordSafe variant="caption">
+              <Text wordSafe variant="fine">
                 {view.coverageNote} Representation is shown only as recorded in
                 the dated release.
               </Text>
               <EvidenceFooter block={view.identity} id="electorate-coverage" />
             </Group>
-            <Text wordSafe variant="caption" testID="electorate-end">
+            <Text wordSafe variant="fine" testID="electorate-end">
               End of electorate record
             </Text>
           </>

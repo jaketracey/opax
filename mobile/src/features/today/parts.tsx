@@ -3,54 +3,15 @@ import {
   Animated,
   Easing,
   Platform,
-  StyleSheet,
-  View,
   useWindowDimensions,
+  type ColorValue,
   type StyleProp,
   type ViewStyle,
 } from 'react-native';
 import { SymbolView, type SFSymbol } from 'expo-symbols';
 import { androidSymbol } from '../../design/android-symbols';
 import { calendarDate, formatDate } from '../../design/format';
-import { partyDot, partyText, type PartyContext } from '../../design/party';
-import { Text, useReduceMotionSetting } from '../../design/primitives';
-import { useIncreaseContrast } from '../../design/accessibility';
-import { colors, hairline, light, spacing } from '../../design/tokens';
-import { markOn, strongAccent, strongOn, washOf, type Accent } from './tint';
-
-/** A Today accent, strengthened under Increase Contrast. */
-export function useTodayAccent(accent: Accent): Accent {
-  return useIncreaseContrast() ? strongAccent(accent) : accent;
-}
-/** A Today text colour on its ground, strengthened under Increase Contrast. */
-export function useTodayInk(color: string, ground: string): string {
-  return useIncreaseContrast() ? strongOn(color, ground) : color;
-}
-
-/** Today's cards: continuous 16pt corners on the raised surface. */
-export const cardRadius = 16;
-
-/** A raised card with a hairline edge. `ground` replaces the raised surface. */
-export function TodayCard({
-  children,
-  ground,
-  style,
-  testID,
-}: {
-  children: ReactNode;
-  ground?: string;
-  style?: StyleProp<ViewStyle>;
-  testID?: string;
-}) {
-  return (
-    <View
-      testID={testID}
-      style={[styles.card, ground ? { backgroundColor: ground } : null, style]}
-    >
-      {children}
-    </View>
-  );
-}
+import { SourceLine, useReduceMotionSetting } from '../../design/primitives';
 
 /**
  * Rises and fades in once, when it first mounts. Nothing moves before iOS
@@ -123,7 +84,7 @@ export function TintIcon({
 }: {
   name: SFSymbol;
   size?: number;
-  color: string;
+  color: ColorValue;
 }) {
   const { fontScale } = useWindowDimensions();
   const scaled = Math.round(size * Math.min(Math.max(fontScale, 1), 2));
@@ -149,8 +110,9 @@ export function shortDay(value: string | number | Date): string {
 }
 
 /**
- * The one quiet caption under a Today block: when its record was last
- * updated, and the saved date when it is a saved copy. No source names.
+ * @deprecated Use `SourceLine`. The one source line under a Today block:
+ * when its record was last updated ("Updated 4 Oct"), and the saved date
+ * when it is a saved copy, opening the source sheet.
  */
 export function UpdatedCaption({
   asAt,
@@ -161,103 +123,12 @@ export function UpdatedCaption({
   savedAt?: number | null;
   testID?: string;
 }) {
-  const parts = [
-    asAt ? `Updated ${shortDay(asAt)}` : 'Date not published',
-    savedAt != null ? `Saved ${shortDay(savedAt)}` : null,
-  ].filter(Boolean);
   return (
-    <Text wordSafe variant="fine" testID={testID}>
-      {parts.join(' · ')}
-    </Text>
-  );
-}
-
-/** A small rounded label on a tinted ground: a category, a status or a topic. */
-export function Chip({
-  label,
-  ground,
-  color = light.ink,
-  dot,
-  icon,
-  testID,
-}: {
-  label: string;
-  ground: string;
-  /** Opaque hex: tests/today-tint.test.ts checks it on its ground. */
-  color?: string;
-  dot?: string | null;
-  icon?: SFSymbol;
-  testID?: string;
-}) {
-  // Increase Contrast: the label reads at 7:1 and the dot at 4.5:1.
-  const strong = useIncreaseContrast();
-  if (strong) {
-    color = strongOn(color, ground);
-    if (dot) dot = strongOn(dot, ground, 4.5);
-  }
-  return (
-    <View testID={testID} style={[styles.chip, { backgroundColor: ground }]}>
-      {dot ? <View style={[styles.chipDot, { backgroundColor: dot }]} /> : null}
-      {icon ? <TintIcon name={icon} size={12} color={color} /> : null}
-      <Text
-        wordSafe
-        variant="tag"
-        accessible={false}
-        style={[styles.chipText, { color }]}
-      >
-        {label}
-      </Text>
-    </View>
-  );
-}
-
-/**
- * A party in a dense row: the dot, the web's short label (ALP, LIB) and its
- * status in words ("Formerly ALP"), on a light wash of the party colour. The
- * row around it carries the full spoken name.
- */
-export function PartyChip({
-  party,
-  status,
-  formerly,
-  testID,
-}: PartyContext & { testID?: string }) {
-  const dot = partyDot(party);
-  const text = partyText({ party, status, formerly }, true);
-  const ground = dot ? washOf(dot, 0.14) : light.sunken;
-  return (
-    <Chip
-      label={
-        text.previous ? `${text.visible} · ${text.previous}` : text.visible
-      }
-      ground={ground}
-      dot={dot ? markOn(dot, ground) : null}
+    <SourceLine
+      asOf={asAt}
+      dateLabel={asAt ? `Updated ${shortDay(asAt)}` : 'Date not published'}
+      savedAt={savedAt}
       testID={testID}
     />
   );
 }
-
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: colors.raised,
-    borderRadius: cardRadius,
-    borderCurve: 'continuous',
-    borderWidth: hairline,
-    borderColor: colors.line,
-    overflow: 'hidden',
-  },
-  chip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    gap: spacing.s1 + 1,
-    paddingHorizontal: spacing.s3,
-    paddingVertical: 3,
-    // A pill at standard sizes; a rounded rectangle once the label wraps.
-    borderRadius: 12,
-    borderCurve: 'continuous',
-    maxWidth: '100%',
-  },
-  chipDot: { width: 8, height: 8, borderRadius: 4 },
-  chipText: { flexShrink: 1 },
-});

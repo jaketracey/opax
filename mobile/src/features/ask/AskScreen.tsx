@@ -693,7 +693,7 @@ export default function AskScreen() {
           testID="ask-history-screen"
           doneID="ask-history-done"
         >
-          <Text wordSafe variant="caption">
+          <Text wordSafe variant="fine">
             {communityAccount
               ? phoneCopy('Saved on this iPhone.')
               : Platform.OS === 'android'

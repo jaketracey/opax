@@ -40,7 +40,7 @@ export default function ExploreHub() {
     <>
       <ExploreHeader title="Explore" />
       <Screen column="wide" testID="explore-screen">
-        <Text variant="lede" wordSafe>
+        <Text variant="body" wordSafe>
           Play with the parliamentary record
         </Text>
         <Section>

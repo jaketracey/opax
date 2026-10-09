@@ -58,7 +58,6 @@ import {
   errorMessage,
   LayoutRegion,
   SidebarSafe,
-  SplitEmpty,
   SplitLayout,
   isPad,
   useLayout,
@@ -528,7 +527,7 @@ function SearchScreen({
                     <LinkRow
                       title="Electorates"
                       icon="map"
-                      accent="places"
+                      accent="people"
                       testID="search-browse-electorate"
                       onPress={() =>
                         router.push({
@@ -538,7 +537,7 @@ function SearchScreen({
                       }
                     />
                   </RowList>
-                  <Text variant="caption">
+                  <Text variant="fine">
                     Bill searches use the saved bill titles in Bills.
                   </Text>
                   <Button
@@ -586,7 +585,7 @@ function SearchScreen({
           {showSuggestions && suggestions?.electorates.length ? (
             <Section
               title="Electorates"
-              accent="places"
+              accent="people"
               testID="search-suggestions-electorates"
             >
               <RowList>
@@ -814,7 +813,7 @@ function SearchScreen({
                   />
                 </>
               ) : (
-                <Text variant="caption" testID="search-cache-state">
+                <Text variant="fine" testID="search-cache-state">
                   Public catalog results
                 </Text>
               )}
@@ -957,7 +956,8 @@ function SearchScreen({
         onOpenKey={(key) => openers.get(key)?.()}
         onCursor={cursor.reveal}
         empty={
-          <SplitEmpty
+          <EmptyState
+            size="pane"
             icon="magnifyingglass"
             title="Nothing open"
             testID="search-split-empty"

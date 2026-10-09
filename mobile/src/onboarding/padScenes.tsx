@@ -8,20 +8,27 @@ import {
   Icon,
   IconTile,
   LinkRow,
-  MachineWritten,
+  MachineLabel,
   PersonRow,
   Portrait,
   Section,
+  StatusLabel,
   Text,
+  statusTone,
   type SFSymbol,
+  Card,
 } from '../design/primitives';
 import { SelectedMark, splitRowStyles } from '../design/selection';
-import { colors, hairline, rhythm, spacing } from '../design/tokens';
+import {
+  colors,
+  hairline,
+  rhythm,
+  spacing,
+  statusTint,
+} from '../design/tokens';
 import { RecordRow } from '../features/RecordRow';
 import { BillStatus } from '../features/bills/parts';
 import { mastheadDate } from '../features/today/Masthead';
-import { Chip, TodayCard, useTodayAccent } from '../features/today/parts';
-import { billAccent } from '../features/today/tint';
 import type { WelcomePage } from './pages';
 import { Reveal, SceneContext, noop } from './scenes';
 
@@ -130,7 +137,7 @@ function TopTabs({ current }: { current: SectionKey }) {
           const on = item.key === current;
           return (
             <View key={item.key} style={[styles.tab, on ? styles.tabOn : null]}>
-              <Text variant="chip" tone={on ? 'navy' : 'ink'}>
+              <Text variant="label" tone={on ? 'navy' : 'ink'}>
                 {item.label}
               </Text>
             </View>
@@ -198,9 +205,7 @@ function Split({
 
 /** Today's broadsheet masthead: the mark, the date, the independence line. */
 function Masthead() {
-  const [date] = useState(() =>
-    mastheadDate(new Date()).toLocaleUpperCase('en-AU'),
-  );
+  const [date] = useState(() => mastheadDate(new Date()));
   return (
     <View style={styles.masthead}>
       <View style={styles.mastheadRow}>
@@ -209,7 +214,7 @@ function Masthead() {
             source={require('../../assets/splash/mark.png')}
             style={styles.mark}
           />
-          <Text variant="kicker" tone="navy">
+          <Text variant="label" tone="navy">
             {date}
           </Text>
         </View>
@@ -235,25 +240,21 @@ function BillCard({
   title: string;
   introduced: string;
 }) {
-  const tone = useTodayAccent(billAccent(status));
+  const tone = statusTint(statusTone(status));
   return (
-    <TodayCard
+    <Card
+      padded={false}
       style={[styles.card, { flexBasis: 200 * useContext(SceneScale) }]}
     >
       <View style={[styles.band, { backgroundColor: tone.base }]} />
       <View style={styles.cardInner}>
-        <Chip
-          label={status}
-          ground={tone.wash}
-          color={tone.ink}
-          dot={tone.base}
-        />
+        <StatusLabel label={status} />
         <Text variant="strong" style={styles.cardTitle}>
           {title}
         </Text>
         <Text variant="fine">{introduced}</Text>
       </View>
-    </TodayCard>
+    </Card>
   );
 }
 
@@ -288,18 +289,18 @@ function TodayScene({ width }: { width: number }) {
           <View style={styles.cards}>
             <View style={[styles.cardSlot, slot]}>
               <Section title="Recent declarations" accent="interests">
-                <TodayCard style={styles.padded}>
+                <Card padded={false} style={styles.padded}>
                   <PersonRow
                     name="Example member"
                     place="Member for Example"
                     detail="Declared 1 Jul 2026"
                   />
-                </TodayCard>
+                </Card>
               </Section>
             </View>
             <View style={[styles.cardSlot, slot]}>
               <Section title="Public money" accent="money">
-                <TodayCard style={[styles.padded, styles.moneyCard]}>
+                <Card padded={false} style={[styles.padded, styles.moneyCard]}>
                   <IconTile
                     name="point.3.connected.trianglepath.dotted"
                     accent="money"
@@ -313,7 +314,7 @@ function TodayScene({ width }: { width: number }) {
                       Political donations &amp; public money map
                     </Text>
                   </View>
-                </TodayCard>
+                </Card>
               </Section>
             </View>
           </View>
@@ -341,7 +342,7 @@ function YourMPScene({ width }: { width: number }) {
                   title="Example electorate"
                   detail="House of Representatives"
                   icon="map"
-                  accent="places"
+                  accent="people"
                   selected
                   onPress={noop}
                 />
@@ -349,7 +350,7 @@ function YourMPScene({ width }: { width: number }) {
                   title="Another electorate"
                   detail="House of Representatives"
                   icon="map"
-                  accent="places"
+                  accent="people"
                   selected={false}
                   onPress={noop}
                 />
@@ -361,7 +362,7 @@ function YourMPScene({ width }: { width: number }) {
           <>
             <Reveal order={2}>
               <Group gap={rhythm.line}>
-                <Text variant="kicker" tone="navy">
+                <Text variant="label" tone="navy">
                   Your electorate
                 </Text>
                 <Heading level={1}>Example electorate</Heading>
@@ -394,7 +395,7 @@ function ViewOriginal() {
   return (
     <View style={styles.original}>
       <Icon name="arrow.up.right.square" size={14} tone="bronzeInk" />
-      <Text variant="kicker" tone="bronzeInk">
+      <Text variant="label" tone="bronzeInk">
         View original
       </Text>
     </View>
@@ -570,7 +571,7 @@ function BillScene({ width }: { width: number }) {
                 <View style={styles.paneBar}>
                   <Icon name="square.and.arrow.up" size={20} tone="navy" />
                 </View>
-                <Text variant="kicker" tone="billsInk">
+                <Text variant="label" tone="billsInk">
                   Bill
                 </Text>
                 <Heading level={1}>Example Amendment Bill 2026</Heading>
@@ -581,10 +582,7 @@ function BillScene({ width }: { width: number }) {
             </Reveal>
             <Reveal order={3}>
               <Section title="In short" accent="bills">
-                <MachineWritten
-                  label="Machine summary"
-                  explanation="Written by a model from the explanatory memorandum; not the record."
-                />
+                <MachineLabel explanation="Written by a model from the explanatory memorandum; not the record." />
               </Section>
             </Reveal>
             <Reveal order={4}>
@@ -636,7 +634,7 @@ function SearchScene({ width }: { width: number }) {
               </Section>
             </Reveal>
             <Reveal order={2}>
-              <Section title="Electorates" accent="places">
+              <Section title="Electorates" accent="people">
                 <RecordRow
                   title="Example electorate"
                   detail="Example member"

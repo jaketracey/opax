@@ -45,7 +45,7 @@ import {
   errorMessage,
 } from '../design/primitives';
 import { partyDot, partyWash, partySlug } from '../design/party';
-import { colors, radius, rhythm } from '../design/tokens';
+import { colors, radii, rhythm } from '../design/tokens';
 import { openOnWeb } from '../navigation/external';
 import { billRoute, personRoute } from '../navigation/routes';
 import { shareHeaderItem } from '../navigation/share';
@@ -200,7 +200,7 @@ export function PartyPage({
                     ]}
                   />
                 ) : null}
-                <Text variant="kicker">Political party</Text>
+                <Text variant="label">Political party</Text>
               </View>
               <Heading
                 level={1}
@@ -349,7 +349,7 @@ export function PartyPage({
                               <Text wordSafe variant="body" style={styles.grow}>
                                 {donor.name}
                               </Text>
-                              <Text variant="figureInline" tone="moneyInk">
+                              <Text variant="strong" tabular tone="moneyInk">
                                 {formatMoney(donor.amount)}
                               </Text>
                             </View>
@@ -392,7 +392,7 @@ export function PartyPage({
                     </>
                   )}
                 </CatalogState>
-                <Text wordSafe variant="caption" testID="party-money-caveat">
+                <Text wordSafe variant="fine" testID="party-money-caveat">
                   {partyPageCopy.aec}
                 </Text>
                 <RowList>
@@ -454,7 +454,7 @@ export function PartyPage({
                         ))}
                       </RowList>
                       {data.total > data.rows.length ? (
-                        <Text wordSafe variant="caption">
+                        <Text wordSafe variant="fine">
                           {data.total} entities have named {view.label} on an
                           associated-entity return; the {data.rows.length} with
                           the largest receipts on their latest return are shown,
@@ -514,7 +514,7 @@ export function PartyPage({
                                   }`,
                                 ].join('\n')}
                                 leading={
-                                  <Text variant="chip" tone="votesInk">
+                                  <Text variant="label" tone="votesInk">
                                     {row.ayes} for, {row.noes} against
                                   </Text>
                                 }
@@ -548,7 +548,7 @@ export function PartyPage({
                         />
                       ) : null}
                       {data.failed ? (
-                        <Text wordSafe variant="caption">
+                        <Text wordSafe variant="fine">
                           {data.failed} bill files could not be read. This block
                           is partial.
                         </Text>
@@ -568,7 +568,7 @@ export function PartyPage({
             <PartyAccess name={view.label} />
             <RecordSection name={view.label} kind="party" />
             <NewsSection name={view.label} />
-            <Text variant="caption" testID="party-end">
+            <Text variant="fine" testID="party-end">
               End of party page
             </Text>
           </>
@@ -580,7 +580,7 @@ export function PartyPage({
 const styles = StyleSheet.create({
   hero: {
     gap: rhythm.tight,
-    borderRadius: radius + 10,
+    borderRadius: radii.md,
     padding: rhythm.block + rhythm.line,
     borderWidth: 1,
     borderColor: colors.line,

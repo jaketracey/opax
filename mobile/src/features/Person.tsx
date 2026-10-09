@@ -238,7 +238,7 @@ export function ProfileScreen({
                         <LinkRow
                           key={seat.electorate_id}
                           icon="map"
-                          accent="places"
+                          accent="people"
                           title={seat.name}
                           detail={[
                             where,
@@ -271,7 +271,7 @@ export function ProfileScreen({
                     may be available on opax.com.au.
                   </Text>
                 ) : null}
-                <Text wordSafe variant="caption">
+                <Text wordSafe variant="fine">
                   These are dated public records. Representation may have
                   changed since collection.
                 </Text>
@@ -389,7 +389,7 @@ export function ProfileScreen({
                                           {row.stage} ·{' '}
                                           {formatDate(row.date, 'short')}
                                         </Text>
-                                        <Text wordSafe variant="caption">
+                                        <Text wordSafe variant="fine">
                                           Not matched to a bill record
                                         </Text>
                                       </Group>
@@ -455,7 +455,7 @@ export function ProfileScreen({
                                 <Text wordSafe variant="strong">
                                   {tie.organisation}
                                 </Text>
-                                <Text wordSafe variant="caption">
+                                <Text wordSafe variant="fine">
                                   {tie.kinds.join('; ')}
                                 </Text>
                                 {tie.declarations.map((d, j) => (
@@ -519,7 +519,7 @@ export function ProfileScreen({
                         },
                       ]}
                     />
-                    <Text wordSafe variant="caption">
+                    <Text wordSafe variant="fine">
                       The comparison is a lead, not a finding.
                     </Text>
                     <RowList>
@@ -566,7 +566,8 @@ export function ProfileScreen({
                                       {name}
                                     </Text>
                                     <Text
-                                      variant="figureInline"
+                                      variant="strong"
+                                      tabular
                                       tone="moneyInk"
                                     >
                                       {formatMoney(amount)}
@@ -578,13 +579,13 @@ export function ProfileScreen({
                                         {category.text}
                                       </Text>
                                       {category.note ? (
-                                        <Text wordSafe variant="caption">
+                                        <Text wordSafe variant="fine">
                                           {category.note}
                                         </Text>
                                       ) : null}
                                     </>
                                   ) : (
-                                    <Text wordSafe variant="caption">
+                                    <Text wordSafe variant="fine">
                                       Category definition not held.
                                     </Text>
                                   )}
@@ -598,7 +599,7 @@ export function ProfileScreen({
                                 licence={e.categories.meta.licence}
                               />
                             ) : (
-                              <Text wordSafe variant="caption">
+                              <Text wordSafe variant="fine">
                                 Category definitions could not be loaded.
                               </Text>
                             )}
@@ -619,7 +620,7 @@ export function ProfileScreen({
                   testID="person-web"
                 />
               </RowList>
-              <Text wordSafe variant="caption" testID="person-end">
+              <Text wordSafe variant="fine" testID="person-end">
                 End of profile
               </Text>
             </Section>

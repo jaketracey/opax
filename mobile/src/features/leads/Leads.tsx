@@ -13,7 +13,7 @@ import {
   Text,
   type Segment,
 } from '../../design/primitives';
-import { chrome, colors, hairline, radius, spacing } from '../../design/tokens';
+import { chrome, colors, hairline, radii, spacing } from '../../design/tokens';
 import { leadRoute } from '../../navigation/routes';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { RecordRow } from '../RecordRow';
@@ -98,7 +98,7 @@ export default function Leads() {
       />
       {discovery ? (
         <>
-          <Text wordSafe variant="lede" testID="leads-lede">
+          <Text wordSafe variant="body" testID="leads-lede">
             {aboutLede(discovery)}
           </Text>
           <Group>
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
   lead: {
     gap: spacing.s3,
     backgroundColor: colors.raised,
-    borderRadius: radius + 10,
+    borderRadius: radii.md,
     borderWidth: hairline,
     borderColor: colors.line,
     paddingHorizontal: spacing.s4,

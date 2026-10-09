@@ -5,11 +5,11 @@ import {
   RowList,
   Screen,
   Section,
+  SwitchRow,
 } from '../../design/primitives';
 import { closeSheetItem } from '../../navigation/chrome';
 import { directorySorts } from './model';
 import { directoryKind, directoryStore, useDirectoryState } from './store';
-import { ToggleRow } from './ToggleRow';
 export default function DirectoryFilters() {
   const { kind: input } = useLocalSearchParams<{ kind: string }>();
   const kind = directoryKind(input),
@@ -44,12 +44,12 @@ export default function DirectoryFilters() {
                   }
                 />
               ) : (
-                <ToggleRow
+                <SwitchRow
                   key={f.key}
                   label={f.label}
-                  checked={!!filters[f.key]}
+                  value={!!filters[f.key]}
                   testID={`directory-filter-${f.key}`}
-                  onChange={() =>
+                  onValueChange={() =>
                     directoryStore.set(kind, {
                       ...filters,
                       [f.key]: filters[f.key] ? '' : '1',

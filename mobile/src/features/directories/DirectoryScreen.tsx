@@ -32,7 +32,6 @@ import {
   errorMessage,
   LayoutRegion,
   SidebarSafe,
-  SplitEmpty,
   SplitLayout,
   isPad,
   useLayout,
@@ -163,7 +162,7 @@ const DirectoryRow = memo(function DirectoryRow({
     <LinkRow
       title={item.name}
       icon="map"
-      accent="places"
+      accent="people"
       testID={`directory-electorate-${item.slug}`}
       detail={[
         seatContext(item),
@@ -500,9 +499,10 @@ function DirectoryView({ kind }: { kind: keyof typeof titles }) {
           keys={[...entries.keys()]}
           entryForKey={(key) => entries.get(key)!}
           empty={
-            <SplitEmpty
+            <EmptyState
+              size="pane"
               icon={kind === 'electorate' ? 'map' : 'person.2'}
-              accent={kind === 'electorate' ? 'places' : 'people'}
+              accent="people"
               title={`No ${kind === 'person' ? 'parliamentarian' : kind} selected`}
               message={record ? count : undefined}
               testID="directory-split-empty"

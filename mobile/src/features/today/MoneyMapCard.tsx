@@ -1,14 +1,13 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
-import { Hoverable, Icon, IconTile, Text } from '../../design/primitives';
-import { colors, rhythm } from '../../design/tokens';
+import { Hoverable, Icon, IconTile, Text, Card } from '../../design/primitives';
+import { colors, rhythm, radii } from '../../design/tokens';
 import { moneyRoute } from '../../navigation/routes';
-import { TodayCard, cardRadius } from './parts';
 
 /** A quiet, static way into the full money record; the map loads on entry. */
 export function MoneyMapCard() {
   return (
-    <Hoverable effect="lift" cornerRadius={cardRadius}>
+    <Hoverable effect="lift" cornerRadius={radii.md}>
       <Pressable
         accessibilityRole="button"
         accessibilityLabel="Money map. Political donations & public money map"
@@ -17,7 +16,8 @@ export function MoneyMapCard() {
         onPress={() => router.push(moneyRoute())}
       >
         {({ pressed }) => (
-          <TodayCard
+          <Card
+            padded={false}
             style={[
               styles.card,
               { backgroundColor: pressed ? colors.sunken : colors.moneyWash },
@@ -37,7 +37,7 @@ export function MoneyMapCard() {
               </Text>
             </View>
             <Icon name="arrow.right" size={16} tone="moneyInk" />
-          </TodayCard>
+          </Card>
         )}
       </Pressable>
     </Hoverable>

@@ -1,8 +1,7 @@
 import { phoneCopy } from '../../design/phone-copy';
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, StyleSheet } from 'react-native';
-import { Group, Icon, Text, haptic } from '../../design/primitives';
-import { colors, minimumTarget, spacing } from '../../design/tokens';
+import { Button, Group, Text, haptic } from '../../design/primitives';
+import { spacing } from '../../design/tokens';
 import {
   FOLLOW_LIMIT,
   follow,
@@ -14,9 +13,10 @@ import {
 import { markSeenNow } from './useFollowStates';
 
 /**
- * Follow or unfollow a parliamentarian, bill or electorate on this iPhone. A
- * switch for VoiceOver ("Follow Grayndler, switch button, on"). Opening the
- * page of something followed marks it seen.
+ * Follow or unfollow a parliamentarian, bill or electorate on this iPhone: a
+ * toggle Button (the default capsule with a plus, navy with a check while
+ * following), a switch for VoiceOver ("Follow Grayndler, switch button,
+ * on"). Opening the page of something followed marks it seen.
  */
 export function FollowToggle({
   kind,
@@ -67,35 +67,17 @@ export function FollowToggle({
   const inert = busy || follows === null;
   return (
     <Group gap={spacing.s3}>
-      <Pressable
-        accessibilityRole="switch"
+      <Button
+        on={following}
+        label={following ? 'Following' : 'Follow'}
+        icon={following ? 'checkmark' : 'plus'}
         accessibilityLabel={`Follow ${title}`}
-        accessibilityState={{ checked: following, disabled: inert }}
-        testID={`${testID}-${following ? 'on' : 'off'}`}
-        disabled={inert}
+        size="compact"
         hitSlop={4}
+        disabled={inert}
         onPress={() => void toggle()}
-        style={({ pressed }) => [
-          styles.toggle,
-          following
-            ? { backgroundColor: pressed ? colors.navyRaised : colors.navy }
-            : { backgroundColor: pressed ? colors.sunken : colors.navyWash },
-        ]}
-      >
-        <Icon
-          name={following ? 'checkmark' : 'plus'}
-          size={16}
-          tone={following ? 'onNavy' : 'navy'}
-        />
-        <Text
-          variant="control"
-          tone={following ? 'onNavy' : 'navy'}
-          wordSafe
-          style={styles.label}
-        >
-          {following ? 'Following' : 'Follow'}
-        </Text>
-      </Pressable>
+        testID={`${testID}-${following ? 'on' : 'off'}`}
+      />
       {message ? (
         <Text wordSafe variant="fine" testID={`${testID}-message`}>
           {message}
@@ -104,19 +86,3 @@ export function FollowToggle({
     </Group>
   );
 }
-const styles = StyleSheet.create({
-  // A capsule, as iOS draws Follow: 40pt drawn, 48pt with its hit slop.
-  toggle: {
-    alignSelf: 'flex-start',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.s2,
-    minWidth: minimumTarget,
-    minHeight: 40,
-    maxWidth: '100%',
-    borderRadius: 999,
-    paddingHorizontal: spacing.s4,
-    paddingVertical: spacing.s2,
-  },
-  label: { flexShrink: 1 },
-});

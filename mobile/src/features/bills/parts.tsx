@@ -14,26 +14,29 @@ import {
   Disclosure as DisclosureRow,
   Hoverable,
   Icon,
-  MachineWritten,
+  LinkRow,
+  MACHINE_BRIEF_EXPLANATION,
+  MachineLabel,
   SourceLink,
+  StatusLabel,
   Text,
   useAccessibilitySize,
   useHover,
-  type SFSymbol,
 } from '../../design/primitives';
 import {
   colors,
   fonts,
   minimumTarget,
-  radius,
+  radii,
   rhythm,
   spacing,
 } from '../../design/tokens';
 import { billRowText, type BillListRow } from './filters';
 
 /**
- * A bill's status as a small tinted label: passed (green), before
- * parliament (teal), anything else (neutral). The word carries the meaning.
+ * @deprecated Use `StatusLabel`. A bill's status as its word on its tone
+ * (passed, before parliament, ended), with the as-at date beside it; at
+ * accessibility sizes the date takes its own line under the label.
  */
 export function BillStatus({
   status,
@@ -42,22 +45,12 @@ export function BillStatus({
   status: string;
   asAt?: string | null;
 }) {
-  // At accessibility sizes the date takes its own line under the label.
   const stacked = useAccessibilitySize();
-  const tone = /passed|assent|act\b/i.test(status)
-    ? { fill: colors.moneyWash, ink: 'moneyInk' as const }
-    : /before|introduced|draft|consultation|reading|committee/i.test(status)
-      ? { fill: colors.billsWash, ink: 'billsInk' as const }
-      : { fill: colors.sunken, ink: 'inkSoft' as const };
   return (
     <View style={[styles.statusLine, stacked ? styles.stacked : null]}>
-      <View style={[styles.status, { backgroundColor: tone.fill }]}>
-        <Text variant="chip" tone={tone.ink}>
-          {status}
-        </Text>
-      </View>
+      <StatusLabel label={status} hidden />
       {asAt ? (
-        <Text variant="caption" style={styles.grow}>
+        <Text variant="fine" style={styles.grow}>
           {asAt}
         </Text>
       ) : null}
@@ -169,46 +162,13 @@ export function OptionRow({
         >
           {label}
         </Text>
-        <Text variant="figureInline" tone="inkSoft">
+        <Text variant="strong" tabular tone="inkSoft">
           {formatCount(count)}
         </Text>
       </View>
       <View style={styles.check}>
         {selected ? <Icon name="checkmark" size={18} tone="navy" /> : null}
       </View>
-    </Pressable>
-  );
-}
-
-/** A text link inside the record: bronze ink, 44pt target, VoiceOver link. */
-export function InlineLink({
-  label,
-  onPress,
-  accessibilityLabel,
-  icon = 'chevron.right',
-  testID,
-}: {
-  label: string;
-  onPress: () => void;
-  accessibilityLabel?: string;
-  icon?: SFSymbol;
-  testID?: string;
-}) {
-  return (
-    <Pressable
-      accessibilityRole="link"
-      accessibilityLabel={accessibilityLabel ?? label}
-      testID={testID}
-      onPress={onPress}
-      style={({ pressed }) => [
-        styles.link,
-        pressed ? { backgroundColor: colors.sunken } : null,
-      ]}
-    >
-      <Text wordSafe variant="body" tone="bronzeInk" style={styles.grow}>
-        {label}
-      </Text>
-      <Icon name={icon} size={14} tone="bronzeInk" />
     </Pressable>
   );
 }
@@ -272,7 +232,7 @@ function SplitRow({
             {split.label}
           </Text>
         </View>
-        <Text variant="figureInline" style={stacked ? null : styles.counts}>
+        <Text variant="strong" tabular style={stacked ? null : styles.counts}>
           {countText(split)}
         </Text>
       </View>
@@ -359,9 +319,9 @@ export function PartySplits({
       {splits.folded
         .filter((split) => !notParty(split))
         .map((split) => (
-          <InlineLink
+          <LinkRow
             key={split.party}
-            label={splitLabel(split)}
+            title={splitLabel(split)}
             onPress={() => router.push(partyRoute(split.label))}
           />
         ))}
@@ -460,7 +420,7 @@ export function DivisionNote({
       ) : null}
       {citations.length ? (
         <View style={styles.citations}>
-          <Text variant="kicker">Linked in the note</Text>
+          <Text variant="label">Linked in the note</Text>
           {citations.map((c, i) => (
             <SourceLink
               key={c.url}
@@ -494,8 +454,7 @@ export function DivisionNote({
 }
 
 /** What a stored machine brief is, for its pill's sheet and VoiceOver. */
-export const BRIEF_EXPLANATION =
-  'An automated summary written by a model; not the record.';
+export const BRIEF_EXPLANATION = MACHINE_BRIEF_EXPLANATION;
 
 /**
  * A bill's stored machine summary. Its pill comes first, so no reader meets
@@ -513,11 +472,7 @@ export function MachineSummary({
 }) {
   return (
     <>
-      <MachineWritten
-        label="Machine summary"
-        explanation={attribution}
-        testID={`${testID}-label`}
-      />
+      <MachineLabel explanation={attribution} testID={`${testID}-label`} />
       <View style={styles.machineText} testID={`${testID}-text`}>
         {sentences.filter(Boolean).map((sentence, index) => (
           <Text key={index} variant="body">
@@ -541,8 +496,7 @@ export function MachineBrief({
 }) {
   return (
     <View style={styles.citations}>
-      <MachineWritten
-        label={label}
+      <MachineLabel
         explanation={BRIEF_EXPLANATION}
         testID={`${testID}-label`}
       />
@@ -640,7 +594,7 @@ const styles = StyleSheet.create({
   rowInSplit: {
     marginHorizontal: -rhythm.heading,
     paddingHorizontal: rhythm.heading,
-    borderRadius: 10,
+    borderRadius: radii.md,
     borderCurve: 'continuous',
   },
   selectedMark: {
@@ -657,11 +611,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     alignItems: 'center',
     gap: rhythm.tight,
-  },
-  status: {
-    borderRadius: radius,
-    paddingHorizontal: 6,
-    paddingVertical: 1,
   },
   semibold: { fontFamily: fonts.sansSemiBold },
   option: {
@@ -680,13 +629,6 @@ const styles = StyleSheet.create({
   stacked: { flexDirection: 'column', alignItems: 'flex-start' },
   check: { width: 36, alignItems: 'center' },
   grow: { flexShrink: 1, flexGrow: 1 },
-  link: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.s3,
-    minHeight: minimumTarget,
-    paddingVertical: spacing.s2,
-  },
   splits: { gap: spacing.s3 },
   citations: { gap: spacing.s1 },
   disclosure: {

@@ -35,11 +35,12 @@ import {
   Section,
   SourceLink,
   StaleNotice,
+  StatusLabel,
   SubSection,
   Text,
   errorMessage,
 } from '../../design/primitives';
-import { chrome, colors, radius, spacing } from '../../design/tokens';
+import { chrome, colors, spacing } from '../../design/tokens';
 import { billRoute, personRoute } from '../../navigation/routes';
 import { CachedPortrait } from '../CachedPortrait';
 import { shareHeaderItem } from '../../navigation/share';
@@ -47,7 +48,6 @@ import { chamberLabel } from './filters';
 import {
   Bullet,
   DivisionNote,
-  InlineLink,
   MachineBrief,
   MachineSummary,
   PartySplits,
@@ -287,7 +287,7 @@ export default function BillDetail({
                   ))}
                 </View>
               ) : (
-                <Text variant="caption">
+                <Text variant="fine">
                   No original source link is held for this bill.
                 </Text>
               )}
@@ -368,7 +368,7 @@ function BillHead({
           />
         </>
       ) : null}
-      <Text variant="kicker" tone="billsInk">
+      <Text variant="label" tone="billsInk">
         {draft ? 'Exposure draft' : 'Bill'}
       </Text>
       <Heading level={1} testID="bill-title">
@@ -471,16 +471,16 @@ function BillHead({
               ? 'Builds on'
               : billSentenceCase(related.relation)}
           </Text>
-          <InlineLink
-            label={related.title}
+          <LinkRow
+            title={related.title}
             onPress={() => bills.openBill(related.key, related.title)}
           />
           {related.note ? <Text variant="fine">{related.note}</Text> : null}
         </View>
       ))}
       {view.became ? (
-        <InlineLink
-          label="Introduced to Parliament as a bill"
+        <LinkRow
+          title="Introduced to Parliament as a bill"
           onPress={() => bills.openBill(view.became!)}
           testID="bill-became"
         />
@@ -493,7 +493,7 @@ function BillHead({
               : `Open for consultation from ${formatDate(consultation.opens)}`}
           </Text>
           {consultation.note ? (
-            <Text variant="caption">{consultation.note}</Text>
+            <Text variant="fine">{consultation.note}</Text>
           ) : null}
           <SourceLink
             label="Consultation page"
@@ -514,7 +514,7 @@ function Summary({ view }: { view: BillView }) {
     return (
       <Section title="In short" accent="bills" testID="bill-summary">
         <EmptyState message="No summary yet." testID="bill-summary-none" />
-        <Text variant="caption">{copy.noSummary}</Text>
+        <Text variant="fine">{copy.noSummary}</Text>
       </Section>
     );
   const sentences = summary.sentences.filter(Boolean);
@@ -548,7 +548,7 @@ function Summary({ view }: { view: BillView }) {
           <Text variant="body">{summary.affected}</Text>
         </SubSection>
       ) : null}
-      {about ? <Text variant="caption">{about}</Text> : null}
+      {about ? <Text variant="fine">{about}</Text> : null}
       {view.summary.sources.length ? (
         <View style={styles.originals}>
           {view.summary.sources.map((source, index) => (
@@ -670,8 +670,8 @@ function Divisions({
               short_title: view.identity.data!.shortTitle,
             })}
           </Text>
-          <InlineLink
-            label="Full bill details"
+          <LinkRow
+            title="Full bill details"
             onPress={() => router.push(billRoute(view.identity.data!.key))}
             testID="bill-divisions-details"
           />
@@ -694,7 +694,7 @@ function Divisions({
             message="No divisions recorded."
             testID="bill-divisions-none"
           />
-          <Text variant="caption">{copy.noDivisions}</Text>
+          <Text variant="fine">{copy.noDivisions}</Text>
         </>
       )}
       {rest > 0 ? (
@@ -753,12 +753,10 @@ function DivisionItem({
         testID={`bill-division-${index}-outcome`}
         style={styles.outcome}
       >
-        <View style={styles.outcomeLabel}>
-          <Text variant="chip" tone="votesInk">
-            {outcome}
-          </Text>
-        </View>
-        <Text variant="figureInline">{counts}</Text>
+        <StatusLabel label={outcome} hidden />
+        <Text variant="strong" tabular>
+          {counts}
+        </Text>
       </View>
       <PartySplits
         splits={division.splits}
@@ -839,7 +837,7 @@ function Speeches({ view }: { view: BillView }) {
         />
       )}
       {speeches.length ? (
-        <Text variant="caption">
+        <Text variant="fine">
           Speeches the record attaches to this bill.{' '}
           {briefs ? copy.briefs : 'Open a speech to read it in full.'}
         </Text>
@@ -910,12 +908,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     alignItems: 'center',
     gap: spacing.s3,
-  },
-  outcomeLabel: {
-    backgroundColor: colors.votesWash,
-    borderRadius: radius,
-    paddingHorizontal: 6,
-    paddingVertical: 1,
   },
   division: { gap: spacing.s3 },
   speech: { gap: spacing.s2 },

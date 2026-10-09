@@ -24,6 +24,8 @@ import {
   StaleNotice,
   Text,
   errorMessage,
+  MACHINE_BRIEF_EXPLANATION,
+  MachineLabel,
 } from '../../design/primitives';
 import { formatCount, formatDate, formatPercent } from '../../design/format';
 import { chamberName, jurisdictionName } from '../../design/parliament';
@@ -355,13 +357,13 @@ export function RecordSection({
                     (jurisdictionName(r.state) ?? 'Jurisdiction not recorded')
                   : ''}
               </Text>
-              <Text wordSafe variant="metadata">
-                {data.briefs[r.resource ?? '']
-                  ? 'Machine brief'
-                  : kind === 'speeches'
-                    ? 'From the speech'
-                    : 'From the record'}
-              </Text>
+              {data.briefs[r.resource ?? ''] ? (
+                <MachineLabel explanation={MACHINE_BRIEF_EXPLANATION} />
+              ) : (
+                <Text wordSafe variant="metadata">
+                  {kind === 'speeches' ? 'From the speech' : 'From the record'}
+                </Text>
+              )}
               <Text wordSafe>
                 {data.briefs[r.resource ?? ''] ||
                   (kind === 'speeches'
@@ -414,7 +416,7 @@ export function NewsSection({ name }: { name: string }) {
                   testID={'people-news-' + i}
                 />
                 {item.published ? (
-                  <Text wordSafe variant="caption">
+                  <Text wordSafe variant="fine">
                     {formatDate(item.published)}
                   </Text>
                 ) : null}

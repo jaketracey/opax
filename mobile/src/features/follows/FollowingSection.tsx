@@ -15,11 +15,17 @@ import {
   Text,
   errorMessage,
   useAccessibilitySize,
+  Card,
 } from '../../design/primitives';
 import { formatCount, formatDate } from '../../design/format';
-import { light, minimumTarget, spacing } from '../../design/tokens';
-import { Entrance, TodayCard } from '../today/parts';
-import { washOf } from '../today/tint';
+import {
+  colors,
+  light,
+  minimumTarget,
+  radii,
+  spacing,
+} from '../../design/tokens';
+import { Entrance } from '../today/parts';
 import {
   billRoute,
   electorateRoute,
@@ -32,11 +38,13 @@ import { followKey, markSeen, type Follow } from './store';
 import { useFollowStates } from './useFollowStates';
 
 export const routeFor = (f: Pick<Follow, 'kind' | 'id'>) =>
-  f.kind === 'party' ? partyRoute(f.id) : f.kind === 'person'
-    ? personRoute(f.id)
-    : f.kind === 'bill'
-      ? billRoute(f.id)
-      : electorateRoute(f.id);
+  f.kind === 'party'
+    ? partyRoute(f.id)
+    : f.kind === 'person'
+      ? personRoute(f.id)
+      : f.kind === 'bill'
+        ? billRoute(f.id)
+        : electorateRoute(f.id);
 const sourceLine = (c: Change, style: 'long' | 'short') =>
   `${c.citation}, ${c.asAt ? `as at ${formatDate(c.asAt, style)}` : 'date not published'}`;
 /** What a follow's row says, visibly and to VoiceOver. */
@@ -109,7 +117,7 @@ export function FollowingSection({
           testID="today-following-loading"
         />
       ) : !follows.length ? (
-        <TodayCard style={styles.empty}>
+        <Card padded={false} style={styles.empty}>
           <View style={styles.emptyIcon}>
             <Icon name="star" size={18} tone="bronzeInk" />
           </View>
@@ -122,7 +130,7 @@ export function FollowingSection({
               testID="today-following-empty"
             />
           </View>
-        </TodayCard>
+        </Card>
       ) : (
         <Group gap={spacing.s3}>
           {sources?.stale && sources.savedAt !== null ? (
@@ -169,7 +177,7 @@ const kindIcons: Record<Follow['kind'], SFSymbol> = {
   bill: 'doc.text.fill',
   electorate: 'mappin.and.ellipse',
 };
-const changedGround = washOf(light.bronzeInk, 0.1);
+const changedGround = colors.bronzeWash;
 
 function FollowRow({
   follow: f,
@@ -218,7 +226,8 @@ function FollowRow({
       }}
     >
       {({ pressed }) => (
-        <TodayCard
+        <Card
+          padded={false}
           ground={
             pressed ? light.sunken : hasChanges ? changedGround : undefined
           }
@@ -256,7 +265,7 @@ function FollowRow({
             ))}
           </View>
           {stacked ? null : chevron}
-        </TodayCard>
+        </Card>
       )}
     </Pressable>
   );
@@ -279,12 +288,12 @@ const styles = StyleSheet.create({
   badge: {
     width: 36,
     height: 36,
-    borderRadius: 18,
+    borderRadius: radii.pill,
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'flex-start',
   },
-  badgeQuiet: { backgroundColor: washOf(light.navy, 0.1) },
+  badgeQuiet: { backgroundColor: colors.navyWash },
   badgeChanged: { backgroundColor: light.bronzeInk },
   text: { flexGrow: 1, flexShrink: 1, alignSelf: 'stretch', gap: 2 },
   change: {
@@ -311,7 +320,7 @@ const styles = StyleSheet.create({
   emptyIcon: {
     width: 36,
     height: 36,
-    borderRadius: 18,
+    borderRadius: radii.pill,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: light.bronzeWash,

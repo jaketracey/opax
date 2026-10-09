@@ -3,7 +3,7 @@ export function Placeholder({ message, id }: { message: string; id: string }) {
   return (
     <Screen testID={id}>
       <Group>
-        <Text variant="lede" testID={`${id}-message`}>
+        <Text variant="body" testID={`${id}-message`}>
           {message}
         </Text>
       </Group>

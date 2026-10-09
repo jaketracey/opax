@@ -8,12 +8,12 @@ import {
   Heading,
   KeyValueList,
   InfoButton,
-  MachineWritten,
-  PartyChip,
+  MachineLabel,
   Screen,
   Section,
   ChoiceChips,
   Text,
+  PartyLabel,
 } from '../../design/primitives';
 import { headerItems } from '../../navigation/chrome';
 import { useCallback, useState } from 'react';
@@ -154,7 +154,12 @@ function Money({ slug }: { slug: string }) {
                         <PadGrid>
                           {comparison.rows.map((row) => (
                             <Group key={row.party}>
-                              <PartyChip status="unknown" party={row.party} />
+                              <PartyLabel
+                                status="unknown"
+                                party={row.party}
+                                dense
+                                linked={false}
+                              />
                               <RecordRow
                                 path={'/money'}
                                 title={`${formatMoney(row.money)} disclosed`}
@@ -384,7 +389,12 @@ function ReportContent({
               <PadGrid>
                 {report.positions.map((p, i) => (
                   <Group key={i}>
-                    <PartyChip status="unknown" party={p.party} />
+                    <PartyLabel
+                      status="unknown"
+                      party={p.party}
+                      dense
+                      linked={false}
+                    />
                     <Text>{p.position}</Text>
                     <Text variant="fine">
                       {p.speaker} · {p.date ? formatDate(p.date) : ''}
@@ -399,7 +409,7 @@ function ReportContent({
                   </Group>
                 ))}
               </PadGrid>
-              <MachineWritten explanation={MODEL_NOTE} />
+              <MachineLabel explanation={MODEL_NOTE} />
             </Section>
           ) : null}
         </Group>

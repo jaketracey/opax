@@ -8,7 +8,7 @@ import {
   SourceLink,
   Text,
 } from '../../design/primitives';
-import { light, radius, rhythm } from '../../design/tokens';
+import { light, radii, rhythm } from '../../design/tokens';
 import { useOutlineProbe } from './outline-probe';
 import {
   displayBoundary,
@@ -53,7 +53,7 @@ export function OutlineMap({
         style={{
           height,
           backgroundColor: light.sunken,
-          borderRadius: radius + 10,
+          borderRadius: radii.md,
           overflow: 'hidden',
         }}
       >
@@ -83,7 +83,7 @@ export function OutlineMap({
           <Text wordSafe variant="metadata" testID="outline-label">
             Display outline · {boundary.vintage}
           </Text>
-          <Text wordSafe variant="caption" testID="outline-limit">
+          <Text wordSafe variant="fine" testID="outline-limit">
             Not for address allocation.
           </Text>
         </View>

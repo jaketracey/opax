@@ -140,7 +140,7 @@ export default function Quiz() {
       >
         {!round ? (
           <Section title="The record quiz">
-            <Text variant="lede" wordSafe>
+            <Text variant="body" wordSafe>
               A game from the public record
             </Text>
             <Heading level={3}>Choose a deck</Heading>

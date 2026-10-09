@@ -21,6 +21,8 @@ import {
   Section,
   Text,
   errorMessage,
+  MACHINE_BRIEF_EXPLANATION,
+  MachineLabel,
 } from '../../design/primitives';
 import { RecordRow } from '../RecordRow';
 import { Excerpt } from './Excerpt';
@@ -278,7 +280,7 @@ export function Results({
             <EmptyState message="No matching records are available for a cited summary." />
           ) : (
             <>
-              <Text wordSafe variant="caption" testID="records-summary-label">
+              <Text wordSafe variant="fine" testID="records-summary-label">
                 AI summary of {summary.data.reviewed_count} matching records.
                 {summary.data.partial
                   ? ' Some sources are temporarily unavailable.'
@@ -371,7 +373,10 @@ export function Results({
               </ResultCursorRow>
               {readMode === 'briefs' && briefs[r.resource] ? (
                 <Group>
-                  <Text variant="fine">Machine brief</Text>
+                  <MachineLabel
+                    explanation={MACHINE_BRIEF_EXPLANATION}
+                    testID={`records-brief-label-${r.slug}`}
+                  />
                   <Text>{briefs[r.resource]}</Text>
                 </Group>
               ) : (
@@ -388,7 +393,7 @@ export function Results({
                 </Group>
               )}
               {/automated summary/.test(r.source ?? '') ? (
-                <Text variant="caption">automated summary</Text>
+                <Text variant="fine">automated summary</Text>
               ) : null}
               {r.url ? (
                 <ViewOriginal

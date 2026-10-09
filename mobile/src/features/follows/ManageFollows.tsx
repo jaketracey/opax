@@ -132,7 +132,7 @@ export default function ManageFollows() {
           </Section>
         </>
       )}
-      <Text wordSafe variant="caption" testID="follows-end">
+      <Text wordSafe variant="fine" testID="follows-end">
         {phoneCopy(
           'Today compares each follow with the published records when you open the app or pull to refresh. The comparison runs on this iPhone.',
         )}

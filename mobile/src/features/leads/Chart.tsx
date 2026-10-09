@@ -16,7 +16,7 @@ import {
   formatPercent,
   moneyAccessibilityLabel,
 } from '../../design/format';
-import { colors, minimumTarget, radius, spacing } from '../../design/tokens';
+import { colors, minimumTarget, radii, spacing } from '../../design/tokens';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { openOnWeb, webPageUrl } from '../../navigation/external';
 import { chartRowLabel, type ChartRow, type LeadComparison } from './model';
@@ -49,7 +49,8 @@ export function ConcentrationChart({
         </Heading>
         <Text
           wordSafe
-          variant="figureInline"
+          variant="strong"
+          tabular
           accessibilityLabel={`${moneyAccessibilityLabel(comparison.total, true)} total`}
           testID={`${testID}-total`}
         >
@@ -100,7 +101,7 @@ export function ConcentrationChart({
                 <Text wordSafe variant="strong">
                   {row.name}
                 </Text>
-                <Text wordSafe variant="figureInline">
+                <Text wordSafe variant="strong" tabular>
                   {formatMoney(row.value)}
                 </Text>
                 <Text wordSafe variant="metadata">
@@ -134,7 +135,7 @@ function ChartBar({ row, testID }: { row: ChartRow; testID: string }) {
           </Text>
           {path ? <Icon name="safari" size={16} tone="bronzeInk" /> : null}
         </View>
-        <Text wordSafe variant="figureInline">
+        <Text wordSafe variant="strong" tabular>
           {formatMoneyCompact(row.value)} · {formatPercent(row.share)}
         </Text>
         <View
@@ -231,7 +232,7 @@ const styles = StyleSheet.create({
   barLabel: { flexDirection: 'row', alignItems: 'center', gap: spacing.s2 },
   track: {
     height: 8,
-    borderRadius: radius,
+    borderRadius: radii.sm,
     backgroundColor: colors.sunken,
     overflow: 'hidden',
     marginTop: spacing.s1,

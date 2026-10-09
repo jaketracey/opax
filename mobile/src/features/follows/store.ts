@@ -35,7 +35,16 @@ const ids: Record<FollowKind, (v: unknown) => string> = {
   person: personId,
   bill: billKey,
   electorate: electorateId,
-  party: (v) => { if (typeof v !== "string" || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(v) || v.length > 200 || partySlug(v) !== v) throw new Error("Invalid party identifier"); return v; },
+  party: (v) => {
+    if (
+      typeof v !== 'string' ||
+      !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(v) ||
+      v.length > 200 ||
+      partySlug(v) !== v
+    )
+      throw new Error('Invalid party identifier');
+    return v;
+  },
 };
 
 // Two slots, written alternately. Each save writes a complete, numbered copy
