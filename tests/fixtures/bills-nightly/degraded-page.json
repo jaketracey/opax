@@ -1,0 +1,18 @@
+{
+ "note": "Reconstructs the review's passed-on-9-Oct bill replaced by a degraded before-parliament-on-1-Oct page. Upsert retains old events while regressing status and status_as_of.",
+ "listing": {"code": "t1", "parliament": 48, "parlinfo_id": "legislation/billhome/t1", "title": "Fixture Bill 2026", "record_date": "2026-10-09"},
+ "last_good_html": "<short-title>Fixture Bill 2026</short-title><status>Passed both Houses</status><originating-chamber>House of Representatives</originating-chamber><table class=\"bills-progress\"><tr class=\"bills-progress-heading\"><td>House of Representatives</td></tr><tr class=\"bills-progress-key-item\"><td>Introduced and read a first time</td><td>01/10/26</td></tr><tr class=\"bills-progress-item\"><td>Finally passed both Houses</td><td>09/10/26</td></tr></table>",
+ "degraded_html": "<short-title>Fixture Bill 2026</short-title><status>Before Parliament</status><originating-chamber>House of Representatives</originating-chamber><table class=\"bills-progress\"><tr class=\"bills-progress-heading\"><td>House of Representatives</td></tr><tr class=\"bills-progress-key-item\"><td>Introduced and read a first time</td><td>01/10/26</td></tr></table>",
+ "head": {
+  "key": "au-federal-t1", "status": "passed", "status_as_of": "2026-10-09",
+  "key_dates": [{"stage": "introduced", "date": "2026-10-01", "house": "representatives"}, {"stage": "passed", "date": "2026-10-09", "house": "representatives"}],
+  "divisions": [{"key": "division-1"}], "sponsor_person_id": null,
+  "speeches": [{"slug": "s1", "brief": "Kept brief"}]
+ },
+ "degraded_export": {
+  "key": "au-federal-t1", "status": "before_parliament", "status_as_of": "2026-10-01",
+  "key_dates": [{"stage": "introduced", "date": "2026-10-01", "house": "representatives"}, {"stage": "passed", "date": "2026-10-09", "house": "representatives"}],
+  "divisions": [{"key": "division-1"}], "sponsor_person_id": null,
+  "speeches": [{"slug": "s1", "brief": "Kept brief"}]
+ }
+}
