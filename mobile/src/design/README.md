@@ -235,6 +235,13 @@ sidebarAdaptable`): a sidebar, or the top tab bar the reader expands into
   sections. Add one by giving it an id and spec in `keyCommandSpecs`, then
   `useKeyCommand(id, handler, enabled)` where it applies: the newest
   registered handler runs, so a screen can take a key while it is shown.
+- **Modal surfaces** that cover the app (the welcome tour) use
+  `useKeyScope(commands, enabled)`: each command is a spec with its `run`.
+  While the surface is mounted UIKit lists only its commands in the Cmd-hold
+  overlay and presses go only to it, so no app shortcut acts behind it; the
+  app's list comes back when it unmounts. Inputs include `left` and `right`;
+  `priority: true` lets a surface with no text input take a key before the
+  system does.
 - **Focus requests:** `requestFocus('search' | 'ask')` before navigating;
   the target screen calls `useFocusRequest(target, inputRef)`, which waits
   for the screen to mount and the transition to settle. `Field` and
