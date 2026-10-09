@@ -1,16 +1,16 @@
 import { partyTimingID } from './people/party-timing';
 import { PartyAccess, PartyFunding } from './people/PartyDepth';
 import { RecordSection, NewsSection } from './people/Sections';
-import { FollowToggle } from './follows/FollowToggle';
-import { AskAbout } from './ask/AskAbout';
+import { PageActions } from './people/PageActions';
 import { CachedPortrait } from './CachedPortrait';
 import { profileGrid } from './split/grid';
 import { headerItems } from '../navigation/chrome';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../api/runtime';
-import type { PartyPageRecord } from '../api/catalogs';
+import type { Block, PartyPageRecord } from '../api/catalogs';
+import { isOffline } from './CatalogState';
 import { partyPageCopy, type PartyMember } from '../api/party-page';
 import { billSentenceCase } from '../api/bill-transforms';
 import {
@@ -22,7 +22,6 @@ import {
 } from '../design/format';
 import { chamberName, jurisdictionName } from '../design/parliament';
 import {
-  AsAtLine,
   BigFigure,
   Button,
   Disclosure,
@@ -33,25 +32,26 @@ import {
   KeyValueList,
   LinkRow,
   LoadingState,
+  OfflineBanner,
   OpaxWebLink,
   PadGrid,
   PersonRow,
   RowList,
   Screen,
   Section,
-  SourceLink,
   SubSection,
   Text,
   errorMessage,
+  type InfoNotes,
+  type SourceDetails,
 } from '../design/primitives';
-import { partyDot, partyWash, partySlug } from '../design/party';
-import { colors, radii, rhythm } from '../design/tokens';
+import { partyDot, partySlug } from '../design/party';
+import { layout, rhythm } from '../design/tokens';
 import { openOnWeb } from '../navigation/external';
-import { billRoute, personRoute } from '../navigation/routes';
+import { billRoute, moneyRoute, personRoute } from '../navigation/routes';
 import { shareHeaderItem } from '../navigation/share';
-import { CatalogState } from './CatalogState';
 import { useCatalogRecord } from './bills/useCatalogRecord';
-import { MoneyMapLink } from './party/MoneyMapLink';
+import { BlockSource, type SourceOverrides } from './your-mp/Evidence';
 import { chamberLabel } from './bills/filters';
 
 function Members({
@@ -185,72 +185,70 @@ export function PartyPage({
         ) : null}
         {view ? (
           <>
-            <View
-              testID={titleTiming}
-              style={[styles.hero, { backgroundColor: partyWash(view.label) }]}
-            >
-              <View style={styles.kicker}>
-                {partyDot(view.label) ? (
-                  <View
-                    accessibilityElementsHidden
-                    importantForAccessibility="no-hide-descendants"
-                    style={[
-                      styles.dot,
-                      { backgroundColor: partyDot(view.label)! },
-                    ]}
-                  />
-                ) : null}
-                <Text variant="label">Political party</Text>
-              </View>
-              <Heading
-                level={1}
-                testID="party-title"
-                onTextLayout={() => {
-                  if (!titleTiming) setTitleTiming(partyTimingID());
-                }}
-              >
-                {view.label}
-              </Heading>
-              <FollowToggle
+            {/* Identity once: the name, a dot and what it is, then Follow
+                and ⋯. The party's colour is its dot, never a fill. */}
+            <Group gap={rhythm.heading} testID={titleTiming}>
+              <Group gap={rhythm.line}>
+                <Heading
+                  level={1}
+                  testID="party-title"
+                  onTextLayout={() => {
+                    if (!titleTiming) setTitleTiming(partyTimingID());
+                  }}
+                >
+                  {view.label}
+                </Heading>
+                <View style={styles.meta}>
+                  {partyDot(view.label) ? (
+                    <View
+                      accessibilityElementsHidden
+                      importantForAccessibility="no-hide-descendants"
+                      style={[
+                        styles.dot,
+                        { backgroundColor: partyDot(view.label)! },
+                      ]}
+                    />
+                  ) : null}
+                  <Text wordSafe variant="metadata" style={styles.grow}>
+                    Political party
+                  </Text>
+                </View>
+              </Group>
+              <PageActions
                 kind="party"
                 id={partySlug(view.label)}
-                title={view.label}
-                testID="party-follow"
+                name={view.label}
+                webPath={webPath}
+                testID="party"
               />
-            </View>
-            <AskAbout kind="party" name={view.label} />
+            </Group>
             {/* iPad: members beside receipts, then associated entities
                 beside the divisions (PadGrid; the phone is unchanged). */}
             <PadGrid {...profileGrid}>
-              <Section
-                title="Members"
-                accent="people"
-                info={{
-                  title: 'About the member count',
-                  notes: [
-                    'Current members use their current party. A directory snapshot is not a live roster. Undated affiliations appear separately as recorded; former members are excluded.',
-                  ],
-                  testID: 'party-members-info',
-                }}
-              >
-                <CatalogState
+              <Section title="Members" accent="people">
+                <PartyBlock
                   block={view.members}
                   empty="No member observations held."
                   onRetry={retry}
                   testID="party-members"
+                  about={{
+                    title: 'About the member count',
+                    notes: [
+                      'Current members use their current party. A directory snapshot is not a live roster. Undated affiliations appear separately as recorded; former members are excluded.',
+                    ],
+                  }}
+                  line={{
+                    coverage: view.rosterAsAt
+                      ? `Roster as at ${formatDate(view.rosterAsAt, 'short')}`
+                      : null,
+                  }}
                 >
                   {(data) => (
                     <>
                       <BigFigure
                         value={formatCount(data.currentCount)}
                         label="current members with current evidence"
-                        detail={
-                          view.rosterAsAt
-                            ? `Roster as at ${formatDate(view.rosterAsAt, 'short')}`
-                            : undefined
-                        }
                         accessibilityLabel={`${formatCount(data.currentCount)} current members with current evidence`}
-                        accent="people"
                         testID="party-current-count"
                       />
                       <RowList>
@@ -283,29 +281,44 @@ export function PartyPage({
                       </RowList>
                     </>
                   )}
-                </CatalogState>
+                </PartyBlock>
               </Section>
-              <Section
-                title="Party receipts"
-                accent="money"
-                info={
-                  view.moneyMeta
-                    ? {
-                        title: 'About party receipts',
-                        notes: [
-                          'Top donors are the displayed donor-to-party flows, not all party receipts. No sequence or causal link is inferred.',
-                          disclosureYearNote,
-                        ],
-                        testID: 'party-receipts-info',
-                      }
-                    : undefined
-                }
-              >
-                <CatalogState
+              <Section title="Party receipts" accent="money">
+                <PartyBlock
                   block={view.receipts}
                   empty="No receipts total is recorded for this party in the money graph."
                   onRetry={retry}
                   testID="party-receipts"
+                  about={
+                    view.moneyMeta
+                      ? {
+                          title: 'About party receipts',
+                          notes: [
+                            'Top donors are the displayed donor-to-party flows, not all party receipts. No sequence or causal link is inferred.',
+                            disclosureYearNote,
+                          ],
+                        }
+                      : undefined
+                  }
+                  after={
+                    <>
+                      <Text wordSafe variant="fine" testID="party-money-caveat">
+                        {partyPageCopy.aec}
+                      </Text>
+                      <RowList>
+                        <LinkRow
+                          title="Money map"
+                          testID="party-money-map"
+                          onPress={() => router.push(moneyRoute(view.label))}
+                        />
+                        <LinkRow
+                          title="Public money"
+                          testID="party-public-money"
+                          onPress={() => router.push('/public-money')}
+                        />
+                      </RowList>
+                    </>
+                  }
                 >
                   {(data) => (
                     <>
@@ -313,7 +326,6 @@ export function PartyPage({
                         value={formatMoney(data.node.total)}
                         label={partyPageCopy.caption}
                         accessibilityLabel={`${partyPageCopy.caption}, ${formatMoney(data.node.total)}`}
-                        accent="money"
                         testID="party-receipts-total"
                       />
                       <KeyValueList
@@ -346,10 +358,10 @@ export function PartyPage({
                               accessibilityLabel={`${donor.name}, ${formatMoney(donor.amount)}`}
                               style={styles.donor}
                             >
-                              <Text wordSafe variant="body" style={styles.grow}>
+                              <Text wordSafe variant="body" style={styles.name}>
                                 {donor.name}
                               </Text>
-                              <Text variant="strong" tabular tone="moneyInk">
+                              <Text variant="strong" tabular>
                                 {formatMoney(donor.amount)}
                               </Text>
                             </View>
@@ -391,40 +403,23 @@ export function PartyPage({
                       </RowList>
                     </>
                   )}
-                </CatalogState>
-                <Text wordSafe variant="fine" testID="party-money-caveat">
-                  {partyPageCopy.aec}
-                </Text>
-                <RowList>
-                  <MoneyMapLink party={view.label} />
-                </RowList>
+                </PartyBlock>
               </Section>
             </PadGrid>
-            <LinkRow
-              title="Public money"
-              accent="money"
-              icon="banknote"
-              testID="party-public-money"
-              onPress={() => router.push('/public-money')}
-            />
             <PartyFunding name={view.label} />
             <PadGrid {...profileGrid}>
-              <Section
-                title="Associated entities"
-                accent="money"
-                info={{
-                  title: 'About associated entities',
-                  notes: [
-                    'These are the entities’ own annual returns. They are not added to the party’s receipts. Names are matched on case, punctuation and company suffixes only; the same body under two spellings appears twice. Debts are the balances owed at 30 June, not new borrowing. Creditors under the disclosure threshold are not itemised.',
-                  ],
-                  testID: 'party-associated-info',
-                }}
-              >
-                <CatalogState
+              <Section title="Associated entities" accent="money">
+                <PartyBlock
                   block={view.associated}
                   empty="No associated-entity return is held for this party."
                   onRetry={retry}
                   testID="party-associated"
+                  about={{
+                    title: 'About associated entities',
+                    notes: [
+                      'These are the entities’ own annual returns. They are not added to the party’s receipts. Names are matched on case, punctuation and company suffixes only; the same body under two spellings appears twice. Debts are the balances owed at 30 June, not new borrowing. Creditors under the disclosure threshold are not itemised.',
+                    ],
+                  }}
                 >
                   {(data) => (
                     <>
@@ -463,27 +458,41 @@ export function PartyPage({
                       ) : null}
                     </>
                   )}
-                </CatalogState>
+                </PartyBlock>
               </Section>
-              <Section
-                title="Bills they divided on"
-                accent="votes"
-                info={{
-                  title: 'About these divisions',
-                  notes: [
-                    view.divisions.data
-                      ? `This party’s own ayes and noes, newest first, read from the ${view.divisions.data.scanned} most recently decided bills the register could open — not the party’s whole voting history, and not every bill it divided on. Party is each member’s recorded affiliation, not a reconstruction of who they sat with on the day. A division on an amendment is not a vote on the bill itself.`
-                      : null,
-                    view.divisions.data?.basisNote,
-                  ],
-                  testID: 'party-divisions-info',
-                }}
-              >
-                <CatalogState
+              <Section title="Bills they divided on" accent="votes">
+                <PartyBlock
                   block={view.divisions}
                   empty="Bill divisions could not be read."
                   onRetry={retry}
                   testID="party-divisions"
+                  citation="They Vote For You"
+                  licence="ODbL"
+                  about={{
+                    title: 'About these divisions',
+                    notes: [
+                      view.divisions.data
+                        ? `This party’s own ayes and noes, newest first, read from the ${view.divisions.data.scanned} most recently decided bills the register could open — not the party’s whole voting history, and not every bill it divided on. Party is each member’s recorded affiliation, not a reconstruction of who they sat with on the day. A division on an amendment is not a vote on the bill itself.`
+                        : null,
+                      view.divisions.data?.basisNote,
+                      view.divisions.data?.failed
+                        ? `${view.divisions.data.failed} bill files could not be read. This block is partial.`
+                        : null,
+                    ],
+                  }}
+                  line={{
+                    partial: !!view.divisions.data?.failed,
+                    coverage: view.divisions.data?.rows.length
+                      ? `Divisions to ${formatDate(view.divisions.data.rows[0]!.division.date, 'short')}`
+                      : null,
+                  }}
+                  originals={(view.divisions.data?.rows ?? [])
+                    .slice(0, allDivisions ? undefined : 10)
+                    .map((row) => ({
+                      label: `They Vote For You · ${row.title}`,
+                      url: row.division.url,
+                      record: `division, ${formatDate(row.division.date)}`,
+                    }))}
                 >
                   {(data) => (
                     <>
@@ -493,45 +502,33 @@ export function PartyPage({
                             ? data.rows
                             : data.rows.slice(0, 10)
                           ).map((row) => (
-                            <Group
+                            <LinkRow
                               key={`${row.billKey}:${row.division.key}`}
-                              gap={rhythm.line}
-                            >
-                              <LinkRow
-                                title={row.title}
-                                detail={[
-                                  row.question ||
-                                    row.division.stage ||
-                                    'Division',
-                                  `${formatDate(row.division.date, 'short')} · ${chamberLabel(row.division.house)} · ${
-                                    row.division.outcome === 'affirmative'
-                                      ? 'Agreed to'
-                                      : row.division.outcome === 'negative'
-                                        ? 'Negatived'
-                                        : billSentenceCase(
-                                            row.division.outcome,
-                                          ) || 'Outcome not recorded'
-                                  }`,
-                                ].join('\n')}
-                                leading={
-                                  <Text variant="label" tone="votesInk">
-                                    {row.ayes} for, {row.noes} against
-                                  </Text>
-                                }
-                                onPress={() =>
-                                  router.push(
-                                    billRoute(row.billKey, 'divisions'),
-                                  )
-                                }
-                                testID={`party-bill-${row.billKey}`}
-                              />
-                              <SourceLink
-                                citation="They Vote For You"
-                                record={`division, ${formatDate(row.division.date)}`}
-                                url={row.division.url}
-                                kind="record"
-                              />
-                            </Group>
+                              title={row.title}
+                              detail={[
+                                row.question ||
+                                  row.division.stage ||
+                                  'Division',
+                                `${formatDate(row.division.date, 'short')} · ${chamberLabel(row.division.house)} · ${
+                                  row.division.outcome === 'affirmative'
+                                    ? 'Agreed to'
+                                    : row.division.outcome === 'negative'
+                                      ? 'Negatived'
+                                      : billSentenceCase(
+                                          row.division.outcome,
+                                        ) || 'Outcome not recorded'
+                                }`,
+                              ].join('\n')}
+                              leading={
+                                <Text variant="label">
+                                  {row.ayes} for, {row.noes} against
+                                </Text>
+                              }
+                              onPress={() =>
+                                router.push(billRoute(row.billKey, 'divisions'))
+                              }
+                              testID={`party-bill-${row.billKey}`}
+                            />
                           ))}
                         </RowList>
                       ) : (
@@ -547,54 +544,99 @@ export function PartyPage({
                           onPress={() => setAllDivisions(true)}
                         />
                       ) : null}
-                      {data.failed ? (
-                        <Text wordSafe variant="fine">
-                          {data.failed} bill files could not be read. This block
-                          is partial.
-                        </Text>
-                      ) : null}
-                      {data.rows.length ? (
-                        <AsAtLine
-                          asOf={data.rows[0]!.division.date}
-                          citation="They Vote For You"
-                          licence="ODbL"
-                        />
-                      ) : null}
                     </>
                   )}
-                </CatalogState>
+                </PartyBlock>
               </Section>
             </PadGrid>
             <PartyAccess name={view.label} />
             <RecordSection name={view.label} kind="party" />
             <NewsSection name={view.label} />
-            <Text variant="fine" testID="party-end">
-              End of party page
-            </Text>
+            {/* The page's end, for journeys that scroll to it; nothing drawn. */}
+            <View testID="party-end" collapsable={false} style={styles.end} />
           </>
         ) : null}
       </Screen>
     </>
   );
 }
+/**
+ * One block of the party record: its loading, error or empty state, its
+ * content, then its one source line (`${testID}-source`): the date and
+ * source, "partial" or "Saved [date]", and the notes, originals and licence
+ * in the source sheet.
+ */
+function PartyBlock<T>({
+  block,
+  empty,
+  onRetry,
+  testID,
+  about,
+  line,
+  citation,
+  licence,
+  originals,
+  after,
+  children,
+}: {
+  block: Block<T> | null;
+  empty: string;
+  onRetry: () => void;
+  testID: string;
+  /** The source sheet's title and notes. */
+  about?: InfoNotes;
+  line?: SourceOverrides;
+  citation?: string;
+  licence?: string;
+  originals?: SourceDetails['originals'];
+  /** Drawn after the content in every state, before the source line. */
+  after?: ReactNode;
+  children: (data: T) => ReactNode;
+}) {
+  if (!block || block.status === 'loading')
+    return (
+      <LoadingState
+        label="Loading the public record"
+        testID={`${testID}-loading`}
+      />
+    );
+  if (block.status === 'error')
+    return (
+      <Group>
+        {isOffline(block.error) ? <OfflineBanner cached={false} /> : null}
+        <ErrorState
+          message={errorMessage(block.error)}
+          onRetry={onRetry}
+          testID={`${testID}-error`}
+        />
+        {after}
+      </Group>
+    );
+  return (
+    <Group>
+      {block.data === null ||
+      (Array.isArray(block.data) && block.data.length === 0) ? (
+        <EmptyState message={empty} testID={`${testID}-empty`} />
+      ) : (
+        children(block.data)
+      )}
+      {after}
+      <BlockSource
+        block={block}
+        citation={citation}
+        licence={licence}
+        title={about?.title}
+        notes={about?.notes}
+        originals={originals}
+        line={line}
+        testID={`${testID}-source`}
+      />
+    </Group>
+  );
+}
 const styles = StyleSheet.create({
-  hero: {
-    gap: rhythm.tight,
-    borderRadius: radii.md,
-    padding: rhythm.block + rhythm.line,
-    borderWidth: 1,
-    borderColor: colors.line,
-  },
-  kicker: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
-  // The raised ring keeps the party colour at 3:1 on its own wash.
-  dot: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    borderWidth: 1.5,
-    borderColor: colors.raised,
-    boxSizing: 'content-box',
-  },
+  meta: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
+  dot: { width: 10, height: 10, borderRadius: 5 },
   donor: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -602,5 +644,8 @@ const styles = StyleSheet.create({
     columnGap: rhythm.block,
     rowGap: rhythm.line,
   },
-  grow: { flexGrow: 1, flexShrink: 1, flexBasis: 160 },
+  name: { flexGrow: 1, flexShrink: 1, flexBasis: 160 },
+  grow: { flexGrow: 1, flexShrink: 1 },
+  // One point, at the foot of the last section rather than a section below.
+  end: { height: 1, marginTop: -layout.sectionGap },
 });

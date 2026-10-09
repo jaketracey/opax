@@ -10,12 +10,12 @@ name: 36 Person topics, speeches, mentions, news, ministerial diary and glossary
       NAME: Anthony Albanese
       SLUG: anthony-albanese
 - scrollUntilVisible:
-    element: { id: person-quick-facts }
+    element: { id: person-figures }
     direction: DOWN
     speed: 20
     centerElement: true
     timeout: 180000
-- takeScreenshot: ${EVIDENCE}/36-quick-facts
+- takeScreenshot: ${EVIDENCE}/36-figures
 - scrollUntilVisible:
     element: { id: person-topics-toggle }
     direction: DOWN

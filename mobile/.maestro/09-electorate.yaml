@@ -72,17 +72,18 @@ name: 09 Electorate representation, elections, Census context and sources
     env:
       END: electorate-end
       PREFIX: 09-electorate
+# The record's one source line sits under the identity.
 - scrollUntilVisible:
     element:
-      id: electorate-coverage-source
+      id: electorate-source
     direction: UP
     centerElement: true
     timeout: 300000
 - tapOn:
-    id: electorate-coverage-source
+    id: electorate-source
 - assertVisible: Original records
 - takeScreenshot: ${EVIDENCE}/09-original-records
-- tapOn: OPAX federal roster reconciled against APH, 2026-09-04
+- tapOn: .*OPAX federal roster reconciled against APH, 2026-09-04.*
 - assertVisible: https://www.aph.gov.au/Senators_and_Members
 - takeScreenshot: ${EVIDENCE}/09-source
 - tapOn: OK

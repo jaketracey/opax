@@ -12,9 +12,8 @@ import {
   RowList,
   Screen,
   Section,
-  SourceLink,
+  StatusLabel,
   Text,
-  AsAtLine,
   errorMessage,
 } from '../design/primitives';
 import { SeatGrants } from './money-public/Grants';
@@ -24,7 +23,8 @@ import { PartialNotice, SavedCopyNotice } from './CatalogNotice';
 import { LocationSuggestion } from './electorate-map/LocationSuggestion';
 import { formatDate } from '../design/format';
 import { useCallback, useEffect, useState } from 'react';
-import { router } from 'expo-router';
+import { router, Stack } from 'expo-router';
+import { openSource } from '../navigation/external';
 import { AndroidFocusBack } from '../navigation/AndroidFocusBack';
 import {
   Keyboard,
@@ -36,14 +36,19 @@ import {
 import { catalogs } from '../api/runtime';
 import type { Electorate } from '../api/catalogs';
 import { rhythm } from '../design/tokens';
-import { VoteSide } from './your-mp/VoteSide';
 import {
   CHAMBER_NOT_RECORDED,
   chamberName,
   jurisdictionName,
 } from '../design/parliament';
 import { billRoute, electorateRoute } from '../navigation/routes';
-import { EvidenceFooter, RecordBlock } from './your-mp/Evidence';
+import {
+  BlockSource,
+  EvidenceFooter,
+  RecordBlock,
+  combinedBlock,
+  votesSource,
+} from './your-mp/Evidence';
 import { RepresentativeRows } from './your-mp/RepresentativeRows';
 import { FollowingEntry } from './follows/FollowingEntry';
 import { loadChoice, saveChoice } from './your-mp/choice-store';
@@ -54,7 +59,6 @@ import {
   registerCategoryLabel,
   registerChangeLabel,
   seatContext,
-  votingMetaFor,
   type Directory,
   type SeatChoice,
   type YourMPView,
@@ -199,12 +203,16 @@ export default function YourMP() {
     view?.verifiedStateSeats.filter((s) =>
       choice?.stateSeatIds.includes(s.electorate_id),
     ) ?? [];
+  const seatName = view && !chooser ? view.seat.data!.name : null;
   return (
     <Screen
       column="wide"
       testID="your-mp-screen"
       refreshControl={<RefreshControl refreshing={busy} onRefresh={retry} />}
     >
+      {/* One title: the chosen seat replaces "Your MP" (the tab still says
+          it); the chooser keeps "Your MP". */}
+      <Stack.Screen options={{ title: seatName ?? 'Your MP' }} />
       {Platform.OS === 'android' ? (
         <AndroidFocusBack
           active={choosing || stateChoosing}
@@ -231,9 +239,9 @@ export default function YourMP() {
       ) : null}
       {chooser ? (
         <Group>
-          <Heading level={2}>
-            {stateChoosing ? 'Choose your state electorate' : 'Find your MP'}
-          </Heading>
+          {stateChoosing ? (
+            <Heading level={2}>Choose your state electorate</Heading>
+          ) : null}
           {directory?.electorates.partial ? (
             <PartialNotice testID="seat-directory-partial" />
           ) : null}
@@ -249,6 +257,7 @@ export default function YourMP() {
           ) : null}
           <Field
             label="Electorate or member’s name"
+            hint="Your choice is saved on this device. Device backups may include it."
             testID="seat-search"
             value={query}
             onChangeText={setQuery}
@@ -259,7 +268,7 @@ export default function YourMP() {
           {!query.trim() ? (
             <EmptyState
               icon="magnifyingglass"
-              message="Search by electorate or member name. Your choice is saved on this device. Device backups may include it."
+              message="Search by electorate or member name."
               testID="seat-empty"
             />
           ) : !matches.length ? (
@@ -291,12 +300,20 @@ export default function YourMP() {
             </RowList>
           )}
           {!stateChoosing ? (
-            <SourceLink
-              label="Check your electorate with the AEC"
-              citation="AEC electorate finder"
-              url="https://electorate.aec.gov.au/"
-              kind="register"
-            />
+            <RowList>
+              <LinkRow
+                title="Check your electorate with the AEC"
+                external
+                accessibilityHint="Opens the AEC electorate finder"
+                testID="seat-aec"
+                onPress={() =>
+                  void openSource(
+                    'https://electorate.aec.gov.au/',
+                    'AEC electorate finder',
+                  )
+                }
+              />
+            </RowList>
           ) : null}
           {choice ? (
             <Button
@@ -314,14 +331,8 @@ export default function YourMP() {
       {chooser && !choice ? <FollowingEntry /> : null}
       {view && directory && !chooser ? (
         <>
-          <Group gap={rhythm.tight}>
-            <Text variant="label" tone="navy">
-              Your electorate
-            </Text>
-            <Heading level={1} testID="your-seat-name">
-              {view.seat.data!.name}
-            </Heading>
-            <Text wordSafe variant="metadata">
+          <Group gap={rhythm.heading}>
+            <Text wordSafe variant="metadata" testID="your-seat-name">
               {chamberName(
                 view.seat.data!.chamber,
                 view.seat.data!.jurisdiction,
@@ -340,8 +351,6 @@ export default function YourMP() {
               <LinkRow
                 title="Electorate record"
                 detail="Outline, elections and local context"
-                icon="map"
-                accent="people"
                 testID="your-electorate"
                 onPress={() =>
                   router.push(electorateRoute(view.seat.data!.electorate_id))
@@ -406,23 +415,8 @@ export default function YourMP() {
                 block={memberProfile.blocks.votes}
                 missing="No recorded bill votes are held for this member."
                 retry={retry}
-                date={false}
-                caption={
-                  memberProfile.blocks.votes.data ? (
-                    <Group gap={rhythm.line}>
-                      {memberProfile.blocks.votes.data.jurisdictions.map(
-                        (jur) => (
-                          <AsAtLine
-                            key={jur}
-                            votes={votingMetaFor(memberProfile.blocks.votes)}
-                            jurisdiction={jur}
-                          />
-                        ),
-                      )}
-                    </Group>
-                  ) : undefined
-                }
-                info={(v) =>
+                line={() => votesSource(memberProfile.blocks.votes)}
+                about={(v) =>
                   v ? { title: 'About these votes', notes: [v.method] } : null
                 }
               >
@@ -433,13 +427,16 @@ export default function YourMP() {
                         ...[...v.for]
                           .sort((a, b) => b.date.localeCompare(a.date))
                           .slice(0, 6)
-                          .map((row) => ({ ...row, side: 'Voted for' })),
+                          .map((row) => ({
+                            ...row,
+                            side: 'Voted for' as const,
+                          })),
                         ...[...v.against]
                           .sort((a, b) => b.date.localeCompare(a.date))
                           .slice(0, 6)
                           .map((row) => ({
                             ...row,
-                            side: 'Voted against',
+                            side: 'Voted against' as const,
                           })),
                       ]
                         .sort((a, b) => b.date.localeCompare(a.date))
@@ -447,13 +444,7 @@ export default function YourMP() {
                           row.billKey ? (
                             <LinkRow
                               key={i}
-                              leading={
-                                <VoteSide
-                                  side={
-                                    row.side === 'Voted for' ? 'for' : 'against'
-                                  }
-                                />
-                              }
+                              leading={<VoteLabel side={row.side} />}
                               title={row.name}
                               dragPath={`/bill/${row.billKey}`}
                               detail={`${row.stage} · ${formatDate(row.date!, 'short')}`}
@@ -470,11 +461,7 @@ export default function YourMP() {
                               accessibilityLabel={`${row.side}, ${row.name}, ${row.stage}, ${formatDate(row.date!)}. Not matched to a bill record`}
                               style={styles.vote}
                             >
-                              <VoteSide
-                                side={
-                                  row.side === 'Voted for' ? 'for' : 'against'
-                                }
-                              />
+                              <VoteLabel side={row.side} />
                               <Text wordSafe variant="strong">
                                 {row.name}
                               </Text>
@@ -492,75 +479,89 @@ export default function YourMP() {
                   </Group>
                 )}
               </RecordBlock>
-              <RowList>
-                <Disclosure
-                  label="Register changes"
-                  icon="list.clipboard"
-                  accent="interests"
-                  open={registerOpen}
-                  testID="your-register-toggle"
-                  onToggle={(open) => {
-                    setRegisterLoadedFor(null);
-                    setRegisterOpen(open);
-                  }}
-                >
-                  {null}
-                </Disclosure>
-              </RowList>
-              {registerOpen && registerLoadedFor !== memberProfile.personId ? (
-                memberFailure?.id === memberProfile.personId ? (
-                  <ErrorState message={memberFailure.message} onRetry={retry} />
-                ) : (
-                  <LoadingState label="Loading the member’s register" />
-                )
-              ) : null}
-              {registerOpen && registerLoadedFor === memberProfile.personId ? (
-                <RecordBlock
-                  title="Register changes"
-                  id="your-register"
-                  accent="interests"
-                  block={memberProfile.blocks.interests}
-                  missing="No register file is held for this member in the covered registers."
-                  retry={retry}
-                  info={() => ({
-                    title: 'About register changes',
-                    notes: [
-                      'Changes are shown only where the register records a date.',
-                      'Entries read by OCR from scanned pages may contain transcription errors; check the original register.',
-                    ],
-                  })}
-                >
-                  {(r) => (
-                    <RowList>
-                      {Object.entries(r.buckets)
-                        .flatMap(([category, bucket]) =>
-                          bucket.items
-                            .filter((row) => row.date)
-                            .map((row) => ({ ...row, category })),
+              {/* Read on demand, like a profile's topics: the section
+                  heading, then one row that opens the latest changes. */}
+              <Section
+                title="Register changes"
+                accent="interests"
+                testID="your-register"
+              >
+                <RowList>
+                  <Disclosure
+                    label={
+                      registerOpen
+                        ? 'Hide the latest changes'
+                        : 'Show the latest changes'
+                    }
+                    open={registerOpen}
+                    testID="your-register-toggle"
+                    onToggle={(open) => {
+                      setRegisterLoadedFor(null);
+                      setRegisterOpen(open);
+                    }}
+                  >
+                    {() =>
+                      registerLoadedFor !== memberProfile.personId ? (
+                        memberFailure?.id === memberProfile.personId ? (
+                          <ErrorState
+                            message={memberFailure.message}
+                            onRetry={retry}
+                          />
+                        ) : (
+                          <LoadingState label="Loading the member’s register" />
                         )
-                        .sort((a, b) =>
-                          (b.date ?? '').localeCompare(a.date ?? ''),
-                        )
-                        .slice(0, 3)
-                        .map((row, i) => (
-                          <Group key={i} gap={rhythm.line}>
-                            <Text wordSafe variant="label" tone="interestsInk">
-                              {registerCategoryLabel(row.category)} ·{' '}
-                              {registerChangeLabel(row.kind)}{' '}
-                              {formatDate(row.date!, 'short')}
-                            </Text>
-                            <Text wordSafe>{row.description}</Text>
-                            {row.ocr ? (
-                              <Text wordSafe variant="fine">
-                                OCR transcription; check the original register.
-                              </Text>
-                            ) : null}
-                          </Group>
-                        ))}
-                    </RowList>
-                  )}
-                </RecordBlock>
-              ) : null}
+                      ) : (
+                        <RecordBlock
+                          title="Register changes"
+                          sub="bare"
+                          id="your-register"
+                          block={memberProfile.blocks.interests}
+                          missing="No register file is held for this member in the covered registers."
+                          retry={retry}
+                          about={() => ({
+                            title: 'About register changes',
+                            notes: [
+                              'Changes are shown only where the register records a date.',
+                              'Entries read by OCR from scanned pages may contain transcription errors; check the original register.',
+                            ],
+                          })}
+                        >
+                          {(r) => (
+                            <RowList>
+                              {Object.entries(r.buckets)
+                                .flatMap(([category, bucket]) =>
+                                  bucket.items
+                                    .filter((row) => row.date)
+                                    .map((row) => ({ ...row, category })),
+                                )
+                                .sort((a, b) =>
+                                  (b.date ?? '').localeCompare(a.date ?? ''),
+                                )
+                                .slice(0, 3)
+                                .map((row, i) => (
+                                  <Group key={i} gap={rhythm.line}>
+                                    <Text wordSafe variant="label">
+                                      {registerCategoryLabel(row.category)} ·{' '}
+                                      {registerChangeLabel(row.kind)}{' '}
+                                      {formatDate(row.date!, 'short')}
+                                    </Text>
+                                    <Text wordSafe>{row.description}</Text>
+                                    {row.ocr ? (
+                                      <Text wordSafe variant="fine">
+                                        OCR transcription; check the original
+                                        register.
+                                      </Text>
+                                    ) : null}
+                                  </Group>
+                                ))}
+                            </RowList>
+                          )}
+                        </RecordBlock>
+                      )
+                    }
+                  </Disclosure>
+                </RowList>
+              </Section>
             </>
           ) : memberFailure &&
             memberFailure.id === view.members.data?.[0]?.person_id ? (
@@ -575,23 +576,28 @@ export default function YourMP() {
               testID="your-senators"
             >
               {view.senators.length ? (
-                view.senators.map((b, i) => (
-                  <Group key={i}>
+                <>
+                  {view.senators.map((b, i) => (
                     <RepresentativeRows
+                      key={i}
                       rows={b.data ?? []}
                       directory={directory}
                       asAt={b.asAt}
                       id="your-senator"
                     />
-                    <EvidenceFooter block={b} id={`your-senators-${i}`} />
-                  </Group>
-                ))
+                  ))}
+                  <BlockSource
+                    block={combinedBlock(view.senators)}
+                    title="About your senators"
+                    notes={[
+                      'Senators are shown as recorded in the dated release.',
+                    ]}
+                    testID="your-senators-end"
+                  />
+                </>
               ) : (
                 <EmptyState message="No verified Senate roster is held for this jurisdiction." />
               )}
-              <Text wordSafe testID="your-senators-end" variant="fine">
-                Senators are shown as recorded in the dated release.
-              </Text>
             </Section>
           ) : null}
           {view.seat.data!.status !== 'historical' ? (
@@ -606,7 +612,6 @@ export default function YourMP() {
                         asAt={b.asAt}
                         id="your-state-member"
                       />
-                      <EvidenceFooter block={b} id={`your-state-${i}`} />
                       {choice && selectedStateSeats[i] ? (
                         <Button
                           label={`Remove ${selectedStateSeats[i]!.name}`}
@@ -628,12 +633,17 @@ export default function YourMP() {
                       ) : null}
                     </Group>
                   ))}
-                  {!view.stateMembers.length ? (
+                  {view.stateMembers.length ? (
+                    <BlockSource
+                      block={combinedBlock(view.stateMembers)}
+                      testID="your-state-source"
+                    />
+                  ) : (
                     <Text wordSafe>
                       Choose your state electorate to see its verified
                       representatives.
                     </Text>
-                  ) : null}
+                  )}
                   <Button
                     label="Choose state electorate"
                     icon="plus"
@@ -672,6 +682,16 @@ export default function YourMP() {
         </>
       ) : null}
     </Screen>
+  );
+}
+/** "Voted for" or "Voted against": the word carries the meaning. */
+function VoteLabel({ side }: { side: 'Voted for' | 'Voted against' }) {
+  return (
+    <StatusLabel
+      label={side}
+      tone={side === 'Voted for' ? 'done' : 'ended'}
+      hidden
+    />
   );
 }
 const styles = StyleSheet.create({

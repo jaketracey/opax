@@ -21,7 +21,6 @@ import {
 import Person from '../src/features/Person';
 import YourMP from '../src/features/YourMP';
 import Electorate from '../src/features/Electorate';
-import { VoteSide } from '../src/features/your-mp/VoteSide';
 import { billRoute } from '../src/navigation/routes';
 import {
   PersonRow,
@@ -30,6 +29,7 @@ import {
   Button,
   LinkRow,
   OpaxWebLink,
+  StatusLabel,
 } from '../src/design/primitives';
 import { loadChoice, saveChoice } from '../src/features/your-mp/choice-store';
 jest.mock('../src/api/runtime', () => ({
@@ -211,9 +211,9 @@ test('electorate preserves Census vintage and renders candidates as plain public
   expect(text(r)).toContain('Updated 2021');
   expect(text(r)).not.toContain('1 January 2021');
   expect(text(r)).toContain('not been redistributed');
-  // The representation caveat is behind the block's ⓘ, in full.
+  // The representation caveat is in the block's source sheet, in full.
   await act(async () =>
-    pressable(r, 'electorate-representatives-info').props.onPress(),
+    pressable(r, 'electorate-representatives-source').props.onPress(),
   );
   expect(text(r)).toContain(
     'Election winners and present-day representation can differ',
@@ -586,9 +586,9 @@ test('Your MP register disclosure is lazy and renders plain category/change labe
     seat.representatives[0]!.person_id,
     { includeInterests: false },
   );
-  // Closed: the disclosure row only; no register block is drawn or loaded.
+  // Closed: the section and its disclosure row only; no register is loaded.
   expect(
-    r.root.findAll((n) => n.props.testID === 'your-register-heading'),
+    r.root.findAll((n) => n.props.testID === 'your-register-source'),
   ).toHaveLength(0);
   await act(async () => pressable(r, 'your-register-toggle').props.onPress());
   expect(mock.profileFor).toHaveBeenLastCalledWith(
@@ -664,9 +664,9 @@ test('Your MP shows six recorded bill votes in each direction', async () => {
   expect(profile.blocks.votes.data!.against.length).toBeGreaterThanOrEqual(6);
   mock.profileFor.mockResolvedValue(profile);
   const r = await render(<YourMP />);
-  const sides = r.root.findAllByType(VoteSide).map((n) => n.props.side);
-  expect(sides.filter((side) => side === 'for')).toHaveLength(6);
-  expect(sides.filter((side) => side === 'against')).toHaveLength(6);
+  const sides = r.root.findAllByType(StatusLabel).map((n) => n.props.label);
+  expect(sides.filter((side) => side === 'Voted for')).toHaveLength(6);
+  expect(sides.filter((side) => side === 'Voted against')).toHaveLength(6);
   const matched = [
     ...profile.blocks.votes.data!.for.slice(0, 6),
     ...profile.blocks.votes.data!.against.slice(0, 6),
@@ -757,8 +757,8 @@ test('missing register ties do not refer to an existing file; expense copy uses 
   const a = await render(<Person />);
   expect(text(a)).toContain('about $2,440,277');
   expect(text(a)).not.toContain('A bar past its tick');
-  // The benchmark method is behind the section's ⓘ, in full.
-  await act(async () => pressable(a, 'person-expenses-info').props.onPress());
+  // The benchmark method is in the block's source sheet, in full.
+  await act(async () => pressable(a, 'person-expenses-source').props.onPress());
   expect(text(a)).toContain('divided by its covered calendar years');
   await act(async () => a.unmount());
 });

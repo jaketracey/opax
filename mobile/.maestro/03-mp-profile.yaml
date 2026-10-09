@@ -16,9 +16,11 @@ name: 03 Read a sourced profile
     element:
       id: person-electorate
     centerElement: true
-- assertVisible: Grayndler
-# Chamber names, never raw IDs ("federal", "representatives").
-- assertVisible: House of Representatives
+# One seat line: "Member for Grayndler · House of Representatives", the
+# electorate as its link. Chamber names, never raw IDs ("federal").
+- assertVisible:
+    id: person-electorate
+    text: Member for Grayndler, House of Representatives.*
 - assertNotVisible: .*· federal.*
 - takeScreenshot: ${EVIDENCE}/03-profile
 - scrollUntilVisible:
@@ -28,12 +30,14 @@ name: 03 Read a sourced profile
 - assertVisible:
     id: person-source
 - takeScreenshot: ${EVIDENCE}/03-source
-# The profile's original records open from one small "View original": with
-# several, a native menu names each. Sources open in the in-app browser; e2e
-# shows the destination locally.
+# The profile's one source line opens its source sheet, which lists the
+# original records. Sources open in the in-app browser once the sheet has
+# gone; e2e shows the destination locally.
 - tapOn:
     id: person-source
-- tapOn: OpenAustralia parliamentary service records
+- assertVisible: Original records
+- takeScreenshot: ${EVIDENCE}/03-source-sheet
+- tapOn: .*OpenAustralia parliamentary service records.*
 - extendedWaitUntil:
     visible:
       id: source-destination-url

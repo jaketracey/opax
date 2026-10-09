@@ -387,10 +387,10 @@ test('member disclosure opens native profiles; the total and every block have pr
     params: { slug: 'anthony-albanese' },
   });
   for (const id of [
-    'party-members-as-at',
-    'party-receipts-as-at',
-    'party-associated-as-at',
-    'party-divisions-as-at',
+    'party-members-source',
+    'party-receipts-source',
+    'party-associated-source',
+    'party-divisions-source',
   ])
     expect(r.root.findAll((n) => n.props.testID === id).length).toBeGreaterThan(
       0,
@@ -535,8 +535,8 @@ test.each(['pull', 'foreground'] as const)(
       press(r, 'party-recorded-toggle');
       const ids = [
         'party-receipts-total',
-        'party-associated-as-at',
-        'party-divisions-as-at',
+        'party-associated-source',
+        'party-divisions-source',
       ];
       const nodes = ids.map((id) =>
         r.root.find((n) => typeof n.type === 'string' && n.props.testID === id),

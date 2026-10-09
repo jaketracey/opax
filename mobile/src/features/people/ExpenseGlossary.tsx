@@ -1,24 +1,21 @@
 import { useEffect, useState } from 'react';
 import { Stack } from 'expo-router';
-import { Platform } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { AndroidReadingHeader } from '../../navigation/AndroidReadingHeader';
 import { catalogs } from '../../api/runtime';
 import {
-  AsAtLine,
   ErrorState,
   Group,
   Heading,
-  InfoButton,
   RowList,
   LoadingState,
   Screen,
   Section,
-  SourceLink,
-  StaleNotice,
   Text,
   errorMessage,
 } from '../../design/primitives';
-import { rhythm } from '../../design/tokens';
+import { layout, rhythm } from '../../design/tokens';
+import { BlockSource, recordBlock } from '../your-mp/Evidence';
 import { shareHeaderItem } from '../../navigation/share';
 import { closeSheetItem, headerItems } from '../../navigation/chrome';
 
@@ -68,15 +65,16 @@ export default function ExpenseGlossary() {
         ) : !record ? (
           <LoadingState label="Loading expense category definitions" />
         ) : (
-          <Group>
-            <Heading level={1}>Expense category glossary</Heading>
-            {record.data.groups.map((g) => (
-              <Section
-                key={g.id}
-                title={g.title}
-                accent="money"
-                info={{ title: g.title, notes: [g.blurb] }}
-              >
+          <Group gap={layout.sectionGap}>
+            {/* The title is the bar's; each group's description and each
+                category's note are the glossary itself, so they are drawn. */}
+            {record.data.groups.map((g, i) => (
+              <Section key={g.id} title={g.title} accent="money" rule={i > 0}>
+                {g.blurb ? (
+                  <Text wordSafe variant="metadata">
+                    {g.blurb}
+                  </Text>
+                ) : null}
                 <RowList>
                   {record.data.categories
                     .filter((c) => c.group === g.id)
@@ -85,35 +83,34 @@ export default function ExpenseGlossary() {
                         <Heading level={3}>{c.name}</Heading>
                         <Text wordSafe>{c.text}</Text>
                         {c.note ? (
-                          <InfoButton
-                            title={'About ' + c.name.toLowerCase()}
-                            notes={[c.note]}
-                          />
-                        ) : null}
-                        {c.url ? (
-                          <SourceLink
-                            citation={c.source}
-                            url={c.url}
-                            kind="record"
-                          />
+                          <Text wordSafe variant="fine">
+                            {c.note}
+                          </Text>
                         ) : null}
                       </Group>
                     ))}
                 </RowList>
               </Section>
             ))}
-            <AsAtLine
-              asOf={record.data.meta.updated}
+            <BlockSource
+              block={recordBlock(record)}
               citation={record.data.meta.source}
-              licence={record.data.meta.licence}
+              licence={record.data.meta.licence ?? undefined}
+              originals={record.data.categories.flatMap((c) =>
+                c.url ? [{ label: c.source, url: c.url, record: c.name }] : [],
+              )}
+              testID="expense-glossary-source"
             />
-            {record.stale ? <StaleNotice savedAt={record.savedAt} /> : null}
-            <Text testID="expense-glossary-end" variant="fine">
-              End of glossary
-            </Text>
+            {/* The page's end, for journeys that scroll to it. */}
+            <View
+              testID="expense-glossary-end"
+              collapsable={false}
+              style={styles.end}
+            />
           </Group>
         )}
       </Screen>
     </>
   );
 }
+const styles = StyleSheet.create({ end: { height: 1 } });

@@ -10,15 +10,18 @@ name: 30 Scoped Ask drafts from native records; arrival never submits
     visible:
       id: person-screen-title
     timeout: 60000
+# Ask is under the header's ⋯, beside Follow.
 - scrollUntilVisible:
     element:
-      id: person-ask
+      id: person-more
+    direction: UP
     centerElement: true
     speed: 20
     timeout: 90000
 - takeScreenshot: ${EVIDENCE}/30-person-entry
 - tapOn:
-    id: person-ask
+    id: person-more
+- tapOn: Ask about their speeches
 - assertVisible:
     id: ask-question
 - assertVisible: What has Anthony Albanese said in parliament\?
@@ -30,13 +33,15 @@ name: 30 Scoped Ask drafts from native records; arrival never submits
     timeout: 60000
 - scrollUntilVisible:
     element:
-      id: party-ask
+      id: party-more
+    direction: UP
     centerElement: true
     speed: 20
     timeout: 90000
 - takeScreenshot: ${EVIDENCE}/30-party-entry
 - tapOn:
-    id: party-ask
+    id: party-more
+- tapOn: Ask about this
 - assertVisible:
     id: ask-question
 - assertVisible: What has parliament said about Labor\?
@@ -47,13 +52,15 @@ name: 30 Scoped Ask drafts from native records; arrival never submits
     timeout: 60000
 - scrollUntilVisible:
     element:
-      id: electorate-ask
+      id: electorate-more
+    direction: UP
     centerElement: true
     speed: 20
     timeout: 90000
 - takeScreenshot: ${EVIDENCE}/30-electorate-entry
 - tapOn:
-    id: electorate-ask
+    id: electorate-more
+- tapOn: Ask about this
 - assertVisible:
     id: ask-question
 - openLink: opax://bill/au-federal-r7534

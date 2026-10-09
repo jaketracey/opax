@@ -16,7 +16,7 @@ appId: au.com.opax.app
 - runFlow:
     when:
       notVisible:
-        id: your-register-heading
+        id: your-register-source
     commands:
       - runFlow:
           when:
