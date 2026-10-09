@@ -54,24 +54,26 @@ name: 30 Ask progress over a production-paced stream, a stages-only wait and an 
     id: ask-progress
 - takeScreenshot: ${EVIDENCE}/30-progress-answer
 # 2. Stage events only for a long while (the model is still thinking), asked
-# from the top composer under an answered question: build 14 scrolled this
-# turn behind the navigation bar and left a lone Cancel on an empty page.
+# from the composer under an answered question (design pass 3D: one
+# composer, which follows the answer): build 14 scrolled this turn behind
+# the navigation bar and left a lone Cancel on an empty page.
 - scrollUntilVisible:
     element:
-      id: ask-question
-    direction: UP
+      id: ask-followup-field
     centerElement: true
+    speed: 20
     timeout: 90000
 - tapOn:
-    id: ask-question
+    id: ask-followup-field
 - inputText: fixture stages only
 - scrollUntilVisible:
     element:
-      id: ask-submit
+      id: ask-followup-submit
     centerElement: true
+    speed: 20
     timeout: 60000
 - tapOn:
-    id: ask-submit
+    id: ask-followup-submit
     enabled: true
 - extendedWaitUntil:
     visible:

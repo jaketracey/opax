@@ -1,0 +1,26 @@
+appId: au.com.opax.app
+name: Open Your conversations, from the idle rows or under an answer's ⋯
+---
+# Design pass 3D: with a conversation open, Options, Your conversations and
+# Start a new conversation are under the answer's ⋯; at idle they are rows.
+- runFlow:
+    when:
+      visible:
+        id: ask-saved
+    commands:
+      - tapOn:
+          id: ask-saved
+- runFlow:
+    when:
+      notVisible:
+        id: ask-history-done
+    commands:
+      - scrollUntilVisible:
+          element:
+            id: ask-answer-more
+          direction: DOWN
+          centerElement: true
+          timeout: 180000
+      - tapOn:
+          id: ask-answer-more
+      - tapOn: Your conversations

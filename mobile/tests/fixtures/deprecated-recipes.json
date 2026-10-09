@@ -17,9 +17,7 @@
     "src/features/Electorate.tsx": 1,
     "src/features/Party.tsx": 4,
     "src/features/Person.tsx": 2,
-    "src/features/Search.tsx": 1,
     "src/features/YourMP.tsx": 2,
-    "src/features/ask/AnswerView.tsx": 1,
     "src/features/ask/Options.tsx": 1,
     "src/features/directories/ElectorateHistory.tsx": 2,
     "src/features/explore/Ballot.tsx": 2,
@@ -44,14 +42,12 @@
     "src/features/reports/TodayReports.tsx": 2,
     "src/features/reports/TopicPage.tsx": 5,
     "src/features/search/FiltersSheet.tsx": 1,
-    "src/features/search/Results.tsx": 2,
     "src/features/your-mp/Evidence.tsx": 1
   },
   "OpaxWebLink": {
     "src/features/About.tsx": 2,
     "src/features/Party.tsx": 2,
     "src/features/Person.tsx": 2,
-    "src/features/Search.tsx": 1,
     "src/features/account/DeleteAccountFlow.tsx": 1,
     "src/features/account/SignInFlow.tsx": 1,
     "src/features/leads/LeadDetail.tsx": 1,
@@ -65,7 +61,6 @@
     "src/features/CatalogState.tsx": 1,
     "src/features/Party.tsx": 1,
     "src/features/Person.tsx": 3,
-    "src/features/Search.tsx": 4,
     "src/features/YourMP.tsx": 1,
     "src/features/declarations/Declarations.tsx": 1,
     "src/features/directories/DirectoryScreen.tsx": 1,
@@ -87,7 +82,6 @@
     "src/features/records/BillTextReader.tsx": 2,
     "src/features/records/DocumentReader.tsx": 2,
     "src/features/reports/parts.tsx": 1,
-    "src/features/search/Results.tsx": 2,
     "src/features/your-mp/Evidence.tsx": 1,
     "src/onboarding/padScenes.tsx": 2,
     "src/onboarding/scenes.tsx": 2,
@@ -97,7 +91,6 @@
   "StaleNotice": {
     "src/features/CatalogState.tsx": 1,
     "src/features/RecordStatus.tsx": 1,
-    "src/features/Search.tsx": 2,
     "src/features/directories/DirectoryScreen.tsx": 1,
     "src/features/explore/Ballot.tsx": 1,
     "src/features/follows/FollowingSection.tsx": 1,
@@ -110,7 +103,6 @@
   },
   "SourceLink": {
     "src/features/Party.tsx": 1,
-    "src/features/Search.tsx": 1,
     "src/features/YourMP.tsx": 1,
     "src/features/electorate-map/OutlineMap.tsx": 1,
     "src/features/explore/PhotoCredits.tsx": 2,
@@ -130,8 +122,6 @@
     "src/features/YourMP.tsx": 2
   },
   "ViewOriginal": {
-    "src/features/ask/AnswerView.tsx": 2,
-    "src/features/ask/SourcesPane.tsx": 1,
     "src/features/money/MoneyNodeScreen.tsx": 3,
     "src/features/money/MoneyScreen.tsx": 1,
     "src/features/money-public/Discover.tsx": 1,
@@ -139,7 +129,6 @@
     "src/features/records/BillTextReader.tsx": 1,
     "src/features/records/DocumentReader.tsx": 1,
     "src/features/reports/TodayReports.tsx": 1,
-    "src/features/search/Results.tsx": 1,
     "src/features/your-mp/Evidence.tsx": 1,
     "src/onboarding/padScenes.tsx": 1
   },

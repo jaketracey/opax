@@ -330,13 +330,9 @@ export function RecordSearchForm({
       {busy && !result ? <LoadingState label="Searching records" /> : null}
       {result ? (
         <>
-          <Button
-            label="Share search"
-            icon="square.and.arrow.up"
-            variant="quiet"
-            size="compact"
-            testID="records-share"
-            onPress={() =>
+          <Results
+            result={result}
+            onShare={() =>
               void shareRecord({
                 path: searchWebPath(
                   result.data.query,
@@ -347,9 +343,6 @@ export function RecordSearchForm({
                 title: `Search: ${result.data.query}`,
               }).catch(setOpenError)
             }
-          />
-          <Results
-            result={result}
             busy={busy}
             filtered={filtered}
             sort={sort}

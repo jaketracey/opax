@@ -1,4 +1,4 @@
-import { PartialNotice, SavedCopyNotice } from './CatalogNotice';
+import { SavedCopyNotice } from './CatalogNotice';
 import { useFocusRequest } from '../design/keyboard';
 import { CachedPortrait } from './CachedPortrait';
 import {
@@ -38,7 +38,6 @@ import {
 } from '../api/catalogs';
 import type { CatalogKind } from '../api/policy';
 import {
-  AsAtLine,
   Button,
   EmptyState,
   ErrorState,
@@ -46,14 +45,12 @@ import {
   Group,
   LoadingState,
   OfflineBanner,
-  OpaxWebLink,
   LinkRow,
   PersonRow,
   RowList,
   KeyboardStableScreen,
   Section,
-  SourceLink,
-  StaleNotice,
+  SourceLine,
   Text,
   errorMessage,
   LayoutRegion,
@@ -62,7 +59,7 @@ import {
   isPad,
   useLayout,
 } from '../design/primitives';
-import { colors } from '../design/tokens';
+import { colors, rhythm } from '../design/tokens';
 import { CursorRow, useCursorReveal } from './split/cursor';
 import {
   decodeEntry,
@@ -73,9 +70,12 @@ import {
 } from './split/entry';
 import { RecordDetail, RecordShare } from './split/RecordDetail';
 import { billStatus } from '../design/parliament';
+import { updatedText } from '../design/source';
 import { RecordRow } from './RecordRow';
 import { Excerpt } from './search/Excerpt';
-import { RecordActions } from './records/RecordActions';
+import { ResultRow } from './search/ResultRow';
+import { CountLine } from './search/CountLine';
+import { countLabel, resultKindLabel, savedCopy } from './search/present';
 import { KindPicker } from './search/KindPicker';
 import { isOffline } from './CatalogState';
 import {
@@ -92,6 +92,13 @@ import {
 import { billRoute, electorateRoute } from '../navigation/routes';
 
 type Sources = Awaited<ReturnType<typeof catalogs.suggestionSources>>;
+/** What a catalog result counts: "1 person", "3 declared interests". */
+const catalogNouns: Record<CatalogKind, readonly [string, string]> = {
+  person: ['person', 'people'],
+  interest: ['declared interest', 'declared interests'],
+  pay: ['pay record', 'pay records'],
+  expense: ['expense record', 'expense records'],
+};
 type Results = Awaited<ReturnType<typeof catalogs.search>>;
 type SearchProps = {
   initialQuery?: string;
@@ -336,28 +343,26 @@ function SearchScreen({
     groupSuggestions(suggestions).every((group) => group.rows.length === 0) &&
     (!richer || Object.values(richer).every((rows) => !rows.length));
   const resultRows = result?.data.results ?? [];
-  const metadata = (group: keyof Sources['provenance']) =>
-    sources ? (
-      <Group>
-        {sources.provenance[group].partial ? <PartialNotice /> : null}
-        {sources.provenance[group].stale &&
-        sources.provenance[group].savedAt !== null ? (
-          <StaleNotice
-            savedAt={sources.provenance[group].savedAt!}
-            refreshing={refreshing}
-          />
-        ) : null}
-        <AsAtLine
-          asOf={sources.provenance[group].asAt}
-          citation={sources.provenance[group].sources.map((s) => s.label)}
-          savedAt={
-            sources.provenance[group].stale
-              ? sources.provenance[group].savedAt
-              : null
-          }
-        />
-      </Group>
-    ) : null;
+  const metadata = (group: keyof Sources['provenance']) => {
+    if (!sources) return null;
+    const block = sources.provenance[group];
+    const saved = savedCopy(block.stale, block.staleReason);
+    return (
+      <SourceLine
+        asOf={block.asAt}
+        citation={block.sources.map((s) => s.label)}
+        originals={block.sources
+          .filter((s) => s.url)
+          .map((s) => ({ label: s.label, url: s.url }))}
+        savedAt={block.stale ? block.savedAt : null}
+        state={block.partial ? 'partial' : saved.state}
+        notes={[
+          block.partial ? 'Some rows in this export could not be read.' : null,
+          saved.note,
+        ]}
+      />
+    );
+  };
   const screen = (
     <KeyboardStableScreen
       scrollRef={scroll}
@@ -537,9 +542,6 @@ function SearchScreen({
                       }
                     />
                   </RowList>
-                  <Text variant="fine">
-                    Bill searches use the saved bill titles in Bills.
-                  </Text>
                   <Button
                     label="Refresh suggestions"
                     variant="quiet"
@@ -702,7 +704,7 @@ function SearchScreen({
                       ),
                     )}
                   </RowList>
-                  <AsAtLine asOf={null} citation="OPAX topic taxonomy" />
+                  <SourceLine asOf={null} citation="OPAX topic taxonomy" />
                 </Section>
               ) : null}
               {richer.reports.length ? (
@@ -712,32 +714,38 @@ function SearchScreen({
                   testID="search-suggestions-reports"
                 >
                   <RowList>
-                    {richer.reports.map((r) => (
-                      <Group key={r.slug}>
-                        {cursorRow(
-                          `report:${r.slug}`,
-                          null,
-                          () =>
-                            void open(() =>
-                              openSearchPath(`/reports/${r.slug}`, r.title),
-                            ),
-                          (state, onPress) => (
-                            <RecordRow
-                              {...state}
-                              title={r.title}
-                              detail={r.blurb}
-                              testID={`search-suggestion-report-${r.slug}`}
-                              onPress={onPress}
-                            />
+                    {richer.reports.map((r) =>
+                      cursorRow(
+                        `report:${r.slug}`,
+                        null,
+                        () =>
+                          void open(() =>
+                            openSearchPath(`/reports/${r.slug}`, r.title),
                           ),
-                        )}
-                        <AsAtLine
-                          asOf={r.updated}
-                          citation="OPAX reports index"
-                        />
-                      </Group>
-                    ))}
+                        (state, onPress) => (
+                          <RecordRow
+                            key={r.slug}
+                            {...state}
+                            title={r.title}
+                            detail={[r.blurb, updatedText(r.updated)]
+                              .filter(Boolean)
+                              .join('\n')}
+                            testID={`search-suggestion-report-${r.slug}`}
+                            onPress={onPress}
+                          />
+                        ),
+                      ),
+                    )}
                   </RowList>
+                  <SourceLine
+                    asOf={
+                      richer.reports
+                        .map((r) => r.updated)
+                        .sort()
+                        .at(-1) ?? null
+                    }
+                    citation="OPAX reports index"
+                  />
                 </Section>
               ) : null}
               {extraSources?.manifest.stale || extraSources?.reports.stale ? (
@@ -770,23 +778,7 @@ function SearchScreen({
         </>
       ) : null}
       {submitted && !extended ? (
-        <Section
-          title={`Results for “${result?.data.query ?? query.trim()}” · ${kindLabel(kind)}`}
-          accent="people"
-          info={
-            result
-              ? {
-                  title: 'About these results',
-                  notes: [...result.data.warnings, result.data.coverage],
-                }
-              : undefined
-          }
-        >
-          {kind === 'pay' ? (
-            <Text variant="metadata" testID="search-pay-caveat">
-              These are entitlements set by instrument, not payslips.
-            </Text>
-          ) : null}
+        <Section accent="people" testID="search-results">
           {busy && !result ? (
             <LoadingState
               label={`Searching ${kindLabel(kind).toLowerCase()}`}
@@ -796,29 +788,17 @@ function SearchScreen({
           ) : null}
           {result ? (
             <Group>
-              {result.stale ? (
-                <>
-                  <SavedCopyNotice
-                    reason={result.staleReason}
-                    testID={
-                      result.staleReason
-                        ? 'search-saved-copy'
-                        : 'search-offline'
-                    }
-                  />
-                  <StaleNotice
-                    savedAt={result.savedAt}
-                    refreshing={busy}
-                    testID="search-cache-state"
-                  />
-                </>
-              ) : (
-                <Text variant="fine" testID="search-cache-state">
-                  Public catalog results
+              <CountLine
+                label={countLabel(
+                  result.data.total,
+                  catalogNouns[kind as CatalogKind],
+                )}
+                testID="search-count"
+              />
+              {kind === 'pay' ? (
+                <Text variant="metadata" testID="search-pay-caveat">
+                  These are entitlements set by instrument, not payslips.
                 </Text>
-              )}
-              {result.partial ? (
-                <PartialNotice testID="search-partial" />
               ) : null}
               {!resultRows.length ? (
                 <Group>
@@ -840,10 +820,10 @@ function SearchScreen({
                 </Group>
               ) : (
                 <RowList>
-                  {resultRows.map((row) => (
-                    <Group key={row.slug}>
-                      {row.personSlug ? (
-                        cursorRow(
+                  {resultRows.map((row) =>
+                    row.personSlug ? (
+                      <Group key={row.slug} gap={rhythm.tight}>
+                        {cursorRow(
                           `search-person:${row.personSlug}`,
                           {
                             kind: 'search-person',
@@ -871,33 +851,36 @@ function SearchScreen({
                               onPress={onPress}
                             />
                           ),
-                        )
-                      ) : (
-                        <Text wordSafe variant="strong">
-                          {row.title}
-                        </Text>
-                      )}
-                      <Excerpt snippet={row.snippet} resource={row.resource} />
-                      <RecordActions slug={row.slug} />
-                      {row.url ? (
-                        <SourceLink
-                          citation={row.source || 'Original source'}
-                          url={row.url}
-                          kind="record"
-                          testID={`search-source-${row.slug}`}
+                        )}
+                        <Excerpt
+                          snippet={row.snippet}
+                          resource={row.resource}
+                          query={result.data.query}
                         />
-                      ) : !row.personSlug ? (
-                        <OpaxWebLink
-                          label="Open the record"
-                          path={row.href}
-                          testID={`search-source-${row.slug}`}
+                      </Group>
+                    ) : (
+                      <ResultRow
+                        key={row.slug}
+                        title={row.title}
+                        meta={resultKindLabel(row.kind)}
+                        accent="people"
+                        testID={`search-result-${row.slug}`}
+                        onPress={() =>
+                          void open(() => openSearchPath(row.href, row.title))
+                        }
+                      >
+                        <Excerpt
+                          snippet={row.snippet}
+                          resource={row.resource}
+                          query={result.data.query}
                         />
-                      ) : null}
-                    </Group>
-                  ))}
+                      </ResultRow>
+                    ),
+                  )}
                 </RowList>
               )}
-              <AsAtLine
+              <SourceLine
+                title="About these results"
                 asOf={result.asOf}
                 citation={[
                   ...new Set(
@@ -907,6 +890,30 @@ function SearchScreen({
                   ),
                 ]}
                 savedAt={result.stale ? result.savedAt : null}
+                state={
+                  result.partial
+                    ? 'partial'
+                    : savedCopy(result.stale, result.staleReason).state
+                }
+                originals={resultRows.flatMap((row) =>
+                  row.url
+                    ? [
+                        {
+                          label: row.source || 'Original source',
+                          url: row.url,
+                          record: row.title,
+                        },
+                      ]
+                    : [],
+                )}
+                notes={[
+                  result.partial
+                    ? 'Some rows in this export could not be read.'
+                    : null,
+                  savedCopy(result.stale, result.staleReason).note,
+                  ...result.data.warnings,
+                  result.data.coverage,
+                ]}
                 testID="search-as-at"
               />
               {result.data.page > 1 ? (

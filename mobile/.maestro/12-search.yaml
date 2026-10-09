@@ -42,7 +42,7 @@ name: 12 Local suggestions and the four catalog search kinds
 # The results state replaces the suggestions; at AX5 it starts below the fold.
 - scrollUntilVisible:
     element:
-      id: search-cache-state
+      id: search-count
     direction: DOWN
     visibilityPercentage: 1
     speed: 20
@@ -78,7 +78,7 @@ name: 12 Local suggestions and the four catalog search kinds
     id: search-submit
 - scrollUntilVisible:
     element:
-      id: search-cache-state
+      id: search-count
     direction: DOWN
     visibilityPercentage: 1
     speed: 20
@@ -113,7 +113,7 @@ name: 12 Local suggestions and the four catalog search kinds
     id: search-submit
 - scrollUntilVisible:
     element:
-      id: search-cache-state
+      id: search-count
     direction: DOWN
     visibilityPercentage: 1
     speed: 20
@@ -127,25 +127,17 @@ name: 12 Local suggestions and the four catalog search kinds
     centerElement: true
     speed: 20
 - takeScreenshot: ${EVIDENCE}/12-pay
+# Design pass 3D: a result's passage is drawn under its row, cut on a word;
+# there is no "Read matching record" disclosure under each result.
+- assertNotVisible: Read matching record
 - scrollUntilVisible:
     element:
-      text: Read matching record
+      id: search-as-at
     direction: DOWN
     timeout: 90000
     centerElement: true
     speed: 20
-- waitForAnimationToEnd
-- tapOn: Read matching record
-- takeScreenshot: ${EVIDENCE}/12-pay-expanded
-# Expanding removes the preview above the toggle, moving it up at AX5.
-- scrollUntilVisible:
-    element:
-      text: Hide matching record
-    timeout: 90000
-    centerElement: true
-    direction: UP
-- takeScreenshot: ${EVIDENCE}/12-pay-expanded-toggle
-- tapOn: Hide matching record
+- takeScreenshot: ${EVIDENCE}/12-pay-source-line
 - scrollUntilVisible:
     element:
       id: search-kind-menu
@@ -167,7 +159,7 @@ name: 12 Local suggestions and the four catalog search kinds
     id: search-submit
 - scrollUntilVisible:
     element:
-      id: search-cache-state
+      id: search-count
     direction: DOWN
     visibilityPercentage: 1
     speed: 20

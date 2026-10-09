@@ -69,17 +69,29 @@ name: 30 Build a question, streamed answer, native bill citation and grounded fo
     timeout: 180000
 - assertVisible: 'Machine-written\. Written by a model from the retrieved passages; not the record\.'
 - takeScreenshot: ${EVIDENCE}/30-answer
+# Design pass 3D: the answer ends in one source line (and ⋯); its sheet
+# holds the cited and retrieved records, the dates and the notes.
 - scrollUntilVisible:
     element:
-      id: ask-answer-info
-    direction: UP
+      id: ask-answer-sources
+    direction: DOWN
     centerElement: true
     timeout: 90000
 - tapOn:
-    id: ask-answer-info
-- takeScreenshot: ${EVIDENCE}/30-answer-notes
+    id: ask-answer-sources
+- extendedWaitUntil:
+    visible:
+      id: ask-answer-sources-sheet-done
+    timeout: 10000
+- assertVisible: About this answer
+- takeScreenshot: ${EVIDENCE}/30-answer-sources
 - tapOn:
-    id: ask-answer-info-sheet-done
+    id: ask-answer-sources-sheet-done
+    retryTapIfNoChange: false
+- extendedWaitUntil:
+    notVisible:
+      id: ask-answer-sources-sheet-done
+    timeout: 10000
 - scrollUntilVisible:
     element:
       id: ask-citation-1
