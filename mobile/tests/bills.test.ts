@@ -402,13 +402,18 @@ describe('sponsor links', () => {
     ).toBe('sam-example');
   });
 
-  test('names that are not a single roster parliamentarian stay plain text', () => {
+  test('a portfolio print with a generation and a title still names one parliamentarian', () => {
     const katter = d.billFor(detail('au-federal-alrc-4437'), bills).identity
       .data!;
-    expect(katter.sponsorMembers.length).toBe(1);
+    expect(katter.sponsorMembers).toEqual([
+      { name: 'KATTER, Bob, Jnr, MP', suffix: '' },
+    ]);
     expect(
       sponsorSlug(katter.sponsorMembers[0]!.name, roster, slugs, null),
-    ).toBeNull();
+    ).toBe('bob-katter');
+  });
+
+  test('names that are not a single roster parliamentarian stay plain text', () => {
     expect(sponsorSlug('Wilkie', roster, slugs)).toBeNull();
     expect(sponsorSlug('Not A Parliamentarian', roster, slugs)).toBeNull();
     // A roster ID that names someone else never links: not to this name's

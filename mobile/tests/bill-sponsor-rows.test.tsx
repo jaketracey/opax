@@ -42,6 +42,11 @@ jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
 }));
 
 const directory = { roster, slugs, people, manifest, electorates: index };
+const withoutStub = <T extends { people: { name: string }[] }>(r: T): T => ({
+  ...r,
+  people: r.people.filter((row) => row.name !== 'Faruqi'),
+});
+const unvouched = { ...directory, roster: withoutStub(roster) };
 const bill = (key: string) =>
   d.billFor(d.decodeBill(pinned(`/bills/${key}.json`)), bills).identity.data!;
 const one = (name: string) => [{ name, suffix: '' }];
@@ -80,15 +85,16 @@ describe('sponsor rows', () => {
   });
 
   test('a sponsor the roster cannot place is a plain row with the bill party', () => {
-    // The full-name roster row has no ID and the ID-bearing row is a surname
-    // stub, so the link guard refuses it.
+    // On the pin Mehreen Faruqi's full-name row has no ID; only the surname
+    // print "Faruqi" holds 10912 and vouches for her full name. Without that
+    // print nothing ties the bill's ID to her row, so the guard refuses it.
     const faruqi = bill('au-federal-s1479');
     expect(
       sponsorRows(
         faruqi.sponsorMembers,
         faruqi.sponsorParty,
         faruqi.sponsorPersonId,
-        directory,
+        unvouched,
       ),
     ).toEqual([
       {
@@ -233,6 +239,13 @@ test('a linked sponsor is the standard people row with one spoken label, opening
 });
 
 test('an unlinked sponsor gets the same row with a blank portrait and no chevron', async () => {
+  mock.directory.mockImplementation(async () => {
+    const found = await fixture.directory();
+    return {
+      ...found,
+      roster: { ...found.roster, data: withoutStub(found.roster.data) },
+    };
+  });
   const r = await render('au-federal-s1479');
   const sponsor = block(r.root);
   const [row] = sponsor.findAllByType(PersonRow);
