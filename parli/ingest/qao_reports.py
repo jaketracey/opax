@@ -7,6 +7,7 @@ last good snapshot when access, completeness, licence or shrink guards fail.
 from __future__ import annotations
 
 import argparse
+import copy
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
 import hashlib
@@ -32,7 +33,7 @@ UA = "OPAX metadata research (https://opax.com.au)"
 MAX_REQUESTS = 800
 ID = re.compile(r"^qao-\d{4}(?:-\d{2})?-\d+$")
 VERSION = re.compile(r"Report\s*:?\s+(\d+)\s*[:–−-]\s*(\d{4})(?:\s*[–−-]\s*(\d{2,4}))?", re.I)
-PARSER_SCHEMA = 1
+PARSER_SCHEMA = 2
 
 
 class Held(ValueError):
@@ -176,17 +177,37 @@ def parse_index(html, url):
 
 
 def licence_review(main):
-    # Check the entire report page, not only the footer's copyright link. A
-    # notice that limits any content holds all recommendations conservatively.
+    # A notice is cleared only by a recognised grant/owner notice. Unknown
+    # reuse terms and third-party captions hold the entire body projection.
     evidence = []
-    for node in main.find_all(["p", "div", "span", "small", "li"]):
-        if node.find(["p", "div", "li"]): continue
+    cue = re.compile(r"copyright|©|all rights reserved|creative commons|\bCC[ -]BY\b|otherwise noted|"
+        r"licen[sc]ed under|(?:used|available|reproduced) under (?:a |the )?licen[sc]e|licen[sc]e (?:terms|notice)|"
+        r"\b(?:reuse|re-use|reproduction)\b.{0,80}(?:terms|permission|conditions|restricted)|"
+        r"\buse (?:only )?under\b.{0,80}(?:terms|rights|permission)|"
+        r"permission to (?:reproduce|use|reuse)|reproduced with permission|"
+        r"\b(?:image|photo(?:graph)?|illustration)\s*:?\s+(?:courtesy|credit|provided by|supplied by)", re.I)
+    known_footer = set()
+    for node in main.find_all(["p", "div", "span", "small", "li", "figure", "figcaption", "caption", "td", "th", "a", "h2", "h3", "h4", "h5", "h6"]):
+        classes = ' '.join(node.get('class', []))
+        caption = node.name in ('figure', 'figcaption', 'caption') or 'caption' in classes.lower()
+        notice = bool(re.search(r'(?:copyright|licen[sc]e|reuse|rights)[_-]?(?:notice|terms)|(?:notice|terms)[_-]?(?:copyright|licen[sc]e|reuse|rights)', classes, re.I))
+        if not caption and not notice and node.find(["p", "div", "li", "figcaption", "caption"]): continue
         value = text(node)
-        if re.search(r"copyright|©|all rights reserved|creative commons|licensed under|permission to (?:reproduce|use)|reproduced with permission", value, re.I):
+        caption_credit = caption and re.search(r'\b(?:source|credit|courtesy|provided|supplied)\b', value, re.I)
+        if cue.search(value) or caption_credit or (notice and value):
             if value not in evidence: evidence.append(value)
+            if value == "Copyright ©" and (node.get('href') in ('/copyright', COPYRIGHT)
+                    or node.find('a', href=re.compile(r'^(?:https://www.qao.qld.gov.au)?/copyright$'))):
+                known_footer.add(value)
+            if caption_credit and re.fullmatch(r'(?:Source|Credit):\s*(?:QAO|Queensland Audit Office)\.?', value, re.I):
+                known_footer.add(value)
     evidence = [v for v in evidence if not any(v != larger and v in larger for larger in evidence)]
-    exceptions = [v for v in evidence if re.search(r"\ball rights reserved\b|\bCC BY[- ](?:NC|ND|SA)\b|\bAttribution[- –](?:NonCommercial|NoDerivatives|ShareAlike)\b|\bnot (?:available |covered )?under (?:the |a )?(?:CC|Creative Commons|licen[sc]e)|\bnot licensed\b|\bexcluded from\b|\bpermission (?:is )?required\b|©(?!.*(?:State of Queensland|Queensland Audit Office))|\bcopyright\s+(?:of|belongs to)\b|\bthird.party (?:copyright|material)\b|\breproduced with permission\b", v, re.I)
-                  and v != "Copyright ©"]
+    exceptions = []
+    owner_notice = re.compile(r'^(?:Copyright\s*)?©\s*(?:\d{4}\s*)?(?:The\s+)?(?:State of Queensland(?:\s*\(Queensland Audit Office\))?|Queensland Audit Office)\s*\d{0,4}\.?$', re.I)
+    grant_notice = re.compile(r'^(?:This (?:work|report|material) is )?(?:licensed under |available under )?(?:a )?(?:Creative Commons Attribution 4\.0(?: International)?(?: licen[sc]e)?|CC BY 4\.0)\.?$', re.I)
+    for value in evidence:
+        if value in known_footer or owner_notice.fullmatch(value) or grant_notice.fullmatch(value): continue
+        exceptions.append("Uncleared copyright/licensing notice: " + value)
     return {"status": "exception" if exceptions else "cc-by-4.0", "licence_url": LICENCE,
             "copyright_url": COPYRIGHT, "checked": True, "notices": evidence,
             "exceptions": exceptions, "body_skipped": bool(exceptions)}
@@ -202,8 +223,111 @@ def clean_markup(node):
     if not isinstance(node, Tag) or node.name in ("script", "style", "img", "iframe"): return ""
     content = "".join(clean_markup(n) for n in node.children)
     if node.name in ("p", "ul", "ol", "li", "em", "strong", "br"):
-        return f"<{node.name}>" + content + f"</{node.name}>"
+        attrs = ''
+        if node.name == 'ol':
+            if node.get('type') in ('1', 'a', 'A', 'i', 'I'): attrs += f' type="{node["type"]}"'
+            if re.fullmatch(r'-?\d+', str(node.get('start', ''))): attrs += f' start="{int(node["start"])}"'
+        if node.name == 'li' and re.fullmatch(r'-?\d+', str(node.get('value', ''))): attrs += f' value="{int(node["value"])}"'
+        return f"<{node.name}{attrs}>" + content + f"</{node.name}>"
     return content
+
+
+# Shared by the exporter: only list marker attributes, never arbitrary HTML.
+SAFE_MARKUP = re.compile(r'</?(?:p|ul|li|em|strong|br)>|</ol>|<ol(?: type="[1aAiI]")?(?: start="-?\d+")?>|<li value="-?\d+">')
+
+
+def recommendation_blocks(main):
+    """All text fields in a chapter, with introductions/addressees kept together."""
+    dedicated = list(main.select('.field--name-field-recommendations'))
+    if dedicated: return [recommendation_scope(copy.copy(field)) for field in dedicated]
+    blocks = []
+    headings = [h for h in main.find_all(['h2', 'h3', 'h4']) if re.fullmatch(r'(?:\d+\.?\s*)?Recommendations?', text(h), re.I)]
+    chapters = [h for h in headings if h.find_parent(class_='paragraph--type--chapter-header')]
+    # A report-on-a-page summary may repeat the heading/count without its text.
+    for heading in chapters or headings:
+        chapter = heading.find_parent(class_='paragraph--type--chapter-header')
+        block = BeautifulSoup('<div></div>', 'html.parser').div
+        if chapter:
+            for sibling in chapter.parent.find_next_siblings():
+                if sibling.select_one('.paragraph--type--chapter-header'): break
+                for field in sibling.select('.field--name-field-text'):
+                    block.append(copy.copy(field))
+        else:
+            # Legacy in-field headings; never cross into the following section.
+            for sibling in heading.find_next_siblings():
+                if sibling.name in ('h2', 'h3', 'h4') and int(sibling.name[1]) <= int(heading.name[1]): break
+                block.append(copy.copy(sibling))
+        blocks.append(recommendation_scope(block))
+    return blocks
+
+
+def recommendation_scope(block):
+    """Stop at response references, retaining any reiterated source advice."""
+    ended = False
+    def trim(node):
+        nonlocal ended
+        for child in list(node.children):
+            if isinstance(child, Tag) and child.name in ('h2', 'h3', 'h4', 'h5'):
+                value = text(child)
+                if re.match(r'Reference to comments', value, re.I): ended = True
+            if ended: child.extract()
+            elif isinstance(child, Tag): trim(child)
+    trim(block)
+    return block
+
+
+def recommendation_parts(block):
+    # A stated count of new recommendations does not count a following
+    # prior-year status section. Reconcile each section independently while
+    # retaining numbered source advice in both.
+    parts, part = [], BeautifulSoup('<div></div>', 'html.parser').div
+    def flatten(node):
+        if isinstance(node, Tag) and node.name in ('div', 'section'):
+            for child in node.children: yield from flatten(child)
+        else: yield node
+    for node in flatten(block):
+        if isinstance(node, Tag) and node.name in ('h2', 'h3', 'h4', 'h5') and re.search(r'prior year|previous years?|status of recommendations|recommendations? (?:for|to)\b', text(node), re.I):
+            if part.contents: parts.append(part)
+            part = BeautifulSoup('<div></div>', 'html.parser').div
+        part.append(copy.copy(node))
+    if part.contents: parts.append(part)
+    return parts
+
+
+def recommendation_evidence(block):
+    """Read source markers independently of the projection parser."""
+    numbers, declared = [], []
+    words = dict(zip(('zero','one','two','three','four','five','six','seven','eight','nine','ten'), range(11)))
+    for paragraph in block.find_all('p'):
+        value = text(paragraph)
+        match = re.search(r'\b(?:[Ww]e (?:make|made|have made)(?: the following)?|[Tt]he following)\s+(\d+|zero|one|two|three|four|five|six|seven|eight|nine|ten)\s+(?:new\s+)?recommendations?\b', value)
+        if match: declared.append(int(match[1]) if match[1].isdigit() else words[match[1]])
+        elif re.search(r'\b[Ww]e make the following new recommendation\b', value): declared.append(1)
+    def walk(node):
+        if not isinstance(node, Tag): return
+        if node.name == 'tr':
+            cells = node.find_all(['td', 'th'], recursive=False)
+            if not cells: return
+            marker = re.fullmatch(r'(?:REC\s*)?(\d+)[.)]?', text(cells[0]), re.I)
+            if marker and len(cells) > 1: numbers.append(int(marker[1])); return
+            walk(cells[0]); return
+        if node.name == 'ol':
+            if node.get('type', '1') != '1': return
+            number = int(node.get('start', 1))
+            for item in node.find_all('li', recursive=False):
+                number = int(item.get('value', number)); numbers.append(number); number += 1
+            return
+        if node.name == 'p':
+            marker = re.match(r'^(\d+)[.)]\s*', text(node))
+            if marker: numbers.append(int(marker[1]))
+            return
+        if node.name in ('td', 'th') and not node.find(['p', 'ol', 'table']):
+            marker = re.match(r'^(\d+)[.)]\s*', text(node))
+            if marker: numbers.append(int(marker[1])); return
+        if node.name == 'ul': return
+        for child in node.children: walk(child)
+    walk(block)
+    return numbers, sum(declared) if declared else None
 
 
 def public_body(name):
@@ -215,13 +339,10 @@ def public_body(name):
 
 
 def recommendations(main):
-    rows, seen, fields = [], set(), list(main.select('.field--name-field-recommendations'))
-    for heading in main.find_all(["h2", "h3", "h4"]):
-        if not re.fullmatch(r"(?:\d+\.?\s*)?Recommendations?", text(heading), re.I): continue
-        field = heading.find_next(class_="field--name-field-text")
-        if field and all(field is not f for f in fields): fields.append(field)
-    for field in fields:
-        pending, addressee, active = [], None, None
+    rows, seen = [], set()
+    for field in [part for block in recommendation_blocks(main) for part in recommendation_parts(block)]:
+        expected_numbers, stated_count = recommendation_evidence(field)
+        pending, addressee, active, stopped = [], None, None, False
 
         def recipient(value):
             named = re.match(r'^(.+?)\s+should\b', value, re.I)
@@ -238,9 +359,12 @@ def recommendations(main):
             pending.append(active)
 
         def walk(node):
-            nonlocal addressee, active
-            if not isinstance(node, Tag): return
+            nonlocal addressee, active, stopped
+            if not isinstance(node, Tag) or stopped: return
             value = text(node)
+            if node.name in ('h2', 'h3', 'h4', 'h5') and re.match(r'Reference to comments', value, re.I):
+                stopped = True
+                return
             if node.name in ('td', 'th', 'strong', 'h3', 'h4') and not node.find(['p', 'ol', 'ul']):
                 intro = re.search(r"We(?: also)? recommend(?:\s+(?:that|to))?\s+(.+?):", value, re.I)
                 councils = re.match(r'For (councils.+?),\s*we recommend they:', value, re.I)
@@ -255,11 +379,26 @@ def recommendations(main):
                 # first column. Never parse the entity's response columns.
                 cells = node.find_all(['td', 'th'], recursive=False)
                 if not cells: return
-                numbered = re.fullmatch(r'(\d+)[.)]?', text(cells[0]))
+                numbered = re.fullmatch(r'(?:REC\s*)?(\d+)[.)]?', text(cells[0]), re.I)
                 if numbered and len(cells) > 1:
                     add(int(numbered.group(1)), '')
+                    # The entire advice cell is QAO's text. Introductory
+                    # recipient sentences within it must not reset the record.
+                    direct = recipient(text(cells[1]))
+                    if direct: active['addressed_to'] = direct
+                    active['html'] = ''.join(clean_markup(n) for n in cells[1].children)
+                elif not text(cells[0]) and len(cells) > 1 and re.match(r'We(?: also)? recommend\b.+:', text(cells[1]), re.I):
+                    # An icon-only first cell is not a recommendation/response
+                    # column. The second cell carries the source introduction.
                     walk(cells[1])
+                elif len(cells) == 1 and not expected_numbers and stated_count is not None and not cells[0].find('ol') and re.match(r'We recommend\b', text(cells[0]), re.I):
+                    add(None, ''.join(clean_markup(n) for n in cells[0].children))
+                    active['addressed_to'] = recipient(value) or addressee
                 else: walk(cells[0])
+            elif node.name in ('td', 'th') and not node.find(['p', 'ol', 'table']) and re.match(r'^\d+[.)]\s*', value):
+                fragment = BeautifulSoup('<p></p>', 'html.parser').p
+                for child in node.children: fragment.append(copy.copy(child))
+                walk(fragment)
             elif node.name in ('h2', 'h3', 'h4'):
                 active = None
                 if public_body(value): addressee = value
@@ -287,6 +426,9 @@ def recommendations(main):
                 elif active and not node.find('cite') and not re.match(r'(?:Note\s*\d*[:.]|In accordance with|Reference to comments)', value, re.I):
                     active['html'] += clean_markup(node)
             elif node.name == 'ol':
+                if node.get('type', '1') != '1':
+                    if active: active['html'] += clean_markup(node)
+                    return
                 number = int(node.get('start', 1))
                 for item in node.find_all('li', recursive=False):
                     number = int(item.get('value', number))
@@ -306,6 +448,11 @@ def recommendations(main):
                 for child in node.children: walk(child)
 
         walk(field)
+        parsed_numbers = [r['number'] for r in pending if r['number'] is not None and text(BeautifulSoup(r['html'], 'html.parser'))]
+        if parsed_numbers != expected_numbers or any(not text(BeautifulSoup(r['html'], 'html.parser')) for r in pending):
+            raise Held(f'Recommendation numbering mismatch: source {expected_numbers}, parsed {parsed_numbers}')
+        if stated_count is not None and len(pending) != stated_count:
+            raise Held(f'Recommendation count mismatch: page states {stated_count}, parsed {len(pending)}')
         for rec in pending:
             rec['text'] = text(BeautifulSoup(rec['html'], 'html.parser'))
             key = (rec['number'], rec['text'], rec['addressed_to'])
@@ -368,6 +515,20 @@ def parse_report(html, row):
             "licence": licence, "page_sha256": hashlib.sha256(html.encode()).hexdigest()}
 
 
+def verify_listing(checkpoint, client, pages):
+    """Never certify cached membership without rereading every listing page."""
+    verify_url, verify_page = INDEX, 0
+    while verify_url:
+        if verify_page >= pages: raise Held('Report index gained pages during acquisition')
+        fresh, nxt, last = parse_index(client.get(verify_url), verify_url)
+        saved = json.loads((checkpoint / f'index-{verify_page}.json').read_text())
+        if (verify_url, fresh, nxt, last) != (saved['url'], saved['records'], saved['next'], saved['last_page']):
+            raise Held(f'Report index changed during acquisition on page {verify_page + 1}; fresh listing required')
+        verify_url, verify_page = nxt, verify_page + 1
+    if verify_page != pages: raise Held('Report index lost pages during acquisition')
+    return verify_page
+
+
 def acquire(out, checkpoint, client, refresh=False):
     started = time.monotonic()
     out, checkpoint = local_path(out), local_path(checkpoint)
@@ -414,15 +575,13 @@ def acquire(out, checkpoint, client, refresh=False):
         records.append(record)
         if len(records) % 10 == 0: print(f"[qao] staged {len(records)} / {len(listed)}; requests {client.requests}", flush=True)
     guard_count(len(records), len(listed), previous["count"] if previous else 0)
-    # Re-read first membership page at the end, so an index moving under a long
-    # acquisition is held for a fresh run instead of being silently accepted.
-    fresh, _, last = parse_index(client.get(INDEX), INDEX)
-    first = json.loads((checkpoint / "index-0.json").read_text())
-    if fresh != first["records"] or last != final_page: raise Held("Report index changed during acquisition")
+    # Cached pages accelerate resume, but cannot certify membership. Re-fetch
+    # every listing page and compare its rows and paging edges before acceptance.
+    verify_page = verify_listing(checkpoint, client, page)
     generated = datetime.now(timezone.utc).isoformat()
     snapshot = {"schema": 1, "scope": "reports to Parliament: index + HTML recommendations", "complete": True,
                 "generated_at": generated, "count": len(records), "listed": len(listed), "pages": page,
-                "policy": policy, "reports": records}
+                "policy": policy, "listing_verified_pages": verify_page, "reports": records}
     # Download dates/receipts are operational evidence; an unchanged catalogue
     # keeps its accepted timestamp and bytes, with a separate latest-run receipt.
     stable = lambda values: [{k: v for k, v in r.items() if k != 'page_sha256'} for r in values]
@@ -430,6 +589,7 @@ def acquire(out, checkpoint, client, refresh=False):
     if not unchanged: atomic_json(out, snapshot)
     summary = {"staged": len(records), "listed": len(listed), "recommendations": sum(len(r["recommendations"]) for r in records),
                "requests": client.requests, "seconds": round(time.monotonic() - started, 2), "unchanged": bool(unchanged),
+               "listing_verified_pages": verify_page,
                "licence_exceptions": [{"id": r["id"], "notices": r["licence"]["exceptions"]} for r in records if r["licence"]["body_skipped"]]}
     atomic_json(checkpoint / "complete.json", summary)
     atomic_json(out.with_name("last-run.json"), summary)
@@ -437,7 +597,7 @@ def acquire(out, checkpoint, client, refresh=False):
     return previous if unchanged else snapshot
 
 
-def reparse_cache(out, checkpoint):
+def reparse_cache(out, checkpoint, client=None):
     """Reapply the parser to verified saved HTML, with zero source requests."""
     started = time.monotonic()
     out, checkpoint = local_path(out), local_path(checkpoint)
@@ -455,6 +615,9 @@ def reparse_cache(out, checkpoint):
         rows.append(parsed)
         atomic_json(checkpoint / (row['id'] + '.json'), parsed)
     guard_count(len(rows), snapshot['listed'], snapshot['count'])
+    if client:
+        client.policies()
+        snapshot['listing_verified_pages'] = verify_listing(checkpoint, client, snapshot['pages'])
     snapshot['reports'] = rows
     atomic_json(out, snapshot)
     receipt = json.loads(out.with_name('last-run.json').read_text())
@@ -462,6 +625,9 @@ def reparse_cache(out, checkpoint):
     receipt['licence_exceptions'] = [{'id':r['id'], 'notices':r['licence']['exceptions']} for r in rows if r['licence']['body_skipped']]
     receipt['reparsed_from_receipts'] = True
     receipt['reparse_seconds'] = round(time.monotonic() - started, 2)
+    if client:
+        receipt['fix_run_requests'] = client.requests
+        receipt['listing_verified_pages'] = snapshot['listing_verified_pages']
     atomic_json(out.with_name('last-run.json'), receipt)
     atomic_json(checkpoint / 'complete.json', receipt)
     print(json.dumps(receipt), flush=True)
@@ -475,11 +641,12 @@ def main():
     parser.add_argument("--refresh", action="store_true")
     parser.add_argument("--quiet-hours", action="store_true", help="Weekly refresh: 20:00–08:00 Brisbane")
     parser.add_argument("--reparse-cache", action="store_true", help="Reapply parser to saved, hash-verified HTML; zero source requests")
+    parser.add_argument("--verify-listing", action="store_true", help="With receipt replay, reread policies and every listing page before acceptance")
     args = parser.parse_args()
     client = Client(quiet=args.quiet_hours, cache=Path(args.checkpoint) / "http")
     try:
         if args.reparse_cache:
-            reparse_cache(args.out, args.checkpoint)
+            reparse_cache(args.out, args.checkpoint, client if args.verify_listing else None)
             return 0
         acquire(args.out, args.checkpoint, client, args.refresh)
         return 0

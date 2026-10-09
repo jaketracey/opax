@@ -14,17 +14,14 @@ const fixture = {schema:1,complete:true,count:1,listed:1,generated_at:'2026-10-1
  id:'qao-2025-26-1',number:1,year:'2025-26',report_label:'Report 1: 2025–26',title:'Example audit',tabled_date:'2026-01-02',sectors:['Health'],entities:['Queensland Health'],canonical_url:'https://www.qao.qld.gov.au/reports-resources/reports-parliament/example',pdf_url:'https://www.qao.qld.gov.au/sites/default/files/report.pdf',
  licence:{checked:true,status:'cc-by-4.0',licence_url:'https://creativecommons.org/licenses/by/4.0/',exceptions:[],body_skipped:false},
  recommendations:[{number:3,text:'Keep Jane Citizen’s redaction.',html:'<p>Keep Jane Citizen’s <em>redaction</em>.</p>',addressed_to:'Queensland Health',source_text:"QAO's text"}]}]};
-const exportFixture = snapshot => JSON.parse(execFileSync('python3',['-c',"import json,sys; from scripts.export_audit import plan_export; p,m=plan_export(json.load(sys.stdin),[{'id':'health','name':'Queensland Health','jurisdiction':'qld'},{'id':'wrong','name':'QUEENSLAND HEALTH','jurisdiction':'qld'}]); print(json.dumps({k:v.decode() for k,v in p.items()}))"],{cwd:checkout,input:JSON.stringify(snapshot),encoding:'utf8'}));
-const files = exportFixture(fixture);
+// Exporter/parser behaviour is tested by qao_loader_test.py separately.
+// Node deploy CI reads these fixtures and needs no Python network packages.
+const fixtureRoot = new URL('./fixtures/audit-export/',import.meta.url);
+const files = Object.fromEntries(readdirSync(fixtureRoot).map(name=>[name,readFileSync(new URL(name,fixtureRoot),'utf8')]));
 const read = async path => JSON.parse(files[path.replace('/audit/','')]);
 const manifest = await read('/audit/manifest.json');
 const index = await read('/audit/index.json');
 const block = (heading,text,links='') => `<section id="prerender"><h1>${heading}</h1><p>${text}</p>${links}</section>`;
-
-test('QAO loader stubbed HTTP: paging, resume, shrink, licence exceptions and access guards',()=> {
- const result = execFileSync('python3',[new URL('./qao_loader_test.py',import.meta.url).pathname],{cwd:checkout,encoding:'utf8'});
- assert.match(result,/"staged": 2, "listed": 2/);
-});
 
 test('QAO weekly refresh stays held before catalogue promotion and preserves a held source',()=> {
  execFileSync('python3',[new URL('../../scripts/vm/test_qao_refresh.py',import.meta.url).pathname],{cwd:checkout,encoding:'utf8'});
@@ -69,9 +66,19 @@ test('audit detail has numbered verbatim QAO text, exact tabled date, SourceLine
 
 test('licence exception detail withholds body and recommendations',async()=> {
  const excepted=structuredClone(fixture); const r=excepted.reports[0];r.entities=[];r.recommendations=[];r.licence={...r.licence,status:'exception',body_skipped:true,exceptions:['All rights reserved.']};
- const exported=exportFixture(excepted);const read=async path=>JSON.parse(exported[path.replace('/audit/','')]);
+ const exported={...files,'reports-1.json':JSON.stringify({records:excepted.reports})};const read=async path=>JSON.parse(exported[path.replace('/audit/','')]);
  const page=await auditPage(r.id,new URL('https://opax.com.au/audit/'+r.id),read,block);
  assert.equal(page.status,200);assert.match(page.prerender,/text withheld/);assert.doesNotMatch(page.prerender,/Keep Jane Citizen/);
+});
+
+test('audit detail preserves alphabetic source markers and marks unpublished numbers',async()=> {
+ const record=structuredClone(fixture.reports[0]);record.recommendations[0].html='<p>Source words</p><ol type="a" start="3"><li value="5">A source subpoint.</li></ol>';
+ const render=async row=>auditPage(row.id,new URL('https://opax.com.au/audit/'+row.id),async path=>path.includes('reports-')?{records:[row]}:read(path),block);
+ const numbered=await render(record);assert.ok(numbered.prerender.includes(record.recommendations[0].html));
+ record.recommendations[0].number=null;
+ const unknown=await render(record);assert.match(unknown.prerender,/Number not published in the HTML/);assert.match(unknown.prerender,/<li class="audit-unnumbered">/);
+ record.recommendations[0].html='<ol type="a" onclick="unsafe"><li>Changed.</li></ol>';
+ const unsafe=await render(record);assert.doesNotMatch(unsafe.prerender,/onclick|Changed\./);assert.ok(unsafe.prerender.includes('Keep Jane Citizen’s redaction.'));
 });
 
 test('audit discovery uses report ids; sitemap type counts reconcile and incomplete catalogues stay absent',()=> {
@@ -89,6 +96,10 @@ test('audit Worker routes give bad/unknown ids a 404 and noindex without externa
  const {default:worker}=await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
  globalThis.HTMLRewriter=class{on(){return this}transform(res){return res}};
  const paths=[];const env={COMMUNITY_ORIGIN:'https://opax.com.au',ASSETS:{async fetch(req){const path=new URL(req.url).pathname;paths.push(path);if(path==='/')return new Response(readFileSync(new URL('index.html',publicRoot)));const body=files[path.slice('/audit/'.length)];return new Response(body||'missing',{status:body?200:404})}}};
+ for(const alias of ['/audit/%71ao-2025-26-1','/audit/qao-2025-26-%31','/audit/qao-2025-26-1/','/audit/']) {
+  const response=await worker.fetch(new Request('https://opax.com.au'+alias+'?ref=source'),env,{});
+  assert.equal(response.status,301,alias);assert.equal(response.headers.get('location'),'https://opax.com.au'+(alias==='/audit/'?'/audit':'/audit/qao-2025-26-1')+'?ref=source');
+ }
  for(const path of ['/audit','/audit/qao-2025-26-1'])assert.equal((await worker.fetch(new Request('https://opax.com.au'+path),env,{})).status,200);
  for(const id of ['null','NULL','undefined','%6Eull','unknown','qao-9999-1','qao-2025-26-1/extra','%ZZ']) {
   const response=await worker.fetch(new Request('https://opax.com.au/audit/'+id),env,{});

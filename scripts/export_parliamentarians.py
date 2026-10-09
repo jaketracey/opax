@@ -71,7 +71,7 @@ from parli.ingest.arag_sync import (  # noqa: E402
     clean_party, prepare_dedupe,
 )
 from parli.ingest.speaker_names import normalize_speaker  # noqa: E402
-from scripts.roster_identity import COMMITTEES, agrees, member, same_person, state_member_matches, usable_alias, verify, weak  # noqa: E402
+from scripts.roster_identity import COMMITTEES, agrees, federal_members, same_person, state_member_matches, usable_alias, verify, weak  # noqa: E402
 from scripts.enrich_profile_jurisdictions import pinned_reference, repair, REVIEWED, REPRESENTATION_METHOD  # noqa: E402
 
 DB = "file:" + (os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")) + "?mode=ro"
@@ -222,12 +222,7 @@ def main(argv=()) -> None:
                        "chamber": r[3], "start": r[6], "end": r[7]} for r in db.execute(
         "SELECT person_id, full_name, state, chamber, party, party_canonical, entered_house, left_house FROM members")}
     # Federal members with their terms: what a row's pid is verified against.
-    federal = {str(r[0]): member(r[0], [r[1], f"{r[2] or ''} {r[3] or ''}".strip()], r[4],
-                                 int(r[5][:4]) if r[5] and r[5][:4].isdigit() else None,
-                                 int(r[6][:4]) if r[6] and r[6][:4].isdigit() else None)
-               for r in db.execute(
-                   "SELECT person_id, full_name, first_name, last_name, chamber, entered_house, left_house "
-                   "FROM members WHERE chamber IN ('representatives', 'senate') AND person_id GLOB '[0-9]*'")}
+    federal = federal_members(db)
     same = same_person()
     now_year = date.today().year
     # Sitting federal parliamentarians and the party they sit for today (members.left_house is

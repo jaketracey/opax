@@ -342,10 +342,16 @@ All checkpoints, raw HTML receipts and the accepted snapshot are gitignored unde
 requests. Robots and the copyright grant are reread each run; minimum spacing is
 two seconds or the publisher's longer crawl delay, with bounded 429/5xx backoff
 and an 800-request ceiling. Any challenge stops acquisition without bypass.
-An empty/incomplete acquisition, changed first index page, loss above 2%, licence
+An empty/incomplete acquisition, changed membership on any listing page, loss above 2%, licence
 grant change or failed acquisition/export exits 3 and preserves the last good
 published catalogue. Interrupted checkpoints resume within the same UTC day;
 later days or completed runs reread membership and every report's licence.
+Every run, including a resume, refetches all listing pages and reconciles rows
+and paging edges before accepting the snapshot. Recommendation numbers and
+stated counts reconcile within their source sections; discrepancies hold the
+run. Unknown reuse notices and third-party captions withhold that report's
+body-derived fields. Offline corrections use hash-verified saved report HTML;
+`--reparse-cache --verify-listing` also refetches policies and full membership.
 Unchanged report projections keep their original accepted timestamp; latest-run
 counts and timing are separate operational receipts. PDF bodies, entity responses
 and the app reader are phase 2, with document-level rights/redaction review.

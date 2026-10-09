@@ -250,6 +250,7 @@
 .audit-facts dt { font-weight: 600; }
 .audit-facts dd { margin: 0; }
 .audit-recommendations > li { padding: var(--space-3) 0; white-space: normal; overflow-wrap: anywhere; }
+.audit-recommendations > .audit-unnumbered { list-style: none; }
 .audit-content nav { display: flex; flex-wrap: wrap; gap: var(--space-5); margin: var(--space-5) 0; }
 .audit-content > .ui-source { margin-top: var(--space-6); }
 @media (max-width: 900px) { .audit-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

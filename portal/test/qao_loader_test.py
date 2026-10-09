@@ -67,8 +67,9 @@ class Tests(unittest.TestCase):
         data = acquire(out, checkpoint, client)
         self.assertEqual(data['count'], 2); self.assertEqual(data['listed'], 2)
         self.assertNotIn(INDEX + '/example-1', resumed.calls)
-        self.assertNotIn(INDEX + '?page=1', resumed.calls)
-        self.assertTrue(all(w == 3 for w in waits)); self.assertEqual(client.requests, 4)
+        self.assertEqual(resumed.calls.count(INDEX + '?page=1'), 1)
+        self.assertTrue(all(w == 3 for w in waits)); self.assertEqual(client.requests, 5)
+        self.assertEqual(data['listing_verified_pages'], 2)
         first, second = data['reports']; self.assertEqual(first['tabled_date'], '2026-01-02')
         self.assertEqual(first['entities'], ['Queensland Health'])
         self.assertEqual([r['number'] for r in first['recommendations']], [3, 7])
@@ -102,6 +103,79 @@ class Tests(unittest.TestCase):
         self.assertEqual(out.read_bytes(), before)
         with self.assertRaisesRegex(Held, 'inside this checkout'):
             acquire('/tmp/qao-outside-checkout.json', root/'checkpoint', Client(Session(),sleep=lambda _:None))
+
+    def test_resume_rechecks_second_page_membership_before_acceptance(self):
+        root=self.temp();out=root/'snapshot.json';checkpoint=root/'checkpoint'
+        with self.assertRaises(Held):
+            acquire(out,checkpoint,Client(Session(fail=INDEX+'/example-2'),sleep=lambda _:None,clock=lambda:0))
+        session=Session();session.responses[INDEX+'?page=1']=Response(listing(3))
+        with self.assertRaisesRegex(Held,'changed.*page 2'):
+            acquire(out,checkpoint,Client(session,sleep=lambda _:None,clock=lambda:0))
+        self.assertFalse(out.exists());self.assertFalse((checkpoint/'complete.json').exists())
+        self.assertIn(INDEX+'?page=1',session.calls)
+
+    def test_saved_source_sections_cover_all_six_intro_split_reports(self):
+        root=ROOT/'portal/test/fixtures/qao'
+        expected={'qao-2020-21-14':6,'qao-2020-21-5':6,'qao-2021-22-1':7,
+                  'qao-2021-22-2':5,'qao-2021-22-8':4,'qao-2022-23-6':7}
+        rows=json.loads((root/'index.json').read_text())
+        for rid,count in expected.items():
+            with self.subTest(report=rid):
+                row=next(r for r in rows if r['id']==rid)
+                recs=parse_report((root/(rid+'.html')).read_text(),row)['recommendations']
+                self.assertEqual([r['number'] for r in recs],list(range(1,count+1)))
+                self.assertTrue(all(r['text'] and r['addressed_to'] for r in recs))
+        self.assertEqual(sum(expected.values()),35)
+
+    def test_legacy_rec_cells_and_stated_counts_reconcile(self):
+        root=ROOT/'portal/test/fixtures/qao';rows=json.loads((root/'index.json').read_text())
+        for rid,count in {'qao-2016-17-1':6,'qao-2020-21-15':2,'qao-2021-22-18':5,
+                          'qao-2022-23-17':8,'qao-2022-23-2':8,'qao-2024-25-13':5,'qao-2025-26-12':2}.items():
+            with self.subTest(report=rid):
+                row=next(r for r in rows if r['id']==rid)
+                self.assertEqual(len(parse_report((root/(rid+'.html')).read_text(),row)['recommendations']),count)
+        row=next(r for r in rows if r['id']=='qao-2021-22-18')
+        html=(root/(row['id']+'.html')).read_text().replace('following 5 recommendations','following 6 recommendations')
+        with self.assertRaisesRegex(Held,'page states 6, parsed 5'):parse_report(html,row)
+        row=parse_index(listing(),INDEX)[0][0]
+        with self.assertRaisesRegex(Held,'numbering mismatch'):
+            parse_report('<h1>Example audit</h1><main><h2>Recommendations</h2><ol><li></li></ol></main>',row)
+
+    def test_alphabetic_source_markers_survive_export(self):
+        root=ROOT/'portal/test/fixtures/qao';rows=json.loads((root/'index.json').read_text())
+        for rid in ('qao-2022-23-14','qao-2021-22-17'):
+            with self.subTest(report=rid):
+                row=next(r for r in rows if r['id']==rid);record=parse_report((root/(rid+'.html')).read_text(),row)
+                html=''.join(r['html'] for r in record['recommendations'])
+                self.assertIn('<ol type="a">',html)
+                payloads,_=plan_export({'complete':True,'listed':1,'count':1,'reports':[record],
+                    'generated_at':'2026-10-10T00:00:00Z','policy':{'copyright_notice':'© State of Queensland'}})
+                self.assertIn('<ol type=\\"a\\">',payloads['reports-1.json'].decode())
+        from bs4 import BeautifulSoup
+        from parli.ingest.qao_reports import clean_markup
+        markup=clean_markup(BeautifulSoup('<ol type="a" start="3" onclick="bad"><li value="5">Words</li></ol>','html.parser').ol)
+        self.assertEqual(markup,'<ol type="a" start="3"><li value="5">Words</li></ol>')
+
+    def test_unknown_notices_and_standalone_captions_fail_closed(self):
+        row=parse_index(listing(),INDEX)[0][0]
+        for notice in ('<figcaption>Image © Third Party.</figcaption>',
+                       '<figcaption>Image © Third Party.<p>A caption with block markup.</p></figcaption>',
+                       '<figcaption>Photo supplied by a third party.</figcaption>',
+                       '<figcaption>Source: Private Image Library.</figcaption>',
+                       '<div class="licence-notice">Restrictions apply; contact the publisher.</div>',
+                       '<caption>Otherwise noted: reproduction requires approval.</caption>',
+                       '<p>This report is licensed under Custom Reuse Terms 2.0.</p>',
+                       '<figcaption>Use only under special rights granted by the provider.</figcaption>',
+                       '<span>Copyright material licensed under CC BY-NC 4.0.</span>',
+                       '<p>Copyright © State of Queensland. Additional reuse conditions apply.</p>'):
+            with self.subTest(notice=notice):
+                record=parse_report(detail()+notice,row)
+                self.assertTrue(record['licence']['body_skipped']);self.assertEqual(record['recommendations'],[])
+                self.assertEqual(record['entities'],[]);self.assertTrue(record['licence']['exceptions'])
+        for notice in ('<p>Copyright © 2026 Queensland Audit Office.</p>',
+                       '<p>This work is licensed under a Creative Commons Attribution 4.0 International licence.</p>',
+                       '<a href="/copyright">Copyright ©</a>'):
+            self.assertFalse(parse_report(detail()+notice,row)['licence']['body_skipped'])
 
     def test_quiet_hours(self):
         from parli.ingest.qao_reports import quiet_guard

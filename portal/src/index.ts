@@ -9,6 +9,7 @@ import { missingEntitySlug } from './crawl-hygiene'
 import { normalizePassage, passageWindow } from './passage-text'
 import { instrumentPage, instrumentReader } from './instruments'
 import { auditPage, auditReader } from './audit'
+import { AUDIT_ID } from '../public/audit.js'
 import { runIndexNow, INDEXNOW_CRON } from './indexnow'
 import { type MoneyFacts, moneyOverviewPrompt, verifiedOverview } from './ask-money-overview'
 import {readGenerationCache, storeGenerationCache} from './generation-cache'
@@ -3739,7 +3740,8 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
   })
 
   switch (route.kind) {
-    case 'audit': return base(await auditPage(route.id, url, auditReader(env.ASSETS), prerenderBlock))
+    case 'audit': return base({ ...await auditPage(route.id, url, auditReader(env.ASSETS), prerenderBlock),
+      ...(route.id && AUDIT_ID.test(route.id) ? { canonical: `${SITE_ORIGIN}/audit/${route.id}` } : {}) })
     case 'instruments': return base(await instrumentPage(route.id, url, instrumentReader(env.ASSETS), prerenderBlock))
     case 'grant-recipient': return grantRecipientMeta(route.jurisdiction, route.id, url, env)
     case 'static': {
@@ -5291,6 +5293,10 @@ async function route(
         // (linked from evidence panels and corpus.json) forwards to the route.
         if (url.pathname === '/connections.html') return legacyConnectionsRedirect(url)
         const seoRoute = matchSeoRoute(url)
+        if (seoRoute?.kind === 'audit') {
+          const path = seoRoute.id === null ? '/audit' : AUDIT_ID.test(seoRoute.id) ? `/audit/${seoRoute.id}` : null
+          if (path && url.pathname !== path) return Response.redirect(`${SITE_ORIGIN}${path}${url.search}`, 301)
+        }
         if (seoRoute?.kind === 'subject' && seoRoute.dir === 'person') {
           const forward = await personSlugRedirect(seoRoute.name, url, env)
           if (forward) return forward

@@ -54,6 +54,9 @@ from datetime import datetime, timedelta, timezone
 from functools import lru_cache
 from pathlib import Path
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import roster_identity  # noqa: E402
+
 DB_PATH = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")
 DB_URI = f"file:{DB_PATH}?mode=ro"
 BRIEF_FIELD = "da-summary-t-body"
@@ -531,6 +534,45 @@ def load_v2_bills(db: sqlite3.Connection) -> list[dict]:
     return bills
 
 
+SPONSOR_WORDS = {"sen", "sen.", "senator", "mp", "jnr", "snr"}
+
+
+def sponsor_print(bill: dict) -> str | None:
+    """The printed sponsor as "Given Surname": the registry's "WANG, Sen Zhenya", or a
+    legacy portfolio's "(s) KATTER, Bob, Jnr, MP" when it names exactly one member."""
+    raw = bill.get("sponsor")
+    if not raw:
+        portfolio = (bill.get("portfolio") or "").strip()
+        if not portfolio.lower().startswith("(s)"):
+            return None
+        raw = portfolio[3:].strip()
+        if len(re.findall(r",\s*(?:MP|Senator|Sen\.?)(?=\s*[A-Z]|\s*$)", raw)) != 1:
+            return None
+    raw = raw.replace("&#39;", "'").replace("&#34;", '"').replace("&quot;", '"')
+    parts = [p.strip() for p in raw.split(",") if p.strip()]
+    if len(parts) > 1:
+        parts = parts[1:] + parts[:1]
+    words = [w for w in " ".join(parts).split() if w.lower() not in SPONSOR_WORDS]
+    return " ".join(words) or None
+
+
+def fill_sponsor_ids(bills: list[dict], members: dict[str, dict]) -> int:
+    """`sponsor_person_id` where the registry left it empty (new ParlInfo rows, every legacy
+    row): the one member of the bill's house whose name agrees with the print and who sat in
+    the year it was introduced -- roster_identity.sole_member(), the people export's own join.
+    Two candidates or none leave it empty. Returns how many were filled."""
+    filled = 0
+    for b in bills:
+        year = (b.get("introduced") or "")[:4]
+        if b.get("sponsor_person_id") or not year.isdigit():
+            continue
+        pid = roster_identity.sole_member(sponsor_print(b), members, b.get("originating_house"), int(year))
+        if pid:
+            b["sponsor_person_id"] = pid
+            filled += 1
+    return filled
+
+
 def fill_sponsor_parties(bills: list[dict], timeline: PartyTimeline) -> None:
     """The sponsor's party on the day they introduced the bill, for the
     `sponsor_party/<party>` label."""
@@ -826,6 +868,9 @@ def build(db: sqlite3.Connection, legacy: bool) -> tuple[list[dict], dict]:
 
     bills = load_legacy_bills(db) if legacy else load_v2_bills(db)
     log(f"registry: {len(bills)} bills")
+    if has_table(db, "members"):
+        filled = fill_sponsor_ids(bills, roster_identity.federal_members(db))
+        log(f"sponsor ids: {filled} filled from the members table")
     fill_sponsor_parties(bills, timeline)
 
     divisions = load_divisions(db, timeline)

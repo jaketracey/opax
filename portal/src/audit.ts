@@ -9,7 +9,7 @@ interface Manifest {
 }
 interface Report extends AuditRow {
   pdf_url: string | null; entity_links: Record<string, string>
-  recommendations: { number: number; text: string; html: string; addressed_to: string | null; source_text: string }[]
+  recommendations: { number: number | null; text: string; html: string; addressed_to: string | null; source_text: string }[]
   licence: { status: string; body_skipped: boolean; exceptions: string[] }
 }
 type Read = <T>(path: string) => Promise<T>
@@ -36,7 +36,7 @@ function entities(r: Report) {
 }
 function recommendationText(rec: Report['recommendations'][number]) {
   // Even a malformed static asset cannot introduce links, scripts or attributes.
-  const remainder = (rec.html || '').replace(/<\/?(?:p|ul|ol|li|em|strong|br)>/g, '')
+  const remainder = (rec.html || '').replace(/<\/?(?:p|ul|li|em|strong|br)>|<\/ol>|<ol(?: type="[1aAiI]")?(?: start="-?\d+")?>|<li value="-?\d+">/g, '')
   return /[<>]/.test(remainder) ? esc(rec.text) : rec.html || esc(rec.text)
 }
 
@@ -68,7 +68,7 @@ export async function auditPage(id: string | null, url: URL, read: Read, block: 
     if (!r || !r.canonical_url.startsWith('https://www.qao.qld.gov.au/reports-resources/')) return missing()
     const description = `${r.report_label}. Tabled date: ${r.tabled_date}. ${r.licence.body_skipped ? 'Recommendation text withheld under a copyright exception.' : `${r.recommendations.length} recommendations published as HTML.`}`
     const recommendations = r.licence.body_skipped ? `<p>Recommendation text withheld because this report page records a copyright exception. Read the authoritative report for its terms.</p>`
-      : r.recommendations.length ? `<ol class="audit-recommendations">${r.recommendations.map(rec => `<li value="${rec.number}"><p>${tagHTML("QAO's text")}${rec.addressed_to ? ` <span>Addressed to: ${esc(rec.addressed_to)}</span>` : ' <span>Addressee not identified in the HTML</span>'}</p><div>${recommendationText(rec)}</div></li>`).join('')}</ol>`
+      : r.recommendations.length ? `<ol class="audit-recommendations">${r.recommendations.map(rec => `<li${rec.number === null ? ' class="audit-unnumbered"' : ` value="${rec.number}"`}><p>${tagHTML("QAO's text")}${rec.number === null ? ' <span>Number not published in the HTML</span>' : ''}${rec.addressed_to ? ` <span>Addressed to: ${esc(rec.addressed_to)}</span>` : ' <span>Addressee not identified in the HTML</span>'}</p><div>${recommendationText(rec)}</div></li>`).join('')}</ol>`
       : '<p>No numbered recommendation text was identified in this report’s published HTML. Recommendations in PDF bodies are outside this phase.</p>'
     return { title: `${r.title} · OPAX`, description, status: 200,
       prerender: block(r.title, description, directory) + `<section class="wrap audit-content"><p>${statusLabelHTML('Tabled', 'done')} ${esc(r.report_label)}</p><dl class="audit-facts"><dt>Tabled date</dt><dd>${esc(r.tabled_date)}</dd><dt>Report year</dt><dd>${esc(r.year)}</dd></dl><p class="audit-tags">${r.sectors.map(s => tagHTML(s)).join(' ')}</p><h2>Entities audited</h2>${entities(r)}<h2>Recommendations</h2>${recommendations}<p><a class="ui-button" href="${esc(r.canonical_url)}" rel="noopener">Authoritative report — Queensland Audit Office</a></p>${r.pdf_url ? `<p><a href="${esc(r.pdf_url)}" rel="noopener">Report PDF on QAO</a></p>` : ''}${source(m, r.canonical_url, r.licence)}</section>` }

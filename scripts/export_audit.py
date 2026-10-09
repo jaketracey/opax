@@ -9,7 +9,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from parli.ingest.qao_reports import Held, ID, INDEX, LICENCE, COPYRIGHT, guard_count, local_path, public_body, source_url
+from parli.ingest.qao_reports import Held, ID, INDEX, LICENCE, COPYRIGHT, SAFE_MARKUP, guard_count, local_path, public_body, source_url
 
 MAX_FILES, MAX_BYTES, CHUNK_ROWS = 40, 10_000_000, 100
 SOURCE = "Source: Queensland Audit Office, CC BY 4.0"
@@ -41,10 +41,10 @@ def validate_record(row):
         raise Held("Excepted report body must be skipped")
     if any(not public_body(entity) for entity in row["entities"]): raise Held("Non-public audited entity")
     for rec in row["recommendations"]:
-        if type(rec["number"]) is not int or rec["number"] < 1 or not rec["text"] or rec.get("source_text") != "QAO's text":
+        if (rec["number"] is not None and (type(rec["number"]) is not int or rec["number"] < 1)) or not rec["text"] or rec.get("source_text") != "QAO's text":
             raise Held("Incomplete source recommendation")
         # Only text and the narrow formatting subset produced by the loader.
-        markup = re.sub(r"</?(?:p|ul|ol|li|em|strong|br)>", "", rec.get("html", ""))
+        markup = SAFE_MARKUP.sub("", rec.get("html", ""))
         if "<" in markup or ">" in markup: raise Held("Unsafe recommendation markup")
 
 
