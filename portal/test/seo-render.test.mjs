@@ -285,3 +285,20 @@ test('server-only pages write the app breadcrumb strip, hidden once the app boot
   const css=readFileSync(new URL('style.css',pub),'utf8');
   assert.match(css,/\.spa-ready \.prerender-crumbs, \.spa-booting \.prerender-crumbs \{ display: none; \}/);
 });
+
+test('an address nothing answers gets the site page, noindex, with a way on; a missing file stays plain',async()=>{
+  for(const path of ['/no-such-page-p5','/no/such/page/','/old-page.html']){
+    const response=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});
+    assert.equal(response.status,404,path);assert.equal(response.headers.get('x-robots-tag'),'noindex',path);
+    const html=await response.text();
+    assert.match(html,/<title>Page not found · OPAX<\/title>/,path);
+    assert.match(html,/<nav class="crumbs prerender-crumbs"[^>]*>.*<span class="crumb-label">Page not found<\/span>/s,path);
+    assert.match(html,/<h1>Page not found<\/h1><p>Nothing is published at this address\. Search the record, or start again from the home page\.<\/p><p><a href="\/ask\?view=search">Search the record<\/a> · <a href="\/">Home<\/a><\/p>/,path);
+    // The canonical goes with the status; the app scripts go in the real HTMLRewriter (not modelled here).
+    assert.doesNotMatch(html,/rel="canonical"/,path);
+  }
+  for(const path of ['/no-such-script.js','/missing.png']){
+    const response=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});
+    assert.equal(response.status,404,path);assert.doesNotMatch(await response.text(),/Page not found · OPAX/,path);
+  }
+});

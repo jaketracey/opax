@@ -3249,6 +3249,8 @@ type SeoRoute =
   | { kind: 'doc'; slug: string }
   | { kind: 'bill'; key: string }
   | { kind: 'grant-recipient'; jurisdiction: 'federal' | 'qld'; id: string }
+  // Never matched from a path: the page for an address nothing answers (see the fallthrough).
+  | { kind: 'notfound' }
 
 /**
  * What the route's share image says (src/og.ts draws it). The portrait is
@@ -3958,6 +3960,15 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
 
     case 'bill':
       return billMeta(route.key, env)
+
+    case 'notfound':
+      return base({
+        title: 'Page not found · OPAX',
+        description: 'Nothing is published at this address.',
+        status: 404,
+        prerender: answerBlock('Page not found', 'Nothing is published at this address. Search the record, or start again from the home page.',
+          '<p><a href="/ask?view=search">Search the record</a> · <a href="/">Home</a></p>', [{ label: 'Page not found' }]),
+      })
   }
 }
 
@@ -4918,6 +4929,10 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } }).on('head', { element(el) { el.append('<link rel="stylesheet" href="/hubs.css">',{html:true}) } })
     .on('p#stats', { element(el) { el.remove() } })
+  // An address nothing answers is a server page too: the app would route it as something else.
+  if (route.kind === 'notfound') rewriter.on('script[src]', { element(el) {
+    if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
+  } })
   if (route.kind === 'instruments' || route.kind === 'audit') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } }).on('a[href^="/subject/person"]', { element(el) { el.remove() } })
@@ -5553,8 +5568,19 @@ async function route(
         }
         if (seoRoute) return await serveSeoPage(seoRoute, url, request, env, ctx)
       }
-      return await env.ASSETS.fetch(request)
+      const asset = await env.ASSETS.fetch(request)
+      // A page address nothing answers gets the site's own not-found page (noindex,
+      // with a way on), not an empty 404; a missing file (a script, an image) stays plain.
+      if (asset.status === 404 && (request.method === 'GET' || request.method === 'HEAD') && pageAddress(url.pathname))
+        return await serveSeoPage({ kind: 'notfound' }, url, request, env, ctx)
+      return asset
   }
+}
+
+/** An address a reader would type or follow: no file extension, or .html. */
+function pageAddress(pathname: string): boolean {
+  const last = pathname.slice(pathname.lastIndexOf('/') + 1)
+  return !/\.[a-z0-9]{1,8}$/i.test(last) || /\.html$/i.test(last)
 }
 
 function personTopicsFor(name: string, env: Env): Promise<Response> {
