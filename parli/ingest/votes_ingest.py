@@ -47,6 +47,7 @@ import sqlite3
 import statistics
 import sys
 import time
+from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Iterable, Optional
@@ -124,7 +125,10 @@ def read_legacy(db: sqlite3.Connection, since: Optional[str], limit: Optional[in
     has_bills = db.execute("SELECT 1 FROM sqlite_master WHERE name = 'division_bills'").fetchone() is not None
     divisions: list[Division] = []
     votes: list[Vote] = []
+    from .federal_affiliations import FederalAffiliations
+    affiliations = FederalAffiliations(db)
     for d in rows:
+        parties = affiliations.for_division(d)
         house = d["house"]
         url = f"https://theyvoteforyou.org.au/divisions/{house}/{d['date']}" + (f"/{d['number']}" if d["number"] else "")
         summary = re.sub(r"<[^>]+>", " ", html.unescape(d["summary"] or ""))
@@ -134,12 +138,13 @@ def read_legacy(db: sqlite3.Connection, since: Optional[str], limit: Optional[in
             result = "affirmative" if d["aye_votes"] > d["no_votes"] else "negative"
         div_id = f"federal-{house}-{d['division_id']}"
         for v in db.execute(
-                "SELECT v.person_id, v.vote, m.full_name, m.party_canonical, m.party "
+                "SELECT v.person_id, v.vote, m.full_name "
                 "FROM votes v LEFT JOIN members m ON m.person_id = v.person_id WHERE v.division_id = ?",
                 (d["division_id"],)):
             raw = v["full_name"]
             votes.append(Vote(div_id, normalize_speaker(raw) if raw else None, raw,
-                              f"tvfy_{v['person_id']}", v["vote"], v["party_canonical"] or v["party"]))
+                              f"tvfy_{v['person_id']}", v["vote"],
+                              affiliations.at(parties, v["person_id"], v["vote"], d["date"])))
         extra = {"tvfy_division_id": d["division_id"], "possible_turnout": d["possible_turnout"],
                  "rebellions": d["rebellions"]}
         ref = bill_ref(d["name"])
@@ -170,6 +175,16 @@ def merge_sources(parts: list[tuple[list[Division], list[Vote]]]) -> tuple[list[
             by_id[d.id] = d
             votes_by[d.id] = fresh.get(d.id, [])
     return list(by_id.values()), votes_by
+
+
+def guard_ext_refresh(old_divisions, old_votes, divisions, votes) -> None:
+    """Check the entire requested window before replacing any chamber-day."""
+    missing = {d.id for d in old_divisions} - {d.id for d in divisions}
+    before = Counter((v.division_id, v.person_id or v.person_name, v.vote) for v in old_votes)
+    after = Counter((v.division_id, v.person_id or v.person_name, v.vote) for v in votes)
+    if missing or before - after:
+        raise ValueError(f"Federal mapping refused: {len(missing)} divisions and "
+                         f"{sum((before - after).values())} recorded votes would vanish")
 
 
 # ---------------------------------------------------------------------------
@@ -430,6 +445,7 @@ def main() -> None:
     ap.add_argument("--load-ext-only", action="store_true",
                     help="--from-legacy: write the mapped divisions/votes into ext_divisions / ext_votes "
                          "in --db (per chamber-day replace, like votes_state --load) and push nothing")
+    ap.add_argument("--strict-ext", action="store_true", help="refuse division/vote loss before any ext_ replacement")
     args = ap.parse_args()
 
     load_dotenv()
@@ -446,7 +462,12 @@ def main() -> None:
         from parli.ingest.votes_state import load_ext
         db = sqlite3.connect(f"file:{Path(args.db).expanduser()}?mode=ro", uri=True)
         db.row_factory = sqlite3.Row
+        db.execute("PRAGMA query_only=ON")
+        db.execute("BEGIN")
         divisions, votes = read_legacy(db, args.since, None)
+        if args.strict_ext:
+            previous = read_ext(db, "federal", args.since, None)
+            guard_ext_refresh(*previous, divisions, votes)
         db.close()
         log(f"[load-ext] {len(divisions)} federal divisions / {len(votes)} votes -> ext_ tables in {args.db}")
         writer = ExtWriter(db_path=args.db, dry_run=args.dry_run)

@@ -5,6 +5,8 @@ cd "$(dirname "$0")/.."
 PY="${OPAX_PYTHON:-.venv/bin/python}"
 PARLIAMENT="${OPAX_BILL_PARLIAMENT:-48}"
 "$PY" scripts/bills_registry/bills_fetch.py --parliaments "$PARLIAMENT" --refresh
+# New registry bills must also see exact TVFY relationships already acquired.
+"$PY" -m parli.ingest.tvfy_bill_links
 "$PY" scripts/export_bills.py --out portal/public/bills
 if [ "${OPAX_SYNC_KB:-0}" = 1 ]; then
   keys=$("$PY" - "$PARLIAMENT" <<'PY'
