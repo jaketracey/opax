@@ -65,7 +65,7 @@ import { renderOgPng, renderOgJpeg, type OgFont } from './og-render'
 // The story renderer is reached through the namespace: tests stub './og-render' with the two card renderers only.
 import * as storyRender from './og-render'
 import { personRole, personTitle, roleLine, billTitle } from './seo-titles'
-import { answerBlock, associationCaveat, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, type Division, type ReadAsset } from './seo-content'
+import { answerBlock, associationCaveat, crumbsHTML, type Crumb, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, type Division, type ReadAsset } from './seo-content'
 import { buildSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
 import { photoFor, storyFrames, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
 
@@ -3762,9 +3762,10 @@ const indexLinks = (): string =>
   `<a href="/subject/topic">Topics</a></p>`
 
 /** The no-JS page: its one title, one sentence and the directory links. No
- *  kicker: the title says what the page is once (principle 3). */
-function prerenderBlock(heading: string, sentence: string, links = indexLinks()): string {
-  return `<section id="prerender" class="wrap">` +
+ *  kicker: the title says what the page is once (principle 3). Server-only
+ *  pages pass their breadcrumb trail after Home (crumbsHTML). */
+function prerenderBlock(heading: string, sentence: string, links = indexLinks(), crumbs: Crumb[] = []): string {
+  return `${crumbsHTML(crumbs)}<section id="prerender" class="wrap">` +
     `<h1>${escHtml(heading)}</h1><p>${escHtml(sentence)}</p>${links}</section>`
 }
 

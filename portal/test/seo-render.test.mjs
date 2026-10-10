@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync,existsSync,readdirSync} from 'node:fs';
 import {build} from 'esbuild';
 import {isOrganisationDonor} from '../public/donor-entity.js';
-import {renderBillAnswer,renderPersonAnswer,partyLine,escapeHtml,safeHref,internalLinkCount,associationCaveat} from '../src/seo-content.ts';
+import {renderBillAnswer,renderPersonAnswer,partyLine,escapeHtml,safeHref,internalLinkCount,associationCaveat,crumbsHTML,answerBlock} from '../src/seo-content.ts';
 const pub=new URL('../public/',import.meta.url);
 const parsedAssets=new Map();
 const read=async path=>{if(!parsedAssets.has(path)) parsedAssets.set(path,JSON.parse(readFileSync(new URL(path.slice(1),pub),'utf8')));return parsedAssets.get(path);};
@@ -267,4 +267,20 @@ test('association caveat requires a rendered money pairing, not an election cove
   const body=person.match(/<section id="prerender"[\s\S]*?<\/section>/)[0];
   assert.match(body,/<h1>Anthony Albanese<\/h1>/);
   assert.match(body,/<h2>Donors to their party<\/h2>[\s\S]*An association does not prove influence\.[\s\S]*\$[\d,]+/);
+});
+
+test('server-only pages write the app breadcrumb strip, hidden once the app boots',()=>{
+  assert.equal(crumbsHTML([]),'');
+  const html=crumbsHTML([{label:'Audit reports',href:'/audit'},{label:'Report <16>'}]);
+  assert.match(html,/^<nav class="crumbs prerender-crumbs" aria-label="Breadcrumb"><ol class="wrap crumbs-list">/);
+  assert.match(html,/<li><a class="crumb-label" href="\/">Home<\/a><\/li>/);
+  assert.match(html,/<a class="crumb-label" href="\/audit">Audit reports<\/a>/);
+  assert.match(html,/<li class="crumb-here" aria-current="page"><svg class="crumb-sep"[^>]*>.*<\/svg><span class="crumb-label">Report &lt;16&gt;<\/span><\/li><\/ol><\/nav>$/);
+  assert.equal((html.match(/crumb-sep/g)||[]).length,2);
+  assert.doesNotMatch(crumbsHTML([{label:'x',href:'javascript:alert(1)'},{label:'y'}]),/javascript:/);
+  assert.match(crumbsHTML([{label:'a'.repeat(80)}]),/a{59}…<\/span>/);
+  const block=answerBlock('Title','Sentence.','Directory','',[{label:'Sitting weeks',href:'/sitting'},{label:'Week'}]);
+  assert.ok(block.indexOf('prerender-crumbs')<block.indexOf('id="prerender"'));
+  const css=readFileSync(new URL('style.css',pub),'utf8');
+  assert.match(css,/\.spa-ready \.prerender-crumbs, \.spa-booting \.prerender-crumbs \{ display: none; \}/);
 });

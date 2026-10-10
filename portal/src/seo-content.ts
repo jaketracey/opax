@@ -56,9 +56,28 @@ const link = (href: string, label: string, rel = '') => {
   return safe ? `<a href="${escapeHtml(safe)}"${rel ? ` rel="${rel}"` : ''}>${escapeHtml(label)}</a>` : escapeHtml(label)
 }
 const original = (url?: string) => url && safeHref(url) ? `<p>${link(url,'View original','noopener noreferrer')}</p>` : ''
-export function answerBlock(title: string, description: string, kicker: string, body = ''): string {
+/** One step of a breadcrumb trail after Home; the last step is the page itself. */
+export interface Crumb { label: string; href?: string }
+const CRUMB_SEP = '<svg class="crumb-sep" viewBox="0 0 6 10" aria-hidden="true"><path d="M1 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+/** The app's breadcrumb strip (`setCrumbs` in app.js), written by the server for
+ *  pages the app never boots on. It sits ahead of the page's own block, directly
+ *  under the masthead; once the app takes a page over it is hidden with
+ *  #prerender and the app's own #crumbs speaks instead. No trail, no strip. */
+export function crumbsHTML(items: Crumb[] = []): string {
+  if (!items.length) return ''
+  const trail: Crumb[] = [{ label: 'Home', href: '/' }, ...items]
+  const label = (s: string) => { const t = String(s || '').replace(/\s+/g, ' ').trim(); return t.length > 60 ? `${t.slice(0, 59).trimEnd()}…` : t }
+  const steps = trail.map((it, i) => {
+    const here = i === trail.length - 1, href = !here && it.href ? safeHref(it.href) : null
+    const text = escapeHtml(label(it.label))
+    const el = href ? `<a class="crumb-label" href="${escapeHtml(href)}">${text}</a>` : `<span class="crumb-label">${text}</span>`
+    return `<li${here ? ' class="crumb-here" aria-current="page"' : ''}>${i ? CRUMB_SEP : ''}${el}</li>`
+  }).join('')
+  return `<nav class="crumbs prerender-crumbs" aria-label="Breadcrumb"><ol class="wrap crumbs-list">${steps}</ol></nav>`
+}
+export function answerBlock(title: string, description: string, kicker: string, body = '', crumbs: Crumb[] = []): string {
   body = associationCaveat(body, `${description} ${body}`)
-  return `<section id="prerender" class="wrap"><p class="kicker">${escapeHtml(kicker)}</p><h1>${escapeHtml(title)}</h1><p>${escapeHtml(description)}</p>${body}</section>`
+  return `${crumbsHTML(crumbs)}<section id="prerender" class="wrap"><p class="kicker">${escapeHtml(kicker)}</p><h1>${escapeHtml(title)}</h1><p>${escapeHtml(description)}</p>${body}</section>`
 }
 export const ASSOCIATION_CAVEAT = 'An association does not prove influence.'
 export function associationCaveat(body: string, facts: string): string {

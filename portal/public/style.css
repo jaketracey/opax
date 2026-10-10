@@ -625,6 +625,9 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 .crumbs-list a.crumb-label:hover { color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-ink); text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
 .crumbs-list a.crumb-label:focus-visible { outline-offset: -2px; }
 .crumb-here .crumb-label { color: var(--ink); font-weight: 600; overflow: hidden; text-overflow: ellipsis; }
+/* Server-only pages (sitting, audit, instruments) write the same strip into
+   <main> (crumbsHTML in seo-content.ts); an app page hides it with #prerender. */
+.spa-ready .prerender-crumbs, .spa-booting .prerender-crumbs { display: none; }
 
 /* ---- hero --------------------------------------------------------------- */
 
