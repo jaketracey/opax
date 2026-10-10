@@ -30,6 +30,7 @@ import { readFileSync, writeFileSync, mkdirSync, readdirSync, unlinkSync } from 
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { buildSpaShell } from './build_spa_shell.mjs'
+import { buildMethods } from './build_methods.mjs'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const PUBLIC = join(ROOT, 'portal', 'public')
@@ -198,6 +199,7 @@ function syncHomeChrome(html, shell) {
 }
 
 function stamp({ check }) {
+  buildMethods({ check })
   buildSpaShell({ check })
   // Modules first: their stamps change app.js and home.js, which are hashed below.
   const staleModules = stampModules({ check })
