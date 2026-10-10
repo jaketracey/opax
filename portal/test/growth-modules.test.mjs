@@ -170,3 +170,25 @@ test('person sections are reused once, and money/vote pairings carry the associa
  assert.match(region,/Party disclosures, not this person’s finances[\s\S]*growthModules.associationHTML/);
  assert.match(region,/#person-pay, #person-expenses/);
 });
+test('suggested questions are plain links, and the bill module asks about the bill',()=>{
+ const html=askBlockHTML({name,pageType:'person',seed:'',questions:['What interests has Alex Example declared?']});
+ assert.match(html,/<li><a href="\/ask\?[^"]+" rel="nofollow">What interests has Alex Example declared\?<\/a><\/li>/);
+ assert.doesNotMatch(html,/class="ui-button" href/);
+ assert.match(askBlockHTML({bill:{title:'A Bill'},pageType:'bill'}),/<h3 id="growth-ask-title">Ask about this bill<\/h3>/);
+});
+test('module touch targets are scoped to module controls, never record titles',()=>{
+ const css=read('../public/style.css');
+ assert.doesNotMatch(css,/\[data-module\] a \{/);
+ assert.match(css,/\.subject-person #subject-votes \.result-meta \{ display: block; \}/);
+ const region=css.slice(css.indexOf('/* Landing modules'),css.indexOf('.growth-correction a'));
+ assert.doesNotMatch(region,/--space-[0-9]|--heading-|font-size: *[0-9]|font: *[0-9]|(margin|padding|gap)[^;]*[0-9]px/);
+ assert.match(core.correctionHTML(),/^<p class="growth-correction"><a href="\/support#support-report">Report a data correction<\/a><span>Response target: 48 hours\.<\/span><\/p>$/);
+});
+test('a supplier growth block that fails collapses instead of printing an error',async()=>{
+ const {mountSupplierGrowth}=await import('../public/supplier-growth.js');
+ const prior=globalThis.fetch;
+ globalThis.fetch=async()=>({ok:false});
+ const root={innerHTML:'before',dataset:{}};
+ try {await mountSupplierGrowth(root,{id:'me',agencies:[{name:'Agency',total:1}]},{},{alive:()=>true,signal:undefined,cleanup(){}},[]);}finally{globalThis.fetch=prior;}
+ assert.equal(root.innerHTML,'');
+});

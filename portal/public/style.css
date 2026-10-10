@@ -4704,11 +4704,11 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .supplier-directory-row:hover { background: var(--paper-sunken); }
 .supplier-directory-row > span { min-width: 0; }
 .supplier-directory-row strong { display: block; color: var(--navy); font-size: .9375rem; overflow-wrap: anywhere; }
-.supplier-directory-row small { display: block; color: var(--ink-soft); font-size: .75rem; line-height: 1.6; margin-top: .3rem; }
+.supplier-directory-row small { display: block; color: var(--ink-soft); font: var(--type-fine); margin-top: var(--space-line); }
 .supplier-directory-value { text-align: right; flex-shrink: 0; font-variant-numeric: tabular-nums; }
 .supplier-totals { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; border-block: 1px solid var(--line); padding: var(--space-5) 0; margin: var(--space-5) 0 var(--space-6); }
 .supplier-totals > div { display: grid; grid-template-rows: 1fr auto; gap: var(--space-3); min-width: 0; }
-.supplier-totals dt { color: var(--ink-soft); font-size: .8125rem; }
+.supplier-totals dt { color: var(--ink-soft); font: var(--type-fine); }
 .supplier-totals dd { font: 700 clamp(1.4rem, 3vw, 2.2rem) var(--serif); color: var(--navy); margin: 0; font-variant-numeric: tabular-nums; }
 .supplier-profile-grid { display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: var(--space-6); align-items: start; }
 .supplier-profile-main { min-width: 0; }
@@ -4719,7 +4719,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .supplier-bars li > div { display: flex; gap: 1rem; justify-content: space-between; font-size: .8125rem; line-height: 1.5; margin-bottom: .4rem; }
 .supplier-bars strong { white-space: nowrap; font-variant-numeric: tabular-nums; }
 .supplier-bars svg { display: block; width: 100%; height: 8px; }
-.supplier-bars small { display: block; color: var(--ink-faint); font-size: .75rem; margin-top: .3rem; }
+.supplier-bars small { display: block; color: var(--ink-soft); font: var(--type-fine); margin-top: var(--space-line); }
 .supplier-bar-track { fill: var(--paper-sunken); }
 .supplier-bar-fill { fill: var(--bronze); }
 .supplier-year-chart svg { width: 100%; display: block; overflow: visible; }
@@ -4736,41 +4736,45 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .supplier-contract summary::before { content: "+"; flex-shrink: 0; color: var(--bronze-ink); font-weight: 700; }
 .supplier-contract[open] summary::before { content: "−"; }
 .supplier-contract summary span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
-.supplier-contract summary small { display: block; color: var(--ink-soft); font-size: .75rem; margin-top: .4rem; line-height: 1.6; }
+.supplier-contract summary small { display: block; color: var(--ink-soft); font: var(--type-fine); margin-top: var(--space-line); }
 .supplier-contract summary b { white-space: nowrap; font-variant-numeric: tabular-nums; }
 .supplier-contract dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .5rem 1rem; font-size: .8125rem; margin: 1.25rem 0; }
 .supplier-contract dt { color: var(--ink-soft); }
 .supplier-contract dd { margin: 0; overflow-wrap: anywhere; }
 .supplier-contract > a { font-size: .8125rem; }
-.supplier-context { border-top: 3px solid var(--bronze); background: var(--paper-raised); padding: var(--space-4); border-inline: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-.supplier-context section + section { margin-top: var(--space-5); padding-top: var(--space-4); border-top: 1px solid var(--line); }
-.supplier-context h3 { font: 700 1rem var(--serif); color: var(--navy); margin: 0 0 1rem; }
-.supplier-context :is(p, li, a, details, dl) { font-size: .8125rem; line-height: 1.65; overflow-wrap: anywhere; }
-.supplier-context ul { padding-left: 1rem; }
-.supplier-context li { margin: .6rem 0; }
-.supplier-context small { display: block; color: var(--ink-faint); }
-.supplier-context .fineprint { margin: .7rem 0 1rem; font-size: .75rem; }
-.supplier-directory-link { display: block; margin-top: 1rem; }
-.supplier-identity dt { color: var(--ink-soft); }
-.supplier-identity dd { margin: .25rem 0 .75rem; }
+.supplier-rail { position: sticky; top: calc(var(--header-h) + var(--space-block)); padding-top: var(--space-block); border-top: var(--border-hairline) solid var(--divider-default); }
+.supplier-rail .entry-rail-list { display: block; }
+.supplier-rail .entry-rail-list li { border-top: 0; }
+.supplier-rail .entry-rail-list li + li { border-top: var(--border-hairline) solid var(--divider-subtle); }
+.supplier-rail .entry-rail-list a { flex-direction: row; align-items: center; justify-content: flex-start; min-height: var(--size-target); }
+.supplier-rail .entry-rail-label { font: var(--type-strong); color: var(--ink); }
+.supplier-rail-links { list-style: none; margin: var(--space-group) 0 0; padding: 0; border-top: var(--border-hairline) solid var(--divider-default); }
+.supplier-rail-links li + li { border-top: var(--border-hairline) solid var(--divider-subtle); }
+.supplier-rail-links a { display: flex; align-items: center; min-height: var(--size-target); font: var(--type-body); }
+.supplier-rail-links span { display: block; margin-bottom: var(--space-tight); font: var(--type-fine); color: var(--ink-soft); }
+/* The tax block writes its title as a label; on the entry it is a section heading like its neighbours. */
+.supplier-taxcharity > .kicker { margin: 0 0 var(--space-heading); font: var(--type-heading); color: var(--ink); }
+.supplier-identity { margin: 0; }
+.supplier-identity dt { font: var(--type-fine); color: var(--ink-soft); }
+.supplier-identity dd { margin: var(--space-line) 0 var(--space-row); font: var(--type-body); overflow-wrap: anywhere; }
 .supplier-empty { padding: 1.5rem; border: 1px solid var(--line); }
 .supplier-page :is(a, button, input, select, summary):focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 4px; }
-@media (max-width: 850px) { .supplier-profile-grid { grid-template-columns: minmax(0, 1fr); } .supplier-context { max-width: none; } }
+/* One column: the page reads straight down, and the rail keeps only its ways out. */
+@media (max-width: 850px) { .supplier-profile-grid { grid-template-columns: minmax(0, 1fr); } .supplier-rail { position: static; padding-top: 0; border-top: 0; } .supplier-rail .entry-rail-nav { display: none; } .supplier-rail-links { margin-top: 0; } }
 @media (max-width: 540px) {
   .supplier-directory-row { flex-direction: column; gap: .5rem; }
   .supplier-directory-value { text-align: left; }
   .supplier-totals { gap: .5rem; }
-.supplier-totals dt { font-size: .75rem; }
   .supplier-contract summary { flex-wrap: wrap; }
   .supplier-contract summary b { width: 100%; padding-left: 1.5rem; }
   .supplier-bars li > div { flex-wrap: wrap; gap: .25rem; }
 }
-.supplier-money-map { height: 360px; margin-top: 1rem; position: relative; border: 1px solid var(--line); overflow: hidden; }
+.supplier-money-map { height: 360px; margin-top: var(--space-block); position: relative; overflow: hidden; }
+/* Filters sit on the page, not in a box (as the directory controls do). */
+.supplier-page .ui-toolbar { margin: var(--space-block) 0 var(--space-tight); padding: 0; border: 0; border-radius: 0; background: none; }
 .supplier-money-map[hidden] { display: none; }
 .supplier-money-map > p { padding: 1rem; }
-.supplier-context > section > details > summary { font: 700 1rem var(--serif); color: var(--navy); }
 .supplier-section > .subject-section-title { margin: 0 0 .75rem; }
-.supplier-contract-description { font-size: .875rem; line-height: 1.7; color: var(--ink-soft); margin: 1rem 0; overflow-wrap: anywhere; }
 
 /* Guided money-map journeys: a short reading rail alongside the 3D scene. */
 .journey-intro { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; margin: 1.2rem 0 .8rem; }
@@ -5150,7 +5154,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 #panel-search .search-record-kind { font-weight: 650; color: var(--navy); }
 /* Agency records share the supplier profile's measured type and spacing. */
 .supplier-bars li > div > a { color: var(--ink); text-decoration-color: var(--line); text-underline-offset: .2em; }
-.supplier-bars li > div > a:hover { color: var(--accent); }
+.supplier-bars li > div > a:hover { color: var(--bronze-ink); }
 .agency-map, .supplier-agency-map { height: clamp(360px, 55vh, 580px); }
 .agency-suppliers .supplier-directory-row > span:first-child { min-width: 0; }
 .agency-suppliers a { overflow-wrap: anywhere; }
@@ -5954,33 +5958,44 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
 .division-markdown a:hover { color: var(--bronze-ink); border-color: var(--bronze-rule); }
 
 /* Landing modules use the view's bronze accent and the shared controls. */
-.growth-ask { margin: 0 0 var(--space-6); padding: var(--space-4) 0; border-block: var(--border-hairline) solid var(--divider-default); }
-.growth-ask h3 { margin: 0 0 var(--space-3); font: var(--heading-subsection); }
-.growth-ask-form { display: flex; align-items: start; gap: var(--space-2); }
-.growth-ask-form .ui-input { flex: 1; min-width: 0; font-size: 1rem; line-height: 1.5; resize: vertical; white-space: pre-wrap; overflow-wrap: normal; word-break: normal; }
+.growth-ask { margin: 0 0 var(--space-section); padding: var(--space-block) 0; border-block: var(--border-hairline) solid var(--divider-default); }
+.growth-ask h3 { margin: 0 0 var(--space-heading); font: var(--type-subheading); }
+.growth-ask-form { display: flex; align-items: start; gap: var(--space-tight); }
+.growth-ask-form .ui-input { flex: 1; min-width: 0; font: var(--type-body); resize: vertical; white-space: pre-wrap; overflow-wrap: normal; word-break: normal; }
 .growth-ask-form .ui-button { flex-shrink: 0; }
-.growth-questions { display: flex; flex-wrap: wrap; gap: var(--space-2); list-style: none; margin: var(--space-3) 0 0; padding: 0; }
+/* Suggested questions are the home page's list of links: one line each, the
+   whole line the target. Ask receives the full question from the href. */
+.growth-questions { display: grid; list-style: none; margin: var(--space-tight) 0 0; padding: 0; }
 .growth-questions:empty { display: none; }
-.growth-questions li { max-width: 100%; min-width: 0; }
-.growth-questions .ui-button { text-align: left; justify-content: start; height: auto; white-space: normal; font-size: 1rem; line-height: 1.5; padding-block: .6rem; overflow-wrap: normal; word-break: normal; }
-.growth-ask :is(input, textarea, button, a), .growth-records :is(a, summary), .growth-donor a { min-height: 44px; min-width: 44px; }
-.growth-records .subject-list > li > a, .growth-donor a { display: inline-flex; align-items: center; }
+.growth-questions li { min-width: 0; }
+.growth-questions a {
+  display: block; width: fit-content; max-width: 100%; padding-block: calc((var(--size-target) - 1.55em) / 2);
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  color: var(--bronze-ink); text-decoration-color: var(--bronze-rule); text-underline-offset: 0.2em;
+}
+.growth-ask :is(input, textarea, button), .growth-records summary { min-height: var(--size-target); }
+.growth-records .subject-list > li > a, .growth-donor a { display: inline-flex; align-items: center; min-height: var(--size-target); }
 .growth-records .result-meta { display: block; }
-.growth-records, .growth-donor, .growth-association { font-size: 1rem; line-height: 1.6; overflow-wrap: normal; word-break: normal; }
-.growth-association { margin-block: var(--space-3); color: var(--ink-soft); }
-:is(.growth-ask, .growth-records, .growth-donor) :is(a, button, input, textarea, summary):focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 3px; }
-.growth-donor { margin-bottom: var(--space-5); }
+.growth-records, .growth-donor { font: var(--type-body); overflow-wrap: normal; word-break: normal; }
+/* The one inline caveat, beside a money-and-politician pairing (principle 4). */
+.growth-association { margin-block: var(--space-row); font: var(--type-fine); color: var(--ink-soft); overflow-wrap: normal; word-break: normal; }
+:is(.growth-ask, .growth-records, .growth-donor) :is(a, button, input, textarea, summary):focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
+.growth-donor { margin-top: var(--space-group); }
 .subject-person .person-actions { position: absolute; right: 0; bottom: 0; margin: 0; }
-.subject-person .subject-head { position: relative; padding-bottom: var(--space-2); }
-.subject-person .subject-head > .ui-source { padding-right: 52px; }
+.subject-person .subject-head { position: relative; padding-bottom: var(--space-tight); }
+.subject-person .subject-head > .ui-source { padding-right: calc(var(--size-target) + var(--space-tight)); }
 @media (max-width: 700px) {
-  .growth-ask { margin-bottom: var(--space-4); }
+  .growth-ask { margin-bottom: var(--space-group); }
   .growth-ask-form { flex-wrap: wrap; }
   .growth-ask-form textarea { flex-basis: calc(100% - 6rem); }
 }
+/* A phone's first screen keeps the composer and one suggestion; the record follows. */
+@media (max-width: 600px) {
+  .growth-questions li + li { display: none; }
+}
 @media (forced-colors: active) {
   .growth-ask { border-color: CanvasText; }
-  .growth-questions .ui-button { border: 1px solid ButtonText; color: LinkText; }
+  .growth-questions a { color: LinkText; }
   .growth-association { color: CanvasText; }
   :is(.growth-ask, .growth-records, .growth-donor) :focus-visible { outline-color: Highlight; }
 }
@@ -5988,17 +6003,20 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
   :is(.growth-ask, .growth-records, .growth-donor) *, :is(.growth-ask, .growth-records, .growth-donor) { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
 
-/* Reused record sections retain the same touch and keyboard targets. */
-[data-module] a { min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; }
+/* Reused record sections keep the shared focus ring. Touch targets come from
+   each module's own controls above, never from record titles or prose. */
 [data-module] :is(a, h3, summary, textarea) { overflow-wrap: normal; word-break: normal; }
-[data-module] :is(a, button, input, textarea, summary):focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 3px; }
-.subject-person #subject-votes > .subject-list > li > .source-title { font: 400 1rem/1.55 var(--serif); }
+[data-module] :is(a, button, input, textarea, summary):focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
+/* A vote row: the bill's title, then its meta on a line of its own (RecordRow). */
+.subject-person #subject-votes > .subject-list > li > .source-title { display: block; padding-block: var(--space-row) var(--space-line); font: var(--type-body); font-family: var(--serif); }
+.subject-person #subject-votes .result-meta { display: block; }
 @media (forced-colors: active) { [data-module] :focus-visible { outline-color: Highlight; } }
 @media (prefers-reduced-motion: reduce) { [data-module] * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
 
-[data-module] .ui-source .ui-sheet .ui-sheet-originals a { min-height: 44px; min-width: 44px; }
-.growth-correction { font-size: 1rem; line-height: 1.6; color: var(--ink-soft); margin-block: var(--space-4); }
-.growth-correction a { min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; }
+[data-module] .ui-source .ui-sheet .ui-sheet-originals a { min-height: var(--size-target); min-width: var(--size-target); }
+/* The correction line is fine print with its link on a target of its own. */
+.growth-correction { display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--space-tight); margin-block: var(--space-block); font: var(--type-fine); color: var(--ink-soft); }
+.growth-correction a { display: flex; align-items: center; min-height: var(--size-target); }
 @media (max-width: 700px) {
   .bill-date { grid-template-columns: minmax(0, 1fr); row-gap: .1rem; }
 }

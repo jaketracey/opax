@@ -23,7 +23,7 @@ export async function loadModuleDonors(signal) {
   return await fetch('/growth/organisation-donors.json',{signal,cache:'no-cache'}).then(r=>r.ok?r.json():null).catch(()=>null) || {donors:[],approved:[]};
 }
 export const ASSOCIATION_NOTE = 'An association does not prove influence.';
-export const correctionHTML = () => '<p class="growth-correction"><a href="/support#support-report">Report a data correction</a> · response target: 48 hours.</p>';
+export const correctionHTML = () => '<p class="growth-correction"><a href="/support#support-report">Report a data correction</a><span>Response target: 48 hours.</span></p>';
 export const associationHTML = () => `<p class="growth-association">${ASSOCIATION_NOTE}</p>`;
 export const moduleAttrs = (module, pageType, position) => `data-module="${esc(module)}" data-page-type="${esc(pageType)}" data-module-position="${position}"`;
 export function askEntry(question, pageType, record = {}) {
@@ -98,7 +98,7 @@ const suggestion = (question,label=question) => ({question,label:questionLabel(l
 const questionKey = value => text(value).replace(/\s+/g,' ').toLowerCase();
 export function askBlockHTML({name = '', bill = null, questions = [], pageType, seed = '', privacy = deny} = {}) {
   if (privacy(bill?.title || bill?.short_title || name, bill ? '' : seed)) return '';
-  const heading = bill ? 'Ask what this bill changes' : `Ask about ${name}`;
+  const heading = bill ? 'Ask about this bill' : `Ask about ${name}`;
   return `<section class="growth-ask" ${moduleAttrs('ask',pageType,1)} aria-labelledby="growth-ask-title">
     <h3 id="growth-ask-title">${esc(heading)}</h3>
     <form class="growth-ask-form" action="/ask" method="get"${bill ? ` data-record-title="${esc(bill.title || bill.short_title)}" data-record-key="${esc(bill.key)}"` : ''}>
@@ -118,7 +118,7 @@ export function questionsHTML(questions, pageType, seed = '', privacy = deny) {
     const key = questionKey(question);
     if (seen.has(key)) return [];
     seen.add(key);
-    return [`<li><a class="ui-button" href="${esc(askEntry(question,pageType))}" rel="nofollow">${esc(questionLabel(label || question))}</a></li>`];
+    return [`<li><a href="${esc(askEntry(question,pageType))}" rel="nofollow">${esc(questionLabel(label || question))}</a></li>`];
   }).join('');
 }
 /** Latest vote per bill, including both sides, without changing votes.json. */

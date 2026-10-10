@@ -1,6 +1,6 @@
 /* Client-side agency records, from the same published exports as their pages. */
 import {sourceLineHTML} from './labels.js?v=804befe8de';
-import {moduleAttrs, donationRegisterHTML, exactOrganisationDonors, growthSummaryPath, normalisedName, approvedModulePrivacy, loadModuleDonors} from './growth-modules.js?v=2f10ab9729';
+import {moduleAttrs, donationRegisterHTML, exactOrganisationDonors, growthSummaryPath, normalisedName, approvedModulePrivacy, loadModuleDonors} from './growth-modules.js?v=b3095eab8c';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money = n => Number(n).toLocaleString('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0});
 async function json(url,signal) {const r=await fetch(url,{signal});if(!r.ok)throw new Error('Records unavailable');return r.json();}
@@ -50,7 +50,7 @@ export async function mountSupplierGrowth(root,profile,meta,life,suppliers) {
       root.innerHTML=supplierRecordsHTML(summary.agency,profile.id,summary.contracts_updated || meta?.generated_at,publishedSupplierIndex(suppliers))
         +agencyGrantsHTML(top.name,summary.grants || [],summary.meta);
       root.dataset.recordsReady='true';
-    } catch {if(life.alive()) root.innerHTML='<p role="status">This agency’s related records could not be opened.</p>';}
+    } catch {if(life.alive()) root.innerHTML='';} // An optional block that fails collapses.
   };
   if(typeof IntersectionObserver==='undefined') await load();
   else {

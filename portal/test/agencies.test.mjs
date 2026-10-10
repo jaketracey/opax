@@ -6,6 +6,7 @@ import { procurementGraph } from '../public/procurement-data.js';
 import { filterMoneyEdges, moneyTotals } from '../public/money-records.js';
 import { buildGraph } from '../public/money-map.js';
 import { shortDate, shortMoney } from '../public/format.js';
+import { sourceLineHTML } from '../public/labels.js';
 
 const source = readFileSync(new URL('../public/agencies.js', import.meta.url), 'utf8').replace(/^import .*;$/gm, '').replaceAll('export async function ', 'async function ').replaceAll('export function ', 'function ');
 const shared = readFileSync(new URL('../public/suppliers.js', import.meta.url), 'utf8').replace(/^import .*;$/gm, '').replaceAll('export async function ', 'async function ').replaceAll('export function ', 'function ');
@@ -18,8 +19,8 @@ function node() {
     querySelectorAll() { return []; }, focus() {} };
 }
 function harness(fetch) {
-  const context = { fetch, AbortController, URLSearchParams, history: { replaceState() {} }, procurementGraph, shortDate, shortMoney };
-  runInNewContext(`Object.assign(this, (() => { ${shared}; return { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract }; })());`, context);
+  const context = { fetch, AbortController, URLSearchParams, history: { replaceState() {} }, procurementGraph, shortDate, shortMoney, sourceLineHTML };
+  runInNewContext(`Object.assign(this, (() => { ${shared}; return { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract, procurementSourceHTML, procurementRailHTML }; })());`, context);
   runInNewContext(source, context); return context;
 }
 const id = 'a-0123456789abcdef0123';
