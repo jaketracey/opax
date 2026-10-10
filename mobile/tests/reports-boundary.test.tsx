@@ -3,7 +3,7 @@ import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { AppState } from 'react-native';
 import { reports } from '../src/api/runtime';
-import { ChoiceChips } from '../src/design/primitives';
+import { SegmentedControl } from '../src/design/primitives';
 import Today from '../src/features/Today';
 import TopicsIndex from '../src/features/reports/TopicsIndex';
 import ReportPage from '../src/features/reports/ReportPage';
@@ -90,16 +90,16 @@ test('Today mount and application foreground send no report reads; paid counts a
     client.get.mock.calls.filter((c) => c[0] === '/api/matrix'),
   ).toHaveLength(0);
   await act(async () =>
-    screen.root.findByType(ChoiceChips).props.onChange('money'),
+    screen.root.findByType(SegmentedControl).props.onChange('money'),
   );
   expect(
     client.get.mock.calls.filter((c) => c[0] === '/api/matrix'),
   ).toHaveLength(1);
   await act(async () =>
-    screen.root.findAllByType(ChoiceChips)[0]!.props.onChange('now'),
+    screen.root.findAllByType(SegmentedControl)[0]!.props.onChange('now'),
   );
   await act(async () =>
-    screen.root.findAllByType(ChoiceChips)[0]!.props.onChange('money'),
+    screen.root.findAllByType(SegmentedControl)[0]!.props.onChange('money'),
   );
   expect(
     client.get.mock.calls.filter((c) => c[0] === '/api/matrix'),

@@ -10,7 +10,7 @@ import {
 import { reports } from '../../api/runtime';
 import { View } from 'react-native';
 import { colors } from '../../design/tokens';
-import { formatMoney } from '../../design/format';
+import { formatDate, formatMoney } from '../../design/format';
 import { useRead, ReadState } from '../reports/parts';
 import { topicNames } from '../reports/model';
 import { openTopicWindow } from '../reports/open';
@@ -23,13 +23,7 @@ export default function WordsDollars() {
     <>
       <ExploreHeader title="Words per dollar" game="wd" />
       <Screen column="wide" testID="explore-wd-screen">
-        <Section
-          title="Words per dollar"
-          info={{
-            title: 'About money beside words',
-            notes: [WORDS_NOTE, money.record?.data.meta.methodology],
-          }}
-        >
+        <Section rule={false}>
           <Text wordSafe variant="body">
             Disclosed donations beside the labelled debate
           </Text>
@@ -39,13 +33,21 @@ export default function WordsDollars() {
         </Section>
         <ReadState
           read={money}
-          citation="AEC disclosures via OPAX’s money data"
+          citation="AEC annual returns"
+          foot={false}
           testID="wd-money"
         >
-          {(donations) => (
+          {(donations, moneyMeta) => (
             <ReadState
               read={matrix}
-              citation="OPAX topic and party labels"
+              citation={['OPAX topic and party labels', 'AEC annual returns']}
+              sheet={{
+                title: 'About money beside words',
+                coverage: moneyMeta.asOf
+                  ? `Donations as at ${formatDate(moneyMeta.asOf, 'short')}`
+                  : null,
+                notes: [WORDS_NOTE, donations.meta.methodology],
+              }}
               testID="wd-matrix"
             >
               {(labels) => (

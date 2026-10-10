@@ -13,9 +13,10 @@ import {
   RowList,
   Disclosure,
   EmptyState,
+  SourceLine,
 } from '../../design/primitives';
 import { formatDate } from '../../design/format';
-import { useRead, ReadState, SourcesFold } from '../reports/parts';
+import { useRead, ReadState, RecordsLine } from '../reports/parts';
 import { openRecord } from '../reports/open';
 import { explore } from './runtime';
 import { voicesNote, yearMachineNote, yearOpening } from './model';
@@ -31,7 +32,7 @@ export default function TimeMachine() {
     <>
       <ExploreHeader title="Time machine" game="tm" />
       <Screen column="wide" testID="explore-tm-screen">
-        <Section title="Time machine">
+        <Section rule={false}>
           <Field
             label="Year, 1998 to 2026"
             value={input}
@@ -104,9 +105,10 @@ function YearView({
       <ReadState
         read={read}
         citation="OPAX pre-generated year brief and voices"
+        foot={false}
         testID="tm-year"
       >
-        {(data) => (
+        {(data, meta) => (
           <Group>
             <Section title="The year in brief">
               <MachineLabel
@@ -127,7 +129,7 @@ function YearView({
                   </Group>
                 </Disclosure>
               ) : null}
-              <SourcesFold
+              <RecordsLine
                 sources={data.brief.sources.map((s) => ({
                   ...s,
                   title: s.title ?? s.slug,
@@ -136,14 +138,12 @@ function YearView({
                   state: s.state ?? undefined,
                   date: s.date ?? undefined,
                 }))}
-                label="The speeches it drew on"
+                {...meta}
+                title="The speeches it drew on"
                 testID="tm-records"
               />
             </Section>
-            <Section
-              title="Voices"
-              info={{ title: 'About these voices', notes: [voicesNote(data)] }}
-            >
+            <Section title="Voices">
               <RowList>
                 {data.voices.speakers
                   .filter((s) => s.speeches >= 2)
@@ -156,6 +156,13 @@ function YearView({
                     </Text>
                   ))}
               </RowList>
+              <SourceLine
+                {...meta}
+                citation="OPAX labelled speeches"
+                title="About these voices"
+                notes={[voicesNote(data)]}
+                testID="tm-voices-as-at"
+              />
             </Section>
             <Section title="Bills">
               <Disclosure label={`Introduced in ${year}`} testID="tm-bills">

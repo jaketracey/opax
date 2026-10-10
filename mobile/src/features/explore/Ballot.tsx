@@ -14,10 +14,10 @@ import {
   RowList,
   LoadingState,
   ErrorState,
-  AsAtLine,
   IconButton,
   OfflineBanner,
-  StaleNotice,
+  SegmentedControl,
+  SourceLine,
   EmptyState,
 } from '../../design/primitives';
 import { rhythm } from '../../design/tokens';
@@ -137,10 +137,9 @@ export default function Ballot() {
     <>
       <ExploreHeader title="Ballot" game="ballot" />
       <Screen column="wide" testID="explore-ballot-screen">
-        <Section
-          title="Build your ballot"
-          info={{ title: 'How the practice ballot works', notes: BALLOT_NOTES }}
-        >
+        {/* The tool's title is the screen's; how it works is in the
+            ballot's source line. */}
+        <Section rule={false}>
           <Text variant="body" wordSafe>
             2025 practice ballot
           </Text>
@@ -213,21 +212,8 @@ export default function Ballot() {
         {ballot && !choosing ? (
           <Section
             title={view === 'candidates' ? 'The candidates' : 'Your order'}
-            info={{
-              title: 'About your order',
-              notes: [
-                'Your first choice is at the top.',
-                'Your preference numbers, beside candidates in the original AEC ballot order:',
-                'You chose this order. Opax does not recommend candidates or preferences.',
-              ],
-            }}
           >
-            {ballot.stale ? (
-              <Group>
-                <OfflineBanner cached />
-                <StaleNotice savedAt={ballot.savedAt} />
-              </Group>
-            ) : null}
+            {ballot.stale ? <OfflineBanner cached /> : null}
             <Text wordSafe testID="ballot-progress">
               {order.length} of {candidates.length} choices made
             </Text>
@@ -236,23 +222,22 @@ export default function Ballot() {
                 ? 'In their original order on the 2025 ballot.'
                 : 'Your first choice is at the top.'}
             </Text>
-            <View style={{ flexDirection: 'row', gap: rhythm.tight }}>
-              <View style={{ flex: 1 }}>
-                <Button
-                  label="Candidates"
-                  onPress={() => setView('candidates')}
-                  variant={view === 'candidates' ? 'primary' : 'default'}
-                />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Button
-                  label="Your order"
-                  onPress={() => setView('order')}
-                  variant={view === 'order' ? 'primary' : 'default'}
-                  testID="ballot-review"
-                />
-              </View>
-            </View>
+            <SegmentedControl
+              value={view}
+              segments={[
+                {
+                  value: 'candidates',
+                  label: 'Candidates',
+                  testID: 'ballot-candidates',
+                },
+                {
+                  value: 'order',
+                  label: 'Your order',
+                  testID: 'ballot-review',
+                },
+              ]}
+              onChange={setView}
+            />
             <RowList>
               {view === 'order' && !order.length ? (
                 <EmptyState message="Add a candidate to begin. You decide the order." />
@@ -365,10 +350,17 @@ export default function Ballot() {
                 ])
               }
             />
-            <AsAtLine
+            <SourceLine
               asOf={ballot.asOf}
               citation={ballot.data.citation.label}
               savedAt={ballot.stale ? ballot.savedAt : null}
+              title="How the practice ballot works"
+              notes={[
+                ...BALLOT_NOTES,
+                'The practice plan lists your preference numbers beside the candidates in the original AEC ballot order.',
+                'You chose this order. Opax does not recommend candidates or preferences.',
+              ]}
+              testID="ballot-as-at"
             />
           </Section>
         ) : null}

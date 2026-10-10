@@ -1,8 +1,7 @@
 import {
-  PadGrid,
   Button,
-  InfoButton,
   Group,
+  RowList,
   Screen,
   Section,
   SegmentedControl,
@@ -17,6 +16,12 @@ import { shareHeaderItem } from '../../navigation/share';
 import { topicDescriptions, topicNames } from './model';
 import { ReadState, ShareBars, announce, useRead } from './parts';
 import { openRecord } from './open';
+
+const NOTES = [
+  'Counts are speeches labelled so far. The small bars are each topic’s share of federal speeches by decade, 1993 to 2026, scaled within the topic.',
+  'A speech can carry more than one topic label, so the shares do not sum to one hundred. The decade bars use federal speeches only, the longest comparable run; each is that topic’s share of the decade’s labelled speeches, scaled to the topic’s own peak. The labelling pass is still running.',
+];
+
 export default function TopicsIndex() {
   const read = useRead(reports.topics),
     tide = useRead(reports.tide);
@@ -39,11 +44,12 @@ export default function TopicsIndex() {
         <ReadState
           read={read}
           citation="OPAX labelled topic catalog"
+          sheet={{ title: 'About these numbers', notes: NOTES }}
           testID="topics"
         >
           {(data) => (
             <Group>
-              <Text testID="topics-count">
+              <Text variant="metadata" testID="topics-count">
                 {data.labelled.toLocaleString()} speeches labelled so far ·{' '}
                 {data.topics.filter((t) => topicNames[t.slug]).length} topics
               </Text>
@@ -62,14 +68,7 @@ export default function TopicsIndex() {
                   );
                 }}
               />
-              <InfoButton
-                title="About these numbers"
-                notes={[
-                  'Counts are speeches labelled so far. The small bars are each topic’s share of federal speeches by decade, 1993 to 2026, scaled within the topic.',
-                  'A speech can carry more than one topic label, so the shares do not sum to one hundred. The decade bars use federal speeches only, the longest comparable run; each is that topic’s share of the decade’s labelled speeches, scaled to the topic’s own peak. The labelling pass is still running.',
-                ]}
-              />
-              <PadGrid>
+              <RowList grid>
                 {[...data.topics]
                   .filter((t) => topicNames[t.slug])
                   .sort((a, b) =>
@@ -83,7 +82,7 @@ export default function TopicsIndex() {
                     const pct =
                       data.labelled > 0 ? (t.count / data.labelled) * 100 : 0;
                     return (
-                      <Section key={t.slug}>
+                      <Group key={t.slug} gap={6}>
                         <RecordRow
                           path={`/subject/topic/${t.slug}`}
                           title={topicNames[t.slug]!}
@@ -96,7 +95,7 @@ export default function TopicsIndex() {
                           }
                           testID={`topic-open-${t.slug}`}
                         />
-                        <Text variant="metadata">
+                        <Text wordSafe variant="metadata">
                           {topicDescriptions[t.slug]}
                         </Text>
                         {points.length ? (
@@ -111,28 +110,32 @@ export default function TopicsIndex() {
                             }))}
                           />
                         ) : null}
-                      </Section>
+                      </Group>
                     );
                   })}
-              </PadGrid>
+              </RowList>
             </Group>
           )}
         </ReadState>
         {tide.error ? (
           <Button label="Try decade bars again" onPress={tide.retry} />
         ) : null}
-        <RecordRow
-          path={'/stats'}
-          title="Sources & coverage"
-          onPress={() => openRecord('/stats', 'Sources & coverage')}
-          testID="topics-stats"
-        />
-        <RecordRow
-          path={'/methods'}
-          title="Methods"
-          onPress={() => openRecord('/methods', 'Methods')}
-          testID="topics-methods"
-        />
+        <Section testID="topics-more">
+          <RowList>
+            <RecordRow
+              path={'/stats'}
+              title="Sources & coverage"
+              onPress={() => openRecord('/stats', 'Sources & coverage')}
+              testID="topics-stats"
+            />
+            <RecordRow
+              path={'/methods'}
+              title="Methods"
+              onPress={() => openRecord('/methods', 'Methods')}
+              testID="topics-methods"
+            />
+          </RowList>
+        </Section>
       </Screen>
     </>
   );

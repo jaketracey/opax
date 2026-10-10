@@ -10,7 +10,7 @@ import {
   SegmentedControl,
   Field,
   LinkRow,
-  AsAtLine,
+  SourceLine,
   BigFigure,
 } from '../../design/primitives';
 import { isE2E } from '../../design/environment';
@@ -139,7 +139,7 @@ export default function Quiz() {
         testID="explore-quiz-screen"
       >
         {!round ? (
-          <Section title="The record quiz">
+          <Section rule={false}>
             <Text variant="body" wordSafe>
               A game from the public record
             </Text>
@@ -159,9 +159,10 @@ export default function Quiz() {
               disabled={!ready}
               testID="quiz-start"
             />
-            <AsAtLine
+            <SourceLine
               asOf={snapshot.generated}
               citation="OPAX static quiz exports"
+              testID="quiz-as-at"
             />
           </Section>
         ) : done ? (
