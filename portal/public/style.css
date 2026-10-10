@@ -3294,18 +3294,22 @@ mark.privacy-confirm {
   #panel-doc .doc-head:has(.doc-portrait) > .doc-meta { grid-column: 1 / -1; }
   #panel-doc .doc-head:has(.doc-portrait) > .doc-portrait { grid-row: 2; }
 }
+/* A label is whole words on one line at every width: it never breaks inside
+   a word (.ui-button allows that) and is never squeezed. A button that does
+   not fit moves to the next row; the buttons in a row share its width. */
+#panel-doc .doc-toolbar-btns .ui-button { white-space: nowrap; overflow-wrap: normal; }
 @media (max-width: 699px) {
   #panel-doc .doc-toolbar-btns { display: flex; flex-wrap: wrap; }
-  #panel-doc .doc-toolbar-btns .ui-button { flex: 1 0 calc(20% - 6px); min-width: max(44px, 4em); }
+  #panel-doc .doc-toolbar-btns .ui-button { flex: 1 1 0; min-width: max-content; }
+  #panel-doc .doc-toolbar-btns button { flex-direction: row; }
   #panel-doc .doc-toolbar-btns #doc-ask, #panel-doc .doc-toolbar-btns #doc-ask-foot { flex-basis: 100%; }
-  #panel-doc .doc-toolbar-foot .doc-toolbar-btns .ui-button { flex-basis: calc(33.3% - 6px); }
 }
-/* Desktop: the portrait and the name block are one header unit. The photo
-   starts on the headline's line (it took row 2, under the name) and spans the
-   name, the debate and the byline; the actions wrap inside the header. */
+/* The portrait and the name block are one header unit. The photo starts on
+   the headline's line (it took row 2, under the name) and spans the name,
+   the debate and the byline; the actions wrap inside the header. */
+#panel-doc .doc-head:has(.doc-portrait) > .doc-portrait { grid-row: 1 / span 3; margin-top: var(--space-line); }
+#panel-doc .doc-head:has(.doc-topic-long) > .doc-portrait { grid-row: 1 / span 2; }
 @media (min-width: 700px) {
-  #panel-doc .doc-head:has(.doc-portrait) > .doc-portrait { grid-row: 1 / span 3; margin-top: var(--space-line); }
-  #panel-doc .doc-head:has(.doc-topic-long) > .doc-portrait { grid-row: 1 / span 2; }
   #panel-doc .doc-toolbar { max-width: 100%; }
   #panel-doc .doc-toolbar-btns { flex-wrap: wrap; min-width: 0; }
 }

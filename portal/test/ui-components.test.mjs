@@ -113,6 +113,17 @@ test('MachineLabel notRecord: the pill says "not part of the record" in its titl
   assert.doesNotMatch(app, /<p class="fineprint">\$\{esc\(summary\.attribution/);
 });
 
+test('doc page actions: whole words on one line, whole buttons to the next row; the header is one unit at every width', () => {
+  // .ui-button breaks anywhere ("Prof ile" at 390); the doc toolbar does not.
+  assert.match(style, /#panel-doc \.doc-toolbar-btns \.ui-button \{ white-space: nowrap; overflow-wrap: normal; \}/);
+  assert.match(style, /#panel-doc \.doc-toolbar-btns \.ui-button \{ flex: 1 1 0; min-width: max-content; \}/);
+  assert.doesNotMatch(style, /flex: 1 0 calc\(20% - 6px\)|flex-basis: calc\(33\.3% - 6px\)/);
+  // The portrait starts on the headline's row outside any width query.
+  assert.match(style, /\n#panel-doc \.doc-head:has\(\.doc-portrait\) > \.doc-portrait \{ grid-row: 1 \/ span 3;/);
+  // The byline never starts a line on its dot, nor splits a date.
+  assert.match(app, /\]\.filter\(Boolean\)\.join\("&nbsp;· "\); \/\/ a line never starts on a dot/);
+});
+
 test('SourceLine: the line, its state and its sheet in order; only safe links', () => {
   const { sourceLineHTML } = helpers;
   const html = sourceLineHTML({

@@ -12888,9 +12888,9 @@ async function openDocPage(slug, manageFocus) {
       doc.labels?.party ? partyChipHTML(doc.labels.party) : "",
       doc.metadata?.electorate ? `${doc.labels?.chamber === "representatives" || doc.labels?.chamber === "nsw_la" ? "Member for " : ""}${esc(doc.metadata.electorate)}` : "",
       house ? esc(house) : "",
-      doc.metadata?.date ? esc(fmtDate(doc.metadata.date)) : "",
+      doc.metadata?.date ? esc(fmtDate(doc.metadata.date)).replace(/ /g, "&nbsp;") : "",
       origin ? `<a href="${esc(origin)}" rel="noopener" target="_blank">View original ↗︎</a>` : "",
-    ].filter(Boolean).join(" · ");
+    ].filter(Boolean).join("&nbsp;· "); // a line never starts on a dot, nor splits a date
     // Machine topic labels (field-level enrichment; a speech can carry
     // several). Chips only for slugs the taxonomy knows — an unknown label
     // has no topic page to link to. Most of the corpus has none yet: the
@@ -12907,7 +12907,7 @@ async function openDocPage(slug, manageFocus) {
     const docWitness = doc.labels?.speaker_type === "witness" || (isCommitteeChamber(doc.labels?.chamber) && doc.metadata?.person_id == null);
     if (docWitness && (doc.metadata?.witness_position || doc.metadata?.witness_organisation)) {
       $("doc-meta").insertAdjacentHTML("afterbegin",
-        `${[doc.metadata.witness_position, doc.metadata.witness_organisation].filter(Boolean).map(esc).join(", ")} · `);
+        `${[doc.metadata.witness_position, doc.metadata.witness_organisation].filter(Boolean).map(esc).join(", ")}&nbsp;· `);
     }
     if (doc.speaker && (docWitness || doc.speaker_attribution === 'unattributed')) {
       speakerLinks.innerHTML = `${docWitness ? 'Committee witness' : 'Unattributed speaker'}, named as the transcript names them. <a ${entityHrefAttr(hasEntityId(doc.speaker) ? subjectHash("person", doc.speaker) + "?attribution=unattributed" : null)}>Their evidence on OPAX</a>`;
