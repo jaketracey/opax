@@ -20,6 +20,9 @@ const fields = {
   opax_search_completed: ['page', 'result_count', 'total_count', 'duration_ms'],
   opax_search_failed: ['page', 'duration_ms'],
   opax_export: ['format', 'row_count'],
+  table_sort: ['table_id', 'page_type'],
+  table_filter: ['table_id', 'page_type'],
+  table_export: ['table_id', 'page_type'],
 };
 export function safePath(value) {
   try {
