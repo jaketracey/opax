@@ -367,15 +367,17 @@ Final answers, decided 6 Oct (default) under decision 14 ("answer conservatively
 | User Content: Other User Content | Yes | Yes | No | App Functionality |
 | Usage Data: Product Interaction | Yes | Yes | No | App Functionality |
 | Search History | Yes | Yes | No | App Functionality |
-| Other Data: Other Data Types (IP addresses) | Yes | Yes | No | App Functionality |
+| Diagnostics: Other Diagnostic Data (server request logs, IP addresses) | Yes | Yes | No | App Functionality |
 
 **Tracking: No.** No App Tracking Transparency prompt; `NSPrivacyTracking` is false and no tracking domains are declared (`verify-ios-release.py:98-99`).
 
-**Not collected:** Location (used on the device only), Contacts, Health and Fitness, Financial Info, Purchases, Browsing History, Diagnostics (crash and performance data), Sensitive Info, Photos or Videos, Device ID and Advertising Data.
+**Not collected:** Location (used on the device only), Contacts, Health and Fitness, Financial Info, Purchases, Browsing History, Crash Data and Performance Data, Sensitive Info, Photos or Videos, Device ID and Advertising Data, and Emails or Text Messages (Community, the only messaging, is not in the 1.0 app).
 
 **Where it is enforced.** The types and their linkage come from one policy file (`mobile/voice-production-policy.json:17-24`), turned into manifest entries with tracking false and the App Functionality purpose (`mobile/plugins/voiceProduction.js:14-40`), merged into the app's manifest only when the switch is on (`mobile/app.config.ts:155-158`). The release verifier refuses a switch-on archive whose manifest differs in any type, linkage, tracking flag or purpose, and states "location not collected" (`verify-ios-release.py:97-116,570-573`).
 
 **Manifest recheck, 7 October 2026.** The policy now has all seven types in `linkedDataTypes`, including Search History and Other Data, and an empty `unlinkedDataTypes`. The switch-on manifest follows those lists; `voice-production.test.ts`, `test-release-tooling.py` and the release verifier check linkage. The signed archive and IPA must still be verified against their exact artifact commit before upload.
+
+**Label change, 10 October 2026.** IP addresses are declared as Diagnostics (Other Diagnostic Data), not Other Data (Jake's choice; `release/1.0/app-privacy.json` in the store lane). Community is left out of the 1.0 app, so Emails or Text Messages is not declared. The policy's `linkedDataTypes` are now EmailAddress, UserID, AudioData, OtherUserContent, ProductInteraction, SearchHistory and OtherDiagnosticData, and the release verifier pins exactly that list (`LABEL_DATA_TYPES`).
 
 ### 4.2 Why each answer
 

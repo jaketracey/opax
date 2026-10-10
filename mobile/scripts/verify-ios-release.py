@@ -66,6 +66,12 @@ SCENE_DELEGATE = "EXExpoAppSceneDelegate"
 # list) are application inputs, not tooling, for artifact provenance.
 APP_INPUTS_UNDER_SCRIPTS = {"mobile/scripts/production-block-list.json"}
 VOICE_POLICY = json.loads((Path(__file__).resolve().parent.parent / "voice-production-policy.json").read_text())
+# The App Privacy label for 1.0 (release/1.0/app-privacy.json, Community
+# hidden): these seven types, all linked, none tracking, App Functionality only.
+# IP addresses are Diagnostics (Jake, 10 October), not Other Data, and there is
+# no Emails or Text Messages without Community. The policy must say the same.
+LABEL_DATA_TYPES = ("EmailAddress", "UserID", "AudioData", "OtherUserContent", "ProductInteraction",
+                    "SearchHistory", "OtherDiagnosticData")
 LOCATION_PURPOSE = "OPAX uses your location once, on this device, to suggest your electorate. It is not sent anywhere."
 
 
@@ -98,6 +104,8 @@ def verify_voice_info(info, enabled):
 
 
 def verify_voice_privacy(manifest):
+    require(tuple(VOICE_POLICY["linkedDataTypes"]) == LABEL_DATA_TYPES and not VOICE_POLICY["unlinkedDataTypes"],
+            "voice policy data types are the App Store privacy label's")
     require(manifest.get("NSPrivacyTracking") is False and not manifest.get("NSPrivacyTrackingDomains"),
             "privacy manifest declares no tracking")
     entries = manifest.get("NSPrivacyCollectedDataTypes", [])
