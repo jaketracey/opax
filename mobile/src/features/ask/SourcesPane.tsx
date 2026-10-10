@@ -32,6 +32,8 @@ import {
   type SplitPane,
   EmptyState,
 } from '../../design/primitives';
+// From adaptive, not primitives: screen tests mock primitives' components.
+import { splitPaneWidth, useLayout } from '../../design/adaptive';
 import {
   SelectedMark,
   selectedWash,
@@ -169,7 +171,6 @@ export function useAskSources(thread: readonly Turn[]) {
   };
 }
 
-const PANE_WIDTH = { min: 320, max: 420 };
 function SourcesPane({
   answer,
   question,
@@ -185,14 +186,11 @@ function SourcesPane({
   setStack: (next: (current: RecordEntry[]) => RecordEntry[]) => void;
   open: (href: string, title: string) => void;
 }) {
-  const { width } = useWindowDimensions();
+  // The narrow pane of the one two-pane rule, from the room it shares with
+  // the conversation (inside the sidebar's inset), as a split's list is.
+  const { width } = useLayout();
   const large = useAccessibilitySize();
-  // At accessibility sizes the pane takes 45% so its rows keep whole words.
-  const paneWidth = large
-    ? Math.round(width * 0.45)
-    : Math.round(
-        Math.min(Math.max(width * 0.34, PANE_WIDTH.min), PANE_WIDTH.max),
-      );
+  const paneWidth = splitPaneWidth(width, large);
   const top = stack.at(-1);
   const pane: SplitPane<RecordEntry> = {
     push: (entry) => setStack((current) => [...current, entry]),
@@ -237,8 +235,7 @@ function SourcesPane({
         ) : (
           <EmptyState
             size="pane"
-            icon="quote.bubble"
-            title="Sources appear here"
+            message="Sources appear here"
             testID="ask-sources-empty"
           />
         )}

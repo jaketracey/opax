@@ -41,11 +41,13 @@ import {
 } from '../../design/primitives';
 import { colors, hairline, layout, rhythm, spacing } from '../../design/tokens';
 import {
-  LayoutRegion,
+  RegionProvider,
   SidebarSafe,
   columns,
   isPad,
+  sizeClassFor,
   useLayout,
+  useMeasuredRegion,
 } from '../../design/adaptive';
 import { AskPaneProvider, useAskSources } from './SourcesPane';
 import { useReduceMotion } from '../../design/accessibility';
@@ -118,10 +120,14 @@ export default function AskScreen() {
   // Cmd-N on iPad (src/navigation/KeyboardShortcuts.tsx) focuses the question.
   const questionInput = useRef<TextInput>(null);
   useFocusRequest('ask', questionInput);
-  // iPad regular width: the conversation beside its sources, the composer
-  // docked under the conversation.
-  const regular = useLayout().regular;
-  const docked = isPad && regular;
+  // iPad: the conversation beside its sources, the composer docked under the
+  // conversation, when the room inside the sidebar's inset is regular width.
+  // The window alone is not enough: a narrow window with the sidebar open
+  // keeps one column, as Bills and Search do.
+  const [onRoom, room] = useMeasuredRegion();
+  const outer = useLayout();
+  const docked =
+    isPad && sizeClassFor(room?.width ?? outer.width) === 'regular';
   const sources = useAskSources(s.thread);
   const noTarget = useRef<View>(null);
   const column = useRef<View>(null);
@@ -659,26 +665,43 @@ export default function AskScreen() {
           ...(isPad ? { headerLargeTitleEnabled: !docked } : null),
         }}
       />
-      {docked ? (
+      {isPad ? (
         <SidebarSafe style={styles.fill}>
-          <LayoutRegion style={[styles.fill, styles.split]}>
-            <View ref={column} style={[styles.fill, { paddingBottom: lift }]}>
-              <AskPaneProvider value={sources.context}>
-                {conversation}
-              </AskPaneProvider>
-              <View style={styles.dock} testID="ask-dock">
-                <View
-                  style={[
-                    styles.dockColumn,
-                    { maxWidth: columns.readable - layout.screenMargin * 2 },
-                  ]}
-                >
-                  {composer}
-                </View>
-              </View>
-            </View>
-            {sources.pane}
-          </LayoutRegion>
+          <View
+            style={[styles.fill, docked ? styles.split : null]}
+            onLayout={onRoom}
+          >
+            <RegionProvider value={room}>
+              {docked ? (
+                <>
+                  <View
+                    ref={column}
+                    style={[styles.fill, { paddingBottom: lift }]}
+                  >
+                    <AskPaneProvider value={sources.context}>
+                      {conversation}
+                    </AskPaneProvider>
+                    <View style={styles.dock} testID="ask-dock">
+                      <View
+                        style={[
+                          styles.dockColumn,
+                          {
+                            maxWidth:
+                              columns.readable - layout.screenMargin * 2,
+                          },
+                        ]}
+                      >
+                        {composer}
+                      </View>
+                    </View>
+                  </View>
+                  {sources.pane}
+                </>
+              ) : (
+                conversation
+              )}
+            </RegionProvider>
+          </View>
         </SidebarSafe>
       ) : (
         conversation

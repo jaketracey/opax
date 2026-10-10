@@ -50,8 +50,29 @@ export const columns = {
   wide: 1180,
 } as const;
 
-/** The list pane of a split layout: default, minimum and maximum widths. */
+/**
+ * The narrow pane's bounds (`splitPaneWidth`); `width` is where it usually
+ * lands, a third of a 13-inch iPad's landscape region.
+ */
 export const splitPane = { width: 360, min: 300, max: 440 } as const;
+
+/**
+ * The narrow pane of every two-pane layout (a split's list, Ask's sources),
+ * from the width of the region the two panes share (inside the sidebar's
+ * inset): a third of it, between `splitPane.min` and `splitPane.max`, never
+ * more than half. At accessibility sizes it is 45%, so the pane's rows keep
+ * whole words. The wide pane takes the rest.
+ */
+export function splitPaneWidth(width: number, large = false): number {
+  if (large) return Math.round(width * 0.45);
+  return Math.round(
+    Math.min(
+      Math.max(width / 3, splitPane.min),
+      splitPane.max,
+      Math.max(width / 2, splitPane.min),
+    ),
+  );
+}
 
 export type SizeClass = 'compact' | 'regular';
 
@@ -175,6 +196,49 @@ export function readableInset(
 ): number {
   if (size === 'compact') return margin;
   return Math.max(margin * 1.6, Math.round((width - max) / 2));
+}
+
+/**
+ * How far a figure in a `column` may reach past each side of it to fill the
+ * wide column, in a region `width` wide (the money map's scene in its
+ * readable page). 0 on compact width and in the wide column itself.
+ */
+export function columnBreakout(
+  width: number,
+  column: keyof typeof columns,
+  size: SizeClass = sizeClassFor(width),
+): number {
+  if (size === 'compact') return 0;
+  const inset = (max: number) =>
+    readableInset(width, max, rhythm.screen, size);
+  return Math.max(0, inset(columns[column]) - inset(columns.wide));
+}
+
+const ColumnContext = createContext<keyof typeof columns | null>(null);
+
+/**
+ * A route's choice of column for the screen it draws, over the screen's own
+ * `column` (Your MP is a reading page: its route asks for the readable
+ * column). It changes nothing on compact width, where every column is the
+ * full width inside the margin, and draws no view.
+ */
+export function ScreenColumn({
+  column,
+  children,
+}: {
+  column: keyof typeof columns;
+  children: ReactNode;
+}) {
+  return (
+    <ColumnContext.Provider value={column}>{children}</ColumnContext.Provider>
+  );
+}
+
+/** The column a route asked for (`ScreenColumn`), else `own`. */
+export function useColumnChoice(
+  own: keyof typeof columns,
+): keyof typeof columns {
+  return useContext(ColumnContext) ?? own;
 }
 
 /**

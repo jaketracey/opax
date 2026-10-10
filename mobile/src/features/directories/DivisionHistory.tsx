@@ -22,6 +22,7 @@ import {
   SourceLine,
   Text,
   errorMessage,
+  useScreenColumn,
 } from '../../design/primitives';
 import { colors, layout, rhythm } from '../../design/tokens';
 import { formatCount, formatDate } from '../../design/format';
@@ -82,6 +83,7 @@ export default function DivisionHistory() {
     [],
   );
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
+  const column = useScreenColumn();
   const [text, setText] = useState(''),
     [query, setQuery] = useState('');
   useEffect(() => {
@@ -123,12 +125,14 @@ export default function DivisionHistory() {
           ],
         }}
       />
-      {/* The iPad sidebar floats over a bare list; this keeps rows clear of it. */}
+      {/* The iPad sidebar floats over a bare list; this keeps rows clear of
+          it, and on regular width the rows keep the readable column. */}
       <SidebarSafe style={styles.screen}>
         <FlatList
           testID="division-history-screen"
           style={styles.screen}
-          contentContainerStyle={styles.content}
+          contentContainerStyle={[styles.content, column.content]}
+          onLayout={column.onLayout}
           contentInsetAdjustmentBehavior="automatic"
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={refresh} />

@@ -19,6 +19,7 @@ import {
   Hoverable,
   RegionProvider,
   splitPane,
+  splitPaneWidth,
   useLayout,
   useMeasuredRegion,
 } from './adaptive';
@@ -69,6 +70,16 @@ export function usePaneBar(): ReactNode {
 }
 
 /**
+ * True inside a split's list pane. The list is the way to the subject, so
+ * its sections draw no category accent: the detail pane carries the view's
+ * one accent. False everywhere else, so the phone is unchanged.
+ */
+const ListPaneContext = createContext(false);
+export function useInSplitList(): boolean {
+  return useContext(ListPaneContext);
+}
+
+/**
  * The keyboard's place in a cursor-mode list (Search): rows draw it as the
  * hover tint, and the screen scrolls it into view. Null elsewhere.
  */
@@ -95,7 +106,10 @@ export interface SplitLayoutProps<T> {
   entryTitle?: (entry: T) => string;
   /** Trailing actions in the pane bar (Share). */
   detailActions?: (entry: T) => ReactNode;
-  /** The calm placeholder while nothing is selected (`SplitEmpty`). */
+  /**
+   * What the detail pane says while nothing is selected: `EmptyState` with
+   * `size="pane"`, one quiet line ("No bill selected").
+   */
   empty: ReactNode;
   /**
    * Keyboard selection: the list's keys in order. Up and Down move the
@@ -238,8 +252,9 @@ export function SplitLayout<T>({
     keyboard && (!!selected || !!cursor),
   );
 
-  // At accessibility sizes the list starts at 45% of the region (up to half)
-  // so its rows keep whole words; a width the reader drags is kept per mode.
+  // The list starts at the one two-pane rule (`splitPaneWidth`: a third of
+  // the region, 45% at accessibility sizes so its rows keep whole words); a
+  // width the reader drags is kept per mode.
   const large = useAccessibilitySize();
   const widthKey = large ? `${id}:large` : id;
   const maxWidth = large
@@ -249,8 +264,7 @@ export function SplitLayout<T>({
     Math.round(Math.min(Math.max(next, splitPane.min), maxWidth));
   const [, setResized] = useState(0);
   const width = clampWidth(
-    savedWidths.get(widthKey) ??
-      (large ? layout.width * 0.45 : splitPane.width),
+    savedWidths.get(widthKey) ?? splitPaneWidth(layout.width, large),
   );
   const resize = (next: number) => {
     savedWidths.set(widthKey, clampWidth(next));
@@ -286,7 +300,11 @@ export function SplitLayout<T>({
         onLayout={onListLayout}
         testID={testID ? `${testID}-list` : undefined}
       >
-        <RegionProvider value={listRegion}>{listContent}</RegionProvider>
+        <RegionProvider value={listRegion}>
+          <ListPaneContext.Provider value>
+            {listContent}
+          </ListPaneContext.Provider>
+        </RegionProvider>
       </View>
       <Divider width={width} onResize={resize} />
       <View
@@ -438,8 +456,8 @@ function Divider({
 }
 
 /**
- * @deprecated Use `EmptyState` with `size="pane"`. The calm placeholder of
- * an empty detail pane.
+ * @deprecated Use `EmptyState` with `size="pane"`. An empty detail pane's
+ * one quiet line; `icon`, `message` and `accent` no longer draw.
  */
 export function SplitEmpty({
   icon,

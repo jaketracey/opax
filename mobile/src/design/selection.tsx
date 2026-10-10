@@ -3,9 +3,11 @@ import { accents, colors, radii, rhythm, type Accent } from './tokens';
 
 /**
  * Rows in an iPad split list (Oct 2026): the row bleeds 12pt into the
- * margin so its selected wash has room around the text, and a 3pt mark in
- * the category's ink leads the selected row. No chevron: the detail pane is
- * the destination. Rows outside a split (every iPhone row) never use this.
+ * margin so its selected wash has room around the text, and a 3pt mark
+ * leads the selected row. No chevron: the detail pane is the destination.
+ * Every split list selects alike, in navy, whatever the row's category: the
+ * category's accent belongs to the detail pane (one accent per view). Rows
+ * outside a split (every iPhone row) never use this.
  */
 export const splitRowStyles = StyleSheet.create({
   bleed: {
@@ -24,21 +26,25 @@ export const splitRowStyles = StyleSheet.create({
   },
 });
 
-/** The selected row's wash: its category's wash. */
-export function selectedWash(accent: Accent = 'people') {
-  return { backgroundColor: colors[accents[accent].wash] };
+// The one selection: the navy wash and ink (the `people` roles), which
+// `contrast.ts` checks for every text tone and under Increase Contrast.
+const SELECTED = accents.people;
+
+/**
+ * The selected row's wash, the same in every list. `accent` is ignored (pass
+ * nothing); it stays optional until the callers that still pass one drop it.
+ */
+export function selectedWash(_accent?: Accent) {
+  return { backgroundColor: colors[SELECTED.wash] };
 }
 
 /** The 3pt mark leading a selected split row; decorative (the state is said). */
-export function SelectedMark({ accent = 'people' }: { accent?: Accent }) {
+export function SelectedMark(_props: { accent?: Accent }) {
   return (
     <View
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
-      style={[
-        splitRowStyles.mark,
-        { backgroundColor: colors[accents[accent].ink] },
-      ]}
+      style={[splitRowStyles.mark, { backgroundColor: colors[SELECTED.ink] }]}
     />
   );
 }
