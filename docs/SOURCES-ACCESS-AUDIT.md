@@ -694,3 +694,384 @@ No production refresh, production write, push or deploy was performed. The harne
 uses disposable local repositories and stub providers. Only read-only public
 honest-agent probes and read-only inspection of published/local snapshot metadata
 were used to establish access and freshness evidence.
+
+## Review correction inventory
+
+Inventory after the review corrections (10 October 2026). Every tracked and
+unignored file is screened, including extensionless scripts. This generated
+inventory is excluded from its own search to avoid recursive matches. Locations
+list tokens only, without source records or private names.
+
+Disposition: the shared JSON identity is the sole outbound value; HTTP callers
+read it through the Python, Node, shell or Worker imports. Firecrawl references
+are historical documentation, denial rules, legacy direct-HTTP filenames or
+fixtures; no executable service call remains. Browser identities in the incoming
+classification fixture and bundled reader analytics describe readers. Browser
+framework imports remain only in `portal/test/` and the four explicitly listed
+OPAX UI harnesses; the contact-log and demo capture launch paths were removed.
+Guard definitions and mutation fixtures never acquire a source.
+
+362 unique file:line matches:
+
+- `.github/workflows/refresh-watchdog.yml:46` — `user-agent`, `user_agent`
+- `.github/workflows/refresh-watchdog.yml:54` — `User-Agent`, `user_agent`
+- `docs/ANALYTICS.md:23` — `User-Agent`
+- `docs/DATA-CONTRACTS.md:115` — `Firecrawl`
+- `docs/DATA-GRANTS.md:59` — `user-agent`
+- `docs/DATA-INFLUENCE.md:41` — `User-Agent`
+- `docs/DATA-INTERESTS.md:11` — `Firecrawl`
+- `docs/DATA-INTERESTS.md:12` — `firecrawl`
+- `docs/DATA-INTERESTS.md:14` — `Firecrawl`
+- `docs/DATA-INTERESTS.md:23` — `Firecrawl`
+- `docs/DATA-INTERESTS.md:44` — `Firecrawl`
+- `docs/DATA-INTERESTS.md:49` — `Firecrawl`
+- `docs/DATA-INTERESTS.md:51` — `Firecrawl`
+- `docs/DATA-INTERESTS.md:85` — `firecrawl`
+- `docs/DATA-INTERESTS.md:99` — `Firecrawl`
+- `docs/DATA-INTERESTS.md:111` — `Firecrawl`, `firecrawl`
+- `docs/DATA-INTERESTS.md:112` — `firecrawl`
+- `docs/DATA-INTERESTS.md:144` — `User-Agent`
+- `docs/DATA-INTERESTS.md:150` — `User-Agent`
+- `docs/DATA-INTERESTS.md:176` — `Firecrawl`, `firecrawl`
+- `docs/DATA-INTERESTS.md:177` — `FIRECRAWL`, `firecrawl`
+- `docs/DATA-INTERESTS.md:182` — `Firecrawl`
+- `docs/DATA-MEMBERS.md:11` — `Firecrawl`
+- `docs/DATA-MEMBERS.md:15` — `Firecrawl`
+- `docs/DATA-MEMBERS.md:18` — `Firecrawl`
+- `docs/DATA-MEMBERS.md:49` — `Firecrawl`
+- `docs/DATA-WORDS.md:15` — `User-Agent`
+- `docs/IOS-API-CONTRACT.md:17` — `User-Agent`
+- `docs/IOS-API-CONTRACT.md:19` — `User-Agent`
+- `docs/IOS-API-CONTRACT.md:34` — `User-Agent`
+- `docs/IOS-API-CONTRACT.md:479` — `User-Agent`
+- `docs/IOS-API-CONTRACT.md:555` — `User-Agent`
+- `docs/IOS-APP.md:193` — `User-Agent`
+- `docs/PHOTOS.md:257` — `User-Agent`
+- `docs/PHOTOS.md:258` — `User-Agent`
+- `docs/PICTURES.md:391` — `Firecrawl`
+- `docs/PICTURES.md:411` — `Firecrawl`
+- `docs/PICTURES.md:413` — `Firecrawl`
+- `docs/PICTURES.md:417` — `firecrawl`
+- `docs/PICTURES.md:418` — `firecrawl`
+- `docs/PICTURES.md:421` — `Firecrawl`
+- `docs/SCOPE-BILLS.md:546` — `Firecrawl`
+- `docs/SCOPE-BILLS.md:550` — `Firecrawl`
+- `docs/SCOPE-BILLS.md:552` — `Firecrawl`
+- `docs/SCOPE-BILLS.md:553` — `Firecrawl`
+- `docs/SCOPE-BILLS.md:581` — `User-Agent`
+- `docs/SCOPE-BILLS.md:590` — `Firecrawl`
+- `docs/SCOPE-BILLS.md:591` — `Firecrawl`
+- `docs/SCOPE-BILLS.md:592` — `Firecrawl`
+- `docs/SCOPE-BILLS.md:594` — `Firecrawl`
+- `docs/SCOPE-BILLS.md:596` — `Firecrawl`, `firecrawl`
+- `docs/SCOPE-BILLS.md:790` — `Firecrawl`
+- `docs/SCOPE-BILLS.md:795` — `USER_AGENT`
+- `docs/SCOPE-BILLS.md:799` — `User-Agent`
+- `docs/SCOPE-BILLS.md:852` — `Firecrawl`
+- `docs/SCOPE-BILLS.md:866` — `Firecrawl`
+- `docs/SCOPE-BILLS.md:867` — `Firecrawl`
+- `docs/SCOPE-BILLS.md:868` — `Firecrawl`
+- `docs/SOURCES-ACCESS.md:4` — `user-agent`
+- `docs/SOURCES-ACCESS.md:34` — `Firecrawl`
+- `docs/SOURCES-ACCESS.md:37` — `firecrawl`
+- `docs/SOURCES-ACCESS.md:38` — `firecrawl`
+- `docs/SOURCES-ACCESS.md:39` — `firecrawl`
+- `docs/SOURCES-ACCESS.md:82` — `Firecrawl`
+- `docs/VOTES.md:103` — `User-Agent`
+- `docs/VOTES.md:112` — `Playwright`
+- `docs/VOTES.md:380` — `Playwright`
+- `docs/operations/evidence-enrichment-layers.md:47` — `Playwright`
+- `docs/operations/interests-refresh-2026-10-03.md:8` — `Firecrawl`
+- `docs/operations/interests-refresh-2026-10-03.md:32` — `Firecrawl`
+- `docs/operations/interests-refresh-2026-10-03.md:47` — `Firecrawl`
+- `docs/operations/interests-refresh-2026-10-03.md:50` — `Firecrawl`
+- `docs/operations/interests-refresh-2026-10-03.md:200` — `Firecrawl`
+- `docs/operations/interests-refresh-2026-10-03.md:219` — `FIRECRAWL`
+- `docs/operations/nightly-refresh.md:24` — `Firecrawl`
+- `docs/operations/nightly-refresh.md:170` — `FIRECRAWL`
+- `docs/operations/nightly-refresh.md:179` — `Firecrawl`
+- `docs/operations/nightly-refresh.md:180` — `Firecrawl`
+- `docs/operations/nightly-refresh.md:187` — `FIRECRAWL`
+- `docs/operations/periodic-refresh.md:95` — `Firecrawl`
+- `docs/operations/periodic-refresh.md:154` — `User-Agent`
+- `docs/reports/2026-09-05-page-search-report.md:32` — `Playwright`
+- `docs/reports/2026-10-09-search-toolbar.md:51` — `Playwright`
+- `docs/reports/2026-10-09-search-toolbar.md:57` — `PLAYWRIGHT`
+- `download_hansard.py:31` — `USER_AGENT`, `User-Agent`
+- `download_hansard_fast.py:41` — `USER_AGENT`
+- `download_hansard_fast.py:402` — `USER_AGENT`, `User-Agent`
+- `enrich/src/kb.ts:1` — `user-agent`
+- `enrich/src/kb.ts:88` — `user-agent`, `user_agent`
+- `parli/ingest/abs_profiles.py:48` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/acnc_ato.py:75` — `USER_AGENT`
+- `parli/ingest/acnc_ato.py:640` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/act_hansard.py:70` — `USER_AGENT`
+- `parli/ingest/act_hansard.py:108` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/aec_results.py:36` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/anao.py:34` — `USER_AGENT`
+- `parli/ingest/austender.py:31` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/austender_full.py:37` — `USER_AGENT`
+- `parli/ingest/austender_full.py:79` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/bill_texts.py:28` — `USER_AGENT`
+- `parli/ingest/bill_texts.py:145` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/bills.py:37` — `USER_AGENT`
+- `parli/ingest/bills.py:90` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/board_appointments.py:47` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/cache_apis.py:40` — `USER_AGENT`
+- `parli/ingest/cache_apis.py:60` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/committee_hearings.py:79` — `USER_AGENT`
+- `parli/ingest/committee_hearings.py:80` — `USER_AGENT`
+- `parli/ingest/committee_hearings.py:132` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/committee_witnesses.py:70` — `USER_AGENT`
+- `parli/ingest/committee_witnesses.py:330` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/conduct_interests_federal.py:48` — `USER_AGENT`
+- `parli/ingest/conduct_interests_federal.py:199` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/conduct_interests_qld.py:10` — `User-Agent`
+- `parli/ingest/conduct_interests_qld.py:31` — `USER_AGENT`
+- `parli/ingest/divisions.py:30` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/donations.py:47` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/electorates.py:73` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/ext_common.py:64` — `USER_AGENT`
+- `parli/ingest/ext_common.py:94` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/federal_lobbyists.py:53` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/fetch_division_votes.py:76` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/fits_register.py:42` — `User-Agent`
+- `parli/ingest/fits_register.py:66` — `USER_AGENT`
+- `parli/ingest/fits_register.py:237` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/frl_instruments.py:55` — `USER_AGENT`
+- `parli/ingest/frl_instruments.py:404` — `user-agent`
+- `parli/ingest/grantconnect.py:74` — `USER_AGENT`
+- `parli/ingest/grantconnect.py:466` — `User-Agent`
+- `parli/ingest/grants.py:46` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/guardian_news.py:30` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/handbook.py:29` — `USER_AGENT`
+- `parli/ingest/handbook.py:167` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/http.py:26` — `USER_AGENT`, `user-agent`, `user_agent`
+- `parli/ingest/http.py:113` — `firecrawl`
+- `parli/ingest/http.py:156` — `user-agent`
+- `parli/ingest/http.py:157` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/http.py:165` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/http.py:178` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/http.py:184` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/http.py:220` — `user-agent`
+- `parli/ingest/http.py:222` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/http.py:240` — `User-agent`
+- `parli/ingest/http.py:241` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/http.py:268` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/http.py:296` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/http.py:311` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/interests_fetch.py:55` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/interests_fetch.py:96` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/load_votes.py:32` — `USER_AGENT`
+- `parli/ingest/load_votes.py:50` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/members.py:33` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/ministerial_diaries.py:53` — `USER_AGENT`
+- `parli/ingest/ministerial_diaries.py:78` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/mp_interests.py:47` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/nsw_hansard.py:37` — `USER_AGENT`
+- `parli/ingest/nsw_hansard.py:64` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/photos.py:49` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/qao_reports.py:34` — `USER_AGENT`
+- `parli/ingest/qao_reports.py:98` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/qld_contracts.py:46` — `USER_AGENT`
+- `parli/ingest/qld_contracts.py:99` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/qld_lobbyists.py:46` — `USER_AGENT`
+- `parli/ingest/qld_lobbyists.py:99` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/qld_parliament.py:55` — `USER_AGENT`
+- `parli/ingest/qld_parliament.py:56` — `USER_AGENT`
+- `parli/ingest/qld_parliament.py:132` — `user-agent`
+- `parli/ingest/qld_parliament.py:134` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/sa_hansard.py:42` — `USER_AGENT`
+- `parli/ingest/sa_hansard.py:75` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/state_donations.py:44` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/state_rosters.py:49` — `USER_AGENT`
+- `parli/ingest/state_rosters.py:134` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/tvfy_refresh.py:52` — `USER_AGENT`
+- `parli/ingest/tvfy_refresh.py:143` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/user-agent.json:2` — `user_agent`
+- `parli/ingest/vic_parliament.py:73` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/votes_state.py:79` — `USER_AGENT`
+- `parli/ingest/votes_state.py:170` — `USER_AGENT`, `User-Agent`
+- `parli/ingest/words_common.py:35` — `USER_AGENT`
+- `parli/ingest/words_common.py:47` — `USER_AGENT`, `User-Agent`
+- `portal/public/analytics.js:1` — `userAgent`
+- `portal/public/analytics.js:2` — `userAgent`, `user_agent`, `useragent`
+- `portal/public/chunks/chunk-OA6WGAJN.js:4084` — `userAgent`
+- `portal/public/chunks/voice-sdk-XRBS4UDV.js:3` — `userAgent`
+- `portal/public/chunks/voice-sdk-XRBS4UDV.js:37` — `userAgent`
+- `portal/public/chunks/voice-sdk-XRBS4UDV.js:143` — `userAgent`
+- `portal/public/evidence/1e.json:1` — `playwright`
+- `portal/public/evidence/2e.json:1` — `playwright`
+- `portal/public/evidence/d4.json:1` — `playwright`
+- `portal/public/evidence/d7.json:1` — `playwright`
+- `portal/public/grants-map.js:1` — `userAgent`
+- `portal/public/grants/federal/shard-33.json:1` — `Playwright`
+- `portal/src/index.ts:1` — `user-agent`
+- `portal/src/index.ts:223` — `user-agent`, `user_agent`
+- `portal/src/index.ts:2626` — `user-agent`, `user_agent`
+- `portal/src/index.ts:5166` — `User-agent`
+- `portal/src/index.ts:5664` — `User-agent`
+- `portal/src/network-block.ts:25` — `user-agent`
+- `portal/src/network-block.ts:101` — `user-agent`
+- `portal/src/posthog.ts:19` — `user-agent`
+- `portal/test/community-deletion-browser.mjs:1` — `Playwright`
+- `portal/test/community-deletion-browser.mjs:2` — `PLAYWRIGHT`
+- `portal/test/community-deletion-browser.mjs:13` — `PLAYWRIGHT`, `playwright`
+- `portal/test/network-block.test.mjs:60` — `user-agent`
+- `portal/test/network-block.test.mjs:61` — `Mozilla/[version]`
+- `portal/test/network-block.test.mjs:68` — `Chrome/[version]`, `Mozilla/[version]`
+- `portal/test/network-block.test.mjs:69` — `AppleWebKit/[version]`, `Chrome/[version]`, `Edg/[version]`, `Mozilla/[version]`, `Safari/[version]`
+- `portal/test/network-block.test.mjs:70` — `Chrome/[version]`, `Mozilla/[version]`
+- `portal/test/network-block.test.mjs:74` — `AppleWebKit/[version]`, `Chrome/[version]`, `Mozilla/[version]`, `Safari/[version]`, `user-agent`
+- `portal/test/qao_loader_test.py:45` — `User-agent`
+- `portal/test/qao_loader_test.py:270` — `User-agent`
+- `portal/test/source-access.test.mjs:8` — `USER_AGENT`
+- `portal/test/source-access.test.mjs:47` — `USER_AGENT`, `user-agent`, `user_agent`
+- `portal/test/source-access.test.mjs:50` — `user_agent`
+- `portal/test/source-access.test.mjs:53` — `user-agent`
+- `portal/test/source-access.test.mjs:54` — `User-Agent`, `user_agent`
+- `portal/voice/README.md:55` — `PLAYWRIGHT`
+- `portal/voice/README.md:56` — `Playwright`
+- `portal/voice/check.mjs:8` — `PLAYWRIGHT`, `playwright`
+- `scripts/arag_enrich.py:229` — `USER_AGENT`, `user-agent`
+- `scripts/arag_enrich.py:314` — `USER_AGENT`, `user-agent`
+- `scripts/arag_enrich.py:335` — `USER_AGENT`, `user-agent`
+- `scripts/arag_smoke.sh:13` — `USER_AGENT`, `user-agent`
+- `scripts/arag_smoke.sh:16` — `USER_AGENT`, `user-agent`
+- `scripts/ask_evidence_audit.py:30` — `USER_AGENT`, `user-agent`
+- `scripts/ask_harness.py:43` — `USER_AGENT`
+- `scripts/ask_harness.py:60` — `USER_AGENT`, `user-agent`
+- `scripts/ask_harness.py:79` — `USER_AGENT`, `user-agent`
+- `scripts/ask_regression.py:90` — `USER_AGENT`, `user-agent`
+- `scripts/backfill_photos_oa.py:56` — `User-Agent`
+- `scripts/bills_registry/bills_common.py:39` — `USER_AGENT`
+- `scripts/bills_registry/bills_common.py:113` — `USER_AGENT`, `User-Agent`
+- `scripts/build_pay.py:80` — `USER_AGENT`
+- `scripts/build_pay.py:94` — `USER_AGENT`, `User-Agent`
+- `scripts/build_pay.py:138` — `USER_AGENT`, `User-Agent`
+- `scripts/check_community_tools.mjs:3` — `PLAYWRIGHT`, `Playwright`
+- `scripts/check_community_tools.mjs:7` — `PLAYWRIGHT`, `playwright`
+- `scripts/check_search_summary.mjs:2` — `PLAYWRIGHT`, `playwright`
+- `scripts/check_search_toolbar.mjs:7` — `PLAYWRIGHT`, `Playwright`
+- `scripts/check_search_toolbar.mjs:8` — `PLAYWRIGHT`, `playwright`
+- `scripts/check_search_toolbar.mjs:59` — `Playwright`
+- `scripts/check_search_toolbar.mjs:62` — `Playwright`
+- `scripts/fetch_commons_portraits.py:15` — `USER_AGENT`, `User-Agent`
+- `scripts/generate_years.py:221` — `USER_AGENT`, `user-agent`
+- `scripts/grantconnect_details.py:53` — `USER_AGENT`
+- `scripts/grantconnect_details.py:127` — `USER_AGENT`, `User-Agent`
+- `scripts/insights.mjs:106` — `userAgent`
+- `scripts/insights.mjs:107` — `userAgent`
+- `scripts/insights.mjs:109` — `userAgent`
+- `scripts/lib/http.mjs:5` — `user-agent`
+- `scripts/lib/http.mjs:6` — `USER_AGENT`, `user_agent`
+- `scripts/lib/http.mjs:7` — `firecrawl`
+- `scripts/lib/http.mjs:80` — `USER_AGENT`, `user-agent`
+- `scripts/lib/http.sh:3` — `USER_AGENT`, `user-agent`, `user_agent`
+- `scripts/propose_social_photos.mjs:1` — `USER_AGENT`
+- `scripts/propose_social_photos.mjs:26` — `USER_AGENT`
+- `scripts/propose_social_photos.mjs:39` — `user-agent`
+- `scripts/propose_social_photos.mjs:71` — `user-agent`
+- `scripts/recrop_commons_portraits.py:28` — `User-Agent`
+- `scripts/refresh_releases.py:7` — `Firecrawl`
+- `scripts/source_access_guard.py:15` — `playwright`, `puppeteer`
+- `scripts/source_access_guard.py:16` — `Firecrawl`
+- `scripts/source_access_guard.py:18` — `userAgent`
+- `scripts/source_access_guard.py:19` — `user-agent`
+- `scripts/source_access_guard.py:20` — `user-agent`
+- `scripts/source_access_guard.py:34` — `user-agent`
+- `scripts/source_access_guard.py:44` — `USER_AGENT`
+- `scripts/source_access_guard.py:47` — `USER_AGENT`
+- `scripts/stamp_assets.mjs:2` — `USER_AGENT`
+- `scripts/stamp_assets.mjs:53` — `USER_AGENT`
+- `scripts/stamp_assets.mjs:65` — `user-agent`
+- `scripts/stamp_assets.mjs:88` — `user-agent`
+- `scripts/test_update_corpus_manifest.py:306` — `Firecrawl`
+- `scripts/vm/bootstrap.sh:284` — `USER_AGENT`, `user-agent`
+- `scripts/vm/bootstrap.sh:285` — `USER_AGENT`, `user-agent`
+- `scripts/vm/probe_sources.py:7` — `User-Agent`
+- `scripts/vm/probe_sources.py:49` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:50` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:53` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:54` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:55` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:81` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:85` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:88` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:92` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:96` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:98` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:101` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:104` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:107` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:110` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:112` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:114` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:118` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:122` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:124` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:126` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:128` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:131` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:134` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:137` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:139` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:141` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:143` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:145` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:147` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:154` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:156` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:158` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:160` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:162` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:166` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:168` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:169` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:171` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:174` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:177` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:181` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:184` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:186` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:189` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:192` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:195` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:196` — `USER_AGENT`
+- `scripts/vm/probe_sources.py:217` — `User-Agent`
+- `scripts/vm/test_fixture_imports.py:58` — `user-agent`
+- `scripts/vm/test_nightly.sh:57` — `user-agent`
+- `scripts/warm_cache.py:58` — `USER_AGENT`
+- `scripts/warm_cache.py:175` — `USER_AGENT`, `user-agent`
+- `scripts/wikidata_match.py:38` — `USER_AGENT`, `User-Agent`
+- `tests/fixtures/interests/README.md:5` — `Firecrawl`
+- `tests/test_interests_fetch.py:128` — `USER_AGENT`, `User-Agent`
+- `tests/test_source_guard.py:15` — `user-agent`
+- `tests/test_source_guard.py:17` — `firecrawl`
+- `tests/test_source_guard.py:18` — `Firecrawl`
+- `tests/test_source_guard.py:22` — `Playwright`
+- `tests/test_source_guard.py:24` — `Puppeteer`
+- `tests/test_source_guard.py:27` — `user-agent`
+- `tests/test_source_guard.py:30` — `user-agent`
+- `tests/test_source_guard.py:35` — `user-agent`
+- `tests/test_source_guard.py:57` — `user-agent`
+- `tests/test_source_guard.py:58` — `USER_AGENT`
+- `tests/test_source_http.py:60` — `User-Agent`
+- `tests/test_source_http.py:61` — `user-agent`
+- `tests/test_source_http.py:62` — `USER_AGENT`, `User-Agent`
+- `tests/test_source_http.py:71` — `USER_AGENT`, `User-Agent`
+- `tests/test_source_http.py:76` — `User-Agent`
+- `tests/test_source_http.py:78` — `USER_AGENT`, `User-Agent`
+- `tests/test_source_http.py:86` — `user-agent`
+- `tests/test_source_http.py:87` — `USER_AGENT`, `User-Agent`
+- `tests/test_source_http.py:108` — `firecrawl`
+- `tests/test_source_http.py:115` — `user-agent`
+- `tests/test_source_http.py:116` — `USER_AGENT`, `User-agent`
+- `tests/test_source_http.py:143` — `User-agent`
+- `tests/test_source_http.py:150` — `USER_AGENT`
+- `tests/test_source_http.py:221` — `USER_AGENT`
+- `tests/test_source_http.py:222` — `USER_AGENT`, `user-agent`, `user_agent`
+- `tests/test_source_http.py:225` — `USER_AGENT`, `user-agent`
+- `tests/test_source_http.py:228` — `user-agent`
+- `tests/test_source_http.py:319` — `USER_AGENT`
+- `tests/test_source_http.py:320` — `USER_AGENT`

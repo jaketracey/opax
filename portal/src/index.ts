@@ -1,3 +1,4 @@
+import sourceIdentity from '../../parli/ingest/user-agent.json'
 import { divisionPlain } from '../public/division-markdown.js'
 import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
@@ -219,6 +220,7 @@ async function kbFetch(
     method: init?.method ?? (init?.body === undefined ? 'GET' : 'POST'),
     headers: {
       'content-type': 'application/json',
+      'user-agent': sourceIdentity.user_agent,
       'x-nuclia-serviceaccount': `Bearer ${env.ARAG_KB_TOKEN}`,
       ...init?.headers,
     },
@@ -2621,7 +2623,7 @@ async function apiNews(): Promise<Response> {
           signal: ac.signal,
           headers: {
             accept: 'application/rss+xml, application/xml, text/xml, */*',
-            'user-agent': 'OPAX-portal/1.0 (+https://opax.com.au)',
+            'user-agent': sourceIdentity.user_agent,
           },
         })
         clearTimeout(timer)

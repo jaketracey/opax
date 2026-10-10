@@ -1,3 +1,4 @@
+import { shortDate } from '../public/format.js'
 import { personUrl, partyUrl } from '../public/canonical-urls.js'
 import {sponsorPerson} from '../public/sponsor-person.js'
 import {currentSittingPath, sydneyDay} from '../public/hubs-data.js'
@@ -169,6 +170,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     const register = id && /^[\w-]+$/.test(id) ? await optional<Interest>(read,`/interests/${id}.json`) : null
     body += '<h2>Declared interests</h2>'
     if (register) {
+      if (register.as_at) body += `<p>Updated ${escapeHtml(shortDate(register.as_at))}</p>`
       body += `<p>${count(register.total)} recorded entries${register.as_at ? ` in the latest register snapshot, as at ${escapeHtml(register.as_at)}` : ''}.</p><ul>`
       // The register's own words (CC BY-NC-ND): an entry naming a withheld donor is
       // left out whole, never reworded, and the official register still has it.

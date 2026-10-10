@@ -5,19 +5,12 @@ Data source: https://lobbyists.integrity.qld.gov.au/
 Entity: dpc_contactlog (Dataverse/PowerApps portal)
 
 The QLD Lobbyist Register is built on Microsoft PowerApps/Dynamics 365 Portal.
-The contact log data is loaded dynamically via client-side JavaScript, making it
-inaccessible without a headless browser. This module scrapes what is available:
-
-1. The list of registered lobbyists and their details from individual pages
-2. Contact log entries via the search page (requires Playwright or similar)
-
-For now, this implements:
-- Scraping the lobbyist entity listing pages
-- Storing lobbyist registration data
-- A stub for contact log scraping (requires headless browser)
+The register's activity grid is loaded by client-side JavaScript. Fetch only
+static records exposed to the honest HTTP agent. If a complete table is not
+available, pause the contact-log source and keep its last good data.
 
 The contact log search page at:
-  https://lobbyists.integrity.qld.gov.au/lobbying-register/search-contact-log/
+  https://lobbyists.integrity.qld.gov.au/Lobbying-Register/Search-lobbying-activity/
 uses a PowerApps entity list (ViewId: 999f1282-b9b8-ed11-b596-0022481574a0)
 with entity name 'dpc_contactlog' and fields:
   - dpc_entity (Trading Name)
@@ -29,7 +22,7 @@ with entity name 'dpc_contactlog' and fields:
 Usage:
     python -m parli.ingest.qld_lobbyists
     python -m parli.ingest.qld_lobbyists --lobbyists-only
-    python -m parli.ingest.qld_lobbyists --contact-log  # requires playwright
+    python -m parli.ingest.qld_lobbyists --contact-log
 """
 
 from parli.ingest import http as source_http
@@ -59,7 +52,7 @@ CACHE_DIR = Path("~/.cache/autoresearch/qld_lobbyists").expanduser()
 # Known lobbyist entity search page URLs
 ENTITY_SEARCH_URL = f"{REGISTER_BASE}/lobbying-register/search-entities/"
 LOBBYIST_SEARCH_URL = f"{REGISTER_BASE}/lobbying-register/search-lobbyists/"
-CONTACT_LOG_URL = f"{REGISTER_BASE}/lobbying-register/search-contact-log/"
+CONTACT_LOG_URL = f"{REGISTER_BASE}/Lobbying-Register/Search-lobbying-activity/"
 
 # ── Database schema ──────────────────────────────────────────────────────────
 
@@ -213,85 +206,43 @@ def scrape_lobbyist_list() -> list[dict]:
     return entities
 
 
-# ── Contact log scraping (requires headless browser) ──────────────────────────
+# ── Contact log scraping through the honest transport ────────────────────────
 
-def scrape_contact_log_playwright(
-    start_date: str | None = None,
-    max_pages: int = 100,
-) -> list[dict]:
-    """Scrape contact log entries using Playwright (headless browser).
+def scrape_contact_log(start_date: str | None = None, max_pages: int = 100) -> list[dict]:
+    """Acquire a complete static contact log, or preserve the retained snapshot."""
+    from bs4 import BeautifulSoup
+    from urllib.parse import urljoin, urlsplit
 
-    The contact log search page loads data dynamically via PowerApps JS.
-    This requires playwright to be installed:
-        pip install playwright && playwright install chromium
-
-    Returns list of contact log entry dicts.
-    """
-    try:
-        from playwright.sync_api import sync_playwright
-    except ImportError:
-        print("  ERROR: playwright not installed.")
-        print("  Install with: pip install playwright && playwright install chromium")
-        print("  The QLD lobbyist contact log requires a headless browser.")
-        return []
-
-    entries = []
-    print(f"  Scraping contact log via Playwright...")
-    print(f"  URL: {CONTACT_LOG_URL}")
-
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        page = browser.new_page()
-
-        try:
-            page.goto(CONTACT_LOG_URL, wait_until="networkidle", timeout=30000)
-
-            # Wait for the entity list grid to load
-            page.wait_for_selector("table.table", timeout=15000)
-
-            pages_scraped = 0
-            while pages_scraped < max_pages:
-                # Extract table rows
-                rows = page.query_selector_all("table.table tbody tr")
-                if not rows:
-                    break
-
-                for row in rows:
-                    cells = row.query_selector_all("td")
-                    if len(cells) >= 5:
-                        entry = {
-                            "lobbyist_trading_name": cells[0].inner_text().strip(),
-                            "client_name": cells[1].inner_text().strip(),
-                            "government_representatives": cells[2].inner_text().strip(),
-                            "portfolio_area": cells[3].inner_text().strip(),
-                            "contact_date": cells[4].inner_text().strip(),
-                        }
-                        entry["contact_id"] = _text_hash(
-                            f"{entry['lobbyist_trading_name']}|{entry['client_name']}|"
-                            f"{entry['contact_date']}|{entry['government_representatives']}"
-                        )
-                        entries.append(entry)
-
-                pages_scraped += 1
-
-                # Try to click "Next" button
-                next_btn = page.query_selector("li.next a, a[aria-label='Next']")
-                if next_btn and not next_btn.is_disabled():
-                    next_btn.click()
-                    page.wait_for_timeout(2000)  # Wait for data reload
-                else:
-                    break
-
-                if pages_scraped % 10 == 0:
-                    print(f"    ... {pages_scraped} pages, {len(entries)} entries")
-
-        except Exception as e:
-            print(f"    Playwright error: {e}")
-        finally:
-            browser.close()
-
-    print(f"  Scraped {len(entries)} contact log entries")
-    return entries
+    entries, seen = [], set()
+    url = CONTACT_LOG_URL
+    for _ in range(max_pages):
+        if url in seen:
+            raise source_http.SourceRefused(CONTACT_LOG_URL, "contact-log pagination is incomplete")
+        seen.add(url)
+        response = source_http.get(url, headers={"Accept": "text/html"})
+        if not response.ok:
+            raise source_http.SourceRefused(url, f"HTTP {response.status_code}; contact log unavailable")
+        soup = BeautifulSoup(response.content, "html.parser")
+        rows = soup.select("table.table tbody tr")
+        if not rows:
+            raise source_http.SourceRefused(url, "no complete static contact log exposed to the honest agent; permission requested")
+        for row in rows:
+            cells = row.find_all("td")
+            if len(cells) < 5:
+                raise source_http.SourceRefused(url, "contact-log table is incomplete")
+            entry = dict(zip(("lobbyist_trading_name", "client_name", "government_representatives",
+                              "portfolio_area", "contact_date"), (c.get_text(strip=True) for c in cells[:5])))
+            entry["contact_id"] = _text_hash("|".join(entry.values()))
+            entries.append(entry)
+        following = soup.select_one("li.next:not(.disabled) a, a[aria-label='Next']:not([aria-disabled='true'])")
+        if not following:
+            return entries
+        href = following.get("href", "")
+        next_url = urljoin(url, href)
+        if not href or href.startswith(("#", "javascript:")) or urlsplit(next_url).netloc != urlsplit(CONTACT_LOG_URL).netloc:
+            raise source_http.SourceRefused(url, "contact-log next page is not available through direct HTTP")
+        url = next_url
+    raise source_http.SourceRefused(CONTACT_LOG_URL, "contact-log page limit reached; existing data kept")
 
 
 # ── Database operations ───────────────────────────────────────────────────────
@@ -341,7 +292,7 @@ def main():
     )
     parser.add_argument(
         "--contact-log", action="store_true",
-        help="Scrape contact log entries (requires playwright)",
+        help="Fetch static contact log entries with the honest agent",
     )
     parser.add_argument(
         "--max-pages", type=int, default=100,
@@ -377,12 +328,12 @@ def main():
             if not entities:
                 print("  NOTE: No entity links found in static HTML.")
                 print("  The lobbyist register uses dynamic JavaScript loading.")
-                print("  Use --contact-log flag with playwright installed for full data.")
+                print("  Existing registration data kept; no static entity list available.")
 
-    # Scrape contact log (requires playwright)
+    # Acquire the contact log before storing anything.
     if args.contact_log:
         print("\n=== Contact Log Scraping ===")
-        entries = scrape_contact_log_playwright(max_pages=args.max_pages)
+        entries = scrape_contact_log(max_pages=args.max_pages)
 
         if args.dry_run:
             for e in entries[:10]:
@@ -408,9 +359,7 @@ def main():
 
     print("\nNOTE: The QLD Lobbyist Register (lobbyists.integrity.qld.gov.au)")
     print("is a PowerApps/Dynamics 365 portal that loads data dynamically.")
-    print("For full contact log data, install playwright:")
-    print("  pip install playwright && playwright install chromium")
-    print("Then run: python -m parli.ingest.qld_lobbyists --contact-log")
+    print("Contact-log data refreshes only when a complete static table is available.")
 
 
 if __name__ == "__main__":

@@ -115,6 +115,7 @@ def test_urllib_forces_identity_and_does_not_cache_challenge():
     req = http.Request('https://example.test/source', headers={'user-agent': 'spoof'})
     assert req.get_header('User-agent') == http.USER_AGENT
     response = mock.Mock()
+    response.headers = {}
     response.getcode.return_value = 200
     response.geturl.return_value = req.full_url
     response.read.return_value = (FIX / 'challenge.html').read_bytes()
@@ -196,23 +197,8 @@ def test_aec_refusal_precedes_any_register_deletion(monkeypatch, tmp_path):
 
 
 def test_repository_cannot_reintroduce_browser_identity_or_bypass_flag():
-    # These are incoming reader/crawler identity fixtures and a vendored reader
-    # analytics bundle. None makes source requests. All other tracked text is scanned.
-    incoming_only = {'portal/test/network-block.test.mjs', 'portal/public/analytics.js'}
-    browser = re.compile(r'(?:Mozilla|Firefox|Chrome|Safari|AppleWebKit|Gecko)/\d', re.I)
-    flag = '--' + 'browser-ua'
-    files = subprocess.check_output(['git', 'ls-files', '-z', '--cached', '--others', '--exclude-standard'], cwd=ROOT).decode().split('\0')
-    failures = []
-    for name in set(files):
-        if not name or name in incoming_only:
-            continue
-        path = ROOT / name
-        if path.suffix not in {'.py', '.js', '.mjs', '.ts', '.sh', '.md', '.txt', '.json', '.jsonl', '.jsonc', '.yml', '.yaml', '.toml', '.service', '.html', '.css'}:
-            continue
-        for line, text in enumerate(path.read_text(errors='replace').splitlines(), 1):
-            if browser.search(text) or flag in text:
-                failures.append(f'{name}:{line}')
-    assert not failures, '\n'.join(failures)
+    from scripts.source_access_guard import scan
+    assert not (failures := scan(ROOT)), '\n'.join(failures)
 
 
 def test_python_fetch_paths_cannot_bypass_shared_transport():
@@ -233,7 +219,7 @@ def test_node_build_fetches_use_same_identity_and_refusal_fixtures(tmp_path):
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { honestFetch, USER_AGENT, SourceRefused } from './scripts/lib/http.mjs';
-assert.equal(USER_AGENT, readFileSync('./parli/ingest/user-agent.txt','utf8').trim());
+assert.equal(USER_AGENT, JSON.parse(readFileSync('./parli/ingest/user-agent.json','utf8')).user_agent);
 let calls = 0;
 globalThis.fetch = async (url, options) => {
   calls++; assert.equal(options.headers.get('user-agent'), USER_AGENT);
@@ -255,3 +241,93 @@ await runSource(async () => { await honestFetch('https://example.test'); throw n
     result = subprocess.run(['node', '--input-type=module', '-e', code], cwd=ROOT, capture_output=True)
     assert result.returncode == 4
     assert result.stderr.decode().count(http.PAUSE_MESSAGE) == 1
+
+
+def test_austender_valid_200_json_is_never_a_challenge():
+    body = (FIX / 'austender.json').read_bytes()
+    client, wire = session([(200, body, {'Content-Type': 'application/json'})])
+    assert client.get('https://example.test/feed', expected_json=True).json()['success']
+    assert len(wire.sent) == 1
+
+
+@pytest.mark.parametrize('body,headers,expected_json', [
+    (b'ok', {'cf-mitigated': 'challenge'}, False),
+    (b'<html><body id="cf-chl-widget">Waiting</body></html>', {}, False),
+    (b'<html><body><script src="/cdn-cgi/challenge-platform/entry"></script></body></html>', {}, False),
+    (b'<html><body>Unavailable</body></html>', {'Content-Type': 'text/html'}, True),
+    ((FIX / 'challenge.html').read_bytes(), {'Content-Type': 'text/plain'}, False),
+])
+def test_headers_structure_and_json_mismatch_pause(body, headers, expected_json):
+    client, wire = session([(200, body, headers)])
+    with pytest.raises(http.SourceRefused):
+        client.get('https://example.test/source', expected_json=expected_json)
+    assert len(wire.sent) == 1
+
+
+def test_ordinary_html_about_access_controls_does_not_pause():
+    body = b'<html><title>Procurement</title><body>Our web application firewall: verify you are human, enable JavaScript and cookies to continue.</body></html>'
+    http.check_response('https://example.test', 200, body)
+
+
+@pytest.mark.parametrize('mime', ['text/plain', 'application/json', 'text/html'])
+def test_node_detects_challenges_regardless_of_mime(mime):
+    code = """
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { honestFetch, SourceRefused } from './scripts/lib/http.mjs';
+globalThis.fetch = async () => new Response(readFileSync('./tests/fixtures/source_access/challenge.html'), {headers:{'content-type':MIME}});
+await assert.rejects(honestFetch('https://example.test'), SourceRefused);
+process.exitCode = 0;
+""".replace('MIME', json.dumps(mime))
+    subprocess.run(['node', '--input-type=module', '-e', code], cwd=ROOT, check=True, capture_output=True)
+
+
+def test_node_accepts_austender_200_json():
+    code = """
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { honestFetch } from './scripts/lib/http.mjs';
+globalThis.fetch = async () => new Response(readFileSync('./tests/fixtures/source_access/austender.json'), {headers:{'content-type':'application/json'}});
+assert.equal((await (await honestFetch('https://example.test', {expectedJson:true})).json()).success, true);
+"""
+    subprocess.run(['node', '--input-type=module', '-e', code], cwd=ROOT, check=True, capture_output=True)
+
+
+def test_qld_contact_log_refusal_keeps_retained_rows(monkeypatch):
+    from parli.ingest import qld_lobbyists as source
+    db = sqlite3.connect(':memory:')
+    source.init_lobbyist_tables(db)
+    db.execute("INSERT INTO qld_lobbyist_contacts(contact_id) VALUES ('retained')")
+    db.commit()
+    monkeypatch.setattr(source.source_http, 'get', lambda *a, **kw: mock.Mock(ok=True, content=b'<html><div class="entitylist"><table></table></div></html>'))
+    with pytest.raises(http.SourceRefused):
+        source.store_contact_entries(db, source.scrape_contact_log())
+    assert db.execute('SELECT contact_id FROM qld_lobbyist_contacts').fetchall() == [('retained',)]
+
+
+def test_qld_contact_log_direct_static_data(monkeypatch):
+    from parli.ingest import qld_lobbyists as source
+    body = b'<html><table class="table"><tbody><tr><td>Fixture firm</td><td>Fixture company</td><td>Public office</td><td>Portfolio</td><td>2026-10-10</td></tr></tbody></table></html>'
+    monkeypatch.setattr(source.source_http, 'get', lambda *a, **kw: mock.Mock(ok=True, content=body))
+    assert source.scrape_contact_log()[0]['client_name'] == 'Fixture company'
+
+
+def test_probe_records_refusal_and_continues(monkeypatch, tmp_path, capsys):
+    from scripts.vm import probe_sources as probe
+    monkeypatch.setattr(probe, 'load_env', lambda: None)
+    monkeypatch.setattr('sys.argv', ['probe_sources'])
+    probes = [dict(name='refused fixture', step='refused', url='https://refused.test', ua=http.USER_AGENT),
+              dict(name='healthy fixture', step='healthy', url='https://healthy.test', ua=http.USER_AGENT, ok=lambda r: True)]
+    monkeypatch.setattr(probe, 'probes', lambda: probes)
+    monkeypatch.setattr(probe.source_http, 'get', lambda *a, **kw: mock.Mock(text='fixture IP'))
+    calls = []
+    def fetch(method, url, **kw):
+        calls.append(url)
+        if url == 'https://refused.test': raise http.SourceRefused(url, 'HTTP 403')
+        return mock.Mock(status_code=200, text='ok', headers={})
+    monkeypatch.setattr(probe.source_http, 'request', fetch)
+    assert probe.main() == 0
+    assert calls == [p['url'] for p in probes]
+    out = capsys.readouterr().out
+    assert 'PAUSED' in out and 'healthy fixture' in out
+    assert json.loads((tmp_path / 'access.json').read_text())['refused.test']['status'] == 'paused'

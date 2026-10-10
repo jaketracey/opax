@@ -9,6 +9,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
 from functools import wraps
+from html.parser import HTMLParser
 import io
 import json
 import os
@@ -22,7 +23,7 @@ from urllib.parse import urlsplit
 
 import requests
 
-USER_AGENT = Path(__file__).with_name("user-agent.txt").read_text().strip()
+USER_AGENT = json.loads(Path(__file__).with_name("user-agent.json").read_text())["user_agent"]
 PAUSED_HOSTS = {
     "www.aph.gov.au": "APH indexes, Senate interests and member list",
     "parlinfo.aph.gov.au": "ParlInfo committees, witnesses, bills and documents",
@@ -30,13 +31,51 @@ PAUSED_HOSTS = {
     "hansardsearch.parliament.sa.gov.au": "South Australian Hansard",
 }
 PAUSE_MESSAGE = "source paused: honest agent refused (awaiting permission)"
-CHALLENGE = re.compile(
-    r"<title[^>]*>\s*(?:just a moment|access denied|request (?:blocked|rejected)|"
-    r"attention required|robot check)|cf-chl-|/cdn-cgi/challenge-platform/|"
-    r"verify (?:that )?you are (?:a )?human|enable javascript and cookies to continue|"
-    r"the request is blocked|web application firewall|incapsula incident id|"
-    r"azure front door.*(?:block|challenge)", re.I | re.S,
-)
+class _ChallengeHTML(HTMLParser):
+    """Recognise challenge markup, never a phrase inside ordinary source data."""
+    def __init__(self):
+        super().__init__()
+        self.found = False
+        self.in_title = False
+        self.title = ""
+
+    def handle_starttag(self, tag, attrs):
+        values = dict(attrs)
+        self.in_title = self.in_title or tag == "title"
+        marker = " ".join(values.get(k, "") or "" for k in ("id", "class"))
+        if re.search(r"(?:^|\s)(?:cf-chl-[\w-]*|challenge-form|challenge-running)(?:\s|$)", marker, re.I):
+            self.found = True
+        if tag in ("script", "iframe") and re.search(r"/cdn-cgi/challenge-platform/|/_Incapsula_Resource", values.get("src", ""), re.I):
+            self.found = True
+
+    def handle_data(self, data):
+        if self.in_title:
+            self.title += data
+
+    def handle_endtag(self, tag):
+        if tag == "title":
+            self.in_title = False
+            if re.match(r"\s*(?:just a moment|access denied|request (?:blocked|rejected)|attention required|robot check)", self.title, re.I):
+                self.found = True
+
+
+def is_challenge(body):
+    sample = body[:131072]
+    if isinstance(sample, bytes):
+        sample = sample.decode("utf-8", "replace")
+    # JSON/CSV descriptions may mention firewalls or include quoted markup.
+    if not re.match(r"\s*(?:<!doctype\s+html|<html|<head|<title|<body|<form|<div)", sample, re.I):
+        return False
+    parser = _ChallengeHTML()
+    parser.feed(sample)
+    return parser.found
+
+
+def expects_json(headers):
+    accept = next((str(v).lower() for k, v in (headers or {}).items() if k.lower() == "accept"), "")
+    return "json" in accept and not any(kind in accept for kind in ("html", "*/*"))
+
+
 _lock = threading.Lock()
 _next_at: dict[str, float] = {}
 _logged: set[str] = set()
@@ -75,14 +114,17 @@ def ensure_allowed(url):
         raise SourceRefused(url, "honest identity without proxies is unverified; permission requested")
 
 
-def check_response(url, status, body=b""):
+def check_response(url, status, body=b"", headers=None, expected_json=False):
+    headers = {k.lower(): str(v).lower() for k, v in (headers or {}).items()}
     if status in (401, 403):
         raise SourceRefused(url, f"HTTP {status}")
-    sample = body[:131072]
-    if isinstance(sample, bytes):
-        sample = sample.decode("utf-8", "replace")
-    if CHALLENGE.search(sample):
+    if headers.get("cf-mitigated") == "challenge" or "x-sucuri-block" in headers:
+        raise SourceRefused(url, "challenge response header")
+    if is_challenge(body):
         raise SourceRefused(url, "challenge/WAF page")
+    content_type = headers.get("content-type", "").split(";", 1)[0].strip()
+    if expected_json and status == 200 and content_type and not (content_type == "application/json" or content_type.endswith("+json")):
+        raise SourceRefused(url, "expected JSON but source returned a different content type")
 
 
 def retry_after(value, now=None):
@@ -127,7 +169,8 @@ class Session(requests.Session):
     @staticmethod
     def _check(response, **kwargs):
         ensure_allowed(response.url)
-        check_response(response.url, response.status_code, response.content)
+        check_response(response.url, response.status_code, response.content, response.headers,
+                       expects_json(response.request.headers))
         return response
 
     def send(self, request, **kwargs):
@@ -140,6 +183,8 @@ class Session(requests.Session):
         ensure_allowed(url)
         self.headers["User-Agent"] = USER_AGENT
         kwargs["headers"] = honest_headers(kwargs.get("headers"))
+        if kwargs.pop("expected_json", False):
+            kwargs["headers"]["Accept"] = "application/json"
         kwargs["proxies"] = {}
         kwargs.setdefault("timeout", 60)
         for attempt in range(3):
@@ -201,10 +246,11 @@ def open_url(opener, req, *args, **kwargs):
         try:
             with opener.open(req, *args, **kwargs) as response:
                 body = response.read()
-                check_response(response.geturl(), response.getcode(), body)
+                check_response(response.geturl(), response.getcode(), body, response.headers,
+                               expects_json(dict(req.header_items())))
                 return _Response(response, body)
         except urllib.error.HTTPError as error:
-            check_response(url, error.code)
+            check_response(url, error.code, error.read(), error.headers)
             if error.code not in (429, 503):
                 raise
             delay = retry_after(error.headers.get("Retry-After"))
@@ -252,7 +298,8 @@ def aiohttp_trace():
     async def end(session, context, params):
         url = str(params.url)
         body = await params.response.read()
-        check_response(url, params.response.status, body)
+        check_response(url, params.response.status, body, params.response.headers,
+                       expects_json(params.headers))
         if params.response.status in (429, 503):
             await asyncio.sleep(retry_after(params.response.headers.get("Retry-After")))
             raise SourceRefused(url, f"HTTP {params.response.status}; retry next run")

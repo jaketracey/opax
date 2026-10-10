@@ -36,11 +36,14 @@ jobs:
       SITE: https://opax.com.au
       STATUS_URL: https://raw.githubusercontent.com/${{ github.repository }}/nightly-status/status.json
     steps:
+      - uses: actions/checkout@v4
       - name: Check freshness and the last run's status
         run: |
           python3 - <<'PY'
           import json, os, sys, time, urllib.request
           from datetime import datetime, timezone
+          from pathlib import Path
+          user_agent = json.loads(Path("parli/ingest/user-agent.json").read_text())["user_agent"]
 
           max_age = float(os.environ["MAX_AGE_HOURS"])
           now = datetime.now(timezone.utc)
@@ -48,7 +51,7 @@ jobs:
 
           def fetch(url):
               req = urllib.request.Request(f"{url}{'&' if '?' in url else '?'}wd={int(time.time())}",
-                                           headers={"Cache-Control": "no-cache", "User-Agent": "opax-refresh-watchdog"})
+                                           headers={"Cache-Control": "no-cache", "User-Agent": user_agent})
               with urllib.request.urlopen(req, timeout=30) as r:
                   return json.load(r)
 

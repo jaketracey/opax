@@ -54,7 +54,7 @@ new_sandbox() {
            scripts/bills_registry/bills_stages.py \
            scripts/export_division_pages.py scripts/export_recent_votes.py scripts/export_votes.py \
            scripts/verify_bill_briefs.py scripts/update_corpus_manifest.py scripts/bump_cache_epoch.py \
-           parli/__init__.py parli/arag.py parli/ingest/http.py parli/ingest/user-agent.txt parli/ingest/__init__.py parli/ingest/speaker_names.py \
+           parli/__init__.py parli/arag.py parli/ingest/http.py parli/ingest/user-agent.json parli/ingest/__init__.py parli/ingest/speaker_names.py \
            portal/wrangler.jsonc portal/public/corpus.json; do
     mkdir -p "$seed/$(dirname "$f")"
     cp "$SRC/$f" "$seed/$f" || { bad "cannot copy fixture dependency: $f"; exit 1; }

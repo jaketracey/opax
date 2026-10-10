@@ -11,7 +11,7 @@ interface Bill {
 }
 interface Division { key: string; slug: string; title?: string; name?: string; question?: string; date: string; house: string; result?: string; ayes?: number; noes?: number; source_url?: string }
 interface Week { start: string; end: string; houses: string[]; senate_cutoff?: string; estimates?: string; bills: Bill[]; divisions: Division[]; lastmod: string }
-export interface HubIndex { updated: string; snapshotDate: string; latestFederalDivision: string; sources: { label: string; url: string }[]; weeks: Week[]; pages: {path: string; lastmod: string}[] }
+export interface HubIndex { updated: string; snapshotDate: string; billUpdated: string; latestFederalDivision: string; sources: { label: string; url: string }[]; weeks: Week[]; pages: {path: string; lastmod: string}[] }
 interface Window { start: string; end: string }
 interface Totals<T> { count: number; total: number; largest: T[] }
 interface Contract { id: string; title: string; supplier: string; amount: number; published: string; start_date?: string; url: string; link_scope?: string }
@@ -79,7 +79,8 @@ export function renderSittingWeek(data: HubIndex, week: Week, people: SponsorCan
   body += sources
   if (week.estimates) body += `<p>${link(`/estimates/${week.estimates}`,'Senate Supplementary Budget Estimates')} takes place alongside this House sitting week.</p>`
   const rows: {href:string;name:string}[] = []
-  if (!week.bills.length && !week.divisions.length) body += '<p>Bills and divisions appear here the morning after each sitting day.</p>'
+  body += `<p>Bill details update when Parliament's site allows our crawler</p>`
+  if (!week.bills.length) body += sourceLineHTML({updated:data.billUpdated,source:'ParlInfo bill records'})
   if (week.bills.length) {
     body += `<section class="hub-section"><h2>Bills introduced <span class="hub-count">${week.bills.length}</span></h2><ul class="hub-records">` + week.bills.map(b => {
       const href = `/bill/${b.key}`
@@ -92,7 +93,7 @@ export function renderSittingWeek(data: HubIndex, week: Week, people: SponsorCan
     }).join('')+'</ul>'
     // One dated source line closes the block; each bill's ParlInfo record is in its sheet.
     const originals = week.bills.flatMap(b => (b.sources || []).filter(s => s.kind === 'billhome').slice(0,1).map(s => ({href:s.url,label:b.title})))
-    body += sourceLineHTML({updated:data.snapshotDate,source:'ParlInfo bill records',originals})+'</section>'
+    body += sourceLineHTML({updated:data.billUpdated,source:'ParlInfo bill records',originals})+'</section>'
   }
   if (week.divisions.length) {
     body += `<section class="hub-section"><h2>Divisions held <span class="hub-count">${week.divisions.length}</span></h2><ul class="hub-records">` + week.divisions.map(d => {

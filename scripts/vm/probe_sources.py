@@ -48,8 +48,6 @@ def load_env() -> None:
 
 OPAX_UA = source_http.USER_AGENT
 QLD_UA = (source_http.USER_AGENT)
-CHALLENGE_MARKERS = ("just a moment", "cf-chl", "attention required", "_incapsula_", "request unsuccessful",
-                     "enable javascript", "access denied", "azure front door", "errors.edgesuite", "captcha")
 
 
 ORG_UA = source_http.USER_AGENT                                   # words_common.USER_AGENT
@@ -58,9 +56,8 @@ RES_UA = source_http.USER_AGENT
 
 
 def clean(r) -> bool:
-    """No bot-challenge marker in the first 6 KB of the body."""
-    body = (r.text or "")[:6000].lower()
-    return not any(m in body for m in CHALLENGE_MARKERS)
+    """Use the same structural challenge detection as source acquisition."""
+    return not source_http.is_challenge(r.text or "")
 
 
 def page_ok(*statuses, needle=None):
@@ -209,6 +206,8 @@ def run_probe(p: dict) -> tuple[str, str, str]:
             from parli.arag import AragConfig, KbClient
             n = KbClient(AragConfig.from_env()).counters()["resources"]
             return "OK", "200", f"{n:,} resources"
+        except source_http.SourceRefused as e:
+            return "PAUSED", "-", e.reason
         except Exception as e:  # noqa: BLE001
             return "DOWN", "-", f"{type(e).__name__}: {str(e)[:80]}"
     if "need_key" in p and not p["need_key"]:
@@ -221,12 +220,14 @@ def run_probe(p: dict) -> tuple[str, str, str]:
     try:
         r = source_http.request(p.get("method", "GET"), p["url"], params=p.get("params"), json=p.get("json"),
                              headers=headers, timeout=25, allow_redirects=True)
+    except source_http.SourceRefused as e:
+        return "PAUSED", "-", e.reason
     except requests.RequestException as e:
         return "DOWN", "-", f"{type(e).__name__}: {str(e)[:80]}"
     took = f"{time.time() - t0:.1f}s"
     body = (r.text or "")[:6000].lower()
     server = r.headers.get("server", "") or ("azure front door" if "x-azure-ref" in r.headers else "")
-    if r.status_code in (403, 429, 503) or any(m in body for m in CHALLENGE_MARKERS) and not p["ok"](r):
+    if r.status_code in (403, 429, 503) or source_http.is_challenge(body) and not p["ok"](r):
         return "BLOCKED", str(r.status_code), f"{server or 'no server header'}; {took}"
     try:
         good = p["ok"](r)
@@ -245,7 +246,7 @@ def main() -> int:
     want = [w.strip().lower() for w in (args.only or "").split(",") if w.strip()]
     try:
         ip = source_http.get("https://api.ipify.org", timeout=10).text
-    except requests.RequestException:
+    except (requests.RequestException, source_http.SourceRefused):
         ip = "public IP unknown"
     print(f"probing from {os.uname().nodename} ({ip})")
     print(f"{'source':<32}{'step':<20}{'result':<9}{'http':<6}note")

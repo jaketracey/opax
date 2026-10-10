@@ -43,7 +43,7 @@ federal attempt. QLD already loaded successfully on 29 September (93 members,
 
 `conduct_interests_federal refresh` uses one shared Firecrawl budget for both chambers:
 
-- Fetch each index fresh with `/v2/scrape`, `proxy: basic`, `rawHtml`, `waitFor: 3000`,
+- Fetch each index fresh with `/v2/scrape`, `basic proxy setting`, `rawHtml`, `waitFor: 3000`,
   `maxAge: 0`, and `parsers: []`. No browser UA option remains.
 - Fetch API and static House PDFs directly with `OPAX research (opax.com.au)`.
   Require `%PDF-` bytes. If direct access fails, Firecrawl requests `formats: ["rawBase64"]` alone with

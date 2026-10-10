@@ -3743,6 +3743,7 @@ async function renderDeclaredPage(params, manageFocus) {
   const root = $("declared-list");
   root.innerHTML = `<p class="status">Opening the register ledger…</p>`;
   const [data, roster] = await Promise.all([loadRecentInterests(), loadParliamentarians(), loadPhotoMap()]);
+  $("declared-updated").innerHTML = sourceLineHTML({updated:data?.meta?.generated || "",source:"Registers of interests"});
   const items = Array.isArray(data?.items) ? data.items : [];
   if (!items.length) {
     root.innerHTML = `<p class="status">No dated alterations are available in the current export.</p>`;

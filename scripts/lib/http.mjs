@@ -2,7 +2,8 @@ import { readFileSync, writeFileSync, mkdirSync, renameSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { dirname, join } from 'node:path'
 
-export const USER_AGENT = readFileSync(new URL('../../parli/ingest/user-agent.txt', import.meta.url), 'utf8').trim()
+import identity from '../../parli/ingest/user-agent.json' with { type: 'json' }
+export const USER_AGENT = identity.user_agent
 const pausedHosts = new Set(['www.aph.gov.au', 'parlinfo.aph.gov.au', 'data.parliament.qld.gov.au', 'hansardsearch.parliament.sa.gov.au', 'api.firecrawl.dev'])
 const nextAt = new Map()
 const logged = new Set()
@@ -41,9 +42,41 @@ export function retryAfter(value, now = Date.now()) {
   return Math.max(0, Number.isFinite(seconds) ? seconds * 1000 : (Date.parse(value) - now) || 0)
 }
 
+// Markup at the document root and challenge-specific tags/attributes are evidence;
+// procurement descriptions mentioning a firewall are ordinary source data.
+export function isChallenge(body) {
+  const sample = body.slice(0, 131072)
+  if (!/^\s*(?:<!doctype\s+html|<html|<head|<title|<body|<form|<div)\b/i.test(sample)) return false
+  return /<title\b[^>]*>\s*(?:just a moment|access denied|request (?:blocked|rejected)|attention required|robot check)/i.test(sample) ||
+    /<(?:script|iframe)\b[^>]*\bsrc\s*=\s*["'][^"']*(?:\/cdn-cgi\/challenge-platform\/|\/_Incapsula_Resource)/i.test(sample) ||
+    /<[^>]+\b(?:id|class)\s*=\s*["'][^"']*\b(?:cf-chl-[\w-]*|challenge-form|challenge-running)\b/i.test(sample)
+}
+
+async function responseSample(response) {
+  const reader = response.clone().body?.getReader()
+  if (!reader) return ''
+  const chunks = []
+  let size = 0
+  try {
+    while (size < 131072) {
+      const { value, done } = await reader.read()
+      if (done) break
+      const chunk = value.subarray(0, 131072 - size)
+      chunks.push(chunk); size += chunk.length
+    }
+  } finally { void reader.cancel().catch(() => {}) }
+  const bytes = new Uint8Array(size)
+  let offset = 0
+  for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.length }
+  return new TextDecoder().decode(bytes)
+}
+
 export async function honestFetch(url, options = {}) {
   url = String(url)
+  const { expectedJson = false, ...requestOptions } = options
+  options = requestOptions
   const headers = new Headers(options.headers)
+  if (expectedJson) headers.set('accept', 'application/json')
   headers.set('user-agent', USER_AGENT)
   for (let attempt = 0, redirects = 0; attempt < 3;) {
     const host = new URL(url).hostname
@@ -53,6 +86,7 @@ export async function honestFetch(url, options = {}) {
     nextAt.set(host, Date.now() + 1000)
     const response = await fetch(url, { ...options, headers, redirect: 'manual' })
     if ([401, 403].includes(response.status)) pauseSource(url, `HTTP ${response.status}`)
+    if (response.headers.get('cf-mitigated') === 'challenge' || response.headers.has('x-sucuri-block')) pauseSource(url, 'challenge response header')
     if ([301, 302, 303, 307, 308].includes(response.status) && response.headers.get('location')) {
       if (++redirects > 5) throw new Error('source redirect limit reached')
       const redirected = new URL(response.headers.get('location'), url)
@@ -63,15 +97,18 @@ export async function honestFetch(url, options = {}) {
       url = String(redirected)
       continue
     }
+    const sample = await responseSample(response)
+    if (isChallenge(sample)) pauseSource(url, 'challenge/WAF page')
     if ([429, 503].includes(response.status)) {
       if (++attempt === 3) pauseSource(url, `HTTP ${response.status}; retry next run`)
       await sleep(Math.max(retryAfter(response.headers.get('retry-after')), 1000 * 2 ** attempt))
       continue
     }
-    if ((response.headers.get('content-type') || '').includes('html')) {
-      const sample = (await response.clone().text()).slice(0, 131072)
-      if (/<title[^>]*>\s*(just a moment|access denied|request blocked|attention required)|cf-chl-|challenge-platform|verify (that )?you are (a )?human|the request is blocked|web application firewall/i.test(sample)) pauseSource(url, 'challenge/WAF page')
-    }
+    // Inspect irrespective of MIME: challenge HTML is sometimes labelled plain text.
+    const accept = headers.get('accept') || ''
+    const wantsJson = expectedJson || (accept.includes('json') && !/html|\*\/\*/i.test(accept))
+    const contentType = (response.headers.get('content-type') || '').split(';')[0].trim()
+    if (wantsJson && response.status === 200 && contentType && contentType !== 'application/json' && !contentType.endsWith('+json')) pauseSource(url, 'expected JSON but source returned a different content type')
     return response
   }
 }

@@ -36,6 +36,8 @@ function checkHtml(html){assert.equal((html.match(/<h1\b/g)||[]).length,1);asser
 test('raw MP answer includes exported bill votes without unsupported recent-vote claims',async()=>{
   const html=await get('/subject/person/david-pocock');const graph=checkHtml(html);
   for(const fact of ['David Pocock','Independent','Senate','Latest exported bill votes','Declared interests','View original'])assert.ok(html.includes(fact),fact);
+  const register=await read('/interests/11009.json');
+  assert.ok(html.includes('Updated '+(await import('../public/format.js')).shortDate(register.as_at)));
   assert.match(html,/href="\/subject\/party\/independent"/);assert.match(html,/href="\/subject\/electorate\//);
   assert.doesNotMatch(html,/Last 10 recorded votes|No per-member votes|not a complete list of recent divisions/);
   const record=(await read('/votes.json'))['11009'];const votes=[...record.for,...record.against].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,10);for(const vote of votes)assert.ok(html.includes(escapeHtml(vote.name)),vote.name);
