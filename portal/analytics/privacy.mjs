@@ -13,6 +13,8 @@ const fields = {
   opax_journey: ['action', 'lens', 'step', 'step_count'],
   opax_source_open: ['from_section'],
   opax_ask_started: ['from_section', 'page_type'],
+  opax_ask_citation_open: ['position', 'source_kind'],
+  opax_ask_citation_read: ['source_kind'],
   opax_module_click: ['module', 'page_type', 'position'],
   opax_ask_completed: ['from_section', 'duration_ms', 'source_count', 'has_answer'],
   opax_ask_failed: ['from_section', 'duration_ms', 'cancelled'],

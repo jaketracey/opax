@@ -3181,11 +3181,10 @@ mark.privacy-confirm {
   #ask-date-ruler .date-ruler-year { font-size: 24px; }
   #ask-date-ruler .date-ruler-key { font-size: 0.75rem; line-height: 1.5; }
 }
-/* The citation mark sits in the text as a true superscript; its 44px touch
-   area is an invisible halo drawn outside the flow, so the line never gaps. */
+/* A compact superscript inside a real 44px keyboard and pointer target. */
 #panel-ask .ask-citation, #panel-chat .ask-citation {
-  display: inline-block; position: relative; vertical-align: super; min-width: 0; min-height: 0;
-  margin: 0 0.05em 0 0.1em; padding: 0 0.15em; border: 0; background: transparent; color: var(--bronze-ink);
+  display: inline-flex; align-items: center; justify-content: center; position: relative; vertical-align: middle; min-width: 44px; min-height: 44px;
+  margin: -10px 0.05em -10px 0.1em; padding: 0; border: 0; background: transparent; color: var(--bronze-ink);
   font: 700 0.6875rem/0 var(--sans); font-variant-numeric: tabular-nums; cursor: pointer;
 }
 #panel-ask .ask-citation::before, #panel-chat .ask-citation::before {
@@ -3242,6 +3241,40 @@ mark.privacy-confirm {
 
 
 #panel-ask .ask-citation:focus-visible, #panel-chat .ask-citation:focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: -3px; border-radius: 2px; }
+
+/* A citation keeps the claim and its original passage in the same reading view. */
+.ask-citation-visible #quote-rail { visibility: hidden; }
+.ask-citation-panel {
+  position: fixed; z-index: 130; right: max(24px, calc((100vw - 1160px) / 2)); top: 104px;
+  width: 320px; max-height: calc(100dvh - 128px); overflow-y: auto; overscroll-behavior: contain;
+  padding: 20px; background: var(--paper-raised); color: var(--ink);
+  border: 1px solid var(--line); border-top: 3px solid var(--bronze); border-radius: 8px;
+  box-shadow: 0 8px 32px rgb(20 42 67 / 12%);
+}
+.ask-citation-panel:focus { outline: 2px solid var(--bronze-ink); outline-offset: 3px; }
+.ask-citation-panel h3 { margin: 0 0 16px; padding-right: 44px; font: 600 1.1rem/1.4 var(--sans); }
+.ask-citation-panel .ask-citation-close { position: absolute; top: 8px; right: 12px; min-width: 44px; min-height: 44px; }
+.ask-citation-supports { margin: 0 0 16px; font: 500 0.9375rem/1.6 var(--sans); }
+.ask-citation-meta { margin: 0 0 12px; font: 400 0.8125rem/1.6 var(--sans); color: var(--ink-soft); }
+.ask-citation-excerpt { margin: 0 0 20px; font: 400 1rem/1.65 var(--serif); overflow-wrap: anywhere; }
+.ask-citation-excerpt mark, .doc-citation-match { background: var(--bronze-wash); color: var(--ink); box-decoration-break: clone; }
+.ask-citation-panel .ask-citation-read { display: flex; min-height: 44px; justify-content: center; }
+.ask-citation-panel .ask-source-back { display: block; min-height: 44px; margin-top: 8px; text-decoration: underline; text-underline-offset: 3px; }
+.ask-citation:hover::after, .ask-citation:focus-visible::after {
+  content: attr(data-source-name); position: absolute; z-index: 131; bottom: 24px; left: 0;
+  width: max-content; max-width: min(260px, 70vw); padding: 8px 12px; background: var(--navy); color: var(--on-navy);
+  border-radius: 4px; font: 500 0.8125rem/1.5 var(--sans); text-align: left; pointer-events: none;
+}
+/* Reserve the reading margin before a citation opens, so paragraphs never reflow. */
+#panel-ask .answer, #panel-chat .chat-turn-answer > .answer { max-width: 46rem; }
+body.ask-citation-modal { overflow: hidden; }
+.ask-citation-sheet {
+  inset: auto 0 0; width: auto; max-height: 78dvh; padding: 20px 24px max(20px, env(safe-area-inset-bottom));
+  border-radius: 16px 16px 0 0; box-shadow: 0 -12px 48px rgb(20 42 67 / 20%);
+}
+@media (forced-colors: active) {
+  .ask-citation-excerpt mark, .doc-citation-match { background: Highlight; color: HighlightText; forced-color-adjust: none; }
+}
 #ask-date-ruler .date-ruler-year { font-variant-numeric: tabular-nums; }
 @media (max-width: 600px) {
   #panel-ask .ask-options-pop { max-height: max(180px, calc(100dvh - 320px)); }

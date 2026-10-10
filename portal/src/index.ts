@@ -3,6 +3,7 @@ import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, 
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
 import { rankedMoneyAnswer } from './ask-money'
 import { paidAnswer, mentionsPay } from './ask-pay'
+import { isEvaluativeQuestion, neutralEvaluativeAnswer } from '../public/ask-evaluative.js'
 import { rewriteFollowUp, clarifyPayload, REWRITE_SYSTEM, type FollowUpRewrite } from './ask-rewrite'
 import { slugIndex, personIndex } from './person-slug'
 import { missingEntitySlug } from './crawl-hygiene'
@@ -1266,6 +1267,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     return res
   }
   if (!rawInput.question?.trim()) return json({ error: 'question is required' }, 400)
+  if (isEvaluativeQuestion(rawInput.question, rawInput.context)) return timed(json(neutralEvaluativeAnswer()))
   // A question naming a withheld donor, now or in the reader's earlier turns, gets
   // one fixed reply before any ranking, rewrite or model call can echo the name.
   if (await questionNamesWithheldDonor(env.ASSETS, rawInput.question, ...readerTurns(rawInput))) return timed(json(withheldDonorAnswer()))
@@ -1315,6 +1317,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     askedAs = rewrite
     if (askedAs) {
       rawInput.question = askedAs
+      if (isEvaluativeQuestion(askedAs)) return timed(json(neutralEvaluativeAnswer()))
       // "And the Liberals?" after a pay answer only reads as one once rewritten.
       const paidFollowUp = await paidAnswer({ ...rawInput, context: undefined }, env.ASSETS).catch(() => null)
       if (paidFollowUp) { mark('pay'); return timed(json(withAskedAs(paidFollowUp, askedAs))) }

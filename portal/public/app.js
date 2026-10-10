@@ -1731,6 +1731,7 @@ function parseHash() {
 }
 
 function route() {
+  closeAskCitation(false);
   const frag = rawFragment();
   if (frag && !frag.startsWith("/") && !firstRoute) return; // native anchors still need their page rendered on first load
   const { segs, params } = parseHash();
@@ -2580,6 +2581,7 @@ const tableFit = new ResizeObserver((entries) => {
 });
 
 function renderAnswer(container, text, response = {}) {
+  container.askAnswerText = String(text);
   container.classList.toggle("answer-evidence", response.answer_status === "evidence_only");
   if (response.answer_status === "evidence_only" && Array.isArray(response.evidence_excerpts)) {
     renderEvidenceAnswer(container, text, response);
@@ -2685,6 +2687,140 @@ function renderAnswer(container, text, response = {}) {
   wireAskCitations(container, evidence);
 }
 
+function trimCitationSentence(text, limit = 240) {
+  const clean = String(text).replace(/⟦source:\d+⟧/g, '').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/[*#_`]/g, '').replace(/\s+/g, ' ').trim();
+  return clean.length > limit ? clean.slice(0, limit).replace(/\s+\S*$/, '') + '…' : clean;
+}
+
+function citationSupportSentence(answer, range) {
+  const points = Array.from(String(answer || ''));
+  const at = Math.max(0, (range?.[1] || points.length) - 1);
+  let start = at;
+  // A provider range may end on punctuation or whitespace after the claim.
+  while (start > 0 && /[\s.!?"”’)*_`]/.test(points[start])) start--;
+  let end = start;
+  while (start > 0 && !/[.!?\n]/.test(points[start - 1])) start--;
+  while (end < points.length && !/[.!?\n]/.test(points[end])) end++;
+  while (end < points.length && /[.!?"”’)*_`]/.test(points[end])) end++;
+  return trimCitationSentence(points.slice(start, end).join(''));
+}
+
+function citationPassage(snippet, sentence) {
+  const text = String(snippet || '').trim().replace(/\s+/g, ' ');
+  const terms = new Set((sentence.toLowerCase().match(/[\p{L}\p{N}]{4,}/gu) || []).filter(t => !['that', 'this', 'with', 'from', 'have', 'were', 'their', 'about', 'said'].includes(t)));
+  const candidates = [...text.matchAll(/[^.!?…]+[.!?]?/g)].map(m => ({ text: m[0].trim(), at: m.index + m[0].indexOf(m[0].trim()) }));
+  let best = null, score = 0;
+  for (const candidate of candidates) {
+    const hits = new Set((candidate.text.toLowerCase().match(/[\p{L}\p{N}]{4,}/gu) || []).filter(t => terms.has(t))).size;
+    if (hits > score) { best = candidate; score = hits; }
+  }
+  // With no lexical overlap, the cited original excerpt is the passage.
+  const match = best?.text || text.replace(/^[.…\s]+|[.…\s]+$/g, '');
+  const at = best?.at ?? text.indexOf(match);
+  return { text, match, before: text.slice(0, at), after: text.slice(at + match.length) };
+}
+
+function citationSourceKind(source) {
+  const kind = source.kind || source.labels?.kind;
+  return ['speech', 'division', 'interest', 'expense', 'pay', 'bill', 'bill_text', 'receipt', 'grant', 'contract'].includes(kind) ? kind : 'record';
+}
+
+function citationReadHref(source, passage) {
+  const url = new URL(searchResultHref(source), location.origin);
+  if (!['http:', 'https:'].includes(url.protocol)) return '';
+  if (url.origin === location.origin && url.pathname.startsWith('/doc/') && passage) url.searchParams.set('passage', passage);
+  if (passage) url.hash = (url.hash.split(':~:')[0] || '#') + ':~:text=' + encodeURIComponent(passage).replace(/-/g, '%2D');
+  return url.href;
+}
+
+let activeAskCitation = null;
+function closeAskCitation(returnFocus = true) {
+  const active = activeAskCitation;
+  if (!active) return;
+  activeAskCitation = null;
+  active.panel.remove();
+  active.scope.classList.remove('citation-reading');
+  document.body.classList.remove('ask-citation-visible', 'ask-citation-modal');
+  for (const [element, inert] of active.inert || []) element.inert = inert;
+  active.button.setAttribute('aria-expanded', 'false');
+  if (returnFocus && active.button.isConnected) active.button.focus({ preventScroll: true });
+}
+
+function openAskCitation(container, source, position, button, sentence) {
+  closeAskCitation(false);
+  const scope = container.closest('#ask-result, .chat-turn-answer') || container;
+  const phone = matchMedia('(max-width: 1100px)').matches || (!!container.closest('#panel-chat') && document.documentElement?.dataset.chat === 'docked');
+  const panel = document.createElement('aside');
+  panel.id = 'ask-citation-panel';
+  panel.className = 'ask-citation-panel';
+  if (phone) panel.classList.add('ask-citation-sheet');
+  else {
+    const top = Math.max(104, Math.min(container.getBoundingClientRect().top, window.innerHeight - 260));
+    panel.style.top = `${top}px`;
+    panel.style.maxHeight = `calc(100dvh - ${top + 24}px)`;
+  }
+  panel.tabIndex = -1;
+  panel.setAttribute('role', phone ? 'dialog' : 'region');
+  panel.setAttribute('aria-labelledby', 'ask-citation-title');
+  panel.setAttribute('aria-describedby', 'ask-citation-supports');
+  if (phone) panel.setAttribute('aria-modal', 'true');
+  const title = document.createElement('h3');
+  title.id = 'ask-citation-title';
+  title.textContent = `Source ${position}: ${displayTitle(source)}`;
+  const close = document.createElement('button');
+  close.type = 'button'; close.className = 'link ask-citation-close'; close.textContent = 'Close';
+  close.setAttribute('aria-label', 'Close source');
+  close.addEventListener('click', () => closeAskCitation());
+  const supports = document.createElement('p');
+  supports.className = 'ask-citation-supports';
+  supports.id = 'ask-citation-supports';
+  supports.textContent = `Supports: “${sentence}”`;
+  const meta = document.createElement('p');
+  meta.className = 'ask-citation-meta';
+  const chamber = source.chamber || source.labels?.chamber;
+  meta.innerHTML = metaHTML(source) + (chamber ? ` · ${esc(CHAMBER_NAMES[chamber] || chamber)}` : '');
+  const passage = citationPassage(source.snippet, sentence);
+  const excerpt = document.createElement('blockquote');
+  excerpt.className = 'ask-citation-excerpt';
+  if (passage.match) {
+    const mark = document.createElement('mark'); mark.textContent = passage.match;
+    excerpt.append(passage.before, mark, passage.after);
+  } else excerpt.textContent = 'Open the record to read the supporting passage.';
+  const read = document.createElement('a');
+  read.className = 'ui-button ask-citation-read'; read.dataset.variant = 'primary';
+  read.href = citationReadHref(source, passage.match);
+  read.textContent = citationSourceKind(source) === 'speech' ? 'Read the full speech' : 'Open record';
+  read.addEventListener('click', () => { trackOutcome('opax_ask_citation_read', { source_kind: citationSourceKind(source) }); closeAskCitation(false); });
+  const back = document.createElement('button');
+  back.type = 'button'; back.className = 'link ask-source-back'; back.textContent = 'Back to answer';
+  back.addEventListener('click', () => closeAskCitation());
+  panel.append(close, title, supports, meta, excerpt, read, back);
+  scope.classList.add('citation-reading');
+  document.body.classList.add('ask-citation-visible');
+  scope.appendChild(panel);
+  const inert = [];
+  if (phone) {
+    document.body.classList.add('ask-citation-modal');
+    // Keep only the dialog's ancestor path active; the answer remains visible.
+    for (let parent = panel; parent?.parentElement; parent = parent.parentElement) {
+      for (const sibling of parent.parentElement.children) if (sibling !== parent) { inert.push([sibling, sibling.inert]); sibling.inert = true; }
+    }
+  }
+  activeAskCitation = { panel, scope, button, inert };
+  button.setAttribute('aria-expanded', 'true');
+  panel.addEventListener('keydown', event => {
+    if (!phone || event.key !== 'Tab') return;
+    const controls = [...panel.querySelectorAll('button, a[href]')];
+    if (event.shiftKey && (document.activeElement === controls[0] || document.activeElement === panel)) { event.preventDefault(); controls.at(-1).focus(); }
+    else if (!event.shiftKey && document.activeElement === controls.at(-1)) { event.preventDefault(); controls[0].focus(); }
+  });
+  panel.focus({ preventScroll: true });
+  trackOutcome('opax_ask_citation_open', { position, source_kind: citationSourceKind(source) });
+}
+document.addEventListener('keydown', event => { if (event.key === 'Escape' && activeAskCitation) { event.preventDefault(); closeAskCitation(); } });
+window.addEventListener('popstate', () => closeAskCitation(false));
+window.addEventListener('resize', () => closeAskCitation());
+
 // Citation ranges come from the response, never from guessed [n] numbering.
 function askCitationText(text, sources) {
   const points = Array.from(text);
@@ -2714,6 +2850,7 @@ function wireAskCitations(container, sources) {
   if (!sources.length) return;
   const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
   const nodes = [];
+  const occurrences = new Map();
   while (walker.nextNode()) nodes.push(walker.currentNode);
   for (const node of nodes) {
     const text = node.textContent;
@@ -2732,28 +2869,27 @@ function wireAskCitations(container, sources) {
       button.className = "ask-citation";
       button.textContent = match[1];
       button.setAttribute("aria-label", `Source ${match[1]}: ${displayTitle(source)}`);
-      button.addEventListener("click", () => {
-        const scope = container.closest("#ask-result, .chat-turn-answer");
-        const row = [...(scope?.querySelectorAll("li[data-resource]") || [])]
-          .find((el) => el.dataset.resource === (source.resource || source.slug));
-        if (!row) return;
-        for (let parent = row.parentElement; parent && parent !== scope; parent = parent.parentElement) {
-          if (parent.tagName === "DETAILS") parent.open = true;
-        }
-        scope.querySelector(".ask-source-back")?.remove();
-        const back = document.createElement("button");
-        back.type = "button";
-        back.className = "link ask-source-back";
-        back.textContent = "Back to answer";
-        back.addEventListener("click", () => {
-          button.focus({ preventScroll: true });
-          button.scrollIntoView({ block: "center", behavior: "instant" });
-          back.remove();
-        });
-        row.appendChild(back);
-        row.focus({ preventScroll: true });
-        row.scrollIntoView({ block: "center", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
-      });
+      button.title = displayTitle(source);
+      button.dataset.sourceName = displayTitle(source);
+      button.setAttribute('aria-controls', 'ask-citation-panel');
+      button.setAttribute('aria-expanded', 'false');
+      const occurrence = occurrences.get(source) || 0;
+      occurrences.set(source, occurrence + 1);
+      const ends = new Set();
+      const points = Array.from(container.askAnswerText || '');
+      const ranges = [...(source.answerRanges || [])].filter(range => {
+        if (!Array.isArray(range) || range.length !== 2) return false;
+        const [start, end] = range;
+        if (!Number.isInteger(start) || !Number.isInteger(end) || start < 0 || end <= start || end > points.length) return false;
+        let at = end;
+        while (at > start && /\s/.test(points[at - 1])) at--;
+        const closing = points.slice(at).join('').match(/^[.!?,;:…"'”’)\]]+/);
+        if (closing) at += Array.from(closing[0]).length;
+        if (ends.has(at)) return false;
+        ends.add(at); return true;
+      }).sort((a, b) => a[1] - b[1]);
+      const sentence = citationSupportSentence(container.askAnswerText || node.parentElement.textContent.split('⟦source:')[0], ranges[occurrence]);
+      button.addEventListener('click', () => openAskCitation(container, source, Number(match[1]), button, sentence));
       sup.appendChild(button);
       fragment.appendChild(sup);
       last = match.index + match[0].length;
@@ -9700,6 +9836,7 @@ function askRequestBody(question, kind, filters, automaticSpeaker) {
 }
 
 async function runAsk(question) {
+  closeAskCitation(false);
   renderRegisterNote(question);
   if (askAbort) askAbort.abort();
   const myAbort = new AbortController();
@@ -9807,10 +9944,13 @@ async function runAsk(question) {
     $("ask-answer").askEvidence = citedList;
     // The speaker this answer was actually filtered to (chosen in Options or
     // read out of the question), so "Continue in a conversation" keeps it.
-    lastAsk = { question, answer: answerText, sources, kind: askKind(), speaker: askFilters().speaker || speakerFilter || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context, money_overview: data.money_overview, pay_answer: data.pay_answer, pay_next: data.pay_next };
+    lastAsk = { question, answer: answerText, sources, kind: askKind(), speaker: askFilters().speaker || speakerFilter || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context, money_overview: data.money_overview, pay_answer: data.pay_answer, pay_next: data.pay_next, next: data.comparison_chips };
     // A calculated answer carries its own fixed next steps, not generated ones.
     const calculated = !!(data.money_ranking || data.pay_answer);
-    if (!calculated) prefetchAskFollowups(lastAsk);
+    if (data.comparison_chips?.length) renderFollowups(data.comparison_chips, $("ask-followups"), item => {
+      if (openConversationFrom(lastAsk)) sendChat(item.question, item);
+    }, 'Choose a record to compare.');
+    else if (!calculated) prefetchAskFollowups(lastAsk);
 
     if (calculated) { $("ask-money").hidden = true; $("ask-register-note").hidden = true; }
     hideWombat();
@@ -10847,6 +10987,7 @@ function renderChatScope() {
 }
 
 function renderChatThread({ landed = false, rise = false } = {}) {
+  closeAskCitation(false);
   syncAskChatViewport();
   renderChatScope();
   const thread = $("chat-thread");
@@ -11067,7 +11208,7 @@ function renderFollowups(questions, next, onSelect, caption) {
   row.className = "chat-next-btns";
   row.setAttribute("role", "group");
   row.setAttribute("aria-label", "Suggested follow-up questions");
-  for (const raw of questions.slice(0, 3)) {
+  for (const raw of questions.slice(0, questions.some(item => item?.label) ? 5 : 3)) {
     // Sessions saved before follow-ups carried evidence stored plain strings.
     const item = typeof raw === "string" ? { question: raw } : raw;
     if (!item?.question) continue;
@@ -11079,7 +11220,7 @@ function renderFollowups(questions, next, onSelect, caption) {
     b.className = "chat-next-btn rise-in";
     b.style.setProperty("--i", String(row.children.length));
     const text = document.createElement("span");
-    text.textContent = item.question;
+    text.textContent = item.label || item.question;
     const arrow = document.createElement("span");
     arrow.className = "next-arrow";
     arrow.setAttribute("aria-hidden", "true");
@@ -11284,6 +11425,7 @@ async function sendChat(question, carry) {
       money_overview: data.money_overview,
       pay_answer: data.pay_answer,
       pay_next: data.pay_next,
+      next: data.comparison_chips,
       evidence_excerpts: data.evidence_excerpts,
       sources: (data.sources || []).map((source) => ({
         ...source,
@@ -12935,6 +13077,7 @@ async function openDocPage(slug, manageFocus) {
       $('doc-bill').hidden = false;
     } else renderDocBillPanel(doc, slug);
     renderDocText(doc);
+    highlightDocCitation();
     $("doc-ask").href = askHash(
       docAskQuestion(doc, topic, isGovernmentRelease || isResearchRecord),
       isGovernmentRelease || isResearchRecord ? "all" : undefined,
@@ -12989,6 +13132,37 @@ function docAskQuestion(doc, debate, isRecord) {
 }
 
 // Preserve the source verbatim, including whitespace. Only presentation changes.
+function highlightDocCitation() {
+  const match = new URLSearchParams(location.search).get('passage');
+  if (!match || match.length > 2400) return;
+  const root = $('doc-text');
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const chars = [], positions = [];
+  while (walker.nextNode()) {
+    const node = walker.currentNode;
+    for (let offset = 0; offset < node.textContent.length; offset++) {
+      const value = node.textContent[offset];
+      if (/\s/.test(value) && chars.at(-1) === ' ') continue;
+      chars.push(/\s/.test(value) ? ' ' : value); positions.push({ node, offset });
+    }
+  }
+  const needle = match.replace(/\s+/g, ' ').trim();
+  const start = chars.join('').toLowerCase().indexOf(needle.toLowerCase());
+  if (start < 0) return;
+  const matched = positions.slice(start, start + needle.length);
+  const nodes = [...new Set(matched.map(p => p.node))];
+  let first;
+  for (const node of nodes) {
+    const offsets = matched.filter(p => p.node === node).map(p => p.offset);
+    const from = offsets[0], to = offsets.at(-1) + 1;
+    const mark = document.createElement('mark'); mark.className = 'doc-citation-match';
+    mark.textContent = node.textContent.slice(from, to);
+    node.replaceWith(document.createTextNode(node.textContent.slice(0, from)), mark, document.createTextNode(node.textContent.slice(to)));
+    first ||= mark;
+  }
+  first?.scrollIntoView({ block: 'center', behavior: 'instant' });
+}
+
 function renderDocText(doc) {
   let text = String(doc.text || "(no text)");
   if ((doc.labels?.kind || doc.kind) === 'bill_text') {
