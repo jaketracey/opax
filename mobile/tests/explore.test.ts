@@ -38,7 +38,7 @@ const ballotRaw = read(
   'electorates/releases/b56417062ccc33cf/el_5d600e7f6dca5b72ae04d686.json',
 );
 test('quiz record links never open private donor profiles and search opens a native draft', () => {
-  expect(quizRecordPath('/subject/donor/Pamela%20Wall')).toBeNull();
+  expect(quizRecordPath('/subject/donor/Jane%20Citizen')).toBeNull();
   expect(quizRecordPath('/subject/donor/Maurice%20Blackburn%20Pty%20Ltd')).toBe(
     '/subject/donor/Maurice%20Blackburn%20Pty%20Ltd',
   );
