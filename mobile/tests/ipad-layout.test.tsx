@@ -1,14 +1,18 @@
 import { act, useEffect } from 'react';
-import { Text as NativeText, View } from 'react-native';
+import { Dimensions, Text as NativeText, View } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 
 import {
   dragWebUrl,
   breakpoints,
+  columnBreakout,
   columns,
   gridColumns,
   readableInset,
+  ScreenColumn,
   sizeClassFor,
+  splitPaneWidth,
+  useColumnChoice,
 } from '../src/design/adaptive';
 import {
   dispatchKeyCommand,
@@ -18,6 +22,8 @@ import {
   takeFocusRequest,
 } from '../src/design/keyboard';
 import { SplitLayout, SplitEmpty, useSplitPane } from '../src/design/split';
+import { Section } from '../src/design/layout';
+import { colors } from '../src/design/tokens';
 import { phoneCopy } from '../src/design/phone-copy';
 
 // SplitLayout decides between one pane and two from `useLayout()`; the test
@@ -171,7 +177,7 @@ describe('SplitLayout', () => {
     expect(hosts(tree, 'the-list')).toBe(1);
     expect(hosts(tree, 'split')).toBe(0);
   });
-  test('regular width shows the calm empty state until something is selected', () => {
+  test('regular width shows the quiet empty line until something is selected', () => {
     const tree = render(null);
     expect(hosts(tree, 'split-list')).toBe(1);
     expect(hosts(tree, 'empty')).toBeGreaterThan(0);
@@ -229,6 +235,108 @@ describe('SplitLayout', () => {
       dispatchKeyCommand('list-up');
     });
     expect(onSelect).toHaveBeenLastCalledWith({ kind: 'item', key: 'a' });
+  });
+});
+
+describe('two panes and the reading measure (design pass 4E)', () => {
+  test('the narrow pane is a third of the shared region, 300 to 440pt, never over half; 45% at accessibility sizes', () => {
+    // 13-inch landscape with the sidebar open, and in portrait.
+    expect(splitPaneWidth(1096)).toBe(365);
+    expect(splitPaneWidth(1032)).toBe(344);
+    // The sidebar hidden: capped.
+    expect(splitPaneWidth(1376)).toBe(440);
+    // Just regular (a Stage Manager window): the detail keeps 400pt.
+    expect(splitPaneWidth(700)).toBe(300);
+    expect(splitPaneWidth(1096, true)).toBe(493);
+  });
+  test('a split list starts at that width: a third, or 45% at accessibility sizes', () => {
+    mockLayout.regular = true;
+    mockLayout.width = 1096;
+    const listWidth = (fontScale: number) => {
+      const window = Dimensions.get('window');
+      const screen = Dimensions.get('screen');
+      const size = { width: 1096, height: 800, scale: 2, fontScale };
+      act(() => Dimensions.set({ window: size, screen: size }));
+      try {
+        const tree = render(null);
+        const list = tree.root.find(
+          (node) =>
+            node.props.testID === 'split-list' && typeof node.type === 'string',
+        );
+        return Object.assign({}, ...[list.props.style].flat(3)).width;
+      } finally {
+        act(() => Dimensions.set({ window, screen }));
+      }
+    };
+    expect(listWidth(1)).toBe(365);
+    // Jest's own window is at an accessibility size.
+    expect(listWidth(3.571)).toBe(493);
+  });
+  test('the list pane draws no category accent: the detail carries it', () => {
+    mockLayout.regular = true;
+    mockLayout.width = 1096;
+    const section = (
+      <Section title="Bills" accent="bills">
+        <View />
+      </Section>
+    );
+    const marks = (tree: TestRenderer.ReactTestRenderer) =>
+      tree.root.findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          [node.props.style]
+            .flat(3)
+            .some((style) => style?.backgroundColor === colors.billsInk),
+      ).length;
+    let alone!: TestRenderer.ReactTestRenderer;
+    let split!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      alone = TestRenderer.create(section);
+      split = TestRenderer.create(
+        <SplitLayout<Entry>
+          id="accent"
+          list={section}
+          selected={{ kind: 'item', key: 'a' }}
+          onSelect={jest.fn()}
+          entryKey={(e) => e.key}
+          renderDetail={() => section}
+          empty={null}
+        />,
+      );
+    });
+    mounted.push(alone, split);
+    expect(marks(alone)).toBe(1);
+    // Only the detail pane's section keeps its mark.
+    expect(marks(split)).toBe(1);
+  });
+  test('a route can choose the readable column over the screen’s own', () => {
+    const seen: string[] = [];
+    function Probe() {
+      seen.push(useColumnChoice('wide'));
+      return null;
+    }
+    act(() => {
+      mounted.push(
+        TestRenderer.create(
+          <>
+            <Probe />
+            <ScreenColumn column="readable">
+              <Probe />
+            </ScreenColumn>
+          </>,
+        ),
+      );
+    });
+    expect(seen.slice(0, 2)).toEqual(['wide', 'readable']);
+  });
+  test('a figure in the readable column reaches the wide one, never on compact', () => {
+    // 13-inch landscape full screen (the money map), and portrait.
+    expect(columnBreakout(1376, 'readable', 'regular')).toBe(240);
+    expect(columnBreakout(1032, 'readable', 'regular')).toBe(134);
+    expect(columnBreakout(1376, 'wide', 'regular')).toBe(0);
+    expect(columnBreakout(402, 'readable', 'compact')).toBe(0);
+    // The phone never breaks out (sizeClassFor is compact off iPad).
+    expect(columnBreakout(956, 'readable')).toBe(0);
   });
 });
 

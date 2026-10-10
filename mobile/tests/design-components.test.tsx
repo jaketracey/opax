@@ -870,8 +870,22 @@ describe('EmptyState', () => {
     ).root;
     expect(strings(root)).toEqual(['No declared interests.']);
   });
-  test('pane: the symbol on its wash, one serif line, one sentence; SplitEmpty is this size', () => {
+  test('pane: one quiet line, the same in every split; SplitEmpty is this size', () => {
     const pane = render(
+      <EmptyState size="pane" message="No bill selected" testID="e" />,
+    ).root;
+    expect(strings(pane)).toEqual(['No bill selected']);
+    const line = nativeTexts(pane)[0]!;
+    expect(hex(flat(line.props.style).color)).toBe(light.inkSoft);
+    expect(flat(line.props.style).textAlign).toBe('center');
+    // No symbol, no wash, no heading: nothing 64pt wide, no category colour.
+    expect(
+      pane.findAll(
+        (n) => typeof n.type === 'string' && flat(n.props.style).width === 64,
+      ),
+    ).toHaveLength(0);
+    // An older call with a title and a count draws the title alone.
+    const older = render(
       <EmptyState
         size="pane"
         icon="doc.text"
@@ -881,15 +895,12 @@ describe('EmptyState', () => {
         testID="e"
       />,
     ).root;
-    expect(strings(pane)).toEqual(['No bill selected', '12 bills']);
-    const mark = pane.find(
-      (n) => typeof n.type === 'string' && flat(n.props.style).width === 64,
-    );
-    expect(hex(flat(mark.props.style).backgroundColor)).toBe(light.billsWash);
+    expect(strings(older)).toEqual(['No bill selected']);
     const alias = render(
       <SplitEmpty icon="doc.text" title="No bill selected" testID="e" />,
     ).root;
     expect(alias.findAllByType(EmptyState)[0]!.props.size).toBe('pane');
+    expect(strings(alias)).toEqual(['No bill selected']);
   });
 });
 
