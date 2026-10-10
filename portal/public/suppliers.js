@@ -285,7 +285,7 @@ async function mountFunding(root, links, life) {
       slot.hidden = false;
       slot.innerHTML = '<p role="status">Opening the money map…</p>';
       try {
-        const { mountMoneyMap } = await import("/money-map.js?v=ee2ffcc234");
+        const { mountMoneyMap } = await import("/money-map.js?v=cb5d2b4aab");
         if (!life.alive()) return;
         slot.textContent = "";
         const handle = await mountMoneyMap(slot, "/graph/money.json?v=suppliers-1", { focus: links[0].id, chrome: "mini", reveal: true, openCard: false });

@@ -1,4 +1,4 @@
-import { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract } from './suppliers.js?v=f8359457f7';
+import { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract } from './suppliers.js?v=90612c9b6c';
 import { procurementGraph } from './procurement-data.js';
 import { shortMoney } from './format.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -19,7 +19,7 @@ export async function mountProcurementPreview(root, profile, kind, life) {
   root.hidden = false;
   root.innerHTML = '<p role="status">Opening the 3D map…</p>';
   try {
-    const { mountMoneyMap } = await import('/money-map.js?v=ee2ffcc234');
+    const { mountMoneyMap } = await import('/money-map.js?v=cb5d2b4aab');
     if (!life.alive()) return;
     const graph = procurementGraph(profile, kind);
     if (!graph.edges.length) { root.innerHTML = '<p>No relationships with positive recorded contract value are available for the map.</p>'; return; }

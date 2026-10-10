@@ -10,8 +10,8 @@ import {partyUrl} from '../public/canonical-urls.js'
 // This is the vanilla adapter that replaces corpuskit's React shell
 // (KnowledgeMap3D.tsx): it fetches the exported graph JSON, builds the
 // engine's data, and owns every piece of DOM around the canvas - the legend
-// (which doubles as an industry filter), the info card, the zoom buttons and
-// the hint. The engine itself (map3d-engine.ts) is the ported corpuskit
+// (which doubles as an industry filter, and ends in the how-to-move note),
+// the info card and the zoom buttons. The engine itself (map3d-engine.ts) is the ported corpuskit
 // engine, driven exactly the way the React shell drove it.
 // ---------------------------------------------------------------------------
 
@@ -143,7 +143,7 @@ export type MoneyMapOptions = {
   onSelect?: (node: MoneyNode | null) => void
   /** Node id to mount already-selected with the camera on it. */
   focus?: string
-  /** 'full' (default): legend, find, time scrub, zoom, hint. 'mini': bare scene + cards. */
+  /** 'full' (default): legend (with its note), find, time scrub, zoom. 'mini': bare scene + cards. */
   chrome?: 'full' | 'mini'
   /** A quiet, fitted industry overview; groups open only when chosen. */
   overview?: boolean
@@ -505,9 +505,8 @@ const CSS = `
 /* Zoom: the shared icon buttons (.ui-button.ui-icon-button), compact. */
 .mm-zoom { position: absolute; right: var(--space-heading); bottom: var(--space-heading); display: flex;
   flex-direction: column; gap: var(--space-line); }
-.mm-hint { position: absolute; bottom: var(--space-row); left: 50%; transform: translateX(-50%);
-  margin: 0; font: var(--type-fine); color: var(--ink-soft); pointer-events: none;
-  white-space: nowrap; }
+.mm-legend-note { max-width: 15rem; margin: var(--space-line) 0 0; padding: var(--space-tight) var(--space-tight) 0;
+  border-top: var(--border-hairline) solid var(--divider-subtle); font: var(--type-fine); color: var(--ink-soft); }
 /* Find: the shared field (.ui-input), compact, over a floating result menu. */
 .mm-find { position: absolute; top: var(--space-heading); right: var(--space-heading); width: 240px; }
 .mm-find-list { list-style: none; margin: var(--space-line) 0 0; padding: var(--space-line);
@@ -601,7 +600,7 @@ const CSS = `
   .mm-legend-title { display: none; }
   .mm-chip { white-space: nowrap; flex: none; }
   .mm-chip.mm-grants-toggle { margin-top: 0; }
-  .mm-find, .mm-hint { display: none; }
+  .mm-find, .mm-legend-note { display: none; }
   .mm-root[data-mm-chrome='full'] .mm-scrub {
     top: 60px; bottom: auto; width: 270px;
   }
@@ -631,7 +630,7 @@ const CSS = `
     bottom: max(var(--space-tight), env(safe-area-inset-bottom)); width: auto;
     max-height: 55%; }
   .mm-root[data-mm-chrome='full'] .mm-card { top: auto; max-height: 55%; }
-  .mm-hint, .mm-find { display: none; }
+  .mm-legend-note, .mm-find { display: none; }
   .mm-root[data-mm-chrome='full'] .mm-scrub { display: flex; align-items: center; gap: var(--space-tight);
     top: 60px; right: var(--space-tight); bottom: auto; left: var(--space-tight); width: auto; padding: var(--space-line) var(--space-tight); overflow: visible; }
   .mm-root[data-mm-chrome='full'] .mm-scrub-label { display: block; flex: none; margin: 0; }
@@ -1027,7 +1026,9 @@ export async function mountMoneyMap(
     zoomButton('M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5', 'Fit the whole map to view', () => engine.fit(true))
   }
 
-  const hint = full ? el('p', 'mm-hint', container) : null
+  // How to move the map, and whose returns it draws: the key's last line, not a
+  // caption floating over the scene (it ran under the year scrub at 1280).
+  const hint = legend ? el('p', 'mm-legend-note', legend) : null
   if (hint) {
     // State files name their commission in meta.sourceShort; the federal
     // export predates the field and stays "AEC returns".
@@ -1330,6 +1331,7 @@ export async function mountMoneyMap(
         pushData()
       })
     }
+    if (hint) legend.append(hint) // after the chips
   }
 
   // --- Find-in-map ------------------------------------------------------
@@ -2022,7 +2024,7 @@ export async function mountMoneyMap(
    * The canvas the floating chrome covers, so the fit and every focus move
    * centre the scene in the unobstructed area: the legend (a left column, or
    * a top row on narrow screens), the find box along the top, the zoom
-   * buttons on the right, the scrub and the hint along the bottom. Measured
+   * buttons on the right, the scrub along the bottom. Measured
    * rather than assumed, so a host that restyles the chrome keeps a clear
    * fit; each side is capped so a strange layout cannot squeeze the scene
    * away.
@@ -2067,7 +2069,6 @@ export async function mountMoneyMap(
       const onTop = rect.top + rect.height / 2 < host.top + host.height / 2
       cover(scrub, onTop ? 'top' : 'bottom')
     }
-    cover(hint, 'bottom')
     return insets
   }
 

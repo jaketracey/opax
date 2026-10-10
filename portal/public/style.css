@@ -4837,7 +4837,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 
 .money-stage { scroll-margin-top: calc(var(--header-h, 70px) + 12px); }
 
-.money-stage.has-journey .mm-legend, .money-stage.has-journey .mm-find, .money-stage.has-journey .mm-hint { display: none; }
+.money-stage.has-journey .mm-legend, .money-stage.has-journey .mm-find { display: none; }
 .money-stage.has-journey .mm-scrub { display: none; }
 @media (max-width: 700px) {
   .journey-story { position: relative; padding: var(--space-4); }
@@ -5264,12 +5264,11 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 /* Keep map actions aligned and distinguish controls from related destinations. */
 .money-workspace-toolbar [data-records] {min-height:42px}
 @media (max-width: 800px) {
-  /* On a phone the five money views are a segmented track: sunken, a navy thumb. */
-  .money-area-nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; margin-bottom: var(--space-block); border: 0; border-radius: var(--radius-md); background: var(--paper-sunken); }
-  .money-area-nav a { display: flex; align-items: center; justify-content: center; min-height: var(--size-control); padding: var(--space-tight); text-align: center; font: var(--type-control); color: var(--ink-soft); border: 0; border-radius: var(--radius-pill); text-decoration: none; }
-  .money-area-nav a[aria-current] { border: 0; background: var(--navy); color: var(--on-navy); }
-  /* Five destinations in a two-column grid: the odd one out takes the full row rather than a half. */
-  .money-area-nav a:last-child:nth-child(odd) {grid-column:1/-1}
+  /* On a phone the five money views stay the tab row they are at 1280 (five is
+     past a segmented control's three), scrolling sideways on one line. */
+  .money-area-nav { flex-wrap: nowrap; gap: var(--space-group); overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; white-space: nowrap; }
+  .money-area-nav::-webkit-scrollbar { display: none; }
+  .money-area-nav a { flex: none; display: inline-flex; align-items: center; }
   .money-workspace-toolbar { display: grid; align-items: stretch; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-tight); margin: 0 0 var(--space-heading); }
   .money-workspace-toolbar :is(#money-jur, .journey-menu, .research-filters) { min-width: 0; }
   .money-workspace-toolbar #money-jur select,
@@ -5281,8 +5280,8 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
   .money-workspace-toolbar :is(.research-filter-panel,#money-journey-controls) {box-sizing:border-box;max-height: min(65vh,32rem);max-height:min(65dvh,32rem);overflow-y:auto;overscroll-behavior:contain}
 }
 
-@media (min-width:600px) and (max-width:800px) {
-  .money-area-nav,.money-workspace-toolbar {grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (min-width: 600px) and (max-width: 800px) {
+  .money-workspace-toolbar { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
 /* Retrieved records can contain long source URLs; keep the report within its column. */

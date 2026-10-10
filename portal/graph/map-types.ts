@@ -64,7 +64,7 @@ export type GroupStyle = {
 /**
  * How much of the canvas floating panels are covering, in canvas pixels:
  * the legend on the left, the find box along the top, the zoom buttons on
- * the right, the scrub and hint along the bottom, and the info card when it
+ * the right, the scrub along the bottom, and the info card when it
  * is open. The fit and every focus move centre the scene in what is left.
  */
 export type Insets = { left: number; right: number; top: number; bottom: number }
