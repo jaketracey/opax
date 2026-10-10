@@ -1,3 +1,5 @@
+import {isIndividualAggregate} from '../public/donor-views.js';
+import {donorNameWithheld,donorPrivacyIndex} from '../public/donor-entity.js';
 // Render the client modules over the derived test's export. This supplies local
 // assets and a small DOM, not another privacy policy or another name scan.
 import {readFileSync} from 'node:fs';
@@ -103,7 +105,7 @@ export async function* moduleOutputs(root,withheld,readAsset) {
  const {partyFlows}=runInNewContext(region('function barList(','const fmtIndustries')+';async function partyFlows(node){const key="fixture";const isParty=true;'+
   region('const donorPrivacy = growthModules.approvedModulePrivacy(await growthModules.loadModuleDonors());','// Identity once (principle 3)')+
   ';return barList(flowRows,{heading:"Disclosed gifts",linkTo:name=>subjectHash("donor",name)});} ;({partyFlows})',{
-   ...context,moneyData,growthModules:{...localModules,loadModuleDonors:async()=>donorIndex},
+   ...context,moneyData,donorNameWithheld,isIndividualAggregate,donorViewIndex:donorPrivacyIndex([moneyData]),growthModules:{...localModules,loadModuleDonors:async()=>donorIndex},
   });
  for(const [i,node] of moneyData.nodes.filter(n=>n.kind==='party').entries())yield {where:`party flow module ${i}`,html:await partyFlows(node),questions:[]};
  number=0;

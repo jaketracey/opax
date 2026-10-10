@@ -1,6 +1,6 @@
 /* Record-based landing modules. No generated answers or guessed identities. */
 import { shortDate } from './format.js';
-import { isOrganisationDonor } from './donor-entity.js?v=2b8d45a50d';
+import { isOrganisationDonor } from './donor-entity.js?v=3a74633831';
 export { isOrganisationDonor };
 import { sourceLineHTML } from './labels.js?v=804befe8de';
 import { sponsorPerson, sponsorKey } from './sponsor-person.js?v=74d9a1f8cf';

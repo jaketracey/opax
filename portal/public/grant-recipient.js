@@ -1,5 +1,6 @@
+import {donorNameWithheld,loadDonorViewIndex,individualDonorLabel} from './donor-views.js?v=b0d980112a';
 import {partyUrl} from './canonical-urls.js?v=225d5915ea';
-import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=9e66f26ed2';
+import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=2b80159770';
 
 const MONEY = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 2 });
 const NUMBER = new Intl.NumberFormat('en-AU');
@@ -70,6 +71,7 @@ export function recipientSourceUrl(jurisdiction, grant) {
 export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () => {}, manageFocus = false }) {
   const aborter = new AbortController();
   let destroyed = false, downloadUrl;
+  let privacy={organisations:new Set(),withheld:new Set()};
   const root = node('article', null, 'grant-recipient-page');
   root.setAttribute('aria-busy', 'true');
   const skeleton = container.querySelector('.grant-recipient-page');
@@ -77,7 +79,7 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
   container.replaceChildren(root);
   const alive = () => !destroyed && root.isConnected;
   const get = async path => {
-    const response = await fetch(path, { signal: aborter.signal });
+    const response = await fetch(path, { signal: aborter.signal, cache:"no-cache" });
     if (!response.ok) throw new Error(response.status === 404 ? 'not-found' : 'unavailable');
     return response.json();
   };
@@ -100,7 +102,7 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
       : 'Published Commonwealth grant awards. Award values do not establish payments received.', 'grant-recipient-intro'));
     const actions = node('nav', null, 'grant-recipient-actions'); actions.setAttribute('aria-label', 'Recipient actions');
     actions.append(link(`/ask?view=search&q=${encodeURIComponent('"' + data.n + '"')}`, 'Search parliamentary records'));
-    if (data.d) actions.append(link(`/subject/donor/${encodeURIComponent(data.d.n)}`, 'View donor profile'));
+    if (data.d && !donorNameWithheld(privacy,data.d.n)) actions.append(link(`/subject/donor/${encodeURIComponent(data.d.n)}`, 'View donor profile'));
     downloadUrl = URL.createObjectURL(new Blob([JSON.stringify({ ...data, source_url: SOURCES[jurisdiction], source_meta: index.meta }, null, 2)], { type: 'application/json' }));
     const download = link(downloadUrl, 'Download recipient data'); download.download = `${jurisdiction}-${fileKey(id)}.json`; actions.append(download);
     header.append(actions); root.append(header);
@@ -183,15 +185,16 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
     const donations = section('In the donor registers', 'recipient-donations');
     if (data.d) {
       const donor = data.d;
-      const matched = node('p'); matched.append(document.createTextNode('Listed as '), link(`/subject/donor/${encodeURIComponent(donor.n)}`, donor.n), document.createTextNode('.')); donations.append(matched);
-      donations.append(definitionList([['Matched by', donor.m === 'abn' ? 'ABN' : donor.m === 'abr_name' ? 'Registered business name' : 'Organisation name'], ['Matched name / identifier', donor.on]]));
-      if (donor.aec > 0) {
-        donations.append(node('h3', 'AEC returns'), node('p', `${money(donor.aec)} disclosed${donor.y0 ? `, ${donor.y0}–${donor.y1 || donor.y0}` : ''}.`));
+      const hidden=donorNameWithheld(privacy,donor.n);
+      const matched = node('p'); if(!hidden){matched.append(document.createTextNode('Listed as '), link(`/subject/donor/${encodeURIComponent(donor.n)}`, donor.n), document.createTextNode('.')); donations.append(matched);}
+      if(!hidden) donations.append(definitionList([['Matched by', donor.m === 'abn' ? 'ABN' : donor.m === 'abr_name' ? 'Registered business name' : 'Organisation name'], ['Matched name / identifier', donor.on]]));
+      if (donor.aec > 0 || hidden) {
+        donations.append(node('h3', 'AEC returns'), node('p', `${hidden ? individualDonorLabel(1)+' · ' : ''}${money(donor.aec)} disclosed${donor.y0 ? `, ${donor.y0}–${donor.y1 || donor.y0}` : ''}.`));
         donations.append(valueTable('Disclosed by party', Object.entries(donor.p || {}).sort((a,b) => b[1] - a[1]), name => link(partyUrl(name), name)));
         const years = donorYears(donor.py); if (years.length) donations.append(valueTable('AEC party returns by year', years));
       }
       for (const [jur, register] of Object.entries(donor.st || {})) {
-        donations.append(node('h3', REGISTERS[jur] || jur), node('p', `${money(register.t)} in ${NUMBER.format(register.c || 0)} gifts.`));
+        donations.append(node('h3', REGISTERS[jur] || jur), node('p', `${hidden ? individualDonorLabel(1)+' · ' : ''}${money(register.t)} in ${NUMBER.format(register.c || 0)} gifts.`));
         donations.append(valueTable('Disclosed by party', Object.entries(register.p || {}).sort((a,b) => b[1] - a[1]), name => link(partyUrl(name), name)));
         const years = donorYears(register.py); if (years.length) donations.append(valueTable('State party returns by year', years));
       }
@@ -224,7 +227,8 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
   async function load() {
     try {
       if (!JURISDICTIONS[jurisdiction] || !id) throw new Error('not-found');
-      const index = await get(`/graph/grants.${jurisdiction}.json`);
+      const [index,donorIndex] = await Promise.all([get(`/graph/grants.${jurisdiction}.json`),loadDonorViewIndex()]);
+      privacy=donorIndex;
       const entry = index.recipients?.find(recipient => recipient.id === id);
       if (!entry || !Number.isInteger(entry.sh)) throw new Error('not-found');
       const bundle = await get(`/grants/${jurisdiction}/shard-${String(entry.sh).padStart(2, '0')}.json`);

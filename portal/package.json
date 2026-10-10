@@ -9,13 +9,13 @@
     "og:portraits": "node og/build.mjs portraits",
     "og:default": "node og/build.mjs default",
     "og:preview": "node og/build.mjs preview",
-    "deploy": "node ../scripts/check_privacy_placeholders.mjs && npm run build:search && npm run build:social && npm run build:grants-map && npm run build:analytics && npm run build:voice && node ../scripts/stamp_assets.mjs && node ../scripts/photo_identity.mjs --deploy && wrangler deploy",
+    "deploy": "node ../scripts/check_privacy_placeholders.mjs && npm run build:search && npm run build:social && npm run build:grants-map && npm run build:analytics && npm run build:voice && node ../scripts/stamp_assets.mjs && node ../scripts/photo_identity.mjs --deploy && npm run build:privacy && wrangler deploy",
     "types": "wrangler types",
     "check": "wrangler types && tsc --noEmit && node ../scripts/build_tokens.mjs --check --only web,docs && node ../scripts/stamp_assets.mjs --check && node ../scripts/check_privacy_placeholders.mjs",
     "build:analytics": "node analytics/build.mjs",
-    "deploy:staging": "node ../scripts/check_privacy_placeholders.mjs && npm run build:search && npm run build:social && npm run build:grants-map && npm run build:graph && npm run build:analytics && npm run build:voice && node ../scripts/stamp_assets.mjs && node ../scripts/photo_identity.mjs --deploy && wrangler deploy --env staging",
+    "deploy:staging": "node ../scripts/check_privacy_placeholders.mjs && npm run build:search && npm run build:social && npm run build:grants-map && npm run build:graph && npm run build:analytics && npm run build:voice && node ../scripts/stamp_assets.mjs && node ../scripts/photo_identity.mjs --deploy && npm run build:privacy && wrangler deploy --env staging",
     "build:tokens": "node ../scripts/build_tokens.mjs --only web,docs",
-    "build:search": "npm run build:tokens && node ../scripts/build_passage_names.mjs && node ../scripts/build_search_catalog.mjs && npm run build:growth && npm run build:hubs && node ../scripts/build_crawl_catalog.mjs && npm run build:vic-election",
+    "build:search": "npm run build:privacy && npm run build:tokens && node ../scripts/build_passage_names.mjs && node ../scripts/build_search_catalog.mjs && npm run build:growth && npm run build:hubs && node ../scripts/build_crawl_catalog.mjs && npm run build:vic-election",
     "build:vic-election": "node ../scripts/build_vic_election.mjs",
     "build:hubs": "node ../scripts/build_hubs.mjs",
     "build:crawl": "node ../scripts/build_crawl_catalog.mjs",
@@ -26,7 +26,8 @@
     "test": "node --test test/*.test.mjs",
     "build:social": "node ../scripts/build_social_catalog.mjs",
     "insights": "node ../scripts/insights.mjs",
-    "build:growth": "node ../scripts/build_growth_modules.mjs"
+    "build:growth": "node ../scripts/build_growth_modules.mjs",
+    "build:privacy": "node ../scripts/withhold_donor_assets.mjs"
   },
   "devDependencies": {
     "@types/three": "^0.185.4",

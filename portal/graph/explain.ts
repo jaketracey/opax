@@ -10,6 +10,7 @@
 // helpers. This module owns only the explanation UI and its three.js scene.
 // ---------------------------------------------------------------------------
 
+import {donorNameWithheld,loadDonorViewIndex,withheldDonorTotals,individualDonorLabel} from '../public/donor-views.js'
 import * as THREE from 'three'
 import { BRONZE_INK, clusterColour, partyDot, SURFACE } from './palette.ts'
 
@@ -105,6 +106,7 @@ type ResolvedFlow = {
   peakAmount: number
   donorRank: number | null
   otherParties: MoneyNode[]
+  individualDonors: {count:number;amount:number}
   topDonors: Array<{ node: MoneyNode; total: number }>
   partyShares: Array<{ node: MoneyNode; total: number }>
   access: Record<string, unknown> | null
@@ -311,6 +313,7 @@ async function resolveFlow(detail: ExplainDetail, helpers: ExplainHelpers): Prom
   const jurisdiction = detail.jurisdiction || 'federal'
   const graph = helpers.money || await helpers.loadMoney(jurisdiction)
   if (!graph?.nodes?.length || !graph?.edges?.length) throw new Error('The disclosed-money data is unavailable')
+  const privacy=await loadDonorViewIndex()
   const norm = helpers.normName || normFallback
   let donor = detail.kind === 'donor' ? exactNode(graph.nodes, 'donor', detail.from, norm) : null
   let party = exactNode(graph.nodes, 'party', detail.to || (detail.kind === 'party' ? detail.from : ''), norm)
@@ -319,7 +322,7 @@ async function resolveFlow(detail: ExplainDetail, helpers: ExplainHelpers): Prom
   let donors: MoneyNode[] = []
   let contextEdges: MoneyEdge[] = []
   if (detail.kind === 'donor') {
-    if (!donor) throw new FlowNotFound(`No disclosed donor named ${detail.from || 'that name'} was found`)
+    if (!donor || donorNameWithheld(privacy,donor.label)) throw new FlowNotFound('This donor is not named in OPAX.')
     donors = [donor]
     contextEdges = graph.edges.filter((edge) => edge.source === donor!.id)
   } else if (detail.kind === 'party') {
@@ -349,7 +352,7 @@ async function resolveFlow(detail: ExplainDetail, helpers: ExplainHelpers): Prom
   const aggregate = sumEdges(edges)
   const nonzeroYears = [...aggregate.years].filter(([, cell]) => cell[0] > 0).sort((a, b) => a[0] - b[0])
   const peak = [...nonzeroYears].sort((a, b) => b[1][0] - a[1][0])[0]
-  const rankedDonors = graph.nodes.filter((node) => node.kind === 'donor')
+  const rankedDonors = graph.nodes.filter((node) => node.kind === 'donor' && !donorNameWithheld(privacy,node.label))
     .sort((a, b) => (Number(b.total) || 0) - (Number(a.total) || 0))
   const donorRank = donor ? rankedDonors.findIndex((node) => node.id === donor!.id) + 1 : null
 
@@ -364,7 +367,7 @@ async function resolveFlow(detail: ExplainDetail, helpers: ExplainHelpers): Prom
   for (const edge of edges) donorTotals.set(edge.source, (donorTotals.get(edge.source) || 0) + (Number(edge.total) || 0))
   const topDonors = [...donorTotals].map(([id, total]) => ({
     node: graph.nodes.find((node) => node.id === id && node.kind === 'donor')!, total,
-  })).filter((row) => row.node).sort((a, b) => b.total - a.total)
+  })).filter((row) => row.node && !donorNameWithheld(privacy,row.node.label)).sort((a, b) => b.total - a.total)
 
   const [access, fits] = await Promise.all([
     helpers.loadAccess?.().catch(() => null) || Promise.resolve(null),
@@ -377,6 +380,7 @@ async function resolveFlow(detail: ExplainDetail, helpers: ExplainHelpers): Prom
     lastYear: nonzeroYears[nonzeroYears.length - 1]?.[0] ?? null,
     peakYear: peak?.[0] ?? null, peakAmount: peak?.[1]?.[0] ?? 0,
     donorRank: donorRank && donorRank > 0 ? donorRank : null,
+    individualDonors:withheldDonorTotals(graph.nodes,edges,privacy),
     otherParties, topDonors, partyShares,
     access: access as Record<string, unknown> | null,
     fits: fits as Record<string, unknown> | null,
@@ -460,7 +464,7 @@ function facts(rows: Array<[string, string]>) {
   return box
 }
 
-function partyList(rows: Array<{ node: MoneyNode; total: number }>, flow: ResolvedFlow, helpers: ExplainHelpers) {
+function partyList(rows: Array<{ node: MoneyNode; total: number }>, flow: ResolvedFlow, helpers: ExplainHelpers, donorList=false) {
   const list = el('ul', 'explain-parties')
   for (const row of rows.slice(0, 5)) {
     const li = el('li')
@@ -471,6 +475,7 @@ function partyList(rows: Array<{ node: MoneyNode; total: number }>, flow: Resolv
     li.append(a, amount)
     list.append(li)
   }
+  if(donorList && flow.individualDonors.count){const li=el('li');li.append(el('span','',individualDonorLabel(flow.individualDonors.count)),el('b','',helpers.fmtMoney(flow.individualDonors.amount)));list.append(li)}
   return list
 }
 
@@ -1730,7 +1735,7 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
       const share = contextTotal ? destinationTotal / contextTotal : 0
       if (detail.kind === 'party') {
         copy.append(el('p', '', `${flow.party?.label} is the destination. The list below shows which of the map’s leading donors account for the largest disclosed flows into it.`))
-        copy.append(partyList(flow.topDonors.map((row) => ({ node: row.node, total: row.total })), flow, helpers))
+        copy.append(partyList(flow.topDonors.map((row) => ({ node: row.node, total: row.total })), flow, helpers,true))
       } else if (detail.to && flow.party) {
         copy.append(el('p', '', `${helpers.fmtMoney(destinationTotal)} landed with ${flow.party.label}. ` +
           `That is ${(share * 100).toFixed(1)}% of this giver’s disclosed money represented by the map; ` +

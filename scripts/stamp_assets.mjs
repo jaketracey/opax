@@ -127,6 +127,8 @@ async function refreshFonts() {
  *  agencies.js and suppliers.js import each other: stamp the agencies → suppliers
  *  edge only, then app.js. Keep the reverse edge hand-versioned to avoid a hash cycle. */
 export const MODULE_STAMPS = [
+  ['donor-views.js', 'donor-entity.js'], ['wordsdollars.js','donor-views.js'], ['quiz.js','donor-views.js'], ['ledger.js', 'donor-views.js'], ['home.js', 'donor-views.js'],
+  ['ledger.js', 'donor-entity.js'], ['quiz.js', 'donor-entity.js'], ['money-journeys-data.js', 'donor-entity.js'], ['map-research.js','donor-entity.js'], ['map-research.js','donor-views.js'],
   ['growth-modules.js', 'donor-entity.js'], ['growth-modules.js', 'labels.js'], ['growth-modules.js', 'sponsor-person.js'],
   ['supplier-growth.js', 'growth-modules.js'], ['supplier-growth.js', 'labels.js'],
 
@@ -134,6 +136,7 @@ export const MODULE_STAMPS = [
   ['ballot.js', 'canonical-urls.js'],
   ['electorates.js', 'canonical-urls.js'],
   ['evidence.js', 'canonical-urls.js'],
+  ['grants.js', 'donor-views.js'], ['grant-recipient.js', 'donor-views.js'],
   ['grants.js', 'canonical-urls.js'],
   ['grant-recipient.js', 'canonical-urls.js'],
   ['home-data.js', 'canonical-urls.js'],
@@ -148,6 +151,7 @@ export const MODULE_STAMPS = [
   ['map-page.js', 'money-map.js'], ['agencies.js', 'money-map.js'], ['suppliers.js', 'money-map.js'],
   ['thenvsnow.js', 'wombat.js'], ['thenvsnow.js', 'labels.js'], ['grant-recipient.js', 'grants.js'],
   ['electorates.js', 'labels.js'], ['home-data.js', 'labels.js'],
+  ['app.js','donor-views.js'], ['app.js','map-research.js'],
   ['app.js', 'canonical-urls.js'], ['app.js', 'growth-modules.js'], ['app.js', 'suppliers.js'],
   ['app.js', 'labels.js'], ['app.js', 'electorates.js'], ['app.js', 'division-markdown.js'], ['app.js', 'quiz.js'], ['app.js', 'timemachine.js'],
   ['app.js', 'money-map.js'], ['app.js', 'explain.js'], ['app.js', 'grant-recipient.js'],

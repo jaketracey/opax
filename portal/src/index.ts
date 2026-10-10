@@ -4021,7 +4021,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
   }
   // Every non-home path has a single answer, including unavailable/not-found pages.
   meta.prerender ??= answerBlock(meta.title.replace(/ · OPAX$/, ''),meta.description)
-  meta.jsonLd=meta.status>=400 ? null : buildSchemaGraph({canonical:meta.canonical,title:meta.title,description:meta.description,jsonLd:meta.jsonLd,person:personIdentity,bill:billIdentity})
+  meta.jsonLd=meta.status>=400 || meta.noindex ? null : buildSchemaGraph({canonical:meta.canonical,title:meta.title,description:meta.description,jsonLd:meta.jsonLd,person:personIdentity,bill:billIdentity})
   return meta
 }
 
@@ -4249,7 +4249,7 @@ async function canonicalRoutePath(url: URL, env: Env): Promise<string> {
   }
   if(route?.kind==='grant-recipient') {
     const meta=await grantRecipientMeta(route.jurisdiction,route.id,candidate,env)
-    if(meta.status===200) return new URL(meta.canonical).pathname
+    if(meta.status===200 && meta.canonical) return new URL(meta.canonical).pathname
   }
   return url.pathname
 }
@@ -4576,13 +4576,14 @@ async function donorKnown(name: string, env: Env): Promise<boolean | null> {
 
 function withheldMeta(dir: 'donor' | 'campaigner', canonical: string): PageMeta {
   const [heading, sentence] = dir === 'donor'
-    ? ['Donor', 'A disclosed political donor in the OPAX money data. Which parties it funded, year by year.']
+    ? ['Donor', 'This donor is not named in OPAX.']
     : ['Campaigner', 'An entry on the AEC register of campaigners, third parties and associated entities. Every return it filed, year by year.']
-  return { title: `${heading} · OPAX`, description: sentence, canonical, ogType: 'profile', status: 200, jsonLd: null,
+  return { title: `${heading} · OPAX`, description: sentence, canonical: '', ogType: 'profile', status: 200, jsonLd: null,
     prerender: prerenderBlock(heading, sentence), card: null, noindex: true }
 }
 
 async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, env: Env): Promise<PageMeta> {
+  if(dir==='donor' && await donorWithheld(env.ASSETS,name)) return withheldMeta('donor','')
   const [moneyData, people] = await Promise.all([loadMoney(env).catch(() => null), loadPeople(env).catch(() => null)])
   // A name no record holds is never repeated back (unknownSubjectMeta).
   let node: MoneyEntry | null, display: string
@@ -4904,16 +4905,16 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
   const rewriter = new HTMLRewriter()
     .on('title', new SetText(meta.title))
     .on('meta[name="description"]', new SetAttr('content', meta.description))
-    .on('link[rel="canonical"]', { element(el) { if(meta.status>=400) el.remove(); else el.setAttribute('href',meta.canonical) } })
+    .on('link[rel="canonical"]', { element(el) { if(meta.status>=400 || !meta.canonical) el.remove(); else el.setAttribute('href',meta.canonical) } })
     .on('meta[property="og:title"]', new SetAttr('content', meta.title))
     .on('meta[property="og:description"]', new SetAttr('content', meta.description))
-    .on('meta[property="og:url"]', { element(el) { if(meta.status>=400) el.remove(); else el.setAttribute('content',meta.canonical) } })
+    .on('meta[property="og:url"]', { element(el) { if(meta.status>=400 || !meta.canonical) el.remove(); else el.setAttribute('content',meta.canonical) } })
     .on('meta[property="og:type"]', new SetAttr('content', meta.ogType))
-    .on('meta[property="og:image"]', new SetAttr('content', image))
-    .on('meta[property="og:image:alt"]', new SetAttr('content', imageAlt))
+    .on('meta[property="og:image"]', {element(el){if(meta.noindex && !meta.canonical)el.remove();else el.setAttribute('content',image)}})
+    .on('meta[property="og:image:alt"]', {element(el){if(meta.noindex && !meta.canonical)el.remove();else el.setAttribute('content',imageAlt)}})
     .on('meta[name="twitter:title"]', new SetAttr('content', meta.title))
     .on('meta[name="twitter:description"]', new SetAttr('content', meta.description))
-    .on('meta[name="twitter:image"]', new SetAttr('content', image))
+    .on('meta[name="twitter:image"]', {element(el){if(meta.noindex && !meta.canonical)el.remove();else el.setAttribute('content',image)}})
     .on('script#ld-page', {
       element(el) {
         if (ld) el.setInnerContent(ld, { html: true })

@@ -1,11 +1,13 @@
+import {donorPrivacyIndex,donorNameWithheld} from '../public/donor-entity.js'
+import {withheldDonorTotals,individualDonorLabel} from '../public/donor-views.js'
 import type { MoneyGraph, MoneyMapHandle, MoneyMapOptions, MoneyScene } from './index.ts'
 import { windowFigures } from './index.ts'
 import { filterMoneyEdges, readMoneyFilters, type MoneyFilters } from '../public/money-records.js'
 import { formatMoney } from './map-types.ts'
 
 /** The fallback uses the same directed edges and year windows as the 3D scene. */
-export function connectionRows(data: MoneyGraph, scene?: MoneyScene, group?: string | null) {
-  const nodes = new Map(data.nodes.map(node => [node.id, node]))
+export function connectionRows(data: MoneyGraph, scene?: MoneyScene, group?: string | null, privacy = donorPrivacyIndex([data]), includeWithheld = false) {
+  const nodes = new Map(data.nodes.filter(node=>includeWithheld || node.kind!=='donor'||!donorNameWithheld(privacy,node.label)).map(node => [node.id, node]))
   const pairs = scene?.edges ? new Set(scene.edges.map(edge => JSON.stringify([edge.source, edge.target]))) : null
   return data.edges.filter(edge => {
     if (!nodes.has(edge.source) || !nodes.has(edge.target)) return false
@@ -18,7 +20,7 @@ export function connectionRows(data: MoneyGraph, scene?: MoneyScene, group?: str
 }
 
 /** A readable, keyboard-accessible graph when this device cannot create WebGL 2. */
-export function mountConnectionFallback(container: HTMLElement, data: MoneyGraph, options: MoneyMapOptions = {}): MoneyMapHandle {
+export function mountConnectionFallback(container: HTMLElement, data: MoneyGraph, options: MoneyMapOptions = {}, privacy = donorPrivacyIndex([data])): MoneyMapHandle {
   const root = document.createElement('div')
   root.className = 'mm-connections'
   root.setAttribute('role', 'region')
@@ -50,9 +52,12 @@ export function mountConnectionFallback(container: HTMLElement, data: MoneyGraph
     add('p', root, 'Showing a lighter map for this browser.').className = 'mm-connections-note'
     const window = period()
     const windowed = { ...data, edges: data.edges.map(e => windowFigures(e, window.from, window.to, window.cpi)).filter(e => e.byYear || (e.firstYear ?? yearMin) <= window.to && (e.lastYear ?? yearMax) >= window.from) }
-    const rows = filterMoneyEdges({ ...data, edges: connectionRows({ ...windowed, edges: windowed.edges.map(e => ({ ...e, byYear: undefined })) }, current ? { ...current, from: undefined, to: undefined } : undefined, group) }, filters)
-    const ids = new Set(rows.flatMap(e => [e.source, e.target]))
-    options.onViewChange?.({ ...data, nodes: data.nodes.filter(n => ids.has(n.id)), edges: rows }, { ...filters, industry: group || '' }, window)
+    const allRows = filterMoneyEdges({ ...data, edges: connectionRows({ ...windowed, edges: windowed.edges.map(e => ({ ...e, byYear: undefined })) }, current ? { ...current, from: undefined, to: undefined } : undefined, group, privacy, true) }, filters)
+    const rows=allRows.filter(e=>[nodes.get(e.source),nodes.get(e.target)].every(n=>n && (n.kind!=='donor'||!donorNameWithheld(privacy,n.label))))
+    const hidden=withheldDonorTotals(data.nodes,allRows,privacy)
+    if(hidden.count) add('p',root,`${individualDonorLabel(hidden.count)} · ${formatMoney(hidden.amount)}`)
+    const ids = new Set(allRows.flatMap(e => [e.source, e.target]))
+    options.onViewChange?.({ ...data, nodes: data.nodes.filter(n => ids.has(n.id)), edges: allRows }, { ...filters, industry: group || '' }, window)
     const shown = rows.slice(0, 24)
     if (!shown.length) add('p', root, 'No recorded connections in this view.')
     const list = add('ul', root)
@@ -97,7 +102,7 @@ export function mountConnectionFallback(container: HTMLElement, data: MoneyGraph
   return {
     setFilters: (value, nextRoute) => { if (nextRoute) route = nextRoute; current = undefined; filters = { ...value }; group = value.industry || null; render() },
     presentScene: scene => {
-      if (destroyed || !nodes.has(scene.focusId)) return false
+      if (destroyed || !nodes.has(scene.focusId) || nodes.get(scene.focusId)?.kind==='donor' && donorNameWithheld(privacy,nodes.get(scene.focusId)!.label)) return false
       current = scene
       route = new URLSearchParams()
       filters = {}

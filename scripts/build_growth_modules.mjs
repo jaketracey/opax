@@ -5,7 +5,7 @@ import {pathToFileURL,fileURLToPath} from 'node:url';
 import {sponsorPerson} from '../portal/public/sponsor-person.js';
 import {sponsorSummaryPath,growthSummaryPath,normalisedName,personQuestions,billQuestions,latestBillVotes} from '../portal/public/growth-modules.js';
 import {agencyGrants,publishedSupplierIndex,publishedAgencySuppliers} from '../portal/public/supplier-growth.js';
-import {isOrganisationDonor,MONEY_GRAPHS,withheldPhrases,namesWithheldPhrase} from '../portal/public/donor-entity.js';
+import {donorPrivacyIndex,donorNameWithheld,foldDonorName,isOrganisationDonor,MONEY_GRAPHS,withheldPhrases,namesWithheldPhrase} from '../portal/public/donor-entity.js';
 import {TOPIC_NAMES} from '../portal/src/topic-names.mjs';
 export const SUMMARY_BUDGET = 24_000;
 export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',import.meta.url))) {
@@ -40,11 +40,13 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
   if(!supplierShards.has(entry.profile_path))supplierShards.set(entry.profile_path,await read(entry.profile_path.replace(/^\//,'')));
   if(!supplierShards.get(entry.profile_path).profiles?.[entry.id])throw new Error('Published supplier profile is missing: '+entry.id);
  }
- const donors=(money.nodes || []).filter(n=>n.kind==='donor' && isOrganisationDonor(n) && !privacy(n.label)).map(n=>{
+ const donorIndex=donorPrivacyIndex(graphs);
+ const donors=(money.nodes || []).filter(n=>n.kind==='donor' && !donorNameWithheld(donorIndex,n.label) && !privacy(n.label)).map(n=>{
   const donor=Object.fromEntries(['id','label','kind','abn'].filter(k=>n[k]!=null).map(k=>[k,n[k]]));
   // Preserve the minimum evidence main's classifier needs, without copying every alias.
   if(!isOrganisationDonor(donor)) {
-   const alias=(n.aliases || []).find(label=>isOrganisationDonor({...donor,aliases:[label]}));
+   const evidence=graphs.flatMap(g=>g.nodes).filter(other=>other.kind==='donor' && foldDonorName(other.label)===foldDonorName(n.label)).flatMap(other=>[other.label,...other.aliases || []]);
+   const alias=evidence.find(label=>isOrganisationDonor({...donor,aliases:[label]}));
    if(alias) donor.aliases=[alias];
   }
   if(!isOrganisationDonor(donor))throw new Error('Donor summary lost organisation evidence');

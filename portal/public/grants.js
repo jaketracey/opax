@@ -1,3 +1,4 @@
+import {donorNameWithheld,loadDonorViewIndex,individualDonorLabel} from './donor-views.js?v=b0d980112a';
 import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
 /**
  * OPAX Who gets the grants — every published grant award, resolved to the
@@ -801,6 +802,8 @@ function actionRow () {
 // ---------------------------------------------------------------------------
 
 export function mountGrants (container, opts = {}) {
+  let privacy={organisations:new Set(),withheld:new Set()};
+  const privacyReady=loadDonorViewIndex().then(index=>{privacy=index});
   injectStyles()
   const subjectHash = opts.subjectHash || ((kind, label) => typeof label === 'string' && label.trim() && !/^(null|undefined)$/i.test(label.trim()) ? subjectUrl(kind,label) : null)
   const searchHash = opts.searchHash || ((q) => `/ask?view=search&q=${encodeURIComponent(q)}`)
@@ -1384,10 +1387,11 @@ export function mountGrants (container, opts = {}) {
   }
 
   async function loadDetail (r) {
+    await privacyReady
     const shard = `${state.jur}/shard-${String(r.sh).padStart(2, '0')}`
     let bundle = detailCache.get(shard)
     if (!bundle) {
-      const res = await fetch(`${JURISDICTIONS[state.jur].dir}shard-${String(r.sh).padStart(2, '0')}.json`, { signal: aborter.signal })
+      const res = await fetch(`${JURISDICTIONS[state.jur].dir}shard-${String(r.sh).padStart(2, '0')}.json`, { signal: aborter.signal, cache:"no-cache" })
       if (!res.ok) throw new Error(`${res.status}`)
       bundle = await res.json()
       detailCache.set(shard, bundle)
@@ -1491,12 +1495,13 @@ export function mountGrants (container, opts = {}) {
     const box = el('div', 'gr-donor')
     if (d.d) {
       const p = el('p')
-      p.append(document.createTextNode('Listed as '), link(subjectHash('donor', d.d.n), d.d.n))
-      p.append(document.createTextNode(d.d.m === 'abn' ? ' (matched by ABN).' : d.d.m === 'abr_name' ? ' (matched through a registered business name).' : ' (matched by name).'))
+      const hidden=donorNameWithheld(privacy,d.d.n)
+      if(!hidden) p.append(document.createTextNode('Listed as '), link(subjectHash('donor', d.d.n), d.d.n))
+      if(!hidden) p.append(document.createTextNode(d.d.m === 'abn' ? ' (matched by ABN).' : d.d.m === 'abr_name' ? ' (matched through a registered business name).' : ' (matched by name).'))
       box.appendChild(p)
       const blocs = donorBlocs(d.d, data.meta.blocs)
-      if (d.d.aec > 0) {
-        box.appendChild(el('p', null, `AEC returns: ${fmtMoney(d.d.aec)} disclosed${d.d.y0 ? `, ${d.d.y0}–${d.d.y1 || d.d.y0}` : ''}`))
+      if (d.d.aec > 0 || hidden) {
+        box.appendChild(el('p', null, `AEC returns: ${hidden ? individualDonorLabel(1)+' · ' : ''}${fmtMoney(d.d.aec)} disclosed${d.d.y0 ? `, ${d.d.y0}–${d.d.y1 || d.d.y0}` : ''}`))
         const ul = el('ul', 'gr-partylist')
         for (const [party, v] of Object.entries(d.d.p || {}).sort((a, b) => b[1] - a[1]).slice(0, 6)) {
           const li = el('li')
@@ -1506,7 +1511,7 @@ export function mountGrants (container, opts = {}) {
         box.appendChild(ul)
       }
       for (const [jur, st] of Object.entries(d.d.st || {})) {
-        box.appendChild(el('p', null, `${STATE_REGISTERS[jur] || jur}: ${fmtMoney(st.t)} in ${NUM.format(st.c)} gifts`))
+        box.appendChild(el('p', null, `${STATE_REGISTERS[jur] || jur}: ${hidden ? individualDonorLabel(1)+' · ' : ''}${fmtMoney(st.t)} in ${NUM.format(st.c)} gifts`))
         const ul = el('ul', 'gr-partylist')
         for (const [party, v] of Object.entries(st.p || {}).sort((a, b) => b[1] - a[1]).slice(0, 4)) {
           const li = el('li')
@@ -1545,7 +1550,7 @@ export function mountGrants (container, opts = {}) {
     }
     const links = actionRow()
     links.appendChild(action(link(searchHash(`"${d.n}"`, {}), 'Search the record for them'), 'primary'))
-    if (d.d) links.appendChild(action(link(subjectHash('donor', d.d.n), 'Donor entry'), 'quiet'))
+    if (d.d && !donorNameWithheld(privacy,d.d.n)) links.appendChild(action(link(subjectHash('donor', d.d.n), 'Donor entry'), 'quiet'))
     const src = action(link(data.meta.source_url, state.jur === 'qld' ? 'Source: data.qld.gov.au' : 'Source: GrantConnect'), 'quiet')
     src.target = '_blank'
     src.rel = 'noopener'
@@ -1583,7 +1588,7 @@ export function mountGrants (container, opts = {}) {
     const id = `${state.jur}/${key}`
     let p = programCache.get(id)
     if (!p) {
-      const res = await fetch(`${JURISDICTIONS[state.jur].dir}programs/${encodeURIComponent(key)}.json`, { signal: aborter.signal })
+      const res = await fetch(`${JURISDICTIONS[state.jur].dir}programs/${encodeURIComponent(key)}.json`, { signal: aborter.signal, cache:"no-cache" })
       if (!res.ok) throw new Error(`${res.status}`)
       p = await res.json()
       if (state.jur === 'federal') p = withToldSeats(p, await loadTold(key))
@@ -1597,7 +1602,7 @@ export function mountGrants (container, opts = {}) {
   /** The programs the daily edition tells by seat (/social/programs.json), fetched once; null when absent. */
   function loadToldFile () {
     if (!toldPromise) {
-      toldPromise = fetch('/social/programs.json', { signal: aborter.signal })
+      toldPromise = fetch('/social/programs.json', { signal: aborter.signal, cache:"no-cache" })
         .then((res) => (res.ok ? res.json() : null))
         .catch(() => null)
     }
@@ -1611,7 +1616,7 @@ export function mountGrants (container, opts = {}) {
 
   function loadNotes () {
     if (!notesPromise) {
-      notesPromise = fetch('/grants/program-notes.json', { signal: aborter.signal })
+      notesPromise = fetch('/grants/program-notes.json', { signal: aborter.signal, cache:"no-cache" })
         .then((res) => (res.ok ? res.json() : null))
         .catch(() => null)
     }
@@ -2254,7 +2259,7 @@ export function mountGrants (container, opts = {}) {
   function fetchIndex (jur) {
     if (cache.has(jur)) return cache.get(jur)
     const url = JURISDICTIONS[jur].file
-    const p = fetch(url, { signal: aborter.signal }).then((res) => {
+    const p = fetch(url, { signal: aborter.signal, cache:"no-cache" }).then((res) => {
       if (!res.ok) throw new Error(`${url} → ${res.status}`)
       return res.json()
     })
@@ -2264,6 +2269,7 @@ export function mountGrants (container, opts = {}) {
   }
 
   async function load (jur = state.jur) {
+    await privacyReady
     state.jur = JURISDICTIONS[jur] ? jur : 'federal'
     for (const b of root.querySelectorAll('.gr-jur')) b.setAttribute('aria-pressed', b.dataset.jur === state.jur ? 'true' : 'false')
     const token = ++loadSeq

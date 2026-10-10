@@ -1,9 +1,9 @@
 /* Client-side agency records, from the same published exports as their pages. */
 import {sourceLineHTML} from './labels.js?v=804befe8de';
-import {moduleAttrs, donationRegisterHTML, exactOrganisationDonors, growthSummaryPath, normalisedName, approvedModulePrivacy, loadModuleDonors} from './growth-modules.js?v=b3095eab8c';
+import {moduleAttrs, donationRegisterHTML, exactOrganisationDonors, growthSummaryPath, normalisedName, approvedModulePrivacy, loadModuleDonors} from './growth-modules.js?v=162c9689d4';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money = n => Number(n).toLocaleString('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0});
-async function json(url,signal) {const r=await fetch(url,{signal});if(!r.ok)throw new Error('Records unavailable');return r.json();}
+async function json(url,signal) {const r=await fetch(url,{signal,cache:"no-cache"});if(!r.ok)throw new Error('Records unavailable');return r.json();}
 /** The supplier directory is the publication authority, not the donor classifier.
  * Match the supplier sitemap's non-empty id/name and exported-profile requirement. */
 export function publishedSupplierIndex(suppliers) {
