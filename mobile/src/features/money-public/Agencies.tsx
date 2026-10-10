@@ -1,15 +1,15 @@
 import { useCallback, useMemo, useState } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
-  AsAtLine,
   LinkRow,
   BigFigure,
-  InfoButton,
   Field,
   Group,
-  SourceLink,
+  RowList,
   Text,
 } from '../../design/primitives';
+import { rhythm } from '../../design/tokens';
+import { openOnWeb } from '../../navigation/external';
 import {
   formatCount,
   formatMoneyCompact,
@@ -21,14 +21,17 @@ import { RecordStatus } from '../RecordStatus';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { money } from './runtime';
 import {
+  MetaSource,
   MoneyHeader,
   MoneyChoices,
   MoneyList,
-  OrganisationWebLink,
-  Provenance,
   ResultCount,
+  RowSource,
   Title,
 } from './parts';
+
+const AGENCY_NAMES =
+  'Agency names appear as recorded. Renamed departments are separate entries; no succession or combined history is assumed.';
 export default function Agencies() {
   const load = useCallback((refresh: boolean) => money.agencies(refresh), []),
     status = useCatalogRecord(load),
@@ -61,15 +64,26 @@ export default function Agencies() {
         header={
           <>
             <Title id="agencies-title">Government agencies</Title>
-            <Text wordSafe>
-              Who awards Commonwealth contracts, and which companies receive
-              them.
-            </Text>
             <RecordStatus
               {...status}
               label="Loading government agencies"
               testID="agencies-status"
             />
+            <Group gap={rhythm.tight}>
+              <Text wordSafe variant="metadata">
+                Who awards Commonwealth contracts, and which companies receive
+                them.
+              </Text>
+              {data ? (
+                <MetaSource
+                  meta={data.meta}
+                  record={status.record}
+                  title="About agencies"
+                  notes={[AGENCY_NAMES]}
+                  testID="agencies-source"
+                />
+              ) : null}
+            </Group>
             <Field
               label="Find an agency"
               value={query}
@@ -91,37 +105,18 @@ export default function Agencies() {
               count={data ? rows.length : null}
               noun="agencies in the available records"
             />
-            {data ? (
-              <AsAtLine asOf={data.meta.asOf} citation={data.meta.source} />
-            ) : null}
           </>
         }
         render={(a, i) => (
-          <>
-            <RecordRow
-              testID={`agency-row-${i}`}
-              title={a.name}
-              detail={`${formatMoneyCompact(a.total)} · ${formatCount(a.count)} contracts · ${formatCount(a.suppliers)} suppliers`}
-              onPress={() =>
-                router.push({ pathname: '/agency', params: { id: a.id } })
-              }
-            />
-            <AsAtLine asOf={data!.meta.asOf} citation="AusTender" />
-          </>
+          <RecordRow
+            testID={`agency-row-${i}`}
+            title={a.name}
+            detail={`${formatMoneyCompact(a.total)} · ${formatCount(a.count)} contracts · ${formatCount(a.suppliers)} suppliers`}
+            onPress={() =>
+              router.push({ pathname: '/agency', params: { id: a.id } })
+            }
+          />
         )}
-        footer={
-          data ? (
-            <Group>
-              <InfoButton
-                title="About agency names"
-                notes={[
-                  'Agency names appear as recorded. Renamed departments are separate entries; no succession or combined history is assumed.',
-                ]}
-              />
-              <Provenance meta={data.meta} />
-            </Group>
-          ) : null
-        }
       />
     </>
   );
@@ -189,17 +184,27 @@ export function Agency() {
               label="Loading agency records"
               testID="agency-status"
             />
-            {profile ? (
-              <>
+            {profile && data ? (
+              <Group gap={rhythm.tight}>
                 <BigFigure
                   value={formatMoneyCompact(profile.total)}
                   spoken={moneyAccessibilityLabel(profile.total, true)}
                   label="Recorded contract value"
                   detail={`${formatCount(profile.count)} contracts`}
                   accent="money"
+                  testID="agency-total"
                 />
-                <AsAtLine asOf={data!.meta.asOf} citation="AusTender" />
-              </>
+                <MetaSource
+                  meta={data.meta}
+                  record={status.record}
+                  title="About this agency"
+                  notes={[
+                    `${formatMoneyCompact(data.profile.undated)} in recorded contracts has no start date, so it is in no year.`,
+                    AGENCY_NAMES,
+                  ]}
+                  testID="agency-sources"
+                />
+              </Group>
             ) : null}
             <MoneyChoices
               value={view}
@@ -212,16 +217,6 @@ export function Agency() {
                 ['suppliers', 'Suppliers', 'agency-suppliers'],
                 ['contracts', 'Contracts', 'agency-contracts'],
               ]}
-            />
-            <LinkRow
-              title="Discover: companies in both"
-              testID="agency-discover-both"
-              onPress={() =>
-                router.push({
-                  pathname: '/discover',
-                  params: { category: 'donor_contract_overlap' },
-                })
-              }
             />
             {view !== 'years' ? (
               <Field
@@ -239,73 +234,85 @@ export function Agency() {
               noun={
                 view === 'years' ? 'years of recorded contract starts' : view
               }
+              detail={
+                data && view === 'years' && data.profile.undated
+                  ? `${formatMoneyCompact(data.profile.undated)} undated`
+                  : null
+              }
             />
           </>
         }
-        render={(r, i) => (
-          <Group>
-            {r.kind === 'year' ? (
-              <>
-                <Text wordSafe variant="strong">
-                  {r.year}
-                </Text>
-                <Text wordSafe>
-                  {formatMoneyCompact(r.total)} · {formatCount(r.count)}{' '}
-                  contracts
-                </Text>
-              </>
-            ) : r.kind === 'supplier' ? (
-              <>
+        render={(r, i) =>
+          r.kind === 'year' ? (
+            <Group gap={rhythm.line}>
+              <Text wordSafe variant="strong">
+                {r.year}
+              </Text>
+              <Text wordSafe variant="metadata">
+                {formatMoneyCompact(r.total)} · {formatCount(r.count)} contracts
+              </Text>
+            </Group>
+          ) : r.kind === 'supplier' ? (
+            r.organisation ? (
+              // A company is a way onward: its page on opax.com.au.
+              <LinkRow
+                title={r.name}
+                detail={`${formatMoneyCompact(r.total)} · ${formatCount(r.count)} contracts`}
+                external
+                accessibilityHint="Opens on opax.com.au"
+                onPress={() =>
+                  void openOnWeb(`/subject/supplier/${r.id}`, r.name)
+                }
+              />
+            ) : (
+              <Group gap={rhythm.line}>
                 <Text wordSafe variant="strong">
                   {r.name}
                 </Text>
-                <Text wordSafe>
+                <Text wordSafe variant="metadata">
                   {formatMoneyCompact(r.total)} · {formatCount(r.count)}{' '}
                   contracts
                 </Text>
-                {r.organisation ? (
-                  <OrganisationWebLink
-                    name={r.name}
-                    path={`/subject/supplier/${r.id}`}
-                  />
-                ) : null}
-              </>
-            ) : (
-              <>
-                <Text wordSafe variant="strong" testID={`agency-contract-${i}`}>
-                  {r.id}
-                </Text>
-                <Text wordSafe>{r.supplier}</Text>
-                {r.title ? <Text wordSafe>{r.title}</Text> : null}
-                <Text wordSafe variant="strong" tabular>
-                  {formatMoneyCompact(r.value)}
-                </Text>
-                <Text wordSafe variant="metadata">
-                  {r.method} · Starts{' '}
-                  {r.start ? formatDate(r.start) : 'not recorded'} · Ends{' '}
-                  {r.end ? formatDate(r.end) : 'not recorded'}
-                </Text>
-                <SourceLink
-                  citation="AusTender register"
-                  record={r.id}
-                  url={r.url}
-                  kind={r.sourceKind}
-                  testID={`agency-source-${i}`}
-                />
-              </>
-            )}
-            <AsAtLine asOf={data!.meta.asOf} citation="AusTender" />
-          </Group>
-        )}
+              </Group>
+            )
+          ) : (
+            <Group gap={rhythm.line}>
+              <Text wordSafe variant="strong" testID={`agency-contract-${i}`}>
+                {r.supplier}
+              </Text>
+              {r.title ? <Text wordSafe>{r.title}</Text> : null}
+              <Text wordSafe variant="strong" tabular>
+                {formatMoneyCompact(r.value)}
+              </Text>
+              <Text wordSafe variant="metadata">
+                {r.method} · Starts{' '}
+                {r.start ? formatDate(r.start) : 'not recorded'} · Ends{' '}
+                {r.end ? formatDate(r.end) : 'not recorded'}
+              </Text>
+              <RowSource
+                register="AusTender"
+                record={r.id}
+                url={r.url}
+                asOf={data!.meta.asOf}
+                testID={`agency-source-${i}`}
+              />
+            </Group>
+          )
+        }
         footer={
           data ? (
-            <>
-              <Text wordSafe>
-                {formatMoneyCompact(data.profile.undated)} in undated recorded
-                contract starts
-              </Text>
-              <Provenance meta={data.meta} />
-            </>
+            <RowList>
+              <LinkRow
+                title="Discover: companies in both"
+                testID="agency-discover-both"
+                onPress={() =>
+                  router.push({
+                    pathname: '/discover',
+                    params: { category: 'donor_contract_overlap' },
+                  })
+                }
+              />
+            </RowList>
           ) : null
         }
       />

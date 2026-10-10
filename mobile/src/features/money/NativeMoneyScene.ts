@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import type { ExpoWebGLRenderingContext } from 'expo-gl';
 import { clusterCentres3D, ForceSim3D } from './ported/force3d';
-import { clusterColour, SURFACE } from './ported/palette';
+import { clusterColour, nodeColour, SURFACE } from './ported/palette';
 import { radiusFor } from './ported/map-types';
 import {
   EDGE_VERTEX_SHADER,
@@ -15,8 +15,13 @@ export interface ProjectedLabel {
   label: string;
   x: number;
   y: number;
-  ink: string;
+  /** An industry cluster, a party beside its node, or the selected node. */
+  kind: 'group' | 'party' | 'focus';
+  /** A cluster's ink; parties and the selection take the ink role. */
+  ink?: string;
 }
+/** How many parties are named at once: the largest in view. */
+export const PARTY_LABELS = 4;
 /** Native adapter. No loaders, textures, DOM, URLs or runtime Three assets. */
 export class NativeMoneyScene {
   private renderer: THREE.WebGLRenderer;
@@ -110,15 +115,10 @@ export class NativeMoneyScene {
     this.active = new Set(this.byId.keys());
     this.activeEdges = new Uint8Array(graph.edges.length).fill(1);
     this.visibleGroups = new Set(graph.nodes.map((n) => this.group(n)));
-    this.colours = graph.nodes.map(
-      (n) => new THREE.Color(n.colour ?? clusterColour(n.group).colour),
+    this.colours = graph.nodes.map((n) => new THREE.Color(nodeColour(n)));
+    this.edgeColours = graph.edges.map(
+      (e) => new THREE.Color(nodeColour(this.byId.get(e.source)!)),
     );
-    this.edgeColours = graph.edges.map((e) => {
-      const source = this.byId.get(e.source)!;
-      return new THREE.Color(
-        source.colour ?? clusterColour(source.group).colour,
-      );
-    });
     const groups = new Map<string, number>();
     graph.nodes.forEach((n) =>
       groups.set(this.group(n), (groups.get(this.group(n)) ?? 0) + 1),
@@ -357,28 +357,53 @@ void main() {`,
   labels(): ProjectedLabel[] {
     const labels: ProjectedLabel[] = [];
     const occupied: { x: number; y: number }[] = [];
-    for (const [group, c] of this.centres) {
-      if (group === 'parties' || !this.visibleGroups.has(group)) continue;
-      const p = this.projected.set(c.x, c.y + c.r, c.z).project(this.camera);
-      const x = ((p.x + 1) * this.width) / 2;
-      const y = ((1 - p.y) * this.height) / 2;
+    const place = (x: number, y: number, z: number) => {
+      const p = this.projected.set(x, y, z).project(this.camera);
+      const px = ((p.x + 1) * this.width) / 2;
+      const py = ((1 - p.y) * this.height) / 2;
       if (
         p.z < 1 &&
-        x > 45 &&
-        x < this.width - 45 &&
-        y > 12 &&
-        y < this.height - 24 &&
-        !occupied.some((o) => Math.abs(o.x - x) < 100 && Math.abs(o.y - y) < 30)
+        px > 45 &&
+        px < this.width - 45 &&
+        py > 12 &&
+        py < this.height - 24 &&
+        !occupied.some(
+          (o) => Math.abs(o.x - px) < 100 && Math.abs(o.y - py) < 30,
+        )
       ) {
-        occupied.push({ x, y });
+        occupied.push({ x: px, y: py });
+        return { x: px, y: py };
+      }
+      return null;
+    };
+    // Parties are drawn in one neutral grey; the largest in view are named
+    // beside their node first (the flows end there), so no party is told
+    // apart by colour alone. Industry clusters take the room left.
+    const parties = this.graph.nodes
+      .filter(
+        (n) =>
+          n.kind === 'party' && this.active.has(n.id) && n.id !== this.selected,
+      )
+      .sort((a, b) => b.total - a.total)
+      .slice(0, PARTY_LABELS);
+    for (const party of parties) {
+      const n = this.sim.byId(party.id);
+      if (!n) continue;
+      const at = place(n.x, n.y, n.z);
+      if (at)
+        labels.push({ id: party.id, label: party.label, ...at, kind: 'party' });
+    }
+    for (const [group, c] of this.centres) {
+      if (group === 'parties' || !this.visibleGroups.has(group)) continue;
+      const at = place(c.x, c.y + c.r, c.z);
+      if (at)
         labels.push({
           id: group,
           label: group,
-          x,
-          y,
+          ...at,
+          kind: 'group',
           ink: clusterColour(group).ink,
         });
-      }
     }
     if (this.selected) {
       const n = this.sim.byId(this.selected)!;
@@ -388,7 +413,7 @@ void main() {`,
         label: this.byId.get(n.id)!.label,
         x: ((p.x + 1) * this.width) / 2,
         y: ((1 - p.y) * this.height) / 2,
-        ink: '#23271F',
+        kind: 'focus',
       });
     }
     return labels;

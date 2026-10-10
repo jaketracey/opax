@@ -167,16 +167,21 @@ name: Android tab and key-screen captures at the requested font scale
 - waitForAnimationToEnd:
     timeout: 5000
 - takeScreenshot: ${EVIDENCE}/money-map
+- scrollUntilVisible:
+    element:
+      id: money-as-at
+    centerElement: true
+    timeout: 30000
 - tapOn:
-    id: money-info
+    id: money-as-at
 - assertVisible:
-    id: money-info-sheet
+    id: money-as-at-sheet
 - waitForAnimationToEnd:
     timeout: 5000
 - takeScreenshot: ${EVIDENCE}/money-notes
 - pressKey: Back
 - assertNotVisible:
-    id: money-info-sheet
+    id: money-as-at-sheet
 - openLink: opax://account
 - extendedWaitUntil:
     visible:

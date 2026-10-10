@@ -7,12 +7,13 @@ import MoneyNodeScreen from '../src/features/money/MoneyNodeScreen';
 import { NativeMoneyMap } from '../src/features/money/NativeMoneyMap';
 import {
   Button,
-  KeyValueList,
   BigFigure,
   Disclosure,
   InfoButton,
+  KeyValueList,
   LinkRow,
   SegmentedControl,
+  SourceLine,
   ViewOriginal,
 } from '../src/design/primitives';
 import { pinned } from './pinned';
@@ -117,7 +118,20 @@ test('VoiceOver defaults to the ranked list, including before its asynchronous s
   expect(NativeMoneyMap).not.toHaveBeenCalled();
   await act(async () => readerAnswer(true));
   expect(r.root.findByType(SegmentedControl).props.value).toBe('list');
-  expect(r.root.findAllByType(ViewOriginal).length).toBeGreaterThan(0);
+  // One source line for the map; no per-row "View original" in the list.
+  const sources = r.root.findAllByType(SourceLine);
+  expect(sources.map((x) => x.props.testID)).toEqual(['money-as-at']);
+  expect(sources[0]!.props.originals).toContainEqual(
+    expect.objectContaining({ url: 'https://transparency.aec.gov.au/' }),
+  );
+  expect(r.root.findAllByType(ViewOriginal)).toHaveLength(0);
+  expect(r.root.findAllByType(InfoButton)).toHaveLength(0);
+  // A donor row says its parties in its own detail line.
+  const first = r.root
+    .findAllByType(LinkRow)
+    .find((x) => x.props.testID === 'money-donor-0')!;
+  expect(first.props.title).toMatch(/^1\. /);
+  expect(first.props.detail).toMatch(/^Disclosed donations · .+ · .+/);
   await act(async () => r.unmount());
   expect(removed).toHaveBeenCalled();
 });
@@ -152,22 +166,25 @@ test('the native focus record shows the pinned selected-year figure, years and o
     layers: 'donations',
   });
   const r = await render(<MoneyNodeScreen />);
-  expect(r.root.findAllByType(BigFigure)[0]!.props.value).toBe('$69,010,542');
-  expect(r.root.findAllByType(BigFigure)[0]!.props.spoken).toBe(
-    '69,010,542 dollars',
+  // One display figure, in the money accent, with its years and count.
+  const figures = r.root.findAllByType(BigFigure);
+  expect(figures).toHaveLength(1);
+  expect(figures[0]!.props.value).toBe('$69,010,542');
+  expect(figures[0]!.props.spoken).toBe('69,010,542 dollars');
+  expect(figures[0]!.props.accent).toBe('money');
+  expect(figures[0]!.props.detail).toBe('2024 · 3,929 receipts');
+  // One source line per block, opening the AEC original.
+  const source = r.root
+    .findAllByType(SourceLine)
+    .find((x) => x.props.testID === 'money-source')!;
+  expect(source.props.originals).toEqual([
+    expect.objectContaining({ url: 'https://transparency.aec.gov.au/' }),
+  ]);
+  expect(source.props.notes).toContain(
+    'The party total covers all industries in these return years. The relationships below follow the industry filter.',
   );
-  const rows = r.root.findByType(KeyValueList).props.items;
-  expect(rows).toContainEqual(expect.objectContaining({ value: '2024' }));
-  expect(
-    r.root
-      .findAllByType(ViewOriginal)
-      .some((x) =>
-        x.props.sources.some(
-          (source: { url: string }) =>
-            source.url === 'https://transparency.aec.gov.au/',
-        ),
-      ),
-  ).toBe(true);
+  expect(r.root.findAllByType(ViewOriginal)).toHaveLength(0);
+  expect(r.root.findAllByType(InfoButton)).toHaveLength(0);
   await act(async () => r.unmount());
 });
 
@@ -184,10 +201,44 @@ test('a public-money focus figure states the mapped-donor scope and contract cov
   expect(r.root.findAllByType(BigFigure)[0]!.props.label).toContain(
     'held by donors on this map across',
   );
-  expect(
-    r.root
-      .findAllByType(InfoButton)
-      .find((x) => x.props.testID === 'money-focus-info')!.props.notes,
-  ).toContain(`${raw.meta.contracts_coverage}.`);
+  const source = r.root
+    .findAllByType(SourceLine)
+    .find((x) => x.props.testID === 'money-source')!;
+  expect(source.props.notes).toContain(`${raw.meta.contracts_coverage}.`);
+  // The hub's source is the contracts register, not the returns.
+  expect(source.props.citation).toBe('AusTender');
+  expect(source.props.licence).toBeNull();
+  await act(async () => r.unmount());
+});
+
+test('a donor shows public money beside its donations, in plain figures', async () => {
+  const raw = pinned('/graph/money.json') as {
+    nodes: {
+      id: string;
+      kind: string;
+      grants?: unknown;
+      contracts?: unknown;
+    }[];
+  };
+  const donor = raw.nodes.find(
+    (n) => n.kind === 'donor' && n.grants && n.contracts,
+  )!;
+  Object.assign(mockParams, { node: donor.id });
+  const r = await render(<MoneyNodeScreen />);
+  // The donations figure is the one accented figure; public money is a list.
+  expect(r.root.findAllByType(BigFigure)).toHaveLength(1);
+  const items = r.root.findByType(KeyValueList).props.items as {
+    testID: string;
+  }[];
+  expect(items.map((x) => x.testID)).toEqual([
+    'money-focus-grants',
+    'money-focus-contracts',
+  ]);
+  const source = r.root
+    .findAllByType(SourceLine)
+    .find((x) => x.props.testID === 'money-public-source')!;
+  expect(source.props.originals.map((o: { label: string }) => o.label)).toEqual(
+    ['GrantConnect', 'AusTender'],
+  );
   await act(async () => r.unmount());
 });

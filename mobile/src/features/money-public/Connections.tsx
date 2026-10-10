@@ -1,13 +1,15 @@
 import { useCallback, useDeferredValue, useMemo, useState } from 'react';
 import {
-  AsAtLine,
-  InfoButton,
   Disclosure,
   Field,
   Group,
-  SourceLink,
+  LinkRow,
+  SourceLine,
   Text,
 } from '../../design/primitives';
+import { formatCount } from '../../design/format';
+import { rhythm } from '../../design/tokens';
+import { openOnWeb } from '../../navigation/external';
 import { RecordStatus } from '../RecordStatus';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { money } from './runtime';
@@ -18,7 +20,6 @@ import {
   MoneyHeader,
   MoneyChoices,
   MoneyList,
-  OrganisationWebLink,
   ResultCount,
   Title,
 } from './parts';
@@ -82,6 +83,16 @@ export default function Connections() {
               label="Loading programs and places"
               testID="connections-status"
             />
+            {data ? (
+              <SourceLine
+                title="About programs and places"
+                asOf={data.asOf}
+                citation="OPAX collected source corpus"
+                savedAt={status.record?.stale ? status.record.savedAt : null}
+                notes={[data.note]}
+                testID="connections-source"
+              />
+            ) : null}
             <Field
               label="Find a program, place or organisation"
               testID="connections-search"
@@ -101,86 +112,70 @@ export default function Connections() {
               ]}
             />
             <ResultCount count={data ? rows.length : null} noun="connections" />
-            {data ? (
-              <>
-                <AsAtLine
-                  asOf={data.asOf}
-                  citation="OPAX collected source corpus"
-                />
-                <InfoButton
-                  title="About programs and places"
-                  notes={[data.note]}
-                />
-              </>
-            ) : null}
           </>
         }
-        render={(r) => (
-          <Group>
-            <Text wordSafe variant="strong">
-              {r.name}
-            </Text>
-            <Text wordSafe>
-              {r.count.toLocaleString('en-AU')} records · {r.kind}
-            </Text>
-            <AsAtLine
-              asOf={data!.asOf}
-              citation="OPAX collected source corpus"
+        render={(r) =>
+          r.kind === 'organisation' ? (
+            // An organisation is a way onward: its page on opax.com.au.
+            <LinkRow
+              title={r.name}
+              detail={`${formatCount(r.count)} records · ${r.kind}`}
+              external
+              accessibilityHint="Opens on opax.com.au"
+              onPress={() =>
+                void openOnWeb(`/connections?entity=${r.id}`, r.name)
+              }
             />
-            {r.kind === 'organisation' ? (
-              <OrganisationWebLink
-                name={r.name}
-                path={`/connections?entity=${r.id}`}
-              />
-            ) : (
-              <>
-                <Disclosure
-                  label="Source excerpts"
-                  testID={`connection-open-${r.id}`}
-                  open={selected?.id === r.id}
-                  onToggle={(expanded) =>
-                    expanded ? void open(r.id) : setSelected(undefined)
-                  }
-                >
-                  {selected?.id === r.id ? (
-                    <Group>
-                      <RecordStatus
-                        record={selected.record ?? null}
-                        error={selected.error}
-                        refreshing={false}
-                        refresh={() => open(r.id, true)}
-                        retry={() => open(r.id)}
-                        label="Opening source excerpts"
-                        testID={`connection-evidence-${r.id}`}
-                      />
-                      {selected.excerpts
-                        ? selected.excerpts.map((e, i) => (
-                            <Group key={i}>
-                              {/* Static evidence shards keep the raw source
-                                  window: entities and tags still in it. */}
-                              <Text wordSafe>{passageText(e.text)}</Text>
-                              <AsAtLine
-                                asOf={e.date || data!.asOf}
-                                citation={e.source}
-                              />
-
-                              {e.url ? (
-                                <SourceLink
-                                  citation={e.source}
-                                  url={e.url}
-                                  kind="record"
-                                />
-                              ) : null}
-                            </Group>
-                          ))
-                        : null}
-                    </Group>
-                  ) : null}
-                </Disclosure>
-              </>
-            )}
-          </Group>
-        )}
+          ) : (
+            <Group gap={rhythm.line}>
+              <Text wordSafe variant="strong">
+                {r.name}
+              </Text>
+              <Text wordSafe variant="metadata">
+                {formatCount(r.count)} records · {r.kind}
+              </Text>
+              <Disclosure
+                label="Source excerpts"
+                testID={`connection-open-${r.id}`}
+                open={selected?.id === r.id}
+                onToggle={(expanded) =>
+                  expanded ? void open(r.id) : setSelected(undefined)
+                }
+              >
+                {selected?.id === r.id ? (
+                  <Group>
+                    <RecordStatus
+                      record={selected.record ?? null}
+                      error={selected.error}
+                      refreshing={false}
+                      refresh={() => open(r.id, true)}
+                      retry={() => open(r.id)}
+                      label="Opening source excerpts"
+                      testID={`connection-evidence-${r.id}`}
+                    />
+                    {selected.excerpts
+                      ? selected.excerpts.map((e, i) => (
+                          <Group key={i} gap={rhythm.line}>
+                            {/* Static evidence shards keep the raw source
+                                window: entities and tags still in it. */}
+                            <Text wordSafe>{passageText(e.text)}</Text>
+                            <SourceLine
+                              title="This excerpt"
+                              asOf={e.date || data!.asOf}
+                              citation={e.source}
+                              originals={
+                                e.url ? [{ label: e.source, url: e.url }] : []
+                              }
+                            />
+                          </Group>
+                        ))
+                      : null}
+                  </Group>
+                ) : null}
+              </Disclosure>
+            </Group>
+          )
+        }
       />
     </>
   );

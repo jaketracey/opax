@@ -80,16 +80,22 @@ name: Android location consent, chooser Back, detail Back and edge gestures
     visible:
       id: money-screen
     timeout: 30000
+# The map's one source line opens its notes, originals and licence.
+- scrollUntilVisible:
+    element:
+      id: money-as-at
+    centerElement: true
+    timeout: 30000
 - tapOn:
-    id: money-info
+    id: money-as-at
 - assertVisible:
-    id: money-info-sheet
+    id: money-as-at-sheet
 - swipe:
     start: 1%, 50%
     end: 95%, 50%
     duration: 500
 - assertNotVisible:
-    id: money-info-sheet
+    id: money-as-at-sheet
 - assertVisible:
     id: money-screen
 - pressKey: Back
