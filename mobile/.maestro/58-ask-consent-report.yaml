@@ -29,15 +29,20 @@ name: 58 Ask asks for consent once before the first question; Not now keeps the 
     timeout: 15000
 - assertVisible:
     id: ask-consent-what
-- assertVisible:
-    id: ask-consent-machine
 - takeScreenshot: ${EVIDENCE}/58-consent
+# At AX5 the words fill the sheet: scroll to the pill and to each button.
+- scrollUntilVisible:
+    element:
+      id: ask-consent-machine
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: ask-consent-continue
+    timeout: 60000
 - scrollUntilVisible:
     element:
       id: ask-consent-not-now
     timeout: 60000
-- assertVisible:
-    id: ask-consent-continue
 - takeScreenshot: ${EVIDENCE}/58-consent-actions
 # Not now: nothing is sent and the question stays in the composer.
 - tapOn:
