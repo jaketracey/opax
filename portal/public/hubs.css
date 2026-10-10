@@ -55,6 +55,13 @@
 .hub-largest p { margin: var(--space-line) 0; }
 .hub-corrections { border-top: var(--border-hairline) solid var(--divider-default); margin-top: var(--space-section); padding-top: var(--space-block); color: var(--ink-soft); font: var(--type-fine); }
 .hub-authorisation { border-top: var(--border-hairline) solid var(--divider-default); margin-top: var(--space-section); padding-top: var(--space-block); font: var(--type-fine); }
+/* Contact follows the hub's fine-text role and shared touch-target token. */
+.hub-footer .hub-corrections a { display: inline-flex; align-items: center; min-height: var(--size-target); }
+.hub-corrections > span { display: block; font: var(--type-fine); margin-top: var(--space-line); }
+@media print {
+  .hub-footer { break-inside: avoid; }
+  .hub-footer .hub-corrections a { min-height: 0; }
+}
 .vic-seats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-line) var(--space-group); list-style: none; padding: 0; }
 .vic-seats a { display: block; padding: var(--space-row) 0; min-height: var(--size-target); }
 .vic-member { padding: var(--space-group) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }

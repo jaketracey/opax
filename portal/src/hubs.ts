@@ -25,10 +25,10 @@ export interface Estimates {
   contractWindow: Window; grantWindow: Window; contractUpdated: string; grantUpdated: string;
 }
 const ORIGIN = 'https://opax.com.au'
-// Pending Jake's decision. Set to the approved contact path or URL to enable.
+// Optional footer defaults for federal hubs. Victoria supplies its approved values.
 export const CORRECTION_CONTACT: string | null = null
 export const AUTHORISATION_LINE: string | null = null
-export interface HubFooterConfig { AUTHORISATION_LINE?: string | null; CORRECTION_CONTACT?: string | null }
+export interface HubFooterConfig { AUTHORISATION_LINE?: string | null; CORRECTION_CONTACT?: string | null; CORRECTION_RESPONSE?: string | null }
 const date = shortDate
 const range = (start: string, end: string) => `${date(start)} – ${date(end)}`
 const count = (n: number) => n.toLocaleString('en-AU')
@@ -36,11 +36,17 @@ const money = (n: number) => shortMoney(n)
 const link = (href: string, text: string) => safeHref(href) ? `<a href="${esc(href)}">${esc(text)}</a>` : esc(text)
 const itemList = (path: string, rows: {href: string; name: string}[]) => ({'@type':'ItemList','@id':ORIGIN + path + '#records',numberOfItems:rows.length,itemListElement:rows.map((r,i) => ({'@type':'ListItem',position:i+1,name:r.name,url:ORIGIN+r.href}))})
 const event = (path: string, name: string, start: string, end: string, source: string) => ({'@type':'Event','@id':ORIGIN+path+'#event',url:ORIGIN+path,name,startDate:start,endDate:end,eventAttendanceMode:'https://schema.org/OfflineEventAttendanceMode',location:{'@type':'Place',name:'Australian Parliament House',address:'Canberra ACT, Australia'},organizer:{'@type':'GovernmentOrganization',name:'Parliament of Australia',url:'https://www.aph.gov.au/'},sameAs:source})
-const correctionLine = (contact: string | null) => contact ? `<p class="hub-corrections">${link(contact,'Report a correction')}</p>` : ''
+const correctionLine = (contact: string | null, response?: string | null) => {
+  if (!contact) return ''
+  // Mail links accept only a bare address; URLs continue through the shared safeHref gate.
+  const email = /^mailto:([a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,})$/i.exec(contact)?.[1]
+  const report = email ? `<a href="mailto:${esc(email)}">Report a correction: ${esc(email)}</a>` : link(contact,'Report a correction')
+  return `<p class="hub-corrections">${report}${response ? `<span>${esc(response)}</span>` : ''}</p>`
+}
 /** A hub page: the breadcrumb strip (the trail after Home), then the page. */
 export const hubShell = (body: string, config: HubFooterConfig = {}, crumbs: Crumb[] = []) => {
   const authorisation = config.AUTHORISATION_LINE ?? AUTHORISATION_LINE
-  const correction = correctionLine(config.CORRECTION_CONTACT ?? CORRECTION_CONTACT)
+  const correction = correctionLine(config.CORRECTION_CONTACT ?? CORRECTION_CONTACT, config.CORRECTION_RESPONSE)
   const lines = (authorisation ? `<p class="hub-authorisation">${esc(authorisation)}</p>` : '') + correction
   return `${crumbsHTML(crumbs)}<section id="prerender" class="wrap hub-page">${body}${lines ? `<div class="hub-footer">${lines}</div>` : ''}</section>`
 }

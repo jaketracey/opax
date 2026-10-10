@@ -6,7 +6,7 @@ import {join,dirname} from 'node:path';
 import {build} from 'esbuild';
 import {isOrganisationDonor} from '../public/donor-entity.js';
 import {personNameKey} from '../public/canonical-urls.js';
-import {vicElectionEnabled,vicElectionDiscovery,VIC_ELECTION_ASSET} from '../public/vic-election.js';
+import {vicElectionEnabled,vicElectionDiscovery,VIC_ELECTION_ASSET,VIC_ELECTION_AUTHORISATION_LINE,VIC_ELECTION_CORRECTIONS_EMAIL,VIC_ELECTION_CORRECTIONS_RESPONSE} from '../public/vic-election.js';
 import {buildVicElection} from '../../scripts/build_vic_election.mjs';
 import {sitemapFiles} from '../../scripts/build_crawl_catalog.mjs';
 const root = new URL('../public/',import.meta.url);
@@ -51,6 +51,15 @@ test('disabled publication gate precedes host, case and trailing-slash redirects
     if(method==='HEAD')assert.equal(await r.text(),'');
   }
 });
+test('disabled electoral share cards are refused before any cached card can be replayed',async()=>{
+  const saved=globalThis.caches;
+  globalThis.caches={default:{match(){assert.fail('Disabled election card read cache');},put(){assert.fail('Disabled election card wrote cache');}}};
+  try {
+    for(const path of ['/og/vic-election-2026.jpg','/og/vic-election-2026/lowan.jpg?format=portrait']) {
+      const r=await fetchPage(path,'false');assert.equal(r.status,404);
+    }
+  } finally {globalThis.caches=saved;}
+});
 test('enabled SSR renders all 88 districts and 8 regions, 128 existing people, sources and explicit gaps',async()=>{
   assert.equal(data.seats.filter(s=>s.kind==='district').length,88);assert.equal(data.seats.filter(s=>s.kind==='region').length,8);
   assert.equal(data.seats.reduce((n,s)=>n+s.members.length,0),128);assert.equal(data.pages.length,97);
@@ -69,6 +78,7 @@ test('enabled SSR renders all 88 districts and 8 regions, 128 existing people, s
   for(const p of data.pages.slice(1))assert.ok(index.html.includes(p.path));
   for(const id of ['unknown','lowan/extra','../lowan','Lowan'])assert.equal((await vicElectionPage(id,read,{VIC_ELECTION_HUB_ENABLED:'true'})).status,404);
   const unknown=await fetchPage('/vic-election-2026/unknown','true');assert.equal(unknown.status,404);assert.equal(unknown.headers.get('x-robots-tag'),'noindex');
+  const missing=await vicElectionPage('unknown',read,{VIC_ELECTION_HUB_ENABLED:'true'});assert.ok(missing.html.includes(VIC_ELECTION_AUTHORISATION_LINE));
 });
 test('enabled crawl discovery has a separate sitemap type; trailing-slash aliases redirect once',async()=>{
   assert.match(await (await fetchPage('/sitemap.xml','true')).text(),/\/sitemaps\/vic-election-1.xml/);
@@ -79,22 +89,38 @@ test('enabled crawl discovery has a separate sitemap type; trailing-slash aliase
   assert.match(await (await fetchPage('/llms.txt','true')).text(),/https:\/\/opax.com.au\/vic-election-2026/);
   for(const p of data.pages){const r=await fetchPage(p.path+'/','true');assert.equal(r.status,301);assert.equal(r.headers.get('location'),'https://opax.com.au'+p.path);}
 });
-test('authorisation and correction footer values are optional, shared, escaped and safe',async()=>{
+test('every election page and download carries the approved authorisation and corrections contact',()=>{
+  assert.equal(data.authorisation,VIC_ELECTION_AUTHORISATION_LINE);
+  assert.deepEqual(data.corrections,{email:VIC_ELECTION_CORRECTIONS_EMAIL,response:VIC_ELECTION_CORRECTIONS_RESPONSE});
+  for(const s of [null,...data.seats]) {
+    // Optional federal Worker values cannot remove the election's approved lines.
+    const page=renderVicElection(data,s,{AUTHORISATION_LINE:'',CORRECTION_CONTACT:null});
+    const footer=page.html.match(/<div class="hub-footer">[\s\S]*?<\/div>/)?.[0];
+    assert.ok(footer);
+    assert.ok(footer.includes(VIC_ELECTION_AUTHORISATION_LINE));
+    assert.ok(footer.includes(`href="mailto:${VIC_ELECTION_CORRECTIONS_EMAIL}"`));
+    assert.ok(footer.includes(VIC_ELECTION_CORRECTIONS_RESPONSE));
+    assert.doesNotMatch(footer,/48[- ]hours?|placeholder|TODO/i);
+    assert.equal(page.card.authorisation,VIC_ELECTION_AUTHORISATION_LINE);
+  }
+});
+test('federal hub footer values remain optional, escaped and safe',async()=>{
   const cfg={AUTHORISATION_LINE:'Authorised by <Approved Person>, Melbourne',CORRECTION_CONTACT:'/corrections'};
   const weeks=await json('hubs/index.json');const estimates=await json('hubs/estimates-2026-10.json');
-  const pages=[renderVicElection(data,null,cfg),...data.seats.map(s=>renderVicElection(data,s,cfg)),renderSittingIndex(weeks,'2026-10-10',cfg),renderEstimates(estimates,cfg),await hubPage('sitting','bad',read,[],new Map(),undefined,cfg),await hubPage('sitting',weeks.weeks[0].start,read,[],new Map(),undefined,cfg)];
+  const pages=[renderSittingIndex(weeks,'2026-10-10',cfg),renderEstimates(estimates,cfg),await hubPage('sitting','bad',read,[],new Map(),undefined,cfg),await hubPage('sitting',weeks.weeks[0].start,read,[],new Map(),undefined,cfg)];
   for(const p of pages){assert.match(p.html,/<div class="hub-footer">[\s\S]*Authorised by &lt;Approved Person&gt;, Melbourne[\s\S]*href="\/corrections">Report a correction[\s\S]*<\/div>/);assert.doesNotMatch(p.html,/48 hours/);}
-  for(const cfg of [{},{AUTHORISATION_LINE:null,CORRECTION_CONTACT:null}])for(const s of [null,...data.seats])assert.doesNotMatch(renderVicElection(data,s,cfg).html,/hub-authorisation|Report a correction/);
-  assert.doesNotMatch(renderVicElection(data,null,{CORRECTION_CONTACT:'javascript:alert(1)'}).html,/href="javascript:/);
-  const auth=renderVicElection(data,null,{AUTHORISATION_LINE:'Approved line'}).html;assert.match(auth,/Approved line/);assert.doesNotMatch(auth,/Report a correction/);
-  const correction=renderVicElection(data,null,{CORRECTION_CONTACT:'/corrections'}).html;assert.match(correction,/Report a correction/);assert.doesNotMatch(correction,/hub-authorisation/);
+  for(const cfg of [{},{AUTHORISATION_LINE:null,CORRECTION_CONTACT:null}])assert.doesNotMatch(renderSittingIndex(weeks,'2026-10-10',cfg).html,/hub-authorisation|Report a correction/);
+  assert.doesNotMatch(renderSittingIndex(weeks,'2026-10-10',{CORRECTION_CONTACT:'javascript:alert(1)'}).html,/href="javascript:/);
+  assert.doesNotMatch(renderSittingIndex(weeks,'2026-10-10',{CORRECTION_CONTACT:'mailto:corrections@example.com?subject=bad'}).html,/href="mailto:/);
+  const auth=renderSittingIndex(weeks,'2026-10-10',{AUTHORISATION_LINE:'Approved line'}).html;assert.match(auth,/Approved line/);assert.doesNotMatch(auth,/Report a correction/);
+  const correction=renderSittingIndex(weeks,'2026-10-10',{CORRECTION_CONTACT:'/corrections'}).html;assert.match(correction,/Report a correction/);assert.doesNotMatch(correction,/hub-authorisation/);
 });
 test('derived individual donor set is absent from every election page and the projection',async()=>{
   const individuals=new Set();
   for(const path of ['graph/money.json','graph/money.vic.json','graph/money.qld.json'])for(const n of (await json(path)).nodes)if(n.kind==='donor'&&!isOrganisationDonor(n))individuals.add(n.label);
   assert.ok(individuals.size>100);
   const all=JSON.stringify(data)+[null,...data.seats].map(s=>renderVicElection(data,s).html).join('\n');
-  // A donor label can coincide with a sitting member's name (Peter Walsh).
+  // A donor label can coincide with a sitting member's name.
   // Their existing roster identity is allowed only in its member context.
   const memberNames=new Set(data.seats.flatMap(s=>s.members.map(m=>personNameKey(m.name))));
   for(const name of individuals)if(!memberNames.has(personNameKey(name)))assert.ok(!all.includes(name),name);
@@ -117,13 +143,14 @@ test('offline projection allowlist withholds injected donor, candidate and money
   try {
     const manifest=await json('electorates/manifest.json');const seats=await json(manifest.index_url.slice(1));
     const roster=await json('parliamentarians.json');const votes=await json('votes.json');
-    for(const r of roster.people)Object.assign(r,{donor_links:[{name:'Private Donor Sentinel'}],candidate_names:['Candidate Sentinel']});
-    for(const s of seats.electorates){s.grants=[{name:'Private Recipient Sentinel'}];for(const r of s.representatives)Object.assign(r.person,{donor:'Private Donor Sentinel'});}
+    for(const r of roster.people)Object.assign(r,{donor_links:[{name:'a withheld donor'}],candidate_names:['Candidate Sentinel']});
+    for(const s of seats.electorates){s.grants=[{name:'Private Recipient Sentinel'}];for(const r of s.representatives)Object.assign(r.person,{donor:'a withheld donor'});}
     const files={'electorates/manifest.json':manifest,[manifest.index_url.slice(1)]:seats,'parliamentarians.json':roster,'votes.json':votes,'divisions/index.json':{divisions:[]},'interests/index.json':await json('interests/index.json'),'corpus.json':await json('corpus.json')};
     for(const [path,data] of Object.entries(files)){await mkdir(dirname(join(dir,path)),{recursive:true});await writeFile(join(dir,path),JSON.stringify(data));}
     await writeFile(join(dir,'person-paths.js'),await readFile(new URL('person-paths.js',root),'utf8'));
     await buildVicElection(dir);
-    const output=await readFile(join(dir,VIC_ELECTION_ASSET),'utf8');assert.doesNotMatch(output,/Private Donor Sentinel|Private Recipient Sentinel|Candidate Sentinel|donor_links|candidate_names/);
+    const output=await readFile(join(dir,VIC_ELECTION_ASSET),'utf8');assert.doesNotMatch(output,/a withheld donor|Private Recipient Sentinel|Candidate Sentinel|donor_links|candidate_names/);
+    const exported=JSON.parse(output);assert.equal(exported.authorisation,VIC_ELECTION_AUTHORISATION_LINE);assert.equal(exported.corrections.response,VIC_ELECTION_CORRECTIONS_RESPONSE);
     seats.electorates=seats.electorates.filter(s=>!(s.jurisdiction==='vic'&&s.name==='Lowan'));await writeFile(join(dir,manifest.index_url),JSON.stringify(seats));
     await assert.rejects(buildVicElection(dir),/No exact state electorate: Lowan/);
   } finally {await rm(dir,{recursive:true,force:true});}

@@ -3802,7 +3802,7 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
     case 'hub': {
       if (route.hub === 'vic-election') {
         const page = await vicElectionPage(route.id,<T>(path: string) => assetJson<T>(env,path),env)
-        return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status})
+        return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status,card:'card' in page ? page.card : null})
       }
       const people = route.hub === 'sitting' && route.id ? await loadPeople(env) : null
       const page = await hubPage(route.hub,route.id,<T>(path: string) => assetJson<T>(env,path),people?.people || [],people?.slugOf || new Map(),undefined,env)
@@ -5091,6 +5091,8 @@ async function serveStorySlide(url: URL, request: Request, env: Env, ctx: Execut
  */
 const NAMED_CARD_ROUTES = new Set<SeoRoute['kind']>(['subject', 'grant-recipient', 'topic'])
 async function cardRefused(route: SeoRoute | null, pageUrl: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<boolean> {
+  // Check the election gate before replaying a card cached while publication was enabled.
+  if (route?.kind === 'hub' && route.hub === 'vic-election' && !vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED)) return true
   if (!route || !NAMED_CARD_ROUTES.has(route.kind)) return false
   const meta = await buildRouteMeta(route, pageUrl, request, env, ctx).catch(() => null)
   return !meta || meta.status !== 200 || !meta.card || meta.noindex === true

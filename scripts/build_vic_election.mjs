@@ -7,7 +7,7 @@ import {personIndex, personSlug} from '../portal/src/person-slug.ts';
 import {personNameKey} from '../portal/public/canonical-urls.js';
 import {day, latest} from '../portal/public/hubs-data.js';
 import {divisionPlain} from '../portal/public/division-markdown.js';
-import {VIC_ELECTION_PATH} from '../portal/public/vic-election.js';
+import {VIC_ELECTION_PATH, VIC_ELECTION_AUTHORISATION_LINE, VIC_ELECTION_CORRECTIONS_EMAIL, VIC_ELECTION_CORRECTIONS_RESPONSE} from '../portal/public/vic-election.js';
 
 export async function buildVicElection(root, configPath = fileURLToPath(new URL('./hubs/vic-election-2026.json',import.meta.url))) {
   const read = async path => JSON.parse(await readFile(join(root,path.replace(/^\//,'')),'utf8'));
@@ -70,7 +70,9 @@ export async function buildVicElection(root, configPath = fileURLToPath(new URL(
   });
   const updated = latest([config.updated,roster.meta.generated,roster.meta.representation?.updated,day(corpus.version),...seats.map(s=>s.roster_date)]);
   const pages = [{path:VIC_ELECTION_PATH,lastmod:updated},...seats.map(s=>({path:s.path,lastmod:updated}))];
-  const data = {updated,checked:config.updated,term_start:config.term_start,term_end:config.term_end,election_day:config.election_day,
+  const data = {authorisation:VIC_ELECTION_AUTHORISATION_LINE,
+    corrections:{email:VIC_ELECTION_CORRECTIONS_EMAIL,response:VIC_ELECTION_CORRECTIONS_RESPONSE},
+    updated,checked:config.updated,term_start:config.term_start,term_end:config.term_end,election_day:config.election_day,
     nominations_close:config.nominations_close,sources:config.sources,licence:config.licence,boundaries:config.boundaries,
     speech_updated:roster.meta.generated,division_start:detailed.map(d=>day(d.date)).sort()[0] || null,
     division_end:latest(detailed.map(d=>d.date)),interests_available:false,seats,pages};

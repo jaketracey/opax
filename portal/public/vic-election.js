@@ -4,6 +4,10 @@ export const VIC_ELECTION_HUB_ENABLED = false;
 export const VIC_ELECTION_PATH = '/vic-election-2026';
 export const VIC_ELECTION_ASSET = '/hubs/vic-election-2026.json';
 export const VIC_ELECTION_SITEMAP = '/sitemaps/vic-election-1.xml';
+// Control hub decision, 10 October 2026. Address verified against Noice's contact page.
+export const VIC_ELECTION_AUTHORISATION_LINE = 'Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 343 Little Collins St, Melbourne VIC 3000.';
+export const VIC_ELECTION_CORRECTIONS_EMAIL = 'corrections@opax.com.au';
+export const VIC_ELECTION_CORRECTIONS_RESPONSE = 'We aim to respond within 2 business days.';
 export const vicElectionEnabled = value => value === 'true' || (value == null && VIC_ELECTION_HUB_ENABLED);
 export function vicElectionAssetPath(path) {
   try { return decodeURIComponent(path).replace(/\/+/g,'/').toLowerCase().startsWith('/hubs/vic-election'); }

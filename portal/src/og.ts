@@ -17,8 +17,9 @@ export const OG_HEIGHT = 630
 /** Bump when the drawing changes, or when a card's portrait or name was wrong: it is
  *  folded into every og:image URL and the Worker's card cache key, so the social
  *  crawlers (which cache by URL, some for weeks) and the edge fetch the new card.
+ *  7: full electoral authorisation on landscape and portrait hub cards.
  *  6: portraits taken off people they did not show (docs/PHOTOS.md, "Identity check"). */
-export const OG_VERSION = '6'
+export const OG_VERSION = '7'
 
 import { STORY_SAFE, STORY_SIZES, type StoryFormat, type StorySlide } from './story'
 
@@ -52,6 +53,8 @@ export interface OgCard {
   wide?: boolean
   /** A source statistic takes the place of decorative art, or sits below a portrait. */
   stat?: { value: string; label: string }
+  /** Electoral material carries the full authorisation at the foot, without clipping. */
+  authorisation?: string
 }
 
 // --- palette: style.css :root, the navy band's values --------------------------
@@ -207,7 +210,7 @@ export function cardTree(card: OgCard): El {
   const kicker = card.kicker
     ? h(
         'div',
-        { style: { fontFamily: SANS, fontSize: 20, fontWeight: 700, letterSpacing: '0.14em', color: BRONZE_BRIGHT, textTransform: 'uppercase', marginBottom: 18 } },
+        { style: { fontFamily: SANS, fontSize: 20, fontWeight: 700, letterSpacing: card.authorisation ? 0 : '0.14em', color: BRONZE_BRIGHT, textTransform: card.authorisation ? 'none' : 'uppercase', marginBottom: 18 } },
         card.kicker,
       )
     : null
@@ -282,8 +285,9 @@ export function cardTree(card: OgCard): El {
 
   const footer = h(
     'div',
-    { style: { display: 'flex', padding: `0 ${PAD}px 30px ${PAD}px` } },
-    h('div', { style: { fontFamily: SANS, fontSize: 20, fontWeight: 700, letterSpacing: '0.16em', color: BRONZE_BRIGHT } }, 'OPAX.COM.AU'),
+    { style: { display: 'flex', flexDirection: 'column', padding: `0 ${PAD}px 30px ${PAD}px` } },
+    h('div', { style: { fontFamily: SANS, fontSize: 20, fontWeight: 700, letterSpacing: card.authorisation ? 0 : '0.16em', color: BRONZE_BRIGHT } }, card.authorisation ? 'opax.com.au' : 'OPAX.COM.AU'),
+    card.authorisation ? h('div', { style: { fontFamily: SANS, fontSize: 16, lineHeight: 1.4, color: SOFT, marginTop: 12 } }, card.authorisation) : null,
   )
 
   const bottomRule = h('div', { style: { height: 6, background: BRONZE } })
@@ -374,7 +378,7 @@ export function portraitTree(card: OgCard): El {
   const kicker = card.kicker
     ? h(
         'div',
-        { style: { fontFamily: SANS, fontSize: 26, fontWeight: 700, letterSpacing: '0.14em', color: BRONZE_BRIGHT, textTransform: 'uppercase', marginBottom: 18, textAlign } },
+        { style: { fontFamily: SANS, fontSize: 26, fontWeight: 700, letterSpacing: card.authorisation ? 0 : '0.14em', color: BRONZE_BRIGHT, textTransform: card.authorisation ? 'none' : 'uppercase', marginBottom: 18, textAlign } },
         card.kicker,
       )
     : null
@@ -448,8 +452,9 @@ export function portraitTree(card: OgCard): El {
 
   const footer = h(
     'div',
-    { style: { display: 'flex', padding: `24px ${P_PAD}px 44px ${P_PAD}px` } },
-    h('div', { style: { fontFamily: SANS, fontSize: 28, fontWeight: 700, letterSpacing: '0.16em', color: BRONZE_BRIGHT } }, 'OPAX.COM.AU'),
+    { style: { display: 'flex', flexDirection: 'column', padding: `24px ${P_PAD}px 44px ${P_PAD}px` } },
+    h('div', { style: { fontFamily: SANS, fontSize: 28, fontWeight: 700, letterSpacing: card.authorisation ? 0 : '0.16em', color: BRONZE_BRIGHT } }, card.authorisation ? 'opax.com.au' : 'OPAX.COM.AU'),
+    card.authorisation ? h('div', { style: { fontFamily: SANS, fontSize: 22, lineHeight: 1.4, color: SOFT, marginTop: 16 } }, card.authorisation) : null,
   )
 
   const bottomRule = h('div', { style: { height: 8, background: BRONZE } })
