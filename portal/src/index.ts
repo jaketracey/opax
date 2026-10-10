@@ -3767,7 +3767,8 @@ const indexLinks = (): string =>
  *  kicker: the title says what the page is once (principle 3). Server-only
  *  pages pass their breadcrumb trail after Home (crumbsHTML). */
 function prerenderBlock(heading: string, sentence: string, links = indexLinks(), crumbs: Crumb[] = []): string {
-  return `${crumbsHTML(crumbs)}<section id="prerender" class="wrap">` +
+  // Only a trail reaches for the helper (tests lift this function out on its own).
+  return `${crumbs.length ? crumbsHTML(crumbs) : ''}<section id="prerender" class="wrap">` +
     `<h1>${escHtml(heading)}</h1><p>${escHtml(sentence)}</p>${links}</section>`
 }
 
