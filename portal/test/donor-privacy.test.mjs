@@ -17,6 +17,8 @@ import {personIndex} from '../src/person-slug.ts';
 import {buildCrawl} from '../../scripts/build_crawl_catalog.mjs';
 import {buildGrowth} from '../../scripts/build_growth_modules.mjs';
 import {moduleOutputs} from './growth-module-harness.mjs';
+import {buildTableIndexes, tableRows} from '../../scripts/build_table_indexes.mjs';
+import {TABLE_DATASETS} from '../public/table-datasets.js';
 
 const pub = new URL('../public/', import.meta.url).pathname;
 const real = path => JSON.parse(readFileSync(join(pub, path), 'utf8'));
@@ -52,7 +54,7 @@ interestRegister.buckets[interestBucket].items.unshift({description: `Gift of a 
 /** The export with these money graphs in place: every other entry is a symlink. */
 function exportRoot(money) {
   const dir = mkdtempSync(join(tmpdir(), 'opax-donor-privacy-'));
-  for (const entry of readdirSync(pub)) if (!['crawl', 'person-paths.js', 'graph', 'interests'].includes(entry)) symlinkSync(join(pub, entry), join(dir, entry));
+  for (const entry of readdirSync(pub)) if (!['crawl', 'person-paths.js', 'graph', 'interests', 'table-index'].includes(entry)) symlinkSync(join(pub, entry), join(dir, entry));
   mkdirSync(join(dir, 'graph'));
   for (const entry of readdirSync(join(pub, 'graph'))) if (entry !== 'money.json') symlinkSync(join(pub, 'graph', entry), join(dir, 'graph', entry));
   writeFileSync(join(dir, 'graph', 'money.json'), JSON.stringify(money));
@@ -69,6 +71,11 @@ const at = path => join(root, path.replace(/^\//, ''));
 
 // --- what may not be named -------------------------------------------------------
 const graphs = MONEY_GRAPHS.map(path => JSON.parse(readFileSync(at(path), 'utf8')));
+// Build the populated financial registers under the same fixture privacy policy
+// as the donation graphs, rather than trusting a prebuilt public snapshot.
+const moneyTables = await tableRows(root, {moneyOnly: true});
+for (const dataset of ['contracts', 'suppliers', 'grants']) assert.ok(moneyTables[dataset].length > 0, dataset);
+await buildTableIndexes(root, moneyTables);
 const index = donorPrivacyIndex(graphs);
 const donorNodes = graphs.flatMap(g => g.nodes.filter(n => n.kind === 'donor'));
 const fixtureLabels = new Set(FIXTURE_INDIVIDUALS.map(([label]) => label));
@@ -189,6 +196,53 @@ function assertClean(where, text) {
 test.after(offline());
 const {env, fetch: fetchWorker} = await loadWorker(new URL('../src/index.ts', import.meta.url).pathname, root);
 const ownUrl = (html, path) => entities(html).replaceAll(path, '');
+
+function assertCleanCSV(where, csv) {
+  let quoted = false, start = 0, batch = [];
+  for (let i = 0; i < csv.length; i++) {
+    if (csv[i] === '"') {
+      if (quoted && csv[i + 1] === '"') i++;
+      else quoted = !quoted;
+    } else if (!quoted && csv[i] === '\n') {
+      batch.push(csv.slice(start, i + 1)); start = i + 1;
+      if (batch.length === 128) {assertClean(where, batch.join(''));batch = [];}
+    }
+  }
+  assertClean(where, batch.join('') + csv.slice(start));
+}
+
+test('money table rows, facets, CSV and normalized URL state withhold donors', async () => {
+  const moneyDatasets = Object.entries(TABLE_DATASETS).filter(([, config]) => config.privacy).map(([name]) => name);
+  const tablePhrases = withheldPhrases(graphs, []);
+  // Derive real labels and aliases once; fixtures and failures carry no private names.
+  const denied = [...new Set(graphs.flatMap(g => g.nodes.filter(n => !isOrganisationDonor(n) && n.kind === 'donor').flatMap(n => [n.label, ...(n.aliases || [])])).filter(label => namesWithheldPhrase(tablePhrases, 'donor ' + label)))];
+  for (const dataset of moneyDatasets) {
+    const base = `/api/table/${dataset}`;
+    const response = await fetchWorker(base + '?pageSize=200');
+    assert.equal(response.status, 200, dataset);
+    assertClean(`${dataset} rows and facets`, await response.text());
+    const csv = await fetchWorker(base + '?format=csv');
+    assert.equal(csv.status, 200, dataset);
+    assertCleanCSV(`${dataset} CSV`, await csv.text());
+    for (const [i, label] of denied.entries()) {
+      const state = new URLSearchParams({q: label, pageSize: '200'});
+      const filtered = await fetchWorker(base + '?' + state);
+      assert.equal(filtered.status, 200, `${dataset} withheld query ${i}`);
+      const body = await filtered.json();
+      assert.equal(body.total, 0, `${dataset} withheld query ${i}`);
+      assert.equal(body.rows.length, 0, `${dataset} withheld query ${i}`);
+      const location = filtered.headers.get('content-location');
+      assert.equal(new URL(location, 'https://opax.com.au').searchParams.has('q'), false);
+      assertClean(`${dataset} URL ${i}`, decodeURIComponent(location));
+      if (i < 10) {
+        const download = await fetchWorker(base + '?' + state + '&format=csv');
+        assert.equal(download.status, 200);
+        assertClean(`${dataset} filtered CSV ${i}`, await download.text());
+        assert.equal(download.headers.get('x-table-exported'), '0');
+      }
+    }
+  }
+});
 
 test('the fixture individuals are withheld and the fixture organisation is not', () => {
   for (const label of fixtureLabels) assert.ok(donorNameWithheld(index, label) && known.includes(label) && checked.includes(label), `fixture ${[...fixtureLabels].indexOf(label)}`);
