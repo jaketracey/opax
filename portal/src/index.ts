@@ -1,3 +1,5 @@
+import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../public/sa-hansard.js'
+import { saPublicResponse } from './sa-hansard'
 import { divisionPlain } from '../public/division-markdown.js'
 import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
@@ -689,7 +691,8 @@ async function searchWindow(
       organisation: typeof meta.witness_organisation === 'string' ? meta.witness_organisation : null,
       // Divisions carry their date on origin.created rather than in metadata.
       date: (meta.date as string) ?? (resource.origin as { created?: string } | undefined)?.created?.slice(0, 10) ?? null,
-      url: resource.origin?.url || null, // official record, for exports/citations
+      url: resource.origin?.url || null,
+      ...((label(resource, 'state') === 'sa' || label(resource, 'source') === 'sa_hansard') && typeof meta.source_url === 'string' ? {source_url:meta.source_url} : {}), // official record, for exports/citations
       snippet: windowed,
       // BASIC already includes resource and computed field classifications.
       // Reuse them; never fetch each result separately just to draw its chips.
@@ -987,7 +990,8 @@ function askPayload(answer: AskAnswer, records: AskRecords = { records: [], cove
         state: label(r, 'state'),
         chamber: label(r, 'chamber'),
         date: (meta.date as string) ?? null,
-        url: r.origin?.url || null, // official record, for exports/citations
+        url: r.origin?.url || null,
+        ...((label(r, 'state') === 'sa' || label(r, 'source') === 'sa_hansard') && typeof meta.source_url === 'string' ? {source_url:meta.source_url} : {}), // official record, for exports/citations
         // Metadata extension is model context, not part of the quoted record.
         snippet: passageWindow(normalizePassage((citedText || bestText).replace(/\n+DOCUMENT CLASSIFICATION LABELS:[\s\S]*$/, ''))),
         cited: citedIds.has(rid),
@@ -4836,6 +4840,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
   const witness = isWitness({ speaker_type: r.labels.speaker_type, chamber: r.labels.chamber,
     person_id: typeof r.metadata.person_id === 'string' || typeof r.metadata.person_id === 'number' ? r.metadata.person_id : null })
   const portraitId = r.speaker && !isUnattributed(r) && !witness ? photoIdFor(photos, r.speaker) : null
+  const saRestricted = isSaHansard(r) && !saFullText(env.SA_HANSARD_FULL_TEXT)
   const recordOf = `the official ${r.labels.state === 'federal' ? 'federal' : (r.labels.state ?? '').toUpperCase()} parliamentary record`
   const words = typeof r.metadata.word_count === 'number' ? `${num(r.metadata.word_count)} words` : 'a speech'
   const description = clip(
@@ -4862,6 +4867,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
       // The KB's title for a speech is "speaker, date", which the card already
       // says: the second line is the summary when the record has one, else the length.
       lines: [[r.labels.party, chamber].filter(Boolean).join(' · '), r.summary?.trim() || `${words[0].toUpperCase()}${words.slice(1)} from ${recordOf}.`],
+      ...(saRestricted ? {sourceNotice:{label:SA_EXCERPT_LABEL,url:saOfficialUrl(r)}} : {}),
       dot: partyColour(moneyData, r.labels.party),
       portraitId,
       credit: await creditLine(env, portraitId),
@@ -5115,7 +5121,7 @@ async function serveOgImage(url: URL, request: Request, env: Env, ctx: Execution
   const variants = new URLSearchParams()
   for (const [k, v] of cardQuery) variants.set(k, v)
   if (portrait) variants.set('format', format)
-  const cacheKey = cacheRequest('og', `${encodeURIComponent(env.CACHE_EPOCH)}/${OG_VERSION}/${m[2]}${pagePath}?${variants}`)
+  const cacheKey = cacheRequest('og', `${encodeURIComponent(env.CACHE_EPOCH)}/sa-full-${saFullText(env.SA_HANSARD_FULL_TEXT)}/${OG_VERSION}/${m[2]}${pagePath}?${variants}`)
   const pageUrl = new URL(`${SITE_ORIGIN}${pagePath}`)
   for (const [k, v] of cardQuery) pageUrl.searchParams.set(k, v)
   let route: SeoRoute | null = null
@@ -5189,7 +5195,8 @@ async function sitemapXml(env: Env, path = '/sitemap.xml'): Promise<Response> {
 async function llmsTxt(env: Env): Promise<Response> {
   const asset = await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/crawl/llms.txt`))
   if (!asset.ok) return new Response('Corpus guide unavailable', { status: 503, headers: { 'cache-control': 'no-store' } })
-  return new Response(vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED) ? (await asset.text()) + '\n' + vicElectionLlms : asset.body, { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=3600' } })
+  const policy = saFullText(env.SA_HANSARD_FULL_TEXT) ? '' : `\nSouth Australian Hansard: ${SA_EXCERPT_LABEL} /api/resource and MCP read_record provide at most 120 words per record, with its official source_url. Machine summaries are OPAX text.\n`
+  return new Response((await asset.text()) + policy + (vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED) ? '\n' + vicElectionLlms : ''), { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=3600' } })
 }
 
 
@@ -5593,6 +5600,14 @@ function personTopicsFor(name: string, env: Env): Promise<Response> {
 export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url)
+    const display = (response: Response, target = url) => {
+      if (!/^\/api\/(?:resource\/[^/]+|search|search-all|search-summary|ask)$/.test(target.pathname) && !/^\/reports\/[^/]+\.json$/.test(target.pathname)) return Promise.resolve(response)
+      return saPublicResponse(response, env.SA_HANSARD_FULL_TEXT, async slug => {
+        const sourceUrl = new URL(`/api/resource/${slug}`, url)
+        const result = await apiResource(new Request(sourceUrl), sourceUrl, slug, env, ctx)
+        return result.ok ? await result.json() as Record<string, unknown> : null
+      }, target.searchParams.get('q') || '')
+    }
     if (!vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED) && vicElectionPublicationPath(url.pathname))
       return withSecurityHeaders(new Response(request.method === 'HEAD' ? null : 'Not found', {status:404,headers:{'x-robots-tag':'noindex','cache-control':'no-store','content-type':'text/plain; charset=utf-8'}}), url)
     const canonical = await pageAliasRedirect(request, url, env)
@@ -5608,6 +5623,7 @@ export default {
       : new Response('Not found', { status: 404 })
     const isApi = url.pathname.startsWith('/api/')
     const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }
+    if (url.pathname === '/api/display-policy' && request.method === 'GET') return communityResponse(new Response(JSON.stringify({SA_HANSARD_FULL_TEXT:saFullText(env.SA_HANSARD_FULL_TEXT) ? 'true' : 'false'}), {headers:{'content-type':'application/json','cache-control':'no-store'}}))
     // Public app adapters use this Worker's journal/assets, before any staging
     // proxy or general retrieval dispatch. No composition callback is supplied.
     if (url.pathname.startsWith('/api/app/v1/edition/')) return communityResponse(await appEdition(request, env))
@@ -5634,20 +5650,20 @@ export default {
     if (url.pathname.startsWith('/api/voice/')) return communityResponse(await voiceRoute(request, env, ctx, async path => {
       const target = new URL(path, env.COMMUNITY_ORIGIN)
       const local = new Request(target, { headers: { 'cf-connecting-ip': 'voice-tools' } })
-      if (target.pathname === '/api/search-all') return apiUnifiedSearch(local, target, env, ctx)
-      if (env.STAGING_API) return env.STAGING_API.fetch(local)
-      return route(local, target, env, ctx)
+      if (target.pathname === '/api/search-all') return display(await apiUnifiedSearch(local, target, env, ctx), target)
+      if (env.STAGING_API) return display(await env.STAGING_API.fetch(local), target)
+      return display(await route(local, target, env, ctx), target)
     }))
     if (url.pathname === '/mcp') return communityResponse(await communityMcp(request, env, async path => {
       const target = new URL(path, env.COMMUNITY_ORIGIN)
       const local = new Request(target, { headers: { 'cf-connecting-ip': request.headers.get('cf-connecting-ip') || 'mcp' } })
-      if (target.pathname === '/api/search-all') return apiUnifiedSearch(local, target, env, ctx)
-      if (env.STAGING_API) return env.STAGING_API.fetch(local)
-      return route(local, target, env, ctx)
+      if (target.pathname === '/api/search-all') return display(await apiUnifiedSearch(local, target, env, ctx), target)
+      if (env.STAGING_API) return display(await env.STAGING_API.fetch(local), target)
+      return display(await route(local, target, env, ctx), target)
     }))
     if (url.pathname === '/api/search-all' && request.method === 'GET') {
       try {
-        const response = withSecurityHeaders(await apiUnifiedSearch(request, url, env, ctx), url)
+        const response = withSecurityHeaders(await display(await apiUnifiedSearch(request, url, env, ctx)), url)
         if (env.STAGING_API) response.headers.set('x-robots-tag', 'noindex, nofollow')
         return response
       } catch {
@@ -5667,7 +5683,7 @@ export default {
         if (matchSeoRoute(url)) assetUrl.pathname = '/'
         response = await env.ASSETS.fetch(new Request(assetUrl, request))
       }
-      const preview = withSecurityHeaders(response, url)
+      const preview = withSecurityHeaders(await display(response), url)
       preview.headers.set('x-robots-tag', 'noindex, nofollow')
       return preview
     }
@@ -5684,7 +5700,7 @@ export default {
         )
         return withSecurityHeaders(new Response(null, got), url)
       }
-      return withSecurityHeaders(await route(request, url, env, ctx), url)
+      return withSecurityHeaders(await display(await route(request, url, env, ctx)), url)
     } catch (err) {
       // The detail goes to the log, never to the client: upstream error text
       // can carry request echoes and internal identifiers.

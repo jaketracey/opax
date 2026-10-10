@@ -3874,6 +3874,9 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
   font-variant-numeric: tabular-nums;
 }
 .ask-source-passage { margin: 0.35rem 0 0; }
+.source-list li:has(> .sa-excerpt-notice) > :not(.source-num) { grid-column: 2; min-width: 0; overflow-wrap: anywhere; }
+.sa-excerpt-notice { max-width: 65ch; overflow-wrap: anywhere; }
+.sa-excerpt-notice a { white-space: nowrap; }
 
 /* ==== growing query fields (ask, search) ==== */
 /* Filled queries wrap and keep their height on blur. A long question should

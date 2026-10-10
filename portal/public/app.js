@@ -21,7 +21,20 @@ const splitSpeakers = person => attributionHelpers?.splitSpeakers(person) || [];
 const personScope = person => attributionHelpers?.personScope(person) || person?.speech_scope || null;
 const datedAffiliationParty = (row, person) => attributionHelpers?.datedAffiliationParty(row, person) || null;
 
+let saDisplayHelpers;
+let saFullTextFlag = 'false';
+const saDisplayReady = Promise.all([
+  import('/sa-hansard.js?v=d6375a8126').then(module => { saDisplayHelpers = module; }),
+  fetch('/api/display-policy').then(response => response.json()).then(policy => { saFullTextFlag = policy.SA_HANSARD_FULL_TEXT === 'true' ? 'true' : 'false'; }).catch(() => {}),
+]);
+
 const $ = (id) => document.getElementById(id);
+
+function excerptNoticeHTML(record) {
+  if (!record?.excerpt) return "";
+  const source = safeUrl(record.source_url || record.url);
+  return `<p class="fineprint sa-excerpt-notice">${esc(record.excerpt_label)}${source ? ` <a href="${esc(source)}" target="_blank" rel="noopener">Official record ↗︎</a>` : ""}</p>`;
+}
 
 // Categories and counts only: never pass questions, answers or error messages.
 function trackOutcome(event, properties = {}) {
@@ -853,10 +866,10 @@ function exportHeader(context) {
 }
 
 function sourcesCSV(rows, context) {
-  const head = "slug,kind,title,speaker,party,state,date,score,snippet,opax_url,source_url";
+  const head = "slug,kind,title,speaker,party,state,date,score,snippet,opax_url,source_url,excerpt_label";
   const body = rows.map((r) =>
     [r.slug, r.kind || (r.slug || "").split("-")[0], r.title, r.speaker, r.party, r.state, r.date,
-      r.score ?? "", (r.snippet || "").slice(0, 300), searchResultUrl(r), r.url || ""].map(csvCell).join(",")
+      r.score ?? "", (r.snippet || "").slice(0, 300), searchResultUrl(r), r.url || "", r.excerpt_label || ""].map(csvCell).join(",")
   );
   return `${exportHeader(context)}\n${head}\n${body.join("\n")}\n`;
 }
@@ -2844,6 +2857,7 @@ function sourceItem(s, num, passage = false) {
     read.textContent = "Read the speech";
     li.appendChild(read);
   }
+  if (passage) li.insertAdjacentHTML("beforeend", excerptNoticeHTML(s));
   return li;
 }
 
@@ -3020,7 +3034,7 @@ function quoteCardHTML(s, i, n) {
     : esc(displayTitle(s));
   return `<span class="kicker">From the record · ${i + 1} of ${n}</span>` +
     `<blockquote>${body}</blockquote>` +
-    (meta ? `<span class="quote-meta"><span class="quote-portrait"></span><span>${meta}</span></span>` : "");
+    (meta ? `<span class="quote-meta"><span class="quote-portrait"></span><span>${meta}</span></span>` : "") + excerptNoticeHTML(s);
 }
 
 function setQuoteRail(sources) {
@@ -4185,7 +4199,7 @@ async function subjectMentions(name, container, heading, moneyContext = false) {
     const items = data.results.slice(0, 5).map((r) => `
       <li><a href="/doc/${esc(r.slug)}" class="source-title doc-title">${esc(displayTitle(r))}</a>
         <span class="result-meta">${metaHTML(r, { linkSpeaker: true, linkParty: true })}</span>
-        <p class="snippet">${esc((r.snippet || "").slice(0, 220))}</p></li>`).join("");
+        <p class="snippet">${esc((r.snippet || "").slice(0, 220))}</p>${excerptNoticeHTML(r)}</li>`).join("");
     container.insertAdjacentHTML("beforeend",
       `<div class="entry-section-head"><h3 class="subject-section-title">${esc(heading)}</h3>
         <a href="${esc(searchHash(`"${name}"`, {}))}">All mentions</a></div>
@@ -5088,7 +5102,7 @@ async function renderPartyMentions(label, sections, key) {
           const excerpt = passage.length > 240 ? `${passage.slice(0, 240).replace(/\s+\S*$/, "")}…` : passage;
           return `<li><a ${entityHrefAttr(`/doc/${encodeURIComponent(result.slug)}`)} class="source-title doc-title">${esc(displayTitle(result))}</a>
             <span class="result-meta">${metaHTML(result, { linkSpeaker: true, linkParty: true })}</span>
-            <p class="${brief ? "party-mention-brief" : "snippet"}">${brief ? machineLabelHTML({ inline: true, className: "party-brief-label" }) : ""}${esc(brief || excerpt || "Open the speech to read the passage.")}</p></li>`;
+            <p class="${brief ? "party-mention-brief" : "snippet"}">${brief ? machineLabelHTML({ inline: true, className: "party-brief-label" }) : ""}${esc(brief || excerpt || "Open the speech to read the passage.")}</p>${excerptNoticeHTML(result)}</li>`;
         }).join("")}</ul>`;
     };
     paint({});
@@ -5901,7 +5915,7 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
           <time datetime="${esc(String(r.date || "").slice(0, 10))}">${esc(r.date ? fmtDate(r.date) : "Undated")}${esc(where)}</time>
           <span class="person-speech-body"><span class="speech-debate">${esc(safeText(titleSubject(r)) || (opts.evidence ? "Evidence" : "Speech"))}</span>
             ${rowText(brief, r)}
-          </span></a></li>`;
+          </span></a>${excerptNoticeHTML(r)}</li>`;
       }).join("")}</ul>
       ${opts.unattributed ? '' : `<p class="person-more"><a href="${esc(opts.scope ? splitSpeechSearch(name) : searchHash("", { speaker: name }, 1, "newest"))}">View all their ${noun}</a></p>`}
       ${sourceLineHTML({
@@ -6173,7 +6187,7 @@ function topicArcItemHTML(item, brief, showYear) {
       ${heading ? `<a class="topic-arc-source" ${entityHrefAttr(`/doc/${encodeURIComponent(item.slug)}`)}>${esc(heading)}</a>` : ""}
       ${brief
         ? `<p class="topic-arc-brief">${machineLabelHTML({ inline: true, className: "topic-arc-tag" })}${esc(brief)}</p><a class="topic-arc-open ui-button" data-ui-size="compact" ${entityHrefAttr(`/doc/${encodeURIComponent(item.slug)}`)}>Read the speech</a>`
-        : `<a class="topic-arc-passage" ${entityHrefAttr(`/doc/${encodeURIComponent(item.slug)}`)}>${esc(passage || "Open the speech to read the passage.")}</a>`}
+        : `<a class="topic-arc-passage" ${entityHrefAttr(`/doc/${encodeURIComponent(item.slug)}`)}>${esc(passage || "Open the speech to read the passage.")}</a>`}${excerptNoticeHTML(item)}
     </div>
   </li>`;
 }
@@ -10381,7 +10395,7 @@ function trimTurn(m) {
   const sources = Array.isArray(m.sources) ? m.sources : [];
   const kept = [...sources.filter((s) => s?.cited), ...sources.filter((s) => !s?.cited)].slice(0, 30).map((s) => {
     const out = {};
-    for (const [k, v] of Object.entries(s || {})) out[k] = typeof v === "string" && v.length > 240 && k !== "href" && k !== "url" ? `${v.slice(0, 239)}…` : v;
+    for (const [k, v] of Object.entries(s || {})) out[k] = typeof v === "string" && v.length > 240 && k !== "href" && k !== "url" && k !== "source_url" ? `${v.slice(0, 239)}…` : v;
     return out;
   });
   return { ...m, sources: kept };
@@ -10846,6 +10860,12 @@ function renderChatScope() {
 }
 
 function renderChatThread({ landed = false, rise = false } = {}) {
+  // Recheck saved conversations against today's display policy on every restore.
+  if (saDisplayHelpers) chatThread = chatThread.map(msg => {
+    if (msg.role === 'user') return msg;
+    const safe = saDisplayHelpers.saDisplayPayload({...msg, answer:msg.text}, saFullTextFlag);
+    return {...msg, ...safe, text:safe.answer};
+  });
   syncAskChatViewport();
   renderChatScope();
   const thread = $("chat-thread");
@@ -12029,7 +12049,7 @@ function renderResults(results) {
           <h3 class="search-result-heading"><a class="result-title" href="${esc(searchResultHref(r))}">${esc(r.title)}</a></h3>
           ${r.machine ? machineLabelHTML({ className: "search-result-machine", note: "The summary sentences in this row were written by a model from the bill's explanatory material. They are not the record: open the bill for its own documents." }) : ""}
           <p id="search-passage-${index}" class="search-result-text snippet" data-full="catalog">${highlightHTML(cleanPassage(r.snippet), lastSearch.query)}</p>
-          <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false">Read more</button>`;
+          <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false">Read more</button>${excerptNoticeHTML(r)}`;
         return li;
       }
       const brief = lastSearch.briefs[r.resource];
@@ -12058,11 +12078,11 @@ function renderResults(results) {
       ].filter(Boolean).join(" ");
       const topics = [...new Set((Array.isArray(r.topics) ? r.topics : []).filter((t) => typeof t === "string" && t.trim()))];
       // Opening a speech row loads the whole speech in place, so its button says so.
-      const more = r.kind === "speech" ? "Read the full speech here" : "Read more";
+      const more = r.excerpt ? "Read excerpt" : r.kind === "speech" ? "Read the full speech here" : "Read more";
       li.innerHTML = `<div class="result-meta">${meta}</div>
         <h3 class="search-result-heading"><a class="result-title" ${entityHrefAttr(`/doc/${encodeURIComponent(r.slug)}`)}>${esc(title)}</a></h3>
         ${byline ? `<div class="result-byline">${byline}</div>` : ""}${text}
-        <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false" data-more="${esc(more)}">${esc(more)}</button>
+        <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false" data-more="${esc(more)}"${r.excerpt ? ' data-excerpt="true"' : ''}>${esc(more)}</button>${excerptNoticeHTML(r)}
         ${topics.length ? `<nav class="search-result-topics" aria-label="Topics for ${esc(title)}">${topics.map((topic) => `<a class="ui-tag" ${entityHrefAttr(subjectHash("topic", topic))}>${esc(TOPICS[topic] || topic)}</a>`).join("")}</nav>` : ""}`;
       return li;
     }),
@@ -12086,7 +12106,7 @@ function refreshSearchPassageFolds() {
       // The retrieved passage is a few sentences; the first opening swaps in
       // the speech itself, so reading on means reading the record.
       const slug = text.closest("li")?.querySelector(".result-title")?.getAttribute("href")?.replace(/^\/doc\//, "");
-      if (!expanded || text.dataset.full || !slug || text.classList.contains("search-result-brief")) return;
+      if (!expanded || btn.dataset.excerpt || text.dataset.full || !slug || text.classList.contains("search-result-brief")) return;
       text.dataset.full = "loading";
       try {
         const doc = await api(`/api/resource/${slug}`);
@@ -12813,6 +12833,7 @@ async function openDocPage(slug, manageFocus) {
   $("doc-topic").hidden = true;
   $("doc-speaker-links").hidden = true;
   $("doc-text").textContent = "";
+  document.querySelector("#panel-doc .sa-excerpt-notice")?.remove();
   $("doc-brief").hidden = true;
   $("doc-bill").hidden = true;
   $("doc-bill").replaceChildren();
@@ -12938,6 +12959,7 @@ async function openDocPage(slug, manageFocus) {
       $('doc-bill').hidden = false;
     } else renderDocBillPanel(doc, slug);
     renderDocText(doc);
+    $("doc-text").insertAdjacentHTML("afterend", excerptNoticeHTML(doc));
     $("doc-ask").href = askHash(
       docAskQuestion(doc, topic, isGovernmentRelease || isResearchRecord),
       isGovernmentRelease || isResearchRecord ? "all" : undefined,
@@ -13082,7 +13104,7 @@ async function renderDocSimilar(doc) {
           : title.length > 110 ? `${title.slice(0, 110).replace(/\s+\S*$/, "")}…` : title;
         return `<li><a ${entityHrefAttr(`/doc/${encodeURIComponent(row.slug)}`)} title="${esc(title)}">${esc(label)}</a>
           <p class="doc-related-meta">${esc([label === row.speaker ? "" : row.speaker, fmtDate(row.date)].filter(Boolean).join(" · "))}</p>
-          <p>${esc(excerpt(brief || row.snippet || "No passage available."))}</p>
+          <p>${esc(excerpt(brief || row.snippet || "No passage available."))}</p>${excerptNoticeHTML(row)}
           <p class="doc-related-meta">${brief ? machineLabelHTML({ inline: true }) : "Passage from the record"}</p></li>`;
       }).join("")}</ul>` : '<p>No related speeches found for this subject.</p>') +
       `<div class="doc-related-actions"><a class="doc-search-all" href="${esc(searchHash(query, {}))}">Search this subject →</a>
@@ -13809,6 +13831,7 @@ function reportSourceRow(s, num) {
   read.href = `/doc/${s.slug}`;
   read.textContent = speech ? "Read the speech" : "Read the record";
   body.appendChild(read);
+  body.insertAdjacentHTML("beforeend", excerptNoticeHTML(s));
 
   li.appendChild(body); // the portrait, when there is one, is already in place
   return li;
@@ -14965,7 +14988,7 @@ function syncPathMeta() {
 
 // The first render waits for labels, attribution helpers and the canonical
 // person URL lookup, so links use the roster's aliases from the first render.
-Promise.allSettled([attributionReady, uiLabelsReady, growthModulesReady, personUrlsReady]).finally(() => {
+Promise.allSettled([attributionReady, uiLabelsReady, growthModulesReady, personUrlsReady, saDisplayReady]).finally(() => {
   loadPersonSlugs();
   initAskBuilder();
   route();
