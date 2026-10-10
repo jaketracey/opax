@@ -68,7 +68,16 @@ def main():
             apply_divisions(scratch,recovered,votes)
             assert projection(scratch)[1]==after,'recovery must be idempotent'
     atomic(stage/'votes.schema1-proof.json',after)
+    procedural = []
+    for d in recovered:
+        if d.house == 'representatives' and d.date == '2025-11-06' and d.number in (23, 24):
+            pol = E.xml_polarity(E.parse_name(d.name), d.question)
+            assert pol == 0, 'closure votes must not become bill stances'
+            procedural.append({'division_id':d.id, 'question':d.question, 'polarity':pol,
+                               'ayes':d.ayes_count, 'noes':d.noes_count,
+                               'bill_ids':[b['official_id'] for b in d.extra.get('bills', [])]})
     proof={'schema':1,'validated':True,'baseline_byte_compatible':True,'idempotent':True,
+           'procedural_divisions':procedural,
            'baseline_ref':args.baseline_ref,
            'recovered_divisions_added':len(recovered),'recovered_member_votes_added':len(votes),
            'quarantined_division_ids':sorted(bad),'source_db_mode':'ro','proof_db':str(destination),

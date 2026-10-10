@@ -212,6 +212,28 @@ def state_polarity(question, bill_ref, divided_on):
     return 1, stage
 
 
+def xml_polarity(parsed, question):
+    """XML bill stances require the actual bill question, not its heading.
+
+    Keep the established TVFY classifier untouched so existing schema 1
+    records retain their bytes. A contextual bill link is still evidence for
+    the division page, but does not make a closure vote a vote for that bill.
+    """
+    q = WS.sub(' ', re.sub(r'<[^>]+>', ' ', question or '')).strip().lower().strip(' .')
+    if not q or re.search(
+            r'\b(?:question be (?:now )?put|adjourn\w*|clos\w*|suspend\w*|suspension|'
+            r'standing orders|amendments?|omit\w*|substitut\w*)\b', q):
+        return 0
+    if POSITIVE.fullmatch(q):
+        return 1 if parsed[3] else 0
+    if NEGATIVE.fullmatch(q):
+        return -1 if parsed[3] else 0
+    direct_bill = re.fullmatch(
+        r'that (?:this|the) bill(?:,? as amended,?)? be (?:now )?'
+        r'(?:read a (?:second|third) time|agreed to|passed)', q)
+    return 1 if direct_bill and parsed[3] else 0
+
+
 def slugify(name):
     s = unicodedata.normalize("NFKD", name or "")
     s = "".join(ch for ch in s if not unicodedata.combining(ch)).lower()
@@ -340,7 +362,7 @@ def export_federal(db, out, names, newest):
             if parsed:
                 title, stage, _, _ = parsed
                 divisions[did] = {"name": title, "stage": stage, "date": day[:10], "jur": "federal",
-                                  "rebels": 0, "polarity": polarity(parsed, question)}
+                                  "rebels": 0, "polarity": xml_polarity(parsed, question)}
         for did, scoped, name, vote, party in db.execute(
                 "SELECT division_id,person_id,person_name,vote,party FROM ext_votes "
                 "WHERE jurisdiction='federal' AND vote IN ('aye','no') ORDER BY id"):

@@ -10,7 +10,8 @@ from urllib.parse import urlencode
 import xml.etree.ElementTree as ET
 
 from .honest_http import HonestHTTP, Refused, Unavailable
-from .openaustralia_xml import DEFAULT_STAGE, atomic, fetch, read_only
+from .cache_batch import CacheBatch
+from .openaustralia_xml import DEFAULT_STAGE, fetch, read_only
 
 
 def apply_api_projection(db, since):
@@ -74,8 +75,10 @@ def api_hansard(args):
                 pending.append((Path(args.modern_dir).expanduser() / f'{day}_{house}.jsonl', rows))
         day += timedelta(days=1)
     # No empty files and no partial fallback after a challenge/error.
-    for path, rows in pending:
-        atomic(path, ''.join(json.dumps(r, ensure_ascii=False) + '\n' for r in rows))
+    with CacheBatch(args.modern_dir) as batch:
+        for path, rows in pending:
+            batch.write(path, ''.join(json.dumps(r, ensure_ascii=False) + '\n' for r in rows))
+        batch.publish()
     print('Federal Hansard: honest OpenAustralia API fallback completed')
 
 

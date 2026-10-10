@@ -28,6 +28,8 @@ with sqlite3.connect(db_path) as db:
     INSERT INTO members VALUES('101','Alex Example','Alex','Example','senate','2000',NULL),('102','Sam Fixture','Sam','Fixture','senate','2000',NULL),
       ('201','Alex Example','Alex','Example','representatives','2000',NULL),('202','Sam Fixture','Sam','Fixture','representatives','2000',NULL);
     CREATE TABLE divisions(division_id INT,house TEXT,date TEXT,number INT,state TEXT);
+    CREATE TABLE speeches(speech_id INTEGER PRIMARY KEY,person_id TEXT,speaker_name TEXT,party TEXT,
+      electorate TEXT,chamber TEXT,date TEXT,topic TEXT,text TEXT,word_count INT,source TEXT);
     ''')
     from parli.ingest.openaustralia_xml import EXT_DDL
     db.executescript(EXT_DDL)
@@ -41,7 +43,13 @@ assert [d['status'] for d in report['days']].count('no_sitting')==2
 for house in ['representatives','senate']:
     assert (stage/'modern'/f'2026-10-13_{house}.jsonl').stat().st_size>0
     assert not (stage/'modern'/f'2026-10-14_{house}.jsonl').exists()
+from parli.ingest import speeches as S
+S.MODERN_DIR=stage/'modern'
+with sqlite3.connect(db_path) as db:
+    assert S.load_modern_jsonl(db,set(),since='2026-10-13',until='2026-10-14')==2
 subprocess.run(command,check=True,capture_output=True)
 with sqlite3.connect(db_path) as db:
     assert db.execute('SELECT COUNT(*) FROM ext_divisions').fetchone()[0]==2
     assert db.execute('SELECT COUNT(*) FROM ext_votes').fetchone()[0]==4
+    assert S.load_modern_jsonl(db,set(),since='2026-10-13',until='2026-10-14')==0
+    assert db.execute('SELECT COUNT(*) FROM speeches').fetchone()[0]==2

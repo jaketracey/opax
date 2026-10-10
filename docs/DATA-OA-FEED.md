@@ -24,13 +24,29 @@ The passive Cloudflare script on the usable Apache index is not executed.
 ## Rows and identities
 
 The XML emits the current modern JSONL fields, with the XML `gid`, office ID and
-guarded numeric person ID as provenance. `parli.ingest.speeches` remains the
-loader: source `openaustralia`, its existing 50-character filter, text cleaner,
-autoincrement speech IDs and `speaker|date|SHA256(text)[:16]` deduplication.
-Person IDs are rechecked through `scripts/roster_identity.py` at load time too.
-XML speech boundaries and text come from Hansard itself; the old HTML parser
-can include navigation text and group procedural text with a preceding speaker.
-Historical speech files are not bulk regenerated in this recovery lane.
+guarded numeric person ID as provenance. `parli.ingest.speeches` retains source
+`openaustralia`, the 50-character filter, text cleaner and permanent autoincrement
+citation IDs. Person IDs are rechecked through `scripts/roster_identity.py`. The loader
+creates a chamber/date index on its writable refresh DB for bounded lookups;
+this lane created it only on scratch copies.
+
+The old API/HTML rows and cached JSONL do **not** store OA gids. Reconciliation
+therefore uses chamber, date, guarded person and normalized body: whitespace and
+the trailing `View the PC OA website` footer are ignored. New imports retain
+gid-to-citation mappings in `oa_speech_provenance`; future reruns use those gids
+first. A fresh chamber-day inserts normally, deduplicating bodies even under
+new gids. An existing chamber-day keeps all its original rows and citation IDs.
+Every unmatched XML speech is reported, never inserted on that day. This also
+protects API days whose grouped procedural text cannot match XML boundaries.
+The nightly writes detailed evidence to `speech-reconciliation.json` in its OA
+cache; `--report` exposes the same evidence for manual scratch-copy tests.
+
+The real loader proof for 15–17 September copied 508 federal API rows and the
+member table from the read-only DB, preserving the citation high-water mark.
+All six chamber-days added **0** rows and retained every original row byte for
+byte. It reconciled 54 XML speeches, including `speech-1319216`; 1,755 XML
+speeches remained unmatched and were held. The fresh sitting fixture adds one
+row; a second gid with the same normalized body adds none.
 
 Membership IDs are not person IDs. `people.xml` explicitly maps each member or
 lord office to a person. The office's dated chamber and name must pass the
@@ -50,8 +66,13 @@ A zero-byte XML file is `no_sitting`, never an error or deletion. A date absent
 from the directory is left untouched. Every online run rechecks the index and
 selected XML files, so zero-byte/unpublished days can become sittings later.
 Nonempty modern files are not deleted for empty days. The loader is skipped if
-acquisition fails. Division application is additive and transactional: old
-records are retained and a conflicting stored vote stops the batch.
+acquisition fails. Acquisition writes only temporary directory copies. Metadata,
+raw XML, JSONL and reports are published after the complete batch validates,
+using Linux `renameat2(RENAME_EXCHANGE)` for an atomic directory swap. A refusal
+or failure on the second day leaves every existing cache file byte-identical.
+Zero-byte observations retain existing speech JSONL. Division application is
+additive and transactional: old records are retained and a conflicting stored
+vote stops the batch.
 
 Bill links use explicit ParlInfo IDs, not title joins. XML-only federal votes
 enter the existing schema 1 exporter through ext_ rows; divisions already
@@ -60,6 +81,12 @@ XML keys that later receive a TVFY ID for the same chamber/date/number. The API
 fallback retains those already published XML keys. The export's
 field names, person keys, serializers and schema remain unchanged. Without XML
 additions the output is byte-identical to the previous implementation.
+XML bill stances require an explicit bill question. Closure, adjournment,
+suspension of standing orders, amendments and unresolved questions have zero
+stance polarity while retaining totals, votes and exact bill evidence. House
+`2025-11-06-23` and `-24` both ask that the question be now put; both classify as
+procedural (polarity 0). The legacy TVFY and state export paths keep their
+existing field order and serialization.
 
 ## Staging audit and schema proof
 
@@ -74,6 +101,7 @@ python3 -m parli.ingest.openaustralia_xml --offline \
   --stage /home/jake/opax-staging/oa-feed \
   --start 2006-02-07 --end 2026-09-17
 python3 scripts/verify_oa_recovery.py --stage /home/jake/opax-staging/oa-feed
+python3 scripts/verify_oa_speeches.py --stage /home/jake/opax-staging/oa-feed
 ```
 
 `divisions.json` contains all parsed division/vote evidence; `dry-run.json`
@@ -141,12 +169,31 @@ automatically. This lane commits only; it does not deploy.
 
 There is a timing limitation: OPAX boots at 03:15 Sydney, before the upstream
 [parser's documented 09:05 previous-working-day job](https://github.com/openaustralia/openaustralia-parser/blob/main/README.md).
-That is too early to guarantee Tuesday's XML on Wednesday. A federal acquisition
-and subsequent export after the upstream job (for example, a 09:15 retry) is
-needed for that promise. No scheduler or production setting was changed here.
-With the current schedule, Tuesday may first be acquired Thursday morning.
-The feed keeps retrying unpublished days; it never treats them as permanent
-empty days or reports a newer coverage date than it actually observed.
+That is too early to guarantee Tuesday's XML on Wednesday. The optional
+`scripts/vm/federal_morning.sh` runner is ready for the orchestrator to schedule
+at **10:00 Sydney after a sitting day**. It acquires only federal XML, validates
+before opening a writer, reconciles speeches, loads divisions, projects exact
+bill links and exports schema 1 to an explicit local output path. Its window is
+seven days ending yesterday, its total budget is 20 minutes, and it shares both
+nightly and daily-refresh locks. It skips non-sitting mornings and retains the
+last output if acquisition or export validation fails. `morning-receipt.json`
+records observed sitting/no-sitting chamber-days and reconciliation results.
+
+Proposed schedule entry, **commented and not installed or enabled**:
+
+```cron
+# CRON_TZ=Australia/Sydney
+# 0 10 * * * /home/jake/opax/scripts/vm/federal_morning.sh --db /home/jake/.cache/autoresearch/parli.db --stage /home/jake/.cache/autoresearch/oa-morning --output /home/jake/.cache/autoresearch/oa-morning/votes.json >> /home/jake/.cache/autoresearch/pipeline/federal-morning.log 2>&1
+```
+
+The orchestrator chooses refresh-box paths, output publication and scheduling;
+the box must be awake before 10:00 and shutdown must wait for the runner. This
+script does not configure boot/shutdown, push, deploy or write to the knowledge
+box. The usual nightly handles search indexing and publication. Wednesday
+coverage can only be claimed once both Tuesday files have been observed and
+validated. With the current early schedule alone, Tuesday may first arrive
+Thursday morning. No scheduler or production setting was changed here.
+The feed retries unpublished days and never treats them as permanent empties.
 
 ## Licence and attribution
 
@@ -173,10 +220,15 @@ lane. No separate permissive XML licence is claimed on that evidence.
 
 ## Validation
 
-`python3 -m pytest`: **82 passed, 156 subtests passed**. It covers the XML/HTTP fixtures, federal affiliation evidence,
-legacy entry point, division wrapper, schema 1 exporter, bill divisions and
-static division pages. `scripts/vm/test_nightly.sh`: **301 passed, zero failed**, covering the complete offline
-nightly harness, including both chambers' normal and zero-byte XML days.
-The staging proof validates all 434 recovered divisions against the exact schema
-1 decoder and checks idempotence. `portal/public/votes.json` is byte-identical to
-HEAD (SHA-256 `a77128dc0e1e1b3fdaa4bf84501e2c94af3125dea3cf0b2dffbc688a49d68546`).
+The touched pytest gate passes **76 tests and 47 subtests**. The complete
+`python3 -m pytest` run passes **1,153 tests**, using cached local dependencies.
+`scripts/vm/test_nightly.sh` passes **301 checks, zero failures**, including
+real speech loading in both chambers, zero-byte days and idempotent reruns.
+The revision gates include XML reconciliation, cache refusal/validation,
+procedural bill stances, the bounded morning runner, existing schema 1 export
+fixtures and the offline nightly harness. The regenerated staging proof
+validates all 434 recovered divisions and 30,539 member votes against the
+strict schema 1 decoder, checks baseline byte compatibility and idempotence,
+and records polarity 0 plus retained totals/bill IDs for both closure divisions.
+`portal/public/votes.json` is byte-identical to HEAD (SHA-256
+`a77128dc0e1e1b3fdaa4bf84501e2c94af3125dea3cf0b2dffbc688a49d68546`).

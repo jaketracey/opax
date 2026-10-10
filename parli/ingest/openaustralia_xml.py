@@ -19,6 +19,7 @@ import xml.etree.ElementTree as ET
 
 from scripts.roster_identity import agrees, federal_members, member, verify
 from .honest_http import HonestHTTP, Refused, Unavailable
+from .cache_batch import CacheBatch
 from .speaker_names import normalize_speaker
 from .tvfy_bill_links import official_ref
 from .tvfy_refresh import PARTY_CANONICAL
@@ -266,6 +267,15 @@ def apply_divisions(db, divisions, votes):
 
 
 def fetch(args, db):
+    with CacheBatch(args.stage, args.modern_dir) as batch:
+        result = _fetch(args, db, batch)
+        if result[2]['issues'] and (args.modern_dir or getattr(args, 'load_divisions', False)):
+            raise ValueError(f"XML evidence has {len(result[2]['issues'])} issues; cache retained")
+        batch.publish()
+        return result
+
+
+def _fetch(args, db, batch):
     http = HonestHTTP()
     stage = Path(args.stage).expanduser()
     if args.offline:
@@ -277,8 +287,7 @@ def fetch(args, db):
             if not raw:
                 raise Unavailable('member mapping unavailable')
             ET.fromstring(raw)
-            (stage / f).parent.mkdir(parents=True, exist_ok=True)
-            (stage / f).write_bytes(raw)
+            batch.write(stage / f, raw)
             metadata.append(raw)
     people = People(metadata[0], metadata[1:], db)
     ids = division_ids(db, args.tvfy_list_cache)
@@ -302,22 +311,21 @@ def fetch(args, db):
                 raw = http.get(f'{BASE}/scrapedxml/{folder}/{day}.xml')
                 if raw is None:
                     raise Unavailable('listed XML disappeared')
-                path.parent.mkdir(parents=True, exist_ok=True)
-                path.write_bytes(raw)
+                batch.write(path, raw)
             s, d, v, bad = parse_day(raw, house, day, people, ids)
             days.append({'date': day, 'house': house, 'status': 'sitting' if raw else 'no_sitting',
                          'speeches': len(s), 'divisions': len(d)})
             if raw and args.modern_dir and not bad:
-                atomic(Path(args.modern_dir).expanduser() / f'{day}_{house}.jsonl',
+                batch.write(Path(args.modern_dir).expanduser() / f'{day}_{house}.jsonl',
                        ''.join(json.dumps(r, ensure_ascii=False) + '\n' for r in s))
             divisions.extend(d); votes.extend(v); issues.extend(bad)
     for did, count in Counter(d.id for d in divisions).items():
         if count > 1:
             issues.append({'kind': 'division-identity', 'division': did, 'occurrences': count})
     report = audit(db, divisions, votes, issues, days)
-    atomic(stage / 'divisions.json', json.dumps({'divisions': [asdict(d) for d in divisions],
+    batch.write(stage / 'divisions.json', json.dumps({'divisions': [asdict(d) for d in divisions],
                                                'votes': [asdict(v) for v in votes]}, ensure_ascii=False))
-    atomic(stage / 'dry-run.json', json.dumps(report, indent=2))
+    batch.write(stage / 'dry-run.json', json.dumps(report, indent=2))
     return divisions, votes, report
 
 

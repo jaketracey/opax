@@ -121,7 +121,8 @@ if run_step fed_download "" \
     --stage "${OPAX_OA_STAGE:-$HOME/.cache/autoresearch/oa-feed}" \
     --modern-dir "$HOME/.cache/autoresearch/hansard/modern"; then
   run_step fed_load "SELECT COUNT(*) FROM speeches WHERE source='openaustralia'" \
-    "$PY" -m parli.ingest.speeches --modern-only --since "$FED_START"
+    "$PY" -m parli.ingest.speeches --modern-only --since "$FED_START" --until "$TODAY" \
+      --report "${OPAX_OA_STAGE:-$HOME/.cache/autoresearch/oa-feed}/speech-reconciliation.json"
 else
   log "[fed_load] SKIP: federal source acquisition failed; cached rows retained"
 fi

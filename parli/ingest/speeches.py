@@ -9,7 +9,7 @@ Data sources:
 
 For each speech, inserts into the speeches table with word_count calculated.
 Skips very short speeches (<50 chars). Strips HTML tags.
-Deduplicates by (speaker_name, date, text hash).
+Reconciles modern chamber-days to permanent citations; deduplicates new bodies.
 
 Usage:
     python -m parli.ingest.speeches                # load all available data
@@ -17,10 +17,8 @@ Usage:
     python -m parli.ingest.speeches --since 2024-01-01  # only speeches after date
 """
 
-import glob
 import hashlib
 import json
-import os
 import re
 import zipfile
 from io import BytesIO
@@ -173,103 +171,86 @@ def load_zenodo_parquet(db, seen: set[str]) -> int:
     return count
 
 
-def load_modern_jsonl(db, seen: set[str], since: str | None = None) -> int:
-    """Load speeches from modern JSONL files. Returns count inserted."""
+def load_modern_jsonl(db, seen: set[str], since: str | None = None, report=None, until=None) -> int:
+    """Reconcile complete chamber-days before inserting new citation IDs.
+
+    Existing days are retained in full. Even one unmatched XML speech prevents
+    any new rows on that day; the report contains its gid and reason. New days
+    deduplicate normalized bodies as well as gids, including within the batch.
+    """
+    from .speech_reconciliation import SpeechReconciler, normalized_body
     if not MODERN_DIR.exists():
         print(f"  Modern dir not found: {MODERN_DIR}")
         return 0
-
-    files = sorted(glob.glob(str(MODERN_DIR / "*.jsonl")))
-    if not files:
-        print(f"  No JSONL files in {MODERN_DIR}")
-        return 0
-
     count = 0
-    pending = 0
-    guarded_members = None
-    for filepath in files:
-        filename = os.path.basename(filepath)
-        # filename format: YYYY-MM-DD_chamber.jsonl
-        parts = filename.replace(".jsonl", "").split("_", 1)
+    reconciler = SpeechReconciler(db)
+    for filepath in sorted(MODERN_DIR.glob('*.jsonl')):
+        parts = filepath.stem.split('_', 1)
         if len(parts) != 2:
             continue
-        file_date, chamber = parts
-
-        if since and file_date < since:
+        day, house = parts
+        if (since and day < since) or (until and day > until):
             continue
-
-        chamber = chamber.lower().strip()
-        if chamber not in ("representatives", "senate"):
-            chamber = "representatives"
-
-        with open(filepath, "r", encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if not line:
-                    continue
-                try:
-                    record = json.loads(line)
-                except json.JSONDecodeError:
-                    continue
-
-                raw_text = record.get("text", "")
-                text = clean_text(raw_text)
-                if not text:
-                    continue
-
-                speaker = record.get("speaker", "") or ""
-                party = record.get("party", "") or ""
-                electorate = record.get("electorate", "") or ""
-                topic = record.get("topic", "") or ""
-                person_id = record.get("person_id")
-                if person_id is not None:
-                    from scripts.roster_identity import federal_members, verify
-                    from collections import Counter
-                    if guarded_members is None:
-                        guarded_members = federal_members(db)
-                    pid = str(person_id)
-                    row = {"name": speaker, "states": ["federal"], "chambers": [chamber],
-                           "first": int(file_date[:4]), "last": int(file_date[:4])}
-                    resolved, _ = verify(row, Counter({pid: 1}), guarded_members, {}, int(file_date[:4]))
-                    person_id = pid if resolved == pid else None
-
-                # Deduplicate
-                dedup_key = f"{speaker}|{file_date}|{text_hash(text)}"
-                if dedup_key in seen:
-                    continue
-                seen.add(dedup_key)
-
-                word_count = len(text.split())
-
-                db.execute(
-                    """
-                    INSERT INTO speeches
-                    (person_id, speaker_name, party, electorate, chamber,
-                     date, topic, text, word_count, source)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                    """,
-                    (
-                        person_id,
-                        speaker,
-                        party,
-                        electorate,
-                        chamber,
-                        file_date,
-                        topic if topic else None,
-                        text,
-                        word_count,
-                        "openaustralia",
-                    ),
-                )
-                count += 1
-                pending += 1
-
-                if pending >= BATCH_SIZE:
-                    db.commit()
-                    pending = 0
-                    print(f"    ... {count} speeches loaded")
-
-    db.commit()
+        if house not in ('representatives', 'senate'):
+            continue
+        existing, bodies, gids, identities = reconciler.day(house, day)
+        entry = {'date': day, 'chamber': house, 'existing_rows': len(existing),
+                 'matched': [], 'unmatched': [], 'added': 0, 'duplicate_bodies': 0,
+                 'short_speeches': 0}
+        with filepath.open(encoding='utf-8') as stream:
+            records = [json.loads(line) for line in stream if line.strip()]
+        for record in records:
+            if record.get('date', day) != day or record.get('chamber', house) != house:
+                raise ValueError('speech record disagrees with its chamber-day file')
+            raw = record.get('text', '')
+            text = clean_text(raw)
+            speaker = record.get('speaker', '') or ''
+            pid, identity = reconciler.identity(speaker, record.get('person_id'), house, day)
+            gid = record.get('gid')
+            key = (identity, normalized_body(raw))
+            matches = bodies.get(key, [])
+            sid = gids.get(gid) if gid else None
+            if sid is not None and identities[sid] != identity:
+                raise ValueError('OpenAustralia gid disagrees with its guarded citation identity')
+            basis = 'gid' if sid is not None else 'normalized-body'
+            if sid is None and len(matches) == 1:
+                sid = matches[0]
+            if sid is not None:
+                reconciler.remember(gid, sid)
+                if gid:
+                    gids[gid] = sid
+                entry['matched'].append({'gid': gid, 'speech_id': sid, 'basis': basis})
+                if not existing:
+                    entry['duplicate_bodies'] += 1
+                continue
+            if existing:
+                entry['unmatched'].append({'gid': gid, 'reason': 'ambiguous-body' if matches else 'no-match'})
+                continue
+            if not text:
+                entry['short_speeches'] += 1
+                continue
+            dedup_key = f"{speaker}|{day}|{text_hash(text)}"
+            cursor = db.execute(
+                """INSERT INTO speeches
+                (person_id,speaker_name,party,electorate,chamber,date,topic,text,word_count,source)
+                VALUES (?,?,?,?,?,?,?,?,?,?)""",
+                (pid, speaker, record.get('party') or '', record.get('electorate') or '',
+                 house, day, record.get('topic') or None, text, len(text.split()), 'openaustralia'))
+            sid = cursor.lastrowid
+            identities[sid] = identity
+            reconciler.remember(gid, sid)
+            if gid:
+                gids[gid] = sid
+            bodies[key].append(sid)
+            seen.add(dedup_key)
+            count += 1
+            entry['added'] += 1
+        entry['fully_reconciled'] = not entry['unmatched']
+        if report is not None:
+            report.append(entry)
+        print(f"  {day} {house}: {entry['added']} added, {len(entry['matched'])} reconciled, "
+              f"{len(entry['unmatched'])} unmatched; {len(existing)} existing citations retained")
+        db.commit()
     return count
 
 
@@ -283,19 +264,21 @@ def main():
                         help="Skip historical Zenodo data")
     parser.add_argument("--since", type=str, default=None,
                         help="Only load speeches after this date (YYYY-MM-DD)")
+    parser.add_argument("--report", help="Write chamber-day reconciliation evidence as JSON")
+    parser.add_argument("--until", help="Last modern chamber-day to load (inclusive)")
     fts.add_argument(parser)
     args = parser.parse_args()
 
     db = get_db()
     init_db(db)
 
-    # Build the dedup set from stored speeches. A modern-only run inserts rows dated on or after
-    # --since (the key includes the date), so only those can match; the Zenodo history needs the lot.
-    window = args.since if (args.modern_only and args.since) else None
-    print("Building deduplication index from existing speeches"
-          + (f" dated {window} or later..." if window else "..."))
-    seen = build_seen(db, text_hash, since=window)
-    print(f"  {len(seen)} existing speeches indexed")
+    # Modern days reconcile through a date/chamber index. Only the historical
+    # loader needs the legacy global hash set (and its full-table text scan).
+    seen = set()
+    if not args.modern_only:
+        print("Building historical deduplication index from existing speeches...")
+        seen = build_seen(db, text_hash)
+        print(f"  {len(seen)} existing speeches indexed")
 
     if not args.modern_only:
         print("\nLoading Zenodo historical speeches...")
@@ -303,7 +286,11 @@ def main():
         print(f"  Loaded {n_zenodo} historical speeches")
 
     print("\nLoading modern JSONL speeches...")
-    n_modern = load_modern_jsonl(db, seen, since=args.since)
+    reconciliation = []
+    n_modern = load_modern_jsonl(db, seen, since=args.since, report=reconciliation, until=args.until)
+    if args.report:
+        from .openaustralia_xml import atomic
+        atomic(Path(args.report), json.dumps(reconciliation, indent=2))
     print(f"  Loaded {n_modern} modern speeches")
 
     total = db.execute("SELECT COUNT(*) FROM speeches").fetchone()[0]

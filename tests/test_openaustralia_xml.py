@@ -266,3 +266,155 @@ def test_party_switch_boundary_keeps_person_and_leaves_party_unknown():
     found=p.resolve('uk.org.publicwhip/lord/1','Alex Example','senate','2026-10-13')
     assert found['person_id']=='101' and found['party']==''
     assert p.resolve('uk.org.publicwhip/lord/1','Alex Example','senate','2026-10-14')['party']=='Australian Greens'
+
+
+def write_speeches(directory, rows):
+    (directory/'2026-10-13_senate.jsonl').write_text(''.join(json.dumps(r)+'\n' for r in rows))
+
+
+def test_api_day_reconciles_footer_and_retains_unmatched_citations(tmp_path):
+    from parli.ingest import speeches as S
+    db=db_fixture(); row=normal(db)[0][0]
+    db.execute('INSERT INTO speeches VALUES(900,?,?,?,?,?,?,?,?,?,?)',
+               ('101','Alex Example','Labor','NSW','senate','2026-10-13',None,
+                row['text'].replace('\n\n','  ')+'\nView the PC OA website',25,'openaustralia'))
+    unmatched=dict(row,gid=row['gid']+'.unmatched',text=row['text']+' An additional unmatched sentence.')
+    write_speeches(tmp_path,[row,unmatched]); report=[]
+    with patch.object(S,'MODERN_DIR',tmp_path):
+        assert S.load_modern_jsonl(db,set(),report=report)==0
+    assert db.execute('SELECT speech_id FROM speeches').fetchall()==[(900,)]
+    assert report[0]['matched'][0]['speech_id']==900
+    assert report[0]['unmatched'][0]['gid']==unmatched['gid']
+    assert not report[0]['fully_reconciled']
+
+
+def test_fresh_day_duplicate_body_under_new_gid_is_impossible(tmp_path):
+    from parli.ingest import speeches as S
+    db=db_fixture(); row=normal(db)[0][0]
+    duplicate=dict(row,gid=row['gid']+'.duplicate',text=row['text'].replace('\n\n',' \t ')+'\nView the PC OA website')
+    write_speeches(tmp_path,[row,duplicate]); report=[]
+    with patch.object(S,'MODERN_DIR',tmp_path):
+        assert S.load_modern_jsonl(db,set(),report=report)==1
+        assert S.load_modern_jsonl(db,set())==0
+    assert report[0]['duplicate_bodies']==1
+    assert db.execute('SELECT COUNT(*) FROM speeches').fetchone()[0]==1
+    assert db.execute('SELECT COUNT(DISTINCT speech_id) FROM oa_speech_provenance').fetchone()[0]==1
+    assert db.execute('SELECT COUNT(*) FROM oa_speech_provenance').fetchone()[0]==2
+
+
+def test_gid_reconciles_to_existing_citation_when_text_changes(tmp_path):
+    from parli.ingest import speeches as S
+    db=db_fixture(); row=normal(db)[0][0]
+    write_speeches(tmp_path,[row])
+    with patch.object(S,'MODERN_DIR',tmp_path):
+        assert S.load_modern_jsonl(db,set())==1
+        row['text']+=' An upstream correction does not create a new citation URL.'
+        write_speeches(tmp_path,[row]); report=[]
+        assert S.load_modern_jsonl(db,set(),report=report)==0
+    assert report[0]['matched'][0]['basis']=='gid'
+
+
+def test_gid_cannot_reconcile_a_different_guarded_person(tmp_path):
+    from parli.ingest import speeches as S
+    db=db_fixture();row=normal(db)[0][0];write_speeches(tmp_path,[row])
+    with patch.object(S,'MODERN_DIR',tmp_path):
+        assert S.load_modern_jsonl(db,set())==1
+        write_speeches(tmp_path,[dict(row,speaker='Sam Fixture',person_id='102')])
+        with pytest.raises(ValueError,match='guarded citation identity'):
+            S.load_modern_jsonl(db,set())
+    assert db.execute('SELECT COUNT(*) FROM speeches').fetchone()[0]==1
+
+
+@pytest.mark.parametrize('failure',[H.Refused('refused'),H.Unavailable('failed'),b'<broken>',
+    (FIXTURES/'sitting.xml').read_bytes().replace(b'2026-10-13',b'2026-10-14').replace(b'ayes="1"',b'ayes="4"')])
+def test_second_day_failure_leaves_entire_cache_unchanged(tmp_path,failure):
+    stage=tmp_path/'stage';stage.mkdir();modern=tmp_path/'modern';modern.mkdir()
+    for f in ('people.xml','representatives.xml','senators.xml'):(stage/f).write_bytes(b'previous mapping')
+    for day in ('2026-10-13','2026-10-14'):
+        p=stage/'raw'/'senate_debates'/f'{day}.xml';p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b'previous XML')
+        (modern/f'{day}_senate.jsonl').write_bytes(b'previous speeches')
+    (stage/'divisions.json').write_bytes(b'previous divisions')
+    before={p.relative_to(tmp_path):p.read_bytes() for p in tmp_path.rglob('*') if p.is_file()}
+    responses=[(FIXTURES/'people.xml').read_bytes(),b'<members/>',(FIXTURES/'senators.xml').read_bytes(),
+               b'Index of',b'Index of href="2026-10-13.xml" href="2026-10-14.xml"',
+               (FIXTURES/'sitting.xml').read_bytes(),failure]
+    args=Namespace(stage=str(stage),offline=False,start='2026-10-13',end='2026-10-14',
+                   modern_dir=str(modern),tvfy_list_cache=str(tmp_path/'lists'),load_divisions=False)
+    with patch.object(X.HonestHTTP,'get',side_effect=responses):
+        expected = (X.ET.ParseError if failure == b'<broken>' else ValueError) if isinstance(failure,bytes) else type(failure)
+        with pytest.raises(expected):X.fetch(args,db_fixture())
+    assert {p.relative_to(tmp_path):p.read_bytes() for p in tmp_path.rglob('*') if p.is_file()}==before
+    assert not list(tmp_path.glob('.*-batch-*'))
+
+
+def test_success_swaps_cache_directory_after_explicit_publication(tmp_path):
+    from parli.ingest.cache_batch import CacheBatch
+    root=tmp_path/'cache';root.mkdir();(root/'old').write_bytes(b'unchanged')
+    old_inode=root.stat().st_ino
+    with CacheBatch(root) as batch:
+        batch.write(root/'old',b'new');batch.write(root/'added',b'validated')
+        assert (root/'old').read_bytes()==b'unchanged'
+        batch.publish()
+    assert (root/'old').read_bytes()==b'new' and (root/'added').read_bytes()==b'validated'
+    assert root.stat().st_ino!=old_inode
+
+
+@pytest.mark.parametrize('question',[
+    'That the question be now put.','That the debate be adjourned.',
+    'Closure of debate','That standing orders be suspended.',
+    'Suspension of standing orders','That the amendment be agreed to.',
+    'That the motion be agreed to.','',None,'Unresolved question',
+])
+def test_xml_procedural_and_unresolved_questions_never_become_bill_stances(question):
+    parsed=E.parse_name('Example Bill 2026 - Second Reading')
+    assert E.xml_polarity(parsed,question)==0
+
+
+@pytest.mark.parametrize('question',['That this bill be now read a second time.',
+    'That the bill be read a third time.','That the bill, as amended, be agreed to.'])
+def test_xml_explicit_bill_questions_qualify(question):
+    assert E.xml_polarity(E.parse_name('Example Bill 2026 - Second Reading'),question)==1
+
+
+def test_procedural_votes_keep_totals_and_bill_evidence(tmp_path):
+    db=db_fixture();_,divisions,votes,_=normal(db)
+    d=divisions[0];d.question='That the question be now put.'
+    X.apply_divisions(db,divisions,votes)
+    out={};E.export_federal(db,out,{},{})
+    assert out['101']['divisions_total']==1 and out['102']['divisions_total']==1
+    assert out['101']['for']==out['101']['against']==[]
+    assert db.execute('SELECT bill_ref FROM ext_divisions').fetchone()[0]==d.bill_ref
+    assert json.loads(db.execute('SELECT evidence FROM oa_division_provenance').fetchone()[0])['bills']
+
+
+def test_morning_runner_is_bounded_federal_only_and_schema_one(tmp_path):
+    from scripts import federal_morning as M
+    stage=tmp_path/'stage';stage.mkdir()
+    for f in ('people.xml','senators.xml'):(stage/f).write_bytes((FIXTURES/f).read_bytes())
+    (stage/'representatives.xml').write_bytes(b'<members/>')
+    raw=stage/'raw'/'senate_debates';raw.mkdir(parents=True)
+    (raw/'2026-10-13.xml').write_bytes((FIXTURES/'sitting.xml').read_bytes())
+    modern=stage/'morning-modern';modern.mkdir()
+    row=normal(db_fixture())[0][0]
+    (modern/'2026-10-16_senate.jsonl').write_text(json.dumps(dict(row,date='2026-10-16'))+'\n')
+    path=tmp_path/'scratch.db'
+    with sqlite3.connect(path) as scratch:db_fixture().backup(scratch)
+    args=Namespace(db=str(path),stage=str(stage),output=tmp_path/'votes.json',date='2026-10-14',offline=True)
+    M.run(args)
+    first=args.output.read_bytes();validate_votes(json.loads(first))
+    M.run(args)
+    assert args.output.read_bytes()==first
+    receipt=json.loads((stage/'morning-receipt.json').read_text())
+    assert receipt['start']=='2026-10-07' and receipt['end']=='2026-10-13'
+    with sqlite3.connect(path) as db:
+        assert db.execute('SELECT COUNT(*) FROM speeches').fetchone()[0]==1
+        assert db.execute('SELECT COUNT(*) FROM speeches WHERE date>\'2026-10-13\'').fetchone()[0]==0
+        assert db.execute('SELECT COUNT(*) FROM ext_divisions').fetchone()[0]==1
+        assert db.execute('SELECT COUNT(*) FROM ext_votes').fetchone()[0]==2
+
+
+def test_morning_runner_calendar_skip_opens_no_database(tmp_path):
+    from scripts import federal_morning as M
+    path=tmp_path/'absent.db'
+    M.run(Namespace(date='2026-10-12',db=str(path)))
+    assert not path.exists()
