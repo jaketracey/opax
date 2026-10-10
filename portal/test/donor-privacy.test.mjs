@@ -13,6 +13,7 @@ import {offline, loadWorker, outbound, rendered} from './worker-harness.mjs';
 import {WITHHELD_DONOR_REPLY} from '../src/donor-index.ts';
 import {MONEY_GRAPHS, isOrganisationDonor, donorPrivacyIndex, donorNameWithheld, foldDonorName, withholdIndividualDonors} from '../public/donor-entity.js';
 import {partyUrl} from '../public/canonical-urls.js';
+import {personIndex} from '../src/person-slug.ts';
 import {buildCrawl} from '../../scripts/build_crawl_catalog.mjs';
 
 const pub = new URL('../public/', import.meta.url).pathname;
@@ -36,12 +37,29 @@ const fixtureNodes = [...FIXTURE_INDIVIDUALS, [FIXTURE_ORGANISATION, 'property',
 const fixtureGraph = {...federal, nodes: [...federal.nodes, ...fixtureNodes],
   edges: [...federal.edges, ...fixtureNodes.map(n => ({source: n.id, target: topParty.id, total: n.total, count: 1, firstYear: 2020, lastYear: 2020, byYear: {2020: [n.total, 1]}}))]};
 
-// The export with the fixture graph in place: every other entry is a symlink.
-const root = mkdtempSync(join(tmpdir(), 'opax-donor-privacy-'));
-for (const entry of readdirSync(pub)) if (!['crawl', 'person-paths.js', 'graph'].includes(entry)) symlinkSync(join(pub, entry), join(root, entry));
-mkdirSync(join(root, 'graph'));
-for (const entry of readdirSync(join(pub, 'graph'))) if (entry !== 'money.json') symlinkSync(join(pub, 'graph', entry), join(root, 'graph', entry));
-writeFileSync(join(root, 'graph', 'money.json'), JSON.stringify(fixtureGraph));
+// A member's declared interests gain one fictional entry naming a fixture individual,
+// first in its bucket so the page would show it.
+const rosterPeople = real('parliamentarians.json').people;
+const interestIndex = real('interests/index.json');
+const interestMember = rosterPeople.find(p => p.pid && !p.speech_scope && interestIndex.people[p.pid] && existsSync(join(pub, `interests/${p.pid}.json`)));
+const interestRegister = real(`interests/${interestMember.pid}.json`);
+const [interestBucket] = Object.keys(interestRegister.buckets);
+const keptEntry = interestRegister.buckets[interestBucket].items[0];
+interestRegister.buckets[interestBucket].items.unshift({description: `Gift of a framed print from ${FIXTURE_INDIVIDUALS[0][0]}`, holder: 'Self'});
+
+/** The export with these money graphs in place: every other entry is a symlink. */
+function exportRoot(money) {
+  const dir = mkdtempSync(join(tmpdir(), 'opax-donor-privacy-'));
+  for (const entry of readdirSync(pub)) if (!['crawl', 'person-paths.js', 'graph', 'interests'].includes(entry)) symlinkSync(join(pub, entry), join(dir, entry));
+  mkdirSync(join(dir, 'graph'));
+  for (const entry of readdirSync(join(pub, 'graph'))) if (entry !== 'money.json') symlinkSync(join(pub, 'graph', entry), join(dir, 'graph', entry));
+  writeFileSync(join(dir, 'graph', 'money.json'), JSON.stringify(money));
+  mkdirSync(join(dir, 'interests'));
+  for (const entry of readdirSync(join(pub, 'interests'))) if (entry !== `${interestMember.pid}.json`) symlinkSync(join(pub, 'interests', entry), join(dir, 'interests', entry));
+  writeFileSync(join(dir, 'interests', `${interestMember.pid}.json`), JSON.stringify(interestRegister));
+  return dir;
+}
+const root = exportRoot(fixtureGraph);
 await buildCrawl(root);
 test.after(() => rmSync(root, {recursive: true, force: true}));
 const at = path => join(root, path.replace(/^\//, ''));
@@ -202,7 +220,7 @@ const locs = name => [...readFileSync(at(`crawl/sitemaps/${name}`), 'utf8').matc
 const sitemapFiles = readdirSync(at('crawl/sitemaps'));
 
 test('every server-rendered person, party, money, hub, campaigner and supplier page names no withheld donor', async t => {
-  let interestMentions = 0;
+  let interestNotes = 0;
   const people = sitemapFiles.filter(f => f.startsWith('people-')).flatMap(locs);
   assert.ok(people.length > 1000);
   const parties = new Set([...sitemapFiles.filter(f => f.startsWith('parties-')).flatMap(locs), ...graphs.flatMap(g => g.nodes.filter(n => n.kind === 'party').map(n => partyUrl(n.label)))]);
@@ -220,15 +238,12 @@ test('every server-rendered person, party, money, hub, campaigner and supplier p
     const response = await fetchWorker(path);
     const html = await response.text();
     if (response.status === 200 && people.includes(path) && /<h3>(?:AEC|ECQ|VEC) disclosed receipts<\/h3>/.test(html)) personDonorBlocks++;
-    // A member's declared interests are the parliamentary register's own words
-    // (CC BY-NC-ND: no derivatives), so a gift giver there is counted, not failed.
-    const [before, interests = '', after = ''] = html.split(/(<h2>Declared interests<\/h2>[\s\S]*?)(?=<h2>)/);
-    if (interests && namesIn(interests).length) interestMentions++;
-    assert.equal(withheldLinks(interests).length, 0, `${path}: withheld link in declared interests`);
-    assertClean(path, rendered(before + after));
+    // Declared interests included: an entry naming a withheld donor is left out whole.
+    if (html.includes('data-register-omitted')) interestNotes++;
+    assertClean(path, rendered(html));
   }
   assert.ok(personDonorBlocks > 500, `${personDonorBlocks} person pages still list organisational donors`);
-  t.diagnostic(`${personDonorBlocks} person pages list organisational donors; ${interestMentions} carry a withheld donor's name in the member's own declared interests`);
+  t.diagnostic(`${personDonorBlocks} person pages list organisational donors; ${interestNotes} leave a declared-interest entry to the official register`);
   t.diagnostic(`scanned for ${checked.length} names: ${withheldLabels.length} withheld labels (${fixtureLabels.size} fixtures), less ${withheldLabels.length - known.length} single-word or other-register organisation names and ${known.length - checked.length} office holders`);
 });
 
@@ -275,6 +290,15 @@ test('a withheld donor or campaigner page is reachable, noindex and unnamed; its
   assert.ok(withheldCampaigners > 0);
 });
 
+test('a declared-interest entry naming a withheld donor is left out whole, with a note and the official register', async () => {
+  const html = rendered(await (await fetchWorker(`/subject/person/${personIndex(rosterPeople).slugOf.get(interestMember.name)}`)).text());
+  assert.ok(html.includes('<h2>Declared interests</h2>'));
+  assert.equal(namesIn(html).length, 0, 'the fixture entry is not shown');
+  assert.match(html, /<p data-register-omitted="">Some register entries are shown only on the <a [^>]*href="https?:[^"]+"[^>]*>official register<\/a>\.<\/p>/);
+  const escaped = keptEntry.description.replace(/&/g, '&amp;').replace(/'/g, '&#39;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  assert.ok(html.includes(escaped), 'the next entry is shown as written');
+});
+
 // --- 2. crawl outputs --------------------------------------------------------------
 test('no sitemap, llms.txt or IndexNow entry names or links a withheld donor', () => {
   for (const name of sitemapFiles) assertClean(`sitemap ${name}`, readFileSync(at(`crawl/sitemaps/${name}`), 'utf8'));
@@ -297,6 +321,27 @@ test('IndexNow fingerprints a person page by the donors it names', () => {
   // Roster members of that party, plus seat-only rows the crawl adds from the electorate export.
   const members = roster.filter(p => foldDonorName(p.party_now || p.party || '') === foldDonorName(topParty.label)).length;
   assert.ok(changed > 0 && changed <= members * 1.1 && changed < people.length / 2, `${changed} of ${people.length} person fingerprints changed for ${members} members`);
+});
+
+test('a person page re-pings when the donor names it shows change, and for nothing else in that block', async () => {
+  const fingerprints = async money => {
+    const dir = exportRoot(money);
+    try { await buildCrawl(dir); return new Map(JSON.parse(readFileSync(join(dir, 'crawl/indexnow.json'), 'utf8')).entries); }
+    finally { rmSync(dir, {recursive: true, force: true}); }
+  };
+  const base = new Map(JSON.parse(readFileSync(at('crawl/indexnow.json'), 'utf8')).entries);
+  const moved = entries => [...entries].filter(([path, hash]) => path.startsWith('/subject/person/') && base.get(path) !== hash).map(([path]) => path);
+  // Amounts change, for a named organisation and for an unnamed (withheld) donor: no name shown changes.
+  const organisationId = `donor:${FIXTURE_ORGANISATION.toLowerCase()}`;
+  const amounts = {...fixtureGraph, edges: fixtureGraph.edges.map(e => e.source === organisationId || e.source === fixtureNodes[0].id ? {...e, total: e.total + 1, byYear: {2020: [e.total + 1, 1]}} : e)};
+  assert.deepEqual(moved(await fingerprints(amounts)), [], 'an amount re-pinged a page');
+  // A fictional organisation renamed: exactly the pages showing it re-ping.
+  const renamed = {...fixtureGraph, nodes: fixtureGraph.nodes.map(n => n.id === organisationId ? {...n, label: 'Fixtureworks Renamed Holdings Pty Ltd'} : n)};
+  const changed = moved(await fingerprints(renamed));
+  const showing = [];
+  for (const path of base.keys()) if (path.startsWith('/subject/person/') && (await (await fetchWorker(path)).text()).includes(FIXTURE_ORGANISATION)) showing.push(path);
+  assert.ok(showing.length > 50, `${showing.length} pages show the fixture organisation`);
+  assert.deepEqual(changed.sort(), showing.sort());
 });
 
 // --- 3. API responses ----------------------------------------------------------------
@@ -354,8 +399,43 @@ test('a question naming a withheld donor gets one fixed reply from /api/ask, wit
     assert.notEqual(out.answer_status, 'withheld', `organisation ${organisations.indexOf(n)} was withheld`);
     if (out.answer_status === 'calculated') answered++;
   }
-  assert.ok(answered > 10, `${answered} organisation questions calculated`);
+  assert.equal(answered, organisations.length, `${answered} of ${organisations.length} organisation questions calculated`);
   t.diagnostic(`${checked.length} withheld names asked four ways; ${answered} of ${organisations.length} organisation questions calculated`);
+});
+
+test('a one-word withheld label is refused only in donor context', async t => {
+  const single = withheldLabels.filter(label => !/\S\s+\S/.test(label.trim()) && !rosterNames.has(foldDonorName(label)));
+  assert.ok(single.length > 5, `${single.length} one-word labels`);
+  for (const word of single) {
+    for (const question of [`What has parliament said about ${word} outages?`, `Which ministers met ${word} staff last year?`]) {
+      const out = JSON.parse((await ask(question)).text);
+      assert.notEqual(out.answer, WITHHELD_DONOR_REPLY, `ordinary question ${single.indexOf(word)} was refused`);
+    }
+    for (const question of [`How much did ${word} donate?`, `donations from ${word}`, `Who is the donor ${word}?`, `"${word}"`, `${word} donated to Labor`, `Who receives the most funding from ${word}?`])
+      assertWithheldReply(`donor-intent question ${single.indexOf(word)}`, JSON.parse((await ask(question)).text));
+  }
+  t.diagnostic(`${single.length} one-word withheld labels: ordinary questions pass, donor-intent questions refused`);
+});
+
+test('a question or search is never echoed into page metadata or a share card', async () => {
+  const marker = 'Zebracorn quarterly fixture question';
+  const questions = [marker, ...checked.slice(0, 60).map(label => `How much did ${label} donate?`)];
+  for (const [i, q] of questions.entries()) {
+    for (const path of [`/ask?${new URLSearchParams({q})}`, `/ask?${new URLSearchParams({view: 'search', q})}`, `/search?${new URLSearchParams({q})}`]) {
+      const response = await fetchWorker(path);
+      const html = rendered(await response.text());
+      assert.ok(!decode(html).toLowerCase().includes('zebracorn'), `question ${i} echoed into ${path.split('?')[0]}`);
+      assertClean(`question ${i} on ${path.split('?')[0]}`, html);
+    }
+    for (const card of ['/og/ask.png', '/og/ask.jpg', '/og/search.png']) {
+      const response = await fetchWorker(`${card}?${new URLSearchParams({q})}`);
+      const text = await response.text();
+      assert.equal(response.status, 200, `${card} is drawn`);
+      assert.ok(response.headers.get('x-opax-og') && text.startsWith('{'), `${card} is a card`);
+      assert.ok(!text.toLowerCase().includes('zebracorn'), `question ${i} drawn on ${card}`);
+      assertClean(`question ${i} on ${card}`, text);
+    }
+  }
 });
 
 test('follow-up suggestions, the search overview, voice tools and the money overview never take a withheld name', async () => {

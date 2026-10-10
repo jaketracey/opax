@@ -36,7 +36,7 @@ import { communityRoute } from './community'
 import { deliverReplyEmails, REPLY_EMAIL_CRON } from './community-notifications'
 import { partyUrl, personUrl, personNameKey } from '../public/canonical-urls.js'
 import { withholdIndividualDonors } from '../public/donor-entity.js'
-import { donorWithheld, namesWithheldDonor, questionNamesWithheldDonor, WITHHELD_DONOR_REPLY } from './donor-index'
+import { donorWithheld, namesWithheldDonor, questionNamesWithheldDonor, withheldNameCheck, WITHHELD_DONOR_REPLY } from './donor-index'
 import { canonicalPageRedirect } from './canonical-origin'
 import { pageEntry } from './page-entry'
 import { communityMcp } from './community-mcp'
@@ -3107,15 +3107,13 @@ const OG_IMAGE_ALT = 'OPAX: ask what your politicians actually said'
 /**
  * The share image for a page is its canonical URL under /og with .png on the
  * end, so /subject/person/anthony-albanese shares
- * /og/subject/person/anthony-albanese.png?v=2, and /ask?q=... keeps its
- * question. The version is the drawing's (src/og.ts), not the data's: a
+ * /og/subject/person/anthony-albanese.png?v=2. A question or search never
+ * reaches the image (it can name a withheld donor). The version is the drawing's (src/og.ts), not the data's: a
  * crawler caches by URL, so a redesign has to move.
  */
 function ogImageFor(canonical: string): string {
   const u = new URL(canonical)
   const out = new URL(`${SITE_ORIGIN}/og${u.pathname}.png`)
-  const q = u.searchParams.get('q')
-  if (q) out.searchParams.set('q', q)
   // The same list as CARD_QUERY, spelled out so this function stands alone (test/grant-social-card.test.mjs runs it in isolation).
   for (const k of ['award', 'jur', 'program', 'largest']) { const v = u.searchParams.get(k); if (v) out.searchParams.set(k, v) }
   out.searchParams.set('v', OG_VERSION)
@@ -3814,20 +3812,22 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
       const page = STATIC_PAGES[researchSearch ? 'search' : route.page]
       const q = url.searchParams.get('q')?.trim()
       const canonical = canonicalFor(url, Boolean(page.query))
+      // A question or search is never echoed into the title, description, share card
+      // or its image: it can name a withheld donor (src/donor-index.ts) or anything else.
       if (route.page === 'ask' && !researchSearch && q) {
         return base({
-          title: clip(`${q} · OPAX`, 90),
-          description: clip(`"${q}": an answer from the Australian parliamentary record, cited to the speeches it draws on, with the money behind the speakers.`),
+          title: 'Ask OPAX',
+          description: 'An answer from the Australian parliamentary record, cited to the speeches it draws on, with the money behind the speakers.',
           canonical,
-          card: { kicker: 'Ask', italic: true, title: `“${clip(q, 160)}”`, lines: ['An answer from the parliamentary record, cited to the speeches it draws on, with the money behind the speakers.'] },
+          card: { kicker: 'Ask', title: 'Ask OPAX', lines: ['An answer from the parliamentary record, cited to the speeches it draws on, with the money behind the speakers.'] },
         })
       }
       if ((route.page === 'search' || researchSearch) && q) {
         return base({
-          title: clip(`Search: ${q} · OPAX`, 90),
-          description: clip(`Speeches matching "${q}" in the Australian parliamentary record, with speaker, party, date and a link to the official source for each.`),
+          title: 'Search the record · OPAX',
+          description: 'Speeches matching a search of the Australian parliamentary record, with speaker, party, date and a link to the official source for each.',
           canonical,
-          card: { kicker: 'Search the record', italic: true, title: `“${clip(q, 160)}”`, lines: ['Speeches matching this query, with speaker, party, date and a link to the official source for each.'] },
+          card: { kicker: 'Search the record', title: 'Search the record', lines: ['Speeches matching this query, with speaker, party, date and a link to the official source for each.'] },
         })
       }
       return base({
@@ -3967,7 +3967,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       if (p) {
         const profiles=await read<{people:Record<string,PersonSchemaIdentity>;by_name:Record<string,PersonSchemaIdentity>}>('/profile-links.json').catch(()=>null)
         const identity={...profiles?.by_name[foldName(p.name)],...profiles?.people[p.pid || '']}
-        const content = await renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined)
+        const content = await renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,await withheldNameCheck(env.ASSETS))
         meta.prerender = content.html
         if(content.description) meta.description=clip(content.description)
         const photos=await loadPhotos(env).catch(()=>null)
@@ -5046,14 +5046,13 @@ async function serveOgImage(url: URL, request: Request, env: Env, ctx: Execution
   if (!m) return ogFallback(env, request)
   const jpeg = m[2] === 'jpg'
   const pagePath = m[1].replace(/\/+$/, '') || '/home'
-  const q = url.searchParams.get('q')?.trim() ?? ''
+  // `q` is never read: a question or search is never drawn on a card.
   const award = url.searchParams.get('award') ?? ''
   const cardQuery = CARD_QUERY.filter(k => url.searchParams.get(k)).map(k => [k, url.searchParams.get(k) as string] as [string, string])
   const cardSubject = url.searchParams.get('program') ?? url.searchParams.get('largest') ?? ''
   const format = ogFormat(url.searchParams.get('format'))
   const portrait = format === 'portrait'
   const variants = new URLSearchParams()
-  if (q) variants.set('q', q)
   for (const [k, v] of cardQuery) variants.set(k, v)
   if (portrait) variants.set('format', format)
   const cacheKey = cacheRequest('og', `${encodeURIComponent(env.CACHE_EPOCH)}/${OG_VERSION}/${m[2]}${pagePath}?${variants}`)
@@ -5072,7 +5071,6 @@ async function serveOgImage(url: URL, request: Request, env: Env, ctx: Execution
       spec = homeCard()
     } else {
       const pageUrl = new URL(`${SITE_ORIGIN}${pagePath}`)
-      if (q) pageUrl.searchParams.set('q', q)
       for (const [k, v] of cardQuery) pageUrl.searchParams.set(k, v)
       const route = matchSeoRoute(pageUrl)
       if (route) {

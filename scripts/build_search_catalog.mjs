@@ -7,7 +7,7 @@ import { personNameKey, personUrl } from '../portal/public/canonical-urls.js';
 import { recordPathIndex } from '../portal/public/record-paths.js';
 import { personSlug, personIndex } from '../portal/src/person-slug.ts';
 import { moneyFlowType } from '../portal/public/money-records.js';
-import { donorPrivacyIndex, donorNameWithheld, foldDonorName } from '../portal/public/donor-entity.js';
+import { donorPrivacyIndex, donorNameWithheld, foldDonorName, withheldPhrases, namesWithheldPhrase } from '../portal/public/donor-entity.js';
 import { recordsWithLocations } from '../portal/public/grants-research.js';
 import { auditComplete } from '../portal/public/audit.js';
 import { payPersonRecord, payPersonOrder, payGeneralRecords } from '../portal/src/pay-records.mjs';
@@ -81,8 +81,13 @@ async function main() {
  const identity=personIndex(roster.people); canonicalPeople=identity.slugOf; canonicalAliases=new Map([...identity.byFold].map(([name,p])=>[name,identity.slugOf.get(p.name)]));
  for(const p of roster.people) add('person:'+p.name,'person',p.full||p.name,personHref(p.name),`${p.party_now||p.party||''}. ${(p.states||[]).join(', ')}. ${personSpeechCount(p)}${p.representation?.length?' Recorded representation: '+p.representation.map(r=>`${r.electorate}${r.state?', '+r.state:''}, ${r.jurisdiction}, ${r.chamber}`).join('; ')+'. Roster affiliations may include past seats and do not establish current tenure.':''}`,{aliases:p.name,from:p.first,to:p.last,state:p.states,parties:[p.party_now||p.party||''],speakers:[p.name],source:'Parliamentarian directory',dateLabel:p.speech_scope?'':(p.speech_count_basis?'Transcript years: ':'')+period(p.first,p.last)});
  // Individual donors stay out of search entities: public/donor-entity.js.
- const donorIndex=donorPrivacyIndex(await Promise.all(['money.json','money.qld.json','money.vic.json','money.tas.json'].map(file=>read('graph/'+file))));
+ const moneyGraphs=await Promise.all(['money.json','money.qld.json','money.vic.json','money.tas.json'].map(file=>read('graph/'+file)));
+ const donorIndex=donorPrivacyIndex(moneyGraphs);
  const withheld=name=>donorIndex.withheld.has(foldDonorName(name));
+ // Free text (a declared-interest entry) naming a withheld donor; office holders are named as such.
+ const officeHolders=[...roster.people.flatMap(p=>[p.name,p.full||'']),...Object.values((await read('access.json')).ministers||{}).map(m=>m.name)].filter(Boolean);
+ const textPhrases=withheldPhrases(moneyGraphs,officeHolders);
+ const namesWithheld=(...texts)=>namesWithheldPhrase(textPhrases,...texts);
  for(const [jur,file] of [['federal','money.json'],['qld','money.qld.json'],['vic','money.vic.json'],['tas','money.tas.json']]) {
   const graph=await read('graph/'+file), byId=new Map(graph.nodes.map(n=>[n.id,n]));
   for(const n of graph.nodes.filter(n=>(n.kind==='donor'&&!donorNameWithheld(donorIndex,n.label))||n.kind==='party')) {
@@ -128,12 +133,13 @@ async function main() {
   // Speakers below the directory's floor still have profiles under their exact
   // corpus name. Only names absent from both indexes need the official register.
   const href=interestHref(p,person,speakerNames);
-  for(const [category,b] of Object.entries(p.buckets||{})) for(const [i,item] of (b.items||[]).entries()) {
+  // An entry naming a withheld donor is left out whole (the register's own words, CC BY-NC-ND).
+  for(const [category,b] of Object.entries(p.buckets||{})) for(const [i,item] of (b.items||[]).entries()) if(!namesWithheld(item.description,item.holder||'')) {
    add(`interest:${file}:${category}:${i}`,'interest',`${p.name} — ${category.replaceAll('_',' ')}`,href,`${item.description}. ${item.holder||''}. ${item.kind||''}.`,{aliases:person?.name||'',date:item.date||null,from:year(item.date||p.as_at),to:year(item.date||p.as_at),dateLabel:item.date?undefined:(p.as_at?'Register as at '+p.as_at:undefined),state:p.jurisdiction,speakers:[...new Set([p.name,person?.name].filter(Boolean))],parties:[person?.party_now||person?.party||''],source:'Register of interests',url:p.source_url});
   }
  }
  const recent=await read('interests/recent.json');
- for(const x of recent.items) add('alteration:'+x.id,'interest',`${x.name} — ${x.kind}`, '/declared?'+new URLSearchParams({person:x.name}),x.description,{date:x.date,state:x.jurisdiction,speakers:[x.name],source:'Register alteration',url:x.url});
+ for(const x of recent.items) if(!namesWithheld(x.description)) add('alteration:'+x.id,'interest',`${x.name} — ${x.kind}`, '/declared?'+new URLSearchParams({person:x.name}),x.description,{date:x.date,state:x.jurisdiction,speakers:[x.name],source:'Register alteration',url:x.url});
  // What each parliamentarian is paid for the posts held (docs/DATA-PAY.md). The
  // rows are written by src/pay-records.mjs, which also hands the closest ones to
  // the model when a pay question is too loose for the calculated answer.

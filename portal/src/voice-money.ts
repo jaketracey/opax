@@ -137,6 +137,13 @@ export async function receiptGraphForQuestion(query:string, load:(file:string)=>
     const graph=await load(file)
     return graph?{graph:withholdIndividualDonors(graph),file,jurisdiction}:null
   }
+  if(direct&&!state&&direct!=='federal') {
+    // A region word inside a complete donor name ("Queensland Nickel Pty Ltd") is
+    // part of the name, not a jurisdiction: with none left over, the default stands.
+    const federal=await read('federal')
+    const donor=federal?exactReceiptDonors(federal.graph,normal(query)):null
+    if(federal&&donor&&!donor.ambiguous&&donor.nodes.length&&!mentionedReceiptRegions(donor.partyQuery??query).length)return federal
+  }
   if(direct)return ['federal','qld','vic','tas'].includes(direct)?read(direct):null
   const candidates=mentionedReceiptRegions(query).filter(j=>['federal','qld','vic','tas'].includes(j))
   let selected:Awaited<ReturnType<typeof read>>=null
