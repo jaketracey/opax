@@ -17,12 +17,19 @@ const unescape = s => s.replace(/&#39;|&apos;/g, "'").replace(/&quot;/g, '"').re
 test('a donor is an organisation only with positive evidence in its name; the industry never counts', () => {
   for (const [label, industry] of [['Roslyn Packer','media'],['Sara Prendergast','fossil_fuels'],['Mrs X AO','finance'],['Mrs Roslyn Packer AO','media'],['Packer, Roslyn','media'],['Visy','other'],['Sportsbet','gambling']])
     assert.equal(isOrganisationDonor({label, industry, aliases: []}), false, label);
-  for (const [label, industry] of [['Clubs NSW','gambling'],['Woodside Energy Ltd','fossil_fuels'],['CFMEU','unions'],["Australian Workers' Union",'unions'],['Pratt Holdings Pty Ltd','property'],['X Family Trust','other'],['Electrical Trades Union of Australia','unions'],['ABN 12 345 678 901','other']])
+  for (const [label, industry] of [['Clubs NSW','gambling'],['Woodside Energy Ltd','fossil_fuels'],['CFMEU','unions'],["Australian Workers' Union",'unions'],['Pratt Holdings Pty Ltd','property'],['X Family Trust','other'],['Electrical Trades Union of Australia','unions']])
     assert.equal(isOrganisationDonor({label, industry, aliases: []}), true, label);
   // An alias with a legal form is evidence; a personal name tagged as a union is not.
   assert.equal(isOrganisationDonor({label: 'Ikon', industry: 'media', aliases: ['Ikon Communication Pty Ltd']}), true);
   assert.equal(isOrganisationDonor({label: 'Mr John Citizen', industry: 'unions'}), false);
   assert.equal(isOrganisationDonor({label: 'Citizen, John', industry: 'unions'}), false);
+  // An ABN or ACN is not evidence (sole traders have them), and neither is the unions tag.
+  assert.equal(isOrganisationDonor({label: 'ABN 12 345 678 901', industry: 'other'}), false);
+  assert.equal(isOrganisationDonor({label: 'Alex Example', industry: 'other', aliases: ['ABN 12 345 678 901']}), false);
+  assert.equal(isOrganisationDonor({label: 'Alex Example', industry: 'unions', aliases: []}), false);
+  // A single all-capitals token is an acronym; a capitalised two-word name is not.
+  assert.equal(isOrganisationDonor({label: 'SDA', industry: 'unions'}), true);
+  assert.equal(isOrganisationDonor({label: 'JOHN SMITH', industry: 'unions'}), false);
   // Organisation words count only as whole tokens.
   assert.equal(isOrganisationDonor({label: 'Ingrid Bankston', industry: 'finance'}), false);
   assert.equal(isOrganisationDonor({label: 'Trustwell', industry: 'finance'}), false);

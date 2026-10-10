@@ -77,7 +77,7 @@ class PassageTextTests(unittest.TestCase):
             path = Path(tmp)
             source_path = path / 'source.sqlite'
             source = sqlite3.connect(source_path)
-            source.executescript('CREATE TABLE speeches(speech_id INTEGER PRIMARY KEY, text_clean TEXT); CREATE TABLE ext_press_releases(source,source_id,body_text);')
+            source.executescript('CREATE TABLE speeches(speech_id INTEGER PRIMARY KEY, text_clean TEXT); CREATE TABLE ext_press_releases(source,source_id,body_text); CREATE TABLE government_grants(grant_id);')
             evidence = setup(path / 'evidence.sqlite')
             originals = {}
             for speech in FIXTURE['speeches']:
@@ -88,19 +88,37 @@ class PassageTextTests(unittest.TestCase):
                 body = speech['text_clean']
                 start = body.index(quote, 3800 if sid == '796901' else 0)
                 end = start + len(quote)
+                old_excerpt = body[max(0,start-160):end+160]
+                if sid == '1249416':
+                    self.assertTrue(old_excerpt.startswith('ransport Legislation Committee'))
+                else:
+                    self.assertTrue(old_excerpt.endswith('We know perso'))
                 obj = 'org:' + sid
                 evidence.execute('INSERT INTO entities VALUES (?,\'organisation\',?,NULL)', (obj, quote))
                 digest = hashlib.sha256(body.encode()).hexdigest()
                 originals[sid] = (start, end, quote, digest)
                 add_evidence(evidence, 'speeches:' + sid, 'mentions', obj, 'speeches', sid, quote,
                              'unique_exact_alias', .98, start=start, end=end,
-                             details={'excerpt': body[max(0,start-160):end+160], 'text_field': 'text_clean', 'text_sha256': digest})
+                             details={'excerpt': old_excerpt, 'text_field': 'text_clean', 'text_sha256': digest})
+            count = source.execute('SELECT count(*) FROM speeches').fetchone()[0]
+            evidence.executemany('INSERT INTO progress VALUES (?,0,?)', [('speeches', count), ('ext_press_releases', 0)])
+            places = setup(path / 'places.sqlite')
+            places.execute("INSERT INTO progress VALUES ('government_grants',0,0)")
+            places.execute("INSERT INTO meta VALUES ('programme_rowid','0')")
+            additional = setup(path / 'additional.sqlite')
+            additional.executemany('INSERT INTO progress VALUES (?,0,?)', [('speeches', count), ('ext_press_releases', 0)])
+            decisions = sqlite3.connect(path / 'decisions.sqlite')
+            decisions.execute('CREATE TABLE decisions(subject,object,method,evidence,status)')
+            for sidecar in (places, additional, decisions):
+                sidecar.commit(); sidecar.close()
             source.commit(); source.close()
             evidence.commit(); evidence.close()
-            before = source_path.read_bytes(), (path / 'evidence.sqlite').read_bytes()
+            inputs = [source_path, *(path / name for name in ('evidence.sqlite', 'places.sqlite', 'additional.sqlite', 'decisions.sqlite'))]
+            before = [p.read_bytes() for p in inputs]
             with contextlib.redirect_stdout(io.StringIO()):
-                export(source_path, path / 'evidence.sqlite', path / 'public', allow_incomplete=True)
-                result = audit(source_path, path / 'public', require_complete=False)
+                export(source_path, path / 'evidence.sqlite', path / 'public',
+                       decisions_path=path / 'decisions.sqlite', places_path=path / 'places.sqlite', additional_path=path / 'additional.sqlite')
+                result = audit(source_path, path / 'public')
             self.assertEqual(result['errors'], [])
             for sid, (start, end, quote, digest) in originals.items():
                 identity = key('org:' + sid)
@@ -110,7 +128,12 @@ class PassageTextTests(unittest.TestCase):
                 self.assertEqual(excerpt['text'], excerpt['details']['excerpt'])
                 self.assertNotIn('senatorsinterjecting', excerpt['text'])
                 self.assertNotIn('&#38;', excerpt['text'])
-            self.assertEqual(before, (source_path.read_bytes(), (path / 'evidence.sqlite').read_bytes()))
+                if sid == '1249416':
+                    self.assertIn('Transport Legislation Committee', excerpt['text'])
+                    self.assertNotIn('ransport Legislation Committee', excerpt['text'].replace('Transport Legislation Committee', ''))
+                else:
+                    self.assertTrue(excerpt['text'].endswith('We know …'))
+            self.assertEqual(before, [p.read_bytes() for p in inputs])
 
     def test_export_falls_back_when_source_fingerprint_drifts_or_is_missing(self):
         from build_evidence_layers import setup, add_evidence
