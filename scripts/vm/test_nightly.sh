@@ -36,6 +36,9 @@ new_sandbox() {
   git config --global init.defaultBranch main; git config --global --add safe.directory '*'
   ORIGIN="$SB/origin.git"; git init -q --bare "$ORIGIN"
   local seed="$SB/seed"; mkdir -p "$seed"
+  # Fixture imports generate bytecode. Keep it out of the seed commit so a
+  # clone's file timestamps cannot dirty the working tree before the rebase.
+  printf '__pycache__/\n*.py[oc]\n' > "$seed/.gitignore"
   local fixture_exporters=()
   # the files the nightly reads, from the real tree
   # Bills imports roster_identity, which in turn imports parli.ingest.speaker_names.

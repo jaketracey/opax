@@ -21,7 +21,7 @@ const {default:worker} = await compile('../src/index.ts');
 const data = await json('hubs/vic-election-2026.json');
 const read = async path => json(path.replace(/^\//,''));
 const env = {COMMUNITY_ORIGIN:'https://opax.com.au',ASSETS:{async fetch(req){const path=new URL(req.url).pathname;assert.doesNotMatch(path,/^\/api\/|^\/ask(?:\/|$)/);try{return new Response(await readFile(new URL(path==='/'?'index.html':path.slice(1),root)),{headers:{'content-type':path.endsWith('.json')?'application/json':'text/html'}});}catch(e){if(e.code!=='ENOENT')throw e;return new Response('Not found',{status:404});}}}};
-const fetchPage = (path,enabled,extra={}) => worker.fetch(new Request('https://opax.com.au'+path),{...env,...extra,...(enabled===undefined?{}:{VIC_ELECTION_HUB_ENABLED:enabled})},{});
+const fetchPage = (path,enabled,extra={},options={}) => worker.fetch(new Request(new URL(path,'https://opax.com.au'),options),{...env,...extra,...(enabled===undefined?{}:{VIC_ELECTION_HUB_ENABLED:enabled})},{});
 // Content assertions use the SSR renderer; router assertions stub only HTML rewriting.
 globalThis.HTMLRewriter=class {on(){return this;} transform(r){return r;}};
 
@@ -38,6 +38,19 @@ test('publication defaults off, fails closed, and never reads election facts whe
     assert.deepEqual(vicElectionDiscovery(data,false),{});
   }
 });
+test('disabled publication gate precedes host, case and trailing-slash redirects for GET and HEAD',async()=>{
+  const paths=['/vic-election-2026','/vic-election-2026/','/VIC-ELECTION-2026/','/vic-election-2026/lowan/',
+    '/Vic-Election-2026/LOWAN/','/vic-election-2026//Lowan/','/%76ic-election-2026/lowan',
+    '/vic-election-2026/%','/%76ic-election-2026/%',
+    '/sitemaps/vic-election-1.xml','/sitemaps/vic-election-1.xml/','/SITEMAPS/VIC-ELECTION-1.XML/',
+    '/sitemaps/%76ic-election-1.xml/',VIC_ELECTION_ASSET,'/HUBS/VIC-ELECTION-2026.JSON/'];
+  for(const enabled of [undefined,'false'])for(const host of ['https://opax.com.au','https://www.opax.com.au','http://www.opax.com.au','http://localhost:8787'])for(const path of paths)for(const method of ['GET','HEAD']) {
+    const url=host+path;const r=await fetchPage(url,enabled,{ASSETS:{fetch(){assert.fail('Disabled alias read assets');}}},{method});
+    assert.equal(r.status,404,url);assert.equal(r.headers.get('x-robots-tag'),'noindex',url);
+    assert.equal(r.headers.get('location'),null,url);assert.equal(r.headers.get('cache-control'),'no-store',url);
+    if(method==='HEAD')assert.equal(await r.text(),'');
+  }
+});
 test('enabled SSR renders all 88 districts and 8 regions, 128 existing people, sources and explicit gaps',async()=>{
   assert.equal(data.seats.filter(s=>s.kind==='district').length,88);assert.equal(data.seats.filter(s=>s.kind==='region').length,8);
   assert.equal(data.seats.reduce((n,s)=>n+s.members.length,0),128);assert.equal(data.pages.length,97);
@@ -47,7 +60,8 @@ test('enabled SSR renders all 88 districts and 8 regions, 128 existing people, s
     assert.equal(page.status,200,s.name);assert.doesNotMatch(page.html,/loading|opening|placeholder/i);
     assert.ok(page.html.includes(s.electorate_url));assert.ok(page.html.includes(s.source_url));
     for(const m of s.members){assert.ok(paths.has(m.href),m.name);assert.ok(page.html.includes(m.href));}
-    for(const text of ['2026 only','no Victorian register','no Victorian state grants','Federal electorates','An association does not prove influence','3 November 2026','18–27 November 2026','28 November 2026'])assert.ok(page.html.includes(text),`${s.name}: ${text}`);
+    for(const text of ['2026 only','no Victorian register','no Victorian state grants','Federal electorates','3 November 2026','18–27 November 2026','28 November 2026'])assert.ok(page.html.includes(text),`${s.name}: ${text}`);
+    assert.doesNotMatch(page.html,/An association does not prove influence/);
     assert.equal(page.jsonLd['@graph'][0]['@type'],'Event');assert.equal(page.jsonLd['@graph'][1]['@type'],'ItemList');
     assert.equal((await fetchPage(s.path,'true')).status,200);
   }

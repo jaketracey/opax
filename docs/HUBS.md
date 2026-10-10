@@ -8,8 +8,10 @@ is false; `portal/wrangler.jsonc` also explicitly sets the production variable t
 `"false"`. An absent value, `false`, `1`, or any string other than exact `"true"`
 keeps publication disabled. Disabled pages, unknown constituencies and the
 direct election facts asset return 404 with `X-Robots-Tag: noindex`; HTML 404s
-also have a robots meta tag. Disabled hubs have no election links, sitemap
-entry or llms.txt entry. Encoded facts-asset paths are gated too.
+also have a robots meta tag. The disabled gate runs before host or alias
+redirects, including www, trailing slashes, case and encoded aliases for pages,
+the election sitemap and facts asset. Disabled hubs have no election links,
+sitemap entry or llms.txt entry.
 
 Jake must resolve electoral-matter authorisation and the correction contact
 before publication. After that decision, set any approved `AUTHORISATION_LINE`
@@ -82,8 +84,9 @@ recorded in `docs/COVERAGE.md`; only existing counts and links enter the hub.
 
 There is no Victorian interests register or state grants export. Federal
 electorates are different from state districts, so no federal grant allocation
-is made. Every page states these gaps and includes “An association does not
-prove influence” alongside the grants section. The tests derive individual
+is made. Every page states these gaps. “An association does not prove influence”
+belongs alongside an actual money-and-politician pairing; the election hub has
+no such records, so it does not display the line. The tests derive individual
 donor labels with main's `isOrganisationDonor` classifier. A label coinciding
 with a validated member name is permitted in that member's roster context;
 donor identities, fields and links remain excluded.

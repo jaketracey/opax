@@ -11,7 +11,7 @@ import { instrumentPage, instrumentReader } from './instruments'
 import { auditPage, auditReader } from './audit'
 import { hubPage } from './hubs'
 import { vicElectionPage, type VicElection } from './vic-election'
-import { vicElectionEnabled, vicElectionAssetPath, vicElectionDiscovery, vicElectionLlms, VIC_ELECTION_ASSET, VIC_ELECTION_SITEMAP } from '../public/vic-election.js'
+import { vicElectionEnabled, vicElectionPublicationPath, vicElectionDiscovery, vicElectionLlms, VIC_ELECTION_ASSET, VIC_ELECTION_SITEMAP } from '../public/vic-election.js'
 import { AUDIT_ID } from '../public/audit.js'
 import { runIndexNow, INDEXNOW_CRON } from './indexnow'
 import { type MoneyFacts, moneyOverviewPrompt, verifiedOverview } from './ask-money-overview'
@@ -4799,8 +4799,11 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
   ])
   if (!shell.ok) return shell
   const noindex = meta.noindex || meta.status === 404 || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
+  // Election coverage names unavailable grants, but renders no financial records.
+  // Its renderer owns any future caveat alongside an actual political money pairing.
+  if (!(route.kind === 'hub' && route.hub === 'vic-election'))
+    meta.prerender=associationCaveat(meta.prerender || '',`${meta.description} ${meta.prerender || ''}`)
   // JSON-LD sits in a <script>: keep "</script>" from ever appearing in it.
-  meta.prerender=associationCaveat(meta.prerender || '',`${meta.description} ${meta.prerender || ''}`)
   const ld = meta.jsonLd ? JSON.stringify(meta.jsonLd).replace(/</g, '\\u003c') : null
   // The share image is drawn per route (see "Share images" below); a page
   // with nothing to draw, or nothing to find, shares the home card.
@@ -5439,7 +5442,6 @@ async function route(
       // Real paths for the hash-routed app (see the SEO section): only paths
       // no asset answers reach here, so index.html itself is never rewritten.
       if (request.method === 'GET' || request.method === 'HEAD') {
-        if (vicElectionAssetPath(url.pathname) && !vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED)) return new Response('Not found',{status:404,headers:{'x-robots-tag':'noindex','cache-control':'no-store'}})
         if (url.pathname.startsWith('/og/')) return await serveOgImage(url, request, env, ctx)
         if (url.pathname === '/sitemap.xml' || url.pathname.startsWith('/sitemaps/')) return await sitemapXml(env, url.pathname)
         if (url.pathname === '/llms.txt') return await llmsTxt(env)
@@ -5466,6 +5468,8 @@ function personTopicsFor(name: string, env: Env): Promise<Response> {
 export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url)
+    if (!vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED) && vicElectionPublicationPath(url.pathname))
+      return withSecurityHeaders(new Response(request.method === 'HEAD' ? null : 'Not found', {status:404,headers:{'x-robots-tag':'noindex','cache-control':'no-store','content-type':'text/plain; charset=utf-8'}}), url)
     const canonical = await pageAliasRedirect(request, url, env)
     if (canonical) return canonical
     // Scraper fleets (see network-block.ts) are refused before any paid route runs.
