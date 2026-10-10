@@ -9,7 +9,7 @@ import { missingEntitySlug } from './crawl-hygiene'
 import { normalizePassage, passageWindow } from './passage-text'
 import { instrumentPage, instrumentReader } from './instruments'
 import { auditPage, auditReader } from './audit'
-import {grantFixtureHTML, grantFixtureResponse, grantFixturePrivacy} from './grants-table-fixture'
+import {grantFixtureHTML, grantFixtureResponse, grantFixturePrivacy, grantFixtureReader} from './grants-table-fixture'
 import {GRANTS_COVERAGE} from '../public/grants-table.js'
 import { hubPage } from './hubs'
 import { vicElectionPage, type VicElection } from './vic-election'
@@ -5411,10 +5411,10 @@ async function route(
   // merges line-by-line instead of conflicting on the whole hunk.
   {
       if (url.pathname === '/api/table/grants/privacy') {
-        return grantFixturePrivacy(request, <T>(path: string) => assetJson<T>(env, path))
+        return grantFixturePrivacy(request, grantFixtureReader(env.ASSETS))
       }
       if (url.pathname === '/api/table/grants') {
-        return grantFixtureResponse(request, url, <T>(path: string) => assetJson<T>(env, path))
+        return grantFixtureResponse(request, url, grantFixtureReader(env.ASSETS))
       }
       if (url.pathname.startsWith('/bill-texts/')) {
         if (request.method !== 'GET' && request.method !== 'HEAD') return json({ error: 'Method not allowed' }, 405)

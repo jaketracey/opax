@@ -26,4 +26,4 @@ const server = createServer(async (req, res) => {
   } catch {res.writeHead(500); res.end('Local preview unavailable');}
 });
 server.listen(8795, '127.0.0.1');
-process.on('SIGINT', () => server.close(() => process.exit(0)));
+process.on('SIGINT', () => {server.close(() => process.exit(0)); server.closeAllConnections();});

@@ -10,6 +10,21 @@ type Graph = {nodes: {label: string; kind: string; aliases?: string[] | null}[]}
 type Recipient = {id: string; n: string; k?: string; sh?: number; aliases?: string[]; abr?: {etype?: string; type?: string}; abnType?: string; kind?: string}
 type Award = Recipient & {rid: string; rn: string; v: number; s?: string; a?: string; el?: string}
 type Program = {n: string; ag: string; grants: Award[]}
+type Fixture = {rows: Row[]; withheld: (...values: unknown[]) => boolean}
+const readers = new WeakMap<Fetcher, {fetch: Fetcher['fetch']; read: Read}>()
+const fixtures = new WeakMap<Read, Promise<Fixture>>()
+export function grantFixtureReader(assets: Fetcher): Read {
+  let cached = readers.get(assets)
+  if (!cached || cached.fetch !== assets.fetch) {
+    const read: Read = async <T>(path: string) => {
+      const response = await assets.fetch(new Request(`https://opax.com.au${path}`))
+      if (!response.ok) throw new Error('Grant export unavailable')
+      return response.json() as Promise<T>
+    }
+    cached = {fetch: assets.fetch, read}; readers.set(assets, cached)
+  }
+  return cached.read
+}
 const sources = ['go3141', 'go90', 'go6284']
 const columns = grantsTableConfig().columns
 const integer = (s: string | null, fallback: number, max: number) => s && /^\d+$/.test(s) && Number.isSafeInteger(Number(s)) && Number(s) > 0 ? Math.min(Number(s), max) : fallback
@@ -42,7 +57,16 @@ export function grantFixtureQuery(params: URLSearchParams, urlKey = ''): Query {
   }
 }
 
-export async function grantFixtureRows(read: Read): Promise<{rows: Row[]; withheld: (...values: unknown[]) => boolean}> {
+export function grantFixtureRows(read: Read): Promise<Fixture> {
+  let pending = fixtures.get(read)
+  if (!pending) {
+    pending = buildGrantFixtureRows(read).catch(error => {fixtures.delete(read); throw error})
+    fixtures.set(read, pending)
+  }
+  return pending
+}
+
+async function buildGrantFixtureRows(read: Read): Promise<Fixture> {
   const [programs, graphs, index] = await Promise.all([
     Promise.all(sources.map(key => read<Program>(`/grants/federal/programs/${key}.json`))),
     Promise.all(MONEY_GRAPHS.map(path => read<Graph>(path))),

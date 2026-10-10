@@ -1,7 +1,7 @@
 // Run inside unshare -rn with loopback enabled. Stop only this runner's children.
 import assert from 'node:assert/strict';
 import {spawn} from 'node:child_process';
-import {readFile, mkdir, writeFile} from 'node:fs/promises';
+import {readFile, mkdir, writeFile, appendFile} from 'node:fs/promises';
 import {createRequire} from 'node:module';
 import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -19,17 +19,25 @@ const {withheld} = await grantFixtureRows(fixture.read);
 const index = {...donorIndex, safe: value => donorIndex.safe(value) && !withheld(value)};
 let browser, server, stage = 'start';
 async function start(fixtureMode) {
-  server = spawn(process.execPath, ['test/grants-table-browser-server.mjs'], {cwd: fileURLToPath(new URL('../', import.meta.url)), env: {...process.env, DT_GRANTS_PRIVACY_FIXTURE: fixtureMode ? '1' : ''}, stdio: 'ignore'});
+  server = spawn(process.execPath, ['test/grants-table-browser-server.mjs'], {cwd: fileURLToPath(new URL('../', import.meta.url)), env: {...process.env, DT_GRANTS_PRIVACY_FIXTURE: fixtureMode ? '1' : ''}, stdio: ['ignore', 'pipe', 'pipe']});
+  server.stdout.on('data', value => {void appendFile(resolve(folder, 'revision-browser-server.log'), value);});
+  server.stderr.on('data', value => {void appendFile(resolve(folder, 'revision-browser-server.log'), value);});
   await writeFile(resolve(folder, 'revision-browser-server.pid'), String(server.pid));
   for (let i = 0; i < 240; i++) {
-    if (server.exitCode != null) throw Error('Local server stopped');
+    if (server.exitCode != null || server.signalCode != null) throw Error('Local server stopped');
     try {if ((await fetch(base + '/fonts.css')).ok) return;} catch {}
     await pause(250);
   }
   throw Error('Local server did not start');
 }
 async function stop() {
-  if (server) {const owned = server; server = undefined; const exit = new Promise(done => owned.once('exit', done)); owned.kill('SIGINT'); await exit;}
+  if (server) {
+    const owned = server; server = undefined;
+    if (owned.exitCode != null || owned.signalCode != null) return;
+    const exit = new Promise(done => owned.once('exit', done)); owned.kill('SIGINT');
+    const closed = await Promise.race([exit.then(() => true), pause(5000).then(() => false)]);
+    if (!closed) {owned.kill('SIGTERM'); await exit;}
+  }
 }
 try {
   await start(true);

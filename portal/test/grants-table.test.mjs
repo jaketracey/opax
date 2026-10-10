@@ -5,6 +5,7 @@ import {isOrganisationRecipient} from '../public/recipient-privacy.js';
 import {grantsTableConfig, sanitizeGrantsState} from '../public/grants-table.js';
 import {grantFixtureQuery, grantFixtureRows, queryGrantFixture, grantFixtureResponse, grantFixturePrivacy} from '../src/grants-table-fixture.ts';
 import {offline, loadWorker} from './worker-harness.mjs';
+import {dataTableHTML, toCSV} from '../public/datatable.js';
 
 const config = grantsTableConfig();
 const rows = [
@@ -100,4 +101,16 @@ test('the core validation hook rejects recipient names independently of donor gr
   assert.deepEqual(await accepted.json(), {safe: true});
   const failed = await grantFixturePrivacy(request('fixture'), async () => {throw Error('unavailable');});
   assert.equal(failed.status, 503);assert.deepEqual(await failed.json(), {safe: false});
+});
+
+test('neutral recipient totals keep only counts and value in HTML and CSV', () => {
+  const aggregate = {aggregate: {kind: 'individual-donors', subject: 'recipients', count: 3}, value: 1234.56, id: 'fixture-secret-row', recipient: 'fixture-secret-recipient Pty Ltd', program: 'fixture-secret-program', aliases: ['fixture-secret-alias']};
+  const config = {...grantsTableConfig(), privacyCheck: () => true, primaryLink: () => '/fixture-secret-link'};
+  const page = {rows: [aggregate], total: 1, page: 1, pageSize: 50};
+  const csv = toCSV(page.rows, config), html = dataTableHTML(config, page);
+  for (const text of [csv, html]) {
+    assert.ok(text.includes('Recipients (3, names withheld)'));
+    assert.ok(text.includes('1234.56'));
+    assert.ok(!text.includes('fixture-secret'));
+  }
 });
