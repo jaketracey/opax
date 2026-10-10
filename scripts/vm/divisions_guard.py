@@ -12,6 +12,7 @@ import sys
 # Use the very same sitting days and Sydney timezone as the bill refresh.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from bills_guard import cadence
+from mobile_votes_contract import validate_votes
 
 VOTES = "portal/public/votes.json"
 DIVISIONS = "portal/public/divisions"
@@ -38,14 +39,7 @@ def since(day: str, catch_up: bool = False) -> str:
 
 
 def votes_guard(old: dict, new: dict) -> None:
-    if type(new.get("_meta", {}).get("schema")) is not int or new["_meta"]["schema"] != 1:
-        raise ValueError("votes.json must retain mobile schema 1")
-    people = {k: p for k, p in new.items() if not k.startswith("_")}
-    allowed = {"name", "party", "jurisdiction", "house", "ayes", "noes", "divisions_total", "years", "for", "against"}
-    for key, person in people.items():
-        if not isinstance(person, dict) or set(person) - allowed or not person.get("name") \
-                or not isinstance(person.get("for"), list) or not isinstance(person.get("against"), list):
-            raise ValueError("votes.json person shape changed")
+    people = validate_votes(new)
     for key, prior in old.items():
         if key.startswith("_"):
             continue
@@ -56,7 +50,7 @@ def votes_guard(old: dict, new: dict) -> None:
                 raise ValueError(f"votes.json {field} shrank for a published identity")
     before = old.get("_meta", {}).get("latest_division_date_by_jurisdiction", {})
     after = new["_meta"].get("latest_division_date_by_jurisdiction", {})
-    if any(after.get(jur, "") < dt for jur, dt in before.items()):
+    if any((after.get(jur) or "") < dt for jur, dt in before.items() if dt):
         raise ValueError("votes.json latest division date went backwards")
 
 
@@ -82,6 +76,12 @@ def check(votes_only: bool = False) -> str:
             raise ValueError("invalid division identity")
         if not Path(f"{DIVISIONS}/{row['slug']}.json").is_file():
             raise ValueError("published division file vanished")
+    # Also catch later validation/portal-gate rollbacks of the divisions group.
+    recent = json.loads(Path("portal/public/seo/recent-votes.json").read_text())
+    slugs = {row["slug"] for row in new["divisions"]}
+    for person in recent.get("people", {}).values():
+        if any(row["division_slug"] not in slugs for row in person["recent"]):
+            raise ValueError("SEO recent vote points to an unpublished division")
     federal = [r for r in new["divisions"] if r["key"].startswith("federal-")]
     return f"divisions: {len(new_keys - old_keys)} new; federal latest {max((r['date'] for r in federal), default='unavailable')}"
 

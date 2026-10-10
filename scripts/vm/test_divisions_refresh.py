@@ -29,7 +29,7 @@ def mobile():
                   "years": [2025, 2026], "for": [], "against": []},
             "_names": {"alex example": ["1"]},
             "_meta": {"schema": 1, "content_changed_at": "2026-08-20T00:00:00Z",
-                      "latest_division_date_by_jurisdiction": {"federal": "2026-08-20"}}}
+                      "latest_division_date": "2026-08-20", "latest_division_date_by_jurisdiction": {"federal": "2026-08-20"}}}
 
 
 class OfflineTests(unittest.TestCase):
@@ -113,7 +113,7 @@ class OfflineTests(unittest.TestCase):
 STUB = r'''
 import json, os, sys, time
 from pathlib import Path
-operation = "fetch" if "tvfy_refresh" in __file__ else "map" if "votes_ingest" in __file__ else "export"
+operation = "fetch" if "tvfy_refresh" in __file__ else "map" if "votes_ingest" in __file__ else "links" if "tvfy_bill_links" in __file__ else "export"
 with open(os.environ["DIVISION_TEST_CALLS"], "a") as out: out.write(operation + "\n")
 assert os.environ["OPAX_SYNC_KB"] == "0"
 assert os.environ["OPAX_DB"] == str(Path.home() / ".cache/autoresearch/parli.db")
@@ -133,6 +133,10 @@ if mode != "unchanged":
 d["_meta"]["content_changed_at"] = "2026-10-10T00:00:00Z"
 if mode == "shrink": d["1"]["noes"] = 0
 if mode == "schema": d["_meta"]["schema"] = 2
+if mode == "missing_names": del d["_names"]
+if mode == "dangling_seo":
+    Path("portal/public/seo/recent-votes.json").write_text(json.dumps({
+        "people": {"1": {"recent": [{"division_slug": "division-federal-senate-2"}]}}}))
 print(json.dumps(d))
 '''
 
@@ -159,10 +163,10 @@ class WrapperTests(unittest.TestCase):
         self.home = self.root / "home"; self.home.mkdir()
         self.calls = self.root / "calls"
         for name in ("scripts/refresh_divisions.sh", "scripts/vm/divisions_refresh.sh", "scripts/vm/divisions_guard.py",
-                     "scripts/vm/bills_guard.py", "scripts/vm/keep_if_unchanged.py", "scripts/bills_registry/bills_stages.py"):
+                     "scripts/vm/bills_guard.py", "scripts/vm/mobile_votes_contract.py", "scripts/vm/keep_if_unchanged.py", "scripts/bills_registry/bills_stages.py"):
             dest = self.root / name; dest.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / name, dest)
-        for name in ("parli/ingest/tvfy_refresh.py", "parli/ingest/votes_ingest.py", "scripts/export_votes.py"):
+        for name in ("parli/ingest/tvfy_refresh.py", "parli/ingest/votes_ingest.py", "parli/ingest/tvfy_bill_links.py", "scripts/export_votes.py"):
             dest = self.root / name; dest.parent.mkdir(parents=True, exist_ok=True); dest.write_text(STUB)
         public = self.root / "portal/public"; (public / "divisions").mkdir(parents=True); (public / "seo").mkdir()
         (public / "votes.json").write_text(json.dumps(mobile()))
@@ -188,17 +192,18 @@ class WrapperTests(unittest.TestCase):
 
     def test_acquisition_mapping_and_mobile_export_run_in_order(self):
         output = self.run_refresh()
-        self.assertEqual(self.calls.read_text().splitlines(), ["fetch", "map", "export"])
+        self.assertEqual(self.calls.read_text().splitlines(), ["fetch", "map", "links", "export"])
         self.assertFalse(self.pending())
         self.assertNotIn("FAIL:", output)
         self.assertEqual(json.loads((self.root / "portal/public/votes.json").read_text())["_meta"]["schema"], 1)
 
     def test_failure_timeout_and_regression_restore_bytes_and_retry(self):
         path = self.root / "portal/public/votes.json"; original = path.read_bytes()
-        for mode in ("fetch_fail", "map_fail", "export_fail", "shrink", "schema", "timeout"):
+        for mode in ("fetch_fail", "map_fail", "links_fail", "export_fail", "shrink", "schema", "missing_names", "dangling_seo", "timeout"):
             with self.subTest(mode=mode):
                 self.assertIn("FAIL:", self.run_refresh(mode))
                 self.assertEqual(path.read_bytes(), original)
+                self.assertEqual((self.root / "portal/public/seo/recent-votes.json").read_text(), '{}')
                 self.assertTrue(self.pending())
 
     def test_timestamp_only_run_keeps_original_bytes(self):

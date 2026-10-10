@@ -15,12 +15,14 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class NightlySEOTests(unittest.TestCase):
-    def run_exports(self, missing_tables=False, skip=False):
+    def run_exports(self, missing_tables=False, skip=False, division_fail=False, projection_fail=False):
         temp = tempfile.TemporaryDirectory(); self.addCleanup(temp.cleanup)
         root = Path(temp.name)
         scripts = root / 'scripts'; scripts.mkdir()
         for name in ['export_division_pages.py', 'export_recent_votes.py', 'export_votes.py']:
             shutil.copyfile(ROOT / 'scripts' / name, scripts / name)
+        if division_fail:
+            (scripts / 'export_division_pages.py').write_text('raise SystemExit(1)\n')
         public = root / 'portal/public'; (public / 'bills').mkdir(parents=True)
         (public / 'bills/example.json').write_text(json.dumps({'key': 'example', 'title': 'Example Bill', 'divisions': []}))
         votes = public / 'votes.json'
@@ -43,7 +45,7 @@ class NightlySEOTests(unittest.TestCase):
         block = '# ---- 3b.' + block
         setup = '''set -u
         PY=python3
-        DIVISIONS_ACQUISITION_FAILED=0
+        DIVISIONS_ACQUISITION_FAILED=PROJECTION_FAILED
         divisions_verify(){ :; }
         log(){ :; }
         run(){ "$@"; }
@@ -51,6 +53,7 @@ class NightlySEOTests(unittest.TestCase):
         fail(){ echo "FAIL:$1"; }
         warn(){ echo "WARN:$1"; }
         '''
+        setup = setup.replace('PROJECTION_FAILED', str(int(projection_fail)))
         result = subprocess.run(['bash'], input=setup + block, text=True, capture_output=True, cwd=root,
                                 env={**os.environ, 'OPAX_DB': str(dbpath), 'OPAX_NIGHTLY_SKIP_REFRESH': '1' if skip else '0'})
         self.assertEqual(votes.read_bytes(), original)
@@ -69,12 +72,23 @@ class NightlySEOTests(unittest.TestCase):
         self.assertEqual(recent['people']['123']['recent'][0]['vote'], 'aye')
         self.assertNotIn('FAIL:', output)
 
-    def test_failed_exports_revert_their_independent_groups(self):
+    def test_failed_divisions_restore_dependent_seo_and_skip_its_export(self):
         public, output = self.run_exports(missing_tables=True)
         self.assertIn('REVERT:divisions', output)
         self.assertIn('REVERT:seovotes', output)
         self.assertFalse((public / 'divisions/index.json').exists())
         self.assertFalse((public / 'seo/recent-votes.json').exists())
+
+    def test_reviewer_reproduction_valid_refreshed_db_failed_pages_cannot_publish_seo(self):
+        public, output = self.run_exports(division_fail=True)
+        self.assertIn('REVERT:divisions', output)
+        self.assertIn('REVERT:seovotes', output)
+        self.assertFalse((public / 'seo/recent-votes.json').exists())
+
+    def test_failed_projection_skips_both_exports(self):
+        public, output = self.run_exports(projection_fail=True)
+        self.assertFalse((public / 'divisions').exists())
+        self.assertFalse((public / 'seo').exists())
 
     def test_publish_only_rerun_skips_database_exports(self):
         public, output = self.run_exports(skip=True)

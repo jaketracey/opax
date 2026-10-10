@@ -765,6 +765,7 @@ def run_qld(args) -> tuple[list[Division], list[Vote], dict]:
 
 
 def run_federal(args) -> tuple[list[Division], list[Vote], dict]:
+    from .federal_affiliations import FederalAffiliations
     db = sqlite3.connect(f"file:{Path(args.db).expanduser()}?mode=ro", uri=True)
     db.row_factory = sqlite3.Row
     # Whole chamber-days only: the ext_ load replaces per (house, date), so a
@@ -779,7 +780,9 @@ def run_federal(args) -> tuple[list[Division], list[Vote], dict]:
             "ORDER BY number, division_id", (d["house"], d["date"])).fetchall()
     divisions: list[Division] = []
     votes: list[Vote] = []
+    affiliations = FederalAffiliations(db)
     for d in rows:
+        parties = affiliations.for_division(d)
         house = d["house"]
         url = f"https://theyvoteforyou.org.au/divisions/{house}/{d['date']}" + \
               (f"/{d['number']}" if d["number"] else "")
@@ -790,13 +793,13 @@ def run_federal(args) -> tuple[list[Division], list[Vote], dict]:
             result = "affirmative" if d["aye_votes"] > d["no_votes"] else "negative"
         div_id = f"federal-{house}-{d['division_id']}"
         for v in db.execute(
-                "SELECT v.person_id, v.vote, m.full_name, m.party_canonical, m.party "
+                "SELECT v.person_id, v.vote, m.full_name "
                 "FROM votes v LEFT JOIN members m ON m.person_id = v.person_id "
                 "WHERE v.division_id = ?", (d["division_id"],)):
             raw = v["full_name"]
             votes.append(Vote(div_id, normalize_speaker(raw) if raw else None, raw,
                               f"tvfy_{v['person_id']}", v["vote"],
-                              v["party_canonical"] or v["party"]))
+                              affiliations.at(parties, v["person_id"], v["vote"], d["date"])))
         divisions.append(Division(
             id=div_id, jurisdiction="federal", house=house, date=d["date"], number=d["number"],
             name=d["name"] or "", question=(summary[:2000] or None), bill_ref=bill_ref(d["name"]),

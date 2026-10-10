@@ -295,6 +295,8 @@ def vote_value(raw: object) -> str:
 
 
 def store_detail(db: sqlite3.Connection, div_id: int, d: dict, known_members: set) -> tuple[int, int]:
+    from .federal_affiliations import store_parties
+    store_parties(db, d)
     house = d.get("house") or ""
     votes_in = members_in = 0
     for v in d.get("votes") or []:

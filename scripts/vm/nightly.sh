@@ -235,6 +235,7 @@ revert() {
   for p in "$@"; do
     [ "$p" != portal/public/bills ] || BILLS_REFRESH_OK=0
     case "$p" in portal/public/votes.json|portal/public/divisions|portal/public/seo/recent-votes.json) DIVISIONS_REFRESH_OK=0 ;; esac
+    [ "$p" != portal/public/divisions ] || DIVISIONS_PAGES_ROLLED_BACK=1
   done
   git checkout -q HEAD -- "$@"; git clean -fdq -- "$@" 2>/dev/null || true
 }
@@ -303,6 +304,12 @@ if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "${OPAX_NIGHTLY_SKIP_PERIODIC
   fi
 fi
 
+# Federal acquisition/projection must precede bills export: exact TVFY links
+# are part of the bill record, and divisions use the verified bills below.
+# shellcheck source=scripts/vm/divisions_refresh.sh
+. "$REPO/scripts/vm/divisions_refresh.sh"
+divisions_refresh
+
 # ---- 2c. bills: current-parliament acquisition, then full static export -------------------------
 # shellcheck source=scripts/vm/bills_refresh.sh
 . "$REPO/scripts/vm/bills_refresh.sh"
@@ -311,12 +318,6 @@ bills_refresh
 # ---- 3. bills: put the speech briefs back, prove no brief or bill was lost ------------------------
 bills_fill_and_verify
 
-# Federal TVFY acquisition and the missing legacy -> ext_ projection, before
-# exporting the web views. This owns its cadence independently of KB sync.
-# shellcheck source=scripts/vm/divisions_refresh.sh
-. "$REPO/scripts/vm/divisions_refresh.sh"
-divisions_refresh
-
 # ---- 3b. Worker-only vote/division projections from the refreshed OPAX DB -------------------------
 # After bill verification so division backlinks use the retained, publishable bills.
 # Both exporters read one read-only DB snapshot; neither alters mobile votes.json.
@@ -324,12 +325,18 @@ if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "$DIVISIONS_ACQUISITION_FAILE
   log "refreshing static division pages and separate SEO recent votes"
   if ! run "$PY" scripts/export_division_pages.py; then
     if [ "${DIVISIONS_REFRESH_OK:-0}" = 1 ]; then divisions_revert; else revert_group divisions; fi
+    DIVISIONS_EXPORT_FAILED=1
+    revert_group seovotes
     fail "division export failed; pinned division pages reverted to HEAD"
   else
+    DIVISIONS_PAGES_ROLLED_BACK=0
     retained=$("$PY" -c 'import json; print(json.load(open("portal/public/divisions/index.json"))["coverage"]["retained_count"])')
     [ "$retained" = 0 ] || warn "division export retained $retained pinned records; explicit coverage flags identify degraded source coverage"
   fi
-  if ! run "$PY" scripts/export_recent_votes.py; then
+  # SEO links depend on the accepted division pages, never just the DB rows.
+  if [ "${DIVISIONS_EXPORT_FAILED:-0}" = 1 ]; then
+    log "SEO recent votes skipped: division export failed or was rolled back"
+  elif ! run "$PY" scripts/export_recent_votes.py; then
     if [ "${DIVISIONS_REFRESH_OK:-0}" = 1 ]; then divisions_revert; else revert_group seovotes; fi
     fail "SEO recent-vote export failed; previous separate export kept"
   fi
@@ -348,6 +355,7 @@ for group in "${DATA_GROUPS[@]}"; do
     fail "validation failed for $group: reverted to HEAD and not published tonight"
   fi
 done
+divisions_restore_dependencies
 
 # The portal test suite reads the generated files (grant shards, money graph, suppliers ...), and the deploy job runs
 # it before it ships anything: a red test would leave tonight's data on main but undeployed until someone noticed.
@@ -394,6 +402,7 @@ if [ "${OPAX_TEST_GATE:-1}" != 0 ]; then
           read -ra paths <<<"${GROUP_PATHS[$g]}"
           [ "$g" != bills ] || BILLS_GATE_BACKUP_OK=$BILLS_REFRESH_OK
           case "$g" in votes|divisions|seovotes) DIVISIONS_GATE_BACKUP_OK=$DIVISIONS_REFRESH_OK ;; esac
+          [ "$g" != divisions ] || DIVISIONS_GATE_BACKUP_ROLLBACK=${DIVISIONS_PAGES_ROLLED_BACK:-0}
           tar cf "$BK/$g.tar" -- "${paths[@]}" 2>/dev/null || true
         }
         restore_group() {
@@ -404,6 +413,7 @@ if [ "${OPAX_TEST_GATE:-1}" != 0 ]; then
             # A trial rollback was innocent: restore acceptance with the files.
             [ "$g" != bills ] || BILLS_REFRESH_OK=$BILLS_GATE_BACKUP_OK
             case "$g" in votes|divisions|seovotes) DIVISIONS_REFRESH_OK=$DIVISIONS_GATE_BACKUP_OK ;; esac
+            [ "$g" != divisions ] || DIVISIONS_PAGES_ROLLED_BACK=$DIVISIONS_GATE_BACKUP_ROLLBACK
           else
             fail "cannot restore test backup for $g"
           fi
@@ -437,6 +447,7 @@ if [ "${OPAX_TEST_GATE:-1}" != 0 ]; then
     fi
   fi
 fi
+divisions_restore_dependencies
 
 # Preview derived roster evidence after the final data gate. Publication needs
 # the dedicated switch explicitly set to 1; the broader periodic switch cannot

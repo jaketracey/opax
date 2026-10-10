@@ -67,7 +67,17 @@ divisions_refresh_complete() {
   fi
 }
 
+divisions_restore_dependencies() {
+  # Gate trials can revert divisions after SEO has already been generated.
+  # Restore that dependent group before the final guard/commit too.
+  if [ "${DIVISIONS_PAGES_ROLLED_BACK:-0}" = 1 ]; then
+    revert portal/public/seo/recent-votes.json
+    log "SEO recent votes restored: published divisions were rolled back"
+  fi
+}
+
 divisions_summary() {
+  divisions_restore_dependencies
   local summary
   summary=$("$PY" scripts/vm/divisions_guard.py) || {
     fail "final division guard failed; vote exports restored to HEAD"

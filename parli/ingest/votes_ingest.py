@@ -125,7 +125,10 @@ def read_legacy(db: sqlite3.Connection, since: Optional[str], limit: Optional[in
     has_bills = db.execute("SELECT 1 FROM sqlite_master WHERE name = 'division_bills'").fetchone() is not None
     divisions: list[Division] = []
     votes: list[Vote] = []
+    from .federal_affiliations import FederalAffiliations
+    affiliations = FederalAffiliations(db)
     for d in rows:
+        parties = affiliations.for_division(d)
         house = d["house"]
         url = f"https://theyvoteforyou.org.au/divisions/{house}/{d['date']}" + (f"/{d['number']}" if d["number"] else "")
         summary = re.sub(r"<[^>]+>", " ", html.unescape(d["summary"] or ""))
@@ -135,12 +138,13 @@ def read_legacy(db: sqlite3.Connection, since: Optional[str], limit: Optional[in
             result = "affirmative" if d["aye_votes"] > d["no_votes"] else "negative"
         div_id = f"federal-{house}-{d['division_id']}"
         for v in db.execute(
-                "SELECT v.person_id, v.vote, m.full_name, m.party_canonical, m.party "
+                "SELECT v.person_id, v.vote, m.full_name "
                 "FROM votes v LEFT JOIN members m ON m.person_id = v.person_id WHERE v.division_id = ?",
                 (d["division_id"],)):
             raw = v["full_name"]
             votes.append(Vote(div_id, normalize_speaker(raw) if raw else None, raw,
-                              f"tvfy_{v['person_id']}", v["vote"], v["party_canonical"] or v["party"]))
+                              f"tvfy_{v['person_id']}", v["vote"],
+                              affiliations.at(parties, v["person_id"], v["vote"], d["date"])))
         extra = {"tvfy_division_id": d["division_id"], "possible_turnout": d["possible_turnout"],
                  "rebellions": d["rebellions"]}
         ref = bill_ref(d["name"])

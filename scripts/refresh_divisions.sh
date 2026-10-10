@@ -8,6 +8,7 @@ SINCE=$1
 "$PY" -m parli.ingest.tvfy_refresh --db "$OPAX_DB" --since "$SINCE" --relist --strict
 # No --limit/--days: project complete chamber-days across the entire window.
 "$PY" -m parli.ingest.votes_ingest --db "$OPAX_DB" --from-legacy --load-ext-only --strict-ext --since "$SINCE"
+"$PY" -m parli.ingest.tvfy_bill_links --db "$OPAX_DB" --since "$SINCE"
 # Keep stdout JSON separate from diagnostics; the wrapper restores exports on failure.
 tmp=$(mktemp)
 trap 'rm -f "$tmp"' EXIT
