@@ -3232,7 +3232,7 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
   },
   privacy: {
     title: 'Privacy · OPAX',
-    description: 'What the OPAX website and iPhone app collect, which companies receive it, how long it is kept, what voice sends to ElevenLabs and how to delete your account.',
+    description: 'What the OPAX website and iPhone and iPad app collect, which companies receive it, how long it is kept, what voice sends to ElevenLabs and how to delete your account.',
   },
 }
 
