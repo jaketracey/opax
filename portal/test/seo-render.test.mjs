@@ -69,8 +69,17 @@ test('raw division names and links every recorded member, with question/date/tal
   const response=await worker.fetch(new Request(origin+'/api/resource/division-federal-senate-10701'),env,{});const app=await response.json();assert.equal(app.metadata.ayes.length,11);assert.equal(app.metadata.noes.length,24);
 });
 test('directories expose bounded links and canonical pagination with rel prev/next',async()=>{
-  for(const path of ['/subject/person','/subject/party','/subject/electorate','/subject/topic','/bills?page=2','/money/grants?page=2']){const html=await get(path);checkHtml(html);const main=html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)[1];assert.ok((main.match(/<li>/g)||[]).length<=50);assert.match(main,/href="\/(subject|bill|money\/grants)\//);if(path.includes('page=2')){assert.match(html,/<link rel="prev"/);assert.match(html,/<link rel="next"/);}}
+  for(const path of ['/subject/person','/subject/party','/subject/electorate','/subject/topic','/bills?page=2']){const html=await get(path);checkHtml(html);const main=html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)[1];assert.ok((main.match(/<li>/g)||[]).length<=50);assert.match(main,/href="\/(subject|bill|money\/grants)\//);if(path.includes('page=2')){assert.match(html,/<link rel="prev"/);assert.match(html,/<link rel="next"/);}}
   const first=await get('/bills');const second=await get('/bills?page=2');const rows=(await read('/bills/index.json')).bills;assert.ok(first.includes(`/bill/${rows[0].key}`));assert.ok(!second.includes(`/bill/${rows[0].key}`));assert.ok(second.includes(`/bill/${rows[50].key}`));const last=await get('/bills?page=999999');assert.match(last,/rel="canonical" href="https:\/\/opax.com.au\/bills\?page=60"/);
+});
+test('grants server rendering supplies bounded award rows and canonical table state', async()=>{
+  const first=await get('/money/grants');checkHtml(first);
+  assert.match(first, /data-grants-table/);assert.match(first, /<caption>Awards<\/caption>/);
+  assert.equal((first.match(/<tbody\b[^>]*>[\s\S]*?<\/tbody>/)?.[0].match(/<tr\b/g)||[]).length,50);
+  const filtered=await get('/money/grants?t.page=2');checkHtml(filtered);
+  assert.match(filtered, /rel="canonical" href="https:\/\/opax.com.au\/money\/grants"/);
+  assert.match(filtered, /<meta name="robots" content="noindex">/);
+  const body=html=>html.match(/<tbody\b[^>]*>([\s\S]*?)<\/tbody>/)[1];assert.notEqual(body(first),body(filtered));
 });
 test('homepage schema includes website, search, organisation and breadcrumb; stats is a dataset',async()=>{
   const html=await get('/');const graph=JSON.parse(html.match(/<script[^>]*id="ld-page"[^>]*>(.*?)<\/script>/s)[1])['@graph'];for(const type of ['WebSite','Organization','BreadcrumbList'])assert.ok(graph.some(n=>n['@type']===type));assert.equal(graph.find(n=>n['@type']==='WebSite').potentialAction.target,origin+'/ask?view=search&q={search_term_string}');assert.ok(checkHtml(await get('/stats')).some(n=>n['@type']==='Dataset'));

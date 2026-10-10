@@ -1327,6 +1327,17 @@ async function openMoneyRecords(kind, params) {
   $('money-records-title').textContent = grants ? 'Government grants' : 'Political receipts';
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
+    if (grants && !params.has('program') && !params.has('open')) {
+      const mod = await import('/grants-table.js?v=871ca9e7aa');
+      if (generation !== moneyRecordsGeneration) return;
+      const controller = new AbortController();
+      moneyRecordsHandle = {destroy() {controller.abort();}};
+      const handle = await mod.mountGrantsTable(body, params, {signal: controller.signal});
+      if (generation !== moneyRecordsGeneration) {handle.destroy(); return;}
+      $('money-records-title').hidden = true;
+      moneyRecordsHandle = handle;
+      return;
+    }
     const mod = await import(grants ? '/grants.js?v=9e66f26ed2' : '/ledger.js?v=65ee0aa12f');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();

@@ -17,6 +17,9 @@ import {personIndex} from '../src/person-slug.ts';
 import {buildCrawl} from '../../scripts/build_crawl_catalog.mjs';
 import {buildGrowth} from '../../scripts/build_growth_modules.mjs';
 import {moduleOutputs} from './growth-module-harness.mjs';
+import {grantFixtureRows, queryGrantFixture, grantFixtureQuery} from '../src/grants-table-fixture.ts';
+import {grantsTableConfig, sanitizeGrantsState} from '../public/grants-table.js';
+import {dataTableHTML, toCSV, serializeQuery} from '../public/datatable.js';
 
 const pub = new URL('../public/', import.meta.url).pathname;
 const real = path => JSON.parse(readFileSync(join(pub, path), 'utf8'));
@@ -193,6 +196,44 @@ const ownUrl = (html, path) => entities(html).replaceAll(path, '');
 test('the fixture individuals are withheld and the fixture organisation is not', () => {
   for (const label of fixtureLabels) assert.ok(donorNameWithheld(index, label) && known.includes(label) && checked.includes(label), `fixture ${[...fixtureLabels].indexOf(label)}`);
   assert.equal(donorNameWithheld(index, FIXTURE_ORGANISATION), false);
+});
+
+test('grants withhold individual recipients in rows, facets, CSV and URL state', async () => {
+  const publicGrant = {id: 'fixture-award', rid: 'name:fixture-community-council', rn: 'Fixture Community Council', k: 'council', v: 25000, s: '2026-08-19', el: 'Fixture electorate'};
+  // Names come only from the derived export set, including the existing fixtures.
+  const privateGrants = checked.map((rn, i) => ({...publicGrant, id: `withheld-${i}`, rid: `abn:${String(i).padStart(11, '0')}`, rn, k: 'company'}));
+  const program = {n: 'Community facilities', ag: 'Fixture Department of Services', grants: [publicGrant, ...privateGrants,
+    {...publicGrant, id: 'withheld-kind', rid: 'person:withheld', k: 'individual'},
+    {...publicGrant, id: 'withheld-link', rid: `name:${checked[0]}`},
+    {...publicGrant, id: `award:${checked[0]}`},
+  ]};
+  const read = async path => path.startsWith('/grants/') ? program : graphs[MONEY_GRAPHS.indexOf(path)];
+  const {rows, withheld} = await grantFixtureRows(read);
+  assert.equal(rows.length, 3, 'one organisation award per fixture program');
+  const config = grantsTableConfig();
+  const {page, filtered} = queryGrantFixture(rows, {}, withheld);
+  for (const [where, output] of Object.entries({rows: JSON.stringify(page.rows), facets: JSON.stringify(page.facets), CSV: toCSV(filtered, config), HTML: dataTableHTML(config, page)})) assertClean(`grants ${where}`, output);
+  const clean = sanitizeGrantsState({q: 'Community', filters: {program: [program.n], recipient: checked}}, page);
+  assertClean('grants URL state', JSON.stringify(clean) + decode(serializeQuery(clean, 't')));
+  assert.equal(clean.q, 'Community');assert.equal(clean.filters.recipient, undefined);
+  for (const [i, name] of checked.entries()) {
+    const query = grantFixtureQuery(new URLSearchParams({q: name, 'f.program': JSON.stringify([name])}));
+    const rejected = queryGrantFixture(rows, query, withheld);
+    assert.equal(rejected.page.total, 0, `grants rejected query ${i}`);
+    assertClean(`grants rejected page ${i}`, JSON.stringify(rejected.page));
+    const state = sanitizeGrantsState(query, rejected.page);
+    assertClean(`grants rejected URL ${i}`, JSON.stringify(state) + decode(serializeQuery(state, 't')));
+    assertClean(`grants rejected CSV ${i}`, toCSV(rejected.filtered, config));
+  }
+  const originalFetch = env.ASSETS.fetch;
+  env.ASSETS.fetch = async request => new URL(request.url).pathname.startsWith('/grants/federal/programs/') ? Response.json(program) : originalFetch(request);
+  try {
+    for (const path of ['/api/table/grants', '/api/table/grants?format=csv', `/api/table/grants?q=${encodeURIComponent(checked[0])}`, `/api/table/grants?format=csv&f.recipient=${encodeURIComponent(JSON.stringify([checked[0]]))}`, `/money/grants?t.q=${encodeURIComponent(checked[0])}`]) {
+      const response = await fetchWorker(path);assert.equal(response.status, 200);
+      const body = await response.text();
+      assertClean('grants fixture endpoint', path.startsWith('/money/') ? rendered(ownUrl(body, path)) : body);
+    }
+  } finally {env.ASSETS.fetch = originalFetch;}
 });
 
 test('anonymising keeps every donor group and its totals: duplicated source ids never merge', () => {

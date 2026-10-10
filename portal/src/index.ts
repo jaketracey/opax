@@ -9,6 +9,8 @@ import { missingEntitySlug } from './crawl-hygiene'
 import { normalizePassage, passageWindow } from './passage-text'
 import { instrumentPage, instrumentReader } from './instruments'
 import { auditPage, auditReader } from './audit'
+import {grantFixtureHTML, grantFixtureResponse} from './grants-table-fixture'
+import {GRANTS_COVERAGE} from '../public/grants-table.js'
 import { hubPage } from './hubs'
 import { vicElectionPage, type VicElection } from './vic-election'
 import { vicElectionEnabled, vicElectionPublicationPath, vicElectionDiscovery, vicElectionLlms, VIC_ELECTION_ASSET, VIC_ELECTION_SITEMAP } from '../public/vic-election.js'
@@ -4011,6 +4013,10 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       if(content) meta.prerender=content.html
     } else if(route.kind==='static' && ['money','connections','explore'].includes(route.page)) {
       meta.prerender=(await renderMoneyAnswer(meta.title.replace(/ · OPAX$/,''),read).catch(()=>null))?.html || answerBlock(meta.title.replace(/ · OPAX$/,''),meta.description)
+    } else if (route.kind === 'static' && route.page === 'money/grants' && !url.searchParams.has('program') && !url.searchParams.has('open') && !url.searchParams.has('largest')) {
+      meta.prerender = answerBlock('Government grants', GRANTS_COVERAGE, await grantFixtureHTML(url, read).catch(() => '<p role="alert">Grant records are temporarily unavailable.</p>'))
+      meta.canonical = `${SITE_ORIGIN}/money/grants`
+      meta.noindex = Boolean(url.search)
     } else {
       const directory=route.kind==='index' ? route.dir : route.kind==='topics' ? 'topic' : route.kind==='static' && route.page==='bills' ? 'bills' : route.kind==='static' && route.page==='money/grants' && !url.searchParams.has('program') && !url.searchParams.has('open') && !url.searchParams.has('largest') ? 'grants' : null
       if(directory){
@@ -4923,6 +4929,7 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
     .on('head', {
       element(el) {
         if (noindex) el.append('<meta name="robots" content="noindex">', { html: true })
+        if (route.kind === 'static' && route.page === 'money/grants' && !url.searchParams.has('program') && !url.searchParams.has('open') && !url.searchParams.has('largest')) el.append('<link rel="stylesheet" href="/grants-table.css" data-grants-table-style>', {html: true})
         for(const [rel,href] of [['prev',meta.prev],['next',meta.next]]) if(href) el.append(`<link rel="${rel}" href="${escHtml(href)}">`,{html:true})
       },
     })
@@ -5403,6 +5410,9 @@ async function route(
   // held by this block, so the caching and SEO work landing on these same lines
   // merges line-by-line instead of conflicting on the whole hunk.
   {
+      if (url.pathname === '/api/table/grants') {
+        return grantFixtureResponse(request, url, <T>(path: string) => assetJson<T>(env, path))
+      }
       if (url.pathname.startsWith('/bill-texts/')) {
         if (request.method !== 'GET' && request.method !== 'HEAD') return json({ error: 'Method not allowed' }, 405)
         const limited = await rateLimited(env.SEARCH_LIMITER, request)
