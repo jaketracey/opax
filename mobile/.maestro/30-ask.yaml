@@ -84,8 +84,12 @@ name: 30 Build a question, streamed answer, native bill citation and grounded fo
     visible:
       id: ask-answer-sources-sheet-done
     timeout: 10000
-- assertVisible: About this answer
 - takeScreenshot: ${EVIDENCE}/30-answer-sources
+# The notes close the sheet, below a long bill title's records.
+- scrollUntilVisible:
+    element:
+      text: About this answer
+    timeout: 30000
 - tapOn:
     id: ask-answer-sources-sheet-done
     retryTapIfNoChange: false
