@@ -32,6 +32,7 @@ import {
 } from '../src/navigation/routes';
 import Today from '../src/features/Today';
 import Leads from '../src/features/leads/Leads';
+import { publicDiscovery } from '../src/features/money-public/discovery';
 import LeadDetail from '../src/features/leads/LeadDetail';
 import Declarations from '../src/features/declarations/Declarations';
 import {
@@ -75,6 +76,11 @@ jest.mock('expo-router', () => ({
 
 const discovery = decodeDiscovery(pinned('/discovery.json'));
 const signals = discovery.signals;
+// What the screens read: a "companies in both" lead about a withheld donor is left out.
+const shown = publicDiscovery(discovery);
+const companies = shown.signals.filter(
+  (s) => s.category === 'donor_contract_overlap',
+).length;
 const evidence = signals.flatMap((s) => s.evidence);
 
 // A catalog client over the pinned files; `fail` refuses the named paths.
@@ -516,7 +522,10 @@ describe('the Leads screen', () => {
     const renderer = await render(<Leads />);
     const root = renderer.root;
     const first = signals[0]!;
-    expect(texts(root)).toContain('60 leads');
+    expect(texts(root)).toContain(`${shown.signals.length} leads`);
+    expect(texts(root)).toContain(
+      `${shown.withheld} leads about a donor not named in OPAX are not shown.`,
+    );
     // A lead is a reason to look closer, never a finding.
     expect(texts(root)).toContain(aboutLede(discovery));
     expect(aboutLede(discovery)).toMatch(/not proof of wrongdoing/);
@@ -620,9 +629,7 @@ describe('the Leads screen', () => {
           n.props.testID === 'lead-0-open' &&
           typeof n.props.onPress === 'function',
       ).props.accessibilityLabel as string;
-    expect(openLabel()).toMatch(
-      `Lead, Government contracts. ${first.title}. `,
-    );
+    expect(openLabel()).toMatch(`Lead, Government contracts. ${first.title}. `);
     await press(root, 'leads-sort-share');
     expect(openLabel()).toMatch(
       `Lead, Government contracts. ${leadsFor(discovery, 'procurement_concentration', 'share')[0]!.title}. `,
@@ -630,7 +637,7 @@ describe('the Leads screen', () => {
     await press(root, 'leads-filter-recipient_concentration');
     expect(texts(root)).toContain('3 parties');
     await press(root, 'leads-filter-donor_contract_overlap');
-    expect(texts(root)).toContain('29 companies');
+    expect(texts(root)).toContain(`${companies} companies`);
     // No share to sort companies in both by.
     expect(root.findAll((n) => n.props.testID === 'leads-sort')).toHaveLength(
       0,
@@ -645,7 +652,7 @@ describe('the Leads screen', () => {
         .length,
     ).toBeGreaterThan(0);
     await press(renderer.root, 'leads-retry');
-    expect(texts(renderer.root)).toContain('60 leads');
+    expect(texts(renderer.root)).toContain(`${shown.signals.length} leads`);
     act(() => renderer.unmount());
   });
 });
@@ -675,9 +682,7 @@ describe('a lead’s comparison', () => {
       expect(texts(root)).toContain(caveat);
     // "About these numbers" is the page's one source line: the web's lede
     // and the methodology in full are in its sheet.
-    expect(labels(root)).toContain(
-      'Updated 21 Sep 2026, AEC annual returns',
-    );
+    expect(labels(root)).toContain('Updated 21 Sep 2026, AEC annual returns');
     expect(texts(root)).not.toContain(aboutLede(discovery));
     await press(root, 'lead-source');
     expect(texts(root)).toContain(aboutLede(discovery));

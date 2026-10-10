@@ -1,3 +1,6 @@
+import { withholdIndividualDonors } from '../../privacy/donorEntity';
+import { aggregateWithheldDonors } from './withheld';
+
 export interface MoneyFigures {
   total: number;
   count: number;
@@ -26,6 +29,11 @@ export interface MoneyNode extends MoneyFigures {
   explorer?: string;
   via?: string;
   publicMoney?: number;
+  aliases?: string[];
+  /** A donor without organisation evidence: never named (privacy/donorEntity). */
+  withheld?: true;
+  /** On an "Individual donors (N)" aggregate: the N. */
+  withheldCount?: number;
 }
 export interface MoneyEdge extends MoneyFigures {
   source: string;
@@ -203,7 +211,10 @@ export function decodeMoneyGraph(value: unknown): MoneyGraph {
     if (signatures.size !== 1) continue;
     edges.push(rows.reduce((a, b) => (b.total > a.total ? b : a)));
   }
-  const result = { ...graph, nodes, edges };
+  // Names leave at the boundary: nothing past the decoder holds a withheld donor's name.
+  const result = aggregateWithheldDonors(
+    withholdIndividualDonors({ ...graph, nodes, edges }),
+  );
   losses.set(result, {
     nodes: graph.nodes.length - nodes.length,
     edges: graph.edges.length - edges.length,

@@ -127,6 +127,12 @@ export default function Leads() {
             <Text variant="metadata" testID="leads-count">
               {leadCount(leads.length, filter)}
             </Text>
+            {discovery?.withheld ? (
+              <Text wordSafe variant="fine" testID="leads-withheld">
+                {leadCount(discovery.withheld, 'all')} about a donor not named
+                in OPAX {discovery.withheld === 1 ? 'is' : 'are'} not shown.
+              </Text>
+            ) : null}
             {hidden ? (
               <Text wordSafe variant="fine" tone="ink" testID="leads-hidden">
                 {leadCount(hidden, 'all')} in this export could not be read and{' '}

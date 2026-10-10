@@ -37,6 +37,7 @@ import {
 } from './records';
 import { moneyView, moneyWindowNodes } from './view';
 import { rhythm } from '../../design/tokens';
+import { donorNotNamed, individualDonorsNote } from '../../privacy/donorEntity';
 
 /**
  * "2024 · 3,929 receipts", or "Nothing disclosed in 2024"; years alone where
@@ -86,10 +87,18 @@ export default function MoneyNodeScreen() {
         <LoadingState label="Loading the money record" />
       </Screen>
     );
+  // A donor the map does not name (or does not hold) resolves to one neutral
+  // line: the link's id carries the name, so nothing of it is drawn.
   if (!node)
     return (
-      <Screen column="wide">
-        <EmptyState message="This node has no recorded flow in the selected view." />
+      <Screen column="wide" testID="money-node-missing">
+        <EmptyState
+          message={
+            param(params.node)?.startsWith('donor:')
+              ? donorNotNamed
+              : 'This node has no recorded flow in the selected view.'
+          }
+        />
       </Screen>
     );
   const profile = moneyProfile(node);
@@ -300,7 +309,13 @@ export default function MoneyNodeScreen() {
           </Group>
         </Section>
       ) : null}
-      {node.kind === 'grantor' ? null : (
+      {node.withheld ? (
+        <Text wordSafe variant="fine" testID="money-withheld-note">
+          {individualDonorsNote(node.withheldCount ?? 1)} Donors without
+          organisation evidence in their name are shown together, with their
+          amounts kept.
+        </Text>
+      ) : node.kind === 'grantor' ? null : (
         <RowList>
           {profile.native ? (
             <LinkRow
