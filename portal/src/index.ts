@@ -37,8 +37,8 @@ import { resolveAskScope, needsAskPeople, askRetrievalQuery, isNamedPositionQues
 import { communityRoute } from './community'
 import { deliverReplyEmails, REPLY_EMAIL_CRON } from './community-notifications'
 import { partyUrl, personUrl, personNameKey } from '../public/canonical-urls.js'
-import { withholdIndividualDonors } from '../public/donor-entity.js'
-import { donorWithheld, namesWithheldDonor, questionNamesWithheldDonor, withheldNameCheck, WITHHELD_DONOR_REPLY } from './donor-index'
+import { withholdIndividualDonors, foldDonorName } from '../public/donor-entity.js'
+import { donorWithheld, namesWithheldDonor, questionNamesWithheldDonor, withheldNameCheck, loadDonorIndex, WITHHELD_DONOR_REPLY } from './donor-index'
 import { canonicalPageRedirect } from './canonical-origin'
 import { pageEntry } from './page-entry'
 import { communityMcp } from './community-mcp'
@@ -4008,7 +4008,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
   }
   // Every non-home path has a single answer, including unavailable/not-found pages.
   meta.prerender ??= answerBlock(meta.title.replace(/ · OPAX$/, ''),meta.description,meta.status===404 ? 'Not found' : 'OPAX')
-  meta.jsonLd=meta.status===404 ? null : buildSchemaGraph({canonical:meta.canonical,title:meta.title,description:meta.description,jsonLd:meta.jsonLd,person:personIdentity,bill:billIdentity})
+  meta.jsonLd=meta.status>=400 ? null : buildSchemaGraph({canonical:meta.canonical,title:meta.title,description:meta.description,jsonLd:meta.jsonLd,person:personIdentity,bill:billIdentity})
   return meta
 }
 
@@ -4288,8 +4288,10 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
     loadMoney(env).catch(() => null),
   ])
   const p = (people ? personAt(people, name) : null)
+  // Not a roster person (or the roster is unreadable): the typed name is never repeated back.
+  if (!p) return unknownSubjectMeta('person', !!people)
   if (url.searchParams.get('attribution') === 'unattributed') {
-    const print = p?.name ?? name
+    const print = p.name
     const description = `Unattributed testimony and other records printed as ${print}. Parliamentary identity, party and portrait are not assigned to this evidence.`
     return { title: `${print} — unattributed evidence · OPAX`, description,
       canonical: `${SITE_ORIGIN}${personPath(people, print)}?attribution=unattributed`, status: 200, ogType: 'website', jsonLd: null,
@@ -4301,16 +4303,6 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   let title = `${display} · OPAX`
   const portraitId = photoIdFor(photos, display)
   const credit = await creditLine(env, portraitId)
-  if (!p) {
-    // Below the 5-speech floor of parliamentarians.json, or a name the record
-    // spells differently. The app still tries the live index, so no 404 here.
-    const description = clip(`${display} in the OPAX record of Australian parliamentary speeches and disclosed political donations.`)
-    return {
-      title, description, canonical, ogType: 'profile', status: 200, jsonLd: null,
-      prerender: prerenderBlock(display, description),
-      card: { kicker: 'Parliamentarian', title: display, lines: ['In the OPAX record of Australian parliamentary speeches and disclosed political donations.'], portraitId, credit },
-    }
-  }
   const where = p.chambers.length === 1 && CHAMBER_NAMES[p.chambers[0]]
     ? `${p.states.length === 1 && p.states[0] !== 'federal' ? `${STATE_NAMES[p.states[0]]?.replace(' parliament', '') ?? p.states[0]} ` : ''}${CHAMBER_NAMES[p.chambers[0]]}`
     : p.states.map((s) => STATE_NAMES[s] ?? s).join(' and ')
@@ -4536,6 +4528,39 @@ async function supplierMeta(name: string, url: URL, env: Env): Promise<PageMeta>
  * positive organisation evidence a donor counts as an individual
  * (public/donor-entity.js, src/donor-index.ts).
  */
+const SUBJECT_UNKNOWN: Record<'person' | 'donor' | 'party' | 'campaigner', [string, string]> = {
+  person: ['Not in the parliamentary roster', "This person isn't in OPAX's parliamentary roster."],
+  donor: ['Donor not found', "This donor isn't in OPAX's money data."],
+  party: ['Party not found', "This party isn't in OPAX's record."],
+  campaigner: ['Campaigner not found', 'No entry with this name is on the AEC register of associated entities, third parties, significant third parties and political campaigners.'],
+}
+/**
+ * A subject route for a name OPAX does not hold: a 404 (a 503 when the records
+ * could not be read) that never repeats the requested name, in the title,
+ * description, structured data, share card or canonical. A typed name can be
+ * anyone's, a withheld donor's included (src/donor-index.ts).
+ */
+function unknownSubjectMeta(kind: keyof typeof SUBJECT_UNKNOWN, loaded: boolean): PageMeta {
+  const [title, description] = loaded ? SUBJECT_UNKNOWN[kind] : ['Temporarily unavailable', 'These records could not be loaded. Please try again.']
+  return { title: `${title} · OPAX`, description, canonical: `${SITE_ORIGIN}/subject/${kind}`, ogType: 'website', status: loaded ? 404 : 503, jsonLd: null, prerender: null, card: null }
+}
+
+/** The party a /subject/party/<name> segment names: a money-map party, or one the roster, bills or divisions record. */
+async function partyFor(name: string, env: Env): Promise<{ node: MoneyEntry | null; label: string | null; loaded: boolean }> {
+  const moneyData = await loadMoney(env).catch(() => null)
+  const node = moneyData?.parties.get(foldName(name)) ?? [...(moneyData?.parties.values() || [])].find(p => partyUrl(p.label).split('/').at(-1) === name.toLowerCase()) ?? null
+  const label = node?.label ?? (await loadPartyLabels(env).catch(() => [])).find(p => partyUrl(p).split('/').at(-1) === name.toLowerCase()) ?? null
+  return { node, label, loaded: !!moneyData }
+}
+
+/** Whether any money graph (Tasmania's included) holds a donor of this name. */
+async function donorKnown(name: string, env: Env): Promise<boolean | null> {
+  const index = await loadDonorIndex(env.ASSETS).catch(() => null)
+  if (!index) return null
+  const key = foldDonorName(name)
+  return index.organisations.has(key) || index.withheld.has(key)
+}
+
 function withheldMeta(dir: 'donor' | 'campaigner', canonical: string): PageMeta {
   const [heading, sentence] = dir === 'donor'
     ? ['Donor', 'A disclosed political donor in the OPAX money data. Which parties it funded, year by year.']
@@ -4546,8 +4571,19 @@ function withheldMeta(dir: 'donor' | 'campaigner', canonical: string): PageMeta 
 
 async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, env: Env): Promise<PageMeta> {
   const [moneyData, people] = await Promise.all([loadMoney(env).catch(() => null), loadPeople(env).catch(() => null)])
-  const node = (dir === 'party' ? moneyData?.parties : moneyData?.donors)?.get(foldName(name)) ?? (dir==='party' ? [...(moneyData?.parties.values() || [])].find(p=>partyUrl(p.label).split('/').at(-1)===name.toLowerCase()) : null) ?? null
-  const display = node?.label ?? (dir==='party' ? (await loadPartyLabels(env).catch(()=>[])).find(p=>partyUrl(p).split('/').at(-1)===name.toLowerCase()) : null) ?? name
+  // A name no record holds is never repeated back (unknownSubjectMeta).
+  let node: MoneyEntry | null, display: string
+  if (dir === 'party') {
+    const party = await partyFor(name, env)
+    if (!party.label) return unknownSubjectMeta('party', party.loaded)
+    node = party.node
+    display = party.label
+  } else {
+    node = moneyData?.donors.get(foldName(name)) ?? null
+    const known = node ? true : await donorKnown(name, env)
+    if (!known) return unknownSubjectMeta('donor', known !== null)
+    display = node?.label ?? name
+  }
   const canonical = dir==='party' ? `${SITE_ORIGIN}${partyUrl(display)}` : `${SITE_ORIGIN}/subject/${dir}/${encodeURIComponent(display)}`
   if (dir === 'donor' && await donorWithheld(env.ASSETS, display)) return withheldMeta('donor', canonical)
   const title = `${display} · OPAX`
@@ -4601,12 +4637,10 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
 }
 
 /**
- * /subject/campaigner/<name>. A donor page stays 200 for a name it cannot find
- * because money.json is a top-N cut and the app can still say something useful
- * about the rest. This roster is not a cut: it is the AEC register itself, so a
- * name absent from it names nothing and 404s. A roster that failed to LOAD is a
- * different case, and stays 200 rather than telling a crawler an entity that
- * exists does not.
+ * /subject/campaigner/<name>. The roster is the AEC register itself, so a name
+ * absent from it names nothing and 404s; a register that failed to load is a
+ * 503, so a crawler is not told an entity that exists does not. Neither repeats
+ * the requested name (unknownSubjectMeta).
  */
 async function campaignerMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   const data = await loadCampaigners(env).catch(() => null)
@@ -4617,21 +4651,8 @@ async function campaignerMeta(name: string, url: URL, env: Env): Promise<PageMet
   // JSON-LD carry the whole name; the title is the one place it has to give way,
   // and it gives way before the masthead does.
   const title = `${clip(display, 90)} · OPAX`
-  if ((c || !data) && await namesWithheldDonor(env.ASSETS, display)) return withheldMeta('campaigner', canonical)
-  if (!c) {
-    // The register is unreadable, so the name is unverified: it is not repeated back.
-    if (!data) return { ...withheldMeta('campaigner', canonical), noindex: false }
-    // Never echo the requested name: it can be a withheld donor's (src/donor-index.ts).
-    return {
-      title: 'Campaigner not found · OPAX',
-      description: 'No entry with this name is on the AEC register of associated entities, third parties, significant third parties and political campaigners.',
-      canonical,
-      ogType: 'website',
-      status: 404,
-      jsonLd: null,
-      prerender: null,
-    }
-  }
+  if (!c) return unknownSubjectMeta('campaigner', !!data)
+  if (await namesWithheldDonor(env.ASSETS, display)) return withheldMeta('campaigner', canonical)
   const linked = c.parties.length ? `; disclosed relationship: ${andList(c.parties.slice(0, 3))}` : ''
   const parts: string[] = []
   if (c.filings) parts.push(`${num(c.filings)} annual return${c.filings === 1 ? '' : 's'}, ${yearSpan(c.firstYear, c.lastYear)}`)
@@ -4856,7 +4877,7 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
     buildMeta(route, url, request, env, ctx),
   ])
   if (!shell.ok) return shell
-  const noindex = meta.noindex || meta.status === 404 || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
+  const noindex = meta.noindex || meta.status >= 400 || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
   // Election coverage names unavailable grants, but renders no financial records.
   // Its renderer owns any future caveat alongside an actual political money pairing.
   if (!(route.kind === 'hub' && route.hub === 'vic-election'))
@@ -4865,15 +4886,15 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
   const ld = meta.jsonLd ? JSON.stringify(meta.jsonLd).replace(/</g, '\\u003c') : null
   // The share image is drawn per route (see "Share images" below); a page
   // with nothing to draw, or nothing to find, shares the home card.
-  const image = meta.card && meta.status !== 404 ? ogImageFor(meta.canonical) : OG_IMAGE
-  const imageAlt = meta.card && meta.status !== 404 ? clip(`${meta.card.title} on OPAX`, 120) : OG_IMAGE_ALT
+  const image = meta.card && meta.status < 400 ? ogImageFor(meta.canonical) : OG_IMAGE
+  const imageAlt = meta.card && meta.status < 400 ? clip(`${meta.card.title} on OPAX`, 120) : OG_IMAGE_ALT
   const rewriter = new HTMLRewriter()
     .on('title', new SetText(meta.title))
     .on('meta[name="description"]', new SetAttr('content', meta.description))
-    .on('link[rel="canonical"]', { element(el) { if(meta.status===404) el.remove(); else el.setAttribute('href',meta.canonical) } })
+    .on('link[rel="canonical"]', { element(el) { if(meta.status>=400) el.remove(); else el.setAttribute('href',meta.canonical) } })
     .on('meta[property="og:title"]', new SetAttr('content', meta.title))
     .on('meta[property="og:description"]', new SetAttr('content', meta.description))
-    .on('meta[property="og:url"]', { element(el) { if(meta.status===404) el.remove(); else el.setAttribute('content',meta.canonical) } })
+    .on('meta[property="og:url"]', { element(el) { if(meta.status>=400) el.remove(); else el.setAttribute('content',meta.canonical) } })
     .on('meta[property="og:type"]', new SetAttr('content', meta.ogType))
     .on('meta[property="og:image"]', new SetAttr('content', image))
     .on('meta[property="og:image:alt"]', new SetAttr('content', imageAlt))
@@ -5043,13 +5064,16 @@ async function serveStorySlide(url: URL, request: Request, env: Env, ctx: Execut
   }
 }
 
-/** A withheld donor's (or a campaigner under a withheld donor's name) share card is never drawn. */
+/** A share card is never drawn, or replayed, for a subject OPAX does not hold (the
+ * name is whatever was typed) or a withheld donor (or a campaigner under one's name). */
 async function withheldCard(pagePath: string, env: Env): Promise<boolean> {
   let route: SeoRoute | null = null
   try { route = matchSeoRoute(new URL(`${SITE_ORIGIN}${pagePath}`)) } catch { return false }
   if (route?.kind !== 'subject') return false
-  if (route.dir === 'donor') return donorWithheld(env.ASSETS, route.name)
-  if (route.dir === 'campaigner') return namesWithheldDonor(env.ASSETS, route.name)
+  if (route.dir === 'person') { const people = await loadPeople(env).catch(() => null); return !people || !personAt(people, route.name) }
+  if (route.dir === 'party') return !(await partyFor(route.name, env)).label
+  if (route.dir === 'donor') return !(await donorKnown(route.name, env)) || donorWithheld(env.ASSETS, route.name)
+  if (route.dir === 'campaigner') { const data = await loadCampaigners(env).catch(() => null); return !data?.byFold.get(foldName(route.name)) || namesWithheldDonor(env.ASSETS, route.name) }
   return false
 }
 

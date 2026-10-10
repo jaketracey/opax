@@ -299,6 +299,68 @@ test('a declared-interest entry naming a withheld donor is left out whole, with 
   assert.ok(html.includes(escaped), 'the next entry is shown as written');
 });
 
+test('a subject route never repeats a name it does not hold, and real names still redirect', async t => {
+  const fictional = ['Quentin Fixtureperson', 'Fictional Example Pty Ltd', 'Zara Fixturequill', 'FIXTUREAXE'];
+  const names = [...checked.slice(0, 150), ...fictional];
+  let unknown = 0, withheldPages = 0, redirects = 0;
+  for (const [i, name] of names.entries()) {
+    for (const kind of ['person', 'party', 'donor', 'campaigner', 'supplier', 'agency', 'electorate']) {
+      for (const query of kind === 'person' ? ['', '?attribution=unattributed'] : ['']) {
+        const path = `/subject/${kind}/${encodeURIComponent(name)}`;
+        const response = await fetchWorker(path + query);
+        const html = await response.text();
+        assert.equal(nameMatcher([name])(rendered(ownUrl(html, path))).length, 0, `${kind} route repeats name ${i}`);
+        // A name that is a real record's (a supplier's registered name) redirects to it by id.
+        if ([301, 308].includes(response.status)) {
+          assert.ok(['supplier', 'person'].includes(kind) && !decode(response.headers.get('location')).toLowerCase().includes(name.toLowerCase()), `${kind} redirect for name ${i}`);
+          redirects++;
+          continue;
+        }
+        assert.equal(response.headers.get('x-robots-tag'), 'noindex', `${kind} route for name ${i} is indexable (${response.status})`);
+        if (response.status === 404) {
+          unknown++;
+          assert.doesNotMatch(html, /<link\b[^>]*rel="canonical"|<meta\b[^>]*property="og:url"|id="ld-page"[^>]*>[^<]/, `${kind} 404 for name ${i} has a canonical or JSON-LD`);
+        } else {
+          // Only a withheld donor (or a campaigner under its name) has a page: unnamed, as tested above.
+          assert.ok(['donor', 'campaigner'].includes(kind) && response.status === 200, `${kind} route for name ${i}: ${response.status}`);
+          withheldPages++;
+        }
+      }
+    }
+    for (const kind of ['person', 'party', 'donor', 'campaigner']) {
+      const card = `/og/subject/${kind}/${encodeURIComponent(name)}`;
+      const png = await fetchWorker(`${card}.png`), jpg = await fetchWorker(`${card}.jpg`);
+      assert.equal(png.headers.get('x-opax-og'), null, `${kind} card drawn for name ${i}`);
+      assert.equal(jpg.status, 404, `${kind} jpg card for name ${i}`);
+      assert.ok(!(await png.text()).includes(name) && !(await jpg.text()).includes(name));
+    }
+  }
+  // A name the roster holds still redirects to its slug.
+  const {slugOf} = personIndex(rosterPeople);
+  const member = rosterPeople.find(p => slugOf.get(p.name) && slugOf.get(p.name) !== encodeURIComponent(p.name));
+  const redirect = await fetchWorker(`/subject/person/${encodeURIComponent(member.name)}`, {redirect: 'manual'});
+  assert.equal(redirect.status, 301);
+  assert.ok(redirect.headers.get('location').endsWith(`/subject/person/${slugOf.get(member.name)}`));
+  t.diagnostic(`${names.length} names (${fictional.length} fictional) on 7 subject kinds: ${unknown} generic 404s, ${withheldPages} withheld pages, ${redirects} redirects to a real record by id, no name repeated`);
+});
+
+test('the Victorian election hub names no withheld donor', async t => {
+  env.VIC_ELECTION_HUB_ENABLED = 'true';
+  try {
+    const xml = await (await fetchWorker('/sitemaps/vic-election-1.xml')).text();
+    const pages = [...xml.matchAll(/<loc>https:\/\/opax\.com\.au([^<]+)<\/loc>/g)].map(m => decode(m[1]));
+    assert.ok(pages.length >= 90, `${pages.length} hub pages`);
+    for (const path of pages) {
+      const response = await fetchWorker(path);
+      assert.equal(response.status, 200, path);
+      assertClean(path, rendered(await response.text()));
+    }
+    assertClean('Victorian election sitemap', xml);
+    assertClean('llms.txt with the hub', await (await fetchWorker('/llms.txt')).text());
+    t.diagnostic(`${pages.length} Victorian election hub pages scanned`);
+  } finally { delete env.VIC_ELECTION_HUB_ENABLED; }
+});
+
 // --- 2. crawl outputs --------------------------------------------------------------
 test('no sitemap, llms.txt or IndexNow entry names or links a withheld donor', () => {
   for (const name of sitemapFiles) assertClean(`sitemap ${name}`, readFileSync(at(`crawl/sitemaps/${name}`), 'utf8'));
