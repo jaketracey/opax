@@ -6,7 +6,7 @@ let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels, source lines and ⋯ (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = import("/growth-modules.js?v=2f10ab9729").then(module => { growthModules = module; });
+const growthModulesReady = import("/growth-modules.js?v=b3095eab8c").then(module => { growthModules = module; });
 let uiLabels;
 const uiLabelsReady = import('/labels.js?v=804befe8de').then(module => { uiLabels = module; });
 let attributionHelpers;
@@ -1584,7 +1584,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=8c8fea74ea");
+    const module = await import("/suppliers.js?v=f07fa5d29c");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,

@@ -140,8 +140,8 @@ const HEX_BASELINE = {
   'public/home.html': 1,
   'public/procurement-data.js': 2,
 };
-// Filled from the counts at pass 5 lane D (design/p5w-shell), after its own
-// regions moved to roles and canonical names. Lower a number when a pass
+// Filled from the counts at pass 5 lane D (design/p5w-shell, merged with lane
+// B), after their regions moved to roles and canonical names. Lower a number when a pass
 // removes some; never raise one.
 const TYPE_BASELINE = {
   'graph/explain.ts': 1,
@@ -161,7 +161,7 @@ const TYPE_BASELINE = {
   'public/quiz.js': 4,
   'public/st-test.html': 1,
   'public/stages.js': 2,
-  'public/style.css': 667,
+  'public/style.css': 652,
   'public/thenvsnow.js': 2,
   'public/timemachine.js': 15,
   'public/ui-controls.css': 9,
@@ -172,7 +172,7 @@ const TYPE_BASELINE = {
   'src/community-notifications.ts': 4,
 };
 const DEPRECATED_BASELINE = {
-  'public/style.css': 648,
+  'public/style.css': 629,
   'public/ui-controls.css': 2,
   'public/ui-workbench.css': 5,
   'public/voice.css': 4,
