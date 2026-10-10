@@ -8,6 +8,7 @@ import {speaker,themes,speeches,bills,catalogueCounts,resource,stubModel,validCa
 const restore=offline();
 const calls=[];
 let mode='fast',aborted=0;
+let rewriteActive=0,rewriteStarted=()=>{};
 const timings=[];
 const harness=await loadWorker(new URL('../src/index.ts',import.meta.url).pathname,new URL('../public/',import.meta.url).pathname);
 const diskAssets=harness.env.ASSETS;
@@ -15,6 +16,17 @@ harness.env.ASSETS={async fetch(req){if(new URL(req.url).pathname.startsWith('/g
 globalThis.fetch=async (input,init)=>{
  const url=new URL(input);const body=init?.body?JSON.parse(init.body):{};calls.push({path:url.pathname,body});
  assert.ok(url.hostname.startsWith('offline.'),'only the offline knowledge-box stub may be addressed');
+ if(mode.startsWith('rewrite-') && url.pathname.endsWith('/ask') && body.prompt?.system?.startsWith('You rewrite follow-up')){
+  rewriteActive++;
+  if(mode==='rewrite-fetch')return new Promise((resolve,reject)=>{
+   const stop=()=>{rewriteActive--;aborted++;reject(init.signal.reason)};
+   init.signal.addEventListener('abort',stop,{once:true});rewriteStarted();if(init.signal.aborted)stop();
+  });
+  return new Response(new ReadableStream({start(controller){
+   const stop=()=>{rewriteActive--;aborted++;controller.error(init.signal.reason)};
+   init.signal.addEventListener('abort',stop,{once:true});rewriteStarted();if(init.signal.aborted)stop();
+  }}),{headers:{'content-type':'application/json'}});
+ }
  if(mode==='slow' || (mode==='verification' && url.pathname.endsWith('/ask') && body.prompt?.user?.includes('Recovery instructions:'))){
   await new Promise((resolve,reject)=>{
    const timer=setTimeout(()=>{init?.signal?.removeEventListener('abort',stop);resolve()},mode==='slow'?1000:3000);
@@ -135,6 +147,16 @@ test('leaving the overview stream cancels retrieval and never starts generation'
  const response=await post('/api/ask?stream=1');const reader=response.body.getReader();await reader.read();
  await new Promise(resolve=>setTimeout(resolve,30));await reader.cancel();await new Promise(resolve=>setTimeout(resolve,30));
  assert.ok(aborted>0);assert.equal(calls.filter(c=>c.path.endsWith('/ask')).length,0);mode='fast';
+});
+
+for(const stage of ['fetch','body'])test(`leaving an overview aborts a hanging rewrite ${stage} before retrieval`,async()=>{
+ mode='rewrite-'+stage;harness.env.CACHE_EPOCH='offline-rewrite-'+stage;calls.length=0;aborted=0;rewriteActive=0;
+ const started=new Promise(resolve=>{rewriteStarted=resolve});
+ const response=await harness.fetch('/api/ask?stream=1',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({question:`What has ${speaker} said in parliament?`,context:[{author:'reader',text:'What subjects were discussed?'},{author:'answer',text:'The record includes speeches on parliamentary scrutiny.'}]})});
+ const reader=response.body.getReader();assert.match(new TextDecoder().decode((await reader.read()).value),/event: status/);
+ await started;assert.equal(rewriteActive,1);await reader.cancel();await new Promise(resolve=>setTimeout(resolve,30));
+ assert.equal(rewriteActive,0);assert.equal(aborted,1);assert.equal(calls.length,1);assert.ok(calls[0].path.endsWith('/ask'));
+ timings.push({scenario:'cancelled-rewrite-'+stage,active_calls:rewriteActive,aborted_calls:aborted});mode='fast';
 });
 
 test.after(async()=>{

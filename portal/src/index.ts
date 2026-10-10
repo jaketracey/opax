@@ -1364,7 +1364,8 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
   if (conversation) {
     const limited = await rateLimited(env.ASK_LIMITER, request)
     if (limited) return limited
-    const rewrite = await standaloneQuestion(rawInput, env)
+    const rewrite = await standaloneQuestion(rawInput, env, firstBudget)
+    firstBudget?.signal.throwIfAborted()
     // "High", "ok", "?": nothing to search on, and never the last question
     // over again. A free request for a full question, no answer generated.
     if (rewrite && typeof rewrite === 'object') { mark('rewrite'); return timed(json(clarifyPayload(rawInput.question ?? '', rewrite.suggestion))) }
@@ -1411,6 +1412,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
   let overview: OverviewPack | undefined
   const overviewIntent = isPersonOverviewIntent(input)
   const recentIntent = isPersonRecentIntent(input)
+  firstBudget?.signal.throwIfAborted()
   try {
     if (overviewIntent || recentIntent) {
       try {
@@ -1627,8 +1629,9 @@ function withAskedAs<T extends object>(payload: T, askedAs: string | null | unde
  * stands alone comes back unchanged and is reported as null too; one with
  * nothing to search on is { unclear } (ask-rewrite.ts).
  */
-async function standaloneQuestion(input: AskInput, env: Env): Promise<FollowUpRewrite> {
-  return rewriteFollowUp(input, async (user, question) => summaryModelAnswer(await kbFetch(env, '/ask', {
+async function standaloneQuestion(input: AskInput, env: Env, budget?: AskDeadline): Promise<FollowUpRewrite> {
+  return rewriteFollowUp(input, async (user, question) => {
+    const work = async (signal: AbortSignal) => summaryModelAnswer(await kbFetch(env, '/ask', {
     body: {
       query: question,
       top_k: 1,
@@ -1638,8 +1641,11 @@ async function standaloneQuestion(input: AskInput, env: Env): Promise<FollowUpRe
       prompt: { system: REWRITE_SYSTEM, user },
     },
     headers: { 'x-synchronous': 'true' },
-    signal: AbortSignal.timeout(9_000),
-  })))
+    signal,
+    }))
+    // Keep the fetch and its response-body read under the same parent budget.
+    return budget ? budget.run(work, 9_000) : work(AbortSignal.timeout(9_000))
+  })
 }
 
 /** Retrieve once, then generate only from original turns belonging to the index speaker. */
