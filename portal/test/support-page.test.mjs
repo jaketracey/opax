@@ -262,7 +262,7 @@ test('/support shows the general form first, then names a record only from the l
 test('/support is a shell route with metadata and a sitemap entry', () => {
   const html = readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
   const worker = readFileSync(new URL('../src/index.ts', import.meta.url), 'utf8');
-  assert.match(html, /<section id="panel-support" class="panel" hidden/);
+  assert.match(html, /<section id="panel-support" class="panel policy-page" hidden/);
   assert.match(app, /const PANELS = \[[^\]]*"support"/);
   assert.match(worker, /support: \{\n\s+title: 'Support · OPAX'/);
   const sitemap = readFileSync(new URL('../public/crawl/sitemaps/static-1.xml', import.meta.url), 'utf8');
