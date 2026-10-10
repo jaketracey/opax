@@ -41,7 +41,7 @@ new_sandbox() {
   # Bills imports roster_identity, which in turn imports parli.ingest.speaker_names.
   for f in scripts/vm/nightly.sh scripts/vm/run-nightly.sh scripts/vm/poweroff-if-idle.sh scripts/vm/validate_data.py scripts/vm/data_groups.sh scripts/export_bills.py scripts/roster_identity.py \
            scripts/vm/bills_refresh.sh scripts/vm/bills_guard.py scripts/vm/keep_if_unchanged.py \
-           scripts/vm/evidence_refresh.sh scripts/vm/evidence_guard.py \
+           scripts/vm/evidence_refresh.sh scripts/vm/evidence_guard.py scripts/vm/evidence_inputs.py \
            scripts/bills_registry/bills_stages.py \
            scripts/export_division_pages.py scripts/export_recent_votes.py scripts/export_votes.py \
            scripts/verify_bill_briefs.py scripts/update_corpus_manifest.py scripts/bump_cache_epoch.py \
@@ -97,9 +97,7 @@ PYEOF
   REPO="$HOME/opax"; git clone -q "$ORIGIN" "$REPO"
   mkdir -p "$REPO/.venv/bin"; ln -s "$(command -v python3)" "$REPO/.venv/bin/python"
   # state the preflight looks for
-  for evidence_sidecar in evidence-layers-full.sqlite evidence-places.sqlite evidence-identity-decisions.sqlite evidence-additional-mentions.sqlite; do
-    touch "$HOME/.cache/autoresearch/$evidence_sidecar"
-  done
+  python3 "$SRC/tests/fixtures/evidence-nightly/inputs.py" "$HOME/.cache/autoresearch"
   python3 - "$HOME/.cache/autoresearch/parli.db" <<'PYEOF'
 import sqlite3, sys
 with sqlite3.connect(sys.argv[1]) as db:
@@ -844,7 +842,21 @@ done
 new_sandbox evidence_missing
 rm "$HOME/.cache/autoresearch/evidence-places.sqlite"
 OPAX_TODAY=2026-10-10 nightly
-check "missing sidecars fail softly before exporter opens anything" bash -c "[ '$NRC' -eq 1 ] && [ ! -f '$HOME/evidence.calls' ] && grep -q 'sidecars missing' '$SB/nightly.out'"
+check "missing sidecars keep the night green and skip export/staging" bash -c "[ '$NRC' -eq 0 ] && [ ! -f '$HOME/evidence.calls' ] && ! find '$HOME/.cache/autoresearch/pipeline' -maxdepth 1 -name 'evidence-stage.*' | grep -q . && git -C '$REPO' diff --quiet HEAD -- portal/public/evidence"
+check "one evidence warning names missing files and status says waiting" bash -c "[ \$(grep -c 'WARN: evidence:' '$SB/nightly.out') -eq 1 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d[\"status\"]==\"ok\" and not d[\"failures\"] and \"evidence: waiting for inputs (missing:\" in d[\"summary\"] and \"evidence-places.sqlite\" in d[\"summary\"]'"
+check "waiting retains catch-up and publishes the rest" bash -c "[ -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending' ] && git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q '\"new\"'"
+OPAX_TODAY=2026-10-10 nightly
+check "missing inputs on the next night still succeed without exporting" bash -c "[ '$NRC' -eq 0 ] && [ ! -f '$HOME/evidence.calls' ] && [ -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending' ] && [ \$(grep -c 'WARN: evidence:' '$SB/nightly.out') -eq 1 ]"
+
+new_sandbox evidence_mismatch
+python3 - "$HOME/.cache/autoresearch/parli.db" <<'PYEOF'
+import sqlite3, sys
+with sqlite3.connect(sys.argv[1]) as db:
+    db.execute('INSERT INTO speeches VALUES(2)')
+PYEOF
+OPAX_TODAY=2026-10-10 nightly
+check "mismatched coverage keeps the night green without export" bash -c "[ '$NRC' -eq 0 ] && [ ! -f '$HOME/evidence.calls' ] && [ -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending' ] && [ \$(grep -c 'WARN: evidence:' '$SB/nightly.out') -eq 1 ]"
+check "mismatch names sidecars in the successful status summary" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d[\"status\"]==\"ok\" and \"waiting for inputs (mismatch:\" in d[\"summary\"] and \"evidence-layers-full.sqlite\" in d[\"summary\"] and \"evidence-additional-mentions.sqlite\" in d[\"summary\"]'"
 
 for evidence_skip in OPAX_NIGHTLY_SKIP_REFRESH OPAX_NIGHTLY_SKIP_PERIODIC; do
   new_sandbox "evidence_$evidence_skip"

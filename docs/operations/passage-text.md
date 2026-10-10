@@ -186,8 +186,15 @@ the catch-up can succeed. The checked-in transfer inventory does not provision
 the four sidecars. The source defaults to the refresh-box `parli.db`, but
 `OPAX_EVIDENCE_SOURCE` can point to a frozen matching snapshot; the four sidecar
 paths also have explicit overrides. Old sidecars against a growing DB fail the
-exporter's exact progress/count, grant-program, identity and additional coverage
-checks. Missing inputs fail before export. No refresh-box filesystem, real DB,
+readiness check's exact progress/count, grant-program, identity and additional coverage
+checks. Missing or mismatched inputs produce one warning and a
+`evidence: waiting for inputs (…)` status, preserve catch-up and return success
+before staging or export; there is no export retry that night. Provisioning can
+remain undecided without making the night red. Coverage checks precede the full
+source audit, which still verifies provenance before publication. The written
+[provisioning procedure](evidence-provisioning.md) specifies matching snapshots,
+WAL handling, inventories and verification commands; none was run in this lane.
+No refresh-box filesystem, real DB,
 KB or external schedule was inspected or changed in this lane.
 
 The step exports to a fresh empty staging directory and runs the full source

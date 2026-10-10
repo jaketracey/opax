@@ -1,22 +1,28 @@
 """Evidence cadence, retention and shell failure tests using only fixture git data."""
 import copy
+from contextlib import closing
 import importlib.util
 import json
 import os
 from pathlib import Path
 import shutil
+import sqlite3
 import subprocess
 import tempfile
 import unittest
 from unittest import mock
 
 from scripts.vm import evidence_guard as guard
+from scripts.vm import evidence_inputs
 
 ROOT = Path(__file__).resolve().parents[2]
 FIXTURES = ROOT / 'tests/fixtures/evidence-nightly'
 spec = importlib.util.spec_from_file_location('evidence_seed', FIXTURES / 'seed.py')
 fixture = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(fixture)
+spec = importlib.util.spec_from_file_location('evidence_input_seed', FIXTURES / 'inputs.py')
+input_fixture = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(input_fixture)
 
 DRIVER = '''
 set -uo pipefail
@@ -25,6 +31,7 @@ PIPE="$HOME/.cache/autoresearch/pipeline"
 RESULT_SUMMARY=""
 log() { echo "$*"; }
 fail() { echo "FAIL: $*"; }
+warn() { echo "WARN: $*"; }
 run() { "$@"; }
 revert() {
   EVIDENCE_REFRESH_OK=0
@@ -50,6 +57,66 @@ def change_stats(files, **changes):
     index['meta'].update(changes)
     files['index.json'] = json.dumps(index).encode()
     files['stats.json'] = json.dumps(index['meta']).encode()
+
+
+class InputTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.paths = input_fixture.seed(self.tmp.name)
+
+    def test_ready_reads_five_inputs_without_changing_them(self):
+        before = {p: p.read_bytes() for p in self.paths.values()}
+        self.assertEqual(evidence_inputs.readiness(self.paths), 'ready')
+        self.assertEqual(before, {p: p.read_bytes() for p in self.paths.values()})
+
+    def test_collects_all_missing_paths_without_opening_any_database(self):
+        for p in self.paths.values():
+            p.unlink()
+        with mock.patch.object(evidence_inputs.sqlite3, 'connect') as connect:
+            result = evidence_inputs.readiness(self.paths)
+        connect.assert_not_called()
+        self.assertTrue(result.startswith('missing:'))
+        for p in self.paths.values():
+            self.assertIn(str(p), result)
+
+    def test_all_exporter_completeness_checks_hold_mismatched_inputs(self):
+        cases = (
+            ('evidence', "UPDATE progress SET processed=0 WHERE source_table='speeches'"),
+            ('places', "UPDATE progress SET processed=1 WHERE source_table='government_grants'"),
+            ('places', "UPDATE meta SET value='1' WHERE key='programme_rowid'"),
+            ('places', "UPDATE meta SET value='bad' WHERE key='programme_rowid'"),
+            ('additional', "UPDATE progress SET processed=1 WHERE source_table='ext_press_releases'"),
+            ('decisions', "INSERT INTO decisions VALUES('accepted')"),
+            ('source', "INSERT INTO ext_press_releases VALUES('fixture','1')"),
+            ('source', "INSERT INTO government_grants VALUES('1')"),
+        )
+        original = {p: p.read_bytes() for p in self.paths.values()}
+        for name, sql in cases:
+            with self.subTest(name=name, sql=sql):
+                with closing(sqlite3.connect(self.paths[name])) as db:
+                    db.execute(sql)
+                    db.commit()
+                result = evidence_inputs.readiness(self.paths)
+                self.assertTrue(result.startswith('mismatch:'), result)
+                if name != 'source':
+                    self.assertIn(str(self.paths[name]), result)
+                for p, raw in original.items():
+                    p.write_bytes(raw)
+
+    def test_unreadable_input_names_the_file(self):
+        self.paths['places'].write_bytes(b'not a database')
+        result = evidence_inputs.readiness(self.paths)
+        self.assertIn('unreadable:', result)
+        self.assertIn(str(self.paths['places']), result)
+
+    def test_readiness_sees_committed_wal_rows(self):
+        with closing(sqlite3.connect(self.paths['source'])) as db:
+            db.execute('PRAGMA journal_mode=WAL')
+            db.execute('INSERT INTO speeches VALUES(2)')
+            db.commit()
+            self.assertTrue(Path(str(self.paths['source']) + '-wal').is_file())
+            self.assertIn('mismatch:', evidence_inputs.readiness(self.paths))
 
 
 class GuardTests(unittest.TestCase):
@@ -161,7 +228,7 @@ class RefreshTests(unittest.TestCase):
         self.home = self.base / 'fixture-home'
         self.pipe = self.home / '.cache/autoresearch/pipeline'
         self.pipe.mkdir(parents=True)
-        for name in ('scripts/vm/evidence_refresh.sh', 'scripts/vm/evidence_guard.py',
+        for name in ('scripts/vm/evidence_refresh.sh', 'scripts/vm/evidence_guard.py', 'scripts/vm/evidence_inputs.py',
                      'scripts/vm/keep_if_unchanged.py'):
             path = self.repo / name
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -173,10 +240,9 @@ class RefreshTests(unittest.TestCase):
                         OPAX_EVIDENCE_TIMEOUT='10s', OPAX_SYNC_KB='1',
                         GIT_AUTHOR_NAME='Fixture', GIT_AUTHOR_EMAIL='fixture@example.invalid',
                         GIT_COMMITTER_NAME='Fixture', GIT_COMMITTER_EMAIL='fixture@example.invalid')
-        for key in ('SOURCE', 'LAYERS', 'PLACES', 'DECISIONS', 'ADDITIONAL'):
-            path = self.base / (key.lower() + '.sqlite')
-            path.touch()
-            self.env['OPAX_EVIDENCE_' + key] = str(path)
+        self.inputs = input_fixture.seed(self.base / 'inputs')
+        for name, (key, _) in evidence_inputs.DEFAULTS.items():
+            self.env['OPAX_EVIDENCE_' + key] = str(self.inputs[name])
         self.git('init', '-q')
         self.git('add', '-A')
         self.git('-c', 'commit.gpgsign=false', 'commit', '-q', '-m', 'fixture')
@@ -231,11 +297,34 @@ class RefreshTests(unittest.TestCase):
                 self.assertFalse(list(self.pipe.glob('evidence-stage.*')))
                 self.assertEqual(self.git('status', '--porcelain', '--', guard.EVIDENCE), '')
 
-    def test_missing_inputs_refuse_before_export(self):
-        Path(self.env['OPAX_EVIDENCE_PLACES']).unlink()
-        self.assertIn('sidecars missing', self.run_refresh('ok'))
+    def test_missing_inputs_wait_before_export_and_keep_status_on_repeat(self):
+        before = guard.read_tree(self.repo / guard.EVIDENCE)
+        self.inputs['places'].unlink()
+        self.inputs['additional'].unlink()
+        for _ in range(2):
+            result = self.run_refresh('ok')
+            self.assertIn('evidence: waiting for inputs (missing:', result)
+            self.assertIn(self.inputs['places'].name, result)
+            self.assertIn(self.inputs['additional'].name, result)
+            self.assertEqual(result.count('WARN:'), 1)
+            self.assertNotIn('FAIL:', result)
+            self.assertTrue(self.pending.exists())
+            self.assertFalse((self.home / 'evidence.calls').exists())
+            self.assertFalse(list(self.pipe.glob('evidence-stage.*')))
+            self.assertEqual(guard.read_tree(self.repo / guard.EVIDENCE), before)
+
+    def test_mismatched_inputs_wait_without_running_export(self):
+        with sqlite3.connect(self.inputs['source']) as db:
+            db.execute('INSERT INTO speeches VALUES(2)')
+        result = self.run_refresh('ok')
+        self.assertIn('waiting for inputs (mismatch:', result)
+        self.assertIn(self.inputs['evidence'].name, result)
+        self.assertIn(self.inputs['additional'].name, result)
+        self.assertEqual(result.count('WARN:'), 1)
+        self.assertNotIn('FAIL:', result)
         self.assertTrue(self.pending.exists())
         self.assertFalse((self.home / 'evidence.calls').exists())
+        self.assertFalse(list(self.pipe.glob('evidence-stage.*')))
 
     def test_publish_only_and_periodic_skip_retain_catchup(self):
         self.pending.touch()

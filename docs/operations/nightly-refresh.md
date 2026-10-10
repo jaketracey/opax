@@ -704,7 +704,15 @@ and `evidence-additional-mentions.sqlite` in the same cache; their overrides are
 `OPAX_EVIDENCE_LAYERS`, `OPAX_EVIDENCE_PLACES`, `OPAX_EVIDENCE_DECISIONS` and
 `OPAX_EVIDENCE_ADDITIONAL`. All five files must exist. The exporter must satisfy exact
 source/progress counts, grant programme rowid, identity review and additional coverage;
-there is no incomplete override. A growing live DB with old sidecars is refused.
+there is no incomplete override. Before creating staging or invoking export,
+`evidence_inputs.py` opens available inputs read-only and checks the same coverage
+requirements. Missing inputs, unreadable coverage or a growing source with old sidecars
+produce **one warning per attempted night**, return success and preserve catch-up.
+The status summary says `evidence: waiting for inputs (missing: …)` or `(mismatch: …)`
+and names the affected files; no export retry occurs that night. Shards stay unchanged.
+Coverage counts alone do not prove source text provenance; the full export/source audit
+still gates publication after readiness. See [evidence-provisioning.md](evidence-provisioning.md)
+for the five-file inventory, exact-size receipts, WAL-safe snapshots and match verification.
 The checked-in transfer inventory does not provision the sidecars: the orchestrator must
 supply a reviewed matching set before catch-up can succeed. This lane has not inspected or
 changed the refresh box, any real DB or KB. Python's standard library and the existing
@@ -740,7 +748,8 @@ Full export/audit runtime is **unmeasured**. The earlier desktop text-only bench
 grouping/sorting, window reconstruction and auditing. Budgeting 20 minutes is a protective
 cap, not a timing claim. The old tree plus staging needs about 312 MiB, plus sidecars,
 SQLite temporary space and guard memory. The first retained content diff may be broad.
-Sidecars absent or stale will retain catch-up and report failure on each attempted night.
+Sidecars absent or stale retain catch-up and report waiting as a warning; the night stays
+green if its other steps succeed. Provisioning may remain undecided indefinitely.
 The fixed byte ceiling can hold a correct export whose text expands. The exporter caps
 previews at 12 per entity: new records displacing any old excerpt also hold the whole export
 until retention policy or input changes receive review. Provisioning and the first timed run
@@ -917,7 +926,8 @@ bill commit/catch-up consumption. No source
 fetch or production database/KB access is needed.
 
 The evidence additions cover Saturday catch-up and consumption, initialized weekdays,
-Sunday export, timestamp-only retention, missing inputs, export/audit failure, timeout,
+Sunday export, timestamp-only retention, missing/mismatched readiness with a green status,
+one warning, no export/staging and retained catch-up (including repeat runs), export/audit failure, timeout,
 incomplete/malformed output, lost entity/excerpt IDs, shard/record shrink, asset overflow,
 partial installation cleanup, publish-only/skip-periodic preservation, permanent and
 innocent portal trial rollback, and failed-commit restoration/status counts.
@@ -926,9 +936,9 @@ fixture data, and preserves ambiguous lookup candidates. `test_passage_text.py` 
 real exporter and source audit against a complete fixture source/four-sidecar set, proves
 the two known clipped rows are cleaned, and compares all five SQLite files byte for byte.
 There is no real source export or production access in these checks.
-The local evidence lane gate (10 October 2026) passed 251 nightly harness checks with
-0 failures, 190 Python tests (including 282 subtests), the search build and all 1,105
-Node tests, plus shell syntax checks. Node integration tests ran in a network namespace
+The local evidence lane gate, including the readiness fix (10 October 2026), passed
+256 nightly harness checks with 0 failures, 196 Python tests plus 290 subtests, the
+search build and all 1,105 Node tests, plus shell syntax checks. Node integration tests ran in a network namespace
 with only loopback enabled. No public evidence data changed during this validation.
 
 ## Not covered by the nightly
