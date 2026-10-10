@@ -26,7 +26,6 @@ import zipfile
 from io import BytesIO
 from pathlib import Path
 
-import pyarrow.parquet as pq
 
 from parli.ingest import fts
 from parli.ingest.dedup import build_seen
@@ -61,6 +60,8 @@ def load_zenodo_parquet(db, seen: set[str]) -> int:
     if not ZENODO_ZIP.exists():
         print(f"  Zenodo zip not found: {ZENODO_ZIP}")
         return 0
+
+    import pyarrow.parquet as pq
 
     count = 0
     pending = 0
@@ -185,6 +186,7 @@ def load_modern_jsonl(db, seen: set[str], since: str | None = None) -> int:
 
     count = 0
     pending = 0
+    guarded_members = None
     for filepath in files:
         filename = os.path.basename(filepath)
         # filename format: YYYY-MM-DD_chamber.jsonl
@@ -219,6 +221,17 @@ def load_modern_jsonl(db, seen: set[str], since: str | None = None) -> int:
                 party = record.get("party", "") or ""
                 electorate = record.get("electorate", "") or ""
                 topic = record.get("topic", "") or ""
+                person_id = record.get("person_id")
+                if person_id is not None:
+                    from scripts.roster_identity import federal_members, verify
+                    from collections import Counter
+                    if guarded_members is None:
+                        guarded_members = federal_members(db)
+                    pid = str(person_id)
+                    row = {"name": speaker, "states": ["federal"], "chambers": [chamber],
+                           "first": int(file_date[:4]), "last": int(file_date[:4])}
+                    resolved, _ = verify(row, Counter({pid: 1}), guarded_members, {}, int(file_date[:4]))
+                    person_id = pid if resolved == pid else None
 
                 # Deduplicate
                 dedup_key = f"{speaker}|{file_date}|{text_hash(text)}"
@@ -236,7 +249,7 @@ def load_modern_jsonl(db, seen: set[str], since: str | None = None) -> int:
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
-                        None,
+                        person_id,
                         speaker,
                         party,
                         electorate,

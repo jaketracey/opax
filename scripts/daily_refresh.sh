@@ -115,11 +115,16 @@ if [ "${OPAX_ENSURE_INDEXES:-0}" = "1" ]; then
   run_step db_indexes "" "$PY" scripts/ensure_db_indexes.py
 fi
 
-# --- federal Hansard: JSONL from OpenAustralia, then load into speeches -------
-run_step fed_download "" \
-  "$PY" download_hansard_fast.py --start "$FED_START" --end "$TODAY" --workers 5
-run_step fed_load "SELECT COUNT(*) FROM speeches WHERE source='openaustralia'" \
-  "$PY" -m parli.ingest.speeches --modern-only --since "$FED_START"
+# --- federal Hansard: public XML first, honest API fallback, existing JSONL loader -------
+if run_step fed_download "" \
+  "$PY" -m parli.ingest.federal_feed --start "$FED_START" --end "$TODAY" \
+    --stage "${OPAX_OA_STAGE:-$HOME/.cache/autoresearch/oa-feed}" \
+    --modern-dir "$HOME/.cache/autoresearch/hansard/modern"; then
+  run_step fed_load "SELECT COUNT(*) FROM speeches WHERE source='openaustralia'" \
+    "$PY" -m parli.ingest.speeches --modern-only --since "$FED_START"
+else
+  log "[fed_load] SKIP: federal source acquisition failed; cached rows retained"
+fi
 
 # --- quick structured sources ------------------------------------------------
 run_step austender "SELECT COUNT(*) FROM contracts" \
@@ -245,10 +250,11 @@ PYEOF
     log "[arag_sync] SKIP: $STATE missing or implausible; refusing --full without a checkpoint"
   fi
   # The reviewed nightly owns the federal sitting-day/weekly acquisition and
-  # legacy -> ext_ projection. Standalone daily runs retain their old behaviour.
+  # XML -> ext_ acquisition. Standalone daily runs use the same source.
   if [ "${OPAX_FEDERAL_VOTES_MANAGED:-0}" != 1 ]; then
-    run_step tvfy_refresh "SELECT COUNT(*) FROM divisions WHERE state='federal'" \
-      "$PY" -m parli.ingest.tvfy_refresh
+    run_step tvfy_refresh "SELECT COUNT(*) FROM ext_divisions WHERE jurisdiction='federal'" \
+      "$PY" -m parli.ingest.federal_feed --start "$FED_START" --end "$TODAY" \
+        --stage "${OPAX_OA_STAGE:-$HOME/.cache/autoresearch/oa-feed}" --load-divisions
   fi
   # division documents for the KB (409 = already there): the state ones just loaded, then the federal ones
   # tvfy_refresh brought in (legacy tables)
