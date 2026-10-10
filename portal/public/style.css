@@ -2957,16 +2957,18 @@ footer #stats:empty { display: none; }
 .defs dd p { margin: 0.25rem 0 0; font-size: 0.9375rem; line-height: 1.55; color: var(--ink-soft); max-width: 68ch; }
 .defs dd .defs-src { font: 400 0.75rem/1.5 var(--sans); color: var(--ink-faint); }
 
-/* /privacy: a reference page. Its h1/h2/h3 take the shared heading roles; a
-   hairline rule opens each major section because the page is long and flat. */
-#panel-privacy > .kicker { margin-top: 0; }
-#panel-privacy > h1 { margin: 0 0 var(--space-4); }
-#panel-privacy .lede { font: 400 1.0625rem/1.65 var(--serif); color: var(--ink); margin: 0 0 var(--space-3); }
-#panel-privacy p, #panel-privacy li { max-width: 68ch; }
-#panel-privacy p { margin-block: var(--space-3); line-height: 1.7; }
-#panel-privacy > h2 { margin: var(--space-6) 0 var(--space-3); padding-top: var(--space-5); border-top: 1px solid var(--divider-default); }
-#panel-privacy > h3 { margin: var(--space-5) 0 var(--space-2); }
-#panel-privacy code { background: var(--paper-sunken); border-radius: 4px; padding: 0.1em 0.35em; font-size: 0.875em; }
+/* /privacy and /support: reference pages, as panels and as the Worker's
+   server-rendered copy (#prerender[data-panel-copy]). Their h1/h2/h3 take the
+   shared heading roles; a hairline rule opens each major section because the
+   pages are long and flat. */
+.policy-page > .kicker { margin-top: 0; }
+.policy-page > h1 { margin: 0 0 var(--space-4); }
+.policy-page .lede { font: 400 1.0625rem/1.65 var(--serif); color: var(--ink); margin: 0 0 var(--space-3); }
+.policy-page p, .policy-page li { max-width: 68ch; }
+.policy-page p { margin-block: var(--space-3); line-height: 1.7; }
+.policy-page > h2 { margin: var(--space-6) 0 var(--space-3); padding-top: var(--space-5); border-top: 1px solid var(--divider-default); }
+.policy-page > h3 { margin: var(--space-5) 0 var(--space-2); }
+.policy-page code { background: var(--paper-sunken); border-radius: 4px; padding: 0.1em 0.35em; font-size: 0.875em; }
 .privacy-contents { margin: var(--space-5) 0 0; }
 .privacy-contents .kicker { margin: 0 0 var(--space-2); }
 .privacy-contents ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); }

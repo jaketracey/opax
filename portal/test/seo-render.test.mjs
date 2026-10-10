@@ -305,3 +305,17 @@ test('an address nothing answers gets the site page, noindex, with a way on; a m
     assert.equal(response.status,404,path);assert.doesNotMatch(await response.text(),/Page not found · OPAX/,path);
   }
 });
+test('/privacy and /support are served whole, from their panels, with canonical links',async()=>{
+  const types=['Email Address','User ID','Audio Data','Other User Content','Product Interaction','Search History','Other Diagnostic Data'];
+  for(const [path,name,facts] of [['/privacy','privacy',['What OPAX collects and who receives it','id="privacy-app"','id="privacy-deletion"','id="voice"','privacy@opax.com.au','Noice Pty Ltd',...types]],['/support','support',['Help with OPAX','id="support-contact"','id="support-report"','id="support-delete"','support@opax.com.au','8-digit deletion code']]]){
+    const html=await get(path);checkHtml(html);
+    assert.match(html,new RegExp(`<link rel="canonical" href="https://opax\\.com\\.au${path}"`),path);
+    assert.match(html,new RegExp(`<section id="prerender" class="wrap policy-page" data-panel-copy="${name}">`),path);
+    const main=html.match(/<main\b[^>]*data-server-rendered[^>]*>([\s\S]*?)<\/main>/)[1];
+    for(const fact of facts)assert.ok(main.includes(fact),`${path}: ${fact}`);
+    assert.doesNotMatch(main,/An association does not prove influence/,path);
+    assert.doesNotMatch(main.match(/<section id="prerender"[^>]*>/)[0],/\shidden/,`${path}: the copy is visible without scripts`);
+  }
+  const shell=readFileSync(new URL('spa-shell.js',pub),'utf8');
+  assert.ok(shell.includes('if(answer.hasAttribute("data-panel-copy"))for(const el of answer.querySelectorAll("[id]"))el.removeAttribute("id");main.prepend(answer);'));
+});

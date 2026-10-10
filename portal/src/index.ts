@@ -65,7 +65,7 @@ import { renderOgPng, renderOgJpeg, type OgFont } from './og-render'
 // The story renderer is reached through the namespace: tests stub './og-render' with the two card renderers only.
 import * as storyRender from './og-render'
 import { personRole, personTitle, roleLine, billTitle } from './seo-titles'
-import { answerBlock, associationCaveat, crumbsHTML, type Crumb, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, type Division, type ReadAsset } from './seo-content'
+import { answerBlock, associationCaveat, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, type Division, type ReadAsset } from './seo-content'
 import { buildSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
 import { photoFor, storyFrames, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
 
@@ -3232,7 +3232,7 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
   },
   privacy: {
     title: 'Privacy · OPAX',
-    description: 'What the OPAX website and iPhone app collect, which companies receive it, how long it is kept, what voice sends to ElevenLabs and how to delete your account.',
+    description: 'What the OPAX website and iPhone and iPad app collect, which companies receive it, how long it is kept, what voice sends to ElevenLabs and how to delete your account.',
   },
 }
 
@@ -3786,6 +3786,12 @@ const publisher = { '@type': 'Organization', name: 'OPAX', url: SITE_ORIGIN, log
 
 // --- per-route metadata -------------------------------------------------------
 
+/** A policy page's panel from the shell, as its server-rendered text (panelPrerender). */
+async function serverPanel(env: Env, name: string): Promise<string | null> {
+  const shell = await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/`))
+  return shell.ok ? panelPrerender(await shell.text(), name) : null
+}
+
 async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<PageMeta> {
   const base = (over: Partial<PageMeta>): PageMeta => ({
     title: SITE_TITLE,
@@ -3841,10 +3847,14 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
           card: { kicker: 'Search the record', title: 'Search the record', lines: ['Speeches matching this query, with speaker, party, date and a link to the official source for each.'] },
         })
       }
+      // /privacy and /support are served whole: the policy text a store reviewer,
+      // a crawler or a reader without scripts sees is the panel's own.
+      const prerender = SERVER_PANELS.has(route.page) ? await serverPanel(env, route.page) : null
       return base({
         title: page.title,
         description: page.description,
         canonical,
+        prerender,
         jsonLd: { '@context': 'https://schema.org', '@type': 'WebPage', name: page.title, description: page.description, url: canonical, isPartOf: { '@type': 'WebSite', name: 'OPAX', url: SITE_ORIGIN } },
         // Ask and Search share the research workspace, separate from the homepage.
         card: route.page === 'ask' && !researchSearch ? homeCard() : { kicker: 'OPAX', title: page.title.replace(/ · OPAX$/, ''), lines: [page.description] },
@@ -4893,7 +4903,8 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
   const noindex = meta.noindex || meta.status >= 400 || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
   // Election coverage names unavailable grants, but renders no financial records.
   // Its renderer owns any future caveat alongside an actual political money pairing.
-  if (!(route.kind === 'hub' && route.hub === 'vic-election'))
+  // The policy pages (privacy, support) name no association between records.
+  if (!(route.kind === 'hub' && route.hub === 'vic-election') && !(route.kind === 'static' && SERVER_PANELS.has(route.page)))
     meta.prerender=associationCaveat(meta.prerender || '',`${meta.description} ${meta.prerender || ''}`)
   // JSON-LD sits in a <script>: keep "</script>" from ever appearing in it.
   const ld = meta.jsonLd ? JSON.stringify(meta.jsonLd).replace(/</g, '\\u003c') : null
