@@ -24,7 +24,7 @@ const datedAffiliationParty = (row, person) => attributionHelpers?.datedAffiliat
 let saDisplayHelpers;
 let saFullTextFlag = 'false';
 const saDisplayReady = Promise.all([
-  import('/sa-hansard.js?v=d6375a8126').then(module => { saDisplayHelpers = module; }),
+  import('/sa-hansard.js?v=ebd30b6d90').then(module => { saDisplayHelpers = module; }),
   fetch('/api/display-policy').then(response => response.json()).then(policy => { saFullTextFlag = policy.SA_HANSARD_FULL_TEXT === 'true' ? 'true' : 'false'; }).catch(() => {}),
 ]);
 
@@ -10288,7 +10288,8 @@ function setFrontPageHidden(hidden) {
 let askFollowupsInflight = null; // {question, answer, promise}
 function followupPassages(sources) {
   return (sources || [])
-    .map((s) => ({ title: s.title || s.slug || "", text: (s.snippet || "").trim() }))
+    .map((s) => ({ title: s.title || s.slug || "", text: (s.snippet || "").trim(),
+      ...Object.fromEntries(['slug','kind','source','state','chamber','source_url'].filter(key => s[key]).map(key => [key,s[key]])) }))
     .filter((p) => p.text)
     .slice(0, 8);
 }
@@ -11123,7 +11124,8 @@ async function sendChat(question, carry) {
   // money path's resolved question, or the Worker's standalone rewrite of a
   // follow-up, and only otherwise the words as typed.
   const context = chatThread
-    .map((m) => ({ author: m.role === "answer" ? "answer" : "user", text: m.role === "user" && typeof m.fundingQuestion === "string" ? m.fundingQuestion : m.role === "user" && typeof m.askedAs === "string" ? m.askedAs : m.text }))
+    .map((m) => ({ author: m.role === "answer" ? "answer" : "user", text: m.role === "user" && typeof m.fundingQuestion === "string" ? m.fundingQuestion : m.role === "user" && typeof m.askedAs === "string" ? m.askedAs : m.text,
+      ...(m.role === "answer" ? {sources:(m.sources || []).map(s => Object.fromEntries(['slug','kind','source','state','chamber'].filter(key => s[key]).map(key => [key,s[key]])))} : {}) }))
     .slice(-12);
   // A chip's question was proven against a passage retrieved for the PREVIOUS
   // answer; fresh retrieval on the chip's wording alone can miss that passage,

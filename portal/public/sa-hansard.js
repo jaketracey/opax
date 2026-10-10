@@ -1,9 +1,10 @@
-// Display policy only. Never apply this to KB retrieval or model context.
+// Shared excerpt policy. Original KB documents and retrieval stay unchanged.
 export const SA_EXCERPT_WORDS = 120;
 export const SA_EXCERPT_LABEL = "Excerpt. The full record is on the Parliament of South Australia's site.";
 export const saFullText = flag => flag === 'true';
 const obj = value => value && typeof value === 'object' && !Array.isArray(value) ? value : {};
 const words = text => String(text || '').match(/\S+/gu) || [];
+const endExcerpt = text => text.trimEnd().replace(/(?:\.{1,}|…+)$/u, '') + '…';
 
 export function isSaHansard(record) {
   const labels = { ...obj(record?.labels), ...Object.fromEntries((record?.usermetadata?.classifications || []).map(c => [c.labelset, c.label])) };
@@ -47,7 +48,7 @@ export function saExcerpt(value, match = '', cap = SA_EXCERPT_WORDS) {
     const tokens = [...sentence.segment.matchAll(/\S+/gu)];
     const hit = Math.max(0, tokens.findIndex(t => sentence.index + t.index + t[0].length > at));
     const start = Math.max(0, Math.min(tokens.length - cap, hit - Math.floor(cap / 2)));
-    return (sentence.index || start ? '…' : '') + tokens.slice(start, start + cap).map(t => t[0]).join(' ') + '…';
+    return (sentence.index || start ? '…' : '') + endExcerpt(tokens.slice(start, start + cap).map(t => t[0]).join(' '));
   }
   let left = centre, right = centre, count = words(sentence.segment).length;
   // Balance context when matched; opening excerpts grow forwards only.
@@ -57,7 +58,8 @@ export function saExcerpt(value, match = '', cap = SA_EXCERPT_WORDS) {
     count += words(sentences[next].segment).length;
     if (next < left) left = next; else right = next;
   }
-  return (left ? '…' : '') + sentences.slice(left, right + 1).map(s => s.segment).join('').trim() + (right < sentences.length - 1 ? '…' : '');
+  const excerpt = sentences.slice(left, right + 1).map(s => s.segment).join('').trim();
+  return (left ? '…' : '') + (right < sentences.length - 1 ? endExcerpt(excerpt) : excerpt);
 }
 
 const sourceKeys = new Set(['text', 'text_clean', 'body', 'snippet', 'passage', 'quote', 'quotes', 'evidence']);
@@ -153,11 +155,11 @@ function displayAnswer(payload, sources, originals, budgets) {
       ...(s.answer_ranges ? {answer_ranges:ranges(s.answer_ranges)} : {}), ...(s.answerRanges ? {answerRanges:ranges(s.answerRanges)} : {})}))} : {})};
 }
 
-export function saDisplayPayload(value, flag, match = '', originals = new Map(), excerpts = new Map(), budgets = new Map()) {
+export function saDisplayPayload(value, flag, match = '', originals = new Map(), excerpts = new Map(), budgets = new Map(), answers = true) {
   if (saFullText(flag) || !value || typeof value !== 'object') return value;
-  if (Array.isArray(value)) return value.map(v => saDisplayPayload(v, flag, match, originals, excerpts, budgets));
+  if (Array.isArray(value)) return value.map(v => saDisplayPayload(v, flag, match, originals, excerpts, budgets, answers));
   const sources = Array.isArray(value.sources) ? value.sources : [];
-  const answered = {...displayAnswer(value, sources, originals, budgets)};
+  const answered = {...(answers ? displayAnswer(value, sources, originals, budgets) : value)};
   const displayedSources = answered.sources || sources;
   const displayRecord = record => {
     const id = record.slug || record.resource || record.id;
@@ -167,7 +169,7 @@ export function saDisplayPayload(value, flag, match = '', originals = new Map(),
   };
   if (Array.isArray(answered.points)) answered.points = answered.points.map(point => {
     const selected = sources.filter(s => point.source_ids?.includes(s.id));
-    const safe = {...displayAnswer(point, selected, originals, budgets)};
+    const safe = {...(answers ? displayAnswer(point, selected, originals, budgets) : point)};
     // Supporting quotes are another view of the same bounded source passage.
     if (safe.evidence) safe.evidence = Object.fromEntries(Object.entries(safe.evidence).map(([id,quotes]) => {
       const source = displayedSources.find(s => s.id === id);
@@ -181,6 +183,11 @@ export function saDisplayPayload(value, flag, match = '', originals = new Map(),
     key === 'evidence_excerpts' && Array.isArray(val) ? val.map(v => {
       const source = displayedSources.find(s => s.resource === v.resource);
       return source && isSaHansard(source) ? {...v, text:displayRecord(source).snippet || ''} : v;
-    }) : saDisplayPayload(val, flag, match, originals, excerpts, budgets)]));
+    }) : saDisplayPayload(val, flag, match, originals, excerpts, budgets, answers)]));
   return displayRecord(result);
+}
+
+/** Streaming prose was bounded before generation; only source views change. */
+export function saDisplayStreamPayload(value, flag, match = '') {
+  return saDisplayPayload(value, flag, match, new Map(), new Map(), new Map(), false);
 }

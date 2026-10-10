@@ -1,5 +1,6 @@
 import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../public/sa-hansard.js'
-import { saPublicResponse } from './sa-hansard'
+import { saPublicResponse, saEventPayload } from './sa-hansard'
+import { saEvidenceText, saEvidenceRecord, saGenerationResponse, saConversationInput } from './sa-evidence'
 import { divisionPlain } from '../public/division-markdown.js'
 import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
@@ -217,15 +218,31 @@ async function kbFetch(
   init?: { method?: string; body?: unknown; headers?: Record<string, string>; signal?: AbortSignal },
 ): Promise<Response> {
   if (path.startsWith('/ask') && await modelBudgetSpent(env)) return modelBudgetResponse()
-  return fetch(`${ragBase(env)}${path}`, {
+  const call = (target: string, body: unknown = init?.body, headers = init?.headers) => fetch(`${ragBase(env)}${target}`, {
     method: init?.method ?? (init?.body === undefined ? 'GET' : 'POST'),
     headers: {
       'content-type': 'application/json',
       'x-nuclia-serviceaccount': `Bearer ${env.ARAG_KB_TOKEN}`,
-      ...init?.headers,
+      ...headers,
     },
-    body: init?.body === undefined ? undefined : JSON.stringify(init.body),
+    body: body === undefined ? undefined : JSON.stringify(body),
     signal: init?.signal,
+  })
+  if (path === '/ask' && init?.body && typeof init.body === 'object') return saGenerationResponse(init.body as Record<string,unknown>, env.SA_HANSARD_FULL_TEXT, (target, body, stream) => {
+    const headers = {...init.headers}
+    if (stream) { delete headers['x-synchronous']; headers.accept = 'application/x-ndjson' }
+    else { headers['x-synchronous'] = 'true'; headers.accept = 'application/json' }
+    return call(target,body,headers)
+  }, init.headers?.accept === 'application/x-ndjson' && init.headers?.['x-synchronous'] !== 'true')
+  return call(path)
+}
+
+/** Protect source payloads before SSE encoding; deltas and points are untouched. */
+function saSendData(event: string, data: unknown, env: Env, ctx: ExecutionContext): Promise<unknown> {
+  return saEventPayload(event, data, env.SA_HANSARD_FULL_TEXT, async slug => {
+    const url = new URL(`/api/resource/${slug}`, SITE_ORIGIN)
+    const response = await apiResource(new Request(url), url, slug, env, ctx)
+    return response.ok ? await response.json() as Record<string,unknown> : null
   })
 }
 
@@ -1259,7 +1276,7 @@ async function moneyOverview(facts: MoneyFacts, env: Env, ctx: ExecutionContext,
 }
 
 async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-  const rawInput = ((await request.json().catch(() => ({}))) ?? {}) as AskInput
+  const rawInput = saConversationInput(((await request.json().catch(() => ({}))) ?? {}) as Record<string,unknown>, env.SA_HANSARD_FULL_TEXT) as AskInput
   // Phase durations go out as a Server-Timing header on synchronous answers,
   // so a slow ask can be split into our work and the platform's from outside.
   const marks: [string, number][] = [['start', Date.now()]]
@@ -1348,7 +1365,14 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   const bypass = cacheBypass(request, url)
   if (cacheKey && !bypass) {
     const hit = await readGenerationCache(env, ctx, cacheKey)
-    if (hit) return wantStream ? replayCachedAsk(hit, ctx) : withCacheStatus(hit, 'HIT', false)
+    if (hit) {
+      const safe = await saPublicResponse(hit, env.SA_HANSARD_FULL_TEXT, async slug => {
+        const resourceUrl=new URL('/api/resource/'+slug,url)
+        const response=await apiResource(new Request(resourceUrl),resourceUrl,slug,env,ctx)
+        return response.ok ? await response.json() as Record<string,unknown> : null
+      })
+      return wantStream ? replayCachedAsk(safe, ctx) : withCacheStatus(safe, 'HIT', false)
+    }
   }
   const status: CacheStatus = bypass ? 'BYPASS' : 'MISS'
   const limited = conversation ? null : await rateLimited(env.ASK_LIMITER, request)
@@ -1487,7 +1511,7 @@ async function documentedPositionAnswer(input: AskInput, body: Record<string, un
     if (!response.ok) throw new Error('Original speech unavailable')
     const original = await response.json() as {speaker?:string;text?:string}
     if (original.speaker !== scope.speaker || typeof original.text !== 'string') return null
-    const snippet = positionEvidence(original.text,query)
+    const snippet = positionEvidence(saEvidenceText({...original,...row},original.text,env.SA_HANSARD_FULL_TEXT,query),query)
     return snippet ? {...row,href:'/doc/'+row.slug,snippet,cited:false} : null
   }))
   const sources = reads.flatMap(r => r.status === 'fulfilled' && r.value ? [r.value] : [])
@@ -1598,7 +1622,7 @@ function positionExcerptsAnswer(payload: AskPayload, query: string): AskPayload 
 
 /** Recover a position with exact source excerpts, rather than inventing citation IDs. */
 async function recoverPositionAnswer(payload: AskPayload, body: Record<string,unknown>, env: Env, progress?: SseSend): Promise<AskPayload | null> {
-  const sourceRows = payload.sources.filter((s): s is Record<string,unknown> => !!s && typeof s === 'object')
+  const sourceRows = payload.sources.filter((s): s is Record<string,unknown> => !!s && typeof s === 'object').map(row => saEvidenceRecord(row,env.SA_HANSARD_FULL_TEXT,String(body.query || '')))
   const sources = summarySources(sourceRows, 6000)
   if (!sources.length) return null
   const query = String(body.query || '')
@@ -1709,7 +1733,7 @@ async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: Execu
   const response = await apiUnifiedSearch(request, searchUrl, env, ctx)
   if (!response.ok) return response
   const results = await response.json() as {results: Record<string, unknown>[]; index_version?: string; warnings?: string[]}
-  const sources = summarySources(results.results || [])
+  const sources = summarySources((results.results || []).map(row => saEvidenceRecord(row,env.SA_HANSARD_FULL_TEXT,searchUrl.searchParams.get('q') || '')))
   if (!sources.length) return json({status:'empty', points:[], sources:[]})
   const query = (searchUrl.searchParams.get('q') || '').trim()
   const filters = Object.fromEntries(['kind','mode','speaker','party','state','topic','from','to'].map(k => [k, searchUrl.searchParams.get(k) || '']))
@@ -1732,7 +1756,7 @@ async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: Execu
     const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>()
     const writer = writable.getWriter()
     const encoder = new TextEncoder()
-    const send = (event: string, data: unknown): Promise<void> => writer.write(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`))
+    const send = async (event: string, data: unknown): Promise<void> => writer.write(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(await saSendData(event,data,env,ctx))}\n\n`))
     ctx.waitUntil((async () => {
       try {
         const validator = summaryPointValidator(sources)
@@ -1780,10 +1804,9 @@ async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: Execu
 /** One streamed platform generation for the overview: answer text chunks go to
  * `onText` as they arrive; the whole answer comes back for the final parse. */
 async function streamSummaryAnswer(env: Env, body: Record<string, unknown>, onText: (text: string) => Promise<void>, signal: AbortSignal): Promise<string> {
-  const res = await modelBudgetSpent(env) ? modelBudgetResponse() : await fetch(`${ragBase(env)}/ask`, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json', accept: 'application/x-ndjson', 'x-nuclia-serviceaccount': `Bearer ${env.ARAG_KB_TOKEN}` },
-    body: JSON.stringify(body),
+  const res = await kbFetch(env,'/ask',{
+    headers: { accept: 'application/x-ndjson' },
+    body,
     signal,
   })
   if (!res.ok || !res.body) throw new Error(`summary failed (${res.status})`)
@@ -1894,14 +1917,12 @@ async function streamAskOnce(
   signal: AbortSignal,
   onProgress?: () => void,
 ): Promise<AskAnswer> {
-  const res = await modelBudgetSpent(env) ? modelBudgetResponse() : await fetch(`${ragBase(env)}/ask`, {
-    method: 'POST',
+  const res = await kbFetch(env, '/ask', {
     headers: {
       'content-type': 'application/json',
       accept: 'application/x-ndjson',
-      'x-nuclia-serviceaccount': `Bearer ${env.ARAG_KB_TOKEN}`,
     },
-    body: JSON.stringify(body),
+    body,
     signal,
   })
   if (!res.ok || !res.body) throw new Error(`ask failed (${res.status})`)
@@ -2045,7 +2066,7 @@ function apiAskStream(
   const send: SseSend = async (event, data) => {
     if (clientGone) return
     try {
-      await writer.write(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`))
+      await writer.write(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(await saSendData(event,data,env,ctx))}\n\n`))
     } catch {
       // The reader left (a newer question aborted this one): stop paying
       // the platform for words nobody will see.
@@ -2141,7 +2162,7 @@ function streamPositionAnswer(
   const send: SseSend = async (event, data) => {
     if (clientGone) return
     try {
-      await writer.write(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`))
+      await writer.write(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(await saSendData(event,data,env,ctx))}\n\n`))
     } catch {
       clientGone = true
     }
@@ -2332,13 +2353,18 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
   const { question, answer, passages } = ((await request.json().catch(() => ({}))) ?? {}) as {
     question?: string
     answer?: string
-    passages?: { title?: string; text?: string }[]
+    passages?: Record<string,unknown>[]
   }
   // Always 200 with a possibly-empty list: follow-ups are an extra, never an error.
   if (!question?.trim() || !answer?.trim()) return json({ questions: [] })
   // Never suggest a next question about a withheld donor (src/donor-index.ts).
   if (await questionNamesWithheldDonor(env.ASSETS, question, answer)) return json({ questions: [] })
-  const clean = (Array.isArray(passages) ? passages : [])
+  const inputPassages = (Array.isArray(passages) ? passages : []).filter(p => p && typeof p === 'object' && !Array.isArray(p))
+  const restricted = inputPassages.some(p => isSaHansard(p) || (!p.kind && !p.source && !p.state && !p.labels))
+  // Older clients may send a previous answer containing full source quotations.
+  const priorAnswer = restricted ? saEvidenceText({},answer,env.SA_HANSARD_FULL_TEXT,'',true) : answer
+  const clean = inputPassages
+    .map(p => saEvidenceRecord(p,env.SA_HANSARD_FULL_TEXT,question, !p.kind && !p.source && !p.state && !p.labels))
     .map((p) => ({
       title: String(p?.title ?? '').slice(0, 300),
       text: String(p?.text ?? '').slice(0, 4000),
@@ -2375,7 +2401,7 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
     `QUESTION ALREADY ASKED: ${clipText(question, 500)}`,
     '',
     'ANSWER ALREADY GIVEN (do not ask for anything it already states):',
-    clipText(answer, FOLLOWUP_ANSWER_BUDGET),
+    clipText(priorAnswer, FOLLOWUP_ANSWER_BUDGET),
     '',
     '--- RETRIEVED PASSAGES (the only source a follow-up may draw on) ---',
     context,

@@ -7,7 +7,7 @@ import {runInNewContext} from 'node:vm';
 import ts from 'typescript';
 import * as passage from '../src/passage-text.ts';
 import {SA_EXCERPT_LABEL, isSaHansard, saExcerpt, saDisplayRecord, saDisplayPayload} from '../public/sa-hansard.js';
-import {saPublicResponse} from '../src/sa-hansard.ts';
+import {saPublicResponse,saEventPayload} from '../src/sa-hansard.ts';
 
 const {sa,nonSA} = JSON.parse(readFileSync(new URL('./fixtures/sa-excerpts.json',import.meta.url)));
 const count = text => String(text).trim().split(/\s+/).filter(Boolean).length;
@@ -25,7 +25,7 @@ test('opening, matched, overlong, HTML-cleaned and Unicode passages obey a stric
   for (const text of [sa.text,sa.text.replaceAll('.',''), '😀 '+sa.text,passage.normalizePassage('<p>'+sa.text+'</p>')]) capped(saExcerpt(text));
   const opening = saExcerpt(sa.text); assert.match(opening,/statement 0\./); assert.doesNotMatch(opening,/statement 39\./);
   const matched = saExcerpt(sa.text,'statement 30'); capped(matched); assert.match(matched,/statement 30\./); assert.doesNotMatch(matched,/statement 0\./);
-  assert.match(matched,/\.\s*…?$/);
+  assert.match(matched,/[^.…]…$/); assert.doesNotMatch(matched,/\.\s*…|\.{4}/);
   assert.equal(saExcerpt('A short complete sentence.'),'A short complete sentence.');
 });
 
@@ -117,17 +117,37 @@ test('repeated report citations share one canonical excerpt rather than revealin
   capped(result.sections[0].sources[0].snippet);
 });
 
-test('SSE never emits unchecked deltas or point quotes before source metadata is available',async()=>{
-  const payload={answer:`“${sa.text}”`,sources:[row],citations:{}};
-  const raw=`event: status\ndata: {"phase":"writing"}\n\nevent: delta\ndata: ${JSON.stringify({text:sa.text})}\n\nevent: done\ndata: ${JSON.stringify(payload)}\n\n`;
-  const bytes=new TextEncoder().encode(raw);
-  for(const size of [1,7,8192]) {
-    const body=new ReadableStream({start(c){for(let i=0;i<bytes.length;i+=size)c.enqueue(bytes.slice(i,i+size));c.close();}});
-    const result=await (await saPublicResponse(new Response(body,{headers:{'content-type':'text/event-stream'}}),'false',async()=>sa)).text();
-    assert.doesNotMatch(result,/event: delta/); assert.match(result,/event: status/);
-    const done=JSON.parse(result.split('event: done\ndata: ')[1]);capped(done.sources[0].snippet);capped(/“([^”]+)”/.exec(done.answer)[1]);
+test('SSE passes every delta and point through progressively with the original bytes and headers',async()=>{
+  for(const flag of ['false','true']) {
+    let controller;
+    const first='event: delta\r\ndata: {"text":"A progressive answer. 😀"}\r\n\r\n';
+    const last='event: point\ndata: {"text":"Another point."}\n\nevent: done\ndata: {"sources":[]}\n\n';
+    const input=new Response(new ReadableStream({start(c){controller=c;c.enqueue(new TextEncoder().encode(first));}}),{headers:{'content-type':'text/event-stream','cache-control':'public, max-age=60',etag:'"stream"'}});
+    const output=await saPublicResponse(input,flag,noRead);
+    assert.equal(output,input);assert.equal(output.headers.get('cache-control'),'public, max-age=60');
+    const reader=output.body.getReader();
+    assert.equal(new TextDecoder().decode((await reader.read()).value),first,'first delta can be read while done has not been enqueued');
+    controller.enqueue(new TextEncoder().encode(last));controller.close();
+    assert.equal(new TextDecoder().decode((await reader.read()).value),last);assert.equal((await reader.read()).done,true);
   }
-  assert.equal(await (await saPublicResponse(new Response(raw,{headers:{'content-type':'text/event-stream'}}),'true',noRead)).text(),raw);
+});
+
+test('stream event construction caps only done and sources metadata, preserving prose and citation offsets',async()=>{
+  const payload={answer:'A generated explanation. 😀',sources:[row],citations:{'r1/t/body/0-1':[[0,25]]}};
+  for(const event of ['delta','point','status']) assert.equal(await saEventPayload(event,payload,'false',noRead),payload);
+  const done=await saEventPayload('done',payload,'false',noRead);
+  capped(done.sources[0].snippet);assert.equal(done.sources[0].excerpt_label,SA_EXCERPT_LABEL);assert.equal(done.sources[0].source_url,sa.url);
+  assert.equal(done.answer,payload.answer);assert.deepEqual(done.citations,payload.citations);
+  capped((await saEventPayload('sources',[row],'false',noRead))[0].snippet);
+  assert.equal(await saEventPayload('done',payload,'true',noRead),payload);
+  const federal={sources:[nonSA[0]]};assert.equal(await saEventPayload('done',federal,'false',noRead),federal);
+});
+
+test('non-SA JSON body and cache headers stay byte-identical',async()=>{
+  const body=JSON.stringify({sources:nonSA},null,2)+'\n';
+  const input=new Response(body,{headers:{'content-type':'application/json','cache-control':'public, max-age=3600',etag:'"federal"','content-length':String(Buffer.byteLength(body)),'x-opax-cache':'HIT'}});
+  const before=[...input.headers];const output=await saPublicResponse(input,'false',noRead);
+  assert.equal(await output.text(),body);assert.deepEqual([...output.headers],before);
 });
 
 test('raw resource retrieval remains complete and the public response alone applies display policy',async()=>{
