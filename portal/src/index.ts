@@ -1,3 +1,5 @@
+import {sanitiseStoredResponse} from './donor-stored-response'
+import {sanitiseStoredDonors} from './donor-hashes.mjs'
 import { divisionPlain } from '../public/division-markdown.js'
 import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
@@ -341,7 +343,7 @@ function withCacheStatus(res: Response, status: CacheStatus, browserCache = true
 function cacheStore(ctx: ExecutionContext, key: Request, res: Response, maxAge: number): void {
   res.headers.set('cache-control', `public, max-age=${maxAge}`)
   res.headers.set('x-opax-cached-at', new Date().toISOString())
-  ctx.waitUntil(caches.default.put(key, res.clone()))
+  ctx.waitUntil(sanitiseStoredResponse(res.clone()).then(safe=>caches.default.put(key, safe)))
 }
 
 /**
@@ -465,7 +467,7 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   const bypass = cacheBypass(request, url)
   if (!bypass) {
     const hit = await caches.default.match(pageKey)
-    if (hit) return withCacheStatus(hit, 'HIT')
+    if (hit) return withCacheStatus(await sanitiseStoredResponse(hit), 'HIT')
   }
 
   const mode = url.searchParams.get('mode') ?? 'hybrid'
@@ -474,7 +476,7 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   let win: SearchWindow | null = null
   if (!bypass) {
     const cached = await caches.default.match(windowKey)
-    if (cached) win = (await cached.json()) as SearchWindow
+    if (cached) win = sanitiseStoredDonors(await cached.json()) as SearchWindow
   }
   if (!win) {
     const limited = await rateLimited(env.SEARCH_LIMITER, request)
@@ -1233,7 +1235,7 @@ async function moneyOverview(facts: MoneyFacts, env: Env, ctx: ExecutionContext,
   const model = env.MONEY_OVERVIEW_MODEL || env.ASK_MODEL || 'openai-compatible'
   const key = cacheRequest('money-overview', await sha256Hex(JSON.stringify({ epoch: env.CACHE_EPOCH, model, facts })))
   const hit = await caches.default.match(key)
-  if (hit) return { overview: (await hit.json<{ overview?: string }>()).overview || '', why: 'hit' }
+  if (hit) return { overview: sanitiseStoredDonors(await hit.json<{ overview?: string }>()).overview || '', why: 'hit' }
   // A paid call, so it spends the reader's Ask quota like any other answer; past
   // the limit the calculated answer goes out without its opening paragraph.
   if (await rateLimited(env.ASK_LIMITER, request)) return { overview: '', why: 'rate-limited' }
@@ -1344,7 +1346,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   const bypass = cacheBypass(request, url)
   if (cacheKey && !bypass) {
     const hit = await readGenerationCache(env, ctx, cacheKey)
-    if (hit) return wantStream ? replayCachedAsk(hit, ctx) : withCacheStatus(hit, 'HIT', false)
+    if (hit) return wantStream ? replayCachedAsk(hit, ctx) : withCacheStatus(await sanitiseStoredResponse(hit), 'HIT', false)
   }
   const status: CacheStatus = bypass ? 'BYPASS' : 'MISS'
   const limited = conversation ? null : await rateLimited(env.ASK_LIMITER, request)
@@ -1711,7 +1713,7 @@ async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: Execu
   const filters = Object.fromEntries(['kind','mode','speaker','party','state','topic','from','to'].map(k => [k, searchUrl.searchParams.get(k) || '']))
   const key = cacheRequest('search-summary', await sha256Hex(JSON.stringify({version:SEARCH_SUMMARY_VERSION, epoch:env.CACHE_EPOCH, query, filters, sources, index:results.index_version})))
   const cached = await readGenerationCache(env, ctx, key)
-  if (cached) return withCacheStatus(cached, 'HIT', false)
+  if (cached) return withCacheStatus(await sanitiseStoredResponse(cached), 'HIT', false)
   const limited = await rateLimited(env.FOLLOWUPS_LIMITER, request)
   if (limited) return limited
   const unavailable = 'A cited summary is unavailable. Your matching records are still below.'
@@ -1809,7 +1811,7 @@ async function apiJourneyStory(request: Request, input: Record<string, unknown>,
   const files: Record<string,string> = {federal:'/graph/money.json',qld:'/graph/money.qld.json',vic:'/graph/money.vic.json',tas:'/graph/money.tas.json'}
   const { jurisdiction, lens, focus } = input
   if (typeof jurisdiction !== 'string' || !Object.hasOwn(files,jurisdiction) || typeof lens !== 'string' || typeof focus !== 'string' || focus.length > 500) return json({error:'Invalid journey'},400)
-  // Individual donors are withheld from the narration (public/donor-entity.js).
+  // Unconfirmed donors are withheld from the narration (public/donor-entity.js).
   const graph = withholdIndividualDonors(await assetJson<StoryGraph>(env,files[jurisdiction]))
   const context = journeyStoryContext(graph,lens,focus)
   if (!context) return json({error:'Journey not available'},404)
@@ -2357,7 +2359,7 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
   const bypass = cacheBypass(request, url)
   if (!bypass) {
     const hit = await caches.default.match(cacheKey)
-    if (hit) return withCacheStatus(hit, 'HIT', false)
+    if (hit) return withCacheStatus(await sanitiseStoredResponse(hit), 'HIT', false)
   }
   const limited = await rateLimited(env.FOLLOWUPS_LIMITER, request)
   if (limited) return limited
@@ -2448,7 +2450,7 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
   const bypass = cacheBypass(request, url)
   if (!bypass) {
     const hit = await caches.default.match(cacheKey)
-    if (hit) return withCacheStatus(hit, 'HIT')
+    if (hit) return withCacheStatus(await sanitiseStoredResponse(hit), 'HIT')
   }
   const res = await kbFetch(
     env,
@@ -2560,7 +2562,7 @@ async function apiNews(): Promise<Response> {
   const cache = caches.default
   const cacheKey = new Request('https://opax.com.au/api/news')
   const cached = await cache.match(cacheKey)
-  if (cached) return withCacheStatus(cached, 'HIT')
+  if (cached) return withCacheStatus(await sanitiseStoredResponse(cached), 'HIT')
 
   // Order matters: CDATA first, numeric refs, then named — so a literal
   // "&amp;#39;" decodes to "&#39;" and no further.
@@ -2673,9 +2675,9 @@ async function apiNews(): Promise<Response> {
   const res = json({ fetched_at: new Date().toISOString(), items })
   if (items.length) {
     res.headers.set('cache-control', 'public, max-age=900')
-    await cache.put(cacheKey, res.clone())
+    await cache.put(cacheKey, await sanitiseStoredResponse(res.clone()))
   }
-  return withCacheStatus(res, 'MISS')
+  return withCacheStatus(await sanitiseStoredResponse(res), 'MISS')
 }
 
 
@@ -2689,7 +2691,7 @@ async function apiRecent(env: Env): Promise<Response> {
   const cache = caches.default
   const cacheKey = new Request('https://opax.com.au/api/recent')
   const cached = await cache.match(cacheKey)
-  if (cached) return withCacheStatus(cached, 'HIT')
+  if (cached) return withCacheStatus(await sanitiseStoredResponse(cached), 'HIT')
   const res = await kbFetch(
     env,
     '/catalog?page_number=0&page_size=14&sort_field=created&sort_order=desc',
@@ -2717,8 +2719,8 @@ async function apiRecent(env: Env): Promise<Response> {
     .slice(0, 12)
   const out = json({ items })
   out.headers.set('cache-control', `public, max-age=${RECENT_CACHE_TTL}`)
-  await cache.put(cacheKey, out.clone())
-  return withCacheStatus(out, 'MISS')
+  await cache.put(cacheKey, await sanitiseStoredResponse(out.clone()))
+  return withCacheStatus(await sanitiseStoredResponse(out), 'MISS')
 }
 
 /**
@@ -2739,7 +2741,7 @@ async function apiBrief(url: URL, env: Env): Promise<Response> {
   const cache = caches.default
   const cacheKey = new Request(`https://opax.com.au/api/brief?rids=${rids.join(',')}`)
   const cached = await cache.match(cacheKey)
-  if (cached) return withCacheStatus(cached, 'HIT')
+  if (cached) return withCacheStatus(await sanitiseStoredResponse(cached), 'HIT')
   const briefs: Record<string, string> = {}
   await Promise.all(
     rids.map(async (rid) => {
@@ -2756,8 +2758,8 @@ async function apiBrief(url: URL, env: Env): Promise<Response> {
   )
   const out = json({ briefs })
   out.headers.set('cache-control', 'public, max-age=3600')
-  await cache.put(cacheKey, out.clone())
-  return withCacheStatus(out, 'MISS')
+  await cache.put(cacheKey, await sanitiseStoredResponse(out.clone()))
+  return withCacheStatus(await sanitiseStoredResponse(out), 'MISS')
 }
 
 // --- topic pages ------------------------------------------------------------
@@ -2794,13 +2796,13 @@ async function cachedJson(
   const cache = caches.default
   const cacheKey = new Request(`https://opax.com.au${cachePath}`)
   const cached = await cache.match(cacheKey)
-  if (cached) return withCacheStatus(cached, 'HIT')
+  if (cached) return withCacheStatus(await sanitiseStoredResponse(cached), 'HIT')
   const out = await build()
   if (out.ok) {
     out.headers.set('cache-control', `public, max-age=${maxAge}`)
-    await cache.put(cacheKey, out.clone())
+    await cache.put(cacheKey, await sanitiseStoredResponse(out.clone()))
   }
-  return withCacheStatus(out, 'MISS')
+  return withCacheStatus(await sanitiseStoredResponse(out), 'MISS')
 }
 
 /** All 21 topics with live counts, plus how many speeches carry any topic label. */

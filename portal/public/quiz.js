@@ -1,5 +1,6 @@
-import {donorPrivacyIndex,donorNameWithheld} from './donor-entity.js?v=3a74633831';
-import {loadDonorViewIndex} from './donor-views.js?v=b0d980112a';
+import {isUnnamedAggregate} from './donor-views.js?v=55a8bd3ae0';
+import {donorPrivacyIndex,donorNameWithheld} from './donor-entity.js?v=ebb2c972d5';
+import {loadDonorViewIndex} from './donor-views.js?v=55a8bd3ae0';
 import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
 /*
  * The record quiz — a MindMaze-spirited quiz over OPAX's real data.
@@ -80,7 +81,7 @@ const INDUSTRY_LABELS = {
   telecom: "Telecommunications", legal: "Legal services", health: "Health",
   defence: "Defence", transport: "Transport", security: "Security",
   waste_management: "Waste management", lobbying: "Lobbying",
-  individual: "Individual donors",
+  individual: "Donors not named",
 };
 
 const DONOR_PHRASES = {
@@ -99,7 +100,7 @@ function industryLabel(key) {
 export function makeQuizContext(data) {
   const money = data.money || { nodes: [], edges: [], meta: {} };
   const privacy=data.donorPrivacy || donorPrivacyIndex([money]);
-  const donors = money.nodes.filter((n) => n.kind === 'donor' && !donorNameWithheld(privacy,n.label));
+  const donors = money.nodes.filter((n) => n.kind === 'donor' && !isUnnamedAggregate(n.label) && !donorNameWithheld(privacy,n.label));
   const donorsById = new Map(donors.map((d) => [d.id, d]));
   const parties = money.nodes.filter((n) => n.kind === "party");
 

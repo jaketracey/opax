@@ -1,4 +1,4 @@
-import {donorPrivacyIndex,donorNameWithheld,loadDonorViewIndex,individualDonorLabel} from './donor-views.js?v=b0d980112a';
+import {donorPrivacyIndex,donorNameWithheld,loadDonorViewIndex,donorAggregateDetail,unnamedDonorLabel} from './donor-views.js?v=55a8bd3ae0';
 /**
  * OPAX Words per dollar — the site's thesis in one view: per industry, who
  * takes the money and who does the talking.
@@ -439,7 +439,7 @@ export function mountWordsDollars (container, opts = {}) {
       lead.append(`; the labelling pass has not reached the ${phrase} debate yet.`)
     }
     section.appendChild(lead)
-    if(panel.individualDonors.count)section.appendChild(el('p','wd-fineprint',`${individualDonorLabel(panel.individualDonors.count)} · ${fmtMoney(panel.individualDonors.amount)}`))
+    if(panel.individualDonors.count)section.appendChild(donorAggregateDetail(`${unnamedDonorLabel(panel.individualDonors.count)} · ${fmtMoney(panel.individualDonors.amount)}`,document))
 
     const rowsEl = el('div', 'wd-rows')
     const maxMoney = Math.max(...panel.rows.map((r) => r.money), 1)

@@ -1,10 +1,11 @@
 import test from 'node:test';
+import ts from 'typescript';
 import {Script} from 'node:vm';
 import assert from 'node:assert/strict';
 import {readFileSync,readdirSync} from 'node:fs';
 import {execFileSync} from 'node:child_process';
 import {join,relative} from 'node:path';
-import {privacySourceGraphs,privacySourceDonorRecords,assetDonorRecords,PRIVACY_BASELINE,readPublicationContext,sanitiseDonorAsset} from '../../scripts/withhold_donor_assets.mjs';
+import {privacyBaselineFiles,privacySourceGraphs,privacySourceDonorRecords,assetDonorRecords,PRIVACY_BASELINE,readPublicationContext,publicationContext,sanitiseDonorAsset,sanitiseGrantDonors} from '../../scripts/withhold_donor_assets.mjs';
 import {donorPrivacyIndex,donorNameWithheld,withholdIndividualDonors,MONEY_GRAPHS,foldDonorName,isOrganisationDonor} from '../public/donor-entity.js';
 import {donorRows,withheldDonorTotals,donorRouteWithheld} from '../public/donor-views.js';
 import {buildFlows} from '../public/ledger.js';
@@ -25,10 +26,13 @@ function hasHiddenIdentity(value,donor=false,nameField=false){
   for(const match of value.matchAll(/\/subject\/donor\/([^\s"<>?#]+)/g)){let label;try{label=decodeURIComponent(match[1])}catch{continue}if(blocked.has(foldDonorName(label))&&!index.organisations.has(foldDonorName(label)))return true;}
   return false;
  }
- if(Array.isArray(value))return value.some(x=>hasHiddenIdentity(x,donor,nameField));
+ if(Array.isArray(value)){if(typeof value[0]==='string'&&/(?:^|:)(?:grant(?:-|:)|grant-program|grant-recipient)/.test(value[0]))return false;return value.some(x=>hasHiddenIdentity(x,donor,nameField));}
  if(!value||typeof value!=='object')return false;
+ if(value.kind==='grant')return assetDonorRecords(value).some(n=>hasHiddenIdentity(n,true));
  const isDonor=donor||value.kind==='donor';
  return Object.entries(value).some(([key,v])=>{
+  if(['recipient','rn','rid','recipientId','recipient_id','recipient_label'].includes(key)||/^\/money\/grants\//.test(key)||/(?:^|:)(?:grant(?:-|:)|grant-program|grant-recipient)/.test(key))return false;
+  if(key==='grants')return assetDonorRecords(v).some(n=>hasHiddenIdentity(n,true));
   if(key==='donors'&&v&&typeof v==='object'&&!Array.isArray(v))return Object.entries(v).some(([label,entry])=>hasHiddenIdentity(label,true)||hasHiddenIdentity(entry));
   return hasHiddenIdentity(v,isDonor||key==='top_donors'||key==='donor'||key==='donor_label',['name','label','n','aliases'].includes(key));
  });
@@ -41,13 +45,26 @@ test('every served JSON and client module passes the runtime export privacy set'
   const file=relative(pub,path);
   if(path.endsWith('.json')) {
    const value=JSON.parse(readFileSync(path,'utf8'));
+   const grant=file.startsWith('grants/') || /^graph\/grants\./.test(file) || file==='social/grants-largest.json';
+   if(file.startsWith('electorates/')){json++;continue;}
+   const scope=grant?assetDonorRecords(value):value;
    // Official office-holder roles remain named; donor contexts are withheld.
    assert.ok(assetDonorRecords(value).every(n=>!donorNameWithheld(index,n.label)),`${file}: donor record lacks organisation evidence`);
-   assert.ok(!hasHiddenIdentity(value),`${file}: derived donor label, alias or profile URL`);
-   assert.ok(JSON.stringify(sanitiseDonorAsset(value,context))===JSON.stringify(value),`${file}: withheld donor data`);json++;
+   assert.ok(!hasHiddenIdentity(scope),`${file}: derived donor label, alias or profile URL`);
+   assert.ok(JSON.stringify((grant?sanitiseGrantDonors:sanitiseDonorAsset)(value,context))===JSON.stringify(value),`${file}: withheld donor data`);json++;
   } else if(/\.(?:js|html|txt|xml)$/.test(path)) {
    const value=readFileSync(path,'utf8');
-   assert.ok(sanitiseDonorAsset(value,context)===value,`${file}: withheld donor text`);modules++;
+   if(path.endsWith('.js')){
+    // Code identifiers and encoded library payloads are not donor labels.
+    // Check actual text literals/comments; runtime view outputs are also swept.
+    const ast=ts.createSourceFile(file,value,ts.ScriptTarget.Latest,true);
+    const checkText=s=>{if(/^data:/.test(s)||s.length>200&&/^[a-z0-9+/=]+$/i.test(s))return;assert.ok(sanitiseDonorAsset(s,context)===s,`${file}: withheld donor literal`);};
+    const scan=node=>{if(ts.isStringLiteralLike(node)||[ts.SyntaxKind.TemplateHead,ts.SyntaxKind.TemplateMiddle,ts.SyntaxKind.TemplateTail].includes(node.kind))checkText(node.text);ts.forEachChild(node,scan)};scan(ast);
+    const scanner=ts.createScanner(ts.ScriptTarget.Latest,false,ts.LanguageVariant.Standard,value);
+    for(let kind=scanner.scan();kind!==ts.SyntaxKind.EndOfFileToken;kind=scanner.scan())if([ts.SyntaxKind.SingleLineCommentTrivia,ts.SyntaxKind.MultiLineCommentTrivia].includes(kind))checkText(scanner.getTokenText());
+   }else assert.ok(sanitiseDonorAsset(value,context)===value,`${file}: withheld donor text`);
+   modules++;
+
   }
  }
  t.diagnostic(`${json} served JSON files; ${modules} client and crawl files`);
@@ -87,7 +104,7 @@ test('client lists contain organisations and one summed aggregate while map tota
  for(let i=0;i<original.length;i++){
   const g=original[i],hidden=g.nodes.filter(n=>n.kind==='donor'&&donorNameWithheld(index,n.label));
   const rows=donorRows(g.nodes.filter(n=>n.kind==='donor').map(n=>[n.label,n.total]),index,5);
-  const aggregate=rows.filter(r=>/^Individual donors \(\d+\)$/.test(r[0]));assert.equal(aggregate.length,1);
+  const aggregate=rows.filter(r=>/^Donors not named \(\d+\)$/.test(r[0]));assert.equal(aggregate.length,1);
   assert.equal(aggregate[0][1],hidden.reduce((sum,n)=>sum+n.total,0));assert.ok(rows.filter(r=>r!==aggregate[0]).every(r=>!donorNameWithheld(index,r[0])));
   const graph=withholdIndividualDonors(g,index);const flows=buildFlows(graph);const totals=withheldDonorTotals(graph.nodes,graph.edges);
   assert.ok(totals.count>0);assert.equal(flows.reduce((sum,e)=>sum+e.total,0),g.edges.filter(e=>!e.grant&&!e.flow).reduce((sum,e)=>sum+e.total,0));
@@ -96,7 +113,7 @@ test('client lists contain organisations and one summed aggregate while map tota
 
 test('all donor client surfaces consume the common policy and neutral routes',()=>{
  const app=readFileSync(join(pub,'app.js'),'utf8');assert.ok(app.includes('This donor is not named in OPAX.'));assert.ok(app.includes('donorViewReady'));assert.ok(app.includes('meta[name="twitter:image"]'));
- for(const path of ['app.js','ledger.js','money-map.js','money-journeys-data.js','growth-modules.js','supplier-growth.js','quiz.js','home.js','map-research.js','wordsdollars.js','explain.js','agencies.js','grants.js','grant-recipient.js'])assert.ok(/donorNameWithheld|isOrganisationDonor|donorRows|donor-views|exactOrganisationDonors|donor:withheld|Donor.*withheld|Individual donors/.test(readFileSync(path==='money-map.js'?new URL('../graph/index.ts',import.meta.url):path==='explain.js'?new URL('../graph/explain.ts',import.meta.url):join(pub,path),'utf8')),path);
+ for(const path of ['app.js','ledger.js','money-map.js','money-journeys-data.js','growth-modules.js','supplier-growth.js','quiz.js','home.js','map-research.js','wordsdollars.js','explain.js','agencies.js','grants.js','grant-recipient.js'])assert.ok(/donorNameWithheld|isOrganisationDonor|donorRows|donor-views|exactOrganisationDonors|donor:withheld|Donor.*withheld|Donors not named/.test(readFileSync(path==='money-map.js'?new URL('../graph/index.ts',import.meta.url):path==='explain.js'?new URL('../graph/explain.ts',import.meta.url):join(pub,path),'utf8')),path);
 });
 
 test('the independent served-file guard rejects exported identities and profile URLs',()=>{
@@ -144,4 +161,82 @@ test('compact metadata cannot change the shared publication and query decision',
  }
  const refresh=readFileSync(new URL('../../scripts/weekly_refresh.sh',import.meta.url),'utf8');
  assert.ok(refresh.includes('scripts/export_access.py "$donor_stage/graph/money.json"'),'access joins must retain the private source identities');
+});
+
+// Failure messages contain counts, paths and field names only.
+test('registered export labels and aliases are replaced regardless of following words',()=>{
+ const records=[...privacySourceDonorRecords(),...original.flatMap(g=>g.nodes)];let checks=0;
+ for(const n of records)if(n.kind==='donor'&&donorNameWithheld(index,n.label))for(const label of [n.label,...n.aliases||[]]){
+  const entry=context.registry.names[context.hash(foldDonorName(label))];if(!entry||entry.exempt)continue;
+  for(const suffix of [' to the party',' to a council',' to a foundation',' gave a recorded amount.']){
+   const result=sanitiseDonorAsset(`Recorded: ${label}${suffix}`,context);
+   assert.ok(!result.toLowerCase().includes(label.toLowerCase()),'registered identity remains in narrative');
+   assert.ok(result.includes(entry.label),'neutral narrative replacement missing');checks++;
+  }
+ }
+ assert.ok(checks>0);
+});
+const baselinePaths=execFileSync('git',['ls-tree','--full-tree','-r','--name-only',PRIVACY_BASELINE,'--','portal/public/grants','portal/public/graph/grants.federal.json','portal/public/graph/grants.qld.json','portal/public/social/grants-largest.json']).toString().trim().split('\n');
+const baselineBytes=new Map(privacyBaselineFiles(baselinePaths));
+const source=p=>JSON.parse(baselineBytes.get('portal/public/'+p).toString());
+const withoutDonor=x=>!x||typeof x!=='object'?x:Array.isArray(x)?x.map(withoutDonor):Object.fromEntries(Object.entries(x).filter(([k])=>k!=='d').map(([k,v])=>[k,withoutDonor(v)]));
+test('grant recipient references match the source and anonymous donor identifiers are empty',t=>{
+ const files=walk(join(pub,'grants')).filter(p=>p.endsWith('.json')).map(p=>relative(pub,p)).concat(['graph/grants.federal.json','graph/grants.qld.json','social/grants-largest.json']);
+ let blocks=0;const ids=new Set();
+ for(const file of files){const before=source(file),after=read(file);
+  assert.ok(JSON.stringify(withoutDonor(before))===JSON.stringify(withoutDonor(after)),`${file}: recipient data or references changed`);
+  const check=(a,b)=>{if(!a||typeof a!=='object')return;
+   if(a.d?.e&&typeof a.d.n==='string'&&typeof a.d.aec==='number'&&donorNameWithheld(index,a.d.n)){
+    blocks++;ids.add(context.hash(a.d.e));assert.equal(fields(a.d),fields(b.d),`${file}: donor fields/types`);
+    assert.ok(/^donor:withheld-\d+$/.test(b.d.e),`${file}: donor identifier`);
+    for(const key of ['on','abn','acn','arbn','tfn','profileUrl','url','aliases','alias','identifier'])if(Object.hasOwn(b.d,key))assert.ok(b.d[key]===null||b.d[key]===''||Array.isArray(b.d[key])&&b.d[key].length===0,`${file}: donor identifier field`);
+    for(const key of Object.keys(a.d).filter(k=>!['n','e','on','abn','acn','arbn','tfn','profileUrl','url','aliases','alias','identifier'].includes(k)))assert.ok(JSON.stringify(a.d[key])===JSON.stringify(b.d[key]),`${file}: donor amount or metadata changed`);
+   }
+   for(const[k,v]of Object.entries(a))if(k!=='d'&&v&&typeof v==='object')check(v,b[k]);
+  };check(before,after);
+ }
+ assert.ok(blocks>=94);assert.ok(ids.size>=81);t.diagnostic(`${blocks} anonymous donor blocks; ${ids.size} donor IDs; recipient data unchanged in ${files.length} files`);
+});
+test('electorates and votes stay byte-identical and release hashes stay consistent',()=>{
+ const files=execFileSync('git',['ls-tree','--full-tree','-r','--name-only',PRIVACY_BASELINE,'--','portal/public/electorates','portal/public/votes.json']).toString().trim().split('\n');
+ for(const [file,raw] of privacyBaselineFiles(files)){assert.ok(raw.equals(readFileSync(new URL('../../'+file,import.meta.url))),`${file}: original bytes changed`);}
+ const manifest=read('electorates/manifest.json');
+ for(const[file,digest]of Object.entries(manifest.files))assert.equal(context.hash(readFileSync(join(pub,'electorates/releases',manifest.release_id,file))),digest,`${file}: manifest digest`);
+});
+
+test('nested grant summaries preserve recipient references while donor blocks stay anonymous',()=>{
+ const data=source('grants/federal/shard-00.json');const nested={grants:Object.values(data),recipient:'recipient route metadata'};
+ const result=sanitiseDonorAsset(nested,context);
+ assert.ok(JSON.stringify(withoutDonor(nested))===JSON.stringify(withoutDonor(result)),'grant summary recipient data changed');
+});
+
+test('exact indexed organisation identities are preserved without narrative guesses',()=>{
+ let checks=0;
+ for(const n of original.flatMap(g=>g.nodes).filter(n=>n.kind==='donor'&&!donorNameWithheld(index,n.label))){
+  for(const label of [n.label,...n.aliases||[]]){
+   assert.equal(sanitiseDonorAsset(label,context),label,'indexed organisation identity changed');assert.equal(sanitiseDonorAsset(`Recorded: ${label} to a recipient`,context),`Recorded: ${label} to a recipient`,'indexed organisation span changed');checks++;
+  }
+ }
+ assert.ok(checks>0);
+});
+test('grant catalog records and path tuples keep their recipient identity',()=>{
+ const shard=source('grants/federal/shard-00.json'),record=Object.values(shard).find(x=>x&&typeof x==='object');
+ const fixtures=[{kind:'grant',href:'/money/grants/recipient/fixture',resource:'grant:fixture',date:'2026-10-10',label:record.rn,grants:shard},['grant:fixture',record.rn,'/grants/recipient/fixture'],{'/money/grants/federal/recipient/fixture':record.rn}];
+ for(const fixture of fixtures){const result=sanitiseDonorAsset(fixture,context);assert.ok(JSON.stringify(withoutDonor(result))===JSON.stringify(withoutDonor(fixture)),'grant catalog recipient identity changed');}
+});
+
+test('stored editions with grant kind still withhold donor narratives on read',async()=>{
+ const {withholdStoredDonors}=await import('../src/donor-sanitise.mjs');
+ const n=original.flatMap(g=>g.nodes).find(n=>n.kind==='donor'&&donorNameWithheld(index,n.label)&&!context.registry.names[context.hash(foldDonorName(n.label))]?.exempt);
+ assert.ok(n);const post={kind:'grant',date:'2026-10-10',subject:'grant:fixture',title:`${n.label} to the party`,text:`${n.label} to a council`,recipient:'recipient field'};
+ const result=withholdStoredDonors(post,context.registry);
+ assert.ok(!JSON.stringify(result).includes(n.label),'grant-kind edition bypassed withholding');
+ assert.equal(result.recipient,post.recipient);
+});
+
+test('registry labels and phrases follow current evidence while anonymous source IDs stay stable',()=>{
+ const idHash=context.hash('donor:retired-field'),nameHash=context.hash('schema:retired-value'),entry={id:'donor:withheld-9000',label:'Donor 9000 (name withheld)',exempt:false};
+ const prior={names:{[nameHash]:entry},ids:{[idHash]:entry},phrases:[{hash:nameHash,words:2,first:context.hash('schema'),replacement:entry.label}],organisations:[]};
+ const fresh=publicationContext(original,[],prior);
+ assert.equal(fresh.registry.names[nameHash],undefined);assert.ok(!fresh.registry.phrases.some(p=>p.hash===nameHash));assert.deepEqual(fresh.registry.ids[idHash],entry);
 });

@@ -1,3 +1,4 @@
+import {createHash} from 'node:crypto';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
@@ -380,4 +381,31 @@ test('a clean recipient link keeps its colon in the share image path the preflig
   assert.equal(new URL(c.link).pathname,'/money/grants/federal/recipient/abn:18374210672');
  }
  assert.match(publicationCopy(grant,'x').text,/recipient\/abn:18374210672\?award=GA123/);
+});
+
+test('stored social previews, channel copies and frozen-edition reuse withhold runtime-derived donor narratives',async()=>{
+ const {privacySourceGraphs}=await import('../../scripts/withhold_donor_assets.mjs');
+ const {donorNameWithheld,donorPrivacyIndex,foldDonorName}=await import('../public/donor-entity.js');
+ const graphs=privacySourceGraphs(),context={index:donorPrivacyIndex(graphs),registry:JSON.parse(readFileSync(new URL('../src/donor-withheld.json',import.meta.url),'utf8')),hash:s=>createHash('sha256').update(s).digest('hex')},n=privacySourceGraphs().flatMap(g=>g.nodes).find(n=>n.kind==='donor'&&donorNameWithheld(context.index,n.label)&&!context.registry.names[context.hash(foldDonorName(n.label))]?.exempt);
+ assert.ok(n);const unsafe={...post,text:`${n.label} to the party.`,caption:`${n.label} to a council.`};
+ const h=harness();try{
+  h.sqlite.prepare('UPDATE social_editions SET post_json=?').run(JSON.stringify(unsafe));
+  const preview=await previewPublication(h.env,post.date,async()=>{throw Error('No source request permitted')});
+  assert.ok(!JSON.stringify(preview).toLowerCase().includes(n.label.toLowerCase()),'stored preview identity');
+  for(const channel of ['x','facebook','instagram','bluesky'])assert.ok(!publicationCopy(unsafe,channel).text.toLowerCase().includes(n.label.toLowerCase()),'channel copy identity');
+  await h.run();assert.ok(h.calls.every(c=>!JSON.stringify(c.body).toLowerCase().includes(n.label.toLowerCase())),'reused edition identity');
+ }finally{h.sqlite.close()}
+});
+
+test('newly composed editions are withheld before journal writes',async()=>{
+ const {privacySourceGraphs}=await import('../../scripts/withhold_donor_assets.mjs');
+ const {donorNameWithheld,donorPrivacyIndex,foldDonorName}=await import('../public/donor-entity.js');
+ const registry=JSON.parse(readFileSync(new URL('../src/donor-withheld.json',import.meta.url),'utf8')),graphs=privacySourceGraphs(),index=donorPrivacyIndex(graphs);
+ const n=graphs.flatMap(g=>g.nodes).find(n=>n.kind==='donor'&&donorNameWithheld(index,n.label)&&!registry.names[createHash('sha256').update(foldDonorName(n.label)).digest('hex')]?.exempt);assert.ok(n);
+ const h=harness({FACEBOOK_POST_ENABLED:'false',INSTAGRAM_POST_ENABLED:'false'});try{
+  h.sqlite.exec('DELETE FROM social_editions');h.env.ASSETS.fetch=async req=>new URL(req.url).pathname==='/parliamentarians.json'?Response.json({people:[{name:n.label,current:true,speeches:250,representation:[{jurisdiction:'federal'}]}]}):Response.json({});
+  const composed=await previewPublication(h.env,post.date,async()=>Response.json({}),'politician');assert.ok(composed);assert.ok(!JSON.stringify(composed).toLowerCase().includes(n.label.toLowerCase()),'composed identity remains');
+  await runSocialPublication(h.env,{now,date:post.date,kind:'politician',channels:['x'],personTopics:async()=>Response.json({}),fetchImpl:h.fetchImpl,sourceResponse:async()=>new Response(null,{status:503})});
+  const stored=h.sqlite.prepare('SELECT post_json FROM social_editions').get();assert.ok(stored);assert.ok(!stored.post_json.toLowerCase().includes(n.label.toLowerCase()),'journal write retains identity');
+ }finally{h.sqlite.close()}
 });

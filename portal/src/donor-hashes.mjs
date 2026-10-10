@@ -2,6 +2,8 @@
 import {createHash} from 'node:crypto';
 import registry from './donor-withheld.json' with {type:'json'};
 import {foldDonorName} from '../public/donor-entity.js';
+import {withholdStoredDonors} from './donor-sanitise.mjs';
+export const sanitiseStoredDonors=value=>withholdStoredDonors(value,registry);
 const hash=s=>createHash('sha256').update(s).digest('hex');
 const normalise=s=>String(s ?? '').normalize('NFKC').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
 export const historicalWithheldName=name=>Object.hasOwn(registry.names,hash(foldDonorName(name)));

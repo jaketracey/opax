@@ -1,4 +1,4 @@
-import {donorPrivacyIndex, donorNameWithheld, foldDonorName, MONEY_GRAPHS} from './donor-entity.js?v=3a74633831';
+import {donorPrivacyIndex, donorNameWithheld, foldDonorName, MONEY_GRAPHS} from './donor-entity.js?v=ebb2c972d5';
 export {donorNameWithheld, donorPrivacyIndex};
 let memo;
 export function loadDonorViewIndex() {
@@ -6,15 +6,22 @@ export function loadDonorViewIndex() {
     const r = await fetch(path,{cache:"no-cache"}); if (!r.ok) throw Error('Money data unavailable'); return r.json();
   })).then(donorPrivacyIndex).catch(() => ({organisations:new Set(),withheld:new Set()}));
 }
-export const individualDonorLabel = n => `Individual donors (${n})`;
-export const isIndividualAggregate = label => /^Individual donors \(\d+\)$/.test(label);
+export const unnamedDonorLabel = n => `Donors not named (${n})`;
+export const isUnnamedAggregate = label => /^Donors not named \(\d+\)$/.test(label);
+export const donorsNotNamedDetail = "OPAX names organisations only. Donors it can't confirm are organisations are counted here, not named.";
+export function donorAggregateDetail(label, doc = globalThis.document) {
+  const detail = doc.createElement('details'); detail.className = 'donor-aggregate';
+  const summary = doc.createElement('summary'); summary.textContent = label;
+  const explanation = doc.createElement('p'); explanation.textContent = donorsNotNamedDetail;
+  detail.append(summary,explanation); return detail;
+}
 /** Preserve totals while drawing only organisations and one unlinked aggregate. */
 export function donorRows(rows, index, limit = Infinity) {
   const organisations = [], withheld = [];
   for (const row of rows || []) (donorNameWithheld(index || {organisations:new Set(),withheld:new Set()},row[0]) ? withheld : organisations).push(row);
   organisations.sort((a,b) => b[1]-a[1]);
   const out = organisations.slice(0,limit);
-  if (withheld.length) out.push([individualDonorLabel(withheld.length),withheld.reduce((s,r)=>s+r[1],0)]);
+  if (withheld.length) out.push([unnamedDonorLabel(withheld.length),withheld.reduce((s,r)=>s+r[1],0)]);
   return out;
 }
 export function withheldDonorTotals(nodes, edges, index = donorPrivacyIndex([{nodes}])) {

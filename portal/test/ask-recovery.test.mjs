@@ -43,7 +43,7 @@ function harness(responses, env = {}) {
     askCacheInput: () => null, cacheBypass: () => false, rateLimited: async () => null,
     retrieveAskRecords: async () => ({ records: [], coverage: '', total: 0 }),
     buildAskBody: input => ({ query: input.question, citations: 'llm_footnotes', prompt: { user: 'Answer {question} from {context}. ' + helpers.FOOTNOTE_INSTRUCTIONS } }),
-    json: (data, status = 200) => new Response(JSON.stringify(data), { status }), withCacheStatus: r => r,
+    json: (data, status = 200) => new Response(JSON.stringify(data), { status }), sanitiseStoredResponse:async r=>r,sanitiseStoredDonors:v=>v,withCacheStatus: r => r,
     healthyRetrieval: () => false, lighterAsk: b => b, recordSources: () => [], label: () => null, calibrate: score => score,
     kbFetch: async (_env, _path, init) => new Response(JSON.stringify(next(init.body))),
     streamAskGuarded: async (_env, body) => next(body),

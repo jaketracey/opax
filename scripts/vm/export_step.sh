@@ -22,7 +22,7 @@ case "$mode" in
     trap 'rm -f "$tmp"' EXIT
     "$@" > "$tmp"
     if [[ "$dest" == portal/public/* && "$dest" != portal/public/votes.json ]]; then
-      node scripts/withhold_donor_assets.mjs --stdin < "$tmp" > "$tmp.safe"
+      node scripts/withhold_donor_assets.mjs --stdin --file "$dest" < "$tmp" > "$tmp.safe"
       mv "$tmp.safe" "$tmp"
     fi
     "$PY" scripts/vm/keep_if_unchanged.py "$dest" "$tmp"
@@ -32,7 +32,7 @@ case "$mode" in
     rm -f "$tmp"
     "$@"
     if [[ "$dest" == portal/public/* && "$dest" != portal/public/votes.json ]]; then
-      node scripts/withhold_donor_assets.mjs --stdin < "$tmp" > "$tmp.safe"
+      node scripts/withhold_donor_assets.mjs --stdin --file "$dest" < "$tmp" > "$tmp.safe"
       mv "$tmp.safe" "$tmp"
     fi
     "$PY" scripts/vm/keep_if_unchanged.py "$dest" "$tmp"

@@ -27,7 +27,7 @@ export async function namesWithheldDonor(assets: Fetcher, name: string): Promise
 }
 
 /** The one reply to a question naming a withheld donor: fixed text, no model call. */
-export const WITHHELD_DONOR_REPLY = "OPAX doesn't name individual donors. Party-level totals are on the party's page."
+export const WITHHELD_DONOR_REPLY = "This donor is not named in OPAX. Party-level totals are on the party's page."
 
 type PhraseGraph = { nodes: { label: string; kind: string; aliases?: string[] | null; industry?: string | null }[] }
 

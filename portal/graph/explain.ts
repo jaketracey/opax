@@ -10,7 +10,7 @@
 // helpers. This module owns only the explanation UI and its three.js scene.
 // ---------------------------------------------------------------------------
 
-import {donorNameWithheld,loadDonorViewIndex,withheldDonorTotals,individualDonorLabel} from '../public/donor-views.js'
+import {donorNameWithheld,loadDonorViewIndex,withheldDonorTotals,donorAggregateDetail,isUnnamedAggregate,unnamedDonorLabel} from '../public/donor-views.js'
 import * as THREE from 'three'
 import { BRONZE_INK, clusterColour, partyDot, SURFACE } from './palette.ts'
 
@@ -389,6 +389,7 @@ async function resolveFlow(detail: ExplainDetail, helpers: ExplainHelpers): Prom
 
 function labelForIndustry(value: string | null, helpers: ExplainHelpers) {
   if (!value) return 'Disclosed donors'
+  if (['individual', 'individuals'].includes(value.toLowerCase())) return 'Industry not recorded'
   return helpers.industryLabel ? helpers.industryLabel(value) : value.replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase())
 }
 
@@ -475,7 +476,7 @@ function partyList(rows: Array<{ node: MoneyNode; total: number }>, flow: Resolv
     li.append(a, amount)
     list.append(li)
   }
-  if(donorList && flow.individualDonors.count){const li=el('li');li.append(el('span','',individualDonorLabel(flow.individualDonors.count)),el('b','',helpers.fmtMoney(flow.individualDonors.amount)));list.append(li)}
+  if(donorList && flow.individualDonors.count){const li=el('li');li.append(donorAggregateDetail(`${unnamedDonorLabel(flow.individualDonors.count)} · ${helpers.fmtMoney(flow.individualDonors.amount)}`,document));list.append(li)}
   return list
 }
 

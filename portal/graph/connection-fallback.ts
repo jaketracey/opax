@@ -1,5 +1,5 @@
 import {donorPrivacyIndex,donorNameWithheld} from '../public/donor-entity.js'
-import {withheldDonorTotals,individualDonorLabel} from '../public/donor-views.js'
+import {withheldDonorTotals,donorAggregateDetail,isUnnamedAggregate,unnamedDonorLabel} from '../public/donor-views.js'
 import type { MoneyGraph, MoneyMapHandle, MoneyMapOptions, MoneyScene } from './index.ts'
 import { windowFigures } from './index.ts'
 import { filterMoneyEdges, readMoneyFilters, type MoneyFilters } from '../public/money-records.js'
@@ -55,7 +55,7 @@ export function mountConnectionFallback(container: HTMLElement, data: MoneyGraph
     const allRows = filterMoneyEdges({ ...data, edges: connectionRows({ ...windowed, edges: windowed.edges.map(e => ({ ...e, byYear: undefined })) }, current ? { ...current, from: undefined, to: undefined } : undefined, group, privacy, true) }, filters)
     const rows=allRows.filter(e=>[nodes.get(e.source),nodes.get(e.target)].every(n=>n && (n.kind!=='donor'||!donorNameWithheld(privacy,n.label))))
     const hidden=withheldDonorTotals(data.nodes,allRows,privacy)
-    if(hidden.count) add('p',root,`${individualDonorLabel(hidden.count)} · ${formatMoney(hidden.amount)}`)
+    if(hidden.count) root.append(donorAggregateDetail(`${unnamedDonorLabel(hidden.count)} · ${formatMoney(hidden.amount)}`,document))
     const ids = new Set(allRows.flatMap(e => [e.source, e.target]))
     options.onViewChange?.({ ...data, nodes: data.nodes.filter(n => ids.has(n.id)), edges: allRows }, { ...filters, industry: group || '' }, window)
     const shown = rows.slice(0, 24)

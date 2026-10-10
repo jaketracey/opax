@@ -1,5 +1,5 @@
 import {donorNameWithheld,donorPrivacyIndex} from '../public/donor-entity.js'
-import {individualDonorLabel,withheldDonorTotals,loadDonorViewIndex} from '../public/donor-views.js'
+import {donorAggregateDetail,isUnnamedAggregate,unnamedDonorLabel,withheldDonorTotals,loadDonorViewIndex} from '../public/donor-views.js'
 import {partyUrl} from '../public/canonical-urls.js'
 // ---------------------------------------------------------------------------
 // OPAX Money Map - public entry.
@@ -219,7 +219,7 @@ const markColour = (n: MoneyNode): string =>
   n.kind === 'grantor' ? hubColour(n) : n.colour ?? (n.kind === 'party' ? partyDot(n.label) : clusterColour(n.group).colour)
 
 /** Sentence case for a lower-case data key shown as a label ("mining & energy"). */
-const sentence = (text: string) => text.charAt(0).toUpperCase() + text.slice(1)
+const sentence = (text: string) => ['individual', 'individuals'].includes(text.toLowerCase()) ? 'Industry not recorded' : text.charAt(0).toUpperCase() + text.slice(1)
 
 const toMapNode = (n: MoneyNode): MapNode => ({
   id: n.id,
@@ -922,7 +922,9 @@ export async function mountMoneyMap(
     legendTitle.textContent = 'Industries · click to isolate'
   }
 
-  const individualSummary = el('p','mm-individual-summary',container)
+  const individualSummary = donorAggregateDetail('',document)
+  individualSummary.classList.add('mm-individual-summary')
+  container.append(individualSummary)
   individualSummary.style.cssText='position:absolute;left:12px;bottom:12px;z-index:3;background:var(--paper);padding:8px;font:var(--type-fine)'
   const card = el('div', 'mm-card', container)
   // A short host (the front page's box, any phone) is shorter than the card,
@@ -1184,7 +1186,7 @@ export async function mountMoneyMap(
     }
     const hiddenTotals=withheldDonorTotals(windowNodes,windowEdges,privacy)
     individualSummary.hidden=hiddenTotals.count===0
-    individualSummary.textContent=`${individualDonorLabel(hiddenTotals.count)} · ${formatMoney(hiddenTotals.amount)}`
+    individualSummary.querySelector('summary')!.textContent=`${unnamedDonorLabel(hiddenTotals.count)} · ${formatMoney(hiddenTotals.amount)}`
     const activeDonors = new Set(windowEdges.flatMap((e) => [e.source, e.target]))
     const visibleNodes = windowNodes.filter((n) => {
       if(withheld(n)) return false
@@ -1516,6 +1518,7 @@ export async function mountMoneyMap(
     onClick: (() => void) | null,
   ) => {
     const item = el('li', '', parent)
+    if (isUnnamedAggregate(name)) { item.append(donorAggregateDetail(`${name} · ${formatMoney(amount)}`,document)); return }
     const body = el('button', 'mm-row', item)
     body.type = 'button'
     // The row's pieces run together as one string otherwise ("Westpac$55.2m1998–2024").
@@ -1845,7 +1848,7 @@ export async function mountMoneyMap(
       const hiddenOutgoing=view.edges.filter(e=>e.source===node.id && view.nodes.has(e.target) && withheld(view.nodes.get(e.target)!))
       const hiddenTargets=new Set(hiddenOutgoing.map(e=>e.target))
       const hiddenCount=[...view.nodes.values()].filter(n=>n.kind==='donor'&&hiddenTargets.has(n.id)).length
-      if(hiddenCount) row(list,null,individualDonorLabel(hiddenCount),hiddenOutgoing.reduce((sum,e)=>sum+e.total,0),'',null)
+      if(hiddenCount) row(list,null,unnamedDonorLabel(hiddenCount),hiddenOutgoing.reduce((sum,e)=>sum+e.total,0),'',null)
       const outgoing = view.edges
         .filter((e) => e.source === node.id && !withheld(view.nodes.get(e.target)!))
         .sort((a, b) => b.total - a.total)
@@ -1874,7 +1877,7 @@ export async function mountMoneyMap(
       listTitle.textContent = 'Top donors shown on the map'
       const allIncoming=view.edges.filter(e=>e.target===node.id)
       const hiddenTotals=withheldDonorTotals([...view.nodes.values()],allIncoming,privacy)
-      if(hiddenTotals.count) row(list,null,individualDonorLabel(hiddenTotals.count),hiddenTotals.amount,'',null)
+      if(hiddenTotals.count) row(list,null,unnamedDonorLabel(hiddenTotals.count),hiddenTotals.amount,'',null)
       const incoming = view.edges
         .filter((e) => e.target === node.id && !withheld(view.nodes.get(e.source)!))
         .sort((a, b) => b.total - a.total)

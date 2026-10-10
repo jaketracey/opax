@@ -1,5 +1,5 @@
-import {donorPrivacyIndex,donorNameWithheld} from './donor-entity.js?v=3a74633831';
-import {withheldDonorTotals,individualDonorLabel} from './donor-views.js?v=b0d980112a';
+import {donorPrivacyIndex,donorNameWithheld} from './donor-entity.js?v=ebb2c972d5';
+import {donorsNotNamedDetail,withheldDonorTotals,unnamedDonorLabel} from './donor-views.js?v=55a8bd3ae0';
 import { readMoneyFilters, moneyTotals, moneyRecordsCSV, moneyFlowType } from './money-records.js?v=ia-ux-20260908-2';
 import { shortMoney } from './format.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -32,7 +32,7 @@ export function mountMapResearch(container, data, options = {}) {
     const hidden=withheldDonorTotals(current.nodes,current.edges,privacy);
     const edges=current.edges.filter(e=>[nodes.get(e.source),nodes.get(e.target)].every(n=>n && (n.kind!=='donor'||!donorNameWithheld(privacy,n.label)))).sort((a,b)=>b.total-a.total);
     tbody.innerHTML=edges.slice(0,rowsShown).map(e=>`<tr><td>${labels[moneyFlowType(e,nodes)] || 'Record'}</td><td>${esc(nodes.get(e.source)?.label)}</td><td>${esc(nodes.get(e.target)?.label)}</td><td>${exactMoney(e.total)}</td><td>${esc(e.count)}</td><td>${esc(e.firstYear || 'Undated')}${e.lastYear && e.lastYear!==e.firstYear?'–'+e.lastYear:''}</td><td><button class="text-link" type="button" data-focus="${esc(e.target)}">Focus in map</button></td></tr>`).join('');
-    if(hidden.count)tbody.insertAdjacentHTML('beforeend',`<tr><td>Political receipts</td><td>${individualDonorLabel(hidden.count)}</td><td>Selected parties</td><td>${exactMoney(hidden.amount)}</td><td colspan=3>Names withheld</td></tr>`);
+    if(hidden.count)tbody.insertAdjacentHTML('beforeend',`<tr><td>Political receipts</td><td>${`<details class="donor-aggregate"><summary>${unnamedDonorLabel(hidden.count)}</summary><p>${donorsNotNamedDetail}</p></details>`}</td><td>Selected parties</td><td>${exactMoney(hidden.amount)}</td><td colspan=3>Names withheld</td></tr>`);
     records.querySelector('[data-more]').hidden=edges.length<=rowsShown;
   }
   function update(graph, nextFilters, years){

@@ -1,3 +1,4 @@
+import {donorsNotNamedDetail} from "../public/donor-views.js"
 import { personUrl, partyUrl } from '../public/canonical-urls.js'
 import {sponsorPerson} from '../public/sponsor-person.js'
 import {currentSittingPath, sydneyDay} from '../public/hubs-data.js'
@@ -197,7 +198,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     const unnamed=graph.nodes.filter(n=>n.kind==='donor'&&hiddenIds.has(n.id)).length
     const hiddenAmount=hiddenFlows.reduce((sum,e)=>sum+e.total,0)
     const organisations = flows.filter(e=>!donorNameWithheld(sharedDonors,donors.get(e.source)!.label)).sort((a,b)=>b.total-a.total).slice(0,10)
-    body += `<h3>${escapeHtml(source)} disclosed receipts</h3><p>${unnamed} donors in this export are not named here: individuals, and organisations without a recorded legal form. ${escapeHtml(graph.meta.coverage || '')}</p><ul>${organisations.map(e=>`<li>${link(`/subject/donor/${encodeURIComponent(donors.get(e.source)!.label)}`,donors.get(e.source)!.label)} — ${currency(e.total)}</li>`).join('')}${unnamed?`<li>Individual donors (${unnamed}) — ${currency(hiddenAmount)}</li>`:''}</ul>`
+    body += `<h3>${escapeHtml(source)} disclosed receipts</h3><p>${escapeHtml(graph.meta.coverage || '')}</p><ul>${organisations.map(e=>`<li>${link(`/subject/donor/${encodeURIComponent(donors.get(e.source)!.label)}`,donors.get(e.source)!.label)} — ${currency(e.total)}</li>`).join('')}${unnamed?`<li><details><summary>Donors not named (${unnamed}) — ${currency(hiddenAmount)}</summary><p>${escapeHtml(donorsNotNamedDetail)}</p></details></li>`:''}</ul>`
     body += `<p>Source: ${escapeHtml(graph.meta.sourceShort || graph.meta.source || source)}. Federal and state returns are shown separately and never summed.</p>${original(graph.meta.source_url || (source==='AEC' ? 'https://transparency.aec.gov.au/' : source==='ECQ' ? 'https://disclosures.ecq.qld.gov.au/' : 'https://disclosures.vec.vic.gov.au/'))}`
   }
   const owned = sponsored?.sponsored[p.pid || p.name] || []

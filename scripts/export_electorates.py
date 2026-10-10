@@ -16,7 +16,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import sys as _donor_sys
 from pathlib import Path as _DonorPath
 _donor_sys.path.insert(0, str(_DonorPath(__file__).resolve().parents[1]))
-from scripts.donor_public import public_donor_data
 from parli.electorates import export_bundle, import_bundle, read_bundle
 
 
@@ -35,7 +34,7 @@ def main():
             if bundle:
                 import_bundle(db, bundle, imported_at=args.as_of, source=str(args.bundle))
             bundle = read_bundle(db)
-    manifest = export_bundle(public_donor_data(bundle), args.out_dir, generated=args.as_of)
+    manifest = export_bundle(bundle, args.out_dir, generated=args.as_of)
     print(f"Published {len(bundle['electorates'])} electorate references: {manifest['release_id']}")
 
 

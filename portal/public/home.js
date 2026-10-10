@@ -1,4 +1,4 @@
-import {donorNameWithheld,loadDonorViewIndex} from './donor-views.js?v=b0d980112a';
+import {donorNameWithheld,loadDonorViewIndex} from './donor-views.js?v=55a8bd3ae0';
 let donorPrivacy={organisations:new Set(),withheld:new Set()};
 loadDonorViewIndex().then(index=>{donorPrivacy=index});
 import { personUrl, partyUrl } from './canonical-urls.js?v=225d5915ea';
@@ -461,7 +461,7 @@ async function mount() {
     const span = mapSpan(graph.meta);
     if (span) $("hp-map-span").textContent = span;
     const { mountMoneyMap } = await import(
-      "/money-map.js?v=8af144cf5f"
+      "/money-map.js?v=ca923f4f2e"
     );
     if (disposed) return;
     root.replaceChildren();

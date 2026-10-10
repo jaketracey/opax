@@ -1,4 +1,4 @@
-import {donorNameWithheld,loadDonorViewIndex,individualDonorLabel} from './donor-views.js?v=b0d980112a';
+import {donorNameWithheld,loadDonorViewIndex,donorAggregateDetail,unnamedDonorLabel} from './donor-views.js?v=55a8bd3ae0';
 import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
 /**
  * OPAX Who gets the grants — every published grant award, resolved to the
@@ -1501,7 +1501,7 @@ export function mountGrants (container, opts = {}) {
       box.appendChild(p)
       const blocs = donorBlocs(d.d, data.meta.blocs)
       if (d.d.aec > 0 || hidden) {
-        box.appendChild(el('p', null, `AEC returns: ${hidden ? individualDonorLabel(1)+' · ' : ''}${fmtMoney(d.d.aec)} disclosed${d.d.y0 ? `, ${d.d.y0}–${d.d.y1 || d.d.y0}` : ''}`))
+        box.appendChild((hidden ? donorAggregateDetail : (text)=>el('p',null,text))(`AEC returns: ${hidden ? unnamedDonorLabel(1)+' · ' : ''}${fmtMoney(d.d.aec)} disclosed${d.d.y0 ? `, ${d.d.y0}–${d.d.y1 || d.d.y0}` : ''}`))
         const ul = el('ul', 'gr-partylist')
         for (const [party, v] of Object.entries(d.d.p || {}).sort((a, b) => b[1] - a[1]).slice(0, 6)) {
           const li = el('li')
@@ -1511,7 +1511,7 @@ export function mountGrants (container, opts = {}) {
         box.appendChild(ul)
       }
       for (const [jur, st] of Object.entries(d.d.st || {})) {
-        box.appendChild(el('p', null, `${STATE_REGISTERS[jur] || jur}: ${hidden ? individualDonorLabel(1)+' · ' : ''}${fmtMoney(st.t)} in ${NUM.format(st.c)} gifts`))
+        box.appendChild((hidden ? donorAggregateDetail : (text)=>el('p',null,text))(`${STATE_REGISTERS[jur] || jur}: ${hidden ? unnamedDonorLabel(1)+' · ' : ''}${fmtMoney(st.t)} in ${NUM.format(st.c)} gifts`))
         const ul = el('ul', 'gr-partylist')
         for (const [party, v] of Object.entries(st.p || {}).sort((a, b) => b[1] - a[1]).slice(0, 4)) {
           const li = el('li')

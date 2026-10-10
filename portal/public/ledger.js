@@ -1,5 +1,5 @@
-import {donorPrivacyIndex,donorNameWithheld} from './donor-entity.js?v=3a74633831';
-import {isIndividualAggregate,individualDonorLabel,loadDonorViewIndex} from './donor-views.js?v=b0d980112a';
+import {donorPrivacyIndex,donorNameWithheld} from './donor-entity.js?v=ebb2c972d5';
+import {isUnnamedAggregate,donorAggregateDetail,unnamedDonorLabel,loadDonorViewIndex} from './donor-views.js?v=55a8bd3ae0';
 import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
 import { filterMoneyEdges } from "./money-records.js?v=ia-ux-20260908-2";
 /**
@@ -488,7 +488,7 @@ function dotLabel (colour, node) {
 }
 
 function subjectLink (kind, label) {
-  if(kind==='donor' && isIndividualAggregate(label)) return el('span',null,label)
+  if(kind==='donor' && isUnnamedAggregate(label)) return donorAggregateDetail(label,document)
   const a = el('a', null, label)
   a.href = subjectUrl(kind,label)
   return a
@@ -671,8 +671,8 @@ export function mountLedger (container, opts = {}) {
     const rows = state.view === 'flows'
       ? visible.filter((r) => r.total >= state.min)
       : aggregateDonors(visible).filter((d) => d.total >= state.min)
-    if(hidden.length){const combined=aggregateDonors(hidden.map(r=>({...r,donorId:'donor:individuals'})))[0];
-      rows.push({...hidden[0],...combined,donor:individualDonorLabel(loadedData.nodes.filter(n=>n.kind==='donor'&&hidden.some(r=>r.donorId===n.id)).length),industry:'individual',party:'All selected parties',partyColour:'var(--party-oth)'});}
+    if(hidden.length){const combined=aggregateDonors(hidden.map(r=>({...r,donorId:'donor:not-named'})))[0];
+      rows.push({...hidden[0],...combined,donor:unnamedDonorLabel(loadedData.nodes.filter(n=>n.kind==='donor'&&hidden.some(r=>r.donorId===n.id)).length),industry:'withheld',party:'All selected parties',partyColour:'var(--party-oth)'});}
     const sort = state.sort[state.view]
     return { flowCount: passing.length, rows: sortRows(rows, sort.key, sort.dir) }
   }

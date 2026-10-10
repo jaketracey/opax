@@ -1,4 +1,4 @@
-import {donorPrivacyIndex,donorNameWithheld} from './donor-entity.js?v=3a74633831';
+import {donorPrivacyIndex,donorNameWithheld} from './donor-entity.js?v=ebb2c972d5';
 /** Guided views derived only from exported graph relationships and year cells. */
 const EXCLUDED_INDUSTRIES = new Set(['individual', 'individuals', 'unions', 'party_internal', 'government', 'other', 'unidentified']);
 const COMPANY_WORD = /\b(?:pty|ltd|limited|corporation|corp|bank|banking|group|holdings|plc)\b/i;

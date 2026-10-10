@@ -5,10 +5,10 @@ import {DatabaseSync} from 'node:sqlite';
 import {build} from 'esbuild';
 import ts from 'typescript';
 
-test('W13 static call graph closes over two modules, pure builtins and one SELECT; paid dependencies are unreachable',async()=>{
-  const built=await build({entryPoints:[new URL('../src/app-edition.ts',import.meta.url).pathname],bundle:true,write:false,metafile:true,platform:'browser',format:'esm'});
-  assert.deepEqual(Object.keys(built.metafile.inputs).map(p=>p.split('/').at(-1)).sort(),['app-edition.ts','app-http.ts'],'type-only daily-post import must never pull in composition');
-  const helpers=new Set(['appJson','appRead','readOnly','validDate','melbourneDay','sha256','storedEdition','missing']);
+test('W13 static call graph closes over pure privacy helpers and one SELECT; paid dependencies are unreachable',async()=>{
+  const built=await build({entryPoints:[new URL('../src/app-edition.ts',import.meta.url).pathname],bundle:true,write:false,metafile:true,platform:'browser',format:'esm',external:['node:crypto']});
+  assert.deepEqual(Object.keys(built.metafile.inputs).map(p=>p.split('/').at(-1)).sort(),['app-edition.ts','app-http.ts','donor-entity.js','donor-hashes.mjs','donor-sanitise.mjs','donor-withheld.json'],'type-only daily-post import must never pull in composition');
+  const helpers=new Set(['appJson','appRead','readOnly','validDate','melbourneDay','sha256','storedEdition','missing','sanitiseStoredDonors']);
   const pureMethods=new Set(['stringify','parse','format','isFinite','isArray','toISOString','slice','digest','encode','map','toString','padStart','join','split','trim','replace','includes','get','test','every','at','now']);
   const constructors=new Set(['Response','URL','Error','Date','Intl.DateTimeFormat','TextEncoder','Uint8Array']);
   const selects=[];

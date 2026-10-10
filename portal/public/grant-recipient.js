@@ -1,6 +1,6 @@
-import {donorNameWithheld,loadDonorViewIndex,individualDonorLabel} from './donor-views.js?v=b0d980112a';
+import {donorNameWithheld,loadDonorViewIndex,donorAggregateDetail,unnamedDonorLabel} from './donor-views.js?v=55a8bd3ae0';
 import {partyUrl} from './canonical-urls.js?v=225d5915ea';
-import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=2b80159770';
+import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=bf7c17477c';
 
 const MONEY = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 2 });
 const NUMBER = new Intl.NumberFormat('en-AU');
@@ -189,12 +189,12 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
       const matched = node('p'); if(!hidden){matched.append(document.createTextNode('Listed as '), link(`/subject/donor/${encodeURIComponent(donor.n)}`, donor.n), document.createTextNode('.')); donations.append(matched);}
       if(!hidden) donations.append(definitionList([['Matched by', donor.m === 'abn' ? 'ABN' : donor.m === 'abr_name' ? 'Registered business name' : 'Organisation name'], ['Matched name / identifier', donor.on]]));
       if (donor.aec > 0 || hidden) {
-        donations.append(node('h3', 'AEC returns'), node('p', `${hidden ? individualDonorLabel(1)+' · ' : ''}${money(donor.aec)} disclosed${donor.y0 ? `, ${donor.y0}–${donor.y1 || donor.y0}` : ''}.`));
+        donations.append(node('h3', 'AEC returns'), (hidden ? donorAggregateDetail : (text)=>node('p',text))(`${hidden ? unnamedDonorLabel(1)+' · ' : ''}${money(donor.aec)} disclosed${donor.y0 ? `, ${donor.y0}–${donor.y1 || donor.y0}` : ''}.`));
         donations.append(valueTable('Disclosed by party', Object.entries(donor.p || {}).sort((a,b) => b[1] - a[1]), name => link(partyUrl(name), name)));
         const years = donorYears(donor.py); if (years.length) donations.append(valueTable('AEC party returns by year', years));
       }
       for (const [jur, register] of Object.entries(donor.st || {})) {
-        donations.append(node('h3', REGISTERS[jur] || jur), node('p', `${hidden ? individualDonorLabel(1)+' · ' : ''}${money(register.t)} in ${NUMBER.format(register.c || 0)} gifts.`));
+        donations.append(node('h3', REGISTERS[jur] || jur), (hidden ? donorAggregateDetail : (text)=>node('p',text))(`${hidden ? unnamedDonorLabel(1)+' · ' : ''}${money(register.t)} in ${NUMBER.format(register.c || 0)} gifts.`));
         donations.append(valueTable('Disclosed by party', Object.entries(register.p || {}).sort((a,b) => b[1] - a[1]), name => link(partyUrl(name), name)));
         const years = donorYears(register.py); if (years.length) donations.append(valueTable('State party returns by year', years));
       }

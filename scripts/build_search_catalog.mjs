@@ -80,7 +80,7 @@ async function main() {
  const roster = await read('parliamentarians.json');
  const identity=personIndex(roster.people); canonicalPeople=identity.slugOf; canonicalAliases=new Map([...identity.byFold].map(([name,p])=>[name,identity.slugOf.get(p.name)]));
  for(const p of roster.people) add('person:'+p.name,'person',p.full||p.name,personHref(p.name),`${p.party_now||p.party||''}. ${(p.states||[]).join(', ')}. ${personSpeechCount(p)}${p.representation?.length?' Recorded representation: '+p.representation.map(r=>`${r.electorate}${r.state?', '+r.state:''}, ${r.jurisdiction}, ${r.chamber}`).join('; ')+'. Roster affiliations may include past seats and do not establish current tenure.':''}`,{aliases:p.name,from:p.first,to:p.last,state:p.states,parties:[p.party_now||p.party||''],speakers:[p.name],source:'Parliamentarian directory',dateLabel:p.speech_scope?'':(p.speech_count_basis?'Transcript years: ':'')+period(p.first,p.last)});
- // Individual donors stay out of search entities: public/donor-entity.js.
+ // Unconfirmed donors stay out of search entities: public/donor-entity.js.
  const moneyGraphs=await Promise.all(['money.json','money.qld.json','money.vic.json','money.tas.json'].map(file=>read('graph/'+file)));
  const donorIndex=donorPrivacyIndex(moneyGraphs);
  const withheld=name=>donorIndex.withheld.has(foldDonorName(name));
