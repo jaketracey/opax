@@ -2,10 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {applyQuery,dataTableHTML,formatCell,mountDataTable,parseQuery,serializeQuery,toCSV} from '../public/datatable.js';
-import {workbenchConfig as config,workbenchRows as rows} from '../public/datatable-workbench-data.js';
+import {workbenchConfig,workbenchRows as rows} from '../public/datatable-workbench-data.js';
 import {cleanEvent} from '../analytics/privacy.mjs';
 import {tableHarness} from './datatable-harness.mjs';
 
+const config={...workbenchConfig,privacyCheck:()=>true};
 const all = query => applyQuery(rows,config,{...query,pageSize:100});
 test('query round trips namespaces, lists, ranges and a colon in the sort key',()=>{
   const query = {q:'Works & services',filters:{region:['Victoria','Queensland'],amount:{min:0,max:500000}},sort:{key:'total:amount',dir:'desc'},page:3,pageSize:25};
@@ -88,9 +89,10 @@ test('server numeric constants rely on the full facet range and keep exact chip 
   assert.match(html,/data-show-constant="amount" title="\$35,400,000,000.00"/);
   assert.match(html,/Amount: \$35.4bn/);
 });
-test('hydration preserves unrelated URL state and removes only its default table state',()=>{
+test('hydration preserves unrelated URL state and removes only its default table state',async ()=>{
   const harness = tableHarness('http://localhost/table?campaign=fixture&t.sort=amount%3Adesc&t.page=1#records');
   const mounted = mountDataTable(harness.root,config);
+  await new Promise(setImmediate);
   const url = new URL(harness.win.location.href);
   assert.equal(url.searchParams.get('campaign'),'fixture'); assert.equal(url.hash,'#records');
   assert.equal(url.searchParams.has('t.sort'),false); assert.equal(url.searchParams.has('t.page'),false);
@@ -99,4 +101,57 @@ test('hydration preserves unrelated URL state and removes only its default table
 });
 test('analytics allow only the contracted table and page identifiers',()=>{
   for (const event of ['table_sort','table_filter','table_export']) assert.deepEqual(cleanEvent(event,{table_id:'workbench-money',page_type:'workbench',q:'private input',row:'private input'}),{table_id:'workbench-money',page_type:'workbench'});
+});
+
+test('neutral individual aggregates carry only counts and numeric totals, without links',()=>{
+  const aggregate={aggregate:{kind:'individual-donors',count:12},name:'untrusted label',id:'unsafe-id',aliases:['untrusted alias'],amount:12345.67,count:20,industry:'untrusted sector'};
+  const page=applyQuery([rows[0],aggregate],config,{});
+  const row=page.rows.find(r=>r.aggregate);
+  assert.deepEqual(row,{aggregate:{kind:'individual-donors',count:12},name:'Individual donors (12)',amount:12345.67,count:20});
+  const html=dataTableHTML(config,page);
+  assert.match(html,/Individual donors \(12\)/); assert.ok(!html.includes('unsafe-id')); assert.ok(!html.includes('untrusted'));
+  assert.ok(!html.includes('href="#undefined"'));
+  assert.match(toCSV(page.rows,config),/Individual donors \(12\),,,12345.67,20/);
+  assert.equal(toCSV([aggregate],{...config,privacy:undefined}),toCSV([aggregate],config));
+  const numericPrimary={...config,columns:config.columns.map(c=>({...c,primary:c.key === 'amount'}))};
+  assert.equal(toCSV([aggregate],numericPrimary),toCSV([aggregate],config));
+});
+test('unprefixed hydration and popstate preserve unrelated and unrecognised prefixed state',async ()=>{
+  const harness=tableHarness('http://localhost/table?q=works&page=2&campaign=fixture&f.unrelated=%5B%22keep%22%5D&t.other=keep');
+  const mounted=mountDataTable(harness.root,{...config,urlKey:undefined}); await new Promise(setImmediate);
+  assert.match(harness.html(),/Showing 1–2 of 2/);
+  let url=new URL(harness.win.location.href);
+  assert.equal(url.searchParams.get('q'),'works'); assert.equal(url.searchParams.get('campaign'),'fixture');
+  assert.ok(url.searchParams.has('f.unrelated')); assert.equal(url.searchParams.get('t.other'),'keep');
+  harness.win.history.replaceState(null,'','http://localhost/table?q=zero%20matches&campaign=fixture');
+  harness.win.dispatchEvent(new Event('popstate')); await new Promise(setImmediate);
+  assert.match(harness.html(),/Showing 0–0 of 0/); mounted.destroy();
+});
+
+test('server SSR discards unknown payload fields and malformed range facet text',()=>{
+  const server={...config,rows:undefined,source:{endpoint:'/__fixtures/table/receipts'}};
+  const page={rows:[rows[0]],total:1,page:1,pageSize:5,echo:'untrusted metadata',facets:{amount:{min:'untrusted range',max:1}}};
+  const html=dataTableHTML(server,page);
+  assert.ok(!html.includes('untrusted metadata'));assert.ok(!html.includes('untrusted range'));
+});
+
+test('row menus have deterministic distinct identities even with duplicate names and IDs',()=>{
+  const input=[{...rows[0],amount:1},{...rows[0],amount:2},{...rows[0],amount:2}];
+  const fixture={...config,rows:input};
+  const html=dataTableHTML(fixture,applyQuery(input,fixture,{}));
+  const identities=[...html.matchAll(/data-panel="(action-[^"]+)"/g)].map(match=>match[1]);
+  assert.equal(new Set(identities).size,3);
+  const clone=structuredClone(input);
+  assert.equal(html,dataTableHTML({...fixture,rows:clone},applyQuery(clone,fixture,{})));
+});
+
+test('query engine uses its row argument for server facet options and isolates configuration caches',()=>{
+  const server={...config,rows:undefined,source:{endpoint:'/__fixtures/table/receipts'}};
+  assert.equal(applyQuery(rows,server,{filters:{region:['Victoria']}}).total,4);
+  assert.equal(applyQuery(rows,config,{}).rows[0].id,'organisation-1');
+  assert.equal(applyQuery(rows,{...config,defaultSort:{key:'name',dir:'asc'}},{}).rows[0].id,'organisation-2');
+  const reverse=rows.slice().reverse();
+  assert.equal(applyQuery(reverse,config,{}).rows[0].id,'organisation-1');
+  const unsorted={...config,columns:config.columns.map(c=>c.key === 'amount' ? {...c,sortable:false} : c)};
+  assert.equal(applyQuery(reverse,unsorted,{}).rows[0].id,'organisation-9');
 });

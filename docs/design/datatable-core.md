@@ -1,104 +1,135 @@
 # DataTable core
 
-The implementation uses the frozen contract in `datatable.contract.md` and
-`portal/public/datatable.d.ts`, with no contract additions. It is a dependency-free
-ES module shared by Worker SSR and browser hydration. Import `datatable.css` alongside
-the design-system tokens; it uses one money accent, sentence-case controls and token
-roles for colour, typography, spacing, borders and sizes.
+The dependency-free ES module serves Worker SSR and browser hydration. Import
+`datatable.css` alongside the design-system tokens and served `fonts.css`. The
+review adds only the optional `privacyCheck` configuration field and optional
+neutral `aggregate` row metadata; the original exports and fields remain.
 
-`dataTableHTML(config, page)` renders a real captioned table, controls, the supplied
-page and a safely escaped JSON hydration payload. Mount either its enclosing section,
-the table itself or a containing element with `mountDataTable(element, config)`.
-The returned `destroy()` removes listeners, timers, requests and robots ownership.
-The page handler owns the canonical link and initial HTTP/head robots metadata:
-keep the canonical free of the table's query parameters and mark an incoming nonempty
-parsed query noindex. Hydration maintains noindex, preserves existing robots directives
-and unrelated URL parameters, and cleans the table prefix from an existing canonical.
-Several tables can share a document without clearing each other's noindex state.
+`dataTableHTML(config, page)` emits a real captioned table and escaped hydration
+payload. `mountDataTable` accepts its section, table or container; `destroy()`
+removes listeners, timers, requests and robots ownership. Queries use the optional
+prefix or unprefixed parameters. Only recognised table parameters are removed
+from the URL and canonical, preserving unrelated parameters and other tables.
+Page handlers must also set canonical/noindex metadata for incoming SSR state.
 
-Client mode filters and sorts the complete input before paging. Facets count values
-with their own filter excluded, so multi-value choices remain available. Category
-columns that become constant move into chips; removing a constant chip reveals its
-column. Removing selected search/range/category chips clears that filter. Clear all
-clears search and filters. Density and column choices are local display preferences;
-the frozen Query type carries search, filters, sort and pagination only. Constant
-server columns depend on full-result facet metadata, never a single page's rows.
-Phone cards retain table semantics and include a visible sort control.
+The toolbar keeps search and export visible and groups facets, column choices and
+density inside Filters. Desktop uses one row; phones use search, Filters/export,
+then sort. Facets exclude their own selection from counts and remain present and
+focused when their column becomes constant. Chips remove applied state; constant
+chips reveal hidden columns. Row menus have deterministic distinct identities;
+Escape closes the nearest disclosure and returns focus, and redraws close row
+menus. Sort/disclosure controls use the design-system stroke SVGs. Desktop bars
+have a track and a visible zero-to-maximum scale; phone cards omit the bars and
+use consistently aligned label/value fields. Pagination has a visible Rows per
+page label and disabled buttons with token-based styling and no hover response.
 
-Server mode sends GET requests to `source.endpoint`, preserving endpoint parameters
-and adding `source.params` and the unprefixed `serializeQuery(query)` parameters,
-including the configured default sort and page size when the query omits them.
-Its first SSR page stays visible during fetching. An aborted or older response cannot
-replace a newer query. Failures show a generic retry state. CSV requests use the same
-filters/sort plus `format=csv`, without page or page-size parameters. The endpoint owns the full
-filtered export and its 50,000-row cap. Client exports cover every filtered row, even
-when only one page or some columns are visible, and use underlying exact values.
-CSV fields quote delimiters/newlines and protect string fields from formula execution.
+Client inputs are immutable for the duration of a mount. Searchable row text is
+normalised once and cached; queries are normalised once per evaluation. One pass
+computes matching rows and facets, with a bounded result cache reused by paging,
+constant detection, scales and export. Already validated state avoids a second
+redraw. Server requests preserve endpoint/configured parameters and add the
+unprefixed serialised query, default sort and page size. Aborts and revision checks
+prevent stale responses replacing current state. Errors expose generic retry text.
+CSV exports use exact underlying values, RFC 4180 quoting and formula protection.
+Analytics contain `{table_id, page_type}` only.
 
-Donor privacy is opt-in via `privacy: 'donors'`. Every naming surface uses the shared,
-fail-closed organisation gate. Rows can be graph nodes (`label`, `aliases`), nested
-donor nodes (`donor`) or flattened rows (`donorName`, `donor_name`, `donor`, `label`,
-`name`, with optional aliases). Unsafe rows are excluded before search, facets,
-sorting, paging, SSR and CSV. A server page containing unsafe rows loses its untrusted
-aggregate facets. Donor facet values are separately checked. Client URL state removes
-withheld labels, aliases and phrases derived from input rows. The server money
-endpoint must enforce the complete donor index and never echo withheld queries;
-server-mode free text is only reflected in HTML/URL state when public results
-substantiate it. This conservatively removes unverified empty searches from money
-URL state. A neutral removable chip and Clear all remain available, and the
-active filtered view stays noindex. Other table types retain ordinary empty searches. Analytics emit only
-`{table_id, page_type}` via `opax:analytics`; the shared allowlist accepts the three
-contract events without adding route or query properties.
+## Donor rollout requirements
 
-## Size decision
+Use `privacy: 'donors'` and the shared index independently of client input. Worker
+renderers and endpoint query engines install its synchronous predicate:
 
-Measured with esbuild 0.28.2, full exported ESM bundles, ES2022, neutral platform,
-minification, no legal comments, and gzip level 9. KB means 1,000 bytes.
+```ts
+import {tablePrivacyCheck} from './table-privacy'
+const config = {...tableConfig, privacy: 'donors',
+  privacyCheck: await tablePrivacyCheck(env.ASSETS)}
+```
+
+This index uses `withheldPhrases` from the shared donor module across all four
+money graphs, without office-holder exemptions in donor context. Do not publish
+index contents. Browser hydration defaults to the read-only, no-store
+`POST /api/table/privacy` validator; custom predicates must consult the same index.
+Without a synchronous predicate, pure `applyQuery` rejects donor searches.
+Hydration validates before matching or reflecting state. Pending names clear old
+SSR rows immediately; rejected searches have zero rows and export only a header.
+Facet selections must belong to public options and pass the index. Server pages,
+facet strings and downloaded CSV are validated before use. Unknown endpoint
+fields and malformed range facets never enter hydration HTML. Organisation rows
+use the shared fail-closed donor gate, and neutral aggregates use a separate shape.
+
+Emit aggregates with numeric column keys and this optional metadata:
+
+```js
+{aggregate: {kind: 'individual-donors', count: 12}, amount: 12345.67, count: 20}
+```
+
+The core generates `Individual donors (12)` in the primary/name column. It keeps
+only numeric counts/totals, removes identifying fields, aliases, categories and
+IDs, and emits no primary link or action menu. The row survives HTML and CSV.
+Do not emit an ordinary donor row with an aggregate-looking label.
+
+Every rollout registers its actual public input and both modes with
+`registerTablePrivacy` from `portal/test/datatable-privacy.mjs`. Supply `id`, `path`,
+`module`, `configExport`, `rowsExport`, `host`, `facet`, `urlKey`, `serverExample`
+and `endpoint`; the core registration is in `test/datatable-browser.mjs`. Run the
+registration against local Wrangler with Playwright. The hook derives withheld
+names/aliases at run time, injects search and secondary-facet URL state independently
+of public rows, and checks input, server responses, actual downloaded files,
+URL, rendered/accessibility text and analytics. Failure messages contain no names.
+`assertTablePrivacy` is exported for rollout adapters with different page flows;
+all seven surfaces, including an actual `csvPath`, are mandatory. Donor-enabled
+configurations also exercise withheld queries/facets with the strict index; other
+registrations use the shared public-office exemptions for legitimate vote/office
+records and still assert all seven surfaces.
+
+The server owns the 50,000-row CSV cap. dt-api must register
+`registerServerCSVContract` from `test/datatable-endpoint-contract.mjs` with its
+real request handler and a seeded dataset. The gate requires 50,000 data rows for
+50,001 matches, a final truncation note and `x-table-export-truncated: true`.
+The core announces a fixed note after download. The reference endpoint and actual
+browser download tests prove the contract/harness, not an absent dt-api endpoint.
+See the additive notes in `datatable.contract.md`.
+
+## Size and measurements
+
+Full exported ESM bundles, esbuild 0.28.2, ES2022, neutral platform, minification,
+no legal comments, gzip level 9; KB means 1,000 bytes:
 
 | Module | Minified bytes | Gzip bytes | Gzip KB |
 | --- | ---: | ---: | ---: |
-| In-house core, SSR, hydration and donor privacy | 24,315 | 9,328 | 9.33 |
-| TanStack table-core 9.2.8, including its store dependency | 113,528 | 30,087 | 30.09 |
+| In-house core, SSR, hydration and privacy | 27,932 | 10,558 | 10.56 |
+| TanStack table-core 9.2.8 with its store | 113,528 | 30,087 | 30.09 |
 
-Keep the in-house module: it is smaller and shares direct query/HTML functions
-between the Worker and browser without an adapter or store. TanStack is headless
-and would still need the contract's SSR, controls, URL, privacy and export code.
-These are complete-module measurements, not a prediction of a selected-feature
-TanStack adapter's final bundle. See the [official TanStack overview](https://tanstack.com/table/latest/docs/overview).
-Reproduce with `DT_BROWSER_TOOLS=/tmp/opax-dt-tools node test/datatable-size.mjs`
-from `portal/`, after installing the comparison package outside this worktree.
-No TanStack or browser-test dependency is added to the portal.
+Keep the in-house core. TanStack still needs SSR, controls, URL, privacy and export
+adapters. Reproduce with `DT_BROWSER_TOOLS=/tmp/opax-dt-tools node test/datatable-size.mjs`.
+Browser measurements include a 2,000-row hydration and ten filter/redraw samples;
+raw samples and summary statistics are in `private/dt-core/timings.json` and the
+browser results. Compare both idle and concurrent-gate timings; CPU contention
+can increase wall time while pure filtering remains cached.
 
-## Offline workbench and checks
+## Local validation
 
-Open `/datatable-workbench.html`. Default, filtered, empty and server examples use
-only fictional organisation records; the server example stubs `window.fetch` for
-`/__fixtures/table/receipts`. It never calls a production API or loads analytics SDKs.
-Rebuild its static SSR and snapshot with `node test/build-datatable-workbench.mjs`.
-The regular gate includes `test/datatable.test.mjs` (pure functions and a DOM-free
-SSR snapshot) and the derived money-table cases in `test/donor-privacy.test.mjs`.
+Build generated assets with `npm run build:search` before the full Node gate.
+Rebuild the workbench and DOM-free SSR snapshot with
+`node test/build-datatable-workbench.mjs`. The workbench uses fictional organisation
+records and stubs only its receipt endpoint. Its validator uses the local Worker;
+no production services or analytics SDKs are called.
 
-Install `playwright-core` outside the worktree and point `DT_BROWSER_TOOLS` at its
-package directory. Run Chrome in the required isolated network namespace:
+Run the Chrome gate from `portal/` with Playwright installed outside the worktree:
 
 ```sh
 unshare -rn sh -c 'ip link set lo up; DT_BROWSER_TOOLS=/tmp/opax-dt-tools node test/datatable-browser.mjs'
 ```
 
-The browser runner starts and closes its own loopback asset server and Chrome. It
-blocks every non-local request and also disables external hostname resolution.
-It verifies sorting, focus, search, facet/range removal, paging and live-region node
-identity, density, visibility, URL/canonical/multiple-table noindex ownership, exact
-client/server downloads, event payloads, fetch parameters, failure/retry, stale
-response suppression, and phone cards. Screenshots and JSON results stay in the
-ignored `portal/private/dt-core/` directory:
+The runner starts Wrangler with local bindings, stops only its own child process,
+blocks non-local browser hosts and checks served fonts. Screenshots of default,
+filtered, empty and server views at 390 and 1280, downloaded CSVs, timings and logs
+are kept in the ignored `portal/private/dt-core/` directory. The regular gates are
+the full `node --test test/*.test.mjs`, `npm run check`, TypeScript and
+`npx wrangler deploy --dry-run`. `votes.json` must remain byte-identical.
 
-- `default-390.png`, `filtered-390.png`, `empty-390.png`, `server-390.png`
-- `default-1280.png`, `filtered-1280.png`, `empty-1280.png`, `server-1280.png`
-- `error-1280.png`, `browser-results.json`, `sizes.json`
-
-Validation for this lane: the full Node suite passed 1,240 tests; the final targeted
-run passed 30 checks, including 13 core tests. The derived table privacy cases
-passed in both modes. TypeScript, `npm run check`, and the Wrangler deployment
-dry run passed. Chrome completed the interaction checks with no page errors.
-`votes.json` remains byte-identical to the contract branch.
+Final review gates: 1,249 full-suite tests and 28 focused checks passed; check,
+TypeScript and Wrangler dry-run passed. The final 2,000-row Chrome fixture measured
+59.7 ms hydration, 30.8–72.2 ms filtering with redraw
+(median 46.9 ms), and 0.7 ms median pure filtering.
+All eight Wrangler screenshots passed with both fonts loaded, no page errors and
+no external browser requests. votes.json is byte-identical to the contract branch.

@@ -647,10 +647,12 @@ test('the published search catalogue holds no donor, receipt, meeting or campaig
   assert.ok(records > 100000);
 });
 
+const tablePhrases=withheldPhrases(graphs,[]);
+
 test('money tables withhold every derived donor in client and server rows, facets and CSV', () => {
   for (const [i,graph] of graphs.entries()) {
     const rows = graph.nodes.filter(n=>n.kind === 'donor');
-    const config = {id:`privacy-table-${i}`,caption:'Receipts',privacy:'donors',pageType:'money',rows,
+    const config = {id:`privacy-table-${i}`,caption:'Receipts',privacy:'donors',pageType:'money',privacyCheck:value=>!namesWithheldPhrase(tablePhrases,`donor receipts ${value}`),rows,
       columns:[{key:'label',label:'Organisation',type:'text',primary:true,facet:'multi'}, {key:'industry',label:'Sector',type:'category',facet:'chips'}, {key:'total',label:'Amount',type:'money',facet:'range'}]};
     const page = applyQuery(rows,config,{pageSize:50000});
     assert.ok(page.rows.every(isOrganisationDonor),`table ${i}: unsafe row`);
@@ -674,14 +676,17 @@ test('money table hydration removes all derived withheld names and aliases from 
     const organisation = donors.find(isOrganisationDonor);
     for (const node of donors.filter(n=>!isOrganisationDonor(n))) {
       for (const value of [node.label,...(node.aliases || [])]) {
-        const config = {id:`privacy-url-${i}`,caption:'Receipts',privacy:'donors',pageType:'money',urlKey:'t',rows:[node,organisation],
-          columns:[{key:'label',label:'Organisation',type:'text',primary:true,facet:'multi'},{key:'total',label:'Amount',type:'money'}]};
-        const params = new URLSearchParams({'t.q':value,'t.f.label':JSON.stringify([value]),campaign:'fixture'});
+        if (!namesWithheldPhrase(tablePhrases,`donor receipts ${value}`)) continue;
+        const config = {id:`privacy-url-${i}`,caption:'Receipts',privacy:'donors',pageType:'money',urlKey:'t',privacyCheck:value=>!namesWithheldPhrase(tablePhrases,`donor receipts ${value}`),rows:[organisation],
+          columns:[{key:'label',label:'Organisation',type:'text',primary:true,facet:'multi'},{key:'total',label:'Amount',type:'money'},{key:'industry',label:'Sector',type:'category',facet:'multi'}]};
+        const params = new URLSearchParams({'t.q':value,'t.f.label':JSON.stringify([value]),'t.f.industry':JSON.stringify([value]),campaign:'fixture'});
         const harness = tableHarness(`http://localhost/money?${params}`);
         const mounted = mountDataTable(harness.root,config);
+        await new Promise(setImmediate);
         const url = new URL(harness.win.location.href);
         assert.equal(url.searchParams.has('t.q'),false,`query ${queries}: search echo`);
         assert.equal(url.searchParams.has('t.f.label'),false,`query ${queries}: facet echo`);
+        assert.equal(url.searchParams.has('t.f.industry'),false,`query ${queries}: secondary facet echo`);
         assert.equal(url.searchParams.get('campaign'),'fixture');
         assertClean(`query ${queries}: HTML`,harness.html());
         mounted.destroy();
@@ -692,10 +697,27 @@ test('money table hydration removes all derived withheld names and aliases from 
         const serverURL = new URL(server.win.location.href);
         assert.equal(serverURL.searchParams.has('t.q'),false,`query ${queries}: server search echo`);
         assert.equal(serverURL.searchParams.has('t.f.label'),false,`query ${queries}: server facet echo`);
+        assert.equal(serverURL.searchParams.has('t.f.industry'),false,`query ${queries}: server secondary facet echo`);
         assertClean(`query ${queries}: server HTML`,server.html());
         serverMount.destroy(); queries++;
       }
     }
   }
   assert.ok(queries > 400,'the full derived withheld set and aliases were checked');
+});
+
+test('table privacy boundary validates the shared index without reflecting input',async ()=>{
+  let checked=0;
+  for (const graph of graphs) for (const node of graph.nodes.filter(n=>n.kind === 'donor' && !isOrganisationDonor(n))) {
+    for (const value of [node.label,...(node.aliases || [])]) {
+      if (!namesWithheldPhrase(tablePhrases,`donor receipts ${value}`)) continue;
+      const response=await fetchWorker('/api/table/privacy',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:value})});
+      assert.equal(response.status,200,`validation ${checked}: status`);
+      assert.deepEqual(await response.json(),{safe:false},`validation ${checked}: rejected`);
+      assert.equal(response.headers.get('cache-control'),'no-store');checked++;
+    }
+  }
+  assert.ok(checked > 400);
+  const response=await fetchWorker('/api/table/privacy',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:'Infrastructure'})});
+  assert.deepEqual(await response.json(),{safe:true});
 });
