@@ -22,6 +22,15 @@ each sitting week, or the calendar's `updated` date when the week is empty. The
 index takes the latest of its weeks. Estimates takes its config's `updated`
 date. Hub facts also enter the existing IndexNow change journal.
 
+## Correction contact
+
+Jake's correction contact and response commitment are pending his decision in
+the control hub (10 October). All hubs, including their 404 pages, share
+`CORRECTION_CONTACT: string | null = null` in `portal/src/hubs.ts`. Once Jake
+approves a contact, set that constant to the approved site path or HTTPS URL in
+one line to enable the shared “Report a correction” footer. There is no response
+time claim in the renderer; add one only if Jake explicitly approves its wording.
+
 ## Updating the October estimates program
 
 On 10 October 2026 one request to APH's [Next hearings page](https://www.aph.gov.au/Parliamentary_Business/Senate_estimates/Next_hearings)
@@ -58,6 +67,7 @@ functions allocated to two committees: its whole-agency figures appear in both,
 with a source note explaining that they are not committee-specific totals.
 The communications/arts and transport subsets follow APH's function split.
 
+The section intro defines the period for all agency totals and largest awards.
 “Recent” means a rolling twelve-month window ending on each export's own date:
 publication dates for contracts, agreement dates for grants. Future agreements,
 undated rows and duplicate record IDs are excluded. Contract amendments are
@@ -68,10 +78,39 @@ available official notice/award links; a fallback to the source register is
 explicitly labelled. The sole grant-agency alias expands NHMRC's acronym in its
 recorded name. No donor, party or politician fields enter the estimates
 projection. Private grant recipient names are withheld.
+An agency with zero exported grants in this window says “No grants in this
+period”; this is a zero count within the stated export coverage, not missing data.
 
 The dates shown on model summaries are their generation date, falling back to
 the summary's recorded as-of date. Undated model text is withheld. Sponsor links
 use the existing validated sponsor resolver and canonical person slugs.
+Government bills without a named sponsor show their recorded portfolio. Only a
+bill without either field says “Sponsor not recorded”. Each bill has one
+introduced-date/house/sponsor meta line; the source line does not repeat its date.
+Rows without dated model summaries show no summary placeholder.
+
+## Division coverage
+
+Weeks that have started and have no exported divisions display “Divisions for
+this week aren't in the published record yet”, dated by the published corpus
+snapshot (`corpus.json.version`). This is a snapshot date, not a claim that the
+division source is current to that date. Upcoming empty weeks retain the
+morning-after-arrival message. A missing export does not establish that no
+divisions were held. The date normalization in the build uses the same `day`
+helper as week derivation, including a timestamp on a period's final day.
+
+The 10 October investigation found 10,574 federal division shards (6,986 Senate,
+3,588 House), both ending on 20 August 2026. Every shard date is `YYYY-MM-DD`;
+the 32 index records for 14–17 September are NSW divisions. Federal bill-linked
+divisions also stop on 20 August. A read-only check of the local database found
+69 federal divisions with votes for 14–17 September in the legacy `divisions`
+table (51 Senate, 18 House); `votes.json` also contains September federal bill
+votes. `tvfy_refresh.py` refreshes that legacy table, while
+`export_division_pages.py` reads `ext_divisions`, which still ends on 20 August.
+This identifies a downstream legacy-to-ext projection gap, not a hub date,
+timezone or chamber filter error, and not evidence of a TheyVoteForYou lag.
+Refreshing that projection belongs to the data pipeline lane. No database or
+vote export was changed during this investigation.
 
 “Most active speakers” is omitted: static bill exports contain a capped sample
 of 24 bill-linked speeches per bill, not a complete dated speech export for a
