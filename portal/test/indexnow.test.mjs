@@ -2,7 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {DatabaseSync} from 'node:sqlite';
-import {runIndexNow,indexNowPayloads,changedUrls,INDEXNOW_KEY} from '../src/indexnow.ts';
+import {runIndexNow,indexNowPayloads,changedUrls,extraUrls,INDEXNOW_KEY} from '../src/indexnow.ts';
 
 function harness(entries) {
   const sqlite = new DatabaseSync(':memory:');
@@ -56,6 +56,20 @@ test('a new epoch submits new bills, changed divisions and updated people, exclu
   h.env.CACHE_EPOCH='epoch-2';await runIndexNow(h.env,601000,h.send);
   assert.deepEqual(h.calls[1].body.urlList,['https://opax.com.au/bill/au-federal-r2','https://opax.com.au/doc/division-federal-senate-1','https://opax.com.au/subject/person/jane-smith']);
   assert.equal(h.sqlite.prepare('SELECT count(*) AS n FROM indexnow_snapshots').get().n,1,'only the current baseline is retained');
+});
+
+test('one-off donor paths from the private secret join the next epoch only, and nothing else does',async()=>{
+  assert.deepEqual(extraUrls(' /subject/donor/Jane%20Citizen\nhttps://opax.com.au/subject/donor/Example%20Co /subject/person/x /subject/donor/a/b https://evil.test/subject/donor/X /subject/donor/Jane%20Citizen '),
+    ['https://opax.com.au/subject/donor/Jane%20Citizen','https://opax.com.au/subject/donor/Example%20Co']);
+  assert.deepEqual(extraUrls(undefined),[]);
+  assert.deepEqual(indexNowPayloads(['https://opax.com.au/subject/donor/Jane%20Citizen','https://opax.com.au/subject/donor/x?y=1'])[0].urlList,['https://opax.com.au/subject/donor/Jane%20Citizen']);
+  const rows=[['/bill/au-federal-r1','same']];
+  const h=harness(rows);await runIndexNow(h.env,1000,h.send);
+  h.env.INDEXNOW_EXTRA_PATHS='/subject/donor/Jane%20Citizen /subject/donor/Example%20Co';
+  await runIndexNow(h.env,301000,h.send);assert.equal(h.calls.length,1,'a completed epoch never re-plans');
+  h.env.CACHE_EPOCH='epoch-2';await runIndexNow(h.env,601000,h.send);
+  assert.deepEqual(h.calls[1].body.urlList,['https://opax.com.au/subject/donor/Example%20Co','https://opax.com.au/subject/donor/Jane%20Citizen']);
+  assert.ok(!JSON.stringify(h.sqlite.prepare('SELECT entries FROM indexnow_snapshots').all()).includes('/subject/donor/'),'extras never enter the baseline snapshot');
 });
 
 test('network and missing migration failures never escape the cron',async()=>{

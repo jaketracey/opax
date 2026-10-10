@@ -8,7 +8,8 @@ import { personNameKey } from '../portal/public/canonical-urls.js';
 import { splitSpeakers } from '../portal/public/speech-attribution.js';
 import { TOPIC_NAMES } from '../portal/src/topic-names.mjs';
 import { fileKey } from '../portal/public/grants.js';
-import { isOrganisationDonor } from '../portal/public/donor-entity.js';
+import { donorPrivacyIndex, donorNameWithheld, foldDonorName } from '../portal/public/donor-entity.js';
+import { renderPersonAnswer } from '../portal/src/seo-content.ts';
 
 import { catalogueComplete, unpack } from '../portal/public/instruments.js';
 import { auditComplete } from '../portal/public/audit.js';
@@ -171,6 +172,8 @@ export async function buildCrawl(root) {
   addAuditDiscovery(groups, audit);
   if(groups.audit) { fallbacks.audit=groups.audit.length; fallbacks.static++; } // audit pages use the export snapshot until per-report tabled dates are read
   const slugs = slugIndex(people).slugOf;
+  const assets = new Map();
+  const cachedRead = p => { if (!assets.has(p)) assets.set(p, read(p)); return assets.get(p); };
   const peopleDate = [roster.meta.generated,roster.meta.representation?.updated,seatManifest.generated].filter(Boolean).sort().at(-1);
   const recent=await optional('seo/recent-votes.json');
   for (const p of people) {
@@ -179,16 +182,21 @@ export async function buildCrawl(root) {
     const interest = p.pid ? await optional(`interests/${p.pid}.json`) : null;
     const record=votes[p.pid];
     add('people',path,latestDate([p.last_changed_at,p.updated_at,p.last_speech_date,interest?.as_at,...Object.values(interest?.buckets || {}).flatMap(b=>b.items?.map(i=>i.date) || []),...(record?.for || []).map(v=>v.date),...(record?.against || []).map(v=>v.date),...(recent?.people?.[p.pid]?.recent || []).map(v=>v.date),p.rosterOnly?.asOf],peopleDate),undefined,peopleDate);
-    snapshot.set(path,hash({person:p,votes:votes[p.pid] || null,interest}));
+    // The person page names its party's organisational donors. Where it renders
+    // a donor block, that block is part of the fingerprint, so a change to who
+    // is named (the 2026-10 donor privacy hotfix) re-pings exactly those pages.
+    const donorBlock = (p.party_now || p.party) ? (await renderPersonAnswer(p,cachedRead,slugs)).html.split('<h2>Donors to their party</h2>')[1]?.split('<h2>Bills sponsored</h2>')[0] || '' : '';
+    snapshot.set(path,hash(donorBlock.includes('<h3>') ? {person:p,votes:votes[p.pid] || null,interest,donors:donorBlock} : {person:p,votes:votes[p.pid] || null,interest}));
   }
   const partyLabels = new Map(), donors = new Map();
+  // Individual donors stay out of the sitemap, as individual grant recipients do.
+  // The industry tag does not say who is a person: public/donor-entity.js.
+  const donorIndex = donorPrivacyIndex((await Promise.all(['money.json','money.qld.json','money.vic.json','money.tas.json'].map(name => optional(`graph/${name}`)))).filter(Boolean));
   for (const name of ['money.json','money.qld.json','money.vic.json']) {
     const money = await read(`graph/${name}`);
     for (const n of money.nodes) {
       if (!validId(n.label)) continue;
-      // Individual donors stay out of the sitemap, as individual grant recipients do.
-      // The industry tag does not say who is a person: public/donor-entity.js.
-      if (n.kind === 'donor' && !isOrganisationDonor(n)) continue;
+      if (n.kind === 'donor' && donorNameWithheld(donorIndex, n.label)) continue;
       const map = n.kind === 'party' ? partyLabels : n.kind === 'donor' ? donors : null;
       if (map && !map.has(fold(n.label))) map.set(fold(n.label),{label:n.label,date:money.meta.generated});
     }
@@ -249,7 +257,8 @@ export async function buildCrawl(root) {
     add('agencies',`/subject/agency/${encodeURIComponent(a.id)}`,latestDate([profile.updated_at,...(profile.contracts || []).flatMap(c=>[c.published,c.start_date])],agencies.meta.generated_at),undefined,agencies.meta.generated_at);
   }
   const campaignerNames = new Map();
-  for (const c of campaigners?.entities || []) if (validId(c.name) && c.name.length <= 200) {
+  // A campaigner registered under a withheld donor's name is noindex and unlisted.
+  for (const c of campaigners?.entities || []) if (validId(c.name) && c.name.length <= 200 && !donorIndex.withheld.has(foldDonorName(c.name))) {
     const previous = campaignerNames.get(fold(c.name));
     if (!previous || (c.years?.length || 0) > (previous.years?.length || 0)) campaignerNames.set(fold(c.name),c);
   }

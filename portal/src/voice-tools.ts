@@ -1,6 +1,8 @@
 import {CommunityError, text} from './community-core'
 import {CATALOG_KINDS} from './catalog-search'
 import {isReceiptGraph, moneyQuestion, receiptAnswer, receiptGraphForQuestion} from './voice-money'
+import {loadDonorIndex} from './donor-index'
+import {foldDonorName} from '../public/donor-entity.js'
 
 type Data = Record<string, unknown>
 export type PublicReader = (path: string) => Promise<Response>
@@ -126,8 +128,11 @@ export async function runVoiceTool(name: string, args: Data, env: Env, readPubli
     const found=await receipts(query)
     if(found) return found
     const index = await asset('/evidence/index.json', 8_000_000)
+    // A connection named for a withheld individual donor is not returned (public/donor-entity.js).
+    const donors = await loadDonorIndex(env.ASSETS).catch(() => null)
+    if (!donors) throw new CommunityError(503, 'Connection records are unavailable.')
     url = origin + '/connections'
-    data = {coverage: index.meta, connections: rows(index, 'entities').filter(e => typeof e.name === 'string' && e.name.toLowerCase().includes(query)).slice(0, 10).map(e => ({...e, opax_url: url + '?entity=' + encodeURIComponent(String(e.id))}))}
+    data = {coverage: index.meta, connections: rows(index, 'entities').filter(e => typeof e.name === 'string' && e.name.toLowerCase().includes(query) && !donors.withheld.has(foldDonorName(e.name))).slice(0, 10).map(e => ({...e, opax_url: url + '?entity=' + encodeURIComponent(String(e.id))}))}
   } else if (name === 'corpus_coverage') {
     data = await asset('/corpus.json', 100_000)
     url = origin + '/reports'

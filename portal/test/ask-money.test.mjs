@@ -83,7 +83,9 @@ test('funding conversations replace party, industry, donor and financial year wi
   assert.ok(result.sources.some(s=>source(new URL(s.href,'https://opax.test').searchParams)),question);
   turns.push(question);return result;
  };
- await follow('What about Liberal?',/Sportsbet.*\$175,500/s,p=>p.get('party')==='party:Liberal'&&p.get('industry')==='gambling'&&p.get('from')==='2020'&&p.get('to')==='2020');
+ // The winner has no legal form in its name, so it is withheld (public/donor-entity.js), not dropped.
+ const liberal=await follow('What about Liberal?',/Donor \d+ \(name withheld\).*\$175,500/s,p=>p.get('party')==='party:Liberal'&&p.get('industry')==='gambling'&&p.get('from')==='2020'&&p.get('to')==='2020');
+ assert.doesNotMatch(liberal.answer,/Sportsbet/);assert.ok(liberal.sources.every(x=>!/sportsbet/i.test(x.href+x.title)));
  await follow('And fossil fuel donors?',/Woodside.*\$137,000/s,p=>p.get('industry')==='fossil_fuels'&&p.get('party')==='party:Liberal'&&p.get('from')==='2020');
  await follow('What about Tabcorp Holdings?',/Tabcorp.*\$87,300/s,p=>p.get('focus')==='donor:tabcorp'&&!p.has('industry')&&p.get('party')==='party:Liberal');
  await follow('And in 2021-22?',/Tabcorp.*\$87,500/s,p=>p.get('from')==='2021'&&p.get('to')==='2021'&&p.get('party')==='party:Liberal');
@@ -364,16 +366,18 @@ test('an explicit year answers a period clarification without losing the funding
 
 const choiceQuestions=answer=>[...answer.matchAll(/\]\(\/ask\?q=([^)]*)\)/g)].map(m=>decodeURIComponent(m[1]));
 test('short donor names offer explicit choices without pooling organisations',async()=>{
- for(const [name,expected] of [['Tabcorp',['Tabcorp Holdings Limited']],['Pratt',['Pratt Holdings Pty Ltd']],['Macquarie',['Macquarie Group Limited','Macquarie Technology Group Ltd']],['Crown',['Crown Castle Australia','Crown Resorts Limited']]]){
+ for(const [name,expected] of [['Tabcorp',['Tabcorp Holdings Limited']],['Pratt',['Pratt Holdings Pty Ltd']],['Macquarie',['Macquarie Group Limited','Macquarie Technology Group Ltd']]]){
   const result=await ask(`Who receives the most funding from ${name}?`);
   assert.equal(result.answer_status,'needs_scope');assert.deepEqual(result.sources,[]);assert.deepEqual(result.citations,{});assert.doesNotMatch(result.answer,/\$[\d,]+/);
   const choices=choiceQuestions(result.answer);assert.equal(choices.length,expected.length);
   for(const label of expected)assert.ok(choices.some(q=>q.includes(label)),label);
   for(const question of choices){const resolved=await ask(question);assert.equal(resolved.answer_status,'calculated');assert.ok(resolved.sources.every(x=>!x.href.startsWith('/money?')||new URL(x.href,'https://opax.test').searchParams.has('focus')));}
  }
+ // A donor without organisation evidence is never offered as a choice, ranked or matched by name.
+ const crown=await ask('Who receives the most funding from Crown?');
+ assert.equal(crown.answer_status,'calculated');assert.match(crown.answer,/Crown Resorts Limited/);assert.doesNotMatch(crown.answer,/Crown Castle/);
  const castle=await ask('Who receives the most funding from Crown Castle Australia?');
- assert.match(castle.answer,/Labor.*\$27,000/s);assert.doesNotMatch(castle.answer,/Crown Resorts/);
- assert.ok(castle.sources.filter(s=>s.href.startsWith('/money?')).every(s=>new URL(s.href,'https://opax.test').searchParams.get('focus')==='donor:crown castle australia'));
+ assert.notEqual(castle.answer_status,'calculated');assert.doesNotMatch(castle.answer,/\$[\d,]+/);assert.deepEqual(castle.sources,[]);
 });
 test('donor choices retain UI controls, follow-up dates and explicit jurisdiction',async()=>{
  const seed=await ask('Who donates most to Labor from gambling in 2020?');

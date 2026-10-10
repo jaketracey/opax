@@ -7,7 +7,22 @@ type Snapshot = [string, string][];
 interface Job { epoch: string; urls: string; cursor: number; complete: number }
 type IndexNowEnv = Pick<Env, 'ASSETS' | 'COMMUNITY_DB' | 'CACHE_EPOCH'> & {
   INDEXNOW_ENABLED?: string; INDEXNOW_DRY_RUN?: string; STAGING_API?: Fetcher;
+  /** Optional private secret: one-off donor paths to re-crawl (see extraUrls). */
+  INDEXNOW_EXTRA_PATHS?: string;
 };
+const EXTRA_PATH = /^\/subject\/donor\/[^/?#]+$/;
+
+/**
+ * One-off donor pages to re-crawl with the next epoch's job, from the private
+ * INDEXNOW_EXTRA_PATHS secret (whitespace-separated paths or opax.com.au URLs).
+ * Donor pages made noindex by the October 2026 privacy hotfix are pinged so
+ * engines see the noindex, without naming anyone in the public crawl assets
+ * (/crawl/indexnow.json is served). Only donor paths are taken; at most 1,000.
+ */
+export function extraUrls(list = ''): string[] {
+  return [...new Set(list.split(/\s+/).map(line => line.replace(/^https:\/\/opax\.com\.au(?=\/)/, '')).filter(path => EXTRA_PATH.test(path)))]
+    .slice(0, 1000).map(path => INDEXNOW_ORIGIN + path);
+}
 
 export function changedUrls(entries: Snapshot, previous: Snapshot = []): string[] {
   const before = new Map(previous);
@@ -20,7 +35,7 @@ export function changedUrls(entries: Snapshot, previous: Snapshot = []): string[
 export function indexNowPayloads(urls: string[], size = INDEXNOW_BATCH_SIZE) {
   if (!Number.isInteger(size) || size < 1 || size > 10_000) throw new Error('Invalid IndexNow batch size');
   const eligible = [...new Set(urls)].filter(raw => {
-    try { const u = new URL(raw); return u.origin === INDEXNOW_ORIGIN && !u.search && !u.hash && changedUrls([[u.pathname,'current']]).length > 0; } catch { return false; }
+    try { const u = new URL(raw); return u.origin === INDEXNOW_ORIGIN && !u.search && !u.hash && (changedUrls([[u.pathname,'current']]).length > 0 || EXTRA_PATH.test(u.pathname)); } catch { return false; }
   }).sort();
   return Array.from({length:Math.ceil(eligible.length / size)},(_,i) => ({
     host: 'opax.com.au', key: INDEXNOW_KEY, keyLocation: `${INDEXNOW_ORIGIN}/${INDEXNOW_KEY}.txt`, urlList: eligible.slice(i * size,(i+1)*size),
@@ -42,7 +57,9 @@ export async function runIndexNow(env: IndexNowEnv, now = Date.now(), send: type
       if (!response.ok) throw new Error(`manifest ${response.status}`);
       const {entries} = await response.json<{entries:Snapshot}>();
       const baseline = await db.prepare('SELECT entries FROM indexnow_snapshots WHERE epoch = (SELECT epoch FROM indexnow_jobs WHERE complete = 1 ORDER BY finished_at DESC LIMIT 1)').first<{entries:string}>();
-      const urls = changedUrls(entries,baseline ? JSON.parse(baseline.entries) as Snapshot : []);
+      const extra = extraUrls(env.INDEXNOW_EXTRA_PATHS);
+      const urls = [...new Set([...changedUrls(entries,baseline ? JSON.parse(baseline.entries) as Snapshot : []), ...extra])].sort();
+      if (extra.length) log('indexnow_extra',{urls:extra.length});
       if (env.INDEXNOW_DRY_RUN === 'true') {
         log('indexnow_dry_run',{urls:urls.length,batches:indexNowPayloads(urls).length});
         return; // no external request, journal, lease or baseline advancement

@@ -31,10 +31,11 @@ test('graph selection masks exact donor names only when resolving conflicting re
  assert.deepEqual(reads,['/graph/money.json','/graph/money.tas.json']);
  reads.length=0;assert.equal((await receiptGraphForQuestion('gambling in Queensland',load)).jurisdiction,'qld');assert.equal(reads.length,1);
  reads.length=0;assert.equal((await receiptGraphForQuestion(query,load,'tas')).jurisdiction,'tas');assert.deepEqual(reads,['/graph/money.tas.json']);
- for(const q of ['money from The Federal Group in federal and Tasmania records','gambling in federal and Tasmania','gambling in NSW',
-  'money from Queensland Nickel Pty Ltd and Federal Secretariat']) {
+ for(const q of ['money from The Federal Group in federal and Tasmania records','gambling in federal and Tasmania','gambling in NSW']) {
   reads.length=0;assert.equal(await receiptGraphForQuestion(q,load),null,q);assert.ok(reads.length<=2);
  }
+ // A donor withheld for want of organisation evidence no longer masks a region word.
+ reads.length=0;assert.equal((await receiptGraphForQuestion('money from Queensland Nickel Pty Ltd and Federal Secretariat',load)).jurisdiction,'federal');
  const ambiguous={nodes:[{id:'a',kind:'donor',label:'A Pty Ltd',aliases:['The Federal Group']},{id:'b',kind:'donor',label:'B Pty Ltd',aliases:['The Federal Group']}],edges:[]};
  assert.equal(await receiptGraphForQuestion(query,async()=>ambiguous),null);
 });

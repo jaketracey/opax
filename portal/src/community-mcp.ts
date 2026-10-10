@@ -2,6 +2,8 @@ import {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js'
 import {WebStandardStreamableHTTPServerTransport} from '@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js'
 import {z} from 'zod'
 import {body,CommunityError,digest,json,limit,now,type Member} from './community-core'
+import {loadDonorIndex} from './donor-index'
+import {foldDonorName} from '../public/donor-entity.js'
 export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=>Promise<Response>):Promise<Response>{
  try{
   if(String(env.COMMUNITY_ENABLED)!=='true')throw new CommunityError(503,'Community access is being prepared.')
@@ -42,7 +44,9 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
   server.registerTool('read_record',{description:'Open an Opax public record using its slug from search results.',inputSchema:{slug:z.string().regex(/^(?:speech-\d+|legal-\d+|news-\d+|bill-text-au-federal-[a-z0-9-]{1,180}|division-[a-z0-9-]+|press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+|grantconnect-award-ga\d+(?:-v\d+)?|grant-site-evidence-(?:ga\d+|mlci-invitation-\d{3})|mlci-invitation-\d{3}|mlci-award-ga[a-z0-9-]+|aec-seat-2025-[a-f0-9]{16}|roster-profile-[a-f0-9]{16}|research-(?:cpi-mlci|mlci-program)-2026)$/)},annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false}},async({slug})=>result('/api/resource/'+encodeURIComponent(slug)))
   server.registerTool('find_connections',{description:'Find organisations, programs, places or electorates in the audited connections dataset. Returns names and links; a matching phrase does not establish influence.',inputSchema:{query:z.string().min(2).max(120)},annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false}},async({query})=>{
    const response=await env.ASSETS.fetch(new Request(env.COMMUNITY_ORIGIN+'/evidence/index.json'));if(!response.ok)return {content:[{type:'text' as const,text:'Connection records are unavailable.'}],isError:true}
-   const data=await response.json() as {entities:{id:string,name:string,kind:string,records:number}[]};const hits=data.entities.filter(e=>e.name.toLowerCase().includes(query.toLowerCase())).slice(0,20).map(e=>({...e,url:env.COMMUNITY_ORIGIN+'/connections?entity='+e.id}));return {content:[{type:'text' as const,text:JSON.stringify({connections:hits})}]}
+   // A connection named for a withheld individual donor is not returned (public/donor-entity.js).
+   const donors=await loadDonorIndex(env.ASSETS).catch(()=>null);if(!donors)return {content:[{type:'text' as const,text:'Connection records are unavailable.'}],isError:true}
+   const data=await response.json() as {entities:{id:string,name:string,kind:string,records:number}[]};const hits=data.entities.filter(e=>e.name.toLowerCase().includes(query.toLowerCase())&&!donors.withheld.has(foldDonorName(e.name))).slice(0,20).map(e=>({...e,url:env.COMMUNITY_ORIGIN+'/connections?entity='+e.id}));return {content:[{type:'text' as const,text:JSON.stringify({connections:hits})}]}
   })
   server.registerTool('corpus_coverage',{description:'Read current searchable corpus coverage and source-enrichment statistics.',inputSchema:{},annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false}},async()=>{const r=await env.ASSETS.fetch(new Request(env.COMMUNITY_ORIGIN+'/corpus.json'));return {content:[{type:'text' as const,text:await r.text()}],isError:!r.ok}})
   type ProgramEntry={id:string,n:string,key:string}

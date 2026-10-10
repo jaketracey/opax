@@ -1,6 +1,6 @@
 import { personUrl, partyUrl } from '../public/canonical-urls.js'
 import {sponsorPerson} from '../public/sponsor-person.js'
-import {isOrganisationDonor} from '../public/donor-entity.js'
+import {isOrganisationDonor, donorPrivacyIndex, donorNameWithheld, foldDonorName, MONEY_GRAPHS} from '../public/donor-entity.js'
 import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, billStripStage} from '../public/division-markdown.js'
 /** Crawlable answers from the same static projections the application reads.
  * All lists are bounded; source strings and URLs cross one escaping boundary. */
@@ -223,6 +223,8 @@ export function renderDivisionAnswer(d: Division, people: Person[], slugs: Map<s
   return {html:answerBlock(title,description,'Division',body),description}
 }
 
+/** The organisation/withheld donor names of every money graph (public/donor-entity.js). */
+const donorIndex = async (read: ReadAsset) => donorPrivacyIndex(await Promise.all(MONEY_GRAPHS.map(path=>read<MoneyGraph>(path))))
 export async function renderDirectory(dir: string, url: URL, read: ReadAsset, people: Person[], slugs: Map<string,string>, topics: Record<string,string>): Promise<RenderedContent | null> {
   if (dir==='person') return paginate(url,people.map(p=>({href:personHref(p,slugs),label:p.name,detail:partyLine(p)})),'Parliamentarians','Parliamentarians in the exported parliamentary record, with speeches, votes and declared interests.')
   if (dir==='topic') return paginate(url,Object.entries(topics).map(([slug,name])=>({href:`/subject/topic/${slug}`,label:name})),'Topics','Browse topics in the parliamentary record.')
@@ -246,14 +248,17 @@ export async function renderDirectory(dir: string, url: URL, read: ReadAsset, pe
   if (dir==='party' || dir==='donor') {
     const graphs = await Promise.all(['/graph/money.json','/graph/money.qld.json','/graph/money.vic.json'].map(path=>read<MoneyGraph>(path)))
     const rows = new Map<string,{href:string;label:string}>()
-    for (const graph of graphs) for (const n of graph.nodes) if (n.kind===dir && (dir==='party' || isOrganisationDonor(n))) rows.set(fold(n.label),{href:dir==='party' ? partyUrl(n.label) : `/subject/donor/${encodeURIComponent(n.label)}`,label:n.label})
+    const donors = dir==='donor' ? await donorIndex(read) : null
+    for (const graph of graphs) for (const n of graph.nodes) if (n.kind===dir && (!donors || !donorNameWithheld(donors,n.label))) rows.set(fold(n.label),{href:dir==='party' ? partyUrl(n.label) : `/subject/donor/${encodeURIComponent(n.label)}`,label:n.label})
     return paginate(url,[...rows.values()],dir==='party' ? 'Parties' : 'Organisational donors','Published political receipts from AEC, ECQ and VEC; federal and state returns remain separate.')
   }
   const sources: Record<string,[string,string,string]> = {supplier:['/suppliers.json','suppliers','Government suppliers'],agency:['/agencies.json','agencies','Government agencies'],campaigner:['/graph/campaigners.json','entities','Campaigners']}
   const source = sources[dir]
   if (source) {
     const data = await read<Record<string,{id?:string;name:string}[]>>(source[0])
-    return paginate(url,(data[source[1]] || []).map(n=>({href:`/subject/${dir}/${encodeURIComponent(n.id || n.name)}`,label:n.name})),source[2],'Entries from the published data exports, with original sources on each profile.')
+    // A campaigner registered under a withheld donor's name is not listed (its page is noindex).
+    const withheld = dir==='campaigner' ? (await donorIndex(read)).withheld : null
+    return paginate(url,(data[source[1]] || []).filter(n=>!withheld?.has(foldDonorName(n.name))).map(n=>({href:`/subject/${dir}/${encodeURIComponent(n.id || n.name)}`,label:n.name})),source[2],'Entries from the published data exports, with original sources on each profile.')
   }
   return null
 }

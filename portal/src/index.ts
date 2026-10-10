@@ -34,7 +34,8 @@ import { resolveAskScope, needsAskPeople, askRetrievalQuery, isNamedPositionQues
 import { communityRoute } from './community'
 import { deliverReplyEmails, REPLY_EMAIL_CRON } from './community-notifications'
 import { partyUrl, personUrl, personNameKey } from '../public/canonical-urls.js'
-import { isOrganisationDonor } from '../public/donor-entity.js'
+import { withholdIndividualDonors } from '../public/donor-entity.js'
+import { donorWithheld, namesWithheldDonor } from './donor-index'
 import { canonicalPageRedirect } from './canonical-origin'
 import { pageEntry } from './page-entry'
 import { communityMcp } from './community-mcp'
@@ -1755,7 +1756,8 @@ async function apiJourneyStory(request: Request, input: Record<string, unknown>,
   const files: Record<string,string> = {federal:'/graph/money.json',qld:'/graph/money.qld.json',vic:'/graph/money.vic.json',tas:'/graph/money.tas.json'}
   const { jurisdiction, lens, focus } = input
   if (typeof jurisdiction !== 'string' || !Object.hasOwn(files,jurisdiction) || typeof lens !== 'string' || typeof focus !== 'string' || focus.length > 500) return json({error:'Invalid journey'},400)
-  const graph = await assetJson<StoryGraph>(env,files[jurisdiction])
+  // Individual donors are withheld from the narration (public/donor-entity.js).
+  const graph = withholdIndividualDonors(await assetJson<StoryGraph>(env,files[jurisdiction]))
   const context = journeyStoryContext(graph,lens,focus)
   if (!context) return json({error:'Journey not available'},404)
   const key = cacheRequest('journey-story',await sha256Hex(JSON.stringify({version:STORY_VERSION,epoch:env.CACHE_EPOCH,context})))
@@ -4450,19 +4452,27 @@ async function supplierMeta(name: string, url: URL, env: Env): Promise<PageMeta>
   }
 }
 
+/**
+ * The page of an individual donor, or of a campaigner registered under a
+ * withheld donor's name: reachable, noindex, and nobody named in the title,
+ * description, structured data, share card or prerendered body. Without
+ * positive organisation evidence a donor counts as an individual
+ * (public/donor-entity.js, src/donor-index.ts).
+ */
+function withheldMeta(dir: 'donor' | 'campaigner', canonical: string): PageMeta {
+  const [heading, sentence] = dir === 'donor'
+    ? ['Donor', 'A disclosed political donor in the OPAX money data. Which parties it funded, year by year.']
+    : ['Campaigner', 'An entry on the AEC register of campaigners, third parties and associated entities. Every return it filed, year by year.']
+  return { title: `${heading} · OPAX`, description: sentence, canonical, ogType: 'profile', status: 200, jsonLd: null,
+    prerender: prerenderBlock(heading, sentence), card: null, noindex: true }
+}
+
 async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, env: Env): Promise<PageMeta> {
   const [moneyData, people] = await Promise.all([loadMoney(env).catch(() => null), loadPeople(env).catch(() => null)])
   const node = (dir === 'party' ? moneyData?.parties : moneyData?.donors)?.get(foldName(name)) ?? (dir==='party' ? [...(moneyData?.parties.values() || [])].find(p=>partyUrl(p.label).split('/').at(-1)===name.toLowerCase()) : null) ?? null
   const display = node?.label ?? (dir==='party' ? (await loadPartyLabels(env).catch(()=>[])).find(p=>partyUrl(p).split('/').at(-1)===name.toLowerCase()) : null) ?? name
   const canonical = dir==='party' ? `${SITE_ORIGIN}${partyUrl(display)}` : `${SITE_ORIGIN}/subject/${dir}/${encodeURIComponent(display)}`
-  // An individual donor is not named in server-rendered HTML, structured data
-  // or a share card, and the page is noindex. Without positive organisation
-  // evidence a donor counts as an individual (public/donor-entity.js).
-  if (dir === 'donor' && !isOrganisationDonor(node ?? { label: display })) {
-    const sentence = 'A disclosed political donor in the OPAX money data. Which parties it funded, year by year.'
-    return { title: 'Donor · OPAX', description: sentence, canonical, ogType: 'profile', status: 200, jsonLd: null,
-      prerender: prerenderBlock('Donor', sentence), card: null, noindex: true }
-  }
+  if (dir === 'donor' && await donorWithheld(env.ASSETS, display)) return withheldMeta('donor', canonical)
   const title = `${display} · OPAX`
   let facts: string
   let tail = ''
@@ -4530,6 +4540,7 @@ async function campaignerMeta(name: string, url: URL, env: Env): Promise<PageMet
   // JSON-LD carry the whole name; the title is the one place it has to give way,
   // and it gives way before the masthead does.
   const title = `${clip(display, 90)} · OPAX`
+  if ((c || !data) && await namesWithheldDonor(env.ASSETS, display)) return withheldMeta('campaigner', canonical)
   if (!c) {
     if (!data) {
       const description = clip(`${display} in the OPAX record of AEC registered campaigners, third parties and associated entities.`)
@@ -4953,6 +4964,16 @@ async function serveStorySlide(url: URL, request: Request, env: Env, ctx: Execut
   }
 }
 
+/** A withheld donor's (or a campaigner under a withheld donor's name) share card is never drawn. */
+async function withheldCard(pagePath: string, env: Env): Promise<boolean> {
+  let route: SeoRoute | null = null
+  try { route = matchSeoRoute(new URL(`${SITE_ORIGIN}${pagePath}`)) } catch { return false }
+  if (route?.kind !== 'subject') return false
+  if (route.dir === 'donor') return donorWithheld(env.ASSETS, route.name)
+  if (route.dir === 'campaigner') return namesWithheldDonor(env.ASSETS, route.name)
+  return false
+}
+
 async function serveOgImage(url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
   // The story slides live under /og/story/ and are reached through every
   // caller of this function (public GETs, the publisher's in-process preflight).
@@ -4972,6 +4993,8 @@ async function serveOgImage(url: URL, request: Request, env: Env, ctx: Execution
   for (const [k, v] of cardQuery) variants.set(k, v)
   if (portrait) variants.set('format', format)
   const cacheKey = cacheRequest('og', `${encodeURIComponent(env.CACHE_EPOCH)}/${OG_VERSION}/${m[2]}${pagePath}?${variants}`)
+  // Checked before the cache, so a card drawn before a donor was withheld is never replayed.
+  if (await withheldCard(pagePath, env)) return jpeg ? new Response('No card available', { status: 404 }) : ogFallback(env, request)
   if (!cacheBypass(request, url)) {
     const hit = await caches.default.match(cacheKey)
     if (hit) return withCacheStatus(request.method === 'HEAD' ? new Response(null, hit) : hit, 'HIT')

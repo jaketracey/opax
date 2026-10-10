@@ -1,4 +1,5 @@
 import {financialYear, receiptPeriodQuery, separateReceiptYears} from './receipt-period'
+import {withholdIndividualDonors} from '../public/donor-entity.js'
 
 type Node = { id:string; label:string; kind:string; industry?:string; group?:string; aliases?:string[] }
 type Edge = { source:string; target:string; total:number; count:number; flow?:string; grant?:boolean; firstYear?:number; lastYear?:number; byYear?:Record<string,number[]> }
@@ -126,13 +127,15 @@ export function receiptJurisdiction(query:string): string | null {
 /** Ordinary questions read one graph. If region words conflict, a complete
  * donor name may explain one of them ("The Federal Group in Tasmania").
  * Check only named, supported regions and require the remaining words to
- * identify that same graph. Never merge jurisdictions or guess from totals. */
+ * identify that same graph. Never merge jurisdictions or guess from totals.
+ * Every answer, tool and choice list reads the graph with individual donors
+ * withheld (public/donor-entity.js): a name typed by the reader is not matched. */
 export async function receiptGraphForQuestion(query:string, load:(file:string)=>Promise<ReceiptGraph|null>, state?:string) {
   const direct=state || receiptJurisdiction(query)
   const read=async(jurisdiction:string)=>{
     const file='/graph/'+(jurisdiction==='federal'?'money.json':`money.${jurisdiction}.json`)
     const graph=await load(file)
-    return graph?{graph,file,jurisdiction}:null
+    return graph?{graph:withholdIndividualDonors(graph),file,jurisdiction}:null
   }
   if(direct)return ['federal','qld','vic','tas'].includes(direct)?read(direct):null
   const candidates=mentionedReceiptRegions(query).filter(j=>['federal','qld','vic','tas'].includes(j))

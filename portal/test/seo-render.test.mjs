@@ -247,19 +247,6 @@ test('noindex 404 bodies emit no canonical or page identity, including unknown r
   for(const path of paths){const response=await worker.fetch(new Request(origin+path),env,{});assert.equal(response.status,404,path);assert.equal(response.headers.get('x-robots-tag'),'noindex',path);const html=await response.text();assert.doesNotMatch(html,/<link\b[^>]*rel="canonical"|<script[^>]*id="ld-page"/,path);}
 });
 
-test('an individual donor page is noindex and names nobody in its server-rendered HTML',async()=>{
-  for(const name of ['Sara Prendergast','Roslyn Packer','Packer, Roslyn']){
-    const response=await worker.fetch(new Request(origin+'/subject/donor/'+encodeURIComponent(name)),env,{waitUntil(){}});
-    assert.equal(response.status,200,name);assert.equal(response.headers.get('x-robots-tag'),'noindex',name);
-    const html=await response.text();assert.match(html,/<meta name="robots" content="noindex">/,name);
-    // The page's own address may carry the name; nothing else on the page does.
-    const head=html.replaceAll('/subject/donor/'+encodeURIComponent(name),'');
-    for(const part of name.split(/[ ,]+/))assert.ok(!head.includes(part),`${name}: ${part}`);
-  }
-  const org=await worker.fetch(new Request(origin+'/subject/donor/Clubs%20NSW'),env,{waitUntil(){}});
-  assert.equal(org.headers.get('x-robots-tag'),'all');assert.match(await org.text(),/<h1>Clubs NSW<\/h1>/);
-});
-
 test('all SSR body types use factual relationship wording and pair political money with the caveat',async()=>{
   const samples=['/subject/party/labor','/subject/person/anthony-albanese','/subject/donor/Clubs%20NSW','/subject/supplier/s-f93824d9abc756c8f32f','/money','/connections','/explore'];
   const campaigners=(await read('/graph/campaigners.json')).entities;
