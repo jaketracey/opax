@@ -1,4 +1,7 @@
 -- Crawl notification state only; no community/member data.
+-- RUNNER ONLY: apply once with `wrangler d1 migrations apply`. Its d1_migrations
+-- journal skips already-applied files. Do not execute or replay this SQL directly:
+-- SQLite/D1 has no conditional ADD COLUMN, and these ALTERs are not idempotent.
 ALTER TABLE indexnow_jobs ADD COLUMN next_attempt_at INTEGER NOT NULL DEFAULT 0;
 ALTER TABLE indexnow_jobs ADD COLUMN failure_count INTEGER NOT NULL DEFAULT 0;
 ALTER TABLE indexnow_jobs ADD COLUMN superseded INTEGER NOT NULL DEFAULT 0;

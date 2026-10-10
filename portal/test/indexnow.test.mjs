@@ -2,18 +2,26 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {DatabaseSync} from 'node:sqlite';
-import {runIndexNow as run,indexNowPayloads,changedUrls,extraUrls,donorPath,INDEXNOW_KEY} from '../src/indexnow.ts';
+import {runIndexNow as run,indexNowPayloads,changedUrls,extraUrls,donorPath,INDEXNOW_KEY,INDEXNOW_JOB_RETENTION} from '../src/indexnow.ts';
 
 const runIndexNow = (env, now, send) => run(env, now, send, () => now);
 const DAY = 86_400_000, HOUR = 3_600_000;
 function harness(entries) {
   const sqlite = new DatabaseSync(':memory:');
-  for (const migration of ['0013_indexnow.sql','0014_indexnow_backoff.sql']) sqlite.exec(readFileSync(new URL('../migrations/'+migration,import.meta.url),'utf8'));
+  for (const migration of ['0013_indexnow.sql','0014_indexnow_backoff.sql','0015_indexnow_epoch_fence.sql']) sqlite.exec(readFileSync(new URL('../migrations/'+migration,import.meta.url),'utf8'));
   const db={prepare(sql){
     const statement=sqlite.prepare(sql);let values=[];
     return {bind(...args){values=args;return this;},async first(){return statement.get(...values) || null;},async all(){return {results:statement.all(...values)};},async run(){return {meta:{changes:Number(statement.run(...values).changes)}};}};
   },async batch(statements){sqlite.exec('BEGIN');try{const values=[];for(const s of statements)values.push(await s.run());sqlite.exec('COMMIT');return values;}catch(e){sqlite.exec('ROLLBACK');throw e;}}};
   const env={CACHE_EPOCH:'epoch-1',INDEXNOW_ENABLED:'true',INDEXNOW_DRY_RUN:'false',COMMUNITY_DB:db,ASSETS:{async fetch(){return Response.json({entries});}}};
+  // Each fixture deployment carries a stable, authoritative revision. Cloned
+  // stale environments retain their original revision; timestamps never assign one.
+  const versions=new Map([['epoch-1','1']]);let epoch='epoch-1';
+  env.INDEXNOW_EPOCH_VERSION='1';
+  Object.defineProperty(env,'CACHE_EPOCH',{enumerable:true,get:()=>epoch,set:value=>{
+    epoch=value;if(!versions.has(value))versions.set(value,String(versions.size+1));
+    env.INDEXNOW_EPOCH_VERSION=versions.get(value);
+  }});
   const calls=[];
   const send=async(url,opts)=>{calls.push({url,opts,body:JSON.parse(opts.body)});return new Response(null,{status:202});};
   return {sqlite,env,send,calls,job:()=>sqlite.prepare('SELECT * FROM indexnow_jobs WHERE epoch = ?').get(env.CACHE_EPOCH),daily:now=>sqlite.prepare('SELECT * FROM indexnow_daily WHERE day = ?').get(new Date(now).toISOString().slice(0,10))};
@@ -142,7 +150,7 @@ test('5xx and invalid Retry-After use exponential delays capped at 24 hours',asy
   }
   const h=harness(entries(1));
   await runIndexNow(h.env,1000,async()=>new Response(null,{status:503,headers:{'retry-after':'900'}}));
-  assert.equal(h.job().next_attempt_at,901000);
+  assert.equal(h.job().next_attempt_at,HOUR+1000);
 });
 
 test('a daily cap smaller than a batch truncates requests and is shared across epochs',async()=>{
@@ -238,7 +246,7 @@ test('the global lease prevents a new epoch planning over an in-flight accepted 
   const wait=new Promise(r=>{release=r;}),ready=new Promise(r=>{entered=r;});
   const first=runIndexNow(h.env,1000,async(...args)=>{entered();await wait;return h.send(...args);});
   await ready;
-  const newer={...h.env,CACHE_EPOCH:'epoch-2'};
+  const newer={...h.env,CACHE_EPOCH:'epoch-2',INDEXNOW_EPOCH_VERSION:'2'};
   await runIndexNow(newer,1000,h.send);
   assert.equal(h.sqlite.prepare('SELECT count(*) AS n FROM indexnow_jobs').get().n,1);
   release();await first;assert.equal(h.job().cursor,1000);
@@ -274,6 +282,7 @@ test('legacy prefixes predating a completed job contribute missing receipts with
 test('a stale legacy epoch defers to a newer journalled epoch during rollout',async()=>{
   const rows=entries(2),h=harness(rows),urls=rows.map(([p])=>'https://opax.com.au'+p);
   legacyJob(h,'older',rows,urls,1);legacyJob(h,'newer',rows,urls);
+  h.sqlite.prepare('UPDATE indexnow_epoch_fence SET epoch = ?, version = ?').run('newer',3);
   h.env.CACHE_EPOCH='older';await runIndexNow(h.env,1000,h.send);assert.equal(h.calls.length,0);
   assert.equal(h.job().cursor,1);assert.equal(h.job().superseded,0);
   h.env.CACHE_EPOCH='newer';await runIndexNow(h.env,301000,h.send);
@@ -363,8 +372,141 @@ test('status and backoff logs contain counts and times without private URLs',asy
 
 test('dry-run leaves existing receipts, pending jobs, leases and daily counts byte-identical',async()=>{
   const h=harness(entries(1001));h.env.INDEXNOW_DAILY_CAP='500';await runIndexNow(h.env,1000,h.send);
-  const dump=()=>JSON.stringify(['indexnow_jobs','indexnow_snapshots','indexnow_sent','indexnow_control','indexnow_daily']
+  const dump=()=>JSON.stringify(['indexnow_jobs','indexnow_snapshots','indexnow_sent','indexnow_control','indexnow_daily','indexnow_epoch_fence','indexnow_priority']
     .map(table=>h.sqlite.prepare('SELECT * FROM '+table).all()));
   const before=dump();h.env.CACHE_EPOCH='epoch-2';h.env.INDEXNOW_DRY_RUN='true';
   await runIndexNow(h.env,DAY+1000,h.send);assert.equal(dump(),before);assert.equal(h.calls.length,1);
+});
+
+test('review reproduction: an unrecorded stale epoch cannot supersede or permanently block the current job',async()=>{
+  const h=harness(entries(10));h.env.CACHE_EPOCH='current';h.env.INDEXNOW_EPOCH_VERSION='200';h.env.INDEXNOW_DAILY_CAP='1';
+  await runIndexNow(h.env,1000,h.send);assert.equal(h.job().cursor,1);
+  for (const version of ['199','200','0',undefined]) {
+    const stale={...h.env,CACHE_EPOCH:'unrecorded-stale',INDEXNOW_EPOCH_VERSION:version};
+    await runIndexNow(stale,10*DAY,h.send);
+    assert.equal(h.sqlite.prepare('SELECT count(*) AS n FROM indexnow_jobs WHERE epoch = ?').get(stale.CACHE_EPOCH).n,0);
+    assert.equal(h.calls.length,1);assert.equal(h.job().superseded,0);
+    assert.deepEqual({...h.sqlite.prepare('SELECT epoch,version FROM indexnow_epoch_fence').get()},{epoch:'current',version:200});
+  }
+  await runIndexNow(h.env,DAY+1000,h.send);assert.equal(h.job().cursor,2,'current ticks still advance');
+  const newer={...h.env,CACHE_EPOCH:'newer',INDEXNOW_EPOCH_VERSION:'201'};
+  await runIndexNow(newer,2*DAY+1000,h.send);
+  assert.equal(h.job().superseded,1);
+  assert.deepEqual({...h.sqlite.prepare('SELECT epoch,version FROM indexnow_epoch_fence').get()},{epoch:'newer',version:201});
+  assert.equal(h.sqlite.prepare('SELECT cursor FROM indexnow_jobs WHERE epoch = ?').get('newer').cursor,1);
+});
+
+test('a superseded row with a later rowid or held lease cannot block an authoritative newer epoch',async()=>{
+  const h=harness(entries(3));h.env.INDEXNOW_DAILY_CAP='0';await runIndexNow(h.env,1000,h.send);
+  legacyJob(h,'late-superseded',entries(3),entries(3).map(([p])=>'https://opax.com.au'+p));
+  h.sqlite.prepare('UPDATE indexnow_jobs SET superseded = 1, owner = ?, lease_until = ? WHERE epoch = ?')
+    .run('old-owner',100*DAY,'late-superseded');
+  h.env.CACHE_EPOCH='epoch-2';h.env.INDEXNOW_DAILY_CAP='3';await runIndexNow(h.env,301000,h.send);
+  assert.equal(h.job().complete,1);assert.equal(h.calls.length,1);
+  assert.equal(h.sqlite.prepare('SELECT version FROM indexnow_epoch_fence').get().version,2);
+});
+
+test('privacy person priority persists through two supersessions until each URL is accepted',async()=>{
+  const people=Array.from({length:1024},(_,i)=>[`/subject/person/fixture-person-${i}`,'before']);
+  const divisions=Array.from({length:600},(_,i)=>[`/doc/division-fixture-${i}`,'before']);
+  const before=[...entries(600),...people,...divisions];
+  const rows=before.map(([p,f])=>[p,p.startsWith('/subject/person/')?'privacy':f]);
+  const h=harness(rows);h.env.CACHE_EPOCH='privacy';h.env.INDEXNOW_DAILY_CAP='500';
+  h.env.INDEXNOW_EXTRA_PATHS=Array.from({length:64},(_,i)=>`/subject/donor/fixture-${i}`).join(' ');
+  legacyJob(h,'before',before,before.map(([p])=>'https://opax.com.au'+p).sort());
+  await runIndexNow(h.env,1000,h.send);assert.equal(h.job().cursor,500);
+  const accepted=new Set(h.calls.flatMap(c=>c.body.urlList));
+  const remainingPeople=people.map(([p])=>'https://opax.com.au'+p).filter(url=>!accepted.has(url));
+  assert.equal(remainingPeople.length,588);
+  for(const row of rows)if(row[0].startsWith('/doc/division-'))row[1]='ordinary-refresh';
+  rows.push(['/bill/au-federal-new','new']);h.env.CACHE_EPOCH='ordinary-1';
+  await runIndexNow(h.env,DAY+1000,h.send);
+  assert.ok(h.calls[1].body.urlList.every(url=>remainingPeople.includes(url)),'first replacement batch contains only pending privacy people');
+  const pendingFlags=new Map(JSON.parse(h.sqlite.prepare('SELECT ranks FROM indexnow_priority').get().ranks));
+  assert.equal([...pendingFlags.values()].filter(rank=>rank===0).length,88);
+  assert.ok(h.calls.flatMap(c=>c.body.urlList).every(url=>!pendingFlags.has(url)),'accepted flags are removed');
+  h.env.CACHE_EPOCH='ordinary-2';await runIndexNow(h.env,2*DAY+1000,h.send);
+  assert.ok(h.calls[2].body.urlList.slice(0,88).every(url=>remainingPeople.includes(url)));
+  assert.ok(h.calls[2].body.urlList.slice(88).every(url=>url.includes('/doc/division-')));
+  const allSent=h.calls.flatMap(c=>c.body.urlList);assert.equal(new Set(allSent).size,allSent.length);
+  assert.equal(h.sqlite.prepare('SELECT count(*) AS n FROM indexnow_priority').get().n,1);
+});
+
+test('Retry-After zero, one second and past dates cannot undercut the exponential minimum',async()=>{
+  for(const status of [429,503])for(const header of ['0','1',new Date(0).toUTCString()]) {
+    const h=harness(entries(1));let attempts=0;
+    const reject=async()=>{attempts++;return new Response(null,{status,headers:{'retry-after':header}});};
+    await runIndexNow(h.env,1000,reject);assert.equal(h.job().next_attempt_at,HOUR+1000);
+    for(const now of [301000,HOUR])await runIndexNow(h.env,now,reject);
+    assert.equal(attempts,1);
+    await runIndexNow(h.env,HOUR+1000,reject);assert.equal(h.job().next_attempt_at,3*HOUR+1000);
+    assert.equal(attempts,2);await runIndexNow(h.env,2*HOUR+1000,reject);assert.equal(attempts,2);
+  }
+});
+
+test('twelve failing epochs retain at most five jobs, one snapshot and only the active payload and priorities',async()=>{
+  const rows=[...entries(4),...Array.from({length:25},(_,i)=>[`/subject/person/fixture-${i}`,'privacy'])];
+  const h=harness(rows);let now=1000;h.env.INDEXNOW_DAILY_CAP='100000';
+  for(let i=1;i<=12;i++) {
+    h.env.CACHE_EPOCH='failing-'+i;
+    await runIndexNow(h.env,now,async()=>new Response(null,{status:503}));
+    assert.equal(h.job().complete,0);assert.equal(h.job().cursor,0);assert.equal(h.job().total,29);
+    assert.equal(h.job().failure_count,i);now=h.job().next_attempt_at;
+    assert.ok(h.sqlite.prepare('SELECT count(*) AS n FROM indexnow_jobs').get().n<=INDEXNOW_JOB_RETENTION);
+    assert.equal(h.sqlite.prepare('SELECT count(*) AS n FROM indexnow_snapshots').get().n,1);
+    assert.equal(h.sqlite.prepare('SELECT count(*) AS n FROM indexnow_priority').get().n,1);
+    for(const old of h.sqlite.prepare('SELECT * FROM indexnow_jobs WHERE epoch != ?').all(h.env.CACHE_EPOCH)) {
+      assert.equal(old.superseded,1);assert.equal(old.urls,'[]');assert.equal(old.extras,'[]');assert.equal(old.carried_entries,'[]');
+    }
+  }
+  assert.equal(h.sqlite.prepare('SELECT count(*) AS n FROM indexnow_jobs').get().n,5);
+  const fence=JSON.stringify(h.sqlite.prepare('SELECT * FROM indexnow_epoch_fence').get());
+  await runIndexNow({...h.env,CACHE_EPOCH:'failing-1',INDEXNOW_EPOCH_VERSION:'2'},now,h.send);
+  assert.equal(h.calls.length,0);assert.equal(JSON.stringify(h.sqlite.prepare('SELECT * FROM indexnow_epoch_fence').get()),fence);
+  await runIndexNow(h.env,now,h.send);assert.equal(h.job().complete,1);
+  assert.equal(new Set(h.calls.flatMap(c=>c.body.urlList)).size,29);
+});
+
+test('an existing pre-review job is upgraded and prunes old retained payloads while still backing off',async()=>{
+  const h=harness(entries(3));h.env.INDEXNOW_DAILY_CAP='0';await runIndexNow(h.env,1000,h.send);
+  h.sqlite.exec('DELETE FROM indexnow_priority');
+  h.sqlite.prepare('UPDATE indexnow_jobs SET next_attempt_at = ?').run(DAY);
+  for(let i=0;i<12;i++) {
+    legacyJob(h,'old-'+i,entries(3),entries(3).map(([p])=>'https://opax.com.au'+p));
+    h.sqlite.prepare('UPDATE indexnow_jobs SET superseded = 1 WHERE epoch = ?').run('old-'+i);
+  }
+  await runIndexNow(h.env,301000,h.send);
+  assert.equal(h.calls.length,0);assert.equal(h.job().next_attempt_at,DAY);
+  assert.equal(h.sqlite.prepare('SELECT count(*) AS n FROM indexnow_jobs').get().n,5);
+  assert.equal(h.sqlite.prepare('SELECT count(*) AS n FROM indexnow_snapshots').get().n,1);
+  assert.ok(h.sqlite.prepare('SELECT urls FROM indexnow_jobs WHERE superseded = 1').all().every(row=>row.urls==='[]'));
+});
+
+test('malformed journals and arbitrary exception names never echo private paths in logs',async(t)=>{
+  const h=harness(entries(2));h.env.INDEXNOW_DAILY_CAP='0';await runIndexNow(h.env,1000,h.send);
+  const privatePath='/subject/donor/fixture-private-marker',logs=[];
+  t.mock.method(console,'log',line=>logs.push(JSON.parse(line)));
+  const original=h.job().urls;
+  h.sqlite.prepare('UPDATE indexnow_jobs SET urls = ?').run('["'+privatePath+'", malformed]');
+  await runIndexNow(h.env,301000,h.send);
+  assert.equal(logs.find(l=>l.event==='indexnow_failed').error_class,'SyntaxError');
+  h.sqlite.prepare('UPDATE indexnow_jobs SET urls = ?').run(original);h.env.INDEXNOW_DAILY_CAP='100';
+  const err=new Error(privatePath);err.name=privatePath;
+  await runIndexNow(h.env,601000,async()=>{throw err;});
+  await runIndexNow(h.env,901000,async()=>new Response(privatePath,{status:403}));
+  const failures=logs.filter(l=>l.event==='indexnow_failed');
+  assert.deepEqual(failures.map(l=>l.error_class),['SyntaxError','Error','IndexNowHttpError']);
+  assert.equal(failures[2].status,403);assert.equal(failures[2].urls,2);
+  assert.ok(!JSON.stringify(logs).includes(privatePath));assert.ok(failures.every(l=>!('message' in l)));
+});
+
+test('the fence migration is idempotent and replay preserves the authoritative version and pending flags',async()=>{
+  const h=harness(entries(2));h.env.INDEXNOW_DAILY_CAP='0';await runIndexNow(h.env,1000,h.send);
+  h.sqlite.prepare('UPDATE indexnow_epoch_fence SET version = 42').run();
+  h.sqlite.prepare('UPDATE indexnow_priority SET ranks = ?').run(JSON.stringify([['https://opax.com.au/subject/person/fixture',0]]));
+  const dump=()=>JSON.stringify(['indexnow_jobs','indexnow_snapshots','indexnow_sent','indexnow_control','indexnow_daily','indexnow_epoch_fence','indexnow_priority']
+    .map(table=>h.sqlite.prepare('SELECT * FROM '+table).all()));
+  const before=dump();
+  for(let i=0;i<2;i++)h.sqlite.exec(readFileSync(new URL('../migrations/0015_indexnow_epoch_fence.sql',import.meta.url),'utf8'));
+  assert.equal(dump(),before);
 });

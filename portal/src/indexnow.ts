@@ -3,15 +3,19 @@ export const INDEXNOW_KEY = '3fd7466e2dc64b00a55ee502b82c51ad';
 export const INDEXNOW_ORIGIN = 'https://opax.com.au';
 export const INDEXNOW_BATCH_SIZE = 500; // protocol allows at most 10,000
 export const INDEXNOW_CRON = '*/5 * * * *';
+export const INDEXNOW_JOB_RETENTION = 5;
 type Snapshot = [string, string][];
 interface Job {
   epoch: string; urls: string; cursor: number; complete: number; total: number;
   next_attempt_at: number; failure_count: number; superseded: number;
   plan_version: number; extras: string; carried_entries: string; lease_until: number; finished_at: number;
+  priority: string | null;
 }
 interface PlannedJob extends Job { entries: string | null; sequence: number }
 interface Sent { path: string; fingerprint: string | null; extra_token: string | null }
 type Extra = [string, string];
+type Priority = [string, number];
+interface EpochFence { epoch: string; version: number }
 const HOUR = 3_600_000;
 const DAY = 24 * HOUR;
 type IndexNowEnv = Pick<Env, 'ASSETS' | 'COMMUNITY_DB' | 'CACHE_EPOCH'> & {
@@ -19,6 +23,8 @@ type IndexNowEnv = Pick<Env, 'ASSETS' | 'COMMUNITY_DB' | 'CACHE_EPOCH'> & {
   /** Optional private secret: one-off donor paths to re-crawl (see extraUrls). */
   INDEXNOW_EXTRA_PATHS?: string;
   INDEXNOW_DAILY_CAP?: string;
+  /** Authoritative monotonic revision, bumped together with CACHE_EPOCH. */
+  INDEXNOW_EPOCH_VERSION?: string;
 };
 const DONOR_PREFIX = '/subject/donor/';
 // One path segment as sent: unreserved and sub-delimiter characters and %-escapes only.
@@ -87,17 +93,37 @@ function dailyCap(raw?: string): number {
 }
 
 function retryAt(header: string | null, failures: number, now: number): number {
+  const minimum = now + Math.min(DAY, HOUR * 2 ** Math.min(failures - 1, 5));
   if (header !== null) {
     const value = header.trim();
     const delta = now + Number(value) * 1000;
-    if (/^\d+$/.test(value) && Number.isSafeInteger(delta)) return delta;
+    if (/^\d+$/.test(value) && Number.isSafeInteger(delta)) return Math.max(minimum,delta);
     // Retry-After is either delta-seconds or an HTTP date, never a signed number.
     if (/[a-z]/i.test(value)) {
       const date = Date.parse(value);
-      if (Number.isFinite(date)) return Math.max(now, date);
+      if (Number.isFinite(date)) return Math.max(minimum, date);
     }
   }
-  return now + Math.min(DAY, HOUR * 2 ** Math.min(failures - 1, 5));
+  return minimum;
+}
+
+class IndexNowHttpError extends Error {
+  readonly status: number;
+  constructor(status: number) { super('IndexNow HTTP failure'); this.status = status; }
+}
+
+function failureClass(err: unknown): string {
+  // Error names, constructor names and messages can all contain request paths.
+  if (err instanceof IndexNowHttpError) return 'IndexNowHttpError';
+  if (err instanceof SyntaxError) return 'SyntaxError';
+  if (err instanceof TypeError) return 'TypeError';
+  if (err instanceof RangeError) return 'RangeError';
+  return err instanceof Error ? 'Error' : 'UnknownError';
+}
+
+function jobStatement(db: D1Database, epoch: string) {
+  return db.prepare(`SELECT j.*, p.ranks AS priority FROM indexnow_jobs j
+    LEFT JOIN indexnow_priority p ON p.epoch = j.epoch WHERE j.epoch = ?`).bind(epoch);
 }
 
 function sentStatement(db: D1Database, receipts: [string, string | null, string | null][]) {
@@ -149,6 +175,24 @@ export async function runIndexNow(env: IndexNowEnv, now = Date.now(), send: type
   const log = (event: string, detail: Record<string, unknown> = {}) => console.log(JSON.stringify({event,epoch,...detail}));
   const db = env.COMMUNITY_DB, owner = crypto.randomUUID(), cap = dailyCap(env.INDEXNOW_DAILY_CAP);
   const dry = env.INDEXNOW_DRY_RUN === 'true';
+  const rawVersion = env.INDEXNOW_EPOCH_VERSION?.trim() ?? '', version = Number(rawVersion);
+  let failureUrls = 0;
+  const fenceStatement = () => db.prepare('SELECT epoch, version FROM indexnow_epoch_fence WHERE id = 1');
+  const readFence = async (): Promise<EpochFence> => {
+    const fence = await fenceStatement().first<EpochFence>();
+    if (!fence) throw new Error('Missing IndexNow epoch fence');
+    return fence;
+  };
+  const allowed = (fence: EpochFence): boolean => {
+    if (!/^[1-9]\d*$/.test(rawVersion) || !Number.isSafeInteger(version)) {
+      log('indexnow_epoch_rejected',{reason:'invalid_version'}); return false;
+    }
+    if (fence.version === 0) return true;
+    if ((fence.epoch === epoch && fence.version === version)
+      || (fence.version > 0 && version > fence.version && fence.epoch !== epoch)) return true;
+    log('indexnow_epoch_rejected',{reason:'stale_or_conflicting_version',epoch_version:version,current_version:fence.version});
+    return false;
+  };
   const renew = async (attempt = time()) => {
     const lease = await db.prepare('UPDATE indexnow_control SET lease_until = ? WHERE id = 1 AND owner = ? AND lease_until > ?')
       .bind(attempt+120_000,owner,attempt).run();
@@ -156,30 +200,33 @@ export async function runIndexNow(env: IndexNowEnv, now = Date.now(), send: type
   };
   let claimed = false;
   try {
-    let job = await db.prepare('SELECT * FROM indexnow_jobs WHERE epoch = ?').bind(epoch).first<Job>();
-    if (job?.complete || job?.superseded) return;
+    if (!allowed(await readFence())) return;
+    let job = await jobStatement(db,epoch).first<Job>();
     if (!dry) {
       const lease = await db.prepare('UPDATE indexnow_control SET owner = ?, lease_until = ? WHERE id = 1 AND lease_until <= ?')
         .bind(owner,time()+120_000,time()).run();
       if (!lease.meta.changes) return;
       claimed = true;
+      if (!allowed(await readFence())) return;
       // A cron running the old code may still own a per-job lease during rollout.
       const held = await db.prepare('SELECT epoch FROM indexnow_jobs WHERE complete = 0 AND superseded = 0 AND lease_until > ?')
         .bind(time()).first();
       if (held) return;
-      job = await db.prepare('SELECT * FROM indexnow_jobs WHERE epoch = ?').bind(epoch).first<Job>();
-      if (job?.complete || job?.superseded) return;
-    }
-    if (!job || !job.plan_version) {
+      job = await jobStatement(db,epoch).first<Job>();
+      await renew();
+      await db.prepare('UPDATE indexnow_epoch_fence SET epoch = ?, version = ? WHERE id = 1 AND version = 0')
+        .bind(epoch,version).run();
+      if (job?.complete && job.priority !== null) {
+        return;
+      }
+    } else if (job?.complete && job.priority !== null) return;
+    if (!job || !job.plan_version || job.superseded || job.priority === null) {
       const response = await env.ASSETS.fetch(new Request(`${INDEXNOW_ORIGIN}/crawl/indexnow.json`));
-      if (!response.ok) throw new Error(`manifest ${response.status}`);
+      if (!response.ok) throw new IndexNowHttpError(response.status);
       const {entries} = await response.json<{entries:Snapshot}>();
-      const {results:jobs} = await db.prepare(`SELECT j.*, s.entries, j.rowid AS sequence FROM indexnow_jobs j
-        LEFT JOIN indexnow_snapshots s ON s.epoch = j.epoch ORDER BY j.rowid`).all<PlannedJob>();
-      // An old rollout tick must not rebuild its legacy plan over a newer epoch
-      // that already exists in the journal. The newest legacy tick takes over.
-      const sequence = jobs.find(j => j.epoch === epoch)?.sequence;
-      if (sequence !== undefined && jobs.some(j => j.sequence > sequence && !j.superseded)) return;
+      const {results:jobs} = await db.prepare(`SELECT j.*, s.entries, p.ranks AS priority, j.rowid AS sequence FROM indexnow_jobs j
+        LEFT JOIN indexnow_snapshots s ON s.epoch = j.epoch
+        LEFT JOIN indexnow_priority p ON p.epoch = j.epoch ORDER BY j.rowid`).all<PlannedJob>();
       const extra = extraUrls(env.INDEXNOW_EXTRA_PATHS);
       const digest = await crypto.subtle.digest('SHA-256',new TextEncoder().encode([...extra].sort().join('\n')));
       const token = [...new Uint8Array(digest)].map(b => b.toString(16).padStart(2,'0')).join('');
@@ -200,11 +247,13 @@ export async function runIndexNow(env: IndexNowEnv, now = Date.now(), send: type
       const pending = jobs.filter(j => !j.complete && !j.superseded);
       const extraTokens = new Map<string,string>();
       const carriedEntries = new Map<string,string>();
+      const carriedPriority = new Map<string,number>();
       const carry: string[] = [];
       for (const old of pending) {
         const oldSnapshot = new Map(old.entries ? JSON.parse(old.entries) as Snapshot : []);
         for (const [path,fingerprint] of JSON.parse(old.carried_entries) as Snapshot) oldSnapshot.set(path,fingerprint);
         const oldExtras = new Map(JSON.parse(old.extras) as Extra[]);
+        const oldPriority = new Map(JSON.parse(old.priority ?? '[]') as Priority[]);
         for (const url of (JSON.parse(old.urls) as string[]).slice(old.cursor)) {
           const path = url.slice(INDEXNOW_ORIGIN.length);
           if (!eligiblePath(path)) continue;
@@ -215,6 +264,12 @@ export async function runIndexNow(env: IndexNowEnv, now = Date.now(), send: type
           if (needsExtra) extraTokens.set(url,extraToken);
           if (needsExtra || (fingerprint !== undefined ? sent.get(path)?.fingerprint !== fingerprint : !sent.has(path))) {
             carry.push(url);
+            // Plans from the previous implementation have no flags. Conservatively
+            // keep their pending person/donor pages first; legacy plans are re-ranked
+            // against the previous snapshot during their initial upgrade instead.
+            const rank = oldPriority.get(url) ?? (old.plan_version && old.priority === null
+              ? path.startsWith('/subject/') ? 0 : path.startsWith('/doc/division-') ? 1 : undefined : undefined);
+            if (rank !== undefined) carriedPriority.set(url,Math.min(rank,carriedPriority.get(url) ?? 2));
             if (!snapshot.has(path) && fingerprint !== undefined) carriedEntries.set(path,fingerprint);
           }
         }
@@ -227,14 +282,15 @@ export async function runIndexNow(env: IndexNowEnv, now = Date.now(), send: type
         .map(r => [r.path,r.fingerprint]);
       const needed = new Set([...changedUrls(entries,baseline),...carry,...extraTokens.keys()]);
       // Priority is based on changes in this epoch, even when earlier unsent work remains.
-      const previous = jobs.filter(j => j.epoch !== epoch && j.entries).at(-1);
+      const previous = jobs.filter(j => j.epoch !== epoch && j.entries && !j.superseded).at(-1);
       const priority = new Set([...changedUrls(entries,previous ? JSON.parse(previous.entries!) as Snapshot : [])
         .filter(url => /\/(?:subject\/(?:person|donor)\/|doc\/division-)/.test(url)),...extraTokens.keys()]);
       // Keep privacy re-pings ahead of even a large set of changed divisions.
-      const rank = (url: string) => !priority.has(url) ? 2
-        : extraTokens.has(url) || url.includes('/subject/') ? 0 : 1;
+      const rank = (url: string) => Math.min(carriedPriority.get(url) ?? 2,
+        !priority.has(url) ? 2 : extraTokens.has(url) || url.includes('/subject/') ? 0 : 1);
       const urls = indexNowPayloads([...needed],10_000).flatMap(p => p.urlList)
         .sort((a,b) => rank(a)-rank(b) || a.localeCompare(b));
+      const ranks = urls.filter(url => rank(url) < 2).map(url => [url,rank(url)] as Priority);
       if (extraTokens.size) log('indexnow_extra',{urls:extraTokens.size});
       if (dry) {
         log('indexnow_dry_run',{urls:urls.length,batches:indexNowPayloads(urls).length});
@@ -242,25 +298,37 @@ export async function runIndexNow(env: IndexNowEnv, now = Date.now(), send: type
       }
       const serialized = JSON.stringify(entries), plan = JSON.stringify(urls);
       const serializedExtras = JSON.stringify([...extraTokens]), serializedCarry = JSON.stringify([...carriedEntries]);
+      const serializedPriority = JSON.stringify(ranks);
       if (new TextEncoder().encode(serialized).length > 1_800_000
-        || new TextEncoder().encode(plan+serializedExtras+serializedCarry).length > 1_800_000) {
+        || new TextEncoder().encode(plan+serializedExtras+serializedCarry).length > 1_800_000
+        || new TextEncoder().encode(serializedPriority).length > 1_800_000) {
         throw new Error('IndexNow journal exceeds row budget');
       }
       const next = Math.max(0,...pending.map(j => j.next_attempt_at));
       const failures = Math.max(0,...pending.map(j => j.failure_count));
       await renew();
       await db.batch([
+        db.prepare('UPDATE indexnow_epoch_fence SET epoch = ?, version = ? WHERE id = 1 AND version <= ?')
+          .bind(epoch,version,version),
         db.prepare('INSERT OR REPLACE INTO indexnow_snapshots (epoch, entries) VALUES (?, ?)').bind(epoch,serialized),
+        db.prepare('INSERT OR REPLACE INTO indexnow_priority (epoch, ranks) VALUES (?, ?)').bind(epoch,serializedPriority),
         db.prepare(`INSERT INTO indexnow_jobs (epoch, urls, total, extras, carried_entries, plan_version, next_attempt_at, failure_count)
           VALUES (?, ?, ?, ?, ?, 1, ?, ?) ON CONFLICT(epoch) DO UPDATE SET
           urls = excluded.urls, cursor = 0, total = excluded.total, extras = excluded.extras, plan_version = 1,
+          superseded = 0, complete = 0, owner = NULL, lease_until = 0,
           carried_entries = excluded.carried_entries,
           next_attempt_at = excluded.next_attempt_at, failure_count = excluded.failure_count`)
           .bind(epoch,plan,urls.length,serializedExtras,serializedCarry,next,failures),
-        db.prepare('UPDATE indexnow_jobs SET superseded = 1 WHERE complete = 0 AND superseded = 0 AND epoch != ?').bind(epoch),
+        db.prepare(`UPDATE indexnow_jobs SET superseded = 1, urls = '[]', extras = '[]', carried_entries = '[]',
+          owner = NULL, lease_until = 0 WHERE complete = 0 AND epoch != ?`).bind(epoch),
+        db.prepare('DELETE FROM indexnow_snapshots WHERE epoch != ?').bind(epoch),
+        db.prepare('DELETE FROM indexnow_priority WHERE epoch != ?').bind(epoch),
+        db.prepare(`DELETE FROM indexnow_jobs WHERE epoch != ? AND epoch NOT IN
+          (SELECT epoch FROM indexnow_jobs WHERE epoch != ? ORDER BY rowid DESC LIMIT ?)`)
+          .bind(epoch,epoch,INDEXNOW_JOB_RETENTION-1),
       ]);
       log('indexnow_plan',{urls:urls.length,superseded:pending.filter(j => j.epoch !== epoch).length});
-      job = await db.prepare('SELECT * FROM indexnow_jobs WHERE epoch = ?').bind(epoch).first<Job>();
+      job = await jobStatement(db,epoch).first<Job>();
     }
     if (!job || job.complete || job.superseded) return;
     const urls = JSON.parse(job.urls) as string[];
@@ -273,6 +341,7 @@ export async function runIndexNow(env: IndexNowEnv, now = Date.now(), send: type
     if (!row) throw new Error('IndexNow snapshot disappeared');
     const snapshot = new Map(JSON.parse(row.entries) as Snapshot), extras = new Map(JSON.parse(job.extras) as Extra[]);
     for (const [path,fingerprint] of JSON.parse(job.carried_entries) as Snapshot) snapshot.set(path,fingerprint);
+    const ranks = new Map(JSON.parse(job.priority ?? '[]') as Priority[]);
     let cursor = job.cursor;
     // At most two 500-URL batches (20 seconds of fetch time) per five-minute tick.
     for (let batch = 0; batch < 2 && cursor < urls.length; batch++) {
@@ -289,6 +358,7 @@ export async function runIndexNow(env: IndexNowEnv, now = Date.now(), send: type
         AND EXISTS (SELECT 1 FROM indexnow_control WHERE id = 1 AND owner = ? AND lease_until > ?)`)
         .bind(payload.urlList.length,day,payload.urlList.length,cap,owner,time()).run();
       if (!reserved.meta.changes) break;
+      failureUrls = payload.urlList.length;
       const response = await send('https://api.indexnow.org/indexnow',{
         method:'POST',headers:{'content-type':'application/json; charset=utf-8'},body:JSON.stringify(payload),signal:AbortSignal.timeout(10_000),
       });
@@ -301,9 +371,11 @@ export async function runIndexNow(env: IndexNowEnv, now = Date.now(), send: type
         log('indexnow_backoff',{status:response.status,next_attempt_at:next,failure_count:failures});
         return;
       }
-      if (response.status !== 200 && response.status !== 202) throw new Error(`IndexNow HTTP ${response.status}`);
+      if (response.status !== 200 && response.status !== 202) throw new IndexNowHttpError(response.status);
       cursor += payload.urlList.length;
+      for (const url of payload.urlList) ranks.delete(url);
       await db.batch([
+        db.prepare('UPDATE indexnow_priority SET ranks = ? WHERE epoch = ?').bind(JSON.stringify([...ranks]),epoch),
         sentStatement(db,payload.urlList.map(url => {
           const path = url.slice(INDEXNOW_ORIGIN.length);
           return [path,snapshot.get(path) ?? null,extras.get(url) ?? null];
@@ -318,13 +390,13 @@ export async function runIndexNow(env: IndexNowEnv, now = Date.now(), send: type
     if (cursor >= urls.length) {
       await db.batch([
         db.prepare('UPDATE indexnow_jobs SET complete = 1, finished_at = ? WHERE epoch = ? AND owner = ?').bind(time(),epoch,owner),
-        db.prepare('DELETE FROM indexnow_snapshots WHERE epoch != ? AND epoch IN (SELECT epoch FROM indexnow_jobs WHERE complete = 1 OR superseded = 1)').bind(epoch),
+        db.prepare('DELETE FROM indexnow_snapshots WHERE epoch != ?').bind(epoch),
         db.prepare("UPDATE indexnow_jobs SET urls = '[]', extras = '[]', carried_entries = '[]' WHERE complete = 1 OR superseded = 1"),
       ]);
       log('indexnow_epoch_complete',{urls:urls.length});
     }
   } catch (err) {
-    log('indexnow_failed',{message:err instanceof Error ? err.message : String(err)});
+    log('indexnow_failed',{error_class:failureClass(err),status:err instanceof IndexNowHttpError ? err.status : undefined,urls:failureUrls});
   } finally {
     if (claimed) {
       try {
@@ -335,11 +407,11 @@ export async function runIndexNow(env: IndexNowEnv, now = Date.now(), send: type
       } catch { log('indexnow_lease_release_failed'); }
     }
     try {
-      const job = await db.prepare('SELECT * FROM indexnow_jobs WHERE epoch = ?').bind(epoch).first<Job>();
+      const job = await jobStatement(db,epoch).first<Job>();
       const day = new Date(time()).toISOString().slice(0,10);
       const daily = await db.prepare('SELECT urls_sent, urls_accepted FROM indexnow_daily WHERE day = ?')
         .bind(day).first<{urls_sent:number;urls_accepted:number}>();
-      log('indexnow_status',{cursor:job?.cursor ?? 0,total:job?.total ?? 0,next_attempt_at:job?.next_attempt_at ?? 0,
+      log('indexnow_status',{epoch_version:Number.isSafeInteger(version) ? version : 0,cursor:job?.cursor ?? 0,total:job?.total ?? 0,next_attempt_at:job?.next_attempt_at ?? 0,
         complete:job?.complete ?? 0,superseded:job?.superseded ?? 0,day,daily_cap:cap,
         urls_sent_today:daily?.urls_sent ?? 0,urls_accepted_today:daily?.urls_accepted ?? 0});
     } catch { /* A missing migration has already been reported above. */ }
