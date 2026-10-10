@@ -19,8 +19,11 @@ and both cut-off dates; its response hash is recorded in the config.
 
 The sitemap's `hubs` type takes the latest introduced-bill or division date in
 each sitting week, or the calendar's `updated` date when the week is empty. The
-index takes the latest of its weeks. Estimates takes its config's `updated`
-date. Hub facts also enter the existing IndexNow change journal.
+index takes the latest of its weeks. Estimates takes the latest of its config's
+`updated` date and the contract and grant snapshot dates. Hub facts also enter
+the existing IndexNow change journal. Published hub URLs with trailing slashes
+use bet 1's canonical resolver and redirect in one 301 hop to the no-slash URL,
+including combined host/path aliases; unknown periods remain noindex 404s.
 
 ## Correction contact
 
@@ -78,8 +81,14 @@ available official notice/award links; a fallback to the source register is
 explicitly labelled. The sole grant-agency alias expands NHMRC's acronym in its
 recorded name. No donor, party or politician fields enter the estimates
 projection. Private grant recipient names are withheld.
+The hub does not read donor records. Other SSR, search and sitemap surfaces
+retain main's shared `isOrganisationDonor` classifier from `donor-entity.js`.
 An agency with zero exported grants in this window says “No grants in this
 period”; this is a zero count within the stated export coverage, not missing data.
+“Largest recorded awards, by value” orders the three largest exported amounts
+in those same dated windows. This is a factual list of agency awards. The
+no-rankings rule concerns people and candidates; award labels use no evaluative
+language.
 
 The dates shown on model summaries are their generation date, falling back to
 the summary's recorded as-of date. Undated model text is withheld. Sponsor links
@@ -91,10 +100,13 @@ Rows without dated model summaries show no summary placeholder.
 
 ## Division coverage
 
-Weeks that have started and have no exported divisions display “Divisions for
-this week aren't in the published record yet”, dated by the published corpus
-snapshot (`corpus.json.version`). This is a snapshot date, not a claim that the
-division source is current to that date. Upcoming empty weeks retain the
+Weeks that have started and have no exported divisions state: “Federal divisions
+in OPAX's published record currently run to <date>; divisions held after that
+date will appear here once the record is updated.” The date is derived from all
+federal records in `divisions/index.json`, including dates outside the configured
+hub periods, and saved as `latestFederalDivision`. The published corpus snapshot
+(`corpus.json.version`) dates the source line separately; it does not establish
+division coverage. Upcoming empty weeks retain the
 morning-after-arrival message. A missing export does not establish that no
 divisions were held. The date normalization in the build uses the same `day`
 helper as week derivation, including a timestamp on a period's final day.

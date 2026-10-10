@@ -5,7 +5,7 @@ import {tmpdir} from 'node:os';
 import {join,dirname} from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {build} from 'esbuild';
-import {deriveWeek,orderedWeeks,currentSittingPath,recentWindow,recentRecords,sydneyDay} from '../public/hubs-data.js';
+import {deriveWeek,orderedWeeks,currentSittingPath,recentWindow,recentRecords,sydneyDay,latest} from '../public/hubs-data.js';
 import {shortDate} from '../public/format.js';
 import {buildHubs} from '../../scripts/build_hubs.mjs';
 import {sitemapFiles} from '../../scripts/build_crawl_catalog.mjs';
@@ -20,7 +20,7 @@ const compile = async entry => {
 const {renderSittingWeek,renderSittingIndex,renderEstimates,hubPage} = await compile('../src/hubs.ts');
 const period = calendar.periods.find(w => w.start === '2026-10-12');
 const fixtureWeek = deriveWeek(period,records.bills,records.divisions,calendar.updated);
-const data = {...calendar,snapshotDate:calendar.updated,weeks:[fixtureWeek]};
+const data = {...calendar,snapshotDate:calendar.updated,latestFederalDivision:'2026-08-20',weeks:[fixtureWeek]};
 const people = [{name:'Faruqi',pid:'10912'},{name:'Mehreen Faruqi',pid:'10912',speeches:30}];
 const slugs = new Map([['Mehreen Faruqi','mehreen-faruqi']]);
 
@@ -70,15 +70,18 @@ test('bill rows have one introduction meta line, portfolio fallback and no missi
   delete week.bills[1].portfolio;
   assert.match(renderSittingWeek(data,week,people,slugs).html,/Sponsor not recorded/);
 });
-test('missing divisions in a started week are dated as a published snapshot, not counted as zero',async()=>{
+test('missing divisions state actual federal export coverage rather than an upstream publication delay',async()=>{
   const index = await json('hubs/index.json');
   const week = {...index.weeks.find(w => w.start === '2026-09-14'),divisions:[]};
-  const page = await hubPage('sitting',week.start,async()=>({...index,snapshotDate:'2026-10-10',weeks:[week]}),[],new Map(),'2026-10-10');
-  assert.match(page.html,/Divisions for this week aren't in the published record yet/);
-  assert.match(page.html,/Published snapshot 10 Oct 2026/);
-  assert.doesNotMatch(page.html,/No divisions|<h2>Divisions held|Divisions[^<]*<span class="hub-count">0/);
+  for (const coverage of ['2026-08-20','2026-09-11']) {
+    const page = await hubPage('sitting',week.start,async()=>({...index,snapshotDate:'2026-10-10',latestFederalDivision:coverage,weeks:[week]}),[],new Map(),'2026-10-10');
+    assert.ok(page.html.includes(`Federal divisions in OPAX&#39;s published record currently run to ${shortDate(coverage)}; divisions held after that date will appear here once the record is updated.`));
+    assert.match(page.html,/Published snapshot 10 Oct 2026/);
+    assert.doesNotMatch(page.html,/aren't in the published record yet|No divisions|<h2>Divisions held|Divisions[^<]*<span class="hub-count">0/);
+  }
+  assert.match(renderSittingWeek({...index,latestFederalDivision:''},week,[],new Map(),'2026-10-10').html,/Federal divisions are not available in this OPAX export/);
   const upcoming = deriveWeek(period,[],[],calendar.updated);
-  assert.doesNotMatch(renderSittingWeek(data,upcoming,[],new Map(),'2026-10-10').html,/aren't in the published record yet/);
+  assert.doesNotMatch(renderSittingWeek(data,upcoming,[],new Map(),'2026-10-10').html,/currently run to|aren't in the published record yet/);
 });
 test('every hub and hub 404 omits the pending correction contact and response commitment',async()=>{
   const index=await json('hubs/index.json');const estimates=await json('hubs/estimates-2026-10.json');
@@ -120,6 +123,8 @@ test('estimates config renders all committees, dates, portfolio fallback, agency
   assert.match(page.html,/Published \d+ \w+ 2026/);assert.match(page.html,/Agreement \d+ \w+ 2026/);
   assert.equal(page.jsonLd['@graph'][0]['@type'],'Event');
   assert.equal(page.jsonLd['@graph'][1].numberOfItems,estimates.agencies.length);
+  assert.match(page.html,/<summary>Largest recorded awards, by value<\/summary>/);
+  assert.doesNotMatch(page.html,/<summary>[^<]*\b(top|best)\b/i);
   const published = structuredClone(estimates);published.committees[0].program={source_url:config.source_url,agencies:[published.agencies[0].name]};
   assert.ok(renderEstimates(published).html.includes('Published hearing program'));
 });
@@ -140,6 +145,8 @@ test('estimates defines both financial windows once and reports zero grants as a
 });
 test('hubs have their own sitemap type, record lastmods, canonical links and llms entries',async()=>{
   const index = await json('hubs/index.json');const manifest=await json('crawl/manifest.json');
+  const estimates = await json('hubs/estimates-2026-10.json');
+  assert.equal(index.pages.find(p=>p.path==='/estimates/2026-10').lastmod,latest([estimates.updated,estimates.contractUpdated,estimates.grantUpdated]));
   assert.equal(manifest.counts.hubs,7);assert.equal(manifest.lastmodFallbacks.hubs,0);
   const body=await readFile(new URL('crawl/sitemaps/hubs-1.xml',root),'utf8');
   for (const p of index.pages) assert.ok(body.includes(`<loc>https://opax.com.au${p.path}</loc><lastmod>${p.lastmod}</lastmod>`));
@@ -164,6 +171,7 @@ test('offline build drops individual donor and politician fields even when sourc
   files['bills/au-federal-senate.json'].introduced='2026-10-15T23:59:00+11:00';
   files['divisions/index.json'].divisions=structuredClone(records.divisions);
   files['divisions/index.json'].divisions[1].date='2026-10-15T23:59:00+11:00';
+  files['divisions/index.json'].divisions.push({key:'federal-senate-outside-calendar',date:'2026-12-01'},{key:'nsw-outside-calendar',date:'2026-12-02'});
   files['divisions/division-federal-reps-example.json'].date='2026-10-15T23:59:00+11:00';
   try {
     for (const [path,value] of Object.entries(files)) {await mkdir(dirname(join(dir,path)),{recursive:true});await writeFile(join(dir,path),JSON.stringify(value));}
@@ -173,9 +181,16 @@ test('offline build drops individual donor and politician fields even when sourc
     const e=JSON.parse(output);assert.equal(e.agencies[0].grants.total,10);assert.equal(e.agencies[0].grants.largest[0].recipient,'Recipient name withheld');
     const index=JSON.parse(await readFile(join(dir,'hubs/index.json'),'utf8'));
     assert.equal(index.snapshotDate,'2026-10-10');
+    assert.equal(index.latestFederalDivision,'2026-12-01');
+    assert.equal(index.pages.find(p=>p.path==='/estimates/2026-10').lastmod,'2026-10-10');
     const w=index.weeks.find(w=>w.start==='2026-10-12');
     assert.equal(w.divisions[0].title,'The 2D division title');
     assert.equal(w.divisions.length,2);assert.equal(w.bills[1].portfolio,'Fixture portfolio');
+    for (const [file,value,expected] of [['agencies.json',{...files['agencies.json'],meta:{generated_at:'2026-10-12T18:00:00Z'}},'2026-10-12'],['graph/grants.federal.json',{meta:{generated:'2026-10-13T02:00:00Z'}},'2026-10-13']]) {
+      await writeFile(join(dir,file),JSON.stringify(value));await buildHubs(dir,configs);
+      const refreshed=JSON.parse(await readFile(join(dir,'hubs/index.json'),'utf8'));
+      assert.equal(refreshed.pages.find(p=>p.path==='/estimates/2026-10').lastmod,expected);
+    }
   } finally {await rm(dir,{recursive:true,force:true});}
 });
 test('bad weeks return a real 404 with noindex; hubs keep SSR and remove SPA startup scripts',async()=>{

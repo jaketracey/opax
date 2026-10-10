@@ -11,7 +11,7 @@ interface Bill {
 }
 interface Division { key: string; slug: string; title?: string; name?: string; question?: string; date: string; house: string; result?: string; ayes?: number; noes?: number; source_url?: string }
 interface Week { start: string; end: string; houses: string[]; senate_cutoff?: string; estimates?: string; bills: Bill[]; divisions: Division[]; lastmod: string }
-export interface HubIndex { updated: string; snapshotDate: string; sources: { label: string; url: string }[]; weeks: Week[]; pages: {path: string; lastmod: string}[] }
+export interface HubIndex { updated: string; snapshotDate: string; latestFederalDivision: string; sources: { label: string; url: string }[]; weeks: Week[]; pages: {path: string; lastmod: string}[] }
 interface Window { start: string; end: string }
 interface Totals<T> { count: number; total: number; largest: T[] }
 interface Contract { id: string; title: string; supplier: string; amount: number; published: string; start_date?: string; url: string; link_scope?: string }
@@ -81,7 +81,8 @@ export function renderSittingWeek(data: HubIndex, week: Week, people: SponsorCan
       return `<li><h3>${link(href,name)}</h3><p class="hub-meta">${date(d.date)} · ${esc(houseName(d.house))}</p><p>${esc(result)} · ${esc(d.ayes ?? 'Unrecorded')} ayes · ${esc(d.noes ?? 'Unrecorded')} noes</p>${sourceLineHTML({updated:d.date,dateLabel:'Division',source:'Exported division record',originals:d.source_url ? [{href:d.source_url,label:'Original division'}] : []})}</li>`
     }).join('')+'</ul></section>'
   } else if (today >= week.start) {
-    body += `<section class="hub-section"><h2>Divisions</h2><p>Divisions for this week aren't in the published record yet.</p>${sourceLineHTML({updated:data.snapshotDate,dateLabel:'Published snapshot',source:'Exported division records',originals:[{href:'https://theyvoteforyou.org.au/divisions',label:'They Vote For You divisions'}],notes:['Absence from this export does not establish that no divisions were held.']})}</section>`
+    const coverage = data.latestFederalDivision ? `Federal divisions in OPAX's published record currently run to ${date(data.latestFederalDivision)}; divisions held after that date will appear here once the record is updated.` : 'Federal divisions are not available in this OPAX export; they will appear here once the record is updated.'
+    body += `<section class="hub-section"><h2>Divisions</h2><p>${esc(coverage)}</p>${sourceLineHTML({updated:data.snapshotDate,dateLabel:'Published snapshot',source:'Exported division records',originals:[{href:'https://theyvoteforyou.org.au/divisions',label:'They Vote For You divisions'}],notes:['Absence from this export does not establish that no divisions were held.']})}</section>`
   }
   return {title,description,html:shell(body),jsonLd:{'@graph':[event(path,title,week.start,week.end,data.sources[0].url),itemList(path,rows)]}}
 }
@@ -102,7 +103,7 @@ export function renderEstimates(data: Estimates) {
         const href = `/subject/agency/${a.id}`
         list.set(a.id,{href,name:a.name})
         body += `<article class="hub-agency"><h4>${link(href,a.name)}</h4><dl class="hub-totals"><div><dt>Contracts</dt><dd>${count(a.contracts.count)} · ${money(a.contracts.total)}</dd></div><div><dt>Grants</dt><dd>${a.grants.count ? `${count(a.grants.count)} · ${money(a.grants.total)}` : 'No grants in this period'}</dd></div></dl>`
-        if (a.contracts.largest.length || a.grants.largest.length) body += `<details class="hub-largest"><summary>Largest recorded awards</summary>${a.contracts.largest.length ? `<h5>Contracts</h5><ul>${a.contracts.largest.map(r => `<li><p>${link(r.url,`${r.id}: ${r.title || r.id}`)}${r.link_scope === 'source_register' ? ' (AusTender register)' : ''}</p><p class="hub-meta">${esc(r.supplier)} · ${money(r.amount)} · Published ${date(r.published)}</p></li>`).join('')}</ul>` : ''}${a.grants.largest.length ? `<h5>Grants</h5><ul>${a.grants.largest.map(r => `<li><p>${link(r.url,`${r.id}: ${r.title}`)}${r.link_scope === 'source_register' ? ' (GrantConnect register)' : ''}</p><p class="hub-meta">${esc(r.recipient)} · ${money(r.value)} · Agreement ${date(r.date)}</p></li>`).join('')}</ul>` : ''}</details>`
+        if (a.contracts.largest.length || a.grants.largest.length) body += `<details class="hub-largest"><summary>Largest recorded awards, by value</summary>${a.contracts.largest.length ? `<h5>Contracts</h5><ul>${a.contracts.largest.map(r => `<li><p>${link(r.url,`${r.id}: ${r.title || r.id}`)}${r.link_scope === 'source_register' ? ' (AusTender register)' : ''}</p><p class="hub-meta">${esc(r.supplier)} · ${money(r.amount)} · Published ${date(r.published)}</p></li>`).join('')}</ul>` : ''}${a.grants.largest.length ? `<h5>Grants</h5><ul>${a.grants.largest.map(r => `<li><p>${link(r.url,`${r.id}: ${r.title}`)}${r.link_scope === 'source_register' ? ' (GrantConnect register)' : ''}</p><p class="hub-meta">${esc(r.recipient)} · ${money(r.value)} · Agreement ${date(r.date)}</p></li>`).join('')}</ul>` : ''}</details>`
         body += '</article>'
       }
       body += '</div></details>'

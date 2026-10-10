@@ -21,6 +21,7 @@ export async function buildHubs(root, configRoot = fileURLToPath(new URL('./hubs
     }
   }
   const divisions = [];
+  const latestFederalDivision = latest(divisionsIndex.divisions.filter(r => r.jurisdiction === 'federal' || /^(?:au-)?federal-/.test(r.key)).map(r => r.date));
   for (const row of divisionsIndex.divisions) {
     if (!/^(?:au-)?federal-/.test(row.key) || !calendar.periods.some(w => w.start <= day(row.date) && day(row.date) <= w.end)) continue;
     const d = await read(`divisions/${row.slug}.json`);
@@ -58,11 +59,12 @@ export async function buildHubs(root, configRoot = fileURLToPath(new URL('./hubs
   }
   const estimatePage = { ...estimates,contractWindow,grantWindow,contractUpdated:agencies.meta.generated_at,grantUpdated:grants.meta.generated,
     agencies:[...records.values()].sort((a,b) => a.name.localeCompare(b.name,'en')) };
-  const pages = [{path:'/sitting',lastmod:latest(weeks.map(w => w.lastmod))},...weeks.map(w => ({path:`/sitting/${w.start}`,lastmod:w.lastmod})),{path:`/estimates/${estimates.id}`,lastmod:estimates.updated}];
+  const estimatesLastmod = latest([estimates.updated,agencies.meta.generated_at,grants.meta.generated]);
+  const pages = [{path:'/sitting',lastmod:latest(weeks.map(w => w.lastmod))},...weeks.map(w => ({path:`/sitting/${w.start}`,lastmod:w.lastmod})),{path:`/estimates/${estimates.id}`,lastmod:estimatesLastmod}];
   await mkdir(join(root,'hubs'),{recursive:true});
   const snapshotDate = day(corpus.version);
   if (!snapshotDate) throw new Error('The published corpus snapshot must have a date');
-  await writeFile(join(root,'hubs/index.json'),JSON.stringify({updated:calendar.updated,snapshotDate,sources:calendar.sources,weeks,pages})+'\n');
+  await writeFile(join(root,'hubs/index.json'),JSON.stringify({updated:calendar.updated,snapshotDate,latestFederalDivision,sources:calendar.sources,weeks,pages})+'\n');
   await writeFile(join(root,`hubs/estimates-${estimates.id}.json`),JSON.stringify(estimatePage)+'\n');
   return {weeks:weeks.length,agencies:records.size,pages:pages.length};
 }

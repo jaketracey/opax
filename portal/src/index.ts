@@ -4155,6 +4155,10 @@ async function canonicalRoutePath(url: URL, env: Env): Promise<string> {
   }
   const candidate=new URL(url); candidate.pathname=path
   const route=matchSeoRoute(candidate)
+  if(route?.kind==='hub') {
+    const hubs=await assetJson<{pages:{path:string}[]}>(env,'/hubs/index.json').catch(()=>null)
+    if(hubs?.pages.some(page=>page.path===path)) return path
+  }
   if(route?.kind==='static' || route?.kind==='index' || route?.kind==='topics') return path
   if(route?.kind==='topic' && TOPIC_NAMES[route.slug]) return path
   if(route?.kind==='report' && (await loadReports(env).catch(()=>null))?.bySlug.has(route.slug)) return path
@@ -4191,7 +4195,7 @@ async function pageAliasRedirect(request: Request, url: URL, env: Env): Promise<
     if(destination.searchParams.has('ask')) {destination.searchParams.set('q',destination.searchParams.get('ask') || '');destination.searchParams.delete('ask');}
   }
   const location=destination.href
-  return new Response(null,{status:host ? 308 : 301,headers:{location,'cache-control':'public, max-age=86400','referrer-policy':'no-referrer',...(['/ask','/search'].includes(path) && url.search ? {'x-robots-tag':'noindex'} : {})}})
+  return new Response(null,{status:host && matchSeoRoute(destination)?.kind !== 'hub' ? 308 : 301,headers:{location,'cache-control':'public, max-age=86400','referrer-policy':'no-referrer',...(['/ask','/search'].includes(path) && url.search ? {'x-robots-tag':'noindex'} : {})}})
 }
 /** slug -> name for every person with a slug: how app.js writes and reads the addresses. */
 async function apiPersonSlugs(env: Env): Promise<Response> {
