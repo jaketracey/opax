@@ -113,7 +113,7 @@ test('primary, modified and middle module openings count once; right clicks do n
 
 test('parliamentary mentions beside procurement carry the association line',async()=>{
  const code=app.slice(app.indexOf('async function subjectMentions('),app.indexOf('/** Missing speech labels'));
- const {subjectMentions}=runInNewContext(code+';({subjectMentions})',{growthModules,api:async()=>({results:[{slug:'fixture',speaker:'Example Member'}]}),loadParliamentarians:async()=>({people:[]}),fillDatedMentionParties(){},displayTitle:()=> 'Fixture speech',metaHTML:()=> 'Example Member',esc:String,searchHash:()=> '/ask?view=search',URLSearchParams});
+ const {subjectMentions}=runInNewContext(code+';({subjectMentions})',{growthModules,excerptNoticeHTML:()=>'',api:async()=>({results:[{slug:'fixture',speaker:'Example Member'}]}),loadParliamentarians:async()=>({people:[]}),fillDatedMentionParties(){},displayTitle:()=> 'Fixture speech',metaHTML:()=> 'Example Member',esc:String,searchHash:()=> '/ask?view=search',URLSearchParams});
  let html='';await subjectMentions('Organisation',{insertAdjacentHTML:(position,value)=>html+=value},'In parliament',true);
  assert.match(html,/Example Member/);assert.ok(html.includes(growthModules.ASSOCIATION_NOTE));
 });

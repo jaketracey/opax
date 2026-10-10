@@ -1,3 +1,4 @@
+import {saConversationInput} from './sa-evidence-harness.mjs';
 import * as passageText from '../src/passage-text.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -32,7 +33,8 @@ function harness(responses, env = {}) {
     return value;
   };
   const ctx = { waitUntil(p) { pending.push(p); } };
-  const api = runInNewContext(transpile(code) + ';({apiAsk,apiAskStream})', {
+  const api = runInNewContext(transpile(code) + ';({apiAsk,apiAskStream})', {saConversationInput,
+    saSendData:async (_event,data)=>data,
     isWitness, loadPeople: async () => ({byFold:new Map()}), scopeSpeakerBody: async () => {}, // External scoped retrieval is exercised in witness-split.test.mjs.
     ...passageText, ...helpers, Response, Request, URL, Date, AbortController, AbortSignal, TransformStream, TextEncoder,
     REFUSAL_PREFIXES: ['not enough data'], ASK_SYNC_TIMEOUT_MS: 1000, ASK_STALL_MS: 1000, ASK_RETRY_BUDGET_MS: 1000,

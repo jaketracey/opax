@@ -55,6 +55,8 @@ export interface OgCard {
   stat?: { value: string; label: string }
   /** Electoral material carries the full authorisation at the foot, without clipping. */
   authorisation?: string
+  /** Restricted source records retain their full display notice and source URL. */
+  sourceNotice?: { label: string; url: string | null }
 }
 
 // --- palette: style.css :root, the navy band's values --------------------------
@@ -288,6 +290,8 @@ export function cardTree(card: OgCard): El {
     { style: { display: 'flex', flexDirection: 'column', padding: `0 ${PAD}px 30px ${PAD}px` } },
     h('div', { style: { fontFamily: SANS, fontSize: 20, fontWeight: 700, letterSpacing: card.authorisation ? 0 : '0.16em', color: BRONZE_BRIGHT } }, card.authorisation ? 'opax.com.au' : 'OPAX.COM.AU'),
     card.authorisation ? h('div', { style: { fontFamily: SANS, fontSize: 16, lineHeight: 1.4, color: SOFT, marginTop: 12 } }, card.authorisation) : null,
+    card.sourceNotice ? h('div', { style: { fontFamily: SANS, fontSize: 16, lineHeight: 1.4, color: SOFT, marginTop: 12 } }, card.sourceNotice.label) : null,
+    card.sourceNotice?.url ? h('div', { style: { fontFamily: SANS, fontSize: 13, lineHeight: 1.4, color: SOFT, marginTop: 4 } }, card.sourceNotice.url) : null,
   )
 
   const bottomRule = h('div', { style: { height: 6, background: BRONZE } })
@@ -455,6 +459,8 @@ export function portraitTree(card: OgCard): El {
     { style: { display: 'flex', flexDirection: 'column', padding: `24px ${P_PAD}px 44px ${P_PAD}px` } },
     h('div', { style: { fontFamily: SANS, fontSize: 28, fontWeight: 700, letterSpacing: card.authorisation ? 0 : '0.16em', color: BRONZE_BRIGHT } }, card.authorisation ? 'opax.com.au' : 'OPAX.COM.AU'),
     card.authorisation ? h('div', { style: { fontFamily: SANS, fontSize: 22, lineHeight: 1.4, color: SOFT, marginTop: 16 } }, card.authorisation) : null,
+    card.sourceNotice ? h('div', { style: { fontFamily: SANS, fontSize: 22, lineHeight: 1.4, color: SOFT, marginTop: 16 } }, card.sourceNotice.label) : null,
+    card.sourceNotice?.url ? h('div', { style: { fontFamily: SANS, fontSize: 18, lineHeight: 1.4, color: SOFT, marginTop: 4 } }, card.sourceNotice.url) : null,
   )
 
   const bottomRule = h('div', { style: { height: 8, background: BRONZE } })
