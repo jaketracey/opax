@@ -1,0 +1,19 @@
+appId: au.com.opax.app
+---
+# A cleared install's first question asks for consent once (App Review
+# 5.1.2(i)); Continue sends the held question. Later questions go straight on.
+# No centerElement: at AX5 it overshoots under the sheet's header.
+- extendedWaitUntil:
+    visible:
+      id: ask-consent
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: ask-consent-continue
+    timeout: 60000
+- tapOn:
+    id: ask-consent-continue
+- extendedWaitUntil:
+    notVisible:
+      id: ask-consent
+    timeout: 15000

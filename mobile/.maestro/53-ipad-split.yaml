@@ -76,6 +76,7 @@ name: 53 iPad splits, Search, Ask with its sources pane, directories, rotation
 - tapOn:
     id: ask-submit
     enabled: true
+- runFlow: support/ask-consent.yaml
 - extendedWaitUntil:
     visible:
       id: ask-pane-source-1

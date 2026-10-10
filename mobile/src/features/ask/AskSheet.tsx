@@ -14,6 +14,7 @@ export function AskSheet({
   title,
   onDone,
   onClose = onDone,
+  doneLabel = 'Done',
   testID,
   doneID,
   keyboardTarget,
@@ -22,6 +23,8 @@ export function AskSheet({
   title: string;
   onDone: () => void;
   onClose?: () => void;
+  /** What VoiceOver calls the close button. */
+  doneLabel?: string;
   testID: string;
   doneID: string;
   keyboardTarget?: RefObject<View | null>;
@@ -44,7 +47,7 @@ export function AskSheet({
           </Heading>
           <IconButton
             symbol="xmark"
-            accessibilityLabel="Done"
+            accessibilityLabel={doneLabel}
             onPress={onDone}
             testID={doneID}
           />

@@ -60,6 +60,7 @@ name: 30 Build a question, streamed answer, native bill citation and grounded fo
     timeout: 180000
 - tapOn:
     id: ask-builder-submit
+- runFlow: support/ask-consent.yaml
 - scrollUntilVisible:
     element:
       id: ask-machine-label

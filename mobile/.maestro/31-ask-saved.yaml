@@ -77,6 +77,7 @@ name: 31 Ask options, chips, saved conversation after relaunch and delete (stand
 - tapOn:
     id: ask-submit
     enabled: true
+- runFlow: support/ask-consent.yaml
 - scrollUntilVisible:
     element:
       id: ask-machine-label
