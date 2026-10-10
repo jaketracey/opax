@@ -2710,7 +2710,14 @@ function citationSentences(value) {
       // Decimal amounts and dotted dates, initials, titles and abbreviations
       // are part of the sentence, not the start of a new supported claim.
       if (/\d/.test(text[i - 1] || '') && /\d/.test(text[i + 1] || '')) continue;
-      if (/(?:\b(?:Mr|Mrs|Ms|Dr|St|No|Hon|Prof|Cth|Pty|Ltd|e\.g|i\.e)|\b[A-Z])\.$/i.test(text.slice(Math.max(0, i - 12), i + 1))) continue;
+      const prefix = text.slice(Math.max(0, i - 12), i + 1);
+      if (/(?:\b(?:Mr|Mrs|Ms|Dr|St|Hon|Prof|e\.g|i\.e)|\b[A-Z])\.$/i.test(prefix)) continue;
+      if (/\b(?:No|Cth|Pty|Ltd|Co|Inc)\.$/i.test(prefix)) {
+        const next = text.slice(i + 1).replace(/^[\s"'”’)\]*_`]+/, '');
+        // A lower-case continuation, record number, or another company suffix
+        // stays inside the sentence. A new capitalised claim ends it here.
+        if (/^[a-z\d,;:]/.test(next) || /^(?:Pty|Ltd|Co|Inc)\./i.test(next)) continue;
+      }
     }
     let end = i + 1;
     while (end < text.length && /[.!?…"'”’)\]*_`]/.test(text[end])) end++;

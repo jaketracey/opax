@@ -33,7 +33,7 @@ import { isWitness, isUnattributed, belongsToScope, scopeFilter, speakerHref, sp
  *  - exclude da-* fields from citations (enrichment output must not cite itself)
  */
 
-import { ASK_PIPELINE_VERSION, EVIDENCE_GAP_ANSWER, isEvidenceGap, isPositionBody, guardPositionAnswer, FOOTNOTE_INSTRUCTIONS, legacyCitationsAsk, quoteRecoveryAsk, evidenceExcerpt, stripListingBoilerplate, FootnoteStream, normaliseFootnotes, originalContext, unsupportedQuotes, type AugmentedContext } from './ask-evidence'
+import { ASK_PIPELINE_VERSION, EVALUATIVE_BACKSTOP, EVIDENCE_GAP_ANSWER, isEvidenceGap, isPositionBody, guardPositionAnswer, FOOTNOTE_INSTRUCTIONS, legacyCitationsAsk, quoteRecoveryAsk, evidenceExcerpt, stripListingBoilerplate, FootnoteStream, normaliseFootnotes, originalContext, unsupportedQuotes, type AugmentedContext } from './ask-evidence'
 import { resolveAskScope, needsAskPeople, askRetrievalQuery, isNamedPositionQuestion, POSITION_GROUNDING, type AskScope } from './ask-scope'
 import { communityRoute } from './community'
 import { deliverReplyEmails, REPLY_EMAIL_CRON } from './community-notifications'
@@ -899,6 +899,9 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
         'Use past tense: proposed, supported, argued, criticised. Do not use now, currently, or suggest these are today’s policies. If the evidence supplies a date, put it beside the relevant position. Do not turn old criticism of a former government into a current position or mix decades into a single present-day platform. Omit notes about your instructions or excluded ministerial replies. ' + FOOTNOTE_INSTRUCTIONS,
     }
   }
+  // Both ordinary and documented-position generation keep the same backstop.
+  const prompt = body.prompt as { system: string; user: string }
+  prompt.system += ' ' + EVALUATIVE_BACKSTOP
   return body
 }
 
@@ -1267,82 +1270,16 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     return res
   }
   if (!rawInput.question?.trim()) return json({ error: 'question is required' }, 400)
-  if (isEvaluativeQuestion(rawInput.question, rawInput.context)) return timed(json(neutralEvaluativeAnswer()))
+  if (isEvaluativeQuestion(rawInput.question)) return timed(json(neutralEvaluativeAnswer()))
   // A question naming a withheld donor, now or in the reader's earlier turns, gets
   // one fixed reply before any ranking, rewrite or model call can echo the name.
   if (await questionNamesWithheldDonor(env.ASSETS, rawInput.question, ...readerTurns(rawInput))) return timed(json(withheldDonorAnswer()))
-  // Resolve receipt conversations from user turns before speech inference can
-  // apply calendar-year or parliamentarian filters. No model call is needed.
-  try {
-    const ranked = await rankedMoneyAnswer(rawInput, env.ASSETS)
-    if (ranked) {
-      mark('receipts')
-      // The sheet is for writing the opening, never for the reader: it leaves
-      // with the answer only as the paragraph it produced.
-      const { money_facts, ...payload } = ranked as typeof ranked & { money_facts?: MoneyFacts }
-      if (!money_facts) return timed(json(payload))
-      const { overview, why } = await moneyOverview(money_facts, env, ctx, request)
-      mark('overview')
-      // Why an answer has no opening is worth being able to see from outside
-      // (a rejected paragraph and an unavailable model read the same to a
-      // reader); the paragraph itself, and nothing about the reader, is all
-      // that goes in the body.
-      const res = timed(json(overview ? { ...payload, money_overview: overview } : payload))
-      res.headers.set('x-opax-overview', why)
-      return res
-    }
-  } catch { return json({ error: 'The receipt records are temporarily unavailable. Please try again.' }, 503) }
-  // What a parliamentarian is paid is set by instrument, not said in a speech:
-  // answered from /pay.json, again with no model call. A failure here is not
-  // the reader's problem; the question falls through to the record.
-  const paid = await paidAnswer(rawInput, env.ASSETS).catch(() => null)
-  if (paid) { mark('pay'); return timed(json(paid)) }
-  // A follow-up in a conversation rarely names its subject ("no he has been
-  // in tons of grants, look more"), and the record is searched on the words
-  // as typed: the prior turns reach generation as chat history but never the
-  // retrieval. So the latest message is first rewritten as a standalone
-  // question drawn from the conversation, and everything downstream - scope,
-  // retrieval, the prompt - works from that. The rewrite is a paid call, so a
-  // conversation turn takes its rate-limit token here (its answer is never
-  // cached, so the cache-first order below has nothing to offer it).
-  const conversation = Array.isArray(rawInput.context) && rawInput.context.length > 0
-  let askedAs: string | null = null
-  if (conversation) {
-    const limited = await rateLimited(env.ASK_LIMITER, request)
-    if (limited) return limited
-    const rewrite = await standaloneQuestion(rawInput, env)
-    // "High", "ok", "?": nothing to search on, and never the last question
-    // over again. A free request for a full question, no answer generated.
-    if (rewrite && typeof rewrite === 'object') { mark('rewrite'); return timed(json(clarifyPayload(rawInput.question ?? '', rewrite.suggestion))) }
-    askedAs = rewrite
-    if (askedAs) {
-      rawInput.question = askedAs
-      if (isEvaluativeQuestion(askedAs)) return timed(json(neutralEvaluativeAnswer()))
-      // "And the Liberals?" after a pay answer only reads as one once rewritten.
-      const paidFollowUp = await paidAnswer({ ...rawInput, context: undefined }, env.ASSETS).catch(() => null)
-      if (paidFollowUp) { mark('pay'); return timed(json(withAskedAs(paidFollowUp, askedAs))) }
-    }
-  }
-  mark('rewrite')
-  let people: { name: string }[] = []
-  if (needsAskPeople(rawInput)) {
-    try { people = (await loadPeople(env)).people }
-    catch { return json({ error: 'The parliamentarian index is temporarily unavailable. Please try again.' }, 503) }
-  }
-  const { input, scope } = resolveAskScope(rawInput, people)
-
   const url = new URL(request.url)
-  const wantStream =
-    url.searchParams.get('stream') === '1' ||
-    (request.headers.get('accept') ?? '').includes('text/event-stream')
-
-  mark('prep')
-
-  // Cache first: a HIT costs neither a model call nor rate-limit quota.
-  // The model is part of the key: re-pinning ASK_MODEL retires answers the
-  // previous model wrote instead of replaying them for seven days.
+  const wantStream = url.searchParams.get('stream') === '1' || (request.headers.get('accept') ?? '').includes('text/event-stream')
   const askModel = env.ASK_MODEL || 'openai-compatible'
-  const keyText = askCacheInput(input, `${env.CACHE_EPOCH}:${askModel}`)
+  // Cache first: a HIT costs neither a rewrite nor rate-limit quota. The
+  // pipeline version retires answers written before the intent/backstop rule.
+  const keyText = askCacheInput(rawInput, `${env.CACHE_EPOCH}:${askModel}`)
   const cacheKey = keyText ? cacheRequest('ask', await sha256Hex(keyText)) : null
   const bypass = cacheBypass(request, url)
   if (cacheKey && !bypass) {
@@ -1350,9 +1287,51 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     if (hit) return wantStream ? replayCachedAsk(hit, ctx) : withCacheStatus(hit, 'HIT', false)
   }
   const status: CacheStatus = bypass ? 'BYPASS' : 'MISS'
-  const limited = conversation ? null : await rateLimited(env.ASK_LIMITER, request)
-  if (limited) return limited
+  const limited = await rateLimited(env.ASK_LIMITER, request)
   mark('cache')
+
+  // One combined rewrite/intent call, including for a first question. History
+  // supplies the subject of follow-ups; it never replaces the reader's intent.
+  let blocked = limited
+  let rewrite: FollowUpRewrite = null
+  if (!blocked) {
+    const result = await standaloneQuestion(rawInput, env)
+    if (result instanceof Response) blocked = result
+    else rewrite = result
+  }
+  mark('rewrite')
+  if (rewrite && typeof rewrite === 'object' && rewrite.intent === 'evaluative') return timed(json(neutralEvaluativeAnswer()))
+  if (rewrite && typeof rewrite === 'object' && 'unclear' in rewrite) return timed(json(clarifyPayload(rawInput.question ?? '', rewrite.suggestion)))
+  const askedAs = typeof rewrite === 'string' ? rewrite : rewrite?.question ?? null
+  if (askedAs) rawInput.question = askedAs
+
+  // Flagged requests have already returned. Calculated money and pay answers
+  // can now compare factual records without turning a judgement into a ranking.
+  try {
+    const ranked = await rankedMoneyAnswer(rawInput, env.ASSETS)
+    if (ranked) {
+      mark('receipts')
+      const { money_facts, ...payload } = ranked as typeof ranked & { money_facts?: MoneyFacts }
+      if (!money_facts) return timed(json(withAskedAs(payload, askedAs)))
+      // A refused paid call must not hide free calculated facts or attempt
+      // the model budget again for an optional opening paragraph.
+      const { overview, why } = blocked ? { overview: '', why: limited ? 'rate-limited' : 'upstream-429' } : await moneyOverview(money_facts, env, ctx, request)
+      mark('overview')
+      const res = timed(json(withAskedAs(overview ? { ...payload, money_overview: overview } : payload, askedAs)))
+      res.headers.set('x-opax-overview', why)
+      return res
+    }
+  } catch { return json({ error: 'The receipt records are temporarily unavailable. Please try again.' }, 503) }
+  const paid = await paidAnswer(rawInput, env.ASSETS).catch(() => null)
+  if (paid) { mark('pay'); return timed(json(withAskedAs(paid, askedAs))) }
+  if (blocked) return timed(blocked)
+  let people: { name: string }[] = []
+  if (needsAskPeople(rawInput)) {
+    try { people = (await loadPeople(env)).people }
+    catch { return json({ error: 'The parliamentarian index is temporarily unavailable. Please try again.' }, 503) }
+  }
+  const { input, scope } = resolveAskScope(rawInput, people)
+  mark('prep')
 
   let records: AskRecords
   try { records = await retrieveAskRecords(input, env.ASSETS) }
@@ -1439,16 +1418,17 @@ function withAskedAs<T extends object>(payload: T, askedAs: string | null | unde
 }
 
 /**
- * The latest message of a conversation as one standalone question - the
+ * A reader message as one standalone question plus its intent - the
  * subject named, the reader's intent and specifics kept - so the record can
  * be searched on it. One small generation-only call on the OpenRouter slot
  * (the followups model), bounded to a few seconds; null means "search the
- * words as typed", which is what happened before. A message that already
- * stands alone comes back unchanged and is reported as null too; one with
- * nothing to search on is { unclear } (ask-rewrite.ts).
+ * words as typed". An unchanged question keeps the parsed intent with a null
+ * rewrite; one with nothing to search on is { unclear } (ask-rewrite.ts).
  */
-async function standaloneQuestion(input: AskInput, env: Env): Promise<FollowUpRewrite> {
-  return rewriteFollowUp(input, async (user, question) => summaryModelAnswer(await kbFetch(env, '/ask', {
+async function standaloneQuestion(input: AskInput, env: Env): Promise<FollowUpRewrite | Response> {
+  let blocked: Response | null = null
+  const rewrite = await rewriteFollowUp(input, async (user, question) => {
+    const response = await kbFetch(env, '/ask', {
     body: {
       query: question,
       top_k: 1,
@@ -1459,7 +1439,11 @@ async function standaloneQuestion(input: AskInput, env: Env): Promise<FollowUpRe
     },
     headers: { 'x-synchronous': 'true' },
     signal: AbortSignal.timeout(9_000),
-  })))
+    })
+    if (response.headers.get(MODEL_BUDGET_HEADER)) { blocked = modelBudgetBusy(); return null }
+    return summaryModelAnswer(response)
+  })
+  return blocked ?? rewrite
 }
 
 /** Retrieve once, then generate only from original turns belonging to the index speaker. */

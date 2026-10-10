@@ -1,4 +1,4 @@
-export function isEvaluativeQuestion(question: string, context?: { author?: string; role?: string; text?: string; content?: string }[]): boolean;
+export function isEvaluativeQuestion(question: string): boolean;
 export function neutralEvaluativeAnswer(): {
   answer: string;
   answer_status: 'neutral';

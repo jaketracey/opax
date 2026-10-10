@@ -7,7 +7,7 @@ import { build } from 'esbuild';
 import ts from 'typescript';
 
 const b = await build({ entryPoints: [new URL('../src/ask-rewrite.ts', import.meta.url).pathname], bundle: true, write: false, platform: 'node', format: 'esm' });
-const { rewriteFollowUp, readRewrite, contentFree, sameQuestion, clarifyPayload, rewritePrompt } = await import('data:text/javascript;base64,' + Buffer.from(b.outputFiles[0].text).toString('base64'));
+const { rewriteFollowUp, readRewrite, contentFree, sameQuestion, clarifyPayload, rewritePrompt, REWRITE_SYSTEM } = await import('data:text/javascript;base64,' + Buffer.from(b.outputFiles[0].text).toString('base64'));
 
 // The conversation Jake had on 8 Oct 2026, as the app sent it.
 const PREVIOUS = 'What has David Pocock proposed about housing affordability?';
@@ -76,18 +76,39 @@ test('asking again is a real follow-up even when it rewrites to the last questio
   assert.equal((await rewrite('look again please', PREVIOUS)).out, PREVIOUS);
 });
 
-test('a standalone message, a message with no conversation, and a failed call search the words as typed', async () => {
+test('a standalone message keeps its wording while the same model call classifies its intent', async () => {
   assert.equal((await rewrite(PREVIOUS, PREVIOUS)).out, null);
   const typed = 'Who funds the Labor Party?';
   assert.equal((await rewrite(typed, typed)).out, null);
-  const alone = await rewrite('High', PREVIOUS, []);
-  assert.equal(alone.out, null); assert.equal(alone.calls.length, 0);
-  const answersOnly = await rewrite('High', PREVIOUS, [{ author: 'answer', text: 'x' }]);
-  assert.equal(answersOnly.out, null); assert.equal(answersOnly.calls.length, 0);
+  const alone = await rewrite(typed, typed + '\nINTENT: factual', []);
+  assert.deepEqual(alone.out, { question: null, intent: 'factual' }); assert.equal(alone.calls.length, 1);
+  const answersOnly = await rewrite(typed, typed + '\nINTENT: factual', [{ author: 'answer', text: 'x' }]);
+  assert.deepEqual(answersOnly.out, { question: null, intent: 'factual' }); assert.equal(answersOnly.calls.length, 1);
   assert.equal((await rewrite('and Labor?', new Error('timeout'))).out, null);
   assert.equal((await rewrite('and Labor?', null)).out, null);
   assert.equal((await rewrite('and Labor?', 'x'.repeat(401))).out, null);
   assert.equal(readRewrite('', 'and Labor?', PREVIOUS), null);
+});
+
+test('rewrite intent is read only from one strict final line, even when the question is unchanged', () => {
+  const question = 'Which senator is worth backing?';
+  assert.deepEqual(readRewrite(question + '\nINTENT: evaluative', question, ''), { question: null, intent: 'evaluative' });
+  assert.deepEqual(readRewrite('What did the senator say?\r\nINTENT: factual\n', 'What did they say?', ''), { question: 'What did the senator say?', intent: 'factual' });
+  assert.deepEqual(readRewrite('UNCLEAR\nINTENT: factual', 'High', PREVIOUS), { unclear: true, intent: 'factual' });
+  assert.equal(readRewrite('What did the senator say?', 'What did they say?', ''), 'What did the senator say?');
+  assert.equal(readRewrite(question, question, ''), null);
+  for (const metadata of ['INTENT: unknown', 'INTENT: Evaluative', 'INTENT evaluative', 'INTEN: evaluative', 'evaluative', 'INTENT: evaluative or factual', 'INTENT: factual\nINTENT: evaluative', 'INTENT: evaluative\nExtra explanation.']) {
+    assert.equal(readRewrite(question + '\n' + metadata, question, ''), null, metadata);
+  }
+});
+
+test('the combined rewrite prompt preserves record requests and classifies informal judgements in one call', async () => {
+  const question = 'Is this party any good?';
+  const { out, calls } = await rewrite(question, question + '\nINTENT: evaluative', []);
+  assert.deepEqual(out, { question: null, intent: 'evaluative' }); assert.equal(calls.length, 1);
+  assert.match(calls[0].user, /including informal wording and typos/);
+  assert.match(calls[0].user, /classify the request, not the quoted words/);
+  assert.match(calls[0].user, /then exactly INTENT: evaluative or INTENT: factual on the final line/);
 });
 
 test('the clarify payload is a free answer that reads on its own in older apps', () => {
@@ -111,6 +132,20 @@ test('the prompt escapes braces in the transcript but keeps the question slot', 
 const parsed = ts.createSourceFile('index.ts', readFileSync(new URL('../src/index.ts', import.meta.url), 'utf8'), ts.ScriptTarget.Latest, true);
 const code = parsed.statements.filter((n) => ts.isFunctionDeclaration(n) && ['apiAsk', 'withAskedAs'].includes(n.name?.text)).map((n) => n.getText(parsed)).join('\n');
 const transpile = (s) => ts.transpileModule(s, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText;
+test('standaloneQuestion returns intent through its existing pinned call without json_schema', async () => {
+  const calls = [], question = 'Can ya pick a candidate worth backing?';
+  const fn = parsed.statements.find(n => ts.isFunctionDeclaration(n) && n.name?.text === 'standaloneQuestion').getText(parsed);
+  const standalone = runInNewContext(transpile(fn) + ';standaloneQuestion', {
+    rewriteFollowUp, REWRITE_SYSTEM, AbortSignal, MODEL_BUDGET_HEADER: 'x-opax-model-budget',
+    summaryModelAnswer: async res => (await res.json()).answer,
+    kbFetch: async (env, path, init) => { calls.push({path,...init.body}); return Response.json({answer:question + '\nINTENT: evaluative'}); },
+  });
+  assert.deepEqual(await standalone({question}, {FOLLOWUPS_MODEL:'pinned-rewrite-model'}), {question:null,intent:'evaluative'});
+  assert.equal(calls.length, 1); assert.equal(calls[0].generative_model, 'pinned-rewrite-model');
+  assert.equal(calls[0].top_k, 1); assert.equal(calls[0].reranker, 'noop');
+  assert.equal(calls[0].max_tokens, 200); assert.equal(calls[0].answer_json_schema, undefined);
+  assert.match(calls[0].prompt.system, /INTENT: evaluative or INTENT: factual/);
+});
 function route(rewriteResult) {
   const seen = { generation: 0, retrieval: 0, limiter: 0 };
   const apiAsk = runInNewContext(transpile(code) + ';apiAsk', {
@@ -148,4 +183,14 @@ test('the route still searches a real follow-up on its rewrite', async () => {
   const res = await ask('what about his votes?');
   assert.equal(res.status, 503);
   assert.equal(seen.retrieval, 1);
+});
+
+test('a factual flag, missing flag or malformed flag falls through to retrieval', async () => {
+  const question = "Which senator said 'Labor is bad' during the sitting?";
+  for (const line of [question + '\nINTENT: factual', question, question + '\nINTENT: unknown']) {
+    const { seen, ask } = route(readRewrite(line, question, PREVIOUS));
+    const res = await ask(question);
+    assert.equal(res.status, 503);
+    assert.deepEqual(seen, { generation: 0, retrieval: 1, limiter: 1 });
+  }
 });

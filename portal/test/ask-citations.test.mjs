@@ -79,6 +79,26 @@ for (const claim of [
   assert.equal(passage.after, ' A final sentence.');
   assert.equal(new URL(api.citationReadHref(source, passage.match)).searchParams.get('passage'), claim);
 });
+for (const suffix of ['Pty Ltd.', 'Co.', 'Inc.', 'No.']) test(`terminal ${suffix} does not merge the next cited claim`, () => {
+  const { api } = harness();
+  const previous = `The record label was Example ${suffix}`;
+  const claim = 'The minister voted against the bill.';
+  const answer = previous + ' ' + claim;
+  const start = Array.from(previous + ' ').length, end = Array.from(answer).length;
+  assert.equal(api.citationSupportSentence(answer, [start, end]), claim);
+  const passage = api.citationPassage(answer, claim);
+  assert.equal(passage.match, claim);
+  assert.equal(passage.before, previous + ' ');
+  assert.equal(new URL(api.citationReadHref(source, passage.match)).searchParams.get('passage'), claim);
+  assert.equal(api.citationSupportSentence(answer, [0, start - 1]), previous);
+});
+for (const claim of ['Example Co. received a grant.', 'Example Inc. discussed housing.', 'The record No. 3 listed divisions.', 'Example Pty. Ltd. received a grant.']) test(`internal abbreviation remains in its sentence: ${claim}`, () => {
+  const { api } = harness();
+  const answer = 'A preceding claim. ' + claim + ' Another claim.';
+  const end = Array.from(answer.slice(0, answer.indexOf(' Another'))).length;
+  assert.equal(api.citationSupportSentence(answer, [end - 1, end]), claim);
+  assert.equal(api.citationPassage(answer, claim).match, claim);
+});
 
 function documentHarness(passage, text = []) {
   const notes = [];

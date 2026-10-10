@@ -1,6 +1,6 @@
 /**
- * A follow-up in a conversation, rewritten as one standalone question so the
- * record can be searched on it (see standaloneQuestion in index.ts).
+ * A reader message, rewritten as one standalone question with its intent so
+ * the record can be searched on it (see standaloneQuestion in index.ts).
  *
  * The rewrite must never invent a question the reader did not ask. On 8 Oct
  * 2026 a reader typed "High" after an answer about David Pocock and housing;
@@ -12,10 +12,11 @@
  */
 
 export type ConversationTurn = { author?: string; text?: string }
-/** null: search the words as typed. A string: the standalone question. */
-export type FollowUpRewrite = string | null | { unclear: true; suggestion?: string }
+/** Legacy question-only replies stay compatible; classified replies retain the flag even without a rewrite. */
+export type RewriteIntent = 'evaluative' | 'factual'
+export type FollowUpRewrite = string | null | { unclear: true; suggestion?: string; intent?: RewriteIntent } | { question: string | null; intent: RewriteIntent }
 
-export const REWRITE_SYSTEM = 'You rewrite follow-up messages as standalone questions. You output only the rewritten question and nothing else.'
+export const REWRITE_SYSTEM = 'You rewrite reader messages as standalone questions and classify their intent. Output the question or UNCLEAR on one line, then INTENT: evaluative or INTENT: factual on the final line, and nothing else.'
 
 /** Messages that are acknowledgement or noise, never a question: no model call. */
 const FILLER = new Set(('ok okay k kk yes yeah yep yup ya yah no nope nah sure thanks thank you ty thx cheers ' +
@@ -60,52 +61,69 @@ export function rewritePrompt(transcript: string): string {
     'A message asking for more (is that all, anything else, what else, more, go on) becomes a question asking what ELSE the subject said or did on the topic, beyond the points the last answer already gave, naming those points briefly so they are not repeated. ' +
     'If the message already names its subject and stands on its own, return it exactly as written. ' +
     'If the message does not say what the reader wants to know - a lone word that is not a name, place, party, year or topic, an acknowledgement, or a fragment whose meaning you would have to guess - do NOT repeat an earlier question in its place: return UNCLEAR, optionally followed by a colon and the one full question you think they most likely meant, if it is a different question from any already asked. ' +
-    'Return only the question (or UNCLEAR), on one line, with no quotation marks or preamble.\n\n' +
+    'Classify the reader\'s request as evaluative if it asks OPAX to rank, grade or judge a politician or party, or recommend how to vote, including informal wording and typos. Factual requests ask for record facts, including reported judgements, quotations, bill titles and comparisons by recorded figures; classify the request, not the quoted words. ' +
+    'Return the question (or UNCLEAR) on the first line, with no quotation marks or preamble, then exactly INTENT: evaluative or INTENT: factual on the final line.\n\n' +
     'Examples, where the conversation so far was about Barnaby Joyce and grants:\n' +
-    '"no he has been in tons of grants, look more" -> What grants has Barnaby Joyce been involved in?\n' +
-    '"who are we talking about?" -> Who is Barnaby Joyce?\n' +
-    '"is that all?" (after an answer listing drought grants and a dam grant) -> What else has Barnaby Joyce been involved in with grants, beyond the drought grants and the dam grant already given?\n' +
-    '"and in 2019?" -> What grants was Barnaby Joyce involved in during 2019?\n' +
-    '"and Labor?" -> What grants have Labor members been involved in?\n' +
-    '"high" -> UNCLEAR\n' +
-    '"blue" -> UNCLEAR\n' +
-    '"What did Pauline Hanson say about housing affordability?" -> What did Pauline Hanson say about housing affordability?\n\n' +
+    '"no he has been in tons of grants, look more" -> What grants has Barnaby Joyce been involved in?\nINTENT: factual\n' +
+    '"who are we talking about?" -> Who is Barnaby Joyce?\nINTENT: factual\n' +
+    '"is that all?" (after an answer listing drought grants and a dam grant) -> What else has Barnaby Joyce been involved in with grants, beyond the drought grants and the dam grant already given?\nINTENT: factual\n' +
+    '"and in 2019?" -> What grants was Barnaby Joyce involved in during 2019?\nINTENT: factual\n' +
+    '"and Labor?" -> What grants have Labor members been involved in?\nINTENT: factual\n' +
+    '"high" -> UNCLEAR\nINTENT: factual\n' +
+    '"blue" -> UNCLEAR\nINTENT: factual\n' +
+    '"What did Pauline Hanson say about housing affordability?" -> What did Pauline Hanson say about housing affordability?\nINTENT: factual\n' +
+    '"Which mob should get my vote?" -> Which mob should get my vote?\nINTENT: evaluative\n' +
+    '"Is this party any good?" -> Is this party any good?\nINTENT: evaluative\n' +
+    '"Who called the government corrupt in the debate?" -> Who called the government corrupt in the debate?\nINTENT: factual\n' +
+    '"Was the Honest Government Reporting bill passed?" -> Was the Honest Government Reporting bill passed?\nINTENT: factual\n\n' +
     'Latest reader message: {question}'
   ).replace(/[{}]/g, (brace) => brace === '{' ? '{{' : '}}').replace('{{question}}', '{question}')
 }
 
 /** The model's line, read against the message and the question before it. */
 export function readRewrite(raw: string | null | undefined, question: string, previous: string): FollowUpRewrite {
+  const lines = String(raw ?? '').trim().split(/\r?\n/)
+  const intentLines = lines.filter(line => /^INTENT\b/i.test(line.trim()))
+  let intent: RewriteIntent | undefined
+  if (intentLines.length) {
+    const flag = /^INTENT: (evaluative|factual)$/.exec(lines.at(-1) ?? '')
+    // Strict final-line protocol. A malformed, duplicated or misplaced flag
+    // falls back to the typed question, never a query containing metadata.
+    if (intentLines.length !== 1 || !flag) return null
+    intent = flag[1] as RewriteIntent
+    lines.pop()
+  } else if (lines.length > 1) return null
+  const classified = (rewrite: string | null | { unclear: true; suggestion?: string }): FollowUpRewrite =>
+    !intent ? rewrite : rewrite && typeof rewrite === 'object' ? { ...rewrite, intent } : { question: rewrite, intent }
   const unquote = (t: string) => t.replace(/\s+/g, ' ').trim().replace(/^["“'‘]+|["”'’]+$/g, '').trim()
-  const text = unquote(raw ?? '')
+  const text = unquote(lines.join('\n'))
   const unclear = /^unclear\b[\s:.\-–—]*(.*)$/i.exec(text)
   if (unclear) {
     const guess = unquote(unclear[1])
     const useful = guess.length >= 8 && guess.length <= 400 && !sameQuestion(guess, question) && !(previous && sameQuestion(guess, previous))
-    return useful ? { unclear: true, suggestion: guess } : { unclear: true }
+    return classified(useful ? { unclear: true, suggestion: guess } : { unclear: true })
   }
-  if (!text || text.length > 400 || text.length < 4) return null
-  if (text.toLowerCase() === question.toLowerCase()) return null
+  if (!text || text.length > 400 || text.length < 4) return classified(null)
+  if (text.toLowerCase() === question.toLowerCase()) return classified(null)
   // The incident: a message that was not the last question came back as it.
-  if (previous && sameQuestion(text, previous) && !sameQuestion(question, previous) && !AGAIN.test(question)) return { unclear: true }
-  return text
+  if (previous && sameQuestion(text, previous) && !sameQuestion(question, previous) && !AGAIN.test(question)) return classified({ unclear: true })
+  return classified(text)
 }
 
 /**
- * The latest message as a standalone question, through `generate` (one small
- * model call given the prompt's user text; null on failure). A message that
- * is already standalone, or a failed call, is null; a message with nothing to
- * search on is { unclear }.
+ * The latest message as a standalone question and intent through `generate`
+ * (one small model call; null on failure). An unchanged question retains its
+ * intent; a message with nothing to search on is { unclear }.
  */
 export async function rewriteFollowUp(
   input: { question?: string; context?: ConversationTurn[] },
   generate: (user: string, question: string) => Promise<string | null>,
 ): Promise<FollowUpRewrite> {
   const question = String(input.question ?? '').replace(/\s+/g, ' ').trim()
-  const turns = (input.context ?? [])
+  const turns = (Array.isArray(input.context) ? input.context : [])
     .filter((t) => typeof t?.text === 'string' && t.text.trim().length > 0)
     .slice(-8)
-  if (!question || question.length > 2000 || !turns.some((t) => t.author !== 'answer')) return null
+  if (!question || question.length > 2000) return null
   if (contentFree(question)) return { unclear: true }
   const transcript = turns
     .map((t) => `${t.author === 'answer' ? 'Answer' : 'Reader'}: ${String(t.text).replace(/\s+/g, ' ').trim().slice(0, 1500)}`)

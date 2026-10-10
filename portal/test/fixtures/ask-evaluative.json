@@ -1,5 +1,5 @@
 {
-  "description": "100 offline intent regressions: the review’s 60 phrasings plus 20 new evaluative and 20 new factual questions. Neutral cases must skip all retrieval and generation.",
+  "description": "100 intent regressions: the first review’s 60 phrasings plus 20 new evaluative and 20 new factual questions. The fast path is precision-only; remaining evaluative requests use the combined rewrite/intent call.",
   "neutral": [
     "Who is the best politician?",
     "Who is the worst politician?",
