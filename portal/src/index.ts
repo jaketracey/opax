@@ -9,7 +9,7 @@ import { missingEntitySlug } from './crawl-hygiene'
 import { normalizePassage, passageWindow } from './passage-text'
 import { instrumentPage, instrumentReader } from './instruments'
 import { auditPage, auditReader } from './audit'
-import {grantFixtureHTML, grantFixtureResponse} from './grants-table-fixture'
+import {grantFixtureHTML, grantFixtureResponse, grantFixturePrivacy} from './grants-table-fixture'
 import {GRANTS_COVERAGE} from '../public/grants-table.js'
 import { hubPage } from './hubs'
 import { vicElectionPage, type VicElection } from './vic-election'
@@ -5410,6 +5410,9 @@ async function route(
   // held by this block, so the caching and SEO work landing on these same lines
   // merges line-by-line instead of conflicting on the whole hunk.
   {
+      if (url.pathname === '/api/table/grants/privacy') {
+        return grantFixturePrivacy(request, <T>(path: string) => assetJson<T>(env, path))
+      }
       if (url.pathname === '/api/table/grants') {
         return grantFixtureResponse(request, url, <T>(path: string) => assetJson<T>(env, path))
       }

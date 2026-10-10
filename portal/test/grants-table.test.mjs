@@ -1,23 +1,46 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
+import {isOrganisationRecipient} from '../public/recipient-privacy.js';
 import {grantsTableConfig, sanitizeGrantsState} from '../public/grants-table.js';
-import {grantFixtureQuery, grantFixtureRows, queryGrantFixture, grantFixtureResponse} from '../src/grants-table-fixture.ts';
+import {grantFixtureQuery, grantFixtureRows, queryGrantFixture, grantFixtureResponse, grantFixturePrivacy} from '../src/grants-table-fixture.ts';
+import {offline, loadWorker} from './worker-harness.mjs';
 
 const config = grantsTableConfig();
 const rows = [
-  {id: '1', recipient: 'Fixture Community Council', program: 'Community facilities', agency: 'Fixture Department of Services', value: 25000.75, date: '2026-08-19', electorate: 'Example district', address: '42 Fixture Road'},
-  {id: '2', recipient: 'Fixture Research Institute', program: 'Research grants', agency: 'Fixture Department of Health', value: 5000, date: '2025-01-01', electorate: 'Example district', address: '87 Sample Street'},
+  {id: '1', recipient: 'Fixture Community Council', recipientKind: 'council', program: 'Community facilities', agency: 'Fixture Department of Services', value: 25000.75, date: '2026-08-19', electorate: 'Example district', address: '42 Fixture Road'},
+  {id: '2', recipient: 'Fixture Research Institute', recipientKind: 'company', program: 'Research grants', agency: 'Fixture Department of Health', value: 5000, date: '2025-01-01', electorate: 'Example district', address: '87 Sample Street'},
 ];
 
 test('grants uses the frozen server contract with six columns and exact export', () => {
   assert.deepEqual(config.source, {endpoint: '/api/table/grants', params: {}});
   assert.equal(config.rows, undefined);assert.equal(config.privacy, 'donors');
   assert.deepEqual(config.columns.map(c => [c.key, c.type]), [['recipient', 'text'], ['program', 'category'], ['agency', 'category'], ['value', 'money'], ['date', 'date'], ['electorate', 'category']]);
-  assert.equal(config.columns[0].primary, true);assert.equal(config.columns[3].bar, true);
+  assert.equal(config.columns[0].primary, true);assert.equal(config.columns[3].bar, false);
   assert.equal(config.export.filename, 'grants.csv');
-  assert.equal(config.primaryLink({...rows[0], jurisdiction: 'federal', recipientId: 'abn:00000000000'}), '/money/grants/federal/recipient/abn%3A00000000000');
+  assert.equal(config.primaryLink({...rows[0], jurisdiction: 'federal', recipientId: 'abn:00000000000', recipientAvailable: true}), '/money/grants/federal/recipient/abn%3A00000000000');
   assert.equal(config.primaryLink({...rows[0], jurisdiction: 'federal', recipientId: 'person:withheld'}), null);
+  assert.equal(config.primaryLink({...rows[0], jurisdiction: 'federal', recipientId: 'abn:00000000000', recipientAvailable: false}), null);
+});
+
+test('recipient source types override organisation-looking labels and preserve positive controls', () => {
+  const recipient = {n: 'fixture-recipient Pty Ltd', k: 'company', id: 'abn:00000000000'};
+  for (const override of [{k: 'person'}, {k: 'individual'}, {k: 'sole trader'}, {kind: 'people'}, {k: 'sole proprietor'}, {abr: {etype: 'IND'}}, {abr: {type: 'Individual'}}, {abnType: 'Sole Trader'}, {id: 'person:fixture-recipient'}]) assert.equal(isOrganisationRecipient({...recipient, ...override}), false);
+  assert.equal(isOrganisationRecipient(recipient), true);
+  assert.equal(isOrganisationRecipient({n: 'fixture-recipient', k: 'company'}), true);
+  assert.equal(isOrganisationRecipient({n: 'fixture-recipient', abr: {etype: 'PRV'}}), true);
+  assert.equal(isOrganisationRecipient({n: 'fixture-recipient', k: 'other'}), false);
+});
+
+test('each facet keeps alternatives while respecting the search and all other filters', () => {
+  const {page} = queryGrantFixture(rows, {filters: {program: [rows[0].program]}});
+  assert.equal(page.total, 1);
+  assert.deepEqual(page.facets.program.map(f => f.value), rows.map(r => r.program));
+  assert.deepEqual(page.facets.agency, [{value: rows[0].agency, count: 1}]);
+  const bounded = queryGrantFixture(rows, {filters: {value: {min: 20000}}}).page;
+  assert.equal(bounded.total, 1);
+  assert.deepEqual(bounded.facets.value, {min: 5000, max: 25000.75});
+  assert.equal(queryGrantFixture(rows, {q: 'Research', filters: {program: [rows[0].program]}}).page.facets.program[0].value, rows[1].program);
 });
 
 test('grants search matches recipient, program and agency names, never an address or electorate', () => {
@@ -52,4 +75,29 @@ test('fixture endpoint serves bounded pages and exports every filtered award wit
   assert.equal(clean.q, undefined);assert.equal(clean.filters.recipient, undefined);
   const failure = await grantFixtureResponse(request, new URL(request.url), async () => {throw Error('fixture unavailable');});
   assert.equal(failure.status, 503);assert.deepEqual(await failure.json(), {error: 'Grant records are temporarily unavailable.'});
+});
+
+test('every generated recipient link resolves to an existing organisation page', async () => {
+  const restore = offline();
+  try {
+    const {fetch: worker} = await loadWorker(new URL('../src/index.ts', import.meta.url).pathname, new URL('../public/', import.meta.url).pathname);
+    const {rows} = await grantFixtureRows(read);
+    const links = [...new Set(rows.map(config.primaryLink).filter(Boolean))];
+    assert.ok(links.length > 0);
+    assert.ok(rows.some(row => !config.primaryLink(row)), 'unavailable destinations have no link');
+    for (const [i, path] of links.entries()) assert.equal((await worker(path)).status, 200, `recipient destination ${i}`);
+  } finally {restore();}
+});
+
+test('the core validation hook rejects recipient names independently of donor graphs', async () => {
+  const index = await read('/graph/grants.federal.json');
+  const names = index.recipients.filter(r => r.k === 'individual').map(r => r.n);
+  const request = text => new Request('https://fixture.test/api/table/grants/privacy', {method: 'POST', body: JSON.stringify({text})});
+  const rejected = await grantFixturePrivacy(request(names.join('\n')), read);
+  assert.deepEqual(await rejected.json(), {safe: false});
+  const {rows} = await grantFixtureRows(read);
+  const accepted = await grantFixturePrivacy(request(rows.find(r => !r.aggregate).recipient), read);
+  assert.deepEqual(await accepted.json(), {safe: true});
+  const failed = await grantFixturePrivacy(request('fixture'), async () => {throw Error('unavailable');});
+  assert.equal(failed.status, 503);assert.deepEqual(await failed.json(), {safe: false});
 });

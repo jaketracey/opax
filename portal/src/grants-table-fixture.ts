@@ -2,11 +2,14 @@
 // It reads a bounded sample of published awards; no private fixture is served.
 import {dataTableHTML, toCSV, type Page, type Query, type Row} from '../public/datatable.js'
 import {grantsTableConfig, GRANTS_SEARCH_KEYS} from '../public/grants-table.js'
+import {isOrganisationRecipient} from '../public/recipient-privacy.js'
 import {MONEY_GRAPHS, isOrganisationDonor, withheldPhrases, namesWithheldPhrase, donorPrivacyIndex, foldDonorName} from '../public/donor-entity.js'
 
 type Read = <T>(path: string) => Promise<T>
 type Graph = {nodes: {label: string; kind: string; aliases?: string[] | null}[]}
-type Program = {n: string; ag: string; grants: {id: string; rid: string; rn: string; k?: string; v: number; s?: string; a?: string; el?: string}[]}
+type Recipient = {id: string; n: string; k?: string; sh?: number; aliases?: string[]; abr?: {etype?: string; type?: string}; abnType?: string; kind?: string}
+type Award = Recipient & {rid: string; rn: string; v: number; s?: string; a?: string; el?: string}
+type Program = {n: string; ag: string; grants: Award[]}
 const sources = ['go3141', 'go90', 'go6284']
 const columns = grantsTableConfig().columns
 const integer = (s: string | null, fallback: number, max: number) => s && /^\d+$/.test(s) && Number.isSafeInteger(Number(s)) && Number(s) > 0 ? Math.min(Number(s), max) : fallback
@@ -40,18 +43,47 @@ export function grantFixtureQuery(params: URLSearchParams, urlKey = ''): Query {
 }
 
 export async function grantFixtureRows(read: Read): Promise<{rows: Row[]; withheld: (...values: unknown[]) => boolean}> {
-  const [programs, graphs] = await Promise.all([
+  const [programs, graphs, index] = await Promise.all([
     Promise.all(sources.map(key => read<Program>(`/grants/federal/programs/${key}.json`))),
     Promise.all(MONEY_GRAPHS.map(path => read<Graph>(path))),
+    read<{recipients: Recipient[]}>('/graph/grants.federal.json'),
   ])
+  // All recipients, including aliases outside the selected programs, participate
+  // in rejection. Missing index/shard data fails closed at the route boundary.
+  const shards = await Promise.all([...new Set(index.recipients.map(r => r.sh).filter((sh): sh is number => Number.isInteger(sh)))].map(sh => read<Record<string, Recipient>>(`/grants/federal/shard-${String(sh).padStart(2, '0')}.json`)))
+  const details = new Map(shards.flatMap(shard => Object.values(shard).map(r => [r.id, r] as const)))
+  const recipients = new Map(index.recipients.map(r => [r.id, r]))
+  const candidates = [...index.recipients, ...details.values(), ...programs.flatMap(p => p.grants.map(g => ({...g, id: g.rid, n: g.rn})))]
+  const phrase = (value: unknown) => foldDonorName(value).replace(/[^a-z0-9]+/g, ' ').trim()
+  const rejected = new Set(candidates.filter(r => !isOrganisationRecipient(r)).flatMap(r => [r.n, ...(r.aliases || [])]).flatMap(name => {
+    const inverted = /^([^,]+),\s*([^,]+)$/.exec(name)
+    return [name, ...(inverted ? [`${inverted[2]} ${inverted[1]}`] : [])].map(phrase).filter(Boolean)
+  }))
   const privacy = donorPrivacyIndex(graphs), phrases = withheldPhrases(graphs, [])
-  const withheld = (...values: unknown[]) => values.some(value => privacy.withheld.has(foldDonorName(value))) || namesWithheldPhrase(phrases, ...values)
-  const rows = programs.flatMap(program => program.grants.filter(g => g.k !== 'individual' && !g.rid.startsWith('person:') && isOrganisationDonor({label: g.rn}) && !withheld(g.rn, g.rid, g.id, program.n, program.ag, g.el)).map(g => ({
-    id: g.id, recipient: g.rn, recipientId: g.rid, jurisdiction: 'federal',
-    program: program.n, agency: program.ag, value: g.v,
-    date: g.s || g.a || null, electorate: g.el || 'Not recorded',
-    donor: {label: g.rn},
-  })))
+  const withheld = (...values: unknown[]) => values.some(value => {
+    const text = typeof value === 'object' && value != null ? JSON.stringify(value) : String(value ?? '')
+    const normalised = ` ${phrase(text)} `
+    return privacy.withheld.has(foldDonorName(text)) || namesWithheldPhrase(phrases, `donor receipts ${text}`)
+      || [...rejected].some(name => normalised.includes(` ${name} `))
+  })
+  const hidden: {id: string; value: number}[] = []
+  const rows: Row[] = programs.flatMap(program => program.grants.flatMap(g => {
+    const summary = recipients.get(g.rid), detail = details.get(g.rid)
+    const omit = () => {if (Number.isFinite(g.v)) hidden.push({id: g.rid, value: g.v}); return []}
+    // Do not overwrite contradictory source types when joining metadata.
+    if (![{...g, id: g.rid, n: g.rn}, summary, detail].filter(Boolean).every(r => isOrganisationRecipient(r)) || !isOrganisationDonor({label: g.rn, aliases: detail?.aliases})) return omit()
+    const row = {
+      id: g.id, recipient: g.rn, recipientId: g.rid, jurisdiction: 'federal',
+      recipientKind: detail?.k || summary?.k || g.k || g.kind,
+      recipientABNType: detail?.abr?.etype || detail?.abr?.type || g.abr?.etype || g.abr?.type || g.abnType || null,
+      recipientAvailable: Boolean(summary && detail && !withheld(summary.n, detail.n)),
+      program: program.n, agency: program.ag, value: g.v,
+      date: g.s || g.a || null, electorate: g.el || 'Not recorded',
+      donor: {label: g.rn, aliases: detail?.aliases || []},
+    }
+    return withheld(row) ? omit() : [row]
+  }))
+  if (hidden.length) rows.push({aggregate: {kind: 'individual-donors', subject: 'recipients', count: new Set(hidden.map(r => r.id)).size}, value: hidden.reduce((sum, r) => sum + r.value, 0)})
   return {rows, withheld}
 }
 
@@ -60,20 +92,22 @@ export function queryGrantFixture(rows: Row[], query: Query, withheld: (...value
   const texts = [query.q, ...Object.values(query.filters || {}).flatMap(v => Array.isArray(v) ? v : [])].filter(Boolean)
   // A rejected query returns neither names nor facets and is never echoed.
   if (withheld(...texts)) return {page: {rows: [], total: 0, page: 1, pageSize, facets: {}}, filtered: []}
-  const filtered = rows.filter(row => isOrganisationDonor({label: row.recipient as string}) && !withheld(...columns.map(c => row[c.key])))
+  const searched = rows.filter(row => (row.aggregate ? !query.q && !Object.keys(query.filters || {}).length : isOrganisationRecipient(row)) && !withheld(row))
     .filter(row => !query.q || GRANTS_SEARCH_KEYS.some(key => String(row[key] || '').toLowerCase().includes(query.q!.toLowerCase())))
-    .filter(row => Object.entries(query.filters || {}).every(([key, filter]) => Array.isArray(filter) ? filter.includes(String(row[key] || ''))
-      : (filter.min == null || Number(row[key]) >= filter.min) && (filter.max == null || Number(row[key]) <= filter.max)))
+  const matches = (row: Row, except = '') => Object.entries(query.filters || {}).every(([key, filter]) => key === except || (Array.isArray(filter) ? filter.includes(String(row[key] || ''))
+    : (filter.min == null || Number(row[key]) >= filter.min) && (filter.max == null || Number(row[key]) <= filter.max)))
+  const filtered = searched.filter(row => matches(row))
   const sort = query.sort || {key: 'value', dir: 'desc'}
   filtered.sort((a, b) => (sort.key === 'value' ? Number(a.value) - Number(b.value) : String(a[sort.key] || '').localeCompare(String(b[sort.key] || ''), 'en-AU')) * (sort.dir === 'asc' ? 1 : -1) || String(a.id).localeCompare(String(b.id)))
   const facets: NonNullable<Page['facets']> = {}
   for (const column of columns) if (column.facet) {
+    const alternatives = searched.filter(row => matches(row, column.key))
     if (column.key === 'value') {
-      const values = filtered.map(row => Number(row.value)).filter(Number.isFinite)
+      const values = alternatives.map(row => Number(row.value)).filter(Number.isFinite)
       if (values.length) facets.value = {min: Math.min(...values), max: Math.max(...values)}
     } else {
       const counts = new Map<string, number>()
-      for (const row of filtered) {const value = String(row[column.key]); counts.set(value, (counts.get(value) || 0) + 1)}
+      for (const row of alternatives.filter(row => !row.aggregate)) {const value = String(row[column.key]); counts.set(value, (counts.get(value) || 0) + 1)}
       facets[column.key] = [...counts].sort(([a], [b]) => a.localeCompare(b)).map(([value, count]) => ({value, count}))
     }
   }
@@ -94,9 +128,25 @@ export async function grantFixtureResponse(request: Request, url: URL, read: Rea
   } catch {return Response.json({error: 'Grant records are temporarily unavailable.'}, {status: 503, headers})}
 }
 
+// The core's privacyCheck hook uses the same recipient + donor index as rows.
+// Only a boolean is returned; this endpoint never publishes the rejection set.
+export async function grantFixturePrivacy(request: Request, read: Read): Promise<Response> {
+  const headers = {'cache-control': 'no-store', 'x-robots-tag': 'noindex'}
+  if (request.method !== 'POST') return Response.json({safe: false}, {status: 405, headers})
+  try {
+    const body = await request.text()
+    if (body.length > 10_000_000) return Response.json({safe: false}, {status: 413, headers})
+    const text: unknown = JSON.parse(body).text
+    if (typeof text !== 'string') return Response.json({safe: false}, {status: 400, headers})
+    const {withheld} = await grantFixtureRows(read)
+    return Response.json({safe: !withheld(text)}, {headers})
+  } catch {return Response.json({safe: false}, {status: 503, headers})}
+}
+
 export async function grantFixtureHTML(url: URL, read: Read): Promise<string> {
   const {rows, withheld} = await grantFixtureRows(read)
   const unavailable = url.searchParams.get('jur') === 'qld' || withheld(...url.searchParams.values())
   const {page} = queryGrantFixture(unavailable ? [] : rows, grantFixtureQuery(url.searchParams, 't'), withheld)
-  return `<div data-grants-table>${dataTableHTML(grantsTableConfig(url.searchParams), page)}</div>`
+  const config = {...grantsTableConfig(url.searchParams), privacyCheck: (text: string) => !withheld(text)}
+  return `<div data-grants-table>${dataTableHTML(config, page)}</div>`
 }

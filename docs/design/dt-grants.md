@@ -4,28 +4,46 @@
 `/api/table/grants`. The table state uses the `t` URL prefix. Existing program,
 recipient and largest-award deep links retain their record views.
 
-The six displayed row fields are `recipient`, `program`, `agency`, `value`,
-`date` and `electorate`. `value` is an exact numeric Australian-dollar award
-commitment; `date` is the source's start date, falling back to its approval date.
-Recipient links use `recipientId` and `jurisdiction`. The `donor` node contains
-the same public organisation label for the core's existing privacy adapter.
+The six displayed fields are `recipient`, `program`, `agency`, `value`, `date`
+and `electorate`. `value` is an exact numeric Australian-dollar award commitment;
+`date` is the start date, falling back to the approval date. Recipient links
+require `recipientAvailable`, checked against the index and recipient shard.
+Unavailable destinations return null. `recipientKind` and `recipientABNType`
+retain the metadata needed for privacy checks; source types are checked before
+joining so a conflicting individual/sole-trader type cannot be overwritten.
 
-The temporary handler in `portal/src/grants-table-fixture.ts` reads selected
-published GrantConnect program files. It exposes organisation awards only,
-fails closed on unreadable privacy data, and searches recipient, program and
-agency names only. Its CSV contains the complete filtered sample. The page
-identifies that coverage as a preview. Queensland data is outside this sample.
+`recipient-privacy.js` mirrors the app's `features/money-public/privacy.ts`:
+entity kinds and ABN types override labels. The frozen donor contract also
+requires organisation evidence in the public donor node. The server builds its
+rejection index from every federal grant recipient and alias, source recipient
+types, and the donor graphs. It checks all returned fields, including program,
+agency, IDs and link metadata. Name-only withheld queries return zero rows.
+The browser uses the core's `privacyCheck` hook against the same server index at
+`POST /api/table/grants/privacy`; only a boolean is returned. SSR supplies the
+same synchronous predicate. Initial hydration keeps the rejected query until
+core validation, so sanitising the URL cannot broaden the result set.
+
+Anonymous totals use the core's neutral aggregate shape, with optional
+`aggregate.subject: 'recipients'` for the fixed recipient wording. No IDs,
+links, names or categories survive in this row. These totals appear only in
+the unfiltered view; a name or facet search never confirms a withheld award.
+
+The temporary handler reads selected published GrantConnect program files.
+Search matches recipient, program and agency names only. Facets apply the
+search and all other filters, excluding their own. Numeric facet bounds span
+the complete result, so value bars use the same scale across pages. CSV exports
+the complete filtered sample, capped at 50,000 rows. The page identifies this
+coverage as a preview. Queensland data is outside this sample.
 
 At the DT-api merge, replace the temporary route and SSR sample reader with
-the shared endpoint/query engine. Keep the row fields above (or map the API's
-`amount` and `start_date` fields), include electorate and recipient link
-metadata, and keep free-text search restricted to the three name fields.
-The temporary query parser follows the core's serialized query, including JSON
-category arrays and numeric ranges. Do not substitute a different filter wire
-format at this boundary.
+the shared endpoint/query engine. Retain privacy validation, profile availability,
+row mappings (or map `amount` and `start_date`), electorate, and name-only search.
+The wire format uses JSON category arrays and numeric ranges. Normalised-query
+caching remains an API handoff check; this fixture deliberately returns no-store.
 
-No frozen contract types or fields changed. The rollout imports the existing
-renderer and hydration API; interactive controls and responsive cards arrive
-with DT-core. Private screenshots include the lane's before/after captures and
-an additional integration preview using the DT-core working copy. That preview
-does not change the committed core module.
+The Chrome gate is `portal/test/grants-table-browser.mjs`, run in an isolated
+network namespace with loopback enabled. It uses the real core and disk-backed
+Worker, blocks non-local requests, derives private test sets at run time, and
+checks initial URLs, actual CSV downloads, rendered/accessibility text, input,
+responses, analytics and URL state using the shared privacy assertion hook.
+Private screenshots are in `portal/private/dt-grants/` at 390 and 1280 pixels.

@@ -1,5 +1,6 @@
 import {dataTableHTML, mountDataTable, parseQuery, serializeQuery} from './datatable.js';
 import {isOrganisationDonor} from './donor-entity.js?v=2b8d45a50d';
+import {isOrganisationRecipient} from './recipient-privacy.js?v=491d974ab2';
 
 export const GRANTS_COVERAGE = 'Preview: selected published awards from GrantConnect. Values are commitments, not payments. Organisation recipients only.';
 export const GRANTS_SEARCH_KEYS = ['recipient', 'program', 'agency'];
@@ -11,15 +12,21 @@ export function grantsTableConfig(params = new URLSearchParams()) {
     id: 'grants', caption: 'Awards', pageType: 'grants', urlKey: 't',
     source: {endpoint: '/api/table/grants', params: jur === 'federal' || jur === 'qld' ? {jur} : {}},
     privacy: 'donors', pageSize: 50, defaultSort: {key: 'value', dir: 'desc'},
+    privacyCheck: async text => {
+      try {
+        const response = await fetch('/api/table/grants/privacy', {method: 'POST', headers: {'content-type': 'application/json'}, body: JSON.stringify({text})});
+        return response.ok && (await response.json()).safe === true;
+      } catch {return false;}
+    },
     columns: [
       {key: 'recipient', label: 'Recipient', type: 'text', primary: true},
       {key: 'program', label: 'Program', type: 'category', facet: 'multi'},
       {key: 'agency', label: 'Agency', type: 'category', facet: 'multi'},
-      {key: 'value', label: 'Value', type: 'money', bar: true, facet: 'range'},
+      {key: 'value', label: 'Value', type: 'money', bar: false, facet: 'range'},
       {key: 'date', label: 'Date', type: 'date'},
       {key: 'electorate', label: 'Electorate', type: 'category', facet: 'multi'},
     ],
-    primaryLink: row => isOrganisationDonor({label: row.recipient})
+    primaryLink: row => row.recipientAvailable === true && isOrganisationRecipient(row)
       && ['federal', 'qld'].includes(row.jurisdiction) && /^(?:abn|name):/.test(row.recipientId || '')
       ? `/money/grants/${row.jurisdiction}/recipient/${encodeURIComponent(row.recipientId)}` : null,
     export: {filename: 'grants.csv'},
@@ -66,20 +73,26 @@ export async function mountGrantsTable(el, params = new URLSearchParams(), optio
   const endpoint = new URL(config.source.endpoint, win.location.href);
   for (const [key, value] of Object.entries(config.source.params)) endpoint.searchParams.set(key, value);
   const query = parseQuery(params, config.urlKey);
+  // Preserve rejected input even while the contract stub supplies no parser.
+  for (const [key, value] of params) if (/^t\.(?:q|sort|page|pageSize|f\.(?:recipient|program|agency|value|electorate))$/.test(key)) endpoint.searchParams.set(key.slice(2), value);
   for (const [key, value] of new URLSearchParams(serializeQuery(query))) endpoint.searchParams.set(key, value);
   const signal = options.signal || controller.signal;
   const response = await win.fetch(endpoint, {signal});
   if (!response.ok) throw new Error('Grant table unavailable');
   const page = await response.json();
   signal.throwIfAborted();
-  // Remove unsubstantiated names before the core reads or writes URL state.
-  const url = new URL(win.location.href);
-  url.search = '';
-  for (const [key, value] of Object.entries(config.source.params)) url.searchParams.set(key, value);
-  for (const [key, value] of new URLSearchParams(serializeQuery(sanitizeGrantsState(query, page), config.urlKey))) url.searchParams.set(key, value);
-  win.history.replaceState(null, '', url.pathname + url.search + url.hash);
+  // Keep the original query until the core has requested its zero-result page.
+  // Rendering an empty response also fails closed while core privacy is pending.
   el.innerHTML = '<h1>Government grants</h1><p></p>' + grantsTableHTML(page, params);
   el.querySelector('p').textContent = GRANTS_COVERAGE;
   const handle = mountDataTable(el.querySelector('[data-grants-table]'), config);
+  // Temporary fail-closed guard: the core has already captured the query, so
+  // cleaning an empty initial result here cannot broaden its pending request.
+  if (page.total === 0) {
+    const url = new URL(win.location.href);
+    for (const key of [...url.searchParams.keys()]) if (key.startsWith('t.')) url.searchParams.delete(key);
+    for (const [key, value] of new URLSearchParams(serializeQuery(sanitizeGrantsState(query, page), config.urlKey))) url.searchParams.set(key, value);
+    win.history.replaceState(win.history.state, '', url);
+  }
   return {destroy() {controller.abort(); handle.destroy();}};
 }

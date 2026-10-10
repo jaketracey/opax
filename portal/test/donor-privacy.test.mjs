@@ -203,13 +203,14 @@ test('grants withhold individual recipients in rows, facets, CSV and URL state',
   // Names come only from the derived export set, including the existing fixtures.
   const privateGrants = checked.map((rn, i) => ({...publicGrant, id: `withheld-${i}`, rid: `abn:${String(i).padStart(11, '0')}`, rn, k: 'company'}));
   const program = {n: 'Community facilities', ag: 'Fixture Department of Services', grants: [publicGrant, ...privateGrants,
-    {...publicGrant, id: 'withheld-kind', rid: 'person:withheld', k: 'individual'},
+    {...publicGrant, id: 'withheld-kind', rid: 'person:withheld', rn: 'fixture-private-kind Pty Ltd', k: 'individual'},
     {...publicGrant, id: 'withheld-link', rid: `name:${checked[0]}`},
     {...publicGrant, id: `award:${checked[0]}`},
   ]};
-  const read = async path => path.startsWith('/grants/') ? program : graphs[MONEY_GRAPHS.indexOf(path)];
+  const read = async path => path.startsWith('/grants/federal/programs/') ? program : MONEY_GRAPHS.includes(path) ? graphs[MONEY_GRAPHS.indexOf(path)] : real(path);
   const {rows, withheld} = await grantFixtureRows(read);
-  assert.equal(rows.length, 3, 'one organisation award per fixture program');
+  assert.equal(rows.filter(row => !row.aggregate).length, 3, 'one organisation award per fixture program');
+  assert.equal(rows.filter(row => row.aggregate).length, 1, 'one neutral aggregate preserves anonymous totals');
   const config = grantsTableConfig();
   const {page, filtered} = queryGrantFixture(rows, {}, withheld);
   for (const [where, output] of Object.entries({rows: JSON.stringify(page.rows), facets: JSON.stringify(page.facets), CSV: toCSV(filtered, config), HTML: dataTableHTML(config, page)})) assertClean(`grants ${where}`, output);
@@ -234,6 +235,47 @@ test('grants withhold individual recipients in rows, facets, CSV and URL state',
       assertClean('grants fixture endpoint', path.startsWith('/money/') ? rendered(ownUrl(body, path)) : body);
     }
   } finally {env.ASSETS.fetch = originalFetch;}
+});
+
+// The grant recipient rejection set is independent of donor graphs.
+test('grants reject every indexed individual, aliases and contradictory source types', async () => {
+  const grantIndex = real('graph/grants.federal.json');
+  const individuals = grantIndex.recipients.filter(r => r.k === 'individual');
+  assert.equal(individuals.length, 45);
+  assert.ok(individuals.every(r => !index.withheld.has(foldDonorName(r.n))));
+  const names = [...new Set(individuals.flatMap(r => {
+    const shard = real(`grants/federal/shard-${String(r.sh).padStart(2, '0')}.json`);
+    const detail = Object.values(shard).find(d => d.id === r.id);
+    return [r.n, ...(detail?.aliases || [])];
+  }))];
+  const publicGrant = {id: 'fixture-award', rid: 'name:fixture-organisation', rn: 'Fixture Research Institute', k: 'company', v: 25000};
+  const overrides = [{k: 'person'}, {k: 'sole trader'}, {kind: 'people'}, {abr: {etype: 'IND'}}, {abnType: 'IND'}].map((override, i) => ({...publicGrant, id: `fixture-private-award-${i}`, rid: `abn:${String(i).padStart(11, '0')}`, rn: `fixture-recipient-${i} Pty Ltd`, ...override}));
+  const metadata = [{k: 'person'}, {k: 'sole trader'}, {abr: {etype: 'IND'}}].map((override, i) => ({id: `name:fixture-metadata-${i}`, n: `fixture-metadata-${i} Pty Ltd`, k: 'company', sh: 99, ...override}));
+  const metadataAwards = metadata.map((r, i) => ({...publicGrant, id: `fixture-metadata-award-${i}`, rid: r.id, rn: r.n}));
+  const cleanProgram = {n: 'Fixture program', ag: 'Fixture agency', grants: [publicGrant, ...overrides, ...metadataAwards]};
+  const programs = [cleanProgram, {...cleanProgram, n: names[0]}, {...cleanProgram, ag: names[1] || names[0]}];
+  const read = async path => path === '/graph/grants.federal.json' ? {...grantIndex, recipients: [...grantIndex.recipients, ...metadata.map(r => ({...r, k: 'company', abr: undefined}))]}
+    : path === '/grants/federal/shard-99.json' ? Object.fromEntries(metadata.map(r => [r.id, r]))
+    : path.startsWith('/grants/federal/programs/') ? programs[['go3141', 'go90', 'go6284'].findIndex(key => path.endsWith(key + '.json'))] : MONEY_GRAPHS.includes(path) ? graphs[MONEY_GRAPHS.indexOf(path)] : real(path);
+  const {rows, withheld} = await grantFixtureRows(read);
+  assert.equal(rows.filter(row => !row.aggregate).length, 1, 'organisation award remains; embedded withheld program/agency text is scrubbed');
+  const aggregate = rows.find(row => row.aggregate);
+  assert.deepEqual(Object.keys(aggregate).sort(), ['aggregate', 'value']);
+  assert.equal(aggregate.aggregate.subject, 'recipients');
+  const safe = value => !withheld(value);
+  const config = grantsTableConfig();
+  const {page, filtered} = queryGrantFixture(rows, {}, withheld);
+  for (const output of [page, page.facets, toCSV(filtered, config), dataTableHTML(config, page)]) assert.ok(safe(output));
+  for (const [i, name] of [...names, ...overrides.map(g => g.rn), ...metadata.map(r => r.n)].entries()) {
+    assert.ok(withheld(name), `grant rejection index ${i}`);
+    for (const query of [{q: name}, {filters: {program: [name]}}, {filters: {recipient: [name]}}]) {
+      const rejected = queryGrantFixture(rows, query, withheld);
+      assert.equal(rejected.page.total, 0, `grant rejected query ${i}`);
+      assert.ok(safe(rejected.page));
+      assert.ok(safe(toCSV(rejected.filtered, config)));
+      assert.ok(safe(serializeQuery(sanitizeGrantsState(query, rejected.page), 't')));
+    }
+  }
 });
 
 test('anonymising keeps every donor group and its totals: duplicated source ids never merge', () => {
