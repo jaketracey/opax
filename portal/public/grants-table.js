@@ -23,7 +23,7 @@ export function grantsTableConfig(params = new URLSearchParams()) {
       {key: 'recipient', label: 'Recipient', type: 'text', primary: true},
       {key: 'program', label: 'Program', type: 'category', facet: 'multi'},
       {key: 'agency', label: 'Agency', type: 'category', facet: 'multi'},
-      {key: 'value', label: 'Value', type: 'money', bar: false, facet: 'range'},
+      {key: 'value', label: 'Value', type: 'money', bar: true, facet: 'range'},
       {key: 'date', label: 'Date', type: 'date'},
       {key: 'electorate', label: 'Electorate', type: 'category', facet: 'multi'},
     ],
@@ -74,27 +74,16 @@ export async function mountGrantsTable(el, params = new URLSearchParams(), optio
   const endpoint = new URL(config.source.endpoint, win.location.href);
   for (const [key, value] of Object.entries(config.source.params)) endpoint.searchParams.set(key, value);
   const query = parseQuery(params, config.urlKey);
-  // Preserve rejected input even while the contract stub supplies no parser.
-  for (const [key, value] of params) if (/^t\.(?:q|sort|page|pageSize|f\.(?:recipient|program|agency|value|electorate))$/.test(key)) endpoint.searchParams.set(key.slice(2), value);
   for (const [key, value] of new URLSearchParams(serializeQuery(query))) endpoint.searchParams.set(key, value);
   const signal = options.signal || controller.signal;
   const response = await win.fetch(endpoint, {signal});
   if (!response.ok) throw new Error('Grant table unavailable');
   const page = await response.json();
   signal.throwIfAborted();
-  // Keep the original query until the core has requested its zero-result page.
-  // Rendering an empty response also fails closed while core privacy is pending.
+  // Core privacy validation owns the original query and its safe URL/echo.
   el.innerHTML = '<h1>Government grants</h1><p></p>' + grantsTableHTML(page, params);
   el.querySelector('p').textContent = GRANTS_COVERAGE;
   const root = el.querySelector('[data-grants-table]');
   const handle = mountDataTable(root, config);
-  // Temporary fail-closed guard: the core has already captured the query, so
-  // cleaning an empty initial result here cannot broaden its pending request.
-  if (page.total === 0) {
-    const url = new URL(win.location.href);
-    for (const key of [...url.searchParams.keys()]) if (key.startsWith('t.')) url.searchParams.delete(key);
-    for (const [key, value] of new URLSearchParams(serializeQuery(sanitizeGrantsState(query, page), config.urlKey))) url.searchParams.set(key, value);
-    win.history.replaceState(win.history.state, '', url);
-  }
   return {destroy() {controller.abort(); handle.destroy();}};
 }

@@ -5,10 +5,7 @@ import {readFile, mkdir, writeFile, appendFile} from 'node:fs/promises';
 import {createRequire} from 'node:module';
 import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
-const {tablePrivacyIndex, assertTablePrivacy} = await import('./datatable-privacy.mjs').catch(error => {
-  if (error.code !== 'ERR_MODULE_NOT_FOUND') throw error;
-  return import('./grants-table-privacy-fixture.mjs');
-});
+import {tablePrivacyIndex, assertTablePrivacy} from './datatable-privacy.mjs';
 import {grantFixtureRows} from '../src/grants-table-fixture.ts';
 import {grantPrivacyFixture} from './grants-table-privacy-fixture.mjs';
 const {chromium} = createRequire(resolve(process.env.DT_BROWSER_TOOLS || '/tmp/opax-dt-tools', 'package.json'))('playwright-core');

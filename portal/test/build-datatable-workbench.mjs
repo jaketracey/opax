@@ -2,13 +2,13 @@
 import {writeFileSync} from 'node:fs';
 import {applyQuery, dataTableHTML} from '../public/datatable.js';
 import {workbenchConfig,workbenchRows} from '../public/datatable-workbench-data.js';
-const table = dataTableHTML(workbenchConfig,applyQuery(workbenchRows,workbenchConfig,{}));
+const table = dataTableHTML({...workbenchConfig,privacyCheck:()=>true},applyQuery(workbenchRows,workbenchConfig,{}));
 writeFileSync(new URL('./fixtures/datatable.html',import.meta.url),`${table}\n`);
 writeFileSync(new URL('../public/datatable-workbench.html',import.meta.url),`<!doctype html>
 <html lang="en-AU"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow"><title>Table workbench · OPAX</title>
-<link rel="stylesheet" href="/tokens.css"><link rel="stylesheet" href="/ui-workbench.css"><link rel="stylesheet" href="/datatable.css"><link rel="stylesheet" href="/datatable-workbench.css">
+<link rel="stylesheet" href="/tokens.css"><link rel="stylesheet" href="/fonts.css"><link rel="stylesheet" href="/datatable.css"><link rel="stylesheet" href="/datatable-workbench.css">
 <script type="module" src="/datatable-workbench.js"></script>
 </head><body><main class="dt-workbench">
 <h1>Table workbench</h1><p>Explore receipts with search, filters and exact-value exports.</p>

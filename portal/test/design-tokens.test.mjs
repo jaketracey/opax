@@ -239,7 +239,9 @@ const TYPE_SKIP = new Set([...SKIP, 'src/og.ts', 'src/og-render.ts', 'src/commun
 // or a keyword that defers to one: "font: 600 1rem/1.4 var(--sans)",
 // "font-size: 13px", "font-weight: 700".
 const RAW_TYPE = /(?<![\w-])font(?:-size|-weight)?\s*:\s*(?!var\(|inherit\b|initial\b|unset\b|revert\b)[^\s;}"'`]/g;
-const rawTypeCounts = () => countPerFile((text) => text.match(RAW_TYPE)?.length ?? 0, TYPE_DIRS, TYPE_SKIP);
+// Font-face axis ranges describe a resource; element typography still requires roles.
+const typeCount = text => text.replace(/@font-face\s*\{[^}]*\}/g, '').match(RAW_TYPE)?.length ?? 0;
+const rawTypeCounts = () => countPerFile(typeCount, TYPE_DIRS, TYPE_SKIP);
 
 // Uses of a name design-tokens.json lists as deprecated for the web (aliases
 // kept for one release: --space-1..7, --line, --heading-*, --row-gap, ...).
@@ -249,7 +251,8 @@ const deprecatedCounts = () => countPerFile(
   TYPE_DIRS, TYPE_SKIP);
 
 test('the type and deprecated-name counters see what they should', () => {
-  const type = (css) => css.match(RAW_TYPE)?.length ?? 0;
+  const type = typeCount;
+  assert.equal(type('@font-face { font-weight: 400 700; } a { font-weight: 600; }'), 1);
   assert.equal(type('a { font: 600 1rem/1.4 var(--sans); font-size: 13px; font-weight: 700; }'), 3);
   assert.equal(type('a { font: var(--type-fine); font-size: inherit; font-weight: var(--x); font-family: var(--serif); font-variant-numeric: tabular-nums; --font-size: 2px; }'), 0);
   assert.ok(DEPRECATED.has('--space-3') && DEPRECATED.has('--line') && !DEPRECATED.has('--space-row'));

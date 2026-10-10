@@ -1328,7 +1328,7 @@ async function openMoneyRecords(kind, params) {
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
     if (grants && !params.has('program') && !params.has('open')) {
-      const mod = await import('/grants-table.js?v=d457225f93');
+      const mod = await import('/grants-table.js?v=a33c975d88');
       if (generation !== moneyRecordsGeneration) return;
       const controller = new AbortController();
       moneyRecordsHandle = {destroy() {controller.abort();}};

@@ -18,7 +18,7 @@ test('grants uses the frozen server contract with six columns and exact export',
   assert.deepEqual(config.source, {endpoint: '/api/table/grants', params: {}});
   assert.equal(config.rows, undefined);assert.equal(config.privacy, 'donors');
   assert.deepEqual(config.columns.map(c => [c.key, c.type]), [['recipient', 'text'], ['program', 'category'], ['agency', 'category'], ['value', 'money'], ['date', 'date'], ['electorate', 'category']]);
-  assert.equal(config.columns[0].primary, true);assert.equal(config.columns[3].bar, false);
+  assert.equal(config.columns[0].primary, true);assert.equal(config.columns[3].bar, true);
   assert.equal(config.export.filename, 'grants.csv');
   assert.equal(config.primaryLink({...rows[0], jurisdiction: 'federal', recipientId: 'abn:00000000000', recipientAvailable: true}), '/money/grants/federal/recipient/abn%3A00000000000');
   assert.equal(config.primaryLink({...rows[0], jurisdiction: 'federal', recipientId: 'person:withheld'}), null);
@@ -139,14 +139,10 @@ test('the real core applies recipient types to HTML and CSV without label-only e
   }
 });
 
-test('value bars stay disabled until a full-result scale is available', () => {
+test('value bars use one full-result scale across server pages', () => {
   const publicRows = rows.map(row => ({...row, donor: {label: row.recipient}}));
   const config = {...grantsTableConfig(), privacyCheck: () => true};
   const html = [1, 2].map(page => dataTableHTML(config, queryGrantFixture(publicRows, {page, pageSize: 1}).page));
-  if (!config.columns.find(c => c.key === 'value').bar) {
-    for (const page of html) assert.ok(!page.includes('--dt-bar:'));
-    return;
-  }
   const scales = html.map(text => text.match(/<small class="dt-scale">([^<]+)<\/small>/)?.[1]);
   assert.ok(scales[0]);assert.equal(scales[0], scales[1]);
   assert.ok(html[0].includes('--dt-bar:100%'));

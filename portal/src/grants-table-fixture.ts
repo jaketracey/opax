@@ -29,7 +29,7 @@ const sources = ['go3141', 'go90', 'go6284']
 const columns = grantsTableConfig().columns
 const integer = (s: string | null, fallback: number, max: number) => s && /^\d+$/.test(s) && Number.isSafeInteger(Number(s)) && Number(s) > 0 ? Math.min(Number(s), max) : fallback
 
-// Kept in the temporary fixture, rather than changing the frozen core stub.
+// Temporary endpoint parser; DT-api will own the same wire format after merge.
 export function grantFixtureQuery(params: URLSearchParams, urlKey = ''): Query {
   const prefix = urlKey ? `${urlKey}.` : '', filters: NonNullable<Query['filters']> = {}
   for (const column of columns) {
@@ -157,9 +157,10 @@ export async function grantFixtureResponse(request: Request, url: URL, read: Rea
     const {rows, withheld} = await grantFixtureRows(read)
     const unavailable = url.searchParams.get('jur') === 'qld' || withheld(...url.searchParams.values())
     const {page, filtered} = queryGrantFixture(unavailable ? [] : rows, grantFixtureQuery(url.searchParams), withheld)
-    return url.searchParams.get('format') === 'csv'
-      ? new Response(toCSV(filtered.slice(0, 50_000), grantsTableConfig()), {headers: {...headers, 'content-type': 'text/csv; charset=utf-8', 'content-disposition': 'attachment; filename="grants.csv"'}})
-      : Response.json(page, {headers})
+    if (url.searchParams.get('format') !== 'csv') return Response.json(page, {headers})
+    const truncated = filtered.length > 50_000
+    const csv = toCSV(filtered.slice(0, 50_000), grantsTableConfig()) + (truncated ? '\r\n# Export truncated at 50,000 rows.' : '')
+    return new Response(csv, {headers: {...headers, 'content-type': 'text/csv; charset=utf-8', 'content-disposition': 'attachment; filename="grants.csv"', ...(truncated ? {'x-table-export-truncated': 'true'} : {})}})
   } catch {return Response.json({error: 'Grant records are temporarily unavailable.'}, {status: 503, headers})}
 }
 

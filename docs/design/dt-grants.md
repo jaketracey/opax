@@ -20,10 +20,9 @@ types, and the donor graphs. It checks all returned fields, including program,
 agency, IDs and link metadata. Name-only withheld queries return zero rows.
 The config supplies `privacyCheck` against the same server index at
 `POST /api/table/grants/privacy`; only a boolean is returned. SSR supplies the
-same synchronous predicate. Core round 1 is merged; round 2 is pending. Until
-its shared hook lands, the endpoint and local initial-load guard fail closed.
-Initial hydration passes the rejected query to the core before sanitising the
-URL, so cleaning cannot broaden the result set.
+same synchronous predicate. Core round 2 (`7a57261b`) is merged. Its shared
+privacy handling owns initial hydration, safe query echoes and URL state;
+rejected search or facet values keep zero rows instead of broadening the query.
 
 Anonymous totals use the core's neutral aggregate shape, with optional
 `aggregate.subject: 'recipients'` for the fixed recipient wording. No IDs,
@@ -33,8 +32,8 @@ the unfiltered view; a name or facet search never confirms a withheld award.
 The temporary handler reads selected published GrantConnect program files.
 Search matches recipient, program and agency names only. Facets apply the
 search and all other filters, excluding their own. Numeric facet bounds span
-the complete result. Value bars stay disabled until core round 2 supplies one
-column-wide scale. CSV exports
+the complete result. Core round 2 supplies one column-wide value-bar scale,
+shared across pages. CSV exports
 the complete filtered sample, capped at 50,000 rows. The page identifies this
 coverage as a preview. Queensland data is outside this sample.
 
@@ -48,6 +47,5 @@ The Chrome gate is `portal/test/grants-table-browser.mjs`, run in an isolated
 network namespace with loopback enabled. It uses the real core and disk-backed
 Worker, blocks non-local requests, derives private test sets at run time, and
 checks initial URLs, actual CSV downloads, rendered/accessibility text, input,
-responses, analytics and URL state. It uses the shared privacy assertion hook
-when available, with a local fallback until the core round 2 merge.
+responses, analytics and URL state using the core's shared privacy assertion hook.
 Private screenshots are in `portal/private/dt-grants/` at 390 and 1280 pixels.
