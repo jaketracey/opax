@@ -2,7 +2,9 @@ import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import * as runtime from '../src/api/runtime';
 import * as c from '../src/api/catalogs';
-import { Text } from '../src/design/primitives';
+import { Disclosure, SourceLine, Text } from '../src/design/primitives';
+import { showMenu } from '../src/design/menu';
+import { openSource } from '../src/navigation/external';
 import { SourcesScreen } from '../src/features/sources/SourcesScreen';
 import { datasets } from '../src/features/sources/datasets';
 import { catalogs as pinnedCatalogs, pinned } from './pinned';
@@ -27,6 +29,7 @@ jest.mock('expo-constants', () => ({
     },
   },
 }));
+jest.mock('../src/design/menu', () => ({ showMenu: jest.fn() }));
 jest.mock('../src/navigation/external', () => ({
   openSource: jest.fn(),
   openOnWeb: jest.fn(),
@@ -135,4 +138,92 @@ test('central sources preserve every held money-map attribution and reuse term',
     }
     if (graph.meta.source_url) expect(all).toContain(graph.meta.source_url);
   }
+});
+
+// Design pass 4D: one pattern for every licence. A dataset's row names it and
+// its publisher; opened, it names a verified licence once, gives the terms in
+// full, and ends on one source line to its originals.
+test('each dataset is its publisher, then its licence, terms and one line to the originals', async () => {
+  let r!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    r = TestRenderer.create(<SourcesScreen />);
+  });
+  for (const dataset of datasets) {
+    const row = r.root
+      .findAllByType(Disclosure)
+      .find((n) => n.props.testID === `sources-dataset-${dataset.id}`)!;
+    expect(row.props.detail).toBe(dataset.publisher);
+    await press(r, `sources-dataset-${dataset.id}`);
+    const lines = r.root
+      .findAllByType(SourceLine)
+      .filter(
+        (n) => n.props.testID === `sources-dataset-${dataset.id}-originals`,
+      );
+    const links = new Set(
+      dataset.links
+        .filter((link) => link.url.startsWith('https://'))
+        .map((link) => link.url),
+    );
+    expect(lines).toHaveLength(links.size ? 1 : 0);
+    const licence = r.root
+      .findAllByType(Text)
+      .filter(
+        (n) => n.props.testID === `sources-dataset-${dataset.id}-licence`,
+      );
+    expect(licence.map((n) => n.props.children)).toEqual(
+      dataset.licence ? [`Licence: ${dataset.licence}`] : [],
+    );
+  }
+  await act(async () => r.unmount());
+});
+
+test('one original opens at once; several are listed by name', async () => {
+  let r!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    r = TestRenderer.create(<SourcesScreen />);
+  });
+  const line = (id: string) =>
+    r.root
+      .findAllByType(SourceLine)
+      .find((n) => n.props.testID === `sources-dataset-${id}-originals`)!;
+  await press(r, 'sources-dataset-hansard');
+  expect(line('hansard').props.label).toBe('Copyright and disclaimer');
+  await act(async () => line('hansard').props.onPress());
+  expect(openSource).toHaveBeenLastCalledWith(
+    'https://www.aph.gov.au/Help/Disclaimer_Privacy_Copyright',
+    'Copyright and disclaimer',
+  );
+  await press(r, 'sources-dataset-money-commonwealth');
+  expect(line('money-commonwealth').props.label).toBe(
+    'GrantConnect and 1 more',
+  );
+  await act(async () => line('money-commonwealth').props.onPress());
+  const [title, actions] = jest.mocked(showMenu).mock.calls.at(-1)!;
+  expect(title).toBe('Original records');
+  expect(actions.map((action) => action.title)).toEqual([
+    'GrantConnect',
+    'AusTender',
+  ]);
+  actions[1]!.onPress();
+  expect(openSource).toHaveBeenLastCalledWith(
+    'https://www.tenders.gov.au/',
+    'AusTender',
+  );
+  await act(async () => r.unmount());
+});
+
+test('the screen ends without a drawn end line, and a Commons credit is one line', async () => {
+  let r!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    r = TestRenderer.create(<SourcesScreen />);
+  });
+  expect(texts(r)).not.toContain('End of sources and licences');
+  expect(
+    r.root.findAllByProps({ testID: 'sources-end' }).length,
+  ).toBeGreaterThan(0);
+  const credit = r.root.findByProps({ testID: 'sources-portrait-sheena-watt' });
+  expect(credit.findAllByType(SourceLine).map((n) => n.props.label)).toEqual([
+    'Photo source and licence',
+  ]);
+  await act(async () => r.unmount());
 });

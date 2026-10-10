@@ -18,6 +18,7 @@ import {
 } from '../src/onboarding/layout';
 import { padSceneBox } from '../src/onboarding/padScenes';
 import { dispatchKeyCommand, onKeyCommand } from '../src/design/keyboard';
+import { SourceLine, StatusLabel } from '../src/design/primitives';
 
 // The window the tour reads: an iPad (regular from 700pt) unless `pad` is
 // false. Rotation and resizing change it between renders.
@@ -505,6 +506,65 @@ describe('VoiceOver on iPad', () => {
       .findAll((n) => n.type === 'Text' && n.props.numberOfLines !== undefined)
       .map((n) => n.props.numberOfLines);
     expect(lines.every((n) => !n)).toBe(true);
+    act(() => renderer.unmount());
+  });
+});
+
+// Design pass 4D: the pictures draw the screens as passes 3A to 3C left them,
+// so the tour never shows a Today or a bill that no longer exists.
+describe('the pictures draw the screens as they are now', () => {
+  const words = (node: ReactTestInstance) =>
+    node
+      .findAll((n) => typeof n.props.children === 'string')
+      .map((n) => n.props.children as string);
+
+  test('Today: the date and a rule, new bills as rows, recent declarations, ways into the record', () => {
+    const { renderer } = render();
+    const today = one(renderer.root, 'tour-pad-scene-about');
+    expect(words(today)).toEqual(
+      expect.arrayContaining([
+        'New in parliament',
+        'Just declared',
+        'Explore the record',
+        'Example Amendment Bill 2026',
+      ]),
+    );
+    // The independence line is at the foot of Today now (D4).
+    expect(words(today).join(' ')).not.toMatch(/independent and non-partisan/);
+    expect(today.findAllByType(StatusLabel).map((n) => n.props.label)).toEqual([
+      'Before Parliament',
+      'Passed',
+    ]);
+    act(() => renderer.unmount());
+  });
+
+  test('every picture: no uppercase label or kicker, status as a StatusLabel, one source line a block', () => {
+    const { renderer } = render();
+    const root = renderer.root;
+    for (const page of welcomePages) {
+      const scene = one(root, `tour-pad-scene-${page.id}`);
+      // Sentence case only (D6): no word in capitals but a name that is
+      // written so (OPAX, IPEA).
+      for (const text of words(scene))
+        expect(text.replace(/\b(OPAX|IPEA)\b/g, '')).not.toMatch(
+          /\b[A-Z]{3,}\b/,
+        );
+      // No kicker above a title ("Bill", "Your electorate").
+      for (const kicker of ['Bill', 'Your electorate'])
+        expect(words(scene)).not.toContain(kicker);
+    }
+    const bill = one(root, 'tour-pad-scene-bills-today');
+    expect(bill.findAllByType(StatusLabel).length).toBeGreaterThanOrEqual(3);
+    expect(words(bill)).not.toContain('View original');
+    const profile = one(root, 'tour-pad-scene-profiles');
+    expect(
+      profile.findAllByType(SourceLine).map((n) => n.props.citation),
+    ).toEqual([
+      'They Vote For You',
+      'Remuneration Tribunal',
+      'IPEA',
+      'Register of Members’ Interests',
+    ]);
     act(() => renderer.unmount());
   });
 });

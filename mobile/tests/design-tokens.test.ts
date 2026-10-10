@@ -291,7 +291,6 @@ describe('promised colour pairs pass in every theme', () => {
 // some, lower its number here.
 const COLOUR_BASELINE: Record<string, number> = {
   'src/features/money/ported/palette.ts': 1,
-  'src/features/talk/VoiceOrb.tsx': 11,
   'src/test-screens/VoiceBridgeTestScreen.tsx': 5,
   'src/design/menu.tsx': 1,
   'src/workbench/Workbench.tsx': 1,

@@ -4,7 +4,7 @@ import { ScrollView } from 'react-native';
 import { router } from 'expo-router';
 import * as voice from '../src/voice';
 import type { VoiceEvent, VoiceStatus } from '../src/voice';
-import { ErrorState, Field } from '../src/design/primitives';
+import { Button, ErrorState, Field, Section } from '../src/design/primitives';
 import {
   codeDigits,
   codeGate,
@@ -29,6 +29,7 @@ import { DeleteAccountFlow } from '../src/features/account/DeleteAccountFlow';
 import { AccountSection } from '../src/features/account/AccountSection';
 import { AccountScreen } from '../src/features/account/AccountScreen';
 import AccountEntry from '../src/features/account/entry';
+import { openOnWeb } from '../src/navigation/external';
 
 jest.mock('../src/voice', () => ({
   status: jest.fn(),
@@ -42,6 +43,10 @@ jest.mock('../src/voice', () => ({
 jest.mock('expo-router', () => ({
   router: { push: jest.fn(), back: jest.fn() },
   Stack: { Screen: () => null },
+}));
+jest.mock('../src/navigation/external', () => ({
+  ...jest.requireActual('../src/navigation/external'),
+  openOnWeb: jest.fn(),
 }));
 
 const mocked = jest.mocked(voice);
@@ -334,6 +339,44 @@ describe('Account section', () => {
     expect(button(renderer, 'account-workbench')).toBeTruthy();
     expect(button(renderer, 'account-replay-tour')).toBeTruthy();
   });
+  test('the sheet: the account, then one list of rows, with one primary action', async () => {
+    const renderer = await render(<AccountEntry />);
+    // Signed out, Sign in is the sheet's one primary (navy) action.
+    const primaries = renderer.root
+      .findAllByType(Button)
+      .filter((node) => node.props.variant === 'primary');
+    expect(primaries.map((node) => node.props.testID)).toEqual([
+      'account-sign-in-start',
+    ]);
+    // No block repeats the sheet's title: no section headings at all, and
+    // no "About OPAX" section whose first row is About OPAX.
+    expect(
+      renderer.root.findAllByType(Section).filter((node) => node.props.title),
+    ).toEqual([]);
+    for (const id of [
+      'account-community',
+      'account-about',
+      'account-sources',
+      'account-replay-tour',
+    ])
+      expect(button(renderer, id)).toBeTruthy();
+    // The independence statement is on About and in the tour (D4).
+    expect(shows(renderer, 'independent and non-partisan')).toBe(false);
+  });
+  test('signed in, sign-out and deletion sit together with no primary action', async () => {
+    mocked.status.mockResolvedValue({ ok: true, value: status() });
+    const renderer = await render(<AccountEntry />);
+    expect(
+      renderer.root
+        .findAllByType(Button)
+        .filter((node) => node.props.variant === 'primary'),
+    ).toEqual([]);
+    expect(
+      renderer.root
+        .findAllByType(Button)
+        .find((node) => node.props.testID === 'account-delete')!.props.variant,
+    ).toBe('danger');
+  });
 });
 
 describe('Sign in by code', () => {
@@ -350,8 +393,11 @@ describe('Sign in by code', () => {
     expect(
       shows(renderer, 'Accounts and voice are for people aged 16 and over.'),
     ).toBe(true);
+    // The privacy policy is one row on opax.com.au (Safari's symbol).
     const privacy = renderer.root.findByProps({ testID: 'account-privacy' });
-    expect(privacy.props.path).toBe('/privacy');
+    expect(privacy.props.external).toBe(true);
+    act(() => privacy.props.onPress());
+    expect(openOnWeb).toHaveBeenLastCalledWith('/privacy', 'Privacy policy');
     const email = field(renderer, 'account-email').props;
     expect(email).toMatchObject({
       label: 'Email',
@@ -579,7 +625,12 @@ describe('Delete account', () => {
     const policy = renderer.root.findByProps({
       testID: 'account-deletion-policy',
     });
-    expect(policy.props.path).toBe('/privacy#privacy-deletion');
+    expect(policy.props.external).toBe(true);
+    act(() => policy.props.onPress());
+    expect(openOnWeb).toHaveBeenLastCalledWith(
+      '/privacy#privacy-deletion',
+      accountCopy.deletionPolicy,
+    );
   });
   test('after five deletion codes the challenge is not tried again', async () => {
     mocked.deleteAccount.mockResolvedValue({

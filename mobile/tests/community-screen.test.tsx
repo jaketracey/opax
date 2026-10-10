@@ -7,8 +7,15 @@ import { clearCommunity } from '../src/features/community/session';
 import { Platform } from 'react-native';
 let mockParams: Record<string, string> = { view: 'home' };
 let mockFocused = false;
+let mockSignedIn = true;
+let mockOptions: Record<string, unknown> = {};
 jest.mock('expo-router', () => ({
-  Stack: { Screen: () => null },
+  Stack: {
+    Screen: (p: { options: Record<string, unknown> }) => {
+      mockOptions = p.options;
+      return null;
+    },
+  },
   router: { push: jest.fn(), back: jest.fn() },
   useLocalSearchParams: () => mockParams,
   useFocusEffect: (callback: () => void | (() => void)) =>
@@ -22,7 +29,7 @@ jest.mock('../modules/opax-voice', () => ({
   default: { communityRequest: jest.fn() },
 }));
 jest.mock('../src/features/account/store', () => ({
-  useAccount: () => ({ status: { signedIn: true } }),
+  useAccount: () => ({ status: { signedIn: mockSignedIn } }),
 }));
 jest.mock('../src/design/primitives', () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -81,6 +88,8 @@ beforeEach(() => {
   request.mockReset();
   mockParams = { view: 'home' };
   mockFocused = false;
+  mockSignedIn = true;
+  mockOptions = {};
   jest.mocked(router.push).mockClear();
 });
 afterEach(() => {
@@ -177,7 +186,7 @@ it('searches only on explicit submit, and ignores an unchanged trimmed query', a
   expect(request.mock.calls[1]![0]).toContain('q=bill');
   await act(async () => input().props.onChangeText(' bill '));
   await act(async () => input().props.onSubmitEditing());
-  await press('community-search-submit');
+  await act(async () => input().props.onSubmitEditing());
   expect(router.push).toHaveBeenCalledTimes(1);
   expect(request).toHaveBeenCalledTimes(2);
 });
@@ -276,4 +285,94 @@ it('clears a draft when a deep link reuses the dynamic route for another discuss
   ).toBe('');
   expect(request).toHaveBeenCalledTimes(2);
   expect(request.mock.calls.every((call) => call[1] === 'GET')).toBe(true);
+});
+
+const ids = () =>
+  new Set(
+    screen.root
+      .findAll((n) => typeof n.props.testID === 'string')
+      .map((n) => n.props.testID as string),
+  );
+it('signed out, the home shows Latest only and one sign-in prompt for the member pages', async () => {
+  mockFocused = true;
+  mockSignedIn = false;
+  request.mockResolvedValue(reply({ threads: [], more: false }));
+  await act(async () => {
+    screen = create(<CommunityScreen />);
+  });
+  const shown = ids();
+  expect(shown.has('community-feeds')).toBe(false);
+  expect(shown.has('community-new')).toBe(false);
+  for (const view of [
+    'members',
+    'messages',
+    'activity',
+    'lists',
+    'profile',
+    'settings',
+  ])
+    expect(shown.has(`community-open-${view}`)).toBe(false);
+  expect(
+    screen.root.findAll(
+      (n) =>
+        n.props.testID === 'community-sign-in' && n.props.variant === 'primary',
+      { deep: false },
+    ),
+  ).toHaveLength(1);
+  expect(shown.has('community-open-guidelines')).toBe(true);
+  // Refresh is a pull, not a drawn button.
+  expect(shown.has('community-refresh')).toBe(false);
+  expect(mockOptions).toEqual({ title: 'Community' });
+});
+it('signed in, the home keeps the feeds, Start a discussion and the member pages', async () => {
+  mockFocused = true;
+  request.mockResolvedValue(reply({ threads: [], more: false }));
+  await act(async () => {
+    screen = create(<CommunityScreen />);
+  });
+  const shown = ids();
+  expect(shown.has('community-feeds')).toBe(true);
+  expect(shown.has('community-new')).toBe(true);
+  expect(shown.has('community-open-members')).toBe(true);
+  expect(shown.has('community-sign-in')).toBe(false);
+});
+it('a discussion is titled once, by its heading; a reply is reported from its byline', async () => {
+  mockFocused = true;
+  mockParams = { view: 'thread', id: 'discussion-a' };
+  request.mockResolvedValue(
+    reply({
+      thread: {
+        id: 'discussion-a',
+        member_id: 'reader-a',
+        title: 'Discussion title',
+        body: 'Discussion body',
+        display_name: 'Fixture Member',
+        replies: 1,
+        likes: 0,
+      },
+      replies: [
+        {
+          id: 'reply-a',
+          member_id: 'reader-b',
+          body: 'Reply body',
+          display_name: 'Other Fixture',
+        },
+      ],
+    }),
+  );
+  await act(async () => {
+    screen = create(<CommunityScreen />);
+  });
+  expect(mockOptions).toEqual({ title: 'Discussion', headerTitle: '' });
+  const flag = screen.root.findAll(
+    (n) => n.props.testID === 'community-report-reply-reply-a',
+  )[0]!;
+  expect(flag.props.symbol).toBe('flag');
+  expect(flag.props.accessibilityLabel).toBe('Report reply from Other Fixture');
+  await press('community-report-reply-reply-a');
+  expect(router.push).toHaveBeenCalledWith(
+    expect.objectContaining({
+      params: { view: 'report', id: 'reply-a', kind: 'content' },
+    }),
+  );
 });

@@ -15,9 +15,11 @@ const ROLES = {
   countdown: 'control with tabular',
 };
 // Retired components: zero uses outside src/design, which keeps any alias.
-// Aliases still in use (UpdatedCaption, BillStatus, VoteSide, RoundButton,
-// AsAtLine, SourceLink, ...) are counted by the ratchet test instead.
+// Aliases still in use (UpdatedCaption, VoteSide, AsAtLine, SourceLink, ...)
+// are counted by the ratchet test instead.
 const COMPONENTS = {
+  BillStatus: 'StatusLabel',
+  RoundButton: 'IconButton (size="large")',
   PartyChip: 'PartyLabel (dense, linked={false})',
   MachineWritten: 'MachineLabel',
   SplitEmpty: 'EmptyState size="pane"',

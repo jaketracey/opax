@@ -11,13 +11,8 @@
     "src/features/records/BillTextReader.tsx": 2,
     "src/features/records/DocumentReader.tsx": 2,
     "src/features/your-mp/Evidence.tsx": 1,
-    "src/onboarding/padScenes.tsx": 2,
-    "src/onboarding/scenes.tsx": 2,
     "src/test-screens/MoneyMapSpike.tsx": 1,
     "src/workbench/Workbench.tsx": 6
-  },
-  "BillStatus": {
-    "src/onboarding/padScenes.tsx": 1
   },
   "Figure": {
     "src/workbench/Workbench.tsx": 4
@@ -29,21 +24,13 @@
     "src/features/people/Sections.tsx": 2
   },
   "OpaxWebLink": {
-    "src/features/About.tsx": 2,
     "src/features/Party.tsx": 2,
     "src/features/Person.tsx": 2,
-    "src/features/account/DeleteAccountFlow.tsx": 1,
-    "src/features/account/SignInFlow.tsx": 1,
     "src/features/people/FinancialBlocks.tsx": 1,
-    "src/features/sources/SourcesScreen.tsx": 1,
     "src/features/split/RecordDetail.tsx": 1,
     "src/workbench/Workbench.tsx": 1
   },
-  "RoundButton": {
-    "src/features/talk/TalkScreen.tsx": 5
-  },
   "Section info": {
-    "src/features/About.tsx": 1,
     "src/features/Electorate.tsx": 1,
     "src/features/Party.tsx": 4,
     "src/features/Person.tsx": 2,
@@ -70,7 +57,6 @@
     "src/features/people/ExpenseGlossary.tsx": 1,
     "src/features/people/PartyDepth.tsx": 2,
     "src/features/people/Sections.tsx": 1,
-    "src/features/sources/SourcesScreen.tsx": 2,
     "src/workbench/Workbench.tsx": 2
   },
   "StaleNotice": {
@@ -86,35 +72,24 @@
     "src/features/records/BillTextReader.tsx": 1,
     "src/features/records/DocumentReader.tsx": 1,
     "src/features/reports/TodayReports.tsx": 1,
-    "src/features/your-mp/Evidence.tsx": 1,
-    "src/onboarding/padScenes.tsx": 1
+    "src/features/your-mp/Evidence.tsx": 1
   },
   "VoteSide": {
     "src/features/YourMP.tsx": 2
   },
   "old spacing step": {
     "src/features/ask/AskProgress.tsx": 1,
-    "src/features/ask/AskScreen.tsx": 1,
-    "src/features/talk/AnswerCaption.tsx": 1,
-    "src/features/talk/CallControls.tsx": 1,
-    "src/features/talk/Consent.tsx": 2,
-    "src/features/talk/SourcesSheet.tsx": 2,
-    "src/features/talk/TalkScreen.tsx": 1,
-    "src/onboarding/WelcomeTour.tsx": 6,
-    "src/onboarding/padScenes.tsx": 2,
-    "src/onboarding/scenes.tsx": 1
+    "src/features/ask/AskScreen.tsx": 1
   },
   "radius token": {
     "src/features/money/ported/force3d.ts": 7,
     "src/features/money/ported/map-types.ts": 2,
-    "src/features/talk/VoiceOrb.tsx": 1,
-    "src/onboarding/WelcomeTour.tsx": 2
+    "src/features/talk/VoiceOrb.tsx": 1
   },
   "static palette read": {
     "src/app/_layout.tsx": 1,
     "src/features/electorate-map/OutlineMap.tsx": 3,
     "src/features/explore/Picture.tsx": 3,
-    "src/features/talk/VoiceOrb.tsx": 3,
     "src/navigation/AndroidReadingHeader.tsx": 5,
     "src/navigation/AndroidTabs.tsx": 2,
     "src/navigation/chrome.ts": 3,

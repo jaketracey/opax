@@ -20,11 +20,14 @@ name: 14 About, coverage, privacy, then Sources and licences with source terms a
       id: about-resources
     timeout: 90000
 - takeScreenshot: ${EVIDENCE}/14-coverage
+# The snapshot date and the one caveat line; the details sit behind
+# disclosures and the source line.
 - scrollUntilVisible:
     element:
-      id: about-checked-at
+      id: about-snapshot
     timeout: 90000
-- takeScreenshot: ${EVIDENCE}/14-checked-at
+- assertVisible: .*Counts describe collected records, not live search totals\.
+- takeScreenshot: ${EVIDENCE}/14-snapshot
 - scrollUntilVisible:
     element:
       id: about-coverage-as-at
