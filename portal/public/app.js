@@ -2687,28 +2687,54 @@ function renderAnswer(container, text, response = {}) {
   wireAskCitations(container, evidence);
 }
 
+// The reading link and the document highlighter share the same anchor limit.
+const CITATION_PASSAGE_MAX_LENGTH = 2400;
+
 function trimCitationSentence(text, limit = 240) {
   const clean = String(text).replace(/⟦source:\d+⟧/g, '').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/[*#_`]/g, '').replace(/\s+/g, ' ').trim();
   return clean.length > limit ? clean.slice(0, limit).replace(/\s+\S*$/, '') + '…' : clean;
 }
 
+function citationSentences(value) {
+  const text = String(value || ''), sentences = [];
+  let start = 0;
+  const push = end => {
+    while (start < end && /\s/.test(text[start])) start++;
+    if (start < end) sentences.push({ text: text.slice(start, end).trimEnd(), start, end });
+    start = end;
+  };
+  for (let i = 0; i < text.length; i++) {
+    if (text[i] === '\n') { push(i); start = i + 1; continue; }
+    if (!/[.!?…]/.test(text[i])) continue;
+    if (text[i] === '.') {
+      // Decimal amounts and dotted dates, initials, titles and abbreviations
+      // are part of the sentence, not the start of a new supported claim.
+      if (/\d/.test(text[i - 1] || '') && /\d/.test(text[i + 1] || '')) continue;
+      if (/(?:\b(?:Mr|Mrs|Ms|Dr|St|No|Hon|Prof|Cth|Pty|Ltd|e\.g|i\.e)|\b[A-Z])\.$/i.test(text.slice(Math.max(0, i - 12), i + 1))) continue;
+    }
+    let end = i + 1;
+    while (end < text.length && /[.!?…"'”’)\]*_`]/.test(text[end])) end++;
+    if (end < text.length && !/\s/.test(text[end])) continue;
+    push(end); i = end - 1;
+  }
+  push(text.length);
+  return sentences;
+}
+
 function citationSupportSentence(answer, range) {
   const points = Array.from(String(answer || ''));
-  const at = Math.max(0, (range?.[1] || points.length) - 1);
-  let start = at;
+  let at = Math.max(0, Math.min(points.length - 1, (range?.[1] || points.length) - 1));
   // A provider range may end on punctuation or whitespace after the claim.
-  while (start > 0 && /[\s.!?"”’)*_`]/.test(points[start])) start--;
-  let end = start;
-  while (start > 0 && !/[.!?\n]/.test(points[start - 1])) start--;
-  while (end < points.length && !/[.!?\n]/.test(points[end])) end++;
-  while (end < points.length && /[.!?"”’)*_`]/.test(points[end])) end++;
-  return trimCitationSentence(points.slice(start, end).join(''));
+  while (at > 0 && /[\s.!?"”’)*_`]/.test(points[at])) at--;
+  const offset = points.slice(0, at).join('').length;
+  const sentence = citationSentences(answer).find(s => s.start <= offset && offset < s.end);
+  return trimCitationSentence(sentence?.text || '');
 }
 
 function citationPassage(snippet, sentence) {
   const text = String(snippet || '').trim().replace(/\s+/g, ' ');
   const terms = new Set((sentence.toLowerCase().match(/[\p{L}\p{N}]{4,}/gu) || []).filter(t => !['that', 'this', 'with', 'from', 'have', 'were', 'their', 'about', 'said'].includes(t)));
-  const candidates = [...text.matchAll(/[^.!?…]+[.!?]?/g)].map(m => ({ text: m[0].trim(), at: m.index + m[0].indexOf(m[0].trim()) }));
+  const candidates = citationSentences(text);
   let best = null, score = 0;
   for (const candidate of candidates) {
     const hits = new Set((candidate.text.toLowerCase().match(/[\p{L}\p{N}]{4,}/gu) || []).filter(t => terms.has(t))).size;
@@ -2716,7 +2742,7 @@ function citationPassage(snippet, sentence) {
   }
   // With no lexical overlap, the cited original excerpt is the passage.
   const match = best?.text || text.replace(/^[.…\s]+|[.…\s]+$/g, '');
-  const at = best?.at ?? text.indexOf(match);
+  const at = best?.start ?? text.indexOf(match);
   return { text, match, before: text.slice(0, at), after: text.slice(at + match.length) };
 }
 
@@ -2728,8 +2754,11 @@ function citationSourceKind(source) {
 function citationReadHref(source, passage) {
   const url = new URL(searchResultHref(source), location.origin);
   if (!['http:', 'https:'].includes(url.protocol)) return '';
-  if (url.origin === location.origin && url.pathname.startsWith('/doc/') && passage) url.searchParams.set('passage', passage);
-  if (passage) url.hash = (url.hash.split(':~:')[0] || '#') + ':~:text=' + encodeURIComponent(passage).replace(/-/g, '%2D');
+  const clean = String(passage || '').replace(/\s+/g, ' ').trim();
+  const boundary = clean.lastIndexOf(' ', CITATION_PASSAGE_MAX_LENGTH);
+  const anchor = clean.length <= CITATION_PASSAGE_MAX_LENGTH ? clean : boundary < 0 ? '' : clean.slice(0, boundary);
+  if (url.origin === location.origin && url.pathname.startsWith('/doc/') && passage) url.searchParams.set('passage', anchor);
+  if (anchor) url.hash = (url.hash.split(':~:')[0] || '#') + ':~:text=' + encodeURIComponent(anchor).replace(/-/g, '%2D');
   return url.href;
 }
 
@@ -10005,13 +10034,14 @@ async function runAsk(question) {
     $("ask-retrieval-note").hidden = calculated;
     $("ask-sources").open = false; // each new answer starts folded
     $("ask-sources").hidden = !sources.length;
+    $("ask-export-picker").hidden = !sources.length;
     // The finished answer replaces the streamed one: let that settle before a
     // shift in the page counts as the reader deciding to move on. People first,
     // so the rail opens on them rather than flashing a quote on the way.
     holdPeopleRail(600);
     setPeopleRail(citedList);
     setQuoteRail(citedList);
-    renderAskAgainChips();
+    if (data.answer_status !== 'neutral') renderAskAgainChips();
     $("ask-answer").focus({ preventScroll: true });
   } catch (err) {
     if (askAbort !== myAbort) return; // a newer request owns the UI now
@@ -13133,9 +13163,18 @@ function docAskQuestion(doc, debate, isRecord) {
 
 // Preserve the source verbatim, including whitespace. Only presentation changes.
 function highlightDocCitation() {
-  const match = new URLSearchParams(location.search).get('passage');
-  if (!match || match.length > 2400) return;
+  $('doc-citation-fallback')?.remove();
+  const params = new URLSearchParams(location.search);
+  if (!params.has('passage')) return;
+  const match = params.get('passage');
   const root = $('doc-text');
+  const fallback = () => {
+    const note = document.createElement('p');
+    note.id = 'doc-citation-fallback'; note.className = 'doc-citation-fallback'; note.setAttribute('role', 'status');
+    note.textContent = "Couldn't find the exact passage; showing the full speech.";
+    root.parentElement.before(note);
+  };
+  if (!match?.trim() || match.length > CITATION_PASSAGE_MAX_LENGTH) { fallback(); return; }
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
   const chars = [], positions = [];
   while (walker.nextNode()) {
@@ -13148,7 +13187,7 @@ function highlightDocCitation() {
   }
   const needle = match.replace(/\s+/g, ' ').trim();
   const start = chars.join('').toLowerCase().indexOf(needle.toLowerCase());
-  if (start < 0) return;
+  if (start < 0) { fallback(); return; }
   const matched = positions.slice(start, start + needle.length);
   const nodes = [...new Set(matched.map(p => p.node))];
   let first;

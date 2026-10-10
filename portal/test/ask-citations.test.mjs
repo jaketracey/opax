@@ -5,7 +5,7 @@ import { runInNewContext } from 'node:vm';
 import { cleanEvent } from '../analytics/privacy.mjs';
 
 const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
-const helpers = app.slice(app.indexOf('function trimCitationSentence('), app.indexOf('// Citation ranges come from'));
+const helpers = app.slice(app.indexOf('const CITATION_PASSAGE_MAX_LENGTH'), app.indexOf('// Citation ranges come from'));
 function harness(phone = false) {
   const events = [], keys = {};
   let document;
@@ -60,6 +60,77 @@ test('the matching original sentence is highlighted within the excerpt and deep 
   assert.equal(url.pathname, '/doc/speech-1');
   assert.equal(url.searchParams.get('passage'), match.match);
   assert.equal(decodeURIComponent(url.hash), '#:~:text=' + match.match);
+});
+for (const claim of [
+  'The health programme costs $1.5 billion annually.',
+  'The payment was $1,234.56 on 10.10.2026.',
+  'Mr. Speaker asked Dr. Minister about St. Road and record No. 3.',
+  'A. B. MP discussed investment of $1.5 billion.',
+  'The programme funds services, e.g. health care, i.e. access to treatment.',
+  'The Cth. record says Example Organisation Pty. Ltd. received a grant.',
+]) test(`support and excerpt retain sentence punctuation: ${claim}`, () => {
+  const { api } = harness();
+  const answer = `😀 An earlier claim. **${claim}** A later claim.`;
+  const end = Array.from(answer.slice(0, answer.indexOf(' A later'))).length;
+  assert.equal(api.citationSupportSentence(answer, [end - 1, end]), claim);
+  const passage = api.citationPassage(`A preceding sentence. ${claim} A final sentence.`, claim);
+  assert.equal(passage.match, claim);
+  assert.equal(passage.before, 'A preceding sentence. ');
+  assert.equal(passage.after, ' A final sentence.');
+  assert.equal(new URL(api.citationReadHref(source, passage.match)).searchParams.get('passage'), claim);
+});
+
+function documentHarness(passage, text = []) {
+  const notes = [];
+  const root = { children: [], parentElement: { before(note) { notes.push(note); } } };
+  const textNode = content => ({ tag: 'text', textContent: content, replaceWith(...items) {
+    root.children.splice(root.children.indexOf(this), 1, ...items);
+  } });
+  root.children = text.map(textNode);
+  const document = {
+    createTreeWalker() { const nodes = root.children.filter(n => n.tag === 'text'); let at = -1;
+      return { nextNode() { return ++at < nodes.length; }, get currentNode() { return nodes[at]; } };
+    },
+    createElement: tag => ({ tag, setAttribute() {}, scrollIntoView() { this.scrolled = true; }, remove() { notes.splice(notes.indexOf(this), 1); } }),
+    createTextNode: textNode,
+  };
+  const code = app.slice(app.indexOf('const CITATION_PASSAGE_MAX_LENGTH'), app.indexOf('function trimCitationSentence(')) +
+    app.slice(app.indexOf('function highlightDocCitation()'), app.indexOf('function renderDocText('));
+  const highlight = runInNewContext(code + ';highlightDocCitation', {
+    document, NodeFilter: { SHOW_TEXT: 4 }, URLSearchParams,
+    location: { search: passage === null ? '' : '?passage=' + encodeURIComponent(passage) },
+    $: id => id === 'doc-text' ? root : notes.find(n => n.id === id),
+  });
+  return { root, notes, highlight };
+}
+test('long reading anchors end at a word boundary and highlight the verbatim document within the shared limit', () => {
+  const { api } = harness();
+  const passage = 'Housing investment ' + 'community infrastructure '.repeat(160) + 'annually.';
+  const url = new URL(api.citationReadHref(source, passage));
+  const anchor = url.searchParams.get('passage');
+  assert.ok(anchor.length <= 2400);
+  assert.ok(anchor.length > 2300);
+  assert.equal(passage.slice(0, anchor.length), anchor);
+  assert.equal(passage[anchor.length], ' ');
+  assert.equal(decodeURIComponent(url.hash), '#:~:text=' + anchor);
+  const h = documentHarness(anchor, ['A preceding paragraph.\n\n', passage.replaceAll(' ', '\n '), '\n\nA final paragraph.']);
+  h.highlight();
+  const marks = h.root.children.filter(n => n.tag === 'mark');
+  assert.equal(marks.map(n => n.textContent).join('').replace(/\s+/g, ' '), anchor);
+  assert.equal(marks[0].scrolled, true);
+  assert.equal(h.notes.length, 0);
+  assert.equal(h.root.children.map(n => n.textContent).join(''), 'A preceding paragraph.\n\n' + passage.replaceAll(' ', '\n ') + '\n\nA final paragraph.');
+});
+test('unmatched or invalid passage anchors explain the fallback and preserve the full speech', () => {
+  for (const passage of ['An absent passage.', 'x'.repeat(2401), '   ']) {
+    const h = documentHarness(passage, ['The complete original speech.']);
+    h.highlight(); h.highlight();
+    assert.equal(h.notes.length, 1);
+    assert.equal(h.notes[0].textContent, "Couldn't find the exact passage; showing the full speech.");
+    assert.equal(h.root.children.map(n => n.textContent).join(''), 'The complete original speech.');
+  }
+  const h = documentHarness(null, ['The complete original speech.']);
+  h.highlight(); assert.equal(h.notes.length, 0);
 });
 for (const phone of [false, true]) test(`${phone ? 'phone sheet' : 'desktop panel'} keeps supports, excerpt, primary reading action and back focus`, () => {
   const h = harness(phone);

@@ -6,6 +6,10 @@ import ts from 'typescript';
 import { isEvaluativeQuestion, neutralEvaluativeAnswer } from '../public/ask-evaluative.js';
 
 const fixtures = JSON.parse(readFileSync(new URL('./fixtures/ask-evaluative.json', import.meta.url)));
+test('the review regression set contains 50 evaluative and 50 factual phrasings', () => {
+  assert.equal(fixtures.neutral.length, 50); assert.equal(fixtures.factual.length, 50);
+  assert.equal(new Set([...fixtures.neutral, ...fixtures.factual]).size, 100);
+});
 for (const question of fixtures.neutral) test(`neutral intent: ${question}`, () => assert.equal(isEvaluativeQuestion(question), true));
 for (const question of fixtures.factual) test(`factual intent: ${question}`, () => assert.equal(isEvaluativeQuestion(question), false));
 test('an elliptical judgement uses only the reader’s political context', () => {

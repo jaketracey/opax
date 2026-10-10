@@ -3267,7 +3267,9 @@ mark.privacy-confirm {
 }
 /* Reserve the reading margin before a citation opens, so paragraphs never reflow. */
 #panel-ask .answer, #panel-chat .chat-turn-answer > .answer { max-width: 46rem; }
+html { scrollbar-gutter: stable; }
 body.ask-citation-modal { overflow: hidden; }
+.doc-citation-fallback { font: 400 0.875rem/1.6 var(--sans); color: var(--ink-soft); margin: 0 0 16px; }
 .ask-citation-sheet {
   inset: auto 0 0; width: auto; max-height: 78dvh; padding: 20px 24px max(20px, env(safe-area-inset-bottom));
   border-radius: 16px 16px 0 0; box-shadow: 0 -12px 48px rgb(20 42 67 / 20%);
