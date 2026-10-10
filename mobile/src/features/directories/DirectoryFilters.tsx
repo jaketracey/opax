@@ -8,7 +8,7 @@ import {
   SwitchRow,
 } from '../../design/primitives';
 import { closeSheetItem } from '../../navigation/chrome';
-import { directorySorts } from './model';
+import { sortSummary } from './model';
 import { directoryKind, directoryStore, useDirectoryState } from './store';
 export default function DirectoryFilters() {
   const { kind: input } = useLocalSearchParams<{ kind: string }>();
@@ -62,12 +62,7 @@ export default function DirectoryFilters() {
         </Section>
         <Section title="Sort" accent="people">
           <LinkRow
-            title={
-              directorySorts[kind].find(
-                (s) =>
-                  s.value === (filters.sort || directorySorts[kind][0]!.value),
-              )!.label
-            }
+            title={sortSummary(kind, filters.sort)}
             testID="directory-filter-sort"
             onPress={() =>
               router.push({

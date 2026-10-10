@@ -5,7 +5,7 @@ import {
 import * as format from '../src/design/format';
 import { act, type ReactElement } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { Image, RefreshControl } from 'react-native';
+import { Image, RefreshControl, ScrollView } from 'react-native';
 import { router } from 'expo-router';
 import * as c from '../src/api/catalogs';
 import { ApiError } from '../src/api/errors';
@@ -17,6 +17,7 @@ import {
   roster,
   slugs,
   pinned,
+  files,
 } from './pinned';
 import Person from '../src/features/Person';
 import YourMP from '../src/features/YourMP';
@@ -30,6 +31,7 @@ import {
   LinkRow,
   OpaxWebLink,
   StatusLabel,
+  Heading,
 } from '../src/design/primitives';
 import { loadChoice, saveChoice } from '../src/features/your-mp/choice-store';
 jest.mock('../src/api/runtime', () => ({
@@ -37,6 +39,7 @@ jest.mock('../src/api/runtime', () => ({
   catalogs: {
     person: jest.fn(),
     profileFor: jest.fn(),
+    rosterProfileFor: jest.fn(),
     directory: jest.fn(),
     yourMP: jest.fn(),
     electorateFor: jest.fn(),
@@ -97,6 +100,15 @@ beforeEach(() => {
     (s) => s.name === 'Grayndler',
   )!.electorate_id;
   mock.directory.mockResolvedValue(directory);
+  // As the runtime does: a second pass with the register file, when pinned.
+  mock.rosterProfileFor.mockImplementation(async (identity) => {
+    const key = c.rosterProfileFor(identity, catalogs).interestKey;
+    const path = `/interests/${key}.json`;
+    return c.rosterProfileFor(identity, {
+      ...catalogs,
+      ...(key && files[path] ? { interest: c.decodeInterest(pinned(path)) } : {}),
+    });
+  });
 });
 test('profile failure in expenses preserves votes, pay and identity; absent local image keeps fallback', async () => {
   mockParams.slug = 'penny-wong';
@@ -137,7 +149,9 @@ test('former roster identity never masquerades as a current affiliation', async 
   );
   const r = await render(<Person />);
   expect(r.root.findByType(PartyLabel).props.status).toBe('former');
-  expect(text(r)).toContain('Formerly Labor');
+  // The label is the party she sat for; the header says she left.
+  expect(text(r)).not.toContain('Formerly Labor');
+  expect(text(r)).toContain('Former member');
   expect(text(r)).toContain('Historical entitlements are listed below');
   await act(async () => r.unmount());
 });
@@ -292,17 +306,20 @@ test('a malformed outline drops only itself: the Electorate screen still reads',
   warn.mockRestore();
 });
 
-test('roster-only member shows limited coverage without fabricating figures', async () => {
+test('roster-only member says how its records are linked, without fabricating figures', async () => {
   mockParams.slug = 'tony-abbott';
-  mock.person.mockResolvedValue(
-    result(c.joinPerson('tony-abbott', slugs, roster, people, manifest)),
-  );
+  const identity = c.joinPerson('tony-abbott', slugs, roster, people, manifest);
+  mock.person.mockResolvedValue(result(identity));
   const r = await render(<Person />);
-  expect(text(r)).toContain('Only the public directory identity');
+  expect(text(r)).toContain(
+    'records here are linked by the parliamentary roster’s ID and name',
+  );
   expect(mock.profileFor).not.toHaveBeenCalled();
+  expect(mock.rosterProfileFor).toHaveBeenCalledWith(identity);
   // The dated Warringah term establishes status without expanding identity coverage.
   expect(r.root.findByType(PartyLabel).props.status).toBe('former');
-  expect(text(r)).toContain('Formerly Liberal');
+  expect(text(r)).toContain('Former member');
+  expect(text(r)).not.toContain('Formerly Liberal');
   await act(async () => r.unmount());
 });
 test('unverified private identity is refused before any name or profile blocks render', async () => {
@@ -417,17 +434,16 @@ test.each([
     expect(catalogs.expenses!.people[legacy]!.total).toBe(expenses);
     mock.person.mockResolvedValue(result(identity));
     const r = await render(<Person />);
-    for (const id of ['votes', 'pay', 'expenses', 'interests', 'ties'])
+    // TestFlight build 32: these records are held by roster ID, so they link.
+    for (const id of ['votes', 'pay', 'expenses'])
       expect(
-        r.root.findAll((n) => n.props.testID === `person-${id}-unlinked`)
-          .length,
-      ).toBeGreaterThan(0);
+        r.root.findAll((n) => n.props.testID === `person-${id}-unlinked`),
+      ).toHaveLength(0);
+    // Nothing held elsewhere is claimed absent: an empty block is unlinked.
     expect(text(r)).not.toMatch(
       /No (voting summary|covered federal salary|expense summary|register file) is held/,
     );
-    expect(text(r)).toContain('This release does not link');
-    expect(text(r)).toContain("party receipts for this person's party");
-    expect(text(r)).not.toContain("this person's party receipts");
+    expect(text(r)).not.toContain("party receipts for this person's party");
     expect(
       r.root
         .findAllByType(OpaxWebLink)
@@ -453,7 +469,7 @@ test('Windsor has a profile even without a representation row', async () => {
   // No dated seat links him (the release names Antony Harold Curties
   // Windsor), but no sitting federal member is a Windsor: former, 9 Oct.
   expect(r.root.findByType(PartyLabel).props.status).toBe('former');
-  expect(text(r)).toContain('Formerly');
+  expect(text(r)).toContain('Former member');
   expect(text(r)).toContain('does not link');
   expect(
     r.root.findAllByType(Button).some((n) => n.props.label === 'Try again'),
@@ -813,5 +829,90 @@ test('a surname profile retains its short route for portrait refusal after canon
     refresh: false,
   });
   expect(r.root.findAllByType(Image)).toHaveLength(0);
+  await act(async () => r.unmount());
+});
+
+test('Choose state electorate opens the chooser at the top of the page', async () => {
+  // TestFlight build 32 (ABy-GsOP): the button sits near the end of a long
+  // page; the short chooser drew above the retained offset, a blank screen.
+  const find = (name: string) =>
+    index.electorates.find((s) => s.name === name)!;
+  const seat = find('Ballarat');
+  (loadChoice as jest.Mock).mockResolvedValue({
+    version: 1,
+    seatId: seat.electorate_id,
+    stateSeatIds: [find('Wendouree').electorate_id],
+  });
+  mock.yourMP.mockImplementation(async (id, chosen) =>
+    c.yourMPFor(id, index, manifest, chosen),
+  );
+  mock.profileFor.mockImplementation(async (id) => c.profileFor(id, catalogs));
+  const scrollTo = jest.spyOn(ScrollView.prototype, 'scrollTo');
+  const r = await render(<YourMP />);
+  scrollTo.mockClear();
+  await act(async () => pressable(r, 'choose-state-seat').props.onPress());
+  expect(
+    r.root
+      .findAllByType(Heading)
+      .some((n) => n.props.children === 'Choose your state electorate'),
+  ).toBe(true);
+  expect(
+    r.root.findAll(
+      (n) =>
+        n.props.testID === 'seat-search' &&
+        typeof n.props.onChangeText === 'function',
+    ).length,
+  ).toBeGreaterThan(0);
+  expect(scrollTo).toHaveBeenCalledTimes(1);
+  expect(scrollTo.mock.calls[0]![0]).toMatchObject({ animated: false });
+  expect((scrollTo.mock.calls[0]![0] as { y: number }).y).toBeLessThanOrEqual(0);
+  // Cancel returns to the page, at its top again.
+  await act(async () =>
+    r.root
+      .findAllByType(Button)
+      .find((n) => n.props.label === 'Cancel')!
+      .props.onPress(),
+  );
+  expect(scrollTo).toHaveBeenCalledTimes(2);
+  scrollTo.mockRestore();
+  await act(async () => r.unmount());
+});
+
+test('Register changes is one section with one heading, open or closed', async () => {
+  // TestFlight build 32 (AJkr7L7f): a "Register changes" disclosure row sat
+  // above a second "Register changes" section heading.
+  const seat = index.electorates.find((s) => s.name === 'Ballarat')!;
+  (loadChoice as jest.Mock).mockResolvedValue({
+    version: 1,
+    seatId: seat.electorate_id,
+    stateSeatIds: [],
+  });
+  mock.yourMP.mockResolvedValue(
+    c.yourMPFor(seat.electorate_id, index, manifest),
+  );
+  mock.profileFor.mockImplementation(async (id, options) =>
+    c.profileFor(id, {
+      ...catalogs,
+      ...(options?.includeInterests
+        ? { interest: c.decodeInterest(pinned('/interests/10368.json')) }
+        : {}),
+    }),
+  );
+  const r = await render(<YourMP />);
+  const headings = () =>
+    r.root
+      .findAllByType(Heading)
+      .filter((n) => n.props.children === 'Register changes').length;
+  // The heading's own text is the only place the words appear.
+  const words = () =>
+    r.root
+      .findAllByType(Text)
+      .filter((n) => n.props.children === 'Register changes').length;
+  expect(headings()).toBe(1);
+  expect(words()).toBe(1);
+  await act(async () => pressable(r, 'your-register-toggle').props.onPress());
+  expect(text(r)).toContain('Gifts · added');
+  expect(headings()).toBe(1);
+  expect(words()).toBe(1);
   await act(async () => r.unmount());
 });

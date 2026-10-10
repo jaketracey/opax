@@ -146,7 +146,11 @@ test.each(['Search', 'About', 'Person', 'Electorate'] as const)(
       }>;
     expect(control().type).toBe(RefreshControl);
     expect(control().props.refreshing).toBe(false);
-    expect(renderer.root.findAllByType(LoadingState)).toHaveLength(1);
+    // Idle Search draws no suggestions, so no placeholder stands in for them
+    // while they load (TestFlight build 32); the other screens show one.
+    expect(renderer.root.findAllByType(LoadingState)).toHaveLength(
+      name === 'Search' ? 0 : 1,
+    );
     await act(async () => finishInitial());
     expect(control().props.refreshing).toBe(false);
     expect(renderer.root.findAllByType(LoadingState)).toHaveLength(0);

@@ -1,14 +1,19 @@
 appId: au.com.opax.app
-name: 06 A former member reads "Formerly"; a member the data does not date reads plainly
+name: 06 A former member reads "Former member" beside their party; a member the data does not date reads plainly
 ---
 # Julia Gillard's Lalor seat ended in 2013 in the dated release: known former.
+# The label is the party she sat for; "Formerly" is only for a change of
+# party (TestFlight build 32), and the header says she left.
 - runFlow:
     file: 06-open-profile.yaml
     env:
       NAME: Julia Gillard
       SLUG: julia-gillard
-      PARTY: Formerly Labor
-      NOT_PARTY: ^Labor$
+      PARTY: ^Labor$
+      NOT_PARTY: Formerly Labor
+- assertVisible:
+    id: person-former
+    text: Former member
 - takeScreenshot: ${EVIDENCE}/06-julia-gillard
 # Janelle Saffin's Page seat ended in 2013, but the roster also records
 # Lismore in the NSW Assembly, which no dated release covers: the data does
@@ -20,4 +25,6 @@ name: 06 A former member reads "Formerly"; a member the data does not date reads
       SLUG: janelle-saffin
       PARTY: ^Labor$
       NOT_PARTY: Formerly Labor
+- assertNotVisible:
+    id: person-former
 - takeScreenshot: ${EVIDENCE}/06-janelle-saffin

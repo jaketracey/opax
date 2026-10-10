@@ -5,6 +5,7 @@ import {
   rosterRowFor,
   personSlugForId,
   indexedPersonSlugForId,
+  scannedPersonSlugForId,
 } from '../src/api/person-identity';
 import { partyLabels, partyMembers } from '../src/api/party-page';
 import {
@@ -48,7 +49,14 @@ for (const slug of Object.keys(slugs.slugs)) {
       manifest,
     ).canonicalPersonId;
     if (!id) continue;
-    const canonical = personSlugForId(id, slugs, roster, people, manifest);
+    // The oracle is the original scan over every directory spelling.
+    const canonical = scannedPersonSlugForId(
+      id,
+      slugs,
+      roster,
+      people,
+      manifest,
+    );
     profileFor(id, catalogs);
     nativeProfiles.set(id, { slug: canonical, name: slugs.slugs[canonical]! });
     nativeSlugs.add(slug);
@@ -56,11 +64,15 @@ for (const slug of Object.keys(slugs.slugs)) {
     /* The real native profile path refuses this identity. */
   }
 }
-test('Android indexed handoff preserves every verified pinned canonical route', () => {
-  for (const [id, native] of nativeProfiles)
+test('the indexed handoff (every platform) preserves every verified pinned canonical route', () => {
+  for (const [id, native] of nativeProfiles) {
     expect(indexedPersonSlugForId(id, slugs, roster, people, manifest)).toBe(
       native.slug,
     );
+    expect(personSlugForId(id, slugs, roster, people, manifest)).toBe(
+      native.slug,
+    );
+  }
 });
 
 test.each(

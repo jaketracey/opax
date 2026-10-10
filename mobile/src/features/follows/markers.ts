@@ -3,7 +3,7 @@ import type { Catalogs } from '../../api/catalogs';
 import { catalogSources, personId, profileFor } from '../../api/catalogs';
 import { billName, billSentenceCase } from '../../api/bill-transforms';
 import { formatCount, formatDate, formatMoney } from '../../design/format';
-import { partySlug, partyText } from '../../design/party';
+import { formerMember, partySlug, partyText } from '../../design/party';
 import type { Fingerprint, Follow, FollowKind, Reading } from './store';
 
 /**
@@ -122,11 +122,17 @@ function personFingerprint(id: string, sources: FollowSources) {
   // Party and seat: the dated release and roster, as the profile shows them.
   markers.party = {
     value: `${identity.partyStatus}|${identity.party ?? ''}`,
-    // "formerly Labor" reads mid-sentence: "Party now recorded as formerly Labor".
-    words: partyText({
-      party: identity.party,
-      status: identity.partyStatus,
-    }).spoken.replace(/^Formerly /, 'formerly '),
+    // The label never carries the status, so a member who leaves reads
+    // "Party now recorded as Labor, former member".
+    words: [
+      partyText({
+        party: identity.party,
+        status: identity.partyStatus,
+      }).spoken,
+      formerMember(identity.partyStatus)?.toLowerCase(),
+    ]
+      .filter(Boolean)
+      .join(', '),
     asAt: dateOf(identity.asOf),
   };
   const seats = [...identity.seats].sort((a, b) =>

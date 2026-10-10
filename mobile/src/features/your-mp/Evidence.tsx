@@ -272,8 +272,18 @@ export function RecordBlock<T>({
       ) : (
         children(block.data)
       )}
-      {/* An unlinked block has nothing to date: the page links the record. */}
-      {footer && block.status !== 'unlinked' ? (
+      {/* An unlinked block has nothing to date: the page links the record.
+          Nor does an empty block without a date: its one plain sentence is
+          the whole card, with no "Date not published" line under it, unless
+          the line has a state to say (partial, or a saved copy). */}
+      {footer &&
+      block.status !== 'unlinked' &&
+      !(
+        block.data === null &&
+        !block.asAt &&
+        !block.partial &&
+        !block.stale
+      ) ? (
         <EvidenceFooter
           block={block}
           id={id}

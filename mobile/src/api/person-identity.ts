@@ -9,7 +9,6 @@ import {
   type RosterId,
 } from './ids';
 import { ApiError, PersonIdentityError } from './errors';
-import { indexedIdentityHandoff } from './identity-platform';
 import { personPartyFor, type PartyStatus } from './party-transforms';
 import type {
   Roster,
@@ -277,8 +276,21 @@ export function personSlugForId(
   people: PeopleCatalog,
   manifest: Manifest,
 ) {
-  if (indexedIdentityHandoff)
-    return indexedPersonSlugForId(id, slugs, roster, people, manifest);
+  return indexedPersonSlugForId(id, slugs, roster, people, manifest);
+}
+/**
+ * The original handoff, which joins every directory spelling for each ID. It
+ * is quadratic over the directory, so the app uses the indexed handoff on
+ * every platform (iOS too since build 33: Search froze while it ran); this
+ * stays as the oracle the index is tested against.
+ */
+export function scannedPersonSlugForId(
+  id: PersonId,
+  slugs: Slugs,
+  roster: Roster,
+  people: PeopleCatalog,
+  manifest: Manifest,
+) {
   const person = people.people.find((p) => p.person_id === id);
   const names = new Set(
     [person?.name, ...(person?.aliases ?? [])]

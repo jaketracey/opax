@@ -33,6 +33,18 @@ export default function DirectoryChoice() {
         contentInsetAdjustmentBehavior="automatic"
         data={choices}
         keyExtractor={(c) => c.value}
+        ListHeaderComponent={
+          field === 'sort' && kind === 'person' ? (
+            <Text
+              wordSafe
+              variant="metadata"
+              testID="directory-choice-sitting-first"
+              style={styles.note}
+            >
+              Sitting members come first in every order.
+            </Text>
+          ) : null
+        }
         ItemSeparatorComponent={() => <Divider variant="subtle" />}
         renderItem={({ item }) => (
           <Pressable
@@ -73,4 +85,5 @@ const styles = StyleSheet.create({
     gap: rhythm.tight,
   },
   label: { flex: 1 },
+  note: { paddingTop: rhythm.heading, paddingBottom: rhythm.tight },
 });

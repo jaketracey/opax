@@ -20,7 +20,7 @@ import { catalogs } from '../../api/runtime';
 import { formatCount, formatDate } from '../../design/format';
 import { showMenu } from '../../design/menu';
 import { jurisdictionName } from '../../design/parliament';
-import { partyText } from '../../design/party';
+import { formerMember, partyText } from '../../design/party';
 import {
   Button,
   EmptyState,
@@ -357,6 +357,9 @@ function BillHead({
               const spoken = [
                 sponsor.name,
                 sponsor.place,
+                sponsor.place?.startsWith('Formerly ')
+                  ? null
+                  : formerMember(sponsor.party?.status),
                 sponsor.party ? partyText(sponsor.party).spoken : null,
                 sponsor.slug ? 'profile' : null,
               ]
@@ -382,6 +385,8 @@ function BillHead({
                       }
                     : { party: undefined })}
                   place={sponsor.place}
+                  // "Formerly Member for Kooyong" already says it.
+                  statusShown={!!sponsor.place?.startsWith('Formerly ')}
                   accessibilityLabel={spoken}
                   onPress={
                     slug ? () => router.push(personRoute(slug)) : undefined

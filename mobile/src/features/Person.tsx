@@ -50,7 +50,7 @@ import {
   useAccessibilitySize,
   useReduceMotion,
 } from '../design/primitives';
-import { partyDot } from '../design/party';
+import { formerMember, partyDot } from '../design/party';
 import { colors, layout, radii, rhythm } from '../design/tokens';
 import { useHeaderBottom } from '../design/useHeaderBottom';
 import {
@@ -68,7 +68,6 @@ import { profileGrid } from './split/grid';
 import { EvidenceFooter, RecordBlock, votesSource } from './your-mp/Evidence';
 import { DeclaredInterests, registerNotes } from './people/DeclaredInterests';
 import {
-  uncoveredProfile,
   hasParliamentaryMembership,
   type ProfileView,
 } from './your-mp/model';
@@ -117,9 +116,11 @@ export function ProfileScreen({
         if (active) setNoNativeProfile(true);
         return null;
       }
-      const p = person.data.canonicalPersonId
+      // A former member outside the dated release still has the records
+      // held by their roster ID and names: votes, party receipts, pay.
+      const p: ProfileView = person.data.canonicalPersonId
         ? await catalogs.profileFor(person.data.canonicalPersonId)
-        : uncoveredProfile(person.data);
+        : await catalogs.rosterProfileFor(person.data);
       if (!person.data.canonicalPersonId) {
         p.blocks.identity.partial = person.partial;
         p.blocks.identity.staleReason = person.staleReason;
@@ -238,15 +239,21 @@ export function ProfileScreen({
                   formerly={identity.formerly}
                   testID="person-party"
                 />
+                {formerMember(identity.partyStatus) ? (
+                  // Whether they sit is said here, never by the party label.
+                  <Text wordSafe variant="metadata" testID="person-former">
+                    {formerMember(identity.partyStatus)}
+                  </Text>
+                ) : null}
                 <SeatLines identity={identity} />
               </Group>
               {profile.personId === null ? (
-                // The one caveat the page needs: why its blocks are empty.
+                // The one caveat the page needs: how its records are linked.
                 <Group gap={rhythm.tight}>
                   <Text wordSafe variant="metadata">
-                    The electorate release does not include this person. Only
-                    the public directory identity is linked here. Other records
-                    may be available on opax.com.au.
+                    The dated electorate release does not include this person,
+                    so records here are linked by the parliamentary roster’s ID
+                    and name. Others may be on opax.com.au.
                   </Text>
                   <RowList>
                     <OpaxWebLink

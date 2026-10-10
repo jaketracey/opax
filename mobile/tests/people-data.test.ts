@@ -1,6 +1,6 @@
 import { joinPerson, profileFor } from '../src/api/catalogs';
 import { chamberName, jurisdictionName } from '../src/design/parliament';
-import { partyText } from '../src/design/party';
+import { formerMember, partyText } from '../src/design/party';
 import {
   partyStatusFor,
   partyStatusSeatsFor,
@@ -147,20 +147,24 @@ describe('party status from the real adapter', () => {
     });
   });
   // Former, known: the dated release says the last seat ended.
-  test('Julia Gillard, whose Lalor seat ended in 2013, reads "Formerly Labor"', () => {
+  // TestFlight build 32: "Formerly" is reserved for a change of party; a
+  // former member's label is the party they sat for, and the row says
+  // "Former member".
+  test('Julia Gillard, whose Lalor seat ended in 2013, reads "Labor" and "Former member"', () => {
     const p = profile('julia-gillard', 'Julia Gillard');
     expect(p.seats).toHaveLength(0);
     expect(p.partyStatus).toBe('former');
     expect(label('julia-gillard', 'Julia Gillard')).toEqual({
-      visible: 'Formerly Labor',
+      visible: 'Labor',
       previous: null,
-      spoken: 'Formerly Labor',
+      spoken: 'Labor',
     });
     expect(label('julia-gillard', 'Julia Gillard', true)).toEqual({
-      visible: 'Formerly ALP',
+      visible: 'ALP',
       previous: null,
-      spoken: 'Formerly Labor',
+      spoken: 'Labor',
     });
+    expect(formerMember(p.partyStatus)).toBe('Former member');
   });
   // Unknown: no dated seat and no roster status. Drawn plainly, as on the web.
   test.each([
@@ -238,8 +242,13 @@ describe('party status from the real adapter', () => {
             expect(sitting.get(j)!.has(surname(row.name))).toBe(false);
           }
         }
-        expect(visible).toMatch(/^Formerly |^Party not recorded$/);
-      } else expect(visible).not.toMatch(/formerly/i);
+        // The status is the row's quiet line, never the label.
+        expect(visible).not.toMatch(/formerly/i);
+        expect(formerMember(p.partyStatus)).toBe('Former member');
+      } else {
+        expect(visible).not.toMatch(/formerly/i);
+        expect(formerMember(p.partyStatus)).toBeNull();
+      }
     }
   });
 });

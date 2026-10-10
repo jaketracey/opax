@@ -38,7 +38,21 @@ export const voteKey = branded<'vote-key'>(
   /^(?:\d+|(?:nsw|vic|qld|sa|wa|tas|act|nt):[a-z0-9]+(?:-[a-z0-9]+)*)$/,
 );
 export const portraitKey = branded<'portrait-key'>(/^(?:\d+|wd-Q\d+)$/);
+// Folding is pure and the same few thousand names are folded again for every
+// identity join. Hermes has no JIT and String#normalize is slow there: the
+// unmemoised fold blocked the JS thread for seconds when Search built its
+// suggestion roster (TestFlight build 32, "App froze on this screen").
+const folds = new Map<string, NameKey>();
+const maxFolds = 50_000;
 export function nameKey(name: string): NameKey {
+  let key = folds.get(name);
+  if (key === undefined) {
+    if (folds.size >= maxFolds) folds.clear();
+    folds.set(name, (key = foldName(name)));
+  }
+  return key;
+}
+function foldName(name: string): NameKey {
   return name
     .normalize('NFKD')
     .replace(/\p{M}/gu, '')

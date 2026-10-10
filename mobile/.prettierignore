@@ -1,2 +1,3 @@
 scripts/fixtures/
 tests/fixtures/interests/
+src/features/electorate-map/state-outlines.json

@@ -35,7 +35,7 @@ export function samePartyLabel(a: string, b: string) {
  * the data does not date. Unknown is common: the roster's `current` flag comes
  * only from the federal APH list, and the dated seat release covers federal
  * House history plus current senators and Victorian members. Only "former"
- * may be drawn as "Formerly X"; unknown is drawn plainly, as the web does.
+ * reads "Former member" on its row; unknown says nothing either way.
  */
 export type PartyStatus = 'current' | 'former' | 'unknown';
 /** Dated evidence for status only; never an identity, portrait or record join. */

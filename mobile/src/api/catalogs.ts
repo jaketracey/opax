@@ -30,6 +30,7 @@ import { billKey, interestKey, personId, type PersonId } from './ids';
 import {
   declarationProfilesFor,
   profileFor,
+  rosterProfileFor,
   recentBillsFor,
   recentDeclarationsFor,
   suggestionProvenanceFor,
@@ -1001,6 +1002,24 @@ export class Catalogs {
   }
   async profileFor(id: PersonId, options: { includeInterests?: boolean } = {}) {
     personId(id);
+    return this.assembleProfile((data) => profileFor(id, data), options);
+  }
+  /** A former member outside the dated release, by their roster identity. */
+  async rosterProfileFor(
+    identity: PersonProfile,
+    options: { includeInterests?: boolean } = {},
+  ) {
+    return this.assembleProfile(
+      (data) => rosterProfileFor(identity, data),
+      options,
+    );
+  }
+  private async assembleProfile<
+    P extends ReturnType<typeof profileFor> | ReturnType<typeof rosterProfileFor>,
+  >(
+    compute: (data: ProfileCatalogs) => P,
+    options: { includeInterests?: boolean },
+  ): Promise<P> {
     const directory = await this.directory();
     const records = new Map<string, RecordResult<unknown>>(),
       errors: Record<string, ApiError> = {};
@@ -1053,12 +1072,12 @@ export class Catalogs {
       photoPeople,
       photoCredits,
     };
-    const initial = profileFor(id, data);
+    const initial = compute(data);
     const interest =
       options.includeInterests !== false && initial.interestKey
         ? await load('interests', this.interests(initial.interestKey))
         : undefined;
-    const profile = profileFor(id, { ...data, interest });
+    const profile = compute({ ...data, interest });
     for (const [key, block] of Object.entries(profile.blocks)) {
       const dependencies: Record<string, string[]> = {
         identity: [],

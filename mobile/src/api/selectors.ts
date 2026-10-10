@@ -72,7 +72,8 @@ export interface Provenance {
   licence?: string;
 }
 export interface Block<T> {
-  status: 'ready' | 'missing' | 'error' | 'loading';
+  /** 'unlinked': records may exist, but none joins this identity safely. */
+  status: 'ready' | 'missing' | 'error' | 'loading' | 'unlinked';
   data: T | null;
   asAt: string | null;
   sources: Provenance[];
@@ -274,26 +275,43 @@ function unique<T>(rows: T[], label: string): T | undefined {
     throw new ApiError('invalid-data', `${label} identity needs review.`);
   return rows[0];
 }
+// The directory's spellings by exact and folded name, in directory order.
+// profileFor runs once per person when Search and the directories build their
+// member lists; scanning every slug for each person was quadratic.
+const slugNameIndexes = new WeakMap<
+  Slugs,
+  { exact: Map<string, string[]>; folded: Map<string, string[]> }
+>();
+const foldedProfileName = (name: string) =>
+  name
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[’‘ʼ`']/g, '');
+function slugNameIndex(slugs: Slugs) {
+  let index = slugNameIndexes.get(slugs);
+  if (!index) {
+    index = { exact: new Map(), folded: new Map() };
+    for (const [slug, name] of Object.entries(slugs.slugs)) {
+      index.exact.set(name, [...(index.exact.get(name) ?? []), slug]);
+      const key = foldedProfileName(name);
+      index.folded.set(key, [...(index.folded.get(key) ?? []), slug]);
+    }
+    slugNameIndexes.set(slugs, index);
+  }
+  return index;
+}
 export function profileFor(id: PersonId, catalogs: ProfileCatalogs) {
   const { people, roster, slugs, manifest } = catalogs;
   const errors: Record<string, ApiError> = {};
-  const fail = (key: string, message: string) => {
-    errors[key] = new ApiError('invalid-data', message);
-  };
-  const optionalIdentity = <T>(rows: T[], key: string) => {
-    if (rows.length > 1) {
-      fail(key, `The ${key} identity needs review.`);
-      return undefined;
-    }
-    return rows[0];
-  };
   if (people.meta.release_id !== manifest.release_id)
     throw new ApiError(
       'invalid-data',
       'The person release does not match its manifest.',
     );
+  const canonicalId = personId(id);
   const p = unique(
-    people.people.filter((p) => p.person_id === personId(id)),
+    people.people.filter((p) => p.person_id === canonicalId),
     'Person',
   );
   if (!p)
@@ -302,22 +320,14 @@ export function profileFor(id: PersonId, catalogs: ProfileCatalogs) {
       'This person is not in the electorate release.',
     );
   const names = [p.name, ...p.aliases];
-  const folded = (name: string) =>
-    name
-      .normalize('NFKD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase()
-      .replace(/[’‘ʼ`']/g, '');
+  const folded = foldedProfileName;
   let slug: string | undefined;
+  const slugNames = slugNameIndex(slugs);
   for (const name of names) {
-    const exact = Object.entries(slugs.slugs)
-      .filter(([, n]) => n === name)
-      .map(([slug]) => slug);
+    const exact = slugNames.exact.get(name) ?? [];
     const matches = exact.length
       ? exact
-      : Object.entries(slugs.slugs)
-          .filter(([, n]) => folded(n) === folded(name))
-          .map(([slug]) => slug);
+      : (slugNames.folded.get(folded(name)) ?? []);
     if (matches.length) {
       slug = unique(matches, 'Slug');
       break;
@@ -363,10 +373,108 @@ export function profileFor(id: PersonId, catalogs: ProfileCatalogs) {
     url: s.url,
     licence: s.licence,
   }));
+  return profileBlocks(
+    {
+      personId: id,
+      slug: personSlug(slug),
+      identity,
+      names,
+      sources,
+      voteKey: p.legacy_person_id,
+      federal: p.jurisdiction === 'federal',
+    },
+    catalogs,
+    errors,
+  );
+}
+/**
+ * A former member outside the dated electorate release (Bill Shorten, Joe
+ * Hockey): no canonical ID, so no release-scoped block, but the records
+ * OPAX holds by their roster ID and full names still join, under the same
+ * identity guards as a release member's (TestFlight build 32: Shorten's page
+ * linked neither his voting record nor Labor's receipts).
+ */
+export function rosterProfileFor(
+  identity: PersonProfile,
+  catalogs: ProfileCatalogs,
+) {
+  const row = identity.rosterRow;
+  // Surname stubs can index another person; full names only, as above.
+  const names = [
+    ...new Set(
+      [identity.name, row?.name, row?.full].filter(
+        (name): name is string => !!name && name.trim().includes(' '),
+      ),
+    ),
+  ];
+  // Every parliament the roster records them in, seats or not (Mark Latham
+  // sat federally and in NSW, so an ID-less pay row cannot be his).
+  const jurisdictions = new Set([
+    ...(row?.states ?? []),
+    ...(row?.representation ?? []).map((r) => r.jurisdiction),
+  ]);
+  const refused: Record<string, ApiError> = {};
+  const profile = profileBlocks(
+    {
+      personId: null,
+      slug: identity.slug,
+      identity,
+      names,
+      sources: identity.sources.map((s) => ({
+        label: s.label,
+        url: s.url,
+        licence: s.licence,
+      })),
+      voteKey: identity.legacyPersonId,
+      federal: jurisdictions.size === 1 && jurisdictions.has('federal'),
+    },
+    catalogs,
+    refused,
+  );
+  // Without the release's aliases a roster join cannot prove an absence, and
+  // a refused join is not a failure to retry (a roster ID can belong to a
+  // namesake: Patrick Conaghan's is Rex Patrick's). Either way, say plainly
+  // that the record is not linked.
+  for (const [key, value] of Object.entries(profile.blocks)) {
+    if (key === 'identity' || (value.data !== null && !refused[key])) continue;
+    value.status = 'unlinked';
+    value.data = null;
+    value.error = undefined;
+  }
+  return profile;
+}
+function profileBlocks<Id extends PersonId | null>(
+  subject: {
+    personId: Id;
+    slug: PersonProfile['slug'];
+    identity: PersonProfile;
+    /** Full names only: the catalog name joins. */
+    names: string[];
+    sources: { label: string; url: string; licence?: string }[];
+    /** The legacy (TVFY/OpenAustralia) ID the voting record is keyed by. */
+    voteKey: string | undefined;
+    /** Pay rows without a person ID are federal; others must carry one. */
+    federal: boolean;
+  },
+  catalogs: ProfileCatalogs,
+  errors: Record<string, ApiError>,
+) {
+  const { identity, names, sources } = subject;
+  const folded = foldedProfileName;
+  const fail = (key: string, message: string) => {
+    errors[key] = new ApiError('invalid-data', message);
+  };
+  const optionalIdentity = <T>(rows: T[], key: string) => {
+    if (rows.length > 1) {
+      fail(key, `The ${key} identity needs review.`);
+      return undefined;
+    }
+    return rows[0];
+  };
   const keys = [
     ...new Set(
       [
-        p.legacy_person_id,
+        subject.voteKey,
         ...nameValues(catalogs.votes?.names ?? {}, names).flat(),
       ].filter((k): k is string => k !== undefined),
     ),
@@ -428,7 +536,7 @@ export function profileFor(id: PersonId, catalogs: ProfileCatalogs) {
   if (
     pay &&
     ((pay.pid && String(pay.pid) !== identity.legacyPersonId) ||
-      (p.jurisdiction !== 'federal' && !pay.pid))
+      (!subject.federal && !pay.pid))
   )
     fail('pay', 'The pay identity needs review.');
   const payData =
@@ -508,8 +616,8 @@ export function profileFor(id: PersonId, catalogs: ProfileCatalogs) {
   });
   if (errors.interests) errors.ties = errors.interests;
   const profile = {
-    personId: id,
-    slug: personSlug(slug),
+    personId: subject.personId,
+    slug: subject.slug,
     interestKey: registerKey ?? null,
     blocks: {
       identity: block(identity, identity.asOf, sources),
@@ -520,7 +628,7 @@ export function profileFor(id: PersonId, catalogs: ProfileCatalogs) {
           r.jurisdiction === 'federal'
             ? {
                 label: 'They Vote For You',
-                url: `https://theyvoteforyou.org.au/search?query=${encodeURIComponent(p.name)}`,
+                url: `https://theyvoteforyou.org.au/search?query=${encodeURIComponent(identity.name)}`,
                 licence: 'ODbL',
               }
             : {

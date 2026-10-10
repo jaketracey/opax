@@ -105,6 +105,8 @@ for journey in "$@"; do
     .maestro/24-electorate-map*.yaml)
       case "$journey" in
         *-offshore.yaml) timed "$UI_TIMEOUT" xcrun simctl location "$UDID" set -35,155 ;;
+        # Moonee Ponds: 1.6 km inside the Essendon district outline.
+        *-state.yaml) timed "$UI_TIMEOUT" xcrun simctl location "$UDID" set -37.7765,144.9179 ;;
         *) timed "$UI_TIMEOUT" xcrun simctl location "$UDID" set -33.900123456,151.145123456 ;;
       esac ;;
   esac

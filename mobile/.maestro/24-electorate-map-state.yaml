@@ -1,0 +1,64 @@
+appId: au.com.opax.app
+name: 24 State district from the device location, with the manual chooser kept
+---
+# TestFlight build 32 (AEArfYzu). Harness sets a Moonee Ponds fix (inside
+# Essendon); launch resets location permission. The suggestion is matched on
+# the device against bundled outlines: the connection audit sees no request.
+- launchApp:
+    clearState: true
+    permissions:
+      location: unset
+- tapOn:
+    id: tab-your-mp
+- tapOn:
+    id: seat-search
+- inputText: Maribyrnong
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: seat-choice-federal-representatives-vic-maribyrnong
+    centerElement: true
+    timeout: 300000
+- tapOn:
+    id: seat-choice-federal-representatives-vic-maribyrnong
+- scrollUntilVisible:
+    element:
+      id: choose-state-seat
+    centerElement: true
+    timeout: 300000
+- tapOn:
+    id: choose-state-seat
+# The chooser opens at the top of the page (ABy-GsOP), with the manual search.
+- extendedWaitUntil:
+    visible: Choose your state electorate
+    timeout: 15000
+- assertVisible:
+    id: seat-search
+- takeScreenshot: ${EVIDENCE}/24-state-chooser
+- tapOn:
+    id: state-use-my-location
+- extendedWaitUntil:
+    visible: Allow Once
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/24-state-location-purpose
+- tapOn: Allow Once
+- scrollUntilVisible:
+    element:
+      id: state-location-suggestion
+    centerElement: true
+    timeout: 300000
+- assertVisible: .*Essendon.*
+- takeScreenshot: ${EVIDENCE}/24-state-suggestion
+- scrollUntilVisible:
+    element:
+      id: state-location-confirm
+    centerElement: true
+    timeout: 300000
+- tapOn:
+    id: state-location-confirm
+- scrollUntilVisible:
+    element:
+      id: remove-state-seat-el_0ec5fa66617d59cf8f49aa2f
+    centerElement: true
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/24-state-member

@@ -216,48 +216,6 @@ export function representativeProfile(
   }
   return null;
 }
-/** A roster-only former person retains identity, with explicit coverage states. */
-export function uncoveredProfile(identity: PersonProfile): ProfileView {
-  const missing = {
-    status: 'unlinked' as const,
-    data: null,
-    asAt: null,
-    sources: [
-      {
-        label: 'Record on opax.com.au',
-        url: `/subject/person/${identity.slug}`,
-      },
-    ],
-    stale: false,
-    savedAt: null,
-  };
-  return {
-    personId: identity.canonicalPersonId ?? null,
-    slug: identity.slug,
-    interestKey: null,
-    blocks: {
-      identity: {
-        ...missing,
-        status: 'ready',
-        data: identity,
-        asAt: identity.asOf,
-        sources: identity.sources.map((s) => ({
-          label: s.label,
-          url: s.url,
-          licence: s.licence,
-        })),
-      },
-      votes: { ...missing },
-      interests: { ...missing },
-      ties: { ...missing },
-      pay: { ...missing },
-      expenses: { ...missing },
-      portrait: { ...missing },
-      partyReceipts: { ...missing },
-    },
-  };
-}
-
 /** Chamber-only rows need a full identity; committee witnesses are not MPs. */
 export function hasParliamentaryMembership(
   identity: PersonProfile,

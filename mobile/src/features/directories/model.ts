@@ -162,7 +162,7 @@ export function peopleRows(
 /**
  * Sitting members first, then those the data cannot date, then former
  * members; the chosen sort applies within each group. The group is the
- * party chip's status, so a "Formerly" chip is always under Former.
+ * profile's party status, the one that draws a "Former member" line.
  */
 export type SittingGroup = 'sitting' | 'unrecorded' | 'former';
 export const sittingGroupTitles: Record<SittingGroup, string> = {
@@ -209,7 +209,9 @@ export function matchingPeople(rows: PeopleRow[], f: Filters, query: string) {
         (!f.state || p.states.includes(f.state)) &&
         (!f.chamber || p.chambers.includes(f.chamber)) &&
         (!f.votes || p.divisions > 0) &&
-        (!f.photo || p.portrait),
+        (!f.photo || p.portrait) &&
+        // The dated status only: an undated party is not called sitting.
+        (!f.sitting || sittingGroup(p) === 'sitting'),
     )
     .sort((a, b) => {
       const group = groupRank[sittingGroup(a)] - groupRank[sittingGroup(b)];
@@ -380,6 +382,7 @@ export function peopleFacets(rows: PeopleRow[]): Facet[] {
         (s) => chamberName(s, 'federal') ?? s,
       ),
     },
+    { key: 'sitting', label: 'Sitting members only' },
     { key: 'votes', label: 'Voting record' },
     { key: 'photo', label: 'Portrait' },
   ];
@@ -449,6 +452,19 @@ export function electorateFacets(rows: Electorate[]): Facet[] {
     },
     { key: 'results', label: 'With election results' },
   ];
+}
+/**
+ * What the Sort row and the list's summary call the order. Every people order
+ * keeps sitting members first (TestFlight build 32: "Would think it would be
+ * better to show current sitting MPs first"), so their sorts are named with
+ * it: "Sitting first, then most speeches".
+ */
+export function sortSummary(kind: DirectoryKind, sort: string | undefined) {
+  const sorts = directorySorts[kind];
+  const label = (sorts.find((s) => s.value === sort) ?? sorts[0]!).label;
+  return kind === 'person'
+    ? `Sitting first, then ${label[0]!.toLowerCase()}${label.slice(1)}`
+    : label;
 }
 export const directorySorts: Record<DirectoryKind, Choice[]> = {
   person: [

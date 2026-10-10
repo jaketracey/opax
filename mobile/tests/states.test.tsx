@@ -360,7 +360,8 @@ describe('party context', () => {
   test.each([
     ['current', 'Labor', 'Labor', 'ALP'],
     ['unknown', 'Labor', 'Labor', 'ALP'],
-    ['former', 'Formerly Labor', 'Formerly Labor', 'Formerly ALP'],
+    // Status is never the label's to say (TestFlight build 32).
+    ['former', 'Labor', 'Labor', 'ALP'],
   ] as const)(
     'a %s party reads "%s", seen and heard',
     (status, visible, spoken, dense) => {
@@ -409,7 +410,7 @@ describe('party context', () => {
   test.each([
     ['current', 'Anthony Albanese', 'Anthony Albanese, Labor'],
     ['unknown', 'Yasmin Catley', 'Yasmin Catley, Labor'],
-    ['former', 'Julia Gillard', 'Julia Gillard, Formerly Labor'],
+    ['former', 'Julia Gillard', 'Julia Gillard, Labor, Former member'],
   ] as const)(
     'a %s person row reads "%s" in one label',
     (status, name, label) => {

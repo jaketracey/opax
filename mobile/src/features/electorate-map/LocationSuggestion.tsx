@@ -4,26 +4,50 @@ import { AccessibilityInfo, Platform, StyleSheet, View } from 'react-native';
 import type { Electorate } from '../../api/catalogs';
 import { Button, Group, Text } from '../../design/primitives';
 import { colors, rhythm } from '../../design/tokens';
-import { suggestFromLocation } from './location';
+import { suggestFromLocation, suggestStateFromLocation } from './location';
 import type { Suggestion } from './suggestion';
-const messages = {
-  denied: 'Location access is off. Search by electorate or member name below.',
-  border:
-    'Your location may be near a border, or too approximate to suggest one seat. Choose your electorate below.',
-  'no-match':
-    'No federal display outline matches your location. You may be offshore or outside the covered area. Choose your electorate below.',
-  unavailable:
-    'A location suggestion is unavailable. Choose your electorate below.',
+type Scope = 'federal' | 'state';
+const messages: Record<Scope, Record<Exclude<Suggestion['kind'], 'suggested'>, string>> = {
+  federal: {
+    denied:
+      'Location access is off. Search by electorate or member name below.',
+    border:
+      'Your location may be near a border, or too approximate to suggest one seat. Choose your electorate below.',
+    'no-match':
+      'No federal display outline matches your location. You may be offshore or outside the covered area. Choose your electorate below.',
+    unavailable:
+      'A location suggestion is unavailable. Choose your electorate below.',
+  },
+  state: {
+    denied:
+      'Location access is off. Search by electorate or member name below.',
+    border:
+      'Your location may be near a district border, or too approximate to suggest one district. Choose your electorate below.',
+    'no-match':
+      'No district in this state matches your location. Choose your electorate below.',
+    unavailable:
+      'A location suggestion is unavailable. Choose your electorate below.',
+  },
 };
+/**
+ * "Use my location" in a seat chooser. `federal` matches the release's
+ * federal display outlines; `state` (TestFlight build 32) matches the state
+ * and territory district outlines bundled in the app. Either way the
+ * permission is asked at the tap and the fix stays on the device.
+ */
 export function LocationSuggestion({
   seats,
   onConfirm,
   disabled,
+  scope = 'federal',
 }: {
   seats: Electorate[];
   onConfirm: (seat: Electorate) => void;
   disabled: boolean;
+  scope?: Scope;
 }) {
+  const id = scope === 'state' ? 'state-' : '';
+  const said = messages[scope];
   const [busy, setBusy] = useState(false),
     [progress, setProgress] = useState<Progress>({ done: 0, total: 0 }),
     [result, setResult] = useState<Suggestion | null>(null);
@@ -36,13 +60,16 @@ export function LocationSuggestion({
     setBusy(true);
     setResult(null);
     setProgress({ done: 0, total: 0 });
-    const outcome = await suggestFromLocation(
-      seats,
-      (done, total) => {
-        if (!controller.signal.aborted) setProgress({ done, total });
-      },
-      controller.signal,
-    );
+    const outcome =
+      scope === 'state'
+        ? await suggestStateFromLocation(seats, controller.signal)
+        : await suggestFromLocation(
+            seats,
+            (done, total) => {
+              if (!controller.signal.aborted) setProgress({ done, total });
+            },
+            controller.signal,
+          );
     if (!controller.signal.aborted) {
       setResult(outcome);
       setBusy(false);
@@ -50,7 +77,7 @@ export function LocationSuggestion({
       AccessibilityInfo.announceForAccessibility(
         outcome.kind === 'suggested'
           ? `Suggested electorate: ${outcome.seat.name}. Confirm or choose another.`
-          : messages[outcome.kind],
+          : said[outcome.kind],
       );
     }
   }
@@ -59,18 +86,25 @@ export function LocationSuggestion({
       <Button
         label="Use my location"
         icon="location"
-        testID="use-my-location"
+        testID={`${id}use-my-location`}
         onPress={() => void locate()}
         disabled={busy || disabled}
-        accessibilityHint="Optional. Suggests a federal electorate using a display outline; you confirm the choice."
+        accessibilityHint={
+          scope === 'state'
+            ? 'Optional. Suggests a state district using an outline held on this device; you confirm the choice.'
+            : 'Optional. Suggests a federal electorate using a display outline; you confirm the choice.'
+        }
       />
       <Text wordSafe variant="fine">
         Your location is used once on your{' '}
-        {Platform.OS === 'android' ? 'phone' : phoneCopy('iPhone')} to suggest a
-        federal seat. It is not sent, saved or logged. Display outlines are not
-        for address allocation.
+        {Platform.OS === 'android' ? 'phone' : phoneCopy('iPhone')} to suggest a{' '}
+        {scope === 'state' ? 'state district' : 'federal seat'}. It is not sent,
+        saved or logged.{' '}
+        {scope === 'state'
+          ? 'District outlines are statistical approximations, not for address allocation.'
+          : 'Display outlines are not for address allocation.'}
       </Text>
-      {busy ? (
+      {busy && scope === 'federal' ? (
         <Group>
           <LocationProgress {...progress} />
           <Button
@@ -87,23 +121,24 @@ export function LocationSuggestion({
       ) : null}
       {result?.kind === 'suggested' ? (
         <Group>
-          <Text wordSafe testID="location-suggestion">
+          <Text wordSafe testID={`${id}location-suggestion`}>
             Your location looks like it&apos;s in {result.seat.name}. Confirm or
             choose another.
           </Text>
           <Text wordSafe variant="fine">
-            Suggestion from AEC {result.vintage} display outlines. Boundaries
-            may have changed; confirm your seat.
+            {scope === 'state'
+              ? `Suggestion from ABS ${result.vintage} statistical approximations of state districts. Boundaries may differ; confirm your district.`
+              : `Suggestion from AEC ${result.vintage} display outlines. Boundaries may have changed; confirm your seat.`}
           </Text>
           <Button
             label={`Confirm ${result.seat.name}`}
-            testID="location-confirm"
+            testID={`${id}location-confirm`}
             disabled={disabled}
             onPress={() => onConfirm(result.seat)}
           />
           <Button
             label="Choose another"
-            testID="location-choose-another"
+            testID={`${id}location-choose-another`}
             onPress={() => setResult(null)}
           />
         </Group>
@@ -111,9 +146,9 @@ export function LocationSuggestion({
         <Text
           wordSafe
           accessibilityLiveRegion="polite"
-          testID={`location-${result.kind}`}
+          testID={`${id}location-${result.kind}`}
         >
-          {messages[result.kind]}
+          {said[result.kind]}
         </Text>
       ) : null}
     </Group>

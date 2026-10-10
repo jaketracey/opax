@@ -229,6 +229,22 @@ export const datasets: Dataset[] = [
     ],
   },
   {
+    id: 'abs-state-districts',
+    name: 'State district outlines',
+    publisher: 'Australian Bureau of Statistics',
+    licence: 'CC BY 4.0',
+    terms: [
+      'Based on Australian Bureau of Statistics data: ASGS Edition 3, State Electoral Divisions 2025 (statistical approximations), simplified. CC BY 4.0.',
+      'Held in the app so a state district can be suggested from your location on the device. Not for address allocation: the outlines approximate electoral boundaries and do not establish your district.',
+    ],
+    links: [
+      {
+        label: 'ABS Australian Statistical Geography Standard',
+        url: 'https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3',
+      },
+    ],
+  },
+  {
     id: 'ipea',
     name: 'Parliamentary expenses',
     publisher: 'Independent Parliamentary Expenses Authority',

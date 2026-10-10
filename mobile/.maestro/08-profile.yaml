@@ -92,8 +92,11 @@ name: 08 Independent profile blocks, current senator, former member and local sh
       id: person-party
     centerElement: true
     timeout: 300000
-- assertVisible: Formerly Labor
-- assertNotVisible: ^Labor$
+- assertVisible: ^Labor$
+- assertNotVisible: Formerly Labor
+- assertVisible:
+    id: person-former
+    text: Former member
 - runFlow:
     file: review-pages.yaml
     env:

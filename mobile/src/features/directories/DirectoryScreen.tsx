@@ -59,7 +59,7 @@ import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { seatContext } from '../your-mp/model';
 import { loadDirectory } from './data';
 import {
-  directorySorts,
+  sortSummary,
   matchingPeople,
   matchingParties,
   matchingElectorates,
@@ -121,6 +121,9 @@ const DirectoryRow = memo(function DirectoryRow({
           party={item.profile.party}
           partyStatus={item.profile.partyStatus}
           formerly={item.profile.formerly}
+          // The years line ("1998 to 2019") under its Sitting or Former
+          // heading says whether they sit; the party label never does.
+          statusShown={!!item.row?.first}
           place={
             item.row?.full && item.row.full !== item.name
               ? item.row.full
@@ -405,14 +408,7 @@ function DirectoryView({ kind }: { kind: keyof typeof titles }) {
                   testID="directory-count"
                   style={styles.grow}
                 >
-                  {count} ·{' '}
-                  {
-                    directorySorts[kind].find(
-                      (s) =>
-                        s.value ===
-                        (filters.sort || directorySorts[kind][0]!.value),
-                    )?.label
-                  }
+                  {count} · {sortSummary(kind, filters.sort)}
                 </Text>
                 <InfoButton
                   title={`About ${title.toLowerCase()}`}
