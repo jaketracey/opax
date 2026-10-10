@@ -46,20 +46,23 @@ test('audit directory filters title, report year, sector and exact entity, with 
  }
  const page = await auditPage(null,new URL('https://opax.com.au/audit'),read,block);
  assert.equal(page.status,200); assert.match(page.prerender,/<section id="prerender">/);
- for(const word of ['Title text','Report year','Sector','Entity audited','Tabled date: 2026-01-02','/audit/qao-2025-26-1']) assert.ok(page.prerender.includes(word),word);
+ for(const word of ['Title text','Report year','Sector','Entity audited','Report 1, 2025–26 · Tabled 2 Jan 2026','/audit/qao-2025-26-1']) assert.ok(page.prerender.includes(word),word);
  assert.equal((page.prerender.match(/class="ui-pop ui-source"/g)||[]).length,1);
  assert.doesNotMatch(page.prerender,/\/subject\/person\//);
 });
 
-test('audit detail has numbered verbatim QAO text, exact tabled date, SourceLine, authoritative and PDF links',async()=> {
+test('audit detail has numbered verbatim QAO text, one dated meta line, SourceLine, authoritative and PDF links',async()=> {
  const page = await auditPage('qao-2025-26-1',new URL('https://opax.com.au/audit/qao-2025-26-1'),read,block);
- assert.equal(page.status,200); assert.match(page.prerender,/<dt>Tabled date<\/dt><dd>2026-01-02<\/dd>/);
+ assert.equal(page.status,200); assert.match(page.prerender,/<h1>Example audit<\/h1><p>Report 1, 2025–26 · Tabled 2 Jan 2026<\/p>/);
+ assert.doesNotMatch(page.prerender,/2026-01-02|Tabled date|<dl|ui-tag">QAO/);
  assert.match(page.prerender,/<ol class="audit-recommendations"><li value="3">/);
  assert.ok(page.prerender.includes('Keep Jane Citizen’s <em>redaction</em>.'));
- assert.ok(page.prerender.includes('QAO&#39;s text'));
+ assert.equal((page.prerender.match(/In the Queensland Audit Office’s words/g)||[]).length,1);
  assert.match(page.prerender,/href="\/subject\/agency\/health"/);
  assert.equal((page.prerender.match(/class="ui-pop ui-source"/g)||[]).length,1);
- assert.ok(page.prerender.includes('Source: Queensland Audit Office, CC BY 4.0'));
+ assert.match(page.prerender,/Updated 10 Oct 2026 · <span class="ui-source-name">Queensland Audit Office<\/span>/);
+ assert.match(page.prerender,/class="ui-sheet-licence"><a href="https:\/\/creativecommons.org\/licenses\/by\/4.0\/">CC BY 4.0<\/a>/);
+ assert.match(page.prerender,/Read the report on qao.qld.gov.au ↗/);assert.doesNotMatch(page.prerender,/class="ui-button"/);
  for(const href of [fixture.reports[0].canonical_url,fixture.reports[0].pdf_url,'https://creativecommons.org/licenses/by/4.0/']) assert.ok(page.prerender.includes(`href="${href}"`));
  assert.doesNotMatch(page.prerender,/\/subject\/person|Machine-written/);
 });
@@ -68,15 +71,15 @@ test('licence exception detail withholds body and recommendations',async()=> {
  const excepted=structuredClone(fixture); const r=excepted.reports[0];r.entities=[];r.recommendations=[];r.licence={...r.licence,status:'exception',body_skipped:true,exceptions:['All rights reserved.']};
  const exported={...files,'reports-1.json':JSON.stringify({records:excepted.reports})};const read=async path=>JSON.parse(exported[path.replace('/audit/','')]);
  const page=await auditPage(r.id,new URL('https://opax.com.au/audit/'+r.id),read,block);
- assert.equal(page.status,200);assert.match(page.prerender,/text withheld/);assert.doesNotMatch(page.prerender,/Keep Jane Citizen/);
+ assert.equal(page.status,200);assert.match(page.prerender,/not reproduced here/);assert.doesNotMatch(page.prerender,/Keep Jane Citizen/);
 });
 
-test('audit detail preserves alphabetic source markers and marks unpublished numbers',async()=> {
+test('audit detail preserves alphabetic source markers and leaves unpublished numbers unnumbered',async()=> {
  const record=structuredClone(fixture.reports[0]);record.recommendations[0].html='<p>Source words</p><ol type="a" start="3"><li value="5">A source subpoint.</li></ol>';
  const render=async row=>auditPage(row.id,new URL('https://opax.com.au/audit/'+row.id),async path=>path.includes('reports-')?{records:[row]}:read(path),block);
  const numbered=await render(record);assert.ok(numbered.prerender.includes(record.recommendations[0].html));
  record.recommendations[0].number=null;
- const unknown=await render(record);assert.match(unknown.prerender,/Number not published in the HTML/);assert.match(unknown.prerender,/<li class="audit-unnumbered">/);
+ const unknown=await render(record);assert.match(unknown.prerender,/<li class="audit-unnumbered">/);
  record.recommendations[0].html='<ol type="a" onclick="unsafe"><li>Changed.</li></ol>';
  const unsafe=await render(record);assert.doesNotMatch(unsafe.prerender,/onclick|Changed\./);assert.ok(unsafe.prerender.includes('Keep Jane Citizen’s redaction.'));
 });

@@ -1,3 +1,4 @@
+import {saConversationInput} from './sa-evidence-harness.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -6,7 +7,7 @@ import { build } from 'esbuild';
 import ts from 'typescript';
 
 const b = await build({ entryPoints: [new URL('../src/ask-rewrite.ts', import.meta.url).pathname], bundle: true, write: false, platform: 'node', format: 'esm' });
-const { rewriteFollowUp, readRewrite, contentFree, sameQuestion, clarifyPayload, rewritePrompt } = await import('data:text/javascript;base64,' + Buffer.from(b.outputFiles[0].text).toString('base64'));
+const { rewriteFollowUp, readRewrite, contentFree, sameQuestion, clarifyPayload, rewritePrompt, REWRITE_SYSTEM } = await import('data:text/javascript;base64,' + Buffer.from(b.outputFiles[0].text).toString('base64'));
 
 // The conversation Jake had on 8 Oct 2026, as the app sent it.
 const PREVIOUS = 'What has David Pocock proposed about housing affordability?';
@@ -112,7 +113,7 @@ const code = parsed.statements.filter((n) => ts.isFunctionDeclaration(n) && ['ap
 const transpile = (s) => ts.transpileModule(s, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText;
 function route(rewriteResult) {
   const seen = { generation: 0, retrieval: 0, limiter: 0 };
-  const apiAsk = runInNewContext(transpile(code) + ';apiAsk', {
+  const apiAsk = runInNewContext(transpile(code) + ';apiAsk', {saConversationInput,
     URL, Request, Response, Date,
     // The donor privacy check and model budget are exercised in donor-privacy.test.mjs and model-budget.test.mjs.
     questionNamesWithheldDonor: async () => false, readerTurns: () => [], withheldDonorAnswer: () => ({}), MODEL_BUDGET_HEADER: 'x-opax-model-budget', modelBudgetBusy: () => new Response(null, { status: 503 }), 
@@ -147,4 +148,26 @@ test('the route still searches a real follow-up on its rewrite', async () => {
   const res = await ask('what about his votes?');
   assert.equal(res.status, 503);
   assert.equal(seen.retrieval, 1);
+});
+
+// Exercise the actual rewrite fetch AND body read with an expiring parent.
+const deadlineBundle=await build({entryPoints:[new URL('../src/ask-deadline.ts',import.meta.url).pathname],bundle:true,write:false,platform:'node',format:'esm'});
+const {AskDeadline}=await import('data:text/javascript;base64,'+Buffer.from(deadlineBundle.outputFiles[0].text).toString('base64'));
+const summaryBundle=await build({entryPoints:[new URL('../src/search-summary.ts',import.meta.url).pathname],bundle:true,write:false,platform:'node',format:'esm'});
+const {summaryModelAnswer}=await import('data:text/javascript;base64,'+Buffer.from(summaryBundle.outputFiles[0].text).toString('base64'));
+const standaloneCode=parsed.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text==='standaloneQuestion').getText(parsed);
+for(const stage of ['fetch','body'])test(`an expired overview budget aborts the hanging rewrite ${stage}`,async()=>{
+ let active=0,aborted=0;
+ const standalone=runInNewContext(transpile(standaloneCode)+';standaloneQuestion',{
+  rewriteFollowUp,summaryModelAnswer,REWRITE_SYSTEM,AbortSignal,
+  kbFetch:async(_env,_path,{signal})=>{
+   active++;
+   if(stage==='fetch')return new Promise((resolve,reject)=>signal.addEventListener('abort',()=>{active--;aborted++;reject(signal.reason)},{once:true}));
+   return new Response(new ReadableStream({start(controller){signal.addEventListener('abort',()=>{active--;aborted++;controller.error(signal.reason)},{once:true})}}));
+  },
+ });
+ const budget=new AskDeadline(50);
+ assert.equal(await standalone({question:'what else?',context},{},budget),null);
+ await new Promise(resolve=>setTimeout(resolve,5));
+ assert.equal(active,0);assert.equal(aborted,1);assert.equal(budget.signal.aborted,true);budget.dispose();
 });

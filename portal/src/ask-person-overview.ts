@@ -4,6 +4,8 @@ import { TOPIC_NAMES } from './topic-names.mjs'
 import type { CatalogRecord } from './catalog-search'
 import type { RecordQuestion, AskRecords } from './ask-records'
 import { AskDeadline } from './ask-deadline'
+import { saEvidenceRecord } from './sa-evidence'
+import { isSaHansard } from '../public/sa-hansard.js'
 
 const fold = (s: string) => s.toLowerCase().replace(/[’‘]/g, "'").replace(/\s+/g, ' ').trim()
 const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -49,7 +51,7 @@ export const isPersonRecentCandidate = (question: string): boolean => /^what did
 
 export type OverviewSpeech = {
   slug: string; resource?: string; title: string; speaker: string; date: string;
-  topics: string[]; state?: string; chamber?: string; url?: string; snippet?: string
+  topics: string[]; source?: string; state?: string; chamber?: string; url?: string; source_url?: string; snippet?: string
 }
 export type OverviewTheme = { slug: string; name: string; count: number; recent_count: number | null }
 export type PersonContext = {
@@ -82,7 +84,7 @@ const topThemes = (counts: Record<string, number>) => Object.entries(counts).fil
  * Dates come from speech metadata, never catalogue created/index time. */
 export async function buildPersonOverview(
   person: { name: string; party?: string | null; party_now?: string; representation?: { electorate: string }[] },
-  asOf: string, profile: string, deps: OverviewDependencies, scoped = false, parent?: AbortSignal | AskDeadline,
+  asOf: string, profile: string, deps: OverviewDependencies, scoped = false, parent?: AbortSignal | AskDeadline, saFullTextFlag?: string,
 ): Promise<OverviewPack> {
   const deadline = parent instanceof AskDeadline ? parent : new AskDeadline(OVERVIEW_RETRIEVAL_MS, parent)
   const call = <T>(work: (signal: AbortSignal) => Promise<T>) => deadline.run(work, OVERVIEW_CALL_MS)
@@ -129,7 +131,11 @@ export async function buildPersonOverview(
       profile, votes: profile + '#subject-votes', interests: '/declared?' + new URLSearchParams({person: person.name}) }
     const records: CatalogRecord[] = []
     let chars = 0
-    const add = (record: CatalogRecord) => {
+    const add = (input: CatalogRecord) => {
+      // Cap the selected evidence, including its context prefix, before it can
+      // reach extra_context or any generation/verifier call. Keep provenance.
+      const record = saEvidenceRecord({...input}, saFullTextFlag)
+      if (record.kind === 'speech' && !record.snippet.trim()) return
       if (!deps.safe(record.title, record.snippet) || chars + record.snippet.length > OVERVIEW_CAPS.chars) return
       if (records.some(r => r.slug === record.slug)) return
       records.push(record); chars += record.snippet.length
@@ -159,7 +165,8 @@ export async function buildPersonOverview(
         const evidence = positionEvidence(original, theme.name)
         if (!evidence) continue
         add({ kind: 'speech', title: speech.title, href: '/doc/' + speech.slug, slug: speech.slug,
-          resource: '', source: 'Hansard · verified speaking turn', date: speech.date, url: speech.url,
+          resource: '', source: isSaHansard(speech) ? 'Parliament of South Australia' : 'Hansard · verified speaking turn', date: speech.date, url: speech.url,
+          state: speech.state, chamber: speech.chamber, source_url: speech.source_url,
           snippet: `${person.name}, ${speech.date}. Topic label: ${theme.name}.\n` + evidenceExcerpt(evidence, theme.name, 1500, true).text })
       }
     }
@@ -167,9 +174,10 @@ export async function buildPersonOverview(
       const original = originals.get(speech.slug)
       if (!original || !deps.safe(original)) continue
       const existing = records.find(r=>r.slug === speech.slug)
-      if (existing) { existing.source = 'Hansard · recent speech'; continue }
+      if (existing) { if (!isSaHansard(existing)) existing.source = 'Hansard · recent speech'; continue }
       add({ kind: 'speech', title: speech.title, href: '/doc/' + speech.slug, slug: speech.slug, resource: '',
-        source: 'Hansard · recent speech', date: speech.date, url: speech.url,
+        source: isSaHansard(speech) ? 'Parliament of South Australia' : 'Hansard · recent speech', date: speech.date, url: speech.url,
+        state: speech.state, chamber: speech.chamber, source_url: speech.source_url,
         snippet: `${person.name}, ${speech.date}. Recent speech in the complete catalogue.\n` + evidenceExcerpt(original, speech.title, 1500, true).text })
     }
     const billDate = (b: {introduced:string;speech_dates?:string[]}) => (b.speech_dates || []).filter(date=>date<=asOf).sort().at(-1) || b.introduced

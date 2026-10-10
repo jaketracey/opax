@@ -432,8 +432,11 @@ work and falls back to `retrieveAskRecords` and ordinary Ask generation. Pack
 failure never returns a 503. `OVERVIEW_FIRST_ANSWER_MS` bounds the whole first
 answer to 20,000ms, including generation and verification. Citation/quote recovery
 gets at most `OVERVIEW_VERIFICATION_MS` = 2,000ms within the remaining allowance;
-it cannot restart the clock. Client cancellation stops pending retrieval and
-generation. The existing model, output token cap and citation/quote rules remain.
+it cannot restart the clock. The same first-answer budget reaches the conversation
+rewrite fetch and its response-body read (with the existing nine-second per-call
+timeout clipped to the remaining budget). Reader cancellation or deadline expiry
+aborts that call; cancellation is checked before retrieval can continue. Client
+cancellation stops pending rewrite, retrieval and generation. The existing model, output token cap and citation/quote rules remain.
 
 The pack is assembled from:
 
@@ -466,7 +469,7 @@ The pack is assembled from:
 Evidence text is capped at 24,000 characters, with each ordinary context record
 still capped at 1,800 characters. The pack uses a ten-minute **per-Worker-isolate
 LRU**, capped at **500 keys**, keyed by corpus epoch, pipeline version and
-person/scope. Pack entries no longer create Cache API keys; eviction and expiry
+person/scope and the SA full-text policy flag. Pack entries no longer create Cache API keys; eviction and expiry
 are application-controlled. Existing originals retain their
 one-hour cache; successful first answers retain the seven-day generation cache.
 On a cold pack, the request maximum falls from 38 extra upstream calls to **28**:
@@ -475,9 +478,11 @@ The deadline often stops earlier; a warm pack makes none of these calls.
 The previous five hybrid/predict finds requested **five query-embedding plus five
 predictive-rerank operations** outside the BYOK answer-generation budget. They
 are now keyword/noop finds with **zero additional embedding/rerank operations**.
-That is five extra inference-using requests reduced to zero (six including the
-unchanged main Ask request reduced to one). Main Ask's existing semantic query,
-predictive reranking and one BYOK generation remain, as do bounded recoveries.
+That is five extra inference-using requests reduced to zero for the theme pack.
+Main's SA safeguard now performs a generation-disabled Ask preflight: SA evidence
+then goes to Predict with explicit capped context; non-SA uses the normal Ask
+after that preflight (two retrieval requests). Both paths keep one BYOK generation,
+with the existing main semantic query and reranking plus bounded recoveries.
 The pack adds no generation call; added context increases answer input tokens.
 This counts requested inference operations, not measured account charges:
 [Progress consumption](https://docs.rag.progress.cloud/docs/rag/advanced/consumption/)
@@ -498,6 +503,15 @@ the speech filter for that request. The desktop panel uses the existing portrait
 map, party dot and design tokens, and is hidden below 1,000px and in the dock.
 The generated overview and the panel's machine-classified top topics use the
 shared Machine label from `labels.js`.
+
+The overview applies main's `saEvidenceRecord` helper to each selected SA speech
+before `recordContext` serialises it for generation. The 120-word cap includes the
+speaker/date/topic prefix. SA source-only and chamber-only classifications also
+retain their provenance; state, chamber and the official source URL remain
+in both model context and citation sources. Original resource provenance fills gaps
+in catalogue metadata. SA quotations without an official Parliament URL are withheld;
+`SA_HANSARD_FULL_TEXT=true` follows main's explicit bypass. Main's generation-context,
+conversation, cache-hit, stream-event and public display guards remain in place.
 
 Offline verification is in `test/ask-person-overview.test.mjs` and
 `test/ask-person-route.test.mjs`, with shared synthetic record/model fixtures.

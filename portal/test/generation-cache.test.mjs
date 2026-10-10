@@ -1,3 +1,4 @@
+import {saConversationInput} from './sa-evidence-harness.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,mkdtempSync,rmSync} from 'node:fs';
@@ -63,7 +64,7 @@ assert.ok(handler,'the actual Ask handler is present');
 const routeCode=ts.transpileModule(handler.getText(source), {compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
 test('Ask checks shared cache before quota, while conversations and explicit refresh bypass it',async()=>{
  let cacheReads=0,quota=0;
- const api=runInNewContext(routeCode+';apiAsk', {URL,Request,Response,AbortSignal,Date,
+ const api=runInNewContext(routeCode+';apiAsk', {saConversationInput,URL,Request,Response,AbortSignal,Date,saPublicResponse:async response=>response,
   // The donor privacy check and model budget are exercised in donor-privacy.test.mjs and model-budget.test.mjs.
   questionNamesWithheldDonor: async () => false, readerTurns: () => [], withheldDonorAnswer: () => ({}), MODEL_BUDGET_HEADER: 'x-opax-model-budget', modelBudgetBusy: () => new Response(null, { status: 503 }), 
   isPersonOverviewCandidate:()=>false,isPersonRecentCandidate:()=>false,isPersonRecentIntent:()=>false,

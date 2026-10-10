@@ -82,6 +82,7 @@ export function tagHTML(label, href) {
 }
 
 export const MACHINE_NOTE = 'Written by a language model from the records it draws on. It is not part of the record: check it against the original.';
+const MACHINE_NOT_RECORD = 'Written by a model, not by a person. Not part of the record.';
 const MACHINE_GLYPH = '<span class="ui-machine-glyph" aria-hidden="true">✦</span>';
 
 /** MachineLabel: one phrase, once at the top of a machine-written block; it
@@ -90,12 +91,17 @@ const MACHINE_GLYPH = '<span class="ui-machine-glyph" aria-hidden="true">✦</sp
  *  - `pill`: the same pill, drawn still, for a row whose own summary opens the
  *    machine-written text (its sheet is the text itself);
  *  - `inline`: the quiet form for a row in a list of briefs.
- *  `className` keeps a block's layout hook. */
-export function machineLabelHTML({ note = MACHINE_NOTE, inline = false, pill = false, className = '' } = {}) {
+ *  `className` keeps a block's layout hook. `notRecord` stands in for the
+ *  sentence a block used to print ("written by a model, not part of the
+ *  record"): the label's title says it, and so does its name for a screen
+ *  reader, with nothing more on the page. */
+export function machineLabelHTML({ note = MACHINE_NOTE, inline = false, pill = false, className = '', notRecord = false } = {}) {
   const cls = className ? ` ${esc(className)}` : '';
-  if (inline) return `<span class="ui-machine-inline${cls}">${MACHINE_GLYPH}Machine-written</span>`;
-  if (pill) return `<span class="ui-machine-pill${cls}">${MACHINE_GLYPH}Machine-written</span>`;
-  return `<details class="ui-pop ui-machine${cls}"><summary>${MACHINE_GLYPH}Machine-written</summary>` +
+  const title = notRecord ? ` title="${MACHINE_NOT_RECORD}"` : '';
+  const text = `${MACHINE_GLYPH}Machine-written${notRecord ? '<span class="visually-hidden">, not part of the record</span>' : ''}`;
+  if (inline) return `<span class="ui-machine-inline${cls}"${title}>${text}</span>`;
+  if (pill) return `<span class="ui-machine-pill${cls}"${title}>${text}</span>`;
+  return `<details class="ui-pop ui-machine${cls}"><summary${title}>${text}</summary>` +
     `<div class="ui-sheet"><p>${esc(note)}</p></div></details>`;
 }
 

@@ -3,6 +3,7 @@ import {sponsorPerson} from '../public/sponsor-person.js'
 import {currentSittingPath, sydneyDay} from '../public/hubs-data.js'
 import {isOrganisationDonor, donorPrivacyIndex, donorNameWithheld, foldDonorName, MONEY_GRAPHS, withheldPhrases, namesWithheldPhrase} from '../public/donor-entity.js'
 import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, billStripStage} from '../public/division-markdown.js'
+import {machineLabelHTML} from '../public/labels.js'
 /** Crawlable answers from the same static projections the application reads.
  * All lists are bounded; source strings and URLs cross one escaping boundary. */
 export type ReadAsset = <T>(path: string) => Promise<T>
@@ -81,6 +82,22 @@ export function crumbsHTML(items: Crumb[] = []): string {
 export function answerBlock(title: string, description: string, body = '', crumbs: Crumb[] = []): string {
   body = associationCaveat(body, `${description} ${body}`)
   return `${crumbsHTML(crumbs)}<section id="prerender" class="wrap"><h1>${escapeHtml(title)}</h1><p>${escapeHtml(description)}</p>${body}</section>`
+}
+/** Pages whose whole text is served by the Worker, copied from their panel in index.html. */
+export const SERVER_PANELS: ReadonlySet<string> = new Set(['privacy', 'support'])
+/**
+ * The server-rendered copy of a policy page (/privacy, /support): the inner
+ * markup of its panel in the shell (index.html), so the page a crawler or a
+ * reader without scripts gets and the app's panel have one source. It keeps the
+ * section anchors for readers without scripts; spa-shell.js drops the copy's
+ * ids once the panel is back, and `.spa-ready #prerender` hides it. Null when
+ * the panel is missing or holds a nested section the pattern cannot bound.
+ */
+export function panelPrerender(shell: string, name: string): string | null {
+  if (!SERVER_PANELS.has(name)) return null
+  const m = new RegExp(`<section id="panel-${name}"[^>]*>([\\s\\S]*?)</section>`).exec(shell)
+  if (!m || /<section\b/.test(m[1])) return null
+  return `<section id="prerender" class="wrap policy-page" data-panel-copy="${name}">${m[1]}</section>`
 }
 export const ASSOCIATION_CAVEAT = 'An association does not prove influence.'
 export function associationCaveat(body: string, facts: string): string {
@@ -218,7 +235,7 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
   const divisionSlot = '<!--bill-divisions-->'
   body += divisionSlot
 
-  if (b.summary) body += `<h2>Plain-language summary</h2><p>${escapeHtml(b.summary.attribution || 'Written by a model; not the record')}${b.summary.as_of ? `, as at ${escapeHtml(b.summary.as_of)}` : ', date not recorded'}.</p>${(b.summary.sentences || []).slice(0,10).map(s=>`<p>${escapeHtml(s)}</p>`).join('')}<ul>${(b.summary.changes || []).slice(0,10).map(s=>`<li>${escapeHtml(s)}</li>`).join('')}</ul>${b.summary.affected ? `<p>${escapeHtml(b.summary.affected)}</p>` : ''}`
+  if (b.summary) body += `<h2>Plain-language summary</h2><p>${machineLabelHTML({pill:true,notRecord:true})} ${b.summary.as_of ? `As at ${escapeHtml(b.summary.as_of)}` : 'Date not recorded'}.</p>${(b.summary.sentences || []).slice(0,10).map(s=>`<p>${escapeHtml(s)}</p>`).join('')}<ul>${(b.summary.changes || []).slice(0,10).map(s=>`<li>${escapeHtml(s)}</li>`).join('')}</ul>${b.summary.affected ? `<p>${escapeHtml(b.summary.affected)}</p>` : ''}`
   else body += '<h2>Plain-language summary</h2><p>No machine-written summary in this export.</p>'
   const sameSponsor = related.filter(r=>r.key!==b.key && !!b.sponsor && fold(r.sponsor || '')===fold(b.sponsor)).slice(0,20)
   const samePortfolio = related.filter(r=>r.key!==b.key && !!b.portfolio && fold(r.portfolio || '')===fold(b.portfolio)).slice(0,20)

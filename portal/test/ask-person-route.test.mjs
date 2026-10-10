@@ -16,6 +16,7 @@ harness.env.ASSETS={async fetch(req){if(new URL(req.url).pathname.startsWith('/g
 globalThis.fetch=async (input,init)=>{
  const url=new URL(input);const body=init?.body?JSON.parse(init.body):{};calls.push({path:url.pathname,body});
  assert.ok(url.hostname.startsWith('offline.'),'only the offline knowledge-box stub may be addressed');
+ if(url.pathname.endsWith('/ask') && body.generate_answer===false)return Response.json({retrieval_results:{resources:{}}});
  if(mode.startsWith('rewrite-') && url.pathname.endsWith('/ask') && body.prompt?.system?.startsWith('You rewrite follow-up')){
   rewriteActive++;
   if(mode==='rewrite-fetch')return new Promise((resolve,reject)=>{
@@ -67,6 +68,7 @@ globalThis.fetch=async (input,init)=>{
  }
  throw new Error('Unexpected offline stub route');
 };
+const modelCalls=()=>calls.filter(c=>c.path.endsWith('/ask') && c.body.generate_answer!==false);
 const post=(path,question=`What has ${speaker} said in parliament?`,signal)=>harness.fetch(path,{method:'POST',signal,headers:{'content-type':'application/json'},body:JSON.stringify({question})});
 
 test('the first overview answer retains preset, caps, citations and required prose shape with a stub model',async()=>{
@@ -78,7 +80,7 @@ test('the first overview answer retains preset, caps, citations and required pro
  for(const [id,ranges] of Object.entries(data.citations)){
   assert.ok(data.sources.some(s=>s.resource===id&&s.cited));for(const [start,end] of ranges)assert.ok(start>=0&&end<=Array.from(data.answer).length);
  }
- const asks=calls.filter(c=>c.path.endsWith('/ask'));assert.equal(asks.length,1);const body=asks[0].body;
+ const asks=modelCalls();assert.equal(asks.length,1);const body=asks[0].body;
  assert.equal(body.generative_model,'openai-compatible');assert.equal(body.max_tokens,1800);assert.equal(body.citations,'llm_footnotes');assert.equal(body.answer_json_schema,undefined);
  assert.match(body.prompt.user,/aggregate evidence pack/);assert.ok(body.extra_context.join('').length<24000);assert.ok(calls.filter(c=>c.path.endsWith('/catalog')).length<=11);assert.equal(calls.filter(c=>c.path.endsWith('/find')).length,5);
  for(const call of calls.filter(c=>c.path.endsWith('/find'))){assert.deepEqual(call.body.features,['keyword']);assert.equal(call.body.reranker,'noop');assert.match(JSON.stringify(call.body.filter_expression),/"prop":"field"/)}
@@ -111,7 +113,7 @@ for(const scenario of ['slow','failing'])test(`${scenario} retrieval sends SSE i
  for(;;){const part=await reader.read();if(part.done)break;text+=new TextDecoder().decode(part.value)}
  const elapsed=performance.now()-start;const done=text.split('\n\n').find(block=>block.startsWith('event: done'));
  assert.ok(done,'fallback must finish with an answer');const data=JSON.parse(done.split('\ndata: ')[1]);assert.match(data.answer,/retrieved speech/);assert.equal(data.is_overview_intent,true);
- assert.equal(calls.filter(c=>c.path.endsWith('/ask')).length,1);assert.ok(!text.includes('event: error'));
+ assert.equal(modelCalls().length,1);assert.ok(!text.includes('event: error'));
  if(scenario==='slow'){assert.ok(aborted>0,'deadline must cancel outstanding fetches');assert.ok(elapsed<6500,`answer ${elapsed}ms`)}else assert.ok(elapsed<1000,`answer ${elapsed}ms`);
  timings.push({scenario,first_byte_ms:Math.round(firstByte),answer_ms:Math.round(elapsed),cancelled_calls:aborted});
  mode='fast';
@@ -121,7 +123,7 @@ test('a slow verification recovery is cancelled within its two-second first-answ
  mode='verification';harness.env.CACHE_EPOCH='offline-verification';calls.length=0;aborted=0;
  const start=performance.now();const response=await post('/api/ask?stream=1');const text=await response.text();const elapsed=performance.now()-start;
  const done=text.split('\n\n').find(block=>block.startsWith('event: done'));assert.ok(done);const data=JSON.parse(done.split('\ndata: ')[1]);
- assert.ok(elapsed<3000,`verification ${elapsed}ms`);assert.equal(aborted,1);assert.equal(calls.filter(c=>c.path.endsWith('/ask')).length,2);
+ assert.ok(elapsed<3000,`verification ${elapsed}ms`);assert.equal(aborted,1);assert.equal(modelCalls().length,2);
  assert.ok(!data.answer.includes('"This unsupported wording'));assert.ok(Object.keys(data.citations).length>0);assert.ok(!text.includes('event: delta'));
  timings.push({scenario:'verification',answer_ms:Math.round(elapsed),cancelled_calls:aborted});mode='fast';
 });
@@ -131,22 +133,22 @@ test('latest-speech fallback holds model deltas for the final privacy check',asy
  const text=await (await post('/api/ask?stream=1',`What did ${speaker} say in their most recent parliamentary speech?`)).text();
  const done=text.split('\n\n').find(block=>block.startsWith('event: done'));assert.ok(done);
  assert.equal(JSON.parse(done.split('\ndata: ')[1]).is_overview_intent,false);assert.ok(!text.includes('event: delta'));
- assert.match(calls.find(c=>c.path.endsWith('/ask')).body.prompt.user,/Speech metadata is incomplete or unavailable.*Do not claim any speech is the latest or give rolling-year counts/);
- assert.equal(calls.filter(c=>c.path.endsWith('/ask')).length,1);mode='fast';
+ assert.match(modelCalls()[0].body.prompt.user,/Speech metadata is incomplete or unavailable.*Do not claim any speech is the latest or give rolling-year counts/);
+ assert.equal(modelCalls().length,1);mode='fast';
 });
 
 test('generation failures are final so the browser cannot restart the first-answer budget',async()=>{
  mode='failing-model';harness.env.CACHE_EPOCH='offline-model-failure';calls.length=0;
  const text=await (await post('/api/ask?stream=1')).text();
  const error=text.split('\n\n').find(block=>block.startsWith('event: error'));assert.ok(error);
- assert.equal(JSON.parse(error.split('\ndata: ')[1]).final,true);assert.equal(calls.filter(c=>c.path.endsWith('/ask')).length,2);mode='fast';
+ assert.equal(JSON.parse(error.split('\ndata: ')[1]).final,true);assert.equal(modelCalls().length,2);mode='fast';
 });
 
 test('leaving the overview stream cancels retrieval and never starts generation',async()=>{
  mode='slow';harness.env.CACHE_EPOCH='offline-client-cancel';calls.length=0;aborted=0;
  const response=await post('/api/ask?stream=1');const reader=response.body.getReader();await reader.read();
  await new Promise(resolve=>setTimeout(resolve,30));await reader.cancel();await new Promise(resolve=>setTimeout(resolve,30));
- assert.ok(aborted>0);assert.equal(calls.filter(c=>c.path.endsWith('/ask')).length,0);mode='fast';
+ assert.ok(aborted>0);assert.equal(modelCalls().length,0);mode='fast';
 });
 
 for(const stage of ['fetch','body'])test(`leaving an overview aborts a hanging rewrite ${stage} before retrieval`,async()=>{
@@ -155,7 +157,7 @@ for(const stage of ['fetch','body'])test(`leaving an overview aborts a hanging r
  const response=await harness.fetch('/api/ask?stream=1',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({question:`What has ${speaker} said in parliament?`,context:[{author:'reader',text:'What subjects were discussed?'},{author:'answer',text:'The record includes speeches on parliamentary scrutiny.'}]})});
  const reader=response.body.getReader();assert.match(new TextDecoder().decode((await reader.read()).value),/event: status/);
  await started;assert.equal(rewriteActive,1);await reader.cancel();await new Promise(resolve=>setTimeout(resolve,30));
- assert.equal(rewriteActive,0);assert.equal(aborted,1);assert.equal(calls.length,1);assert.ok(calls[0].path.endsWith('/ask'));
+ assert.equal(rewriteActive,0);assert.equal(aborted,1);assert.equal(modelCalls().length,1);assert.equal(calls.length,2);assert.ok(calls.every(c=>c.path.endsWith('/ask')));
  timings.push({scenario:'cancelled-rewrite-'+stage,active_calls:rewriteActive,aborted_calls:aborted});mode='fast';
 });
 

@@ -1,11 +1,11 @@
 # Sitting weeks and Senate estimates
 
-## Victorian election 2026 (publication disabled)
+## Victorian election 2026
 
 `/vic-election-2026` and its 96 constituency pages are behind
 `VIC_ELECTION_HUB_ENABLED`. The shared default in `portal/public/vic-election.js`
-is false; `portal/wrangler.jsonc` also explicitly sets the production variable to
-`"false"`. An absent value, `false`, `1`, or any string other than exact `"true"`
+is false; the deployment value is controlled separately in `portal/wrangler.jsonc`.
+An absent value, `false`, `1`, or any string other than exact `"true"`
 keeps publication disabled. Disabled pages, unknown constituencies and the
 direct election facts asset return 404 with `X-Robots-Tag: noindex`; HTML 404s
 also have a robots meta tag. The disabled gate runs before host or alias
@@ -13,15 +13,20 @@ redirects, including www, trailing slashes, case and encoded aliases for pages,
 the election sitemap and facts asset. Disabled hubs have no election links,
 sitemap entry or llms.txt entry.
 
-Jake must resolve electoral-matter authorisation and the correction contact
-before publication. After that decision, set any approved `AUTHORISATION_LINE`
-and `CORRECTION_CONTACT` Worker variables, and change
-`VIC_ELECTION_HUB_ENABLED` to `"true"` through the normal reviewed release.
-Both footer values default to null in `portal/src/hubs.ts`; the existing shared
-`CORRECTION_CONTACT` is reused. The authorisation is escaped plain text; the
-correction contact is a site path or HTTPS URL. All sitting, estimates and
-election hub pages (including their 404s) render configured footer values.
-Neither value is invented, and there is no response-time commitment.
+The control hub approved the electoral authorisation and corrections contact on
+10 October 2026. Every published Victorian hub page carries:
+
+> Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 343 Little Collins St, Melbourne VIC 3000.
+
+The address was verified against [Noice's contact page](https://noice.net.au/contact/).
+The footer links to `corrections@opax.com.au` and says “We aim to respond within
+2 business days.” These values live in `portal/public/vic-election.js` and are
+required for Victorian pages even when optional federal footer variables are
+empty. The complete authorisation is also on landscape and portrait electoral
+share cards and in the downloadable `/hubs/vic-election-2026.json` projection,
+which includes the corrections contact and response wording. Print styles
+retain the footer and keep its lines together. Enabling publication is a
+separate change to `VIC_ELECTION_HUB_ENABLED`; the text change does not enable it.
 
 For an **isolated local preview only**, run Wrangler with
 `--var VIC_ELECTION_HUB_ENABLED:true` inside the required network namespace.
@@ -122,12 +127,11 @@ including combined host/path aliases; unknown periods remain noindex 404s.
 
 ## Correction contact
 
-Jake's correction contact and response commitment are pending his decision in
-the control hub (10 October). All hubs, including their 404 pages, share
-`CORRECTION_CONTACT: string | null = null` in `portal/src/hubs.ts`. Once Jake
-approves a contact, set that constant to the approved site path or HTTPS URL in
-one line to enable the shared “Report a correction” footer. There is no response
-time claim in the renderer; add one only if Jake explicitly approves its wording.
+Victorian election pages use the approved corrections email and response wording
+above. Federal sitting and estimates hubs retain their optional
+`CORRECTION_CONTACT` and `AUTHORISATION_LINE` defaults in `portal/src/hubs.ts`;
+configured links are validated and text is escaped. A bare `mailto:` address is
+accepted alongside site paths and HTTPS URLs.
 
 ## Updating the October estimates program
 

@@ -6,8 +6,8 @@ import {cleanEvent} from '../analytics/privacy.mjs';
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 
-const bundle=await build({entryPoints:[new URL('../src/ask-person-overview.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
-const {overviewSubject,isPersonOverviewIntent,buildPersonOverview,OVERVIEW_CAPS,OVERVIEW_INSTRUCTIONS}=await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64'));
+const bundle=await build({stdin:{contents:"export * from './src/ask-person-overview'; export * from './src/ask-records'; export * from './src/sa-evidence';",resolveDir:new URL('../',import.meta.url).pathname,loader:'ts'},bundle:true,write:false,format:'esm',platform:'node'});
+const {overviewSubject,isPersonOverviewIntent,buildPersonOverview,OVERVIEW_CAPS,OVERVIEW_INSTRUCTIONS,recordContext,saGenerationResponse}=await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64'));
 const deadlines=await build({entryPoints:[new URL('../src/ask-deadline.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
 const {AskDeadline,AskPackCache}=await import('data:text/javascript;base64,'+Buffer.from(deadlines.outputFiles[0].text).toString('base64'));
 const people=[{name:'Example Member'},{name:'Other Member'}];
@@ -47,6 +47,55 @@ test('the pack uses whole-record facets, metadata dates, export bill links and t
  assert.ok(!pack.records.records.filter(r=>r.source?.includes('verified')).some(r=>r.snippet.includes('later reply')));
  assert.ok(pack.records.records.reduce((sum,r)=>sum+r.snippet.length,0)<=OVERVIEW_CAPS.chars);
  assert.ok(calls.original.length<=12);assert.match(OVERVIEW_INSTRUCTIONS,/3–5 themes/);assert.match(OVERVIEW_INSTRUCTIONS,/EVERY factual sentence/);
+});
+
+test('SA overview evidence is capped before the stub model, retaining provenance and the permission switch',async()=>{
+ const original=Array.from({length:24},(_,i)=>`Housing statement ${i} described the parliamentary proposal and requested scrutiny of its recorded effects and implementation.`).join(' ');
+ const make=()=>{
+  const fixture=evidence(6);
+  for(const row of fixture.rows)Object.assign(row,{state:'sa',chamber:'sa_lc',url:'https://example.invalid/internal',source_url:'https://hansardsearch.parliament.sa.gov.au/search/fixture'});
+  fixture.deps.original=async()=>original;
+  return fixture;
+ };
+ for(const flag of [undefined,'false','true']){
+  const {deps}=make();const pack=await buildPersonOverview(subject,'2026-10-10',profile,deps,false,undefined,flag);
+  const speeches=pack.records.records.filter(r=>r.kind==='speech');assert.ok(speeches.length);
+  for(const row of speeches){
+   assert.equal(row.state,'sa');assert.equal(row.chamber,'sa_lc');assert.match(row.source_url,/parliament.sa.gov.au/);
+   assert.equal(row.snippet.trim().split(/\s+/).length<=120,flag!=='true');
+  }
+  const body={query:'Housing speeches',generative_model:'fixture-model',extra_context:recordContext(pack.records.records)};
+  let generations=0;
+  await saGenerationResponse(body,flag,async(path,request)=>{
+   if(request.generate_answer===false)return Response.json({retrieval_results:{resources:{}}});
+   generations++;
+   const contexts=path==='/predict/chat'?Object.values(request.query_context):request.extra_context;
+   const rows=contexts.map(text=>JSON.parse(text)).filter(r=>r.kind==='speech');assert.ok(rows.length);
+   for(const row of rows){
+    assert.equal(row.state,'sa');assert.match(row.source_url,/parliament.sa.gov.au/);
+    assert.equal(row.record.trim().split(/\s+/).length<=120,flag!=='true');
+   }
+   return path==='/predict/chat'?new Response(JSON.stringify({chunk:{type:'text',text:'A cited overview.'}})+'\n'):Response.json({answer:'A cited overview.'});
+  },false);
+  assert.equal(generations,1);
+ }
+ // Source-only and chamber-only classifications must reach the same policy,
+ // including a conflicting jurisdiction label and a recent-speech duplicate.
+ for(const metadata of [{source:'sa_hansard',state:undefined,chamber:undefined},{source:'sa_hansard',state:'federal',chamber:'senate'},{state:undefined,chamber:'sa_lc'}]){
+  const {deps,rows}=make();for(const row of rows)Object.assign(row,metadata);
+  const pack=await buildPersonOverview(subject,'2026-10-10',profile,deps);
+  for(const row of pack.records.records.filter(r=>r.kind==='speech')){
+   assert.equal(row.source,'Parliament of South Australia');assert.ok(row.snippet.split(/\s+/).length<=120);
+  }
+  const contexts=recordContext(pack.records.records).map(text=>JSON.parse(text));
+  assert.ok(contexts.some(r=>r.source==='Parliament of South Australia'),'source provenance survives model context');
+ }
+ const {deps,rows}=make();for(const row of rows)delete row.source_url;
+ const withheld=await buildPersonOverview(subject,'2026-10-10',profile,deps);
+ assert.ok(!withheld.records.records.some(r=>r.kind==='speech'),'without official provenance SA quotations are withheld');
+ const federal=evidence(6);federal.deps.original=async()=>original;
+ const unrestricted=await buildPersonOverview(subject,'2026-10-10',profile,federal.deps);
+ assert.ok(unrestricted.records.records.some(r=>r.kind==='speech' && r.snippet.split(/\s+/).length>120));
 });
 
 test('incomplete metadata keeps whole-record counts and never invents recent totals or a latest speech',async()=>{

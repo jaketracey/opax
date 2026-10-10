@@ -4,6 +4,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { build } from 'esbuild';
+import {VIC_ELECTION_AUTHORISATION_LINE} from '../public/vic-election.js';
 
 const built = await build({ entryPoints: [new URL('../src/og.ts', import.meta.url).pathname], bundle: true, write: false, platform: 'node', format: 'esm' });
 const { portraitTree, cardTree, ogLayout, ogFormat, homeCard, PORTRAIT_WIDTH, PORTRAIT_HEIGHT, OG_WIDTH, OG_HEIGHT, OG_VERSION } = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
@@ -22,6 +23,18 @@ function walk(el, out = []) {
   return out;
 }
 const textNode = (el, text) => walk(el).find(n => n.props?.children === text);
+
+test('electoral share cards retain the complete authorisation in both formats',()=>{
+  const card={kicker:'Victorian election',title:'Victorian election 2026',lines:['Official districts, regions and parliamentary records.'],authorisation:VIC_ELECTION_AUTHORISATION_LINE};
+  for(const tree of [cardTree(card),portraitTree(card)]) {
+    const line=textNode(tree,VIC_ELECTION_AUTHORISATION_LINE);
+    assert.ok(line);
+    assert.equal(line.props.style.overflow,undefined);
+    assert.equal(line.props.style.whiteSpace,undefined);
+    assert.equal(textNode(tree,card.kicker).props.style.textTransform,'none');
+    assert.ok(textNode(tree,'opax.com.au'));
+  }
+});
 const images = el => walk(el).filter(n => n.type === 'img');
 const engraving = el => images(el).find(n => n.props.width === 340);
 
@@ -85,7 +98,7 @@ test('the layout table and the format parser leave the landscape card untouched'
   assert.equal(ogFormat('portrait'), 'portrait');
   const home = cardTree(homeCard());
   assert.equal(home.props.style.width, 1200); assert.equal(home.props.style.height, 630);
-  assert.equal(OG_VERSION, '6', 'portraits taken off people they did not show, so crawlers and the edge fetch the new card');
+  assert.equal(OG_VERSION, '7', 'electoral authorisation changes the card, so crawlers and the edge fetch the new version');
 });
 
 test('the Worker draws ?format=portrait at 1080x1350, keys the cache on it and says so in a header', async () => {

@@ -1,3 +1,4 @@
+import {saConversationInput} from './sa-evidence-harness.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -13,7 +14,7 @@ const {normalizePassage, passageWindow} = passageText;
 const source = ts.createSourceFile('index.ts', readFileSync(new URL('../src/index.ts', import.meta.url), 'utf8'), ts.ScriptTarget.Latest, true);
 const select = names => source.statements.filter(n => ts.isFunctionDeclaration(n) && names.includes(n.name?.text)).map(n => n.getText(source)).join('\n');
 const transpile = text => ts.transpileModule(text,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;
-const compile = (names, context) => runInNewContext(transpile(select(names)) + ';({' + names.join(',') + '})', {...passageText, ...context});
+const compile = (names, context) => runInNewContext(transpile(select(names)) + ';({' + names.join(',') + '})', {saConversationInput,...passageText, ...context});
 const evidence = {};
 runInNewContext(transpile(readFileSync(new URL('../src/ask-evidence.ts', import.meta.url), 'utf8')), {exports: evidence, require: () => passageText});
 const rid = '855d6df1c8c1429df4e4123c7557373b';
