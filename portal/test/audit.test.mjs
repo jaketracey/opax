@@ -46,7 +46,7 @@ test('audit directory filters title, report year, sector and exact entity, with 
  }
  const page = await auditPage(null,new URL('https://opax.com.au/audit'),read,block);
  assert.equal(page.status,200); assert.match(page.prerender,/<section id="prerender">/);
- for(const word of ['Title text','Report year','Sector','Entity audited','Tabled date: 2026-01-02','/audit/qao-2025-26-1']) assert.ok(page.prerender.includes(word),word);
+ for(const word of ['Title','Tabled','Sector','Entities','2026-01-02','qao-2025-26-1']) assert.ok(page.prerender.includes(word),word);
  assert.equal((page.prerender.match(/class="ui-pop ui-source"/g)||[]).length,1);
  assert.doesNotMatch(page.prerender,/\/subject\/person\//);
 });

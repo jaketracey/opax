@@ -1,0 +1,11 @@
+/* Each register uses its section's existing accent, supplied by design tokens. */
+.instrument-content [data-register-table],
+.audit-content [data-register-table] {
+  --money-ink: var(--bronze-ink);
+  --money-wash: var(--bronze-wash);
+}
+#subject-interests [data-register-table],
+[data-register-table="ssr-interests-table"] {
+  --money-ink: var(--interests-ink);
+  --money-wash: var(--interests-wash);
+}

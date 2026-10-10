@@ -17,29 +17,39 @@ import {personIndex} from '../src/person-slug.ts';
 import {buildCrawl} from '../../scripts/build_crawl_catalog.mjs';
 import {buildGrowth} from '../../scripts/build_growth_modules.mjs';
 import {moduleOutputs} from './growth-module-harness.mjs';
+import {applyQuery,toCSV,serializeQuery} from '../public/datatable.js';
+import {interestTableData,interestTableConfig,partyMoneyData,partyMoneyTableConfig,guardRegisterQuery} from '../public/register-tables.js';
 
 const pub = new URL('../public/', import.meta.url).pathname;
 const real = path => JSON.parse(readFileSync(join(pub, path), 'utf8'));
 
-// --- fixtures: fictional donors to the party with the most receipts --------------
+// --- runtime fixtures: derived donors to the party with the most receipts -------
 const federal = real('graph/money.json');
 const inbound = new Map();
 for (const e of federal.edges) if (!e.flow && !e.grant) inbound.set(e.target, (inbound.get(e.target) || 0) + e.total);
 const topParty = federal.nodes.find(n => n.id === [...inbound].sort((a, b) => b[1] - a[1])[0][0]);
-// Sector-tagged, titled, inverted and individual-tagged people; the reviews' ABN-only alias,
-// unions-tagged personal name and acronym aliases ("ABN", initials); an all-capitals name.
-const FIXTURE_INDIVIDUALS = [['Quillon Fixturewright', 'media', ['Q. Fixturewright']], ['Mrs Verity Fixturemoor AO', 'finance', []], ['Fixturemoor, Ottoline', 'unions', []], ['Bertram Fixturebay', 'individual', []],
-  ['Alexandra Fixturely', 'other', ['ABN 12 345 678 901']], ['Morgan Fixtureton', 'unions', []], ['JUNIPER FIXTUREHAM', 'unions', ['ACN 123 456 789']],
-  ['Ines Fixturegate', 'other', ['ABN']], ['Rowan Fixturepeak', 'media', ['RF']], ['Hollis Fixtureford', 'finance', ['HFX']]];
+// Labels and aliases come from the export. Vary sector tags to catch classification
+// that mistakenly treats an industry tag as organisation evidence.
+const fixtureRoster = new Set([...real('parliamentarians.json').people.flatMap(p=>[p.name,p.full]),...Object.values(real('access.json').ministers || {}).map(m=>m.name)].filter(Boolean).map(foldDonorName));
+const fixturePublicNames = new Set([
+  ...real('graph/campaigners.json').entities.map(e=>e.name),...real('suppliers.json').suppliers.map(s=>s.name),...real('agencies.json').agencies.map(a=>a.name),
+  ...['federal','qld'].flatMap(jur=>real(`graph/grants.${jur}.json`).recipients.filter(r=>!['individual','person','undisclosed'].includes(r.k)).map(r=>r.n)),
+  ...real('evidence/index.json').entities.filter(e=>e.kind === 'organisation').map(e=>e.name),
+].map(foldDonorName));
+const sourcePrivacy = donorPrivacyIndex(MONEY_GRAPHS.map(path=>real(path.slice(1))));
+const fixtureSources = federal.nodes.filter(n=>n.kind === 'donor' && n.industry === 'individual' && !isOrganisationDonor(n) && donorNameWithheld(sourcePrivacy,n.label) && /\S\s+\S/.test(n.label.trim()) && !fixtureRoster.has(foldDonorName(n.label)) && !fixturePublicNames.has(foldDonorName(n.label))).slice(0,10);
+assert.equal(fixtureSources.length,10,'derived fixture donor count');
+const fixtureIndustries = ['media','finance','unions','individual','other','unions','unions','other','media','finance'];
+const FIXTURE_INDIVIDUALS = fixtureSources.map((n,i)=>[n.label,fixtureIndustries[i],(n.aliases || []).filter(alias=>!isOrganisationDonor({label:alias}))]);
 const FIXTURE_ORGANISATION = 'Fixtureworks Holdings Pty Ltd';
 const big = Math.max(...federal.edges.map(e => e.total)) * 2;
 const fixtureNodes = [...FIXTURE_INDIVIDUALS, [FIXTURE_ORGANISATION, 'property', []]].map(([label, industry, aliases], i) => ({
-  id: `donor:${label.toLowerCase()}`, label, kind: 'donor', industry, group: industry, total: big + i, count: 1, firstYear: 2020, lastYear: 2020, byYear: {2020: [big + i, 1]}, aliases,
+  id: i < FIXTURE_INDIVIDUALS.length ? `donor:withheld-fixture-${i}` : `donor:${label.toLowerCase()}`, label, kind: 'donor', industry, group: industry, total: big + i, count: 1, firstYear: 2020, lastYear: 2020, byYear: {2020: [big + i, 1]}, aliases,
 }));
 const fixtureGraph = {...federal, nodes: [...federal.nodes, ...fixtureNodes],
   edges: [...federal.edges, ...fixtureNodes.map(n => ({source: n.id, target: topParty.id, total: n.total, count: 1, firstYear: 2020, lastYear: 2020, byYear: {2020: [n.total, 1]}}))]};
 
-// A member's declared interests gain one fictional entry naming a fixture individual,
+// A member's declared interests gain one entry naming a derived withheld donor,
 // first in its bucket so the page would show it.
 const rosterPeople = real('parliamentarians.json').people;
 const interestIndex = real('interests/index.json');
@@ -208,7 +218,7 @@ test('anonymising keeps every donor group and its totals: duplicated source ids 
 
 test('a campaigner route never repeats a requested name it cannot show', async () => {
   const register = new Set(real('graph/campaigners.json').entities.map(e => foldDonorName(e.name)));
-  const names = [...checked.filter(label => !register.has(foldDonorName(label))).slice(0, 80), 'Quinella Fixturestone'];
+  const names = [...checked.filter(label => !register.has(foldDonorName(label))).slice(0, 80), 'Withheld donor fixture'];
   for (const name of names) {
     const path = `/subject/campaigner/${encodeURIComponent(name)}`;
     const response = await fetchWorker(path);
@@ -322,8 +332,50 @@ test('a declared-interest entry naming a withheld donor is left out whole, with 
   assert.ok(html.includes(escaped), 'the next entry is shown as written');
 });
 
+test('interest tables omit withheld entries before rows, facets, CSV and URL state are constructed', () => {
+  const phrases = withheldPhrases(graphs,[...rosterNames]);
+  const projected = interestTableData(interestRegister,(...texts)=>namesWithheldPhrase(phrases,...texts));
+  assert.ok(projected.omitted > 0,'the derived fixture entry is omitted');
+  assert.ok(projected.rows.some(row=>row.item === keptEntry.description),'the next source entry stays verbatim');
+  const config = interestTableConfig(projected.rows);
+  const page = applyQuery(projected.rows,config,{pageSize:2000});
+  assertClean('interest table rows and facets',JSON.stringify(page));
+  assertClean('interest table CSV',toCSV(page.rows,config));
+  for (const [i,label] of checked.entries()) {
+    for (const query of [{q:label},{filters:{category:[label]}},{sort:{key:label,dir:'asc'}}]) {
+      const guarded = guardRegisterQuery(query,config);
+      assertClean(`interest table URL ${i}`,serializeQuery(guarded.query,config.urlKey));
+      assert.equal(applyQuery(guarded.blocked ? [] : projected.rows,config,guarded.query).total,0,`interest query ${i} has no rows`);
+    }
+  }
+  assert.deepEqual(interestTableData(interestRegister).rows,[],'missing privacy approval fails closed');
+});
+
+test('party money tables name only organisations in rows, facets, CSV and URL state and retain withheld totals', () => {
+  const phrases = withheldPhrases(graphs,[...rosterNames]);
+  const check = (...texts)=>namesWithheldPhrase(phrases,...texts);
+  for (const [g,graph] of graphs.entries()) for (const party of graph.nodes.filter(n=>n.kind === 'party')) {
+    const projected = partyMoneyData(graph,party.id,check), config = partyMoneyTableConfig(projected.rows);
+    assert.ok(projected.rows.every(isOrganisationDonor),`graph ${g}: organisation evidence`);
+    const page = applyQuery(projected.rows,config,{pageSize:2000});
+    assertClean(`party table ${g} rows and facets`,JSON.stringify(page));
+    assertClean(`party table ${g} CSV`,toCSV(page.rows,config));
+    const donorIds = new Set(graph.nodes.filter(n=>n.kind === 'donor').map(n=>n.id));
+    const receipts = graph.edges.filter(e=>e.target === party.id && !e.flow && !e.grant && donorIds.has(e.source));
+    assert.ok(Math.abs(projected.rows.reduce((n,row)=>n+row.total,0)+projected.aggregate.total-receipts.reduce((n,e)=>n+e.total,0)) < 0.01,`graph ${g}: every receipt amount retained`);
+    assert.equal(projected.rows.reduce((n,row)=>n+row.count,0)+projected.aggregate.count,receipts.reduce((n,e)=>n+(e.count || 0),0),`graph ${g}: every receipt count retained`);
+    for (const [i,label] of checked.entries()) {
+      for (const query of [{q:label},{filters:{label:[label]}},{sort:{key:label,dir:'asc'}}]) {
+        const guarded = guardRegisterQuery(query,config);
+        assertClean(`party table ${g} URL ${i}`,serializeQuery(guarded.query,config.urlKey));
+        assert.equal(applyQuery(guarded.blocked ? [] : projected.rows,config,guarded.query).total,0,`party query ${i} has no rows`);
+      }
+    }
+  }
+});
+
 test('a subject route never repeats a name it does not hold, and real names still redirect', async t => {
-  const fictional = ['Quentin Fixtureperson', 'Fictional Example Pty Ltd', 'Zara Fixturequill', 'FIXTUREAXE'];
+  const fictional = ['Withheld donor fixture', 'Fictional Example Pty Ltd', 'Withheld donor fixture', 'FIXTUREAXE'];
   const names = [...checked.slice(0, 150), ...fictional];
   let unknown = 0, withheldPages = 0, redirects = 0;
   for (const [i, name] of names.entries()) {
@@ -375,7 +427,7 @@ test('a card for a subject the page would not show is refused before any cache r
   try {
     const withheldName = checked.find(label => /\S\s+\S/.test(label) && !fixtureLabels.has(label));
     const withheldDonor = withheldLabels.find(label => !fixtureLabels.has(label) && donorNodes.some(n => n.label === label));
-    const fictional = 'Quentin Fixtureperson';
+    const fictional = 'Withheld donor fixture';
     const refused = {
       person: [withheldName, fictional].map(n => `/subject/person/${encodeURIComponent(n)}`),
       party: [withheldName, 'Fictional Fixture Party'].map(n => `/subject/party/${encodeURIComponent(n)}`),

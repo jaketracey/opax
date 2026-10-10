@@ -36,7 +36,7 @@ const PUBLIC = join(ROOT, 'portal', 'public')
 const INDEX = join(PUBLIC, 'index.html')
 
 /** Assets referenced from index.html with a ?v= stamp. */
-const STAMPED = ['app.js', 'spa-shell.js', 'spa-entry.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'quick-search.js', 'voice.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'labels.js']
+const STAMPED = ['app.js', 'spa-shell.js', 'spa-entry.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'quick-search.js', 'voice.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'labels.js', 'register-tables.css', 'register-tables-entry.js']
 
 const hashOf = (file) =>
   createHash('sha256').update(readFileSync(join(PUBLIC, file))).digest('hex').slice(0, 10)
@@ -127,6 +127,7 @@ async function refreshFonts() {
  *  agencies.js and suppliers.js import each other: stamp the agencies → suppliers
  *  edge only, then app.js. Keep the reverse edge hand-versioned to avoid a hash cycle. */
 export const MODULE_STAMPS = [
+  ['register-tables.js', 'donor-entity.js'], ['register-tables-entry.js', 'register-tables.js'], ['app.js', 'register-tables.js'],
   ['growth-modules.js', 'donor-entity.js'], ['growth-modules.js', 'labels.js'], ['growth-modules.js', 'sponsor-person.js'],
   ['supplier-growth.js', 'growth-modules.js'], ['supplier-growth.js', 'labels.js'],
 

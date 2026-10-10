@@ -4,6 +4,7 @@ import {readFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {runInNewContext} from 'node:vm';
 import * as modules from '../public/growth-modules.js';
+import * as registerTables from '../public/register-tables.js';
 import {supplierRecordsHTML,agencyGrantsHTML,publishedSupplierIndex} from '../public/supplier-growth.js';
 import {sourceLineHTML} from '../public/labels.js';
 import * as divisionMarkdown from '../public/division-markdown.js';
@@ -30,7 +31,7 @@ export async function* moduleOutputs(root,withheld,readAsset) {
  // belong to the published roster, so use the fixture file as that authority.
  const roster=JSON.parse(readFileSync(join(root,'parliamentarians.json'),'utf8'));
  const localModules={...modules,loadModulePrivacy:async(kind,id)=>modules.approvedModulePrivacy(await read(await modules.growthSummaryPath('privacy/'+kind,id)))};
- const context={growthModules:localModules,esc,safeUrl:v=>v || '',fmtDate:v=>v || '',fmtMoney:String,industryLabel:String,partyDotHTML:()=>'',
+ const context={growthModules:localModules,registerTables:{...registerTables,hydrateRegisterTables(){}},registerTablesReady:Promise.resolve(),esc,safeUrl:v=>v || '',fmtDate:v=>v || '',fmtMoney:String,industryLabel:String,partyDotHTML:()=>'',
   sourceLineHTML,entityHrefAttr:href=>`href="${esc(href)}"`,subjectHash:(kind,name)=>`/subject/${kind}/${encodeURIComponent(name)}`,fetch:fetchAsset,currentSubjectKey:'fixture',
   document:{createElement:()=>({dataset:{},isConnected:true,remove(){},querySelectorAll:()=>[]})},searchHash:q=>'/ask?view=search&'+new URLSearchParams({q}),STATE_NAMES:{},billQuestion:v=>v,
   machineLabelHTML:({note=''})=>`<span>${esc(note)}</span>`,partyChipHTML:esc,
@@ -102,7 +103,7 @@ export async function* moduleOutputs(root,withheld,readAsset) {
  const moneyData=await read('graph/money.json');
  const {partyFlows}=runInNewContext(region('function barList(','const fmtIndustries')+';async function partyFlows(node){const key="fixture";const isParty=true;'+
   region('const donorPrivacy = growthModules.approvedModulePrivacy(await growthModules.loadModuleDonors());','// Identity once (principle 3)')+
-  ';return barList(flowRows,{heading:"Disclosed gifts",linkTo:name=>subjectHash("donor",name)});} ;({partyFlows})',{
+  ';return partyTable;} ;({partyFlows})',{
    ...context,moneyData,growthModules:{...localModules,loadModuleDonors:async()=>donorIndex},
   });
  for(const [i,node] of moneyData.nodes.filter(n=>n.kind==='party').entries())yield {where:`party flow module ${i}`,html:await partyFlows(node),questions:[]};

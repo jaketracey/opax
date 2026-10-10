@@ -9,6 +9,9 @@ import { missingEntitySlug } from './crawl-hygiene'
 import { normalizePassage, passageWindow } from './passage-text'
 import { instrumentPage, instrumentReader } from './instruments'
 import { auditPage, auditReader } from './audit'
+import {instrumentTableResponse} from './instrument-table'
+import {parseQuery} from '../public/datatable.js'
+import {partyMoneyData,partyMoneyTableConfig,registerTableHTML,individualDonorsHTML} from '../public/register-tables.js'
 import { hubPage } from './hubs'
 import { vicElectionPage, type VicElection } from './vic-election'
 import { vicElectionEnabled, vicElectionPublicationPath, vicElectionDiscovery, vicElectionLlms, VIC_ELECTION_ASSET, VIC_ELECTION_SITEMAP } from '../public/vic-election.js'
@@ -3987,7 +3990,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       if (p) {
         const profiles=await read<{people:Record<string,PersonSchemaIdentity>;by_name:Record<string,PersonSchemaIdentity>}>('/profile-links.json').catch(()=>null)
         const identity={...profiles?.by_name[foldName(p.name)],...profiles?.people[p.pid || '']}
-        const content = await renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,await withheldNameCheck(env.ASSETS))
+        const content = await renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,await withheldNameCheck(env.ASSETS),url.searchParams)
         meta.prerender = content.html
         if(content.description) meta.description=clip(content.description)
         const photos=await loadPhotos(env).catch(()=>null)
@@ -4637,6 +4640,18 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
   }
   const sentence = tail ? `${facts} ${tail}` : facts
   const description = withTail(facts, tail)
+  let table = ''
+  if (dir === 'party') {
+    const read = <T>(path:string)=>assetJson<T>(env,path)
+    const graph = await read<Parameters<typeof partyMoneyData>[0]>('/graph/money.json').catch(()=>null)
+    const party = graph?.nodes.find(n=>n.kind === 'party' && foldName(n.label) === foldName(display))
+    if (graph && party) {
+      const {rows,aggregate} = partyMoneyData(graph,party.id,await withheldNameCheck(env.ASSETS))
+      const config = partyMoneyTableConfig(rows)
+      config.id = 'ssr-party-money-table'
+      table = `<section class="wrap"><h2>Disclosed donations</h2>${individualDonorsHTML(aggregate)}${registerTableHTML(config,parseQuery(url.searchParams,config.urlKey),true)}<p>Party transfers and grants are excluded. Source: <a href="https://transparency.aec.gov.au/">AEC Transparency Register</a>.</p></section>`
+    }
+  }
   return {
     title,
     description,
@@ -4644,7 +4659,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     ogType: 'profile',
     status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': ldType, name: display, url: canonical, description },
-    prerender: prerenderBlock(display, sentence),
+    prerender: prerenderBlock(display, sentence) + table,
     card,
   }
 }
@@ -4890,7 +4905,8 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
     buildMeta(route, url, request, env, ctx),
   ])
   if (!shell.ok) return shell
-  const noindex = meta.noindex || meta.status >= 400 || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
+  const tableState = [...url.searchParams.keys()].some(key=>/^(?:instruments|audit|interests|partyMoney(?:AEC|ECQ|VEC)?)\./.test(key))
+  const noindex = meta.noindex || meta.status >= 400 || tableState || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
   // Election coverage names unavailable grants, but renders no financial records.
   // Its renderer owns any future caveat alongside an actual political money pairing.
   if (!(route.kind === 'hub' && route.hub === 'vic-election'))
@@ -5591,6 +5607,7 @@ function personTopicsFor(name: string, env: Env): Promise<Response> {
 export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url)
+    if (url.pathname === '/api/table/instruments') return withSecurityHeaders(await instrumentTableResponse(request,env.ASSETS),url)
     if (!vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED) && vicElectionPublicationPath(url.pathname))
       return withSecurityHeaders(new Response(request.method === 'HEAD' ? null : 'Not found', {status:404,headers:{'x-robots-tag':'noindex','cache-control':'no-store','content-type':'text/plain; charset=utf-8'}}), url)
     const canonical = await pageAliasRedirect(request, url, env)

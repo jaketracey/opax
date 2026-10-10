@@ -7,6 +7,8 @@ const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(
 // The labels, source lines and ⋯ (labels.js); the first render waits for them.
 let growthModules;
 const growthModulesReady = import("/growth-modules.js?v=b3095eab8c").then(module => { growthModules = module; });
+let registerTables;
+const registerTablesReady = import('/register-tables.js?v=861e275caf').then(module => { registerTables = module; });
 let uiLabels;
 const uiLabelsReady = import('/labels.js?v=804befe8de').then(module => { uiLabels = module; });
 let attributionHelpers;
@@ -3816,7 +3818,7 @@ async function renderPersonInterests(name, personId, sections, onRecord = () => 
   const lname = String(name || "").trim().toLowerCase();
   const id = personId && index?.people?.[personId] ? personId : index?._by_name?.[lname];
   if (!id || !/^[\w-]+$/.test(id)) { slot.remove(); return; }
-  const [data,privacy] = await Promise.all([getJSON(`/interests/${encodeURIComponent(id)}.json`),growthModules.loadModulePrivacy("person",growthModules.normalisedName(name))]);
+  const [data,privacy] = await Promise.all([getJSON(`/interests/${encodeURIComponent(id)}.json`),growthModules.loadModulePrivacy("person",growthModules.normalisedName(name)),registerTablesReady]);
   if (currentSubjectKey !== key) return;
   if (!data?.total || !data.buckets) { slot.remove(); return; }
   onRecord({interests: data});
@@ -3913,29 +3915,9 @@ async function renderPersonInterests(name, personId, sections, onRecord = () => 
       })}
     </section>` : "";
 
-  const itemHTML = (it) => {
-    const src = safeUrl(it.url) || base;
-    const meta = [
-      it.kind === "addition" ? `added ${esc(fmtDate(it.date) || "later")}` : "",
-      it.kind === "deletion" ? `deleted ${esc(fmtDate(it.date) || "later")}` : "",
-      it.ocr ? "machine-read from a scan" : "",
-      src ? `<a href="${esc(it.page ? `${src}#page=${Number(it.page) || 1}` : src)}" rel="noopener" target="_blank">${it.page ? `page ${esc(String(Number(it.page)))}` : "source"} ↗︎</a>` : "",
-    ].filter(Boolean).join(" · ");
-    return `<li class="interests-item${it.kind === "deletion" ? " interests-deleted" : ""}">
-      ${hasHolders ? `<span class="interests-holder">${esc(HOLDER[it.holder] || "")}</span>` : ""}
-      <span class="interests-desc">${esc(it.description || "")}</span>
-      ${meta ? `<span class="result-meta">${meta}</span>` : ""}</li>`;
-  };
-  const rows = buckets.map((b) => {
-    const { count, items: recordedItems = [] } = data.buckets[b];
-    const items = recordedItems.filter(it=>!privacy(it.description));
-    return `<li><details class="chat-sources interests-bucket">
-      <summary>${esc(LABELS[b])}<span class="interests-count">${num(count)}</span></summary>
-      <ol class="source-list interests-items${hasHolders ? " interests-holders" : ""}">${items.map(itemHTML).join("")}</ol>
-      ${count > items.length ? `<p class="fineprint">Showing ${num(items.length)} of ${num(count)} entries; the full list is in the register.</p>` : ""}
-    </details></li>`;
-  }).join("");
-
+  const {rows: registerRows, omitted} = registerTables.interestTableData(data,privacy);
+  const registerConfig = registerTables.interestTableConfig(registerRows);
+  const registerHTML = registerTables.registerTableHTML(registerConfig,{},true);
   const added = Number(data.alterations?.added) || 0;
   const deleted = Number(data.alterations?.deleted) || 0;
   const since = data.statement_date ? `since the statement of ${esc(fmtDate(data.statement_date))}` : "since the statement";
@@ -3947,7 +3929,9 @@ async function renderPersonInterests(name, personId, sections, onRecord = () => 
     <h3 id="person-register" class="subject-section-title" data-rail-figure="${num(data.total)}">Declared interests</h3>
     <p class="person-register-updates"><a href="${esc(`/declared?person=${encodeURIComponent(data.name || name)}`)}">Just declared</a></p>
     <p class="interests-summary"><b>${num(data.total)}</b> ${data.total === 1 ? "entry" : "entries"} across ${num(buckets.length)} ${buckets.length === 1 ? "category" : "categories"} · ${alterations}</p>
-    <ul class="subject-list interests-list" role="list">${rows}</ul>
+    ${registerHTML}
+    ${omitted ? `<p data-register-omitted="">Some register entries are shown only on the ${base ? `<a href="${esc(base)}" rel="noopener">official register</a>` : "official register"}.</p>` : ""}
+    <p class="fineprint">Date is the notification date where supplied, otherwise the register snapshot date. Check the official entry for holders and alterations.</p>
     ${sourceLineHTML({
       updated: data.as_at || "", source: REGISTER[data.chamber] || "Register of interests",
       // Scanned pages read by machine: the register is complete, OPAX's reading of it may not be.
@@ -3959,6 +3943,7 @@ async function renderPersonInterests(name, personId, sections, onRecord = () => 
         data.unread_pages > 0 ? `${num(data.unread_pages)} ${data.unread_pages === 1 ? "page" : "pages"} of the source could not be read by machine; the register itself is complete.` : "",
       ],
     })}`;
+  registerTables.hydrateRegisterTables(slot);
 }
 
 let interestsTiesPromise = null;
@@ -5382,6 +5367,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     if (node.label && node.label !== name) {
       setCrumbs([{ label: isParty ? "Parties" : "Donors", href: `/subject/${node.kind}` }, { label: node.label }]);
     }
+    await registerTablesReady;
     const donorPrivacy = growthModules.approvedModulePrivacy(await growthModules.loadModuleDonors());
     if (currentSubjectKey !== key) return;
     const flows = moneyData.edges.filter((e) => (isParty ? e.target : e.source) === node.id)
@@ -5393,6 +5379,9 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       counter.set(label, (counter.get(label) || 0) + (e.total || 0));
     }
     const flowRows = [...counter.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10);
+    const partyDonations = isParty ? registerTables.partyMoneyData(moneyData,node.id,donorPrivacy) : null;
+    const partyTable = partyDonations ? registerTables.individualDonorsHTML(partyDonations.aggregate)
+      + registerTables.registerTableHTML(registerTables.partyMoneyTableConfig(partyDonations.rows),{},true) : "";
     // Identity once (principle 3): the title, then one meta line with the
     // party's own dot and full name (or the donor's industry) and its years.
     // Quick facts became the head's source sheet and the "On this page" rail;
@@ -5452,7 +5441,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     box.innerHTML = entryRailHTML();
     const rail = isParty ? PARTY_RAIL : DONOR_RAIL;
     sections.insertAdjacentHTML("beforeend", `<section id="entry-flows" data-accent="money" data-rail-figure="${esc(fmtMoney(node.total || 0))}">
-      ${barList(flowRows, {
+      ${isParty ? `<h3 class="subject-section-title">Where it came from</h3>${partyTable}` : barList(flowRows, {
         fmt: fmtMoney,
         heading: isParty ? "Where it came from" : "Where the money went",
         linkTo: (nm) => subjectHash(isParty ? "donor" : "party", nm),
@@ -5473,6 +5462,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
         licence: 'AEC Transparency Register returns, <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener" target="_blank">CC BY 4.0 ↗︎</a>.',
       })}
     </section>`);
+    if (isParty) registerTables.hydrateRegisterTables(sections.querySelector("#entry-flows"));
     if (!isParty) sections.insertAdjacentHTML("beforeend", donorBalanceHTML(flows));
     if (!isParty) {
       const evidenceSlot = document.createElement('section');

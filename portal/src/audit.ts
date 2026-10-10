@@ -1,6 +1,8 @@
 import { AUDIT_ID, auditComplete, filterAudit, type AuditRow } from '../public/audit.js'
 import { sourceLineHTML, tagHTML, statusLabelHTML } from '../public/labels.js'
 import { catalogueReader } from './catalogue-reader.mjs'
+import {parseQuery} from '../public/datatable.js'
+import {auditTableConfig, registerTableHTML} from '../public/register-tables.js'
 
 interface Manifest {
   count: number; listed: number; generated_at: string; index_url: string; lookup: Record<string, number>
@@ -24,9 +26,6 @@ function source(m: Manifest, original: string, licence?: Report['licence']) {
     notes: [esc(a.copyright_notice), esc(a.changes), esc(a.exceptions), esc(a.endorsement),
       ...(licence?.body_skipped ? licence.exceptions.map(esc) : [])],
     licence: `<a href="${esc(a.licence_url)}">CC BY 4.0</a> · <a href="${esc(a.copyright_url)}">QAO copyright and exceptions</a>` })
-}
-function select(label: string, key: string, values: string[], url: URL) {
-  return `<label>${label}<select name="${key}"><option value="">All</option>${values.map(v => `<option value="${esc(v)}"${url.searchParams.get(key) === v ? ' selected' : ''}>${esc(v)}</option>`).join('')}</select></label>`
 }
 function entities(r: Report) {
   return r.entities.length ? `<ul>${r.entities.map(name => {
@@ -53,16 +52,10 @@ export async function auditPage(id: string | null, url: URL, read: Read, block: 
       const index = await read<{ records: AuditRow[] }>(m.index_url)
       if (index.records.length !== m.count) return missing()
       const matches = filterAudit(index.records, url.searchParams)
-      const pages = Math.ceil(matches.length / 50) || 1
-      const page = Math.max(1, Math.min(pages, Math.trunc(Number(url.searchParams.get('page')) || 1)))
-      const rows = matches.slice((page - 1) * 50, page * 50)
+      const config = auditTableConfig(matches)
       const description = `${m.count} Queensland Audit Office reports tabled in Parliament, with report metadata and recommendations published as HTML.`
-      const href = (n: number) => { const next = new URL(url); next.searchParams.set('page', String(n)); return next.pathname + next.search }
-      const form = `<form class="audit-filters" action="/audit" method="get"><label>Title text<input type="search" name="q" value="${esc(url.searchParams.get('q') || '')}"></label>${select('Report year', 'year', m.facets.year, url)}${select('Sector', 'sector', m.facets.sector, url)}${select('Entity audited', 'entity', m.facets.entity, url)}<button type="submit" class="ui-button">Filter</button><a href="/audit">Reset</a></form>`
-      const list = `<p>${matches.length} matching reports</p><ul class="audit-list">${rows.map(r => `<li><h2><a href="/audit/${r.id}">${esc(r.title)}</a></h2><p>${esc(r.report_label)} · Tabled date: ${esc(r.tabled_date)}</p><p class="audit-tags">${r.sectors.map(s => tagHTML(s)).join(' ')}</p>${r.entities.length ? `<p>Entities audited: ${esc(r.entities.join('; '))}</p>` : ''}</li>`).join('')}</ul>`
-      const navigation = `<nav aria-label="Audit catalogue pages">${page > 1 ? `<a rel="prev" href="${esc(href(page - 1))}">Previous</a>` : ''}<span>Page ${page} of ${pages}</span>${page < pages ? `<a rel="next" href="${esc(href(page + 1))}">Next</a>` : ''}</nav>`
       return { title: 'Queensland audit reports · OPAX', description, status: 200,
-        prerender: block('Queensland audit reports', description, '') + `<section class="wrap audit-content">${form}${list}${navigation}${source(m, m.attribution.source_url)}</section>` }
+        prerender: block('Queensland audit reports', description, '') + `<section class="wrap audit-content">${registerTableHTML(config,parseQuery(url.searchParams,config.urlKey))}${source(m, m.attribution.source_url)}</section>` }
     }
     const chunk = m.lookup[id]
     if (!Number.isInteger(chunk) || !m.chunks[chunk]) return missing()

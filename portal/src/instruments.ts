@@ -1,5 +1,7 @@
-import { FRL_ID, catalogueComplete, filterInstruments, unpack, type CatalogueRow } from '../public/instruments.js'
+import { FRL_ID, catalogueComplete, filterInstruments, unpack, instrumentTableRows, type CatalogueRow } from '../public/instruments.js'
 import { catalogueReader } from './catalogue-reader.mjs'
+import {applyQuery, dataTableHTML, parseQuery} from '../public/datatable.js'
+import {instrumentTableConfig} from '../public/register-tables.js'
 
 interface Attribution { source: string; source_url: string; licence_url: string; dated: string; changes: string; exceptions: string; endorsement: string }
 interface Manifest {
@@ -29,10 +31,6 @@ const directoryLink = '<p><a href="/instruments">All instruments</a></p>'
 function attribution(a: Attribution) {
   return `<footer class="instrument-attribution"><p>Source: <a href="${esc(a.source_url)}">Federal Register of Legislation (legislation.gov.au)</a>, <a href="${esc(a.licence_url)}">CC BY 4.0</a></p><p>${esc(a.dated)}</p><p>${esc(a.changes)}</p><p>${esc(a.exceptions)} ${esc(a.endorsement)}</p></footer>`
 }
-function select(label: string, key: string, values: string[], url: URL, unknown = false) {
-  return `<label>${label}<select name="${key}"><option value="">All</option>${[...values, ...(unknown && !values.includes('unknown') ? ['unknown'] : [])].map(v => `<option value="${esc(v)}"${url.searchParams.get(key) === v ? ' selected' : ''}>${v === 'unknown' ? 'Not supplied' : esc(v)}</option>`).join('')}</select></label>`
-}
-
 export async function instrumentPage(id: string | null, url: URL, read: Read, block: Block) {
   const missing = () => ({ title: 'Instrument not found · OPAX', description: 'No instrument metadata is available for this FRL id.', status: 404, prerender: block('Instrument not found', 'No instrument metadata is available for this FRL id.', directoryLink) })
   if (id === null && url.pathname.replace(/\/+$/, '') !== '/instruments') return missing()
@@ -45,17 +43,15 @@ export async function instrumentPage(id: string | null, url: URL, read: Read, bl
       const index = await read<{ records: CatalogueRow[] }>(manifest.index_url)
       if (!Array.isArray(index.records) || index.records.length !== (manifest.exported ?? manifest.count)) return unavailable()
       const matches = filterInstruments(index.records, url.searchParams)
-      const page = Math.max(1, Math.min(Math.ceil(matches.length / 50) || 1, Math.trunc(Number(url.searchParams.get('page')) || 1)))
-      const rows = matches.slice((Math.trunc(page) - 1) * 50, Math.trunc(page) * 50)
+      const config = instrumentTableConfig()
+      const rows = await instrumentTableRows(read,manifest,matches)
+      const page = applyQuery(rows,config,parseQuery(url.searchParams,config.urlKey))
       const description = `${(manifest.exported ?? manifest.count).toLocaleString('en-AU')} in-force federal legislative-instrument titles. Metadata only; authoritative text is on the Federal Register of Legislation.`
       const gapNote = manifest.unresolved_gap ? `<p class="fineprint">FRL listed ${manifest.count.toLocaleString('en-AU')}; ${manifest.unresolved_gap} could not be retrieved from its API</p>` : ''
       const facts = block('Federal legislative instruments', description, '')
-      const form = `<form class="instrument-filters" action="/instruments" method="get"><label>Title text<input name="q" type="search" value="${esc(url.searchParams.get('q') || '')}"></label>${select('Portfolio', 'portfolio', manifest.facets.portfolio, url, true)}${select('Type', 'type', manifest.facets.type, url)}${select('Commencement year', 'year', manifest.facets.commencement_year, url)}${select('Status', 'status', manifest.facets.status, url)}<button type="submit" class="ui-button">Filter</button><a href="/instruments">Reset</a></form>`
-      const href = (n: number) => { const target = new URL(url); target.searchParams.set('page', String(n)); return target.pathname + target.search }
-      const pagination = `<nav aria-label="Catalogue pages">${page > 1 ? `<a href="${esc(href(page - 1))}" rel="prev">Previous</a>` : ''}<span>Page ${Math.trunc(page)} of ${Math.ceil(matches.length / 50) || 1}</span>${page * 50 < matches.length ? `<a href="${esc(href(page + 1))}" rel="next">Next</a>` : ''}</nav>`
-      const list = `<p>${matches.length.toLocaleString('en-AU')} matching titles · snapshot ${esc(manifest.generated_at.slice(0, 10))}</p><ul class="instrument-list">${rows.map(r => `<li><h2><a href="/instrument/${r[0]}">${esc(r[1])}</a></h2><p>${esc(r[0])} · ${esc(r[3])} · ${esc(r[5])}</p><p>Portfolio: ${r[2].length ? esc(r[2].join('; ')) : 'Not supplied'} · Commenced: ${date(r[4])}</p></li>`).join('')}</ul>`
+      const table = `<div data-register-table="${config.id}">${dataTableHTML(config,page)}<script type="application/json" data-register-config>${JSON.stringify({config}).replace(/</g,'\\u003c')}</script></div>`
       return { title: 'Federal legislative instruments · OPAX', description, status: 200,
-        prerender: facts + `<section class="wrap instrument-content">${gapNote}${form}<p class="fineprint">FRL's in-force listing includes instruments made but not yet commenced. Version start dates are separate from commencement; dates not supplied by the API stay unknown.</p>${list}${pagination}${attribution(manifest.attribution)}</section>` }
+        prerender: facts + `<section class="wrap instrument-content">${gapNote}<p class="fineprint">Registered is the as-made registration date. FRL's in-force listing includes instruments made but not yet commenced. Dates not supplied by the API stay unknown.</p>${table}${attribution(manifest.attribution)}</section>` }
     }
     const chunk = manifest.lookup[id]
     if (!Number.isInteger(chunk) || !manifest.chunks[chunk]) return missing()

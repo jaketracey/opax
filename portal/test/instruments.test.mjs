@@ -69,7 +69,7 @@ test('directory filters title, portfolio, type, commencement year and status wit
   assert.equal(filterInstruments(fixtures,new URLSearchParams('status=Repealed')).length,0);
   const result=await instrumentPage(null,new URL('https://opax.com.au/instruments'),read,block);
   assert.equal(result.status,200);assert.match(result.prerender,/id="prerender"/);
-  for(const label of ['Title text','Portfolio','Type','Commencement year','Status']) assert.ok(result.prerender.includes(label));
+  for(const label of ['Title','Portfolio','Type','Registered','Status']) assert.ok(result.prerender.includes(label));
   assert.match(result.prerender,/Federal Register of Legislation/);assert.match(result.prerender,/CC BY 4.0/);
   assert.doesNotMatch(result.prerender,/\/subject\/person\//);
 });
@@ -204,10 +204,11 @@ test('every shipped HTML file has no static instruments href before catalogue av
 
 test('parsed catalogue is reused per isolate and failed reads can recover', async () => {
   const calls=[];
-  const assets={async fetch(req){const p=new URL(req.url).pathname;calls.push(p);return new Response(fixtureFiles[p.slice('/instruments/'.length)])}};
+  const registered=Object.fromEntries(fixture.titles.map(row=>[row.id,row.asMadeRegisteredAt?.slice(0,10) || null]));
+  const assets={async fetch(req){const p=new URL(req.url).pathname;calls.push(p);return p === '/instruments/registered.json' ? Response.json(registered) : new Response(fixtureFiles[p.slice('/instruments/'.length)])}};
   const read=instrumentReader(assets);assert.equal(read,instrumentReader(assets));
   await Promise.all([instrumentPage(null,new URL('https://opax.com.au/instruments'),read,block),instrumentPage(null,new URL('https://opax.com.au/instruments?q=jane'),read,block)]);
-  assert.deepEqual(calls.sort(),['/instruments/index.json','/instruments/manifest.json']);
+  assert.deepEqual(calls.sort(),['/instruments/index.json','/instruments/manifest.json','/instruments/registered.json']);
   let available=false;
   const recovering=instrumentReader({async fetch(){return available?new Response(fixtureFiles['manifest.json']):new Response('',{status:404})}});
   await assert.rejects(recovering('/instruments/manifest.json'));
