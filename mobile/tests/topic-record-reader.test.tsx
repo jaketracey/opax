@@ -124,6 +124,34 @@ test('the reader opened from a topic record loads the 1999 speech', async () => 
   await act(async () => view.unmount());
 });
 
+// Jake, 10 Oct: "In brief" is labelled by the Machine-written pill alone; the
+// disclosure is the pill's sheet and VoiceOver label, never a visible line.
+test('a speech brief is labelled by the pill, not a sentence', async () => {
+  // A slug of its own: the reader's records client keeps speech-18098.
+  mockSlug = 'speech-18101';
+  const brief = 'A synthetic brief of this speech.';
+  mockTransport.mockImplementation(async () =>
+    Response.json({
+      ...(responses[zenodo] as object),
+      slug: mockSlug,
+      summary: brief,
+    }),
+  );
+  const view = await mount(<DocumentReader />);
+  const section = view.root.findByProps({ testID: 'doc-brief' });
+  const label = section.find(
+    (n) => n.props.testID === 'doc-brief-label' && n.props.accessibilityLabel,
+  );
+  expect(label.props.accessibilityLabel).toBe(
+    'Machine-written. Written from this speech by a model, not by a person, and not part of the record.',
+  );
+  const shown = textOf(section);
+  expect(shown).toContain('Machine-written');
+  expect(shown).toContain(brief);
+  expect(shown).not.toMatch(/by a model|part of the record/);
+  await act(async () => view.unmount());
+});
+
 test('an unreadable record ends in an error with Try again and the web reader', async () => {
   mockSlug = 'speech-18099';
   mockTransport.mockImplementation(async () =>
