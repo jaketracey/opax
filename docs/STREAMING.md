@@ -396,3 +396,75 @@ incomplete footnote syntax; the final `done` contains verified ranges. The
 its mapping and Opax retries once with legacy citations. See the
 [feature review](operations/2026-09-08-progress-rag-features.md) for live format
 findings, compatibility details and the broader release inventory.
+
+## Whole-person overviews (10 October 2026)
+
+`ask-person-overview.ts` recognises broad, roster-resolved requests such as
+“What has X said in parliament?”, “What does X talk about?”, “X's views”,
+“Summarise X's speeches” and “What topics does X discuss?”. Matching uses an
+exact public roster name and a complete question pattern. A topic, date window,
+comparison or hypothetical stays on its existing answer path. Explicit scope
+controls still win. The conversation rewrite and “Understood as” are unchanged;
+intent detection happens after that rewrite and normal scope resolution.
+
+These first answers use the ordinary `buildAskBody` generation preset, 1,800
+output tokens and `llm_footnotes`, with the existing citation normalization,
+quotation verification and bounded recovery. They receive a cited evidence pack
+in `extra_context` (ordinary `USER_CONTEXT_n` IDs). The prompt asks for about
+300 words: 3–5 counted themes, recent speeches and bills with dates, then one or
+two verbatim quotes. It forbids editorialising, party-based inference, attribution
+of other speaking turns, and inferring sponsorship or votes from a bill speech.
+The overview stream holds answer deltas until final verification, then emits the
+usual `done` payload. Cache keys retire the previous prompt pipeline version.
+
+The pack is assembled from:
+
+- A speaker-filtered `/catalog` with topic facets and metadata pages of 200
+  resources, capped at 20 pages / 4,000 speeches. Facets give whole-record totals
+  and top topic counts. Metadata dates give the rolling year ending at the
+  exported corpus snapshot and the two most recent dated speeches. Catalogue
+  `created` is index time and is never used for this. Pages are consumed in
+  batches of at most four. Counts overlap because speeches can carry several
+  topic labels. Incomplete enumeration keeps whole-record facets but omits recent
+  counts and “latest” claims. Split identities have house/service checks against
+  metadata dates and require complete enumeration for their counts.
+- Up to five theme-filtered `/find` passes (`top_k: 10`), up to two originals per
+  theme, read through the existing resource cache. Only the indexed speaker's
+  first speaking turn passes `positionEvidence`; no ministerial replies enter
+  the pack. The two recent originals bring the total to at most 12 reads.
+- `/growth/person-bills/<name-hash>.json`, built by `build:growth` from the complete
+  published bill exports: exact speaker links and resolved public sponsors,
+  introduction dates and up to three linked speech dates. Twelve candidate bills
+  per person are exported; the pack retains the two most recent relevant bills.
+  This projection contains no summaries, donors or donation fields.
+- One topic-filtered collaborator facet for an optional comparison member,
+  accepted only if they resolve to another public roster member.
+
+Evidence text is capped at 24,000 characters, with each ordinary context record
+still capped at 1,800 characters. The pack uses a ten-minute edge cache keyed by
+corpus epoch, pipeline version and person/scope. Existing originals retain their
+one-hour cache; successful first answers retain the seven-day generation cache.
+On a cold pack, costs are up to 26 catalogue/find calls and 12 original reads,
+plus the existing answer generation/recovery. Retrieval adds no generative call
+or token billing of its own; the added prompt text increases input tokens within
+the existing caps. Conversation rewriting retains its existing separate call.
+Person chips are deterministic and add no generation cost; other answer follow-ups
+keep their existing model and evidence checks. A latest-speech chip uses the same
+cached metadata pack to select the most recent dated original, rather than a
+nearest-chunk search.
+
+All newly exposed evidence, bill projection text, comparison names, finished
+answers and source previews pass the withheld-name detector backed by
+`donor-entity.js`. The panel is a server-created public person projection; the
+model cannot supply its identity fields. The chat keeps 2–4 full-question chips
+on their individual answer, without a heading. Vote and comparison chips clear
+the speech filter for that request. The desktop panel uses the existing portrait
+map, party dot and design tokens, and is hidden below 1,000px and in the dock.
+
+Offline verification is in `test/ask-person-overview.test.mjs` and
+`test/ask-person-route.test.mjs`, with shared synthetic record/model fixtures.
+`test/ask-first-answer-browser.mjs` captures the real `/chat` UI at 390, 1280 and
+1440 pixels, intercepting every API request and rejecting all external traffic.
+Run it under the local-server network namespace, with `OPAX_PLAYWRIGHT_MODULE`
+and `OPAX_BROWSER_EXECUTABLE` pointing to the local installed browser tools.
+Artifacts go to `portal/private/ask-first-answer/`.

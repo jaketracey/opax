@@ -6,6 +6,8 @@ let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels, source lines and ⋯ (labels.js); the first render waits for them.
 let growthModules;
+let askPerson;
+const askPersonReady = import('/ask-person.js?v=584e5d8e3a').then(module => { askPerson = module; });
 const growthModulesReady = import("/growth-modules.js?v=b3095eab8c").then(module => { growthModules = module; });
 let uiLabels;
 const uiLabelsReady = import('/labels.js?v=804befe8de').then(module => { uiLabels = module; });
@@ -552,7 +554,7 @@ async function askRecord(body, signal, on = {}) {
   trackOutcome("opax_ask_started", { from_section, page_type: growthModules.askPageType(location.href) });
   try {
     const data = await askRecordRequest(body, signal, on);
-    trackOutcome("opax_ask_completed", { from_section, duration_ms: Math.round(performance.now() - started), source_count: data.sources?.length || 0, has_answer: !!data.answer?.trim() });
+    trackOutcome("opax_ask_completed", { from_section, duration_ms: Math.round(performance.now() - started), source_count: data.sources?.length || 0, has_answer: !!data.answer?.trim(), is_overview_intent: data.is_overview_intent === true });
     return data;
   } catch (err) {
     trackOutcome("opax_ask_failed", { from_section, duration_ms: Math.round(performance.now() - started), cancelled: err.name === "AbortError" });
@@ -9807,7 +9809,7 @@ async function runAsk(question) {
     $("ask-answer").askEvidence = citedList;
     // The speaker this answer was actually filtered to (chosen in Options or
     // read out of the question), so "Continue in a conversation" keeps it.
-    lastAsk = { question, answer: answerText, sources, kind: askKind(), speaker: askFilters().speaker || speakerFilter || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context, money_overview: data.money_overview, pay_answer: data.pay_answer, pay_next: data.pay_next };
+    lastAsk = { question, answer: answerText, sources, next: data.followups, subject_context: data.subject_context, kind: askKind(), speaker: askFilters().speaker || speakerFilter || data.scope?.speaker || data.subject_context?.name || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context, money_overview: data.money_overview, pay_answer: data.pay_answer, pay_next: data.pay_next };
     // A calculated answer carries its own fixed next steps, not generated ones.
     const calculated = !!(data.money_ranking || data.pay_answer);
     if (!calculated) prefetchAskFollowups(lastAsk);
@@ -10275,7 +10277,7 @@ function setFrontPageHidden(hidden) {
 let askFollowupsInflight = null; // {question, answer, promise}
 function followupPassages(sources) {
   return (sources || [])
-    .map((s) => ({ title: s.title || s.slug || "", text: (s.snippet || "").trim() }))
+    .map((s) => ({ title: s.title || s.slug || "", text: (s.snippet || "").trim(), kind: s.kind, cited: s.cited === true }))
     .filter((p) => p.text)
     .slice(0, 8);
 }
@@ -10286,12 +10288,16 @@ function normaliseFollowups(data) {
 }
 function prefetchAskFollowups(ask) {
   if (!ask?.question || !ask?.answer) return;
+  if (ask.next?.length) {
+    renderFollowups(ask.next, $("ask-followups"), item => { if (openConversationFrom(ask)) sendChat(item.question, item); });
+    return;
+  }
   const passages = followupPassages(ask.sources);
   if (!passages.length) return;
   const promise = api("/api/followups", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ question: ask.question, answer: ask.answer, passages }),
+    body: JSON.stringify({ question: ask.question, answer: ask.answer, passages, person: ask.speaker || ask.subject_context?.name }),
   }).then((data) => {
     const questions = normaliseFollowups(data);
     if (questions.length && lastAsk === ask) {
@@ -10645,7 +10651,7 @@ function initChat(manageFocus) {
           store.active = null;
           chatThread = [
             { role: "user", text: seed.question, fundingQuestion: seed.money_question },
-            { role: "answer", text: seed.answer, sources: seed.sources || [], next: seed.next || undefined, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context, money_overview: seed.money_overview, pay_answer: seed.pay_answer, pay_next: seed.pay_next },
+            { role: "answer", text: seed.answer, sources: seed.sources || [], next: seed.next || undefined, subject_context: seed.subject_context, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context, money_overview: seed.money_overview, pay_answer: seed.pay_answer, pay_next: seed.pay_next },
           ];
           chatKind = seed.kind === "speech" ? "speech" : "all";
           // An ask that was filtered to one speaker hands that filter on: the
@@ -10849,6 +10855,7 @@ function renderChatScope() {
 function renderChatThread({ landed = false, rise = false } = {}) {
   syncAskChatViewport();
   renderChatScope();
+  renderChatContext();
   const thread = $("chat-thread");
   thread.replaceChildren();
   $("chat-input").placeholder = chatThread.length ? "Ask a follow-up question…"
@@ -11003,7 +11010,30 @@ function chatAnswerEl(msg) {
       : "This suggested follow-up drew on a passage retrieved for the previous answer.";
     wrap.appendChild(p);
   }
+  if (msg.next?.length) {
+    const next = document.createElement('div');
+    renderFollowups(msg.next, next, item => sendChat(item.question, item));
+    wrap.appendChild(next);
+  }
   return wrap;
+}
+
+async function renderChatContext() {
+  const slot = $("chat-person-context");
+  if (!slot) return;
+  const last = [...chatThread].reverse().find(msg => msg.role === 'answer');
+  const context = last?.subject_context;
+  slot.hidden = true;
+  $("panel-chat").classList.toggle('has-person-context', !!context);
+  if (!context || (chatSpeaker && chatSpeaker !== context.name)) return;
+  await Promise.allSettled([askPersonReady, loadPhotoMap()]);
+  if (chatThread.includes(last) && [...chatThread].reverse().find(msg => msg.role === 'answer') === last) {
+    const dot = document.createElement('span');
+    dot.innerHTML = partyDotHTML(context.party);
+    // subject_context is a server projection checked by withheldNameCheck;
+    // the model cannot supply its fields. Saved chats retain that projection.
+    askPerson?.renderPersonContext(slot, context, {portrait: photoUrlFor(context.name) || '', partyDot: dot, safe: () => true});
+  }
 }
 
 async function requestChatFollowups() {
@@ -11026,7 +11056,7 @@ async function requestChatFollowups() {
       : normaliseFollowups(await api("/api/followups", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ question: asked.text, answer: last.text, passages }),
+          body: JSON.stringify({ question: asked.text, answer: last.text, passages, person: chatSpeaker || last.subject_context?.name }),
           signal: myAbort.signal,
         }));
     if (chatFollowAbort !== myAbort || chatThread[chatThread.length - 1] !== last) return;
@@ -11038,12 +11068,14 @@ async function requestChatFollowups() {
     // they land: once rendered they are what moves the end. A reader who has
     // scrolled up to read is left where they are.
     const wasAtEnd = chatFollower.nearEnd();
-    renderChatNext(questions);
+    renderChatThread();
     if (wasAtEnd) requestAnimationFrame(() => scrollChatToEnd());
   } catch { /* follow-ups are an extra, never an error */ }
 }
 
 function renderChatNext(questions) {
+  const last = chatThread[chatThread.length - 1];
+  if (last?.role === 'answer' && last.next?.length) { renderChatThread(); return; }
   const next = $("chat-next");
   renderFollowups(questions, next, (item) => sendChat(item.question, item));
 }
@@ -11053,10 +11085,6 @@ function renderFollowups(questions, next, onSelect, caption) {
   next.hidden = false;
   next.replaceChildren();
   next.className = "chat-next";
-  const kicker = document.createElement("h3");
-  kicker.className = "subject-section-title";
-  kicker.textContent = "Ask next";
-  next.appendChild(kicker);
   if (caption) {
     const note = document.createElement("p");
     note.className = "chat-next-note";
@@ -11067,7 +11095,7 @@ function renderFollowups(questions, next, onSelect, caption) {
   row.className = "chat-next-btns";
   row.setAttribute("role", "group");
   row.setAttribute("aria-label", "Suggested follow-up questions");
-  for (const raw of questions.slice(0, 3)) {
+  for (const raw of questions.slice(0, 4)) {
     // Sessions saved before follow-ups carried evidence stored plain strings.
     const item = typeof raw === "string" ? { question: raw } : raw;
     if (!item?.question) continue;
@@ -11076,16 +11104,21 @@ function renderFollowups(questions, next, onSelect, caption) {
     // They land together but read as a list, so they arrive as one: rise-in
     // staggers off --i, and the stylesheet drops the motion under
     // prefers-reduced-motion.
-    b.className = "chat-next-btn rise-in";
+    b.className = "chat-next-btn ui-button rise-in";
+    b.dataset.variant = 'quiet';
     b.style.setProperty("--i", String(row.children.length));
     const text = document.createElement("span");
-    text.textContent = item.question;
+    text.textContent = item.label || item.question;
     const arrow = document.createElement("span");
     arrow.className = "next-arrow";
     arrow.setAttribute("aria-hidden", "true");
     arrow.textContent = "→";
     b.append(text, arrow);
-    b.addEventListener("click", () => onSelect(item));
+    const position = row.children.length + 1;
+    b.addEventListener("click", () => {
+      trackOutcome('opax_ask_followup_click', {position, kind: item.kind || 'detail'});
+      onSelect(item);
+    });
     row.appendChild(b);
   }
   next.appendChild(row);
@@ -11200,8 +11233,8 @@ async function sendChat(question, carry) {
     // would read out of the wording, so "and on housing?" stays with them.
     const chatBody = JSON.stringify({
       question: q,
-      kind: chatSpeaker ? "speech" : chatKind,
-      ...(chatSpeaker ? { speaker: chatSpeaker } : {}),
+      kind: ['vote','compare'].includes(carry?.kind) ? 'all' : chatSpeaker ? "speech" : chatKind,
+      ...(chatSpeaker && !['vote','compare'].includes(carry?.kind) ? { speaker: chatSpeaker } : {}),
       context,
       prior_resources: priorResources.slice(0, 6),
     });
@@ -11278,6 +11311,8 @@ async function sendChat(question, carry) {
     chatThread.push({
       role: "answer",
       text: (data.answer || "").trim() || "(no answer)",
+      next: data.followups,
+      subject_context: data.subject_context || (chatSpeaker ? [...chatThread].reverse().find(msg => msg.subject_context?.name === chatSpeaker)?.subject_context : undefined),
       answer_status: data.answer_status,
       money_ranking: data.money_ranking,
       money_context: data.money_context,

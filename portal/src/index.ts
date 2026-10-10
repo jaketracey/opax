@@ -4,6 +4,9 @@ import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, pos
 import { rankedMoneyAnswer } from './ask-money'
 import { paidAnswer, mentionsPay } from './ask-pay'
 import { rewriteFollowUp, clarifyPayload, REWRITE_SYSTEM, type FollowUpRewrite } from './ask-rewrite'
+import { buildPersonOverview, isPersonOverviewIntent, isPersonRecentIntent, OVERVIEW_INSTRUCTIONS, type OverviewPack, type OverviewSpeech, type PersonContext } from './ask-person-overview'
+import { personFollowups } from '../public/ask-person.js'
+import { firstSpeechTurn } from './position-evidence'
 import { slugIndex, personIndex } from './person-slug'
 import { missingEntitySlug } from './crawl-hygiene'
 import { normalizePassage, passageWindow } from './passage-text'
@@ -902,8 +905,8 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
 }
 
 /** The portal's answer payload: the same shape from the sync and streamed paths. */
-function askPayload(answer: AskAnswer, records: AskRecords = { records: [], coverage: '', total: 0 }, scope?: AskScope, people?: PeopleData): { answer: string; citations: Record<string, unknown>; sources: unknown[]; scope?: AskScope; answer_status?: string; evidence_excerpts?: { resource: string; text: string }[] } {
-  const resources = Object.fromEntries(Object.entries(answer.retrieval_results?.resources ?? {})
+function askPayload(answer: AskAnswer, records: AskRecords = { records: [], coverage: '', total: 0 }, scope?: AskScope, people?: PeopleData, verifiedOnly = false): { answer: string; citations: Record<string, unknown>; sources: unknown[]; scope?: AskScope; answer_status?: string; evidence_excerpts?: { resource: string; text: string }[] } {
+  const resources = Object.fromEntries(Object.entries(verifiedOnly ? {} : answer.retrieval_results?.resources ?? {})
     .filter(([, r]) => !/^(da-|news-)/.test(r.slug ?? '')))
   const knownContexts = new Set<string>(records.records.map((_, i) => `USER_CONTEXT_${i}`))
   for (const resource of Object.values(resources)) {
@@ -1002,7 +1005,7 @@ function askPayload(answer: AskAnswer, records: AskRecords = { records: [], cove
   }
 }
 
-type AskPayload = ReturnType<typeof askPayload> & { evidence_kind?: 'original_position_proposal' }
+type AskPayload = ReturnType<typeof askPayload> & { evidence_kind?: 'original_position_proposal'; is_overview_intent?: boolean; subject_context?: PersonContext; followups?: {label: string; question: string; kind: string}[] }
 
 /** Verify quotes against original cited resources, not model metadata. */
 function hasUnsupportedQuotes(payload: AskPayload, raw: AskAnswer): boolean {
@@ -1352,14 +1355,28 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   mark('cache')
 
   let records: AskRecords
-  try { records = await retrieveAskRecords(input, env.ASSETS) }
+  let overview: OverviewPack | undefined
+  const overviewIntent = isPersonOverviewIntent(input)
+  const recentIntent = isPersonRecentIntent(input)
+  try {
+    if (overviewIntent || recentIntent) {
+      overview = await personOverviewPack(input, env, ctx)
+      records = overview.records
+    } else records = await retrieveAskRecords(input, env.ASSETS)
+  }
   catch (err) {
     // Swallowed silently, this was undiagnosable from outside (2026-09-17).
     console.error('ask records', err instanceof Error ? err.stack || err.message : String(err))
     return json({ error: 'Public-record search is temporarily unavailable. Please try again.' }, 503)
   }
   mark('records')
-  const body = buildAskBody(input, records)
+  const body = buildAskBody(input, records, { reasoned: overviewIntent || recentIntent })
+  if (overview) {
+    const prompt = body.prompt as {system: string; user: string}
+    // The evidence uses ordinary extra_context IDs and the existing Ask preset.
+    // The position checks apply to the verified speaking turns in the pack.
+    prompt.user += '\n' + (overviewIntent ? OVERVIEW_INSTRUCTIONS : 'Answer about the most recent dated speech in the complete catalogue metadata selection. Give its title and exact speech date, then a short cited account of its verified original speaking turn. Use only the supplied verified speech records for this answer. If catalogue enumeration is incomplete, do not claim any speech is the latest; explain that limitation. ' + FOOTNOTE_INSTRUCTIONS)
+  }
   await scopeSpeakerBody(body, env, input.speaker)
   // Pinned per pipeline through wrangler vars (see env.d.ts). Every pipeline
   // rides the KB's OpenRouter slot: generation bills to OpenRouter only.
@@ -1378,7 +1395,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
       return timed(withCacheStatus(json(payload), status, false))
     } catch { return json({ error: 'The speech records are temporarily unavailable. Please try again.' }, 503) }
   }
-  if (wantStream) return apiAskStream(body, env, ctx, { onDone: store, cacheStatus: status, records, scope, askedAs })
+  if (wantStream) return apiAskStream(body, env, ctx, { onDone: store, cacheStatus: status, records, scope, askedAs, overview, overviewIntent })
 
   const askOnce = async (b: Record<string, unknown>, timeoutMs: number): Promise<AskAnswer | Response> => {
     try {
@@ -1402,20 +1419,105 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     if (!(again instanceof Response) && !isRefusal(again)) answer = again
   }
   mark('retry')
-  let payload = askPayload(answer, records, scope, await loadPeople(env))
+  let payload = askPayload(answer, records, scope, await loadPeople(env), !!overview)
   if (isPositionBody(body) && payload.sources.length && (isEvidenceGap(payload.answer) || !Object.keys(payload.citations).length || hasUnsupportedQuotes(payload, answer))) {
     payload = await recoverPositionAnswer(payload, body, env) || payload
   }
   if (!isPositionBody(body) && !isRefusal(answer) && payload.sources.length && (!Object.keys(payload.citations).length || hasUnsupportedQuotes(payload, answer))) {
     const retryBody = Object.keys(payload.citations).length ? body : legacyCitationsAsk(body)
     const fallback = await askOnce(hasUnsupportedQuotes(payload, answer) ? quoteRecoveryAsk(retryBody) : retryBody, ASK_SYNC_TIMEOUT_MS)
-    if (!(fallback instanceof Response) && !isRefusal(fallback)) { answer = fallback; payload = askPayload(fallback, records, scope, await loadPeople(env)) }
+    if (!(fallback instanceof Response) && !isRefusal(fallback)) { answer = fallback; payload = askPayload(fallback, records, scope, await loadPeople(env), !!overview) }
   }
   payload = looseAnswer(payload, answer)
   mark('verify')
   payload = withAskedAs(payload, askedAs)
+  payload = await overviewPayload(payload, overview, env, overviewIntent)
   store(payload)
   return timed(withCacheStatus(json(payload), status, false))
+}
+
+/** Public metadata only; no catalogue index-time sort or generative call. */
+async function personOverviewPack(input: AskInput, env: Env, ctx: ExecutionContext): Promise<OverviewPack> {
+  const key = await sha256Hex(JSON.stringify({epoch:env.CACHE_EPOCH,version:ASK_PIPELINE_VERSION,speaker:input.speaker,state:input.state,chamber:input.chamber,party:input.party}))
+  const response = await cachedJson('/api/person-overview-pack/'+key,async()=>json(await buildOverviewPack(input,env,ctx)))
+  return await response.json() as OverviewPack
+}
+
+async function buildOverviewPack(input: AskInput, env: Env, ctx: ExecutionContext): Promise<OverviewPack> {
+  const people = await loadPeople(env)
+  const person = people.byFold.get(foldName(input.speaker || ''))
+  if (!person) throw new Error('Person unavailable')
+  const attribution = personScope(person)
+  const withheld = await withheldNameCheck(env.ASSETS)
+  const safe = (...values: string[]) => !withheld(...values)
+  if (!safe(person.name,person.party_now || person.party || '',...(person.representation || []).map(r=>r.electorate))) throw new Error('Person context unavailable')
+  const corpus = await assetJson<{version: string}>(env, '/corpus.json')
+  const asOf = corpus.version.slice(0,10)
+  const base = filterExpression({kind:'speech',speaker:person.name,state:input.state,chamber:input.chamber,party:input.party})?.field || {}
+  // Service dates are checked against speech metadata below. Catalogue created
+  // means index time; it cannot supply a service-date predicate.
+  const scope = attribution ? scopeFilter({...attribution,service:undefined}) : undefined
+  const filter = {resource:{and:[attribution ? scopedCollaborators(base,attribution) : base,...(scope ? [scope] : []),
+    ...['witness','chair','unknown'].map(label => ({not:{prop:'label',labelset:'speaker_type',label}}))]}}
+  const decode = (rid: string, r: FindResource & {computedmetadata?:{field_classifications?:{classifications?:{labelset:string;label:string}[]}[]}}): OverviewSpeech => ({
+    resource:rid,slug:r.slug || '',title:r.title || r.slug || '',speaker:r.origin?.collaborators?.[0] || '',
+    date:String(r.extra?.metadata?.date || '').slice(0,10),state:label(r,'state') || undefined,chamber:label(r,'chamber') || undefined,
+    url:r.origin?.url || undefined,topics:[...new Set([...(r.usermetadata?.classifications || []),...(r.computedmetadata?.field_classifications || []).flatMap(f=>f.classifications || [])].filter(c=>c.labelset==='topic').map(c=>c.label))],
+  })
+  const belongs = (s: OverviewSpeech) => /^speech-\d+$/.test(s.slug) &&
+    (attribution ? belongsToScope({...s,kind:'speech'},attribution) : foldName(s.speaker) === foldName(person.name))
+  return buildPersonOverview(person,asOf,personPath(people,person.name),{
+    safe,belongs,
+    catalogue: async page => {
+      const response = await kbFetch(env,'/catalog',{body:{filter_expression:filter,faceted:[TOPIC_FILTER_PREFIX],page_size:200,page_number:page,show:['basic','origin','extra']}})
+      if (!response.ok) throw new Error('Speech catalogue unavailable')
+      const data = await response.json() as CatalogPage
+      return {total:data.fulltext?.total || 0,counts:Object.fromEntries(Object.entries(data.fulltext?.facets?.[TOPIC_FILTER_PREFIX] || {}).map(([path,n])=>[path.slice((TOPIC_FILTER_PREFIX+'/').length),n])),
+        speeches:Object.entries(data.resources || {}).map(([rid,r])=>decode(rid,r))}
+    },
+    find: async theme => {
+      const url = new URL('https://opax.com.au/api/search')
+      for (const [key,value] of Object.entries({...input,topic:theme})) if (['speaker','state','chamber','party','topic'].includes(key) && typeof value==='string') url.searchParams.set(key,value)
+      const found = await searchWindow(env,{q:TOPIC_NAMES[theme],mode:'hybrid',kind:'speech',topK:10,url})
+      if (!found) throw new Error('Theme retrieval unavailable')
+      return found.results.map(r=>({...r,speaker:r.speaker || '',date:r.date || '',topics:r.topics || [],state:r.state || undefined,chamber:r.chamber || undefined,url:r.url || undefined}))
+    },
+    original: async speech => {
+      const url = new URL('https://opax.com.au/api/resource/'+speech.slug)
+      const response = await apiResource(new Request(url),url,speech.slug,env,ctx)
+      if (!response.ok) return null
+      const original = await response.json() as {speaker?:string;text?:string}
+      if (foldName(original.speaker || '') !== foldName(speech.speaker) || !original.text) return null
+      return firstSpeechTurn(original.text)
+    },
+    bills: async () => {
+      const hash = (await sha256Hex(person.name.normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim())).slice(0,24)
+      return (await assetJson<{bills:{key:string;title:string;introduced:string;sponsor?:string;speech_dates?:string[]}[]}>(env,'/growth/person-bills/'+hash+'.json')).bills
+    },
+    peer: async theme => {
+      const response = await kbFetch(env,'/catalog',{body:{filter_expression:{resource:{and:[{prop:'label',labelset:'kind',label:'speech'},{prop:'label',labelset:'topic',label:theme}]}},faceted:['/origin.collaborators'],page_size:0}})
+      if (!response.ok) return undefined
+      const data = await response.json() as CatalogPage
+      return Object.entries(data.fulltext?.facets?.['/origin.collaborators'] || {}).sort((a,b)=>b[1]-a[1]).map(([path])=>path.replace(/^\/origin\.collaborators\//,''))
+        .find(name=>name!==person.name && people.byName.has(name) && safe(name))
+    },
+  },!!attribution)
+}
+
+async function overviewPayload(payload: AskPayload, pack: OverviewPack | undefined, env: Env, overviewIntent = true): Promise<AskPayload> {
+  if (!pack) return {...payload,is_overview_intent:false}
+  const withheld = await withheldNameCheck(env.ASSETS)
+  if (withheld(payload.answer)) return {...withheldDonorAnswer(),is_overview_intent:overviewIntent} as AskPayload
+  const sources = payload.sources.filter((source) => {
+    const row = source as {title?:string;snippet?:string;speaker?:string}
+    return !withheld(row.title,row.snippet,row.speaker)
+  })
+  const ids = new Set(sources.map(source=>(source as {resource:string}).resource))
+  const citations = Object.fromEntries(Object.entries(payload.citations).filter(([id])=>ids.has(id.split('/')[0])))
+  if (Object.keys(payload.citations).length && !Object.keys(citations).length) return {...withheldDonorAnswer(),is_overview_intent:overviewIntent} as AskPayload
+  payload = {...payload,sources,citations}
+  return {...payload,is_overview_intent:overviewIntent,subject_context:pack.context,
+    followups:personFollowups(payload.answer,payload.sources as {title:string;cited?:boolean;kind?:string}[],pack.context,(...values)=>!withheld(...values))}
 }
 
 /** The reader's own earlier turns: what a follow-up can inherit a name from. */
@@ -2031,7 +2133,7 @@ function apiAskStream(
   body: Record<string, unknown>,
   env: Env,
   ctx: ExecutionContext,
-  opts: { onDone?: (payload: AskPayload) => void; cacheStatus: CacheStatus; records: AskRecords; scope?: AskScope; askedAs?: string | null },
+  opts: { onDone?: (payload: AskPayload) => void; cacheStatus: CacheStatus; records: AskRecords; scope?: AskScope; askedAs?: string | null; overview?: OverviewPack; overviewIntent?: boolean },
 ): Response {
   const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>()
   const writer = writable.getWriter()
@@ -2050,7 +2152,7 @@ function apiAskStream(
     }
   }
 
-  const checkedSend: SseSend = isPositionBody(body) ? async (event, data) => { if (event !== 'delta') await send(event, data) } : send
+  const checkedSend: SseSend = isPositionBody(body) || opts.overview ? async (event, data) => { if (event !== 'delta') await send(event, data) } : send
   ctx.waitUntil(
     (async () => {
       try {
@@ -2079,7 +2181,7 @@ function apiAskStream(
           if (!isRefusal(again)) result = again
         }
         result = guardPositionAnswer(result, body)
-        let payload = askPayload(result, opts.records, opts.scope, await loadPeople(env))
+        let payload = askPayload(result, opts.records, opts.scope, await loadPeople(env), !!opts.overview)
         if (!clientGone && isPositionBody(body) && payload.sources.length && (isEvidenceGap(payload.answer) || !Object.keys(payload.citations).length || hasUnsupportedQuotes(payload, result))) {
           payload = await recoverPositionAnswer(payload, body, env) || payload
         }
@@ -2088,13 +2190,14 @@ function apiAskStream(
           try {
             const retryBody = Object.keys(payload.citations).length ? body : legacyCitationsAsk(body)
             const fallback = await streamAskGuarded(env, hasUnsupportedQuotes(payload, result) ? quoteRecoveryAsk(retryBody) : retryBody, checkedSend, upstream.signal, ASK_STALL_MS)
-            if (!isRefusal(fallback)) { result = guardPositionAnswer(fallback, body); payload = askPayload(result, opts.records, opts.scope, await loadPeople(env)) }
+            if (!isRefusal(fallback)) { result = guardPositionAnswer(fallback, body); payload = askPayload(result, opts.records, opts.scope, await loadPeople(env), !!opts.overview) }
           } catch {
             // The final quotation check below falls back to evidence if recovery fails.
           }
         }
         payload = looseAnswer(payload, result)
         payload = withAskedAs(payload, opts.askedAs)
+        payload = await overviewPayload(payload, opts.overview, env, opts.overviewIntent)
         await send('done', payload)
         // Cached from the `done` payload — the same bytes the reader got —
         // even when the reader left early (the answer was paid for).
@@ -2325,23 +2428,35 @@ function parseFollowUpLines(answerText: string): { question: string; evidence: s
 }
 
 async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-  const { question, answer, passages } = ((await request.json().catch(() => ({}))) ?? {}) as {
+  const { question, answer, passages, person: personName } = ((await request.json().catch(() => ({}))) ?? {}) as {
     question?: string
     answer?: string
-    passages?: { title?: string; text?: string }[]
+    person?: string
+    passages?: { title?: string; text?: string; kind?: string; date?: string; cited?: boolean }[]
   }
   // Always 200 with a possibly-empty list: follow-ups are an extra, never an error.
   if (!question?.trim() || !answer?.trim()) return json({ questions: [] })
   // Never suggest a next question about a withheld donor (src/donor-index.ts).
   if (await questionNamesWithheldDonor(env.ASSETS, question, answer)) return json({ questions: [] })
+  const withheld = await withheldNameCheck(env.ASSETS)
   const clean = (Array.isArray(passages) ? passages : [])
     .map((p) => ({
       title: String(p?.title ?? '').slice(0, 300),
       text: String(p?.text ?? '').slice(0, 4000),
+      kind: p?.kind === 'speech' || p?.kind === 'bill' ? p.kind : undefined,
+      cited: p?.cited === true,
     }))
-    .filter((p) => p.text.trim().length > 0)
+    .filter((p) => p.text.trim().length > 0 && !withheld(p.title,p.text))
     .slice(0, 12)
   const context = passageContext(clean)
+  if (personName && !withheld(personName)) {
+    const person = (await loadPeople(env)).byFold.get(foldName(personName))
+    if (person) {
+      const topics = Object.entries(TOPIC_NAMES).filter(([,name])=>answer.toLowerCase().includes(name.toLowerCase())).map(([slug,name])=>({slug,name,count:0,recent_count:null}))
+      const questions = personFollowups(answer,clean,{name:person.name,party:null,electorate:'',speeches:0,topics,recent_from:'',as_of:'',complete:false,profile:'',votes:'',interests:''},(...texts)=>!withheld(...texts))
+      if (questions.length >= 2) return json({questions})
+    }
+  }
   if (context.length < FOLLOWUP_MIN_CONTEXT) return json({ questions: [] })
 
   // The input is the whole story (question, answer, passages): the same
@@ -2411,7 +2526,7 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
     if (!res.ok) return withCacheStatus(json({ questions: [] }), cacheStatus, false)
     const data = (await res.json()) as { answer?: string }
     const candidates = parseFollowUpLines(data.answer ?? '')
-    const questions = selectFollowUps(candidates, question, clean, context)
+    const questions = selectFollowUps(candidates, question, clean, context).filter(item=>!withheld(item.question,item.evidence))
     const out = json({ questions })
     // An empty list may be a model stumble — never pin that for a day.
     if (questions.length > 0) cacheStore(ctx, cacheKey, out, FOLLOWUPS_CACHE_TTL)

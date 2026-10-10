@@ -122,6 +122,7 @@ test('Worker /ask sources normalize once and keep the 600 maximum on word bounda
     questionNamesWithheldDonor: async () => false, readerTurns: () => [], withheldDonorAnswer: () => ({}), MODEL_BUDGET_HEADER: 'x-opax-model-budget', modelBudgetBusy: () => new Response(null, { status: 503 }), 
     rankedMoneyAnswer:async()=>null, rateLimited:async()=>null, paidAnswer:async()=>null, integrityQuestion:()=>false,
     needsAskPeople:()=>false, loadPeople:async()=>people,
+    isPersonOverviewIntent:()=>false, isPersonRecentIntent:()=>false, overviewPayload:async payload=>({...payload,is_overview_intent:false}),
     resolveAskScope:input=>({input,scope:undefined}), askCacheInput:()=>null, cacheBypass:()=>true,
     retrieveAskRecords:async()=>({records:[],coverage:'',total:0}),
     buildAskBody:()=>({}), scopeSpeakerBody:async()=>{},
