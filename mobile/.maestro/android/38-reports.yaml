@@ -1,0 +1,98 @@
+appId: au.com.opax.app
+name: 38 Android reports, report, Money, section deep link and cited record
+---
+- launchApp:
+    clearState: true
+- scrollUntilVisible:
+    element:
+      id: today-reports
+    direction: DOWN
+    timeout: 300000
+    centerElement: true
+- tapOn:
+    id: today-reports
+- assertVisible:
+    id: reports-screen
+- takeScreenshot: ${EVIDENCE}/38-reports-index
+# Today's tile opens the reports; Spotlight left Today in design pass 3A.
+- scrollUntilVisible:
+    element:
+      id: report-open-gambling
+    direction: DOWN
+    timeout: 300000
+    centerElement: true
+- tapOn:
+    id: report-open-gambling
+- assertVisible:
+    id: report-title
+- takeScreenshot: ${EVIDENCE}/38-report
+- scrollUntilVisible:
+    element:
+      id: report-tab-money
+    direction: DOWN
+    timeout: 300000
+    centerElement: true
+- tapOn:
+    id: report-tab-money
+- scrollUntilVisible:
+    element:
+      text: Follow the money
+    direction: DOWN
+    timeout: 300000
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/38-money
+- scrollUntilVisible:
+    element:
+      text: Words per dollar
+    direction: DOWN
+    timeout: 300000
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/38-words-per-dollar
+- scrollUntilVisible:
+    element:
+      id: report-open-section-1
+    direction: DOWN
+    timeout: 300000
+    visibilityPercentage: 10
+    centerElement: true
+- tapOn:
+    id: report-open-section-1
+- scrollUntilVisible:
+    element:
+      id: report-section-1
+    direction: DOWN
+    timeout: 90000
+    visibilityPercentage: 2
+- takeScreenshot: ${EVIDENCE}/38-section
+# Citations are inline numerals; every one also has a 44pt row in the
+# section's records sheet, behind its source line (design pass 4B).
+- scrollUntilVisible:
+    element:
+      id: report-section-sources-1
+    direction: DOWN
+    timeout: 300000
+    centerElement: true
+- tapOn:
+    id: report-section-sources-1
+- assertVisible:
+    id: report-section-sources-1-sheet
+- takeScreenshot: ${EVIDENCE}/38-section-records
+- tapOn:
+    id: report-section-sources-1-cited-0
+# The records lane now owns the native reader. Its local fixture contains
+# only the pinned citation excerpt and says so on screen.
+- assertVisible:
+    id: doc-title
+- takeScreenshot: ${EVIDENCE}/38-cited-record
+# Android's bar shows no back title: Back returns to the section's page,
+# where it stood.
+- pressKey: Back
+- extendedWaitUntil:
+    visible: Share Gambling
+    timeout: 30000
+# A section is shared from its own page's header (pass 4B moved the
+# per-section Share buttons there).
+- tapOn: Share Gambling
+- assertVisible: https://opax.invalid/reports/gambling/s/1
+- takeScreenshot: ${EVIDENCE}/38-section-share
+- tapOn: OK

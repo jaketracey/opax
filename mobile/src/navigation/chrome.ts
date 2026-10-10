@@ -7,7 +7,13 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { router, type NativeStackHeaderItem } from 'expo-router';
-import { chrome, fonts, light, navigationTitleSizes } from '../design/tokens';
+import {
+  chrome,
+  fonts,
+  light,
+  navigationTitleSizes,
+  textStyles,
+} from '../design/tokens';
 import { isPad } from '../design/adaptive';
 
 /**
@@ -18,24 +24,37 @@ import { isPad } from '../design/adaptive';
 // On iOS 26 a bar background or blur hides the large title (a UIKit bug,
 // react-native-screens#3100), so there the system's glass bar is left alone.
 // Earlier versions keep an opaque paper bar, so content never shows through.
-const opaqueBar =
+// Android's bar is flat paper like the redesign's: no elevation shadow.
+const opaqueBar = () =>
   Platform.OS === 'android' ||
   (Platform.OS === 'ios' && parseInt(String(Platform.Version), 10) < 26)
     ? {
         headerStyle: { backgroundColor: light.paper },
         headerLargeStyle: { backgroundColor: light.paper },
+        ...(Platform.OS === 'android' ? { headerShadowVisible: false } : {}),
       }
     : {};
+
+/**
+ * Android bar text, in sp. The native bar sets its title in sp, so the
+ * system's font scale (to 200%) applies once; passing the iOS Dynamic Type
+ * size as well would scale it twice. With no large title on Android, the
+ * bar title is the screen's title: the `heading` size, Material's title size.
+ */
+export const androidBar = {
+  title: textStyles.heading.fontSize,
+  action: textStyles.metadata.fontSize,
+} as const;
 
 export function useStackChrome() {
   const { fontScale } = useWindowDimensions();
   const sizes = navigationTitleSizes(fontScale);
   return {
     headerTintColor: chrome.tint,
-    ...opaqueBar,
+    ...opaqueBar(),
     headerTitleStyle: {
       fontFamily: fonts.serif,
-      fontSize: sizes.title,
+      fontSize: Platform.OS === 'android' ? androidBar.title : sizes.title,
       color: chrome.title,
     },
     headerLargeTitleStyle: {
@@ -116,7 +135,7 @@ export function headerItems(
                           style: {
                             color: chrome.tint,
                             fontFamily: fonts.sansSemiBold,
-                            fontSize: 14,
+                            fontSize: androidBar.action,
                           },
                         },
                         item.label,

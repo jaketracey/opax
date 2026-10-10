@@ -3,8 +3,13 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Icon } from '../design/icon';
 import { fonts, light, rhythm } from '../design/tokens';
+import { androidBar } from './chrome';
 
-/** A measured Android header: long reading titles wrap at the user's size. */
+/**
+ * A measured Android header: long reading titles wrap at the user's size.
+ * It matches the native Android bar on the other screens: flat paper, the
+ * Material back arrow, the title at the bar's size and a navy text action.
+ */
 export function AndroidReadingHeader({
   navigation,
   options,
@@ -26,7 +31,7 @@ export function AndroidReadingHeader({
             onPress={() => navigation.goBack()}
             style={styles.action}
           >
-            <Icon name="chevron.left" size={22} maxScale={1} />
+            <Icon name="arrow.left" size={24} maxScale={1} />
           </Pressable>
         ) : null}
         <Text accessibilityRole="header" style={styles.title}>
@@ -41,9 +46,11 @@ export function AndroidReadingHeader({
               accessibilityLabel="Done"
               testID="header-done"
               onPress={() => navigation.goBack()}
-              style={styles.action}
+              style={[styles.action, styles.trailing]}
             >
-              <Text style={styles.done}>Done</Text>
+              <Text maxFontSizeMultiplier={1.5} style={styles.done}>
+                Done
+              </Text>
             </Pressable>
           ))}
       </View>
@@ -63,9 +70,14 @@ const styles = StyleSheet.create({
   title: {
     flex: 1,
     fontFamily: fonts.serif,
-    fontSize: 20,
+    fontSize: androidBar.title,
     color: light.ink,
   },
   action: { minWidth: 48, minHeight: 48, justifyContent: 'center' },
-  done: { fontFamily: fonts.sansSemiBold, fontSize: 14, color: light.navy },
+  trailing: { alignItems: 'flex-end' },
+  done: {
+    fontFamily: fonts.sansSemiBold,
+    fontSize: androidBar.action,
+    color: light.navy,
+  },
 });

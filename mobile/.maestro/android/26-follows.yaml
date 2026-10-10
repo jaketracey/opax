@@ -1,0 +1,423 @@
+appId: au.com.opax.app
+name: 26 Android follow a member, a bill and an electorate; Today shows what changed
+---
+# Run on its own, against the changed-data fixture:
+#   OPAX_FIXTURE_DATA=changed scripts/e2e-android.sh OPAX_API34 26
+# Android differs from the iPhone flow where the platform does: Back leaves a
+# pushed page (the bar has no back title or Today tab text to tap), the seat
+# line is found by its ID, the copy says "this phone", and Unfollow comes
+# from the row's touch-and-hold sheet rather than an iOS-style swipe.
+# The fixture serves the pinned catalogs until the app revalidates the bill or
+# register index (Today's pull to refresh), then one new declared entry for
+# Anthony Albanese and the Ending Financial Abuse bill as passed. clearState,
+# so nothing is followed and every first read is unconditional.
+#
+# Rows grow past the screen at AX5: whole-row checks match a tenth of the row,
+# centred with half-screen (speed 20) swipes.
+- launchApp:
+    clearState: true
+- assertVisible:
+    id: today-screen-message
+
+# A bill: the first recently introduced bill is the Ending Financial Abuse bill.
+# Before any follow, Today has no Following block: the bills come next.
+- scrollUntilVisible:
+    element:
+      id: today-bill-0
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- assertNotVisible:
+    id: today-following
+- takeScreenshot: ${EVIDENCE}/26-today-empty
+- waitForAnimationToEnd
+- tapOn:
+    id: today-bill-0
+- extendedWaitUntil:
+    visible:
+      id: bill-screen
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: bill-follow-off
+    timeout: 90000
+    centerElement: true
+    speed: 20
+- assertVisible:
+    id: bill-follow-off
+    text: Follow Child Support and Family Assistance Legislation Amendment .*
+- tapOn:
+    id: bill-follow-off
+- extendedWaitUntil:
+    visible:
+      id: bill-follow-on
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/26-bill-following
+# Back to Today's root, so the Today tab opens there later.
+- pressKey: Back
+- assertVisible:
+    id: today-screen
+
+# A parliamentarian, from Search.
+- tapOn:
+    id: tab-search
+- scrollUntilVisible:
+    element:
+      id: search-input
+    centerElement: true
+    timeout: 300000
+- tapOn:
+    id: search-input
+- inputText: Anthony Albanese
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: search-result-anthony-albanese
+    centerElement: true
+    timeout: 300000
+- tapOn:
+    id: search-result-anthony-albanese
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: person-follow-off
+    timeout: 90000
+    centerElement: true
+    speed: 20
+- assertVisible:
+    id: person-follow-off
+    text: Follow Anthony Albanese
+- tapOn:
+    id: person-follow-off
+- extendedWaitUntil:
+    visible:
+      id: person-follow-on
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/26-person-following
+
+# An electorate, from the member's seat line ("Member for Grayndler, House
+# of Representatives, …"; design pass 3B).
+- scrollUntilVisible:
+    element:
+      id: person-electorate
+      text: Member for Grayndler.*
+    timeout: 90000
+    centerElement: true
+    speed: 20
+- tapOn:
+    id: person-electorate
+- extendedWaitUntil:
+    visible:
+      id: electorate-name
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: electorate-follow-off
+    timeout: 90000
+    centerElement: true
+    speed: 20
+- assertVisible:
+    id: electorate-follow-off
+    text: Follow Grayndler
+- tapOn:
+    id: electorate-follow-off
+- extendedWaitUntil:
+    visible:
+      id: electorate-follow-on
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/26-electorate-following
+
+# Today lists all three, unchanged.
+- tapOn:
+    id: tab-today
+- assertVisible:
+    id: today-screen
+# Today keeps its scroll position; at AX5 that is below Following, so
+# start from the top and search down.
+- scrollUntilVisible:
+    element:
+      id: today-screen-message
+    direction: UP
+    timeout: 90000
+- scrollUntilVisible:
+    element:
+      id: today-following-summary
+      text: No changes since you last looked\.
+    timeout: 90000
+    centerElement: true
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/26-today-following
+- scrollUntilVisible:
+    element:
+      id: today-following-bill-au-federal-r7549
+      text: 'Child Support and Family Assistance .*, Bill, No changes since \d+ \w+ 20\d\d'
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- scrollUntilVisible:
+    element:
+      id: today-following-person-person_2b850aa643795ce8902f754b
+      text: Anthony Albanese, Parliamentarian, No changes since \d+ \w+ 20\d\d
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- scrollUntilVisible:
+    element:
+      id: today-following-electorate-el_5d600e7f6dca5b72ae04d686
+      text: Grayndler, Electorate, No changes since \d+ \w+ 20\d\d
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/26-today-no-changes
+
+# Pull to refresh: the catalogs revalidate and the fixture's changes arrive.
+- scrollUntilVisible:
+    element:
+      id: today-screen-message
+    direction: UP
+    timeout: 90000
+- swipe:
+    start: 50%, 30%
+    end: 50%, 85%
+    duration: 800
+- waitForAnimationToEnd
+- scrollUntilVisible:
+    element:
+      id: today-following-summary
+    timeout: 90000
+    centerElement: true
+    speed: 20
+- extendedWaitUntil:
+    visible:
+      id: today-following-summary
+      text: 2 of 3 changed since you last looked\.
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/26-today-changed
+- scrollUntilVisible:
+    element:
+      id: today-following-bill-au-federal-r7549
+      text: '.*, Bill, 1 change since \d+ \w+ 20\d\d, Now passed; was before parliament, ParlInfo bill records, as at 1 October 2026'
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/26-today-bill-changed
+- scrollUntilVisible:
+    element:
+      id: today-following-person-person_2b850aa643795ce8902f754b
+      text: 'Anthony Albanese, Parliamentarian, 1 change since \d+ \w+ 20\d\d, 1 new declared entry, Register of Members’ Interests, as at 4 September 2026'
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/26-today-member-changed
+
+# Opening the bill marks it seen; the member still shows its change.
+# At AX5 the row (about 1,370pt) outgrows the screen, and Maestro taps its
+# centre. A row already a tenth visible is never centred, so come at it from
+# the top: the half-screen scroll then stops with its centre on screen.
+- scrollUntilVisible:
+    element:
+      id: today-screen-message
+    direction: UP
+    timeout: 90000
+- scrollUntilVisible:
+    element:
+      id: today-following-bill-au-federal-r7549
+    direction: DOWN
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- waitForAnimationToEnd
+- tapOn:
+    id: today-following-bill-au-federal-r7549
+- extendedWaitUntil:
+    visible:
+      id: bill-screen
+    timeout: 15000
+# At AX5 the title alone outgrows the screen; scroll to the switch.
+- scrollUntilVisible:
+    element:
+      id: bill-follow-on
+    timeout: 90000
+    centerElement: true
+    speed: 20
+- pressKey: Back
+- assertVisible:
+    id: today-screen
+- scrollUntilVisible:
+    element:
+      id: today-screen-message
+    direction: UP
+    timeout: 90000
+- scrollUntilVisible:
+    element:
+      id: today-following-summary
+      text: 1 of 3 changed since you last looked\.
+    timeout: 90000
+    centerElement: true
+    speed: 20
+- scrollUntilVisible:
+    element:
+      id: today-following-bill-au-federal-r7549
+      text: '.*, Bill, No changes since \d+ \w+ 20\d\d'
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/26-today-bill-seen
+
+# Unfollow the electorate under Your MP's Manage follows.
+- tapOn:
+    id: tab-your-mp
+- scrollUntilVisible:
+    element:
+      id: your-following-manage
+    timeout: 90000
+    centerElement: true
+    speed: 20
+- scrollUntilVisible:
+    element:
+      id: your-following-count
+      text: 3 follows saved on this phone\. Today shows what changed in each\.
+    direction: UP
+    timeout: 90000
+    visibilityPercentage: 10
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/26-your-mp-following
+- scrollUntilVisible:
+    element:
+      id: your-following-manage
+    timeout: 90000
+    centerElement: true
+    speed: 20
+- tapOn:
+    id: your-following-manage
+- extendedWaitUntil:
+    visible:
+      id: follows-screen
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/26-manage
+# Unfollow from the row's touch-and-hold actions: Android's bottom sheet,
+# titled with the follow (pass 4F). The row's swipe action stays for
+# TalkBack and the iPhone.
+- scrollUntilVisible:
+    element:
+      id: follows-open-electorate-el_5d600e7f6dca5b72ae04d686
+    timeout: 90000
+    centerElement: true
+    speed: 20
+- longPressOn:
+    id: follows-open-electorate-el_5d600e7f6dca5b72ae04d686
+- extendedWaitUntil:
+    visible:
+      id: android-menu
+    timeout: 15000
+- assertVisible:
+    text: Grayndler
+    childOf:
+      id: android-menu
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/26-manage-menu
+- tapOn:
+    text: Unfollow
+    childOf:
+      id: android-menu
+- extendedWaitUntil:
+    notVisible:
+      id: follows-open-electorate-el_5d600e7f6dca5b72ae04d686
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: follows-count
+      text: Following 2 of at most 50
+    direction: UP
+    timeout: 90000
+    centerElement: true
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/26-manage-unfollowed
+
+# Follows, and what was seen, survive a relaunch.
+- launchApp
+- assertVisible:
+    id: today-screen-message
+- scrollUntilVisible:
+    element:
+      id: today-following-summary
+      text: 1 of 2 changed since you last looked\.
+    timeout: 90000
+    centerElement: true
+    speed: 20
+- scrollUntilVisible:
+    element:
+      id: today-following-bill-au-federal-r7549
+      text: '.*, Bill, No changes since \d+ \w+ 20\d\d'
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- scrollUntilVisible:
+    element:
+      id: today-following-person-person_2b850aa643795ce8902f754b
+      text: 'Anthony Albanese, Parliamentarian, 1 change since .*1 new declared entry.*'
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- assertNotVisible:
+    id: today-following-electorate-el_5d600e7f6dca5b72ae04d686
+- takeScreenshot: ${EVIDENCE}/26-after-relaunch
+
+# Unfollow all from Today's Manage follows.
+- scrollUntilVisible:
+    element:
+      id: today-following-manage
+    timeout: 90000
+    centerElement: true
+    speed: 20
+- tapOn:
+    id: today-following-manage
+- extendedWaitUntil:
+    visible:
+      id: follows-screen
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: follows-clear
+    timeout: 90000
+    centerElement: true
+    speed: 20
+- tapOn:
+    id: follows-clear
+- assertVisible: Unfollow all 2\?
+- takeScreenshot: ${EVIDENCE}/26-clear-confirm
+# The alert's positive button; the rows behind it also hold "Unfollow".
+- tapOn:
+    id: android:id/button1
+- scrollUntilVisible:
+    element:
+      id: follows-empty
+    direction: UP
+    timeout: 30000
+    centerElement: true
+    speed: 20
+- pressKey: Back
+- assertVisible:
+    id: today-screen
+- scrollUntilVisible:
+    element:
+      id: today-screen-message
+    direction: UP
+    timeout: 90000
+- assertNotVisible:
+    id: today-following
+- takeScreenshot: ${EVIDENCE}/26-cleared

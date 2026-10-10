@@ -152,6 +152,7 @@ const config: ExpoConfig = {
       ? [
           './plugins/withAndroidUploadSigning.js',
           './plugins/withAndroidBack.js',
+          './plugins/withAndroidTheme.js',
         ]
       : []),
     '@react-native-community/datetimepicker',

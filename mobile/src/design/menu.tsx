@@ -1,17 +1,10 @@
 import { onKeyCommand } from './keyboard';
 import { useSyncExternalStore } from 'react';
+import { ActionSheetIOS, Platform } from 'react-native';
 import {
-  ActionSheetIOS,
-  Modal,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Heading, Text } from './text';
-import { colors, minimumTarget, radii, rhythm } from './tokens';
+  AndroidBottomSheet,
+  AndroidSheetRow,
+} from '../navigation/AndroidSheet';
 
 export interface MenuAction {
   title: string;
@@ -31,7 +24,7 @@ function present(next: Menu) {
   listeners.forEach((listener) => listener());
 }
 
-/** A scrollable Android dialog; iOS keeps its existing native action sheet. */
+/** Android's bottom sheet of actions; iOS keeps its native action sheet. */
 export function showMenu(
   title: string,
   actions: readonly MenuAction[],
@@ -63,66 +56,22 @@ export function AndroidMenuHost() {
   const current = useSyncExternalStore(subscribe, () => menu);
   if (Platform.OS !== 'android' || !current) return null;
   return (
-    <Modal
-      visible
-      transparent
-      animationType="fade"
-      onRequestClose={() => present(null)}
+    <AndroidBottomSheet
+      title={current.title}
+      closeLabel="Cancel"
+      onClose={() => present(null)}
+      testID="android-menu"
     >
-      <SafeAreaView style={styles.backdrop}>
-        <Pressable
-          style={StyleSheet.absoluteFill}
-          accessibilityLabel="Cancel menu"
-          onPress={() => present(null)}
+      {current.actions.map((action) => (
+        <AndroidSheetRow
+          key={action.title}
+          label={action.title}
+          onPress={() => {
+            present(null);
+            action.onPress();
+          }}
         />
-        <View
-          style={styles.menu}
-          accessibilityViewIsModal
-          testID="android-menu"
-        >
-          <Heading level={2}>{current.title}</Heading>
-          <ScrollView>
-            {current.actions.map((action) => (
-              <Pressable
-                key={action.title}
-                accessibilityRole="button"
-                accessibilityLabel={action.title}
-                style={styles.row}
-                onPress={() => {
-                  present(null);
-                  action.onPress();
-                }}
-              >
-                <Text variant="control">{action.title}</Text>
-              </Pressable>
-            ))}
-          </ScrollView>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Cancel"
-            style={styles.row}
-            onPress={() => present(null)}
-          >
-            <Text variant="control">Cancel</Text>
-          </Pressable>
-        </View>
-      </SafeAreaView>
-    </Modal>
+      ))}
+    </AndroidBottomSheet>
   );
 }
-const styles = StyleSheet.create({
-  backdrop: {
-    flex: 1,
-    backgroundColor: '#00000055',
-    justifyContent: 'center',
-    padding: rhythm.screen,
-  },
-  menu: {
-    backgroundColor: colors.paper,
-    padding: rhythm.block,
-    gap: rhythm.heading,
-    maxHeight: '85%',
-    borderRadius: radii.md,
-  },
-  row: { minHeight: minimumTarget, paddingVertical: rhythm.heading },
-});

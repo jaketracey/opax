@@ -28,6 +28,8 @@ cleanup() {
   if [ "$OWN_DEVICE" = 1 ]; then
     timed 10 "${ADB[@]}" shell settings put system font_scale 1.0 > "$OUT/restore.log" 2>&1 || true
     timed 10 "${ADB[@]}" shell settings get system font_scale >> "$OUT/restore.log" 2>&1 || true
+    # The AVD keeps its settings between boots: never leave High contrast text on.
+    timed 10 "${ADB[@]}" shell settings put secure high_text_contrast_enabled 0 >> "$OUT/restore.log" 2>&1 || true
     if timed 20 "${ADB[@]}" emu kill >> "$OUT/restore.log" 2>&1; then touch "$OUT/device-shutdown"; else
       [ -z "$EMULATOR_PID" ] || kill -TERM "$EMULATOR_PID" 2>/dev/null || true
       rc=1
@@ -51,9 +53,9 @@ ANDROID_BOOTED=$(adb devices | awk '$1 ~ /^emulator-/ {n++} END {print n+0}')
 for port in "$PORT" "$METRO_PORT" "${OPAX_ANDROID_EMULATOR_PORT:-5580}"; do
   ! lsof -nP -iTCP:"$port" -sTCP:LISTEN >/dev/null 2>&1 || { echo "Port $port is occupied" >&2; exit 1; }
 done
-test -s build/android/development/opax-debug.apk
+[ "${OPAX_ANDROID_SKIP_DEBUG_PROOF:-0}" = 1 ] || test -s build/android/development/opax-debug.apk
 test -s build/android/e2e/opax-e2e.apk
-mkdir -p "$OUT/screenshots/standard" "$OUT/screenshots/font-2" "$OUT/maestro"
+mkdir -p "$OUT/screenshots/standard" "$OUT/screenshots/font-2" "$OUT/screenshots/high-contrast" "$OUT/maestro"
 OPAX_TARGET_PLATFORM=android ./node_modules/.bin/tsx scripts/fixture-server.ts > "$OUT/fixture.log" 2>&1 & FIXTURE_PID=$!
 deadline=$((SECONDS + 60))
 until curl --silent --fail -H "Host: 10.0.2.2:$PORT" "http://127.0.0.1:$PORT/parliamentarians.json" >/dev/null; do
@@ -150,7 +152,12 @@ for flow in "${FLOWS[@]}"; do
     08) file=.maestro/08-profile.yaml ;;
     13) file=.maestro/android/13-today.yaml ;;
     25) file=.maestro/android/25-party.yaml ;;
+    # 26 needs the changed-data fixture: run it alone, OPAX_FIXTURE_DATA=changed.
+    26) file=.maestro/android/26-follows.yaml ;;
     32) file=.maestro/android/32-record-reader.yaml ;;
+    38) file=.maestro/android/38-reports.yaml ;;
+    39) file=.maestro/android/39-topics.yaml ;;
+    40) file=.maestro/40-report-record.yaml ;;
     *) echo 'Unsupported Android journey' >&2; exit 2 ;;
   esac
   assert_lock
@@ -189,6 +196,12 @@ for scale in 1.0 2.0; do
   if ! android_flow "screenshots-$size" "$size" "$file"; then failed=1; fi
 done
 "${ADB[@]}" shell settings put system font_scale 1.0
+# Android's High contrast text against the stronger text roles (pass 4F).
+if [ "${OPAX_ANDROID_HIGH_CONTRAST:-0}" = 1 ]; then
+  "${ADB[@]}" shell settings put secure high_text_contrast_enabled 1
+  if ! android_flow screenshots-high-contrast high-contrast .maestro/android/screenshots-high-contrast.yaml; then failed=1; fi
+  "${ADB[@]}" shell settings put secure high_text_contrast_enabled 0
+fi
 if [ "${OPAX_ANDROID_CAPTURES_ONLY:-0}" != 1 ]; then
 if ! android_flow native-share standard .maestro/android/native-share.yaml; then failed=1; fi
 for permission in ACCESS_FINE_LOCATION ACCESS_COARSE_LOCATION; do
