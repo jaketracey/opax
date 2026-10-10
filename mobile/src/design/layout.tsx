@@ -21,8 +21,10 @@ import {
   Grid,
   isPad,
   SidebarSafe,
+  columnBreakout,
   columns,
   readableInset,
+  useColumnChoice,
   useLayout,
   useMeasuredRegion,
 } from './adaptive';
@@ -40,7 +42,7 @@ import {
   spacing,
   type Accent,
 } from './tokens';
-import { usePaneBar } from './split';
+import { useInSplitList, usePaneBar } from './split';
 import { useStableKeyboard } from './useStableKeyboard';
 import { useRefreshCommand } from './keyboard';
 
@@ -53,8 +55,11 @@ import { useRefreshCommand } from './keyboard';
  * use it directly: `onLayout` on the list, `content` in its
  * contentContainerStyle, `inner` in a `RegionProvider` around the rows, and
  * `bar` (a split pane's Back and actions, or null) first in the header.
+ * `breakout` is how far a figure in a readable column may reach past each
+ * side to fill the wide one (the money map's scene); 0 on compact.
  */
-export function useScreenColumn(column: keyof typeof columns = 'readable') {
+export function useScreenColumn(own: keyof typeof columns = 'readable') {
+  const column = useColumnChoice(own);
   const [onLayout, region] = useMeasuredRegion();
   const outer = useLayout();
   const width = region?.width ?? outer.width;
@@ -64,9 +69,10 @@ export function useScreenColumn(column: keyof typeof columns = 'readable') {
   const inner = region
     ? { width: region.width - inset * 2, height: region.height }
     : null;
+  const breakout = columnBreakout(width, column);
   // Inside a split pane: its Back and actions, first in the content.
   const bar = usePaneBar();
-  return { onLayout, content, inner, bar };
+  return { onLayout, content, inner, bar, breakout };
 }
 
 /**
@@ -225,12 +231,14 @@ export function Section({
   headingTestID?: string;
 }) {
   const stacked = useAccessibilitySize();
+  // In a split's list pane the detail carries the view's one accent.
+  const quiet = useInSplitList();
   return (
     <View
       testID={testID}
       style={[styles.section, rule ? null : styles.unruled]}
     >
-      {rule && accent ? (
+      {rule && accent && !quiet ? (
         <View
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"

@@ -114,6 +114,8 @@ export {
   breakpoints,
   columns,
   splitPane,
+  splitPaneWidth,
+  ScreenColumn,
   type Layout,
   type SizeClass,
   type GridColumns,

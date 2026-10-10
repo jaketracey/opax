@@ -61,8 +61,7 @@ Nothing is uppercase or letter-spaced (D6).
 - **`SwitchRow`**: a wrapping label (and optional detail) beside the
   platform switch; the whole row is one switch. The track is navy.
 - **`EmptyState`** has two sizes: `block` (a symbol and one sentence) and
-  `pane` (an empty iPad detail pane: the symbol on its category wash, one
-  serif line, one sentence).
+  `pane` (an empty iPad pane: one quiet line, centred; see Two panes).
 - **Type roles:** eleven roles in six sizes (34, 22, 18, 17, 15, 13) plus
   the title's regular-width step (42). The deprecated roles draw as their
   replacements (`deprecatedTextVariants`): `lede` and `padLede` as `body`,
@@ -194,6 +193,16 @@ landscape }`. `size` is `regular` from **700pt** (`breakpoints.regular`)
   `onLayout` on the list, `content` in `contentContainerStyle`, `inner` in a
   `RegionProvider` around the header, and `bar` first in the header (the
   reader's `ReaderList` is the example).
+- **One measure for reading** (design pass 4E): text pages, record pages
+  and lists keep `readable`; `wide` is for front pages and grids (Today,
+  Explore, profiles that pair blocks with `PadGrid`). A route can choose the
+  column for the screen it draws with `ScreenColumn` (Your MP's route asks
+  for `readable`); it changes nothing on compact width.
+- **A figure may break out.** `useScreenColumn().breakout` (or
+  `columnBreakout(width, column)`) is how far a figure in a readable column
+  may reach past each side to fill the wide one: the money map keeps its
+  controls, lines and list at the reading measure and its scene at the wide
+  width, so nothing moves when the view switches. 0 on compact.
 - `ReadableColumn` centres long text outside a `Screen` (a sheet's body).
 
 ### The sidebar's inset: `SidebarSafe`
@@ -226,11 +235,16 @@ landscape }`. `size` is `regular` from **700pt** (`breakpoints.regular`)
 
 ### Two panes: `SplitLayout`
 
-- `SplitLayout<T>` draws a list pane (360pt, dragged between 300 and 440pt
-  on the hairline divider; at accessibility sizes it starts at 45% of the
-  region and drags up to half, so rows keep whole words, which VoiceOver adjusts in 40pt steps and which
-  thickens in bronze under the pointer) beside a detail pane, on regular
-  width. On compact it renders the list alone: the screen then pushes its
+- **One proportion for two panes** (`splitPaneWidth(width, large)`): the
+  narrow pane is a third of the region the panes share (inside the
+  sidebar's inset), between 300 and 440pt and never over half; 45% at
+  accessibility sizes, so its rows keep whole words. Every split list and
+  Ask's sources pane start there; the wide pane takes the rest.
+- `SplitLayout<T>` draws a list pane (dragged between 300 and 440pt on the
+  hairline divider, up to half at accessibility sizes; VoiceOver adjusts it
+  in 40pt steps, and it thickens in bronze under the pointer) beside a
+  detail pane, on regular width of its own region, never of the window: a
+  narrow window with the sidebar open keeps one column. On compact it renders the list alone: the screen then pushes its
   detail route exactly as before, so check `useLayout().regular` in the row's
   `onPress`.
 - **Selection lives in the route** (`router.setParams({ bill: key })` on the
@@ -249,11 +263,14 @@ landscape }`. `size` is `regular` from **700pt** (`breakpoints.regular`)
   pushing or switching tabs; Back returns to the split with its selection.
 - Detail screens render `embedded` (no `Stack.Screen` title or bar items);
   the pane bar carries `detailActions` (Share).
-- `empty` is a `SplitEmpty`: a symbol on its category wash, one serif line
-  and, at most, one sentence. No instructions.
-- Rows in the list take a `selected` state: the category wash with a 3pt ink
-  mark, no chevron (the pane is the destination), `accessibilityState
-selected`. `LinkRow`, `PersonRow`, `RecordRow` and the party directory
+- `empty` is `EmptyState size="pane"`: one quiet line in `inkSoft`,
+  centred, the same in every pane ("No bill selected", "Sources appear
+  here"). No symbol, heading, count, instructions or button.
+- Rows in the list take a `selected` state: the navy wash with a 3pt navy
+  mark, the same in every list whatever the row's category (the category's
+  accent is the detail pane's: one accent per view), no chevron (the pane
+  is the destination), `accessibilityState selected`. For the same reason a
+  `Section` in the list pane draws no accent mark (`useInSplitList()`). `LinkRow`, `PersonRow`, `RecordRow` and the party directory
   row take `selected` (undefined everywhere outside a split, so the phone's
   rows are unchanged) and `highlighted` (the keyboard cursor, drawn as the
   hover tint); `design/selection.tsx` has the shared wash and mark, and
@@ -368,7 +385,8 @@ sidebarAdaptable`): a sidebar, or the top tab bar the reader expands into
   the route (`/search?q=…&open=bill:…`; the route keeps Search mounted when
   either changes on iPad, and applies a new `q`). Topics and reports keep
   pushing.
-- **Ask**: the conversation with the composer docked under it (lifted by
+- **Ask**: when the room inside the sidebar's inset is regular width, the
+  conversation with the composer docked under it (lifted by
   its measured overlap with the keyboard; the column starts below the bar,
   so `KeyboardAvoidingView` under-lifts it), and a sources pane on the
   right (`features/ask/SourcesPane.tsx`): the answer being read (it follows

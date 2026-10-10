@@ -365,14 +365,7 @@ function BillsScreen() {
         empty={
           <EmptyState
             size="pane"
-            icon="doc.text"
-            accent="bills"
-            title="No bill selected"
-            message={
-              list && index
-                ? countLine(rows.length, index.bills.length)
-                : undefined
-            }
+            message="No bill selected"
             testID="bills-split-empty"
           />
         }

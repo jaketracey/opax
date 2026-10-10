@@ -207,7 +207,9 @@ function MoneyCatalogScreen({
       </View>
     );
   };
-  const column = useScreenColumn('wide');
+  // Regular width: the controls, lines and list keep the readable measure;
+  // the scene reaches past it to the wide column (`breakout`).
+  const column = useScreenColumn('readable');
   const { regular } = useLayout();
   return (
     <SidebarSafe style={styles.screen}>
@@ -290,6 +292,11 @@ function MoneyCatalogScreen({
                       </Text>
                       {mode === '3d' ? (
                         <View
+                          style={
+                            column.breakout
+                              ? { marginHorizontal: -column.breakout }
+                              : null
+                          }
                           onLayout={(event) => {
                             plate.current = {
                               top: event.nativeEvent.layout.y,

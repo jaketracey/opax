@@ -10,9 +10,8 @@ import { ApiError } from '../api/errors';
 import { Button } from './controls';
 import { staleText, type DateInput } from './format';
 import { Icon, type SFSymbol } from './icon';
-import { Heading, Text } from './text';
+import { Text } from './text';
 import {
-  accents,
   colors,
   hairline,
   radii,
@@ -111,50 +110,34 @@ export function LoadingState({
 /**
  * Says what is absent, in the web's words where it has them. `block` (the
  * default) is one quiet symbol and one sentence inside a block; a block with
- * nothing for this person is usually left out instead. `pane` is the calm
- * placeholder of an empty iPad detail pane: the symbol on its category's
- * wash, one serif line and at most one sentence, centred. No instructions.
+ * nothing for this person is usually left out instead. `pane` is an empty
+ * iPad pane (no bill selected, no sources yet): one quiet line, centred,
+ * the same in every split. No symbol, heading, count or instructions.
  */
 export function EmptyState({
   message,
   title,
   icon = 'tray',
   size = 'block',
-  accent = 'people',
   testID,
 }: {
-  /** The sentence; in a pane, the optional line under the title. */
+  /** The sentence. */
   message?: string;
-  /** The pane's one serif line. */
+  /** A pane's line when it has one (it then draws alone), else `message`. */
   title?: string;
-  /** A quiet symbol before the message; null where the block draws its own. */
+  /** A quiet symbol before a block's message; a pane draws none. */
   icon?: SFSymbol | null;
   size?: 'block' | 'pane';
-  /** The pane symbol's category. */
+  /** @deprecated A pane draws no symbol; the accent is the detail's. */
   accent?: Accent;
   testID?: string;
 }) {
   if (size === 'pane') {
-    const tone = accents[accent];
     return (
       <View style={styles.pane} testID={testID}>
-        {icon ? (
-          <View
-            style={[styles.paneMark, { backgroundColor: colors[tone.wash] }]}
-          >
-            <Icon name={icon} size={28} tone={tone.ink} />
-          </View>
-        ) : null}
-        {title ? (
-          <Heading level={2} style={styles.center}>
-            {title}
-          </Heading>
-        ) : null}
-        {message ? (
-          <Text variant="metadata" style={styles.center}>
-            {message}
-          </Text>
-        ) : null}
+        <Text wordSafe tone="inkSoft" style={styles.center}>
+          {title ?? message}
+        </Text>
       </View>
     );
   }
@@ -298,17 +281,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: rhythm.heading,
     paddingHorizontal: rhythm.section,
     paddingBottom: rhythm.section * 2,
-  },
-  paneMark: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: rhythm.tight,
   },
   center: { textAlign: 'center' },
   inline: { flexDirection: 'row', gap: spacing.s3, alignItems: 'flex-start' },
