@@ -326,6 +326,19 @@ class RefreshTests(unittest.TestCase):
         self.assertFalse((self.home / 'evidence.calls').exists())
         self.assertFalse(list(self.pipe.glob('evidence-stage.*')))
 
+    def test_slow_readiness_probe_times_out_and_waits_without_export(self):
+        before = guard.read_tree(self.repo / guard.EVIDENCE)
+        shutil.copyfile(FIXTURES / 'slow_probe.py', self.repo / 'scripts/vm/evidence_inputs.py')
+        result = self.run_refresh('ok', OPAX_EVIDENCE_READINESS_TIMEOUT='0.2s')
+        self.assertIn('waiting for inputs (readiness probe timed out after 0.2s)', result)
+        self.assertEqual(result.count('WARN:'), 1)
+        self.assertNotIn('FAIL:', result)
+        self.assertEqual((self.home / 'evidence-probe.calls').read_text(), 'probe\n')
+        self.assertTrue(self.pending.exists())
+        self.assertFalse((self.home / 'evidence.calls').exists())
+        self.assertFalse(list(self.pipe.glob('evidence-stage.*')))
+        self.assertEqual(guard.read_tree(self.repo / guard.EVIDENCE), before)
+
     def test_publish_only_and_periodic_skip_retain_catchup(self):
         self.pending.touch()
         for switch in ('OPAX_NIGHTLY_SKIP_REFRESH', 'OPAX_NIGHTLY_SKIP_PERIODIC'):

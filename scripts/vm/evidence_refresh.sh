@@ -21,7 +21,7 @@ evidence_refresh() {
       fail "cannot initialize evidence catch-up marker"; return 1;
     }
   fi
-  local day reason started rc readiness catch_up=() input_args=()
+  local day reason started rc readiness readiness_limit catch_up=() input_args=()
   day=${OPAX_TODAY:-$(TZ=Australia/Sydney date +%F)}
   [ ! -f "$EVIDENCE_PENDING" ] || catch_up=(--catch-up)
   reason=$("$PY" scripts/vm/evidence_guard.py --date "$day" ${catch_up[@]+"${catch_up[@]}"}) || {
@@ -38,8 +38,12 @@ evidence_refresh() {
     --decisions "${OPAX_EVIDENCE_DECISIONS:-$HOME/.cache/autoresearch/evidence-identity-decisions.sqlite}"
     --additional "${OPAX_EVIDENCE_ADDITIONAL:-$HOME/.cache/autoresearch/evidence-additional-mentions.sqlite}"
   )
-  readiness=$("$PY" scripts/vm/evidence_inputs.py "${input_args[@]}" 2>/dev/null)
+  readiness_limit=${OPAX_EVIDENCE_READINESS_TIMEOUT:-60s}
+  readiness=$(timeout --kill-after=5s "$readiness_limit" "$PY" scripts/vm/evidence_inputs.py "${input_args[@]}" 2>/dev/null)
   rc=$?
+  case "$rc" in
+    124|137) readiness="readiness probe timed out after $readiness_limit" ;;
+  esac
   if [ "$rc" -ne 0 ] || [ "$readiness" != ready ]; then
     [ -n "$readiness" ] || readiness="readiness check unavailable"
     EVIDENCE_WAITING="evidence: waiting for inputs ($readiness)"

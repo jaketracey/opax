@@ -15,15 +15,18 @@ credentials transfer, sidecar builder or mention rescan is needed for publicatio
 | File | Setting | Size known before provisioning |
 | --- | --- | --- |
 | Matching corpus snapshot (`parli.db` in the bundle) | `OPAX_EVIDENCE_SOURCE` | Historical full corpus approximately 29 GB; exact snapshot size must be inventoried |
-| `evidence-layers-full.sqlite` | `OPAX_EVIDENCE_LAYERS` | Individual size not supplied; included in the reported sidecar total |
-| `evidence-places.sqlite` | `OPAX_EVIDENCE_PLACES` | Individual size not supplied; included in the reported sidecar total |
-| `evidence-identity-decisions.sqlite` | `OPAX_EVIDENCE_DECISIONS` | Individual size not supplied; included in the reported sidecar total |
-| `evidence-additional-mentions.sqlite` | `OPAX_EVIDENCE_ADDITIONAL` | Individual size not supplied; included in the reported sidecar total |
-| Any active `<input>-wal` / `<input>-shm` | Snapshot inputs only; do not transfer separately | Review reports an additional WAL, size and owning input unspecified |
+| `evidence-layers-full.sqlite` | `OPAX_EVIDENCE_LAYERS` | 2,211,057,664 bytes |
+| `evidence-places.sqlite` | `OPAX_EVIDENCE_PLACES` | 1,004,138,496 bytes, plus the WAL below |
+| `evidence-identity-decisions.sqlite` | `OPAX_EVIDENCE_DECISIONS` | 3,076,096 bytes |
+| `evidence-additional-mentions.sqlite` | `OPAX_EVIDENCE_ADDITIONAL` | 447,434,752 bytes |
+| `evidence-places.sqlite-wal` | Snapshot input only; fold into the standalone backup | 1,230,668,752 bytes |
+| Any other active `<input>-wal` / `<input>-shm` | Snapshot inputs only; do not transfer separately | Re-measure all companions when provisioning |
 
-The review reports **3.4 GiB combined for the four sidecars, plus a WAL**. No per-file
-measurement was supplied, and this lane did not inspect the real files. The desktop
-commands below write exact byte sizes for both the original files and their WAL/SHM
+The review supplied these measurements: **3,665,707,008 bytes (about 3.4 GiB) combined
+for the four sidecar main files**, plus the **1,230,668,752-byte places WAL**. This lane
+did not inspect the real files. **Re-measure at provisioning time**: active WAL sizes
+and standalone backup sizes can differ from this inventory. The desktop commands
+below write exact byte sizes for both the original files and their WAL/SHM
 companions to `input-sizes.json`, and exact standalone snapshot sizes to
 `snapshot-sizes.json`. These inventories travel with the bundle; they are receipts,
 not extra nightly inputs. `SHA256SUMS` records the five snapshot hashes.

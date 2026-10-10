@@ -706,8 +706,11 @@ and `evidence-additional-mentions.sqlite` in the same cache; their overrides are
 source/progress counts, grant programme rowid, identity review and additional coverage;
 there is no incomplete override. Before creating staging or invoking export,
 `evidence_inputs.py` opens available inputs read-only and checks the same coverage
-requirements. Missing inputs, unreadable coverage or a growing source with old sidecars
-produce **one warning per attempted night**, return success and preserve catch-up.
+requirements within **60 seconds plus a 5-second kill grace**, configurable with
+`OPAX_EVIDENCE_READINESS_TIMEOUT`. A timed-out probe reports waiting and cannot block
+later groups indefinitely. Missing inputs, unreadable coverage or a growing source
+with old sidecars produce **one warning per attempted night**, return success and
+preserve catch-up.
 The status summary says `evidence: waiting for inputs (missing: …)` or `(mismatch: …)`
 and names the affected files; no export retry occurs that night. Shards stay unchanged.
 Coverage counts alone do not prove source text provenance; the full export/source audit
@@ -927,7 +930,9 @@ fetch or production database/KB access is needed.
 
 The evidence additions cover Saturday catch-up and consumption, initialized weekdays,
 Sunday export, timestamp-only retention, missing/mismatched readiness with a green status,
-one warning, no export/staging and retained catch-up (including repeat runs), export/audit failure, timeout,
+one warning, no export/staging and retained catch-up (including repeat runs), a slow
+readiness probe cut off without failing the night or blocking later groups,
+export/audit failure, timeout,
 incomplete/malformed output, lost entity/excerpt IDs, shard/record shrink, asset overflow,
 partial installation cleanup, publish-only/skip-periodic preservation, permanent and
 innocent portal trial rollback, and failed-commit restoration/status counts.
@@ -936,10 +941,11 @@ fixture data, and preserves ambiguous lookup candidates. `test_passage_text.py` 
 real exporter and source audit against a complete fixture source/four-sidecar set, proves
 the two known clipped rows are cleaned, and compares all five SQLite files byte for byte.
 There is no real source export or production access in these checks.
-The local evidence lane gate, including the readiness fix (10 October 2026), passed
-256 nightly harness checks with 0 failures, 196 Python tests plus 290 subtests, the
-search build and all 1,105 Node tests, plus shell syntax checks. Node integration tests ran in a network namespace
-with only loopback enabled. No public evidence data changed during this validation.
+The local evidence lane gate, including the readiness timeout fix (10 October 2026),
+passed 259 nightly harness checks with 0 failures, 197 Python tests plus 290 subtests,
+the search build and all 1,105 Node tests, plus shell syntax checks. Node integration
+tests ran in a network namespace with only loopback enabled. No public evidence data
+changed during this validation.
 
 ## Not covered by the nightly
 

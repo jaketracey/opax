@@ -858,6 +858,13 @@ OPAX_TODAY=2026-10-10 nightly
 check "mismatched coverage keeps the night green without export" bash -c "[ '$NRC' -eq 0 ] && [ ! -f '$HOME/evidence.calls' ] && [ -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending' ] && [ \$(grep -c 'WARN: evidence:' '$SB/nightly.out') -eq 1 ]"
 check "mismatch names sidecars in the successful status summary" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d[\"status\"]==\"ok\" and \"waiting for inputs (mismatch:\" in d[\"summary\"] and \"evidence-layers-full.sqlite\" in d[\"summary\"] and \"evidence-additional-mentions.sqlite\" in d[\"summary\"]'"
 
+new_sandbox evidence_probe_timeout
+cp "$SRC/tests/fixtures/evidence-nightly/slow_probe.py" "$REPO/scripts/vm/evidence_inputs.py"
+OPAX_TODAY=2026-10-10 OPAX_EVIDENCE_READINESS_TIMEOUT=0.2s nightly
+check "slow readiness is cut off once; the night stays green without export/staging" bash -c "[ '$NRC' -eq 0 ] && [ \$(wc -l < '$HOME/evidence-probe.calls') -eq 1 ] && grep -qx probe '$HOME/evidence-probe.calls' && [ ! -f '$HOME/evidence.calls' ] && ! find '$HOME/.cache/autoresearch/pipeline' -maxdepth 1 -name 'evidence-stage.*' | grep -q . && git -C '$REPO' diff --quiet HEAD -- portal/public/evidence"
+check "probe timeout emits one warning, retains catch-up and later groups publish" bash -c "[ \$(grep -c 'WARN: evidence:' '$SB/nightly.out') -eq 1 ] && [ -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending' ] && grep -q 'refreshing static division pages' '$SB/nightly.out' && git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q '\"new\"' && git --git-dir='$ORIGIN' show main:portal/public/divisions/index.json | grep -q federal-senate-1"
+check "probe timeout is waiting in successful status, with no failed steps" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d[\"status\"]==\"ok\" and not d[\"failures\"] and \"evidence: waiting for inputs (readiness probe timed out after 0.2s)\" in d[\"summary\"]'"
+
 for evidence_skip in OPAX_NIGHTLY_SKIP_REFRESH OPAX_NIGHTLY_SKIP_PERIODIC; do
   new_sandbox "evidence_$evidence_skip"
   touch "$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending"

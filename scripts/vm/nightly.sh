@@ -60,6 +60,7 @@
 #   OPAX_BILL_PARLIAMENT  current federal parliament (default 48)
 #   OPAX_BILLS_TIMEOUT    combined bill fetch/full-export limit (default 20m, plus 60s kill grace)
 #   OPAX_EVIDENCE_TIMEOUT combined evidence export/audit/install limit (default 20m, plus 60s kill grace)
+#   OPAX_EVIDENCE_READINESS_TIMEOUT input probe limit (default 60s, plus 5s kill grace; timeout waits)
 #   OPAX_EVIDENCE_SOURCE / LAYERS / PLACES / DECISIONS / ADDITIONAL  matching read-only SQLite inputs
 #   OPAX_TEST_GATE        0 = do not run the portal test suite against the new data before committing
 #   OPAX_BOT_NAME / OPAX_BOT_EMAIL   commit identity
