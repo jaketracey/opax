@@ -1,8 +1,8 @@
 /* Supplier entries: recorded procurement, source notices and funding cross-links.
    No dependencies but the shared formats; the host router owns mounting and calls destroy on departure. */
 import { shortDate, shortMoney } from "./format.js";
-import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=11edae4da5";
-import { associationHTML } from "./growth-modules.js?v=097cceba9a";
+import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=bc22659471";
+import { associationHTML } from "./growth-modules.js?v=4987326170";
 import { partyUrl } from "./canonical-urls.js?v=225d5915ea";
 const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
 const number = (value) => (Number(value) || 0).toLocaleString("en-AU");

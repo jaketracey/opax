@@ -12,6 +12,11 @@ const graphs=['money','money.qld','money.vic','money.tas'].map(name=>JSON.parse(
 const rejected=graphs.flatMap(g=>g.nodes.filter(n=>n.kind==='donor'&&!isOrganisationDonor(n)));
 const company={kind:'donor',id:'donor:fixture',label:'Fixture Company Pty Ltd'};
 const untyped={kind:'donor',id:'donor:untyped',label:'Alex Example',abn:'12345678901',industry:'media'};
+const reviewerFixtures=[
+ {case:'personal name with an ABN-only alias',...untyped,id:'donor:abn-alias',aliases:['ABN 12 345 678 901']},
+ {case:'personal name tagged as unions',kind:'donor',id:'donor:unions-tag',label:'Alex Example',industry:'unions'},
+];
+const excluded=[...rejected,untyped,...reviewerFixtures];
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const ties=nodes=>nodes.map(n=>({...n,organisation:n.label,donor_id:n.id,register:{description:n.label,category:'gifts'},flows:[{party:'Private flow fixture',total:100,from:2025,to:2026}]}));
 const noNames=(html,nodes)=>{for(const n of nodes)assert.ok(!html.includes(esc(n.label)),`Rejected donor named: ${n.label}`)};
@@ -43,34 +48,47 @@ test('modules import main’s classifier and reject an untyped individual with a
  } finally {globalThis.fetch=prior}
 });
 
+for(const fixture of reviewerFixtures)test(`review fixture: ${fixture.case} cannot enter person or supplier donor modules`,async()=>{
+ assert.equal(isOrganisationDonor(fixture),false);
+ assert.equal(growthModules.isOrganisationDonor(fixture),false);
+ const html=await personHTML([fixture]);
+ noNames(html,[fixture]);assert.doesNotMatch(html,/Private flow fixture|person-ties/);
+ assert.equal(growthModules.donationRegisterHTML({name:fixture.label,abn:fixture.abn},[fixture]),'');
+ const prior=globalThis.fetch;
+ globalThis.fetch=async url=>{assert.equal(url,'/growth/organisation-donors.json');return {ok:true,json:async()=>({donors:[fixture,company]})}};
+ try {
+  assert.deepEqual(await supplierDonations({name:fixture.label,abn:fixture.abn,donor_links:[{id:fixture.id,method:'abn'}]},{signal:new AbortController().signal}),{html:'',links:[]});
+ } finally {globalThis.fetch=prior}
+});
+
 test('every rejected donor in all four exports is absent from person modules, including party flows',async()=>{
  assert.ok(rejected.length>0,'derive the fixture from the whole export');
- const html=await personHTML(rejected);
- noNames(html,rejected);assert.doesNotMatch(html,/Private flow fixture|person-ties/);
+ const html=await personHTML(excluded);
+ noNames(html,excluded);assert.doesNotMatch(html,/Private flow fixture|person-ties/);
  assert.match(await personHTML([company]),/Fixture Company Pty Ltd/);
 });
 
 test('every rejected export donor is absent from the reused declared-interest ties renderer',()=>{
  const code=app.slice(app.indexOf('function declaredTieHTML('),app.indexOf('function declaredRowHTML('));
  const {declaredTieHTML}=runInNewContext(code+';({declaredTieHTML})',{growthModules,esc,safeUrl:()=>'',industryLabel:String,entityHrefAttr:href=>`href="${href}"`,subjectHash:(kind,name)=>`/subject/${kind}/${name}`});
- const html=declaredTieHTML(ties(rejected));
- noNames(html,rejected);assert.equal(html,'');
+ const html=declaredTieHTML(ties(excluded));
+ noNames(html,excluded);assert.equal(html,'');
  assert.match(declaredTieHTML(ties([company])),/Fixture Company Pty Ltd/);
 });
 
 test('every rejected export donor is absent from party flow module HTML before grouping or top-ten selection',()=>{
- const nodes=[...rejected,untyped,company];
+ const nodes=[...excluded,company];
  const party={id:'party:fixture',kind:'party',label:'Fixture Party'};
  const moneyData={nodes:[...nodes,party],edges:nodes.map((n,i)=>({source:n.id,target:party.id,total:n===company?1:10000+i}))};
  const start=app.indexOf('const flows = moneyData.edges.filter');
  const code=app.slice(start,app.indexOf('// Identity once',start));
  const bars=app.slice(app.indexOf('function barList('),app.indexOf('const fmtIndustries'));
  const {html,flowRows}=runInNewContext(code+bars+';({flowRows,html:barList(flowRows,{heading:"Where it came from",linkTo:name=>"/subject/donor/"+encodeURIComponent(name)})})',{growthModules,moneyData,node:party,isParty:true,esc});
- noNames(html,[...rejected,untyped]);assert.match(html,/Fixture Company Pty Ltd/);assert.equal(flowRows.length,1);
+ noNames(html,excluded);assert.match(html,/Fixture Company Pty Ltd/);assert.equal(flowRows.length,1);
 });
 
 test('every rejected export donor is absent from supplier donor-line HTML, including matching ABNs',()=>{
- for(const donor of [...rejected,untyped]){
+ for(const donor of excluded){
   const html=growthModules.donationRegisterHTML({name:donor.label,abn:donor.abn},[donor]);
   noNames(html,[donor]);assert.equal(html,'');
  }
