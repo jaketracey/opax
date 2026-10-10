@@ -266,8 +266,17 @@ test('Labor total is pinned independently at JSON pointer /nodes/0/total, never 
   );
   for (const year of receipts.byYear)
     for (const donor of year.donors) {
+      // The closing "Individual donors (N)" row sums every withheld donor's flow.
+      const withheld = new Set(
+        graph.nodes.filter((n) => n.withheld).map((n) => n.id),
+      );
       const sourceAmount = graph.edges
-        .filter((e) => e.source === donor.id && e.target === receipts.node.id)
+        .filter(
+          (e) =>
+            (donor.id === 'donor:individual-donors'
+              ? withheld.has(e.source)
+              : e.source === donor.id) && e.target === receipts.node.id,
+        )
         .reduce((sum, e) => sum + (e.byYear[year.year]?.[0] ?? 0), 0);
       expect(donor.amount).toBe(sourceAmount);
     }

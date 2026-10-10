@@ -105,6 +105,19 @@ the hub is one list; cross-links ("The month's largest grants", "Discover:
 companies in both") sit at the foot of their lists. An individual recipient's
 award record is never linked.
 
+## Donor privacy (October 2026)
+
+`decodeMoneyGraph` passes every graph through `src/privacy/donorEntity.ts`, a
+port of the web's fail-closed `isOrganisationDonor`: a donor without a legal
+form or organisation word in its label or aliases, or a 3-7 capital acronym
+label, is not named. Those donors are folded into one "Individual donors (N)"
+node per industry cluster with every flow and amount kept; the aggregate has
+no rank and no profile link. A link to any donor id the map does not hold
+opens the neutral "This donor is not named in OPAX." record. Party pages,
+reports, register ties, leads and the bundled quiz use the same gate;
+`tests/donor-privacy.test.tsx` checks every screen against the names derived
+from the pinned exports.
+
 ## Verification
 
 Journey 23 starts at Today, verifies native pixels and completed frames, captures

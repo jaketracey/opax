@@ -15,6 +15,10 @@ import {
   type Decoder,
 } from '../../api/validation';
 import topicsCopy from './topics-copy.json';
+import {
+  isOrganisationDonor,
+  withholdIndividualDonors,
+} from '../../privacy/donorEntity';
 function tuple<D extends readonly Decoder<unknown>[]>(...decoders: D) {
   return (v: unknown): { [K in keyof D]: ReturnType<D[K]> } => {
     if (!Array.isArray(v) || v.length !== decoders.length) invalid();
@@ -186,7 +190,11 @@ export const decodeReport = shape({
           total: number,
           count,
           industries: array(text),
-          top_donors: array(tuple(text, number)),
+          // Named only with organisation evidence (privacy/donorEntity).
+          top_donors: (v: unknown) =>
+            array(tuple(text, number))(v).filter(([label]) =>
+              isOrganisationDonor({ label }),
+            ),
           by_year: array(tuple(text, number)),
         }),
       ),
@@ -232,7 +240,7 @@ export const decodeMatrix = shape({
   cells: dict(dict(count)),
   totals: dict(count),
 });
-export const decodeIndustryMoney = shape({
+const decodeIndustryMoneyRows = shape({
   meta: shape({
     generated: date,
     source: nonempty,
@@ -247,6 +255,7 @@ export const decodeIndustryMoney = shape({
       kind: nonempty,
       industry: optional(text),
       group: optional(text),
+      aliases: optional(array(text)),
       total: number,
       count,
     }),
@@ -255,6 +264,9 @@ export const decodeIndustryMoney = shape({
     shape({ source: nonempty, target: nonempty, total: number, count }),
   ),
 });
+/** Withheld donors are renamed and marked before any panel sums them. */
+export const decodeIndustryMoney = (v: unknown) =>
+  withholdIndividualDonors(decodeIndustryMoneyRows(v));
 export type IndustryMoney = ReturnType<typeof decodeIndustryMoney>;
 export const decodeSpeeches = (v: unknown) => {
   const row = object(v);

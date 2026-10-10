@@ -15,6 +15,7 @@ import {
   EDGE_FRAGMENT_SHADER,
 } from '../src/features/money/ported/edge-shaders';
 import { pinned } from './pinned';
+import { isOrganisationDonor } from '../src/privacy/donorEntity';
 import { ApiClient } from '../src/api/client';
 import {
   CatalogCache,
@@ -24,13 +25,31 @@ import {
 
 test('a malformed or duplicated row is counted without blanking the valid jurisdiction', () => {
   const graph = decodeMoneyGraph(pinned('/graph/money.json'));
-  expect(graph.nodes).toHaveLength(413);
-  expect(graph.edges).toHaveLength(1159);
+  // 413 nodes and 1,159 edges, with the withheld donors folded into one node
+  // per cluster (privacy/donorEntity) and their flows summed per party.
+  const raw = pinned('/graph/money.json') as {
+    nodes: (MoneyNode & { aliases?: string[] })[];
+    edges: { total: number }[];
+  };
+  const hidden = raw.nodes.filter(
+    (n) => n.kind === 'donor' && !isOrganisationDonor(n),
+  );
+  const clusters = new Set(
+    hidden.map((n) => [n.group, n.industry, n.via ?? ''].join('|')),
+  ).size;
+  expect(raw.nodes).toHaveLength(413);
+  expect(raw.edges).toHaveLength(1159);
+  expect(graph.nodes).toHaveLength(413 - hidden.length + clusters);
+  const sum = (edges: { total: number }[]) =>
+    edges.reduce((n, e) => n + e.total, 0);
+  expect(sum(graph.edges)).toBe(sum(raw.edges));
+  const held = graph.nodes.length,
+    flows = graph.edges.length;
   const duplicate = decodeMoneyGraph({
     ...graph,
     nodes: [...graph.nodes, graph.nodes[0]],
   });
-  expect(duplicate.nodes).toHaveLength(413);
+  expect(duplicate.nodes).toHaveLength(held);
   expect(moneyDecodeLoss(duplicate).nodes).toBe(1);
   const bad = decodeMoneyGraph({
     ...graph,
@@ -40,8 +59,8 @@ test('a malformed or duplicated row is counted without blanking the valid jurisd
     ],
     edges: [...graph.edges, { ...graph.edges[0], target: 'missing' }],
   });
-  expect(bad.nodes).toHaveLength(413);
-  expect(bad.edges).toHaveLength(1159);
+  expect(bad.nodes).toHaveLength(held);
+  expect(bad.edges).toHaveLength(flows);
   expect(moneyDecodeLoss(bad)).toEqual({ nodes: 1, edges: 1, fields: 0 });
 });
 test('ID duplicates retain the larger total only when all other fields are identical; ambiguity removes all rows and dangling edges', () => {
@@ -180,8 +199,15 @@ test.each(Object.values(moneyCatalogs))(
   'year cells and public-money blocks are validated for $path',
   ({ path }) => {
     const graph = decodeMoneyGraph(pinned(path));
-    expect(graph.nodes.length).toBeGreaterThan(100);
-    expect(graph.edges.length).toBeGreaterThan(100);
+    // Withheld donors are folded into a few aggregates, so fewer rows remain.
+    expect((pinned(path) as { nodes: unknown[] }).nodes.length).toBeGreaterThan(
+      100,
+    );
+    expect(graph.nodes.length).toBeGreaterThan(50);
+    expect((pinned(path) as { edges: unknown[] }).edges.length).toBeGreaterThan(
+      100,
+    );
+    expect(graph.edges.length).toBeGreaterThan(50);
     for (const fields of [
       { byYear: { '2025': [Infinity, 1] } },
       { undated: [-1, 1] },

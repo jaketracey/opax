@@ -1,5 +1,6 @@
 import type { ApiClient, RecordResult } from './client';
 import { decodePartyFile } from '../features/directories/party-file';
+import { publicDiscovery } from '../features/money-public/discovery';
 import {
   partyLabels,
   resolveParty,
@@ -501,7 +502,11 @@ export class Catalogs {
   }
   /** Leads (P1): the static discovery export, decoded whole. */
   discovery(refresh = false) {
-    return this.client.get('/discovery.json', decode.decodeDiscovery, refresh);
+    return this.client.get(
+      '/discovery.json',
+      (v) => publicDiscovery(decode.decodeDiscovery(v)),
+      refresh,
+    );
   }
   /**
    * The declared-interests feed behind Today's recent declarations: every

@@ -22,7 +22,6 @@ import {
   leadCategories,
   type LeadCategory,
 } from '../leads/model';
-import { publicSignal } from './discovery';
 import { isOrganisation } from './privacy';
 import {
   MoneyHeader,
@@ -49,11 +48,7 @@ export default function Discover() {
   const rows = useMemo(
     () =>
       data
-        ? leadsFor(
-            { ...data, signals: data.signals.map(publicSignal) },
-            category,
-            sort,
-          ).filter((s) =>
+        ? leadsFor(data, category, sort).filter((s) =>
             [s.title, s.summary]
               .join(' ')
               .toLowerCase()

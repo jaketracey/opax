@@ -16,6 +16,7 @@ import {
 } from './bill-transforms';
 import { isPartyLabel, samePartyLabel } from '../design/party';
 import { nameKey } from './ids';
+import { individualDonorsLabel } from '../privacy/donorEntity';
 export { resolveParty } from '../design/party';
 
 export function partyLabels(
@@ -231,11 +232,25 @@ export function partyMoney(label: string, graph: Money) {
         (sums.get(e.source) ?? 0) +
           (year ? (e.byYear[year]?.[0] ?? 0) : e.total),
       );
-    return [...sums]
-      .filter(([, amount]) => amount > 0)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 10)
-      .map(([id, amount]) => ({ id, name: donors.get(id)!.label, amount }));
+    const given = [...sums].filter(([, amount]) => amount > 0);
+    // Withheld donors are one closing row with their amounts kept, never ranked or named.
+    const hidden = given.filter(([id]) => donors.get(id)!.withheld);
+    return [
+      ...given
+        .filter(([id]) => !donors.get(id)!.withheld)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10)
+        .map(([id, amount]) => ({ id, name: donors.get(id)!.label, amount })),
+      ...(hidden.length
+        ? [
+            {
+              id: 'donor:individual-donors',
+              name: individualDonorsLabel(hidden.length),
+              amount: hidden.reduce((n, [, amount]) => n + amount, 0),
+            },
+          ]
+        : []),
+    ];
   };
   return {
     node,
