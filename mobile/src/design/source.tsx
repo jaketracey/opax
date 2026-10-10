@@ -505,12 +505,15 @@ export function SheetBody({
   children: ReactNode;
 }) {
   // A page sheet sits below the status bar; only the home indicator needs
-  // room, so no inset provider (a modal would need its own).
-  const Container = Platform.OS === 'android' ? SafeAreaView : View;
+  // room, so no inset provider (a modal would need its own). Android draws
+  // the sheet as a full-screen dialog: no grab handle, as nothing drags it;
+  // Back and Done close it.
+  const android = Platform.OS === 'android';
+  const Container = android ? SafeAreaView : View;
   return (
     <Container style={styles.sheet} testID={testID} accessibilityViewIsModal>
-      <View style={styles.bar}>
-        <View style={styles.grab} />
+      <View style={[styles.bar, android ? styles.barAndroid : null]}>
+        {android ? null : <View style={styles.grab} />}
         <View style={styles.head}>
           <Heading level={2} style={styles.title}>
             {title}
@@ -573,6 +576,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: hairline,
     borderBottomColor: colors.dividerSubtle,
   },
+  barAndroid: { paddingTop: rhythm.heading },
   grab: {
     alignSelf: 'center',
     width: 36,
