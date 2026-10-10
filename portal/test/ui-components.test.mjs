@@ -359,6 +359,12 @@ test('every web header has a named home link with only the hidden Australia and 
   assert.doesNotMatch(standalone, /site-wordmark|>OPAX</);
 });
 
+test('the compact band keeps the mark left and its icons together on the right', () => {
+  const band = style.slice(style.indexOf('@media (max-width: 960px) {\n  .site-header .masthead { justify-content: flex-start;'));
+  assert.match(band, /^@media \(max-width: 960px\) \{\n  \.site-header \.masthead \{ justify-content: flex-start; gap: var\(--space-tight\); \}/);
+  assert.match(band.slice(0, band.indexOf('}\n}')), /\.site-header \.masthead-id \{ margin-right: auto; \}/);
+});
+
 test('the Ask launcher is a header icon, never a pill floating over the page', () => {
   const launcherRules = [...style.matchAll(/([^{}]*\.chat-launcher[^{}]*)\{([^{}]*)\}/g)];
   assert.ok(launcherRules.length > 0);

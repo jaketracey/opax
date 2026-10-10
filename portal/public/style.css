@@ -5983,8 +5983,12 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
 .header-search-panel { position: absolute; right: var(--space-screen); top: calc(100% + var(--border-focus)); z-index: 60; width: min(26rem, calc(100vw - var(--space-screen) * 2)); background: var(--paper); padding: var(--space-block); border: var(--border-hairline) solid var(--divider-default); border-top: 0; box-shadow: var(--shadow-overlay); }
 .header-search-panel .mast-search.ui-input-wrap { display: flex; margin: 0; width: 100%; }
 .header-search-panel .mast-sugg { width: calc(100% + var(--space-block) * 2); top: calc(100% + var(--space-block)); right: calc(-1 * var(--space-block)); }
+/* Without the nav the band is the mark on the left and its icons together on the right;
+   the menu icon sits on the screen gutter, not 10px inside it. */
 @media (max-width: 960px) {
-  .site-header .nav-toggle { margin-left: 0; }
+  .site-header .masthead { justify-content: flex-start; gap: var(--space-tight); }
+  .site-header .masthead-id { margin-right: auto; }
+  .site-header .nav-toggle { margin-left: 0; margin-right: calc(var(--space-row) * -1); }
   .site-header .header-search-toggle { margin-left: 0; }
 }
 @media print {
