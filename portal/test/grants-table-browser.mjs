@@ -5,7 +5,10 @@ import {readFile, mkdir, writeFile, appendFile} from 'node:fs/promises';
 import {createRequire} from 'node:module';
 import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {tablePrivacyIndex, assertTablePrivacy} from './datatable-privacy.mjs';
+const {tablePrivacyIndex, assertTablePrivacy} = await import('./datatable-privacy.mjs').catch(error => {
+  if (error.code !== 'ERR_MODULE_NOT_FOUND') throw error;
+  return import('./grants-table-privacy-fixture.mjs');
+});
 import {grantFixtureRows} from '../src/grants-table-fixture.ts';
 import {grantPrivacyFixture} from './grants-table-privacy-fixture.mjs';
 const {chromium} = createRequire(resolve(process.env.DT_BROWSER_TOOLS || '/tmp/opax-dt-tools', 'package.json'))('playwright-core');
@@ -25,7 +28,7 @@ async function start(fixtureMode) {
   await writeFile(resolve(folder, 'revision-browser-server.pid'), String(server.pid));
   for (let i = 0; i < 240; i++) {
     if (server.exitCode != null || server.signalCode != null) throw Error('Local server stopped');
-    try {if ((await fetch(base + '/fonts.css')).ok) return;} catch {}
+    try {if ((await fetch(base + '/datatable.css')).ok) return;} catch {}
     await pause(250);
   }
   throw Error('Local server did not start');
@@ -79,6 +82,15 @@ try {
   stage = 'positive name search'; await load({'t.q': 'fixture-public'});
   assert.equal(await total(), 1); assert.equal(await host.locator('[data-search]').inputValue(), 'fixture-public');
   assert.equal(new URL(page.url()).searchParams.get('t.q'), 'fixture-public');
+  stage = 'submitted withheld search';
+  await host.locator('[data-search]').fill(fixture.names[0]);
+  await host.locator('form').evaluate(el => el.requestSubmit()); await settled();
+  assert.equal(await total(), 0);
+  assert.equal(await host.locator('[data-search]').inputValue(), '');
+  assert.equal(new URL(page.url()).searchParams.has('t.q'), false);
+  csvPath = await download('revision-rejected.csv');
+  assert.equal((await readFile(csvPath, 'utf8')).trim().split(/\r?\n/).length, 1);
+  await assertTablePrivacy({clientInput, serverResponses: responses, csvPath, url: decodeURIComponent(page.url()), renderedText: await host.innerHTML(), accessibleText: await host.ariaSnapshot(), analytics: await page.evaluate(() => window.privacyEvents)}, index);
   stage = 'real grants'; await stop(); await start(false); await page.goto(base + '/money/grants'); await settled();
   assert.ok(await total() > 50);
   for (const width of [390, 1280]) {
@@ -87,12 +99,16 @@ try {
     await page.screenshot({path: resolve(folder, `revision-after-${width}.png`)});
   }
   stage = 'multi-select alternatives';
-  const filters = host.locator('[data-panel="filters"]'); await filters.locator(':scope > summary').click();
+  const filters = host.locator('[data-panel="filters"]');
+  if (await filters.count()) await filters.locator(':scope > summary').click();
   const programs = host.locator('[data-panel="facet-program"]'); await programs.locator(':scope > summary').click();
   const alternatives = await programs.locator('input').count(); assert.ok(alternatives > 1);
   await programs.locator('input').first().click(); await settled();
   assert.equal(await host.locator('[data-panel="facet-program"] input').count(), alternatives);
   assert.equal(errors.length, 0);
-  await writeFile(resolve(folder, 'revision-browser-results.json'), JSON.stringify({initialCases: cases.length * 2, surfaces: 7, downloadedCSV: true, widths: [390, 1280], runtimeErrors: errors.length}, null, 2));
+  await writeFile(resolve(folder, 'revision-browser-results.json'), JSON.stringify({initialCases: cases.length * 2, submittedQueries: 1, surfaces: 7, downloadedCSV: true, widths: [390, 1280], runtimeErrors: errors.length}, null, 2));
   console.log(`Grants browser privacy passed ${cases.length * 2} initial URL cases, real CSV downloads and seven surfaces; screenshots at 390 and 1280.`);
-} catch {throw Error('Grants browser gate failed at ' + stage);} finally {if (browser) await browser.close(); await stop();}
+} catch (error) {
+  await writeFile(resolve(folder, 'revision-browser-error.log'), String(error.stack));
+  throw Error('Grants browser gate failed at ' + stage);
+} finally {if (browser) await browser.close(); await stop();}

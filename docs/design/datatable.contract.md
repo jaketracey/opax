@@ -79,3 +79,8 @@ type Row = Record<string, unknown>;
 
 ## Privacy regression (blocking)
 The shared derived test, `portal/test/donor-privacy.test.mjs`, covers every table in every mode. That includes the rows, facets, CSV and URL state of each.
+
+## Optional recipient privacy fields
+
+- `DataTableConfig.rowPrivacyCheck?` is a synchronous `(row: Row) => boolean` organisation policy for money rows. True means public; exceptions and non-boolean results fail closed. Without it the donor label policy applies. Grants use the shared recipient classifier with all source entity kinds and ABN types retained. Text validation remains separate and must use the withheld index.
+- Neutral rows can carry optional `aggregate.subject: 'recipients'` alongside `aggregate: {kind: 'individual-donors', count: number}`. The core generates fixed `Recipients (N, names withheld)` wording, retains only configured numeric values and removes IDs, aliases, categories and links. Other subject values are discarded. The default donor wording remains unchanged.

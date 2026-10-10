@@ -251,7 +251,7 @@ test('grants reject every indexed individual, aliases and contradictory source t
   }))];
   const publicGrant = {id: 'fixture-award', rid: 'name:fixture-organisation', rn: 'Fixture Research Institute', k: 'company', v: 25000};
   const overrides = [{k: 'person'}, {k: 'sole trader'}, {kind: 'people'}, {abr: {etype: 'IND'}}, {abnType: 'IND'}].map((override, i) => ({...publicGrant, id: `fixture-private-award-${i}`, rid: `abn:${String(i).padStart(11, '0')}`, rn: `fixture-recipient-${i} Pty Ltd`, ...override}));
-  const metadata = [{k: 'person'}, {k: 'sole trader'}, {abr: {etype: 'IND'}}].map((override, i) => ({id: `name:fixture-metadata-${i}`, n: `fixture-metadata-${i} Pty Ltd`, k: 'company', sh: 99, ...override}));
+  const metadata = [{k: 'person'}, {k: 'sole trader'}, {abr: {etype: 'IND', name: 'fixture-abr-alias-2'}}].map((override, i) => ({id: `name:fixture-metadata-${i}`, n: `fixture-metadata-${i} Pty Ltd`, k: 'company', sh: 99, ...override}));
   const metadataAwards = metadata.map((r, i) => ({...publicGrant, id: `fixture-metadata-award-${i}`, rid: r.id, rn: r.n}));
   const cleanProgram = {n: 'Fixture program', ag: 'Fixture agency', grants: [publicGrant, ...overrides, ...metadataAwards]};
   const programs = [cleanProgram, {...cleanProgram, n: names[0]}, {...cleanProgram, ag: names[1] || names[0]}];
@@ -267,7 +267,7 @@ test('grants reject every indexed individual, aliases and contradictory source t
   const config = grantsTableConfig();
   const {page, filtered} = queryGrantFixture(rows, {}, withheld);
   for (const output of [page, page.facets, toCSV(filtered, config), dataTableHTML(config, page)]) assert.ok(safe(output));
-  for (const [i, name] of [...names, ...overrides.map(g => g.rn), ...metadata.map(r => r.n)].entries()) {
+  for (const [i, name] of [...names, ...overrides.map(g => g.rn), ...metadata.flatMap(r => [r.n, r.abr?.name].filter(Boolean))].entries()) {
     assert.ok(withheld(name), `grant rejection index ${i}`);
     for (const query of [{q: name}, {filters: {program: [name]}}, {filters: {recipient: [name]}}]) {
       const rejected = queryGrantFixture(rows, query, withheld);

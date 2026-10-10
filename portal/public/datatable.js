@@ -43,7 +43,23 @@ function donorNode(row) {
   if (row.donor && typeof row.donor === 'object') return row.donor;
   return {label: row.donorName ?? row.donor_name ?? row.donor ?? row.label ?? row.name, aliases:row.aliases};
 }
-const publicRows = (rows, config) => config.privacy === 'donors' ? rows.filter(row => isOrganisationDonor(donorNode(row))) : rows;
+const aggregate = row => row?.aggregate?.kind === 'individual-donors' && Number.isSafeInteger(row.aggregate.count) && row.aggregate.count >= 0;
+function publicRows(rows, config) {
+  if (config.privacy !== 'donors') return rows;
+  return rows.flatMap(row => {
+    if (row?.aggregate && !aggregate(row)) return [];
+    if (aggregate(row)) {
+      const recipients = row.aggregate.subject === 'recipients';
+      const safe = {aggregate:{kind:'individual-donors',count:row.aggregate.count,...(recipients ? {subject:'recipients'} : {})}};
+      for (const c of config.columns) {
+        if (c.primary || donorColumn(c)) safe[c.key] = recipients ? `Recipients (${row.aggregate.count}, names withheld)` : `Individual donors (${row.aggregate.count})`;
+        else if (numeric(c) && number(row[c.key]) != null) safe[c.key] = number(row[c.key]);
+      }
+      return [safe];
+    }
+    try {return (config.rowPrivacyCheck ? config.rowPrivacyCheck(row) === true : isOrganisationDonor(donorNode(row))) ? [row] : [];} catch {return [];}
+  });
+}
 const donorColumn = column => /^(?:donor(?:_?name)?|label|name)$/i.test(column.key) || column.primary;
 
 function cleanQuery(query = {}, config, page) {
@@ -200,8 +216,8 @@ function constants(config, page, query) {
     const selected = query.filters?.[column.key];
     const facet = page.facets?.[column.key];
     const values = rows ? [...new Set(rows.map(row => text(row[column.key])))]
-      : Array.isArray(selected) && selected.length === 1 && page.total > 0 ? selected
       : Array.isArray(facet) ? facet.map(v => v.value)
+      : Array.isArray(selected) && selected.length === 1 && page.total > 0 ? selected
       : facet && facet.min === facet.max ? [text(facet.min)] : [];
     return values.length === 1 && values[0] ? [{column, value:values[0]}] : [];
   });
@@ -254,11 +270,11 @@ function render(config, page, query = {}, view = {}, error = '') {
   const body = page.rows.map(row => `<tr role="row">${columns.map(column => {
     const value = row[column.key], display = formatCell(value,column), n = number(value);
     const exact = numeric(column) && n != null ? column.type === 'money' ? money.format(n) : decimal.format(n) : display;
-    const link = column.primary && config.primaryLink ? href(config.primaryLink(row)) : null;
+    const link = !aggregate(row) && column.primary && config.primaryLink ? href(config.primaryLink(row)) : null;
     const bar = column.bar && n != null && maxima[column.key] ? `<span class="dt-bar" aria-hidden="true" style="--dt-bar:${Math.round(Math.abs(n) / maxima[column.key] * 100)}%"></span>` : '';
     return `<td role="cell" data-label="${esc(column.label)}" data-align="${esc(column.align || (numeric(column) ? 'end' : 'start'))}"${column.primary ? ' data-primary' : ''}${column === prominence ? ' data-prominent' : ''}${numeric(column) ? ' class="dt-number"' : ''} title="${esc(exact)}">${bar}<span class="dt-value">${link ? `<a href="${esc(link)}">${esc(display)}</a>` : esc(display) || '—'}</span></td>`;
   }).join('')}${config.actions?.length ? `<td role="cell" class="dt-actions"><details class="dt-panel" data-panel="action"><summary aria-label="Actions" title="Actions"><span aria-hidden="true">⋯</span></summary><div>${config.actions.map(action => {
-    const target = href(action.href(row));
+    const target = !aggregate(row) ? href(action.href(row)) : null;
     return target ? `<a href="${esc(target)}"><span aria-hidden="true">${esc(action.icon)}</span> ${esc(action.label)}</a>` : '';
   }).join('')}</div></details></td>` : ''}</tr>`).join('');
   const start = page.total ? (page.page - 1) * page.pageSize + 1 : 0;

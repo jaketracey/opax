@@ -86,7 +86,8 @@ export async function mountGrantsTable(el, params = new URLSearchParams(), optio
   // Rendering an empty response also fails closed while core privacy is pending.
   el.innerHTML = '<h1>Government grants</h1><p></p>' + grantsTableHTML(page, params);
   el.querySelector('p').textContent = GRANTS_COVERAGE;
-  const handle = mountDataTable(el.querySelector('[data-grants-table]'), config);
+  const root = el.querySelector('[data-grants-table]');
+  const handle = mountDataTable(root, config);
   // Temporary fail-closed guard: the core has already captured the query, so
   // cleaning an empty initial result here cannot broaden its pending request.
   if (page.total === 0) {

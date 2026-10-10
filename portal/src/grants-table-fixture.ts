@@ -7,7 +7,7 @@ import {MONEY_GRAPHS, withheldPhrases, namesWithheldPhrase, donorPrivacyIndex, f
 
 type Read = <T>(path: string) => Promise<T>
 type Graph = {nodes: {label: string; kind: string; aliases?: string[] | null}[]}
-type Recipient = {id: string; n: string; k?: string; sh?: number; aliases?: string[]; abr?: {etype?: string; type?: string}; abnType?: string; abn_type?: string; kind?: string; entityKind?: string; entity_kind?: string}
+type Recipient = {id: string; n: string; k?: string; sh?: number; aliases?: string[]; abr?: {name?: string; etype?: string; type?: string}; abnType?: string; abn_type?: string; kind?: string; entityKind?: string; entity_kind?: string}
 type Award = Recipient & {rid: string; rn: string; v: number; s?: string; a?: string; el?: string}
 type Program = {n: string; ag: string; grants: Award[]}
 type Fixture = {rows: Row[]; withheld: (...values: unknown[]) => boolean}
@@ -88,7 +88,7 @@ async function buildGrantFixtureRows(read: Read): Promise<Fixture> {
   // Combine positive evidence without discarding any contradictory private type.
   const publicIdentities = new Set([...identities].filter(([id, records]) => records.some(r => isOrganisationRecipient({...evidence.get(id), n: r.n}))).map(([id]) => id))
   const phrase = (value: unknown) => foldDonorName(value).replace(/[^a-z0-9]+/g, ' ').trim()
-  const rejected = new Set(candidates.filter(r => !publicIdentities.has(r.id)).flatMap(r => [r.n, ...(r.aliases || [])]).flatMap(name => {
+  const rejected = new Set(candidates.filter(r => !publicIdentities.has(r.id)).flatMap(r => [r.n, ...(r.aliases || []), r.abr?.name].filter((name): name is string => typeof name === 'string')).flatMap(name => {
     const inverted = /^([^,]+),\s*([^,]+)$/.exec(name)
     return [name, ...(inverted ? [`${inverted[2]} ${inverted[1]}`] : [])].map(phrase).filter(Boolean)
   }))

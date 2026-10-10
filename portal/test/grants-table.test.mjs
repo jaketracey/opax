@@ -5,7 +5,8 @@ import {isOrganisationRecipient} from '../public/recipient-privacy.js';
 import {grantsTableConfig, sanitizeGrantsState} from '../public/grants-table.js';
 import {grantFixtureQuery, grantFixtureRows, queryGrantFixture, grantFixtureResponse, grantFixturePrivacy} from '../src/grants-table-fixture.ts';
 import {offline, loadWorker} from './worker-harness.mjs';
-import {dataTableHTML, toCSV} from '../public/datatable.js';
+import {dataTableHTML, mountDataTable, toCSV} from '../public/datatable.js';
+import {tableHarness} from './datatable-harness.mjs';
 
 const config = grantsTableConfig();
 const rows = [
@@ -43,6 +44,18 @@ test('each facet keeps alternatives while respecting the search and all other fi
   assert.equal(bounded.total, 1);
   assert.deepEqual(bounded.facets.value, {min: 5000, max: 25000.75});
   assert.equal(queryGrantFixture(rows, {q: 'Research', filters: {program: [rows[0].program]}}).page.facets.program[0].value, rows[1].program);
+});
+
+test('the real core keeps multi-select controls when a selected category has alternatives', async () => {
+  const page = queryGrantFixture(rows, {filters: {program: [rows[0].program]}}).page;
+  const harness = tableHarness('http://localhost/money/grants?' + new URLSearchParams({'t.f.program': JSON.stringify([rows[0].program])}));
+  harness.win.fetch = async () => Response.json(page);
+  const mounted = mountDataTable(harness.root, {...config, privacyCheck: () => true});
+  await new Promise(done => setTimeout(done, 0));
+  const html = harness.html();
+  assert.ok(html.includes('data-panel="facet-program"'));
+  for (const row of rows) assert.ok(html.includes(`value="${row.program}"`));
+  mounted.destroy();
 });
 
 test('grants search matches recipient, program and agency names, never an address or electorate', () => {
@@ -126,10 +139,14 @@ test('the real core applies recipient types to HTML and CSV without label-only e
   }
 });
 
-test('value bars keep one full-result scale across server pages', () => {
+test('value bars stay disabled until a full-result scale is available', () => {
   const publicRows = rows.map(row => ({...row, donor: {label: row.recipient}}));
   const config = {...grantsTableConfig(), privacyCheck: () => true};
   const html = [1, 2].map(page => dataTableHTML(config, queryGrantFixture(publicRows, {page, pageSize: 1}).page));
+  if (!config.columns.find(c => c.key === 'value').bar) {
+    for (const page of html) assert.ok(!page.includes('--dt-bar:'));
+    return;
+  }
   const scales = html.map(text => text.match(/<small class="dt-scale">([^<]+)<\/small>/)?.[1]);
   assert.ok(scales[0]);assert.equal(scales[0], scales[1]);
   assert.ok(html[0].includes('--dt-bar:100%'));

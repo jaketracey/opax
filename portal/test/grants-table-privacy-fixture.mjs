@@ -1,4 +1,24 @@
 // Recipient names are derived only at run time. Synthetic IDs exercise overrides.
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {MONEY_GRAPHS, isOrganisationDonor, withheldPhrases, namesWithheldPhrase} from '../public/donor-entity.js';
+
+// Temporary assertion fallback until the core round 2 helper is committed.
+export async function tablePrivacyIndex() {
+  const graphs = await Promise.all(MONEY_GRAPHS.map(path => readFile(new URL('../public' + path, import.meta.url), 'utf8').then(JSON.parse)));
+  const phrases = withheldPhrases(graphs, []);
+  const values = [...new Set(graphs.flatMap(g => g.nodes.filter(n => n.kind === 'donor' && !isOrganisationDonor(n)).flatMap(n => [n.label, ...(n.aliases || [])])))].filter(v => namesWithheldPhrase(phrases, `donor receipts ${v}`));
+  return {values, safe: value => !namesWithheldPhrase(phrases, `donor receipts ${value}`)};
+}
+export async function assertTablePrivacy(surfaces, index) {
+  for (const key of ['clientInput', 'serverResponses', 'url', 'renderedText', 'accessibleText', 'analytics']) {
+    assert.ok(Object.hasOwn(surfaces, key), `privacy surface missing: ${key}`);
+    assert.ok(index.safe(typeof surfaces[key] === 'string' ? surfaces[key] : JSON.stringify(surfaces[key])), `withheld text on privacy surface: ${key}`);
+  }
+  assert.equal(typeof surfaces.csvPath, 'string');
+  assert.ok(index.safe(await readFile(surfaces.csvPath, 'utf8')), 'withheld text in downloaded CSV');
+}
+
 export async function grantPrivacyFixture(read) {
   const index = await read('/graph/grants.federal.json');
   const names = index.recipients.filter(r => r.k === 'individual').map(r => r.n);
