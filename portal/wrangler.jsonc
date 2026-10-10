@@ -12,7 +12,7 @@
     // Page entry points must canonicalise www before serving the app, so
     // sign-in requests and host-only account cookies share one origin.
     // Other static assets still bypass the Worker. Share images are dynamic.
-    "run_worker_first": ["/", "/home", "/home/", "/*.html", "/community", "/community/", "/connections", "/connections/", "/map", "/map/", "/instruments", "/instruments/", "/instrument", "/instrument/*", "/api/*", "/bill-texts/*", "/og/*", "/ingest/*", "/mcp", "/sitemap.xml", "/sitemap.xml/", "/sitemaps/*", "/robots.txt", "/robots.txt/", "/llms.txt", "/llms.txt/"]
+    "run_worker_first": ["/", "/home", "/home/", "/*.html", "/community", "/community/", "/connections", "/connections/", "/map", "/map/", "/instruments", "/instruments/", "/instrument", "/instrument/*", "/audit", "/audit/*", "/api/*", "/bill-texts/*", "/og/*", "/ingest/*", "/mcp", "/sitemap.xml", "/sitemap.xml/", "/sitemaps/*", "/robots.txt", "/robots.txt/", "/llms.txt", "/llms.txt/"]
   },
 
   "kv_namespaces": [{"binding":"GENERATION_CACHE","id":"e0b56c0457374743b580e7210e7b4515"}],

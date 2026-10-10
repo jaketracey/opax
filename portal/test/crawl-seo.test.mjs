@@ -1,4 +1,3 @@
-import {isOrganisationDonor} from '../public/donor-privacy.js';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync, existsSync} from 'node:fs';
@@ -9,6 +8,7 @@ import {sitemapFiles, exportDate, latestDate, billLastmod} from '../../scripts/b
 import {grantRecipientUrl} from '../public/grants.js';
 import {awardHref} from '../public/grants-largest.js';
 import {personUrl} from '../public/canonical-urls.js';
+import {isOrganisationDonor} from '../public/donor-entity.js';
 import {INDEXNOW_KEY} from '../src/indexnow.ts';
 
 const root = new URL('../public/',import.meta.url);
@@ -65,8 +65,10 @@ test('sitemap index and every type file have export lastmod, unique canonical UR
   const grantsXml = read('crawl/sitemaps/grant-recipients-1.xml');
   for (const r of recipients.filter(r=>['individual','person'].includes(r.k))) assert.ok(!grantsXml.includes(encodeURIComponent(r.id)));
   const donorsXml = read('crawl/sitemaps/donors-1.xml');
+  // A label with organisation evidence in any map (the federal node, with its aliases, wins) may be listed.
+  const organisations = new Set(['money.json','money.qld.json','money.vic.json'].flatMap(name=>json(`graph/${name}`).nodes.filter(n=>n.kind==='donor'&&isOrganisationDonor(n)).map(n=>n.label)));
   for (const name of ['money.json','money.qld.json','money.vic.json'])
-    for (const n of json(`graph/${name}`).nodes.filter(n=>n.kind==='donor'&&!isOrganisationDonor(n)))
+    for (const n of json(`graph/${name}`).nodes.filter(n=>n.kind==='donor'&&!organisations.has(n.label)))
       assert.ok(!donorsXml.includes(`/subject/donor/${encodeURIComponent(n.label)}<`), `individual donor in sitemap: ${name}`);
   const robots = await (await get('/robots.txt')).text();
   assert.match(robots,/Sitemap: https:\/\/opax.com.au\/sitemap.xml/);

@@ -89,10 +89,10 @@ const supplier={name:'ACME Pty Ltd',abn:'12 345 678 901'};
 const donor={kind:'donor',label:'Acme Pty. Ltd.',industry:'manufacturing',abn:'12345678901'};
 test('donation matches require an organisation and exact normalised name, with ABN when both hold one',()=>{
  assert.equal(exactOrganisationDonors(supplier,[donor]).length,1);
- for(const d of [{...donor,donor_type:'individual'},{...donor,entity_type:'sole trader'},{kind:'donor',label:'Roslyn Packer',industry:'media'},{...donor,abn:'99999999999'},{...donor,label:'Acme Group Pty Ltd'}]) assert.equal(exactOrganisationDonors(supplier,[d]).length,0);
+ for(const d of [{kind:'donor',label:'Alex Example',abn:donor.abn},{kind:'donor',label:'Roslyn Packer',industry:'media'},{...donor,abn:'99999999999'},{...donor,label:'Acme Group Pty Ltd'}]) assert.equal(exactOrganisationDonors(supplier,[d]).length,0);
  assert.equal(exactOrganisationDonors({...supplier,abn:null},[donor]).length,1);
  assert.equal(exactOrganisationDonors(supplier,[{...donor,abn:null}]).length,1);
- assert.equal(donationRegisterHTML(supplier,[{...donor,donor_type:'individual'}]),'');
+ assert.equal(donationRegisterHTML(supplier,[{kind:'donor',label:'Alex Example',abn:donor.abn}]),'');
  assert.equal(donationRegisterHTML(supplier,[donor,{...donor,id:'second'}]),'');
  assert.match(donationRegisterHTML(supplier,[donor]),/Also in the donations register/);
  assert.ok(donationRegisterHTML(supplier,[donor]).includes(ASSOCIATION_NOTE));
@@ -100,8 +100,8 @@ test('donation matches require an organisation and exact normalised name, with A
 test('live individual-donor fixture cannot enter the supplier donations or funding path',async()=>{
  const {supplierDonations}=await import('../public/supplier-growth.js');
  const prior=globalThis.fetch;
- globalThis.fetch=async()=>({ok:true,json:async()=>({donors:[{...donor,donor_type:'individual',id:'donor:acme'}]})});
- try {assert.deepEqual(await supplierDonations({...supplier,donor_links:[{id:'donor:acme',url:'/subject/donor/Acme',method:'abn'}]},{signal:new AbortController().signal}),{html:'',links:[]});}finally{globalThis.fetch=prior;}
+ globalThis.fetch=async()=>({ok:true,json:async()=>({donors:[{kind:'donor',label:'Alex Example',abn:donor.abn,id:'donor:alex'}]})});
+ try {assert.deepEqual(await supplierDonations({...supplier,name:'Alex Example',donor_links:[{id:'donor:alex',url:'/subject/donor/Acme',method:'abn'}]},{signal:new AbortController().signal}),{html:'',links:[]});}finally{globalThis.fetch=prior;}
  const source=read('../public/suppliers.js');
  assert.match(source,/supplierDonations\(profile, life\).then\(donations =>/);
  assert.match(source,/const donorLinks = donations.links/);

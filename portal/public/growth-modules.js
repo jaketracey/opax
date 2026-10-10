@@ -1,6 +1,7 @@
 /* Record-based landing modules. No generated answers or guessed identities. */
 import { shortDate } from './format.js';
-import { isOrganisationDonor } from './donor-privacy.js?v=fe35a6ecb9';
+import { isOrganisationDonor } from './donor-entity.js?v=01f8f2c44b';
+export { isOrganisationDonor };
 import { sourceLineHTML } from './labels.js?v=804befe8de';
 import { sponsorPerson, sponsorKey } from './sponsor-person.js?v=74d9a1f8cf';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -107,10 +108,6 @@ export function recentSittingSpeeches(speeches = []) {
   const week = monday(dated[0].date);
   return {week,speeches:dated.filter(s=>monday(s.date)===week)};
 }
-/** Organisation classification follows the existing public donor directory. Unknown stays unlinked. */
-export function organisationDonor(donor) {
-  return donor?.kind === 'donor' && isOrganisationDonor(donor);
-}
 /** Privacy filtering happens before grouping, names, declarations or party flows. */
 export function publicOrganisationTies(ties = []) {
   return ties.filter(tie=>{
@@ -124,7 +121,7 @@ const abnKey = value => String(value || '').replace(/\s/g,'');
 export function exactOrganisationDonors(supplier, donors = []) {
   const name = normalisedName(supplier?.name);
   if (!name) return [];
-  return donors.filter(d=>organisationDonor(d) && normalisedName(d.label)===name &&
+  return donors.filter(d=>d.kind==='donor' && isOrganisationDonor(d) && normalisedName(d.label)===name &&
     (!supplier.abn || !d.abn || abnKey(supplier.abn)===abnKey(d.abn)));
 }
 export function donationRegisterHTML(supplier, donors) {

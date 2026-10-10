@@ -3,8 +3,9 @@ import {readFile,writeFile,mkdir,rm,readdir} from 'node:fs/promises';
 import {join,resolve} from 'node:path';
 import {pathToFileURL,fileURLToPath} from 'node:url';
 import {sponsorPerson} from '../portal/public/sponsor-person.js';
-import {sponsorSummaryPath,growthSummaryPath,normalisedName,organisationDonor} from '../portal/public/growth-modules.js';
+import {sponsorSummaryPath,growthSummaryPath,normalisedName} from '../portal/public/growth-modules.js';
 import {agencyGrants} from '../portal/public/supplier-growth.js';
+import {isOrganisationDonor} from '../portal/public/donor-entity.js';
 export const SUMMARY_BUDGET = 24_000;
 export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',import.meta.url))) {
  const read=async p=>JSON.parse(await readFile(join(root,p),'utf8'));
@@ -18,8 +19,18 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
   await writeFile(join(root,path.replace(/^\//,'')),json);sizes.push({path,bytes});
  };
  const [index,roster,money,agencies]=await Promise.all(['bills/index.json','parliamentarians.json','graph/money.json','agencies.json'].map(read));
- const donors=(money.nodes || []).filter(organisationDonor).map(n=>Object.fromEntries(['id','label','kind','abn','acn','donor_type','entity_type','entity_kind'].filter(k=>n[k]!=null).map(k=>[k,n[k]])));
- // Names only: no individual rows, aliases, giving amounts or party flows.
+ const donors=(money.nodes || []).filter(n=>n.kind==='donor' && isOrganisationDonor(n)).map(n=>{
+  const donor=Object.fromEntries(['id','label','kind','abn'].filter(k=>n[k]!=null).map(k=>[k,n[k]]));
+  // Preserve the minimum evidence main's classifier needs, without copying every alias.
+  if(!isOrganisationDonor(donor)) {
+   const alias=(n.aliases || []).find(label=>isOrganisationDonor({label}));
+   if(alias) donor.aliases=[alias];
+   else donor.industry=n.industry;
+  }
+  if(!isOrganisationDonor(donor))throw new Error('Donor summary lost organisation evidence');
+  return donor;
+ });
+ // Names and organisation evidence only: no individual rows, amounts or party flows.
  await write('/growth/organisation-donors.json',{donors},64_000);
  const grouped=new Map();
  for(const bill of index.bills){

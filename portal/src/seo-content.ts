@@ -1,5 +1,6 @@
 import { personUrl, partyUrl } from '../public/canonical-urls.js'
 import {sponsorPerson} from '../public/sponsor-person.js'
+import {isOrganisationDonor} from '../public/donor-entity.js'
 import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, billStripStage} from '../public/division-markdown.js'
 /** Crawlable answers from the same static projections the application reads.
  * All lists are bounded; source strings and URLs cross one escaping boundary. */
@@ -35,7 +36,7 @@ interface Interest {
   source_url?: string; total: number; as_at?: string; ocr_rows?: number; unread_pages?: number;
   buckets: Record<string, { count: number; items: { description: string; holder?: string; page?: number }[] }>;
 }
-interface MoneyNode { id: string; label: string; kind: string; industry?: string; total: number }
+interface MoneyNode { id: string; label: string; kind: string; industry?: string; aliases?: string[]; total: number }
 interface MoneyGraph { meta: { sourceShort?: string; source?: string; coverage?: string; source_url?: string }; nodes: MoneyNode[]; edges: { source: string; target: string; total: number; grant?: boolean; flow?: string }[] }
 const PAGE_SIZE = 50
 export const escapeHtml = (value: unknown): string => String(value ?? '').slice(0,5000).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!))
@@ -137,10 +138,10 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     if (!graph || !node) continue
     const donors = new Map(graph.nodes.filter(n=>n.kind==='donor').map(n=>[n.id,n]))
     const flows = graph.edges.filter(e=>e.target===node.id && !e.grant && !e.flow && donors.has(e.source))
-    const individuals = new Set(flows.filter(e=>donors.get(e.source)?.industry==='individual').map(e=>e.source)).size
-    // Unknown/other classifications do not establish that an entity is an organisation.
-    const organisations = flows.filter(e=>!['individual','individuals','other','unknown',''].includes(donors.get(e.source)?.industry || '')).sort((a,b)=>b.total-a.total).slice(0,10)
-    body += `<h3>${escapeHtml(source)} disclosed receipts</h3><p>${individuals} individual donors in this export. ${escapeHtml(graph.meta.coverage || '')}</p><ul>${organisations.map(e=>`<li>${link(`/subject/donor/${encodeURIComponent(donors.get(e.source)!.label)}`,donors.get(e.source)!.label)} — ${currency(e.total)}</li>`).join('')}</ul>`
+    // Only donors with positive organisation evidence are named; the industry tag never counts.
+    const unnamed = new Set(flows.filter(e=>!isOrganisationDonor(donors.get(e.source))).map(e=>e.source)).size
+    const organisations = flows.filter(e=>isOrganisationDonor(donors.get(e.source))).sort((a,b)=>b.total-a.total).slice(0,10)
+    body += `<h3>${escapeHtml(source)} disclosed receipts</h3><p>${unnamed} donors in this export are not named here: individuals, and organisations without a recorded legal form. ${escapeHtml(graph.meta.coverage || '')}</p><ul>${organisations.map(e=>`<li>${link(`/subject/donor/${encodeURIComponent(donors.get(e.source)!.label)}`,donors.get(e.source)!.label)} — ${currency(e.total)}</li>`).join('')}</ul>`
     body += `<p>Source: ${escapeHtml(graph.meta.sourceShort || graph.meta.source || source)}. Federal and state returns are shown separately and never summed.</p>${original(graph.meta.source_url || (source==='AEC' ? 'https://transparency.aec.gov.au/' : source==='ECQ' ? 'https://disclosures.ecq.qld.gov.au/' : 'https://disclosures.vec.vic.gov.au/'))}`
   }
   const owned = sponsored?.sponsored[p.pid || p.name] || []
@@ -245,7 +246,7 @@ export async function renderDirectory(dir: string, url: URL, read: ReadAsset, pe
   if (dir==='party' || dir==='donor') {
     const graphs = await Promise.all(['/graph/money.json','/graph/money.qld.json','/graph/money.vic.json'].map(path=>read<MoneyGraph>(path)))
     const rows = new Map<string,{href:string;label:string}>()
-    for (const graph of graphs) for (const n of graph.nodes) if (n.kind===dir && (dir==='party' || !['individual','individuals','other','unknown',''].includes(n.industry || ''))) rows.set(fold(n.label),{href:dir==='party' ? partyUrl(n.label) : `/subject/donor/${encodeURIComponent(n.label)}`,label:n.label})
+    for (const graph of graphs) for (const n of graph.nodes) if (n.kind===dir && (dir==='party' || isOrganisationDonor(n))) rows.set(fold(n.label),{href:dir==='party' ? partyUrl(n.label) : `/subject/donor/${encodeURIComponent(n.label)}`,label:n.label})
     return paginate(url,[...rows.values()],dir==='party' ? 'Parties' : 'Organisational donors','Published political receipts from AEC, ECQ and VEC; federal and state returns remain separate.')
   }
   const sources: Record<string,[string,string,string]> = {supplier:['/suppliers.json','suppliers','Government suppliers'],agency:['/agencies.json','agencies','Government agencies'],campaigner:['/graph/campaigners.json','entities','Campaigners']}

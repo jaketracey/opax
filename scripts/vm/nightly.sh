@@ -57,6 +57,8 @@
 #   OPAX_FORCE_GROUPS     "weekly", "monthly" or "weekly monthly": run those groups tonight whatever the day
 #                         (rehearsal; normally weekly = every Sunday Sydney, monthly = the first Sunday too)
 #   OPAX_WEEKLY_REFRESH   periodic script (default scripts/weekly_refresh.sh)
+#   OPAX_BILL_PARLIAMENT  current federal parliament (default 48)
+#   OPAX_BILLS_TIMEOUT    combined bill fetch/full-export limit (default 20m, plus 60s kill grace)
 #   OPAX_TEST_GATE        0 = do not run the portal test suite against the new data before committing
 #   OPAX_BOT_NAME / OPAX_BOT_EMAIL   commit identity
 
@@ -228,7 +230,11 @@ run_completed() {
 }
 
 # git helpers for putting a group of data files back to what HEAD has
-revert() { git checkout -q HEAD -- "$@"; git clean -fdq -- "$@" 2>/dev/null || true; }
+revert() {
+  local p
+  for p in "$@"; do [ "$p" != portal/public/bills ] || BILLS_REFRESH_OK=0; done
+  git checkout -q HEAD -- "$@"; git clean -fdq -- "$@" 2>/dev/null || true
+}
 revert_group() { local g=$1; local paths; read -ra paths <<<"${GROUP_PATHS[$g]}"; revert "${paths[@]}"; }
 group_changed() { local g=$1; local paths; read -ra paths <<<"${GROUP_PATHS[$g]}"; [ -n "$(git status --porcelain -- "${paths[@]}")" ]; }
 
@@ -294,15 +300,13 @@ if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "${OPAX_NIGHTLY_SKIP_PERIODIC
   fi
 fi
 
-# ---- 3. bills: put the speech briefs back, prove none was lost -----------------------------------
-log "filling bill speech briefs from the knowledge box"
-if ! run "$PY" scripts/export_bills.py --fill-briefs portal/public/bills; then
-  log "WARN: fill-briefs exited non-zero; the verification below decides whether the bills are usable"
-fi
-if ! run "$PY" scripts/verify_bill_briefs.py; then
-  fail "bill briefs lost between HEAD and the new export; bills reverted to HEAD and not published tonight"
-  revert portal/public/bills
-fi
+# ---- 2c. bills: current-parliament acquisition, then full static export -------------------------
+# shellcheck source=scripts/vm/bills_refresh.sh
+. "$REPO/scripts/vm/bills_refresh.sh"
+bills_refresh
+
+# ---- 3. bills: put the speech briefs back, prove no brief or bill was lost ------------------------
+bills_fill_and_verify
 
 # ---- 3b. Worker-only vote/division projections from the refreshed OPAX DB -------------------------
 # After bill verification so division backlinks use the retained, publishable bills.
@@ -374,8 +378,23 @@ if [ "${OPAX_TEST_GATE:-1}" != 0 ]; then
         # reverted; the others are restored from the backup). If no single group does it, two or more together break
         # a test: put them back cumulatively, in order, until green (the same as blaming all of them).
         BK="$PIPE/gate-backup"; rm -rf "$BK"; mkdir -p "$BK"
-        backup_group() { local g=$1 paths; read -ra paths <<<"${GROUP_PATHS[$g]}"; tar cf "$BK/$g.tar" -- "${paths[@]}" 2>/dev/null || true; }
-        restore_group() { local g=$1 paths; read -ra paths <<<"${GROUP_PATHS[$g]}"; rm -rf -- "${paths[@]}"; tar xf "$BK/$g.tar" 2>/dev/null || true; }
+        backup_group() {
+          local g=$1 paths
+          read -ra paths <<<"${GROUP_PATHS[$g]}"
+          [ "$g" != bills ] || BILLS_GATE_BACKUP_OK=$BILLS_REFRESH_OK
+          tar cf "$BK/$g.tar" -- "${paths[@]}" 2>/dev/null || true
+        }
+        restore_group() {
+          local g=$1 paths
+          read -ra paths <<<"${GROUP_PATHS[$g]}"
+          rm -rf -- "${paths[@]}"
+          if tar xf "$BK/$g.tar" 2>/dev/null; then
+            # A trial rollback was innocent: restore acceptance with the files.
+            [ "$g" != bills ] || BILLS_REFRESH_OK=$BILLS_GATE_BACKUP_OK
+          else
+            fail "cannot restore test backup for $g"
+          fi
+        }
         for group in "${gate_groups[@]}"; do backup_group "$group"; done
         culprit=""
         for group in "${gate_groups[@]}"; do
@@ -456,6 +475,8 @@ else
   log "knowledge box unchanged: CACHE_EPOCH not bumped"
 fi
 
+bills_summary || { fail "cannot summarize retained bills"; finish; }
+
 # ---- 6. commit -----------------------------------------------------------------------------------------------
 # Re-read HEAD after sync/validation; stage whole published directory roots,
 # including new chunks and deletions, without admitting untracked first exports.
@@ -476,13 +497,13 @@ if git diff --cached --quiet; then
   else
     log "no data changes tonight (and checked_at is fresh): nothing to commit, push or deploy"
     DEPLOY="not needed (no changes)"
+    bills_refresh_complete
     finish
   fi
 else
-  nbills=$(git diff --cached --name-only -- portal/public/bills | wc -l | tr -d ' ')
   parts=(); changed_groups=()
   [ -n "$RESULT_SUMMARY" ] && [ "$KB_CHANGED" = true ] && parts+=("$RESULT_SUMMARY")
-  [ "$nbills" -gt 0 ] && parts+=("$nbills bill files")
+  [ "$KB_CHANGED" = true ] || parts+=("$BILLS_SUMMARY")
   git diff --cached --quiet -- portal/public/votes.json || parts+=("votes.json")
   for group in "${DATA_GROUPS[@]}"; do
     case $group in bills|votes|corpus|wrangler) continue ;; esac
@@ -500,6 +521,7 @@ else
     || { fail "git commit failed"; finish; }
   log "committed: $subject"
 fi
+bills_refresh_complete
 COMMIT_SHA=$(git rev-parse --short HEAD)
 
 # ---- 7. push (the push starts the deploy) --------------------------------------------------------------------

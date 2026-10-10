@@ -1,0 +1,42 @@
+[
+ {
+  "name": "second reading relabelled as committee",
+  "before": {
+   "key": "au-federal-t1",
+   "status": "introduced",
+   "status_as_of": "2026-10-09",
+   "key_dates": [
+    {"stage": "introduced", "house": "representatives", "date": "2026-10-01"},
+    {"stage": "second_reading", "house": "representatives", "date": "2026-10-09"}
+   ]
+  },
+  "after": {
+   "key": "au-federal-t1",
+   "status": "introduced",
+   "status_as_of": "2026-10-09",
+   "key_dates": [
+    {"stage": "introduced", "house": "representatives", "date": "2026-10-01"},
+    {"stage": "committee", "house": "representatives", "date": "2026-10-09"}
+   ]
+  }
+ },
+ {
+  "name": "introduction redated from 1 to 2 October",
+  "before": {
+   "key": "au-federal-t2",
+   "status": "introduced",
+   "status_as_of": "2026-10-01",
+   "key_dates": [
+    {"stage": "introduced", "house": "representatives", "date": "2026-10-01"}
+   ]
+  },
+  "after": {
+   "key": "au-federal-t2",
+   "status": "introduced",
+   "status_as_of": "2026-10-02",
+   "key_dates": [
+    {"stage": "introduced", "house": "representatives", "date": "2026-10-02"}
+   ]
+  }
+ }
+]

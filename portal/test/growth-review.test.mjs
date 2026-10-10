@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,readdirSync,statSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
-import {isOrganisationDonor} from '../public/donor-privacy.js';
+import {isOrganisationDonor} from '../public/donor-entity.js';
 import * as growthModules from '../public/growth-modules.js';
 import {supplierDonations,mountSupplierGrowth} from '../public/supplier-growth.js';
 import {cleanEvent,safePath} from '../analytics/privacy.mjs';
@@ -16,8 +16,10 @@ test('donor privacy uses entity evidence, never industry, including ABN sole tra
  assert.equal(isOrganisationDonor({...roslyn,industry:'individual'}),false);
  assert.equal(isOrganisationDonor({label:'Alex Example',donor_type:'sole trader',abn:'12345678901'}),false);
  assert.equal(isOrganisationDonor({label:'Alex Example',donor_type:'individual',abn:'12345678901'}),false);
- for(const record of [company,{label:'United Workers Union'},{label:'Example Family Trust'},{label:'Example Association'},{label:'Example Council'},{label:'Example',acn:'123456789'},{label:'Example',donor_type:'organisation'}])assert.equal(isOrganisationDonor(record),true);
+ for(const record of [company,{label:'United Workers Union'},{label:'Example Family Trust'},{label:'Example Association'},{label:'Example Council'},{label:'Example',aliases:['Example Services']}])assert.equal(isOrganisationDonor(record),true);
  assert.equal(isOrganisationDonor({label:'Unknown name',industry:'construction'}),false);
+ assert.equal(isOrganisationDonor({label:'Alex Example',abn:'12345678901'}),false);
+ assert.equal(isOrganisationDonor({label:'Alex Example',acn:'123456789'}),false);
 });
 test('individual donor fixture is absent from rendered person interests and supplier modules',async()=>{
  const code=app.slice(app.indexOf('async function renderPersonInterests('),app.indexOf('let interestsTiesPromise'));
@@ -96,7 +98,7 @@ test('supplier scroll fetches one bounded agency summary, never grants shards or
 test('published growth assets are bounded and the small donor index excludes individuals',()=>{
  for(const dir of ['sponsors','agencies'])for(const file of readdirSync(new URL('../public/growth/'+dir+'/',import.meta.url)))assert.ok(statSync(new URL('../public/growth/'+dir+'/'+file,import.meta.url)).size<=24000);
  const index=json('../public/growth/organisation-donors.json');assert.ok(Buffer.byteLength(JSON.stringify(index))<=64000);
- assert.ok(index.donors.every(growthModules.organisationDonor));assert.ok(!index.donors.some(d=>d.label==='Roslyn Packer'));
+ assert.ok(index.donors.every(growthModules.isOrganisationDonor));assert.ok(!index.donors.some(d=>d.label==='Roslyn Packer'));
 });
 test('primary, modified and middle module openings count once; right clicks do not count',()=>{
  const listeners=new Map(),measured=[];

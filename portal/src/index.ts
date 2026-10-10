@@ -8,6 +8,8 @@ import { slugIndex, personIndex } from './person-slug'
 import { missingEntitySlug } from './crawl-hygiene'
 import { normalizePassage, passageWindow } from './passage-text'
 import { instrumentPage, instrumentReader } from './instruments'
+import { auditPage, auditReader } from './audit'
+import { AUDIT_ID } from '../public/audit.js'
 import { runIndexNow, INDEXNOW_CRON } from './indexnow'
 import { type MoneyFacts, moneyOverviewPrompt, verifiedOverview } from './ask-money-overview'
 import {readGenerationCache, storeGenerationCache} from './generation-cache'
@@ -32,6 +34,7 @@ import { resolveAskScope, needsAskPeople, askRetrievalQuery, isNamedPositionQues
 import { communityRoute } from './community'
 import { deliverReplyEmails, REPLY_EMAIL_CRON } from './community-notifications'
 import { partyUrl, personUrl, personNameKey } from '../public/canonical-urls.js'
+import { isOrganisationDonor } from '../public/donor-entity.js'
 import { canonicalPageRedirect } from './canonical-origin'
 import { pageEntry } from './page-entry'
 import { communityMcp } from './community-mcp'
@@ -3180,6 +3183,7 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
 
 type SeoRoute =
   | { kind: 'instruments'; id: string | null }
+  | { kind: 'audit'; id: string | null }
   | { kind: 'static'; page: keyof typeof STATIC_PAGES }
   | { kind: 'report'; slug: string }
   | { kind: 'index'; dir: DirectoryKind }
@@ -3209,6 +3213,8 @@ interface PageMeta {
   card?: CardSpec | null
   prev?: string
   next?: string
+  /** Served with a noindex robots tag (an individual donor's page). */
+  noindex?: boolean
 }
 
 // How long a /subject/<dir>/<name> segment may be. A person, a party or a donor
@@ -3228,6 +3234,11 @@ const GRANT_RECIPIENT_ID_RE = /^(?:abn:\d{11}|name:[a-z0-9 .&'()-]{2,120}|person
 /** Route table for real paths. Trailing slashes tolerated, never canonical. */
 function matchSeoRoute(url: URL): SeoRoute | null {
   const path = url.pathname.replace(/\/+$/, '') || '/'
+  if (path === '/audit') return { kind: 'audit', id: null }
+  if (path.startsWith('/audit/') && !/^\/audit\/(?:manifest|index|ready|reports-\d+)\.json$/.test(path)) {
+    try { return { kind: 'audit', id: decodeURIComponent(path.slice('/audit/'.length)) } }
+    catch { return { kind: 'audit', id: '' } }
+  }
   if (path === '/instruments') return { kind: 'instruments', id: null }
   if (path === '/instrument' || path.startsWith('/instrument/')) {
     try { return { kind: 'instruments', id: decodeURIComponent(path.slice('/instrument/'.length)) } }
@@ -3323,6 +3334,7 @@ interface MoneyNode {
   label: string
   kind: 'donor' | 'party'
   industry: string
+  aliases?: string[]
   group: string
   total: number
   count: number
@@ -3724,6 +3736,8 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
   })
 
   switch (route.kind) {
+    case 'audit': return base({ ...await auditPage(route.id, url, auditReader(env.ASSETS), prerenderBlock),
+      ...(route.id && AUDIT_ID.test(route.id) ? { canonical: `${SITE_ORIGIN}/audit/${route.id}` } : {}) })
     case 'instruments': return base(await instrumentPage(route.id, url, instrumentReader(env.ASSETS), prerenderBlock))
     case 'grant-recipient': return grantRecipientMeta(route.jurisdiction, route.id, url, env)
     case 'static': {
@@ -4441,10 +4455,18 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
   const node = (dir === 'party' ? moneyData?.parties : moneyData?.donors)?.get(foldName(name)) ?? (dir==='party' ? [...(moneyData?.parties.values() || [])].find(p=>partyUrl(p.label).split('/').at(-1)===name.toLowerCase()) : null) ?? null
   const display = node?.label ?? (dir==='party' ? (await loadPartyLabels(env).catch(()=>[])).find(p=>partyUrl(p).split('/').at(-1)===name.toLowerCase()) : null) ?? name
   const canonical = dir==='party' ? `${SITE_ORIGIN}${partyUrl(display)}` : `${SITE_ORIGIN}/subject/${dir}/${encodeURIComponent(display)}`
+  // An individual donor is not named in server-rendered HTML, structured data
+  // or a share card, and the page is noindex. Without positive organisation
+  // evidence a donor counts as an individual (public/donor-entity.js).
+  if (dir === 'donor' && !isOrganisationDonor(node ?? { label: display })) {
+    const sentence = 'A disclosed political donor in the OPAX money data. Which parties it funded, year by year.'
+    return { title: 'Donor · OPAX', description: sentence, canonical, ogType: 'profile', status: 200, jsonLd: null,
+      prerender: prerenderBlock('Donor', sentence), card: null, noindex: true }
+  }
   const title = `${display} · OPAX`
   let facts: string
   let tail = ''
-  let ldType = 'Organization'
+  const ldType = 'Organization'
   let card: CardSpec
   if (dir === 'party') {
     const members = people?.people.filter((p) => p.party && foldName(p.party) === foldName(display)) ?? []
@@ -4465,8 +4487,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
       dot: node?.colour ?? null,
     }
   } else if (node) {
-    ldType = node.industry === 'individual' ? 'Person' : 'Organization'
-    const what = node.industry === 'individual' ? 'individual donor' : `${industryLabel(node.industry)} donor`
+    const what = node.industry === 'individual' ? 'donor' : `${industryLabel(node.industry)} donor`
     facts = `${display}: disclosed political ${what}, ${money(node.total)} across ${num(node.count)} receipts, ${years(node.firstYear, node.lastYear)} (${node.sourceShort}).`
     tail = 'Which parties it funded.'
     card = {
@@ -4752,7 +4773,7 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
     buildMeta(route, url, request, env, ctx),
   ])
   if (!shell.ok) return shell
-  const noindex = meta.status === 404 || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
+  const noindex = meta.noindex || meta.status === 404 || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
   // JSON-LD sits in a <script>: keep "</script>" from ever appearing in it.
   meta.prerender=associationCaveat(meta.prerender || '',`${meta.description} ${meta.prerender || ''}`)
   const ld = meta.jsonLd ? JSON.stringify(meta.jsonLd).replace(/</g, '\\u003c') : null
@@ -4785,7 +4806,7 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
         for(const [rel,href] of [['prev',meta.prev],['next',meta.next]]) if(href) el.append(`<link rel="${rel}" href="${escHtml(href)}">`,{html:true})
       },
     })
-  if (route.kind === 'instruments') rewriter.on('script[src]', { element(el) {
+  if (route.kind === 'instruments' || route.kind === 'audit') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } }).on('a[href^="/subject/person"]', { element(el) { el.remove() } })
   rewriter.on('main#main', { element(el) { el.setAttribute('data-server-rendered',''); el.setInnerContent(meta.prerender || '', { html: true }) } })
@@ -5385,6 +5406,10 @@ async function route(
         // (linked from evidence panels and corpus.json) forwards to the route.
         if (url.pathname === '/connections.html') return legacyConnectionsRedirect(url)
         const seoRoute = matchSeoRoute(url)
+        if (seoRoute?.kind === 'audit') {
+          const path = seoRoute.id === null ? '/audit' : AUDIT_ID.test(seoRoute.id) ? `/audit/${seoRoute.id}` : null
+          if (path && url.pathname !== path) return Response.redirect(`${SITE_ORIGIN}${path}${url.search}`, 301)
+        }
         if (seoRoute) return await serveSeoPage(seoRoute, url, request, env, ctx)
       }
       return await env.ASSETS.fetch(request)

@@ -7,10 +7,11 @@ import { personSlug, slugIndex, personIndex } from '../portal/src/person-slug.ts
 import { personNameKey } from '../portal/public/canonical-urls.js';
 import { splitSpeakers } from '../portal/public/speech-attribution.js';
 import { TOPIC_NAMES } from '../portal/src/topic-names.mjs';
-import { isOrganisationDonor } from '../portal/public/donor-privacy.js';
 import { fileKey } from '../portal/public/grants.js';
+import { isOrganisationDonor } from '../portal/public/donor-entity.js';
 
 import { catalogueComplete, unpack } from '../portal/public/instruments.js';
+import { auditComplete } from '../portal/public/audit.js';
 
 export const ORIGIN = 'https://opax.com.au';
 export const SITEMAP_LIMIT = 49_999;
@@ -46,7 +47,7 @@ export function sitemapFiles(groups, limit = SITEMAP_LIMIT) {
   return {files,index,counts};
 }
 
-export function llmsText(corpus, grants, instruments = null) {
+export function llmsText(corpus, grants, instruments = null, audit = null) {
   return `# OPAX
 
 > OPAX is an independent, non-partisan record of Australian parliament and public money. It connects parliamentary speeches, votes and bills with disclosed political funding, public contracts and grants.
@@ -72,6 +73,7 @@ OPAX code is AGPL-3.0. Source data retains its own terms: parliamentary material
 - [Electorates](${ORIGIN}/subject/electorate): \`/subject/electorate/{slug}\`; jurisdiction-specific seat records.
 - [Bills](${ORIGIN}/bills): \`/bill/{bill-key}\`; stages, original bill text and linked divisions.
 ${catalogueComplete(instruments) ? '- [Federal legislative instruments](' + ORIGIN + '/instruments): \`/instrument/{frl-id}\`; metadata only, with dates and links to authoritative FRL versions. No model summaries or person entities.\n' : ''}
+${auditComplete(audit) ? '- [Queensland audit reports](' + ORIGIN + '/audit): \`/audit/{report-id}\`; report index and numbered HTML recommendations, QAO source text under CC BY 4.0 with State of Queensland attribution. Per-report exceptions withhold bodies. PDF bodies, entity responses and the app surface are phase 2.\n' : ''}
 - [Divisions and source records](${ORIGIN}/ask): \`/doc/division-{division-key}\` for votes; \`/doc/{resource-slug}\` for speeches and other source records.
 - [Grant programs and organisation recipients](${ORIGIN}/money/grants): Programs use \`/money/grants?jur={federal|qld}&program={encoded-program-id}\`; recipients use \`/money/grants/{federal|qld}/recipient/{encoded-recipient-id}\`; a particular award adds \`?award={award-id}\`.
 - [Donors](${ORIGIN}/subject/donor): \`/subject/donor/{encoded-name}\`.
@@ -102,6 +104,19 @@ export function addInstrumentDiscovery(groups, manifest) {
   if (!catalogueComplete(manifest)) return;
   groups.instruments = instrumentCrawlEntries(manifest);
   groups.static.push({ path: '/instruments', lastmod: exportDate(manifest.generated_at) });
+}
+
+export function auditCrawlEntries(manifest) {
+  if (!auditComplete(manifest)) return [];
+  const lastmod = exportDate(manifest.generated_at);
+  if (!lastmod) throw new Error('Invalid audit export date');
+  return Object.keys(manifest.lookup).map(id => ({path: `/audit/${id}`, lastmod}));
+}
+
+export function addAuditDiscovery(groups, manifest) {
+  if (!auditComplete(manifest)) return;
+  groups.audit = auditCrawlEntries(manifest);
+  groups.static.push({path:'/audit', lastmod:exportDate(manifest.generated_at)});
 }
 
 export async function buildCrawl(root) {
@@ -152,6 +167,9 @@ export async function buildCrawl(root) {
     }
     fallbacks.static++; // the instrument directory uses its export snapshot
   }
+  const audit = await optional('audit/manifest.json');
+  addAuditDiscovery(groups, audit);
+  if(groups.audit) { fallbacks.audit=groups.audit.length; fallbacks.static++; } // audit pages use the export snapshot until per-report tabled dates are read
   const slugs = slugIndex(people).slugOf;
   const peopleDate = [roster.meta.generated,roster.meta.representation?.updated,seatManifest.generated].filter(Boolean).sort().at(-1);
   const recent=await optional('seo/recent-votes.json');
@@ -169,6 +187,7 @@ export async function buildCrawl(root) {
     for (const n of money.nodes) {
       if (!validId(n.label)) continue;
       // Individual donors stay out of the sitemap, as individual grant recipients do.
+      // The industry tag does not say who is a person: public/donor-entity.js.
       if (n.kind === 'donor' && !isOrganisationDonor(n)) continue;
       const map = n.kind === 'party' ? partyLabels : n.kind === 'donor' ? donors : null;
       if (map && !map.has(fold(n.label))) map.set(fold(n.label),{label:n.label,date:money.meta.generated});
@@ -244,7 +263,7 @@ export async function buildCrawl(root) {
   await mkdir(join(out,'sitemaps'),{recursive:true});
   await writeFile(join(out,'sitemap.xml'),result.index);
   for (const f of result.files) await writeFile(join(out,f.path.slice(1)),f.body);
-  await writeFile(join(out,'llms.txt'),llmsText(corpus,grants,instruments));
+  await writeFile(join(out,'llms.txt'),llmsText(corpus,grants,instruments,audit));
   const entries = [...snapshot].sort(([a],[b])=>a.localeCompare(b,'en'));
   await writeFile(join(out,'indexnow.json'),JSON.stringify({entries}));
   await writeFile(join(out,'manifest.json'),JSON.stringify({counts:result.counts,lastmodFallbacks:fallbacks,files:result.files.map(({body,...f})=>f)},null,2)+'\n');

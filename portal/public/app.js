@@ -6,7 +6,7 @@ let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels, source lines and ⋯ (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = import("/growth-modules.js?v=2e332c3951").then(module => { growthModules = module; });
+const growthModulesReady = import("/growth-modules.js?v=097cceba9a").then(module => { growthModules = module; });
 let uiLabels;
 const uiLabelsReady = import('/labels.js?v=804befe8de').then(module => { uiLabels = module; });
 let attributionHelpers;
@@ -1584,7 +1584,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=a327fb4d28");
+    const module = await import("/suppliers.js?v=4cf6f291a2");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -2225,7 +2225,7 @@ function reportGlyph(slug, cls) {
 }
 
 function reportsMenuHTML(list) {
-  return list.map((r) => `
+  return '<a class="mm-link" href="/audit"><span class="mm-title">Queensland audit reports</span><span class="mm-blurb">Reports tabled in Parliament and QAO recommendations.</span></a>' + list.map((r) => `
     <a class="mm-link" href="/reports/${esc(r.slug)}">${reportGlyph(r.slug, "mm-glyph")}
       <span class="mm-title">${esc(r.title)}</span>
       <span class="mm-blurb">${esc(r.blurb)}</span>
@@ -3657,14 +3657,15 @@ function partyMapForRoster(roster) {
 }
 
 function declaredTieHTML(ties) {
-  if (!Array.isArray(ties) || !ties.length) return "";
+  ties = growthModules.publicOrganisationTies(Array.isArray(ties) ? ties : []);
+  if (!ties.length) return "";
   return `<p class="declared-match">Name match: ${ties.map((tie) => {
     const kinds = Array.isArray(tie.kinds) ? tie.kinds : [tie.kind];
     const labels = [];
     if (kinds.includes("donor")) labels.push(`AEC donor${tie.industry ? ` · ${industryLabel(tie.industry)}` : ""}`);
     if (kinds.includes("lobbyist")) labels.push("registered lobbying firm");
     if (kinds.includes("fits")) labels.push("FITS registrant");
-    const org = tie.donor_id && growthModules.organisationDonor({kind: "donor", industry: tie.industry})
+    const org = tie.donor_id && growthModules.isOrganisationDonor({...tie, label: tie.organisation})
       ? `<a ${entityHrefAttr(subjectHash("donor", tie.organisation))}>${esc(tie.organisation)}</a>`
       : safeUrl(tie.fits_url)
         ? `<a href="${esc(tie.fits_url)}" rel="noopener" target="_blank">${esc(tie.organisation)} ↗︎</a>`
@@ -3883,7 +3884,7 @@ async function renderPersonInterests(name, personId, sections, onRecord = () => 
       <ul class="subject-list ties-list" role="list">${[...tiesByOrg].map(([org, orgTies]) => {
         const sourceTie = orgTies.find((t) => t.kind === "donor") || orgTies[0];
         const lead = { ...sourceTie, kinds: [...new Set(orgTies.flatMap((t) => t.kinds || [t.kind]))] };
-        const orgLabel = lead.donor_id && growthModules.organisationDonor({...lead, kind: "donor", label: org})
+        const orgLabel = lead.donor_id && growthModules.isOrganisationDonor({...lead, label: org})
           ? `<a class="source-title" ${entityHrefAttr(subjectHash("donor", org))}>${esc(org)}</a>`
           : `<span class="source-title">${esc(org)}</span>`;
         const declarations = orgTies.map((tie) => {
@@ -5361,7 +5362,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     if (node.label && node.label !== name) {
       setCrumbs([{ label: isParty ? "Parties" : "Donors", href: `/subject/${node.kind}` }, { label: node.label }]);
     }
-    const flows = moneyData.edges.filter((e) => (isParty ? e.target : e.source) === node.id);
+    const flows = moneyData.edges.filter((e) => (isParty ? e.target : e.source) === node.id)
+      .filter(e => !isParty || growthModules.isOrganisationDonor(moneyData.nodes.find(n => n.id === e.source)));
     const counter = new Map();
     for (const e of flows) {
       const other = String(isParty ? e.source : e.target).replace(/^(donor|party):/, "");
@@ -11618,13 +11620,13 @@ const FILTER_KIND_LABELS = {
   person: "Person", party: "Political party", donor: "Donor", receipt: "Political receipts",
   agency: "Government agency", supplier: "Supplier", contract: "Government contract", grant: "Grant", bill: "Bill", bill_text: "Bill text",
   interest: "Declared interest", expense: "Parliamentary expenses", pay: "Parliamentary pay", access: "Meeting or lobbying register",
-  campaigner: "Campaigner or associated entity", report: "Research report",
+  campaigner: "Campaigner or associated entity", report: "Research report", 'audit report': "Audit report",
 };
 // A document kind narrows the search in hand: the query and filters travel
 // with it, so "Speeches" on a row is the same search, speeches only, rather
 // than an empty form. Dataset kinds go to their own hubs.
 function recordTypeHref(kind, q = "", f = {}) {
-  const roots = { person:'/subject/person', party:'/subject/party', donor:'/subject/donor', agency:'/subject/agency', supplier:'/subject/supplier', receipt:'/money/receipts', contract:'/discover', grant:'/money/grants', bill:'/bills', bill_text:'/bills', interest:'/declared', campaigner:'/subject/campaigner', report:'/reports' };
+  const roots = { person:'/subject/person', party:'/subject/party', donor:'/subject/donor', agency:'/subject/agency', supplier:'/subject/supplier', receipt:'/money/receipts', contract:'/discover', grant:'/money/grants', bill:'/bills', bill_text:'/bills', interest:'/declared', campaigner:'/subject/campaigner', report:'/reports', 'audit report':'/audit' };
   if (roots[kind]) return roots[kind];
   const p = new URLSearchParams();
   if (q) p.set("q", q);
