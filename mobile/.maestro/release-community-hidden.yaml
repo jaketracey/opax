@@ -14,9 +14,10 @@ name: Community hidden, as in the 1.0 App Store build - Today and Account offer 
     timeout: 30000
 - assertVisible:
     id: today-screen
+# The grid's own section ID is not in the hierarchy; its tiles are.
 - scrollUntilVisible:
     element:
-      id: today-explore
+      id: today-reports
     timeout: 90000
 - scrollUntilVisible:
     element:
@@ -24,7 +25,7 @@ name: Community hidden, as in the 1.0 App Store build - Today and Account offer 
     visibilityPercentage: 100
     timeout: 90000
 - assertVisible:
-    id: today-reports
+    id: today-explore-open
 - assertNotVisible:
     id: today-community
 - takeScreenshot: ${EVIDENCE}/release-today-explore
