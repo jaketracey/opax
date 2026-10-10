@@ -16,6 +16,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Button,
+  Card,
   Divider,
   Heading,
   Text,
@@ -29,8 +30,7 @@ import {
   hairline,
   isAccessibilityCategory,
   layout,
-  radius,
-  spacing,
+  rhythm,
 } from '../design/tokens';
 import {
   finishLabel,
@@ -337,9 +337,9 @@ function PhoneTour({
         style={[
           styles.masthead,
           {
-            paddingTop: insets.top + spacing.s2,
+            paddingTop: insets.top + rhythm.tight,
             paddingLeft: layout.screenMargin + insets.left,
-            paddingRight: layout.screenMargin - spacing.s3 + insets.right,
+            paddingRight: layout.screenMargin - rhythm.tight + insets.right,
           },
         ]}
       >
@@ -412,7 +412,7 @@ function PhoneTour({
         style={[
           styles.controls,
           {
-            paddingBottom: insets.bottom + spacing.s3,
+            paddingBottom: insets.bottom + rhythm.tight,
             paddingLeft: layout.screenMargin + insets.left,
             paddingRight: layout.screenMargin + insets.right,
           },
@@ -507,9 +507,11 @@ function Page({
           },
         ],
       };
+  // The picture is held in the app's one card (12pt corners, a hairline, no
+  // shadow), padded 16 a side.
   const plateInner = width - 2 * margin - insets.left - insets.right - 2 * 16;
   const stage = (
-    <View style={styles.plate}>
+    <Card style={styles.plate}>
       {page.example ? (
         <Text variant="label" testID={`tour-example-${page.id}`}>
           Example
@@ -525,7 +527,7 @@ function Page({
           reduced={motion}
         />
       </Animated.View>
-    </View>
+    </Card>
   );
   const text = (
     <Animated.View
@@ -596,9 +598,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingBottom: spacing.s2,
+    paddingBottom: rhythm.tight,
   },
-  brand: { flexDirection: 'row', alignItems: 'center', gap: spacing.s3 },
+  brand: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
   mark: { width: 28, height: 28 },
   wordmark: {
     fontFamily: fonts.serifBold,
@@ -609,22 +611,15 @@ const styles = StyleSheet.create({
   rule: { paddingHorizontal: layout.screenMargin },
   pager: { flex: 1 },
   page: {
-    paddingTop: spacing.s5,
-    paddingBottom: spacing.s5,
-    gap: spacing.s5,
+    paddingTop: rhythm.group,
+    paddingBottom: rhythm.group,
+    gap: rhythm.group,
   },
-  plate: {
-    backgroundColor: colors.raised,
-    borderColor: colors.line,
-    borderWidth: hairline,
-    borderRadius: radius + 12,
-    padding: 16,
-    gap: spacing.s3,
-  },
-  words: { gap: spacing.s3 },
+  plate: { gap: rhythm.tight },
+  words: { gap: rhythm.tight },
   controls: {
-    gap: spacing.s4,
-    paddingTop: spacing.s3,
+    gap: rhythm.block,
+    paddingTop: rhythm.tight,
     borderTopWidth: hairline,
     borderTopColor: colors.dividerSubtle,
     backgroundColor: colors.paper,
@@ -633,10 +628,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: spacing.s2,
+    gap: rhythm.tight,
     minHeight: 12,
   },
   tick: { width: 24, borderRadius: 1 },
   tickCurrent: { height: 3, backgroundColor: colors.navy },
-  tickOther: { height: hairline, backgroundColor: colors.lineStrong },
+  tickOther: { height: hairline, backgroundColor: colors.lineControl },
 });

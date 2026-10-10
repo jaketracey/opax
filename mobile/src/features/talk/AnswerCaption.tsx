@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import { Text } from '../../design/primitives';
-import { spacing } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
 import type { TranscriptTurn } from '../../voice';
 
 /**
@@ -28,7 +28,7 @@ export function AnswerCaption({ turn }: { turn: TranscriptTurn }) {
 }
 
 const styles = StyleSheet.create({
-  you: { alignSelf: 'flex-end', maxWidth: '85%', paddingLeft: spacing.s5 },
+  you: { alignSelf: 'flex-end', maxWidth: '85%', paddingLeft: rhythm.group },
   opax: { alignSelf: 'stretch' },
   right: { textAlign: 'right' },
 });

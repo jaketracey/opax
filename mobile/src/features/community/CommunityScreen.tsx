@@ -23,15 +23,15 @@ import {
   StepButtons,
   Text,
 } from '../../design/primitives';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState, type ReactNode } from 'react';
 import {
   AccessibilityInfo,
   Alert,
   Keyboard,
   Platform,
   Pressable,
+  RefreshControl,
   StyleSheet,
-  TextInput,
   View,
 } from 'react-native';
 import {
@@ -41,13 +41,7 @@ import {
   useFocusEffect,
   type Href,
 } from 'expo-router';
-import {
-  colors,
-  fonts,
-  minimumTarget,
-  radii,
-  rhythm,
-} from '../../design/tokens';
+import { colors, minimumTarget, rhythm } from '../../design/tokens';
 import { formatCount } from '../../design/format';
 import { openSource, canonicalUrl } from '../../navigation/external';
 import { fromWebPath } from '../../navigation/routes';
@@ -217,9 +211,13 @@ function ThreadRows({ items }: { items: Row[] }) {
           >
             <Portrait />
             <View style={styles.rowContent}>
-              <Text variant="subheading">{text(t, 'title')}</Text>
-              <Text variant="metadata">{text(t, 'display_name')}</Text>
-              <Text variant="fine">
+              <Text wordSafe variant="subheading">
+                {text(t, 'title')}
+              </Text>
+              <Text wordSafe variant="metadata">
+                {text(t, 'display_name')}
+              </Text>
+              <Text wordSafe variant="fine">
                 {dateLine(t)} · {replyCount(t)}
               </Text>
             </View>
@@ -232,21 +230,43 @@ function replyCount(row: Row) {
   const n = count(row, 'replies');
   return `${formatCount(n)} ${n === 1 ? 'reply' : 'replies'}`;
 }
-function MemberByline({ member, testID }: { member: Row; testID?: string }) {
+/**
+ * Who wrote a discussion or reply, linked to their profile, with one quiet
+ * trailing action (Report) where there is one.
+ */
+function MemberByline({
+  member,
+  action,
+  testID,
+}: {
+  member: Row;
+  action?: ReactNode;
+  testID?: string;
+}) {
   return (
-    <Pressable
-      accessibilityRole="link"
-      accessibilityLabel={`${text(member, 'display_name')}, ${dateLine(member)}`}
-      onPress={() => go('member', { id: text(member, 'member_id') })}
-      testID={testID}
-      style={({ pressed }) => [styles.byline, pressed ? styles.pressed : null]}
-    >
-      <Portrait />
-      <View style={styles.rowContent}>
-        <Text variant="strong">{text(member, 'display_name')}</Text>
-        <Text variant="fine">{dateLine(member)}</Text>
-      </View>
-    </Pressable>
+    <View style={styles.bylineRow}>
+      <Pressable
+        accessibilityRole="link"
+        accessibilityLabel={`${text(member, 'display_name')}, ${dateLine(member)}`}
+        onPress={() => go('member', { id: text(member, 'member_id') })}
+        testID={testID}
+        style={({ pressed }) => [
+          styles.byline,
+          pressed ? styles.pressed : null,
+        ]}
+      >
+        <Portrait />
+        <View style={styles.rowContent}>
+          <Text wordSafe variant="strong">
+            {text(member, 'display_name')}
+          </Text>
+          <Text wordSafe variant="fine">
+            {dateLine(member)}
+          </Text>
+        </View>
+      </Pressable>
+      {action}
+    </View>
   );
 }
 function SearchBox({
@@ -267,32 +287,20 @@ function SearchBox({
     setSubmitted(next);
     onSearch(next);
   };
+  // The app's one search field (Search draws the same): the keyboard's
+  // Search key, or Return on a hardware keyboard, submits.
   return (
-    <View style={styles.search}>
-      <Icon name="magnifyingglass" tone="inkSoft" />
-      <TextInput
-        accessibilityLabel={label}
-        placeholder={label}
-        placeholderTextColor={colors.inkSoft}
-        value={q}
-        onChangeText={setQ}
-        maxLength={120}
-        autoCapitalize="none"
-        autoCorrect={false}
-        returnKeyType="search"
-        onSubmitEditing={submit}
-        allowFontScaling
-        style={styles.searchInput}
-        testID="community-search"
-      />
-      <IconButton
-        symbol="arrow.right"
-        accessibilityLabel={label}
-        onPress={submit}
-        disabled={q.trim() === submitted}
-        testID="community-search-submit"
-      />
-    </View>
+    <Field
+      label={label}
+      value={q}
+      onChangeText={setQ}
+      maxLength={120}
+      autoCapitalize="none"
+      autoCorrect={false}
+      returnKeyType="search"
+      onSubmitEditing={submit}
+      testID="community-search"
+    />
   );
 }
 export function CommunityScreen() {
@@ -484,7 +492,7 @@ function CommunityPage() {
       }
       void mutate(`threads/${id}`, 'POST', { body: draft.trim() }, () => {
         setDraft('');
-        setNotice('Reply posted. Use Refresh to read it.');
+        setNotice('Reply posted. Pull down to see it.');
       });
     } else if (view === 'conversation') {
       void mutate(
@@ -506,7 +514,7 @@ function CommunityPage() {
               id: text(d, 'id'),
               title: 'Open conversation',
             });
-          else setNotice('Message sent. Use Refresh to read it.');
+          else setNotice('Message sent. Pull down to see it.');
         },
       );
     }
@@ -530,33 +538,45 @@ function CommunityPage() {
   const share = (kind: CommunityView, title: string, recordID?: string) =>
     void shareRecord({ path: communitySharePath(kind, recordID), title });
   let content;
+  // A discussion, member, reading list or the guidelines is titled once, by
+  // its own level 1 heading (as a bill or a profile is), not again in the bar.
+  let heading: string | null = null;
+  const signInPrompt = (message: string) => (
+    <Group gap={rhythm.heading}>
+      <Text wordSafe>{message}</Text>
+      <Button
+        label="Sign in"
+        variant="primary"
+        testID="community-sign-in"
+        onPress={() => router.push('/account/sign-in' as Href)}
+      />
+    </Group>
+  );
   if (restricted && !signedIn)
     content = (
       <Section rule={false}>
-        <Text>Sign in to connect with other readers.</Text>
-        <LinkRow
-          title="Sign in"
-          testID="community-sign-in"
-          onPress={() => router.push('/account/sign-in' as Href)}
-        />
+        {signInPrompt('Sign in to connect with other readers.')}
       </Section>
     );
-  else if (view === 'guidelines')
+  else if (view === 'guidelines') {
+    heading = titles.guidelines;
     content = (
       <>
         <Section rule={false}>
           <Heading level={1}>
             Follow the evidence. Make room for each other.
           </Heading>
-          <Text>This community helps people understand the public record.</Text>
+          <Text wordSafe>
+            This community helps people understand the public record.
+          </Text>
         </Section>
         {guidelines.map(([heading, body]) => (
           <Section key={heading} title={heading}>
-            <Text>{body}</Text>
+            <Text wordSafe>{body}</Text>
           </Section>
         ))}
         <Section title="Community terms">
-          <Text>
+          <Text wordSafe>
             There is no tolerance for objectionable content or abusive users. By
             posting, you agree to these guidelines and to moderators removing
             content that breaks them.
@@ -576,12 +596,12 @@ function CommunityPage() {
         </Section>
       </>
     );
-  else if (view === 'report')
+  } else if (view === 'report')
     content = (
       <Section rule={false}>
-        <Text>What should a moderator review?</Text>
+        <Text wordSafe>What should a moderator review?</Text>
         {params.kind === 'message' ? (
-          <Text variant="metadata">
+          <Text wordSafe variant="metadata">
             Reporting a message shares only that message with moderators.
           </Text>
         ) : null}
@@ -620,7 +640,7 @@ function CommunityPage() {
   else if (view === 'new-thread')
     content = (
       <Section rule={false}>
-        <Text variant="metadata">
+        <Text wordSafe variant="metadata">
           Give people enough context to explore it with you. Member discussions
           are separate from source records.
         </Text>
@@ -664,7 +684,7 @@ function CommunityPage() {
   else if (view === 'conversation' && !id)
     content = (
       <Section rule={false}>
-        <Text>Send a message to this community member.</Text>
+        <Text wordSafe>Send a message to this community member.</Text>
         <Composer
           ref={composerSurface}
           label="Your message"
@@ -688,32 +708,37 @@ function CommunityPage() {
     content = (
       <>
         <Section rule={false}>
-          <Text>Questions, sources and conversations worth following.</Text>
-          <ChoiceChips
-            value={feed!}
-            onChange={(value) => {
-              if (value === 'all' || requireSignIn())
-                go('home', { feed: value });
-            }}
-            segments={[
-              { value: 'all', label: 'Latest' },
-              { value: 'following', label: 'Following' },
-              { value: 'saved', label: 'Saved' },
-            ]}
-            testID="community-feeds"
-          />
+          <Text wordSafe>
+            Questions, sources and conversations worth following.
+          </Text>
+          {/* Following and Saved are a member's own: signed out, Latest is
+              the only feed, so no choice is drawn. */}
+          {signedIn ? (
+            <ChoiceChips
+              value={feed!}
+              onChange={(value) => go('home', { feed: value })}
+              segments={[
+                { value: 'all', label: 'Latest' },
+                { value: 'following', label: 'Following' },
+                { value: 'saved', label: 'Saved' },
+              ]}
+              testID="community-feeds"
+            />
+          ) : null}
           <SearchBox
             label="Search discussions"
             initial={q}
             onSearch={(q) => go('home', { feed: feed!, q })}
           />
-          <LinkRow
-            title="Start a discussion"
-            testID="community-new"
-            onPress={() => {
-              if (requireSignIn()) go('new-thread');
-            }}
-          />
+          {signedIn ? (
+            <RowList>
+              <LinkRow
+                title="Start a discussion"
+                testID="community-new"
+                onPress={() => go('new-thread')}
+              />
+            </RowList>
+          ) : null}
         </Section>
         <PadGrid>
           <Section title="Discussions">
@@ -727,24 +752,32 @@ function CommunityPage() {
             {pagination(flag(data.more), 'home')}
           </Section>
           <Section title="Your community">
+            {/* Signed out, one prompt stands for the six member pages. */}
+            {signedIn
+              ? null
+              : signInPrompt(
+                  'Sign in to start a discussion, reply, message members and keep reading lists.',
+                )}
             <RowList>
-              {(
-                [
-                  'members',
-                  'messages',
-                  'activity',
-                  'lists',
-                  'profile',
-                  'settings',
-                ] as CommunityView[]
-              ).map((v) => (
-                <LinkRow
-                  key={v}
-                  title={titles[v]}
-                  testID={`community-open-${v}`}
-                  onPress={() => go(v)}
-                />
-              ))}
+              {signedIn
+                ? (
+                    [
+                      'members',
+                      'messages',
+                      'activity',
+                      'lists',
+                      'profile',
+                      'settings',
+                    ] as CommunityView[]
+                  ).map((v) => (
+                    <LinkRow
+                      key={v}
+                      title={titles[v]}
+                      testID={`community-open-${v}`}
+                      onPress={() => go(v)}
+                    />
+                  ))
+                : null}
               <LinkRow
                 title="Community guidelines"
                 testID="community-open-guidelines"
@@ -758,6 +791,7 @@ function CommunityPage() {
   else if (view === 'thread' && data) {
     const t = object(data.thread),
       owner = text(t, 'member_id');
+    if (!isBlocked(owner)) heading = text(t, 'title');
     content = isBlocked(owner) ? (
       <EmptyState message="This member is blocked. Their discussions are hidden." />
     ) : (
@@ -765,7 +799,7 @@ function CommunityPage() {
         <Section rule={false}>
           <Heading level={1}>{text(t, 'title')}</Heading>
           <MemberByline member={t} testID="community-author" />
-          <Text>{text(t, 'body')}</Text>
+          <Text wordSafe>{text(t, 'body')}</Text>
           {text(t, 'source_path') ? (
             <LinkRow
               title="Open OPAX record"
@@ -803,6 +837,8 @@ function CommunityPage() {
                 name={flag(t.liked) ? 'heart.fill' : 'heart'}
                 tone={working ? 'inkSoft' : 'navy'}
               />
+              {/* A count hugs its digits: not word-safe, which would chase
+                  its own frame. */}
               <Text variant="control" tone={working ? 'inkSoft' : 'navy'}>
                 {formatCount(count(t, 'likes'))}
               </Text>
@@ -844,19 +880,24 @@ function CommunityPage() {
             {rows(data, 'replies')
               .filter((r) => !isBlocked(text(r, 'member_id')))
               .map((r) => (
-                <Group key={text(r, 'id')}>
-                  <MemberByline member={r} />
-                  <Text>{text(r, 'body')}</Text>
-                  <LinkRow
-                    title="Report reply"
-                    testID={`community-report-reply-${text(r, 'id')}`}
-                    onPress={() => report(text(r, 'id'))}
+                <Group key={text(r, 'id')} gap={rhythm.tight}>
+                  <MemberByline
+                    member={r}
+                    action={
+                      <IconButton
+                        symbol="flag"
+                        accessibilityLabel={`Report reply from ${text(r, 'display_name')}`}
+                        testID={`community-report-reply-${text(r, 'id')}`}
+                        onPress={() => report(text(r, 'id'))}
+                      />
+                    }
                   />
+                  <Text wordSafe>{text(r, 'body')}</Text>
                 </Group>
               ))}
           </RowList>
           {data.more_replies ? (
-            <Text variant="metadata">
+            <Text wordSafe variant="metadata">
               Showing the latest replies. Open the discussion on OPAX to read
               more.
             </Text>
@@ -885,14 +926,12 @@ function CommunityPage() {
     content = (
       <>
         <Section rule={false}>
-          <Text>Find people exploring the public record.</Text>
+          <Text wordSafe>Find people exploring the public record.</Text>
           <SearchBox
             label="Search community members"
             initial={q}
             onSearch={(q) => go('members', { q })}
           />
-        </Section>
-        <Section title="Members">
           <RowList>
             {rows(data, 'members')
               .filter((m) => !isBlocked(text(m, 'id')))
@@ -914,9 +953,10 @@ function CommunityPage() {
     const m = object(data.member),
       relationship = object(data.relationship),
       blocked = isBlocked(id) || flag(relationship.blocked);
+    if (!blocked) heading = text(m, 'name');
     content = blocked ? (
       <Section rule={false}>
-        <Text testID="community-blocked">
+        <Text wordSafe testID="community-blocked">
           Member blocked. Their discussions, messages and activity are hidden.
         </Text>
         <Button
@@ -933,8 +973,10 @@ function CommunityPage() {
       <>
         <Section rule={false}>
           <Heading level={1}>{text(m, 'name')}</Heading>
-          <Text>{text(m, 'bio')}</Text>
-          <Text variant="fine">Joined {dateLine(m)}</Text>
+          <Text wordSafe>{text(m, 'bio')}</Text>
+          <Text wordSafe variant="fine">
+            Joined {dateLine(m)}
+          </Text>
           <KeyValueList
             items={Object.entries(object(data.stats)).map(([label, value]) => ({
               label,
@@ -1022,7 +1064,6 @@ function CommunityPage() {
   } else if (view === 'messages' && data)
     content = (
       <Section rule={false}>
-        <Text>Your conversations</Text>
         <RowList>
           {rows(data, 'conversations')
             .filter((c) => !isBlocked(text(c, 'member_id')))
@@ -1059,24 +1100,27 @@ function CommunityPage() {
           />
           <RowList>
             {messages.map((msg) => (
-              <Group key={text(msg, 'id')}>
-                <Text variant="metadata">
-                  {text(msg, 'sender_id') === text(m, 'id')
-                    ? text(m, 'name')
-                    : 'You'}{' '}
-                  · {dateLine(msg)}
-                </Text>
-                <Text>
+              <Group key={text(msg, 'id')} gap={rhythm.line}>
+                <View style={styles.messageHead}>
+                  <Text wordSafe variant="metadata" style={styles.grow}>
+                    {text(msg, 'sender_id') === text(m, 'id')
+                      ? text(m, 'name')
+                      : 'You'}{' '}
+                    · {dateLine(msg)}
+                  </Text>
+                  {text(msg, 'sender_id') === text(m, 'id') &&
+                  !flag(msg.hidden) ? (
+                    <IconButton
+                      symbol="flag"
+                      accessibilityLabel={`Report message from ${text(m, 'name')}`}
+                      testID={`community-report-message-${text(msg, 'id')}`}
+                      onPress={() => report(text(msg, 'id'), 'message')}
+                    />
+                  ) : null}
+                </View>
+                <Text wordSafe>
                   {flag(msg.hidden) ? 'Message removed' : text(msg, 'body')}
                 </Text>
-                {text(msg, 'sender_id') === text(m, 'id') &&
-                !flag(msg.hidden) ? (
-                  <LinkRow
-                    title="Report message"
-                    testID={`community-report-message-${text(msg, 'id')}`}
-                    onPress={() => report(text(msg, 'id'), 'message')}
-                  />
-                ) : null}
               </Group>
             ))}
           </RowList>
@@ -1117,7 +1161,7 @@ function CommunityPage() {
               submitTestID="community-send"
             />
           ) : (
-            <Text>Messaging is currently unavailable.</Text>
+            <Text wordSafe>Messaging is currently unavailable.</Text>
           )}
         </Section>
         <Section>
@@ -1132,7 +1176,7 @@ function CommunityPage() {
   } else if (view === 'activity' && data)
     content = (
       <Section rule={false}>
-        <Text>Replies, likes and new followers.</Text>
+        <Text wordSafe>Replies, likes and new followers.</Text>
         <RowList>
           {rows(data, 'notifications')
             .filter((n) => !isBlocked(text(n, 'actor_id')))
@@ -1208,7 +1252,7 @@ function CommunityPage() {
           />
         </Section>
         <Section title="Email notifications">
-          <Text>
+          <Text wordSafe>
             Email me when another member replies to a discussion I started.
           </Text>
           <SegmentedControl
@@ -1230,7 +1274,7 @@ function CommunityPage() {
           />
         </Section>
         <Section title="Blocked members">
-          <Text>
+          <Text wordSafe>
             Blocking stops messages, removes your follow connections and hides
             each other’s discussions while signed in.
           </Text>
@@ -1248,7 +1292,7 @@ function CommunityPage() {
             <RowList>
               {blockedRows.map((m) => (
                 <Group key={text(m, 'id')}>
-                  <Text>{text(m, 'name')}</Text>
+                  <Text wordSafe>{text(m, 'name')}</Text>
                   <Button
                     label="Unblock"
                     onPress={() =>
@@ -1269,7 +1313,7 @@ function CommunityPage() {
               ))}
             </RowList>
           ) : null}
-          <Text variant="metadata">
+          <Text wordSafe variant="metadata">
             Public discussions can still be read when signed out.
           </Text>
         </Section>
@@ -1278,7 +1322,7 @@ function CommunityPage() {
   else if (view === 'profile' && data)
     content = (
       <Section rule={false}>
-        <Text>
+        <Text wordSafe>
           Your email stays private. Your display name and bio are public.
         </Text>
         <Field
@@ -1315,7 +1359,7 @@ function CommunityPage() {
     content = (
       <>
         <Section rule={false}>
-          <Text>
+          <Text wordSafe>
             Keep a trail through the record, for yourself or to share.
           </Text>
           <RowList>
@@ -1378,14 +1422,15 @@ function CommunityPage() {
   else if (view === 'list' && data) {
     const l = object(data.list),
       own = signedIn && ownsList(id, text(l, 'member_id'));
+    if (!isBlocked(text(l, 'member_id'))) heading = text(l, 'title');
     content = isBlocked(text(l, 'member_id')) ? (
       <EmptyState message="This member is blocked. Their reading lists are hidden." />
     ) : (
       <>
         <Section rule={false}>
           <Heading level={1}>{text(l, 'title')}</Heading>
-          <Text>{text(l, 'description')}</Text>
-          <Text variant="metadata">
+          <Text wordSafe>{text(l, 'description')}</Text>
+          <Text wordSafe variant="metadata">
             {flag(l.public) ? 'Shared reading list' : 'Private reading list'} ·{' '}
             {text(l, 'display_name')}
           </Text>
@@ -1404,7 +1449,7 @@ function CommunityPage() {
                   testID={`community-list-item-${text(i, 'id')}`}
                   onPress={() => record(text(i, 'path'))}
                 />
-                <Text>{text(i, 'note')}</Text>
+                <Text wordSafe>{text(i, 'note')}</Text>
                 {own ? (
                   <Button
                     label="Remove from list"
@@ -1526,15 +1571,31 @@ function CommunityPage() {
   }
   return (
     <>
-      <Stack.Screen options={{ title: titles[view] }} />
+      <Stack.Screen
+        options={
+          // The bar keeps the view's name for Back ("‹ Discussion").
+          heading
+            ? { title: titles[view], headerTitle: '' }
+            : { title: titles[view] }
+        }
+      />
       <KeyboardStableScreen
         column="wide"
         testID={`community-${view}`}
         keyboardTarget={composerSurface}
+        refreshControl={
+          path && data ? (
+            <RefreshControl
+              refreshing={busy}
+              onRefresh={() => void reload(true)}
+            />
+          ) : undefined
+        }
       >
         <Group>
           {failure ? (
             <Text
+              wordSafe
               tone="danger"
               accessibilityRole="alert"
               testID="community-error"
@@ -1543,7 +1604,11 @@ function CommunityPage() {
             </Text>
           ) : null}
           {notice ? (
-            <Text accessibilityLiveRegion="polite" testID="community-notice">
+            <Text
+              wordSafe
+              accessibilityLiveRegion="polite"
+              testID="community-notice"
+            >
               {notice}
             </Text>
           ) : null}
@@ -1556,16 +1621,6 @@ function CommunityPage() {
           ) : null}
           {content}
         </Group>
-        {path && data ? (
-          <Section>
-            <Button
-              label="Refresh"
-              loading={busy}
-              onPress={() => void reload(true)}
-              testID="community-refresh"
-            />
-          </Section>
-        ) : null}
         {view !== 'home' ? (
           <Section>
             <LinkRow
@@ -1588,30 +1643,21 @@ const styles = StyleSheet.create({
     gap: rhythm.heading,
   },
   rowContent: { flex: 1, minWidth: 0, gap: rhythm.line },
+  bylineRow: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
   byline: {
+    flex: 1,
     minHeight: minimumTarget,
     flexDirection: 'row',
     alignItems: 'center',
     gap: rhythm.heading,
   },
-  pressed: { backgroundColor: colors.sunken },
-  search: {
+  messageHead: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: rhythm.tight,
-    paddingLeft: rhythm.heading,
-    backgroundColor: colors.sunken,
-    borderRadius: radii.md,
   },
-  searchInput: {
-    flex: 1,
-    minWidth: 0,
-    minHeight: minimumTarget,
-    paddingVertical: rhythm.tight,
-    fontFamily: fonts.sans,
-    fontSize: 17,
-    color: colors.ink,
-  },
+  grow: { flex: 1 },
+  pressed: { backgroundColor: colors.sunken },
   actions: {
     flexDirection: 'row',
     flexWrap: 'wrap',

@@ -15,21 +15,22 @@ import {
   type ViewStyle,
 } from 'react-native';
 import {
-  AsAtLine,
   Button,
   Divider,
   Field,
   Group,
+  MachineLabel,
   PersonRow,
+  SourceLine,
   Text,
 } from '../design/primitives';
-import { spacing } from '../design/tokens';
+import { rhythm } from '../design/tokens';
 import { RecordRow } from '../features/RecordRow';
 import type { WelcomePage } from './pages';
 
 /**
  * The tour's scenes: small pictures of the app, built from its own
- * components (Field, Button, PersonRow, RecordRow, AsAtLine, Divider). They
+ * components (Field, Button, PersonRow, RecordRow, SourceLine, Divider). They
  * are pictures: never touchable, hidden from VoiceOver (the page's words say
  * the same), and the records in them are samples, labelled "Example" above
  * the picture. Placeholders name roles ("Your member"), never a real person,
@@ -117,16 +118,16 @@ function AboutScene() {
     ['Public disclosures', 'Registers of interests'],
   ] as const;
   return (
-    <Group gap={spacing.s3}>
+    <Group gap={rhythm.tight}>
       <Reveal order={0}>
-        <Group gap={spacing.s3}>
+        <Group gap={rhythm.tight}>
           <Text variant="label">The public record</Text>
           <Divider variant="accent" />
         </Group>
       </Reveal>
       {rows.map(([name, source], index) => (
         <Reveal key={name} order={index + 1}>
-          <Group gap={spacing.s1}>
+          <Group gap={rhythm.line}>
             <Text variant="strong">{name}</Text>
             <Text variant="fine">{source}</Text>
             {index < rows.length - 1 ? (
@@ -143,25 +144,25 @@ function AboutScene() {
 
 function YourMPScene() {
   return (
-    <Group gap={spacing.s3}>
+    <Group gap={rhythm.tight}>
       <Reveal order={0}>
         <Field label="Electorate or member’s name" value="Example" />
       </Reveal>
       <Reveal order={1}>
-        <Group gap={spacing.s1}>
+        <Group gap={rhythm.line}>
           <Button label="Example electorate" onPress={noop} />
           <Text variant="metadata">House of Representatives</Text>
         </Group>
       </Reveal>
       <Reveal order={2}>
-        <Group gap={spacing.s1}>
+        <Group gap={rhythm.line}>
           <Divider />
           <Text variant="subheading">Your member</Text>
           <PersonRow name="Your member" place="Member for your electorate" />
         </Group>
       </Reveal>
       <Reveal order={3}>
-        <Group gap={spacing.s1}>
+        <Group gap={rhythm.line}>
           <Text variant="subheading">Your senators</Text>
           <PersonRow name="Your senator" place="Senator for your state" />
         </Group>
@@ -178,16 +179,16 @@ function ProfilesScene() {
     ['Declared interests', 'Register of Members’ Interests'],
   ] as const;
   return (
-    <Group gap={spacing.s3}>
+    <Group gap={rhythm.tight}>
       <Reveal order={0}>
         <PersonRow name="Example member" place="Member for Example" />
       </Reveal>
       {blocks.map(([title, source], index) => (
         <Reveal key={title} order={index + 1}>
-          <Group gap={spacing.s1}>
+          <Group gap={rhythm.line}>
             <Divider variant={index === 0 ? 'default' : 'subtle'} />
             <Text variant="subheading">{title}</Text>
-            <AsAtLine asOf="2026-07-01" citation={source} />
+            <SourceLine asOf="2026-07-01" citation={source} onPress={noop} />
           </Group>
         </Reveal>
       ))}
@@ -197,9 +198,9 @@ function ProfilesScene() {
 
 function BillsTodayScene() {
   return (
-    <Group gap={spacing.s3}>
+    <Group gap={rhythm.tight}>
       <Reveal order={0}>
-        <Text variant="subheading">Recently introduced bills</Text>
+        <Text variant="subheading">New in parliament</Text>
       </Reveal>
       <Reveal order={1}>
         <RecordRow
@@ -209,19 +210,21 @@ function BillsTodayScene() {
         />
       </Reveal>
       <Reveal order={2}>
-        <Group gap={spacing.s1}>
+        <Group gap={rhythm.line}>
           <Divider />
           <Text variant="subheading">In short</Text>
-          <Text variant="fine">
-            Written by a model from the explanatory memorandum; not the record.
-          </Text>
+          <MachineLabel explanation="Written by a model from the explanatory memorandum; not the record." />
         </Group>
       </Reveal>
       <Reveal order={3}>
-        <Group gap={spacing.s1}>
+        <Group gap={rhythm.line}>
           <Divider variant="subtle" />
-          <Text variant="subheading">Key dates</Text>
-          <AsAtLine asOf="2026-07-01" citation="Parliament of Australia" />
+          <Text variant="subheading">How it moved</Text>
+          <SourceLine
+            asOf="2026-07-01"
+            citation="Parliament of Australia"
+            onPress={noop}
+          />
         </Group>
       </Reveal>
     </Group>
@@ -230,7 +233,7 @@ function BillsTodayScene() {
 
 function SearchScene() {
   return (
-    <Group gap={spacing.s3}>
+    <Group gap={rhythm.tight}>
       <Reveal order={0}>
         <Field label="Search people, places and bills" value="Example" />
       </Reveal>
@@ -238,13 +241,13 @@ function SearchScene() {
         <Button label="Kind: People" icon="chevron.down" onPress={noop} />
       </Reveal>
       <Reveal order={2}>
-        <Group gap={spacing.s1}>
+        <Group gap={rhythm.line}>
           <Text variant="subheading">People</Text>
           <PersonRow name="Example member" place="Member for Example" />
         </Group>
       </Reveal>
       <Reveal order={3}>
-        <Group gap={spacing.s1}>
+        <Group gap={rhythm.line}>
           <Text variant="subheading">Bills</Text>
           <RecordRow title="Example Amendment Bill 2026" onPress={noop} />
         </Group>
@@ -314,5 +317,5 @@ export function Scene({
 }
 
 const styles = StyleSheet.create({
-  rowRule: { paddingTop: spacing.s2 },
+  rowRule: { paddingTop: rhythm.tight },
 });

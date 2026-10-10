@@ -4,13 +4,10 @@ import { Platform, RefreshControl } from 'react-native';
 import { router } from 'expo-router';
 import { catalogs } from '../api/runtime';
 import {
-  Button,
   Disclosure,
   Group,
-  Heading,
   KeyValueList,
   LinkRow,
-  OpaxWebLink,
   RowList,
   Screen,
   Section,
@@ -22,11 +19,19 @@ import {
 } from '../design/primitives';
 import { formatCount, formatDate } from '../design/format';
 import { rhythm } from '../design/tokens';
+import { openOnWeb } from '../navigation/external';
 import { CatalogState, isOffline } from './CatalogState';
 
 import { openRecord } from './reports/open';
 import { deceasedPersonsNotice } from '../onboarding/pages';
 
+/**
+ * About OPAX (IOS-UX 4.9): prose under the sheet's one title, so no heading
+ * repeats it and no section carries an accent mark. Each section has one
+ * heading level; coverage ends on its one source line, the details behind
+ * disclosures. Datasets, licences, credits and fonts are on Sources and
+ * licences, one row away. Pull to refresh reads coverage again.
+ */
 export default function About() {
   const [record, setRecord] = useState<Awaited<
     ReturnType<typeof catalogs.about>
@@ -67,53 +72,22 @@ export default function About() {
       }
     >
       <Group gap={rhythm.heading}>
-        <Heading level={1} testID="about-name">
-          Open Parliamentary Accountability Exchange
-        </Heading>
-        <Text variant="body">
+        <Text wordSafe variant="body" testID="about-name">
           The Open Parliamentary Accountability Exchange brings together
           Australian parliamentary speeches, votes, political funding and public
           disclosures, with links to the records behind them.
         </Text>
-        <Text variant="metadata" testID="about-independence">
+        <Text wordSafe variant="metadata" testID="about-independence">
           OPAX is independent and non-partisan. It is not a government app and
           is not affiliated with any parliament, government or political party.
         </Text>
       </Group>
-      <Section title="Read the record" accent="leads">
-        <RowList>
-          <LinkRow
-            title="Reports"
-            onPress={() => openRecord('/reports', 'Reports')}
-            testID="about-reports"
-          />
-          <LinkRow
-            title="Topics A–Z"
-            onPress={() => openRecord('/subject/topic', 'Topics A–Z')}
-            testID="about-topics"
-          />
-          <LinkRow
-            title="Sources & coverage"
-            onPress={() => openRecord('/stats', 'Sources & coverage')}
-            testID="about-stats"
-          />
-        </RowList>
+      <Section title="Cultural notice">
+        <Text wordSafe testID="about-deceased-notice">
+          {deceasedPersonsNotice}
+        </Text>
       </Section>
-      <Section title="Cultural notice" accent="people">
-        <Text testID="about-deceased-notice">{deceasedPersonsNotice}</Text>
-      </Section>
-      <Section
-        title="Coverage"
-        accent="people"
-        testID="about-coverage"
-        info={{
-          title: 'About the coverage',
-          notes: [
-            'Snapshot counts describe collected records. They are not live search totals.',
-          ],
-          testID: 'about-coverage-info',
-        }}
-      >
+      <Section title="Coverage" testID="about-coverage">
         {error ? (
           <Group>
             {isOffline(error) && !record ? (
@@ -129,12 +103,10 @@ export default function About() {
             onRetry={refresh}
             refreshing={refreshing}
             testID="about-coverage"
-            links={false}
           >
             {(coverage) => (
               <Group>
                 <StatRow
-                  accent="people"
                   stats={[
                     {
                       label: 'Collected speeches',
@@ -148,63 +120,59 @@ export default function About() {
                     },
                   ]}
                 />
-                <KeyValueList
-                  items={[
-                    {
-                      label: 'Snapshot version',
-                      value: formatDate(coverage.version),
-                    },
-                    ...(record?.data.asAt
-                      ? [
-                          {
-                            label: 'Coverage checked',
-                            value: new Date(record.data.asAt).toLocaleString(
-                              'en-AU',
-                              {
-                                day: 'numeric',
-                                month: 'long',
-                                year: 'numeric',
-                                hour: 'numeric',
-                                minute: '2-digit',
-                                timeZoneName: 'short',
-                              },
-                            ),
-                            testID: 'about-checked-at',
-                          },
-                        ]
-                      : []),
-                  ]}
-                />
+                {/* The one caveat drawn: these numbers are not search totals. */}
+                <Text wordSafe variant="fine" testID="about-snapshot">
+                  {[
+                    formatDate(coverage.version)
+                      ? `Snapshot of ${formatDate(coverage.version)}.`
+                      : null,
+                    'Counts describe collected records, not live search totals.',
+                  ]
+                    .filter(Boolean)
+                    .join(' ')}
+                </Text>
                 <RowList>
                   <Disclosure
-                    label="Coverage details and limitations"
+                    label="Record counts"
                     testID="about-coverage-details"
                   >
                     {() => (
-                      <Group>
-                        <Heading level={3}>Record counts</Heading>
-                        <KeyValueList
-                          items={Object.entries(coverage.resources).map(
-                            ([name, count]) => ({
-                              label: name.replaceAll('_', ' '),
-                              value: formatCount(count),
-                            }),
-                          )}
-                        />
-                        <Heading level={3}>Structured source counts</Heading>
-                        <KeyValueList
-                          items={Object.entries(coverage.structuredSources).map(
-                            ([name, count]) => ({
-                              label: name.replaceAll('_', ' '),
-                              value: formatCount(count),
-                            }),
-                          )}
-                        />
-                        <Heading level={3}>Inclusion</Heading>
-                        <Text>{coverage.inclusion}</Text>
-                        <Heading level={3}>Source limitations</Heading>
+                      <KeyValueList
+                        items={Object.entries(coverage.resources).map(
+                          ([name, count]) => ({
+                            label: name.replaceAll('_', ' '),
+                            value: formatCount(count),
+                          }),
+                        )}
+                      />
+                    )}
+                  </Disclosure>
+                  <Disclosure
+                    label="Structured sources"
+                    testID="about-coverage-structured"
+                  >
+                    {() => (
+                      <KeyValueList
+                        items={Object.entries(coverage.structuredSources).map(
+                          ([name, count]) => ({
+                            label: name.replaceAll('_', ' '),
+                            value: formatCount(count),
+                          }),
+                        )}
+                      />
+                    )}
+                  </Disclosure>
+                  <Disclosure
+                    label="Inclusion and limitations"
+                    testID="about-coverage-limits"
+                  >
+                    {() => (
+                      <Group gap={rhythm.tight}>
+                        <Text wordSafe>{coverage.inclusion}</Text>
                         {coverage.limitations.map((item) => (
-                          <Text key={item}>{item}</Text>
+                          <Text wordSafe key={item}>
+                            {item}
+                          </Text>
                         ))}
                       </Group>
                     )}
@@ -214,77 +182,68 @@ export default function About() {
             )}
           </CatalogState>
         ) : null}
-        <Button
-          label="Refresh coverage"
-          variant="quiet"
-          size="compact"
-          icon="arrow.clockwise"
-          onPress={refresh}
-          loading={refreshing}
-          testID="about-refresh"
-        />
       </Section>
-      <Section
-        title="Sources and licences"
-        accent="leads"
-        testID="about-sources"
-      >
-        <Text wordSafe>
-          Every dataset, its publisher and licence, the portrait credits and the
-          fonts, in one place.
-        </Text>
+      <Section title="Read the record">
+        <RowList>
+          <LinkRow
+            title="Reports"
+            onPress={() => openRecord('/reports', 'Reports')}
+            testID="about-reports"
+          />
+          <LinkRow
+            title="Topics A–Z"
+            onPress={() => openRecord('/subject/topic', 'Topics A–Z')}
+            testID="about-topics"
+          />
+        </RowList>
+      </Section>
+      <Section title="Sources and methods" testID="about-sources">
         <RowList>
           <LinkRow
             title="Sources and licences"
-            icon="checkmark.seal"
-            accent="leads"
+            detail="Datasets, portrait credits and fonts"
             onPress={() => router.push('/account/sources')}
             testID="about-sources-open"
           />
           <LinkRow
+            title="Sources & coverage"
+            onPress={() => openRecord('/stats', 'Sources & coverage')}
+            testID="about-stats"
+          />
+          <LinkRow
             title="Methods and source terms"
-            icon="text.book.closed"
-            accent="bills"
             onPress={() => openRecord('/methods', 'Methods')}
             testID="about-methods"
           />
         </RowList>
       </Section>
-      <Section title="Machine-written text" accent="bills">
-        <Text>
+      <Section title="Machine-written text">
+        <Text wordSafe>
           Stored machine briefs are labelled “Machine-written”. Bill summaries
           carry their attribution: “Written by a model from the explanatory
           memorandum; not the record”. Check the linked original record.
           Patterns are leads, not findings.
         </Text>
       </Section>
-      <Section
-        title="Corrections and contact"
-        accent="people"
-        testID="about-contact"
-      >
-        <Text>
+      <Section title="Corrections and contact" testID="about-contact">
+        <Text wordSafe>
           Report a correction or contact OPAX through the support page.
         </Text>
-        <OpaxWebLink
-          label="Corrections and contact"
-          path="/support"
-          testID="about-support"
-        />
+        <WebRow title="OPAX support" path="/support" testID="about-support" />
       </Section>
-      <Section title="Privacy" accent="people">
-        <Text>
+      <Section title="Privacy">
+        <Text wordSafe>
           {phoneCopy(
             'Public reading needs no account and sends no account or device identifier. Requests reach OPAX’s servers with this iPhone’s IP address, used for rate limits and security. Request URLs, including submitted searches, may be kept in server logs for 7 days. Cloudflare traffic and security analytics may keep IP addresses, paths and queries for up to 31 days.',
           )}
         </Text>
-        <Text>
+        <Text wordSafe>
           Search queries and results stay in memory during this app session and
           are not saved on this phone. Other public catalogs are saved on this
           phone for offline reading.
         </Text>
         {Platform.OS === 'android' ? null : (
-          <Text>
+          <Text wordSafe>
             Voice sends your audio and the conversation’s words to ElevenLabs
             and the language model it runs. OPAX keeps your email address and
             member ID until account deletion, and call times, seconds used and
@@ -296,12 +255,31 @@ export default function About() {
             stays in database recovery history for up to 30 days.
           </Text>
         )}
-        <OpaxWebLink
-          label="Privacy policy"
-          path="/privacy"
-          testID="about-privacy"
-        />
+        <WebRow title="Privacy policy" path="/privacy" testID="about-privacy" />
       </Section>
     </Screen>
+  );
+}
+
+/** A page on opax.com.au, as one row in Safari's symbol. */
+function WebRow({
+  title,
+  path,
+  testID,
+}: {
+  title: string;
+  path: string;
+  testID: string;
+}) {
+  return (
+    <RowList>
+      <LinkRow
+        title={title}
+        external
+        accessibilityHint="Opens on opax.com.au"
+        testID={testID}
+        onPress={() => void openOnWeb(path, title)}
+      />
+    </RowList>
   );
 }

@@ -1,7 +1,6 @@
-import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Button, Heading, Icon, Text } from '../../design/primitives';
-import { colors, hairline, layout, spacing } from '../../design/tokens';
+import { Modal } from 'react-native';
+import { LinkRow, RowList, useReduceMotion } from '../../design/primitives';
+import { SheetBody } from '../../design/source';
 import { webPageUrl } from '../../navigation/external';
 import type { VoiceSource } from '../../voice';
 import { recordDestination } from './sources';
@@ -12,8 +11,10 @@ export const openableSources = (sources: readonly VoiceSource[]) =>
   sources.filter((source) => webPageUrl(source.path));
 
 /**
- * The records behind the call's answers, in a native sheet over the call.
- * A sheet, not a route: leaving Talk's route would end the call.
+ * The records behind the call's answers, in a native sheet over the call
+ * (the source sheet's bar and rows). A sheet, not a route: leaving Talk's
+ * route would end the call. A record the app draws opens in the call (a
+ * chevron); one on opax.com.au waits for the call to end (Safari).
  */
 export function SourcesSheet({
   visible,
@@ -30,36 +31,29 @@ export function SourcesSheet({
   onClose: () => void;
   onDismiss: () => void;
 }) {
+  const reduced = useReduceMotion();
   useKeyCommand('list-escape', onClose, visible);
   return (
     <Modal
       visible={visible}
-      animationType="slide"
+      animationType={reduced ? 'none' : 'slide'}
       presentationStyle="pageSheet"
       onRequestClose={onClose}
       onDismiss={onDismiss}
     >
-      <SafeAreaProvider>
-        <View style={styles.sheet} testID="talk-sources-sheet">
-          <View style={styles.header}>
-            <Heading level={2}>Sources</Heading>
-            <Button
-              label="Done"
-              variant="quiet"
-              size="compact"
-              testID="talk-sources-done"
-              onPress={onClose}
-            />
-          </View>
-          <ScrollView contentContainerStyle={styles.list}>
-            {openableSources(sources).map((source, index) => (
-              <Pressable
+      <SheetBody title="Sources" onClose={onClose} testID="talk-sources-sheet">
+        <RowList>
+          {openableSources(sources).map((source, index) => {
+            const native = recordDestination(source.path) !== null;
+            return (
+              <LinkRow
                 key={source.path}
+                title={source.title}
+                external={!native}
                 testID={`talk-source-${index}`}
-                accessibilityRole="link"
                 accessibilityLabel={source.title}
                 accessibilityHint={
-                  recordDestination(source.path)
+                  native
                     ? active
                       ? 'Opens the record within the conversation'
                       : 'Opens the record'
@@ -68,51 +62,11 @@ export function SourcesSheet({
                       : 'Opens on opax.com.au'
                 }
                 onPress={() => onOpen(source)}
-                style={({ pressed }) => [
-                  styles.row,
-                  pressed ? styles.pressed : null,
-                ]}
-              >
-                <View style={styles.title}>
-                  <Text tone="bronzeInk" wordSafe>
-                    {source.title}
-                  </Text>
-                </View>
-                <Icon name="chevron.right" size={14} tone="inkFaint" />
-              </Pressable>
-            ))}
-          </ScrollView>
-        </View>
-      </SafeAreaProvider>
+              />
+            );
+          })}
+        </RowList>
+      </SheetBody>
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  sheet: { flex: 1, backgroundColor: colors.paper },
-  header: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: spacing.s3,
-    paddingHorizontal: layout.screenMargin,
-    paddingTop: spacing.s5,
-    paddingBottom: spacing.s3,
-  },
-  list: {
-    paddingHorizontal: layout.screenMargin,
-    paddingBottom: spacing.s7,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.s4,
-    minHeight: 44,
-    paddingVertical: spacing.s4,
-    borderBottomWidth: hairline,
-    borderBottomColor: colors.dividerSubtle,
-  },
-  pressed: { backgroundColor: colors.sunken },
-  title: { flex: 1 },
-});

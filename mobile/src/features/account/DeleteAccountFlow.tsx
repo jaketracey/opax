@@ -1,5 +1,5 @@
 import { useRef, useState, type ReactNode } from 'react';
-import { AccessibilityInfo, Keyboard } from 'react-native';
+import { AccessibilityInfo, Keyboard, StyleSheet, View } from 'react-native';
 import * as voice from '../../voice';
 import type { VoiceFailure } from '../../voice';
 import {
@@ -8,10 +8,12 @@ import {
   Field,
   Group,
   Heading,
-  OpaxWebLink,
+  LinkRow,
   Screen,
   Text,
 } from '../../design/primitives';
+import { rhythm } from '../../design/tokens';
+import { openOnWeb } from '../../navigation/external';
 import { CODE_LENGTH, codeDigits } from './code';
 import { accountCopy, deletionRefusal, refusalCopy } from './copy';
 import { accountDeleted, sessionEnded } from './store';
@@ -111,7 +113,7 @@ export function DeleteAccountFlow({
         <Heading level={2} testID="account-deleted">
           {accountCopy.accountDeleted}
         </Heading>
-        <Text>{accountCopy.accountDeletedDetail}</Text>
+        <Text wordSafe>{accountCopy.accountDeletedDetail}</Text>
         {error ? (
           <ErrorState
             message={error}
@@ -139,7 +141,7 @@ export function DeleteAccountFlow({
     return page(
       <Group testID="account-deletion-code-step">
         <Heading level={2}>{accountCopy.enterDeletionCode}</Heading>
-        <Text testID="account-deletion-code-sent">
+        <Text wordSafe testID="account-deletion-code-sent">
           {accountCopy.deletionCodeSent}
         </Text>
         <Field
@@ -169,7 +171,11 @@ export function DeleteAccountFlow({
           onPress={() => void remove()}
           testID="account-delete-final"
         />
-        {notice ? <Text testID="account-deletion-notice">{notice}</Text> : null}
+        {notice ? (
+          <Text wordSafe testID="account-deletion-notice">
+            {notice}
+          </Text>
+        ) : null}
         <Button
           variant="quiet"
           label={accountCopy.sendNewDeletionCode}
@@ -179,7 +185,7 @@ export function DeleteAccountFlow({
           testID="account-deletion-resend"
         />
         {challenge.wait > 0 ? (
-          <Text variant="fine" testID="account-deletion-resend-wait">
+          <Text wordSafe variant="fine" testID="account-deletion-resend-wait">
             {accountCopy.resendIn(challenge.wait)}
           </Text>
         ) : null}
@@ -193,22 +199,31 @@ export function DeleteAccountFlow({
     );
   return page(
     <Group testID="account-delete-confirm-step">
-      <Text variant="body">{accountCopy.deleteIntro}</Text>
-      <Heading level={2}>{accountCopy.deletedHeading}</Heading>
-      <Text>{accountCopy.deletedNote}</Text>
-      {accountCopy.deleted.map((item) => (
-        <Text key={item}>{item}</Text>
-      ))}
-      <Heading level={2}>{accountCopy.keptHeading}</Heading>
-      {accountCopy.kept.map((item) => (
-        <Text key={item}>{item}</Text>
-      ))}
-      <OpaxWebLink
-        label={accountCopy.deletionPolicy}
-        path="/privacy#privacy-deletion"
+      <Text wordSafe variant="body">
+        {accountCopy.deleteIntro}
+      </Text>
+      <Group gap={rhythm.heading}>
+        <Heading level={2}>{accountCopy.deletedHeading}</Heading>
+        <Text wordSafe>{accountCopy.deletedNote}</Text>
+        <Bullets items={accountCopy.deleted} />
+      </Group>
+      <Group gap={rhythm.heading}>
+        <Heading level={2}>{accountCopy.keptHeading}</Heading>
+        <Bullets items={accountCopy.kept} />
+      </Group>
+      <LinkRow
+        title={accountCopy.deletionPolicy}
+        external
+        accessibilityHint="Opens on opax.com.au"
         testID="account-deletion-policy"
+        onPress={() =>
+          void openOnWeb(
+            '/privacy#privacy-deletion',
+            accountCopy.deletionPolicy,
+          )
+        }
       />
-      <Text>{accountCopy.deleteConfirmNote}</Text>
+      <Text wordSafe>{accountCopy.deleteConfirmNote}</Text>
       {error ? (
         <ErrorState message={error} testID="account-delete-error" />
       ) : null}
@@ -228,3 +243,35 @@ export function DeleteAccountFlow({
     </Group>,
   );
 }
+
+/**
+ * What deletion removes or keeps, one item to a bullet, each said in full.
+ * The bullet is drawn, not spoken.
+ */
+function Bullets({ items }: { items: readonly string[] }) {
+  return (
+    <View style={styles.list}>
+      {items.map((item) => (
+        <View key={item} style={styles.item}>
+          <Text
+            accessible={false}
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
+            tone="inkSoft"
+          >
+            •
+          </Text>
+          <Text wordSafe style={styles.itemText}>
+            {item}
+          </Text>
+        </View>
+      ))}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  list: { gap: rhythm.tight },
+  item: { flexDirection: 'row', gap: rhythm.tight },
+  itemText: { flex: 1 },
+});

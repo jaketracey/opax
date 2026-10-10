@@ -26,8 +26,8 @@ import {
   isAccessibilityCategory,
   light,
   minimumTarget,
+  radii,
   rhythm,
-  spacing,
 } from '../design/tokens';
 import {
   padGeometry,
@@ -185,7 +185,7 @@ export function PadTour({
         style={[
           styles.masthead,
           {
-            paddingTop: insets.top + spacing.s4,
+            paddingTop: insets.top + rhythm.block,
             paddingLeft: margin + insets.left,
             paddingRight: margin + insets.right,
           },
@@ -650,9 +650,9 @@ const styles = StyleSheet.create({
   masthead: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingBottom: spacing.s4,
+    paddingBottom: rhythm.block,
   },
-  brand: { flexDirection: 'row', alignItems: 'center', gap: spacing.s3 },
+  brand: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
   mark: { width: 30, height: 30 },
   wordmark: {
     fontFamily: fonts.serifBold,
@@ -668,14 +668,15 @@ const styles = StyleSheet.create({
   centred: { alignItems: 'center' },
   stackedWords: { paddingTop: rhythm.section, paddingBottom: rhythm.group },
   stackedControls: { alignSelf: 'center' },
-  exampleLine: { paddingBottom: spacing.s1 },
+  exampleLine: { paddingBottom: rhythm.line },
+  // The picture's window holds content: the app's card corners and hairline.
   window: {
     flex: 1,
     overflow: 'hidden',
     backgroundColor: colors.paper,
-    borderColor: colors.line,
+    borderColor: colors.dividerSubtle,
     borderWidth: hairline,
-    borderRadius: 24,
+    borderRadius: radii.md,
     borderCurve: 'continuous',
   },
   fade: {
@@ -702,15 +703,15 @@ const styles = StyleSheet.create({
   },
   tick: { width: 28, borderRadius: 1.5 },
   tickCurrent: { height: 3, backgroundColor: colors.navy },
-  tickOther: { height: hairline, backgroundColor: colors.lineStrong },
+  tickOther: { height: hairline, backgroundColor: colors.lineControl },
   actions: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    gap: spacing.s3,
+    gap: rhythm.tight,
   },
   skip: { marginRight: 'auto' },
-  actionsStacked: { gap: spacing.s3 },
-  actionsPair: { flexDirection: 'row', gap: spacing.s3 },
+  actionsStacked: { gap: rhythm.tight },
+  actionsPair: { flexDirection: 'row', gap: rhythm.tight },
 });

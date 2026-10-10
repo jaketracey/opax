@@ -59,7 +59,7 @@ export const finishLabel = 'Choose your electorate';
  */
 export const padSceneSummaries: Record<WelcomePage['id'], string> = {
   about:
-    'Example: Today on iPad, beside the sidebar, with recently introduced bills, recent declarations and the money map.',
+    'Example: Today on iPad, beside the sidebar, with new bills, recent declarations and ways into the record.',
   'your-mp':
     'Example: Your MP on iPad, with electorates beside your member and your senators.',
   profiles:

@@ -1,7 +1,6 @@
 import { createContext, useContext, useState, type ReactNode } from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import {
-  AsAtLine,
   Field,
   Group,
   Heading,
@@ -12,22 +11,15 @@ import {
   PersonRow,
   Portrait,
   Section,
+  SourceLine,
   StatusLabel,
   Text,
-  statusTone,
   type SFSymbol,
   Card,
 } from '../design/primitives';
 import { SelectedMark, splitRowStyles } from '../design/selection';
-import {
-  colors,
-  hairline,
-  rhythm,
-  spacing,
-  statusTint,
-} from '../design/tokens';
+import { border, colors, hairline, rhythm } from '../design/tokens';
 import { RecordRow } from '../features/RecordRow';
-import { BillStatus } from '../features/bills/parts';
 import { mastheadDate } from '../features/today/Masthead';
 import type { WelcomePage } from './pages';
 import { Reveal, SceneContext, noop } from './scenes';
@@ -35,10 +27,12 @@ import { Reveal, SceneContext, noop } from './scenes';
 /**
  * The tour's pictures on iPad (regular width): the app's iPad screens at
  * their real size, built from the same components (the sidebar or the top
- * tab bar, split panes, rows, sections, Today's cards). Like the phone's
- * scenes they are pictures: never touchable, one VoiceOver image (the
- * stage's summary), and every record in them is a sample; the stage labels
- * them "Example". No figure appears, and placeholders name roles.
+ * tab bar, split panes, rows, sections, one source line a block, Today's
+ * tiles), drawn as the screens are now (design pass 3: no kickers, no
+ * uppercase, status as a StatusLabel). Like the phone's scenes they are
+ * pictures: never touchable, one VoiceOver image (the stage's summary), and
+ * every record in them is a sample; the stage labels them "Example". No
+ * figure appears, and placeholders name roles.
  *
  * A scene fills the box it is given and is cropped at the bottom, as a
  * window onto the screen would be. Below `MIN_SCENE_WIDTH`, and at larger
@@ -203,25 +197,15 @@ function Split({
   );
 }
 
-/** Today's broadsheet masthead: the mark, the date, the independence line. */
+/**
+ * Today's broadsheet masthead: the date in sentence case over a bronze
+ * double rule. The independence line is at the foot of Today (D4).
+ */
 function Masthead() {
   const [date] = useState(() => mastheadDate(new Date()));
   return (
     <View style={styles.masthead}>
-      <View style={styles.mastheadRow}>
-        <View style={styles.brand}>
-          <Image
-            source={require('../../assets/splash/mark.png')}
-            style={styles.mark}
-          />
-          <Text variant="label" tone="navy">
-            {date}
-          </Text>
-        </View>
-        <Text variant="fine" style={styles.mastheadLine}>
-          OPAX is independent and non-partisan. It is not a government app.
-        </Text>
-      </View>
+      <Text variant="metadata">{date}</Text>
       <View style={styles.doubleRule}>
         <View style={styles.ruleThick} />
         <View style={styles.ruleThin} />
@@ -230,29 +214,43 @@ function Masthead() {
   );
 }
 
-/** One of Today's bill cards: a band and a chip in the status's colour. */
-function BillCard({
+/** One of Today's new bills: its status and date, then the title. */
+function BillLine({
   status,
-  title,
   introduced,
+  title,
 }: {
   status: string;
-  title: string;
   introduced: string;
+  title: string;
 }) {
-  const tone = statusTint(statusTone(status));
   return (
-    <Card
-      padded={false}
-      style={[styles.card, { flexBasis: 200 * useContext(SceneScale) }]}
-    >
-      <View style={[styles.band, { backgroundColor: tone.base }]} />
-      <View style={styles.cardInner}>
-        <StatusLabel label={status} />
-        <Text variant="strong" style={styles.cardTitle}>
-          {title}
-        </Text>
+    <View style={styles.billLine}>
+      <View style={styles.billMeta}>
+        <StatusLabel label={status} hidden />
         <Text variant="fine">{introduced}</Text>
+      </View>
+      <Text variant="subheading">{title}</Text>
+    </View>
+  );
+}
+
+/** One of Today's "Explore the record" tiles. */
+function Tile({
+  icon,
+  title,
+  detail,
+}: {
+  icon: SFSymbol;
+  title: string;
+  detail: string;
+}) {
+  return (
+    <Card style={[styles.tile, { flexBasis: 200 * useContext(SceneScale) }]}>
+      <IconTile name={icon} />
+      <View style={styles.tileText}>
+        <Text variant="strong">{title}</Text>
+        <Text variant="metadata">{detail}</Text>
       </View>
     </Card>
   );
@@ -270,54 +268,50 @@ function TodayScene({ width }: { width: number }) {
           </Group>
         </Reveal>
         <Reveal order={1}>
-          <Section title="Recently introduced bills" accent="bills">
-            <View style={styles.cards}>
-              <BillCard
-                status="Before Parliament"
-                title="Example Amendment Bill 2026"
-                introduced="Introduced 1 Jul"
-              />
-              <BillCard
-                status="Passed"
-                title="Example Bill 2026"
-                introduced="Introduced 3 Jun"
-              />
-            </View>
-          </Section>
-        </Reveal>
-        <Reveal order={2}>
-          <View style={styles.cards}>
-            <View style={[styles.cardSlot, slot]}>
-              <Section title="Recent declarations" accent="interests">
-                <Card padded={false} style={styles.padded}>
-                  <PersonRow
-                    name="Example member"
-                    place="Member for Example"
-                    detail="Declared 1 Jul 2026"
+          <View style={styles.columns}>
+            <View style={[styles.columnSlot, slot]}>
+              <Section title="New in parliament">
+                <View style={styles.rows}>
+                  <BillLine
+                    status="Before Parliament"
+                    introduced="Introduced 1 Jul"
+                    title="Example Amendment Bill 2026"
                   />
-                </Card>
+                  <View style={styles.rowRule} />
+                  <BillLine
+                    status="Passed"
+                    introduced="Introduced 3 Jun"
+                    title="Example Bill 2026"
+                  />
+                </View>
               </Section>
             </View>
-            <View style={[styles.cardSlot, slot]}>
-              <Section title="Public money" accent="money">
-                <Card padded={false} style={[styles.padded, styles.moneyCard]}>
-                  <IconTile
-                    name="point.3.connected.trianglepath.dotted"
-                    accent="money"
-                    size="section"
-                  />
-                  <View style={styles.grow}>
-                    <Text variant="subheading" tone="moneyInk">
-                      Money map
-                    </Text>
-                    <Text variant="metadata" tone="ink">
-                      Political donations &amp; public money map
-                    </Text>
-                  </View>
-                </Card>
+            <View style={[styles.columnSlot, slot]}>
+              <Section title="Just declared">
+                <PersonRow
+                  name="Example member"
+                  place="Member for Example"
+                  detail="Gift · added 1 Jul"
+                />
               </Section>
             </View>
           </View>
+        </Reveal>
+        <Reveal order={2}>
+          <Section title="Explore the record">
+            <View style={styles.columns}>
+              <Tile
+                icon="map"
+                title="Money map"
+                detail="Donations and public money"
+              />
+              <Tile
+                icon="chart.bar.doc.horizontal"
+                title="Reports"
+                detail="Standing investigations and topics"
+              />
+            </View>
+          </Section>
         </Reveal>
       </View>
     </Frame>
@@ -362,9 +356,6 @@ function YourMPScene({ width }: { width: number }) {
           <>
             <Reveal order={2}>
               <Group gap={rhythm.line}>
-                <Text variant="label" tone="navy">
-                  Your electorate
-                </Text>
                 <Heading level={1}>Example electorate</Heading>
                 <Text variant="metadata">House of Representatives</Text>
               </Group>
@@ -390,18 +381,6 @@ function YourMPScene({ width }: { width: number }) {
   );
 }
 
-/** "View original", as a record's small source link draws it. */
-function ViewOriginal() {
-  return (
-    <View style={styles.original}>
-      <Icon name="arrow.up.right.square" size={14} tone="bronzeInk" />
-      <Text variant="label" tone="bronzeInk">
-        View original
-      </Text>
-    </View>
-  );
-}
-
 function ProfileBlock({
   title,
   accent,
@@ -416,8 +395,7 @@ function ProfileBlock({
       style={[styles.blockSlot, { flexBasis: 200 * useContext(SceneScale) }]}
     >
       <Section title={title} accent={accent}>
-        <AsAtLine asOf="2026-07-01" citation={citation} />
-        <ViewOriginal />
+        <SourceLine asOf="2026-07-01" citation={citation} onPress={noop} />
       </Section>
     </View>
   );
@@ -501,16 +479,14 @@ function ProfileScene({ width }: { width: number }) {
   );
 }
 
-/** A bill in the Bills list: its status and date, title and chamber. */
+/** A bill in the Bills list: its status, title and chamber. */
 function BillListItem({
   status,
-  date,
   title,
   where,
   selected,
 }: {
   status: string;
-  date: string;
   title: string;
   where: string;
   selected: boolean;
@@ -524,7 +500,7 @@ function BillListItem({
       ]}
     >
       {selected ? <SelectedMark accent="bills" /> : null}
-      <BillStatus status={status} asAt={date} />
+      <StatusLabel label={status} hidden />
       <Text variant="strong">{title}</Text>
       <Text variant="metadata">{where}</Text>
     </View>
@@ -547,7 +523,6 @@ function BillScene({ width }: { width: number }) {
               <View style={styles.rows}>
                 <BillListItem
                   status="Before Parliament"
-                  date="1 Jul 2026"
                   title="Example Amendment Bill 2026"
                   where="House of Representatives"
                   selected
@@ -555,7 +530,6 @@ function BillScene({ width }: { width: number }) {
                 <View style={styles.rowRule} />
                 <BillListItem
                   status="Passed"
-                  date="3 Jun 2026"
                   title="Example Bill 2026"
                   where="Senate"
                   selected={false}
@@ -571,12 +545,10 @@ function BillScene({ width }: { width: number }) {
                 <View style={styles.paneBar}>
                   <Icon name="square.and.arrow.up" size={20} tone="navy" />
                 </View>
-                <Text variant="label" tone="billsInk">
-                  Bill
-                </Text>
+                <StatusLabel label="Before Parliament" hidden />
                 <Heading level={1}>Example Amendment Bill 2026</Heading>
                 <Text variant="metadata">
-                  Introduced 1 July 2026 in the House of Representatives
+                  Introduced 1 July 2026 · House of Representatives
                 </Text>
               </Group>
             </Reveal>
@@ -586,7 +558,7 @@ function BillScene({ width }: { width: number }) {
               </Section>
             </Reveal>
             <Reveal order={4}>
-              <Section title="Key dates" accent="bills">
+              <Section title="How it moved" accent="bills">
                 <View style={styles.dateRow}>
                   <View style={styles.dateDot} />
                   <View style={styles.grow}>
@@ -598,9 +570,10 @@ function BillScene({ width }: { width: number }) {
             </Reveal>
             <Reveal order={5}>
               <Section title="Divisions" accent="votes">
-                <AsAtLine
+                <SourceLine
                   asOf="2026-07-01"
                   citation="Parliament of Australia"
+                  onPress={noop}
                 />
               </Section>
             </Reveal>
@@ -770,6 +743,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: colors.paper,
   },
+  // The iPadOS sidebar and top tab bar are system chrome: their shapes are
+  // UIKit's, not the app's.
   sidebar: {
     margin: 10,
     marginRight: 0,
@@ -777,7 +752,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     gap: 2,
     backgroundColor: colors.raised,
-    borderColor: colors.line,
+    borderColor: colors.dividerSubtle,
     borderWidth: hairline,
     borderRadius: 20,
     borderCurve: 'continuous',
@@ -786,7 +761,7 @@ const styles = StyleSheet.create({
   sidebarItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.s3 + 2,
+    gap: rhythm.row,
     minHeight: 44,
     paddingHorizontal: 10,
     borderRadius: 12,
@@ -796,7 +771,7 @@ const styles = StyleSheet.create({
   tabsRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.s3,
+    gap: rhythm.tight,
     paddingHorizontal: 16,
     paddingTop: 12,
     paddingBottom: 4,
@@ -808,7 +783,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.raised,
-    borderColor: colors.line,
+    borderColor: colors.dividerSubtle,
     borderWidth: hairline,
   },
   tabs: {
@@ -819,7 +794,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     borderCurve: 'continuous',
     backgroundColor: colors.raised,
-    borderColor: colors.line,
+    borderColor: colors.dividerSubtle,
     borderWidth: hairline,
   },
   tab: {
@@ -835,43 +810,25 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     gap: rhythm.block,
   },
-  masthead: { gap: spacing.s3 },
-  mastheadRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    columnGap: spacing.s4,
-    rowGap: spacing.s2,
-  },
-  brand: { flexDirection: 'row', alignItems: 'center', gap: spacing.s3 },
-  mark: { width: 26, height: 26 },
-  mastheadLine: { flexShrink: 1, textAlign: 'right' },
+  masthead: { gap: rhythm.heading },
   doubleRule: { gap: 2 },
-  ruleThick: { height: 2, backgroundColor: colors.bronze },
+  ruleThick: { height: border.masthead, backgroundColor: colors.bronze },
   ruleThin: { height: hairline, backgroundColor: colors.bronze },
-  cards: {
+  columns: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: rhythm.block,
+    gap: rhythm.group,
   },
-  cardSlot: { flexGrow: 1 },
-  card: { flexGrow: 1 },
-  band: { height: 4 },
-  cardTitle: { flexGrow: 1 },
-  cardInner: {
-    flexGrow: 1,
-    padding: spacing.s4,
-    paddingTop: spacing.s3 + spacing.s1,
-    gap: spacing.s3,
-  },
-  padded: { padding: spacing.s4 },
-  moneyCard: {
+  columnSlot: { flexGrow: 1 },
+  billLine: { gap: rhythm.tight, paddingVertical: rhythm.row },
+  billMeta: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     alignItems: 'center',
-    gap: rhythm.heading,
-    backgroundColor: colors.moneyWash,
+    gap: rhythm.tight,
   },
+  tile: { flexGrow: 1, gap: rhythm.heading },
+  tileText: { gap: 2 },
   split: { flex: 1, flexDirection: 'row' },
   listPane: { paddingHorizontal: 20, paddingTop: 16, gap: rhythm.block },
   paneRule: { width: hairline, backgroundColor: colors.dividerDefault },
@@ -883,20 +840,15 @@ const styles = StyleSheet.create({
   },
   rows: { gap: rhythm.tight },
   rowRule: { height: hairline, backgroundColor: colors.dividerSubtle },
-  original: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.s2,
-  },
   blocks: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     columnGap: rhythm.group,
   },
   blockSlot: { flexGrow: 1 },
-  billRow: { paddingVertical: 10, gap: rhythm.line },
+  billRow: { paddingVertical: rhythm.row, gap: rhythm.line },
   paneBar: { alignItems: 'flex-end', minHeight: 28 },
-  dateRow: { flexDirection: 'row', gap: spacing.s3 },
+  dateRow: { flexDirection: 'row', gap: rhythm.tight },
   dateDot: {
     width: 8,
     height: 8,

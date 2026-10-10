@@ -23,10 +23,17 @@ import {
   isPad,
   EdgeFade,
   Field,
+  IconButton,
   Text,
   useReduceMotion,
 } from '../../design/primitives';
-import { chrome, colors, layout, spacing } from '../../design/tokens';
+import {
+  chrome,
+  colors,
+  controlHeight,
+  layout,
+  rhythm,
+} from '../../design/tokens';
 import { openOnWeb, webPageUrl } from '../../navigation/external';
 import { ProfileScreen } from '../Person';
 import { ElectorateScreen } from '../Electorate';
@@ -43,7 +50,7 @@ import { VoiceOrb, type OrbPhase } from './VoiceOrb';
 import { useVoiceLevels } from './useVoiceLevels';
 import { useCaptionsPreference } from './captions-preference';
 import { canReport, minutesLeft, talkMenu, timeLeft } from './menu';
-import { ControlRow, RoundButton } from './CallControls';
+import { ControlRow } from './CallControls';
 import { openableSources, SourcesSheet } from './SourcesSheet';
 import { Consent, VoiceDisclosure } from './Consent';
 import { accountCopy } from '../account/copy';
@@ -110,7 +117,7 @@ export default function TalkScreen({
             : lastTurn?.role === 'user'
               ? 'thinking'
               : 'listening';
-  // Spoken by VoiceOver on every change; the screen itself shows no labels.
+  // Spoken by VoiceOver on every change; drawn as the one status line.
   const stateText =
     s.state === 'ending'
       ? 'Ending the call'
@@ -280,21 +287,22 @@ export default function TalkScreen({
   const fitted = stage ? Math.min(stage.width, stage.height, 380) : 0;
   const orbSize = consenting && fitted < 64 ? 0 : fitted;
   const captionsButton = (
-    <RoundButton
+    <IconButton
       symbol={captions ? 'captions.bubble.fill' : 'captions.bubble'}
-      label="Captions"
-      size="small"
-      look={captions ? 'on' : 'plain'}
+      accessibilityLabel="Captions"
+      variant="default"
+      size="large"
       selected={captions}
       testID="talk-captions"
       onPress={() => setCaptions(!captions)}
     />
   );
   const sourcesButton = sources.length ? (
-    <RoundButton
+    <IconButton
       symbol="books.vertical"
-      label={`Sources, ${sources.length}`}
-      size="small"
+      accessibilityLabel={`Sources, ${sources.length}`}
+      variant="default"
+      size="large"
       badge={sources.length}
       testID="talk-sources"
       onPress={() => setSourcesOpen(true)}
@@ -302,6 +310,10 @@ export default function TalkScreen({
   ) : (
     <View style={styles.slot} />
   );
+  // One plain line under the orb, always in the same place: what went wrong
+  // or how the call ended, otherwise what the call is doing. VoiceOver hears
+  // it from the status element above, so the line itself is hidden.
+  const statusLine = message ?? (active || !s.status ? stateText : null);
 
   return (
     <View
@@ -338,11 +350,10 @@ export default function TalkScreen({
               />
             </View>
             {active ? (
-              <RoundButton
+              <IconButton
                 symbol="phone.down.fill"
-                label="End call"
-                look="danger"
-                size="bar"
+                accessibilityLabel="End call"
+                variant="danger"
                 testID="talk-record-end"
                 onPress={() => void call.end()}
               />
@@ -375,7 +386,10 @@ export default function TalkScreen({
             isPad
               ? { width: '100%', maxWidth: 700, alignSelf: 'center' }
               : null,
-            { paddingBottom: Math.max(insets.bottom, spacing.s4) + spacing.s4 },
+            {
+              paddingBottom:
+                Math.max(insets.bottom, rhythm.block) + rhythm.block,
+            },
           ]}
         >
           <View
@@ -448,6 +462,18 @@ export default function TalkScreen({
           <View style={styles.dock} testID="talk-sheet-message">
             {active ? (
               <>
+                {statusLine ? (
+                  <Text
+                    wordSafe
+                    variant="metadata"
+                    style={styles.centre}
+                    testID="talk-state"
+                    accessibilityElementsHidden
+                    importantForAccessibility="no-hide-descendants"
+                  >
+                    {statusLine}
+                  </Text>
+                ) : null}
                 {typing && live ? (
                   <TypedMessage
                     send={call.send}
@@ -470,19 +496,21 @@ export default function TalkScreen({
                 ) : null}
                 <ControlRow>
                   {captionsButton}
-                  <RoundButton
+                  <IconButton
                     symbol={s.mode === 'muted' ? 'mic.slash.fill' : 'mic.fill'}
-                    label={s.mode === 'muted' ? 'Unmute' : 'Mute'}
-                    look={s.mode === 'muted' ? 'on' : 'plain'}
+                    accessibilityLabel={s.mode === 'muted' ? 'Unmute' : 'Mute'}
+                    variant="default"
+                    size="large"
                     selected={s.mode === 'muted'}
                     disabled={!live || call.busy}
                     testID="talk-mute"
                     onPress={() => void call.mute()}
                   />
-                  <RoundButton
+                  <IconButton
                     symbol="phone.down.fill"
-                    label={live ? 'End call' : 'Cancel call'}
-                    look="danger"
+                    accessibilityLabel={live ? 'End call' : 'Cancel call'}
+                    variant="danger"
+                    size="large"
                     disabled={s.state === 'ending'}
                     testID="talk-end"
                     onPress={() => void call.end()}
@@ -500,14 +528,16 @@ export default function TalkScreen({
               />
             ) : (
               <>
-                {message ? (
+                {statusLine ? (
                   <Text
+                    wordSafe
+                    variant={message ? 'body' : 'metadata'}
                     style={styles.centre}
-                    testID="talk-message"
+                    testID={message ? 'talk-message' : 'talk-state'}
                     accessibilityElementsHidden
                     importantForAccessibility="no-hide-descendants"
                   >
-                    {message}
+                    {statusLine}
                   </Text>
                 ) : null}
                 {queuedSource ? (
@@ -712,7 +742,7 @@ const styles = StyleSheet.create({
   body: {
     flexGrow: 1,
     paddingHorizontal: layout.screenMargin,
-    gap: spacing.s5,
+    gap: rhythm.group,
   },
   stage: {
     flex: 1,
@@ -721,27 +751,28 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   captions: { flexGrow: 0, maxHeight: 260 },
-  captionsContent: { gap: spacing.s4, paddingVertical: spacing.s3 },
-  dock: { gap: spacing.s4, alignItems: 'stretch' },
+  captionsContent: { gap: rhythm.block, paddingVertical: rhythm.tight },
+  dock: { gap: rhythm.block, alignItems: 'stretch' },
   centre: { textAlign: 'center' },
   inline: { alignItems: 'center' },
-  slot: { width: 54, height: 54 },
+  // Holds the Sources control's place, so the row never shifts when it comes.
+  slot: { width: controlHeight.large, height: controlHeight.large },
   primary: { flexGrow: 1, flexShrink: 1, maxWidth: 280 },
-  typed: { gap: spacing.s3 },
+  typed: { gap: rhythm.tight },
   typedActions: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     flexWrap: 'wrap',
-    gap: spacing.s3,
+    gap: rhythm.tight,
   },
   recordBar: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
-    gap: spacing.s3,
-    paddingHorizontal: spacing.s4,
-    paddingVertical: spacing.s3,
+    gap: rhythm.tight,
+    paddingHorizontal: rhythm.block,
+    paddingVertical: rhythm.tight,
     borderBottomWidth: 1,
     borderBottomColor: colors.dividerSubtle,
   },

@@ -14,7 +14,8 @@ import {
   useSharedValue,
   type SharedValue,
 } from 'react-native-reanimated';
-import { light } from '../../design/tokens';
+import { useIncreaseContrast } from '../../design/accessibility';
+import { light, lightHighContrast, type Role } from '../../design/palette';
 
 /** What the call is doing, as the orb draws it. */
 export type OrbPhase =
@@ -48,16 +49,46 @@ const PETALS = 12;
 const SEGMENTS = 144;
 // Ring radii are multiples of the core radius R. The canvas is 4.7R across.
 const EXTENT = 2.35;
-// Hairline bronze, the OPAX engraving register.
-const ringColours = [
-  'rgba(160,118,27,0.95)',
-  'rgba(160,118,27,0.6)',
-  'rgba(160,118,27,0)',
-];
-const rosetteColour = 'rgba(183,198,217,0.2)';
-const coreColours = ['#2E5682', light.navyRaised, light.navy, '#0C1B2C'];
-const glowColours = ['rgba(217,168,74,0.75)', 'rgba(217,168,74,0)'];
-const haloColours = ['rgba(236,228,211,0.95)', 'rgba(236,228,211,0)'];
+/**
+ * A palette role as Skia's colour ([r, g, b, a], 0 to 1). Skia draws plain
+ * colours, so Increase Contrast is resolved here (`strong`), as the role
+ * colours resolve it natively elsewhere. `shade` scales the channels: the
+ * core's lit and shadowed navy.
+ */
+function paint(role: Role, alpha = 1, strong = false, shade = 1): number[] {
+  const hex = (strong ? lightHighContrast[role] : undefined) ?? light[role];
+  const channel = (at: number) =>
+    Math.min(1, (parseInt(hex.slice(at, at + 2), 16) / 255) * shade);
+  return [channel(1), channel(3), channel(5), alpha];
+}
+
+/**
+ * The orb's colours, all from the palette: hairline bronze rings (the OPAX
+ * engraving register) on a navy core with a bronze-bright glow. Under
+ * Increase Contrast the rings, the sweep and the core's edge take the
+ * stronger bronze ink at full strength.
+ */
+function orbColours(strong: boolean) {
+  const ring = strong ? 'bronzeInk' : 'bronze';
+  return {
+    rings: [
+      paint(ring, strong ? 1 : 0.95, strong),
+      paint(ring, strong ? 0.8 : 0.6, strong),
+      paint(ring, 0, strong),
+    ],
+    rosette: paint('onNavySoft', strong ? 0.35 : 0.2, strong),
+    core: [
+      paint('navyRaised', 1, false, 1.45),
+      paint('navyRaised'),
+      paint('navy'),
+      paint('navy', 1, false, 0.6),
+    ],
+    glow: [paint('bronzeBright', 0.75), paint('bronzeBright', 0)],
+    halo: [paint('bronzeWash', 0.95), paint('bronzeWash', 0)],
+    sweep: paint(ring, 1, strong),
+    edge: paint('bronzeBright', strong ? 1 : 0.6),
+  };
+}
 
 /**
  * Speech-shaped loudness, in [0, 1]: worklet only.
@@ -89,6 +120,8 @@ export function VoiceOrb({
 }) {
   const R = size / (2 * EXTENT);
   const c = size / 2;
+  const strong = useIncreaseContrast();
+  const colours = useMemo(() => orbColours(strong), [strong]);
   const t = useSharedValue(0);
   const code = useSharedValue(phaseCode[phase]);
   const calm = useSharedValue(reduceMotion ? 1 : 0);
@@ -252,7 +285,7 @@ export function VoiceOrb({
         <RadialGradient
           c={centre}
           r={R * EXTENT}
-          colors={haloColours}
+          colors={colours.halo}
           positions={[0.45, 1]}
         />
       </Circle>
@@ -261,7 +294,7 @@ export function VoiceOrb({
           <RadialGradient
             c={centre}
             r={R * EXTENT}
-            colors={ringColours}
+            colors={colours.rings}
             positions={[0.48, 0.8, 1]}
           />
         </Path>
@@ -271,7 +304,7 @@ export function VoiceOrb({
         style="stroke"
         strokeWidth={1.5}
         strokeCap="round"
-        color={light.bronze}
+        color={colours.sweep}
         opacity={sweepAlpha}
       />
       <Group opacity={coreAlpha}>
@@ -279,7 +312,7 @@ export function VoiceOrb({
           <RadialGradient
             c={highlight}
             r={R * 1.7}
-            colors={coreColours}
+            colors={colours.core}
             positions={[0, 0.28, 0.68, 1]}
           />
         </Circle>
@@ -287,10 +320,10 @@ export function VoiceOrb({
           path={rosette}
           style="stroke"
           strokeWidth={0.75}
-          color={rosetteColour}
+          color={colours.rosette}
         />
         <Circle cx={c} cy={c} r={coreR} opacity={glow}>
-          <RadialGradient c={centre} r={R} colors={glowColours} />
+          <RadialGradient c={centre} r={R} colors={colours.glow} />
         </Circle>
         <Circle
           cx={c}
@@ -298,7 +331,7 @@ export function VoiceOrb({
           r={coreR}
           style="stroke"
           strokeWidth={1}
-          color="rgba(217,168,74,0.6)"
+          color={colours.edge}
         />
       </Group>
     </Canvas>

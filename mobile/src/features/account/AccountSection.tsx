@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-import { AccessibilityInfo } from 'react-native';
+import { AccessibilityInfo, StyleSheet, View } from 'react-native';
 import { router, type Href } from 'expo-router';
 import {
   Button,
-  Divider,
   ErrorState,
   Group,
   Section,
   Text,
 } from '../../design/primitives';
+import { rhythm } from '../../design/tokens';
 import { accountCopy } from './copy';
 import {
   accountView,
@@ -19,9 +19,11 @@ import {
 } from './store';
 
 /**
- * The Account section of Account and about (IOS-UX 4.9 and 4.12): signed
- * out, signed in with voice time, sign-out and deletion. A plain line about
- * the account; nothing here is tracked.
+ * The account block of Account and about (IOS-UX 4.9 and 4.12), first under
+ * the sheet's title, so it has no heading of its own. Signed out: one
+ * sentence and the sheet's one primary action, Sign in. Signed in: the
+ * address and voice time, then sign-out and deletion side by side (stacked
+ * at accessibility sizes). Nothing here is tracked.
  */
 export function AccountSection() {
   const account = useAccount();
@@ -44,36 +46,37 @@ export function AccountSection() {
   };
   const actions = (
     <>
-      <Divider variant="subtle" />
-      <Button
-        label={accountCopy.signOut}
-        loading={leaving}
-        onPress={() => void leave()}
-        testID="account-sign-out"
-      />
-      <Divider variant="subtle" />
-      <Button
-        variant="danger"
-        label={accountCopy.deleteAccount}
-        onPress={() => router.push('/account/delete' as Href)}
-        testID="account-delete"
-      />
-      <Text variant="fine">{accountCopy.sharedAccount}</Text>
+      <View style={styles.actions}>
+        <Button
+          label={accountCopy.signOut}
+          loading={leaving}
+          onPress={() => void leave()}
+          testID="account-sign-out"
+        />
+        <Button
+          variant="danger"
+          label={accountCopy.deleteAccount}
+          onPress={() => router.push('/account/delete' as Href)}
+          testID="account-delete"
+        />
+      </View>
+      <Text wordSafe variant="fine">
+        {accountCopy.sharedAccount}
+      </Text>
     </>
   );
   return (
-    <Section
-      title="Account"
-      accent="people"
-      rule={false}
-      testID="account-section"
-    >
+    <Section rule={false} testID="account-section">
       <Group>
         {account.notice ? (
-          <Text testID="account-notice">{account.notice}</Text>
+          <Text wordSafe testID="account-notice">
+            {account.notice}
+          </Text>
         ) : null}
         {view.kind === 'checking' ? (
-          <Text testID="account-sheet-message">{accountCopy.checking}</Text>
+          <Text wordSafe testID="account-sheet-message">
+            {accountCopy.checking}
+          </Text>
         ) : view.kind === 'failed' ? (
           <ErrorState
             message={accountCopy.statusFailed}
@@ -82,7 +85,9 @@ export function AccountSection() {
           />
         ) : view.kind === 'signedOut' ? (
           <>
-            <Text testID="account-sheet-message">{accountCopy.signedOut}</Text>
+            <Text wordSafe testID="account-sheet-message">
+              {accountCopy.signedOut}
+            </Text>
             <Button
               variant="primary"
               label={accountCopy.signInForVoice}
@@ -92,24 +97,28 @@ export function AccountSection() {
           </>
         ) : view.kind === 'unavailable' ? (
           <>
-            <Text testID="account-sheet-message">
+            <Text wordSafe testID="account-sheet-message">
               {accountCopy.unavailableAccount}
             </Text>
             {actions}
           </>
         ) : (
           <>
-            <Text testID="account-sheet-message">
-              {view.email
-                ? accountCopy.signedInAs(view.email)
-                : accountCopy.signedInHere}
-            </Text>
-            <Text testID="account-voice-time">
-              {view.status.unlimited
-                ? accountCopy.unlimited
-                : accountCopy.voiceTime(view.status.remainingSeconds)}
-            </Text>
-            {view.status.enabled ? null : <Text>{accountCopy.voiceOff}</Text>}
+            <Group gap={rhythm.line}>
+              <Text wordSafe testID="account-sheet-message">
+                {view.email
+                  ? accountCopy.signedInAs(view.email)
+                  : accountCopy.signedInHere}
+              </Text>
+              <Text wordSafe variant="metadata" testID="account-voice-time">
+                {view.status.unlimited
+                  ? accountCopy.unlimited
+                  : accountCopy.voiceTime(view.status.remainingSeconds)}
+              </Text>
+            </Group>
+            {view.status.enabled ? null : (
+              <Text wordSafe>{accountCopy.voiceOff}</Text>
+            )}
             {actions}
           </>
         )}
@@ -117,3 +126,12 @@ export function AccountSection() {
     </Section>
   );
 }
+
+const styles = StyleSheet.create({
+  actions: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: rhythm.tight,
+  },
+});

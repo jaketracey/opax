@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { RefreshControl, StyleSheet, View } from 'react-native';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { findNodeHandle, RefreshControl, StyleSheet, View } from 'react-native';
 import Constants from 'expo-constants';
 import { catalogs, portraits } from '../../api/runtime';
 import type { PortraitListing } from '../../api/people-portraits';
@@ -12,14 +12,17 @@ import {
   Disclosure,
   Field,
   Group,
-  OpaxWebLink,
+  LinkRow,
   RowList,
   Screen,
   Section,
-  SourceLink,
+  SourceLine,
   Text,
 } from '../../design/primitives';
+import { showMenu } from '../../design/menu';
 import { rhythm } from '../../design/tokens';
+import { openSource } from '../../navigation/external';
+import { openRecord } from '../reports/open';
 import {
   code,
   collectedSourceTerms,
@@ -57,9 +60,14 @@ async function settle<T>(read: () => Promise<T>): Promise<T | undefined> {
 }
 
 /**
- * Sources and licences (from About): every dataset with its publisher,
- * licence, attribution and links; every portrait's credit, searchable; the
- * fonts. Record screens no longer print these inline.
+ * Sources and licences (from About and the Account sheet): every dataset
+ * with its publisher, licence, attribution and originals; every portrait's
+ * credit, searchable; the fonts. Record screens print none of this inline
+ * (Jake, 7 Oct): their source lines lead here.
+ *
+ * One pattern for every licence: a dataset's row names it and its
+ * publisher; opened, it says the licence, the terms in full, then one source
+ * line to the originals (one opens it, several list each in a menu).
  */
 export function SourcesScreen() {
   const [loaded, setLoaded] = useState<Loaded>({});
@@ -171,23 +179,19 @@ export function SourcesScreen() {
       <Fonts />
       <Section title="OPAX">
         <Text wordSafe>{code.terms}</Text>
-        <View style={styles.links}>
-          <SourceLink
-            label="Source code and licence"
-            citation="OPAX source code and licence"
-            url={code.url}
-            kind="record"
-            testID="sources-code"
-          />
-        </View>
-        <OpaxWebLink
-          label="Methods and source terms"
-          path="/methods"
-          testID="sources-methods"
+        <OriginalsLine
+          links={[{ label: 'Source code and licence', url: code.url }]}
+          testID="sources-code"
         />
-        <Text variant="fine" testID="sources-end">
-          End of sources and licences
-        </Text>
+        <RowList>
+          <LinkRow
+            title="Methods and source terms"
+            testID="sources-methods"
+            onPress={() => openRecord('/methods', 'Methods')}
+          />
+        </RowList>
+        {/* The end of the screen, for the journeys; nothing is drawn. */}
+        <View testID="sources-end" />
       </Section>
     </Screen>
   );
@@ -260,37 +264,85 @@ function DatasetRow({ dataset }: { dataset: Dataset }) {
   return (
     <Disclosure
       label={dataset.name}
-      detail={[dataset.publisher, dataset.licence].filter(Boolean).join(' · ')}
+      detail={dataset.publisher}
       testID={`sources-dataset-${dataset.id}`}
     >
+      {/* Only a verified licence is named; the terms say the rest. */}
+      {dataset.licence ? (
+        <Text
+          wordSafe
+          variant="strong"
+          testID={`sources-dataset-${dataset.id}-licence`}
+        >
+          {`Licence: ${dataset.licence}`}
+        </Text>
+      ) : null}
       {dataset.terms.map((term, index) => (
         <Text key={index} wordSafe variant="body">
           {term}
         </Text>
       ))}
-      <Links links={dataset.links} />
+      <OriginalsLine
+        links={dataset.links}
+        testID={`sources-dataset-${dataset.id}-originals`}
+      />
     </Disclosure>
   );
 }
 
-function Links({ links }: { links: readonly DatasetLink[] }) {
+/**
+ * The originals behind a licence, as one source line: the one original by
+ * name ("Copyright and disclaimer"), or "GrantConnect and 1 more", which
+ * lists each in a menu. Each opens in the in-app browser.
+ */
+function OriginalsLine({
+  links,
+  label,
+  testID,
+}: {
+  links: readonly DatasetLink[];
+  /** Names a pair of originals ("Photo source and licence"). */
+  label?: string;
+  testID?: string;
+}) {
+  const anchor = useRef<View>(null);
   const unique = links.filter(
     (link, index) =>
       link.url.startsWith('https://') &&
       links.findIndex((other) => other.url === link.url) === index,
   );
-  if (!unique.length) return null;
+  const [first] = unique;
+  if (!first) return null;
+  const open = (link: DatasetLink) => void openSource(link.url, link.label);
+  const several = unique.length > 1;
   return (
-    <View style={styles.links}>
-      {unique.map((link) => (
-        <SourceLink
-          key={link.url}
-          label={link.label}
-          citation={link.label}
-          url={link.url}
-          kind="register"
-        />
-      ))}
+    <View ref={anchor} collapsable={false} style={styles.line}>
+      <SourceLine
+        label={
+          label ??
+          (several
+            ? `${first.label} and ${unique.length - 1} more`
+            : first.label)
+        }
+        accessibilityLabel={
+          several
+            ? `Original records: ${unique.map((link) => link.label).join(', ')}`
+            : `View original: ${first.label}`
+        }
+        onPress={() =>
+          several
+            ? showMenu(
+                'Original records',
+                unique.map((link) => ({
+                  title: link.label,
+                  onPress: () => open(link),
+                })),
+                findNodeHandle(anchor.current) ?? undefined,
+              )
+            : open(first)
+        }
+        testID={testID}
+      />
     </View>
   );
 }
@@ -326,14 +378,20 @@ function PortraitCredits() {
   return (
     <Section title="Portraits" testID="sources-portraits">
       <Text wordSafe>{portraitTerms.official.terms}</Text>
+      <OriginalsLine
+        links={portraitTerms.official.links}
+        label="Licence and copyright"
+        testID="sources-portraits-originals"
+      />
       <Text wordSafe>{portraitTerms.commons}</Text>
-      <Links links={portraitTerms.official.links} />
       {failed ? (
         <Text wordSafe variant="metadata">
           Portrait credits could not be loaded. Pull to refresh.
         </Text>
       ) : !list ? (
-        <Text variant="metadata">Loading portrait credits</Text>
+        <Text wordSafe variant="metadata">
+          Loading portrait credits
+        </Text>
       ) : (
         <Group gap={rhythm.tight}>
           <Field
@@ -349,7 +407,7 @@ function PortraitCredits() {
             returnKeyType="search"
             testID="sources-portrait-search"
           />
-          <Text variant="metadata" testID="sources-portrait-count">
+          <Text wordSafe variant="metadata" testID="sources-portrait-count">
             {needle
               ? `${formatCount(matches.length)} of ${formatCount(list.length)} portraits`
               : `${formatCount(list.length)} portraits`}
@@ -389,11 +447,12 @@ function PortraitCredit({ row }: { row: PortraitListing }) {
         </Text>
       ) : null}
       {official ? null : (
-        <Links
+        <OriginalsLine
           links={[
             { label: 'Photo source', url: row.info.sourceURL },
             { label: 'Licence', url: row.info.licenceURL },
           ]}
+          label="Photo source and licence"
         />
       )}
     </View>
@@ -423,6 +482,7 @@ function Fonts() {
                 .filter((paragraph) => paragraph.trim())
                 .map((paragraph, index) => (
                   <Text
+                    wordSafe
                     key={index}
                     variant="fine"
                     tone="ink"
@@ -437,13 +497,16 @@ function Fonts() {
           ))}
         </RowList>
       ) : (
-        <Text>The build’s font acknowledgements could not be read.</Text>
+        <Text wordSafe>
+          The build’s font acknowledgements could not be read.
+        </Text>
       )}
     </Section>
   );
 }
 
 const styles = StyleSheet.create({
-  links: { flexDirection: 'row', flexWrap: 'wrap', gap: rhythm.tight },
+  // The line hugs its words; at accessibility sizes it takes the column.
+  line: { alignSelf: 'stretch' },
   credit: { gap: rhythm.line },
 });

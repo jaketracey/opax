@@ -7,11 +7,16 @@ community IDs through the parliamentary people catalog.
 Every read is an explicitly opened, focused route or a submitted search. There
 is no launch read, polling, notification refresh, list-row read or prefetch.
 Reads coalesce in session memory and back navigation retains the loaded screen.
-Refresh is explicit. Writes make one attempt and do not automatically read back;
-a new discussion, list or conversation offers an explicit Open action.
-Search uses the keyboard's Search action or the inline submit arrow only.
-Typing never navigates or requests data; submitting an unchanged trimmed query
-is ignored. Community avatars use the shared blank Portrait, with no lookup of
+Refresh is explicit: pull down, or Cmd-R on iPad. Writes make one attempt and do
+not automatically read back; a new discussion, list or conversation offers an
+explicit Open action. Search is the app's one search field and submits from the
+keyboard's Search key (Return on a hardware keyboard) only. Typing never
+navigates or requests data; submitting an unchanged trimmed query is ignored.
+
+Signed out, the home shows Latest only, and one Sign in prompt stands for the
+member pages (Members, Messages, Activity, Reading lists, Profile, Privacy).
+A discussion, member or reading list is titled once, by its level 1 heading.
+Report on a reply or a received message is a quiet flag beside its byline. Community avatars use the shared blank Portrait, with no lookup of
 parliamentary identities or images.
 
 The native `communityRequest` bridge uses the existing Keychain credential and

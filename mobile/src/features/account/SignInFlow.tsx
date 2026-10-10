@@ -8,9 +8,11 @@ import {
   Field,
   Group,
   Heading,
-  OpaxWebLink,
+  LinkRow,
   Text,
 } from '../../design/primitives';
+import { rhythm } from '../../design/tokens';
+import { openOnWeb } from '../../navigation/external';
 import { CODE_LENGTH, codeDigits, isEmailAddress } from './code';
 import {
   accountCopy,
@@ -112,9 +114,17 @@ export function SignInFlow({
   if (sentTo === null)
     return (
       <Group testID="account-email-step">
-        <Text variant="body">{accountCopy.signInIntro}</Text>
-        <Text>{accountCopy.sameAccount}</Text>
-        <Text testID="account-age-limit">{accountCopy.ageLimit}</Text>
+        <Group gap={rhythm.tight}>
+          <Text wordSafe variant="body">
+            {accountCopy.signInIntro}
+          </Text>
+          <Text wordSafe variant="metadata">
+            {accountCopy.sameAccount}
+          </Text>
+          <Text wordSafe variant="metadata" testID="account-age-limit">
+            {accountCopy.ageLimit}
+          </Text>
+        </Group>
         <Field
           label={accountCopy.email}
           value={email}
@@ -142,18 +152,26 @@ export function SignInFlow({
           onPress={() => void send(false)}
           testID="account-send-code"
         />
-        <OpaxWebLink
-          label={accountCopy.privacy}
-          path="/privacy"
+        <LinkRow
+          title={accountCopy.privacy}
+          external
+          accessibilityHint="Opens on opax.com.au"
           testID="account-privacy"
+          onPress={() => void openOnWeb('/privacy', accountCopy.privacy)}
         />
       </Group>
     );
   return (
     <Group testID="account-code-step">
-      <Heading level={2}>{accountCopy.enterCode}</Heading>
-      <Text testID="account-code-sent">{accountCopy.codeSent(sentTo)}</Text>
-      <Text variant="fine">{accountCopy.emailLink}</Text>
+      <Group gap={rhythm.tight}>
+        <Heading level={2}>{accountCopy.enterCode}</Heading>
+        <Text wordSafe testID="account-code-sent">
+          {accountCopy.codeSent(sentTo)}
+        </Text>
+        <Text wordSafe variant="metadata">
+          {accountCopy.emailLink}
+        </Text>
+      </Group>
       <Field
         label={accountCopy.code}
         value={code}
@@ -175,7 +193,11 @@ export function SignInFlow({
         onPress={() => void verify(code)}
         testID="account-sign-in-code"
       />
-      {notice ? <Text testID="account-code-notice">{notice}</Text> : null}
+      {notice ? (
+        <Text wordSafe testID="account-code-notice">
+          {notice}
+        </Text>
+      ) : null}
       <Button
         variant="quiet"
         label={accountCopy.sendNewCode}
@@ -185,7 +207,7 @@ export function SignInFlow({
         testID="account-resend"
       />
       {challenge.wait > 0 ? (
-        <Text variant="fine" testID="account-resend-wait">
+        <Text wordSafe variant="fine" testID="account-resend-wait">
           {accountCopy.resendIn(challenge.wait)}
         </Text>
       ) : null}

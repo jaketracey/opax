@@ -150,7 +150,7 @@ export const guidelines = [
   ],
   [
     'Keep it useful',
-    'Discussions and reading lists are written by members. They are separate from Opax’s source records. Moderators can remove content that breaks these guidelines.',
+    'Discussions and reading lists are written by members. They are separate from OPAX’s source records. Moderators can remove content that breaks these guidelines.',
   ],
   [
     'Flag a concern',

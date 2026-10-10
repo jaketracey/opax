@@ -1,13 +1,14 @@
 import { phoneCopy } from '../../design/phone-copy';
-import { Pressable, StyleSheet, View } from 'react-native';
-import { Button, Heading, Icon, Text } from '../../design/primitives';
-import { spacing } from '../../design/tokens';
+import { StyleSheet, View } from 'react-native';
+import { Button, Heading, LinkRow, Text } from '../../design/primitives';
+import { rhythm } from '../../design/tokens';
 import { openOnWeb } from '../../navigation/external';
 
 /** One line before every call (App Review 5.1.2(i) and honest AI output). */
 export function VoiceDisclosure() {
   return (
     <Text
+      wordSafe
       variant="fine"
       tone="inkFaint"
       style={styles.centre}
@@ -15,26 +16,6 @@ export function VoiceDisclosure() {
     >
       AI voice by ElevenLabs. It can be wrong: check the sources.
     </Text>
-  );
-}
-
-/** A compact link to the Voice privacy page. */
-export function PrivacyLink({ testID }: { testID?: string }) {
-  return (
-    <Pressable
-      accessibilityRole="link"
-      accessibilityLabel="Voice privacy"
-      accessibilityHint="Opens on opax.com.au"
-      testID={testID}
-      hitSlop={8}
-      onPress={() => void openOnWeb('/privacy', 'Voice privacy')}
-      style={({ pressed }) => [styles.link, pressed ? styles.pressed : null]}
-    >
-      <Text tone="bronzeInk" wordSafe>
-        Voice privacy
-      </Text>
-      <Icon name="arrow.up.right" size={13} tone="bronzeInk" />
-    </Pressable>
   );
 }
 
@@ -52,26 +33,32 @@ export function Consent({
   onDecline: () => void;
 }) {
   return (
-    <View style={styles.card} testID="talk-consent">
+    <View style={styles.consent} testID="talk-consent">
       <Heading level={2}>Before you talk</Heading>
-      <Text>
+      <Text wordSafe>
         Your voice and the conversation go to ElevenLabs, OPAX’s voice provider,
         so it can answer you.
       </Text>
-      <Text>
+      <Text wordSafe>
         OPAX keeps each call’s times and ElevenLabs reference on your account:
         no audio, no transcript.
       </Text>
-      <Text>
+      <Text wordSafe>
         ElevenLabs was set to keep no audio and to delete transcripts after a
         day (checked 9 September 2026). Its own privacy policy also applies.
       </Text>
-      <Text variant="metadata">
+      <Text wordSafe variant="metadata">
         {phoneCopy(
           'Stored on this iPhone. Withdraw it any time from the More menu.',
         )}
       </Text>
-      <PrivacyLink testID="talk-consent-privacy" />
+      <LinkRow
+        title="Voice privacy"
+        external
+        accessibilityHint="Opens on opax.com.au"
+        testID="talk-consent-privacy"
+        onPress={() => void openOnWeb('/privacy', 'Voice privacy')}
+      />
       <View style={styles.actions}>
         <Button
           label="Agree and start"
@@ -96,14 +83,6 @@ export function Consent({
 
 const styles = StyleSheet.create({
   centre: { textAlign: 'center' },
-  card: { gap: spacing.s3 },
-  actions: { gap: spacing.s2, marginTop: spacing.s3 },
-  link: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    gap: spacing.s2,
-    minHeight: 44,
-  },
-  pressed: { opacity: 0.6 },
+  consent: { gap: rhythm.tight },
+  actions: { gap: rhythm.tight, marginTop: rhythm.tight },
 });
