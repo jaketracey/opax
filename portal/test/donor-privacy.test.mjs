@@ -10,7 +10,8 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {build} from 'esbuild';
 import {offline, loadWorker, outbound, rendered} from './worker-harness.mjs';
-import {MONEY_GRAPHS, isOrganisationDonor, donorPrivacyIndex, donorNameWithheld, foldDonorName} from '../public/donor-entity.js';
+import {WITHHELD_DONOR_REPLY} from '../src/donor-index.ts';
+import {MONEY_GRAPHS, isOrganisationDonor, donorPrivacyIndex, donorNameWithheld, foldDonorName, withholdIndividualDonors} from '../public/donor-entity.js';
 import {partyUrl} from '../public/canonical-urls.js';
 import {buildCrawl} from '../../scripts/build_crawl_catalog.mjs';
 
@@ -62,20 +63,20 @@ const organisationNames = new Set([
 // With and without a trailing legal form: "Example One" is "Example One Limited".
 const legalForm = /(?:[\s,]+(?:pty\.?|ltd\.?|limited|proprietary|inc\.?|incorporated|corp\.?|corporation|company|co\.?|llp|plc))+$/i;
 const organisationFolds = new Set([...organisationNames].flatMap(name => [foldDonorName(name), foldDonorName(String(name).replace(legalForm, ''))]));
-// The export's own individual-tagged donors without organisation evidence, plus the
-// fixtures. An individual-tagged label another register records as an organisation
-// (a supplier, agency, grant company or campaigner of that exact name), or one
-// naming Australia, is a mis-tagged organisation: still withheld everywhere, and
-// still covered by the link and own-page checks, but not a person's name to scan for.
-const known = [...new Set(donorNodes.filter(n => (n.industry === 'individual' || fixtureLabels.has(n.label)) && donorNameWithheld(index, n.label)).map(n => n.label))]
-  .filter(label => fixtureLabels.has(label) || (!/\baustralian?\b/i.test(label) && !organisationFolds.has(foldDonorName(label))));
-// A parliamentarian or minister who also gave to a party is named as an office
-// holder; their donor record is still covered by the link checks.
+// The complete withheld set: every label failing the organisation test, sector-tagged
+// people included, plus the fixtures. Three kinds of label are not scanned for as
+// text, and stay covered by the link, id and own-page checks: a single word (no
+// person's full name is one word; these are bare company names withheld for want of
+// a legal form, and appear in other registers' longer names), a label another
+// register records as an organisation of that exact name (a supplier, agency, grant
+// company, campaigner or connection), and a parliamentarian's or minister's name
+// (office holders who gave to their party are named as office holders).
+const withheldLabels = [...new Set(donorNodes.filter(n => donorNameWithheld(index, n.label)).map(n => n.label))];
+const known = withheldLabels.filter(label => fixtureLabels.has(label) || (/\S\s+\S/.test(label.trim()) && !organisationFolds.has(foldDonorName(label))));
 const roster = real('parliamentarians.json').people;
 const access = real('access.json');
 const rosterNames = new Set([...roster.flatMap(p => [p.name, p.full]), ...Object.values(access.ministers).map(m => m.name)].filter(Boolean).map(foldDonorName));
 const checked = known.filter(label => !rosterNames.has(foldDonorName(label)));
-const individualTagged = new Set(donorNodes.filter(n => n.industry === 'individual' && donorNameWithheld(index, n.label)).map(n => n.label)).size;
 const donorIds = new Map(donorNodes.map(n => [n.id, n.label]));
 
 const entities = s => String(s).replace(/\\u003c/g, '<').replace(/&#39;|&#x27;|&apos;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
@@ -91,7 +92,7 @@ function nameMatcher(names, allowed = new Map()) {
     if (!w.length) continue;
     const key = w.length > 1 ? `${w[0]} ${w[1]}` : w[0];
     if (!byStart.has(key)) byStart.set(key, []);
-    byStart.get(key).push({name, phrase: phrase(name)});
+    byStart.get(key).push({name, phrase: phrase(name), length: w.length});
   }
   return text => {
     const w = words(text), joined = ` ${w.join(' ')} `, hits = new Set();
@@ -100,7 +101,15 @@ function nameMatcher(names, allowed = new Map()) {
       let rest = joined;
       // Repeat: back-to-back copies of a name share the space between them.
       for (const longer of allowed.get(c.name) || []) while (rest.includes(longer)) rest = rest.replaceAll(longer, ' ');
-      if (rest.includes(c.phrase)) hits.add(c.name);
+      // An occurrence followed by organisation evidence ("<name> Pty Limited",
+      // "<name> Family Trust") is an organisation's name, not the person's.
+      const rw = rest.trim().split(' ');
+      for (let j = 0; j < rw.length; j++) {
+        if (` ${rw.slice(j, j + c.length).join(' ')} ` !== c.phrase) continue;
+        if (isOrganisationDonor({label: rw.slice(j, j + c.length + 4).join(' ')}) && !isOrganisationDonor({label: rw.slice(j, j + c.length).join(' ')})) continue;
+        hits.add(c.name);
+        break;
+      }
     }
     return [...hits];
   };
@@ -165,6 +174,29 @@ test('the fixture individuals are withheld and the fixture organisation is not',
   assert.equal(donorNameWithheld(index, FIXTURE_ORGANISATION), false);
 });
 
+test('anonymising keeps every donor group and its totals: duplicated source ids never merge', () => {
+  for (const [i, g] of graphs.entries()) {
+    const out = withholdIndividualDonors(g);
+    const groups = graph => new Set(graph.nodes.filter(n => n.kind === 'donor').map(n => n.id)).size;
+    const totals = graph => { const m = new Map(); for (const e of graph.edges) m.set(e.source, (m.get(e.source) || 0) + e.total); return [...m.values()].sort((a, b) => a - b).join(); };
+    assert.equal(groups(out), groups(g), `graph ${i}: donor groups`);
+    assert.equal(totals(out), totals(g), `graph ${i}: per-group totals`);
+  }
+  assert.equal(new Set(graphs[3].nodes.filter(n => n.kind === 'donor').map(n => withholdIndividualDonors(graphs[3]).nodes[graphs[3].nodes.indexOf(n)].id)).size, 170, 'Tasmania');
+});
+
+test('a campaigner route never repeats a requested name it cannot show', async () => {
+  const register = new Set(real('graph/campaigners.json').entities.map(e => foldDonorName(e.name)));
+  const names = [...checked.filter(label => !register.has(foldDonorName(label))).slice(0, 80), 'Quinella Fixturestone'];
+  for (const name of names) {
+    const path = `/subject/campaigner/${encodeURIComponent(name)}`;
+    const response = await fetchWorker(path);
+    const html = rendered(ownUrl(await response.text(), path));
+    assert.equal(response.status, 404);
+    assert.equal(nameMatcher([name])(html).length, 0, `campaigner 404 ${names.indexOf(name)} repeats the name`);
+  }
+});
+
 // --- 1. server-rendered HTML -----------------------------------------------------
 const locs = name => [...readFileSync(at(`crawl/sitemaps/${name}`), 'utf8').matchAll(/<loc>https:\/\/opax\.com\.au([^<]+)<\/loc>/g)].map(m => decode(m[1]));
 const sitemapFiles = readdirSync(at('crawl/sitemaps'));
@@ -197,7 +229,7 @@ test('every server-rendered person, party, money, hub, campaigner and supplier p
   }
   assert.ok(personDonorBlocks > 500, `${personDonorBlocks} person pages still list organisational donors`);
   t.diagnostic(`${personDonorBlocks} person pages list organisational donors; ${interestMentions} carry a withheld donor's name in the member's own declared interests`);
-  t.diagnostic(`scanned for ${checked.length} names: ${individualTagged} withheld individual-tagged labels, less ${individualTagged + fixtureLabels.size - known.length} mis-tagged organisations and ${known.length - checked.length} office holders, plus ${fixtureLabels.size} fixtures`);
+  t.diagnostic(`scanned for ${checked.length} names: ${withheldLabels.length} withheld labels (${fixtureLabels.size} fixtures), less ${withheldLabels.length - known.length} single-word or other-register organisation names and ${known.length - checked.length} office holders`);
 });
 
 test('a withheld donor or campaigner page is reachable, noindex and unnamed; its share card is never drawn', async () => {
@@ -269,7 +301,12 @@ test('IndexNow fingerprints a person page by the donors it names', () => {
 
 // --- 3. API responses ----------------------------------------------------------------
 const regions = {federal: '', qld: ' in Queensland', vic: ' in Victoria', tas: ' in Tasmania'};
-const ask = async question => { const r = await fetchWorker('/api/ask', {method: 'POST', headers: {'content-type': 'application/json'}, body: JSON.stringify({question})}); return {status: r.status, text: await r.text()}; };
+const ask = async (question, extra = {}) => { const r = await fetchWorker('/api/ask', {method: 'POST', headers: {'content-type': 'application/json'}, body: JSON.stringify({question, ...extra})}); return {status: r.status, text: await r.text()}; };
+/** The fixed reply, and nothing from the question in it: no withheld name in the answer text. */
+function assertWithheldReply(where, out) {
+  assert.equal(out.answer, WITHHELD_DONOR_REPLY, `${where}: not the fixed reply`);
+  assert.equal(namesIn(out.answer).length, 0, `${where}: the answer names a withheld donor`);
+}
 
 test('money rankings from /api/ask and the voice tools withhold individual donors', async () => {
   const graphsByJur = {federal: graphs[0], qld: graphs[1], vic: graphs[2], tas: graphs[3]};
@@ -288,12 +325,56 @@ test('money rankings from /api/ask and the voice tools withhold individual donor
   // The fixture organisation has the largest total and the fixture individuals the next four: a five-row table.
   assert.ok(top.answer.includes(FIXTURE_ORGANISATION), 'the fixture organisation is named');
   assert.equal((top.answer.match(/\| Donor \d+ \(name withheld\) \|/g) || []).length, 4, 'the fixture individuals rank as withheld donors');
-  // Asked by name, a withheld donor is never matched, totalled or linked.
+});
+
+test('a question naming a withheld donor gets one fixed reply from /api/ask, with no model call', async t => {
+  const party = topParty.label;
+  outbound.length = 0;
   for (const label of checked) {
-    const {text} = await ask(`How much did ${label} donate?`);
-    const out = JSON.parse(text);
-    assert.notEqual(out.answer_status, 'calculated', 'a withheld donor asked by name was calculated');
-    assert.equal(withheldLinks(text).length, 0, 'a withheld donor asked by name was linked');
+    for (const question of [`How much did ${label} donate?`, `Who donates the most to ${party} from ${label}?`, `What has ${label} given to ${party} since 2020?`]) {
+      const {status, text} = await ask(question);
+      assert.equal(status, 200);
+      const out = JSON.parse(text);
+      assertWithheldReply('ask by name', out);
+      assert.equal(out.answer_status, 'withheld');
+      assert.deepEqual(out.sources, []);
+      assert.equal(withheldLinks(text).length, 0);
+    }
+    // A follow-up inherits the name from the reader's earlier turn.
+    const follow = JSON.parse((await ask('And in 2021?', {context: [{author: 'user', text: `How much did ${label} donate to ${party}?`}]})).text);
+    assertWithheldReply('follow-up', follow);
+  }
+  assert.equal(outbound.length, 0, 'a named question reached a model');
+  assert.ok(checked.length > 300, `${checked.length} withheld names asked`);
+  // Organisations are unaffected, including one whose name holds a withheld donor's.
+  const organisations = graphs[0].nodes.filter(n => n.kind === 'donor' && !donorNameWithheld(index, n.label)).slice(0, 25);
+  let answered = 0;
+  for (const n of organisations) {
+    const out = JSON.parse((await ask(`Who receives the most funding from ${n.label}?`)).text);
+    assert.notEqual(out.answer_status, 'withheld', `organisation ${organisations.indexOf(n)} was withheld`);
+    if (out.answer_status === 'calculated') answered++;
+  }
+  assert.ok(answered > 10, `${answered} organisation questions calculated`);
+  t.diagnostic(`${checked.length} withheld names asked four ways; ${answered} of ${organisations.length} organisation questions calculated`);
+});
+
+test('follow-up suggestions, the search overview, voice tools and the money overview never take a withheld name', async () => {
+  const party = topParty.label;
+  outbound.length = 0;
+  for (const label of checked.slice(0, 120)) {
+    const followups = await fetchWorker('/api/followups', {method: 'POST', headers: {'content-type': 'application/json'}, body: JSON.stringify({question: `How much did ${label} donate to ${party}?`, answer: 'An answer.', passages: [{title: 'x', text: 'y '.repeat(200)}]})});
+    assert.deepEqual(await followups.json(), {questions: []});
+    const summary = await fetchWorker(`/api/search-summary?${new URLSearchParams({q: `${label} donations`})}`);
+    if (summary.status === 200) { const out = await summary.json(); assert.deepEqual(out.points ?? [], []); }
+  }
+  assert.equal(outbound.length, 0, 'a named follow-up or overview reached a model');
+  const voice = await build({entryPoints: [new URL('../src/voice-tools.ts', import.meta.url).pathname], bundle: true, write: false, platform: 'node', format: 'esm'});
+  const {runVoiceTool} = await import('data:text/javascript;base64,' + Buffer.from(voice.outputFiles[0].text).toString('base64'));
+  const read = async () => { throw new Error('No retrieval for a withheld name'); };
+  for (const label of checked) for (const [tool, args] of [['search_records', {query: `How much did ${label} donate to ${party}?`, kind: 'receipt'}], ['search_records', {query: `${label} donations`}], ['find_connections', {query: label}]]) {
+    const out = await runVoiceTool(tool, args, env, read);
+    assertWithheldReply(`voice ${tool}`, out.data);
+    assert.deepEqual(out.sources, []);
   }
 });
 

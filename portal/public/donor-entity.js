@@ -45,21 +45,27 @@ export function isOrganisationDonor(node) {
 /** A money graph in which every donor failing isOrganisationDonor is renamed
  * and re-keyed (its id embeds the name) before a server-side answer, story or
  * tool reads it. Amounts, years and industry tags are kept, so totals and
- * rankings stay true; a withheld donor is never merged with another.
+ * rankings stay true. The anonymous id is keyed by the source id: a source id
+ * carried by two nodes (one donor group) keeps one anonymous id, and two
+ * groups never share one. A group is withheld when none of its nodes is an
+ * organisation.
  * @template {{nodes: {id: string, label: string, kind: string, aliases?: string[] | null, industry?: string | null}[], edges: {source: string, target: string}[]}} G
  * @param {G} graph
  * @returns {G} */
 export function withholdIndividualDonors(graph) {
-  const ids = new Map()
-  const nodes = graph.nodes.map(node => {
-    if (node.kind !== 'donor' || isOrganisationDonor(node)) return node
-    const n = ids.size + 1
-    ids.set(node.id, `donor:withheld-${n}`)
+  const withheld = new Map()
+  for (const node of graph.nodes) if (node.kind === 'donor') withheld.set(node.id, (withheld.get(node.id) ?? true) && !isOrganisationDonor(node))
+  /** @type {Map<string, number>} source id -> anonymous number, in first-appearance order of the groups */
+  const anonymous = new Map()
+  for (const [id, hidden] of withheld) if (hidden) anonymous.set(id, anonymous.size + 1)
+  if (!anonymous.size) return graph
+  const anonymousId = id => `donor:withheld-${anonymous.get(id)}`
+  const nodes = graph.nodes.map(node => node.kind === 'donor' && anonymous.has(node.id)
     // Neutral: failing closed also withholds organisations without a legal form.
-    return {...node, id: `donor:withheld-${n}`, label: `Donor ${n} (name withheld)`, aliases: []}
-  })
-  if (!ids.size) return graph
-  const edges = graph.edges.map(e => ids.has(e.source) || ids.has(e.target) ? {...e, source: ids.get(e.source) ?? e.source, target: ids.get(e.target) ?? e.target} : e)
+    ? {...node, id: anonymousId(node.id), label: `Donor ${anonymous.get(node.id)} (name withheld)`, aliases: []}
+    : node)
+  const edges = graph.edges.map(e => anonymous.has(e.source) || anonymous.has(e.target)
+    ? {...e, source: anonymous.has(e.source) ? anonymousId(e.source) : e.source, target: anonymous.has(e.target) ? anonymousId(e.target) : e.target} : e)
   return {...graph, nodes, edges}
 }
 

@@ -36,7 +36,7 @@ import { communityRoute } from './community'
 import { deliverReplyEmails, REPLY_EMAIL_CRON } from './community-notifications'
 import { partyUrl, personUrl, personNameKey } from '../public/canonical-urls.js'
 import { withholdIndividualDonors } from '../public/donor-entity.js'
-import { donorWithheld, namesWithheldDonor } from './donor-index'
+import { donorWithheld, namesWithheldDonor, questionNamesWithheldDonor, WITHHELD_DONOR_REPLY } from './donor-index'
 import { canonicalPageRedirect } from './canonical-origin'
 import { pageEntry } from './page-entry'
 import { communityMcp } from './community-mcp'
@@ -180,11 +180,39 @@ function filterExpression(f: {
 const ragBase = (env: Env) =>
   `https://${env.ARAG_ZONE}.rag.progress.cloud/api/v1/kb/${env.ARAG_KB_ID}`
 
+/**
+ * The aggregate cap on paid model calls (MODEL_LIMITER in wrangler.jsonc: one key
+ * for every reader, per Cloudflare location). Every platform /ask call is a
+ * generation and checks it first; cache hits never get here. Past the cap the
+ * call is answered with MODEL_BUDGET_RESPONSE and each caller's fallback stands:
+ * no overview, follow-ups, story or summary, and a "busy" reply for an answer.
+ * A limiter error fails open, as the per-reader limiters do.
+ */
+async function modelBudgetSpent(env: Env): Promise<boolean> {
+  if (!env.MODEL_LIMITER) return false
+  try { return !(await env.MODEL_LIMITER.limit({ key: 'model-calls' })).success }
+  catch (err) {
+    console.log(JSON.stringify({ level: 'warn', message: `model limiter failed open: ${String(err)}` }))
+    return false
+  }
+}
+const MODEL_BUDGET_HEADER = 'x-opax-model-budget'
+const modelBudgetResponse = (): Response => new Response(JSON.stringify({ error: 'The model call budget for this minute is spent.' }), {
+  status: 429, headers: { 'content-type': 'application/json; charset=utf-8', 'retry-after': '60', [MODEL_BUDGET_HEADER]: 'spent' },
+})
+const modelBudgetBusy = (): Response => {
+  const res = json({ error: 'OPAX is answering a lot of questions right now. Please try again in a minute.' }, 503)
+  res.headers.set('retry-after', '60')
+  res.headers.set(MODEL_BUDGET_HEADER, 'spent')
+  return res
+}
+
 async function kbFetch(
   env: Env,
   path: string,
   init?: { method?: string; body?: unknown; headers?: Record<string, string>; signal?: AbortSignal },
 ): Promise<Response> {
+  if (path.startsWith('/ask') && await modelBudgetSpent(env)) return modelBudgetResponse()
   return fetch(`${ragBase(env)}${path}`, {
     method: init?.method ?? (init?.body === undefined ? 'GET' : 'POST'),
     headers: {
@@ -1199,11 +1227,14 @@ function replayCachedAsk(hit: Response, ctx: ExecutionContext): Response {
  * opening still gets the same calculated answer. A slow or unavailable model
  * costs the answer nothing but the timeout.
  */
-async function moneyOverview(facts: MoneyFacts, env: Env, ctx: ExecutionContext): Promise<{ overview: string; why: string }> {
+async function moneyOverview(facts: MoneyFacts, env: Env, ctx: ExecutionContext, request: Request): Promise<{ overview: string; why: string }> {
   const model = env.MONEY_OVERVIEW_MODEL || env.ASK_MODEL || 'openai-compatible'
   const key = cacheRequest('money-overview', await sha256Hex(JSON.stringify({ epoch: env.CACHE_EPOCH, model, facts })))
   const hit = await caches.default.match(key)
   if (hit) return { overview: (await hit.json<{ overview?: string }>()).overview || '', why: 'hit' }
+  // A paid call, so it spends the reader's Ask quota like any other answer; past
+  // the limit the calculated answer goes out without its opening paragraph.
+  if (await rateLimited(env.ASK_LIMITER, request)) return { overview: '', why: 'rate-limited' }
   try {
     const res = await kbFetch(env, '/ask', {
       body: { query: moneyOverviewPrompt(facts), top_k: 5, max_tokens: 4096, generative_model: model },
@@ -1233,6 +1264,9 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     return res
   }
   if (!rawInput.question?.trim()) return json({ error: 'question is required' }, 400)
+  // A question naming a withheld donor, now or in the reader's earlier turns, gets
+  // one fixed reply before any ranking, rewrite or model call can echo the name.
+  if (await questionNamesWithheldDonor(env.ASSETS, rawInput.question, ...readerTurns(rawInput))) return timed(json(withheldDonorAnswer()))
   // Resolve receipt conversations from user turns before speech inference can
   // apply calendar-year or parliamentarian filters. No model call is needed.
   try {
@@ -1243,7 +1277,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
       // with the answer only as the paragraph it produced.
       const { money_facts, ...payload } = ranked as typeof ranked & { money_facts?: MoneyFacts }
       if (!money_facts) return timed(json(payload))
-      const { overview, why } = await moneyOverview(money_facts, env, ctx)
+      const { overview, why } = await moneyOverview(money_facts, env, ctx, request)
       mark('overview')
       // Why an answer has no opening is worth being able to see from outside
       // (a rejected paragraph and an unavailable model read the same to a
@@ -1347,6 +1381,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   const askOnce = async (b: Record<string, unknown>, timeoutMs: number): Promise<AskAnswer | Response> => {
     try {
       const res = await kbFetch(env, '/ask', { body: b, headers: { 'x-synchronous': 'true' }, signal: AbortSignal.timeout(timeoutMs) })
+      if (res.headers.get(MODEL_BUDGET_HEADER)) return modelBudgetBusy()
       if (!res.ok) return json({ error: `ask failed (${res.status})` }, 502)
       return guardPositionAnswer((await res.json()) as AskAnswer, b)
     } catch (err) {
@@ -1356,8 +1391,9 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   const t0 = Date.now()
   let answer = await askOnce(body, ASK_SYNC_TIMEOUT_MS)
   mark('ask')
-  // A stall or an upstream error gets one lighter attempt before the reader hears about it.
-  if (answer instanceof Response) answer = await askOnce(lighterAsk(body), ASK_SYNC_TIMEOUT_MS)
+  // A stall or an upstream error gets one lighter attempt before the reader hears about it;
+  // a spent model budget does not.
+  if (answer instanceof Response && !answer.headers.get(MODEL_BUDGET_HEADER)) answer = await askOnce(lighterAsk(body), ASK_SYNC_TIMEOUT_MS)
   if (answer instanceof Response) return answer
   if (isRefusal(answer) && healthyRetrieval(answer) && Date.now() - t0 < ASK_RETRY_BUDGET_MS) {
     const again = await askOnce(body, ASK_SYNC_TIMEOUT_MS)
@@ -1378,6 +1414,18 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   payload = withAskedAs(payload, askedAs)
   store(payload)
   return timed(withCacheStatus(json(payload), status, false))
+}
+
+/** The reader's own earlier turns: what a follow-up can inherit a name from. */
+function readerTurns(input: AskInput): string[] {
+  return (Array.isArray(input.context) ? input.context : [])
+    .filter(t => t && (t.author === 'user' || t.author === 'question') && typeof t.text === 'string').map(t => t.text as string)
+}
+
+/** The fixed reply to a question naming a withheld donor (src/donor-index.ts): no
+ * sources, citations or follow-ups, and nothing from the question echoed back. */
+function withheldDonorAnswer(): Record<string, unknown> {
+  return { answer: WITHHELD_DONOR_REPLY, citations: {}, sources: [], answer_status: 'withheld' }
 }
 
 /** The payload with the question as it was understood, when a follow-up was rewritten. */
@@ -1645,6 +1693,8 @@ async function recoverPositionAnswer(payload: AskPayload, body: Record<string,un
 
 /** A short overview grounded only in the same filtered public search results. */
 async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
+  // No overview, and no search, for a query naming a withheld donor (src/donor-index.ts).
+  if (await questionNamesWithheldDonor(env.ASSETS, url.searchParams.get('q') || '')) return json({status:'empty', points:[], sources:[]})
   const searchUrl = new URL(url)
   searchUrl.pathname = '/api/search-all'
   searchUrl.searchParams.set('page', '1')
@@ -1724,7 +1774,7 @@ async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: Execu
 /** One streamed platform generation for the overview: answer text chunks go to
  * `onText` as they arrive; the whole answer comes back for the final parse. */
 async function streamSummaryAnswer(env: Env, body: Record<string, unknown>, onText: (text: string) => Promise<void>, signal: AbortSignal): Promise<string> {
-  const res = await fetch(`${ragBase(env)}/ask`, {
+  const res = await modelBudgetSpent(env) ? modelBudgetResponse() : await fetch(`${ragBase(env)}/ask`, {
     method: 'POST',
     headers: { 'content-type': 'application/json', accept: 'application/x-ndjson', 'x-nuclia-serviceaccount': `Bearer ${env.ARAG_KB_TOKEN}` },
     body: JSON.stringify(body),
@@ -1838,7 +1888,7 @@ async function streamAskOnce(
   signal: AbortSignal,
   onProgress?: () => void,
 ): Promise<AskAnswer> {
-  const res = await fetch(`${ragBase(env)}/ask`, {
+  const res = await modelBudgetSpent(env) ? modelBudgetResponse() : await fetch(`${ragBase(env)}/ask`, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
@@ -2280,6 +2330,8 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
   }
   // Always 200 with a possibly-empty list: follow-ups are an extra, never an error.
   if (!question?.trim() || !answer?.trim()) return json({ questions: [] })
+  // Never suggest a next question about a withheld donor (src/donor-index.ts).
+  if (await questionNamesWithheldDonor(env.ASSETS, question, answer)) return json({ questions: [] })
   const clean = (Array.isArray(passages) ? passages : [])
     .map((p) => ({
       title: String(p?.title ?? '').slice(0, 300),
@@ -4555,17 +4607,12 @@ async function campaignerMeta(name: string, url: URL, env: Env): Promise<PageMet
   const title = `${clip(display, 90)} · OPAX`
   if ((c || !data) && await namesWithheldDonor(env.ASSETS, display)) return withheldMeta('campaigner', canonical)
   if (!c) {
-    if (!data) {
-      const description = clip(`${display} in the OPAX record of AEC registered campaigners, third parties and associated entities.`)
-      return {
-        title, description, canonical, ogType: 'profile', status: 200, jsonLd: null,
-        prerender: prerenderBlock(display, description),
-        card: { kicker: 'Campaigners & third parties', title: display, lines: ['In the OPAX record of AEC registered campaigners, third parties and associated entities.'] },
-      }
-    }
+    // The register is unreadable, so the name is unverified: it is not repeated back.
+    if (!data) return { ...withheldMeta('campaigner', canonical), noindex: false }
+    // Never echo the requested name: it can be a withheld donor's (src/donor-index.ts).
     return {
       title: 'Campaigner not found · OPAX',
-      description: clip(`${display} is not on the AEC register of associated entities, third parties, significant third parties and political campaigners.`),
+      description: 'No entry with this name is on the AEC register of associated entities, third parties, significant third parties and political campaigners.',
       canonical,
       ogType: 'website',
       status: 404,

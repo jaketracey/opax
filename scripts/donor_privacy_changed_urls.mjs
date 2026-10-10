@@ -14,8 +14,9 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {offline, loadWorker, rendered} from '../portal/test/worker-harness.mjs';
-import {buildCrawl} from './build_crawl_catalog.mjs';
+import {buildCrawl, namedDonors} from './build_crawl_catalog.mjs';
 import {MONEY_GRAPHS, foldDonorName} from '../portal/public/donor-entity.js';
+import {donorPath} from '../portal/src/indexnow.ts';
 
 const ref = process.argv[2] || '6998b79e';
 const repo = fileURLToPath(new URL('..', import.meta.url));
@@ -49,11 +50,15 @@ const after = await crawl(buildCrawl);
 const restore = offline();
 const oldWorker = await loadWorker(join(old, 'portal/src/index.ts'), pub);
 const newWorker = await loadWorker(join(repo, 'portal/src/index.ts'), pub);
-const render = async (worker, path) => { const r = await worker.fetch(path); return {robots: r.headers.get('x-robots-tag'), html: rendered(await r.text())}; };
-const differs = async path => { const [a, b] = await Promise.all([render(oldWorker, path), render(newWorker, path)]); return {changed: a.robots !== b.robots || a.html !== b.html, robots: b.robots}; };
+const render = async (worker, path) => { const r = await worker.fetch(path); const html = await r.text(); return {robots: r.headers.get('x-robots-tag'), html: rendered(html), named: namedDonors(html).join('\n')}; };
+const differs = async path => { const [a, b] = await Promise.all([render(oldWorker, path), render(newWorker, path)]); return {changed: a.robots !== b.robots || a.html !== b.html, named: a.named !== b.named, robots: b.robots}; };
 
-const people = [];
-for (const path of [...new Set([...before.people, ...after.people])]) if ((await differs(path)).changed) people.push(path);
+// A person page whose named donors changed is re-pinged; one whose donor block only changed wording is not.
+const people = [], wording = [];
+for (const path of [...new Set([...before.people, ...after.people])]) {
+  const {changed, named} = await differs(path);
+  if (named) people.push(path); else if (changed) wording.push(path);
+}
 const tags = new Map();
 for (const path of MONEY_GRAPHS) for (const n of JSON.parse(readFileSync(join(pub, path), 'utf8')).nodes) if (n.kind === 'donor') {
   const key = foldDonorName(n.label);
@@ -74,13 +79,14 @@ restore();
 // IndexNow pings a person page when its fingerprint differs from the last completed epoch's.
 const fingerprinted = new Set([...after.indexnow].filter(([path, hash]) => path.startsWith('/subject/person/') && before.indexnow.get(path) !== hash).map(([path]) => path));
 const uncovered = people.filter(path => !fingerprinted.has(path)).length;
-const unchangedPings = [...fingerprinted].filter(path => !people.includes(path)).length;
+const unchangedPings = [...fingerprinted].filter(path => !people.includes(path)).length; // over-pings
 const head = commit => execFileSync('git', ['-C', repo, 'rev-parse', '--short', commit]).toString().trim();
 const counts = {
-  person_pages_changed: people.length,
+  person_pages_named_donors_changed: people.length,
+  person_pages_wording_only: wording.length,
   person_fingerprints_changed: fingerprinted.size,
-  changed_person_pages_without_new_fingerprint: uncovered,
-  fingerprint_changes_without_page_change: unchangedPings,
+  named_change_pages_without_new_fingerprint: uncovered,
+  fingerprint_changes_without_named_change: unchangedPings,
   old_sitemap_donor_urls: before.donors.length,
   new_sitemap_donor_urls: after.donors.length,
   donor_urls_removed_from_sitemap: removed.length,
@@ -89,13 +95,21 @@ const counts = {
   donor_pages_now_noindex_other_tags: noindex.other.length,
   donor_pages_changed_still_indexed: reindexed.length,
 };
+// The one-off IndexNow list (portal/src/indexnow.ts extraUrls): every donor page now noindex
+// that donorPath accepts as is; a name decoding to a slash is not one segment and is not pinged.
+const noindexed = [...new Set([...noindex.individual, ...noindex.other, ...removed])];
+const pingable = noindexed.filter(path => donorPath(path) === path);
+writeFileSync(join(work, 'indexnow-extra-paths.txt'), pingable.join('\n') + '\n');
+counts.noindexed_donor_pages_pingable = pingable.length;
+counts.noindexed_donor_pages_not_pingable = noindexed.length - pingable.length;
 const section = (title, paths) => [`## ${title} (${paths.length})`, ...paths.map(path => ORIGIN + path)];
 mkdirSync(work, {recursive: true});
 writeFileSync(join(work, 'changed-urls.txt'), [
   `# Donor privacy hotfix: pages whose server-rendered output changes, pre-hotfix ${ref} vs working tree on ${head('HEAD')}.`,
   '# Private: donor URLs carry names. Never commit or paste this file.',
   ...Object.entries(counts).map(([key, value]) => `# ${key}: ${value}`),
-  ...section('person pages changed (re-pinged by IndexNow: new fingerprint)', people),
+  ...section('person pages whose named donors changed (re-pinged by IndexNow: new fingerprint)', people),
+  ...section('person pages whose donor block changed wording only (fingerprint kept, not re-pinged)', wording),
   ...section('donor pages now noindex: individual-tagged', noindex.individual),
   ...section('donor pages now noindex: other tags (sector-tagged people and organisations without a legal form)', noindex.other),
   ...section('donor pages changed, still indexed', reindexed),
@@ -103,7 +117,5 @@ writeFileSync(join(work, 'changed-urls.txt'), [
   ...section('donor URLs added to the sitemap', added),
   '',
 ].join('\n'));
-// The one-off IndexNow list (portal/src/indexnow.ts extraUrls): every donor page now noindex.
-writeFileSync(join(work, 'indexnow-extra-paths.txt'), [...new Set([...noindex.individual, ...noindex.other, ...removed])].join('\n') + '\n');
 rmSync(old, {recursive: true, force: true});
 console.log(JSON.stringify(counts, null, 2));

@@ -344,6 +344,7 @@ needs Wrangler ≥ 4.36), keyed on `CF-Connecting-IP`:
 | `ASK_LIMITER` | `/api/ask` | 20 / 60 s |
 | `FOLLOWUPS_LIMITER` | `/api/followups` | 20 / 60 s |
 | `SEARCH_LIMITER` | `/api/search` | 120 / 60 s |
+| `MODEL_LIMITER` | every paid generation (one key for all readers) | 60 / 60 s |
 
 `limit()` is called **after** the cache read, so a hit costs no quota — the
 hot questions stay free no matter how often they are asked. Over the limit
@@ -352,6 +353,32 @@ open**: a binding outage, or a build without it, logs a warning and lets the
 request through. Losing the site to a limiter fault would be the worse
 failure. Miniflare implements the binding locally, so `wrangler dev`
 enforces the real thing.
+
+The calculated money answer's opening paragraph is a paid call too: it spends
+the reader's `ASK_LIMITER` token after its own cache read, and past the limit
+the calculated answer goes out without the paragraph (`x-opax-overview:
+rate-limited`).
+
+`MODEL_LIMITER` is the aggregate cap (October 2026). Every platform `/ask`
+call, whether answer, retry, rewrite, overview, follow-ups, journey story or search
+overview, checks one constant key first, so the cap covers all readers at a
+Cloudflare location together; cache hits never reach it. Past it, the call is
+answered `429` with `x-opax-model-budget: spent` and the caller's fallback
+stands: an Ask answer is a `503` "busy, try again in a minute" with
+`Retry-After: 60` and no lighter retry, a position answer falls back to its
+excerpts, and the overview, follow-ups, story and search overview are simply
+absent. Change the limit per environment in the binding's `simple.limit`
+(staging has no limiters). Like the others it fails open.
+
+**Warm-up after an epoch bump.** A bump orphans every cached answer, so the
+first asks of each question are model calls again: the 75 recurring questions
+of `warm_cache.py` (about $0.60 cold) and whatever readers ask. Expect the
+hit rate to recover over the first day as the common questions are asked
+again. At most 60 generations a minute per location run while it is cold,
+whatever the traffic, so the worst case for a sustained burst is about 3,600
+calls an hour per location, with readers past the cap seeing "busy" instead
+of a bill. Run `warm_cache.py` after the deploy so the recurring questions
+are warm before readers reach them.
 
 `CACHE_EPOCH` is the kill switch for all of it. Bump it in
 `portal/wrangler.jsonc` and deploy, and every cached answer, search, resource

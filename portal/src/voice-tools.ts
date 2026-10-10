@@ -1,7 +1,7 @@
 import {CommunityError, text} from './community-core'
 import {CATALOG_KINDS} from './catalog-search'
 import {isReceiptGraph, moneyQuestion, receiptAnswer, receiptGraphForQuestion} from './voice-money'
-import {loadDonorIndex} from './donor-index'
+import {loadDonorIndex, questionNamesWithheldDonor, WITHHELD_DONOR_REPLY} from './donor-index'
 import {foldDonorName} from '../public/donor-entity.js'
 
 type Data = Record<string, unknown>
@@ -72,6 +72,9 @@ function compact(value: unknown, budget = {left: 15_000}, depth = 0): unknown {
 
 export async function runVoiceTool(name: string, args: Data, env: Env, readPublic: PublicReader): Promise<Data> {
   const origin = env.COMMUNITY_ORIGIN
+  // A query naming a withheld donor gets one fixed reply before any lookup (src/donor-index.ts).
+  if (typeof args.query === 'string' && await questionNamesWithheldDonor(env.ASSETS, args.query))
+    return {source_notice: evidenceNotice, source_url: origin, sources: [], data: {answer: WITHHELD_DONOR_REPLY}}
   const asset = async (path: string, limit: number) => boundedJson(await env.ASSETS.fetch(new Request(origin + path)), limit)
   const receipts = async (query:string) => {
     if(/\b(?:grants?|contracts?|expenditure|expenses?|government spending|public funding)\b/i.test(query)) return null

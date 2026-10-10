@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {isOrganisationDonor, withholdIndividualDonors, donorPrivacyIndex, donorNameWithheld} from '../public/donor-entity.js';
+import {withheldPhrases, namesWithheldPhrase} from '../src/donor-index.ts';
 
 // Fictional names only: the export's own donors are exercised in donor-privacy.test.mjs.
 test('a donor is an organisation only with positive evidence in its name; the industry never counts', () => {
@@ -65,4 +66,34 @@ test('a label is an organisation if any graph vouches for it; an unknown name is
   assert.equal(donorNameWithheld(index, 'jane  citizen'), true);
   assert.equal(donorNameWithheld(index, 'Unknown Person'), true);
   assert.equal(donorNameWithheld(index, 'Unknown Example Pty Ltd'), false);
+});
+
+test('an anonymous id is keyed by the source id: a duplicated id stays one group, and no two groups share one', () => {
+  const donor = (id, label) => ({id, label, kind: 'donor', industry: 'media'});
+  const graph = {nodes: [donor('donor:a', 'Ann Example'), donor('donor:b', 'Bea Example'), donor('donor:b', 'Bea Example'), donor('donor:c', 'Cal Example'), {id: 'party:L', label: 'Labor', kind: 'party'}],
+    edges: [{source: 'donor:a', target: 'party:L', total: 1}, {source: 'donor:b', target: 'party:L', total: 10}, {source: 'donor:c', target: 'party:L', total: 100}]};
+  const out = withholdIndividualDonors(graph);
+  assert.deepEqual(out.nodes.map(n => n.id), ['donor:withheld-1', 'donor:withheld-2', 'donor:withheld-2', 'donor:withheld-3', 'party:L']);
+  assert.deepEqual(out.edges.map(e => [e.source, e.total]), [['donor:withheld-1', 1], ['donor:withheld-2', 10], ['donor:withheld-3', 100]]);
+  // A source id withheld only when every node carrying it fails the test.
+  const mixed = withholdIndividualDonors({nodes: [donor('donor:x', 'Exco'), {...donor('donor:x', 'Exco'), aliases: ['Exco Pty Ltd']}], edges: [{source: 'donor:x', target: 'party:L', total: 5}]});
+  assert.deepEqual(mixed.edges.map(e => e.source), ['donor:x']);
+});
+
+test('a question names a withheld donor by label, alias or "Given Surname", never through an organisation or office holder', () => {
+  const graphs = [{nodes: [
+    {label: 'Jane Citizen', kind: 'donor', industry: 'media', aliases: ['J. Q. Citizen']},
+    {label: 'Example, Robin', kind: 'donor', industry: 'individual'},
+    {label: 'Morgan Member', kind: 'donor', industry: 'individual'},
+    {label: 'Jane Citizen Holdings Pty Ltd', kind: 'donor', industry: 'property'},
+    {label: 'Citizen Group', kind: 'donor', industry: 'other', aliases: ['Jane']},
+  ]}];
+  const phrases = withheldPhrases(graphs, ['Morgan Member']);
+  for (const q of ['How much did Jane Citizen give?', 'jane   CITIZEN donations', 'What has J. Q. Citizen given?', 'Robin Example to Labor', 'Example, Robin', 'Who funds Labor? And Jane Citizen.'])
+    assert.equal(namesWithheldPhrase(phrases, q), true, q);
+  for (const q of ['How much did Jane Citizen Holdings Pty Ltd give?', 'Morgan Member speeches', 'Who gives the most to Labor?', 'Jane', 'Citizen Group donations', ''])
+    assert.equal(namesWithheldPhrase(phrases, q), false, q);
+  // An organisation's name covers only its own occurrence: a second, bare mention still counts.
+  assert.equal(namesWithheldPhrase(phrases, 'Jane Citizen Holdings Pty Ltd and Jane Citizen'), true);
+  assert.equal(namesWithheldPhrase(phrases, 'Labor', 'And Jane Citizen?'), true, 'any of several texts');
 });

@@ -81,6 +81,7 @@ function fixture({empty=false,invalid=false,denied=false}={}){
   cacheRequest:(kind,key)=>new Request('https://cache.test/'+kind+'/'+key),sha256Hex:async s=>createHash('sha256').update(s).digest('hex'),
   readGenerationCache:async (_env,_ctx,key)=>cache.get(key.url)?.clone(),storeGenerationCache:(_env,_ctx,key,res)=>cache.set(key.url,res.clone()),withCacheStatus:res=>res,
   rateLimited:async()=>denied?Response.json({error:'Limited'},{status:429}):null,
+  questionNamesWithheldDonor:async()=>false,modelBudgetSpent:async()=>false,modelBudgetResponse:()=>new Response(null,{status:429}), // exercised in donor-privacy and model-budget tests
   kbFetch:async(_env,path,options)=>{calls.push({path,body:options.body});return Response.json({answer:invalid?'invalid':JSON.stringify(draft())})}
  };
  const fn=runInNewContext(code+';apiSearchSummary',ctx);
@@ -123,7 +124,8 @@ test('the streamed overview sends each validated point as it lands, then the cac
   apiUnifiedSearch:async()=>Response.json({results:rows,index_version:'v1'}),
   cacheRequest:(kind,key)=>new Request('https://cache.test/'+kind+'/'+key),sha256Hex:async s=>createHash('sha256').update(s).digest('hex'),
   readGenerationCache:async(_e,_c,key)=>cache.get(key.url)?.clone(),storeGenerationCache:(_e,_c,key,res)=>cache.set(key.url,res.clone()),withCacheStatus:res=>res,
-  rateLimited:async()=>null,kbFetch:async()=>{throw new Error('the streamed path must not fall back to a synchronous generation when points validated')}};
+  rateLimited:async()=>null,kbFetch:async()=>{throw new Error('the streamed path must not fall back to a synchronous generation when points validated')},
+  questionNamesWithheldDonor:async()=>false,modelBudgetSpent:async()=>false,modelBudgetResponse:()=>new Response(null,{status:429})};
  const fn=runInNewContext(code+';apiSearchSummary',ctx);
  const pending=[];const u=new URL('https://opax.test/api/search-summary?q=agriculture&kind=all&stream=1');
  const res=await fn(new Request(u),u,{CACHE_EPOCH:'v1'},{waitUntil:p=>pending.push(p)});

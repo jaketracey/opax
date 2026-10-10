@@ -123,6 +123,29 @@ export function addAuditDiscovery(groups, manifest) {
   groups.static.push({path:'/audit', lastmod:exportDate(manifest.generated_at)});
 }
 
+/** Donor names linked from a person page's "Donors to their party" block, in page order. */
+export function namedDonors(html) {
+  const block = html.split('<h2>Donors to their party</h2>')[1]?.split('<h2>Bills sponsored</h2>')[0] || '';
+  const unescape = s => s.replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+  return [...block.matchAll(/href="\/subject\/donor\/([^"]+)"/g)].map(m => decodeURIComponent(unescape(m[1])));
+}
+
+/** The donors the person page named before the October 2026 privacy hotfix: up to ten
+ * per register by receipts, everything but individual/other/unknown industry tags.
+ * Kept only to tell which pages' named donors the hotfix changed (IndexNow). */
+export async function legacyNamedDonors(party, read) {
+  const names = [];
+  for (const path of ['/graph/money.json','/graph/money.qld.json','/graph/money.vic.json']) {
+    const graph = await read(path).catch(() => null);
+    const node = graph?.nodes.find(n => n.kind === 'party' && fold(n.label) === fold(party));
+    if (!node) continue;
+    const donors = new Map(graph.nodes.filter(n => n.kind === 'donor').map(n => [n.id, n]));
+    const flows = graph.edges.filter(e => e.target === node.id && !e.grant && !e.flow && donors.has(e.source));
+    names.push(...flows.filter(e => !['individual','individuals','other','unknown',''].includes(donors.get(e.source)?.industry || '')).sort((a,b) => b.total - a.total).slice(0,10).map(e => donors.get(e.source).label));
+  }
+  return names;
+}
+
 export async function buildCrawl(root) {
   const read = async p => JSON.parse(await readFile(join(root,p.replace(/^\//,'')), 'utf8'));
   const optional = async p => { try { return await read(p); } catch (e) { if (e.code === 'ENOENT') return null; throw e; } };
@@ -191,11 +214,15 @@ export async function buildCrawl(root) {
     const interest = p.pid ? await optional(`interests/${p.pid}.json`) : null;
     const record=votes[p.pid];
     add('people',path,latestDate([p.last_changed_at,p.updated_at,p.last_speech_date,interest?.as_at,...Object.values(interest?.buckets || {}).flatMap(b=>b.items?.map(i=>i.date) || []),...(record?.for || []).map(v=>v.date),...(record?.against || []).map(v=>v.date),...(recent?.people?.[p.pid]?.recent || []).map(v=>v.date),p.rosterOnly?.asOf],peopleDate),undefined,peopleDate);
-    // The person page names its party's organisational donors. Where it renders
-    // a donor block, that block is part of the fingerprint, so a change to who
-    // is named (the 2026-10 donor privacy hotfix) re-pings exactly those pages.
-    const donorBlock = (p.party_now || p.party) ? (await renderPersonAnswer(p,cachedRead,slugs)).html.split('<h2>Donors to their party</h2>')[1]?.split('<h2>Bills sponsored</h2>')[0] || '' : '';
-    snapshot.set(path,hash(donorBlock.includes('<h3>') ? {person:p,votes:votes[p.pid] || null,interest,donors:donorBlock} : {person:p,votes:votes[p.pid] || null,interest}));
+    // A person page fingerprints the donors it names only where they differ from
+    // what the pre-October-2026 rule named (legacyNamedDonors): the donor privacy
+    // hotfix re-pings exactly the pages whose named donors changed, and a page
+    // whose donor list only changed wording keeps its fingerprint.
+    const base = {person:p,votes:votes[p.pid] || null,interest};
+    const party = p.party_now || p.party;
+    const named = party ? namedDonors((await renderPersonAnswer(p,cachedRead,slugs)).html) : [];
+    const legacy = party ? await legacyNamedDonors(party,cachedRead) : [];
+    snapshot.set(path,hash(named.join('\n') === legacy.join('\n') ? base : {...base,donors:named}));
   }
   const partyLabels = new Map(), donors = new Map();
   // Individual donors stay out of the sitemap, as individual grant recipients do.

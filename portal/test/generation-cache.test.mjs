@@ -61,6 +61,8 @@ const routeCode=ts.transpileModule(index.slice(index.indexOf('async function api
 test('Ask checks shared cache before quota, while conversations and explicit refresh bypass it',async()=>{
  let cacheReads=0,quota=0;
  const api=runInNewContext(routeCode+';apiAsk', {URL,Request,Response,AbortSignal,Date,
+  // The donor privacy check and model budget are exercised in donor-privacy.test.mjs and model-budget.test.mjs.
+  questionNamesWithheldDonor: async () => false, readerTurns: () => [], withheldDonorAnswer: () => ({}), MODEL_BUDGET_HEADER: 'x-opax-model-budget', modelBudgetBusy: () => new Response(null, { status: 503 }), 
   rankedMoneyAnswer: async () => null, paidAnswer: async () => null, standaloneQuestion: async () => null, withAskedAs:p=>p, needsAskPeople:()=>false,resolveAskScope:input=>({input}),askCacheInput:input=>input.context?.length?null:'public',
   cacheRequest:()=>key(),sha256Hex:async()=>'',cacheBypass:(r,u)=>u.searchParams.get('nocache')==='1',
   readGenerationCache:async()=>{cacheReads++;return Response.json({answer:'Cached'})},

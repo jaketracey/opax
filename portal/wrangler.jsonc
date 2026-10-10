@@ -133,7 +133,12 @@
     // Share images (/og/*.png) are rasterised in wasm on a cache MISS, a few
     // hundred ms of CPU each. A crawler fetches one per shared link; only a
     // script minting fresh ?q= URLs could ask for sixty in a minute.
-    { "name": "OG_LIMITER", "namespace_id": "1004", "simple": { "limit": 60, "period": 60 } }
+    { "name": "OG_LIMITER", "namespace_id": "1004", "simple": { "limit": 60, "period": 60 } },
+    // Aggregate cap on paid generation (every platform /ask call: answers, rewrites,
+    // overviews, follow-ups, stories, summaries), one key for all readers, so a
+    // cold cache after a CACHE_EPOCH bump cannot run up a bill. Past it the cached
+    // or fallback output stands (src/index.ts modelBudgetSpent). Per location.
+    { "name": "MODEL_LIMITER", "namespace_id": "1005", "simple": { "limit": 60, "period": 60 } }
   ],
   "env": {
     "staging": {

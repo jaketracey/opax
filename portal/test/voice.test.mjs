@@ -16,11 +16,13 @@ const {voiceRoute,reserveVoiceSession,claimVoiceSession,reconcileVoiceSession,ex
 const {runVoiceTool}=await import(pathToFileURL(join(folder,'voice-tools.js')));
 const hash=async value=>Buffer.from(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value))).toString('hex');
 
+// The donor privacy check reads the money graphs and rosters; these suites serve them empty.
+const emptyRegisters=request=>{const path=new URL(request.url).pathname;return /^\/graph\/money(?:\.[a-z]+)?\.json$/.test(path)?Response.json({nodes:[],edges:[]}):path==='/parliamentarians.json'?Response.json({people:[]}):path==='/access.json'?Response.json({ministers:{}}):null};
 function fixture(){
   const db=new DatabaseSync(':memory:');
   for(const name of ['0001_community.sql','0002_free_community.sql','0003_voice.sql','0004_voice_access.sql','0009_community_social.sql','0010_reply_email_notifications.sql','0011_native_signin.sql','0012_voice_deletion_safe.sql']) db.exec(readFileSync(new URL('../migrations/'+name,import.meta.url),'utf8'));
   const statement=(sql,args=[])=>({bind(...values){return statement(sql,values)},async first(){return db.prepare(sql).get(...args)||null},async all(){return {results:db.prepare(sql).all(...args)}},async run(){const result=db.prepare(sql).run(...args);return {success:true,meta:{changes:Number(result.changes)}}}});
-  const env={COMMUNITY_DB:{prepare:statement},COMMUNITY_ENABLED:'true',COMMUNITY_ORIGIN:'https://opax.test',VOICE_ENABLED:'true',VOICE_AGENT_ID:'agent_test',ELEVENLABS_API_KEY:'server-only-test-key',VOICE_TOOL_SECRET:'t'.repeat(43),VOICE_MONTHLY_SECONDS:'40000',ASSETS:{async fetch(){return Response.json({entities:[],sources:[]})}}};
+  const env={COMMUNITY_DB:{prepare:statement},COMMUNITY_ENABLED:'true',COMMUNITY_ORIGIN:'https://opax.test',VOICE_ENABLED:'true',VOICE_AGENT_ID:'agent_test',ELEVENLABS_API_KEY:'server-only-test-key',VOICE_TOOL_SECRET:'t'.repeat(43),VOICE_MONTHLY_SECONDS:'40000',ASSETS:{async fetch(request){return emptyRegisters(request)??Response.json({entities:[],sources:[]})}}};
   const pending=[]; const ctx={waitUntil(p){pending.push(p)}};
   let reads=0; const read=async path=>{reads++;return Response.json(path.startsWith('/api/search-all')?{results:[{slug:'speech-931754',title:'Housing record'},{href:'/subject/supplier/example',title:'Supplier'}]}:{slug:'speech-931754',title:'Housing record',text:'Public source text.'})};
   const request=(path,method='GET',data,cookie='',headers={})=>new Request('https://opax.test/api/voice/'+path,{method,headers:{origin:'https://opax.test',...(data?{'content-type':'application/json'}:{}),...(cookie?{cookie}:{}),...headers},body:data?JSON.stringify(data):undefined});
@@ -264,14 +266,14 @@ test('voice tools reject arbitrary routes and bound oversized source responses',
 });
 
 test('lookup tools use bounded local grant, topic and party sources with working recipient links',async()=>{
-  const f=fixture();f.env.ASSETS.fetch=async()=>Response.json({meta:{source_url:'https://grants.gov.au'},recipients:[{id:'abn:123',n:'Housing Services',t:500,c:2}],programs:[]});
+  const f=fixture();f.env.ASSETS.fetch=async request=>emptyRegisters(request)??Response.json({meta:{source_url:'https://grants.gov.au'},recipients:[{id:'abn:123',n:'Housing Services',t:500,c:2}],programs:[]});
   const grants=await runVoiceTool('lookup_grants',{query:'Housing'},f.env,async()=>{throw Error('Unexpected fetch')});assert.equal(grants.data.recipients[0].total_aud,500);assert.equal(grants.sources[0].url,'https://opax.test/money/grants?jur=federal&open=abn%3A123');
   const parties=await runVoiceTool('lookup_parties',{query:'Labor'},f.env,async path=>{assert.equal(path,'/api/parties');return Response.json({parties:[{label:'Labor',count:2},{label:'Liberal',count:1}]})});assert.equal(parties.data.parties.length,1);f.db.close();
 });
 
 test('catalogue results reopen exact versioned financial records and reject stale identifiers',async()=>{
   const f=fixture(),version='0123456789abcdef';
-  f.env.ASSETS.fetch=async request=>new URL(request.url).pathname.endsWith('manifest.json')?Response.json({version,count:1,recordShardSize:256,coverage:'Sampled awards, not payments.'}):Response.json([{slug:'catalog-0',kind:'contract',title:'Housing services',href:'/subject/supplier/example',snippet:'Published contract award of $100.',source:'AusTender'}]);
+  f.env.ASSETS.fetch=async request=>emptyRegisters(request)??(new URL(request.url).pathname.endsWith('manifest.json')?Response.json({version,count:1,recordShardSize:256,coverage:'Sampled awards, not payments.'}):Response.json([{slug:'catalog-0',kind:'contract',title:'Housing services',href:'/subject/supplier/example',snippet:'Published contract award of $100.',source:'AusTender'}]));
   const search=await runVoiceTool('search_records',{query:'housing',kind:'contract'},f.env,async path=>{assert.match(path,/kind=contract/);return Response.json({index_version:version,results:[{slug:'catalog-0',href:'/subject/supplier/example',title:'Housing services'}]})});
   const identifier=search.data.results[0].slug;assert.equal(identifier,'catalog-'+version+'-0');
   const record=await runVoiceTool('read_record',{slug:identifier},f.env,async()=>{throw Error('Catalogue reads must not fetch an arbitrary API path')});assert.equal(record.data.kind,'contract');assert.equal(record.sources[0].url,'https://opax.test/subject/supplier/example');assert.match(record.data.record_note,/Awards are not payments/);

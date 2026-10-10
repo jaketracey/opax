@@ -118,6 +118,8 @@ test('Worker /ask sources normalize once and keep the 600 maximum on word bounda
   let calls = 0;
   const worker = compile(['apiAsk','askPayload','label','calibrate'], {
     ...evidence, URL, Response, AbortSignal, isWitness,
+    // The donor privacy check and model budget are exercised in donor-privacy.test.mjs and model-budget.test.mjs.
+    questionNamesWithheldDonor: async () => false, readerTurns: () => [], withheldDonorAnswer: () => ({}), MODEL_BUDGET_HEADER: 'x-opax-model-budget', modelBudgetBusy: () => new Response(null, { status: 503 }), 
     rankedMoneyAnswer:async()=>null, rateLimited:async()=>null, paidAnswer:async()=>null, integrityQuestion:()=>false,
     needsAskPeople:()=>false, loadPeople:async()=>people,
     resolveAskScope:input=>({input,scope:undefined}), askCacheInput:()=>null, cacheBypass:()=>true,
