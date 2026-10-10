@@ -1,65 +1,69 @@
-/* Hubs retain their server-rendered body. Native disclosures work without JS. */
-.hub-page { max-width: 960px; padding-top: 2rem; padding-bottom: 3rem; }
-.hub-page h1 { font: 700 clamp(1.6rem, 3.5vw, 2.4rem)/1.3 var(--serif); margin: .75rem 0 1rem; text-wrap: balance; }
-.hub-page h2 { font: 700 1.35rem/1.4 var(--serif); margin: 0 0 .5rem; }
-.hub-page h3 { font: 600 1.125rem/1.5 var(--serif); margin: 0; }
-.hub-page h4 { font: 600 1rem/1.5 var(--sans); margin: 0; }
-.hub-page h5 { font: 600 .9375rem/1.5 var(--sans); margin: 1rem 0 .5rem; }
-.hub-page p { line-height: 1.65; }
-.hub-page a { color: var(--bills-ink); overflow-wrap: anywhere; }
-.hub-trail, .hub-meta, .hub-date { color: var(--ink-soft); font-size: .875rem; }
-.hub-lead { max-width: 46rem; font-size: 1.0625rem; margin-bottom: 1.25rem; }
-.hub-page .ui-source { margin: .75rem 0; }
-.hub-pills { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1rem 0; }
-.hub-pills .ui-tag { background: var(--bills-wash); color: var(--bills-ink); text-decoration: none; }
-.hub-cutoff, .hub-arrival { border-left: 3px solid var(--bills-ink); padding: .75rem 1rem; background: var(--paper-sunken); }
-.hub-arrival { margin: 2rem 0 3rem; }
-.hub-weeks, .hub-records { list-style: none; padding: 0; margin: 1.5rem 0; }
-.hub-weeks > li { display: flex; gap: 1rem; align-items: flex-start; justify-content: space-between; padding: 1.5rem 0; border-top: 1px solid var(--divider-subtle); }
-.hub-weeks h2 { font-size: 1.2rem; }
-.hub-weeks p { margin: .35rem 0; }
-.hub-weeks .ui-status { flex-shrink: 0; margin-top: .25rem; }
-.hub-section { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--divider-default); scroll-margin-top: 7rem; }
-.hub-count { color: var(--ink-soft); font: 400 1rem var(--sans); margin-left: .4rem; }
-.hub-records > li { padding: 1.25rem 0; border-top: 1px solid var(--divider-subtle); }
-.hub-records > li:first-child { border-top: 0; padding-top: .25rem; }
-.hub-records .hub-meta { margin: .5rem 0; }
-.hub-summary { margin: 1rem 0; }
-.hub-summary .hub-date { margin-left: .5rem; }
-.hub-summary > p { margin: .7rem 0; }
-.hub-coverage { border-top: 1px solid var(--divider-subtle); margin-top: 1.5rem; padding-top: .75rem; }
-.hub-coverage p { font-size: .9375rem; margin: .6rem 0; }
-.hub-committee { border-top: 1px solid var(--divider-subtle); }
-.hub-committee > summary { cursor: pointer; padding: 1.2rem 0; }
+/* Hubs retain their server-rendered body. Native disclosures work without JS.
+   They sit on the site's own measure (.wrap, as /bills does), use the shared
+   link, focus and label rules, and the type roles from tokens.css. */
+.hub-page { padding-top: var(--space-group); padding-bottom: var(--space-section); }
+.hub-page h1 { font: var(--type-title); margin: var(--space-heading) 0 var(--space-tight); text-wrap: balance; }
+.hub-page h2 { font: var(--type-heading); margin: 0 0 var(--space-tight); }
+.hub-page h3 { font: var(--type-subheading); margin: 0; }
+.hub-page h4 { font: var(--type-strong); margin: 0; }
+.hub-page h5 { font: var(--type-label); color: var(--ink-soft); margin: var(--space-block) 0 var(--space-tight); }
+.hub-page p { max-width: 46rem; }
+.hub-page a { overflow-wrap: anywhere; }
+.hub-trail, .hub-meta, .hub-date { color: var(--ink-soft); font: var(--type-metadata); }
+.hub-lead { font: var(--type-body); margin: 0 0 var(--space-block); }
+/* The one meta line under a week's or an estimates period's title. */
+.hub-page > .hub-meta { margin: 0 0 var(--space-block); }
+.hub-page .ui-source { margin: var(--space-heading) 0; }
+.hub-pills { display: flex; flex-wrap: wrap; gap: var(--space-tight); margin: var(--space-block) 0; }
+.hub-weeks, .hub-records { list-style: none; padding: 0; margin: var(--space-group) 0; }
+.hub-weeks > li { display: flex; gap: var(--space-block); align-items: flex-start; justify-content: space-between; padding: var(--space-group) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
+.hub-weeks h2 { font: var(--type-subheading); }
+.hub-weeks p { margin: var(--space-line) 0; }
+.hub-weeks .ui-status { flex-shrink: 0; margin-top: var(--space-line); }
+.hub-section { margin-top: var(--space-section); padding-top: var(--space-group); border-top: var(--border-hairline) solid var(--divider-default); scroll-margin-top: calc(var(--header-h) + var(--space-block)); }
+.hub-count { color: var(--ink-soft); font: var(--type-body); margin-left: var(--space-tight); font-variant-numeric: tabular-nums; }
+.hub-records > li { padding: var(--space-block) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
+.hub-records > li:first-child { border-top: 0; padding-top: var(--space-line); }
+.hub-records .hub-meta { margin: var(--space-tight) 0; }
+.hub-summary { margin: var(--space-block) 0; }
+.hub-summary .hub-date { margin-left: var(--space-tight); }
+.hub-summary > p { font: var(--type-body); margin: var(--space-tight) 0; }
+/* Estimates: "On this page" (the entry rail's rows), then the money block's caveat and source line. */
+.hub-toc { max-width: 28rem; margin: var(--space-group) 0 0; padding-top: var(--space-block); border-top: var(--border-hairline) solid var(--divider-default); }
+.hub-toc-head { margin: 0 0 var(--space-line); font: var(--type-label); color: var(--ink-soft); }
+.hub-toc ul { list-style: none; margin: 0; padding: 0; }
+.hub-toc li + li { border-top: var(--border-hairline) solid var(--divider-subtle); }
+.hub-toc a { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 var(--space-block); min-height: var(--size-target); padding: var(--space-line) 0; color: var(--ink); text-decoration: none; }
+.hub-toc a > span:first-child { font: var(--type-strong); }
+.hub-toc a:hover > span:first-child { text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
+.hub-coverage { margin-top: var(--space-group); }
+.hub-coverage > p { font: var(--type-fine); color: var(--ink-soft); margin: 0; }
+.hub-coverage .ui-source { margin-top: var(--space-tight); }
+.hub-committee { border-top: var(--border-hairline) solid var(--divider-subtle); }
+.hub-committee > summary { cursor: pointer; padding: var(--space-block) 0; min-height: var(--size-target); }
 .hub-committee > summary h3 { display: inline; }
-.hub-committee > summary .hub-meta { display: block; margin: .35rem 0 0 1rem; }
-.hub-committee-body { padding-left: 1rem; }
-.hub-fallback { color: var(--ink-soft); font-size: .875rem; }
-.hub-agency { padding: 1.2rem 0; border-top: 1px solid var(--divider-subtle); }
-.hub-totals { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem 2rem; margin: .75rem 0; }
-.hub-totals dt { color: var(--ink-soft); font-size: .8125rem; }
-.hub-totals dd { margin: .2rem 0 0; font-variant-numeric: tabular-nums; }
-.hub-largest > summary { cursor: pointer; color: var(--bills-ink); font-size: .875rem; padding: .35rem 0; }
+.hub-committee > summary .hub-meta { display: block; margin: var(--space-line) 0 0 var(--space-block); }
+.hub-committee-body { padding-left: var(--space-block); }
+.hub-fallback { color: var(--ink-soft); font: var(--type-metadata); }
+.hub-agency { padding: var(--space-block) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
+.hub-totals { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-heading) var(--space-section); margin: var(--space-heading) 0; max-width: 46rem; }
+.hub-totals dt { color: var(--ink-soft); font: var(--type-fine); }
+.hub-totals dd { margin: var(--space-line) 0 0; font: var(--type-body); font-variant-numeric: tabular-nums; }
+.hub-largest > summary { cursor: pointer; font: var(--type-metadata); display: flex; align-items: center; min-height: var(--size-target); }
 .hub-largest ul { list-style: none; margin: 0; padding: 0; }
-.hub-largest li { padding: .5rem 0; border-top: 1px solid var(--divider-subtle); }
-.hub-largest p { margin: .3rem 0; }
-.hub-corrections { border-top: 1px solid var(--divider-default); margin-top: 2rem; padding-top: 1rem; color: var(--ink-soft); font-size: .875rem; }
-.hub-authorisation { border-top: 1px solid var(--divider-default); margin-top: 2rem; padding-top: 1rem; font-size: .875rem; }
-.hub-page .hub-footer { background: transparent; color: inherit; border: 0; padding: 0; margin: 0; font: inherit; }
-.hub-page .hub-footer a { color: var(--bills-ink); }
-.vic-seats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .25rem 1.5rem; list-style: none; padding: 0; }
-.vic-seats a { display: block; padding: .65rem 0; min-height: 44px; }
-.vic-member { padding: 1.5rem 0; border-top: 1px solid var(--divider-subtle); }
-.vic-member h4 { margin-top: 1rem; }
-.vic-dates dt { font-weight: 600; }
-.vic-dates dd { margin: .4rem 0 1rem; line-height: 1.65; }
-.hub-page a:focus-visible, .hub-page summary:focus-visible { outline: 2px solid var(--bills-ink); outline-offset: 3px; }
+.hub-largest li { padding: var(--space-tight) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
+.hub-largest p { margin: var(--space-line) 0; }
+.hub-corrections { border-top: var(--border-hairline) solid var(--divider-default); margin-top: var(--space-section); padding-top: var(--space-block); color: var(--ink-soft); font: var(--type-fine); }
+.hub-authorisation { border-top: var(--border-hairline) solid var(--divider-default); margin-top: var(--space-section); padding-top: var(--space-block); font: var(--type-fine); }
+.vic-seats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-line) var(--space-group); list-style: none; padding: 0; }
+.vic-seats a { display: block; padding: var(--space-row) 0; min-height: var(--size-target); }
+.vic-member { padding: var(--space-group) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
+.vic-member h4 { margin-top: var(--space-block); }
+.vic-dates dt { font: var(--type-strong); }
+.vic-dates dd { margin: var(--space-tight) 0 var(--space-block); }
 @media (max-width: 600px) {
-  .hub-page { padding-top: 1.25rem; }
-  .hub-weeks > li { gap: .6rem; }
-  .hub-weeks h2 { font-size: 1.05rem; }
-  .hub-weeks .ui-status { font-size: .75rem; }
-  .hub-totals { gap: .75rem; font-size: .875rem; }
+  .hub-weeks > li { gap: var(--space-row); }
+  .hub-totals { gap: var(--space-heading); }
   .hub-committee-body { padding-left: 0; }
   .vic-seats { grid-template-columns: 1fr; }
 }
