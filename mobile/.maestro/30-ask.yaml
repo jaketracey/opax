@@ -214,16 +214,22 @@ name: 30 Build a question, streamed answer, native bill citation and grounded fo
 - assertNotVisible:
     id: ask-clarify
 # A scoped draft returns the composer to view after a scrolled answer.
+# Ask about this is under the bill's ⋯ (as in journey 46).
 - openLink: opax://bill/au-federal-r7534
 - scrollUntilVisible:
     element:
-      id: bill-ask
+      id: bill-more
+    direction: DOWN
     centerElement: true
     speed: 20
     timeout: 90000
+- waitForAnimationToEnd
 - tapOn:
-    id: bill-ask
-- assertVisible:
-    id: ask-question
+    id: bill-more
+- tapOn: Ask about this
+- extendedWaitUntil:
+    visible:
+      id: ask-question
+    timeout: 15000
 - assertVisible: What did parliament say about the Interactive Gambling.*
 - takeScreenshot: ${EVIDENCE}/30-new-draft
