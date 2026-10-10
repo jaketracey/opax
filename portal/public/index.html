@@ -60,12 +60,12 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=93733c2d8a">
+<link rel="stylesheet" href="/style.css?v=6cb9fea4ee">
 <link rel="stylesheet" href="/ui-controls.css?v=f8011bf298">
 <link rel="stylesheet" href="/ui-source.css?v=4f396d8cfc">
 <link rel="stylesheet" href="/voice.css?v=a10938b91d">
 <!-- labels.js: app.js imports it before its first render. -->
-<link rel="modulepreload" href="/labels.js?v=804befe8de">
+<link rel="modulepreload" href="/labels.js?v=c6bf994ef7">
 </head>
 <body class="research-app">
 <!-- Google Tag Manager (noscript) -->
@@ -437,9 +437,9 @@
         <div class="front-main">
 <section class="front-mod" aria-labelledby="h-bills" id="mod-bills" hidden>
           <h2 class="subject-section-title" id="h-bills">Latest bills</h2>
+          <div class="front-bills-machine"><details class="ui-pop ui-machine"><summary title="Written by a model, not by a person. Not part of the record."><span class="ui-machine-glyph" aria-hidden="true">✦</span>Machine-written<span class="visually-hidden">, not part of the record</span></summary><div class="ui-sheet"><p>Each summary is written by a model from the bill&#39;s explanatory memorandum. It is not part of the record.</p></div></details></div>
           <ul class="subject-list front-bills" id="front-bills" role="list"></ul>
-          <p class="fineprint" id="front-bills-note">Summaries are written by a model from each bill's explanatory
-          memorandum; they are not the record. <a href="/bills">All bills, with their divisions and speeches →</a></p>
+          <p class="fineprint" id="front-bills-note"><a href="/bills">All bills, with their divisions and speeches →</a></p>
         </section>
 <section class="front-mod" aria-labelledby="h-mw" id="mod-mw" hidden>
           <h2 class="subject-section-title" id="h-mw">Money &amp; words</h2>
@@ -710,7 +710,7 @@
            is written on request, when the row is opened, and sits above the
            results it reads. -->
       <details class="search-answer" id="search-answer" hidden>
-        <summary class="search-summary-row"><span class="search-summary-word" id="search-answer-head">Summarise these records</span><span class="ui-machine-pill"><span class="ui-machine-glyph" aria-hidden="true">✦</span>Machine-written</span></summary>
+        <summary class="search-summary-row"><span class="search-summary-word" id="search-answer-head">Summarise these records</span><span class="ui-machine-pill" title="Written by a model, not by a person. Not part of the record."><span class="ui-machine-glyph" aria-hidden="true">✦</span>Machine-written<span class="visually-hidden">, not part of the record</span></span></summary>
         <div class="search-summary-open">
           <p class="search-summary-status" id="search-answer-status" role="status" aria-live="polite"></p>
           <div class="answer answer-compact" id="search-answer-body"></div>
@@ -869,7 +869,6 @@
           <h3 class="subject-section-title" id="doc-brief-head">In brief</h3>
         </div>
         <p id="doc-brief-text"></p>
-        <p class="doc-brief-note">Written from this speech by a model, not by a person, and not part of the record.</p>
       </aside>
       <div id="doc-text" class="doc-text"></div>
       </div>
@@ -2053,10 +2052,10 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=d28b1d2444" defer></script>
+<script src="/spa-shell.js?v=003ded5508" defer></script>
 <script src="/navigation.js?v=f86ae6aef6" defer></script>
 <script src="/quick-search.js?v=206914f32d" defer></script>
 <script src="/ui-source.js?v=5e7b751ca0" defer></script>
-<script src="/app.js?v=a0b2d5975e" defer></script>
+<script src="/app.js?v=4ccf7d1551" defer></script>
 </body>
 </html>
