@@ -18,6 +18,8 @@ Usage:
     python -m parli.ingest.politician_finances --skip-download
 """
 
+from parli.ingest import http as source_http
+
 import argparse
 import csv
 import io
@@ -152,7 +154,7 @@ def download_gdrive_csv(file_id: str, dest: Path) -> Path:
     """
     import zipfile
 
-    session = requests.Session()
+    session = source_http.Session()
     url = f"https://drive.google.com/uc?export=download&id={file_id}"
     print(f"  Downloading {dest.name} from Google Drive...")
     resp = session.get(url, allow_redirects=True, timeout=120)
@@ -203,7 +205,7 @@ def download_all():
             continue
         try:
             print(f"  Downloading {fname}...")
-            resp = requests.get(url, timeout=15)
+            resp = source_http.get(url, timeout=15)
             if resp.status_code == 200 and len(resp.content) > 100:
                 dest.write_bytes(resp.content)
                 print(f"    OK ({len(resp.content):,} bytes)")

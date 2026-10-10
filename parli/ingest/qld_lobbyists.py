@@ -32,6 +32,8 @@ Usage:
     python -m parli.ingest.qld_lobbyists --contact-log  # requires playwright
 """
 
+from parli.ingest import http as source_http
+
 import argparse
 import hashlib
 import json
@@ -48,7 +50,7 @@ from parli.schema import get_db, init_db
 # ── Configuration ─────────────────────────────────────────────────────────────
 
 REGISTER_BASE = "https://lobbyists.integrity.qld.gov.au"
-USER_AGENT = "Mozilla/5.0 (compatible; OPAX/1.0; +https://opax.com.au)"
+USER_AGENT = source_http.USER_AGENT
 REQUEST_DELAY = 1.0
 MAX_RETRIES = 3
 
@@ -100,14 +102,14 @@ CREATE TABLE IF NOT EXISTS qld_lobbyist_contacts (
 
 def _fetch(url: str) -> str:
     """Fetch a URL and return text content."""
-    req = urllib.request.Request(url, headers={
-        "User-Agent": USER_AGENT,
+    req = source_http.Request(url, headers={
+        "User-Agent": source_http.USER_AGENT,
         "Accept": "text/html,application/xhtml+xml",
     })
     for attempt in range(MAX_RETRIES):
         try:
             time.sleep(REQUEST_DELAY)
-            with urllib.request.urlopen(req, timeout=60) as resp:
+            with source_http.urlopen(req, timeout=60) as resp:
                 return resp.read().decode("utf-8", errors="replace")
         except Exception as e:
             if attempt == MAX_RETRIES - 1:

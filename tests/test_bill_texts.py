@@ -1,6 +1,8 @@
+import os
 import json
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 from parli.ingest.bill_texts import (
@@ -185,7 +187,7 @@ class BillTextTests(unittest.TestCase):
         from scripts import publish_bill_texts as cli
         from parli.ingest.bill_texts import SourceBlocked
         args = SimpleNamespace(bills_dir=self.root, keys=None, parliaments=None, limit=None,
-            state_dir=self.root, source_rate=0.7, browser_ua=True, refresh_discovery=False,
+            state_dir=self.root, source_rate=0.7, refresh_discovery=False,
             home_cache=None, max_sections=10, export_every=25, output_dir=self.root / "out", source_attempts=3)
         for outcome, expected, attempts in [("incomplete", 2, 3), (RuntimeError("operational fault"), 1, 1), (SourceBlocked("blocked"), 130, 1)]:
             with patch.object(cli, "load_documents", return_value=[DOC]), patch.object(cli, "discover", return_value=[VERSION]), patch.object(cli, "walk_version", side_effect=outcome if isinstance(outcome, Exception) else None, return_value=outcome) as walker, contextlib.redirect_stdout(io.StringIO()):
@@ -217,7 +219,7 @@ class BillTextTests(unittest.TestCase):
         fetcher = SourceFetcher(self.root / "cache")
         for url in ["https://parlinfo.aph.gov.au/parlInfo/download/legislation/bills/a.pdf", "https://evil.test/parlInfo/search/display/x"]:
             with self.assertRaises(ValueError): fetcher.get(url)
-        with self.assertRaisesRegex(ValueError, "browser-ua"):
+        with mock.patch.dict(os.environ, {"OPAX_SOURCE_STATUS_FILE": str(self.root / "status.json")}), self.assertRaises(SystemExit):
             fetcher.get(display_url("legislation/billhome/r7531"))
 
 

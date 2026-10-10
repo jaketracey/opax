@@ -49,6 +49,11 @@ Output (whole dollars):
 person is in the roster (OpenAustralia's people.csv carries the APH id).
 """
 
+import sys as _http_sys
+from pathlib import Path as _HttpPath
+_http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
+from parli.ingest import http as source_http
+
 import argparse
 import csv
 import io
@@ -71,9 +76,8 @@ ROSTER = ROOT / "portal" / "public" / "parliamentarians.json"
 CACHE = Path.home() / ".cache" / "autoresearch" / "pay"
 HANDBOOK = "https://handbookapi.aph.gov.au/api/"
 OA_PEOPLE = "https://raw.githubusercontent.com/openaustralia/openaustralia-parser/master/data/people.csv"
-# aph.gov.au turns away clients that identify as scripts.
-UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
-      "(KHTML, like Gecko) Chrome/126.0 Safari/537.36")
+# Shared honest identification for the Handbook API and roster CSV.
+UA = (source_http.USER_AGENT)
 PAGE = 100  # the API refuses $top above 100
 OPEN = date(9999, 12, 31)
 
@@ -87,8 +91,8 @@ ROS_TYPES = {"positions": 8, "service": 9, "partypositions": 7}
 def get_json(url):
     for attempt in range(4):
         try:
-            req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/json"})
-            with urllib.request.urlopen(req, timeout=90) as res:
+            req = source_http.Request(url, headers={"User-Agent": source_http.USER_AGENT, "Accept": "application/json"})
+            with source_http.urlopen(req, timeout=90) as res:
                 return json.load(res)
         except Exception as err:  # noqa: BLE001 - retried, then fatal
             print(f"  retry {attempt + 1}: {err}", file=sys.stderr)
@@ -131,8 +135,8 @@ def oa_people(refresh):
     """APH id -> (OpenAustralia person id, names). OPAX pids are OA's."""
     path = CACHE / "oa_people.csv"
     if not path.exists() or refresh:
-        req = urllib.request.Request(OA_PEOPLE, headers={"User-Agent": UA})
-        with urllib.request.urlopen(req, timeout=60) as res:
+        req = source_http.Request(OA_PEOPLE, headers={"User-Agent": source_http.USER_AGENT})
+        with source_http.urlopen(req, timeout=60) as res:
             CACHE.mkdir(parents=True, exist_ok=True)
             path.write_bytes(res.read())
     out = {}

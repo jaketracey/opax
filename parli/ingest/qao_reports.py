@@ -6,6 +6,8 @@ last good snapshot when access, completeness, licence or shrink guards fail.
 """
 from __future__ import annotations
 
+from parli.ingest import http as source_http
+
 import argparse
 import copy
 from datetime import datetime, timezone
@@ -29,7 +31,7 @@ SITE = "https://www.qao.qld.gov.au"
 INDEX = SITE + "/reports-resources/reports-parliament"
 COPYRIGHT = SITE + "/copyright"
 LICENCE = "https://creativecommons.org/licenses/by/4.0/"
-UA = "OPAX metadata research (https://opax.com.au)"
+UA = source_http.USER_AGENT
 MAX_REQUESTS = 800
 ID = re.compile(r"^qao-\d{4}(?:-\d{2})?-\d+$")
 VERSION = re.compile(r"Report\s*:?\s+(\d+)\s*[:–−-]\s*(\d{4})(?:\s*[–−-]\s*(\d{2,4}))?", re.I)
@@ -76,7 +78,7 @@ def source_url(value, base=INDEX):
 
 class Client:
     def __init__(self, session=None, sleep=time.sleep, clock=time.monotonic, quiet=False, cache=None):
-        self.session = session or requests.Session()
+        self.session = session or source_http.Session()
         self.sleep, self.clock, self.quiet = sleep, clock, quiet
         self.requests, self.last, self.spacing, self.robot = 0, None, 2.0, None
         self.cache = local_path(cache) if cache else None
@@ -93,7 +95,7 @@ class Client:
             if self.quiet: quiet_guard()
             self.last = self.clock()
             self.requests += 1
-            response = self.session.get(url, headers={"User-Agent": UA}, timeout=45, allow_redirects=False)
+            response = self.session.get(url, headers={"User-Agent": source_http.USER_AGENT}, timeout=45, allow_redirects=False)
             body = response.text
             if re.search(r"cf-chl-|cf-mitigated|challenge-platform|<title>\s*(?:just a moment|access denied)|verify you are human|[gh]-recaptcha|hcaptcha", body, re.I) or response.headers.get("cf-mitigated") == "challenge":
                 raise Held("Source challenge detected; stopped without bypass")

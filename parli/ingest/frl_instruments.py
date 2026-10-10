@@ -7,6 +7,8 @@ are requested, and no identities or inferred legal relationships are created.
 """
 from __future__ import annotations
 
+from parli.ingest import http as source_http
+
 import argparse
 from datetime import datetime, time as day_time, timedelta, timezone
 from zoneinfo import ZoneInfo
@@ -50,7 +52,7 @@ REQUEST_TIMEOUT = 45
 WINDOW_MARGIN = 60
 MELBOURNE = ZoneInfo("Australia/Melbourne")
 FIXED_AEST = timezone(timedelta(hours=10))
-UA = "OPAX metadata research (https://opax.com.au)"
+UA = source_http.USER_AGENT
 LICENCE = "https://creativecommons.org/licenses/by/4.0/"
 
 
@@ -380,6 +382,7 @@ class PoliteSession:
             raise Held("Quiet window ending; checkpoint kept for the next quiet window")
 
     def get(self, url: str, allow_missing=False) -> bytes:
+        source_http.ensure_allowed(url)
         host = urlsplit(url).netloc
         publisher = host == "legislation.gov.au" or host.endswith(".legislation.gov.au")
         if publisher: self.check_window()
@@ -398,11 +401,12 @@ class PoliteSession:
             print(f"[frl-instruments] HTTP request {self.requests} (attempt {attempt + 1})", flush=True)
             result = subprocess.run([
                 "curl", "--globoff", "--http1.1", "--compressed", "--max-time", str(REQUEST_TIMEOUT), "--silent", "--show-error",
-                "--user-agent", UA, "--dump-header", "-", "--write-out", "\n%{http_code}", url,
+                "--noproxy", "*", "--user-agent", UA, "--dump-header", "-", "--write-out", "\n%{http_code}", url,
             ], capture_output=True)
             self.last = self.clock()
             raw, _, status = result.stdout.rpartition(b"\n")
             code = int(status) if status.isdigit() else 0
+            source_http.check_response(url, code, raw)
             self.http_429 += code == 429
             self.http_503 += code == 503
             if self.http_429 + self.http_503 >= 2:

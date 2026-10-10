@@ -11,6 +11,8 @@ Usage:
     python -m parli.ingest.abc_news --query "NACC inquiry" --limit 50
 """
 
+from parli.ingest import http as source_http
+
 import argparse
 import time
 
@@ -30,7 +32,7 @@ ALGOLIA_HEADERS = {
     "Content-Type": "application/json",
 }
 
-SESSION = requests.Session()
+SESSION = source_http.Session()
 SESSION.headers.update(ALGOLIA_HEADERS)
 
 # Topics and their search queries -- tuned for Australian political coverage

@@ -19,6 +19,8 @@ Usage:
     python -m parli.ingest.mp_interests --download-only # download only, no extraction
 """
 
+from parli.ingest import http as source_http
+
 import argparse
 import json
 import os
@@ -40,9 +42,9 @@ from parli.schema import get_db, init_db
 
 CACHE_DIR = Path("~/.cache/autoresearch/mp_interests").expanduser()
 
-SESSION = requests.Session()
+SESSION = source_http.Session()
 SESSION.headers.update({
-    "User-Agent": "OPAX/1.0 (opax.com.au; parliamentary research)",
+    "User-Agent": source_http.USER_AGENT,
 })
 
 # APH index pages

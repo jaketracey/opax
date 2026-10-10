@@ -37,6 +37,8 @@ Usage:
 
 from __future__ import annotations
 
+from parli.ingest import http as source_http
+
 import argparse
 import collections
 import difflib
@@ -65,7 +67,7 @@ CHAMBER = "act_la"
 BASE = "https://www.hansard.act.gov.au/hansard/"
 INDEX_URL = BASE + "debates(PDF).htm"
 MEMBERS_URL = "https://www.parliament.act.gov.au/members/current"
-USER_AGENT = "OPAX research (https://opax.com.au; contact jake.tracey@noice.work)"
+USER_AGENT = source_http.USER_AGENT
 
 # robots.txt on hansard.act.gov.au: Allow /, Crawl-delay 0. We stay at one request a second.
 REQUEST_DELAY = 1.0
@@ -96,19 +98,19 @@ class Fetcher:
     def __init__(self, delay: float = REQUEST_DELAY, opener=None):
         self.delay = delay
         self._last = 0.0
-        self._open = opener or urllib.request.urlopen
+        self._open = opener or source_http.urlopen
         self.requests = 0
 
     def fetch(self, url: str, *, etag: str | None = None, last_modified: str | None = None,
               timeout: int = 90) -> tuple[int, bytes, dict]:
         """(status, body, headers). With a stored ETag / Last-Modified the server can answer 304
         (status 304, empty body); the site's IIS honours both."""
-        headers = {"User-Agent": USER_AGENT, "Accept": "*/*"}
+        headers = {"User-Agent": source_http.USER_AGENT, "Accept": "*/*"}
         if etag:
             headers["If-None-Match"] = etag
         if last_modified:
             headers["If-Modified-Since"] = last_modified
-        req = urllib.request.Request(url, headers=headers)
+        req = source_http.Request(url, headers=headers)
         err: Exception | None = None
         for attempt in range(MAX_RETRIES):
             wait = self.delay - (time.monotonic() - self._last)

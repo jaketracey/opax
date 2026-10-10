@@ -19,12 +19,14 @@ candidate left = accepted, with the reason in `match_basis`. Stub members (`wrag
 
 from __future__ import annotations
 
+from parli.ingest import http as source_http
+
 import re
 import sqlite3
 from datetime import datetime, timedelta, timezone
 
 API = "https://handbookapi.aph.gov.au/api"
-USER_AGENT = "OPAX research (opax.com.au)"
+USER_AGENT = source_http.USER_AGENT
 FIELDS = ("PHID,GivenName,MiddleNames,FamilyName,PreferredName,DisplayName,Party,Electorate,SenateState,StateAbbrev,State,"
           "InCurrentParliament,MPorSenator,RepresentedParliaments,ServiceHistory_Start,ServiceHistory_End,Gender")
 MIN_PARLIAMENT = 46          # people who sat in the 46th Parliament or later (covers the 47th and 48th)
@@ -161,8 +163,8 @@ def match_people(individuals: list[dict], members: list[dict]) -> list[dict]:
 
 def fetch_individuals(session=None) -> list[dict]:
     import requests
-    s = session or requests.Session()
-    s.headers.update({"User-Agent": USER_AGENT})
+    s = session or source_http.Session()
+    s.headers.update({"User-Agent": source_http.USER_AGENT})
     resp = s.get(f"{API}/individuals", params={"$select": FIELDS}, timeout=120)
     resp.raise_for_status()
     return resp.json()["value"]

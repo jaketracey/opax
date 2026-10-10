@@ -35,6 +35,11 @@ that shares production's model budget without meaning to.
 
 from __future__ import annotations
 
+import sys as _http_sys
+from pathlib import Path as _HttpPath
+_http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
+from parli.ingest import http as source_http
+
 import argparse
 import ast
 import json
@@ -50,7 +55,7 @@ REPO = ROOT.parent
 PORTAL_PUBLIC = REPO / "portal" / "public"
 
 # Cloudflare blocks bare python-urllib; identify honestly (the harness does too).
-UA = "opax-warm-cache/1.0 (+https://opax.com.au/#/methods)"
+UA = source_http.USER_AGENT
 MODEL_CALL_COST_USD = 0.008  # per ask on the BYOK DeepSeek config (ask_harness.py)
 
 # The money map's flow card offers "What has parliament said about <group>?"
@@ -164,15 +169,15 @@ def ask(base: str, item: dict, timeout: int) -> tuple[str, float, int, int, str]
     for k in ("kind", "speaker", "party", "state", "topic", "from", "to"):
         if item.get(k):
             body[k] = item[k]
-    req = urllib.request.Request(
+    req = source_http.Request(
         f"{base}/api/ask",
         data=json.dumps(body).encode(),
-        headers={"content-type": "application/json", "user-agent": UA},
+        headers={"content-type": "application/json", "user-agent": source_http.USER_AGENT},
         method="POST",
     )
     t0 = time.time()
     try:
-        with urllib.request.urlopen(req, timeout=timeout) as res:
+        with source_http.urlopen(req, timeout=timeout) as res:
             status = res.headers.get("X-OPAX-Cache", "?")
             data = json.load(res)
     except urllib.error.HTTPError as e:
