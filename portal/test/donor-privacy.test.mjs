@@ -11,10 +11,12 @@ import {join} from 'node:path';
 import {build} from 'esbuild';
 import {offline, loadWorker, outbound, rendered} from './worker-harness.mjs';
 import {WITHHELD_DONOR_REPLY} from '../src/donor-index.ts';
-import {MONEY_GRAPHS, isOrganisationDonor, donorPrivacyIndex, donorNameWithheld, foldDonorName, withholdIndividualDonors} from '../public/donor-entity.js';
+import {MONEY_GRAPHS, isOrganisationDonor, donorPrivacyIndex, donorNameWithheld, foldDonorName, withholdIndividualDonors, withheldPhrases, namesWithheldPhrase} from '../public/donor-entity.js';
 import {partyUrl} from '../public/canonical-urls.js';
 import {personIndex} from '../src/person-slug.ts';
 import {buildCrawl} from '../../scripts/build_crawl_catalog.mjs';
+import {buildGrowth} from '../../scripts/build_growth_modules.mjs';
+import {moduleOutputs} from './growth-module-harness.mjs';
 
 const pub = new URL('../public/', import.meta.url).pathname;
 const real = path => JSON.parse(readFileSync(join(pub, path), 'utf8'));
@@ -60,6 +62,7 @@ function exportRoot(money) {
   return dir;
 }
 const root = exportRoot(fixtureGraph);
+await buildGrowth(root);
 await buildCrawl(root);
 test.after(() => rmSync(root, {recursive: true, force: true}));
 const at = path => join(root, path.replace(/^\//, ''));
@@ -245,6 +248,26 @@ test('every server-rendered person, party, money, hub, campaigner and supplier p
   assert.ok(personDonorBlocks > 500, `${personDonorBlocks} person pages still list organisational donors`);
   t.diagnostic(`${personDonorBlocks} person pages list organisational donors; ${interestNotes} leave a declared-interest entry to the official register`);
   t.diagnostic(`scanned for ${checked.length} names: ${withheldLabels.length} withheld labels (${fixtureLabels.size} fixtures), less ${withheldLabels.length - known.length} single-word or other-register organisation names and ${known.length - checked.length} office holders`);
+});
+
+test('the same derived privacy set covers person, bill and supplier client module output and every Ask seed',async t=>{
+  let outputs=0,seeds=0;
+  const phrases=withheldPhrases(graphs,[...roster.flatMap(p=>[p.name,p.full]),...Object.values(access.ministers || {}).map(m=>m.name)].filter(Boolean));
+  for await(const {where,html,questions,partyNames=[],approved} of moduleOutputs(root,checked,async path=>{
+    const response=await env.ASSETS.fetch(new Request('https://fixture.test'+path));
+    if(!response.ok)throw Error('Missing module asset');return response.json();
+  })){
+    assertClean(where,html);
+    for(const party of partyNames) if(!namesWithheldPhrase(phrases,party)) assert.ok(!approved(party),`${where}: safe party label retains approval`);
+    for(const question of questions){
+      assert.ok(!namesWithheldPhrase(phrases,question),`${where}: withheld Ask seed`);
+      assertClean(`${where}: Ask seed`,question);seeds++;
+    }
+    outputs++;
+  }
+  assert.ok(outputs>25000,'all published page modules were rendered');
+  assert.ok(seeds>1000,'safe seeded questions still render');
+  t.diagnostic(`${outputs} module outputs and ${seeds} Ask seeds scanned with the shared derived set`);
 });
 
 test('a withheld donor or campaigner page is reachable, noindex and unnamed; its share card is never drawn', async () => {

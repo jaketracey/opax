@@ -3,14 +3,14 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 import { shortDate, shortMoney } from '../public/format.js';
+import { associationHTML } from '../public/growth-modules.js';
 import { partyUrl } from '../public/canonical-urls.js';
 
 // Execute the actual module; only replace its dynamic WebGL import with a
 // controlled loader. The small DOM below models the nodes this module touches.
 const source = readFileSync(new URL('../public/suppliers.js', import.meta.url), 'utf8')
   .replaceAll('export function ', 'function ').replaceAll('export async function ', 'async function ')
-  .replace(/^import .*format\.js.*;\s*/m, '')
-  .replace(/^import .*canonical-urls\.js.*;\s*/m, '')
+  .replace(/^import .*;\s*/gm, '')
   .replace(/import\("\/money-map\.js\?v=[^"]*"\)/, 'loadMapModule()');
 const tick = () => new Promise((resolve) => setImmediate(resolve));
 const deferred = () => { let resolve; const promise = new Promise((r) => { resolve = r; }); return { promise, resolve }; };
@@ -28,6 +28,7 @@ function node() {
 }
 function setup(fetch, mount = async () => ({ destroy() {}, setPaused() {} })) {
   const context = { fetch, AbortController, URLSearchParams, history: { replaceState() {} }, shortDate, shortMoney, partyUrl,
+    mountSupplierGrowth: () => {}, supplierDonations: async () => ({html: "", links: []}), associationHTML,
     loadMapModule: async () => ({ mountMoneyMap: mount }) };
   runInNewContext(source, context);
   return context;
@@ -39,6 +40,18 @@ const profile = (overrides = {}) => ({ id, name: 'Acme Pty Ltd', abn: '123456789
   agencies: [{ name: 'Agency', total: 100, count: 1 }], years: [{ year: 2025, total: 100, count: 1 }],
   contracts: [{ id: 'CN1', title: 'Example award', agency: 'Agency', amount: 100, start_date: '2025-01-01' }], donor_links: [], caveats: [], ...overrides });
 const response = (data) => ({ ok: true, json: async () => data });
+
+test('supplier modules reuse the already loaded publication directory without another request',async()=>{
+  const suppliers=[entry(),entry({id:second,name:'Published second supplier'})];
+  let authority;const calls=[];
+  const context=setup(async url=>{calls.push(url);return response(url==='/suppliers.json'?{suppliers}:url==='/agencies.json'?{agencies:[]}:{profiles:{[id]:profile()}})});
+  context.mountSupplierGrowth=(_root,_profile,_meta,_life,rows)=>{authority=rows};
+  const handle=context.mountSupplierProfile(node(),id,{});
+  await tick();
+  assert.equal(authority,suppliers);
+  assert.deepEqual(calls,['/suppliers.json','/suppliers/01.json','/agencies.json']);
+  handle.destroy();
+});
 
 test('profile resolves a unique source alias or established funding lookup to a stable identity', async () => {
   for (const name of [' acme source name ', 'ACME FUNDING']) {

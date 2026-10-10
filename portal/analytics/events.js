@@ -1,4 +1,5 @@
 import { cleanEvent, safePath } from './privacy.mjs';
+import { askPageType } from '../public/growth-modules.js';
 /* --- OPAX events -------------------------------------------------------------
    The site is a single page app on real paths, so Tag Manager sees one page
    view unless we tell it otherwise. Every producer passes through the same
@@ -14,7 +15,9 @@ import { cleanEvent, safePath } from './privacy.mjs';
   window.opaxAnalyticsPending = [];
   addEventListener('opax:analytics', ({ detail }) => {
     if (optedOut()) return;
-    const properties = cleanEvent(detail?.event, detail?.properties);
+    const properties = cleanEvent(detail?.event, detail?.event === "opax_ask_started"
+      ? {...detail.properties, page_type: detail.properties?.page_type || askPageType(location.href)}
+      : detail?.properties);
     if (!properties) return;
     properties.page_path ??= safePath(location.href);
     properties.page_section = sectionOf(properties.page_path);
@@ -79,8 +82,17 @@ import { cleanEvent, safePath } from './privacy.mjs';
     }
   }, true);
 
+  // Primary/keyboard and middle-button openings have disjoint event paths.
+  const moduleOpening = (e) => {
+    if (e.type === "auxclick" ? e.button !== 1 : e.button > 0) return;
+    const t = e.target instanceof Element ? e.target : null;
+    const module = t?.closest("a[href]")?.closest("[data-module]");
+    if (module) push("opax_module_click", {module: module.dataset.module, page_type: module.dataset.pageType, position: Number(module.dataset.modulePosition)});
+  };
+  addEventListener("auxclick", moduleOpening, true);
   // The things a reader clicks that say what the site is for.
   addEventListener("click", (e) => {
+    moduleOpening(e);
     const t = e.target instanceof Element ? e.target : null;
     if (!t) return;
     if (t.closest("#search-chips .chip")) return push("opax_chip", { chip_kind: "search" });

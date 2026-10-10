@@ -41,7 +41,8 @@ query-free internal paths. Google signals and advertising personalization are of
 | --- | --- |
 | `$pageview`, `$pageleave` | Initial visit, SPA route changes, session duration |
 | `opax_ask`, `opax_search` | Ask/search form submission |
-| `opax_ask_started`, `opax_ask_completed`, `opax_ask_failed` | Full answer lifecycle, including streamed answers and fallbacks; duration, source count, cancellation |
+| `opax_ask_started`, `opax_ask_completed`, `opax_ask_failed` | Full answer lifecycle, including streamed answers and fallbacks; duration, source count, cancellation. Started includes `page_type`. |
+| `opax_module_click` | Landing-module link or question submission: `{module, page_type, position}`; categories and placement only |
 | `opax_search_started`, `opax_search_completed`, `opax_search_failed` | Search lifecycle; duration, page, filter count and result counts |
 | `opax_source_open` | Open an original record |
 | `opax_chip` | Select a suggested question/search |
@@ -135,3 +136,32 @@ The PostHog dashboard's former generic autocapture funnel is replaced with
 When changing the GA adapter, rebuild `public/ga.js` and update the GTM loader
 query version after deploying the tested file. Never paste a Google tracking
 snippet into the page shell in addition to this tag.
+
+## Landing-page modules
+
+`opax_ask_started` keeps `from_section` and adds `page_type`. The type is the
+originating record page when a landing module opens `/ask?q=…&from=person` or
+`from=bill`; otherwise it is the current page type (`person`, `bill`, `supplier`,
+`agency`, `party`, `donor`, `electorate`, `topic`, `campaigner`, `grant`, `ask`,
+`chat`, `search`, `reports`, `money`, `doc`, `discover`, `explore`, `declared`,
+`home`, `index` or `other`). Only person/bill/supplier origin categories are
+accepted from the URL. The question and URL parameters are never sent.
+
+`opax_module_click` has `{module, page_type, position}`. Modules are `ask`,
+`latest_bills`, `declared_interests`, `sitting_speeches`, `party_votes`,
+`sponsor_bills`, `agency_suppliers`, `agency_grants` and `donations_register`.
+`position` is the module’s reserved, one-based position in the landing journey,
+not a pixel coordinate or the clicked row: person Ask/bills/interests/speeches
+are 1/2/3/4; bill Ask/votes/sponsor bills are 1/2/3; supplier other
+suppliers/grants/donations register are 1/2/3. Missing records leave gaps.
+
+The shared click listener emits once for every link within a module, including
+seeded questions, originals in its SourceLine, and modified clicks. Middle-button openings use `auxclick` with button 1;
+primary and keyboard openings use `click` with button 0. The paths are disjoint,
+so a middle opening produces one module event. Submitting
+the module’s editable question emits one module event from the form handler.
+Navigation does not emit another module event. Answer requests alone emit
+`opax_ask_started`, once per lifecycle (stream/fallback/retry rules are
+unchanged). Module clicks can also produce the existing source/outbound event;
+those describe different actions and should not be summed as module clicks.
+Do Not Track and the shared property allowlist apply to both events.

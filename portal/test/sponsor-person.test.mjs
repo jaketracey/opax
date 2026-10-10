@@ -58,10 +58,15 @@ test('two people with one name stay plain text; a pid-less namesake does not',()
  assert.equal(at('Ali Faruqi','10912',[...pinned,{name:'Ali Faruqi'}]),null);
 });
 
-test('the bill page loads the shared resolver and marks every sponsor link',()=>{
- assert.match(app,/import\("\/sponsor-person\.js\?v=[A-Za-z0-9._-]+"\)/);
- assert.equal((app.match(/<a data-sponsor="/g)||[]).length,2,'the sole sponsor and each portfolio member');
+test('bill sponsor summaries use the shared resolver; the page avoids the bulk roster',()=>{
+ const builder=readFile(new URL('../../scripts/build_growth_modules.mjs',import.meta.url),'utf8');
+ return builder.then(source=>{
+ assert.match(source,/import \{sponsorPerson\} from .*sponsor-person/);
+ const loader=app.slice(app.indexOf('async function linkBillSponsors'),app.indexOf('function loadPersonSlugs'));
+ assert.doesNotMatch(loader,/loadParliamentarians|loadBillsIndex/);
+ assert.equal((app.match(/<(?:a|span) data-sponsor="/g)||[]).length,2,'the sole sponsor and each portfolio member');
  assert.match(app,/linkBillSponsors\(body, bill\);/);
+ });
 });
 
 test('no sponsor on any bill opens a surname print',async()=>{

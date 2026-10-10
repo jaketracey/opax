@@ -5,6 +5,8 @@
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels, source lines and ⋯ (labels.js); the first render waits for them.
+let growthModules;
+const growthModulesReady = import("/growth-modules.js?v=2f10ab9729").then(module => { growthModules = module; });
 let uiLabels;
 const uiLabelsReady = import('/labels.js?v=804befe8de').then(module => { uiLabels = module; });
 let attributionHelpers;
@@ -547,7 +549,7 @@ async function readAskStream(body, signal, on) {
 async function askRecord(body, signal, on = {}) {
   const started = performance.now();
   const from_section = location.pathname.split("/")[1] || "home";
-  trackOutcome("opax_ask_started", { from_section });
+  trackOutcome("opax_ask_started", { from_section, page_type: growthModules.askPageType(location.href) });
   try {
     const data = await askRecordRequest(body, signal, on);
     trackOutcome("opax_ask_completed", { from_section, duration_ms: Math.round(performance.now() - started), source_count: data.sources?.length || 0, has_answer: !!data.answer?.trim() });
@@ -1129,7 +1131,7 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=5e54b1085d");
+    const { mountMoneyMap } = await import("/money-map.js?v=ee2ffcc234");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json?v=suppliers-1", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -1447,7 +1449,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=5e54b1085d"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=remove-copy-link-1"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=ee2ffcc234"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=remove-copy-link-1"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1582,7 +1584,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=p4g-20261010");
+    const module = await import("/suppliers.js?v=f8359457f7");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -1596,7 +1598,7 @@ async function openSupplierPage(name, params, manageFocus) {
         replaceRoute(`/subject/supplier/${encodeURIComponent(id)}${params.get("contract") ? "?"+new URLSearchParams({contract:params.get("contract")}) : ""}`);
         setCrumbs([{ label: "Suppliers", href: "/subject/supplier" }, { label }]);
       },
-      onMentions: (label, container) => subjectMentions(label, container, "In parliament"),
+      onMentions: (label, container) => subjectMentions(label, container, "In parliament", true),
     };
     supplierPage = name
       ? module.mountSupplierProfile(body, name, helpers)
@@ -1663,7 +1665,7 @@ async function openAgencyPage(name, params, manageFocus) {
         replaceRoute(`/subject/agency/${encodeURIComponent(id)}`);
         setCrumbs([{ label: "Agencies", href: "/subject/agency" }, { label }]);
       },
-      onMentions: (label, container) => subjectMentions(label, container, "In parliament"),
+      onMentions: (label, container) => subjectMentions(label, container, "In parliament", true),
     };
     supplierPage = name
       ? module.mountAgencyProfile(body, name, helpers)
@@ -3581,25 +3583,30 @@ function personSlug(name) {
 
 /** Point each sponsor link at the roster row the bill names (sponsor-person.js: the bill's person ID
  *  decides, never a surname print); a print the roster cannot place keeps its name link. */
+const sponsorSummaries = new Map();
+async function loadSponsorSummary(bill) {
+  const path = await growthModules.sponsorSummaryPath(bill);
+  if (!path) return null;
+  if (!sponsorSummaries.has(path)) sponsorSummaries.set(path, fetch(path).then(r=>r.ok?r.json():null).catch(()=>null));
+  return sponsorSummaries.get(path);
+}
 async function linkBillSponsors(root, bill) {
-  const anchors = [...root.querySelectorAll("a[data-sponsor]")];
-  if (!anchors.length) return;
-  const [roster, resolver] = await Promise.all([
-    loadParliamentarians().catch(() => null),
-    import("/sponsor-person.js?v=74d9a1f8cf").catch(() => null),
-  ]);
-  if (!roster?.people?.length || !resolver) return;
-  const { sponsorPerson } = resolver;
-  for (const a of anchors) {
-    if (!a.isConnected) continue;
-    const printed = a.dataset.sponsor;
-    const person = sponsorPerson(printed, anchors.length === 1 ? bill.sponsor_person_id : null, roster.people);
-    const href = person && subjectHash("person", person.name);
-    if (!href) continue;
-    a.setAttribute("href", href);
-    // A register print the parser could not read ("KATTER, Bob, Jnr, MP") reads as the person.
-    if (printed.includes(",")) a.textContent = person.name;
+  if (!bill.sponsor) {
+    root.querySelector(".growth-ask")?.setAttribute("data-questions-ready", "true");
+    return;
   }
+  const summary = await loadSponsorSummary(bill);
+  if (!root.isConnected || root.querySelector(".growth-ask-form")?.dataset.recordKey !== bill.key) return;
+  const person = summary?.person;
+  for (const printed of root.querySelectorAll("[data-sponsor]")) {
+    if (!person) continue;
+    const a = document.createElement("a");
+    a.href = subjectHash("person", person.name);
+    a.textContent = person.name;
+    printed.replaceWith(a);
+  }
+  appendGrowthQuestions(root, growthModules.billQuestions(bill, person ? [person] : [],bill.modulePrivacy), "bill",bill.modulePrivacy);
+  root.querySelector(".growth-ask")?.setAttribute("data-questions-ready", "true");
 }
 function loadPersonSlugs() {
   personSlugs.ready ??= fetch("/api/person-slugs").then((r) => (r.ok ? r.json() : null)).then((data) => {
@@ -3649,15 +3656,16 @@ function partyMapForRoster(roster) {
   return map;
 }
 
-function declaredTieHTML(ties) {
-  if (!Array.isArray(ties) || !ties.length) return "";
+function declaredTieHTML(ties, privacy) {
+  ties = growthModules.publicOrganisationTies(Array.isArray(ties) ? ties : [],privacy);
+  if (!ties.length) return "";
   return `<p class="declared-match">Name match: ${ties.map((tie) => {
     const kinds = Array.isArray(tie.kinds) ? tie.kinds : [tie.kind];
     const labels = [];
     if (kinds.includes("donor")) labels.push(`AEC donor${tie.industry ? ` · ${industryLabel(tie.industry)}` : ""}`);
     if (kinds.includes("lobbyist")) labels.push("registered lobbying firm");
     if (kinds.includes("fits")) labels.push("FITS registrant");
-    const org = tie.donor_id
+    const org = tie.donor_id && growthModules.isOrganisationDonor({...tie, label: tie.organisation})
       ? `<a ${entityHrefAttr(subjectHash("donor", tie.organisation))}>${esc(tie.organisation)}</a>`
       : safeUrl(tie.fits_url)
         ? `<a href="${esc(tie.fits_url)}" rel="noopener" target="_blank">${esc(tie.organisation)} ↗︎</a>`
@@ -3795,7 +3803,7 @@ async function renderDeclaredPage(params, manageFocus) {
 // CC BY-NC-ND). Federal people are keyed by the portrait id; QLD and unmatched
 // members by a name slug the index resolves. The slot is placed synchronously
 // so the section keeps its position however long the fetches take.
-async function renderPersonInterests(name, personId, sections) {
+async function renderPersonInterests(name, personId, sections, onRecord = () => {}) {
   const key = currentSubjectKey;
   const slot = document.createElement("div");
   slot.id = "subject-interests";
@@ -3808,9 +3816,11 @@ async function renderPersonInterests(name, personId, sections) {
   const lname = String(name || "").trim().toLowerCase();
   const id = personId && index?.people?.[personId] ? personId : index?._by_name?.[lname];
   if (!id || !/^[\w-]+$/.test(id)) { slot.remove(); return; }
-  const data = await getJSON(`/interests/${encodeURIComponent(id)}.json`);
+  const [data,privacy] = await Promise.all([getJSON(`/interests/${encodeURIComponent(id)}.json`),growthModules.loadModulePrivacy("person",growthModules.normalisedName(name))]);
   if (currentSubjectKey !== key) return;
   if (!data?.total || !data.buckets) { slot.remove(); return; }
+  onRecord({interests: data});
+  Object.assign(slot.dataset, {module: "declared_interests", pageType: "person", modulePosition: "3"});
 
   const LABELS = {
     shareholdings: "Shareholdings", real_estate: "Real estate", trusts: "Trusts",
@@ -3835,7 +3845,7 @@ async function renderPersonInterests(name, personId, sections) {
   const hasHolders = buckets.some((b) => (data.buckets[b].items || []).some((it) => HOLDER[it.holder]));
   const register = `${REGISTER[data.chamber] || "Register of interests"}${data.parliament ? `, ${ordinal(Number(data.parliament))} Parliament` : ""}${data.as_at ? `, as at ${esc(fmtDate(data.as_at))}` : ""}`;
 
-  const ties = Array.isArray(data.ties) ? data.ties : [];
+  const ties = growthModules.publicOrganisationTies(Array.isArray(data.ties) ? data.ties : [],privacy);
   const tiesByOrg = new Map();
   for (const tie of ties) {
     const org = String(tie.organisation || "").trim();
@@ -3867,13 +3877,14 @@ async function renderPersonInterests(name, personId, sections) {
   };
   const tiesHTML = tiesByOrg.size ? `
     <section id="person-ties" class="declared-ties" data-accent="interests" data-rail-figure="${tiesByOrg.size}" aria-labelledby="declared-ties-heading">
-      <h3 class="subject-section-title" id="declared-ties-heading">Declared ties to disclosed money</h3>
+      <h3 class="subject-section-title" id="declared-ties-heading">Disclosed money records</h3>
+      ${growthModules.associationHTML()}
       <p class="interests-summary">${base ? `<a href="${esc(base)}" rel="noopener" target="_blank"><b>${tiesByOrg.size}</b></a>` : `<b>${tiesByOrg.size}</b>`}
         ${tiesByOrg.size === 1 ? "organisation named" : "organisations named"} in this register also ${tiesByOrg.size === 1 ? "appears" : "appear"} in an AEC donor return, on a lobbyist register or on the Foreign Influence Transparency Scheme register.</p>
       <ul class="subject-list ties-list" role="list">${[...tiesByOrg].map(([org, orgTies]) => {
         const sourceTie = orgTies.find((t) => t.kind === "donor") || orgTies[0];
         const lead = { ...sourceTie, kinds: [...new Set(orgTies.flatMap((t) => t.kinds || [t.kind]))] };
-        const orgLabel = lead.donor_id
+        const orgLabel = lead.donor_id && growthModules.isOrganisationDonor({...lead, label: org})
           ? `<a class="source-title" ${entityHrefAttr(subjectHash("donor", org))}>${esc(org)}</a>`
           : `<span class="source-title">${esc(org)}</span>`;
         const declarations = orgTies.map((tie) => {
@@ -3916,7 +3927,8 @@ async function renderPersonInterests(name, personId, sections) {
       ${meta ? `<span class="result-meta">${meta}</span>` : ""}</li>`;
   };
   const rows = buckets.map((b) => {
-    const { count, items = [] } = data.buckets[b];
+    const { count, items: recordedItems = [] } = data.buckets[b];
+    const items = recordedItems.filter(it=>!privacy(it.description));
     return `<li><details class="chat-sources interests-bucket">
       <summary>${esc(LABELS[b])}<span class="interests-count">${num(count)}</span></summary>
       <ol class="source-list interests-items${hasHolders ? " interests-holders" : ""}">${items.map(itemHTML).join("")}</ol>
@@ -3936,6 +3948,7 @@ async function renderPersonInterests(name, personId, sections) {
     <p class="person-register-updates"><a href="${esc(`/declared?person=${encodeURIComponent(data.name || name)}`)}">Just declared</a></p>
     <p class="interests-summary"><b>${num(data.total)}</b> ${data.total === 1 ? "entry" : "entries"} across ${num(buckets.length)} ${buckets.length === 1 ? "category" : "categories"} · ${alterations}</p>
     <ul class="subject-list interests-list" role="list">${rows}</ul>
+    ${growthModules.associationHTML()}
     ${sourceLineHTML({
       updated: data.as_at || "", source: REGISTER[data.chamber] || "Register of interests",
       // Scanned pages read by machine: the register is complete, OPAX's reading of it may not be.
@@ -4105,7 +4118,7 @@ async function mountSubjectMap(nodeId, label = "") {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=5e54b1085d");
+    const { mountMoneyMap } = await import("/money-map.js?v=ee2ffcc234");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
@@ -4164,7 +4177,7 @@ async function subjectNews(name, container) {
       <a href="https://www.theguardian.com/australia-news?query=${q}#search" rel="noopener" target="_blank">The Guardian ↗︎</a></p>`);
 }
 
-async function subjectMentions(name, container, heading) {
+async function subjectMentions(name, container, heading, moneyContext = false) {
   try {
     const [data, roster] = await Promise.all([
       api(`/api/search?${new URLSearchParams({ q: `"${name}"`, top_k: "6" })}`), loadParliamentarians()]);
@@ -4177,6 +4190,7 @@ async function subjectMentions(name, container, heading) {
     container.insertAdjacentHTML("beforeend",
       `<div class="entry-section-head"><h3 class="subject-section-title">${esc(heading)}</h3>
         <a href="${esc(searchHash(`"${name}"`, {}))}">All mentions</a></div>
+       ${moneyContext ? growthModules.associationHTML() : ""}
        <ul class="subject-list" role="list">${items}</ul>`);
   } catch { /* mentions are a bonus, not a dependency */ }
 }
@@ -5081,10 +5095,10 @@ async function renderPartyMentions(label, sections, key) {
 // sample keyed "{jurisdiction}:{slug}", plus a `_names` index so a page with no
 // portrait id still finds its records. Lazy: fetched on first use, never at boot.
 
-/** "Voting record" section: counts, the bill questions backed and opposed (up to
- *  six each, newest first, tagged by jurisdiction), and the provenance fineprint.
+/** Reuse the voting section for counts and the latest bill votes (up to six,
+ *  newest first, tagged by jurisdiction), with one provenance line.
  *  A placeholder holds the section's place while votes.json loads. */
-async function renderPersonVotes(name, personId, sections) {
+async function renderPersonVotes(name, personId, sections, onRecord = () => {}) {
   const key = currentSubjectKey;
   sections.insertAdjacentHTML("beforeend", `<div id="subject-votes"></div>`);
   await loadVotes();
@@ -5099,25 +5113,16 @@ async function renderPersonVotes(name, personId, sections) {
   const years = recs.flatMap((r) => (Array.isArray(r.years) ? r.years : [])).map(Number).filter(Number.isFinite);
   const jurs = [...new Set(recs.map((r) => r.jurisdiction).filter(Boolean))];
   const jurName = (j) => STATE_NAMES[j] || String(j || "").toUpperCase();
-  const jurChip = (j) => jurs.length > 1
-    ? `<span class="party party-oth" style="--pc:var(--bronze)"><i aria-hidden="true"></i>${esc(jurName(j))}</span>`
-    : "";
-  const side = (field) => recs
-    .flatMap((r) => (Array.isArray(r[field]) ? r[field] : []).map((d) => ({ ...d, jur: d.jur || r.jurisdiction })))
-    .sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).slice(0, 6);
-  // data-bill-name is what decoratePersonVoteBills matches on; until (and
-  // unless) the register names this bill, the row is exactly what it was.
-  const billRow = (d) => `
-        <li data-bill-name="${esc(d.name)}"><a class="source-title" href="${esc(searchHash(`"${d.name}"`, {}))}">${esc(billQuestion(d.name))}</a>
-          ${d.question ? `<div class="division-markdown">${billNoteHTML(d.question)}</div>` : ""}
-          <span class="result-meta">${[d.stage ? esc(d.stage) : "", esc(String(d.date || "").slice(0, 4)), jurChip(d.jur)].filter(Boolean).join(" · ")}</span></li>`;
-  const col = (label, rows) => rows.length ? `
-    <div>
-      <h4 class="person-vote-side">${esc(label)}</h4>
-      <ul class="subject-list" role="list">${rows.map(billRow).join("")}</ul>
-    </div>` : "";
-  const forRows = side("for");
-  const againstRows = side("against");
+  const all = recs.flatMap(r => ["for", "against"].flatMap(field => (r[field] || []).map(d => ({...d, jur: d.jur || r.jurisdiction, vote: field === "for" ? "Voted for" : "Voted against"}))));
+  const privacy = await growthModules.loadModulePrivacy("person",growthModules.normalisedName(name));
+  if (currentSubjectKey !== key) return;
+  const latestBills = growthModules.latestBillVotes(all).filter(d=>!privacy(d.name));
+  const billIndex = await loadBillsIndex().catch(() => null);
+  if (currentSubjectKey !== key || !slot.isConnected) return;
+  onRecord({votes: latestBills, bills: billIndex?.bills || []});
+  Object.assign(slot.dataset, {module: "latest_bills", pageType: "person", modulePosition: "2"});
+  const billRow = d => `<li data-bill-name="${esc(d.name)}" data-bill-jur="${esc(d.jur)}"><a class="source-title" href="${esc(searchHash(`"${d.name}"`, {}))}">${esc(billQuestion(d.name))}</a>
+    <span class="result-meta">${esc(d.vote)} · ${esc(fmtDate(d.date))}${d.stage ? ` · ${esc(d.stage)}` : ""}${jurs.length > 1 ? ` · ${esc(jurName(d.jur))}` : ""}</span></li>`;
   const total = sum("divisions_total");
   const ayes = sum("ayes");
   const noes = sum("noes");
@@ -5128,7 +5133,8 @@ async function renderPersonVotes(name, personId, sections) {
   slot.dataset.railFigure = total.toLocaleString();
   slot.dataset.accent = "votes";
   slot.innerHTML = `
-    <h3 class="subject-section-title">Voting record</h3>
+    <h3 class="subject-section-title">Latest bills they voted on</h3>
+    ${growthModules.associationHTML()}
     <div class="tiles tiles-compact votes-tiles">
       <div class="tile"><b>${esc(total.toLocaleString())}</b><span>recorded division${total === 1 ? "" : "s"}</span></div>
       <div class="tile"><b>${esc(ayes.toLocaleString())}</b><span>ayes</span></div>
@@ -5136,24 +5142,24 @@ async function renderPersonVotes(name, personId, sections) {
     </div>
     ${ayes + noes ? `<div class="votes-split" role="img" aria-label="${esc(ayePct)} percent ayes, ${esc(100 - ayePct)} percent noes"><i style="width:${ayePct}%"></i></div>
     <p class="votes-lede">${esc(ayePct)}% ayes${where ? ` in the ${where}` : ""}${span ? `, ${span}` : ""}.</p>` : ""}
-    ${forRows.length || againstRows.length
-      ? `<div class="votes-cols">${col("Voted for", forRows)}${col("Voted against", againstRows)}</div>`
+    ${latestBills.length
+      ? `<ul class="subject-list" role="list">${latestBills.slice(0, 6).map(billRow).join("")}</ul>`
       : `<p class="status" style="margin-top:0.6rem">None of their recorded divisions was a vote on a bill itself.</p>`}
     ${sourceLineHTML({
       source: federal ? "They Vote For You" : "State Hansard",
       originals: federal ? [{ label: "Full record on They Vote For You", href: `https://theyvoteforyou.org.au/search?query=${encodeURIComponent(name)}` }] : [],
       notes: [
         "Only formal divisions are counted; most questions are decided on the voices and leave no per-member record.",
-        `“Voted for” and “Voted against” list divisions on the bill itself: a second or third reading, or agreeing
+        `This list shows the latest recorded vote on each bill itself: a second or third reading, or agreeing
           to the bill. Amendments, gag motions and other procedural votes are left out because an aye there says nothing about
-          the bill. A bill missing here was not necessarily unvoted on. Each bill name searches the record for what was said about it.`,
+          the bill. A bill missing here was not necessarily unvoted on. A matched title opens the bill page; other titles search the record.`,
       ],
       licence: "They Vote For You (federal divisions, OpenAustralia Foundation, ODbL) and the NSW, Victorian and Queensland Hansard for state divisions.",
     })}`;
   decoratePersonVoteBills(slot);
 }
 
-async function renderPersonTopics(name, sections) {
+async function renderPersonTopics(name, sections, onRecord = () => {}) {
   const key = currentSubjectKey;
   const slot = document.createElement("section");
   slot.className = "person-topics";
@@ -5178,6 +5184,7 @@ async function renderPersonTopics(name, sections) {
       slot.innerHTML = `<h3 class="subject-section-title">What they talk about</h3><p class="status">No topic-labelled speeches are held for this person yet. Their other records below remain available.</p>`;
       return;
     }
+    onRecord({topics: data.profiles.all.topics.map(t => ({name: TOPICS[t.slug] || t.slug, count: t.count}))});
     let era = "all";
     const paint = () => {
       const profile = data.profiles?.[era];
@@ -5358,7 +5365,10 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     if (node.label && node.label !== name) {
       setCrumbs([{ label: isParty ? "Parties" : "Donors", href: `/subject/${node.kind}` }, { label: node.label }]);
     }
-    const flows = moneyData.edges.filter((e) => (isParty ? e.target : e.source) === node.id);
+    const donorPrivacy = growthModules.approvedModulePrivacy(await growthModules.loadModuleDonors());
+    if (currentSubjectKey !== key) return;
+    const flows = moneyData.edges.filter((e) => (isParty ? e.target : e.source) === node.id)
+      .filter(e => !isParty || (()=>{const donor=moneyData.nodes.find(n => n.id === e.source);return growthModules.isOrganisationDonor(donor) && !donorPrivacy(donor.label)})());
     const counter = new Map();
     for (const e of flows) {
       const other = String(isParty ? e.source : e.target).replace(/^(donor|party):/, "");
@@ -5617,23 +5627,23 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     ],
     notes: ["These are dated public records. Representation may have changed since collection."],
   }));
-  // Two drawn actions (principle 5): Ask about their speeches, and ⋯.
   head.insertAdjacentHTML("beforeend", `<div class="page-actions person-actions">
-      <button type="button" class="ui-button" id="subject-ask-toggle" aria-expanded="false" aria-controls="subject-ask-form">${iconSvg("ask")}<span>Ask about their speeches</span></button>
       ${moreMenuHTML([
-        // The parliamentary profile is the head's original, in its source sheet.
         { href: roster?.speech_scope ? splitSpeechSearch(speechSpeaker) : searchHash("", { speaker: speechSpeaker, kind: "speech" }), label: "View all their speeches" },
         { href: `https://en.wikipedia.org/w/index.php?search=${q}%20Australian%20politician`, label: "Wikipedia" },
       ], "More about this person")}
     </div>`);
-  head.insertAdjacentHTML("afterend", `
-    <form class="query-line subject-ask-form" id="subject-ask-form" hidden>
-      <label for="subject-ask-topic">What did ${esc(name)} say about…</label>
-      <input id="subject-ask-topic" class="ui-input" type="text" autocomplete="off"
-             placeholder="Enter a topic…">
-      <button type="submit" class="ui-button" data-variant="primary">Ask</button>
-    </form>`);
-  wireSubjectAsk(name);
+  const promptName = roster?.full || name;
+  const privacy = await growthModules.loadModulePrivacy("person",growthModules.normalisedName(roster?.name || name));
+  if (currentSubjectKey !== key) return;
+  head.insertAdjacentHTML("afterend", growthModules.askBlockHTML({name: promptName, pageType: "person", seed: `What has ${promptName} said in parliament?`,privacy}));
+  const askRecord = {name: promptName,privacy};
+  const updateQuestions = (record) => {
+    if (currentSubjectKey !== key) return;
+    Object.assign(askRecord, record);
+    appendGrowthQuestions(body, growthModules.personQuestions(askRecord), "person",privacy);
+  };
+  wireGrowthAsk(body);
   const fitsRow = fitsInfoRow(fits, "people", name);
   if (fitsRow) head.insertAdjacentHTML("afterend", `<p class="person-fits">${fitsRow[1]}</p>`);
   box.innerHTML = entryRailHTML();
@@ -5641,11 +5651,14 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // The structured record first; the speeches follow it.
   // Each source renders independently. The topic section reserves its chart
   // space, so slower topic requests never hold back votes or other records.
-  renderPersonTopics(name, sections).then(() => refreshEntryRail(sections));
+  const topicQuestions = renderPersonTopics(name, sections, updateQuestions).then(() => refreshEntryRail(sections));
   // Records by the roster's verified pid (none for a print that holds more than one person).
-  renderPersonVotes(name, roster?.pid ?? null, sections).then(() => refreshEntryRail(sections));
-  renderPersonInterests(name, roster?.pid ?? null, sections).then(() => refreshEntryRail(sections));
-  renderPersonSpeeches(speechSpeaker, speeches, chambers, sections, { scope: speechScope }).then(() => refreshEntryRail(sections));
+  const voteQuestions = renderPersonVotes(name, roster?.pid ?? null, sections, updateQuestions).then(() => refreshEntryRail(sections));
+  const interestQuestions = renderPersonInterests(name, roster?.pid ?? null, sections, updateQuestions).then(() => refreshEntryRail(sections));
+  Promise.allSettled([topicQuestions, voteQuestions, interestQuestions]).then(() => {
+    if (currentSubjectKey === key) body.querySelector(".growth-ask")?.setAttribute("data-questions-ready", "true");
+  });
+  renderPersonSpeeches(speechSpeaker, speeches, chambers, sections, { scope: speechScope, privacy }).then(() => refreshEntryRail(sections));
   renderPersonDiary(name, sections, chambers).then(() => { polishPersonSections(sections); refreshEntryRail(sections); });
   const news = document.createElement("section");
   sections.appendChild(news);
@@ -5663,9 +5676,13 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     const money = sections.querySelector("#person-expenses") || sections.querySelector("#person-pay");
     const row = `<p class="person-party-money"><a href="${partyOnMap ? esc(subjectHash("party", party)) : '/money'}">${
       partyOnMap ? `${esc(party)} party receipts` : 'Party receipts on the money map'}</a>
-      <span>Party disclosures, not this person’s finances.</span></p>`;
+      <span>Party disclosures, not this person’s finances.</span></p>${growthModules.associationHTML()}`;
     if (money) money.querySelector(":scope > .ui-source")?.insertAdjacentHTML("beforebegin", row);
   }
+  for (const block of sections.querySelectorAll("#person-pay, #person-expenses")) {
+    if (!block.querySelector(".growth-association")) block.insertAdjacentHTML("beforeend", growthModules.associationHTML());
+  }
+  sections.insertAdjacentHTML("beforeend", growthModules.correctionHTML());
   refreshEntryRail(sections);
   const mentions = document.createElement("section");
   mentions.id = "person-mentions";
@@ -5675,6 +5692,55 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   if (!mentions.querySelector(".subject-list")) mentions.remove();
   polishPersonSections(sections);
   refreshEntryRail(sections);
+}
+
+function appendGrowthQuestions(root, questions, pageType,privacy) {
+  const list = root.querySelector(".growth-questions");
+  if (!list) return;
+  const field = root.querySelector('#growth-ask-input');
+  const key = value => String(value || "").replace(/\s+/g, " ").trim().toLowerCase();
+  const seen = new Set([...list.querySelectorAll("a")].map(a => key(new URL(a.href).searchParams.get("q"))));
+  seen.add(key(field?.value));
+  // Full questions identify links; shortened labels never replace a focused link.
+  for (const question of questions) {
+    if (seen.has(key(question.question))) continue;
+    seen.add(key(question.question));
+    list.insertAdjacentHTML("beforeend", growthModules.questionsHTML([question], pageType,"",privacy));
+  }
+}
+
+function wireGrowthAsk(root) {
+  const form = root.querySelector(".growth-ask-form");
+  if (!form) return;
+  const field = form.querySelector('[name="q"]');
+  const fit = () => fitQueryField(field);
+  for (const event of ["focus", "input", "blur"]) field.addEventListener(event, fit);
+  field.addEventListener("keydown", event => {
+    if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {
+      event.preventDefault();
+      field.value = field.value.replace(/\s*\n\s*/g, " ").trim();
+      fit();
+      form.requestSubmit();
+    }
+  });
+  const observer = new ResizeObserver(() => requestAnimationFrame(fit));
+  observer.observe(field);
+  const cleanup = () => {
+    if (form.isConnected) return;
+    observer.disconnect();
+    removeEventListener("opax:route", cleanup);
+  };
+  addEventListener("opax:route", cleanup);
+  document.fonts.ready.then(fit);
+  fit();
+  form?.addEventListener("submit", event => {
+    event.preventDefault();
+    const question = form.querySelector('[name="q"]').value.trim();
+    if (question) {
+      trackOutcome("opax_module_click", {module: "ask", page_type: form.closest("[data-page-type]").dataset.pageType, position: 1});
+      goRoute(growthModules.askEntry(question, form.closest("[data-page-type]").dataset.pageType, {title: form.dataset.recordTitle, key: form.dataset.recordKey}));
+    }
+  });
 }
 
 /** The ask field under a person's header: "Ask about their speeches" opens it. */
@@ -5702,7 +5768,7 @@ function wireSubjectAsk(name) {
    data-rail-figure once it knows the figure; refreshEntryRail rebuilds the
    rows from the blocks on the page. */
 const PERSON_RAIL = [
-  ["person-topics", "Topics"], ["subject-votes", "Voting record"], ["person-ties", "Ties to disclosed money"],
+  ["person-topics", "Topics"], ["subject-votes", "Voting record"], ["person-ties", "Disclosed money records"],
   ["person-register", "Declared interests"], ["person-speeches", "Speeches"], ["subject-diary", "Ministerial diary"],
   ["person-pay", "Pay"], ["person-expenses", "Expenses"],
 ];
@@ -5789,24 +5855,28 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
   }
   if (currentSubjectKey !== key || !slot.isConnected) return;
   if (!newest.length) { slot.remove(); return; }
+  const week = opts.evidence || opts.unattributed ? null : growthModules.recentSittingSpeeches(newest);
+  if (week?.speeches.length) newest = week.speeches;
+  if (week) Object.assign(slot.dataset, {module: "sitting_speeches", pageType: "person", modulePosition: "4"});
   const noun = opts.evidence || opts.unattributed ? "evidence" : "speeches";
   // A row is a brief (OPAX's words, in sans) or a passage (the record's, in
   // the serif); the list carries one machine label at its head while any row
   // is a brief, and each row says which it is to a screen reader.
-  const rowText = (brief, r) => brief
+  const safeText = value => opts.privacy?.(value) ? "" : value;
+  const rowText = (brief, r) => safeText(brief)
     ? `<span class="visually-hidden">Machine-written brief: </span><span class="person-speech-text is-brief">${esc(brief)}</span>`
-    : `<span class="visually-hidden">From the record: </span><span class="person-speech-text">${esc(cleanPassage(r.snippet) || "Open the speech to read the record.")}</span>`;
+    : `<span class="visually-hidden">From the record: </span><span class="person-speech-text">${esc(safeText(r.snippet) && cleanPassage(r.snippet) || "Open the speech to read the record.")}</span>`;
   const machine = () => machineLabelHTML({ className: "person-speeches-machine",
     note: "Rows set in this type are briefs written by a model from each speech; rows in the record's serif are passages from the speech itself. A brief is not part of the record: open the speech to read what was said." });
   const paint = (briefs) => {
     const any = newest.some((r) => typeof briefs[r.resource] === "string" && briefs[r.resource].trim());
-    slot.innerHTML = `<div class="person-section-head"><h3 class="subject-section-title">${latest ? `Latest indexed ${noun}` : `Indexed ${noun}`}</h3>${any ? machine() : ""}</div>
+    slot.innerHTML = `<div class="person-section-head"><h3 class="subject-section-title">${week?.week ? `Speeches in the week of ${esc(fmtDate(week.week))}` : latest ? `Latest indexed ${noun}` : `Indexed ${noun}`}</h3>${any ? machine() : ""}</div>
       <ul class="speech-rows" role="list">${newest.map((r) => {
         const brief = typeof briefs[r.resource] === "string" ? briefs[r.resource].trim() : "";
         const where = chambers.length > 1 && r.state ? ` · ${STATE_NAMES[r.state] || r.state}` : "";
         return `<li><a class="person-speech-link" href="/doc/${esc(r.slug)}">
           <time datetime="${esc(String(r.date || "").slice(0, 10))}">${esc(r.date ? fmtDate(r.date) : "Undated")}${esc(where)}</time>
-          <span class="person-speech-body"><span class="speech-debate">${esc(titleSubject(r) || (opts.evidence ? "Evidence" : "Speech"))}</span>
+          <span class="person-speech-body"><span class="speech-debate">${esc(safeText(titleSubject(r)) || (opts.evidence ? "Evidence" : "Speech"))}</span>
             ${rowText(brief, r)}
           </span></a></li>`;
       }).join("")}</ul>
@@ -5814,18 +5884,20 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
       ${sourceLineHTML({
         source: "Parliamentary Hansard",
         state: latest ? "" : "sample",
-        notes: [latest ? "Newest results within the indexed retrieval window." : "Newest retrieval is unavailable; this is a sample of indexed matches."],
+        updated: week?.speeches[0]?.date || "", dateLabel: "Latest speech",
+        notes: [(week ? "The most recent sitting week found in this person’s indexed speeches, not necessarily the current calendar week. " : "") + (latest ? "Newest results within the indexed retrieval window; this week may contain further speeches." : "Newest retrieval is unavailable; this is a sample of indexed matches.")],
       })}`;
   };
   paint({});
   refreshEntryRail(sections);
+  if (week) return; // These landing rows quote the record; no undated model briefs.
   const briefs = await fetchBriefMap(newest);
   if (currentSubjectKey !== key || !slot.isConnected) return;
   if (!Object.values(briefs).some((b) => typeof b === "string" && b.trim())) return;
   // Preserve existing links and keyboard focus while optional briefs arrive.
   slot.querySelectorAll(".person-speech-link").forEach((link, index) => {
     const brief = briefs[newest[index].resource];
-    if (typeof brief !== "string" || !brief.trim()) return;
+    if (typeof brief !== "string" || !brief.trim() || !safeText(brief.trim())) return;
     const body = link.querySelector(".person-speech-body");
     body.querySelector(".visually-hidden")?.remove();
     body.querySelector(".person-speech-text").remove();
@@ -7667,7 +7739,7 @@ function billOutcomeLabelHTML(outcome) {
 /** "Passed, as at 12 Feb 2022" — the status is never shown undated. */
 function billStatusLine(b) {
   const status = sentenceCase(b?.status) || "Status not recorded";
-  const as = b?.status_as_of ? `, as at ${fmtDate(b.status_as_of)}` : "";
+  const as = b?.status_as_of ? `, status as at ${fmtDate(b.status_as_of)}` : "";
   return `${status}${as}`;
 }
 
@@ -8125,6 +8197,10 @@ const billParty = (p) => BILL_PARTY_LABELS[String(p || "").trim()] || billPartyN
    status label, so ayes and noes read at a glance; the question and the
    smaller parties sit behind one disclosure. */
 function billDivisionHTML(d, bill) {
+  const privacy = bill.modulePrivacy || (() => true);
+  // Keep the dated counts when descriptive text cannot be approved.
+  d = {...d, title: privacy(d.title) ? "" : d.title, question: privacy(d.question) ? "" : d.question,
+    party_splits: Object.fromEntries(Object.entries(d.party_splits || {}).filter(([party]) => !privacy(party)))};
   const ayes = Number(d.ayes) || 0, noes = Number(d.noes) || 0;
   const target = billDivisionHref(d);
   const recorded = String(d.title || "").trim();
@@ -8173,13 +8249,13 @@ function billDivisionHTML(d, bill) {
 function billDivisionsHTML(bill) {
   const { divisions: divs, collapsed } = billDedupeDivisions(bill.divisions, bill);
   if (!divs.length) {
-    return `<section class="bill-section" data-accent="votes"><h3 class="subject-section-title">Divisions</h3>
-      <p class="status">No divisions recorded. Most questions are decided on the voices, so a bill with no
-        division here was not necessarily unopposed.</p></section>`;
+    return `<section class="bill-section" data-accent="votes" ${growthModules.moduleAttrs("party_votes", "bill", 2)}><h3 class="subject-section-title">${esc(growthModules.noDivisionsHeading(bill))}</h3>
+      <p class="status">No formal divisions recorded. Most questions are decided on the voices, so a bill with no
+        division here was not necessarily unopposed. This register does not establish whether a vote on the voices has occurred.</p>${sourceLineHTML({source: "Parliamentary division records", notes: ["No per-member or per-party vote is available without a formal division."]})}</section>`;
   }
   const head = divs.slice(0, 6), rest = divs.slice(6);
-  return `<section class="bill-section" data-accent="votes">
-    <h3 class="subject-section-title">Divisions</h3>
+  return `<section class="bill-section" data-accent="votes" ${growthModules.moduleAttrs("party_votes", "bill", 2)}>
+    <h3 class="subject-section-title">How each party voted</h3>
     <ol class="bill-division-list" role="list" id="bill-divisions">${head.map((d) => billDivisionHTML(d, bill)).join("")}</ol>
     ${rest.length ? `<p class="dir-more-row"><button type="button" class="ui-button" id="bill-divisions-more"
       data-rest="${esc(String(rest.length))}">Show more (${rest.length} more)</button></p>` : ""}
@@ -8201,7 +8277,9 @@ function billDivisionsHTML(bill) {
 const BILL_SPEECH_BRIEF_NOTE = "Each brief under a name was written by a model from that speech. It is not part of the record: open the speech to read what was said.";
 
 function billSpeechesHTML(bill) {
-  const speeches = (bill.speeches || []).filter((s) => s?.slug);
+  const privacy = bill.modulePrivacy || (() => true);
+  const speeches = (bill.speeches || []).filter((s) => s?.slug && !privacy(s.speaker, s.party))
+    .map(s => ({...s, brief: privacy(s.brief) ? "" : s.brief}));
   if (!speeches.length) {
     return `<section class="bill-section"><h3 class="subject-section-title">What was said</h3>
       <p class="status">No speeches linked to this bill yet.</p></section>`;
@@ -8265,7 +8343,7 @@ function billActsHTML(bill) {
    opens what wrote it, from what), and one source line with the official
    documents it was written from. No card around it (principle 2). */
 function billSummaryHTML(bill) {
-  const s = bill.summary;
+  const s = growthModules.approvedBillSummary(bill.summary, bill.modulePrivacy);
   const originals = billOriginals(bill.sources);
   if (!s) {
     return `<section class="bill-section bill-summary bill-summary-empty" data-accent="bills" aria-labelledby="bill-summary-head">
@@ -8292,8 +8370,8 @@ function billSummaryHTML(bill) {
     ${s.affected ? `<h4 class="bill-sub">Who is affected</h4><p class="bill-affected">${esc(s.affected)}</p>` : ""}
     ${sourceLineHTML({
       // The day the summary was written; the material's own date is in the sheet.
-      updated: String(s.generated_at || s.as_of || "").slice(0, 10), dateLabel: s.generated_at ? "Written" : "As at", source: basis, originals,
-      asAt: s.as_of ? `Written from material dated ${fmtDate(s.as_of)}.` : "",
+      updated: String(s.generated_at || "").slice(0, 10), dateLabel: "Summary written", source: basis, originals,
+      asAt: s.as_of ? `Source material dated ${fmtDate(s.as_of)}.` : "",
       notes: [esc(note)],
       licence: billLicence(bill),
     })}
@@ -8353,6 +8431,8 @@ async function openBill(key, manageFocus) {
     setCrumbs([{ label: "Bills", href: "/bills" }, { label: "Not found" }]);
     return;
   }
+  bill.modulePrivacy = await growthModules.loadModulePrivacy("bill",bill.key);
+  if (billView !== view || generation !== billTextGeneration) return;
   const title = bill.title || bill.short_title || key;
   // Landed here from outside: keep the Worker's search title (see BOOT_META).
   // Otherwise the same rule as seo-titles.ts billTitle(): the full official
@@ -8363,7 +8443,7 @@ async function openBill(key, manageFocus) {
   const members = billSponsorFromPortfolio(bill.portfolio);
   // Each co-sponsor is a person with an entry of their own, so each is a link.
   const sponsorLinks = bill.sponsor
-    ? [`<a data-sponsor="${esc(billSponsorName(bill.sponsor))}" ${entityHrefAttr(subjectHash("person", billSponsorName(bill.sponsor)))}>${esc(billSponsorName(bill.sponsor))}</a>`]
+    ? [`<span data-sponsor="${esc(billSponsorName(bill.sponsor))}">${esc(billSponsorName(bill.sponsor))}</span>`]
     : (members || []).map((m) => `<a data-sponsor="${esc(m.name)}" ${entityHrefAttr(subjectHash("person", m.name))}>${esc(m.name)}</a>${
       m.suffix ? ` ${esc(m.suffix)}` : ""}`);
   const draft = bill.status === "exposure_draft";
@@ -8386,7 +8466,6 @@ async function openBill(key, manageFocus) {
   // Two drawn actions (principle 5): Ask, and ⋯ for the rest. The foot's
   // repeat of the same three buttons is gone.
   const actions = `<div class="page-actions bill-actions">
-      ${actionBtn("ask", askHash(`What did parliament say about the ${billName(bill)}?`), "Ask about this bill")}
       ${moreMenuHTML([
         { href: searchHash(`"${title}"`, {}), label: "Search the record for this bill" },
         billhome && { href: billhome, label: "Official bill home" },
@@ -8396,7 +8475,7 @@ async function openBill(key, manageFocus) {
   body.innerHTML = `
     <div class="subject-head bill-head">
       <p class="bill-status">${statusLabelHTML(statusWord, billStatusTone(bill.status))}${
-        bill.status_as_of ? `<span class="bill-status-as">as at ${esc(fmtDate(bill.status_as_of))}</span>` : ""}</p>
+        bill.status_as_of ? `<span class="bill-status-as">Status as at ${esc(fmtDate(bill.status_as_of))}</span>` : ""}</p>
       <h2 id="bill-title" class="bill-title" tabindex="-1">${esc(title)}</h2>
       ${bill.short_title && bill.short_title !== title
         ? `<p class="bill-short">Known as the ${esc(bill.short_title)}</p>` : ""}
@@ -8404,12 +8483,17 @@ async function openBill(key, manageFocus) {
       ${billRelatedHTML(bill)}
       ${actions}
     </div>
+    ${growthModules.askBlockHTML({bill, pageType: "bill", questions: growthModules.billQuestions(bill,[],bill.modulePrivacy),privacy:bill.modulePrivacy})}
     ${billSummaryHTML(bill)}
     <div id="bill-text-slot"><div class="answer-skeleton bill-text-skeleton" aria-hidden="true"><i style="width:65%"></i><i style="width:95%"></i><i style="width:78%"></i></div><p class="visually-hidden" role="status">Checking published bill text</p></div>
     ${billTimelineHTML(bill)}
     ${billDivisionsHTML(bill)}
     ${billSpeechesHTML(bill)}
-    ${billActsHTML(bill)}`;
+    ${billActsHTML(bill)}
+    <div id="bill-sponsor-others"></div>
+    ${growthModules.correctionHTML()}`;
+  wireGrowthAsk(body);
+  renderOtherSponsorBills(bill, body, view, generation);
   linkBillSponsors(body, bill);
   openBillText(bill);
   if (manageFocus) $("bill-title")?.focus();
@@ -8424,6 +8508,32 @@ async function openBill(key, manageFocus) {
       list.children[first]?.querySelector("a, .bill-division-q")?.focus?.();
     });
   }
+}
+
+function renderOtherSponsorBills(bill, body, view, generation) {
+  const slot = body.querySelector("#bill-sponsor-others");
+  if (!slot) return;
+  if (!bill.sponsor) { slot.remove(); return; }
+  slot.innerHTML = `<section class="bill-section growth-records" ${growthModules.moduleAttrs("sponsor_bills", "bill", 3)}>
+    <h3 class="subject-section-title">Other bills from this sponsor</h3><p role="status">Opening the sponsor’s records…</p></section>`;
+  const load = async () => {
+    const summary = await loadSponsorSummary(bill);
+    if (billView !== view || generation !== billTextGeneration || !slot.isConnected) return;
+    const rows = (summary?.bills || []).filter(b=>b.key!==bill.key && b.jurisdiction===bill.jurisdiction).slice(0,5);
+    if (!summary?.person || !rows.length) { slot.remove(); return; }
+    slot.innerHTML = `<section class="bill-section growth-records" data-records-ready="true" ${growthModules.moduleAttrs("sponsor_bills", "bill", 3)}>
+      <h3 class="subject-section-title">Other bills from this sponsor</h3>
+      <ul class="subject-list" role="list">${rows.map(b => `<li><a href="${esc(billHash(b.key))}">${esc(billName(b))}</a><span class="result-meta">${esc(fmtDate(b.introduced))} · ${esc(sentenceCase(b.status))}</span></li>`).join("")}</ul>
+      ${sourceLineHTML({source: "Parliamentary bill register", updated: summary.generated || "", notes: ["Bills in the same jurisdiction, matched to the same roster person using the sponsor identity rules."]})}
+    </section>`;
+  };
+  if (typeof IntersectionObserver === "undefined") { load(); return; }
+  const observer = new IntersectionObserver(entries=>{
+    if (entries.some(e=>e.isIntersecting)) { observer.disconnect(); load(); }
+  }, {rootMargin: "200px"});
+  observer.observe(slot);
+  const cleanup = () => { if (!slot.isConnected) { observer.disconnect(); removeEventListener("opax:route",cleanup); } };
+  addEventListener("opax:route",cleanup);
 }
 
 /* --- bills on the person page ----------------------------------------------
@@ -8441,14 +8551,14 @@ async function decoratePersonVoteBills(slot) {
   if (!map?.size || !slot.isConnected) return;
   for (const row of rows) {
     const entry = map.get(titleKey(row.dataset.billName));
-    if (!entry) continue;
+    if (!entry || row.dataset.billJur && entry.jurisdiction !== row.dataset.billJur) continue;
     const meta = row.querySelector(".result-meta")?.innerHTML || "";
     const id = `bill-peek-${entry.key}-${Math.random().toString(36).slice(2, 7)}`;
-    row.innerHTML = `
+    const voteMeta = meta;
+    row.innerHTML = `<a class="source-title" href="${esc(billHash(entry.key))}">${esc(billName(entry))}</a><span class="result-meta">${voteMeta}</span>
       <details class="bill-peek" data-bill-key="${esc(entry.key)}">
         <summary class="bill-peek-summary" aria-describedby="${esc(id)}">
-          <span class="bill-peek-name">${esc(billName(entry))}</span>
-          <span class="result-meta">${meta}</span>
+          <span class="bill-peek-name">Read the summary and status</span>
         </summary>
         <div class="bill-peek-body" id="${esc(id)}">
           <p class="status bill-peek-status">Opening the summary…</p>
@@ -8474,16 +8584,20 @@ async function fillBillPeek(details, entry) {
   }
   const bill = await loadBill(entry.key);
   if (!box.isConnected) return;
-  const sentences = (bill?.summary?.sentences || []).filter(Boolean);
+  const privacy = await growthModules.loadModulePrivacy("bill", entry.key);
+  if (!box.isConnected) return;
+  const summary = growthModules.approvedBillSummary(bill?.summary, privacy);
+  const sentences = summary?.sentences || [];
   if (!sentences.length) {
     box.innerHTML = `<p class="bill-peek-line">${esc(billStatusLine(entry))}. No summary yet.</p>${foot}`;
     return;
   }
   box.innerHTML = `
-    <div class="bill-peek-head">${machineLabelHTML({ note: `${bill.summary.attribution
+    <div class="bill-peek-head">${machineLabelHTML({ note: `${summary.attribution
       || "Written by a model from the explanatory memorandum; not the record"}.` })}</div>
+    ${growthModules.summaryWrittenHTML(summary)}
     <div class="bill-sentences">${sentences.map((t) => `<p>${esc(t)}</p>`).join("")}</div>
-    <p class="fineprint">${esc(bill.summary.attribution
+    <p class="fineprint">${esc(summary.attribution
       || "Written by a model from the explanatory memorandum; not the record")}. ${esc(billStatusLine(entry))}.</p>
     ${foot}`;
 }
@@ -8633,6 +8747,7 @@ async function renderDocBillPanel(doc, slug) {
   if (!el) return;
   el.outerHTML = first
     ? `<p class="doc-bill-sentence">${esc(first)}</p>
+       ${growthModules.summaryWrittenHTML(bill.summary)}
        <p class="fineprint doc-bill-attrib">${esc(bill.summary.attribution
          || "Written by a model from the explanatory memorandum; not the record")}.</p>`
     : `<p class="fineprint doc-bill-none">No summary written for this bill yet.</p>`;
@@ -9348,7 +9463,7 @@ async function mountFrontMap() {
   if (!root || frontMapHandle || frontMapLoading) return;
   frontMapLoading = true;
   try {
-    const [mod, data] = await Promise.all([import("/money-map.js?v=5e54b1085d"), loadMoneyData()]);
+    const [mod, data] = await Promise.all([import("/money-map.js?v=ee2ffcc234"), loadMoneyData()]);
     if (!data) throw new Error("money data unavailable");
     root.textContent = "";
     const handle = await mod.mountMoneyMap(root, "/graph/money.json?v=suppliers-1", {
@@ -14080,7 +14195,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=5e54b1085d");
+    const { mountMoneyMap } = await import("/money-map.js?v=ee2ffcc234");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
       chrome: "mini",
@@ -14776,7 +14891,7 @@ function syncPathMeta() {
 
 // The first render waits for labels, attribution helpers and the canonical
 // person URL lookup, so links use the roster's aliases from the first render.
-Promise.allSettled([attributionReady, uiLabelsReady, personUrlsReady]).finally(() => {
+Promise.allSettled([attributionReady, uiLabelsReady, growthModulesReady, personUrlsReady]).finally(() => {
   loadPersonSlugs();
   initAskBuilder();
   route();
