@@ -128,17 +128,19 @@ function checks(): Check[] {
 test('journey 27 checks the first lead’s figures, caveats and records by JSON pointer', () => {
   const all = checks();
   const pointers = all.map((c) => c.pointer);
-  // The first lead: its title, every metric, two caveats, a record and date.
+  // The first lead's card: its title, both money flows and its caveat line;
+  // its source sheet: another caveat, a record and the date. The second
+  // lead's comparison: the figures the feed card leaves to it.
   for (const pointer of [
     '/signals/0/title',
     '/signals/0/metrics/0',
     '/signals/0/metrics/1',
-    '/signals/0/metrics/2',
-    '/signals/0/metrics/3',
     '/signals/0/caveats/0',
     '/signals/0/caveats/2',
     '/signals/0/evidence/1/record_id',
     '/generated_at',
+    '/signals/1/metrics/2',
+    '/signals/1/metrics/3',
   ])
     expect(pointers).toContain(pointer);
   expect(all.length).toBeGreaterThanOrEqual(20);

@@ -7,7 +7,6 @@ import { partyText } from '../../design/party';
 import {
   Icon,
   PartyLabel,
-  Tag,
   Text,
   useAccessibilitySize,
 } from '../../design/primitives';
@@ -40,13 +39,29 @@ export function tieText(tie: Tie) {
 }
 
 /**
- * One row of the declared-interests feed, in Today's compact register row:
- * portrait, name, party and category on one line, the chamber, the entry in
- * the member's own words, and when it changed. The row opens the member's
- * native profile when there is one. "View original" (the register page) is a
- * touch-and-hold action and a VoiceOver action, as on Today; credits and
- * source terms are on the Sources and licences screen. Any name match the
- * export found follows the entry, in full.
+ * "Gift · added 31 Aug · Senate": the category, what changed and when, and
+ * the chamber, on the row's one date line (Today's anatomy, with the chamber
+ * the feed filters by).
+ */
+export function feedDateLine(item: Pick<Declaration, 'category' | 'kind' | 'date' | 'chamber' | 'jurisdiction'>) {
+  return [
+    item.category,
+    `${registerChangeLabel(item.kind)} ${shortDay(item.date)}`,
+    chamberName(item.chamber, item.jurisdiction),
+  ]
+    .filter(Boolean)
+    .join(' · ');
+}
+
+/**
+ * One row of the declared-interests feed, on the paper as Today draws it:
+ * portrait, the member's name and party (a dot and a name), the entry in the
+ * member's own words and in full, then one date line ("Gift · added 31 Aug
+ * · Senate"). The row opens the member's native profile when there is one.
+ * "View original" (the register page) is a touch-and-hold action and a
+ * VoiceOver action, as on Today; the registers are in the feed's source line
+ * and on Sources and licences. Any name match the export found follows the
+ * entry, in full, with its caveat.
  */
 export function FeedRow({
   item,
@@ -60,7 +75,6 @@ export function FeedRow({
 }) {
   const stacked = useAccessibilitySize();
   const changed = registerChangeLabel(item.kind);
-  const change = `${changed[0]!.toUpperCase()}${changed.slice(1)} ${shortDay(item.date)}`;
   const party = item.party
     ? partyText({
         party: item.party,
@@ -122,7 +136,7 @@ export function FeedRow({
         />
         <View style={styles.main}>
           <View style={styles.head}>
-            <Text wordSafe variant="strong" style={styles.name}>
+            <Text wordSafe variant="strong">
               {item.name}
             </Text>
             {item.party ? (
@@ -130,21 +144,20 @@ export function FeedRow({
                 party={item.party}
                 status={item.partyStatus}
                 formerly={item.formerly}
-                dense
                 linked={false}
                 nested
               />
             ) : null}
           </View>
-          {chamber ? (
-            <Text wordSafe variant="metadata">
-              {chamber}
-            </Text>
+          {item.description ? (
+            <Text testID={`declaration-text-${index}`}>{item.description}</Text>
           ) : null}
-          <Tag label={item.category} kind="Category" />
-          {item.description ? <Text>{item.description}</Text> : null}
-          <Text wordSafe variant="fine">
-            {change}
+          <Text
+            wordSafe
+            variant="fine"
+            testID={`declaration-change-${index}`}
+          >
+            {feedDateLine(item)}
           </Text>
         </View>
         {onOpenPerson && !stacked ? (
@@ -170,7 +183,7 @@ export function FeedRow({
 const PORTRAIT_COLUMN = 44 + rhythm.heading;
 
 const styles = StyleSheet.create({
-  frame: { gap: rhythm.tight, paddingVertical: rhythm.tight },
+  frame: { gap: rhythm.tight, paddingVertical: rhythm.row },
   row: {
     flexDirection: 'row',
     alignItems: 'flex-start',
@@ -184,15 +197,8 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flexShrink: 1,
     alignSelf: 'stretch',
-    gap: rhythm.tight - 2,
+    gap: rhythm.line + 2,
   },
-  head: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    columnGap: rhythm.tight,
-    rowGap: rhythm.line,
-  },
-  name: { flexShrink: 1 },
+  head: { gap: 2 },
   indent: { marginLeft: PORTRAIT_COLUMN },
 });

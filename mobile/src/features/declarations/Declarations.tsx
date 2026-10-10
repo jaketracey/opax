@@ -10,7 +10,7 @@ import {
 import { router } from 'expo-router';
 import { catalogs } from '../../api/runtime';
 import {
-  AsAtLine,
+  useAccessibilitySize,
   useScreenColumn,
   SidebarSafe,
   RegionProvider,
@@ -19,20 +19,21 @@ import {
   EmptyState,
   Field,
   Group,
-  InfoButton,
-  ChoiceChips,
+  SourceLine,
   Text,
 } from '../../design/primitives';
 import { formatCount } from '../../design/format';
-import { chrome, colors, layout, spacing } from '../../design/tokens';
+import { chrome, colors, layout, rhythm } from '../../design/tokens';
 import { personRoute } from '../../navigation/routes';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { RecordStatus } from '../RecordStatus';
 import { FeedRow } from './FeedRow';
+import { FilterSheet } from './FilterSheet';
 import {
   feedCountLine,
   feedFacets,
   filterFeed,
+  filterSummary,
   noFilters,
   type FeedFilters,
 } from './model';
@@ -42,9 +43,12 @@ const coverageNote = (rows: number, available: number) =>
 
 /**
  * The declared-interests feed behind Today's recent declarations: every row
- * of /interests/recent.json, newest first, filtered on the device by
- * chamber, jurisdiction and member. Rows are Today's compact register rows,
- * with the member's profile and any name match the export found.
+ * of /interests/recent.json, newest first, filtered on the device by member
+ * and, in a Filters sheet, by chamber and jurisdiction, with one summary
+ * line ("300 declarations · All chambers · Federal"). One source line under
+ * the lede dates the export and holds its coverage note. Rows are Today's
+ * register rows on the paper, with the member's profile and any name match
+ * the export found.
  */
 export default function Declarations() {
   const load = useCallback(
@@ -54,6 +58,8 @@ export default function Declarations() {
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
   const [filters, setFilters] = useState<FeedFilters>(noFilters);
   const [text, setText] = useState('');
+  const [sheet, setSheet] = useState(false);
+  const stacked = useAccessibilitySize();
   // Filter as the reader types, a beat behind the keyboard.
   useEffect(() => {
     const timer = setTimeout(
@@ -71,13 +77,27 @@ export default function Declarations() {
     filters.chamber !== 'all' ||
     filters.jurisdiction !== 'all' ||
     !!filters.member;
+  const summary = filterSummary(filters, facets);
 
   const header = (
     <Group style={styles.header}>
-      <Text wordSafe variant="body">
-        The newest additions and deletions recorded in parliamentarians’
-        registers of interests, in their own words.
-      </Text>
+      <Group gap={rhythm.tight}>
+        <Text wordSafe variant="body" testID="declarations-lede">
+          The newest additions and deletions recorded in parliamentarians’
+          registers of interests, in their own words. Entries are as declared,
+          not verified by OPAX.
+        </Text>
+        {record ? (
+          <SourceLine
+            title="About these declarations"
+            asOf={record.asAt}
+            citation={record.meta.source}
+            savedAt={record.stale ? record.savedAt : null}
+            notes={[coverageNote(record.meta.rows, record.meta.available)]}
+            testID="declarations-source"
+          />
+        ) : null}
+      </Group>
       <RecordStatus
         record={record}
         error={error}
@@ -89,52 +109,6 @@ export default function Declarations() {
       />
       {record ? (
         <>
-          <Group gap={spacing.s3}>
-            <Text wordSafe variant="control" accessibilityRole="header">
-              Chamber
-            </Text>
-            <ChoiceChips
-              segments={[
-                {
-                  value: 'all',
-                  label: 'All chambers',
-                  testID: 'declarations-chamber-all',
-                },
-                ...facets.chambers.map((facet) => ({
-                  value: facet.id,
-                  label: facet.label,
-                  testID: `declarations-chamber-${facet.id}`,
-                })),
-              ]}
-              value={filters.chamber}
-              onChange={(chamber) => setFilters((f) => ({ ...f, chamber }))}
-              testID="declarations-chamber"
-            />
-          </Group>
-          <Group gap={spacing.s3}>
-            <Text wordSafe variant="control" accessibilityRole="header">
-              Jurisdiction
-            </Text>
-            <ChoiceChips
-              segments={[
-                {
-                  value: 'all',
-                  label: 'All jurisdictions',
-                  testID: 'declarations-jurisdiction-all',
-                },
-                ...facets.jurisdictions.map((facet) => ({
-                  value: facet.id,
-                  label: facet.label,
-                  testID: `declarations-jurisdiction-${facet.id}`,
-                })),
-              ]}
-              value={filters.jurisdiction}
-              onChange={(jurisdiction) =>
-                setFilters((f) => ({ ...f, jurisdiction }))
-              }
-              testID="declarations-jurisdiction"
-            />
-          </Group>
           <Field
             label="Member"
             placeholder="Name"
@@ -150,38 +124,42 @@ export default function Declarations() {
             autoCapitalize="words"
             clearButtonMode="while-editing"
           />
-          <View style={styles.count}>
+          <View style={[styles.filters, stacked ? styles.stacked : null]}>
+            <Button
+              label="Filters"
+              icon="slider.horizontal.3"
+              size="compact"
+              accessibilityLabel={`Filters: ${summary}`}
+              accessibilityHint="Opens the chamber and jurisdiction filters"
+              testID="declarations-filters"
+              onPress={() => {
+                Keyboard.dismiss();
+                setSheet(true);
+              }}
+            />
             <Text
+              wordSafe
               variant="metadata"
               testID="declarations-count"
-              style={styles.grow}
+              style={stacked ? null : styles.grow}
             >
-              {feedCountLine(rows.length, all.length)} · newest first
+              {feedCountLine(rows.length, all.length)} · {summary}
             </Text>
-            <InfoButton
-              title="About these declarations"
-              notes={[coverageNote(record.meta.rows, record.meta.available)]}
-              testID="declarations-info"
-            />
           </View>
+          <FilterSheet
+            visible={sheet}
+            filters={filters}
+            facets={facets}
+            onChange={setFilters}
+            onClear={() =>
+              setFilters((f) => ({ ...f, chamber: 'all', jurisdiction: 'all' }))
+            }
+            onClose={() => setSheet(false)}
+          />
         </>
       ) : null}
     </Group>
   );
-
-  const footer = record ? (
-    <Group style={styles.footer}>
-      <AsAtLine
-        asOf={record.asAt}
-        citation={record.meta.source}
-        savedAt={record.stale ? record.savedAt : null}
-        testID="declarations-as-at"
-      />
-      <Text wordSafe variant="fine" testID="declarations-coverage">
-        Entries are as declared, not verified by OPAX.
-      </Text>
-    </Group>
-  ) : null;
 
   return (
     <SidebarSafe style={styles.screen}>
@@ -214,11 +192,7 @@ export default function Declarations() {
             }
           />
         )}
-        ItemSeparatorComponent={() => (
-          <View style={styles.separator}>
-            <Divider variant="subtle" />
-          </View>
-        )}
+        ItemSeparatorComponent={() => <Divider variant="subtle" />}
         ListHeaderComponent={
           <RegionProvider value={column.inner}>
             {column.bar}
@@ -245,7 +219,6 @@ export default function Declarations() {
             </Group>
           ) : null
         }
-        ListFooterComponent={footer}
         initialNumToRender={8}
       />
     </SidebarSafe>
@@ -256,12 +229,15 @@ const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
   content: {
     paddingHorizontal: layout.screenMargin,
-    paddingTop: spacing.s4,
-    paddingBottom: spacing.s7,
+    paddingTop: rhythm.block,
+    paddingBottom: rhythm.section + rhythm.block,
   },
-  header: { paddingBottom: spacing.s4 },
-  footer: { paddingTop: spacing.s4 },
-  count: { flexDirection: 'row', alignItems: 'center', gap: spacing.s3 },
-  separator: { paddingVertical: 4 },
+  header: { paddingBottom: rhythm.tight },
+  filters: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.heading,
+  },
+  stacked: { flexDirection: 'column', alignItems: 'stretch' },
   grow: { flex: 1 },
 });

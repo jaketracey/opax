@@ -512,48 +512,100 @@ describe('leads', () => {
 });
 
 describe('the Leads screen', () => {
-  test('opens on the export’s first lead with its figures, caveats, records and as-at line', async () => {
+  test('opens on the export’s first lead: its title, figures, sentence, one caveat and one source line', async () => {
     const renderer = await render(<Leads />);
     const root = renderer.root;
+    const first = signals[0]!;
     expect(texts(root)).toContain('60 leads');
-    expect(byTestID(root, 'lead-0-title').props.accessibilityLabel).toBe(
-      `Lead, Companies in both. ${signals[0]!.title}`,
+    // A lead is a reason to look closer, never a finding.
+    expect(texts(root)).toContain(aboutLede(discovery));
+    expect(aboutLede(discovery)).toMatch(/not proof of wrongdoing/);
+    // The card's upper part is one element that opens the comparison: the
+    // category, the export's title, the two flows and its one sentence.
+    const open = root.find(
+      (n) =>
+        n.props.testID === 'lead-0-open' &&
+        typeof n.props.onPress === 'function',
     );
-    expect(byTestID(root, 'lead-0-metric-0').props.accessibilityLabel).toBe(
-      'Recorded party receipts, 76,984,493 dollars',
+    expect(open.props.accessibilityLabel).toBe(
+      `Lead, Companies in both. ${first.title}. Recorded party receipts, 76,984,493 dollars. Recorded contract value, 9,102,500 dollars. ${first.summary}`,
     );
-    for (const caveat of signals[0]!.caveats)
-      expect(texts(root)).toContain(caveat);
-    // One source line on screen (the date, then the source's name in the
-    // link colour); VoiceOver hears the full as-at sentence.
-    expect(texts(root).some((t) => t.startsWith('Updated 21 Sep 2026 · '))).toBe(
-      true,
+    expect(open.props.accessibilityHint).toBe('Opens the comparison');
+    expect(texts(root)).toEqual(
+      expect.arrayContaining(['$76,984,493', '$9,102,500', first.summary]),
     );
-    expect(texts(root)).toContain('AEC annual returns and 1 more');
+    // One caveat line, the export's first, verbatim; the rest are one tap away.
+    expect(byTestID(root, 'lead-0-caveat').props.children).toBe(
+      first.caveats[0],
+    );
+    expect(texts(root)).not.toContain(first.caveats[1]);
+    // The export is dated once, at the top; each card's source line names its
+    // example records and publishers.
+    expect(
+      texts(root).filter((t) => t.startsWith('Updated 21 Sep 2026 · ')),
+    ).toHaveLength(1);
     expect(labels(root)).toContain(
-      'As at 21 September 2026 · Source: AEC annual returns; AusTender',
+      'Updated 21 Sep 2026, AEC annual returns and 1 more',
     );
-    // Ten cards, then Show more.
-    expect(
-      root.findAll(
-        (n) =>
-          typeof n.type === 'string' &&
-          /^lead-\d+-title$/.test(n.props.testID ?? ''),
-      ),
-    ).toHaveLength(10);
-    await press(root, 'leads-more');
-    expect(
-      root.findAll(
-        (n) =>
-          typeof n.type === 'string' &&
-          /^lead-\d+-title$/.test(n.props.testID ?? ''),
-      ),
-    ).toHaveLength(20);
-    // The methodology, in full.
+    expect(labels(root)).toContain(
+      '2 example records, AEC annual returns and 1 more',
+    );
+    // No as-at line, methodology or "See the comparison" row per card.
+    expect(texts(root).join('\n')).not.toMatch(/As at |See the comparison/);
     for (const method of discovery.methodology)
-      expect(texts(root)).toContain(method);
+      expect(texts(root)).not.toContain(method);
+    // Ten cards, then Show more.
+    const cards = () =>
+      root.findAll(
+        (n) =>
+          typeof n.type === 'string' &&
+          /^lead-\d+-title$/.test(n.props.testID ?? ''),
+      );
+    expect(cards()).toHaveLength(10);
+    await press(root, 'leads-more');
+    expect(cards()).toHaveLength(20);
     await press(root, 'lead-1-open');
     expect(router.push).toHaveBeenCalledWith(leadRoute(signals[1]!.id));
+    act(() => renderer.unmount());
+  });
+  test('the top source line holds the methodology; a card’s holds every caveat and its example records', async () => {
+    const renderer = await render(<Leads />);
+    const root = renderer.root;
+    const first = signals[0]!;
+    await press(root, 'leads-source');
+    for (const method of discovery.methodology)
+      expect(texts(root)).toContain(method);
+    expect(texts(root)).toContain('As at 21 September 2026');
+    await press(root, 'leads-source-sheet-done');
+    await press(root, 'lead-0-source');
+    for (const caveat of first.caveats) expect(texts(root)).toContain(caveat);
+    // Each example record opens from the sheet, named by its register, with
+    // no local row number.
+    expect(labels(root)).toEqual(
+      expect.arrayContaining([
+        'View original, AEC Transparency Register, $1,803 from Westpac Banking Corporation to Australian Labor Party (ALP) · AEC annual receipt · FY 2024–25',
+        'View original, AusTender register, $4,537,500 from Australian Office of Financial Management to Westpac Banking Corporation · Contract value · starts 6 Feb 2017 · record CN3407266',
+      ]),
+    );
+    expect(texts(root).join('\n')).not.toMatch(/643745|local record/);
+    act(() => renderer.unmount());
+  });
+  test('a concentration card shows its largest value: the title and sentence already give the share', async () => {
+    const renderer = await render(<Leads />);
+    const root = renderer.root;
+    const lead = leadsFor(discovery)[2]!;
+    expect(lead.category).toBe('procurement_concentration');
+    const open = root.find(
+      (n) =>
+        n.props.testID === 'lead-2-open' &&
+        typeof n.props.onPress === 'function',
+    );
+    expect(open.props.accessibilityLabel).toBe(
+      `Lead, Government contracts. ${lead.title}. Largest supplier value, 2,343,038,544 dollars. ${lead.summary}`,
+    );
+    expect(byTestID(root, 'lead-2-caveat').props.children).toBe(
+      'This share describes available records only; missing disclosures can materially change it.',
+    );
     act(() => renderer.unmount());
   });
   test('filters by category, sorts concentrations, and counts in the web’s nouns', async () => {
@@ -562,12 +614,18 @@ describe('the Leads screen', () => {
     await press(root, 'leads-filter-procurement_concentration');
     expect(texts(root)).toContain('28 agencies');
     const first = leadsFor(discovery, 'procurement_concentration')[0]!;
-    expect(byTestID(root, 'lead-0-title').props.accessibilityLabel).toBe(
-      `Lead, Government contracts. ${first.title}`,
+    const openLabel = () =>
+      root.find(
+        (n) =>
+          n.props.testID === 'lead-0-open' &&
+          typeof n.props.onPress === 'function',
+      ).props.accessibilityLabel as string;
+    expect(openLabel()).toMatch(
+      `Lead, Government contracts. ${first.title}. `,
     );
     await press(root, 'leads-sort-share');
-    expect(byTestID(root, 'lead-0-title').props.accessibilityLabel).toBe(
-      `Lead, Government contracts. ${leadsFor(discovery, 'procurement_concentration', 'share')[0]!.title}`,
+    expect(openLabel()).toMatch(
+      `Lead, Government contracts. ${leadsFor(discovery, 'procurement_concentration', 'share')[0]!.title}. `,
     );
     await press(root, 'leads-filter-recipient_concentration');
     expect(texts(root)).toContain('3 parties');
@@ -615,10 +673,18 @@ describe('a lead’s comparison', () => {
     );
     for (const caveat of signals[1]!.caveats)
       expect(texts(root)).toContain(caveat);
-    // "About these numbers": the web's lede and the methodology in full.
+    // "About these numbers" is the page's one source line: the web's lede
+    // and the methodology in full are in its sheet.
+    expect(labels(root)).toContain(
+      'Updated 21 Sep 2026, AEC annual returns',
+    );
+    expect(texts(root)).not.toContain(aboutLede(discovery));
+    await press(root, 'lead-source');
     expect(texts(root)).toContain(aboutLede(discovery));
     for (const method of discovery.methodology)
       expect(texts(root)).toContain(method);
+    // The heading says the lead's category once, as its meta line.
+    expect(texts(root)).toContain('Lead · Party funding');
     expect(
       root.findAll((n) => n.props.testID === 'lead-link-money-map').length,
     ).toBeGreaterThan(0);
@@ -730,9 +796,23 @@ describe('the declared-interests feed', () => {
   test('the screen filters by chamber and a row opens the member’s native profile', async () => {
     const renderer = await render(<Declarations />);
     const root = renderer.root;
-    expect(texts(root)).toContain('300 declarations · newest first');
+    // One summary line; the chamber and jurisdiction chips are in a sheet,
+    // and a single jurisdiction is named, not offered.
+    expect(texts(root)).toContain('300 declarations · All chambers · Federal');
+    expect(
+      root.findAll((n) => n.props.testID === 'declarations-chamber-house'),
+    ).toHaveLength(0);
+    await press(root, 'declarations-filters');
+    expect(
+      root.findAll((n) => n.props.testID === 'declarations-jurisdiction'),
+    ).toHaveLength(0);
+    // No label sits over chips that name themselves.
+    expect(texts(root)).not.toContain('Chamber');
     await press(root, 'declarations-chamber-house');
-    expect(texts(root)).toContain('176 of 300 declarations · newest first');
+    await press(root, 'declarations-filters-sheet-done');
+    expect(texts(root)).toContain(
+      '176 of 300 declarations · House of Representatives · Federal',
+    );
     const field = root.find(
       (n) =>
         n.props.testID === 'declarations-member' &&
@@ -740,13 +820,21 @@ describe('the declared-interests feed', () => {
     );
     await act(async () => field.props.onChangeText('Briskey'));
     await act(async () => field.props.onSubmitEditing());
-    expect(texts(root)).toContain('3 of 300 declarations · newest first');
+    expect(texts(root)).toContain(
+      '3 of 300 declarations · House of Representatives · Federal',
+    );
+    // Today's anatomy: the category joins the date line; no chip per row.
+    expect(byTestID(root, 'declaration-change-0').props.children).toMatch(
+      /^[A-Z][^·]+ · (added|deleted|changed) \d{1,2} [A-Z][a-z]{2}( \d{4})? · House of Representatives$/,
+    );
     await press(root, 'declaration-person-0');
     expect(router.push).toHaveBeenCalledWith(personRoute('jo-briskey'));
     // The feed adds the export's name matches and their caveat.
     await act(async () => field.props.onChangeText('Susan McDonald'));
     await act(async () => field.props.onSubmitEditing());
-    await press(root, 'declarations-chamber-all');
+    await press(root, 'declarations-filters');
+    await press(root, 'declarations-filters-clear');
+    await press(root, 'declarations-filters-sheet-done');
     expect(
       texts(root).some((t) =>
         t.startsWith(
@@ -754,8 +842,8 @@ describe('the declared-interests feed', () => {
         ),
       ),
     ).toBe(true);
-    // The export's coverage note is behind the count's ⓘ, in full.
-    await press(root, 'declarations-info');
+    // The export's coverage note is in its one source line's sheet, in full.
+    await press(root, 'declarations-source');
     expect(texts(root)).toContain(
       'This export holds the newest 300 of 1,660 dated register alterations. Entries are as declared, not verified by OPAX. Additions and deletions carry the date the register records. A gift or trip with no organisation match names one the AEC and lobbyist registers do not list under that spelling. Organisation matches to AEC Transparency Register returns, the lobbyist registers and FITS use exact normalised names.',
     );
@@ -773,7 +861,7 @@ describe('the declared-interests feed', () => {
     await act(async () => field.props.onSubmitEditing());
     expect(texts(root)).toContain('No alterations match these filters.');
     await press(root, 'declarations-clear');
-    expect(texts(root)).toContain('300 declarations · newest first');
+    expect(texts(root)).toContain('300 declarations · All chambers · Federal');
     act(() => renderer.unmount());
   });
 });

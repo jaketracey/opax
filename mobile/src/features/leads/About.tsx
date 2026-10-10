@@ -1,6 +1,5 @@
 import type { Discovery } from '../../api/catalog-decoders';
-import { AsAtLine, Group, Section, Text } from '../../design/primitives';
-import { spacing } from '../../design/tokens';
+import type { SourceDetails } from '../../design/primitives';
 import { aboutLede, discoveryAsOf, leadsFor } from './model';
 
 /** The registers the example records open, once each (Sources and licences). */
@@ -14,49 +13,21 @@ export function leadRegisters(discovery: Discovery): [string, string][] {
 }
 
 /**
- * The web's "About these numbers" (renderDiscoveryPage): its lede, the
- * export's methodology in full and the as-at line. The registers the example
- * records open are listed on Sources and licences. Shown under the leads and
- * under every comparison.
+ * The web's "About these numbers" (renderDiscoveryPage) as one source line:
+ * the export's date and publishers on the line; its lede and methodology in
+ * full in the sheet. The registers the example records open are listed on
+ * Sources and licences. Once at the top of the leads and at the foot of
+ * every comparison.
  */
-export function AboutLeads({
-  discovery,
-  savedAt,
-  lede = false,
-  testID,
-}: {
-  discovery: Discovery;
-  savedAt: number | null;
-  /** Repeat the lede where the screen does not open with it. */
-  lede?: boolean;
-  testID: string;
-}) {
-  return (
-    <Section title="About these numbers" accent="leads" testID={testID}>
-      {lede ? (
-        <Text wordSafe testID={`${testID}-lede`}>
-          {aboutLede(discovery)}
-        </Text>
-      ) : null}
-      <Group gap={spacing.s3}>
-        {discovery.methodology.map((method, index) => (
-          <Text
-            key={index}
-            wordSafe
-            variant="fine"
-            tone="ink"
-            testID={`${testID}-method-${index}`}
-          >
-            {method}
-          </Text>
-        ))}
-      </Group>
-      <AsAtLine
-        asOf={discoveryAsOf(discovery)}
-        citation={['AEC annual returns', 'AusTender']}
-        savedAt={savedAt}
-        testID={`${testID}-as-at`}
-      />
-    </Section>
-  );
+export function leadsSource(
+  discovery: Discovery,
+  savedAt: number | null,
+): SourceDetails & { title: string } {
+  return {
+    title: 'About these numbers',
+    asOf: discoveryAsOf(discovery),
+    citation: ['AEC annual returns', 'AusTender'],
+    savedAt,
+    notes: [aboutLede(discovery), ...discovery.methodology],
+  };
 }

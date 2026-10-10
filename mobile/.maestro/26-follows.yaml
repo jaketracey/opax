@@ -301,12 +301,20 @@ name: 26 Follow a member, a bill and an electorate; Today shows what changed
       id: follows-screen
     timeout: 15000
 - takeScreenshot: ${EVIDENCE}/26-manage
+# Unfollow sits behind a leftward swipe on the row (and its touch-and-hold
+# menu); the swipe brings the action on screen.
 - scrollUntilVisible:
     element:
-      id: follows-unfollow-electorate-el_5d600e7f6dca5b72ae04d686
+      id: follows-open-electorate-el_5d600e7f6dca5b72ae04d686
     timeout: 90000
     centerElement: true
     speed: 20
+- swipe:
+    from:
+      id: follows-open-electorate-el_5d600e7f6dca5b72ae04d686
+    direction: LEFT
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/26-manage-swipe
 - tapOn:
     id: follows-unfollow-electorate-el_5d600e7f6dca5b72ae04d686
 - extendedWaitUntil:
