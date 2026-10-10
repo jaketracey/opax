@@ -60,7 +60,7 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=43e87d61f3">
+<link rel="stylesheet" href="/style.css?v=a7b99a766c">
 <link rel="stylesheet" href="/ui-controls.css?v=f8011bf298">
 <link rel="stylesheet" href="/ui-source.css?v=4f396d8cfc">
 <link rel="stylesheet" href="/voice.css?v=a10938b91d">
@@ -795,7 +795,7 @@
       <!-- The index: one title, the cards, one dated source line for the set. -->
       <div id="reports-index">
         <div class="subject-head reports-head">
-          <h2 id="reports-title" tabindex="-1">Reports</h2>
+          <h1 id="reports-title" tabindex="-1">Reports</h1>
           <p class="subject-tag"><span>Standing investigations that pair the money with the words, every claim cited to the record.</span></p>
         </div>
         <div id="reports-list" class="report-cards"></div>
@@ -803,7 +803,7 @@
       </div>
       <div id="reports-status" class="status" role="status"></div>
       <article id="report-view" hidden>
-        <h2 id="report-title" tabindex="-1"></h2>
+        <h1 id="report-title" tabindex="-1"></h1>
         <p id="report-blurb" class="report-blurb"></p>
         <!-- v2 head: the window the report covers and the lede in reading
              size. Empty and hidden for a v1 report. -->
@@ -1199,7 +1199,7 @@
         </ul>
       </nav>
       <div class="about-body">
-      <h2>What OPAX is</h2>
+      <h1>What OPAX is</h1>
       <p>OPAX, the Open Parliamentary Accountability Exchange, has one intent: to put as much of
       the open data about Australian politics as possible in one place, cross-referenced and
       citable, so that the blind spots become findable. What a politician said on the record, how
@@ -1492,18 +1492,7 @@
 
     <!-- ============================ METHODS ============================ -->
     <section id="panel-methods" class="panel" hidden aria-label="Methods">
-      <p class="kicker">Methods</p>
-      <h2>How OPAX works, and how to cite it</h2>
-      <p>Federal legislative instruments are a separate metadata catalogue.
-      Cite the FRL id and the authoritative version linked on its detail page. Source: Federal
-      Register of Legislation (legislation.gov.au), <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
-      OPAX shows metadata only; version start, registration and commencement are distinct dates.</p>
-      <p><a href="/audit">Queensland audit reports</a> carries the report index and QAO's
-      numbered recommendations published as HTML. Cite the report number and year, the
-      labelled tabled date, and its authoritative QAO link. Source: Queensland Audit Office,
-      <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, unless otherwise noted.
-      © The State of Queensland (Queensland Audit Office) 2026. Copyright exceptions are recorded
-      per report and their bodies withheld. PDF bodies, entity responses and the app are phase 2.</p>
+      <h1>How OPAX works, and how to cite it</h1>
 
       <h3>What OPAX is, and is not</h3>
       <p>OPAX is a retrieval and analysis layer over public records. It is not the official
@@ -1531,6 +1520,18 @@
       embeds all three. Generated answers are <strong>not</strong> reproducible and must not be
       quoted as data. The supported method for a paper: state the question, cite the returned
       documents by their permanent OPAX links, and archive the export file.</p>
+
+      <h3>Citing instruments and audit reports</h3>
+      <p>Federal legislative instruments are a separate metadata catalogue. Cite the FRL id and
+      the authoritative version linked on its page. OPAX shows metadata only; version start,
+      registration and commencement are distinct dates. Source: Federal Register of Legislation
+      (legislation.gov.au), <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p>
+      <p><a href="/audit">Queensland audit reports</a> carries the report index and the Queensland
+      Audit Office's numbered recommendations. Cite the report number and year, the tabled date,
+      and its authoritative QAO link. Source: Queensland Audit Office,
+      <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, unless otherwise noted.
+      © The State of Queensland (Queensland Audit Office) 2026. Copyright exceptions are recorded
+      per report and their bodies withheld.</p>
 
       <h3>Known limitations</h3>
       <ul class="about-list" id="methods-defects"><!-- filled from corpus.json --></ul>
@@ -2054,7 +2055,7 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=a2361b652c" defer></script>
+<script src="/spa-shell.js?v=34e5071c1b" defer></script>
 <script src="/navigation.js?v=f86ae6aef6" defer></script>
 <script src="/quick-search.js?v=206914f32d" defer></script>
 <script src="/ui-source.js?v=5e7b751ca0" defer></script>

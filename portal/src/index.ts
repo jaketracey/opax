@@ -3998,7 +3998,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       const content=await renderSupplierAnswer(meta.canonical.split('/').at(-1)!,read)
       if(content) meta.prerender=content.html
     } else if(route.kind==='static' && ['money','connections','explore'].includes(route.page)) {
-      meta.prerender=(await renderMoneyAnswer(meta.title.replace(/ · OPAX$/,''),read).catch(()=>null))?.html || answerBlock(meta.title.replace(/ · OPAX$/,''),meta.description,'Public money')
+      meta.prerender=(await renderMoneyAnswer(meta.title.replace(/ · OPAX$/,''),read).catch(()=>null))?.html || answerBlock(meta.title.replace(/ · OPAX$/,''),meta.description)
     } else {
       const directory=route.kind==='index' ? route.dir : route.kind==='topics' ? 'topic' : route.kind==='static' && route.page==='bills' ? 'bills' : route.kind==='static' && route.page==='money/grants' && !url.searchParams.has('program') && !url.searchParams.has('open') && !url.searchParams.has('largest') ? 'grants' : null
       if(directory){
@@ -4008,7 +4008,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
     }
   }
   // Every non-home path has a single answer, including unavailable/not-found pages.
-  meta.prerender ??= answerBlock(meta.title.replace(/ · OPAX$/, ''),meta.description,meta.status===404 ? 'Not found' : 'OPAX')
+  meta.prerender ??= answerBlock(meta.title.replace(/ · OPAX$/, ''),meta.description)
   meta.jsonLd=meta.status>=400 ? null : buildSchemaGraph({canonical:meta.canonical,title:meta.title,description:meta.description,jsonLd:meta.jsonLd,person:personIdentity,bill:billIdentity})
   return meta
 }

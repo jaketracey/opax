@@ -1625,7 +1625,9 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 .card-blurb { display: block; color: var(--ink-soft); font: var(--type-metadata); }
 .card-meta { display: block; color: var(--ink-soft); font: var(--type-fine); }
 
-#report-view h2 { font: 600 2rem/1.2 var(--serif); margin: 0.2rem 0 0.4rem; }
+/* The report's title is the page's h1 (the title role); the index's is #reports-title. */
+#report-view #report-title { margin: var(--space-line) 0 var(--space-tight); }
+#reports-index #reports-title { margin: var(--space-line) 0 var(--space-tight); }
 .report-glyph { display: inline-block; width: 1.05em; height: 1.05em; vertical-align: -0.15em; margin-right: 0.4rem; color: var(--bronze-ink); }
 .report-blurb { font: 400 italic 1.125rem/1.5 var(--serif); color: var(--ink-soft); margin: 0 0 0.4rem; max-width: 62ch; }
 .report-meta { color: var(--ink-faint); font-size: 0.8125rem; margin: 0 0 1rem; }
@@ -1761,7 +1763,6 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 #report-moments:not(:empty) + #report-sections .report-section:first-child { margin-top: var(--section-gap); }
 
 @media (max-width: 640px) {
-  #report-view h2 { font-size: clamp(1.7rem, 8vw, 2rem); line-height: 1.15; }
   .report-blurb { font-size: 1.0625rem; }
   .report-meta { line-height: 1.55; }
   #report-figures .tiles { gap: var(--space-4); }
@@ -2717,10 +2718,9 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .about-index a:hover { text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
 .about-index a:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 2px; }
 
-#panel-about h2, #panel-methods h2 { font: 600 1.5rem/1.3 var(--serif); margin: 1.6rem 0 0.5rem; }
-#panel-about .about-body > h2:first-child { margin-top: 0; }
-#panel-methods h2 { margin-top: 0.2rem; }
-#panel-methods h3 { font: 600 1.125rem/1.3 var(--serif); margin: 1.4rem 0 0.4rem; }
+/* One title (h1), sections (h2), subsections (h3): the type roles below set
+   their faces; these only space them. */
+#panel-about .about-body > h1, #panel-methods > h1 { margin: 0 0 var(--space-group); }
 #panel-about p, #panel-methods p, .about-list li { max-width: 68ch; }
 .about-list { padding-left: 1.2rem; }
 .about-list li { margin: 0.5rem 0; }
@@ -5539,7 +5539,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 h1, .hero-intro h1, #subject-title, #bill-title, #report-view #report-title,
 #panel-doc #doc-title, #panel-declared > h1, .tide-shell > h1,
 .allocation-intro h1, .connections-page h1, .ballot-tool .ballot-intro h2,
-#panel-about .about-body > h2:first-of-type, #panel-methods > h2:first-of-type,
 #panel-expenses > h2:first-of-type {
   font:var(--heading-page); color:var(--ink);
   letter-spacing:var(--heading-tracking); overflow-wrap:break-word;
@@ -5558,7 +5557,6 @@ h3, #panel-methods h3, #panel-expenses h3 {
   font:var(--heading-subsection); color:var(--ink); letter-spacing:normal;
 }
 /* A reference page's first heading is its title, not a body section. */
-#panel-about .about-body > h2:first-of-type, #panel-methods > h2:first-of-type,
 #panel-expenses > h2:first-of-type { font:var(--heading-page); letter-spacing:var(--heading-tracking); margin-bottom:var(--space-5); }
 
 /* Home shortcuts: the same bronze line icons used in navigation and reports. */

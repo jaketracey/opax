@@ -279,7 +279,8 @@ test('server-only pages write the app breadcrumb strip, hidden once the app boot
   assert.equal((html.match(/crumb-sep/g)||[]).length,2);
   assert.doesNotMatch(crumbsHTML([{label:'x',href:'javascript:alert(1)'},{label:'y'}]),/javascript:/);
   assert.match(crumbsHTML([{label:'a'.repeat(80)}]),/a{59}…<\/span>/);
-  const block=answerBlock('Title','Sentence.','Directory','',[{label:'Sitting weeks',href:'/sitting'},{label:'Week'}]);
+  const block=answerBlock('Title','Sentence.','',[{label:'Sitting weeks',href:'/sitting'},{label:'Week'}]);
+  assert.match(block,/<section id="prerender" class="wrap"><h1>Title<\/h1><p>Sentence.<\/p><\/section>$/,'one title, no kicker');
   assert.ok(block.indexOf('prerender-crumbs')<block.indexOf('id="prerender"'));
   const css=readFileSync(new URL('style.css',pub),'utf8');
   assert.match(css,/\.spa-ready \.prerender-crumbs, \.spa-booting \.prerender-crumbs \{ display: none; \}/);

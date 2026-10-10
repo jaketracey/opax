@@ -75,9 +75,12 @@ export function crumbsHTML(items: Crumb[] = []): string {
   }).join('')
   return `<nav class="crumbs prerender-crumbs" aria-label="Breadcrumb"><ol class="wrap crumbs-list">${steps}</ol></nav>`
 }
-export function answerBlock(title: string, description: string, kicker: string, body = '', crumbs: Crumb[] = []): string {
+/** The crawlable answer: one title, one sentence, the body. No kicker: the
+ *  title says what the page is once (principle 3), and a server-only page's
+ *  breadcrumb says where it sits. */
+export function answerBlock(title: string, description: string, body = '', crumbs: Crumb[] = []): string {
   body = associationCaveat(body, `${description} ${body}`)
-  return `${crumbsHTML(crumbs)}<section id="prerender" class="wrap"><p class="kicker">${escapeHtml(kicker)}</p><h1>${escapeHtml(title)}</h1><p>${escapeHtml(description)}</p>${body}</section>`
+  return `${crumbsHTML(crumbs)}<section id="prerender" class="wrap"><h1>${escapeHtml(title)}</h1><p>${escapeHtml(description)}</p>${body}</section>`
 }
 export const ASSOCIATION_CAVEAT = 'An association does not prove influence.'
 export function associationCaveat(body: string, facts: string): string {
@@ -104,7 +107,7 @@ function paginate(url: URL, rows: { href: string; label: string; detail?: string
   const prev = page > 1 ? href(page - 1) : undefined, next = page < pageCount ? href(page + 1) : undefined
   const body = `<p>${count(rows.length)} entries. Page ${page} of ${pageCount}.</p><ul>${rows.slice((page-1)*PAGE_SIZE,page*PAGE_SIZE).map(r => `<li>${link(r.href,r.label)}${r.detail ? ` — ${escapeHtml(r.detail)}` : ''}</li>`).join('')}</ul>` +
     `<nav aria-label="Directory pages">${prev ? link(prev,'Previous page','prev') : ''}${prev && next ? ' · ' : ''}${next ? link(next,'Next page','next') : ''}</nav>`
-  return { html: answerBlock(title,description,'Directory',body), prev, next, page }
+  return { html: answerBlock(title,description,body), prev, next, page }
 }
 const optional = async <T>(read: ReadAsset, path: string): Promise<T | null> => read<T>(path).catch(() => null)
 
@@ -195,7 +198,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
   }
   const owned = sponsored?.sponsored[p.pid || p.name] || []
   body += `<h2>Bills sponsored</h2>${owned.length ? `<ul>${owned.slice(0,30).map(key=>`<li>${link(`/bill/${key}`,bills?.bills.find(b=>b.key===key)?.title || key)}</li>`).join('')}</ul>` : '<p>No sponsored bills recorded in this export.</p>'}`
-  return {html:answerBlock(display,description,'Parliamentarian',body),description}
+  return {html:answerBlock(display,description,body),description}
 }
 
 /** The roster row a bill's printed sponsor opens: public/sponsor-person.js, never a surname print. */
@@ -226,7 +229,7 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
   body += `<h2>Sources</h2>${(b.sources || []).map(s=>`<p>${escapeHtml(human(s.kind))}</p>${original(s.url)}`).join('')}`
   const rows = divisions.map(d => billDivision(d,people,slugs,false))
   const block = () => rows.length ? `<ul>${rows.join('')}</ul>` : '<p>No divisions recorded. Most questions are decided on the voices; this does not establish that a bill was unopposed.</p>'
-  const output = () => answerBlock(title,description,'Bill',body.replace(divisionSlot,block()))
+  const output = () => answerBlock(title,description,body.replace(divisionSlot,block()))
   // Whole member lists are expanded only when the complete page stays in budget.
   const recent = divisions.map((d,i)=>({d,i})).sort((a,b)=>String(b.d.date || '').localeCompare(String(a.d.date || ''))).slice(0,3)
   for (const {d,i} of recent) {
@@ -234,7 +237,7 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
     if (!billBodyFits(output())) rows[i]=compact
   }
   let html=output()
-  if (!billBodyFits(html)) html=answerBlock(title,description,'Bill',`<p>This record exceeds the page display limit. Stages, division tallies and model attribution are available in the ${link(`/bills/${b.key}.json`,'complete bill export')}.</p>`)
+  if (!billBodyFits(html)) html=answerBlock(title,description,`<p>This record exceeds the page display limit. Stages, division tallies and model attribution are available in the ${link(`/bills/${b.key}.json`,'complete bill export')}.</p>`)
   return {html}
 }
 export const BILL_MAX_INTERNAL_LINKS = 300
@@ -269,7 +272,7 @@ export function renderDivisionAnswer(d: Division, people: Person[], slugs: Map<s
   let body = `<h2>Question</h2><div class="division-markdown">${renderDivisionMarkdown(d.question || d.name || 'Question not recorded')}</div>${original(d.source_url || d.url)}<h2>How each member voted</h2>`
   body += divisionVotes(d,people,slugs)
   body += `<h2>Related bills</h2><ul>${(d.bills || []).map(b=>`<li>${link(`/bill/${b.key}`,b.title)}</li>`).join('')}</ul><p>Only formal divisions leave a per-member record. A procedural vote is not necessarily a vote for or against a bill.</p>`
-  return {html:answerBlock(title,description,'Division',body),description}
+  return {html:answerBlock(title,description,body),description}
 }
 
 /** The organisation/withheld donor names of every money graph (public/donor-entity.js). */
@@ -343,7 +346,7 @@ export async function renderSupplierAnswer(id: string, read: ReadAsset): Promise
     body+=`<h3>${escapeHtml(a.name)}</h3><ul>${rows.map(s=>`<li>${link(`/subject/supplier/${s.id}`,s.name)} — ${currency(s.total)} in recorded awards from this agency</li>`).join('')}</ul>`
   }
   body+=`<p>An association does not prove influence.</p><p>${link('/subject/supplier','Browse suppliers')} · ${link('/methods','Sources and methods')}</p>`
-  return {html:answerBlock(profile.name,description,'Commonwealth contracts',body),description}
+  return {html:answerBlock(profile.name,description,body),description}
 }
 
 /** No map boot state is exposed to crawlers. Totals retain separate jurisdictions. */
@@ -360,5 +363,5 @@ export async function renderMoneyAnswer(title: string, read: ReadAsset): Promise
   const suppliers=await read<{meta:{generated_at:string;total:number;contract_count:number;source:string;published_from:string;published_to:string}}>('/suppliers.json')
   const m=suppliers.meta
   body+=`<h2>Commonwealth contracts</h2><p>${currency(m.total)} in recorded awards across ${count(m.contract_count)} contracts. Notices published ${escapeHtml(m.published_from)} to ${escapeHtml(m.published_to)}. Exported ${escapeHtml(m.generated_at.slice(0,10))}. Source: ${escapeHtml(m.source)}.</p><p>${link('/subject/supplier','Government suppliers')} · ${link('/subject/agency','Government agencies')} · ${link('/money/grants','Grant records')} · ${link('/ask','Ask about the record')} · ${link('/methods','Sources and methods')}</p>`
-  return {html:answerBlock(title,'Public disclosure records, dated totals and original sources. Federal and state returns are never summed.','Public money',body)}
+  return {html:answerBlock(title,'Public disclosure records, dated totals and original sources. Federal and state returns are never summed.',body)}
 }
