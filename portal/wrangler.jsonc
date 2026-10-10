@@ -12,7 +12,7 @@
     // Page entry points must canonicalise www before serving the app, so
     // sign-in requests and host-only account cookies share one origin.
     // Other static assets still bypass the Worker. Share images are dynamic.
-    "run_worker_first": ["/", "/home", "/home/", "/*.html", "/community", "/community/", "/connections", "/connections/", "/map", "/map/", "/instruments", "/instruments/", "/instrument", "/instrument/*", "/audit", "/audit/*", "/api/*", "/bill-texts/*", "/og/*", "/ingest/*", "/mcp", "/sitemap.xml", "/sitemap.xml/", "/sitemaps/*", "/robots.txt", "/robots.txt/", "/llms.txt", "/llms.txt/"]
+    "run_worker_first": ["/", "/home", "/home/", "/*.html", "/community", "/community/", "/connections", "/connections/", "/map", "/map/", "/instruments", "/instruments/", "/instrument", "/instrument/*", "/audit", "/audit/*", "/api/*", "/bill-texts/*", "/og/*", "/ingest/*", "/mcp", "/vic-election-2026", "/vic-election-2026/*", "/hubs/*", "/sitemap.xml", "/sitemap.xml/", "/sitemaps/*", "/robots.txt", "/robots.txt/", "/llms.txt", "/llms.txt/"]
   },
 
   "kv_namespaces": [{"binding":"GENERATION_CACHE","id":"e0b56c0457374743b580e7210e7b4515"}],
@@ -47,6 +47,7 @@
   //   npx wrangler secret put ARAG_KB_TOKEN
   //   npx wrangler secret put ARAG_KB_ID
   "vars": {
+    "VIC_ELECTION_HUB_ENABLED": "false",
     // Raising this floor deliberately requires older native builds to update.
     "APP_MINIMUM_VERSION": "0.0.0",
     "VOICE_ENABLED": "true",
@@ -62,7 +63,7 @@
     // answers built on the old record are never served again. Any string;
     // the convention is the date of the corpus change. See docs/STREAMING.md
     // "Caching" and the MIGRATION-ARAG.md invariants.
-    "CACHE_EPOCH": "2026-10-10-nightly",
+    "CACHE_EPOCH": "2026-10-10-donor-privacy",
     "INDEXNOW_ENABLED": "true",
     "INDEXNOW_DRY_RUN": "false",
     "DAILY_POST_ENABLED": "true",
@@ -133,7 +134,12 @@
     // Share images (/og/*.png) are rasterised in wasm on a cache MISS, a few
     // hundred ms of CPU each. A crawler fetches one per shared link; only a
     // script minting fresh ?q= URLs could ask for sixty in a minute.
-    { "name": "OG_LIMITER", "namespace_id": "1004", "simple": { "limit": 60, "period": 60 } }
+    { "name": "OG_LIMITER", "namespace_id": "1004", "simple": { "limit": 60, "period": 60 } },
+    // Aggregate cap on paid generation (every platform /ask call: answers, rewrites,
+    // overviews, follow-ups, stories, summaries), one key for all readers, so a
+    // cold cache after a CACHE_EPOCH bump cannot run up a bill. Past it the cached
+    // or fallback output stands (src/index.ts modelBudgetSpent). Per location.
+    { "name": "MODEL_LIMITER", "namespace_id": "1005", "simple": { "limit": 60, "period": 60 } }
   ],
   "env": {
     "staging": {
@@ -145,7 +151,7 @@
       "workers_dev": true,
       "routes": [{ "pattern": "staging.opax.com.au", "custom_domain": true }],
       "services": [{ "binding": "STAGING_API", "service": "opax-portal" }],
-      "vars": { "APP_MINIMUM_VERSION":"0.0.0", "VOICE_ENABLED":"true", "VOICE_AGENT_ID":"agent_1501m22syqc3fhqsjkxnfy7d0xag", "VOICE_MONTHLY_SECONDS":"3000", "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-10-10-nightly",
+      "vars": { "APP_MINIMUM_VERSION":"0.0.0", "VOICE_ENABLED":"true", "VOICE_AGENT_ID":"agent_1501m22syqc3fhqsjkxnfy7d0xag", "VOICE_MONTHLY_SECONDS":"3000", "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-10-10-donor-privacy",
         "INDEXNOW_ENABLED": "false",
         "INDEXNOW_DRY_RUN": "true", "DAILY_POST_ENABLED": "false", "BLUESKY_POST_ENABLED": "false", "BLOCKED_ASNS": "45102,24429,37963", "GENERATION_BLOCKED_ASNS": "32934", "GENERATION_BLOCKED_CIDRS": "116.179.32.0/21,220.181.108.0/24,119.249.100.0/24,180.97.39.0/24" },
       "ratelimits": [],

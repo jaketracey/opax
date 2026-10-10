@@ -29,12 +29,17 @@ test('graph selection masks exact donor names only when resolving conflicting re
  const selection=await receiptGraphForQuestion(query,load);
  assert.equal(selection.jurisdiction,'tas');assert.equal(selection.file,'/graph/money.tas.json');
  assert.deepEqual(reads,['/graph/money.json','/graph/money.tas.json']);
- reads.length=0;assert.equal((await receiptGraphForQuestion('gambling in Queensland',load)).jurisdiction,'qld');assert.equal(reads.length,1);
+ // A region word is first checked against the federal donors' names (one extra read), then decides.
+ reads.length=0;assert.equal((await receiptGraphForQuestion('gambling in Queensland',load)).jurisdiction,'qld');assert.ok(reads.length<=2);
+ // Inside a complete donor name it is part of the name, and the federal default stands.
+ assert.equal((await receiptGraphForQuestion('Who receives the most funding from Queensland Nickel Pty Ltd?',load)).jurisdiction,'federal');
+ assert.equal((await receiptGraphForQuestion('Who receives the most funding from Queensland Nickel Pty Ltd in Queensland?',load)).jurisdiction,'qld');
  reads.length=0;assert.equal((await receiptGraphForQuestion(query,load,'tas')).jurisdiction,'tas');assert.deepEqual(reads,['/graph/money.tas.json']);
- for(const q of ['money from The Federal Group in federal and Tasmania records','gambling in federal and Tasmania','gambling in NSW',
-  'money from Queensland Nickel Pty Ltd and Federal Secretariat']) {
+ for(const q of ['money from The Federal Group in federal and Tasmania records','gambling in federal and Tasmania','gambling in NSW']) {
   reads.length=0;assert.equal(await receiptGraphForQuestion(q,load),null,q);assert.ok(reads.length<=2);
  }
+ // A donor withheld for want of organisation evidence no longer masks a region word.
+ reads.length=0;assert.equal((await receiptGraphForQuestion('money from Queensland Nickel Pty Ltd and Federal Secretariat',load)).jurisdiction,'federal');
  const ambiguous={nodes:[{id:'a',kind:'donor',label:'A Pty Ltd',aliases:['The Federal Group']},{id:'b',kind:'donor',label:'B Pty Ltd',aliases:['The Federal Group']}],edges:[]};
  assert.equal(await receiptGraphForQuestion(query,async()=>ambiguous),null);
 });

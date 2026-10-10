@@ -38,10 +38,10 @@ import json, os
 from pathlib import Path
 import sys
 mode = os.environ.get("BILL_TEST_MODE", "ok")
-operation = "fetch" if "bills_fetch" in __file__ else "fill" if "--fill-briefs" in sys.argv else "export"
+operation = "fetch" if "bills_fetch" in __file__ else "links" if "tvfy_bill_links" in __file__ else "fill" if "--fill-briefs" in sys.argv else "export"
 with open(os.environ["BILL_TEST_CALLS"], "a") as log:
     log.write(operation + "\n")
-if operation in ("fetch", "export"):
+if operation in ("fetch", "links", "export"):
     assert os.environ["OPAX_SYNC_KB"] == "0"
     assert os.environ["OPAX_DB"] == str(Path.home() / ".cache/autoresearch/parli.db")
 if operation == "fetch":
@@ -50,6 +50,9 @@ if operation == "fetch":
     if mode == "timeout":
         import time
         time.sleep(10)
+    sys.exit(0)
+if operation == "links":
+    if mode == "links_fail": sys.exit(1)
     sys.exit(0)
 out = Path("portal/public/bills")
 index = json.loads((out / "index.json").read_text())
@@ -249,13 +252,13 @@ class BillStepTests(unittest.TestCase):
                         GIT_AUTHOR_NAME="test", GIT_COMMITTER_NAME="test",
                         GIT_AUTHOR_EMAIL="test@example.test", GIT_COMMITTER_EMAIL="test@example.test")
         Path(self.env["HOME"]).mkdir()
-        for name in ("scripts/vm/bills_refresh.sh", "scripts/vm/bills_guard.py",
+        for name in ("scripts/hubs/sitting-2026.json", "scripts/vm/bills_refresh.sh", "scripts/vm/bills_guard.py",
                      "scripts/vm/keep_if_unchanged.py", "scripts/refresh_bills.sh", "scripts/verify_bill_briefs.py",
                      "scripts/bills_registry/bills_stages.py"):
             dest = self.repo / name
             dest.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / name, dest)
-        for name in ("scripts/export_bills.py", "scripts/bills_registry/bills_fetch.py"):
+        for name in ("scripts/export_bills.py", "scripts/bills_registry/bills_fetch.py", "parli/ingest/tvfy_bill_links.py"):
             dest = self.repo / name
             dest.parent.mkdir(parents=True, exist_ok=True)
             dest.write_text(STUB)
@@ -304,7 +307,7 @@ class BillStepTests(unittest.TestCase):
     def test_catch_up_exports_on_saturday_once_and_logs_retained_deltas(self):
         rc, output = self.run_step()
         self.assertEqual(rc, 0)
-        self.assertEqual(self.calls(), ["fetch", "export", "fill"])
+        self.assertEqual(self.calls(), ["fetch", "links", "export", "fill"])
         self.assertIn("catch-up", output)
         summary = "bills: 1 new, 1 changed, 1 titles filled, 1 sponsor IDs filled"
         self.assertIn(summary, output)
@@ -313,7 +316,7 @@ class BillStepTests(unittest.TestCase):
         self.assertTrue((self.pipe / "bills-refresh-v1.initialized").exists())
         rc, output = self.run_step("quiet")
         self.assertEqual(rc, 0)
-        self.assertEqual(self.calls(), ["fetch", "export", "fill", "fill"])
+        self.assertEqual(self.calls(), ["fetch", "links", "export", "fill", "fill"])
         self.assertIn("0 new, 0 changed, 0 titles filled, 0 sponsor IDs filled", output)
 
     def test_calendar_runs_sitting_days_and_sundays_but_skips_other_days(self):
@@ -326,7 +329,7 @@ class BillStepTests(unittest.TestCase):
         rc, output = self.run_step("quiet", OPAX_TODAY="2026-10-12")
         self.assertEqual(rc, 0)
         self.assertIn("yesterday was not a sitting day", output)
-        self.assertEqual(self.calls(), ["fetch", "export", "fill", "fetch", "export", "fill", "fill"])
+        self.assertEqual(self.calls(), ["fetch", "links", "export", "fill", "fetch", "links", "export", "fill", "fill"])
 
     def test_keep_if_unchanged_preserves_head_bytes(self):
         before = (self.bills / "index.json").read_bytes()
@@ -336,8 +339,15 @@ class BillStepTests(unittest.TestCase):
         self.assertEqual(self.git("status", "--porcelain"), "")
         self.assertFalse(self.pending.exists())
 
+    def test_divisions_catchup_refreshes_bills_even_after_bill_marker_consumed(self):
+        self.initialized()
+        rc, output = self.run_step('quiet', DIVISIONS_REFRESH_OK='1')
+        self.assertEqual(rc, 0)
+        self.assertIn('(division-links, parliament 48)', output)
+        self.assertEqual(self.calls(), ['fetch', 'links', 'export', 'fill'])
+
     def test_guards_revert_shrink_vanish_missing_file_and_verify_failure(self):
-        for mode in ("shrink", "vanish", "index_vanish", "delete_file", "bad_count", "brief_fail", "export_fail", "fetch_fail"):
+        for mode in ("shrink", "vanish", "index_vanish", "delete_file", "bad_count", "brief_fail", "export_fail", "fetch_fail", "links_fail"):
             with self.subTest(mode=mode):
                 rc, output = self.run_step(mode)
                 self.assertEqual(rc, 1)

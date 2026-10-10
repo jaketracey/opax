@@ -1,0 +1,765 @@
+{
+  "updated": "2026-10-10",
+  "term_start": "2022-11-26",
+  "term_end": "2026-11-28",
+  "election_day": "2026-11-28",
+  "nominations_close": "2026-11-09T12:00:00+11:00",
+  "sources": {
+    "districts": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts",
+    "regions": "https://www.vec.vic.gov.au/electoral-boundaries/state-regions",
+    "boundaries": "https://www.vec.vic.gov.au/electoral-boundaries/state-boundary-reviews",
+    "ebc": "https://www.ebc.vic.gov.au/Past-Redivisions/Default.html",
+    "report": "https://www.ebc.vic.gov.au/files/2021-boundaries/reports/EBC%20Report%20on%20the%20Redivision%20of%20Victorian%20Electoral%20Boundaries%202020-2021%20-%20Web%20version%20text%20only.pdf",
+    "election": "https://www.vec.vic.gov.au/voting/2026-state-election",
+    "timeline": "https://www.vec.vic.gov.au/voting/types-of-elections/state-elections",
+    "voting": "https://www.vec.vic.gov.au/voting/2026-state-election/voting-options",
+    "caretaker": "https://www.vic.gov.au/guidelines-caretaker-conventions/introduction",
+    "licence": "https://www.vec.vic.gov.au/legal"
+  },
+  "licence": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "attribution": "\u00a9 Victorian Electoral Commission",
+    "exceptions": "Images, photographs, videos, branding (including the VEC logo), and third-party content are excluded. No VEC maps, imagery or third-party projections are reproduced."
+  },
+  "fetch": [
+    {
+      "name": "districts",
+      "sha256": "70aa9491561c07ffb96f9a5d710784e70fb2b191f7dbd631280ed98b76bc9e34"
+    },
+    {
+      "name": "regions",
+      "sha256": "6653116dcf2dcab0eea36c16f77b1fb1168f61b3927cb94eb34323af7ede80b1"
+    },
+    {
+      "name": "review",
+      "sha256": "aa5dbe81f853b746bae12463a6c00b117ba0a4163e8fa432ea6efd9d448611ec"
+    },
+    {
+      "name": "election",
+      "sha256": "194f2c1bb53e7e2d53faa935c863e838e8a04d0b73d0a089469b112c3a091fa9"
+    },
+    {
+      "name": "legal",
+      "sha256": "281c491ae8b2d1d56bba49315626d0eafe435e951fa719e38f504b35b8e99fbd"
+    },
+    {
+      "name": "ebc",
+      "sha256": "ace9767e9e767e59660438cf717862c09541aa8844edf000563655587d9c98f0"
+    },
+    {
+      "name": "ebc-report",
+      "sha256": "aaed11d69f233d39771502c39a0c852ef0b034805e647ef564637924143cd945"
+    }
+  ],
+  "districts": [
+    {
+      "name": "Albert Park",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/albert-park-district",
+      "region": "Southern Metropolitan"
+    },
+    {
+      "name": "Ashwood",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/ashwood-district",
+      "region": "Southern Metropolitan",
+      "boundary_note": "Ashwood was created in the 2021 redivision, effective 1 November 2022. This predates the 2022\u20132026 term."
+    },
+    {
+      "name": "Bass",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/bass-district",
+      "region": "Eastern Victoria"
+    },
+    {
+      "name": "Bayswater",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/bayswater-district",
+      "region": "North-Eastern Metropolitan"
+    },
+    {
+      "name": "Bellarine",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/bellarine-district",
+      "region": "Western Victoria"
+    },
+    {
+      "name": "Benambra",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/benambra-district",
+      "region": "Northern Victoria"
+    },
+    {
+      "name": "Bendigo East",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/bendigo-east-district",
+      "region": "Northern Victoria"
+    },
+    {
+      "name": "Bendigo West",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/bendigo-west-district",
+      "region": "Northern Victoria"
+    },
+    {
+      "name": "Bentleigh",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/bentleigh-district",
+      "region": "Southern Metropolitan"
+    },
+    {
+      "name": "Berwick",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/berwick-district",
+      "region": "South-Eastern Metropolitan",
+      "boundary_note": "Berwick was created in the 2021 redivision, effective 1 November 2022. This predates the 2022\u20132026 term."
+    },
+    {
+      "name": "Box Hill",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/box-hill-district",
+      "region": "North-Eastern Metropolitan"
+    },
+    {
+      "name": "Brighton",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/brighton-district",
+      "region": "Southern Metropolitan"
+    },
+    {
+      "name": "Broadmeadows",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/broadmeadows-district",
+      "region": "Northern Metropolitan"
+    },
+    {
+      "name": "Brunswick",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/brunswick-district",
+      "region": "Northern Metropolitan"
+    },
+    {
+      "name": "Bulleen",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/bulleen-district",
+      "region": "North-Eastern Metropolitan"
+    },
+    {
+      "name": "Bundoora",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/bundoora-district",
+      "region": "North-Eastern Metropolitan"
+    },
+    {
+      "name": "Carrum",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/carrum-district",
+      "region": "South-Eastern Metropolitan"
+    },
+    {
+      "name": "Caulfield",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/caulfield-district",
+      "region": "Southern Metropolitan"
+    },
+    {
+      "name": "Clarinda",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/clarinda-district",
+      "region": "South-Eastern Metropolitan"
+    },
+    {
+      "name": "Cranbourne",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/cranbourne-district",
+      "region": "South-Eastern Metropolitan"
+    },
+    {
+      "name": "Croydon",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/croydon-district",
+      "region": "North-Eastern Metropolitan"
+    },
+    {
+      "name": "Dandenong",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/dandenong-district",
+      "region": "South-Eastern Metropolitan"
+    },
+    {
+      "name": "Eildon",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/eildon-district",
+      "region": "Northern Victoria"
+    },
+    {
+      "name": "Eltham",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/eltham-district",
+      "region": "North-Eastern Metropolitan"
+    },
+    {
+      "name": "Essendon",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/essendon-district",
+      "region": "Northern Metropolitan"
+    },
+    {
+      "name": "Eureka",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/eureka-district",
+      "region": "Western Victoria",
+      "boundary_note": "The EBC final report changed Buninyong District\u2019s name to Eureka District, with boundary changes, effective 1 November 2022. This predates the 2022\u20132026 term."
+    },
+    {
+      "name": "Euroa",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/euroa-district",
+      "region": "Northern Victoria"
+    },
+    {
+      "name": "Evelyn",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/evelyn-district",
+      "region": "Eastern Victoria"
+    },
+    {
+      "name": "Footscray",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/footscray-district",
+      "region": "Western Metropolitan"
+    },
+    {
+      "name": "Frankston",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/frankston-district",
+      "region": "South-Eastern Metropolitan"
+    },
+    {
+      "name": "Geelong",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/geelong-district",
+      "region": "Western Victoria"
+    },
+    {
+      "name": "Gippsland East",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/gippsland-east-district",
+      "region": "Eastern Victoria"
+    },
+    {
+      "name": "Gippsland South",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/gippsland-south-district",
+      "region": "Eastern Victoria"
+    },
+    {
+      "name": "Glen Waverley",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/glen-waverley-district",
+      "region": "North-Eastern Metropolitan",
+      "boundary_note": "Glen Waverley was created in the 2021 redivision, effective 1 November 2022. This predates the 2022\u20132026 term."
+    },
+    {
+      "name": "Greenvale",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/greenvale-district",
+      "region": "Northern Metropolitan",
+      "boundary_note": "Greenvale was created in the 2021 redivision, effective 1 November 2022. This predates the 2022\u20132026 term."
+    },
+    {
+      "name": "Hastings",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/hastings-district",
+      "region": "Eastern Victoria"
+    },
+    {
+      "name": "Hawthorn",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/hawthorn-district",
+      "region": "Southern Metropolitan"
+    },
+    {
+      "name": "Ivanhoe",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/ivanhoe-district",
+      "region": "North-Eastern Metropolitan"
+    },
+    {
+      "name": "Kalkallo",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/kalkallo-district",
+      "region": "Northern Metropolitan",
+      "boundary_note": "Kalkallo was created in the 2021 redivision, effective 1 November 2022. This predates the 2022\u20132026 term."
+    },
+    {
+      "name": "Kew",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/kew-district",
+      "region": "Southern Metropolitan"
+    },
+    {
+      "name": "Kororoit",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/kororoit-district",
+      "region": "Western Metropolitan"
+    },
+    {
+      "name": "Lara",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/lara-district",
+      "region": "Western Victoria"
+    },
+    {
+      "name": "Laverton",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/laverton-district",
+      "region": "Western Metropolitan",
+      "boundary_note": "Laverton was created in the 2021 redivision, effective 1 November 2022. This predates the 2022\u20132026 term."
+    },
+    {
+      "name": "Lowan",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/lowan-district",
+      "region": "Western Victoria"
+    },
+    {
+      "name": "Macedon",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/macedon-district",
+      "region": "Northern Victoria"
+    },
+    {
+      "name": "Malvern",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/malvern-district",
+      "region": "Southern Metropolitan"
+    },
+    {
+      "name": "Melbourne",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/melbourne-district",
+      "region": "Northern Metropolitan"
+    },
+    {
+      "name": "Melton",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/melton-district",
+      "region": "Western Victoria"
+    },
+    {
+      "name": "Mildura",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/mildura-district",
+      "region": "Northern Victoria"
+    },
+    {
+      "name": "Mill Park",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/mill-park-district",
+      "region": "North-Eastern Metropolitan"
+    },
+    {
+      "name": "Monbulk",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/monbulk-district",
+      "region": "Eastern Victoria"
+    },
+    {
+      "name": "Mordialloc",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/mordialloc-district",
+      "region": "South-Eastern Metropolitan"
+    },
+    {
+      "name": "Mornington",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/mornington-district",
+      "region": "Eastern Victoria"
+    },
+    {
+      "name": "Morwell",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/morwell-district",
+      "region": "Eastern Victoria"
+    },
+    {
+      "name": "Mulgrave",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/mulgrave-district",
+      "region": "South-Eastern Metropolitan"
+    },
+    {
+      "name": "Murray Plains",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/murray-plains-district",
+      "region": "Northern Victoria"
+    },
+    {
+      "name": "Narracan",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/narracan-district",
+      "region": "Eastern Victoria"
+    },
+    {
+      "name": "Narre Warren North",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/narre-warren-north-district",
+      "region": "South-Eastern Metropolitan"
+    },
+    {
+      "name": "Narre Warren South",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/narre-warren-south-district",
+      "region": "South-Eastern Metropolitan"
+    },
+    {
+      "name": "Nepean",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/nepean-district",
+      "region": "Eastern Victoria"
+    },
+    {
+      "name": "Niddrie",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/niddrie-district",
+      "region": "Western Metropolitan"
+    },
+    {
+      "name": "Northcote",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/northcote-district",
+      "region": "Northern Metropolitan"
+    },
+    {
+      "name": "Oakleigh",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/oakleigh-district",
+      "region": "Southern Metropolitan"
+    },
+    {
+      "name": "Ovens Valley",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/ovens-valley-district",
+      "region": "Northern Victoria"
+    },
+    {
+      "name": "Pakenham",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/pakenham-district",
+      "region": "Eastern Victoria",
+      "boundary_note": "Pakenham was created in the 2021 redivision, effective 1 November 2022. This predates the 2022\u20132026 term."
+    },
+    {
+      "name": "Pascoe Vale",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/pascoe-vale-district",
+      "region": "Northern Metropolitan"
+    },
+    {
+      "name": "Point Cook",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/point-cook-district",
+      "region": "Western Metropolitan",
+      "boundary_note": "Point Cook was created in the 2021 redivision, effective 1 November 2022. This predates the 2022\u20132026 term."
+    },
+    {
+      "name": "Polwarth",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/polwarth-district",
+      "region": "Western Victoria"
+    },
+    {
+      "name": "Prahran",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/prahran-district",
+      "region": "Southern Metropolitan"
+    },
+    {
+      "name": "Preston",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/preston-district",
+      "region": "Northern Metropolitan"
+    },
+    {
+      "name": "Richmond",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/richmond-district",
+      "region": "Northern Metropolitan"
+    },
+    {
+      "name": "Ringwood",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/ringwood-district",
+      "region": "North-Eastern Metropolitan"
+    },
+    {
+      "name": "Ripon",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/ripon-district",
+      "region": "Western Victoria"
+    },
+    {
+      "name": "Rowville",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/rowville-district",
+      "region": "South-Eastern Metropolitan"
+    },
+    {
+      "name": "Sandringham",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/sandringham-district",
+      "region": "Southern Metropolitan"
+    },
+    {
+      "name": "Shepparton",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/shepparton-district",
+      "region": "Northern Victoria"
+    },
+    {
+      "name": "South Barwon",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/south-barwon-district",
+      "region": "Western Victoria"
+    },
+    {
+      "name": "South-West Coast",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/south-west-coast-district",
+      "region": "Western Victoria"
+    },
+    {
+      "name": "St Albans",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/st-albans-district",
+      "region": "Western Metropolitan"
+    },
+    {
+      "name": "Sunbury",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/sunbury-district",
+      "region": "Western Metropolitan"
+    },
+    {
+      "name": "Sydenham",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/sydenham-district",
+      "region": "Western Metropolitan"
+    },
+    {
+      "name": "Tarneit",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/tarneit-district",
+      "region": "Western Metropolitan"
+    },
+    {
+      "name": "Thomastown",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/thomastown-district",
+      "region": "Northern Metropolitan"
+    },
+    {
+      "name": "Warrandyte",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/warrandyte-district",
+      "region": "North-Eastern Metropolitan"
+    },
+    {
+      "name": "Wendouree",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/wendouree-district",
+      "region": "Western Victoria"
+    },
+    {
+      "name": "Werribee",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/werribee-district",
+      "region": "Western Metropolitan"
+    },
+    {
+      "name": "Williamstown",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/williamstown-district",
+      "region": "Western Metropolitan"
+    },
+    {
+      "name": "Yan Yean",
+      "kind": "district",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/yan-yean-district",
+      "region": "Northern Victoria"
+    }
+  ],
+  "regions": [
+    {
+      "name": "Eastern Victoria",
+      "kind": "region",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-regions/eastern-victoria-region",
+      "districts": [
+        "Bass",
+        "Evelyn",
+        "Gippsland East",
+        "Gippsland South",
+        "Hastings",
+        "Monbulk",
+        "Mornington",
+        "Morwell",
+        "Narracan",
+        "Nepean",
+        "Pakenham"
+      ]
+    },
+    {
+      "name": "North-Eastern Metropolitan",
+      "kind": "region",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-regions/north-eastern-metropolitan-region",
+      "districts": [
+        "Bayswater",
+        "Box Hill",
+        "Bulleen",
+        "Bundoora",
+        "Croydon",
+        "Eltham",
+        "Glen Waverley",
+        "Ivanhoe",
+        "Mill Park",
+        "Ringwood",
+        "Warrandyte"
+      ],
+      "boundary_note": "Eastern Metropolitan Region was renamed North-Eastern Metropolitan Region in the 2021 redivision, effective 1 November 2022. This predates the 2022\u20132026 term."
+    },
+    {
+      "name": "Northern Metropolitan",
+      "kind": "region",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-regions/northern-metropolitan-region",
+      "districts": [
+        "Broadmeadows",
+        "Brunswick",
+        "Essendon",
+        "Greenvale",
+        "Kalkallo",
+        "Melbourne",
+        "Northcote",
+        "Pascoe Vale",
+        "Preston",
+        "Richmond",
+        "Thomastown"
+      ]
+    },
+    {
+      "name": "Northern Victoria",
+      "kind": "region",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-regions/northern-victoria-region",
+      "districts": [
+        "Benambra",
+        "Bendigo East",
+        "Bendigo West",
+        "Eildon",
+        "Euroa",
+        "Macedon",
+        "Mildura",
+        "Murray Plains",
+        "Ovens Valley",
+        "Shepparton",
+        "Yan Yean"
+      ]
+    },
+    {
+      "name": "South-Eastern Metropolitan",
+      "kind": "region",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-regions/south-eastern-metropolitan-region",
+      "districts": [
+        "Berwick",
+        "Carrum",
+        "Clarinda",
+        "Cranbourne",
+        "Dandenong",
+        "Frankston",
+        "Mordialloc",
+        "Mulgrave",
+        "Narre Warren North",
+        "Narre Warren South",
+        "Rowville"
+      ]
+    },
+    {
+      "name": "Southern Metropolitan",
+      "kind": "region",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-regions/southern-metropolitan-region",
+      "districts": [
+        "Albert Park",
+        "Ashwood",
+        "Bentleigh",
+        "Brighton",
+        "Caulfield",
+        "Hawthorn",
+        "Kew",
+        "Malvern",
+        "Oakleigh",
+        "Prahran",
+        "Sandringham"
+      ]
+    },
+    {
+      "name": "Western Metropolitan",
+      "kind": "region",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-regions/western-metropolitan-region",
+      "districts": [
+        "Footscray",
+        "Kororoit",
+        "Laverton",
+        "Niddrie",
+        "Point Cook",
+        "St Albans",
+        "Sunbury",
+        "Sydenham",
+        "Tarneit",
+        "Werribee",
+        "Williamstown"
+      ]
+    },
+    {
+      "name": "Western Victoria",
+      "kind": "region",
+      "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-regions/western-victoria-region",
+      "districts": [
+        "Bellarine",
+        "Eureka",
+        "Geelong",
+        "Lara",
+        "Lowan",
+        "Melton",
+        "Polwarth",
+        "Ripon",
+        "South Barwon",
+        "South-West Coast",
+        "Wendouree"
+      ]
+    }
+  ],
+  "boundaries": {
+    "summary": "The VEC identifies the October 2021 redivision as the latest state boundary review. It took effect on 1 November 2022. No 2025 state redivision or subsequent boundary change for 2026 is identified by these official sources.",
+    "created": [
+      "Ashwood",
+      "Berwick",
+      "Eureka",
+      "Glen Waverley",
+      "Greenvale",
+      "Kalkallo",
+      "Laverton",
+      "Pakenham",
+      "Point Cook"
+    ],
+    "abolished": [
+      "Altona",
+      "Buninyong",
+      "Burwood",
+      "Ferntree Gully",
+      "Forest Hill",
+      "Gembrook",
+      "Keysborough",
+      "Mount Waverley",
+      "Yuroke"
+    ]
+  }
+}

@@ -37,6 +37,8 @@ function harness(responses, env = {}) {
     ...passageText, ...helpers, Response, Request, URL, Date, AbortController, AbortSignal, TransformStream, TextEncoder,
     REFUSAL_PREFIXES: ['not enough data'], ASK_SYNC_TIMEOUT_MS: 1000, ASK_STALL_MS: 1000, ASK_RETRY_BUDGET_MS: 1000,
     SSE_HEADERS: { 'content-type': 'text/event-stream' },
+    // The donor privacy check and model budget are exercised in donor-privacy.test.mjs and model-budget.test.mjs.
+    questionNamesWithheldDonor: async () => false, readerTurns: () => [], withheldDonorAnswer: () => ({}), MODEL_BUDGET_HEADER: 'x-opax-model-budget', modelBudgetBusy: () => new Response(null, { status: 503 }), 
     rankedMoneyAnswer: async () => null, paidAnswer: async () => null, standaloneQuestion: async () => null, needsAskPeople: () => false, resolveAskScope: input => ({ input, scope: {} }),
     askCacheInput: () => null, cacheBypass: () => false, rateLimited: async () => null,
     retrieveAskRecords: async () => ({ records: [], coverage: '', total: 0 }),

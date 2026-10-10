@@ -1,0 +1,70 @@
+{
+  "year": 2026,
+  "updated": "2026-10-10",
+  "sources": [
+    {
+      "label": "APH 2026 sitting calendar (iCal)",
+      "url": "https://static.aph.gov.au/-/media/05_About_Parliament/58_Sitting_Calendars/2026/Parliamentary_Sittings_2026.ics?rev=3825198646d14809a1c5efdc4d57f804&hash=E294EB64C4E82FA28B75D99EE38E9104"
+    },
+    {
+      "label": "APH sitting calendar",
+      "url": "https://www.aph.gov.au/About_Parliament/Sitting_Calendar"
+    }
+  ],
+  "periods": [
+    {
+      "start": "2026-09-14",
+      "end": "2026-09-17",
+      "houses": [
+        "representatives",
+        "senate"
+      ],
+      "senate_cutoff": null,
+      "refresh_bills": false
+    },
+    {
+      "start": "2026-10-12",
+      "end": "2026-10-15",
+      "houses": [
+        "representatives",
+        "senate"
+      ],
+      "senate_cutoff": "2026-10-14",
+      "refresh_bills": true
+    },
+    {
+      "start": "2026-10-26",
+      "end": "2026-10-29",
+      "houses": [
+        "representatives"
+      ],
+      "senate_cutoff": null,
+      "refresh_bills": true,
+      "estimates": "2026-10"
+    },
+    {
+      "start": "2026-11-16",
+      "end": "2026-11-19",
+      "houses": [
+        "senate"
+      ],
+      "senate_cutoff": null,
+      "refresh_bills": true
+    },
+    {
+      "start": "2026-11-23",
+      "end": "2026-11-26",
+      "houses": [
+        "representatives",
+        "senate"
+      ],
+      "senate_cutoff": "2026-11-24",
+      "refresh_bills": true
+    }
+  ],
+  "calendar_fetch": {
+    "checked": "2026-10-10",
+    "status": 200,
+    "sha256": "8a70acf67467c5069b38596d43b24ecad0e30b4e002b7c7fbf4de39f5dd49a03"
+  }
+}

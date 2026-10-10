@@ -1,6 +1,8 @@
 import {CommunityError, text} from './community-core'
 import {CATALOG_KINDS} from './catalog-search'
 import {isReceiptGraph, moneyQuestion, receiptAnswer, receiptGraphForQuestion} from './voice-money'
+import {loadDonorIndex, questionNamesWithheldDonor, WITHHELD_DONOR_REPLY} from './donor-index'
+import {foldDonorName} from '../public/donor-entity.js'
 
 type Data = Record<string, unknown>
 export type PublicReader = (path: string) => Promise<Response>
@@ -70,6 +72,9 @@ function compact(value: unknown, budget = {left: 15_000}, depth = 0): unknown {
 
 export async function runVoiceTool(name: string, args: Data, env: Env, readPublic: PublicReader): Promise<Data> {
   const origin = env.COMMUNITY_ORIGIN
+  // A query naming a withheld donor gets one fixed reply before any lookup (src/donor-index.ts).
+  if (typeof args.query === 'string' && await questionNamesWithheldDonor(env.ASSETS, args.query))
+    return {source_notice: evidenceNotice, source_url: origin, sources: [], data: {answer: WITHHELD_DONOR_REPLY}}
   const asset = async (path: string, limit: number) => boundedJson(await env.ASSETS.fetch(new Request(origin + path)), limit)
   const receipts = async (query:string) => {
     if(/\b(?:grants?|contracts?|expenditure|expenses?|government spending|public funding)\b/i.test(query)) return null
@@ -126,8 +131,11 @@ export async function runVoiceTool(name: string, args: Data, env: Env, readPubli
     const found=await receipts(query)
     if(found) return found
     const index = await asset('/evidence/index.json', 8_000_000)
+    // A connection named for a withheld individual donor is not returned (public/donor-entity.js).
+    const donors = await loadDonorIndex(env.ASSETS).catch(() => null)
+    if (!donors) throw new CommunityError(503, 'Connection records are unavailable.')
     url = origin + '/connections'
-    data = {coverage: index.meta, connections: rows(index, 'entities').filter(e => typeof e.name === 'string' && e.name.toLowerCase().includes(query)).slice(0, 10).map(e => ({...e, opax_url: url + '?entity=' + encodeURIComponent(String(e.id))}))}
+    data = {coverage: index.meta, connections: rows(index, 'entities').filter(e => typeof e.name === 'string' && e.name.toLowerCase().includes(query) && !donors.withheld.has(foldDonorName(e.name))).slice(0, 10).map(e => ({...e, opax_url: url + '?entity=' + encodeURIComponent(String(e.id))}))}
   } else if (name === 'corpus_coverage') {
     data = await asset('/corpus.json', 100_000)
     url = origin + '/reports'

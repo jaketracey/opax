@@ -46,7 +46,9 @@ def projection(db, identities):
                 or jur != division[5] or not re.fullmatch(r"\d{4}-\d\d-\d\d", (division[3] or "")[:10]) \
                 or not re.match(r"https?://", division[4] or ""):
             continue
-        key = str(pid) if jur == "federal" and pid is not None else f"{jur}:{slugify(pkey)}"
+        # Unified federal votes scope the legacy TVFY person ID as tvfy_<id>;
+        # mobile schema 1 retains the original numeric-string key.
+        key = str(pid).removeprefix("tvfy_") if jur == "federal" and pid is not None else f"{jur}:{slugify(pkey)}"
         person = people.get(key)
         if not person or person["jurisdiction"] != jur or person["name"].casefold() != (name or "").casefold():
             candidates = by_name.get((jur, (name or "").casefold()), [])

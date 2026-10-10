@@ -6,7 +6,7 @@ let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels, source lines and ⋯ (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = import("/growth-modules.js?v=4987326170").then(module => { growthModules = module; });
+const growthModulesReady = import("/growth-modules.js?v=2f10ab9729").then(module => { growthModules = module; });
 let uiLabels;
 const uiLabelsReady = import('/labels.js?v=804befe8de').then(module => { uiLabels = module; });
 let attributionHelpers;
@@ -1584,7 +1584,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=07870ca572");
+    const module = await import("/suppliers.js?v=f8359457f7");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -3605,7 +3605,7 @@ async function linkBillSponsors(root, bill) {
     a.textContent = person.name;
     printed.replaceWith(a);
   }
-  appendGrowthQuestions(root, growthModules.billQuestions(bill, person ? [person] : []), "bill");
+  appendGrowthQuestions(root, growthModules.billQuestions(bill, person ? [person] : [],bill.modulePrivacy), "bill",bill.modulePrivacy);
   root.querySelector(".growth-ask")?.setAttribute("data-questions-ready", "true");
 }
 function loadPersonSlugs() {
@@ -3656,8 +3656,8 @@ function partyMapForRoster(roster) {
   return map;
 }
 
-function declaredTieHTML(ties) {
-  ties = growthModules.publicOrganisationTies(Array.isArray(ties) ? ties : []);
+function declaredTieHTML(ties, privacy) {
+  ties = growthModules.publicOrganisationTies(Array.isArray(ties) ? ties : [],privacy);
   if (!ties.length) return "";
   return `<p class="declared-match">Name match: ${ties.map((tie) => {
     const kinds = Array.isArray(tie.kinds) ? tie.kinds : [tie.kind];
@@ -3816,7 +3816,7 @@ async function renderPersonInterests(name, personId, sections, onRecord = () => 
   const lname = String(name || "").trim().toLowerCase();
   const id = personId && index?.people?.[personId] ? personId : index?._by_name?.[lname];
   if (!id || !/^[\w-]+$/.test(id)) { slot.remove(); return; }
-  const data = await getJSON(`/interests/${encodeURIComponent(id)}.json`);
+  const [data,privacy] = await Promise.all([getJSON(`/interests/${encodeURIComponent(id)}.json`),growthModules.loadModulePrivacy("person",growthModules.normalisedName(name))]);
   if (currentSubjectKey !== key) return;
   if (!data?.total || !data.buckets) { slot.remove(); return; }
   onRecord({interests: data});
@@ -3845,7 +3845,7 @@ async function renderPersonInterests(name, personId, sections, onRecord = () => 
   const hasHolders = buckets.some((b) => (data.buckets[b].items || []).some((it) => HOLDER[it.holder]));
   const register = `${REGISTER[data.chamber] || "Register of interests"}${data.parliament ? `, ${ordinal(Number(data.parliament))} Parliament` : ""}${data.as_at ? `, as at ${esc(fmtDate(data.as_at))}` : ""}`;
 
-  const ties = growthModules.publicOrganisationTies(Array.isArray(data.ties) ? data.ties : []);
+  const ties = growthModules.publicOrganisationTies(Array.isArray(data.ties) ? data.ties : [],privacy);
   const tiesByOrg = new Map();
   for (const tie of ties) {
     const org = String(tie.organisation || "").trim();
@@ -3927,7 +3927,8 @@ async function renderPersonInterests(name, personId, sections, onRecord = () => 
       ${meta ? `<span class="result-meta">${meta}</span>` : ""}</li>`;
   };
   const rows = buckets.map((b) => {
-    const { count, items = [] } = data.buckets[b];
+    const { count, items: recordedItems = [] } = data.buckets[b];
+    const items = recordedItems.filter(it=>!privacy(it.description));
     return `<li><details class="chat-sources interests-bucket">
       <summary>${esc(LABELS[b])}<span class="interests-count">${num(count)}</span></summary>
       <ol class="source-list interests-items${hasHolders ? " interests-holders" : ""}">${items.map(itemHTML).join("")}</ol>
@@ -5113,7 +5114,9 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
   const jurs = [...new Set(recs.map((r) => r.jurisdiction).filter(Boolean))];
   const jurName = (j) => STATE_NAMES[j] || String(j || "").toUpperCase();
   const all = recs.flatMap(r => ["for", "against"].flatMap(field => (r[field] || []).map(d => ({...d, jur: d.jur || r.jurisdiction, vote: field === "for" ? "Voted for" : "Voted against"}))));
-  const latestBills = growthModules.latestBillVotes(all);
+  const privacy = await growthModules.loadModulePrivacy("person",growthModules.normalisedName(name));
+  if (currentSubjectKey !== key) return;
+  const latestBills = growthModules.latestBillVotes(all).filter(d=>!privacy(d.name));
   const billIndex = await loadBillsIndex().catch(() => null);
   if (currentSubjectKey !== key || !slot.isConnected) return;
   onRecord({votes: latestBills, bills: billIndex?.bills || []});
@@ -5362,8 +5365,10 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     if (node.label && node.label !== name) {
       setCrumbs([{ label: isParty ? "Parties" : "Donors", href: `/subject/${node.kind}` }, { label: node.label }]);
     }
+    const donorPrivacy = growthModules.approvedModulePrivacy(await growthModules.loadModuleDonors());
+    if (currentSubjectKey !== key) return;
     const flows = moneyData.edges.filter((e) => (isParty ? e.target : e.source) === node.id)
-      .filter(e => !isParty || growthModules.isOrganisationDonor(moneyData.nodes.find(n => n.id === e.source)));
+      .filter(e => !isParty || (()=>{const donor=moneyData.nodes.find(n => n.id === e.source);return growthModules.isOrganisationDonor(donor) && !donorPrivacy(donor.label)})());
     const counter = new Map();
     for (const e of flows) {
       const other = String(isParty ? e.source : e.target).replace(/^(donor|party):/, "");
@@ -5629,12 +5634,14 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       ], "More about this person")}
     </div>`);
   const promptName = roster?.full || name;
-  head.insertAdjacentHTML("afterend", growthModules.askBlockHTML({name: promptName, pageType: "person", seed: `What has ${promptName} said in parliament?`}));
-  const askRecord = {name: promptName};
+  const privacy = await growthModules.loadModulePrivacy("person",growthModules.normalisedName(roster?.name || name));
+  if (currentSubjectKey !== key) return;
+  head.insertAdjacentHTML("afterend", growthModules.askBlockHTML({name: promptName, pageType: "person", seed: `What has ${promptName} said in parliament?`,privacy}));
+  const askRecord = {name: promptName,privacy};
   const updateQuestions = (record) => {
     if (currentSubjectKey !== key) return;
     Object.assign(askRecord, record);
-    appendGrowthQuestions(body, growthModules.personQuestions(askRecord), "person");
+    appendGrowthQuestions(body, growthModules.personQuestions(askRecord), "person",privacy);
   };
   wireGrowthAsk(body);
   const fitsRow = fitsInfoRow(fits, "people", name);
@@ -5651,7 +5658,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   Promise.allSettled([topicQuestions, voteQuestions, interestQuestions]).then(() => {
     if (currentSubjectKey === key) body.querySelector(".growth-ask")?.setAttribute("data-questions-ready", "true");
   });
-  renderPersonSpeeches(speechSpeaker, speeches, chambers, sections, { scope: speechScope }).then(() => refreshEntryRail(sections));
+  renderPersonSpeeches(speechSpeaker, speeches, chambers, sections, { scope: speechScope, privacy }).then(() => refreshEntryRail(sections));
   renderPersonDiary(name, sections, chambers).then(() => { polishPersonSections(sections); refreshEntryRail(sections); });
   const news = document.createElement("section");
   sections.appendChild(news);
@@ -5687,7 +5694,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   refreshEntryRail(sections);
 }
 
-function appendGrowthQuestions(root, questions, pageType) {
+function appendGrowthQuestions(root, questions, pageType,privacy) {
   const list = root.querySelector(".growth-questions");
   if (!list) return;
   const field = root.querySelector('#growth-ask-input');
@@ -5698,7 +5705,7 @@ function appendGrowthQuestions(root, questions, pageType) {
   for (const question of questions) {
     if (seen.has(key(question.question))) continue;
     seen.add(key(question.question));
-    list.insertAdjacentHTML("beforeend", growthModules.questionsHTML([question], pageType));
+    list.insertAdjacentHTML("beforeend", growthModules.questionsHTML([question], pageType,"",privacy));
   }
 }
 
@@ -5855,9 +5862,10 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
   // A row is a brief (OPAX's words, in sans) or a passage (the record's, in
   // the serif); the list carries one machine label at its head while any row
   // is a brief, and each row says which it is to a screen reader.
-  const rowText = (brief, r) => brief
+  const safeText = value => opts.privacy?.(value) ? "" : value;
+  const rowText = (brief, r) => safeText(brief)
     ? `<span class="visually-hidden">Machine-written brief: </span><span class="person-speech-text is-brief">${esc(brief)}</span>`
-    : `<span class="visually-hidden">From the record: </span><span class="person-speech-text">${esc(cleanPassage(r.snippet) || "Open the speech to read the record.")}</span>`;
+    : `<span class="visually-hidden">From the record: </span><span class="person-speech-text">${esc(safeText(r.snippet) && cleanPassage(r.snippet) || "Open the speech to read the record.")}</span>`;
   const machine = () => machineLabelHTML({ className: "person-speeches-machine",
     note: "Rows set in this type are briefs written by a model from each speech; rows in the record's serif are passages from the speech itself. A brief is not part of the record: open the speech to read what was said." });
   const paint = (briefs) => {
@@ -5868,7 +5876,7 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
         const where = chambers.length > 1 && r.state ? ` · ${STATE_NAMES[r.state] || r.state}` : "";
         return `<li><a class="person-speech-link" href="/doc/${esc(r.slug)}">
           <time datetime="${esc(String(r.date || "").slice(0, 10))}">${esc(r.date ? fmtDate(r.date) : "Undated")}${esc(where)}</time>
-          <span class="person-speech-body"><span class="speech-debate">${esc(titleSubject(r) || (opts.evidence ? "Evidence" : "Speech"))}</span>
+          <span class="person-speech-body"><span class="speech-debate">${esc(safeText(titleSubject(r)) || (opts.evidence ? "Evidence" : "Speech"))}</span>
             ${rowText(brief, r)}
           </span></a></li>`;
       }).join("")}</ul>
@@ -5889,7 +5897,7 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
   // Preserve existing links and keyboard focus while optional briefs arrive.
   slot.querySelectorAll(".person-speech-link").forEach((link, index) => {
     const brief = briefs[newest[index].resource];
-    if (typeof brief !== "string" || !brief.trim()) return;
+    if (typeof brief !== "string" || !brief.trim() || !safeText(brief.trim())) return;
     const body = link.querySelector(".person-speech-body");
     body.querySelector(".visually-hidden")?.remove();
     body.querySelector(".person-speech-text").remove();
@@ -7894,6 +7902,19 @@ async function openBillsIndex(params, manageFocus) {
     row: billRowHTML,
     fineprint: BILLS_FINEPRINT,
   });
+  const [hubs, helper] = await Promise.all([
+    fetch('/hubs/index.json').then(r => r.ok ? r.json() : null).catch(() => null),
+    import('/hubs-data.js?v=20261010'),
+  ]);
+  if (billView === 'index' && hubs && !body.querySelector('[data-sitting-week]')) {
+    const entry = document.createElement('p');
+    const link = document.createElement('a');
+    link.dataset.sittingWeek = '';
+    link.href = helper.currentSittingPath(hubs.weeks,helper.sydneyDay());
+    link.textContent = 'This sitting week';
+    entry.append(link);
+    body.querySelector('.subject-head')?.append(entry);
+  }
 }
 
 /* The timeline. A bill's dates sit inside months, not decades, so the ruler is
@@ -8176,6 +8197,10 @@ const billParty = (p) => BILL_PARTY_LABELS[String(p || "").trim()] || billPartyN
    status label, so ayes and noes read at a glance; the question and the
    smaller parties sit behind one disclosure. */
 function billDivisionHTML(d, bill) {
+  const privacy = bill.modulePrivacy || (() => true);
+  // Keep the dated counts when descriptive text cannot be approved.
+  d = {...d, title: privacy(d.title) ? "" : d.title, question: privacy(d.question) ? "" : d.question,
+    party_splits: Object.fromEntries(Object.entries(d.party_splits || {}).filter(([party]) => !privacy(party)))};
   const ayes = Number(d.ayes) || 0, noes = Number(d.noes) || 0;
   const target = billDivisionHref(d);
   const recorded = String(d.title || "").trim();
@@ -8252,7 +8277,9 @@ function billDivisionsHTML(bill) {
 const BILL_SPEECH_BRIEF_NOTE = "Each brief under a name was written by a model from that speech. It is not part of the record: open the speech to read what was said.";
 
 function billSpeechesHTML(bill) {
-  const speeches = (bill.speeches || []).filter((s) => s?.slug);
+  const privacy = bill.modulePrivacy || (() => true);
+  const speeches = (bill.speeches || []).filter((s) => s?.slug && !privacy(s.speaker, s.party))
+    .map(s => ({...s, brief: privacy(s.brief) ? "" : s.brief}));
   if (!speeches.length) {
     return `<section class="bill-section"><h3 class="subject-section-title">What was said</h3>
       <p class="status">No speeches linked to this bill yet.</p></section>`;
@@ -8316,7 +8343,7 @@ function billActsHTML(bill) {
    opens what wrote it, from what), and one source line with the official
    documents it was written from. No card around it (principle 2). */
 function billSummaryHTML(bill) {
-  const s = bill.summary;
+  const s = growthModules.approvedBillSummary(bill.summary, bill.modulePrivacy);
   const originals = billOriginals(bill.sources);
   if (!s) {
     return `<section class="bill-section bill-summary bill-summary-empty" data-accent="bills" aria-labelledby="bill-summary-head">
@@ -8404,6 +8431,8 @@ async function openBill(key, manageFocus) {
     setCrumbs([{ label: "Bills", href: "/bills" }, { label: "Not found" }]);
     return;
   }
+  bill.modulePrivacy = await growthModules.loadModulePrivacy("bill",bill.key);
+  if (billView !== view || generation !== billTextGeneration) return;
   const title = bill.title || bill.short_title || key;
   // Landed here from outside: keep the Worker's search title (see BOOT_META).
   // Otherwise the same rule as seo-titles.ts billTitle(): the full official
@@ -8454,7 +8483,7 @@ async function openBill(key, manageFocus) {
       ${billRelatedHTML(bill)}
       ${actions}
     </div>
-    ${growthModules.askBlockHTML({bill, pageType: "bill", questions: growthModules.billQuestions(bill)})}
+    ${growthModules.askBlockHTML({bill, pageType: "bill", questions: growthModules.billQuestions(bill,[],bill.modulePrivacy),privacy:bill.modulePrivacy})}
     ${billSummaryHTML(bill)}
     <div id="bill-text-slot"><div class="answer-skeleton bill-text-skeleton" aria-hidden="true"><i style="width:65%"></i><i style="width:95%"></i><i style="width:78%"></i></div><p class="visually-hidden" role="status">Checking published bill text</p></div>
     ${billTimelineHTML(bill)}
@@ -8555,17 +8584,20 @@ async function fillBillPeek(details, entry) {
   }
   const bill = await loadBill(entry.key);
   if (!box.isConnected) return;
-  const sentences = (bill?.summary?.sentences || []).filter(Boolean);
+  const privacy = await growthModules.loadModulePrivacy("bill", entry.key);
+  if (!box.isConnected) return;
+  const summary = growthModules.approvedBillSummary(bill?.summary, privacy);
+  const sentences = summary?.sentences || [];
   if (!sentences.length) {
     box.innerHTML = `<p class="bill-peek-line">${esc(billStatusLine(entry))}. No summary yet.</p>${foot}`;
     return;
   }
   box.innerHTML = `
-    <div class="bill-peek-head">${machineLabelHTML({ note: `${bill.summary.attribution
+    <div class="bill-peek-head">${machineLabelHTML({ note: `${summary.attribution
       || "Written by a model from the explanatory memorandum; not the record"}.` })}</div>
-    ${growthModules.summaryWrittenHTML(bill.summary)}
+    ${growthModules.summaryWrittenHTML(summary)}
     <div class="bill-sentences">${sentences.map((t) => `<p>${esc(t)}</p>`).join("")}</div>
-    <p class="fineprint">${esc(bill.summary.attribution
+    <p class="fineprint">${esc(summary.attribution
       || "Written by a model from the explanatory memorandum; not the record")}. ${esc(billStatusLine(entry))}.</p>
     ${foot}`;
 }

@@ -46,6 +46,13 @@ class RecentVotesTests(unittest.TestCase):
         identities = self.identities(); identities['123']['name'] = 'Another Member'
         self.assertEqual(R.projection(self.fixture(), identities)['people'], {})
 
+    def test_scoped_federal_id_resolves_even_when_names_are_ambiguous(self):
+        db = self.fixture()
+        db.execute("UPDATE ext_votes SET person_id='tvfy_123'")
+        identities = self.identities()
+        identities['456'] = dict(identities['123'])
+        self.assertEqual(len(R.projection(db, identities)['people']['123']['recent']), 10)
+
     def test_unknown_source_or_date_and_conflicting_votes_are_omitted(self):
         db = self.fixture()
         db.execute("UPDATE ext_divisions SET source_url=NULL WHERE id='federal-senate-12'")

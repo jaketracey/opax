@@ -7,7 +7,43 @@ type Snapshot = [string, string][];
 interface Job { epoch: string; urls: string; cursor: number; complete: number }
 type IndexNowEnv = Pick<Env, 'ASSETS' | 'COMMUNITY_DB' | 'CACHE_EPOCH'> & {
   INDEXNOW_ENABLED?: string; INDEXNOW_DRY_RUN?: string; STAGING_API?: Fetcher;
+  /** Optional private secret: one-off donor paths to re-crawl (see extraUrls). */
+  INDEXNOW_EXTRA_PATHS?: string;
 };
+const DONOR_PREFIX = '/subject/donor/';
+// One path segment as sent: unreserved and sub-delimiter characters and %-escapes only.
+const SEGMENT = /^(?:[A-Za-z0-9\-._~!$&'()*+,;=:@]|%[0-9A-Fa-f]{2})+$/;
+
+/**
+ * The canonical `/subject/donor/<one segment>` path for a path or opax.com.au URL,
+ * or null. The segment is decoded (a malformed escape fails), and the decoded
+ * name must still be one plain segment: no slash or backslash, no dot segment, no
+ * query, fragment, percent sign (double encoding) or control character. The
+ * result is re-encoded as the sitemap encodes a donor name.
+ */
+export function donorPath(raw: string): string | null {
+  const path = raw.startsWith(INDEXNOW_ORIGIN + '/') ? raw.slice(INDEXNOW_ORIGIN.length) : raw;
+  if (!path.startsWith(DONOR_PREFIX)) return null;
+  const segment = path.slice(DONOR_PREFIX.length);
+  if (!SEGMENT.test(segment)) return null;
+  let name: string;
+  try { name = decodeURIComponent(segment); } catch { return null; }
+  if (!name.trim() || name === '.' || name === '..' || /[/\\?#%\u0000-\u001f\u007f]/.test(name)) return null;
+  return DONOR_PREFIX + encodeURIComponent(name);
+}
+
+/**
+ * One-off donor pages to re-crawl with the next epoch's job, from the private
+ * INDEXNOW_EXTRA_PATHS secret (whitespace-separated paths or opax.com.au URLs).
+ * Donor pages made noindex by the October 2026 privacy hotfix are pinged so
+ * engines see the noindex, without naming anyone in the public crawl assets
+ * (/crawl/indexnow.json is served). Only valid donor paths are taken (donorPath),
+ * in canonical form; at most 1,000.
+ */
+export function extraUrls(list = ''): string[] {
+  return [...new Set(list.split(/\s+/).filter(Boolean).map(donorPath).filter((path): path is string => path !== null))]
+    .slice(0, 1000).map(path => INDEXNOW_ORIGIN + path);
+}
 
 export function changedUrls(entries: Snapshot, previous: Snapshot = []): string[] {
   const before = new Map(previous);
@@ -20,7 +56,9 @@ export function changedUrls(entries: Snapshot, previous: Snapshot = []): string[
 export function indexNowPayloads(urls: string[], size = INDEXNOW_BATCH_SIZE) {
   if (!Number.isInteger(size) || size < 1 || size > 10_000) throw new Error('Invalid IndexNow batch size');
   const eligible = [...new Set(urls)].filter(raw => {
-    try { const u = new URL(raw); return u.origin === INDEXNOW_ORIGIN && !u.search && !u.hash && changedUrls([[u.pathname,'current']]).length > 0; } catch { return false; }
+    // Exactly as sent: a URL the parser would rewrite (dot segments, backslashes) is refused.
+    if (raw.startsWith(INDEXNOW_ORIGIN + DONOR_PREFIX)) return raw === INDEXNOW_ORIGIN + donorPath(raw);
+    try { const u = new URL(raw); return u.href === raw && u.origin === INDEXNOW_ORIGIN && !u.search && !u.hash && changedUrls([[u.pathname,'current']]).length > 0; } catch { return false; }
   }).sort();
   return Array.from({length:Math.ceil(eligible.length / size)},(_,i) => ({
     host: 'opax.com.au', key: INDEXNOW_KEY, keyLocation: `${INDEXNOW_ORIGIN}/${INDEXNOW_KEY}.txt`, urlList: eligible.slice(i * size,(i+1)*size),
@@ -42,7 +80,9 @@ export async function runIndexNow(env: IndexNowEnv, now = Date.now(), send: type
       if (!response.ok) throw new Error(`manifest ${response.status}`);
       const {entries} = await response.json<{entries:Snapshot}>();
       const baseline = await db.prepare('SELECT entries FROM indexnow_snapshots WHERE epoch = (SELECT epoch FROM indexnow_jobs WHERE complete = 1 ORDER BY finished_at DESC LIMIT 1)').first<{entries:string}>();
-      const urls = changedUrls(entries,baseline ? JSON.parse(baseline.entries) as Snapshot : []);
+      const extra = extraUrls(env.INDEXNOW_EXTRA_PATHS);
+      const urls = [...new Set([...changedUrls(entries,baseline ? JSON.parse(baseline.entries) as Snapshot : []), ...extra])].sort();
+      if (extra.length) log('indexnow_extra',{urls:extra.length});
       if (env.INDEXNOW_DRY_RUN === 'true') {
         log('indexnow_dry_run',{urls:urls.length,batches:indexNowPayloads(urls).length});
         return; // no external request, journal, lease or baseline advancement

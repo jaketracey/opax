@@ -1,4 +1,8 @@
 interface Env {
+  /** Publication waits for Jake's election authorisation decision. Exact "true" only. */
+  VIC_ELECTION_HUB_ENABLED?: string
+  AUTHORISATION_LINE?: string
+  CORRECTION_CONTACT?: string
   /** Minimum native app version; absent/invalid defaults to 0.0.0 (never blocks). Raising it is Jake's deliberate update lever. */
   APP_MINIMUM_VERSION?: string
   /** HMAC-SHA-256 key for sign-in and member-bound deletion codes. Separate Worker secret in each environment. */

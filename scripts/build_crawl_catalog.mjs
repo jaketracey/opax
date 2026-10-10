@@ -8,7 +8,8 @@ import { personNameKey } from '../portal/public/canonical-urls.js';
 import { splitSpeakers } from '../portal/public/speech-attribution.js';
 import { TOPIC_NAMES } from '../portal/src/topic-names.mjs';
 import { fileKey } from '../portal/public/grants.js';
-import { isOrganisationDonor } from '../portal/public/donor-entity.js';
+import { donorPrivacyIndex, donorNameWithheld, foldDonorName } from '../portal/public/donor-entity.js';
+import { renderPersonAnswer, INTEREST_OMITTED_MARK } from '../portal/src/seo-content.ts';
 
 import { catalogueComplete, unpack } from '../portal/public/instruments.js';
 import { auditComplete } from '../portal/public/audit.js';
@@ -72,6 +73,9 @@ OPAX code is AGPL-3.0. Source data retains its own terms: parliamentary material
 - [Parties](${ORIGIN}/subject/party): \`/subject/party/{slug}\`; disclosed funding and parliamentary records.
 - [Electorates](${ORIGIN}/subject/electorate): \`/subject/electorate/{slug}\`; jurisdiction-specific seat records.
 - [Bills](${ORIGIN}/bills): \`/bill/{bill-key}\`; stages, original bill text and linked divisions.
+- [Sitting weeks](${ORIGIN}/sitting): Sitting dates, introduced bills, divisions and sourced Senate cut-off dates.
+- [12–15 October sitting week](${ORIGIN}/sitting/2026-10-12): Calendar and published records for this period.
+- [Supplementary Budget Estimates](${ORIGIN}/estimates/2026-10): 26–29 October 2026; committee dates, portfolio agencies and recent contract and grant awards. Portfolio lists are not confirmed appearances while programs remain unpublished. No donor records.
 ${catalogueComplete(instruments) ? '- [Federal legislative instruments](' + ORIGIN + '/instruments): \`/instrument/{frl-id}\`; metadata only, with dates and links to authoritative FRL versions. No model summaries or person entities.\n' : ''}
 ${auditComplete(audit) ? '- [Queensland audit reports](' + ORIGIN + '/audit): \`/audit/{report-id}\`; report index and numbered HTML recommendations, QAO source text under CC BY 4.0 with State of Queensland attribution. Per-report exceptions withhold bodies. PDF bodies, entity responses and the app surface are phase 2.\n' : ''}
 - [Divisions and source records](${ORIGIN}/ask): \`/doc/division-{division-key}\` for votes; \`/doc/{resource-slug}\` for speeches and other source records.
@@ -119,6 +123,13 @@ export function addAuditDiscovery(groups, manifest) {
   groups.static.push({path:'/audit', lastmod:exportDate(manifest.generated_at)});
 }
 
+/** Donor names linked from a person page's "Donors to their party" block, in page order. */
+export function namedDonors(html) {
+  const block = html.split('<h2>Donors to their party</h2>')[1]?.split('<h2>Bills sponsored</h2>')[0] || '';
+  const unescape = s => s.replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+  return [...block.matchAll(/href="\/subject\/donor\/([^"]+)"/g)].map(m => decodeURIComponent(unescape(m[1])));
+}
+
 export async function buildCrawl(root) {
   const read = async p => JSON.parse(await readFile(join(root,p.replace(/^\//,'')), 'utf8'));
   const optional = async p => { try { return await read(p); } catch (e) { if (e.code === 'ENOENT') return null; throw e; } };
@@ -126,6 +137,7 @@ export async function buildCrawl(root) {
     read('parliamentarians.json'), read('electorates/manifest.json'), read('bills/index.json'), read('suppliers.json'), read('agencies.json'), read('reports/index.json'), read('corpus.json'), read('votes.json'), optional('graph/campaigners.json')
   ]);
   const [seats, seatPeople] = await Promise.all([read(seatManifest.index_url), read(seatManifest.people_url)]);
+  const hubs = await optional('hubs/index.json');
   const people = [...roster.people];
   const known = new Set(people.flatMap(p => [p.name,...splitSpeakers(p)].map(personNameKey)));
   for (const p of seatPeople.people) {
@@ -149,6 +161,11 @@ export async function buildCrawl(root) {
     groups[type].push({path,lastmod,...(priority != null ? {priority} : {})});
   };
   const snapshot = new Map();
+  if (hubs) {
+    groups.hubs = hubs.pages;
+    fallbacks.hubs = 0;
+    for (const page of hubs.pages) snapshot.set(page.path,hash(page.path.startsWith('/estimates/') ? await read(`hubs/estimates-${page.path.split('/').at(-1)}.json`) : page.path === '/sitting' ? hubs : hubs.weeks.find(w => page.path === `/sitting/${w.start}`)));
+  }
   const instruments = await optional('instruments/manifest.json').catch(() => null);
   addInstrumentDiscovery(groups, instruments);
   if(groups.instruments) {
@@ -171,6 +188,8 @@ export async function buildCrawl(root) {
   addAuditDiscovery(groups, audit);
   if(groups.audit) { fallbacks.audit=groups.audit.length; fallbacks.static++; } // audit pages use the export snapshot until per-report tabled dates are read
   const slugs = slugIndex(people).slugOf;
+  const assets = new Map();
+  const cachedRead = p => { if (!assets.has(p)) assets.set(p, read(p)); return assets.get(p); };
   const peopleDate = [roster.meta.generated,roster.meta.representation?.updated,seatManifest.generated].filter(Boolean).sort().at(-1);
   const recent=await optional('seo/recent-votes.json');
   for (const p of people) {
@@ -179,16 +198,24 @@ export async function buildCrawl(root) {
     const interest = p.pid ? await optional(`interests/${p.pid}.json`) : null;
     const record=votes[p.pid];
     add('people',path,latestDate([p.last_changed_at,p.updated_at,p.last_speech_date,interest?.as_at,...Object.values(interest?.buckets || {}).flatMap(b=>b.items?.map(i=>i.date) || []),...(record?.for || []).map(v=>v.date),...(record?.against || []).map(v=>v.date),...(recent?.people?.[p.pid]?.recent || []).map(v=>v.date),p.rosterOnly?.asOf],peopleDate),undefined,peopleDate);
-    snapshot.set(path,hash({person:p,votes:votes[p.pid] || null,interest}));
+    // A person page's fingerprint carries the donor names its "Donors to their party"
+    // block shows, so any change in who is named re-pings it and nothing else in that
+    // block does; and whether a declared-interest entry is left out (a withheld donor).
+    // A page naming no donors keeps the plain fingerprint.
+    const base = {person:p,votes:votes[p.pid] || null,interest};
+    const html = (p.party_now || p.party || interest) ? (await renderPersonAnswer(p,cachedRead,slugs)).html : '';
+    const named = namedDonors(html);
+    snapshot.set(path,hash({...base,...(named.length ? {donors:named} : {}),...(html.includes(INTEREST_OMITTED_MARK) ? {interestsWithheld:true} : {})}));
   }
   const partyLabels = new Map(), donors = new Map();
+  // Individual donors stay out of the sitemap, as individual grant recipients do.
+  // The industry tag does not say who is a person: public/donor-entity.js.
+  const donorIndex = donorPrivacyIndex((await Promise.all(['money.json','money.qld.json','money.vic.json','money.tas.json'].map(name => optional(`graph/${name}`)))).filter(Boolean));
   for (const name of ['money.json','money.qld.json','money.vic.json']) {
     const money = await read(`graph/${name}`);
     for (const n of money.nodes) {
       if (!validId(n.label)) continue;
-      // Individual donors stay out of the sitemap, as individual grant recipients do.
-      // The industry tag does not say who is a person: public/donor-entity.js.
-      if (n.kind === 'donor' && !isOrganisationDonor(n)) continue;
+      if (n.kind === 'donor' && donorNameWithheld(donorIndex, n.label)) continue;
       const map = n.kind === 'party' ? partyLabels : n.kind === 'donor' ? donors : null;
       if (map && !map.has(fold(n.label))) map.set(fold(n.label),{label:n.label,date:money.meta.generated});
     }
@@ -249,7 +276,8 @@ export async function buildCrawl(root) {
     add('agencies',`/subject/agency/${encodeURIComponent(a.id)}`,latestDate([profile.updated_at,...(profile.contracts || []).flatMap(c=>[c.published,c.start_date])],agencies.meta.generated_at),undefined,agencies.meta.generated_at);
   }
   const campaignerNames = new Map();
-  for (const c of campaigners?.entities || []) if (validId(c.name) && c.name.length <= 200) {
+  // A campaigner registered under a withheld donor's name is noindex and unlisted.
+  for (const c of campaigners?.entities || []) if (validId(c.name) && c.name.length <= 200 && !donorIndex.withheld.has(foldDonorName(c.name))) {
     const previous = campaignerNames.get(fold(c.name));
     if (!previous || (c.years?.length || 0) > (previous.years?.length || 0)) campaignerNames.set(fold(c.name),c);
   }

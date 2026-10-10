@@ -9,7 +9,7 @@ import {cleanEvent,safePath} from '../analytics/privacy.mjs';
 const read=f=>readFileSync(new URL(f,import.meta.url),'utf8');
 const app=read('../public/app.js');
 const json=f=>JSON.parse(read(f));
-const roslyn={id:'donor:roslyn packer',kind:'donor',label:'Roslyn Packer',industry:'media'};
+const roslyn={id:'donor:fixture-person',kind:'donor',label:'Quillon Fixturewright',industry:'media'};
 const company={id:'donor:acme',kind:'donor',label:'Acme Pty Ltd'};
 test('donor privacy uses entity evidence, never industry, including ABN sole traders',()=>{
  assert.equal(isOrganisationDonor(roslyn),false);
@@ -28,11 +28,11 @@ test('individual donor fixture is absent from rendered person interests and supp
  const record={total:1,buckets:{gifts:{count:1,items:[]}},ties};
  const esc=s=>String(s??'').replaceAll('&','&amp;').replaceAll('<','&lt;');
  const {renderPersonInterests}=runInNewContext(code+';({renderPersonInterests})',{
-  growthModules,currentSubjectKey:'person',document:{createElement:()=>({dataset:{},remove(){}})},fetch:async url=>({ok:true,json:async()=>url==='/interests/index.json'?{people:{fixture:{}}}:record}),
+  growthModules:{...growthModules,loadModulePrivacy:async()=>()=>false},currentSubjectKey:'person',document:{createElement:()=>({dataset:{},remove(){}})},fetch:async url=>({ok:true,json:async()=>url==='/interests/index.json'?{people:{fixture:{}}}:record}),
   esc,safeUrl:()=>'',fmtDate:String,fmtMoney:String,industryLabel:String,partyDotHTML:()=>'',entityHrefAttr:href=>`href="${href}"`,subjectHash:(kind,name)=>`/subject/${kind}/${name}`,sourceLineHTML:()=>'<details class="ui-source"></details>',
  });
  await renderPersonInterests('Example','fixture',{appendChild:slot=>slots.push(slot)});
- assert.doesNotMatch(slots[0].innerHTML,/Roslyn Packer|Private Party/);
+ assert.doesNotMatch(slots[0].innerHTML,/Quillon Fixturewright|Private Party/);
  assert.match(slots[0].innerHTML,/Acme Pty Ltd|Disclosed money records/);
  assert.ok(slots[0].innerHTML.includes(growthModules.ASSOCIATION_NOTE));
  const prior=globalThis.fetch,calls=[];
@@ -52,7 +52,7 @@ test('model previews expose the written date separately from bill status',async(
  const code=app.slice(app.indexOf('async function fillBillPeek('),app.indexOf('/* --- bills on the party page'));
  const body={isConnected:true};
  const bill={summary:{generated_at:'2026-10-08T12:00:00Z',sentences:['Fixture model text.']}};
- const {fillBillPeek}=runInNewContext(code+';({fillBillPeek})',{growthModules,loadBill:async()=>bill,billHash:k=>'/bill/'+k,entityHrefAttr:h=>`href="${h}"`,iconSvg:()=>'',esc:String,billStatusLine:()=> 'Passed, status as at 9 Oct 2026',machineLabelHTML:()=>'<span>Machine-written</span>'});
+ const {fillBillPeek}=runInNewContext(code+';({fillBillPeek})',{growthModules:{...growthModules,loadModulePrivacy:async()=>()=>false},loadBill:async()=>bill,billHash:k=>'/bill/'+k,entityHrefAttr:h=>`href="${h}"`,iconSvg:()=>'',esc:String,billStatusLine:()=> 'Passed, status as at 9 Oct 2026',machineLabelHTML:()=>'<span>Machine-written</span>'});
  await fillBillPeek({querySelector:()=>body},{key:'test',has_summary:true});
  assert.match(body.innerHTML,/Machine-written/);assert.match(body.innerHTML,/Summary written <time datetime="2026-10-08">8 Oct 2026/);assert.match(body.innerHTML,/status as at 9 Oct 2026/);
 });
@@ -69,7 +69,7 @@ test('typed generic bill question carries full bill title and key through the re
  assert.equal(url.searchParams.get('from'),'bill');
  for(const text of [field.value,bill.title,bill.key])assert.ok(url.searchParams.get('q').includes(text));
  assert.equal(events.length,1);assert.equal(events[0].event,'opax_module_click');
- assert.match(growthModules.askBlockHTML({bill,pageType:'bill'}),/data-record-key="au-federal-example"/);
+ assert.match(growthModules.askBlockHTML({bill,pageType:'bill',privacy:()=>false}),/data-record-key="au-federal-example"/);
 });
 test('related sponsor rows wait for visibility, never loading the bill index or roster',async()=>{
  const code=app.slice(app.indexOf('function renderOtherSponsorBills('),app.indexOf('/* --- bills on the person page'));
@@ -98,7 +98,7 @@ test('supplier scroll fetches one bounded agency summary, never grants shards or
 test('published growth assets are bounded and the small donor index excludes individuals',()=>{
  for(const dir of ['sponsors','agencies'])for(const file of readdirSync(new URL('../public/growth/'+dir+'/',import.meta.url)))assert.ok(statSync(new URL('../public/growth/'+dir+'/'+file,import.meta.url)).size<=24000);
  const index=json('../public/growth/organisation-donors.json');assert.ok(Buffer.byteLength(JSON.stringify(index))<=64000);
- assert.ok(index.donors.every(growthModules.isOrganisationDonor));assert.ok(!index.donors.some(d=>d.label==='Roslyn Packer'));
+ assert.ok(index.donors.every(growthModules.isOrganisationDonor));assert.ok(!index.donors.some(d=>d.label==='Quillon Fixturewright'));
 });
 test('primary, modified and middle module openings count once; right clicks do not count',()=>{
  const listeners=new Map(),measured=[];

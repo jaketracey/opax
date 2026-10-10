@@ -32,6 +32,12 @@ bills_refresh() {
   reason=$("$PY" scripts/vm/bills_guard.py --date "$day" ${catch_up[@]+"${catch_up[@]}"}) || {
     fail "cannot select bills refresh cadence"; return 1;
   }
+  # A first divisions catch-up can run outside the shared calendar after the
+  # bills catch-up has already been consumed. Publish its new relationships
+  # in the same run rather than leaving bills stale until the next Sunday.
+  if [ "$reason" = skip ] && [ "${DIVISIONS_REFRESH_OK:-0}" = 1 ]; then
+    reason=division-links
+  fi
   if [ "$reason" = skip ]; then
     log "bills acquisition skipped on $day: yesterday was not a sitting day; weekly on Sunday"
     return 0

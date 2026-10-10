@@ -16,6 +16,7 @@ so a bad export never reaches the site but a good one is not held up by it.
   votes     schema-1 mobile contract, allowed person fields, non-empty, and at least half HEAD's size
   divisions no missing pinned files, explicit refresh/member coverage, no member regression
   seovotes  separate OPAX-only schema, bounded recent records, no coverage shrink
+  evidence  complete static export, retained entity/excerpt IDs, 98% counts, fixed byte budget
   corpus    corpus.json parses; its breakdown sums to expected_resources; the version is a date
   wrangler  portal/wrangler.jsonc carries exactly two CACHE_EPOCH values, both non-empty
 
@@ -49,6 +50,7 @@ import json
 import re
 import subprocess
 import sys
+import tarfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -575,7 +577,16 @@ def check_audit(directory=None, compare_head=True) -> list[str]:
         return [f"audit export unreadable: {error}"]
 
 
-CHECKS = {"bills": check_bills, "instruments": check_instruments, "audit": check_audit, "votes": check_votes, "divisions": check_divisions, "seovotes": check_seovotes,
+def check_evidence() -> list[str]:
+    from scripts.vm.evidence_guard import check
+    try:
+        check(repo=ROOT)
+        return []
+    except (ValueError, KeyError, TypeError, OSError, tarfile.TarError) as error:
+        return [f"evidence export refused: {error}"]
+
+
+CHECKS = {"bills": check_bills, "instruments": check_instruments, "audit": check_audit, "evidence": check_evidence, "votes": check_votes, "divisions": check_divisions, "seovotes": check_seovotes,
           "corpus": check_corpus, "wrangler": check_wrangler,
           "money": check_money, "grants": check_grants, "suppliers": check_suppliers, "access": check_access,
           "expenses": check_expenses, "interests": check_interests, "fits": check_fits, "speakers": check_speakers,

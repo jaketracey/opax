@@ -1,78 +1,99 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync, readdirSync} from 'node:fs';
-import {isOrganisationDonor} from '../public/donor-entity.js';
-import {renderPersonAnswer} from '../src/seo-content.ts';
-import {personIndex} from '../src/person-slug.ts';
+import {isOrganisationDonor, withholdIndividualDonors, donorPrivacyIndex, donorNameWithheld} from '../public/donor-entity.js';
+import {withheldPhrases, namesWithheldPhrase} from '../src/donor-index.ts';
 
-const pub = new URL('../public/', import.meta.url);
-const json = path => JSON.parse(readFileSync(new URL(path, pub), 'utf8'));
-const graphs = ['money.json','money.qld.json','money.vic.json','money.tas.json'].map(f => json(`graph/${f}`));
-const donorNodes = graphs.flatMap(g => g.nodes.filter(n => n.kind === 'donor'));
-// A label is unnameable when no graph gives positive organisation evidence for it.
-const organisations = new Set(donorNodes.filter(isOrganisationDonor).map(n => n.label));
-const individuals = new Set(donorNodes.map(n => n.label).filter(l => !organisations.has(l)));
-const unescape = s => s.replace(/&#39;|&apos;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
-
+// Fictional names only: the export's own donors are exercised in donor-privacy.test.mjs.
 test('a donor is an organisation only with positive evidence in its name; the industry never counts', () => {
-  for (const [label, industry] of [['Roslyn Packer','media'],['Sara Prendergast','fossil_fuels'],['Mrs X AO','finance'],['Mrs Roslyn Packer AO','media'],['Packer, Roslyn','media'],['Visy','other'],['Sportsbet','gambling']])
+  for (const [label, industry] of [['Jane Citizen','media'],['Ann Example','fossil_fuels'],['Mrs Jane Citizen AO','finance'],['Citizen, Jane','media'],['Bareword','other'],['Betwell','gambling'],['Coleman Example','retail']])
     assert.equal(isOrganisationDonor({label, industry, aliases: []}), false, label);
-  for (const [label, industry] of [['Clubs NSW','gambling'],['Woodside Energy Ltd','fossil_fuels'],['CFMEU','unions'],["Australian Workers' Union",'unions'],['Pratt Holdings Pty Ltd','property'],['X Family Trust','other'],['Electrical Trades Union of Australia','unions']])
+  for (const [label, industry] of [['Clubs Example','gambling'],['Example Energy Ltd','fossil_fuels'],['CFMEU','unions'],['SDA','unions'],["Australian Workers' Union",'unions'],['Unions Example','unions'],['Example Trades Hall Council','unions'],['Example Trades  Hall','unions'],['Example Holdings Pty Ltd','property'],['Citizen Family Trust','other'],
+    ['Example & Smith Lawyers','legal'],['University of Example','education'],['Royal Example College of Surgeons','education'],['The Example Guild of Australia','pharmacy'],['Example Pastoral Co','agriculture'],['Smith & Co.','finance']])
     assert.equal(isOrganisationDonor({label, industry, aliases: []}), true, label);
   // An alias with a legal form is evidence; a personal name tagged as a union is not.
-  assert.equal(isOrganisationDonor({label: 'Ikon', industry: 'media', aliases: ['Ikon Communication Pty Ltd']}), true);
+  assert.equal(isOrganisationDonor({label: 'Exco', industry: 'media', aliases: ['Exco Communication Pty Ltd']}), true);
   assert.equal(isOrganisationDonor({label: 'Mr John Citizen', industry: 'unions'}), false);
   assert.equal(isOrganisationDonor({label: 'Citizen, John', industry: 'unions'}), false);
-  // An ABN or ACN is not evidence (sole traders have them), and neither is the unions tag.
-  assert.equal(isOrganisationDonor({label: 'ABN 12 345 678 901', industry: 'other'}), false);
-  assert.equal(isOrganisationDonor({label: 'Alex Example', industry: 'other', aliases: ['ABN 12 345 678 901']}), false);
-  assert.equal(isOrganisationDonor({label: 'Alex Example', industry: 'unions', aliases: []}), false);
-  // A single all-capitals token is an acronym; a capitalised two-word name is not.
-  assert.equal(isOrganisationDonor({label: 'SDA', industry: 'unions'}), true);
-  assert.equal(isOrganisationDonor({label: 'JOHN SMITH', industry: 'unions'}), false);
-  // Organisation words count only as whole tokens.
-  assert.equal(isOrganisationDonor({label: 'Ingrid Bankston', industry: 'finance'}), false);
-  assert.equal(isOrganisationDonor({label: 'Trustwell', industry: 'finance'}), false);
+  // An ABN or ACN is not evidence (sole traders have them), and no industry tag is, not even unions.
+  for (const node of [{label: 'ABN 12 345 678 901', industry: 'other'}, {label: 'ACN 123 456 789', industry: 'other'},
+    {label: 'Alex Example', industry: 'other', aliases: ['ABN 12 345 678 901']}, {label: 'Alex Example', industry: 'unions', aliases: []},
+    {label: 'Alex Example', industry: 'unions', aliases: ['12345678901']}])
+    assert.equal(isOrganisationDonor(node), false, `${node.label} / ${node.industry} / ${node.aliases?.join(';')}`);
+  // A label of one all-capitals token, 3-7 letters, is an acronym; an all-capitals or inverted personal name is not.
+  for (const label of ['CFMEU','SDA','QIC','EXAMPLE']) assert.equal(isOrganisationDonor({label, industry: 'other', aliases: []}), true, label);
+  for (const label of ['JOHN SMITH','Smith, John','SMITH, JOHN','J SMITH','Abc','ABCDEFGH','A','ABN','ACN','ARBN','TFN']) assert.equal(isOrganisationDonor({label, industry: 'unions'}), false, label);
+  // Never an acronym alias: "RP" or "ABN" beside a personal name reads as initials or a registration note.
+  for (const aliases of [['ABN'],['RP'],['CFMEU'],['RPX'],['ACN','TFN']]) assert.equal(isOrganisationDonor({label: 'Alex Example', industry: 'other', aliases}), false, aliases.join(';'));
+  // Two capitals read as initials, so "EY" fails closed unless an alias carries a legal form.
+  assert.equal(isOrganisationDonor({label: 'EY', industry: 'finance', aliases: []}), false);
+  assert.equal(isOrganisationDonor({label: 'EY', industry: 'finance', aliases: ['Example & Young Pty Ltd']}), true);
+  // Organisation words count only as whole tokens, and "Co" only as the last one.
+  for (const label of ['Ingrid Bankston','Trustwell','Collegiate Smith','Co Example','Jane Lawyersmith','Hallam Trades']) assert.equal(isOrganisationDonor({label, industry: 'finance'}), false, label);
   assert.equal(isOrganisationDonor(null), false);
   assert.equal(isOrganisationDonor({label: '  ', industry: 'unions'}), false);
 });
 
-test('the exported money maps hold the known sector-tagged individuals as individuals', () => {
-  for (const label of ['Roslyn Packer','Sara Prendergast']) assert.ok(individuals.has(label), label);
-  for (const label of ['Clubs NSW','Mineralogy Pty Ltd']) assert.ok(organisations.has(label), label);
+test('withheld donors are renamed and re-keyed in a server-side graph, never merged or dropped', () => {
+  const graph = {meta: {}, nodes: [
+    {id: 'donor:jane citizen', label: 'Jane Citizen', kind: 'donor', industry: 'media', aliases: ['J Citizen']},
+    {id: 'donor:ann example', label: 'Ann Example', kind: 'donor', industry: 'individual'},
+    {id: 'donor:example holdings', label: 'Example Holdings Pty Ltd', kind: 'donor', industry: 'property'},
+    {id: 'party:Labor', label: 'Labor', kind: 'party'},
+  ], edges: [
+    {source: 'donor:jane citizen', target: 'party:Labor', total: 100, count: 1},
+    {source: 'donor:ann example', target: 'party:Labor', total: 50, count: 1},
+    {source: 'donor:example holdings', target: 'party:Labor', total: 25, count: 1},
+  ]};
+  const out = withholdIndividualDonors(graph);
+  const text = JSON.stringify(out);
+  for (const name of ['Jane Citizen','J Citizen','jane citizen','Ann Example','ann example']) assert.ok(!text.includes(name), name);
+  assert.deepEqual(out.nodes.map(n => n.label), ['Donor 1 (name withheld)','Donor 2 (name withheld)','Example Holdings Pty Ltd','Labor']);
+  assert.deepEqual(out.edges.map(e => [e.source, e.total]), [['donor:withheld-1',100],['donor:withheld-2',50],['donor:example holdings',25]]);
+  assert.equal(out.nodes[0].industry, 'media');
+  assert.equal(JSON.stringify(graph).includes('Jane Citizen'), true, 'the input graph is not mutated');
+  const clean = {nodes: [graph.nodes[2], graph.nodes[3]], edges: []};
+  assert.equal(withholdIndividualDonors(clean), clean);
 });
 
-test('no server-rendered person page names a donor that fails the organisation test', async () => {
-  const assets = new Map();
-  const read = async path => { if (!assets.has(path)) assets.set(path, JSON.parse(readFileSync(new URL(path.slice(1), pub), 'utf8'))); return assets.get(path); };
-  const roster = json('parliamentarians.json').people;
-  const {slugOf} = personIndex(roster);
-  let named = 0;
-  for (const p of roster) {
-    const {html} = await renderPersonAnswer(p, read, slugOf);
-    const section = html.split('<h2>Donors to their party</h2>')[1]?.split('<h2>Bills sponsored</h2>')[0] || '';
-    for (const [, href] of section.matchAll(/href="\/subject\/donor\/([^"]+)"/g)) {
-      const label = decodeURIComponent(unescape(href));
-      assert.ok(organisations.has(label), `${p.name}: ${label}`);
-      named++;
-    }
-    for (const label of individuals) assert.ok(!section.includes(`>${label.replace(/&/g,'&amp;').replace(/'/g,'&#39;')}</a>`), `${p.name}: ${label}`);
-  }
-  assert.ok(named > 0, 'organisational donors are still listed');
-  const morrison = roster.find(p => p.name === 'Scott Morrison');
-  if (morrison) assert.doesNotMatch((await renderPersonAnswer(morrison, read, slugOf)).html, /Sara Prendergast|Roslyn Packer/);
+test('a label is an organisation if any graph vouches for it; an unknown name is judged alone', () => {
+  const index = donorPrivacyIndex([
+    {nodes: [{label: 'Exco', kind: 'donor', aliases: ['Exco Pty Ltd']}, {label: 'Jane Citizen', kind: 'donor', industry: 'media'}]},
+    {nodes: [{label: 'Exco', kind: 'donor', aliases: []}, {label: 'Labor', kind: 'party'}]},
+  ]);
+  assert.deepEqual([...index.organisations], ['exco']);
+  assert.deepEqual([...index.withheld], ['jane citizen']);
+  assert.equal(donorNameWithheld(index, 'Exco'), false);
+  assert.equal(donorNameWithheld(index, 'jane  citizen'), true);
+  assert.equal(donorNameWithheld(index, 'Unknown Person'), true);
+  assert.equal(donorNameWithheld(index, 'Unknown Example Pty Ltd'), false);
 });
 
-test('the donors sitemap and the search catalogue hold no donor that fails the organisation test', () => {
-  const xml = readFileSync(new URL('crawl/sitemaps/donors-1.xml', pub), 'utf8');
-  const listed = [...xml.matchAll(/<loc>https:\/\/opax\.com\.au\/subject\/donor\/([^<]+)<\/loc>/g)].map(m => decodeURIComponent(unescape(m[1])));
-  assert.ok(listed.length > 0);
-  for (const label of listed) assert.ok(organisations.has(label), `sitemap: ${label}`);
-  const {version} = json('search-catalog/manifest.json');
-  for (const file of readdirSync(new URL(`search-catalog/${version}/`, pub)).filter(f => f.startsWith('records-'))) {
-    for (const r of json(`search-catalog/${version}/${file}`)) {
-      if (r.kind === 'donor') assert.ok(!individuals.has(r.title), `search donor: ${r.title}`);
-      if (r.kind === 'receipt') assert.ok(!individuals.has(r.title.split(' → ')[0]), `search receipt: ${r.title}`);
-    }
-  }
+test('an anonymous id is keyed by the source id: a duplicated id stays one group, and no two groups share one', () => {
+  const donor = (id, label) => ({id, label, kind: 'donor', industry: 'media'});
+  const graph = {nodes: [donor('donor:a', 'Ann Example'), donor('donor:b', 'Bea Example'), donor('donor:b', 'Bea Example'), donor('donor:c', 'Cal Example'), {id: 'party:L', label: 'Labor', kind: 'party'}],
+    edges: [{source: 'donor:a', target: 'party:L', total: 1}, {source: 'donor:b', target: 'party:L', total: 10}, {source: 'donor:c', target: 'party:L', total: 100}]};
+  const out = withholdIndividualDonors(graph);
+  assert.deepEqual(out.nodes.map(n => n.id), ['donor:withheld-1', 'donor:withheld-2', 'donor:withheld-2', 'donor:withheld-3', 'party:L']);
+  assert.deepEqual(out.edges.map(e => [e.source, e.total]), [['donor:withheld-1', 1], ['donor:withheld-2', 10], ['donor:withheld-3', 100]]);
+  // A source id withheld only when every node carrying it fails the test.
+  const mixed = withholdIndividualDonors({nodes: [donor('donor:x', 'Exco'), {...donor('donor:x', 'Exco'), aliases: ['Exco Pty Ltd']}], edges: [{source: 'donor:x', target: 'party:L', total: 5}]});
+  assert.deepEqual(mixed.edges.map(e => e.source), ['donor:x']);
+});
+
+test('a question names a withheld donor by label, alias or "Given Surname", never through an organisation or office holder', () => {
+  const graphs = [{nodes: [
+    {label: 'Jane Citizen', kind: 'donor', industry: 'media', aliases: ['J. Q. Citizen']},
+    {label: 'Example, Robin', kind: 'donor', industry: 'individual'},
+    {label: 'Morgan Member', kind: 'donor', industry: 'individual'},
+    {label: 'Jane Citizen Holdings Pty Ltd', kind: 'donor', industry: 'property'},
+    {label: 'Citizen Group', kind: 'donor', industry: 'other', aliases: ['Jane']},
+  ]}];
+  const phrases = withheldPhrases(graphs, ['Morgan Member']);
+  for (const q of ['How much did Jane Citizen give?', 'jane   CITIZEN donations', 'What has J. Q. Citizen given?', 'Robin Example to Labor', 'Example, Robin', 'Who funds Labor? And Jane Citizen.'])
+    assert.equal(namesWithheldPhrase(phrases, q), true, q);
+  for (const q of ['How much did Jane Citizen Holdings Pty Ltd give?', 'Morgan Member speeches', 'Who gives the most to Labor?', 'Jane', 'Citizen Group donations', ''])
+    assert.equal(namesWithheldPhrase(phrases, q), false, q);
+  // An organisation's name covers only its own occurrence: a second, bare mention still counts.
+  assert.equal(namesWithheldPhrase(phrases, 'Jane Citizen Holdings Pty Ltd and Jane Citizen'), true);
+  assert.equal(namesWithheldPhrase(phrases, 'Labor', 'And Jane Citizen?'), true, 'any of several texts');
 });

@@ -9,6 +9,9 @@ import { missingEntitySlug } from './crawl-hygiene'
 import { normalizePassage, passageWindow } from './passage-text'
 import { instrumentPage, instrumentReader } from './instruments'
 import { auditPage, auditReader } from './audit'
+import { hubPage } from './hubs'
+import { vicElectionPage, type VicElection } from './vic-election'
+import { vicElectionEnabled, vicElectionPublicationPath, vicElectionDiscovery, vicElectionLlms, VIC_ELECTION_ASSET, VIC_ELECTION_SITEMAP } from '../public/vic-election.js'
 import { AUDIT_ID } from '../public/audit.js'
 import { runIndexNow, INDEXNOW_CRON } from './indexnow'
 import { type MoneyFacts, moneyOverviewPrompt, verifiedOverview } from './ask-money-overview'
@@ -34,7 +37,8 @@ import { resolveAskScope, needsAskPeople, askRetrievalQuery, isNamedPositionQues
 import { communityRoute } from './community'
 import { deliverReplyEmails, REPLY_EMAIL_CRON } from './community-notifications'
 import { partyUrl, personUrl, personNameKey } from '../public/canonical-urls.js'
-import { isOrganisationDonor } from '../public/donor-entity.js'
+import { withholdIndividualDonors, foldDonorName } from '../public/donor-entity.js'
+import { donorWithheld, namesWithheldDonor, questionNamesWithheldDonor, withheldNameCheck, loadDonorIndex, WITHHELD_DONOR_REPLY } from './donor-index'
 import { canonicalPageRedirect } from './canonical-origin'
 import { pageEntry } from './page-entry'
 import { communityMcp } from './community-mcp'
@@ -178,11 +182,39 @@ function filterExpression(f: {
 const ragBase = (env: Env) =>
   `https://${env.ARAG_ZONE}.rag.progress.cloud/api/v1/kb/${env.ARAG_KB_ID}`
 
+/**
+ * The aggregate cap on paid model calls (MODEL_LIMITER in wrangler.jsonc: one key
+ * for every reader, per Cloudflare location). Every platform /ask call is a
+ * generation and checks it first; cache hits never get here. Past the cap the
+ * call is answered with MODEL_BUDGET_RESPONSE and each caller's fallback stands:
+ * no overview, follow-ups, story or summary, and a "busy" reply for an answer.
+ * A limiter error fails open, as the per-reader limiters do.
+ */
+async function modelBudgetSpent(env: Env): Promise<boolean> {
+  if (!env.MODEL_LIMITER) return false
+  try { return !(await env.MODEL_LIMITER.limit({ key: 'model-calls' })).success }
+  catch (err) {
+    console.log(JSON.stringify({ level: 'warn', message: `model limiter failed open: ${String(err)}` }))
+    return false
+  }
+}
+const MODEL_BUDGET_HEADER = 'x-opax-model-budget'
+const modelBudgetResponse = (): Response => new Response(JSON.stringify({ error: 'The model call budget for this minute is spent.' }), {
+  status: 429, headers: { 'content-type': 'application/json; charset=utf-8', 'retry-after': '60', [MODEL_BUDGET_HEADER]: 'spent' },
+})
+const modelBudgetBusy = (): Response => {
+  const res = json({ error: 'OPAX is answering a lot of questions right now. Please try again in a minute.' }, 503)
+  res.headers.set('retry-after', '60')
+  res.headers.set(MODEL_BUDGET_HEADER, 'spent')
+  return res
+}
+
 async function kbFetch(
   env: Env,
   path: string,
   init?: { method?: string; body?: unknown; headers?: Record<string, string>; signal?: AbortSignal },
 ): Promise<Response> {
+  if (path.startsWith('/ask') && await modelBudgetSpent(env)) return modelBudgetResponse()
   return fetch(`${ragBase(env)}${path}`, {
     method: init?.method ?? (init?.body === undefined ? 'GET' : 'POST'),
     headers: {
@@ -1197,11 +1229,14 @@ function replayCachedAsk(hit: Response, ctx: ExecutionContext): Response {
  * opening still gets the same calculated answer. A slow or unavailable model
  * costs the answer nothing but the timeout.
  */
-async function moneyOverview(facts: MoneyFacts, env: Env, ctx: ExecutionContext): Promise<{ overview: string; why: string }> {
+async function moneyOverview(facts: MoneyFacts, env: Env, ctx: ExecutionContext, request: Request): Promise<{ overview: string; why: string }> {
   const model = env.MONEY_OVERVIEW_MODEL || env.ASK_MODEL || 'openai-compatible'
   const key = cacheRequest('money-overview', await sha256Hex(JSON.stringify({ epoch: env.CACHE_EPOCH, model, facts })))
   const hit = await caches.default.match(key)
   if (hit) return { overview: (await hit.json<{ overview?: string }>()).overview || '', why: 'hit' }
+  // A paid call, so it spends the reader's Ask quota like any other answer; past
+  // the limit the calculated answer goes out without its opening paragraph.
+  if (await rateLimited(env.ASK_LIMITER, request)) return { overview: '', why: 'rate-limited' }
   try {
     const res = await kbFetch(env, '/ask', {
       body: { query: moneyOverviewPrompt(facts), top_k: 5, max_tokens: 4096, generative_model: model },
@@ -1231,6 +1266,9 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     return res
   }
   if (!rawInput.question?.trim()) return json({ error: 'question is required' }, 400)
+  // A question naming a withheld donor, now or in the reader's earlier turns, gets
+  // one fixed reply before any ranking, rewrite or model call can echo the name.
+  if (await questionNamesWithheldDonor(env.ASSETS, rawInput.question, ...readerTurns(rawInput))) return timed(json(withheldDonorAnswer()))
   // Resolve receipt conversations from user turns before speech inference can
   // apply calendar-year or parliamentarian filters. No model call is needed.
   try {
@@ -1241,7 +1279,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
       // with the answer only as the paragraph it produced.
       const { money_facts, ...payload } = ranked as typeof ranked & { money_facts?: MoneyFacts }
       if (!money_facts) return timed(json(payload))
-      const { overview, why } = await moneyOverview(money_facts, env, ctx)
+      const { overview, why } = await moneyOverview(money_facts, env, ctx, request)
       mark('overview')
       // Why an answer has no opening is worth being able to see from outside
       // (a rejected paragraph and an unavailable model read the same to a
@@ -1345,6 +1383,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   const askOnce = async (b: Record<string, unknown>, timeoutMs: number): Promise<AskAnswer | Response> => {
     try {
       const res = await kbFetch(env, '/ask', { body: b, headers: { 'x-synchronous': 'true' }, signal: AbortSignal.timeout(timeoutMs) })
+      if (res.headers.get(MODEL_BUDGET_HEADER)) return modelBudgetBusy()
       if (!res.ok) return json({ error: `ask failed (${res.status})` }, 502)
       return guardPositionAnswer((await res.json()) as AskAnswer, b)
     } catch (err) {
@@ -1354,8 +1393,9 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   const t0 = Date.now()
   let answer = await askOnce(body, ASK_SYNC_TIMEOUT_MS)
   mark('ask')
-  // A stall or an upstream error gets one lighter attempt before the reader hears about it.
-  if (answer instanceof Response) answer = await askOnce(lighterAsk(body), ASK_SYNC_TIMEOUT_MS)
+  // A stall or an upstream error gets one lighter attempt before the reader hears about it;
+  // a spent model budget does not.
+  if (answer instanceof Response && !answer.headers.get(MODEL_BUDGET_HEADER)) answer = await askOnce(lighterAsk(body), ASK_SYNC_TIMEOUT_MS)
   if (answer instanceof Response) return answer
   if (isRefusal(answer) && healthyRetrieval(answer) && Date.now() - t0 < ASK_RETRY_BUDGET_MS) {
     const again = await askOnce(body, ASK_SYNC_TIMEOUT_MS)
@@ -1376,6 +1416,18 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   payload = withAskedAs(payload, askedAs)
   store(payload)
   return timed(withCacheStatus(json(payload), status, false))
+}
+
+/** The reader's own earlier turns: what a follow-up can inherit a name from. */
+function readerTurns(input: AskInput): string[] {
+  return (Array.isArray(input.context) ? input.context : [])
+    .filter(t => t && (t.author === 'user' || t.author === 'question') && typeof t.text === 'string').map(t => t.text as string)
+}
+
+/** The fixed reply to a question naming a withheld donor (src/donor-index.ts): no
+ * sources, citations or follow-ups, and nothing from the question echoed back. */
+function withheldDonorAnswer(): Record<string, unknown> {
+  return { answer: WITHHELD_DONOR_REPLY, citations: {}, sources: [], answer_status: 'withheld' }
 }
 
 /** The payload with the question as it was understood, when a follow-up was rewritten. */
@@ -1643,6 +1695,8 @@ async function recoverPositionAnswer(payload: AskPayload, body: Record<string,un
 
 /** A short overview grounded only in the same filtered public search results. */
 async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
+  // No overview, and no search, for a query naming a withheld donor (src/donor-index.ts).
+  if (await questionNamesWithheldDonor(env.ASSETS, url.searchParams.get('q') || '')) return json({status:'empty', points:[], sources:[]})
   const searchUrl = new URL(url)
   searchUrl.pathname = '/api/search-all'
   searchUrl.searchParams.set('page', '1')
@@ -1722,7 +1776,7 @@ async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: Execu
 /** One streamed platform generation for the overview: answer text chunks go to
  * `onText` as they arrive; the whole answer comes back for the final parse. */
 async function streamSummaryAnswer(env: Env, body: Record<string, unknown>, onText: (text: string) => Promise<void>, signal: AbortSignal): Promise<string> {
-  const res = await fetch(`${ragBase(env)}/ask`, {
+  const res = await modelBudgetSpent(env) ? modelBudgetResponse() : await fetch(`${ragBase(env)}/ask`, {
     method: 'POST',
     headers: { 'content-type': 'application/json', accept: 'application/x-ndjson', 'x-nuclia-serviceaccount': `Bearer ${env.ARAG_KB_TOKEN}` },
     body: JSON.stringify(body),
@@ -1755,7 +1809,8 @@ async function apiJourneyStory(request: Request, input: Record<string, unknown>,
   const files: Record<string,string> = {federal:'/graph/money.json',qld:'/graph/money.qld.json',vic:'/graph/money.vic.json',tas:'/graph/money.tas.json'}
   const { jurisdiction, lens, focus } = input
   if (typeof jurisdiction !== 'string' || !Object.hasOwn(files,jurisdiction) || typeof lens !== 'string' || typeof focus !== 'string' || focus.length > 500) return json({error:'Invalid journey'},400)
-  const graph = await assetJson<StoryGraph>(env,files[jurisdiction])
+  // Individual donors are withheld from the narration (public/donor-entity.js).
+  const graph = withholdIndividualDonors(await assetJson<StoryGraph>(env,files[jurisdiction]))
   const context = journeyStoryContext(graph,lens,focus)
   if (!context) return json({error:'Journey not available'},404)
   const key = cacheRequest('journey-story',await sha256Hex(JSON.stringify({version:STORY_VERSION,epoch:env.CACHE_EPOCH,context})))
@@ -1835,7 +1890,7 @@ async function streamAskOnce(
   signal: AbortSignal,
   onProgress?: () => void,
 ): Promise<AskAnswer> {
-  const res = await fetch(`${ragBase(env)}/ask`, {
+  const res = await modelBudgetSpent(env) ? modelBudgetResponse() : await fetch(`${ragBase(env)}/ask`, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
@@ -2277,6 +2332,8 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
   }
   // Always 200 with a possibly-empty list: follow-ups are an extra, never an error.
   if (!question?.trim() || !answer?.trim()) return json({ questions: [] })
+  // Never suggest a next question about a withheld donor (src/donor-index.ts).
+  if (await questionNamesWithheldDonor(env.ASSETS, question, answer)) return json({ questions: [] })
   const clean = (Array.isArray(passages) ? passages : [])
     .map((p) => ({
       title: String(p?.title ?? '').slice(0, 300),
@@ -3052,15 +3109,13 @@ const OG_IMAGE_ALT = 'OPAX: ask what your politicians actually said'
 /**
  * The share image for a page is its canonical URL under /og with .png on the
  * end, so /subject/person/anthony-albanese shares
- * /og/subject/person/anthony-albanese.png?v=2, and /ask?q=... keeps its
- * question. The version is the drawing's (src/og.ts), not the data's: a
+ * /og/subject/person/anthony-albanese.png?v=2. A question or search never
+ * reaches the image (it can name a withheld donor). The version is the drawing's (src/og.ts), not the data's: a
  * crawler caches by URL, so a redesign has to move.
  */
 function ogImageFor(canonical: string): string {
   const u = new URL(canonical)
   const out = new URL(`${SITE_ORIGIN}/og${u.pathname}.png`)
-  const q = u.searchParams.get('q')
-  if (q) out.searchParams.set('q', q)
   // The same list as CARD_QUERY, spelled out so this function stands alone (test/grant-social-card.test.mjs runs it in isolation).
   for (const k of ['award', 'jur', 'program', 'largest']) { const v = u.searchParams.get(k); if (v) out.searchParams.set(k, v) }
   out.searchParams.set('v', OG_VERSION)
@@ -3182,6 +3237,7 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
 }
 
 type SeoRoute =
+  | { kind: 'hub'; hub: 'sitting' | 'estimates' | 'vic-election'; id: string | null }
   | { kind: 'instruments'; id: string | null }
   | { kind: 'audit'; id: string | null }
   | { kind: 'static'; page: keyof typeof STATIC_PAGES }
@@ -3234,6 +3290,9 @@ const GRANT_RECIPIENT_ID_RE = /^(?:abn:\d{11}|name:[a-z0-9 .&'()-]{2,120}|person
 /** Route table for real paths. Trailing slashes tolerated, never canonical. */
 function matchSeoRoute(url: URL): SeoRoute | null {
   const path = url.pathname.replace(/\/+$/, '') || '/'
+  if (path === '/sitting' || path.startsWith('/sitting/')) return {kind:'hub',hub:'sitting',id:path === '/sitting' ? null : path.slice('/sitting/'.length)}
+  if (path === '/vic-election-2026' || path.startsWith('/vic-election-2026/')) return {kind:'hub',hub:'vic-election',id:path === '/vic-election-2026' ? null : path.slice('/vic-election-2026/'.length)}
+  if (path === '/estimates' || path.startsWith('/estimates/')) return {kind:'hub',hub:'estimates',id:path === '/estimates' ? null : path.slice('/estimates/'.length)}
   if (path === '/audit') return { kind: 'audit', id: null }
   if (path.startsWith('/audit/') && !/^\/audit\/(?:manifest|index|ready|reports-\d+)\.json$/.test(path)) {
     try { return { kind: 'audit', id: decodeURIComponent(path.slice('/audit/'.length)) } }
@@ -3736,6 +3795,15 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
   })
 
   switch (route.kind) {
+    case 'hub': {
+      if (route.hub === 'vic-election') {
+        const page = await vicElectionPage(route.id,<T>(path: string) => assetJson<T>(env,path),env)
+        return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status})
+      }
+      const people = route.hub === 'sitting' && route.id ? await loadPeople(env) : null
+      const page = await hubPage(route.hub,route.id,<T>(path: string) => assetJson<T>(env,path),people?.people || [],people?.slugOf || new Map(),undefined,env)
+      return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status})
+    }
     case 'audit': return base({ ...await auditPage(route.id, url, auditReader(env.ASSETS), prerenderBlock),
       ...(route.id && AUDIT_ID.test(route.id) ? { canonical: `${SITE_ORIGIN}/audit/${route.id}` } : {}) })
     case 'instruments': return base(await instrumentPage(route.id, url, instrumentReader(env.ASSETS), prerenderBlock))
@@ -3751,20 +3819,22 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
       const page = STATIC_PAGES[researchSearch ? 'search' : route.page]
       const q = url.searchParams.get('q')?.trim()
       const canonical = canonicalFor(url, Boolean(page.query))
+      // A question or search is never echoed into the title, description, share card
+      // or its image: it can name a withheld donor (src/donor-index.ts) or anything else.
       if (route.page === 'ask' && !researchSearch && q) {
         return base({
-          title: clip(`${q} · OPAX`, 90),
-          description: clip(`"${q}": an answer from the Australian parliamentary record, cited to the speeches it draws on, with the money behind the speakers.`),
+          title: 'Ask OPAX',
+          description: 'An answer from the Australian parliamentary record, cited to the speeches it draws on, with the money behind the speakers.',
           canonical,
-          card: { kicker: 'Ask', italic: true, title: `“${clip(q, 160)}”`, lines: ['An answer from the parliamentary record, cited to the speeches it draws on, with the money behind the speakers.'] },
+          card: { kicker: 'Ask', title: 'Ask OPAX', lines: ['An answer from the parliamentary record, cited to the speeches it draws on, with the money behind the speakers.'] },
         })
       }
       if ((route.page === 'search' || researchSearch) && q) {
         return base({
-          title: clip(`Search: ${q} · OPAX`, 90),
-          description: clip(`Speeches matching "${q}" in the Australian parliamentary record, with speaker, party, date and a link to the official source for each.`),
+          title: 'Search the record · OPAX',
+          description: 'Speeches matching a search of the Australian parliamentary record, with speaker, party, date and a link to the official source for each.',
           canonical,
-          card: { kicker: 'Search the record', italic: true, title: `“${clip(q, 160)}”`, lines: ['Speeches matching this query, with speaker, party, date and a link to the official source for each.'] },
+          card: { kicker: 'Search the record', title: 'Search the record', lines: ['Speeches matching this query, with speaker, party, date and a link to the official source for each.'] },
         })
       }
       return base({
@@ -3904,7 +3974,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       if (p) {
         const profiles=await read<{people:Record<string,PersonSchemaIdentity>;by_name:Record<string,PersonSchemaIdentity>}>('/profile-links.json').catch(()=>null)
         const identity={...profiles?.by_name[foldName(p.name)],...profiles?.people[p.pid || '']}
-        const content = await renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined)
+        const content = await renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,await withheldNameCheck(env.ASSETS))
         meta.prerender = content.html
         if(content.description) meta.description=clip(content.description)
         const photos=await loadPhotos(env).catch(()=>null)
@@ -3938,7 +4008,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
   }
   // Every non-home path has a single answer, including unavailable/not-found pages.
   meta.prerender ??= answerBlock(meta.title.replace(/ · OPAX$/, ''),meta.description,meta.status===404 ? 'Not found' : 'OPAX')
-  meta.jsonLd=meta.status===404 ? null : buildSchemaGraph({canonical:meta.canonical,title:meta.title,description:meta.description,jsonLd:meta.jsonLd,person:personIdentity,bill:billIdentity})
+  meta.jsonLd=meta.status>=400 ? null : buildSchemaGraph({canonical:meta.canonical,title:meta.title,description:meta.description,jsonLd:meta.jsonLd,person:personIdentity,bill:billIdentity})
   return meta
 }
 
@@ -4146,6 +4216,15 @@ async function canonicalRoutePath(url: URL, env: Env): Promise<string> {
   }
   const candidate=new URL(url); candidate.pathname=path
   const route=matchSeoRoute(candidate)
+  if(route?.kind==='hub') {
+    if(route.hub === 'vic-election') {
+      if (!vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED)) return url.pathname
+      const election = await assetJson<VicElection>(env,VIC_ELECTION_ASSET).catch(()=>null)
+      return election?.pages.some(page=>page.path === path) ? path : url.pathname
+    }
+    const hubs=await assetJson<{pages:{path:string}[]}>(env,'/hubs/index.json').catch(()=>null)
+    if(hubs?.pages.some(page=>page.path===path)) return path
+  }
   if(route?.kind==='static' || route?.kind==='index' || route?.kind==='topics') return path
   if(route?.kind==='topic' && TOPIC_NAMES[route.slug]) return path
   if(route?.kind==='report' && (await loadReports(env).catch(()=>null))?.bySlug.has(route.slug)) return path
@@ -4182,7 +4261,7 @@ async function pageAliasRedirect(request: Request, url: URL, env: Env): Promise<
     if(destination.searchParams.has('ask')) {destination.searchParams.set('q',destination.searchParams.get('ask') || '');destination.searchParams.delete('ask');}
   }
   const location=destination.href
-  return new Response(null,{status:host ? 308 : 301,headers:{location,'cache-control':'public, max-age=86400','referrer-policy':'no-referrer',...(['/ask','/search'].includes(path) && url.search ? {'x-robots-tag':'noindex'} : {})}})
+  return new Response(null,{status:host && matchSeoRoute(destination)?.kind !== 'hub' ? 308 : 301,headers:{location,'cache-control':'public, max-age=86400','referrer-policy':'no-referrer',...(['/ask','/search'].includes(path) && url.search ? {'x-robots-tag':'noindex'} : {})}})
 }
 /** slug -> name for every person with a slug: how app.js writes and reads the addresses. */
 async function apiPersonSlugs(env: Env): Promise<Response> {
@@ -4209,8 +4288,10 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
     loadMoney(env).catch(() => null),
   ])
   const p = (people ? personAt(people, name) : null)
+  // Not a roster person (or the roster is unreadable): the typed name is never repeated back.
+  if (!p) return unknownSubjectMeta('person', !!people)
   if (url.searchParams.get('attribution') === 'unattributed') {
-    const print = p?.name ?? name
+    const print = p.name
     const description = `Unattributed testimony and other records printed as ${print}. Parliamentary identity, party and portrait are not assigned to this evidence.`
     return { title: `${print} — unattributed evidence · OPAX`, description,
       canonical: `${SITE_ORIGIN}${personPath(people, print)}?attribution=unattributed`, status: 200, ogType: 'website', jsonLd: null,
@@ -4222,16 +4303,6 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   let title = `${display} · OPAX`
   const portraitId = photoIdFor(photos, display)
   const credit = await creditLine(env, portraitId)
-  if (!p) {
-    // Below the 5-speech floor of parliamentarians.json, or a name the record
-    // spells differently. The app still tries the live index, so no 404 here.
-    const description = clip(`${display} in the OPAX record of Australian parliamentary speeches and disclosed political donations.`)
-    return {
-      title, description, canonical, ogType: 'profile', status: 200, jsonLd: null,
-      prerender: prerenderBlock(display, description),
-      card: { kicker: 'Parliamentarian', title: display, lines: ['In the OPAX record of Australian parliamentary speeches and disclosed political donations.'], portraitId, credit },
-    }
-  }
   const where = p.chambers.length === 1 && CHAMBER_NAMES[p.chambers[0]]
     ? `${p.states.length === 1 && p.states[0] !== 'federal' ? `${STATE_NAMES[p.states[0]]?.replace(' parliament', '') ?? p.states[0]} ` : ''}${CHAMBER_NAMES[p.chambers[0]]}`
     : p.states.map((s) => STATE_NAMES[s] ?? s).join(' and ')
@@ -4450,19 +4521,71 @@ async function supplierMeta(name: string, url: URL, env: Env): Promise<PageMeta>
   }
 }
 
+/**
+ * The page of an individual donor, or of a campaigner registered under a
+ * withheld donor's name: reachable, noindex, and nobody named in the title,
+ * description, structured data, share card or prerendered body. Without
+ * positive organisation evidence a donor counts as an individual
+ * (public/donor-entity.js, src/donor-index.ts).
+ */
+const SUBJECT_UNKNOWN: Record<'person' | 'donor' | 'party' | 'campaigner', [string, string]> = {
+  person: ['Not in the parliamentary roster', "This person isn't in OPAX's parliamentary roster."],
+  donor: ['Donor not found', "This donor isn't in OPAX's money data."],
+  party: ['Party not found', "This party isn't in OPAX's record."],
+  campaigner: ['Campaigner not found', 'No entry with this name is on the AEC register of associated entities, third parties, significant third parties and political campaigners.'],
+}
+/**
+ * A subject route for a name OPAX does not hold: a 404 (a 503 when the records
+ * could not be read) that never repeats the requested name, in the title,
+ * description, structured data, share card or canonical. A typed name can be
+ * anyone's, a withheld donor's included (src/donor-index.ts).
+ */
+function unknownSubjectMeta(kind: keyof typeof SUBJECT_UNKNOWN, loaded: boolean): PageMeta {
+  const [title, description] = loaded ? SUBJECT_UNKNOWN[kind] : ['Temporarily unavailable', 'These records could not be loaded. Please try again.']
+  return { title: `${title} · OPAX`, description, canonical: `${SITE_ORIGIN}/subject/${kind}`, ogType: 'website', status: loaded ? 404 : 503, jsonLd: null, prerender: null, card: null }
+}
+
+/** The party a /subject/party/<name> segment names: a money-map party, or one the roster, bills or divisions record. */
+async function partyFor(name: string, env: Env): Promise<{ node: MoneyEntry | null; label: string | null; loaded: boolean }> {
+  const moneyData = await loadMoney(env).catch(() => null)
+  const node = moneyData?.parties.get(foldName(name)) ?? [...(moneyData?.parties.values() || [])].find(p => partyUrl(p.label).split('/').at(-1) === name.toLowerCase()) ?? null
+  const label = node?.label ?? (await loadPartyLabels(env).catch(() => [])).find(p => partyUrl(p).split('/').at(-1) === name.toLowerCase()) ?? null
+  return { node, label, loaded: !!moneyData }
+}
+
+/** Whether any money graph (Tasmania's included) holds a donor of this name. */
+async function donorKnown(name: string, env: Env): Promise<boolean | null> {
+  const index = await loadDonorIndex(env.ASSETS).catch(() => null)
+  if (!index) return null
+  const key = foldDonorName(name)
+  return index.organisations.has(key) || index.withheld.has(key)
+}
+
+function withheldMeta(dir: 'donor' | 'campaigner', canonical: string): PageMeta {
+  const [heading, sentence] = dir === 'donor'
+    ? ['Donor', 'A disclosed political donor in the OPAX money data. Which parties it funded, year by year.']
+    : ['Campaigner', 'An entry on the AEC register of campaigners, third parties and associated entities. Every return it filed, year by year.']
+  return { title: `${heading} · OPAX`, description: sentence, canonical, ogType: 'profile', status: 200, jsonLd: null,
+    prerender: prerenderBlock(heading, sentence), card: null, noindex: true }
+}
+
 async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, env: Env): Promise<PageMeta> {
   const [moneyData, people] = await Promise.all([loadMoney(env).catch(() => null), loadPeople(env).catch(() => null)])
-  const node = (dir === 'party' ? moneyData?.parties : moneyData?.donors)?.get(foldName(name)) ?? (dir==='party' ? [...(moneyData?.parties.values() || [])].find(p=>partyUrl(p.label).split('/').at(-1)===name.toLowerCase()) : null) ?? null
-  const display = node?.label ?? (dir==='party' ? (await loadPartyLabels(env).catch(()=>[])).find(p=>partyUrl(p).split('/').at(-1)===name.toLowerCase()) : null) ?? name
-  const canonical = dir==='party' ? `${SITE_ORIGIN}${partyUrl(display)}` : `${SITE_ORIGIN}/subject/${dir}/${encodeURIComponent(display)}`
-  // An individual donor is not named in server-rendered HTML, structured data
-  // or a share card, and the page is noindex. Without positive organisation
-  // evidence a donor counts as an individual (public/donor-entity.js).
-  if (dir === 'donor' && !isOrganisationDonor(node ?? { label: display })) {
-    const sentence = 'A disclosed political donor in the OPAX money data. Which parties it funded, year by year.'
-    return { title: 'Donor · OPAX', description: sentence, canonical, ogType: 'profile', status: 200, jsonLd: null,
-      prerender: prerenderBlock('Donor', sentence), card: null, noindex: true }
+  // A name no record holds is never repeated back (unknownSubjectMeta).
+  let node: MoneyEntry | null, display: string
+  if (dir === 'party') {
+    const party = await partyFor(name, env)
+    if (!party.label) return unknownSubjectMeta('party', party.loaded)
+    node = party.node
+    display = party.label
+  } else {
+    node = moneyData?.donors.get(foldName(name)) ?? null
+    const known = node ? true : await donorKnown(name, env)
+    if (!known) return unknownSubjectMeta('donor', known !== null)
+    display = node?.label ?? name
   }
+  const canonical = dir==='party' ? `${SITE_ORIGIN}${partyUrl(display)}` : `${SITE_ORIGIN}/subject/${dir}/${encodeURIComponent(display)}`
+  if (dir === 'donor' && await donorWithheld(env.ASSETS, display)) return withheldMeta('donor', canonical)
   const title = `${display} · OPAX`
   let facts: string
   let tail = ''
@@ -4514,12 +4637,10 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
 }
 
 /**
- * /subject/campaigner/<name>. A donor page stays 200 for a name it cannot find
- * because money.json is a top-N cut and the app can still say something useful
- * about the rest. This roster is not a cut: it is the AEC register itself, so a
- * name absent from it names nothing and 404s. A roster that failed to LOAD is a
- * different case, and stays 200 rather than telling a crawler an entity that
- * exists does not.
+ * /subject/campaigner/<name>. The roster is the AEC register itself, so a name
+ * absent from it names nothing and 404s; a register that failed to load is a
+ * 503, so a crawler is not told an entity that exists does not. Neither repeats
+ * the requested name (unknownSubjectMeta).
  */
 async function campaignerMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   const data = await loadCampaigners(env).catch(() => null)
@@ -4530,25 +4651,8 @@ async function campaignerMeta(name: string, url: URL, env: Env): Promise<PageMet
   // JSON-LD carry the whole name; the title is the one place it has to give way,
   // and it gives way before the masthead does.
   const title = `${clip(display, 90)} · OPAX`
-  if (!c) {
-    if (!data) {
-      const description = clip(`${display} in the OPAX record of AEC registered campaigners, third parties and associated entities.`)
-      return {
-        title, description, canonical, ogType: 'profile', status: 200, jsonLd: null,
-        prerender: prerenderBlock(display, description),
-        card: { kicker: 'Campaigners & third parties', title: display, lines: ['In the OPAX record of AEC registered campaigners, third parties and associated entities.'] },
-      }
-    }
-    return {
-      title: 'Campaigner not found · OPAX',
-      description: clip(`${display} is not on the AEC register of associated entities, third parties, significant third parties and political campaigners.`),
-      canonical,
-      ogType: 'website',
-      status: 404,
-      jsonLd: null,
-      prerender: null,
-    }
-  }
+  if (!c) return unknownSubjectMeta('campaigner', !!data)
+  if (await namesWithheldDonor(env.ASSETS, display)) return withheldMeta('campaigner', canonical)
   const linked = c.parties.length ? `; disclosed relationship: ${andList(c.parties.slice(0, 3))}` : ''
   const parts: string[] = []
   if (c.filings) parts.push(`${num(c.filings)} annual return${c.filings === 1 ? '' : 's'}, ${yearSpan(c.firstYear, c.lastYear)}`)
@@ -4773,21 +4877,24 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
     buildMeta(route, url, request, env, ctx),
   ])
   if (!shell.ok) return shell
-  const noindex = meta.noindex || meta.status === 404 || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
+  const noindex = meta.noindex || meta.status >= 400 || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
+  // Election coverage names unavailable grants, but renders no financial records.
+  // Its renderer owns any future caveat alongside an actual political money pairing.
+  if (!(route.kind === 'hub' && route.hub === 'vic-election'))
+    meta.prerender=associationCaveat(meta.prerender || '',`${meta.description} ${meta.prerender || ''}`)
   // JSON-LD sits in a <script>: keep "</script>" from ever appearing in it.
-  meta.prerender=associationCaveat(meta.prerender || '',`${meta.description} ${meta.prerender || ''}`)
   const ld = meta.jsonLd ? JSON.stringify(meta.jsonLd).replace(/</g, '\\u003c') : null
   // The share image is drawn per route (see "Share images" below); a page
   // with nothing to draw, or nothing to find, shares the home card.
-  const image = meta.card && meta.status !== 404 ? ogImageFor(meta.canonical) : OG_IMAGE
-  const imageAlt = meta.card && meta.status !== 404 ? clip(`${meta.card.title} on OPAX`, 120) : OG_IMAGE_ALT
+  const image = meta.card && meta.status < 400 ? ogImageFor(meta.canonical) : OG_IMAGE
+  const imageAlt = meta.card && meta.status < 400 ? clip(`${meta.card.title} on OPAX`, 120) : OG_IMAGE_ALT
   const rewriter = new HTMLRewriter()
     .on('title', new SetText(meta.title))
     .on('meta[name="description"]', new SetAttr('content', meta.description))
-    .on('link[rel="canonical"]', { element(el) { if(meta.status===404) el.remove(); else el.setAttribute('href',meta.canonical) } })
+    .on('link[rel="canonical"]', { element(el) { if(meta.status>=400) el.remove(); else el.setAttribute('href',meta.canonical) } })
     .on('meta[property="og:title"]', new SetAttr('content', meta.title))
     .on('meta[property="og:description"]', new SetAttr('content', meta.description))
-    .on('meta[property="og:url"]', { element(el) { if(meta.status===404) el.remove(); else el.setAttribute('content',meta.canonical) } })
+    .on('meta[property="og:url"]', { element(el) { if(meta.status>=400) el.remove(); else el.setAttribute('content',meta.canonical) } })
     .on('meta[property="og:type"]', new SetAttr('content', meta.ogType))
     .on('meta[property="og:image"]', new SetAttr('content', image))
     .on('meta[property="og:image:alt"]', new SetAttr('content', imageAlt))
@@ -4806,6 +4913,10 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
         for(const [rel,href] of [['prev',meta.prev],['next',meta.next]]) if(href) el.append(`<link rel="${rel}" href="${escHtml(href)}">`,{html:true})
       },
     })
+  if (route.kind === 'hub') rewriter.on('script[src]', { element(el) {
+    if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
+  } }).on('head', { element(el) { el.append('<link rel="stylesheet" href="/hubs.css">',{html:true}) } })
+    .on('p#stats', { element(el) { el.remove() } })
   if (route.kind === 'instruments' || route.kind === 'audit') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } }).on('a[href^="/subject/person"]', { element(el) { el.remove() } })
@@ -4953,6 +5064,21 @@ async function serveStorySlide(url: URL, request: Request, env: Env, ctx: Execut
   }
 }
 
+/**
+ * Route kinds whose path names a subject, by a typed name or an id: person,
+ * party, donor, campaigner, supplier, agency and electorate pages, grant
+ * recipients and topics. Their card is drawn only for a subject the page itself
+ * would show (a 200 with a card, indexable), and that is checked before any
+ * cache read: a card cached before a subject was withheld, or one for a name no
+ * record holds, is never replayed.
+ */
+const NAMED_CARD_ROUTES = new Set<SeoRoute['kind']>(['subject', 'grant-recipient', 'topic'])
+async function cardRefused(route: SeoRoute | null, pageUrl: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<boolean> {
+  if (!route || !NAMED_CARD_ROUTES.has(route.kind)) return false
+  const meta = await buildRouteMeta(route, pageUrl, request, env, ctx).catch(() => null)
+  return !meta || meta.status !== 200 || !meta.card || meta.noindex === true
+}
+
 async function serveOgImage(url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
   // The story slides live under /og/story/ and are reached through every
   // caller of this function (public GETs, the publisher's in-process preflight).
@@ -4961,17 +5087,22 @@ async function serveOgImage(url: URL, request: Request, env: Env, ctx: Execution
   if (!m) return ogFallback(env, request)
   const jpeg = m[2] === 'jpg'
   const pagePath = m[1].replace(/\/+$/, '') || '/home'
-  const q = url.searchParams.get('q')?.trim() ?? ''
+  // `q` is never read: a question or search is never drawn on a card.
   const award = url.searchParams.get('award') ?? ''
   const cardQuery = CARD_QUERY.filter(k => url.searchParams.get(k)).map(k => [k, url.searchParams.get(k) as string] as [string, string])
   const cardSubject = url.searchParams.get('program') ?? url.searchParams.get('largest') ?? ''
   const format = ogFormat(url.searchParams.get('format'))
   const portrait = format === 'portrait'
   const variants = new URLSearchParams()
-  if (q) variants.set('q', q)
   for (const [k, v] of cardQuery) variants.set(k, v)
   if (portrait) variants.set('format', format)
   const cacheKey = cacheRequest('og', `${encodeURIComponent(env.CACHE_EPOCH)}/${OG_VERSION}/${m[2]}${pagePath}?${variants}`)
+  const pageUrl = new URL(`${SITE_ORIGIN}${pagePath}`)
+  for (const [k, v] of cardQuery) pageUrl.searchParams.set(k, v)
+  let route: SeoRoute | null = null
+  try { route = pagePath === '/home' ? null : matchSeoRoute(pageUrl) } catch { route = null }
+  // Before the cache: a subject the page would not show gets no card, drawn or replayed.
+  if (await cardRefused(route, pageUrl, request, env, ctx)) return jpeg ? new Response('No card available', { status: 404 }) : ogFallback(env, request)
   if (!cacheBypass(request, url)) {
     const hit = await caches.default.match(cacheKey)
     if (hit) return withCacheStatus(request.method === 'HEAD' ? new Response(null, hit) : hit, 'HIT')
@@ -4984,10 +5115,6 @@ async function serveOgImage(url: URL, request: Request, env: Env, ctx: Execution
     if (pagePath === '/home') {
       spec = homeCard()
     } else {
-      const pageUrl = new URL(`${SITE_ORIGIN}${pagePath}`)
-      if (q) pageUrl.searchParams.set('q', q)
-      for (const [k, v] of cardQuery) pageUrl.searchParams.set(k, v)
-      const route = matchSeoRoute(pageUrl)
       if (route) {
         const meta = await buildMeta(route, pageUrl, request, env, ctx)
         if (meta.status !== 404) spec = meta.card ?? null
@@ -5022,15 +5149,28 @@ function robotsTxt(): Response {
 /** Generated from the published exports by build:crawl; each child is bounded. */
 async function sitemapXml(env: Env, path = '/sitemap.xml'): Promise<Response> {
   if (path !== '/sitemap.xml' && !/^\/sitemaps\/[a-z-]+-[1-9]\d*\.xml$/.test(path)) return new Response('Not found', { status: 404, headers: { 'x-robots-tag': 'noindex' } })
+  const enabled = vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED)
+  const headers = {'content-type':'application/xml; charset=utf-8','cache-control':'public, max-age=3600'}
+  if (path.startsWith('/sitemaps/vic-election-')) {
+    if (!enabled || path !== VIC_ELECTION_SITEMAP) return new Response('Not found',{status:404,headers:{'x-robots-tag':'noindex'}})
+    const data = await assetJson<VicElection>(env,VIC_ELECTION_ASSET)
+    const rows = vicElectionDiscovery(data,true)['vic-election']
+    return new Response(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${rows.map(p=>`<url><loc>${SITE_ORIGIN}${escHtml(p.path)}</loc><lastmod>${escHtml(p.lastmod)}</lastmod></url>`).join('')}</urlset>`,{headers})
+  }
   const asset = await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/crawl${path}`))
   if (!asset.ok) return new Response('Sitemap unavailable', { status: 503, headers: { 'cache-control': 'no-store' } })
-  return new Response(asset.body, { headers: { 'content-type': 'application/xml; charset=utf-8', 'cache-control': 'public, max-age=3600' } })
+  if (enabled && path === '/sitemap.xml') {
+    const data = await assetJson<VicElection>(env,VIC_ELECTION_ASSET)
+    const body = (await asset.text()).replace('</sitemapindex>',`<sitemap><loc>${SITE_ORIGIN}${VIC_ELECTION_SITEMAP}</loc><lastmod>${escHtml(data.updated)}</lastmod></sitemap></sitemapindex>`)
+    return new Response(body,{headers})
+  }
+  return new Response(asset.body, { headers })
 }
 
 async function llmsTxt(env: Env): Promise<Response> {
   const asset = await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/crawl/llms.txt`))
   if (!asset.ok) return new Response('Corpus guide unavailable', { status: 503, headers: { 'cache-control': 'no-store' } })
-  return new Response(asset.body, { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=3600' } })
+  return new Response(vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED) ? (await asset.text()) + '\n' + vicElectionLlms : asset.body, { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=3600' } })
 }
 
 
@@ -5423,6 +5563,8 @@ function personTopicsFor(name: string, env: Env): Promise<Response> {
 export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url)
+    if (!vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED) && vicElectionPublicationPath(url.pathname))
+      return withSecurityHeaders(new Response(request.method === 'HEAD' ? null : 'Not found', {status:404,headers:{'x-robots-tag':'noindex','cache-control':'no-store','content-type':'text/plain; charset=utf-8'}}), url)
     const canonical = await pageAliasRedirect(request, url, env)
     if (canonical) return canonical
     // Scraper fleets (see network-block.ts) are refused before any paid route runs.

@@ -145,16 +145,17 @@ test('page aliases, including combined www/path aliases, redirect once to an exp
     ['/division/division-federal-representatives-10266/','/doc/division-federal-representatives-10266'],
     ['/doc/federal-representatives-10266','/doc/division-federal-representatives-10266'],
     ['/money/','/money'],['/map/','/map'],['/community/','/community'],['/map.html','/map'],['/connections.html','/connections'],['/community.html','/community'],
+    ...(await read('/hubs/index.json')).pages.map(p=>[p.path+'/',p.path]),
   ];
   for(const [path,target] of cases) for(const host of ['opax.com.au','www.opax.com.au']) for(const method of ['GET','HEAD']) {
     const response=await worker.fetch(new Request(`https://${host}${path}`,{method}),env,{waitUntil(){}});
-    assert.equal(response.status,host.startsWith('www.')?308:301,path);
+    assert.equal(response.status,host.startsWith('www.') && !/^\/(sitting|estimates)(\/|$)/.test(target)?308:301,path);
     assert.equal(response.headers.get('location'),origin+target,path);
     const landed=await worker.fetch(new Request(response.headers.get('location'),{method}),env,{waitUntil(){}});
     assert.equal(landed.status,200,path);
     if(method==='GET') assert.ok((await landed.text()).includes(`rel="canonical" href="${origin+target}"`),path);
   }
-  for(const path of ['/bill/AU-FEDERAL-NONEXISTENT','/division/federal-representatives-99999999','/subject/person/null']) {
+  for(const path of ['/bill/AU-FEDERAL-NONEXISTENT','/division/federal-representatives-99999999','/subject/person/null','/sitting/2026-10-13/','/estimates/unknown/']) {
     const r=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});
     assert.equal(r.status,404,path);assert.equal(r.headers.get('location'),null,path);
   }
@@ -247,22 +248,23 @@ test('noindex 404 bodies emit no canonical or page identity, including unknown r
   for(const path of paths){const response=await worker.fetch(new Request(origin+path),env,{});assert.equal(response.status,404,path);assert.equal(response.headers.get('x-robots-tag'),'noindex',path);const html=await response.text();assert.doesNotMatch(html,/<link\b[^>]*rel="canonical"|<script[^>]*id="ld-page"/,path);}
 });
 
-test('an individual donor page is noindex and names nobody in its server-rendered HTML',async()=>{
-  for(const name of ['Sara Prendergast','Roslyn Packer','Packer, Roslyn']){
-    const response=await worker.fetch(new Request(origin+'/subject/donor/'+encodeURIComponent(name)),env,{waitUntil(){}});
-    assert.equal(response.status,200,name);assert.equal(response.headers.get('x-robots-tag'),'noindex',name);
-    const html=await response.text();assert.match(html,/<meta name="robots" content="noindex">/,name);
-    // The page's own address may carry the name; nothing else on the page does.
-    const head=html.replaceAll('/subject/donor/'+encodeURIComponent(name),'');
-    for(const part of name.split(/[ ,]+/))assert.ok(!head.includes(part),`${name}: ${part}`);
-  }
-  const org=await worker.fetch(new Request(origin+'/subject/donor/Clubs%20NSW'),env,{waitUntil(){}});
-  assert.equal(org.headers.get('x-robots-tag'),'all');assert.match(await org.text(),/<h1>Clubs NSW<\/h1>/);
-});
-
 test('all SSR body types use factual relationship wording and pair political money with the caveat',async()=>{
   const samples=['/subject/party/labor','/subject/person/anthony-albanese','/subject/donor/Clubs%20NSW','/subject/supplier/s-f93824d9abc756c8f32f','/money','/connections','/explore'];
   const campaigners=(await read('/graph/campaigners.json')).entities;
   for(const c of campaigners){const html=await get('/subject/campaigner/'+encodeURIComponent(c.name));const body=html.match(/<section id="prerender"[\s\S]*?<\/section>/)[0];assert.doesNotMatch(body,/linked to/i,c.name);assert.equal(associationCaveat(body,body),body,c.name);}
   for(const path of samples){const body=(await get(path)).match(/<section id="prerender"[\s\S]*?<\/section>/)[0];assert.doesNotMatch(body,/linked to/i,path);assert.match(body,/An association does not prove influence\./,path);}
+});
+
+test('association caveat requires a rendered money pairing, not an election coverage gap',async()=>{
+  const election=await read('/hubs/vic-election-2026.json');
+  for(const {path} of election.pages){
+    const r=await worker.fetch(new Request(origin+path),{...env,VIC_ELECTION_HUB_ENABLED:'true'},{});
+    assert.equal(r.status,200,path);const html=await r.text();
+    assert.match(html,/<h2>Grants by state electorate<\/h2><p>Not available\./,path);
+    assert.doesNotMatch(html,/An association does not prove influence/,path);
+  }
+  const person=await get('/subject/person/anthony-albanese');
+  const body=person.match(/<section id="prerender"[\s\S]*?<\/section>/)[0];
+  assert.match(body,/<h1>Anthony Albanese<\/h1>/);
+  assert.match(body,/<h2>Donors to their party<\/h2>[\s\S]*An association does not prove influence\.[\s\S]*\$[\d,]+/);
 });

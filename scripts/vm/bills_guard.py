@@ -22,11 +22,11 @@ MAX_HELD = 5
 MAX_HELD_PERCENT = 2
 # Store actual sitting days, not refresh dates. Extend before the 2027 sittings;
 # unknown dates retain the Sunday cadence without requesting APH's calendar.
-SITTING_RANGES = (
-    ("2026-10-12", "2026-10-15"),
-    ("2026-10-26", "2026-10-29"),
-    ("2026-11-16", "2026-11-19"),
-    ("2026-11-23", "2026-11-26"),
+SITTING_CALENDAR = Path(__file__).resolve().parents[1] / "hubs/sitting-2026.json"
+SITTING_RANGES = tuple(
+    (period["start"], period["end"])
+    for period in json.loads(SITTING_CALENDAR.read_text())["periods"]
+    if period.get("refresh_bills")
 )
 
 
