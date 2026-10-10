@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 import { shortDate, shortMoney } from '../public/format.js';
-import { associationHTML } from '../public/growth-modules.js';
+import { sourceLineHTML } from '../public/labels.js';
 import { partyUrl } from '../public/canonical-urls.js';
 
 // Execute the actual module; only replace its dynamic WebGL import with a
@@ -28,7 +28,7 @@ function node() {
 }
 function setup(fetch, mount = async () => ({ destroy() {}, setPaused() {} })) {
   const context = { fetch, AbortController, URLSearchParams, history: { replaceState() {} }, shortDate, shortMoney, partyUrl,
-    mountSupplierGrowth: () => {}, supplierDonations: async () => ({html: "", links: []}), associationHTML,
+    mountSupplierGrowth: () => {}, supplierDonations: async () => ({html: "", links: []}), sourceLineHTML,
     loadMapModule: async () => ({ mountMoneyMap: mount }) };
   runInNewContext(source, context);
   return context;
