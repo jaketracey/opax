@@ -5898,20 +5898,18 @@ html[data-chat="docked"] #panel-chat .chat-composer {
   html[data-chat="docked"] .chat-scroll { padding: 12px 16px 2px; }
   html[data-chat="docked"] #panel-chat .chat-composer { padding: 10px 16px max(12px, env(safe-area-inset-bottom)); }
 }
-/* At 360px the band's row is full: the wordmark gives up 8px of its gap. */
+/* The compact band gives every control its own touch target. */
 @media (min-width: 360px) and (max-width: 960px) {
   .site-header .chat-launcher:not([hidden]) {
     display: flex; align-items: center; justify-content: center; flex: 0 0 var(--size-target);
-    width: var(--size-target); height: var(--size-target); margin: 0 0 0 auto; padding: 10px;
+    width: var(--size-target); height: var(--size-target); margin: 0; padding: var(--space-row);
     border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--on-navy); cursor: pointer;
     -webkit-tap-highlight-color: transparent;
   }
   .site-header .chat-launcher:hover, .site-header .chat-launcher[aria-expanded="true"] { background: color-mix(in srgb, var(--on-navy) 10%, transparent); }
-  .site-header .chat-launcher:focus-visible { outline: var(--border-focus) solid var(--bronze-bright); outline-offset: 3px; }
+  .site-header .chat-launcher:focus-visible { outline: var(--border-focus) solid var(--bronze-bright); outline-offset: var(--space-line); }
   .site-header .chat-launcher > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-  .site-header .chat-launcher svg { width: 22px; height: 22px; flex: none; color: var(--bronze-bright); }
-  .site-header .masthead:has(> .chat-launcher:not([hidden])) > .masthead-id { margin-right: -8px; }
-  .site-header .masthead:has(> .chat-launcher:not([hidden])) > .header-search-toggle { margin-left: 0; }
+  .site-header .chat-launcher svg { width: var(--size-icon-md); height: var(--size-icon-md); flex: none; color: var(--on-navy); }
 }
 /* A short window (a landscape phone) gives the sheet everything it can. */
 @media (max-height: 620px) and (min-width: 601px) {
@@ -5949,42 +5947,47 @@ html[data-chat="docked"] .answer-overview .answer-overview-label { font-size: 0.
 html[data-panel="search"] .research-app main.compact .hero-intro { display: block; }
 
 /* Shared compact masthead for the homepage and research pages. */
-.site-header { padding: 0; border-bottom-width: 2px; }
-.site-header .masthead { position: relative; align-items: center; justify-content: space-between; gap: 30px; min-height: 78px; }
+.site-header { padding: 0; border-bottom-width: var(--border-focus); }
+.site-header .masthead { position: relative; align-items: center; justify-content: space-between; gap: var(--space-group); min-height: calc(var(--size-control-large) + var(--space-group)); }
 .site-header .masthead-id { top: 0; flex: 0 0 auto; max-width: none; }
-.site-header .logo { gap: 10px; color: var(--on-navy); }
-.site-header .logo-mark { width: 54px; height: 49px; }
-.site-wordmark { font: 700 26px var(--serif); }
-.site-header .masthead-nav { display: flex; flex: 0 1 auto; margin-left: auto; }
-.site-header .nav-list { gap: var(--space-group); }
+.site-header .logo { justify-content: center; min-width: var(--size-target); min-height: var(--size-target); color: var(--on-navy); }
+.site-header .logo-mark { width: var(--size-control-large); height: auto; aspect-ratio: 176 / 160; }
+.site-header .masthead-nav { display: flex; flex: 1 1 auto; align-items: flex-end; margin-left: 0; }
+.site-header .nav-list { flex-wrap: nowrap; gap: var(--space-group); }
 .site-header .nav-link { color: var(--on-navy); font: var(--type-metadata); padding: 0; gap: var(--space-tight); border-bottom: 0; }
-.site-header .nav-link.active { text-decoration: underline; text-underline-offset: 5px; }
+.site-header .nav-link.active { text-decoration: underline; text-underline-offset: var(--space-line); }
 .site-header .nav-item { position: static; }
-.site-header .megamenu { left: auto; right: 0; top: 100%; border-top: 3px solid var(--bronze); max-height: calc(100vh - 150px); overflow-y: auto; }
+.site-header .megamenu { left: auto; right: 0; top: 100%; border-top: var(--border-masthead) solid var(--bronze); max-height: calc(100vh - var(--size-control-large) * 3); overflow-y: auto; }
 .site-header .nav-toggle, .site-header .mast-search-toggle { display: none; }
 @media (max-width: 1100px) {
   .site-header .nav-list { gap: var(--space-block); }
   .site-header .nav-link { font: var(--type-fine); }
 }
-/* The full row (eight sections once Instruments joins at runtime) needs about
-   900px beside the logo and search; below 960 the band carries the menu. Keep
+/* Below 960 the band carries the menu. Keep
    in step with COMPACT_NAV in navigation.js and the chat launcher's range. */
 @media (max-width: 960px) {
   .site-header .masthead-nav { display: none; }
-  .site-header .nav-toggle { display: inline-flex; margin-left: auto; }
+  .site-header .nav-toggle { display: inline-flex; flex: 0 0 var(--size-target); width: var(--size-target); height: var(--size-target); margin-left: 0; color: var(--on-navy); }
+  .site-header .nav-toggle svg { width: var(--size-icon-md); height: var(--size-icon-md); }
 }
 
 /* Search is available on demand without taking space from the navigation. */
-.header-search-toggle { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 44px; width: 44px; height: 44px; padding: 10px; background: transparent; border: 0; border-radius: 4px; color: var(--on-navy); cursor: pointer; }
-.header-search-toggle:hover, .header-search-toggle[aria-expanded="true"] { background: rgb(255 255 255 / 10%); }
-.header-search-toggle svg { width: 22px; height: 22px; }
-.header-search-panel { position: absolute; right: clamp(1.25rem, 4vw, 4.5rem); top: calc(100% + 2px); z-index: 60; width: min(420px, calc(100vw - 40px)); background: var(--paper); padding: 14px; border: 1px solid var(--line); border-top: 0; box-shadow: 0 14px 30px rgb(21 27 20 / 20%); }
+.header-search-toggle { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 var(--size-target); width: var(--size-target); height: var(--size-target); padding: var(--space-row); background: transparent; border: 0; border-radius: var(--radius-sm); color: var(--on-navy); cursor: pointer; }
+.header-search-toggle:hover, .header-search-toggle[aria-expanded="true"] { background: color-mix(in srgb, var(--on-navy) 10%, transparent); }
+.header-search-toggle svg { width: var(--size-icon-md); height: var(--size-icon-md); }
+.header-search-panel { position: absolute; right: var(--space-screen); top: calc(100% + var(--border-focus)); z-index: 60; width: min(26rem, calc(100vw - var(--space-screen) * 2)); background: var(--paper); padding: var(--space-block); border: var(--border-hairline) solid var(--divider-default); border-top: 0; box-shadow: var(--shadow-overlay); }
 .header-search-panel .mast-search.ui-input-wrap { display: flex; margin: 0; width: 100%; }
-.header-search-panel .mast-sugg { width: calc(100% + 28px); top: calc(100% + 16px); right: -14px; }
-.site-header .masthead { gap: 20px; }
+.header-search-panel .mast-sugg { width: calc(100% + var(--space-block) * 2); top: calc(100% + var(--space-block)); right: calc(-1 * var(--space-block)); }
 @media (max-width: 960px) {
   .site-header .nav-toggle { margin-left: 0; }
-  .site-header .header-search-toggle { margin-left: auto; }
+  .site-header .header-search-toggle { margin-left: 0; }
+}
+@media print {
+  .site-header { position: static; }
+  .site-header .masthead-nav, .site-header .header-search-toggle,
+  .site-header .nav-toggle, .site-header .chat-launcher { display: none; }
+  .site-header .logo-mark .logo-land { fill: var(--bronze-ink); }
+  .site-header .logo-mark .logo-star { fill: var(--ink); }
 }
 
 /* TVFY division prose uses the same quiet type and quote rule in SPA and SSR. */

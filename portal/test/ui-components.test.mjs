@@ -343,6 +343,22 @@ test('focus, touch targets, reduced motion and forced colours cover every contro
 
 // --- no floating Ask pill ----------------------------------------------------------
 
+test('every web header has a named home link with only the hidden Australia and stars mark', () => {
+  for (const file of ['index.html', 'home.html', 'community.html', 'ui-workbench.html']) {
+    const html = read(file);
+    const header = html.match(/<header\b[^>]*>[\s\S]*?<\/header>/)?.[0];
+    assert.ok(header, file);
+    assert.match(header, /<a class="logo" href="\/" aria-label="OPAX home">/);
+    assert.match(header, /<svg class="logo-mark"[^>]*aria-hidden="true"/);
+    assert.doesNotMatch(header, /site-wordmark|>OPAX</);
+    assert.match(html, /<title>[^<]*OPAX/);
+  }
+  const standalone = readFileSync(new URL('../src/site-mark.ts', import.meta.url), 'utf8');
+  assert.match(standalone, /aria-label="OPAX home"/);
+  assert.match(standalone, /aria-hidden="true"/);
+  assert.doesNotMatch(standalone, /site-wordmark|>OPAX</);
+});
+
 test('the Ask launcher is a header icon, never a pill floating over the page', () => {
   const launcherRules = [...style.matchAll(/([^{}]*\.chat-launcher[^{}]*)\{([^{}]*)\}/g)];
   assert.ok(launcherRules.length > 0);

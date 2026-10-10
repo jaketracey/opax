@@ -1,6 +1,7 @@
 @font-face { font-family: 'Public Sans'; font-style: normal; font-weight: 400 700; font-display: swap; src: url('/fonts/public-sans-normal-latin.woff2') format('woff2'); }
 @font-face { font-family: 'Merriweather'; font-style: normal; font-weight: 400 900; font-display: swap; src: url('/fonts/merriweather-normal-latin.woff2') format('woff2'); }
 .ui-workbench-page { scroll-padding-top: 1rem; }
+.wb-header .logo-mark { width: var(--size-control-large); height: var(--size-control-large); }
 .workbench { max-width: 1180px; width: 100%; margin: auto; padding: 0 clamp(1.25rem, 5vw, 4rem) 4rem; }
 .wb-header { background: var(--navy); color: var(--on-navy); padding: 1.25rem clamp(1.25rem, 5vw, 4rem); display: flex; align-items: center; justify-content: space-between; gap: 1rem; border-bottom: 3px solid var(--bronze-bright); }
 .wb-header a { color: inherit; text-decoration: none; font: 700 1.2rem var(--serif); }
