@@ -498,5 +498,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     columnGap: rhythm.heading,
   },
-  stacked: { flexDirection: 'column', alignItems: 'stretch' },
+  stacked: {
+    flexDirection: 'column',
+    flexWrap: 'nowrap',
+    alignItems: 'stretch',
+  },
 });

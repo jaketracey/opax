@@ -122,5 +122,9 @@ const styles = StyleSheet.create({
     columnGap: rhythm.tight,
     rowGap: rhythm.line,
   },
-  metaStacked: { flexDirection: 'column', alignItems: 'stretch' },
+  metaStacked: {
+    flexDirection: 'column',
+    flexWrap: 'nowrap',
+    alignItems: 'stretch',
+  },
 });

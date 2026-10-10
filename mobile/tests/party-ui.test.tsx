@@ -15,6 +15,7 @@ import { openOnWeb } from '../src/navigation/external';
 import { partyRoute } from '../src/navigation/routes';
 import { partyColors } from '../src/design/palette';
 import { pinned, slugs } from './pinned';
+import { describeWrappingColumns } from './wrapping-columns';
 jest.mock('expo-router', () => ({
   useSegments: () => [],
   router: { push: jest.fn() },
@@ -421,6 +422,8 @@ test('AX5 party text remains uncapped and current/recorded disclosures expose th
     );
     expect(control.props.accessibilityState.expanded).toBe(true);
   }
+  // A wrapping column draws stretched text blank or clipped (build 33).
+  expect(describeWrappingColumns(r)).toEqual([]);
   act(() => r.unmount());
 });
 test('authoritative unresolved party follows the web fallback', async () => {
