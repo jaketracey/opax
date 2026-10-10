@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 import ts from 'typescript';
-import { isEvaluativeQuestion, neutralEvaluativeAnswer } from '../public/ask-evaluative.js';
+import { isEvaluativeQuestion, mightBeEvaluative, neutralEvaluativeAnswer } from '../public/ask-evaluative.js';
 import { readRewrite } from '../src/ask-rewrite.ts';
 
 const fixtures = JSON.parse(readFileSync(new URL('./fixtures/ask-evaluative.json', import.meta.url)));
@@ -23,6 +23,14 @@ test('fast-path precision is 100 percent across all 140 phrasings; recall is del
   for (const question of ['Which is best?', 'Can I trust this senator?', 'Which party is more honest?']) assert.equal(isEvaluativeQuestion(question), false);
 });
 
+test('the cheap filter selects possible political judgements without deciding their intent', () => {
+  for (const question of ['Which party is more honest?', 'Is Labor any good?', 'Which senator is the laziest?', 'Who shoud I vote for?', 'Which minister is incompetant?', 'Who should I put first on my ballot?', 'Should I elect the Greens?']) assert.equal(mightBeEvaluative(question),true,question);
+  for (const question of ['What has parliament said about housing?', 'What are MPs paid?', 'Who receives the most funding from gambling donors?', 'Who spoke about the worst floods?', 'What are the best public transport options?']) assert.equal(mightBeEvaluative(question),false,question);
+  assert.equal(mightBeEvaluative('Is he competent?',{speaker:'Example MP'}),true);
+  assert.equal(mightBeEvaluative('Which senator said the minister was corrupt?'),true,'reported judgement needs a model intent decision, not a local neutral reply');
+  assert.equal(isEvaluativeQuestion('Which senator said the minister was corrupt?'),false);
+});
+
 const source = readFileSync(new URL('../src/index.ts', import.meta.url), 'utf8');
 const parsed = ts.createSourceFile('index.ts', source, ts.ScriptTarget.Latest, true);
 const fn = parsed.statements.find(n => ts.isFunctionDeclaration(n) && n.name?.text === 'apiAsk').getText(parsed);
@@ -31,7 +39,7 @@ for (const stream of [false, true]) test(`neutral reply before any retrieval or 
   const calls = [];
   const unexpected = name => async () => { calls.push(name); throw new Error(`Unexpected ${name}`); };
   const apiAsk = runInNewContext(code + ';apiAsk', {
-    isEvaluativeQuestion, neutralEvaluativeAnswer, Date, URL, Request, Response,
+    isEvaluativeQuestion, mightBeEvaluative, neutralEvaluativeAnswer, Date, URL, Request, Response,
     json: data => Response.json(data),
     questionNamesWithheldDonor: unexpected('asset lookup'), rankedMoneyAnswer: unexpected('money ranking'), paidAnswer: unexpected('salary ranking'),
     standaloneQuestion: unexpected('model rewrite'), retrieveAskRecords: unexpected('retrieval'), kbFetch: unexpected('model'),
@@ -56,15 +64,15 @@ for (const stream of [false, true]) for (const conversation of [false, true]) te
   const seen = { rewrite: 0, retrieval: 0, generation: 0, quota: 0 };
   const unexpected = name => async () => { seen[name]++; throw new Error(`Unexpected ${name}`); };
   const apiAsk = runInNewContext(code + ';apiAsk', {
-    isEvaluativeQuestion, neutralEvaluativeAnswer, Date, URL, Request, Response,
-    json: data => Response.json(data), readerTurns: () => [], questionNamesWithheldDonor: async () => false,
+    isEvaluativeQuestion, mightBeEvaluative, neutralEvaluativeAnswer, Date, URL, Request, Response,
+    json: data => Response.json(data), readerTurns: input => (input.context || []).filter(t => t.author === 'user').map(t => t.text), questionNamesWithheldDonor: async () => false,
     askCacheInput: () => null, cacheBypass: () => false,
     rateLimited: async () => { seen.quota++; return null; },
     standaloneQuestion: async input => { seen.rewrite++; return readRewrite(input.question + '\nINTENT: evaluative', input.question, ''); },
     rankedMoneyAnswer: unexpected('retrieval'), paidAnswer: unexpected('retrieval'), loadPeople: unexpected('retrieval'),
     retrieveAskRecords: unexpected('retrieval'), kbFetch: unexpected('generation'), fetch: unexpected('generation'),
   });
-  const questions = neutral.filter(question => !isEvaluativeQuestion(question));
+  const questions = neutral.filter(question => !isEvaluativeQuestion(question) && (conversation || mightBeEvaluative(question)));
   for (const question of questions) {
     const res = await apiAsk(new Request(`http://opax.test/api/ask${stream ? '?stream=1' : ''}`, {
       method: 'POST', body: JSON.stringify({question, ...(conversation ? {context:[{author:'user',text:'Compare parliamentary records.'}]} : {})}),

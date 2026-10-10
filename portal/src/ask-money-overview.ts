@@ -10,6 +10,8 @@
  * having asked, only sometimes plainer.
  */
 
+import { EVALUATIVE_BACKSTOP } from './ask-evidence'
+
 export type MoneyFacts = {
   /** The canonical wording of the selection, where one exists: the same
    *  figures must always produce the same sheet, whatever a reader typed. */
@@ -64,6 +66,7 @@ export function moneyOverviewPrompt(facts: MoneyFacts): string {
       'table: never write "row", "listed here", "the figures show", "this selection" or "data". ' +
       'No headings, lists, links, bold or quotation marks. Australian English. Reply with the ' +
       'paragraph and nothing else.',
+    EVALUATIVE_BACKSTOP,
   ].join('\n')
 }
 

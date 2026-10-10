@@ -1,4 +1,4 @@
-import { isEvaluativeQuestion, neutralEvaluativeAnswer } from '../public/ask-evaluative.js';
+import { isEvaluativeQuestion, mightBeEvaluative, neutralEvaluativeAnswer } from '../public/ask-evaluative.js';
 import * as passageText from '../src/passage-text.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -39,7 +39,7 @@ function harness(responses, env = {}) {
     REFUSAL_PREFIXES: ['not enough data'], ASK_SYNC_TIMEOUT_MS: 1000, ASK_STALL_MS: 1000, ASK_RETRY_BUDGET_MS: 1000,
     SSE_HEADERS: { 'content-type': 'text/event-stream' },
     // The donor privacy check and model budget are exercised in donor-privacy.test.mjs and model-budget.test.mjs.
-    isEvaluativeQuestion, neutralEvaluativeAnswer, questionNamesWithheldDonor: async () => false, readerTurns: () => [], withheldDonorAnswer: () => ({}), MODEL_BUDGET_HEADER: 'x-opax-model-budget', modelBudgetBusy: () => new Response(null, { status: 503 }),
+    isEvaluativeQuestion, mightBeEvaluative, neutralEvaluativeAnswer, questionNamesWithheldDonor: async () => false, readerTurns: input => (input.context || []).filter(t => t.author === 'user' || t.author === 'question').map(t => t.text), withheldDonorAnswer: () => ({}), MODEL_BUDGET_HEADER: 'x-opax-model-budget', modelBudgetBusy: () => new Response(null, { status: 503 }),
     rankedMoneyAnswer: async () => null, paidAnswer: async () => null, standaloneQuestion: async () => null, needsAskPeople: () => false, resolveAskScope: input => ({ input, scope: {} }),
     askCacheInput: () => null, cacheBypass: () => false, rateLimited: async () => null,
     retrieveAskRecords: async () => ({ records: [], coverage: '', total: 0 }),

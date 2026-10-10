@@ -11,7 +11,7 @@ import ts from 'typescript';
 const dir=mkdtempSync(join(tmpdir(),'opax-summary-test-'));
 await build({entryPoints:[new URL('../src/search-summary.ts',import.meta.url).pathname,new URL('../src/ask-evidence.ts',import.meta.url).pathname],outdir:dir,bundle:true,platform:'node',format:'esm'});
 const summary=await import(pathToFileURL(join(dir,'search-summary.js')));
-const {stripListingBoilerplate,evidenceExcerpt}=await import(pathToFileURL(join(dir,'ask-evidence.js')));
+const {stripListingBoilerplate,evidenceExcerpt,EVALUATIVE_BACKSTOP}=await import(pathToFileURL(join(dir,'ask-evidence.js')));
 const rows=[{slug:'speech-1',title:'Agricultural research',speaker:'Example MP',date:'2000-10-04',kind:'speech',snippet:'Agricultural research and development increased by 10 per cent under the programme. The speaker described investing in rural production.'},{slug:'award-2',title:'Local facilities',kind:'grant_award',href:'/money/grants?open=award-2#record',snippet:'A published grant award of $250,000 supported local facilities in the shire. This entry does not establish a payment.'}];
 const sources=summary.summarySources(rows);
 const draft=()=>({points:[{text:'The speaker described a 10 per cent increase in agricultural research and development.',citations:[{id:'s1',quote:'Agricultural research and development increased by 10 per cent under the programme.'}]}]});
@@ -76,7 +76,7 @@ const index=readFileSync(new URL('../src/index.ts',import.meta.url),'utf8');
 const code=ts.transpileModule(index.slice(index.indexOf('async function apiSearchSummary('),index.indexOf('// Narration is generated')), {compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
 function fixture({empty=false,invalid=false,denied=false}={}){
  const calls=[],cache=new Map();
- const ctx={...summary,URL,Request,Response,AbortSignal,Error,json:(x,status=200)=>Response.json(x,{status}),
+ const ctx={...summary,EVALUATIVE_BACKSTOP,URL,Request,Response,AbortSignal,Error,json:(x,status=200)=>Response.json(x,{status}),
   apiUnifiedSearch:async(req,url)=>{calls.push({search:url.href});return Response.json({results:empty?[]:rows,index_version:'v1'})},
   cacheRequest:(kind,key)=>new Request('https://cache.test/'+kind+'/'+key),sha256Hex:async s=>createHash('sha256').update(s).digest('hex'),
   readGenerationCache:async (_env,_ctx,key)=>cache.get(key.url)?.clone(),storeGenerationCache:(_env,_ctx,key,res)=>cache.set(key.url,res.clone()),withCacheStatus:res=>res,
@@ -94,6 +94,7 @@ test('summary uses the actual filtered search with canonical relevance order and
  for(const k of ['party','topic','from','to','state','mode','speaker','kind'])assert.equal(query.get(k),params[k]||'all');
  assert.equal(query.get('page'),'1');assert.equal(query.get('sort'),'relevance');
  assert.equal(f.calls[1].path,'/ask');assert.equal(f.calls[1].body.generative_model,'openai-compatible');
+ assert.ok(f.calls[1].body.prompt.system.includes(EVALUATIVE_BACKSTOP));
  await f.run({...params,page:'1',sort:'newest'});assert.equal(f.calls.filter(c=>c.path).length,1);
  await f.run({...params,from:'1999'});assert.equal(f.calls.filter(c=>c.path).length,2);
 });
@@ -118,7 +119,7 @@ test('the streamed overview sends each validated point as it lands, then the cac
  const answer=JSON.stringify({points:[...draft().points,{text:'An invented claim that must be dropped.',citations:[{id:'s1',quote:'not in the record at all, really not'}]}]});
  const chunks=[];for(let i=0;i<answer.length;i+=11) chunks.push(JSON.stringify({item:{type:'answer',text:answer.slice(i,i+11)}})+'\n');
  chunks.unshift(JSON.stringify({item:{type:'reasoning',text:''}})+'\n');
- const ctx={...summary,URL,Request,Response,AbortSignal,Error,TransformStream,TextEncoder,TextDecoder,JSON,json:(x,status=200)=>Response.json(x,{status}),
+ const ctx={...summary,EVALUATIVE_BACKSTOP,URL,Request,Response,AbortSignal,Error,TransformStream,TextEncoder,TextDecoder,JSON,json:(x,status=200)=>Response.json(x,{status}),
   SSE_HEADERS:{'content-type':'text/event-stream; charset=utf-8'},ragBase:()=>'https://rag.test/kb',
   fetch:async(url,init)=>{calls.push({url,body:JSON.parse(init.body)});const enc=new TextEncoder();return new Response(new ReadableStream({start(c){for(const ch of chunks)c.enqueue(enc.encode(ch));c.close()}}),{status:200})},
   apiUnifiedSearch:async()=>Response.json({results:rows,index_version:'v1'}),
@@ -136,6 +137,7 @@ test('the streamed overview sends each validated point as it lands, then the cac
  assert.equal(events[0].d.text,draft().points[0].text);assert.deepEqual(events[0].d.source_ids,['s1']);
  assert.equal(events[1].d.status,'ready');assert.equal(events[1].d.points.length,1);assert.equal(events[1].d.sources[0].href,'/doc/speech-1');
  assert.equal(calls[0].url,'https://rag.test/kb/ask');assert.equal(calls[0].body.generative_model,'openai-compatible');
+ assert.ok(calls[0].body.prompt.system.includes(EVALUATIVE_BACKSTOP));
  assert.equal(cache.size,1,'the done payload is cached like the synchronous answer');
  const hit=await fn(new Request(u),u,{CACHE_EPOCH:'v1'},{waitUntil:()=>{}});
  assert.doesNotMatch(hit.headers.get('content-type')||'',/text\/event-stream/);assert.equal((await hit.json()).status,'ready');

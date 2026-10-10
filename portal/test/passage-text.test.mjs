@@ -1,4 +1,4 @@
-import { isEvaluativeQuestion, neutralEvaluativeAnswer } from '../public/ask-evaluative.js';
+import { isEvaluativeQuestion, mightBeEvaluative, neutralEvaluativeAnswer } from '../public/ask-evaluative.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -120,7 +120,7 @@ test('Worker /ask sources normalize once and keep the 600 maximum on word bounda
   const worker = compile(['apiAsk','askPayload','label','calibrate'], {
     ...evidence, URL, Response, AbortSignal, isWitness,
     // The donor privacy check and model budget are exercised in donor-privacy.test.mjs and model-budget.test.mjs.
-    isEvaluativeQuestion, neutralEvaluativeAnswer, questionNamesWithheldDonor: async () => false, readerTurns: () => [], withheldDonorAnswer: () => ({}), MODEL_BUDGET_HEADER: 'x-opax-model-budget', modelBudgetBusy: () => new Response(null, { status: 503 }),
+    isEvaluativeQuestion, mightBeEvaluative, neutralEvaluativeAnswer, questionNamesWithheldDonor: async () => false, readerTurns: input => (input.context || []).filter(t => t.author === 'user' || t.author === 'question').map(t => t.text), withheldDonorAnswer: () => ({}), MODEL_BUDGET_HEADER: 'x-opax-model-budget', modelBudgetBusy: () => new Response(null, { status: 503 }),
     rankedMoneyAnswer:async()=>null, rateLimited:async()=>null, paidAnswer:async()=>null, standaloneQuestion:async()=>null, integrityQuestion:()=>false,
     needsAskPeople:()=>false, loadPeople:async()=>people,
     resolveAskScope:input=>({input,scope:undefined}), askCacheInput:()=>null, cacheBypass:()=>true,

@@ -17,6 +17,26 @@ export type RewriteIntent = 'evaluative' | 'factual'
 export type FollowUpRewrite = string | null | { unclear: true; suggestion?: string; intent?: RewriteIntent } | { question: string | null; intent: RewriteIntent }
 
 export const REWRITE_SYSTEM = 'You rewrite reader messages as standalone questions and classify their intent. Output the question or UNCLEAR on one line, then INTENT: evaluative or INTENT: factual on the final line, and nothing else.'
+export const INTENT_SYSTEM = 'You classify the intent of a reader question. Output exactly INTENT: evaluative or INTENT: factual on one line, and nothing else.'
+
+/** First questions are classified only: their wording and scope cannot be rewritten. */
+export async function classifyQuestion(
+  input: { question?: string },
+  generate: (user: string, question: string) => Promise<string | null>,
+): Promise<FollowUpRewrite> {
+  const question = String(input.question ?? '').replace(/\s+/g, ' ').trim()
+  if (!question || question.length > 2000) return null
+  let raw: string | null
+  try {
+    raw = await generate(
+      'Classify the reader\'s request as evaluative if it asks OPAX to rank, grade or judge a politician or party, or recommend how to vote, including informal wording and typos. ' +
+      'Factual requests ask for record facts, including reported judgements, quotations, bill titles and comparisons by recorded figures; classify the request, not the quoted words. ' +
+      'Return exactly INTENT: evaluative or INTENT: factual on one line.\n\nReader question: {question}', question,
+    )
+  } catch { return null }
+  const flag = /^INTENT: (evaluative|factual)$/.exec(String(raw ?? '').trim())
+  return flag ? { question: null, intent: flag[1] as RewriteIntent } : null
+}
 
 /** Messages that are acknowledgement or noise, never a question: no model call. */
 const FILLER = new Set(('ok okay k kk yes yeah yep yup ya yah no nope nah sure thanks thank you ty thx cheers ' +

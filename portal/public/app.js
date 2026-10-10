@@ -9871,7 +9871,7 @@ function askRequestBody(question, kind, filters, automaticSpeaker) {
   return body;
 }
 
-async function runAsk(question) {
+async function runAsk(question, requestOverride) {
   closeAskCitation(false);
   renderRegisterNote(question);
   if (askAbort) askAbort.abort();
@@ -9922,7 +9922,8 @@ async function runAsk(question) {
       // remain in the question for the server to handle without a guessed filter.
       speakerFilter = await resolveSpeaker(speakerFilter);
     }
-    const askBody = JSON.stringify(askRequestBody(question, askKind(), askFilters(), speakerFilter));
+    const askInput = requestOverride || askRequestBody(question, askKind(), askFilters(), speakerFilter);
+    const askBody = JSON.stringify(askInput);
     // The answer streams into the page as it is written; the wombat leaves
     // on the first words. Sources, stamp and rail wait for the final payload.
     const live = streamRenderer($("ask-answer"), () => askAbort === myAbort);
@@ -9980,13 +9981,14 @@ async function runAsk(question) {
     $("ask-answer").askEvidence = citedList;
     // The speaker this answer was actually filtered to (chosen in Options or
     // read out of the question), so "Continue in a conversation" keeps it.
-    lastAsk = { question, answer: answerText, sources, kind: askKind(), speaker: askFilters().speaker || speakerFilter || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context, money_overview: data.money_overview, pay_answer: data.pay_answer, pay_next: data.pay_next, next: data.comparison_chips };
+    lastAsk = { question, answer: answerText, sources, kind: askInput.kind, speaker: askInput.speaker || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context, money_overview: data.money_overview, pay_answer: data.pay_answer, pay_next: data.pay_next, next: data.comparison_chips, record_retry: data.record_retry, record_request: data.answer_status === 'neutral' ? askInput : undefined };
     // A calculated answer carries its own fixed next steps, not generated ones.
     const calculated = !!(data.money_ranking || data.pay_answer);
     if (data.comparison_chips?.length) renderFollowups(data.comparison_chips, $("ask-followups"), item => {
       if (openConversationFrom(lastAsk)) sendChat(item.question, item);
     }, 'Choose a record to compare.');
     else if (!calculated) prefetchAskFollowups(lastAsk);
+    if (data.answer_status === 'neutral') renderRecordRetry($("ask-followups"), data.record_retry, askInput, input => runAsk(input.question, input));
 
     if (calculated) { $("ask-money").hidden = true; $("ask-register-note").hidden = true; }
     hideWombat();
@@ -9999,7 +10001,7 @@ async function runAsk(question) {
     renderAnswerOverview($("ask-overview"), data.money_overview);
     if (answerText) {
       // Final rendering uses the complete citation ranges, including cache hits.
-      renderAnswer($("ask-answer"), answerText, { ...data, onRetry: () => runAsk(question) });
+      renderAnswer($("ask-answer"), answerText, { ...data, onRetry: () => runAsk(question, askInput) });
       // A calculated money answer gets no generated follow-ups, so it carries
       // two fixed next steps instead of dead-ending under its table.
       if (data.money_ranking && data.answer_status === "calculated") renderMoneyNextSteps($("ask-answer"), answerText);
@@ -10013,7 +10015,7 @@ async function runAsk(question) {
       retry.type = "button";
       retry.className = "ui-button"; retry.dataset.variant = "primary";
       retry.textContent = "Ask again";
-      retry.addEventListener("click", () => runAsk(question));
+      retry.addEventListener("click", () => runAsk(question, askInput));
       $("ask-answer").replaceChildren(p, retry);
     }
     const inferredScope = [data.scope?.speaker, data.scope?.party,
@@ -10063,7 +10065,7 @@ async function runAsk(question) {
       retry.className = "ui-button ask-retry";
       retry.dataset.uiSize = "compact";
       retry.textContent = "Try again";
-      retry.addEventListener("click", () => runAsk(question));
+      retry.addEventListener("click", () => runAsk(question, requestOverride));
       $("ask-status").append(" ", retry);
       // A failed ask leaves the page empty; the suggested starts return.
       // (A stream that broke after its first words leaves them standing.)
@@ -10822,7 +10824,7 @@ function initChat(manageFocus) {
           store.active = null;
           chatThread = [
             { role: "user", text: seed.question, fundingQuestion: seed.money_question },
-            { role: "answer", text: seed.answer, sources: seed.sources || [], next: seed.next || undefined, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context, money_overview: seed.money_overview, pay_answer: seed.pay_answer, pay_next: seed.pay_next },
+            { role: "answer", text: seed.answer, sources: seed.sources || [], next: seed.next || undefined, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context, money_overview: seed.money_overview, pay_answer: seed.pay_answer, pay_next: seed.pay_next, record_retry: seed.record_retry, record_request: seed.record_request },
           ];
           chatKind = seed.kind === "speech" ? "speech" : "all";
           // An ask that was filtered to one speaker hands that filter on: the
@@ -11189,7 +11191,7 @@ async function requestChatFollowups() {
   const last = chatThread[chatThread.length - 1];
   const asked = chatThread[chatThread.length - 2];
   if (!last || last.role !== "answer" || asked?.role !== "user") return;
-  if (last.next?.length) { renderChatNext(last.next); return; } // generated once, kept on the message
+  if (last.next?.length) { renderChatNext(last.next, last.record_retry, last.record_request); return; } // generated once, kept on the message
   const passages = followupPassages(last.sources);
   if (!passages.length) return; // no passages, no follow-ups — never a spinner
   const myAbort = new AbortController();
@@ -11221,9 +11223,25 @@ async function requestChatFollowups() {
   } catch { /* follow-ups are an extra, never an error */ }
 }
 
-function renderChatNext(questions) {
+function renderChatNext(questions, recordRetry, recordRequest) {
   const next = $("chat-next");
   renderFollowups(questions, next, (item) => sendChat(item.question, item));
+  renderRecordRetry(next, recordRetry, recordRequest, input => sendChat(input.question, { recordRequest: input }));
+}
+
+function renderRecordRetry(container, action, request, onSelect) {
+  if (!container || !action || !request?.question) return;
+  const row = container.querySelector('.chat-next-btns');
+  if (!row) return;
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'ask-record-retry';
+  button.textContent = 'Ask for the record instead';
+  // Snapshot the whole original request: a later filter edit or chat turn
+  // must not change the person, topic, dates or conversation being retried.
+  const retry = JSON.parse(JSON.stringify({ ...request, record_only: true }));
+  button.addEventListener('click', () => onSelect(retry));
+  row.appendChild(button);
 }
 
 function renderFollowups(questions, next, onSelect, caption) {
@@ -11376,13 +11394,14 @@ async function sendChat(question, carry) {
     // A scoped conversation sends its speaker on EVERY turn, not only the
     // first: the Worker gives an explicit filter precedence over anything it
     // would read out of the wording, so "and on housing?" stays with them.
-    const chatBody = JSON.stringify({
+    const chatInput = carry?.recordRequest || {
       question: q,
       kind: chatSpeaker ? "speech" : chatKind,
       ...(chatSpeaker ? { speaker: chatSpeaker } : {}),
       context,
       prior_resources: priorResources.slice(0, 6),
-    });
+    };
+    const chatBody = JSON.stringify(chatInput);
     // The answer streams into a provisional turn beneath the waiting state;
     // the finished thread re-renders from chatThread as before.
     let liveWrap = null;
@@ -11463,6 +11482,8 @@ async function sendChat(question, carry) {
       pay_answer: data.pay_answer,
       pay_next: data.pay_next,
       next: data.comparison_chips,
+      record_retry: data.record_retry,
+      record_request: data.answer_status === 'neutral' ? chatInput : undefined,
       evidence_excerpts: data.evidence_excerpts,
       sources: (data.sources || []).map((source) => ({
         ...source,

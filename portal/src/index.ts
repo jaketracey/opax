@@ -3,8 +3,8 @@ import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, 
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
 import { rankedMoneyAnswer } from './ask-money'
 import { paidAnswer, mentionsPay } from './ask-pay'
-import { isEvaluativeQuestion, neutralEvaluativeAnswer } from '../public/ask-evaluative.js'
-import { rewriteFollowUp, clarifyPayload, REWRITE_SYSTEM, type FollowUpRewrite } from './ask-rewrite'
+import { isEvaluativeQuestion, mightBeEvaluative, neutralEvaluativeAnswer } from '../public/ask-evaluative.js'
+import { rewriteFollowUp, classifyQuestion, clarifyPayload, REWRITE_SYSTEM, INTENT_SYSTEM, type FollowUpRewrite } from './ask-rewrite'
 import { slugIndex, personIndex } from './person-slug'
 import { missingEntitySlug } from './crawl-hygiene'
 import { normalizePassage, passageWindow } from './passage-text'
@@ -712,6 +712,8 @@ async function searchWindow(
 
 interface AskInput {
   question?: string
+  /** The reader explicitly asks for record facts after a neutral intent reply. */
+  record_only?: boolean
   kind?: string
   speaker?: string
   party?: string
@@ -902,6 +904,7 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
   // Both ordinary and documented-position generation keep the same backstop.
   const prompt = body.prompt as { system: string; user: string }
   prompt.system += ' ' + EVALUATIVE_BACKSTOP
+  if (input.record_only === true) prompt.system += ' The reader chose to ask for the record: answer with relevant record facts within the given person, topic and date scope.'
   return body
 }
 
@@ -1140,6 +1143,7 @@ function askCacheInput(input: AskInput, epoch: string): string | null {
       // Pay evidence arrived on 2026-09-17: answers written without it retire, and only those.
       + (mentionsPay(input.question) ? ':pay-v1' : '') + ':witness-split-v1',
     question: str(input.question).toLowerCase(),
+    record_only: input.record_only === true,
     kind: kind && kind !== 'all' ? kind : 'all',
     speaker: str(input.speaker) ? canonicalSpeaker(input.speaker as string) : '',
     party: str(input.party),
@@ -1235,7 +1239,7 @@ function replayCachedAsk(hit: Response, ctx: ExecutionContext): Response {
  */
 async function moneyOverview(facts: MoneyFacts, env: Env, ctx: ExecutionContext, request: Request): Promise<{ overview: string; why: string }> {
   const model = env.MONEY_OVERVIEW_MODEL || env.ASK_MODEL || 'openai-compatible'
-  const key = cacheRequest('money-overview', await sha256Hex(JSON.stringify({ epoch: env.CACHE_EPOCH, model, facts })))
+  const key = cacheRequest('money-overview', await sha256Hex(JSON.stringify({ epoch: env.CACHE_EPOCH, model, facts, backstop: EVALUATIVE_BACKSTOP })))
   const hit = await caches.default.match(key)
   if (hit) return { overview: (await hit.json<{ overview?: string }>()).overview || '', why: 'hit' }
   // A paid call, so it spends the reader's Ask quota like any other answer; past
@@ -1270,7 +1274,8 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     return res
   }
   if (!rawInput.question?.trim()) return json({ error: 'question is required' }, 400)
-  if (isEvaluativeQuestion(rawInput.question)) return timed(json(neutralEvaluativeAnswer()))
+  const recordOnly = rawInput.record_only === true
+  if (!recordOnly && isEvaluativeQuestion(rawInput.question)) return timed(json(neutralEvaluativeAnswer()))
   // A question naming a withheld donor, now or in the reader's earlier turns, gets
   // one fixed reply before any ranking, rewrite or model call can echo the name.
   if (await questionNamesWithheldDonor(env.ASSETS, rawInput.question, ...readerTurns(rawInput))) return timed(json(withheldDonorAnswer()))
@@ -1287,20 +1292,24 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     if (hit) return wantStream ? replayCachedAsk(hit, ctx) : withCacheStatus(hit, 'HIT', false)
   }
   const status: CacheStatus = bypass ? 'BYPASS' : 'MISS'
-  const limited = await rateLimited(env.ASK_LIMITER, request)
+  const followUp = readerTurns(rawInput).length > 0
+  const needsRewrite = followUp || (!recordOnly && mightBeEvaluative(rawInput.question, rawInput))
+  const limited = needsRewrite ? await rateLimited(env.ASK_LIMITER, request) : null
   mark('cache')
 
-  // One combined rewrite/intent call, including for a first question. History
-  // supplies the subject of follow-ups; it never replaces the reader's intent.
+  // Follow-ups keep their existing combined rewrite/intent call. A first
+  // question pays for classification only when the local vocabulary filter
+  // finds a possible judgement or voting choice; ordinary and calculated
+  // questions need no rewrite. Cache hits have already returned above.
   let blocked = limited
   let rewrite: FollowUpRewrite = null
-  if (!blocked) {
-    const result = await standaloneQuestion(rawInput, env)
+  if (needsRewrite && !blocked) {
+    const result = await standaloneQuestion(rawInput, env, !followUp)
     if (result instanceof Response) blocked = result
     else rewrite = result
   }
   mark('rewrite')
-  if (rewrite && typeof rewrite === 'object' && rewrite.intent === 'evaluative') return timed(json(neutralEvaluativeAnswer()))
+  if (!recordOnly && rewrite && typeof rewrite === 'object' && rewrite.intent === 'evaluative') return timed(json(neutralEvaluativeAnswer()))
   if (rewrite && typeof rewrite === 'object' && 'unclear' in rewrite) return timed(json(clarifyPayload(rawInput.question ?? '', rewrite.suggestion)))
   const askedAs = typeof rewrite === 'string' ? rewrite : rewrite?.question ?? null
   if (askedAs) rawInput.question = askedAs
@@ -1324,6 +1333,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   } catch { return json({ error: 'The receipt records are temporarily unavailable. Please try again.' }, 503) }
   const paid = await paidAnswer(rawInput, env.ASSETS).catch(() => null)
   if (paid) { mark('pay'); return timed(json(withAskedAs(paid, askedAs))) }
+  if (!needsRewrite) blocked = await rateLimited(env.ASK_LIMITER, request)
   if (blocked) return timed(blocked)
   let people: { name: string }[] = []
   if (needsAskPeople(rawInput)) {
@@ -1425,9 +1435,10 @@ function withAskedAs<T extends object>(payload: T, askedAs: string | null | unde
  * words as typed". An unchanged question keeps the parsed intent with a null
  * rewrite; one with nothing to search on is { unclear } (ask-rewrite.ts).
  */
-async function standaloneQuestion(input: AskInput, env: Env): Promise<FollowUpRewrite | Response> {
+async function standaloneQuestion(input: AskInput, env: Env, intentOnly = false): Promise<FollowUpRewrite | Response> {
   let blocked: Response | null = null
-  const rewrite = await rewriteFollowUp(input, async (user, question) => {
+  const interpret = intentOnly ? classifyQuestion : rewriteFollowUp
+  const rewrite = await interpret(input, async (user, question) => {
     const response = await kbFetch(env, '/ask', {
     body: {
       query: question,
@@ -1435,7 +1446,7 @@ async function standaloneQuestion(input: AskInput, env: Env): Promise<FollowUpRe
       reranker: 'noop',
       generative_model: env.FOLLOWUPS_MODEL || 'openai-compatible',
       max_tokens: 200,
-      prompt: { system: REWRITE_SYSTEM, user },
+      prompt: { system: intentOnly ? INTENT_SYSTEM : REWRITE_SYSTEM, user },
     },
     headers: { 'x-synchronous': 'true' },
     signal: AbortSignal.timeout(9_000),
@@ -1610,7 +1621,7 @@ async function recoverPositionAnswer(payload: AskPayload, body: Record<string,un
       if (!sources.length) return { summary: null, drafted: [] }
       const answer = await summaryModelAnswer(await kbFetch(env, '/ask', {
         body:{query:String(body.position_question || body.query || '').slice(0,2000),top_k:1,reranker:'noop',generative_model:env.POSITION_RECOVERY_MODEL || 'openai-compatible',max_tokens:2600,
-          prompt:{system:SEARCH_SUMMARY_SYSTEM + ' ' + POSITION_GROUNDING + ' Return only valid JSON in the requested points-and-citations schema, with no other text.',
+          prompt:{system:SEARCH_SUMMARY_SYSTEM + ' ' + POSITION_GROUNDING + ' ' + EVALUATIVE_BACKSTOP + ' Return only valid JSON in the requested points-and-citations schema, with no other text.',
             user:prompt.replace(/[{}]/g, brace => brace + brace) + '\nReader question: {question}'}},
         headers:{'x-synchronous':'true'},signal:AbortSignal.timeout(40_000),
       }))
@@ -1704,7 +1715,7 @@ async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: Execu
   const unavailable = 'A cited summary is unavailable. Your matching records are still below.'
   const prompt = summaryPrompt(query,filters,sources)
   const askBody = (q: string) => ({query:q, top_k:1, reranker:'noop', generative_model:env.SEARCH_SUMMARY_MODEL || 'openai-compatible', max_tokens:4096,
-    prompt:{system:SEARCH_SUMMARY_SYSTEM, user:'{question}'}})
+    prompt:{system:SEARCH_SUMMARY_SYSTEM + ' ' + EVALUATIVE_BACKSTOP, user:'{question}'}})
   const repairPrompt = prompt + '\nWrite a fresh, short overview. Previous output failed source validation. Keep each sentence to one narrow factual point. Cite an EXACT passage or title for every named speaker and claim. Use supplied numbers without rounding. Grants and contracts are published awards, not received, paid or spent money, funded work, or completed projects. Return only the required JSON.'
   const finish = (summary: SearchSummary) => ({status:'ready', ...summary, reviewed_count:sources.length, partial:!!results.warnings?.length})
   if (url.searchParams.get('stream') === '1') {
@@ -1809,7 +1820,7 @@ async function apiJourneyStory(request: Request, input: Record<string, unknown>,
     const generate = async (query: string) => {
       const response = await kbFetch(env,'/ask',{
         body:{query,top_k:1,reranker:'noop',generative_model:env.JOURNEY_STORY_MODEL || 'openai-compatible',max_tokens:4096,
-          prompt:{system:JOURNEY_STORY_SYSTEM,user:'{question}'}},
+          prompt:{system:JOURNEY_STORY_SYSTEM + ' ' + EVALUATIVE_BACKSTOP,user:'{question}'}},
         headers:{'x-synchronous':'true'},signal:AbortSignal.timeout(30_000),
       })
       if (!response.ok) return null
@@ -2380,6 +2391,7 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
     '',
     `Reply with exactly ${asked} lines and nothing else, each formatted as:`,
     'Q: <the question> || EV: <the copied sentence>',
+    EVALUATIVE_BACKSTOP,
   ].join('\n')
 
   try {

@@ -1,4 +1,4 @@
-import { isEvaluativeQuestion, neutralEvaluativeAnswer } from '../public/ask-evaluative.js';
+import { isEvaluativeQuestion, mightBeEvaluative, neutralEvaluativeAnswer } from '../public/ask-evaluative.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -7,7 +7,7 @@ import { build } from 'esbuild';
 import ts from 'typescript';
 
 const b = await build({ entryPoints: [new URL('../src/ask-rewrite.ts', import.meta.url).pathname], bundle: true, write: false, platform: 'node', format: 'esm' });
-const { rewriteFollowUp, readRewrite, contentFree, sameQuestion, clarifyPayload, rewritePrompt, REWRITE_SYSTEM } = await import('data:text/javascript;base64,' + Buffer.from(b.outputFiles[0].text).toString('base64'));
+const { rewriteFollowUp, classifyQuestion, readRewrite, contentFree, sameQuestion, clarifyPayload, rewritePrompt, REWRITE_SYSTEM, INTENT_SYSTEM } = await import('data:text/javascript;base64,' + Buffer.from(b.outputFiles[0].text).toString('base64'));
 
 // The conversation Jake had on 8 Oct 2026, as the app sent it.
 const PREVIOUS = 'What has David Pocock proposed about housing affordability?';
@@ -102,6 +102,19 @@ test('rewrite intent is read only from one strict final line, even when the ques
   }
 });
 
+test('first-question classification accepts only an intent flag and never a rewritten question', async () => {
+  const question='Which candidate is good on housing in 2025?';
+  for (const intent of ['evaluative','factual']) {
+    const calls=[];
+    const out=await classifyQuestion({question},async(user,query)=>{calls.push({user,query});return `INTENT: ${intent}`;});
+    assert.deepEqual(out,{question:null,intent});assert.equal(calls.length,1);assert.equal(calls[0].query,question);
+    assert.match(calls[0].user,/classify the request, not the quoted words/);
+    assert.match(calls[0].user,/Return exactly INTENT: evaluative or INTENT: factual on one line/);
+  }
+  for (const line of [null,'',question,'INTENT: unknown','INTENT: Evaluative',question+'\nINTENT: factual','INTENT: factual\nExtra words.']) assert.equal(await classifyQuestion({question},async()=>line),null);
+  assert.equal(await classifyQuestion({question},async()=>{throw Error('stub timeout');}),null);
+});
+
 test('the combined rewrite prompt preserves record requests and classifies informal judgements in one call', async () => {
   const question = 'Is this party any good?';
   const { out, calls } = await rewrite(question, question + '\nINTENT: evaluative', []);
@@ -136,7 +149,7 @@ test('standaloneQuestion returns intent through its existing pinned call without
   const calls = [], question = 'Can ya pick a candidate worth backing?';
   const fn = parsed.statements.find(n => ts.isFunctionDeclaration(n) && n.name?.text === 'standaloneQuestion').getText(parsed);
   const standalone = runInNewContext(transpile(fn) + ';standaloneQuestion', {
-    rewriteFollowUp, REWRITE_SYSTEM, AbortSignal, MODEL_BUDGET_HEADER: 'x-opax-model-budget',
+    rewriteFollowUp, classifyQuestion, REWRITE_SYSTEM, INTENT_SYSTEM, AbortSignal, MODEL_BUDGET_HEADER: 'x-opax-model-budget',
     summaryModelAnswer: async res => (await res.json()).answer,
     kbFetch: async (env, path, init) => { calls.push({path,...init.body}); return Response.json({answer:question + '\nINTENT: evaluative'}); },
   });
@@ -151,7 +164,7 @@ function route(rewriteResult) {
   const apiAsk = runInNewContext(transpile(code) + ';apiAsk', {
     URL, Request, Response, Date,
     // The donor privacy check and model budget are exercised in donor-privacy.test.mjs and model-budget.test.mjs.
-    isEvaluativeQuestion, neutralEvaluativeAnswer, questionNamesWithheldDonor: async () => false, readerTurns: () => [], withheldDonorAnswer: () => ({}), MODEL_BUDGET_HEADER: 'x-opax-model-budget', modelBudgetBusy: () => new Response(null, { status: 503 }),
+    isEvaluativeQuestion, mightBeEvaluative, neutralEvaluativeAnswer, questionNamesWithheldDonor: async () => false, readerTurns: input => (input.context || []).filter(t => t.author === 'user' || t.author === 'question').map(t => t.text), withheldDonorAnswer: () => ({}), MODEL_BUDGET_HEADER: 'x-opax-model-budget', modelBudgetBusy: () => new Response(null, { status: 503 }),
     rankedMoneyAnswer: async () => null, paidAnswer: async () => null, clarifyPayload,
     standaloneQuestion: async () => rewriteResult,
     rateLimited: async () => { seen.limiter++; return null; },

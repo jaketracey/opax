@@ -4,6 +4,8 @@ import {readFile} from 'node:fs/promises';
 import {runInNewContext} from 'node:vm';
 import {build} from 'esbuild';
 import ts from 'typescript';
+const backstopBundle = await build({entryPoints:[new URL('../src/ask-evidence.ts', import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
+const {EVALUATIVE_BACKSTOP} = await import('data:text/javascript;base64,'+Buffer.from(backstopBundle.outputFiles[0].text).toString('base64'));
 import {shortDate} from '../public/format.js';
 
 const bundle=await build({entryPoints:[new URL('../src/search-summary.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
@@ -16,7 +18,7 @@ const code=source.slice(start,source.indexOf('/** A short overview grounded',sta
 const quote='I propose a five-year moratorium on GST for essential building materials for homes up to $1 million.';
 const payload={answer:'An uncited draft.',citations:{},scope:{speaker:'Example MP',kind:'speech'},sources:[{resource:'rid',slug:'speech-1',title:'Example MP — 2025-02-11',href:'/doc/speech-1',kind:'speech',speaker:'Example MP',snippet:quote,cited:false}]};
 const draft=(excerpt=quote)=>JSON.stringify({points:[{text:'Example MP proposed a five-year GST moratorium for essential building materials for homes up to $1 million.',citations:[{id:'s1',quote:excerpt}]}]});
-function harness(answer){let calls=0,request;const recover=runInNewContext(ts.transpileModule(code,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText+';recoverPositionAnswer',{...helpers,...evidenceHelpers,shortDate,POSITION_GROUNDING:'Ground positions.',AbortSignal,Intl,Date,kbFetch:async(e,p,r)=>{calls++;request=r;return Response.json({answer})}});return {recover,get calls(){return calls},get request(){return request}};}
+function harness(answer){let calls=0,request;const recover=runInNewContext(ts.transpileModule(code,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText+';recoverPositionAnswer',{...helpers,...evidenceHelpers,shortDate,EVALUATIVE_BACKSTOP,POSITION_GROUNDING:'Ground positions.',AbortSignal,Intl,Date,kbFetch:async(e,p,r)=>{calls++;request=r;return Response.json({answer})}});return {recover,get calls(){return calls},get request(){return request}};}
 
 test('position recovery binds every displayed point to a verified original excerpt and dated record',async()=>{
  const h=harness(draft());const out=await h.recover(payload,{query:'housing'},{});
@@ -33,7 +35,7 @@ test('unverifiable position recovery does not turn fabricated excerpts into cita
 });
 test('a first draft that fails verification is written again and the verified retry is used',async()=>{
  const answers=[draft('This fabricated sentence does not exist in the speech.'),draft()];let calls=0;const phases=[];
- const recover=runInNewContext(ts.transpileModule(code,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText+';recoverPositionAnswer',{...helpers,...evidenceHelpers,shortDate,POSITION_GROUNDING:'Ground positions.',AbortSignal,Intl,Date,kbFetch:async()=>{calls++;return Response.json({answer:answers.shift()})}});
+ const recover=runInNewContext(ts.transpileModule(code,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText+';recoverPositionAnswer',{...helpers,...evidenceHelpers,shortDate,EVALUATIVE_BACKSTOP,POSITION_GROUNDING:'Ground positions.',AbortSignal,Intl,Date,kbFetch:async()=>{calls++;return Response.json({answer:answers.shift()})}});
  const out=await recover(payload,{query:'housing'},{},async(event,data)=>{phases.push([event,data])});
  assert.equal(calls,2);assert.match(out.answer,/five-year/);assert.equal(out.sources[0].cited,true);
  assert.equal(JSON.stringify(phases),JSON.stringify([['status',{phase:'writing',attempt:2}]]));

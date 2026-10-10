@@ -102,19 +102,9 @@ test('bill dates describe introduction, never passage or assent',()=>{
  assert.match(worker.buildAskBody({question:'When did it pass?'}).prompt.system,/only give a passage or assent date when separately documented/);
 });
 
-test('all Ask generation prompts include the short political-judgement backstop', () => {
- for (const [input, options] of [
-  [{question:'Who deserves my vote?'}, {}],
-  [{question:'What did Example MP say about housing?',speaker:'Example MP',kind:'speech'}, {}],
-  [{question:'What did Example MP say about housing?',speaker:'Example MP',kind:'speech'}, {reasoned:true}],
- ]) {
-  const body = worker.buildAskBody(input, {records:[],coverage:'',total:0}, options);
-  assert.ok(body.prompt.system.includes(evidenceHelpers.EVALUATIVE_BACKSTOP));
-  assert.match(body.prompt.system, /give no ranking or judgement/);
-  assert.match(body.prompt.system, /Say OPAX compares records, then answer only with record facts relevant to the question/);
-  assert.equal(body.prompt.system.split(evidenceHelpers.EVALUATIVE_BACKSTOP).length, 2);
- }
+test('intent prompt version and record retry cannot share an older or ordinary answer cache', () => {
  assert.match(JSON.parse(worker.askCacheInput({question:'A question'},'epoch')).pipeline, /intent-v1/);
+ assert.notEqual(worker.askCacheInput({question:'A question'},'epoch'), worker.askCacheInput({question:'A question',record_only:true},'epoch'));
 });
 
 test('referential funding questions retain the donor in catalog retrieval',()=>{

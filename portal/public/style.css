@@ -3203,6 +3203,8 @@ mark.privacy-confirm {
 #panel-ask .chat-next .subject-section-title, #panel-chat .chat-next .subject-section-title { font: 600 1.125rem/1.4 var(--serif); margin: 0 0 12px; }
 #panel-ask .chat-next-btns, #panel-chat .chat-next-btns { flex-direction: row; flex-wrap: wrap; gap: 8px; max-width: none; }
 #panel-ask .chat-next-btn, #panel-chat .chat-next-btn {flex: 1 1 220px; overflow-wrap: anywhere;}
+.ask-record-retry { min-height: 44px; min-width: 44px; padding: 0.5rem 0.75rem; border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--ink-faint); font: inherit; text-align: left; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.ask-record-retry:hover, .ask-record-retry:focus-visible { color: var(--ink); }
 #panel-chat .chat-pending { min-height: 180px; max-width: 30rem; scroll-margin-block: 90px; }
 /* The waiting state in a conversation: the animal on its track, then the
    answer's steps beneath it (stages.js), both set to the thread's left edge.
