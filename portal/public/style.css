@@ -397,14 +397,14 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 .nav-toggle { align-self: center; }
 .mast-sugg {
   position: absolute; top: calc(100% + 8px); right: 0; z-index: 40;
-  width: min(380px, 90vw); background: var(--paper); border: 1px solid var(--line); border-top: none;
+  width: min(380px, 90vw); background: var(--paper); border: var(--border-hairline) solid var(--divider-subtle); border-top: none;
   box-shadow: 0 18px 40px rgba(21, 27, 20, 0.22);
   padding: 0.35rem;
 }
 .ms-row {
   display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
   width: 100%; padding: 0.5rem 0.65rem; border: none; background: none; cursor: pointer;
-  font: 400 0.9375rem/1.35 var(--sans); color: var(--ink); text-align: left; border-radius: 4px;
+  font: var(--type-metadata); color: var(--ink); text-align: left; border-radius: var(--radius-sm);
 }
 .ms-row:hover, .ms-row.ms-active { background: var(--paper-sunken); }
 .ms-type { flex: 0 0 auto; font: var(--type-label); color: var(--ink-soft); }
@@ -429,7 +429,7 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 }
 .masthead-name {
   margin: 0; padding-left: 0.15rem; white-space: nowrap;
-  font: 600 0.9375rem/1.2 var(--sans); letter-spacing: 0.02em;
+  font: var(--type-label);
   color: var(--on-navy-soft);
 }
 @media (prefers-reduced-motion: no-preference) {
@@ -448,7 +448,7 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 .nav-link {
   display: inline-flex; align-items: center; gap: 0.4rem;
   background: none; border: none; cursor: pointer; white-space: nowrap;
-  font: 600 0.9375rem/1 var(--sans); color: var(--on-navy-soft);
+  font: var(--type-control); color: var(--on-navy-soft);
   text-decoration: none; padding: 0.4rem 0.15rem; min-height: 44px;
   border-bottom: 3px solid transparent;
 }
@@ -465,14 +465,14 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 .megamenu {
   position: absolute; top: calc(100% + 3px); left: 0; z-index: 30;
   width: 340px; max-width: calc(100vw - 1.5rem);
-  background: var(--paper); border: 1px solid var(--line); border-top: none;
+  background: var(--paper); border: var(--border-hairline) solid var(--divider-subtle); border-top: none;
   box-shadow: 0 18px 40px rgba(21, 27, 20, 0.22);
   padding: 1.1rem 1.25rem 1.15rem;
 }
 .megamenu-wide { width: min(720px, calc(100vw - 1.5rem)); }
 .megamenu .kicker { margin: 0 0 0.5rem; }
 .mm-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
-.mm-all { font: 600 0.875rem/1.3 var(--sans); white-space: nowrap; }
+.mm-all { font: var(--type-label); white-space: nowrap; }
 .mm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.1rem 1.4rem; }
 /* Two kickered columns side by side (Explore: play | encyclopedia). */
 .mm-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.6rem; }
@@ -482,15 +482,15 @@ header :focus-visible { outline-color: var(--bronze-bright); }
   text-decoration: none; border-radius: 4px;
 }
 .mm-link:hover, .mm-link:focus-visible { background: var(--paper-sunken); }
-.mm-title { display: block; font: 600 1.0625rem/1.3 var(--serif); color: var(--ink); }
+.mm-title { display: block; font: var(--type-subheading); color: var(--ink); }
 .mm-link:hover .mm-title { color: var(--bronze-ink); }
-.mm-blurb { display: block; margin-top: 2px; font-size: 0.8125rem; line-height: 1.45; color: var(--ink-soft); }
+.mm-blurb { display: block; margin-top: var(--space-line); font: var(--type-fine); color: var(--ink-soft); }
 /* Report pictograms: bronze hairline glyph in its own column, title and blurb
    hanging beside it. Links without a glyph (Explore, unknown slugs) keep the
    plain block layout. */
 .mm-link:has(.mm-glyph) { display: grid; grid-template-columns: auto 1fr; column-gap: 0.7rem; align-items: start; }
 .mm-glyph { grid-row: 1 / span 2; width: 30px; height: 30px; margin-top: 3px; color: var(--bronze-ink); }
-.mm-note { margin: 0.7rem 0 0; font-size: 0.8125rem; color: var(--ink-faint); }
+.mm-note { margin: var(--space-row) 0 0; font: var(--type-fine); color: var(--ink-faint); }
 @media (prefers-reduced-motion: no-preference) {
   .megamenu { animation: menu-in 160ms ease; }
   @keyframes menu-in {
@@ -516,7 +516,7 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 .nav-drawer {
   position: fixed; inset: 0 0 0 auto; margin: 0;
   width: min(380px, calc(100vw - 16px)); max-width: none; height: 100dvh; max-height: none;
-  border: none; border-left: 1px solid var(--line-strong);
+  border: none; border-left: var(--border-hairline) solid var(--line-control);
   background: var(--paper); color: var(--ink);
   box-shadow: -18px 0 40px rgba(21, 27, 20, 0.28);
   padding: max(1rem, env(safe-area-inset-top)) 1.25rem max(1.5rem, env(safe-area-inset-bottom)); overflow-y: auto; overscroll-behavior: contain;
@@ -598,7 +598,7 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 .drawer-sub { font: 400 0.9375rem/1.3 var(--sans); color: var(--ink-soft); min-height: 40px; }
 .drawer-link:hover, .drawer-sub:hover { color: var(--bronze-ink); }
 .drawer-link.active, .drawer-sub.active { border-left-color: var(--bronze); color: var(--navy); background: var(--bronze-wash); }
-.drawer-kicker { margin: 1.1rem 0 0.2rem; padding-top: 0.9rem; border-top: 1px solid var(--line); }
+.drawer-kicker { margin: var(--space-block) 0 var(--space-line); padding-top: var(--space-heading); border-top: var(--border-hairline) solid var(--divider-subtle); }
 
 /* ---- breadcrumb ----------------------------------------------------------- */
 /* One slim strip of paper hung directly under the band, on every page but the
@@ -607,8 +607,8 @@ header :focus-visible { outline-color: var(--bronze-bright); }
    page shortens to an ellipsis before its ancestors do, and past that the
    strip scrolls sideways. */
 .crumbs {
-  background: var(--paper); border-bottom: 1px solid var(--line);
-  font: 400 0.8125rem/1.3 var(--sans);
+  background: var(--paper); border-bottom: var(--border-hairline) solid var(--divider-subtle);
+  font: var(--type-fine);
 }
 .crumbs-list {
   display: flex; align-items: center; gap: 0.45rem; min-height: 40px;
@@ -624,7 +624,7 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 .crumbs-list a.crumb-label { color: var(--ink-soft); text-decoration: none; }
 .crumbs-list a.crumb-label:hover { color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-ink); text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
 .crumbs-list a.crumb-label:focus-visible { outline-offset: -2px; }
-.crumb-here .crumb-label { color: var(--ink); font-weight: 600; overflow: hidden; text-overflow: ellipsis; }
+.crumb-here .crumb-label { color: var(--ink); font: var(--type-label); overflow: hidden; text-overflow: ellipsis; }
 /* Server-only pages (sitting, audit, instruments) write the same strip into
    <main> (crumbsHTML in seo-content.ts); an app page hides it with #prerender. */
 .spa-ready .prerender-crumbs, .spa-booting .prerender-crumbs { display: none; }
@@ -870,20 +870,22 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px var(
   }
 }
 
-/* Sample questions: plain links (concept 5), no label and no boxes. They
-   wrap on a wide screen and take a row each, with a 44px target, on a phone. */
+/* Sample questions: plain links (concept 5), no label and no boxes, drawn as
+   the home page draws them (.hp-examples): one bronze link a row, body size,
+   a 44px target on a phone or a touch screen. The growth modules on person
+   and bill pages take the same list. */
 #ask-chips { margin-top: var(--space-heading); }
-.ask-samples { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-line) var(--space-group); }
+.ask-samples { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-line); }
 .ask-sample {
-  display: inline-flex; align-items: center; min-height: 32px;
-  font: var(--type-metadata); color: var(--ink); text-decoration: underline;
-  text-decoration-color: var(--bronze-rule); text-underline-offset: 3px;
+  display: inline-block; padding-block: var(--space-line);
+  font: var(--type-body); color: var(--bronze-ink); text-decoration: underline;
+  text-decoration-color: var(--bronze-rule); text-underline-offset: 0.2em;
 }
-.ask-sample:hover { color: var(--bronze-ink); text-decoration-color: var(--bronze-ink); }
-.ask-sample:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 2px; }
-@media (max-width: 700px), (pointer: coarse) {
-  .ask-samples { flex-direction: column; align-items: flex-start; gap: var(--space-tight); }
-  .ask-sample { min-height: var(--size-target); line-height: 1.45; }
+.ask-sample:hover { text-decoration-color: currentColor; }
+.ask-sample:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
+@media (max-width: 1000px), (pointer: coarse) {
+  .ask-samples { gap: 0; }
+  .ask-sample { display: inline-flex; align-items: center; min-height: var(--size-target); }
 }
 .suggest-grid {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -2759,7 +2761,7 @@ a.ency-name:hover, a.ency-name:focus-visible {
 footer {
   background: var(--navy);
   border-top: 3px solid var(--bronze);
-  padding: 0 0 1.5rem; color: var(--on-navy-soft); font-size: 0.8125rem;
+  padding: 0 0 var(--space-group); color: var(--on-navy-soft); font: var(--type-fine);
 }
 .footer-lines { padding-top: 1.1rem; }
 .footer-lines p { margin: 0.35rem 0; max-width: 90ch; }
@@ -4981,12 +4983,12 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 /* Reference pages predate the shared rhythm scale. Bring their headings,
    prose and lists onto the same steps used by entries and reports. */
 #panel-about h2, #panel-methods h2, #panel-expenses h2 {
-  margin: 0 0 var(--space-3);
+  margin: 0 0 var(--space-heading);
 }
 /* About's sections open with a rule; nothing else on the page draws one. */
 #panel-about .about-body > h2:not(:first-child) { margin-top: var(--space-section); padding-top: var(--space-block); border-top: var(--border-hairline) solid var(--divider-default); scroll-margin-top: calc(var(--header-h) + 1rem); }
-#panel-methods h3, #panel-expenses h3 { margin: var(--space-6) 0 var(--space-2); }
-#panel-about p, #panel-methods p, #panel-expenses p { margin-block: var(--space-3); line-height: 1.7; }
+#panel-methods h3, #panel-expenses h3 { margin: var(--space-group) 0 var(--space-tight); }
+#panel-about p, #panel-methods p, #panel-expenses p { margin-block: var(--space-row); line-height: 1.7; }
 .about-list { margin-block: var(--space-4); }
 .about-list li { margin-block: var(--space-3); line-height: 1.65; }
 .defs { margin-top: var(--space-4); }
@@ -5054,9 +5056,9 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 }
 
 /* Connected research: one IA, with the map as a primary working surface. */
-.entry-modes, .area-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; margin: 0 0 1.3rem; border-bottom: 1px solid var(--line); }
-.entry-modes a, .area-nav a { color: var(--ink-soft); padding: .65rem 0; min-height: 44px; text-decoration: none; }
-.entry-modes a[aria-current], .area-nav a[aria-current] { color: var(--navy); border-bottom: 2px solid var(--navy); font-weight: 650; }
+.entry-modes, .area-nav { display: flex; gap: var(--space-group); flex-wrap: wrap; margin: 0 0 var(--space-group); border-bottom: var(--border-hairline) solid var(--divider-subtle); }
+.entry-modes a, .area-nav a { color: var(--ink-soft); padding: var(--space-row) 0; min-height: var(--size-target); font: var(--type-body); text-decoration: none; }
+.entry-modes a[aria-current], .area-nav a[aria-current] { color: var(--navy); border-bottom: 2px solid var(--navy); font: var(--type-strong); }
 .home-tasks { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem; margin: 2rem 0 3rem; }
 .home-tasks a { border-top: 1px solid var(--line); padding: 1rem 0; color: var(--navy); text-decoration: none; }
 .home-tasks strong, .home-tasks span { display: block; }
@@ -5078,22 +5080,22 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .home-map-journeys > a { font-size: .85rem; color: var(--bronze-ink); }
 .home-parliaments #front-statemap { max-width: 600px; height: 330px; margin: auto; }
 .home-map-industries { margin-top: .75rem; }
-.drawer-primary { min-height: 52px; padding: .75rem; border-bottom: 1px solid var(--line); font: 600 1.0625rem/1.35 var(--sans); }
-.research-filters { border: 1px solid var(--line); border-radius: 6px; padding: .8rem 1rem; margin: 1rem 0; }
-.research-filters summary { cursor: pointer; font-weight: 650; color: var(--navy); min-height: 32px; }
+.drawer-primary { min-height: 52px; padding: var(--space-heading); border-bottom: var(--border-hairline) solid var(--divider-subtle); font: var(--type-control); }
+.research-filters { border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md); padding: var(--space-heading) var(--space-block); margin: var(--space-block) 0; }
+.research-filters summary { cursor: pointer; font: var(--type-control); color: var(--navy); min-height: 32px; }
 .research-controls { display: grid; grid-template-columns: 1.5fr repeat(4,1fr) auto; gap: .8rem; align-items: end; margin: .8rem 0; }
-.research-controls label { display: flex; flex-direction: column; gap: .35rem; font-size: .8rem; min-width: 0; color: var(--ink-soft); }
-.research-controls input, .research-controls select { min-height: 42px; width: 100%; border: 1px solid var(--line-strong); border-radius: 4px; padding: .5rem; background: white; color: var(--ink); font: inherit; }
-.research-summary { display: flex; gap: .7rem 1.5rem; flex-wrap: wrap; font-size: .85rem; margin: 1rem 0; align-items: baseline; }
+.research-controls label { display: flex; flex-direction: column; gap: var(--space-line); font: var(--type-label); min-width: 0; color: var(--ink-soft); }
+.research-controls input, .research-controls select { min-height: 42px; width: 100%; border: var(--border-hairline) solid var(--line-control); border-radius: var(--radius-sm); padding: var(--space-tight); background: var(--paper-raised); color: var(--ink); font: var(--type-body); }
+.research-summary { display: flex; gap: var(--space-row) var(--space-group); flex-wrap: wrap; font: var(--type-metadata); margin: var(--space-block) 0; align-items: baseline; }
 .research-summary > span { color: var(--ink-soft); }
 .research-summary b { color: var(--ink); font-variant-numeric: tabular-nums; margin-left: .4rem; }
-.research-summary .research-period { margin-left: auto; font-size: .75rem; }
+.research-summary .research-period { margin-left: auto; font: var(--type-fine); }
 .research-summary p { flex-basis: 100%; }
 .research-actions { display: flex; gap: .65rem; flex-wrap: wrap; align-items: center; margin: .8rem 0 1.5rem; }
 .research-records { margin: 1.2rem 0 2rem; }
-.research-records table { width: 100%; text-align: left; border-collapse: collapse; font-size: .85rem; }
-.research-records td, .research-records th { padding: .8rem; border-bottom: 1px solid var(--line); }
-.research-records caption { text-align: left; font-weight: 650; padding-bottom: 1rem; }
+.research-records table { width: 100%; text-align: left; border-collapse: collapse; font: var(--type-metadata); }
+.research-records td, .research-records th { padding: var(--space-heading); border-bottom: var(--border-hairline) solid var(--divider-subtle); }
+.research-records caption { text-align: left; font: var(--type-strong); padding-bottom: var(--space-block); }
 .research-records .text-link { background: none; border: 0; color: var(--bronze-ink); text-decoration: underline; cursor: pointer; font: inherit; min-height: 44px; }
 #money-records-body .lg-root { margin-top: 1.5rem; }
 #panel-money .money-map-root { min-height: 560px; }
@@ -5110,7 +5112,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
   .research-summary { gap: .6rem 1rem; }
   .research-summary .research-period { margin-left: 0; flex-basis: 100%; }
   #panel-money .money-map-root { min-height: 480px; }
-  .entry-modes, .area-nav { gap: 1rem; font-size: .85rem; }
+  .entry-modes, .area-nav { gap: var(--space-block); }
 }
 @media (prefers-reduced-motion: reduce) { .home-map-stage *, .research-records * { scroll-behavior: auto; } }
 
@@ -5920,15 +5922,15 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
 .site-header .logo-mark { width: 54px; height: 49px; }
 .site-wordmark { font: 700 26px var(--serif); }
 .site-header .masthead-nav { display: flex; flex: 0 1 auto; margin-left: auto; }
-.site-header .nav-list { gap: 22px; }
-.site-header .nav-link { color: var(--on-navy); font-size: 14px; font-weight: 400; padding: 0; gap: 7px; border-bottom: 0; }
+.site-header .nav-list { gap: var(--space-group); }
+.site-header .nav-link { color: var(--on-navy); font: var(--type-metadata); padding: 0; gap: var(--space-tight); border-bottom: 0; }
 .site-header .nav-link.active { text-decoration: underline; text-underline-offset: 5px; }
 .site-header .nav-item { position: static; }
 .site-header .megamenu { left: auto; right: 0; top: 100%; border-top: 3px solid var(--bronze); max-height: calc(100vh - 150px); overflow-y: auto; }
 .site-header .nav-toggle, .site-header .mast-search-toggle { display: none; }
 @media (max-width: 1100px) {
-  .site-header .nav-list { gap: 15px; }
-  .site-header .nav-link { font-size: 13px; }
+  .site-header .nav-list { gap: var(--space-block); }
+  .site-header .nav-link { font: var(--type-fine); }
 }
 /* The full row (eight sections once Instruments joins at runtime) needs about
    900px beside the logo and search; below 960 the band carries the menu. Keep

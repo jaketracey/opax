@@ -240,7 +240,7 @@ void main() {
 .mm-action:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: -2px; }
 .mm-action:disabled { color: var(--ink-soft); cursor: progress; }
 .mm-action:disabled .mm-action-label { text-decoration: none; }
-.mm-action:not(:last-child)::after { content: '\xB7'; margin-left: var(--space-tight); color: var(--divider-default); font-weight: 400; }
+.mm-action:not(:last-child)::after { content: '\xB7'; margin-left: var(--space-tight); color: var(--divider-default); font: var(--type-fine); }
 .mm-action-chevron { display: inline-flex; flex: none; width: var(--size-icon-sm); height: var(--size-icon-sm); margin-left: var(--space-line);
   color: currentColor; transition: transform var(--duration-standard) var(--ease-standard); }
 .mm-action[aria-expanded='true'] .mm-action-chevron { transform: rotate(180deg); }

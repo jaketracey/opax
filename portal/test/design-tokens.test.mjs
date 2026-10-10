@@ -140,6 +140,43 @@ const HEX_BASELINE = {
   'public/home.html': 1,
   'public/procurement-data.js': 2,
 };
+// Filled from the counts at pass 5 lane D (design/p5w-shell), after its own
+// regions moved to roles and canonical names. Lower a number when a pass
+// removes some; never raise one.
+const TYPE_BASELINE = {
+  'graph/explain.ts': 1,
+  'graph/index.ts': 7,
+  'graph/map3d-engine.ts': 2,
+  'graph/words.ts': 3,
+  'public/app.js': 3,
+  'public/ballot.css': 2,
+  'public/community.css': 5,
+  'public/community.html': 9,
+  'public/grants.js': 6,
+  'public/home.css': 8,
+  'public/hubs.css': 19,
+  'public/index.html': 9,
+  'public/ledger.js': 2,
+  'public/matrix.js': 1,
+  'public/quiz.js': 4,
+  'public/st-test.html': 1,
+  'public/stages.js': 2,
+  'public/style.css': 667,
+  'public/thenvsnow.js': 2,
+  'public/timemachine.js': 15,
+  'public/ui-controls.css': 9,
+  'public/ui-source.css': 2,
+  'public/ui-workbench.css': 10,
+  'public/voice.css': 19,
+  'public/wordsdollars.js': 2,
+  'src/community-notifications.ts': 4,
+};
+const DEPRECATED_BASELINE = {
+  'public/style.css': 648,
+  'public/ui-controls.css': 2,
+  'public/ui-workbench.css': 5,
+  'public/voice.css': 4,
+};
 const HEX = /(?<![\w&#-])#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3,4})(?![\w-])/g;
 const SCANNED = ['public', 'graph', 'grants-map', 'voice', 'analytics'];
 const SKIP = new Set([
@@ -149,34 +186,81 @@ const SKIP = new Set([
   'public/analytics.js', 'public/events.js', 'public/ga.js', // analytics/ bundles
 ]);
 
-function rawHexCounts() {
+/** Per file, how many times `count` finds something in its text: the
+ *  hand-written sources under `dirs`, minus `skip`, and style.css without its
+ *  generated token region. */
+function countPerFile(count, dirs = SCANNED, skip = SKIP) {
   const counts = {};
   const walk = (dir) => {
     for (const name of readdirSync(join(PORTAL, dir))) {
       const path = `${dir}/${name}`;
-      if (name === 'node_modules' || name.startsWith('.') || SKIP.has(path)) continue;
+      if (name === 'node_modules' || name.startsWith('.') || skip.has(path)) continue;
       const full = join(PORTAL, path);
       if (statSync(full).isDirectory()) walk(path);
       else if (['.css', '.js', '.mjs', '.html', '.ts'].includes(extname(name))) {
         let text = readFileSync(full, 'utf8');
         if (path === 'public/style.css') text = text.slice(0, text.indexOf(STYLE_BEGIN)) + text.slice(text.indexOf(STYLE_END));
-        const n = text.match(HEX)?.length ?? 0;
+        const n = count(text);
         if (n) counts[relative(PORTAL, full)] = n;
       }
     }
   };
-  for (const dir of SCANNED) walk(dir);
+  for (const dir of dirs) walk(dir);
   return counts;
+}
+const rawHexCounts = () => countPerFile((text) => text.match(HEX)?.length ?? 0);
+
+/** A count that may go down, never up: a file over its baseline fails, a new
+ *  file starts at zero, a file under its baseline is reported for lowering. */
+function onlyDown(t, label, counts, baseline, fix) {
+  const over = Object.entries(counts)
+    .filter(([file, n]) => n > (baseline[file] ?? 0))
+    .map(([file, n]) => `${file}: ${n} ${label} (baseline ${baseline[file] ?? 0}); ${fix}`);
+  assert.deepEqual(over, []);
+  for (const [file, n] of Object.entries(baseline))
+    if ((counts[file] ?? 0) < n) t.diagnostic(`${file} is down to ${counts[file] ?? 0} ${label} from ${n}: lower the baseline`);
+  const sum = (o) => Object.values(o).reduce((a, b) => a + b, 0);
+  t.diagnostic(`${label}: ${sum(counts)} (baseline ${sum(baseline)})`);
 }
 
 test('no new raw hex colours outside the tokens', (t) => {
-  const counts = rawHexCounts();
-  const over = Object.entries(counts)
-    .filter(([file, n]) => n > (HEX_BASELINE[file] ?? 0))
-    .map(([file, n]) => `${file}: ${n} raw hex colours (baseline ${HEX_BASELINE[file] ?? 0}); use a token from tokens.css`);
-  assert.deepEqual(over, []);
-  const under = Object.entries(HEX_BASELINE).filter(([file, n]) => (counts[file] ?? 0) < n);
-  for (const [file, n] of under) t.diagnostic(`${file} is down to ${counts[file] ?? 0} from ${n}: lower HEX_BASELINE`);
-  const total = Object.values(counts).reduce((sum, n) => sum + n, 0);
-  t.diagnostic(`raw hex colours: ${total} (baseline ${Object.values(HEX_BASELINE).reduce((sum, n) => sum + n, 0)})`);
+  onlyDown(t, 'raw hex colours', rawHexCounts(), HEX_BASELINE, 'use a token from tokens.css');
+});
+
+// --- raw type values and deprecated token names ------------------------------
+// Pass 5 (lane D): the hex test could not see two other bypasses. Both are
+// counted per file in the same sources plus the Worker's HTML and CSS strings
+// in src/ (not the share-card renderer or the email, which draw outside the
+// site's stylesheet). Each count may go down, never up.
+const TYPE_DIRS = [...SCANNED, 'src'];
+const TYPE_SKIP = new Set([...SKIP, 'src/og.ts', 'src/og-render.ts', 'src/community-email.ts', 'src/community-email-mark.ts']);
+
+// A font, font-size or font-weight set to anything but a role (var(--type-*))
+// or a keyword that defers to one: "font: 600 1rem/1.4 var(--sans)",
+// "font-size: 13px", "font-weight: 700".
+const RAW_TYPE = /(?<![\w-])font(?:-size|-weight)?\s*:\s*(?!var\(|inherit\b|initial\b|unset\b|revert\b)[^\s;}"'`]/g;
+const rawTypeCounts = () => countPerFile((text) => text.match(RAW_TYPE)?.length ?? 0, TYPE_DIRS, TYPE_SKIP);
+
+// Uses of a name design-tokens.json lists as deprecated for the web (aliases
+// kept for one release: --space-1..7, --line, --heading-*, --row-gap, ...).
+const DEPRECATED = new Set(Object.keys(source.deprecated.web).filter((name) => name.startsWith('--')));
+const deprecatedCounts = () => countPerFile(
+  (text) => [...text.matchAll(/var\(\s*(--[\w-]+)\s*[,)]/g)].filter(([, name]) => DEPRECATED.has(name)).length,
+  TYPE_DIRS, TYPE_SKIP);
+
+test('the type and deprecated-name counters see what they should', () => {
+  const type = (css) => css.match(RAW_TYPE)?.length ?? 0;
+  assert.equal(type('a { font: 600 1rem/1.4 var(--sans); font-size: 13px; font-weight: 700; }'), 3);
+  assert.equal(type('a { font: var(--type-fine); font-size: inherit; font-weight: var(--x); font-family: var(--serif); font-variant-numeric: tabular-nums; --font-size: 2px; }'), 0);
+  assert.ok(DEPRECATED.has('--space-3') && DEPRECATED.has('--line') && !DEPRECATED.has('--space-row'));
+  const names = (css) => [...css.matchAll(/var\(\s*(--[\w-]+)\s*[,)]/g)].filter(([, name]) => DEPRECATED.has(name)).length;
+  assert.equal(names('a { margin: var(--space-3) var(--space-row); border-color: var(--line); color: var(--line-control); }'), 2);
+});
+
+test('no new raw type values outside the roles', (t) => {
+  onlyDown(t, 'raw type values', rawTypeCounts(), TYPE_BASELINE, 'use a --type-* role from tokens.css');
+});
+
+test('no new uses of deprecated token names', (t) => {
+  onlyDown(t, 'deprecated token names', deprecatedCounts(), DEPRECATED_BASELINE, 'use the name design-tokens.json gives as its replacement');
 });
