@@ -44,6 +44,16 @@
 .hub-largest li { padding: .5rem 0; border-top: 1px solid var(--divider-subtle); }
 .hub-largest p { margin: .3rem 0; }
 .hub-corrections { border-top: 1px solid var(--divider-default); margin-top: 2rem; padding-top: 1rem; color: var(--ink-soft); font-size: .875rem; }
+.hub-authorisation { border-top: 1px solid var(--divider-default); margin-top: 2rem; padding-top: 1rem; font-size: .875rem; }
+.hub-page .hub-footer { background: transparent; color: inherit; border: 0; padding: 0; margin: 0; font: inherit; }
+.hub-page .hub-footer a { color: var(--bills-ink); }
+.vic-seats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .25rem 1.5rem; list-style: none; padding: 0; }
+.vic-seats a { display: block; padding: .65rem 0; min-height: 44px; }
+.vic-member { padding: 1.5rem 0; border-top: 1px solid var(--divider-subtle); }
+.vic-member h4 { margin-top: 1rem; }
+.vic-dates dt { font-weight: 600; }
+.vic-dates dd { margin: .4rem 0 1rem; line-height: 1.65; }
+.hub-page a:focus-visible, .hub-page summary:focus-visible { outline: 2px solid var(--bills-ink); outline-offset: 3px; }
 @media (max-width: 600px) {
   .hub-page { padding-top: 1.25rem; }
   .hub-weeks > li { gap: .6rem; }
@@ -51,4 +61,5 @@
   .hub-weeks .ui-status { font-size: .75rem; }
   .hub-totals { gap: .75rem; font-size: .875rem; }
   .hub-committee-body { padding-left: 0; }
+  .vic-seats { grid-template-columns: 1fr; }
 }

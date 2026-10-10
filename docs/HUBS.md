@@ -1,5 +1,97 @@
 # Sitting weeks and Senate estimates
 
+## Victorian election 2026 (publication disabled)
+
+`/vic-election-2026` and its 96 constituency pages are behind
+`VIC_ELECTION_HUB_ENABLED`. The shared default in `portal/public/vic-election.js`
+is false; `portal/wrangler.jsonc` also explicitly sets the production variable to
+`"false"`. An absent value, `false`, `1`, or any string other than exact `"true"`
+keeps publication disabled. Disabled pages, unknown constituencies and the
+direct election facts asset return 404 with `X-Robots-Tag: noindex`; HTML 404s
+also have a robots meta tag. Disabled hubs have no election links, sitemap
+entry or llms.txt entry. Encoded facts-asset paths are gated too.
+
+Jake must resolve electoral-matter authorisation and the correction contact
+before publication. After that decision, set any approved `AUTHORISATION_LINE`
+and `CORRECTION_CONTACT` Worker variables, and change
+`VIC_ELECTION_HUB_ENABLED` to `"true"` through the normal reviewed release.
+Both footer values default to null in `portal/src/hubs.ts`; the existing shared
+`CORRECTION_CONTACT` is reused. The authorisation is escaped plain text; the
+correction contact is a site path or HTTPS URL. All sitting, estimates and
+election hub pages (including their 404s) render configured footer values.
+Neither value is invented, and there is no response-time commitment.
+
+For an **isolated local preview only**, run Wrangler with
+`--var VIC_ELECTION_HUB_ENABLED:true` inside the required network namespace.
+This does not change the checked-in default. With publication enabled, the
+Worker adds `/sitemaps/vic-election-1.xml` to the generated sitemap index and
+adds the election entry to `/llms.txt`. The separate `vic-election` sitemap type
+contains the hub plus all 96 constituency pages, with dated lastmods. Discovery
+is gated at request time by the same flag as SSR and canonical resolution;
+the base generated crawl files always remain election-free. Published trailing
+slashes redirect once to the canonical no-slash path, including www aliases.
+
+`npm run build:search` finishes with `build:vic-election`. Its offline projection
+uses the VEC source config in `scripts/hubs/vic-election-2026.json`, the exact
+state electorate index, validated roster, existing canonical person-path table,
+`votes.json` and Victorian division shards. It writes the uncommitted,
+deployed `portal/public/hubs/vic-election-2026.json`; run the full search build
+first to refresh canonical person paths. There is no new ingestion, identity
+join, cron, candidate list or donor read. The projection uses an explicit field
+allowlist. All 88 Assembly districts have one roster member and all 8 Council
+regions have five, dated to the published roster snapshot.
+
+The VEC's [district list](https://www.vec.vic.gov.au/electoral-boundaries/state-districts)
+and [region list](https://www.vec.vic.gov.au/electoral-boundaries/state-regions)
+were checked on 10 October 2026. The [VEC boundary review](https://www.vec.vic.gov.au/electoral-boundaries/state-boundary-reviews)
+identifies October 2021 as the last state redivision, effective 1 November 2022.
+The [EBC final report](https://www.ebc.vic.gov.au/Past-Redivisions/Default.html)
+(paragraphs 476, 478 and 479) identifies the Buninyong/Eureka and Eastern
+Metropolitan/North-Eastern Metropolitan name changes and nine abolished and
+nine new district names. These changes predate this term; there is no 2025
+state redivision identified by those sources. No spatial boundaries are copied
+or approximated. Each region's 11-district membership uses its VEC page.
+
+The [VEC legal terms](https://vec.vic.gov.au/legal) grant **CC BY 4.0 International**
+for website material, excluding images, photographs, videos, branding (including
+the VEC logo) and third-party content. The rendered attribution is **© Victorian
+Electoral Commission**. Pages paraphrase facts and reproduce names, not maps,
+imagery, VEC branding or third-party enrolment projections. The source config
+records hashes of the checked pages and EBC report; local source copies are in
+`portal/private/growth-vic/`.
+
+The current [VEC timeline](https://www.vec.vic.gov.au/voting/types-of-elections/state-elections)
+and [2026 election page](https://www.vec.vic.gov.au/voting/2026-state-election)
+put nominations closing at **noon 9 November**, superseding the older draft
+service plan's 13 November. The hub points to VEC candidate publication after
+nominations close and carries no candidate names. Early voting is 18–27 November
+(closed Sunday 22 November); election day is Saturday 28 November. Caretaker
+starts at 6 pm 3 November unless Parliament is dissolved earlier, sourced to
+the [Victorian caretaker guidelines](https://www.vic.gov.au/guidelines-caretaker-conventions/introduction).
+
+Speech counts retain their exported years. Counts wholly within 2023–2026 are
+available term records, without a completeness claim. Counts starting in 2022
+cannot isolate the November election cutoff. Mixed federal/Victorian totals are
+withheld, and members without a count show an explicit gap. Historical surname
+aggregates are not merged. Victorian vote totals cover **2026 only**; their
+participation counts can differ from the separately exported detailed division
+pages. No division absence is inferred from a missing row. The five latest
+available detailed divisions carry dates, recorded votes and original sources.
+Victorian Hansard/divisions have restricted copyright, **no open licence**, as
+recorded in `docs/COVERAGE.md`; only existing counts and links enter the hub.
+
+There is no Victorian interests register or state grants export. Federal
+electorates are different from state districts, so no federal grant allocation
+is made. Every page states these gaps and includes “An association does not
+prove influence” alongside the grants section. The tests derive individual
+donor labels with main's `isOrganisationDonor` classifier. A label coinciding
+with a validated member name is permitted in that member's roster context;
+donor identities, fields and links remain excluded.
+
+The dated, per-constituency export audit and verification record are in
+[VIC-ELECTION-2026.md](VIC-ELECTION-2026.md). Screenshots and local HTTP/DOM
+checks at 390 and 1280 are retained privately in `portal/private/growth-vic/`.
+
 The hub facts are rebuilt by `npm run build:search` (including `build:hubs`) from
 the published bills, divisions, agency profiles and federal grant shards. The
 Worker renders those facts at `/sitting`, `/sitting/<monday-date>` and
