@@ -11,7 +11,7 @@ assert.ok(start >= 0 && end > start);
 // execute unchanged, without requiring WebGL in Node.
 // discoveryMoney writes through app.js's own short money form, defined above the slice.
 const fmtMoney = app.match(/^function fmtMoney\(value\) \{[\s\S]*?^\}$/m)[0];
-const code = fmtMoney + '\n' + app.slice(start, end).replace(/import\("\/money-map\.js(?:\?[^"]*)?"\)/g, 'loadMapModule()');
+const code = fmtMoney + '\n' + app.slice(start, end).replace(/import\("\/money-map\.js(?:\?[^"]*)?"\)/g, 'loadMapModule()').replace(/import\('\/contracts-table\.js(?:\?[^']*)?'\)/g,'loadContractsModule()');
 assert.ok(code.includes('loadMapModule()'), 'the map module loader is intercepted');
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const deferred = () => { let resolve; const promise = new Promise((r) => { resolve = r; }); return { promise, resolve }; };
@@ -31,12 +31,13 @@ function harness({ money = { nodes: [] }, mount = async () => ({ destroy() {}, s
   };
   element('discover-map-area').hidden = true;
   element('discover-sort').value = 'value';
-  const document = { documentElement: { dataset: { panel: 'discover' } } };
+  const document = {querySelector: () => null, documentElement: { dataset: { panel: 'discover' } } };
   const routes = [];
   const context = {
     $: element, esc, safeUrl: (u) => typeof u === 'string' && /^https?:\/\//i.test(u) ? u : null,
-    document, window: {}, URLSearchParams, matchMedia: () => ({ matches: false }),
+    document, window: {}, location: {search: ''}, URLSearchParams, AbortController, matchMedia: () => ({ matches: false }),
     loadMoneyData: async () => money,
+    loadContractsModule: async () => ({mountContractsTable: async () => ({destroy() {}})}),
     loadMapModule: async () => ({ mountMoneyMap: mount }),
     askHash: (q) => `/ask?q=${encodeURIComponent(q)}`, industryLabel: (v) => v,
     replaceRoute: (route) => routes.push(route), goRoute() {}, fmtDate: (v) => v,
@@ -145,4 +146,15 @@ test('late map handles are destroyed after selection or route invalidates the mo
   assert.equal(focus, 'acme-id');
   assert.equal(destroyed, 1);
   assert.equal(h.eval('discoveryMapHandle'), null);
+});
+
+
+test('departure aborts the hub table request and destroys a late handle', async () => {
+  const h=harness(), pending=deferred();let signal, destroyed=0;
+  h.context.loadContractsModule=async()=>({mountContractsTable:async(_root,options)=>{signal=options.signal;return pending.promise;}});
+  await h.context.renderDiscoveryPage(new URLSearchParams(),false);
+  assert.ok(signal);
+  h.context.destroyContractsTable();assert.equal(signal.aborted,true);
+  pending.resolve({destroy(){destroyed++;}});
+  await new Promise(resolve=>setImmediate(resolve));assert.equal(destroyed,1);
 });

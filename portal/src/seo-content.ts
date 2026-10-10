@@ -1,3 +1,4 @@
+import {supplierContractsHTML} from '../public/contracts-table.js'
 import { personUrl, partyUrl } from '../public/canonical-urls.js'
 import {sponsorPerson} from '../public/sponsor-person.js'
 import {currentSittingPath, sydneyDay} from '../public/hubs-data.js'
@@ -321,7 +322,7 @@ export async function renderDirectory(dir: string, url: URL, read: ReadAsset, pe
 interface Contract { id: string; title?: string; description?: string; agency?: string; amount: number; start_date?: string; published?: string; url?: string; link_scope?: string }
 interface SupplierProfile { id: string; name: string; total: number; count: number; agencies: {name:string;total:number;count:number}[]; contracts: Contract[] }
 interface AgencyProfile { id: string; name: string; profile_path: string }
-export async function renderSupplierAnswer(id: string, read: ReadAsset): Promise<RenderedContent | null> {
+export async function renderSupplierAnswer(id: string, read: ReadAsset, params = new URLSearchParams(), withheld: (...texts: unknown[]) => boolean = () => true): Promise<RenderedContent | null> {
   const [index,agencies] = await Promise.all([
     read<{meta:{generated_at:string;source:string};suppliers:{id:string;profile_path:string}[]}>('/suppliers.json'),
     read<{agencies:AgencyProfile[]}>('/agencies.json'),
@@ -333,12 +334,13 @@ export async function renderSupplierAnswer(id: string, read: ReadAsset): Promise
   const description=`${profile.name}: ${currency(profile.total)} in recorded Commonwealth contract awards across ${count(profile.count)} contracts and ${profile.agencies.length} agencies.`
   let body=`<p>Exported ${escapeHtml(index.meta.generated_at.slice(0,10))}. Source: ${escapeHtml(index.meta.source)}. Award values are not expenditure. One contract is counted at its latest recorded notice value; amendments are not added together. Coverage is limited to the available notices.</p><h2>Agencies contracted</h2><ul>`
   const matches=profile.agencies.map(a=>({a,record:agencies.agencies.find(r=>r.name===a.name)}))
-  body+=matches.map(({a,record})=>`<li>${record ? link(`/subject/agency/${record.id}`,a.name) : escapeHtml(a.name)} — ${count(a.count)} contracts, ${currency(a.total)}</li>`).join('')+'</ul><h2>Largest recorded contracts</h2><ol>'
-  body+=[...profile.contracts].sort((a,b)=>b.amount-a.amount).slice(0,10).map(c=>{
+  body+=matches.map(({a,record})=>`<li>${record ? link(`/subject/agency/${record.id}`,a.name) : escapeHtml(a.name)} — ${count(a.count)} contracts, ${currency(a.total)}</li>`).join('')+'</ul>'
+  body+=supplierContractsHTML(profile.contracts as unknown as Record<string, unknown>[],id,params,withheld)+'<details><summary>Notice details for the largest awards</summary><ol>'
+  body+=[...profile.contracts].filter(c=>!withheld(...Object.values(c))).sort((a,b)=>b.amount-a.amount).slice(0,10).map(c=>{
     const agency=agencies.agencies.find(a=>a.name===c.agency)
     const notice=c.link_scope==='source_register' ? `https://www.tenders.gov.au/Search/KeywordSearch?keyword=${encodeURIComponent(c.id)}` : c.url
     return `<li>${escapeHtml(c.title || c.id)}${c.description ? ` — ${escapeHtml(c.description)}` : ''}. ${currency(c.amount)}. Start date: ${escapeHtml(c.start_date || 'Not recorded')}. Published: ${escapeHtml(c.published || 'Not recorded')}. Agency: ${agency ? link(`/subject/agency/${agency.id}`,agency.name) : escapeHtml(c.agency || 'Not recorded')}. ${notice ? link(notice,`AusTender notice ${c.id}`,'noopener noreferrer') : escapeHtml(c.id)}.</li>`
-  }).join('')+'</ol><h2>Other suppliers to these agencies</h2>'
+  }).join('')+'</ol></details><h2>Other suppliers to these agencies</h2>'
   for(const {a,record} of matches.slice(0,10)) {
     if(!record) continue
     const data=await optional<{suppliers:{id:string;name:string;total:number}[]}>(read,record.profile_path)

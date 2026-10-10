@@ -1,6 +1,8 @@
 /* Supplier entries: recorded procurement, source notices and funding cross-links.
    No dependencies but the shared formats; the host router owns mounting and calls destroy on departure. */
 import { shortDate, shortMoney } from "./format.js";
+import { contractTitle, placeholderContract, mountContractsTable } from "./contracts-table.js?v=98e8b452f1";
+export { contractTitle, placeholderContract } from "./contracts-table.js?v=98e8b452f1";
 import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=bd36519a83";
 import { sourceLineHTML } from "./labels.js?v=804befe8de";
 import { partyUrl } from "./canonical-urls.js?v=225d5915ea";
@@ -16,7 +18,7 @@ const donorUrl = (value) => typeof value === "string" && /^\/subject\/donor\/[^\
 const placeholderDate = (value) => !value || !/^\d{4}-\d{2}-\d{2}/.test(value) || Number(value.slice(0, 4)) <= 1900;
 const date = (value) => placeholderDate(value) ? "Not recorded" : shortDate(value);
 /** An undated $0 row is the register's placeholder, not a contract a reader can follow. */
-export function placeholderContract(contract) { return placeholderDate(contract?.start_date) && !(Number(contract?.amount) > 0); }
+
 let agencyIdsPromise = null;
 /** Agency pages canonicalise on their id; the supplier export names agencies only, so the directory supplies the ids. */
 function agencyIds(signal) {
@@ -161,15 +163,6 @@ export function mountYearChart(root, life) {
   life.cleanup(() => { for (const [event, fn] of Object.entries(handlers)) chart.removeEventListener(event, fn); });
 }
 
-// Most AusTender titles are the agency's own reference ("4600062643"); a row reads by what was bought.
-const referenceTitle = (value) => !/\s/.test(value) && (/\d/.test(value) || value === value.toUpperCase());
-export function contractTitle(contract) {
-  const title = String(contract?.title || "").trim();
-  const description = String(contract?.description || "").trim();
-  const counterpart = contract?.supplier || contract?.agency;
-  return description || (title && !referenceTitle(title) ? title : counterpart ? `Contract with ${counterpart}` : "Untitled contract");
-}
-
 export function contractHTML(contract, ids) {
   const url = contract.link_scope === "source_register" && contract.id
     ? `https://www.tenders.gov.au/Search/KeywordSearch?keyword=${encodeURIComponent(contract.id)}`
@@ -191,6 +184,8 @@ async function renderProfile(root, profile, meta, helpers, life, suppliers) {
   const top = agencies[0];
   const share = top && profile.total > 0 ? Number(top.total) / Number(profile.total) * 100 : 0;
 
+  const tableSeed = document.querySelector('#prerender [data-contracts-seed]');
+  const seed = tableSeed ? JSON.parse(tableSeed.textContent) : null;
   root.removeAttribute("aria-busy");
   const identity = [
     sourceUrl(profile.identity?.abn_url) ? `<dt>Business register</dt><dd><a href="${esc(sourceUrl(profile.identity.abn_url))}" target="_blank" rel="noopener noreferrer">Check the ABN record</a></dd>` : "",
@@ -210,7 +205,7 @@ async function renderProfile(root, profile, meta, helpers, life, suppliers) {
     <p class="supplier-lede">${top ? `${esc(top.name)} accounts for ${percent(share)} of the recorded contract value.` : "No agency breakdown is available in this export."}</p>
     <dl class="supplier-totals"><div><dt>Recorded contract value</dt><dd title="${currency(profile.total)}">${shortMoney(profile.total)}</dd></div><div><dt>Contracts</dt><dd>${number(profile.count)}</dd></div><div><dt>Agencies</dt><dd>${number(agencies.length)}</dd></div></dl>
     <div class="supplier-profile-grid"><div class="supplier-profile-main">${agencyChart(agencies, Number(profile.total), ids, meta)}<section class="supplier-section" id="supplier-connections"><h3 class="subject-section-title">Agency connections</h3><p>Explore the agencies awarding contracts to this supplier.</p><div class="supplier-money-map supplier-agency-map"></div></section>${yearChart(years, profile.undated)}<div class="supplier-growth"></div><section class="supplier-section supplier-funding" id="supplier-funding" hidden></section><section class="supplier-section supplier-evidence" hidden></section><section class="supplier-section supplier-taxcharity" hidden></section><section class="supplier-section supplier-mentions"></section>
-      <section class="supplier-section" id="supplier-contracts"><h3 class="subject-section-title">The contract record</h3><div class="ui-toolbar"><label class="ui-field">Filter contracts<input class="ui-input" type="search" name="contract-query" placeholder="Title, agency or reference" autocomplete="off"></label></div><p class="supplier-contract-count" role="status"></p><div class="supplier-contract-list"></div><div class="supplier-contract-more"></div>${procurementSourceHTML(meta, profile.caveats || [])}</section>
+      <section class="supplier-section" id="supplier-contracts"><div data-contracts-table></div>${procurementSourceHTML(meta, profile.caveats || [])}</section>
       <section class="supplier-section" id="supplier-identity"><h3 class="subject-section-title">Identity</h3>${identity ? `<dl class="supplier-identity">${identity}</dl>` : "<p>No business register details are recorded for this supplier.</p>"}${aliases}</section>
     </div>${rail}</div></div>`;
   mountSupplierGrowth(root.querySelector(".supplier-growth"), profile, meta, life, suppliers);
@@ -237,26 +232,13 @@ async function renderProfile(root, profile, meta, helpers, life, suppliers) {
     const donorLinks = donations.links;
     if (donorLinks.length) mountFunding(root.querySelector(".supplier-funding"), donorLinks, life, donations.html);
   }).catch(() => {});
-  // The register's undated $0 placeholders are left out; the count says so below.
-  const contracts = (profile.contracts || []).filter((contract) => !placeholderContract(contract)).sort((a, b) => String(b.start_date || "").localeCompare(String(a.start_date || "")) || Number(b.amount) - Number(a.amount));
-  const placeholders = (profile.contracts || []).length - contracts.length;
-  let visible = 15;
-  const query = root.querySelector('input[name="contract-query"]');
-  query.value = helpers.params?.get("contract") || "";
-  function renderContracts() {
-    const term = query.value.trim().toLocaleLowerCase();
-    const filtered = contracts.filter((contract) => !term || `${contract.title} ${contract.description || ""} ${contract.agency} ${contract.id}`.toLocaleLowerCase().includes(term));
-    root.querySelector(".supplier-contract-count").textContent = `${number(Math.min(visible, filtered.length))} of ${number(filtered.length)} ${filtered.length === 1 ? "contract" : "contracts"}${term ? " matching this filter" : " shown, newest first"}${placeholders && !term ? ` · ${number(placeholders)} undated $0 ${placeholders === 1 ? "record" : "records"} not shown` : ""}`;
-    root.querySelector(".supplier-contract-list").innerHTML = filtered.length ? filtered.slice(0, visible).map((contract) => contractHTML(contract, ids)).join("") : '<p class="status">No contracts match this filter.</p>';
-    const more = root.querySelector(".supplier-contract-more");
-    more.innerHTML = filtered.length > visible ? '<button type="button" class="ui-button">Show more contracts</button>' : "";
-    more.querySelector("button")?.addEventListener("click", () => { const firstNew = visible; visible += 15; renderContracts(); root.querySelectorAll(".supplier-contract summary")[firstNew]?.focus(); });
-  }
-  query.addEventListener("input", () => { visible = 15; renderContracts(); });
-  renderContracts();
-  if (query.value) {
-    const selected = root.querySelector(".supplier-contract");
-    if (selected) { selected.open = true; selected.querySelector("summary")?.focus(); selected.scrollIntoView({block:"center"}); }
+  const table = root.querySelector('#supplier-contracts [data-contracts-table]');
+  try {
+    const handle = await mountContractsTable(table, {supplierId: profile.id, count: profile.contracts.length,
+      seed: seed?.supplierId === profile.id ? seed : undefined, signal: life.signal, params: helpers.params});
+    if (life.alive()) life.cleanup(() => handle.destroy()); else handle.destroy();
+  } catch (error) {
+    if (life.alive()) table.innerHTML = '<p role="alert">The contract records could not be loaded.</p>';
   }
 }
 

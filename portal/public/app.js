@@ -953,7 +953,7 @@ function showPanel(name) {
   if (name !== "money-records") { moneyRecordsGeneration++; moneyRecordsHandle?.destroy(); moneyRecordsHandle = null; }
   for (const nav of document.querySelectorAll('[data-money-navigation]')) nav.innerHTML = OpaxNavigation.moneyNav(location.pathname, new URLSearchParams(location.search).get('jur'));
 
-  if (name !== "discover") destroyDiscoveryMap();
+  if (name !== "discover") { destroyDiscoveryMap(); destroyContractsTable(); }
   if (name !== "money") {
     moneyJourneys?.destroy(); moneyJourneys = null;
     moneyMapLoading = null; moneyMapGeneration += 1;
@@ -1017,6 +1017,14 @@ const DISCOVERY_CATEGORIES = {
   donor_contract_overlap: "Companies in both",
 };
 const DISCOVERY_DEFAULT = "procurement_concentration";
+let contractsTableHandle = null;
+let contractsTableGeneration = 0;
+let contractsTableController = null;
+function destroyContractsTable() {
+  contractsTableGeneration++;
+  contractsTableController?.abort(); contractsTableController = null;
+  contractsTableHandle?.destroy(); contractsTableHandle = null;
+}
 let discoveryData = null;
 let discoveryRequest = null;
 let discoveryRenderId = 0;
@@ -1059,7 +1067,7 @@ function destroyDiscoveryMap() {
   discoveryMapHandle = null;
 }
 function discoveryUrl() {
-  const params = new URLSearchParams();
+  const params = new URLSearchParams([...new URLSearchParams(location.search)].filter(([key]) => key.startsWith("t.")));
   const category = discoveryCategory();
   if (category !== DISCOVERY_DEFAULT) params.set("category", category);
   const q = $("discover-query").value.trim();
@@ -1183,6 +1191,17 @@ function filterDiscoveries() {
 }
 async function renderDiscoveryPage(params, manageFocus) {
   const renderId = ++discoveryRenderId;
+  destroyContractsTable();
+  const tableGeneration = contractsTableGeneration;
+  const tableController = contractsTableController = new AbortController();
+  const slot = $("contracts-hub-table");
+  const seedNode = document.querySelector('#prerender [data-contracts-seed]');
+  const seed = seedNode ? JSON.parse(seedNode.textContent) : null;
+  import('/contracts-table.js?v=98e8b452f1').then(async ({mountContractsTable}) => {
+    if (tableGeneration !== contractsTableGeneration) return;
+    const handle = await mountContractsTable(slot, {seed: seed?.supplierId === null ? seed : undefined, signal: tableController.signal});
+    if (tableGeneration === contractsTableGeneration) contractsTableHandle = handle; else handle.destroy();
+  }).catch(() => { if (tableGeneration === contractsTableGeneration) slot.innerHTML = '<p role="alert">The contract records could not be loaded.</p>'; });
   const category = Object.hasOwn(DISCOVERY_CATEGORIES, params.get("category")) ? params.get("category") : DISCOVERY_DEFAULT;
   destroyDiscoveryMap();
   discoverySelected = params.get("item");
@@ -1584,7 +1603,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=f07fa5d29c");
+    const module = await import("/suppliers.js?v=3908a4549d");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,

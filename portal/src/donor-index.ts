@@ -1,4 +1,5 @@
 import { MONEY_GRAPHS, donorPrivacyIndex, donorNameWithheld, foldDonorName, withheldPhrases, namesWithheldPhrase, type DonorPrivacyIndex, type WithheldPhrases } from '../public/donor-entity.js'
+import {compileContractGuard} from '../public/contracts-table.js'
 export { withheldPhrases, namesWithheldPhrase }
 type DonorGraph = { nodes: { label: string; kind: string; aliases?: string[] | null; industry?: string | null }[] }
 
@@ -59,8 +60,8 @@ export async function questionNamesWithheldDonor(assets: Fetcher | undefined, ..
 
 /** A synchronous withheld-name check over the per-isolate phrases, for renderers that
  * test many texts (declared-interest entries). Fails closed when the export is unreadable. */
-export async function withheldNameCheck(assets: Fetcher | undefined): Promise<(...texts: unknown[]) => boolean> {
+export async function withheldNameCheck(assets: Fetcher | undefined, indexed = false): Promise<(...texts: unknown[]) => boolean> {
   if (!assets) return () => false
   const phrases = await loadWithheldPhrases(assets).catch(() => null)
-  return phrases ? (...texts) => namesWithheldPhrase(phrases, ...texts) : () => true
+  return phrases ? indexed ? compileContractGuard(phrases) : (...texts) => namesWithheldPhrase(phrases, ...texts) : () => true
 }

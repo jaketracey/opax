@@ -5,12 +5,13 @@ import { runInNewContext } from 'node:vm';
 import { shortDate, shortMoney } from '../public/format.js';
 import { sourceLineHTML } from '../public/labels.js';
 import { partyUrl } from '../public/canonical-urls.js';
+import {contractTitle, placeholderContract} from '../public/contracts-table.js';
 
 // Execute the actual module; only replace its dynamic WebGL import with a
 // controlled loader. The small DOM below models the nodes this module touches.
 const source = readFileSync(new URL('../public/suppliers.js', import.meta.url), 'utf8')
   .replaceAll('export function ', 'function ').replaceAll('export async function ', 'async function ')
-  .replace(/^import .*;\s*/gm, '')
+  .replace(/^import .*;\s*/gm, '').replace(/^export \{.*\} from .*;\s*/gm, '')
   .replace(/import\("\/money-map\.js\?v=[^"]*"\)/, 'loadMapModule()');
 const tick = () => new Promise((resolve) => setImmediate(resolve));
 const deferred = () => { let resolve; const promise = new Promise((r) => { resolve = r; }); return { promise, resolve }; };
@@ -28,6 +29,7 @@ function node() {
 }
 function setup(fetch, mount = async () => ({ destroy() {}, setPaused() {} })) {
   const context = { fetch, AbortController, URLSearchParams, history: { replaceState() {} }, shortDate, shortMoney, partyUrl,
+    document: {querySelector: () => null}, contractTitle, placeholderContract, mountContractsTable: async () => ({destroy() {}}),
     mountSupplierGrowth: () => {}, supplierDonations: async () => ({html: "", links: []}), sourceLineHTML,
     loadMapModule: async () => ({ mountMoneyMap: mount }) };
   runInNewContext(source, context);
@@ -159,12 +161,17 @@ test('a map handle returned after departure is destroyed and cannot become activ
 });
 
 
-test('a contract search link filters and opens its exact supplier record', async () => {
+test('a contract search link reaches the table adapter and departure destroys it', async () => {
   const context = setup(async (url) => response(url === '/suppliers.json' ? { suppliers: [entry()] } : { profiles: { [id]: profile() } }));
+  let options, destroyed = 0;
+  context.mountContractsTable = async (_el, value) => { options = value; return {destroy() {destroyed++;}}; };
   const root = node();
-  context.mountSupplierProfile(root, id, { params: new URLSearchParams({contract:'CN1'}) });
+  const handle = context.mountSupplierProfile(root, id, { params: new URLSearchParams({contract:'CN1'}) });
   await tick();
-  assert.equal(root.querySelector('input[name="contract-query"]').value, 'CN1');
-  assert.match(root.querySelector('.supplier-contract-list').innerHTML, /CN1/);
-  assert.equal(root.querySelector('.supplier-contract').open, true);
+  assert.equal(options.params.get('contract'), 'CN1');
+  assert.equal(options.supplierId, id);
+  assert.equal(options.count, 1);
+  assert.match(root.innerHTML, /data-contracts-table/);
+  handle.destroy();
+  assert.equal(destroyed, 1);
 });
