@@ -7,9 +7,12 @@
  * industry tag, and individuals are often tagged with a sector (a person
  * tagged media or fossil fuels). So the industry never counts, not even unions.
  * Organisation evidence is a legal-form or organisation word or phrase as whole
- * tokens in the label or an alias, a trailing "Co", or a single-token acronym
- * ("CFMEU"). An ABN/ACN is not evidence: sole traders have ABNs. Everything else
- * is treated as an individual: a bare company name ("Visy") fails closed.
+ * tokens in the label or an alias, a trailing "Co", or a label that is a single
+ * acronym of 3-7 capitals ("CFMEU"). An alias is never an acronym ("RP" reads as
+ * initials), a two-letter label is not one ("EY" needs a legal form in an alias),
+ * and ABN, ACN, ARBN and TFN are registration words, not names. An ABN/ACN is not
+ * evidence: sole traders have ABNs. Everything else is treated as an individual:
+ * a bare company name ("Visy") fails closed.
  *
  * Shared by the Worker (src/) and the build scripts (scripts/build_*_catalog.mjs);
  * test/donor-entity.test.mjs and test/donor-privacy.test.mjs. */
@@ -24,15 +27,19 @@ const ORGANISATION_WORDS = [
 const ORGANISATION_WORD = new RegExp(`(?:^|[^a-z0-9])(?:${ORGANISATION_WORDS.join('|')})(?=$|[^a-z0-9])`, 'i')
 // "& Co" or "Pastoral Co" as the last word; "Co" elsewhere is too often part of a name.
 const TRAILING_CO = /(?:^|[^a-z0-9])co\.?\s*$/i
-// A single all-capitals token such as "CFMEU" or "SDA". "JOHN SMITH" has two tokens and is not one.
-const ACRONYM = /^[A-Z]{2,7}$/
+// A label that is one all-capitals token of 3-7 letters, such as "CFMEU" or "SDA".
+// "JOHN SMITH" has two tokens; "RP" reads as initials; registration words are not names.
+const ACRONYM = /^[A-Z]{3,7}$/
+const REGISTRATION_WORDS = new Set(['ABN', 'ACN', 'ARBN', 'TFN'])
 
 /** @param {{label?: string, aliases?: string[] | null, industry?: string | null} | null | undefined} node */
 export function isOrganisationDonor(node) {
   if (!node || typeof node.label !== 'string' || !node.label.trim()) return false
   const names = [node.label, ...(Array.isArray(node.aliases) ? node.aliases : [])].filter(n => typeof n === 'string')
   if (names.some(n => ORGANISATION_WORD.test(n) || TRAILING_CO.test(n))) return true
-  return names.some(n => ACRONYM.test(n.trim()))
+  // The label only: an alias acronym can be a person's initials.
+  const label = node.label.trim()
+  return ACRONYM.test(label) && !REGISTRATION_WORDS.has(label)
 }
 
 /** A money graph in which every donor failing isOrganisationDonor is renamed

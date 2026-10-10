@@ -18,9 +18,14 @@ test('a donor is an organisation only with positive evidence in its name; the in
     {label: 'Alex Example', industry: 'other', aliases: ['ABN 12 345 678 901']}, {label: 'Alex Example', industry: 'unions', aliases: []},
     {label: 'Alex Example', industry: 'unions', aliases: ['12345678901']}])
     assert.equal(isOrganisationDonor(node), false, `${node.label} / ${node.industry} / ${node.aliases?.join(';')}`);
-  // A single all-capitals token is an acronym; an all-capitals or inverted personal name is not.
-  for (const label of ['JOHN SMITH','Smith, John','SMITH, JOHN','J SMITH','Abc','ABCDEFGH','A']) assert.equal(isOrganisationDonor({label, industry: 'unions'}), false, label);
-  assert.equal(isOrganisationDonor({label: 'Example Union Members', industry: 'unions', aliases: ['EUM']}), true);
+  // A label of one all-capitals token, 3-7 letters, is an acronym; an all-capitals or inverted personal name is not.
+  for (const label of ['CFMEU','SDA','QIC','EXAMPLE']) assert.equal(isOrganisationDonor({label, industry: 'other', aliases: []}), true, label);
+  for (const label of ['JOHN SMITH','Smith, John','SMITH, JOHN','J SMITH','Abc','ABCDEFGH','A','ABN','ACN','ARBN','TFN']) assert.equal(isOrganisationDonor({label, industry: 'unions'}), false, label);
+  // Never an acronym alias: "RP" or "ABN" beside a personal name reads as initials or a registration note.
+  for (const aliases of [['ABN'],['RP'],['CFMEU'],['RPX'],['ACN','TFN']]) assert.equal(isOrganisationDonor({label: 'Alex Example', industry: 'other', aliases}), false, aliases.join(';'));
+  // Two capitals read as initials, so "EY" fails closed unless an alias carries a legal form.
+  assert.equal(isOrganisationDonor({label: 'EY', industry: 'finance', aliases: []}), false);
+  assert.equal(isOrganisationDonor({label: 'EY', industry: 'finance', aliases: ['Example & Young Pty Ltd']}), true);
   // Organisation words count only as whole tokens, and "Co" only as the last one.
   for (const label of ['Ingrid Bankston','Trustwell','Collegiate Smith','Co Example','Jane Lawyersmith','Hallam Trades']) assert.equal(isOrganisationDonor({label, industry: 'finance'}), false, label);
   assert.equal(isOrganisationDonor(null), false);

@@ -22,10 +22,11 @@ const federal = real('graph/money.json');
 const inbound = new Map();
 for (const e of federal.edges) if (!e.flow && !e.grant) inbound.set(e.target, (inbound.get(e.target) || 0) + e.total);
 const topParty = federal.nodes.find(n => n.id === [...inbound].sort((a, b) => b[1] - a[1])[0][0]);
-// Sector-tagged, titled, inverted and individual-tagged people; the review's ABN-only alias
-// and unions-tagged personal name; and an all-capitals personal name.
+// Sector-tagged, titled, inverted and individual-tagged people; the reviews' ABN-only alias,
+// unions-tagged personal name and acronym aliases ("ABN", initials); an all-capitals name.
 const FIXTURE_INDIVIDUALS = [['Quillon Fixturewright', 'media', ['Q. Fixturewright']], ['Mrs Verity Fixturemoor AO', 'finance', []], ['Fixturemoor, Ottoline', 'unions', []], ['Bertram Fixturebay', 'individual', []],
-  ['Alexandra Fixturely', 'other', ['ABN 12 345 678 901']], ['Morgan Fixtureton', 'unions', []], ['JUNIPER FIXTUREHAM', 'unions', ['ACN 123 456 789']]];
+  ['Alexandra Fixturely', 'other', ['ABN 12 345 678 901']], ['Morgan Fixtureton', 'unions', []], ['JUNIPER FIXTUREHAM', 'unions', ['ACN 123 456 789']],
+  ['Ines Fixturegate', 'other', ['ABN']], ['Rowan Fixturepeak', 'media', ['RF']], ['Hollis Fixtureford', 'finance', ['HFX']]];
 const FIXTURE_ORGANISATION = 'Fixtureworks Holdings Pty Ltd';
 const big = Math.max(...federal.edges.map(e => e.total)) * 2;
 const fixtureNodes = [...FIXTURE_INDIVIDUALS, [FIXTURE_ORGANISATION, 'property', []]].map(([label, industry, aliases], i) => ({
