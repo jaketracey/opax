@@ -1,7 +1,7 @@
 import { personUrl, partyUrl } from './canonical-urls.js?v=225d5915ea';
 /* Electorate reference pages. Independently loadable; no funding-data dependency. */
 import { shortDate } from './format.js';
-import { partyLabelHTML, statusLabelHTML, sourceLineHTML, moreMenuHTML } from './labels.js?v=804befe8de';
+import { partyLabelHTML, statusLabelHTML, sourceLineHTML, moreMenuHTML } from './labels.js?v=c6bf994ef7';
 export const JURISDICTIONS = { federal: 'Federal', nsw: 'New South Wales', vic: 'Victoria', qld: 'Queensland', sa: 'South Australia', wa: 'Western Australia', tas: 'Tasmania', nt: 'Northern Territory', act: 'Australian Capital Territory' };
 export const CHAMBERS = { representatives: 'House of Representatives', senate: 'Senate', nsw_la: 'NSW Legislative Assembly', nsw_lc: 'NSW Legislative Council', vic_la: 'Victorian Legislative Assembly', vic_lc: 'Victorian Legislative Council', qld_la: 'Queensland Legislative Assembly', sa_ha: 'SA House of Assembly', sa_lc: 'SA Legislative Council', wa_la: 'WA Legislative Assembly', wa_lc: 'WA Legislative Council', tas_ha: 'Tasmanian House of Assembly', tas_lc: 'Tasmanian Legislative Council', nt_la: 'NT Legislative Assembly', act_la: 'ACT Legislative Assembly' };
 export const escapeHTML = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);

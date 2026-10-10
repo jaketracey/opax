@@ -91,6 +91,39 @@ test('MachineLabel: one phrase; the pill opens its note, the inline form has no 
   assert.doesNotMatch(app, /class="(?:doc-brief-tag|topic-arc-tag|party-brief-label)">Machine/);
 });
 
+test('MachineLabel notRecord: the pill says "not part of the record" in its title and its name; no block prints the sentence', () => {
+  const { machineLabelHTML } = helpers;
+  const said = ' title="Written by a model, not by a person. Not part of the record."';
+  const name = 'Machine-written<span class="visually-hidden">, not part of the record</span>';
+  assert.equal(machineLabelHTML({ notRecord: true, note: 'From the EM.' }),
+    `<details class="ui-pop ui-machine"><summary${said}><span class="ui-machine-glyph" aria-hidden="true">✦</span>${name}</summary><div class="ui-sheet"><p>From the EM.</p></div></details>`);
+  assert.equal(machineLabelHTML({ pill: true, notRecord: true }), `<span class="ui-machine-pill"${said}><span class="ui-machine-glyph" aria-hidden="true">✦</span>${name}</span>`);
+  assert.equal(machineLabelHTML({ inline: true, notRecord: true }), `<span class="ui-machine-inline"${said}><span class="ui-machine-glyph" aria-hidden="true">✦</span>${name}</span>`);
+  // The home page's bills list carries the helper's pill, written into the page.
+  const index = read('index.html');
+  assert.ok(index.includes(machineLabelHTML({ notRecord: true, note: "Each summary is written by a model from the bill's explanatory memorandum. It is not part of the record." })));
+  // The sentences the pill replaced: the doc page's In brief, the speech's bill
+  // panel, the bill peek, the search summary, the home bills note, the year in brief.
+  const tm = read('timemachine.js');
+  for (const text of [app, index, tm]) {
+    assert.doesNotMatch(text, /not by a person, and not part of the record|not part of the original bill text/);
+    assert.doesNotMatch(text, /doc-brief-note|doc-bill-attrib/);
+    assert.doesNotMatch(text, /`Written by a model from \$\{data\.reviewed_count\}|Summaries are written by a model from each bill|Machine-written from (?:the|what)/);
+  }
+  assert.doesNotMatch(app, /<p class="fineprint">\$\{esc\(summary\.attribution/);
+});
+
+test('doc page actions: whole words on one line, whole buttons to the next row; the header is one unit at every width', () => {
+  // .ui-button breaks anywhere ("Prof ile" at 390); the doc toolbar does not.
+  assert.match(style, /#panel-doc \.doc-toolbar-btns \.ui-button \{ white-space: nowrap; overflow-wrap: normal; \}/);
+  assert.match(style, /#panel-doc \.doc-toolbar-btns \.ui-button \{ flex: 1 1 0; min-width: max-content; \}/);
+  assert.doesNotMatch(style, /flex: 1 0 calc\(20% - 6px\)|flex-basis: calc\(33\.3% - 6px\)/);
+  // The portrait starts on the headline's row outside any width query.
+  assert.match(style, /\n#panel-doc \.doc-head:has\(\.doc-portrait\) > \.doc-portrait \{ grid-row: 1 \/ span 3;/);
+  // The byline never starts a line on its dot, nor splits a date.
+  assert.match(app, /\]\.filter\(Boolean\)\.join\("&nbsp;· "\); \/\/ a line never starts on a dot/);
+});
+
 test('SourceLine: the line, its state and its sheet in order; only safe links', () => {
   const { sourceLineHTML } = helpers;
   const html = sourceLineHTML({
@@ -142,7 +175,7 @@ test('MachineLabel: the still pill draws the mark with no sheet, for a row whose
   assert.equal(machineLabelHTML({ pill: true }), '<span class="ui-machine-pill"><span class="ui-machine-glyph" aria-hidden="true">✦</span>Machine-written</span>');
   const index = read('index.html');
   const row = index.slice(index.indexOf('<summary class="search-summary-row">'), index.indexOf('</summary>', index.indexOf('<summary class="search-summary-row">')));
-  assert.match(row, /<span class="ui-machine-pill"><span class="ui-machine-glyph" aria-hidden="true">✦<\/span>Machine-written<\/span>/);
+  assert.ok(row.endsWith(machineLabelHTML({ pill: true, notRecord: true })), 'the search row draws the helper\'s still pill');
   assert.doesNotMatch(style + index, /search-summary-machine/);
   // The still pill is the pill: one rule draws both.
   assert.match(sourceCss, /\.ui-machine > summary, \.ui-machine-pill \{[^}]*border-radius: var\(--radius-pill\)[^}]*background: var\(--bills-wash\)/);

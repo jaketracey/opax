@@ -1828,9 +1828,6 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 .doc-brief #doc-brief-text {
   font: 400 0.9375rem/1.6 var(--sans); color: var(--ink); margin: 0;
 }
-.doc-brief-note {
-  margin: 0.6rem 0 0; font: 400 0.75rem/1.5 var(--sans); color: var(--ink-faint);
-}
 /* Names the serif below as the record, now that something else stands above it. */
 .doc-record-head { margin: var(--space-5) 0 var(--space-2); }
 .doc-text {
@@ -3295,7 +3292,6 @@ mark.privacy-confirm {
 #panel-doc .doc-head:has(.doc-topic-long) > .doc-topics { grid-row: 4; }
 
 #panel-doc .doc-brief-head .subject-section-title { margin: 0; font: 600 1.125rem/1.4 var(--serif); }
-#panel-doc .doc-brief-note { font-size: 0.875rem; color: var(--ink-soft); }
 #panel-doc .doc-record-head { margin: 1.5rem 0 0.75rem; font: 600 1.125rem/1.4 var(--serif); }
 #panel-doc .doc-related-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem 1rem; margin-top: 0.5rem; }
 #panel-doc .doc-related-actions .doc-search-all { margin-top: 0; }
@@ -3313,11 +3309,24 @@ mark.privacy-confirm {
   #panel-doc .doc-head:has(.doc-portrait) > .doc-meta { grid-column: 1 / -1; }
   #panel-doc .doc-head:has(.doc-portrait) > .doc-portrait { grid-row: 2; }
 }
+/* A label is whole words on one line at every width: it never breaks inside
+   a word (.ui-button allows that) and is never squeezed. A button that does
+   not fit moves to the next row; the buttons in a row share its width. */
+#panel-doc .doc-toolbar-btns .ui-button { white-space: nowrap; overflow-wrap: normal; }
 @media (max-width: 699px) {
   #panel-doc .doc-toolbar-btns { display: flex; flex-wrap: wrap; }
-  #panel-doc .doc-toolbar-btns .ui-button { flex: 1 0 calc(20% - 6px); min-width: max(44px, 4em); }
+  #panel-doc .doc-toolbar-btns .ui-button { flex: 1 1 0; min-width: max-content; }
+  #panel-doc .doc-toolbar-btns button { flex-direction: row; }
   #panel-doc .doc-toolbar-btns #doc-ask, #panel-doc .doc-toolbar-btns #doc-ask-foot { flex-basis: 100%; }
-  #panel-doc .doc-toolbar-foot .doc-toolbar-btns .ui-button { flex-basis: calc(33.3% - 6px); }
+}
+/* The portrait and the name block are one header unit. The photo starts on
+   the headline's line (it took row 2, under the name) and spans the name,
+   the debate and the byline; the actions wrap inside the header. */
+#panel-doc .doc-head:has(.doc-portrait) > .doc-portrait { grid-row: 1 / span 3; margin-top: var(--space-line); }
+#panel-doc .doc-head:has(.doc-topic-long) > .doc-portrait { grid-row: 1 / span 2; }
+@media (min-width: 700px) {
+  #panel-doc .doc-toolbar { max-width: 100%; }
+  #panel-doc .doc-toolbar-btns { flex-wrap: wrap; min-width: 0; }
 }
 /* ==== page actions: one secondary pill and ⋯ (person, bill, search) ====
    Principle 5: one drawn action per view besides ⋯ (ui-source.css draws ⋯). */
@@ -4444,6 +4453,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 
 /* ---- the newest bills on the front page ---------------------------------- */
 .front-bills .front-bill { padding-bottom: var(--row-gap); }
+.front-bills-machine { margin: 0 0 var(--space-tight); }
 .front-bill-sum { margin: 0.35rem 0 0; font: 400 0.9375rem/1.55 var(--sans); color: var(--ink); max-width: 66ch; }
 .front-bill-sum.front-bill-none { color: var(--ink-faint); }
 .front-bill-who { margin: 0.3rem 0 0; font: 400 0.8125rem/1.5 var(--sans); color: var(--ink-soft); max-width: 66ch; }
@@ -4501,7 +4511,9 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .doc-bill-title { margin: 0; font: 600 1.0625rem/1.4 var(--serif); color: var(--ink); }
 .doc-bill-status { margin: 0.2rem 0 0; font: 400 0.875rem/1.5 var(--sans); color: var(--ink-soft); }
 .doc-bill-sentence { margin: var(--space-3) 0 0; font: 400 0.9375rem/1.6 var(--serif); color: var(--ink); }
-.doc-bill-attrib, .doc-bill-none { margin-top: var(--space-2); }
+.doc-bill-none { margin-top: var(--space-2); }
+.doc-bill-machine { margin: var(--space-row) 0 0; }
+.doc-bill-machine + .doc-bill-sentence { margin-top: var(--space-tight); }
 .doc-bill-link { margin: var(--space-3) 0 0; }
 .doc-bill-link a {
   display: inline-flex; align-items: center; min-height: 44px;

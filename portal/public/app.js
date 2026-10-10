@@ -6,9 +6,9 @@ let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels, source lines and ⋯ (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = import("/growth-modules.js?v=b3095eab8c").then(module => { growthModules = module; });
+const growthModulesReady = import("/growth-modules.js?v=a467db42f2").then(module => { growthModules = module; });
 let uiLabels;
-const uiLabelsReady = import('/labels.js?v=804befe8de').then(module => { uiLabels = module; });
+const uiLabelsReady = import('/labels.js?v=c6bf994ef7').then(module => { uiLabels = module; });
 let attributionHelpers;
 const attributionReady = Promise.allSettled([divisionMarkdownReady,
   import('./speech-attribution.js?v=20261006-4').then(module => { attributionHelpers = module; })]);
@@ -1584,7 +1584,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=f07fa5d29c");
+    const module = await import("/suppliers.js?v=b670f2f222");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -6603,7 +6603,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=044baa0c8c").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=f60dff0a4b").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -8382,7 +8382,7 @@ function billSummaryHTML(bill) {
   return `<section class="bill-section bill-summary" data-accent="bills" aria-labelledby="bill-summary-head">
     <div class="bill-section-head">
       <h3 class="subject-section-title" id="bill-summary-head">In short</h3>
-      ${machineLabelHTML({ note })}
+      ${machineLabelHTML({ note, notRecord: true })}
     </div>
     <div class="bill-sentences">${sentences.map((t) => `<p>${esc(t)}</p>`).join("")}</div>
     ${changes.length ? `<h4 class="bill-sub">What it changes</h4>
@@ -8616,12 +8616,11 @@ async function fillBillPeek(details, entry) {
     return;
   }
   box.innerHTML = `
-    <div class="bill-peek-head">${machineLabelHTML({ note: `${summary.attribution
+    <div class="bill-peek-head">${machineLabelHTML({ notRecord: true, note: `${summary.attribution
       || "Written by a model from the explanatory memorandum; not the record"}.` })}</div>
     ${growthModules.summaryWrittenHTML(summary)}
     <div class="bill-sentences">${sentences.map((t) => `<p>${esc(t)}</p>`).join("")}</div>
-    <p class="fineprint">${esc(summary.attribution
-      || "Written by a model from the explanatory memorandum; not the record")}. ${esc(billStatusLine(entry))}.</p>
+    <p class="fineprint">${esc(billStatusLine(entry))}.</p>
     ${foot}`;
 }
 
@@ -8804,10 +8803,10 @@ async function renderDocBillPanel(doc, slug) {
   const el = box.querySelector(".doc-bill-sentence");
   if (!el) return;
   el.outerHTML = first
-    ? `<p class="doc-bill-sentence">${esc(first)}</p>
-       ${growthModules.summaryWrittenHTML(bill.summary)}
-       <p class="fineprint doc-bill-attrib">${esc(bill.summary.attribution
-         || "Written by a model from the explanatory memorandum; not the record")}.</p>`
+    ? `<div class="doc-bill-machine">${machineLabelHTML({ notRecord: true, note: `${bill.summary.attribution
+         || "Written by a model from the explanatory memorandum; not the record"}.` })}</div>
+       <p class="doc-bill-sentence">${esc(first)}</p>
+       ${growthModules.summaryWrittenHTML(bill.summary)}`
     : `<p class="fineprint doc-bill-none">No summary written for this bill yet.</p>`;
 }
 
@@ -8904,14 +8903,14 @@ document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
   ballot: { name: "Build your ballot", dialog: "dialog-ballot", body: "explore-ballot", module: "/ballot.js?v=49e7bc6382", mount: "mountBallot" },
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=b331b0dcd1", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=8e86f26747", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=deeaffee40", mount: "mountQuiz" },
   ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=65ee0aa12f", mount: "mountLedger" },
   grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=9e66f26ed2", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=25f5793db5", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=58a0a413a1", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=f57768f881", mount: "mountThenVsNow" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=de2fe807c7", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {
@@ -12421,7 +12420,7 @@ async function runSearchAnswer(q, f, key) {
     }));
     $("search-answer-sum").textContent = `Sources (${sources.size})`;
     $("search-answer-fold").hidden = false;
-    $("search-answer-more").textContent = `Written by a model from ${data.reviewed_count} matching records; not part of the record.${data.partial ? " Some sources are temporarily unavailable." : ""}`;
+    $("search-answer-more").textContent = `Drawn from ${data.reviewed_count} matching records.${data.partial ? " Some sources are temporarily unavailable." : ""}`;
     setStatus($("search-answer-status"), "Summary ready");
     $("search-answer-status").classList.add("visually-hidden");
   } catch (err) {
@@ -12889,9 +12888,9 @@ async function openDocPage(slug, manageFocus) {
       doc.labels?.party ? partyChipHTML(doc.labels.party) : "",
       doc.metadata?.electorate ? `${doc.labels?.chamber === "representatives" || doc.labels?.chamber === "nsw_la" ? "Member for " : ""}${esc(doc.metadata.electorate)}` : "",
       house ? esc(house) : "",
-      doc.metadata?.date ? esc(fmtDate(doc.metadata.date)) : "",
+      doc.metadata?.date ? esc(fmtDate(doc.metadata.date)).replace(/ /g, "&nbsp;") : "",
       origin ? `<a href="${esc(origin)}" rel="noopener" target="_blank">View original ↗︎</a>` : "",
-    ].filter(Boolean).join(" · ");
+    ].filter(Boolean).join("&nbsp;· "); // a line never starts on a dot, nor splits a date
     // Machine topic labels (field-level enrichment; a speech can carry
     // several). Chips only for slugs the taxonomy knows — an unknown label
     // has no topic page to link to. Most of the corpus has none yet: the
@@ -12908,7 +12907,7 @@ async function openDocPage(slug, manageFocus) {
     const docWitness = doc.labels?.speaker_type === "witness" || (isCommitteeChamber(doc.labels?.chamber) && doc.metadata?.person_id == null);
     if (docWitness && (doc.metadata?.witness_position || doc.metadata?.witness_organisation)) {
       $("doc-meta").insertAdjacentHTML("afterbegin",
-        `${[doc.metadata.witness_position, doc.metadata.witness_organisation].filter(Boolean).map(esc).join(", ")} · `);
+        `${[doc.metadata.witness_position, doc.metadata.witness_organisation].filter(Boolean).map(esc).join(", ")}&nbsp;· `);
     }
     if (doc.speaker && (docWitness || doc.speaker_attribution === 'unattributed')) {
       speakerLinks.innerHTML = `${docWitness ? 'Committee witness' : 'Unattributed speaker'}, named as the transcript names them. <a ${entityHrefAttr(hasEntityId(doc.speaker) ? subjectHash("person", doc.speaker) + "?attribution=unattributed" : null)}>Their evidence on OPAX</a>`;
@@ -12928,7 +12927,11 @@ async function openDocPage(slug, manageFocus) {
       $("doc-brief-text").textContent = doc.summary;
       $("doc-brief").hidden = false;
     }
-    document.querySelector('#doc-brief .doc-brief-note').textContent = isBillText ? 'Written from this document by a model, not part of the original bill text.' : 'Written from this speech by a model, not by a person, and not part of the record.';
+    // The pill says what wrote the brief; its sheet says from what.
+    const briefHead = document.querySelector("#doc-brief .doc-brief-head");
+    briefHead.querySelector(".ui-machine")?.remove();
+    briefHead.insertAdjacentHTML("beforeend", machineLabelHTML({ notRecord: true,
+      note: isBillText ? "Written from this document by a model. It is not part of the bill's text." : "Written from this speech by a model. It is not part of the record." }));
     if (isBillText && /^[a-z0-9][a-z0-9-]{1,160}$/.test(doc.metadata?.bill_key || '')) {
       const version = typeof doc.metadata?.version_id === 'string' ? '?text-version=' + encodeURIComponent(doc.metadata.version_id) : '';
       $('doc-bill').innerHTML = `<a class="ui-button" href="/bill/${encodeURIComponent(doc.metadata.bill_key)}${version}#bill-full-text">Bill page and text versions</a><p class="fineprint">${doc.metadata.complete === false ? 'Incomplete extracted bill text. Use the original document for the complete bill.' : 'Published bill text. Check the original document for authoritative wording and formatting.'}</p>`;
