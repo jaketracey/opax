@@ -116,7 +116,7 @@ async function buildGrantFixtureRows(read: Read): Promise<Fixture> {
       date: g.s || g.a || null, electorate: g.el || 'Not recorded',
       donor: {label: g.rn, aliases: detail?.aliases || []},
     }
-    return withheld(row) ? omit() : [row]
+    return !isOrganisationRecipient(row) || withheld(row) ? omit() : [row]
   }))
   if (hidden.length) rows.push({aggregate: {kind: 'individual-donors', subject: 'recipients', count: new Set(hidden.map(r => r.id)).size}, value: hidden.reduce((sum, r) => sum + r.value, 0)})
   return {rows, withheld}
