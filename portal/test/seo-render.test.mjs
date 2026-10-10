@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,existsSync,readdirSync} from 'node:fs';
 import {build} from 'esbuild';
+import {isOrganisationDonor} from '../public/donor-entity.js';
 import {renderBillAnswer,renderPersonAnswer,partyLine,escapeHtml,safeHref,internalLinkCount,associationCaveat} from '../src/seo-content.ts';
 const pub=new URL('../public/',import.meta.url);
 const parsedAssets=new Map();
@@ -38,9 +39,9 @@ test('raw MP answer includes exported bill votes without unsupported recent-vote
   assert.match(html,/href="\/subject\/party\/independent"/);assert.match(html,/href="\/subject\/electorate\//);
   assert.doesNotMatch(html,/Last 10 recorded votes|No per-member votes|not a complete list of recent divisions/);
   const record=(await read('/votes.json'))['11009'];const votes=[...record.for,...record.against].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,10);for(const vote of votes)assert.ok(html.includes(escapeHtml(vote.name)),vote.name);
-  for(const path of ['/graph/money.json','/graph/money.qld.json','/graph/money.vic.json'])for(const n of (await read(path)).nodes.filter(n=>n.kind==='donor'&&n.industry==='individual'))assert.ok(!html.includes(escapeHtml(n.label)),n.label);
+  for(const path of ['/graph/money.json','/graph/money.qld.json','/graph/money.vic.json'])for(const n of (await read(path)).nodes.filter(n=>n.kind==='donor'&&!isOrganisationDonor(n)))assert.ok(!html.includes(escapeHtml(n.label)),n.label);
   const person=graph.find(n=>n['@type']==='Person');assert.ok(person.image);assert.ok(person.sameAs.some(url=>url.startsWith('https://www.aph.gov.au/Senators_and_Members/Parliamentarian?MPID=')));
-  const labor=await get('/subject/person/anthony-albanese');assert.ok(labor.includes('individual donors'));
+  const labor=await get('/subject/person/anthony-albanese');assert.ok(labor.includes('donors in this export are not named here'));
 });
 test('mobile voting asset retains schema 1 and the shipped per-person keys',async()=>{
   const data=await read('/votes.json');assert.equal(data._meta.schema,1);
@@ -244,6 +245,19 @@ test('discovery endpoints redirect www once with 301 and serve apex directly',as
 test('noindex 404 bodies emit no canonical or page identity, including unknown reports/topics',async()=>{
   const paths=['/reports/not-a-published-report','/subject/topic/not-a-published-topic','/subject/supplier/not-a-supplier','/subject/agency/not-an-agency','/subject/campaigner/not-a-campaigner','/bill/au-federal-nonexistent','/doc/division-federal-senate-99999999','/instrument/C9999L99999'];
   for(const path of paths){const response=await worker.fetch(new Request(origin+path),env,{});assert.equal(response.status,404,path);assert.equal(response.headers.get('x-robots-tag'),'noindex',path);const html=await response.text();assert.doesNotMatch(html,/<link\b[^>]*rel="canonical"|<script[^>]*id="ld-page"/,path);}
+});
+
+test('an individual donor page is noindex and names nobody in its server-rendered HTML',async()=>{
+  for(const name of ['Sara Prendergast','Roslyn Packer','Packer, Roslyn']){
+    const response=await worker.fetch(new Request(origin+'/subject/donor/'+encodeURIComponent(name)),env,{waitUntil(){}});
+    assert.equal(response.status,200,name);assert.equal(response.headers.get('x-robots-tag'),'noindex',name);
+    const html=await response.text();assert.match(html,/<meta name="robots" content="noindex">/,name);
+    // The page's own address may carry the name; nothing else on the page does.
+    const head=html.replaceAll('/subject/donor/'+encodeURIComponent(name),'');
+    for(const part of name.split(/[ ,]+/))assert.ok(!head.includes(part),`${name}: ${part}`);
+  }
+  const org=await worker.fetch(new Request(origin+'/subject/donor/Clubs%20NSW'),env,{waitUntil(){}});
+  assert.equal(org.headers.get('x-robots-tag'),'all');assert.match(await org.text(),/<h1>Clubs NSW<\/h1>/);
 });
 
 test('all SSR body types use factual relationship wording and pair political money with the caveat',async()=>{
