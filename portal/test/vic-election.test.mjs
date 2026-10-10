@@ -83,7 +83,7 @@ test('authorisation and correction footer values are optional, shared, escaped a
   const cfg={AUTHORISATION_LINE:'Authorised by <Approved Person>, Melbourne',CORRECTION_CONTACT:'/corrections'};
   const weeks=await json('hubs/index.json');const estimates=await json('hubs/estimates-2026-10.json');
   const pages=[renderVicElection(data,null,cfg),...data.seats.map(s=>renderVicElection(data,s,cfg)),renderSittingIndex(weeks,'2026-10-10',cfg),renderEstimates(estimates,cfg),await hubPage('sitting','bad',read,[],new Map(),undefined,cfg),await hubPage('sitting',weeks.weeks[0].start,read,[],new Map(),undefined,cfg)];
-  for(const p of pages){assert.match(p.html,/<footer class="hub-footer">[\s\S]*Authorised by &lt;Approved Person&gt;, Melbourne[\s\S]*href="\/corrections">Report a correction[\s\S]*<\/footer>/);assert.doesNotMatch(p.html,/48 hours/);}
+  for(const p of pages){assert.match(p.html,/<div class="hub-footer">[\s\S]*Authorised by &lt;Approved Person&gt;, Melbourne[\s\S]*href="\/corrections">Report a correction[\s\S]*<\/div>/);assert.doesNotMatch(p.html,/48 hours/);}
   for(const cfg of [{},{AUTHORISATION_LINE:null,CORRECTION_CONTACT:null}])for(const s of [null,...data.seats])assert.doesNotMatch(renderVicElection(data,s,cfg).html,/hub-authorisation|Report a correction/);
   assert.doesNotMatch(renderVicElection(data,null,{CORRECTION_CONTACT:'javascript:alert(1)'}).html,/href="javascript:/);
   const auth=renderVicElection(data,null,{AUTHORISATION_LINE:'Approved line'}).html;assert.match(auth,/Approved line/);assert.doesNotMatch(auth,/Report a correction/);
