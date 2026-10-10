@@ -2812,6 +2812,13 @@ footer #stats:empty { display: none; }
   .coverage-band > i > b, .topic-tide-track i, .tide-decade i,
   .barrow-marker, .person-topic-legend i, .person-topic-legend b { background: CanvasText; fill: CanvasText; }
   .date-ruler-axis, .date-ruler-tick { stroke: CanvasText; }
+  /* The 28 x 2 accent mark is drawn in the section rule's own colour, so the
+     rule stays whole and the mark reads as its heavier start, not a gap. */
+  :root :is(.subject-person, .subject-party) #subject-sections > [data-accent]::before,
+  :root #bill-body .bill-section[data-accent]::before { background: CanvasText; }
+  /* The ayes bar keeps its track as a hairline and its share as ink. */
+  .votes-split { border: var(--border-hairline) solid CanvasText; }
+  .votes-split i { background: CanvasText; }
   /* Transparent inactive borders survive forced colors, so the active
      underline / left rule keep working; only the hover washes vanish. */
   .megamenu { border-top-width: 3px; }

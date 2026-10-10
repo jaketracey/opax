@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { representationAt, validDate, profileHTML, findPerson, outlineHTML } from '../public/electorates.js';
+import { representationAt, validDate, profileHTML, findPerson, outlineHTML, displayName } from '../public/electorates.js';
 
 const detail = { capacity: 5, terms: [
   { person_id: 'a', start: '2020-01-01', end: '2024-01-01', start_precision: 'day', end_precision: 'day', party_periods: [{ party: 'Labor', start: '2020-01-01', end: '2022-01-01' }, { party: 'Independent', start: '2022-01-01', end: '2024-01-01' }] },
@@ -106,4 +106,20 @@ test('recorded affiliations link only to unique electorate pages in their stated
   assert.equal(recordedElectorate(senate, [...seats, recordedElectorate(senate, seats)]), null, 'ambiguous matches stay unlinked');
   assert.ok(!recordedRepresentationHTML({ ...senate, electorate: '<script>unknown</script>' }, seats).includes('<script>'));
   assert.ok(!recordedRepresentationHTML(senate, []).includes('<a'), 'missing reference data retains the source label');
+});
+
+test('roster names in capitals read in title case; Mc, Mac and O\' keep their shape', () => {
+  assert.equal(displayName('JANE McEXAMPLE'), 'Jane McExample');
+  assert.equal(displayName('ALEX MacSAMPLE'), 'Alex MacSample');
+  assert.equal(displayName("SAM O'TEST"), "Sam O'Test");
+  assert.equal(displayName('Robin McTest'), 'Robin McTest');
+});
+test('an electorate page has one visible title and says relation years in words', () => {
+  const entry = index.electorates.find((e) => e.name === 'Farrer');
+  const data = JSON.parse(readFileSync(publicFile(entry.detail_url)));
+  const html = profileHTML({ ...data, relations: [{ related: { slug: 'x', name: 'Elsewhere', chamber: 'senate' }, vintage: '2026 source configuration' }, { related: { slug: 'y', name: 'Other', chamber: 'senate' }, vintage: '2025' }] });
+  assert.match(html, /^<div class="subject-head"><h1 id="subject-title" tabindex="-1">Farrer<\/h1>/);
+  assert.doesNotMatch(html, /source configuration/);
+  assert.match(html, />Elsewhere<\/a> · Senate · as at 2026<\/li>/);
+  assert.match(html, />Other<\/a> · Senate · as at 2025<\/li>/);
 });

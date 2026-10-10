@@ -41,7 +41,8 @@ test('declaration rows: official portraits only, the party from the roster, the 
  assert.match(html,/<img class="hp-portrait" src="\/photos\/10060.webp" alt=""/);
  assert.match(html,/party-alp/);
  assert.match(html,/“Two &quot;tickets&quot;”/);
- assert.match(html,/Gift · <span>recorded <time datetime="2026-10-07">7 Oct 2026<\/time><\/span> · <a href="https:\/\/www.aph.gov.au\/register" rel="noopener" target="_blank" aria-label="Register entry for Chris Bowen">Register/);
+ assert.match(html,/Gift · <span>recorded <time datetime="2026-10-07">7 Oct 2026<\/time><\/span> · <a href="https:\/\/www.aph.gov.au\/register" rel="noopener" target="_blank" aria-label="Register entry for Chris Bowen">Register<\/a><\/p>/);
+ assert.doesNotMatch(html,/↗/,'one ↗ per block at most, none per row');
  // A Commons portrait needs its credit beside it, so the row shows the blank circle.
  assert.match(declarationRowHTML(item,{photos:{'chris bowen':'wd-Q1'},parties}),/<span class="hp-portrait" aria-hidden="true"><\/span>/);
  const removed=declarationRowHTML({...item,kind:'deletion',url:'javascript:alert(1)'});

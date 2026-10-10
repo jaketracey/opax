@@ -9,6 +9,9 @@ const esc = escapeHTML;
 const number = (n) => Number(n).toLocaleString('en-AU', { maximumFractionDigits: 1 });
 const date = (s) => s ? shortDate(s) : 'Unknown';
 const personURL = (p) => personUrl(p.name);
+/** A roster name as a reader sees it: some service records set the whole name
+ *  or the surname in capitals ("LEO McLEAY"). Mc/Mac/O' keep their own shape. */
+export const displayName = (name) => String(name ?? '').replace(/\b(Mc|Mac|O['’])?([A-Z])([A-Z]+)\b/g, (_, pre = '', first, rest) => `${pre}${first}${rest.toLowerCase()}`);
 const sourceURL = (s) => /^https?:\/\//.test(s || '') ? s : null;
 let manifestPromise, indexPromise, peoplePromise;
 const json = async (url) => { const r = await fetch(url); if (!r.ok) throw new Error(`Reference data unavailable (${r.status})`); return r.json(); };
@@ -118,8 +121,11 @@ export function outlineHTML(boundary, name) {
 }
 function memberHTML(m, people) {
   const p = people[m.person_id] || m.person;
-  return `<li>${p ? `<a href="${esc(personURL(p))}">${esc(p.name)}</a>` : 'Unresolved person'}${m.party ? ` ${partyLabelHTML(m.party)}` : ''}</li>`;
+  return `<li>${p ? `<a href="${esc(personURL(p))}">${esc(displayName(p.name))}</a>` : 'Unresolved person'}${m.party ? ` ${partyLabelHTML(m.party)}` : ''}</li>`;
 }
+/** A relation's vintage in words: the year it was recorded for, never the
+ *  pipeline's own label ("2026 source configuration"). */
+const relatedAsAt = (vintage) => { const year = /^\d{4}\b/.exec(String(vintage || ''))?.[0]; return year ? ` · as at ${year}` : ''; };
 /** A block's own sources, by the record keys it is drawn from: each opens in its source sheet. */
 function sourcesOf(detail, keys) {
   const ids = new Set();
@@ -168,7 +174,7 @@ export function profileHTML(detail, on = '') {
   const service = sourcesOf(detail, ['terms']);
   const census = sourcesOf(detail, ['demographics']);
   const line = (list, opts) => sourceLineHTML({ updated: retrieved(list), dateLabel: 'Retrieved', originals: originalsOf(list), licence: licences(list), ...opts });
-  return `<div class="subject-head"><h2 id="subject-title" tabindex="-1">${esc(detail.name)}</h2><p class="subject-tag"><span>${esc(CHAMBERS[detail.chamber] || detail.chamber)} · ${esc(detail.state_code.toUpperCase())}${detail.capacity > 1 ? ` · ${detail.capacity} seats` : ''}${detail.status === 'historical' ? ' · Historical electorate' : ''}</span></p>
+  return `<div class="subject-head"><h1 id="subject-title" tabindex="-1">${esc(detail.name)}</h1><p class="subject-tag"><span>${esc(CHAMBERS[detail.chamber] || detail.chamber)} · ${esc(detail.state_code.toUpperCase())}${detail.capacity > 1 ? ` · ${detail.capacity} seats` : ''}${detail.status === 'historical' ? ' · Historical electorate' : ''}</span></p>
     <div class="page-actions">${moreMenuHTML([
       { href: detail.detail_url, label: 'Download this electorate', detail: 'JSON, every record on this page with its sources' },
       { href: '/subject/electorate', label: 'All electorates' },
@@ -185,27 +191,27 @@ export function profileHTML(detail, on = '') {
       ${line(contests, { source: 'AEC results', notes: [`${detail.elections.length} indexed ${detail.elections.length === 1 ? 'contest' : 'contests'}; gaps are missing coverage.`, 'Percentages use each count’s recorded denominator. “—” means no result for that candidate in that count. TCP and TPP are distinct counts.'] })}` : '<p class="el-empty">Election results have not yet been imported for this electorate.</p>'}</section>
     <section id="el-history" class="el-section"><div class="el-section-head"><h3 class="subject-section-title">Representation history</h3>
       <form id="el-asof-form" class="el-asof"><label for="el-asof">On a date</label><input id="el-asof" class="ui-input" name="asof" type="date" value="${esc(on)}" required><button type="submit" class="ui-button">Show</button></form></div>
-      ${terms.length ? `<ol class="el-service">${terms.map((t) => `<li><div><time>${esc(date(t.start))}</time> – ${t.end ? `<time>${esc(date(t.end))}</time> (exclusive)` : `end not recorded${t.observed_through ? `; observed ${esc(date(t.observed_through))}` : ''}`}</div><strong>${people[t.person_id] ? `<a href="${esc(personURL(people[t.person_id]))}">${esc(people[t.person_id].name)}</a>` : 'Unresolved person'}</strong><span>${(t.party_periods || []).map((p) => partyLabelHTML(p.party) || esc(p.party || '')).filter(Boolean).join(' → ')}</span></li>`).join('')}</ol>
+      ${terms.length ? `<ol class="el-service">${terms.map((t) => `<li><div><time>${esc(date(t.start))}</time> – ${t.end ? `<time>${esc(date(t.end))}</time> (exclusive)` : `end not recorded${t.observed_through ? `; observed ${esc(date(t.observed_through))}` : ''}`}</div><strong>${people[t.person_id] ? `<a href="${esc(personURL(people[t.person_id]))}">${esc(displayName(people[t.person_id].name))}</a>` : 'Unresolved person'}</strong><span>${(t.party_periods || []).map((p) => partyLabelHTML(p.party) || esc(p.party || '')).filter(Boolean).join(' → ')}</span></li>`).join('')}</ol>
       ${line(service, { source: 'Service records', notes: ['Dated service records, newest first. Party changes may create a new period. Open-ended records are not proof of current membership.'] })}` : '<p class="el-empty">Historical service has not yet been imported.</p>'}</section>
     <section id="el-context" class="el-section"><h3 class="subject-section-title">Census context</h3>${detail.demographics.length ? `${detail.demographics.map(censusHTML).join('')}
       ${line(census, { source: detail.demographics.map((d) => d.vintage).join('; '), notes: detail.demographics.map((d) => esc(d.note)) })}` : '<p class="el-empty">Census indicators have not yet been imported for this electorate.</p>'}</section>
-    ${detail.relations.length ? `<section class="el-section"><h3 class="subject-section-title">Related constituencies</h3><ul class="el-related">${detail.relations.map((r) => `<li><a href="/subject/electorate/${esc(r.related.slug)}">${esc(r.related.name)}</a> · ${esc(CHAMBERS[r.related.chamber] || r.related.chamber)} · ${esc(r.vintage)}</li>`).join('')}</ul></section>` : ''}`;
+    ${detail.relations.length ? `<section class="el-section"><h3 class="subject-section-title">Related constituencies</h3><ul class="el-related">${detail.relations.map((r) => `<li><a href="/subject/electorate/${esc(r.related.slug)}">${esc(r.related.name)}</a> · ${esc(CHAMBERS[r.related.chamber] || r.related.chamber)}${relatedAsAt(r.vintage)}</li>`).join('')}</ul></section>` : ''}`;
 }
 export async function renderProfile({ body, slug, on, isActive, setCrumbs, goRoute, manageFocus }) {
   try {
     const data = await loadIndex();
     if (!isActive()) return;
     const entry = data.electorates.find((e) => e.slug === slug || e.electorate_id === slug);
-    if (!entry) { body.innerHTML = '<h2 id="subject-title" tabindex="-1">Electorate not found</h2><p>No electorate has this address. <a href="/subject/electorate">Browse electorates</a></p>'; return; }
+    if (!entry) { body.innerHTML = '<h1 id="subject-title" tabindex="-1">Electorate not found</h1><p>No electorate has this address. <a href="/subject/electorate">Browse electorates</a></p>'; return; }
     const detail = await json(entry.detail_url);
     if (!isActive()) return;
-    if (on && !validDate(on)) { body.innerHTML = `<h2>Invalid date</h2><p><a href="${esc(entry.url)}">Return to ${esc(entry.name)}</a></p>`; return; }
+    if (on && !validDate(on)) { body.innerHTML = `<h1 id="subject-title" tabindex="-1">Invalid date</h1><p><a href="${esc(entry.url)}">Return to ${esc(entry.name)}</a></p>`; return; }
     document.title = `${entry.name} · Electorate · OPAX`;
     setCrumbs([{ label: 'Electorates', href: '/subject/electorate' }, { label: entry.name }]);
     body.innerHTML = profileHTML(detail, on);
     body.querySelector('#el-asof-form').addEventListener('submit', (event) => { event.preventDefault(); const value = body.querySelector('#el-asof').value; if (validDate(value)) goRoute(`${entry.url}?asof=${value}`); });
     if (manageFocus) body.querySelector('#subject-title')?.focus();
   } catch {
-    if (isActive()) body.innerHTML = `<h2 id="subject-title" tabindex="-1">Electorate</h2><p>The electorate's record could not load just now. <a href="${esc(location.pathname + location.search)}">Try again</a></p>`;
+    if (isActive()) body.innerHTML = `<h1 id="subject-title" tabindex="-1">Electorate</h1><p>The electorate's record could not load just now. <a href="${esc(location.pathname + location.search)}">Try again</a></p>`;
   }
 }

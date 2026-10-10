@@ -43,7 +43,8 @@ const DECLARED_KINDS = {
   memberships: 'Membership or office', liabilities: 'Liability', other: 'Other interest',
 };
 /** PersonRow for a register entry: portrait, name and party, the entry as
- *  declared, then what it is, when the register recorded it and the register. */
+ *  declared, then what it is, when the register recorded it and the register.
+ *  No ↗ per row (principle 10): the register link says where it goes. */
 export function declarationRowHTML(item, { photos = {}, parties = new Map() } = {}) {
   const name = String(item.name || '');
   // Official portraits only: a Commons portrait's credit belongs beside it, on the profile.
@@ -58,7 +59,7 @@ export function declarationRowHTML(item, { photos = {}, parties = new Map() } = 
     `<div class="hp-row-who"><h3 class="hp-row-name"><a href="${href('person', name)}">${esc(name)}</a></h3>${party}</div>` +
     `<p class="hp-row-text">“${esc(item.description)}”</p>` +
     `<p class="hp-row-detail">${item.kind === 'deletion' ? `${statusLabelHTML('Removed')} ` : ''}${esc(kind)} · <span>recorded ${time(item.date)}</span>` +
-    `${source ? ` · <a href="${esc(source)}" rel="noopener" target="_blank" aria-label="Register entry for ${esc(name)}">Register <span aria-hidden="true">↗︎</span></a>` : ''}</p>` +
+    `${source ? ` · <a href="${esc(source)}" rel="noopener" target="_blank" aria-label="Register entry for ${esc(name)}">Register</a>` : ''}</p>` +
     `</div></li>`;
 }
 export function reportCardHTML(r) {

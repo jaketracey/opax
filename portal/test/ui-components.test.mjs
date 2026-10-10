@@ -531,3 +531,9 @@ test('SourceLine: a floating sheet that would cross the right edge aligns to its
   on('toggle').handler(event({ target: pop }));
   assert.equal(pop.dataset.align, undefined, 'an inline sheet needs no alignment');
 });
+
+test('forced colours keep the section rule whole and the ayes track visible', () => {
+  const forced = style.slice(style.indexOf('/* ---- forced colors / high contrast'));
+  assert.match(forced, /#subject-sections > \[data-accent\]::before,\n  :root #bill-body \.bill-section\[data-accent\]::before \{ background: CanvasText; \}/);
+  assert.match(forced, /\.votes-split \{ border: var\(--border-hairline\) solid CanvasText; \}/);
+});
